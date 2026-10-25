@@ -1137,6 +1137,27 @@
   <data name="Tab.Desktop" xml:space="preserve">
     <value>Bureau</value>
   </data>
+  <data name="Nav.AriaLabel" xml:space="preserve">
+    <value>Pages des paramètres</value>
+  </data>
+  <data name="Nav.Collapse" xml:space="preserve">
+    <value>Réduire le menu</value>
+  </data>
+  <data name="Nav.Expand" xml:space="preserve">
+    <value>Développer le menu</value>
+  </data>
+  <data name="Nav.Group.Personalization" xml:space="preserve">
+    <value>Personnalisation</value>
+  </data>
+  <data name="Nav.Group.Applications" xml:space="preserve">
+    <value>Applications</value>
+  </data>
+  <data name="Nav.Group.Network" xml:space="preserve">
+    <value>Réseau</value>
+  </data>
+  <data name="Nav.Group.System" xml:space="preserve">
+    <value>Système</value>
+  </data>
   <data name="Desktop.Description" xml:space="preserve">
     <value>Le bureau affiche les fichiers de {0}. Ces options sont rangées dans {1} ; le bureau suit le fichier dès qu'il change.</value>
   </data>

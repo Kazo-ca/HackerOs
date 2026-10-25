@@ -26,7 +26,7 @@ namespace HackerOs.Apps.Settings;
 /// optional server;</item>
 /// <item><see cref="HackSystem"/> (capability <c>system.power</c>) for restart and factory reset;
 /// the OS asks an administrator in its own window, this app never sees the password.</item>
-/// <item><see cref="HackSystemBackup"/> (capability <c>system.backup</c>, ADR 0099) in the Backup tab,
+/// <item><see cref="HackSystemBackup"/> (capability <c>system.backup</c>, ADR 0099) on the Backup page,
 /// shown only when the host supports it.</item>
 /// </list>
 /// </remarks>
@@ -76,23 +76,6 @@ public partial class SettingsWindow : IAsyncDisposable
     private HackSyncStatus _syncStatus = HackSyncStatus.Inactive;
     private IReadOnlyList<HackSyncConflict> _conflicts = [];
 
-    /// <summary>Index of the "Appearance" tab, the first one (<c>--page=appearance</c>).</summary>
-    private const int AppearanceTabIndex = 0;
-
-    /// <summary>Index of the "Desktop" tab, right after Appearance (<c>--page=desktop</c>, ADR 0160 §8).</summary>
-    private const int DesktopTabIndex = 1;
-
-    /// <summary>Number of tabs always shown: Appearance, Desktop, Accessibility, Language, File Associations,
-    /// Capability Grants, Permissions, Installed Apps, OS Components, File Menus, Server Connection,
-    /// Synchronization, Users, Memory and About System.</summary>
-    private const int FixedTabCount = 15;
-
-    /// <summary>
-    /// Index of the "Application" tab, the last one (ADR 0096 §4): after the fixed tabs and Backup, which
-    /// is only there when the host supports it.
-    /// </summary>
-    private int AppPageTabIndex => FixedTabCount + (HackerOs.AppSdk.Administration.HackSystemBackup.IsSupportedFor(AppContext) ? 1 : 0);
-
     private IStringLocalizer<Strings>? _localizer;
 
     /// <summary>Settings' texts in the language of its own process (ADR 0104).</summary>
@@ -112,10 +95,9 @@ public partial class SettingsWindow : IAsyncDisposable
     /// <summary>Prefix of the argument naming the app whose page to show (<c>--app=&lt;id&gt;</c>).</summary>
     internal const string AppArgumentPrefix = "--app=";
 
-    /// <summary>Prefix of the argument naming a Settings page to open (<c>--page=appearance|desktop</c>).</summary>
+    /// <summary>Prefix of the argument naming a Settings page to open (<c>--page=appearance</c>, <c>--page=desktop</c>, ...).</summary>
     internal const string PageArgumentPrefix = "--page=";
 
-    private int _activeTab;
     private string? _appPageId;
 
     private bool IsConfirmed => string.Equals(_confirmText, ResetConfirmPhrase, StringComparison.Ordinal);
@@ -154,7 +136,7 @@ public partial class SettingsWindow : IAsyncDisposable
     }
 
     /// <summary>
-    /// Opens the "Application" tab on the app named by <c>--app=&lt;id&gt;</c>, or the page named by
+    /// Opens the "Application" page on the app named by <c>--app=&lt;id&gt;</c>, or the page named by
     /// <c>--page=</c> (the desktop's "Change background…" and "Desktop settings…", ADR 0160 §8).
     /// </summary>
     private void ShowAppPage(IReadOnlyList<string> arguments)
@@ -162,25 +144,13 @@ public partial class SettingsWindow : IAsyncDisposable
         if (ReadAppArgument(arguments) is { } appId)
         {
             _appPageId = appId;
-            _activeTab = AppPageTabIndex;
+            _activePage = ApplicationPageId;
         }
         else if (ReadPageArgument(arguments) is { } page)
         {
-            _activeTab = page;
+            _activePage = page;
         }
     }
-
-    /// <summary>Reads <c>--page=appearance|desktop</c>; the last known page wins, an unknown one is ignored.</summary>
-    internal static int? ReadPageArgument(IReadOnlyList<string> arguments) =>
-        arguments
-            .Where(static argument => argument.StartsWith(PageArgumentPrefix, StringComparison.Ordinal))
-            .Select(static argument => argument[PageArgumentPrefix.Length..].Trim().ToLowerInvariant() switch
-            {
-                "appearance" => AppearanceTabIndex,
-                "desktop" => DesktopTabIndex,
-                _ => (int?)null
-            })
-            .LastOrDefault(static index => index is not null);
 
     /// <summary>Reads <c>--app=&lt;id&gt;</c> from Settings' command line; the last one wins, an empty id is ignored.</summary>
     internal static string? ReadAppArgument(IReadOnlyList<string> arguments) =>

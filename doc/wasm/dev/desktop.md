@@ -78,8 +78,10 @@ suivante), un plantage le relance une fois.
 
 ### Paramètres ▸ Bureau
 
-Onglet après Apparence : taille des icônes, réorganisation automatique,
+Page après Apparence : taille des icônes, réorganisation automatique,
 alignement, icônes système, tri, « Oublier les positions des icônes ».
+Paramètres s'ouvre directement sur une page avec `--page=appearance` ou
+`--page=desktop` (toutes les pages depuis l'ADR 0170, voir [settings-app.md](settings-app.md)).
 
 ## Décisions clés
 
