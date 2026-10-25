@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <!--
-    Sample "Intranet" of ASP.Hack (web/11, doc/wasm/framework/asp-hack-developer-guide.md): one web app at
+    Sample "Intranet" of ASP.Hack (web/11, doc/en/wasm/framework/asp-hack-developer-guide.md): one web app at
     http://intranet.hack/ that brings the bricks of the web phase together. MVC pages written as
     .cshtml and .razor views over a shared layout, a REST API, JavaScript from the embedded wwwroot
     (run by the browser's isolated page), a cookie session with anti-forgery forms, and an interactive

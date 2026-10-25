@@ -1,8 +1,10 @@
-# Documentation de la version legacy
+> [Version française](readme-fr.md)
 
-Fonctionnalités de la version TypeScript (`src/`). Voir aussi
+# Legacy version documentation
+
+Features of the TypeScript version (`src/`). See also
 [`../README.md`](../README.md).
 
-| Document | Rôle |
+| Document | Purpose |
 | --- | --- |
-| [`app-tile-colors.md`](app-tile-colors.md) | Couleurs personnalisables des tuiles d'apps du menu Démarrer et leur intégration aux thèmes (en anglais). |
+| [`app-tile-colors.md`](app-tile-colors.md) | Customizable colors of the Start menu app tiles and their theme integration. |

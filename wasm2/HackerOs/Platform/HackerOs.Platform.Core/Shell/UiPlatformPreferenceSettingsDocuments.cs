@@ -7,7 +7,7 @@ namespace HackerOs.Platform.Core.Shell;
 /// Defines the layered UI-platform-preference document (ADR 0044 section 8):
 /// <c>/etc/hackeros/ui-platform-preference.config</c> then <c>~/.config/hackeros/ui-platform-preference.config</c>,
 /// holding whether the shell follows automatic platform detection or an explicit Desktop/Mobile
-/// choice (see doc/wasm/dev/old/mobile-interface-platform-plan.md §6).
+/// choice (see doc/en/wasm/dev/old/mobile-interface-platform-plan.md §6).
 /// </summary>
 public static class UiPlatformPreferenceSettingsDocuments
 {

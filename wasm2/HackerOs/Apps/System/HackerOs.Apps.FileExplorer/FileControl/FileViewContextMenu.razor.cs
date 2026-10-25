@@ -14,7 +14,7 @@ namespace HackerOs.Apps.FileExplorer.FileControl;
 /// Builds and opens one context menu: default well-known items for the given scope, then every matching
 /// <see cref="IFileViewContextMenuProvider"/> in <see cref="FileView.ContextMenuProviders"/> order, then
 /// <see cref="FileView.ContextMenuOpening"/> as the final host-level adjustment point. See
-/// <c>doc/wasm/dev/old/Global-FileView-And-MessagingSystem/FileViewControl.md#context-menu-customization</c>.
+/// <c>doc/en/wasm/dev/old/Global-FileView-And-MessagingSystem/FileViewControl.md#context-menu-customization</c>.
 /// </summary>
 public partial class FileViewContextMenu
 {

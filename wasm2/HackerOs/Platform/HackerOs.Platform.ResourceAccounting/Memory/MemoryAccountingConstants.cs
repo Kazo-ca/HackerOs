@@ -1,7 +1,7 @@
 namespace HackerOs.Platform.ResourceAccounting.Memory;
 
 /// <summary>
-/// The calculation rules of ADR 0068, section 1, documented in <c>doc/wasm/dev/system-metrics.md</c> and
+/// The calculation rules of ADR 0068, section 1, documented in <c>doc/en/wasm/dev/system-metrics.md</c> and
 /// covered by tests. Changing one changes what <c>/proc</c> shows: update both.
 /// </summary>
 public static class MemoryAccountingConstants

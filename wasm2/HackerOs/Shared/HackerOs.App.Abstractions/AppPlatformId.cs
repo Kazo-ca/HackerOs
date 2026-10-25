@@ -5,7 +5,7 @@ namespace HackerOs.App.Abstractions;
 /// <summary>
 /// Identifies a UI platform (e.g. desktop, mobile) an app entry point can target. Deliberately not
 /// a closed enum — the platform catalog is an open, extensible set (see
-/// doc/wasm/dev/old/mobile-interface-platform-plan.md §3); app and shell code should query platform
+/// doc/en/wasm/dev/old/mobile-interface-platform-plan.md §3); app and shell code should query platform
 /// capabilities through a contract rather than switch on this value.
 /// </summary>
 public readonly partial record struct AppPlatformId

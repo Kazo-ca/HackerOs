@@ -13,7 +13,7 @@ namespace HackerOs.Platform.Core.Tests.FileSystem;
 /// <summary>
 /// Tests for <c>MSG-011</c>/<c>MSG-012</c>/<c>MSG-013</c> — <see cref="FileSystemService"/> publishing
 /// <see cref="FileSystemChangeEvent"/>s and <see cref="AppFileSystemWatchGateway"/> reusing filesystem
-/// read authorization, per doc/wasm/dev/old/Global-FileView-And-MessagingSystem/MessagingSystem.md.
+/// read authorization, per doc/en/wasm/dev/old/Global-FileView-And-MessagingSystem/MessagingSystem.md.
 /// </summary>
 /// <remarks>
 /// <see cref="InMemoryTopicMessageBus.Publish{TPayload}"/> dispatches synchronously, so a change event is

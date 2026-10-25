@@ -6,19 +6,19 @@ using Xunit.Abstractions;
 namespace HackerOs.UI.E2E.Tests;
 
 /// <summary>
-/// Expands automated accessibility/visual coverage (P2-GATE-003, doc/wasm/dev/accessibility.md
+/// Expands automated accessibility/visual coverage (P2-GATE-003, doc/en/wasm/dev/accessibility.md
 /// "Required expanded automation") beyond HackerOs.E2E.Tests's seven isolated-harness
 /// scenarios: scans the real desktop shell/launcher/taskbar and File Explorer, Settings,
 /// Code Editor, and Hack Paint windows, at both desktop and mobile viewports, and persists
-/// a screenshot per surface/viewport under artifacts/playwright/ (doc/wasm/dev/accessibility.md's
+/// a screenshot per surface/viewport under artifacts/playwright/ (doc/en/wasm/dev/accessibility.md's
 /// prescribed location) instead of discarding it — the one existing screenshot in this repo
 /// (IndexedDbBrowserContractTests) was written to a temp file and deleted immediately after
 /// a non-zero-length check, leaving nothing for anyone to actually review.
 ///
 /// Keyboard-only navigation, the high-contrast layer and text at 200% are covered by
-/// AccessibilityPreferencesTests (ADR 0105, doc/wasm/dev/accessibility.md). Focus traps, long text,
+/// AccessibilityPreferencesTests (ADR 0105, doc/en/wasm/dev/accessibility.md). Focus traps, long text,
 /// RTL and screen-reader passes remain human checklist items — see
-/// doc/wasm/dev/old/Human-test-needed-p2-GATE-003.md.
+/// doc/en/wasm/dev/old/Human-test-needed-p2-GATE-003.md.
 /// </summary>
 public sealed class AccessibilityAndVisualCoverageTests(ITestOutputHelper output)
 {
