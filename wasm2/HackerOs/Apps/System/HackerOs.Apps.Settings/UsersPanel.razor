@@ -27,13 +27,82 @@
                         {
                             <span class="badge">@L["Users.Badge.You"]</span>
                         }
+                        @if (account.PasskeyCount > 0)
+                        {
+                            <span class="badge" title="@L["Users.Badge.PasskeysTitle"]">@L["Users.Badge.Passkeys", account.PasskeyCount]</span>
+                        }
                         <span class="@StateClass(account)" title="@StateTitle(account)">@StateCode(account)</span>
+                        @if (CurrentIsAdministrator && !account.IsCurrentUser)
+                        {
+                            <button type="button" class="btn-link-danger" disabled="@_busy"
+                                    aria-label="@L["Users.Delete.Button", account.LoginName]"
+                                    @onclick="() => AskDelete(account.LoginName)">@L["Users.Delete.Short"]</button>
+                        }
                     </span>
                 </li>
             }
         </ul>
     }
+
+    @if (_deleteLogin is { } deleting)
+    {
+        <div class="delete-confirm" role="group" aria-label="@L["Users.Delete.Title", deleting]">
+            <p class="setting-desc">@L["Users.Delete.Description", deleting]</p>
+            <label class="check-field">
+                <input type="checkbox" @bind="_deleteHome" disabled="@_busy" />
+                <span>@LocalizedMarkup.Format(L["Users.Delete.RemoveHome"], LocalizedMarkup.Code("/home/" + deleting))</span>
+            </label>
+            <div class="form-actions">
+                <button type="button" class="btn-danger" disabled="@_busy" @onclick="DeleteAsync">@L["Users.Delete.Confirm", deleting]</button>
+                <button type="button" class="btn-secondary" disabled="@_busy" @onclick="CancelDelete">@L["Users.Delete.Cancel"]</button>
+            </div>
+        </div>
+    }
+    @if (!string.IsNullOrEmpty(_listMessage))
+    {
+        <p class="@(_listFailed ? "dialog-error" : "users-result")" role="@(_listFailed ? "alert" : "status")">@_listMessage</p>
+    }
 </div>
+
+@if (CurrentIsAdministrator)
+{
+    <div class="setting-group users-panel">
+        <h4>@L["Users.Add.Title"]</h4>
+        <p class="setting-desc">@LocalizedMarkup.Format(L["Users.Add.Description"], LocalizedMarkup.Code("users.manage"))</p>
+        <form class="password-form" @onsubmit="AddAsync" @onsubmit:preventDefault>
+            <label class="field">
+                <span>@L["Users.Field.Login"]</span>
+                <input class="text-input" type="text" autocomplete="off" spellcheck="false" maxlength="32" @bind="_newLogin" disabled="@_busy" />
+            </label>
+            <label class="field">
+                <span>@L["Users.Field.DisplayName"]</span>
+                <input class="text-input" type="text" autocomplete="off" maxlength="128" @bind="_newDisplayName" disabled="@_busy" />
+            </label>
+            <label class="field">
+                <span>@L["Users.Field.Type"]</span>
+                <select class="text-input" @bind="_newIsAdministrator" disabled="@_busy">
+                    <option value="false">@L["Users.Type.Standard"]</option>
+                    <option value="true">@L["Users.Type.Administrator"]</option>
+                </select>
+            </label>
+            <label class="field">
+                <span>@L["Users.Field.InitialPassword"]</span>
+                <input class="text-input" type="password" autocomplete="new-password" @bind="_newPassword" disabled="@_busy" />
+            </label>
+            <label class="field">
+                <span>@L["Users.Field.Confirm"]</span>
+                <input class="text-input" type="password" autocomplete="new-password" @bind="_newConfirm" disabled="@_busy" />
+            </label>
+            <button type="submit" class="btn-secondary" disabled="@_busy">@L["Users.Add.Submit"]</button>
+        </form>
+        @if (!string.IsNullOrEmpty(_addMessage))
+        {
+            <p class="@(_addFailed ? "dialog-error" : "users-result")" role="@(_addFailed ? "alert" : "status")">@_addMessage</p>
+        }
+    </div>
+}
+
+<PasskeysPanel Changed="LoadAsync" />
 
 <div class="setting-group users-panel">
     <h4>@L["Users.Own.Title"]</h4>

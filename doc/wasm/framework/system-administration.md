@@ -126,6 +126,23 @@ Le trousseau du compte visé est mis de côté. Détails :
 [`sensitive-settings.md`](../dev/sensitive-settings.md#4-mots-de-passe--passwd-et-réinitialisation)
 et [ADR 0120](../dev/adr/0120-passwd-and-administrator-password-reset.md).
 
+`CreateAsync(new HackNewUserAccount(login, nomAffiché, autorité, motDePasse))`
+et `DeleteAsync(login, removeHome)` exigent aussi `users.manage` et un
+administrateur (actions `users.add` et `users.delete`, ADR 0169). La création
+donne au compte son propre groupe, et `administrators` pour un administrateur ;
+le dossier personnel naît à la première connexion. La suppression refuse le
+compte de la session et le dernier administrateur actif, emporte les clés
+d'accès du compte et, avec `removeHome`, son dossier `/home/<login>`.
+`ValidateNewAccount` vérifie un compte avant l'envoi (nom de connexion, nom
+affiché de 128 caractères au plus, mot de passe). `HackUserAccount.PasskeyCount`
+donne le nombre de clés d'accès de chaque compte.
+
+Clés d'accès de la session (ADR 0168), sans capacité : `ListPasskeysAsync`,
+`AddPasskeyAsync(nom)` (le navigateur demande la présence de l'utilisateur ;
+`OperationCanceledException` si la demande est fermée, `NotSupportedException`
+sans WebAuthn) et `RemovePasskeyAsync(id)`. `HackPasskey.UnlocksKeyring` dit si
+la clé ouvre le trousseau. Détails : [`passkeys.md`](../dev/passkeys.md).
+
 ## Décisions
 
 - Voir l'ADR 0060 : propriété `SystemPower` (pas `System`),
@@ -150,6 +167,12 @@ dans l'ordre fermeture, effacement, redémarrage ; inspection du stockage ;
 sauvegarde (capacité, hôte sans sauvegarde, refus de l'administrateur,
 sélecteur avant administrateur, ordre de la restauration, échec journalisé au
 démarrage suivant).
+`Tests/HackerOs.Platform.Core.Tests/Sessions/LocalPasswordServiceTests.cs` :
+ajout et suppression de comptes par la passerelle (`users.manage` et
+administrateur), clés d'accès de la session sans capacité ni administrateur.
+`Tests/HackerOs.Platform.Core.Tests/Sessions/LocalAccountServiceTests.cs` :
+groupes, noms réservés ou pris, suppression avec ou sans dossier, refus pour
+soi-même et pour le dernier administrateur.
 
 ## Liste des tâches
 

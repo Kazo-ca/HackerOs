@@ -40,6 +40,18 @@ public sealed record SystemAdministrationGatewayServices(
     public Func<LocalPasswordService>? Passwords { get; init; }
 
     /// <summary>
+    /// Gets the service that adds and deletes accounts behind <c>HackUserAccounts</c> (ADR 0169);
+    /// <see langword="null"/> leaves those calls unsupported.
+    /// </summary>
+    public Func<LocalAccountService>? Accounts { get; init; }
+
+    /// <summary>
+    /// Gets the passkey service behind <c>HackUserAccounts</c> (ADR 0168); <see langword="null"/> on a
+    /// host without WebAuthn, where the session user has no passkey to manage.
+    /// </summary>
+    public Func<PasskeyService>? Passkeys { get; init; }
+
+    /// <summary>
     /// Gets the service behind <c>HackComponentProviders</c> (ADR 0156); <see langword="null"/> leaves
     /// the gateway unsupported.
     /// </summary>

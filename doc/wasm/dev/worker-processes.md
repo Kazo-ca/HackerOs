@@ -113,7 +113,7 @@ Messages JSON avec un champ `t` :
 | Worker → OS | Rôle |
 |---|---|
 | `hello` | Runtime et assemblies chargés. |
-| `hb` | Battement (250 ms) : temps CPU par processus, mémoire du runtime, temps occupé. |
+| `hb` | Battement (250 ms) : temps CPU par processus, mémoire du runtime, temps occupé, et depuis combien de temps le code de chaque processus a le thread (`rn`). |
 | `call` | Appel de passerelle qui attend une réponse ; `"s": true` pour un appel synchrone, dont la réponse revient par la case partagée du worker (ADR 0143 §5). |
 | `note` | Appel sans réponse (journal, environnement), gardé dans l'ordre. |
 | `cancel` | Annuler un `call` en cours. |
@@ -197,9 +197,14 @@ WebAssembly ne rétrécit jamais (ADR 0142 §5, [`oom-killer.md`](oom-killer.md)
   `requestIdleCallback` (2 s au plus) : le worker prêt d'abord, puis les cœurs.
   Avant ce signal, une demande démarre son propre worker et l'attend.
 - **Libre** : un worker prêt sans processus, ou dont le dernier battement a
-  moins de 750 ms **et** est arrivé au moins une période après le dernier
-  processus placé sur lui (ADR 0072 §6) : une commande qui boucle dès son
-  lancement n'attire pas la suivante derrière elle.
+  moins de 750 ms **et** montre chaque processus hébergé en train d'exécuter
+  son propre code depuis au moins une période (`rn`, ADR 0072 §6) : une
+  commande qui boucle dès son lancement n'attire pas la suivante derrière
+  elle. La preuve est ce que le worker rapporte, pas l'heure d'arrivée du
+  battement : un battement envoyé pendant le chargement de l'assembly du
+  nouveau processus (ce chargement rend la main) pouvait arriver une période
+  après le placement sur une machine chargée, alors que le code n'avait pas
+  encore tourné.
 - **File d'attente** (ADR 0127 §1, `WorkerRunQueue`) : au plafond, les
   demandes attendent par `nice` croissant puis par ordre d'arrivée ; un
   processus de valeur `nice` positive ne prend pas le worker prêt pendant qu'un autre worker démarre. La
@@ -224,7 +229,12 @@ WebAssembly ne rétrécit jamais (ADR 0142 §5, [`oom-killer.md`](oom-killer.md)
 - **Étape 4** : sinon (ou après le délai de grâce de `SIGTERM`), l'OS termine
   le worker. Ses autres processus sortent `Killed` avec « [pid] killed: worker
   N terminated to stop pid P » dans syslog, le shell écrit « Killed », et le
-  worker prêt reprend le cœur.
+  worker prêt reprend le cœur. Les voisins sont marqués tués dans la table des
+  processus **avant** la fin de leur session, pour que le shell voie la raison ;
+  la sortie déjà reçue d'un processus tué est écrite avant qu'il se termine
+  pour son appelant (1 s au plus pour une session abandonnée, 3 s au plus pour
+  la commande tuée), comme les données d'un tube restent lisibles après un
+  `SIGKILL`.
 
 ### `/proc/hackeros/workers`
 

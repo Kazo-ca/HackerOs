@@ -442,7 +442,11 @@ public sealed class AppExecutionContextFactory
             new AppSystemPowerGateway(_administration.Power, capabilities, gate),
             new AppStorageDiagnosticsGateway(_administration.Storage, capabilities, _webDatabases),
             new AppSystemBackupGateway(_administration.Backup, capabilities, gate),
-            new AppUserAccountsGateway(_administration.Passwords, capabilities, gate),
+            new AppUserAccountsGateway(_administration.Passwords, capabilities, gate)
+            {
+                Accounts = _administration.Accounts,
+                Passkeys = _administration.Passkeys
+            },
             new AppComponentProviderAdministrationGateway(_administration.ComponentProviders, _administration.ApprovalPrompt, capabilities, gate),
             new AppFileMenuEntryAdministrationGateway(_administration.FileMenuEntries, capabilities, language));
     }

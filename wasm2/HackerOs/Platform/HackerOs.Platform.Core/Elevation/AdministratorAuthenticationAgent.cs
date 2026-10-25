@@ -48,6 +48,12 @@ public sealed class AdministratorAuthenticationAgent : IAdministratorAuthenticat
         _clock = clock ?? (() => DateTimeOffset.UtcNow);
     }
 
+    /// <summary>
+    /// Gets the passkey verifier of ADR 0168 section 4 (an administrator's login in, the verification
+    /// out); <see langword="null"/> offers the password only.
+    /// </summary>
+    public Func<string, CancellationToken, Task<AdminElevationVerificationResult>>? PasskeyVerifier { get; init; }
+
     /// <inheritdoc />
     public async Task<AdministratorAuthenticationResult> AuthenticateAsync(
         AdministratorAuthenticationRequest request, CancellationToken cancellationToken = default)
@@ -73,7 +79,28 @@ public sealed class AdministratorAuthenticationAgent : IAdministratorAuthenticat
         string? authenticatedAs = null;
         SemaphoreSlim attemptGate = new(1, 1);
 
-        async Task<AdministratorAuthenticationAttempt> AttemptAsync(string login, string password, CancellationToken ct)
+        Task<AdministratorAuthenticationAttempt> AttemptAsync(string login, string password, CancellationToken ct) =>
+            AttemptCoreAsync(login, token => _verifier.VerifyAsync(login ?? string.Empty, password ?? string.Empty, token), ct);
+
+        async Task<AdministratorAuthenticationAttempt> PasskeyAttemptAsync(string login, CancellationToken ct)
+        {
+            try
+            {
+                return await AttemptCoreAsync(login, token => PasskeyVerifier!(login ?? string.Empty, token), ct).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException) when (!ct.IsCancellationRequested)
+            {
+                // The browser's prompt was closed: not a failed attempt.
+                return new AdministratorAuthenticationAttempt(false, AdministratorAuthenticationPromptRequest.MaxAttempts - failures, "passkey-cancelled");
+            }
+            catch (NotSupportedException)
+            {
+                return new AdministratorAuthenticationAttempt(false, AdministratorAuthenticationPromptRequest.MaxAttempts - failures, "passkey-unsupported");
+            }
+        }
+
+        async Task<AdministratorAuthenticationAttempt> AttemptCoreAsync(
+            string login, Func<CancellationToken, Task<AdminElevationVerificationResult>> verify, CancellationToken ct)
         {
             await attemptGate.WaitAsync(ct).ConfigureAwait(false);
             try
@@ -88,9 +115,7 @@ public sealed class AdministratorAuthenticationAgent : IAdministratorAuthenticat
                     return new AdministratorAuthenticationAttempt(false, 0, "too-many-attempts");
                 }
 
-                AdminElevationVerificationResult verification = await _verifier
-                    .VerifyAsync(login ?? string.Empty, password ?? string.Empty, ct)
-                    .ConfigureAwait(false);
+                AdminElevationVerificationResult verification = await verify(ct).ConfigureAwait(false);
                 if (!verification.Success)
                 {
                     failures++;
@@ -116,7 +141,10 @@ public sealed class AdministratorAuthenticationAgent : IAdministratorAuthenticat
             request.RequestedBy is { } principal && AppAuthorityPolicy.Satisfies(principal.Authority, AppAuthority.Administrator)
                 ? principal.LoginName.Value
                 : null,
-            AttemptAsync);
+            AttemptAsync)
+        {
+            AuthenticateWithPasskeyAsync = PasskeyVerifier is null ? null : PasskeyAttemptAsync
+        };
 
         AdministratorAuthenticationOutcome outcome;
         try

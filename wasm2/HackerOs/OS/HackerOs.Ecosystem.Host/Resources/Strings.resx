@@ -106,4 +106,16 @@
     <value>Restart to update</value>
   </data>
   <data name="Project.LegacyMoved" xml:space="preserve"><value>The original version has moved to</value></data>
+  <data name="Login.UsePasskey" xml:space="preserve">
+    <value>Sign in with a passkey</value>
+  </data>
+  <data name="Login.PasskeyRejected" xml:space="preserve">
+    <value>The passkey was not accepted.</value>
+  </data>
+  <data name="Login.PasskeyCancelled" xml:space="preserve">
+    <value>The passkey prompt was closed. Try again or use the password.</value>
+  </data>
+  <data name="Login.PasskeyUnsupported" xml:space="preserve">
+    <value>This browser cannot use a passkey on this page (HTTPS or localhost is needed).</value>
+  </data>
 </root>

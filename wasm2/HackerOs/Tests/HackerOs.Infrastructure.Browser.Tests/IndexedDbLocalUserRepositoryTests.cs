@@ -61,6 +61,35 @@ public sealed class IndexedDbLocalUserRepositoryTests
             async () => await repository.SetAuthorityAsync(admin.Id, AppAuthority.User));
     }
 
+    [Fact]
+    public async Task Passkeys_round_trip_and_a_deleted_user_is_gone_but_not_the_last_administrator()
+    {
+        await using IndexedDbLocalUserRepository repository = new(
+            new FakeJsRuntime(new FakeIndexedDbModule()));
+        LocalGroupId groupId = LocalGroupId.FromGuid(Guid.NewGuid());
+        LocalUser admin = await repository.CreateUserAsync(
+            LocalLoginName.Parse("admin"), "Admin", AppAuthority.Administrator, groupId);
+        LocalUser zed = await repository.CreateUserAsync(
+            LocalLoginName.Parse("zed"), "Zed", AppAuthority.User, groupId);
+        LocalPasskeyCredential passkey = new(
+            [1, 2, 3], [4, 5, 6], LocalPasskeyCredential.Es256, "Phone", 7,
+            new DateTimeOffset(2026, 10, 25, 0, 0, 0, TimeSpan.Zero), lastUsedAtUtc: null, prfSalt: Enumerable.Range(0, 32).Select(index => (byte)index).ToArray());
+
+        await repository.SetPasskeysAsync(zed.Id, [passkey]);
+        LocalPasskeyCredential stored = Assert.Single((await repository.FindByIdAsync(zed.Id))!.Passkeys);
+
+        Assert.Equal(passkey.Id, stored.Id);
+        Assert.Equal(passkey.PublicKey, stored.PublicKey);
+        Assert.Equal(passkey.PrfSalt, stored.PrfSalt);
+        Assert.Equal(7u, stored.SignCount);
+        Assert.Empty((await repository.FindByIdAsync(admin.Id))!.Passkeys);
+
+        await repository.DeleteUserAsync(zed.Id);
+
+        Assert.Null(await repository.FindByIdAsync(zed.Id));
+        await Assert.ThrowsAsync<InvalidOperationException>(async () => await repository.DeleteUserAsync(admin.Id));
+    }
+
     private sealed class FakeJsRuntime(IJSObjectReference module) : IJSRuntime
     {
         public ValueTask<TValue> InvokeAsync<TValue>(string identifier, object?[]? args) =>
@@ -138,6 +167,11 @@ public sealed class IndexedDbLocalUserRepositoryTests
                 }
 
                 return JsonSerializer.SerializeToElement(new { committed });
+            }
+
+            if (operation.Kind == "delete")
+            {
+                _users.Remove((string)operation.Key!);
             }
 
             return NullElement();

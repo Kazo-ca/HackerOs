@@ -689,4 +689,16 @@
 <data name="MobileHome.StorageError" xml:space="preserve"><value>The Home layout could not be saved or loaded. Your last saved layout is retained.</value></data>
 <data name="MobileHome.EditHint" xml:space="preserve"><value>Drag icons or use their arrows to arrange them. Removing a shortcut does not uninstall the app.</value></data>
 <data name="MobileHome.Saved" xml:space="preserve"><value>Layout saved</value></data>
+  <data name="Auth.UsePasskey" xml:space="preserve">
+    <value>Use a passkey</value>
+  </data>
+  <data name="Security.NoPasskey" xml:space="preserve">
+    <value>This administrator has no passkey. Attempts left: {0}.</value>
+  </data>
+  <data name="Security.PasskeyCancelled" xml:space="preserve">
+    <value>The passkey prompt was closed. Attempts left: {0}.</value>
+  </data>
+  <data name="Security.PasskeyUnsupported" xml:space="preserve">
+    <value>This browser cannot use a passkey here. Attempts left: {0}.</value>
+  </data>
 </root>
