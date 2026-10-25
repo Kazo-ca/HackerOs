@@ -32,6 +32,11 @@ les tests sans navigateur et l'artefact WASM téléchargeable. Il ne déploie pa
 Pages et ne demande pas les droits Pages/OIDC. Ses déclencheurs sont limités
 au WASM et à son propre workflow.
 
+Sur une pull request qui touche le legacy, `assemble-pages.ps1` ou ce workflow,
+`deploy-to-pages.yml` construit le site combiné sans le téléverser ni le
+déployer, dans son propre groupe de concurrence ; il n'annule donc jamais un
+déploiement de `main`. Vue d'ensemble : [`ci-workflows.md`](ci-workflows.md).
+
 Playwright n'est exécuté ni par Pages, ni par les vérifications automatiques
 sur `main`. Les six projets de tests navigateur restent disponibles dans
 `.github/workflows/verify-browser-tests.yml`, lancé uniquement par

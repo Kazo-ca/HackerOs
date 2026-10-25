@@ -2,7 +2,7 @@ name: Verify local Windowing and Taskbar packages
 
 on:
   push:
-    branches: [ "main", "Wasm" ]
+    branches: [ "main", "*/base" ]
     paths:
       - ".github/workflows/window-taskbar-packages.yml"
       - "wasm2/HackerOs/Directory.Build.props"
@@ -46,16 +46,17 @@ env:
 jobs:
   verify-package-closure:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     defaults:
       run:
         working-directory: wasm2/HackerOs
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup .NET 10
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: "10.0.x"
 
@@ -169,7 +170,7 @@ jobs:
           "$SAMPLE_PUBLISH_OUTPUT/wwwroot/_content/HackerOs.Theming.Blazor/themes.css"
 
       - name: Upload verified packages and sample
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: hackeros-windowing-packages-${{ github.run_attempt }}
           path: |
