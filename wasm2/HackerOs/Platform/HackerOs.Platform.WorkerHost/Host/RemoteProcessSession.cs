@@ -208,10 +208,32 @@ internal sealed class RemoteProcessSession
     /// Ends the process because its worker is gone (terminated, or crashed): <c>SIGKILL</c> semantics,
     /// whatever it was doing (ADR 0070, section 5).
     /// </summary>
+    /// <remarks>
+    /// The output the worker sent before it was terminated is still written first, as for an
+    /// <c>exit</c>, within <see cref="AbandonedOutputTimeout"/>: a reader that no longer reads does
+    /// not keep the process alive.
+    /// </remarks>
     public void Abandon()
     {
         _outputQueue.Writer.TryComplete();
-        End(new RemoteProcessExit(RemoteProcessExitStatus.Killed));
+        _ = EndAfterOutputAsync(new RemoteProcessExit(RemoteProcessExitStatus.Killed));
+    }
+
+    /// <summary>How long an abandoned process waits for the output already received to be written.</summary>
+    internal static readonly TimeSpan AbandonedOutputTimeout = TimeSpan.FromSeconds(1);
+
+    private async Task EndAfterOutputAsync(RemoteProcessExit exit)
+    {
+        try
+        {
+            await _outputPump.WaitAsync(AbandonedOutputTimeout).ConfigureAwait(false);
+        }
+        catch (TimeoutException)
+        {
+            // The reader stopped reading: the process ends without the rest of its output.
+        }
+
+        End(exit);
     }
 
     /// <summary>Queues output text in arrival order.</summary>

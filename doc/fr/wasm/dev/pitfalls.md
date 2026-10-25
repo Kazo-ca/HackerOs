@@ -55,16 +55,41 @@ commandes exactes de build et de test sont dans
 | Le test du choix Mobile échoue de façon intermittente | L'écriture du réglage dans `~/.config/hackeros` n'est pas instantanée (2 s avant l'[ADR 0090](adr/0090-filesystem-path-lookup-in-one-request.md), 235 ms après) | Attendre la bascule avant de recharger. |
 | États ARIA faux ou test axe rouge | Un attribut ARIA lié directement à un `bool` en Razor disparaît quand il vaut `false` | Écrire `"true"`/`"false"` ([`old/common-pitfalls.md`](old/common-pitfalls.md) §8). |
 
-Tests **instables connus** (pas des régressions ; ils passent seuls ou sur une
-machine au repos) : `A_command_that_spins_at_once` et `Kill_minus_9`
-(`WorkerHost.Tests`), parité `zip`/`unzip` de `CommandParityTests`,
-`CpuAccountingOverheadTests`, un test d'`AppInstallationService` (environ une
-fois sur douze), le web worker de `LocalNetworkTests`, le harnais de fenêtre
-détachée de l'UI, `FileExplorerDownload` et `BrowserHomePage` d'`UI.E2E` sous
-la charge de la suite complète, et deux tests `Pwa.E2E` qui attendent
-l'explorateur de fichiers. Relancer la suite seule avant de conclure. Sur
-GitHub Actions, ces tests sont relancés une fois et signalés comme instables
-s'ils passent ([`ci-workflows.md`](ci-workflows.md#tests-instables-et-nouvel-essai)).
+### Tests instables : causes trouvées et corrigées (2026-10-25)
+
+Ces tests échouaient de façon intermittente sur la CI ou sous charge ; la
+cause est corrigée (dans le code ou dans le test), aucun test n'a été ignoré.
+Dans un conteneur cloud à quatre cœurs, chacun a passé de 8 à 20 fois de
+suite sous charge (quatre boucles CPU en parallèle), sauf
+`CpuAccountingOverheadTests`, qui passe 10 fois sur 10 au repos mais peut
+encore échouer sur une machine saturée : c'est une mesure de temps.
+
+| Test | Cause | Correction |
+| --- | --- | --- |
+| `A_command_that_spins_at_once` (`WorkerHost.Tests`) | Un cœur passait pour « libre » dès qu'un battement arrivait une période après le placement ; un battement envoyé pendant le chargement de l'assembly de la commande (qui rend la main) suffisait sur une machine chargée, et la commande suivante se plaçait derrière la boucle. | Le battement rapporte depuis combien de temps le code de chaque processus a le thread (`rn`) ; le cœur n'est libre que si chaque processus hébergé a exécuté son code depuis une période ([`worker-processes.md`](worker-processes.md)). |
+| `Kill_minus_9_of_a_spinning_command…` (`WorkerHost.Tests`) | Trois courses : les voisins d'un worker terminé sortaient 137 avant que l'OS note la raison `Killed` (pas de « Killed » du shell) ; la sortie reçue d'une session abandonnée n'était pas écrite ; la commande tuée rendait la main au shell avant que sa sortie reçue soit écrite. Le test tuait aussi parfois `spin` avant qu'il ait démarré. | Voisins marqués tués avant la fin de leur session ; sortie reçue écrite avant la fin (bornée) ; le test attend `TestCommands.Spinning`. |
+| `StaticSitesTests` (sous charge) | `hackwebd` ouvrait un port et acceptait des requêtes avant de connaître le site de cette liaison : 503. Le test attendait le premier port ouvert, pas toutes les liaisons (`intranet.hack` partait alors vers une app de la fixture). | L'acceptation commence une fois la table des sites à jour ; le test attend toutes les liaisons. |
+| Parité `zip`/`unzip` (`CommandParityTests`) | `ZipArchive.CreateEntry` date l'entrée avec l'horloge réelle de la machine : les deux exécutions différaient quand elles tombaient de part et d'autre d'une frontière de 2 s. | `zip` date chaque entrée avec la date de modification du fichier, comme Info-ZIP. |
+| `CpuAccountingOverheadTests` (`ResourceAccounting.Tests`) | Une passe du même scénario variait du simple au triple : la compilation à niveaux recompilait le code en arrière-plan entre les passes, et les 300 `Task.Yield` attendaient un thread du pool. Le surcoût mesuré allait de -9 % à +15 %. | Compilation à niveaux coupée dans ce projet de test, collecte complète avant chaque passe, boucle d'événements à un seul thread (comme le fil principal du navigateur), ordre des deux modes alterné, cinq essais. Surcoût mesuré : environ 2 %. |
+| `A_child_with_a_parent_exit_grace_period…` (`Core.Tests`) | Le test vérifiait que le petit-enfant était tué au moment où l'enfant disparaissait ; le code le tue juste après, dans la même tâche (ADR 0147). | Le test attend les deux. |
+
+Tests **instables connus**, non reproduits en 25 essais sous charge le
+2026-10-25 : un test d'`AppInstallationService` (environ une fois sur douze
+avant), le web worker de `LocalNetworkTests`. Côté navigateur (workflow
+manuel) : le harnais de fenêtre détachée de l'UI, `FileExplorerDownload` et
+`BrowserHomePage` d'`UI.E2E` sous la charge de la suite complète, et deux
+tests `Pwa.E2E` qui attendent l'explorateur de fichiers. Relancer la suite
+seule avant de conclure, et noter ici la cause d'un nouveau cas. Sur
+GitHub Actions, un test qui échoue est relancé une fois et signalé comme
+instable s'il passe ([`ci-workflows.md`](ci-workflows.md#tests-instables-et-nouvel-essai)) :
+ce signal est le point de départ pour trouver sa cause.
+
+**À retenir pour écrire un test** : attendre l'événement qui prouve l'état
+voulu (la commande tourne, toutes les liaisons sont ouvertes, les deux
+processus sont terminés), jamais un signe qui le précède (le processus est
+placé, le premier port est ouvert) ; ne jamais comparer une sortie qui
+contient l'heure réelle de la machine ; pour mesurer un temps, couper la
+compilation à niveaux et comparer des passes faites dans les mêmes conditions.
 
 ## 5. Blazor, fenêtres et SDK
 

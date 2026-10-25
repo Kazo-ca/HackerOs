@@ -23,7 +23,7 @@ internal sealed class WorkerConnection
     private long _browserMemory;
     private long _browserMemoryAt;
     private long _lastHeartbeat;
-    private long _lastPlaced;
+    private bool _yieldsProven;
     private long _emptySince;
     private bool _terminated;
 
@@ -161,11 +161,17 @@ internal sealed class WorkerConnection
 
     /// <summary>
     /// Gets whether the worker's thread can take a new process now (ADR 0071, section 3, ADR 0072): it
-    /// is warmed up, answered its heartbeat recently — so it is not running a long slice — and, when
-    /// it was just given a process, sent a heartbeat at least one period after that, proving the new
-    /// process yields. Without the last rule a command that spins at once (<c>stress</c>) would look
-    /// free until its worker's heartbeat went stale, and the next command would queue behind it.
+    /// is warmed up, answered its heartbeat recently — so it is not running a long slice — and its
+    /// last heartbeat reports every process it hosts as running its own code for at least one period,
+    /// proving each of them yields. Without the last rule a command that spins at once (<c>stress</c>)
+    /// would look free until its worker's heartbeat went stale, and the next command would queue
+    /// behind it.
     /// </summary>
+    /// <remarks>
+    /// The proof is what the worker reports, not when its heartbeat arrives: a heartbeat sent while the
+    /// new process's assembly was still loading (that load yields) can arrive a period after the
+    /// placement on a busy machine, though the process's code has not run yet.
+    /// </remarks>
     public bool IsFree
     {
         get
@@ -176,10 +182,15 @@ internal sealed class WorkerConnection
             }
 
             long last = Interlocked.Read(ref _lastHeartbeat);
-            long placed = Interlocked.Read(ref _lastPlaced);
+            bool yieldsProven;
+            lock (_gate)
+            {
+                yieldsProven = _yieldsProven;
+            }
+
             return last != 0
                 && Stopwatch.GetElapsedTime(last) <= _pool.Options.BusyThreshold
-                && Stopwatch.GetElapsedTime(placed, last) >= _pool.Options.HeartbeatPeriod;
+                && yieldsProven;
         }
     }
 
@@ -265,7 +276,8 @@ internal sealed class WorkerConnection
         {
             _sessions[session.Pid] = session;
             HostedTotal++;
-            Interlocked.Exchange(ref _lastPlaced, Stopwatch.GetTimestamp());
+            // Until a heartbeat shows its code running and the thread coming back (ADR 0072, section 6).
+            _yieldsProven = false;
         }
     }
 
@@ -307,7 +319,11 @@ internal sealed class WorkerConnection
     /// Terminates the worker (<c>worker.terminate()</c>) and ends every process it hosted as killed.
     /// </summary>
     /// <returns>The processes that were still running on it.</returns>
-    public IReadOnlyList<RemoteProcessSession> Terminate()
+    /// <param name="beforeAbandon">
+    /// Called with the hosted processes once the worker is terminated, before they end: the pool marks
+    /// them killed in the process table first, so whoever waits for them sees why they ended.
+    /// </param>
+    public IReadOnlyList<RemoteProcessSession> Terminate(Action<IReadOnlyList<RemoteProcessSession>>? beforeAbandon = null)
     {
         List<RemoteProcessSession> sessions;
         lock (_gate)
@@ -324,6 +340,7 @@ internal sealed class WorkerConnection
 
         _worker?.Terminate();
         _hello.TrySetException(new WebWorkerStartException($"Worker {Id} was terminated."));
+        beforeAbandon?.Invoke(sessions);
         foreach (RemoteProcessSession session in sessions)
         {
             session.Abandon();
@@ -437,8 +454,14 @@ internal sealed class WorkerConnection
 
         lock (_gate)
         {
+            HashSet<long> yielding = [];
             foreach (JsonElement process in root.GetProperty("ps").EnumerateArray())
             {
+                if (process.GetOptional("rn") is { } running && TimeSpan.FromTicks(running.GetInt64()) >= _pool.Options.HeartbeatPeriod)
+                {
+                    yielding.Add(process.GetInt64("p"));
+                }
+
                 if (process.TryGetProperty("ut", out _))
                 {
                     _samples[process.GetInt64("p")] = new ProcessSample(
@@ -451,6 +474,8 @@ internal sealed class WorkerConnection
                         Stopwatch.GetTimestamp());
                 }
             }
+
+            _yieldsProven = _sessions.Keys.All(yielding.Contains);
         }
 
         // The answer keeps the worker's simulated clock in step (ADR 0012).

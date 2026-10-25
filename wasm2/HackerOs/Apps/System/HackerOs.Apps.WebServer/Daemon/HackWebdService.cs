@@ -164,6 +164,12 @@ public sealed class HackWebdService : ServiceAppBase
             }
 
             _sites = served;
+            // Accept only once the site table names the new bindings: a request taken earlier would
+            // find no site and answer 503, though the port was already open.
+            foreach ((string prefix, BindingListener listener) in _listeners)
+            {
+                listener.Loop ??= AcceptAsync(prefix, listener, listener.Stopping);
+            }
         }
         finally
         {
@@ -194,9 +200,8 @@ public sealed class HackWebdService : ServiceAppBase
         }
 
         CancellationTokenSource stop = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-        BindingListener binding = new(listener, stop);
-        binding.Loop = AcceptAsync(prefix, binding, stop.Token);
-        return binding;
+        // Requests wait in the socket's queue until ReloadAsync starts the accept loop.
+        return new BindingListener(listener, stop);
     }
 
     private async Task AcceptAsync(string prefix, BindingListener binding, CancellationToken cancellationToken)
@@ -324,6 +329,9 @@ public sealed class HackWebdService : ServiceAppBase
         public HackHttpListener Listener { get; } = listener;
 
         public Task? Loop { get; set; }
+
+        /// <summary>Gets the token that stops the accept loop.</summary>
+        public CancellationToken Stopping => stop.Token;
 
         public async ValueTask DisposeAsync()
         {

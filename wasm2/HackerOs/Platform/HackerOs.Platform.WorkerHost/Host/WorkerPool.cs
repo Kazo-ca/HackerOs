@@ -574,25 +574,9 @@ public sealed class WorkerPool : IWorkerPoolStatus, HackerOs.Platform.Core.Proce
             }
         }
 
-        IReadOnlyList<RemoteProcessSession> sessions = worker.Terminate();
-        Log(triggerPid is { } pid ? $"worker {worker.Id} terminated: pid {pid} did not stop" : $"worker {worker.Id} terminated", triggerPid);
-        IProcessManager? processes = _processes();
-        foreach (RemoteProcessSession session in sessions.Where(session => session.Pid != triggerPid))
-        {
-            // ADR 0070, section 5: the neighbors end as killed, with the reason in syslog.
-            Log(neighborMessage, session.Pid);
-            if (processes is not null && processes.TryGetActive(ProcessId.FromInt64(session.Pid), out _))
-            {
-                try
-                {
-                    processes.Kill(ProcessId.FromInt64(session.Pid), ProcessExitReason.Killed);
-                }
-                catch (Exception exception) when (exception is KeyNotFoundException or InvalidOperationException)
-                {
-                    // Ended meanwhile.
-                }
-            }
-        }
+        // The neighbors are killed in the process table before their sessions end: otherwise their
+        // command could complete with 137 first, and the shell would not see the reason (no "Killed").
+        worker.Terminate(sessions => KillNeighbors(worker, sessions, neighborMessage, triggerPid));
 
         if (role == WorkerRole.Pool)
         {
@@ -616,6 +600,28 @@ public sealed class WorkerPool : IWorkerPoolStatus, HackerOs.Platform.Core.Proce
 
         Signal();
         EnsureReadyWorker();
+    }
+
+    /// <summary>ADR 0070, section 5: the neighbors end as killed, with the reason in syslog.</summary>
+    private void KillNeighbors(WorkerConnection worker, IReadOnlyList<RemoteProcessSession> sessions, string neighborMessage, long? triggerPid)
+    {
+        Log(triggerPid is { } pid ? $"worker {worker.Id} terminated: pid {pid} did not stop" : $"worker {worker.Id} terminated", triggerPid);
+        IProcessManager? processes = _processes();
+        foreach (RemoteProcessSession session in sessions.Where(session => session.Pid != triggerPid))
+        {
+            Log(neighborMessage, session.Pid);
+            if (processes is not null && processes.TryGetActive(ProcessId.FromInt64(session.Pid), out _))
+            {
+                try
+                {
+                    processes.Kill(ProcessId.FromInt64(session.Pid), ProcessExitReason.Killed);
+                }
+                catch (Exception exception) when (exception is KeyNotFoundException or InvalidOperationException)
+                {
+                    // Ended meanwhile.
+                }
+            }
+        }
     }
 
     private async Task WatchAsync(CancellationToken cancellationToken)
