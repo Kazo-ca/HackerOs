@@ -190,6 +190,40 @@ public sealed class InMemoryLocalUserRepository : ILocalUserRepository
         }
     }
 
+    /// <inheritdoc />
+    public ValueTask<LocalUser> SetPasskeysAsync(
+        LocalUserId id,
+        IReadOnlyList<LocalPasskeyCredential> passkeys,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(passkeys);
+        cancellationToken.ThrowIfCancellationRequested();
+        lock (_gate)
+        {
+            LocalUser user = GetRequired(id);
+            LocalUser updated = WithMutation(user) with { Passkeys = [.. passkeys] };
+            _usersById[id] = updated;
+            return ValueTask.FromResult(updated);
+        }
+    }
+
+    /// <inheritdoc />
+    public ValueTask DeleteUserAsync(LocalUserId id, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        lock (_gate)
+        {
+            LocalUser user = GetRequired(id);
+            if (IsLastEnabledAdministrator(user))
+            {
+                throw new InvalidOperationException("Cannot delete the last enabled Administrator.");
+            }
+
+            _usersById.Remove(id);
+            return ValueTask.CompletedTask;
+        }
+    }
+
     private bool IsLastEnabledAdministrator(LocalUser user) =>
         user.Enabled
         && user.Authority == AppAuthority.Administrator
@@ -214,7 +248,10 @@ public sealed class InMemoryLocalUserRepository : ILocalUserRepository
         credential is { } change ? change.Credential : user.Credential,
         user.Revision + 1,
         user.CreatedAtUtc,
-        _clock());
+        _clock())
+    {
+        Passkeys = user.Passkeys
+    };
 
     /// <summary>A credential to set, possibly <see langword="null"/> (no password), as opposed to no change.</summary>
     private readonly record struct CredentialChange(LocalPasswordCredential? Credential);

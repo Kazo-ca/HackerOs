@@ -666,4 +666,13 @@ Cancel: decide at the next launch.</value>
   <data name="Errno.InvalidArgument" xml:space="preserve">
     <value>Invalid argument</value>
   </data>
+  <data name="Admin.AddUser" xml:space="preserve">
+    <value>Add the account {0}</value>
+  </data>
+  <data name="Admin.DeleteUser" xml:space="preserve">
+    <value>Delete the account {0} (its home folder is kept)</value>
+  </data>
+  <data name="Admin.DeleteUserAndHome" xml:space="preserve">
+    <value>Delete the account {0} and its home folder</value>
+  </data>
 </root>

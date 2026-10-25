@@ -1,3 +1,4 @@
+using HackerOs.App.Abstractions;
 using HackerOs.AppSdk;
 using HackerOs.AppSdk.Administration;
 using HackerOs.AppSdk.Globalization;
@@ -7,7 +8,9 @@ namespace HackerOs.Apps.Settings;
 
 /// <summary>
 /// Settings &gt; Users (ADR 0120, section 6): the local accounts, the form that changes one's own
-/// password, and, for an administrator, the form that resets or removes another account's password.
+/// password, and, for an administrator, the forms that reset or remove another account's password
+/// and that add or delete an account (ADR 0169). The session user's passkeys are in
+/// <see cref="PasskeysPanel"/> (ADR 0168).
 /// </summary>
 /// <remarks>
 /// Uses only the public SDK (ADR 0055): <see cref="HackUserAccounts"/>. Changing one's own password
@@ -17,6 +20,19 @@ namespace HackerOs.Apps.Settings;
 public partial class UsersPanel
 {
     private IReadOnlyList<HackUserAccount> _accounts = [];
+
+    private string? _deleteLogin;
+    private bool _deleteHome;
+    private string? _listMessage;
+    private bool _listFailed;
+
+    private string _newLogin = string.Empty;
+    private string _newDisplayName = string.Empty;
+    private bool _newIsAdministrator;
+    private string _newPassword = string.Empty;
+    private string _newConfirm = string.Empty;
+    private string? _addMessage;
+    private bool _addFailed;
     private string? _loadError;
     private bool _busy;
 
@@ -55,6 +71,11 @@ public partial class UsersPanel
     /// <summary>Reads the account list again (after every change: the state column follows).</summary>
     internal async Task LoadAsync()
     {
+        if (_deleteLogin is not null && _accounts.All(account => account.LoginName != _deleteLogin))
+        {
+            _deleteLogin = null;
+        }
+
         try
         {
             _accounts = await HackUserAccounts.ListAsync(Context, Context.CancellationToken);
@@ -149,6 +170,81 @@ public partial class UsersPanel
         finally
         {
             (_resetNew, _resetConfirm) = (string.Empty, string.Empty);
+            _busy = false;
+        }
+    }
+
+    /// <summary>ADR 0169 §3: asks for the confirmation and the home folder choice before deleting.</summary>
+    private void AskDelete(string login) => (_deleteLogin, _deleteHome, _listMessage) = (login, false, null);
+
+    private void CancelDelete() => _deleteLogin = null;
+
+    /// <summary>Deletes the account chosen in the list; the OS asks an administrator first.</summary>
+    private async Task DeleteAsync()
+    {
+        if (_busy || _deleteLogin is not { } login)
+        {
+            return;
+        }
+
+        _busy = true;
+        try
+        {
+            await HackUserAccounts.DeleteAsync(Context, login, _deleteHome, Context.CancellationToken);
+            (_listMessage, _listFailed) = (L[_deleteHome ? "Users.Delete.DoneWithHome" : "Users.Delete.Done", login], false);
+            _deleteLogin = null;
+            await LoadAsync();
+        }
+        catch (Exception exception) when (exception is UnauthorizedAccessException or ArgumentException or InvalidOperationException or NotSupportedException or IOException)
+        {
+            (_listMessage, _listFailed) = (L["Users.Error.Failed", exception.Message], true);
+        }
+        finally
+        {
+            _busy = false;
+        }
+    }
+
+    /// <summary>ADR 0169 §1: adds an account; the OS asks an administrator first.</summary>
+    private async Task AddAsync()
+    {
+        if (_busy)
+        {
+            return;
+        }
+
+        HackNewUserAccount account = new(
+            _newLogin.Trim().ToLowerInvariant(),
+            _newDisplayName.Trim(),
+            _newIsAdministrator ? AppAuthority.Administrator : AppAuthority.User,
+            _newPassword);
+        if (Check(_newPassword, _newConfirm) is { } problem)
+        {
+            (_addMessage, _addFailed) = (problem, true);
+            return;
+        }
+
+        if (HackUserAccounts.ValidateNewAccount(account) is { } reason)
+        {
+            (_addMessage, _addFailed) = (L["Users.Error.Failed", reason], true);
+            return;
+        }
+
+        _busy = true;
+        try
+        {
+            HackUserAccount created = await HackUserAccounts.CreateAsync(Context, account, Context.CancellationToken);
+            (_addMessage, _addFailed) = (L["Users.Add.Done", created.LoginName], false);
+            (_newLogin, _newDisplayName, _newIsAdministrator) = (string.Empty, string.Empty, false);
+            await LoadAsync();
+        }
+        catch (Exception exception) when (exception is UnauthorizedAccessException or ArgumentException or InvalidOperationException or NotSupportedException)
+        {
+            (_addMessage, _addFailed) = (L["Users.Error.Failed", exception.Message], true);
+        }
+        finally
+        {
+            (_newPassword, _newConfirm) = (string.Empty, string.Empty);
             _busy = false;
         }
     }

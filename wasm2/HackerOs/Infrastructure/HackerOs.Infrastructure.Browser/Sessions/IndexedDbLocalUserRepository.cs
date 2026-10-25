@@ -125,6 +125,37 @@ public sealed partial class IndexedDbLocalUserRepository : ILocalUserRepository,
             cancellationToken);
 
     /// <inheritdoc />
+    public ValueTask<LocalUser> SetPasskeysAsync(
+        LocalUserId id,
+        IReadOnlyList<LocalPasskeyCredential> passkeys,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(passkeys);
+        LocalPasskeyRecord[] records = [.. passkeys.Select(LocalPasskeyRecord.FromDomain)];
+        return MutateAsync(id, user => user with { Passkeys = records }, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public async ValueTask DeleteUserAsync(LocalUserId id, CancellationToken cancellationToken = default)
+    {
+        LocalUser[] users = [.. await GetAllAsync(cancellationToken).ConfigureAwait(false)];
+        LocalUser current = users.SingleOrDefault(user => user.Id == id)
+            ?? throw new KeyNotFoundException($"No local user with ID '{id}'.");
+        if (current.Enabled
+            && current.Authority == AppAuthority.Administrator
+            && users.Count(user => user.Enabled && user.Authority == AppAuthority.Administrator) == 1)
+        {
+            throw new InvalidOperationException("Cannot delete the last enabled Administrator.");
+        }
+
+        await _adapter.ExecuteAsync(
+            TransactionBoundary,
+            IndexedDbTransactionMode.ReadWrite,
+            [new IndexedDbOperation("delete", HackerOsIndexedDbSchema.UserStoreName, Key: current.Id.ToString())],
+            cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
     public ValueTask DisposeAsync() => _adapter.DisposeAsync();
 
     private async ValueTask<LocalUser?> FindOneAsync(
@@ -208,7 +239,8 @@ public sealed partial class IndexedDbLocalUserRepository : ILocalUserRepository,
         [property: JsonPropertyName("credential")] LocalCredentialRecord? Credential,
         [property: JsonPropertyName("revision")] long Revision,
         [property: JsonPropertyName("createdAtUtc")] DateTimeOffset CreatedAtUtc,
-        [property: JsonPropertyName("updatedAtUtc")] DateTimeOffset UpdatedAtUtc)
+        [property: JsonPropertyName("updatedAtUtc")] DateTimeOffset UpdatedAtUtc,
+        [property: JsonPropertyName("passkeys")] LocalPasskeyRecord[]? Passkeys = null)
     {
         internal static LocalUserRecord FromDomain(LocalUser user) => new(
             user.Id.ToString(),
@@ -221,7 +253,8 @@ public sealed partial class IndexedDbLocalUserRepository : ILocalUserRepository,
             user.Credential is null ? null : LocalCredentialRecord.FromDomain(user.Credential),
             user.Revision,
             user.CreatedAtUtc,
-            user.UpdatedAtUtc);
+            user.UpdatedAtUtc,
+            user.Passkeys.Count == 0 ? null : [.. user.Passkeys.Select(LocalPasskeyRecord.FromDomain)]);
 
         internal static LocalUser ToDomain(JsonElement element) =>
             JsonSerializer.Deserialize(element, LocalUserJsonContext.Default.LocalUserRecord)!.ToDomain();
@@ -237,7 +270,42 @@ public sealed partial class IndexedDbLocalUserRepository : ILocalUserRepository,
             Credential?.ToDomain(),
             Revision,
             CreatedAtUtc,
-            UpdatedAtUtc);
+            UpdatedAtUtc)
+        {
+            // Records written before ADR 0168 have no "passkeys" property.
+            Passkeys = this.Passkeys is null ? [] : [.. this.Passkeys.Select(static passkey => passkey.ToDomain())]
+        };
+    }
+
+    private sealed record LocalPasskeyRecord(
+        [property: JsonPropertyName("credentialId")] string CredentialId,
+        [property: JsonPropertyName("publicKey")] string PublicKey,
+        [property: JsonPropertyName("algorithm")] int Algorithm,
+        [property: JsonPropertyName("name")] string Name,
+        [property: JsonPropertyName("signCount")] uint SignCount,
+        [property: JsonPropertyName("createdAtUtc")] DateTimeOffset CreatedAtUtc,
+        [property: JsonPropertyName("lastUsedAtUtc")] DateTimeOffset? LastUsedAtUtc,
+        [property: JsonPropertyName("prfSalt")] string? PrfSalt)
+    {
+        internal static LocalPasskeyRecord FromDomain(LocalPasskeyCredential passkey) => new(
+            Convert.ToBase64String(passkey.CredentialId),
+            Convert.ToBase64String(passkey.PublicKey),
+            passkey.Algorithm,
+            passkey.Name,
+            passkey.SignCount,
+            passkey.CreatedAtUtc,
+            passkey.LastUsedAtUtc,
+            passkey.PrfSalt is null ? null : Convert.ToBase64String(passkey.PrfSalt));
+
+        internal LocalPasskeyCredential ToDomain() => new(
+            Convert.FromBase64String(CredentialId),
+            Convert.FromBase64String(PublicKey),
+            Algorithm,
+            Name,
+            SignCount,
+            CreatedAtUtc,
+            LastUsedAtUtc,
+            PrfSalt is null ? null : Convert.FromBase64String(PrfSalt));
     }
 
     private sealed record LocalCredentialRecord(
@@ -262,5 +330,6 @@ public sealed partial class IndexedDbLocalUserRepository : ILocalUserRepository,
 
     [JsonSerializable(typeof(LocalUserRecord))]
     [JsonSerializable(typeof(LocalCredentialRecord))]
+    [JsonSerializable(typeof(LocalPasskeyRecord))]
     private sealed partial class LocalUserJsonContext : JsonSerializerContext;
 }

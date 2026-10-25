@@ -106,4 +106,16 @@
     <value>Redémarrer pour mettre à jour</value>
   </data>
   <data name="Project.LegacyMoved" xml:space="preserve"><value>La version d’origine a été déplacée vers</value></data>
+  <data name="Login.UsePasskey" xml:space="preserve">
+    <value>Se connecter avec une clé d'accès</value>
+  </data>
+  <data name="Login.PasskeyRejected" xml:space="preserve">
+    <value>La clé d'accès n'a pas été acceptée.</value>
+  </data>
+  <data name="Login.PasskeyCancelled" xml:space="preserve">
+    <value>La fenêtre de la clé d'accès a été fermée. Réessayez ou utilisez le mot de passe.</value>
+  </data>
+  <data name="Login.PasskeyUnsupported" xml:space="preserve">
+    <value>Ce navigateur ne peut pas utiliser de clé d'accès sur cette page (HTTPS ou localhost est nécessaire).</value>
+  </data>
 </root>

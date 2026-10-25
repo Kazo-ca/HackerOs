@@ -55,6 +55,12 @@ l'orchestrateur sinon).
   autre compte administrateur peut répondre, comme avec `sudo`.
 - **La fenêtre ne peut pas forger une approbation** : seul un essai vérifié par
   l'agent compte, quoi que la surface renvoie.
+- **Clé d'accès** (ADR 0168 §4) : quand l'hôte branche
+  `AdministratorAuthenticationAgent.PasskeyVerifier`, la fenêtre montre
+  « Utiliser une clé d'accès » ; `AdminElevationVerifier.VerifyWithPasskeyAsync`
+  vérifie une clé d'accès du compte saisi (raison `no-passkey` s'il n'en a pas).
+  Une demande du navigateur fermée (`passkey-cancelled`) ou un navigateur sans
+  WebAuthn (`passkey-unsupported`) ne compte pas comme un essai raté.
 
 ### Journal `/var/log/auth.log`
 
@@ -63,7 +69,7 @@ Action `admin.authenticate`, une entrée par essai et une pour l'échec final :
 | Propriété | Contenu |
 |---|---|
 | `app` | id de l'app qui demande |
-| `operation` | id stable de l'opération : `apps.uninstall.machine`, `apps.reinstall.machine`, `permissions.policy`, `permissions.machine-decision`, `system.reboot`, `system.factory-reset` |
+| `operation` | id stable de l'opération : `apps.uninstall.machine`, `apps.reinstall.machine`, `permissions.policy`, `permissions.machine-decision`, `system.reboot`, `system.factory-reset`, `users.password-reset`, `users.password-delete`, `users.add`, `users.delete` |
 | `requestedBy` | login de l'utilisateur de la session |
 | `admin` | login saisi (ou `root`, ou `-`) |
 | `outcome` | `success` ou `failure:<raison>` |
@@ -115,7 +121,8 @@ par `AdministratorGate` (`Platform/HackerOs.Platform.Core/Administration`) :
 
 - `Tests/HackerOs.Platform.Core.Tests/Elevation/AdministratorAuthenticationAgentTests.cs` :
   root sans demande, absence de surface, essai faux puis juste, trois échecs,
-  surface qui tente de forger une approbation.
+  surface qui tente de forger une approbation, demande de clé d'accès fermée
+  qui ne coûte pas d'essai puis clé vérifiée, pas de bouton sans vérificateur.
 - `Tests/HackerOs.Platform.Core.Tests/Execution/AppCatalogGatewayTests.cs` :
   portée machine refusée ou acceptée, app système refusée avant toute demande,
   `sudo` sans demande.

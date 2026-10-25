@@ -413,7 +413,13 @@ public static class EcosystemServiceCollectionExtensions
         services.AddScoped<IAdministratorAuthenticationAgent>(provider => new AdministratorAuthenticationAgent(
             provider.GetRequiredService<IAdminElevationVerifier>(),
             provider.GetRequiredService<IAuditLog>(),
-            provider.GetRequiredService<IAdministratorAuthenticationPrompt>()));
+            provider.GetRequiredService<IAdministratorAuthenticationPrompt>())
+        {
+            // ADR 0168 section 4: an administrator may confirm with a passkey instead of a password.
+            PasskeyVerifier = provider.GetRequiredService<IAdminElevationVerifier>() is AdminElevationVerifier verifier
+                ? (login, ct) => verifier.VerifyWithPasskeyAsync(login, provider.GetRequiredService<PasskeyService>(), ct)
+                : null
+        });
         services.AddScoped<AppPermissionAdministration>(provider => new AppPermissionAdministration(
             provider.GetRequiredService<AppCatalog>(),
             provider.GetRequiredService<IAppPermissionStore>(),
@@ -478,6 +484,27 @@ public static class EcosystemServiceCollectionExtensions
                 provider.GetRequiredService<ILocalUserRepository>(),
                 provider.GetRequiredService<IAuditLog>(),
                 provider.GetRequiredService<UserKeyringService>(),
+                asyncHasher: (password, salt, iterations, length, ct) =>
+                    hasher.DeriveKeyAsync(password, salt, iterations, length, ct));
+        });
+
+        // Passkeys (ADR 0168): WebAuthn through webAuthn.js, verified by the OS, a keyring slot per
+        // PRF passkey. Adding and deleting accounts (ADR 0169) hashes like at login.
+        services.AddScoped<IPasskeyAuthenticator>(provider =>
+            new HackerOs.Ecosystem.Passkeys.BrowserPasskeyAuthenticator(provider.GetRequiredService<IJSRuntime>()));
+        services.AddScoped<PasskeyService>(provider => new PasskeyService(
+            provider.GetRequiredService<ILocalUserRepository>(),
+            provider.GetRequiredService<IPasskeyAuthenticator>(),
+            provider.GetRequiredService<IAuditLog>(),
+            provider.GetRequiredService<UserKeyringService>()));
+        services.AddScoped<LocalAccountService>(provider =>
+        {
+            WebCryptoPasswordHasher hasher = provider.GetRequiredService<WebCryptoPasswordHasher>();
+            return new LocalAccountService(
+                provider.GetRequiredService<ILocalUserRepository>(),
+                provider.GetRequiredService<ILocalGroupRepository>(),
+                provider.GetRequiredService<IAuditLog>(),
+                provider.GetRequiredService<IFileSystemService>(),
                 asyncHasher: (password, salt, iterations, length, ct) =>
                     hasher.DeriveKeyAsync(password, salt, iterations, length, ct));
         });
@@ -734,6 +761,9 @@ public static class EcosystemServiceCollectionExtensions
                 OperatingSystem.IsBrowser() ? () => provider.GetRequiredService<SystemBackupService>() : null)
             {
                 Passwords = () => provider.GetRequiredService<LocalPasswordService>(),
+                // HackUserAccounts (ADR 0168, 0169): passkeys of the session user, adding and deleting accounts.
+                Accounts = () => provider.GetRequiredService<LocalAccountService>(),
+                Passkeys = () => provider.GetRequiredService<PasskeyService>(),
                 // HackComponentProviders (ADR 0156): a third-party provider goes through the approval window.
                 ComponentProviders = () => provider.GetRequiredService<HackerOs.Platform.Core.ComponentProviders.ComponentProviderService>(),
                 ApprovalPrompt = () => provider.GetRequiredService<IDangerousCapabilityApprovalPrompt>(),

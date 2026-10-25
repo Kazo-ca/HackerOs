@@ -130,6 +130,15 @@
     color: #f4f7f8;
 }
 
+.aaa-passkey {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid #4a6470;
+    background: #1f2d34;
+    color: #f4f7f8;
+}
+
 .aaa-authenticate {
     border: 1px solid #ff6b70;
     background: #c62a30;

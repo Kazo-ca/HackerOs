@@ -101,8 +101,74 @@ public sealed class LocalSessionService : ISessionService
     }
 
     /// <inheritdoc />
-    public async Task<AuthenticatedPrincipal> LoginAsync(
-        LocalLoginName loginName, string? password, CancellationToken cancellationToken = default)
+    public Task<AuthenticatedPrincipal> LoginAsync(
+        LocalLoginName loginName, string? password, CancellationToken cancellationToken = default) =>
+        LoginCoreAsync(
+            loginName,
+            async (user, token) =>
+            {
+                if (user.Credential is { } credential
+                    && !await LocalPasswordHasher.VerifyAsync(password ?? string.Empty, credential, _asyncHasher, token).ConfigureAwait(false))
+                {
+                    RecordAudit(user.Id.ToString(), "session.login", loginName.Value, AuditOutcome.Denied);
+                    throw new InvalidOperationException("Invalid credentials.");
+                }
+
+                // Like pam_gnome_keyring: the password just verified unlocks the login keyring.
+                return (keyring, principal, unlockToken) =>
+                    keyring.UnlockAsync(principal, user.Credential is null ? null : password, unlockToken);
+            },
+            loginName.Value,
+            cancellationToken);
+
+    /// <summary>
+    /// Starts a session with one of the account's passkeys (ADR 0168): the passkey service asks the
+    /// browser and verifies the answer, then the session starts as after a password login. The
+    /// passkey's PRF output, if any, unlocks the keyring slot of that passkey; otherwise the keyring
+    /// stays locked for the session.
+    /// </summary>
+    /// <param name="loginName">The account.</param>
+    /// <param name="passkeys">The passkey service of this host.</param>
+    /// <param name="cancellationToken">Cancels the login.</param>
+    /// <returns>The session's principal.</returns>
+    /// <exception cref="InvalidOperationException">No such account, a disabled one, or a passkey that failed a check.</exception>
+    /// <exception cref="NotSupportedException">The page has no WebAuthn.</exception>
+    /// <exception cref="OperationCanceledException">The user closed the browser's prompt.</exception>
+    public Task<AuthenticatedPrincipal> LoginWithPasskeyAsync(
+        LocalLoginName loginName, PasskeyService passkeys, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(passkeys);
+        return LoginCoreAsync(
+            loginName,
+            async (user, token) =>
+            {
+                PasskeyAuthentication verified;
+                try
+                {
+                    verified = await passkeys.AuthenticateAsync(user, token).ConfigureAwait(false);
+                }
+                catch (InvalidOperationException)
+                {
+                    RecordAudit(user.Id.ToString(), "session.login", loginName.Value + " (passkey)", AuditOutcome.Denied);
+                    throw;
+                }
+
+                return (keyring, principal, unlockToken) =>
+                    keyring.UnlockWithPasskeyAsync(principal, verified.Passkey.Id, verified.PrfOutput, unlockToken);
+            },
+            loginName.Value + " (passkey)",
+            cancellationToken);
+    }
+
+    /// <summary>
+    /// The login of ADR 0013 with a pluggable proof: <paramref name="verify"/> checks the account's
+    /// credential (and throws on failure), then returns how to unlock the keyring.
+    /// </summary>
+    private async Task<AuthenticatedPrincipal> LoginCoreAsync(
+        LocalLoginName loginName,
+        Func<LocalUser, CancellationToken, Task<Func<Keyring.ISessionKeyring, AuthenticatedPrincipal, CancellationToken, ValueTask>>> verify,
+        string auditSubject,
+        CancellationToken cancellationToken)
     {
         lock (_gate)
         {
@@ -120,6 +186,7 @@ public sealed class LocalSessionService : ISessionService
         try
         {
             LocalUser? user;
+            Func<Keyring.ISessionKeyring, AuthenticatedPrincipal, CancellationToken, ValueTask> unlock;
             using (_progressTracker.BeginStep("Loading Profile"))
             {
                 user = await _users.FindByLoginNameAsync(loginName, cancellationToken);
@@ -135,12 +202,7 @@ public sealed class LocalSessionService : ISessionService
                     throw new InvalidOperationException($"User '{loginName}' is disabled.");
                 }
 
-                if (user.Credential is { } credential
-                    && !await LocalPasswordHasher.VerifyAsync(password ?? string.Empty, credential, _asyncHasher, cancellationToken).ConfigureAwait(false))
-                {
-                    RecordAudit(user.Id.ToString(), "session.login", loginName.Value, AuditOutcome.Denied);
-                    throw new InvalidOperationException("Invalid credentials.");
-                }
+                unlock = await verify(user, cancellationToken).ConfigureAwait(false);
             }
 
             await Task.Yield();
@@ -182,9 +244,8 @@ public sealed class LocalSessionService : ISessionService
 
             if (_keyring is not null)
             {
-                // Like pam_gnome_keyring: the password just verified unlocks the login keyring.
                 // Never fails the login; an unreadable keyring stays locked or is set aside.
-                await _keyring.UnlockAsync(principal, user.Credential is null ? null : password, cancellationToken).ConfigureAwait(false);
+                await unlock(_keyring, principal, cancellationToken).ConfigureAwait(false);
             }
 
             using (_progressTracker.BeginStep("Starting Session"))
@@ -197,7 +258,7 @@ public sealed class LocalSessionService : ISessionService
                 }
 
                 _eventBus.Publish(new SessionActivatedEvent(sessionId, user.Id, principal.AuthenticatedAtUtc));
-                RecordAudit(user.Id.ToString(), "session.login", loginName.Value, AuditOutcome.Success);
+                RecordAudit(user.Id.ToString(), "session.login", auditSubject, AuditOutcome.Success);
             }
 
             return principal;

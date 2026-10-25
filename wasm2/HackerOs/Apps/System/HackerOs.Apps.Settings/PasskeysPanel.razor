@@ -1,0 +1,61 @@
+@inherits HackerOs.AppSdk.Blazor.HackComponentBase
+@using HackerOs.AppSdk.Administration
+
+<div class="setting-group users-panel">
+    <h4>@L["Passkeys.Title"]</h4>
+    <p class="setting-desc">@L["Passkeys.Description"]</p>
+    @if (_passkeys.Count == 0)
+    {
+        <p class="setting-desc">@L["Passkeys.Empty"]</p>
+    }
+    else
+    {
+        <ul class="account-list" aria-label="@L["Passkeys.Title"]">
+            @foreach (HackPasskey passkey in _passkeys)
+            {
+                <li class="account passkey">
+                    <span class="account-login">@passkey.Name</span>
+                    <span class="account-name">
+                        @L["Passkeys.Created", passkey.CreatedAtUtc.ToLocalTime().ToString("g")]
+                        @if (passkey.LastUsedAtUtc is { } lastUsed)
+                        {
+                            <text> · @L["Passkeys.LastUsed", lastUsed.ToLocalTime().ToString("g")]</text>
+                        }
+                    </span>
+                    <span class="account-badges">
+                        @if (passkey.UnlocksKeyring)
+                        {
+                            <span class="badge badge-ok" title="@L["Passkeys.KeyringTitle"]">@L["Passkeys.Keyring"]</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-warning" title="@L["Passkeys.NoKeyringTitle"]">@L["Passkeys.NoKeyring"]</span>
+                        }
+                        <button type="button" class="btn-link-danger" disabled="@_busy"
+                                aria-label="@L["Passkeys.RemoveLabel", passkey.Name]"
+                                @onclick="() => RemoveAsync(passkey)">@L["Passkeys.Remove"]</button>
+                    </span>
+                </li>
+            }
+        </ul>
+    }
+
+    @if (_isSupported)
+    {
+        <form class="password-form passkey-form" @onsubmit="AddAsync" @onsubmit:preventDefault>
+            <label class="field">
+                <span>@L["Passkeys.Field.Name"]</span>
+                <input class="text-input" type="text" autocomplete="off" maxlength="64" @bind="_name" disabled="@_busy" />
+            </label>
+            <button type="submit" class="btn-secondary" disabled="@_busy">@L["Passkeys.Add"]</button>
+        </form>
+    }
+    else
+    {
+        <p class="setting-desc">@L["Passkeys.Unsupported"]</p>
+    }
+    @if (!string.IsNullOrEmpty(_message))
+    {
+        <p class="@(_failed ? "dialog-error" : "users-result")" role="@(_failed ? "alert" : "status")">@_message</p>
+    }
+</div>

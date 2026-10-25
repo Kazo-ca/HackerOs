@@ -32,12 +32,19 @@ jour à la fin de chaque série ou quand une convention change.
   build change sous la page (ADR 0162), aperçu local du déplacement des
   fenêtres (ADR 0163), icônes des apps et menu de l'icône de fenêtre
   (ADR 0164), accueil et tiroir mobiles (ADR 0165, 0166), publication GitHub
-  Pages combinée PWA + legacy (ADR 0167), paquets NuGet mis à jour,
-  explorateur de fichiers mobile, point d'entrée mobile honoré et dialogues en
-  plein écran sur mobile (ADR 0171).
-- **ADR** : 0001 à 0167 et 0171 existent (quelques numéros sautés). 0168 à 0170
-  sont réservés par des threads parallèles ; 0172, réservé avec 0171, n'a pas
-  servi. **Prochain numéro libre : 0172.** Des threads parallèles réservent des numéros distincts.
+  Pages combinée PWA + legacy (ADR 0167), paquets NuGet mis à jour.
+- **Clés d'accès et comptes** (octobre 2026, PR vers `main`) : connexion par
+  clé d'accès WebAuthn et trousseau format 2 à emplacements (ADR 0168,
+  [`passkeys.md`](../dev/passkeys.md)), ajout et suppression de comptes par un
+  administrateur (ADR 0169). Ajouts au SDK dans `PublicAPI.Unshipped.txt`
+  (prochaine mineure).
+- **Explorateur mobile** (octobre 2026, PR #212 vers `main`) : point d'entrée
+  mobile des apps honoré, explorateur de fichiers mobile, dialogues en plein
+  écran sur mobile, un toucher ouvre (`HackFileView.OpenOnTap`) (ADR 0171).
+- **ADR** : 0001 à 0169 existent (quelques numéros sautés) ; 0170 est pris
+  par le menu latéral des Paramètres (PR #210), 0171 est l'explorateur de fichiers
+  mobile et 0172, réservé avec lui, n'a pas servi. **Prochain numéro libre : 0173.** Des
+  threads parallèles réservent des numéros distincts.
 
 ## Conventions de travail
 

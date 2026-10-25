@@ -1208,4 +1208,127 @@
 <data name="Mobile.HelpersLabel" xml:space="preserve"><value>Show mobile mouse helpers</value></data>
 <data name="Mobile.HelpersError" xml:space="preserve"><value>Unable to update mobile mouse helpers.</value></data>
   <data name="About.Repository" xml:space="preserve"><value>GitHub repository</value></data>
+  <data name="Users.Badge.Passkeys" xml:space="preserve">
+    <value>{0} passkey(s)</value>
+  </data>
+  <data name="Users.Badge.PasskeysTitle" xml:space="preserve">
+    <value>This account can sign in with a passkey.</value>
+  </data>
+  <data name="Users.Delete.Button" xml:space="preserve">
+    <value>Delete the account {0}</value>
+  </data>
+  <data name="Users.Delete.Short" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Users.Delete.Title" xml:space="preserve">
+    <value>Delete {0}</value>
+  </data>
+  <data name="Users.Delete.Description" xml:space="preserve">
+    <value>Delete the account {0}? Its passkeys and password go with it. An administrator confirms in the OS window.</value>
+  </data>
+  <data name="Users.Delete.RemoveHome" xml:space="preserve">
+    <value>Also delete its home folder {0} and every file in it</value>
+  </data>
+  <data name="Users.Delete.Confirm" xml:space="preserve">
+    <value>Delete {0}</value>
+  </data>
+  <data name="Users.Delete.Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Users.Delete.Done" xml:space="preserve">
+    <value>Account {0} deleted. Its home folder was kept.</value>
+  </data>
+  <data name="Users.Delete.DoneWithHome" xml:space="preserve">
+    <value>Account {0} and its home folder deleted.</value>
+  </data>
+  <data name="Users.Add.Title" xml:space="preserve">
+    <value>Add an account</value>
+  </data>
+  <data name="Users.Add.Description" xml:space="preserve">
+    <value>A new local account with its own group and a password. An administrator confirms in the OS window (capability {0}). The home folder is created at the first sign-in.</value>
+  </data>
+  <data name="Users.Add.Submit" xml:space="preserve">
+    <value>Add the account</value>
+  </data>
+  <data name="Users.Add.Done" xml:space="preserve">
+    <value>Account {0} added.</value>
+  </data>
+  <data name="Users.Field.Login" xml:space="preserve">
+    <value>Login name (lowercase letters, digits, - and _)</value>
+  </data>
+  <data name="Users.Field.DisplayName" xml:space="preserve">
+    <value>Display name</value>
+  </data>
+  <data name="Users.Field.Type" xml:space="preserve">
+    <value>Account type</value>
+  </data>
+  <data name="Users.Type.Standard" xml:space="preserve">
+    <value>Standard</value>
+  </data>
+  <data name="Users.Type.Administrator" xml:space="preserve">
+    <value>Administrator</value>
+  </data>
+  <data name="Users.Field.InitialPassword" xml:space="preserve">
+    <value>Initial password</value>
+  </data>
+  <data name="Passkeys.Title" xml:space="preserve">
+    <value>My passkeys</value>
+  </data>
+  <data name="Passkeys.Description" xml:space="preserve">
+    <value>A passkey signs you in with your fingerprint, your face, a PIN or a security key, without typing your password. The browser keeps the key; HackerOS only stores its public half. A passkey that supports the PRF extension also opens your keyring.</value>
+  </data>
+  <data name="Passkeys.Empty" xml:space="preserve">
+    <value>No passkey yet.</value>
+  </data>
+  <data name="Passkeys.Created" xml:space="preserve">
+    <value>added {0}</value>
+  </data>
+  <data name="Passkeys.LastUsed" xml:space="preserve">
+    <value>last used {0}</value>
+  </data>
+  <data name="Passkeys.Keyring" xml:space="preserve">
+    <value>keyring</value>
+  </data>
+  <data name="Passkeys.KeyringTitle" xml:space="preserve">
+    <value>Signing in with this passkey opens your keyring.</value>
+  </data>
+  <data name="Passkeys.NoKeyring" xml:space="preserve">
+    <value>no keyring</value>
+  </data>
+  <data name="Passkeys.NoKeyringTitle" xml:space="preserve">
+    <value>This authenticator does not support PRF: after signing in with it, your keyring stays locked until you give your password.</value>
+  </data>
+  <data name="Passkeys.Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="Passkeys.RemoveLabel" xml:space="preserve">
+    <value>Remove the passkey {0}</value>
+  </data>
+  <data name="Passkeys.Field.Name" xml:space="preserve">
+    <value>Name of the new passkey (for example: Phone, YubiKey)</value>
+  </data>
+  <data name="Passkeys.Add" xml:space="preserve">
+    <value>Add a passkey</value>
+  </data>
+  <data name="Passkeys.Added" xml:space="preserve">
+    <value>Passkey {0} added. It also opens your keyring.</value>
+  </data>
+  <data name="Passkeys.AddedNoKeyring" xml:space="preserve">
+    <value>Passkey {0} added. Your authenticator does not support PRF, so it will not open your keyring.</value>
+  </data>
+  <data name="Passkeys.Removed" xml:space="preserve">
+    <value>Passkey {0} removed.</value>
+  </data>
+  <data name="Passkeys.Unsupported" xml:space="preserve">
+    <value>This browser cannot use passkeys here (WebAuthn needs a secure context: https or localhost).</value>
+  </data>
+  <data name="Passkeys.Error.NameRequired" xml:space="preserve">
+    <value>Give the passkey a name.</value>
+  </data>
+  <data name="Passkeys.Error.Cancelled" xml:space="preserve">
+    <value>The browser request was cancelled or timed out.</value>
+  </data>
+  <data name="Passkeys.Error.NotFound" xml:space="preserve">
+    <value>The passkey {0} no longer exists.</value>
+  </data>
 </root>

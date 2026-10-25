@@ -1,0 +1,238 @@
+/* Settings > Users > Passkeys (ADR 0168): same console panels as UsersPanel.razor.css (scoped CSS
+   does not cross components), one row per passkey. */
+
+.setting-group {
+    background-color: var(--hos-bg-surface, #151c20);
+    border: 1px solid var(--hos-border, #3a4b53);
+    border-radius: var(--hos-radius-md, 0.45rem);
+    padding: 14px;
+    margin-bottom: 16px;
+}
+
+.setting-group h4 {
+    margin-top: 0;
+    margin-bottom: 6px;
+    color: color-mix(in srgb, var(--hos-accent, #42d392) 68%, var(--hos-text-primary, #f4f7f8));
+}
+
+.setting-group.danger-zone {
+    border-color: color-mix(in srgb, var(--hos-error, #ff8f87) 45%, var(--hos-border, #3a4b53));
+}
+
+.setting-desc {
+    font-size: 0.75rem;
+    color: var(--hos-text-secondary, #a8bac4);
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+
+.setting-desc code {
+    font-family: var(--hos-font-mono, ui-monospace, monospace);
+    color: var(--hos-accent, #42d392);
+}
+
+.account-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.account {
+    display: grid;
+    grid-template-columns: minmax(90px, auto) 1fr auto;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border: 1px solid var(--hos-border, #3a4b53);
+    border-radius: var(--hos-radius-sm, 0.25rem);
+    background-color: var(--hos-bg-base, #101417);
+}
+
+.account.is-current {
+    border-color: color-mix(in srgb, var(--hos-accent, #42d392) 55%, var(--hos-border, #3a4b53));
+}
+
+.account-login {
+    font-family: var(--hos-font-mono, ui-monospace, monospace);
+    font-size: 0.85rem;
+    color: var(--hos-accent, #42d392);
+}
+
+.account-name {
+    font-size: 0.8rem;
+    color: var(--hos-text-primary, #f4f7f8);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.account-badges {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.badge {
+    padding: 1px 6px;
+    border: 1px solid var(--hos-border, #3a4b53);
+    border-radius: 999px;
+    font-size: 0.6875rem;
+    color: var(--hos-text-secondary, #a8bac4);
+}
+
+.badge-admin {
+    border-color: var(--hos-accent, #42d392);
+    color: var(--hos-accent, #42d392);
+}
+
+.badge-ok {
+    font-family: var(--hos-font-mono, ui-monospace, monospace);
+}
+
+.badge-warning {
+    font-family: var(--hos-font-mono, ui-monospace, monospace);
+    border-color: var(--hos-warning, #f2c66d);
+    color: var(--hos-warning, #f2c66d);
+}
+
+.password-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 420px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.75rem;
+    color: var(--hos-text-secondary, #a8bac4);
+}
+
+.text-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: var(--hos-input-padding, 8px 10px);
+    border: var(--hos-input-border, 1px solid var(--hos-border, #3a4b53));
+    border-radius: var(--hos-input-radius, var(--hos-radius-sm, 0.25rem));
+    box-shadow: var(--hos-input-shadow, none);
+    background-color: var(--hos-input-bg, #101417);
+    color: var(--hos-input-color, var(--hos-text-primary, #f4f7f8));
+    font-family: inherit;
+    font-size: 0.9rem;
+}
+
+.text-input:focus {
+    outline: none;
+    border-color: var(--hos-input-focus-border, var(--hos-accent, #42d392));
+    box-shadow: var(--hos-input-focus-ring, 0 0 0 1px var(--hos-accent, #42d392));
+}
+
+.password-form > .btn-secondary {
+    align-self: flex-start;
+}
+
+.form-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.btn-danger,
+.btn-secondary {
+    min-height: var(--hos-btn-min-height, 2.25rem);
+    padding: var(--hos-btn-padding, 6px 14px);
+    border-radius: var(--hos-btn-radius, var(--hos-radius-sm, 0.25rem));
+    box-shadow: var(--hos-btn-shadow, none);
+    font-family: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.btn-danger {
+    border: var(--hos-btn-danger-border, 1px solid var(--hos-error, #ff8f87));
+    background-color: var(--hos-btn-danger-bg, color-mix(in srgb, var(--hos-error, #ff8f87) 18%, var(--hos-bg-base, #101417)));
+    color: var(--hos-btn-danger-color, var(--hos-error, #ff8f87));
+}
+
+.btn-danger:hover:not(:disabled) {
+    background-color: var(--hos-btn-danger-hover-bg, color-mix(in srgb, var(--hos-error, #ff8f87) 28%, var(--hos-bg-base, #101417)));
+}
+
+.btn-secondary {
+    border: var(--hos-btn-border, 1px solid var(--hos-border, #3a4b53));
+    background-color: var(--hos-btn-bg, var(--hos-bg-base, #101417));
+    color: var(--hos-btn-color, var(--hos-text-secondary, #a8bac4));
+}
+
+.btn-secondary:hover:not(:disabled) {
+    border-color: var(--hos-btn-hover-border, var(--hos-accent, #42d392));
+    background-color: var(--hos-btn-hover-bg, var(--hos-bg-elevated, #1b252a));
+    color: var(--hos-btn-hover-color, var(--hos-text-primary, #f4f7f8));
+}
+
+.btn-danger:disabled,
+.btn-secondary:disabled,
+.text-input:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.users-result {
+    margin: 10px 0 0;
+    font-size: 0.75rem;
+    color: var(--hos-text-primary, #f4f7f8);
+}
+
+.dialog-error {
+    margin: 10px 0 0;
+    font-size: 0.75rem;
+    color: var(--hos-error, #ff8f87);
+}
+
+/* ADR 0169: the delete link of each account and its confirmation. */
+.btn-link-danger {
+    padding: 0 4px;
+    border: none;
+    background: none;
+    font-family: inherit;
+    font-size: 0.6875rem;
+    color: var(--hos-error, #ff8f87);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.btn-link-danger:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.delete-confirm {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid color-mix(in srgb, var(--hos-error, #ff8f87) 45%, var(--hos-border, #3a4b53));
+    border-radius: var(--hos-radius-sm, 0.25rem);
+}
+
+.check-field {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 10px;
+    font-size: 0.75rem;
+    color: var(--hos-text-secondary, #a8bac4);
+}
+
+.check-field code {
+    font-family: var(--hos-font-mono, ui-monospace, monospace);
+    color: var(--hos-accent, #42d392);
+}
+
+.passkey-form {
+    margin-top: 12px;
+}

@@ -991,6 +991,179 @@ HackerOs.Platform.Core.Shell.MobileSettingsDocuments
 const HackerOs.Platform.Core.Shell.MobileSettingsDocuments.MouseHelpersKey = "mouseHelpers" -> string!
 static HackerOs.Platform.Core.Shell.MobileSettingsDocuments.Schema.get -> HackerOs.Simulation.Abstractions.Settings.SettingsSchema!
 static HackerOs.Platform.Core.Shell.MobileSettingsDocuments.Document.get -> HackerOs.Platform.Core.Settings.OsSettingsDocument!
+HackerOs.Platform.Core.Keyring.ISessionKeyring.UnlockWithPasskeyAsync(HackerOs.Simulation.Abstractions.Sessions.AuthenticatedPrincipal! principal, string! credentialId, byte[]? prfOutput, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+HackerOs.Platform.Core.Keyring.UserKeyringService.AddPasskeySlotAsync(HackerOs.Simulation.Abstractions.Sessions.LocalUserId userId, string! credentialId, byte[]! prfOutput, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+HackerOs.Platform.Core.Keyring.UserKeyringService.GetPasskeySlotIdsAsync(HackerOs.Simulation.Abstractions.Sessions.AuthenticatedPrincipal! principal, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlySet<string!>!>
+HackerOs.Platform.Core.Keyring.UserKeyringService.RemovePasskeySlotAsync(HackerOs.Simulation.Abstractions.Sessions.AuthenticatedPrincipal! principal, string! credentialId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+HackerOs.Platform.Core.Keyring.UserKeyringService.UnlockWithPasskeyAsync(HackerOs.Simulation.Abstractions.Sessions.AuthenticatedPrincipal! principal, string! credentialId, byte[]? prfOutput, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+HackerOs.Platform.Core.Sessions.IPasskeyAuthenticator
+HackerOs.Platform.Core.Sessions.IPasskeyAuthenticator.CreateAsync(HackerOs.Platform.Core.Sessions.PasskeyCreationOptions! options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Platform.Core.Sessions.PasskeyRegistrationResponse!>
+HackerOs.Platform.Core.Sessions.IPasskeyAuthenticator.GetAsync(HackerOs.Platform.Core.Sessions.PasskeyRequestOptions! options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Platform.Core.Sessions.PasskeyAssertionResponse!>
+HackerOs.Platform.Core.Sessions.IPasskeyAuthenticator.GetEnvironmentAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Platform.Core.Sessions.PasskeyEnvironment!>
+HackerOs.Platform.Core.Sessions.IPasskeyAuthenticator.VerifySignatureAsync(int algorithm, byte[]! publicKey, byte[]! data, byte[]! signature, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+HackerOs.Platform.Core.Sessions.InMemoryLocalUserRepository.DeleteUserAsync(HackerOs.Simulation.Abstractions.Sessions.LocalUserId id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+HackerOs.Platform.Core.Sessions.InMemoryLocalUserRepository.SetPasskeysAsync(HackerOs.Simulation.Abstractions.Sessions.LocalUserId id, System.Collections.Generic.IReadOnlyList<HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential!>! passkeys, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Sessions.LocalUser!>
+HackerOs.Platform.Core.Sessions.LocalSessionService.LoginWithPasskeyAsync(HackerOs.Simulation.Abstractions.Sessions.LocalLoginName loginName, HackerOs.Platform.Core.Sessions.PasskeyService! passkeys, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.Simulation.Abstractions.Sessions.AuthenticatedPrincipal!>!
+HackerOs.Platform.Core.Sessions.PasskeyAllowedCredential
+HackerOs.Platform.Core.Sessions.PasskeyAllowedCredential.<Clone>$() -> HackerOs.Platform.Core.Sessions.PasskeyAllowedCredential!
+HackerOs.Platform.Core.Sessions.PasskeyAllowedCredential.Deconstruct(out byte[]! Id, out byte[]? PrfSalt) -> void
+HackerOs.Platform.Core.Sessions.PasskeyAllowedCredential.Equals(HackerOs.Platform.Core.Sessions.PasskeyAllowedCredential? other) -> bool
+HackerOs.Platform.Core.Sessions.PasskeyAllowedCredential.Id.get -> byte[]!
+HackerOs.Platform.Core.Sessions.PasskeyAllowedCredential.Id.init -> void
+HackerOs.Platform.Core.Sessions.PasskeyAllowedCredential.PasskeyAllowedCredential(byte[]! Id, byte[]? PrfSalt) -> void
+HackerOs.Platform.Core.Sessions.PasskeyAllowedCredential.PrfSalt.get -> byte[]?
+HackerOs.Platform.Core.Sessions.PasskeyAllowedCredential.PrfSalt.init -> void
+HackerOs.Platform.Core.Sessions.PasskeyAssertionResponse
+HackerOs.Platform.Core.Sessions.PasskeyAssertionResponse.<Clone>$() -> HackerOs.Platform.Core.Sessions.PasskeyAssertionResponse!
+HackerOs.Platform.Core.Sessions.PasskeyAssertionResponse.AuthenticatorData.get -> byte[]!
+HackerOs.Platform.Core.Sessions.PasskeyAssertionResponse.AuthenticatorData.init -> void
+HackerOs.Platform.Core.Sessions.PasskeyAssertionResponse.ClientDataJson.get -> byte[]!
+HackerOs.Platform.Core.Sessions.PasskeyAssertionResponse.ClientDataJson.init -> void
+HackerOs.Platform.Core.Sessions.PasskeyAssertionResponse.CredentialId.get -> byte[]!
+HackerOs.Platform.Core.Sessions.PasskeyAssertionResponse.CredentialId.init -> void
+HackerOs.Platform.Core.Sessions.PasskeyAssertionResponse.Deconstruct(out byte[]! CredentialId, out byte[]! ClientDataJson, out byte[]! AuthenticatorData, out byte[]! Signature, out byte[]? PrfOutput) -> void
+HackerOs.Platform.Core.Sessions.PasskeyAssertionResponse.Equals(HackerOs.Platform.Core.Sessions.PasskeyAssertionResponse? other) -> bool
+HackerOs.Platform.Core.Sessions.PasskeyAssertionResponse.PasskeyAssertionResponse(byte[]! CredentialId, byte[]! ClientDataJson, byte[]! AuthenticatorData, byte[]! Signature, byte[]? PrfOutput) -> void
+HackerOs.Platform.Core.Sessions.PasskeyAssertionResponse.PrfOutput.get -> byte[]?
+HackerOs.Platform.Core.Sessions.PasskeyAssertionResponse.PrfOutput.init -> void
+HackerOs.Platform.Core.Sessions.PasskeyAssertionResponse.Signature.get -> byte[]!
+HackerOs.Platform.Core.Sessions.PasskeyAssertionResponse.Signature.init -> void
+HackerOs.Platform.Core.Sessions.PasskeyAuthentication
+HackerOs.Platform.Core.Sessions.PasskeyAuthentication.<Clone>$() -> HackerOs.Platform.Core.Sessions.PasskeyAuthentication!
+HackerOs.Platform.Core.Sessions.PasskeyAuthentication.Deconstruct(out HackerOs.Simulation.Abstractions.Sessions.LocalUser! User, out HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential! Passkey, out byte[]? PrfOutput) -> void
+HackerOs.Platform.Core.Sessions.PasskeyAuthentication.Equals(HackerOs.Platform.Core.Sessions.PasskeyAuthentication? other) -> bool
+HackerOs.Platform.Core.Sessions.PasskeyAuthentication.Passkey.get -> HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential!
+HackerOs.Platform.Core.Sessions.PasskeyAuthentication.Passkey.init -> void
+HackerOs.Platform.Core.Sessions.PasskeyAuthentication.PasskeyAuthentication(HackerOs.Simulation.Abstractions.Sessions.LocalUser! User, HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential! Passkey, byte[]? PrfOutput) -> void
+HackerOs.Platform.Core.Sessions.PasskeyAuthentication.PrfOutput.get -> byte[]?
+HackerOs.Platform.Core.Sessions.PasskeyAuthentication.PrfOutput.init -> void
+HackerOs.Platform.Core.Sessions.PasskeyAuthentication.User.get -> HackerOs.Simulation.Abstractions.Sessions.LocalUser!
+HackerOs.Platform.Core.Sessions.PasskeyAuthentication.User.init -> void
+HackerOs.Platform.Core.Sessions.PasskeyCreationOptions
+HackerOs.Platform.Core.Sessions.PasskeyCreationOptions.<Clone>$() -> HackerOs.Platform.Core.Sessions.PasskeyCreationOptions!
+HackerOs.Platform.Core.Sessions.PasskeyCreationOptions.Challenge.get -> byte[]!
+HackerOs.Platform.Core.Sessions.PasskeyCreationOptions.Challenge.init -> void
+HackerOs.Platform.Core.Sessions.PasskeyCreationOptions.Deconstruct(out byte[]! Challenge, out string! RpId, out string! RpName, out byte[]! UserHandle, out string! UserName, out string! UserDisplayName, out System.Collections.Generic.IReadOnlyList<byte[]!>! ExcludeCredentialIds, out byte[]! PrfSalt) -> void
+HackerOs.Platform.Core.Sessions.PasskeyCreationOptions.Equals(HackerOs.Platform.Core.Sessions.PasskeyCreationOptions? other) -> bool
+HackerOs.Platform.Core.Sessions.PasskeyCreationOptions.ExcludeCredentialIds.get -> System.Collections.Generic.IReadOnlyList<byte[]!>!
+HackerOs.Platform.Core.Sessions.PasskeyCreationOptions.ExcludeCredentialIds.init -> void
+HackerOs.Platform.Core.Sessions.PasskeyCreationOptions.PasskeyCreationOptions(byte[]! Challenge, string! RpId, string! RpName, byte[]! UserHandle, string! UserName, string! UserDisplayName, System.Collections.Generic.IReadOnlyList<byte[]!>! ExcludeCredentialIds, byte[]! PrfSalt) -> void
+HackerOs.Platform.Core.Sessions.PasskeyCreationOptions.PrfSalt.get -> byte[]!
+HackerOs.Platform.Core.Sessions.PasskeyCreationOptions.PrfSalt.init -> void
+HackerOs.Platform.Core.Sessions.PasskeyCreationOptions.RpId.get -> string!
+HackerOs.Platform.Core.Sessions.PasskeyCreationOptions.RpId.init -> void
+HackerOs.Platform.Core.Sessions.PasskeyCreationOptions.RpName.get -> string!
+HackerOs.Platform.Core.Sessions.PasskeyCreationOptions.RpName.init -> void
+HackerOs.Platform.Core.Sessions.PasskeyCreationOptions.UserDisplayName.get -> string!
+HackerOs.Platform.Core.Sessions.PasskeyCreationOptions.UserDisplayName.init -> void
+HackerOs.Platform.Core.Sessions.PasskeyCreationOptions.UserHandle.get -> byte[]!
+HackerOs.Platform.Core.Sessions.PasskeyCreationOptions.UserHandle.init -> void
+HackerOs.Platform.Core.Sessions.PasskeyCreationOptions.UserName.get -> string!
+HackerOs.Platform.Core.Sessions.PasskeyCreationOptions.UserName.init -> void
+HackerOs.Platform.Core.Sessions.PasskeyEnvironment
+HackerOs.Platform.Core.Sessions.PasskeyEnvironment.<Clone>$() -> HackerOs.Platform.Core.Sessions.PasskeyEnvironment!
+HackerOs.Platform.Core.Sessions.PasskeyEnvironment.Deconstruct(out bool IsSupported, out string! Origin, out string! RpId) -> void
+HackerOs.Platform.Core.Sessions.PasskeyEnvironment.Equals(HackerOs.Platform.Core.Sessions.PasskeyEnvironment? other) -> bool
+HackerOs.Platform.Core.Sessions.PasskeyEnvironment.IsSupported.get -> bool
+HackerOs.Platform.Core.Sessions.PasskeyEnvironment.IsSupported.init -> void
+HackerOs.Platform.Core.Sessions.PasskeyEnvironment.Origin.get -> string!
+HackerOs.Platform.Core.Sessions.PasskeyEnvironment.Origin.init -> void
+HackerOs.Platform.Core.Sessions.PasskeyEnvironment.PasskeyEnvironment(bool IsSupported, string! Origin, string! RpId) -> void
+HackerOs.Platform.Core.Sessions.PasskeyEnvironment.RpId.get -> string!
+HackerOs.Platform.Core.Sessions.PasskeyEnvironment.RpId.init -> void
+HackerOs.Platform.Core.Sessions.PasskeyRegistrationResponse
+HackerOs.Platform.Core.Sessions.PasskeyRegistrationResponse.<Clone>$() -> HackerOs.Platform.Core.Sessions.PasskeyRegistrationResponse!
+HackerOs.Platform.Core.Sessions.PasskeyRegistrationResponse.Algorithm.get -> int
+HackerOs.Platform.Core.Sessions.PasskeyRegistrationResponse.Algorithm.init -> void
+HackerOs.Platform.Core.Sessions.PasskeyRegistrationResponse.AuthenticatorData.get -> byte[]!
+HackerOs.Platform.Core.Sessions.PasskeyRegistrationResponse.AuthenticatorData.init -> void
+HackerOs.Platform.Core.Sessions.PasskeyRegistrationResponse.ClientDataJson.get -> byte[]!
+HackerOs.Platform.Core.Sessions.PasskeyRegistrationResponse.ClientDataJson.init -> void
+HackerOs.Platform.Core.Sessions.PasskeyRegistrationResponse.CredentialId.get -> byte[]!
+HackerOs.Platform.Core.Sessions.PasskeyRegistrationResponse.CredentialId.init -> void
+HackerOs.Platform.Core.Sessions.PasskeyRegistrationResponse.Deconstruct(out byte[]! CredentialId, out byte[]! ClientDataJson, out byte[]! AuthenticatorData, out byte[]? PublicKey, out int Algorithm, out bool PrfEnabled, out byte[]? PrfOutput) -> void
+HackerOs.Platform.Core.Sessions.PasskeyRegistrationResponse.Equals(HackerOs.Platform.Core.Sessions.PasskeyRegistrationResponse? other) -> bool
+HackerOs.Platform.Core.Sessions.PasskeyRegistrationResponse.PasskeyRegistrationResponse(byte[]! CredentialId, byte[]! ClientDataJson, byte[]! AuthenticatorData, byte[]? PublicKey, int Algorithm, bool PrfEnabled, byte[]? PrfOutput) -> void
+HackerOs.Platform.Core.Sessions.PasskeyRegistrationResponse.PrfEnabled.get -> bool
+HackerOs.Platform.Core.Sessions.PasskeyRegistrationResponse.PrfEnabled.init -> void
+HackerOs.Platform.Core.Sessions.PasskeyRegistrationResponse.PrfOutput.get -> byte[]?
+HackerOs.Platform.Core.Sessions.PasskeyRegistrationResponse.PrfOutput.init -> void
+HackerOs.Platform.Core.Sessions.PasskeyRegistrationResponse.PublicKey.get -> byte[]?
+HackerOs.Platform.Core.Sessions.PasskeyRegistrationResponse.PublicKey.init -> void
+HackerOs.Platform.Core.Sessions.PasskeyRequestOptions
+HackerOs.Platform.Core.Sessions.PasskeyRequestOptions.<Clone>$() -> HackerOs.Platform.Core.Sessions.PasskeyRequestOptions!
+HackerOs.Platform.Core.Sessions.PasskeyRequestOptions.AllowCredentials.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.Sessions.PasskeyAllowedCredential!>!
+HackerOs.Platform.Core.Sessions.PasskeyRequestOptions.AllowCredentials.init -> void
+HackerOs.Platform.Core.Sessions.PasskeyRequestOptions.Challenge.get -> byte[]!
+HackerOs.Platform.Core.Sessions.PasskeyRequestOptions.Challenge.init -> void
+HackerOs.Platform.Core.Sessions.PasskeyRequestOptions.Deconstruct(out byte[]! Challenge, out string! RpId, out System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.Sessions.PasskeyAllowedCredential!>! AllowCredentials) -> void
+HackerOs.Platform.Core.Sessions.PasskeyRequestOptions.Equals(HackerOs.Platform.Core.Sessions.PasskeyRequestOptions? other) -> bool
+HackerOs.Platform.Core.Sessions.PasskeyRequestOptions.PasskeyRequestOptions(byte[]! Challenge, string! RpId, System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.Sessions.PasskeyAllowedCredential!>! AllowCredentials) -> void
+HackerOs.Platform.Core.Sessions.PasskeyRequestOptions.RpId.get -> string!
+HackerOs.Platform.Core.Sessions.PasskeyRequestOptions.RpId.init -> void
+HackerOs.Platform.Core.Sessions.PasskeyService
+HackerOs.Platform.Core.Sessions.PasskeyService.AuthenticateAsync(HackerOs.Simulation.Abstractions.Sessions.LocalUser! user, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Platform.Core.Sessions.PasskeyAuthentication!>
+HackerOs.Platform.Core.Sessions.PasskeyService.GetKeyringPasskeyIdsAsync(HackerOs.Simulation.Abstractions.Sessions.AuthenticatedPrincipal! principal, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlySet<string!>!>
+HackerOs.Platform.Core.Sessions.PasskeyService.IsSupportedAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+HackerOs.Platform.Core.Sessions.PasskeyService.ListAsync(HackerOs.Simulation.Abstractions.Sessions.LocalUserId userId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential!>!>
+HackerOs.Platform.Core.Sessions.PasskeyService.PasskeyService(HackerOs.Simulation.Abstractions.Sessions.ILocalUserRepository! users, HackerOs.Platform.Core.Sessions.IPasskeyAuthenticator! authenticator, HackerOs.Simulation.Abstractions.Diagnostics.IAuditLog! audit, HackerOs.Platform.Core.Keyring.UserKeyringService? keyring = null, System.Func<System.DateTimeOffset>? clock = null) -> void
+HackerOs.Platform.Core.Sessions.PasskeyService.RegisterAsync(HackerOs.Simulation.Abstractions.Sessions.AuthenticatedPrincipal! principal, string! name, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential!>
+HackerOs.Platform.Core.Sessions.PasskeyService.RemoveAsync(HackerOs.Simulation.Abstractions.Sessions.AuthenticatedPrincipal! principal, string! passkeyId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+HackerOs.Platform.Core.Sessions.PasskeySignatureFormat
+const HackerOs.Platform.Core.Keyring.UserKeyringService.PrfKeyPrefix = "hackeros-keyring-prf-v1" -> string!
+const HackerOs.Platform.Core.Sessions.PasskeyService.RelyingPartyName = "HackerOS" -> string!
+override HackerOs.Platform.Core.Sessions.PasskeyAllowedCredential.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.Sessions.PasskeyAllowedCredential.GetHashCode() -> int
+override HackerOs.Platform.Core.Sessions.PasskeyAllowedCredential.ToString() -> string!
+override HackerOs.Platform.Core.Sessions.PasskeyAssertionResponse.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.Sessions.PasskeyAssertionResponse.GetHashCode() -> int
+override HackerOs.Platform.Core.Sessions.PasskeyAssertionResponse.ToString() -> string!
+override HackerOs.Platform.Core.Sessions.PasskeyAuthentication.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.Sessions.PasskeyAuthentication.GetHashCode() -> int
+override HackerOs.Platform.Core.Sessions.PasskeyAuthentication.ToString() -> string!
+override HackerOs.Platform.Core.Sessions.PasskeyCreationOptions.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.Sessions.PasskeyCreationOptions.GetHashCode() -> int
+override HackerOs.Platform.Core.Sessions.PasskeyCreationOptions.ToString() -> string!
+override HackerOs.Platform.Core.Sessions.PasskeyEnvironment.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.Sessions.PasskeyEnvironment.GetHashCode() -> int
+override HackerOs.Platform.Core.Sessions.PasskeyEnvironment.ToString() -> string!
+override HackerOs.Platform.Core.Sessions.PasskeyRegistrationResponse.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.Sessions.PasskeyRegistrationResponse.GetHashCode() -> int
+override HackerOs.Platform.Core.Sessions.PasskeyRegistrationResponse.ToString() -> string!
+override HackerOs.Platform.Core.Sessions.PasskeyRequestOptions.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.Sessions.PasskeyRequestOptions.GetHashCode() -> int
+override HackerOs.Platform.Core.Sessions.PasskeyRequestOptions.ToString() -> string!
+static HackerOs.Platform.Core.Sessions.PasskeyAllowedCredential.operator !=(HackerOs.Platform.Core.Sessions.PasskeyAllowedCredential? left, HackerOs.Platform.Core.Sessions.PasskeyAllowedCredential? right) -> bool
+static HackerOs.Platform.Core.Sessions.PasskeyAllowedCredential.operator ==(HackerOs.Platform.Core.Sessions.PasskeyAllowedCredential? left, HackerOs.Platform.Core.Sessions.PasskeyAllowedCredential? right) -> bool
+static HackerOs.Platform.Core.Sessions.PasskeyAssertionResponse.operator !=(HackerOs.Platform.Core.Sessions.PasskeyAssertionResponse? left, HackerOs.Platform.Core.Sessions.PasskeyAssertionResponse? right) -> bool
+static HackerOs.Platform.Core.Sessions.PasskeyAssertionResponse.operator ==(HackerOs.Platform.Core.Sessions.PasskeyAssertionResponse? left, HackerOs.Platform.Core.Sessions.PasskeyAssertionResponse? right) -> bool
+static HackerOs.Platform.Core.Sessions.PasskeyAuthentication.operator !=(HackerOs.Platform.Core.Sessions.PasskeyAuthentication? left, HackerOs.Platform.Core.Sessions.PasskeyAuthentication? right) -> bool
+static HackerOs.Platform.Core.Sessions.PasskeyAuthentication.operator ==(HackerOs.Platform.Core.Sessions.PasskeyAuthentication? left, HackerOs.Platform.Core.Sessions.PasskeyAuthentication? right) -> bool
+static HackerOs.Platform.Core.Sessions.PasskeyCreationOptions.operator !=(HackerOs.Platform.Core.Sessions.PasskeyCreationOptions? left, HackerOs.Platform.Core.Sessions.PasskeyCreationOptions? right) -> bool
+static HackerOs.Platform.Core.Sessions.PasskeyCreationOptions.operator ==(HackerOs.Platform.Core.Sessions.PasskeyCreationOptions? left, HackerOs.Platform.Core.Sessions.PasskeyCreationOptions? right) -> bool
+static HackerOs.Platform.Core.Sessions.PasskeyEnvironment.operator !=(HackerOs.Platform.Core.Sessions.PasskeyEnvironment? left, HackerOs.Platform.Core.Sessions.PasskeyEnvironment? right) -> bool
+static HackerOs.Platform.Core.Sessions.PasskeyEnvironment.operator ==(HackerOs.Platform.Core.Sessions.PasskeyEnvironment? left, HackerOs.Platform.Core.Sessions.PasskeyEnvironment? right) -> bool
+static HackerOs.Platform.Core.Sessions.PasskeyRegistrationResponse.operator !=(HackerOs.Platform.Core.Sessions.PasskeyRegistrationResponse? left, HackerOs.Platform.Core.Sessions.PasskeyRegistrationResponse? right) -> bool
+static HackerOs.Platform.Core.Sessions.PasskeyRegistrationResponse.operator ==(HackerOs.Platform.Core.Sessions.PasskeyRegistrationResponse? left, HackerOs.Platform.Core.Sessions.PasskeyRegistrationResponse? right) -> bool
+static HackerOs.Platform.Core.Sessions.PasskeyRequestOptions.operator !=(HackerOs.Platform.Core.Sessions.PasskeyRequestOptions? left, HackerOs.Platform.Core.Sessions.PasskeyRequestOptions? right) -> bool
+static HackerOs.Platform.Core.Sessions.PasskeyRequestOptions.operator ==(HackerOs.Platform.Core.Sessions.PasskeyRequestOptions? left, HackerOs.Platform.Core.Sessions.PasskeyRequestOptions? right) -> bool
+static HackerOs.Platform.Core.Sessions.PasskeySignatureFormat.DerToP1363(byte[]! der, int fieldSize = 32) -> byte[]?
+HackerOs.Platform.Core.Administration.SystemAdministrationGatewayServices.Accounts.get -> System.Func<HackerOs.Platform.Core.Sessions.LocalAccountService!>?
+HackerOs.Platform.Core.Administration.SystemAdministrationGatewayServices.Accounts.init -> void
+HackerOs.Platform.Core.Administration.SystemAdministrationGatewayServices.Passkeys.get -> System.Func<HackerOs.Platform.Core.Sessions.PasskeyService!>?
+HackerOs.Platform.Core.Administration.SystemAdministrationGatewayServices.Passkeys.init -> void
+HackerOs.Platform.Core.Sessions.LocalAccountService
+HackerOs.Platform.Core.Sessions.LocalAccountService.CreateAsync(string! administratorLogin, HackerOs.AppSdk.Administration.HackNewUserAccount! account, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Sessions.LocalUser!>
+HackerOs.Platform.Core.Sessions.LocalAccountService.DeleteAsync(HackerOs.Simulation.Abstractions.Sessions.AuthenticatedPrincipal! caller, string! administratorLogin, string! loginName, bool removeHome, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+HackerOs.Platform.Core.Sessions.LocalAccountService.LocalAccountService(HackerOs.Simulation.Abstractions.Sessions.ILocalUserRepository! users, HackerOs.Simulation.Abstractions.Sessions.ILocalGroupRepository! groups, HackerOs.Simulation.Abstractions.Diagnostics.IAuditLog! audit, HackerOs.Simulation.Abstractions.FileSystem.IFileSystemService? fileSystem = null, HackerOs.Platform.Core.Sessions.KeyDerivationAsyncDelegate? asyncHasher = null, System.Func<System.DateTimeOffset>? clock = null, int iterations = 210000) -> void
+const HackerOs.Platform.Core.Sessions.LocalAccountService.AdministratorsGroupName = "administrators" -> string!
+const HackerOs.Platform.Core.Sessions.LocalAccountService.MaximumDisplayNameLength = 128 -> int
+static HackerOs.Platform.Core.Sessions.LocalAccountService.IsReserved(string! loginName) -> bool
+HackerOs.Platform.Core.Elevation.AdminElevationVerifier.VerifyWithPasskeyAsync(string! loginName, HackerOs.Platform.Core.Sessions.PasskeyService! passkeys, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.App.Abstractions.Policy.AdminElevationVerificationResult!>!
+HackerOs.Platform.Core.Elevation.AdministratorAuthenticationAgent.PasskeyVerifier.get -> System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<HackerOs.App.Abstractions.Policy.AdminElevationVerificationResult!>!>?
+HackerOs.Platform.Core.Elevation.AdministratorAuthenticationAgent.PasskeyVerifier.init -> void
+HackerOs.Platform.Core.Elevation.AdministratorAuthenticationPromptRequest.AuthenticateWithPasskeyAsync.get -> System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<HackerOs.Platform.Core.Elevation.AdministratorAuthenticationAttempt!>!>?
+HackerOs.Platform.Core.Elevation.AdministratorAuthenticationPromptRequest.AuthenticateWithPasskeyAsync.init -> void
 HackerOs.Platform.Core.Discovery.AppDescriptor.PlatformEntryPointTypes.get -> System.Collections.Generic.IReadOnlyDictionary<HackerOs.App.Abstractions.AppPlatformId, System.Type!>!
 HackerOs.Platform.Core.Discovery.AppDescriptor.PlatformEntryPointTypes.init -> void
 HackerOs.Platform.Core.Discovery.AppDescriptor.EntryPointTypeFor(HackerOs.App.Abstractions.AppPlatformId platform) -> System.Type!

@@ -164,6 +164,9 @@ public sealed record LocalUser
     /// <summary>Gets the UTC simulation time of the account's last mutation.</summary>
     public DateTimeOffset UpdatedAtUtc { get; }
 
+    /// <summary>Gets the WebAuthn passkeys that can sign this user in (ADR 0168); empty by default.</summary>
+    public IReadOnlyList<LocalPasskeyCredential> Passkeys { get; init; } = [];
+
     /// <summary>Gets the user's home directory path, derived from the login name.</summary>
     public string HomePath => $"/home/{LoginName.Value}";
 }
