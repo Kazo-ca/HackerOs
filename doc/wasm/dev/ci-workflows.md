@@ -1,0 +1,75 @@
+# Validations GitHub Actions
+
+Ce que vérifient les workflows de `.github/workflows/`, quand ils tournent, et
+comment lire un échec. Pour lancer les mêmes vérifications sur sa machine, voir
+[`building-and-testing.md`](building-and-testing.md). La publication du site est
+détaillée dans [`github-pages-deployment.md`](github-pages-deployment.md).
+
+## Les workflows
+
+| Workflow (fichier) | Déclencheurs | Ce qu'il vérifie |
+| --- | --- | --- |
+| **Verify HackerOS WASM** (`deploy-wasm.yml`) | Toute PR qui touche `wasm2/HackerOs/**` (sauf `wasm2/HackerOs/docs/**`) ou ce workflow ; push sur `main` et sur `*/base` ; manuel | Paquets locaux Windowing/Taskbar, restauration, build Release (avertissements en erreurs), scan Razor (pas de `<style>`, `<script>` ni gestionnaire `on*` en ligne), paquets vulnérables, tous les tests sans navigateur, publication de la PWA. |
+| **Verify local Windowing and Taskbar packages** (`window-taskbar-packages.yml`) | PR ou push (`main`, `*/base`) qui touche les projets de fenêtrage, de thème, d'icônes, de barre des tâches ou l'exemple SampleHost | Paquets et symboles produits dans l'ordre des dépendances, exemple restauré **uniquement** depuis ces paquets, compilé et publié. |
+| **Deploy to GitHub Pages** (`deploy-to-pages.yml`) | Push sur `main` (déploie) ; PR qui touche le legacy (`src/**`, `package*.json`, `tsconfig*.json`, `webpack.config.js`), `assemble-pages.ps1` ou ce workflow (construit sans déployer) ; manuel | Build legacy pour `/legacy/`, publication WASM, assemblage du site combiné. Une PR a son propre groupe de concurrence : elle n'annule jamais un déploiement de `main`. |
+| **Verify HackerOS browser tests (manual)** (`verify-browser-tests.yml`) | Manuel seulement (`workflow_dispatch`) | Les six projets Playwright, avec le Chromium installé par Playwright. |
+
+Les PR vers `main` comme vers une branche d'intégration `<série>/base` sont
+vérifiées : le déclencheur `pull_request` n'a pas de filtre de branche. Le
+push sur `*/base` vérifie aussi l'état de la branche après chaque fusion d'un
+chantier.
+
+Une PR qui ne touche que la doc (`doc/**`, `*.md` à la racine) ne lance aucun
+workflow. Les `README.md` des projets sous `wasm2/HackerOs` restent des
+entrées du build (paquets NuGet, `AnalyzerReleases.*.md`) : les modifier lance
+la vérification.
+
+## Tests instables et nouvel essai
+
+`build/run-test-suite.ps1 -RetryFailedTests N` relance, après l'échec d'un
+projet, **seulement ses tests en échec** (lus dans le `.trx`), jusqu'à `N`
+fois. Les workflows passent `-RetryFailedTests 1` :
+
+- un test qui réussit au nouvel essai ne fait pas échouer la vérification ; il
+  apparaît comme avertissement « Flaky test » sur la PR et dans le résumé du job
+  (« Tests instables ») ;
+- un test qui échoue deux fois fait échouer la vérification ;
+- un projet en échec sans test en échec dans son `.trx` (plantage, délai du
+  runner) n'est jamais relancé et fait échouer la vérification.
+
+Les résultats du premier passage restent dans
+`artifacts/test-results/<suite>/<projet>/`, ceux du nouvel essai dans
+`retry-1/` à côté ; l'artefact `hackeros-verification-<essai>` les contient.
+
+Sans le paramètre (par défaut en local), le script garde son comportement
+strict : un échec est un échec. Les tests instables connus sont listés dans
+[`pitfalls.md`](pitfalls.md#4-tests-et-e2e) ; en voir un passer au nouvel
+essai sur une PR n'est pas une régression, mais un test qui y apparaît souvent
+mérite d'être stabilisé.
+
+## Lire un échec
+
+1. Ouvrir le job `verify` et chercher `Test projects failed:` : le message
+   nomme les projets en échec. Le résumé du job liste aussi les échecs et les
+   tests instables.
+2. Télécharger l'artefact `hackeros-verification-<essai>` pour les `.trx`.
+3. Reproduire en local avec la même commande
+   (`./build/run-test-suite.ps1 -Suite NonBrowser`) après un build Release.
+
+Un build et des tests locaux verts restent exigés avant de fusionner : la
+vérification GitHub ne lance pas les suites Playwright.
+
+## Versions des actions
+
+Les actions officielles sont aux versions qui tournent sous Node 24
+(`checkout@v6`, `setup-dotnet@v5`, `setup-node@v6`, `cache@v5`,
+`upload-artifact@v6`, `configure-pages@v6`, `upload-pages-artifact@v5`,
+`deploy-pages@v5`) : les runners forcent Node 24 et signalaient les versions
+Node 20 comme dépréciées.
+
+## Contrôles obligatoires
+
+Rendre un workflow obligatoire se règle dans GitHub (Settings ▸ Branches ▸
+règle de protection de `main` ou de `*/base`), pas dans le dépôt. Attention :
+un workflow filtré par chemins ne tourne pas sur une PR qui ne touche pas ces
+chemins, et un contrôle obligatoire jamais lancé bloque la PR en « attente ».

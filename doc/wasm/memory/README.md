@@ -55,7 +55,9 @@ jour à la fin de chaque série ou quand une convention change.
 - **Barre de fusion** : build et tests locaux verts (suites E2E une à la fois),
   `build/publish-trimmed.sh` et la compatibilité du SDK
   (`Tests/fixtures/sdk-compat`) quand ils sont concernés. Les GitHub Actions
-  tournent de nouveau depuis le 2026-10-24 (Playwright dans un workflow manuel).
+  tournent de nouveau depuis le 2026-10-24 et vérifient chaque PR vers `main`
+  et `*/base` (tests en échec relancés une fois, Playwright dans un workflow
+  manuel) : [`../dev/ci-workflows.md`](../dev/ci-workflows.md).
 - **SDK** : l'API publique est suivie par `PublicAPI.Shipped.txt` /
   `PublicAPI.Unshipped.txt` ; un ajout passe par `Unshipped` jusqu'à la
   publication suivante (`build/tools/ship-public-api.sh`).

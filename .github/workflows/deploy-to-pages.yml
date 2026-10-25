@@ -10,6 +10,16 @@ on:
       - 'tsconfig*.json'
       - 'webpack.config.js'
       - '.github/workflows/deploy-to-pages.yml'
+  # A pull request builds the combined site (legacy + WASM) without deploying it,
+  # so a broken legacy build or assemble script is caught before main.
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'package*.json'
+      - 'tsconfig*.json'
+      - 'webpack.config.js'
+      - 'wasm2/HackerOs/build/assemble-pages.ps1'
+      - '.github/workflows/deploy-to-pages.yml'
   workflow_dispatch:
 
 permissions:
@@ -17,36 +27,38 @@ permissions:
   pages: write
   id-token: write
 
+# Pull requests get their own group so they never cancel a deployment of main.
 concurrency:
-  group: "pages"
+  group: ${{ github.event_name == 'pull_request' && format('pages-pr-{0}', github.ref) || 'pages' }}
   cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       # Exact content keys keep the builds independent. No prefix restore: stale
       # releases must never be mistaken for the output of changed source files.
       - name: Restore published legacy
         id: legacy
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: dist
           key: pages-legacy-v1-${{ runner.os }}-${{ hashFiles('src/**', 'package*.json', 'tsconfig*.json', 'webpack.config.js') }}
 
       - name: Restore published WASM
         id: wasm
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: wasm2/HackerOs/artifacts/pages-publish/wwwroot
           key: pages-wasm-v1-${{ runner.os }}-${{ hashFiles('wasm2/HackerOs/**', '!wasm2/HackerOs/**/bin/**', '!wasm2/HackerOs/**/obj/**', '!wasm2/HackerOs/artifacts/**', '!wasm2/HackerOs/**/node_modules/**', '!wasm2/HackerOs/**/TestResults/**') }}
 
       - name: Setup Node.js
         if: steps.legacy.outputs.cache-hit != 'true'
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: '20'
           cache: 'npm'
@@ -61,7 +73,7 @@ jobs:
 
       - name: Setup .NET 10
         if: steps.wasm.outputs.cache-hit != 'true'
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '10.0.x'
 
@@ -82,14 +94,17 @@ jobs:
         run: ./wasm2/HackerOs/build/assemble-pages.ps1
 
       - name: Setup Pages
-        uses: actions/configure-pages@v4
+        if: github.event_name != 'pull_request'
+        uses: actions/configure-pages@v6
 
       - name: Upload combined Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v5
         with:
           path: wasm2/HackerOs/artifacts/pages
 
   deploy:
+    if: github.event_name != 'pull_request'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -98,4 +113,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
