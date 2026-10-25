@@ -74,7 +74,7 @@ produit dans `artifacts/local-nupkg`, un `nuget.config` (modèle
 projet :
 
 ```bash
-dotnet new install <HackerOS>/artifacts/local-nupkg/HackerOs.Templates.2.0.0.nupkg
+dotnet new install <HackerOS>/artifacts/local-nupkg/HackerOs.Templates.2.0.3.nupkg
 dotnet new hackeros-window -n Contoso.Notes --appId com.contoso.notes
 dotnet new hackeros-host -n Contoso.Os          # un hôte qui lance tout l'OS
 ```
@@ -296,7 +296,7 @@ Le composant peut aussi implémenter :
 ### Événements et taille de la fenêtre
 
 Surcharger `OnWindowActivated[Async]`, `OnWindowDeactivated[Async]`,
-`OnWindowStateChanged[Async](previous, current)` et `OnWindowResized[Async](../../../wasm2/HackerOs/docs/size)`
+`OnWindowStateChanged[Async](previous, current)` et `OnWindowResized[Async](size)`
 pour réagir au focus, à la réduction, à l'agrandissement, à la restauration et à
 la fin d'un redimensionnement ; `IsWindowActive`, `WindowState` et `WindowSize`
 donnent le dernier état. Une exception dans un crochet est écrite dans

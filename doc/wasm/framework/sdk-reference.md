@@ -26,7 +26,7 @@ Conventions de l'API :
 ## Bibliothèques
 
 Toutes sont publiées en paquets NuGet locaux du même nom, à la version de
-`build/Versions.props` (`2.0.0` depuis la fin de la série du bureau, ADR 0149 et 0161 ; `1.2.0` à la fin de la série `exec`, ADR 0132 §2 ; `1.1.0` pour la série v3.1, ADR 0117 §5 ; `1.0.0` au gel du SDK, ADR 0114) ; un autre
+`build/Versions.props` (`2.0.3` aujourd'hui, publiée le 2026-10-24 ; la majeure 2 date de la fin de la série du bureau, ADR 0149 et 0161 ; `1.2.0` à la fin de la série `exec`, ADR 0132 §2 ; `1.1.0` pour la série v3.1, ADR 0117 §5 ; `1.0.0` au gel du SDK, ADR 0114) ; un autre
 dépôt les consomme comme le décrit [`building-on-hackeros.md`](building-on-hackeros.md).
 La promesse de compatibilité SemVer couvre les bibliothèques de cette page et
 `HackerOs.Theming.Blazor`, pas la plateforme (ADR 0114 §2).
@@ -36,6 +36,8 @@ exhaustive. La liste complète et exacte de la surface publique 2.0 est le
 fichier `PublicAPI.Shipped.txt` de chaque projet (environ 940 types au gel de la 1.0),
 vérifié au build par l'analyseur d'API publique : un ajout va dans
 `PublicAPI.Unshipped.txt`, un retrait exige une ligne `*REMOVED*` (ADR 0114).
+Les ajouts non publiés (lignes de `Unshipped.txt`) partiront avec la prochaine
+mineure ; ceux qui sont connus sont listés dans [`sdk-packages.md`](sdk-packages.md#ajouts-depuis-la-200-prochaine-mineure).
 
 | Projet | Espaces de noms | Pour |
 |---|---|---|
@@ -64,7 +66,7 @@ vérifié au build par l'analyseur d'API publique : un ajout va dans
 | `AppSettingsSchemaManifest(SchemaVersion, Fields)`, `AppSettingFieldManifest(Key, ValueType, DefaultValue, Scope, Sensitivity, AllowedValues, Group)` | Schéma des paramètres ; `AppSettingValueType` : `String`, `Integer`, `Boolean`, `Enum`. |
 | `AppResourceProfileManifest` | Poids CPU, mémoire, disque et réseau simulés (`None` par défaut). |
 | `AppDefinitionMapper.ToManifest(definition)` | Définition → `AppManifest` (utile dans les tests). |
-| `HackerOsSdk` | `Version` (version du SDK chargé, par exemple `2.0.0`), `SemanticVersion`, `IsCompatible(range)` (ADR 0098 §3). `AppDefinition.SdkCompatibility` déclare une plage ; par défaut, la version contre laquelle l'app est compilée est le minimum. |
+| `HackerOsSdk` | `Version` (version du SDK chargé, par exemple `2.0.3`), `SemanticVersion`, `IsCompatible(range)` (ADR 0098 §3). `AppDefinition.SdkCompatibility` déclare une plage ; par défaut, la version contre laquelle l'app est compilée est le minimum. |
 | `AppManifest` | Manifeste validé, lu par l'OS ; `AppContext.Manifest` à l'exécution. `OomScoreAdj` (champ `oomScoreAdj`, SDK 1.2, ADR 0126 §4) : valeur de `AppDefinition.OomScoreAdjust`. |
 | `AppCapabilities` | Catalogue des capacités (voir ci-dessous) ; `Describe`, `IsDangerous`, `GetRisk`, `IsKnown`, `RequiresWindowKind`, `All`. |
 | `VirtualPath` | Chemin absolu canonique (`Parse`, `Value`). |
@@ -450,6 +452,8 @@ Détails : [`blazor-sites.md`](blazor-sites.md).
 | `HackFileView` | Composant typé du contrat `hackeros.file-view`, fourni par l'explorateur. Paramètres : `InitialDirectory`, `Mode` (`HackFileViewMode` : `Details`, `Icons`, `Tree`), `ModeChanged`, `Features` (`HackFileViewFeatures`), `AllowMultiSelect`, `Filter`, `SelectedResource`, rappels `Opening` (`Handled`), `Navigated`, `SelectionChanged`, `Renamed`, `Deleted`, `ContextMenuOpening`, `ErrorOccurred`. |
 | `IHackFileView` | Contrôleur : `CurrentDirectory`, `Items`, `SelectedItems` (`HackFileViewItem`), `CanPaste`, `IsBusy`, `StateChanged`, `NavigateAsync`, `RefreshAsync`, `RevealAsync`, `ClearSelection`, `RefreshFilter`, `CanExecute`/`ExecuteAsync(commande)`, `WhenIdleAsync`. |
 | `HackFileMenuOpeningEventArgs` | `Scope`, `Items`, `Directory`, `Menu` (`HackMenuDefinition`), `Cancel`. |
+| `HackFileDialogs` (`.Files`) | Noms des dialogues du fournisseur `hackeros.file-dialogs` : `OpenWith` (« Ouvrir avec »), `Properties`, `Conflict` (types de requêtes : `OpenWithDialogRequest`, `FilePropertiesDialogRequest`, `FileConflictDialogRequest`). |
+| `HackFileOperationDialogs.AsFileConflictResolver(IDialogService, IAppExecutionContext, CancellationToken)` (`.Files`) | Résolveur de conflit de `HackFileOperations.MoveAsync` et `TransferAsync` : le dialogue « Remplacer / Garder les deux / Ignorer » modal à la fenêtre de l'app ; fermer le dialogue ou un hôte sans fournisseur ignore l'élément. |
 | `FileMenuScope`, `HackFileMenuItems` (`HackerOs.AppSdk.Files`) | Portées (`File`, `Directory`, `Background`, `Desktop`) et identifiants des entrées (`open`, `open-with`, `open-with-other`, `open-with:<appId>`, `cut`, `copy`, `paste`, `paste-into`, `rename`, `delete`, `delete-permanently`, `new-folder`, `refresh`, `properties`…). |
 
 Détails : [`embedded-components.md`](embedded-components.md#hackfileview-et-ihackfileview).
@@ -500,7 +504,7 @@ paramètre `Tokens` appliqué par-dessus le thème de base.
 ## Tâches de ce document
 
 - [x] Lister les bibliothèques du SDK et leurs espaces de noms.
-- [x] Types de définition d'une app et table complète des 36 capacités (`keyring.read-all` ajoutée par `v3/8`, `system.backup` par `v3/7`, `users.manage` par la suite de `v3/8`, ADR 0120).
+- [x] Types de définition d'une app et table complète des 37 capacités (`keyring.read-all` ajoutée par `v3/8`, `system.backup` par `v3/7`, `users.manage` par la suite de `v3/8`, ADR 0120).
 - [x] Membres de `IAppExecutionContext`.
 - [x] Chaque façade `Hack*` avec ses membres, sa capacité et son document.
 - [x] Classes de base des points d'entrée et interfaces des fenêtres.

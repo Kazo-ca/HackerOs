@@ -308,7 +308,7 @@ hôte qui la référence ne se construit plus (`HOSAPP0021`, la même règle que
 catalogue appliquée au build) ; un OS 2.0 qui la trouve à son catalogue la refuse
 au démarrage (`catalog.sdk.incompatible`), ne la charge pas, et Paramètres ▸
 Applications installées l'affiche « Incompatible ». Elle doit être recompilée
-contre les paquets 2.0.0.
+contre les paquets 2.x (2.0.3 aujourd'hui).
 
 ### Migration d'une app 1.x
 
@@ -321,7 +321,7 @@ contre les paquets 2.0.0.
 | un résolveur de conflit écrit par l'app | `Dialogs.AsFileConflictResolver(AppContext)` : le dialogue « Remplacer / Garder les deux / Ignorer » du fournisseur de `hackeros.file-dialogs` |
 | `ShellIcon`, `ShellIconDescriptor` | `HackIcons.Vector(…)` / `HackIcons.FromImage(…)` (`HackerOs.AppSdk.Icons`) pour décrire une icône ; le rendu appartient à l'OS |
 
-Puis passer `HackerOsVersion` à `2.0.0` et recompiler.
+Puis passer `HackerOsVersion` à `2.0.3` (ou la dernière 2.0.x publiée) et recompiler.
 
 ### Ajouts
 
@@ -348,7 +348,7 @@ Tous les autres changements du SDK sont des ajouts :
 Ces ajouts du chantier `exec/5` (arrivés par `main` après la coupe de la 2.0)
 sont dans `PublicAPI.Unshipped.txt` ; ils partiront avec la prochaine
 publication (2.1.0, mineure d'après SemVer puisque ce sont des ajouts).
-`HackerOsVersion` reste `2.0.0` d'ici là.
+`HackerOsVersion` reste `2.0.3` d'ici là.
 
 | Bibliothèque | Ajout | Décision |
 |---|---|---|

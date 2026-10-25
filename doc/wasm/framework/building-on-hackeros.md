@@ -4,7 +4,7 @@
 
 Le guide d'un dépôt qui **utilise** HackerOS sans en copier le code : tout
 projet qui veut ses propres apps et son propre hôte d'OS. **Aucun jeu sur ce repository** ([ADR 0135](../dev/adr/0135-no-game-in-this-repository.md)). Il part du SDK 1.0, gelé par le chantier `v3/15`
-([ADR 0114](../dev/adr/0114-sdk-1-0-freeze.md)) ; la version courante est la **2.0.0**
+([ADR 0114](../dev/adr/0114-sdk-1-0-freeze.md)) ; la version courante est la **2.0.3**
 (série du bureau et du menu contextuel, [ADR 0149](../dev/adr/0149-sdk-2-0-file-view-removal.md)
 et [ADR 0161](../dev/adr/0161-sdk-2-0-implementation-adjustments.md), voir « Passer à la 2.0 » ;
 la 1.2 vient de la série `exec`, [ADR 0132](../dev/adr/0132-exec-series-sdk-1-2-and-merge-rules.md) §2,
@@ -34,7 +34,7 @@ nuget.org). Dans un clone de HackerOS, sur la version voulue :
 ```bash
 git -C ../HackerSimulator checkout <tag ou branche>
 ../HackerSimulator/wasm2/HackerOs/build/pack-local.sh      # ou pack-local.ps1
-# -> ../HackerSimulator/wasm2/HackerOs/artifacts/local-nupkg/*.2.0.0.nupkg
+# -> ../HackerSimulator/wasm2/HackerOs/artifacts/local-nupkg/*.2.0.3.nupkg
 ```
 
 `--output <dossier>` écrit ailleurs (par exemple un dossier partagé de votre
@@ -80,7 +80,7 @@ que celle-ci :
 ```xml
 <Project>
   <PropertyGroup>
-    <HackerOsVersion>2.0.0</HackerOsVersion>
+    <HackerOsVersion>2.0.3</HackerOsVersion>
   </PropertyGroup>
 </Project>
 ```
@@ -88,7 +88,7 @@ que celle-ci :
 ## 4. Créer les projets
 
 ```bash
-dotnet new install ../HackerSimulator/wasm2/HackerOs/artifacts/local-nupkg/HackerOs.Templates.2.0.0.nupkg
+dotnet new install ../HackerSimulator/wasm2/HackerOs/artifacts/local-nupkg/HackerOs.Templates.2.0.3.nupkg
 dotnet new hackeros-window  -n Contoso.Notes -o src/Contoso.Notes --appId com.contoso.notes --publisherId pub.contoso
 dotnet new hackeros-command -n Contoso.Hello -o src/Contoso.Hello --appId com.contoso.hello --publisherId pub.contoso
 dotnet new hackeros-service -n Contoso.Sync  -o src/Contoso.Sync  --appId com.contoso.sync  --publisherId pub.contoso
@@ -178,7 +178,7 @@ statique ; le service worker ne s'enregistre que hors de `localhost`. Voir
 
 Une majeure : l'OS 2.0 refuse une app compilée contre 1.x, et un hôte qui en
 référence une ne se construit plus (`HOSAPP0021`). Toute app doit être
-recompilée contre les paquets 2.0.0 (vérifié par `Tests/fixtures/sdk-compat`,
+recompilée contre les paquets 2.x (2.0.3 aujourd'hui ; vérifié par `Tests/fixtures/sdk-compat`,
 où les apps 1.0.0 et 1.1.0 sont refusées et l'app 2.0.0 tourne).
 
 - **Seule rupture** : le paquet `HackerOs.AppSdk.FileView` n'existe plus. Une

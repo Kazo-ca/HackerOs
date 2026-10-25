@@ -455,8 +455,11 @@ dotnet test Tests/HackerOs.UI.E2E.Tests -c Release --no-build --filter "FullyQua
 
 ### État connu
 
-- **GitHub Actions** ne tourne plus (les jobs échouent sans exécuteur) : un
-  build et des tests locaux verts font foi avant de fusionner.
+- **GitHub Actions** : sans exécuteur d'août au 23 octobre 2026, les workflows
+  tournent de nouveau depuis le 2026-10-24 (`Verify HackerOS WASM`,
+  `Deploy to GitHub Pages` ; Playwright dans le workflow manuel
+  `verify-browser-tests.yml`). Un build et des tests locaux verts restent
+  exigés avant de fusionner.
 - Dans un conteneur cloud, les suites Playwright tournent sur le Chromium de
   `/opt/pw-browsers` ([repli](#chromium-pour-playwright)). État au
   2026-10-16 (après `dotnet build HackerOs.sln -c Release`, une suite à la
