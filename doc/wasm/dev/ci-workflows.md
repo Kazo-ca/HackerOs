@@ -67,6 +67,23 @@ Les actions officielles sont aux versions qui tournent sous Node 24
 `deploy-pages@v5`) : les runners forcent Node 24 et signalaient les versions
 Node 20 comme dépréciées.
 
+## Installation du SDK .NET
+
+Les quatre workflows installent le SDK par l'action locale
+`.github/actions/setup-dotnet-sdk`. Elle lit la dernière version du canal
+(`latest-sdk` de
+`https://builds.dotnet.microsoft.com/dotnet/release-metadata/10.0/releases.json`)
+et la passe **exacte** à `actions/setup-dotnet`.
+
+Pourquoi : avec `dotnet-version: 10.0.x`, le script d'installation suit le lien
+`aka.ms` du canal, qui pointait le 2026-10-25 vers
+`dotnetorigin.blob.core.windows.net`, un stockage qui répondait HTTP 409 ; le
+job échouait avant toute compilation. Avec une version exacte, le script
+télécharge depuis `builds.dotnet.microsoft.com`, qui répondait normalement. Si
+le fichier de métadonnées est illisible, l'action se replie sur `10.0.x` avec un
+avertissement. `wasm2/HackerOs/global.json` (`10.0.100`, `latestFeature`)
+accepte toute version 10.0 plus récente.
+
 ## Contrôles obligatoires
 
 Rendre un workflow obligatoire se règle dans GitHub (Settings ▸ Branches ▸
