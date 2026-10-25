@@ -12,6 +12,7 @@ internal static class TestCommands
     public const string AssemblyFile = "HackerOs.Platform.WorkerHost.Tests.dll";
 
     private static volatile bool s_release;
+    private static TaskCompletionSource s_spinning = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
     /// <summary>Gets the manifests of the test apps.</summary>
     public static IReadOnlyList<AppManifest> Manifests { get; } =
@@ -34,7 +35,17 @@ internal static class TestCommands
     /// <summary>Lets every <c>spin</c> stuck in a terminated loopback worker return, so the test run ends cleanly.</summary>
     public static void ReleaseSpinners() => s_release = true;
 
-    public static void ArmSpinners() => s_release = false;
+    public static void ArmSpinners()
+    {
+        s_release = false;
+        s_spinning = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+    }
+
+    /// <summary>
+    /// Completes once a <c>spin</c> armed by <see cref="ArmSpinners"/> wrote its line and holds its
+    /// worker's thread: a placed process may not have started yet on a busy machine.
+    /// </summary>
+    public static Task Spinning => s_spinning.Task;
 
     internal static AppManifest Command<TCommand>(string name, AppExecutionHost execution = AppExecutionHost.Pool) => new()
     {
@@ -92,6 +103,7 @@ internal static class TestCommands
         {
             context.StandardOutput.WriteLine("spinning");
             context.StandardOutput.Flush();
+            s_spinning.TrySetResult();
             while (!s_release)
             {
                 Thread.SpinWait(1000);

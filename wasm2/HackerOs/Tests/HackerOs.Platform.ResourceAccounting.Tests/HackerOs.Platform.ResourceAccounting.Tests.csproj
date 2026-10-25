@@ -5,6 +5,11 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
+    <!-- The overhead and measurement tests time real code: with tiered compilation, methods keep being
+         recompiled in the background between runs, which made one run of the same scenario vary
+         threefold (CpuAccountingOverheadTests, pitfalls.md section 4). Fully optimized from the
+         first call, the timings are stable. -->
+    <TieredCompilation>false</TieredCompilation>
   </PropertyGroup>
 
   <ItemGroup>
