@@ -7,8 +7,8 @@ namespace HackerOs.Simulation.Abstractions.Events;
 /// Identifies one validated, namespaced messaging topic. Instances are only ever produced through
 /// <see cref="TopicNames"/>/<see cref="TopicNameBuilder"/> — never constructed from a hand-typed string —
 /// so a publisher and a subscriber can only ever agree on a topic by sharing the same helper call. See
-/// <c>docs/Global-FileView-And-MessagingSystem/MessagingSystem.md</c> (<c>MSG-002</c>) and
-/// <c>docs/adr/0038-emitter-authorized-topic-messaging.md</c>.
+/// <c>doc/wasm/dev/old/Global-FileView-And-MessagingSystem/MessagingSystem.md</c> (<c>MSG-002</c>) and
+/// <c>doc/wasm/dev/adr/0038-emitter-authorized-topic-messaging.md</c>.
 /// </summary>
 public readonly record struct TopicName
 {
@@ -114,7 +114,7 @@ public static class TopicNames
 /// <summary>
 /// Builds well-formed <see cref="App.Abstractions.TopicPermissions"/> capability identifiers from an
 /// already-validated <see cref="TopicName"/>, so a declared or requested permission is never a hand-typed
-/// string. See <c>docs/adr/0040-declared-topic-permissions.md</c>.
+/// string. See <c>doc/wasm/dev/adr/0040-declared-topic-permissions.md</c>.
 /// </summary>
 public static class TopicPermissionNames
 {
@@ -190,7 +190,7 @@ public enum SharedChannelAccessMode
 /// <see cref="SharedChannelAccessMode.RequiresCapability"/> tier instead of introducing a new
 /// authorization mechanism; grants for a capability declared this way go through the same
 /// explicit-approval flow (<c>CapabilityGrantSource.UserApproval</c>/<c>AdministratorApproval</c>) as
-/// every other capability, per <c>docs/adr/0038-emitter-authorized-topic-messaging.md</c>.
+/// every other capability, per <c>doc/wasm/dev/adr/0038-emitter-authorized-topic-messaging.md</c>.
 /// </summary>
 public sealed record SharedChannelPolicy
 {
@@ -280,8 +280,8 @@ public interface ITopicChannelSubscription<TPayload> : IAsyncDisposable where TP
 /// <summary>
 /// Publishes and subscribes to named, namespaced topics with emitter authorization, extending (not
 /// replacing) the existing <see cref="IEventBus"/> kernel-event lane. See
-/// <c>docs/Global-FileView-And-MessagingSystem/MessagingSystem.md</c> and
-/// <c>docs/adr/0038-emitter-authorized-topic-messaging.md</c> for the full specification.
+/// <c>doc/wasm/dev/old/Global-FileView-And-MessagingSystem/MessagingSystem.md</c> and
+/// <c>doc/wasm/dev/adr/0038-emitter-authorized-topic-messaging.md</c> for the full specification.
 /// Implemented by <c>HackerOs.Platform.Core.Events.InMemoryTopicMessageBus</c> (<c>MSG-001</c>).
 /// </summary>
 public interface ITopicMessageBus

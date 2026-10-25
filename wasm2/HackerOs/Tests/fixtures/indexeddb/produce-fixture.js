@@ -6,7 +6,7 @@
 // usage: node produce-fixture.js <url> <schemaVersion> <commit> <out.json> <screenshotPrefix>
 // env:   PLAYWRIGHT_MODULE  path of the node "playwright" package (default: "playwright")
 //        CHROMIUM           Chromium executable (default: Playwright's own)
-// Full procedure: docs/building-and-testing.md, "Fixtures de montée de version IndexedDB".
+// Full procedure: doc/wasm/dev/building-and-testing.md, "Fixtures de montée de version IndexedDB".
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
 const fs = require('fs');
 
@@ -100,7 +100,7 @@ async function step(page, name, fn) {
   });
 
   const fixture = {
-    $comment: 'IndexedDB fixture produced by booting an old HackerOS build; see docs/building-and-testing.md.',
+    $comment: 'IndexedDB fixture produced by booting an old HackerOS build; see doc/wasm/dev/building-and-testing.md.',
     databaseName: 'hackeros',
     version: dump.version,
     producedFrom: { commit, method: 'booted', host: 'test/test (Release)', producedOn: new Date().toISOString().slice(0, 10) },

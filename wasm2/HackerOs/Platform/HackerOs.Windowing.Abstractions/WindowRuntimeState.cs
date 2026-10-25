@@ -140,7 +140,7 @@ public sealed record WindowRuntimeState
 
     /// <summary>
     /// Gets whether the shell should present Back navigation chrome for this window, per
-    /// docs/mobile-interface-platform-plan.md §8 (<c>MOB-012</c>/<c>MOB-013</c>). Set once at
+    /// doc/wasm/dev/old/mobile-interface-platform-plan.md §8 (<c>MOB-012</c>/<c>MOB-013</c>). Set once at
     /// window-creation time from the launching app's manifest <c>supportsBack</c> declaration;
     /// does not track the app's live <c>IAppBackHandler.CanNavigateBack</c> state.
     /// </summary>

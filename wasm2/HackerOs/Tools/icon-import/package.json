@@ -2,7 +2,7 @@
   "name": "hackeros-icon-import",
   "private": true,
   "version": "1.0.0",
-  "description": "One-off/regeneration tooling that extracts icon SVG data from upstream npm packages into the JSON resources embedded by HackerOs.AppSdk.Icons. Not part of any published app; run manually and commit the resulting Data/*.json files. See docs/icon-library.md.",
+  "description": "One-off/regeneration tooling that extracts icon SVG data from upstream npm packages into the JSON resources embedded by HackerOs.AppSdk.Icons. Not part of any published app; run manually and commit the resulting Data/*.json files. See doc/wasm/dev/old/icon-library.md.",
   "scripts": {
     "extract": "node extract.js"
   },

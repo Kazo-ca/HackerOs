@@ -4,7 +4,7 @@ namespace HackerOs.Windowing.Core;
 
 /// <summary>
 /// Pure decision logic for a "single full-screen surface" presentation mode, per
-/// docs/mobile-interface-platform-plan.md §7.1 (<c>MOB-009</c>): exactly one window is visible and
+/// doc/wasm/dev/old/mobile-interface-platform-plan.md §7.1 (<c>MOB-009</c>): exactly one window is visible and
 /// filling the work area at a time; every other window is hidden. Deliberately independent of
 /// <see cref="WindowRuntime"/> and Blazor — a caller (e.g. a Blazor host component) reads these
 /// decisions and issues the corresponding <see cref="WindowCommand"/>s itself, the same separation

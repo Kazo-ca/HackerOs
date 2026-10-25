@@ -1,7 +1,7 @@
 namespace HackerOs.AppSdk.Blazor;
 
 /// <summary>
-/// Identifies what triggered a Back request, per docs/mobile-interface-platform-plan.md §8. An app
+/// Identifies what triggered a Back request, per doc/wasm/dev/old/mobile-interface-platform-plan.md §8. An app
 /// rarely needs to branch on this, but it's available for the rare case where a Desktop chrome
 /// click and a keyboard shortcut should be distinguished.
 /// </summary>
@@ -53,7 +53,7 @@ public sealed record AppBackResult(AppBackResultStatus Status)
 
 /// <summary>
 /// Lets a window app participate in the platform's Back navigation, per
-/// docs/mobile-interface-platform-plan.md §8 (<c>MOB-012</c>) — the Mobile system navigation bar's
+/// doc/wasm/dev/old/mobile-interface-platform-plan.md §8 (<c>MOB-012</c>) — the Mobile system navigation bar's
 /// triangle and the Desktop-only chrome Back button (<c>MOB-013</c>) both call the same contract. A
 /// manifest declaring <c>supportsBack</c> is validated at discovery time to implement this interface
 /// (see <c>AppEntryPointDiscovery</c>); an app that doesn't declare it simply never gets a Back

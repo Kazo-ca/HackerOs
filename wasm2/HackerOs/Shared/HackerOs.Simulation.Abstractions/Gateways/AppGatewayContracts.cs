@@ -160,7 +160,7 @@ public interface IAppFileSystemGateway
 /// app instance so platform code can trace and, if necessary, force-dispose leaked subscriptions.
 /// </summary>
 /// <remarks>
-/// Per <c>docs/adr/0038-emitter-authorized-topic-messaging.md</c>, this gateway has two lanes.
+/// Per <c>doc/wasm/dev/adr/0038-emitter-authorized-topic-messaging.md</c>, this gateway has two lanes.
 /// <see cref="Subscribe{TEvent}(Action{TEvent})"/>/<see cref="Publish{TEvent}(TEvent)"/> are the kernel lane: any app may still
 /// subscribe to a trusted platform lifecycle event type (read access was never the security problem),
 /// but <see cref="Publish{TEvent}(TEvent)"/> no longer forwards to the underlying bus for app-facing callers —

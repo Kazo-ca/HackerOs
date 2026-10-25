@@ -1,7 +1,7 @@
 // JS initializer of HackerOs.Platform.Blazor (Blazor picks up "<Library>.lib.module.js" from every
 // referenced Razor library, in all three hosts: no host references it by hand).
 //
-// Detached display surfaces (ADR 0078, docs/detached-display-windows.md) show Blazor content in a
+// Detached display surfaces (ADR 0078, doc/wasm/dev/detached-display-windows.md) show Blazor content in a
 // second, same-origin window. Blazor delegates every DOM event through listeners it adds to the
 // main `document`; an event in another window's document never reaches them. This initializer runs
 // before Blazor starts, so it can remember each listener added to `document` and let the display

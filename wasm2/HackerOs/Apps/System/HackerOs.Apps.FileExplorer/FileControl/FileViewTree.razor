@@ -5,7 +5,7 @@
     Root of the lazily-expandable Tree renderer (FV-004). Top-level nodes mirror the same Items the other
     two modes show for the current directory; each directory node expands further children in place via
     FileViewTreeNode, without changing Owner.CurrentDirectory. See
-    docs/Global-FileView-And-MessagingSystem/FileViewControl.md.
+    doc/wasm/dev/old/Global-FileView-And-MessagingSystem/FileViewControl.md.
 *@
 <ul class="file-view-tree" role="tree" aria-multiselectable="@(Owner.AllowMultiSelect ? "true" : "false")">
     @foreach (FileViewTreeNodeState node in RootNodes)

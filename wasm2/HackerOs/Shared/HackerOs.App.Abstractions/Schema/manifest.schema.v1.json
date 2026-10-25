@@ -362,7 +362,7 @@
       "then": { "not": { "required": ["window"] } }
     },
     {
-      "description": "Exactly one of entryPoint (legacy, single-platform) or platform (MOB-003, multi-platform) must be present. See docs/mobile-interface-platform-plan.md §4.3.",
+      "description": "Exactly one of entryPoint (legacy, single-platform) or platform (MOB-003, multi-platform) must be present. See doc/wasm/dev/old/mobile-interface-platform-plan.md §4.3.",
       "oneOf": [
         { "required": ["entryPoint"], "not": { "required": ["platform"] } },
         { "required": ["platform"], "not": { "required": ["entryPoint"] } }

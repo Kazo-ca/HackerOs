@@ -11,7 +11,7 @@ namespace HackerOs.Samples.Intranet;
 
 /// <summary>
 /// Manifest and startup of "Intranet", the sample of the ASP.Hack web phase
-/// (<c>docs/asp-hack-developer-guide.md</c>): one web app at <c>http://intranet.hack/</c> that the OS
+/// (<c>doc/wasm/framework/asp-hack-developer-guide.md</c>): one web app at <c>http://intranet.hack/</c> that the OS
 /// starts on the first request (ADR 0073, 0074).
 /// </summary>
 /// <remarks>

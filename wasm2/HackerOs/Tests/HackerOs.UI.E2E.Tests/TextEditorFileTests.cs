@@ -17,7 +17,7 @@ public sealed class TextEditorFileTests(ITestOutputHelper output)
     /// independent of the editor itself — that the new content actually reached the
     /// virtual filesystem. This exercises the same <c>FileDialogCoordinator</c> /
     /// <c>FileDialogWindowAdapter</c> / <c>DesktopShell</c> wiring that makes the
-    /// platform Open/Save dialogs work at all (see docs/file-dialogs.md).
+    /// platform Open/Save dialogs work at all (see doc/wasm/dev/old/file-dialogs.md).
     /// </summary>
     [Fact]
     public async Task Text_editor_opens_edits_and_saves_a_seeded_file_via_the_open_dialog()

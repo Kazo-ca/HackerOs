@@ -13,7 +13,7 @@ namespace HackerOs.Infrastructure.Browser.Settings;
 /// <remarks>
 /// Read-only on purpose: the store is neither emptied nor deleted, so a failed migration can be
 /// retried, and the IndexedDB schema version stays unchanged (see
-/// <c>docs/old/common-pitfalls.md</c> on IndexedDB versioning). Records whose shape is unexpected
+/// <c>doc/wasm/dev/old/common-pitfalls.md</c> on IndexedDB versioning). Records whose shape is unexpected
 /// are skipped rather than failing the whole read.
 /// </remarks>
 public sealed class IndexedDbLegacySettingsStore : ILegacySettingsStore, IAsyncDisposable

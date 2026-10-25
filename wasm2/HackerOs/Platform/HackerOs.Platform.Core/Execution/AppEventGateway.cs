@@ -8,7 +8,7 @@ namespace HackerOs.Platform.Core.Execution;
 /// Provides one app instance's typed event bus access: read-only pass-through to the kernel-lane
 /// <see cref="IEventBus"/>, and authorized publish/subscribe through the app-lane
 /// <see cref="ITopicMessageBus"/>, stamping this instance's own trusted identity as publisher/subscriber.
-/// See <c>docs/adr/0038-emitter-authorized-topic-messaging.md</c>.
+/// See <c>doc/wasm/dev/adr/0038-emitter-authorized-topic-messaging.md</c>.
 /// </summary>
 public sealed class AppEventGateway : IAppEventGateway
 {

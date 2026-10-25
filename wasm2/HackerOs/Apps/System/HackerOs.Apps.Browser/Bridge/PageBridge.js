@@ -8,7 +8,7 @@
 // reaches HackerOS nor the real Internet.
 //
 // Not a host script: it cannot be served from _content/ because the frame may load nothing but
-// data: URLs, so HtmlPageComposer embeds it as text (see docs/browser-html-rendering.md).
+// data: URLs, so HtmlPageComposer embeds it as text (see doc/wasm/dev/browser-html-rendering.md).
 function (boot) {
     "use strict";
 
