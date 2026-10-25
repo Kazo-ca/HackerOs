@@ -105,27 +105,36 @@ réservée à root, garde tout.
 | --- | --- |
 | Fichier | `~/.local/share/keyrings/login.keyring` (`0600`, dossier `0700`) |
 | Chiffrement | AES-256-GCM, nonce de 12 octets neuf à chaque écriture |
-| Clé | PBKDF2-SHA-256 sur le mot de passe de connexion, 210 000 itérations, sel de 16 octets propre au trousseau |
+| Clé | Clé maîtresse aléatoire de 32 octets, enveloppée (AES-256-GCM) dans des emplacements : un emplacement mot de passe (PBKDF2-SHA-256, 210 000 itérations, sel de 16 octets) et un emplacement par clé d'accès PRF (SHA-256 de `hackeros-keyring-prf-v1` et de la sortie PRF, ADR 0168) |
 | Moteur | Web Crypto (`cryptoHasher.js`, `WebCryptoKeyringCipher`) dans l'hôte, `ManagedKeyringCipher` (.NET) dans les tests |
-| Format | JSON `hackeros-keyring` v1 : `kdf`, `cipher`, `iterations`, `salt`, `nonce`, `ciphertext` (base64) |
+| Format | JSON `hackeros-keyring` v2 : `cipher`, `slots` (`kind` `password` avec `kdf`, `iterations`, `salt` ; ou `passkey` avec `credentialId` ; puis `nonce`, `wrappedKey`), `nonce`, `ciphertext` (base64). Un fichier v1 (entrées scellées directement sous la clé du mot de passe) est lu et réécrit en v2 à la prochaine connexion par mot de passe (`keyring.upgrade`) |
 
 ### Cycle de vie (`UserKeyringService`)
 
 - **Connexion** (`LocalSessionService`) : `UnlockAsync(principal, password)`
   ouvre le trousseau, ou le crée vide. Un utilisateur sans mot de passe n'a pas
   de trousseau : il reste verrouillé.
+- **Connexion par clé d'accès** (ADR 0168) : `UnlockWithPasskeyAsync(principal,
+  idDeLaClé, sortiePrf)` ouvre le trousseau par l'emplacement de cette clé.
+  Sans sortie PRF ou sans emplacement, le trousseau reste verrouillé ; il n'est
+  jamais mis de côté par ce chemin. Une clé ajoutée pendant que le trousseau
+  est ouvert reçoit son emplacement (`AddPasskeySlotAsync`) ; une clé retirée
+  perd le sien (`RemovePasskeySlotAsync`, possible trousseau verrouillé, car
+  les emplacements sont en clair). Voir [`passkeys.md`](passkeys.md).
 - **Mot de passe différent** (réinitialisé par un administrateur) : le
   trousseau illisible est renommé `login.keyring.old` et un trousseau vide le
   remplace, comme sous GNOME.
 - **Déconnexion, arrêt** : `Lock()` efface la clé de la mémoire.
 - **Changement de mot de passe** : `ChangePasswordAsync(userId, nouveau)`
-  re-chiffre le trousseau avec un nouveau sel. **Mise à l'écart par un
+  remplace seulement l'emplacement mot de passe (nouveau sel) ; les
+  emplacements des clés d'accès restent valides. **Mise à l'écart par un
   administrateur** : `SetAsideAsync(homePath)`. La commande `passwd` et
   l'onglet « Utilisateurs » des Paramètres les appellent (ADR 0120, voir
   [§4](#4-mots-de-passe--passwd-et-réinitialisation) plus bas).
 - Le journal d'authentification (`IAuditLog`) reçoit `keyring.unlock`,
   `keyring.create`, `keyring.reset` (aussi pour une mise à l'écart par
-  l'administrateur) et `keyring.rekey`, sans aucun secret.
+  l'administrateur), `keyring.rekey` et `keyring.upgrade` (passage au format 2),
+  sans aucun secret.
 
 ### API du SDK (`HackKeyring`)
 
@@ -225,7 +234,9 @@ Décision : [ADR 0120](adr/0120-passwd-and-administrator-password-reset.md).
   `getpass(3)` coupe `ECHO` ([`terminal-emulator.md`](terminal-emulator.md)).
 - **Paramètres > Utilisateurs** (`UsersPanel`) : liste des comptes avec leur
   état `P`/`NP`/`L`, changement de son mot de passe, et pour un administrateur
-  la réinitialisation ou le retrait du mot de passe d'un autre compte.
+  la réinitialisation ou le retrait du mot de passe d'un autre compte, l'ajout
+  et la suppression de comptes (ADR 0169, [`settings-app.md`](settings-app.md)).
+  Les clés d'accès de la session sont dans `PasskeysPanel` (ADR 0168).
 
 ## Limites connues
 
@@ -247,6 +258,9 @@ Décision : [ADR 0120](adr/0120-passwd-and-administrator-password-reset.md).
   création et modes, reconnexion, mise à l'écart sur un autre mot de passe,
   changement de mot de passe, mise à l'écart par l'administrateur, utilisateur
   sans mot de passe, confinement par app et `keyring.read-all`, chiffrement.
+- `Tests/HackerOs.Platform.Core.Tests/Sessions/PasskeyServiceTests.cs` :
+  emplacement PRF, ouverture par clé d'accès, clé sans PRF, changement de mot
+  de passe qui garde les emplacements, migration du format 1.
 - `Tests/HackerOs.Platform.Core.Tests/FileSystem/FileSystemAuditTests.cs` :
   politique, format aller-retour, écritures acceptées et refusées dans
   `audit.log` (`0600`), `uid`/`auid` sous `sudo`.

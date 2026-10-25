@@ -100,7 +100,7 @@ Détails : [`app-model.md`](app-model.md).
 | `ShellContextMenu` | `shell.context-menu` | normale | ajouter des entrées aux menus des fichiers (`[RegisterFileContextMenu]`, ADR 0151) |
 | `ShellHost` | `shell.host` | **dangereuse** | `HackShell` |
 | `KeyringReadAll` | `keyring.read-all` | **dangereuse** | `HackKeyring` sur les entrées des autres apps |
-| `UsersManage` | `users.manage` | **dangereuse** | `HackUserAccounts.ResetPasswordAsync` / `RemovePasswordAsync` (ADR 0120) |
+| `UsersManage` | `users.manage` | **dangereuse** | `HackUserAccounts.ResetPasswordAsync` / `RemovePasswordAsync` (ADR 0120), `CreateAsync` / `DeleteAsync` (ADR 0169) |
 | `PermissionsManage` | `permissions.manage` | **dangereuse** | `HackPermissionAdministration` |
 | `ServerConnectionManage` | `server.connection.manage` | **dangereuse** | `HackServerConnection` |
 | `SystemPower` | `system.power` | **dangereuse** | `HackSystem` (avec un administrateur) |
@@ -210,7 +210,7 @@ porte le code du moteur, et `ShellErrorText.Describe` donne le message Linux.
 
 | API | Membres | Capacité | Document |
 |---|---|---|---|
-| `HackUserAccounts` | `ListAsync`, `ChangePasswordAsync([context,] courant, nouveau)`, `ResetPasswordAsync([context,] login, nouveau)`, `RemovePasswordAsync([context,] login)`, `ValidateNewPassword`, `MinimumPasswordLength` (8), `MaximumPasswordLength` (256) | aucune pour lister et changer son propre mot de passe ; `users.manage` (dangereuse) et un administrateur pour un autre compte | [`sensitive-settings.md`](../dev/sensitive-settings.md) |
+| `HackUserAccounts` | `ListAsync`, `ChangePasswordAsync([context,] courant, nouveau)`, `ResetPasswordAsync([context,] login, nouveau)`, `RemovePasswordAsync([context,] login)`, `CreateAsync([context,] HackNewUserAccount)`, `DeleteAsync([context,] login, removeHome)`, `ListPasskeysAsync([context])`, `AddPasskeyAsync([context,] nom)`, `RemovePasskeyAsync([context,] id)`, `ValidateNewPassword`, `ValidateNewAccount`, `MinimumPasswordLength` (8), `MaximumPasswordLength` (256), `MaximumDisplayNameLength` (128) ; types `HackNewUserAccount`, `HackPasskey`, `HackUserAccount.PasskeyCount` | aucune pour lister, changer son propre mot de passe et gérer ses clés d'accès ; `users.manage` (dangereuse) et un administrateur pour un autre compte, l'ajout et la suppression | [`system-administration.md`](system-administration.md), [`passkeys.md`](../dev/passkeys.md) |
 | `HackUserAccount` | `LoginName`, `DisplayName`, `Authority`, `IsEnabled`, `HasPassword`, `UpdatedAtUtc`, `IsCurrentUser`, `IsAdministrator` (jamais le hachage) | — | [`sensitive-settings.md`](../dev/sensitive-settings.md) |
 | `IAppUserAccountsGateway` | passerelle derrière `HackUserAccounts` (`IAppExecutionContext.UserAccounts`, membre par défaut non pris en charge) | — | [ADR 0120](../dev/adr/0120-passwd-and-administrator-password-reset.md) |
 
@@ -514,6 +514,7 @@ paramètre `Tokens` appliqué par-dessus le thème de base.
 - [x] Base `HackWebDb`, journal de débogage d'un site, passerelle `WebDatabase`, bases des sites dans `HackStorageDiagnostics` (`web/12`).
 - [x] Réglages sensibles, `HackKeyring` et `keyring.read-all` (`v3/8-settings-security`, ADR 0100).
 - [x] `HackUserAccounts`, `users.manage`, `ITerminalInputMode` et `ReadSecretLineAsync` (`passwd`, ADR 0120).
+- [x] `HackUserAccounts.CreateAsync`/`DeleteAsync` et les clés d'accès (ADR 0168, 0169).
 - [x] Intents de l'ADR 0096 : `HackApps.EditFileAsync`, `RevealFileAsync`, `OpenUriAsync`, `ShowSettingsAsync`, `SendIntentAsync` ; `Intent`/`IntentReceived` ; sélecteur d'apps ; `FileView.RevealAsync` (`v3/4`).
 - [x] Défauts propres à l'utilisateur (ADR 0121, `v3/4b`) : `HackApps.GetDefaultHandlersAsync`, `SetDefaultHandlerAsync`, `ResetDefaultHandlerAsync`.
 - [x] Thèmes utilisateur : jetons, format `.theme`, bibliothèque et résolution (`v3/11`).

@@ -33,7 +33,8 @@ code suit le choix recommandé (★) en attendant sa réponse.
   autorité, motDePasse))` exige `users.manage` **et** un administrateur (fenêtre
   de l'agent ; rien sous `sudo`). `auth.log` : `users.add`.
 - Le nom de connexion suit `LocalLoginName` (minuscules, chiffres, `-`, `_`,
-  32 caractères au plus), n'est pas réservé (`hackeros`, ADR 0097) et n'est ni
+  32 caractères au plus), n'est pas réservé (`hackeros-svc`, ADR 0097, `root` et
+  `administrators`) et n'est ni
   un compte ni un groupe existant. Le nom affiché est obligatoire (128
   caractères au plus).
 - Le mot de passe initial est obligatoire et suit les règles de l'ADR 0120.
@@ -46,10 +47,14 @@ code suit le choix recommandé (★) en attendant sa réponse.
 - `HackUserAccounts.DeleteAsync(login, supprimerDossier)` exige `users.manage`
   et un administrateur. `auth.log` : `users.delete`.
 - Refusé pour : le compte de la session (on ne se supprime pas soi-même), le
-  dernier administrateur actif, le compte de service `hackeros`.
-- Le compte, ses clés d'accès (ADR 0168) et ses autorisations de capacités
-  sont supprimés. Le groupe propre du compte est laissé (aucun fichier n'est
-  réattribué).
+  dernier administrateur actif. Le compte de service `hackeros-svc` n'est pas
+  un compte local et ne peut pas être visé.
+- Le compte et ses clés d'accès (ADR 0168) sont supprimés. Le groupe propre du
+  compte est laissé (aucun fichier n'est réattribué). Les autorisations de
+  capacités accordées au compte restent dans leur dépôt, qui n'a pas de
+  recherche par utilisateur : elles sont orphelines et sans effet, car un
+  identifiant de compte (GUID) n'est jamais réutilisé, même pour un compte
+  recréé sous le même nom.
 - **Dossier personnel ★** : une case « Supprimer aussi le dossier personnel »,
   décochée par défaut (`userdel` le garde, `userdel -r` le supprime). Le
   dossier est supprimé en opération système, trousseau compris. Gardé, il

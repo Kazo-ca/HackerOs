@@ -33,8 +33,15 @@ jour à la fin de chaque série ou quand une convention change.
   fenêtres (ADR 0163), icônes des apps et menu de l'icône de fenêtre
   (ADR 0164), accueil et tiroir mobiles (ADR 0165, 0166), publication GitHub
   Pages combinée PWA + legacy (ADR 0167), paquets NuGet mis à jour.
-- **ADR** : 0001 à 0167 existent (quelques numéros sautés). **Prochain numéro
-  libre : 0168.** Des threads parallèles réservent des numéros distincts.
+- **Clés d'accès et comptes** (octobre 2026, PR vers `main`) : connexion par
+  clé d'accès WebAuthn et trousseau format 2 à emplacements (ADR 0168,
+  [`passkeys.md`](../dev/passkeys.md)), ajout et suppression de comptes par un
+  administrateur (ADR 0169). Ajouts au SDK dans `PublicAPI.Unshipped.txt`
+  (prochaine mineure).
+- **ADR** : 0001 à 0169 existent (quelques numéros sautés). **Prochain numéro
+  libre : 0170**, sauf si un thread parallèle l'a réservé (vérifier
+  `dev/adr/` et la mémoire du projet). Des threads parallèles réservent des
+  numéros distincts.
 
 ## Conventions de travail
 
