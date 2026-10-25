@@ -9,8 +9,8 @@ dans le même changement (voir [`AGENTS.md`](../../AGENTS.md)).
 
 | Dossier | Contenu |
 | --- | --- |
-| [`framework/`](framework/) | Construire **sur** HackerOS : SDK, modèle d'app, capacités, API `Hack*`, paquets NuGet, sites ASP.Hack et Blazor. Pour qui écrit une app, une commande, un service ou un site. |
-| [`dev/`](dev/) | Développer **l'OS** lui-même : architecture, sous-systèmes, apps de base, compilation, tests, publication, plans et bilans des séries ([`dev/plans/`](dev/plans/)), décisions d'architecture ([`dev/adr/`](dev/adr/)), pièges ([`dev/pitfalls.md`](dev/pitfalls.md)) et archives ([`dev/old/`](dev/old/)). |
+| [`framework/`](framework/README.md) | Construire **sur** HackerOS : SDK, modèle d'app, capacités, API `Hack*`, paquets NuGet, sites ASP.Hack et Blazor. Pour qui écrit une app, une commande, un service ou un site. |
+| [`dev/`](dev/README.md) | Développer **l'OS** lui-même : architecture, sous-systèmes, apps de base, compilation, tests, publication, plans et bilans des séries ([`dev/plans/`](dev/plans/README.md)), décisions d'architecture ([`dev/adr/`](dev/adr/README.md)), pièges ([`dev/pitfalls.md`](dev/pitfalls.md)) et archives ([`dev/old/`](dev/old/)). |
 | [`memory/`](memory/README.md) | Mémoire du projet : état des séries, conventions de travail, prochain numéro d'ADR, notes historiques. |
 
 ## Commencer ici

@@ -92,7 +92,7 @@
     * If a change contradicts an accepted ADR, do not leave the ADR silently wrong: either the change is out of scope until a new ADR supersedes it, or a new ADR must be added recording the supersession (never edit an accepted ADR's decision in place — add a new one that references it).
     * If you are not sure a doc needs updating, search `doc/wasm/` (including `doc/wasm/dev/adr/`) for the feature/contract name before finishing, rather than assuming no doc mentions it.
     * A change that touches public API surface, manifests, capabilities, settings, or host composition and ships with no doc/ADR update should be treated as incomplete, the same way shipping with no tests would be.
-    * [`doc/wasm/README.md`](doc/wasm/README.md) is the index of every doc in that folder (archived docs are indexed by `doc/wasm/dev/old/README.md`). Adding, renaming, or removing a doc **MUST** update that index in the same change.
+    * [`doc/wasm/README.md`](doc/wasm/README.md) is the index of every doc in that folder (archived docs are indexed by `doc/wasm/dev/old/README.md`). Adding, renaming, or removing a doc **MUST** update that index in the same change. Every folder under `doc/` has a `README.md` that indexes its content (for example `doc/wasm/dev/README.md`, `doc/wasm/framework/README.md`, `doc/wasm/dev/adr/README.md`): the same change also updates the `README.md` of the folder that holds the doc.
 
 ---
 

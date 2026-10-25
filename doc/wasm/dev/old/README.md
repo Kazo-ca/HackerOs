@@ -186,5 +186,4 @@ has diverged from the original plan in places.
 | [`migration/wave-3.md`](migration/wave-3.md) | Wave 3 — editing, clipboard, and drag/drop migration report. |
 | [`migration/wave-4.md`](migration/wave-4.md) | Wave 4 — simulated network, browser, and websites migration report. |
 | [`migration/wave-5.md`](migration/wave-5.md) | Wave 5 — remaining utility apps and commands migration report. |
-| [`migration/wave-6.md`](migration/wave-6.md) | Wave 6 — gameplay domains migration report. |
 | [`pwa-release.md`](pwa-release.md) | PWA release and offline strategy write-up. |
