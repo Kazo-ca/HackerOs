@@ -6,6 +6,8 @@
 @using Microsoft.JSInterop
 @implements IAsyncDisposable
 @inject WindowRuntime WindowRuntime
+@* ADR 0171 §3: the session's file and basic dialogs become windows here too (only the desktop created the adapter). *@
+@inject HackerOs.Platform.Blazor.Dialogs.FileDialogWindowAdapter FileDialogAdapter
 @inject AppLifecycleOrchestrator Orchestrator
 @inject WindowCloseCoordinator CloseCoordinator
 @inject WindowCloseGuardRegistry CloseGuards
@@ -110,6 +112,7 @@
     protected override void OnInitialized()
     {
         WindowRuntime.StateChanged += Rerender;
+        FileDialogAdapter.Changed += Rerender;
         _navigationHistory = new MobileNavigationHistory(WindowRuntime);
         _windowCommands = new TaskbarCommandDispatcherAdapter(WindowRuntime, CloseCoordinator, CloseGuards);
         _navigationCommands = new MobileNavigationCommandsAdapter(
@@ -230,6 +233,7 @@
     public async ValueTask DisposeAsync()
     {
         WindowRuntime.StateChanged -= Rerender;
+        FileDialogAdapter.Changed -= Rerender;
         _mobileProcessObserver?.Dispose();
         _navigationHistory.Dispose();
 

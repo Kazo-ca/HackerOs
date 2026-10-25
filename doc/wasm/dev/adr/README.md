@@ -166,5 +166,6 @@ prochain numéro libre est indiqué dans
 | [`0165-mobile-home-drawer-and-mouse-controls.md`](0165-mobile-home-drawer-and-mouse-controls.md) | ADR 0165 : accueil mobile, tiroir et aides souris |
 | [`0166-mobile-layout-conf-on-desktop.md`](0166-mobile-layout-conf-on-desktop.md) | ADR 0166 : disposition mobile en fichier conf sous Desktop |
 | [`0167-combined-pages-deployment.md`](0167-combined-pages-deployment.md) | ADR 0167 : publication Pages combinée et builds indépendants |
+| [`0171-mobile-file-explorer-and-full-screen-dialogs.md`](0171-mobile-file-explorer-and-full-screen-dialogs.md) | ADR 0171 : point d'entrée par plateforme, explorateur de fichiers mobile, dialogues en plein écran sur mobile, alignement du menu Démarrer |
 
 Index du dossier parent : [`../README.md`](../README.md).

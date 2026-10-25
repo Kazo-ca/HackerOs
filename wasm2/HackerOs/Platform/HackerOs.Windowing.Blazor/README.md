@@ -35,3 +35,13 @@ The package's texts (accessible labels, window buttons such as Minimize, Maximiz
 `HackerOs.Theming.Blazor.Localization.PackageStringLocalizer` (ADR 0104): a host that
 registers an `IStringLocalizer<T>` (HackerOS registers its session-language
 `SessionStringLocalizer<T>`) gets its language; a host without localization gets English.
+
+## Single surface (phones)
+
+`SingleSurfaceArea` shows one window at a time, full screen and without chrome,
+as `MobileShell` does. It renders the stack given by
+`SingleSurfacePresentationPolicy.SelectSurfaceStack`: the app's window, then
+its owner-modal dialogs. Every window of the stack is maximized; only the top
+one takes input, the windows under it stay mounted and `inert`. Each window host
+is its own stacking context, so nothing in an app draws over its dialog
+(ADR 0171).

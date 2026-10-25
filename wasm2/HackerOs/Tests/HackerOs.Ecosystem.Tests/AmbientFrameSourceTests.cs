@@ -62,6 +62,7 @@ public sealed partial class AmbientFrameSourceTests
         string apps = Path.Combine(FindSolutionDirectory(), "Apps");
         Dictionary<string, string> classBases = CollectClassBases(SourceFiles(apps, "*.cs"));
         List<string> violations = [];
+        Dictionary<string, string> razorBases = new(StringComparer.Ordinal);
 
         foreach (string razor in SourceFiles(apps, "*.razor"))
         {
@@ -71,8 +72,19 @@ public sealed partial class AmbientFrameSourceTests
             }
 
             string? codeBehind = File.Exists(razor + ".cs") ? File.ReadAllText(razor + ".cs") : null;
-            string componentBase = RazorComponentBase(File.ReadAllText(razor), codeBehind);
-            if (!ResolvesToAmbientBase(componentBase, classBases))
+            razorBases[razor] = RazorComponentBase(File.ReadAllText(razor), codeBehind);
+        }
+
+        // A component may inherit another component (the File Explorer's mobile window, ADR 0171).
+        Dictionary<string, string> allBases = new(classBases, StringComparer.Ordinal);
+        foreach ((string razor, string componentBase) in razorBases)
+        {
+            allBases.TryAdd(Path.GetFileNameWithoutExtension(razor), componentBase);
+        }
+
+        foreach ((string razor, string componentBase) in razorBases)
+        {
+            if (!ResolvesToAmbientBase(componentBase, allBases))
             {
                 violations.Add($"{Relative(razor)} derives from {componentBase}");
             }

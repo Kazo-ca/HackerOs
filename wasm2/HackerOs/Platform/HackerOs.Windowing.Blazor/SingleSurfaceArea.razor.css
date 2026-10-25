@@ -8,3 +8,10 @@
     font-family: var(--hos-font-ui, system-ui, sans-serif);
     isolation: isolate;
 }
+
+/* ADR 0171 §3: the surface stacks a window and its dialogs in document order, the dialog last on top,
+   whatever z-order the runtime gave them. Each host is its own stacking context, so nothing inside a
+   window (a floating button) can rise above the dialog shown over it. */
+.single-surface-area ::deep .window-host {
+    z-index: 0;
+}

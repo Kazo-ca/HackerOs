@@ -203,6 +203,63 @@ public partial class FileView : IAsyncDisposable
     /// <summary>Gets whether items may be renamed in place (always, unless the OS menu binding forbids it).</summary>
     internal bool CanRenameItems => MenuBinding?.AllowRename ?? true;
 
+    /// <summary>
+    /// Gets or sets whether a tap (a single click) opens the item, as in a phone's file manager: set by the
+    /// File Explorer's mobile window (ADR 0171 §2). Off by default: a click selects, a double click opens.
+    /// </summary>
+    internal bool TapOpens { get; set; }
+
+    /// <summary>
+    /// Gets or sets whether a tap adds the item to the selection or removes it from it, instead of opening it:
+    /// the selection mode of the mobile window (ADR 0171 §2), which has no Ctrl key.
+    /// </summary>
+    internal bool TapTogglesSelection { get; set; }
+
+    /// <summary>The second click of a double click lands on the folder just opened: it must not open it too.</summary>
+    private static readonly TimeSpan TapRepeatGuard = TimeSpan.FromMilliseconds(450);
+
+    private DateTimeOffset _lastTapOpen = DateTimeOffset.MinValue;
+
+    /// <summary>
+    /// A click (or a tap) on an item: selects it, adds it with Ctrl; with <see cref="TapOpens"/>, opens it,
+    /// and with <see cref="TapTogglesSelection"/>, adds it to the selection or removes it.
+    /// </summary>
+    internal Task ClickItemAsync(FileViewItem item, bool ctrlKey)
+    {
+        if (TapTogglesSelection)
+        {
+            if (item.IsSelected)
+            {
+                DeselectItemInternal(item);
+            }
+            else
+            {
+                SelectItemInternal(item, additive: true);
+            }
+
+            return Task.CompletedTask;
+        }
+
+        if (!TapOpens || ctrlKey)
+        {
+            SelectItemInternal(item, ctrlKey);
+            return Task.CompletedTask;
+        }
+
+        DateTimeOffset now = DateTimeOffset.UtcNow;
+        if (now - _lastTapOpen < TapRepeatGuard)
+        {
+            return Task.CompletedTask;
+        }
+
+        _lastTapOpen = now;
+        return ActivateItemAsync(item);
+    }
+
+    /// <summary>A double click opens the item, unless a tap already did (<see cref="TapOpens"/>).</summary>
+    internal Task DoubleClickItemAsync(FileViewItem item) =>
+        TapOpens || TapTogglesSelection ? Task.CompletedTask : ActivateItemAsync(item);
+
     /// <summary>Gets the directory currently displayed.</summary>
     public VirtualPath CurrentDirectory { get; private set; }
 

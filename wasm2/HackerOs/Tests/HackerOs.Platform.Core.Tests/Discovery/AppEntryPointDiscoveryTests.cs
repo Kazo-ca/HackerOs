@@ -140,6 +140,67 @@ public sealed class AppEntryPointDiscoveryTests
     }
 
     [Fact]
+    public void Discover_keeps_the_other_platform_entry_point_for_the_window_renderer()
+    {
+        // ADR 0171 §1: the host discovers for Desktop, the mobile shell shows the app's mobile window.
+        AppManifest manifest = CreateManifest("org.hackeros.notes", AppKind.Window, typeof(TestWindowApp).FullName!) with
+        {
+            EntryPoint = null,
+            Platform = new AppManifestPlatform(
+                ["desktop", "mobile"],
+                [
+                    new AppPlatformEntryPointManifest(["desktop"], "HackerOs.Platform.Core.Tests", typeof(TestWindowApp).FullName!),
+                    new AppPlatformEntryPointManifest(["mobile"], "HackerOs.Platform.Core.Tests", typeof(OtherTestWindowApp).FullName!)
+                ])
+        };
+
+        AppDescriptor descriptor = AppEntryPointDiscovery.Discover(BuildCatalog(manifest), HostAssemblies()).Descriptors![manifest.Id];
+
+        Assert.Equal(typeof(TestWindowApp), descriptor.EntryPointType);
+        Assert.Equal(typeof(TestWindowApp), descriptor.EntryPointTypeFor(WellKnownAppPlatforms.Desktop));
+        Assert.Equal(typeof(OtherTestWindowApp), descriptor.EntryPointTypeFor(WellKnownAppPlatforms.Mobile));
+    }
+
+    [Fact]
+    public void Discover_falls_back_to_the_main_entry_point_when_the_other_platform_type_is_unusable()
+    {
+        AppManifest manifest = CreateManifest("org.hackeros.notes", AppKind.Window, typeof(TestWindowApp).FullName!) with
+        {
+            EntryPoint = null,
+            Platform = new AppManifestPlatform(
+                ["desktop", "mobile"],
+                [
+                    new AppPlatformEntryPointManifest(["desktop"], "HackerOs.Platform.Core.Tests", typeof(TestWindowApp).FullName!),
+                    new AppPlatformEntryPointManifest(["mobile"], "HackerOs.Platform.Core.Tests", "Does.Not.Exist")
+                ])
+        };
+
+        AppDiscoveryResult result = AppEntryPointDiscovery.Discover(BuildCatalog(manifest), HostAssemblies());
+
+        Assert.True(result.IsSuccess);
+        AppDescriptor descriptor = result.Descriptors![manifest.Id];
+        Assert.Empty(descriptor.PlatformEntryPointTypes);
+        Assert.Equal(typeof(TestWindowApp), descriptor.EntryPointTypeFor(WellKnownAppPlatforms.Mobile));
+    }
+
+    [Fact]
+    public void A_shared_entry_point_has_no_other_platform_type()
+    {
+        AppManifest manifest = CreateManifest("org.hackeros.notes", AppKind.Window, typeof(TestWindowApp).FullName!) with
+        {
+            EntryPoint = null,
+            Platform = new AppManifestPlatform(
+                ["desktop", "mobile"],
+                [new AppPlatformEntryPointManifest(["desktop", "mobile"], "HackerOs.Platform.Core.Tests", typeof(TestWindowApp).FullName!)])
+        };
+
+        AppDescriptor descriptor = AppEntryPointDiscovery.Discover(BuildCatalog(manifest), HostAssemblies()).Descriptors![manifest.Id];
+
+        Assert.Empty(descriptor.PlatformEntryPointTypes);
+        Assert.Equal(typeof(TestWindowApp), descriptor.EntryPointTypeFor(WellKnownAppPlatforms.Mobile));
+    }
+
+    [Fact]
     public void Discover_rejects_a_supportsBack_manifest_whose_entry_point_does_not_implement_the_back_handler_interface()
     {
         AppManifest manifest = CreateManifest("org.hackeros.notes", AppKind.Window, typeof(TestWindowApp).FullName!) with

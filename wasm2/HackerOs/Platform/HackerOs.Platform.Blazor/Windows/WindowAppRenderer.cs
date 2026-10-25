@@ -2,7 +2,9 @@ using HackerOs.AppSdk;
 using HackerOs.AppSdk.Blazor;
 using HackerOs.AppSdk.Blazor.ContextMenus;
 using HackerOs.Platform.Blazor.ContextMenus;
+using System.Diagnostics.CodeAnalysis;
 using HackerOs.Platform.Core.Discovery;
+using HackerOs.Platform.Core.Shell;
 using HackerOs.Windowing.Core;
 using HackerOs.Windowing.Abstractions;
 using Microsoft.AspNetCore.Components;
@@ -148,11 +150,26 @@ public sealed class WindowAppRenderer : ComponentBase, IDisposable
             return;
         }
 
-        builder.OpenComponent(0, Descriptor.EntryPointType);
+        builder.OpenComponent(0, EntryPointType);
         builder.AddComponentParameter(1, nameof(WindowAppBase.AppContext), AppContext);
         builder.AddComponentReferenceCapture(2, CaptureComponent);
         builder.CloseComponent();
     }
+
+    /// <summary>
+    /// The component of the window: the entry point the app declares for the platform active when the window
+    /// first rendered (ADR 0171 §1). Kept for the window's life: a platform switch restarts the windows whose
+    /// entry point differs (<see cref="Shell.PlatformShellSwitchCoordinator"/>) rather than swapping it live.
+    /// </summary>
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+    private Type EntryPointType => Descriptor.EntryPointTypeFor(_platform ??= ActivePlatform());
+
+    private HackerOs.App.Abstractions.AppPlatformId? _platform;
+
+    private HackerOs.App.Abstractions.AppPlatformId ActivePlatform() =>
+        Services.GetService(typeof(UiPlatformPreferenceService)) is UiPlatformPreferenceService preference
+            ? preference.Current.ActivePlatform
+            : HackerOs.App.Abstractions.WellKnownAppPlatforms.Desktop;
 
     private void CaptureComponent(object component)
     {

@@ -133,12 +133,51 @@ public static class AppEntryPointDiscovery
                 continue;
             }
 
-            descriptors.Add(manifest.Id, new AppDescriptor(manifest, entryType, assembly));
+            descriptors.Add(manifest.Id, new AppDescriptor(manifest, entryType, assembly)
+            {
+                PlatformEntryPointTypes = ResolveOtherPlatformTypes(manifest, platform, entryPoint, hostAssemblies)
+            });
         }
 
         return errors.Count > 0
             ? new AppDiscoveryResult(null, errors)
             : new AppDiscoveryResult(descriptors, []);
+    }
+
+    /// <summary>
+    /// Resolves the entry points the manifest declares for the other platforms (ADR 0171 §1): a mobile window
+    /// next to the desktop one. Only a type found in the host's assemblies, concrete and of the same base
+    /// as the main entry point is kept; anything else falls back to the main entry point, so a platform
+    /// variant can never stop the app from launching.
+    /// </summary>
+    [RequiresUnreferencedCode("Resolves manifest entry-point types by name from an explicit host assembly list.")]
+    private static IReadOnlyDictionary<AppPlatformId, Type> ResolveOtherPlatformTypes(
+        AppManifest manifest,
+        AppPlatformId platform,
+        AppEntryPointManifest mainEntryPoint,
+        IReadOnlyDictionary<string, Assembly> hostAssemblies)
+    {
+        Dictionary<AppPlatformId, Type> types = [];
+        if (AppManifestPlatformSupport.Resolve(manifest) is not { } resolution)
+        {
+            return types;
+        }
+
+        string expectedBase = ExpectedBaseTypeFullNames[manifest.Kind];
+        foreach ((AppPlatformId other, AppEntryPointManifest entryPoint) in resolution.EntryPointsByPlatform)
+        {
+            if (other == platform || entryPoint.Equals(mainEntryPoint)
+                || !hostAssemblies.TryGetValue(entryPoint.Assembly, out Assembly? assembly)
+                || assembly.GetType(entryPoint.Type, throwOnError: false) is not { IsClass: true, IsAbstract: false } type
+                || !DerivesFrom(type, expectedBase))
+            {
+                continue;
+            }
+
+            types[other] = type;
+        }
+
+        return types;
     }
 
     /// <summary>Walks a type's base-type chain, comparing full names without loading the ancestor assembly by reference.</summary>

@@ -991,3 +991,6 @@ HackerOs.Platform.Core.Shell.MobileSettingsDocuments
 const HackerOs.Platform.Core.Shell.MobileSettingsDocuments.MouseHelpersKey = "mouseHelpers" -> string!
 static HackerOs.Platform.Core.Shell.MobileSettingsDocuments.Schema.get -> HackerOs.Simulation.Abstractions.Settings.SettingsSchema!
 static HackerOs.Platform.Core.Shell.MobileSettingsDocuments.Document.get -> HackerOs.Platform.Core.Settings.OsSettingsDocument!
+HackerOs.Platform.Core.Discovery.AppDescriptor.PlatformEntryPointTypes.get -> System.Collections.Generic.IReadOnlyDictionary<HackerOs.App.Abstractions.AppPlatformId, System.Type!>!
+HackerOs.Platform.Core.Discovery.AppDescriptor.PlatformEntryPointTypes.init -> void
+HackerOs.Platform.Core.Discovery.AppDescriptor.EntryPointTypeFor(HackerOs.App.Abstractions.AppPlatformId platform) -> System.Type!

@@ -3,21 +3,25 @@
 @inject IServiceProvider LocalizationServices
 
 <main class="single-surface-area" aria-label="@L["Surface.Application"]">
-    @if (Primary is not null)
+    @* ADR 0171 §3: an owner-modal dialog fills the screen above its window, which stays rendered (and
+       inert) under it so the app awaiting the dialog keeps its state. *@
+    @{ IReadOnlyList<WindowRuntimeState> stack = SingleSurfacePresentationPolicy.SelectSurfaceStack(Windows); }
+    @for (int index = 0; index < stack.Count; index++)
     {
-        <WindowHost @key="Primary.Id"
-                    Window="Primary"
+        WindowRuntimeState window = stack[index];
+        <WindowHost @key="window.Id"
+                    Window="window"
                     ShowChrome="false"
-                    IsInteractionBlocked="false"
+                    IsInteractionBlocked="@(index < stack.Count - 1)"
                     OnFocus="OnFocus"
                     OnMinimize="OnMinimize"
                     OnToggleMaximize="OnToggleMaximize"
                     OnClose="OnClose"
                     OnGesture="OnGesture"
-                    Overlay="@(WindowOverlay?.Invoke(Primary))">
+                    Overlay="@(WindowOverlay?.Invoke(window))">
             @if (WindowContent is not null)
             {
-                @WindowContent(Primary)
+                @WindowContent(window)
             }
         </WindowHost>
     }
@@ -63,18 +67,10 @@
     [Parameter]
     public EventCallback<WindowCommand> OnGesture { get; set; }
 
-    private WindowRuntimeState? Primary
-    {
-        get
-        {
-            WindowId? primaryId = SingleSurfacePresentationPolicy.SelectPrimary(Windows);
-            return primaryId is WindowId id ? Windows.FirstOrDefault(window => window.Id == id) : null;
-        }
-    }
-
     /// <summary>
     /// Applies the single-full-screen-surface policy (plan §7.1, <c>MOB-009</c>): every window
-    /// except the current primary is minimized, and the primary is maximized to fill the work area
+    /// except the current primary (and the owners under a primary dialog, ADR 0171 §3) is minimized,
+    /// and the surface is maximized to fill the work area
     /// via the existing Maximize mechanism rather than computing full-screen geometry separately.
     /// Idempotent — once applied, a subsequent parameter set with the same <see cref="Windows"/>
     /// shape issues no further commands.
@@ -92,9 +88,9 @@
             await OnGesture.InvokeAsync(new MinimizeWindowCommand(id));
         }
 
-        if (SingleSurfacePresentationPolicy.ShouldMaximizePrimary(Windows, primaryId) && primaryId is WindowId primary)
+        foreach (WindowId id in SingleSurfacePresentationPolicy.WindowsToMaximize(Windows, primaryId))
         {
-            await OnGesture.InvokeAsync(new MaximizeWindowCommand(primary));
+            await OnGesture.InvokeAsync(new MaximizeWindowCommand(id));
         }
     }
 

@@ -42,6 +42,61 @@ public sealed class FileViewIconsTests
     }
 
     [Fact]
+    public async Task With_TapOpens_a_tap_on_a_folder_opens_it()
+    {
+        // ADR 0171 §2: the File Explorer's mobile window opens an item with one tap.
+        FileViewTestFixture fixture = await FileViewTestFixture.CreateAsync();
+        await fixture.CreateDirectoryAsync("/home/user/Documents");
+        (TestComponentRenderer renderer, TestableFileView view) = await RenderViewAsync(fixture);
+        TestableFileViewIcons icons = await RenderIconsAsync(renderer, view);
+        FileViewItem directory = view.Items.Single(i => i.FileName == "Documents");
+        view.TapOpens = true;
+
+        await renderer.RunAsync(() => icons.OnTileClick(directory, new MouseEventArgs()));
+
+        Assert.Equal(VirtualPath.Parse("/home/user/Documents"), view.CurrentDirectory);
+    }
+
+    [Fact]
+    public async Task With_TapOpens_the_double_click_does_not_open_a_second_time()
+    {
+        FileViewTestFixture fixture = await FileViewTestFixture.CreateAsync();
+        await fixture.CreateDirectoryAsync("/home/user/Documents");
+        (TestComponentRenderer renderer, TestableFileView view) = await RenderViewAsync(fixture);
+        TestableFileViewIcons icons = await RenderIconsAsync(renderer, view);
+        FileViewItem directory = view.Items.Single(i => i.FileName == "Documents");
+        view.TapOpens = true;
+
+        await renderer.RunAsync(() => icons.OnTileDoubleClickAsync(directory));
+
+        Assert.Equal(VirtualPath.Parse("/home/user"), view.CurrentDirectory);
+    }
+
+    [Fact]
+    public async Task In_the_selection_mode_a_tap_adds_then_removes_the_item()
+    {
+        FileViewTestFixture fixture = await FileViewTestFixture.CreateAsync();
+        await fixture.CreateFileAsync("/home/user/a.txt");
+        await fixture.CreateFileAsync("/home/user/b.txt");
+        (TestComponentRenderer renderer, TestableFileView view) = await RenderViewAsync(fixture);
+        TestableFileViewIcons icons = await RenderIconsAsync(renderer, view);
+        FileViewItem a = view.Items.Single(i => i.FileName == "a.txt");
+        FileViewItem b = view.Items.Single(i => i.FileName == "b.txt");
+        view.TapOpens = true;
+        view.TapTogglesSelection = true;
+
+        await renderer.RunAsync(() => icons.OnTileClick(a, new MouseEventArgs()));
+        await renderer.RunAsync(() => icons.OnTileClick(b, new MouseEventArgs()));
+        Assert.True(a.IsSelected);
+        Assert.True(b.IsSelected);
+
+        await renderer.RunAsync(() => icons.OnTileClick(a, new MouseEventArgs()));
+        Assert.False(a.IsSelected);
+        Assert.True(b.IsSelected);
+        Assert.Equal(VirtualPath.Parse("/home/user"), view.CurrentDirectory);
+    }
+
+    [Fact]
     public async Task OnTileKeyDownAsync_F2_enters_rename_mode()
     {
         FileViewTestFixture fixture = await FileViewTestFixture.CreateAsync();

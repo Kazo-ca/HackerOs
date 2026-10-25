@@ -71,6 +71,29 @@ Dans tous les modes, un fichier `.desktop` valide s'affiche avec le nom et
 l'icône de son app (grisé si l'app manque) et l'ouvrir lance l'app ; déposer
 une app glissée du menu Démarrer crée un raccourci dans le dossier visé.
 
+## Explorateur mobile (ADR 0171)
+
+Sur la plateforme mobile, l'OS ouvre `FileExplorerMobileWindow`, le point
+d'entrée `MobileEntryPoint` de l'app ([ADR 0171](adr/0171-mobile-file-explorer-and-full-screen-dialogs.md)).
+La fenêtre hérite de `FileExplorerWindow` : même état, mêmes commandes, même
+`HackFileView`. Seule la mise en page change :
+
+- en haut : Retour, nom du dossier, Rechercher et le menu « ⋮ » (Sélectionner,
+  Liste ou Grille, fichiers cachés, Actualiser) ; puis les puces Dossier perso
+  et Corbeille et le fil d'Ariane ;
+- en bas : les actions sur la sélection (Copier, Couper, Renommer, Supprimer,
+  Plus), sinon « Coller ici » quand le presse-papiers a des fichiers, sinon le
+  bouton « + » (Nouveau dossier, Nouveau fichier, Téléverser) ;
+- un toucher ouvre l'élément (`FileView.TapOpens`) ; en mode sélection, il
+  l'ajoute ou le retire (`FileView.TapTogglesSelection`) ; l'appui long ouvre le
+  menu de fichiers de l'OS ;
+- le bouton Retour du système (`IAppBackHandler`) ferme la feuille, la
+  recherche, la sélection, quitte la Corbeille, puis remonte l'historique.
+
+Les dialogues que l'explorateur ouvre (nom d'un dossier, confirmation,
+propriétés) s'affichent en plein écran (voir
+[`mobile-home-screen.md`](mobile-home-screen.md#dialogues-en-plein-écran-adr-0171)).
+
 ## Architecture
 
 Depuis `desk/3`, ce schéma est celui du fournisseur `ExplorerFileView`, que la
