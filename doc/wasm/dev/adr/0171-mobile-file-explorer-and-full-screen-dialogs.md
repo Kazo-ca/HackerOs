@@ -53,7 +53,7 @@ menu Démarrer.
   Renommer, Supprimer, Plus), sinon « Coller ici » quand le presse-papiers a des
   fichiers, sinon le bouton flottant « + » (Nouveau dossier, Nouveau fichier,
   Téléverser). Les autres commandes sont dans des feuilles en bas de l'écran.
-- Un toucher ouvre l'élément (`FileView.TapOpens`, interne à l'explorateur). Le
+- Un toucher ouvre l'élément (`HackFileView.OpenOnTap`, voir §3). Le
   mode sélection (menu « ⋮ » ▸ Sélectionner) fait d'un toucher un ajout ou un
   retrait (`FileView.TapTogglesSelection`) et se termine avec le dernier élément
   désélectionné. Le double-clic n'ouvre pas une seconde fois. L'appui long ouvre
@@ -79,7 +79,15 @@ menu Démarrer.
   monté sous son dialogue, pour que l'app qui attend la réponse garde son état.
   Chaque hôte de fenêtre est son propre contexte d'empilement : rien d'une app
   (un bouton flottant) ne passe au-dessus de son dialogue.
-- Le Desktop ne change pas : les dialogues y gardent leur taille.
+- Un toucher entre dans un dossier ou prend un fichier, sans double-clic (choix
+  de Benoit, « pour mobile seulement ») : le contrat `HackFileView` gagne le
+  paramètre `OpenOnTap` (désactivé par défaut), que `FileDialogBrowser` active
+  sur la plateforme mobile (`FileDialogBrowser.OpenOnTap`, `null` suit la
+  plateforme active). L'explorateur le transmet à `FileView.TapOpens`.
+- Les dialogues mobiles n'ont pas de barre de titre (choix de Benoit) : ils ont
+  leurs boutons Annuler et le Retour du système.
+- Le Desktop ne change pas : les dialogues y gardent leur taille et le
+  double-clic.
 
 ### 4. Menu Démarrer
 
@@ -93,21 +101,24 @@ menu Démarrer.
   `MobileEntryPoint` ; c'est désormais celle que voit l'utilisateur.
 - API publique ajoutée (non livrée, prochaine mineure) : `AppDescriptor.PlatformEntryPointTypes`,
   `AppDescriptor.EntryPointTypeFor`, `SingleSurfacePresentationPolicy.SelectSurfaceStack`
-  et `WindowsToMaximize`, la classe `FileExplorerMobileWindow`. Le SDK ne change pas.
-- Hors périmètre : dans les dialogues de fichiers, un dossier s'ouvre toujours par
-  un double toucher (le contrat `HackFileView` n'a pas de mode « toucher pour
-  ouvrir ») ; les dialogues mobiles n'ont pas de barre de titre (ils ont leurs
-  boutons Annuler et le Retour du système).
+  et `WindowsToMaximize`, `FileDialogBrowser.OpenOnTap`, la classe
+  `FileExplorerMobileWindow` et `ExplorerFileView.OpenOnTap`. Dans le SDK (ajout
+  compatible, prochaine mineure 2.1) : `HackFileView.OpenOnTap`. Un autre
+  fournisseur du contrôle (ADR 0156) qui ignore ce paramètre garde le double-clic.
+- Dans un dialogue qui accepte plusieurs fichiers, un toucher sur un fichier le
+  prend seul ; Ctrl+clic sélectionne encore.
 
 ## Vérification
 
 - Tests : `SingleSurfacePresentationPolicyTests` (pile, dialogue sans focus, dialogue
   réduit, propriétaire gardé, dialogue imbriqué), `AppEntryPointDiscoveryTests`
   (type mobile gardé, repli, point d'entrée partagé), `FileViewIconsTests` (toucher
-  qui ouvre, double-clic ignoré, mode sélection), `FileExplorerMobileWindowTests`.
+  qui ouvre, double-clic ignoré, mode sélection), `FileExplorerMobileWindowTests`,
+  `FileDialogBrowserTests` (`OpenOnTap` transmis au contrôle).
 - Navigateur à 390 × 844 en mode mobile : explorateur mobile, dossier ouvert d'un
   toucher, « + » ▸ Nouveau dossier en plein écran, dialogue Ouvrir de l'éditeur de
-  texte en plein écran, Retour qui ferme le dialogue. Menu Démarrer Desktop : icône
+  texte en plein écran, un seul toucher sur « Documents » qui y entre, Retour qui
+  ferme le dialogue. Menu Démarrer Desktop : icône
   de « File Explorer » à la même position que les autres.
 - Doc : [file-explorer.md](../file-explorer.md#explorateur-mobile-adr-0171),
   [mobile-home-screen.md](../mobile-home-screen.md#dialogues-en-plein-écran-adr-0171).

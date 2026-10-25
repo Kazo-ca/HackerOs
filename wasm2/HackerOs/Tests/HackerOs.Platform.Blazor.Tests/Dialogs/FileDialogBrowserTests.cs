@@ -59,6 +59,24 @@ public sealed class FileDialogBrowserTests
         Assert.Contains("fake-file-view", harness.Html, StringComparison.Ordinal);
     }
 
+    [Theory]
+    [InlineData(null, false)]
+    [InlineData(true, true)]
+    [InlineData(false, false)]
+    public async Task On_a_phone_one_tap_opens_an_item_in_the_dialog(bool? openOnTap, bool expected)
+    {
+        // ADR 0171: no double click on the mobile platform; without a platform service, the desktop.
+        MinimalAppExecutionContext context = new(Manifest());
+        await using DialogHarness harness = await DialogHarness.RenderAsync(provided: true, new Dictionary<string, object?>
+        {
+            [nameof(FileDialogBrowser.Context)] = context,
+            [nameof(FileDialogBrowser.FileSystem)] = context.FileSystem,
+            [nameof(FileDialogBrowser.OpenOnTap)] = openOnTap,
+        });
+
+        Assert.Equal(expected, harness.View!.OpenOnTap);
+    }
+
     [Fact]
     public async Task An_activated_file_goes_to_the_dialog_instead_of_its_default_app()
     {
@@ -253,6 +271,7 @@ public sealed class FileDialogBrowserTests
         [Parameter] public EventCallback<HackFileViewMode> ModeChanged { get; set; }
         [Parameter] public HackFileViewFeatures Features { get; set; }
         [Parameter] public bool AllowMultiSelect { get; set; }
+        [Parameter] public bool OpenOnTap { get; set; }
         [Parameter] public Func<HackFileViewItem, bool>? Filter { get; set; }
         [Parameter] public EventCallback<HackFileViewOpeningEventArgs> Opening { get; set; }
         [Parameter] public EventCallback<string> Navigated { get; set; }

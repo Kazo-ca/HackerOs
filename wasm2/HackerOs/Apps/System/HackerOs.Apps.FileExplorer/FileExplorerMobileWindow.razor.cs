@@ -100,7 +100,7 @@ public partial class FileExplorerMobileWindow
         }
     }
 
-    /// <summary>The control is ready: on a phone, a tap opens an item (ADR 0171 §2).</summary>
+    /// <summary>The control is ready: in the selection mode, a tap adds or removes an item (ADR 0171 §2).</summary>
     private async Task OnMobileControllerChangedAsync(IHackFileView? files)
     {
         await OnControllerChangedAsync(files);
@@ -111,7 +111,6 @@ public partial class FileExplorerMobileWindow
     {
         if (_fileView is { } view)
         {
-            view.TapOpens = true;
             view.TapTogglesSelection = _selecting;
         }
     }

@@ -56,3 +56,5 @@ HackerOs.Apps.FileExplorer.FileExplorerMobileWindow.CanNavigateBackChanged -> Sy
 HackerOs.Apps.FileExplorer.FileExplorerMobileWindow.NavigateBackAsync(HackerOs.AppSdk.Blazor.AppBackRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Blazor.AppBackResult!>
 override HackerOs.Apps.FileExplorer.FileExplorerMobileWindow.OnAppAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
 ~override HackerOs.Apps.FileExplorer.FileExplorerMobileWindow.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+HackerOs.Apps.FileExplorer.ExplorerFileView.OpenOnTap.get -> bool
+HackerOs.Apps.FileExplorer.ExplorerFileView.OpenOnTap.set -> void

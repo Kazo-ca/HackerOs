@@ -47,6 +47,15 @@ public sealed class HackFileView : HackContractComponent<IHackFileView>
     public bool AllowMultiSelect { get; set; } = true;
 
     /// <summary>
+    /// Gets or sets whether one click, or one tap, opens an item, as in a phone's file manager
+    /// (ADR 0171): a folder is entered, a file is opened (or handed to <see cref="Opening"/>), and a
+    /// double click opens nothing more. Ctrl+click still selects. Off by default: a click selects, a
+    /// double click opens.
+    /// </summary>
+    [Parameter]
+    public bool OpenOnTap { get; set; }
+
+    /// <summary>
     /// Gets or sets which items are shown (a search box); call <see cref="IHackFileView.RefreshFilter"/>
     /// when what it returns changes.
     /// </summary>
@@ -132,6 +141,7 @@ public sealed class HackFileView : HackContractComponent<IHackFileView>
         parameters[nameof(ModeChanged)] = ModeChanged;
         parameters[nameof(Features)] = Features;
         parameters[nameof(AllowMultiSelect)] = AllowMultiSelect;
+        parameters[nameof(OpenOnTap)] = OpenOnTap;
         parameters[nameof(Filter)] = Filter;
         parameters[nameof(Opening)] = Opening;
         parameters[nameof(Navigated)] = Navigated;

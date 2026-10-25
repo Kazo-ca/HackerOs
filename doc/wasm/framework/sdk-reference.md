@@ -449,7 +449,7 @@ Détails : [`blazor-sites.md`](blazor-sites.md).
 
 | Type | Rôle |
 |---|---|
-| `HackFileView` | Composant typé du contrat `hackeros.file-view`, fourni par l'explorateur. Voir [`file-control-api.md`](file-control-api.md). Paramètres : `InitialDirectory`, `Mode` (`HackFileViewMode` : `Details`, `Icons`, `Tree`), `ModeChanged`, `Features` (`HackFileViewFeatures`), `AllowMultiSelect`, `Filter`, `SelectedResource`, rappels `Opening` (`Handled`), `Navigated`, `SelectionChanged`, `Renamed`, `Deleted`, `ContextMenuOpening`, `ErrorOccurred`. |
+| `HackFileView` | Composant typé du contrat `hackeros.file-view`, fourni par l'explorateur. Voir [`file-control-api.md`](file-control-api.md). Paramètres : `InitialDirectory`, `Mode` (`HackFileViewMode` : `Details`, `Icons`, `Tree`), `ModeChanged`, `Features` (`HackFileViewFeatures`), `AllowMultiSelect`, `OpenOnTap` (un toucher ouvre, ADR 0171), `Filter`, `SelectedResource`, rappels `Opening` (`Handled`), `Navigated`, `SelectionChanged`, `Renamed`, `Deleted`, `ContextMenuOpening`, `ErrorOccurred`. |
 | `IHackFileView` | Contrôleur : `CurrentDirectory`, `Items`, `SelectedItems` (`HackFileViewItem`), `CanPaste`, `IsBusy`, `StateChanged`, `NavigateAsync`, `RefreshAsync`, `RevealAsync`, `ClearSelection`, `RefreshFilter`, `CanExecute`/`ExecuteAsync(commande)`, `WhenIdleAsync`. |
 | `HackFileMenuOpeningEventArgs` | `Scope`, `Items`, `Directory`, `Menu` (`HackMenuDefinition`), `Cancel`. |
 | `HackFileDialogs` (`.Files`) | Noms des dialogues du fournisseur `hackeros.file-dialogs` : `OpenWith` (« Ouvrir avec »), `Properties`, `Conflict` (types de requêtes : `OpenWithDialogRequest`, `FilePropertiesDialogRequest`, `FileConflictDialogRequest`). |

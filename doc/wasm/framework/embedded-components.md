@@ -162,6 +162,7 @@ en affichant le contrôle d'une autre.
 | Paramètre | Rôle |
 | --- | --- |
 | `InitialDirectory`, `Mode`/`ModeChanged`, `AllowMultiSelect`, `Filter` | Dossier, disposition (`Details`, `Icons`, `Tree`, `Desktop`), sélection, filtre (rappeler `RefreshFilter`). |
+| `OpenOnTap` | Un clic ou un toucher ouvre l'élément, sans double-clic, comme sur un téléphone ; désactivé par défaut (ADR 0171). |
 | `Features` | Ce que le contrôle fait seul (`Clipboard`, `Delete`, `Rename`, `CreateFolder`, `DragDrop`, `OpenWith`, `Properties`) ; une fonction retirée disparaît du menu et sa touche ne fait rien. |
 | `SelectedResource` | Poignée d'un dossier choisi dans le dialogue de l'OS : le contrôle liste avec elle. |
 | `Opening` | Avant l'ouverture d'un élément ; `Handled = true` laisse l'hôte l'ouvrir lui-même. |

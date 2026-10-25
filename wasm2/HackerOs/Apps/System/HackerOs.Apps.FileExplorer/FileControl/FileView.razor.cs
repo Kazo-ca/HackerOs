@@ -204,8 +204,8 @@ public partial class FileView : IAsyncDisposable
     internal bool CanRenameItems => MenuBinding?.AllowRename ?? true;
 
     /// <summary>
-    /// Gets or sets whether a tap (a single click) opens the item, as in a phone's file manager: set by the
-    /// File Explorer's mobile window (ADR 0171 §2). Off by default: a click selects, a double click opens.
+    /// Gets or sets whether a tap (a single click) opens the item, as in a phone's file manager: set from
+    /// <c>HackFileView.OpenOnTap</c> (ADR 0171 §2). Off by default: a click selects, a double click opens.
     /// </summary>
     internal bool TapOpens { get; set; }
 

@@ -2,6 +2,7 @@ using HackerOs.App.Abstractions;
 using HackerOs.AppSdk;
 using HackerOs.AppSdk.Blazor.Files;
 using HackerOs.Platform.Blazor.ContextMenus;
+using HackerOs.Platform.Core.Shell;
 using HackerOs.Simulation.Abstractions.FileSystem;
 using HackerOs.Simulation.Abstractions.Gateways;
 using Microsoft.AspNetCore.Components;
@@ -35,6 +36,7 @@ public sealed partial class FileDialogBrowser
     private HackFileViewMode _mode = HackFileViewMode.Details;
     private string? _error;
     private bool _initialized;
+    private bool _openOnTap;
 
     // Built once: HackFileView hands its provider a new parameter set only when a value changes.
     private Func<HackFileViewItem, bool> _filter = default!;
@@ -90,6 +92,13 @@ public sealed partial class FileDialogBrowser
     /// </summary>
     [Parameter]
     public Func<string, string?, bool>? FileFilter { get; set; }
+
+    /// <summary>
+    /// Gets or sets whether one tap opens a folder or takes a file, with no double click (ADR 0171):
+    /// <see langword="null"/> follows the active platform, on for the mobile one.
+    /// </summary>
+    [Parameter]
+    public bool? OpenOnTap { get; set; }
 
     /// <summary>Raised after each navigation with the folder shown.</summary>
     [Parameter]
@@ -158,6 +167,8 @@ public sealed partial class FileDialogBrowser
     /// <inheritdoc />
     protected override void OnParametersSet()
     {
+        _openOnTap = OpenOnTap ?? IsMobilePlatform();
+
         // The dialog re-renders on every shell render while it is open: seed the folder once only.
         if (_initialized)
         {
@@ -249,6 +260,10 @@ public sealed partial class FileDialogBrowser
     }
 
     private void SetMode(HackFileViewMode mode) => _mode = mode;
+
+    private bool IsMobilePlatform() =>
+        Services.GetService(typeof(UiPlatformPreferenceService)) is UiPlatformPreferenceService preference
+        && preference.Current.ActivePlatform == WellKnownAppPlatforms.Mobile;
 
     private static VirtualPath Combine(VirtualPath directory, string name) =>
         VirtualPath.Parse(directory.Value == "/" ? $"/{name}" : $"{directory.Value}/{name}");

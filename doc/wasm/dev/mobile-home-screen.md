@@ -115,7 +115,9 @@ texte, message, Ouvrir avec, Propriétés, conflit) deviennent des fenêtres.
 la fenêtre de l'app, puis ses dialogues modaux. `SingleSurfaceArea` dessine
 toute la pile agrandie à l'écran ; seule la dernière fenêtre reçoit les
 entrées, le propriétaire reste monté dessous (`inert`) et n'est plus réduit.
-Le bouton Retour du système ferme le dialogue du dessus.
+Le bouton Retour du système ferme le dialogue du dessus. Dans les dialogues de
+fichiers, un seul toucher entre dans un dossier ou prend un fichier
+(`HackFileView.OpenOnTap`) ; il n'y a pas de double-clic sur mobile.
 
 Une app peut aussi déclarer une fenêtre propre au téléphone avec
 `AppDefinition.MobileEntryPoint` : l'OS l'ouvre sur la plateforme mobile

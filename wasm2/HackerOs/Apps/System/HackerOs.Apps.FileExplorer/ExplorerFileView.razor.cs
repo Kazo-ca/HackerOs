@@ -84,6 +84,10 @@ public sealed partial class ExplorerFileView : IHackFileView
     [Parameter]
     public bool AllowMultiSelect { get; set; } = true;
 
+    /// <summary>Gets or sets whether one tap opens an item, as on a phone (ADR 0171).</summary>
+    [Parameter]
+    public bool OpenOnTap { get; set; }
+
     /// <summary>Gets or sets which items are shown.</summary>
     [Parameter]
     public Func<HackFileViewItem, bool>? Filter { get; set; }
@@ -302,6 +306,11 @@ public sealed partial class ExplorerFileView : IHackFileView
     /// <inheritdoc />
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (_view is not null)
+        {
+            _view.TapOpens = OpenOnTap;
+        }
+
         if (!ReferenceEquals(_subscribedView, _view))
         {
             Unsubscribe();
