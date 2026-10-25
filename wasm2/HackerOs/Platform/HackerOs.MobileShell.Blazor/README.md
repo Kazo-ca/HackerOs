@@ -2,7 +2,7 @@
 
 Mobile shell chrome Razor components, driven by host-supplied contracts the
 same way `HackerOs.Taskbar.Blazor` drives the Desktop taskbar. Mobile has no
-taskbar ([archived mobile plan](../../../../doc/wasm/dev/old/mobile-interface-platform-plan.md) §7.2), so this is a sibling
+taskbar ([archived mobile plan](../../../../doc/en/wasm/dev/old/mobile-interface-platform-plan.md) §7.2), so this is a sibling
 package rather than a modification of `HackerOs.Taskbar.Blazor`.
 
 ## `MobileSystemNavigationBar`
@@ -29,8 +29,8 @@ This package supplies the navigation controls and Recent surface. The host owns
 Back's ordered semantics (overlay → app handler → navigation history → Home).
 HackerOS also recognizes an upward gesture starting on the Home control to open
 its application drawer. Home pages, the pinned app dock and mouse assistance
-belong to Platform Blazor; see [mobile Home](../../../../doc/wasm/dev/mobile-home-screen.md)
-and [ADR 0165](../../../../doc/wasm/dev/adr/0165-mobile-home-drawer-and-mouse-controls.md).
+belong to Platform Blazor; see [mobile Home](../../../../doc/en/wasm/dev/mobile-home-screen.md)
+and [ADR 0165](../../../../doc/en/wasm/dev/adr/0165-mobile-home-drawer-and-mouse-controls.md).
 
 ## Localization
 

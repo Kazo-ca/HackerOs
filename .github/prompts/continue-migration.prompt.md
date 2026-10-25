@@ -5,7 +5,7 @@ argument-hint: "Optional task ID (e.g. P1-BLD-001) or section number; omit to au
 agent: "agent"
 ---
 Continue the HackerOS v3 migration described in
-[integration-task-list.md](../../doc/wasm/dev/old/integration-task-list.md),
+[integration-task-list.md](../../doc/en/wasm/dev/old/integration-task-list.md),
 following the project rules in [AGENTS.md](../../AGENTS.md).
 
 ## Before writing any code
@@ -50,11 +50,11 @@ following the project rules in [AGENTS.md](../../AGENTS.md).
    - The task's checkbox in integration-task-list.md (only `[x]` if code,
      tests, docs, and the stated validation gate all pass — otherwise leave
      `[ ]` with a dated progress note).
-   - The feature's dedicated doc under `doc/wasm/` (create one if
+   - The feature's dedicated doc under `doc/en/wasm/` (create one if
      none exists for this section).
-   - `doc/wasm/dev/old/implementation-status.md` test counts and validation
+   - `doc/en/wasm/dev/old/implementation-status.md` test counts and validation
      command.
-   - A new ADR under `doc/wasm/dev/adr/` if an architecture decision was
+   - A new ADR under `doc/en/wasm/dev/adr/` if an architecture decision was
      made (a task requiring an unresolved ADR cannot be marked complete).
    - `/memories/repo/` with any new gotcha, bug root-cause, or verified
      convention discovered this session.

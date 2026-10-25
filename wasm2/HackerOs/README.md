@@ -15,7 +15,7 @@ dotnet run --project OS/HackerOs.Ecosystem     # l'OS, en PWA autonome
 ```
 
 Prérequis, hôtes de débogage, publication et contournements en conteneur :
-[`doc/wasm/dev/building-and-testing.md`](../../doc/wasm/dev/building-and-testing.md).
+[`doc/en/wasm/dev/building-and-testing.md`](../../doc/en/wasm/dev/building-and-testing.md).
 
 ## Structure
 
@@ -31,21 +31,21 @@ Prérequis, hôtes de débogage, publication et contournements en conteneur :
 | `Tests/` | Tests unitaires, d'intégration MSBuild et E2E. |
 
 Le détail de chaque projet est dans
-[`doc/wasm/dev/project-overview.md`](../../doc/wasm/dev/project-overview.md).
+[`doc/en/wasm/dev/project-overview.md`](../../doc/en/wasm/dev/project-overview.md).
 
 ## Documentation
 
-[`doc/wasm/README.md`](../../doc/wasm/README.md) est l'index de toute la documentation
+[`doc/en/wasm/README.md`](../../doc/en/wasm/README.md) est l'index de toute la documentation
 (rédigée en français). Par où commencer :
 
-- [`doc/wasm/dev/project-overview.md`](../../doc/wasm/dev/project-overview.md) : comprendre le code ;
-- [`doc/wasm/framework/sdk-developer-guide.md`](../../doc/wasm/framework/sdk-developer-guide.md) et
-  [`doc/wasm/framework/sdk-reference.md`](../../doc/wasm/framework/sdk-reference.md) : écrire une app ;
-- [`doc/wasm/dev/plans/ecosystem-rebuild-plan.md`](../../doc/wasm/dev/plans/ecosystem-rebuild-plan.md) : la
+- [`doc/en/wasm/dev/project-overview.md`](../../doc/en/wasm/dev/project-overview.md) : comprendre le code ;
+- [`doc/en/wasm/framework/sdk-developer-guide.md`](../../doc/en/wasm/framework/sdk-developer-guide.md) et
+  [`doc/en/wasm/framework/sdk-reference.md`](../../doc/en/wasm/framework/sdk-reference.md) : écrire une app ;
+- [`doc/en/wasm/dev/plans/ecosystem-rebuild-plan.md`](../../doc/en/wasm/dev/plans/ecosystem-rebuild-plan.md) : la
   direction du projet et ses décisions ;
-- [`doc/wasm/dev/adr/`](../../doc/wasm/dev/adr/) : les décisions d'architecture ;
-- [`doc/wasm/dev/pitfalls.md`](../../doc/wasm/dev/pitfalls.md) : les pièges rencontrés et leurs solutions ;
-- [`doc/wasm/memory/`](../../doc/wasm/memory/README.md) : la mémoire du projet (état des séries, conventions).
+- [`doc/en/wasm/dev/adr/`](../../doc/en/wasm/dev/adr/) : les décisions d'architecture ;
+- [`doc/en/wasm/dev/pitfalls.md`](../../doc/en/wasm/dev/pitfalls.md) : les pièges rencontrés et leurs solutions ;
+- [`doc/en/wasm/memory/`](../../doc/en/wasm/memory/README.md) : la mémoire du projet (état des séries, conventions).
 
 Les règles de contribution (emplacement du code, CSS et JavaScript
 collocalisés, documentation à jour à chaque changement) sont dans

@@ -4,11 +4,11 @@ Ce dossier contient la **première version** de HackerSimulator, écrite en
 TypeScript et LESS et empaquetée par Webpack. Elle est gardée **en lecture
 seule** comme référence de comportement : tout le travail actif se fait dans la
 version WebAssembly, [`wasm2/HackerOs/`](../wasm2/HackerOs/README.md), documentée
-dans [`doc/wasm/`](../doc/wasm/README.md).
+dans [`doc/en/wasm/`](../doc/en/wasm/README.md).
 
 La version legacy est publiée sur <https://hackos.kazo.ca/legacy/> par le même
 workflow GitHub Pages que la version WebAssembly
-([`github-pages-deployment.md`](../doc/wasm/dev/github-pages-deployment.md)).
+([`github-pages-deployment.md`](../doc/en/wasm/dev/github-pages-deployment.md)).
 
 ## Compiler et lancer
 
@@ -38,4 +38,4 @@ npm run tsc:debug    # compile chaque fichier TypeScript avec ses source maps
 
 Les apps et commandes de ce dossier ont été portées en C# dans
 `wasm2/HackerOs/Apps/`. Les rapports de migration archivés sont dans
-[`doc/wasm/dev/old/migration/`](../doc/wasm/dev/old/migration/README.md).
+[`doc/en/wasm/dev/old/migration/`](../doc/en/wasm/dev/old/migration/README.md).

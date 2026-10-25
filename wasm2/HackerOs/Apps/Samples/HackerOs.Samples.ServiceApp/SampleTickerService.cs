@@ -78,7 +78,7 @@ public class SampleTickerService : ServiceAppBase
                 DateTimeOffset now = context.Clock.UtcNow;
 
                 // Publish status/health event on this app's own topic (P2-SVC-002; migrated to the
-                // topic lane per doc/wasm/dev/adr/0038-emitter-authorized-topic-messaging.md — the old
+                // topic lane per doc/en/wasm/dev/adr/0038-emitter-authorized-topic-messaging.md — the old
                 // type-based Publish<TEvent> no longer delivers app-initiated events).
                 context.Events.Publish(SampleTickerTopics.Ticked, new SampleTickerEvent(_tickCount, now, status));
 

@@ -18,7 +18,7 @@ public sealed class IndexedDbUpgradeFixtureCatalogTests
     /// <summary>
     /// The oldest version a dump exists for. Version 1 was never in any commit of this repository
     /// (its root commit <c>fdca68e</c> already declares version 2), so no build can produce it;
-    /// see <c>doc/wasm/dev/building-and-testing.md</c>.
+    /// see <c>doc/en/wasm/dev/building-and-testing.md</c>.
     /// </summary>
     private const int FirstReleasedVersion = 2;
 
@@ -34,7 +34,7 @@ public sealed class IndexedDbUpgradeFixtureCatalogTests
                 File.Exists(path),
                 $"Missing IndexedDB fixture for schema v{version} ({path}). A chantier that raises " +
                 "HackerOsIndexedDbSchema.CurrentVersion adds the dump of the previous version " +
-                "(procedure in doc/wasm/dev/building-and-testing.md).");
+                "(procedure in doc/en/wasm/dev/building-and-testing.md).");
         }
     }
 

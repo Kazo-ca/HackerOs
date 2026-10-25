@@ -34,7 +34,7 @@ public sealed class MeasuredMemoryAccountantTests
     [Fact]
     public void The_constants_are_the_documented_ones()
     {
-        // doc/wasm/dev/system-metrics.md, "Mémoire mesurée": change both together.
+        // doc/en/wasm/dev/system-metrics.md, "Mémoire mesurée": change both together.
         Assert.Equal(TimeSpan.FromSeconds(10), MemoryAccountingConstants.ResidentHalfLife);
         Assert.Equal(512 * 1024, MemoryAccountingConstants.WindowBytes);
     }

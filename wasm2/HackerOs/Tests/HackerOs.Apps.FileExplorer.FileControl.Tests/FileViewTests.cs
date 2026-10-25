@@ -13,7 +13,7 @@ namespace HackerOs.Apps.FileExplorer.FileControl.Tests;
 /// to a real <see cref="Microsoft.AspNetCore.Components.RenderHandle"/> via <see cref="TestComponentRenderer"/>
 /// so <c>StateHasChanged</c>/<c>InvokeAsync</c> behave exactly as in production, while the actual markup
 /// (<c>FileViewDetails</c>/<c>FileViewContextMenu</c>, which would otherwise pull in MudBlazor/JSInterop) is
-/// suppressed by <see cref="TestableFileView"/> — see <c>doc/wasm/dev/old/Global-FileView-And-MessagingSystem/FileViewControl.md</c>.
+/// suppressed by <see cref="TestableFileView"/> — see <c>doc/en/wasm/dev/old/Global-FileView-And-MessagingSystem/FileViewControl.md</c>.
 /// </summary>
 public sealed class FileViewTests
 {

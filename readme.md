@@ -9,7 +9,7 @@ apps, commandes, services et sites.
 
 - **Essayer** : <https://hackos.kazo.ca/> (PWA, fonctionne hors ligne).
 - **Code** : [`wasm2/HackerOs/`](wasm2/HackerOs/README.md).
-- **Documentation** (en français) : [`doc/wasm/README.md`](doc/wasm/README.md).
+- **Documentation** (en français) : [`doc/en/wasm/README.md`](doc/en/wasm/README.md).
 - Dépôt source : [Kazo-ca/HackerOs](https://github.com/Kazo-ca/HackerOs).
 
 ## Démarrer
@@ -25,19 +25,19 @@ dotnet run --project OS/HackerOs.Ecosystem     # l'OS en PWA autonome
 
 Les hôtes de débogage, la publication trimmée, les contournements connus et
 l'exécution des tests E2E sont décrits dans
-[`building-and-testing.md`](doc/wasm/dev/building-and-testing.md).
+[`building-and-testing.md`](doc/en/wasm/dev/building-and-testing.md).
 
 ## Documentation
 
 | Pour… | Lire |
 | --- | --- |
-| Comprendre le code de l'OS | [`project-overview.md`](doc/wasm/dev/project-overview.md), puis [`doc/wasm/dev/`](doc/wasm/dev/README.md) |
-| Écrire une app, une commande ou un service | [`sdk-developer-guide.md`](doc/wasm/framework/sdk-developer-guide.md) et [`sdk-reference.md`](doc/wasm/framework/sdk-reference.md) |
-| Construire sur HackerOS depuis un autre dépôt | [`building-on-hackeros.md`](doc/wasm/framework/building-on-hackeros.md) |
-| Créer un site web interne (ASP.Hack, Blazor) | [`asp-hack-developer-guide.md`](doc/wasm/framework/asp-hack-developer-guide.md) |
-| Éviter les problèmes déjà rencontrés | [`pitfalls.md`](doc/wasm/dev/pitfalls.md) |
-| Connaître l'état du projet et ses conventions | [`doc/wasm/memory/`](doc/wasm/memory/README.md) |
-| Les décisions d'architecture | [`doc/wasm/dev/adr/`](doc/wasm/dev/adr/README.md) |
+| Comprendre le code de l'OS | [`project-overview.md`](doc/en/wasm/dev/project-overview.md), puis [`doc/en/wasm/dev/`](doc/en/wasm/dev/README.md) |
+| Écrire une app, une commande ou un service | [`sdk-developer-guide.md`](doc/en/wasm/framework/sdk-developer-guide.md) et [`sdk-reference.md`](doc/en/wasm/framework/sdk-reference.md) |
+| Construire sur HackerOS depuis un autre dépôt | [`building-on-hackeros.md`](doc/en/wasm/framework/building-on-hackeros.md) |
+| Créer un site web interne (ASP.Hack, Blazor) | [`asp-hack-developer-guide.md`](doc/en/wasm/framework/asp-hack-developer-guide.md) |
+| Éviter les problèmes déjà rencontrés | [`pitfalls.md`](doc/en/wasm/dev/pitfalls.md) |
+| Connaître l'état du projet et ses conventions | [`doc/en/wasm/memory/`](doc/en/wasm/memory/README.md) |
+| Les décisions d'architecture | [`doc/en/wasm/dev/adr/`](doc/en/wasm/dev/adr/README.md) |
 
 ## Structure du dépôt
 
@@ -58,7 +58,7 @@ structure, fonctionnalités) est dans [`src/README.md`](src/README.md).
 
 Les deux versions sont publiées par un seul
 [workflow GitHub Pages](.github/workflows/deploy-to-pages.yml)
-([guide de déploiement](doc/wasm/dev/github-pages-deployment.md)).
+([guide de déploiement](doc/en/wasm/dev/github-pages-deployment.md)).
 
 ## Contribuer
 

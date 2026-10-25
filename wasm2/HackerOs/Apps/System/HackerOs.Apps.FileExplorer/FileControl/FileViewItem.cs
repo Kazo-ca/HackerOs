@@ -9,7 +9,7 @@ namespace HackerOs.Apps.FileExplorer.FileControl;
 /// One row/tile/node model shared across every <see cref="FileViewMode"/>. A <see cref="FileViewItem"/>
 /// does not know which mode is currently rendering it — selection, rename, and icon resolution are
 /// identical regardless of view mode. See
-/// <c>doc/wasm/dev/old/Global-FileView-And-MessagingSystem/FileViewControl.md</c>.
+/// <c>doc/en/wasm/dev/old/Global-FileView-And-MessagingSystem/FileViewControl.md</c>.
 /// </summary>
 /// <remarks>
 /// Skeleton for <c>FV-001</c>: properties are populated by the owning <see cref="FileView"/>; the

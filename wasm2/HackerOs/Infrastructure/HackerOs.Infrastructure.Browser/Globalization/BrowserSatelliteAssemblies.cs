@@ -5,7 +5,7 @@ namespace HackerOs.Infrastructure.Browser.Globalization;
 
 /// <summary>
 /// Loads the satellite assemblies of HackerOS's languages into the browser's .NET runtime
-/// (ADR 0104, section 3; doc/wasm/framework/localization.md).
+/// (ADR 0104, section 3; doc/en/wasm/framework/localization.md).
 /// </summary>
 /// <remarks>
 /// <para>

@@ -5,7 +5,7 @@ namespace HackerOs.Apps.FileExplorer.FileControl;
 /// <summary>
 /// Controls what happens when the user activates (double-click, Enter, or the context menu's default
 /// action on) a directory item in a <see cref="FileView"/>. See
-/// <c>doc/wasm/dev/old/Global-FileView-And-MessagingSystem/FileViewControl.md#folder-double-click-behavior</c>.
+/// <c>doc/en/wasm/dev/old/Global-FileView-And-MessagingSystem/FileViewControl.md#folder-double-click-behavior</c>.
 /// </summary>
 public enum FileViewFolderActivationMode
 {

@@ -9,7 +9,7 @@ namespace HackerOs.Platform.Core.Tests.Events;
 
 /// <summary>
 /// Authorization and delivery tests for <c>MSG-001</c>/<c>MSG-005</c> —
-/// <see cref="InMemoryTopicMessageBus"/>, per doc/wasm/dev/adr/0038-emitter-authorized-topic-messaging.md.
+/// <see cref="InMemoryTopicMessageBus"/>, per doc/en/wasm/dev/adr/0038-emitter-authorized-topic-messaging.md.
 /// </summary>
 public sealed class InMemoryTopicMessageBusTests
 {

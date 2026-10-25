@@ -9,7 +9,7 @@
       P2-PWA-007 / P2-ACC-015 / P2-ACC-016: these tests exercise a real
       `dotnet publish` of OS/HackerOs.Ecosystem served from a minimal static
       host, not a dev server or a source service-worker file. See
-      doc/wasm/dev/old/phase-2-acceptance.md for the evidence this satisfies.
+      doc/en/wasm/dev/old/phase-2-acceptance.md for the evidence this satisfies.
     -->
   </PropertyGroup>
 
