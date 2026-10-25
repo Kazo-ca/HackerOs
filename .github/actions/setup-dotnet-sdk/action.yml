@@ -1,0 +1,41 @@
+name: Setup .NET SDK (exact version)
+description: >-
+  Installs the latest SDK of a .NET channel by its exact version. A channel such as
+  10.0.x makes the install script follow the aka.ms link, which can point to a
+  storage account that answers HTTP 409; an exact version downloads from
+  builds.dotnet.microsoft.com instead.
+
+inputs:
+  channel:
+    description: .NET channel whose latest SDK is installed, for example 10.0.
+    required: false
+    default: "10.0"
+
+outputs:
+  version:
+    description: The SDK version that was requested.
+    value: ${{ steps.resolve.outputs.version }}
+
+runs:
+  using: composite
+  steps:
+    - name: Resolve the latest SDK version
+      id: resolve
+      shell: bash
+      env:
+        DOTNET_CHANNEL: ${{ inputs.channel }}
+      run: |
+        metadata_url="https://builds.dotnet.microsoft.com/dotnet/release-metadata/${DOTNET_CHANNEL}/releases.json"
+        version="$(curl --fail --silent --show-error --location --retry 3 --retry-delay 5 "$metadata_url" |
+          python3 -c 'import json, sys; print(json.load(sys.stdin)["latest-sdk"])')" || version=""
+        if [ -z "$version" ]; then
+          echo "::warning title=.NET SDK::Could not read $metadata_url; falling back to channel ${DOTNET_CHANNEL}.x."
+          version="${DOTNET_CHANNEL}.x"
+        fi
+        echo "Installing .NET SDK $version"
+        echo "version=$version" >> "$GITHUB_OUTPUT"
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: ${{ steps.resolve.outputs.version }}
