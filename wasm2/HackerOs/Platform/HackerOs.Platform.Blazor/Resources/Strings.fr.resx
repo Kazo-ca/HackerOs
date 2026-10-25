@@ -689,4 +689,16 @@
 <data name="MobileHome.StorageError" xml:space="preserve"><value>Impossible de charger ou enregistrer l’accueil. La dernière disposition enregistrée est conservée.</value></data>
 <data name="MobileHome.EditHint" xml:space="preserve"><value>Glissez les icônes ou utilisez leurs flèches. Retirer un raccourci ne désinstalle pas l’application.</value></data>
 <data name="MobileHome.Saved" xml:space="preserve"><value>Disposition enregistrée</value></data>
+  <data name="Auth.UsePasskey" xml:space="preserve">
+    <value>Utiliser une clé d’accès</value>
+  </data>
+  <data name="Security.NoPasskey" xml:space="preserve">
+    <value>Cet administrateur n’a pas de clé d’accès. Essais restants : {0}.</value>
+  </data>
+  <data name="Security.PasskeyCancelled" xml:space="preserve">
+    <value>La fenêtre de la clé d’accès a été fermée. Essais restants : {0}.</value>
+  </data>
+  <data name="Security.PasskeyUnsupported" xml:space="preserve">
+    <value>Ce navigateur ne peut pas utiliser de clé d’accès ici. Essais restants : {0}.</value>
+  </data>
 </root>

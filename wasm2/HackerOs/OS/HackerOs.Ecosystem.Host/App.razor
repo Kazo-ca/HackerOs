@@ -102,6 +102,10 @@
                         <p class="form-error" role="alert">@FormError</p>
                     }
                     <button type="submit" disabled="@IsSubmitting">@L["Login.Submit"]</button>
+                    @if (SelectedUserHasPasskey)
+                    {
+                        <button type="button" class="passkey-login" disabled="@IsSubmitting" @onclick="LoginWithPasskeyAsync">@L["Login.UsePasskey"]</button>
+                    }
                 </form>
                 <ProjectInformation />
             </section>
@@ -451,6 +455,57 @@
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException)
         {
             // Keep the sign-in screen's language.
+        }
+    }
+
+    /// <summary>ADR 0168: the account chosen on the sign-in screen has at least one passkey.</summary>
+    private bool SelectedUserHasPasskey =>
+        State.Users.FirstOrDefault(user => user.LoginName.Value == SelectedLogin) is { Passkeys.Count: > 0 };
+
+    /// <summary>
+    /// ADR 0168 section 2: signs in with one of the account's passkeys. A cancelled or failed passkey
+    /// leaves the password sign-in available.
+    /// </summary>
+    private async Task LoginWithPasskeyAsync()
+    {
+        FormError = null;
+        IsSubmitting = true;
+        try
+        {
+            PasskeyService passkeys = Services.GetRequiredService<PasskeyService>();
+            if (SessionService is not LocalSessionService sessions)
+            {
+                FormError = L["Login.PasskeyUnsupported"];
+                return;
+            }
+
+            // The browser's prompt shows first; the progress screen follows a verified passkey.
+            LocalLoginName loginName = LocalLoginName.Parse(SelectedLogin);
+            State.BeginLoginProgress();
+            StateHasChanged();
+            AuthenticatedPrincipal principal = await sessions.LoginWithPasskeyAsync(loginName, passkeys);
+            await UseSessionLocaleAsync(principal);
+            ClearPasswords();
+            State.CompleteLogin();
+        }
+        catch (OperationCanceledException)
+        {
+            State.CompleteIdentityLoad(State.Users);
+            FormError = L["Login.PasskeyCancelled"];
+        }
+        catch (NotSupportedException)
+        {
+            State.CompleteIdentityLoad(State.Users);
+            FormError = L["Login.PasskeyUnsupported"];
+        }
+        catch (Exception exception) when (exception is FormatException or InvalidOperationException)
+        {
+            State.CompleteIdentityLoad(State.Users);
+            FormError = L["Login.PasskeyRejected"];
+        }
+        finally
+        {
+            IsSubmitting = false;
         }
     }
 

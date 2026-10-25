@@ -71,6 +71,33 @@ public interface ILocalUserRepository
         LocalPasswordCredential? credential,
         CancellationToken cancellationToken = default) =>
         throw new NotSupportedException("This user store cannot change passwords.");
+
+    /// <summary>
+    /// Replaces one user's passkeys (ADR 0168). Callers verify who may do it.
+    /// </summary>
+    /// <param name="id">The user to change.</param>
+    /// <param name="passkeys">The complete new list of passkeys.</param>
+    /// <param name="cancellationToken">Cancels the write to the user store.</param>
+    /// <returns>The updated user record.</returns>
+    /// <exception cref="NotSupportedException">The store cannot keep passkeys (the default).</exception>
+    ValueTask<LocalUser> SetPasskeysAsync(
+        LocalUserId id,
+        IReadOnlyList<LocalPasskeyCredential> passkeys,
+        CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This user store cannot keep passkeys.");
+
+    /// <summary>
+    /// Deletes one user account, as <c>userdel</c> removes its <c>/etc/passwd</c> line (ADR 0169).
+    /// The last enabled Administrator can never be deleted. Callers verify who may do it and handle
+    /// the home directory.
+    /// </summary>
+    /// <param name="id">The user to delete.</param>
+    /// <param name="cancellationToken">Cancels the write to the user store.</param>
+    /// <exception cref="KeyNotFoundException">No such user.</exception>
+    /// <exception cref="InvalidOperationException">The user is the last enabled Administrator.</exception>
+    /// <exception cref="NotSupportedException">The store cannot delete accounts (the default).</exception>
+    ValueTask DeleteUserAsync(LocalUserId id, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This user store cannot delete accounts.");
 }
 
 /// <summary>Stores local user groups, per ADR 0013.</summary>

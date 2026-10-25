@@ -726,3 +726,60 @@ virtual HackerOs.AppSdk.IO.HackFileConflictResolver.Invoke(HackerOs.AppSdk.IO.Ha
 ~override HackerOs.AppSdk.TerminalViewport.Equals(object obj) -> bool
 ~override HackerOs.AppSdk.TerminalViewport.ToString() -> string
 ~override HackerOs.AppSdk.Threading.HackBackgroundProgress.Equals(object obj) -> bool
+HackerOs.AppSdk.Administration.HackNewUserAccount
+HackerOs.AppSdk.Administration.HackNewUserAccount.<Clone>$() -> HackerOs.AppSdk.Administration.HackNewUserAccount!
+HackerOs.AppSdk.Administration.HackNewUserAccount.Authority.get -> HackerOs.App.Abstractions.AppAuthority
+HackerOs.AppSdk.Administration.HackNewUserAccount.Authority.init -> void
+HackerOs.AppSdk.Administration.HackNewUserAccount.Deconstruct(out string! LoginName, out string! DisplayName, out HackerOs.App.Abstractions.AppAuthority Authority, out string! Password) -> void
+HackerOs.AppSdk.Administration.HackNewUserAccount.DisplayName.get -> string!
+HackerOs.AppSdk.Administration.HackNewUserAccount.DisplayName.init -> void
+HackerOs.AppSdk.Administration.HackNewUserAccount.Equals(HackerOs.AppSdk.Administration.HackNewUserAccount? other) -> bool
+HackerOs.AppSdk.Administration.HackNewUserAccount.HackNewUserAccount(string! LoginName, string! DisplayName, HackerOs.App.Abstractions.AppAuthority Authority, string! Password) -> void
+HackerOs.AppSdk.Administration.HackNewUserAccount.LoginName.get -> string!
+HackerOs.AppSdk.Administration.HackNewUserAccount.LoginName.init -> void
+HackerOs.AppSdk.Administration.HackNewUserAccount.Password.get -> string!
+HackerOs.AppSdk.Administration.HackNewUserAccount.Password.init -> void
+HackerOs.AppSdk.Administration.HackPasskey
+HackerOs.AppSdk.Administration.HackPasskey.<Clone>$() -> HackerOs.AppSdk.Administration.HackPasskey!
+HackerOs.AppSdk.Administration.HackPasskey.CreatedAtUtc.get -> System.DateTimeOffset
+HackerOs.AppSdk.Administration.HackPasskey.CreatedAtUtc.init -> void
+HackerOs.AppSdk.Administration.HackPasskey.Deconstruct(out string! Id, out string! Name, out System.DateTimeOffset CreatedAtUtc, out System.DateTimeOffset? LastUsedAtUtc, out bool UnlocksKeyring) -> void
+HackerOs.AppSdk.Administration.HackPasskey.Equals(HackerOs.AppSdk.Administration.HackPasskey? other) -> bool
+HackerOs.AppSdk.Administration.HackPasskey.HackPasskey(string! Id, string! Name, System.DateTimeOffset CreatedAtUtc, System.DateTimeOffset? LastUsedAtUtc, bool UnlocksKeyring) -> void
+HackerOs.AppSdk.Administration.HackPasskey.Id.get -> string!
+HackerOs.AppSdk.Administration.HackPasskey.Id.init -> void
+HackerOs.AppSdk.Administration.HackPasskey.LastUsedAtUtc.get -> System.DateTimeOffset?
+HackerOs.AppSdk.Administration.HackPasskey.LastUsedAtUtc.init -> void
+HackerOs.AppSdk.Administration.HackPasskey.Name.get -> string!
+HackerOs.AppSdk.Administration.HackPasskey.Name.init -> void
+HackerOs.AppSdk.Administration.HackPasskey.UnlocksKeyring.get -> bool
+HackerOs.AppSdk.Administration.HackPasskey.UnlocksKeyring.init -> void
+HackerOs.AppSdk.Administration.HackUserAccount.PasskeyCount.get -> int
+HackerOs.AppSdk.Administration.HackUserAccount.PasskeyCount.init -> void
+HackerOs.AppSdk.Administration.IAppUserAccountsGateway.AddPasskeyAsync(string! name, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Administration.HackPasskey!>
+HackerOs.AppSdk.Administration.IAppUserAccountsGateway.CreateAsync(HackerOs.AppSdk.Administration.HackNewUserAccount! account, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Administration.HackUserAccount!>
+HackerOs.AppSdk.Administration.IAppUserAccountsGateway.DeleteAsync(string! loginName, bool removeHome, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+HackerOs.AppSdk.Administration.IAppUserAccountsGateway.ListPasskeysAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Administration.HackPasskey!>!>
+HackerOs.AppSdk.Administration.IAppUserAccountsGateway.RemovePasskeyAsync(string! passkeyId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+const HackerOs.AppSdk.Administration.HackUserAccounts.MaximumDisplayNameLength = 128 -> int
+override HackerOs.AppSdk.Administration.HackNewUserAccount.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Administration.HackNewUserAccount.GetHashCode() -> int
+override HackerOs.AppSdk.Administration.HackNewUserAccount.ToString() -> string!
+override HackerOs.AppSdk.Administration.HackPasskey.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Administration.HackPasskey.GetHashCode() -> int
+override HackerOs.AppSdk.Administration.HackPasskey.ToString() -> string!
+static HackerOs.AppSdk.Administration.HackNewUserAccount.operator !=(HackerOs.AppSdk.Administration.HackNewUserAccount? left, HackerOs.AppSdk.Administration.HackNewUserAccount? right) -> bool
+static HackerOs.AppSdk.Administration.HackNewUserAccount.operator ==(HackerOs.AppSdk.Administration.HackNewUserAccount? left, HackerOs.AppSdk.Administration.HackNewUserAccount? right) -> bool
+static HackerOs.AppSdk.Administration.HackPasskey.operator !=(HackerOs.AppSdk.Administration.HackPasskey? left, HackerOs.AppSdk.Administration.HackPasskey? right) -> bool
+static HackerOs.AppSdk.Administration.HackPasskey.operator ==(HackerOs.AppSdk.Administration.HackPasskey? left, HackerOs.AppSdk.Administration.HackPasskey? right) -> bool
+static HackerOs.AppSdk.Administration.HackUserAccounts.AddPasskeyAsync(HackerOs.AppSdk.IAppExecutionContext! context, string! name, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Administration.HackPasskey!>!
+static HackerOs.AppSdk.Administration.HackUserAccounts.AddPasskeyAsync(string! name, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Administration.HackPasskey!>!
+static HackerOs.AppSdk.Administration.HackUserAccounts.CreateAsync(HackerOs.AppSdk.Administration.HackNewUserAccount! account, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Administration.HackUserAccount!>!
+static HackerOs.AppSdk.Administration.HackUserAccounts.CreateAsync(HackerOs.AppSdk.IAppExecutionContext! context, HackerOs.AppSdk.Administration.HackNewUserAccount! account, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Administration.HackUserAccount!>!
+static HackerOs.AppSdk.Administration.HackUserAccounts.DeleteAsync(HackerOs.AppSdk.IAppExecutionContext! context, string! loginName, bool removeHome, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+static HackerOs.AppSdk.Administration.HackUserAccounts.DeleteAsync(string! loginName, bool removeHome, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+static HackerOs.AppSdk.Administration.HackUserAccounts.ListPasskeysAsync(HackerOs.AppSdk.IAppExecutionContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Administration.HackPasskey!>!>!
+static HackerOs.AppSdk.Administration.HackUserAccounts.ListPasskeysAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Administration.HackPasskey!>!>!
+static HackerOs.AppSdk.Administration.HackUserAccounts.RemovePasskeyAsync(HackerOs.AppSdk.IAppExecutionContext! context, string! passkeyId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
+static HackerOs.AppSdk.Administration.HackUserAccounts.RemovePasskeyAsync(string! passkeyId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
+static HackerOs.AppSdk.Administration.HackUserAccounts.ValidateNewAccount(HackerOs.AppSdk.Administration.HackNewUserAccount? account) -> string?

@@ -167,6 +167,47 @@ public sealed class LocalPasswordServiceTests
         Assert.Null((await files.Users.SetCredentialAsync(files.Alice.Id, null)).Credential);
     }
 
+    [Fact]
+    public async Task Adding_and_deleting_through_the_gateway_need_users_manage_and_an_administrator()
+    {
+        Harness harness = await Harness.CreateAsync();
+        CountingAgent refusing = new(false);
+        CountingAgent agreeing = new(true);
+        HackNewUserAccount carol = new("carol", "Carol", AppAuthority.User, NewPassword);
+
+        await Assert.ThrowsAsync<AppGatewayAccessDeniedException>(() => harness.Gateway(agreeing).CreateAsync(carol).AsTask());
+        await Assert.ThrowsAsync<HackUnauthorizedAccessException>(
+            () => harness.Gateway(refusing, AppCapabilities.UsersManage).CreateAsync(carol).AsTask());
+        Assert.Equal("users.add", refusing.LastRequest!.Action);
+
+        HackUserAccount created = await harness.Gateway(agreeing, AppCapabilities.UsersManage).CreateAsync(carol);
+        Assert.Equal("carol", created.LoginName);
+        Assert.False(created.IsAdministrator);
+
+        await Assert.ThrowsAsync<AppGatewayAccessDeniedException>(() => harness.Gateway(agreeing).DeleteAsync("carol", removeHome: false).AsTask());
+        await harness.Gateway(agreeing, AppCapabilities.UsersManage).DeleteAsync("carol", removeHome: true);
+
+        Assert.Equal("users.delete", agreeing.LastRequest!.Action);
+        Assert.DoesNotContain(await harness.Gateway(agreeing).ListAsync(), account => account.LoginName == "carol");
+    }
+
+    [Fact]
+    public async Task The_session_user_manages_their_passkeys_without_capability_or_administrator()
+    {
+        Harness harness = await Harness.CreateAsync();
+        CountingAgent agent = new(true);
+        AppUserAccountsGateway gateway = harness.Gateway(agent);
+
+        HackPasskey added = await gateway.AddPasskeyAsync("Phone");
+
+        Assert.True(added.UnlocksKeyring);
+        Assert.Equal(added.Id, Assert.Single(await gateway.ListPasskeysAsync()).Id);
+        Assert.Equal(1, (await gateway.ListAsync()).Single(account => account.IsCurrentUser).PasskeyCount);
+        Assert.True(await gateway.RemovePasskeyAsync(added.Id));
+        Assert.Empty(await gateway.ListPasskeysAsync());
+        Assert.Equal(0, agent.Calls);
+    }
+
     /// <summary>The files harness with its keyring, an administrator account and alice logged in.</summary>
     private sealed class Harness
     {
@@ -175,6 +216,8 @@ public sealed class LocalPasswordServiceTests
             Files = files;
             Alice = alice;
             Service = new LocalPasswordService(files.Users, files.Audit, files.Keyring, iterations: 10);
+            Accounts = new LocalAccountService(files.Users, new InMemoryLocalGroupRepository(), files.Audit, files.FileSystem, iterations: 10);
+            Passkeys = new PasskeyService(files.Users, new FakePasskeyAuthenticator { PrfOnCreate = true }, files.Audit, files.Keyring);
         }
 
         internal SettingsFilesHarness Files { get; }
@@ -182,6 +225,10 @@ public sealed class LocalPasswordServiceTests
         internal AuthenticatedPrincipal Alice { get; }
 
         internal LocalPasswordService Service { get; }
+
+        internal LocalAccountService Accounts { get; }
+
+        internal PasskeyService Passkeys { get; }
 
         internal static async Task<Harness> CreateAsync()
         {
@@ -212,7 +259,11 @@ public sealed class LocalPasswordServiceTests
             return new AppUserAccountsGateway(
                 () => Service,
                 new FixedCapabilities(capabilities),
-                new AdministratorGate(() => agent, manifest, Alice, isRootElevated: false));
+                new AdministratorGate(() => agent, manifest, Alice, isRootElevated: false))
+            {
+                Accounts = () => Accounts,
+                Passkeys = () => Passkeys
+            };
         }
     }
 

@@ -1208,4 +1208,127 @@
 <data name="Mobile.HelpersLabel" xml:space="preserve"><value>Afficher les aides souris du mode mobile</value></data>
 <data name="Mobile.HelpersError" xml:space="preserve"><value>Impossible de mettre à jour les aides souris mobiles.</value></data>
   <data name="About.Repository" xml:space="preserve"><value>Dépôt GitHub</value></data>
+  <data name="Users.Badge.Passkeys" xml:space="preserve">
+    <value>{0} clé(s) d'accès</value>
+  </data>
+  <data name="Users.Badge.PasskeysTitle" xml:space="preserve">
+    <value>Ce compte peut se connecter avec une clé d'accès.</value>
+  </data>
+  <data name="Users.Delete.Button" xml:space="preserve">
+    <value>Supprimer le compte {0}</value>
+  </data>
+  <data name="Users.Delete.Short" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="Users.Delete.Title" xml:space="preserve">
+    <value>Supprimer {0}</value>
+  </data>
+  <data name="Users.Delete.Description" xml:space="preserve">
+    <value>Supprimer le compte {0} ? Ses clés d'accès et son mot de passe disparaissent avec lui. Un administrateur confirme dans la fenêtre de l'OS.</value>
+  </data>
+  <data name="Users.Delete.RemoveHome" xml:space="preserve">
+    <value>Supprimer aussi son dossier personnel {0} et tous ses fichiers</value>
+  </data>
+  <data name="Users.Delete.Confirm" xml:space="preserve">
+    <value>Supprimer {0}</value>
+  </data>
+  <data name="Users.Delete.Cancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="Users.Delete.Done" xml:space="preserve">
+    <value>Compte {0} supprimé. Son dossier personnel est conservé.</value>
+  </data>
+  <data name="Users.Delete.DoneWithHome" xml:space="preserve">
+    <value>Compte {0} et son dossier personnel supprimés.</value>
+  </data>
+  <data name="Users.Add.Title" xml:space="preserve">
+    <value>Ajouter un compte</value>
+  </data>
+  <data name="Users.Add.Description" xml:space="preserve">
+    <value>Un nouveau compte local avec son propre groupe et un mot de passe. Un administrateur confirme dans la fenêtre de l'OS (capacité {0}). Le dossier personnel est créé à la première connexion.</value>
+  </data>
+  <data name="Users.Add.Submit" xml:space="preserve">
+    <value>Ajouter le compte</value>
+  </data>
+  <data name="Users.Add.Done" xml:space="preserve">
+    <value>Compte {0} ajouté.</value>
+  </data>
+  <data name="Users.Field.Login" xml:space="preserve">
+    <value>Nom de connexion (minuscules, chiffres, - et _)</value>
+  </data>
+  <data name="Users.Field.DisplayName" xml:space="preserve">
+    <value>Nom affiché</value>
+  </data>
+  <data name="Users.Field.Type" xml:space="preserve">
+    <value>Type de compte</value>
+  </data>
+  <data name="Users.Type.Standard" xml:space="preserve">
+    <value>Standard</value>
+  </data>
+  <data name="Users.Type.Administrator" xml:space="preserve">
+    <value>Administrateur</value>
+  </data>
+  <data name="Users.Field.InitialPassword" xml:space="preserve">
+    <value>Mot de passe initial</value>
+  </data>
+  <data name="Passkeys.Title" xml:space="preserve">
+    <value>Mes clés d'accès</value>
+  </data>
+  <data name="Passkeys.Description" xml:space="preserve">
+    <value>Une clé d'accès vous connecte avec votre empreinte, votre visage, un NIP ou une clé de sécurité, sans taper votre mot de passe. Le navigateur garde la clé ; HackerOS n'en conserve que la moitié publique. Une clé qui prend en charge l'extension PRF ouvre aussi votre trousseau.</value>
+  </data>
+  <data name="Passkeys.Empty" xml:space="preserve">
+    <value>Aucune clé d'accès pour l'instant.</value>
+  </data>
+  <data name="Passkeys.Created" xml:space="preserve">
+    <value>ajoutée le {0}</value>
+  </data>
+  <data name="Passkeys.LastUsed" xml:space="preserve">
+    <value>dernière utilisation le {0}</value>
+  </data>
+  <data name="Passkeys.Keyring" xml:space="preserve">
+    <value>trousseau</value>
+  </data>
+  <data name="Passkeys.KeyringTitle" xml:space="preserve">
+    <value>Se connecter avec cette clé ouvre votre trousseau.</value>
+  </data>
+  <data name="Passkeys.NoKeyring" xml:space="preserve">
+    <value>sans trousseau</value>
+  </data>
+  <data name="Passkeys.NoKeyringTitle" xml:space="preserve">
+    <value>Cet authentificateur ne prend pas en charge PRF : après une connexion avec lui, votre trousseau reste verrouillé jusqu'à ce que vous donniez votre mot de passe.</value>
+  </data>
+  <data name="Passkeys.Remove" xml:space="preserve">
+    <value>Retirer</value>
+  </data>
+  <data name="Passkeys.RemoveLabel" xml:space="preserve">
+    <value>Retirer la clé d'accès {0}</value>
+  </data>
+  <data name="Passkeys.Field.Name" xml:space="preserve">
+    <value>Nom de la nouvelle clé (par exemple : Téléphone, YubiKey)</value>
+  </data>
+  <data name="Passkeys.Add" xml:space="preserve">
+    <value>Ajouter une clé d'accès</value>
+  </data>
+  <data name="Passkeys.Added" xml:space="preserve">
+    <value>Clé d'accès {0} ajoutée. Elle ouvre aussi votre trousseau.</value>
+  </data>
+  <data name="Passkeys.AddedNoKeyring" xml:space="preserve">
+    <value>Clé d'accès {0} ajoutée. Votre authentificateur ne prend pas en charge PRF : elle n'ouvrira pas votre trousseau.</value>
+  </data>
+  <data name="Passkeys.Removed" xml:space="preserve">
+    <value>Clé d'accès {0} retirée.</value>
+  </data>
+  <data name="Passkeys.Unsupported" xml:space="preserve">
+    <value>Ce navigateur ne peut pas utiliser de clé d'accès ici (WebAuthn exige un contexte sécurisé : https ou localhost).</value>
+  </data>
+  <data name="Passkeys.Error.NameRequired" xml:space="preserve">
+    <value>Donnez un nom à la clé d'accès.</value>
+  </data>
+  <data name="Passkeys.Error.Cancelled" xml:space="preserve">
+    <value>La demande du navigateur a été annulée ou a expiré.</value>
+  </data>
+  <data name="Passkeys.Error.NotFound" xml:space="preserve">
+    <value>La clé d'accès {0} n'existe plus.</value>
+  </data>
 </root>

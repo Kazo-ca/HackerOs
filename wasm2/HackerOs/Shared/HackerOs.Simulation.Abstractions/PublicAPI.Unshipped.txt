@@ -1083,3 +1083,32 @@ virtual HackerOs.Simulation.Abstractions.Network.SimulatedPageSection.PrintMembe
 ~override HackerOs.Simulation.Abstractions.Sessions.SessionId.Equals(object obj) -> bool
 ~override HackerOs.Simulation.Abstractions.Settings.SettingsDocumentKey.Equals(object obj) -> bool
 ~override HackerOs.Simulation.Abstractions.Settings.SettingsDocumentKey.ToString() -> string
+HackerOs.Simulation.Abstractions.Sessions.ILocalUserRepository.DeleteUserAsync(HackerOs.Simulation.Abstractions.Sessions.LocalUserId id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+HackerOs.Simulation.Abstractions.Sessions.ILocalUserRepository.SetPasskeysAsync(HackerOs.Simulation.Abstractions.Sessions.LocalUserId id, System.Collections.Generic.IReadOnlyList<HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential!>! passkeys, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Sessions.LocalUser!>
+HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential
+HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential.<Clone>$() -> HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential!
+HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential.Algorithm.get -> int
+HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential.CreatedAtUtc.get -> System.DateTimeOffset
+HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential.CredentialId.get -> byte[]!
+HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential.Equals(HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential? other) -> bool
+HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential.Id.get -> string!
+HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential.LastUsedAtUtc.get -> System.DateTimeOffset?
+HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential.LastUsedAtUtc.init -> void
+HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential.LocalPasskeyCredential(byte[]! credentialId, byte[]! publicKey, int algorithm, string! name, uint signCount, System.DateTimeOffset createdAtUtc, System.DateTimeOffset? lastUsedAtUtc, byte[]? prfSalt) -> void
+HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential.Name.get -> string!
+HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential.PrfSalt.get -> byte[]?
+HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential.PublicKey.get -> byte[]!
+HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential.SignCount.get -> uint
+HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential.SignCount.init -> void
+HackerOs.Simulation.Abstractions.Sessions.LocalUser.Passkeys.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential!>!
+HackerOs.Simulation.Abstractions.Sessions.LocalUser.Passkeys.init -> void
+const HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential.Es256 = -7 -> int
+const HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential.MaximumNameLength = 64 -> int
+const HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential.Rs256 = -257 -> int
+override HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential.Equals(object? obj) -> bool
+override HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential.GetHashCode() -> int
+override HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential.ToString() -> string!
+static HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential.FromBase64Url(string? text) -> byte[]?
+static HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential.ToBase64Url(System.ReadOnlySpan<byte> bytes) -> string!
+static HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential.operator !=(HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential? left, HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential? right) -> bool
+static HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential.operator ==(HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential? left, HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential? right) -> bool
