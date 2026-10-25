@@ -159,10 +159,10 @@ dossier soit lu, pour ne jamais effacer les positions.
 
 ### Paramètres ▸ Bureau
 
-Onglet après Apparence : taille des icônes, réorganisation automatique,
+Page après Apparence : taille des icônes, réorganisation automatique,
 alignement, icônes système, tri, « Oublier les positions des icônes ».
-Paramètres s'ouvre directement sur un onglet avec `--page=appearance` ou
-`--page=desktop`.
+Paramètres s'ouvre directement sur une page avec `--page=appearance` ou
+`--page=desktop` (toutes les pages depuis l'ADR 0170, voir [settings-app.md](settings-app.md)).
 
 ## Décisions clés
 

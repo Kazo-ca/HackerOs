@@ -2,3 +2,4 @@
 override HackerOs.Apps.Settings.SettingsApp.Icons.get -> System.Collections.Generic.IReadOnlyList<string!>!
 override HackerOs.Apps.Settings.SettingsApp.Assets.get -> System.Collections.Generic.IReadOnlyList<HackerOs.App.Abstractions.AssetManifest!>!
 override HackerOs.Apps.Settings.SettingsApp.MobileEntryPoint.get -> System.Type?
+override HackerOs.Apps.Settings.SettingsWindow.OnAppAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!

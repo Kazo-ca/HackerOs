@@ -1137,6 +1137,27 @@
   <data name="Tab.Desktop" xml:space="preserve">
     <value>Desktop</value>
   </data>
+  <data name="Nav.AriaLabel" xml:space="preserve">
+    <value>Settings pages</value>
+  </data>
+  <data name="Nav.Collapse" xml:space="preserve">
+    <value>Collapse the menu</value>
+  </data>
+  <data name="Nav.Expand" xml:space="preserve">
+    <value>Expand the menu</value>
+  </data>
+  <data name="Nav.Group.Personalization" xml:space="preserve">
+    <value>Personalization</value>
+  </data>
+  <data name="Nav.Group.Applications" xml:space="preserve">
+    <value>Applications</value>
+  </data>
+  <data name="Nav.Group.Network" xml:space="preserve">
+    <value>Network</value>
+  </data>
+  <data name="Nav.Group.System" xml:space="preserve">
+    <value>System</value>
+  </data>
   <data name="Desktop.Description" xml:space="preserve">
     <value>The desktop shows the files of {0}. These options live in {1}; the desktop follows the file as soon as it changes.</value>
   </data>

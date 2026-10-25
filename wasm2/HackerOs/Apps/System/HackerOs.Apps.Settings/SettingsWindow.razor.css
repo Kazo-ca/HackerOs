@@ -21,17 +21,228 @@
         var(--hos-text-primary, #f4f7f8));
 }
 
+/* ADR 0170: the pages are a side menu, expanded with labels or collapsed to an icon rail.
+   The body is the container of the narrow-window rules below (a phone, or a small window). */
 .settings-body {
+    position: relative;
+    display: flex;
     flex: 1;
+    min-height: 0;
+    container-type: inline-size;
+    container-name: settings-body;
+}
+
+.settings-nav {
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    gap: 2px;
+    width: 14rem;
+    padding: 0.4rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: var(--hos-bg-elevated, #1b252a);
+    border-inline-end: 1px solid var(--hos-border, #3a4b53);
+    transition: width var(--hos-transition-fast, 120ms ease);
+}
+
+.settings-nav.is-collapsed {
+    width: 3.25rem;
+}
+
+.settings-nav-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.settings-nav-toggle,
+.settings-nav-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.6rem;
+    width: 100%;
+    min-height: 2.25rem;
+    padding: 0.4rem 0.65rem;
+    border: none;
+    border-radius: var(--hos-radius-md, 0.45rem);
+    background: transparent;
+    color: var(--hos-text-secondary, #a8bac4);
+    font: inherit;
+    font-size: 0.85rem;
+    text-align: start;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.settings-nav-toggle {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    margin-bottom: 0.25rem;
+    background: var(--hos-bg-elevated, #1b252a);
+}
+
+.settings-nav-toggle.is-narrow {
+    display: none;
+}
+
+.settings-nav-toggle:hover,
+.settings-nav-item:hover {
+    background: var(--hos-bg-surface, #151c20);
+    color: var(--hos-text-primary, #f4f7f8);
+}
+
+.settings-nav-toggle:focus-visible,
+.settings-nav-item:focus-visible {
+    outline: 2px solid var(--hos-focus-ring, #42d392);
+    outline-offset: -2px;
+}
+
+.settings-nav-item.is-active {
+    background: color-mix(in srgb, var(--hos-accent, #42d392) 18%, transparent);
+    color: var(--hos-text-primary, #f4f7f8);
+    box-shadow: inset 3px 0 0 var(--hos-accent, #42d392);
+}
+
+.settings-nav-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.settings-nav-group {
+    margin: 0.6rem 0.65rem 0.2rem;
+    overflow: hidden;
+    color: var(--hos-text-secondary, #a8bac4);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.settings-nav-group:first-child {
+    margin-top: 0.2rem;
+}
+
+/* Collapsed: icons only, a group title becomes a thin separator. */
+.settings-nav.is-collapsed .settings-nav-label {
+    display: none;
+}
+
+.settings-nav.is-collapsed .settings-nav-group {
+    height: 0;
+    margin: 0.35rem 0.4rem;
+    border-top: 1px solid var(--hos-border, #3a4b53);
+    font-size: 0;
+}
+
+.settings-nav.is-collapsed .settings-nav-toggle,
+.settings-nav.is-collapsed .settings-nav-item {
+    justify-content: center;
+    padding-inline: 0;
+}
+
+.settings-content {
+    flex: 1;
+    min-width: 0;
     overflow-y: auto;
     padding: 12px;
 }
 
-/* MudTabs' tab-header background/text color for this window is styled
-   globally in css/app.css (.hos-tab-header): MudBlazor's default light theme
-   otherwise renders it with insufficient contrast (axe color-contrast), and
-   Blazor CSS isolation's ::deep scoping did not reliably reach this
-   MudBlazor-internal element from here — a plain unscoped global rule does. */
+.settings-content:focus {
+    outline: none;
+}
+
+.settings-nav-scrim {
+    display: none;
+}
+
+/* Narrow window: the menu is always an icon rail; its own button opens it over the page. */
+@container settings-body (max-width: 36rem) {
+    .settings-nav,
+    .settings-nav.is-collapsed {
+        width: 3.25rem;
+        padding-inline: 0.3rem;
+    }
+
+    .settings-nav .settings-nav-label {
+        display: none;
+    }
+
+    .settings-nav .settings-nav-group {
+        height: 0;
+        margin: 0.35rem 0.4rem;
+        border-top: 1px solid var(--hos-border, #3a4b53);
+        font-size: 0;
+    }
+
+    .settings-nav .settings-nav-toggle,
+    .settings-nav .settings-nav-item {
+        justify-content: center;
+        padding-inline: 0;
+    }
+
+    .settings-nav-toggle.is-wide {
+        display: none;
+    }
+
+    .settings-nav-toggle.is-narrow {
+        display: flex;
+    }
+
+    .settings-nav.is-overlay-open {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        z-index: 3;
+        width: min(16rem, 85%);
+        padding-inline: 0.4rem;
+        box-shadow: var(--hos-shadow-lg, 0 8px 24px rgb(0 0 0 / 45%));
+    }
+
+    .settings-nav.is-overlay-open .settings-nav-label {
+        display: inline;
+    }
+
+    .settings-nav.is-overlay-open .settings-nav-group {
+        height: auto;
+        margin: 0.6rem 0.65rem 0.2rem;
+        border-top: none;
+        font-size: 0.7rem;
+    }
+
+    .settings-nav.is-overlay-open .settings-nav-toggle,
+    .settings-nav.is-overlay-open .settings-nav-item {
+        justify-content: flex-start;
+        padding-inline: 0.65rem;
+    }
+
+    /* The rail leaves the flow when it opens: the page keeps its place. */
+    .settings-nav.is-overlay-open ~ .settings-content {
+        margin-inline-start: 3.25rem;
+    }
+
+    .settings-nav-scrim {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        display: block;
+        background: rgb(0 0 0 / 40%);
+    }
+
+    .settings-content {
+        padding: 0.5rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .settings-nav {
+        transition: none;
+    }
+}
 
 .setting-group {
     background-color: var(--hos-bg-surface, #151c20);
@@ -355,10 +566,6 @@
     .theme-options,
     .mobile-theme-options {
         grid-template-columns: 1fr;
-    }
-
-    .settings-body {
-        padding: 0.5rem;
     }
 }
 
