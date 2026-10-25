@@ -157,7 +157,7 @@ public static class EcosystemServiceCollectionExtensions
         // that same dead instance, so its JS interop calls fail forever with "cannot be issued at
         // this time... statically rendered" — regardless of which lifecycle method later calls it.
         // Scoped services get a fresh instance per circuit's own DI scope, which is exactly what's
-        // needed here. See docs/Global-FileView-And-MessagingSystem/integrationPlan.md Phase 4 live
+        // needed here. See doc/wasm/dev/old/Global-FileView-And-MessagingSystem/integrationPlan.md Phase 4 live
         // browser check notes.
         services.AddScoped<IndexedDbLocalUserRepository>();
         services.AddScoped<ILocalUserRepository>(provider =>

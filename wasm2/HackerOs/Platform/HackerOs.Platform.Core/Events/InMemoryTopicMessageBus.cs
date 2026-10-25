@@ -8,7 +8,7 @@ namespace HackerOs.Platform.Core.Events;
 
 /// <summary>
 /// In-memory <see cref="ITopicMessageBus"/> implementation. Enforces the authorization decisions
-/// described in <c>docs/adr/0038-emitter-authorized-topic-messaging.md</c>: a publisher may always
+/// described in <c>doc/wasm/dev/adr/0038-emitter-authorized-topic-messaging.md</c>: a publisher may always
 /// publish within its own app namespace; acting on a shared channel it does not own is governed,
 /// independently per direction, by that channel's declared <see cref="SharedChannelAccessMode"/> — a
 /// permission requirement is entirely optional per channel, chosen by the owner at registration time

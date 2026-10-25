@@ -99,7 +99,7 @@ public enum ProcessExitReason
     Fault,
 
     /// <summary>
-    /// The active UI platform changed (docs/mobile-interface-platform-plan.md §6.3, <c>MOB-008</c>) and
+    /// The active UI platform changed (doc/wasm/dev/old/mobile-interface-platform-plan.md §6.3, <c>MOB-008</c>) and
     /// this UI instance does not carry over to the new shell.
     /// </summary>
     PlatformChanged,

@@ -24,7 +24,7 @@ public enum ShellIconKind
 /// Describes one resolved icon, independent of whether it came from the vector icon system or a raster
 /// image, so every consumer (<see cref="FileView"/>, <see cref="ShellIcon"/>, per-item overrides) shares
 /// one type. See
-/// <c>docs/Global-FileView-And-MessagingSystem/FileViewControl.md#icon-resolution-ishelliconprovider</c>.
+/// <c>doc/wasm/dev/old/Global-FileView-And-MessagingSystem/FileViewControl.md#icon-resolution-ishelliconprovider</c>.
 /// </summary>
 /// <param name="Kind">Which rendering strategy applies.</param>
 /// <param name="LibraryOrPath">For <see cref="ShellIconKind.Vector"/>, the <see cref="IconLibrary"/> name; for <see cref="ShellIconKind.Png"/>, the asset path or URI.</param>

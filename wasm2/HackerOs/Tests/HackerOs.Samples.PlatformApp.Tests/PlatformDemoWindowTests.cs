@@ -6,7 +6,7 @@ namespace HackerOs.Samples.PlatformApp.Tests;
 
 /// <summary>
 /// End-to-end proof for <c>MOB-014</c> (partial): one manifest with a single, shared entry point
-/// declared for both <c>desktop</c> and <c>mobile</c> (docs/mobile-interface-platform-plan.md §4.1's
+/// declared for both <c>desktop</c> and <c>mobile</c> (doc/wasm/dev/old/mobile-interface-platform-plan.md §4.1's
 /// first example), validated and resolved through the real <see cref="AppManifestValidator"/>,
 /// <see cref="AppCatalog"/>, and <see cref="AppEntryPointDiscovery"/> pipeline.
 /// </summary>

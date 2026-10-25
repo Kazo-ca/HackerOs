@@ -93,7 +93,7 @@ public sealed record WindowConstraints
     /// <summary>
     /// Gets whether user move commands are allowed. Defaults to <see langword="true"/> for source
     /// compatibility with every existing caller; a pinned surface (e.g. Mobile's single full-screen
-    /// window, docs/mobile-interface-platform-plan.md §7.1) sets this <see langword="false"/>.
+    /// window, doc/wasm/dev/old/mobile-interface-platform-plan.md §7.1) sets this <see langword="false"/>.
     /// </summary>
     public bool IsMovable { get; }
 

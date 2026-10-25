@@ -32,7 +32,7 @@ public sealed class PlatformEnvironmentPolicyTests
     public void Narrow_desktop_window_with_no_touch_points_stays_desktop()
     {
         // A Desktop browser window resized narrow must not be mistaken for a mobile device
-        // (docs/mobile-interface-platform-plan.md §6.2).
+        // (doc/wasm/dev/old/mobile-interface-platform-plan.md §6.2).
         PlatformEnvironmentSignals signals = new(
             LogicalWidth: 320, LogicalHeight: 700, PointerIsCoarse: false, HasHover: true, MaxTouchPoints: 0, IsStandalone: false);
 

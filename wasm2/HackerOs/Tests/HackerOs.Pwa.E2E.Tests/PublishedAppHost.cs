@@ -13,7 +13,7 @@ namespace HackerOs.Pwa.E2E.Tests;
 /// a Kestrel-bound TCP port, so Playwright can exercise the actual
 /// <c>service-worker.published.js</c> and <c>manifest.webmanifest</c> — nothing else in
 /// this repo does that; every other harness runs a dev-mode host instead (see
-/// docs/phase-2-acceptance.md for the audit that found this gap).
+/// doc/wasm/dev/old/phase-2-acceptance.md for the audit that found this gap).
 ///
 /// <c>OS/HackerOs.Ecosystem/wwwroot/index.html</c> deliberately refuses to register the
 /// service worker whenever <c>window.location.hostname</c> contains "localhost" or

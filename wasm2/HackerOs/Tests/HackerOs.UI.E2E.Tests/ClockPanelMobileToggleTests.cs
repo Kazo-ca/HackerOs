@@ -8,7 +8,7 @@ public sealed class ClockPanelMobileToggleTests(ITestOutputHelper output)
 {
     /// <summary>
     /// End-to-end proof of the mobile-platform toggle location
-    /// (docs/mobile-interface-platform-plan.md §16.1) and, since <c>MOB-008</c>, that the choice
+    /// (doc/wasm/dev/old/mobile-interface-platform-plan.md §16.1) and, since <c>MOB-008</c>, that the choice
     /// actually drives which shell renders: clicking the taskbar clock opens a panel whose
     /// Auto/Desktop/Mobile choice persists across a reload, and after reload the Mobile shell (its
     /// Back/Home/Recent system navigation bar, not the Desktop taskbar/App launcher) is what's

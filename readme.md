@@ -7,7 +7,7 @@ Source repository: [Kazo-ca/HackerOs](https://github.com/Kazo-ca/HackerOs).
 Run [HackerOS WebAssembly](https://hackos.kazo.ca/) or the
 [original TypeScript version](https://hackos.kazo.ca/legacy/).
 Both are published by one [GitHub Pages workflow](.github/workflows/deploy-to-pages.yml),
-with independent cached builds; see the [deployment guide](wasm2/HackerOs/docs/github-pages-deployment.md).
+with independent cached builds; see the [deployment guide](doc/wasm/dev/github-pages-deployment.md).
 
 ## Active codebase: HackerOS (C# / Blazor WebAssembly)
 
@@ -15,9 +15,9 @@ The project is being ported to C# and Blazor WebAssembly under
 [`wasm2/HackerOs/`](wasm2/HackerOs/README.md). That is where all new work
 happens; the TypeScript application described below (`src/`) is kept read-only
 as a behavioral reference. Documentation (in French) starts at
-[`wasm2/HackerOs/docs/README.md`](wasm2/HackerOs/docs/README.md), with a
-[project overview](wasm2/HackerOs/docs/project-overview.md) and an
-[app SDK developer guide](wasm2/HackerOs/docs/sdk-developer-guide.md).
+[`doc/wasm/README.md`](doc/wasm/README.md), with a
+[project overview](doc/wasm/dev/project-overview.md) and an
+[app SDK developer guide](doc/wasm/framework/sdk-developer-guide.md).
 
 ## Project Overview
 

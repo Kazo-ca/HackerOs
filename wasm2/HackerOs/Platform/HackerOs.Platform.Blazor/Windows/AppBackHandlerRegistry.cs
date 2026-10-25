@@ -6,7 +6,7 @@ namespace HackerOs.Platform.Blazor.Windows;
 
 /// <summary>
 /// Tracks the <see cref="IAppBackHandler"/> captured from each dynamically rendered window app,
-/// per docs/mobile-interface-platform-plan.md §8 (<c>MOB-012</c>). Registrations are
+/// per doc/wasm/dev/old/mobile-interface-platform-plan.md §8 (<c>MOB-012</c>). Registrations are
 /// reference-safe so disposal of an old renderer cannot remove a newer component's handler for
 /// the same window, mirroring <see cref="WindowCloseGuardRegistry"/>.
 /// </summary>

@@ -1,4 +1,4 @@
-// Host side of the detached display surfaces (ADR 0078 §2, docs/detached-display-windows.md).
+// Host side of the detached display surfaces (ADR 0078 §2, doc/wasm/dev/detached-display-windows.md).
 //
 // Only what C# cannot reach lives here: opening a same-origin window of the host browser on an
 // empty document, building that document (style sheets mirrored from the desktop, a root for the

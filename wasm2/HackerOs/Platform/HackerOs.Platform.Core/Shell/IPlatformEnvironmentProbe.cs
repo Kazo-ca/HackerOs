@@ -23,7 +23,7 @@ public sealed record PlatformEnvironmentSignals(
 
 /// <summary>
 /// The environment probe's current reasoned conclusion. Kept loggable/observable per
-/// docs/mobile-interface-platform-plan.md §6.2 — auto-detection must never be a silent black box.
+/// doc/wasm/dev/old/mobile-interface-platform-plan.md §6.2 — auto-detection must never be a silent black box.
 /// </summary>
 /// <param name="Signals">Raw signals the decision was made from.</param>
 /// <param name="SuggestedPlatform">The platform automatic detection currently suggests.</param>
@@ -52,7 +52,7 @@ public interface IPlatformEnvironmentProbe
 
 /// <summary>
 /// Pure decision logic over <see cref="PlatformEnvironmentSignals"/>, isolated from any browser
-/// interop so it is unit-testable in isolation (see docs/mobile-interface-platform-plan.md §6.2:
+/// interop so it is unit-testable in isolation (see doc/wasm/dev/old/mobile-interface-platform-plan.md §6.2:
 /// "a Desktop window resize must not be mistaken for a device change").
 /// </summary>
 public static class PlatformEnvironmentPolicy
