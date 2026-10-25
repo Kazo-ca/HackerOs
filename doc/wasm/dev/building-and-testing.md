@@ -295,8 +295,9 @@ Détails : [`sdk-packages.md`](../framework/sdk-packages.md).
 
 ## Tester
 
-La vérification automatique sur `main` lance les tests sans navigateur. Après
-une compilation Release, le même sélecteur s'utilise localement :
+La vérification automatique (chaque PR, push sur `main` et `*/base`) lance les
+tests sans navigateur ; voir [`ci-workflows.md`](ci-workflows.md). Après une
+compilation Release, le même sélecteur s'utilise localement :
 
 ```powershell
 ./build/run-test-suite.ps1 -Suite NonBrowser
@@ -311,6 +312,10 @@ projet échoue. Il attend des assemblies déjà compilées (`--no-build`,
 `--no-restore`). Actuellement, 41 projets sont sans navigateur et six utilisent
 Playwright. Un nouveau projet Playwright est ainsi exclu automatiquement du
 contrôle sans navigateur.
+
+`-RetryFailedTests 1` (utilisé par GitHub Actions) relance une fois les seuls
+tests en échec et signale comme instable un test qui passe au nouvel essai ;
+sans ce paramètre, le script reste strict.
 
 Dans GitHub Actions, les suites Playwright se lancent uniquement via
 **Verify HackerOS browser tests (manual)** (`verify-browser-tests.yml`,
@@ -456,10 +461,10 @@ dotnet test Tests/HackerOs.UI.E2E.Tests -c Release --no-build --filter "FullyQua
 ### État connu
 
 - **GitHub Actions** : sans exécuteur d'août au 23 octobre 2026, les workflows
-  tournent de nouveau depuis le 2026-10-24 (`Verify HackerOS WASM`,
-  `Deploy to GitHub Pages` ; Playwright dans le workflow manuel
-  `verify-browser-tests.yml`). Un build et des tests locaux verts restent
-  exigés avant de fusionner.
+  tournent de nouveau depuis le 2026-10-24 et vérifient chaque PR vers `main`
+  et `*/base` depuis le 2026-10-25 ([`ci-workflows.md`](ci-workflows.md) ;
+  Playwright dans le workflow manuel `verify-browser-tests.yml`). Un build et
+  des tests locaux verts restent exigés avant de fusionner.
 - Dans un conteneur cloud, les suites Playwright tournent sur le Chromium de
   `/opt/pw-browsers` ([repli](#chromium-pour-playwright)). État au
   2026-10-16 (après `dotnet build HackerOs.sln -c Release`, une suite à la

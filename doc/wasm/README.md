@@ -77,6 +77,7 @@ dans le même changement (voir [`AGENTS.md`](../../AGENTS.md)).
 | Document | Rôle |
 | --- | --- |
 | [`building-and-testing.md`](dev/building-and-testing.md) | Compiler, lancer les trois hôtes, publier la PWA et exécuter les tests ; contournements connus dans un conteneur Linux ; hébergement et en-têtes d'isolation cross-origin (ADR 0143). |
+| [`ci-workflows.md`](dev/ci-workflows.md) | Validations GitHub Actions : ce que vérifie chaque workflow, déclencheurs (PR vers `main` et `*/base`), nouvel essai des tests instables (`-RetryFailedTests`), lire un échec. |
 | [`pitfalls.md`](dev/pitfalls.md) | **Pièges rencontrés et leurs solutions**, en grandes lignes : build et NuGet, publication trimmée et WebCIL, navigateur et cache, tests instables connus, Blazor et fenêtres, IndexedDB, conteneurs cloud et GitHub. À lire avant de diagnostiquer un problème « bizarre ». |
 | [`trimmed-publish.md`](dev/trimmed-publish.md) | Publication Release trimmée de l'Ecosystem (chantier `v3/14-trimming`, ADR 0106 et 0113) : `PublishTrimmed`, `TrimMode=partial`, racines ILLink générées depuis les manifestes (`HackerOs.TrimmerRoots.xml`), assemblies `HackerOs.*` gardées entières, tailles avant et après (50,9 → 26,5 Mio), `build/publish-trimmed.sh` et sa suite E2E (apps, worker, sites, hors ligne). |
 | [`pwa-cache-recovery.md`](dev/pwa-cache-recovery.md) | Cache PWA abîmé (`v3/7`, ADR 0099 §3) : garde de démarrage de `index.html`, message `RESET_CACHE` du service worker, rechargement unique (`sessionStorage`), écran hors ligne, tests `Pwa.E2E`. |

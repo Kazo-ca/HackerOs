@@ -61,7 +61,9 @@ machine au repos) : `A_command_that_spins_at_once` et `Kill_minus_9`
 fois sur douze), le web worker de `LocalNetworkTests`, le harnais de fenêtre
 détachée de l'UI, `FileExplorerDownload` et `BrowserHomePage` d'`UI.E2E` sous
 la charge de la suite complète, et deux tests `Pwa.E2E` qui attendent
-l'explorateur de fichiers. Relancer la suite seule avant de conclure.
+l'explorateur de fichiers. Relancer la suite seule avant de conclure. Sur
+GitHub Actions, ces tests sont relancés une fois et signalés comme instables
+s'ils passent ([`ci-workflows.md`](ci-workflows.md#tests-instables-et-nouvel-essai)).
 
 ## 5. Blazor, fenêtres et SDK
 
@@ -91,7 +93,7 @@ l'explorateur de fichiers. Relancer la suite seule avant de conclure.
 
 | Symptôme | Cause | Solution |
 | --- | --- | --- |
-| Les GitHub Actions échouaient toutes (août à octobre 2026) | Plus d'exécuteur disponible | Pendant cette période, un build et des tests locaux verts faisaient foi. Depuis le 2026-10-24, les workflows tournent de nouveau (`Verify HackerOS WASM`, `Deploy to GitHub Pages`) ; les tests Playwright sont dans un workflow manuel séparé (`verify-browser-tests.yml`). Un build et des tests locaux verts restent exigés avant de fusionner. |
+| Les GitHub Actions échouaient toutes (août à octobre 2026) | Plus d'exécuteur disponible | Pendant cette période, un build et des tests locaux verts faisaient foi. Depuis le 2026-10-24, les workflows tournent de nouveau (`Verify HackerOS WASM`, `Deploy to GitHub Pages`) ; les tests Playwright sont dans un workflow manuel séparé (`verify-browser-tests.yml`). Un build et des tests locaux verts restent exigés avant de fusionner. Les PR échouaient ensuite sur des tests instables (`Kill_minus_9`, `ResourceAccounting`) : les workflows relancent une fois les tests en échec ([`ci-workflows.md`](ci-workflows.md)). |
 | `dotnet` absent dans un conteneur cloud | Rien n'est préinstallé | `curl -sSL https://dot.net/v1/dotnet-install.sh \| bash -s -- --channel 10.0`. |
 | Un thread cloud ne peut pas supprimer une branche GitHub (403) | Droits insuffisants des sessions cloud | Benoit supprime les branches fusionnées lui-même avec une commande préparée. |
 | Le nom de branche reçu porte un suffixe (`…-txf6mn`) | Le harnais attribue des noms suffixés | Travailler sur la branche donnée ; vérifier qu'aucune branche orpheline ne reste. |

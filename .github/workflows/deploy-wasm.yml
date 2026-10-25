@@ -1,11 +1,14 @@
 name: Verify HackerOS WASM
 
+# Every pull request (to main and to the <series>/base integration branches) and
+# every push to those branches. The docs folder under wasm2/HackerOs only holds a
+# pointer README; the real docs live in doc/wasm and are not build inputs.
 on:
   push:
-    branches: [ "main", "Wasm" ]
-    paths: [ 'wasm2/HackerOs/**', '.github/workflows/deploy-wasm.yml' ]
+    branches: [ "main", "*/base" ]
+    paths: [ 'wasm2/HackerOs/**', '!wasm2/HackerOs/docs/**', '.github/workflows/deploy-wasm.yml' ]
   pull_request:
-    paths: [ 'wasm2/HackerOs/**', '.github/workflows/deploy-wasm.yml' ]
+    paths: [ 'wasm2/HackerOs/**', '!wasm2/HackerOs/docs/**', '.github/workflows/deploy-wasm.yml' ]
   workflow_dispatch:
 
 permissions:
@@ -16,18 +19,21 @@ concurrency:
   cancel-in-progress: true
 
 env:
+  DOTNET_NOLOGO: "true"
+  DOTNET_CLI_TELEMETRY_OPTOUT: "true"
   HACKEROS_SOLUTION_DIR: wasm2/HackerOs
   HACKEROS_ARTIFACT_DIR: wasm2/HackerOs/artifacts
 
 jobs:
   verify:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup .NET 10
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: "10.0.x"
 
@@ -87,10 +93,13 @@ jobs:
         working-directory: ${{ env.HACKEROS_SOLUTION_DIR }}
         run: dotnet list HackerOs.sln package --vulnerable --include-transitive --no-restore
 
+      # Timing-sensitive tests (kill -9, CPU accounting) sometimes fail on shared
+      # runners. Only the failed tests rerun, once; a test that passes on retry is
+      # reported as a warning and in the job summary, a test that fails twice fails.
       - name: Test Release without browser suites
         working-directory: ${{ env.HACKEROS_SOLUTION_DIR }}
         shell: pwsh
-        run: ./build/run-test-suite.ps1 -Suite NonBrowser
+        run: ./build/run-test-suite.ps1 -Suite NonBrowser -RetryFailedTests 1
 
       - name: Publish HackerOS PWA
         working-directory: ${{ env.HACKEROS_SOLUTION_DIR }}
@@ -102,7 +111,7 @@ jobs:
 
       - name: Upload verification diagnostics
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: hackeros-verification-${{ github.run_attempt }}
           path: |
@@ -113,7 +122,7 @@ jobs:
 
       - name: Upload verified WASM publish
         if: github.event_name != 'pull_request'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: hackeros-wasm-publish-${{ github.run_attempt }}
           path: wasm2/HackerOs/artifacts/publish/wwwroot
