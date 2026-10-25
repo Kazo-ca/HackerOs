@@ -33,8 +33,51 @@ public sealed class AdminElevationVerifier : IAdminElevationVerifier
     }
 
     /// <inheritdoc />
-    public async Task<AdminElevationVerificationResult> VerifyAsync(
-        string loginName, string password, CancellationToken cancellationToken = default)
+    public Task<AdminElevationVerificationResult> VerifyAsync(
+        string loginName, string password, CancellationToken cancellationToken = default) =>
+        VerifyCoreAsync(
+            loginName,
+            async (user, token) => user.Credential is { } credential
+                && await LocalPasswordHasher.VerifyAsync(password ?? string.Empty, credential, _asyncHasher, token).ConfigureAwait(false),
+            cancellationToken);
+
+    /// <summary>
+    /// Verifies that a login belongs to an enabled Administrator who confirms with one of their
+    /// passkeys (ADR 0168 section 4). Opens no session and no keyring.
+    /// </summary>
+    /// <param name="loginName">The administrator's login.</param>
+    /// <param name="passkeys">The passkey service of this host.</param>
+    /// <param name="cancellationToken">Cancels the verification.</param>
+    /// <returns>The verification; <c>no-passkey</c> when the account has none.</returns>
+    /// <exception cref="OperationCanceledException">The user closed the browser's prompt.</exception>
+    /// <exception cref="NotSupportedException">The page has no WebAuthn.</exception>
+    public Task<AdminElevationVerificationResult> VerifyWithPasskeyAsync(
+        string loginName, PasskeyService passkeys, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(passkeys);
+        return VerifyCoreAsync(
+            loginName,
+            async (user, token) =>
+            {
+                try
+                {
+                    await passkeys.AuthenticateAsync(user, token).ConfigureAwait(false);
+                    return true;
+                }
+                catch (InvalidOperationException)
+                {
+                    return false;
+                }
+            },
+            cancellationToken,
+            requirePasskey: true);
+    }
+
+    private async Task<AdminElevationVerificationResult> VerifyCoreAsync(
+        string loginName,
+        Func<LocalUser, CancellationToken, Task<bool>> proves,
+        CancellationToken cancellationToken,
+        bool requirePasskey = false)
     {
         ArgumentNullException.ThrowIfNull(loginName);
 
@@ -68,9 +111,13 @@ public sealed class AdminElevationVerifier : IAdminElevationVerifier
             return AdminElevationVerificationResult.Failed("not-administrator");
         }
 
-        if (user.Credential is not { } credential
-            || !await LocalPasswordHasher.VerifyAsync(password ?? string.Empty, credential, _asyncHasher, cancellationToken)
-                .ConfigureAwait(false))
+        if (requirePasskey && user.Passkeys.Count == 0)
+        {
+            RecordAudit(user.Id.ToString(), loginName, AuditOutcome.Denied);
+            return AdminElevationVerificationResult.Failed("no-passkey");
+        }
+
+        if (!await proves(user, cancellationToken).ConfigureAwait(false))
         {
             RecordAudit(user.Id.ToString(), loginName, AuditOutcome.Denied);
             return AdminElevationVerificationResult.Failed("invalid-credentials");

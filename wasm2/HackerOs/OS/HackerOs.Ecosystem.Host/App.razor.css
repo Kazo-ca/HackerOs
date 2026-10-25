@@ -105,6 +105,11 @@ button:disabled {
     opacity: 0.55;
 }
 
+.passkey-login {
+    border-color: var(--hos-border, #34444c);
+    background: transparent;
+}
+
 .form-error {
     color: var(--hos-error, #ff9a91);
     font-size: 0.875rem;

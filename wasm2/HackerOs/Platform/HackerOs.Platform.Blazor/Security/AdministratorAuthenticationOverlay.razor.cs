@@ -38,6 +38,8 @@ public sealed partial class AdministratorAuthenticationOverlay
 
     private bool CanAuthenticate => !_isVerifying && !string.IsNullOrWhiteSpace(_login) && !string.IsNullOrEmpty(_password);
 
+    private bool CanUsePasskey => !_isVerifying && !string.IsNullOrWhiteSpace(_login);
+
     /// <inheritdoc />
     protected override void OnInitialized()
     {
@@ -107,7 +109,27 @@ public sealed partial class AdministratorAuthenticationOverlay
         _password = string.Empty;
         AdministratorAuthenticationAttempt attempt = await pending.Request.AuthenticateAsync(_login.Trim(), password, CancellationToken.None);
         _isVerifying = false;
+        ShowAttempt(pending, attempt);
+    }
 
+    /// <summary>ADR 0168 section 4: the administrator confirms with a passkey; the browser asks for their presence.</summary>
+    private async Task AuthenticateWithPasskeyAsync()
+    {
+        if (_current is not { } pending || pending.Request.AuthenticateWithPasskeyAsync is not { } authenticate || !CanUsePasskey)
+        {
+            return;
+        }
+
+        _isVerifying = true;
+        _error = null;
+        _password = string.Empty;
+        AdministratorAuthenticationAttempt attempt = await authenticate(_login.Trim(), CancellationToken.None);
+        _isVerifying = false;
+        ShowAttempt(pending, attempt);
+    }
+
+    private void ShowAttempt(AdministratorAuthenticationBroker.PendingAuthentication pending, AdministratorAuthenticationAttempt attempt)
+    {
         if (attempt.Succeeded)
         {
             pending.Complete(AdministratorAuthenticationOutcome.Approved);
@@ -124,6 +146,9 @@ public sealed partial class AdministratorAuthenticationOverlay
         {
             "not-administrator" => "Security.NotAdministrator",
             "user-disabled" => "Security.UserDisabled",
+            "no-passkey" => "Security.NoPasskey",
+            "passkey-cancelled" => "Security.PasskeyCancelled",
+            "passkey-unsupported" => "Security.PasskeyUnsupported",
             _ => "Security.InvalidCredentials"
         }, attempt.RemainingAttempts];
         _focusPending = true;

@@ -666,4 +666,13 @@ Annuler : décider au prochain lancement.</value>
   <data name="Errno.InvalidArgument" xml:space="preserve">
     <value>Argument invalide</value>
   </data>
+  <data name="Admin.AddUser" xml:space="preserve">
+    <value>Ajouter le compte {0}</value>
+  </data>
+  <data name="Admin.DeleteUser" xml:space="preserve">
+    <value>Supprimer le compte {0} (son dossier personnel est gardé)</value>
+  </data>
+  <data name="Admin.DeleteUserAndHome" xml:space="preserve">
+    <value>Supprimer le compte {0} et son dossier personnel</value>
+  </data>
 </root>

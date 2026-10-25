@@ -113,6 +113,156 @@ public static class HackUserAccounts
         });
     }
 
+    /// <summary>Longest display name of a new account (ADR 0169).</summary>
+    public const int MaximumDisplayNameLength = 128;
+
+    /// <summary>Creates an account (ambient context).</summary>
+    /// <param name="account">The new account.</param>
+    /// <param name="cancellationToken">Cancels the creation.</param>
+    /// <returns>The created account.</returns>
+    public static Task<HackUserAccount> CreateAsync(HackNewUserAccount account, CancellationToken cancellationToken = default) =>
+        CreateAsync(HackExecutionContext.Current, account, cancellationToken);
+
+    /// <summary>
+    /// Creates an account, as <c>useradd -m</c> then <c>passwd</c> (ADR 0169): needs
+    /// <c>users.manage</c> and an administrator. The home directory is created at its first login.
+    /// </summary>
+    /// <param name="context">The calling app's context.</param>
+    /// <param name="account">The new account.</param>
+    /// <param name="cancellationToken">Cancels the creation.</param>
+    /// <returns>The created account.</returns>
+    /// <exception cref="UnauthorizedAccessException">No <c>users.manage</c>, or no administrator confirmed.</exception>
+    /// <exception cref="ArgumentException">A field breaks the rules (see <see cref="ValidateNewAccount"/>), or the name is taken or reserved.</exception>
+    public static Task<HackUserAccount> CreateAsync(IAppExecutionContext context, HackNewUserAccount account, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(account);
+        if (ValidateNewAccount(account) is { } reason)
+        {
+            throw new ArgumentException($"useradd: {reason}", nameof(account));
+        }
+
+        return Call(context, gateway => gateway.CreateAsync(account, cancellationToken));
+    }
+
+    /// <summary>Deletes an account (ambient context).</summary>
+    /// <param name="loginName">The account to delete.</param>
+    /// <param name="removeHome">Whether to delete its home directory too.</param>
+    /// <param name="cancellationToken">Cancels the deletion.</param>
+    public static Task DeleteAsync(string loginName, bool removeHome, CancellationToken cancellationToken = default) =>
+        DeleteAsync(HackExecutionContext.Current, loginName, removeHome, cancellationToken);
+
+    /// <summary>
+    /// Deletes an account, as <c>userdel</c> (or <c>userdel -r</c> with <paramref name="removeHome"/>)
+    /// (ADR 0169): needs <c>users.manage</c> and an administrator. Refused for the caller's own
+    /// account and for the last enabled administrator.
+    /// </summary>
+    /// <param name="context">The calling app's context.</param>
+    /// <param name="loginName">The account to delete.</param>
+    /// <param name="removeHome">Whether to delete its home directory too.</param>
+    /// <param name="cancellationToken">Cancels the deletion.</param>
+    /// <exception cref="UnauthorizedAccessException">No <c>users.manage</c>, or no administrator confirmed.</exception>
+    /// <exception cref="ArgumentException">The account does not exist.</exception>
+    /// <exception cref="InvalidOperationException">The caller's own account, or the last enabled administrator.</exception>
+    public static Task DeleteAsync(IAppExecutionContext context, string loginName, bool removeHome, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(loginName);
+        return Call(context, async gateway =>
+        {
+            await gateway.DeleteAsync(loginName, removeHome, cancellationToken).ConfigureAwait(false);
+            return true;
+        });
+    }
+
+    /// <summary>Lists the session user's passkeys (ambient context).</summary>
+    /// <param name="cancellationToken">Cancels the read.</param>
+    /// <returns>The passkeys, oldest first.</returns>
+    public static Task<IReadOnlyList<HackPasskey>> ListPasskeysAsync(CancellationToken cancellationToken = default) =>
+        ListPasskeysAsync(HackExecutionContext.Current, cancellationToken);
+
+    /// <summary>Lists the session user's passkeys (ADR 0168).</summary>
+    /// <param name="context">The calling app's context.</param>
+    /// <param name="cancellationToken">Cancels the read.</param>
+    /// <returns>The passkeys, oldest first.</returns>
+    public static Task<IReadOnlyList<HackPasskey>> ListPasskeysAsync(IAppExecutionContext context, CancellationToken cancellationToken = default) =>
+        Call(context, gateway => gateway.ListPasskeysAsync(cancellationToken));
+
+    /// <summary>Creates a passkey for the session user (ambient context).</summary>
+    /// <param name="name">Name of the passkey.</param>
+    /// <param name="cancellationToken">Cancels the ceremony.</param>
+    /// <returns>The new passkey.</returns>
+    public static Task<HackPasskey> AddPasskeyAsync(string name, CancellationToken cancellationToken = default) =>
+        AddPasskeyAsync(HackExecutionContext.Current, name, cancellationToken);
+
+    /// <summary>
+    /// Creates a passkey for the session user (ADR 0168): the browser asks for their presence
+    /// (fingerprint, device PIN, security key). No capability: the passkey only signs in this account.
+    /// </summary>
+    /// <param name="context">The calling app's context.</param>
+    /// <param name="name">Name of the passkey, e.g. "Laptop" (64 characters at most).</param>
+    /// <param name="cancellationToken">Cancels the ceremony.</param>
+    /// <returns>The new passkey.</returns>
+    /// <exception cref="NotSupportedException">No WebAuthn in this page or process.</exception>
+    /// <exception cref="OperationCanceledException">The user closed the browser's prompt.</exception>
+    /// <exception cref="InvalidOperationException">The browser's answer failed a check.</exception>
+    public static Task<HackPasskey> AddPasskeyAsync(IAppExecutionContext context, string name, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        return Call(context, gateway => gateway.AddPasskeyAsync(name.Trim(), cancellationToken));
+    }
+
+    /// <summary>Removes one of the session user's passkeys (ambient context).</summary>
+    /// <param name="passkeyId">Its base64url id.</param>
+    /// <param name="cancellationToken">Cancels the change.</param>
+    /// <returns><see langword="true"/> when a passkey was removed.</returns>
+    public static Task<bool> RemovePasskeyAsync(string passkeyId, CancellationToken cancellationToken = default) =>
+        RemovePasskeyAsync(HackExecutionContext.Current, passkeyId, cancellationToken);
+
+    /// <summary>Removes one of the session user's passkeys, and the keyring slot it had.</summary>
+    /// <param name="context">The calling app's context.</param>
+    /// <param name="passkeyId">Its base64url id.</param>
+    /// <param name="cancellationToken">Cancels the change.</param>
+    /// <returns><see langword="true"/> when a passkey was removed.</returns>
+    public static Task<bool> RemovePasskeyAsync(IAppExecutionContext context, string passkeyId, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(passkeyId);
+        return Call(context, gateway => gateway.RemovePasskeyAsync(passkeyId, cancellationToken));
+    }
+
+    /// <summary>
+    /// Checks a new account against the rules of ADR 0169: a login name of lowercase letters,
+    /// digits, <c>-</c> and <c>_</c> starting with a letter (32 characters at most), a display name,
+    /// a user or administrator authority, and a password that passes <see cref="ValidateNewPassword"/>.
+    /// </summary>
+    /// <param name="account">The candidate account.</param>
+    /// <returns><see langword="null"/> when valid; otherwise the reason.</returns>
+    public static string? ValidateNewAccount(HackNewUserAccount? account)
+    {
+        if (account is null)
+        {
+            return "No account has been supplied.";
+        }
+
+        string login = account.LoginName?.Trim() ?? string.Empty;
+        if (login.Length is 0 or > 32
+            || !char.IsAsciiLetterLower(login[0])
+            || !login.All(static c => char.IsAsciiLetterLower(c) || char.IsAsciiDigit(c) || c is '-' or '_'))
+        {
+            return "The login name must start with a lowercase letter and use only lowercase letters, digits, '-' and '_' (32 at most).";
+        }
+
+        if (string.IsNullOrWhiteSpace(account.DisplayName) || account.DisplayName.Trim().Length > MaximumDisplayNameLength)
+        {
+            return $"A display name of 1 to {MaximumDisplayNameLength} characters is required.";
+        }
+
+        if (account.Authority is not (App.Abstractions.AppAuthority.User or App.Abstractions.AppAuthority.Administrator))
+        {
+            return "An account is a user or an administrator.";
+        }
+
+        return ValidateNewPassword(account.Password);
+    }
+
     /// <summary>
     /// Checks a new password against the rules of ADR 0120: between <see cref="MinimumPasswordLength"/>
     /// and <see cref="MaximumPasswordLength"/> characters, with no control character.

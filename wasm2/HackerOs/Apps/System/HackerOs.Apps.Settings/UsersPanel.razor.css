@@ -194,3 +194,41 @@
     font-size: 0.75rem;
     color: var(--hos-error, #ff8f87);
 }
+
+/* ADR 0169: the delete link of each account and its confirmation. */
+.btn-link-danger {
+    padding: 0 4px;
+    border: none;
+    background: none;
+    font-family: inherit;
+    font-size: 0.6875rem;
+    color: var(--hos-error, #ff8f87);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.btn-link-danger:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.delete-confirm {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid color-mix(in srgb, var(--hos-error, #ff8f87) 45%, var(--hos-border, #3a4b53));
+    border-radius: var(--hos-radius-sm, 0.25rem);
+}
+
+.check-field {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 10px;
+    font-size: 0.75rem;
+    color: var(--hos-text-secondary, #a8bac4);
+}
+
+.check-field code {
+    font-family: var(--hos-font-mono, ui-monospace, monospace);
+    color: var(--hos-accent, #42d392);
+}

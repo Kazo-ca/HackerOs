@@ -34,7 +34,7 @@ L'ordre compte : les arguments `--page=` et les crochets d'index s'y appuient.
 | Menus des fichiers | `FileMenuEntriesPanel` | Entrées de menu inscrites par les apps (ADR 0151). |
 | Connexion au serveur | `ServerRelayPolicyPanel` (+ la fenêtre) | Serveur optionnel, relais réseau (ADR 0102, 0134). Visible dans tous les cas, l'état vient de `HackServerConnection`. |
 | Synchronisation | (dans la fenêtre) | État de la synchro et conflits (ADR 0101). |
-| Utilisateurs | `UsersPanel` | Mots de passe, réinitialisation par un administrateur (ADR 0120). |
+| Utilisateurs | `UsersPanel` (+ `PasskeysPanel`) | Comptes, mots de passe, ajout et suppression de comptes par un administrateur, clés d'accès de la session (ADR 0120, 0168, 0169 ; voir [Page Utilisateurs](#page-utilisateurs)). |
 | Mémoire | `MemoryPanel` | Fichier `/etc/hackeros/memory.config`, section `[oom-killer]` (ADR 0126). |
 | Sauvegarde | `BackupPanel` | Présent seulement si `HackSystemBackup.IsSupportedFor` le permet (ADR 0099). |
 | À propos | (dans la fenêtre) | Autorité, redémarrage (`HackSystem.RebootAsync`), zone de danger : réinitialisation d'usine (`HackSystem.FactoryResetAsync`), confirmée par la saisie de `RESET`. |
@@ -64,6 +64,34 @@ Une valeur inconnue de `--page=` est ignorée.
 Les deux opérations d'administration (redémarrage, réinitialisation) font
 confirmer un administrateur par l'OS dans sa propre fenêtre ; l'app ne voit
 jamais le mot de passe ([`admin-authentication-agent.md`](admin-authentication-agent.md)).
+
+## Page Utilisateurs
+
+`UsersPanel` (ADR 0120, 0169) et `PasskeysPanel` (ADR 0168), de haut en bas :
+
+- **Liste des comptes** : nom de connexion, nom affiché, badges
+  « Administrateur », « Vous », nombre de clés d'accès, état `P`/`NP`/`L`. Pour
+  un administrateur, un lien « Supprimer » sur chaque compte autre que le sien
+  ouvre une confirmation avec la case « Supprimer aussi son dossier
+  personnel `/home/<login>` », décochée par défaut
+  (`HackUserAccounts.DeleteAsync(login, removeHome)`).
+- **Ajouter un compte** (administrateur seulement) : nom de connexion, nom
+  affiché, type standard ou administrateur, mot de passe initial et
+  confirmation, vérifiés par `HackUserAccounts.ValidateNewAccount` avant
+  l'envoi (`HackUserAccounts.CreateAsync`).
+- **Mes clés d'accès** (tout le monde) : nom, date d'ajout et de dernière
+  utilisation, badge « trousseau » si la clé ouvre le trousseau (PRF), bouton
+  « Retirer », et un champ « Nom » + « Ajouter une clé d'accès » qui lance la
+  demande du navigateur. Sans WebAuthn (page non sécurisée), une note remplace
+  le formulaire. Voir [`passkeys.md`](passkeys.md).
+- **Mon mot de passe**, puis pour un administrateur la **réinitialisation**
+  du mot de passe d'un autre compte (ADR 0120).
+
+Ajouter, supprimer et réinitialiser demandent `users.manage` et la
+confirmation d'un administrateur dans la fenêtre de l'OS (mot de passe ou clé
+d'accès). Gérer ses propres clés d'accès ne demande aucune capacité : le
+navigateur demande la présence de l'utilisateur. La navigation de la fenêtre
+n'est pas concernée par ces panneaux.
 
 ## Ce que l'app ne fait pas
 

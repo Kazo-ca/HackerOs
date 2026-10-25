@@ -98,6 +98,37 @@ public sealed class AdministratorAuthenticationAgentTests
         Assert.Equal("cancelled", result.FailureReason);
     }
 
+    [Fact]
+    public async Task A_cancelled_passkey_prompt_costs_no_attempt_and_a_verified_passkey_approves()
+    {
+        int calls = 0;
+        PasskeyPrompt prompt = new(times: 4);
+        AdministratorAuthenticationAgent agent = new(new FakeVerifier(), new BoundedAuditLog(maxEntries: 20), prompt)
+        {
+            // The browser prompt is closed three times (NotAllowedError), then the passkey is verified.
+            PasskeyVerifier = (_, _) => ++calls <= 3
+                ? throw new OperationCanceledException()
+                : Task.FromResult(new AdminElevationVerificationResult(true, "uid-admin", "admin", null))
+        };
+
+        AdministratorAuthenticationResult result = await agent.AuthenticateAsync(Request());
+
+        Assert.True(result.Succeeded);
+        Assert.Equal("admin", result.AdministratorLogin);
+        Assert.All(prompt.Remaining.Take(3), remaining => Assert.Equal(3, remaining));
+    }
+
+    [Fact]
+    public async Task Without_a_passkey_verifier_the_prompt_offers_no_passkey()
+    {
+        PasskeyPrompt prompt = new(times: 0);
+        AdministratorAuthenticationAgent agent = new(new FakeVerifier(), new BoundedAuditLog(maxEntries: 20), prompt);
+
+        await agent.AuthenticateAsync(Request());
+
+        Assert.False(prompt.OfferedPasskey);
+    }
+
     private static AdministratorAuthenticationRequest Request(bool isRootElevated = false) =>
         new(App, "Uninstall Calc for all users", "apps.uninstall.machine", null, isRootElevated);
 
@@ -142,6 +173,32 @@ public sealed class AdministratorAuthenticationAgentTests
                     // A real overlay closes here; keep submitting to prove the agent refuses.
                     continue;
                 }
+            }
+
+            return AdministratorAuthenticationOutcome.Cancelled;
+        }
+    }
+
+    /// <summary>Confirms with a passkey up to <paramref name="times"/> times, recording the attempts left.</summary>
+    private sealed class PasskeyPrompt(int times) : IAdministratorAuthenticationPrompt
+    {
+        public List<int> Remaining { get; } = [];
+
+        public bool OfferedPasskey { get; private set; }
+
+        public async Task<AdministratorAuthenticationOutcome> RequestAsync(
+            AdministratorAuthenticationPromptRequest request, CancellationToken cancellationToken = default)
+        {
+            OfferedPasskey = request.AuthenticateWithPasskeyAsync is not null;
+            for (int index = 0; index < times && request.AuthenticateWithPasskeyAsync is { } passkey; index++)
+            {
+                AdministratorAuthenticationAttempt attempt = await passkey("admin", cancellationToken);
+                if (attempt.Succeeded)
+                {
+                    return AdministratorAuthenticationOutcome.Approved;
+                }
+
+                Remaining.Add(attempt.RemainingAttempts);
             }
 
             return AdministratorAuthenticationOutcome.Cancelled;

@@ -63,6 +63,13 @@
 
                     <div class="aaa-actions">
                         <button type="button" class="aaa-cancel" disabled="@_isVerifying" @onclick="Cancel">@L["Common.Cancel"]</button>
+                        @if (request.AuthenticateWithPasskeyAsync is not null)
+                        {
+                            <button type="button" class="aaa-passkey" disabled="@(!CanUsePasskey)" @onclick="AuthenticateWithPasskeyAsync">
+                                <HackerIcon Library="IconLibrary.Lucide" Name="fingerprint" Size="16" Title="" />
+                                @L["Auth.UsePasskey"]
+                            </button>
+                        }
                         <button type="submit" class="aaa-authenticate" disabled="@(!CanAuthenticate)">
                             @(_isVerifying ? L["Security.Verifying"] : L["Auth.Authenticate"])
                         </button>

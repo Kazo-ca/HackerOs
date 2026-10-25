@@ -27,15 +27,31 @@ public interface ISessionKeyring
     /// <param name="cancellationToken">Cancels the unlock.</param>
     ValueTask UnlockAsync(AuthenticatedPrincipal principal, string? password, CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Unlocks the user's keyring with the PRF output of the passkey they signed in with
+    /// (ADR 0168 section 3). Never fails the login and never sets a keyring aside: without a PRF
+    /// output or a slot for that passkey, the keyring stays locked for the session.
+    /// </summary>
+    /// <param name="principal">The user who just authenticated.</param>
+    /// <param name="credentialId">Base64url id of the passkey used.</param>
+    /// <param name="prfOutput">The PRF output of that passkey, or <see langword="null"/> when the authenticator gave none.</param>
+    /// <param name="cancellationToken">Cancels the unlock.</param>
+    ValueTask UnlockWithPasskeyAsync(
+        AuthenticatedPrincipal principal,
+        string credentialId,
+        byte[]? prfOutput,
+        CancellationToken cancellationToken = default) => ValueTask.CompletedTask;
+
     /// <summary>Forgets the key and the decrypted entries (logout).</summary>
     void Lock();
 }
 
 /// <summary>
 /// The session user's keyring, <c>~/.local/share/keyrings/login.keyring</c> (ADR 0100 section 2),
-/// like gnome-keyring's login keyring: unlocked at login with a key derived from the password
-/// (PBKDF2-SHA256, same work factor as the password hash, own salt), sealed with AES-256-GCM, kept
-/// in memory for the session and forgotten at logout.
+/// like gnome-keyring's login keyring: sealed with AES-256-GCM under a random master key, kept in
+/// memory for the session and forgotten at logout. The master key is wrapped in one slot per way of
+/// unlocking (ADR 0168 section 3): the password (PBKDF2-SHA256, same work factor as the password
+/// hash, own salt) and every passkey whose authenticator has the PRF extension.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -62,6 +78,10 @@ public sealed class UserKeyringService : ISessionKeyring
     /// <summary>File name of the login keyring.</summary>
     public const string LoginKeyringName = "login.keyring";
 
+    /// <summary>Prefix hashed with a PRF output to make the key of a passkey slot (ADR 0168 section 3).</summary>
+    public const string PrfKeyPrefix = "hackeros-keyring-prf-v1";
+
+    private const int MasterKeyLength = 32;
     private const ushort DirectoryMode = 0b111_000_000;
     private const ushort FileMode = 0b110_000_000;
     private const int SaltLength = 16;
@@ -131,9 +151,16 @@ public sealed class UserKeyringService : ISessionKeyring
                 return;
             }
 
-            if (read.Exists && await TryOpenAsync(read.Content!, password, cancellationToken).ConfigureAwait(false) is { } opened)
+            if (read.Exists && await TryOpenWithPasswordAsync(principal, read.Content!, password, cancellationToken).ConfigureAwait(false) is { } opened)
             {
-                _unlocked = new UnlockedKeyring(principal, opened.Key, opened.Salt, opened.Iterations, opened.Entries);
+                _unlocked = opened;
+                if (KeyringFileFormat.ReadVersion(read.Content!) != KeyringFileFormat.VersionWithSlots)
+                {
+                    // ADR 0168 section 3: a format 1 keyring is rewritten with a master key and slots.
+                    await SaveAsync(opened, cancellationToken).ConfigureAwait(false);
+                    Audit(principal, "keyring.upgrade", AuditOutcome.Success);
+                }
+
                 Audit(principal, "keyring.unlock", AuditOutcome.Success);
                 return;
             }
@@ -146,9 +173,9 @@ public sealed class UserKeyringService : ISessionKeyring
                 Audit(principal, "keyring.reset", AuditOutcome.Success);
             }
 
-            byte[] salt = RandomNumberGenerator.GetBytes(SaltLength);
-            byte[] key = await _cipher.DeriveKeyAsync(password, salt, _iterations, cancellationToken).ConfigureAwait(false);
-            UnlockedKeyring created = new(principal, key, salt, _iterations, []);
+            byte[] masterKey = RandomNumberGenerator.GetBytes(MasterKeyLength);
+            KeyringSlot slot = await CreatePasswordSlotAsync(masterKey, password, cancellationToken).ConfigureAwait(false);
+            UnlockedKeyring created = new(principal, masterKey, [slot], []);
             await SaveAsync(created, cancellationToken).ConfigureAwait(false);
             _unlocked = created;
             Audit(principal, "keyring.create", AuditOutcome.Success);
@@ -179,8 +206,8 @@ public sealed class UserKeyringService : ISessionKeyring
     }
 
     /// <summary>
-    /// Re-seals the unlocked keyring under a new password (new salt), for <c>passwd</c>. The caller
-    /// has already verified the old password.
+    /// Wraps the master key of the unlocked keyring under a new password (new salt), for
+    /// <c>passwd</c>; the passkey slots stay valid. The caller has already verified the old password.
     /// </summary>
     /// <param name="userId">The user changing their password; must own the unlocked keyring.</param>
     /// <param name="newPassword">New password.</param>
@@ -193,11 +220,12 @@ public sealed class UserKeyringService : ISessionKeyring
         try
         {
             UnlockedKeyring current = RequireUnlocked(userId);
-            byte[] salt = RandomNumberGenerator.GetBytes(SaltLength);
-            byte[] key = await _cipher.DeriveKeyAsync(newPassword, salt, _iterations, cancellationToken).ConfigureAwait(false);
-            UnlockedKeyring resealed = current with { Key = key, Salt = salt, Iterations = _iterations };
+            KeyringSlot slot = await CreatePasswordSlotAsync(current.Key, newPassword, cancellationToken).ConfigureAwait(false);
+            UnlockedKeyring resealed = current with
+            {
+                Slots = [slot, .. current.Slots.Where(static existing => existing.Kind != KeyringFileFormat.PasswordSlot)]
+            };
             await SaveAsync(resealed, cancellationToken).ConfigureAwait(false);
-            CryptographicOperations.ZeroMemory(current.Key);
             _unlocked = resealed;
             Audit(current.Principal, "keyring.rekey", AuditOutcome.Success);
         }
@@ -205,6 +233,174 @@ public sealed class UserKeyringService : ISessionKeyring
         {
             _gate.Release();
         }
+    }
+
+    /// <inheritdoc />
+    public async ValueTask UnlockWithPasskeyAsync(
+        AuthenticatedPrincipal principal,
+        string credentialId,
+        byte[]? prfOutput,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(principal);
+        ArgumentException.ThrowIfNullOrEmpty(credentialId);
+        await _gate.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            ForgetKey();
+            if (prfOutput is not { Length: > 0 })
+            {
+                _logger.LogInformation("keyring: passkey without PRF output, keyring stays locked");
+                return;
+            }
+
+            IAppFileSystemGateway files = CreateUserGateway(principal);
+            SettingsFileReadResult read = await SettingsTextFile
+                .ReadAsync(files, GetKeyringPath(principal.HomePath), cancellationToken)
+                .ConfigureAwait(false);
+            if (!read.Exists || KeyringFileFormat.ReadEnvelopeV2(read.Content!) is not { } envelope
+                || envelope.Slots.FirstOrDefault(slot => slot.Kind == KeyringFileFormat.PasskeySlot && slot.CredentialId == credentialId) is not { } slot)
+            {
+                _logger.LogInformation("keyring: no slot for this passkey, keyring stays locked");
+                return;
+            }
+
+            byte[] slotKey = DerivePasskeySlotKey(prfOutput);
+            byte[]? masterKey = await _cipher.DecryptAsync(slotKey, slot.Nonce, slot.WrappedKey, cancellationToken).ConfigureAwait(false);
+            CryptographicOperations.ZeroMemory(slotKey);
+            if (masterKey is null || await OpenEntriesAsync(masterKey, envelope, cancellationToken).ConfigureAwait(false) is not { } entries)
+            {
+                Audit(principal, "keyring.unlock", AuditOutcome.Denied);
+                return;
+            }
+
+            _unlocked = new UnlockedKeyring(principal, masterKey, envelope.Slots, entries);
+            Audit(principal, "keyring.unlock", AuditOutcome.Success);
+        }
+        catch (Exception exception) when (exception is not OperationCanceledException and not OutOfMemoryException)
+        {
+            ForgetKey();
+            _logger.LogWarning(exception, "keyring: passkey unlock failed, keyring stays locked");
+        }
+        finally
+        {
+            _gate.Release();
+        }
+    }
+
+    /// <summary>
+    /// Adds (or replaces) the slot of one passkey to the unlocked keyring, so that signing in with
+    /// that passkey opens it (ADR 0168 section 3).
+    /// </summary>
+    /// <param name="userId">The owner of the unlocked keyring.</param>
+    /// <param name="credentialId">Base64url id of the passkey.</param>
+    /// <param name="prfOutput">The PRF output of that passkey with its salt.</param>
+    /// <param name="cancellationToken">Cancels the write.</param>
+    /// <exception cref="HackerOs.AppSdk.Keyring.HackKeyringLockedException">That user's keyring is not unlocked.</exception>
+    public async ValueTask AddPasskeySlotAsync(LocalUserId userId, string credentialId, byte[] prfOutput, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(credentialId);
+        ArgumentNullException.ThrowIfNull(prfOutput);
+        await _gate.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            UnlockedKeyring current = RequireUnlocked(userId);
+            byte[] slotKey = DerivePasskeySlotKey(prfOutput);
+            byte[] nonce = RandomNumberGenerator.GetBytes(NonceLength);
+            byte[] wrapped = await _cipher.EncryptAsync(slotKey, nonce, current.Key, cancellationToken).ConfigureAwait(false);
+            CryptographicOperations.ZeroMemory(slotKey);
+            UnlockedKeyring next = current with
+            {
+                Slots =
+                [
+                    .. current.Slots.Where(slot => slot.CredentialId != credentialId),
+                    new KeyringSlot(KeyringFileFormat.PasskeySlot, credentialId, null, 0, nonce, wrapped)
+                ]
+            };
+            await SaveAsync(next, cancellationToken).ConfigureAwait(false);
+            _unlocked = next;
+            Audit(current.Principal, "keyring.slot-add", AuditOutcome.Success);
+        }
+        finally
+        {
+            _gate.Release();
+        }
+    }
+
+    /// <summary>
+    /// Removes the slot of one passkey. The slots are in clear, so a locked keyring is edited too.
+    /// </summary>
+    /// <param name="principal">The owner of the keyring.</param>
+    /// <param name="credentialId">Base64url id of the passkey.</param>
+    /// <param name="cancellationToken">Cancels the write.</param>
+    /// <returns><see langword="true"/> when a slot was removed.</returns>
+    public async ValueTask<bool> RemovePasskeySlotAsync(AuthenticatedPrincipal principal, string credentialId, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(principal);
+        ArgumentException.ThrowIfNullOrEmpty(credentialId);
+        await _gate.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            if (_unlocked is { } current && current.Principal.UserId == principal.UserId)
+            {
+                if (current.Slots.All(slot => slot.CredentialId != credentialId))
+                {
+                    return false;
+                }
+
+                UnlockedKeyring next = current with { Slots = [.. current.Slots.Where(slot => slot.CredentialId != credentialId)] };
+                await SaveAsync(next, cancellationToken).ConfigureAwait(false);
+                _unlocked = next;
+                Audit(principal, "keyring.slot-remove", AuditOutcome.Success);
+                return true;
+            }
+
+            IAppFileSystemGateway files = CreateUserGateway(principal);
+            VirtualPath path = GetKeyringPath(principal.HomePath);
+            SettingsFileReadResult read = await SettingsTextFile.ReadAsync(files, path, cancellationToken).ConfigureAwait(false);
+            if (!read.Exists || KeyringFileFormat.ReadEnvelopeV2(read.Content!) is not { } envelope
+                || envelope.Slots.All(slot => slot.CredentialId != credentialId))
+            {
+                return false;
+            }
+
+            string text = KeyringFileFormat.WriteEnvelope(
+                envelope with { Slots = [.. envelope.Slots.Where(slot => slot.CredentialId != credentialId)] });
+            FileSystemError? error = await SettingsTextFile
+                .EditAsync(files, path, _ => text, createIfMissing: false, FileMode, cancellationToken)
+                .ConfigureAwait(false);
+            if (error is not null)
+            {
+                throw new IOException($"Cannot save the keyring '{path.Value}': {error.Code}.");
+            }
+
+            Audit(principal, "keyring.slot-remove", AuditOutcome.Success);
+            return true;
+        }
+        finally
+        {
+            _gate.Release();
+        }
+    }
+
+    /// <summary>Gets whether the keyring file of <paramref name="principal"/> has a slot for a passkey.</summary>
+    /// <param name="principal">The owner of the keyring.</param>
+    /// <param name="cancellationToken">Cancels the read.</param>
+    /// <returns>The base64url ids of the passkeys that open the keyring.</returns>
+    public async ValueTask<IReadOnlySet<string>> GetPasskeySlotIdsAsync(AuthenticatedPrincipal principal, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(principal);
+        if (_unlocked is { } current && current.Principal.UserId == principal.UserId)
+        {
+            return PasskeyIds(current.Slots);
+        }
+
+        SettingsFileReadResult read = await SettingsTextFile
+            .ReadAsync(CreateUserGateway(principal), GetKeyringPath(principal.HomePath), cancellationToken)
+            .ConfigureAwait(false);
+        return read.Exists && KeyringFileFormat.ReadEnvelopeV2(read.Content!) is { } envelope
+            ? PasskeyIds(envelope.Slots)
+            : new HashSet<string>(StringComparer.Ordinal);
     }
 
     /// <summary>
@@ -314,24 +510,86 @@ public sealed class UserKeyringService : ISessionKeyring
             ? unlocked
             : throw new HackerOs.AppSdk.Keyring.HackKeyringLockedException("The keyring of this user is locked.");
 
-    private async ValueTask<OpenedKeyring?> TryOpenAsync(string text, string password, CancellationToken cancellationToken)
+    private async ValueTask<UnlockedKeyring?> TryOpenWithPasswordAsync(
+        AuthenticatedPrincipal principal, string text, string password, CancellationToken cancellationToken)
     {
-        if (KeyringFileFormat.ReadEnvelope(text) is not { } envelope)
+        if (KeyringFileFormat.ReadEnvelopeV2(text) is { } envelope)
+        {
+            if (envelope.Slots.FirstOrDefault(static slot => slot.Kind == KeyringFileFormat.PasswordSlot) is not { } slot)
+            {
+                return null;
+            }
+
+            byte[] slotKey = await _cipher.DeriveKeyAsync(password, slot.Salt!, slot.Iterations, cancellationToken).ConfigureAwait(false);
+            byte[]? masterKey = await _cipher.DecryptAsync(slotKey, slot.Nonce, slot.WrappedKey, cancellationToken).ConfigureAwait(false);
+            CryptographicOperations.ZeroMemory(slotKey);
+            if (masterKey is null || await OpenEntriesAsync(masterKey, envelope, cancellationToken).ConfigureAwait(false) is not { } entries)
+            {
+                return null;
+            }
+
+            return new UnlockedKeyring(principal, masterKey, envelope.Slots, entries);
+        }
+
+        if (KeyringFileFormat.ReadEnvelope(text) is not { } legacy)
         {
             return null;
         }
 
-        byte[] key = await _cipher.DeriveKeyAsync(password, envelope.Salt, envelope.Iterations, cancellationToken).ConfigureAwait(false);
-        byte[]? plaintext = await _cipher.DecryptAsync(key, envelope.Nonce, envelope.SealedData, cancellationToken).ConfigureAwait(false);
-        if (plaintext is null || KeyringFileFormat.ReadEntries(plaintext) is not { } entries)
+        // Format 1: the entries are sealed under the password key itself. They move under a new
+        // master key, wrapped in a password slot; the caller saves the keyring in format 2.
+        byte[] key = await _cipher.DeriveKeyAsync(password, legacy.Salt, legacy.Iterations, cancellationToken).ConfigureAwait(false);
+        byte[]? plaintext = await _cipher.DecryptAsync(key, legacy.Nonce, legacy.SealedData, cancellationToken).ConfigureAwait(false);
+        CryptographicOperations.ZeroMemory(key);
+        if (plaintext is null || KeyringFileFormat.ReadEntries(plaintext) is not { } legacyEntries)
         {
-            CryptographicOperations.ZeroMemory(key);
             return null;
         }
 
         CryptographicOperations.ZeroMemory(plaintext);
-        return new OpenedKeyring(key, envelope.Salt, envelope.Iterations, entries);
+        byte[] newMasterKey = RandomNumberGenerator.GetBytes(MasterKeyLength);
+        KeyringSlot passwordSlot = await CreatePasswordSlotAsync(newMasterKey, password, cancellationToken).ConfigureAwait(false);
+        return new UnlockedKeyring(principal, newMasterKey, [passwordSlot], legacyEntries);
     }
+
+    private async ValueTask<List<KeyringEntryRecord>?> OpenEntriesAsync(byte[] masterKey, KeyringEnvelopeV2 envelope, CancellationToken cancellationToken)
+    {
+        byte[]? plaintext = await _cipher.DecryptAsync(masterKey, envelope.Nonce, envelope.SealedData, cancellationToken).ConfigureAwait(false);
+        if (plaintext is null)
+        {
+            return null;
+        }
+
+        List<KeyringEntryRecord>? entries = KeyringFileFormat.ReadEntries(plaintext);
+        CryptographicOperations.ZeroMemory(plaintext);
+        return entries;
+    }
+
+    private async ValueTask<KeyringSlot> CreatePasswordSlotAsync(byte[] masterKey, string password, CancellationToken cancellationToken)
+    {
+        byte[] salt = RandomNumberGenerator.GetBytes(SaltLength);
+        byte[] slotKey = await _cipher.DeriveKeyAsync(password, salt, _iterations, cancellationToken).ConfigureAwait(false);
+        byte[] nonce = RandomNumberGenerator.GetBytes(NonceLength);
+        byte[] wrapped = await _cipher.EncryptAsync(slotKey, nonce, masterKey, cancellationToken).ConfigureAwait(false);
+        CryptographicOperations.ZeroMemory(slotKey);
+        return new KeyringSlot(KeyringFileFormat.PasswordSlot, null, salt, _iterations, nonce, wrapped);
+    }
+
+    /// <summary>The key of a passkey slot: SHA-256 of a fixed prefix and the PRF output (ADR 0168 section 3).</summary>
+    internal static byte[] DerivePasskeySlotKey(byte[] prfOutput)
+    {
+        byte[] prefix = Encoding.UTF8.GetBytes(PrfKeyPrefix);
+        byte[] input = new byte[prefix.Length + prfOutput.Length];
+        prefix.CopyTo(input, 0);
+        prfOutput.CopyTo(input, prefix.Length);
+        byte[] key = SHA256.HashData(input);
+        CryptographicOperations.ZeroMemory(input);
+        return key;
+    }
+
+    private static HashSet<string> PasskeyIds(IEnumerable<KeyringSlot> slots) => new(
+        slots.Where(static slot => slot.Kind == KeyringFileFormat.PasskeySlot && slot.CredentialId is not null).Select(static slot => slot.CredentialId!),
+        StringComparer.Ordinal);
 
     private async ValueTask SaveAsync(UnlockedKeyring keyring, CancellationToken cancellationToken)
     {
@@ -339,7 +597,7 @@ public sealed class UserKeyringService : ISessionKeyring
         byte[] nonce = RandomNumberGenerator.GetBytes(NonceLength);
         byte[] sealedData = await _cipher.EncryptAsync(keyring.Key, nonce, plaintext, cancellationToken).ConfigureAwait(false);
         CryptographicOperations.ZeroMemory(plaintext);
-        string text = KeyringFileFormat.WriteEnvelope(new KeyringEnvelope(keyring.Iterations, keyring.Salt, nonce, sealedData));
+        string text = KeyringFileFormat.WriteEnvelope(new KeyringEnvelopeV2(keyring.Slots, nonce, sealedData));
 
         IAppFileSystemGateway files = CreateUserGateway(keyring.Principal);
         VirtualPath path = GetKeyringPath(keyring.Principal.HomePath);
@@ -458,8 +716,7 @@ public sealed class UserKeyringService : ISessionKeyring
         _audit?.Record(new AuditEntry(
             _clock.UtcNow, Guid.NewGuid(), principal.UserId.ToString(), action, GetKeyringPath(principal.HomePath).Value, outcome));
 
+    /// <summary>The open keyring: its owner, the master key, the slots that wrap it, and the entries.</summary>
     private sealed record UnlockedKeyring(
-        AuthenticatedPrincipal Principal, byte[] Key, byte[] Salt, int Iterations, IReadOnlyList<KeyringEntryRecord> Entries);
-
-    private sealed record OpenedKeyring(byte[] Key, byte[] Salt, int Iterations, List<KeyringEntryRecord> Entries);
+        AuthenticatedPrincipal Principal, byte[] Key, IReadOnlyList<KeyringSlot> Slots, IReadOnlyList<KeyringEntryRecord> Entries);
 }

@@ -86,6 +86,13 @@ public sealed record AdministratorAuthenticationPromptRequest(
 {
     /// <summary>Maximum number of credential attempts before the request is cancelled.</summary>
     public const int MaxAttempts = 3;
+
+    /// <summary>
+    /// Gets how to authenticate an administrator with one of their passkeys instead of a password
+    /// (ADR 0168 section 4): takes the administrator's login; <see langword="null"/> when the host
+    /// has no passkeys, and the prompt then offers the password only.
+    /// </summary>
+    public Func<string, CancellationToken, Task<AdministratorAuthenticationAttempt>>? AuthenticateWithPasskeyAsync { get; init; }
 }
 
 /// <summary>
