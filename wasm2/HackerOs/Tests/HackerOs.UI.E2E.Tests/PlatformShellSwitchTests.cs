@@ -7,7 +7,7 @@ namespace HackerOs.UI.E2E.Tests;
 public sealed class PlatformShellSwitchTests(ITestOutputHelper output)
 {
     /// <summary>
-    /// End-to-end proof of the controlled platform switch (docs/mobile-interface-platform-plan.md
+    /// End-to-end proof of the controlled platform switch (doc/wasm/dev/old/mobile-interface-platform-plan.md
     /// §6.3, <c>MOB-008</c>): selecting Mobile in the clock panel swaps the rendered shell live
     /// (no reload) from the Desktop taskbar to the Mobile system navigation bar, and Mobile's
     /// swipe-down notification shade (reusing the same clock panel) swaps it back.

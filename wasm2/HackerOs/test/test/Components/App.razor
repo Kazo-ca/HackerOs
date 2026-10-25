@@ -28,7 +28,7 @@
       The design-system tokens (--hos-*) are a static web asset of HackerOs.Ecosystem.Host (ADR 0098 §2),
       so every host serves them under that library's _content/ prefix. This host must never keep its own
       wwwroot/app.css: the `dotnet new blazor` stub once shadowed the real file and left every HackerOS
-      surface unstyled (see docs/old/webassembly-debugging.md).
+      surface unstyled (see doc/wasm/dev/old/webassembly-debugging.md).
     -->
     <link rel="stylesheet" href="_content/HackerOs.Ecosystem.Host/css/app.css" />
     <link rel="stylesheet" href="@Assets["test.styles.css"]" />

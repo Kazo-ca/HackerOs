@@ -5,7 +5,7 @@ namespace HackerOs.Apps.FileExplorer.FileControl.ContextMenu;
 
 /// <summary>
 /// Identifies which right-click surface a <see cref="IFileViewContextMenuProvider"/> customizes. See
-/// <c>docs/Global-FileView-And-MessagingSystem/FileViewControl.md#context-menu-customization</c>.
+/// <c>doc/wasm/dev/old/Global-FileView-And-MessagingSystem/FileViewControl.md#context-menu-customization</c>.
 /// </summary>
 public enum FileViewContextMenuScope
 {
@@ -107,7 +107,7 @@ public sealed record FileViewContextMenuContext(FileViewContextMenuScope Scope, 
 /// Registered via <c>FileView.ContextMenuProviders</c>, evaluated in list order:
 /// Background/Directory/File providers first, then every matching <see cref="FileViewContextMenuScope.FileType"/>
 /// provider, before the host-level <c>ContextMenuOpening</c> event gets one final look. See
-/// <c>docs/Global-FileView-And-MessagingSystem/FileViewControl.md#context-menu-customization</c> for the
+/// <c>doc/wasm/dev/old/Global-FileView-And-MessagingSystem/FileViewControl.md#context-menu-customization</c> for the
 /// worked <c>.zip</c> "UnZip Here…" example this interface exists to support.
 /// </summary>
 public interface IFileViewContextMenuProvider

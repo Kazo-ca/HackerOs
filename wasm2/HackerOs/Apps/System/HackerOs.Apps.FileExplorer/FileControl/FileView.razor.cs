@@ -20,7 +20,7 @@ namespace HackerOs.Apps.FileExplorer.FileControl;
 /// Shared backing for <see cref="FileView"/> — navigation, selection, inline rename, folder activation,
 /// live-watch wiring, and control-initiated create/delete. Markup lives in <c>FileView.razor</c>; view-mode
 /// renderers (<c>FileViewDetails</c>, ...) call back into the <c>internal</c> members here. See
-/// <c>docs/Global-FileView-And-MessagingSystem/FileViewControl.md</c>.
+/// <c>doc/wasm/dev/old/Global-FileView-And-MessagingSystem/FileViewControl.md</c>.
 /// </summary>
 public partial class FileView : IAsyncDisposable
 {

@@ -9,7 +9,7 @@ namespace HackerOs.Apps.FileExplorer.FileControl.Events;
 /// Base type for every cancelable "-ing" event raised by <see cref="FileView"/> before it performs an
 /// observable action. Setting <see cref="Cancel"/> stops the action from proceeding — this is the
 /// literal <c>e.Cancel = true</c> interception point requested for the control. See
-/// <c>docs/Global-FileView-And-MessagingSystem/FileViewControl.md#cancelable-eventing-model</c>.
+/// <c>doc/wasm/dev/old/Global-FileView-And-MessagingSystem/FileViewControl.md#cancelable-eventing-model</c>.
 /// </summary>
 public abstract class FileViewCancelEventArgs : EventArgs
 {

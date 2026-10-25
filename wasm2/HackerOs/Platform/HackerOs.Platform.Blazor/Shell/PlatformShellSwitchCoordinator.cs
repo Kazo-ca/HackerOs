@@ -10,7 +10,7 @@ using HackerOs.Windowing.Abstractions;
 namespace HackerOs.Platform.Blazor.Shell;
 
 /// <summary>
-/// Drives the controlled platform-switch sequence, per docs/mobile-interface-platform-plan.md §6.3
+/// Drives the controlled platform-switch sequence, per doc/wasm/dev/old/mobile-interface-platform-plan.md §6.3
 /// (<c>MOB-008</c>): confirm the dirty state of every window that would need to stop, stop each such
 /// window's owning instance with the typed <see cref="ProcessExitReason.PlatformChanged"/> reason and
 /// remove its window, then persist the new preference through <see cref="UiPlatformPreferenceService"/>.

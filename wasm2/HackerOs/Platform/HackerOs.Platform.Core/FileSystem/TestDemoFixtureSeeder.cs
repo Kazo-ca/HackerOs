@@ -7,7 +7,7 @@ namespace HackerOs.Platform.Core.FileSystem;
 /// <summary>
 /// Seeds a deterministic file/folder fixture into the signed-in user's home directory.
 /// Only ever invoked from the "Test Demo" control, which is itself gated to E2E test
-/// runs (see <c>docs/e2e-test-demo-mode.md</c>). Writes go through the trusted platform
+/// runs (see <c>doc/wasm/dev/old/e2e-test-demo-mode.md</c>). Writes go through the trusted platform
 /// <see cref="IFileSystemService"/> as a system operation, the same way
 /// <see cref="FileSystemSeeder"/> provisions the default home layout at login.
 /// </summary>

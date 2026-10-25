@@ -33,7 +33,7 @@ public sealed record AppPlatformEntryPointResolution(
 
 /// <summary>
 /// Resolves which of a manifest's declared entry points activates an app on a given platform, per
-/// docs/mobile-interface-platform-plan.md §5 (<c>MOB-005</c>): "Manifest + plateforme active →
+/// doc/wasm/dev/old/mobile-interface-platform-plan.md §5 (<c>MOB-005</c>): "Manifest + plateforme active →
 /// validation de compatibilité → point d'entrée unique → découverte du type → descripteur effectif →
 /// lancement." This covers the first step; type discovery remains <see cref="AppEntryPointDiscovery"/>'s
 /// job.

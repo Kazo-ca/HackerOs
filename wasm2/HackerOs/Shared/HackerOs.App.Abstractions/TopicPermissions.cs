@@ -5,7 +5,7 @@ namespace HackerOs.App.Abstractions;
 /// <summary>
 /// Validates app-declared topic-permission capability identifiers — the mechanism an app uses to gate
 /// its own shared messaging channel behind a permission other apps must be explicitly granted, per
-/// <c>docs/adr/0040-declared-topic-permissions.md</c>. Kept deliberately separate from the fixed,
+/// <c>doc/wasm/dev/adr/0040-declared-topic-permissions.md</c>. Kept deliberately separate from the fixed,
 /// curated <see cref="AppCapabilities"/> OS-resource catalog (ADR 0003 governs that catalog's exact-match
 /// semantics; this is a parallel, app-declared space, not an addition to it).
 /// </summary>

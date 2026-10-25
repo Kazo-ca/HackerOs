@@ -15,7 +15,7 @@ dotnet run --project OS/HackerOs.Ecosystem     # l'OS, en PWA autonome
 ```
 
 Prérequis, hôtes de débogage, publication et contournements en conteneur :
-[`docs/building-and-testing.md`](docs/building-and-testing.md).
+[`doc/wasm/dev/building-and-testing.md`](../../doc/wasm/dev/building-and-testing.md).
 
 ## Structure
 
@@ -31,19 +31,21 @@ Prérequis, hôtes de débogage, publication et contournements en conteneur :
 | `Tests/` | Tests unitaires, d'intégration MSBuild et E2E. |
 
 Le détail de chaque projet est dans
-[`docs/project-overview.md`](docs/project-overview.md).
+[`doc/wasm/dev/project-overview.md`](../../doc/wasm/dev/project-overview.md).
 
 ## Documentation
 
-[`docs/README.md`](docs/README.md) est l'index de toute la documentation
+[`doc/wasm/README.md`](../../doc/wasm/README.md) est l'index de toute la documentation
 (rédigée en français). Par où commencer :
 
-- [`docs/project-overview.md`](docs/project-overview.md) : comprendre le code ;
-- [`docs/sdk-developer-guide.md`](docs/sdk-developer-guide.md) et
-  [`docs/sdk-reference.md`](docs/sdk-reference.md) : écrire une app ;
-- [`docs/ecosystem-rebuild-plan.md`](docs/ecosystem-rebuild-plan.md) : la
+- [`doc/wasm/dev/project-overview.md`](../../doc/wasm/dev/project-overview.md) : comprendre le code ;
+- [`doc/wasm/framework/sdk-developer-guide.md`](../../doc/wasm/framework/sdk-developer-guide.md) et
+  [`doc/wasm/framework/sdk-reference.md`](../../doc/wasm/framework/sdk-reference.md) : écrire une app ;
+- [`doc/wasm/dev/plans/ecosystem-rebuild-plan.md`](../../doc/wasm/dev/plans/ecosystem-rebuild-plan.md) : la
   direction du projet et ses décisions ;
-- [`docs/adr/`](docs/adr/) : les décisions d'architecture.
+- [`doc/wasm/dev/adr/`](../../doc/wasm/dev/adr/) : les décisions d'architecture ;
+- [`doc/wasm/dev/pitfalls.md`](../../doc/wasm/dev/pitfalls.md) : les pièges rencontrés et leurs solutions ;
+- [`doc/wasm/memory/`](../../doc/wasm/memory/README.md) : la mémoire du projet (état des séries, conventions).
 
 Les règles de contribution (emplacement du code, CSS et JavaScript
 collocalisés, documentation à jour à chaque changement) sont dans

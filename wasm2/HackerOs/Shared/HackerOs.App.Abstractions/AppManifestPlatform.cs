@@ -2,7 +2,7 @@ namespace HackerOs.App.Abstractions;
 
 /// <summary>
 /// Declares which platforms an app supports and how each maps to an entry point, per
-/// docs/mobile-interface-platform-plan.md §4.1 (<c>MOB-003</c>). One entry point may cover several
+/// doc/wasm/dev/old/mobile-interface-platform-plan.md §4.1 (<c>MOB-003</c>). One entry point may cover several
 /// platforms (a shared component); each supported platform must be covered by exactly one entry
 /// point — enforced by <see cref="AppManifestValidator"/>, not by this record itself.
 /// </summary>

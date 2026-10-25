@@ -5,7 +5,7 @@ namespace HackerOs.App.Abstractions.Tests;
 
 /// <summary>
 /// Tests for <see cref="TopicPermissions"/> and its integration with <see cref="CapabilityGrant"/>, per
-/// docs/adr/0040-declared-topic-permissions.md.
+/// doc/wasm/dev/adr/0040-declared-topic-permissions.md.
 /// </summary>
 public sealed class TopicPermissionsTests
 {

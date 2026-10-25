@@ -49,7 +49,7 @@ internal static class E2ESupport
         {
             // dotnet run requires an explicit "--" separator before args meant for the
             // application itself; without it, dotnet run tries to parse --test-demo as
-            // one of its own options and fails. See docs/e2e-test-demo-mode.md.
+            // one of its own options and fails. See doc/wasm/dev/old/e2e-test-demo-mode.md.
             startInfo.ArgumentList.Add("--");
             startInfo.ArgumentList.Add("--test-demo");
         }

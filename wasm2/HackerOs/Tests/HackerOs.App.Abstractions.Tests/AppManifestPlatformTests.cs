@@ -4,7 +4,7 @@ namespace HackerOs.App.Abstractions.Tests;
 
 /// <summary>
 /// Covers the multi-platform manifest declaration (<c>MOB-003</c>/<c>MOB-004</c>): validation rules
-/// from docs/mobile-interface-platform-plan.md §4.2, and the
+/// from doc/wasm/dev/old/mobile-interface-platform-plan.md §4.2, and the
 /// <see cref="AppManifestPlatformSupport.Resolve"/> normalizer that both
 /// <see cref="AppManifestValidator"/> and the entry-point resolver build on.
 /// </summary>

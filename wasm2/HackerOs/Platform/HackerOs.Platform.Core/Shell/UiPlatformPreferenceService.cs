@@ -32,7 +32,7 @@ public sealed record UiPlatformPreferenceState(
 /// </summary>
 /// <remarks>
 /// <para>
-/// This is a first Phase-0 slice of docs/old/mobile-interface-platform-plan.md §6 — it persists the
+/// This is a first Phase-0 slice of doc/wasm/dev/old/mobile-interface-platform-plan.md §6 — it persists the
 /// Auto/Desktop/Mobile choice and recomputes <see cref="UiPlatformPreferenceState.ActivePlatform"/>
 /// live, but does not itself change shell rendering. A consumer subscribes to <see cref="Changed"/>
 /// and drives the switch sequence.

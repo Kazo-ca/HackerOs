@@ -13,8 +13,8 @@ namespace HackerOs.Platform.Core.FileSystem;
 /// <remarks>
 /// Publishes a <see cref="FileSystemChangeEvent"/> to <see cref="FileSystemTopics.ForDirectory"/> of the
 /// affected entry's parent after every successful mutation, per
-/// <c>docs/adr/0038-emitter-authorized-topic-messaging.md</c> and
-/// <c>docs/Global-FileView-And-MessagingSystem/MessagingSystem.md</c> (<c>MSG-011</c>/<c>MSG-012</c>).
+/// <c>doc/wasm/dev/adr/0038-emitter-authorized-topic-messaging.md</c> and
+/// <c>doc/wasm/dev/old/Global-FileView-And-MessagingSystem/MessagingSystem.md</c> (<c>MSG-011</c>/<c>MSG-012</c>).
 /// The <c>shared/filesystem/changed</c> channel is registered once, in this singleton's constructor,
 /// owner-only for publish under <see cref="KernelPublisherIdentity"/> so no app can ever forge a change
 /// notification. Paths owned by an <see cref="IVirtualFileSystemProvider"/> (<c>/proc</c>, <c>/dev</c>)

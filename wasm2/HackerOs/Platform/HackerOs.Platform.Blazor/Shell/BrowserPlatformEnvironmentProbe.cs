@@ -7,7 +7,7 @@ namespace HackerOs.Platform.Blazor.Shell;
 /// <summary>
 /// Browser-backed <see cref="IPlatformEnvironmentProbe"/>. The JS module
 /// (<c>wwwroot/js/platformEnvironmentProbe.js</c>) only reports raw signals per
-/// docs/adr/0015-browser-storage-and-indexeddb-adapter.md's JS-isolation precedent — the
+/// doc/wasm/dev/adr/0015-browser-storage-and-indexeddb-adapter.md's JS-isolation precedent — the
 /// suggested-platform decision is made in <see cref="PlatformEnvironmentPolicy"/>, in C#.
 /// </summary>
 public sealed class BrowserPlatformEnvironmentProbe : IPlatformEnvironmentProbe, IAsyncDisposable
