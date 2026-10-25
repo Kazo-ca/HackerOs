@@ -170,5 +170,6 @@ prochain numéro libre est indiqué dans
 | [`0167-combined-pages-deployment.md`](0167-combined-pages-deployment.md) | ADR 0167 : publication Pages combinée et builds indépendants |
 | [`0168-passkey-sign-in.md`](0168-passkey-sign-in.md) | ADR 0168 : connexion par clé d'accès (WebAuthn) et déverrouillage du trousseau |
 | [`0169-administrator-adds-and-removes-users.md`](0169-administrator-adds-and-removes-users.md) | ADR 0169 : un administrateur ajoute et supprime des comptes |
+| [`0170-settings-side-menu.md`](0170-settings-side-menu.md) | ADR 0170 : menu latéral réductible dans Paramètres |
 
 Index du dossier parent : [`../README.md`](../README.md).

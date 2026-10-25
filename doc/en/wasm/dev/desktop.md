@@ -77,8 +77,9 @@ relaunches it once.
 
 ### Settings ▸ Desktop
 
-Tab after Appearance: icon size, auto-arrange, alignment, system icons, sort,
-"Forget icon positions".
+Page after Appearance: icon size, auto-arrange, alignment, system icons, sort,
+"Forget icon positions". Settings opens directly on a page with `--page=appearance` or
+`--page=desktop` (every page since ADR 0170, see [settings-app.md](settings-app.md)).
 
 ## Key decisions
 

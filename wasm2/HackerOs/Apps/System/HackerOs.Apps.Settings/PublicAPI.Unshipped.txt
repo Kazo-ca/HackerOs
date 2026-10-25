@@ -8,3 +8,4 @@ HackerOs.Apps.Settings.PasskeysPanel.Changed.set -> void
 HackerOs.Apps.Settings.PasskeysPanel.PasskeysPanel() -> void
 override HackerOs.Apps.Settings.PasskeysPanel.OnInitializedAsync() -> System.Threading.Tasks.Task!
 ~override HackerOs.Apps.Settings.PasskeysPanel.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+override HackerOs.Apps.Settings.SettingsWindow.OnAppAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!

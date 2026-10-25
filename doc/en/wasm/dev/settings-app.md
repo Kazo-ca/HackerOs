@@ -5,51 +5,69 @@
 ## Purpose
 
 Describes the system app `Apps/System/HackerOs.Apps.Settings`: the OS control
-panel. It owns no data: each tab reads and writes OS files (settings as files,
+panel. It owns no data: each page reads and writes OS files (settings as files,
 ADR 0044) or calls an SDK `Hack*` facade. The decisions that shaped it are
 ADR 0047 (manifest), ADR 0048 (system app), ADR 0096 (`--app=` arguments),
-ADR 0105, 0120, 0121, 0160 and sections 8 to 11 of ADR 0056.
+ADR 0105, 0120, 0121, 0160, 0170 (side menu) and sections 8 to 11 of ADR 0056.
 
 Key files: `SettingsApp.cs` (the `[AppManifest]` class, identifier,
 capabilities, resource weights), `SettingsWindow.razor` and
-`SettingsWindow.razor.cs` (the window, a `MudTabs`), `SettingsWindow.Mobile.cs`
-(mobile preferences), one `*Panel.razor` panel per tab, `Strings.cs` and
-`Resources/` (English and French texts). The `manifest.json` is generated at
-build time from `SettingsApp.cs` (do not edit it). Tests:
-`Tests/HackerOs.Apps.Settings.Tests`.
+`SettingsWindow.razor.cs` (the window: side menu then a `@switch` on the active
+page), `SettingsWindow.Navigation.cs` (list of pages, collapsed state,
+keyboard), `SettingsWindow.Mobile.cs` (mobile preferences), one `*Panel.razor`
+panel per page, `Strings.cs` and `Resources/` (English and French texts). The
+`manifest.json` is generated at build time from `SettingsApp.cs` (do not edit
+it). Tests: `Tests/HackerOs.Apps.Settings.Tests`.
 
-## Tabs
+## Side menu (ADR 0170)
 
-Order matters: the `--page=` arguments and the index hooks rely on it.
+Pages are in a grouped menu on the left: Personalization (Appearance, Desktop,
+Accessibility, Language), Applications (File associations to File menus,
+Application), Network (Server connection, Synchronization), System (Users,
+Memory, Backup, About).
 
-| Tab | Panel | Main content |
+- The button at the top of the menu collapses it to an icon bar or expands it
+  with its labels. The state is not saved (Benoit's choice, 2026-10-25): the
+  menu always opens expanded.
+- In a window narrower than 36 rem (phone, small window; container query
+  `settings-body`), the menu stays an icon bar; its button opens it over the
+  page, and choosing a page closes it.
+- Accessibility: WAI-ARIA vertical tab list (`role="tab"`), the up/down arrows,
+  Home and End change page.
+- Adding a page: an entry in `SettingsWindow.AllPages` (id, group, label,
+  icon), a `case` in the `@switch` of `SettingsWindow.razor`, a `Tab.*` label in
+  English and French. No index to recompute.
+
+## Pages
+
+| Page (id) | Panel | Main content |
 |---|---|---|
-| Appearance | (in `SettingsWindow.razor`) | Write layer (user or system), desktop and mobile theme, accent, animations, user themes (`/etc/hackeros/themes` and `~/.config/hackeros/themes`, `UserThemeLibrary`); writes `appearance.config`. |
-| Desktop | `DesktopPanel` | Desktop options and layout (`desktop.config`, ADR 0160). |
-| Accessibility | `AccessibilityPanel` | High contrast, text size, reduced motion (ADR 0105). |
-| Language | `LanguagePanel` | Interface language. |
-| File associations | `FileAssociationsPanel` | Default applications, system or user layer (`HackFileAssociationLayer`, ADR 0121). |
-| Granted permissions | (in the window) | Capabilities granted to the user. |
-| Permissions | `AppPermissionsPanel` | Per-app decisions and approvals of dangerous capabilities (ADR 0049). |
-| Installed applications | `InstalledAppsPanel` | List of apps and their commands, uninstall and reinstall (ADR 0048). |
-| OS components | `OsComponentsPanel` | Provider chosen for each contract (`HackComponentProviders.GetOverviewAsync`, `SetProviderAsync`). |
-| File menus | `FileMenuEntriesPanel` | Menu entries registered by apps (ADR 0151). |
-| Server connection | `ServerRelayPolicyPanel` (+ the window) | Optional server, network relay (ADR 0102, 0134). Visible in all cases, the state comes from `HackServerConnection`. |
-| Synchronization | (in the window) | Sync state and conflicts (ADR 0101). |
-| Users | `UsersPanel` (+ `PasskeysPanel`) | Accounts, passwords, adding and deleting accounts by an administrator, session passkeys (ADR 0120, 0168, 0169; see [Users page](#users-page)). |
-| Memory | `MemoryPanel` | File `/etc/hackeros/memory.config`, section `[oom-killer]` (ADR 0126). |
-| Backup | `BackupPanel` | Present only if `HackSystemBackup.IsSupportedFor` allows it (ADR 0099). |
-| About | (in the window) | Authority, reboot (`HackSystem.RebootAsync`), danger zone: factory reset (`HackSystem.FactoryResetAsync`), confirmed by typing `RESET`. |
-| Application | `AppDetailsPanel` | Added only with `--app=<id>` (ADR 0096): details and settings of an app. |
+| Appearance (`appearance`) | (in `SettingsWindow.razor`) | Write layer (user or system), desktop and mobile theme, accent, animations, user themes (`/etc/hackeros/themes` and `~/.config/hackeros/themes`, `UserThemeLibrary`); writes `appearance.config`. |
+| Desktop (`desktop`) | `DesktopPanel` | Desktop options and layout (`desktop.config`, ADR 0160). |
+| Accessibility (`accessibility`) | `AccessibilityPanel` | High contrast, text size, reduced motion (ADR 0105). |
+| Language (`language`) | `LanguagePanel` | Interface language. |
+| File associations (`file-associations`) | `FileAssociationsPanel` | Default applications, system or user layer (`HackFileAssociationLayer`, ADR 0121). |
+| Granted permissions (`capabilities`) | (in the window) | Capabilities granted to the user. |
+| Permissions (`permissions`) | `AppPermissionsPanel` | Per-app decisions and approvals of dangerous capabilities (ADR 0049). |
+| Installed applications (`installed-apps`) | `InstalledAppsPanel` | List of apps and their commands, uninstall and reinstall (ADR 0048). |
+| OS components (`os-components`) | `OsComponentsPanel` | Provider chosen for each contract (`HackComponentProviders.GetOverviewAsync`, `SetProviderAsync`). |
+| File menus (`file-menus`) | `FileMenuEntriesPanel` | Menu entries registered by apps (ADR 0151). |
+| Server connection (`server`) | `ServerRelayPolicyPanel` (+ the window) | Optional server, network relay (ADR 0102, 0134). Visible in all cases, the state comes from `HackServerConnection`. |
+| Synchronization (`sync`) | (in the window) | Sync state and conflicts (ADR 0101). |
+| Users (`users`) | `UsersPanel` (+ `PasskeysPanel`) | Accounts, passwords, adding and deleting accounts by an administrator, session passkeys (ADR 0120, 0168, 0169; see [Users page](#users-page)). |
+| Memory (`memory`) | `MemoryPanel` | File `/etc/hackeros/memory.config`, section `[oom-killer]` (ADR 0126). |
+| Backup (`backup`) | `BackupPanel` | Present only if `HackSystemBackup.IsSupportedFor` allows it (ADR 0099). |
+| About (`about`) | (in the window) | Authority, reboot (`HackSystem.RebootAsync`), danger zone: factory reset (`HackSystem.FactoryResetAsync`), confirmed by typing `RESET`. |
+| Application (`application`) | `AppDetailsPanel` | Added only with `--app=<id>` (ADR 0096): details and settings of an app. |
 
 ## Launch arguments
 
-- `--page=appearance` or `--page=desktop`: opens that tab (the desktop's
-  "Change background" and "Desktop settings" use it, ADR 0160 §8).
-- `--app=<id>`: opens the "Application" tab of that app; an empty identifier
+- `--page=<id>`: opens the page with that id (table above), except
+  `application`; the desktop's "Change background" and "Desktop settings" use
+  `appearance` and `desktop` (ADR 0160 §8). An unknown value is ignored, the
+  last known `--page=` wins.
+- `--app=<id>`: opens the "Application" page of that app; an empty identifier
   is ignored, the last one wins.
-
-An unknown `--page=` value is ignored.
 
 ## Data access
 
