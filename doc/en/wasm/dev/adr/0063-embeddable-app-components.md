@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0063-embeddable-app-components.md)
+
 # ADR 0063: embeddable app components, registered with the OS
 
 ## Status

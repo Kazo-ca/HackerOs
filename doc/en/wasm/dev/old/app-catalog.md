@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/old/app-catalog.md)
+
 # App Catalog and Dependency Graph
 
 ## Purpose

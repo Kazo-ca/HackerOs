@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0100-sensitive-settings-and-protected-write-audit.md)
+
 # ADR 0100: sensitive settings (private files, masking, encrypted keyring) and audit of protected writes
 
 ## Status

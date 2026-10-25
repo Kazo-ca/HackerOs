@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/old/app-contracts.md)
+
 # Initial App Contracts
 
 ## Purpose

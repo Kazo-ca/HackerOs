@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0088-site-data-debug-logs-and-form-history.md)
+
 # ADR 0088 : base d'un site, journaux de débogage et saisie semi-automatique
 
 ## Statut

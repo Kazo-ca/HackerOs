@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/memory-accounting.md)
+
 # Measured per-process memory, in layers
 
 This document covers the implementation of layered memory measurement. What an app sees (`HackProcess.WorkingSet64`, `PrivateMemorySize64`, fields of `/proc/<pid>/status` and `/proc/meminfo`, measured or simulated) is in [`../framework/process-resources-api.md`](../framework/process-resources-api.md).

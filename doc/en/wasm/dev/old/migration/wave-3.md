@@ -1,3 +1,5 @@
+> [Version française](../../../../../fr/wasm/dev/old/migration/wave-3.md)
+
 # Wave 3: Editing, Clipboard, and Drag/Drop Migration Report
 
 ## Overview

@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/plans/wasm-v3-completion-plan.md)
+
 # Fin de la migration wasm v3 : plan des chantiers
 
 **Statut :** proposé le 2026-10-17, **validé par Benoit le 2026-10-17**

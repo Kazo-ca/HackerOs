@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/framework/trash-api.md)
+
 # Corbeille : format `.trashinfo` et API `HackTrash`
 
 Ce document décrit ce qu'une app voit de la corbeille : l'API `HackTrash` du SDK, les règles qui s'appliquent à ses opérations, et le format `.trashinfo` que les apps et les autres implémentations lisent ou écrivent. La place de la corbeille dans l'OS, les commandes `rm` et `trash`, l'explorateur et la synchronisation sont dans [`dev/trash.md`](../dev/trash.md).

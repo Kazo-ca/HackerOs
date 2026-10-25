@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0139-process-limits-implementation-adjustments.md)
+
 # ADR 0139: implementation adjustments for process limits
 
 ## Status

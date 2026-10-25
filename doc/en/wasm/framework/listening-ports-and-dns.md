@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/framework/listening-ports-and-dns.md)
+
 # Listening ports, `hackdns` and local websites
 
 Work item `web/3-listener-dns` of the web phase (ASP.Hack). Decisions: ADR 0073

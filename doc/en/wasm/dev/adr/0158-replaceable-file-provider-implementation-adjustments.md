@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0158-replaceable-file-provider-implementation-adjustments.md)
+
 # ADR 0158: adjustments to the replaceable file provider
 
 ## Status

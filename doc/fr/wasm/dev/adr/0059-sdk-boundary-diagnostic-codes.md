@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0059-sdk-boundary-diagnostic-codes.md)
+
 # ADR 0059 : Codes des diagnostics de la frontière du SDK
 
 ## Statut

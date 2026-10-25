@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0082-asp-hack-route-source-generator.md)
+
 # ADR 0082: ASP.Hack route table produced by a Roslyn source generator
 
 ## Status

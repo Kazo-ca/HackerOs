@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0083-asp-hack-razor-views.md)
+
 # ADR 0083 : vues `.razor` d'ASP.Hack, anti-falsification et `wwwroot` embarqué
 
 ## Statut

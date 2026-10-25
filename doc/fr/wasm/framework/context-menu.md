@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/framework/context-menu.md)
+
 # Menu contextuel de l'OS (`hackeros.context-menu`)
 
 ## Objet

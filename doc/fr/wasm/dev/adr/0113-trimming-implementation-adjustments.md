@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0113-trimming-implementation-adjustments.md)
+
 # ADR 0113 : ajustements de la publication trimmée
 
 ## Statut

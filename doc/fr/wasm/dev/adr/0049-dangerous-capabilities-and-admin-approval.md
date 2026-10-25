@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0049-dangerous-capabilities-and-admin-approval.md)
+
 # ADR 0049 : Capacités dangereuses et approbation par un administrateur
 
 ## Statut

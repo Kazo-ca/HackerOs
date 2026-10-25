@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0083-asp-hack-razor-views.md)
+
 # ADR 0083: ASP.Hack `.razor` views, anti-forgery and embedded `wwwroot`
 
 ## Status

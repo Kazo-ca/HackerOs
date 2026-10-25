@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/oom-killer.md)
+
 # OOM killer and browser memory guard
 
 This document covers the implementation of the OOM killer and the browser guard. What an app sees (`/proc` files and `/dev/kmsg`, `AppDefinition.OomScoreAdjust`, the `OutOfMemory` termination reason) is in [`../framework/process-resources-api.md`](../framework/process-resources-api.md).

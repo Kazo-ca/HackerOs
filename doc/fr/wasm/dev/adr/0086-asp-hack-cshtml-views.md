@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0086-asp-hack-cshtml-views.md)
+
 # ADR 0086 : vues `.cshtml` d'ASP.Hack compilées par le compilateur Razor, sans ASP.NET MVC
 
 ## Statut

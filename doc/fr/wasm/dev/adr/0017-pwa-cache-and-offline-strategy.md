@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0017-pwa-cache-and-offline-strategy.md)
+
 # ADR 0017: Progressive Web App Caching, Offline Strategy, and Version Migration
 
 * **Status:** Accepted (DECISION: D-011)

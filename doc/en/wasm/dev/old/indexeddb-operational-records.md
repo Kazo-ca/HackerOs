@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/old/indexeddb-operational-records.md)
+
 # IndexedDB Operational Records
 
 ## Purpose

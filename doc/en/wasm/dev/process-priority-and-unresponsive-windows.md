@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/process-priority-and-unresponsive-windows.md)
+
 # `nice` priority and windows that do not respond
 
 This document covers the implementation of the `nice` priority and of the detection of windows that do not respond. What an app sees and must do (`HackProcess.Nice` API, priority rules, the "Not responding" box, limits of a loop on the main thread) is in [`../framework/app-responsiveness-api.md`](../framework/app-responsiveness-api.md).

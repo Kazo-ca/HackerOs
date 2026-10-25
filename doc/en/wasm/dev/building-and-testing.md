@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/building-and-testing.md)
+
 # Build, run and test HackerOS
 
 ## Purpose
@@ -36,7 +38,7 @@ dotnet build HackerOs.sln
 
 The build applies the project rules (warnings as errors, inline assets
 forbidden, regenerated manifests, SDK boundary): see
-[`project-overview.md`](project-overview.md#règles-vérifiées-au-build). An app
+[`project-overview.md`](project-overview.md#rules-checked-at-build). An app
 `manifest.json` modified by the build is a change to commit.
 
 The verification workflow explicitly installs `ripgrep` before the additional
@@ -92,7 +94,7 @@ measurement off without recompiling: see
 | Debug host | `dotnet run --project test/test` | Browser or IDE WebAssembly debugger ([`old/webassembly-debugging.md`](old/webassembly-debugging.md)). `dotnet run --project test/test -- --test-demo` shows the button that creates the E2E test files ([`old/e2e-test-demo-mode.md`](old/e2e-test-demo-mode.md)). |
 | Optional server | `dotnet run --project Server/HackerOs.Server` | Synchronization, accounts, network relay, and the Ecosystem OS served as is in WebAssembly ([`server-hosting.md`](server-hosting.md)). |
 
-Publish the PWA (trimmed Release, see [Publishing a trimmed Release](#publier-en-release-trimmée)):
+Publish the PWA (trimmed Release, see [Publishing a trimmed Release](#publishing-a-trimmed-release)):
 
 ```bash
 dotnet publish OS/HackerOs.Ecosystem -c Release -o artifacts/ecosystem
@@ -118,7 +120,7 @@ Prerequisites: .NET 10 SDK (`~/.dotnet` is added to the `PATH` if it exists),
 `python3` (static server for the published PWA), `curl`, `setsid`, and a
 Chromium that Playwright can launch (in a cloud container,
 `/opt/pw-browsers/chromium` is picked up automatically, see
-[Chromium for Playwright](#chromium-pour-playwright)). The script applies the
+[Chromium for Playwright](#chromium-for-playwright)). The script applies the
 Linux workarounds above itself, builds once and then launches the hosts with
 `--no-build`, and sets `ASPNETCORE_ENVIRONMENT=Development` for the hosts
 launched by `dotnet run` ([`old/common-pitfalls.md`](old/common-pitfalls.md) §4).
@@ -194,7 +196,7 @@ normally elsewhere. In `ecosystem-limits-off`, `ulimit -n 100` must answer
 "cannot modify limit".
 
 Each flow verifies cross-origin isolation (`exec/9`,
-[`worker-processes.md`](worker-processes.md#isolation-cross-origin-adr-0131-adr-0143)):
+[`worker-processes.md`](worker-processes.md#cross-origin-isolation-adr-0131-adr-0143)):
 `crossOriginIsolated` in the page, the `cross-origin-isolated:` line of
 `/proc/hackeros/workers`, `sample-cmd --processes` (synchronous answer if the
 page is isolated, refusal otherwise) and `seq 30000 | wc -l`. Isolated:
@@ -364,7 +366,7 @@ provided under `/opt/pw-browsers` serves as the fallback.
 To test an app without an OS, `Tests/HackerOs.Tests.Support` provides
 `MinimalAppExecutionContext` and fake gateways (files, clock, logs, processes,
 intents, environment, shell). Example: see the
-[SDK guide](../framework/sdk-developer-guide.md#8-tester-une-app).
+[SDK guide](../framework/sdk-developer-guide.md#8-testing-an-app).
 
 ### IndexedDB version upgrade fixtures
 
@@ -464,13 +466,13 @@ dotnet test Tests/HackerOs.UI.E2E.Tests -c Release --no-build --filter "FullyQua
   Playwright in the manual workflow `verify-browser-tests.yml`). A green local
   build and tests are still required before merging.
 - In a cloud container, the Playwright suites run on the Chromium of
-  `/opt/pw-browsers` ([fallback](#chromium-pour-playwright)). State on
+  `/opt/pw-browsers` ([fallback](#chromium-for-playwright)). State on
   2026-10-16 (after `dotnet build HackerOs.sln -c Release`, one suite at a
   time):
   - `HackerOs.E2E.Tests`: 16/16;
   - `HackerOs.UI.E2E.Tests`: 10/10 since `rebuild/5-ui-a11y-mkdir`, 15/15 on
     `web/base` since its port (`web/13`, 2026-10-17), 18/18 with the two
-    [IndexedDB version upgrade](#fixtures-de-montée-de-version-indexeddb) tests
+    [IndexedDB version upgrade](#indexeddb-version-upgrade-fixtures) tests
     (`v3/7`, 2026-10-17, about 1 min 20 s each), 20/20 after the rebase of
     `v3/7` onto `v3/3` with `LowStorageSpaceTests` (Chromium quota lowered,
     [`system-backup.md`](system-backup.md)), 24/24 with the three accessibility
@@ -501,7 +503,7 @@ dotnet test Tests/HackerOs.UI.E2E.Tests -c Release --no-build --filter "FullyQua
     or alone on the next run. **Flaky, to be stabilized**: the wait is on the
     file explorer, not on the cache.
 - Phase 5: each `rebuild/5-*` PR pastes the output of
-  `build/verify-hosts.sh` ([Verify the three hosts](#vérifier-les-trois-hôtes)).
+  `build/verify-hosts.sh` ([Verify the three hosts](#verify-the-three-hosts)).
 - A test of `AppInstallationService` is flaky (about one in twelve), on the
   base too.
 

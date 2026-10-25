@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/framework/settings-files.md)
+
 # Settings as files
 
 Mobile home uses `~/Desktop/.mobile/layout.conf` (text sections and keys,

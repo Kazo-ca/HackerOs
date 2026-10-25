@@ -1,3 +1,5 @@
+> [Version française](../../../../../fr/wasm/dev/old/apps/text-editor.md)
+
 # Text Editor App (`org.hackeros.text-editor`)
 
 ## Purpose

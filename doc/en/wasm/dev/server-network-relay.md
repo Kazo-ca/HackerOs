@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/server-network-relay.md)
+
 # Network relay of the optional server
 
 Work item `v3/10-server-proxy` of the [completion plan](plans/wasm-v3-completion-plan.md),

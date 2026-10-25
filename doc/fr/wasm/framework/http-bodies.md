@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/framework/http-bodies.md)
+
 # Corps HTTP réels dans le réseau simulé
 
 **Phase web, chantier `web/2-http-bodies`** ([`asp-hack-plan.md`](../dev/plans/asp-hack-plan.md),

@@ -1,3 +1,5 @@
+> [Version française](../fr/README.md)
+
 # HackerSimulator documentation
 
 | Folder | Contents |

@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0112-accessibility-implementation-adjustments.md)
+
 # ADR 0112: implementation adjustments for accessibility
 
 ## Status

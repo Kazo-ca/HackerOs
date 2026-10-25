@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0065-os-clipboard-and-host-bridge.md)
+
 # ADR 0065: OS clipboard and text sharing with the host
 
 ## Status

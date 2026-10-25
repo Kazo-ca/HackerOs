@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/framework/shell-host.md)
+
 # Shell host: `HackShell` and the `shell.host` capability
 
 ## Purpose

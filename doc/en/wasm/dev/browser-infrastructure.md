@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/browser-infrastructure.md)
+
 # Browser infrastructure: `HackerOs.Infrastructure.Browser`
 
 ## Purpose

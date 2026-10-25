@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0058-base-app-features.md)
+
 # ADR 0058: Base app features
 
 ## Status

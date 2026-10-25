@@ -1,3 +1,5 @@
+> [English version](../../../../../en/wasm/dev/old/Global-FileView-And-MessagingSystem/integrationPlan.md)
+
 # Integration Plan — `FileView` & Topic Messaging
 
 Parent document: [`../Global-FileView-And-MessagingSystem.md`](../Global-FileView-And-MessagingSystem.md)

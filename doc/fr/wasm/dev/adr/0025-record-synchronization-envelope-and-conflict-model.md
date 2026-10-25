@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0025-record-synchronization-envelope-and-conflict-model.md)
+
 # ADR 0025: Record Synchronization Envelope, Conflict Model, and Cursor Strategy
 
 **Status:** Accepted  

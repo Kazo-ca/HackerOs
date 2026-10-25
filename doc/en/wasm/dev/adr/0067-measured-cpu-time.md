@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0067-measured-cpu-time.md)
+
 # ADR 0067: measured CPU time per process and the "Not responding" state
 
 ## Status

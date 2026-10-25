@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/framework/terminal-api.md)
+
 # Terminal API for apps and commands
 
 This document describes what an app or a command sees of the terminal: the `TerminalPanel` component, the `IHackTerminal` interface, reading a password without echo and full-screen mode. The internal workings (xterm.js, line discipline, rendering, shortcuts) are in [`dev/terminal-emulator.md`](../dev/terminal-emulator.md).
@@ -29,7 +31,7 @@ passwords this way.
 
 ## Full-screen commands
 
-A full-screen command uses the SDK's `IFullScreenTerminalSession` contract: `EnterAlternateScreenAsync` switches to the alternate screen, `RenderAsync` receives a `TerminalScreenFrame` (lines, cursor, accessible label) on each frame, and `ReadKeyAsync` waits for the next key or the next resize. A row can carry color or reverse video sequences (SGR); it ends with `ESC[0m`. Rendering on the terminal side is in [`dev/terminal-emulator.md`](../dev/terminal-emulator.md#commandes-plein-écran).
+A full-screen command uses the SDK's `IFullScreenTerminalSession` contract: `EnterAlternateScreenAsync` switches to the alternate screen, `RenderAsync` receives a `TerminalScreenFrame` (lines, cursor, accessible label) on each frame, and `ReadKeyAsync` waits for the next key or the next resize. A row can carry color or reverse video sequences (SGR); it ends with `ESC[0m`. Rendering on the terminal side is in [`dev/terminal-emulator.md`](../dev/terminal-emulator.md#full-screen-commands).
 
 ## IHackTerminal
 

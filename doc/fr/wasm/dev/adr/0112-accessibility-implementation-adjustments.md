@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0112-accessibility-implementation-adjustments.md)
+
 # ADR 0112 : ajustements de la mise en œuvre de l'accessibilité
 
 ## Statut

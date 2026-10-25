@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/server-hosting.md)
+
 # OS served by `HackerOs.Server` and automatic connection
 
 Work item `exec/8-server-wasm` (`exec` series), ADRs

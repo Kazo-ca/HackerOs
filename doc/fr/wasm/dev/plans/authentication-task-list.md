@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/plans/authentication-task-list.md)
+
 # WebAssembly Authentication Task List
 
 ## 1. IndexedDB User Store

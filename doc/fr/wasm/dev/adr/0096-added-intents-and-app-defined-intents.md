@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0096-added-intents-and-app-defined-intents.md)
+
 # ADR 0096 : intents ajoutés (afficher, modifier, ouvrir une URI, réglages d'une app) et intents définis par les apps
 
 ## Statut

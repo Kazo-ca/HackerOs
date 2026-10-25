@@ -1,3 +1,5 @@
+> [English version](../../../../../en/wasm/dev/old/commands/README.md)
+
 # Archives : `commands/`
 
 Documents archivés, antérieurs au plan de refonte. Ils restent utiles comme

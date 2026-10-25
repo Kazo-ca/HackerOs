@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0044-settings-as-files.md)
+
 # ADR 0044 : Paramètres en fichiers, en couches `/etc` puis `~/.config`
 
 ## Statut

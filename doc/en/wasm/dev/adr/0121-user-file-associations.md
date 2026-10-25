@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0121-user-file-associations.md)
+
 # ADR 0121: per-user file and scheme associations
 
 ## Status

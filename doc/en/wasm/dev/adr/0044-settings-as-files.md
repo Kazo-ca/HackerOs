@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0044-settings-as-files.md)
+
 # ADR 0044: Settings as files, layered `/etc` then `~/.config`
 
 ## Status

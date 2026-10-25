@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0039-directory-open-file-association.md)
+
 # ADR 0039: `inode/directory` Media-Type Convention for Directory File Association
 
 ## Status

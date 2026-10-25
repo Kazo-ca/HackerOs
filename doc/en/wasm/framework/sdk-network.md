@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/framework/sdk-network.md)
+
 # Network in the SDK
 
 ## Purpose

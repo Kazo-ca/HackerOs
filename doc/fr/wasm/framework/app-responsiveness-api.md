@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/framework/app-responsiveness-api.md)
+
 # Priorité et réactivité des apps
 
 Ce document décrit ce qu'une app voit et doit faire pour rester réactive : la priorité `nice` et la fenêtre « Ne répond pas ». La mise en œuvre (détection, file des workers, architecture, tests) est dans [`../dev/process-priority-and-unresponsive-windows.md`](../dev/process-priority-and-unresponsive-windows.md).

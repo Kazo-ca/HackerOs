@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0154-context-menu-implementation-adjustments.md)
+
 # ADR 0154: adjustments to the OS context menu
 
 ## Status

@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/old/window-runtime.md)
+
 # Window Runtime
 
 ## Purpose

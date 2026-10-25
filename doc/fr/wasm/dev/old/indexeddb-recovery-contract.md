@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/old/indexeddb-recovery-contract.md)
+
 # IndexedDB Recovery Contract
 
 ## Purpose

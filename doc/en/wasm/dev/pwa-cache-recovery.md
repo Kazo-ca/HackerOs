@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/pwa-cache-recovery.md)
+
 # Recovery from a corrupted PWA cache
 
 Implementation of section 3 of

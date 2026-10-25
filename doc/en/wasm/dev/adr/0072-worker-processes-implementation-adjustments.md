@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0072-worker-processes-implementation-adjustments.md)
+
 # ADR 0072: adjustments to the implementation of processes in Web Workers
 
 ## Status

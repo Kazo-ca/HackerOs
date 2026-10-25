@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0055-base-apps-on-public-sdk-only.md)
+
 # ADR 0055 : Apps de base sur le SDK public uniquement
 
 ## Statut

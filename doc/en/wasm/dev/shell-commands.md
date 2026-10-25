@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/shell-commands.md)
+
 # Shell commands and controlled shell access
 
 Phase 3 of the rebuild plan, work item `rebuild/3-shell-commands`
@@ -9,7 +11,7 @@ process environment ([`process-environment.md`](process-environment.md)).
 > Since [ADR 0064](adr/0064-posix-shell-scripts-jobs-and-app-commands.md),
 > a few POSIX **special built-ins** (`break`, `return`, `set`, `local`,
 > `eval`, `source`, `wait`, `fg`, `trap`...) live in the interpreter
-> ([`shell-interpreter.md`](shell-interpreter.md#built-ins-spéciaux)); everything
+> ([`shell-interpreter.md`](shell-interpreter.md#special-built-ins)); everything
 > else, including `read`, `jobs`, `test` and `which`, stays in the catalog. The
 > added Linux commands are described in [`linux-commands.md`](linux-commands.md).
 

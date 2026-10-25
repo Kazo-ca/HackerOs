@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/mobile-home-screen.md)
+
 # Mobile home screen and app drawer
 
 ## Purpose

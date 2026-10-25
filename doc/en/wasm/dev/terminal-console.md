@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/terminal-console.md)
+
 # Console: path completion, `exit` and tabs
 
 ## Purpose

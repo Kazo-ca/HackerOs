@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0142-oom-killer-implementation-adjustments.md)
+
 # ADR 0142 : ajustements de la mise en œuvre de l'OOM killer
 
 ## Statut

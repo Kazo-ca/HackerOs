@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0010-manifest-json-and-schema.md)
+
 # ADR 0010: Canonical Manifest JSON and Schema
 
 ## Status

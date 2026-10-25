@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0049-dangerous-capabilities-and-admin-approval.md)
+
 # ADR 0049: Dangerous capabilities and administrator approval
 
 ## Status

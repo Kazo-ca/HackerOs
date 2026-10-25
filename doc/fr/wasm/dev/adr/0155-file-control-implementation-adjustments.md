@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0155-file-control-implementation-adjustments.md)
+
 # ADR 0155 : ajustements du contrôle de fichiers fourni par l'explorateur
 
 ## Statut

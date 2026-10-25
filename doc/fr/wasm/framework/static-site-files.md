@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/framework/static-site-files.md)
+
 # Fichiers de site statique (`.site`) et API `HackWebSiteFile`
 
 Ce document décrit le format des fichiers `.site` qu'une app ou un outil écrit pour publier un dossier comme site web, et l'API du SDK qui les lit et les écrit. Le service `hackwebd` qui sert ces fichiers, ses journaux et Web Server Manager sont décrits dans [`dev/static-sites.md`](../dev/static-sites.md).

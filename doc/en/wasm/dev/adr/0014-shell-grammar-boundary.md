@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0014-shell-grammar-boundary.md)
+
 # ADR 0014: First-Slice Shell Grammar Boundary
 
 ## Status

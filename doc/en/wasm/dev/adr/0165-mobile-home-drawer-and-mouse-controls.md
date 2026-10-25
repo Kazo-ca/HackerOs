@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0165-mobile-home-drawer-and-mouse-controls.md)
+
 # ADR 0165: mobile home, drawer and mouse aids
 
 ## Status

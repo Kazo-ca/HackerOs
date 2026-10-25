@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/framework/window-model.md)
+
 # Modèle de fenêtre : événements, tailles déclarées et clavier
 
 Chantier `v3/3-window-model` du [plan de fin de migration wasm v3](../dev/plans/wasm-v3-completion-plan.md),

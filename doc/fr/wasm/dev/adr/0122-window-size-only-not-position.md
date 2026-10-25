@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0122-window-size-only-not-position.md)
+
 # ADR 0122 : une fenêtre retient sa taille, pas sa position
 
 ## Statut

@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/old/system-monitor.md)
+
 # System Monitor & Process Management Architecture
 
 ## Purpose

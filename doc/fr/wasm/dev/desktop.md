@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/desktop.md)
+
 # Bureau : icônes, raccourcis et `desktop.config`
 
 Les types `HackDesktop*`, le fichier `desktop.config`, les raccourcis `.desktop` et l'intent de création de raccourci destinés aux apps sont dans [`desktop-api.md`](../framework/desktop-api.md).

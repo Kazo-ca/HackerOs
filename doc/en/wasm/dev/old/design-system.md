@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/old/design-system.md)
+
 # HackerOS Design System & Visual Tokens Specification
 
 ## Overview

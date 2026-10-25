@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/theme-editor.md)
+
 # User themes and theme editor
 
 This document covers the implementation of user themes and the theme editor. The format of the `.theme` file, the list of tokens and the message-reading API are in [`../framework/theme-files.md`](../framework/theme-files.md).

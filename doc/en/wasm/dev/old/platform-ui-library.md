@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/old/platform-ui-library.md)
+
 # Platform UI Library
 
 ## Purpose

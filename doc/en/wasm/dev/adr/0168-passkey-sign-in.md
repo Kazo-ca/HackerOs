@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0168-passkey-sign-in.md)
+
 # ADR 0168: sign-in with a passkey (WebAuthn) and keyring unlock
 
 ## Status

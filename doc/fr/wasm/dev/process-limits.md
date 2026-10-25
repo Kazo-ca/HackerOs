@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/process-limits.md)
+
 # Limites de processus (`ulimit`, `prlimit`, `limits.conf`)
 
 Chantier `exec/2-process-limits` (2026-10-18). Décisions : ADR 0125 (limites

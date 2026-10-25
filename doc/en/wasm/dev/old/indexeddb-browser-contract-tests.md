@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/old/indexeddb-browser-contract-tests.md)
+
 # IndexedDB Browser Contract Tests
 
 ## Purpose

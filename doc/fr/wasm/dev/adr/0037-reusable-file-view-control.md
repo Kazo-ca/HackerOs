@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0037-reusable-file-view-control.md)
+
 # ADR 0037: `FileView` as the Canonical File-Listing Control
 
 ## Status

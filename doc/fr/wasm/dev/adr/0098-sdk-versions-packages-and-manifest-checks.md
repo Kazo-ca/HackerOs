@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0098-sdk-versions-packages-and-manifest-checks.md)
+
 # ADR 0098 : versions et paquets NuGet du SDK et de la plateforme, vérifications du manifeste au chargement, gabarits et gel du SDK 1.0
 
 ## Statut

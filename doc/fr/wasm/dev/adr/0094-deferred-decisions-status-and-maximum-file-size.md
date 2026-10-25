@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0094-deferred-decisions-status-and-maximum-file-size.md)
+
 # ADR 0094 : état des décisions différées de la migration v3 et taille maximale des fichiers
 
 ## Statut

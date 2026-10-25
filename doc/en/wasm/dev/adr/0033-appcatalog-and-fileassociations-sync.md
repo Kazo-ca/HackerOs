@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0033-appcatalog-and-fileassociations-sync.md)
+
 # ADR 0033: AppCatalog and FileAssociations Domain Sync
 
 ## Status

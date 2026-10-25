@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/framework/app-intents.md)
+
 # Intents des apps : afficher, modifier, ouvrir une URI, réglages et intents définis par les apps
 
 Chantier `v3/4-intents` de la migration wasm v3, selon

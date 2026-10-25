@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/server-hosting.md)
+
 # OS servi par `HackerOs.Server` et connexion automatique
 
 Chantier `exec/8-server-wasm` (série `exec`), ADR

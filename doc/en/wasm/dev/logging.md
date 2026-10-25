@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/logging.md)
+
 # File logs (`/var/log`)
 
 The log files an app produces and the APIs that write them are in [`app-log-files.md`](../framework/app-log-files.md).

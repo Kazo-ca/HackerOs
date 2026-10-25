@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/desktop.md)
+
 # Desktop: icons, shortcuts and `desktop.config`
 
 The `HackDesktop*` types, the `desktop.config` file, the `.desktop` shortcuts and the shortcut-creation intent intended for apps are in [`desktop-api.md`](../framework/desktop-api.md).

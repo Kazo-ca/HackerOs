@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0056-sdk-apis-for-system-apps.md)
+
 # ADR 0056 : API du SDK qui remplacent les services internes
 
 ## Statut

@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0003-exact-capability-matching.md)
+
 # ADR 0003: Match Capabilities Exactly
 
 ## Status

@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/framework/window-model.md)
+
 # Window model: events, declared sizes and keyboard
 
 Work item `v3/3-window-model` of the [wasm v3 migration completion plan](../dev/plans/wasm-v3-completion-plan.md),

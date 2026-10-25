@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/old/indexeddb-backup-restore.md)
+
 # IndexedDB Backup and Restore
 
 ## Purpose

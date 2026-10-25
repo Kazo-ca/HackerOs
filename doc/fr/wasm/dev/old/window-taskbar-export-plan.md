@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/old/window-taskbar-export-plan.md)
+
 # Plan d’extraction du système de fenêtres et de la barre des tâches
 
 **Statut :** proposition d’architecture et plan de reprise  

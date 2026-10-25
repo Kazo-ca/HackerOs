@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0059-sdk-boundary-diagnostic-codes.md)
+
 # ADR 0059: SDK boundary diagnostic codes
 
 ## Status
@@ -21,7 +23,7 @@ boundary:
 These two numbers have already been taken since ADR 0047 and are emitted by the same
 generator: `HOSAPP0002` reports a non-public `[AppManifest]` class,
 `HOSAPP0003` an abstract `[AppManifest]` class (see
-[`app-model.md`](../../framework/app-model.md#codes-derreur)). The same code would therefore have two
+[`app-model.md`](../../framework/app-model.md#error-codes)). The same code would therefore have two
 meanings, and the tests that look for `error HOSAPP0002` would no longer know which
 rule they are verifying.
 
@@ -45,7 +47,7 @@ Everywhere that ADR 0055 and the work item table of ADR 0058 write
 
 - No existing code changes: the projects and tests of ADR 0047
   keep working.
-- The documentation of the codes ([`app-model.md`](../../framework/app-model.md#codes-derreur)
+- The documentation of the codes ([`app-model.md`](../../framework/app-model.md#error-codes)
   and [`app-sdk.md`](../../framework/app-sdk.md)) lists the two new codes.
 
 ## Rejected alternatives

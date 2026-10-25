@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0156-replaceable-file-control-provider.md)
+
 # ADR 0156: file control provider replaceable by a third-party app
 
 ## Status

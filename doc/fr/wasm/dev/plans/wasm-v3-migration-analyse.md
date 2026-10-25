@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/plans/wasm-v3-migration-analyse.md)
+
 # HackerOS WebAssembly v3 Migration Analysis
 
 > **Mise à jour du 2026-10-17 :** le jeu n'est plus dans ce dépôt. La phase

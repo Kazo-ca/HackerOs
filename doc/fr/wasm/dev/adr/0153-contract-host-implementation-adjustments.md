@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0153-contract-host-implementation-adjustments.md)
+
 # ADR 0153 : ajustements de l'hôte de contrats générique
 
 ## Statut

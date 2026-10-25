@@ -1,3 +1,5 @@
+> [Version française](../../../../../fr/wasm/dev/old/migration/wave-2.md)
+
 # Wave 2: OS Fundamentals Migration Report
 
 ## Overview

@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0041-shared-theme-catalog-and-scoped-tokens.md)
+
 # ADR 0041: Shared Theme Catalog and Scoped CSS Tokens
 
 ## Status

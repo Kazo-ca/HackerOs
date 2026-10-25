@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/framework/theme-files.md)
+
 # Fichiers de thème `.theme`
 
 Ce document décrit le format du fichier `.theme`, la liste des jetons et l'API de lecture des thèmes pour les auteurs de thèmes et les outils. L'éditeur de thèmes, la résolution d'un identifiant de thème et la mise en œuvre sont dans [`../dev/theme-editor.md`](../dev/theme-editor.md).

@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/worker-processes.md)
+
 # Headless processes in Web Workers
 
 What an app declares for its execution host, the types that cross a worker's boundary and the page's isolation state are in [`app-execution-hosts.md`](../framework/app-execution-hosts.md).
@@ -113,7 +115,7 @@ JSON messages with a `t` field:
 | Worker → OS | Role |
 |---|---|
 | `hello` | Runtime and assemblies loaded. |
-| `hb` | Heartbeat (250 ms): CPU time per process, runtime memory, busy time. |
+| `hb` | Heartbeat (250 ms): CPU time per process, runtime memory, busy time, and how long each process's code has held the thread (`rn`). |
 | `call` | Gateway call that waits for an answer; `"s": true` for a synchronous call, whose answer comes back through the worker's shared cell (ADR 0143 §5). |
 | `note` | Call without an answer (log, environment), kept in order. |
 | `cancel` | Cancel a `call` in progress. |
@@ -197,9 +199,13 @@ never shrinks (ADR 0142 §5, [`oom-killer.md`](oom-killer.md)).
   `requestIdleCallback` (2 s at most): the ready worker first, then the cores.
   Before this signal, a request starts its own worker and waits for it.
 - **Free**: a ready worker with no process, or whose last heartbeat is less
-  than 750 ms old **and** arrived at least one period after the last process
-  placed on it (ADR 0072 §6): a command that loops as soon as it is launched
-  does not attract the next one behind it.
+  than 750 ms old **and** shows every hosted process running its own code for
+  at least one period (`rn`, ADR 0072 §6): a command that loops as soon as it
+  is launched does not attract the next one behind it. The proof is what the
+  worker reports, not when the heartbeat arrives: a heartbeat sent while the
+  new process's assembly was loading (that loading yields) could arrive one
+  period after the placement on a loaded machine, although the code had not
+  run yet.
 - **Queue** (ADR 0127 §1, `WorkerRunQueue`): at the ceiling, requests wait by
   increasing `nice` then in arrival order; a process with a positive `nice`
   value does not take the ready worker while another worker is starting. Priority does not slice time:
@@ -224,7 +230,11 @@ never shrinks (ADR 0142 §5, [`oom-killer.md`](oom-killer.md)).
 - **Step 4**: otherwise (or after the `SIGTERM` grace period), the OS
   terminates the worker. Its other processes exit `Killed` with "[pid] killed: worker
   N terminated to stop pid P" in syslog, the shell writes "Killed", and the
-  ready worker takes over the core.
+  ready worker takes over the core. The neighbors are marked killed in the
+  process table **before** their session ends, so the shell sees the reason;
+  output already received from a killed process is written before it ends for
+  its caller (at most 1 s for an abandoned session, at most 3 s for the killed
+  command), the way a pipe's data stays readable after a `SIGKILL`.
 
 ### `/proc/hackeros/workers`
 

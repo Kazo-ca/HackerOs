@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/framework/asp-hack-razor-views.md)
+
 # ASP.Hack: `.razor` views, anti-forgery and `wwwroot`
 
 Work item `web/7-razor-views` of the web phase. Decisions: [ADR 0076](../dev/adr/0076-asp-hack-mvc.md)

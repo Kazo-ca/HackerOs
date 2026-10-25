@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/framework/file-control-api.md)
+
 # Contrôle de fichiers de l'OS : usage depuis une app
 
 Ce document décrit ce qu'une app obtient quand elle affiche le contrôle de fichiers (`HackFileView`) ou ouvre un dialogue de fichiers de l'OS, et ce qui change pour elle selon l'hôte. Le fournisseur de l'explorateur (`ExplorerFileView`, contrats et composition) est dans [`dev/file-explorer.md`](../dev/file-explorer.md).

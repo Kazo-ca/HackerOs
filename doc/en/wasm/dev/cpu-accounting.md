@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/cpu-accounting.md)
+
 # Measured CPU time per process and "Not responding"
 
 This document covers the implementation of CPU time measurement. What an app sees (`HackProcess`, `/proc/<pid>/stat`, `/proc/<pid>/status`, `/proc/stat`) and the rules to follow are in [`../framework/process-resources-api.md`](../framework/process-resources-api.md).

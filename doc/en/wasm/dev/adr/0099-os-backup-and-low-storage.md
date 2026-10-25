@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0099-os-backup-and-low-storage.md)
+
 # ADR 0099: OS backup and restore, low space and `ENOSPC`, corrupted PWA cache, tested IndexedDB version upgrades
 
 ## Status

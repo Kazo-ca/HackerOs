@@ -1,3 +1,5 @@
+> [English version](../../en/wasm/README.md)
+
 # Documentation HackerOS
 
 Point d'entrée de `doc/fr/wasm/`, la documentation de l'OS HackerOS (code dans

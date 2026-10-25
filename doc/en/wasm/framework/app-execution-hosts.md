@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/framework/app-execution-hosts.md)
+
 # App execution host: main thread or Web Worker
 
 This document describes what an app declares to choose where its process runs (main thread or Web Worker), what crosses a worker boundary, and how to read the page's isolation state. The protocol, the pool, escalation, process limits and measurements are in [`dev/worker-processes.md`](../dev/worker-processes.md).
@@ -18,7 +20,7 @@ A window (embedded component included) stays on the main thread: `mainThread` is
 ## By default
 
 On the app side: nothing to do, other than declaring the host when the default does not fit
-(see [`app-sdk.md`](app-sdk.md#processus-dans-des-web-workers-adr-0070-et-0071)).
+(see [`app-sdk.md`](app-sdk.md#processes-in-web-workers-adr-0070-and-0071)).
 
 ## What crosses the boundary
 
@@ -35,9 +37,9 @@ Diagnostics uses it for its badge.
 
 ## `HackBackground` tasks
 
-A `HackBackground` task launched by an app (`HackBackground.RunAsync`) runs in a pool worker when the host has one, or on the main thread when there is no worker, with the same serialization. Details: [`dev/worker-processes.md`](../dev/worker-processes.md#tâches-hackbackground-adr-0128-adr-0140) and [`background-jobs.md`](background-jobs.md).
+A `HackBackground` task launched by an app (`HackBackground.RunAsync`) runs in a pool worker when the host has one, or on the main thread when there is no worker, with the same serialization. Details: [`dev/worker-processes.md`](../dev/worker-processes.md#hackbackground-tasks-adr-0128-adr-0140) and [`background-jobs.md`](background-jobs.md).
 
 ## See also
 
-- [`app-sdk.md`](app-sdk.md#processus-dans-des-web-workers-adr-0070-et-0071): SDK-side summary.
-- [`app-sdk.md`](app-sdk.md#isolation-cross-origin-adr-0146): `HackCrossOriginIsolation`.
+- [`app-sdk.md`](app-sdk.md#processes-in-web-workers-adr-0070-and-0071): SDK-side summary.
+- [`app-sdk.md`](app-sdk.md#cross-origin-isolation-adr-0146): `HackCrossOriginIsolation`.

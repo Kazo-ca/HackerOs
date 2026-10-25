@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/code-editor.md)
+
 # Éditeur de code
 
 `Apps/System/HackerOs.Apps.CodeEditor` (`org.hackeros.code-editor`) : éditeur

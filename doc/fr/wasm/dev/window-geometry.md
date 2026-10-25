@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/window-geometry.md)
+
 # Taille des fenêtres enregistrée et restaurée
 
 ## Objet

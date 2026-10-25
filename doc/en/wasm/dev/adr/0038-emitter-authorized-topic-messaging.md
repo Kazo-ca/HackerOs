@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0038-emitter-authorized-topic-messaging.md)
+
 # ADR 0038: Emitter-Authorized Topic Messaging
 
 ## Status

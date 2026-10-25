@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0095-window-events-sizes-and-keyboard.md)
+
 # ADR 0095 : événements de fenêtre pour les apps, tailles déclarées et commandes clavier
 
 ## Statut

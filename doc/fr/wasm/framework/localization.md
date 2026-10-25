@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/framework/localization.md)
+
 # Localisation (anglais et français)
 
 Décisions : [ADR 0104](../dev/adr/0104-localization.md), ajustée par l'[ADR 0111](../dev/adr/0111-localization-implementation-adjustments.md). Chantier : `v3/12-localization`

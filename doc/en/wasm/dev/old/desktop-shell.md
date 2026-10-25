@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/old/desktop-shell.md)
+
 # HackerOS Desktop Shell
 
 ## Purpose

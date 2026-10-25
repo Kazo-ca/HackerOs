@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/plans/wasm-v3-completion-plan.md)
+
 # End of the wasm v3 migration: work item plan
 
 **Status:** proposed on 2026-10-17, **approved by Benoit on 2026-10-17**

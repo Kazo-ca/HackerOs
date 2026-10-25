@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/old/progress-and-plan-2026-08-17.md)
+
 # Progress status and action plan: 2026-08-17
 
 ## Purpose

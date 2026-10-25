@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/framework/clipboard-api.md)
+
 # Presse-papiers : API pour les apps
 
 Ce document décrit le presse-papiers tel qu'une app le voit : `HackClipboard` (texte et listes de fichiers), le format de liste de fichiers et ce qui sort vers la vraie machine. Le presse-papiers partagé de l'OS, le pont vers l'hôte et le réglage `clipboard.config` sont dans [`dev/clipboard.md`](../dev/clipboard.md).

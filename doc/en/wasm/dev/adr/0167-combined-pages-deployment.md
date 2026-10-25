@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0167-combined-pages-deployment.md)
+
 # ADR 0167: combined Pages publication and independent builds
 
 ## Status

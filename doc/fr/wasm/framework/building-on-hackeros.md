@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/framework/building-on-hackeros.md)
+
 # Construire sur HackerOS depuis un autre dépôt
 
 ## Objet

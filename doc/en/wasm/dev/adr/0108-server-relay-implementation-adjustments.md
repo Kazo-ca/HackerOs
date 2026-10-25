@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0108-server-relay-implementation-adjustments.md)
+
 # ADR 0108: implementation adjustments for the server relay
 
 ## Status

@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0104-localization.md)
+
 # ADR 0104 : localisation (anglais et français, `LANG` par processus, `locale.conf`, ressources `.resx`)
 
 ## Statut

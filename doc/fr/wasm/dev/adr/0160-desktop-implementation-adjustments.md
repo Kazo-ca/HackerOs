@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0160-desktop-implementation-adjustments.md)
+
 # ADR 0160 : bureau, ajustements d'implémentation
 
 ## Statut

@@ -1,3 +1,5 @@
+> [English version](../../../../../en/wasm/dev/old/apps/file-explorer.md)
+
 # HackerOS File Explorer Application (`org.hackeros.file-explorer`)
 
 ## Purpose

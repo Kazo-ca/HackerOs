@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0088-site-data-debug-logs-and-form-history.md)
+
 # ADR 0088: site database, debug logs and autofill
 
 ## Status

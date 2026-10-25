@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/browser-infrastructure.md)
+
 # Infrastructure navigateur : `HackerOs.Infrastructure.Browser`
 
 ## Objet

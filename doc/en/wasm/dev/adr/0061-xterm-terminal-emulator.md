@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0061-xterm-terminal-emulator.md)
+
 # ADR 0061: xterm.js as the terminal emulator
 
 ## Status

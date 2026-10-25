@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0075-browser-html-rendering.md)
+
 # ADR 0075 : rendu HTML du navigateur dans une iframe isolée
 
 ## Statut

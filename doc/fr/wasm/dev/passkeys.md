@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/passkeys.md)
+
 # Clés d'accès (WebAuthn)
 
 ## Objet

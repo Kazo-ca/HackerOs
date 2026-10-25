@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0068-measured-process-memory.md)
+
 # ADR 0068 : mémoire mesurée par processus, en couches
 
 ## Statut

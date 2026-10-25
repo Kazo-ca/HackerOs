@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/clipboard.md)
+
 # OS clipboard and sharing with the host
 
 The clipboard API for apps (`HackClipboard`, file lists, GNOME format) is in [`clipboard-api.md`](../framework/clipboard-api.md).

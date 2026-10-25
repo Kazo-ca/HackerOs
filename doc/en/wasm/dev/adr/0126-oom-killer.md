@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0126-oom-killer.md)
+
 # ADR 0126: OOM killer disabled by default and guard on the real browser's memory
 
 ## Status

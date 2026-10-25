@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0122-window-size-only-not-position.md)
+
 # ADR 0122: a window remembers its size, not its position
 
 ## Status

@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/framework/listening-ports-and-dns.md)
+
 # Ports à l'écoute, `hackdns` et sites web locaux
 
 Chantier `web/3-listener-dns` de la phase web (ASP.Hack). Décisions : ADR 0073

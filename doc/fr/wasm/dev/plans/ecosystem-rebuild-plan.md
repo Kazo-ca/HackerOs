@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/plans/ecosystem-rebuild-plan.md)
+
 # Plan de refonte de l'écosystème HackerOS
 
 **Statut :** plan validé avec Benoit le 2026-10-10. Les quatre phases sont

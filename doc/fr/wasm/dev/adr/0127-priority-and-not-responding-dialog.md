@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0127-priority-and-not-responding-dialog.md)
+
 # ADR 0127 : priorité `nice` sans quantum, et boîte « L'application ne répond pas : Attendre | Terminer l'application »
 
 ## Statut

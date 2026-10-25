@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/old/ecosystem-maturity-gap-analysis.md)
+
 # Gap analysis for a true WebAssembly ecosystem
 
 **Status:** exploratory analysis, not implemented, no `D-xxx` decision

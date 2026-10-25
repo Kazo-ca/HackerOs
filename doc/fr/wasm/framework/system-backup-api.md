@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/framework/system-backup-api.md)
+
 # Sauvegarde système côté apps
 
 Ce document décrit ce qu'une app voit de la sauvegarde de la machine : l'API `HackSystemBackup`, l'archive `.hosbak`, la capacité `system.backup` et les codes d'erreur d'espace. La mise en œuvre (séquence, espace de stockage, cache PWA, montées de version IndexedDB, tests) est dans [`../dev/system-backup.md`](../dev/system-backup.md).

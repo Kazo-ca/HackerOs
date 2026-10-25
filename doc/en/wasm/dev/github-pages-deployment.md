@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/github-pages-deployment.md)
+
 # GitHub Pages publication: WASM and legacy
 
 ## Purpose
@@ -42,7 +44,7 @@ six browser test projects remain available in
 `.github/workflows/verify-browser-tests.yml`, launched only by
 **Actions → Verify HackerOS browser tests (manual) → Run workflow**. This
 workflow keeps its diagnostics and performs no deployment. See
-[the test suites](building-and-testing.md#tester) for the local commands.
+[the test suites](building-and-testing.md#testing) for the local commands.
 
 ### Test separation tasks
 

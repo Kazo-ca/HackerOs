@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0051-unified-commands-project.md)
+
 # ADR 0051: Grouped commands, with no hard-coded exception
 
 ## Status

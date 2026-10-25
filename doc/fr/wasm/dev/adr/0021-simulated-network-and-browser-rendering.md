@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0021-simulated-network-and-browser-rendering.md)
+
 # ADR 0021 — Simulated Network Contracts and Browser Rendering Model
 
 **Status:** Accepted  

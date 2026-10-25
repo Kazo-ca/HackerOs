@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0078-detached-display-windows.md)
+
 # ADR 0078 : fenêtres d'affichage détachées (préparation du deuxième écran)
 
 ## Statut

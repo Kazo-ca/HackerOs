@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/framework/embedded-components.md)
+
 # Composants intégrables
 
 Une app peut afficher dans sa fenêtre un composant qu'une autre app a

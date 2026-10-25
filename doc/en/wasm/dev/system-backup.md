@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/system-backup.md)
+
 # Machine backup and storage space
 
 This document covers the implementation of backup and storage space. What an app sees (the `HackSystemBackup` API, the `.hosbak` archive, the `NoSpace` and `FileTooLarge` codes) is in [`../framework/system-backup-api.md`](../framework/system-backup-api.md).
@@ -15,8 +17,8 @@ Work item `v3/7-storage-backup`, following [ADR 0099](adr/0099-os-backup-and-low
   per file, ADR 0094) codes, all the way to the shell's Linux message; logs
   count the lost lines.
 - **Damaged PWA cache** and **tested IndexedDB version upgrades**: see
-  [PWA cache](#cache-pwa-abîmé-adr-0099-3) and
-  [Version upgrades](#montées-de-version-indexeddb-adr-0099-4).
+  [PWA cache](#damaged-pwa-cache-adr-0099-3) and
+  [Version upgrades](#indexeddb-version-upgrades-adr-0099-4).
 
 ```text
 alice@hackeros:~$ sudo hackbackup create
@@ -140,7 +142,7 @@ screen explains that one must reconnect once. See
 ## IndexedDB version upgrades (ADR 0099 §4)
 
 Dumps of versions 2 and 3 in `Tests/fixtures/indexeddb/` (version 1 was never committed, ADR 0110 §1), E2E test `IndexedDbUpgradeFixtureTests` and procedure: see
-[`building-and-testing.md`](building-and-testing.md#fixtures-de-montée-de-version-indexeddb).
+[`building-and-testing.md`](building-and-testing.md#indexeddb-version-upgrade-fixtures).
 
 ## Decisions
 

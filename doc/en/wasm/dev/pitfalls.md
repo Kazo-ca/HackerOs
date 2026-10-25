@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/pitfalls.md)
+
 # Pitfalls encountered and their solutions
 
 This document summarizes, in broad strokes, the problems that cost time
@@ -55,16 +57,41 @@ build and test commands are in
 | The Mobile choice test fails intermittently | Writing the setting in `~/.config/hackeros` is not instantaneous (2 s before [ADR 0090](adr/0090-filesystem-path-lookup-in-one-request.md), 235 ms after) | Wait for the switch before reloading. |
 | Wrong ARIA states or red axe test | An ARIA attribute bound directly to a `bool` in Razor disappears when it is `false` | Write `"true"`/`"false"` ([`old/common-pitfalls.md`](old/common-pitfalls.md) §8). |
 
-**Known unstable** tests (not regressions; they pass alone or on an idle
-machine): `A_command_that_spins_at_once` and `Kill_minus_9`
-(`WorkerHost.Tests`), `zip`/`unzip` parity of `CommandParityTests`,
-`CpuAccountingOverheadTests`, one `AppInstallationService` test (about once
-in twelve), the web worker of `LocalNetworkTests`, the detached window harness
-of the UI, `FileExplorerDownload` and `BrowserHomePage` of `UI.E2E` under
-the load of the complete suite, and two `Pwa.E2E` tests that wait for
-the file explorer. Rerun the suite alone before concluding. On
-GitHub Actions, these tests are rerun once and reported as unstable
-if they pass ([`ci-workflows.md`](ci-workflows.md#tests-instables-et-nouvel-essai)).
+### Unstable tests: causes found and fixed (2026-10-25)
+
+These tests failed intermittently on CI or under load; the cause is fixed
+(in the code or in the test), and no test was skipped. In a four-core cloud
+container, each one passed 8 to 20 times in a row under load (four CPU loops
+in parallel), except `CpuAccountingOverheadTests`, which passes 10 times out
+of 10 on an idle machine but can still fail on a saturated one: it is a time
+measurement.
+
+| Test | Cause | Fix |
+| --- | --- | --- |
+| `A_command_that_spins_at_once` (`WorkerHost.Tests`) | A core counted as "free" as soon as a heartbeat arrived one period after the placement; a heartbeat sent while the command's assembly was loading (which yields) was enough on a loaded machine, and the next command was placed behind the loop. | The heartbeat reports how long each process's code has held the thread (`rn`); the core is free only if every hosted process has run its own code for at least one period ([`worker-processes.md`](worker-processes.md)). |
+| `Kill_minus_9_of_a_spinning_command…` (`WorkerHost.Tests`) | Three races: the neighbors of a terminated worker exited 137 before the OS recorded the `Killed` reason (no "Killed" from the shell); output received from an abandoned session was not written; the killed command handed control back to the shell before its received output was written. The test also sometimes killed `spin` before it had started. | Neighbors marked killed before their session ends; received output written before the end (bounded); the test waits for `TestCommands.Spinning`. |
+| `StaticSitesTests` (under load) | `hackwebd` opened a port and accepted requests before knowing the site of that binding: 503. The test waited for the first open port, not for all bindings (`intranet.hack` then went to an app of the fixture). | Accepting starts once the site table is up to date; the test waits for all bindings. |
+| `zip`/`unzip` parity (`CommandParityTests`) | `ZipArchive.CreateEntry` stamps the entry with the machine's real clock: the two runs differed when they fell on either side of a 2 s boundary. | `zip` stamps each entry with the file's modification date, like Info-ZIP. |
+| `CpuAccountingOverheadTests` (`ResourceAccounting.Tests`) | One pass of the same scenario varied by a factor of three: tiered compilation recompiled code in the background between passes, and the 300 `Task.Yield` waited for a thread-pool thread. The measured overhead ranged from -9 % to +15 %. | Tiered compilation turned off in this test project, full collection before each pass, single-threaded event loop (like the browser's main thread), order of the two modes alternated, five tries. Measured overhead: about 2 %. |
+| `A_child_with_a_parent_exit_grace_period…` (`Core.Tests`) | The test checked that the grandchild was killed at the moment the child disappeared; the code kills it right after, in the same task (ADR 0147). | The test waits for both. |
+
+**Known unstable** tests, not reproduced in 25 runs under load on
+2026-10-25: one `AppInstallationService` test (about once in twelve before),
+the web worker of `LocalNetworkTests`. Browser side (manual workflow): the
+detached window harness of the UI, `FileExplorerDownload` and
+`BrowserHomePage` of `UI.E2E` under the load of the complete suite, and two
+`Pwa.E2E` tests that wait for the file explorer. Rerun the suite alone before
+concluding, and record the cause of any new case here. On GitHub Actions, a
+failing test is rerun once and reported as unstable if it passes
+([`ci-workflows.md`](ci-workflows.md#flaky-tests-and-retry)): that
+signal is the starting point to find its cause.
+
+**Remember when writing a test**: wait for the event that proves the wanted
+state (the command runs, all bindings are open, both processes have ended),
+never for a sign that comes before it (the process is placed, the first port
+is open); never compare output that contains the machine's real time; to
+measure time, turn off tiered compilation and compare passes made under the
+same conditions.
 
 ## 5. Blazor, windows and SDK
 
@@ -95,7 +122,7 @@ if they pass ([`ci-workflows.md`](ci-workflows.md#tests-instables-et-nouvel-essa
 | Symptom | Cause | Solution |
 | --- | --- | --- |
 | The GitHub Actions all failed (August to October 2026) | No runner available | During this period, a green local build and tests were authoritative. Since 2026-10-24, the workflows run again (`Verify HackerOS WASM`, `Deploy to GitHub Pages`); the Playwright tests are in a separate manual workflow (`verify-browser-tests.yml`). A green local build and tests are still required before merging. PRs then failed on unstable tests (`Kill_minus_9`, `ResourceAccounting`): the workflows rerun failing tests once ([`ci-workflows.md`](ci-workflows.md)). |
-| GitHub Actions fails at "Setup .NET 10": `409 Unable to download https://dotnetorigin.blob.core.windows.net/...` | With a channel (`10.0.x`), the install script follows the `aka.ms` link, which pointed to a failing storage | Install an exact version: the `.github/actions/setup-dotnet-sdk` action reads `latest-sdk` and downloads from `builds.dotnet.microsoft.com` ([`ci-workflows.md`](ci-workflows.md#installation-du-sdk-net)). |
+| GitHub Actions fails at "Setup .NET 10": `409 Unable to download https://dotnetorigin.blob.core.windows.net/...` | With a channel (`10.0.x`), the install script follows the `aka.ms` link, which pointed to a failing storage | Install an exact version: the `.github/actions/setup-dotnet-sdk` action reads `latest-sdk` and downloads from `builds.dotnet.microsoft.com` ([`ci-workflows.md`](ci-workflows.md#net-sdk-installation)). |
 | `dotnet` missing in a cloud container | Nothing is preinstalled | `curl -sSL https://dot.net/v1/dotnet-install.sh \| bash -s -- --channel 10.0`. |
 | A cloud thread cannot delete a GitHub branch (403) | Insufficient rights of cloud sessions | Benoit deletes merged branches himself with a prepared command. |
 | The received branch name carries a suffix (`…-txf6mn`) | The harness assigns suffixed names | Work on the given branch; check that no orphan branch remains. |

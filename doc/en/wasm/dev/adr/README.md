@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/README.md)
+
 # Architecture decisions (ADR)
 
 An accepted ADR is never modified: a new ADR replaces it and says so. The

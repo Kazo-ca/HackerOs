@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/old/policy-system.md)
+
 # Capability Policy System
 
 ## Purpose

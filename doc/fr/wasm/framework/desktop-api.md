@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/framework/desktop-api.md)
+
 # Bureau : API pour les apps
 
 Ce document décrit ce qu'une app utilise pour le bureau : les types `HackDesktop*` du SDK, le fichier `desktop.config`, les raccourcis `.desktop`, le mode Bureau du contrôle de fichiers et l'intent de création de raccourci. L'app Bureau, la coquille, les menus et les surfaces de l'OS sont décrits dans [`dev/desktop.md`](../dev/desktop.md).

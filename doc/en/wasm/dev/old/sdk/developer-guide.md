@@ -1,3 +1,5 @@
+> [Version française](../../../../../fr/wasm/dev/old/sdk/developer-guide.md)
+
 # HackerOS App SDK 1.0 Developer Guide
 
 ## Overview

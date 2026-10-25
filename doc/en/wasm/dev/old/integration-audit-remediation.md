@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/old/integration-audit-remediation.md)
+
 # HackerOS v3 Integration Audit — Remediation Handoff
 
 **Status:** Remediation in progress  

@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/detached-display-windows.md)
+
 # Fenêtres détachées
 
 Le contrat des surfaces pour les apps (`IDisplaySurfaceService`, `DisplaySurfaceContent`, événements, `HackBrowser.OpenDetachedAsync`) est dans [`display-surface-api.md`](../framework/display-surface-api.md).

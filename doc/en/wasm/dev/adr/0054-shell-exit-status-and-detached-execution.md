@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0054-shell-exit-status-and-detached-execution.md)
+
 # ADR 0054: `$?` per pipeline, detached shell and synchronous writes to a pipe
 
 ## Status

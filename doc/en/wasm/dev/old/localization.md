@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/old/localization.md)
+
 > **Archive — ne décrit pas HackerOS.** Cette conception (cinq cultures, `/etc/hackeros/locale.json`) n'a jamais été réalisée. La localisation réelle est décrite par l'[ADR 0104](../adr/0104-localization.md), l'[ADR 0111](../adr/0111-localization-implementation-adjustments.md) et [`localization.md`](../../framework/localization.md).
 
 # HackerOS Globalization & Localization Architecture

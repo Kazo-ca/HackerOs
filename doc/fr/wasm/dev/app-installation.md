@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/app-installation.md)
+
 # Désinstallation et réinstallation des apps
 
 Phase 2 du [plan de refonte](plans/ecosystem-rebuild-plan.md) (section 6.3, décisions

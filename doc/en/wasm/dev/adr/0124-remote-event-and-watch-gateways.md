@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0124-remote-event-and-watch-gateways.md)
+
 # ADR 0124: remote event and file watch gateways, pool open to any app assembly
 
 ## Status

@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/platform-core.md)
+
 # Plateforme : `HackerOs.Platform.Core`
 
 ## Objet

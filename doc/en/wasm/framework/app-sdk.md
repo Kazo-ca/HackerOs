@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/framework/app-sdk.md)
+
 # App SDK and the SDK boundary
 
 ## Purpose
@@ -13,7 +15,7 @@ public SDK (plan principle 3, ADR 0055). This document describes:
   add them (ADR 0056).
 
 Each phase 4 work item that adds an API documents it here, in the
-section [SDK API](#api-du-sdk).
+section [SDK API](#sdk-api).
 
 To write an app step by step, see the
 [developer guide](sdk-developer-guide.md); for the complete list of
@@ -176,7 +178,7 @@ Static facades that existed at the start of phase 4:
 | `HackTrash` | trash | [`trash.md`](../dev/trash.md), [`trash-api.md`](trash-api.md) |
 | `HackDns`, `HackPing`, `HackHttpClient`, `HackTcpClient`, `HackUdpClient` | network, real fallback decided by the OS (`4-sdk-network`), relayed sockets (`v3/10`) | [`sdk-network.md`](sdk-network.md) |
 | `HackDriveInfo` | disk size and free space (`4-proc-metrics`) | [`system-metrics.md`](../dev/system-metrics.md) |
-| `HackCrossOriginIsolation` | isolated page or not, and what that enables (ADR 0146, SDK 2.0) | [`worker-processes.md`](../dev/worker-processes.md#isolation-cross-origin-adr-0131-adr-0143) |
+| `HackCrossOriginIsolation` | isolated page or not, and what that enables (ADR 0146, SDK 2.0) | [`worker-processes.md`](../dev/worker-processes.md#cross-origin-isolation-adr-0131-adr-0143) |
 | `HackClipboard` | session clipboard, text and file list (`4-file-explorer`) | [`file-explorer.md`](../dev/file-explorer.md), [`clipboard-api.md`](clipboard-api.md) |
 | `HackTextContent` | text or binary decided on the content, like `file` (`4-file-explorer`) | [`text-editor.md`](../dev/text-editor.md) |
 
@@ -534,7 +536,7 @@ in the [SDK reference](sdk-reference.md).
 
 | API | Role | Capability | Document |
 |---|---|---|---|
-| `[assembly: HackWireContext(typeof(…))]` (`HackWireContextAttribute`) | Types of an app that cross a worker's boundary: `HackEvents` payloads, inputs and results of `HackBackground` | none | [above](#processus-dans-des-web-workers-adr-0070-et-0071), [ADR 0124](../dev/adr/0124-remote-event-and-watch-gateways.md) |
+| `[assembly: HackWireContext(typeof(…))]` (`HackWireContextAttribute`) | Types of an app that cross a worker's boundary: `HackEvents` payloads, inputs and results of `HackBackground` | none | [above](#processes-in-web-workers-adr-0070-and-0071), [ADR 0124](../dev/adr/0124-remote-event-and-watch-gateways.md) |
 | `HackProcess.GetResourceLimitsAsync` → `HackResourceLimits`, `SetResourceLimitAsync`; `ProcessLimitExceededException` (`EAGAIN`), `FileSystemErrorCode.TooManyOpenFiles` (`EMFILE`), `ProcessExitReason.CpuLimitExceeded`, `MemoryLimitExceeded` | `setrlimit`-style limits of a process | `process.manage` for another process | [`process-limits.md`](../dev/process-limits.md) |
 | `AppDefinition.OomScoreAdjust` (manifest `oomScoreAdj`), `ProcessExitReason.OutOfMemory` | starting `oom_score_adj`, negative for a system app only (`HOSAPP0024`); exit reason of an OOM killer victim | none | [`oom-killer.md`](../dev/oom-killer.md) |
 | `HackProcess.Nice`, `BasePriority`, `IShellSession.RunNicedAsync`, `ProcessNice` | `nice` priority of a process; launch a command with an adjustment | `process.manage` outside one's own process and its children; `shell.control` | [`process-priority-and-unresponsive-windows.md`](../dev/process-priority-and-unresponsive-windows.md) |
@@ -544,13 +546,13 @@ in the [SDK reference](sdk-reference.md).
 
 A major version: a 1.x app is refused and must be recompiled. The only removal
 is the `HackerOs.AppSdk.FileView` package; the migration table is in
-[`sdk-packages.md`](sdk-packages.md#migration-dune-app-1x).
+[`sdk-packages.md`](sdk-packages.md#migrating-a-1x-app).
 
 | API | Role | Capability | Document |
 |---|---|---|---|
 | `HackFileView`, `IHackFileView` (`HackerOs.AppSdk.Blazor.Files`) | File control provided by the OS (the default explorer), with the rights of the app that displays it | those of the files shown | [`embedded-components.md`](embedded-components.md), [`file-explorer.md`](../dev/file-explorer.md), [`file-control-api.md`](file-control-api.md) |
 | `Menus.Attach`, `Menus.Define`, `HackContextMenu`, `HackMenuDefinition` | OS context menu, multi-level, keyboard and long press | none | [`context-menu.md`](context-menu.md) |
-| `[RegisterFileContextMenu]`, `RegisterFileContextMenuContext`, `HackFileMenuItems` | Entries of an app in file menus, registered at build time | `shell.context-menu` | [`context-menu.md`](context-menu.md#entrées-des-apps-dans-les-menus-des-fichiers-chantier-4) |
+| `[RegisterFileContextMenu]`, `RegisterFileContextMenuContext`, `HackFileMenuItems` | Entries of an app in file menus, registered at build time | `shell.context-menu` | [`context-menu.md`](context-menu.md#app-entries-in-the-file-menus-work-item-4) |
 | `HackFileOperations`, `IDialogService.AsFileConflictResolver` | Copy, move, import, trash, Nautilus-style conflicts (formerly `FileTransfer`) | those of the files | [`file-explorer.md`](../dev/file-explorer.md), [`file-operations-api.md`](file-operations-api.md) |
 | `HackDesktopSettings`, `HackDesktopEntry`, `HackDesktopLayout` | Settings, `.desktop` shortcuts and desktop grid | those of the home folder | [`desktop.md`](../dev/desktop.md), [`desktop-api.md`](desktop-api.md) |
 | `HackComponentProviders`, `HackFileMenuEntries` | Choose the provider of a contract, hide a menu entry | `apps.manage` | [`embedded-components.md`](embedded-components.md) |
@@ -564,7 +566,7 @@ the `[AppManifest]`); their details are in the
 
 | API | Role | Capability | Document |
 |---|---|---|---|
-| `HackConsole`, gateway `IAppExecutionContext.Console` (`IAppConsoleGateway`) | Standard streams of an instance: those of the shell that launched it by name, `/dev/null` from the desktop | none | [`shell-interpreter.md`](../dev/shell-interpreter.md#apps-lancées-par-leur-nom) |
+| `HackConsole`, gateway `IAppExecutionContext.Console` (`IAppConsoleGateway`) | Standard streams of an instance: those of the shell that launched it by name, `/dev/null` from the desktop | none | [`shell-interpreter.md`](../dev/shell-interpreter.md#apps-launched-by-name) |
 | `IShellSession`: `GetVariable`, `AssignVariable`, `RunAsync`, `Jobs`, `KillJob`; `IHackShell.NeedsMoreInput` | Built-ins `read`, `watch`, `jobs`, `kill %n` written as ordinary commands; continuation prompt | `shell.control`; `shell.host` | [`shell-commands.md`](../dev/shell-commands.md), [`shell-host.md`](shell-host.md) |
 | `IFullScreenTerminalSession` (`TerminalExecutionContext.FullScreen`), `TerminalInputReader` | Alternate screen (`nano`, `top`, `htop`) and the terminal's standard input | none | [`terminal-emulator.md`](../dev/terminal-emulator.md), [`terminal-api.md`](terminal-api.md) |
 | `HackFile.CreateSymbolicLinkAsync` | `ln -s` | path rights | [`hack-file-api.md`](hack-file-api.md) |
@@ -574,7 +576,7 @@ the `[AppManifest]`); their details are in the
 None of these APIs gives access to an internal service: the apps that
 use them (Terminal, CodeEditor, Diagnostics, FileExplorer, `HackerOs.Commands`)
 pass the boundary check without exception (see
-[Final verification](#vérification-finale-de-la-phase-4-2026-10-16)).
+[Final verification](#final-verification-of-phase-4-2026-10-16)).
 
 ## Decisions
 
@@ -600,7 +602,7 @@ pass the boundary check without exception (see
   the ambient context. *Phase 5:* the Settings panels (`InstalledAppsPanel`,
   `AppPermissionsPanel`) now inherit from `HackComponentBase` and receive
   the context as a cascading value, like all components in `Apps/`
-  ([`resource-accounting.md`](../dev/resource-accounting.md#apps-existantes)).
+  ([`resource-accounting.md`](../dev/resource-accounting.md#existing-apps)).
 
 ## Final verification of phase 4 (2026-10-16)
 

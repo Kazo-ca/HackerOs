@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/virtual-proc-and-dev.md)
+
 # Virtual `/proc` and `/dev`
 
 Implementation of section 5.4 of the [rebuild plan](plans/ecosystem-rebuild-plan.md)

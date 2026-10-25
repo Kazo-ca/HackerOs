@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/ci-workflows.md)
+
 # Validations GitHub Actions
 
 Ce que vérifient les workflows de `.github/workflows/`, quand ils tournent, et

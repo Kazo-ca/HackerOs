@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0106-trimmed-release-publish.md)
+
 # ADR 0106 : publication Release trimmée de l'hôte Ecosystem
 
 ## Statut

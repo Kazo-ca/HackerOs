@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/system-metrics.md)
+
 # Mesures système : CPU, disque, réseau et espace disque
 
 Mise en œuvre de l'[ADR 0057](adr/0057-proc-metrics-for-task-manager.md),

@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0053-hack-environment-async-directory-change.md)
+
 # ADR 0053: Asynchronous current directory change and reading the login environment
 
 ## Status

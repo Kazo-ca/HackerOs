@@ -1,3 +1,5 @@
+> [English version](../../../../../en/wasm/dev/old/apps/terminal.md)
+
 # HackerOS Terminal Application (`org.hackeros.terminal`)
 
 ## Purpose

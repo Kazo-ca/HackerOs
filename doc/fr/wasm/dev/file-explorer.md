@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/file-explorer.md)
+
 # Explorateur de fichiers : couper, copier, coller et glisser-déposer
 
 Les API destinées aux apps sont dans [`file-operations-api.md`](../framework/file-operations-api.md) (`HackFileOperations`), [`file-control-api.md`](../framework/file-control-api.md) (`HackFileView` et dialogues) et [`clipboard-api.md`](../framework/clipboard-api.md) (presse-papiers).

@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0151-app-registered-file-menu-entries.md)
+
 # ADR 0151 : entrées de menu de fichiers inscrites par les apps
 
 ## Statut

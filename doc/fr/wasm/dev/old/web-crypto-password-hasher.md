@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/old/web-crypto-password-hasher.md)
+
 # Web Crypto API Password Hashing Acceleration
 
 ## Purpose

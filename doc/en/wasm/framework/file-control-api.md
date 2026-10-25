@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/framework/file-control-api.md)
+
 # OS file control: usage from an app
 
 This document describes what an app gets when it displays the file control (`HackFileView`) or opens an OS file dialog, and what changes for it depending on the host. The explorer provider (`ExplorerFileView`, contracts and composition) is in [`dev/file-explorer.md`](../dev/file-explorer.md).

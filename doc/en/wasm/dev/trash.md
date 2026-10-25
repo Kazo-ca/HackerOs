@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/trash.md)
+
 # Trash
 
 The `HackTrash` API and the `.trashinfo` format intended for apps are in [`trash-api.md`](../framework/trash-api.md).

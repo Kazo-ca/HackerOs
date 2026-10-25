@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0128-background-jobs-hack-background.md)
+
 # ADR 0128: heavy background tasks (`HackBackground.RunAsync`)
 
 ## Status

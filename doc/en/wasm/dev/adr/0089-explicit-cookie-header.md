@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0089-explicit-cookie-header.md)
+
 # ADR 0089: `Cookie` header written by the app
 
 ## Status

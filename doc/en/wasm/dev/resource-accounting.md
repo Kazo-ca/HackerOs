@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/resource-accounting.md)
+
 # Optional resource measurement: switches and context-switch hook
 
 Implementation of work item `rebuild/5-accounting-switches` of phase 5

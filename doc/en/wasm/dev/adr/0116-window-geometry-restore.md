@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0116-window-geometry-restore.md)
+
 # ADR 0116: window geometry saved and restored
 
 ## Status

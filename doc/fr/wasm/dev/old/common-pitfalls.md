@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/old/common-pitfalls.md)
+
 # Common Pitfalls
 
 Recurring mistakes this codebase has already made at least once, each expensive

@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/framework/sdk-network.md)
+
 # Réseau dans le SDK
 
 ## Objet

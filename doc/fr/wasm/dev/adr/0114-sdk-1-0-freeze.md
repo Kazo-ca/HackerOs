@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0114-sdk-1-0-freeze.md)
+
 # ADR 0114 : gel du SDK 1.0, périmètre de la promesse de compatibilité et app de compatibilité
 
 ## Statut

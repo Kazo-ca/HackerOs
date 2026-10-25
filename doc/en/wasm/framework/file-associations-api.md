@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/framework/file-associations-api.md)
+
 # Per-user file associations (API and formats)
 
 This document describes what an app or a third party sees of file associations: the format of the two files, the resolution order, the `HackApps` API and the capabilities. The implementation (layers, index, Settings panel, "Open with", `xdg-mime`, tests) is in [`../dev/user-file-associations.md`](../dev/user-file-associations.md).

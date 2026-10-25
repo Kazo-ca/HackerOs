@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0006-seal-window-component-lifecycle.md)
+
 # ADR 0006: Seal the Window Component Lifecycle
 
 ## Status

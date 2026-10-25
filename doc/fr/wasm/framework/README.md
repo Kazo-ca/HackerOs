@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/framework/README.md)
+
 # Framework HackerOS : créer des apps et des sites
 
 Ce dossier documente ce qui sert à construire **sur** HackerOS : le SDK public,
@@ -12,7 +14,6 @@ travailler depuis un autre dépôt.
 
 | Document | Rôle |
 | --- | --- |
-| [`framework`]() | Construire **sur** HackerOS : SDK, modèle d'app, capacités, API `Hack*`, paquets NuGet, sites ASP.Hack et Blazor. Pour qui écrit une app, une commande, un service ou un site. |
 | [`sdk-developer-guide.md`](sdk-developer-guide.md) | Guide du développeur d'apps : créer une app fenêtrée, une commande du shell ou un service avec le SDK public, `AppDefinition`, services de l'OS, capacités, installation, tests. Exemples compilés. |
 | [`sdk-reference.md`](sdk-reference.md) | Référence du SDK : bibliothèques, types de définition, les 37 capacités, `IAppExecutionContext`, chaque façade `Hack*`, points d'entrée, composants Blazor (dialogues, graphiques, vue de fichiers, terminal, icônes, clavier virtuel). |
 | [`sdk-developer-guide.md`](sdk-developer-guide.md) | Guide du développeur d'apps : créer une app fenêtrée, une commande du shell ou un service avec le SDK public, `AppDefinition`, services de l'OS, capacités, installation, tests. Exemples compilés. |

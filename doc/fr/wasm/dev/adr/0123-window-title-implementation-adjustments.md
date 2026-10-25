@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0123-window-title-implementation-adjustments.md)
+
 # ADR 0123 : ajustements de la mise en œuvre du titre de fenêtre
 
 ## Statut

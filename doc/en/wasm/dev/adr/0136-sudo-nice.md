@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0136-sudo-nice.md)
+
 # ADR 0136: `sudo nice` runs the command as root
 
 ## Status

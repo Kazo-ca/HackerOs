@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/memory/README.md)
+
 # HackerOS project memory
 
 Project status and working conventions as of **2026-10-25**. This folder serves as a

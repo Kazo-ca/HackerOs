@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0043-hack-file-api-and-ambient-context.md)
+
 # ADR 0043: System.IO-style `Hack*` file API and ambient execution context
 
 ## Status

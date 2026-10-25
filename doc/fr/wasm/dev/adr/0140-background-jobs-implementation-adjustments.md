@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0140-background-jobs-implementation-adjustments.md)
+
 # ADR 0140 : ajustements de la mise en œuvre de l'ADR 0128 (tâches en arrière-plan)
 
 ## Statut

@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0020-editor-framework-and-script-sandbox.md)
+
 # ADR 0020: Code Editor Architecture, Framework Selection, and Script Execution Sandbox Policy
 
 ## Status

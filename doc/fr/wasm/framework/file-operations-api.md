@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/framework/file-operations-api.md)
+
 # Opérations sur les fichiers : API `HackFileOperations`
 
 Ce document décrit `HackFileOperations`, l'API du SDK qui copie, déplace, importe et envoie à la corbeille des fichiers, avec ses règles de nommage, de conflit et d'arrêt. Le contrôle de fichiers de l'explorateur, qui s'appuie sur ces opérations, est dans [`dev/file-explorer.md`](../dev/file-explorer.md).

@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0052-trash.md)
+
 # ADR 0052: Trash
 
 ## Status

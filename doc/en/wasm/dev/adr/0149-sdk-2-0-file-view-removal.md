@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0149-sdk-2-0-file-view-removal.md)
+
 # ADR 0149: SDK 2.0, removal of `HackerOs.AppSdk.FileView` and file contracts
 
 ## Status

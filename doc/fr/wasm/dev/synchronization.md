@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/synchronization.md)
+
 # Synchronisation entre appareils
 
 Chantier `v3/9-sync`, [ADR 0101](adr/0101-synchronized-deletions-and-conflicts.md)

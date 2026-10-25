@@ -1,3 +1,5 @@
+> [Version française](../../../../../fr/wasm/dev/old/Global-FileView-And-MessagingSystem/FileViewControl.md)
+
 # `FileView` Control Specification
 
 Parent document: [`../Global-FileView-And-MessagingSystem.md`](../Global-FileView-And-MessagingSystem.md)

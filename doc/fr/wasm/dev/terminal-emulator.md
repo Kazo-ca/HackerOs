@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/terminal-emulator.md)
+
 # Émulateur du terminal (xterm.js)
 
 Le contrat côté apps et commandes (`TerminalPanel`, `IHackTerminal`, lecture d'un mot de passe sans écho, mode plein écran) est dans [`terminal-api.md`](../framework/terminal-api.md).

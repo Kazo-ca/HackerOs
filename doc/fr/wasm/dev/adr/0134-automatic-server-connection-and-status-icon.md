@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0134-automatic-server-connection-and-status-icon.md)
+
 # ADR 0134 : connexion automatique au serveur qui sert l'OS, et icône d'état dans la zone de notification
 
 ## Statut

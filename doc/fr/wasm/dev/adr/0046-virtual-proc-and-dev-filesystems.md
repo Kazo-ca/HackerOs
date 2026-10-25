@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0046-virtual-proc-and-dev-filesystems.md)
+
 # ADR 0046 : Systèmes de fichiers virtuels `/proc` et `/dev`
 
 ## Statut

@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0005-deterministic-app-dependency-order.md)
+
 # ADR 0005: Deterministic App Dependency Order
 
 ## Status

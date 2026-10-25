@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0060-system-administration-sdk-adjustments.md)
+
 # ADR 0060 : Ajustements de l'API d'administration du système
 
 ## Statut

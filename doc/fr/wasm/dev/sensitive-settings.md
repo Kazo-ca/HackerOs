@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/sensitive-settings.md)
+
 # Réglages sensibles, trousseau et journal d'audit
 
 Mise en œuvre du chantier `v3/8-settings-security` du

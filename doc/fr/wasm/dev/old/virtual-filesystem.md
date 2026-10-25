@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/old/virtual-filesystem.md)
+
 # Virtual Filesystem
 
 ## Purpose

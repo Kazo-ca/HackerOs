@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/framework/http-bodies.md)
+
 # Real HTTP bodies in the simulated network
 
 **Web phase, work item `web/2-http-bodies`** ([`asp-hack-plan.md`](../dev/plans/asp-hack-plan.md),

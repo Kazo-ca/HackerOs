@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0129-window-rendering-in-worker-trial.md)
+
 # ADR 0129 : essai du rendu d'une fenêtre Blazor dans un worker, et critères pour y aller
 
 ## Statut

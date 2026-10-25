@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/old/icon-library.md)
+
 # Icon Library Support
 
 ## Overview

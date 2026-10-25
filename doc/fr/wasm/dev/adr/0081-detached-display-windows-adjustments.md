@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0081-detached-display-windows-adjustments.md)
+
 # ADR 0081 : fenêtres détachées, ajustements de la mise en œuvre
 
 ## Statut

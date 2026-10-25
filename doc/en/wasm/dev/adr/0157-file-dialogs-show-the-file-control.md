@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0157-file-dialogs-show-the-file-control.md)
+
 # ADR 0157: the Open / Save / Choose a folder dialogs show the file control
 
 ## Status

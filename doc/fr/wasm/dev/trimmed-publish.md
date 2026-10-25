@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/trimmed-publish.md)
+
 # Publication Release trimmée
 
 ## Objet

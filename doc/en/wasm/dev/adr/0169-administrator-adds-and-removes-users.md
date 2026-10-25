@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0169-administrator-adds-and-removes-users.md)
+
 # ADR 0169: an administrator adds and removes accounts
 
 ## Status

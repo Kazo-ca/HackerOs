@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0019-sdk-versioning-and-compatibility.md)
+
 # ADR 0019: App SDK Versioning, Compatibility, and Deprecation Policy
 
 * **Status:** Accepted (DECISION: D-012)

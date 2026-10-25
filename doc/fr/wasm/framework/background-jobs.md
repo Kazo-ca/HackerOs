@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/framework/background-jobs.md)
+
 # Tâches en arrière-plan (`HackBackground`)
 
 Chantier `exec/5-background-jobs`, [ADR 0128](../dev/adr/0128-background-jobs-hack-background.md)

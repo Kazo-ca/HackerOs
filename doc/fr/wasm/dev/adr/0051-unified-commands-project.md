@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0051-unified-commands-project.md)
+
 # ADR 0051 : Commandes regroupées, sans exception codée en dur
 
 ## Statut

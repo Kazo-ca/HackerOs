@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/server-network-relay.md)
+
 # Relais réseau du serveur optionnel
 
 Chantier `v3/10-server-proxy` du [plan de fin de migration](plans/wasm-v3-completion-plan.md),

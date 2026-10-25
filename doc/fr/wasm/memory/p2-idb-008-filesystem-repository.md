@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/memory/p2-idb-008-filesystem-repository.md)
+
 # P2-IDB-008: Filesystem Repository Transactions - Contract & Implementation Analysis
 
 **Task:** Filesystem transactions, streams/chunks, projection routing, clean-profile seed idempotence.

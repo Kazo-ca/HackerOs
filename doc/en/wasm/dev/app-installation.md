@@ -1,8 +1,10 @@
+> [Version française](../../../fr/wasm/dev/app-installation.md)
+
 # Uninstalling and reinstalling apps
 
 Phase 2 of the [rebuild plan](plans/ecosystem-rebuild-plan.md) (section 6.3, decisions
 D10 and D11), work item `rebuild/2-app-uninstall` of [ADR 0048](adr/0048-system-apps-and-uninstall.md).
-System apps (D9) are described in [`app-model.md`](../framework/app-model.md#apps-système-adr-0048-1).
+System apps (D9) are described in [`app-model.md`](../framework/app-model.md#system-apps-adr-0048-1).
 
 ## Goal
 

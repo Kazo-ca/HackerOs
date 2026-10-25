@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/pitfalls.md)
+
 # Pièges rencontrés et leurs solutions
 
 Ce document résume, en grandes lignes, les problèmes qui ont coûté du temps

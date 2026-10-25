@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/old/Global-FileView-And-MessagingSystem.md)
+
 # Global FileView Control & Messaging System
 
 ## Purpose

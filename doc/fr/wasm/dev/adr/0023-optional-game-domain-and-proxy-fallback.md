@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0023-optional-game-domain-and-proxy-fallback.md)
+
 # ADR 0023: Optional Game Domain Integration & Network Proxy Fallback
 
 ## Status

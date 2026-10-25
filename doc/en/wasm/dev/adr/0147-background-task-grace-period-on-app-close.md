@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0147-background-task-grace-period-on-app-close.md)
+
 # ADR 0147: 5 s grace period for background tasks when their app closes
 
 ## Status

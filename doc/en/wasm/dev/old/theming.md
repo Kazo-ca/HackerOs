@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/old/theming.md)
+
 # Shared Theme System
 
 ## Purpose

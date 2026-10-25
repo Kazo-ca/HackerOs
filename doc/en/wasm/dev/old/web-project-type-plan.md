@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/old/web-project-type-plan.md)
+
 # Technical plan: "Web" project type (hosted ASP.NET/Blazor, WebAssembly or Server)
 
 **Status:** technical proposal, not implemented, no `D-xxx` decision

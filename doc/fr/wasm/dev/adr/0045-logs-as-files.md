@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0045-logs-as-files.md)
+
 # ADR 0045 : Journaux en fichiers texte dans `/var/log`, avec rotation
 
 ## Statut

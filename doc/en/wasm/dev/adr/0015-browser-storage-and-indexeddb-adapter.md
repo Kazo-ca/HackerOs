@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0015-browser-storage-and-indexeddb-adapter.md)
+
 # ADR 0015: Browser Support Baseline and IndexedDB Adapter Approach
 
 ## Status

@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0002-authority-comes-from-policy.md)
+
 # ADR 0002: Authority Comes from Trusted Policy
 
 ## Status

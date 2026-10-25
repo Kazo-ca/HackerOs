@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/system-metrics.md)
+
 # System metrics: CPU, disk, network and disk space
 
 Implementation of [ADR 0057](adr/0057-proc-metrics-for-task-manager.md),
@@ -300,7 +302,7 @@ only the owner and the `System` authority read it.
 - **Real browser figures (ADR 0099 §2).** `df` shows the used space and quota
   of `navigator.storage.estimate()`; the root reserve and the low-space alert
   use the same figures
-  ([`system-backup.md`](system-backup.md#espace-de-stockage-adr-0099-2)).
+  ([`system-backup.md`](system-backup.md#storage-space-adr-0099-2)).
 - **Used space without orphan blocks.** Blocks awaiting cleanup are no longer
   referenced by any file and are not counted.
 

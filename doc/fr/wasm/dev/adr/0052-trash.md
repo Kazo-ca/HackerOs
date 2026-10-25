@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0052-trash.md)
+
 # ADR 0052 : Corbeille
 
 ## Statut

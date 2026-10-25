@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0022-multi-monitor-requirement-position.md)
+
 # ADR 0022 — Multi-Monitor Requirement Position
 
 **Status:** Accepted  

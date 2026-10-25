@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0116-window-geometry-restore.md)
+
 # ADR 0116 : géométrie des fenêtres enregistrée et restaurée
 
 ## Statut

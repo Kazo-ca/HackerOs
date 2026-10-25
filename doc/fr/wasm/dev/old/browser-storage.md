@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/old/browser-storage.md)
+
 # Browser Storage (IndexedDB)
 
 ## Purpose

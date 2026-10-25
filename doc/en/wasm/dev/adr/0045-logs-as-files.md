@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0045-logs-as-files.md)
+
 # ADR 0045: Logs as text files in `/var/log`, with rotation
 
 ## Status

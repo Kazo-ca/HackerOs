@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/framework/desktop-api.md)
+
 # Desktop: API for apps
 
 This document describes what an app uses for the desktop: the `HackDesktop*` SDK types, the `desktop.config` file, `.desktop` shortcuts, the Desktop mode of the file control and the shortcut-creation intent. The Desktop app, the shell, the menus and the OS surfaces are described in [`dev/desktop.md`](../dev/desktop.md).

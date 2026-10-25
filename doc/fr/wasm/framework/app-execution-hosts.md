@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/framework/app-execution-hosts.md)
+
 # Hôte d'exécution des apps : fil principal ou Web Worker
 
 Ce document décrit ce qu'une app déclare pour choisir où tourne son processus (fil principal ou Web Worker), ce qui traverse la frontière d'un worker et comment lire l'état d'isolation de la page. Le protocole, le pool, l'escalade, les limites de processus et les mesures sont dans [`dev/worker-processes.md`](../dev/worker-processes.md).

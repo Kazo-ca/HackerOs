@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/framework/asp-hack-site-data.md)
+
 # Site data: `HackWebDb` database, debug log, autofill
 
 Work item `web/12-site-data` of the web phase ([`asp-hack-plan.md`](../dev/plans/asp-hack-plan.md)). Decisions:

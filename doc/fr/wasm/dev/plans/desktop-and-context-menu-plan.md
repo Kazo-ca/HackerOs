@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/plans/desktop-and-context-menu-plan.md)
+
 # Icônes du bureau, contrôle de fichiers fourni par l'OS et menu contextuel central
 
 **Statut :** plan **validé par Benoit le 2026-10-19** (récapitulatif accepté,

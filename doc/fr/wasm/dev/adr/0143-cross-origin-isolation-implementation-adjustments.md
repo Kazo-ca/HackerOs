@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0143-cross-origin-isolation-implementation-adjustments.md)
+
 # ADR 0143 : ajustements de la mise en œuvre de l'isolation cross-origin
 
 ## Statut

@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/old/pwa-release.md)
+
 # HackerOS Progressive Web App (PWA) Release & Offline Strategy
 
 ## Overview

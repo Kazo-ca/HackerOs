@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/plans/asp-hack-plan.md)
+
 # Web phase: ASP.Hack, internal HackerOS websites
 
 **Status:** plan validated by Benoit on 2026-10-16 (answers to the questionnaire of

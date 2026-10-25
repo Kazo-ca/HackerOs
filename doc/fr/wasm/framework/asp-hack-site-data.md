@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/framework/asp-hack-site-data.md)
+
 # Données d'un site : base `HackWebDb`, journal de débogage, saisie semi-automatique
 
 Chantier `web/12-site-data` de la phase web ([`asp-hack-plan.md`](../dev/plans/asp-hack-plan.md)). Décisions :

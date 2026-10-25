@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/old/indexeddb-settings-persistence.md)
+
 # IndexedDB Settings Persistence
 
 ## Purpose

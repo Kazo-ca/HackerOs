@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/framework/app-responsiveness-api.md)
+
 # App priority and responsiveness
 
 This document describes what an app sees and must do to stay responsive: the `nice` priority and the "Not responding" window. The implementation (detection, worker queue, architecture, tests) is in [`../dev/process-priority-and-unresponsive-windows.md`](../dev/process-priority-and-unresponsive-windows.md).

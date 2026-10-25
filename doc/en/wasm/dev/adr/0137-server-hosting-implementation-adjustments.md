@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0137-server-hosting-implementation-adjustments.md)
+
 # ADR 0137: implementation adjustments for the OS served by `HackerOs.Server`
 
 ## Status

@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0146-cross-origin-isolation-sdk-api.md)
+
 # ADR 0146: `HackCrossOriginIsolation`, the isolation state in the SDK
 
 ## Status

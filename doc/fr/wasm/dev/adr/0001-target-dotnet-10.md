@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0001-target-dotnet-10.md)
+
 # ADR 0001: Target .NET 10
 
 ## Status

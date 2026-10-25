@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/plans/wasm-v3-final-status.md)
+
 # Status report of the wasm v3 migration
 
 ## Purpose

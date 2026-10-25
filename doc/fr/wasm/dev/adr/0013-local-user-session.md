@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0013-local-user-session.md)
+
 # ADR 0013: Local User and Session Model
 
 ## Status

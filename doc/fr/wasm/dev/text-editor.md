@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/text-editor.md)
+
 # Éditeur de texte
 
 App système `HackerOs.Apps.TextEditor` (`org.hackeros.text-editor`). Ce document

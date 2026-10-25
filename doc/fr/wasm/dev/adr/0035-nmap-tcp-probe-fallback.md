@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0035-nmap-tcp-probe-fallback.md)
+
 # ADR 0035: Single-Port TCP Reachability Probe for nmap's Real-Network Fallback
 
 ## Status

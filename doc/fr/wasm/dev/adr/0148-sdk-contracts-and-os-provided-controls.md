@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0148-sdk-contracts-and-os-provided-controls.md)
+
 # ADR 0148 : le SDK ne porte que des contrats ; l'OS fournit les contrôles et dialogues partagés
 
 ## Statut

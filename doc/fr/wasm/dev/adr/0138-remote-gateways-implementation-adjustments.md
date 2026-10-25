@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0138-remote-gateways-implementation-adjustments.md)
+
 # ADR 0138 : ajustements de la mise en œuvre de l'ADR 0124 (passerelles distantes)
 
 ## Statut

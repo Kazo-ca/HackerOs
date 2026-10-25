@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/old/README.md)
+
 # HackerOS v3 Documentation Index
 
 > **Archived.** These documents predate the rebuild plan. The current index is

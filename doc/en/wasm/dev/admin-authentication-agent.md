@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/admin-authentication-agent.md)
+
 # OS authentication agent
 
 ## Purpose

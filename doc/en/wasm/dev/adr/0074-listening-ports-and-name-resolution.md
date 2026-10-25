@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0074-listening-ports-and-name-resolution.md)
+
 # ADR 0074: listening ports, OS DNS resolver and real HTTP bodies
 
 ## Status

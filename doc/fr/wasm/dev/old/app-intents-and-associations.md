@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/old/app-intents-and-associations.md)
+
 # App Lifecycle Orchestration, Typed Intent Dispatch, and File Associations
 
 **Task list section:** [`integration-task-list.md` § 8](integration-task-list.md)

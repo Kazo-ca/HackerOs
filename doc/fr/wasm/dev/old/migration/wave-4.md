@@ -1,3 +1,5 @@
+> [English version](../../../../../en/wasm/dev/old/migration/wave-4.md)
+
 # Wave 4: Simulated Network, Browser, and Websites Migration Report
 
 ## Overview

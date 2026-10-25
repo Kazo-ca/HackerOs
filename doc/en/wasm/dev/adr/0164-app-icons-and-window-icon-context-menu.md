@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0164-app-icons-and-window-icon-context-menu.md)
+
 # ADR 0164: app icons and the window icon context menu
 
 ## Status

@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0084-blazor-sites.md)
+
 # ADR 0084: interactive Blazor sites drawn by the browser
 
 ## Status

@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/old/mobile-interface-platform-plan.md)
+
 # Mobile platform and interface plan
 
 > Update of 2026-10-23: paginated home screen, dock, drawer and mouse aids are

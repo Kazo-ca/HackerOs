@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/terminal-emulator.md)
+
 # Terminal emulator (xterm.js)
 
 The contract on the side of apps and commands (`TerminalPanel`, `IHackTerminal`, password reading without echo, full-screen mode) is in [`terminal-api.md`](../framework/terminal-api.md).

@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/browser-html-rendering.md)
+
 # Browser HTML rendering
 
 **Web phase, work item `web/4-browser-html`** ([`asp-hack-plan.md`](plans/asp-hack-plan.md),
@@ -115,7 +117,7 @@ A response that arrives after the tab has changed page is discarded.
 | `document.URL`, `document.referrer` | The page's real URL, not `about:srcdoc`. |
 | `console.*`, unhandled errors | Console tab of the developer tools. |
 | `alert` | Banner above the page; `confirm` returns `false`, `prompt` `null`. |
-| Autocomplete | When a form is submitted, named text fields (neither password, nor hidden, nor `autocomplete="off"`, nor card number) go into `~/.local/share/hackeros/browser/form-history.json`; on focus of a field, its past values are offered through a `<datalist>`; `Ctrl+Shift+Delete` clears the history (ADR 0088 §6, [`asp-hack-site-data.md`](../framework/asp-hack-site-data.md#saisie-semi-automatique)). |
+| Autocomplete | When a form is submitted, named text fields (neither password, nor hidden, nor `autocomplete="off"`, nor card number) go into `~/.local/share/hackeros/browser/form-history.json`; on focus of a field, its past values are offered through a `<datalist>`; `Ctrl+Shift+Delete` clears the history (ADR 0088 §6, [`asp-hack-site-data.md`](../framework/asp-hack-site-data.md#autofill)). |
 | `WebSocket`, `EventSource`, `window.open`, geolocation | Refused. |
 | Elements added afterwards (`img.src = …`, `appendChild`) | Loaded by the browser on demand. |
 

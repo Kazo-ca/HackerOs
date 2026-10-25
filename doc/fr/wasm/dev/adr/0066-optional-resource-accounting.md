@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0066-optional-resource-accounting.md)
+
 # ADR 0066 : mesure des ressources optionnelle, au build et au démarrage
 
 ## Statut

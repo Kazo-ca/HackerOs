@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/linux-commands.md)
+
 # Commandes Linux du shell
 
 Commandes ajoutées ou revues par l'[ADR 0064](adr/0064-posix-shell-scripts-jobs-and-app-commands.md)

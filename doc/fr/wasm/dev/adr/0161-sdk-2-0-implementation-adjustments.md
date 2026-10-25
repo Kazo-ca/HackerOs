@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0161-sdk-2-0-implementation-adjustments.md)
+
 # ADR 0161 : SDK 2.0, ajustements d'implémentation
 
 ## Statut

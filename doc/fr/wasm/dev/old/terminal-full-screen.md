@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/old/terminal-full-screen.md)
+
 # Full-Screen Terminal Contract and Nano
 
 ## Purpose

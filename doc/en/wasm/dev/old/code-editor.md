@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/old/code-editor.md)
+
 # Code Editor
 
 ## Purpose

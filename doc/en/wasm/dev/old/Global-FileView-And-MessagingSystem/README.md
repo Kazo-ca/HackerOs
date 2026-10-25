@@ -1,3 +1,5 @@
+> [Version française](../../../../../fr/wasm/dev/old/Global-FileView-And-MessagingSystem/README.md)
+
 # Archives: `Global-FileView-And-MessagingSystem/`
 
 Archived documents, predating the overhaul plan. They remain useful as a

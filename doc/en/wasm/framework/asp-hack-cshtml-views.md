@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/framework/asp-hack-cshtml-views.md)
+
 # ASP.Hack: `.cshtml` views
 
 Work item `web/8-cshtml-views` of the web phase. Decisions: [ADR 0076](../dev/adr/0076-asp-hack-mvc.md)

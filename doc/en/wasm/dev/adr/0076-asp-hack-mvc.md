@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0076-asp-hack-mvc.md)
+
 # ADR 0076: ASP.Hack MVC, pipeline, routing and views
 
 ## Status

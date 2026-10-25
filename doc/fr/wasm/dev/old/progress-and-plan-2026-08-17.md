@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/old/progress-and-plan-2026-08-17.md)
+
 # État d'avancement et plan d'action — 2026-08-17
 
 ## Objet

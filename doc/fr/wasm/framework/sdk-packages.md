@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/framework/sdk-packages.md)
+
 # Paquets NuGet, version du SDK et modèles
 
 ## Objet

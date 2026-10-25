@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0024-server-identity-and-device-registration.md)
+
 # ADR 0024: Server Identity and Device Registration
 
 **Status:** Accepted  

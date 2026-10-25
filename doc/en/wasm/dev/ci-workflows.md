@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/ci-workflows.md)
+
 # GitHub Actions validations
 
 What the workflows in `.github/workflows/` check, when they run, and how to
@@ -41,7 +43,7 @@ next to it; the `hackeros-verification-<attempt>` artifact contains them.
 
 Without the parameter (the default locally), the script keeps its strict
 behavior: a failure is a failure. Known flaky tests are listed in
-[`pitfalls.md`](pitfalls.md#4-tests-et-e2e); seeing one pass on retry on a PR
+[`pitfalls.md`](pitfalls.md#4-tests-and-e2e); seeing one pass on retry on a PR
 is not a regression, but a test that shows up there often deserves to be
 stabilized.
 

@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/framework/sdk-packages.md)
+
 # NuGet packages, SDK version and templates
 
 ## Purpose
@@ -14,7 +16,7 @@ upgrade) is [`building-on-hackeros.md`](building-on-hackeros.md).
 
 The checks done at load time (SDK version, duplicate commands,
 resource fingerprints, ADR 0098 §3 to §5) are described in
-[`app-model.md`](app-model.md#version-du-sdk-commandes-intégrité-adr-0098-3-5).
+[`app-model.md`](app-model.md#sdk-version-commands-integrity-adr-0098-3-5).
 
 ## Single version
 
@@ -86,7 +88,7 @@ unless it declares `HackerOsAppHost=true` (a host). Differences with the reposit
 - the boundary rule on `ProjectReference` (written in repository paths)
   does not apply; the one on packages does
   (`_ValidateHackerOsPackageBoundary`, `HOSAPP0030`, see
-  [`app-sdk.md`](app-sdk.md#vérification)): every compile reference
+  [`app-sdk.md`](app-sdk.md#verification)): every compile reference
   coming from a `HackerOs.*` package, direct or transitive, must be allowed;
 - injection inspection (`HOSAPP0031`), the `HOSAPP*` codes and the resource
   fingerprints are identical.

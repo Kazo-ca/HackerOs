@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/logging.md)
+
 # Journaux en fichiers (`/var/log`)
 
 Les fichiers de journal qu'une app produit et les API qui les écrivent sont dans [`app-log-files.md`](../framework/app-log-files.md).

@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/old/server-security.md)
+
 # Optional Server Security Remediation
 
 ## Purpose

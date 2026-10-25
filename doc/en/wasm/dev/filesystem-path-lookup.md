@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/filesystem-path-lookup.md)
+
 # Filesystem path lookup
 
 ## Goal

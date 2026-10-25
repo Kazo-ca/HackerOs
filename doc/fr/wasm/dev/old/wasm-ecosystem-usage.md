@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/old/wasm-ecosystem-usage.md)
+
 # HackerOS App Framework
 
 A modular Blazor WebAssembly framework that turns the HackerSimulator project into

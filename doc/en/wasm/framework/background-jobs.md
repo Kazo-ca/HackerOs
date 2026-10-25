@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/framework/background-jobs.md)
+
 # Background tasks (`HackBackground`)
 
 Work item `exec/5-background-jobs`, [ADR 0128](../dev/adr/0128-background-jobs-hack-background.md),
@@ -172,7 +174,7 @@ HackBackground.RunAsync ──► IAppExecutionContext.Background
   `TryGetJob` for `/proc` and the task manager.
 - **Workers** (`Platform/HackerOs.Platform.WorkerHost`): `start` with `k = 2`,
   `bg.progress`, `bg.run` and `bgp` for a task launched from a worker
-  ([`worker-processes.md`](../dev/worker-processes.md#tâches-hackbackground-adr-0128-adr-0140)).
+  ([`worker-processes.md`](../dev/worker-processes.md#hackbackground-tasks-adr-0128-adr-0140)).
 - **`/proc/<pid>/status`**: `Name:` carries the task name (15 characters),
   then `Job:` and `Host: MainThread|Worker`.
 

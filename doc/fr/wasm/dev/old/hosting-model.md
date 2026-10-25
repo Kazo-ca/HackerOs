@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/old/hosting-model.md)
+
 # Hosting Model
 
 > **Fait le 2026-10-18 (`exec/8-server-wasm`) :** l'[ADR 0130](../adr/0130-server-serves-webassembly-os-and-api.md)

@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0133-window-rendering-in-worker-verdict.md)
+
 # ADR 0133: window rendering in a worker, verdict of the trial: we stop
 
 ## Status

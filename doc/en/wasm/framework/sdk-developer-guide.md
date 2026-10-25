@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/framework/sdk-developer-guide.md)
+
 # HackerOS app developer guide
 
 ## Purpose
@@ -132,12 +134,12 @@ public sealed class NotesApp : AppDefinition
 
 Only `Id`, `Name`, `Kind` and `EntryPoint` are required; the other
 members have a default value (full table in
-[`app-model.md`](app-model.md#appdefinition-et-appmanifest)). The most
+[`app-model.md`](app-model.md#appdefinition-and-appmanifest)). The most
 useful members:
 
 | Member | Role |
 |---|---|
-| `Capabilities` | Rights requested, taken from `AppCapabilities` ([reference](sdk-reference.md#capacités)). Request only what is needed: a dangerous capability requires administrator approval at first launch. |
+| `Capabilities` | Rights requested, taken from `AppCapabilities` ([reference](sdk-reference.md#capabilities)). Request only what is needed: a dangerous capability requires administrator approval at first launch. |
 | `FileHandlers` | File types the app knows how to open; the path arrives in `LaunchFile`. |
 | `Terminal` | For a command: name, usage and aliases (`new("wc-notes", "wc-notes [-l] FILE...", ["wcn"])`). |
 | `Settings` | Schema of the settings read by `HackSettings`. |
@@ -348,7 +350,7 @@ protected override void OnAppInitialized()
 
 The shell waits for the window to close (`my-app &` gives the prompt back);
 launched from the desktop, the app writes to `/dev/null`. See
-[`shell-interpreter.md`](../dev/shell-interpreter.md#apps-lancées-par-leur-nom).
+[`shell-interpreter.md`](../dev/shell-interpreter.md#apps-launched-by-name).
 
 ### Ambient context and child components
 
@@ -563,7 +565,7 @@ ADR 0038): see `Apps/Samples/HackerOs.Samples.ServiceApp`. A
 service runs by default in a dedicated Web Worker (ADR 0070): the type of its
 payloads must then be declared by `[assembly: HackWireContext(typeof(…))]`
 (SDK 1.2, ADR 0124), as the example's `SampleTickerJsonContext` does;
-see [`app-sdk.md`](app-sdk.md#processus-dans-des-web-workers-adr-0070-et-0071).
+see [`app-sdk.md`](app-sdk.md#processes-in-web-workers-adr-0070-and-0071).
 
 ## 6. Using OS services
 
@@ -664,7 +666,7 @@ requests the `shell.context-menu` capability and declares in its
 The title is a key of `Resources/AppManifest.resx` (English, required) and
 of `Resources/AppManifest.fr.resx`. The method runs at build time; on click,
 the app receives the intent and reads the paths through `HackFileMenuIntent.ReadPaths`.
-Complete guide: [`context-menu.md`](context-menu.md#entrées-des-apps-dans-les-menus-des-fichiers-chantier-4).
+Complete guide: [`context-menu.md`](context-menu.md#app-entries-in-the-file-menus-work-item-4).
 
 ### Dangerous capabilities
 

@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0117-sdk-window-title-and-sdk-1-1.md)
+
 # ADR 0117 : titre de fenêtre posé par l'app et publication du SDK 1.1
 
 ## Statut

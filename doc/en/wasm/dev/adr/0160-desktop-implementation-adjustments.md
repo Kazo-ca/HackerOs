@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0160-desktop-implementation-adjustments.md)
+
 # ADR 0160: desktop, implementation adjustments
 
 ## Status

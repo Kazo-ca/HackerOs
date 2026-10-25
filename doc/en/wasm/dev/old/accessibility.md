@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/old/accessibility.md)
+
 # HackerOS Accessibility Evidence and WCAG 2.2 AA Checklist
 
 ## Overview

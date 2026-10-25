@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/clipboard.md)
+
 # Presse-papiers de l'OS et partage avec l'hôte
 
 L'API du presse-papiers pour les apps (`HackClipboard`, listes de fichiers, format GNOME) est dans [`clipboard-api.md`](../framework/clipboard-api.md).

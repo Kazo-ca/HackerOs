@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/old/blazor-app-sdk.md)
+
 # Blazor App SDK
 
 ## Purpose

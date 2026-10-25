@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/settings-app.md)
+
 # App Paramètres (`org.hackeros.settings`)
 
 ## Objet

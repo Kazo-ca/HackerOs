@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0057-proc-metrics-for-task-manager.md)
+
 # ADR 0057 : Mesures système dans `/proc` et `HackDriveInfo`
 
 ## Statut

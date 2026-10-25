@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0127-priority-and-not-responding-dialog.md)
+
 # ADR 0127: `nice` priority without a quantum, and "The application is not responding: Wait | End the application" dialog
 
 ## Status

@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/hack-paint.md)
+
 # Hack Paint
 
 Drawing app `org.hackeros.hack-paint` (`Apps/System/HackerOs.Apps.HackPaint`,

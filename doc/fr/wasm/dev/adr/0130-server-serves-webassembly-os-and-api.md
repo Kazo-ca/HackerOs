@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0130-server-serves-webassembly-os-and-api.md)
+
 # ADR 0130 : `HackerOs.Server` sert l'OS en WebAssembly et ne garde que son API
 
 ## Statut

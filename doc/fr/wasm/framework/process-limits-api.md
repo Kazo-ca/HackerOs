@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/framework/process-limits-api.md)
+
 # Limites de processus côté apps
 
 Ce document décrit ce qu'une app voit et peut faire avec les limites de son processus (`HackProcess`, `/proc/<pid>/limits`). La mise en œuvre (tables, contrôleur, lecture de `limits.conf`, commandes du shell) est dans [`../dev/process-limits.md`](../dev/process-limits.md).

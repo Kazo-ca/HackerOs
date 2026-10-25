@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0100-sensitive-settings-and-protected-write-audit.md)
+
 # ADR 0100 : réglages sensibles (fichiers privés, masquage, trousseau chiffré) et audit des écritures protégées
 
 ## Statut

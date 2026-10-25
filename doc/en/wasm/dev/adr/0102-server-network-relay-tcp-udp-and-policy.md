@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0102-server-network-relay-tcp-udp-and-policy.md)
+
 # ADR 0102: optional server network relay (HTTP body, TCP streams, UDP, verified grant, policy in `appsettings`)
 
 ## Status

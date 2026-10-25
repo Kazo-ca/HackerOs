@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/old/dialogs.md)
+
 # Platform Dialogs (Basic & File Dialogs)
 
 ## Purpose

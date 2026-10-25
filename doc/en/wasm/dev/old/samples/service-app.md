@@ -1,3 +1,5 @@
+> [Version française](../../../../../fr/wasm/dev/old/samples/service-app.md)
+
 # First Session Service App (`org.hackeros.samples.service-app`)
 
 ## Purpose

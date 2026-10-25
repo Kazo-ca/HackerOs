@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0164-app-icons-and-window-icon-context-menu.md)
+
 # ADR 0164 : icônes des apps et menu contextuel de l'icône de fenêtre
 
 ## Statut

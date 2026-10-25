@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/framework/building-on-hackeros.md)
+
 # Building on HackerOS from another repository
 
 ## Purpose
@@ -20,7 +22,7 @@ Details of the packages and of the package mode of `HackerOs.App.Build`:
 | Your project depends on… | Guarantee |
 |---|---|
 | the SDK: `HackerOs.App.Abstractions`, `HackerOs.Simulation.Abstractions`, `HackerOs.Theming.Abstractions`, `HackerOs.AppSdk*`, `HackerOs.Theming.Blazor`, the build contract of `HackerOs.App.Build`, the manifest format | an app compiled against `1.x` runs on any OS `1.y` (y ≥ x); a break only comes with a 2.0 |
-| the platform: `HackerOs.Ecosystem.Host`, `HackerOs.Platform.*`, `HackerOs.Windowing.*`, `HackerOs.Infrastructure.Browser`, the public types of the base apps | versioned with the SDK; a minor can break a **host**, never an app. Every break is listed in [`sdk-packages.md`](sdk-packages.md#ruptures-hors-sdk) |
+| the platform: `HackerOs.Ecosystem.Host`, `HackerOs.Platform.*`, `HackerOs.Windowing.*`, `HackerOs.Infrastructure.Browser`, the public types of the base apps | versioned with the SDK; a minor can break a **host**, never an app. Every break is listed in [`sdk-packages.md`](sdk-packages.md#breaks-outside-the-sdk) |
 
 The OS refuses an app compiled against a newer SDK than its own, or of a
 different major version ("incompatible" state in Settings, ADR 0098 §3). An app
@@ -185,7 +187,7 @@ where the 1.0.0 and 1.1.0 apps are refused and the 2.0.0 app runs).
   app that displayed `FileView` displays `HackFileView` (file control
   provided by the OS, `HackerOs.AppSdk.Blazor.Files`); `FileTransfer` becomes
   `HackFileOperations` (`HackerOs.AppSdk.IO`). The full table is in
-  [`sdk-packages.md`](sdk-packages.md#migration-dune-app-1x).
+  [`sdk-packages.md`](sdk-packages.md#migrating-a-1x-app).
 - **OS context menu**: `Menus.Attach(name, element)` on any
   element, `Menus.Define` in C#, submenus, keyboard and long press
   (ADR 0150, [`context-menu.md`](context-menu.md)).
@@ -202,7 +204,7 @@ where the 1.0.0 and 1.1.0 apps are refused and the 2.0.0 app runs).
 
 The breaks outside the SDK for a host (file explorer, code editor,
 the host's `IShellIconProvider`) are in
-[`sdk-packages.md`](sdk-packages.md#ruptures-hors-sdk).
+[`sdk-packages.md`](sdk-packages.md#breaks-outside-the-sdk).
 
 ### What 1.2 added
 

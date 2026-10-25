@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/old/start-menu.md)
+
 # Start Menu and Quick Launch
 
 ## Purpose

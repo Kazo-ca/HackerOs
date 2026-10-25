@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/plans/execution-isolation-plan.md)
+
 # Phase 5 — exécution des apps : mesure du CPU et de la mémoire, arrêt propre, Web Workers
 
 **Statut :** plan validé avec Benoit le 2026-10-16, **terminé le 2026-10-16**

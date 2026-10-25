@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0032-app-enablement-management.md)
+
 # ADR 0032: App Enablement Management
 
 ## Status

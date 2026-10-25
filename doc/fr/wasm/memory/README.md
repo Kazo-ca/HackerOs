@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/memory/README.md)
+
 # Mémoire du projet HackerOS
 
 État du projet et conventions de travail au **2026-10-25**. Ce dossier sert de

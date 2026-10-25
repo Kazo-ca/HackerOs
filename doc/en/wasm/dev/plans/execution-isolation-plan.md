@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/plans/execution-isolation-plan.md)
+
 # Phase 5: app execution: CPU and memory measurement, clean stop, Web Workers
 
 **Status:** plan approved with Benoit on 2026-10-16, **finished on 2026-10-16**
@@ -151,7 +153,7 @@ Done by `rebuild/5-memory-accounting` ([`memory-accounting.md`](../memory-accoun
 - [x] "End task" as `SIGTERM`, "Force kill" added.
 
 Implementation details (`rebuild/5-graceful-stop`, detail in
-[`app-sdk.md`](../../framework/app-sdk.md#arrêt-propre-et-points-darrêt-adr-0069)):
+[`app-sdk.md`](../../framework/app-sdk.md#clean-shutdown-and-checkpoints-adr-0069)):
 
 - The kernel holds a `ProcessControlBlock` per process (stop request,
   "killed" flag, `ProcessTaskScheduler`). A `SIGKILL` is: `Killed`
@@ -230,7 +232,7 @@ RESULT: PASS
   and `linux-commands.md` already describe ADRs 0066 to 0072 (each work item
   updated them); the counts (32 capabilities, 75 apps including 63 commands) are exact.
 - Left out of this phase, noted in
-  [`building-and-testing.md`](../building-and-testing.md#état-connu): two failures of
+  [`building-and-testing.md`](../building-and-testing.md#known-state): two failures of
   `HackerOs.UI.E2E.Tests` due to the app (accessibility, mobile "Back" button), fixed
   afterwards by `rebuild/5-ui-a11y-mkdir`, and the PWA suite that requires IPv6.
 

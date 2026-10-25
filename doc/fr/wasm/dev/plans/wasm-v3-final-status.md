@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/plans/wasm-v3-final-status.md)
+
 # Bilan de la migration wasm v3
 
 ## Objet

@@ -1,3 +1,5 @@
+> [Version française](../../fr/wasm/README.md)
+
 # HackerOS documentation
 
 Entry point of `doc/en/wasm/`, the documentation of the HackerOS operating system (code in
@@ -77,7 +79,7 @@ in the same change (see [`AGENTS.md`](../../../AGENTS.md)).
 | --- | --- |
 | [`building-and-testing.md`](dev/building-and-testing.md) | Build, run the three hosts, publish the PWA and run the tests; known workarounds in a Linux container; hosting and cross-origin isolation headers (ADR 0143). |
 | [`ci-workflows.md`](dev/ci-workflows.md) | GitHub Actions validations: what each workflow checks, triggers (PRs to `main` and `*/base`), retrying flaky tests (`-RetryFailedTests`), installing the .NET SDK by exact version, reading a failure. |
-| [`pitfalls.md`](dev/pitfalls.md) | **Pitfalls encountered and their solutions**, in broad strokes: build and NuGet, trimmed publish and WebCIL, browser and cache, known flaky tests, Blazor and windows, IndexedDB, cloud containers and GitHub. To read before diagnosing a "weird" problem. |
+| [`pitfalls.md`](dev/pitfalls.md) | **Pitfalls encountered and their solutions**, in broad strokes: build and NuGet, trimmed publish and WebCIL, browser and cache, unstable tests (causes found and fixed, remaining cases), Blazor and windows, IndexedDB, cloud containers and GitHub. To read before diagnosing a "weird" problem. |
 | [`trimmed-publish.md`](dev/trimmed-publish.md) | Trimmed Release publish of the Ecosystem (work item `v3/14-trimming`, ADR 0106 and 0113): `PublishTrimmed`, `TrimMode=partial`, ILLink roots generated from the manifests (`HackerOs.TrimmerRoots.xml`), `HackerOs.*` assemblies kept whole, sizes before and after (50.9 → 26.5 MiB), `build/publish-trimmed.sh` and its E2E suite (apps, worker, sites, offline). |
 | [`pwa-cache-recovery.md`](dev/pwa-cache-recovery.md) | Damaged PWA cache (`v3/7`, ADR 0099 §3): `index.html` startup guard, service worker `RESET_CACHE` message, single reload (`sessionStorage`), offline screen, `Pwa.E2E` tests. |
 | [`github-pages-deployment.md`](dev/github-pages-deployment.md) | GitHub Pages publishing: PWA at the root, legacy under `/legacy/`, independent caches and repository links ([ADR 0167](dev/adr/0167-combined-pages-deployment.md)). |

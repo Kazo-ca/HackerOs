@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/framework/trash-api.md)
+
 # Trash: `.trashinfo` format and `HackTrash` API
 
 This document describes what an app sees of the trash: the SDK's `HackTrash` API, the rules that apply to its operations, and the `.trashinfo` format that apps and other implementations read or write. The place of the trash in the OS, the `rm` and `trash` commands, the explorer and synchronization are in [`dev/trash.md`](../dev/trash.md).

@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/resource-accounting.md)
+
 # Mesure des ressources optionnelle : interrupteurs et crochet de changement de contexte
 
 Mise en œuvre du chantier `rebuild/5-accounting-switches` de la phase 5

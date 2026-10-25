@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/theme-editor.md)
+
 # Thèmes utilisateur et éditeur de thèmes
 
 Ce document couvre la mise en œuvre des thèmes utilisateur et de l'éditeur de thèmes. Le format du fichier `.theme`, la liste des jetons et l'API de lecture des messages sont dans [`../framework/theme-files.md`](../framework/theme-files.md).

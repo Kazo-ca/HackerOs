@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/old/integration-task-list.md)
+
 # HackerOS v3 Remaining Integration Task List
 
 **Status:** Active execution plan  

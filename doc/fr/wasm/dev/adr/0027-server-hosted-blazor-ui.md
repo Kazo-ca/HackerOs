@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0027-server-hosted-blazor-ui.md)
+
 # ADR 0027: Server-Hosted Blazor UI (Third Host, Single-Tenant Phase)
 
 ## Status

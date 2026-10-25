@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/memory/blazor-window-manager-bugs.md)
+
 # Historical BlazorWindowManager lessons
 
 - The prior `wasm2/HackerOs/Ecosystem/HackerOs.Ecosystem` implementation is not present on the `wasm-total-conversion` branch as of 2026-08-01. Do not treat the old project paths or run commands as current.

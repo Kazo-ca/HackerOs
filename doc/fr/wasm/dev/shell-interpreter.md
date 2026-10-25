@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/shell-interpreter.md)
+
 # Interpréteur du shell `hsh`
 
 Phase 3 du plan de reconstruction, chantier `rebuild/3-shell-interpreter`

@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/framework/blazor-sites.md)
+
 # Blazor sites: components drawn by the browser
 
 Work item `web/9-blazor-sites` of the web phase (ASP.Hack). Decision:

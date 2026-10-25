@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0124-remote-event-and-watch-gateways.md)
+
 # ADR 0124 : passerelles distantes d'événements et de surveillance de fichiers, pool ouvert à toute assembly d'app
 
 ## Statut

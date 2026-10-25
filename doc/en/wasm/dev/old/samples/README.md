@@ -1,3 +1,5 @@
+> [Version française](../../../../../fr/wasm/dev/old/samples/README.md)
+
 # Archives: `samples/`
 
 Archived documents, predating the rebuild plan. They remain useful as a

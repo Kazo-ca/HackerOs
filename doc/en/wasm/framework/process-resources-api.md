@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/framework/process-resources-api.md)
+
 # Process resources for apps (CPU, memory, OOM killer)
 
 This document describes what an app sees and can do with the CPU time, memory and OOM killer of a process: `HackProcess`, `/proc/<pid>/stat`, `/proc/<pid>/status`, `/proc/meminfo` and `/proc/<pid>/oom_score_adj`. The implementation is in [`../dev/cpu-accounting.md`](../dev/cpu-accounting.md), [`../dev/memory-accounting.md`](../dev/memory-accounting.md) and [`../dev/oom-killer.md`](../dev/oom-killer.md).

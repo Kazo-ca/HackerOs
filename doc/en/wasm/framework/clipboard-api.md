@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/framework/clipboard-api.md)
+
 # Clipboard: API for apps
 
 This document describes the clipboard as an app sees it: `HackClipboard` (text and file lists), the file list format, and what goes out to the real machine. The OS shared clipboard, the bridge to the host and the `clipboard.config` setting are in [`dev/clipboard.md`](../dev/clipboard.md).

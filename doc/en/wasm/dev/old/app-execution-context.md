@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/old/app-execution-context.md)
+
 # App Execution Context and Scoped Gateways
 
 **Task list section:** [`integration-task-list.md` § 7.1](integration-task-list.md)

@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0062-code-editor-workbench.md)
+
 # ADR 0062 : l'éditeur de code en atelier à la VS Code
 
 ## Statut

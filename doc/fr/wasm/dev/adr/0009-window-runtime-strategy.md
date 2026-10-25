@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0009-window-runtime-strategy.md)
+
 # ADR 0009: Purpose-Built Window Runtime
 
 ## Status

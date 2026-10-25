@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/worker-processes.md)
+
 # Processus sans interface dans des Web Workers
 
 Ce qu'une app déclare pour son hôte d'exécution, les types qui traversent la frontière d'un worker et l'état d'isolation de la page sont dans [`app-execution-hosts.md`](../framework/app-execution-hosts.md).

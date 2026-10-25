@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0007-enforce-collocated-razor-assets.md)
+
 # ADR 0007: Enforce Collocated Razor Assets
 
 ## Status

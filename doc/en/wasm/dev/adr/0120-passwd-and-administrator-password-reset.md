@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0120-passwd-and-administrator-password-reset.md)
+
 # ADR 0120: `passwd`, password reset by an administrator and effect on the keyring
 
 ## Status

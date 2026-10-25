@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0090-filesystem-path-lookup-in-one-request.md)
+
 # ADR 0090 : recherche d'un chemin en une seule requête au stockage
 
 ## Statut

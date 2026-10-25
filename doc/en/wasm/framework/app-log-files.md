@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/framework/app-log-files.md)
+
 # App logs (`/var/log`): API and files produced by an app
 
 This document describes the log files that an app, a command or a site produces, the APIs that write them, and what was removed from the SDK. The implementation (`LogFileWriter`, rotation, channel, Error Log Viewer) and the system logs (`syslog`, `kern.log`, `auth.log`, `audit.log`) are in [`dev/logging.md`](../dev/logging.md).

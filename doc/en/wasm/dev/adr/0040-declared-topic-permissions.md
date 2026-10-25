@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0040-declared-topic-permissions.md)
+
 # ADR 0040: Declared Topic Permissions and Optional Per-Channel Access
 
 ## Status

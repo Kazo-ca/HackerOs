@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0048-system-apps-and-uninstall.md)
+
 # ADR 0048: System apps, machine or user uninstall, and reinstall
 
 ## Status

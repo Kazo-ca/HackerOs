@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0087-asp-hack-intranet-sample-adjustments.md)
+
 # ADR 0087: Intranet sample, end-of-web-phase adjustments
 
 ## Status

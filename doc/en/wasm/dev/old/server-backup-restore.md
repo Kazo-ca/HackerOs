@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/old/server-backup-restore.md)
+
 # Optional Server Backup and Restore
 
 ## Purpose

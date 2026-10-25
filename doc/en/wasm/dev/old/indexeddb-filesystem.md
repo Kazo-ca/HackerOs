@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/old/indexeddb-filesystem.md)
+
 # IndexedDB Filesystem
 
 ## Purpose

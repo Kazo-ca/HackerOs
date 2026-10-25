@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0103-hack-paint-image-files-and-theme-editor.md)
+
 # ADR 0103: Hack Paint images in OS files and theme editor (user themes as token files)
 
 ## Status

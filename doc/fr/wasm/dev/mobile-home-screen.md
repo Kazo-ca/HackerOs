@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/mobile-home-screen.md)
+
 # Accueil et tiroir d’applications mobiles
 
 ## Objet

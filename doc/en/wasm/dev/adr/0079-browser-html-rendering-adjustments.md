@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0079-browser-html-rendering-adjustments.md)
+
 # ADR 0079: adjustments to the browser HTML rendering
 
 ## Status

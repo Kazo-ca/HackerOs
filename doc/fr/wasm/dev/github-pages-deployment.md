@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/github-pages-deployment.md)
+
 # Publication GitHub Pages : WASM et legacy
 
 ## Objet

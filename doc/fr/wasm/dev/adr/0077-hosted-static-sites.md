@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0077-hosted-static-sites.md)
+
 # ADR 0077 : sites statiques hébergés, service `hackwebd` et Web Server Manager
 
 ## Statut

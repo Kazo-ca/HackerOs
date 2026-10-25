@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0152-desktop-icons.md)
+
 # ADR 0152: desktop icons
 
 ## Status

@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/old/startup-performance.md)
+
 # Startup Performance
 
 ## Purpose

@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0077-hosted-static-sites.md)
+
 # ADR 0077: hosted static sites, `hackwebd` service and Web Server Manager
 
 ## Status

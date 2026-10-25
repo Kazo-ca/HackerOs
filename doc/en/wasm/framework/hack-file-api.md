@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/framework/hack-file-api.md)
+
 # `Hack*` file API and ambient execution context
 
 Implementation of section 5.1 of the [rebuild plan](../dev/plans/ecosystem-rebuild-plan.md),

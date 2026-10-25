@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0012-process-and-clock-model.md)
+
 # ADR 0012: Deterministic Process, Clock, and Resource Model
 
 ## Status

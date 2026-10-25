@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/sensitive-settings.md)
+
 # Sensitive settings, keyring and audit log
 
 Implementation of work item `v3/8-settings-security` of the
@@ -130,7 +132,7 @@ reserved to root, keeps everything.
   slots stay valid. **Set aside by an
   administrator**: `SetAsideAsync(homePath)`. The `passwd` command and
   the "Users" tab of Settings call them (ADR 0120, see
-  [§4](#4-mots-de-passe--passwd-et-réinitialisation) below).
+  [§4](#4-passwords-passwd-and-reset) below).
 - The authentication log (`IAuditLog`) receives `keyring.unlock`,
   `keyring.create`, `keyring.reset` (also for a set-aside by the
   administrator), `keyring.rekey` and `keyring.upgrade` (move to format 2),

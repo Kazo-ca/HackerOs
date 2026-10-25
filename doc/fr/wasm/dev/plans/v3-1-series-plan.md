@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/plans/v3-1-series-plan.md)
+
 # Série v3.1 : lacunes de la migration wasm v3
 
 ## Objet

@@ -1,3 +1,5 @@
+> [Version française](../../../../../fr/wasm/dev/old/migration/rules.md)
+
 # HackerOS Legacy Migration Rules & Standard Operating Procedure
 
 ## Overview

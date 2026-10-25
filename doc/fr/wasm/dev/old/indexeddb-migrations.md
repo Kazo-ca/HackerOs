@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/old/indexeddb-migrations.md)
+
 # IndexedDB Migrations
 
 ## Purpose

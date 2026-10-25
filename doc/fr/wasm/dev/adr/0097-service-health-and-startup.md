@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0097-service-health-and-startup.md)
+
 # ADR 0097 : état et santé des services, démarrage au boot ou à la connexion, désinstallation d'une app active
 
 ## Statut

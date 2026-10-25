@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0080-hosted-static-sites-adjustments.md)
+
 # ADR 0080 : ajustements des sites statiques hébergés
 
 ## Statut

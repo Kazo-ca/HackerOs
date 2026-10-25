@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/old/code-editor.md)
+
 # Code Editor
 
 ## Purpose

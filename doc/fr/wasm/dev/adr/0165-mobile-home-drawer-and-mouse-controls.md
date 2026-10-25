@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0165-mobile-home-drawer-and-mouse-controls.md)
+
 # ADR 0165 : accueil mobile, tiroir et aides souris
 
 ## Statut

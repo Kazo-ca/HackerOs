@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0069-graceful-stop-and-checkpoints.md)
+
 # ADR 0069: requested stop, voluntary checkpoints and escalation
 
 ## Status

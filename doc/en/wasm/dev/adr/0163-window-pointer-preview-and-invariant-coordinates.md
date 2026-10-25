@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0163-window-pointer-preview-and-invariant-coordinates.md)
+
 # ADR 0163: move preview and invariant coordinates
 
 ## Status

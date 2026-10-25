@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/old/settings-system.md)
+
 # Canonical Settings System
 
 ## Purpose

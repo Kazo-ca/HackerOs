@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0105-accessibility-preferences.md)
+
 # ADR 0105: accessibility preferences as files (high contrast, text size, reduced motion) and automated tests
 
 ## Status

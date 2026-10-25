@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/admin-authentication-agent.md)
+
 # Agent d'authentification de l'OS
 
 ## Objet

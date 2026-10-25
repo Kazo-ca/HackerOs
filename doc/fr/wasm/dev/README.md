@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/README.md)
+
 # Développement de l'OS HackerOS
 
 Ce dossier documente l'OS lui-même (code dans `wasm2/HackerOs/`) :
@@ -20,7 +22,6 @@ Par où commencer : [`project-overview.md`](project-overview.md), puis
 
 | Document | Rôle |
 | --- | --- |
-| [`dev`]() | Développer **l'OS** lui-même : architecture, sous-systèmes, apps de base, compilation, tests, publication, plans et bilans des séries ([`dev/plans/`](plans)), décisions d'architecture ([`dev/adr/`](adr)), pièges ([`dev/pitfalls.md`](pitfalls.md)) et archives ([`dev/old/`](old)). |
 | [`project-overview.md`](project-overview.md) | Vue d'ensemble du projet : couches, rôle de chaque projet de la solution, hôtes, système simulé (fichiers, processus, shell, capacités), démarrage, règles vérifiées au build. **Point d'entrée pour comprendre le code.** |
 | [`pitfalls.md`](pitfalls.md) | Pièges rencontrés pendant la refonte et comment ils ont été réglés. |
 | [`building-and-testing.md`](building-and-testing.md) | Compiler, lancer les trois hôtes, publier la PWA et exécuter les tests ; contournements connus dans un conteneur Linux ; hébergement et en-têtes d'isolation cross-origin (ADR 0143). |

@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/framework/shell-host.md)
+
 # Hôte de shell : `HackShell` et capacité `shell.host`
 
 ## Objet

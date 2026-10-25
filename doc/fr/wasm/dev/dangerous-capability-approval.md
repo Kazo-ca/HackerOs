@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/dangerous-capability-approval.md)
+
 # Approbation des capacités dangereuses
 
 ## Objectif

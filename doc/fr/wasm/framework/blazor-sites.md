@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/framework/blazor-sites.md)
+
 # Sites Blazor : composants dessinés par le navigateur
 
 Chantier `web/9-blazor-sites` de la phase web (ASP.Hack). Décision :

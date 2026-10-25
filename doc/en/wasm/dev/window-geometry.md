@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/window-geometry.md)
+
 # Window size saved and restored
 
 ## Purpose
@@ -122,7 +124,7 @@ schema accepts it as an optional field, the strict deserializer too.
 - **`SaveAsync` without `isEligible`**: the coordinator decides which windows to
   track (`Track`); the removed line was marked `*REMOVED*` in
   `PublicAPI.Unshipped.txt` of Platform.Blazor (outside the SDK's promise, ADR 0114 §2),
-  then applied at the 1.1 publication ("Breaking changes outside the SDK" in [`sdk-packages.md`](../framework/sdk-packages.md#ruptures-hors-sdk)).
+  then applied at the 1.1 publication ("Breaking changes outside the SDK" in [`sdk-packages.md`](../framework/sdk-packages.md#breaks-outside-the-sdk)).
 - **Failures logged**: `WindowGeometryPersistence` writes a warning when the
   file cannot be read or written, then continues.
 - **Content compared before writing**: closing a window whose size has not

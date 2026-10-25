@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/old/implementation-status.md)
+
 # v3 Implementation Status
 
 ## Purpose

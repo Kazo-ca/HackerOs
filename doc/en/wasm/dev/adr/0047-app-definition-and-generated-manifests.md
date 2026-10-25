@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0047-app-definition-and-generated-manifests.md)
+
 # ADR 0047: C# class manifest (`AppDefinition`) and generated JSON manifests
 
 ## Status

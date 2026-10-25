@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0034-wire-terminal-command-catalog.md)
+
 # ADR 0034: Wire the Terminal Command Catalog
 
 ## Status

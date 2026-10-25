@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/browser-html-rendering.md)
+
 # Rendu HTML du navigateur
 
 **Phase web, chantier `web/4-browser-html`** ([`asp-hack-plan.md`](plans/asp-hack-plan.md),

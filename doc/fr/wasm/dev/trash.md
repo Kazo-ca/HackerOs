@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/trash.md)
+
 # Corbeille
 
 L'API `HackTrash` et le format `.trashinfo` destinés aux apps sont dans [`trash-api.md`](../framework/trash-api.md).

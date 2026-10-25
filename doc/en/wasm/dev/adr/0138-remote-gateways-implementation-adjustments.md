@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0138-remote-gateways-implementation-adjustments.md)
+
 # ADR 0138: implementation adjustments for ADR 0124 (remote gateways)
 
 ## Status

@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0070-worker-hosted-processes.md)
+
 # ADR 0070 : processus sans interface dans des Web Workers
 
 ## Statut

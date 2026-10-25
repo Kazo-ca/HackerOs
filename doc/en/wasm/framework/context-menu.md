@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/framework/context-menu.md)
+
 # OS context menu (`hackeros.context-menu`)
 
 ## Purpose
@@ -18,10 +20,10 @@ are OS menus: the explorer provider
 defines one menu per control, fills it on each opening (plan §7) and
 passes it to the host's `ContextMenuOpening`; the `MudMenu` of `FileView` is no longer
 drawn when the view is bound to the OS menu. See
-[`embedded-components.md`](embedded-components.md#hackfileview-et-ihackfileview).
+[`embedded-components.md`](embedded-components.md#hackfileview-and-ihackfileview).
 
 Since work item 4 (ADR 0159), the OS adds to these menus the entries that
-apps register: see [App entries](#entrées-des-apps-dans-les-menus-des-fichiers-chantier-4).
+apps register: see [App entries](#app-entries-in-the-file-menus-work-item-4).
 
 ## Using a menu in an app
 

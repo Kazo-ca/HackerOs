@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/framework/app-log-files.md)
+
 # Journaux des apps (`/var/log`) : API et fichiers produits par une app
 
 Ce document décrit les fichiers de journal qu'une app, une commande ou un site produit, les API qui les écrivent et ce qui a été retiré du SDK. L'implémentation (`LogFileWriter`, rotation, canal, Error Log Viewer) et les journaux du système (`syslog`, `kern.log`, `auth.log`, `audit.log`) sont dans [`dev/logging.md`](../dev/logging.md).

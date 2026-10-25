@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0070-worker-hosted-processes.md)
+
 # ADR 0070: headless processes in Web Workers
 
 ## Status

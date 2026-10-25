@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0071-always-ready-worker.md)
+
 # ADR 0071 : toujours un worker prêt pour la prochaine demande
 
 ## Statut

@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/memory-accounting.md)
+
 # Mémoire mesurée par processus, en couches
 
 Ce document couvre la mise en œuvre de la mesure mémoire en couches. Ce qu'une app voit (`HackProcess.WorkingSet64`, `PrivateMemorySize64`, champs de `/proc/<pid>/status` et `/proc/meminfo`, mesuré ou simulé) est dans [`../framework/process-resources-api.md`](../framework/process-resources-api.md).

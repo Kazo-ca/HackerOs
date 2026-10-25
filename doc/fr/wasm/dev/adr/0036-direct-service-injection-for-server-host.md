@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0036-direct-service-injection-for-server-host.md)
+
 # ADR 0036: Direct Service Injection for the Server-Hosted UI (Pass N+5)
 
 ## Status

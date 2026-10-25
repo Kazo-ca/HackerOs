@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/static-sites.md)
+
 # Sites statiques : fichiers `.site`, `hackwebd` et Web Server Manager
 
 Le format des fichiers `.site` et l'API `HackWebSiteFile` destinés aux apps et aux outils sont dans [`static-site-files.md`](../framework/static-site-files.md).

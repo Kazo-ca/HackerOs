@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0114-sdk-1-0-freeze.md)
+
 # ADR 0114: SDK 1.0 freeze, scope of the compatibility promise and compatibility app
 
 ## Status

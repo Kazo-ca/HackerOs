@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/accessibility.md)
+
 # Accessibility
 
 Work item `v3/13-accessibility` ([ADR 0105](adr/0105-accessibility-preferences.md), adjusted by

@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/virtual-proc-and-dev.md)
+
 # `/proc` et `/dev` virtuels
 
 Mise en œuvre de la section 5.4 du [plan de refonte](plans/ecosystem-rebuild-plan.md)

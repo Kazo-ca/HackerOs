@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0058-base-app-features.md)
+
 # ADR 0058 : Fonctionnalités des apps de base
 
 ## Statut

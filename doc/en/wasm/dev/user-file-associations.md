@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/user-file-associations.md)
+
 # Per-user default applications
 
 This document covers the implementation of per-user file associations. The formats of the two files, the resolution order, the `HackApps` API and the capabilities are in [`../framework/file-associations-api.md`](../framework/file-associations-api.md).

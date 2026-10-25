@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0135-no-game-in-this-repository.md)
+
 # ADR 0135: no game in this repository
 
 ## Status

@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/old/e2e-test-demo-mode.md)
+
 # E2E "Test Demo" mode
 
 ## Purpose

@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/task-manager.md)
+
 # Task manager
 
 Implementation of the `rebuild/4-task-manager` work item of phase 4: ADR 0056
@@ -51,7 +53,7 @@ All the tab components inherit from `HackComponentBase`: their event handlers
 run in the app's ambient context (ADR 0043). `PerformanceTab`, `DiskTab` and
 `NetworkTab`, which do not call the SDK, were switched to it in phase 5 so that
 their time is counted for the app and not for the compositor (ADR 0067,
-[`resource-accounting.md`](resource-accounting.md#apps-existantes)).
+[`resource-accounting.md`](resource-accounting.md#existing-apps)).
 
 ## How it works
 
@@ -200,7 +202,7 @@ await p.KillAsync();                                           // SIGKILL
   (same polite stop with the reason `CloseRequested`, `DefaultCloseTimeout`) go
   through `IAppProcessGateway`. Both polite stops return `false` when the OS had
   to kill the process at the deadline. See ADR 0069 and
-  [`app-sdk.md`](../framework/app-sdk.md#arrêt-propre-et-points-darrêt-adr-0069). Exceptions:
+  [`app-sdk.md`](../framework/app-sdk.md#clean-shutdown-and-checkpoints-adr-0069). Exceptions:
   `HackUnauthorizedAccessException` (`process.manage` capability missing for
   another process), `InvalidOperationException` (process already finished).
 

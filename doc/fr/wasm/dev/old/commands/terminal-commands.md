@@ -1,3 +1,5 @@
+> [English version](../../../../../en/wasm/dev/old/commands/terminal-commands.md)
+
 # Core Terminal Command Applications (`Apps/Commands/`)
 
 ## Purpose

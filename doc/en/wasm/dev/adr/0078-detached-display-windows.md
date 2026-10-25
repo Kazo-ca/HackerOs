@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0078-detached-display-windows.md)
+
 # ADR 0078: detached display windows (preparation for the second screen)
 
 ## Status

@@ -1,3 +1,5 @@
+> [Version française](../../../../../fr/wasm/dev/old/apps/README.md)
+
 # Archives: `apps/`
 
 Archived documents, predating the overhaul plan. They remain useful as a

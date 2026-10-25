@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/framework/system-administration.md)
+
 # Administration du système dans le SDK
 
 ## Objet

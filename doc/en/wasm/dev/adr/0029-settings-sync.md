@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0029-settings-sync.md)
+
 # ADR 0029: Settings Domain Sync (First Client Sync Implementation)
 
 ## Status

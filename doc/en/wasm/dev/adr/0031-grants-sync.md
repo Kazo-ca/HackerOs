@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0031-grants-sync.md)
+
 # ADR 0031: Grants Domain Sync (Pull-Only)
 
 ## Status

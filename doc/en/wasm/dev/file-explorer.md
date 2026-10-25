@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/file-explorer.md)
+
 # File explorer: cut, copy, paste and drag and drop
 
 The APIs intended for apps are in [`file-operations-api.md`](../framework/file-operations-api.md) (`HackFileOperations`), [`file-control-api.md`](../framework/file-control-api.md) (`HackFileView` and dialogs) and [`clipboard-api.md`](../framework/clipboard-api.md) (clipboard).
@@ -30,7 +32,7 @@ the legacy (`src/apps/file-explorer.ts`) and goes beyond it:
   `FileExplorerApp`, intent `org.hackeros.file-explorer.extract-here.v1`:
   the explorer opens on the archive's folder and extracts it); the window no
   longer adds anything through `ContextMenuOpening`. See
-  [`context-menu.md`](../framework/context-menu.md#entrées-des-apps-dans-les-menus-des-fichiers-chantier-4).
+  [`context-menu.md`](../framework/context-menu.md#app-entries-in-the-file-menus-work-item-4).
 - since `desk/3-file-control` (ADR 0155), **the explorer provides the OS file
   control** (`hackeros.file-view`) and its dialogs (`hackeros.file-dialogs`),
   and uses it itself: see the next section.

@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0154-context-menu-implementation-adjustments.md)
+
 # ADR 0154 : ajustements du menu contextuel de l'OS
 
 ## Statut

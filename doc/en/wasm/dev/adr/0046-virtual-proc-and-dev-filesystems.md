@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0046-virtual-proc-and-dev-filesystems.md)
+
 # ADR 0046: Virtual `/proc` and `/dev` file systems
 
 ## Status

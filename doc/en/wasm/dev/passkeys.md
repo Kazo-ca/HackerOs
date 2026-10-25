@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/passkeys.md)
+
 # Passkeys (WebAuthn)
 
 ## Purpose
@@ -19,7 +21,7 @@ The passkey is added to the password: the account keeps its password
 | Browser contract | `Platform.Core/Sessions/PasskeyContracts.cs` (`IPasskeyAuthenticator`) | What the page provides: environment, creation, assertion, signature verification. |
 | Browser bridge | `Infrastructure.Browser/wwwroot/webAuthn.js`, `OS/HackerOs.Ecosystem.Host/Passkeys/BrowserPasskeyAuthenticator.cs` | `navigator.credentials.create`/`get` and `crypto.subtle.verify`; WebAuthn errors become .NET exceptions. |
 | Session | `LocalSessionService.LoginWithPasskeyAsync` | Sign-in: verifies the key, opens the session, then the keyring through the key. |
-| Keyring | `Platform.Core/Keyring/UserKeyringService.cs`, `KeyringFileFormat.cs` | Format 2 with slots ([`sensitive-settings.md`](sensitive-settings.md#2-trousseau-de-connexion)). |
+| Keyring | `Platform.Core/Keyring/UserKeyringService.cs`, `KeyringFileFormat.cs` | Format 2 with slots ([`sensitive-settings.md`](sensitive-settings.md#2-login-keyring)). |
 | Administrator | `AdminElevationVerifier.VerifyWithPasskeyAsync`, `AdministratorAuthenticationAgent.PasskeyVerifier` | Administrator confirmation by passkey ([`admin-authentication-agent.md`](admin-authentication-agent.md)). |
 | Interface | `App.razor` (sign-in screen), `AdministratorAuthenticationOverlay`, Settings ▸ Users (`PasskeysPanel`) | "Use a passkey" buttons and key management. |
 | SDK | `HackUserAccounts.ListPasskeysAsync`, `AddPasskeyAsync`, `RemovePasskeyAsync` | The keys of the session, without a capability ([`../framework/system-administration.md`](../framework/system-administration.md)). |

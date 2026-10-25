@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/plans/execution-followups-plan.md)
+
 # Suites de la phase 5 : limites, OOM killer, fenêtres en worker, hôte Server, isolation cross-origin
 
 **Statut :** plan **validé par Benoit le 2026-10-17** (réponses aux questions de

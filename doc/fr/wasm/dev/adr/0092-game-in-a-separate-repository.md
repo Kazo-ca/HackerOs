@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0092-game-in-a-separate-repository.md)
+
 # ADR 0092 : le jeu vit dans un dépôt séparé
 
 ## Statut

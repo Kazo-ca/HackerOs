@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/plans/README.md)
+
 # Series plans and reviews
 
 Plans validated by Benoit and end-of-series reviews. The current state of the project is

@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0068-measured-process-memory.md)
+
 # ADR 0068: layered measured memory per process
 
 ## Status

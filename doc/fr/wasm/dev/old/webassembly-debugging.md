@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/old/webassembly-debugging.md)
+
 # HackerOS WebAssembly Debug Host Setup
 
 ## Overview

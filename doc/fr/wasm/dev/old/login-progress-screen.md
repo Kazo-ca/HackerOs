@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/old/login-progress-screen.md)
+
 # Login Progress Screen System
 
 ## Purpose

@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0125-process-resource-limits.md)
+
 # ADR 0125: per-process resource limits (`setrlimit`, `ulimit`, `limits.conf`)
 
 ## Status

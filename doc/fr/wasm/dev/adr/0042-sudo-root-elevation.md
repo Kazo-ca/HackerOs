@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0042-sudo-root-elevation.md)
+
 # ADR 0042: `sudo` Root Elevation and the Admin-Approval Prompt
 
 ## Status

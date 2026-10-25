@@ -1,3 +1,5 @@
+> [Version française](../../../../../fr/wasm/dev/old/sdk/README.md)
+
 # Archives: `sdk/`
 
 Archived documents, predating the rebuild plan. They remain useful as a

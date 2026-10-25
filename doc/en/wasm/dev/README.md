@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/README.md)
+
 # HackerOS development
 
 This folder documents the OS itself (code in `wasm2/HackerOs/`):
@@ -20,12 +22,11 @@ Where to start: [`project-overview.md`](project-overview.md), then
 
 | Document | Role |
 | --- | --- |
-| [`dev`]() | Develop **the OS** itself: architecture, subsystems, base apps, build, tests, publishing, plans and reviews of the series ([`dev/plans/`](plans)), architecture decisions ([`dev/adr/`](adr)), pitfalls ([`dev/pitfalls.md`](pitfalls.md)) and archives ([`dev/old/`](old)). |
 | [`project-overview.md`](project-overview.md) | Project overview: layers, role of each project in the solution, hosts, simulated system (files, processes, shell, capabilities), startup, rules verified at build time. **Entry point for understanding the code.** |
 | [`pitfalls.md`](pitfalls.md) | Pitfalls encountered during the rebuild and how they were resolved. |
 | [`building-and-testing.md`](building-and-testing.md) | Build, run the three hosts, publish the PWA and run the tests; known workarounds in a Linux container; hosting and cross-origin isolation headers (ADR 0143). |
 | [`ci-workflows.md`](ci-workflows.md) | GitHub Actions validations: what each workflow checks, triggers (PRs to `main` and `*/base`), retrying flaky tests (`-RetryFailedTests`), installing the .NET SDK by exact version, reading a failure. |
-| [`pitfalls.md`](pitfalls.md) | **Pitfalls encountered and their solutions**, in broad strokes: build and NuGet, trimmed publish and WebCIL, browser and cache, known flaky tests, Blazor and windows, IndexedDB, cloud containers and GitHub. To read before diagnosing a "weird" problem. |
+| [`pitfalls.md`](pitfalls.md) | **Pitfalls encountered and their solutions**, in broad strokes: build and NuGet, trimmed publish and WebCIL, browser and cache, unstable tests (causes found and fixed, remaining cases), Blazor and windows, IndexedDB, cloud containers and GitHub. To read before diagnosing a "weird" problem. |
 | [`trimmed-publish.md`](trimmed-publish.md) | Trimmed Release publish of the Ecosystem (work item `v3/14-trimming`, ADR 0106 and 0113): `PublishTrimmed`, `TrimMode=partial`, ILLink roots generated from the manifests (`HackerOs.TrimmerRoots.xml`), `HackerOs.*` assemblies kept whole, sizes before and after (50.9 → 26.5 MiB), `build/publish-trimmed.sh` and its E2E suite (apps, worker, sites, offline). |
 | [`pwa-cache-recovery.md`](pwa-cache-recovery.md) | Damaged PWA cache (`v3/7`, ADR 0099 §3): `index.html` startup guard, service worker `RESET_CACHE` message, single reload (`sessionStorage`), offline screen, `Pwa.E2E` tests. |
 | [`github-pages-deployment.md`](github-pages-deployment.md) | GitHub Pages publishing: PWA at the root, legacy under `/legacy/`, independent caches and repository links ([ADR 0167](adr/0167-combined-pages-deployment.md)). |

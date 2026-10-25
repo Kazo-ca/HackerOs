@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0064-posix-shell-scripts-jobs-and-app-commands.md)
+
 # ADR 0064 : shell POSIX, scripts, jobs, apps lancées par leur nom et commandes Linux
 
 ## Statut

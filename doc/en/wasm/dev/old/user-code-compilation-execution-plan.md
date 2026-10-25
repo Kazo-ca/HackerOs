@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/old/user-code-compilation-execution-plan.md)
+
 # Plan for compiling and running user code (hybrid WASM/server)
 
 **Status:** technical proposal, not implemented, no `D-xxx` decision

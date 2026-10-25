@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0110-backup-and-storage-implementation-adjustments.md)
+
 # ADR 0110 : ajustements de la mise en œuvre de la sauvegarde, de l'espace de stockage et des fixtures IndexedDB
 
 ## Statut

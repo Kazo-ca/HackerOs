@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0073-web-apps.md)
+
 # ADR 0073: web apps (`Web` kind), external sites and hosted sites
 
 ## Status

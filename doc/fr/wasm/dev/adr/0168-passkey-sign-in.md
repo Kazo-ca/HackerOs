@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0168-passkey-sign-in.md)
+
 # ADR 0168 : connexion par clé d'accès (WebAuthn) et déverrouillage du trousseau
 
 ## Statut

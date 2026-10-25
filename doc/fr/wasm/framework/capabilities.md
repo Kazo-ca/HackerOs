@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/framework/capabilities.md)
+
 # Capacités : catalogue, classement et attribution
 
 ## Objectif

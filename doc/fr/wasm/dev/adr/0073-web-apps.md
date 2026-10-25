@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0073-web-apps.md)
+
 # ADR 0073 : apps web (genre `Web`), sites externes et sites hébergés
 
 ## Statut

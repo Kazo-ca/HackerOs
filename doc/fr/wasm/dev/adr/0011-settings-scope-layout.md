@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0011-settings-scope-layout.md)
+
 # ADR 0011: Settings Scope Keys and Projection Paths
 
 ## Status

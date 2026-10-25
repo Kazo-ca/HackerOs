@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0159-app-menu-entries-implementation-adjustments.md)
+
 # ADR 0159: app menu entries, implementation adjustments
 
 ## Status

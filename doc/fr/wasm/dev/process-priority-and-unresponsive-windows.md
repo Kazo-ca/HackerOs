@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/process-priority-and-unresponsive-windows.md)
+
 # Priorité `nice` et fenêtres qui ne répondent pas
 
 Ce document couvre la mise en œuvre de la priorité `nice` et de la détection des fenêtres qui ne répondent pas. Ce qu'une app voit et doit faire (API `HackProcess.Nice`, règles de la priorité, boîte « Ne répond pas », limites d'une boucle sur le fil principal) est dans [`../framework/app-responsiveness-api.md`](../framework/app-responsiveness-api.md).

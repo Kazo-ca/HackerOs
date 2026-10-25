@@ -1,3 +1,5 @@
+> [Version française](../../../../../fr/wasm/dev/old/apps/icon-viewer.md)
+
 # Icon Viewer (`org.hackeros.icon-viewer`)
 
 ## Purpose

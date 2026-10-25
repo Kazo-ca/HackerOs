@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/task-manager.md)
+
 # Gestionnaire de tâches
 
 Mise en œuvre du chantier `rebuild/4-task-manager` de la phase 4 : ADR 0056

@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/synchronization.md)
+
 # Synchronization between devices
 
 Work item `v3/9-sync`, [ADR 0101](adr/0101-synchronized-deletions-and-conflicts.md)

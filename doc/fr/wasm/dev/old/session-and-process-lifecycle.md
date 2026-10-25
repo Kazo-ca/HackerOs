@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/old/session-and-process-lifecycle.md)
+
 # Session and Process Lifecycle
 
 ## Purpose

@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/plans/README.md)
+
 # Plans et bilans des séries
 
 Plans validés par Benoit et bilans de fin de série. L'état actuel du projet est

@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0111-localization-implementation-adjustments.md)
+
 # ADR 0111: implementation adjustments for localization
 
 ## Status

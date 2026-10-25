@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/user-file-associations.md)
+
 # Applications par défaut propres à chaque utilisateur
 
 Ce document couvre la mise en œuvre des associations de fichiers par utilisateur. Les formats des deux fichiers, l'ordre de résolution, l'API `HackApps` et les capacités sont dans [`../framework/file-associations-api.md`](../framework/file-associations-api.md).

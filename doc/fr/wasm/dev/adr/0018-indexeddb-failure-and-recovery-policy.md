@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0018-indexeddb-failure-and-recovery-policy.md)
+
 # ADR 0018: IndexedDB Failure and Recovery Policy
 
 ## Status

@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/settings-app.md)
+
 # Settings App (`org.hackeros.settings`)
 
 ## Purpose
@@ -34,7 +36,7 @@ Order matters: the `--page=` arguments and the index hooks rely on it.
 | File menus | `FileMenuEntriesPanel` | Menu entries registered by apps (ADR 0151). |
 | Server connection | `ServerRelayPolicyPanel` (+ the window) | Optional server, network relay (ADR 0102, 0134). Visible in all cases, the state comes from `HackServerConnection`. |
 | Synchronization | (in the window) | Sync state and conflicts (ADR 0101). |
-| Users | `UsersPanel` (+ `PasskeysPanel`) | Accounts, passwords, adding and deleting accounts by an administrator, session passkeys (ADR 0120, 0168, 0169; see [Users page](#page-utilisateurs)). |
+| Users | `UsersPanel` (+ `PasskeysPanel`) | Accounts, passwords, adding and deleting accounts by an administrator, session passkeys (ADR 0120, 0168, 0169; see [Users page](#users-page)). |
 | Memory | `MemoryPanel` | File `/etc/hackeros/memory.config`, section `[oom-killer]` (ADR 0126). |
 | Backup | `BackupPanel` | Present only if `HackSystemBackup.IsSupportedFor` allows it (ADR 0099). |
 | About | (in the window) | Authority, reboot (`HackSystem.RebootAsync`), danger zone: factory reset (`HackSystem.FactoryResetAsync`), confirmed by typing `RESET`. |

@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/old/ecosystem-maturity-gap-analysis.md)
+
 # Analyse des manques pour un véritable écosystème WebAssembly
 
 **Statut :** analyse exploratoire — non implémentée, aucune décision `D-xxx`

@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/old/hosting-model.md)
+
 # Hosting Model
 
 > **Fait le 2026-10-18 (`exec/8-server-wasm`) :** l'[ADR 0130](../adr/0130-server-serves-webassembly-os-and-api.md)
@@ -26,7 +28,7 @@ dependency for ordinary use.
 ## Current hosts
 
 All three hosts are booted to the desktop by one command,
-`build/verify-hosts.sh` (see [`../building-and-testing.md`](../building-and-testing.md#vérifier-les-trois-hôtes)).
+`build/verify-hosts.sh` (see [`../building-and-testing.md`](../building-and-testing.md#verify-the-three-hosts)).
 A host's `Components/App.razor` must link its own scoped-CSS bundle
 (`@Assets["{Project}.styles.css"]`, which imports every referenced library's
 scoped CSS) and declare an icon; the smoke test fails otherwise.

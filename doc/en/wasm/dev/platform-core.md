@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/platform-core.md)
+
 # Platform: `HackerOs.Platform.Core`
 
 ## Purpose
@@ -36,7 +38,7 @@ About 240 C# files (51,000 lines); the folder is read by subsystem.
 | `Diagnostics/`, `Metrics/` | Kernel log (`KernelLog`) and `/var/log` files, rotation, redaction, CPU and I/O counters | [`logging.md`](logging.md), [`system-metrics.md`](system-metrics.md) |
 | `Backup/`, `Storage/` | Machine backup and restore, space monitoring | [`system-backup.md`](system-backup.md) |
 | `Administration/` | SDK administration gateways (system settings, power, backup, storage diagnostics, accounts) | [`sdk-reference.md`](../framework/sdk-reference.md) |
-| `Clipboard/`, `Notifications/`, `Time/`, `Power/`, `Isolation/`, `Globalization/`, `Events/` | Clipboard, notifications, simulated clock, shutdown, cross-origin isolation, session language, event bus | [`clipboard.md`](clipboard.md), [`worker-processes.md`](worker-processes.md#isolation-cross-origin-adr-0131-adr-0143) |
+| `Clipboard/`, `Notifications/`, `Time/`, `Power/`, `Isolation/`, `Globalization/`, `Events/` | Clipboard, notifications, simulated clock, shutdown, cross-origin isolation, session language, event bus | [`clipboard.md`](clipboard.md), [`worker-processes.md`](worker-processes.md#cross-origin-isolation-adr-0131-adr-0143) |
 | `WebData/` | Database of ASP.Hack sites (`WebSiteDatabaseStore`) | [`asp-hack-site-data.md`](../framework/asp-hack-site-data.md) |
 
 ## Services and composition

@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/terminal-console.md)
+
 # Console : complétion des chemins, `exit` et onglets
 
 ## Objet

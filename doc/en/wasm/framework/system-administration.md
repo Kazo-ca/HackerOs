@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/framework/system-administration.md)
+
 # System administration in the SDK
 
 ## Purpose
@@ -43,7 +45,7 @@ await appearance.SetAsync("accent", "cyan");                               // co
 await appearance.SetManyAsync(values, SettingLayer.System);                // /etc : une seule approbation
 ```
 
-See [`settings-files.md`](settings-files.md#documents-de-los-hacksettingsopensystemasync-adr-0056-8).
+See [`settings-files.md`](settings-files.md#os-documents-hacksettingsopensystemasync-adr-0056-8).
 
 ### Permissions (`permissions.manage`)
 
@@ -123,7 +125,7 @@ after the current password) require no capability;
 `ResetPasswordAsync` and `RemovePasswordAsync` require `users.manage` and an
 administrator (actions `users.password-reset` and `users.password-delete`).
 The target account's keyring is set aside. Details:
-[`sensitive-settings.md`](../dev/sensitive-settings.md#4-mots-de-passe--passwd-et-réinitialisation)
+[`sensitive-settings.md`](../dev/sensitive-settings.md#4-passwords-passwd-and-reset)
 and [ADR 0120](../dev/adr/0120-passwd-and-administrator-password-reset.md).
 
 `CreateAsync(new HackNewUserAccount(login, nomAffiché, autorité, motDePasse))`
@@ -176,4 +178,4 @@ oneself and for the last administrator.
 
 ## Task list
 
-See [`app-sdk.md`](app-sdk.md#liste-des-tâches-du-chantier-rebuild4-sdk-system-admin).
+See [`app-sdk.md`](app-sdk.md#task-list-of-work-item-rebuild4-sdk-system-admin).

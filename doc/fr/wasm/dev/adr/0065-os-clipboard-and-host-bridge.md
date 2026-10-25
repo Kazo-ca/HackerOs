@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0065-os-clipboard-and-host-bridge.md)
+
 # ADR 0065 : presse-papiers de l'OS et partage de texte avec l'hôte
 
 ## Statut

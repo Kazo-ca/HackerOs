@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0147-background-task-grace-period-on-app-close.md)
+
 # ADR 0147 : délai de 5 s pour les tâches en arrière-plan quand leur app se ferme
 
 ## Statut

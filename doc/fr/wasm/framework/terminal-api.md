@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/framework/terminal-api.md)
+
 # API du terminal pour les apps et les commandes
 
 Ce document décrit ce qu'une app ou une commande voit du terminal : le composant `TerminalPanel`, l'interface `IHackTerminal`, la lecture d'un mot de passe sans écho et le mode plein écran. Le fonctionnement interne (xterm.js, discipline de ligne, rendu, raccourcis) est dans [`dev/terminal-emulator.md`](../dev/terminal-emulator.md).

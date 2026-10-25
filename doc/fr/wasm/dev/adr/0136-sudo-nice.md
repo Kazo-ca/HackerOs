@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0136-sudo-nice.md)
+
 # ADR 0136 : `sudo nice` lance la commande en root
 
 ## Statut

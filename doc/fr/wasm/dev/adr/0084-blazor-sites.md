@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0084-blazor-sites.md)
+
 # ADR 0084 : sites Blazor interactifs dessinés par le navigateur
 
 ## Statut

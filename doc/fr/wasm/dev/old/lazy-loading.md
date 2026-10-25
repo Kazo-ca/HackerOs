@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/old/lazy-loading.md)
+
 # HackerOS Build-Known Lazy Loading Architecture
 
 ## Overview

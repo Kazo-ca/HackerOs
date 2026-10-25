@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0026-icon-library-support.md)
+
 # ADR 0026: Shared Icon Library Support
 
 ## Status

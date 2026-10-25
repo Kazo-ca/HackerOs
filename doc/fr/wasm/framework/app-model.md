@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/framework/app-model.md)
+
 # Modèle d'application : `AppDefinition` et manifestes générés
 
 Phase 2 du [plan de refonte](../dev/plans/ecosystem-rebuild-plan.md) (sections 6.1 et 6.2),

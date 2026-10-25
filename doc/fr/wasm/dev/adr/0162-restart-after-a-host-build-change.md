@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0162-restart-after-a-host-build-change.md)
+
 # ADR 0162 : redémarrer quand le build a changé sous la page
 
 ## Statut

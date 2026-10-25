@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0107-service-startup-implementation-adjustments.md)
+
 # ADR 0107: implementation adjustments for service states and startup
 
 ## Status

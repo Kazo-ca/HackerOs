@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0004-settings-files-are-projections.md)
+
 # ADR 0004: Settings Files Are Canonical Projections
 
 ## Status

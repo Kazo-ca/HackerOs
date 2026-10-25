@@ -1,3 +1,5 @@
+> [English version](../../../../../en/wasm/dev/old/Global-FileView-And-MessagingSystem/MessagingSystem.md)
+
 # Topic Messaging & Filesystem-Watch System Specification
 
 Parent document: [`../Global-FileView-And-MessagingSystem.md`](../Global-FileView-And-MessagingSystem.md)

@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0085-default-simulated-network-in-the-os.md)
+
 # ADR 0085: the default simulated network is wired into the OS
 
 ## Status

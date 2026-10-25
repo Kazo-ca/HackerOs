@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/framework/app-intents.md)
+
 # App intents: reveal, edit, open a URI, settings and app-defined intents
 
 Work item `v3/4-intents` of the wasm v3 migration, according to
@@ -132,7 +134,7 @@ like `LaunchAsync`.
 
 ### `xdg-open`
 
-See [`linux-commands.md`](../dev/linux-commands.md#fichiers): path → `OpenFile`
+See [`linux-commands.md`](../dev/linux-commands.md#files): path → `OpenFile`
 (a folder as `inode/directory`), URI → `OpenUri`. Codes: 0 sent, 1 command
 line, 3 no app, 4 missing file or failure; several apps without a default
 give 4 and the list of candidates.
@@ -140,7 +142,7 @@ give 4 and the list of candidates.
 ### Explorer and Settings
 
 - Explorer: `<folder>` and `--select=<path>`, details in
-  [`file-explorer.md`](../dev/file-explorer.md#ligne-de-commande-et--afficher-dans-le-dossier--adr-0039-adr-0096-1).
+  [`file-explorer.md`](../dev/file-explorer.md#command-line-and-show-in-folder-adr-0039-adr-0096-1).
 - Settings: `--app=<id>` opens the "Application" tab (`AppDetailsPanel`):
   identity, requested capabilities with the state of dangerous capabilities
   (`HackPermissionAdministration`), managed file types and schemes, service

@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/old/build-profile.md)
+
 # Canonical Manifest JSON Schema and Build Profile
 
 ## Purpose

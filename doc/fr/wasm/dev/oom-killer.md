@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/oom-killer.md)
+
 # OOM killer et garde de la mémoire du navigateur
 
 Ce document couvre la mise en œuvre de l'OOM killer et de la garde du navigateur. Ce qu'une app voit (fichiers `/proc` et `/dev/kmsg`, `AppDefinition.OomScoreAdjust`, raison de fin `OutOfMemory`) est dans [`../framework/process-resources-api.md`](../framework/process-resources-api.md).

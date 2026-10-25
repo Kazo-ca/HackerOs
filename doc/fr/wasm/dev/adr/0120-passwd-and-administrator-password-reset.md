@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0120-passwd-and-administrator-password-reset.md)
+
 # ADR 0120 : `passwd`, réinitialisation du mot de passe par un administrateur et effet sur le trousseau
 
 ## Statut

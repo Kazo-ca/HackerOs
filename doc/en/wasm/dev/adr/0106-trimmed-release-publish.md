@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0106-trimmed-release-publish.md)
+
 # ADR 0106: trimmed Release publish of the Ecosystem host
 
 ## Status

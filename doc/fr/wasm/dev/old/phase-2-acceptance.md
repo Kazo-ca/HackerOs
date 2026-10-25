@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/old/phase-2-acceptance.md)
+
 # Phase 2 Acceptance and Exit Gate Report
 
 ## Overview

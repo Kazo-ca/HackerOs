@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0145-publish-async-from-a-worker.md)
+
 # ADR 0145 : `PublishAsync`, le vrai résultat d'une publication depuis un worker
 
 ## Statut

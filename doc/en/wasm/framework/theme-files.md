@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/framework/theme-files.md)
+
 # `.theme` theme files
 
 This document describes the `.theme` file format, the token list and the theme-reading API for theme authors and tools. The theme editor, the resolution of a theme identifier and the implementation are in [`../dev/theme-editor.md`](../dev/theme-editor.md).

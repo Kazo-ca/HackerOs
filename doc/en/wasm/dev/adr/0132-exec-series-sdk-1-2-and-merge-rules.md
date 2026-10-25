@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0132-exec-series-sdk-1-2-and-merge-rules.md)
+
 # ADR 0132: `exec` series, SDK 1.2 additions, branches and merge bar
 
 ## Status

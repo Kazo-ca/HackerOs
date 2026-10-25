@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/shell-commands.md)
+
 # Commandes du shell et accès contrôlé au shell
 
 Phase 3 du plan de reconstruction, chantier `rebuild/3-shell-commands`

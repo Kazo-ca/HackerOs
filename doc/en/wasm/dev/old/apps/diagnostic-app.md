@@ -1,3 +1,5 @@
+> [Version française](../../../../../fr/wasm/dev/old/apps/diagnostic-app.md)
+
 # HackerOS IndexedDB Diagnostic Application (`org.hackeros.diagnostic`)
 
 ## Purpose

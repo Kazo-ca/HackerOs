@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/remote-window-rendering.md)
+
 # Rendering a window in a Web Worker (trial)
 
 > **Status: trial finished, verdict "we stop here"** ([ADR 0133](adr/0133-window-rendering-in-worker-verdict.md)).

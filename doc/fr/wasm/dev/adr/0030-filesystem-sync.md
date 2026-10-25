@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0030-filesystem-sync.md)
+
 # ADR 0030: FileSystem Domain Sync
 
 ## Status

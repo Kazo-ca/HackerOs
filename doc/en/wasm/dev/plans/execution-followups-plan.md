@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/plans/execution-followups-plan.md)
+
 # Follow-ups of phase 5: limits, OOM killer, windows in workers, Server host, cross-origin isolation
 
 **Status:** plan **approved by Benoit on 2026-10-17** (answers to the questions in

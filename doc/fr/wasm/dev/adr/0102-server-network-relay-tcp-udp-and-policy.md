@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0102-server-network-relay-tcp-udp-and-policy.md)
+
 # ADR 0102 : relais réseau du serveur optionnel (corps HTTP, flux TCP, UDP, accord vérifié, politique dans `appsettings`)
 
 ## Statut

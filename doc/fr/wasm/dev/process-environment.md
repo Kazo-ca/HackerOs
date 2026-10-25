@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/process-environment.md)
+
 # Environnement de processus
 
 Chantier `rebuild/3-process-environment` de la phase 3 : ADR 0050, sections 5

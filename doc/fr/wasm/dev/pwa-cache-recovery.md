@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/pwa-cache-recovery.md)
+
 # Récupération d'un cache PWA corrompu
 
 Mise en œuvre de la section 3 de

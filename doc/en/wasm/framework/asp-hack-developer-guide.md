@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/framework/asp-hack-developer-guide.md)
+
 # ASP.Hack developer guide
 
 Work item `web/11-sample-final`, the last of the web phase ([`asp-hack-plan.md`](../dev/plans/asp-hack-plan.md)).
@@ -5,7 +7,7 @@ This guide shows how to write an **internal site** for HackerOS with ASP.Hack, b
 following the **Intranet** example (`Apps/Samples/HackerOs.Samples.Intranet`,
 `http://intranet.hack/`), which brings together all the building blocks of the phase. Decisions
 specific to this work item: [ADR 0087](../dev/adr/0087-asp-hack-intranet-sample-adjustments.md).
-Reference for each type: [`sdk-reference.md`](sdk-reference.md#sites-web-asphack).
+Reference for each type: [`sdk-reference.md`](sdk-reference.md#websites-asphack).
 Guide to windowed apps, commands and services: [`sdk-developer-guide.md`](sdk-developer-guide.md).
 
 ## Purpose
@@ -381,7 +383,7 @@ Three levels, all in the example:
    and Diagnostics.
 
 In memory, `HackWebDb` is an in-memory database specific to the application: tests
-have nothing to configure ([`asp-hack-site-data.md`](asp-hack-site-data.md#hors-de-hackeros-et-dans-les-tests)).
+have nothing to configure ([`asp-hack-site-data.md`](asp-hack-site-data.md#outside-hackeros-and-in-tests)).
 
 ## 10. Installing the site in the OS
 

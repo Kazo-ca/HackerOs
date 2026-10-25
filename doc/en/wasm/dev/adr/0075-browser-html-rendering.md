@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0075-browser-html-rendering.md)
+
 # ADR 0075: browser HTML rendering in an isolated iframe
 
 ## Status

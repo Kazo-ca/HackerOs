@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/system-backup.md)
+
 # Sauvegarde de la machine et espace de stockage
 
 Ce document couvre la mise en œuvre de la sauvegarde et de l'espace de stockage. Ce qu'une app voit (API `HackSystemBackup`, archive `.hosbak`, codes `NoSpace` et `FileTooLarge`) est dans [`../framework/system-backup-api.md`](../framework/system-backup-api.md).

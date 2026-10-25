@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/framework/display-surface-api.md)
+
 # Display windows (surfaces): API for apps
 
 This document describes how an app opens a surface, draws its content in it, follows its events and opens a page in a detached window. The internal mechanism (portal, JS initializer, `displaySurfaces.js` module, OS browser) is in [`dev/detached-display-windows.md`](../dev/detached-display-windows.md).

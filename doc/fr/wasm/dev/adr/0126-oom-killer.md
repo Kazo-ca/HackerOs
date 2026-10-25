@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0126-oom-killer.md)
+
 # ADR 0126 : OOM killer désactivé par défaut et garde de la mémoire du vrai navigateur
 
 ## Statut

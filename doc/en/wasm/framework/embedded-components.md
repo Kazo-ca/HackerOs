@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/framework/embedded-components.md)
+
 # Embeddable components
 
 An app can display in its window a component that another app has
@@ -186,7 +188,7 @@ A control provider (the explorer, or the third-party app chosen by the
 administrator) **sets `HackMenuDefinition.FileMenu`** (`HackFileMenuContext`:
 scope, items, displayed folder) on each file menu it opens:
 this is what allows the OS to add app entries to it (ADR 0159 §4, see
-[`context-menu.md`](context-menu.md#entrées-des-apps-dans-les-menus-des-fichiers-chantier-4)).
+[`context-menu.md`](context-menu.md#app-entries-in-the-file-menus-work-item-4)).
 
 ### `IHackTerminal`
 

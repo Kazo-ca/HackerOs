@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/old/mobile-interface-platform-plan.md)
+
 # Plan de plateforme et d’interface Mobile
 
 > Mise à jour du 2026-10-23 : accueil paginé, dock, tiroir et aides souris sont

@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0069-graceful-stop-and-checkpoints.md)
+
 # ADR 0069 : arrêt demandé, points d'arrêt volontaires et escalade
 
 ## Statut

@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/dangerous-capability-approval.md)
+
 # Dangerous capability approval
 
 ## Goal

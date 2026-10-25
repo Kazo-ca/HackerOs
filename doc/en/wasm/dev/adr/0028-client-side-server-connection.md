@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0028-client-side-server-connection.md)
+
 # ADR 0028: Client-Side Optional-Server Connection and Proxy Bridge
 
 ## Status

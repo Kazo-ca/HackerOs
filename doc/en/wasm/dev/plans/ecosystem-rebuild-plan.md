@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/plans/ecosystem-rebuild-plan.md)
+
 # HackerOS ecosystem rebuild plan
 
 **Status:** plan approved with Benoit on 2026-10-10. The four phases are
@@ -442,9 +444,9 @@ the corresponding ADR, with the value proposed below by default.
 - [x] Create `AppDefinition` and the `[AppManifest]` attribute ([`app-model.md`](../../framework/app-model.md)).
 - [x] Create the MSBuild task that generates `manifest.json` per app, with validation.
 - [x] Create the `BuiltInApplications.json` aggregation task and the "one reference is enough" `.targets`.
-- [x] Migrate the existing apps, then delete the hand-written `app.manifest.json` files and `StaticManifest` ([`app-model.md`](../../framework/app-model.md#migration-des-apps)).
+- [x] Migrate the existing apps, then delete the hand-written `app.manifest.json` files and `StaticManifest` ([`app-model.md`](../../framework/app-model.md#migrating-the-apps)).
 - [x] Implement the system apps list, machine and user uninstallation, and reinstallation.
-  - [x] System apps list: `AppCatalog.IsSystemApp`, `IsSystemApp="true"` on the host's `ProjectReference`s (`rebuild/2-system-apps`, [`app-model.md`](../../framework/app-model.md#apps-système-adr-0048-1)).
+  - [x] System apps list: `AppCatalog.IsSystemApp`, `IsSystemApp="true"` on the host's `ProjectReference`s (`rebuild/2-system-apps`, [`app-model.md`](../../framework/app-model.md#system-apps-adr-0048-1)).
   - [x] Machine and user uninstallation, reinstallation (`rebuild/2-app-uninstall`, ADR 0048, [`app-installation.md`](../app-installation.md)).
 - [x] Classify capabilities, create the approval window and the security policy.
   - [x] Classification of capabilities, removal of `settings.*` and `diagnostics.*`, seeder according to system status (`rebuild/2-capability-classification`, [`capabilities.md`](../../framework/capabilities.md)).
@@ -454,7 +456,7 @@ the corresponding ADR, with the value proposed below by default.
 - [x] Extend the parser: pipes, redirections, `&&`, variables (`rebuild/3-shell-interpreter`, ADR 0050 and 0054, [`shell-interpreter.md`](../shell-interpreter.md)).
 - [x] Add current directory and environment per process (`rebuild/3-process-environment`, ADR 0050 and 0053, [`process-environment.md`](../process-environment.md)).
 - [x] Merge the 28 command projects and make `cd`, `pwd`, `clear`, `help` normal.
-  - [x] Merge of the 28 projects into `HackerOs.Commands`, a single `ProjectReference` in the host (`rebuild/3-commands-merge`, ADR 0051 §1, [`app-model.md`](../../framework/app-model.md#commandes-intégrées--un-seul-projet-adr-0051)).
+  - [x] Merge of the 28 projects into `HackerOs.Commands`, a single `ProjectReference` in the host (`rebuild/3-commands-merge`, ADR 0051 §1, [`app-model.md`](../../framework/app-model.md#built-in-commands-a-single-project-adr-0051)).
   - [x] `cd`, `pwd`, `clear`, `help`, `sudo`, `export`, `unset`, `env` from the catalog, `IShellSession` and `shell.control`, no more hard-coded names in the terminal (`rebuild/3-shell-commands`, ADR 0051 §2-5, [`shell-commands.md`](../shell-commands.md)).
 - [x] Implement the trash and the `HackTrash` API (`rebuild/3-trash`, ADR 0052, [`trash.md`](../trash.md)).
 
@@ -465,7 +467,7 @@ the corresponding ADR, with the value proposed below by default.
 - [x] Add the architecture test that forbids internal references from `Apps/`.
   - [x] Build verification of references and injections, `IJSRuntime` test, temporary exemption list (`rebuild/4-sdk-boundary`, ADR 0055 and 0059, [`app-sdk.md`](../../framework/app-sdk.md)).
   - [x] Shell host: `HackShell`, capability `shell.host`, `TerminalPanel` without `Platform.Core`, system CodeEditor (`rebuild/4-sdk-shell-host`, ADR 0056 §7, [`shell-host.md`](../../framework/shell-host.md)).
-  - [x] Exemption mechanism removed: every boundary violation is an error, no project can escape it, the whole solution compiles without a boundary diagnostic (`rebuild/4-sdk-boundary-final`, ADR 0055 §6, [`app-sdk.md`](../../framework/app-sdk.md#fin-des-exemptions-temporaires-adr-0055-6)).
+  - [x] Exemption mechanism removed: every boundary violation is an error, no project can escape it, the whole solution compiles without a boundary diagnostic (`rebuild/4-sdk-boundary-final`, ADR 0055 §6, [`app-sdk.md`](../../framework/app-sdk.md#end-of-temporary-exemptions-adr-0055-6)).
 - [x] Explorer: cut, copy, paste, trash, drag and drop (`rebuild/4-file-explorer`, ADR 0056 §12 and 0058 §1, [`file-explorer.md`](../file-explorer.md)).
   - [x] OS clipboard shared with the host (text, pasted files, `clipboard.config` setting), Diagnostic on `HackClipboard` (`rebuild/4-file-explorer`, ADR 0065, [`clipboard.md`](../clipboard.md)).
 - [x] Task manager: performance, disk, network, detail, filter, multiple selection, through `/proc` (`rebuild/4-proc-metrics` and `rebuild/4-task-manager`, ADR 0057 and 0058 §2, [`system-metrics.md`](../system-metrics.md), [`task-manager.md`](../task-manager.md)).
@@ -497,7 +499,7 @@ to #122, before the merge of phases 1 to 4 into `main` (PR #114):
 - [x] All `Tests/*.Tests` suites excluding E2E pass; documentation with no
   dead link, complete indexes (`docs/README.md`, `docs/old/README.md`).
 
-Detail: [`app-sdk.md`](../../framework/app-sdk.md#vérification-finale-de-la-phase-4-2026-10-16).
+Detail: [`app-sdk.md`](../../framework/app-sdk.md#final-verification-of-phase-4-2026-10-16).
 
 ## 13. References
 

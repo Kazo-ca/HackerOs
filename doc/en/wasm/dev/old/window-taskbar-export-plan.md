@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/old/window-taskbar-export-plan.md)
+
 # Plan for extracting the window system and the taskbar
 
 **Status:** architecture proposal and resumption plan  

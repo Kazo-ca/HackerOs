@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0131-cross-origin-isolation.md)
+
 # ADR 0131 : isolation cross-origin optionnelle (COOP/COEP), tubes partagés et mesures fines
 
 ## Statut

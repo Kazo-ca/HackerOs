@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/filesystem-path-lookup.md)
+
 # Recherche des chemins du système de fichiers
 
 ## But

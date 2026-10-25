@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/framework/file-operations-api.md)
+
 # File operations: `HackFileOperations` API
 
 This document describes `HackFileOperations`, the SDK API that copies, moves, imports and sends files to the trash, with its naming, conflict and stop rules. The explorer's file control, which relies on these operations, is in [`dev/file-explorer.md`](../dev/file-explorer.md).

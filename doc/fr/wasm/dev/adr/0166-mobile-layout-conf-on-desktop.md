@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0166-mobile-layout-conf-on-desktop.md)
+
 # ADR 0166 : disposition mobile en fichier conf sous Desktop
 
 ## Statut

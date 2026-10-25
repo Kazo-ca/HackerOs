@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0142-oom-killer-implementation-adjustments.md)
+
 # ADR 0142: adjustments to the implementation of the OOM killer
 
 ## Status

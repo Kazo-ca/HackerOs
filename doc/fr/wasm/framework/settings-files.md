@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/framework/settings-files.md)
+
 # Paramètres en fichiers
 
 L'accueil mobile utilise `~/Desktop/.mobile/layout.conf` (sections et clés texte,

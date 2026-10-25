@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/linux-commands.md)
+
 # Shell Linux commands
 
 Commands added or reviewed by [ADR 0064](adr/0064-posix-shell-scripts-jobs-and-app-commands.md)

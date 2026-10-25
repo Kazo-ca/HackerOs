@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/building-and-testing.md)
+
 # Compiler, lancer et tester HackerOS
 
 ## Objet

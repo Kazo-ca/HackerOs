@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/trimmed-publish.md)
+
 # Trimmed Release publication
 
 ## Purpose

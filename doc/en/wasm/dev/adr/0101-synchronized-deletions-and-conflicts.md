@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0101-synchronized-deletions-and-conflicts.md)
+
 # ADR 0101: synchronized deletions, user-resolved conflicts, periodic sync and remaining sync domains
 
 ## Status

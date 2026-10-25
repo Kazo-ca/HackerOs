@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/framework/app-model.md)
+
 # App model: `AppDefinition` and generated manifests
 
 Phase 2 of the [rebuild plan](../dev/plans/ecosystem-rebuild-plan.md) (sections 6.1 and 6.2),
@@ -17,7 +19,7 @@ Project `Shared/HackerOs.App.Abstractions`, folder `Definition/`, namespace
 
 | Type | Role |
 | --- | --- |
-| `AppManifestAttribute` | Marks the class that describes an app. Single use, not inherited. Named property `Execution` (ADR 0070): where the OS runs the app (see [Execution host](#hôte-dexécution-adr-0070)). |
+| `AppManifestAttribute` | Marks the class that describes an app. Single use, not inherited. Named property `Execution` (ADR 0070): where the OS runs the app (see [Execution host](#execution-host-adr-0070)). |
 | `AppDefinition` | Abstract base class: 4 required members (`Id`, `Name`, `Kind`, `EntryPoint`) and optional members with a default value. |
 | `FileHandler`, `TerminalCommand` | Short forms of `FileHandlerManifest` and `TerminalCommandManifest`. |
 | `AppDefinitionMapper` | `ToManifest(definition)` converts a definition into an `AppManifest` (schema version 1). |
@@ -33,7 +35,7 @@ Default values of the optional members:
 | `LaunchVisibility` | `Visible` |
 | `Icons`, `Capabilities`, `FileHandlers`, `Dependencies`, `Intents`, `DeclaredTopicPermissions`, `Localizations`, `Assets` | empty list |
 | `Terminal`, `MobileEntryPoint`, `Settings` | `null` |
-| `[RegisterFileContextMenu]` | no method; `contextMenus` is then omitted from the manifest. A static method of the class itself, run twice at build time, registers the app's entries in file menus (ADR 0151, ADR 0159, [`context-menu.md`](context-menu.md#entrées-des-apps-dans-les-menus-des-fichiers-chantier-4)); titles in `Resources/AppManifest.resx` |
+| `[RegisterFileContextMenu]` | no method; `contextMenus` is then omitted from the manifest. A static method of the class itself, run twice at build time, registers the app's entries in file menus (ADR 0151, ADR 0159, [`context-menu.md`](context-menu.md#app-entries-in-the-file-menus-work-item-4)); titles in `Resources/AppManifest.resx` |
 | `Components` | empty list; `components` is then omitted from the manifest (ADR 0063, [`embedded-components.md`](embedded-components.md)); `hackeros.context-menu` is refused (platform); `hackeros.file-view` and `hackeros.file-dialogs` are open to any windowed app, an administrator chooses the one in service (ADR 0156, ADR 0158) |
 | `SingleInstancePerUser`, `AutoStart`, `SupportsBack` | `false` |
 | `ServiceStartup` | `null` (= `Login`); `serviceStartup` is then omitted from the manifest. `Boot` only applies to a system app of kind `Service` (ADR 0097 §4, ADR 0107) |

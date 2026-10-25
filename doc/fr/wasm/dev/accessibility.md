@@ -1,3 +1,5 @@
+> [English version](../../../en/wasm/dev/accessibility.md)
+
 # Accessibilité
 
 Chantier `v3/13-accessibility` ([ADR 0105](adr/0105-accessibility-preferences.md), ajusté par

@@ -1,3 +1,5 @@
+> [Version française](../../../fr/wasm/dev/project-overview.md)
+
 # HackerOS project overview
 
 ## Purpose
@@ -108,7 +110,7 @@ browser is here ([`browser-infrastructure.md`](browser-infrastructure.md)).
 
 An app is **system** when the host declares it so on its `ProjectReference`
 (`IsSystemApp="true"`): it cannot be uninstalled and automatically receives its
-dangerous capabilities. List and rules: [`app-model.md`](../framework/app-model.md#apps-système-adr-0048-1).
+dangerous capabilities. List and rules: [`app-model.md`](../framework/app-model.md#system-apps-adr-0048-1).
 
 ### Hosts
 
@@ -238,11 +240,11 @@ Documents: [`hack-file-api.md`](../framework/hack-file-api.md),
   desktop and context menu series (`desk/base`: file control
   provided by the explorer, OS context menu, app entries, desktop
   icons; ADR 0149, 0161, [`sdk-packages.md`](../framework/sdk-packages.md#sdk-20),
-  report in [`desktop-and-context-menu-plan.md`](plans/desktop-and-context-menu-plan.md#13-vérification-finale)); the migration status report is in
+  report in [`desktop-and-context-menu-plan.md`](plans/desktop-and-context-menu-plan.md#13-final-verification)); the migration status report is in
   [`wasm-v3-final-status.md`](plans/wasm-v3-final-status.md), that of the `exec` series
   (limits, OOM killer, priorities, background tasks, Server host in WebAssembly,
   cross-origin isolation) in
-  [`execution-followups-plan.md`](plans/execution-followups-plan.md#11-vérification-finale). The published version is **2.0.3** (`build/Versions.props`, published on
+  [`execution-followups-plan.md`](plans/execution-followups-plan.md#11-final-verification). The published version is **2.0.3** (`build/Versions.props`, published on
   2026-10-24); another repository can build on SDK 2.x
   ([`building-on-hackeros.md`](../framework/building-on-hackeros.md)).
 

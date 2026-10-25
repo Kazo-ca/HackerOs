@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0081-detached-display-windows-adjustments.md)
+
 # ADR 0081: detached windows, implementation adjustments
 
 ## Status

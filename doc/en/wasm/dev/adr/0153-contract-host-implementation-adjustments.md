@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/adr/0153-contract-host-implementation-adjustments.md)
+
 # ADR 0153: adjustments to the generic contract host
 
 ## Status

@@ -1,3 +1,5 @@
+> [English version](../../../../en/wasm/dev/adr/0111-localization-implementation-adjustments.md)
+
 # ADR 0111 : ajustements de la mise en œuvre de la localisation
 
 ## Statut

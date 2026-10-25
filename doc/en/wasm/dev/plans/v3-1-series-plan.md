@@ -1,3 +1,5 @@
+> [Version française](../../../../fr/wasm/dev/plans/v3-1-series-plan.md)
+
 # Series v3.1: gaps in the wasm v3 migration
 
 ## Purpose
