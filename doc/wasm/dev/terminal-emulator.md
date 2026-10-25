@@ -1,5 +1,7 @@
 # Émulateur du terminal (xterm.js)
 
+Le contrat côté apps et commandes (`TerminalPanel`, `IHackTerminal`, lecture d'un mot de passe sans écho, mode plein écran) est dans [`terminal-api.md`](../framework/terminal-api.md).
+
 ## Objet
 
 `TerminalPanel` (`Shared/HackerOs.AppSdk.Terminal`) affiche son shell dans un
@@ -11,10 +13,6 @@ La console (`Apps/System/HackerOs.Apps.Terminal`) utilise `TerminalTabs`.
 L'éditeur de code n'utilise plus `TerminalPanel` directement : il embarque le
 terminal que l'app Terminal enregistre pour le contrat `hackeros.terminal`
 (`TerminalEmbed`, ADR 0063, [`embedded-components.md`](../framework/embedded-components.md)).
-`TerminalPanel` implémente `IHackTerminal` : un hôte peut y lancer des
-commandes (affichées à l'invite, après les touches déjà tapées), changer de
-dossier par un `cd` visible et lire le texte affiché sans séquences de
-contrôle (`TerminalAnsi.StripControlSequences`).
 
 ## Architecture
 
@@ -86,25 +84,11 @@ interrompt. Ce que la commande n'a pas lu revient à l'invite suivante comme
 frappe anticipée (4096 touches au plus) : `sleep 5` puis `ls` + Entrée tapé
 pendant l'attente lance `ls` ensuite, comme sous Linux.
 
-Une commande peut couper l'écho, comme le drapeau `ECHO` de `termios` (ADR
-0120 §4) : `TerminalInputReader` implémente `ITerminalInputMode`, et
-`TerminalExecutionContext.ReadSecretLineAsync(invite)` met `EchoEnabled` à
-`false` le temps d'une ligne, comme `getpass(3)`. La discipline de ligne
-(`HandleInputKey`) n'affiche alors ni les caractères ni leur effacement
-(Retour arrière, Ctrl+U) ; Entrée passe toujours à la ligne. `passwd` lit
-ainsi les mots de passe.
-
 Une commande inachevée (`for f in *; do` + Entrée, guillemet ouvert, `|`
 final, here-document) affiche l'invite de continuation `>` de bash (`PS2`) :
 le terminal le demande au shell par `IHackShell.NeedsMoreInput`, accumule les
 lignes, puis les exécute ensemble ; Ctrl+C abandonne. L'historique garde une
 seule ligne (`TerminalHistory.ToSingleLine` : `for f in *; do echo $f; done`).
-Les commandes envoyées par un hôte (`IHackTerminal.RunCommandAsync`) ne sont
-jamais continuées.
-
-`TerminalPanel.PushVirtualKey` (clavier virtuel) suit le même chemin que le
-clavier physique ; avec `UseVirtualKeyboard`, la zone de saisie cachée de
-xterm.js reçoit `inputmode="none"`.
 
 ## Commandes plein écran
 

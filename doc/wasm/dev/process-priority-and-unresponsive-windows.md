@@ -1,5 +1,7 @@
 # Priorité `nice` et fenêtres qui ne répondent pas
 
+Ce document couvre la mise en œuvre de la priorité `nice` et de la détection des fenêtres qui ne répondent pas. Ce qu'une app voit et doit faire (API `HackProcess.Nice`, règles de la priorité, boîte « Ne répond pas », limites d'une boucle sur le fil principal) est dans [`../framework/app-responsiveness-api.md`](../framework/app-responsiveness-api.md).
+
 Mise en œuvre de l'[ADR 0127](adr/0127-priority-and-not-responding-dialog.md),
 chantier `exec/4-not-responding-ui` de la série « suites de l'étape 5 »
 ([`execution-followups-plan.md`](plans/execution-followups-plan.md)).
@@ -45,18 +47,7 @@ $ ps -o pid,ni,comm
 - Le gestionnaire de tâches a une colonne **Priorité**, masquée par défaut, que
   le bouton « Priorité » de la barre d'outils de l'onglet Processus affiche.
 
-### Règles
-
-| Règle | Détail |
-| --- | --- |
-| Plage | `-20`..`19`, toute valeur hors plage est ramenée aux bornes. |
-| Héritage | Un enfant prend la valeur de son parent, sauf si la demande de lancement en donne une (`ProcessStartRequest.Nice`, `AppLaunchRequest.Nice`). |
-| Baisser | Seul root (`sudo`, ADR 0042) baisse une valeur (`EACCES` sinon : « Permission denied »). |
-| Autre utilisateur | Seul root change la valeur d'un processus d'un autre utilisateur (`EPERM` : « Operation not permitted »). |
-| Capacités | Lire un autre processus demande `process.list` ; changer un processus qui n'est ni le sien ni un de ses enfants demande `process.manage`, comme `kill` (ADR 0140). |
-| Effet | Ordre de la file des workers (ADR 0071), commandes et tâches de fond `HackBackground.RunAsync` (ADR 0128, valeur `HackBackgroundOptions.Nice`, 0 par défaut) : la plus petite valeur d'abord, puis l'ordre d'arrivée. |
-| Worker toujours prêt | Une commande à valeur **positive** ne prend pas le worker toujours prêt pendant qu'un autre worker démarre : il reste pour la prochaine commande interactive. |
-| Thread principal | **Aucun effet.** Un processus du thread principal (fenêtres, commandes `MainThread`) tourne quand il est appelé ; il n'y a pas d'ordonnanceur à pondérer. |
+Les règles de la priorité (plage, héritage, droits, effet sur la file des workers, thread principal) sont dans [`../framework/app-responsiveness-api.md`](../framework/app-responsiveness-api.md).
 
 ### Architecture
 
@@ -106,26 +97,9 @@ recommence à traiter ses messages.
 Sans mesure du CPU (`Cpu:Enabled = false`), aucune attente ne peut être
 attribuée à un processus : aucune fenêtre n'est marquée.
 
-### Ce que voit l'utilisateur
+### Ce que voit l'utilisateur (fenêtre)
 
-- Le titre affiché prend le suffixe « (Ne répond pas) » / « (Not responding) »,
-  dans la langue de la session. C'est **de l'affichage** : le titre posé par
-  l'app (`SetWindowTitleAsync`) ne change pas et aucun
-  `WindowTitleChangedEvent` n'est émis.
-- Le contenu passe en gris (`filter: grayscale(1) brightness(0.7)`), en fondu
-  sauf sous « réduire les animations » (ADR 0105).
-- La boîte est attachée **à cette fenêtre seulement** : elle couvre son
-  contenu, pas sa barre de titre ; les autres fenêtres et la barre des tâches
-  restent utilisables. `role="alertdialog"`, le focus va sur **Attendre**,
-  `Tab` reste entre les deux boutons, `Échap` vaut **Attendre**.
-- **Attendre** ferme la boîte ; elle revient un seuil plus tard (5 s) si la
-  fenêtre ne répond toujours pas.
-- **Terminer l'application** suit l'escalade de l'ADR 0069 : raison
-  `Terminated`, délai de grâce de **2 s**, puis arrêt forcé (étape 3) et, pour
-  un worker, terminaison du worker (étape 4). La fenêtre se ferme quand son
-  processus se termine.
-- La croix (et `Alt+F4`) d'une fenêtre sans réponse ouvre la même boîte au lieu
-  d'une fermeture que l'app gelée ne pourrait pas traiter.
+Le suffixe « (Ne répond pas) », le contenu grisé, la boîte « Attendre | Terminer l'application » et la croix sont décrits dans [`../framework/app-responsiveness-api.md`](../framework/app-responsiveness-api.md).
 
 ### Réglage
 
@@ -158,16 +132,6 @@ Les fenêtres détachées de l'ADR 0078 n'hébergent aujourd'hui que des onglets
 du navigateur (iframes), pas des fenêtres d'app : la boîte vit dans le
 composant de la fenêtre, et une future surface détachée qui hébergerait une app
 la rendra dans sa propre surface avec le même calque.
-
-### Ce que la boîte ne peut pas faire
-
-Une boucle **qui ne rend jamais la main** sur le thread principal gèle tout
-l'OS : ni la boîte ni rien d'autre ne peut s'afficher, et c'est le navigateur
-qui finit par proposer sa propre boîte « Page sans réponse ». Le travail long
-doit partir dans un worker (`HackBackground.RunAsync`, ADR 0128, à venir) ou
-rendre la main régulièrement avec `HackProcess.CheckpointAsync` (ADR 0069) ;
-voir [`cpu-accounting.md`](cpu-accounting.md) et
-[`sdk-developer-guide.md`](../framework/sdk-developer-guide.md).
 
 ## Décisions de mise en œuvre
 

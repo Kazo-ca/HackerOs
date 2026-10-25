@@ -1,5 +1,7 @@
 # Bureau : icônes, raccourcis et `desktop.config`
 
+Les types `HackDesktop*`, le fichier `desktop.config`, les raccourcis `.desktop` et l'intent de création de raccourci destinés aux apps sont dans [`desktop-api.md`](../framework/desktop-api.md).
+
 Chantier `desk/5-desktop` du plan
 [`desktop-and-context-menu-plan.md`](plans/desktop-and-context-menu-plan.md) (§5).
 Les décisions sont dans l'[ADR 0152](adr/0152-desktop-icons.md) et
@@ -49,10 +51,6 @@ DesktopShell ──► DesktopArea.BackgroundContent (BackgroundInteractive)
 | App **Bureau** (`org.hackeros.desktop`) | `Apps/System/HackerOs.Apps.Desktop` | App système cachée, à instance unique, SDK public seulement. Crée `~/Desktop` s'il manque, lit et écrit `desktop.config`, suit `~/.config/hackeros`, complète le menu du fond, reçoit l'intent de raccourci. |
 | `FileViewDesktop` | explorateur, `FileControl/` (`AppSdk.FileView` avant le SDK 2.0) | Le mode Bureau du contrôle interne : grille mesurée (`ResizeObserver`), sélection, lasso, clavier, glisser-déposer, icônes système. Script collocalisé `FileViewDesktop.razor.js`. |
 | `ExplorerFileView` (`ExplorerFileView.Desktop.cs`) | `Apps.FileExplorer` | Le fournisseur : menus et actions de Dossier perso et Corbeille, état plein ou vide de la Corbeille, décor des raccourcis (nom et icône de l'app, grisé si l'app manque), lancement d'un raccourci, création de raccourcis à un dépôt d'app. |
-| `HackDesktopLayout`, `HackDesktopCell`, `HackDesktopOptions`, `HackDesktopItems` | `AppSdk` (`Files/HackDesktop.cs`) | La grille en fonctions pures, partagée par tout fournisseur. |
-| `HackDesktopEntry` | `AppSdk` (`Files/HackDesktopEntry.cs`) | Lecture et écriture des `.desktop`, `CreateShortcutAsync`. |
-| `HackDesktopSettings` | `AppSdk` (`Files/HackDesktopSettings.cs`) | Lecture et écriture de `desktop.config`. |
-| `HackAppIcons.LucideName` | `AppSdk` (`Apps/`) | Icône Lucide d'une app (celle du menu Démarrer), reprise par les raccourcis. |
 | Menu Démarrer (`AppLauncher.Menu.cs`, `AppLauncher.razor.js`) | `Platform.Blazor` | Menu de l'OS sur chaque app (Ouvrir, Épingler, Envoyer vers ▸ Bureau) et glisser d'une app (`application/vnd.hackeros.app+json`). |
 | `DesktopPanel` | `Apps.Settings` | L'onglet Paramètres ▸ Bureau. |
 
@@ -61,85 +59,6 @@ tâches ; `kill` le ferme (les icônes disparaissent jusqu'à la connexion
 suivante), un plantage le relance une fois.
 
 ## Usage et API
-
-### `desktop.config`
-
-```ini
-[view]
-icon-size=medium      # small | medium | large
-auto-arrange=false
-align-to-grid=true
-sort=name             # name | size | type | date
-show-home=true
-show-trash=true
-
-[positions]
-::home=0,0
-::trash=0,1
-notes.txt=1,0
-```
-
-- Fichier de l'utilisateur seulement ; pas de couche `/etc`.
-- Une clé de `[positions]` est un nom de fichier (ou `::home`, `::trash`) où
-  `%`, `=`, `\`, `#`, `;`, `[`, `]`, les caractères de contrôle et les espaces
-  de bord sont écrits `%XX` ; la valeur est `colonne,ligne`, à partir de 0.
-- Une ligne fausse est ignorée. Écrire `[view]` garde les commentaires et les
-  clés inconnues ; `[positions]` est réécrit en entier.
-- Le bureau suit le fichier : le modifier avec `nano` ou Paramètres redessine
-  les icônes.
-
-```csharp
-HackDesktopSettingsDocument settings = await HackDesktopSettings.ReadAsync();
-await HackDesktopSettings.SaveOptionsAsync(settings.Options with { IconSize = HackDesktopIconSize.Large });
-```
-
-### Grille (`HackDesktopLayout`)
-
-| Membre | Rôle |
-| --- | --- |
-| `CellSize(size)` | Taille d'une case : petite 76 × 84, moyenne 92 × 100, grande 116 × 128 pixels CSS. |
-| `GridSize(width, height, size)` | Colonnes et lignes qui tiennent (au moins une de chaque). |
-| `Order(items, sort, showHome, showTrash)` | Ordre des éléments nouveaux : Dossier perso, Corbeille, puis dossiers et fichiers selon le tri. |
-| `Arrange(keys, saved, columns, rows, autoArrange, alignToGrid)` | Case affichée de chaque élément, positions à enregistrer et `Changed`. Une position hors de l'écran est gardée (l'élément est montré ailleurs). |
-| `Move(current, moved, anchor, target, columns, rows, autoArrange)` | Positions après un glisser : écarts gardés, cases occupées sautées ; en réorganisation automatique, insertion à la case visée. |
-| `CellAtPoint(x, y, size, columns, rows)` | Case sous un point. |
-
-Les cases vont de haut en bas, puis de gauche à droite.
-
-### Raccourcis (`HackDesktopEntry`)
-
-```ini
-[Desktop Entry]
-Type=Application
-Name=Text Editor
-Exec=org.hackeros.text-editor "/home/alice/My notes.txt"
-Icon=file-text
-```
-
-`TryParse`, `Format`, `IsDesktopFile`, `IsAppId`, `SplitExec`, `JoinExec` et
-`CreateShortcutAsync(dossier, appId, nom)` (écrit `Nom.desktop`, puis
-`Nom (2).desktop`…). Les codes `%f`, `%U`… sont ignorés ; `%%` donne `%`. Un
-fichier qui n'est pas un raccourci valide reste un fichier texte.
-
-Dans tout contrôle de fichiers fourni par l'explorateur, un raccourci montre le
-nom et l'icône de l'app, sans extension ; l'ouvrir lance l'app avec ses
-arguments ; une app absente grise l'icône et l'ouvrir l'explique.
-
-### Contrôle de fichiers en mode Bureau
-
-```razor
-<HackFileView InitialDirectory="@desktop"
-              Mode="HackFileViewMode.Desktop"
-              DesktopOptions="@_options"
-              DesktopPositions="@_positions"
-              DesktopPositionsChanged="SavePositionsAsync"
-              ContextMenuOpening="OnContextMenuOpening" />
-```
-
-L'hôte garde le fichier ; le fournisseur place, déplace et signale les
-positions à enregistrer (`DesktopPositionsChanged`) après un déplacement ou
-quand un élément nouveau prend une case. Rien n'est enregistré avant que le
-dossier soit lu, pour ne jamais effacer les positions.
 
 ### Menus
 
@@ -161,8 +80,6 @@ dossier soit lu, pour ne jamais effacer les positions.
 
 Onglet après Apparence : taille des icônes, réorganisation automatique,
 alignement, icônes système, tri, « Oublier les positions des icônes ».
-Paramètres s'ouvre directement sur un onglet avec `--page=appearance` ou
-`--page=desktop`.
 
 ## Décisions clés
 

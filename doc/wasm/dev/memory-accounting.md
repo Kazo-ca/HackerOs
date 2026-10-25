@@ -1,5 +1,7 @@
 # Mémoire mesurée par processus, en couches
 
+Ce document couvre la mise en œuvre de la mesure mémoire en couches. Ce qu'une app voit (`HackProcess.WorkingSet64`, `PrivateMemorySize64`, champs de `/proc/<pid>/status` et `/proc/meminfo`, mesuré ou simulé) est dans [`../framework/process-resources-api.md`](../framework/process-resources-api.md).
+
 Mise en œuvre du chantier `rebuild/5-memory-accounting` de la phase 5
 ([`execution-isolation-plan.md`](plans/execution-isolation-plan.md)) :
 [ADR 0068](adr/0068-measured-process-memory.md), branchée sur les interrupteurs
@@ -118,12 +120,7 @@ compteur du processus créé, sans allocation.
 Entre deux GC la répartition ne bouge pas : un processus lancé depuis le
 dernier GC n'a pas encore de `RssAnon`.
 
-### Mesuré ou simulé
-
-Un processus est mesuré si le catalogue de l'hôte connaît son image (toutes
-les apps intégrées) ou s'il a exécuté du code sous son frame (le shell, une
-app installée au runtime). Les autres (processus simulés sans code) restent
-simulés, comme le veut l'ADR 0066 §4.
+### Processus dans un worker
 
 Un processus dans un Web Worker (ADR 0070) reçoit en plus, en `RssAnon`, sa part
 de la mémoire du runtime de son worker (répartie entre les processus du
@@ -149,38 +146,7 @@ tests de charge :
 
 ## Utilisation
 
-### Lecture
-
-```text
-$ cat /proc/42/status
-...
-VmRSS:	4712 kB
-RssAnon:	3000 kB
-RssFile:	1200 kB
-VmData:	512 kB
-VmExe:	40 kB
-HackAllocBytes:	123456789
-Cpu:	0.0
-CpuSource:	simulated
-MemSource:	measured
-```
-
-```text
-$ cat /proc/meminfo
-MemTotal:        4194304 kB
-MemFree:         4063232 kB
-MemAvailable:    4063232 kB
-AnonPages:        102400 kB
-Mapped:            20480 kB
-Slab:               4096 kB
-```
-
-- `MemTotal` reste celui du `VirtualHardwareProfile`.
-- Mémoire utilisée = `AnonPages + Mapped + Slab` + mémoire simulée des
-  processus restés simulés.
-- `HackProcess.WorkingSet64` lit `VmRSS` ; `HackProcess.PrivateMemorySize64`
-  lit `RssAnon` (et vaut `WorkingSet64` quand la mémoire est simulée), comme
-  `System.Diagnostics.Process`.
+La lecture de `/proc/<pid>/status`, de `/proc/meminfo` et des propriétés `HackProcess` est décrite dans [`../framework/process-resources-api.md`](../framework/process-resources-api.md).
 
 ### Charger une ressource de l'OS (code de l'OS)
 

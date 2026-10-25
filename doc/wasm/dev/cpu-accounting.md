@@ -1,5 +1,7 @@
 # Temps CPU mesuré par processus et « Not responding »
 
+Ce document couvre la mise en œuvre de la mesure du temps CPU. Ce qu'une app voit (`HackProcess`, `/proc/<pid>/stat`, `/proc/<pid>/status`, `/proc/stat`) et les règles à suivre sont dans [`../framework/process-resources-api.md`](../framework/process-resources-api.md).
+
 Mise en œuvre du chantier `rebuild/5-cpu-accounting` de la phase 5
 ([`execution-isolation-plan.md`](plans/execution-isolation-plan.md)) :
 [ADR 0067](adr/0067-measured-cpu-time.md). Il s'appuie sur les interrupteurs et
@@ -19,9 +21,6 @@ le crochet de changement de contexte de l'ADR 0066
 - Exposer ces mesures là où Linux les expose : `/proc/<pid>/stat`,
   `/proc/<pid>/status`, `/proc/stat`, et `HackProcess` comme
   `System.Diagnostics.Process`.
-
-Aucune app ne change une ligne : tout passe par le frame ambiant que l'OS ouvre
-déjà autour de leur code (ADR 0043).
 
 ## Architecture
 
@@ -70,7 +69,7 @@ dont le processus est sorti :
 |---|---|---|
 | l'OS ferme la portée lui-même (gestionnaire d'événement, rendu, lancement) | l'OS continue : rendu Blazor, gestionnaire de fenêtres | compositeur, jusqu'à `CompositorSliceBudget` (4 ms, une passe de rendu), le reste en `idle` |
 | le runtime restaure un contexte vide (fin d'une continuation, d'une minuterie) | retour à la boucle d'événements | `idle` |
-| démarrage, avant tout processus | — | `idle` |
+| démarrage, avant tout processus | rien | `idle` |
 
 Comme Xorg ou `gnome-shell`, le temps du compositeur est du temps `system` dans
 `/proc/stat`. `idle` est le reste du temps écoulé depuis la création du
@@ -90,11 +89,6 @@ comptable : `user + system + idle` vaut toujours le temps écoulé.
 - Sur le thread principal, l'état n'est visible qu'**après coup**, à la fin de
   la tranche : rien d'autre ne s'exécute pendant. Une boucle infinie gèle
   encore l'OS ; seul un Web Worker (ADR 0070) l'isole.
-- **Attention (ADR 0127 §4)** : une app fenêtrée tourne sur le fil principal.
-  Une boucle longue sans `await` y gèle tout le bureau, souris comprise, et
-  aucune boîte ne peut s'afficher pendant le gel. Un calcul lourd va dans
-  `HackBackground.RunAsync` (ADR 0128) ; une boucle longue qui doit rester sur
-  le fil appelle `CheckpointAsync` (ADR 0069) assez souvent pour rendre la main.
 - Une fenêtre dont le processus reste « Not responding » reçoit le suffixe
   « (Not responding) », un voile gris et la boîte « Attendre | Terminer
   l'application » (ADR 0127 §2-3, [`process-priority-and-unresponsive-windows.md`](process-priority-and-unresponsive-windows.md)).
@@ -125,31 +119,7 @@ la portée, et sans crochet (mesures coupées) il ne fait rien du tout.
 
 ## Utilisation
 
-### Lire
-
-```bash
-cat /proc/42/stat
-# 42 (code-editor) R 1 42 42 0 -1 0 0 0 0 0 153 27 0 0 20 0 1 0 1234 4194304 1024 18446744073709551615 0 0 ... 0
-grep -E 'Cpu|Responding|LongTasks|ctxt' /proc/42/status
-cat /proc/stat
-```
-
-```csharp
-HackProcess editor = await HackProcess.GetProcessByIdAsync(42);
-TimeSpan user = editor.UserProcessorTime;          // utime
-TimeSpan system = editor.PrivilegedProcessorTime;  // stime
-TimeSpan total = editor.TotalProcessorTime;
-bool responding = editor.Responding;               // false : « Not responding »
-```
-
-| Fichier | Mesure active | Mesure coupée |
-|---|---|---|
-| `/proc/<pid>/stat` | `utime`, `stime` mesurés (champs 14 et 15, `USER_HZ`) | `utime` reconstruit depuis l'historique borné du simulateur (un échantillon par seconde), `stime` à `0` |
-| `/proc/<pid>/status` | `Cpu` = usage de la dernière seconde, `CpuSource: measured`, puis `Responding`, `LongTasks`, `voluntary_ctxt_switches`, `nonvoluntary_ctxt_switches` | exactement le fichier d'avant : `Cpu` simulé, `CpuSource: simulated`, sans les quatre champs |
-| `/proc/stat` | `cpu0` = le thread principal (`user`, `system` = `stime` + compositeur, `idle`) ; le cœur `k` ajoute le temps occupé du worker du pool qui le porte (ADR 0070, [`worker-processes.md`](worker-processes.md)) ; sans worker, les autres cœurs restent `idle` | temps simulé (ADR 0057) |
-
-Un processus qui n'a encore rien exécuté (ou un processus simulé,
-qui n'exécute pas de code) n'est pas mesuré : il garde ses valeurs simulées.
+La lecture de ces mesures par une app est décrite dans [`../framework/process-resources-api.md`](../framework/process-resources-api.md). Ce qui suit concerne la configuration.
 
 ### Configurer
 
@@ -175,9 +145,6 @@ exactement les fichiers d'avant la phase 5, plus le nouveau `stat` simulé.
   changements de processus) ; `ExecutionContextSwitch` gagne deux champs
   optionnels (`FromKernel`, `ToKernel`) et les changements de mode vont à
   `IExecutionModeSwitchObserver`, que la mesure de la mémoire peut ignorer.
-- **Sous-frame noyau réservé à l'OS.** `EnterKernel` est interne au SDK et
-  visible de Platform Core seulement : une app ne peut pas déclarer son propre
-  code en temps système.
 - **Usage de la dernière seconde calculé à la lecture.** Le comptable garde,
   par processus, le total au dernier échantillon ; une lecture plus d'une
   seconde après le précédent échantillon en prend un nouveau. Pas de minuterie

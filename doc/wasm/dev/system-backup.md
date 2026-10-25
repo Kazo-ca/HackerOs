@@ -1,5 +1,7 @@
 # Sauvegarde de la machine et espace de stockage
 
+Ce document couvre la mise en œuvre de la sauvegarde et de l'espace de stockage. Ce qu'une app voit (API `HackSystemBackup`, archive `.hosbak`, codes `NoSpace` et `FileTooLarge`) est dans [`../framework/system-backup-api.md`](../framework/system-backup-api.md).
+
 ## Objet
 
 Chantier `v3/7-storage-backup`, d'après l'[ADR 0099](adr/0099-os-backup-and-low-storage.md) :
@@ -44,39 +46,7 @@ l'onglet est masqué (ADR 0099, conséquences).
 
 ## Sauvegarde et restauration (ADR 0099 §1)
 
-### Archive `.hosbak`
-
-Le JSON `formatVersion: 1` de `IndexedDbBackupService` (version du schéma,
-tous les magasins, SHA-256), compressé en gzip. `ReadArchive` reconnaît le gzip
-à ses deux premiers octets (`1F 8B`) et accepte aussi le JSON brut. Une archive
-abîmée, vide, falsifiée (empreinte fausse) ou d'une autre version de schéma est
-refusée **avant** toute écriture, avec un message qui nomme les deux versions :
-
-```text
-This backup uses database schema version 3; this HackerOS uses version 4. It cannot be restored here.
-```
-
-Nom : `hackeros-AAAAMMJJ-HHMMSSZ.hosbak` (heure UTC de l'export).
-
-### API
-
-```csharp
-// Capacité system.backup (dangereuse) et un administrateur à chaque appel.
-HackBackupInfo backup = await HackSystemBackup.CreateAsync(AppContext);
-HackBackupInfo? restored = await HackSystemBackup.RestoreAsync(AppContext, HackBackupRestoreMode.Replace);
-// restored == null : l'utilisateur a fermé le sélecteur ; sinon la machine redémarre.
-```
-
-| Membre | Effet |
-|---|---|
-| `IsSupported`, `IsSupportedFor(context)` | `false` sur un hôte sans IndexedDB. |
-| `CreateAsync` | Demande un administrateur, exporte, télécharge l'archive sur l'hôte, journalise. |
-| `RestoreAsync(mode)` | Ouvre le sélecteur de l'hôte, valide l'archive, **puis** demande un administrateur, ferme la session, restaure, redémarre. |
-| `HackBackupInvalidException` | Archive refusée (sous-classe de `HackIOException`). |
-
-L'ordre de `RestoreAsync` est voulu : le navigateur n'ouvre son sélecteur que
-juste après un geste de l'utilisateur (clic, ou Entrée dans le terminal), et
-un mauvais fichier ne doit coûter à personne un mot de passe.
+L'archive, l'API du SDK et la capacité `system.backup` destinées aux apps sont dans [`../framework/system-backup-api.md`](../framework/system-backup-api.md). Ce qui suit décrit la séquence de la sauvegarde et de la restauration.
 
 ### Séquence de `SystemBackupService`
 
@@ -142,23 +112,9 @@ lancent l'app puis ferment la notification.
 
 ### Réserve de root
 
-Dans la réserve, `FileSystemService` refuse `Create`, `Write` et `Copy` d'un
-appelant dont l'autorité effective est sous Administrateur, avec `NoSpace`.
-Le système (journaux, démarrage), root (`sudo`) et l'administrateur écrivent
-jusqu'à la vraie limite du navigateur. Les montages virtuels (`/proc`, `/dev`)
-ne sont jamais concernés.
+Le refus d'écriture vu par une app quand l'espace passe sous la réserve de root est décrit dans [`../framework/system-backup-api.md`](../framework/system-backup-api.md).
 
-### `ENOSPC` et `EFBIG`
-
-| Origine | Code | Message du shell |
-|---|---|---|
-| `QuotaExceededError` d'IndexedDB (transaction annulée en entier) | `NoSpace` | `No space left on device` |
-| Réserve de root | `NoSpace` | `No space left on device` |
-| Contenu de plus de 16 Mio | `FileTooLarge` | `File too large` |
-
-`HackFile`/`HackFileStream` lèvent `HackIOException` avec `ErrorCode` ;
-`ShellErrorText.Describe` et les commandes (`chmod`, `mkdir`…) affichent le
-message Linux.
+Les codes `NoSpace` et `FileTooLarge` vus par les apps, avec leur message et la liste de leurs origines, sont dans [`../framework/system-backup-api.md`](../framework/system-backup-api.md). Les origines côté navigateur figurent dans le tableau d'architecture ci-dessus.
 
 ### `df`
 

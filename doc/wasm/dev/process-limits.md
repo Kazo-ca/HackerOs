@@ -3,27 +3,7 @@
 Chantier `exec/2-process-limits` (2026-10-18). Décisions : ADR 0125 (limites
 par processus) et ADR 0139 (ajustements de la mise en œuvre).
 
-## Rôle
-
-Chaque processus porte quatre limites façon `setrlimit(2)`, avec une valeur
-souple (celle qui s'applique) et une valeur dure (son plafond) :
-
-| Limite | `ulimit` | `/proc/<pid>/limits` | Défaut (souple / dure) | Effet quand elle est atteinte |
-|---|---|---|---|---|
-| `cpu` | `-t` (secondes) | `Max cpu time` | illimité / illimité | souple : `SIGXCPU` (sortie 152, « CPU time limit exceeded ») ; dure : `SIGKILL` (137, « Killed ») |
-| `rss` | `-m` (Kio) | `Max resident set` | illimité / illimité | `SIGKILL` (137) |
-| `nofile` | `-n` | `Max open files` | 1024 / 524288 | ouverture refusée : `EMFILE`, « Too many open files » |
-| `nproc` | `-u` | `Max processes` | 4096 / 4096 | lancement refusé : `EAGAIN`, « hsh: fork: Resource temporarily unavailable » |
-
-Ce sont les défauts du noyau Linux. Un processus hérite des limites de son
-parent ; un processus sans parent prend celles de la session, lues dans
-`/etc/security/limits.conf` à la connexion.
-
-L'application est **stricte dans un Web Worker** (l'OS termine le worker) et
-**au mieux sur le fil principal** (vérifiée entre deux tranches de travail).
-Les limites `cpu` et `rss` ne s'appliquent que là où le CPU et la mémoire sont
-mesurés ([`resource-accounting.md`](resource-accounting.md)) ; sinon
-`/proc/<pid>/limits` les dit inactives.
+Ce document couvre la mise en œuvre des limites de processus : tables, contrôleur, lecture de `limits.conf`, commandes du shell et réglage de l'hôte. Ce qu'une app voit et peut faire (défauts, effets, héritage, `/proc/<pid>/limits`, API du SDK) est dans [`../framework/process-limits-api.md`](../framework/process-limits-api.md).
 
 ## Architecture
 
@@ -99,32 +79,6 @@ alice      hard  cpu      60
 - Le fichier livré est entièrement commenté (`system:system`, `0644`) :
   il ne change rien aux défauts. Un changement vaut à la prochaine connexion.
 
-### `/proc/<pid>/limits`
-
-```text
-Limit                     Soft Limit           Hard Limit           Units     
-Max cpu time              unlimited            unlimited            seconds   
-…
-Max open files            1024                 524288               files     
-# enforcement: strict (worker)
-# cpu, rss: inactive (not measured)
-```
-
-La ligne `# enforcement:` vaut `strict (worker)`, `best-effort (main thread)`
-ou `off (HackerOs:ResourceLimits:Enabled=false)`. `/proc/<pid>/fd/` (dossier
-`0500`) liste les descripteurs ouverts sous forme de liens.
-
-### SDK
-
-```csharp
-HackProcess self = await HackProcess.GetCurrentProcessAsync();
-HackResourceLimits limits = await self.GetResourceLimitsAsync();
-await self.SetResourceLimitAsync(ResourceLimitKind.NoFile, 256, limits.NoFile.Hard);
-```
-
-Erreurs : `ArgumentException` (`EINVAL`), `HackUnauthorizedAccessException`
-(`EPERM`), `InvalidOperationException` (`ESRCH`).
-
 ### Hôte
 
 ```json
@@ -139,8 +93,6 @@ Erreurs : `ArgumentException` (`EINVAL`), `HackUnauthorizedAccessException`
 - Tables à côté de `ProcessRecord`, qui reste figé (API 1.1 livrée).
 - Un seul `SIGXCPU`, puis le délai de grâce de l'ADR 0069 ; la dure est
   vérifiée en premier, donc `ulimit -t 1` donne `SIGKILL` comme sous Linux.
-- Un descripteur = une lecture ou un flux d'écriture ouvert ; les écritures
-  d'un bloc, les listes de dossiers et les sockets ne comptent pas.
 - `NPROC` vérifié par le gestionnaire au lancement ; root élevé et
   `hackeros-svc` exemptés.
 - `limits.conf` lu une fois par session.

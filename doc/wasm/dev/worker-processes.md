@@ -1,5 +1,7 @@
 # Processus sans interface dans des Web Workers
 
+Ce qu'une app déclare pour son hôte d'exécution, les types qui traversent la frontière d'un worker et l'état d'isolation de la page sont dans [`app-execution-hosts.md`](../framework/app-execution-hosts.md).
+
 Mise en œuvre des [ADR 0070](adr/0070-worker-hosted-processes.md) et
 [0071](adr/0071-always-ready-worker.md), avec les ajustements de
 l'[ADR 0072](adr/0072-worker-processes-implementation-adjustments.md) ;
@@ -28,15 +30,6 @@ Les apps à fenêtre, le shell (`hsh`) et ses commandes intégrées restent sur 
 fil principal.
 
 ## Où tourne chaque processus
-
-`[AppManifest(Execution = AppExecutionHost.…)]` déclare l'hôte ; le générateur
-écrit le résultat dans `manifest.json` (`"execution"`).
-
-| Genre | Défaut (`Default`) | Valeurs permises |
-|---|---|---|
-| Fenêtre, composant embarqué | `mainThread` | `mainThread` (validateur : `manifest.execution.window`) |
-| Commande | `pool` | `pool`, `dedicated`, `mainThread` |
-| Service | `dedicated` | `dedicated`, `pool`, `mainThread` |
 
 Une fenêtre reste sur le fil principal : l'essai de rendu dans un worker
 (ADR 0129) a conclu « on s'arrête » ([ADR 0133](adr/0133-window-rendering-in-worker-verdict.md),
@@ -154,12 +147,7 @@ Le bus reste dans l'OS. `RemoteEventGateway` et `RemoteWatchGateway`
 | `watch.open` | `call` | `WatchAsync` : l'OS ouvre la surveillance avec les droits du pid. |
 | `ev` (OS → worker) | message | Une livraison : abonnement, JSON, sujet, app éditrice, date. Livrée dans le contexte ambiant du processus. |
 
-Ce qui traverse : les types d'événements de l'OS qui ont un codec dans
-`WirePayloadCodec` (liste dans l'ADR 0138 §6) et les types d'une app déclarés
-par `[assembly: HackWireContext(typeof(MyJsonContext))]`. Un autre type lève
-une `NotSupportedException` dans le worker, avec le nom de l'attribut à
-ajouter ; sur le fil principal, rien ne change. Côté OS, les bus indexent ces
-abonnements par nom de type (`IWireTopicMessageBus`, `IWireEventBus`) : une
+Côté OS, les bus indexent ces abonnements par nom de type (`IWireTopicMessageBus`, `IWireEventBus`) : une
 publication d'un worker n'est matérialisée en objet qu'une fois par type pour
 les abonnés du fil principal.
 
@@ -286,11 +274,6 @@ Quand la page est isolée (`crossOriginIsolated`), les workers gagnent :
 Sans isolation, tout reste comme avant : messages seulement, membres
 synchrones refusés avec le même message, mémoire du battement de cœur.
 
-Une app lit l'état sans capacité par `HackCrossOriginIsolation.GetStatusAsync()`
-(SDK, espace `Diagnostics`, ADR 0146) : mêmes faits que les premières lignes de
-`/proc/hackeros/workers`. Dans un worker, c'est l'appel asynchrone `coi.get`.
-Diagnostic s'en sert pour son badge.
-
 Qui pose les en-têtes : le service worker de l'Ecosystem (selon
 `HackerOs:CrossOriginIsolation` de `appsettings.json`, repli `require-corp`
 avec un rechargement unique), l'intergiciel de `test/test` et de
@@ -317,9 +300,6 @@ Avec l'isolation, `seq 30000 | wc -l` donne `30000` par les anneaux,
 `sleep 1 & ps` marche, et `sample-cmd --processes` répond.
 
 ## Usage
-
-Côté app : rien, sinon déclarer l'hôte quand le défaut ne convient pas
-(voir [`app-sdk.md`](../framework/app-sdk.md#processus-dans-des-web-workers-adr-0070-et-0071)).
 
 Côté hôte :
 

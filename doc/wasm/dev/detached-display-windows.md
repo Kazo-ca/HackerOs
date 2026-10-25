@@ -1,5 +1,7 @@
 # Fenêtres détachées
 
+Le contrat des surfaces pour les apps (`IDisplaySurfaceService`, `DisplaySurfaceContent`, événements, `HackBrowser.OpenDetachedAsync`) est dans [`display-surface-api.md`](../framework/display-surface-api.md).
+
 **Phase web, chantier `web/10-detached-window`** ([`asp-hack-plan.md`](plans/asp-hack-plan.md),
 section 5). Décision : [ADR 0078](adr/0078-detached-display-windows.md),
 précisée par l'[ADR 0081](adr/0081-detached-display-windows-adjustments.md).
@@ -38,14 +40,11 @@ HackerOs.Platform.Blazor.lib.module.js (initialiseur JS, avant Blazor) :
 
 | Fichier | Rôle |
 |---|---|
-| `Shared/HackerOs.AppSdk.Blazor/Display/DisplaySurfaceContracts.cs` | Contrat public : `IDisplaySurfaceService`, `IDisplaySurface`, `DisplaySurfaceOptions`, `DisplaySurfaceOpenResult`, `DisplaySurfaceOpenStatus`, `DisplaySurfaceState`. |
-| `Shared/HackerOs.AppSdk.Blazor/Display/DisplaySurfaceContent.razor(.cs,.css)` | Portail : rend son contenu ici, puis déplace son élément dans la surface ; le rend avant d'être supprimé. `Surface` est facultatif (ADR 0084 §7) : sans surface ouverte, le contenu reste en place, ce qui permet de le rendre une seule fois et de garder son état au détachement. |
 | `Platform/HackerOs.Platform.Blazor/Display/DisplaySurfaceService.cs` | Implémentation : ouvre, suit et ferme les surfaces ; publie la notification « fenêtre bloquée ». |
 | `Platform/HackerOs.Platform.Blazor/wwwroot/displaySurfaces.js` | `window.open`, document de la surface (`<base>`, styles recopiés et tenus à jour, apparence héritée de l'ancre), déplacement du contenu, événements `resize`/`focus`/`blur`/fermeture, messages remis à la fenêtre principale. |
 | `Platform/HackerOs.Platform.Blazor/wwwroot/displaySurfaceRelay.js` | Chargé dans la surface : poster un message « depuis » la surface. |
 | `Platform/HackerOs.Platform.Blazor/wwwroot/displaySurface.css` | Style de base du document d'une surface. |
 | `Platform/HackerOs.Platform.Blazor/wwwroot/HackerOs.Platform.Blazor.lib.module.js` | Initialiseur JS (`beforeStart`, `beforeWebStart`) : relais des écouteurs et des `@ref`. |
-| `Shared/HackerOs.AppSdk/Apps/HackBrowser.cs` | `HackBrowser.OpenAsync(url)`, `HackBrowser.OpenDetachedAsync(url)`. |
 | `Apps/System/HackerOs.Apps.Browser/BrowserWindow.razor(.cs,.css)` | Bouton `⧉`, placeholder, barre de la fenêtre détachée, rattachement, argument `--detached`. |
 | `Apps/System/HackerOs.Apps.Browser/BrowserPageView.razor.js` | Réponses du pont envoyées par le relais quand la page est dans une surface. |
 
@@ -53,40 +52,13 @@ HackerOs.Platform.Blazor.lib.module.js (initialiseur JS, avant Blazor) :
 
 ### Ouvrir une surface
 
-`IDisplaySurfaceService.OpenAsync(new DisplaySurfaceOptions(titre, largeur, hauteur))`
-appelle `window.open("", "hackeros-surface-<n>", "popup=yes,…")`. Le navigateur
-hôte n'ouvre une fenêtre qu'après un geste de l'utilisateur (environ cinq
-secondes après un clic ou une touche) : l'appel vient d'un gestionnaire de
-clic, ou juste après le lancement qu'un clic a déclenché.
-
 - **Ouverte** : le module construit le document (titre, `<base>` sur l'adresse
   de l'OS, feuilles de style du bureau recopiées et mises à jour quand elles
   changent, attributs de `<html>`), commence à relayer les écouteurs et attend
   le relais de messages. Résultat `Opened` avec la surface (`surface-1`,
   `surface-2`…).
-- **Bloquée** : résultat `Blocked` ; le service publie une notification
-  « Detached window blocked » qui explique comment autoriser les fenêtres
-  surgissantes.
-- **Impossible** (pas de JavaScript interactif : prérendu, tests) :
-  `Unavailable`.
 
 ### Dessiner dans une surface
-
-```razor
-@if (_surface is not null)
-{
-    <DisplaySurfaceContent Surface="_surface">
-        <MonPanneau Donnees="_donnees" />
-    </DisplaySurfaceContent>
-}
-```
-
-Le contenu reste un morceau ordinaire de la fenêtre de l'app : mêmes
-paramètres en cascade, même contexte d'exécution, mêmes gestionnaires
-d'événements. Seul son DOM vit dans la surface. Il garde l'apparence de
-l'endroit où il est rendu : le module recopie sur la racine de la surface les
-propriétés CSS personnalisées (`--hos-*`, thème) et le style de texte de
-l'ancre.
 
 Ce qui fait marcher Blazor dans un autre document (ADR 0081 §2) :
 
@@ -96,24 +68,6 @@ Ce qui fait marcher Blazor dans un autre document (ADR 0081 §2) :
   MudBlazor) posent sur `document` ;
 - un `@ref` dont l'élément est dans une surface est retrouvé par le sélecteur
   `[_bl_<id>]`, cherché aussi dans les surfaces.
-
-### Événements d'une surface
-
-`IDisplaySurface.Changed` signale la taille (`Width`, `Height`), le focus
-(`HasFocus`), le titre et l'état. Il arrive hors de tout événement Blazor et
-hors du contexte de l'app : un composant le traite avec `InvokeAsync` et, s'il
-appelle le SDK, `HackExecutionContext.Enter(AppContext)`.
-
-| État | Quand |
-|---|---|
-| `Open` | La fenêtre montre la surface. |
-| `ClosedByUser` | L'utilisateur a fermé la fenêtre. |
-| `Closed` | Le propriétaire a appelé `CloseAsync`, ou `CloseAllAsync` a été appelé. |
-| `Lost` | La fenêtre a quitté le document de la surface (autre adresse tapée) ; l'OS la ferme. |
-
-Quand une surface se termine, son contenu revient sous son ancre dans la
-fenêtre de l'app. Recharger ou fermer l'onglet de l'OS ferme toutes les
-surfaces.
 
 ### Le navigateur
 
@@ -135,19 +89,6 @@ surfaces.
   rattachement, la page est réécrite à partir du document déjà reçu, sans
   nouvelle requête, avec ses cookies et son `localStorage` actuels.
 
-### Depuis une autre app
-
-```csharp
-// Depuis un clic : le navigateur hôte refuse une fenêtre sans geste.
-await HackBrowser.OpenDetachedAsync("https://intranet.hack/rapport");
-```
-
-Lance le navigateur avec `--detached <url>` (capacité `apps.launch`) : la
-fenêtre détachée s'ouvre avant la première navigation. Si elle est bloquée, la
-page s'affiche dans le navigateur de l'OS, avec le bandeau et la notification.
-`HackBrowser.OpenAsync(url)` ouvre simplement l'adresse dans un nouveau
-navigateur.
-
 ## Décisions clés
 
 - **Une instance, plusieurs surfaces** (ADR 0078 §1) : aucune seconde instance
@@ -163,19 +104,9 @@ navigateur.
 
 ## Limites connues
 
-- L'état JavaScript d'une page (variables, formulaire en cours) est perdu au
-  détachement et au rattachement.
 - Un onglet ne peut avoir qu'une fenêtre détachée ; le navigateur de l'OS n'a
   qu'un onglet par fenêtre.
-- Les styles rendus dans le corps du bureau (thème de MudBlazor) sont recopiés
-  à l'ouverture ; seuls ceux de `<head>` et les attributs de `<html>` sont
-  suivis ensuite. Un changement de thème met à jour les variables du thème à la
-  prochaine ouverture.
 - Sur mobile, le navigateur hôte ouvre la fenêtre comme un onglet.
-- Les sites Blazor (ADR 0084, [`blazor-sites.md`](../framework/blazor-sites.md)) se
-  détachent comme les autres pages et gardent leur état : la zone de page est
-  rendue une seule fois à travers `DisplaySurfaceContent`, dont le portail
-  déplace le DOM sans recréer les composants.
 
 ## Tests
 

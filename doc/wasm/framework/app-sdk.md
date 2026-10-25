@@ -174,11 +174,11 @@ Façades statiques existantes au début de la phase 4 :
 | `HackExecutionContext` | contexte ambiant | [`hack-file-api.md`](hack-file-api.md) |
 | `HackEnvironment` | arguments, répertoire courant, variables | [`process-environment.md`](../dev/process-environment.md) |
 | `HackSettings` | paramètres en fichiers | [`settings-files.md`](settings-files.md) |
-| `HackTrash` | corbeille | [`trash.md`](../dev/trash.md) |
+| `HackTrash` | corbeille | [`trash.md`](../dev/trash.md), [`trash-api.md`](trash-api.md) |
 | `HackDns`, `HackPing`, `HackHttpClient`, `HackTcpClient`, `HackUdpClient` | réseau, repli réel décidé par l'OS (`4-sdk-network`), sockets relayés (`v3/10`) | [`sdk-network.md`](sdk-network.md) |
 | `HackDriveInfo` | taille et espace libre des disques (`4-proc-metrics`) | [`system-metrics.md`](../dev/system-metrics.md) |
 | `HackCrossOriginIsolation` | page isolée ou non, et ce que ça active (ADR 0146, SDK 2.0) | [`worker-processes.md`](../dev/worker-processes.md#isolation-cross-origin-adr-0131-adr-0143) |
-| `HackClipboard` | presse-papiers de session, texte et liste de fichiers (`4-file-explorer`) | [`file-explorer.md`](../dev/file-explorer.md) |
+| `HackClipboard` | presse-papiers de session, texte et liste de fichiers (`4-file-explorer`) | [`file-explorer.md`](../dev/file-explorer.md), [`clipboard-api.md`](clipboard-api.md) |
 | `HackTextContent` | texte ou binaire décidé sur le contenu, comme `file` (`4-file-explorer`) | [`text-editor.md`](../dev/text-editor.md) |
 
 Passerelles de `IAppExecutionContext` : `FileSystem`, `Events`,
@@ -392,7 +392,7 @@ synchrones de `Kill` et `ListProcesses`, `WithSelectedHandle`, `SetNice`,
 Exception : quand la page est isolée (`crossOriginIsolated`, ADR 0131 et 0143),
 les formes synchrones de `Kill` et `ListProcesses` marchent aussi dans un
 worker, qui attend la réponse de l'OS comme un appel système bloquant.
-Détails : [`worker-processes.md`](../dev/worker-processes.md).
+Détails : [`worker-processes.md`](../dev/worker-processes.md), [`app-execution-hosts.md`](app-execution-hosts.md).
 
 **Événements et surveillance de fichiers dans un worker (ADR 0124, ADR
 0138).** `HackEvents` et `HackFileSystemWatcher` marchent dans un worker : l'OS
@@ -411,7 +411,7 @@ Sans déclaration, l'abonnement ou la publication lève dans le worker une
 `NotSupportedException` qui nomme le type et l'attribut ; sur le fil principal,
 rien ne change. Dans un worker, `Publish` renvoie un résultat provisoire
 (`Delivered`) : un refus de l'OS (sujet d'une autre app, canal verrouillé) est
-écrit dans le journal de l'app. `PublishAsync` (ADR 0145, SDK 2.0)
+écrit dans le journal de l'app ([`app-log-files.md`](app-log-files.md)). `PublishAsync` (ADR 0145, SDK 2.0)
 renvoie le vrai résultat de l'OS, fautes des abonnés comprises, sur le fil
 principal comme dans un worker : c'est la forme à préférer dans le code qui
 peut tourner en worker.
@@ -453,7 +453,7 @@ string? text = await HackClipboard.GetTextAsync();
   aussi vers le presse-papiers de l'hôte, et un collage de l'hôte devient
   l'entrée courante, selon la clé `sharing` de `/etc/hackeros/clipboard.config`.
   Une app ne parle jamais à `navigator.clipboard` ; `BrowserClipboard` a été
-  retiré au gel du SDK 1.0 (ADR 0114 §3). Voir [`clipboard.md`](../dev/clipboard.md).
+  retiré au gel du SDK 1.0 (ADR 0114 §3). Voir [`clipboard.md`](../dev/clipboard.md), [`clipboard-api.md`](clipboard-api.md).
 - `HackDirectory.CopyAsync` (copie récursive) et `HackFileOperations`
   (`HackerOs.AppSdk.IO`, ex-`FileTransfer`, transferts de l'explorateur et de
   toute app depuis le SDK 2.0) sont décrits dans
@@ -549,11 +549,11 @@ est le paquet `HackerOs.AppSdk.FileView` ; le tableau de migration est dans
 
 | API | Rôle | Capacité | Document |
 |---|---|---|---|
-| `HackFileView`, `IHackFileView` (`HackerOs.AppSdk.Blazor.Files`) | Contrôle de fichiers fourni par l'OS (l'explorateur par défaut), avec les droits de l'app qui l'affiche | celles des fichiers montrés | [`embedded-components.md`](embedded-components.md), [`file-explorer.md`](../dev/file-explorer.md) |
+| `HackFileView`, `IHackFileView` (`HackerOs.AppSdk.Blazor.Files`) | Contrôle de fichiers fourni par l'OS (l'explorateur par défaut), avec les droits de l'app qui l'affiche | celles des fichiers montrés | [`embedded-components.md`](embedded-components.md), [`file-explorer.md`](../dev/file-explorer.md), [`file-control-api.md`](file-control-api.md) |
 | `Menus.Attach`, `Menus.Define`, `HackContextMenu`, `HackMenuDefinition` | Menu contextuel de l'OS, multi-niveaux, clavier et appui long | — | [`context-menu.md`](context-menu.md) |
 | `[RegisterFileContextMenu]`, `RegisterFileContextMenuContext`, `HackFileMenuItems` | Entrées d'une app dans les menus des fichiers, inscrites au build | `shell.context-menu` | [`context-menu.md`](context-menu.md#entrées-des-apps-dans-les-menus-des-fichiers-chantier-4) |
-| `HackFileOperations`, `IDialogService.AsFileConflictResolver` | Copie, déplacement, import, corbeille, conflits à la Nautilus (ex-`FileTransfer`) | celles des fichiers | [`file-explorer.md`](../dev/file-explorer.md) |
-| `HackDesktopSettings`, `HackDesktopEntry`, `HackDesktopLayout` | Réglages, raccourcis `.desktop` et grille du bureau | celles du dossier perso | [`desktop.md`](../dev/desktop.md) |
+| `HackFileOperations`, `IDialogService.AsFileConflictResolver` | Copie, déplacement, import, corbeille, conflits à la Nautilus (ex-`FileTransfer`) | celles des fichiers | [`file-explorer.md`](../dev/file-explorer.md), [`file-operations-api.md`](file-operations-api.md) |
+| `HackDesktopSettings`, `HackDesktopEntry`, `HackDesktopLayout` | Réglages, raccourcis `.desktop` et grille du bureau | celles du dossier perso | [`desktop.md`](../dev/desktop.md), [`desktop-api.md`](desktop-api.md) |
 | `HackComponentProviders`, `HackFileMenuEntries` | Choisir le fournisseur d'un contrat, masquer une entrée de menu | `apps.manage` | [`embedded-components.md`](embedded-components.md) |
 | `IAppEventGateway.PublishAsync`, `HackCrossOriginIsolation` | Prévus pour une 1.3 jamais publiée (ADR 0145, 0146) | — | ci-dessus |
 
@@ -567,7 +567,7 @@ le `[AppManifest]`) ; leur détail est dans la
 |---|---|---|---|
 | `HackConsole`, passerelle `IAppExecutionContext.Console` (`IAppConsoleGateway`) | Flux standard d'une instance : ceux du shell qui l'a lancée par son nom, `/dev/null` depuis le bureau | — | [`shell-interpreter.md`](../dev/shell-interpreter.md#apps-lancées-par-leur-nom) |
 | `IShellSession` : `GetVariable`, `AssignVariable`, `RunAsync`, `Jobs`, `KillJob` ; `IHackShell.NeedsMoreInput` | Built-ins `read`, `watch`, `jobs`, `kill %n` écrits comme des commandes ordinaires ; invite de continuation | `shell.control` ; `shell.host` | [`shell-commands.md`](../dev/shell-commands.md), [`shell-host.md`](shell-host.md) |
-| `IFullScreenTerminalSession` (`TerminalExecutionContext.FullScreen`), `TerminalInputReader` | Écran alternatif (`nano`, `top`, `htop`) et entrée standard du terminal | — | [`terminal-emulator.md`](../dev/terminal-emulator.md) |
+| `IFullScreenTerminalSession` (`TerminalExecutionContext.FullScreen`), `TerminalInputReader` | Écran alternatif (`nano`, `top`, `htop`) et entrée standard du terminal | — | [`terminal-emulator.md`](../dev/terminal-emulator.md), [`terminal-api.md`](terminal-api.md) |
 | `HackFile.CreateSymbolicLinkAsync` | `ln -s` | droits du chemin | [`hack-file-api.md`](hack-file-api.md) |
 | `AppDefinition.Components` (`AppComponent`), `HackEmbeddedComponent<T>`, `HackContractComponent<T>`, `HackEmbeddableComponent`, `HackComponentContracts`, `IHackTerminal` | Composant d'une app affiché par une autre, par contrat (`hackeros.terminal`) | celles de l'app qui affiche le composant (CodeEditor déclare `shell.host` pour le terminal embarqué) | [`embedded-components.md`](embedded-components.md) |
 | `HackClipboard` partagé avec l'hôte (`BrowserClipboard` retiré en 1.0) | Le texte copié part vers la vraie machine selon `clipboard.config` | `clipboard.read`, `clipboard.write` | [`clipboard.md`](../dev/clipboard.md) |

@@ -1,5 +1,7 @@
 # Journaux en fichiers (`/var/log`)
 
+Les fichiers de journal qu'une app produit et les API qui les écrivent sont dans [`app-log-files.md`](../framework/app-log-files.md).
+
 Mise en œuvre de l'[ADR 0045](adr/0045-logs-as-files.md) et de la section 5.3 du
 [plan de refonte](plans/ecosystem-rebuild-plan.md).
 
@@ -14,9 +16,6 @@ Error Log Viewer les lisent avec les droits de fichier ordinaires.
 | `/var/log/kern.log` | Journal du noyau (`KernelLog`) : OOM killer, garde de la mémoire du navigateur ; aussi copié dans `syslog` et lu par `dmesg` depuis `/dev/kmsg` (ADR 0126 §3, [`oom-killer.md`](oom-killer.md)) | `system:system 0644` |
 | `/var/log/auth.log` | `IAuditLog` (`session.login`, `session.elevate`, `capability.*` de l'ADR 0049…) | `system:system 0600` |
 | `/var/log/audit.log` | Audit des créations, écritures, renommages, copies, suppressions et `chmod` sous `/etc`, `/bin` et `/var` (sauf `/var/log`), au format d'`auditd` (ADR 0100 §3, [`sensitive-settings.md`](sensitive-settings.md)) ; `ausearch` le filtre | `system:system 0600` |
-| `/var/log/apps/<appId>.log` | `IAppExecutionContext.Logging` de l'app | `system:system 0644` |
-| `/var/log/<démon>/<fichier>.log` | `IAppLoggingGateway.AppendToLogFile` d'une **app système** seulement, ligne écrite telle quelle (ADR 0080 §3) ; par exemple `/var/log/hackweb/error.log` de `hackwebd` ([`static-sites.md`](static-sites.md)) | `system:system 0644` |
-| `/var/log/hackweb/<appId>.log` | Journal de débogage d'un **site** (app `Web`) qui l'active par `builder.Logging.EnableDebugLog()` : `ILogger<T>`, requêtes, exceptions, par `IAppLoggingGateway.AppendToSiteDebugLog` (ADR 0088 §5, [`asp-hack-site-data.md`](../framework/asp-hack-site-data.md)) | `system:system 0644` |
 
 ## Architecture
 
@@ -28,17 +27,7 @@ HostExceptionReporter ───────────────────�
                                      IDiagnosticSink (tampon mémoire des entrées récentes)
 ```
 
-- `LogLineFormat` (`Shared/HackerOs.Simulation.Abstractions/Diagnostics/`) :
-  `Format`, `FormatAudit` et `TryParse`. Une entrée tient sur une ligne :
-  `2026-10-10T03:11:42.123Z WARN  org.hackeros.text-editor[42]: message {clé=valeur}`.
-  Le message échappe `\`, `\n`, `\r`, `\t` et aussi `{` (en `\{`), pour qu'un
-  message ne soit jamais relu comme un bloc de propriétés. Dans ce bloc, les
-  clés et valeurs échappent en plus `,`, `=` et `}`. Les espaces d'une source
-  deviennent `_`.
 - `LogFileTarget` : `Syslog`, `AuthLog`, `AuditLog` (ADR 0100), `ForApp(appId)`, avec chemin et mode.
-- `LogRotationPolicy` : `MaxFileBytes` = 1 Mio, `MaxArchives` = 5. Rotation à
-  la `logrotate` (`.5` supprimé, `.4`→`.5` … `<f>`→`.1`, nouveau `<f>` vide).
-  Un fichier vide ne tourne jamais : un lot plus gros que 1 Mio est écrit entier.
 - `LogFileWriter` (singleton, `Platform.Core/Diagnostics/`) :
   - `Enqueue(target, line)` et `Write(target, severity, source, message, pid)`,
     synchrones, jamais bloquants. Canal de 10 000 lignes ; au-delà, les plus
@@ -76,13 +65,9 @@ HostExceptionReporter ───────────────────�
 
 ## Retraits
 
-- `IAppDiagnosticsGateway`, `AppDiagnosticsGateway` et `IAppExecutionContext.Diagnostics`
-  sont supprimés. Lire les journaux, c'est lire des fichiers.
 - `IPersistentDiagnosticRepository` et `IndexedDbDiagnosticRepository` ne sont
   plus enregistrés ; l'audit IndexedDB n'était déjà pas branché. Les classes et
   leurs magasins restent, et la version du schéma IndexedDB ne change pas.
-- `diagnostics.read` et `diagnostics.clear` sont retirées du catalogue par
-  l'ADR 0049 ([`capabilities.md`](../framework/capabilities.md)).
 - L'hôte `OS/HackerOs.Ecosystem` ne retire plus son `ILoggerProvider` : toutes ses
   dépendances sont des singletons. Le serveur garde sa composition (le pont
   `ILogger` y reste retiré, aucun système de fichiers n'y est attaché).

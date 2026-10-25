@@ -1,5 +1,7 @@
 # OOM killer et garde de la mémoire du navigateur
 
+Ce document couvre la mise en œuvre de l'OOM killer et de la garde du navigateur. Ce qu'une app voit (fichiers `/proc` et `/dev/kmsg`, `AppDefinition.OomScoreAdjust`, raison de fin `OutOfMemory`) est dans [`../framework/process-resources-api.md`](../framework/process-resources-api.md).
+
 Chantier `exec/3-oom-killer`. Décisions : [ADR 0126](adr/0126-oom-killer.md)
 et ses ajustements [ADR 0142](adr/0142-oom-killer-implementation-adjustments.md).
 
@@ -68,15 +70,7 @@ min-free-percent=5
 Ou Paramètres › Mémoire (demande d'administrateur). `min-free-percent` va de
 `0` à `50` ; une valeur hors bornes est ramenée et signalée dans `syslog`.
 
-### Fichiers
-
-| Chemin | Accès | Contenu |
-| --- | --- | --- |
-| `/proc/<pid>/oom_score` | lecture | Score actuel. |
-| `/proc/<pid>/oom_score_adj` | lecture, écriture | `-1000` à `1000`. Le propriétaire monte la valeur ; descendre sous le plancher demande `sudo`. |
-| `/proc/vmstat` | lecture | `nr_free_pages`, puis `nr_anon_pages`, `nr_mapped`, `nr_slab_unreclaimable` si mesuré, puis `oom_kill`. |
-| `/dev/kmsg` | lecture ; écriture root | `prio,seq,usec,-;message`. |
-| `/var/log/kern.log` | lecture | Lignes du noyau (rotation 1 Mio × 5, ADR 0045). |
+Les fichiers `/proc/<pid>/oom_score`, `oom_score_adj`, `/proc/vmstat` et `/dev/kmsg`, ainsi que la déclaration de `OomScoreAdjust` dans une app, sont décrits dans [`../framework/process-resources-api.md`](../framework/process-resources-api.md).
 
 ### Commandes
 
@@ -84,19 +78,6 @@ Ou Paramètres › Mémoire (demande d'administrateur). `min-free-percent` va de
 - `stress --vm N [--vm-bytes B] [--vm-keep]` (`B` : `256M` par défaut,
   suffixes `K`, `M`, `G`).
 - `echo 500 > /proc/<pid>/oom_score_adj`.
-
-### Déclarer une valeur dans une app
-
-```csharp
-public sealed class MyServiceDefinition : AppDefinition
-{
-    // Seule une app système peut déclarer une valeur négative (HOSAPP0024).
-    public override int? OomScoreAdjust => -200;
-}
-```
-
-Le manifeste généré porte `"oomScoreAdj": -200`. Un service système sans
-valeur reçoit `-500` ; les autres processus héritent de leur parent.
 
 ### Réglage d'hôte
 

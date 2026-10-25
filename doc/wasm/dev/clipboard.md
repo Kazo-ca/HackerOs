@@ -1,5 +1,7 @@
 # Presse-papiers de l'OS et partage avec l'hôte
 
+L'API du presse-papiers pour les apps (`HackClipboard`, listes de fichiers, format GNOME) est dans [`clipboard-api.md`](../framework/clipboard-api.md).
+
 ## Objet
 
 Mise en œuvre de l'[ADR 0065](adr/0065-os-clipboard-and-host-bridge.md), qui
@@ -38,20 +40,6 @@ tout ce qui dépend d'`IJSRuntime`) et démarré par `App.razor` après le
 chargement des préférences ; un échec n'empêche jamais le démarrage.
 
 ## Usage et API
-
-### Apps
-
-Rien de nouveau : `HackClipboard` reste la seule porte (voir
-[`file-explorer.md`](file-explorer.md#presse-papiers-hackclipboard)).
-
-```csharp
-await HackClipboard.SetTextAsync(json);                  // arrive aussi sur la vraie machine
-string? text = await HackClipboard.GetTextAsync();       // y compris un texte collé depuis la vraie machine
-```
-
-Une app ne parle jamais à `navigator.clipboard`. `BrowserClipboard`
-(`HackerOs.AppSdk.Blazor`), qui contournait le réglage, a été retiré au gel du
-SDK 1.0 (ADR 0114 §3).
 
 ### OS
 

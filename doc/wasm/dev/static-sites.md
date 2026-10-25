@@ -1,5 +1,7 @@
 # Sites statiques : fichiers `.site`, `hackwebd` et Web Server Manager
 
+Le format des fichiers `.site` et l'API `HackWebSiteFile` destinés aux apps et aux outils sont dans [`static-site-files.md`](../framework/static-site-files.md).
+
 Chantier `web/5-static-sites` de la phase web (ASP.Hack). Décisions :
 [ADR 0077](adr/0077-hosted-static-sites.md) et ses ajustements,
 [ADR 0080](adr/0080-hosted-static-sites-adjustments.md). Plan :
@@ -40,8 +42,6 @@ Publier un dossier comme site web, comme avec IIS, Apache ou nginx :
 
 | Élément | Projet | Rôle |
 |---|---|---|
-| `HackWebSite`, `HackWebSiteDeclaration`, `HackWebSiteScope` | `Shared/HackerOs.AppSdk/Net/Hosting` | Contenu d'un `.site` et fichier lu (chemin, portée, propriétaire, erreurs). |
-| `HackWebSiteFile` | idem | Emplacements, `Parse`, `Validate`, `Serialize`, `TryParseBinding`, `ReadAllAsync`. Partagé par le démon, le Manager et le résolveur. |
 | `HackWebdApp`, `HackWebdService` | `Apps/System/HackerOs.Apps.WebServer` | Le service : réconciliation des écoutes, boucle d'acceptation, journaux. |
 | `StaticFileHandler`, `WwwDataAccess`, `HackWebdLog` | idem, `Daemon/` | Traitement d'une requête, droits de `www-data`, formats des journaux. |
 | `WebServerManagerApp`, `WebServerManagerWindow`, `WebSiteStore` | idem, `Manager/` | L'app à fenêtre et sa logique sans interface. |
@@ -55,30 +55,6 @@ services d'une même app. Les deux sont des apps système (`IsSystemApp` sur la
 `ProjectReference` des hôtes).
 
 ## Fonctionnement
-
-### Le fichier `.site`
-
-```json
-{
-  "name": "docs",
-  "root": "/home/benoit/www/docs",
-  "bindings": ["http://docs.hack:8080/", "http://localhost:8081/"],
-  "defaultDocuments": ["index.html", "index.htm", "default.htm"],
-  "directoryBrowsing": false,
-  "enabled": true
-}
-```
-
-- Le fichier s'appelle `<name>.site` ; sinon le site est invalide.
-- Seuls `name`, `root` et `bindings` sont obligatoires ; les commentaires `//`
-  et les virgules finales sont tolérés (fichier édité à la main).
-- `root` : chemin absolu, ni `/`, ni `..`.
-- `bindings` : préfixes `http://hôte[:port]/chemin/` normalisés comme ceux de
-  `HackHttpListener` (`+`, `*` acceptés). `https://` refusé (pas de
-  certificats, ADR 0080). Un site d'utilisateur ne peut pas prendre un port
-  < 1024 : l'erreur va dans `error.log`.
-- Un site invalide ou désactivé n'est pas servi ; il reste listé (état
-  « invalid » ou « stopped ») dans le Manager.
 
 ### `hackwebd`
 
@@ -97,10 +73,6 @@ services d'une même app. Les deux sont des apps système (`IsSystemApp` sur la
 - Fichier : `Content-Type` par extension (`SimulatedFileTypes`), `ETag`
   (`"<révision>-<taille>"`), `Last-Modified`, `304` sur `If-None-Match` puis
   `If-Modified-Since` ; `HEAD` envoie `Content-Length` sans corps.
-- Droits : un site d'utilisateur est lu avec les droits de son propriétaire ;
-  un site système applique ceux de `www-data` (bits « other » sur chaque
-  dossier et le fichier) — un site système dans un dossier personnel `0700`
-  répond `403`, comme Apache.
 - Pages d'erreur et en-tête `Server: hackwebd/1.0` à la manière de nginx.
 
 ### Journaux
@@ -159,14 +131,6 @@ systemctl restart hackwebd
 
 Ou, dans l'explorateur, clic droit sur un dossier → **Publish as a web site…**,
 puis Save dans le Manager et **Open in browser**.
-
-Pour un développeur d'app, le format est dans le SDK :
-
-```csharp
-IReadOnlyList<HackWebSiteDeclaration> sites = await HackWebSiteFile.ReadAllAsync();
-HackWebSiteDeclaration parsed = HackWebSiteFile.Parse(path, json, HackWebSiteScope.User, "alice");
-IReadOnlyList<string> errors = HackWebSiteFile.Validate(site, HackWebSiteScope.User);
-```
 
 ## Décisions clés
 

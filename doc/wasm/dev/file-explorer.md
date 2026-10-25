@@ -1,5 +1,7 @@
 # Explorateur de fichiers : couper, copier, coller et glisser-déposer
 
+Les API destinées aux apps sont dans [`file-operations-api.md`](../framework/file-operations-api.md) (`HackFileOperations`), [`file-control-api.md`](../framework/file-control-api.md) (`HackFileView` et dialogues) et [`clipboard-api.md`](../framework/clipboard-api.md) (presse-papiers).
+
 ## Objet
 
 Chantier `rebuild/4-file-explorer` de la phase 4 (ADR 0056 §12, ADR 0058 §1).
@@ -48,44 +50,12 @@ Le manifeste (`FileExplorerApp.Components`) inscrit deux composants :
 | `hackeros.file-view` | `ExplorerFileView` | `FileView` (implémentation interne, ADR 0155 §1) liée au menu de l'OS, avec la corbeille, le presse-papiers, les transferts et leurs conflits, l'ouverture et « Ouvrir avec ». Contrôleur `IHackFileView`. |
 | `hackeros.file-dialogs` | `ExplorerFileDialogs` | « Ouvrir avec » (« Toujours utiliser »), « Propriétés », conflit de noms, en markup natif. |
 
-Toute app l'affiche par `HackFileView` du SDK (`HackerOs.AppSdk.Blazor.Files`)
-et l'explorateur aussi : sa fenêtre rend `<HackFileView>` et garde le chrome
-(barres, Emplacements, Corbeille, barre d'état). Les boutons Renommer,
-Supprimer, Couper, Copier, Coller, Propriétés et Ouvrir avec appellent
-`IHackFileView.ExecuteAsync` avec l'identifiant de l'entrée de menu
-correspondante, donc font la même chose que le menu. Nouveau dossier/fichier
-par nom, envoi, téléchargement, compression, extraction et dépôt sur la
-Corbeille restent dans la fenêtre ; ils passent eux aussi par `IHackFileView`
-(dossier courant, sélection, `RefreshAsync`). Seuls le fil d'Ariane et les
-dépôts sur Home et Trash utilisent l'implémentation interne (`FileView`) : si
-un administrateur choisit un autre fournisseur (ADR 0156, code dans un chantier
-suivant), la fenêtre affiche ce fournisseur et seuls ces deux extras
-disparaissent.
-
-Tout s'exécute **avec les droits de l'hôte** (`HostContext`) : l'éditeur de
-code qui affiche le contrôle ne voit, ne copie et ne supprime que ce qu'il peut.
-
 ```text
 App hôte ──► HackFileView (SDK) ──► registre ──► ExplorerFileView (explorateur)
                                                    ├─ FileView + FileViewMenuBinding ──► Menus.Attach (menu de l'OS)
                                                    ├─ ExplorerFileMenu (menus du plan §7) ──► ContextMenuOpening de l'hôte
                                                    └─ IDialogService ──► DialogCoordinator ──► ProvidedFileDialog ──► ExplorerFileDialogs
 ```
-
-Menus (plan §7) : `ExplorerFileMenu` remplit le menu à chaque ouverture ; un
-élément hors de la sélection devient la sélection ; « Ouvrir avec ▸ » liste les
-apps du type (défaut en tête, `open-with:<appId>`) puis « Choisir une autre
-application… » ; plusieurs éléments : ni Renommer ni Ouvrir avec, Propriétés
-désactivé. Un hôte retire des fonctions par `Features` et ajuste le menu par
-`ContextMenuOpening`. Détails : [ADR 0155](adr/0155-file-control-implementation-adjustments.md).
-
-Depuis `desk/3b` ([ADR 0157](adr/0157-file-dialogs-show-the-file-control.md)),
-les dialogues Ouvrir, Enregistrer et Choisir un dossier de l'OS montrent aussi
-ce contrôle (`FileDialogBrowser` de la plateforme, avec les droits de l'app
-qui demande) : Ouvrir sans `Features`, Enregistrer et Choisir un dossier avec
-Nouveau dossier et Renommer. Un fichier activé y est pris par le dialogue
-(`Opening` mis à `Handled`), pas ouvert dans son app. Sans fournisseur, la
-plateforme reprend sa liste `VirtualFolderBrowser`.
 
 ### Mode Bureau et raccourcis (`desk/5`, ADR 0160)
 
@@ -128,54 +98,6 @@ ExplorerFileView ──► FileView (interne)    ── Ctrl+X/C/V, menus ──
 | `ExplorerFileDialogs` | `Apps/System/HackerOs.Apps.FileExplorer/` | Fenêtre « Replace / Keep both / Skip » (et « Ouvrir avec », « Propriétés ») du contrat `hackeros.file-dialogs`, en markup natif depuis `desk/3` ; l'ancien `FileConflictDialog` MudBlazor est retiré. |
 
 ## Usage et API
-
-### Presse-papiers (`HackClipboard`)
-
-```csharp
-await HackClipboard.SetFileDropListAsync(["~/rapport.txt", "Documents"], HackClipboardFileOperation.Cut);
-HackClipboardFileList? files = await HackClipboard.GetFileDropListAsync();   // Operation + Paths absolus
-bool canPaste = await HackClipboard.ContainsFileDropListAsync();
-string? text = await HackClipboard.GetTextAsync();   // une liste de fichiers se lit comme ses chemins
-await HackClipboard.SetTextAsync("bonjour");
-await HackClipboard.ClearAsync();
-AppContext.Clipboard.Changed += OnClipboardChanged;   // une autre app a coupé ou copié
-```
-
-Contenu de la cible `x-special/gnome-copied-files`, comme GNOME Files :
-
-```text
-cut
-file:///home/benoit/rapport.txt
-file:///home/benoit/Documents
-```
-
-`IAppClipboardGateway.GetFileReferencesAsync` et `SetFileReferencesAsync`, anciennes
-formes de « copier » marquées `[Obsolete]` par l'ADR 0056 §12, sont retirées au gel
-du SDK 1.0 (ADR 0114 §3).
-
-### Transferts (`HackFileOperations`, ex-`FileTransfer`)
-
-```csharp
-HackFileTransferResult copied = await HackFileOperations.CopyAsync(paths, "/home/benoit/Backup");
-HackFileTransferResult moved = await HackFileOperations.MoveAsync(paths, destination, Dialogs.AsFileConflictResolver(AppContext));
-HackFileTransferResult imported = await HackFileOperations.ImportAsync(hostFiles, destination);
-HackFileTransferResult trashed = await HackFileOperations.MoveToTrashAsync(paths);
-string? summary = moved.DescribeFailures("move");   // « Could not move 'x': permission denied. »
-```
-
-Règles :
-
-| Cas | Comportement |
-|---|---|
-| Copie, nom pris (y compris coller dans le même dossier) | `nom (copy).ext`, puis `nom (copy 2).ext`… ; un nom déjà suffixé continue la série. Pas d'extension séparée pour un dossier ou un fichier caché (`.bashrc (copy)`). |
-| Déplacement, nom pris | Fenêtre « Replace » (supprime la destination, dossier compris), « Keep both » (nom de copie), « Skip » ; « Apply to all » vaut pour le reste de l'opération. Fermer la fenêtre = « Skip ». |
-| Couper puis coller dans le dossier d'origine | Rien. |
-| Dossier vers lui-même ou un descendant | Refusé avant toute écriture ; les autres éléments continuent. |
-| Fichiers de l'hôte | Écrits comme une copie (nom de copie si pris), 256 Mio au plus par fichier. |
-| Erreur | Une raison par élément (`permission denied`, `read-only file system`, `no longer exists`…), sans arrêter les autres. |
-| Arrêt demandé (ADR 0069 : jeton annulé, `kill`, « End task », déconnexion) | Entre deux éléments (`HackProcess.CheckpointAsync`, qui rend aussi la main à l'interface) : l'élément en cours, atomique, se termine ; les suivants sont rapportés « stopped before this item » et `FileTransferResult.Cancelled` est vrai. Rien n'est à moitié copié ni perdu en silence. La fenêtre de l'explorateur fait attendre l'OS jusqu'à la fin de l'élément en cours. |
-
-Après un collage d'éléments coupés sans échec, le presse-papiers est vidé.
 
 ### Archives en arrière-plan (ADR 0140)
 
@@ -250,11 +172,6 @@ l'app est traduit par `Resources/AppManifest.fr.resx`.
 - Les noms de fichiers et de dossiers ne sont jamais traduits (`NewFile.txt`,
   `Archive.zip`, `~/.local/share/Trash`) ; seul le nom proposé pour un nouveau
   dossier l'est, comme « Dossier sans titre » sous GNOME.
-- Les menus et les dialogues du contrôle fourni (`ExplorerFileView`,
-  `ExplorerFileDialogs`) parlent la langue de l'**app hôte**
-  (`HostContext.GetLocalizer<Strings>()`) : dans l'éditeur de code en français,
-  le menu de l'arbre est en français même si l'explorateur tourne en anglais.
-  Clés `Menu.*`, `Dialog.Loading`, `Error.DialogsUnavailable` (desk/3).
 
 ## Décisions clés
 
