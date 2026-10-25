@@ -1,32 +1,32 @@
-# ADR 0126 : OOM killer désactivé par défaut et garde de la mémoire du vrai navigateur
+# ADR 0126: OOM killer disabled by default and guard on the real browser's memory
 
-## Statut
+## Status
 
-Accepté le 2026-10-18.
+Accepted on 2026-10-18.
 
-- **Plan :** [`execution-followups-plan.md`](../plans/execution-followups-plan.md),
-  décisions 3 et 4 (réponses Q2 « simulée, estimation si possible » et Q3
-  « désactivé ») ; mis en œuvre par `exec/3-oom-killer`, après
+- **Plan:** [`execution-followups-plan.md`](../plans/execution-followups-plan.md),
+  decisions 3 and 4 (answers Q2 "simulated, estimate if possible" and Q3
+  "disabled"); implemented by `exec/3-oom-killer`, after
   `exec/2-process-limits`.
-- **Remplace :** l'ADR 0068 §3 (« pas de limite, aucun OOM killer »).
-- **Complète :** ADR 0068 (couches de mémoire), ADR 0069 (escalade),
-  ADR 0125 (limite `rss` par processus).
+- **Replaces:** ADR 0068 §3 ("no limit, no OOM killer").
+- **Complements:** ADR 0068 (memory layers), ADR 0069 (escalation),
+  ADR 0125 (per-process `rss` limit).
 
-## Contexte
+## Context
 
-L'ADR 0068 mesure la mémoire de chaque processus en couches (tas .NET, octets
-des fichiers ouverts, worker) et affiche `MemTotal` du profil matériel simulé.
-Dépasser `MemTotal` sature seulement les graphiques. Benoit a choisi de garder
-`MemTotal` simulé, d'estimer l'occupation au plus juste, et de **ne pas**
-activer l'OOM killer par défaut : la réponse par défaut à une app qui gêne est
-la boîte « L'application ne répond pas » (ADR 0127), pas une mise à mort.
+ADR 0068 measures the memory of each process in layers (.NET heap, bytes
+of open files, worker) and displays `MemTotal` of the simulated hardware profile.
+Exceeding `MemTotal` only saturates the graphs. Benoit chose to keep
+`MemTotal` simulated, to estimate occupancy as accurately as possible, and **not** to
+enable the OOM killer by default: the default response to an app that gets in the way
+is the "Application is not responding" box (ADR 0127), not a kill.
 
-## Décision
+## Decision
 
 ### 1. Activation
 
-- Document de l'OS `/etc/hackeros/memory.config` (ADR 0044), section
-  `[oom-killer]` :
+- OS document `/etc/hackeros/memory.config` (ADR 0044), section
+  `[oom-killer]`:
 
   ```text
   [oom-killer]
@@ -34,83 +34,83 @@ la boîte « L'application ne répond pas » (ADR 0127), pas une mise à mort.
   min-free-percent=5
   ```
 
-- `enabled=true` ne suffit pas : il faut aussi que la mémoire soit mesurée
-  (`MemSource` différent de `simulated`, ADR 0066). Sinon, l'OS l'écrit une fois
-  dans `/var/log/syslog` (« oom-killer: disabled, memory is not measured ») et
-  ne tue rien : on ne tue pas sur des valeurs inventées.
-- Le fichier appartient à `system` : le modifier demande un administrateur.
-  Paramètres l'affiche dans Système › Mémoire, avec la mention de la mesure.
+- `enabled=true` is not enough: memory must also be measured
+  (`MemSource` different from `simulated`, ADR 0066). Otherwise, the OS writes it once
+  in `/var/log/syslog` ("oom-killer: disabled, memory is not measured") and
+  kills nothing: nothing is killed on invented values.
+- The file belongs to `system`: modifying it requires an administrator.
+  Settings displays it in System › Memory, with a note about the measurement.
 
-### 2. Déclenchement et choix de la victime
+### 2. Trigger and choice of victim
 
-- L'OS échantillonne chaque seconde. Quand `MemAvailable` passe sous
-  `min-free-percent` de `MemTotal` **deux échantillons de suite**, il choisit
-  une victime.
-- `oom_score` d'un processus = `VmRSS × 1000 / MemTotal + oom_score_adj`,
-  borné à `[0, 2000]` ; `oom_score_adj = -1000` exempte. Le plus haut score
-  perd ; à égalité, le plus récent.
-- La victime passe par `SIGKILL` (ADR 0069, étape 3 ; étape 4 en worker),
-  raison `ProcessExitReason.OutOfMemory` (ajout du SDK 1.2, ADR 0132).
-  Aucune nouvelle victime n'est choisie tant que la précédente n'est pas sortie.
+- The OS samples every second. When `MemAvailable` falls below
+  `min-free-percent` of `MemTotal` **for two consecutive samples**, it picks
+  a victim.
+- A process's `oom_score` = `VmRSS × 1000 / MemTotal + oom_score_adj`,
+  bounded to `[0, 2000]`; `oom_score_adj = -1000` exempts. The highest score
+  loses; on a tie, the most recent.
+- The victim goes through `SIGKILL` (ADR 0069, step 3; step 4 in a worker),
+  reason `ProcessExitReason.OutOfMemory` (SDK 1.2 addition, ADR 0132).
+  No new victim is chosen until the previous one has exited.
 
-### 3. Traces, comme le noyau
+### 3. Traces, like the kernel
 
-- Ligne de `/var/log/kern.log` et `/var/log/syslog` :
+- Line in `/var/log/kern.log` and `/var/log/syslog`:
   `Out of memory: Killed process 1234 (hackpaint) total-vm:…kB, anon-rss:…kB, file-rss:…kB, shmem-rss:0kB, UID:1000 oom_score_adj:0`.
-- Nouvelle commande **`dmesg`** : tampon du noyau de la session (lignes
-  `kern.*` depuis le démarrage, horodatées en secondes depuis le boot) ;
-  `dmesg -T` pour l'heure locale.
-- Nouveau fichier `/proc/vmstat`, avec pour commencer le compteur `oom_kill`.
-- Une app à fenêtre tuée laisse une notification à l'utilisateur :
-  « « Hack Paint » a été fermée : mémoire insuffisante » (textes en anglais et
-  en français, ADR 0104).
+- New command **`dmesg`**: the session's kernel buffer (lines
+  `kern.*` since startup, timestamped in seconds since boot);
+  `dmesg -T` for local time.
+- New file `/proc/vmstat`, to begin with the `oom_kill` counter.
+- A killed window app leaves a notification for the user:
+  "Hack Paint was closed: not enough memory" (texts in English and
+  French, ADR 0104).
 
-### 4. `oom_score` et `oom_score_adj`
+### 4. `oom_score` and `oom_score_adj`
 
-- `/proc/<pid>/oom_score` (lecture) et `/proc/<pid>/oom_score_adj` (lecture et
-  écriture, `-1000` à `1000`). Le propriétaire peut monter la valeur ; la
-  baisser demande un administrateur, comme `CAP_SYS_RESOURCE`. La valeur est
-  héritée par les enfants.
-- Une app **système** peut déclarer une valeur négative dans sa définition
-  (`AppDefinition.OomScoreAdjust`, ajout du SDK 1.2) ; une app non système qui
-  le fait est refusée au build par le générateur de manifeste (nouveau code
-  `HOSAPP` choisi par le chantier). Le bureau, le gestionnaire de fenêtres et
-  les services de session reçoivent `-1000`, les services système `-500`.
+- `/proc/<pid>/oom_score` (read) and `/proc/<pid>/oom_score_adj` (read and
+  write, `-1000` to `1000`). The owner can raise the value; lowering it
+  requires an administrator, like `CAP_SYS_RESOURCE`. The value is
+  inherited by children.
+- A **system** app can declare a negative value in its definition
+  (`AppDefinition.OomScoreAdjust`, SDK 1.2 addition); a non-system app that
+  does so is rejected at build time by the manifest generator (new
+  `HOSAPP` code chosen by the work item). The desktop, the window manager and
+  the session services receive `-1000`, the system services `-500`.
 
-### 5. Garde de la mémoire du vrai navigateur
+### 5. Guard on the real browser's memory
 
-- L'OS suit la mémoire WebAssembly du runtime principal et de chaque worker
-  (taille de `WebAssembly.Memory`, plafond de 4 Gio en wasm32, ou
-  `jsHeapSizeLimit` quand le navigateur le donne).
-- À 80 % du plafond, il écrit un avertissement dans `kern.log` et une
-  notification une seule fois par runtime : « La page approche de la limite de
-  mémoire du navigateur ».
-- Si l'OOM killer est activé, il choisit en plus une victime **parmi les
-  processus de ce runtime** (le worker visé, ou le fil principal) même si
-  `MemAvailable` simulé reste haut. Tuer un processus d'un worker rend la
-  mémoire au navigateur ; sur le fil principal, l'OS lâche les références du
-  processus et demande un ramassage.
+- The OS tracks the WebAssembly memory of the main runtime and of each worker
+  (size of `WebAssembly.Memory`, 4 GiB ceiling in wasm32, or
+  `jsHeapSizeLimit` when the browser provides it).
+- At 80% of the ceiling, it writes a warning to `kern.log` and a
+  notification only once per runtime: "The page is approaching the browser's
+  memory limit".
+- If the OOM killer is enabled, it additionally picks a victim **among the
+  processes of that runtime** (the targeted worker, or the main thread) even if
+  the simulated `MemAvailable` stays high. Killing a worker's process gives
+  memory back to the browser; on the main thread, the OS drops the process's
+  references and requests a collection.
 
 ### 6. Estimation
 
-L'occupation reste celle de l'ADR 0068 ; quand l'isolation cross-origin est
-active (ADR 0131), la couche d'un worker devient la mesure réelle de
-`measureUserAgentSpecificMemory()`. Le champ `MemSource`
-(ADR 0066) dit laquelle est utilisée.
+Occupancy remains that of ADR 0068; when cross-origin isolation is
+active (ADR 0131), a worker's layer becomes the real measurement of
+`measureUserAgentSpecificMemory()`. The `MemSource` field
+(ADR 0066) says which one is used.
 
-## Conséquences
+## Consequences
 
-- Les apps qui gardent un état (éditeurs, CodeEditor, explorateur, Paramètres)
-  gardent leur brouillon de récupération quand elles sont tuées, comme avec
-  « Force kill ».
-- `build/verify-hosts.sh` gagne un parcours avec `MemTotal` simulée réduite,
-  OOM killer activé, `stress --vm` (option ajoutée par le chantier), ligne `Out of memory` vérifiée dans `dmesg`.
-- Docs : [`memory-accounting.md`](../memory-accounting.md),
+- Apps that keep state (editors, CodeEditor, explorer, Settings)
+  keep their recovery draft when they are killed, as with
+  "Force kill".
+- `build/verify-hosts.sh` gains a walkthrough with reduced simulated `MemTotal`,
+  OOM killer enabled, `stress --vm` (option added by the work item), `Out of memory` line checked in `dmesg`.
+- Docs: [`memory-accounting.md`](../memory-accounting.md),
   [`virtual-proc-and-dev.md`](../virtual-proc-and-dev.md),
-  [`linux-commands.md`](../linux-commands.md) (`dmesg`), nouveau
+  [`linux-commands.md`](../linux-commands.md) (`dmesg`), new
   `oom-killer.md`.
 
-## Références
+## References
 
 - ADR 0044, 0066, 0068, 0069, 0104, 0125, 0127, 0131, 0132.
 - `proc(5)` (`oom_score`, `oom_score_adj`), `dmesg(1)`.

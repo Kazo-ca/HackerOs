@@ -1,60 +1,60 @@
-# ADR 0090 : recherche d'un chemin en une seule requête au stockage
+# ADR 0090: path lookup in a single storage request
 
-## Statut
+## Status
 
-Accepté le 2026-10-17, avec le chantier `web/15-settings-perf`.
+Accepted on 2026-10-17, with the `web/15-settings-perf` work item.
 
-- **Complète :** le contrat des fournisseurs du système de fichiers
-  (`IFileSystemProvider`) et le résolveur de chemins `FileSystemPathResolver`
-  (documentés dans [`old/virtual-filesystem.md`](../old/virtual-filesystem.md)
-  et [`old/indexeddb-filesystem.md`](../old/indexeddb-filesystem.md)).
-  Ne remplace aucune décision : les permissions, les liens symboliques, les
-  points de montage et les révisions restent appliqués exactement comme avant.
+- **Completes:** the contract of file system providers
+  (`IFileSystemProvider`) and the path resolver `FileSystemPathResolver`
+  (documented in [`old/virtual-filesystem.md`](../old/virtual-filesystem.md)
+  and [`old/indexeddb-filesystem.md`](../old/indexeddb-filesystem.md)).
+  Replaces no decision: permissions, symbolic links, mount
+  points and revisions are applied exactly as before.
 
-## Contexte
+## Context
 
-Écrire un réglage dans `~/.config/hackeros` prenait environ 2 secondes dans le
-navigateur (constaté pendant la PR #133). Mesure dans Chromium, version Release
-de l'hôte Ecosystem, clic sur « Mobile » dans le panneau de l'horloge (premier
-enregistrement du choix, création du fichier comprise) :
+Writing a setting in `~/.config/hackeros` took about 2 seconds in the
+browser (observed during PR #133). Measurement in Chromium, Release build of the
+Ecosystem host, click on "Mobile" in the clock panel (first
+save of the choice, file creation included):
 
-| | Transactions IndexedDB | Clic → shell mobile affiché | Avec le processeur ralenti ×4 |
+| | IndexedDB transactions | Click → mobile shell displayed | With CPU throttled ×4 |
 |---|---|---|---|
-| Avant | 604 | 845 ms | 2 000 ms |
-| Après | 51 | 235 ms | 1 010 ms |
+| Before | 604 | 845 ms | 2,000 ms |
+| After | 51 | 235 ms | 1,010 ms |
 
-Les réglages restent de vrais fichiers soumis aux permissions (ADR 0044). La
-lenteur venait de la recherche des chemins :
+Settings remain real files subject to permissions (ADR 0044). The
+slowness came from path lookup:
 
-1. `IndexedDbFileSystemReader.ResolveAsync` lisait chaque composant d'un chemin
-   avec deux transactions (le lien `(parentId, nom)`, puis l'entrée), en
-   repartant de `/`. Chaque transaction est un aller-retour C# → JavaScript
-   → IndexedDB (environ 4 ms, 20 ms sur un appareil lent).
-2. `FileSystemPathResolver` fait un `lstat` de **chaque préfixe** du chemin
-   pour suivre les liens et vérifier le droit de traverser. Avec le point 1,
-   résoudre `/home/<user>/.config/hackeros/<doc>.config` coûtait
-   3 + 5 + 7 + 9 + 11 = 35 transactions, avant même l'autorisation et
-   l'opération elle-même. Une écriture de réglage lit puis écrit plusieurs
-   fichiers : plus de 600 transactions.
+1. `IndexedDbFileSystemReader.ResolveAsync` read each component of a path
+   with two transactions (the `(parentId, name)` link, then the entry),
+   starting again from `/`. Each transaction is a C# → JavaScript
+   → IndexedDB round trip (about 4 ms, 20 ms on a slow device).
+2. `FileSystemPathResolver` does an `lstat` of **each prefix** of the path
+   to follow links and check the right to traverse. With point 1,
+   resolving `/home/<user>/.config/hackeros/<doc>.config` cost
+   3 + 5 + 7 + 9 + 11 = 35 transactions, before even the authorization and
+   the operation itself. A setting write reads then writes several
+   files: more than 600 transactions.
 
-## Décision
+## Decision
 
-### 1. Le stockage IndexedDB parcourt un chemin dans une seule transaction
+### 1. IndexedDB storage walks a path in a single transaction
 
-`indexedDb.js` gagne l'opération `resolvePath` : à partir de l'entrée racine,
-elle lit lien puis entrée pour chaque nom, **dans la même transaction en
-lecture seule**, et renvoie la liste des entrées trouvées (arrêt avant le
-premier nom absent). Un lien vers une entrée absente termine la liste par un
-marqueur `{ danglingLink, entryId }`, que le C# signale comme corruption
-(`InvalidDataException`, comme avant). C'est le `namei` d'un noyau : un seul
-parcours, un instantané cohérent.
+`indexedDb.js` gains the `resolvePath` operation: starting from the root entry,
+it reads link then entry for each name, **in the same read-only
+transaction**, and returns the list of entries found (stopping before the
+first missing name). A link to a missing entry ends the list with a
+`{ danglingLink, entryId }` marker, which the C# reports as corruption
+(`InvalidDataException`, as before). It is a kernel's `namei`: a single
+walk, a consistent snapshot.
 
-`IndexedDbFileSystemReader.ResolveAsync` s'en sert pour tout chemin autre que
-`/` ; la nouvelle méthode `ResolveComponentsAsync` rend la liste complète.
+`IndexedDbFileSystemReader.ResolveAsync` uses it for any path other than
+`/`; the new method `ResolveComponentsAsync` returns the full list.
 
-### 2. Capacité facultative `IFileSystemPathWalkProvider`
+### 2. Optional capability `IFileSystemPathWalkProvider`
 
-Contrat ajouté dans `HackerOs.Simulation.Abstractions.FileSystem` :
+Contract added in `HackerOs.Simulation.Abstractions.FileSystem`:
 
 ```csharp
 public interface IFileSystemPathWalkProvider
@@ -64,35 +64,35 @@ public interface IFileSystemPathWalkProvider
 }
 ```
 
-Elle rend les métadonnées de chaque composant sans suivre de lien ; une liste
-plus courte que le chemin veut dire que le composant suivant n'existe pas.
-`IndexedDbFileSystemProvider` l'implémente avec l'opération du point 1. Les
-autres fournisseurs (`/proc`, `/dev`, mémoire, montages de test) ne changent pas.
+It returns the metadata of each component without following links; a list
+shorter than the path means that the next component does not exist.
+`IndexedDbFileSystemProvider` implements it with the operation of point 1. The
+other providers (`/proc`, `/dev`, memory, test mounts) do not change.
 
-### 3. Le résolveur l'utilise quand tout le chemin est sur un même montage
+### 3. The resolver uses it when the whole path is on one mount
 
-Au début de chaque passe, si le chemin a au moins deux composants, que tous
-ses préfixes appartiennent au même montage et que ce fournisseur implémente
-`IFileSystemPathWalkProvider`, `FileSystemPathResolver` demande le parcours en
-une requête puis applique **les mêmes règles** sur la liste : droit de
-traverser, `NotDirectory`, liens suivis (un lien n'a pas d'enfant, le parcours
-s'arrête dessus et la passe suivante repart de la cible), limite de 40 liens et
-boucles. Sinon, ou si le parcours échoue, il revient au `lstat` par préfixe,
-qui rapporte l'erreur exacte comme avant.
+At the start of each pass, if the path has at least two components, all
+its prefixes belong to the same mount and that provider implements
+`IFileSystemPathWalkProvider`, `FileSystemPathResolver` requests the walk in
+one request then applies **the same rules** on the list: right to
+traverse, `NotDirectory`, links followed (a link has no children, the walk
+stops on it and the next pass starts again from the target), limit of 40 links and
+loops. Otherwise, or if the walk fails, it falls back to `lstat` per prefix,
+which reports the exact error as before.
 
-## Conséquences
+## Consequences
 
-- Une opération sur un fichier coûte trois requêtes au stockage (résolution,
-  autorisation, opération) au lieu de dizaines, quelle que soit la profondeur.
-  Tout l'OS en profite (démarrage, explorateur, shell), pas seulement les
-  réglages.
-- `/proc/diskstats` compte une lecture de 4 Kio par parcours de chemin au lieu
-  d'une par composant : plus proche d'un vrai noyau, dont le cache des entrées
-  de répertoire évite de relire le disque à chaque préfixe.
-- Pas de cache des métadonnées : un autre onglet ou une synchronisation qui
-  modifie IndexedDB reste vu immédiatement, aucune invalidation à gérer.
-- Reste après ce chantier (mesuré, non traité) : environ 100 ms entre le clic et
-  la première écriture, dues aux relectures du document (lecture avant
-  `SetManyAsync`, relecture après écriture, relecture déclenchée par la
-  surveillance du fichier) ; au ralenti ×4, la moitié du temps restant est le
-  rendu du shell mobile, pas le disque.
+- An operation on a file costs three storage requests (resolution,
+  authorization, operation) instead of dozens, whatever the depth.
+  The whole OS benefits (startup, explorer, shell), not only
+  settings.
+- `/proc/diskstats` counts one 4 KiB read per path walk instead of one
+  per component: closer to a real kernel, whose directory entry cache
+  avoids rereading the disk for each prefix.
+- No metadata cache: another tab or a synchronization that
+  modifies IndexedDB is still seen immediately, no invalidation to manage.
+- Remaining after this work item (measured, not addressed): about 100 ms between the click and
+  the first write, due to rereads of the document (read before
+  `SetManyAsync`, reread after write, reread triggered by the
+  file watcher); at ×4 throttling, half of the remaining time is the
+  rendering of the mobile shell, not the disk.

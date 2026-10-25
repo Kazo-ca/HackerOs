@@ -1,38 +1,38 @@
-# Guide du développeur d'apps HackerOS
+# HackerOS app developer guide
 
-## Objet
+## Purpose
 
-Ce guide explique comment écrire une app pour HackerOS avec le SDK public :
-une fenêtre, une commande du shell ou un service. Il part de zéro et va
-jusqu'à l'installation et aux tests. La liste complète des API est dans la
-[référence du SDK](sdk-reference.md) ; les règles de la frontière du SDK sont
-dans [`app-sdk.md`](app-sdk.md).
+This guide explains how to write an app for HackerOS with the public SDK:
+a window, a shell command or a service. It starts from zero and goes
+through to installation and testing. The complete list of APIs is in the
+[SDK reference](sdk-reference.md); the rules of the SDK boundary are
+in [`app-sdk.md`](app-sdk.md).
 
-Tous les exemples de ce guide ont été compilés et le test de la dernière
-section exécuté contre le code de `rebuild/base` (2026-10-11).
+All the examples in this guide were compiled and the test in the last
+section was run against the code of `rebuild/base` (2026-10-11).
 
-## Les trois genres d'app
+## The three kinds of app
 
-| Genre (`AppKind`) | Point d'entrée | Exemples dans l'OS |
+| Kind (`AppKind`) | Entry point | Examples in the OS |
 |---|---|---|
-| `Window` | composant Razor dérivé de `WindowAppBase` | Text Editor, File Explorer, Calculator |
-| `Terminal` | classe dérivée de `TerminalAppBase`, lancée par le shell | `ls`, `cat`, `grep`, `nano` |
-| `Service` | classe dérivée de `ServiceAppBase`, sans interface, liée à la session | services démarrés à la connexion |
-| `Web` | classe dérivée de `WebServerAppBase`, URL dans `Urls` (`web.urls`), démarrée à la première requête dans le worker `web` partagé ; avec ASP.Hack, une `WebAppDefinition` | sites internes `.hack` : [guide ASP.Hack](asp-hack-developer-guide.md), exemple Intranet |
+| `Window` | Razor component derived from `WindowAppBase` | Text Editor, File Explorer, Calculator |
+| `Terminal` | class derived from `TerminalAppBase`, launched by the shell | `ls`, `cat`, `grep`, `nano` |
+| `Service` | class derived from `ServiceAppBase`, without an interface, bound to the session | services started at sign-in |
+| `Web` | class derived from `WebServerAppBase`, URL in `Urls` (`web.urls`), started at the first request in the shared `web` worker; with ASP.Hack, a `WebAppDefinition` | internal `.hack` sites: [ASP.Hack guide](asp-hack-developer-guide.md), Intranet example |
 
-Une app est décrite par une classe `[AppManifest]` dérivée d'`AppDefinition`.
-Le build en tire `manifest.json` ; l'OS ne lit que ce fichier, jamais la classe.
+An app is described by an `[AppManifest]` class derived from `AppDefinition`.
+The build produces `manifest.json` from it; the OS only reads this file, never the class.
 
-Des apps complètes servent de modèles dans `Apps/Samples/` (une par genre) et
-`Apps/System/` (les apps de base, écrites avec le même SDK public).
+Complete apps serve as models in `Apps/Samples/` (one per kind) and
+`Apps/System/` (the base apps, written with the same public SDK).
 
-## 1. Créer le projet
+## 1. Creating the project
 
-Un projet d'app vit sous `Apps/` : c'est ce qui en fait un projet d'app
-(`HackerOsAppProject`), avec génération du manifeste et contrôle de la
-frontière du SDK.
+An app project lives under `Apps/`: this is what makes it an app project
+(`HackerOsAppProject`), with manifest generation and checking of the SDK
+boundary.
 
-`Apps/Samples/Example.Notes/Example.Notes.csproj` :
+`Apps/Samples/Example.Notes/Example.Notes.csproj`:
 
 ```xml
 <Project Sdk="Microsoft.NET.Sdk.Razor">
@@ -57,21 +57,21 @@ frontière du SDK.
 </Project>
 ```
 
-- Une commande ou un service sans interface peut utiliser
-  `Microsoft.NET.Sdk` et se passer de `HackerOs.AppSdk.Blazor`.
-- Références permises : les quatre `Shared/*.Abstractions`, les bibliothèques
-  `Shared/HackerOs.AppSdk*`, `Platform/HackerOs.Theming.Blazor` et d'autres
-  projets sous `Apps/`. Toute autre référence de projet échoue au build
-  (`HOSAPP0030`). Les `PackageReference` (MudBlazor par exemple) sont libres.
-- Ajouter le projet à `HackerOs.sln` (`dotnet sln add`).
+- A command or a service without an interface can use
+  `Microsoft.NET.Sdk` and do without `HackerOs.AppSdk.Blazor`.
+- Allowed references: the four `Shared/*.Abstractions`, the
+  `Shared/HackerOs.AppSdk*` libraries, `Platform/HackerOs.Theming.Blazor` and other
+  projects under `Apps/`. Any other project reference fails the build
+  (`HOSAPP0030`). `PackageReference`s (MudBlazor for example) are free.
+- Add the project to `HackerOs.sln` (`dotnet sln add`).
 
-### Depuis un autre dépôt (paquets locaux)
+### From another repository (local packages)
 
-Hors de ce dépôt, une app se construit sur les paquets locaux (ADR 0098 §2,
-[`sdk-packages.md`](sdk-packages.md)) : `build/pack-local.sh` (ou `.ps1`) les
-produit dans `artifacts/local-nupkg`, un `nuget.config` (modèle
-`build/nuget.config.sample`) pointe vers ce dossier, puis les modèles créent le
-projet :
+Outside this repository, an app is built on the local packages (ADR 0098 §2,
+[`sdk-packages.md`](sdk-packages.md)): `build/pack-local.sh` (or `.ps1`) produces
+them in `artifacts/local-nupkg`, a `nuget.config` (template
+`build/nuget.config.sample`) points to this folder, then the templates create the
+project:
 
 ```bash
 dotnet new install <HackerOS>/artifacts/local-nupkg/HackerOs.Templates.2.0.3.nupkg
@@ -79,15 +79,15 @@ dotnet new hackeros-window -n Contoso.Notes --appId com.contoso.notes
 dotnet new hackeros-host -n Contoso.Os          # un hôte qui lance tout l'OS
 ```
 
-Le projet référence `HackerOs.AppSdk*` et `HackerOs.App.Build`
-(`PrivateAssets="all"`), qui apporte la génération du manifeste, le générateur
-de routes ASP.Hack et la règle de frontière sur les paquets (`HOSAPP0030`).
-Un hôte ajoute l'app par une `ProjectReference` ou une `PackageReference`.
-Le guide complet d'un dépôt tiers (disposition, version épinglée, hôte, tests,
-publication, montée de version, ce que la promesse du SDK 1.0 couvre) est
+The project references `HackerOs.AppSdk*` and `HackerOs.App.Build`
+(`PrivateAssets="all"`), which brings manifest generation, the ASP.Hack route
+generator and the boundary rule on packages (`HOSAPP0030`).
+A host adds the app through a `ProjectReference` or a `PackageReference`.
+The complete guide for a third-party repository (layout, pinned version, host, tests,
+publishing, version upgrade, what the SDK 1.0 promise covers) is
 [`building-on-hackeros.md`](building-on-hackeros.md).
 
-## 2. Décrire l'app : `AppDefinition`
+## 2. Describing the app: `AppDefinition`
 
 ```csharp
 using HackerOs.App.Abstractions;
@@ -130,40 +130,40 @@ public sealed class NotesApp : AppDefinition
 }
 ```
 
-Seuls `Id`, `Name`, `Kind` et `EntryPoint` sont obligatoires ; les autres
-membres ont une valeur par défaut (tableau complet dans
-[`app-model.md`](app-model.md#appdefinition-et-appmanifest)). Les membres les
-plus utiles :
+Only `Id`, `Name`, `Kind` and `EntryPoint` are required; the other
+members have a default value (full table in
+[`app-model.md`](app-model.md#appdefinition-et-appmanifest)). The most
+useful members:
 
-| Membre | Rôle |
+| Member | Role |
 |---|---|
-| `Capabilities` | Droits demandés, pris dans `AppCapabilities` ([référence](sdk-reference.md#capacités)). Ne demander que le nécessaire : une capacité dangereuse impose une approbation administrateur au premier lancement. |
-| `FileHandlers` | Types de fichiers que l'app sait ouvrir ; le chemin arrive dans `LaunchFile`. |
-| `Terminal` | Pour une commande : nom, usage et alias (`new("wc-notes", "wc-notes [-l] FILE...", ["wcn"])`). |
-| `Settings` | Schéma des paramètres lus par `HackSettings`. |
-| `SingleInstancePerUser` | Une seule fenêtre ; un second lancement l'active. |
-| `AutoStart` | Pour un service : démarré à la connexion. |
-| `LaunchVisibility` | `Hidden` pour ne pas apparaître dans le menu Démarrer (commandes, services). |
-| `Icons` | Images relatives à `wwwroot/`, aussi déclarées dans `Assets` ; la première apparaît dans la barre de titre et la taskbar (ADR 0164). macOS masque celle du titre. Le build calcule l'empreinte de l'asset. |
-| `Category`, `Version` | Présentation et classement de l'app. |
-| `OomScoreAdjust` | `oom_score_adj` de départ (SDK 1.2) ; une valeur négative, qui protège de l'OOM killer, est réservée aux apps système (`HOSAPP0024`, [`oom-killer.md`](../dev/oom-killer.md)). |
+| `Capabilities` | Rights requested, taken from `AppCapabilities` ([reference](sdk-reference.md#capacités)). Request only what is needed: a dangerous capability requires administrator approval at first launch. |
+| `FileHandlers` | File types the app knows how to open; the path arrives in `LaunchFile`. |
+| `Terminal` | For a command: name, usage and aliases (`new("wc-notes", "wc-notes [-l] FILE...", ["wcn"])`). |
+| `Settings` | Schema of the settings read by `HackSettings`. |
+| `SingleInstancePerUser` | A single window; a second launch activates it. |
+| `AutoStart` | For a service: started at sign-in. |
+| `LaunchVisibility` | `Hidden` to not appear in the Start menu (commands, services). |
+| `Icons` | Images relative to `wwwroot/`, also declared in `Assets`; the first appears in the title bar and the taskbar (ADR 0164). macOS hides the title one. The build computes the asset's fingerprint. |
+| `Category`, `Version` | Presentation and classification of the app. |
+| `OomScoreAdjust` | Starting `oom_score_adj` (SDK 1.2); a negative value, which protects from the OOM killer, is reserved for system apps (`HOSAPP0024`, [`oom-killer.md`](../dev/oom-killer.md)). |
 
-Règles imposées par le générateur : classe publique, non abstraite, avec un
-constructeur sans paramètre ; getters purs (le générateur instancie la classe
-deux fois et compare) ; point d'entrée dans le même assembly. Un projet peut
-contenir plusieurs classes `[AppManifest]` : le build écrit alors
-`manifests/<appId>.json` au lieu de `manifest.json`.
+Rules enforced by the generator: public, non-abstract class, with a
+parameterless constructor; pure getters (the generator instantiates the class
+twice and compares); entry point in the same assembly. A project can
+contain several `[AppManifest]` classes: the build then writes
+`manifests/<appId>.json` instead of `manifest.json`.
 
-Le fichier généré est **suivi par git** : un changement de capacité se voit
-dans la revue. Ne jamais le modifier à la main, le build l'écrase.
+The generated file is **tracked by git**: a capability change shows up
+in review. Never edit it by hand, the build overwrites it.
 
-## 3. Une app fenêtrée
+## 3. A windowed app
 
-Le point d'entrée est un composant Razor qui hérite de `WindowAppBase`. CSS et
-JavaScript vont dans des fichiers à côté du composant, jamais en ligne (le
-build refuse `style="..."`, `<style>`, `<script>` et `onclick="..."`).
+The entry point is a Razor component that inherits from `WindowAppBase`. CSS and
+JavaScript go in files next to the component, never inline (the
+build refuses `style="..."`, `<style>`, `<script>` and `onclick="..."`).
 
-`NotesWindow.razor` :
+`NotesWindow.razor`:
 
 ```razor
 @inherits WindowAppBase
@@ -180,7 +180,7 @@ build refuse `style="..."`, `<style>`, `<script>` et `onclick="..."`).
 </div>
 ```
 
-`NotesWindow.razor.cs` :
+`NotesWindow.razor.cs`:
 
 ```csharp
 using HackerOs.AppSdk;
@@ -250,8 +250,8 @@ public partial class NotesWindow
 }
 ```
 
-`NotesWindow.razor.css` utilise les jetons du thème (`--hos-*`), pour suivre
-le thème choisi par l'utilisateur :
+`NotesWindow.razor.css` uses the theme tokens (`--hos-*`), to follow
+the theme chosen by the user:
 
 ```css
 .notes {
@@ -272,37 +272,37 @@ le thème choisi par l'utilisateur :
 }
 ```
 
-### Ce que fournit `WindowAppBase`
+### What `WindowAppBase` provides
 
-| Membre | Rôle |
+| Member | Role |
 |---|---|
-| `AppContext` | Contexte d'exécution de l'instance (`IAppExecutionContext`) : passerelles, identité, capacités accordées. |
-| `LaunchArguments`, `LaunchFile` | Arguments du processus sans `argv[0]` ; premier argument s'il est un chemin absolu. |
-| `OnAppInitialized[Async]`, `OnAppParametersSet[Async]`, `OnAppAfterRender[Async]`, `ShouldRenderApp` | Cycle de vie. Les méthodes Blazor (`OnInitializedAsync`…) sont scellées : on surcharge celles-ci. |
-| `OpenFileAsync`, `SaveFileAsync`, `SelectFolderAsync` | Dialogues de fichiers de l'OS (capacités `dialogs.file-open`, `dialogs.file-save`, `dialogs.folder-select`) ; le résultat porte le chemin choisi (`Resource.Path`, `Resources`). |
-| `MessageBox`, `TextInput` | Boîte de message et saisie de texte. |
-| `WindowTitle`, `SetWindowTitleAsync`, `FormatWindowTitle` | Titre de la fenêtre (ADR 0117, SDK 1.1) : l'app écrit tout le titre, par convention `document — App` avec `*` en tête si le document est modifié ; `null` rend le nom de l'app. Voir ci-dessous. |
-| `OnPermissionErrorRaised` | Surcharger pour afficher soi-même une erreur de permission (mettre `ErrorHandled = true`) au lieu de la notification de l'OS. |
-| `OnAppStopRequestedAsync(e)` | L'OS demande l'arrêt (`kill`, « End task », déconnexion ; ADR 0069) : finir ou annuler l'opération en cours, écrire un brouillon des modifications non enregistrées (`HackRecoveryDraft`). La fenêtre se ferme quand la tâche renvoyée se termine, au plus tard à `e.Deadline`. |
+| `AppContext` | Execution context of the instance (`IAppExecutionContext`): gateways, identity, granted capabilities. |
+| `LaunchArguments`, `LaunchFile` | Process arguments without `argv[0]`; first argument if it is an absolute path. |
+| `OnAppInitialized[Async]`, `OnAppParametersSet[Async]`, `OnAppAfterRender[Async]`, `ShouldRenderApp` | Life cycle. The Blazor methods (`OnInitializedAsync`...) are sealed: override these instead. |
+| `OpenFileAsync`, `SaveFileAsync`, `SelectFolderAsync` | OS file dialogs (capabilities `dialogs.file-open`, `dialogs.file-save`, `dialogs.folder-select`); the result carries the chosen path (`Resource.Path`, `Resources`). |
+| `MessageBox`, `TextInput` | Message box and text input. |
+| `WindowTitle`, `SetWindowTitleAsync`, `FormatWindowTitle` | Window title (ADR 0117, SDK 1.1): the app writes the whole title, by convention `document — App` with `*` in front if the document is modified; `null` gives back the app name. See below. |
+| `OnPermissionErrorRaised` | Override to display a permission error yourself (set `ErrorHandled = true`) instead of the OS notification. |
+| `OnAppStopRequestedAsync(e)` | The OS requests a stop (`kill`, "End task", sign-out; ADR 0069): finish or cancel the operation in progress, write a draft of unsaved changes (`HackRecoveryDraft`). The window closes when the returned task completes, at the latest at `e.Deadline`. |
 
-Le composant peut aussi implémenter :
+The component can also implement:
 
-- `IWindowCloseGuard` (`ConfirmCloseAsync`) pour demander confirmation avant
-  fermeture, par exemple s'il reste des modifications non enregistrées
-  (CodeEditor le fait) ;
-- `IAppBackHandler` pour gérer le bouton Retour (mobile et barre de titre) ;
-  déclarer alors `SupportsBack => true`.
+- `IWindowCloseGuard` (`ConfirmCloseAsync`) to ask for confirmation before
+  closing, for example if unsaved changes remain
+  (CodeEditor does this);
+- `IAppBackHandler` to handle the Back button (mobile and title bar);
+  then declare `SupportsBack => true`.
 
-### Événements et taille de la fenêtre
+### Window events and size
 
-Surcharger `OnWindowActivated[Async]`, `OnWindowDeactivated[Async]`,
-`OnWindowStateChanged[Async](previous, current)` et `OnWindowResized[Async](size)`
-pour réagir au focus, à la réduction, à l'agrandissement, à la restauration et à
-la fin d'un redimensionnement ; `IsWindowActive`, `WindowState` et `WindowSize`
-donnent le dernier état. Une exception dans un crochet est écrite dans
-`/var/log/apps/<appId>.log` sans bloquer la fenêtre.
+Override `OnWindowActivated[Async]`, `OnWindowDeactivated[Async]`,
+`OnWindowStateChanged[Async](previous, current)` and `OnWindowResized[Async](size)`
+to react to focus, minimizing, maximizing, restoring and the
+end of a resize; `IsWindowActive`, `WindowState` and `WindowSize`
+give the last state. An exception in a hook is written to
+`/var/log/apps/<appId>.log` without blocking the window.
 
-La taille de la fenêtre se déclare dans la définition :
+The window size is declared in the definition:
 
 ```csharp
 public override WindowOptions? Window => new()
@@ -311,30 +311,30 @@ public override WindowOptions? Window => new()
 };
 ```
 
-Le titre se pose depuis l'app (SDK 1.1, ADR 0117). Le poser dans
-`OnAppInitialized[Async]` l'affiche avec la fenêtre ; le reposer après chaque
-rendu le garde à jour (redemander le même titre ne fait rien) :
+The title is set from the app (SDK 1.1, ADR 0117). Setting it in
+`OnAppInitialized[Async]` displays it with the window; setting it again after each
+render keeps it up to date (asking for the same title again does nothing):
 
 ```csharp
 protected override Task OnAppAfterRenderAsync(bool firstRender) =>
     SetWindowTitleAsync(FormatWindowTitle(_fileName, _isDirty)).AsTask(); // « *notes.txt — Mon app »
 ```
 
-Sans déclaration, la fenêtre fait 800×560 avec un minimum de 360×240.
-`Resizable = false` retire les poignées et le bouton Agrandir. L'OS retient la
-taille et l'état agrandi de la fenêtre d'une ouverture à l'autre, pas sa
-position (ADR 0122) ; `RememberGeometry = false` (SDK 1.1) la fait toujours
-s'ouvrir à sa taille par défaut ([`window-geometry.md`](../dev/window-geometry.md)). Détails, ordre
-des crochets et raccourcis clavier du gestionnaire de fenêtres :
+Without a declaration, the window is 800×560 with a minimum of 360×240.
+`Resizable = false` removes the handles and the Maximize button. The OS remembers the
+size and maximized state of the window from one opening to the next, not its
+position (ADR 0122); `RememberGeometry = false` (SDK 1.1) makes it always
+open at its default size ([`window-geometry.md`](../dev/window-geometry.md)). Details, hook
+order and the window manager's keyboard shortcuts:
 [`window-model.md`](window-model.md).
 
-### Lancée depuis le terminal
+### Launched from the terminal
 
-Taper le dernier segment de l'identifiant de l'app dans le terminal la lance
-(ADR 0064) : `my-app --verbose notes.txt` pour `com.example.my-app`. Les mots
-qui suivent arrivent dans `LaunchArguments` (relatifs au dossier du shell :
-`HackPath.GetFullPath` les résout), et `HackConsole` écrit dans ce terminal,
-comme `printf` d'un programme graphique Linux :
+Typing the last segment of the app's identifier in the terminal launches it
+(ADR 0064): `my-app --verbose notes.txt` for `com.example.my-app`. The words
+that follow arrive in `LaunchArguments` (relative to the shell's folder:
+`HackPath.GetFullPath` resolves them), and `HackConsole` writes to that terminal,
+like `printf` of a Linux graphical program:
 
 ```csharp
 protected override void OnAppInitialized()
@@ -346,25 +346,25 @@ protected override void OnAppInitialized()
 }
 ```
 
-Le shell attend la fermeture de la fenêtre (`my-app &` rend l'invite) ;
-lancée du bureau, l'app écrit dans `/dev/null`. Voir
+The shell waits for the window to close (`my-app &` gives the prompt back);
+launched from the desktop, the app writes to `/dev/null`. See
 [`shell-interpreter.md`](../dev/shell-interpreter.md#apps-lancées-par-leur-nom).
 
-### Contexte ambiant et composants enfants
+### Ambient context and child components
 
-Les façades `Hack*` savent quelle app les appelle grâce à un contexte ambiant
-que l'OS ouvre autour du cycle de vie, des gestionnaires d'événements
-(`@onclick`…) et du rendu de `WindowAppBase`. **Tout composant enfant** hérite
-de `HackComponentBase` : il reçoit le même contexte en cascade. Depuis la
-phase 5, c'est vrai même s'il n'appelle pas `Hack*` : le temps du code exécuté
-hors contexte est compté au compositeur, pas à l'app (ADR 0067), et un test
-(`AmbientFrameSourceTests`) le vérifie pour les apps de `Apps/`. Un dialogue
-MudBlazor, rendu hors de la fenêtre, reçoit le contexte de la fenêtre en
-paramètre et l'adopte avant le cycle de vie de `HackComponentBase` (comme le
-faisait `FileExplorerDialogBase`, retiré par l'ADR 0155 : les dialogues de
-fichiers de l'OS passent maintenant par `IDialogService`). Une méthode `[JSInvokable]` ou un
-rappel de minuterie .NET (hors `AppContext.Clock`) ouvre le contexte lui-même,
-dès sa première instruction :
+The `Hack*` facades know which app is calling them thanks to an ambient context
+that the OS opens around the life cycle, the event handlers
+(`@onclick`...) and the rendering of `WindowAppBase`. **Every child component**
+inherits from `HackComponentBase`: it receives the same context as a cascading value. Since
+phase 5, this is true even if it does not call `Hack*`: the time of code run
+outside a context is charged to the compositor, not to the app (ADR 0067), and a test
+(`AmbientFrameSourceTests`) checks it for the apps in `Apps/`. A
+MudBlazor dialog, rendered outside the window, receives the window's context as a
+parameter and adopts it before the life cycle of `HackComponentBase` (as
+`FileExplorerDialogBase` did, removed by ADR 0155: the OS file dialogs
+now go through `IDialogService`). A `[JSInvokable]` method or a
+.NET timer callback (outside `AppContext.Clock`) opens the context itself,
+from its first statement:
 
 ```csharp
 using (HackExecutionContext.Enter(AppContext))
@@ -373,14 +373,14 @@ using (HackExecutionContext.Enter(AppContext))
 }
 ```
 
-Sans contexte, l'API lève `HackExecutionContextMissingException` ; elle ne
-retombe jamais sur une identité système.
+Without a context, the API throws `HackExecutionContextMissingException`; it never
+falls back to a system identity.
 
 ### JavaScript
 
-À n'utiliser que pour une API du navigateur inaccessible en C#. Le module est
-un fichier `MonComposant.razor.js` à côté du composant (ou sous `wwwroot/` du
-projet), importé ainsi et uniquement ainsi (vérifié au build, `HOSAPP0031`) :
+To be used only for a browser API not reachable from C#. The module is
+a `MyComponent.razor.js` file next to the component (or under the project's
+`wwwroot/`), imported like this and only like this (checked at build, `HOSAPP0031`):
 
 ```csharp
 [Inject] private IJSRuntime JS { get; set; } = default!;
@@ -389,24 +389,24 @@ _module = await JS.InvokeAsync<IJSObjectReference>(
     "import", "./_content/Example.Notes/NotesWindow.razor.js");
 ```
 
-Ne jamais ajouter de `<script>` dans un hôte.
+Never add a `<script>` in a host.
 
-### Ne pas bloquer le fil principal (ADR 0127 §4)
+### Do not block the main thread (ADR 0127 §4)
 
-Une app fenêtrée tourne sur le fil principal du navigateur, comme tout le
-bureau. Une boucle longue sans `await` gèle alors tout l'OS : la souris, les
-autres fenêtres et même la boîte « L'application ne répond pas », qui ne peut
-s'afficher qu'après le gel. Mettez un calcul lourd dans
-`HackBackground.RunAsync` (ADR 0128, il tourne dans un worker), ou appelez
-`HackProcess.CheckpointAsync` souvent dans la boucle. Quand la fenêtre reste
-occupée plus de 5 s, l'OS lui ajoute « (Not responding) » et propose
-« Attendre » ou « Terminer l'application » (arrêt demandé puis forcé après
-2 s). Voir [`process-priority-and-unresponsive-windows.md`](../dev/process-priority-and-unresponsive-windows.md).
+A windowed app runs on the browser's main thread, like the whole
+desktop. A long loop without `await` then freezes the whole OS: the mouse, the
+other windows and even the "The application is not responding" box, which can only
+be displayed after the freeze. Put heavy computation in
+`HackBackground.RunAsync` (ADR 0128, it runs in a worker), or call
+`HackProcess.CheckpointAsync` often in the loop. When the window stays
+busy for more than 5 s, the OS adds "(Not responding)" to it and offers
+"Wait" or "End the application" (stop requested then forced after
+2 s). See [`process-priority-and-unresponsive-windows.md`](../dev/process-priority-and-unresponsive-windows.md).
 
-## 4. Une commande du shell
+## 4. A shell command
 
-Une commande reçoit ses arguments, ses flux et le répertoire courant du shell.
-Elle rend un code de sortie (0 = succès), lu par `$?` et `&&`.
+A command receives its arguments, its streams and the shell's current directory.
+It returns an exit code (0 = success), read by `$?` and `&&`.
 
 ```csharp
 [AppManifest]
@@ -461,27 +461,27 @@ public sealed class WordCountCommand(AppManifest manifest) : TerminalAppBase(man
 }
 ```
 
-`TerminalExecutionContext` donne aussi `Environment` (variables du
-processus), `App` (le contexte d'app), `Shell` (`IShellSession`, pour une
-commande qui agit sur son shell comme `cd` ou `export`, capacité
-`shell.control`) et `FullScreen` (écran alternatif plein terminal, comme
-`nano`). Les erreurs vont sur `StandardError`, les messages dans le style des
-outils GNU. Voir [`shell-commands.md`](../dev/shell-commands.md) et
+`TerminalExecutionContext` also gives `Environment` (process
+variables), `App` (the app context), `Shell` (`IShellSession`, for a
+command that acts on its shell like `cd` or `export`, capability
+`shell.control`) and `FullScreen` (full-terminal alternate screen, like
+`nano`). Errors go to `StandardError`, messages in the style of the GNU
+tools. See [`shell-commands.md`](../dev/shell-commands.md) and
 [`shell-interpreter.md`](../dev/shell-interpreter.md).
 
-Une boucle longue (parcours d'arborescence, gros fichier ligne à ligne) appelle
-`await HackProcess.CheckpointAsync(cancellationToken)` à chaque tour (ADR
-0069) : elle rend la main au-delà de 8 ms, ce qui garde l'OS fluide, et
-s'arrête dès que `kill` le demande. Sans arrêt demandé et dans sa tranche,
-l'appel ne coûte qu'une lecture d'horloge. Une commande arrêtée sur son jeton
-sort avec `130` ; une commande tuée (`kill -9`, ou délai de 5 s dépassé) avec
-`137`, et ses continuations en attente ne s'exécutent plus.
+A long loop (walking a tree, a large file line by line) calls
+`await HackProcess.CheckpointAsync(cancellationToken)` on each turn (ADR
+0069): it yields control beyond 8 ms, which keeps the OS smooth, and
+stops as soon as `kill` requests it. With no stop requested and within its slice,
+the call only costs a clock read. A command stopped on its token
+exits with `130`; a killed command (`kill -9`, or 5 s timeout exceeded) with
+`137`, and its pending continuations no longer run.
 
-## 5. Un service
+## 5. A service
 
-Un service tourne en arrière-plan pendant la session, sans fenêtre. Il observe
-le jeton d'annulation (déconnexion, arrêt, désactivation) et peut libérer ses
-ressources dans `OnStoppingAsync`.
+A service runs in the background during the session, without a window. It observes
+the cancellation token (sign-out, shutdown, disabling) and can release its
+resources in `OnStoppingAsync`.
 
 ```csharp
 [AppManifest]
@@ -529,99 +529,99 @@ public sealed class CleanupService(AppManifest manifest) : ServiceAppBase(manife
 }
 ```
 
-`OnStoppingAsync(reason, token)` est appelé une seule fois, dès que l'OS
-demande l'arrêt (ADR 0069), avant l'annulation du jeton :
-`ServiceStopReason.Terminated` pour `kill`, « End task » ou `systemctl stop`,
-`Logout`, `Shutdown` ou `Disabled` sinon. C'est là qu'un service qui tient un
-état termine ou annule son opération en cours.
+`OnStoppingAsync(reason, token)` is called only once, as soon as the OS
+requests the stop (ADR 0069), before the token is canceled:
+`ServiceStopReason.Terminated` for `kill`, "End task" or `systemctl stop`,
+`Logout`, `Shutdown` or `Disabled` otherwise. This is where a service that holds
+state finishes or cancels its operation in progress.
 
-États et santé (ADR 0097, ADR 0107) : le service est `activating` tant que
-`OnStartAsync(context, token)` (facultatif : ouvrir un port, charger un cache)
-n'est pas revenu, puis `active`. Un démarrage de plus de 30 s le fait tuer en
-`failed (Result: timeout)`. Une exception non gérée, un code de sortie non nul
-ou un `kill -9` le laissent `failed` avec la raison, jusqu'au prochain
-démarrage ou à `systemctl reset-failed`. Pendant qu'il tourne, il peut dire
-qu'il va mal sans s'arrêter :
+States and health (ADR 0097, ADR 0107): the service is `activating` as long as
+`OnStartAsync(context, token)` (optional: open a port, load a cache)
+has not returned, then `active`. A startup of more than 30 s gets it killed as
+`failed (Result: timeout)`. An unhandled exception, a non-zero exit code
+or a `kill -9` leave it `failed` with the reason, until the next
+start or `systemctl reset-failed`. While it runs, it can say
+it is unwell without stopping:
 
 ```csharp
 ReportHealth(HackServiceHealth.Degraded, "database unreachable");
 ```
 
-Démarrage automatique (`AutoStart => true`, mode `Automatic`) : après chaque
-connexion, sous l'utilisateur ; arrêté à la déconnexion. Une **app système**
-peut déclarer `public override AppServiceStartup? ServiceStartup =>
-AppServiceStartup.Boot;` : elle démarre alors à la fin du boot, avant l'écran
-de connexion, sous le compte `hackeros-svc` (maison `/var/lib/hackeros-svc`),
-continue après la déconnexion et ne s'arrête qu'à l'extinction. Une autre app
-qui demande `Boot` démarre à la connexion, avec un avertissement dans
+Automatic start (`AutoStart => true`, `Automatic` mode): after each
+sign-in, under the user; stopped at sign-out. A **system app**
+can declare `public override AppServiceStartup? ServiceStartup =>
+AppServiceStartup.Boot;`: it then starts at the end of boot, before the sign-in
+screen, under the `hackeros-svc` account (home `/var/lib/hackeros-svc`),
+continues after sign-out and only stops at shutdown. Another app
+that requests `Boot` starts at sign-in, with a warning in
 `/var/log/syslog`.
 
-Le service apparaît dans l'onglet Services du gestionnaire de tâches et dans
-`/proc`. Il communique avec les autres apps par les sujets du bus
-d'événements (`context.Events.Publish(topic, payload)` dans son propre espace
-de noms, ADR 0038) : voir `Apps/Samples/HackerOs.Samples.ServiceApp`. Un
-service tourne par défaut dans un Web Worker dédié (ADR 0070) : le type de ses
-charges doit alors être déclaré par `[assembly: HackWireContext(typeof(…))]`
-(SDK 1.2, ADR 0124), comme le fait `SampleTickerJsonContext` de l'exemple ;
-voir [`app-sdk.md`](app-sdk.md#processus-dans-des-web-workers-adr-0070-et-0071).
+The service appears in the Services tab of the task manager and in
+`/proc`. It communicates with other apps through event bus
+topics (`context.Events.Publish(topic, payload)` in its own namespace,
+ADR 0038): see `Apps/Samples/HackerOs.Samples.ServiceApp`. A
+service runs by default in a dedicated Web Worker (ADR 0070): the type of its
+payloads must then be declared by `[assembly: HackWireContext(typeof(…))]`
+(SDK 1.2, ADR 0124), as the example's `SampleTickerJsonContext` does;
+see [`app-sdk.md`](app-sdk.md#processus-dans-des-web-workers-adr-0070-et-0071).
 
-## 6. Utiliser les services de l'OS
+## 6. Using OS services
 
-Une app n'obtient un service de l'OS que par le SDK : une **façade statique**
-`Hack*` (forme recommandée, elle lit le contexte ambiant) ou une **passerelle**
-de `AppContext`. L'injection d'un service de la plateforme est refusée au
-build (`HOSAPP0031`). Les tâches courantes :
+An app only gets an OS service through the SDK: a **static `Hack*` facade**
+(recommended form, it reads the ambient context) or a **gateway**
+of `AppContext`. Injecting a platform service is refused at
+build (`HOSAPP0031`). Common tasks:
 
-| Besoin | API | Capacité |
+| Need | API | Capability |
 |---|---|---|
-| Lire, écrire, copier, déplacer des fichiers | `HackFile`, `HackDirectory`, `HackPath`, `HackFileInfo` | `filesystem.user-home.*` pour `~`, `filesystem.system.*` (dangereuses) ailleurs |
-| Copier ou déplacer comme l'explorateur (conflits de noms, « (copie) », annulation) | `HackFileOperations.CopyAsync`, `MoveAsync`, `ImportAsync` ; `IDialogService.AsFileConflictResolver(AppContext)` pose la question (SDK 2.0, ADR 0161 §2) | celles des fichiers |
-| Mettre à la corbeille | `HackTrash.MoveToTrashAsync` | celles du fichier |
-| Afficher des fichiers dans sa fenêtre (liste, icônes, arbre) | `<HackFileView>` (contrat `hackeros.file-view`, fourni par l'explorateur ou l'app choisie par l'administrateur, [`embedded-components.md`](embedded-components.md)) | celles du dossier |
-| Surveiller un dossier | `HackFileSystemWatcher` | celles du dossier |
-| Paramètres de l'app | `HackSettings.OpenAsync`, `GetAsync`, `SetAsync` | `filesystem.private.read` / `.write` |
-| Garder un mot de passe ou un jeton | `HackKeyring.SetAsync`, `GetAsync`, ou une clé `SecretReference` avec `HackSettingsDocument.SetSecretAsync` ([`sensitive-settings.md`](../dev/sensitive-settings.md)) | aucune pour ses propres entrées |
-| Journaliser | `AppContext.Logging.Log` → `/var/log/apps/<appId>.log` | aucune |
-| Notifier l'utilisateur | `AppContext.Notifications.Post` | `notifications.post` |
-| Utilisateur, dossiers spéciaux, variables, arguments | `HackUser`, `HackEnvironment` | aucune |
-| Lancer une app, ouvrir un fichier avec son app | `HackApps.LaunchAsync`, `HackApps.OpenFileAsync` | `apps.launch` |
-| Ouvrir une page dans le navigateur, ou dans une fenêtre détachée | `HackBrowser.OpenAsync`, `HackBrowser.OpenDetachedAsync` | `apps.launch` |
-| Afficher une partie de sa fenêtre dans une fenêtre détachée | `IDisplaySurfaceService` (injecté) et `<DisplaySurfaceContent>` | aucune |
-| Presse-papiers | `HackClipboard` | `clipboard.read` / `.write` |
-| Réseau simulé (et réel si l'OS l'autorise) | `HackDns`, `HackPing`, `HackHttpClient`, `HackTcpClient`, `HackUdpClient` | `network.simulated.*`, `network.real.access` (dangereuse) |
-| Processus et services | `HackProcess`, `HackServiceController` | `process.list`, `process.manage`, `services.manage` |
-| Lire ou baisser les limites de son processus (`ulimit`) | `HackProcess.GetResourceLimitsAsync`, `SetResourceLimitAsync` (SDK 1.2, [`process-limits.md`](../dev/process-limits.md)) | aucune pour son processus ; `process.manage` pour un autre |
-| Héberger un shell (terminal, éditeur de code) | `HackShell.StartAsync` | `shell.host` (dangereuse) |
-| Sauvegarder ou restaurer toute la machine (apps système) | `HackSystemBackup.CreateAsync`, `RestoreAsync` | `system.backup` (dangereuse) + administrateur |
-| Temps simulé, minuteries | `AppContext.Clock` | aucune |
-| Sortir un calcul lourd de la fenêtre (filtre, recherche, compression) | `HackBackground.RunAsync` (SDK 1.2) | aucune ; la tâche a les capacités de l'app |
+| Read, write, copy, move files | `HackFile`, `HackDirectory`, `HackPath`, `HackFileInfo` | `filesystem.user-home.*` for `~`, `filesystem.system.*` (dangerous) elsewhere |
+| Copy or move like the explorer (name conflicts, "(copy)", cancellation) | `HackFileOperations.CopyAsync`, `MoveAsync`, `ImportAsync`; `IDialogService.AsFileConflictResolver(AppContext)` asks the question (SDK 2.0, ADR 0161 §2) | those of the files |
+| Move to the trash | `HackTrash.MoveToTrashAsync` | those of the file |
+| Display files in its window (list, icons, tree) | `<HackFileView>` (contract `hackeros.file-view`, provided by the explorer or the app chosen by the administrator, [`embedded-components.md`](embedded-components.md)) | those of the folder |
+| Watch a folder | `HackFileSystemWatcher` | those of the folder |
+| App settings | `HackSettings.OpenAsync`, `GetAsync`, `SetAsync` | `filesystem.private.read` / `.write` |
+| Keep a password or a token | `HackKeyring.SetAsync`, `GetAsync`, or a `SecretReference` key with `HackSettingsDocument.SetSecretAsync` ([`sensitive-settings.md`](../dev/sensitive-settings.md)) | none for its own entries |
+| Log | `AppContext.Logging.Log` → `/var/log/apps/<appId>.log` | none |
+| Notify the user | `AppContext.Notifications.Post` | `notifications.post` |
+| User, special folders, variables, arguments | `HackUser`, `HackEnvironment` | none |
+| Launch an app, open a file with its app | `HackApps.LaunchAsync`, `HackApps.OpenFileAsync` | `apps.launch` |
+| Open a page in the browser, or in a detached window | `HackBrowser.OpenAsync`, `HackBrowser.OpenDetachedAsync` | `apps.launch` |
+| Display part of its window in a detached window | `IDisplaySurfaceService` (injected) and `<DisplaySurfaceContent>` | none |
+| Clipboard | `HackClipboard` | `clipboard.read` / `.write` |
+| Simulated network (and real if the OS allows it) | `HackDns`, `HackPing`, `HackHttpClient`, `HackTcpClient`, `HackUdpClient` | `network.simulated.*`, `network.real.access` (dangerous) |
+| Processes and services | `HackProcess`, `HackServiceController` | `process.list`, `process.manage`, `services.manage` |
+| Read or lower the limits of its process (`ulimit`) | `HackProcess.GetResourceLimitsAsync`, `SetResourceLimitAsync` (SDK 1.2, [`process-limits.md`](../dev/process-limits.md)) | none for its own process; `process.manage` for another |
+| Host a shell (terminal, code editor) | `HackShell.StartAsync` | `shell.host` (dangerous) |
+| Back up or restore the whole machine (system apps) | `HackSystemBackup.CreateAsync`, `RestoreAsync` | `system.backup` (dangerous) + administrator |
+| Simulated time, timers | `AppContext.Clock` | none |
+| Take heavy computation out of the window (filter, search, compression) | `HackBackground.RunAsync` (SDK 1.2) | none; the job has the app's capabilities |
 
-Les chemins acceptent `~` et les chemins relatifs (au répertoire courant du
-processus). Les erreurs suivent `System.IO` : `HackFileNotFoundException`,
-`HackDirectoryNotFoundException`, `HackFileConflictException` (révision
-concurrente), `HackIOException`, `HackUnauthorizedAccessException` (avec
-`RequiredCapability`). Une écriture peut échouer faute de place :
-`HackIOException` avec `ErrorCode` `NoSpace` (`ENOSPC` : quota du navigateur
-atteint, ou réserve de root atteinte pour un utilisateur simple) ou
-`FileTooLarge` (`EFBIG`, plus de 16 Mio) ; `ShellErrorText.Describe` donne le
-message Linux ([`system-backup.md`](../dev/system-backup.md)). Une ouverture au-delà
-de la limite `nofile` du processus lève `HackIOException` avec
-`TooManyOpenFiles` (`EMFILE`, SDK 1.2) ; un lancement au-delà de `nproc`
-échoue avec « Resource temporarily unavailable » (`EAGAIN`)
+Paths accept `~` and relative paths (to the process's current directory).
+Errors follow `System.IO`: `HackFileNotFoundException`,
+`HackDirectoryNotFoundException`, `HackFileConflictException` (concurrent
+revision), `HackIOException`, `HackUnauthorizedAccessException` (with
+`RequiredCapability`). A write can fail for lack of space:
+`HackIOException` with `ErrorCode` `NoSpace` (`ENOSPC`: browser quota
+reached, or root reserve reached for a simple user) or
+`FileTooLarge` (`EFBIG`, over 16 MiB); `ShellErrorText.Describe` gives the
+Linux message ([`system-backup.md`](../dev/system-backup.md)). An open beyond
+the process's `nofile` limit throws `HackIOException` with
+`TooManyOpenFiles` (`EMFILE`, SDK 1.2); a launch beyond `nproc`
+fails with "Resource temporarily unavailable" (`EAGAIN`)
 ([`process-limits.md`](../dev/process-limits.md)).
 
-Exemples détaillés par domaine : [`hack-file-api.md`](hack-file-api.md),
+Detailed examples by domain: [`hack-file-api.md`](hack-file-api.md),
 [`settings-files.md`](settings-files.md), [`logging.md`](../dev/logging.md),
 [`trash.md`](../dev/trash.md), [`process-environment.md`](../dev/process-environment.md),
 [`sdk-network.md`](sdk-network.md), [`task-manager.md`](../dev/task-manager.md),
 [`shell-host.md`](shell-host.md), [`system-administration.md`](system-administration.md).
 
-### Calculs lourds : `HackBackground`
+### Heavy computation: `HackBackground`
 
-Une app fenêtrée tourne sur le fil principal, qui dessine aussi le bureau : une
-boucle longue y gèle tout. `HackBackground.RunAsync` confie le travail à un
-processus enfant de l'app, dans un Web Worker quand l'hôte en a, et attend son
-résultat ; la progression revient dans le contexte de la fenêtre.
+A windowed app runs on the main thread, which also draws the desktop: a long
+loop there freezes everything. `HackBackground.RunAsync` hands the work to a
+child process of the app, in a Web Worker when the host has one, and waits for its
+result; progress comes back in the window's context.
 
 ```csharp
 [assembly: HackWireContext(typeof(MyJobsJsonContext))]
@@ -642,61 +642,61 @@ PrimeCountResult result = await HackBackground.RunAsync<PrimeCountInput, PrimeCo
     MyJobs.CountPrimes, new PrimeCountInput(3_000_000), new Progress<HackBackgroundProgress>(Show), cancellationToken: ct);
 ```
 
-La tâche est une **méthode statique** de l'app (pas de lambda : elle ne peut pas
-capturer les objets de la fenêtre) et ses types passent en JSON par un
-contexte `HackWireContext`. L'analyseur du SDK le vérifie au build
-(`HOSBG0001` à `HOSBG0004`). Annulation : `OperationCanceledException` ; tâche
-tuée depuis `kill` ou le gestionnaire de tâches : `HackProcessKilledException`
-(à attraper **avant** l'annulation) ; exception de la tâche :
-`HackBackgroundJobException`. Quand l'app se ferme, la tâche voit son jeton
-annulé et a 5 s pour finir avant d'être tuée (ADR 0147). Dans les tests de l'app, la tâche s'exécute en
-ligne avec la même sérialisation. Guide complet et exemple :
-[`background-jobs.md`](background-jobs.md) et la section « Background Task » de
+The job is a **static method** of the app (no lambda: it cannot
+capture the window's objects) and its types go through JSON via a
+`HackWireContext` context. The SDK analyzer checks this at build
+(`HOSBG0001` to `HOSBG0004`). Cancellation: `OperationCanceledException`; job
+killed from `kill` or the task manager: `HackProcessKilledException`
+(to be caught **before** cancellation); exception from the job:
+`HackBackgroundJobException`. When the app closes, the job sees its token
+canceled and has 5 s to finish before being killed (ADR 0147). In the app's tests, the job runs
+inline with the same serialization. Complete guide and example:
+[`background-jobs.md`](background-jobs.md) and the "Background Task" section of
 `Apps/Samples/HackerOs.Samples.WindowApp`.
 
-### Ajouter des entrées aux menus des fichiers
+### Adding entries to the file menus
 
-Une app peut ajouter « Convertir en PNG », « Extraire ici »… aux menus des
-fichiers de tout l'OS (explorateur, dialogues de fichiers, bureau) : elle
-demande la capacité `shell.context-menu` et déclare dans sa classe
-`[AppManifest]` une méthode statique `[RegisterFileContextMenu]` qui appelle
+An app can add "Convert to PNG", "Extract here"... to the file menus
+across the whole OS (explorer, file dialogs, desktop): it
+requests the `shell.context-menu` capability and declares in its
+`[AppManifest]` class a static `[RegisterFileContextMenu]` method that calls
 `context.Register(title, name, intent: …, types: […], after: HackFileMenuItems.Open)`.
-Le titre est une clé de `Resources/AppManifest.resx` (anglais, obligatoire) et
-de `Resources/AppManifest.fr.resx`. La méthode s'exécute au build ; au clic,
-l'app reçoit l'intent et lit les chemins par `HackFileMenuIntent.ReadPaths`.
-Guide complet : [`context-menu.md`](context-menu.md#entrées-des-apps-dans-les-menus-des-fichiers-chantier-4).
+The title is a key of `Resources/AppManifest.resx` (English, required) and
+of `Resources/AppManifest.fr.resx`. The method runs at build time; on click,
+the app receives the intent and reads the paths through `HackFileMenuIntent.ReadPaths`.
+Complete guide: [`context-menu.md`](context-menu.md#entrées-des-apps-dans-les-menus-des-fichiers-chantier-4).
 
-### Capacités dangereuses
+### Dangerous capabilities
 
 `filesystem.system.*`, `apps.manage`, `process.manage`, `services.manage`,
-`network.real.access`, `shell.host`, `permissions.manage`… sont
-**dangereuses** : pour une app non système, l'OS demande à un administrateur
-de les approuver au premier lancement, et l'app peut être lancée sans elles si
-l'administrateur refuse. Le code doit donc s'attendre à
-`HackUnauthorizedAccessException` et dégrader proprement. Détails :
+`network.real.access`, `shell.host`, `permissions.manage`... are
+**dangerous**: for a non-system app, the OS asks an administrator
+to approve them at first launch, and the app can be launched without them if
+the administrator refuses. The code must therefore expect
+`HackUnauthorizedAccessException` and degrade gracefully. Details:
 [`capabilities.md`](capabilities.md),
 [`dangerous-capability-approval.md`](../dev/dangerous-capability-approval.md).
 
-## 7. Installer l'app dans l'OS
+## 7. Installing the app in the OS
 
-Ajouter une `ProjectReference` dans `OS/HackerOs.Ecosystem/HackerOs.Ecosystem.csproj` :
+Add a `ProjectReference` in `OS/HackerOs.Ecosystem/HackerOs.Ecosystem.csproj`:
 
 ```xml
 <ProjectReference Include="..\..\Apps\Samples\Example.Notes\Example.Notes.csproj" />
 ```
 
-C'est tout. Au build, l'hôte agrège le manifeste dans
-`BuiltInApplications.json` et charge l'assembly de l'app au premier lancement.
-`IsSystemApp="true"` sur la référence fait de l'app une app système (non
-désinstallable, capacités dangereuses accordées d'office) : réservé aux apps
-de base de l'OS.
+That is all. At build time, the host aggregates the manifest into
+`BuiltInApplications.json` and loads the app's assembly at first launch.
+`IsSystemApp="true"` on the reference makes the app a system app (not
+uninstallable, dangerous capabilities granted automatically): reserved for the OS's
+base apps.
 
-## 8. Tester une app
+## 8. Testing an app
 
-`Tests/HackerOs.Tests.Support` fournit `MinimalAppExecutionContext` et des
-passerelles factices (`FakeAppFileSystemGateway`, `FakeAppClockGateway`,
+`Tests/HackerOs.Tests.Support` provides `MinimalAppExecutionContext` and fake
+gateways (`FakeAppFileSystemGateway`, `FakeAppClockGateway`,
 `FakeAppLoggingGateway`, `FakeAppIntentGateway`, `FakeAppEnvironmentGateway`,
-`FakeShellSession`…). Le manifeste vient de la définition elle-même.
+`FakeShellSession`...). The manifest comes from the definition itself.
 
 ```csharp
 public sealed class WordCountCommandTests
@@ -727,20 +727,20 @@ public sealed class WordCountCommandTests
 }
 ```
 
-Le projet de tests référence le projet de l'app et `HackerOs.Tests.Support`
-(xUnit 2.9). Les composants fenêtrés se testent avec bUnit (voir
+The test project references the app's project and `HackerOs.Tests.Support`
+(xUnit 2.9). Windowed components are tested with bUnit (see
 `Tests/HackerOs.Apps.*.Tests`).
 
-## 8 bis. Traduire son app
+## 8 bis. Translating your app
 
-HackerOS parle anglais (par défaut) et français ; chaque processus suit son
-propre `LANG` (ADR 0104). Pour traduire une app :
+HackerOS speaks English (default) and French; each process follows its
+own `LANG` (ADR 0104). To translate an app:
 
-1. Ajouter une classe marqueur `internal sealed class Strings` dans l'espace
-   de noms racine, et ses textes dans `Resources/Strings.resx` (anglais) et
-   `Resources/Strings.fr.resx` (français), avec exactement les mêmes clés
-   (`build/tools/resx.py` écrit un `.resx` depuis une table JSON).
-2. Lire les textes dans la langue du processus :
+1. Add a marker class `internal sealed class Strings` in the root
+   namespace, and its texts in `Resources/Strings.resx` (English) and
+   `Resources/Strings.fr.resx` (French), with exactly the same keys
+   (`build/tools/resx.py` writes a `.resx` from a JSON table).
+2. Read the texts in the process's language:
 
    ```razor
    @using HackerOs.AppSdk.Globalization
@@ -754,49 +754,49 @@ propre `LANG` (ADR 0104). Pour traduire une app :
    }
    ```
 
-   Dans une commande : `context.App.GetLocalizer<Strings>()`. Les dates et
-   nombres affichés utilisent `AppContext.FormatCulture`.
-3. Traduire le nom et la description : `Resources/AppManifest.fr.resx` avec les
-   clés `Name`, `Description` (et `Terminal.Usage` pour une commande). Le build
-   produit `localization/fr.json` et l'entrée `localizations` du manifeste ; le
-   lanceur et `help` affichent alors le nom traduit.
+   In a command: `context.App.GetLocalizer<Strings>()`. Displayed dates and
+   numbers use `AppContext.FormatCulture`.
+3. Translate the name and description: `Resources/AppManifest.fr.resx` with the
+   keys `Name`, `Description` (and `Terminal.Usage` for a command). The build
+   produces `localization/fr.json` and the manifest's `localizations` entry; the
+   launcher and `help` then display the translated name.
 
-Les sorties lues par des scripts, les noms de fichiers et les journaux restent
-en anglais. Le guide complet est [`localization.md`](localization.md).
+Output read by scripts, file names and logs stay
+in English. The complete guide is [`localization.md`](localization.md).
 
-## 9. Liste de contrôle avant de livrer
+## 9. Checklist before delivering
 
-- [ ] Le projet est sous `Apps/`, dans `HackerOs.sln`, et ne référence que le SDK.
-- [ ] La classe `[AppManifest]` ne demande que les capacités nécessaires.
-- [ ] `manifest.json` (ou `manifests/*.json`) régénéré est committé.
-- [ ] Pas de CSS ni de JavaScript en ligne ; styles sur les jetons `--hos-*`.
-- [ ] Les erreurs de permission et de fichier sont gérées et affichées.
-- [ ] Une demande d'arrêt ne perd rien en silence (`OnAppStopRequestedAsync`, `OnStoppingAsync`) et les boucles longues appellent `HackProcess.CheckpointAsync` (ADR 0069).
-- [ ] Des tests couvrent la logique de l'app.
-- [ ] Les textes visibles sont dans `Resources/Strings.resx` et `Strings.fr.resx` (mêmes clés), le nom dans `AppManifest.fr.resx`.
-- [ ] L'app fonctionne avec le seul hôte Ecosystem, sans serveur.
-- [ ] Un document décrit l'app sous `docs/`, ajouté à l'index [`README.md`](../README.md).
+- [ ] The project is under `Apps/`, in `HackerOs.sln`, and only references the SDK.
+- [ ] The `[AppManifest]` class only requests the necessary capabilities.
+- [ ] The regenerated `manifest.json` (or `manifests/*.json`) is committed.
+- [ ] No inline CSS or JavaScript; styles use the `--hos-*` tokens.
+- [ ] Permission and file errors are handled and displayed.
+- [ ] A stop request loses nothing silently (`OnAppStopRequestedAsync`, `OnStoppingAsync`) and long loops call `HackProcess.CheckpointAsync` (ADR 0069).
+- [ ] Tests cover the app's logic.
+- [ ] Visible texts are in `Resources/Strings.resx` and `Strings.fr.resx` (same keys), the name in `AppManifest.fr.resx`.
+- [ ] The app works with the Ecosystem host alone, without a server.
+- [ ] A document describes the app under `docs/`, added to the index [`README.md`](../README.md).
 
-Un hôte d'un autre dépôt (modèle `hackeros-host`) installe une app de la même
-façon : `ProjectReference` ou `PackageReference` (paquet d'app produit par
-`dotnet pack`, qui embarque ses manifestes), avec la même métadonnée
-`IsSystemApp`.
+A host from another repository (`hackeros-host` template) installs an app in the same
+way: `ProjectReference` or `PackageReference` (app package produced by
+`dotnet pack`, which embeds its manifests), with the same `IsSystemApp`
+metadata.
 
-## Tâches de ce document
+## Tasks of this document
 
-- [x] Présenter les trois genres d'app et leurs points d'entrée.
-- [x] Création du projet, références permises.
-- [x] `AppDefinition` : membres utiles, règles du générateur.
-- [x] Exemple complet d'app fenêtrée (fichiers, paramètres, journal, dialogue, notification, CSS).
-- [x] Exemple de commande du shell (arguments, flux, code de sortie).
-- [x] Exemple de service (boucle, horloge simulée, annulation).
-- [x] Table des services de l'OS et capacités associées.
-- [x] Installation dans l'hôte et test unitaire d'une commande.
-- [x] Compiler les exemples et exécuter le test contre `rebuild/base`.
-- [x] Construire une app ou un hôte depuis un autre dépôt avec les paquets locaux et les modèles (v3/6).
-- [x] Guide complet du dépôt tiers, SDK 1.0 (`v3/15`, ADR 0114) : [`building-on-hackeros.md`](building-on-hackeros.md).
-- [x] Sauvegarde de la machine et erreurs `NoSpace`/`FileTooLarge` (`v3/7-storage-backup`).
-- [x] Traduire son app : ressources, `GetLocalizer<T>`, `AppManifest.fr.resx` (`v3/12`, ADR 0104).
-- [x] Calculs lourds hors de la fenêtre avec `HackBackground` (`exec/5`, ADR 0128 et 0140).
-- [x] SDK 1.2 : `HackWireContext` d'un service en worker, `OomScoreAdjust`, limites de processus, `TooManyOpenFiles` (`exec/10-final`).
-- [x] SDK 2.0 : modèles 2.0.0, `HackFileView` et `HackFileOperations` dans la table des services (`desk/6-sdk-2`, ADR 0161) ; migration d'une app 1.x dans [`sdk-packages.md`](sdk-packages.md#sdk-20).
+- [x] Present the three kinds of app and their entry points.
+- [x] Project creation, allowed references.
+- [x] `AppDefinition`: useful members, generator rules.
+- [x] Complete example of a windowed app (files, settings, log, dialog, notification, CSS).
+- [x] Example of a shell command (arguments, streams, exit code).
+- [x] Example of a service (loop, simulated clock, cancellation).
+- [x] Table of OS services and associated capabilities.
+- [x] Installation in the host and unit test of a command.
+- [x] Compile the examples and run the test against `rebuild/base`.
+- [x] Build an app or a host from another repository with the local packages and templates (v3/6).
+- [x] Complete guide for the third-party repository, SDK 1.0 (`v3/15`, ADR 0114): [`building-on-hackeros.md`](building-on-hackeros.md).
+- [x] Machine backup and `NoSpace`/`FileTooLarge` errors (`v3/7-storage-backup`).
+- [x] Translating your app: resources, `GetLocalizer<T>`, `AppManifest.fr.resx` (`v3/12`, ADR 0104).
+- [x] Heavy computation outside the window with `HackBackground` (`exec/5`, ADR 0128 and 0140).
+- [x] SDK 1.2: `HackWireContext` of a service in a worker, `OomScoreAdjust`, process limits, `TooManyOpenFiles` (`exec/10-final`).
+- [x] SDK 2.0: 2.0.0 templates, `HackFileView` and `HackFileOperations` in the services table (`desk/6-sdk-2`, ADR 0161); migrating a 1.x app in [`sdk-packages.md`](sdk-packages.md#sdk-20).

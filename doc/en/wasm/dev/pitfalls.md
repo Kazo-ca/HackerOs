@@ -1,109 +1,109 @@
-# Pièges rencontrés et leurs solutions
+# Pitfalls encountered and their solutions
 
-Ce document résume, en grandes lignes, les problèmes qui ont coûté du temps
-pendant la refonte de HackerOS (phases 1 à 5, phase web, séries v3, v3.1,
-`exec` et `desk`) et la façon dont ils ont été réglés. Pour chaque piège :
-le **symptôme** tel qu'on le voit, la **cause**, la **solution** (ou le
-contournement) et la source détaillée.
+This document summarizes, in broad strokes, the problems that cost time
+during the rebuild of HackerOS (phases 1 to 5, web phase, series v3, v3.1,
+`exec` and `desk`) and how they were resolved. For each pitfall:
+the **symptom** as it is seen, the **cause**, the **solution** (or
+workaround) and the detailed source.
 
-Le détail technique de certains pièges plus anciens est dans
-[`old/common-pitfalls.md`](old/common-pitfalls.md) (en anglais) ; les
-commandes exactes de build et de test sont dans
+The technical detail of some older pitfalls is in
+[`old/common-pitfalls.md`](old/common-pitfalls.md) (in English); the exact
+build and test commands are in
 [`building-and-testing.md`](building-and-testing.md).
 
-## 1. Build et NuGet
+## 1. Build and NuGet
 
-| Symptôme | Cause | Solution |
+| Symptom | Cause | Solution |
 | --- | --- | --- |
-| `NU1902` sur `Microsoft.Build.Tasks.Git` traité comme une erreur | Avis de sécurité NuGet sur une dépendance de build seulement | `export NuGetAudit=false` **en variable d'environnement** (pas seulement `-p:`) : les suites `UI.E2E` et `Templates.E2E` relancent elles-mêmes `dotnet run`/`dotnet pack`, qui refont un restore. Sans la variable, toutes échouent par « harness did not become ready ». |
-| Erreurs de compilation Razor dans `Apps.Browser` (`ResponseBodyViewer.razor`, `switch`/`case`) alors que le code est correct | Le SDK .NET 10 compilé par Ubuntu (`/usr/bin/dotnet`, 10.0.113) a un compilateur Razor différent du SDK Microsoft | Installer le SDK Microsoft (10.0.402 ou plus récent) dans `~/.dotnet` et le mettre en tête : `export PATH=$HOME/.dotnet:$PATH DOTNET_ROOT=$HOME/.dotnet` ([`building-and-testing.md`](building-and-testing.md)). |
-| `NU1301` sur la source `local-nupkg` | Le dossier du flux local n'existe pas sur un checkout neuf | `mkdir -p wasm2/HackerOs/artifacts/local-nupkg`. Le `nuget.config` de l'exemple utilisait des `\` lus littéralement sous Linux ; il utilise maintenant `/`. |
-| `IOException … being used by another process` dans `obj/…/compressed/` d'Ecosystem | `test/test` et `HackerOs.Server` compilés en même temps partagent Ecosystem | Compiler la solution une fois, puis lancer les hôtes avec `--no-build`. |
-| `MsBuildIntegrationTests` du générateur de manifestes bloqués sans fin | Le `dotnet build` lancé par le test laisse des nœuds MSBuild réutilisés qui gardent la sortie redirigée | Lancer les tests avec `MSBUILDDISABLENODEREUSE=1`. |
-| Un test casse après la fusion de deux branches parallèles alors que chacune était verte | Des tests comptent des choses (apps, manifestes, commandes : `BuildKnownLazyAppsTests`, `EcosystemBootCoordinatorTests`, `CommandParityTests`) et les documents citent ces nombres | Après chaque fusion, relancer la suite complète et mettre à jour les nombres dans les tests **et** dans la doc (`app-model.md`, `linux-commands.md`…). |
-| Un test refuse une app « incompatible » après un changement de version du SDK | Un manifeste de test écrivait la version du SDK en dur (`"1.0.0"`) | Les manifestes de test utilisent `HackerOsSdk.Version` ; les tests de refus épinglent des versions explicites. |
-| Le paquet de compatibilité du SDK change sans raison | Il a été reconstruit | Les paquets `Tests/fixtures/sdk-compat/packages/*.nupkg` (1.0.0, 1.1.0, 2.0.0) sont committés et **jamais** reconstruits ; ils prouvent que les apps compilées contre une version publiée se chargent toujours ([`../framework/sdk-packages.md`](../framework/sdk-packages.md)). |
+| `NU1902` on `Microsoft.Build.Tasks.Git` treated as an error | NuGet security advisory on a build-only dependency | `export NuGetAudit=false` **as an environment variable** (not only `-p:`): the `UI.E2E` and `Templates.E2E` suites themselves rerun `dotnet run`/`dotnet pack`, which redo a restore. Without the variable, they all fail with "harness did not become ready". |
+| Razor compilation errors in `Apps.Browser` (`ResponseBodyViewer.razor`, `switch`/`case`) although the code is correct | The .NET 10 SDK built by Ubuntu (`/usr/bin/dotnet`, 10.0.113) has a Razor compiler different from the Microsoft SDK | Install the Microsoft SDK (10.0.402 or newer) in `~/.dotnet` and put it first: `export PATH=$HOME/.dotnet:$PATH DOTNET_ROOT=$HOME/.dotnet` ([`building-and-testing.md`](building-and-testing.md)). |
+| `NU1301` on the `local-nupkg` source | The local feed folder does not exist on a fresh checkout | `mkdir -p wasm2/HackerOs/artifacts/local-nupkg`. The `nuget.config` of the sample used `\` read literally on Linux; it now uses `/`. |
+| `IOException … being used by another process` in `obj/…/compressed/` of Ecosystem | `test/test` and `HackerOs.Server` built at the same time share Ecosystem | Build the solution once, then run the hosts with `--no-build`. |
+| `MsBuildIntegrationTests` of the manifest generator blocked forever | The `dotnet build` launched by the test leaves reused MSBuild nodes that hold the redirected output | Run the tests with `MSBUILDDISABLENODEREUSE=1`. |
+| A test breaks after merging two parallel branches although each was green | Some tests count things (apps, manifests, commands: `BuildKnownLazyAppsTests`, `EcosystemBootCoordinatorTests`, `CommandParityTests`) and the documents quote those numbers | After each merge, rerun the complete suite and update the numbers in the tests **and** in the docs (`app-model.md`, `linux-commands.md`…). |
+| A test refuses an "incompatible" app after an SDK version change | A test manifest hard-coded the SDK version (`"1.0.0"`) | Test manifests use `HackerOsSdk.Version`; refusal tests pin explicit versions. |
+| The SDK compatibility package changes for no reason | It was rebuilt | The packages `Tests/fixtures/sdk-compat/packages/*.nupkg` (1.0.0, 1.1.0, 2.0.0) are committed and **never** rebuilt; they prove that apps compiled against a published version still load ([`../framework/sdk-packages.md`](../framework/sdk-packages.md)). |
 
-## 2. Publication trimmée et WebAssembly
+## 2. Trimmed publication and WebAssembly
 
-| Symptôme | Cause | Solution |
+| Symptom | Cause | Solution |
 | --- | --- | --- |
-| Une publication non trimmée (`-p:PublishTrimmed=false`) contient des assemblies élaguées et plante à l'exécution | La conversion WebCIL du SDK .NET est incrémentale par dates de fichiers : elle reprend les sorties de la publication trimmée précédente | Supprimer `OS/HackerOs.Ecosystem/obj/Release/net10.0/{linked,webcil,tmp-webcil}` avant de publier ; `build/publish-trimmed.sh` le fait ([ADR 0113](adr/0113-trimming-implementation-adjustments.md), [`trimmed-publish.md`](trimmed-publish.md)). |
-| Les avertissements `IL2110`/`IL2111` n'apparaissent que dans l'app livrée, jamais dans les tests | Les projets de test n'exécutent pas l'analyseur de trimming | Vérifier avec `build/publish-trimmed.sh` (porte de fusion locale, échoue sur toute alerte `IL…`). Ne pas mettre `DynamicallyAccessedMembers` sur des paramètres de composants capturés par des closures Razor : utiliser `UnconditionalSuppressMessage` sur la méthode, ou passer le `Type` dans un objet porteur. |
-| Le trimming retire des types utilisés par réflexion | Racines ILLink incomplètes | Les assemblies HackerOS et les apps restent entières ; seules les assemblies du framework sont élaguées, avec des racines générées depuis les manifestes (`HackerOs.TrimmerRoots.xml`, [ADR 0106](adr/0106-trimmed-release-publish.md)). |
-| Le rendu d'une fenêtre Blazor dans un Web Worker coûte trop de mémoire | Chaque worker de fenêtre charge son propre runtime .NET : 66,5 Mio mesurés pour 40 Mio permis | Essai arrêté, prototype gardé coupé par défaut ([ADR 0133](adr/0133-window-rendering-in-worker-verdict.md), [`remote-window-rendering.md`](remote-window-rendering.md)). Les calculs lourds passent par `HackBackground.RunAsync`. |
+| A non-trimmed publication (`-p:PublishTrimmed=false`) contains trimmed assemblies and crashes at runtime | The WebCIL conversion of the .NET SDK is incremental by file dates: it reuses the outputs of the previous trimmed publication | Delete `OS/HackerOs.Ecosystem/obj/Release/net10.0/{linked,webcil,tmp-webcil}` before publishing; `build/publish-trimmed.sh` does it ([ADR 0113](adr/0113-trimming-implementation-adjustments.md), [`trimmed-publish.md`](trimmed-publish.md)). |
+| The `IL2110`/`IL2111` warnings appear only in the shipped app, never in tests | Test projects do not run the trimming analyzer | Verify with `build/publish-trimmed.sh` (local merge gate, fails on any `IL…` alert). Do not put `DynamicallyAccessedMembers` on component parameters captured by Razor closures: use `UnconditionalSuppressMessage` on the method, or pass the `Type` in a carrier object. |
+| Trimming removes types used through reflection | Incomplete ILLink roots | The HackerOS assemblies and the apps stay whole; only the framework assemblies are trimmed, with roots generated from the manifests (`HackerOs.TrimmerRoots.xml`, [ADR 0106](adr/0106-trimmed-release-publish.md)). |
+| Rendering a Blazor window in a Web Worker costs too much memory | Each window worker loads its own .NET runtime: 66.5 MiB measured for 40 MiB allowed | Trial stopped, prototype kept off by default ([ADR 0133](adr/0133-window-rendering-in-worker-verdict.md), [`remote-window-rendering.md`](remote-window-rendering.md)). Heavy computations go through `HackBackground.RunAsync`. |
 
-## 3. Navigateur, cache et page périmée
+## 3. Browser, cache and stale page
 
-| Symptôme | Cause | Solution |
+| Symptom | Cause | Solution |
 | --- | --- | --- |
-| Une app ne s'ouvre plus après un rebuild : `download '…/HackerOs.Apps.<Nom>.<empreinte>.wasm' failed … TypeError: Failed to fetch` (erreur d'intégrité SRI) | L'onglet garde le `dotnet.js` du build précédent, qui demande des fichiers dont l'empreinte a changé ; le build est correct | Ctrl+F5 (ou F12 ▸ Application ▸ Clear site data) et relancer le serveur de dev après un rebuild. Depuis l'[ADR 0162](adr/0162-restart-after-a-host-build-change.md), l'OS détecte le nouveau build et propose de redémarrer. |
-| Page blanche de `test/test` ou `HackerOs.Server` lancé avec `--no-build` (« Static Web Assets are not enabled ») | Sans profil de lancement, l'hôte démarre en `Production` et ne sert pas les actifs des projets référencés | `ASPNETCORE_ENVIRONMENT=Development`. |
-| Les actifs statiques d'une app référencée sont introuvables sous `_content/<Projet>/…` | Un projet d'app Blazor WebAssembly référencé publie ses actifs sans préfixe | Voir [`old/common-pitfalls.md`](old/common-pitfalls.md) §1. |
-| Le cache PWA abîmé bloque le démarrage | Octets corrompus dans le cache du service worker | Garde de démarrage dans `index.html`, message `RESET_CACHE`, rechargement unique ([`pwa-cache-recovery.md`](pwa-cache-recovery.md)). |
-| Ctrl+Maj+T et Ctrl+Maj+W n'arrivent pas au terminal ou à l'OS | Chrome garde ces raccourcis pour lui hors d'une PWA installée | Problème connu : installer l'OS en PWA, ou utiliser les touches de remplacement de `keybindings.config` ([`../framework/window-model.md`](../framework/window-model.md)). |
-| Les tests PWA échouent par `SocketException : Address family not supported` | La suite se liait à `[::1]` et le conteneur n'a pas d'IPv6 | Repli sur `127.0.0.2`, adresse de bouclage acceptée comme contexte sécurisé. |
+| An app no longer opens after a rebuild: `download '…/HackerOs.Apps.<Nom>.<empreinte>.wasm' failed … TypeError: Failed to fetch` (SRI integrity error) | The tab keeps the `dotnet.js` of the previous build, which requests files whose hash has changed; the build is correct | Ctrl+F5 (or F12 ▸ Application ▸ Clear site data) and restart the dev server after a rebuild. Since [ADR 0162](adr/0162-restart-after-a-host-build-change.md), the OS detects the new build and offers to restart. |
+| Blank page from `test/test` or `HackerOs.Server` launched with `--no-build` ("Static Web Assets are not enabled") | Without a launch profile, the host starts in `Production` and does not serve the assets of referenced projects | `ASPNETCORE_ENVIRONMENT=Development`. |
+| The static assets of a referenced app are not found under `_content/<Projet>/…` | A referenced Blazor WebAssembly app project publishes its assets without a prefix | See [`old/common-pitfalls.md`](old/common-pitfalls.md) §1. |
+| A damaged PWA cache blocks startup | Corrupted bytes in the service worker cache | Startup guard in `index.html`, `RESET_CACHE` message, single reload ([`pwa-cache-recovery.md`](pwa-cache-recovery.md)). |
+| Ctrl+Shift+T and Ctrl+Shift+W do not reach the terminal or the OS | Chrome keeps these shortcuts for itself outside an installed PWA | Known problem: install the OS as a PWA, or use the replacement keys of `keybindings.config` ([`../framework/window-model.md`](../framework/window-model.md)). |
+| The PWA tests fail with `SocketException : Address family not supported` | The suite bound to `[::1]` and the container has no IPv6 | Fallback to `127.0.0.2`, a loopback address accepted as a secure context. |
 
-## 4. Tests et E2E
+## 4. Tests and E2E
 
-| Symptôme | Cause | Solution |
+| Symptom | Cause | Solution |
 | --- | --- | --- |
-| Les 16 tests de `E2E.Tests` échouent par « harness did not become ready » | Le harnais se lance avec `--no-build -c Release` | Compiler d'abord en Release (`dotnet build HackerOs.sln -c Release` ou `Tests/HackerOs.BrowserHarness.Tests -c Release`). |
-| Tests E2E instables quand plusieurs suites tournent | Les suites Playwright se disputent le processeur et les ports | Lancer `E2E`, `UI.E2E`, `Pwa.E2E` et `TrimmedPublish.E2E` **une à la fois**. |
-| Chromium introuvable pour Playwright | Navigateurs non installés à l'endroit attendu | `ChromiumLauncher` se replie sur `/opt/pw-browsers/chromium`. Ne jamais lancer `playwright install`. |
-| Un test lit la sortie du terminal avant qu'elle soit complète | La sortie d'une commande en worker arrive en plusieurs écritures | Attendre le prompt suivant (`OutputFinished`) avant de lire. |
-| Le test du choix Mobile échoue de façon intermittente | L'écriture du réglage dans `~/.config/hackeros` n'est pas instantanée (2 s avant l'[ADR 0090](adr/0090-filesystem-path-lookup-in-one-request.md), 235 ms après) | Attendre la bascule avant de recharger. |
-| États ARIA faux ou test axe rouge | Un attribut ARIA lié directement à un `bool` en Razor disparaît quand il vaut `false` | Écrire `"true"`/`"false"` ([`old/common-pitfalls.md`](old/common-pitfalls.md) §8). |
+| The 16 tests of `E2E.Tests` fail with "harness did not become ready" | The harness launches with `--no-build -c Release` | Build in Release first (`dotnet build HackerOs.sln -c Release` or `Tests/HackerOs.BrowserHarness.Tests -c Release`). |
+| Unstable E2E tests when several suites run | The Playwright suites compete for CPU and ports | Run `E2E`, `UI.E2E`, `Pwa.E2E` and `TrimmedPublish.E2E` **one at a time**. |
+| Chromium not found for Playwright | Browsers not installed at the expected location | `ChromiumLauncher` falls back to `/opt/pw-browsers/chromium`. Never run `playwright install`. |
+| A test reads the terminal output before it is complete | The output of a command in a worker arrives in several writes | Wait for the next prompt (`OutputFinished`) before reading. |
+| The Mobile choice test fails intermittently | Writing the setting in `~/.config/hackeros` is not instantaneous (2 s before [ADR 0090](adr/0090-filesystem-path-lookup-in-one-request.md), 235 ms after) | Wait for the switch before reloading. |
+| Wrong ARIA states or red axe test | An ARIA attribute bound directly to a `bool` in Razor disappears when it is `false` | Write `"true"`/`"false"` ([`old/common-pitfalls.md`](old/common-pitfalls.md) §8). |
 
-Tests **instables connus** (pas des régressions ; ils passent seuls ou sur une
-machine au repos) : `A_command_that_spins_at_once` et `Kill_minus_9`
-(`WorkerHost.Tests`), parité `zip`/`unzip` de `CommandParityTests`,
-`CpuAccountingOverheadTests`, un test d'`AppInstallationService` (environ une
-fois sur douze), le web worker de `LocalNetworkTests`, le harnais de fenêtre
-détachée de l'UI, `FileExplorerDownload` et `BrowserHomePage` d'`UI.E2E` sous
-la charge de la suite complète, et deux tests `Pwa.E2E` qui attendent
-l'explorateur de fichiers. Relancer la suite seule avant de conclure. Sur
-GitHub Actions, ces tests sont relancés une fois et signalés comme instables
-s'ils passent ([`ci-workflows.md`](ci-workflows.md#tests-instables-et-nouvel-essai)).
+**Known unstable** tests (not regressions; they pass alone or on an idle
+machine): `A_command_that_spins_at_once` and `Kill_minus_9`
+(`WorkerHost.Tests`), `zip`/`unzip` parity of `CommandParityTests`,
+`CpuAccountingOverheadTests`, one `AppInstallationService` test (about once
+in twelve), the web worker of `LocalNetworkTests`, the detached window harness
+of the UI, `FileExplorerDownload` and `BrowserHomePage` of `UI.E2E` under
+the load of the complete suite, and two `Pwa.E2E` tests that wait for
+the file explorer. Rerun the suite alone before concluding. On
+GitHub Actions, these tests are rerun once and reported as unstable
+if they pass ([`ci-workflows.md`](ci-workflows.md#tests-instables-et-nouvel-essai)).
 
-## 5. Blazor, fenêtres et SDK
+## 5. Blazor, windows and SDK
 
-| Symptôme | Cause | Solution |
+| Symptom | Cause | Solution |
 | --- | --- | --- |
-| Déplacer ou redimensionner une fenêtre ne fait rien, sans erreur | Une sous-classe surchargeait `OnAfterRenderAsync` sans appeler la base : le module JavaScript du déplacement n'était jamais chargé | `WindowAppBase` scelle les méthodes du cycle de vie Blazor et expose des crochets `OnApp*` ([`../memory/blazor-window-manager-bugs.md`](../memory/blazor-window-manager-bugs.md)). |
-| Minuteries, délais d'arrêt et horloge de la barre des tâches ne se déclenchent jamais | Rien n'avançait l'horloge simulée en production | `SimulationClockDriver` fait avancer `ManualSimulationClock`. |
-| Une façade statique du SDK (`HackUser`…) ne trouve pas son contexte | `BuildRenderTree` et les composants `ComponentBase` simples tournent hors de la portée ambiante | Utiliser `HackUser.Describe(AppContext)` ou `AppContext.Catalog` dans ces endroits ([`../framework/hack-file-api.md`](../framework/hack-file-api.md)). |
-| Le build refuse une app avec `HOSAPP0030`/`HOSAPP0031` | L'app référence un projet interne ou injecte un service hors SDK (par exemple `IServiceProvider`) | Les apps n'utilisent que le SDK public, vérifié au build ([`../framework/app-sdk.md`](../framework/app-sdk.md)). Injecter directement l'interface du SDK. |
-| Une propriété ajoutée à `AppManifest` disparaît du `manifest.json` | La liste blanche du sérialiseur strict n'était pas à jour | Mettre à jour `AppManifestJsonSerializer` en même temps ([`old/common-pitfalls.md`](old/common-pitfalls.md) §2). |
-| Tests de pages de site incohérents (`AmbientFrameSourceTests`) | Chaque page `.razor` doit déclarer son `@inherits HackComponentBase` (pas dans `_Imports.razor`) | Ajouter `@inherits` explicitement dans chaque page. |
-| `@await Component.InvokeAsync<T>(…)` ne compile pas en Razor | Le `<` générique est lu comme du balisage | Écrire `@(await Component.InvokeAsync<T>(…))`. |
-| `View("texte")` d'ASP.Hack cherche une vue nommée « texte » | Même résolution de surcharge qu'ASP.NET Core | Passer une classe de modèle ou `View(viewName: null, model: x)` ([`../framework/asp-hack-razor-views.md`](../framework/asp-hack-razor-views.md)). |
-| `curl -d` vers un formulaire ASP.Hack répond 400 | Anti-falsification : chaque `curl` a son propre pot à cookies | Comportement attendu. |
-| Les terminaux xterm.js effacent la dernière cellule ou ont un fond noir forcé | `ESC[K` après une ligne pleine efface la dernière cellule ; `xterm.css` peint `.xterm-viewport` en noir | Gérés dans la discipline de ligne C# et surchargés en CSS isolé ([`terminal-emulator.md`](terminal-emulator.md)). |
+| Moving or resizing a window does nothing, without error | A subclass overrode `OnAfterRenderAsync` without calling the base: the JavaScript module for moving was never loaded | `WindowAppBase` seals the Blazor lifecycle methods and exposes `OnApp*` hooks ([`../memory/blazor-window-manager-bugs.md`](../memory/blazor-window-manager-bugs.md)). |
+| Timers, shutdown delays and the taskbar clock never fire | Nothing advanced the simulated clock in production | `SimulationClockDriver` advances `ManualSimulationClock`. |
+| A static SDK facade (`HackUser`…) does not find its context | `BuildRenderTree` and plain `ComponentBase` components run outside the ambient scope | Use `HackUser.Describe(AppContext)` or `AppContext.Catalog` in these places ([`../framework/hack-file-api.md`](../framework/hack-file-api.md)). |
+| The build refuses an app with `HOSAPP0030`/`HOSAPP0031` | The app references an internal project or injects a service outside the SDK (for example `IServiceProvider`) | Apps use only the public SDK, verified at build time ([`../framework/app-sdk.md`](../framework/app-sdk.md)). Inject the SDK interface directly. |
+| A property added to `AppManifest` disappears from `manifest.json` | The allowlist of the strict serializer was not up to date | Update `AppManifestJsonSerializer` at the same time ([`old/common-pitfalls.md`](old/common-pitfalls.md) §2). |
+| Inconsistent site page tests (`AmbientFrameSourceTests`) | Each `.razor` page must declare its `@inherits HackComponentBase` (not in `_Imports.razor`) | Add `@inherits` explicitly in each page. |
+| `@await Component.InvokeAsync<T>(…)` does not compile in Razor | The generic `<` is read as markup | Write `@(await Component.InvokeAsync<T>(…))`. |
+| ASP.Hack `View("texte")` looks for a view named "texte" | Same overload resolution as ASP.NET Core | Pass a model class or `View(viewName: null, model: x)` ([`../framework/asp-hack-razor-views.md`](../framework/asp-hack-razor-views.md)). |
+| `curl -d` to an ASP.Hack form answers 400 | Anti-forgery: each `curl` has its own cookie jar | Expected behavior. |
+| xterm.js terminals erase the last cell or have a forced black background | `ESC[K` after a full line erases the last cell; `xterm.css` paints `.xterm-viewport` black | Handled in the C# line discipline and overridden in isolated CSS ([`terminal-emulator.md`](terminal-emulator.md)). |
 
-## 6. IndexedDB et fichiers
+## 6. IndexedDB and files
 
-| Symptôme | Cause | Solution |
+| Symptom | Cause | Solution |
 | --- | --- | --- |
-| Base IndexedDB cassée après une montée de version | Numéro de version du schéma écrit en dur | Toujours référencer `HackerOsIndexedDbSchema.CurrentVersion` ; les montées de version sont testées avec des fixtures ([`old/common-pitfalls.md`](old/common-pitfalls.md) §3, [`building-and-testing.md`](building-and-testing.md)). |
-| Bandeau « Unknown IndexedDB transaction boundary » au démarrage | Une frontière de transaction utilisée par un dépôt n'était pas déclarée dans le schéma | Déclarée ; un test vérifie maintenant que chaque `TransactionBoundary` est déclarée. Si le bandeau revient, c'est un nouveau bogue. |
-| Écrire un réglage prenait 845 ms et 604 transactions | La résolution de chemin parcourait le stockage segment par segment | Une seule requête `resolvePath` (604 → 51 transactions, [`filesystem-path-lookup.md`](filesystem-path-lookup.md)). |
-| Un enregistrement `HackWebDb` avec `Id = 0` est stocké sous la clé 0 au lieu d'être numéroté | Comportement normal d'IndexedDB avec `autoIncrement` | Mettre `[JsonIgnore(Condition = WhenWritingDefault)]` sur `Id` ([`../framework/asp-hack-site-data.md`](../framework/asp-hack-site-data.md)). |
+| IndexedDB database broken after a version upgrade | Schema version number hard-coded | Always reference `HackerOsIndexedDbSchema.CurrentVersion`; version upgrades are tested with fixtures ([`old/common-pitfalls.md`](old/common-pitfalls.md) §3, [`building-and-testing.md`](building-and-testing.md)). |
+| "Unknown IndexedDB transaction boundary" banner at startup | A transaction boundary used by a repository was not declared in the schema | Declared; a test now verifies that each `TransactionBoundary` is declared. If the banner comes back, it is a new bug. |
+| Writing a setting took 845 ms and 604 transactions | Path resolution walked the storage segment by segment | A single `resolvePath` request (604 → 51 transactions, [`filesystem-path-lookup.md`](filesystem-path-lookup.md)). |
+| A `HackWebDb` record with `Id = 0` is stored under key 0 instead of being numbered | Normal IndexedDB behavior with `autoIncrement` | Put `[JsonIgnore(Condition = WhenWritingDefault)]` on `Id` ([`../framework/asp-hack-site-data.md`](../framework/asp-hack-site-data.md)). |
 
-## 7. Conteneurs cloud, GitHub et organisation
+## 7. Cloud containers, GitHub and organization
 
-| Symptôme | Cause | Solution |
+| Symptom | Cause | Solution |
 | --- | --- | --- |
-| Les GitHub Actions échouaient toutes (août à octobre 2026) | Plus d'exécuteur disponible | Pendant cette période, un build et des tests locaux verts faisaient foi. Depuis le 2026-10-24, les workflows tournent de nouveau (`Verify HackerOS WASM`, `Deploy to GitHub Pages`) ; les tests Playwright sont dans un workflow manuel séparé (`verify-browser-tests.yml`). Un build et des tests locaux verts restent exigés avant de fusionner. Les PR échouaient ensuite sur des tests instables (`Kill_minus_9`, `ResourceAccounting`) : les workflows relancent une fois les tests en échec ([`ci-workflows.md`](ci-workflows.md)). |
-| GitHub Actions échoue à « Setup .NET 10 » : `409 Unable to download https://dotnetorigin.blob.core.windows.net/...` | Avec un canal (`10.0.x`), le script d'installation suit le lien `aka.ms`, qui pointait vers un stockage en erreur | Installer une version exacte : l'action `.github/actions/setup-dotnet-sdk` lit `latest-sdk` et télécharge depuis `builds.dotnet.microsoft.com` ([`ci-workflows.md`](ci-workflows.md#installation-du-sdk-net)). |
-| `dotnet` absent dans un conteneur cloud | Rien n'est préinstallé | `curl -sSL https://dot.net/v1/dotnet-install.sh \| bash -s -- --channel 10.0`. |
-| Un thread cloud ne peut pas supprimer une branche GitHub (403) | Droits insuffisants des sessions cloud | Benoit supprime les branches fusionnées lui-même avec une commande préparée. |
-| Le nom de branche reçu porte un suffixe (`…-txf6mn`) | Le harnais attribue des noms suffixés | Travailler sur la branche donnée ; vérifier qu'aucune branche orpheline ne reste. |
-| Un thread s'arrête sans reprendre | Limite d'usage du compte atteinte | Le coordinateur relance les threads arrêtés. |
-| `pkill -f <motif>` tue la commande elle-même (code 144) | Le motif correspond aussi à la ligne de commande du shell | Lancer `pkill` seul, avec un motif qui ne se correspond pas à lui-même. |
-| Mauvaise base pour un chantier ou fusion non voulue dans `main` | Plusieurs séries en parallèle | Une branche d'intégration `<série>/base` par série, une branche `<série>/<n>-<sujet>` par chantier ; seul Benoit fusionne dans `main` ([`../memory/README.md`](../memory/README.md)). |
+| The GitHub Actions all failed (August to October 2026) | No runner available | During this period, a green local build and tests were authoritative. Since 2026-10-24, the workflows run again (`Verify HackerOS WASM`, `Deploy to GitHub Pages`); the Playwright tests are in a separate manual workflow (`verify-browser-tests.yml`). A green local build and tests are still required before merging. PRs then failed on unstable tests (`Kill_minus_9`, `ResourceAccounting`): the workflows rerun failing tests once ([`ci-workflows.md`](ci-workflows.md)). |
+| GitHub Actions fails at "Setup .NET 10": `409 Unable to download https://dotnetorigin.blob.core.windows.net/...` | With a channel (`10.0.x`), the install script follows the `aka.ms` link, which pointed to a failing storage | Install an exact version: the `.github/actions/setup-dotnet-sdk` action reads `latest-sdk` and downloads from `builds.dotnet.microsoft.com` ([`ci-workflows.md`](ci-workflows.md#installation-du-sdk-net)). |
+| `dotnet` missing in a cloud container | Nothing is preinstalled | `curl -sSL https://dot.net/v1/dotnet-install.sh \| bash -s -- --channel 10.0`. |
+| A cloud thread cannot delete a GitHub branch (403) | Insufficient rights of cloud sessions | Benoit deletes merged branches himself with a prepared command. |
+| The received branch name carries a suffix (`…-txf6mn`) | The harness assigns suffixed names | Work on the given branch; check that no orphan branch remains. |
+| A thread stops without resuming | Account usage limit reached | The coordinator restarts stopped threads. |
+| `pkill -f <motif>` kills the command itself (code 144) | The pattern also matches the command line of the shell | Run `pkill` alone, with a pattern that does not match itself. |
+| Wrong base for a work item or unwanted merge into `main` | Several series in parallel | One integration branch `<série>/base` per series, one branch `<série>/<n>-<sujet>` per work item; only Benoit merges into `main` ([`../memory/README.md`](../memory/README.md)). |
 
-## Tâches de ce document
+## Tasks of this document
 
-- [x] Rassembler les pièges des plans, bilans, ADR et de la mémoire du projet.
-- [ ] Ajouter ici tout nouveau piège qui a coûté du temps, dans la même PR que sa solution.
+- [x] Gather the pitfalls from the plans, reviews, ADRs and project memory.
+- [ ] Add here any new pitfall that cost time, in the same PR as its solution.

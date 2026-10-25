@@ -1,22 +1,22 @@
-# Sauvegarde système côté apps
+# System backup for apps
 
-Ce document décrit ce qu'une app voit de la sauvegarde de la machine : l'API `HackSystemBackup`, l'archive `.hosbak`, la capacité `system.backup` et les codes d'erreur d'espace. La mise en œuvre (séquence, espace de stockage, cache PWA, montées de version IndexedDB, tests) est dans [`../dev/system-backup.md`](../dev/system-backup.md).
+This document describes what an app sees of the machine backup: the `HackSystemBackup` API, the `.hosbak` archive, the `system.backup` capability and the space error codes. The implementation (sequence, storage space, PWA cache, IndexedDB version upgrades, tests) is in [`../dev/system-backup.md`](../dev/system-backup.md).
 
-## Archive `.hosbak`
+## `.hosbak` archive
 
-Le JSON `formatVersion: 1` de `IndexedDbBackupService` (version du schéma,
-tous les magasins, SHA-256), compressé en gzip. `ReadArchive` reconnaît le gzip
-à ses deux premiers octets (`1F 8B`) et accepte aussi le JSON brut. Une archive
-abîmée, vide, falsifiée (empreinte fausse) ou d'une autre version de schéma est
-refusée **avant** toute écriture, avec un message qui nomme les deux versions :
+The `formatVersion: 1` JSON of `IndexedDbBackupService` (schema version,
+all stores, SHA-256), compressed with gzip. `ReadArchive` recognizes gzip
+by its first two bytes (`1F 8B`) and also accepts raw JSON. An archive that is
+damaged, empty, tampered with (wrong hash) or from another schema version is
+refused **before** any write, with a message that names both versions:
 
 ```text
 This backup uses database schema version 3; this HackerOS uses version 4. It cannot be restored here.
 ```
 
-Nom : `hackeros-AAAAMMJJ-HHMMSSZ.hosbak` (heure UTC de l'export).
+Name: `hackeros-AAAAMMJJ-HHMMSSZ.hosbak` (UTC time of the export).
 
-## API du SDK
+## SDK API
 
 ```csharp
 // Capacité system.backup (dangereuse) et un administrateur à chaque appel.
@@ -25,44 +25,44 @@ HackBackupInfo? restored = await HackSystemBackup.RestoreAsync(AppContext, HackB
 // restored == null : l'utilisateur a fermé le sélecteur ; sinon la machine redémarre.
 ```
 
-| Membre | Effet |
+| Member | Effect |
 |---|---|
-| `IsSupported`, `IsSupportedFor(context)` | `false` sur un hôte sans IndexedDB. |
-| `CreateAsync` | Demande un administrateur, exporte, télécharge l'archive sur l'hôte, journalise. |
-| `RestoreAsync(mode)` | Ouvre le sélecteur de l'hôte, valide l'archive, **puis** demande un administrateur, ferme la session, restaure, redémarre. |
-| `HackBackupInvalidException` | Archive refusée (sous-classe de `HackIOException`). |
+| `IsSupported`, `IsSupportedFor(context)` | `false` on a host without IndexedDB. |
+| `CreateAsync` | Asks for an administrator, exports, downloads the archive on the host, logs. |
+| `RestoreAsync(mode)` | Opens the host's picker, validates the archive, **then** asks for an administrator, closes the session, restores, reboots. |
+| `HackBackupInvalidException` | Archive refused (subclass of `HackIOException`). |
 
-L'ordre de `RestoreAsync` est voulu : le navigateur n'ouvre son sélecteur que
-juste après un geste de l'utilisateur (clic, ou Entrée dans le terminal), et
-un mauvais fichier ne doit coûter à personne un mot de passe.
+The order of `RestoreAsync` is deliberate: the browser only opens its picker
+right after a user gesture (click, or Enter in the terminal), and
+a wrong file must not cost anyone a password.
 
-## Capacité
+## Capability
 
-`HackSystemBackup` exige la capacité `system.backup`, qui est dangereuse (ADR 0049). Seule l'app système Paramètres la déclare. Un administrateur est demandé à chaque appel.
+`HackSystemBackup` requires the `system.backup` capability, which is dangerous (ADR 0049). Only the Settings system app declares it. An administrator is requested on every call.
 
-## Règles
+## Rules
 
-- Tester `HackSystemBackup.IsSupported` (ou `IsSupportedFor(context)`) avant d'afficher une action : sur un hôte sans IndexedDB il vaut `false`, et l'onglet Backup de Paramètres est masqué.
-- Déclencher `RestoreAsync` depuis un geste de l'utilisateur (clic, ou Entrée dans le terminal) : le navigateur n'ouvre son sélecteur que juste après un geste. La validation de l'archive passe avant la demande d'administrateur, si bien qu'un mauvais fichier ne coûte pas de mot de passe.
-- Traiter `null` comme « l'utilisateur a fermé le sélecteur » : la machine ne redémarre pas.
-- Traiter `HackBackupInvalidException` : c'est une `HackIOException`, et l'archive refusée n'a rien écrit.
+- Test `HackSystemBackup.IsSupported` (or `IsSupportedFor(context)`) before displaying an action: on a host without IndexedDB it is `false`, and the Backup tab of Settings is hidden.
+- Trigger `RestoreAsync` from a user gesture (click, or Enter in the terminal): the browser only opens its picker right after a gesture. Archive validation comes before the administrator request, so a wrong file costs no password.
+- Treat `null` as "the user closed the picker": the machine does not reboot.
+- Handle `HackBackupInvalidException`: it is a `HackIOException`, and the refused archive wrote nothing.
 
-## Réserve de root
+## Root reserve
 
-Dans la réserve, `FileSystemService` refuse `Create`, `Write` et `Copy` d'un
-appelant dont l'autorité effective est sous Administrateur, avec `NoSpace`.
-Le système (journaux, démarrage), root (`sudo`) et l'administrateur écrivent
-jusqu'à la vraie limite du navigateur. Les montages virtuels (`/proc`, `/dev`)
-ne sont jamais concernés.
+In the reserve, `FileSystemService` refuses `Create`, `Write` and `Copy` from a
+caller whose effective authority is below Administrator, with `NoSpace`.
+The system (logs, boot), root (`sudo`) and the administrator write
+up to the real browser limit. Virtual mounts (`/proc`, `/dev`)
+are never concerned.
 
-## Codes `NoSpace` et `FileTooLarge`
+## `NoSpace` and `FileTooLarge` codes
 
-| Origine | Code | Message du shell |
+| Origin | Code | Shell message |
 |---|---|---|
-| `QuotaExceededError` d'IndexedDB (transaction annulée en entier) | `NoSpace` | `No space left on device` |
-| Réserve de root | `NoSpace` | `No space left on device` |
-| Contenu de plus de 16 Mio | `FileTooLarge` | `File too large` |
+| IndexedDB `QuotaExceededError` (whole transaction canceled) | `NoSpace` | `No space left on device` |
+| Root reserve | `NoSpace` | `No space left on device` |
+| Content over 16 MiB | `FileTooLarge` | `File too large` |
 
-`HackFile`/`HackFileStream` lèvent `HackIOException` avec `ErrorCode` ;
-`ShellErrorText.Describe` et les commandes (`chmod`, `mkdir`…) affichent le
-message Linux.
+`HackFile`/`HackFileStream` throw `HackIOException` with `ErrorCode`;
+`ShellErrorText.Describe` and the commands (`chmod`, `mkdir`...) display the
+Linux message.

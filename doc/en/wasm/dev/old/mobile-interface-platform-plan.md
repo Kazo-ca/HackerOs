@@ -1,130 +1,129 @@
-# Plan de plateforme et d’interface Mobile
+# Mobile platform and interface plan
 
-> Mise à jour du 2026-10-23 : accueil paginé, dock, tiroir et aides souris sont
-> décrits dans [mobile-home-screen.md](../mobile-home-screen.md) et
-> l'[ADR 0165](../adr/0165-mobile-home-drawer-and-mouse-controls.md), qui
-> complètent les primitives de navigation de ce plan archivé.
+> Update of 2026-10-23: paginated home screen, dock, drawer and mouse aids are
+> described in [mobile-home-screen.md](../mobile-home-screen.md) and
+> [ADR 0165](../adr/0165-mobile-home-drawer-and-mouse-controls.md), which
+> complement the navigation primitives of this archived plan.
 
-**Statut :** Phase 0 (fondation) faite le 2026-08-18, Phase 1 (manifeste et
-résolution de point d’entrée) faite le 2026-08-18, Phase 2a (primitives shell
-Mobile), Phase 2b (`MOB-008`, changement de shell contrôlé), Phase 2c
-(`MOB-012`/`MOB-013`, contrat Back applicatif) et `MOB-011` (pile de
-navigation et surface Recent, complétant les étapes 1/3/4/5 de §7.3 — Phase 2
-est donc entièrement close) faites entre le 2026-08-18 et le 2026-08-23, puis
-`MOB-015` (clavier virtuel réutilisable, généralisé au-delà du seul Terminal —
-voir §16.11) faite le 2026-08-23 — voir §16 ; le reste (`MOB-016` à `MOB-018`)
-reste à l’état de proposition  
-**Modes initiaux :** `desktop`, `mobile`  
-**Extensibilité requise :** ajout ultérieur d’autres plateformes sans refonte du
-manifeste ou du catalogue
+**Status:** Phase 0 (foundation) done on 2026-08-18, Phase 1 (manifest and
+entry point resolution) done on 2026-08-18, Phase 2a (Mobile shell
+primitives), Phase 2b (`MOB-008`, controlled shell switch), Phase 2c
+(`MOB-012`/`MOB-013`, application Back contract) and `MOB-011` (navigation
+stack and Recent surface, completing steps 1/3/4/5 of §7.3, so Phase 2
+is entirely closed) done between 2026-08-18 and 2026-08-23, then
+`MOB-015` (reusable virtual keyboard, generalized beyond the Terminal alone,
+see §16.11) done on 2026-08-23; see §16; the rest (`MOB-016` to `MOB-018`)
+remains at the proposal stage  
+**Initial modes:** `desktop`, `mobile`  
+**Required extensibility:** later addition of other platforms without reworking the
+manifest or the catalog
 
-## 0. Note de mise à jour (2026-08-18)
+## 0. Update note (2026-08-18)
 
-Ce document a été écrit le 2026-08-03, **avant** l’extraction du moteur
-fenêtres/taskbar en packages autonomes (`HackerOs.Windowing.Core`,
+This document was written on 2026-08-03, **before** the extraction of the
+windows/taskbar engine into standalone packages (`HackerOs.Windowing.Core`,
 `HackerOs.Windowing.Abstractions`, `HackerOs.Windowing.Blazor`,
-`HackerOs.Taskbar.Blazor` — finalisée le 2026-08-17, voir
-[`window-taskbar-export-plan.md`](window-taskbar-export-plan.md) et
-[`progress-and-plan-2026-08-17.md`](progress-and-plan-2026-08-17.md)). Le texte
-original ci-dessous ne nomme jamais ces packages ; §16 fait le lien entre les
-concepts qu’il décrit et leur emplacement réel dans le code, et resséquence
-`MOB-002` à `MOB-018` en phases à la lumière de ce qui existe maintenant.
+`HackerOs.Taskbar.Blazor`, finalized on 2026-08-17, see
+[`window-taskbar-export-plan.md`](window-taskbar-export-plan.md) and
+[`progress-and-plan-2026-08-17.md`](progress-and-plan-2026-08-17.md)). The original
+text below never names these packages; §16 links the concepts it describes
+to their actual location in the code, and resequences
+`MOB-002` to `MOB-018` into phases in light of what exists now.
 
-Une première tranche (« Phase 0 ») a été implémentée le 2026-08-18 : elle pose
-`AppPlatformId`, la préférence `UiPlatformPreference` (persistance seule, pas
-encore de changement de shell), et — anticipant le besoin d’un point d’entrée
-UI pour ce toggle — une extensibilité `RenderFragment` sur le taskbar
-(`ITaskbarClockPanelSource`) permettant d’ouvrir un panneau
-notifications/calendrier/toggle en cliquant sur l’horloge, avec le contenu du
-panneau conçu entièrement en dehors du package taskbar. Détail complet en §16.
+A first slice ("Phase 0") was implemented on 2026-08-18: it lays down
+`AppPlatformId`, the `UiPlatformPreference` preference (persistence only, no
+shell switch yet), and, anticipating the need for a UI entry point
+for this toggle, a `RenderFragment` extensibility on the taskbar
+(`ITaskbarClockPanelSource`) allowing a notifications/calendar/toggle
+panel to be opened by clicking the clock, with the panel content designed entirely outside the taskbar package. Full detail in §16.
 
-## 1. Objectif
+## 1. Goal
 
-Ajouter un mode Mobile complet à HackerOS tout en conservant le mode Desktop.
-Une application pourra supporter une ou plusieurs plateformes et utiliser soit un
-point d’entrée partagé, soit un point d’entrée distinct par plateforme, dans un
-manifeste unique et avec un seul `AppId`.
+Add a complete Mobile mode to HackerOS while keeping the Desktop mode.
+An application will be able to support one or more platforms and use either a
+shared entry point or a distinct entry point per platform, in a single
+manifest and with a single `AppId`.
 
-Le mode Mobile doit :
+The Mobile mode must:
 
-- afficher une seule application plein écran à la fois ;
-- remplacer la taskbar Desktop par une barre de navigation inspirée d’Android
-  comportant Triangle/Back, Cercle/Home et Carré/Recent ;
-- offrir une pile de navigation cohérente ;
-- fournir au Terminal un clavier virtuel HackerOS sans ouvrir le clavier natif du
-  téléphone ;
-- filtrer les applications incompatibles avec la plateforme active ;
-- permettre de passer explicitement entre Desktop et Mobile ;
-- mémoriser le choix par appareil ;
-- utiliser la détection du navigateur tant qu’aucun choix explicite n’a été
-  enregistré.
+- display a single full-screen application at a time;
+- replace the Desktop taskbar with an Android-inspired navigation bar
+  with Triangle/Back, Circle/Home and Square/Recent;
+- offer a coherent navigation stack;
+- provide the Terminal with a HackerOS virtual keyboard without opening the phone's
+  native keyboard;
+- filter the applications incompatible with the active platform;
+- allow explicit switching between Desktop and Mobile;
+- remember the choice per device;
+- use browser detection as long as no explicit choice has been
+  recorded.
 
-Le bouton Back dans la barre de menu propre à l’application est une fonctionnalité
-Desktop seulement. Sur Mobile, la navigation Back est fournie par le triangle de
-la barre système.
+The Back button in the application's own menu bar is a Desktop-only
+feature. On Mobile, Back navigation is provided by the triangle of
+the system bar.
 
-## 2. Vocabulaire
+## 2. Vocabulary
 
-- **Plateforme :** environnement de présentation logique tel que `desktop` ou
-  `mobile`. Ce n’est pas le système d’exploitation réel du téléphone.
-- **Mode actif :** plateforme actuellement sélectionnée par le shell HackerOS.
-- **Détection automatique :** plateforme suggérée par les capacités rapportées par
-  le navigateur lorsqu’aucune préférence explicite n’existe.
-- **Point d’entrée de plateforme :** assembly et type utilisés pour lancer une
-  application sur une ou plusieurs plateformes.
-- **Back applicatif :** demande typée permettant à l’application active de revenir
-  à son état interne précédent.
-- **Home :** retour à l’accueil Mobile sans terminer automatiquement l’application.
-- **Recent :** surface affichant les applications/fenêtres mobiles récentes.
+- **Platform:** logical presentation environment such as `desktop` or
+  `mobile`. It is not the real operating system of the phone.
+- **Active mode:** platform currently selected by the HackerOS shell.
+- **Automatic detection:** platform suggested by the capabilities reported by
+  the browser when no explicit preference exists.
+- **Platform entry point:** assembly and type used to launch an
+  application on one or more platforms.
+- **Application Back:** typed request allowing the active application to return
+  to its previous internal state.
+- **Home:** return to the Mobile home without automatically terminating the application.
+- **Recent:** surface displaying the recent mobile applications/windows.
 
-## 3. Modèle de plateformes extensible
+## 3. Extensible platform model
 
-### 3.1 Ne pas utiliser un enum fermé
+### 3.1 Do not use a closed enum
 
-Introduire un identifiant validé, par exemple `AppPlatformId`, contenant une chaîne
-normalisée :
+Introduce a validated identifier, for example `AppPlatformId`, containing a normalized
+string:
 
-- minuscules ASCII ;
-- segments séparés par `-` si nécessaire ;
-- longueur bornée ;
-- valeurs initiales connues : `desktop` et `mobile`.
+- ASCII lowercase;
+- segments separated by `-` if necessary;
+- bounded length;
+- known initial values: `desktop` and `mobile`.
 
-Le catalogue des plateformes connues appartient au système de policy/build, pas à
-un `switch` compilé dans chaque application. Ajouter une troisième plateforme
-doit principalement nécessiter :
+The catalog of known platforms belongs to the policy/build system, not to
+a `switch` compiled into each application. Adding a third platform
+should mainly require:
 
-1. l’enregistrement de son identifiant et de ses capacités de shell ;
-2. une implémentation de shell ;
-3. des points d’entrée d’applications compatibles ;
-4. des tests et un profil de build.
+1. registration of its identifier and its shell capabilities;
+2. a shell implementation;
+3. compatible application entry points;
+4. tests and a build profile.
 
-Les manifestes existants ne doivent pas devenir invalides simplement parce qu’une
-nouvelle plateforme est ajoutée.
+Existing manifests must not become invalid simply because a
+new platform is added.
 
-### 3.2 Capacités décrites par la plateforme
+### 3.2 Capabilities described by the platform
 
-Une plateforme enregistrée expose un descripteur tel que :
+A registered platform exposes a descriptor such as:
 
-- identifiant ;
-- famille de shell ;
-- support des fenêtres flottantes ;
-- nombre de surfaces principales visibles ;
-- support move/resize/minimize/maximize ;
-- type de navigation système ;
-- présence d’une barre d’application ;
-- stratégie de clavier ;
-- contraintes de viewport et safe areas.
+- identifier;
+- shell family;
+- support for floating windows;
+- number of visible main surfaces;
+- move/resize/minimize/maximize support;
+- type of system navigation;
+- presence of an application bar;
+- keyboard strategy;
+- viewport constraints and safe areas.
 
-Le code applicatif interroge ces capacités par contrat lorsqu’il doit adapter un
-composant partagé. Il ne doit pas multiplier les tests directs
-`if (platform == mobile)` lorsqu’une capacité exprime mieux le besoin.
+Application code queries these capabilities through a contract when it needs to adapt a
+shared component. It must not multiply direct
+`if (platform == mobile)` tests when a capability expresses the need better.
 
-## 4. Manifeste unique et points d’entrée multiples
+## 4. Single manifest and multiple entry points
 
-### 4.1 Forme proposée
+### 4.1 Proposed form
 
-Faire évoluer le schéma de manifeste vers une collection de points d’entrée. Une
-entrée peut couvrir une ou plusieurs plateformes :
+Evolve the manifest schema towards a collection of entry points. An
+entry can cover one or more platforms:
 
 ```json
 {
@@ -143,7 +142,7 @@ entrée peut couvrir une ou plusieurs plateformes :
 }
 ```
 
-Application utilisant deux composants distincts avec le même `AppId` :
+Application using two distinct components with the same `AppId`:
 
 ```json
 {
@@ -167,211 +166,211 @@ Application utilisant deux composants distincts avec le même `AppId` :
 }
 ```
 
-Une application Desktop seulement déclare uniquement `desktop`. Elle n’apparaît
-pas lorsque `mobile` est actif. La règle est symétrique pour une application
-Mobile seulement.
+A Desktop-only application declares only `desktop`. It does not appear
+when `mobile` is active. The rule is symmetrical for a Mobile-only
+application.
 
-### 4.2 Règles de validation
+### 4.2 Validation rules
 
-- `supported` contient au moins une plateforme connue par le profil de build.
-- Chaque plateforme supportée est couverte par exactement un point d’entrée.
-- Un point d’entrée peut couvrir plusieurs plateformes.
-- Deux points d’entrée ne peuvent pas couvrir la même plateforme pour le même
-  manifeste, afin d’éviter une résolution ambiguë.
-- Un point d’entrée ne peut référencer une plateforme absente de `supported`.
-- Tous les points d’entrée doivent correspondre au `kind` déclaré et respecter les
-  mêmes règles de base/visibilité/trimming.
-- L’identité, la version, les permissions, les settings, les associations et les
-  données appartiennent au manifeste/AppId commun, pas à chaque point d’entrée.
-- Les ressources peuvent être communes ou ciblées par plateforme avec une
-  déclaration explicite.
-- Les dépendances doivent être résolues pour la plateforme active ; une dépendance
-  obligatoire indisponible rend l’application indisponible sur cette plateforme.
+- `supported` contains at least one platform known to the build profile.
+- Each supported platform is covered by exactly one entry point.
+- An entry point can cover several platforms.
+- Two entry points cannot cover the same platform for the same
+  manifest, to avoid an ambiguous resolution.
+- An entry point cannot reference a platform absent from `supported`.
+- All entry points must match the declared `kind` and respect the
+  same base/visibility/trimming rules.
+- Identity, version, permissions, settings, associations and
+  data belong to the common manifest/AppId, not to each entry point.
+- Resources can be common or targeted per platform with an
+  explicit declaration.
+- Dependencies must be resolved for the active platform; an unavailable mandatory
+  dependency makes the application unavailable on that platform.
 
-### 4.3 Compatibilité et migration
+### 4.3 Compatibility and migration
 
-- Introduire une nouvelle version du schéma de manifeste.
-- Migrer l’ancien champ `entryPoint` vers une entrée couvrant `desktop` par défaut.
-- Fournir une erreur claire si un ancien manifeste est lancé en Mobile sans
-  déclaration compatible.
-- Mettre à jour le JSON Schema, le contexte `System.Text.Json`, les fixtures, le
-  validateur CLI, les templates et les guides SDK.
-- Ne pas maintenir durablement deux sources de vérité indépendantes
-  (`entryPoint` et `entryPoints`). La compatibilité de lecture peut être
-  temporaire, mais la sérialisation canonique utilise le nouveau modèle.
+- Introduce a new version of the manifest schema.
+- Migrate the old `entryPoint` field to an entry covering `desktop` by default.
+- Provide a clear error if an old manifest is launched in Mobile without a
+  compatible declaration.
+- Update the JSON Schema, the `System.Text.Json` context, the fixtures, the
+  CLI validator, the templates and the SDK guides.
+- Do not durably maintain two independent sources of truth
+  (`entryPoint` and `entryPoints`). Read compatibility may be
+  temporary, but canonical serialization uses the new model.
 
-## 5. Résolution du point d’entrée
+## 5. Entry point resolution
 
-Ajouter un service indépendant du shell, par exemple
-`IAppPlatformEntryPointResolver` :
+Add a shell-independent service, for example
+`IAppPlatformEntryPointResolver`:
 
 ```text
-Manifest + plateforme active
-  -> validation de compatibilité
-  -> point d’entrée unique
-  -> découverte du type
-  -> descripteur effectif
-  -> lancement
+Manifest + active platform
+  -> compatibility validation
+  -> single entry point
+  -> type discovery
+  -> effective descriptor
+  -> launch
 ```
 
-Le catalogue conserve une identité d’application unique. Il ne doit pas créer deux
-applications cataloguées pour les variantes Desktop et Mobile.
+The catalog keeps a single application identity. It must not create two
+cataloged applications for the Desktop and Mobile variants.
 
-La résolution par plateforme intervient avant :
+Resolution by platform occurs before:
 
-- l’affichage dans le launcher ;
-- la sélection d’un handler de fichier ;
-- la résolution d’un intent ;
-- le chargement lazy d’une assembly ;
-- la création d’un processus et d’une surface ;
-- le contrôle singleton.
+- display in the launcher;
+- selection of a file handler;
+- resolution of an intent;
+- lazy loading of an assembly;
+- creation of a process and a surface;
+- singleton control.
 
-Conséquences attendues :
+Expected consequences:
 
-- une application incompatible n’apparaît pas dans le launcher actif ;
-- elle n’est pas proposée dans Open With ;
-- un intent explicite vers celle-ci retourne un résultat typé
-  `PlatformUnsupported` ;
-- ses services peuvent être traités séparément si leur point d’entrée n’est pas une
-  surface UI et si le manifeste les déclare compatibles ;
-- le même `AppId` conserve settings, grants, associations et données lors d’un
-  changement de plateforme.
+- an incompatible application does not appear in the active launcher;
+- it is not offered in Open With;
+- an explicit intent towards it returns a typed result
+  `PlatformUnsupported`;
+- its services can be handled separately if their entry point is not a
+  UI surface and if the manifest declares them compatible;
+- the same `AppId` keeps settings, grants, associations and data during a
+  platform change.
 
-## 6. Sélection et persistance du mode OS
+## 6. OS mode selection and persistence
 
-### 6.1 Modèle de préférence
+### 6.1 Preference model
 
-Persister une préférence par appareil :
+Persist a per-device preference:
 
 ```text
 UiPlatformPreference
   SelectionSource: Auto | Explicit
-  ExplicitPlatformId: string?     # requis seulement pour Explicit
-  LastResolvedPlatformId: string  # diagnostic, pas source d’autorité
+  ExplicitPlatformId: string?     # required only for Explicit
+  LastResolvedPlatformId: string  # diagnostic, not a source of authority
   Revision
 ```
 
-Cette préférence doit être stockée dans un document de settings device-scoped du
-shell système, par exemple sous l’AppId protégé `org.hackeros.shell`. Elle ne doit
-pas suivre l’utilisateur en roaming, car le choix est propre au device/navigateur.
+This preference must be stored in a device-scoped settings document of the
+system shell, for example under the protected AppId `org.hackeros.shell`. It must not
+follow the user in roaming, because the choice is specific to the device/browser.
 
-### 6.2 Détection automatique
+### 6.2 Automatic detection
 
-Créer `IPlatformEnvironmentProbe` derrière une implémentation Browser. La décision
-automatique combine des signaux plutôt que la seule largeur :
+Create `IPlatformEnvironmentProbe` behind a Browser implementation. The automatic
+decision combines signals rather than the width alone:
 
-- viewport et écran rapportés ;
-- pointer coarse/fine ;
-- présence de hover ;
-- touch points ;
-- mode PWA/standalone ;
-- user-agent client hints lorsque disponibles, utilisés comme indice et non comme
-  autorité unique.
+- reported viewport and screen;
+- coarse/fine pointer;
+- presence of hover;
+- touch points;
+- PWA/standalone mode;
+- user-agent client hints when available, used as a hint and not as the
+  sole authority.
 
-La politique retourne un résultat motivé et journalisable. Exemple :
+The policy returns a reasoned and loggable result. Example:
 
 ```text
-mobile si environnement tactile/coarse sans hover et largeur logique sous le seuil
-desktop autrement
+mobile if touch/coarse environment without hover and logical width below the threshold
+desktop otherwise
 ```
 
-Les seuils sont configurables et testés. Un redimensionnement ponctuel d’une
-fenêtre Desktop ne doit pas être confondu avec un changement d’appareil.
+The thresholds are configurable and tested. A one-off resize of a Desktop
+window must not be confused with a device change.
 
-### 6.3 Changement explicite
+### 6.3 Explicit change
 
-Le mode peut être changé dans Settings et, éventuellement, dans une action rapide
-du shell. Lors d’un changement explicite :
+The mode can be changed in Settings and, possibly, in a quick action
+of the shell. During an explicit change:
 
-1. valider que la plateforme cible est installée et activée ;
-2. prévenir les applications UI et demander confirmation pour les états sales ;
-3. annuler proprement les opérations de surface en cours ;
-4. arrêter les instances UI avec une raison typée `PlatformChanged` ;
-5. conserver les services compatibles qui ne dépendent pas du shell, ou les
-   redémarrer si leur contrat l’exige ;
-6. persister la préférence device-scoped de façon atomique ;
-7. reconstruire le shell cible ;
-8. résoudre à nouveau le launcher, les associations et les points d’entrée ;
-9. afficher Home sur Mobile ou le bureau sur Desktop.
+1. validate that the target platform is installed and enabled;
+2. warn the UI applications and ask for confirmation for dirty states;
+3. cleanly cancel the surface operations in progress;
+4. stop the UI instances with a typed reason `PlatformChanged`;
+5. keep the compatible services that do not depend on the shell, or
+   restart them if their contract requires it;
+6. persist the device-scoped preference atomically;
+7. rebuild the target shell;
+8. resolve the launcher, associations and entry points again;
+9. display Home on Mobile or the desktop on Desktop.
 
-Ne pas remplacer à chaud le type de composant d’une instance existante. Une
-instance Desktop et une instance Mobile peuvent partager le même `AppId`, mais le
-changement de point d’entrée passe par un arrêt/re-lancement contrôlé afin de
-respecter le cycle de vie et les ressources.
+Do not hot-swap the component type of an existing instance. A
+Desktop instance and a Mobile instance can share the same `AppId`, but the
+entry point change goes through a controlled stop/relaunch in order to
+respect the lifecycle and the resources.
 
-Fournir une action « Utiliser la détection automatique » qui supprime l’override
-explicite et revient au résultat du navigateur.
+Provide a "Use automatic detection" action that removes the
+explicit override and returns to the browser result.
 
-## 7. Shell Mobile
+## 7. Mobile shell
 
-### 7.1 Fenêtres plein écran
+### 7.1 Full-screen windows
 
-En Mobile :
+In Mobile:
 
-- une seule surface principale est visible ;
-- ses bounds correspondent à la work area entre safe areas, barre système et
-  clavier virtuel éventuel ;
-- déplacement, redimensionnement, minimisation par chrome, maximisation et
-  restauration sont indisponibles ;
-- les dialogues sont plein écran ou présentés comme feuilles modales adaptées ;
-- les fenêtres secondaires appartenant à l’application sont représentées dans la
-  pile de navigation plutôt que comme fenêtres flottantes lorsque possible ;
-- l’état processus et lifecycle reste géré par le même noyau.
+- a single main surface is visible;
+- its bounds correspond to the work area between safe areas, system bar and
+  possible virtual keyboard;
+- move, resize, chrome minimization, maximization and
+  restoration are unavailable;
+- dialogs are full screen or presented as adapted modal sheets;
+- secondary windows belonging to the application are represented in the
+  navigation stack rather than as floating windows when possible;
+- the process and lifecycle state stays managed by the same kernel.
 
-Le moteur exportable ne doit pas simuler une fenêtre 1280x720 réduite. Le mode de
-présentation doit appliquer une vraie politique `SingleFullScreenSurface`.
+The exportable engine must not simulate a reduced 1280x720 window. The presentation
+mode must apply a real `SingleFullScreenSurface` policy.
 
-### 7.2 Barre système inspirée d’Android
+### 7.2 Android-inspired system bar
 
-Créer `MobileSystemNavigationBar.razor` et son fichier CSS collocaté. La barre est
-fixée en bas, respecte `env(safe-area-inset-bottom)` et expose trois boutons avec
-labels accessibles :
+Create `MobileSystemNavigationBar.razor` and its collocated CSS file. The bar is
+fixed at the bottom, respects `env(safe-area-inset-bottom)` and exposes three buttons with
+accessible labels:
 
-- **Triangle — Back** ;
-- **Cercle — Home** ;
-- **Carré — Recent**.
+- **Triangle: Back**;
+- **Circle: Home**;
+- **Square: Recent**.
 
-L’inspiration visuelle correspond à la navigation Android classique, sans copier
-des assets propriétaires. Utiliser des formes CSS/SVG appartenant au projet,
-dimensionnées pour une cible tactile d’au moins 44×44 CSS pixels.
+The visual inspiration corresponds to classic Android navigation, without copying
+proprietary assets. Use CSS/SVG shapes owned by the project,
+sized for a touch target of at least 44×44 CSS pixels.
 
-### 7.3 Sémantique Back
+### 7.3 Back semantics
 
-Ordre de traitement du triangle Mobile :
+Processing order of the Mobile triangle:
 
-1. fermer ou revenir dans le dialogue/modal système supérieur s’il est annulable ;
-2. appeler le handler Back de l’application active si elle expose explicitement ce
-   support et peut revenir ;
-3. revenir à l’entrée précédente de la pile de navigation de l’application ou du
-   shell ;
-4. si aucun état précédent n’existe, fermer/retirer la surface active selon sa
-   politique de fermeture et revenir à Home ;
-5. à Home sans historique, ne rien faire et produire un retour accessible discret.
+1. close or go back in the topmost system dialog/modal if it is cancelable;
+2. call the Back handler of the active application if it explicitly exposes this
+   support and can go back;
+3. return to the previous entry of the application or shell navigation
+   stack;
+4. if no previous state exists, close/remove the active surface according to its
+   closing policy and return to Home;
+5. at Home without history, do nothing and produce a discreet accessible feedback.
 
-Le Back ne doit pas contourner une confirmation de données non sauvegardées.
+Back must not bypass a confirmation of unsaved data.
 
-### 7.4 Sémantique Home
+### 7.4 Home semantics
 
-- Masquer la surface active et afficher l’accueil Mobile.
-- Ne pas terminer automatiquement le processus.
-- Publier un événement de blur/background dans la session OS.
-- Respecter la politique de suspension simulée et les limites de ressources.
-- Un nouvel appui sur l’icône de l’application restaure son instance singleton ou
-  en crée une selon son manifeste.
+- Hide the active surface and display the Mobile home.
+- Do not automatically terminate the process.
+- Publish a blur/background event in the OS session.
+- Respect the simulated suspension policy and the resource limits.
+- A new press on the application icon restores its singleton instance or
+  creates one according to its manifest.
 
-### 7.5 Sémantique Recent
+### 7.5 Recent semantics
 
-- Afficher les instances UI récentes compatibles avec la plateforme active.
-- Présenter un aperçu sûr, le titre et l’icône sans exposer de contenu sensible
-  lorsqu’une application demande la protection des previews.
-- Permettre activation et fermeture avec confirmation éventuelle.
-- Ne pas confondre Recent avec la liste de tous les processus/services.
-- Exclure les applications devenues incompatibles ou désactivées après une mise à
-  jour de policy.
+- Display the recent UI instances compatible with the active platform.
+- Present a safe preview, the title and the icon without exposing sensitive content
+  when an application requests preview protection.
+- Allow activation and closing with possible confirmation.
+- Do not confuse Recent with the list of all processes/services.
+- Exclude applications that became incompatible or disabled after a
+  policy update.
 
-## 8. Contrat Back applicatif
+## 8. Application Back contract
 
-Ajouter un contrat SDK sans dépendance au composant de shell, par exemple :
+Add an SDK contract without dependency on the shell component, for example:
 
 ```csharp
 public interface IAppBackHandler
@@ -383,934 +382,923 @@ public interface IAppBackHandler
 }
 ```
 
-Le résultat est typé : `Handled`, `NotHandled`, `Blocked`, `ConfirmationRequired`
-ou `Faulted`. Les changements de `CanNavigateBack` sont observables afin que le
-shell mette à jour ses contrôles sans polling.
+The result is typed: `Handled`, `NotHandled`, `Blocked`, `ConfirmationRequired`
+or `Faulted`. Changes of `CanNavigateBack` are observable so that the
+shell updates its controls without polling.
 
-Le manifeste déclare explicitement le support Back pour chaque point d’entrée ou
-pour l’application partagée. La découverte valide que le type implémente le
-contrat annoncé.
+The manifest explicitly declares Back support for each entry point or
+for the shared application. Discovery validates that the type implements the
+announced contract.
 
 ### Desktop
 
-- Si l’application déclare Back, afficher un bouton Back dans sa barre de menu ou
-  barre applicative Desktop.
-- Le bouton est désactivé lorsque `CanNavigateBack` est faux.
-- Il n’est pas ajouté au chrome système des applications qui ne le déclarent pas.
-- Le raccourci clavier documenté utilise le même contrat.
+- If the application declares Back, display a Back button in its menu bar or
+  Desktop application bar.
+- The button is disabled when `CanNavigateBack` is false.
+- It is not added to the system chrome of applications that do not declare it.
+- The documented keyboard shortcut uses the same contract.
 
 ### Mobile
 
-- Ne pas dupliquer le bouton Back dans la barre applicative.
-- Le triangle système appelle le même contrat.
-- Une application peut rendre sa propre navigation interne, mais ne doit pas
-  masquer ou intercepter silencieusement la barre système.
+- Do not duplicate the Back button in the application bar.
+- The system triangle calls the same contract.
+- An application can render its own internal navigation, but must not
+  hide or silently intercept the system bar.
 
-## 9. Terminal et clavier virtuel Mobile
+## 9. Terminal and Mobile virtual keyboard
 
-### 9.1 Principe
+### 9.1 Principle
 
-Sur Mobile, le Terminal utilise un clavier virtuel HackerOS intégré à sa surface.
-Le clavier natif du téléphone ne doit pas s’ouvrir pour la zone terminal.
+On Mobile, the Terminal uses a HackerOS virtual keyboard integrated into its surface.
+The phone's native keyboard must not open for the terminal area.
 
-Créer une abstraction de saisie terminal commune afin que clavier physique,
-clavier virtuel et tests produisent les mêmes événements typés vers la session.
+Create a common terminal input abstraction so that physical keyboard,
+virtual keyboard and tests produce the same typed events towards the session.
 
-### 9.2 Fonctionnalités minimales
+### 9.2 Minimum features
 
-Le clavier virtuel doit fournir :
+The virtual keyboard must provide:
 
-- disposition lettres/chiffres ;
-- disposition symboles utile au shell (`/`, `-`, `_`, `.`, `|`, `>`, `<`, `~`,
-  `*`, quotes et backslash) ;
-- Shift et verrouillage de majuscules ;
-- Ctrl, Alt/Meta selon la politique du terminal ;
-- Escape, Tab, Enter et Backspace ;
-- flèches directionnelles, Home/End et Page Up/Page Down ;
-- raccourcis utiles comme Ctrl+C, Ctrl+D, Ctrl+L et Ctrl+R ;
-- état visuel des modificateurs ;
-- labels accessibles et retour tactile/visuel configurable ;
-- répétition bornée pour Backspace et flèches ;
-- internationalisation des labels sans changer les caractères du shell.
+- letters/digits layout;
+- symbols layout useful to the shell (`/`, `-`, `_`, `.`, `|`, `>`, `<`, `~`,
+  `*`, quotes and backslash);
+- Shift and caps lock;
+- Ctrl, Alt/Meta according to the terminal policy;
+- Escape, Tab, Enter and Backspace;
+- arrow keys, Home/End and Page Up/Page Down;
+- useful shortcuts such as Ctrl+C, Ctrl+D, Ctrl+L and Ctrl+R;
+- visual state of the modifiers;
+- accessible labels and configurable tactile/visual feedback;
+- bounded repeat for Backspace and arrows;
+- internationalization of labels without changing the shell characters.
 
-### 9.3 Intégration navigateur
+### 9.3 Browser integration
 
-- La surface terminal ne doit pas dépendre d’un `<input>` texte qui déclenche le
-  clavier natif.
-- Utiliser `inputmode="none"`, focus programmatique et interop minimale seulement
-  si les moteurs mobiles l’exigent ; tester réellement Chrome Android et la
-  politique Safari/iOS retenue.
-- Prévoir un fallback explicite si un navigateur force tout de même son clavier,
-  sans créer deux sources de saisie concurrentes.
-- Quand le clavier HackerOS apparaît, recalculer la work area du terminal et son
-  nombre de lignes/colonnes sans recouvrir le prompt.
-- Les changements d’orientation et safe areas déclenchent un événement de resize
-  terminal borné et annulable.
-- Le clavier ne doit jamais recevoir ou conserver le contenu sensible hors de la
-  session active.
+- The terminal surface must not depend on a text `<input>` that triggers the
+  native keyboard.
+- Use `inputmode="none"`, programmatic focus and minimal interop only
+  if the mobile engines require it; actually test Chrome Android and the
+  chosen Safari/iOS policy.
+- Provide an explicit fallback if a browser forces its keyboard anyway,
+  without creating two competing input sources.
+- When the HackerOS keyboard appears, recompute the terminal work area and its
+  number of rows/columns without covering the prompt.
+- Orientation and safe-area changes trigger a bounded and cancelable
+  terminal resize event.
+- The keyboard must never receive or keep sensitive content outside the
+  active session.
 
 ### 9.4 Desktop
 
-Le Terminal Desktop conserve clavier physique et comportement actuel. Un clavier
-virtuel facultatif peut être exposé comme outil d’accessibilité, mais il n’est pas
-activé automatiquement.
+The Desktop Terminal keeps the physical keyboard and current behavior. An optional virtual
+keyboard can be exposed as an accessibility tool, but it is not
+enabled automatically.
 
-## 10. Cycle de vie et données lors du changement de plateforme
+## 10. Lifecycle and data during the platform change
 
-- Le changement de plateforme ne change jamais `AppId`.
-- Les grants, settings, données privées et associations restent associés à
-  l’application commune.
-- Les settings de présentation propres à une plateforme utilisent des clés ou
-  documents distincts sous le même AppId.
-- La géométrie Desktop n’est pas appliquée en Mobile.
-- L’historique Recent Mobile n’est pas interprété comme un placement de fenêtre
-  Desktop.
-- Les intents et fichiers en attente sont conservés seulement si leur contrat est
-  sérialisable et si le point d’entrée cible les accepte.
-- Les états volatils de composant ne sont pas transférés implicitement entre deux
-  types d’entrée. Une application peut fournir une migration/reconstruction
-  explicite via son modèle persistant.
-- Si une application active ne supporte pas la plateforme cible, demander une
-  confirmation si elle contient un état sale, puis l’arrêter et la retirer des
-  surfaces visibles.
+- A platform change never changes the `AppId`.
+- Grants, settings, private data and associations stay associated with the
+  common application.
+- Presentation settings specific to a platform use distinct keys or
+  documents under the same AppId.
+- Desktop geometry is not applied in Mobile.
+- The Mobile Recent history is not interpreted as a Desktop window
+  placement.
+- Pending intents and files are kept only if their contract is
+  serializable and if the target entry point accepts them.
+- Volatile component states are not implicitly transferred between two
+  entry types. An application can provide an explicit migration/reconstruction
+  through its persistent model.
+- If an active application does not support the target platform, ask for
+  confirmation if it contains a dirty state, then stop it and remove it from the visible
+  surfaces.
 
-## 11. Accessibilité, orientation et responsive design
+## 11. Accessibility, orientation and responsive design
 
-- Respecter WCAG 2.2 AA, zoom et tailles de texte utilisateur.
-- Cibles tactiles d’au moins 44×44 CSS pixels.
-- Navigation utilisable avec lecteur d’écran et clavier externe.
-- Annoncer les changements Home/Recent/Back et le changement de plateforme.
-- Supporter portrait et paysage sans recouvrir contenu, dialogues ou terminal.
-- Utiliser les safe-area insets pour appareils avec encoche ou barre système.
-- Ne pas supposer une largeur fixe ni identifier Mobile uniquement par user-agent.
-- Tester les textes longs, traductions, RTL selon la décision produit, contraste,
-  mouvement réduit et grossissement 200/400 %.
+- Respect WCAG 2.2 AA, zoom and user text sizes.
+- Touch targets of at least 44×44 CSS pixels.
+- Navigation usable with a screen reader and external keyboard.
+- Announce Home/Recent/Back changes and the platform change.
+- Support portrait and landscape without covering content, dialogs or terminal.
+- Use safe-area insets for devices with a notch or system bar.
+- Do not assume a fixed width nor identify Mobile through user-agent alone.
+- Test long texts, translations, RTL according to the product decision, contrast,
+  reduced motion and 200/400% magnification.
 
-## 12. Sécurité et autorité
+## 12. Security and authority
 
-- Changer le mode de présentation est un setting device-scoped autorisé à
-  l’utilisateur du device ; modifier les plateformes installées/activées reste une
-  opération Administrateur/System.
-- Une application ne peut pas forcer le mode global sans intent/capability dédié et
-  confirmation utilisateur.
-- L’identifiant de plateforme fourni par le navigateur n’accorde aucune capacité.
-- Une variante Mobile n’obtient pas plus de permissions que la variante Desktop du
-  même AppId.
-- Les previews Recent respectent les contenus sensibles.
-- Le clavier terminal ne doit pas injecter de commandes autrement que par le flux
-  d’entrée typé de la session active.
-- Le routage de point d’entrée valide toujours assembly, type, AppId, kind,
-  plateforme, profil de build et compatibilité SDK avant instanciation.
+- Changing the presentation mode is a device-scoped setting allowed to
+  the user of the device; modifying the installed/enabled platforms remains an
+  Administrator/System operation.
+- An application cannot force the global mode without a dedicated intent/capability and
+  user confirmation.
+- The platform identifier provided by the browser grants no capability.
+- A Mobile variant does not obtain more permissions than the Desktop variant of the
+  same AppId.
+- Recent previews respect sensitive content.
+- The terminal keyboard must not inject commands other than through the typed
+  input stream of the active session.
+- Entry point routing always validates assembly, type, AppId, kind,
+  platform, build profile and SDK compatibility before instantiation.
 
-## 13. Tests requis
+## 13. Required tests
 
-### Manifestes et catalogue
+### Manifests and catalog
 
-- point d’entrée unique couvrant Desktop et Mobile ;
-- deux points d’entrée distincts sous le même AppId ;
-- application Desktop seulement cachée en Mobile et inversement ;
-- couverture manquante, doublon ou plateforme inconnue rejetés ;
-- troisième plateforme fictive enregistrée sans modification du parseur ;
-- résolution d’intents, associations et dépendances selon la plateforme ;
-- compatibilité/migration des manifestes historiques.
+- single entry point covering Desktop and Mobile;
+- two distinct entry points under the same AppId;
+- Desktop-only application hidden in Mobile and vice versa;
+- missing coverage, duplicate or unknown platform rejected;
+- fictitious third platform registered without changing the parser;
+- resolution of intents, associations and dependencies according to the platform;
+- compatibility/migration of historical manifests.
 
-### Mode OS
+### OS mode
 
-- premier démarrage Auto Desktop et Auto Mobile ;
-- choix explicite persisté par device ;
-- retour à Auto ;
-- changement de plateforme avec applications propres ou sales ;
-- services compatibles et incompatibles ;
-- reconstruction après reload ;
-- absence de fuite d’état entre deux devices/utilisateurs.
+- first start Auto Desktop and Auto Mobile;
+- explicit choice persisted per device;
+- return to Auto;
+- platform change with clean or dirty applications;
+- compatible and incompatible services;
+- reconstruction after reload;
+- no state leak between two devices/users.
 
-### Shell Mobile
+### Mobile shell
 
-- surface toujours plein écran en portrait/paysage ;
-- aucun drag/resize/chrome Desktop actif ;
-- Back : dialogue, app, historique, fermeture et Home ;
-- Home conserve le processus selon sa policy ;
-- Recent active et ferme les bonnes instances ;
-- safe areas, lecteur d’écran, clavier externe et focus ;
-- disparition immédiate des applications incompatibles/désactivées.
+- surface always full screen in portrait/landscape;
+- no Desktop drag/resize/chrome active;
+- Back: dialog, app, history, closing and Home;
+- Home keeps the process according to its policy;
+- Recent activates and closes the right instances;
+- safe areas, screen reader, external keyboard and focus;
+- immediate disappearance of incompatible/disabled applications.
 
-### Terminal Mobile
+### Mobile Terminal
 
-- aucun clavier natif à l’ouverture et au focus ;
-- saisie lettres, symboles et modificateurs ;
-- Ctrl+C, Ctrl+D, Tab, Escape, flèches et répétition ;
-- redimensionnement du viewport lorsque le clavier apparaît ;
-- orientation, reconnexion, annulation et fermeture ;
-- commandes ordinaires et applications terminal full-screen ;
-- absence de double événement entre clavier physique et virtuel.
+- no native keyboard on opening and on focus;
+- input of letters, symbols and modifiers;
+- Ctrl+C, Ctrl+D, Tab, Escape, arrows and repeat;
+- viewport resize when the keyboard appears;
+- orientation, reconnection, cancellation and closing;
+- ordinary commands and full-screen terminal applications;
+- no double event between physical and virtual keyboard.
 
-### Navigateur/PWA
+### Browser/PWA
 
-- Chrome Android réel ou émulation documentée ;
-- stratégie et preuves Safari/iOS selon la matrice supportée ;
-- installation PWA, reload hors ligne et update ;
-- persistance du mode par device ;
-- changement Desktop/Mobile sans mélange d’assets ou de points d’entrée ;
-- console et réseau sans erreur.
+- real Chrome Android or documented emulation;
+- Safari/iOS strategy and evidence according to the supported matrix;
+- PWA installation, offline reload and update;
+- persistence of the mode per device;
+- Desktop/Mobile switch without mixing assets or entry points;
+- console and network without errors.
 
-## 14. Plan d’implémentation
+## 14. Implementation plan
 
-- [x] `MOB-001` Créer `AppPlatformId` et le registre extensible de plateformes.
-  **Phase 0, 2026-08-18** — `Shared/HackerOs.App.Abstractions/AppPlatformId.cs`
-  (type validé + `WellKnownAppPlatforms.Desktop`/`.Mobile`). Pas encore de
-  descripteurs de capacités (`MOB-002`, toujours ouvert).
-- [x] `MOB-002` Définir les descripteurs de capacités de plateforme et les contrats
-  du shell. **Phase 1, 2026-08-18** —
+- [x] `MOB-001` Create `AppPlatformId` and the extensible platform registry.
+  **Phase 0, 2026-08-18**: `Shared/HackerOs.App.Abstractions/AppPlatformId.cs`
+  (validated type + `WellKnownAppPlatforms.Desktop`/`.Mobile`). No capability
+  descriptors yet (`MOB-002`, still open).
+- [x] `MOB-002` Define the platform capability descriptors and the shell
+  contracts. **Phase 1, 2026-08-18**:
   `Shared/HackerOs.App.Abstractions/AppPlatformCapabilities.cs`
   (`AppPlatformCapabilities`, `IAppPlatformCapabilityRegistry`/
-  `AppPlatformCapabilityRegistry`, descripteurs `WellKnownAppPlatformCapabilities.Desktop`/
-  `.Mobile`). Pas encore consommé par une UI de shell (ça reste Phase 2, `MOB-009`/`010`).
-- [x] `MOB-003` Faire évoluer le manifeste vers plusieurs points d’entrée couvrant
-  une ou plusieurs plateformes. **Phase 1, 2026-08-18** —
+  `AppPlatformCapabilityRegistry`, descriptors `WellKnownAppPlatformCapabilities.Desktop`/
+  `.Mobile`). Not yet consumed by a shell UI (that remains Phase 2, `MOB-009`/`010`).
+- [x] `MOB-003` Evolve the manifest towards several entry points covering
+  one or more platforms. **Phase 1, 2026-08-18**:
   `Shared/HackerOs.App.Abstractions/AppManifestPlatform.cs`
   (`AppManifestPlatform`, `AppPlatformEntryPointManifest`,
-  `AppManifestPlatformSupport.Resolve` normalizer). `AppManifest.EntryPoint` est
-  devenu optionnel ; `AppManifest.Platform` est le nouveau champ, mutuellement
-  exclusif avec `EntryPoint` (validé par `AppManifestValidator`). Un manifeste
-  historique n’utilisant que `entryPoint` est traité comme couvrant `desktop`
-  seul, sans qu’aucun des 40+ `app.manifest.json` existants n’ait eu besoin
-  d’être modifié — voir §16.5.
-- [x] `MOB-004` Mettre à jour JSON Schema, sérialisation source-generated,
-  validation, fixtures, CLI et templates. **Phase 1, 2026-08-18** — schéma :
-  `Shared/HackerOs.App.Abstractions/Schema/manifest.schema.v1.json` (`platform`
-  optionnel + règle `oneOf` entryPoint/platform) ; sérialisation :
-  `AppManifestJsonSerializerContext` + tri canonique dans
-  `AppManifestJsonSerializer.CreateCanonicalManifest` ; validation : voir
-  `MOB-003` ; fixtures : `window-multi-platform.valid.json` et
-  `invalid-platform-ambiguous.json` sous `Schema/Fixtures/` ; CLI :
-  `Tools/HackerOs.Tools.ManifestValidator` fonctionne sans modification (le
-  générateur source inclut `AppManifestPlatform` automatiquement, type atteint
-  depuis `AppManifest`), vérifié en validant un manifeste `platform` réel.
-  Pas de projet de template `dotnet new` trouvé dans le dépôt pour ce lot —
-  aucun à mettre à jour.
-- [x] `MOB-005` Implémenter `IAppPlatformEntryPointResolver` et l’intégrer à la
-  découverte, au catalogue, aux intents et aux associations. **Phase 1,
-  2026-08-18 — tranche découverte seule** :
+  `AppManifestPlatformSupport.Resolve` normalizer). `AppManifest.EntryPoint` became
+  optional; `AppManifest.Platform` is the new field, mutually
+  exclusive with `EntryPoint` (validated by `AppManifestValidator`). A
+  historical manifest using only `entryPoint` is treated as covering `desktop`
+  alone, without any of the 40+ existing `app.manifest.json` needing to
+  be modified; see §16.5.
+- [x] `MOB-004` Update JSON Schema, source-generated serialization,
+  validation, fixtures, CLI and templates. **Phase 1, 2026-08-18**: schema:
+  `Shared/HackerOs.App.Abstractions/Schema/manifest.schema.v1.json` (optional
+  `platform` + `oneOf` rule entryPoint/platform); serialization:
+  `AppManifestJsonSerializerContext` + canonical sort in
+  `AppManifestJsonSerializer.CreateCanonicalManifest`; validation: see
+  `MOB-003`; fixtures: `window-multi-platform.valid.json` and
+  `invalid-platform-ambiguous.json` under `Schema/Fixtures/`; CLI:
+  `Tools/HackerOs.Tools.ManifestValidator` works without modification (the
+  source generator includes `AppManifestPlatform` automatically, type reached
+  from `AppManifest`), verified by validating a real `platform` manifest.
+  No `dotnet new` template project found in the repository for this batch,
+  none to update.
+- [x] `MOB-005` Implement `IAppPlatformEntryPointResolver` and integrate it into
+  discovery, catalog, intents and associations. **Phase 1,
+  2026-08-18, discovery slice only**:
   `Platform/HackerOs.Platform.Core/Discovery/AppPlatformEntryPointResolver.cs`
-  + `AppEntryPointDiscovery.Discover` prend désormais un `activePlatform`
-  optionnel (défaut `desktop`, comportement inchangé pour tout appelant
-  existant). Un manifeste ne supportant pas la plateforme demandée est exclu du
-  résultat sans erreur, par §5. L’intégration aux intents/associations
-  (`FileAssociationResolver`, `AppIntentDispatcher`) est volontairement
-  **reportée à la Phase 2** (`MOB-008`) : filtrer ces surfaces sur la
-  préférence de plateforme *actuelle* de l’utilisateur avant que le shell sache
-  reconstruire proprement (arrêt des instances sales, etc.) masquerait toutes
-  les apps existantes dès qu’un utilisateur bascule le toggle Mobile de la
-  Phase 0, sans qu’aucun shell Mobile n’existe encore pour les reprendre — voir
-  §16.5.
-- [x] `MOB-006` Ajouter la préférence `Auto | Explicit` device-scoped et sa
-  migration. **Phase 0, 2026-08-18 — tranche persistance seule** :
+  + `AppEntryPointDiscovery.Discover` now takes an optional `activePlatform`
+  (default `desktop`, behavior unchanged for any existing caller).
+  A manifest not supporting the requested platform is excluded from the
+  result without error, per §5. Integration with intents/associations
+  (`FileAssociationResolver`, `AppIntentDispatcher`) is deliberately
+  **deferred to Phase 2** (`MOB-008`): filtering these surfaces on the user's
+  *current* platform preference before the shell knows how to rebuild cleanly
+  (stopping dirty instances, etc.) would hide all existing
+  apps as soon as a user flips the Phase 0 Mobile toggle, with no
+  Mobile shell yet to take them over; see §16.5.
+- [x] `MOB-006` Add the device-scoped `Auto | Explicit` preference and its
+  migration. **Phase 0, 2026-08-18, persistence slice only**:
   `Platform/HackerOs.Platform.Core/Shell/UiPlatformPreferenceSettingsDocuments.cs`
-  + `UiPlatformPreferenceService.cs` (scope `OsAdmin`/`SyncEligible:false` en
-  attendant un `InstallationId` durable pour un vrai scope `AppDevice`, voir
-  §16.3), exposée dans le panneau horloge (§16.4). La séquence contrôlée en 9
-  étapes de §6.3 (avertir les apps sales, arrêter les instances UI avec la
-  raison `PlatformChanged`, reconstruire le shell...) reste à faire — ce lot ne
-  fait volontairement rien de plus que persister le choix et notifier un futur
-  abonné, sans jamais changer le rendu de `DesktopShell`.
-- [x] `MOB-007` Implémenter `IPlatformEnvironmentProbe` Browser avec raisons de
-  décision testables. **Phase 0, 2026-08-18** —
+  + `UiPlatformPreferenceService.cs` (scope `OsAdmin`/`SyncEligible:false` pending a
+  durable `InstallationId` for a real `AppDevice` scope, see
+  §16.3), exposed in the clock panel (§16.4). The controlled 9-step sequence
+  of §6.3 (warn dirty apps, stop UI instances with the reason `PlatformChanged`,
+  rebuild the shell...) remains to be done; this batch deliberately does
+  nothing more than persist the choice and notify a future
+  subscriber, without ever changing the rendering of `DesktopShell`.
+- [x] `MOB-007` Implement the Browser `IPlatformEnvironmentProbe` with testable
+  decision reasons. **Phase 0, 2026-08-18**:
   `Platform/HackerOs.Platform.Core/Shell/IPlatformEnvironmentProbe.cs`
-  (`PlatformEnvironmentPolicy.Decide`, pur et testable sans navigateur) +
+  (`PlatformEnvironmentPolicy.Decide`, pure and testable without a browser) +
   `Platform/HackerOs.Platform.Blazor/Shell/BrowserPlatformEnvironmentProbe.cs`
-  (interop JS minimal, `wwwroot/platformEnvironmentProbe.js`).
-- [x] `MOB-008` Implémenter le changement contrôlé de shell et la raison d’arrêt
-  `PlatformChanged`. **Phase 2b, 2026-08-18 — tranche pragmatique, pas les 9
-  étapes littérales de §6.3** :
+  (minimal JS interop, `wwwroot/platformEnvironmentProbe.js`).
+- [x] `MOB-008` Implement the controlled shell switch and the `PlatformChanged`
+  stop reason. **Phase 2b, 2026-08-18, pragmatic slice, not the literal 9
+  steps of §6.3**:
   `Platform/HackerOs.Platform.Blazor/Shell/PlatformShellSwitchCoordinator.cs`
-  confirme chaque fenêtre ouverte via `WindowCloseGuardRegistry`, arrête son
-  instance avec `ProcessExitReason.PlatformChanged` (nouveau, dans
-  `Shared/HackerOs.Simulation.Abstractions`) puis ferme sa fenêtre, avant de
-  persister via `UiPlatformPreferenceService`. `ClockPanel.razor` route
-  désormais Auto/Desktop/Mobile par ce coordinateur plutôt que d’appeler
-  `UiPlatformPreferenceService` directement, pour confirmer *avant* de
-  persister (ordre exact de §6.3). `App.razor` s’abonne à
-  `UiPlatformPreferenceService.Changed` et rend `MobileShell` ou `DesktopShell`
-  selon `Current.ActivePlatform` — le changement de shell est donc réellement
-  en direct, sans reload, prouvé par un test E2E navigateur réel
-  (`PlatformShellSwitchTests.cs`). Détail des simplifications assumées en §16.7.
-- [x] `MOB-009` Créer le shell Mobile à surface unique plein écran. **Phase 2a,
-  2026-08-18** — moteur : `Platform/HackerOs.Windowing.Core/SingleSurfacePresentationPolicy.cs`
-  (logique pure : sélectionne la fenêtre principale, minimise les autres,
-  réutilise Maximize pour remplir la zone de travail) +
-  `WindowConstraints.IsMovable` (nouveau, appliqué par `WindowRuntime.Move`,
-  défense en profondeur). Blazor : `Platform/HackerOs.Windowing.Blazor/SingleSurfaceArea.razor`
-  (réutilise `WindowHost` avec son nouveau paramètre `ShowChrome=false`) +
-  `Platform/HackerOs.Platform.Blazor/Shell/MobileShell.razor` (compose la
-  surface unique et la barre système). En corrigeant un bug latent découvert
-  pendant le spike de faisabilité (`WindowChrome` ignorait déjà `IsResizable`
-  pour les dialogues de fichiers non redimensionnables), voir §16.6.
-- [x] `MOB-010` Créer `MobileSystemNavigationBar.razor/.css` avec Back/Home/Recent.
-  **Phase 2a, 2026-08-18** — nouveau package `Platform/HackerOs.MobileShell.Blazor/`
-  (frère de `HackerOs.Taskbar.Blazor`, comme prévu en §16.2), contrat
-  `IMobileNavigationCommands`. `Back`/`Recent` sont des no-op documentés tant
-  que `MOB-011`/`MOB-012` n’existent pas ; `Home` masque la surface active via
-  Minimize sans terminer le processus (§7.4), implémenté dans
+  confirms each open window via `WindowCloseGuardRegistry`, stops its
+  instance with `ProcessExitReason.PlatformChanged` (new, in
+  `Shared/HackerOs.Simulation.Abstractions`) then closes its window, before
+  persisting via `UiPlatformPreferenceService`. `ClockPanel.razor` now
+  routes Auto/Desktop/Mobile through this coordinator rather than calling
+  `UiPlatformPreferenceService` directly, in order to confirm *before*
+  persisting (exact order of §6.3). `App.razor` subscribes to
+  `UiPlatformPreferenceService.Changed` and renders `MobileShell` or `DesktopShell`
+  according to `Current.ActivePlatform`; the shell switch is therefore truly
+  live, without reload, proven by a real browser E2E test
+  (`PlatformShellSwitchTests.cs`). Detail of the accepted simplifications in §16.7.
+- [x] `MOB-009` Create the single full-screen surface Mobile shell. **Phase 2a,
+  2026-08-18**: engine: `Platform/HackerOs.Windowing.Core/SingleSurfacePresentationPolicy.cs`
+  (pure logic: selects the main window, minimizes the others,
+  reuses Maximize to fill the work area) +
+  `WindowConstraints.IsMovable` (new, applied by `WindowRuntime.Move`,
+  defense in depth). Blazor: `Platform/HackerOs.Windowing.Blazor/SingleSurfaceArea.razor`
+  (reuses `WindowHost` with its new parameter `ShowChrome=false`) +
+  `Platform/HackerOs.Platform.Blazor/Shell/MobileShell.razor` (composes the
+  single surface and the system bar). Fixing a latent bug discovered
+  during the feasibility spike (`WindowChrome` already ignored `IsResizable`
+  for non-resizable file dialogs), see §16.6.
+- [x] `MOB-010` Create `MobileSystemNavigationBar.razor/.css` with Back/Home/Recent.
+  **Phase 2a, 2026-08-18**: new package `Platform/HackerOs.MobileShell.Blazor/`
+  (sibling of `HackerOs.Taskbar.Blazor`, as planned in §16.2), contract
+  `IMobileNavigationCommands`. `Back`/`Recent` are documented no-ops as long as
+  `MOB-011`/`MOB-012` do not exist; `Home` hides the active surface via
+  Minimize without terminating the process (§7.4), implemented in
   `MobileNavigationCommandsAdapter`.
-- [x] `MOB-011` Implémenter la pile de navigation et la surface Recent.
-  **2026-08-23** — voir §16.10 pour le détail fichier par fichier.
-- [x] `MOB-012` Ajouter `IAppBackHandler`, ses événements et la validation de
-  manifeste. **Phase 2c, 2026-08-19** — voir §16.9 pour le détail fichier par
-  fichier (`AppBackContracts.cs`, `AppManifest.SupportsBack`,
-  `AppBackHandlerRegistry`). `CanNavigateBackChanged` n'est pas encore câblé au
-  chrome (voir l'écart documenté en fin de §16.9).
-- [x] `MOB-013` Ajouter le bouton Back Desktop uniquement aux applications qui le
-  déclarent. **Phase 2c, 2026-08-19** — voir §16.9 (`WindowChrome`, Desktop
-  uniquement ; Mobile ne le duplique pas par construction, `ShowChrome=false`).
-- [x] `MOB-014` Ajouter les variantes Desktop/Mobile de référence sous un AppId
-  commun et une application à point d’entrée partagé. **Phase 1, 2026-08-18 —
-  tranche partielle : un seul point d’entrée partagé** (le premier exemple de
-  §4.1, pas encore les deux variantes distinctes du second exemple) —
+- [x] `MOB-011` Implement the navigation stack and the Recent surface.
+  **2026-08-23**: see §16.10 for the file-by-file detail.
+- [x] `MOB-012` Add `IAppBackHandler`, its events and the manifest
+  validation. **Phase 2c, 2026-08-19**: see §16.9 for the file-by-file
+  detail (`AppBackContracts.cs`, `AppManifest.SupportsBack`,
+  `AppBackHandlerRegistry`). `CanNavigateBackChanged` is not yet wired to the
+  chrome (see the gap documented at the end of §16.9).
+- [x] `MOB-013` Add the Back button on Desktop only for applications that
+  declare it. **Phase 2c, 2026-08-19**: see §16.9 (`WindowChrome`, Desktop
+  only; Mobile does not duplicate it by construction, `ShowChrome=false`).
+- [x] `MOB-014` Add the reference Desktop/Mobile variants under a common AppId
+  and an application with a shared entry point. **Phase 1, 2026-08-18,
+  partial slice: a single shared entry point** (the first example of
+  §4.1, not yet the two distinct variants of the second example):
   `Apps/Samples/HackerOs.Samples.PlatformApp/` (`PlatformDemoWindow.razor` +
-  `app.manifest.json` déclarant `platform.entryPoints` pour `desktop`+`mobile`
-  via le même type) et `Tests/HackerOs.Samples.PlatformApp.Tests/` (validation,
-  résolution par plateforme, et cohérence du fichier JSON archivé — tout passe
-  par le vrai `AppManifestValidator`/`AppCatalog`/`AppEntryPointDiscovery`).
-  Comme les samples existants, ce projet n’est pas câblé dans le catalogue de
-  build de `HackerOs.Ecosystem` — c’est un projet de démonstration/test isolé,
-  pas une app réellement lancable dans le shell.
-- [x] `MOB-015` Implémenter le clavier virtuel HackerOS du Terminal Mobile.
-  **2026-08-23** — généralisé en un contrôle réutilisable indépendant du
-  Terminal, voir §16.11.
-- [ ] `MOB-016` Adapter le viewport terminal, les safe areas et l’orientation.
-- [ ] `MOB-017` Ajouter tests unitaires, composants, Playwright, accessibilité et
-  PWA pour la matrice complète.
-- [ ] `MOB-018` Mettre à jour SDK, guide développeur, manifests existants, ADRs,
-  liste d’intégration et documentation utilisateur.
+  `app.manifest.json` declaring `platform.entryPoints` for `desktop`+`mobile`
+  through the same type) and `Tests/HackerOs.Samples.PlatformApp.Tests/` (validation,
+  resolution by platform, and consistency of the archived JSON file; everything
+  goes through the real `AppManifestValidator`/`AppCatalog`/`AppEntryPointDiscovery`).
+  Like the existing samples, this project is not wired into the build catalog of
+  `HackerOs.Ecosystem`; it is an isolated demonstration/test project,
+  not an app really launchable in the shell.
+- [x] `MOB-015` Implement the HackerOS virtual keyboard of the Mobile Terminal.
+  **2026-08-23**: generalized into a reusable control independent of the
+  Terminal, see §16.11.
+- [ ] `MOB-016` Adapt the terminal viewport, safe areas and orientation.
+- [ ] `MOB-017` Add unit, component, Playwright, accessibility and
+  PWA tests for the complete matrix.
+- [ ] `MOB-018` Update SDK, developer guide, existing manifests, ADRs,
+  integration list and user documentation.
 
-## 15. Définition de complétion
+## 15. Definition of completion
 
-Le support Mobile est terminé lorsque :
+Mobile support is complete when:
 
-- une application commune fonctionne avec un seul point d’entrée sur Desktop et
-  Mobile ;
-- une seconde application utilise deux points d’entrée sous un même AppId ;
-- les applications incompatibles sont absentes de toutes les surfaces de
-  découverte et retournent une erreur typée en lancement explicite ;
-- une troisième plateforme factice peut être enregistrée et résolue sans modifier
-  le format de manifeste ;
-- le choix explicite est persisté par device et Auto suit la détection navigateur ;
-- le passage Desktop/Mobile respecte cycle de vie, états sales et données ;
-- les applications Mobile sont toujours plein écran ;
-- Triangle, Cercle et Carré implémentent exactement Back, Home et Recent ;
-- le Back applicatif est explicite, testable et affiché dans la barre d’application
-  Desktop seulement ;
-- le Terminal Mobile fonctionne avec le clavier HackerOS sans clavier natif ;
-- la matrice unit/component/browser/PWA/accessibilité passe en Release ;
-- tous les manifestes, guides SDK et documents d’architecture sont synchronisés.
+- a common application works with a single entry point on Desktop and
+  Mobile;
+- a second application uses two entry points under the same AppId;
+- incompatible applications are absent from all discovery
+  surfaces and return a typed error on explicit launch;
+- a dummy third platform can be registered and resolved without changing
+  the manifest format;
+- the explicit choice is persisted per device and Auto follows browser detection;
+- the Desktop/Mobile switch respects lifecycle, dirty states and data;
+- Mobile applications are always full screen;
+- Triangle, Circle and Square implement exactly Back, Home and Recent;
+- the application Back is explicit, testable and displayed in the application bar
+  on Desktop only;
+- the Mobile Terminal works with the HackerOS keyboard without a native keyboard;
+- the unit/component/browser/PWA/accessibility matrix passes in Release;
+- all manifests, SDK guides and architecture documents are synchronized.
 
-## 16. Feuille de route par phases (ajouté 2026-08-18)
+## 16. Phased roadmap (added 2026-08-18)
 
-### 16.1 Ce que « Phase 0 » a livré
+### 16.1 What "Phase 0" delivered
 
-Voir `MOB-001`/`006`/`007` ci-dessus pour le détail fichier par fichier. En plus
-de ces trois tâches, Phase 0 a ajouté une brique qui n’était pas nommée dans ce
-document à l’origine : un point d’entrée UI réel pour le choix de plateforme.
-`HackerOs.Taskbar.Blazor.Taskbar` expose désormais `ITaskbarClockPanelSource` +
-un paramètre `RenderFragment? ClockPanelContent` — le taskbar possède
-uniquement le déclencheur (bouton horloge) et l’ancrage du panneau, jamais son
-contenu. `Platform/HackerOs.Platform.Blazor/Shell/ClockPanel.razor` (fourni par
-l’application hôte, hors du package taskbar) combine notifications, un
-calendrier minimal, et le sélecteur Auto/Desktop/Mobile branché sur
-`UiPlatformPreferenceService`. Ce même changement a fusionné l’ancienne cloche
-de notifications (`ITaskbarNotificationSource`, dont le panneau ne s’affichait
-jamais — bug préexistant) dans ce nouveau point d’entrée unique.
+See `MOB-001`/`006`/`007` above for the file-by-file detail. In addition to
+these three tasks, Phase 0 added a building block that was not named in this
+document originally: a real UI entry point for the platform choice.
+`HackerOs.Taskbar.Blazor.Taskbar` now exposes `ITaskbarClockPanelSource` +
+a parameter `RenderFragment? ClockPanelContent`; the taskbar owns
+only the trigger (clock button) and the panel anchor, never its
+content. `Platform/HackerOs.Platform.Blazor/Shell/ClockPanel.razor` (provided by the
+host application, outside the taskbar package) combines notifications, a
+minimal calendar, and the Auto/Desktop/Mobile selector wired to
+`UiPlatformPreferenceService`. This same change merged the former notification bell
+(`ITaskbarNotificationSource`, whose panel was never displayed, a
+pre-existing bug) into this new single entry point.
 
-Bascule le toggle ne change **pas** encore le rendu du shell : c’est une
-persistance de préférence uniquement, avec un événement `Changed` prêt à être
-consommé par une phase future (`MOB-008`/`009`).
+Flipping the toggle does **not** yet change the shell rendering: it is a
+preference persistence only, with a `Changed` event ready to be consumed by a
+future phase (`MOB-008`/`009`).
 
-### 16.2 Rattachement aux packages réels
+### 16.2 Link to the real packages
 
-Ce document, écrit avant l’extraction fenêtres/taskbar, ne nomme jamais les
-packages qui portent désormais les concepts qu’il décrit :
+This document, written before the windows/taskbar extraction, never names the
+packages that now carry the concepts it describes:
 
-- **§3 (descripteurs de capacités, `MOB-002`)** : contrat à définir aux côtés de
-  `HackerOs.Windowing.Abstractions` (mêmes conventions que `WindowId`/
+- **§3 (capability descriptors, `MOB-002`)**: contract to define alongside
+  `HackerOs.Windowing.Abstractions` (same conventions as `WindowId`/
   `WindowBounds`/`WindowVisualState`).
-- **§7.1 (`SingleFullScreenSurface`, `MOB-009`)** : politique de présentation à
-  ajouter à `HackerOs.Windowing.Core`/`WindowRuntime` — **non vérifié** que le
-  moteur actuel (conçu pour des fenêtres flottantes) supporte une surface
-  unique non déplaçable/non redimensionnable ; un spike est nécessaire avant de
-  chiffrer `MOB-009` en détail.
-- **§7.2 (`MobileSystemNavigationBar.razor`, `MOB-010`)** : nouveau package
-  frère de `HackerOs.Taskbar.Blazor` (Mobile n’a pas de taskbar), pas une
-  modification de celui-ci.
-- **§6 (préférence et détection, `MOB-006`/`007`)** : fait en Phase 0, voir
+- **§7.1 (`SingleFullScreenSurface`, `MOB-009`)**: presentation policy to
+  add to `HackerOs.Windowing.Core`/`WindowRuntime`; **not verified** that the
+  current engine (designed for floating windows) supports a single
+  non-movable/non-resizable surface; a spike is needed before
+  estimating `MOB-009` in detail.
+- **§7.2 (`MobileSystemNavigationBar.razor`, `MOB-010`)**: new package
+  sibling of `HackerOs.Taskbar.Blazor` (Mobile has no taskbar), not a
+  modification of it.
+- **§6 (preference and detection, `MOB-006`/`007`)**: done in Phase 0, see
   §16.1.
 
-### 16.3 Risque ouvert : `InstallationId` non durable
+### 16.3 Open risk: non-durable `InstallationId`
 
-`UiPlatformPreference` (§6.1) doit rester local à l’appareil et ne jamais se
-synchroniser entre les appareils d’un même utilisateur. Le scope
-`SettingsScope.AppDevice` existe déjà pour ça, mais
-`EcosystemServiceCollectionExtensions.cs` régénère `InstallationId` à chaque
-démarrage (`Guid.NewGuid()`, jamais persisté) — l’utiliser casserait la
-persistance à chaque rechargement de page. Phase 0 utilise donc le scope
-`OsAdmin` + `SyncEligible:false` (même résultat pratique : pas de
-synchronisation), en notant la migration vers un vrai scope `AppDevice` comme
-suite mécanique une fois `InstallationId` rendu durable — pas un blocage pour
-la suite de ce plan.
+`UiPlatformPreference` (§6.1) must stay local to the device and never
+synchronize between the devices of a same user. The scope
+`SettingsScope.AppDevice` already exists for that, but
+`EcosystemServiceCollectionExtensions.cs` regenerates `InstallationId` at each
+startup (`Guid.NewGuid()`, never persisted); using it would break
+persistence at each page reload. Phase 0 therefore uses the scope
+`OsAdmin` + `SyncEligible:false` (same practical result: no
+synchronization), noting the migration to a real `AppDevice` scope as a
+mechanical follow-up once `InstallationId` is made durable, not a blocker for
+the rest of this plan.
 
-### 16.4 Séquencement proposé pour `MOB-002` à `MOB-018`
+### 16.4 Proposed sequencing for `MOB-002` to `MOB-018`
 
 ```text
-Phase 1 — Manifeste et résolution de point d’entrée [FAIT le 2026-08-18]
-  MOB-002, MOB-003, MOB-004, MOB-005, MOB-014 (partiel : une app de référence)
-  Dépend de : AppPlatformId (Phase 0, fait)
+Phase 1: Manifest and entry point resolution [DONE on 2026-08-18]
+  MOB-002, MOB-003, MOB-004, MOB-005, MOB-014 (partial: one reference app)
+  Depends on: AppPlatformId (Phase 0, done)
 
-Phase 2 — Shell Mobile et changement contrôlé [FAITE le 2026-08-18]
-  Phase 2a (sous-tranche) : MOB-009, MOB-010 — voir §16.6. Spike de faisabilité
-  (§16.2) confirmé additif, pas de restructuration du moteur.
-  Phase 2b (sous-tranche) : MOB-008, en version pragmatique — voir §16.7.
-  Phase 2c (sous-tranche) : MOB-012, MOB-013 (contrat IAppBackHandler, bouton
-  Back Desktop, triangle Mobile appelle l'étape 2 de §7.3) — voir §16.9.
-  Reste hors Phase 2 : MOB-011 (pile de navigation, Recent — Recent du
-  MOB-010 et les étapes 1/3/4 de la séquence Back de §7.3 restent des no-op
-  en attendant)
-  Dépend de : Phase 1 (les apps doivent déclarer un point d’entrée Mobile)
+Phase 2: Mobile shell and controlled switch [DONE on 2026-08-18]
+  Phase 2a (sub-slice): MOB-009, MOB-010, see §16.6. Feasibility spike
+  (§16.2) confirmed additive, no restructuring of the engine.
+  Phase 2b (sub-slice): MOB-008, in a pragmatic version, see §16.7.
+  Phase 2c (sub-slice): MOB-012, MOB-013 (IAppBackHandler contract, Desktop
+  Back button, Mobile triangle calls step 2 of §7.3), see §16.9.
+  Remaining outside Phase 2: MOB-011 (navigation stack, Recent; the Recent of
+  MOB-010 and steps 1/3/4 of the Back sequence of §7.3 remain no-ops
+  in the meantime)
+  Depends on: Phase 1 (apps must declare a Mobile entry point)
 
-Phase 3 — Clavier virtuel Terminal Mobile
+Phase 3: Mobile Terminal virtual keyboard
   MOB-015, MOB-016
-  Dépend de : Phase 2 (a besoin d’une vraie surface Mobile à laquelle s’attacher)
+  Depends on: Phase 2 (needs a real Mobile surface to attach to)
 
-Phase 4 — Durcissement
-  MOB-017 (matrice de tests complète), MOB-018 (SDK/docs/ADR/manifestes)
-  Dépend de : Phases 1-3
+Phase 4: Hardening
+  MOB-017 (complete test matrix), MOB-018 (SDK/docs/ADR/manifests)
+  Depends on: Phases 1-3
 ```
 
-Ce séquencement est une proposition de dépendances, pas un engagement daté —
-à réviser/prioriser au démarrage de chaque phase selon la bande passante
-disponible, comme le fait déjà
-[`progress-and-plan-2026-08-17.md`](progress-and-plan-2026-08-17.md) §8 pour
-les autres chantiers.
+This sequencing is a proposal of dependencies, not a dated commitment;
+to be revised/prioritized at the start of each phase according to the available bandwidth,
+as [`progress-and-plan-2026-08-17.md`](progress-and-plan-2026-08-17.md) §8 already does for
+the other work items.
 
-### 16.5 Ce que « Phase 1 » a livré
+### 16.5 What "Phase 1" delivered
 
-Voir `MOB-002`/`003`/`004`/`005`/`014` ci-dessus pour le détail fichier par
-fichier. Résumé des décisions de conception :
+See `MOB-002`/`003`/`004`/`005`/`014` above for the file-by-file detail.
+Summary of the design decisions:
 
-- **Rétrocompatibilité sans migration de fichiers** : plutôt que de migrer les
-  40+ `app.manifest.json` existants vers le nouveau format (§4.3 l'envisage
-  comme une migration physique), `AppManifest.EntryPoint` est resté un champ
-  optionnel à part entière et `AppManifestPlatformSupport.Resolve` normalise
-  virtuellement tout manifeste `entryPoint`-only comme couvrant `desktop`
-  seul. Un seul point d'entrée normalisé (`AppManifestPlatformResolution`) sert
-  ensuite à la fois la validation et la résolution — pas de double source de
-  vérité au sens de §4.3, juste deux syntaxes JSON d'entrée pour un seul modèle
-  interne.
-- **`platform` et `entryPoint` sont mutuellement exclusifs**, imposé à la fois
-  par le JSON Schema (règle `oneOf`) et par `AppManifestValidator`
+- **Backward compatibility without file migration**: rather than migrating the
+  40+ existing `app.manifest.json` to the new format (§4.3 envisages it
+  as a physical migration), `AppManifest.EntryPoint` stayed a field
+optional field in its own right and `AppManifestPlatformSupport.Resolve` virtually normalizes
+any `entryPoint`-only manifest as covering `desktop`
+alone. A single normalized entry point (`AppManifestPlatformResolution`) then serves
+both validation and resolution: no double source of
+truth in the sense of §4.3, just two input JSON syntaxes for a single internal
+model.
+- **`platform` and `entryPoint` are mutually exclusive**, enforced both
+  by the JSON Schema (`oneOf` rule) and by `AppManifestValidator`
   (`manifest.platform.required`/`manifest.platform.ambiguous`).
-- **La découverte reste stable par défaut** : `AppEntryPointDiscovery.Discover`
-  résout maintenant chaque manifeste via `IAppPlatformEntryPointResolver` pour
-  une plateforme active (nouveau paramètre optionnel, défaut `desktop`), donc
-  aucun appelant existant (chargement paresseux WebAssembly compris, voir
-  `BuildKnownLazyAppDescriptorRegistry`/`WebAssemblyLazyAssemblyTransport`) n'a
-  changé de comportement observable.
-- **Périmètre volontairement non couvert par cette phase** : filtrer
-  `FileAssociationResolver`/`AppIntentDispatcher`/le launcher sur la
-  préférence de plateforme *actuelle* (§5 : « une application incompatible
-  n'apparaît pas dans le launcher actif »). Le faire maintenant masquerait
-  toutes les apps existantes (aucune ne déclare encore `mobile`) dès qu'un
-  utilisateur bascule le toggle Mobile posé en Phase 0, alors qu'aucun shell
-  Mobile n'existe pour les reprendre. Cette intégration revient avec le
-  changement de shell contrôlé de `MOB-008` (Phase 2), qui sait suspendre/
-  arrêter proprement les instances incompatibles avant de les retirer des
-  surfaces visibles.
-- **`AppPlatformCapabilities` (`MOB-002`) n'est pas encore consommé** par du
-  code de shell — Phase 1 ne fait qu'enregistrer les descripteurs Desktop et
-  Mobile ; leur premier vrai consommateur sera le shell Mobile de `MOB-009`/
+- **Discovery stays stable by default**: `AppEntryPointDiscovery.Discover`
+  now resolves each manifest via `IAppPlatformEntryPointResolver` for
+  an active platform (new optional parameter, default `desktop`), so
+  no existing caller (WebAssembly lazy loading included, see
+  `BuildKnownLazyAppDescriptorRegistry`/`WebAssemblyLazyAssemblyTransport`) has
+  changed observable behavior.
+- **Scope deliberately not covered by this phase**: filtering
+  `FileAssociationResolver`/`AppIntentDispatcher`/the launcher on the
+  *current* platform preference (§5: "an incompatible application
+  does not appear in the active launcher"). Doing it now would hide
+  all existing apps (none declares `mobile` yet) as soon as a
+  user flips the Mobile toggle laid down in Phase 0, while no Mobile shell
+  exists to take them over. This integration comes back with the controlled
+  shell switch of `MOB-008` (Phase 2), which knows how to suspend/
+  stop incompatible instances cleanly before removing them from the visible
+  surfaces.
+- **`AppPlatformCapabilities` (`MOB-002`) is not yet consumed** by
+  shell code; Phase 1 only registers the Desktop and
+  Mobile descriptors; their first real consumer will be the Mobile shell of `MOB-009`/
   `MOB-010` (Phase 2).
 
-### 16.6 Ce que « Phase 2a » a livré
+### 16.6 What "Phase 2a" delivered
 
-Sous-tranche de Phase 2 couvrant `MOB-009` et `MOB-010`, livrée en isolation
-avant `MOB-008` (§16.7) — au moment de cette tranche, `MobileShell` n'était
-volontairement atteignable depuis aucune route réelle (voir dernier point
-ci-dessous, devenu obsolète depuis Phase 2b). `MOB-011` (pile de
-navigation/Recent) et `MOB-012` (`IAppBackHandler`) restent non faits. Voir
-`MOB-009`/`010` ci-dessus pour le détail fichier par fichier.
+Sub-slice of Phase 2 covering `MOB-009` and `MOB-010`, delivered in isolation
+before `MOB-008` (§16.7); at the time of this slice, `MobileShell` was
+deliberately reachable from no real route (see last point
+below, which became obsolete since Phase 2b). `MOB-011` (navigation
+stack/Recent) and `MOB-012` (`IAppBackHandler`) remain undone. See
+`MOB-009`/`010` above for the file-by-file detail.
 
-- **Spike de faisabilité (§16.2) fait avant tout code** : le moteur fenêtres
-  supporte déjà, sans restructuration, les deux mécanismes dont
-  `SingleFullScreenSurface` a besoin — `Maximized` remplit exactement la zone
-  de travail suivie par `WindowRuntime`, et `Minimized` cache déjà une fenêtre
-  de bout en bout (moteur + rendu). `MOB-009` réutilise les deux plutôt que de
-  recalculer une géométrie ou un mécanisme de visibilité séparés.
-- **Bug latent corrigé en amont** : le spike a découvert que `WindowChrome`
-  affichait ses poignées de redimensionnement sans vérifier
-  `Constraints.IsResizable`, et que `DesktopShell.HandleGesture` n'avait aucun
-  `try/catch` autour de `WindowRuntime.Apply` — un vrai bug (pas seulement
-  latent : les dialogues de fichiers créent déjà des fenêtres
-  `isResizable:false` via `FileDialogWindowAdapter.cs`) qui aurait levé une
-  `InvalidOperationException` non gérée au premier redimensionnement tenté
-  d'un dialogue de fichier. Corrigé avant le reste de `MOB-009` pour ne pas
-  bâtir sur un mécanisme de contraintes déjà cassé.
-- **`WindowConstraints.IsMovable`** (nouveau, défaut `true`) ajouté en défense
-  en profondeur aux côtés de `IsResizable` — le moteur n'avait aucun concept
-  d'« impossible à déplacer » avant Phase 2a ; `WindowRuntime.Move` lève
-  maintenant la même exception que `Resize` pour une fenêtre épinglée.
-- **`SingleSurfaceArea` (Blazor) reste dans `HackerOs.Windowing.Core`/`.Blazor`**,
-  pas dans un package Mobile-only, parce que le comportement « une seule
-  surface visible à la fois » est un mode de présentation générique du moteur
-  de fenêtrage (au même titre que le mode flottant), même si Mobile en est le
-  premier consommateur — cohérent avec la note §16.2 qui plaçait déjà
-  `SingleFullScreenSurface` dans `HackerOs.Windowing.Core`/`WindowRuntime`.
-  `WindowHost` gagne un paramètre `ShowChrome` (`true` par défaut, donc aucun
-  changement de comportement pour `DesktopArea`) plutôt qu'un nouveau
-  composant dupliqué.
-- **`HackerOs.MobileShell.Blazor` est un nouveau package frère de
-  `HackerOs.Taskbar.Blazor`**, pas une modification de celui-ci, exactement
-  comme anticipé en §16.2 — Mobile n'a pas de taskbar. Contrairement aux
-  contrats du taskbar (tous optionnels), `MobileSystemNavigationBar.Commands`
-  est requis : la barre système n'a pas d'équivalent Desktop où elle
-  disparaîtrait proprement quand absente.
-- **`MobileShell.razor` (`Platform/HackerOs.Platform.Blazor/Shell/`) compose
-  `SingleSurfaceArea` + `MobileSystemNavigationBar`** exactement comme
-  `DesktopShell.razor` compose `DesktopArea` + `Taskbar`. Au moment de la
-  livraison de Phase 2a, il n'était atteignable depuis aucune route ni service
-  de démarrage réel et n'était testé qu'unitairement (build + tests directs
-  sur `WindowRuntime`) — Phase 2b (§16.7) l'a rendu réellement atteignable et
-  ajoute la preuve E2E navigateur. `MobileNavigationCommandsAdapter`
-  n'implémente réellement que `RequestHome` (masque la surface active via
-  Minimize, §7.4) ; `RequestBack`/`RequestRecent` restent des no-op documentés —
-  §7.3 accepte explicitement « ne rien faire » comme issue terminale valide en
-  l'absence de pile de navigation/gestionnaire Back applicatif (`MOB-011`/`012`).
-- **`MOB-008` a suivi immédiatement dans la même session, en Phase 2b** — voir
-  §16.7 pour le détail : `MobileShell` avait besoin d'exister avant que le
-  changement de shell contrôlé ait un sens, donc les deux tranches
-  s'enchaînaient naturellement plutôt que d'être séparées par un délai.
+- **Feasibility spike (§16.2) done before any code**: the windows engine
+  already supports, without restructuring, the two mechanisms that
+  `SingleFullScreenSurface` needs: `Maximized` fills exactly the work area
+  tracked by `WindowRuntime`, and `Minimized` already hides a window
+  end to end (engine + rendering). `MOB-009` reuses both rather than
+  recomputing a separate geometry or visibility mechanism.
+- **Latent bug fixed upstream**: the spike discovered that `WindowChrome`
+  displayed its resize handles without checking
+  `Constraints.IsResizable`, and that `DesktopShell.HandleGesture` had no
+  `try/catch` around `WindowRuntime.Apply`: a real bug (not only
+  latent: file dialogs already create `isResizable:false`
+  windows via `FileDialogWindowAdapter.cs`) that would have thrown an unhandled
+  `InvalidOperationException` on the first attempted resize
+  of a file dialog. Fixed before the rest of `MOB-009` so as not to
+  build on an already broken constraints mechanism.
+- **`WindowConstraints.IsMovable`** (new, default `true`) added as defense
+  in depth next to `IsResizable`; the engine had no concept
+  of "cannot be moved" before Phase 2a; `WindowRuntime.Move` now throws
+  the same exception as `Resize` for a pinned window.
+- **`SingleSurfaceArea` (Blazor) stays in `HackerOs.Windowing.Core`/`.Blazor`**,
+  not in a Mobile-only package, because the "a single
+  surface visible at a time" behavior is a generic presentation mode of the windowing
+  engine (just like the floating mode), even if Mobile is its
+  first consumer; consistent with the §16.2 note that already placed
+  `SingleFullScreenSurface` in `HackerOs.Windowing.Core`/`WindowRuntime`.
+  `WindowHost` gains a `ShowChrome` parameter (`true` by default, so no
+  behavior change for `DesktopArea`) rather than a new
+  duplicated component.
+- **`HackerOs.MobileShell.Blazor` is a new package sibling of
+  `HackerOs.Taskbar.Blazor`**, not a modification of it, exactly
+  as anticipated in §16.2: Mobile has no taskbar. Unlike the
+  taskbar contracts (all optional), `MobileSystemNavigationBar.Commands`
+  is required: the system bar has no Desktop equivalent where it would
+  cleanly disappear when absent.
+- **`MobileShell.razor` (`Platform/HackerOs.Platform.Blazor/Shell/`) composes
+  `SingleSurfaceArea` + `MobileSystemNavigationBar`** exactly as
+  `DesktopShell.razor` composes `DesktopArea` + `Taskbar`. At the time
+  of the Phase 2a delivery, it was reachable from no real route or startup
+  service and was only tested at the unit level (build + direct tests
+  on `WindowRuntime`); Phase 2b (§16.7) made it truly reachable
+  and adds the browser E2E proof. `MobileNavigationCommandsAdapter`
+  really implements only `RequestHome` (hides the active surface via
+  Minimize, §7.4); `RequestBack`/`RequestRecent` remain documented no-ops;
+  §7.3 explicitly accepts "do nothing" as a valid terminal outcome in
+  the absence of a navigation stack/application Back handler (`MOB-011`/`012`).
+- **`MOB-008` followed immediately in the same session, in Phase 2b**; see
+  §16.7 for the detail: `MobileShell` had to exist before the controlled
+  shell switch made sense, so the two slices
+  naturally followed one another rather than being separated by a delay.
 
-### 16.7 Ce que « Phase 2b » (`MOB-008`) a livré
+### 16.7 What "Phase 2b" (`MOB-008`) delivered
 
-Rend `MobileShell` réellement atteignable : sélectionner Mobile dans le
-panneau horloge bascule maintenant le shell rendu **en direct, sans reload**,
-et un volet de notifications accessible par glissement depuis le haut de
-l'écran Mobile (§16.8) réutilise ce même panneau pour revenir à Desktop.
-Prouvé par des tests navigateur réels de bout en bout
+Makes `MobileShell` truly reachable: selecting Mobile in the clock
+panel now switches the rendered shell **live, without reload**,
+and a notification pane reachable by swiping from the top of the
+Mobile screen (§16.8) reuses this same panel to return to Desktop.
+Proven by real end-to-end browser tests
 (`Tests/HackerOs.UI.E2E.Tests/PlatformShellSwitchTests.cs`,
-`ClockPanelMobileToggleTests.cs`, `MobileNotificationShadeSwipeTests.cs`), en
-plus des tests unitaires du coordinateur
+`ClockPanelMobileToggleTests.cs`, `MobileNotificationShadeSwipeTests.cs`), in
+addition to the unit tests of the coordinator
 (`Tests/HackerOs.Platform.Blazor.Tests/Shell/PlatformShellSwitchCoordinatorTests.cs`,
-construits contre un vrai `AppLifecycleOrchestrator`/`WindowRuntime`, pas des
-doublures).
+built against a real `AppLifecycleOrchestrator`/`WindowRuntime`, not doubles).
 
 - **`PlatformShellSwitchCoordinator`** (`Platform/HackerOs.Platform.Blazor/Shell/`)
-  implémente une version pragmatique de la séquence en 9 étapes de §6.3, pas
-  littérale point par point : pour chaque fenêtre qui a effectivement besoin
-  de redémarrer (voir point suivant), confirme via
-  `WindowCloseGuardRegistry.ConfirmCloseAsync` (étape 2) ; si tout accepte,
-  arrête l'instance propriétaire avec `ProcessExitReason.PlatformChanged`
-  (nouveau, étape 4) puis force la fermeture de la fenêtre (couvre l'étape 3 —
-  aucune opération de surface ne survit à l'arrêt de son instance) ; enfin
-  persiste le nouveau choix via `UiPlatformPreferenceService` (étape 6). Le
-  changement effectif de rendu (étape 7) et l'affichage résultant (étape 9)
-  sont la responsabilité d'`App.razor`, pas du coordinateur — voir plus bas.
-- **Seules les fenêtres qui en ont réellement besoin sont redémarrées** —
-  raffinement apporté après coup (le premier jet arrêtait systématiquement
-  toutes les fenêtres ouvertes, plus prudent que nécessaire). §6.3 le dit
-  explicitement : « ne pas remplacer à chaud le type de composant d'une
-  instance existante... le changement de point d'entrée passe par un
-  arrêt/re-lancement contrôlé » — c'est le *changement de type* qui exige
-  l'arrêt, pas le changement de plateforme en soi. `WindowRuntime` est un
-  singleton DI partagé entre `DesktopShell` et `MobileShell` ; une fenêtre
-  dont l'app déclare un point d'entrée partagé pour les deux plateformes
-  (comme `HackerOs.Samples.PlatformApp`) survit donc telle quelle au
-  changement de shell — le nouveau shell la re-présente simplement (avec ou
-  sans chrome) sans toucher à l'instance en cours. `SelectWindowsNeedingRestart`
-  compare, pour chaque fenêtre, le point d'entrée résolu
-  (`AppManifestPlatformSupport.Resolve`) sur la plateforme active contre celui
-  de la plateforme cible ; seule une différence (ou une app non supportée sur
-  la cible) déclenche confirmation + arrêt. `RequestAutoAsync` reste
-  conservateur (arrête tout) puisque la plateforme résultante d'Auto n'est
-  pas connue à l'avance sans relancer la détection.
-- **Ordre confirmation-avant-persistance respecté** : Phase 0 avait câblé
-  `ClockPanel.razor` pour appeler `UiPlatformPreferenceService.SetExplicitAsync`/
-  `ClearToAutoAsync` directement, ce qui aurait persisté le choix avant toute
-  confirmation. `ClockPanel.razor` appelle maintenant
-  `PlatformShellSwitchCoordinator.RequestExplicitAsync`/`RequestAutoAsync` à la
-  place ; si une fenêtre refuse la fermeture, rien n'est persisté et rien ne
-  change à l'écran (pas de message d'erreur ajouté — le guard de la fenêtre a
-  déjà dû afficher sa propre confirmation, même motif que
+  implements a pragmatic version of the 9-step sequence of §6.3, not
+  literal point by point: for each window that actually needs
+  to restart (see next point), confirms via
+  `WindowCloseGuardRegistry.ConfirmCloseAsync` (step 2); if all accept,
+  stops the owning instance with `ProcessExitReason.PlatformChanged`
+  (new, step 4) then forces the closing of the window (covers step 3:
+  no surface operation survives the stopping of its instance); finally
+  persists the new choice via `UiPlatformPreferenceService` (step 6). The
+  actual change of rendering (step 7) and the resulting display (step 9)
+  are the responsibility of `App.razor`, not of the coordinator; see below.
+- **Only the windows that really need it are restarted**:
+  refinement made afterwards (the first draft systematically stopped
+  all open windows, more cautious than necessary). §6.3 says it
+  explicitly: "do not hot-swap the component type of an
+  existing instance... the entry point change goes through a controlled
+  stop/relaunch"; it is the *type change* that requires
+  the stop, not the platform change itself. `WindowRuntime` is a
+  DI singleton shared between `DesktopShell` and `MobileShell`; a window
+  whose app declares a shared entry point for both platforms
+  (like `HackerOs.Samples.PlatformApp`) therefore survives the
+  shell switch as is: the new shell simply re-presents it (with or
+  without chrome) without touching the running instance. `SelectWindowsNeedingRestart`
+  compares, for each window, the entry point resolved
+  (`AppManifestPlatformSupport.Resolve`) on the active platform against that
+  of the target platform; only a difference (or an app not supported on
+  the target) triggers confirmation + stop. `RequestAutoAsync` stays
+  conservative (stops everything) since the platform resulting from Auto is
+  not known in advance without rerunning the detection.
+- **Confirmation-before-persistence order respected**: Phase 0 had wired
+  `ClockPanel.razor` to call `UiPlatformPreferenceService.SetExplicitAsync`/
+  `ClearToAutoAsync` directly, which would have persisted the choice before any
+  confirmation. `ClockPanel.razor` now calls
+  `PlatformShellSwitchCoordinator.RequestExplicitAsync`/`RequestAutoAsync`
+  instead; if a window refuses to close, nothing is persisted and nothing
+  changes on screen (no error message added; the window's guard
+  already had to display its own confirmation, same reasoning as
   `WindowCloseCoordinator.CloseAsync`).
-- **`App.razor` devient le point de bascule réel** : il s'abonne désormais à
-  `UiPlatformPreferenceService.Changed` (déplacé depuis l'initialisation
-  paresseuse de `DesktopShell.OnInitialized`, maintenant appelée au boot de
-  l'application) et rend `<MobileShell />` ou `<DesktopShell />` dans le cas
-  `EcosystemHostView.Desktop` selon `Current.ActivePlatform`.
-- **Étape 5 (services compatibles) volontairement simplifiée** : aucun service
-  (`AppKind.Service`) n'est arrêté ni redémarré par ce coordinateur — tous les
-  services en cours restent actifs tels quels. Aucun service du dépôt ne
-  déclare aujourd'hui d'exigence de redémarrage liée à la plateforme ; ajouter
-  cette distinction reste un exercice mécanique pour une session future si un
-  tel service apparaît.
-- **Étape 8 (re-résolution launcher/associations/intents) toujours différée** —
-  la raison documentée en §16.5 reste valide : aucun manifeste embarqué ne
-  déclare de point d'entrée Mobile-only (seul l'exemple `HackerOs.Samples.PlatformApp`
-  déclare `platform.entryPoints`, partagé desktop+mobile), donc toute app qui
-  se lance aujourd'hui se lance identiquement quelle que soit la plateforme
-  active — lancer une app Desktop sur Mobile affiche simplement son UI Desktop
-  plein écran sans chrome, ce qui est un état honnête et attendu tant
-  qu'aucune app ne déclare de variante Mobile réelle.
+- **`App.razor` becomes the real switching point**: it now subscribes to
+  `UiPlatformPreferenceService.Changed` (moved from the lazy
+  initialization of `DesktopShell.OnInitialized`, now called at application
+  boot) and renders `<MobileShell />` or `<DesktopShell />` in the
+  `EcosystemHostView.Desktop` case according to `Current.ActivePlatform`.
+- **Step 5 (compatible services) deliberately simplified**: no service
+  (`AppKind.Service`) is stopped or restarted by this coordinator; all
+  running services stay active as is. No service in the repository
+  declares today a restart requirement tied to the platform; adding
+  this distinction remains a mechanical exercise for a future session if such
+  a service appears.
+- **Step 8 (re-resolution of launcher/associations/intents) still deferred**:
+  the reason documented in §16.5 remains valid: no embedded manifest
+  declares a Mobile-only entry point (only the `HackerOs.Samples.PlatformApp` sample
+  declares `platform.entryPoints`, shared desktop+mobile), so any app that
+  launches today launches identically whatever the active platform
+  is; launching a Desktop app on Mobile simply displays its Desktop UI
+  full screen without chrome, which is an honest and expected state as long as
+  no app declares a real Mobile variant.
 
-### 16.8 Volet de notifications Mobile par glissement (post-`MOB-008`)
+### 16.8 Mobile notification pane by swiping (post-`MOB-008`)
 
-Ajouté après coup pour remplacer un premier jet de `MOB-008` (un bouton
-placeholder « Switch to Desktop » posé dans un coin de `MobileShell`) par
-quelque chose de plus proche d'un vrai shell Mobile : un volet accessible en
-glissant depuis le haut de l'écran, à l'image d'un panneau de notifications
-Android, qui réutilise **le même composant `ClockPanel`** que le panneau
-horloge Desktop (notifications, calendrier, et le sélecteur Auto/Desktop/Mobile
-— donc le retour vers Desktop se fait depuis ce même volet, sans contrôle
-séparé).
+Added afterwards to replace a first draft of `MOB-008` (a placeholder
+"Switch to Desktop" button laid in a corner of `MobileShell`) with
+something closer to a real Mobile shell: a pane reachable by
+swiping from the top of the screen, like an Android notification panel,
+which reuses **the same `ClockPanel` component** as the Desktop clock
+panel (notifications, calendar, and the Auto/Desktop/Mobile selector,
+so the return to Desktop is done from this same pane, without a
+separate control).
 
-- **`MobileShell.razor.js`** (nouveau, colocalisé) expose
-  `attachSwipeDownGesture`/`detachSwipeDownGesture`, sur le même modèle pointer
-  capture que `WindowChrome.razor.js` — un bouton poignée en haut de l'écran
-  (`.mobile-shade-handle`, aussi cliquable/focusable pour l'accessibilité, pas
-  seulement glissable) déclenche `[JSInvokable] OnSwipeDownDetected` après un
-  glissement vers le bas d'au moins 32px.
-- **Bug réel trouvé en testant, pas seulement latent** : sans
-  `event.preventDefault()` dans le gestionnaire `pointerdown`, un glissement
-  souris réellement fiable (piloté par le système, pas un événement
-  synthétique) peut être détourné vers la sélection de texte/le glisser-déposer
-  natif du navigateur avant de délivrer la séquence `pointermove` attendue —
-  corrigé pour correspondre exactement au motif déjà utilisé et fonctionnel de
+- **`MobileShell.razor.js`** (new, collocated) exposes
+  `attachSwipeDownGesture`/`detachSwipeDownGesture`, on the same pointer
+  capture model as `WindowChrome.razor.js`: a handle button at the top of the screen
+  (`.mobile-shade-handle`, also clickable/focusable for accessibility, not
+  only draggable) triggers `[JSInvokable] OnSwipeDownDetected` after a
+  downward swipe of at least 32px.
+- **Real bug found while testing, not only latent**: without
+  `event.preventDefault()` in the `pointerdown` handler, a truly reliable
+  mouse swipe (driven by the system, not a synthetic event)
+  can be hijacked by text selection/the browser's native drag and drop before delivering the expected `pointermove`
+  sequence; fixed to match exactly the already used and working pattern of
   `WindowChrome.razor.js`.
-- **Limite de test découverte en pratique** : ni `page.Mouse` (simulation
-  d'entrée au niveau système) ni `Locator.DispatchEventAsync` de Playwright ne
-  délivrent de façon fiable un vrai `PointerEvent` (avec `pointerId`/`clientY`/
-  `button` correctement renseignés) à un gestionnaire personnalisé basé sur
-  `setPointerCapture`, dans Chromium headless — confirmé par expérimentation
-  directe. `MobileNotificationShadeSwipeTests.cs` construit et distribue de
-  vrais `new PointerEvent(...)` via `page.EvaluateAsync` plutôt que de
-  s'appuyer sur l'un ou l'autre.
-- **`MobileShell` n'injecte plus `PlatformShellSwitchCoordinator` directement**
-  — le volet réutilisant `ClockPanel` tel quel, c'est ce composant qui gère
-  déjà tout le flux de changement de plateforme (Phase 2b ci-dessus).
+- **Test limit discovered in practice**: neither `page.Mouse` (system-level
+  input simulation) nor Playwright's `Locator.DispatchEventAsync` reliably
+  deliver a real `PointerEvent` (with `pointerId`/`clientY`/
+  `button` correctly filled in) to a custom handler based on
+  `setPointerCapture`, in headless Chromium; confirmed by direct
+  experimentation. `MobileNotificationShadeSwipeTests.cs` builds and dispatches
+  real `new PointerEvent(...)` through `page.EvaluateAsync` rather than
+  relying on either.
+- **`MobileShell` no longer injects `PlatformShellSwitchCoordinator` directly**:
+  since the pane reuses `ClockPanel` as is, it is this component that already handles
+  the whole platform switch flow (Phase 2b above).
 
-### 16.9 Contrat Back applicatif (`MOB-012`/`MOB-013`, post-§16.8)
+### 16.9 Application Back contract (`MOB-012`/`MOB-013`, post-§16.8)
 
-Livre le contrat SDK et l'étape 2 de la séquence Back ordonnée de §7.3 —
-« appeler le handler Back de l'application active si elle expose explicitement
-ce support ». `MOB-011` (pile de navigation, surface Recent) reste
-délibérément hors périmètre : c'est un sous-système plus large qui mérite sa
-propre tranche dédiée, pas un ajout incrémental à celle-ci.
+Delivers the SDK contract and step 2 of the ordered Back sequence of §7.3:
+"call the Back handler of the active application if it explicitly exposes
+this support". `MOB-011` (navigation stack, Recent surface) remains
+deliberately out of scope: it is a broader subsystem that deserves its
+own dedicated slice, not an incremental addition to this one.
 
-- **`Shared/HackerOs.AppSdk.Blazor/AppBackContracts.cs`** (nouveau) — le
-  contrat exact de §8 : `AppBackSource` (`SystemNavigationBar` /
+- **`Shared/HackerOs.AppSdk.Blazor/AppBackContracts.cs`** (new): the
+  exact contract of §8: `AppBackSource` (`SystemNavigationBar` /
   `DesktopChromeButton` / `KeyboardShortcut`), `AppBackRequest`,
   `AppBackResultStatus` (`Handled`/`NotHandled`/`Blocked`/
-  `ConfirmationRequired`/`Faulted`), `AppBackResult`, et `IAppBackHandler`
+  `ConfirmationRequired`/`Faulted`), `AppBackResult`, and `IAppBackHandler`
   (`CanNavigateBack`, `CanNavigateBackChanged`, `NavigateBackAsync`).
-- **`AppManifest.SupportsBack`** (nouveau bool, `Window` uniquement — même
-  garde-fou que `FileHandlers`) déclare le support Back pour un point d'entrée
-  ou l'application partagée, comme demandé par §8. Le raccourci clavier
-  documenté dans §8 (« Le raccourci clavier documenté utilise le même
-  contrat ») n'est pas câblé dans cette tranche.
-- **`AppEntryPointDiscovery` valide la conformité par réflexion**, sans
-  référence de projet vers `HackerOs.AppSdk.Blazor` — même motif exact que
-  `DerivesFrom` pour les types de base : un nouveau helper `Implements`
-  compare `Type.GetInterfaces()` par nom complet. `manifest.SupportsBack ==
-  true` sans un type qui implémente `IAppBackHandler` échoue avec
+- **`AppManifest.SupportsBack`** (new bool, `Window` only, same guard
+  as `FileHandlers`) declares Back support for an entry point
+  or the shared application, as requested by §8. The documented keyboard shortcut
+  in §8 ("The documented keyboard shortcut uses the same
+  contract") is not wired in this slice.
+- **`AppEntryPointDiscovery` validates conformance by reflection**, without a
+  project reference to `HackerOs.AppSdk.Blazor`: exactly the same pattern as
+  `DerivesFrom` for base types: a new `Implements` helper
+  compares `Type.GetInterfaces()` by full name. `manifest.SupportsBack ==
+  true` without a type implementing `IAppBackHandler` fails with
   `discovery.backHandler.missing`.
-- **`WindowRuntimeState.SupportsBack`** — champ déclaratif posé une seule fois
-  à la création de la fenêtre depuis `AppManifest.SupportsBack`
-  (`WindowLaunchCoordinator`), pas un miroir en direct de
+- **`WindowRuntimeState.SupportsBack`**: declarative field set only once
+  at window creation from `AppManifest.SupportsBack`
+  (`WindowLaunchCoordinator`), not a live mirror of
   `IAppBackHandler.CanNavigateBack`.
-- **Bug réel trouvé par le test, pas seulement latent** :
-  `WindowRuntime.Copy()` (le helper privé que `Create()` utilise pour poser
-  `zOrder`/`isFocused` sur l'état initial) oubliait de reporter
-  `SupportsBack` — toute fenêtre créée avec `supportsBack: true` perdait
-  silencieusement ce fait dès sa création. Détecté par
+- **Real bug found by the test, not only latent**:
+  `WindowRuntime.Copy()` (the private helper that `Create()` uses to set
+  `zOrder`/`isFocused` on the initial state) forgot to carry over
+  `SupportsBack`; any window created with `supportsBack: true` silently lost
+  this fact upon creation. Detected by
   `WindowLaunchCoordinatorTests.Present_projects_the_manifests_supportsBack_declaration_onto_the_window`,
-  qui teste au niveau `WindowRuntime` réel (pas un double), corrigé en une
-  ligne.
-- **`AppBackHandlerRegistry` + capture dans `WindowAppRenderer`** — même motif
-  exact que `WindowCloseGuardRegistry`/`IWindowCloseGuard` (déjà en place pour
-  la fermeture) : `AddComponentReferenceCapture` récupère le composant rendu,
-  et s'il implémente `IAppBackHandler`, l'enregistre par `WindowId` dans un
-  registre DI singleton. Enregistrements sûrs par référence — la disposition
-  d'un ancien renderer ne peut pas retirer le handler d'un composant plus
-  récent pour la même fenêtre.
-- **Bouton Back dans `WindowChrome`, Desktop uniquement** — rendu
-  conditionnellement sur `Window.SupportsBack`, dans `.window-identity` avant
-  l'icône. Propagé `WindowChrome` → `WindowHost` → `DesktopArea` →
-  `DesktopShell.HandleBack`, qui appelle
+  which tests at the real `WindowRuntime` level (not a double), fixed in one
+  line.
+- **`AppBackHandlerRegistry` + capture in `WindowAppRenderer`**: exactly the same
+  pattern as `WindowCloseGuardRegistry`/`IWindowCloseGuard` (already in place for
+  closing): `AddComponentReferenceCapture` retrieves the rendered component,
+  and if it implements `IAppBackHandler`, registers it by `WindowId` in a
+  singleton DI registry. Reference-safe registrations: the disposal of an old renderer cannot
+  remove the handler of a newer component for the same window.
+- **Back button in `WindowChrome`, Desktop only**: rendered
+  conditionally on `Window.SupportsBack`, in `.window-identity` before the
+  icon. Propagated `WindowChrome` → `WindowHost` → `DesktopArea` →
+  `DesktopShell.HandleBack`, which calls
   `BackHandlers.NavigateBackAsync(id, new AppBackRequest(DesktopChromeButton))`.
-  Mobile ne duplique pas ce bouton par construction, pas par condition
-  explicite : `SingleSurfaceArea` rend toujours `WindowHost` avec
-  `ShowChrome="false"`, donc `WindowChrome` (et son bouton Back) n'y est
-  jamais instancié — conforme à §8 (« Ne pas dupliquer le bouton Back dans la
-  barre applicative » côté Mobile).
-- **`MobileNavigationCommandsAdapter.RequestBack`** appelle maintenant
-  `BackHandlers.NavigateBackAsync` pour la fenêtre primaire (même sélection
-  que `RequestHome`, via `SingleSurfacePresentationPolicy.SelectPrimary`), avec
-  `AppBackSource.SystemNavigationBar`. Implémenté en `async void` — choix
-  déjà correct pour le contrat synchrone existant
-  `IMobileNavigationCommands.RequestBack() -> void`, un fire-and-forget
-  déclenché par le clic du triangle système, pas une méthode dont l'appelant
-  attend un résultat.
-- **Écart documenté, volontairement différé** : §8 dit « Le bouton est
-  désactivé lorsque `CanNavigateBack` est faux. » Cette tranche ne câble pas
-  cet état — le bouton Desktop est toujours actif dès que `SupportsBack` est
-  vrai, sans écouter `IAppBackHandler.CanNavigateBackChanged`. Câbler l'état
-  vivant demanderait un canal de notification supplémentaire depuis le
-  composant capturé vers `WindowChrome` ; à faire dans une tranche
-  ultérieure si un besoin réel se présente.
-- **Seule l'étape 2 de la séquence ordonnée de §7.3 est livrée.** Les étapes 1
-  (pile de dialogues/modals système), 3 (pile de navigation applicative/shell)
-  et 4 (fermeture-et-retour-Home) attendent `MOB-011` ; un résultat
-  `NotHandled` (ou l'absence de handler) reste un no-op silencieux — c'est
-  l'issue terminale valide de l'étape 5 tant que les étapes précédentes
-  n'existent pas pour la prévenir.
+  Mobile does not duplicate this button by construction, not by an explicit
+  condition: `SingleSurfaceArea` always renders `WindowHost` with
+  `ShowChrome="false"`, so `WindowChrome` (and its Back button) is
+  never instantiated there; compliant with §8 ("Do not duplicate the Back button in
+  the application bar" on the Mobile side).
+- **`MobileNavigationCommandsAdapter.RequestBack`** now calls
+  `BackHandlers.NavigateBackAsync` for the primary window (same selection
+  as `RequestHome`, via `SingleSurfacePresentationPolicy.SelectPrimary`), with
+  `AppBackSource.SystemNavigationBar`. Implemented as `async void`, a choice
+  already correct for the existing synchronous contract
+  `IMobileNavigationCommands.RequestBack() -> void`, a fire-and-forget
+  triggered by the click of the system triangle, not a method whose caller
+  waits for a result.
+- **Documented gap, deliberately deferred**: §8 says "The button is
+  disabled when `CanNavigateBack` is false." This slice does not wire this
+  state; the Desktop button is always active as soon as `SupportsBack` is
+  true, without listening to `IAppBackHandler.CanNavigateBackChanged`. Wiring the live
+  state would require an additional notification channel from the captured
+  component to `WindowChrome`; to be done in a later slice if a real
+  need arises.
+- **Only step 2 of the ordered sequence of §7.3 is delivered.** Steps 1
+  (system dialog/modal stack), 3 (application/shell navigation stack)
+  and 4 (close-and-return-Home) await `MOB-011`; a `NotHandled` result
+  (or the absence of a handler) remains a silent no-op; this is
+  the valid terminal outcome of step 5 as long as the previous steps do not exist to prevent it.
 
-### 16.10 Ce que « MOB-011 » a livré (2026-08-23)
+### 16.10 What "MOB-011" delivered (2026-08-23)
 
-Complète les étapes 1/3/4/5 de la séquence Back de §7.3 restées ouvertes
-depuis §16.9, et livre la surface Recent de §7.5, sans introduire de fixture
-lourde ni de nouveau moteur parallèle à `WindowRuntime`.
+Completes steps 1/3/4/5 of the Back sequence of §7.3 left open
+since §16.9, and delivers the Recent surface of §7.5, without introducing a
+heavy fixture or a new engine parallel to `WindowRuntime`.
 
-- **`MobileNavigationHistory`** (nouveau,
-  `Platform/HackerOs.Platform.Blazor/Shell/`) — une pile de
-  `Stack<WindowId>` réactive : elle s'abonne à `WindowRuntime.StateChanged`,
-  recalcule `SingleSurfacePresentationPolicy.SelectPrimary` à chaque tick, et
-  empile l'ancien primaire dès qu'il change tant que la fenêtre existe encore
-  (fermée = jamais empilée). Ce diff réactif capture *tout* changement de
-  primaire — un intent qui lance une fenêtre, une activation depuis Recent,
-  n'importe quoi d'autre — sans qu'aucun site d'appel n'ait besoin de pousser
-  explicitement. `TryPopPrevious` ignore silencieusement les entrées
-  devenues obsolètes (fenêtre fermée depuis) et marque l'entrée retournée
-  comme un retour attendu (`_pendingReturn`) pour que le
-  `WindowFocusedEvent` qui suit ne soit pas ré-empilé comme une nouvelle
-  navigation avant.
-- **Étape 1 (dialogue/modal annulable)** : aucune pile de dialogues séparée
-  n'a été construite — la fenêtre primaire elle-même porte déjà
-  `Modality`/`OnRequestClose` (`WindowRuntimeState`), et
-  `SingleSurfacePresentationPolicy.SelectPrimary` fait déjà remonter une
-  boîte de dialogue owner-modal comme primaire pendant qu'elle est ouverte
-  (elle a le z-order le plus élevé). `RequestBack` traite donc
-  `Modality: OwnerModal` + `OnRequestClose` non nul comme le signal
-  « annulable » et route directement vers ce délégué — aucun nouveau
-  concept de pile de modals n'était nécessaire.
-- **Étape 3 (retour à l'entrée précédente)** : `history.TryPopPrevious`,
-  puis Restore (si minimisée) + Focus — même forme que
-  `TaskbarWindowInteraction.HandleClick` pour un item minimisé.
-  `SingleSurfaceArea.OnParametersSetAsync` (préexistant, non modifié)
-  reminimise automatiquement l'ancienne fenêtre primaire au prochain rendu ;
-  cette tranche n'a pas eu besoin de gérer elle-même la minimisation.
-- **Étape 4 (fermeture gardée et retour Home)** : `RequestBack` prend un
-  délégué `Func<WindowId, Task> closeWindow` plutôt que d'injecter
-  directement `WindowCloseCoordinator`/`WindowCloseGuardRegistry` — **aucun
-  test unitaire du dépôt ne construit ces deux services réels** (leur seul
-  consommateur, `PlatformShellSwitchCoordinatorTests`, utilise une fixture
-  privée de noyau complet à 12 paramètres) ; construire ça ici aurait fait
-  déborder cette tranche bien au-delà de « petite et autonome ». Le vrai
-  chemin gardé (`CloseCoordinator.CloseAsync(id, ct =>
-  CloseGuards.ConfirmCloseAsync(id, ct))`) est injecté depuis
-  `MobileShell.razor`, identique à ce que
-  `TaskbarCommandDispatcherAdapter.Close` fait déjà pour la taskbar — les
-  tests unitaires de l'adaptateur utilisent un simple délégué d'enregistrement
-  à la place, le vrai chemin gardé restant exercé par le test navigateur
-  E2E.
-- **Étape 0, ajout délibéré non nommé par §7.3** : un panneau de
-  notifications ouvert ou la surface Recent ouverte sont fermés en priorité
-  absolue avant tout le reste — c'est manifestement le vrai sommet de la
-  pile UI même si les 5 étapes littérales ne le nomment pas séparément
-  (même esprit que la « tranche pragmatique » déjà assumée pour `MOB-008`
-  en §16.7).
-- **Surface Recent** : `MobileRecentProjection` (nouveau, statique et pur,
-  même style que `SingleSurfacePresentationPolicy`) trie
-  `WindowRuntime.Windows` par `ZOrder` décroissant — le compteur de focus
-  monotone que `WindowRuntime` maintient déjà sert directement de signal de
-  récence, sans nouveau suivi. `MobileRecentItem`/`MobileRecentSurface`
-  (nouveaux, `HackerOs.MobileShell.Blazor`, miroir exact de la séparation
-  contrat-générique/projection-HackerOS déjà utilisée par
-  `HackerOs.Taskbar.Blazor`/`TaskbarWindowSourceAdapter`) n'affichent que
-  titre + icône — **aucun mécanisme de capture de miniature n'existe nulle
-  part dans le dépôt** ; la protection de preview de §7.5 est donc satisfaite
-  par omission (rien de sensible n'est jamais rendu) plutôt que par un
-  indicateur actif. Le filtrage par compatibilité de plateforme/activation
-  vivante n'est pas non plus appliqué, avec exactement le même raisonnement
-  que §16.5 pour le launcher : aucune app du catalogue actuel ne déclare de
-  point d'entrée Mobile-only, et désactiver une app pendant qu'une de ses
-  fenêtres reste ouverte est un cas non géré ailleurs non plus dans le dépôt.
-  Activer un item ferme la surface Recent et réutilise
-  `TaskbarCommandDispatcherAdapter` (construit une fois dans
-  `MobileShell.razor.OnInitialized`) pour Restore/Activate/Close — zéro
-  logique de fermeture dupliquée par rapport à la taskbar.
-- **`RequestHome` ne vide pas l'historique** : revenir plus tard vers une
-  app laisse toujours l'utilisateur remonter dans ce qu'elle avait, comme le
-  fait Android.
-- **Deux bugs réels trouvés par le test E2E, pas seulement latents** — aucun
-  des deux n'est causé par le code ajouté dans cette tranche ; les deux
-  existaient depuis les Phases 2a/2b et n'avaient jamais été détectés parce
-  qu'aucun test Mobile antérieur ne prenait de capture d'écran ni ne mesurait
-  de géométrie réelle (seuls le rôle/la visibilité ARIA étaient vérifiés,
-  insensibles à la hauteur de boîte) :
-  1. **`.mobile-shell` ne remplissait jamais l'écran.** Son `height: 100%`
-     remonte par `#ecosystem-host` jusqu'à `ThemeScope`, qui se rend en
-     `display: contents` — une valeur qui ne propage pas fiablement une base
-     de hauteur en pourcentage aux descendants selon les moteurs de rendu.
-     Résultat mesuré en E2E : `.mobile-shell` ne faisait que 61px de haut (la
-     hauteur naturelle de la barre système), avec `.mobile-shell-workspace`
-     (`flex: 1`) écrasé à 0 — rien sous la barre système n'était visible ni
-     atteignable, la barre elle-même se retrouvant collée en haut de l'écran
-     faute d'espace pour le contenu au-dessus. Corrigé en ancrant
-     `.mobile-shell` directement au viewport (`position: fixed; inset: 0;`)
-     au lieu de `width/height: 100%` — même mécanisme que les backdrops
-     shade/Recent, qui contourne entièrement la chaîne de pourcentage.
+- **`MobileNavigationHistory`** (new,
+  `Platform/HackerOs.Platform.Blazor/Shell/`): a reactive
+  `Stack<WindowId>`: it subscribes to `WindowRuntime.StateChanged`,
+  recomputes `SingleSurfacePresentationPolicy.SelectPrimary` at each tick, and
+  pushes the old primary as soon as it changes as long as the window still exists
+  (closed = never pushed). This reactive diff captures *any* change of
+  primary (an intent that launches a window, an activation from Recent,
+  anything else) without any call site needing to push
+  explicitly. `TryPopPrevious` silently ignores stale entries
+  (window closed since) and marks the returned entry
+  as an expected return (`_pendingReturn`) so that the following
+  `WindowFocusedEvent` is not pushed again as a new navigation forward.
+- **Step 1 (cancelable dialog/modal)**: no separate dialog stack
+  was built; the primary window itself already carries
+  `Modality`/`OnRequestClose` (`WindowRuntimeState`), and
+  `SingleSurfacePresentationPolicy.SelectPrimary` already surfaces an
+  owner-modal dialog box as primary while it is open
+  (it has the highest z-order). `RequestBack` therefore treats
+  `Modality: OwnerModal` + non-null `OnRequestClose` as the
+  "cancelable" signal and routes directly to this delegate; no new
+  modal stack concept was needed.
+- **Step 3 (return to the previous entry)**: `history.TryPopPrevious`,
+  then Restore (if minimized) + Focus, the same form as
+  `TaskbarWindowInteraction.HandleClick` for a minimized item.
+  `SingleSurfaceArea.OnParametersSetAsync` (pre-existing, unmodified)
+  automatically re-minimizes the old primary window at the next render;
+  this slice did not need to handle the minimization itself.
+- **Step 4 (guarded closing and return Home)**: `RequestBack` takes a
+  `Func<WindowId, Task> closeWindow` delegate rather than directly injecting
+  `WindowCloseCoordinator`/`WindowCloseGuardRegistry`; **no unit
+  test in the repository builds these two real services** (their only
+  consumer, `PlatformShellSwitchCoordinatorTests`, uses a private fixture
+  of a complete kernel with 12 parameters); building that here would have made
+  this slice overflow well beyond "small and self-contained". The real guarded
+  path (`CloseCoordinator.CloseAsync(id, ct =>
+  CloseGuards.ConfirmCloseAsync(id, ct))`) is injected from
+  `MobileShell.razor`, identical to what
+  `TaskbarCommandDispatcherAdapter.Close` already does for the taskbar; the
+  adapter's unit tests use a simple recording delegate
+  instead, the real guarded path remaining exercised by the browser
+  E2E test.
+- **Step 0, deliberate addition not named by §7.3**: an open notification
+  pane or the open Recent surface are closed with absolute priority
+  before everything else; it is obviously the real top of the
+  UI stack even if the 5 literal steps do not name it separately
+  (same spirit as the "pragmatic slice" already accepted for `MOB-008`
+  in §16.7).
+- **Recent surface**: `MobileRecentProjection` (new, static and pure,
+  same style as `SingleSurfacePresentationPolicy`) sorts
+  `WindowRuntime.Windows` by descending `ZOrder`; the monotonic focus
+  counter that `WindowRuntime` already maintains directly serves as a recency
+  signal, with no new tracking. `MobileRecentItem`/`MobileRecentSurface`
+  (new, `HackerOs.MobileShell.Blazor`, exact mirror of the generic-contract/HackerOS-projection
+  separation already used by
+  `HackerOs.Taskbar.Blazor`/`TaskbarWindowSourceAdapter`) display only
+  title + icon; **no thumbnail capture mechanism exists
+  anywhere in the repository**; the preview protection of §7.5 is therefore satisfied
+  by omission (nothing sensitive is ever rendered) rather than by an active
+  indicator. Filtering by platform compatibility/live activation
+  is not applied either, with exactly the same reasoning as
+  §16.5 for the launcher: no app in the current catalog declares a
+  Mobile-only entry point, and disabling an app while one of its
+  windows remains open is a case not handled elsewhere in the repository either.
+  Activating an item closes the Recent surface and reuses
+  `TaskbarCommandDispatcherAdapter` (built once in
+  `MobileShell.razor.OnInitialized`) for Restore/Activate/Close; zero
+  duplicated closing logic compared to the taskbar.
+- **`RequestHome` does not clear the history**: going back later to an
+  app still lets the user go back up through what it had, as
+  Android does.
+- **Two real bugs found by the E2E test, not only latent**: neither
+  is caused by the code added in this slice; both
+  existed since Phases 2a/2b and had never been detected because
+  no earlier Mobile test took a screenshot or measured
+  real geometry (only the ARIA role/visibility were checked,
+  insensitive to box height):
+  1. **`.mobile-shell` never filled the screen.** Its `height: 100%`
+     goes up through `#ecosystem-host` to `ThemeScope`, which renders as
+     `display: contents`, a value that does not reliably propagate a percentage
+     height basis to descendants depending on the rendering engines.
+     Result measured in E2E: `.mobile-shell` was only 61px high (the
+     natural height of the system bar), with `.mobile-shell-workspace`
+     (`flex: 1`) squashed to 0; nothing under the system bar was visible or
+     reachable, the bar itself ending up stuck at the top of the screen
+     for lack of space for the content above. Fixed by anchoring
+     `.mobile-shell` directly to the viewport (`position: fixed; inset: 0;`)
+     instead of `width/height: 100%`, the same mechanism as the
+     shade/Recent backdrops, which entirely bypasses the percentage chain.
   2. **`.mobile-shade-backdrop` (`position: fixed`, `z-index: 1100`,
-     introduit en Phase 2b) recouvrait physiquement `MobileSystemNavigationBar`**,
-     qui n'avait aucun `z-index` propre — une fois le bug 1 corrigé et la
-     barre système réellement en bas de l'écran, Playwright a échoué avec
-     « intercepts pointer events » en essayant de cliquer Back pendant que le
-     volet était ouvert. Concrètement, l'étape 0 de cette tranche (Back
-     ferme l'overlay en priorité) était inatteignable : impossible de
-     cliquer Back tant qu'un overlay couvrait la barre. Corrigé en donnant à
-     `.mobile-nav-bar` `position: relative` et `z-index: 1200` (au-dessus des
-     backdrops shade/Recent, tous deux à 1100) — la barre système reste
-     maintenant cliquable au-dessus de n'importe quel panneau, comme sur
-     Android réel.
+     introduced in Phase 2b) physically covered `MobileSystemNavigationBar`**,
+     which had no `z-index` of its own; once bug 1 was fixed and the
+     system bar really at the bottom of the screen, Playwright failed with
+     "intercepts pointer events" when trying to click Back while the
+     pane was open. Concretely, step 0 of this slice (Back
+     closes the overlay with priority) was unreachable: impossible to
+     click Back while an overlay covered the bar. Fixed by giving
+     `.mobile-nav-bar` `position: relative` and `z-index: 1200` (above the
+     shade/Recent backdrops, both at 1100); the system bar now stays
+     clickable above any panel, as on real Android.
 
-  Les deux bugs se masquaient l'un l'autre : tant que le bug 1 n'était pas
-  corrigé, la barre système et le volet occupaient la même bande de 61px en
-  haut de l'écran (le bug 2 était déjà présent mais se manifestait
-  différemment). Les trois tests E2E Mobile préexistants
+  The two bugs hid each other: as long as bug 1 was not fixed, the system bar and the pane occupied the same 61px band
+  at the top of the screen (bug 2 was already present but manifested
+  differently). The three pre-existing Mobile E2E tests
   (`PlatformShellSwitchTests`, `MobileNotificationShadeSwipeTests`,
-  `ClockPanelMobileToggleTests`) ont été rejoués après les deux correctifs et
-  passent toujours sans régression.
-- Tests : 4 nouveaux cas sur `MobileNavigationCommandsAdapterTests`
-  (annulation de dialogue, retour d'historique, fermeture gardée, fermeture
-  de l'overlay en priorité), `MobileNavigationHistoryTests` (5 cas :
-  empilage/dépilage, entrées obsolètes, non-ré-empilage du retour) et
-  `MobileRecentProjectionTests` (3 cas : tri, mapping, liste vide) — 16 tests
-  au total dans `HackerOs.Platform.Blazor.Tests`, tous construits contre un
-  vrai `WindowRuntime`/`AppBackHandlerRegistry`, aucun framework de mock.
-  `dotnet build HackerOs.sln --configuration Release` : 0 avertissement/0
-  erreur (a nécessité de régénérer `PublicAPI.Unshipped.txt` de
+  `ClockPanelMobileToggleTests`) were replayed after the two fixes and
+  still pass without regression.
+- Tests: 4 new cases on `MobileNavigationCommandsAdapterTests`
+  (dialog cancellation, history return, guarded closing, priority closing
+  of the overlay), `MobileNavigationHistoryTests` (5 cases:
+  push/pop, stale entries, non-re-push of the return) and
+  `MobileRecentProjectionTests` (3 cases: sort, mapping, empty list), 16 tests
+  in total in `HackerOs.Platform.Blazor.Tests`, all built against a
+  real `WindowRuntime`/`AppBackHandlerRegistry`, no mocking framework.
+  `dotnet build HackerOs.sln --configuration Release`: 0 warnings/0
+  errors (required regenerating `PublicAPI.Unshipped.txt` of
   `HackerOs.MobileShell.Blazor` via `dotnet format analyzers
-  --diagnostics RS0016 --include-generated`, même procédure que
+  --diagnostics RS0016 --include-generated`, same procedure as
   `EXT-WIN-014`).
-- **Constat fait en écrivant le test navigateur E2E, hors périmètre de cette
-  tranche** : aucune application réelle du catalogue `HackerOs.Ecosystem` ne
-  déclare de support Mobile (seul `HackerOs.Samples.PlatformApp`, projet de
-  démonstration isolé non câblé dans le catalogue de build, le fait — voir
-  `MOB-014`). Le launcher qui permettrait d'en lancer une est un chrome
-  Desktop-only (`AppLauncher.razor`, jamais composé dans `MobileShell`), et
-  `PlatformShellSwitchCoordinator.SelectWindowsNeedingRestart` arrête déjà
-  toute fenêtre dont l'app ne résout aucun point d'entrée sur la plateforme
-  cible — donc basculer vers Mobile avec une app Desktop ouverte la ferme
-  plutôt que de la faire apparaître. Concrètement : **aujourd'hui, aucune
-  fenêtre d'application réelle ne peut exister pendant que Mobile est actif**
-  via le produit réel. Le scénario multi-fenêtres Back/Recent est donc
-  entièrement prouvé au niveau unitaire ci-dessus contre un vrai
-  `WindowRuntime` (qui ne passe pas par ce filtrage de plateforme), et non
-  reproductible en E2E avec le catalogue actuel. Le test navigateur
-  (`MobileRecentAndOverlayBackTests.cs`) prouve à la place ce qui est
-  réellement observable aujourd'hui : l'étape 0 (fermeture prioritaire du
-  volet de notifications puis de Recent), l'état vide de Recent (« No recent
-  apps »), et l'absence d'erreur à l'étape 5 (no-op à Home). Ce n'est pas un
-  recul du périmètre de `MOB-011` — la logique multi-fenêtres est faite et
-  testée — c'est une limite pré-existante et documentée de ce que le
-  catalogue d'apps permet d'observer en conditions réelles tant qu'aucune
-  app ne déclare de variante Mobile (`MOB-014` ne couvre qu'un exemple de
-  démonstration isolé).
+- **Finding made while writing the E2E browser test, outside the scope of this
+  slice**: no real application of the `HackerOs.Ecosystem` catalog
+  declares Mobile support (only `HackerOs.Samples.PlatformApp`, an isolated
+  demonstration project not wired into the build catalog, does so; see
+  `MOB-014`). The launcher that would allow launching one is a Desktop-only chrome
+  (`AppLauncher.razor`, never composed in `MobileShell`), and
+  `PlatformShellSwitchCoordinator.SelectWindowsNeedingRestart` already stops
+  any window whose app resolves no entry point on the target
+  platform; so switching to Mobile with a Desktop app open closes it
+  rather than making it appear. Concretely: **today, no real application
+  window can exist while Mobile is active**
+  through the real product. The multi-window Back/Recent scenario is therefore
+  entirely proven at the unit level above against a real
+  `WindowRuntime` (which does not go through this platform filtering), and not
+  reproducible in E2E with the current catalog. The browser test
+  (`MobileRecentAndOverlayBackTests.cs`) proves instead what is
+  really observable today: step 0 (priority closing of the notification
+  pane then of Recent), the empty state of Recent ("No recent
+  apps"), and the absence of error at step 5 (no-op at Home). This is not a
+  retreat of the scope of `MOB-011`; the multi-window logic is done and
+  tested; it is a pre-existing and documented limit of what the
+  app catalog allows observing in real conditions as long as no
+  app declares a Mobile variant (`MOB-014` covers only an isolated
+  demonstration example).
 
-### 16.11 Ce que « MOB-015 » a livré (2026-08-23) — clavier virtuel réutilisable
+### 16.11 What "MOB-015" delivered (2026-08-23): reusable virtual keyboard
 
-Le clavier virtuel du §9 est livré, mais généralisé au-delà du Terminal seul,
-sur demande explicite en session : un contrôle réutilisable et un conteneur
-« façon SplitContainer » qui rétrécit une région de contenu quand le clavier
-se déploie en dessous, plutôt qu'un composant Terminal-only. Le Terminal est
-le premier consommateur, pas le seul possible.
+The virtual keyboard of §9 is delivered, but generalized beyond the Terminal alone,
+at explicit request in session: a reusable control and a "SplitContainer-style"
+container that shrinks a content region when the keyboard
+deploys below it, rather than a Terminal-only component. The Terminal is
+the first consumer, not the only possible one.
 
-- **`Shared/HackerOs.AppSdk.VirtualKeyboard/` (nouveau, zéro dépendance)** —
-  package RCL rejoignant le lot exportable (`Packaging.props`, PublicAPI,
-  README), sans aucune référence à HackerOS ou au Terminal :
-  - `VirtualKey`/`VirtualKeyPressedEvent` : contrat de touche indépendant du
-    renderer, calqué sur la forme de `TerminalKeyEvent` (`Shared/HackerOs.AppSdk/
-    FullScreenTerminalContracts.cs`) pour un mapping direct, mais possédé par
-    ce nouveau package plutôt que par le Terminal.
-  - `VirtualKeyboardOptions` : bascules par rangée (modificateurs, symboles,
-    flèches), même forme que `MobileSystemNavigationBarOptions`.
-  - `VirtualKeyboard.razor` : rendu 100% boutons — aucun `<input>`/
-    `contenteditable` nulle part, ce qui garantit structurellement qu'il ne
-    peut jamais déclencher un clavier natif. Modificateurs Shift/Ctrl/Alt
-    « collants », consommés par la touche suivante — délibérément plus
-    simple qu'un vrai clavier (pas de verrouillage majuscules séparé), la
-    surface ne devant jamais remplir une zone de texte standard. Répétition
-    bornée (`PeriodicTimer`, 40 répétitions max) pour Backspace/flèches —
-    terrain neuf, aucun motif de répétition longue durée n'existait ailleurs
-    dans ce dépôt.
-  - `VirtualKeyboardHost.razor` : le conteneur réutilisable. Aucune détection
-    `ResizeObserver`/`visualViewport` — le rétrécissement de la région de
-    contenu (`flex:1`) quand le clavier apparaît est un simple reflow flexbox
-    conditionnel, puisque ce clavier ne détecte pas un clavier natif : il en
-    tient lieu.
-- **Intégration Terminal (`Shared/HackerOs.AppSdk.Terminal/TerminalPanel.razor`)**,
-  pas dans le nouveau package : nouveaux `UseVirtualKeyboard` (pose
-  `inputmode="none"` sur l'`<input>` de mode ligne), `OnExitRequested`
-  (non lié par défaut) et `PushVirtualKey(VirtualKeyPressedEvent)`. En mode
-  plein écran, route vers `TerminalFullScreenSession.TryPostKey` — le même
-  point d'entrée que `HandleFullScreenKeyAsync` utilise déjà, donc `nano` et
-  toute autre commande plein écran héritent du support clavier virtuel sans
-  aucun changement. En mode ligne, manipule `_inputBuffer` directement en C#
-  plutôt que de synthétiser un `KeyboardEvent` DOM — les navigateurs
-  n'appliquent pas le comportement d'édition de texte par défaut à un
-  événement clavier envoyé par programme (non « trusted »).
-  - **Ctrl+D** (aucun précédent existant) : n'agit que sur une ligne vide
-    (comme un vrai shell — EOF seulement en ligne vide), invoque
-    `OnExitRequested` si lié. Ligne non vide : no-op.
-  - **Escape** (aucun précédent en mode ligne) : vide seulement la ligne en
-    cours, distinct de Ctrl+L (vide le scrollback) et Ctrl+C (annule la
-    commande active) — reprend le sens déjà établi ailleurs dans ce dépôt
-    (`nano`/`PromptAsync` traite déjà `TerminalKey.Escape` comme « annuler
-    l'édition en cours »).
-- **Câblage dans un vrai shell Mobile explicitement hors périmètre** — aucune
-  app du catalogue (Terminal compris) ne déclare de support Mobile
-  aujourd'hui (constat de `MOB-011`), donc il n'existe aucun Terminal Mobile
-  réel à câbler. Cette tranche livre l'infrastructure réutilisable et le
-  point d'intégration côté Terminal ; l'activer réellement dans un Terminal
-  Mobile reste un suivi conditionné à `MOB-014` couvrant une vraie variante
-  Mobile.
-- **Preuve navigateur, cadrée pour éviter une fixture lourde** —
-  `TerminalPanel` exige un vrai `IAppExecutionContext` ; en construire un
-  faux dans le harness aurait demandé le même type de fixture complète que
-  celle jugée disproportionnée pour `WindowCloseCoordinator` pendant
-  `MOB-011`. Le nouveau scénario `Tests/HackerOs.BrowserHarness.Tests/
-  VirtualKeyboardTerminalBrowserScenario.razor` reprend plutôt le motif déjà
-  autonome de `TerminalFullScreenBrowserScenario.razor` (boucle plein écran
-  auto-suffisante, sans `AppContext`), enveloppé dans `VirtualKeyboardHost`.
-  Le test Playwright `Virtual_keyboard_drives_the_full_screen_terminal_without_a_native_input`
-  (`Tests/HackerOs.E2E.Tests/IndexedDbBrowserContractTests.cs`) tape des
-  lettres et Ctrl+X à l'écran, confirme que le terminal les reçoit via le
-  pipeline `TerminalKeyEvent` existant, et vérifie qu'aucun `<input>`/
-  `[contenteditable]` n'existe nulle part dans la page. **Non couvert par un
-  test automatisé cette fois-ci** : le nouveau comportement de mode ligne de
-  `TerminalPanel` (`PushVirtualKey`, Ctrl+D, Escape) — cohérent avec le fait
-  que les branches existantes de `HandleKeyDownAsync` n'ont elles-mêmes
-  jamais eu de couverture automatisée dans ce dépôt (pas de bUnit ici, preuve
-  UI seulement via le harness navigateur).
-- **Non vérifié dans cette tranche** : l'hypothèse que le pipeline existant
-  `ResizeObserver` → `UpdateTerminalViewport` → `TryPostKey(Resize)` reflow
-  déjà correctement une commande plein écran quand le clavier apparaît/
-  disparaît en direct — le nouveau scénario affiche le clavier de façon
-  statique (`IsKeyboardVisible="true"` fixe) et ne teste jamais la
-  bascule. Reste à vérifier concrètement quand `MOB-016` sera attaqué, pas
-  supposé acquis.
-- Tests : 4 nouveaux cas unitaires (`Tests/HackerOs.AppSdk.VirtualKeyboard.Tests`)
-  pour `VirtualKeyboardOptions`/`VirtualKeyPressedEvent`, plus le nouveau test
-  E2E ci-dessus. `dotnet build HackerOs.sln --configuration Release` : 0
-  avertissement/0 erreur (a nécessité de régénérer `PublicAPI.Unshipped.txt`
+- **`Shared/HackerOs.AppSdk.VirtualKeyboard/` (new, zero dependency)**:
+  RCL package joining the exportable batch (`Packaging.props`, PublicAPI,
+  README), without any reference to HackerOS or the Terminal:
+  - `VirtualKey`/`VirtualKeyPressedEvent`: renderer-independent key contract,
+    modeled on the shape of `TerminalKeyEvent` (`Shared/HackerOs.AppSdk/
+    FullScreenTerminalContracts.cs`) for a direct mapping, but owned by
+    this new package rather than by the Terminal.
+  - `VirtualKeyboardOptions`: per-row toggles (modifiers, symbols,
+    arrows), same shape as `MobileSystemNavigationBarOptions`.
+  - `VirtualKeyboard.razor`: 100% button rendering; no `<input>`/
+    `contenteditable` anywhere, which structurally guarantees that it
+    can never trigger a native keyboard. "Sticky" Shift/Ctrl/Alt
+    modifiers, consumed by the next key; deliberately simpler
+    than a real keyboard (no separate caps lock), since the surface must never
+    fill a standard text area. Bounded repeat
+    (`PeriodicTimer`, 40 repeats max) for Backspace/arrows; new
+    ground, no long-duration repeat pattern existed elsewhere
+    in this repository.
+  - `VirtualKeyboardHost.razor`: the reusable container. No
+    `ResizeObserver`/`visualViewport` detection; the shrinking of the content region
+    (`flex:1`) when the keyboard appears is a simple conditional flexbox reflow,
+    since this keyboard does not detect a native keyboard: it takes its place.
+- **Terminal integration (`Shared/HackerOs.AppSdk.Terminal/TerminalPanel.razor`)**,
+  not in the new package: new `UseVirtualKeyboard` (sets
+  `inputmode="none"` on the line-mode `<input>`), `OnExitRequested`
+  (unbound by default) and `PushVirtualKey(VirtualKeyPressedEvent)`. In
+  full-screen mode, routes to `TerminalFullScreenSession.TryPostKey`, the same
+  entry point that `HandleFullScreenKeyAsync` already uses, so `nano` and
+  any other full-screen command inherit virtual keyboard support with no
+  change. In line mode, manipulates `_inputBuffer` directly in C#
+  rather than synthesizing a DOM `KeyboardEvent`; browsers
+  do not apply the default text editing behavior to a keyboard event
+  sent programmatically (not "trusted").
+  - **Ctrl+D** (no existing precedent): acts only on an empty line
+    (like a real shell, EOF only on an empty line), invokes
+    `OnExitRequested` if bound. Non-empty line: no-op.
+  - **Escape** (no precedent in line mode): clears only the current line,
+    distinct from Ctrl+L (clears the scrollback) and Ctrl+C (cancels the
+    active command); takes up the meaning already established elsewhere in this repository
+    (`nano`/`PromptAsync` already treats `TerminalKey.Escape` as "cancel
+    the current edit").
+- **Wiring into a real Mobile shell explicitly out of scope**: no
+  app in the catalog (Terminal included) declares Mobile support
+  today (finding of `MOB-011`), so there is no real Mobile Terminal
+  to wire. This slice delivers the reusable infrastructure and the
+  integration point on the Terminal side; actually enabling it in a Mobile
+  Terminal remains a follow-up conditional on `MOB-014` covering a real
+  Mobile variant.
+- **Browser proof, scoped to avoid a heavy fixture**:
+  `TerminalPanel` requires a real `IAppExecutionContext`; building a
+  fake one in the harness would have required the same kind of complete fixture
+  as the one judged disproportionate for `WindowCloseCoordinator` during
+  `MOB-011`. The new scenario `Tests/HackerOs.BrowserHarness.Tests/
+  VirtualKeyboardTerminalBrowserScenario.razor` instead takes up the already standalone
+  pattern of `TerminalFullScreenBrowserScenario.razor` (self-sufficient full-screen
+  loop, without `AppContext`), wrapped in `VirtualKeyboardHost`.
+  The Playwright test `Virtual_keyboard_drives_the_full_screen_terminal_without_a_native_input`
+  (`Tests/HackerOs.E2E.Tests/IndexedDbBrowserContractTests.cs`) types
+  letters and Ctrl+X on screen, confirms that the terminal receives them through the existing
+  `TerminalKeyEvent` pipeline, and verifies that no `<input>`/
+  `[contenteditable]` exists anywhere in the page. **Not covered by an
+  automated test this time**: the new line mode behavior of
+  `TerminalPanel` (`PushVirtualKey`, Ctrl+D, Escape); consistent with the fact
+  that the existing branches of `HandleKeyDownAsync` have themselves
+  never had automated coverage in this repository (no bUnit here, UI proof
+  only through the browser harness).
+- **Not verified in this slice**: the assumption that the existing
+  `ResizeObserver` → `UpdateTerminalViewport` → `TryPostKey(Resize)` pipeline
+  already reflows a full-screen command correctly when the keyboard appears/
+  disappears live; the new scenario displays the keyboard statically
+  (fixed `IsKeyboardVisible="true"`) and never tests the
+  toggle. To be verified concretely when `MOB-016` is tackled, not
+  assumed.
+- Tests: 4 new unit cases (`Tests/HackerOs.AppSdk.VirtualKeyboard.Tests`)
+  for `VirtualKeyboardOptions`/`VirtualKeyPressedEvent`, plus the new
+  E2E test above. `dotnet build HackerOs.sln --configuration Release`: 0
+  warnings/0 errors (required regenerating `PublicAPI.Unshipped.txt`
   via `dotnet format analyzers --diagnostics RS0016 --include-generated`,
-  même procédure que pour `HackerOs.MobileShell.Blazor` pendant `MOB-011`).
-  Les suites `HackerOs.AppSdk.Terminal.Tests` (9/9) et le test E2E plein écran
-  préexistant ont été rejoués : aucune régression.
-
+  same procedure as for `HackerOs.MobileShell.Blazor` during `MOB-011`).
+  The suites `HackerOs.AppSdk.Terminal.Tests` (9/9) and the pre-existing full-screen
+  E2E test were replayed: no regression.

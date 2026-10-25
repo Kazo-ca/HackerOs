@@ -1,61 +1,61 @@
-# ADR 0069 : arrêt demandé, points d'arrêt volontaires et escalade
+# ADR 0069: requested stop, voluntary checkpoints and escalation
 
-## Statut
+## Status
 
-Accepté le 2026-10-16.
+Accepted on 2026-10-16.
 
-- **Phase du plan :** phase 5 — exécution des apps
+- **Plan phase:** phase 5: app execution
   ([`execution-isolation-plan.md`](../plans/execution-isolation-plan.md)).
-- **Complète :** ADR 0012 (cycle de vie des processus), ADR 0056 §4
-  (`HackProcess`). Ne contredit pas l'ADR 0058 §2 : « End task » garde sa
-  confirmation, seul son mode d'arrêt change (section 4).
-- **Utilisé par :** ADR 0070 (processus dans des Web Workers).
+- **Completes:** ADR 0012 (process lifecycle), ADR 0056 §4
+  (`HackProcess`). Does not contradict ADR 0058 §2: "End task" keeps its
+  confirmation, only its stop mode changes (section 4).
+- **Used by:** ADR 0070 (processes in Web Workers).
 
-## Contexte
+## Context
 
-L'OS sait déjà arrêter poliment un processus : `StopAsync` le passe à
-`Stopping`, annule `IAppExecutionContext.CancellationToken`, attend un délai de
-grâce, puis le force (`InMemoryProcessManager.StopAsync`). C'est `SIGTERM` puis
-`SIGKILL`. `KillAsync` est `kill -9`.
+The OS already knows how to politely stop a process: `StopAsync` moves it to
+`Stopping`, cancels `IAppExecutionContext.CancellationToken`, waits for a grace
+period, then forces it (`InMemoryProcessManager.StopAsync`). This is `SIGTERM` then
+`SIGKILL`. `KillAsync` is `kill -9`.
 
-Il manque trois choses :
+Three things are missing:
 
-1. Le code ne sait pas **pourquoi** ni **dans combien de temps** il sera forcé :
-   il voit seulement un jeton annulé.
-2. Un traitement long n'a aucun moyen simple de **rendre la main**. Dans un Web
-   Worker, c'est grave : un worker n'a qu'un thread, et le message « arrête le
-   pid 42 » n'est jamais traité tant qu'un processus du worker boucle sans
-   rendre la main. Le jeton ne peut donc pas s'annuler.
-3. « End task » du gestionnaire de tâches fait aujourd'hui un `kill -9`
-   (`EndTaskRunner` appelle `HackProcess.KillAsync`) : l'app n'a aucune chance
-   de se terminer proprement.
+1. The code does not know **why** or **in how long** it will be forced:
+   it only sees a canceled token.
+2. A long-running computation has no simple way to **yield control**. In a Web
+   Worker, this is serious: a worker has only one thread, and the message "stop
+   pid 42" is never processed as long as a process in the worker loops without
+   yielding. The token therefore cannot be canceled.
+3. "End task" in the task manager currently does a `kill -9`
+   (`EndTaskRunner` calls `HackProcess.KillAsync`): the app has no chance
+   to terminate cleanly.
 
-Benoit a proposé qu'un jeton prévienne le processus avant qu'il soit tué, pour
-qu'il arrête ses tâches et évite de faire tomber son worker avec ses voisins.
+Benoit proposed that a token warn the process before it is killed, so
+that it stops its tasks and avoids bringing down its worker along with its neighbors.
 
-## Décision
+## Decision
 
-### 1. Arrêt demandé : raison et échéance
+### 1. Requested stop: reason and deadline
 
-`IAppExecutionContext` reçoit :
+`IAppExecutionContext` receives:
 
 ```csharp
 /// Levé une fois, quand l'OS demande l'arrêt (SIGTERM), avant l'annulation du jeton.
 event EventHandler<HackStopRequestedEventArgs>? StopRequested;
 ```
 
-`HackStopRequestedEventArgs` porte `Reason` (`ProcessExitReason` :
-`CloseRequested`, `Terminated`, `Logout`, `Shutdown`) et `Deadline`
-(l'instant où l'OS forcera, sur l'horloge simulée). Le SDK l'expose aussi par
-`HackProcess.Current.StopRequested`, sur le modèle de
+`HackStopRequestedEventArgs` carries `Reason` (`ProcessExitReason`:
+`CloseRequested`, `Terminated`, `Logout`, `Shutdown`) and `Deadline`
+(the instant when the OS will force, on the simulated clock). The SDK also exposes it
+through `HackProcess.Current.StopRequested`, modeled on
 `IHostApplicationLifetime.ApplicationStopping`.
 
-Ordre : passage à `Stopping`, levée de `StopRequested`, annulation de
-`CancellationToken`, attente jusqu'à `Deadline`. La nouvelle valeur
-`ProcessExitReason.Terminated` désigne un `SIGTERM` envoyé par un autre
-processus (`kill`, « End task »).
+Order: move to `Stopping`, raise `StopRequested`, cancel
+`CancellationToken`, wait until `Deadline`. The new value
+`ProcessExitReason.Terminated` designates a `SIGTERM` sent by another
+process (`kill`, "End task").
 
-### 2. Point d'arrêt volontaire
+### 2. Voluntary checkpoint
 
 ```csharp
 for (...)
@@ -64,63 +64,63 @@ for (...)
 }
 ```
 
-- Si l'arrêt est demandé, lève `OperationCanceledException`.
-- Si la tranche courante dépasse 8 ms (le budget d'une image à 60 fps), rend
-  la main par `await Task.Yield()`, ce qui laisse passer les événements de
-  l'interface et les messages de l'OS ; sinon, revient tout de suite, sans
+- If a stop is requested, throws `OperationCanceledException`.
+- If the current slice exceeds 8 ms (the budget of a frame at 60 fps), yields
+  control through `await Task.Yield()`, which lets UI events
+  and OS messages through; otherwise, returns immediately, with no
   allocation.
-- Rien n'oblige à l'appeler : ce n'est pas un quantum imposé, c'est un geste de
-  bon citoyen. Les commandes intégrées longues (`find`, `grep -r`, `zip`, `du`)
-  l'appellent dans leurs boucles.
-- Il connaît la durée de la tranche par l'ADR 0067. Si la mesure du CPU est
-  coupée (ADR 0066), il garde son propre horodatage de tranche.
+- Nothing requires calling it: it is not an imposed quantum, it is a
+  good-citizen gesture. Long built-in commands (`find`, `grep -r`, `zip`, `du`)
+  call it in their loops.
+- It knows the slice duration from ADR 0067. If CPU measurement is
+  disabled (ADR 0066), it keeps its own slice timestamp.
 
-### 3. Escalade
+### 3. Escalation
 
-Quand l'OS arrête un processus :
+When the OS stops a process:
 
-1. **`SIGTERM`** : `StopRequested`, jeton annulé, délai de grâce (5 s pour
-   `kill` et « End task », la valeur de `StopAsync` sinon).
-2. **Le processus se termine** : fin, sans effet sur les autres.
-3. **Délai passé, mais le thread qui l'exécute répond encore** : le processus
-   ignore son jeton sans bloquer. L'OS le passe à `Exited (Killed)`, libère ses
-   ressources, ferme ses fenêtres et **jette ses continuations** : l'ordonnanceur
-   du processus (un `TaskScheduler` installé dans son contexte) refuse toute
-   nouvelle tâche, et les passerelles de l'OS lèvent
-   `HackProcessKilledException` à tout appel de ce pid. C'est un `SIGKILL`
-   local, sans dégât collatéral.
-4. **Le thread ne répond plus** : sur le thread principal, rien n'est possible
-   (l'OS est gelé avec lui, voir ADR 0067 §4). Dans un Web Worker, l'OS termine
-   le worker (ADR 0070).
+1. **`SIGTERM`**: `StopRequested`, token canceled, grace period (5 s for
+   `kill` and "End task", the `StopAsync` value otherwise).
+2. **The process terminates**: end, with no effect on the others.
+3. **Deadline passed, but the thread running it still responds**: the process
+   ignores its token without blocking. The OS moves it to `Exited (Killed)`, frees its
+   resources, closes its windows and **drops its continuations**: the process's
+   scheduler (a `TaskScheduler` installed in its context) refuses any
+   new task, and the OS gateways throw
+   `HackProcessKilledException` on any call from that pid. This is a local
+   `SIGKILL`, with no collateral damage.
+4. **The thread no longer responds**: on the main thread, nothing is possible
+   (the OS is frozen with it, see ADR 0067 §4). In a Web Worker, the OS terminates
+   the worker (ADR 0070).
 
-### 4. Vocabulaire des commandes
+### 4. Command vocabulary
 
-| Action | Signal | Comportement |
+| Action | Signal | Behavior |
 |---|---|---|
-| `kill <pid>`, `kill -15`, `kill -TERM` | `SIGTERM` | sections 1 et 3 |
-| `kill -9`, `kill -KILL` | `SIGKILL` | immédiat, ne peut pas être intercepté, pas de `StopRequested` |
-| « End task » du gestionnaire de tâches | `SIGTERM` | **change** : `EndTaskRunner` passe de `KillAsync` à `TerminateAsync` |
-| « Force kill » du gestionnaire de tâches (nouveau, menu contextuel) | `SIGKILL` | `KillAsync` |
-| fermeture de fenêtre | `SIGTERM`, raison `CloseRequested` | `CloseMainWindowAsync`, inchangé |
+| `kill <pid>`, `kill -15`, `kill -TERM` | `SIGTERM` | sections 1 and 3 |
+| `kill -9`, `kill -KILL` | `SIGKILL` | immediate, cannot be intercepted, no `StopRequested` |
+| Task manager "End task" | `SIGTERM` | **changes**: `EndTaskRunner` goes from `KillAsync` to `TerminateAsync` |
+| Task manager "Force kill" (new, context menu) | `SIGKILL` | `KillAsync` |
+| window close | `SIGTERM`, reason `CloseRequested` | `CloseMainWindowAsync`, unchanged |
 
-`HackProcess.TerminateAsync(TimeSpan? timeout)` est ajouté : c'est le
-`SIGTERM` d'un autre processus, sous la capacité `process.manage` (ADR 0056).
+`HackProcess.TerminateAsync(TimeSpan? timeout)` is added: it is the
+`SIGTERM` of another process, under the `process.manage` capability (ADR 0056).
 
-## Conséquences
+## Consequences
 
-- Une app qui écoute `StopRequested` ou son jeton se termine proprement dans
-  tous les cas.
-- Le shell (`kill` sans option) garde son comportement ; « End task » devient
-  poli.
-- Le chantier ajoute `TerminateAsync`, `CheckpointAsync`, `StopRequested`,
-  `ProcessExitReason.Terminated` et `HackProcessKilledException` au SDK, à
-  documenter dans `app-sdk.md` et `sdk-reference.md`.
+- An app that listens to `StopRequested` or its token terminates cleanly in
+  all cases.
+- The shell (`kill` without option) keeps its behavior; "End task" becomes
+  polite.
+- The work item adds `TerminateAsync`, `CheckpointAsync`, `StopRequested`,
+  `ProcessExitReason.Terminated` and `HackProcessKilledException` to the SDK, to
+  be documented in `app-sdk.md` and `sdk-reference.md`.
 
-## Références
+## References
 
 - [`execution-isolation-plan.md`](../plans/execution-isolation-plan.md)
 - `Platform/HackerOs.Platform.Core/Processes/InMemoryProcessManager.cs`,
   `Apps/System/HackerOs.Apps.SystemMonitor/Processes/EndTaskRunner.cs`,
   `Apps/Commands/HackerOs.Commands/Kill/KillCommand.cs`.
-- `signal(7)` : `SIGTERM`, `SIGKILL`.
+- `signal(7)`: `SIGTERM`, `SIGKILL`.
 - ADR 0012, 0056, 0058, 0066, 0067, 0070.

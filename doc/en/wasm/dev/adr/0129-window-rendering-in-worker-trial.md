@@ -1,95 +1,94 @@
-# ADR 0129 : essai du rendu d'une fenêtre Blazor dans un worker, et critères pour y aller
+# ADR 0129: trial of rendering a Blazor window in a worker, and criteria for going ahead
 
-## Statut
+## Status
 
-Accepté le 2026-10-18 **comme essai**. Rien n'est livré aux apps par cet ADR.
+Accepted on 2026-10-18 **as a trial**. Nothing is delivered to apps by this ADR.
 
-- **Plan :** [`execution-followups-plan.md`](../plans/execution-followups-plan.md),
-  décision 7, étape 2 (réponse de Benoit : « garder l'essai ») ; mené par
-  `exec/6-remote-renderer-poc`. La suite (`exec/7-window-workers`) n'a lieu
-  que si l'essai passe les critères de §4.
-- **Réserve :** l'ADR **0133** pour la décision « on y va » ou « on
-  s'arrête », écrite par `exec/6` avec les mesures. Si on y va, cet ADR 0133
-  remplace l'ADR 0070 §1 pour les fenêtres.
+- **Plan:** [`execution-followups-plan.md`](../plans/execution-followups-plan.md),
+  decision 7, step 2 (Benoit's answer: "keep the trial"); led by
+  `exec/6-remote-renderer-poc`. The follow-up (`exec/7-window-workers`) only happens
+  if the trial passes the criteria of §4.
+- **Reserve:** ADR **0133** for the "go ahead" or "stop"
+  decision, written by `exec/6` with the measurements. If we go ahead, that ADR 0133
+  replaces ADR 0070 §1 for windows.
 
-## Contexte
+## Context
 
-Une app à fenêtre tourne sur le fil principal parce qu'un worker n'a pas de
-DOM (ADR 0070 §1). `HackBackground` (ADR 0128) sort les calculs, pas la
-logique de l'interface. Un serveur d'affichage (X11, Wayland) montre une autre
-voie : le client calcule ce qu'il faut dessiner, le serveur dessine et renvoie
-les entrées. Blazor fait déjà cela en mode serveur (lots de rendu envoyés au
-navigateur par SignalR), mais le format binaire de ces lots
-(`RenderBatchWriter`) et l'applicateur JavaScript sont internes au framework.
+A window app runs on the main thread because a worker has no
+DOM (ADR 0070 §1). `HackBackground` (ADR 0128) moves computations out, not the
+interface logic. A display server (X11, Wayland) shows another
+way: the client computes what to draw, the server draws and sends back
+the inputs. Blazor already does this in server mode (render batches sent to the
+browser through SignalR), but the binary format of these batches
+(`RenderBatchWriter`) and the JavaScript applier are internal to the framework.
 
-## Décision
+## Decision
 
-### 1. Ce que l'essai construit
+### 1. What the trial builds
 
-- Dans un worker : un `Renderer` dérivé de la classe publique
-  `Microsoft.AspNetCore.Components.RenderTree.Renderer` (.NET 10), qui rend le
-  composant racine de la fenêtre et sérialise chaque `RenderBatch` (types
-  publics `RenderTreeFrame`, `RenderTreeEdit`) dans un format **à nous**,
-  versionné, encodé par `WireCodec`.
-- Sur le fil principal : un hôte de fenêtre de la plateforme qui reçoit les lots
-  et les applique au DOM du contenu de la fenêtre par un petit module
-  JavaScript propre au composant (`RemoteWindowHost.razor.js`, AGENTS.md I.2),
-  puis renvoie au worker les événements du DOM (`click`, `input`, `change`,
-  `keydown`, `focus`…) et les valeurs liées.
-- Le chrome (barre de titre, bordures, boîte de l'ADR 0127) reste dessiné par
-  le fil principal : une fenêtre qui gèle dans son worker se déplace et se ferme
-  toujours.
-- Sujet de l'essai : la **Calculatrice** (aucune interop JavaScript propre, CSS
-  isolé, clavier).
+- In a worker: a `Renderer` derived from the public class
+  `Microsoft.AspNetCore.Components.RenderTree.Renderer` (.NET 10), which renders the
+  window's root component and serializes each `RenderBatch` (public types
+  `RenderTreeFrame`, `RenderTreeEdit`) in a format **of our own**,
+  versioned, encoded by `WireCodec`.
+- On the main thread: a platform window host that receives the batches
+  and applies them to the DOM of the window's content through a small
+  JavaScript module specific to the component (`RemoteWindowHost.razor.js`, AGENTS.md I.2),
+  then sends back to the worker the DOM events (`click`, `input`, `change`,
+  `keydown`, `focus`…) and bound values.
+- The chrome (title bar, borders, dialog of ADR 0127) remains drawn by
+  the main thread: a window that freezes in its worker can still be moved and closed.
+- Subject of the trial: the **Calculator** (no JavaScript interop of its own, isolated
+  CSS, keyboard).
 
-### 2. Ce que l'essai ne fait pas
+### 2. What the trial does not do
 
-- Pas de réflexion sur des membres privés du framework, pas d'appel aux API
-  internes de `blazor.web.js` : c'est la condition pour survivre aux mises à
-  jour de .NET.
-- Pas d'interop JavaScript d'une app dans le worker : une app qui en a
-  (CodeEditor et Monaco, Terminal et xterm.js) reste sur le fil principal
-  quoi qu'il arrive.
-- Pas de threads .NET WebAssembly (`WasmEnableThreads`, refusé par Benoit,
+- No reflection on private framework members, no call to the internal APIs
+  of `blazor.web.js`: this is the condition for surviving .NET
+  updates.
+- No JavaScript interop of an app in the worker: an app that has some
+  (CodeEditor and Monaco, Terminal and xterm.js) stays on the main thread
+  regardless.
+- No .NET WebAssembly threads (`WasmEnableThreads`, rejected by Benoit,
   question Q8).
 
-### 3. Mesures demandées
+### 3. Measurements requested
 
-Sur Chromium, profil de référence de `build/verify-hosts.sh`, en Release
-trimmé (ADR 0106) :
+On Chromium, reference profile of `build/verify-hosts.sh`, in trimmed
+Release (ADR 0106):
 
-- latence ajoutée entre un clic et l'image suivante (p50, p95), comparée à la
-  même Calculatrice sur le fil principal ;
-- mémoire d'un worker de fenêtre (runtime et assemblies) ;
-- temps d'ouverture de la fenêtre ;
-- taille moyenne d'un lot de rendu ;
-- couverture : CSS isolé, `@bind`, focus et `Tab`, raccourcis du gestionnaire
-  de fenêtres (ADR 0095), fenêtre détachée (ADR 0078), dialogue du SDK.
+- latency added between a click and the next frame (p50, p95), compared to the
+  same Calculator on the main thread;
+- memory of a window worker (runtime and assemblies);
+- window opening time;
+- average size of a render batch;
+- coverage: isolated CSS, `@bind`, focus and `Tab`, window manager
+  shortcuts (ADR 0095), detached window (ADR 0078), SDK dialog.
 
-### 4. Critères pour y aller
+### 4. Criteria for going ahead
 
-L'ADR 0133 conclut « on y va » si **tous** sont tenus ; sinon « on s'arrête »
-et rien ne change pour les apps.
+ADR 0133 concludes "go ahead" if **all** are met; otherwise "stop"
+and nothing changes for apps.
 
-| Critère | Seuil |
+| Criterion | Threshold |
 |---|---|
-| Latence ajoutée, p95 | ≤ 16 ms (une image à 60 Hz) |
-| Mémoire d'un worker de fenêtre | ≤ 40 Mio |
-| Ouverture de la fenêtre | ≤ 1 s de plus que sur le fil principal, worker déjà prêt (ADR 0071) |
-| Tests UI de la Calculatrice | tous verts, sans modification de l'app |
-| Accessibilité | suite axe et clavier verte |
-| Framework | aucune API interne ou privée utilisée |
+| Added latency, p95 | ≤ 16 ms (one frame at 60 Hz) |
+| Memory of a window worker | ≤ 40 MiB |
+| Window opening | ≤ 1 s more than on the main thread, worker already ready (ADR 0071) |
+| Calculator UI tests | all green, without modifying the app |
+| Accessibility | axe and keyboard suite green |
+| Framework | no internal or private API used |
 
-## Conséquences
+## Consequences
 
-- `exec/6` livre un prototype derrière un réglage d'hôte coupé par défaut,
-  les mesures dans [`worker-processes.md`](../worker-processes.md) et l'ADR
+- `exec/6` delivers a prototype behind a host setting turned off by default,
+  the measurements in [`worker-processes.md`](../worker-processes.md) and ADR
   0133.
-- Si on y va, `exec/7` permet `AppExecutionHost.Dedicated` aux fenêtres sans
-  interop JavaScript propre (le validateur du manifeste l'interdit
-  aujourd'hui) et fait l'inventaire des apps de base.
+- If we go ahead, `exec/7` allows `AppExecutionHost.Dedicated` for windows without
+  their own JavaScript interop (the manifest validator forbids it
+  today) and takes inventory of the base apps.
 
-## Références
+## References
 
 - ADR 0070, 0071, 0078, 0095, 0106, 0127, 0128.
-- Protocole X11, protocole Wayland ; `Renderer` et `RenderBatch` d'ASP.NET Core.
+- X11 protocol, Wayland protocol; ASP.NET Core `Renderer` and `RenderBatch`.

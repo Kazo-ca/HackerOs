@@ -1,18 +1,18 @@
-# Applications par défaut propres à chaque utilisateur
+# Per-user default applications
 
-Ce document couvre la mise en œuvre des associations de fichiers par utilisateur. Les formats des deux fichiers, l'ordre de résolution, l'API `HackApps` et les capacités sont dans [`../framework/file-associations-api.md`](../framework/file-associations-api.md).
+This document covers the implementation of per-user file associations. The formats of the two files, the resolution order, the `HackApps` API and the capabilities are in [`../framework/file-associations-api.md`](../framework/file-associations-api.md).
 
-Chantier `v3/4b`, suite de `v3/4-intents`, selon
-l'[ADR 0121](adr/0121-user-file-associations.md). Complète
-[`app-intents.md`](../framework/app-intents.md) (résolution des intents) et
-[`settings-files.md`](../framework/settings-files.md) (emplacements des fichiers).
+Work item `v3/4b`, follow-up to `v3/4-intents`, following
+[ADR 0121](adr/0121-user-file-associations.md). Completes
+[`app-intents.md`](../framework/app-intents.md) (intent resolution) and
+[`settings-files.md`](../framework/settings-files.md) (file locations).
 
-## Objet
+## Purpose
 
-Chaque utilisateur choisit l'app qui ouvre un type de fichier (`.md`,
-`text/plain`) ou un schéma d'URI (`https`) pour lui seul, sans droits
-d'administrateur. Son choix passe avant celui de la machine, comme
-`~/.config/mimeapps.list` passe avant `/etc/xdg/mimeapps.list` sous Linux.
+Each user chooses the app that opens a file type (`.md`, `text/plain`) or a URI
+scheme (`https`) for themselves alone, without administrator rights. Their
+choice takes precedence over the machine's, like `~/.config/mimeapps.list` takes
+precedence over `/etc/xdg/mimeapps.list` on Linux.
 
 ## Architecture
 
@@ -29,66 +29,62 @@ FileAssociationResolver ──► UserFileAssociationStore (~/.config, sous l'id
 AppIntentDispatcher (passe le principal à chaque résolution)
 ```
 
-- **`UserFileAssociationStore`** (`Platform.Core/Intents`) : lit le fichier de
-  l'utilisateur (validé par `FileAssociationSettingsValidator`), l'écrit en
-  gardant les autres entrées et les autres actions d'une même cible. Crée
-  `~/.config/hackeros` en `0755` et le fichier en `0644`.
-- **`PrincipalTextFile`** : lecture et écriture d'un petit fichier texte du
-  dossier personnel sous l'identité de l'utilisateur, partagées avec
-  `IntentChoiceStore` (`intents.config`).
-- **`FileAssociationIndex`** : rangé par cible **et** action, dans les deux
-  couches.
-- **`FileAssociationResolver`** : surcharges qui prennent l'utilisateur
+- **`UserFileAssociationStore`** (`Platform.Core/Intents`): reads the user's file
+  (validated by `FileAssociationSettingsValidator`), writes it while keeping the
+  other entries and the other actions of the same target. Creates
+  `~/.config/hackeros` as `0755` and the file as `0644`.
+- **`PrincipalTextFile`**: reading and writing a small text file in the home
+  folder under the user's identity, shared with `IntentChoiceStore`
+  (`intents.config`).
+- **`FileAssociationIndex`**: keyed by target **and** action, in both layers.
+- **`FileAssociationResolver`**: overloads that take the user
   (`ResolveAsync(intent, user)`, `ResolveSchemeAsync(scheme, user)`,
-  `GetHandlerAppIdsAsync(path, user)`), `GetConfiguredDefaultsAsync(user)` et
-  `SetUserDefaultAsync(user, target, action, appId?)`. Les anciennes
-  signatures lisent la couche système seulement.
-- **`AppCatalogGateway`** reçoit le principal et le vérificateur de capacités
-  de l'app.
+  `GetHandlerAppIdsAsync(path, user)`), `GetConfiguredDefaultsAsync(user)` and
+  `SetUserDefaultAsync(user, target, action, appId?)`. The old signatures read
+  the system layer only.
+- **`AppCatalogGateway`** receives the principal and the app's capability
+  checker.
 
 ## Interfaces
 
-- **Paramètres > Associations de fichiers** (« Applications par défaut ») :
-  une ligne par cible et action déclarées par les apps installées (extensions,
-  puis types de média, puis schémas affichés `https:`), un sélecteur
-  (« Défaut du système (X) », « Seule app (X) » ou « Demander à chaque fois »,
-  puis les apps), le badge d'origine (à vous, défaut système, intégré) et un
-  filtre. Composant `FileAssociationsPanel`.
-- **Explorateur > Ouvrir avec** : case « Toujours utiliser cette app pour les
-  fichiers .ext » quand l'app choisie déclare l'extension. L'explorateur
-  déclare `file-associations.read`.
-- **`xdg-mime`** ([`linux-commands.md`](linux-commands.md)) :
+- **Settings > File associations** ("Default applications"): one row per target
+  and action declared by the installed apps (extensions, then media types, then
+  schemes shown as `https:`), a selector ("System default (X)", "Only app (X)"
+  or "Ask every time", then the apps), the origin badge (yours, system default,
+  built-in) and a filter. `FileAssociationsPanel` component.
+- **Explorer > Open with**: checkbox "Always use this app for .ext files" when
+  the chosen app declares the extension. The explorer declares
+  `file-associations.read`.
+- **`xdg-mime`** ([`linux-commands.md`](linux-commands.md)):
   `query default <type>`, `default <app> <type>...`, `query filetype <fichier>`.
 
-## Décisions
+## Decisions
 
-- Même format JSON que le fichier de la machine plutôt que `mimeapps.list` :
-  un seul validateur, un seul index.
-- Pas de verrou de l'administrateur pour l'instant (question posée, ADR 0121 §8).
-- Le fichier de la machine reste écrit à la main par un administrateur.
+- Same JSON format as the machine's file rather than `mimeapps.list`: a single
+  validator, a single index.
+- No administrator lock for now (question raised, ADR 0121 §8).
+- The machine's file remains written by hand by an administrator.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Intents/UserFileAssociationTests.cs` :
-  ordre des couches, utilisateur par utilisateur, choix périmé, `open` et
-  `edit` séparés, fichier `0644` et réinitialisation, fichier invalide gardé,
-  refus (`InvalidTarget`, `InvalidAction`, `AppNotFound`, `AppCannotHandle`),
-  schéma, « Ouvrir avec », liste des défauts.
+- `Tests/HackerOs.Platform.Core.Tests/Intents/UserFileAssociationTests.cs`:
+  layer order, user by user, stale choice, separate `open` and `edit`, `0644`
+  file and reset, invalid file kept, refusals (`InvalidTarget`, `InvalidAction`,
+  `AppNotFound`, `AppCannotHandle`), scheme, "Open with", list of defaults.
 - `AppIntentDispatcherTests.Open_uri_and_open_file_use_the_acting_users_own_default`.
-- `AppCatalogGatewayTests` : capacités et ordre des lignes.
-- `XdgMimeCommandTests`, parité `xdg-mime` dans `CommandParityTests`,
+- `AppCatalogGatewayTests`: capabilities and row order.
+- `XdgMimeCommandTests`, `xdg-mime` parity in `CommandParityTests`,
   `WireCodecIntentTests.Default_handlers_keep_target_action_app_and_layer`.
-- `HackerOs.Apps.Settings.Tests/FileAssociationsPanelTests.cs` : lignes du
-  panneau.
+- `HackerOs.Apps.Settings.Tests/FileAssociationsPanelTests.cs`: panel rows.
 
-## Liste des tâches
+## Task list
 
 - [x] ADR 0121.
-- [x] Couche `~/.config/hackeros/file-associations.json` lue sous l'identité de l'utilisateur.
-- [x] Index rangé par cible et action.
-- [x] Ordre utilisateur, puis machine, dans toutes les résolutions.
-- [x] API du SDK (`Unshipped`) et opérations des workers.
-- [x] Panneau des Paramètres.
-- [x] « Toujours utiliser » dans « Ouvrir avec ».
-- [x] Commande `xdg-mime`.
-- [x] Tests et documentation.
+- [x] `~/.config/hackeros/file-associations.json` layer read under the user's identity.
+- [x] Index keyed by target and action.
+- [x] User order, then machine, in all resolutions.
+- [x] SDK API (`Unshipped`) and worker operations.
+- [x] Settings panel.
+- [x] "Always use" in "Open with".
+- [x] `xdg-mime` command.
+- [x] Tests and documentation.

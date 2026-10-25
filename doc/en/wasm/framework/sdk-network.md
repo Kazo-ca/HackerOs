@@ -1,18 +1,18 @@
-# Réseau dans le SDK
+# Network in the SDK
 
-## Objet
+## Purpose
 
-Une app accède au réseau uniquement par le SDK (ADR 0055, ADR 0056 section 6) :
-résolution de noms, ping, HTTP et sondage de ports TCP. L'OS décide seul quel
-réseau sert une requête : le réseau simulé d'abord, puis, si l'hôte n'y existe
-pas, le réseau réel par le proxy du serveur optionnel, quand c'est permis et
-possible. L'app ne voit ni le jeton d'accès, ni l'adresse du serveur, ni même
-s'il existe un serveur.
+An app accesses the network only through the SDK (ADR 0055, ADR 0056 section 6):
+name resolution, ping, HTTP and TCP port probing. The OS alone decides which
+network serves a request: the simulated network first, then, if the host does not
+exist there, the real network through the optional server's proxy, when it is allowed and
+possible. The app sees neither the access token, nor the server address, nor even
+whether a server exists.
 
-Ce document décrit les façades `HackDns`, `HackPing`, `HackHttpClient` et
-`HackTcpClient`, la passerelle `IAppNetworkGateway` qui les porte et son
-implémentation `AppNetworkGateway` dans Platform Core. Il a été écrit par le
-chantier `rebuild/4-sdk-network` (ADR 0058).
+This document describes the `HackDns`, `HackPing`, `HackHttpClient` and
+`HackTcpClient` facades, the `IAppNetworkGateway` gateway that carries them and its
+`AppNetworkGateway` implementation in Platform Core. It was written by the
+work item `rebuild/4-sdk-network` (ADR 0058).
 
 ## Architecture
 
@@ -27,35 +27,35 @@ App (Browser, ping, curl, cat, nmap)
                       (seulement si network.real.access, serveur connecté, jeton valide)
 ```
 
-| Type | Projet | Rôle |
+| Type | Project | Role |
 |---|---|---|
-| `IAppNetworkGateway` | `HackerOs.AppSdk` (`Net/`) | Passerelle de l'instance : `ResolveAsync`, `ReverseLookupAsync`, `PingAsync`, `SendAsync`, `ProbeTcpAsync`, `DetectOperatingSystemAsync`. Les échecs réseau sont un résultat (`HackNetworkResult<T>`, `HackNetworkError`), jamais une exception. |
-| `IAppExecutionContext.Network` | `HackerOs.AppSdk` | Membre avec une implémentation par défaut « non prise en charge », pour que les contextes existants compilent. |
-| `HackDns`, `HackPing`, `HackHttpClient`, `HackCookieContainer`, `HackTcpClient` | `HackerOs.AppSdk` (`Net/`) | Façades calquées sur `System.Net` : elles lisent le contexte ambiant (ADR 0043) et lèvent les exceptions de .NET. |
-| `AppNetworkGateway` | `HackerOs.Platform.Core` (`Network/`) | Implémentation de confiance : capacités, réseau simulé, décision du repli réel, jeton du serveur. Construite par `AppExecutionContextFactory` pour chaque instance. |
+| `IAppNetworkGateway` | `HackerOs.AppSdk` (`Net/`) | Instance gateway: `ResolveAsync`, `ReverseLookupAsync`, `PingAsync`, `SendAsync`, `ProbeTcpAsync`, `DetectOperatingSystemAsync`. Network failures are a result (`HackNetworkResult<T>`, `HackNetworkError`), never an exception. |
+| `IAppExecutionContext.Network` | `HackerOs.AppSdk` | Member with a "not supported" default implementation, so that existing contexts compile. |
+| `HackDns`, `HackPing`, `HackHttpClient`, `HackCookieContainer`, `HackTcpClient` | `HackerOs.AppSdk` (`Net/`) | Facades modeled on `System.Net`: they read the ambient context (ADR 0043) and throw .NET exceptions. |
+| `AppNetworkGateway` | `HackerOs.Platform.Core` (`Network/`) | Trusted implementation: capabilities, simulated network, real fallback decision, server token. Built by `AppExecutionContextFactory` for each instance. |
 
-`AppExecutionContextFactory` reçoit `ISimulatedNetworkService`,
-`IServerConnectionService` et `IProxyClient` (paramètres optionnels). Sans réseau
-simulé, `Network` lève `NotSupportedException` ; sans serveur ni proxy, le repli
-réel est simplement absent.
+`AppExecutionContextFactory` receives `ISimulatedNetworkService`,
+`IServerConnectionService` and `IProxyClient` (optional parameters). Without a simulated
+network, `Network` throws `NotSupportedException`; without a server or proxy, the real
+fallback is simply absent.
 
-Depuis `web/3-listener-dns`, `AppNetworkGateway` passe d'abord par le
-résolveur local `hackdns` (`/etc/hosts`, loopback, apps web, sites hébergés) :
-une cible locale est servie par la table des ports de l'OS, sur `lo`, et un nom
-`.hack` n'est jamais relayé au vrai réseau. Voir
+Since `web/3-listener-dns`, `AppNetworkGateway` first goes through the
+local `hackdns` resolver (`/etc/hosts`, loopback, web apps, hosted sites):
+a local target is served by the OS port table, on `lo`, and a `.hack`
+name is never relayed to the real network. See
 [`listening-ports-and-dns.md`](listening-ports-and-dns.md).
 
-## Capacités
+## Capabilities
 
-| Opération | Capacité | Sans la capacité |
+| Operation | Capability | Without the capability |
 |---|---|---|
-| DNS, ping, `GET`, `HEAD`, sondage de ports, détection d'OS | `network.simulated.read` (normale) | `UnauthorizedAccessException` (interne : `AppGatewayAccessDeniedException`) |
-| `POST` et toute autre méthode HTTP, socket TCP ou UDP (`ConnectAsync`) | `network.simulated.write` (normale) | idem |
-| Repli sur le réseau réel | `network.real.access` (dangereuse), vérifiée aussi par le serveur (ADR 0102 §4) | aucun repli : « hôte introuvable » |
-| Écouter un port (`HackHttpListener`) hors de ses `web.urls` | `network.listen` (normale), plus `network.listen.privileged` (dangereuse) sous 1024 | `UnauthorizedAccessException` |
+| DNS, ping, `GET`, `HEAD`, port probing, OS detection | `network.simulated.read` (normal) | `UnauthorizedAccessException` (internal: `AppGatewayAccessDeniedException`) |
+| `POST` and any other HTTP method, TCP or UDP socket (`ConnectAsync`) | `network.simulated.write` (normal) | same |
+| Fallback to the real network | `network.real.access` (dangerous), also checked by the server (ADR 0102 §4) | no fallback: "host not found" |
+| Listen on a port (`HackHttpListener`) outside its `web.urls` | `network.listen` (normal), plus `network.listen.privileged` (dangerous) below 1024 | `UnauthorizedAccessException` |
 
-Les classements sont inchangés (ADR 0049). Une app système reçoit ses capacités
-d'office.
+Classifications are unchanged (ADR 0049). A system app receives its capabilities
+automatically.
 
 ## Usage
 
@@ -77,120 +77,120 @@ IReadOnlyList<HackPortProbeResult> ports = await HackTcpClient.ProbeAsync("10.0.
 HackOsFingerprint? os = await HackTcpClient.DetectOperatingSystemAsync("10.0.0.5");
 ```
 
-Comportement HTTP :
+HTTP behavior:
 
-- les redirections sont suivies (10 au plus) ; un `POST` redirigé par 301 ou
-  302 continue en `GET`, 303 change toute méthode sauf `HEAD` en `GET`, 307 et
-  308 gardent la méthode et le corps, comme un navigateur et `HttpClient`
-  (ADR 0074 §1, [`http-bodies.md`](http-bodies.md)) ;
-- les cookies posés en route sont rangés dans le `HackCookieContainer` du client
-  (le navigateur en a un par fenêtre) ; un en-tête `Cookie` mis dans
-  `DefaultRequestHeaders` est envoyé avec eux (il gagne sur un cookie de même
-  nom), sur l'hôte demandé seulement, et n'est jamais rangé (ADR 0089) ;
-- un statut d'erreur (404, 500) est une réponse, pas une exception ;
-  `EnsureSuccessStatusCode` et `GetStringAsync` lèvent `HttpRequestException` ;
-- aucune réponse (hôte inconnu, hôte éteint, trop de redirections) lève
-  `HackHttpRequestException`, qui hérite de `HttpRequestException` et porte
-  `NetworkError` et `ErrorCode` (`ERR_NAME_NOT_RESOLVED`…, affiché par le
-  navigateur) ;
-- toute méthode porte un corps typé (`HackHttpContent`) et toute réponse rend
-  ses octets avec leur `Content-Type` ([`http-bodies.md`](http-bodies.md)) ;
-- le corps d'une page d'un site historique est son rendu texte
-  (`SimulatedPageTextFormatter`, `text/plain`), celui qu'affichent `curl` et
-  `cat` ; la page structurée reste dans `Page` pour le navigateur.
+- redirects are followed (10 at most); a `POST` redirected by 301 or
+  302 continues as `GET`, 303 turns any method except `HEAD` into `GET`, 307 and
+  308 keep the method and the body, like a browser and `HttpClient`
+  (ADR 0074 §1, [`http-bodies.md`](http-bodies.md));
+- cookies set along the way are stored in the client's `HackCookieContainer`
+  (the browser has one per window); a `Cookie` header put in
+  `DefaultRequestHeaders` is sent along with them (it wins over a cookie of the same
+  name), for the requested host only, and is never stored (ADR 0089);
+- an error status (404, 500) is a response, not an exception;
+  `EnsureSuccessStatusCode` and `GetStringAsync` throw `HttpRequestException`;
+- no response (unknown host, host down, too many redirects) throws
+  `HackHttpRequestException`, which inherits from `HttpRequestException` and carries
+  `NetworkError` and `ErrorCode` (`ERR_NAME_NOT_RESOLVED`..., displayed by the
+  browser);
+- every method carries a typed body (`HackHttpContent`) and every response returns
+  its bytes with their `Content-Type` ([`http-bodies.md`](http-bodies.md));
+- the body of a historical site's page is its text rendering
+  (`SimulatedPageTextFormatter`, `text/plain`), the one `curl` and
+  `cat` display; the structured page remains in `Page` for the browser.
 
-## Repli sur le réseau réel
+## Fallback to the real network
 
-L'OS ne tente le réseau réel que si l'hôte n'existe pas dans le réseau simulé,
-que l'app a `network.real.access`, que le serveur optionnel est connecté et que
-`EnsureAccessTokenAsync` rend un jeton. Depuis `v3/10-server-proxy`
-(ADR 0102, 0108, [`server-network-relay.md`](../dev/server-network-relay.md)), le
-serveur vérifie aussi l'accord de son côté et relaie :
+The OS only tries the real network if the host does not exist in the simulated network,
+the app has `network.real.access`, the optional server is connected and
+`EnsureAccessTokenAsync` returns a token. Since `v3/10-server-proxy`
+(ADR 0102, 0108, [`server-network-relay.md`](../dev/server-network-relay.md)), the
+server also checks agreement on its side and relays:
 
-| Appel | Relais réel |
+| Call | Real relay |
 |---|---|
-| `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `OPTIONS`… | requête du proxy avec le corps de la requête (taille et hash vérifiés) et celui de la réponse |
-| `HEAD` | requête du proxy sans corps de réponse |
-| `HackPing.SendAsync` | `HEAD` chronométré : un navigateur ne peut pas envoyer d'ICMP ; `Address` vaut `null` |
-| `HackTcpClient.ProbeAsync` sur **un seul** port | sondage TCP du proxy (ADR 0035) ; une plage n'est jamais relayée |
-| `HackTcpClient.ConnectAsync` | flux TCP en WebSocket (`HackNetworkStream`) |
-| `HackUdpClient.ConnectAsync` | datagrammes UDP en WebSocket |
-| DNS, détection d'OS | jamais : « hôte introuvable » |
+| `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `OPTIONS`... | proxy request with the request body (size and hash checked) and the response body |
+| `HEAD` | proxy request without a response body |
+| `HackPing.SendAsync` | timed `HEAD`: a browser cannot send ICMP; `Address` is `null` |
+| `HackTcpClient.ProbeAsync` on **a single** port | proxy TCP probe (ADR 0035); a range is never relayed |
+| `HackTcpClient.ConnectAsync` | TCP stream over WebSocket (`HackNetworkStream`) |
+| `HackUdpClient.ConnectAsync` | UDP datagrams over WebSocket |
+| DNS, OS detection | never: "host not found" |
 
-Une erreur du proxy (`ServerConnectionException`, `HttpRequestException`)
-devient `HackNetworkError.ConnectionFailed` pour HTTP et le sondage, et
-`TimedOut` pour un ping. Un refus à l'ouverture d'un socket devient l'erreur
-d'une vraie pile (`SocketException` : `ConnectionRefused`, `HostUnreachable`
-ou `HostNotFound`, table dans `server-network-relay.md`). Sans serveur, rien
-ne signale son absence : le résultat est celui d'une machine sans passerelle
-par défaut.
+A proxy error (`ServerConnectionException`, `HttpRequestException`)
+becomes `HackNetworkError.ConnectionFailed` for HTTP and probing, and
+`TimedOut` for a ping. A refusal when opening a socket becomes the error
+of a real stack (`SocketException`: `ConnectionRefused`, `HostUnreachable`
+or `HostNotFound`, table in `server-network-relay.md`). Without a server, nothing
+signals its absence: the result is that of a machine with no default
+gateway.
 
-### Sockets TCP et UDP
+### TCP and UDP sockets
 
-`HackTcpClient.ConnectAsync(host, port)` rend un `HackNetworkStream`
-(`ReadAsync`, `WriteAsync`, `RemoteEndPoint`, `0` lu quand la cible a fermé) ;
-`HackUdpClient.ConnectAsync(host, port)` rend un socket UDP « connecté »
-(`SendAsync`, `ReceiveAsync` → `HackUdpReceiveResult`, 65 507 octets au
-plus). Les deux demandent `network.simulated.write`. Le réseau simulé n'a pas
-de flux bruts : un hôte qu'il connaît, ou cette machine, refuse la connexion.
-Les appels synchrones lèvent `NotSupportedException`.
+`HackTcpClient.ConnectAsync(host, port)` returns a `HackNetworkStream`
+(`ReadAsync`, `WriteAsync`, `RemoteEndPoint`, `0` read when the target has closed);
+`HackUdpClient.ConnectAsync(host, port)` returns a "connected" UDP socket
+(`SendAsync`, `ReceiveAsync` → `HackUdpReceiveResult`, 65,507 bytes at
+most). Both require `network.simulated.write`. The simulated network has no
+raw streams: a host it knows, or this machine, refuses the connection.
+Synchronous calls throw `NotSupportedException`.
 
-## Apps migrées
+## Migrated apps
 
-- **Browser** : plus d'injection ; `HackHttpClient` et un `HackCookieContainer`
-  par fenêtre. Une connexion (formulaire `POST` redirigé) arrive directement
-  sur la page cible. Depuis `web/4-browser-html` (ADR 0075), le navigateur
-  rend le HTML dans une iframe isolée et relaie `fetch`, XHR, liens,
-  formulaires et `document.cookie` par ce même client ; `document.cookie`
-  supprime un cookie expiré avec `HackCookieContainer.Remove` ; détail dans
+- **Browser**: no more injection; `HackHttpClient` and one `HackCookieContainer`
+  per window. A login (redirected `POST` form) lands directly
+  on the target page. Since `web/4-browser-html` (ADR 0075), the browser
+  renders HTML in an isolated iframe and relays `fetch`, XHR, links,
+  forms and `document.cookie` through this same client; `document.cookie`
+  deletes an expired cookie with `HackCookieContainer.Remove`; details in
   [`browser-html-rendering.md`](../dev/browser-html-rendering.md).
-- **`ping`** : quatre `HackPing.SendAsync`, statistiques calculées sur les
-  réponses reçues (min/moy/max/écart).
-- **`curl`** : `HackHttpClient.SendAsync` ; `-I` envoie un `HEAD` et affiche
-  les en-têtes ; `-d` suit maintenant la redirection, comme `curl -L` (`-L`
-  était déjà sans effet). Depuis `web/2-http-bodies` (ADR 0074 §1), `curl`
-  écrit le corps brut, envoie `-d`/`--json` tels quels et, comme le vrai
-  `curl`, n'échoue (code 22, sans corps) sur un statut ≥ 400 qu'avec `-f` ;
-  détail dans [`http-bodies.md`](http-bodies.md).
-- **`cat <url>`** : `HackHttpClient.GetAsync`, même rendu que `curl`.
-- **`nmap`** : `HackDns` pour l'adresse, `HackPing` pour la découverte de
-  l'hôte, `HackTcpClient` pour le sondage et `-O`. `-p 80` et `-p 80-80` sont
-  équivalents pour le repli réel (un seul port).
-- **`cd`** : `ShellErrorText` est passé de Platform Core au SDK
-  (`HackerOs.AppSdk`, à côté de `IShellSession`).
+- **`ping`**: four `HackPing.SendAsync`, statistics computed over the
+  replies received (min/avg/max/deviation).
+- **`curl`**: `HackHttpClient.SendAsync`; `-I` sends a `HEAD` and displays
+  the headers; `-d` now follows the redirect, like `curl -L` (`-L`
+  already had no effect). Since `web/2-http-bodies` (ADR 0074 §1), `curl`
+  writes the raw body, sends `-d`/`--json` as is and, like the real
+  `curl`, fails (code 22, no body) on a status ≥ 400 only with `-f`;
+  details in [`http-bodies.md`](http-bodies.md).
+- **`cat <url>`**: `HackHttpClient.GetAsync`, same rendering as `curl`.
+- **`nmap`**: `HackDns` for the address, `HackPing` for host
+  discovery, `HackTcpClient` for probing and `-O`. `-p 80` and `-p 80-80` are
+  equivalent for the real fallback (a single port).
+- **`cd`**: `ShellErrorText` moved from Platform Core to the SDK
+  (`HackerOs.AppSdk`, next to `IShellSession`).
 
-`HackerOs.Commands` ne référence plus `Platform.Core` ni `Server.Contracts` ;
-`HackerOs.Apps.Browser` et `HackerOs.Commands` sont sortis de la liste
-d'exemptions de la frontière du SDK.
+`HackerOs.Commands` no longer references `Platform.Core` or `Server.Contracts`;
+`HackerOs.Apps.Browser` and `HackerOs.Commands` left the SDK boundary
+exemption list.
 
-## Décisions
+## Decisions
 
-- **Échecs réseau en résultat dans la passerelle, en exceptions .NET dans les
-  façades.** La passerelle reste simple à tester et à implémenter ; le code
-  d'app lit comme du code .NET (`SocketException`, `HttpRequestException`).
-- **`HackTcpClient.DetectOperatingSystemAsync`**, absente de l'ADR 0056 :
-  `nmap -O` en a besoin et c'est une détection par la pile TCP/IP, donc à sa
-  place à côté du sondage de ports. Simulée seulement.
-- **`HackPingReply.RoundtripTime` est un `TimeSpan`**, pas des millisecondes
-  entières comme `PingReply` : les latences simulées ont des décimales.
-- **Gigue du ping dans l'OS**, pas dans la commande : ±5 % de la latence de
-  l'hôte, déterministe et cyclique par instance, comme un vrai lien varie.
-- **Pas d'option pour ne pas suivre les redirections** : aucune app n'en a
-  besoin et le réseau simulé n'expose pas de requête à un seul saut pour `GET`.
-- **Comptage des octets** pour `/proc/net/dev` : `AppNetworkGateway` est le
-  point de passage unique. Depuis le chantier `4-proc-metrics` (ADR 0057),
-  chaque méthode publique compte son échange sur `eth0` et dans `rchar`/`wchar`
-  du processus de l'app (`NetworkTrafficMeter`) ; un appel refusé faute de
-  capacité ne compte rien. Détails : [`system-metrics.md`](../dev/system-metrics.md).
+- **Network failures as a result in the gateway, as .NET exceptions in the
+  facades.** The gateway stays simple to test and implement; app code
+  reads like .NET code (`SocketException`, `HttpRequestException`).
+- **`HackTcpClient.DetectOperatingSystemAsync`**, absent from ADR 0056:
+  `nmap -O` needs it and it is a detection through the TCP/IP stack, so it belongs
+  next to port probing. Simulated only.
+- **`HackPingReply.RoundtripTime` is a `TimeSpan`**, not whole milliseconds
+  like `PingReply`: simulated latencies have decimals.
+- **Ping jitter in the OS**, not in the command: ±5% of the host's latency,
+  deterministic and cyclic per instance, as a real link varies.
+- **No option to not follow redirects**: no app needs it
+  and the simulated network does not expose a single-hop request for `GET`.
+- **Byte counting** for `/proc/net/dev`: `AppNetworkGateway` is the
+  single point of passage. Since the work item `4-proc-metrics` (ADR 0057),
+  each public method counts its exchange on `eth0` and in the `rchar`/`wchar`
+  of the app's process (`NetworkTrafficMeter`); a call refused for lack of a
+  capability counts nothing. Details: [`system-metrics.md`](../dev/system-metrics.md).
 
-## Liste des tâches du chantier `rebuild/4-sdk-network`
+## Task list for work item `rebuild/4-sdk-network`
 
-- [x] `IAppNetworkGateway`, `HackNetworkResult<T>`, `HackNetworkError` et `IAppExecutionContext.Network`.
-- [x] Façades `HackDns`, `HackPing`, `HackHttpClient` (`HackCookieContainer`, `HackHttpResponse`, `HackHttpRequestException`), `HackTcpClient`.
-- [x] `AppNetworkGateway` dans Platform Core : capacités, réseau simulé, repli réel et jeton gérés par l'OS.
-- [x] Câblage dans `AppExecutionContextFactory` et l'hôte Ecosystem.
-- [x] `ShellErrorText` déplacé dans le SDK.
-- [x] Migration de Browser, `ping`, `curl`, `cat`, `nmap` ; `HackerOs.Commands` sans `Platform.Core` ni `Server.Contracts`.
-- [x] Exemptions de `HackerOs.Apps.Browser` et `HackerOs.Commands` retirées.
-- [x] Tests : commandes sur la passerelle réelle, façades, capacités, repli réel refusé sans `network.real.access`.
-- [x] Documentation : ce document, `app-sdk.md`, `shell-interpreter.md`, index.
+- [x] `IAppNetworkGateway`, `HackNetworkResult<T>`, `HackNetworkError` and `IAppExecutionContext.Network`.
+- [x] `HackDns`, `HackPing`, `HackHttpClient` (`HackCookieContainer`, `HackHttpResponse`, `HackHttpRequestException`), `HackTcpClient` facades.
+- [x] `AppNetworkGateway` in Platform Core: capabilities, simulated network, real fallback and token handled by the OS.
+- [x] Wiring in `AppExecutionContextFactory` and the Ecosystem host.
+- [x] `ShellErrorText` moved into the SDK.
+- [x] Migration of Browser, `ping`, `curl`, `cat`, `nmap`; `HackerOs.Commands` without `Platform.Core` or `Server.Contracts`.
+- [x] Exemptions for `HackerOs.Apps.Browser` and `HackerOs.Commands` removed.
+- [x] Tests: commands on the real gateway, facades, capabilities, real fallback refused without `network.real.access`.
+- [x] Documentation: this document, `app-sdk.md`, `shell-interpreter.md`, index.

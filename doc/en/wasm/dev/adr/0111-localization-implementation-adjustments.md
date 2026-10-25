@@ -1,61 +1,61 @@
-# ADR 0111 : ajustements de la mise en œuvre de la localisation
+# ADR 0111: implementation adjustments for localization
 
-## Statut
+## Status
 
-Accepté le 2026-10-17 (chantier `v3/12-localization`).
+Accepted on 2026-10-17 (work item `v3/12-localization`).
 
-- **Complète :** [ADR 0104](0104-localization.md). Remplace un mot de son §4
-  (« l'asset `localization/fr.json` ») et précise ses §2 et §3.
-- Numéro : `0109` est peut-être pris par un chantier parallèle ; ce chantier
-  prend `0111`, réservé pour lui.
+- **Complements:** [ADR 0104](0104-localization.md). Replaces a word of its §4
+  ("the asset `localization/fr.json`") and clarifies its §2 and §3.
+- Number: `0109` may be taken by a parallel work item; this work item
+  takes `0111`, reserved for it.
 
-## Contexte
+## Context
 
-La mise en œuvre de l'ADR 0104 a rencontré cinq points que l'ADR ne tranche
-pas, ou qu'il décrit d'une façon qui ne marche pas telle quelle.
+The implementation of ADR 0104 ran into five points that the ADR does not settle,
+or that it describes in a way that does not work as written.
 
-## Décision
+## Decision
 
-1. **Chargement des satellites.** L'option de démarrage
-   `loadAllSatelliteResources` télécharge les assemblies satellites mais
-   `Assembly.GetSatelliteAssembly` ne les trouve pas pour une app chargée
-   paresseusement (`FileNotFoundException`, vérifié dans Chromium). HackerOS
-   appelle donc la fonction du runtime `INTERNAL.loadSatelliteAssemblies(["fr"])`
-   par `[JSImport]` depuis C#, comme `WebAssemblyCultureProvider` de Blazor :
-   au démarrage de l'hôte (`BrowserSatelliteAssemblies`, Infrastructure.Browser)
-   et une fois dans chaque Web Worker (`BrowserWorkerAssemblyLoader`). Aucun
-   fichier JavaScript n'est ajouté. Les hôtes déclarent aussi
-   `SatelliteResourceLanguages=en;fr` et les données ICU `icudt_EFIGS.dat`
-   (`Directory.Build.props`) pour les formats `fr-CA`, `fr-FR`, `en-GB`.
-2. **Textes du manifeste embarqués, pas assets.** `localization/<culture>.json`
-   est produit et référencé par `localizations`, comme le dit l'ADR 0104 §4,
-   mais n'est **pas** déclaré dans `assets` du manifeste : l'agrégateur recopie
-   ses textes dans la propriété facultative `localized` de
-   `BuiltInApplications.json`, et le catalogue les lit de là
-   (`AppCatalog.Localize`). Le lanceur n'a donc rien à télécharger, et le hash
-   des assets (ADR 0098) n'est pas touché. Une app installée plus tard (plan
-   d'installation au runtime) lira les mêmes fichiers depuis son paquet.
-3. **Projets à plusieurs apps.** Dans un projet qui déclare plusieurs apps
-   (les commandes), les clés de `AppManifest.<culture>.resx` sont préfixées de
-   l'id (`org.hackeros.commands.ls.Description`) et les fichiers vont dans
-   `localization/<appId>/<culture>.json`. Une clé absente garde le texte
-   anglais ; une clé inconnue est l'erreur `HOSAPP0040`.
-4. **Langue de la plateforme.** Les composants de la plateforme reçoivent
-   `IStringLocalizer<T>` par injection, lié à `SessionLocaleService` (langue du
-   système avant la connexion, de l'utilisateur après), et jamais à
-   `CultureInfo.CurrentUICulture`. `AddHackerOsPlatformLocalization` remplace
-   l'enregistrement de `IStringLocalizer<>` (même après un `AddLocalization()`
-   d'une bibliothèque). MudBlazor garde sa propre localisation.
-5. **`localectl set-locale`.** Le droit d'écrire `/etc/locale.conf` vient des
-   permissions du fichier (`root`, `0644`) : `sudo localectl set-locale …`
-   réussit, un utilisateur reçoit `Access denied (try sudo)`. Une locale
-   inconnue (hors `localectl list-locales`) est refusée ; `LANGUAGE` n'est pas
-   vérifiée, comme sous systemd.
+1. **Loading satellites.** The startup option
+   `loadAllSatelliteResources` downloads the satellite assemblies but
+   `Assembly.GetSatelliteAssembly` does not find them for a lazily loaded app
+   (`FileNotFoundException`, verified in Chromium). HackerOS therefore
+   calls the runtime function `INTERNAL.loadSatelliteAssemblies(["fr"])`
+   through `[JSImport]` from C#, like Blazor's `WebAssemblyCultureProvider`:
+   at host startup (`BrowserSatelliteAssemblies`, Infrastructure.Browser)
+   and once in each Web Worker (`BrowserWorkerAssemblyLoader`). No
+   JavaScript file is added. The hosts also declare
+   `SatelliteResourceLanguages=en;fr` and the ICU data `icudt_EFIGS.dat`
+   (`Directory.Build.props`) for the `fr-CA`, `fr-FR`, `en-GB` formats.
+2. **Manifest texts embedded, not assets.** `localization/<culture>.json`
+   is produced and referenced by `localizations`, as ADR 0104 §4 says,
+   but is **not** declared in the manifest's `assets`: the aggregator copies
+   its texts into the optional `localized` property of
+   `BuiltInApplications.json`, and the catalog reads them from there
+   (`AppCatalog.Localize`). The launcher therefore has nothing to download, and the asset
+   hash (ADR 0098) is not touched. An app installed later (runtime
+   installation plan) will read the same files from its package.
+3. **Projects with several apps.** In a project that declares several apps
+   (the commands), the keys of `AppManifest.<culture>.resx` are prefixed with
+   the id (`org.hackeros.commands.ls.Description`) and the files go in
+   `localization/<appId>/<culture>.json`. A missing key keeps the English
+   text; an unknown key is the error `HOSAPP0040`.
+4. **Platform language.** The platform components receive
+   `IStringLocalizer<T>` by injection, bound to `SessionLocaleService` (system
+   language before login, user's after), and never to
+   `CultureInfo.CurrentUICulture`. `AddHackerOsPlatformLocalization` replaces
+   the registration of `IStringLocalizer<>` (even after a library's
+   `AddLocalization()`). MudBlazor keeps its own localization.
+5. **`localectl set-locale`.** The right to write `/etc/locale.conf` comes from the
+   file permissions (`root`, `0644`): `sudo localectl set-locale …`
+   succeeds, a user receives `Access denied (try sudo)`. An unknown locale
+   (outside `localectl list-locales`) is rejected; `LANGUAGE` is not
+   checked, as under systemd.
 
-## Conséquences
+## Consequences
 
-- [`localization.md`](../../framework/localization.md) décrit ces points ;
-  [`app-model.md`](../../framework/app-model.md) liste `HOSAPP0040` et la propriété
-  `localized`.
-- Une app tierce traduit son nom par `Resources/AppManifest.fr.resx`, ses
-  textes par `Resources/Strings*.resx` et `AppContext.GetLocalizer<T>()`.
+- [`localization.md`](../../framework/localization.md) describes these points;
+  [`app-model.md`](../../framework/app-model.md) lists `HOSAPP0040` and the
+  `localized` property.
+- A third-party app translates its name through `Resources/AppManifest.fr.resx`, its
+  texts through `Resources/Strings*.resx` and `AppContext.GetLocalizer<T>()`.

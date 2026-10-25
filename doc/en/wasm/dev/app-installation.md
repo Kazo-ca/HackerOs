@@ -1,27 +1,27 @@
-# Désinstallation et réinstallation des apps
+# Uninstalling and reinstalling apps
 
-Phase 2 du [plan de refonte](plans/ecosystem-rebuild-plan.md) (section 6.3, décisions
-D10 et D11), chantier `rebuild/2-app-uninstall` de l'[ADR 0048](adr/0048-system-apps-and-uninstall.md).
-Les apps système (D9) sont décrites dans [`app-model.md`](../framework/app-model.md#apps-système-adr-0048-1).
+Phase 2 of the [rebuild plan](plans/ecosystem-rebuild-plan.md) (section 6.3, decisions
+D10 and D11), work item `rebuild/2-app-uninstall` of [ADR 0048](adr/0048-system-apps-and-uninstall.md).
+System apps (D9) are described in [`app-model.md`](../framework/app-model.md#apps-système-adr-0048-1).
 
-## Objectif
+## Goal
 
-Désinstaller une app la retire de l'OS sans rien effacer : elle disparaît du
-lanceur, de la recherche, de « Ouvrir avec » et du terminal, ne se lance plus
-par aucune voie, ses fenêtres ouvertes se ferment. Ses réglages
-(`~/.config/<appId>/`, `/etc/<appId>/`), ses journaux et les fichiers de
-l'utilisateur restent en place : une réinstallation retrouve tout.
+Uninstalling an app removes it from the OS without erasing anything: it disappears from the
+launcher, from search, from "Open With" and from the terminal, can no longer be launched
+by any route, and its open windows close. Its settings
+(`~/.config/<appId>/`, `/etc/<appId>/`), its logs and the user's
+files stay in place: a reinstall finds everything again.
 
-L'état vit dans deux fichiers texte, comme sous Linux : `cat` montre ce qui
-est retiré, `nano` a le même effet que l'app Paramètres. Il remplace le drapeau
-IndexedDB `IsEnabled` de l'ADR 0032.
+The state lives in two text files, as under Linux: `cat` shows what is
+removed, `nano` has the same effect as the Settings app. It replaces the IndexedDB
+`IsEnabled` flag of ADR 0032.
 
-## Fichiers `apps.config`
+## `apps.config` files
 
-| Portée | Fichier | Propriétaire et mode | Qui écrit |
+| Scope | File | Owner and mode | Who writes |
 | --- | --- | --- | --- |
-| Machine | `/etc/hackeros/apps.config` | `system:system 0644` | un administrateur, par `sudo` ou l'agent d'authentification de l'OS (ADR 0055 §5) |
-| Utilisateur | `~/.config/hackeros/apps.config` | l'utilisateur, `0644` | l'utilisateur lui-même |
+| Machine | `/etc/hackeros/apps.config` | `system:system 0644` | an administrator, through `sudo` or the OS authentication agent (ADR 0055 §5) |
+| User | `~/.config/hackeros/apps.config` | the user, `0644` | the user themselves |
 
 ```text
 # /etc/hackeros/apps.config
@@ -30,78 +30,78 @@ org.hackeros.hack-paint=true
 org.hackeros.calculator=true
 ```
 
-Règles de lecture (`AppsConfigDocument.Read`) :
+Reading rules (`AppsConfigDocument.Read`):
 
-- grammaire `.config` de l'ADR 0011, lue ligne à ligne sans schéma ; seules les
-  clés de `[uninstalled]` comptent et la dernière occurrence d'une clé l'emporte ;
-- `true` : désinstallée ; `false` ou absence : installée ; autre valeur : ligne
-  ignorée avec un avertissement dans `/var/log/syslog` ;
-- identifiant inconnu de ce build : ignoré **sans** avertissement, ligne
-  conservée (un même fichier peut servir à plusieurs builds) ;
-- identifiant d'app système, ou app dont une app système dépend : ignoré avec
-  un avertissement. Éditer le fichier ne contourne donc pas la protection ;
-- fichier absent ou illisible : rien de désinstallé.
+- `.config` grammar of ADR 0011, read line by line without a schema; only the
+  keys of `[uninstalled]` count and the last occurrence of a key wins;
+- `true`: uninstalled; `false` or absence: installed; any other value: line
+  ignored with a warning in `/var/log/syslog`;
+- identifier unknown to this build: ignored **without** a warning, line
+  kept (the same file can serve several builds);
+- identifier of a system app, or of an app on which a system app depends: ignored with
+  a warning. Editing the file therefore does not bypass the protection;
+- file missing or unreadable: nothing uninstalled.
 
-Les écritures (`ConfigDocumentEditor`) ne touchent que la ligne concernée :
-commentaires, ordre et identifiants inconnus sont préservés. Réinstaller retire
-la ligne.
+Writes (`ConfigDocumentEditor`) touch only the line concerned:
+comments, order and unknown identifiers are preserved. Reinstalling removes
+the line.
 
-### État effectif
+### Effective state
 
-Une app est désinstallée pour la session si elle est listée dans le fichier
-machine **ou** dans le fichier de l'utilisateur, ou si elle dépend (dépendance
-non optionnelle, transitivement) d'une app ainsi désinstallée.
+An app is uninstalled for the session if it is listed in the machine file
+**or** in the user's file, or if it depends (non-optional dependency,
+transitively) on an app thus uninstalled.
 
-| `AppInstallationState` | Sens |
+| `AppInstallationState` | Meaning |
 | --- | --- |
-| `Installed` | ni listée ni dépendante d'une app listée |
-| `UninstalledForUser` | désinstallée par le fichier de l'utilisateur |
-| `UninstalledForMachine` | désinstallée par le fichier machine : seul un administrateur la réinstalle |
-| `System` | app système, jamais désinstallable |
+| `Installed` | neither listed nor dependent on a listed app |
+| `UninstalledForUser` | uninstalled through the user's file |
+| `UninstalledForMachine` | uninstalled through the machine file: only an administrator reinstalls it |
+| `System` | system app, never uninstallable |
 
 ## Architecture
 
-| Type | Projet | Rôle |
+| Type | Project | Role |
 | --- | --- | --- |
-| `IAppInstallationService`, `AppInstallationService` | `Platform/HackerOs.Platform.Core/Apps` | lit, surveille et écrit les deux fichiers ; tient `AppEnablementRegistry` égal à l'état effectif |
-| `AppsConfigDocument` | idem | chemins, lecture tolérante, écriture ligne à ligne, fermetures de dépendances |
-| `AppEnablementToFilesMigration` | idem | crée `/etc/hackeros/apps.config` commenté et y recopie une fois les anciens `IsEnabled = false` |
-| `AppEnablementRegistry` | `Platform/HackerOs.Platform.Core/Lifecycle` | point de contrôle unique du lancement, désormais alimenté par le service ; événement `Changed` |
-| `InstalledAppsPanel` | `Apps/System/HackerOs.Apps.Settings` | onglet « Installed Apps » de l'app Paramètres |
+| `IAppInstallationService`, `AppInstallationService` | `Platform/HackerOs.Platform.Core/Apps` | reads, watches and writes the two files; keeps `AppEnablementRegistry` equal to the effective state |
+| `AppsConfigDocument` | same | paths, tolerant reading, line-by-line writing, dependency closures |
+| `AppEnablementToFilesMigration` | same | creates a commented `/etc/hackeros/apps.config` and copies into it once the old `IsEnabled = false` entries |
+| `AppEnablementRegistry` | `Platform/HackerOs.Platform.Core/Lifecycle` | single launch checkpoint, now fed by the service; `Changed` event |
+| `InstalledAppsPanel` | `Apps/System/HackerOs.Apps.Settings` | "Installed Apps" tab of the Settings app |
 
-Flux unique, quelle que soit l'origine du changement (app Paramètres, `nano`,
-synchronisation de `/home`, connexion, déconnexion) :
+Single flow, whatever the origin of the change (Settings app, `nano`,
+`/home` synchronization, login, logout):
 
-1. `ReloadAsync` relit les deux fichiers (contexte système pour `/etc`, contexte
-   de l'utilisateur pour son fichier) ;
-2. l'état effectif est calculé (union, puis dépendants) ;
-3. les apps nouvellement désinstallées sont arrêtées et désactivées, dépendants
-   d'abord, par `AppLifecycleOrchestrator.DisableAsync` (instances arrêtées,
-   `AppDisabledEvent` publié) ; les apps réinstallées sont réactivées,
-   dépendances d'abord, par `EnableAsync` ;
-4. `Changed` est levé.
+1. `ReloadAsync` rereads the two files (system context for `/etc`, user
+   context for their file);
+2. the effective state is computed (union, then dependents);
+3. newly uninstalled apps are stopped and disabled, dependents
+   first, through `AppLifecycleOrchestrator.DisableAsync` (instances stopped,
+   `AppDisabledEvent` published); reinstalled apps are re-enabled,
+   dependencies first, through `EnableAsync`;
+4. `Changed` is raised.
 
-Au démarrage, `EcosystemBootCoordinator` exécute la migration puis
-`AppInstallationService.StartAsync`, qui applique le fichier machine et pose
-les surveillances (`SettingsFilesWatcher`) avant toute connexion. La connexion
-et la déconnexion (`SessionActivatedEvent`, `SessionLoggedOutEvent`) relisent
-la couche utilisateur et déplacent sa surveillance.
+At startup, `EcosystemBootCoordinator` runs the migration then
+`AppInstallationService.StartAsync`, which applies the machine file and sets up
+the watches (`SettingsFilesWatcher`) before any login. Login
+and logout (`SessionActivatedEvent`, `SessionLoggedOutEvent`) reread
+the user layer and move its watch.
 
-### Filtrage
+### Filtering
 
-Toutes les voies consultent `IAppEnablementRegistry` :
+All routes consult `IAppEnablementRegistry`:
 
-| Voie | Effet d'une app désinstallée |
+| Route | Effect of an uninstalled app |
 | --- | --- |
 | `AppLifecycleOrchestrator.LaunchAsync` | `AppLaunchStatus.Disabled` |
-| `AppIntentDispatcher` (intentions, `launch`) | refus ; `launch` répond « is not installed » |
-| `FileAssociationResolver` | ni défaut ni candidate ; les préférences de `/etc/hackeros/file-associations.json` et de `~/.config/hackeros/file-associations.json` ne sont **pas** réécrites (une entrée périmée est sautée, ADR 0121) |
-| Lanceur et recherche (`LauncherAppProjection`) | absente ; le menu ouvert se met à jour sur `Changed` |
-| Explorateur, « Open With... » | absente de la liste |
-| Contrôle de fichiers et dialogues (`HackComponentHost`) | sautée ; si c'était le fournisseur choisi, l'explorateur prend le relais (`component.fallback`) ; une désinstallation pour la machine retire sa ligne de `/etc/hackeros/components.config` (ADR 0156 §4, ADR 0158 §6) |
-| Terminal (`ShellCommandResolver`, `ShellInterpreter`) | `command not found`, absente de `help` et de la complétion |
+| `AppIntentDispatcher` (intents, `launch`) | refusal; `launch` answers "is not installed" |
+| `FileAssociationResolver` | neither default nor candidate; the preferences of `/etc/hackeros/file-associations.json` and `~/.config/hackeros/file-associations.json` are **not** rewritten (a stale entry is skipped, ADR 0121) |
+| Launcher and search (`LauncherAppProjection`) | absent; the open menu updates on `Changed` |
+| Explorer, "Open With..." | absent from the list |
+| File control and dialogs (`HackComponentHost`) | skipped; if it was the chosen provider, the explorer takes over (`component.fallback`); an uninstall for the machine removes its line from `/etc/hackeros/components.config` (ADR 0156 §4, ADR 0158 §6) |
+| Terminal (`ShellCommandResolver`, `ShellInterpreter`) | `command not found`, absent from `help` and from completion |
 
-## Utilisation
+## Usage
 
 ```csharp
 public interface IAppInstallationService
@@ -116,132 +116,132 @@ public interface IAppInstallationService
 }
 ```
 
-- `GetUninstallClosure(appId)` : les apps qui en dépendent (dépendants d'abord)
-  puis l'app elle-même ; la boîte de confirmation les liste.
-- `PlanUninstallAsync(appId)` (ADR 0097 §5) : la fermeture et les processus
-  actifs qu'elle arrêtera (`AppProcessInfo` : PID, app, nom, utilisateur), sans
-  rien changer. Paramètres les liste dans la confirmation (« These processes
-  will be stopped »). Le résultat de `UninstallAsync` donne
-  `StoppedProcesses`, avec `Forced` pour ceux tués après leur délai ; chacun est
-  écrit dans `/var/log/syslog`. Dans le SDK : `HackAppManagement.PlanUninstallAsync`
-  et `UninstallWithReportAsync` (`HackUninstallPlan`, `HackUninstallReport`).
-- `UninstallAsync` écrit toute la fermeture dans le fichier de la portée.
-  Refus : `apps.app.system:<id>`, `apps.closure.system-app:<id système>`,
+- `GetUninstallClosure(appId)`: the apps that depend on it (dependents first)
+  then the app itself; the confirmation dialog lists them.
+- `PlanUninstallAsync(appId)` (ADR 0097 §5): the closure and the active
+  processes it will stop (`AppProcessInfo`: PID, app, name, user), without
+  changing anything. Settings lists them in the confirmation ("These processes
+  will be stopped"). The result of `UninstallAsync` gives
+  `StoppedProcesses`, with `Forced` for those killed after their delay; each is
+  written to `/var/log/syslog`. In the SDK: `HackAppManagement.PlanUninstallAsync`
+  and `UninstallWithReportAsync` (`HackUninstallPlan`, `HackUninstallReport`).
+- `UninstallAsync` writes the entire closure in the scope's file.
+  Refusals: `apps.app.system:<id>`, `apps.closure.system-app:<system id>`,
   `apps.app.not-found:<id>`, `apps.session.required`.
-- `ReinstallAsync` retire l'app et ses dépendances obligatoires listées dans la
-  même portée. Refus en portée utilisateur si l'app (ou une dépendance) est
-  désinstallée pour la machine : `apps.uninstalled-by-administrator:<id>`.
-- `writer` : passerelle dont les droits décident d'une écriture **machine**,
-  normalement `AppContext.FileSystem` de l'app appelante. Un refus lève
-  `HackUnauthorizedAccessException`, ce qui déclenche l'invite d'approbation
-  administrateur de l'ADR 0042 ; l'app réessaie une fois l'approbation donnée.
-  Sans `writer`, l'utilisateur de la session écrit avec ses propres droits. La
-  portée utilisateur est toujours écrite comme l'utilisateur de la session.
-- Chaque changement est journalisé dans `/var/log/syslog`, par exemple
+- `ReinstallAsync` removes the app and its mandatory dependencies listed in the
+  same scope. Refusal in user scope if the app (or a dependency) is
+  uninstalled for the machine: `apps.uninstalled-by-administrator:<id>`.
+- `writer`: gateway whose rights decide on a **machine** write,
+  normally the calling app's `AppContext.FileSystem`. A refusal throws
+  `HackUnauthorizedAccessException`, which triggers the administrator approval
+  prompt of ADR 0042; the app retries once approval is given.
+  Without `writer`, the session user writes with their own rights. The user
+  scope is always written as the session user.
+- Each change is logged in `/var/log/syslog`, for example
   `apps: org.hackeros.calculator uninstalled (scope=machine, by=alice)`.
 
-Depuis la phase 4 (`rebuild/4-sdk-user-and-apps`), les apps n'utilisent plus ce
-service directement : elles passent par `HackAppManagement` du SDK, derrière la
-capacité dangereuse `apps.manage` (ADR 0056 §3, [`app-sdk.md`](../framework/app-sdk.md)).
-Pour la portée machine, la passerelle demande d'abord à l'agent
-d'authentification de l'OS de confirmer un administrateur
-([`admin-authentication-agent.md`](admin-authentication-agent.md)), puis l'OS
-écrit `/etc/hackeros/apps.config` lui-même comme `system` : le paramètre
-`writer` reçoit cette passerelle système, et l'invite de l'ADR 0042 n'est plus
-utilisée pour ce fichier. La liste des apps installées, elle, est lue par
-`HackApps` sans capacité.
+Since phase 4 (`rebuild/4-sdk-user-and-apps`), apps no longer use this
+service directly: they go through the SDK's `HackAppManagement`, behind the
+dangerous capability `apps.manage` (ADR 0056 §3, [`app-sdk.md`](../framework/app-sdk.md)).
+For the machine scope, the gateway first asks the OS authentication
+agent to confirm an administrator
+([`admin-authentication-agent.md`](admin-authentication-agent.md)), then the OS
+writes `/etc/hackeros/apps.config` itself as `system`: the `writer` parameter
+receives this system gateway, and the prompt of ADR 0042 is no longer
+used for this file. The list of installed apps is read
+by `HackApps` without a capability.
 
-### App Paramètres, onglet « Installed Apps »
+### Settings app, "Installed Apps" tab
 
-- une ligne par app fenêtrée (nom, éditeur, version), puis les commandes du
-  terminal dans une section repliée ; les services restent gérés par l'onglet
-  Services du Moniteur système ;
-- badge « System » sans bouton pour une app système ;
-- **Uninstall** pour une app installée, avec confirmation : liste des
-  dépendants emportés, choix « Only for me » / « For all users » pour un
-  administrateur (un utilisateur standard n'a que sa propre portée) ; « For all
-  users » ouvre la fenêtre de l'agent d'authentification, où l'administrateur
-  retape son mot de passe ;
-- pour un site (app `Web`) emporté par la désinstallation, la confirmation
-  annonce que sa base de navigateur `hackweb.<id>` sera supprimée ; elle l'est
-  après la désinstallation par `UninstallAsync`, seule donnée qu'une
-  désinstallation efface (ADR 0088 §4, [`asp-hack-site-data.md`](../framework/asp-hack-site-data.md)) ;
-- **Reinstall** pour une app désinstallée dans une portée que l'utilisateur
-  peut modifier ; sinon la mention « Uninstalled by the administrator » ;
-- l'ancien interrupteur activer/désactiver a disparu ;
-- depuis la phase 4, le panneau n'utilise que le SDK : `AppContext.AppManagement`
-  pour la liste et les changements, `AppContext.Catalog.Changed` pour se
-  rafraîchir, `HackUser.Describe(AppContext)` pour savoir si l'utilisateur est
-  administrateur.
+- one line per windowed app (name, publisher, version), then the terminal
+  commands in a collapsed section; services remain managed by the Services tab
+  of the System Monitor;
+- "System" badge without a button for a system app;
+- **Uninstall** for an installed app, with confirmation: list of the
+  dependents taken along, "Only for me" / "For all users" choice for an
+  administrator (a standard user has only their own scope); "For all
+  users" opens the authentication agent window, where the administrator
+  retypes their password;
+- for a site (`Web` app) taken along by the uninstall, the confirmation
+  announces that its browser database `hackweb.<id>` will be deleted; it is deleted
+  after the uninstall by `UninstallAsync`, the only data that an
+  uninstall erases (ADR 0088 §4, [`asp-hack-site-data.md`](../framework/asp-hack-site-data.md));
+- **Reinstall** for an app uninstalled in a scope that the user
+  can modify; otherwise the notice "Uninstalled by the administrator";
+- the old enable/disable switch is gone;
+- since phase 4, the panel uses only the SDK: `AppContext.AppManagement`
+  for the list and the changes, `AppContext.Catalog.Changed` to
+  refresh, `HackUser.Describe(AppContext)` to know whether the user is
+  an administrator.
 
-## Décisions de mise en œuvre
+## Implementation decisions
 
-- **Un seul état.** « Désactivée » et « désinstallée » ne font plus qu'un. Le
-  magasin IndexedDB garde l'instantané des manifestes, mais l'OS ne lit ni
-  n'écrit plus `IsEnabled` ; sa version de schéma ne change pas.
-- **`DisableAsync` et `EnableAsync` deviennent internes** à
-  `HackerOs.Platform.Core` (visibles des tests par `InternalsVisibleTo`) : seul
-  le service d'installation les appelle. L'orchestrateur ne reçoit plus
-  `IOsSettingsService` ni `IPersistentAppCatalogRepository`.
-- **Dépendants désinstallés implicitement.** Une ligne écrite à la main pour
-  une bibliothèque désinstalle aussi ses dépendants, même s'ils ne sont pas
-  listés : une app dont une dépendance obligatoire manque ne peut pas tourner.
-  L'app Paramètres, elle, écrit toute la fermeture, pour que la réinstallation
-  soit explicite.
-- **Fichier machine créé au démarrage** par la migration (contexte système),
-  pour qu'il appartienne à `system` et que les écritures suivantes ne modifient
-  que son contenu.
-- **Synchronisation.** Le domaine « AppCatalog » de l'ADR 0033
-  (`AppCatalogSyncService`, `AppCatalogSyncPayload`) est retiré. Le fichier
-  utilisateur est sous `/home` et voyage avec le domaine « FileSystem » ;
-  `/etc` n'est pas synchronisé. L'énumération `SyncDomain.AppCatalog` reste
-  côté serveur pour les données déjà stockées.
-- **Écart avec la signature de l'ADR :** `UninstallAsync` et `ReinstallAsync`
-  prennent un paramètre `writer` en plus. « Le contexte de l'appelant » de
-  l'ADR est ainsi transmis explicitement, comme pour `IOsSettingsService`
-  (ADR 0044), plutôt que par le contexte ambiant `Hack*`, qui n'existe pas dans
-  un gestionnaire d'événement Blazor.
-- **`GetState` d'un identifiant inconnu** lève `ArgumentException` : l'ADR ne
-  prévoit pas d'état « inconnu ».
-- **Interface en anglais**, comme le reste de l'app Paramètres.
+- **A single state.** "Disabled" and "uninstalled" are now one. The
+  IndexedDB store keeps the manifest snapshot, but the OS no longer reads or
+  writes `IsEnabled`; its schema version does not change.
+- **`DisableAsync` and `EnableAsync` become internal** to
+  `HackerOs.Platform.Core` (visible to tests through `InternalsVisibleTo`): only
+  the installation service calls them. The orchestrator no longer receives
+  `IOsSettingsService` or `IPersistentAppCatalogRepository`.
+- **Dependents uninstalled implicitly.** A hand-written line for
+  a library also uninstalls its dependents, even if they are not
+  listed: an app whose mandatory dependency is missing cannot run.
+  The Settings app writes the entire closure, so that reinstalling
+  is explicit.
+- **Machine file created at startup** by the migration (system context),
+  so that it belongs to `system` and later writes modify
+  only its content.
+- **Synchronization.** The "AppCatalog" domain of ADR 0033
+  (`AppCatalogSyncService`, `AppCatalogSyncPayload`) is removed. The user
+  file is under `/home` and travels with the "FileSystem" domain;
+  `/etc` is not synchronized. The `SyncDomain.AppCatalog` enumeration remains
+  on the server side for already stored data.
+- **Deviation from the ADR's signature:** `UninstallAsync` and `ReinstallAsync`
+  take an additional `writer` parameter. The ADR's "caller's context" is thus
+  passed explicitly, as for `IOsSettingsService`
+  (ADR 0044), rather than through the ambient `Hack*` context, which does not exist in
+  a Blazor event handler.
+- **`GetState` of an unknown identifier** throws `ArgumentException`: the ADR
+  does not provide an "unknown" state.
+- **English interface**, like the rest of the Settings app.
 
-## Tests de contrat
+## Contract tests
 
 `Tests/HackerOs.Platform.Core.Tests/Apps/AppInstallationServiceTests.cs`
-(ADR 0048 section 7) :
+(ADR 0048 section 7):
 
-- désinstallation utilisateur : fichier écrit, lancement refusé, instance
-  arrêtée, données conservées, ligne de journal ;
-- réinstallation : ligne retirée, lancement de nouveau possible ;
-- app système et fermeture contenant une app système refusées ;
-- lignes `apps.config` d'app système ou de valeur invalide ignorées avec
-  avertissement, identifiant inconnu ignoré en silence ;
-- portée machine sans droit : `HackUnauthorizedAccessException` ; écriture
-  approuvée : fichier écrit, effet pour tous les utilisateurs ;
-- état effectif machine OU utilisateur, couche utilisateur retirée à la
-  déconnexion, réinstallation utilisateur refusée pour une désinstallation
-  machine ;
-- fermeture des dépendances à la désinstallation et à la réinstallation ;
-- modification de `apps.config` par l'API fichier prise en compte sans
-  redémarrage ;
-- édition qui préserve commentaires et identifiants inconnus ;
-- migration : `IsEnabled = false` devient une ligne `[uninstalled]`, une seule
-  fois, jamais pour une app système, fichier possédé par `system`.
+- user uninstall: file written, launch refused, instance
+  stopped, data kept, log line;
+- reinstall: line removed, launch possible again;
+- system app and closure containing a system app refused;
+- `apps.config` lines of a system app or with an invalid value ignored with a
+  warning, unknown identifier silently ignored;
+- machine scope without rights: `HackUnauthorizedAccessException`; approved
+  write: file written, effect for all users;
+- effective state machine OR user, user layer removed at
+  logout, user reinstall refused for a machine
+  uninstall;
+- dependency closure at uninstall and at reinstall;
+- modification of `apps.config` through the file API taken into account without
+  a restart;
+- editing that preserves comments and unknown identifiers;
+- migration: `IsEnabled = false` becomes a `[uninstalled]` line, only once,
+  never for a system app, file owned by `system`.
 
-Ailleurs : `ShellCommandResolverTests.Uninstalled_commands_are_neither_resolved_nor_listed`,
+Elsewhere: `ShellCommandResolverTests.Uninstalled_commands_are_neither_resolved_nor_listed`,
 `EcosystemBootCoordinatorTests.BootAsync_moves_persisted_disabled_entries_into_the_machine_apps_config`,
-et les tests existants du lanceur, du résolveur d'associations et du
-répartiteur d'intentions, qui s'appuient déjà sur le registre.
+and the existing tests of the launcher, the association resolver and the
+intent dispatcher, which already rely on the registry.
 
-## Tâches
+## Tasks
 
 - [x] `IAppInstallationService`, `AppInstallationService`, `AppsConfigDocument`.
-- [x] Lecture tolérante, avertissements dans `/var/log/syslog`, identifiants inconnus conservés.
-- [x] Surveillance des deux fichiers, rechargement à la connexion et à la déconnexion.
-- [x] Fermeture des dépendances (désinstallation, réinstallation), refus des apps système.
-- [x] Arrêt des instances, `AppEnablementRegistry.Changed`.
-- [x] Filtrage : lanceur, recherche, « Open With... », associations, intentions, `launch`, terminal.
-- [x] Migration `AppEnablementToFilesMigration` et retrait de l'hydratation `IsEnabled` au démarrage.
-- [x] Retrait d'`AppCatalogSyncService` et de son contrat.
-- [x] Onglet « Installed Apps » refait (`InstalledAppsPanel`).
-- [x] Tests de contrat et documentation.
+- [x] Tolerant reading, warnings in `/var/log/syslog`, unknown identifiers kept.
+- [x] Watching of the two files, reload at login and logout.
+- [x] Dependency closure (uninstall, reinstall), refusal of system apps.
+- [x] Stopping of instances, `AppEnablementRegistry.Changed`.
+- [x] Filtering: launcher, search, "Open With...", associations, intents, `launch`, terminal.
+- [x] `AppEnablementToFilesMigration` migration and removal of the `IsEnabled` hydration at startup.
+- [x] Removal of `AppCatalogSyncService` and its contract.
+- [x] "Installed Apps" tab redone (`InstalledAppsPanel`).
+- [x] Contract tests and documentation.

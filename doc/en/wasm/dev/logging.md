@@ -1,122 +1,123 @@
-# Journaux en fichiers (`/var/log`)
+# File logs (`/var/log`)
 
-Les fichiers de journal qu'une app produit et les API qui les écrivent sont dans [`app-log-files.md`](../framework/app-log-files.md).
+The log files an app produces and the APIs that write them are in [`app-log-files.md`](../framework/app-log-files.md).
 
-Mise en œuvre de l'[ADR 0045](adr/0045-logs-as-files.md) et de la section 5.3 du
-[plan de refonte](plans/ecosystem-rebuild-plan.md).
+Implementation of [ADR 0045](adr/0045-logs-as-files.md) and section 5.3 of the
+[overhaul plan](plans/ecosystem-rebuild-plan.md).
 
-## Rôle
+## Role
 
-Les journaux de HackerOS sont de vrais fichiers texte. `cat`, `tail`, `grep` et
-Error Log Viewer les lisent avec les droits de fichier ordinaires.
+HackerOS logs are real text files. `cat`, `tail`, `grep` and Error Log Viewer
+read them with ordinary file permissions.
 
-| Fichier | Contenu | Mode |
+| File | Content | Mode |
 |---|---|---|
-| `/var/log/syslog` | `ILogger<T>` de la plateforme, démarrage (`kernel`), pannes de l'hôte (`ecosystem-host`), lignes perdues (`logging`) | `system:system 0644` |
-| `/var/log/kern.log` | Journal du noyau (`KernelLog`) : OOM killer, garde de la mémoire du navigateur ; aussi copié dans `syslog` et lu par `dmesg` depuis `/dev/kmsg` (ADR 0126 §3, [`oom-killer.md`](oom-killer.md)) | `system:system 0644` |
-| `/var/log/auth.log` | `IAuditLog` (`session.login`, `session.elevate`, `capability.*` de l'ADR 0049…) | `system:system 0600` |
-| `/var/log/audit.log` | Audit des créations, écritures, renommages, copies, suppressions et `chmod` sous `/etc`, `/bin` et `/var` (sauf `/var/log`), au format d'`auditd` (ADR 0100 §3, [`sensitive-settings.md`](sensitive-settings.md)) ; `ausearch` le filtre | `system:system 0600` |
+| `/var/log/syslog` | Platform `ILogger<T>`, startup (`kernel`), host failures (`ecosystem-host`), lost lines (`logging`) | `system:system 0644` |
+| `/var/log/kern.log` | Kernel log (`KernelLog`): OOM killer, browser memory guard; also copied to `syslog` and read by `dmesg` from `/dev/kmsg` (ADR 0126 §3, [`oom-killer.md`](oom-killer.md)) | `system:system 0644` |
+| `/var/log/auth.log` | `IAuditLog` (`session.login`, `session.elevate`, `capability.*` from ADR 0049…) | `system:system 0600` |
+| `/var/log/audit.log` | Audit of creations, writes, renames, copies, deletions and `chmod` under `/etc`, `/bin` and `/var` (except `/var/log`), in `auditd` format (ADR 0100 §3, [`sensitive-settings.md`](sensitive-settings.md)); `ausearch` filters it | `system:system 0600` |
 
 ## Architecture
 
 ```text
 ILogger<T> ──► HackerOsDiagnosticLoggerProvider ─┐
 IAppLoggingGateway ──► AppLoggingGateway ────────┼─► LogFileWriter ─► IFileSystemService ─► /var/log/…
-IAuditLog ──► FileAuditLog ──────────────────────┘        │ (canal borné, vidage groupé, rotation)
+IAuditLog ──► FileAuditLog ──────────────────────┘        │ (bounded channel, grouped flush, rotation)
 HostExceptionReporter ───────────────────────────┘        ▼
-                                     IDiagnosticSink (tampon mémoire des entrées récentes)
+                                     IDiagnosticSink (in-memory buffer of recent entries)
 ```
 
-- `LogFileTarget` : `Syslog`, `AuthLog`, `AuditLog` (ADR 0100), `ForApp(appId)`, avec chemin et mode.
-- `LogFileWriter` (singleton, `Platform.Core/Diagnostics/`) :
-  - `Enqueue(target, line)` et `Write(target, severity, source, message, pid)`,
-    synchrones, jamais bloquants. Canal de 10 000 lignes ; au-delà, les plus
-    anciennes sont perdues et une ligne `WARN logging: <n> entries dropped` est
-    écrite dans `syslog` au vidage suivant.
-  - Plus de place (`NoSpace`, ADR 0099 §2) : le lot refusé est abandonné et
-    ses lignes comptées (`PendingNoSpaceLoss`) ; au premier vidage réussi,
-    une seule ligne `WARN logging: <n> lines lost (No space left on device)`
-    est écrite dans `syslog` ([`system-backup.md`](system-backup.md)).
-  - Vidage toutes les 1 s de temps simulé, dès 100 lignes en attente, à la
-    déconnexion (`SessionLoggedOutEvent`) et à `DisposeAsync`. Un seul vidage à
-    la fois par système de fichiers attaché ; une seule écriture par fichier et
-    par vidage.
-  - `AttachAsync(IFileSystemService)` est appelé par `EcosystemBootCoordinator`
-    juste après `EnsureRootAsync`. Avant, les lignes attendent dans le canal.
-    Le rédacteur crée lui-même `/var/log` et `/var/log/apps` s'ils manquent.
-  - Attacher un **autre** système de fichiers abandonne le précédent : son
-    jeton est annulé et les vidages suivants ne l'attendent plus. Sur
-    `HackerOs.Server`, chaque circuit monte le sien ; un rechargement peut
-    couper l'ancien circuit au milieu d'un vidage (appel JS sans réponse), et
-    le démarrage du nouveau circuit restait bloqué derrière, environ une fois
-    sur cinq (trouvé par `build/verify-hosts.sh`). Les lignes du lot abandonné
-    ne restent que dans le tampon mémoire.
-  - Un échec d'écriture n'est jamais journalisé dans un fichier : il est noté une
-    fois par fichier (catégorie `logging`) dans le tampon mémoire.
-- `FileAuditLog` remplace `BoundedAuditLog` dans la composition ; `Entries` reste
-  servi par un tampon de 512 entrées.
-- `SimulationClockDriver` (`Platform.Core/Time/`) : l'adaptateur de production
-  prévu par l'ADR 0012, qui n'existait pas. Il fait avancer `ManualSimulationClock`
-  depuis un minuteur de la plateforme (au plus 50 tics par battement, le reste
-  est abandonné quand l'onglet est ralenti). Sans lui, le vidage périodique, l'horloge
-  de la barre des tâches et les délais d'arrêt des processus ne s'exécutaient
-  jamais. Il est démarré par `EcosystemBootCoordinator`. `ManualSimulationClock`
-  protège désormais sa file de rappels par un verrou.
+- `LogFileTarget`: `Syslog`, `AuthLog`, `AuditLog` (ADR 0100), `ForApp(appId)`, with path and mode.
+- `LogFileWriter` (singleton, `Platform.Core/Diagnostics/`):
+  - `Enqueue(target, line)` and `Write(target, severity, source, message, pid)`,
+    synchronous, never blocking. Channel of 10,000 lines; beyond that, the
+    oldest are lost and a `WARN logging: <n> entries dropped` line is written
+    to `syslog` at the next flush.
+  - Out of space (`NoSpace`, ADR 0099 §2): the refused batch is abandoned and
+    its lines counted (`PendingNoSpaceLoss`); at the first successful flush,
+    a single `WARN logging: <n> lines lost (No space left on device)` line is
+    written to `syslog` ([`system-backup.md`](system-backup.md)).
+  - Flush every 1 s of simulated time, as soon as 100 lines are pending, at
+    logout (`SessionLoggedOutEvent`) and at `DisposeAsync`. Only one flush at a
+    time per attached filesystem; only one write per file and per flush.
+  - `AttachAsync(IFileSystemService)` is called by `EcosystemBootCoordinator`
+    right after `EnsureRootAsync`. Before that, lines wait in the channel.
+    The writer itself creates `/var/log` and `/var/log/apps` if they are
+    missing.
+  - Attaching a **different** filesystem abandons the previous one: its token
+    is cancelled and later flushes no longer wait for it. On
+    `HackerOs.Server`, each circuit mounts its own; a reload can cut the old
+    circuit in the middle of a flush (JS call with no response), and the
+    startup of the new circuit stayed blocked behind it, about one time in
+    five (found by `build/verify-hosts.sh`). The lines of the abandoned batch
+    remain only in the in-memory buffer.
+  - A write failure is never logged to a file: it is noted once per file
+    (category `logging`) in the in-memory buffer.
+- `FileAuditLog` replaces `BoundedAuditLog` in the composition; `Entries` is
+  still served by a 512-entry buffer.
+- `SimulationClockDriver` (`Platform.Core/Time/`): the production adapter
+  planned by ADR 0012, which did not exist. It advances `ManualSimulationClock`
+  from a platform timer (at most 50 ticks per beat, the rest is dropped when
+  the tab is throttled). Without it, the periodic flush, the taskbar clock and
+  the process shutdown delays never ran. It is started by
+  `EcosystemBootCoordinator`. `ManualSimulationClock` now protects its
+  callback queue with a lock.
 
-## Retraits
+## Removals
 
-- `IPersistentDiagnosticRepository` et `IndexedDbDiagnosticRepository` ne sont
-  plus enregistrés ; l'audit IndexedDB n'était déjà pas branché. Les classes et
-  leurs magasins restent, et la version du schéma IndexedDB ne change pas.
-- L'hôte `OS/HackerOs.Ecosystem` ne retire plus son `ILoggerProvider` : toutes ses
-  dépendances sont des singletons. Le serveur garde sa composition (le pont
-  `ILogger` y reste retiré, aucun système de fichiers n'y est attaché).
+- `IPersistentDiagnosticRepository` and `IndexedDbDiagnosticRepository` are no
+  longer registered; the IndexedDB audit was already not wired. The classes
+  and their stores remain, and the IndexedDB schema version does not change.
+- The `OS/HackerOs.Ecosystem` host no longer removes its `ILoggerProvider`:
+  all its dependencies are singletons. The server keeps its composition (the
+  `ILogger` bridge remains removed there, no filesystem is attached to it).
 
 ## Error Log Viewer
 
-- Manifeste : `filesystem.system.read` et `filesystem.system.write` (au lieu de
+- Manifest: `filesystem.system.read` and `filesystem.system.write` (instead of
   `diagnostics.*`).
-- `LogFileReader` liste `syslog` puis `apps/*.log` (et les archives `.1` à `.5`
-  si la case « Archives » est cochée), lit et analyse avec `LogLineFormat.TryParse`,
-  et compte les lignes étrangères. Il ne lit jamais `auth.log` (`sudo cat` pour ça).
-- `audit.log` et ses archives (ADR 0100) sont listés pour un administrateur ou
-  une session élevée seulement (`LogSource.RequiresRoot`) et ne sont pas lus
-  par la vue « tous les journaux ». Chaque ligne `type=PATH` est analysée par
-  `AuditLineFormat` : un refus devient un avertissement, une écriture réussie
-  une information, avec l'app comme source.
-- Suivi en direct par `AppContext.Watch` sur `/var/log` et `/var/log/apps`.
-- « Truncate » vide le journal sélectionné (jamais une archive). Pour un
-  utilisateur ordinaire c'est refusé, la fenêtre propose l'approbation
-  administrateur (ADR 0042), puis un second clic réussit.
-- **Écart temporaire avec l'ADR 0045 §6 :** le lecteur passe par
-  `IAppFileSystemGateway` et non par `HackFile`/`HackFileSystemWatcher`, qui
-  arrivent avec la branche `rebuild/1-file-api` (ADR 0043). Le passage à `Hack*`
-  se fera une fois cette API mergée ; le comportement ne change pas.
+- `LogFileReader` lists `syslog` then `apps/*.log` (and the `.1` to `.5`
+  archives if the "Archives" box is checked), reads and parses with
+  `LogLineFormat.TryParse`, and counts foreign lines. It never reads
+  `auth.log` (`sudo cat` for that).
+- `audit.log` and its archives (ADR 0100) are listed for an administrator or
+  an elevated session only (`LogSource.RequiresRoot`) and are not read by the
+  "all logs" view. Each `type=PATH` line is parsed by `AuditLineFormat`: a
+  denial becomes a warning, a successful write an information entry, with the
+  app as source.
+- Live tracking through `AppContext.Watch` on `/var/log` and `/var/log/apps`.
+- "Truncate" empties the selected log (never an archive). For an ordinary user
+  it is refused, the window offers administrator approval (ADR 0042), then a
+  second click succeeds.
+- **Temporary deviation from ADR 0045 §6:** the reader goes through
+  `IAppFileSystemGateway` and not `HackFile`/`HackFileSystemWatcher`, which
+  arrive with the `rebuild/1-file-api` branch (ADR 0043). The switch to
+  `Hack*` will happen once that API is merged; the behavior does not change.
 
-## Tests de contrat
+## Contract tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Diagnostics/LogLineFormatTests.cs` : format,
-  exemple exact de l'ADR, échappements, propriétés, audit, rejet des lignes étrangères.
-- `.../LogFileWriterTests.cs` : création et modes, vidage périodique et par seuil,
-  une écriture par fichier, rotation et archives, lot géant, perte de lignes,
-  échecs non récursifs, déconnexion, arrêt, droits de lecture, nouvel attachement
-  qui n'attend pas un vidage bloqué sur le précédent.
-- `.../LogProducersTests.cs` : `ILogger`, `AppLoggingGateway`, `FileAuditLog`.
+- `Tests/HackerOs.Platform.Core.Tests/Diagnostics/LogLineFormatTests.cs`: format,
+  exact ADR example, escapes, properties, audit, rejection of foreign lines.
+- `.../LogFileWriterTests.cs`: creation and modes, periodic and threshold
+  flush, one write per file, rotation and archives, giant batch, line loss,
+  non-recursive failures, logout, shutdown, read permissions, new attachment
+  that does not wait for a flush blocked on the previous one.
+- `.../LogProducersTests.cs`: `ILogger`, `AppLoggingGateway`, `FileAuditLog`.
 - `Tests/HackerOs.Platform.Core.Tests/Time/SimulationClockDriverTests.cs`.
-- `Tests/HackerOs.Apps.ErrorLogViewer.Tests/` : manifeste et `LogFileReader` sur un
-  vrai `AppFileSystemGateway`.
+- `Tests/HackerOs.Apps.ErrorLogViewer.Tests/`: manifest and `LogFileReader` on
+  a real `AppFileSystemGateway`.
 
-## Liste des tâches
+## Task list
 
 - [x] `LogLineFormat` (`Format`, `FormatAudit`, `TryParse`).
-- [x] `LogFileTarget`, `LogRotationPolicy` (1 Mio × 5).
-- [x] `LogFileWriter` : canal borné, vidage groupé, rotation, pas de récursion.
+- [x] `LogFileTarget`, `LogRotationPolicy` (1 MiB × 5).
+- [x] `LogFileWriter`: bounded channel, grouped flush, rotation, no recursion.
 - [x] `ILogger` → `syslog`, `IAppLoggingGateway` → `apps/<appId>.log`, `IAuditLog` → `auth.log`.
-- [x] `HostExceptionReporter` sur `syslog`.
-- [x] Attache au démarrage et ligne `kernel: boot` ; `/var/log/apps` créé par `FileSystemSeeder`.
-- [x] `SimulationClockDriver` pour que le temps simulé avance.
-- [x] Retrait de `IAppDiagnosticsGateway` et des dépôts IndexedDB de la composition.
-- [x] Error Log Viewer lit les fichiers.
-- [x] Tests de contrat.
-- [x] Lignes perdues faute de place, comptées puis signalées (`v3/7`, ADR 0099 §2).
-- [ ] Passer Error Log Viewer sur `HackFile` après le merge de l'ADR 0043.
+- [x] `HostExceptionReporter` on `syslog`.
+- [x] Attach at startup and `kernel: boot` line; `/var/log/apps` created by `FileSystemSeeder`.
+- [x] `SimulationClockDriver` so that simulated time advances.
+- [x] Removal of `IAppDiagnosticsGateway` and the IndexedDB repositories from the composition.
+- [x] Error Log Viewer reads the files.
+- [x] Contract tests.
+- [x] Lines lost for lack of space, counted then reported (`v3/7`, ADR 0099 §2).
+- [ ] Move Error Log Viewer to `HackFile` after the ADR 0043 merge.

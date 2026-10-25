@@ -1,95 +1,95 @@
-# ADR 0087 : exemple Intranet, ajustements de fin de phase web
+# ADR 0087: Intranet sample, end-of-web-phase adjustments
 
-## Statut
+## Status
 
-Accepté le 2026-10-17, avec le chantier `web/11-sample-final`.
+Accepted on 2026-10-17, with the `web/11-sample-final` work item.
 
-- **Phase du plan :** phase web ([`asp-hack-plan.md`](../plans/asp-hack-plan.md), §5).
-- **Complète :** ADR 0084 §5 (navigation d'un site Blazor), ADR 0083 et 0086
-  (classes de base des vues), ADR 0076 §6 (sous-ensemble d'ASP.NET retenu).
-  Ne remplace aucune décision ; constate aussi ce que la phase n'a pas livré de
-  l'ADR 0073 §3.
+- **Plan phase:** web phase ([`asp-hack-plan.md`](../plans/asp-hack-plan.md), §5).
+- **Completes:** ADR 0084 §5 (Blazor site navigation), ADR 0083 and 0086
+  (view base classes), ADR 0076 §6 (retained subset of ASP.NET).
+  Replaces no decision; also records what the phase did not deliver from
+  ADR 0073 §3.
 
-## Contexte
+## Context
 
-Le dernier chantier de la phase web réunit toutes les briques dans un seul site,
-l'exemple **Intranet** (`http://intranet.hack/`) : pages MVC en `.cshtml` et en
-`.razor` sous un même layout, API REST, JavaScript du `wwwroot`, session par
-cookie, formulaires anti-falsification et tableau de tâches Blazor sous
-`/board`. C'est le premier site **livré** (projet sous `Apps/`, analysé pour le
-trimming comme toute app) qui a des vues, et le premier qui mêle pages MVC et
-pages Blazor sur la même origine. Quatre points sont apparus.
+The last work item of the web phase brings all the building blocks together in a single site,
+the **Intranet** sample (`http://intranet.hack/`): MVC pages in `.cshtml` and
+`.razor` under the same layout, REST API, JavaScript from `wwwroot`, cookie
+session, anti-forgery forms and a Blazor task board under
+`/board`. It is the first **shipped** site (project under `Apps/`, analyzed for
+trimming like any app) that has views, and the first that mixes MVC pages and
+Blazor pages on the same origin. Four points emerged.
 
-## Décision
+## Decision
 
-### 1. Un lien à `target` autre que `_self` quitte le site Blazor
+### 1. A link with a `target` other than `_self` leaves the Blazor site
 
-L'ADR 0084 §5 fait de tout lien vers l'adresse du site une navigation interne.
-Un site qui a aussi des pages MVC (ADR 0073 §2 : « MVC et Blazor dans la même
-app ») n'avait alors aucun lien simple vers elles : le routeur du site répondait
-« page introuvable ». Comme Blazor, qui n'intercepte pas un lien dont la cible
-est un autre cadre, la zone de page traite désormais un `<a>` dont l'attribut
-`target` existe et n'est pas `_self` (`_top`, `_blank`, un nom) comme une
-navigation du document, avec `forceLoad`. Un onglet par fenêtre : la page
-s'ouvre dans cet onglet (comme `target="_blank"` dans une page HTML, ADR 0079).
-`HackWebSiteView.OnLinkClicked` reçoit ce drapeau du module JS.
+ADR 0084 §5 makes any link to the site's address an internal navigation.
+A site that also has MVC pages (ADR 0073 §2: "MVC and Blazor in the same
+app") then had no simple link to them: the site's router answered
+"page not found". Like Blazor, which does not intercept a link whose target
+is another frame, the page area now treats an `<a>` whose `target` attribute
+exists and is not `_self` (`_top`, `_blank`, a name) as a document
+navigation, with `forceLoad`. One tab per window: the page
+opens in that tab (like `target="_blank"` in an HTML page, ADR 0079).
+`HackWebSiteView.OnLinkClicked` receives this flag from the JS module.
 
-L'exemple écrit `<a href="/Notes" target="_top">` ; dans l'autre sens, un lien
-ordinaire d'une page MVC vers `/board` charge la page hôte et démarre le site
-Blazor.
-
-### 2. Les classes de base des vues ne portent plus d'annotation de trimming
-
-Les vues sont nommées par `typeof()` avec `DynamicallyAccessedMemberTypes.All`
-(table des vues générée, `RazorCompiledItemAttribute`, `[Layout]`). Le trimmer
-considère alors chaque membre de la vue **et de ses classes de base** comme lu
-par réflexion, et signale tout membre annoté (`IL2110`, `IL2111`). Les projets
-de test n'analysent pas le trimming : la faute n'apparaissait qu'avec une app
-livrée, où elle casse la build (avertissements en erreurs).
-
-- `HackViewBase.Layout` n'est plus annoté ; son `set` supprime `IL2067` avec la
-  même justification que `HackViewEngine.LayoutOf` (un layout est un composant
-  de l'assembly de la vue, nommé par `typeof()` comme dans `[Layout]`).
-- `HackRazorPage.RenderAsync` remplit ses `@inject` avant de passer à une
-  méthode asynchrone : le paramètre annoté `pageType` ne devient plus un champ
-  de la machine à états.
-
-Règle pour la suite : aucun membre d'une classe de base de vue ou de composant
-(`HackViewBase`, `HackRazorPage`, `HackComponentBase`...) ne porte
-`[DynamicallyAccessedMembers]` ; l'annotation reste sur les paramètres des
-méthodes de l'OS qui reçoivent un type (`HackViewDescriptor`, `View<T>()`).
-L'exemple Intranet, compilé avec l'hôte Ecosystem, vérifie la règle à chaque
-build.
-
-### 3. `TryValidateModel` sur les contrôleurs
-
-Un `PATCH` fusionne un corps partiel dans l'entité stockée puis doit vérifier
-le résultat avec les règles `DataAnnotations` du modèle complet, ce que
-`ControllerBase.TryValidateModel` fait dans ASP.NET Core. `HackControllerBase`
-reçoit `TryValidateModel<TModel>(model, prefix)` (type annoté
-`PublicProperties`, erreurs dans `ModelState`, renvoie `ModelState.IsValid`),
-ajouté au sous-ensemble de l'ADR 0076 §6.
-
-### 4. L'exemple est installé dans les hôtes ; ses données restent en mémoire
-
-`HackerOs.Samples.Intranet` est, comme le site d'exemple Blazor (ADR 0084), une
-app `Web` intégrée non système, cachée du lanceur, référencée par l'Ecosystem et
-`test/test` (chargement paresseux). Ses notes et ses cartes sont des singletons
-du processus du site : elles reviennent à leur état initial quand l'OS arrête le
+The sample writes `<a href="/Notes" target="_top">`; in the other direction, an
+ordinary link from an MVC page to `/board` loads the host page and starts the Blazor
 site.
 
-La base d'un site décidée par l'ADR 0073 §3 (IndexedDB de l'hôte, nom imposé
-`hackweb.<id>`, `HackWebDb`, effacement à la désinstallation, liste dans
-Diagnostic) n'a été confiée à aucun chantier du plan et n'existe pas. De même,
-les journaux de débogage d'un site ASP.Hack (`/var/log/hackweb/<id>.log`) et la
-saisie semi-automatique du navigateur ne sont pas réalisés. Ces décisions
-restent valables ; elles demandent un chantier à part.
+### 2. View base classes no longer carry a trimming annotation
 
-## Conséquences
+Views are named by `typeof()` with `DynamicallyAccessedMemberTypes.All`
+(generated view table, `RazorCompiledItemAttribute`, `[Layout]`). The trimmer
+then considers every member of the view **and of its base classes** as read
+by reflection, and flags any annotated member (`IL2110`, `IL2111`). Test
+projects do not analyze trimming: the fault only appeared with a shipped app,
+where it breaks the build (warnings as errors).
 
-- Un site mixte relie ses deux moitiés par des liens ordinaires ; la règle du
-  §1 est celle de Blazor, donc un développeur ASP.NET la connaît.
-- Toute app livrée peut avoir des vues `.razor` et `.cshtml` ; une régression
-  du §2 casse la build de l'Ecosystem.
-- Le guide du développeur ([`asp-hack-developer-guide.md`](../../framework/asp-hack-developer-guide.md))
-  s'appuie sur l'exemple et signale le §4 dans ses limites.
+- `HackViewBase.Layout` is no longer annotated; its `set` suppresses `IL2067` with the
+  same justification as `HackViewEngine.LayoutOf` (a layout is a component
+  of the view's assembly, named by `typeof()` as in `[Layout]`).
+- `HackRazorPage.RenderAsync` fills its `@inject`s before moving to an
+  async method: the annotated `pageType` parameter no longer becomes a field
+  of the state machine.
+
+Rule going forward: no member of a view or component base class
+(`HackViewBase`, `HackRazorPage`, `HackComponentBase`...) carries
+`[DynamicallyAccessedMembers]`; the annotation stays on the parameters of the
+OS methods that receive a type (`HackViewDescriptor`, `View<T>()`).
+The Intranet sample, compiled with the Ecosystem host, verifies the rule at each
+build.
+
+### 3. `TryValidateModel` on controllers
+
+A `PATCH` merges a partial body into the stored entity then must verify
+the result with the full model's `DataAnnotations` rules, which
+`ControllerBase.TryValidateModel` does in ASP.NET Core. `HackControllerBase`
+receives `TryValidateModel<TModel>(model, prefix)` (type annotated
+`PublicProperties`, errors in `ModelState`, returns `ModelState.IsValid`),
+added to the subset of ADR 0076 §6.
+
+### 4. The sample is installed in the hosts; its data stays in memory
+
+`HackerOs.Samples.Intranet` is, like the Blazor sample site (ADR 0084), a
+built-in non-system `Web` app, hidden from the launcher, referenced by the Ecosystem and
+`test/test` (lazy loading). Its notes and cards are singletons
+of the site's process: they return to their initial state when the OS stops the
+site.
+
+The site database decided by ADR 0073 §3 (host IndexedDB, imposed name
+`hackweb.<id>`, `HackWebDb`, erasure on uninstallation, listing in
+Diagnostic) was assigned to no work item of the plan and does not exist. Likewise,
+the debug logs of an ASP.Hack site (`/var/log/hackweb/<id>.log`) and the
+browser's autofill are not implemented. These decisions
+remain valid; they require a separate work item.
+
+## Consequences
+
+- A mixed site links its two halves with ordinary links; the rule of
+  §1 is Blazor's, so an ASP.NET developer knows it.
+- Any shipped app can have `.razor` and `.cshtml` views; a regression
+  of §2 breaks the Ecosystem build.
+- The developer guide ([`asp-hack-developer-guide.md`](../../framework/asp-hack-developer-guide.md))
+  builds on the sample and flags §4 in its limits.

@@ -1,52 +1,52 @@
-# ADR 0164 : icônes des apps et menu contextuel de l'icône de fenêtre
+# ADR 0164: app icons and the window icon context menu
 
-## Statut
+## Status
 
-Accepté le 2026-10-22, à la demande de Benoit. Remplace les accès au menu par
-clic gauche et clic droit sur toute la barre de titre de l'ADR 0095 §3.
-Les raccourcis clavier de cette décision sont conservés.
+Accepted on 2026-10-22, at Benoit's request. Replaces the menu access by
+left click and right click on the whole title bar of ADR 0095 §3.
+The keyboard shortcuts of that decision are kept.
 
-## Contexte
+## Context
 
-Les apps système fenêtrées ne déclaraient aucun fichier dans `AppDefinition.Icons`.
-Le chrome montrait un bouton de menu générique et la taskbar une icône générique.
-Un chemin déclaré, relatif au paquet, était de plus utilisé directement comme URL
-d'image, sans le préfixe de static web assets de sa bibliothèque.
+Windowed system apps declared no file in `AppDefinition.Icons`.
+The chrome showed a generic menu button and the taskbar a generic icon.
+A declared path, relative to the package, was also used directly as an
+image URL, without the static web assets prefix of its library.
 
-## Décision
+## Decision
 
-- La première icône de `presentation.iconAssetPaths` est celle de la fenêtre et
-  de son bouton dans la taskbar. `WindowLaunchCoordinator` résout ce chemin par
-  `StaticWebAssetAppAssetSource.RelativeUrl`, sous `_content/<assembly>/…`.
-  Taskbar, sélecteur et autres projections réutilisent l'URL du même snapshot.
-- Les quatorze apps système fenêtrées déclarent `icons/app.svg` et son asset image.
-  Les SVG utilisent des glyphes Lucide déjà embarqués (licence ISC), dans une tuile
-  colorée. Le générateur calcule leur SHA-256 ; aucun changement de schéma ni
-  nouveau contrat SDK n'est nécessaire. Les apps tierces utilisent les mêmes
-  propriétés `Icons` et `Assets`.
-- Dans tous les thèmes de bureau sauf macOS, la barre de titre montre cette
-  icône. macOS la masque par un jeton CSS interne de mise en page
-  `--hos-window-icon-display`, mais son dock garde l'icône de l'app.
-- Un clic gauche sur l'icône active seulement la fenêtre. Le menu des commandes
-  de fenêtre s'ouvre au clic droit **sur l'icône**, et reste accessible par
-  `Alt+Space` / `Alt+F3`. Le reste de la barre de titre n'ouvre plus ce menu.
-- Sans icône déclarée, les composants gardent un symbole de fenêtre générique.
-  Le menu utilise ce symbole, sans introduire de bouton hamburger.
-- Les assets restent dans les bibliothèques des apps ; aucun hôte ni serveur
-  supplémentaire requis. Le lanceur et les raccourcis gardent leur sélection
-  Lucide existante, indépendante des images de la fenêtre.
+- The first icon of `presentation.iconAssetPaths` is that of the window and
+  of its button in the taskbar. `WindowLaunchCoordinator` resolves this path through
+  `StaticWebAssetAppAssetSource.RelativeUrl`, under `_content/<assembly>/…`.
+  Taskbar, picker and other projections reuse the URL of the same snapshot.
+- The fourteen windowed system apps declare `icons/app.svg` and its image asset.
+  The SVGs use Lucide glyphs already embedded (ISC license), in a colored
+  tile. The generator computes their SHA-256; no schema change nor
+  new SDK contract is needed. Third-party apps use the same
+  `Icons` and `Assets` properties.
+- In all desktop themes except macOS, the title bar shows this
+  icon. macOS hides it through an internal CSS layout token
+  `--hos-window-icon-display`, but its dock keeps the app's icon.
+- A left click on the icon only activates the window. The window commands menu
+  opens on right click **on the icon**, and remains accessible through
+  `Alt+Space` / `Alt+F3`. The rest of the title bar no longer opens this menu.
+- Without a declared icon, the components keep a generic window symbol.
+  The menu uses this symbol, without introducing a hamburger button.
+- The assets stay in the apps' libraries; no additional host or server
+  required. The launcher and shortcuts keep their existing Lucide selection,
+  independent of the window images.
 
-## Vérification
+## Verification
 
-- `WindowLaunchCoordinatorTests` : résolution du chemin d'icône et échappement URL.
-- Génération des manifestes : assets présents et empreintes SHA-256 calculées.
-- `WindowAppIconTests` (UI.E2E) : deux apps distinctes, images réellement décodées,
-  même source dans chrome/taskbar, sept thèmes, exception macOS, clic gauche,
-  clic droit sur le titre, clic droit sur l'icône et accès clavier.
+- `WindowLaunchCoordinatorTests`: resolution of the icon path and URL escaping.
+- Manifest generation: assets present and SHA-256 fingerprints computed.
+- `WindowAppIconTests` (UI.E2E): two distinct apps, images actually decoded,
+  same source in chrome/taskbar, seven themes, macOS exception, left click,
+  right click on the title, right click on the icon and keyboard access.
 
-## Tâches
+## Tasks
 
-- [x] Déclarer les icônes des apps système fenêtrées et résoudre leurs URLs.
-- [x] Afficher l'icône dans chrome/taskbar et respecter l'exception macOS.
-- [x] Réserver le menu au clic droit sur l'icône et conserver l'accès clavier.
-- [x] Ajouter les tests de régression et mettre à jour les documents concernés.
+- [x] Declare the icons of windowed system apps and resolve their URLs.
+- [x] Display the icon in chrome/taskbar and respect the macOS exception.
+- [x] Reserve the menu for right click on the icon and keep keyboard access.
+- [x] Add the regression tests and update the relevant documents.

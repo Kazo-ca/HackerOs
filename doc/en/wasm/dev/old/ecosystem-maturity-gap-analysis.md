@@ -1,137 +1,130 @@
-# Analyse des manques pour un véritable écosystème WebAssembly
+# Gap analysis for a true WebAssembly ecosystem
 
-**Statut :** analyse exploratoire — non implémentée, aucune décision `D-xxx`
-actée, aucun code écrit.
+**Status:** exploratory analysis, not implemented, no `D-xxx` decision
+recorded, no code written.
 
-## 1. Objet
+## 1. Purpose
 
-`integration-task-list.md` documente exhaustivement le travail restant pour
-les phases déjà engagées (1 à 6). Ce document couvre autre chose : des
-manques qui ne figurent **nulle part** dans ce plan — ni comme tâche ouverte,
-ni comme exclusion délibérée — repérés en se demandant ce qu'un développeur
-ou un utilisateur attendrait d'un « vrai » écosystème WebAssembly, au-delà de
-la seule faisabilité technique de charger des apps.
+`integration-task-list.md` exhaustively documents the remaining work for the
+phases already under way (1 to 6). This document covers something else:
+gaps that appear **nowhere** in that plan, neither as an open task nor as a
+deliberate exclusion, identified by asking what a developer or a user would
+expect from a "real" WebAssembly ecosystem, beyond the mere technical
+feasibility of loading apps.
 
-Deux points ont été jugés assez structurants pour recevoir une entrée dans le
-Registre des problèmes (`P-014`) et une place réservée dans les phases
-existantes ; cinq autres ont reçu une entrée dans le Registre des suggestions
-(`S-011` à `S-016`, section 40). Le reste reste à l'état de discussion —
-volontairement, faute de matière suffisante pour un item de plan actionnable.
+Two points were judged structuring enough to receive an entry in the Problem
+Register (`P-014`) and a reserved place in the existing phases; five others
+received an entry in the Suggestion Register (`S-011` to `S-016`, section 40).
+The rest remains at the discussion stage, deliberately, for lack of enough
+material for an actionable plan item.
 
-## 2. Deux manques structurants
+## 2. Two structuring gaps
 
-### 2.1 Isolation d'exécution entre apps (pas seulement contre le code malveillant)
+### 2.1 Execution isolation between apps (not only against malicious code)
 
-**Registre des problèmes : `P-014`.**
+**Problem Register: `P-014`.**
 
-`P-009` couvre déjà l'absence d'isolation contre du *code malveillant* :
-« Runtime assemblies share one .NET process and are not malicious-code
-isolated. » C'est un problème de confiance/sécurité, résolu en aval par
-`D-020`.
+`P-009` already covers the lack of isolation against *malicious code*:
+"Runtime assemblies share one .NET process and are not malicious-code
+isolated." This is a trust/security problem, resolved downstream by `D-020`.
 
-Le manque relevé ici est différent : même une app **honnête mais buguée**
-(boucle infinie, calcul synchrone lourd) bloque aujourd'hui **tout l'OS**, pas
-seulement elle-même. Toutes les apps tournent sur le même thread WASM
-principal du navigateur — il n'existe ni Web Worker par app, ni watchdog, ni
-timeout, ni mécanisme de récupération. C'est un problème de *résilience*, pas
-de *malveillance* : même un futur modèle de confiance/signature (`D-019`)
-n'y changerait rien, puisqu'il ne protège que contre l'intention, pas contre
-le bug.
+The gap noted here is different: even an **honest but buggy** app (infinite
+loop, heavy synchronous computation) currently blocks **the entire OS**, not
+just itself. All apps run on the same main WASM thread of the browser: there
+is no Web Worker per app, no watchdog, no timeout, and no recovery mechanism.
+This is a *resilience* problem, not a *malice* problem: even a future
+trust/signing model (`D-019`) would change nothing, since it only protects
+against intent, not against a bug.
 
-Le nouveau `docs/user-code-compilation-execution-plan.md` effleure déjà le
-sujet, mais seulement pour le cas particulier du code utilisateur compilé à
-la volée (« Worker dédié sans binding JS-interop... communication limitée à
-un canal `postMessage` typé »). Rien n'existe pour les apps normales,
-premières ou tierces parties, qui tournent toutes aujourd'hui in-process.
+The new `docs/user-code-compilation-execution-plan.md` already touches on the
+subject, but only for the special case of user code compiled on the fly
+("dedicated Worker without JS-interop bindings... communication limited to a
+typed `postMessage` channel"). Nothing exists for normal apps, first-party or
+third-party, which all run in-process today.
 
-### 2.2 Distribution et découverte de packages
+### 2.2 Package distribution and discovery
 
-**Registre des suggestions : `S-011`.**
+**Suggestion Register: `S-011`.**
 
-La Phase 6 (`integration-task-list.md` section 33) répond entièrement à la
-question « peut-on installer un package au runtime ? » — jamais à « où le
-trouve-t-on ? ». Aucun registre, catalogue, recherche, ni même le concept
-d'un « store » pour des apps tierces n'existe dans le plan. Sans ça, une
-Phase 6 techniquement réussie donnerait un mécanisme d'installation sans
-rien à installer — pas un écosystème.
+Phase 6 (`integration-task-list.md` section 33) fully answers the question
+"can a package be installed at runtime?", never "where do you find it?". No
+registry, catalog, search, or even the concept of a "store" for third-party
+apps exists in the plan. Without that, a technically successful Phase 6 would
+yield an installation mechanism with nothing to install: not an ecosystem.
 
-## 3. Cinq manques additionnels (Registre des suggestions)
+## 3. Five additional gaps (Suggestion Register)
 
-| Manque | ID | Emplacement dédié |
+| Gap | ID | Dedicated location |
 |---|---|---|
-| Cache/partage de dépendances entre apps chargées indépendamment | `S-012` | Phase 3 — Build-Known Lazy Loading |
-| Permissions à la demande (au lieu de tout déclarer au manifeste et accorder au login) | `S-013` | Extension de la Phase 1 — Policy/Capability Grants |
-| Deep-linking externe (gestionnaire de protocole `web+hackeros://`) | `S-014` | Phase 2 — PWA Packaging |
-| Mise à jour indépendante d'une app installée (vs mise à jour PWA globale atomique) | `S-015` | Phase 6 — Package Format |
-| Boucle de développement locale (lancer/hot-reload une app dans HackerOS sans rebuild complet) | `S-016` | Phase 3 — Public SDK |
+| Cache/sharing of dependencies between independently loaded apps | `S-012` | Phase 3: Build-Known Lazy Loading |
+| On-demand permissions (instead of declaring everything in the manifest and granting at login) | `S-013` | Phase 1 extension: Policy/Capability Grants |
+| External deep-linking (`web+hackeros://` protocol handler) | `S-014` | Phase 2: PWA Packaging |
+| Independent update of an installed app (vs atomic global PWA update) | `S-015` | Phase 6: Package Format |
+| Local development loop (run/hot-reload an app in HackerOS without a full rebuild) | `S-016` | Phase 3: Public SDK |
 
-Détail de chacun :
+Details on each:
 
-- **Cache/partage de dépendances (`S-012`)** — chaque app *build-known lazy*
-  (`docs/lazy-loading.md`) semble apporter ses propres assemblys
-  indépendamment ; rien ne dit si deux apps référençant la même bibliothèque
-  partagée dédupliquent au téléchargement ou en mémoire. À mesure que plus
-  d'apps sont lazy-loaded, ce coût redondant grandit.
-- **Permissions à la demande (`S-013`)** — le modèle actuel
-  (`CleanProfileCapabilityGrantSeeder`) accorde toutes les capacités
-  déclarées au manifeste dès le login. Aucune demande de capacité *au moment
-  du besoin* (type « autoriser l'accès à la webcam maintenant »), contrairement
-  à la plupart des écosystèmes modernes (navigateur, mobile).
-- **Deep-linking externe (`S-014`)** — pas de gestionnaire de protocole
-  enregistré pour ouvrir une app/intent HackerOS depuis un lien situé en
-  dehors de la PWA elle-même.
-- **Mise à jour indépendante d'une app (`S-015`)** — le modèle de mise à jour
-  actuel (`P2-PWA-*`) est celui de la PWA entière, atomique, tout ou rien.
-  Une fois la Phase 6 en place, rien ne prévoit de versionner/mettre à jour
-  une app tierce indépendamment du reste.
-- **Boucle de développement locale (`S-016`)** — le SDK a un validateur de
-  manifeste (`Tools/HackerOs.Tools.ManifestValidator`) et des templates
-  `dotnet new`, mais rien pour lancer/tester son app *dans* HackerOS
-  localement avec hot-reload, sans passer par le build complet de
-  `HackerOs.Ecosystem`.
+- **Dependency cache/sharing (`S-012`)**: each *build-known lazy* app
+  (`docs/lazy-loading.md`) seems to bring its own assemblies independently;
+  nothing says whether two apps referencing the same shared library
+  deduplicate at download time or in memory. As more apps are lazy-loaded,
+  this redundant cost grows.
+- **On-demand permissions (`S-013`)**: the current model
+  (`CleanProfileCapabilityGrantSeeder`) grants all capabilities declared in
+  the manifest at login. There is no capability request *at the moment of
+  need* (such as "allow webcam access now"), unlike most modern ecosystems
+  (browser, mobile).
+- **External deep-linking (`S-014`)**: no protocol handler is registered to
+  open a HackerOS app/intent from a link located outside the PWA itself.
+- **Independent app update (`S-015`)**: the current update model (`P2-PWA-*`)
+  is that of the whole PWA, atomic, all or nothing. Once Phase 6 is in place,
+  nothing provides for versioning/updating a third-party app independently
+  of the rest.
+- **Local development loop (`S-016`)**: the SDK has a manifest validator
+  (`Tools/HackerOs.Tools.ManifestValidator`) and `dotnet new` templates, but
+  nothing to run/test one's app *inside* HackerOS locally with hot-reload,
+  without going through the full build of `HackerOs.Ecosystem`.
 
-## 4. Manques relevés mais non promus (discussion seulement)
+## 4. Gaps noted but not promoted (discussion only)
 
-Ces points restent à l'état de discussion : trop tôt pour un item de plan
-actionnable, faute de décision produit ou de matière technique suffisante
-pour écrire une portée concrète. Ils sont notés ici pour ne pas les perdre.
+These points remain at the discussion stage: too early for an actionable plan
+item, for lack of a product decision or enough technical material to write a
+concrete scope. They are noted here so as not to lose them.
 
-- **Interop WASM non-.NET** — l'écosystème entier est verrouillé sur
-  Blazor/Mono. Aucun mécanisme pour charger un module WASM écrit dans un
-  autre langage (Rust, C, AssemblyScript — pas de WASI, pas de component
-  model). Si « vrai écosystème WebAssembly » implique interopérer avec le
-  monde WASM au sens large plutôt que juste « du .NET compilé en wasm »,
-  c'est un manque conceptuel plus qu'une tâche à planifier.
-- **Communication inter-app au-delà des intents typés** — les intents
-  couvrent lancement/ouverture de fichier/exécution de commande, mais pas de
-  bus pub/sub, pas de « share sheet » générique, pas d'échange de données en
-  temps réel entre deux apps ouvertes simultanément.
-- **Télémétrie/rapport de crash pour apps tierces** — le diagnostic/logging
-  existant sert la plateforme elle-même ; rien n'est exposé comme SDK pour
-  qu'une app tierce y adhère volontairement.
-- **Signaux de confiance communautaires** — `D-019` couvre la
-  signature/trust store *techniques*, mais rien sur la couche sociale (notes,
-  avis, vérification d'éditeur, réputation) qu'un écosystème utilisateur a
-  généralement.
-- **Recherche globale (« spotlight »)** — pas de recherche unifiée à travers
-  apps, fichiers, et commandes.
-- **Widgets / mini-surfaces de bureau** — rien au-delà des fenêtres complètes
-  gérées par `HackerOs.Windowing.Core`.
-- **Monétisation/licence** — absent partout ; pertinent seulement si
-  l'ambition inclut des développeurs tiers rémunérés.
+- **Non-.NET WASM interop**: the whole ecosystem is locked to Blazor/Mono.
+  There is no mechanism to load a WASM module written in another language
+  (Rust, C, AssemblyScript; no WASI, no component model). If "true
+  WebAssembly ecosystem" implies interoperating with the WASM world at large
+  rather than just ".NET compiled to wasm", this is a conceptual gap more than
+  a task to plan.
+- **Inter-app communication beyond typed intents**: intents cover launching,
+  opening a file, and running a command, but there is no pub/sub bus, no
+  generic "share sheet", and no real-time data exchange between two apps open
+  at the same time.
+- **Telemetry/crash reporting for third-party apps**: the existing
+  diagnostics/logging serves the platform itself; nothing is exposed as an SDK
+  for a third-party app to opt into.
+- **Community trust signals**: `D-019` covers the *technical* signing/trust
+  store, but nothing on the social layer (ratings, reviews, publisher
+  verification, reputation) that a user ecosystem generally has.
+- **Global search ("spotlight")**: no unified search across apps, files, and
+  commands.
+- **Desktop widgets / mini-surfaces**: nothing beyond the full windows managed
+  by `HackerOs.Windowing.Core`.
+- **Monetization/licensing**: absent everywhere; relevant only if the
+  ambition includes paid third-party developers.
 
-## 5. Documents de référence
+## 5. Reference documents
 
-- [`integration-task-list.md`](integration-task-list.md) — sections 33 (Phase
-  6), 39 (Registre des problèmes, `P-014`), 40 (Registre des suggestions,
-  `S-011` à `S-016`)
-- [`user-code-compilation-execution-plan.md`](user-code-compilation-execution-plan.md) —
-  isolation par Web Worker pour le code utilisateur compilé, angle voisin de
-  la section 2.1
-- [`lazy-loading.md`](lazy-loading.md) — mécanisme actuel de chargement
-  différé, base du manque `S-012`
-- [`server-implementation-pass.md`](server-implementation-pass.md) —
-  patron proxy/fallback réutilisable pour une éventuelle voie serveur de
-  distribution de packages
-- [`progress-and-plan-2026-08-17.md`](progress-and-plan-2026-08-17.md) —
-  séquencement global dans lequel situer ces manques une fois priorisés
+- [`integration-task-list.md`](integration-task-list.md): sections 33 (Phase
+  6), 39 (Problem Register, `P-014`), 40 (Suggestion Register, `S-011` to
+  `S-016`)
+- [`user-code-compilation-execution-plan.md`](user-code-compilation-execution-plan.md):
+  Web Worker isolation for compiled user code, an angle close to section 2.1
+- [`lazy-loading.md`](lazy-loading.md): current deferred-loading mechanism,
+  basis of the `S-012` gap
+- [`server-implementation-pass.md`](server-implementation-pass.md):
+  proxy/fallback pattern reusable for a possible server path for package
+  distribution
+- [`progress-and-plan-2026-08-17.md`](progress-and-plan-2026-08-17.md):
+  overall sequencing in which to place these gaps once prioritized

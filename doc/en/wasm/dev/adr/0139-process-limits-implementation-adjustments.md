@@ -1,151 +1,151 @@
-# ADR 0139 : ajustements de la mise en œuvre des limites de processus
+# ADR 0139: implementation adjustments for process limits
 
-## Statut
+## Status
 
-Accepté le 2026-10-18, chantier `exec/2-process-limits`.
+Accepted on 2026-10-18, work item `exec/2-process-limits`.
 
-- **Complète :** ADR 0125 (limites par processus). Ne remplace aucune de ses
-  décisions. Il précise les points que le code a dû trancher et corrige le
-  parcours de vérification de l'ADR 0125, section « Conséquences ».
-- **Doc :** [`process-limits.md`](../process-limits.md).
+- **Complements:** ADR 0125 (per-process limits). Replaces none of its
+  decisions. It specifies the points the code had to settle and fixes the
+  verification walkthrough of ADR 0125, "Consequences" section.
+- **Doc:** [`process-limits.md`](../process-limits.md).
 
-## Contexte
+## Context
 
-L'ADR 0125 fixe les quatre limites (`cpu`, `rss`, `nofile`, `nproc`), leurs
-sources (`limits.conf`, héritage), leurs surfaces (`ulimit`, `prlimit`,
-`/proc/<pid>/limits`, SDK) et leur application (stricte en worker, au mieux sur
-le fil principal). En l'écrivant, plusieurs détails sont apparus : où vivent
-les limites, quand `SIGXCPU` part, ce qu'est un descripteur dans un OS sans
-appel `open(2)`, et les noms exacts du SDK.
+ADR 0125 sets the four limits (`cpu`, `rss`, `nofile`, `nproc`), their
+sources (`limits.conf`, inheritance), their surfaces (`ulimit`, `prlimit`,
+`/proc/<pid>/limits`, SDK) and their enforcement (strict in a worker, best effort on
+the main thread). While writing it, several details appeared: where the limits live,
+when `SIGXCPU` is sent, what a descriptor is in an OS with no
+`open(2)` call, and the exact SDK names.
 
-## Décision
+## Decision
 
-### 1. Tables à côté du processus, pas dans `ProcessRecord`
+### 1. Tables next to the process, not in `ProcessRecord`
 
-Les limites et les descripteurs vivent dans deux tables tenues par le
-gestionnaire de processus, comme la table d'environnement de l'ADR 0050 :
-`IProcessResourceLimitTable` et `IProcessFileDescriptorTable` (Simulation
-Abstractions). L'entrée naît au `Start` (limites du parent, sinon celles de la
-session, sinon celles du noyau) et disparaît à la fin du processus.
-`ProcessRecord` ne change pas : c'est un instantané figé et ses champs font
-partie de l'API 1.1 livrée.
+The limits and descriptors live in two tables held by the process
+manager, like the environment table of ADR 0050:
+`IProcessResourceLimitTable` and `IProcessFileDescriptorTable` (Simulation
+Abstractions). The entry is born at `Start` (parent's limits, otherwise the
+session's, otherwise the kernel's) and disappears when the process ends.
+`ProcessRecord` does not change: it is a frozen snapshot and its fields are part
+of the released 1.1 API.
 
-### 2. `SIGXCPU` une fois, puis le délai de grâce
+### 2. `SIGXCPU` once, then the grace period
 
-Un contrôleur (`ResourceLimitEnforcer`) compare la mesure aux limites tous les
-quarts de seconde simulée. L'ordre est celui de Linux :
+A controller (`ResourceLimitEnforcer`) compares the measurement to the limits every
+quarter of a simulated second. The order is Linux's:
 
-1. limite **dure** du CPU atteinte : `SIGKILL`, raison `CpuLimitExceeded`,
-   sortie 137, « Killed » ;
-2. limite **souple** atteinte : `SIGXCPU` une seule fois, sous la forme de la
-   demande d'arrêt de l'ADR 0069 (raison `CpuLimitExceeded`, délai de 5 s). Si
-   le processus finit sur cette demande, sa sortie vaut 152 et le shell écrit
-   « CPU time limit exceeded ». Sinon le délai de grâce mène à `SIGKILL` ;
-3. mémoire au-delà de la limite : `SIGKILL` tout de suite, raison
+1. **hard** CPU limit reached: `SIGKILL`, reason `CpuLimitExceeded`,
+   exit 137, "Killed";
+2. **soft** limit reached: `SIGXCPU` only once, in the form of the stop
+   request of ADR 0069 (reason `CpuLimitExceeded`, 5 s delay). If
+   the process ends on this request, its exit is 152 and the shell writes
+   "CPU time limit exceeded". Otherwise the grace period leads to `SIGKILL`;
+3. memory beyond the limit: `SIGKILL` right away, reason
    `MemoryLimitExceeded`.
 
-L'ADR 0125 parlait d'un `SIGXCPU` « puis chaque seconde ». Une demande d'arrêt
-déjà en cours n'est pas renvoyée (ADR 0069), donc il n'y en a qu'une.
+ADR 0125 spoke of a `SIGXCPU` "then every second". A stop request
+already in progress is not sent again (ADR 0069), so there is only one.
 
-Conséquence pour la vérification : avec `ulimit -t 1`, la souple et la dure
-valent 1, et la dure passe en premier. Le processus reçoit donc `SIGKILL` (137),
-comme sous Linux. Le parcours de `build/verify-hosts.sh` utilise
-`sh -c 'ulimit -S -t 1; stress --yield'` : seule la souple est posée, et
-`stress --yield` s'arrête sur la demande, ce qui donne la sortie 152. Un
-`stress` sans `--yield` ne rend jamais la main. Il finit donc par `SIGKILL`
-après le délai de grâce : le worker est terminé (étape 4 de l'ADR 0069).
+Consequence for verification: with `ulimit -t 1`, the soft and hard limits
+are 1, and the hard one goes first. The process therefore receives `SIGKILL` (137),
+as under Linux. The `build/verify-hosts.sh` walkthrough uses
+`sh -c 'ulimit -S -t 1; stress --yield'`: only the soft limit is set, and
+`stress --yield` stops on the request, which gives exit 152. A
+`stress` without `--yield` never yields. It therefore ends with `SIGKILL`
+after the grace period: the worker is terminated (step 4 of ADR 0069).
 
-### 3. Ce qui compte comme descripteur
+### 3. What counts as a descriptor
 
-HackerOS n'a pas d'appel `open(2)`. Un descripteur est pris :
+HackerOS has no `open(2)` call. A descriptor is taken:
 
-- par chaque lecture (`IAppFileSystemGateway.ReadAsync`), jusqu'à ce que son
-  flux soit libéré ;
-- par chaque flux d'écriture (`HackFileStream` en écriture), au moyen de
-  `IAppFileSystemGateway.OpenDescriptorAsync`, jusqu'à sa fermeture.
+- by each read (`IAppFileSystemGateway.ReadAsync`), until its
+  stream is released;
+- by each write stream (`HackFileStream` for writing), by means of
+  `IAppFileSystemGateway.OpenDescriptorAsync`, until it is closed.
 
-Les numéros 0, 1 et 2 sont les flux standard (`/dev/tty` pour un terminal,
-`/dev/null` sinon). Un nouveau descripteur prend le plus petit numéro libre à
-partir de 3. Il est refusé (`EMFILE`) quand son numéro atteint la limite
-souple : avec `ulimit -n 3`, aucun fichier ne s'ouvre, comme sous Linux.
-`/proc/<pid>/fd/` liste les descripteurs ouverts.
+Numbers 0, 1 and 2 are the standard streams (`/dev/tty` for a terminal,
+`/dev/null` otherwise). A new descriptor takes the smallest free number from
+3 on. It is refused (`EMFILE`) when its number reaches the soft
+limit: with `ulimit -n 3`, no file opens, as under Linux.
+`/proc/<pid>/fd/` lists the open descriptors.
 
-Ne sont pas comptés : les écritures d'un bloc (`WriteAllText` et le reste de
-`WriteAsync`, qui n'ont pas de flux ouvert), les listes de dossiers et les
-sockets. Dans un worker, un fichier de 16 Mio au plus est lu en une seule
-réponse (ADR 0070). Son descripteur est donc fermé dès cette réponse, même si
-l'app garde le flux plus longtemps.
+Not counted: single-block writes (`WriteAllText` and the rest of
+`WriteAsync`, which have no open stream), folder listings and
+sockets. In a worker, a file of at most 16 MiB is read in a single
+response (ADR 0070). Its descriptor is therefore closed as soon as this response,
+even if the app keeps the stream longer.
 
-### 4. `NPROC` vérifié au lancement, par le gestionnaire
+### 4. `NPROC` checked at launch, by the manager
 
-`InMemoryProcessManager.Start` compte les processus vivants de l'utilisateur.
-Il lève `ProcessLimitExceededException` (`EAGAIN`) quand ce compte atteint la
-limite souple de l'appelant. En sont exemptés :
+`InMemoryProcessManager.Start` counts the user's live processes.
+It throws `ProcessLimitExceededException` (`EAGAIN`) when this count reaches
+the caller's soft limit. Exempt are:
 
-- un lancement marqué `ResourceLimitExempt` (root élevé) ;
-- un lancement de portée système (`hackeros-svc`).
+- a launch marked `ResourceLimitExempt` (elevated root);
+- a system-scope launch (`hackeros-svc`).
 
-L'orchestrateur traduit cette exception en un échec de lancement de code
-`lifecycle.process.eagain`. Le shell écrit alors
-« hsh: fork: Resource temporarily unavailable » et sort avec 1. Un script
-(`sh script`, `sh -c`) donne le même message.
+The orchestrator translates this exception into a launch failure with code
+`lifecycle.process.eagain`. The shell then writes
+"hsh: fork: Resource temporarily unavailable" and exits with 1. A script
+(`sh script`, `sh -c`) gives the same message.
 
-### 5. `pam_limits` au premier processus racine de la session
+### 5. `pam_limits` at the session's first root process
 
-Les fichiers sont lus au premier lancement d'un processus sans parent de la
-session, puis gardés en mémoire jusqu'à la session suivante. Un changement de
-`limits.conf` vaut donc pour la prochaine connexion. Chaque ligne invalide est
-écrite une fois dans `/var/log/auth.log` (acteur `pam_limits`). Les éléments de
-Linux que HackerOS n'applique pas (`core`, `stack`, `as`…) sont acceptés sans
+The files are read at the first launch of a process with no parent in the
+session, then kept in memory until the next session. A change to
+`limits.conf` therefore applies to the next login. Each invalid line is
+written once to `/var/log/auth.log` (actor `pam_limits`). The Linux items
+that HackerOS does not enforce (`core`, `stack`, `as`…) are accepted without a
 message.
 
-### 6. Noms du SDK (ajouts du SDK 1.2, `PublicAPI.Unshipped.txt`)
+### 6. SDK names (SDK 1.2 additions, `PublicAPI.Unshipped.txt`)
 
-- `HackProcess.GetResourceLimitsAsync()` (méthode d'instance asynchrone :
-  elle lit `/proc/<pid>/limits`) et
+- `HackProcess.GetResourceLimitsAsync()` (asynchronous instance method:
+  it reads `/proc/<pid>/limits`) and
   `HackProcess.SetResourceLimitAsync(ResourceLimitKind, long soft, long hard)`.
-  Les erreurs sont `ArgumentException` (`EINVAL`),
-  `HackUnauthorizedAccessException` (`EPERM`) et `InvalidOperationException`
+  The errors are `ArgumentException` (`EINVAL`),
+  `HackUnauthorizedAccessException` (`EPERM`) and `InvalidOperationException`
   (`ESRCH`).
-- `HackResourceLimits` (avec `Parse`) et `HackResourceLimitEnforcement`
+- `HackResourceLimits` (with `Parse`) and `HackResourceLimitEnforcement`
   (`Off`, `BestEffort`, `Strict`).
-- Simulation Abstractions :
+- Simulation Abstractions:
   - `ResourceLimitKind`, `ResourceLimit`, `ProcessResourceLimits`,
-    `ResourceLimitChangeResult`, `ProcessLimitExceededException` ;
-  - les deux tables du §1 ;
-  - `ProcessStartRequest.ResourceLimits` et `ResourceLimitExempt` ;
-  - `IAppFileSystemGateway.OpenDescriptorAsync` et
-    `IAppProcessGateway.SetResourceLimitAsync`, avec une implémentation par
-    défaut pour que les passerelles existantes compilent ;
-  - `NoDescriptor` ;
-  - `ProcessExitReason.CpuLimitExceeded` et `MemoryLimitExceeded` ;
+    `ResourceLimitChangeResult`, `ProcessLimitExceededException`;
+  - the two tables of §1;
+  - `ProcessStartRequest.ResourceLimits` and `ResourceLimitExempt`;
+  - `IAppFileSystemGateway.OpenDescriptorAsync` and
+    `IAppProcessGateway.SetResourceLimitAsync`, with a default
+    implementation so that existing gateways compile;
+  - `NoDescriptor`;
+  - `ProcessExitReason.CpuLimitExceeded` and `MemoryLimitExceeded`;
   - `FileSystemErrorCode.TooManyOpenFiles` (1802).
 
 ### 7. Surfaces
 
-- `ulimit` accepte aussi `-f`. `ulimit unlimited` (ou `-f unlimited`) réussit
-  sans rien changer. Un nombre répond « cannot modify limit: Operation not
-  permitted », comme le dit l'ADR 0125.
-- `prlimit` sans `--pid` vise son propre processus, comme dans util-linux. Il
-  demande `process.list` et `filesystem.system.read` pour lire `/proc`, comme
-  `ps`, et `process.manage` pour changer un autre processus.
-- `/proc/<pid>/limits` gagne la ligne
-  `# enforcement: off (HackerOs:ResourceLimits:Enabled=false)` quand l'hôte a
-  coupé les limites.
-- Chaque hôte qui compose l'OS (l'Ecosystem et `test/test` ; `HackerOs.Server`
-  sert l'Ecosystem depuis l'ADR 0130) lit le réglage par
-  `AddHackerOsResourceLimits(configuration)`, avant `AddHackerOsEcosystem`.
+- `ulimit` also accepts `-f`. `ulimit unlimited` (or `-f unlimited`) succeeds
+  without changing anything. A number answers "cannot modify limit: Operation not
+  permitted", as ADR 0125 says.
+- `prlimit` without `--pid` targets its own process, as in util-linux. It
+  requires `process.list` and `filesystem.system.read` to read `/proc`, like
+  `ps`, and `process.manage` to change another process.
+- `/proc/<pid>/limits` gains the line
+  `# enforcement: off (HackerOs:ResourceLimits:Enabled=false)` when the host has
+  turned the limits off.
+- Each host that composes the OS (the Ecosystem and `test/test`; `HackerOs.Server`
+  serves the Ecosystem since ADR 0130) reads the setting through
+  `AddHackerOsResourceLimits(configuration)`, before `AddHackerOsEcosystem`.
 
-## Conséquences
+## Consequences
 
-- `build/verify-hosts.sh` gagne une étape et un passage. L'étape lit
-  `/proc/self/limits` et lance le parcours du §2 sur chaque hôte : 152 là où le
-  CPU est mesuré, sortie normale là où il ne l'est pas. Le passage
-  `ecosystem-limits-off` publie avec les limites coupées.
-- `cat`, `grep` et `wc` disent « Too many open files » au lieu de « No such
-  file or directory » quand l'ouverture échoue sur `EMFILE`, par le même
-  traducteur (`CommandIO.ReadErrno`) que les autres commandes de lecture.
+- `build/verify-hosts.sh` gains a step and a pass. The step reads
+  `/proc/self/limits` and runs the walkthrough of §2 on each host: 152 where the
+  CPU is measured, normal exit where it is not. The
+  `ecosystem-limits-off` pass publishes with the limits turned off.
+- `cat`, `grep` and `wc` say "Too many open files" instead of "No such
+  file or directory" when opening fails with `EMFILE`, through the same translator
+  (`CommandIO.ReadErrno`) as the other read commands.
 
-## Références
+## References
 
 - ADR 0050, 0066, 0067, 0068, 0069, 0070, 0107, 0125, 0132.

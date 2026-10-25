@@ -1,65 +1,65 @@
-# ADR 0094 : état des décisions différées de la migration v3 et taille maximale des fichiers
+# ADR 0094: status of the deferred decisions of the v3 migration and maximum file size
 
-## Statut
+## Status
 
-Accepté le 2026-10-17 (chantier `v3/1-adr`).
+Accepted on 2026-10-17 (work item `v3/1-adr`).
 
-- **Plan :** [`wasm-v3-completion-plan.md`](../plans/wasm-v3-completion-plan.md), ligne `v3/1-adr`.
-- **Source :** `doc/en/wasm/dev/plans/wasm-v3-migration-analyse.md`, §20 « Deferred Decisions »
-  et case `[ ] Resolve Phase 0 deferred decisions in architecture decision records`
-  de la §22 ; manque R22 du relevé du 2026-10-16.
+- **Plan:** [`wasm-v3-completion-plan.md`](../plans/wasm-v3-completion-plan.md), row `v3/1-adr`.
+- **Source:** `doc/en/wasm/dev/plans/wasm-v3-migration-analyse.md`, §20 "Deferred Decisions"
+  and the box `[ ] Resolve Phase 0 deferred decisions in architecture decision records`
+  of §22; gap R22 of the 2026-10-16 inventory.
 
-## Contexte
+## Context
 
-L'analyse de migration v3 (2026-08-01) a laissé douze décisions « à prendre avant
-leur phase », chacune devant devenir un ADR court. Plusieurs ont été tranchées
-depuis par des ADR qui ne les citent pas, une est devenue sans objet, et
-certaines restent ouvertes. Faute de table, le relevé du 2026-10-16 les comptait
-toutes comme manquantes.
+The v3 migration analysis (2026-08-01) left twelve decisions "to be made before
+their phase", each of which was to become a short ADR. Several have been settled
+since by ADRs that do not cite them, one has become moot, and
+some remain open. For lack of a table, the 2026-10-16 inventory counted them
+all as missing.
 
-## Décision
+## Decision
 
-1. **Table de correspondance.** Chaque décision différée a désormais un statut
-   écrit :
+1. **Correspondence table.** Each deferred decision now has a written
+   status:
 
-   | N° | Décision différée | Statut |
+   | No. | Deferred decision | Status |
    |---|---|---|
-   | 1 | Version LTS de .NET et navigateurs pris en charge | **Tranchée par le code** : `net10.0` dans tous les projets, SDK `10.0.100` épinglé par `global.json` (`rollForward: latestFeature`). Navigateurs : Chromium (cible des tests E2E et PWA) ; Firefox et Safari en meilleur effort, sans test automatisé. |
-   | 2 | Format, signature et révocation des paquets d'apps | **Reportée** au plan « installation d'apps au runtime » (réponse 1 de Benoit, 2026-10-17). |
-   | 3 | Apps chargées au runtime non fiables et isolation | **Reportée** au même plan. L'isolation actuelle est celle de la phase 5 (Web Workers, ADR 0070). |
-   | 4 | Grammaire du shell | **Tranchée** : ADR 0050 puis ADR 0064 (shell POSIX). |
-   | 5 | Découpage, déduplication et taille maximale d'un fichier | **Tranchée** par `FileContentStoragePolicy`, constatée au point 2 ci-dessous. |
-   | 6 | Quota IndexedDB, export et restauration côté utilisateur | **Tranchée** par l'[ADR 0099](0099-os-backup-and-low-storage.md) (chantier `v3/7`). |
-   | 7 | Algorithmes de conflit par domaine de synchro et profondeur d'historique hors ligne | **Tranchée** par l'ADR 0025 (table par domaine) et l'[ADR 0101](0101-synchronized-deletions-and-conflicts.md) (chantier `v3/9`). |
-   | 8 | Utilisateurs locaux et identités synchronisées | **Tranchée** : ADR 0024 et 0028. |
-   | 9 | Réglages sensibles et chiffrement côté client | **Tranchée** par l'[ADR 0100](0100-sensitive-settings-and-protected-write-audit.md) (chantier `v3/8`). |
-   | 10 | Redémarrage de la PWA après une installation au runtime | **Reportée** au plan « installation d'apps au runtime ». |
-   | 11 | Fenêtre de support et dépréciation du SDK, mise à jour des paquets | **Tranchée** par l'ADR 0019 (SemVer, `[Obsolete]` une version mineure avant retrait) et l'[ADR 0098](0098-sdk-versions-packages-and-manifest-checks.md) (chantier `v3/6`). |
-   | 12 | Interface de récupération quand Paramètres et Terminal sont désactivés | **Sans objet** : il n'y a plus de désactivation (ADR 0048), et une app système ne se désinstalle pas. Paramètres et Terminal sont des apps système, donc toujours présents. |
+   | 1 | LTS version of .NET and supported browsers | **Settled by the code**: `net10.0` in all projects, SDK `10.0.100` pinned by `global.json` (`rollForward: latestFeature`). Browsers: Chromium (target of E2E and PWA tests); Firefox and Safari on a best-effort basis, with no automated test. |
+   | 2 | Format, signing and revocation of app packages | **Deferred** to the "runtime app installation" plan (Benoit's answer 1, 2026-10-17). |
+   | 3 | Untrusted runtime-loaded apps and isolation | **Deferred** to the same plan. Current isolation is that of phase 5 (Web Workers, ADR 0070). |
+   | 4 | Shell grammar | **Settled**: ADR 0050 then ADR 0064 (POSIX shell). |
+   | 5 | Splitting, deduplication and maximum size of a file | **Settled** by `FileContentStoragePolicy`, recorded in point 2 below. |
+   | 6 | IndexedDB quota, user-side export and restore | **Settled** by [ADR 0099](0099-os-backup-and-low-storage.md) (work item `v3/7`). |
+   | 7 | Conflict algorithms per sync domain and offline history depth | **Settled** by ADR 0025 (table per domain) and [ADR 0101](0101-synchronized-deletions-and-conflicts.md) (work item `v3/9`). |
+   | 8 | Local users and synchronized identities | **Settled**: ADR 0024 and 0028. |
+   | 9 | Sensitive settings and client-side encryption | **Settled** by [ADR 0100](0100-sensitive-settings-and-protected-write-audit.md) (work item `v3/8`). |
+   | 10 | PWA restart after a runtime installation | **Deferred** to the "runtime app installation" plan. |
+   | 11 | SDK support and deprecation window, package updates | **Settled** by ADR 0019 (SemVer, `[Obsolete]` one minor version before removal) and [ADR 0098](0098-sdk-versions-packages-and-manifest-checks.md) (work item `v3/6`). |
+   | 12 | Recovery interface when Settings and Terminal are disabled | **Moot**: there is no more disabling (ADR 0048), and a system app cannot be uninstalled. Settings and Terminal are system apps, therefore always present. |
 
-2. **Taille maximale d'un fichier.** La règle déjà appliquée par
+2. **Maximum file size.** The rule already applied by
    `Infrastructure/HackerOs.Infrastructure.Browser/Schema/FileContentStoragePolicy.cs`
-   devient la règle documentée :
-   - un fichier fait au plus **16 Mio** (`DefaultMaxFileSizeBytes`) ;
-   - son contenu est découpé en blocs d'au plus **256 Kio**
-     (`DefaultMaxChunkSizeBytes`), adressés par leur SHA-256 et dédupliqués ;
-   - un bloc qui n'est plus référencé est gardé 30 jours avant d'être supprimé.
+   becomes the documented rule:
+   - a file is at most **16 MiB** (`DefaultMaxFileSizeBytes`);
+   - its content is split into chunks of at most **256 KiB**
+     (`DefaultMaxChunkSizeBytes`), addressed by their SHA-256 and deduplicated;
+   - a chunk that is no longer referenced is kept for 30 days before being deleted.
 
-   Une écriture qui dépasserait 16 Mio est déjà refusée par
-   `IndexedDbFileContentRepository` (ligne 67), mais avec une erreur générique.
-   Le chantier `v3/7` lui donne un code propre, `FileSystemErrorCode.FileTooLarge`
-   (l'équivalent de `EFBIG` sous Linux), à côté de `NoSpace` (`ENOSPC`, voir
-   l'ADR 0099). Changer ces valeurs demande un
-   nouvel ADR, parce qu'elles fixent le format stocké dans IndexedDB et le
-   protocole de blocs de la synchro (ADR 0030).
+   A write that would exceed 16 MiB is already refused by
+   `IndexedDbFileContentRepository` (line 67), but with a generic error.
+   Work item `v3/7` gives it its own code, `FileSystemErrorCode.FileTooLarge`
+   (the equivalent of `EFBIG` on Linux), alongside `NoSpace` (`ENOSPC`, see
+   ADR 0099). Changing these values requires a
+   new ADR, because they fix the format stored in IndexedDB and the sync
+   chunk protocol (ADR 0030).
 
-3. Les décisions reportées (n° 2, 3 et 10) ne sont plus des manques de la
-   migration v3 : elles appartiennent au plan d'installation au runtime.
+3. The deferred decisions (no. 2, 3 and 10) are no longer gaps in the
+   v3 migration: they belong to the runtime installation plan.
 
-## Conséquences
+## Consequences
 
-- La case §22 de l'analyse peut être cochée par `v3/16-final`, avec un renvoi à
-  cet ADR.
-- `sdk-developer-guide.md` et `sdk-reference.md` (section `HackFile`) citent la
-  limite de 16 Mio quand le chantier qui ajoute l'erreur « fichier trop gros »
-  au SDK (`v3/7`, avec `ENOSPC`) les met à jour.
+- The §22 box of the analysis can be ticked by `v3/16-final`, with a reference to
+  this ADR.
+- `sdk-developer-guide.md` and `sdk-reference.md` (`HackFile` section) cite the
+  16 MiB limit when the work item that adds the "file too large" error
+  to the SDK (`v3/7`, with `ENOSPC`) updates them.

@@ -1,46 +1,46 @@
-# Mesure des ressources optionnelle : interrupteurs et crochet de changement de contexte
+# Optional resource measurement: switches and context-switch hook
 
-Mise en œuvre du chantier `rebuild/5-accounting-switches` de la phase 5
-([`execution-isolation-plan.md`](plans/execution-isolation-plan.md)) :
-[ADR 0066](adr/0066-optional-resource-accounting.md), et le crochet commun de
-l'[ADR 0067](adr/0067-measured-cpu-time.md) §1 que les chantiers
-`5-cpu-accounting` et `5-memory-accounting` utiliseront.
+Implementation of work item `rebuild/5-accounting-switches` of phase 5
+([`execution-isolation-plan.md`](plans/execution-isolation-plan.md)):
+[ADR 0066](adr/0066-optional-resource-accounting.md), and the common hook of
+[ADR 0067](adr/0067-measured-cpu-time.md) §1 that work items
+`5-cpu-accounting` and `5-memory-accounting` will use.
 
-## Rôle
+## Role
 
-- Choisir **au build** si le code de mesure du CPU et de la mémoire est livré,
-  et **au démarrage** (`appsettings.json`) s'il est branché.
-- Installer, quand au moins une mesure est active, le **crochet de changement
-  de contexte** : le rappel de l'`AsyncLocal` ambiant de
-  `HackExecutionContext`, qui voit chaque processus entrer et sortir du
-  thread, y compris dans les continuations async.
-- Coupé (ou pas encore implémenté), revenir **exactement** au simulateur
-  actuel, avec un indicateur : `CpuSource:` / `MemSource:` dans
-  `/proc/<pid>/status`, mention « estimated » dans le gestionnaire de tâches.
+- Choose **at build** whether the CPU and memory measurement code is shipped,
+  and **at startup** (`appsettings.json`) whether it is wired in.
+- Install, when at least one measurement is active, the **context-switch
+  hook**: the callback of the ambient `AsyncLocal` of
+  `HackExecutionContext`, which sees each process enter and leave the
+  thread, including in async continuations.
+- Turned off (or not yet implemented), return **exactly** to the current
+  simulator, with an indicator: `CpuSource:` / `MemSource:` in
+  `/proc/<pid>/status`, "estimated" label in the task manager.
 
-Les deux mesures sont faites. Le CPU par `MeasuredCpuTimeAccountant` (chantier
-`5-cpu-accounting`, [`cpu-accounting.md`](cpu-accounting.md)), la mémoire
-depuis le chantier `5-memory-accounting`
-([`memory-accounting.md`](memory-accounting.md)) : son `AllocationTracker` est
-un observateur du crochet, et `MeasuredMemoryAccountant` remplace le comptable
-nul.
+Both measurements are done. CPU through `MeasuredCpuTimeAccountant` (work item
+`5-cpu-accounting`, [`cpu-accounting.md`](cpu-accounting.md)), memory
+since work item `5-memory-accounting`
+([`memory-accounting.md`](memory-accounting.md)): its `AllocationTracker` is
+an observer of the hook, and `MeasuredMemoryAccountant` replaces the null
+accountant.
 
 ## Architecture
 
-| Élément | Projet | Rôle |
+| Element | Project | Role |
 |---|---|---|
-| `ICpuTimeAccountant`, `IMemoryAccountant`, `ResourceMeasurementSource` | `Shared/HackerOs.Simulation.Abstractions` (`Processes/ResourceAccountingContracts.cs`) | contrats lus par `/proc` ; `TryGet…` faux = valeur simulée |
-| `IExecutionContextSwitchObserver`, `ExecutionContextSwitch` | idem | contrat d'observateur du crochet : processus quitté, processus entré, changement fait par le runtime (`ThreadContextChanged`), et depuis l'ADR 0067 le mode de chacun (`FromKernel`, `ToKernel`) |
-| `IExecutionModeSwitchObserver` | idem | changements de mode (entrée ou sortie d'une passerelle de l'OS) sans changement de processus ; facultatif (ADR 0067, [`cpu-accounting.md`](cpu-accounting.md)) |
-| `NullCpuTimeAccountant`, `NullMemoryAccountant` | `Platform/HackerOs.Platform.Core` (`Processes/Accounting/`) | implémentations nulles ; Platform Core ne dépend jamais du projet de mesure |
-| `ResourceAccountingPlan`, `ResourceAccountingSettings`, `ResourceAccountingBuildSupport` | idem | décision prise une fois : build × réglage → mesures actives, crochet requis, lignes pour syslog |
-| `HackExecutionContext` (`InstallContextSwitchHook`, interne) | `Shared/HackerOs.AppSdk` | remplace le frame ambiant par un `AsyncLocal<T>(valueChangedHandler)` ; visible seulement du projet de mesure (`InternalsVisibleTo`) |
-| `ContextSwitchHook`, `ContextSwitchDispatcher`, `ResourceAccountingFeatures` | `Platform/HackerOs.Platform.ResourceAccounting` (nouveau) | installation du crochet, diffusion aux mesures (changements de processus, et de mode aux observateurs qui les veulent), interrupteurs `[FeatureSwitchDefinition]` |
-| `MeasuredCpuTimeAccountant` | idem | mesure du CPU (ADR 0067), inscrite sur le diffuseur quand `plan.CpuActive` |
-| `ResourceAccountingServiceCollectionExtensions` | `OS/HackerOs.Ecosystem.Host` | lecture de `HackerOs:ResourceAccounting`, composition, `#if HACKEROS_RESOURCE_ACCOUNTING` |
-| `build/HackerOs.ResourceAccounting.targets` | `build/` | propriétés MSBuild, `RuntimeHostConfigurationOption`, référence conditionnelle |
+| `ICpuTimeAccountant`, `IMemoryAccountant`, `ResourceMeasurementSource` | `Shared/HackerOs.Simulation.Abstractions` (`Processes/ResourceAccountingContracts.cs`) | contracts read by `/proc`; `TryGet…` false = simulated value |
+| `IExecutionContextSwitchObserver`, `ExecutionContextSwitch` | same | hook observer contract: process left, process entered, change made by the runtime (`ThreadContextChanged`), and since ADR 0067 the mode of each (`FromKernel`, `ToKernel`) |
+| `IExecutionModeSwitchObserver` | same | mode changes (entering or leaving an OS gateway) without a process change; optional (ADR 0067, [`cpu-accounting.md`](cpu-accounting.md)) |
+| `NullCpuTimeAccountant`, `NullMemoryAccountant` | `Platform/HackerOs.Platform.Core` (`Processes/Accounting/`) | null implementations; Platform Core never depends on the measurement project |
+| `ResourceAccountingPlan`, `ResourceAccountingSettings`, `ResourceAccountingBuildSupport` | same | decision made once: build × setting → active measurements, required hook, lines for syslog |
+| `HackExecutionContext` (`InstallContextSwitchHook`, internal) | `Shared/HackerOs.AppSdk` | replaces the ambient frame with an `AsyncLocal<T>(valueChangedHandler)`; visible only to the measurement project (`InternalsVisibleTo`) |
+| `ContextSwitchHook`, `ContextSwitchDispatcher`, `ResourceAccountingFeatures` | `Platform/HackerOs.Platform.ResourceAccounting` (new) | hook installation, broadcast to the measurements (process changes, and mode changes to observers that want them), `[FeatureSwitchDefinition]` switches |
+| `MeasuredCpuTimeAccountant` | same | CPU measurement (ADR 0067), registered on the broadcaster when `plan.CpuActive` |
+| `ResourceAccountingServiceCollectionExtensions` | `OS/HackerOs.Ecosystem.Host` | reading of `HackerOs:ResourceAccounting`, composition, `#if HACKEROS_RESOURCE_ACCOUNTING` |
+| `build/HackerOs.ResourceAccounting.targets` | `build/` | MSBuild properties, `RuntimeHostConfigurationOption`, conditional reference |
 
-### Le crochet
+### The hook
 
 ```
 HackExecutionContext.Enter(P) ──┐
@@ -52,23 +52,23 @@ fin de continuation, minuterie ─┘         │ processus différent ?
                          mesure CPU (0067)   mesure mémoire (0068)
 ```
 
-- Sans mesure active, le frame reste un `AsyncLocal` ordinaire : aucun rappel,
-  aucun test « activé ? » dans le chemin chaud.
-- Le rappel ne signale que les vrais changements de processus (pas un frame
-  imbriqué du même processus, pas le code de l'OS qui reprend du code de
-  l'OS). Il ne lève jamais : une exception dans la restauration d'un
-  `ExecutionContext` arrêterait le runtime ; un observateur qui lève est
-  ignoré pour ce changement.
-- Remplacer l'`AsyncLocal` ferait perdre leur contexte aux flots qui ont
-  capturé l'ancien : l'installation est donc refusée si une portée est ouverte
-  (compteur de portées vivantes) ou si un crochet existe déjà. L'OS l'installe
-  à la composition des services, avant tout code d'app, et ne la retire jamais.
-- Le diffuseur copie son tableau d'observateurs à l'inscription : la lecture
-  dans le chemin chaud se fait sans verrou ni allocation.
+- Without an active measurement, the frame stays an ordinary `AsyncLocal`: no callback,
+  no "enabled?" test in the hot path.
+- The callback only signals real process changes (not a nested frame
+  of the same process, not OS code resuming OS code). It never
+  throws: an exception in the restoration of an
+  `ExecutionContext` would stop the runtime; an observer that throws is
+  ignored for that change.
+- Replacing the `AsyncLocal` would make flows that captured the old one lose their context:
+  installation is therefore refused if a scope is open
+  (live scope counter) or if a hook already exists. The OS installs it
+  at service composition, before any app code, and never removes it.
+- The broadcaster copies its array of observers at registration: reading
+  in the hot path is done without a lock or allocation.
 
-## Utilisation
+## Usage
 
-### Au build
+### At build
 
 ```xml
 <!-- Directory.Build.props, ou en ligne de commande : -p:HackerOsCpuAccounting=false -->
@@ -76,25 +76,25 @@ fin de continuation, minuterie ─┘         │ processus différent ?
 <HackerOsMemoryAccounting>false</HackerOsMemoryAccounting>
 ```
 
-Les deux valent `true` par défaut. Les trois hôtes importent
-`build/HackerOs.ResourceAccounting.targets` à la fin de leur `.csproj`.
+Both default to `true`. The three hosts import
+`build/HackerOs.ResourceAccounting.targets` at the end of their `.csproj`.
 
-| Propriétés | Effet |
+| Properties | Effect |
 |---|---|
-| une au moins à `true` | référence vers `HackerOs.Platform.ResourceAccounting`, constante `HACKEROS_RESOURCE_ACCOUNTING` ; chaque propriété devient l'option d'exécution `HackerOs.ResourceAccounting.{Cpu,Memory}.IsSupported` |
-| les deux à `false` | pas de référence : le code de mesure n'est **pas dans le binaire** ; la composition compile sa branche `#else` |
+| at least one `true` | reference to `HackerOs.Platform.ResourceAccounting`, constant `HACKEROS_RESOURCE_ACCOUNTING`; each property becomes the runtime option `HackerOs.ResourceAccounting.{Cpu,Memory}.IsSupported` |
+| both `false` | no reference: the measurement code is **not in the binary**; the composition compiles its `#else` branch |
 
-La composition vit dans `HackerOs.Ecosystem.Host` (qui importe aussi ces cibles),
-que l'Ecosystem, `test/test` et `HackerOs.Server` référencent. Le paquet
-`HackerOs.Ecosystem.Host` est produit avec les deux mesures compilées ; un hôte
-d'un autre dépôt les coupe à l'exécution (`appsettings.json` ou ses propres
-options `RuntimeHostConfigurationOption`). Pour retirer le code de **tout** le graphe,
-passer les propriétés en ligne de commande ou dans un `Directory.Build.props`.
-Posées seulement dans le `.csproj` de `test/test` ou du serveur, elles coupent
-l'option d'exécution de cet hôte (la mesure est ignorée au démarrage, avec la
-ligne syslog) mais la DLL arrive encore par `HackerOs.Ecosystem.Host`.
+The composition lives in `HackerOs.Ecosystem.Host` (which also imports these targets),
+which the Ecosystem, `test/test` and `HackerOs.Server` reference. The package
+`HackerOs.Ecosystem.Host` is produced with both measurements compiled; a host
+of another repository turns them off at runtime (`appsettings.json` or its own
+`RuntimeHostConfigurationOption` options). To remove the code from the **whole** graph,
+pass the properties on the command line or in a `Directory.Build.props`.
+Set only in the `.csproj` of `test/test` or of the server, they turn off
+the runtime option of that host (the measurement is ignored at startup, with the
+syslog line) but the DLL still arrives through `HackerOs.Ecosystem.Host`.
 
-### Au démarrage
+### At startup
 
 ```json
 {
@@ -107,37 +107,37 @@ ligne syslog) mais la DLL arrive encore par `HackerOs.Ecosystem.Host`.
 }
 ```
 
-| Hôte | Fichier | Défaut livré |
+| Host | File | Shipped default |
 |---|---|---|
-| `OS/HackerOs.Ecosystem` | `wwwroot/appsettings.json` (lu par `WebAssemblyHostBuilder`, servi aussi à l'îlot WASM de `test/test`) | les deux activées |
-| `test/test` | `appsettings.json` (composition côté serveur, pré-rendu) | les deux activées |
-| `Server/HackerOs.Server` | aucun : il sert l'OS de l'Ecosystem et son `wwwroot/appsettings.json` (ADR 0130) | comme l'Ecosystem (activées) |
+| `OS/HackerOs.Ecosystem` | `wwwroot/appsettings.json` (read by `WebAssemblyHostBuilder`, also served to the WASM island of `test/test`) | both enabled |
+| `test/test` | `appsettings.json` (server-side composition, prerendering) | both enabled |
+| `Server/HackerOs.Server` | none: it serves the Ecosystem's OS and its `wwwroot/appsettings.json` (ADR 0130) | as the Ecosystem (enabled) |
 
-Chaque hôte appelle, avant `AddHackerOsEcosystem` :
+Each host calls, before `AddHackerOsEcosystem`:
 
 ```csharp
 builder.Services.AddHackerOsResourceAccounting(builder.Configuration, BuildKnownLazyApps.Images);
 ```
 
-(`AddHackerOsBrowserHost` le fait pour un hôte WebAssembly, avec les images de son
-`HostAppCatalog` ; voir [`sdk-packages.md`](../framework/sdk-packages.md).)
+(`AddHackerOsBrowserHost` does it for a WebAssembly host, with the images of its
+`HostAppCatalog`; see [`sdk-packages.md`](../framework/sdk-packages.md).)
 
-- La section est lue **une fois** ; la changer demande de recharger la page.
-- Une valeur absente prend son défaut ; une valeur illisible aussi, avec une
-  ligne d'avertissement dans syslog.
-- Une mesure coupée au build l'emporte : `Enabled: true` est ignoré et
-  `/var/log/syslog` le dit (catégorie `resource-accounting`, écrit par
-  `EcosystemBootCoordinator` dès que le journal est attaché), suivi d'une
-  ligne de résumé, par exemple
+- The section is read **once**; changing it requires reloading the page.
+- A missing value takes its default; an unreadable value too, with a warning
+  line in syslog.
+- A measurement turned off at build wins: `Enabled: true` is ignored and
+  `/var/log/syslog` says so (category `resource-accounting`, written by
+  `EcosystemBootCoordinator` as soon as the log is attached), followed by a
+  summary line, for example
   `resource accounting: cpu off (not built), memory on`.
-- Un hôte ou un test qui n'appelle pas `AddHackerOsResourceAccounting` reçoit
-  `ResourceAccountingPlan.Disabled` et les comptables nuls.
+- A host or a test that does not call `AddHackerOsResourceAccounting` receives
+  `ResourceAccountingPlan.Disabled` and the null accountants.
 
-### Inscrire une mesure
+### Registering a measurement
 
-La mesure du CPU est inscrite ainsi, dès la composition (avant tout code
-d'app) ; la mesure de la mémoire inscrit son `AllocationTracker` de la même
-façon :
+The CPU measurement is registered this way, at composition (before any app
+code); the memory measurement registers its `AllocationTracker` the same
+way:
 
 ```csharp
 // Dans AddHackerOsResourceAccounting, quand plan.CpuActive :
@@ -147,105 +147,105 @@ services.AddSingleton(cpu);
 services.AddSingleton<ICpuTimeAccountant>(cpu);
 ```
 
-`AddHackerOsResourceAccounting` enregistre les comptables nuls (et
-`NullKernelMemoryLedger`) par `TryAddSingleton` : une mesure enregistrée avant
-eux les remplace. La mémoire le fait déjà (`AddMeasuredMemory`, sous
+`AddHackerOsResourceAccounting` registers the null accountants (and
+`NullKernelMemoryLedger`) with `TryAddSingleton`: a measurement registered before
+them replaces them. Memory already does this (`AddMeasuredMemory`, under
 `ResourceAccountingFeatures.IsMemoryAccountingSupported`).
 
-### Lecture
+### Reading
 
-- `/proc/<pid>/status` : `Cpu` et `VmRSS` prennent la valeur mesurée quand le
-  comptable répond, sinon celle du simulateur ; `CpuSource:` et `MemSource:`
-  valent `measured` ou `simulated`
-  ([`virtual-proc-and-dev.md`](virtual-proc-and-dev.md)). Une mémoire mesurée
-  ajoute ses couches après `VmRSS`, et `/proc/meminfo` ses lignes
+- `/proc/<pid>/status`: `Cpu` and `VmRSS` take the measured value when the
+  accountant answers, otherwise the simulator's; `CpuSource:` and `MemSource:`
+  are `measured` or `simulated`
+  ([`virtual-proc-and-dev.md`](virtual-proc-and-dev.md)). A measured memory
+  adds its layers after `VmRSS`, and `/proc/meminfo` its lines
   ([`memory-accounting.md`](memory-accounting.md)).
-- Gestionnaire de tâches : l'en-tête des colonnes CPU et Memory porte une
-  étiquette `estimated` (petite, en pointillés, monospace) tant qu'une ligne
-  au moins est simulée. L'app lit `HackProcess.Status` : le SDK ne change pas.
+- Task manager: the header of the CPU and Memory columns carries an `estimated`
+  label (small, dotted, monospace) as long as at least one row
+  is simulated. The app reads `HackProcess.Status`: the SDK does not change.
 
-## Apps existantes
+## Existing apps
 
-Section 5.1 du plan : le crochet compte au compositeur le code exécuté hors de
-tout frame, donc tout le code des apps de `Apps/` doit tourner dans le frame de
-son processus.
+Section 5.1 of the plan: the hook charges to the compositor the code run outside
+any frame, so all the code of the apps in `Apps/` must run in the frame of
+its process.
 
-| Point d'entrée | Qui ouvre le frame |
+| Entry point | Who opens the frame |
 |---|---|
-| Commande (`TerminalAppBase.ExecuteAsync`), service (`ServiceAppBase`) | l'OS, autour de l'appel ; le frame suit les continuations, minuteries et `Task.Run` |
-| Fenêtre (`WindowAppBase`) | paramètres, cycle de vie, événements, après-rendu |
-| Composant enfant | `HackComponentBase` (ou `HackEmbeddableComponent`), contexte reçu en cascade de `WindowAppRenderer` |
-| Dialogue MudBlazor (rendu hors de la fenêtre) | le composant du dialogue reçoit le contexte de la fenêtre en paramètre (l'ancien `FileExplorerDialogBase` et son `OwnerAppContext`) ; depuis `desk/3` (ADR 0155), les dialogues de l'explorateur sont des dialogues fournis rendus par la plateforme dans une fenêtre modale qui donne le contexte de l'app appelante en cascade (`ProvidedFileDialog`) |
-| Méthode `[JSInvokable]` | la méthode elle-même, en première instruction : `using IDisposable scope = HackExecutionContext.Enter(AppContext);` |
+| Command (`TerminalAppBase.ExecuteAsync`), service (`ServiceAppBase`) | the OS, around the call; the frame follows continuations, timers and `Task.Run` |
+| Window (`WindowAppBase`) | parameters, lifecycle, events, after-render |
+| Child component | `HackComponentBase` (or `HackEmbeddableComponent`), context received as a cascade from `WindowAppRenderer` |
+| MudBlazor dialog (rendered outside the window) | the dialog component receives the window's context as a parameter (the old `FileExplorerDialogBase` and its `OwnerAppContext`); since `desk/3` (ADR 0155), the explorer's dialogs are provided dialogs rendered by the platform in a modal window that gives the calling app's context as a cascade (`ProvidedFileDialog`) |
+| `[JSInvokable]` method | the method itself, as its first statement: `using IDisposable scope = HackExecutionContext.Enter(AppContext);` |
 
-Le rendu du balisage et la libération des composants restent hors frame : c'est
-le travail du compositeur (ADR 0067 §2).
+Markup rendering and component disposal stay outside a frame: it is
+the compositor's work (ADR 0067 §2).
 
-Migration faite dans ce chantier :
+Migration done in this work item:
 
-- vers `HackComponentBase` : `NetworkTab`, `PerformanceTab`, `DiskTab`
+- to `HackComponentBase`: `NetworkTab`, `PerformanceTab`, `DiskTab`
   (System Monitor), `CodeEditorSearchView`, `CodeEditorExplorer`,
   `CodeEditorQuickOpenPalette`, `CodeEditorCursorStatus`,
-  `SimulatedPageRenderer` (Browser), `AppPermissionsPanel` et
-  `InstalledAppsPanel` (Settings, qui ne prennent plus `AppContext` en
-  paramètre mais le reçoivent en cascade) ;
-- vers `FileExplorerDialogBase` : `FileConflictDialog`, `OpenWithDialog`,
-  `FilePropertiesDialog` (retirés depuis par `desk/3`, remplacés par
-  `ExplorerFileDialogs`, ADR 0155) ;
-- frame ouvert en première instruction : `SystemMonitorWindow.SetWindowVisible`
-  et les quatre rappels JavaScript de `CodeEditorWindow`.
+  `SimulatedPageRenderer` (Browser), `AppPermissionsPanel` and
+  `InstalledAppsPanel` (Settings, which no longer take `AppContext` as a
+  parameter but receive it as a cascade);
+- to `FileExplorerDialogBase`: `FileConflictDialog`, `OpenWithDialog`,
+  `FilePropertiesDialog` (since removed by `desk/3`, replaced by
+  `ExplorerFileDialogs`, ADR 0155);
+- frame opened as the first statement: `SystemMonitorWindow.SetWindowVisible`
+  and the four JavaScript callbacks of `CodeEditorWindow`.
 
-`AmbientFrameSourceTests` (`HackerOs.Ecosystem.Tests`) lit toutes les sources de
-`Apps/` et échoue si un composant ne dérive pas (directement ou par une base de
-l'app) de `WindowAppBase`, `HackComponentBase` ou `HackEmbeddableComponent`, si
-une méthode `[JSInvokable]` n'entre pas dans le frame en premier, ou si du code
-utilise `ExecutionContext.SuppressFlow`, `UnsafeQueueUserWorkItem`,
-`UnsafeRegister` ou `new Thread(`. Avant la migration, il signalait les treize
-composants et les cinq rappels ci-dessus.
+`AmbientFrameSourceTests` (`HackerOs.Ecosystem.Tests`) reads all the sources of
+`Apps/` and fails if a component does not derive (directly or through a base of
+the app) from `WindowAppBase`, `HackComponentBase` or `HackEmbeddableComponent`, if
+a `[JSInvokable]` method does not enter the frame first, or if code
+uses `ExecutionContext.SuppressFlow`, `UnsafeQueueUserWorkItem`,
+`UnsafeRegister` or `new Thread(`. Before the migration, it reported the thirteen
+components and the five callbacks above.
 
-## Décisions
+## Decisions
 
-- **Crochet dans `HackExecutionContext`, installation réservée.** Le frame est
-  privé au SDK ; seul `HackerOs.Platform.ResourceAccounting` voit les membres
-  internes qui l'échangent. Une app ne peut ni installer ni observer le
-  crochet.
-- **Échange de l'`AsyncLocal` plutôt qu'un rappel toujours présent.** Un
-  `AsyncLocal` avec rappel coûte à chaque restauration de contexte ; sans
-  mesure, il n'existe pas.
-- **Installation à la composition, pas au démarrage de l'OS.** C'est le seul
-  moment où aucune portée n'est ouverte ; les tests de l'Ecosystem passent un
-  installateur factice pour couvrir toutes les combinaisons sans toucher au
-  crochet du processus de test.
-- **Source par processus.** `TryGetCpuUsage` / `TryGetProcessMemory` répondent
-  processus par processus : les processus simulés, qui n'exécutent
-  pas de code, resteront simulés même mesure active (ADR 0066 §4).
-- **Lecture manuelle de la configuration** (pas de liaison par réflexion) :
-  compatible avec l'analyse de trimming de la solution.
+- **Hook in `HackExecutionContext`, reserved installation.** The frame is
+  private to the SDK; only `HackerOs.Platform.ResourceAccounting` sees the internal
+  members that swap it. An app can neither install nor observe the
+  hook.
+- **Swapping the `AsyncLocal` rather than an always-present callback.** An
+  `AsyncLocal` with a callback costs something at every context restoration; without a
+  measurement, it does not exist.
+- **Installation at composition, not at OS startup.** This is the only
+  moment when no scope is open; the Ecosystem tests pass a fake
+  installer to cover all combinations without touching the test process's
+  hook.
+- **Source per process.** `TryGetCpuUsage` / `TryGetProcessMemory` answer
+  process by process: simulated processes, which do not run
+  code, will stay simulated even with a measurement active (ADR 0066 §4).
+- **Manual reading of the configuration** (no reflection binding):
+  compatible with the solution's trimming analysis.
 
 ## Tests
 
-| Suite | Couvre |
+| Suite | Covers |
 |---|---|
-| `HackerOs.Platform.ResourceAccounting.Tests` | crochet : entrée et sortie, continuations (`ThreadContextChanged`), `Task.Run`, processus imbriqués, même processus ignoré, double installation et portée ouverte refusées, observateur qui lève, retrait ; diffuseur ; interrupteurs indépendants. Parallélisme désactivé (crochet global). |
-| `HackerOs.Platform.Core.Tests` (`ResourceAccountingPlanTests`) | les 16 combinaisons build × réglage, lignes syslog, comptables nuls |
-| `HackerOs.Platform.Core.Tests` (`ProcFileSystemProviderTests`) | format de `status`, retour au simulateur, sources mesurées indépendantes |
-| `HackerOs.Ecosystem.Tests` (`ResourceAccountingCompositionTests`) | crochet installé seulement si une mesure est active (16 combinaisons), aucun crochet par le vrai chemin quand tout est coupé, lecture de la section, `appsettings.json` livrés |
-| `HackerOs.Apps.SystemMonitor.Tests` | mention « estimated » par colonne |
-| `HackerOs.Ecosystem.Tests` (`AmbientFrameSourceTests`) | tout le code des apps de `Apps/` dans un frame ambiant (composants, rappels JavaScript, pas d'évasion du contexte), avec un contrôle que l'analyse détecte bien une faute |
+| `HackerOs.Platform.ResourceAccounting.Tests` | hook: enter and leave, continuations (`ThreadContextChanged`), `Task.Run`, nested processes, same process ignored, double installation and open scope refused, observer that throws, removal; broadcaster; independent switches. Parallelism disabled (global hook). |
+| `HackerOs.Platform.Core.Tests` (`ResourceAccountingPlanTests`) | the 16 build × setting combinations, syslog lines, null accountants |
+| `HackerOs.Platform.Core.Tests` (`ProcFileSystemProviderTests`) | format of `status`, return to the simulator, independent measured sources |
+| `HackerOs.Ecosystem.Tests` (`ResourceAccountingCompositionTests`) | hook installed only if a measurement is active (16 combinations), no hook through the real path when everything is off, reading of the section, shipped `appsettings.json` |
+| `HackerOs.Apps.SystemMonitor.Tests` | "estimated" label per column |
+| `HackerOs.Ecosystem.Tests` (`AmbientFrameSourceTests`) | all the code of the apps in `Apps/` in an ambient frame (components, JavaScript callbacks, no escape from the context), with a check that the analysis does detect a fault |
 
-Vérifié à la main : un build de `HackerOs.Ecosystem` avec les deux propriétés
-à `false` ne contient aucun fichier `HackerOs.Platform.ResourceAccounting*` et
-son `runtimeconfig.json` porte les deux options à `false`.
+Verified by hand: a build of `HackerOs.Ecosystem` with both properties
+at `false` contains no `HackerOs.Platform.ResourceAccounting*` file and
+its `runtimeconfig.json` carries both options at `false`.
 
-## Liste des tâches
+## Task list
 
-- [x] Contrats `ICpuTimeAccountant`, `IMemoryAccountant`, `ResourceMeasurementSource`, `IExecutionContextSwitchObserver` (Simulation Abstractions).
-- [x] Implémentations nulles et `ResourceAccountingPlan` (Platform Core).
-- [x] Crochet `AsyncLocal<T>(valueChangedHandler)` installable dans `HackExecutionContext`, refusé si une portée est ouverte.
-- [x] Projet `HackerOs.Platform.ResourceAccounting` : interrupteurs, diffuseur, installation.
-- [x] `build/HackerOs.ResourceAccounting.targets`, import dans les trois hôtes, référence conditionnelle, `RuntimeHostConfigurationOption`.
-- [x] `appsettings.json` des trois hôtes (créé pour l'Ecosystem, coupé pour le serveur), lecture à la composition, lignes syslog.
-- [x] `CpuSource` / `MemSource` dans `/proc/<pid>/status`, mention « estimated » dans le gestionnaire de tâches.
-- [x] Tests des combinaisons, aucun crochet quand tout est coupé, observateur de test du crochet.
-- [x] Documentation et index.
-- [x] Apps existantes (plan §5.1) : composants de `Apps/` sur `HackComponentBase`, dialogues de l'explorateur sur `FileExplorerDialogBase`, rappels `[JSInvokable]` dans le frame, test `AmbientFrameSourceTests`.
+- [x] Contracts `ICpuTimeAccountant`, `IMemoryAccountant`, `ResourceMeasurementSource`, `IExecutionContextSwitchObserver` (Simulation Abstractions).
+- [x] Null implementations and `ResourceAccountingPlan` (Platform Core).
+- [x] `AsyncLocal<T>(valueChangedHandler)` hook installable in `HackExecutionContext`, refused if a scope is open.
+- [x] Project `HackerOs.Platform.ResourceAccounting`: switches, broadcaster, installation.
+- [x] `build/HackerOs.ResourceAccounting.targets`, import in the three hosts, conditional reference, `RuntimeHostConfigurationOption`.
+- [x] `appsettings.json` of the three hosts (created for the Ecosystem, turned off for the server), reading at composition, syslog lines.
+- [x] `CpuSource` / `MemSource` in `/proc/<pid>/status`, "estimated" label in the task manager.
+- [x] Tests of the combinations, no hook when everything is off, hook test observer.
+- [x] Documentation and index.
+- [x] Existing apps (plan §5.1): `Apps/` components on `HackComponentBase`, explorer dialogs on `FileExplorerDialogBase`, `[JSInvokable]` callbacks in the frame, test `AmbientFrameSourceTests`.

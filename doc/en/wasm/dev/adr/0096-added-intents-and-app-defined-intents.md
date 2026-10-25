@@ -1,109 +1,109 @@
-# ADR 0096 : intents ajoutés (afficher, modifier, ouvrir une URI, réglages d'une app) et intents définis par les apps
+# ADR 0096: added intents (reveal, edit, open a URI, app settings) and app-defined intents
 
-## Statut
+## Status
 
-Accepté le 2026-10-17 (chantier `v3/1-adr`, pour le chantier `v3/4-intents`).
+Accepted on 2026-10-17 (work item `v3/1-adr`, for the work item `v3/4-intents`).
 
-- **Complète :** ADR 0010 et 0047 (déclaration `Intents` du manifeste),
-  [ADR 0039](0039-directory-open-file-association.md) (association des
-  dossiers), ADR 0050 §7 (`ExecuteCommandIntent`), ADR 0056 (façades du SDK).
-- **Plan :** [`wasm-v3-completion-plan.md`](../plans/wasm-v3-completion-plan.md),
-  ligne `v3/4-intents` ; manque R6.
+- **Complements:** ADR 0010 and 0047 (`Intents` declaration of the manifest),
+  [ADR 0039](0039-directory-open-file-association.md) (folder
+  association), ADR 0050 §7 (`ExecuteCommandIntent`), ADR 0056 (SDK facades).
+- **Plan:** [`wasm-v3-completion-plan.md`](../plans/wasm-v3-completion-plan.md),
+  line `v3/4-intents`; gap R6.
 
-## Contexte
+## Context
 
 `AppIntentDispatcher` (`Platform/HackerOs.Platform.Core/Intents/AppIntentDispatcher.cs:160-169`)
-traite `LaunchApp`, `OpenFile` et `ExecuteCommand`. Deux intents existent mais ne
-font rien : `RevealFileIntent` (ligne 166) et `ShowAppSettingsIntent` (ligne 297,
-qui valide la cible et répond « envoyé »). Il n'y a pas d'intent pour modifier un
-fichier ni pour ouvrir une URI ; `HackBrowser.OpenAsync` lance directement le
-navigateur de HackerOS. `IAppIntentGateway` n'expose que `LaunchAsync` et
-`OpenFileAsync`. Une app peut déclarer des intents (`AppDefinition.Intents`,
-champ `intents` du manifeste) mais le répartiteur répond toujours
-`intent.unknown` à un identifiant qu'il ne connaît pas. Il n'existe pas de
-commande `xdg-open`.
+handles `LaunchApp`, `OpenFile` and `ExecuteCommand`. Two intents exist but do
+nothing: `RevealFileIntent` (line 166) and `ShowAppSettingsIntent` (line 297,
+which validates the target and answers "sent"). There is no intent to edit a
+file or to open a URI; `HackBrowser.OpenAsync` launches the HackerOS browser
+directly. `IAppIntentGateway` only exposes `LaunchAsync` and
+`OpenFileAsync`. An app can declare intents (`AppDefinition.Intents`,
+`intents` field of the manifest) but the dispatcher always answers
+`intent.unknown` to an identifier it does not know. There is no
+`xdg-open` command.
 
-## Décision
+## Decision
 
-### 1. Afficher un fichier (`RevealFileIntent`)
+### 1. Reveal a file (`RevealFileIntent`)
 
-- Le répartiteur lance le gestionnaire par défaut des dossiers (type
-  `inode/directory`, ADR 0039) sur le **dossier parent**, avec l'argument
-  `--select=<chemin>`. C'est le contrat de `org.freedesktop.FileManager1.ShowItems`
-  ramené à un argument de lancement.
-- L'explorateur de fichiers ouvre le dossier et sélectionne l'élément, en le
-  faisant défiler jusqu'à lui. Un autre gestionnaire de dossiers qui ignore
-  `--select` ouvre simplement le dossier.
-- Mêmes règles d'accès qu'`OpenFile` : l'appelant doit pouvoir lire le dossier
-  parent, sinon `intent.reveal-file.denied` ; chemin absent :
+- The dispatcher launches the default folder handler (type
+  `inode/directory`, ADR 0039) on the **parent folder**, with the argument
+  `--select=<path>`. This is the contract of `org.freedesktop.FileManager1.ShowItems`
+  reduced to a launch argument.
+- The file explorer opens the folder and selects the item, scrolling
+  to it. Another folder handler that ignores
+  `--select` simply opens the folder.
+- Same access rules as `OpenFile`: the caller must be able to read the parent
+  folder, otherwise `intent.reveal-file.denied`; missing path:
   `intent.reveal-file.not-found`.
 
-### 2. Modifier un fichier (`EditFileIntent`)
+### 2. Edit a file (`EditFileIntent`)
 
-- Nouvel intent `org.hackeros.intent.edit-file.v1`, record
+- New intent `org.hackeros.intent.edit-file.v1`, record
   `EditFileIntent(VirtualPath Path, string? MediaType)`.
-- Il choisit parmi les gestionnaires dont `FileHandlerManifest.Actions` contient
-  `edit`, avec les mêmes règles de priorité et de choix par défaut qu'`OpenFile`.
-  Sans gestionnaire `edit`, il retombe sur `open` (comme `xdg-open`, qui n'a pas de
-  verbe « modifier »), et le résultat le signale (`FellBackToOpen`).
-- `IAppIntentGateway.EditFileAsync` et `HackApps.EditFileAsync` l'exposent.
+- It chooses among the handlers whose `FileHandlerManifest.Actions` contains
+  `edit`, with the same priority and default-choice rules as `OpenFile`.
+  Without an `edit` handler, it falls back to `open` (like `xdg-open`, which has no
+  "edit" verb), and the result reports it (`FellBackToOpen`).
+- `IAppIntentGateway.EditFileAsync` and `HackApps.EditFileAsync` expose it.
 
-### 3. Ouvrir une URI (`OpenUriIntent`) et `xdg-open`
+### 3. Open a URI (`OpenUriIntent`) and `xdg-open`
 
-- Nouvel intent `org.hackeros.intent.open-uri.v1`, record `OpenUriIntent(Uri Uri)`.
-- Comme sous freedesktop, un schéma d'URI est un type de média
-  `x-scheme-handler/<schéma>` : une app le déclare dans ses `FileHandlers`
-  (`MediaType = "x-scheme-handler/https"`, action `open`) et le choix par défaut
-  vit dans `/etc/hackeros/file-associations.json`, modifiable par
-  l'administrateur et surchargeable par l'utilisateur, comme les autres
-  associations. Le navigateur de HackerOS déclare `http` et `https` et en est le
-  gestionnaire par défaut.
-- `file://` devient un `OpenFileIntent` sur le chemin.
-- Schéma sans gestionnaire : `intent.open-uri.no-handler`.
-- `IAppIntentGateway.OpenUriAsync` et `HackApps.OpenUriAsync` l'exposent ;
-  `HackBrowser.OpenAsync` reste, pour une app qui veut précisément le navigateur
-  de HackerOS.
-- Nouvelle commande `xdg-open <chemin|uri>` dans `HackerOs.Commands` : un
-  chemin donne `OpenFile` (un dossier s'ouvre dans son gestionnaire, comme sous
-  Linux), une URI donne `OpenUri`. Code de sortie 0 si
-  l'intent est envoyé, 3 sans gestionnaire, 4 si le fichier n'existe pas (codes
-  de `xdg-open`).
+- New intent `org.hackeros.intent.open-uri.v1`, record `OpenUriIntent(Uri Uri)`.
+- As under freedesktop, a URI scheme is a media type
+  `x-scheme-handler/<scheme>`: an app declares it in its `FileHandlers`
+  (`MediaType = "x-scheme-handler/https"`, action `open`) and the default choice
+  lives in `/etc/hackeros/file-associations.json`, editable by the
+  administrator and overridable by the user, like the other
+  associations. The HackerOS browser declares `http` and `https` and is the
+  default handler for them.
+- `file://` becomes an `OpenFileIntent` on the path.
+- Scheme without a handler: `intent.open-uri.no-handler`.
+- `IAppIntentGateway.OpenUriAsync` and `HackApps.OpenUriAsync` expose it;
+  `HackBrowser.OpenAsync` remains, for an app that specifically wants the
+  HackerOS browser.
+- New command `xdg-open <path|uri>` in `HackerOs.Commands`: a
+  path gives `OpenFile` (a folder opens in its handler, as on
+  Linux), a URI gives `OpenUri`. Exit code 0 if
+  the intent is sent, 3 without a handler, 4 if the file does not exist (codes
+  of `xdg-open`).
 
-### 4. Réglages d'une app (`ShowAppSettingsIntent`)
+### 4. App settings (`ShowAppSettingsIntent`)
 
-- Si l'app cible déclare elle-même l'intent `org.hackeros.intent.show-app-settings.v1`
-  dans `Intents`, c'est elle qui est lancée (ou activée) avec
-  `--show-settings` : elle a sa propre page de réglages.
-- Sinon, Paramètres s'ouvre sur la fiche de l'app (`--app=<id>`) : capacités
-  accordées, associations, état du service et mode de démarrage pour une app de
-  genre `Service`, désinstallation.
+- If the target app itself declares the intent `org.hackeros.intent.show-app-settings.v1`
+  in `Intents`, it is the one launched (or activated) with
+  `--show-settings`: it has its own settings page.
+- Otherwise, Settings opens on the app's page (`--app=<id>`): granted
+  capabilities, associations, service state and start mode for an app of
+  kind `Service`, uninstallation.
 
-### 5. Intents définis par les apps
+### 5. App-defined intents
 
-- Une app qui déclare un identifiant dans `Intents` **le reçoit** : le
-  répartiteur ne répond plus `intent.unknown` à un identifiant déclaré par au
-  moins une app installée.
-- Nouvel intent générique `CustomIntent(string IntentId, string? PayloadJson)`,
-  envoyé par `HackApps.SendIntentAsync(intentId, payload)`. Identifiant libre mais
-  bien formé (`domaine.inversé.nom.vN`), comme une action Android.
-- Routage : une seule app déclarante, elle est lancée ou activée ; plusieurs,
-  l'utilisateur choisit dans le même sélecteur qu'« Ouvrir avec », avec la case
-  « toujours utiliser » enregistrée dans `~/.config/hackeros/intents.config`.
-- Réception : `IAppExecutionContext.Intent` (identifiant et charge utile) au
-  lancement ; pour une app déjà ouverte et `SingleInstancePerUser`, un crochet
-  `OnIntentReceived` de `WindowAppBase` et `TerminalApp`/`ServiceApp` équivalents.
-- La charge utile est un objet JSON de 64 Kio au plus, vérifié bien formé.
-  `PayloadSchemaAssetPath` reste une documentation pour les appelants : pas de
-  validation de schéma au répartiteur (pas de bibliothèque JSON Schema dans
-  l'OS).
-- L'appelant doit avoir `apps.launch`, comme pour `LaunchApp` vers une autre app.
+- An app that declares an identifier in `Intents` **receives it**: the
+  dispatcher no longer answers `intent.unknown` to an identifier declared by at
+  least one installed app.
+- New generic intent `CustomIntent(string IntentId, string? PayloadJson)`,
+  sent by `HackApps.SendIntentAsync(intentId, payload)`. Free but
+  well-formed identifier (`reversed.domain.name.vN`), like an Android action.
+- Routing: a single declaring app, it is launched or activated; several,
+  the user chooses in the same picker as "Open with", with the "always use"
+  checkbox saved in `~/.config/hackeros/intents.config`.
+- Reception: `IAppExecutionContext.Intent` (identifier and payload) at
+  launch; for an already open app with `SingleInstancePerUser`, an
+  `OnIntentReceived` hook of `WindowAppBase` and equivalent `TerminalApp`/`ServiceApp` ones.
+- The payload is a JSON object of at most 64 KiB, checked to be well-formed.
+  `PayloadSchemaAssetPath` remains documentation for callers: no
+  schema validation in the dispatcher (no JSON Schema library in the
+  OS).
+- The caller must have `apps.launch`, as for `LaunchApp` to another app.
 
-## Conséquences
+## Consequences
 
-- `AppIntentIds` gagne `edit-file`, `open-uri` et le préfixe libre ; le schéma
-  du manifeste ne change pas (les déclarations existent déjà).
-- `v3/4` ajoute les intents, `xdg-open`, `--select` dans l'explorateur, la fiche
-  d'app dans Paramètres, et des tests du répartiteur pour chaque intent et chaque
-  code d'erreur.
+- `AppIntentIds` gains `edit-file`, `open-uri` and the free prefix; the manifest
+  schema does not change (the declarations already exist).
+- `v3/4` adds the intents, `xdg-open`, `--select` in the explorer, the app
+  page in Settings, and dispatcher tests for each intent and each
+  error code.
 - `sdk-reference.md`, `app-model.md`, `file-explorer.md`, `linux-commands.md`
-  et `shell-commands.md` sont mis à jour.
+  and `shell-commands.md` are updated.

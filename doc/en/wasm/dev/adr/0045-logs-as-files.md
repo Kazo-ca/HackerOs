@@ -1,168 +1,168 @@
-# ADR 0045 : Journaux en fichiers texte dans `/var/log`, avec rotation
+# ADR 0045: Logs as text files in `/var/log`, with rotation
 
-## Statut
+## Status
 
-Accepté le 2026-10-10.
+Accepted on 2026-10-10.
 
-- **Phase du plan :** phase 1 — Fichiers ([`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md), section 5.3, décision D19).
-- **Remplace :** aucun ADR. Retire les magasins IndexedDB de diagnostics et
-  d'audit comme destination des journaux.
-- **Valeurs par défaut retenues** (plan, section 11) : rotation à **1 Mio** par
-  fichier, **5 archives**.
+- **Plan phase:** phase 1, Files ([`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md), section 5.3, decision D19).
+- **Replaces:** no ADR. Removes the diagnostics and audit IndexedDB stores
+  as a log destination.
+- **Default values retained** (plan, section 11): rotation at **1 MiB** per
+  file, **5 archives**.
 
-## Contexte
+## Context
 
-`/var/log` est créé par `FileSystemSeeder` mais reste vide. Les entrées passent
-par `HackerOsDiagnosticLoggerProvider` (pour les `ILogger<T>` de la plateforme)
-et par `IAppLoggingGateway` (pour les apps), puis vont dans
-`EventPublishingDiagnosticSink`, `BoundedDiagnosticSink` et
-`IPersistentDiagnosticRepository` (magasin IndexedDB). L'audit (`IAuditLog`,
-`BoundedAuditLog`, `IndexedDbAuditRepository`) a son propre circuit. Seul Error
-Log Viewer peut lire ces journaux, à travers `IAppDiagnosticsGateway`. Ni `cat`,
-ni `tail`, ni `grep` n'y ont accès.
+`/var/log` is created by `FileSystemSeeder` but stays empty. Entries go through
+`HackerOsDiagnosticLoggerProvider` (for the platform's `ILogger<T>`)
+and through `IAppLoggingGateway` (for apps), then into
+`EventPublishingDiagnosticSink`, `BoundedDiagnosticSink` and
+`IPersistentDiagnosticRepository` (IndexedDB store). The audit (`IAuditLog`,
+`BoundedAuditLog`, `IndexedDbAuditRepository`) has its own circuit. Only Error
+Log Viewer can read these logs, through `IAppDiagnosticsGateway`. Neither `cat`,
+nor `tail`, nor `grep` can access them.
 
-## Décision
+## Decision
 
-### 1. Fichiers
+### 1. Files
 
-| Fichier | Contenu | Propriétaire et mode |
+| File | Content | Owner and mode |
 |---|---|---|
-| `/var/log/syslog` | journaux de la plateforme : toutes les catégories `ILogger` (`HackerOs.*`), le démarrage, les erreurs des services de l'OS, les avertissements de paramètres de l'OS (ADR 0044) | `system:system 0644` |
-| `/var/log/auth.log` | toutes les entrées `IAuditLog` : actions existantes `session.login` et `session.elevate` (`sudo`, ADR 0042), et plus tard les décisions d'approbation de permissions (ADR de phase 2) | `system:system 0600` (lisible avec `sudo` ou un ticket d'approbation) |
-| `/var/log/apps/<appId>.log` | entrées de `IAppLoggingGateway.Log` pour cette app, et ses avertissements de paramètres (ADR 0044) | `system:system 0644` |
+| `/var/log/syslog` | platform logs: all `ILogger` categories (`HackerOs.*`), startup, OS service errors, OS settings warnings (ADR 0044) | `system:system 0644` |
+| `/var/log/auth.log` | all `IAuditLog` entries: existing actions `session.login` and `session.elevate` (`sudo`, ADR 0042), and later the permission approval decisions (phase 2 ADR) | `system:system 0600` (readable with `sudo` or an approval ticket) |
+| `/var/log/apps/<appId>.log` | entries of `IAppLoggingGateway.Log` for that app, and its settings warnings (ADR 0044) | `system:system 0644` |
 
-Le dossier `/var/log/apps` (`system:system 0755`) est créé par `FileSystemSeeder`.
-Les fichiers sont créés à la première écriture. Les apps n'écrivent **jamais**
-directement dans `/var/log` : seul l'écrivain de la plateforme (section 4) le
-fait, avec un contexte système. Les lecteurs ordinaires passent par les droits
-du fichier, ce qui exige `filesystem.system.read` puisque `/var` est un chemin
-système.
+The `/var/log/apps` folder (`system:system 0755`) is created by `FileSystemSeeder`.
+Files are created on first write. Apps **never** write
+directly to `/var/log`: only the platform writer (section 4) does
+so, with a system context. Ordinary readers go through the file
+permissions, which requires `filesystem.system.read` since `/var` is a system
+path.
 
-### 2. Format de ligne
+### 2. Line format
 
-Une entrée tient sur **une** ligne UTF-8 terminée par `\n` :
+An entry fits on **one** UTF-8 line terminated by `\n`:
 
 ```text
-<horodatage> <NIVEAU> <source>[<pid>]: <message>[ {clé=valeur, ...}]
+<timestamp> <LEVEL> <source>[<pid>]: <message>[ {key=value, ...}]
 ```
 
-- `horodatage` : heure UTC de la simulation (`ISimulationClock`), ISO 8601 à la
-  milliseconde, par exemple `2026-10-10T03:11:42.123Z`.
-- `NIVEAU` : `DiagnosticSeverity` traduit en `TRACE`, `DEBUG`, `INFO`, `WARN`,
-  `ERROR`, `CRIT`, complété à 5 caractères.
-- `source` : la catégorie `ILogger` pour `syslog`, l'`appId` pour les journaux
-  d'app, l'`Action` de l'`AuditEntry` pour `auth.log`. `[<pid>]` est présent
-  quand un processus est connu.
-- `message` : les `\`, retours à la ligne et tabulations sont échappés en `\\`,
-  `\n` et `\t`, pour qu'`grep` trouve une entrée sur une seule ligne.
-- Propriétés : déjà caviardées par `IDiagnosticRedactor`
-  (`SensitiveKeyDiagnosticRedactor`), puis triées par clé.
-- Entrée d'audit : `<horodatage> <NIVEAU> <action>: actor=<Actor> subject=<Subject> outcome=<Success|Denied|Failed> {propriétés}`,
-  avec le niveau `INFO` pour `Success` et `WARN` sinon.
+- `timestamp`: UTC simulation time (`ISimulationClock`), ISO 8601 to the
+  millisecond, for example `2026-10-10T03:11:42.123Z`.
+- `LEVEL`: `DiagnosticSeverity` translated to `TRACE`, `DEBUG`, `INFO`, `WARN`,
+  `ERROR`, `CRIT`, padded to 5 characters.
+- `source`: the `ILogger` category for `syslog`, the `appId` for app logs,
+  the `Action` of the `AuditEntry` for `auth.log`. `[<pid>]` is present
+  when a process is known.
+- `message`: `\`, line breaks and tabs are escaped as `\\`,
+  `\n` and `\t`, so that `grep` finds an entry on a single line.
+- Properties: already redacted by `IDiagnosticRedactor`
+  (`SensitiveKeyDiagnosticRedactor`), then sorted by key.
+- Audit entry: `<timestamp> <LEVEL> <action>: actor=<Actor> subject=<Subject> outcome=<Success|Denied|Failed> {properties}`,
+  with level `INFO` for `Success` and `WARN` otherwise.
 
-Exemple :
+Example:
 
 ```text
 2026-10-10T03:11:42.123Z WARN  org.hackeros.text-editor[42]: settings: /etc/org.hackeros.text-editor/settings.config:12: invalid value for 'tab-size' (expected int64), using default
 ```
 
-Le type public `LogLineFormat` (`Shared/HackerOs.Simulation.Abstractions/Diagnostics/LogLineFormat.cs`)
-contient `Format(...)` et `TryParse(string line, out LogLine entry)`. Error Log
-Viewer et les tests l'utilisent pour relire les lignes.
+The public type `LogLineFormat` (`Shared/HackerOs.Simulation.Abstractions/Diagnostics/LogLineFormat.cs`)
+contains `Format(...)` and `TryParse(string line, out LogLine entry)`. Error Log
+Viewer and the tests use it to re-read lines.
 
-### 3. Taille et rotation
+### 3. Size and rotation
 
-- **Taille maximale : 1 Mio (1 048 576 octets) par fichier actif. Nombre
-  d'archives : 5.** Ce sont les valeurs retenues par défaut. Elles sont des
-  constantes de `LogRotationPolicy` (`MaxFileBytes`, `MaxArchives`) et ne sont
-  pas des paramètres en phase 1.
-- Avant d'ajouter un lot, si `taille actuelle + taille du lot` dépasse
-  `MaxFileBytes`, on fait une rotation, à la manière de `logrotate` :
-  supprimer `<f>.5`, puis renommer `<f>.4` en `<f>.5`, …, `<f>.1` en `<f>.2`, et
-  `<f>` en `<f>.1`, puis créer un `<f>` vide. Chaque étape est un `MoveAsync`
-  ou un `DeleteAsync` atomique du moteur.
-- Les archives ne sont pas compressées. Le `.gz` est reporté.
-- Un lot seul plus gros que `MaxFileBytes` est écrit tel quel dans un fichier
-  neuf. On ne coupe jamais une ligne.
+- **Maximum size: 1 MiB (1,048,576 bytes) per active file. Number
+  of archives: 5.** These are the values retained by default. They are
+  constants of `LogRotationPolicy` (`MaxFileBytes`, `MaxArchives`) and are not
+  settings in phase 1.
+- Before appending a batch, if `current size + batch size` exceeds
+  `MaxFileBytes`, a rotation is performed, in the manner of `logrotate`:
+  delete `<f>.5`, then rename `<f>.4` to `<f>.5`, ..., `<f>.1` to `<f>.2`, and
+  `<f>` to `<f>.1`, then create an empty `<f>`. Each step is an atomic `MoveAsync`
+  or `DeleteAsync` of the engine.
+- Archives are not compressed. `.gz` is deferred.
+- A single batch larger than `MaxFileBytes` is written as is to a new
+  file. A line is never cut.
 
-### 4. Écriture groupée en arrière-plan
+### 4. Batched background writing
 
-Nouveau service `LogFileWriter` (`Platform/HackerOs.Platform.Core/Diagnostics/LogFileWriter.cs`),
-enregistré en singleton :
+New service `LogFileWriter` (`Platform/HackerOs.Platform.Core/Diagnostics/LogFileWriter.cs`),
+registered as a singleton:
 
-- `Enqueue(LogFileTarget target, string line)` est synchrone et ne bloque
-  jamais : la ligne va dans un `Channel<T>` borné à **10 000** lignes. Au-delà,
-  les plus anciennes sont perdues et un compteur est tenu. Au vidage suivant, une
-  ligne `WARN logging: <n> entries dropped` est écrite dans `syslog`.
-- **Vidage** toutes les **1 s** de temps simulé (`ISimulationClock.Schedule`),
-  ou dès que **100** lignes attendent, et aussi à la déconnexion et à l'arrêt.
-  Il y a un seul vidage à la fois. Les lignes d'un même fichier sont regroupées
-  en **un seul** ajout (lecture, concaténation, écriture avec la révision lue,
-  comme `AppendAllTextAsync` de l'ADR 0043).
-- **Avant que le système de fichiers soit prêt :** les lignes s'accumulent dans
-  le canal. La séquence de démarrage appelle
-  `LogFileWriter.AttachAsync(IFileSystemService)` une fois l'amorçage IndexedDB
-  et `FileSystemSeeder` terminés. Si le système de fichiers ne devient jamais
-  disponible, les entrées restent visibles dans le tampon mémoire (section 5)
-  pour l'écran d'erreur de démarrage.
-- **Pas de récursion :** un échec d'écriture du journal n'est jamais journalisé
-  dans un fichier. Il est noté une seule fois dans le tampon mémoire, avec la
-  catégorie `logging`.
-- Le coût d'un ajout reste borné : le stockage par blocs dédupliqués ne réécrit
-  que le dernier bloc de 256 Kio, et un fichier ne dépasse jamais 1 Mio.
+- `Enqueue(LogFileTarget target, string line)` is synchronous and never
+  blocks: the line goes into a `Channel<T>` bounded to **10,000** lines. Beyond that,
+  the oldest are lost and a counter is kept. At the next flush, a
+  `WARN logging: <n> entries dropped` line is written to `syslog`.
+- **Flush** every **1 s** of simulated time (`ISimulationClock.Schedule`),
+  or as soon as **100** lines are waiting, and also on sign-out and shutdown.
+  Only one flush runs at a time. Lines of the same file are grouped
+  into **a single** append (read, concatenate, write with the revision read,
+  like `AppendAllTextAsync` of ADR 0043).
+- **Before the file system is ready:** lines accumulate in the
+  channel. The startup sequence calls
+  `LogFileWriter.AttachAsync(IFileSystemService)` once the IndexedDB bootstrap
+  and `FileSystemSeeder` are finished. If the file system never becomes
+  available, entries remain visible in the memory buffer (section 5)
+  for the startup error screen.
+- **No recursion:** a log write failure is never logged
+  to a file. It is noted only once in the memory buffer, with the
+  `logging` category.
+- The cost of an append stays bounded: deduplicated block storage only rewrites
+  the last 256 KiB block, and a file never exceeds 1 MiB.
 
-### 5. Branchements
+### 5. Wiring
 
-| Producteur | Avant | Après |
+| Producer | Before | After |
 |---|---|---|
-| `ILogger<T>` (`HackerOsDiagnosticLoggerProvider`) | sink en mémoire + `IPersistentDiagnosticRepository` | `LogFileWriter` → `syslog`, plus le tampon mémoire |
-| `IAppLoggingGateway.Log` (`AppLoggingGateway`) | même sink | `LogFileWriter` → `apps/<appId>.log`, plus le tampon mémoire |
-| `IAuditLog.Record` | `BoundedAuditLog` + `IndexedDbAuditRepository` | nouvelle implémentation `FileAuditLog` → `auth.log` ; `IAuditLog.Entries` reste servi par un tampon mémoire de 512 entrées |
+| `ILogger<T>` (`HackerOsDiagnosticLoggerProvider`) | in-memory sink + `IPersistentDiagnosticRepository` | `LogFileWriter` → `syslog`, plus the memory buffer |
+| `IAppLoggingGateway.Log` (`AppLoggingGateway`) | same sink | `LogFileWriter` → `apps/<appId>.log`, plus the memory buffer |
+| `IAuditLog.Record` | `BoundedAuditLog` + `IndexedDbAuditRepository` | new implementation `FileAuditLog` → `auth.log`; `IAuditLog.Entries` is still served by a 512-entry memory buffer |
 
-- `BoundedDiagnosticSink` et `EventPublishingDiagnosticSink` restent comme
-  **tampon mémoire** des entrées récentes (événement `DiagnosticEntryRecordedEvent`
-  pour l'affichage en direct). Ce n'est plus une source de vérité.
+- `BoundedDiagnosticSink` and `EventPublishingDiagnosticSink` remain as the
+  **memory buffer** of recent entries (`DiagnosticEntryRecordedEvent` event
+  for live display). It is no longer a source of truth.
 - `IPersistentDiagnosticRepository`, `IndexedDbDiagnosticRepository`,
-  `IPersistentAuditRepository` et `IndexedDbAuditRepository` ne sont plus
-  branchés dans la composition. Leurs magasins IndexedDB ne sont ni supprimés ni
-  migrés, et **la version de schéma IndexedDB ne change pas** (voir
-  [`old/common-pitfalls.md`](../old/common-pitfalls.md)). Les anciennes entrées
-  ne sont pas copiées : ce sont des diagnostics éphémères.
-- `IAppDiagnosticsGateway` (`Entries`, `Clear`) est **retiré** du SDK, ainsi que
-  `IAppExecutionContext.Diagnostics`. Les capacités `diagnostics.read` et
-  `diagnostics.clear` ne sont plus évaluées. Elles restent dans le catalogue
-  jusqu'à l'ADR de phase 2 sur les permissions.
-- Les deux hôtes (`OS/HackerOs.Ecosystem` et `test/test`) passent par
-  `EcosystemServiceCollectionExtensions`. Le serveur (ADR 0036) garde sa propre
-  composition, qui n'est pas modifiée.
+  `IPersistentAuditRepository` and `IndexedDbAuditRepository` are no longer
+  wired into the composition. Their IndexedDB stores are neither deleted nor
+  migrated, and **the IndexedDB schema version does not change** (see
+  [`old/common-pitfalls.md`](../old/common-pitfalls.md)). Old entries
+  are not copied: they are ephemeral diagnostics.
+- `IAppDiagnosticsGateway` (`Entries`, `Clear`) is **removed** from the SDK, as is
+  `IAppExecutionContext.Diagnostics`. The `diagnostics.read` and
+  `diagnostics.clear` capabilities are no longer evaluated. They remain in the catalog
+  until the phase 2 ADR on permissions.
+- Both hosts (`OS/HackerOs.Ecosystem` and `test/test`) go through
+  `EcosystemServiceCollectionExtensions`. The server (ADR 0036) keeps its own
+  composition, which is not modified.
 
-### 6. Lecteurs
+### 6. Readers
 
-- **Error Log Viewer** (`Apps/System/HackerOs.Apps.ErrorLogViewer`) lit
-  `/var/log/syslog` et `/var/log/apps/*.log` (et leurs archives `.1` à `.5` à la
-  demande) avec `HackFile`, analyse les lignes avec `LogLineFormat.TryParse` et
-  suit les nouveautés avec `HackFileSystemWatcher`. « Effacer » devient
-  « tronquer le fichier », ce qui demande le droit d'écrire dans `/var/log`
-  (`sudo` ou approbation, ADR 0042).
-- `cat`, `tail`, `grep` et `less` lisent ces fichiers comme n'importe quel autre.
+- **Error Log Viewer** (`Apps/System/HackerOs.Apps.ErrorLogViewer`) reads
+  `/var/log/syslog` and `/var/log/apps/*.log` (and their `.1` to `.5` archives on
+  demand) with `HackFile`, parses lines with `LogLineFormat.TryParse` and
+  follows new entries with `HackFileSystemWatcher`. "Clear" becomes
+  "truncate the file", which requires the right to write to `/var/log`
+  (`sudo` or approval, ADR 0042).
+- `cat`, `tail`, `grep` and `less` read these files like any other.
 
-## Conséquences
+## Consequences
 
-- `tail /var/log/syslog` et `grep ERROR /var/log/apps/*.log` fonctionnent dans le
+- `tail /var/log/syslog` and `grep ERROR /var/log/apps/*.log` work in the
   terminal.
-- Un journal occupe au plus 6 Mio par fichier (l'actif plus 5 archives).
-- Les journaux arrivent jusqu'à environ 1 s après l'événement. Un arrêt brutal
-  de l'onglet peut perdre la dernière seconde. C'est accepté, puisque le tampon
-  mémoire reste visible tant que l'onglet vit.
-- `auth.log` en `0600` réserve l'audit à l'administrateur, comme sous Linux.
-- Les tests d'Error Log Viewer et des diagnostics qui utilisaient
-  `IAppDiagnosticsGateway` sont réécrits sur des fichiers.
+- A log occupies at most 6 MiB per file (the active one plus 5 archives).
+- Logs arrive up to about 1 s after the event. An abrupt tab shutdown
+  can lose the last second. This is accepted, since the memory buffer
+  remains visible as long as the tab lives.
+- `auth.log` at `0600` reserves the audit for the administrator, as on Linux.
+- The tests of Error Log Viewer and of diagnostics that used
+  `IAppDiagnosticsGateway` are rewritten on files.
 
-## Références
+## References
 
-- ADR 0012 : processus et horloge (`ISimulationClock`).
-- ADR 0042 : `sudo` et audit `session.elevate`.
-- ADR 0043 : API `Hack*`.
-- ADR 0044 : avertissements de paramètres invalides.
-- [`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md), sections 5.3 et 11.
+- ADR 0012: process and clock (`ISimulationClock`).
+- ADR 0042: `sudo` and `session.elevate` audit.
+- ADR 0043: `Hack*` API.
+- ADR 0044: invalid settings warnings.
+- [`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md), sections 5.3 and 11.
 - `Platform/HackerOs.Platform.Core/Diagnostics/`, `Shared/HackerOs.Simulation.Abstractions/Diagnostics/DiagnosticsContracts.cs`.

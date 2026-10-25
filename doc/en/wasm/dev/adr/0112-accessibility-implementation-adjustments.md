@@ -1,60 +1,60 @@
-# ADR 0112 : ajustements de la mise en œuvre de l'accessibilité
+# ADR 0112: implementation adjustments for accessibility
 
-## Statut
+## Status
 
-Accepté le 2026-10-17 (chantier `v3/13-accessibility`).
+Accepted on 2026-10-17 (work item `v3/13-accessibility`).
 
-- **Complète :** [ADR 0105](0105-accessibility-preferences.md). Précise ses §1, §2, §3 et §4 ;
-  ne change aucune de ses décisions.
-- Numéro : `0112`, réservé pour ce chantier.
+- **Complements:** [ADR 0105](0105-accessibility-preferences.md). Clarifies its §1, §2, §3 and §4;
+  changes none of its decisions.
+- Number: `0112`, reserved for this work item.
 
-## Contexte
+## Context
 
-La mise en œuvre de l'ADR 0105 a rencontré six points que l'ADR ne tranche pas.
+The implementation of ADR 0105 ran into six points that the ADR does not settle.
 
-## Décision
+## Decision
 
-1. **Taille du texte par la police racine.** `ThemeScope` est un élément `display: contents`
-   au milieu de la page, alors qu'une taille en `rem` se mesure sur `<html>`. `themes.css`
-   règle donc la police de la racine avec `:root:has(.theme-scope[data-text-scale="200"])`
-   (`font-size: 200%`), sans JavaScript. Les 164 tailles de texte en `px` des feuilles de la
-   plateforme, des apps système et des bibliothèques du SDK sont passées en `rem` (valeur ÷ 16,
-   identique à 100 %). Les cadres, bordures et marges en `px` ne bougent pas : seul le texte
-   grandit. Les exemples (`Apps/Samples`) et les pages web gardent leurs tailles.
-   `--hos-text-scale` (1 à 2) reste exposé pour les composants qui dimensionnent par script.
-2. **Contraste élevé `!important`, aperçus compris.** Les jetons d'un thème utilisateur sont
-   posés en style en ligne sur la racine du thème (ADR 0103) ; seule une déclaration
-   `!important` d'une feuille passe devant. La couche s'applique aussi aux éléments
-   `[data-theme]` imbriqués (aperçus de Paramètres, Theme Editor) : en contraste élevé, les
-   aperçus montrent la couche, comme sous le contraste élevé de Windows.
-3. **Mouvement réduit au-delà des jetons.** `data-motion="reduced"` mettait déjà les jetons de
-   transition à 0. Des composants déclarent des durées en dur (animation « occupé » de Hack
-   Paint, ouverture de fenêtre) : une règle globale les ramène à 0,01 ms, ce qui garde les
-   événements `animationend`/`transitionend` dont du code dépend. `ThemeScope` reçoit
-   `AnimationsEnabled = !ReducedMotion` : `animationsEnabled = false` et `reducedMotion = on`
-   donnent le même rendu.
-4. **Paramètres écrit la couche utilisateur seulement.** La page Accessibilité écrit
-   `~/.config/hackeros/accessibility.config`. Le défaut de la machine (`/etc`, aussi lu par
-   l'écran de connexion) s'édite avec `sudo nano`, comme `/etc/locale.conf` pour la langue.
-   « Réduire les animations » y est un choix à trois valeurs (Auto, Activé, Désactivé) comme le
-   contraste. Choisir Auto ou Désactivé remet aussi `animationsEnabled = true` dans la couche
-   utilisateur d'`appearance.config`, sinon l'ancien interrupteur garderait les animations
-   coupées ; un verrou de l'administrateur reste, et la page le signale.
-5. **Préférences de l'hôte par requêtes média.** `auto` suit `prefers-contrast: more`,
-   `forced-colors: active` et `prefers-reduced-motion: reduce`, lus par un petit module
-   (`hostAccessibilityProbe.js`, Platform.Blazor) qui ne décide rien ; la résolution est en C#
-   (`AccessibilitySettingsDocuments.Resolve`). Un hôte sans navigateur répond « rien demandé ».
-6. **Processus sans interface.** `IAppExecutionContext.Accessibility` a un membre par défaut
-   qui répond les valeurs par défaut (`DefaultAppAccessibilityGateway`). Un processus d'un Web
-   Worker (ADR 0070) n'a pas de service et le reçoit : il ne dessine rien. Lire les préférences
-   ne demande aucune capacité.
+1. **Text size through the root font.** `ThemeScope` is a `display: contents` element
+   in the middle of the page, whereas a `rem` size is measured on `<html>`. `themes.css`
+   therefore sets the root font with `:root:has(.theme-scope[data-text-scale="200"])`
+   (`font-size: 200%`), without JavaScript. The 164 text sizes in `px` of the stylesheets of the
+   platform, the system apps and the SDK libraries were converted to `rem` (value ÷ 16,
+   identical at 100%). Frames, borders and margins in `px` do not change: only text
+   grows. The samples (`Apps/Samples`) and web pages keep their sizes.
+   `--hos-text-scale` (1 to 2) remains exposed for components that size things by script.
+2. **High contrast `!important`, previews included.** The tokens of a user theme are
+   set as an inline style on the theme root (ADR 0103); only an `!important`
+   declaration from a stylesheet takes precedence. The layer also applies to nested
+   `[data-theme]` elements (Settings previews, Theme Editor): in high contrast, the
+   previews show the layer, as under Windows high contrast.
+3. **Reduced motion beyond tokens.** `data-motion="reduced"` already set the transition tokens to 0.
+   Some components declare hard-coded durations ("busy" animation of Hack
+   Paint, window opening): a global rule brings them down to 0.01 ms, which keeps the
+   `animationend`/`transitionend` events that some code depends on. `ThemeScope` receives
+   `AnimationsEnabled = !ReducedMotion`: `animationsEnabled = false` and `reducedMotion = on`
+   give the same rendering.
+4. **Settings writes the user layer only.** The Accessibility page writes
+   `~/.config/hackeros/accessibility.config`. The machine default (`/etc`, also read by
+   the login screen) is edited with `sudo nano`, like `/etc/locale.conf` for the language.
+   "Reduce animations" there is a three-value choice (Auto, On, Off) like
+   contrast. Choosing Auto or Off also sets `animationsEnabled = true` again in the user
+   layer of `appearance.config`, otherwise the old switch would keep animations
+   off; an administrator lock remains, and the page reports it.
+5. **Host preferences through media queries.** `auto` follows `prefers-contrast: more`,
+   `forced-colors: active` and `prefers-reduced-motion: reduce`, read by a small module
+   (`hostAccessibilityProbe.js`, Platform.Blazor) that decides nothing; the resolution is in C#
+   (`AccessibilitySettingsDocuments.Resolve`). A host without a browser answers "nothing requested".
+6. **Processes without an interface.** `IAppExecutionContext.Accessibility` has a default
+   member that answers the default values (`DefaultAppAccessibilityGateway`). A Web
+   Worker process (ADR 0070) has no service and receives it: it draws nothing. Reading the preferences
+   requires no capability.
 
-## Conséquences
+## Consequences
 
-- Une app qui dessine elle-même lit `HackAccessibility`. Le Terminal (xterm.js), le Code Editor
-  (Monaco) et Hack Paint le font ; leurs paquets JavaScript sont reconstruits (`npm run build`),
-  les sorties restent identiques à la source.
-- Un composant qui écrit une taille de texte en `px` ne suit plus la taille du texte : les
-  nouvelles feuilles utilisent `rem`.
-- Les tests de l'ADR 0105 §4 sont dans `AccessibilityPreferencesTests` (UI.E2E) ; voir
+- An app that draws by itself reads `HackAccessibility`. The Terminal (xterm.js), the Code Editor
+  (Monaco) and Hack Paint do so; their JavaScript bundles are rebuilt (`npm run build`),
+  the outputs remain identical to the source.
+- A component that writes a text size in `px` no longer follows the text size: the
+  new stylesheets use `rem`.
+- The tests of ADR 0105 §4 are in `AccessibilityPreferencesTests` (UI.E2E); see
   [`accessibility.md`](../accessibility.md).

@@ -1,85 +1,85 @@
-# ADR 0071 : toujours un worker prêt pour la prochaine demande
+# ADR 0071: always a worker ready for the next request
 
-## Statut
+## Status
 
-Accepté le 2026-10-16.
+Accepted on 2026-10-16.
 
-- **Phase du plan :** phase 5 — exécution des apps
+- **Plan phase:** phase 5: app execution
   ([`execution-isolation-plan.md`](../plans/execution-isolation-plan.md)).
-- **Complète :** ADR 0070. Remplace ses sections 2 (moment du démarrage du pool)
-  et 3 (réserve réservée aux processus dédiés) sur les points ci-dessous ; le
-  reste de l'ADR 0070 est inchangé.
+- **Completes:** ADR 0070. Supersedes its sections 2 (when the pool starts)
+  and 3 (spare reserved for dedicated processes) on the points below; the
+  rest of ADR 0070 is unchanged.
 
-## Contexte
+## Context
 
-L'ADR 0070 démarre le pool au boot et garde une réserve pour les seuls processus
-dédiés. Deux cas laissent encore une demande attendre un démarrage à froid (0,5
-à 2 s) :
+ADR 0070 starts the pool at boot and keeps a spare for dedicated processes
+only. Two cases still make a request wait for a cold start (0.5
+to 2 s):
 
-- tous les workers du pool sont occupés, par exemple l'un d'eux est bloqué par
-  une boucle : une nouvelle commande attendrait derrière lui ;
-- la réserve vient d'être prise par un service, et une deuxième demande arrive
-  avant qu'elle soit remplacée.
+- all pool workers are busy, for example one of them is blocked by
+  a loop: a new command would wait behind it;
+- the spare has just been taken by a service, and a second request arrives
+  before it is replaced.
 
-Benoit veut qu'**il y ait toujours un worker disponible pour la prochaine
-demande**, une fois le système démarré.
+Benoit wants **there to always be a worker available for the next
+request**, once the system has started.
 
-## Décision
+## Decision
 
 ### 1. Invariant
 
-Une fois le système démarré, l'OS garde **au moins un worker prêt** : runtime
-chargé, assemblies du SDK chargées, aucun processus. Chaque fois qu'un worker
-prêt est pris, l'OS en lance un autre en arrière-plan, tout de suite.
+Once the system has started, the OS keeps **at least one ready worker**: runtime
+loaded, SDK assemblies loaded, no process. Each time a ready worker
+is taken, the OS immediately launches another one in the background.
 
-### 2. « Système démarré »
+### 2. "System started"
 
-Le démarrage des workers ne doit pas ralentir le boot. Le premier worker prêt
-est lancé quand la session est ouverte, le bureau affiché et les apps de
-démarrage lancées (signal de fin de boot de `EcosystemBootCoordinator`), puis
-dès que le navigateur est inactif (`requestIdleCallback`, avec un délai maximal
-de 2 s). Le pool de l'ADR 0070 §2 démarre au même moment, worker par worker,
-derrière le premier worker prêt.
+Starting the workers must not slow down the boot. The first ready worker
+is launched when the session is open, the desktop displayed and the startup apps
+launched (end-of-boot signal of `EcosystemBootCoordinator`), then
+as soon as the browser is idle (`requestIdleCallback`, with a maximum delay
+of 2 s). The pool of ADR 0070 §2 starts at the same time, worker by worker,
+behind the first ready worker.
 
-Avant ce signal, une demande qui a besoin d'un worker en démarre un elle-même
-et l'attend.
+Before this signal, a request that needs a worker starts one itself
+and waits for it.
 
-### 3. Qui prend le worker prêt
+### 3. Who takes the ready worker
 
-- un processus `Dedicated` (ADR 0070 §3) ;
-- une commande ou un pipeline quand **aucun worker du pool n'est libre**
-  (aucun n'a son thread disponible : il exécute une tranche, ou il est « Not
-  responding »). Le worker prêt rejoint alors le pool pour la durée de ce
-  processus : le pool déborde au-delà du nombre de cœurs virtuels, comme une
-  machine qui ajoute des threads matériels sous charge, et revient à sa taille
-  quand le worker en trop est resté vide 30 s ;
-- un worker du pool terminé pendant une escalade (ADR 0069 §3, étape 4) : le
-  worker prêt le remplace immédiatement.
+- a `Dedicated` process (ADR 0070 §3);
+- a command or pipeline when **no pool worker is free**
+  (none has its thread available: it is running a slice, or it is "Not
+  responding"). The ready worker then joins the pool for the duration of that
+  process: the pool overflows beyond the number of virtual cores, like a
+  machine that adds hardware threads under load, and returns to its size
+  when the extra worker has stayed empty for 30 s;
+- a pool worker terminated during an escalation (ADR 0069 §3, step 4): the
+  ready worker replaces it immediately.
 
-### 4. Plafond
+### 4. Ceiling
 
-Le nombre total de workers est plafonné à `navigator.hardwareConcurrency` (au
-moins 2). Au plafond, l'invariant est suspendu : une nouvelle demande attend
-qu'un worker se libère, et le journal `/var/log/syslog` le note une fois
-(« worker pool saturated »). L'invariant reprend dès qu'un worker se libère.
+The total number of workers is capped at `navigator.hardwareConcurrency` (at
+least 2). At the ceiling, the invariant is suspended: a new request waits
+for a worker to become free, and the `/var/log/syslog` log notes it once
+("worker pool saturated"). The invariant resumes as soon as a worker becomes free.
 
-### 5. Visibilité
+### 5. Visibility
 
-- `/proc/hackeros/workers` (nouveau, lecture seule) liste chaque worker : rôle
-  (`pool`, `dedicated`, `ready`), état, processus hébergés, mémoire du runtime ;
-- le gestionnaire de tâches affiche les workers dans l'onglet Performance, avec
-  les cœurs.
+- `/proc/hackeros/workers` (new, read-only) lists each worker: role
+  (`pool`, `dedicated`, `ready`), state, hosted processes, runtime memory;
+- the task manager displays the workers in the Performance tab, along with
+  the cores.
 
-## Conséquences
+## Consequences
 
-- Une demande après le boot ne paie jamais un démarrage à froid, sauf au plafond.
-- Le coût mémoire de base devient « pool + 1 worker », soit environ
-  (`CpuCapacity` + 1) × 15 à 40 Mo.
-- Les tests du chantier `5-worker-processes` couvrent l'invariant (prise,
-  remplacement, débordement, retour à la taille, plafond, demande avant la fin
-  du boot).
+- A request after boot never pays a cold start, except at the ceiling.
+- The base memory cost becomes "pool + 1 worker", i.e. about
+  (`CpuCapacity` + 1) × 15 to 40 MB.
+- The tests of the `5-worker-processes` work item cover the invariant (taking,
+  replacement, overflow, return to size, ceiling, request before the end
+  of boot).
 
-## Références
+## References
 
 - [`execution-isolation-plan.md`](../plans/execution-isolation-plan.md)
 - `OS/HackerOs.Ecosystem/EcosystemBootCoordinator.cs`.

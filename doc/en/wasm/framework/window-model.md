@@ -1,48 +1,48 @@
-# Modèle de fenêtre : événements, tailles déclarées et clavier
+# Window model: events, declared sizes and keyboard
 
-Chantier `v3/3-window-model` du [plan de fin de migration wasm v3](../dev/plans/wasm-v3-completion-plan.md),
-mise en œuvre de l'[ADR 0095](../dev/adr/0095-window-events-sizes-and-keyboard.md).
+Work item `v3/3-window-model` of the [wasm v3 migration completion plan](../dev/plans/wasm-v3-completion-plan.md),
+implementation of [ADR 0095](../dev/adr/0095-window-events-sizes-and-keyboard.md).
 
-## Objet
+## Purpose
 
-- Une app fenêtrée apprend ce qui arrive à sa fenêtre : elle gagne ou perd le focus, elle est
-  réduite, agrandie ou restaurée, elle change de taille.
-- Une app fenêtrée déclare la taille de sa fenêtre (initiale, minimale, maximale, redimensionnable)
-  dans sa classe `AppDefinition` au lieu du 800×560 / 360×240 codé en dur.
-- Le gestionnaire de fenêtres se pilote au clavier comme un bureau Linux : changer de fenêtre,
-  fermer, menu de fenêtre, déplacer et redimensionner au clavier, réduire, agrandir, ancrer à
-  gauche ou à droite, plein écran.
-- Une app fenêtrée écrit le titre de sa fenêtre (`document — App`), affiché par le gestionnaire de
-  fenêtres (ADR 0117, §4).
+- A windowed app learns what happens to its window: it gains or loses focus, it is
+  minimized, maximized or restored, it changes size.
+- A windowed app declares its window size (initial, minimum, maximum, resizable)
+  in its `AppDefinition` class instead of the hard-coded 800×560 / 360×240.
+- The window manager is driven from the keyboard like a Linux desktop: switch window,
+  close, window menu, move and resize with the keyboard, minimize, maximize, snap to
+  the left or right, full screen.
+- A windowed app writes its window title (`document — App`), displayed by the window
+  manager (ADR 0117, §4).
 
-## 1. Événements de fenêtre (ADR 0095 §1)
+## 1. Window events (ADR 0095 §1)
 
-### Pour l'app
+### For the app
 
-`WindowAppBase` (SDK Blazor) expose :
+`WindowAppBase` (Blazor SDK) exposes:
 
-| Membre | Rôle |
+| Member | Role |
 | --- | --- |
-| `OnWindowActivated[Async]()` | La fenêtre reçoit le focus. |
-| `OnWindowDeactivated[Async]()` | La fenêtre perd le focus (autre fenêtre, réduction, plus aucune fenêtre au premier plan). |
-| `OnWindowStateChanged[Async](previous, current)` | `HackWindowState` : `Normal`, `Minimized`, `Maximized`. |
-| `OnWindowResized[Async](HackWindowSize size)` | Taille de la zone client (sans la barre de titre), en pixels CSS, **une seule fois à la fin** d'un redimensionnement (geste à la souris, clavier, agrandissement, restauration, changement de la zone de travail). |
-| `IsWindowActive`, `WindowState`, `WindowSize` | Dernier état connu, à lire dans le rendu. |
-| `TrackDisplaySurface(IDisplaySurface)` | Fait suivre une fenêtre détachée (ADR 0078/0081) : son focus, sa perte de focus et sa taille déclenchent les mêmes crochets. `HackWindowSize.DisplaySurfaceId` indique alors la surface. Le résultat se libère quand la surface est rattachée. |
+| `OnWindowActivated[Async]()` | The window receives focus. |
+| `OnWindowDeactivated[Async]()` | The window loses focus (another window, minimizing, no window left in the foreground). |
+| `OnWindowStateChanged[Async](previous, current)` | `HackWindowState`: `Normal`, `Minimized`, `Maximized`. |
+| `OnWindowResized[Async](HackWindowSize size)` | Size of the client area (without the title bar), in CSS pixels, **only once at the end** of a resize (mouse gesture, keyboard, maximizing, restoring, change of the work area). |
+| `IsWindowActive`, `WindowState`, `WindowSize` | Last known state, to be read in rendering. |
+| `TrackDisplaySurface(IDisplaySurface)` | Makes a detached window followed (ADR 0078/0081): its focus, loss of focus and size trigger the same hooks. `HackWindowSize.DisplaySurfaceId` then indicates the surface. The result is released when the surface is reattached. |
 
-Ordre garanti :
+Guaranteed order:
 
-- les crochets d'une fenêtre passent dans une file à elle, un à la fois, dans l'ordre des faits ;
-- un changement d'état précède le redimensionnement qu'il provoque (agrandir donne
-  `OnWindowStateChanged(Normal, Maximized)` puis `OnWindowResized`) ;
-- quand l'app est rendue dans une fenêtre déjà agrandie ou déjà au premier plan, elle reçoit
-  `OnWindowStateChanged(Normal, état actuel)` puis `OnWindowActivated` ;
-- la version synchrone est appelée avant la version `Async`, sur le répartiteur du composant, dans
-  le contexte ambiant de l'app (les façades `Hack*` marchent) ; un nouveau rendu suit.
+- a window's hooks go through a queue of its own, one at a time, in the order of the facts;
+- a state change precedes the resize it causes (maximizing gives
+  `OnWindowStateChanged(Normal, Maximized)` then `OnWindowResized`);
+- when the app is rendered in a window that is already maximized or already in the foreground, it receives
+  `OnWindowStateChanged(Normal, current state)` then `OnWindowActivated`;
+- the synchronous version is called before the `Async` version, on the component's dispatcher, in
+  the app's ambient context (the `Hack*` facades work); a new render follows.
 
-Un crochet qui lève une exception est écrit dans le journal de l'app
-(`/var/log/apps/<appId>.log`, niveau `Error`, préfixe `window:`) ; la transition de la fenêtre a
-déjà eu lieu et continue.
+A hook that throws an exception is written to the app's log
+(`/var/log/apps/<appId>.log`, level `Error`, prefix `window:`); the window's transition
+has already happened and continues.
 
 ```razor
 @inherits WindowAppBase
@@ -57,46 +57,46 @@ déjà eu lieu et continue.
 
 ### Architecture
 
-- `WindowRuntime` (Windowing.Core) produit déjà des faits (`WindowFocusedEvent`,
-  `WindowVisualStateChangedEvent`, `WindowViewportChangedEvent`, `WindowClosedEvent`). Il publie
-  maintenant chaque lot par l'événement `EventsApplied`, avant `StateChanged`.
-- Nouveau fait : `CompleteWindowResizeCommand` → `WindowResizeCompletedEvent(id, bounds)`. Le
-  chrome (`WindowChrome.razor.js`) l'envoie quand un geste de redimensionnement se termine ; le
-  clavier l'envoie quand on valide un redimensionnement.
-- `WindowAppEventDispatcher` (Platform.Blazor, un par session) traduit ces faits en appels de
-  `IWindowAppEventTarget` (interface du SDK, implémentée par `WindowAppBase`). `WindowAppRenderer`
-  y inscrit le composant de l'app. La taille est mesurée dans le navigateur
-  (`IWindowClientAreaProbe`, `windowClientArea.js`, deux images après le rendu) ; à défaut, elle
-  est estimée depuis la taille de la fenêtre moins le chrome.
-- `DesktopShell` et `MobileShell` passent le répartiteur à `WindowAppRenderer`. Sur mobile, les
-  fenêtres sont plein écran : les crochets d'activation et d'état restent valables.
+- `WindowRuntime` (Windowing.Core) already produces facts (`WindowFocusedEvent`,
+  `WindowVisualStateChangedEvent`, `WindowViewportChangedEvent`, `WindowClosedEvent`). It
+  now publishes each batch through the `EventsApplied` event, before `StateChanged`.
+- New fact: `CompleteWindowResizeCommand` → `WindowResizeCompletedEvent(id, bounds)`. The
+  chrome (`WindowChrome.razor.js`) sends it when a resize gesture ends; the
+  keyboard sends it when a resize is confirmed.
+- `WindowAppEventDispatcher` (Platform.Blazor, one per session) translates these facts into calls on
+  `IWindowAppEventTarget` (SDK interface, implemented by `WindowAppBase`). `WindowAppRenderer`
+  registers the app's component there. The size is measured in the browser
+  (`IWindowClientAreaProbe`, `windowClientArea.js`, two frames after rendering); failing that, it
+  is estimated from the window size minus the chrome.
+- `DesktopShell` and `MobileShell` pass the dispatcher to `WindowAppRenderer`. On mobile,
+  windows are full screen: the activation and state hooks remain valid.
 
-## 2. Tailles déclarées (ADR 0095 §2)
+## 2. Declared sizes (ADR 0095 §2)
 
-### Gestes au pointeur (ADR 0163)
+### Pointer gestures (ADR 0163)
 
-Les attributs `data-window-x/y/width/height` utilisent la culture invariante,
-même quand le bureau est en français. Le déplacement donne le focus au début,
-projette une translation CSS locale pendant le geste et transmet un seul delta
-final à C# au relâchement. Le runtime applique alors ses contraintes ; la position
-n'est jamais enregistrée sur disque (ADR 0122). Le redimensionnement garde les
-contraintes C# en direct, avec un échantillon en cours et le plus récent en attente
-au lieu d'une file par mouvement. La capture perdue ou annulée termine le geste
-sur le dernier delta valide ; retirer le composant libère les écouteurs et la capture.
+The `data-window-x/y/width/height` attributes use the invariant culture,
+even when the desktop is in French. Moving gives focus at the start,
+projects a local CSS translation during the gesture and sends a single final delta
+to C# on release. The runtime then applies its constraints; the position
+is never saved to disk (ADR 0122). Resizing keeps the C# constraints live,
+with one sample in progress and the most recent one pending
+instead of a queue per movement. A lost or canceled capture ends the gesture
+on the last valid delta; removing the component releases the listeners and the capture.
 
-Cette projection temporaire amende l'ADR 0009 sans déplacer l'état du runtime
-en JavaScript : voir l'[ADR 0163](../dev/adr/0163-window-pointer-preview-and-invariant-coordinates.md).
+This temporary projection amends ADR 0009 without moving the runtime state
+into JavaScript: see [ADR 0163](../dev/adr/0163-window-pointer-preview-and-invariant-coordinates.md).
 
-Au relâchement, l'aperçu vise une destination absolue et sa translation soustrait
-la position CSS courante du cadre. Ainsi, un rendu de la nouvelle position avant
-le retour de l'interop ne peut pas additionner deux fois le déplacement.
-`ReportGestureCompletedAsync("move")`, appelé après le retour de la commande,
-projette la position C# courante (contraintes comprises) et retire l'aperçu dans
-une même tâche JavaScript (`completeWindowMove`). Cela couvre aussi un retour
-interop précédant la projection `WindowHost.OnAfterRenderAsync`, sans image à
-l'ancienne position. Aucun mouvement supplémentaire ni écriture disque n'est émis.
+On release, the preview targets an absolute destination and its translation subtracts
+the frame's current CSS position. Thus, a render of the new position before
+the interop returns cannot add the move twice.
+`ReportGestureCompletedAsync("move")`, called after the command returns,
+projects the current C# position (constraints included) and removes the preview in
+a single JavaScript task (`completeWindowMove`). This also covers an interop
+return that precedes the `WindowHost.OnAfterRenderAsync` projection, with no frame at the
+old position. No additional movement or disk write is emitted.
 
-### Déclaration par l'app
+### Declaration by the app
 
 ```csharp
 public override WindowOptions? Window => new()
@@ -108,45 +108,45 @@ public override WindowOptions? Window => new()
 };
 ```
 
-- `WindowOptions` (App.Abstractions) : tailles extérieures (barre de titre comprise) en pixels
-  CSS. Sans déclaration : `WindowOptions.Default`, 800×560 et minimum 360×240, comme avant.
-- Manifeste : objet facultatif `window` (`defaultWidth`, `defaultHeight`, `minWidth`, `minHeight`,
-  `maxWidth`, `maxHeight`, `resizable`), produit par le générateur et absent si l'app ne déclare
-  rien. Un champ omis prend sa valeur par défaut. Le schéma `manifest.schema.v1.json` interdit
-  `window` hors des apps de genre `window`.
-- Codes du validateur :
+- `WindowOptions` (App.Abstractions): outer sizes (title bar included) in CSS
+  pixels. Without a declaration: `WindowOptions.Default`, 800×560 and minimum 360×240, as before.
+- Manifest: optional `window` object (`defaultWidth`, `defaultHeight`, `minWidth`, `minHeight`,
+  `maxWidth`, `maxHeight`, `resizable`), produced by the generator and absent if the app declares
+  nothing. An omitted field takes its default value. The `manifest.schema.v1.json` schema forbids
+  `window` outside apps of the `window` kind.
+- Validator codes:
 
-| Code | Règle |
+| Code | Rule |
 | --- | --- |
-| `manifest.window.forbidden` | `window` sur une app qui n'est pas de genre `window`. |
-| `manifest.window.size.invalid` | Une taille nulle ou négative. |
-| `manifest.window.minimum.exceedsDefault` | Minimum plus grand que la taille initiale. |
-| `manifest.window.default.exceedsMaximum` | Taille initiale plus grande que le maximum. |
+| `manifest.window.forbidden` | `window` on an app that is not of the `window` kind. |
+| `manifest.window.size.invalid` | A zero or negative size. |
+| `manifest.window.minimum.exceedsDefault` | Minimum larger than the initial size. |
+| `manifest.window.default.exceedsMaximum` | Initial size larger than the maximum. |
 
-- Ouverture (`WindowLaunchCoordinator.InitialBounds`) : taille initiale réduite à la zone de
-  travail, mais jamais sous le minimum ; une fenêtre dont le minimum dépasse l'écran déborde,
-  comme sur un vrai petit écran (`WindowRuntime.Constrain` garde le minimum).
-- Agrandir ignore le maximum. `Resizable = false` : pas de poignées, pas de bouton Agrandir, et
-  les commandes clavier redimensionner, agrandir et ancrer ne font rien.
-- Taille retenue (ADR 0116 et 0122, [`window-geometry.md`](../dev/window-geometry.md)) : la taille et
-  l'état agrandi de chaque fenêtre d'app, pas sa position, sont écrits dans
-  `~/.local/state/hackeros/windows/<appId>.config` et relus par
-  `WindowLaunchCoordinator.PresentAsync`, qui corrige la taille pour l'écran et les tailles
-  déclarées du moment ; la fenêtre s'ouvre toujours à sa place de cascade (`InitialBounds`).
-  `WindowOptions.RememberGeometry = false` refuse.
-- Le shell mobile ignore ces tailles.
+- Opening (`WindowLaunchCoordinator.InitialBounds`): initial size reduced to the work
+  area, but never below the minimum; a window whose minimum exceeds the screen overflows,
+  as on a real small screen (`WindowRuntime.Constrain` keeps the minimum).
+- Maximizing ignores the maximum. `Resizable = false`: no handles, no Maximize button, and
+  the keyboard commands resize, maximize and snap do nothing.
+- Remembered size (ADR 0116 and 0122, [`window-geometry.md`](../dev/window-geometry.md)): the size and
+  maximized state of each app window, not its position, are written to
+  `~/.local/state/hackeros/windows/<appId>.config` and reread by
+  `WindowLaunchCoordinator.PresentAsync`, which corrects the size for the screen and the current
+  declared sizes; the window always opens at its cascade position (`InitialBounds`).
+  `WindowOptions.RememberGeometry = false` refuses.
+- The mobile shell ignores these sizes.
 
-## 3. Commandes clavier (ADR 0095 §3)
+## 3. Keyboard commands (ADR 0095 §3)
 
-### Fichier `keybindings.config`
+### `keybindings.config` file
 
-Lu par `WindowKeyboardCommands` avec les couches habituelles
-([`settings-files.md`](settings-files.md)) : `/etc/hackeros/keybindings.config` (écrit au
-premier démarrage, tout en commentaires), puis `~/.config/hackeros/keybindings.config`. Une
-modification du fichier s'applique tout de suite. Plusieurs combinaisons séparées par des virgules ;
-une valeur vide retire la touche.
+Read by `WindowKeyboardCommands` with the usual layers
+([`settings-files.md`](settings-files.md)): `/etc/hackeros/keybindings.config` (written at
+first startup, all commented out), then `~/.config/hackeros/keybindings.config`. A
+change to the file applies immediately. Several combinations separated by commas;
+an empty value removes the key.
 
-| Action (clé) | `[linux]` (sous verrouillage du clavier) | `[fallback]` (toujours) |
+| Action (key) | `[linux]` (under keyboard lock) | `[fallback]` (always) |
 | --- | --- | --- |
 | `switch-next` | `Alt+Tab` | `` Alt+` `` (`Alt+Backquote`) |
 | `switch-previous` | `Alt+Shift+Tab` | `Alt+Shift+Backquote` |
@@ -161,74 +161,74 @@ une valeur vide retire la touche.
 | `snap-left` / `snap-right` | `Super+Left` / `Super+Right` | `Alt+Shift+Left` / `Alt+Shift+Right` |
 | `toggle-fullscreen` | | `Alt+F11` |
 
-Les touches Linux ne sont actives que si le clavier est verrouillé (`navigator.keyboard.lock()`,
-appelé en plein écran) : sans cela, le système hôte les intercepte. Les touches de remplacement
-marchent dans un onglet ordinaire. Une combinaison du gestionnaire de fenêtres passe avant l'app
-qui a le focus. Une lettre est reconnue par sa touche physique quand Alt change le caractère
-(Option+Q sur macOS).
+The Linux keys are only active if the keyboard is locked (`navigator.keyboard.lock()`,
+called in full screen): otherwise, the host system intercepts them. The replacement keys
+work in an ordinary tab. A window manager combination takes precedence over the app
+that has focus. A letter is recognized by its physical key when Alt changes the character
+(Option+Q on macOS).
 
-### Comportement
+### Behavior
 
-- **Changer de fenêtre** : tant que Alt est tenu, un sélecteur liste les fenêtres (non réduites
-  d'abord, de la plus récente à la plus ancienne) et la sélection avance à chaque appui ; relâcher
-  Alt passe à la fenêtre choisie (restaurée si elle était réduite). Échap annule.
-- **Déplacer / redimensionner** : un bandeau indique le mode ; les flèches déplacent ou
-  redimensionnent de 10 px (1 px avec Ctrl), Entrée garde, Échap remet la fenêtre où elle était.
-- **Ancrer** : moitié gauche ou droite de la zone de travail.
-- **Menu de fenêtre** (ADR 0164) : `Alt+Space`/`Alt+F3` ou clic droit sur l'icône
-  de l'app dans la barre de titre. Un clic gauche sur l'icône active seulement la
-  fenêtre ; le reste de la barre de titre n'ouvre pas le menu. Il contient toutes les actions avec leur raccourci actif :
-  Agrandir/Restaurer, Réduire, Déplacer, Redimensionner, Ancrer à gauche/droite, Plein écran,
-  Fermer. Flèches, Entrée et Échap y fonctionnent.
-- **Fermer** suit le chemin du bouton Fermer (`IWindowCloseGuard` compris).
-- **Focus clavier** : la fenêtre qui devient la fenêtre active (sélecteur, fermeture de celle du
-  dessus, barre des tâches) reçoit aussi le focus clavier : le dernier contrôle qui l'avait dans
-  cette fenêtre, sinon son premier élément focalisable, sinon la fenêtre elle-même. Rien ne bouge
-  si le focus y est déjà (clic, app qui se focalise seule). `WindowHost` le fait au rendu
-  (`WindowHost.razor.js`, chantier `v3/13`).
+- **Switching windows**: as long as Alt is held, a switcher lists the windows (non-minimized
+  first, from most recent to oldest) and the selection advances on each press; releasing
+  Alt switches to the chosen window (restored if it was minimized). Esc cancels.
+- **Move / resize**: a banner indicates the mode; arrows move or
+  resize by 10 px (1 px with Ctrl), Enter keeps, Esc puts the window back where it was.
+- **Snap**: left or right half of the work area.
+- **Window menu** (ADR 0164): `Alt+Space`/`Alt+F3` or right click on the app
+  icon in the title bar. A left click on the icon only activates the
+  window; the rest of the title bar does not open the menu. It contains all actions with their active shortcut:
+  Maximize/Restore, Minimize, Move, Resize, Snap left/right, Full screen,
+  Close. Arrows, Enter and Esc work there.
+- **Close** follows the path of the Close button (`IWindowCloseGuard` included).
+- **Keyboard focus**: the window that becomes the active window (switcher, closing the one
+  on top, taskbar) also receives keyboard focus: the last control that had it in
+  that window, otherwise its first focusable element, otherwise the window itself. Nothing moves
+  if focus is already there (click, app that focuses itself). `WindowHost` does it on render
+  (`WindowHost.razor.js`, work item `v3/13`).
 
 ### Architecture
 
-- `WindowKeyBindingsSettingsDocuments`, `KeyChord`, `WindowKeyboardAction` (Platform.Core) :
-  schéma du document, analyse des combinaisons, contenu par défaut.
-- `WindowKeyboardCommands` (Platform.Blazor, un par session) : toutes les décisions (modes,
-  sélecteur, menu, déplacements) en C#, testées sans navigateur.
-- `WindowManagerOverlays` (`.razor`, `.razor.cs`, `.razor.css`, `.razor.js`) : dessine le
-  sélecteur, le bandeau et le menu. Son JS écoute `keydown` en phase de capture, reconnaît les
-  combinaisons envoyées par le C#, appelle le C# et bloque la touche ; il gère le plein écran et
-  le verrouillage du clavier.
+- `WindowKeyBindingsSettingsDocuments`, `KeyChord`, `WindowKeyboardAction` (Platform.Core):
+  document schema, combination parsing, default content.
+- `WindowKeyboardCommands` (Platform.Blazor, one per session): all decisions (modes,
+  switcher, menu, moves) in C#, tested without a browser.
+- `WindowManagerOverlays` (`.razor`, `.razor.cs`, `.razor.css`, `.razor.js`): draws the
+  switcher, the banner and the menu. Its JS listens to `keydown` in the capture phase, recognizes the
+  combinations sent by C#, calls C# and blocks the key; it handles full screen and
+  keyboard locking.
 
-## 4. Titre de fenêtre (ADR 0117, ADR 0123)
+## 4. Window title (ADR 0117, ADR 0123)
 
-### Icône de l'application (ADR 0164)
+### Application icon (ADR 0164)
 
-La première image déclarée dans `AppDefinition.Icons` devient l'icône de la
-fenêtre et de sa taskbar. Elle doit aussi figurer dans `Assets` et exister sous
-`wwwroot/` dans le projet de l'app. `WindowLaunchCoordinator` transforme son
-chemin relatif au paquet en URL `_content/<assembly>/<chemin>` (segments échappés),
-partagée par le chrome, la taskbar et le sélecteur. Les quatorze apps système
-fenêtrées fournissent chacune leur `icons/app.svg` ; le build calcule l'empreinte
-de l'asset. Sans déclaration, un symbole de fenêtre sert de repli.
+The first image declared in `AppDefinition.Icons` becomes the icon of the
+window and of its taskbar entry. It must also appear in `Assets` and exist under
+`wwwroot/` in the app's project. `WindowLaunchCoordinator` turns its
+package-relative path into a `_content/<assembly>/<path>` URL (segments escaped),
+shared by the chrome, the taskbar and the switcher. The fourteen windowed system
+apps each provide their `icons/app.svg`; the build computes the asset's
+fingerprint. Without a declaration, a window symbol serves as a fallback.
 
-Tous les thèmes de bureau affichent l'icône de titre sauf macOS, qui masque
-l'icône et son bouton contextuel avec `--hos-window-icon-display: none`.
-Le dock macOS garde les icônes d'apps. Le menu demeure accessible au clavier.
-Le choix Lucide du lanceur et des raccourcis reste indépendant des images du chrome.
-Voir l'[ADR 0164](../dev/adr/0164-app-icons-and-window-icon-context-menu.md).
+All desktop themes display the title icon except macOS, which hides
+the icon and its context button with `--hos-window-icon-display: none`.
+The macOS dock keeps the app icons. The menu remains accessible from the keyboard.
+The Lucide choice of the launcher and shortcuts remains independent of the chrome images.
+See [ADR 0164](../dev/adr/0164-app-icons-and-window-icon-context-menu.md).
 
-Chantier `v3.1/3-window-title` de la [série v3.1](../dev/plans/v3-1-series-plan.md).
+Work item `v3.1/3-window-title` of the [v3.1 series](../dev/plans/v3-1-series-plan.md).
 
-### Pour l'app
+### For the app
 
-L'app écrit **tout** son titre, comme un client X11 écrit `_NET_WM_NAME` ; le gestionnaire de
-fenêtres l'affiche tel quel dans la barre de titre, la barre des tâches, le sélecteur `` Alt+` ``,
-les récents du bureau mobile et le nom accessible du cadre (`aria-labelledby`).
+The app writes its **whole** title, as an X11 client writes `_NET_WM_NAME`; the window manager
+displays it as is in the title bar, the taskbar, the `` Alt+` `` switcher,
+the mobile desktop's recents and the frame's accessible name (`aria-labelledby`).
 
-| Membre de `WindowAppBase` | Rôle |
+| `WindowAppBase` member | Role |
 | --- | --- |
-| `WindowTitle` | Titre affiché ; le nom de l'app dans la langue du bureau tant que l'app n'a rien posé. |
-| `SetWindowTitleAsync(string? title, CancellationToken)` | Remplace le titre de **cette** fenêtre. `null`, vide ou blanc rend le nom de l'app. Aucune capacité. |
-| `FormatWindowTitle(string? document, bool modified = false)` | Compose la convention des apps de base : `document — App`, `*` en tête si `modified`, le nom seul sans document. |
+| `WindowTitle` | Displayed title; the app's name in the desktop language as long as the app has set nothing. |
+| `SetWindowTitleAsync(string? title, CancellationToken)` | Replaces the title of **this** window. `null`, empty or blank gives back the app name. No capability. |
+| `FormatWindowTitle(string? document, bool modified = false)` | Composes the base apps' convention: `document — App`, `*` in front if `modified`, the name alone without a document. |
 
 ```razor
 @inherits WindowAppBase
@@ -243,122 +243,122 @@ les récents du bureau mobile et le nom accessible du cadre (`aria-labelledby`).
 }
 ```
 
-- Le titre est nettoyé : caractères de contrôle retirés, espaces aux extrémités coupés, au plus
-  256 caractères (coupé avec `…`, jamais au milieu d'une paire de substitution).
-- Posé dans `OnAppInitialized[Async]`, il est affiché avec la fenêtre, sans clignotement.
-- Les fenêtres détachées suivies par `TrackDisplaySurface` prennent le même titre une fois que l'app
-  en a posé un.
-- Les fenêtres sensibles de l'OS (agent d'authentification, approbation d'une capacité dangereuse)
-  sont dessinées par l'OS, hors des fenêtres d'app, et ne prennent jamais un titre d'app ; la barre
-  des tâches montre l'icône de l'app propriétaire à côté du titre.
-- Une app sans interface (`Terminal`, `Service`) n'a pas cette API.
+- The title is cleaned: control characters removed, leading and trailing spaces trimmed, at most
+  256 characters (cut with `…`, never in the middle of a surrogate pair).
+- Set in `OnAppInitialized[Async]`, it is displayed with the window, without flicker.
+- Detached windows followed by `TrackDisplaySurface` take the same title once the app
+  has set one.
+- Sensitive OS windows (authentication agent, dangerous capability approval)
+  are drawn by the OS, outside app windows, and never take an app title; the taskbar
+  shows the owning app's icon next to the title.
+- An app without an interface (`Terminal`, `Service`) does not have this API.
 
 ### Architecture
 
-- `WindowRuntime.SetTitle(windowId, title)` (Windowing.Core) applique `SetWindowTitleCommand`,
-  nettoie le titre avec `WindowTitles.Sanitize` (Windowing.Abstractions) et publie
-  `WindowTitleChangedEvent` ; un titre inchangé ne produit rien. Les surfaces relisent
-  `WindowRuntimeState.Title` à chaque `StateChanged`.
-- `AppWindowGatewayFactory` (Platform.Blazor, enregistrée par `AddHackerOsEcosystem`) crée une
-  `IAppWindowGateway` par fenêtre, liée à son `WindowId`. `WindowAppRenderer` la reçoit
-  (`WindowGateways`, passé par `DesktopShell` et `MobileShell`) et la donne à l'app par un
-  `CascadingValue` fixe : l'app ne peut atteindre que sa propre fenêtre.
-- Le titre par défaut vient de `WindowLaunchCoordinator.DefaultTitle(manifest)` (nom traduit).
+- `WindowRuntime.SetTitle(windowId, title)` (Windowing.Core) applies `SetWindowTitleCommand`,
+  cleans the title with `WindowTitles.Sanitize` (Windowing.Abstractions) and publishes
+  `WindowTitleChangedEvent`; an unchanged title produces nothing. Surfaces reread
+  `WindowRuntimeState.Title` on each `StateChanged`.
+- `AppWindowGatewayFactory` (Platform.Blazor, registered by `AddHackerOsEcosystem`) creates one
+  `IAppWindowGateway` per window, bound to its `WindowId`. `WindowAppRenderer` receives it
+  (`WindowGateways`, passed by `DesktopShell` and `MobileShell`) and gives it to the app through a fixed
+  `CascadingValue`: the app can only reach its own window.
+- The default title comes from `WindowLaunchCoordinator.DefaultTitle(manifest)` (translated name).
 
-### Apps de base
+### Base apps
 
-| App | Titre |
+| App | Title |
 | --- | --- |
-| Hack Paint | `photo.png — Hack Paint`, `*` si l'image est modifiée ; le nom quitte la barre d'outils. |
-| Éditeur de texte | `*notes.txt — Éditeur de texte` ; le bandeau de l'app garde son affichage. |
-| Éditeur de code | Onglet actif, puis dossier ouvert : `*Program.cs — src — Éditeur de code`. |
-| Éditeur de thèmes | `*Nom — Éditeur de thèmes` (aussi dans sa barre d'outils). |
-| Explorateur de fichiers | `Documents — Explorateur de fichiers`, `/` à la racine, la corbeille quand elle est affichée. |
+| Hack Paint | `photo.png — Hack Paint`, `*` if the image is modified; the name leaves the toolbar. |
+| Text Editor | `*notes.txt — Text Editor`; the app's banner keeps its display. |
+| Code Editor | Active tab, then open folder: `*Program.cs — src — Code Editor`. |
+| Theme Editor | `*Name — Theme Editor` (also in its toolbar). |
+| File Explorer | `Documents — File Explorer`, `/` at the root, the trash when it is displayed. |
 
-## 5. Fenêtre qui ne répond pas (ADR 0127 §2-3)
+## 5. Window that does not respond (ADR 0127 §2-3)
 
-- `WindowRuntimeState.IsResponding` (vrai par défaut) est changé par
-  `SetWindowRespondingCommand` ; `WindowRuntime` publie
-  `WindowRespondingChangedEvent` seulement quand la valeur change.
-- `WindowChrome` ajoute « (Not responding) » / « (Ne répond pas) » au titre
-  affiché (le titre de l'app ne change pas) ; `WindowHost` grise le contenu
-  (`is-not-responding`, `aria-busy`) et dessine son paramètre `Overlay` par
-  dessus le contenu. `DesktopArea` et `SingleSurfaceArea` le remplissent avec
-  `WindowOverlay` (un `RenderFragment<WindowRuntimeState>`).
-- Le moniteur `WindowResponsivenessMonitor`, la boîte et le réglage
-  `window-manager.config` sont décrits dans [`process-priority-and-unresponsive-windows.md`](../dev/process-priority-and-unresponsive-windows.md).
+- `WindowRuntimeState.IsResponding` (true by default) is changed by
+  `SetWindowRespondingCommand`; `WindowRuntime` publishes
+  `WindowRespondingChangedEvent` only when the value changes.
+- `WindowChrome` adds "(Not responding)" / "(Ne répond pas)" to the displayed
+  title (the app's title does not change); `WindowHost` greys out the content
+  (`is-not-responding`, `aria-busy`) and draws its `Overlay` parameter over
+  the content. `DesktopArea` and `SingleSurfaceArea` fill it with
+  `WindowOverlay` (a `RenderFragment<WindowRuntimeState>`).
+- The `WindowResponsivenessMonitor` monitor, the box and the `window-manager.config`
+  setting are described in [`process-priority-and-unresponsive-windows.md`](../dev/process-priority-and-unresponsive-windows.md).
 
-## Décisions de mise en œuvre
+## Implementation decisions
 
-- **Plein écran ajouté** (`toggle-fullscreen`, `Alt+F11`, entrée du menu) : le verrouillage du
-  clavier n'existe qu'en plein écran, il fallait un moyen d'y entrer.
-- **`HackWindowSize.DisplaySurfaceId`** : distingue le redimensionnement d'une fenêtre détachée de
-  celui de la fenêtre du bureau.
-- **Taille mesurée** dans le navigateur, estimée seulement en repli (tests, rendu serveur).
-- **`/etc/hackeros/keybindings.config` livré en commentaires** : les valeurs actives viennent du
-  code tant que personne n'écrit le fichier, comme les autres documents de l'OS.
-- **Ancrer ne garde pas de géométrie de restauration** : la fenêtre ancrée est une fenêtre normale.
-  La taille enregistrée (ADR 0116, 0122) ignore cette moitié d'écran et garde celle d'avant l'ancrage.
-- **Touches dans une iframe** (navigateur, sites) : elles restent dans l'iframe, la page ne les voit
-  pas ; il faut d'abord rendre le focus au bureau.
-- **Correction** : réduire une fenêtre en arrière-plan levait une exception dans `WindowRuntime`
-  (il tentait de lui donner le focus). Elle est maintenant réduite sans toucher au focus.
+- **Full screen added** (`toggle-fullscreen`, `Alt+F11`, menu entry): keyboard
+  locking only exists in full screen, so a way to enter it was needed.
+- **`HackWindowSize.DisplaySurfaceId`**: distinguishes the resizing of a detached window from
+  that of the desktop window.
+- **Measured size** in the browser, estimated only as a fallback (tests, server rendering).
+- **`/etc/hackeros/keybindings.config` shipped as comments**: active values come from
+  the code as long as nobody writes the file, like the other OS documents.
+- **Snapping keeps no restore geometry**: the snapped window is a normal window.
+  The saved size (ADR 0116, 0122) ignores this half screen and keeps the one from before snapping.
+- **Keys in an iframe** (browser, sites): they stay in the iframe, the page does not see
+  them; focus must first be given back to the desktop.
+- **Fix**: minimizing a background window threw an exception in `WindowRuntime`
+  (it tried to give it focus). It is now minimized without touching focus.
 
 ## Tests
 
-- `WindowAppIconTests` (UI.E2E) : images des apps décodées et identiques dans
-  chrome/taskbar, sept thèmes et exception macOS, menu au clic droit sur l'icône
-  seulement, clic gauche et clavier. `WindowLaunchCoordinatorTests` couvre la
-  résolution des chemins relatifs et l'échappement des segments.
+- `WindowAppIconTests` (UI.E2E): app images decoded and identical in
+  chrome/taskbar, seven themes and the macOS exception, menu on right click on the icon
+  only, left click and keyboard. `WindowLaunchCoordinatorTests` covers
+  the resolution of relative paths and segment escaping.
 
-- `WindowPointerGestureTests` (UI.E2E) : module de pointeur et projection du cadre
-  réels dans Chromium ; échantillonnage des positions sur plusieurs images avec
-  projection avant/après le retour interop, avec ou sans correction des contraintes,
-  déplacements successifs, capture perdue, retrait du composant, erreur interop et
-  redimensionnement ralenti. `WindowGeometryRestoreTests` vérifie aussi chaque
-  image au relâchement pendant deux déplacements dans l'OS complet.
+- `WindowPointerGestureTests` (UI.E2E): real pointer module and frame projection
+  in Chromium; sampling of positions over several frames with
+  projection before/after the interop return, with or without constraint correction,
+  successive moves, lost capture, component removal, interop error and
+  slowed resizing. `WindowGeometryRestoreTests` also checks each
+  frame on release during two moves in the complete OS.
 
-- `WindowAppBaseWindowEventsTests` (SDK Blazor) : ordre des crochets, erreur journalisée,
-  surfaces détachées.
+- `WindowAppBaseWindowEventsTests` (Blazor SDK): hook order, logged error,
+  detached surfaces.
 - `WindowAppEventDispatcherTests`, `WindowKeyboardCommandsTests`, `WindowLaunchCoordinatorTests`
-  (Platform.Blazor) : traduction des faits, une seule fin de redimensionnement, sélecteur, menu,
-  modes clavier, tailles initiales.
-- `WindowKeyBindingsTests` (Platform.Core) : analyse des combinaisons et du fichier en couches.
-- `WindowRuntimeTests` (Windowing.Core) : fin de redimensionnement, minimum qui déborde, réduction
-  en arrière-plan.
-- Validateur, sérialiseur, mappeur et schéma (App.Abstractions).
-- `WindowAppBaseWindowTitleTests` (SDK Blazor), `WindowTitleTests` (Windowing.Core),
-  `AppWindowGatewayFactoryTests` (Platform.Blazor) : titre posé avant le premier rendu, même titre
-  ignoré, nettoyage, retour au nom de l'app, une seule fenêtre visée, fenêtre fermée, surfaces.
-- E2E `HackPaintWindowTitleTests` (UI.E2E) : `Untitled — Hack Paint`, `*` après un trait, nom du
-  fichier après « Enregistrer sous » dans la barre de titre et la barre des tâches.
-- E2E `WindowKeyboardCommandsTests` (UI.E2E) : `` Alt+` `` change de fenêtre et `Alt+Q` ferme la
-  fenêtre active dans un onglet Chromium.
+  (Platform.Blazor): translation of facts, a single end of resize, switcher, menu,
+  keyboard modes, initial sizes.
+- `WindowKeyBindingsTests` (Platform.Core): parsing of combinations and of the layered file.
+- `WindowRuntimeTests` (Windowing.Core): end of resize, overflowing minimum, minimizing
+  in the background.
+- Validator, serializer, mapper and schema (App.Abstractions).
+- `WindowAppBaseWindowTitleTests` (Blazor SDK), `WindowTitleTests` (Windowing.Core),
+  `AppWindowGatewayFactoryTests` (Platform.Blazor): title set before the first render, same title
+  ignored, cleaning, return to the app name, a single window targeted, closed window, surfaces.
+- E2E `HackPaintWindowTitleTests` (UI.E2E): `Untitled — Hack Paint`, `*` after a stroke, file
+  name after "Save As" in the title bar and the taskbar.
+- E2E `WindowKeyboardCommandsTests` (UI.E2E): `` Alt+` `` switches window and `Alt+Q` closes the
+  active window in a Chromium tab.
 
-## Liste des tâches
+## Task list
 
-- [x] Corriger le double déplacement au relâchement et la transition avant/après projection.
-- [x] Couvrir les images intermédiaires dans Chromium et dans le scénario OS de restauration.
+- [x] Fix the double move on release and the transition before/after projection.
+- [x] Cover intermediate frames in Chromium and in the OS restore scenario.
 
-- [x] Crochets de fenêtre dans `WindowAppBase` et contrats du SDK (`HackWindowState`, `HackWindowSize`).
-- [x] Faits du runtime : lot publié, fin de redimensionnement, correction de la réduction en arrière-plan.
-- [x] Répartiteur `WindowAppEventDispatcher` et mesure de la zone client.
-- [x] Fenêtres détachées suivies (`TrackDisplaySurface`, navigateur).
-- [x] `WindowOptions` dans `AppDefinition`, manifeste, schéma, validateur, sérialiseur strict.
-- [x] Tailles appliquées à l'ouverture ; bouton Agrandir masqué si non redimensionnable.
-- [x] `keybindings.config` (schéma, couches, défaut commenté, rechargement).
-- [x] `WindowKeyboardCommands` : sélecteur, fermer, menu, déplacer, redimensionner, réduire, agrandir, ancrer, plein écran.
-- [x] Menu de fenêtre et surcouches : clavier et clic droit sur l'icône (ADR 0164).
-- [x] Icônes déclarées des apps système, URLs RCL et exception macOS (ADR 0164).
-- [x] App d'exemple WindowApp : tailles déclarées et journal des événements.
-- [x] Tests unitaires et E2E.
-- [x] Documentation et index.
+- [x] Window hooks in `WindowAppBase` and SDK contracts (`HackWindowState`, `HackWindowSize`).
+- [x] Runtime facts: published batch, end of resize, fix for minimizing in the background.
+- [x] `WindowAppEventDispatcher` dispatcher and client area measurement.
+- [x] Detached windows followed (`TrackDisplaySurface`, browser).
+- [x] `WindowOptions` in `AppDefinition`, manifest, schema, validator, strict serializer.
+- [x] Sizes applied on opening; Maximize button hidden if not resizable.
+- [x] `keybindings.config` (schema, layers, commented default, reload).
+- [x] `WindowKeyboardCommands`: switcher, close, menu, move, resize, minimize, maximize, snap, full screen.
+- [x] Window menu and overlays: keyboard and right click on the icon (ADR 0164).
+- [x] Declared icons of system apps, RCL URLs and macOS exception (ADR 0164).
+- [x] WindowApp sample app: declared sizes and event log.
+- [x] Unit and E2E tests.
+- [x] Documentation and index.
 
-### Chantier `v3.1/3-window-title`
+### Work item `v3.1/3-window-title`
 
-- [x] Commande `SetWindowTitleCommand`, événement `WindowTitleChangedEvent`, `WindowTitles.Sanitize`.
-- [x] `IAppWindowGateway`, `AppWindowGatewayFactory`, cascade dans `WindowAppRenderer` (bureau et mobile).
-- [x] `WindowTitle`, `SetWindowTitleAsync`, `FormatWindowTitle` dans `WindowAppBase` ; surfaces détachées suivies.
-- [x] Hack Paint, éditeur de texte, éditeur de code, éditeur de thèmes, explorateur.
-- [x] Tests unitaires et E2E.
-- [x] ADR 0123, documentation, référence du SDK et index.
+- [x] `SetWindowTitleCommand` command, `WindowTitleChangedEvent` event, `WindowTitles.Sanitize`.
+- [x] `IAppWindowGateway`, `AppWindowGatewayFactory`, cascade in `WindowAppRenderer` (desktop and mobile).
+- [x] `WindowTitle`, `SetWindowTitleAsync`, `FormatWindowTitle` in `WindowAppBase`; detached surfaces followed.
+- [x] Hack Paint, text editor, code editor, theme editor, explorer.
+- [x] Unit and E2E tests.
+- [x] ADR 0123, documentation, SDK reference and index.

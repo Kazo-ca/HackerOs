@@ -1,81 +1,80 @@
-# ADR 0162 : redémarrer quand le build a changé sous la page
+# ADR 0162: restart when the build changed under the page
 
-## Statut
+## Status
 
-Accepté le 2026-10-22.
+Accepted on 2026-10-22.
 
-- **Question posée à Benoit** (2026-10-22, fil « mise à jour des packages
-  NuGet ») : comment éviter qu'une app refuse de s'ouvrir après une
-  recompilation. Choix proposés : (A) l'OS détecte le nouveau build et propose
-  un redémarrage, (B) interdire le cache en développement, (C) documenter
-  seulement. Réponse de Benoit le 2026-10-22 : « a et c ».
+- **Question put to Benoit** (2026-10-22, thread "NuGet package
+  update"): how to prevent an app from refusing to open after a
+  recompilation. Proposed choices: (A) the OS detects the new build and offers
+  a restart, (B) forbid caching in development, (C) document
+  only. Benoit's answer on 2026-10-22: "a and c".
 
-## Contexte
+## Context
 
-Les apps chargées à la demande (ADR 0113, `BuildKnownAssemblyLoaderRegistry`)
-vont chercher leur `.wasm` au premier lancement, sous le nom à empreinte que
-le `dotnet.js` de la page connaît depuis le démarrage
-(`HackerOs.Apps.Settings.yesfevpgxl.wasm`). Si l'origine sert un autre build
-entre-temps (F5 dans Visual Studio pendant qu'un onglet reste ouvert, hot
-reload, déploiement d'une nouvelle version), ce fichier n'existe plus ou n'a
-plus la bonne empreinte : le navigateur refuse la réponse (contrôle
-d'intégrité) et le lancement échoue avec
+On-demand apps (ADR 0113, `BuildKnownAssemblyLoaderRegistry`)
+fetch their `.wasm` at first launch, under the fingerprinted name that
+the page's `dotnet.js` has known since startup
+(`HackerOs.Apps.Settings.yesfevpgxl.wasm`). If the origin serves another build
+in the meantime (F5 in Visual Studio while a tab stays open, hot
+reload, deployment of a new version), this file no longer exists or no longer has
+the right fingerprint: the browser refuses the response (integrity check) and
+the launch fails with
 `download '…/_framework/HackerOs.Apps.Settings.yesfevpgxl.wasm' failed 0
-TypeError: Failed to fetch`. Rien n'expliquait à l'utilisateur qu'un
-rechargement suffisait.
+TypeError: Failed to fetch`. Nothing explained to the user that a
+reload was enough.
 
-Le bandeau « Une mise à jour de HackerOS est prête » existait
-(`EcosystemHostState.UpdateAvailable`) mais n'était jamais affiché et son
-bouton était désactivé.
+The "A HackerOS update is ready" banner existed
+(`EcosystemHostState.UpdateAvailable`) but was never displayed and its
+button was disabled.
 
-## Décision
+## Decision
 
-### 1. Un échec de chargement déclenche une comparaison de builds
+### 1. A load failure triggers a build comparison
 
-- `HostBuildUpdateMonitor` (Platform.Blazor) compare le build qui tourne avec
-  celui que l'origine sert maintenant, par un `IHostBuildProbe`.
-- L'identité d'un build est le nom à empreinte de `dotnet.js`
-  (`HostBuildIdentity.FromMarkup`) : le build y intègre sa configuration de
-  démarrage, donc ce nom change dès qu'un assemblage change. Le nom est lu
-  dans l'import map de la page en cours, puis dans la page redemandée sans
+- `HostBuildUpdateMonitor` (Platform.Blazor) compares the running build with
+  the one the origin is serving now, through an `IHostBuildProbe`.
+- A build's identity is the fingerprinted name of `dotnet.js`
+  (`HostBuildIdentity.FromMarkup`): the build embeds its startup
+  configuration in it, so this name changes as soon as an assembly changes. The name is read
+  from the import map of the current page, then from the page requested again without
   cache (`fetch(document.baseURI, { cache: 'no-store' })`).
-- Une origine injoignable, une page sans `dotnet.js` à empreinte ou une sonde
-  qui lève ne sont pas une mise à jour : l'erreur d'origine reste (hors ligne,
-  serveur arrêté).
-- `BuildKnownAssemblyLoaderRegistry` reçoit le moniteur par un nouveau
-  constructeur. Quand le transport lève et que le build a changé, le résultat
-  est `BuildKnownAssemblyLoadStatus.HostBuildChanged`, avec le message
-  « HackerOS was updated while it was running: restart it to open this app. »
-  Sans moniteur, rien ne change.
+- An unreachable origin, a page without a fingerprinted `dotnet.js` or a probe
+  that throws are not an update: the original error remains (offline,
+  server stopped).
+- `BuildKnownAssemblyLoaderRegistry` receives the monitor through a new
+  constructor. When the transport throws and the build has changed, the result
+  is `BuildKnownAssemblyLoadStatus.HostBuildChanged`, with the message
+  "HackerOS was updated while it was running: restart it to open this app."
+  Without a monitor, nothing changes.
 
-### 2. L'OS propose un redémarrage, comme après une mise à jour système
+### 2. The OS offers a restart, like after a system update
 
-- Le moniteur lève `UpdatePending` une fois. `App.razor` (Ecosystem.Host)
-  affiche alors le bandeau existant, complété par « Les apps ouvertes seront
-  fermées. », et active son bouton « Redémarrer pour mettre à jour ».
-- Le bouton passe par `SystemPowerService.RestartAfterAsync` : journaux vidés,
-  session fermée (les apps reçoivent leur annulation), puis rechargement de la
-  page. Aucune élévation n'est demandée : rien ne change sur la machine, on
-  charge seulement les fichiers déjà installés.
-- Le module `OS/HackerOs.Ecosystem.Host/wwwroot/hostBuild.js` lit l'import map
-  et redemande la page ; la comparaison reste en C#.
+- The monitor raises `UpdatePending` once. `App.razor` (Ecosystem.Host)
+  then displays the existing banner, completed by "Open apps will be closed.",
+  and enables its "Restart to update" button.
+- The button goes through `SystemPowerService.RestartAfterAsync`: logs flushed,
+  session closed (apps receive their cancellation), then page
+  reload. No elevation is requested: nothing changes on the machine, we
+  only load the already installed files.
+- The module `OS/HackerOs.Ecosystem.Host/wwwroot/hostBuild.js` reads the import map
+  and requests the page again; the comparison stays in C#.
 
-### 3. Hors du code
+### 3. Outside the code
 
-Le piège et son correctif manuel (relancer l'app puis Ctrl+F5) sont décrits
-dans [`common-pitfalls.md`](../old/common-pitfalls.md) §9. Un serveur de
-développement resté allumé pendant la recompilation (`dotnet run` sans
-redémarrage) sert un mélange des deux builds : la page redémarrée échoue alors
-au démarrage, avec l'écran d'erreur existant. Il faut relancer le serveur, ce
-que fait Visual Studio à chaque F5.
+The pitfall and its manual fix (restart the app then Ctrl+F5) are described
+in [`common-pitfalls.md`](../old/common-pitfalls.md) §9. A development server left running during the recompilation (`dotnet run` without
+restart) serves a mix of the two builds: the restarted page then fails
+at startup, with the existing error screen. The server must be restarted,
+which Visual Studio does at each F5.
 
-## Conséquences
+## Consequences
 
-- Après une recompilation ou un déploiement, la première app qui ne se charge
-  plus affiche le bandeau au lieu d'un échec inexpliqué ; un clic redémarre sur
-  le nouveau build.
-- La PWA installée (service worker, ADR 0017) garde son propre flux de mise à
-  jour ; le moniteur ne se déclenche que sur un échec de chargement réel.
-- L'option B (pas de cache en développement) n'est pas retenue : elle demandait
-  de remplacer le DevServer de Microsoft et ne couvrait pas l'onglet resté
-  ouvert pendant la recompilation.
+- After a recompilation or a deployment, the first app that no longer loads
+  displays the banner instead of an unexplained failure; one click restarts on
+  the new build.
+- The installed PWA (service worker, ADR 0017) keeps its own update
+  flow; the monitor only triggers on a real load failure.
+- Option B (no cache in development) is not adopted: it required
+  replacing Microsoft's DevServer and did not cover the tab left
+  open during the recompilation.

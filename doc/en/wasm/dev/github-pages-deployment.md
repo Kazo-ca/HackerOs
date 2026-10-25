@@ -1,89 +1,90 @@
-# Publication GitHub Pages : WASM et legacy
+# GitHub Pages publication: WASM and legacy
 
-## Objet
+## Purpose
 
-Le dépôt public est [Kazo-ca/HackerOs](https://github.com/Kazo-ca/HackerOs).
-La version WebAssembly autonome **2.0.3** est publiée à la racine de
-`https://hackos.kazo.ca/` ; la version TypeScript d'origine est conservée sous
-`https://hackos.kazo.ca/legacy/`. Voir l'[ADR 0167](adr/0167-combined-pages-deployment.md).
+The public repository is [Kazo-ca/HackerOs](https://github.com/Kazo-ca/HackerOs).
+The standalone WebAssembly version **2.0.3** is published at the root of
+`https://hackos.kazo.ca/`; the original TypeScript version is kept under
+`https://hackos.kazo.ca/legacy/`. See [ADR 0167](adr/0167-combined-pages-deployment.md).
 
-## Workflow et builds indépendants
+## Workflow and independent builds
 
-`.github/workflows/deploy-to-pages.yml` est l'unique workflow qui déploie Pages.
-Il s'exécute sur `main` quand les sources concernées, les fichiers de build ou
-ce workflow changent, et peut être lancé manuellement.
+`.github/workflows/deploy-to-pages.yml` is the only workflow that deploys Pages.
+It runs on `main` when the relevant sources, the build files or this workflow
+change, and can be launched manually.
 
-| Sortie | Entrées de sa clé de cache | Construction si la clé n'existe pas |
+| Output | Inputs of its cache key | Build if the key does not exist |
 | --- | --- | --- |
 | `dist/` (legacy) | `src/**`, `package*.json`, `tsconfig*.json`, `webpack.config.js` | Node 20, `npm ci`, `npm run build:prod -- --output-public-path /legacy/` |
-| `wasm2/HackerOs/artifacts/pages-publish/wwwroot/` | `wasm2/HackerOs/**`, hors `bin`, `obj`, `artifacts`, `node_modules`, `TestResults` | .NET 10, workload `wasm-tools`, `dotnet publish` de `OS/HackerOs.Ecosystem` en Release |
+| `wasm2/HackerOs/artifacts/pages-publish/wwwroot/` | `wasm2/HackerOs/**`, excluding `bin`, `obj`, `artifacts`, `node_modules`, `TestResults` | .NET 10, `wasm-tools` workload, `dotnet publish` of `OS/HackerOs.Ecosystem` in Release |
 
-Les clés contiennent l'OS du runner et l'empreinte du contenu. Un cache exact
-permet de réutiliser les octets publiés et de sauter toute la chaîne de build
-concernée. Il n'y a pas de restauration par préfixe pouvant accepter une ancienne
-version. Un changement legacy ne reconstruit donc pas le WASM, et inversement.
-La première publication et un cache expiré, supprimé ou évincé reconstruisent
-la sortie absente, même sans nouvelle modification de cette partie. Les fichiers
-de build communs au legacy comptent aussi comme changements de cette version.
-Modifier le préfixe `v1` d'une clé permet d'invalider volontairement son cache.
+The keys contain the runner OS and the content fingerprint. An exact cache
+allows reusing the published bytes and skipping the whole relevant build
+chain. There is no prefix restore that could accept an old version. A legacy
+change therefore does not rebuild the WASM, and vice versa. The first
+publication and an expired, deleted or evicted cache rebuild the missing
+output, even without a new modification of that part. Build files shared with
+the legacy also count as changes of that version. Changing the `v1` prefix of
+a key deliberately invalidates its cache.
 
-`deploy-wasm.yml` conserve la compilation, le scan Razor, l'audit des dépendances,
-les tests sans navigateur et l'artefact WASM téléchargeable. Il ne déploie pas
-Pages et ne demande pas les droits Pages/OIDC. Ses déclencheurs sont limités
-au WASM et à son propre workflow.
+`deploy-wasm.yml` keeps the compilation, the Razor scan, the dependency audit,
+the non-browser tests and the downloadable WASM artifact. It does not deploy
+Pages and does not request the Pages/OIDC permissions. Its triggers are
+limited to the WASM and its own workflow.
 
-Sur une pull request qui touche le legacy, `assemble-pages.ps1` ou ce workflow,
-`deploy-to-pages.yml` construit le site combiné sans le téléverser ni le
-déployer, dans son propre groupe de concurrence ; il n'annule donc jamais un
-déploiement de `main`. Vue d'ensemble : [`ci-workflows.md`](ci-workflows.md).
+On a pull request that touches the legacy, `assemble-pages.ps1` or this
+workflow, `deploy-to-pages.yml` builds the combined site without uploading or
+deploying it, in its own concurrency group; it therefore never cancels a
+`main` deployment. Overview: [`ci-workflows.md`](ci-workflows.md).
 
-Playwright n'est exécuté ni par Pages, ni par les vérifications automatiques
-sur `main`. Les six projets de tests navigateur restent disponibles dans
-`.github/workflows/verify-browser-tests.yml`, lancé uniquement par
-**Actions → Verify HackerOS browser tests (manual) → Run workflow**. Ce workflow
-conserve ses diagnostics et n'effectue aucun déploiement. Voir
-[les suites de tests](building-and-testing.md#tester) pour les commandes locales.
+Playwright is run neither by Pages nor by the automatic checks on `main`. The
+six browser test projects remain available in
+`.github/workflows/verify-browser-tests.yml`, launched only by
+**Actions → Verify HackerOS browser tests (manual) → Run workflow**. This
+workflow keeps its diagnostics and performs no deployment. See
+[the test suites](building-and-testing.md#tester) for the local commands.
 
-### Tâches de séparation des tests
+### Test separation tasks
 
-- [x] Publication Pages indépendante de Playwright.
-- [x] Vérification automatique des 41 projets sans navigateur.
-- [x] Six projets Playwright conservés dans un workflow manuel dédié.
-- [x] Sélection des projets vérifiée avec `run-test-suite.ps1 -ListOnly`.
+- [x] Pages publication independent of Playwright.
+- [x] Automatic verification of the 41 non-browser projects.
+- [x] Six Playwright projects kept in a dedicated manual workflow.
+- [x] Project selection verified with `run-test-suite.ps1 -ListOnly`.
 
-## Assemblage et routage
+## Assembly and routing
 
-`build/assemble-pages.ps1` copie la publication WASM sans la modifier dans
-`artifacts/pages/`, puis le bundle legacy dans `artifacts/pages/legacy/`. Il
-ajoute `.nojekyll` et le `CNAME` `hackos.kazo.ca`. Le dossier de destination
-doit être vide ; une entrée requise absente interrompt la publication.
+`build/assemble-pages.ps1` copies the WASM publication unmodified into
+`artifacts/pages/`, then the legacy bundle into `artifacts/pages/legacy/`. It
+adds `.nojekyll` and the `CNAME` `hackos.kazo.ca`. The destination folder
+must be empty; a missing required entry aborts the publication.
 
-La base HTML du WASM reste `/`. Le bundle legacy utilise le public path
-Webpack `/legacy/`, y compris pour ses chunks et ses assets. La source LESS
-conserve Google Fonts comme import CSS navigateur, sans télécharger la police
-pendant la compilation.
+The HTML base of the WASM remains `/`. The legacy bundle uses the Webpack
+public path `/legacy/`, including for its chunks and assets. The LESS source
+keeps Google Fonts as a browser CSS import, without downloading the font
+during compilation.
 
-Le manifeste d'intégrité PWA n'est pas réécrit et ne contient pas le legacy.
-Le service worker WASM laisse les requêtes same-origin `/legacy` et `/legacy/**`
-au réseau : aucune substitution par le shell WASM, aucun ajout de ses en-têtes
-d'isolation au legacy. Les autres chemins gardent la stratégie offline existante.
+The PWA integrity manifest is not rewritten and does not contain the legacy.
+The WASM service worker leaves same-origin `/legacy` and `/legacy/**`
+requests to the network: no substitution by the WASM shell, no addition of
+its isolation headers to the legacy. Other paths keep the existing offline
+strategy.
 
-## Informations visibles
+## Visible information
 
-- Connexion et création du premier compte : version du build et URL GitHub.
-  Si le nom d'hôte est exactement `hackos.kazo.ca`, un message indique le
-  déplacement de l'original vers `https://hackos.kazo.ca/legacy`. Les ports
-  n'affectent pas ce test ; les sous-domaines ressemblants et les paramètres
-  d'URL ne l'activent pas.
-- Récupération et erreurs fatales du WASM : même référence au dépôt et à la version.
-- Paramètres, À propos : version courante via `HackerOsSdk.Version` et URL GitHub.
-- Paramètres legacy, About : URL GitHub visible, version legacy inchangée.
-- Les métadonnées des paquets pointent aussi vers le nouveau dépôt. La version
-  commune est définie une seule fois dans `build/Versions.props` (`2.0.3`).
+- Login and first account creation: build version and GitHub URL. If the host
+  name is exactly `hackos.kazo.ca`, a message indicates the move of the
+  original to `https://hackos.kazo.ca/legacy`. Ports do not affect this test;
+  look-alike subdomains and URL parameters do not enable it.
+- WASM recovery and fatal errors: same reference to the repository and the
+  version.
+- Settings, About: current version through `HackerOsSdk.Version` and GitHub URL.
+- Legacy Settings, About: GitHub URL visible, legacy version unchanged.
+- Package metadata also points to the new repository. The common version is
+  defined once in `build/Versions.props` (`2.0.3`).
 
-## Vérification locale
+## Local verification
 
-Depuis la racine du dépôt, sur un dossier de sortie encore vide :
+From the repository root, on an output folder that is still empty:
 
 ```powershell
 npm ci
@@ -95,25 +96,25 @@ $env:HACKEROS_PAGES_ROOT = (Resolve-Path wasm2/HackerOs/artifacts/pages).Path
 dotnet test wasm2/HackerOs/Tests/HackerOs.Pwa.E2E.Tests/HackerOs.Pwa.E2E.Tests.csproj --filter FullyQualifiedName~PublishedPagesTests
 ```
 
-Le test sert l'artefact statique, active le vrai service worker, crée un compte,
-vérifie À propos, ouvre le legacy et son écran About, puis le recharge. Sans
-`HACKEROS_PAGES_ROOT`, ce test spécifique est ignoré lors des tests ordinaires.
-`ProjectInformationTests` couvre les domaines autorisés et refusés, et
-`ResourceParityTests` vérifie les traductions anglais/français.
+The test serves the static artifact, enables the real service worker, creates
+an account, checks About, opens the legacy and its About screen, then reloads
+it. Without `HACKEROS_PAGES_ROOT`, this specific test is ignored during
+ordinary test runs. `ProjectInformationTests` covers the allowed and refused
+domains, and `ResourceParityTests` verifies the English/French translations.
 
-## Tâches
+## Tasks
 
-- [x] Garder un seul éditeur de l'artefact Pages.
-- [x] Séparer les clés et conditions de build des deux versions.
-- [x] Publier WASM à la racine et legacy sous `/legacy/`.
-- [x] Mettre à jour version et références au dépôt.
-- [x] Limiter le message de déplacement au domaine demandé.
-- [x] Terminer la validation du navigateur sur l'artefact combiné.
+- [x] Keep a single publisher of the Pages artifact.
+- [x] Separate the build keys and conditions of the two versions.
+- [x] Publish WASM at the root and legacy under `/legacy/`.
+- [x] Update version and repository references.
+- [x] Limit the move message to the requested domain.
+- [x] Finish the browser validation on the combined artifact.
 
-Validation du 2026-10-24 : publication Release WASM réussie, build legacy réussi
-(avertissements de taille du bundle existants), 103 tests ciblés d'information
-produit/traductions réussis et parcours réel `PublishedPagesTests` réussi après
-activation du service worker. Les workflows ont été analysés en YAML ; les
-conditions indépendantes, l'unicité du déploiement et la conservation des octets
-du manifeste PWA ont été contrôlées localement. Le premier déploiement distant
-est déclenché par le prochain push sur `main`, ou manuellement sur GitHub.
+Validation of 2026-10-24: Release WASM publication succeeded, legacy build
+succeeded (existing bundle size warnings), 103 targeted product
+information/translation tests passed and the real `PublishedPagesTests` flow
+passed after enabling the service worker. The workflows were parsed as YAML;
+the independent conditions, the uniqueness of the deployment and the
+preservation of the PWA manifest bytes were checked locally. The first remote
+deployment is triggered by the next push to `main`, or manually on GitHub.

@@ -1,29 +1,29 @@
-# Corps HTTP réels dans le réseau simulé
+# Real HTTP bodies in the simulated network
 
-**Phase web, chantier `web/2-http-bodies`** ([`asp-hack-plan.md`](../dev/plans/asp-hack-plan.md),
-section 5). Décision : [ADR 0074](../dev/adr/0074-listening-ports-and-name-resolution.md)
-§1. Complète [`sdk-network.md`](sdk-network.md) (ADR 0056 §6).
+**Web phase, work item `web/2-http-bodies`** ([`asp-hack-plan.md`](../dev/plans/asp-hack-plan.md),
+section 5). Decision: [ADR 0074](../dev/adr/0074-listening-ports-and-name-resolution.md)
+§1. Complements [`sdk-network.md`](sdk-network.md) (ADR 0056 §6).
 
-## Objet
+## Purpose
 
-Avant ce chantier, une réponse simulée ne portait qu'un `SimulatedPage`
-structuré et une requête qu'un formulaire `POST`. Il n'y avait aucun moyen
-d'envoyer ou de recevoir du HTML, du CSS, du JavaScript, du JSON ou des octets.
+Before this work item, a simulated response only carried a structured
+`SimulatedPage` and a request only a `POST` form. There was no way to
+send or receive HTML, CSS, JavaScript, JSON or bytes.
 
-Désormais, comme sur le fil d'un vrai serveur HTTP :
+Now, as on the wire of a real HTTP server:
 
-- toute requête et toute réponse peut porter un **corps** : des octets et le
-  `Content-Type` qui dit comment les lire ;
-- toutes les méthodes passent : `GET`, `HEAD`, `POST`, `PUT`, `PATCH`,
-  `DELETE`, `OPTIONS` ;
-- les redirections suivent les règles des navigateurs (303, 307, 308) ;
-- `curl` écrit le corps brut ; le navigateur affiche un corps qui n'est pas une
-  page structurée selon son type.
+- every request and every response can carry a **body**: bytes and the
+  `Content-Type` that says how to read them;
+- all methods go through: `GET`, `HEAD`, `POST`, `PUT`, `PATCH`,
+  `DELETE`, `OPTIONS`;
+- redirects follow browser rules (303, 307, 308);
+- `curl` writes the raw body; the browser displays a body that is not a
+  structured page according to its type.
 
-`SimulatedPage` reste une réponse valide : les sites historiques (HackMail,
-HackerSearch, banque, forum, darknet) ne changent pas de modèle. C'est la base
-sur laquelle `web/3-listener-dns` (sites qui écoutent un port) et
-`web/4-browser-html` (rendu HTML isolé) s'appuient.
+`SimulatedPage` remains a valid response: the historical sites (HackMail,
+HackerSearch, bank, forum, darknet) do not change model. It is the base
+on which `web/3-listener-dns` (sites that listen on a port) and
+`web/4-browser-html` (isolated HTML rendering) build.
 
 ## Architecture
 
@@ -37,63 +37,63 @@ App (navigateur, curl, wget, app tierce)
                            → SimulatedHttpResponse(Status, Page?, RedirectUrl?, SetCookies, Headers, Body?)
 ```
 
-### Contrats simulés (`HackerOs.Simulation.Abstractions.Network`)
+### Simulated contracts (`HackerOs.Simulation.Abstractions.Network`)
 
-| Type | Rôle |
+| Type | Role |
 |---|---|
-| `SimulatedHttpBody` | Corps immuable : `ContentType` complet, `MediaType`, `Charset`, `Content` (`ReadOnlyMemory<byte>`), `Length`, `ReadAsString()` (selon le charset, UTF-8 par défaut), `ReadAsForm()`. Fabriques `FromText`, `Html`, `Json`, `FromBytes`, `FormUrlEncoded`. |
-| `SimulatedMediaTypes` | Constantes (`text/html`, `application/json`, `application/x-www-form-urlencoded`…) et analyse d'un `Content-Type` : `GetMediaType`, `GetCharset`, `GetEncoding`, `IsText`, `IsJson`. |
-| `SimulatedHttpRequest` | Gagne `Body` (remplace `TextBody`, jamais utilisé). `Create(method, host, path, query, headers, cookies, body)` remplit `FormBody` quand le corps est un formulaire, quelle que soit la méthode, et pose `Content-Type`/`Content-Length`. En-têtes insensibles à la casse. |
-| `SimulatedHttpResponse` | Gagne `Body`, qui l'emporte sur `Page` sur le fil. Fabriques `Content`, `Text`, `Html`, `Json`, `File`, `NoContent`, `MethodNotAllowed`. `IsRedirect` reconnaît 301, 302, 303, 307 et 308. |
-| `SimulatedHttpMethods` | Gagne `Patch`, `Options` et `IsSafe` (`GET`, `HEAD`, `OPTIONS`). |
-| `SimulatedHttpStatus` | Gagne `NoContent` (204), `MovedPermanently` (301), `TemporaryRedirect` (307), `PermanentRedirectKeepMethod` (308), `MethodNotAllowed` (405). |
-| `ISimulatedNetworkService.Send` | Un échange, sans suivre les redirections, avec cookies : rend `SimulatedExchangeResult(Response, NetworkError)`. `Post` passe désormais par lui ; `Navigate` reste pour la compatibilité et rend aussi `Body`. |
+| `SimulatedHttpBody` | Immutable body: full `ContentType`, `MediaType`, `Charset`, `Content` (`ReadOnlyMemory<byte>`), `Length`, `ReadAsString()` (according to the charset, UTF-8 by default), `ReadAsForm()`. Factories `FromText`, `Html`, `Json`, `FromBytes`, `FormUrlEncoded`. |
+| `SimulatedMediaTypes` | Constants (`text/html`, `application/json`, `application/x-www-form-urlencoded`...) and `Content-Type` analysis: `GetMediaType`, `GetCharset`, `GetEncoding`, `IsText`, `IsJson`. |
+| `SimulatedHttpRequest` | Gains `Body` (replaces `TextBody`, never used). `Create(method, host, path, query, headers, cookies, body)` fills `FormBody` when the body is a form, whatever the method, and sets `Content-Type`/`Content-Length`. Case-insensitive headers. |
+| `SimulatedHttpResponse` | Gains `Body`, which takes precedence over `Page` on the wire. Factories `Content`, `Text`, `Html`, `Json`, `File`, `NoContent`, `MethodNotAllowed`. `IsRedirect` recognizes 301, 302, 303, 307 and 308. |
+| `SimulatedHttpMethods` | Gains `Patch`, `Options` and `IsSafe` (`GET`, `HEAD`, `OPTIONS`). |
+| `SimulatedHttpStatus` | Gains `NoContent` (204), `MovedPermanently` (301), `TemporaryRedirect` (307), `PermanentRedirectKeepMethod` (308), `MethodNotAllowed` (405). |
+| `ISimulatedNetworkService.Send` | One exchange, without following redirects, with cookies: returns `SimulatedExchangeResult(Response, NetworkError)`. `Post` now goes through it; `Navigate` remains for compatibility and also returns `Body`. |
 
-### Routeur des sites (`SimulatedWebsiteControllerBase`)
+### Site router (`SimulatedWebsiteControllerBase`)
 
-Comme ASP.NET Core :
+Like ASP.NET Core:
 
-- `Map(method, motif, handler)` et les raccourcis `Get`, `Post`, `Put`,
-  `Patch`, `Delete` ;
-- `HEAD` est servi par la route `GET` (la passerelle retire le corps et garde
-  `Content-Length`) ;
-- un chemin connu demandé avec une méthode qu'il n'a pas répond **405** avec
-  l'en-tête `Allow` ; `OPTIONS` sur un chemin connu répond **204** avec `Allow` ;
-- un chemin inconnu répond toujours 404.
+- `Map(method, pattern, handler)` and the shortcuts `Get`, `Post`, `Put`,
+  `Patch`, `Delete`;
+- `HEAD` is served by the `GET` route (the gateway removes the body and keeps
+  `Content-Length`);
+- a known path requested with a method it does not have answers **405** with
+  the `Allow` header; `OPTIONS` on a known path answers **204** with `Allow`;
+- an unknown path always answers 404.
 
-### Passerelle (`AppNetworkGateway`)
+### Gateway (`AppNetworkGateway`)
 
-- Capacité : `network.simulated.read` pour une méthode sûre (`GET`, `HEAD`,
-  `OPTIONS`), `network.simulated.write` pour les autres.
-- Boucle de redirections (10 au plus, puis `ERR_TOO_MANY_REDIRECTS`), règles de
-  `RedirectBecomesGet` :
+- Capability: `network.simulated.read` for a safe method (`GET`, `HEAD`,
+  `OPTIONS`), `network.simulated.write` for the others.
+- Redirect loop (10 at most, then `ERR_TOO_MANY_REDIRECTS`), rules of
+  `RedirectBecomesGet`:
 
-  | Statut | Méthode suivante |
+  | Status | Next method |
   |---|---|
-  | 303 | `GET` sans corps, sauf `HEAD` qui reste `HEAD` |
-  | 301, 302 | `GET` sans corps pour un `POST` ; même méthode sinon |
-  | 307, 308 | même méthode, même corps |
+  | 303 | `GET` without a body, except `HEAD` which stays `HEAD` |
+  | 301, 302 | `GET` without a body for a `POST`; same method otherwise |
+  | 307, 308 | same method, same body |
 
-- Réponse rendue à l'app : en-têtes du site, puis `Content-Type` (celui du
-  corps ; `text/plain; charset=utf-8` pour le rendu texte d'une page
-  historique ; aucun quand il n'y a ni corps ni page, comme un vrai 204 ou
+- Response returned to the app: the site's headers, then `Content-Type` (that of the
+  body; `text/plain; charset=utf-8` for the text rendering of a historical
+  page; none when there is neither body nor page, like a real 204 or
   302), `Content-Length`, `Set-Cookie`.
-- Le relais vers le réseau réel (serveur optionnel) transporte toutes les
-  méthodes et le corps de la requête depuis `v3/10-server-proxy`
-  (`ProxyHttpRequest.Body`, taille et hash vérifiés par le serveur,
+- The relay to the real network (optional server) carries all
+  methods and the request body since `v3/10-server-proxy`
+  (`ProxyHttpRequest.Body`, size and hash verified by the server,
   [`server-network-relay.md`](../dev/server-network-relay.md)).
-- Comptage `/proc/net/dev` (ADR 0057) : la taille de la requête inclut
-  `Content-Type`, `Content-Length` et le corps.
+- `/proc/net/dev` accounting (ADR 0057): the request size includes
+  `Content-Type`, `Content-Length` and the body.
 
 ### Web Workers
 
-`WireCodec.WriteHttpRequest` écrit le type (`ct`) et les octets en base64
-(`bd`) du corps ; la réponse portait déjà ses octets (`b`) et ses en-têtes. Une
-commande lancée dans un worker (ADR 0070) envoie et reçoit donc les mêmes
-octets que sur le fil principal. `Page` ne traverse toujours pas : seul le
-navigateur, une app à fenêtre, l'affiche.
+`WireCodec.WriteHttpRequest` writes the body's type (`ct`) and bytes in base64
+(`bd`); the response already carried its bytes (`b`) and its headers. A
+command launched in a worker (ADR 0070) therefore sends and receives the same
+bytes as on the main thread. `Page` still does not cross: only the
+browser, a windowed app, displays it.
 
-## Utilisation (SDK)
+## Usage (SDK)
 
 ```csharp
 using HackHttpClient http = new();
@@ -117,7 +117,7 @@ byte[] raw = updated.ContentBytes;           // octets bruts
 string? allow = updated.GetHeader("Allow");  // premier en-tête de ce nom, sans casse
 ```
 
-| Type | Équivalent .NET | Type par défaut |
+| Type | .NET equivalent | Default type |
 |---|---|---|
 | `HackHttpContent` | `HttpContent` | `application/octet-stream` |
 | `HackStringContent(text, encoding?, mediaType?)` | `StringContent` | `text/plain; charset=utf-8` |
@@ -125,17 +125,17 @@ string? allow = updated.GetHeader("Allow");  // premier en-tête de ce nom, sans
 | `HackFormUrlEncodedContent(fields)` | `FormUrlEncodedContent` | `application/x-www-form-urlencoded` |
 | `HackJsonContent.Create(value, JsonTypeInfo)` / `FromJson(json)` | `JsonContent.Create` | `application/json; charset=utf-8` |
 
-`HackJsonContent.Create<T>(value, options)` et `HackHttpResponse.ReadFromJson<T>(options)`
-existent aussi par réflexion, marqués `[RequiresUnreferencedCode]` : préférer
-les surcharges `JsonTypeInfo<T>` dans une app publiée en WebAssembly.
+`HackJsonContent.Create<T>(value, options)` and `HackHttpResponse.ReadFromJson<T>(options)`
+also exist through reflection, marked `[RequiresUnreferencedCode]`: prefer
+the `JsonTypeInfo<T>` overloads in an app published to WebAssembly.
 
-Changement de contrat : `HackHttpRequest.Form` est remplacé par `Content` ;
-`HackHttpResponse.Content` (octets) devient `ContentBytes`, et `Content` donne
-le texte (ADR 0074 §1). `SendAsync(method, uri, content)` prend un
-`HackHttpContent` au lieu d'une liste de champs ;
-`PostAsync(uri, champs)` reste.
+Contract change: `HackHttpRequest.Form` is replaced by `Content`;
+`HackHttpResponse.Content` (bytes) becomes `ContentBytes`, and `Content` gives
+the text (ADR 0074 §1). `SendAsync(method, uri, content)` takes an
+`HackHttpContent` instead of a list of fields;
+`PostAsync(uri, fields)` remains.
 
-## Côté site simulé
+## Simulated site side
 
 ```csharp
 public sealed class ApiController : SimulatedWebsiteControllerBase
@@ -153,90 +153,90 @@ public sealed class ApiController : SimulatedWebsiteControllerBase
 }
 ```
 
-Sites historiques adaptés dans ce chantier : HackerSearch sert
-`/api/search?q=…` (JSON écrit avec `Utf8JsonWriter`), `/robots.txt`
-(`text/plain`), et son formulaire de recherche, qui postait vers une route
-inexistante, reçoit un `POST /search` qui redirige vers `GET /search?q=…`.
+Historical sites adapted in this work item: HackerSearch serves
+`/api/search?q=…` (JSON written with `Utf8JsonWriter`), `/robots.txt`
+(`text/plain`), and its search form, which used to post to a
+nonexistent route, receives a `POST /search` that redirects to `GET /search?q=…`.
 
 ## `curl`
 
-| Option | Effet |
+| Option | Effect |
 |---|---|
-| `-d`, `--data` | Corps envoyé tel quel, `POST` implicite, `Content-Type: application/x-www-form-urlencoded` ; `@fichier` lit un fichier sans ses fins de ligne ; plusieurs `-d` sont joints par `&`. |
-| `--data-raw` | Comme `-d`, sans interprétation de `@`. |
-| `--data-binary` | `@fichier` lu sans modification. |
-| `--data-urlencode nom=valeur` | Valeur encodée (espace en `+`). |
-| `--json DONNÉES` | Corps JSON, `Content-Type` et `Accept` à `application/json`. |
-| `-H "Content-Type: …"` | Remplace le type impliqué par l'option de données. |
-| `-X MÉTHODE` | `PUT`, `PATCH`, `DELETE`, `OPTIONS`… |
-| `-i` | Ligne de statut et en-têtes, ligne vide, puis le corps. |
-| `-v` | En-têtes envoyés (`>`) et reçus (`<`). |
-| `-f` | Statut ≥ 400 : pas de corps, code 22. **Sans `-f`, le corps est affiché et le code est 0**, comme le vrai `curl` (avant ce chantier, `-f` était toujours actif). |
+| `-d`, `--data` | Body sent as is, implicit `POST`, `Content-Type: application/x-www-form-urlencoded`; `@file` reads a file without its line endings; several `-d` are joined by `&`. |
+| `--data-raw` | Like `-d`, without interpreting `@`. |
+| `--data-binary` | `@file` read without modification. |
+| `--data-urlencode name=value` | Encoded value (space as `+`). |
+| `--json DATA` | JSON body, `Content-Type` and `Accept` set to `application/json`. |
+| `-H "Content-Type: …"` | Replaces the type implied by the data option. |
+| `-X METHOD` | `PUT`, `PATCH`, `DELETE`, `OPTIONS`... |
+| `-i` | Status line and headers, empty line, then the body. |
+| `-v` | Headers sent (`>`) and received (`<`). |
+| `-f` | Status ≥ 400: no body, code 22. **Without `-f`, the body is displayed and the code is 0**, like the real `curl` (before this work item, `-f` was always active). |
 
-Le corps est écrit brut, décodé selon son charset. Un corps binaire (image,
-archive) n'est pas écrit dans le terminal : `curl` affiche l'avertissement
-« Binary output can mess up your terminal » et sort avec 23, sauf avec
-`-o FICHIER` ou `-o -`.
+The body is written raw, decoded according to its charset. A binary body (image,
+archive) is not written to the terminal: `curl` displays the warning
+"Binary output can mess up your terminal" and exits with 23, except with
+`-o FILE` or `-o -`.
 
-## Navigateur
+## Browser
 
-`BrowserWindow.ShowResponse` choisit le rendu :
+`BrowserWindow.ShowResponse` chooses the rendering:
 
-1. une page structurée (`Page`) : `SimulatedPageRenderer`, comme avant ;
-2. sinon un corps, présenté par `ResponseBodyPresenter` (pur, testé) et dessiné
-   par `ResponseBodyViewer` :
+1. a structured page (`Page`): `SimulatedPageRenderer`, as before;
+2. otherwise a body, presented by `ResponseBodyPresenter` (pure, tested) and drawn
+   by `ResponseBodyViewer`:
 
-   | Type | Rendu |
+   | Type | Rendering |
    |---|---|
-   | `application/json`, `+json` | JSON indenté (texte inchangé s'il est invalide) |
-   | `text/html` | Rendu dans l'iframe isolée depuis `web/4-browser-html` (ADR 0075, [`browser-html-rendering.md`](../dev/browser-html-rendering.md)) ; la source reste visible avec `view-source:` ou le bouton « source » |
-   | `text/*`, XML, JavaScript | Texte brut |
-   | `image/*` | Image (`data:` URL) sur damier |
-   | autre | « This file can't be displayed », avec la commande `curl -O` à utiliser |
-   | sans type | Reniflé : texte UTF-8 valide sans octet nul, sinon binaire |
+   | `application/json`, `+json` | Indented JSON (text unchanged if invalid) |
+   | `text/html` | Rendered in the isolated iframe since `web/4-browser-html` (ADR 0075, [`browser-html-rendering.md`](../dev/browser-html-rendering.md)); the source remains visible with `view-source:` or the "source" button |
+   | `text/*`, XML, JavaScript | Plain text |
+   | `image/*` | Image (`data:` URL) on a checkerboard |
+   | other | "This file can't be displayed", with the `curl -O` command to use |
+   | no type | Sniffed: valid UTF-8 text without a null byte, otherwise binary |
 
-3. une erreur sans corps : page d'erreur « HTTP ERROR 500 ».
+3. an error without a body: "HTTP ERROR 500" error page.
 
-## Décisions
+## Decisions
 
-- **`SimulatedHttpBody` est une classe, pas un `record`** : l'égalité d'un
-  record sur un tableau d'octets serait une égalité de références, trompeuse.
-- **`HackHttpRequest.Form` disparaît** au lieu de cohabiter avec `Content` :
-  une seule source de vérité pour le corps ; `PostAsync(uri, champs)` reste
-  comme raccourci.
-- **Les redirections sont décidées par la passerelle**, plus par
-  `Navigate` : c'est elle qui connaît la méthode et le corps à rejouer pour
+- **`SimulatedHttpBody` is a class, not a `record`**: the equality of a
+  record over a byte array would be reference equality, which is misleading.
+- **`HackHttpRequest.Form` disappears** instead of coexisting with `Content`:
+  a single source of truth for the body; `PostAsync(uri, fields)` remains
+  as a shortcut.
+- **Redirects are decided by the gateway**, no longer by
+  `Navigate`: it is the one that knows the method and the body to replay for
   307/308.
-- **`curl` ne force plus `-f`** : l'ADR 0074 demande le corps brut ; le
-  comportement par défaut du vrai `curl` est d'afficher le corps d'une erreur.
-- **HTML montré en source** dans ce chantier : le rendu réel exige l'iframe
-  isolée et le chargeur de sous-ressources de l'ADR 0075 (`web/4`).
-- **Pas de corps de requête vers le réseau réel** dans ce chantier : le
-  contrat du proxy ne le transportait pas. Fait depuis par
+- **`curl` no longer forces `-f`**: ADR 0074 asks for the raw body; the
+  default behavior of the real `curl` is to display the body of an error.
+- **HTML shown as source** in this work item: real rendering requires the isolated
+  iframe and the sub-resource loader of ADR 0075 (`web/4`).
+- **No request body to the real network** in this work item: the
+  proxy contract did not carry it. Done since by
   `v3/10-server-proxy` (ADR 0102, [`server-network-relay.md`](../dev/server-network-relay.md)).
-- L'ADR 0021 (« pas de HTML brut ») est marqué remplacé en partie par les
-  ADR 0074 §1 et 0075.
+- ADR 0021 ("no raw HTML") is marked partly replaced by
+  ADR 0074 §1 and 0075.
 
-## Pour `web/3` et `web/4`
+## For `web/3` and `web/4`
 
-- Un listener (`HackHttpListener`, `web/3`) reçoit un `SimulatedHttpRequest`
-  avec `Body` et répond un `SimulatedHttpResponse` avec `Body` : le format sur
-  le fil des workers existe déjà pour le client (`ct`, `bd`, `b`).
-- Le navigateur (`web/4`) remplace la branche `Html` de `ResponseBodyViewer`
-  par l'iframe isolée ; `HackHttpClient` sait déjà charger CSS, JS et images
-  avec leur type, et relayer `fetch` avec n'importe quelle méthode et corps.
+- A listener (`HackHttpListener`, `web/3`) receives a `SimulatedHttpRequest`
+  with `Body` and answers a `SimulatedHttpResponse` with `Body`: the wire format of
+  workers already exists for the client (`ct`, `bd`, `b`).
+- The browser (`web/4`) replaces the `Html` branch of `ResponseBodyViewer`
+  with the isolated iframe; `HackHttpClient` already knows how to load CSS, JS and images
+  with their type, and relay `fetch` with any method and body.
 
-## Liste des tâches
+## Task list
 
-- [x] `SimulatedHttpBody`, `SimulatedMediaTypes`, corps dans `SimulatedHttpRequest` et `SimulatedHttpResponse`.
-- [x] `ISimulatedNetworkService.Send` et `SimulatedExchangeResult` ; `Post` et `Navigate` adaptés.
-- [x] Routeur des sites : `Map`, `Put`, `Patch`, `Delete`, `HEAD` sur `GET`, 405 avec `Allow`, `OPTIONS`.
-- [x] `HackHttpContent` et variantes ; `HackHttpRequest.Content` ; `HackHttpResponse.ContentType`, `Content`, `ContentBytes`, `GetHeader`, `ReadFromJson`.
-- [x] `HackHttpClient` : `PutAsync`, `PatchAsync`, `DeleteAsync`, `GetByteArrayAsync`, `GetFromJsonAsync`, `PostAsJsonAsync`, `SendAsync` avec contenu.
-- [x] Passerelle : capacité par méthode sûre, boucle de redirections (303/307/308), en-têtes du site, `Content-Type` réel.
-- [x] Protocole des workers (`WireCodec`) et comptage réseau.
-- [x] `curl` : corps brut, `-i`, `--json`, `--data-*`, `@fichier`, `-f` facultatif, refus du binaire ; `wget` sur `ContentBytes`.
-- [x] Navigateur : `ResponseBodyPresenter` et `ResponseBodyViewer`.
-- [x] HackerSearch : `/api/search`, `/robots.txt`, `POST /search`.
-- [x] Tests : réseau et SDK (`Wave4NetworkTests.HttpBodies`), `curl`, protocole des workers (`WireCodecHttpTests`), navigateur (`ResponseBodyPresenterTests`).
-- [x] Documentation : ce document, `sdk-network.md`, `sdk-reference.md`, `linux-commands.md`, plan, statut de l'ADR 0021, index.
+- [x] `SimulatedHttpBody`, `SimulatedMediaTypes`, body in `SimulatedHttpRequest` and `SimulatedHttpResponse`.
+- [x] `ISimulatedNetworkService.Send` and `SimulatedExchangeResult`; `Post` and `Navigate` adapted.
+- [x] Site router: `Map`, `Put`, `Patch`, `Delete`, `HEAD` on `GET`, 405 with `Allow`, `OPTIONS`.
+- [x] `HackHttpContent` and variants; `HackHttpRequest.Content`; `HackHttpResponse.ContentType`, `Content`, `ContentBytes`, `GetHeader`, `ReadFromJson`.
+- [x] `HackHttpClient`: `PutAsync`, `PatchAsync`, `DeleteAsync`, `GetByteArrayAsync`, `GetFromJsonAsync`, `PostAsJsonAsync`, `SendAsync` with content.
+- [x] Gateway: capability per safe method, redirect loop (303/307/308), site headers, real `Content-Type`.
+- [x] Worker protocol (`WireCodec`) and network accounting.
+- [x] `curl`: raw body, `-i`, `--json`, `--data-*`, `@file`, optional `-f`, binary refusal; `wget` on `ContentBytes`.
+- [x] Browser: `ResponseBodyPresenter` and `ResponseBodyViewer`.
+- [x] HackerSearch: `/api/search`, `/robots.txt`, `POST /search`.
+- [x] Tests: network and SDK (`Wave4NetworkTests.HttpBodies`), `curl`, worker protocol (`WireCodecHttpTests`), browser (`ResponseBodyPresenterTests`).
+- [x] Documentation: this document, `sdk-network.md`, `sdk-reference.md`, `linux-commands.md`, plan, status of ADR 0021, index.

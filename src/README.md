@@ -1,41 +1,43 @@
+> [Version française](readme-fr.md)
+
 # HackerSimulator legacy (TypeScript)
 
-Ce dossier contient la **première version** de HackerSimulator, écrite en
-TypeScript et LESS et empaquetée par Webpack. Elle est gardée **en lecture
-seule** comme référence de comportement : tout le travail actif se fait dans la
-version WebAssembly, [`wasm2/HackerOs/`](../wasm2/HackerOs/README.md), documentée
-dans [`doc/en/wasm/`](../doc/en/wasm/README.md).
+This folder holds the **first version** of HackerSimulator, written in
+TypeScript and LESS and bundled by Webpack. It is kept **read-only** as a
+behavioral reference: all active work happens in the WebAssembly version,
+[`wasm2/HackerOs/`](../wasm2/HackerOs/README.md), documented in
+[`doc/en/wasm/`](../doc/en/wasm/README.md).
 
-La version legacy est publiée sur <https://hackos.kazo.ca/legacy/> par le même
-workflow GitHub Pages que la version WebAssembly
+The legacy version is published at <https://hackos.kazo.ca/legacy/> by the same
+GitHub Pages workflow as the WebAssembly version
 ([`github-pages-deployment.md`](../doc/en/wasm/dev/github-pages-deployment.md)).
 
-## Compiler et lancer
+## Build and run
 
-Prérequis : Node.js 20 et npm. Les commandes se lancent à la racine du dépôt.
+Prerequisites: Node.js 20 and npm. Run the commands from the repository root.
 
 ```bash
 npm install
-npm run dev          # serveur de développement avec rechargement à chaud
-npm run build:debug  # bundle de développement dans dist/
-npm run build:prod   # bundle minifié dans dist/
-npm run tsc:debug    # compile chaque fichier TypeScript avec ses source maps
+npm run dev          # development server with hot reload
+npm run build:debug  # development bundle in dist/
+npm run build:prod   # minified bundle in dist/
+npm run tsc:debug    # compiles each TypeScript file with its source maps
 ```
 
-## Structure
+## Layout
 
-| Dossier | Contenu |
+| Folder | Contents |
 | --- | --- |
-| [`index.ts`](index.ts), [`index.html`](index.html) | Point d'entrée et page hôte. |
-| [`core/`](core/) | Noyau : système de fichiers, processus, fenêtres, bureau, menu Démarrer, thèmes, réglages, réseau simulé, moniteurs multiples. |
-| [`apps/`](apps/) | Applications : terminal, éditeur de code, éditeur de texte, explorateur de fichiers, navigateur, calculatrice, moniteur système, Hack Paint, réglages, éditeur de thèmes, visionneuse des journaux d'erreurs. |
-| [`commands/`](commands/) | Interpréteur de commandes du terminal et commandes Linux (`ls`, `cat`, `grep`, `ps`, `curl`, `nmap`, `ping`…). |
-| [`websites/`](websites/) | Sites web simulés servis au navigateur intégré. |
-| [`styles/`](styles/) | Feuilles LESS communes. |
-| [`docs/`](docs/README.md) | Documentation des fonctionnalités de la version legacy. |
+| [`index.ts`](index.ts), [`index.html`](index.html) | Entry point and host page. |
+| [`core/`](core/) | Core: file system, processes, windows, desktop, Start menu, themes, settings, simulated network, multiple monitors. |
+| [`apps/`](apps/) | Applications: terminal, code editor, text editor, file explorer, browser, calculator, system monitor, Hack Paint, settings, theme editor, error log viewer. |
+| [`commands/`](commands/) | Terminal command processor and Linux commands (`ls`, `cat`, `grep`, `ps`, `curl`, `nmap`, `ping`…). |
+| [`websites/`](websites/) | Simulated web sites served to the built-in browser. |
+| [`styles/`](styles/) | Shared LESS style sheets. |
+| [`docs/`](docs/README.md) | Documentation of the legacy version's features. |
 
-## Correspondance avec la version WebAssembly
+## Mapping to the WebAssembly version
 
-Les apps et commandes de ce dossier ont été portées en C# dans
-`wasm2/HackerOs/Apps/`. Les rapports de migration archivés sont dans
+The apps and commands of this folder were ported to C# in
+`wasm2/HackerOs/Apps/`. The archived migration reports are in
 [`doc/en/wasm/dev/old/migration/`](../doc/en/wasm/dev/old/migration/README.md).

@@ -1,30 +1,30 @@
-# ADR 0076 : ASP.Hack MVC, pipeline, routage et vues
+# ADR 0076: ASP.Hack MVC, pipeline, routing and views
 
-## Statut
+## Status
 
-Accepté le 2026-10-16 (proposé le même jour, puis validé par Benoit avec le
-questionnaire de la section 4 du plan).
+Accepted on 2026-10-16 (proposed the same day, then validated by Benoit with the
+questionnaire of section 4 of the plan).
 
-- **Phase du plan :** phase web ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
-- **Dépend de :** ADR 0073 (genre `Web`), ADR 0074 (`HackHttpListener`).
+- **Plan phase:** web phase ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
+- **Depends on:** ADR 0073 (`Web` kind), ADR 0074 (`HackHttpListener`).
 
-## Contexte
+## Context
 
-Benoit veut une couche par-dessus le SDK qui reprenne la façon de travailler
-d'ASP.NET MVC (méthodes `GET`, `POST`, `PUT`, `PATCH`, `DELETE`...), sans
-reprendre tout ASP.NET, avec des vues à la `.cshtml` et un contrôleur derrière.
-ASP.NET Core lui-même ne tourne pas dans Blazor WebAssembly (pas de Kestrel ni
-de référence `Microsoft.AspNetCore.App`).
+Benoit wants a layer on top of the SDK that takes up the way of working
+of ASP.NET MVC (`GET`, `POST`, `PUT`, `PATCH`, `DELETE` methods...), without
+taking all of ASP.NET, with `.cshtml`-style views and a controller behind.
+ASP.NET Core itself does not run in Blazor WebAssembly (no Kestrel and no
+`Microsoft.AspNetCore.App` reference).
 
-## Décision
+## Decision
 
-### 1. Bibliothèque
+### 1. Library
 
-`Shared/HackerOs.AppSdk.Web` (bibliothèque du SDK, `HackerOsSdkLibrary`), qui ne
-dépend que de `HackerOs.AppSdk`. Le site est un processus qui ouvre un
-`HackHttpListener` sur ses `Urls` et passe chaque requête au pipeline.
+`Shared/HackerOs.AppSdk.Web` (SDK library, `HackerOsSdkLibrary`), which
+depends only on `HackerOs.AppSdk`. The site is a process that opens an
+`HackHttpListener` on its `Urls` and passes each request to the pipeline.
 
-### 2. Démarrage et pipeline
+### 2. Startup and pipeline
 
 ```csharp
 public override void Configure(HackWebApplicationBuilder builder)
@@ -40,59 +40,59 @@ public override void Configure(HackWebApplicationBuilder builder)
 }
 ```
 
-Un middleware reçoit `HackHttpContext` (`Request`, `Response`, `Items`,
+A middleware receives `HackHttpContext` (`Request`, `Response`, `Items`,
 `RequestServices`, `Session`, `RequestAborted`).
 
-### 3. Contrôleurs et routage
+### 3. Controllers and routing
 
-- `HackController` (avec vues) et `HackApiController` (sans vues, erreurs en
+- `HackController` (with views) and `HackApiController` (without views, errors as
   `application/problem+json`).
-- Attributs aux noms d'ASP.NET : `[Route]`, `[HttpGet]`, `[HttpPost]`,
+- Attributes with ASP.NET names: `[Route]`, `[HttpGet]`, `[HttpPost]`,
   `[HttpPut]`, `[HttpPatch]`, `[HttpDelete]`, `[HttpHead]`, `[HttpOptions]`,
-  `[NonAction]`. Route conventionnelle par défaut
+  `[NonAction]`. Default conventional route
   `{controller=Home}/{action=Index}/{id?}`.
-- Gabarits : segments littéraux, `{param}`, `{param?}`, valeur par défaut,
-  `{*reste}`, contraintes `int`, `long`, `guid`, `bool`, `alpha`, `min`, `max`,
+- Templates: literal segments, `{param}`, `{param?}`, default value,
+  `{*rest}`, constraints `int`, `long`, `guid`, `bool`, `alpha`, `min`, `max`,
   `length`, `regex`.
-- **La table de routes est générée au build** par le générateur de manifestes
-  (pas de réflexion au démarrage) : compatible avec le trimming, plus rapide, et
-  les conflits de routes sont des erreurs de build (`HOSWEB0001`...). Le même
-  générateur pourra servir au compilateur dans l'OS.
-- Méthode non permise : `405` avec `Allow` ; `HEAD` répond comme `GET` sans
-  corps ; `OPTIONS` liste les méthodes.
+- **The route table is generated at build time** by the manifest generator
+  (no reflection at startup): compatible with trimming, faster, and
+  route conflicts are build errors (`HOSWEB0001`...). The same
+  generator can serve the compiler in the OS.
+- Method not allowed: `405` with `Allow`; `HEAD` answers like `GET` without a
+  body; `OPTIONS` lists the methods.
 
-### 4. Liaison de modèle et validation
+### 4. Model binding and validation
 
-Sources : `[FromRoute]`, `[FromQuery]`, `[FromForm]`, `[FromBody]` (JSON par
-`System.Text.Json`), `[FromHeader]`, `[FromServices]`, avec inférence comme
-ASP.NET (types simples depuis la route puis la requête, types complexes depuis le
-corps pour une API, le formulaire pour un contrôleur à vues). Validation par
-`DataAnnotations` dans `ModelState` ; un `HackApiController` répond `400`
-automatiquement si le modèle est invalide.
+Sources: `[FromRoute]`, `[FromQuery]`, `[FromForm]`, `[FromBody]` (JSON through
+`System.Text.Json`), `[FromHeader]`, `[FromServices]`, with inference like
+ASP.NET (simple types from the route then the request, complex types from the
+body for an API, the form for a controller with views). Validation through
+`DataAnnotations` into `ModelState`; an `HackApiController` automatically answers `400`
+if the model is invalid.
 
-### 5. Résultats
+### 5. Results
 
-`IHackActionResult` : `View`, `PartialView`, `Json`, `Content`, `File`,
+`IHackActionResult`: `View`, `PartialView`, `Json`, `Content`, `File`,
 `Redirect`, `RedirectToAction`, `LocalRedirect`, `StatusCode`, `Ok`, `Created`,
 `CreatedAtAction`, `NoContent`, `NotFound`, `BadRequest`, `Unauthorized`,
-`Forbid`, `Problem`. Une action peut aussi rendre un objet (sérialisé en JSON)
-ou une `Task` de ces types.
+`Forbid`, `Problem`. An action can also return an object (serialized as JSON)
+or a `Task` of these types.
 
-### 6. Services, session, sécurité
+### 6. Services, session, security
 
-- Injection de dépendances par `Microsoft.Extensions.DependencyInjection`, une
-  portée par requête ; les façades `Hack*` du SDK restent disponibles selon les
-  capacités du site.
-- Session par cookie (`HackSession`), en mémoire du processus du site.
-- Jeton anti-falsification pour les formulaires `POST` des vues
+- Dependency injection through `Microsoft.Extensions.DependencyInjection`, one
+  scope per request; the SDK's `Hack*` facades remain available according to the
+  site's capabilities.
+- Cookie session (`HackSession`), in the memory of the site's process.
+- Anti-forgery token for the views' `POST` forms
   (`[ValidateAntiForgeryToken]`).
-- Filtres d'action simples (`IHackActionFilter`, avant/après, en attribut ou
+- Simple action filters (`IHackActionFilter`, before/after, as an attribute or
   global).
-- Pas d'authentification complète en v1.
+- No full authentication in v1.
 
-### 7. Vues `.razor`
+### 7. `.razor` views
 
-Une vue est un composant Razor compilé au build avec un paramètre `Model` :
+A view is a Razor component compiled at build time with a `Model` parameter:
 
 ```razor
 @inherits HackView<HomeModel>
@@ -101,32 +101,32 @@ Une vue est un composant Razor compilé au build avec un paramètre `Model` :
 <HackForm Action="Contact" Controller="Home"> ... </HackForm>
 ```
 
-Elle est rendue en HTML statique par `HtmlRenderer` (.NET, comme les
-composants rendus côté serveur d'ASP.NET 8), sans interactivité. Recherche par
-convention `Views/<Contrôleur>/<Action>.razor` (`View()` sans type), ou par type
-(`View<HomeIndexView>(model)`). Helpers : `Url.Action`, `HackForm`,
+It is rendered as static HTML by `HtmlRenderer` (.NET, like ASP.NET 8's
+server-rendered components), without interactivity. Lookup by
+convention `Views/<Controller>/<Action>.razor` (`View()` without a type), or by type
+(`View<HomeIndexView>(model)`). Helpers: `Url.Action`, `HackForm`,
 `HackLink`, `HackValidationMessage`.
 
-### 8. Vues `.cshtml`
+### 8. `.cshtml` views
 
-Le compilateur Razor sait produire du C# à partir d'un `.cshtml` au build. Le
-chantier `web/8-cshtml-views` commence par une preuve : compiler un `.cshtml`
-avec `@model`, `@inject`, `@section`, `_Layout` et `_ViewStart` contre une classe
-de base `HackRazorPage<TModel>` d'ASP.Hack, sans référencer ASP.NET MVC. Si la
-preuve réussit, `View()` trouve `Views/<Contrôleur>/<Action>.cshtml` aussi. Si
-elle échoue, l'autre voie est déjà choisie : un moteur `.cshtml` interprété,
-propre à ASP.Hack, qui couvre un sous-ensemble (`@model`, `@using`, `@if`,
-`@foreach`, `@switch`, expressions `@Model.X`, `@section`, `_Layout`,
-`_ViewStart`, partials) sans C# arbitraire dans la vue ; un ADR court en note
-alors les limites avant le code. La compilation d'un `.cshtml` **dans l'OS** (moteur Razor et
-Roslyn dans le navigateur) est hors périmètre, mais le choix d'une classe de
-base propre à ASP.Hack la rend possible plus tard.
+The Razor compiler can produce C# from a `.cshtml` at build time. The
+`web/8-cshtml-views` work item starts with a proof: compile a `.cshtml`
+with `@model`, `@inject`, `@section`, `_Layout` and `_ViewStart` against a base
+class `HackRazorPage<TModel>` of ASP.Hack, without referencing ASP.NET MVC. If the
+proof succeeds, `View()` also finds `Views/<Controller>/<Action>.cshtml`. If
+it fails, the other path is already chosen: an interpreted `.cshtml` engine,
+specific to ASP.Hack, which covers a subset (`@model`, `@using`, `@if`,
+`@foreach`, `@switch`, `@Model.X` expressions, `@section`, `_Layout`,
+`_ViewStart`, partials) without arbitrary C# in the view; a short ADR then notes
+the limits before the code. Compiling a `.cshtml` **in the OS** (Razor engine and
+Roslyn in the browser) is out of scope, but choosing a base class specific to
+ASP.Hack makes it possible later.
 
-## Conséquences
+## Consequences
 
-- Le générateur de manifestes gagne la génération des routes des apps `Web`.
-- Les sites MVC tournent dans le worker web partagé (ADR 0073 §1) ; leurs
-  vues n'ont pas besoin du DOM.
-- Les noms d'attributs identiques à ASP.NET vivent dans l'espace de noms
-  `HackerOs.AppSdk.Web.Mvc` et ne peuvent pas entrer en conflit (ASP.NET n'est
-  pas référencé).
+- The manifest generator gains the generation of routes for `Web` apps.
+- MVC sites run in the shared web worker (ADR 0073 §1); their
+  views do not need the DOM.
+- Attribute names identical to ASP.NET live in the namespace
+  `HackerOs.AppSdk.Web.Mvc` and cannot conflict (ASP.NET is not
+  referenced).

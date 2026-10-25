@@ -1,138 +1,138 @@
-# ADR 0125 : limites de ressources par processus (`setrlimit`, `ulimit`, `limits.conf`)
+# ADR 0125: per-process resource limits (`setrlimit`, `ulimit`, `limits.conf`)
 
-## Statut
+## Status
 
-Accepté le 2026-10-18. Une question est posée à Benoit (§6, valeurs par
-défaut) ; ce qui suit applique la réponse recommandée en attendant.
+Accepted on 2026-10-18. A question is asked to Benoit (§6, default
+values); what follows applies the recommended answer while awaiting it.
 
-- **Plan :** [`execution-followups-plan.md`](../plans/execution-followups-plan.md),
-  décision 2 (réponse Q1 : « au mieux » sur le fil principal) ; mis en œuvre
-  par `exec/2-process-limits`.
-- **Remplace :** le principe « mesurer, pas contraindre » de la phase 5
-  ([`execution-isolation-plan.md`](../plans/execution-isolation-plan.md) §3) pour les
-  limites de cet ADR.
-- **Complète :** ADR 0067 (temps CPU), 0068 (mémoire), 0069 (escalade).
+- **Plan:** [`execution-followups-plan.md`](../plans/execution-followups-plan.md),
+  decision 2 (answer Q1: "best effort" on the main thread); implemented
+  by `exec/2-process-limits`.
+- **Replaces:** the principle "measure, do not constrain" of phase 5
+  ([`execution-isolation-plan.md`](../plans/execution-isolation-plan.md) §3) for the
+  limits of this ADR.
+- **Complements:** ADR 0067 (CPU time), 0068 (memory), 0069 (escalation).
 
-## Contexte
+## Context
 
-La phase 5 mesure le CPU et la mémoire de chaque processus (ADR 0066 à 0068)
-mais n'en limite aucun. Un processus peut aussi ouvrir des descripteurs ou
-lancer des enfants sans borne. Linux règle cela par `setrlimit` : une limite
-**souple** (celle qui s'applique) et une limite **dure** (le plafond de la
-souple), héritées au `fork`, posées à la connexion par `pam_limits` depuis
+Phase 5 measures the CPU and memory of each process (ADR 0066 to 0068)
+but limits none. A process can also open descriptors or
+launch children without bound. Linux handles this through `setrlimit`: a
+**soft** limit (the one that applies) and a **hard** limit (the ceiling of the
+soft one), inherited at `fork`, set at login by `pam_limits` from
 `/etc/security/limits.conf`.
 
-## Décision
+## Decision
 
-### 1. Limites retenues
+### 1. Limits retained
 
-| Ressource | Nom Linux | `ulimit` | Mesure | Dépassement |
+| Resource | Linux name | `ulimit` | Measure | Overrun |
 |---|---|---|---|---|
-| Temps CPU | `RLIMIT_CPU` | `-t` (secondes) | `utime + stime` (ADR 0067) | souple : `SIGXCPU`, puis chaque seconde ; dure : `SIGKILL` |
-| Mémoire résidente | `RLIMIT_RSS` | `-m` (Kio) | `VmRSS` mesuré (ADR 0068) | `SIGKILL`, raison `MemoryLimitExceeded` |
-| Descripteurs ouverts | `RLIMIT_NOFILE` | `-n` | table des descripteurs (`/proc/<pid>/fd`) | ouverture refusée : `EMFILE`, « Too many open files » |
-| Processus de l'utilisateur | `RLIMIT_NPROC` | `-u` | processus vivants de l'UID | lancement refusé : `EAGAIN`, « Resource temporarily unavailable » |
+| CPU time | `RLIMIT_CPU` | `-t` (seconds) | `utime + stime` (ADR 0067) | soft: `SIGXCPU`, then every second; hard: `SIGKILL` |
+| Resident memory | `RLIMIT_RSS` | `-m` (KiB) | measured `VmRSS` (ADR 0068) | `SIGKILL`, reason `MemoryLimitExceeded` |
+| Open descriptors | `RLIMIT_NOFILE` | `-n` | descriptor table (`/proc/<pid>/fd`) | open refused: `EMFILE`, "Too many open files" |
+| User processes | `RLIMIT_NPROC` | `-u` | live processes of the UID | launch refused: `EAGAIN`, "Resource temporarily unavailable" |
 
-- Linux ignore `RLIMIT_RSS` depuis 2.6 ; HackerOS l'applique, parce que c'est la
-  seule mémoire qu'il mesure. La documentation le dit.
-- `RLIM_INFINITY` s'écrit `unlimited`.
-- Une limite fondée sur une mesure (CPU, mémoire) est **inactive** quand cette
-  mesure est coupée (`CpuSource`/`MemSource: simulated`, ADR 0066) ; `ulimit`
-  l'affiche quand même, et `/proc/<pid>/limits` le note (§4).
-- `NOFILE` et `NPROC` sont comptés par l'OS lui-même : ils s'appliquent
-  partout, au fil principal comme en worker.
-- Un réglage d'hôte `HackerOs:ResourceLimits:Enabled` (`appsettings.json`,
-  `true` par défaut) coupe toutes les limites : l'OS se comporte alors comme
-  aujourd'hui et tout est `unlimited`.
+- Linux has ignored `RLIMIT_RSS` since 2.6; HackerOS enforces it, because it is the
+  only memory it measures. The documentation says so.
+- `RLIM_INFINITY` is written `unlimited`.
+- A limit based on a measurement (CPU, memory) is **inactive** when that
+  measurement is turned off (`CpuSource`/`MemSource: simulated`, ADR 0066); `ulimit`
+  still displays it, and `/proc/<pid>/limits` notes it (§4).
+- `NOFILE` and `NPROC` are counted by the OS itself: they apply
+  everywhere, on the main thread as in a worker.
+- A host setting `HackerOs:ResourceLimits:Enabled` (`appsettings.json`,
+  `true` by default) turns off all limits: the OS then behaves as
+  today and everything is `unlimited`.
 
-### 2. Application stricte en worker, au mieux sur le fil principal
+### 2. Strict enforcement in a worker, best effort on the main thread
 
-- **Dans un worker**, `SIGXCPU` lève `StopRequested` avec la nouvelle raison
-  `ProcessExitReason.CpuLimitExceeded` ; sans fin du processus, la limite dure
-  mène à `SIGKILL` par l'escalade de l'ADR 0069, jusqu'à l'étape 4 (worker
-  terminé). Le dépassement de la mémoire tue tout de suite (étape 3 puis 4) :
-  rien ne permet de refuser une allocation .NET.
-- **Sur le fil principal**, l'OS ne voit la mesure qu'entre deux tranches
-  (ADR 0067 §4) : `SIGXCPU` et `SIGKILL` partent à la fin de la tranche qui
-  franchit la limite, et l'escalade s'arrête à l'étape 3. Une boucle qui ne rend
-  jamais la main n'est pas arrêtée.
-- Codes de sortie : 152 (128 + `SIGXCPU`, 24) si le processus se termine sur
-  `SIGXCPU`, 137 après `SIGKILL`. Le shell écrit « CPU time limit exceeded » ou
-  « Killed », comme bash.
+- **In a worker**, `SIGXCPU` raises `StopRequested` with the new reason
+  `ProcessExitReason.CpuLimitExceeded`; if the process does not end, the hard limit
+  leads to `SIGKILL` through the escalation of ADR 0069, up to step 4 (worker
+  terminated). Exceeding memory kills immediately (step 3 then 4):
+  nothing allows refusing a .NET allocation.
+- **On the main thread**, the OS only sees the measurement between two slices
+  (ADR 0067 §4): `SIGXCPU` and `SIGKILL` are sent at the end of the slice that
+  crosses the limit, and escalation stops at step 3. A loop that never yields
+  is not stopped.
+- Exit codes: 152 (128 + `SIGXCPU`, 24) if the process ends on
+  `SIGXCPU`, 137 after `SIGKILL`. The shell writes "CPU time limit exceeded" or
+  "Killed", like bash.
 
-### 3. Sources et héritage
+### 3. Sources and inheritance
 
-- **Valeurs du noyau** (avant toute configuration) : celles de §6.
-- **`/etc/security/limits.conf`** et **`/etc/security/limits.d/*.conf`**
-  (ordre alphabétique), format de `pam_limits` :
-  `<domaine> <type> <élément> <valeur>`, domaine `utilisateur`, `@groupe` ou
-  `*`, type `soft`, `hard` ou `-`, éléments `cpu`, `rss`, `nofile`, `nproc`.
-  Lus à l'ouverture de session (premier processus de la session) ; une ligne
-  invalide est ignorée et écrite dans `/var/log/auth.log`, comme `pam_limits`.
-  Fichiers `system:system 0644` ; l'OS livre un `limits.conf` entièrement
-  commenté, comme les distributions.
-- **Héritage** : un enfant reçoit les limites de son parent au lancement.
-- **Changement** : un processus baisse ses limites librement, monte la souple
-  jusqu'à la dure ; seul un processus élevé (`sudo`, ADR 0042) monte la dure.
+- **Kernel values** (before any configuration): those of §6.
+- **`/etc/security/limits.conf`** and **`/etc/security/limits.d/*.conf`**
+  (alphabetical order), `pam_limits` format:
+  `<domain> <type> <item> <value>`, domain `user`, `@group` or
+  `*`, type `soft`, `hard` or `-`, items `cpu`, `rss`, `nofile`, `nproc`.
+  Read at session opening (first process of the session); an invalid line
+  is ignored and written to `/var/log/auth.log`, like `pam_limits`.
+  Files `system:system 0644`; the OS ships a fully commented `limits.conf`,
+  like distributions do.
+- **Inheritance**: a child receives its parent's limits at launch.
+- **Change**: a process lowers its limits freely, raises the soft one
+  up to the hard one; only an elevated process (`sudo`, ADR 0042) raises the hard one.
 
 ### 4. Surfaces
 
-- **`ulimit`** intégré à `hsh` (il agit sur le shell et ses futurs enfants) :
-  `-a`, `-S`, `-H`, `-t`, `-m`, `-n`, `-u`. Sans lettre, bash vise `-f` (taille
-  de fichier) ; HackerOS n'a pas cette limite, donc `ulimit` seul affiche
-  `unlimited` et `ulimit <n>` répond « ulimit: file size: cannot modify limit:
-  Operation not permitted ».
-- **`prlimit`** : `prlimit --pid <pid> [--cpu=soft:hard] [--rss=…] [--nofile=…]
-  [--nproc=…]`, sur un processus du même utilisateur, ou sur tout processus
-  avec `sudo`.
-- **`/proc/<pid>/limits`** : le tableau de Linux (`Limit`, `Soft Limit`,
-  `Hard Limit`, `Units`) pour les quatre lignes, suivi d'une ligne de
-  commentaire propre à HackerOS : `# enforcement: strict (worker)`,
-  `# enforcement: best-effort (main thread)` ou `# cpu, rss: inactive (not measured)`.
-- **SDK** (ajouts du SDK 1.2, ADR 0132) : `HackProcess.Current.GetResourceLimits()`
-  (enregistrement `HackResourceLimits`), `HackProcess.SetResourceLimitAsync(kind,
-  soft, hard)`, `ProcessExitReason.CpuLimitExceeded` et `MemoryLimitExceeded`,
-  `FileSystemErrorCode.TooManyOpenFiles` (`EMFILE`) traduit en `HackIOException`,
-  et un échec de lancement qui porte `EAGAIN`. Les noms exacts sont fixés par
-  le chantier dans `PublicAPI.Unshipped.txt`, dans l'esprit de cette liste.
+- **`ulimit`** built into `hsh` (it acts on the shell and its future children):
+  `-a`, `-S`, `-H`, `-t`, `-m`, `-n`, `-u`. Without a letter, bash targets `-f` (file
+  size); HackerOS has no such limit, so `ulimit` alone displays
+  `unlimited` and `ulimit <n>` answers "ulimit: file size: cannot modify limit:
+  Operation not permitted".
+- **`prlimit`**: `prlimit --pid <pid> [--cpu=soft:hard] [--rss=…] [--nofile=…]
+  [--nproc=…]`, on a process of the same user, or on any process
+  with `sudo`.
+- **`/proc/<pid>/limits`**: Linux's table (`Limit`, `Soft Limit`,
+  `Hard Limit`, `Units`) for the four rows, followed by a
+  comment line specific to HackerOS: `# enforcement: strict (worker)`,
+  `# enforcement: best-effort (main thread)` or `# cpu, rss: inactive (not measured)`.
+- **SDK** (SDK 1.2 additions, ADR 0132): `HackProcess.Current.GetResourceLimits()`
+  (record `HackResourceLimits`), `HackProcess.SetResourceLimitAsync(kind,
+  soft, hard)`, `ProcessExitReason.CpuLimitExceeded` and `MemoryLimitExceeded`,
+  `FileSystemErrorCode.TooManyOpenFiles` (`EMFILE`) translated to `HackIOException`,
+  and a launch failure that carries `EAGAIN`. The exact names are set by
+  the work item in `PublicAPI.Unshipped.txt`, in the spirit of this list.
 
 ### 5. Exemptions
 
-`root` élevé n'est pas soumis à `NPROC` (comme `CAP_SYS_RESOURCE`). Les
-processus système du compte `hackeros-svc` (ADR 0107) reçoivent les limites du
-noyau, pas celles de `limits.conf` (ils ne passent pas par une connexion).
+An elevated `root` is not subject to `NPROC` (like `CAP_SYS_RESOURCE`). The system
+processes of the `hackeros-svc` account (ADR 0107) receive the kernel limits,
+not those of `limits.conf` (they do not go through a login).
 
-### 6. Valeurs par défaut (question posée à Benoit)
+### 6. Default values (question asked to Benoit)
 
-Appliqué en attendant sa réponse (recommandé) : valeurs d'une distribution
-Linux courante pour les compteurs, illimité pour ce qui dépend d'une mesure.
+Applied while awaiting his answer (recommended): values of a common Linux
+distribution for the counters, unlimited for what depends on a measurement.
 
-| Élément | Souple | Dure |
+| Item | Soft | Hard |
 |---|---|---|
 | `cpu` | `unlimited` | `unlimited` |
 | `rss` | `unlimited` | `unlimited` |
 | `nofile` | 1024 | 524288 |
 | `nproc` | 4096 | 4096 |
 
-L'autre choix proposé : tout `unlimited` par défaut, rien ne change pour une
-app tant qu'un administrateur n'écrit pas `limits.conf`. Si Benoit le choisit,
-un ADR court remplace ce paragraphe.
+The other proposed choice: everything `unlimited` by default, nothing changes for an
+app until an administrator writes `limits.conf`. If Benoit chooses it,
+a short ADR replaces this paragraph.
 
-## Conséquences
+## Consequences
 
-- Contrat de limites dans Simulation Abstractions, table des limites dans
-  `ProcessRecord`, héritage au lancement, contrôle dans la table des
-  descripteurs et au lancement d'un processus.
-- Chaque commande traite `EMFILE` et `EAGAIN` comme une erreur d'E/S ordinaire
-  (message, code de sortie 1).
-- `build/verify-hosts.sh` gagne le parcours `ulimit -t 1` puis `stress`, sortie
-  152, dans un worker.
-- Docs : [`linux-commands.md`](../linux-commands.md) (`ulimit`, `prlimit`),
+- Limits contract in Simulation Abstractions, limits table in
+  `ProcessRecord`, inheritance at launch, check in the descriptor table
+  and at process launch.
+- Each command treats `EMFILE` and `EAGAIN` as an ordinary I/O error
+  (message, exit code 1).
+- `build/verify-hosts.sh` gains the walkthrough `ulimit -t 1` then `stress`, exit
+  152, in a worker.
+- Docs: [`linux-commands.md`](../linux-commands.md) (`ulimit`, `prlimit`),
   [`virtual-proc-and-dev.md`](../virtual-proc-and-dev.md) (`limits`),
-  [`worker-processes.md`](../worker-processes.md), nouveau
+  [`worker-processes.md`](../worker-processes.md), new
   `process-limits.md`.
 
-## Références
+## References
 
 - ADR 0042, 0066, 0067, 0068, 0069, 0070, 0107, 0132.
 - `setrlimit(2)`, `limits.conf(5)`, `prlimit(1)`, `proc(5)`.

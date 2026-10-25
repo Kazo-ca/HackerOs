@@ -1,36 +1,36 @@
-# ADR 0052 : Corbeille
+# ADR 0052: Trash
 
-## Statut
+## Status
 
-Accepté le 2026-10-10.
+Accepted on 2026-10-10.
 
-- **Phase du plan :** phase 3 — Shell, commandes et corbeille
+- **Plan phase:** phase 3, Shell, commands and trash
   ([`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md), section 7.4,
-  décision D15, point de détail de la section 11 sur `rm`).
-- **Complète :** ADR 0043 : `HackFile.DeleteAsync` et
-  `HackDirectory.DeleteAsync` restent des suppressions définitives, comme
-  `System.IO` ; la corbeille est une API à part, `HackTrash`.
-- **S'appuie sur :** ADR 0051 (`rm` et la nouvelle commande `trash` vivent dans
+  decision D15, detail point of section 11 on `rm`).
+- **Complements:** ADR 0043: `HackFile.DeleteAsync` and
+  `HackDirectory.DeleteAsync` remain permanent deletions, like
+  `System.IO`; the trash is a separate API, `HackTrash`.
+- **Builds on:** ADR 0051 (`rm` and the new `trash` command live in
   `HackerOs.Commands`).
 
-## Contexte
+## Context
 
-Aucune corbeille n'existe. `rm` supprime définitivement. L'explorateur
-(`FileExplorerWindow.DeleteSelectedAsync`) appelle
-`IAppFileSystemGateway.DeleteAsync` récursif sur la sélection, sans
-confirmation ni retour possible. Le menu de `FileView` propose « Delete » avec
-une icône de corbeille.
+No trash exists. `rm` deletes permanently. The explorer
+(`FileExplorerWindow.DeleteSelectedAsync`) calls a recursive
+`IAppFileSystemGateway.DeleteAsync` on the selection, without
+confirmation and with no way back. The `FileView` menu offers "Delete" with
+a trash icon.
 
-## Décision
+## Decision
 
-### 1. Format : spécification freedesktop.org
+### 1. Format: freedesktop.org specification
 
-La corbeille d'un utilisateur est `$HOME/.local/share/Trash/`, avec la
-structure de la spécification « Trash » de freedesktop.org (version 1.0) :
+A user's trash is `$HOME/.local/share/Trash/`, with the
+structure of the freedesktop.org "Trash" specification (version 1.0):
 
-- `files/<nom>` : l'élément supprimé, fichier ou dossier entier, déplacé tel
-  quel (contenu, droits, propriétaire et dates conservés).
-- `info/<nom>.trashinfo` : un fichier texte par élément :
+- `files/<name>`: the deleted item, a file or an entire folder, moved as
+  is (content, permissions, owner and dates preserved).
+- `info/<name>.trashinfo`: one text file per item:
 
   ```ini
   [Trash Info]
@@ -38,40 +38,40 @@ structure de la spécification « Trash » de freedesktop.org (version 1.0) :
   DeletionDate=2026-10-10T14:03:27
   ```
 
-  `Path` est le chemin absolu d'origine, encodé comme une URL (RFC 2396,
-  `/` non encodé). `DeletionDate` est l'heure locale de l'horloge simulée, au
-  format `YYYY-MM-DDThh:mm:ss`.
-- Les dossiers sont créés à la demande avec les droits `0700`.
-- Pas de cache `directorysizes` dans cette phase.
+  `Path` is the original absolute path, encoded like a URL (RFC 2396,
+  `/` not encoded). `DeletionDate` is the local time of the simulated clock, in
+  the format `YYYY-MM-DDThh:mm:ss`.
+- Folders are created on demand with permissions `0700`.
+- No `directorysizes` cache in this phase.
 
-**Noms.** `<nom>` est le nom d'origine. S'il est déjà pris dans `info/`, on
-essaie `nom.2.ext`, `nom.3.ext`… (pour `rapport.txt` : `rapport.2.txt`). Comme
-le demande la spécification, le fichier `.trashinfo` est créé **d'abord**, en
-création exclusive, pour réserver le nom ; puis l'élément est déplacé dans
-`files/`. Si le déplacement échoue, le `.trashinfo` est supprimé et l'erreur
-remonte. Au listage, un `.trashinfo` sans élément dans `files/` est ignoré et
-nettoyé ; un élément de `files/` sans `.trashinfo` est listé avec une origine
-inconnue.
+**Names.** `<name>` is the original name. If it is already taken in `info/`,
+`name.2.ext`, `name.3.ext`... are tried (for `rapport.txt`: `rapport.2.txt`). As
+the specification requires, the `.trashinfo` file is created **first**, with
+exclusive creation, to reserve the name; then the item is moved into
+`files/`. If the move fails, the `.trashinfo` is deleted and the error
+propagates. When listing, a `.trashinfo` with no item in `files/` is ignored and
+cleaned up; an item in `files/` with no `.trashinfo` is listed with an unknown
+origin.
 
-### 2. Ce qui peut aller à la corbeille
+### 2. What can go to the trash
 
-- Les éléments du système de fichiers principal (IndexedDB), quel que soit
-  leur dossier, dès que l'appelant a le droit de les supprimer (écriture sur
-  le dossier parent, droits du fichier et capacités de l'app). Ils vont dans
-  la corbeille de l'**utilisateur effectif** : `sudo rm /etc/x` envoie dans
+- Items of the main file system (IndexedDB), whatever
+  their folder, as long as the caller has the right to delete them (write on
+  the parent folder, file permissions and the app's capabilities). They go into
+  the trash of the **effective user**: `sudo rm /etc/x` sends to
   `/root/.local/share/Trash/`.
-- Les montages virtuels (`/proc`, `/dev`) refusent : `HackIOException`
-  « Cannot move to trash: virtual file system ».
-- Un élément déjà dans la corbeille (`~/.local/share/Trash/...`) est supprimé
-  définitivement au lieu d'être déplacé.
-- Le dossier personnel lui-même, `/` et la corbeille elle-même sont refusés.
-- Pas de limite de taille ni de purge automatique dans cette phase. La
-  corbeille compte dans l'espace disque comme n'importe quel fichier.
+- Virtual mounts (`/proc`, `/dev`) refuse: `HackIOException`
+  "Cannot move to trash: virtual file system".
+- An item already in the trash (`~/.local/share/Trash/...`) is deleted
+  permanently instead of being moved.
+- The home folder itself, `/` and the trash itself are refused.
+- No size limit or automatic purge in this phase. The
+  trash counts toward disk space like any other file.
 
-### 3. API `HackTrash` dans le SDK
+### 3. `HackTrash` API in the SDK
 
-`Shared/HackerOs.AppSdk/IO/HackTrash.cs`, statique, asynchrone, contexte
-ambiant de l'ADR 0043, mêmes exceptions `Hack*` :
+`Shared/HackerOs.AppSdk/IO/HackTrash.cs`, static, asynchronous, ambient
+context of ADR 0043, same `Hack*` exceptions:
 
 ```csharp
 public static class HackTrash
@@ -84,87 +84,87 @@ public static class HackTrash
 }
 
 public sealed record HackTrashItem(
-    string Name,                 // nom dans files/ (identifiant stable)
-    string? OriginalPath,        // null si le .trashinfo manque
+    string Name,                 // name in files/ (stable identifier)
+    string? OriginalPath,        // null if the .trashinfo is missing
     DateTimeOffset? DeletedAt,
     bool IsDirectory,
-    long Length);                // taille du fichier, ou somme pour un dossier
+    long Length);                // file size, or sum for a folder
 ```
 
-- `MoveToTrashAsync` : chemin manquant → `HackFileNotFoundException`.
-- `RestoreAsync` : remet l'élément à `destinationPath`, sinon à son origine ;
-  recrée les dossiers parents manquants ; un élément déjà présent à la
-  destination → `HackIOException` (« already exists »), sans rien écraser.
-  Renvoie le chemin restauré et supprime le `.trashinfo`.
-- `DeleteAsync` supprime définitivement un élément ; `EmptyAsync` vide tout.
-- **Aucune nouvelle capacité :** la corbeille est un ensemble de fichiers du
-  dossier personnel. Les capacités `filesystem.*` existantes et les droits
-  des fichiers décident, comme pour `HackFile`.
-- Chaque mise à la corbeille, restauration et suppression définitive est
-  écrite au niveau `Info` dans le journal de l'app (ADR 0045).
+- `MoveToTrashAsync`: missing path → `HackFileNotFoundException`.
+- `RestoreAsync`: puts the item back at `destinationPath`, otherwise at its origin;
+  recreates missing parent folders; an item already present at the
+  destination → `HackIOException` ("already exists"), overwriting nothing.
+  Returns the restored path and deletes the `.trashinfo`.
+- `DeleteAsync` permanently deletes an item; `EmptyAsync` empties everything.
+- **No new capability:** the trash is a set of files in the
+  home folder. The existing `filesystem.*` capabilities and file permissions
+  decide, as for `HackFile`.
+- Every move to the trash, restore and permanent deletion is
+  written at `Info` level in the app's log (ADR 0045).
 
-### 4. `rm` et la commande `trash`
+### 4. `rm` and the `trash` command
 
-- `rm fichier` : met à la corbeille. Un dossier demande `-r` (`rm: cannot
-  remove 'd': Is a directory`), puis part **entier** à la corbeille. `-f`
-  ignore les éléments manquants. Sortie silencieuse, comme `rm`.
-- `rm --permanent` : suppression définitive, comportement actuel.
-- `rm` sur `/proc` ou `/dev` affiche l'erreur de la section 2.
-- Nouvelle commande `trash` (même projet, app système), inspirée de
-  `trash-cli` :
-  - `trash put <fichier…>` : comme `rm` ;
-  - `trash list` : `DeletionDate  Path`, trié par date ;
-  - `trash restore <nom|chemin d'origine> [destination]` : quand le chemin
-    d'origine désigne plusieurs éléments, le plus récent ;
-  - `trash rm <nom>` : suppression définitive d'un élément ;
-  - `trash empty` : vide la corbeille.
+- `rm file`: moves to the trash. A folder requires `-r` (`rm: cannot
+  remove 'd': Is a directory`), then goes to the trash **whole**. `-f`
+  ignores missing items. Silent output, like `rm`.
+- `rm --permanent`: permanent deletion, the current behavior.
+- `rm` on `/proc` or `/dev` prints the error from section 2.
+- New `trash` command (same project, system app), inspired by
+  `trash-cli`:
+  - `trash put <file...>`: like `rm`;
+  - `trash list`: `DeletionDate  Path`, sorted by date;
+  - `trash restore <name|original path> [destination]`: when the original
+    path designates several items, the most recent;
+  - `trash rm <name>`: permanent deletion of an item;
+  - `trash empty`: empties the trash.
 
-### 5. Explorateur de fichiers
+### 5. File explorer
 
-- « Delete » et la touche Suppr mettent la sélection à la corbeille, sans
-  confirmation (l'action est réversible).
-- Maj+Suppr et une entrée « Delete permanently » suppriment définitivement,
-  après une confirmation.
-- Une entrée « Trash » dans le panneau latéral ouvre une vue de la
-  corbeille : colonnes nom, emplacement d'origine, date de suppression,
-  taille ; actions « Restore », « Delete permanently » et « Empty trash »
-  (avec confirmation). Cette vue lit `HackTrash.GetItemsAsync`, pas le
-  dossier brut.
-- Couper, copier, coller et glisser-déposer vers la corbeille restent en
-  phase 4 (section 8.2 du plan).
+- "Delete" and the Delete key send the selection to the trash, without
+  confirmation (the action is reversible).
+- Shift+Delete and a "Delete permanently" entry delete permanently,
+  after a confirmation.
+- A "Trash" entry in the side panel opens a trash view:
+  columns name, original location, deletion date,
+  size; actions "Restore", "Delete permanently" and "Empty trash"
+  (with confirmation). This view reads `HackTrash.GetItemsAsync`, not the
+  raw folder.
+- Cut, copy, paste and drag-and-drop to the trash remain in
+  phase 4 (section 8.2 of the plan).
 
-## Conséquences
+## Consequences
 
-- Une suppression par `rm` ou l'explorateur devient réversible, avec le même
-  format que les bureaux Linux.
-- La corbeille est de simples fichiers : `ls ~/.local/share/Trash/files`
-  fonctionne, et ses droits sont ceux du dossier personnel.
-- Les scripts ou apps qui comptaient sur `rm` pour libérer l'espace doivent
-  utiliser `rm --permanent` ou vider la corbeille.
+- A deletion by `rm` or the explorer becomes reversible, with the same
+  format as Linux desktops.
+- The trash is plain files: `ls ~/.local/share/Trash/files`
+  works, and its permissions are those of the home folder.
+- Scripts or apps that relied on `rm` to free up space must
+  use `rm --permanent` or empty the trash.
 
-## Chantiers d'implémentation de la phase 3
+## Phase 3 implementation work items
 
-Tableau commun aux ADR 0050, 0051 et 0052. Chaque branche part de
-`rebuild/base` et sa PR vise `rebuild/base`.
+Table shared by ADRs 0050, 0051 and 0052. Each branch starts from
+`rebuild/base` and its PR targets `rebuild/base`.
 
-| Branche | Contenu | Dépend de |
+| Branch | Content | Depends on |
 |---|---|---|
-| `rebuild/3-commands-merge` | ADR 0051 section 1 : projet `HackerOs.Commands`, déplacement des 28 commandes, `manifests/<appId>.json`, une `ProjectReference` dans l'hôte, solution et projets de tests mis à jour, anciens projets supprimés. Aucun changement de comportement. | — |
-| `rebuild/3-process-environment` | ADR 0050 sections 5 et 6 : `IProcessEnvironmentTable`, arguments, répertoire et environnement à la création (héritage du parent), environnement de connexion et `/etc/environment`, `/etc/hostname`, `/proc/<pid>/cmdline`, `environ`, `cwd`, `HackEnvironment`, contexte ambiant relié au répertoire du processus. | — |
-| `rebuild/3-shell-interpreter` | ADR 0050 sections 1 à 4 et 7 : `ShellParser` (arbre), expansion, `ShellPipe`, redirections, `&&`, `ShellInterpreter` et `ShellSession` dans Platform Core, flux sur `AppLaunchRequest`, sortie au fil de l'eau dans le terminal, `ExecuteCommandIntent` par l'interpréteur. Les noms codés en dur du terminal restent provisoirement. | `3-process-environment` |
-| `rebuild/3-trash` | ADR 0052 : `HackTrash`, `rm` vers la corbeille et `--permanent`, commande `trash`, vue Corbeille et Maj+Suppr dans l'explorateur. | `3-commands-merge` |
-| `rebuild/3-shell-commands` | ADR 0051 sections 2 à 5 : `IShellSession`, capacité `shell.control` (classée normale), commandes `cd`, `pwd`, `clear`, `help`, `export`, `unset`, `env`, `sudo` du catalogue, séquences d'effacement dans le terminal, retrait de tous les noms codés en dur, complétion depuis le catalogue, alias statiques de `alias`. | `3-shell-interpreter`, `3-commands-merge` |
+| `rebuild/3-commands-merge` | ADR 0051 section 1: `HackerOs.Commands` project, move of the 28 commands, `manifests/<appId>.json`, one `ProjectReference` in the host, solution and test projects updated, old projects deleted. No behavior change. | n/a |
+| `rebuild/3-process-environment` | ADR 0050 sections 5 and 6: `IProcessEnvironmentTable`, arguments, directory and environment at creation (inherited from the parent), login environment and `/etc/environment`, `/etc/hostname`, `/proc/<pid>/cmdline`, `environ`, `cwd`, `HackEnvironment`, ambient context tied to the process's directory. | n/a |
+| `rebuild/3-shell-interpreter` | ADR 0050 sections 1 to 4 and 7: `ShellParser` (tree), expansion, `ShellPipe`, redirections, `&&`, `ShellInterpreter` and `ShellSession` in Platform Core, streams on `AppLaunchRequest`, output as produced in the terminal, `ExecuteCommandIntent` through the interpreter. The terminal's hard-coded names remain temporarily. | `3-process-environment` |
+| `rebuild/3-trash` | ADR 0052: `HackTrash`, `rm` to the trash and `--permanent`, `trash` command, Trash view and Shift+Delete in the explorer. | `3-commands-merge` |
+| `rebuild/3-shell-commands` | ADR 0051 sections 2 to 5: `IShellSession`, `shell.control` capability (classified normal), catalog commands `cd`, `pwd`, `clear`, `help`, `export`, `unset`, `env`, `sudo`, clear sequences in the terminal, removal of all hard-coded names, completion from the catalog, static aliases of `alias`. | `3-shell-interpreter`, `3-commands-merge` |
 
-Ordre : `3-commands-merge` et `3-process-environment` en parallèle ; puis
-`3-trash` (dès que `3-commands-merge` est mergé) en parallèle avec
-`3-shell-interpreter` ; enfin `3-shell-commands`.
+Order: `3-commands-merge` and `3-process-environment` in parallel; then
+`3-trash` (as soon as `3-commands-merge` is merged) in parallel with
+`3-shell-interpreter`; finally `3-shell-commands`.
 
-## Références
+## References
 
 - [Trash specification 1.0](https://specifications.freedesktop.org/trash-spec/1.0/),
   freedesktop.org.
-- ADR 0043 (API `Hack*`), ADR 0045 (journaux), ADR 0050, ADR 0051.
-- [`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md), sections 7.4 et 11.
+- ADR 0043 (`Hack*` API), ADR 0045 (logs), ADR 0050, ADR 0051.
+- [`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md), sections 7.4 and 11.
 - `Apps/System/HackerOs.Apps.FileExplorer/FileExplorerWindow.razor`,
   `Apps/Commands/HackerOs.Commands.Rm/RmCommand.cs`,
   `Shared/HackerOs.AppSdk/IO/HackFile.cs`.

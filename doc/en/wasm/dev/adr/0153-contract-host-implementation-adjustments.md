@@ -1,108 +1,108 @@
-# ADR 0153 : ajustements de l'hôte de contrats générique
+# ADR 0153: adjustments to the generic contract host
 
-## Statut
+## Status
 
-Accepté le 2026-10-19.
+Accepted on 2026-10-19.
 
-- **Chantier :** `desk/1-contract-host` (chantier 1 du plan
+- **Work item:** `desk/1-contract-host` (work item 1 of the plan
   [`desktop-and-context-menu-plan.md`](../plans/desktop-and-context-menu-plan.md) §11).
-- **Ajuste :** l'ADR 0148 §1, §3 et §5 sur des points de mise en œuvre ; ses
-  décisions restent vraies.
+- **Adjusts:** ADR 0148 §1, §3 and §5 on implementation points; its
+  decisions remain true.
 
-## Contexte
+## Context
 
-L'ADR 0148 décide que le SDK ne porte que des contrats et que l'OS fournit à
-l'exécution le contrôle de fichiers, ses dialogues et le menu contextuel. Le
-chantier 1 livre la mécanique commune ; quelques détails n'étaient pas fixés
-par l'ADR ou ne pouvaient pas l'être tels quels.
+ADR 0148 decides that the SDK carries only contracts and that the OS provides at
+run time the file control, its dialogs and the context menu. Work item 1
+delivers the common mechanics; a few details were not fixed
+by the ADR or could not be as stated.
 
-## Décision
+## Decision
 
-### 1. Le composant hôte typé : `HackContractComponent<TController>`
+### 1. The typed host component: `HackContractComponent<TController>`
 
-Le SDK Blazor gagne une classe de base abstraite
+The Blazor SDK gains an abstract base class
 `HackContractComponent<TController>` (`HackerOs.AppSdk.Blazor.Components`).
-Un composant typé (`HackFileView`, `HackContextMenu`) en dérive, déclare ses
-`[Parameter]` ordinaires et les recopie par nom dans
-`AddProviderParameters`. Il se rend par `HackEmbeddedComponent<T>`, qui gagne
-le paramètre `Parameters` (dictionnaire transmis par nom au fournisseur, à
-côté d'`Options` et `ControllerReady`, qui gardent la priorité). La base
-expose `ControllerChanged`, `Unavailable`, `Controller` et le crochet
-`OnControllerChangedAsync`. Un nouveau dictionnaire n'est transmis que si une
-valeur a changé (comparaison superficielle), pour ne pas redessiner le
-fournisseur à chaque rendu de l'hôte.
+A typed component (`HackFileView`, `HackContextMenu`) derives from it, declares its
+ordinary `[Parameter]`s and copies them by name in
+`AddProviderParameters`. It is rendered through `HackEmbeddedComponent<T>`, which gains
+the `Parameters` parameter (dictionary passed by name to the provider, next
+to `Options` and `ControllerReady`, which keep priority). The base
+exposes `ControllerChanged`, `Unavailable`, `Controller` and the
+`OnControllerChangedAsync` hook. A new dictionary is passed only if a
+value has changed (shallow comparison), so as not to redraw the
+provider on each render of the host.
 
-`HackEmbeddedComponent<T>` garde son API 1.x : la base est une composition,
-pas un parent, afin que rien ne quitte `PublicAPI.Shipped.txt`.
+`HackEmbeddedComponent<T>` keeps its 1.x API: the base is a composition,
+not a parent, so that nothing leaves `PublicAPI.Shipped.txt`.
 
-### 2. Tolérance de version des paramètres
+### 2. Parameter version tolerance
 
-`HackEmbeddableComponent` capture les paramètres qu'il ne déclare pas
-(`UnmatchedParameters`, `CaptureUnmatchedValues`). Une app compilée avec un
-SDK plus récent peut donc passer un paramètre que le fournisseur de l'OS ne
-connaît pas encore : il est ignoré au lieu de faire échouer le rendu, comme
-une bibliothèque plus ancienne ignore un argument facultatif. Un fournisseur
-ne déclare pas son propre `CaptureUnmatchedValues` (Blazor n'en permet qu'un).
+`HackEmbeddableComponent` captures the parameters it does not declare
+(`UnmatchedParameters`, `CaptureUnmatchedValues`). An app compiled with a
+more recent SDK can therefore pass a parameter that the OS provider does not
+know yet: it is ignored instead of making the render fail, like
+an older library ignoring an optional argument. A provider
+does not declare its own `CaptureUnmatchedValues` (Blazor allows only one).
 
-### 3. Registre lu au démarrage dans le catalogue
+### 3. Registry read at startup in the catalog
 
-Le registre des fournisseurs est construit avec le catalogue
-(`AppCatalog.ComponentProviders`, `GetComponentProviders(contract)`), donc à
-partir des manifestes lus au démarrage, comme les commandes du `PATH`
-(ADR 0098 §4). L'ordre est celui de l'ADR 0063 §3. L'état installé est
-appliqué à la résolution par `HackComponentHost`.
+The provider registry is built with the catalog
+(`AppCatalog.ComponentProviders`, `GetComponentProviders(contract)`), hence from
+the manifests read at startup, like the `PATH` commands
+(ADR 0098 §4). The order is that of ADR 0063 §3. The installed state is
+applied at resolution by `HackComponentHost`.
 
-### 4. Contrats réservés : où le refus a lieu
+### 4. Reserved contracts: where the refusal happens
 
-Les noms vivent dans `HackerOs.App.Abstractions`
-(`AppComponentContracts`, `AppComponentProviderScope`) pour que le
-validateur les connaisse ; le SDK les répète dans `HackComponentContracts`.
+The names live in `HackerOs.App.Abstractions`
+(`AppComponentContracts`, `AppComponentProviderScope`) so that the
+validator knows them; the SDK repeats them in `HackComponentContracts`.
 
-- **`hackeros.context-menu` (plateforme)** : `AppManifestValidator.Validate`
-  refuse toute app qui le déclare (`manifest.component.contract.platform`) ;
-  le générateur l'arrête donc au build de l'app (`HOSAPP0009`).
-- **`hackeros.file-view`, `hackeros.file-dialogs` (apps système)** : le
-  manifeste seul ne dit pas si une app est système (seule la
-  `ProjectReference` de l'hôte le dit, ADR 0048). Le refus a donc lieu à
-  l'**agrégation** de l'hôte, par
-  `AppManifestValidator.ValidateComponentProviders`, avec le nouveau code
-  **`HOSAPP0025`** (comme `HOSAPP0024` pour `oomScoreAdj`). À l'exécution, le
-  catalogue écarte l'inscription et écrit `catalog.component.reserved` dans
-  `/var/log/syslog` ; l'app reste installable.
+- **`hackeros.context-menu` (platform)**: `AppManifestValidator.Validate`
+  refuses any app that declares it (`manifest.component.contract.platform`);
+  the generator therefore stops it at the app's build (`HOSAPP0009`).
+- **`hackeros.file-view`, `hackeros.file-dialogs` (system apps)**: the
+  manifest alone does not say whether an app is a system app (only the host's
+  `ProjectReference` says it, ADR 0048). The refusal therefore happens at the host's
+  **aggregation**, through
+  `AppManifestValidator.ValidateComponentProviders`, with the new code
+  **`HOSAPP0025`** (like `HOSAPP0024` for `oomScoreAdj`). At run time, the
+  catalog discards the registration and writes `catalog.component.reserved` in
+  `/var/log/syslog`; the app remains installable.
 
-### 5. Fournisseurs de la plateforme
+### 5. Platform providers
 
-La plateforme inscrit ses fournisseurs dans le conteneur de services
-(`HackPlatformComponent(contract, type)`), que `HackComponentHost` reçoit au
-démarrage. Ils sont essayés avant toute app et résolus sans charger
-d'assembly ; leur `ProviderAppId` vaut
-`HackComponentResolution.PlatformProviderId` (`"platform"`, jamais un
-identifiant d'app valide).
+The platform registers its providers in the service container
+(`HackPlatformComponent(contract, type)`), which `HackComponentHost` receives at
+startup. They are tried before any app and resolved without loading an
+assembly; their `ProviderAppId` is
+`HackComponentResolution.PlatformProviderId` (`"platform"`, never a valid app
+identifier).
 
-### 6. Erreur au journal système
+### 6. Error in the system log
 
-Quand un contrat réservé n'a aucun fournisseur qui se charge,
-`HackComponentHost` écrit `component.unavailable` en erreur dans
-`/var/log/syslog` (source `components`). Un contrat ouvert sans fournisseur
-(aucun terminal installé) reste un état normal, seulement montré à
-l'utilisateur.
+When a reserved contract has no provider that loads,
+`HackComponentHost` writes `component.unavailable` as an error in
+`/var/log/syslog` (source `components`). An open contract without a provider
+(no terminal installed) remains a normal state, only shown to
+the user.
 
-### 7. Droits de l'hôte
+### 7. Host rights
 
-Rien ne change dans le mécanisme : le fournisseur est rendu dans la fenêtre de
-l'hôte, reçoit l'`AppContext` en cascade de l'hôte, et les callbacks qu'il
-invoque s'exécutent dans le contexte ambiant de l'hôte (`HackComponentBase`).
-Un test le vérifie pour le composant typé.
+Nothing changes in the mechanism: the provider is rendered in the host's
+window, receives the host's `AppContext` in cascade, and the callbacks it
+invokes run in the host's ambient context (`HackComponentBase`).
+A test verifies this for the typed component.
 
-## Conséquences
+## Consequences
 
-- Les chantiers 2 et 3 n'ont qu'à écrire leur contrôleur, leur composant typé
-  et leur fournisseur.
-- Nouvelles API non livrées (`PublicAPI.Unshipped.txt`) dans
-  `App.Abstractions`, `AppSdk`, `AppSdk.Blazor`, `Platform.Core` et
-  `Platform.Blazor` ; elles seront publiées avec le SDK 2.0 (chantier 6).
+- Work items 2 and 3 only have to write their controller, their typed component
+  and their provider.
+- New unshipped APIs (`PublicAPI.Unshipped.txt`) in
+  `App.Abstractions`, `AppSdk`, `AppSdk.Blazor`, `Platform.Core` and
+  `Platform.Blazor`; they will be published with SDK 2.0 (work item 6).
 
-## Références
+## References
 
 - ADR 0048, 0063, 0098, 0126, 0148.
 - [`embedded-components.md`](../../framework/embedded-components.md),

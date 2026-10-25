@@ -1,193 +1,192 @@
-# ADR 0143 : ajustements de la mise en œuvre de l'isolation cross-origin
+# ADR 0143: adjustments to the implementation of cross-origin isolation
 
-## Statut
+## Status
 
-Accepté le 2026-10-18, chantier `exec/9-cross-origin-isolation`.
+Accepted on 2026-10-18, work item `exec/9-cross-origin-isolation`.
 
-- **Complète :** ADR 0131 (isolation cross-origin optionnelle). Précise ce que
-  le code a dû trancher et s'écarte de l'ADR 0131 sur quatre points : `MemSource`
-  (§6), ce que portent les anneaux (§4), l'Ecosystem lancé par `dotnet run` (§3)
-  et la suite de parité (§9).
-- **Doc :** [`worker-processes.md`](../worker-processes.md) (section
-  « Isolation cross-origin » et compte rendu de l'audit).
+- **Completes:** ADR 0131 (optional cross-origin isolation). Clarifies what
+  the code had to settle and departs from ADR 0131 on four points: `MemSource`
+  (§6), what the rings carry (§4), the Ecosystem launched by `dotnet run` (§3)
+  and the parity suite (§9).
+- **Doc:** [`worker-processes.md`](../worker-processes.md) (section
+  "Cross-origin isolation" and the audit report).
 
-## Contexte
+## Context
 
-L'ADR 0131 fixe le réglage `HackerOs:CrossOriginIsolation`, qui pose les
-en-têtes, l'audit, et ce que l'isolation apporte : anneaux partagés, appels
-synchrones en worker, mémoire mesurée par le navigateur, minuteries fines. En
-l'écrivant, plusieurs détails sont apparus : où vit la constante d'audit,
-comment la page apprend pourquoi elle n'est pas isolée, comment garder l'ordre
-des messages entre anneau et `postMessage`, comment un worker attend sans que
-le fil principal attende, et comment attribuer la mémoire à un worker.
+ADR 0131 fixes the `HackerOs:CrossOriginIsolation` setting, which sets the
+headers, the audit, and what isolation brings: shared rings, synchronous calls
+in a worker, memory measured by the browser, fine-grained timers. While
+writing it, several details appeared: where the audit constant lives, how the
+page learns why it is not isolated, how to keep message order between ring and
+`postMessage`, how a worker waits without the main thread waiting, and how to
+attribute memory to a worker.
 
-## Décision
+## Decision
 
-### 1. Constante d'audit et réglage
+### 1. Audit constant and setting
 
 - `CrossOriginIsolationPolicy.AuditPassed` (`HackerOs.Platform.Core`,
-  espace `Isolation`) est la constante de build de l'ADR 0131 §1. Le service
-  worker en garde une copie (`crossOriginIsolationAuditPassed`), puisqu'il ne
-  peut pas lire un assembly ; un test unitaire vérifie que les deux disent la
-  même chose.
-- L'audit est passé (§10) : `AuditPassed = true`, donc `auto` vaut `on`.
-- `Parse` lit `auto`, `on`/`true`, `off`/`false` ; toute autre valeur vaut
-  `auto`. Les trois hôtes livrent `"CrossOriginIsolation": "auto"`.
+  namespace `Isolation`) is the build constant of ADR 0131 §1. The service
+  worker keeps a copy (`crossOriginIsolationAuditPassed`), since it cannot
+  read an assembly; a unit test checks that both say the same thing.
+- The audit has passed (§10): `AuditPassed = true`, so `auto` means `on`.
+- `Parse` reads `auto`, `on`/`true`, `off`/`false`; any other value means
+  `auto`. The three hosts ship `"CrossOriginIsolation": "auto"`.
 
-### 2. Qui pose les en-têtes, et ce qu'ils couvrent
+### 2. Who sets the headers, and what they cover
 
-- **Service worker de l'Ecosystem** : il lit le réglage dans `appsettings.json`
-  (en cache, sinon sur le réseau) et ajoute `COOP: same-origin`,
-  `COEP: credentialless` et `Cross-Origin-Resource-Policy: same-origin` aux
-  réponses de même origine qu'il sert (navigation, assets, `_framework`),
-  jamais aux réponses opaques. Il relit le réglage à chaque navigation.
-- **Repli `require-corp`** : la page demande au service worker ce qu'il a
-  envoyé (`COI_STATE`). Si le service worker envoie `credentialless` et que la
-  page n'est pas isolée, la page lui demande `require-corp` (`COI_STRICT`), le
-  choix est gardé dans le cache du service worker, et la page se recharge
-  **une seule fois** (garde dans `sessionStorage`).
-- **`test/test` et `HackerOs.Server`** : un intergiciel posé juste après
-  `builder.Build()` ajoute `COOP` et `COEP: credentialless` à toutes les
-  réponses (`CrossOriginIsolationPolicy.ServerHeaders`), selon le réglage de
-  l'hôte. Ces deux hôtes n'ont pas de repli `require-corp`.
-- **Rechargement unique du premier chargement** : c'est celui qui existait
-  déjà dans `index.html` (`controllerchange`), sans code nouveau.
+- **Ecosystem service worker**: it reads the setting in `appsettings.json`
+  (from cache, otherwise from the network) and adds `COOP: same-origin`,
+  `COEP: credentialless` and `Cross-Origin-Resource-Policy: same-origin` to the
+  same-origin responses it serves (navigation, assets, `_framework`),
+  never to opaque responses. It rereads the setting on each navigation.
+- **`require-corp` fallback**: the page asks the service worker what it
+  sent (`COI_STATE`). If the service worker sends `credentialless` and the
+  page is not isolated, the page asks it for `require-corp` (`COI_STRICT`), the
+  choice is kept in the service worker's cache, and the page reloads
+  **only once** (guard in `sessionStorage`).
+- **`test/test` and `HackerOs.Server`**: a middleware placed right after
+  `builder.Build()` adds `COOP` and `COEP: credentialless` to all
+  responses (`CrossOriginIsolationPolicy.ServerHeaders`), according to the
+  host's setting. These two hosts have no `require-corp` fallback.
+- **Single reload on first load**: this is the one that already existed
+  in `index.html` (`controllerchange`), with no new code.
 
-### 3. Écart : l'Ecosystem par `dotnet run` n'est pas isolé
+### 3. Deviation: the Ecosystem run by `dotnet run` is not isolated
 
-`index.html` n'enregistre pas le service worker sur `localhost` ni
-`127.0.0.1`. Sur ces adresses, rien ne pose les en-têtes, donc l'Ecosystem lancé
-par `dotnet run` (ou servi par un serveur statique en local) n'est pas isolé :
-`/proc/hackeros/workers` dit `missing-headers` et l'OS fonctionne comme avant.
-Pour essayer l'isolation, on sert la publication sur `127.0.0.2` (contexte
-sécurisé où le service worker s'enregistre), ou on lance `test/test`. Question 2
-ci-dessous.
+`index.html` does not register the service worker on `localhost` or
+`127.0.0.1`. On these addresses, nothing sets the headers, so the Ecosystem launched
+by `dotnet run` (or served by a local static server) is not isolated:
+`/proc/hackeros/workers` says `missing-headers` and the OS works as before.
+To try isolation, serve the publication on `127.0.0.2` (a secure
+context where the service worker registers), or run `test/test`. Question 2
+below.
 
-### 4. Écart : les anneaux portent tous les messages du protocole
+### 4. Deviation: the rings carry all protocol messages
 
-L'ADR 0131 §4 parle des flux standard. Les anneaux portent en fait **tous** les
-messages texte du protocole (sorties, accusés, appels, résultats), un anneau
-SPSC de 1 Mio par sens dans un `SharedArrayBuffer`, avec trames de longueur.
+ADR 0131 §4 speaks of the standard streams. The rings actually carry **all**
+the protocol's text messages (outputs, acknowledgments, calls, results), one
+1 MiB SPSC ring per direction in a `SharedArrayBuffer`, with length frames.
 
-- **Ordre** : le lecteur vide son anneau avant de traiter tout message reçu par
-  `postMessage`. Un message trop gros pour la place libre part par
-  `postMessage`, et l'ordre ne change jamais.
-- **Personne ne bloque sur un anneau** : un anneau plein retombe sur les
-  messages ; le crédit des sorties (`OutputAck`, ADR 0070) reste le contrôle de
-  flux. Même crédit, même `SIGPIPE`, même `/proc/<pid>/fd` qu'avant.
-- **Sonnette** : l'écrivain envoie un petit `postMessage` seulement quand
-  l'anneau était au repos.
-- La page écrit dans l'anneau vers le worker seulement après le message
-  `ready` du worker qui annonce `rings: true` ; un worker qui n'a pas pu ouvrir
-  ses anneaux reste aux messages.
+- **Order**: the reader drains its ring before processing any message received by
+  `postMessage`. A message too large for the free space goes through
+  `postMessage`, and the order never changes.
+- **Nobody blocks on a ring**: a full ring falls back to
+  messages; the output credit (`OutputAck`, ADR 0070) remains the flow
+  control. Same credit, same `SIGPIPE`, same `/proc/<pid>/fd` as before.
+- **Doorbell**: the writer sends a small `postMessage` only when the
+  ring was idle.
+- The page writes to the ring toward the worker only after the worker's `ready`
+  message announcing `rings: true`; a worker that could not open
+  its rings stays on messages.
 
-### 5. Appels synchrones
+### 5. Synchronous calls
 
-- Une case partagée par worker (en-tête `[état, appel attendu, longueur,
-  appel répondu]`, 1 Mio de réponse). Le worker marque l'appel attendu, l'envoie
-  (`"s": true` dans le message `call`), puis attend avec `Atomics.wait`. La page
-  n'attend jamais : elle écrit la réponse et réveille le worker
+- One shared cell per worker (header `[state, expected call, length,
+  answered call]`, 1 MiB of response). The worker marks the expected call, sends it
+  (`"s": true` in the `call` message), then waits with `Atomics.wait`. The page
+  never waits: it writes the response and wakes the worker
   (`ISynchronousWebWorker.AnswerSynchronousCall`).
-- **Délai** : 10 s (`WorkerRpcClient.SynchronousCallTimeout`), puis
-  `TimeoutException`. Une réponse en retard trouve la case au repos et est
-  jetée. Une réponse de plus de 1 Mio donne une `IOException` dans le worker.
-- **Membres** : ceux que l'ADR 0124 §5 refusait, `ListProcesses` (nouvelle
-  opération `proc.list`) et `Kill` d'un autre processus. Les autres membres
-  synchrones gardent leur refus. Sans isolation, le refus et son message ne
-  changent pas.
-- **Exemple** : `sample-cmd --processes` et `sample-cmd --kill <pid>` appellent
-  ces membres ; `HostSmoke` s'en sert.
+- **Timeout**: 10 s (`WorkerRpcClient.SynchronousCallTimeout`), then
+  `TimeoutException`. A late response finds the cell idle and is
+  discarded. A response larger than 1 MiB gives an `IOException` in the worker.
+- **Members**: those that ADR 0124 §5 refused, `ListProcesses` (new
+  operation `proc.list`) and `Kill` of another process. The other synchronous
+  members keep their refusal. Without isolation, the refusal and its message do
+  not change.
+- **Example**: `sample-cmd --processes` and `sample-cmd --kill <pid>` call
+  these members; `HostSmoke` uses them.
 
-### 6. Écart : `MemSource` reste `measured`
+### 6. Deviation: `MemSource` stays `measured`
 
-L'ADR 0131 §4 dit que `MemSource` indique la mémoire mesurée par le navigateur.
-`MemSource` de `/proc/<pid>/status` garde `measured` : le gestionnaire de
-tâches et `HostSmoke` comparent cette valeur exactement, et la mémoire d'un
-processus reste une estimation en couches (ADR 0068) même quand celle du worker
-vient du navigateur. Le détail est dans `/proc/hackeros/workers`
-(`memory-measure: browser|estimated`). Question 1 ci-dessous.
+ADR 0131 §4 says that `MemSource` indicates the memory measured by the browser.
+`MemSource` in `/proc/<pid>/status` keeps `measured`: the task manager and
+`HostSmoke` compare this value exactly, and the memory of a
+process remains a layered estimate (ADR 0068) even when the worker's memory
+comes from the browser. The detail is in `/proc/hackeros/workers`
+(`memory-measure: browser|estimated`). Question 1 below.
 
-- **Attribution** : l'URL de chaque worker porte `?hackeros-worker=N` ; le
-  service worker l'ignore pour son cache (`ignoreSearch`). Le pool demande
-  `performance.measureUserAgentSpecificMemory()` toutes les 20 s
-  (`WorkerPoolOptions.MemoryMeasurePeriod`) par `IWebWorkerMemoryMeter`.
-- Une mesure vaut pendant trois périodes ; sans elle, on revient à la mémoire
-  du battement de cœur. La comptabilité par processus et l'OOM killer la
-  reçoivent par `WorkerConnection.RuntimeMemoryBytes` (ADR 0126 §6). La garde
-  du navigateur compare toujours le tas géré (ADR 0142 §4).
+- **Attribution**: each worker's URL carries `?hackeros-worker=N`; the
+  service worker ignores it for its cache (`ignoreSearch`). The pool asks
+  `performance.measureUserAgentSpecificMemory()` every 20 s
+  (`WorkerPoolOptions.MemoryMeasurePeriod`) through `IWebWorkerMemoryMeter`.
+- A measurement is valid for three periods; without it, we fall back to the
+  heartbeat memory. Per-process accounting and the OOM killer
+  receive it through `WorkerConnection.RuntimeMemoryBytes` (ADR 0126 §6). The
+  browser guard still compares the managed heap (ADR 0142 §4).
 
-### 7. Minuteries
+### 7. Timers
 
-Rien à brancher : les tranches de l'ADR 0067 lisent `Stopwatch.GetTimestamp`,
-c'est-à-dire `performance.now()`, que le navigateur arrondit à 5 µs dans une
-page isolée au lieu de 100 µs. La sonde mesure la résolution réelle et
-`/proc/hackeros/workers` l'affiche (`timer-resolution-us`).
+Nothing to wire up: the slices of ADR 0067 read `Stopwatch.GetTimestamp`,
+that is `performance.now()`, which the browser rounds to 5 µs in an isolated
+page instead of 100 µs. The probe measures the real resolution and
+`/proc/hackeros/workers` shows it (`timer-resolution-us`).
 
-### 8. Ce que la page dit, et où
+### 8. What the page says, and where
 
-- Au démarrage, `crossOriginIsolation.js` (`HackerOs.Infrastructure.Browser`)
-  renvoie ce qu'il a trouvé ; `CrossOriginIsolationProbe.Read` en fait un
-  `CrossOriginIsolationStatus`. Raisons, dans l'ordre : `insecure-context`,
-  `setting`, `browser` (le service worker a posé les en-têtes et le navigateur
-  les a ignorés), `missing-headers` (rien ne les a posés) ; `not-browser` hors
-  navigateur.
-- `/var/log/syslog` reçoit une ligne `isolation: …` (catégorie `kernel`).
-- `/proc/hackeros/workers` commence par `cross-origin-isolated`, puis
+- At startup, `crossOriginIsolation.js` (`HackerOs.Infrastructure.Browser`)
+  returns what it found; `CrossOriginIsolationProbe.Read` turns it into a
+  `CrossOriginIsolationStatus`. Reasons, in order: `insecure-context`,
+  `setting`, `browser` (the service worker set the headers and the browser
+  ignored them), `missing-headers` (nothing set them); `not-browser` outside a
+  browser.
+- `/var/log/syslog` receives an `isolation: …` line (category `kernel`).
+- `/proc/hackeros/workers` starts with `cross-origin-isolated`, then
   `isolation-reason`, `isolation-setting`, `embedder-policy`, `shared-pipes`,
-  `sync-calls`, `memory-measure`, `timer-resolution-us`, avant `capacity`.
-- Diagnostic lit ce fichier par `HackFile` et affiche un badge « Isolé » ou
-  « Non isolé : » avec la raison, toutes les lignes dans l'infobulle. Lire
-  `/proc` demande `filesystem.system.read`, capacité dangereuse : Diagnostic,
-  déjà soumis à l'approbation d'un administrateur pour
-  `system.storage.inspect`, la déclare en plus, et l'administrateur l'approuve
-  au lancement suivant (ADR 0049). Sans elle, ou sans pool de workers, pas de
+  `sync-calls`, `memory-measure`, `timer-resolution-us`, before `capacity`.
+- Diagnostic reads this file through `HackFile` and shows an "Isolated" or
+  "Not isolated:" badge with the reason, all lines in the tooltip. Reading
+  `/proc` requires `filesystem.system.read`, a dangerous capability: Diagnostic,
+  already subject to administrator approval for
+  `system.storage.inspect`, declares it in addition, and the administrator approves it
+  at the next launch (ADR 0049). Without it, or without a worker pool, no
   badge.
 
-### 9. Écart : la parité sous anneaux passe par `HostSmoke`
+### 9. Deviation: parity under rings goes through `HostSmoke`
 
-Les anneaux sont du JavaScript : la suite de parité des commandes, qui tourne
-dans des workers de bouclage .NET, ne peut pas les exercer. À la place :
-`sharedRing.js` a ses tests sous Node (ordre, bouclage, anneau plein, case
-synchrone), les appels synchrones ont des tests de bouclage, et `HostSmoke`
-rejoue sous isolation un tube long (`seq 30000 | wc -l`) et
-`sample-cmd --processes` dans les parcours isolés de `verify-hosts.sh`
-(`ecosystem-isolated`, `test-host`, `server`) et non isolés (les parcours de
-l'Ecosystem sur `127.0.0.1`, `ecosystem-isolation-off`).
+The rings are JavaScript: the command parity suite, which runs
+in .NET loopback workers, cannot exercise them. Instead:
+`sharedRing.js` has its tests under Node (order, wraparound, full ring,
+synchronous cell), the synchronous calls have loopback tests, and `HostSmoke`
+replays under isolation a long pipe (`seq 30000 | wc -l`) and
+`sample-cmd --processes` in the isolated scenarios of `verify-hosts.sh`
+(`ecosystem-isolated`, `test-host`, `server`) and non-isolated ones (the
+Ecosystem scenarios on `127.0.0.1`, `ecosystem-isolation-off`).
 
 ### 10. Audit
 
-Fait dans Chromium avec l'isolation (compte rendu dans
-[`worker-processes.md`](../worker-processes.md)) : rien n'a cassé, donc
-`auto = on`. La suite UI E2E entière tourne isolée, puisque `test/test` pose
-maintenant les en-têtes.
+Done in Chromium with isolation (report in
+[`worker-processes.md`](../worker-processes.md)): nothing broke, so
+`auto = on`. The entire UI E2E suite runs isolated, since `test/test` now
+sets the headers.
 
-## Questions posées à Benoit
+## Questions asked to Benoit
 
-1. **`MemSource` quand le navigateur mesure le worker.** A (appliqué) :
-   `measured` reste, le détail est dans `/proc/hackeros/workers`. B : nouvelle
-   valeur `browser`, le gestionnaire de tâches et `HostSmoke` sont adaptés.
-2. **Isolation de l'Ecosystem lancé en local (`dotnet run`).** A (appliqué) :
-   non isolé, comme avant ; on essaie sur `127.0.0.2` ou avec `test/test`.
-   B : enregistrer le service worker aussi sur `localhost`, au risque de servir
-   des fichiers en cache pendant le développement.
-3. **Navigateur sans `credentialless` (Safari).** A (appliqué, ADR 0131 §2) :
-   repli `require-corp`, la page est isolée mais les images externes sans CORP
-   des pages du navigateur simulé sont bloquées. B : pas de repli, la page reste
-   non isolée et garde ces images.
+1. **`MemSource` when the browser measures the worker.** A (applied):
+   `measured` stays, the detail is in `/proc/hackeros/workers`. B: new
+   value `browser`, the task manager and `HostSmoke` are adapted.
+2. **Isolation of the Ecosystem launched locally (`dotnet run`).** A (applied):
+   not isolated, as before; try on `127.0.0.2` or with `test/test`.
+   B: register the service worker on `localhost` too, at the risk of serving
+   cached files during development.
+3. **Browser without `credentialless` (Safari).** A (applied, ADR 0131 §2):
+   `require-corp` fallback, the page is isolated but external images without CORP
+   in the simulated browser's pages are blocked. B: no fallback, the page stays
+   non-isolated and keeps those images.
 
-## Conséquences
+## Consequences
 
-- `build/verify-hosts.sh` gagne `ecosystem-isolated` et
-  `ecosystem-isolation-off` (sur `127.0.0.2`) et vérifie l'isolation de chaque
-  parcours (`HACKEROS_SMOKE_EXPECT_ISOLATION`). Un parcours qui modifie
-  `appsettings.json` recalcule son empreinte dans `service-worker-assets.js`.
-- Docs : [`worker-processes.md`](../worker-processes.md),
+- `build/verify-hosts.sh` gains `ecosystem-isolated` and
+  `ecosystem-isolation-off` (on `127.0.0.2`) and checks the isolation of each
+  scenario (`HACKEROS_SMOKE_EXPECT_ISOLATION`). A scenario that modifies
+  `appsettings.json` recomputes its fingerprint in `service-worker-assets.js`.
+- Docs: [`worker-processes.md`](../worker-processes.md),
   [`memory-accounting.md`](../memory-accounting.md),
   [`cpu-accounting.md`](../cpu-accounting.md),
   [`building-and-testing.md`](../building-and-testing.md),
   [`server-hosting.md`](../server-hosting.md),
   [`virtual-proc-and-dev.md`](../virtual-proc-and-dev.md).
 
-## Références
+## References
 
 - ADR 0067, 0068, 0070, 0124, 0126, 0130, 0131, 0142.

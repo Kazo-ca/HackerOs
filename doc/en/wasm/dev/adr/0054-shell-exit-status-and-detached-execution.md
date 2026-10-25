@@ -1,66 +1,66 @@
-# ADR 0054 : `$?` par pipeline, shell détaché et écritures synchrones dans un tube
+# ADR 0054: `$?` per pipeline, detached shell and synchronous writes to a pipe
 
-## Statut
+## Status
 
-Accepté le 2026-10-10.
+Accepted on 2026-10-10.
 
-- **Phase du plan :** phase 3 — Shell, commandes et corbeille
+- **Plan phase:** phase 3, Shell, commands and trash
   ([`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md), section 7.1).
-- **Remplace en partie :** ADR 0050, section 3, pour un seul point : la valeur
-  de `$?`. Le reste de l'ADR 0050 reste en vigueur.
-- **Précise :** ADR 0050, sections 4 et 7, sur trois points que l'ADR ne
-  tranchait pas.
+- **Partially replaces:** ADR 0050, section 3, for a single point: the value
+  of `$?`. The rest of ADR 0050 remains in force.
+- **Clarifies:** ADR 0050, sections 4 and 7, on three points the ADR did not
+  settle.
 
-## Contexte
+## Context
 
-En implémentant l'interpréteur (chantier `rebuild/3-shell-interpreter`), quatre
-points se sont révélés absents ou contraires au comportement de bash :
+While implementing the interpreter (work item `rebuild/3-shell-interpreter`), four
+points turned out to be missing or contrary to bash behavior:
 
-1. L'ADR 0050 définit `$?` comme le code de « la dernière **liste** exécutée ».
-   Sous bash, `$?` suit chaque **pipeline** : dans `false && …` puis
-   `echo $?`, c'est le même résultat, mais dans `vrai && echo $?` bash affiche
-   le code de `vrai`, pas celui de la ligne précédente.
-2. L'ADR veut que les étapes tournent en même temps et qu'un écrivain attende
-   quand le tube est plein, mais WebAssembly n'a qu'un fil : une écriture
-   **synchrone** (`Write`, `WriteLine`) ne peut pas attendre.
-3. L'ADR veut que `ExecuteCommandIntent` utilise le processus appelant comme
-   processus du shell, mais la requête d'intention ne porte que l'identifiant
-   de l'app appelante, pas son contexte.
-4. `ExecuteCommandIntent` peut porter un jeton d'élévation à usage unique alors
-   que la ligne peut lancer plusieurs commandes.
+1. ADR 0050 defines `$?` as the code of "the last **list** executed". In
+   bash, `$?` follows each **pipeline**: in `false && ...` then
+   `echo $?`, the result is the same, but in `true && echo $?` bash prints
+   the code of `true`, not that of the previous line.
+2. The ADR wants the steps to run at the same time and a writer to wait when
+   the pipe is full, but WebAssembly has only one thread: a **synchronous**
+   write (`Write`, `WriteLine`) cannot wait.
+3. The ADR wants `ExecuteCommandIntent` to use the calling process as the
+   shell's process, but the intent request only carries the calling app's
+   identifier, not its context.
+4. `ExecuteCommandIntent` can carry a single-use elevation token while the line
+   can launch several commands.
 
-## Décision
+## Decision
 
-1. **`$?` est mis à jour après chaque pipeline**, comme sous bash. Le code
-   d'une ligne reste celui du dernier pipeline exécuté. Une ligne vide ne
-   change pas `$?`.
-2. **Une écriture synchrone dans un tube plein n'attend pas** : le tampon
-   dépasse temporairement sa capacité. Seules les écritures asynchrones
-   attendent de la place. Les lectures synchrones gardent la règle de
-   l'ADR 0050 (exception sur un tube vide encore ouvert).
-3. **`AppIntentDispatcher.DispatchAsync` accepte un contexte appelant
-   facultatif** (`callerContext`). Fourni, son processus est celui du shell
-   (parent des commandes, répertoire de départ) et sa passerelle de fichiers
-   ouvre les redirections. Absent, la ligne tourne dans un **shell détaché** :
-   commandes sans parent (environnement de connexion), répertoire
-   `ExecuteCommandIntent.WorkingDirectory` ou dossier personnel, et toute
-   redirection est refusée (`hsh: <cible>: cannot open files without a calling
+1. **`$?` is updated after each pipeline**, as in bash. The code of a line
+   remains that of the last pipeline executed. An empty line does not
+   change `$?`.
+2. **A synchronous write to a full pipe does not wait**: the buffer
+   temporarily exceeds its capacity. Only asynchronous writes
+   wait for space. Synchronous reads keep the rule of
+   ADR 0050 (exception on an empty pipe that is still open).
+3. **`AppIntentDispatcher.DispatchAsync` accepts an optional caller context**
+   (`callerContext`). When provided, its process is the shell's process
+   (parent of the commands, starting directory) and its file gateway
+   opens the redirections. When absent, the line runs in a **detached shell**:
+   commands with no parent (login environment), directory
+   `ExecuteCommandIntent.WorkingDirectory` or home folder, and any
+   redirection is refused (`hsh: <target>: cannot open files without a calling
    app`, code `1`).
-4. **Le jeton d'élévation d'un `ExecuteCommandIntent` est consommé par la
-   première commande lancée** de la ligne ; les suivantes tournent sans
-   élévation.
+4. **The elevation token of an `ExecuteCommandIntent` is consumed by the
+   first command launched** on the line; the following ones run without
+   elevation.
 
-## Conséquences
+## Consequences
 
-- `a && echo $?` affiche `0`, comme sous bash.
-- Une commande qui écrit en synchrone beaucoup de données dans un tube consomme
-  de la mémoire au lieu de bloquer ; toutes les commandes intégrées écrivent en
-  asynchrone.
-- Une app qui veut des redirections dans `ExecuteCommandIntent` passe son
-  contexte. Le terminal n'utilise plus l'intention : il appelle directement
-  `ShellInterpreter`.
+- `a && echo $?` prints `0`, as in bash.
+- A command that synchronously writes a lot of data to a pipe consumes
+  memory instead of blocking; all built-in commands write
+  asynchronously.
+- An app that wants redirections in `ExecuteCommandIntent` passes its
+  context. The terminal no longer uses the intent: it calls
+  `ShellInterpreter` directly.
 
-## Références
+## References
 
-- ADR 0042 (élévation), ADR 0050 (grammaire du shell), ADR 0051 (commandes).
+- ADR 0042 (elevation), ADR 0050 (shell grammar), ADR 0051 (commands).
 - [`shell-interpreter.md`](../shell-interpreter.md).

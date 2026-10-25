@@ -1,176 +1,176 @@
-# ADR 0159 : entrées de menu des apps, ajustements d'implémentation
+# ADR 0159: app menu entries, implementation adjustments
 
-## Statut
+## Status
 
-Accepté le 2026-10-20.
+Accepted on 2026-10-20.
 
-- **Chantier :** `desk/4-app-menu-entries` (plan
+- **Work item:** `desk/4-app-menu-entries` (plan
   [`desktop-and-context-menu-plan.md`](../plans/desktop-and-context-menu-plan.md) §12,
-  chantier 4).
-- **Ajuste :** l'ADR 0151 (§2 titres, §3 inscription, §4.4 `afterGroup`, §5
-  vérifications, §6 réglage, §8 dernier point). Ses autres décisions restent
-  vraies et sont livrées telles quelles.
+  work item 4).
+- **Adjusts:** ADR 0151 (§2 titles, §3 registration, §4.4 `afterGroup`, §5
+  checks, §6 setting, §8 last point). Its other decisions remain
+  true and are delivered as is.
 
-## Contexte
+## Context
 
-L'ADR 0151 décide comment une app ajoute des entrées aux menus des fichiers :
-une méthode `[RegisterFileContextMenu]`, exécutée au build pour les apps
-intégrées et à l'installation pour les autres, un dossier
-`/etc/hackeros/context-menus.d` lu au démarrage, un placement par `first`,
-`after`, `afterGroup` et `parent`, la capacité `shell.context-menu` et un
-réglage pour masquer les entrées. En l'implémentant, quelques points ont dû
-être précisés ou corrigés. Cet ADR les consigne ; le guide d'utilisation est
-[`context-menu.md`](../../framework/context-menu.md) (section « Entrées des apps »).
+ADR 0151 decides how an app adds entries to file menus:
+a `[RegisterFileContextMenu]` method, run at build time for built-in
+apps and at install time for the others, a
+`/etc/hackeros/context-menus.d` folder read at startup, placement by `first`,
+`after`, `afterGroup` and `parent`, the `shell.context-menu` capability and a
+setting to hide entries. While implementing it, a few points had to be
+clarified or corrected. This ADR records them; the usage guide is
+[`context-menu.md`](../../framework/context-menu.md) (section "App entries").
 
-## Décision
+## Decision
 
-### 1. Une seule inscription : au build, pour toutes les apps
+### 1. A single registration: at build time, for all apps
 
-Toutes les apps de l'écosystème sont compilées dans l'hôte
-(`HackerOs.App.Build`) : il n'existe pas d'installation de paquet à
-l'exécution où l'OS exécuterait la méthode (ADR 0151 §3.2). Le générateur de
-manifeste l'exécute donc pour **chaque** app, au build, et écrit les entrées
-dans `manifest.json` (`contextMenus`, omise sans entrée) puis dans
-`BuiltInApplications.json`. Une app installée plus tard par un paquet suivra
-le même chemin : son `manifest.json` porte déjà ses entrées, l'OS n'exécute
-jamais son code pour un menu.
+All the ecosystem's apps are compiled into the host
+(`HackerOs.App.Build`): there is no package installation at
+run time where the OS would run the method (ADR 0151 §3.2). The manifest
+generator therefore runs it for **each** app, at build time, and writes the entries
+in `manifest.json` (`contextMenus`, omitted without entries) then in
+`BuiltInApplications.json`. An app installed later through a package will follow
+the same path: its `manifest.json` already carries its entries, the OS never
+runs its code for a menu.
 
-Le générateur :
+The generator:
 
-- cherche la méthode **déclarée sur la classe `[AppManifest]` elle-même**
-  (pas une méthode héritée), par le nom complet de l'attribut ; il en faut
-  une au plus, `static void M(RegisterFileContextMenuContext context)` ;
-- l'exécute **deux fois** et compare les deux résultats : une méthode qui
-  dépend de l'heure, d'un fichier ou d'un service est refusée ;
-- refuse toute l'inscription si la méthode lève une exception (rien de
-  partiel, ADR 0151 §2).
+- looks for the method **declared on the `[AppManifest]` class itself**
+  (not an inherited method), by the full name of the attribute; at most one is
+  allowed, `static void M(RegisterFileContextMenuContext context)`;
+- runs it **twice** and compares the two results: a method that
+  depends on the time, a file or a service is refused;
+- refuses the whole registration if the method throws an exception (nothing
+  partial, ADR 0151 §2).
 
-### 2. Le dossier `/etc/hackeros/context-menus.d`
+### 2. The `/etc/hackeros/context-menus.d` folder
 
-Au démarrage et à chaque changement des apps installées
-(`AppInstallationService.Changed`), `FileContextMenuRegistry` aligne le
-dossier sur les manifestes, puis le relit :
+At startup and at each change of installed apps
+(`AppInstallationService.Changed`), `FileContextMenuRegistry` aligns the
+folder with the manifests, then rereads it:
 
-- un fichier `<appId>.json` par app qui a des entrées : `schemaVersion`,
-  `appId`, `appVersion`, `rank`, `source` (empreinte SHA-256 des entrées) et
-  `entries` ;
-- le fichier n'est réécrit que si l'empreinte ou la version de l'app change ;
-  il garde alors son **rang**. Une nouvelle app prend le rang suivant, dans
-  l'ordre d'activation du catalogue ; c'est l'« ordre d'installation » de
-  l'ADR 0151 §4.6 ;
-- le fichier d'une app désinstallée pour toute la machine, ou inconnue du
-  catalogue, est retiré ; une app désactivée ou désinstallée pour
-  l'utilisateur garde son fichier, ses entrées sont seulement masquées ;
-- un fichier illisible, qui nomme une autre app, dont l'app ne demande pas
-  `shell.context-menu`, ou qui enfreint une règle de l'ADR 0151 §5, est
-  ignoré et signalé dans `/var/log/syslog` (il n'y a pas d'installation à
-  refuser, ADR 0151 §5 dernière phrase) ;
-- chaque écriture est une opération système auditée de l'OS.
+- one `<appId>.json` file per app that has entries: `schemaVersion`,
+  `appId`, `appVersion`, `rank`, `source` (SHA-256 fingerprint of the entries) and
+  `entries`;
+- the file is rewritten only if the fingerprint or the app's version changes;
+  it then keeps its **rank**. A new app takes the next rank, in
+  the catalog's activation order; this is the "installation order" of
+  ADR 0151 §4.6;
+- the file of an app uninstalled for the whole machine, or unknown to the
+  catalog, is removed; an app disabled or uninstalled for the
+  user keeps its file, its entries are only hidden;
+- a file that is unreadable, names another app, whose app does not request
+  `shell.context-menu`, or that violates a rule of ADR 0151 §5, is
+  ignored and reported in `/var/log/syslog` (there is no installation to
+  refuse, ADR 0151 §5 last sentence);
+- each write is an audited system operation of the OS.
 
-### 3. Titres : `Resources/AppManifest.resx` en anglais
+### 3. Titles: `Resources/AppManifest.resx` in English
 
-`title` est une clé de ressource. Le texte anglais vit dans le fichier
-**neutre** `Resources/AppManifest.resx`, les traductions dans
-`Resources/AppManifest.<culture>.resx` (ADR 0104). Le générateur copie chaque
-titre dans le manifeste, par culture (`titles: [{culture, text}]`, l'anglais
-obligatoire). Dans un projet qui déclare plusieurs apps, la clé est préfixée
-de l'identifiant de l'app, comme les autres clés du manifeste. Ces clés ne
-sont pas des chaînes de manifeste localisées au sens de l'ADR 0104 : le
-générateur de localisation les ignore. Le menu choisit le titre de la culture
-de la session, puis de sa culture parente, puis l'anglais.
+`title` is a resource key. The English text lives in the **neutral** file
+`Resources/AppManifest.resx`, the translations in
+`Resources/AppManifest.<culture>.resx` (ADR 0104). The generator copies each
+title into the manifest, per culture (`titles: [{culture, text}]`, English
+required). In a project that declares several apps, the key is prefixed
+with the app's identifier, like the other manifest keys. These keys
+are not localized manifest strings in the sense of ADR 0104: the
+localization generator ignores them. The menu chooses the title of the session's
+culture, then of its parent culture, then English.
 
-### 4. Le menu appliqué par l'OS, quel que soit le fournisseur
+### 4. The menu applied by the OS, whatever the provider
 
-Le fournisseur du contrôle de fichiers (ADR 0156, 0158) pose
-`HackMenuDefinition.FileMenu` (`HackFileMenuContext` : portée, éléments,
-dossier affiché) sur le menu qu'il ouvre. `ContextMenuService` ajoute les
-entrées des apps **après** le `Opening` du menu, donc après le
-`ContextMenuOpening` de l'hôte (ADR 0151 §8, dernier point : l'hôte ajuste
-le menu par défaut, pas les entrées des apps). Un fournisseur tiers qui ne
-pose pas `FileMenu` n'a pas les entrées des apps ; le contrat
-`hackeros.file-view` le demande ([`embedded-components.md`](../../framework/embedded-components.md)).
-Une erreur en ajoutant les entrées est écrite dans le journal et le menu
-s'ouvre avec ses entrées par défaut.
+The file control provider (ADR 0156, 0158) sets
+`HackMenuDefinition.FileMenu` (`HackFileMenuContext`: scope, items,
+displayed folder) on the menu it opens. `ContextMenuService` adds the
+apps' entries **after** the menu's `Opening`, therefore after the host's
+`ContextMenuOpening` (ADR 0151 §8, last point: the host adjusts
+the default menu, not the apps' entries). A third-party provider that does not
+set `FileMenu` does not get the apps' entries; the `hackeros.file-view`
+contract requires it ([`embedded-components.md`](../../framework/embedded-components.md)).
+An error while adding the entries is written to the log and the menu
+opens with its default entries.
 
-Les identifiants des entrées dans le menu sont `app:<appId>/<name>`. Au clic,
-l'OS lance la cible par `AppLifecycleOrchestrator` ; l'expéditeur de l'intent
-est l'OS (`org.hackeros.shell`), pas l'app qui montre le menu. Dans l'espace
-vide (portées `background` et `desktop`), le chemin transmis est le dossier
-affiché.
+The identifiers of the entries in the menu are `app:<appId>/<name>`. On click,
+the OS launches the target through `AppLifecycleOrchestrator`; the intent's sender
+is the OS (`org.hackeros.shell`), not the app that shows the menu. In the empty
+space (scopes `background` and `desktop`), the path passed is the displayed
+folder.
 
-### 5. Filtres
+### 5. Filters
 
-- Un fichier est accepté par la portée `file` et les types ; un dossier par
-  la portée `directory` et, si des types sont déclarés, par `*` ou
-  `inode/directory`. Une sélection mélangée demande les deux portées.
-- Le menu de l'espace vide du bureau est le menu de l'espace vide plus celui
-  du bureau (ADR 0152) : une entrée `background` y paraît aussi, une entrée
-  `desktop` n'y paraît que là.
-- Une entrée enfant inscrite sans portée prend celle de son parent ; un
-  enfant ne peut pas paraître là où son parent ne paraît pas.
+- A file is accepted by the `file` scope and the types; a folder by
+  the `directory` scope and, if types are declared, by `*` or
+  `inode/directory`. A mixed selection requires both scopes.
+- The desktop's empty-space menu is the empty-space menu plus that
+  of the desktop (ADR 0152): a `background` entry also appears there, a `desktop`
+  entry appears only there.
+- A child entry registered without a scope takes its parent's; a
+  child cannot appear where its parent does not appear.
 
-### 6. `afterGroup` : un groupe par ancre
+### 6. `afterGroup`: one group per anchor
 
-Plusieurs entrées `afterGroup: "X"` (de la même app ou d'apps différentes)
-partagent **un seul** nouveau groupe après celui de X, dans l'ordre de rang
-puis de déclaration, plutôt qu'un groupe chacune. Une entrée ancrée à une
-entrée de sa propre app déclarée plus loin est placée après elle ; une ancre
-absente du menu envoie l'entrée au groupe commun (ADR 0151 §4.7).
+Several `afterGroup: "X"` entries (from the same app or from different apps)
+share **a single** new group after X's, in rank order
+then declaration order, rather than one group each. An entry anchored to
+an entry of its own app declared further down is placed after it; an anchor
+absent from the menu sends the entry to the common group (ADR 0151 §4.7).
 
 ### 7. Diagnostics
 
-| Code | Cas |
+| Code | Case |
 |---|---|
-| `HOSAPP0026` | Méthode mal formée, plusieurs méthodes, exception, deux exécutions différentes, titre absent de `AppManifest.resx`, règle de l'ADR 0151 §5 |
-| `HOSAPP0027` | Entrées sans la capacité `shell.context-menu` |
-| `HOSAPP0028` | (hôte) `target` vise une app absente de l'hôte ou qui ne déclare pas l'intent |
+| `HOSAPP0026` | Malformed method, several methods, exception, two different runs, title missing from `AppManifest.resx`, rule of ADR 0151 §5 |
+| `HOSAPP0027` | Entries without the `shell.context-menu` capability |
+| `HOSAPP0028` | (host) `target` points to an app absent from the host or that does not declare the intent |
 
-### 8. Le réglage : Paramètres ▸ Menus des fichiers
+### 8. The setting: Settings ▸ File Menus
 
-Le réglage de l'ADR 0151 §6 est un onglet à part, **Menus des fichiers**,
-plutôt qu'une section de Paramètres ▸ Applications : il liste les entrées de
-toutes les apps, groupées par app, sous-menus sous leur parent, avec une case
-par entrée. Il passe par une API publique du SDK, `HackFileMenuEntries`
-(`GetEntriesAsync`, `SetHiddenAsync`), qui exige `apps.manage`, comme
-`HackComponentProviders` ; le choix est celui de l'utilisateur de la session
-(`~/.config/hackeros/context-menus.config`), aucun administrateur n'est
-demandé. Masquer une entrée inconnue est refusé ; la réafficher reste
-possible pour nettoyer une ligne restée.
+The setting of ADR 0151 §6 is a separate tab, **File Menus**,
+rather than a section of Settings ▸ Applications: it lists the entries of
+all apps, grouped by app, submenus under their parent, with a checkbox
+per entry. It goes through a public SDK API, `HackFileMenuEntries`
+(`GetEntriesAsync`, `SetHiddenAsync`), which requires `apps.manage`, like
+`HackComponentProviders`; the choice is the session user's
+(`~/.config/hackeros/context-menus.config`), no administrator is
+requested. Hiding an unknown entry is refused; showing it again remains
+possible to clean up a leftover line.
 
-### 9. Entrées migrées
+### 9. Migrated entries
 
-- « Extraire ici » (`extract-here`) : `types: [".zip", "application/zip"]`,
+- "Extract Here" (`extract-here`): `types: [".zip", "application/zip"]`,
   `after: "open"`, intent `org.hackeros.file-explorer.extract-here.v1`.
-  L'explorateur s'ouvre sur le dossier de l'archive et l'extrait dans un
-  dossier de son nom (`<nom>.d` pour un fichier `application/zip` sans
+  The explorer opens on the archive's folder and extracts it into a
+  folder with its name (`<name>.d` for an `application/zip` file without
   extension).
-- « Publier comme site web… » (`publish-site`) : portée `Directory`,
+- "Publish as a web site..." (`publish-site`): scope `Directory`,
   `selection: Single`, intent `org.hackeros.web-server-manager.publish-site.v1`,
-  reçu au lancement ou par `IntentReceived`.
-- Les entrées que l'explorateur ajoutait lui-même dans son
-  `ContextMenuOpening` disparaissent.
+  received at launch or through `IntentReceived`.
+- The entries that the explorer used to add itself in its
+  `ContextMenuOpening` disappear.
 
-## Conséquences
+## Consequences
 
-- La capacité `shell.context-menu` est une capacité normale du catalogue
+- The `shell.context-menu` capability is a normal capability of the catalog
   ([`capabilities.md`](../../framework/capabilities.md)).
-- Les entrées sont les mêmes dans l'explorateur, les dialogues de fichiers,
-  toute app qui affiche `HackFileView` et, au chantier 5, le bureau.
-- Le SDK gagne `RegisterFileContextMenuAttribute`,
+- The entries are the same in the explorer, the file dialogs,
+  any app that displays `HackFileView` and, in work item 5, the desktop.
+- The SDK gains `RegisterFileContextMenuAttribute`,
   `RegisterFileContextMenuContext`, `MenuSelection`, `HackFileMenuIntent`,
-  `HackFileMenuContext`, `HackMenuDefinition.FileMenu` et
-  `HackFileMenuEntries` (non livrés, pour le SDK 2.0 du chantier 6).
+  `HackFileMenuContext`, `HackMenuDefinition.FileMenu` and
+  `HackFileMenuEntries` (unshipped, for SDK 2.0 of work item 6).
 
-## Alternatives écartées
+## Alternatives rejected
 
-- **Exécuter la méthode au démarrage de l'OS** : refusé par l'ADR 0151.
-- **Un groupe par entrée `afterGroup`** : hache le menu de séparateurs pour
-  des entrées voulues au même endroit.
-- **Une section de Paramètres ▸ Applications** : obligerait à ouvrir chaque
-  app pour retrouver une entrée ; une liste unique répond mieux à « qu'est-ce
-  qui encombre mon menu ? ».
+- **Run the method at OS startup**: refused by ADR 0151.
+- **One group per `afterGroup` entry**: chops the menu with separators for
+  entries intended for the same place.
+- **A section of Settings ▸ Applications**: would force opening each
+  app to find an entry; a single list better answers "what
+  is cluttering my menu?".
 
-## Références
+## References
 
 - ADR 0104, 0150, 0151, 0152, 0153, 0154, 0155, 0156, 0158.
 - [`context-menu.md`](../../framework/context-menu.md),

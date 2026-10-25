@@ -1,32 +1,32 @@
-# Tâches en arrière-plan (`HackBackground`)
+# Background tasks (`HackBackground`)
 
-Chantier `exec/5-background-jobs`, [ADR 0128](../dev/adr/0128-background-jobs-hack-background.md)
-[ADR 0140](../dev/adr/0140-background-jobs-implementation-adjustments.md) et
-[ADR 0147](../dev/adr/0147-background-task-grace-period-on-app-close.md). Ajout du
-SDK 1.2, publié à la fin de la série `exec` (ADR 0132).
+Work item `exec/5-background-jobs`, [ADR 0128](../dev/adr/0128-background-jobs-hack-background.md),
+[ADR 0140](../dev/adr/0140-background-jobs-implementation-adjustments.md) and
+[ADR 0147](../dev/adr/0147-background-task-grace-period-on-app-close.md). Addition to
+SDK 1.2, released at the end of the `exec` series (ADR 0132).
 
-## Objet
+## Purpose
 
-Une app à fenêtre tourne sur le fil principal du navigateur, celui qui dessine
-aussi le bureau. Un filtre d'image, une recherche dans un projet ou une
-compression y gèlent tout. `HackBackground.RunAsync` fait l'inverse de
-`Control.Invoke` de WinForms : la fenêtre confie la charge lourde à un autre
-« thread », ici un **processus enfant** de l'app, placé dans un Web Worker du
-pool quand l'hôte en a, et attend son résultat sans bloquer.
+A windowed app runs on the browser's main thread, the one that also draws
+the desktop. An image filter, a project search or a compression freezes everything
+there. `HackBackground.RunAsync` does the opposite of WinForms'
+`Control.Invoke`: the window hands the heavy load to another
+"thread", here a **child process** of the app, placed in a pool Web Worker
+when the host has one, and waits for its result without blocking.
 
-Comme sous Linux, la tâche est un vrai processus :
+As on Linux, the task is a real process:
 
-- elle apparaît dans `ps`, `top` et le gestionnaire de tâches sous l'app, avec
-  le nom `<commande>:<tâche>` (`code-editor:search`, `file-explorer:compress`) ;
-- `kill -9 <pid>` ou « Terminer » la tue **sans fermer la fenêtre** ;
-- quand l'app se ferme, elle reçoit une demande d'arrêt (son jeton est annulé)
-  et a **5 s** pour finir, puis elle est tuée, comme `SIGTERM` puis `SIGKILL`
-  (ADR 0147) ; un `kill -9` de l'app la tue tout de suite ;
-- elle est soumise aux limites des processus (ADR 0125) comme les autres.
+- it appears in `ps`, `top` and the task manager under the app, with
+  the name `<command>:<task>` (`code-editor:search`, `file-explorer:compress`);
+- `kill -9 <pid>` or "End" kills it **without closing the window**;
+- when the app closes, it receives a stop request (its token is cancelled)
+  and has **5 s** to finish, then it is killed, like `SIGTERM` then `SIGKILL`
+  (ADR 0147); a `kill -9` of the app kills it immediately;
+- it is subject to process limits (ADR 0125) like the others.
 
 ## Usage
 
-### Une méthode statique
+### A static method
 
 ```csharp
 using System.Text.Json.Serialization;
@@ -64,63 +64,63 @@ byte[] blurred = await HackBackground.RunAsync<BlurInput, byte[]>(
     cancellationToken);
 ```
 
-Formes acceptées (`HackerOs.AppSdk.Threading.HackBackground`) :
+Accepted forms (`HackerOs.AppSdk.Threading.HackBackground`):
 
-| Forme | Tâche |
+| Form | Task |
 |---|---|
-| `RunAsync<TInput, TResult>(job, input, …)` | `Func<TInput, HackBackgroundContext, Task<TResult>>` ou `Func<…, TResult>` |
-| `RunAsync<TInput>(job, input, …)` | `Func<TInput, HackBackgroundContext, Task>` ou `Action<TInput, HackBackgroundContext>` |
-| `RunAsync<TJob, TInput, TResult>(input, …)` | une classe `TJob : HackBackgroundJob<TInput, TResult>, new()` |
+| `RunAsync<TInput, TResult>(job, input, …)` | `Func<TInput, HackBackgroundContext, Task<TResult>>` or `Func<…, TResult>` |
+| `RunAsync<TInput>(job, input, …)` | `Func<TInput, HackBackgroundContext, Task>` or `Action<TInput, HackBackgroundContext>` |
+| `RunAsync<TJob, TInput, TResult>(input, …)` | a class `TJob : HackBackgroundJob<TInput, TResult>, new()` |
 
-Chaque forme prend `IProgress<HackBackgroundProgress>? progress`,
-`HackBackgroundOptions? options` (`Name`, `Nice`) et `CancellationToken`.
+Each form takes `IProgress<HackBackgroundProgress>? progress`,
+`HackBackgroundOptions? options` (`Name`, `Nice`) and `CancellationToken`.
 
-### Le contexte de la tâche
+### The task context
 
-`HackBackgroundContext` :
+`HackBackgroundContext`:
 
-| Membre | Rôle |
+| Member | Role |
 |---|---|
-| `ProcessId` | PID du processus de la tâche. |
-| `CancellationToken` | Annulé par le jeton de l'appelant, par `kill` sans `-9`, à la fermeture de l'app. |
-| `Report(fraction, message)` | Progression de `0` à `1` (bornée) ; au plus 10 remontées par seconde, la dernière l'emporte, celle d'avant la fin est toujours livrée. `NaN` lève `ArgumentOutOfRangeException`. |
-| `CheckpointAsync()` | Point d'arrêt volontaire (ADR 0069) : lève si la tâche est annulée et rend le fil au-delà de 8 ms. Indispensable sur le fil principal, utile en worker. |
+| `ProcessId` | PID of the task's process. |
+| `CancellationToken` | Cancelled by the caller's token, by `kill` without `-9`, and when the app closes. |
+| `Report(fraction, message)` | Progress from `0` to `1` (clamped); at most 10 reports per second, the latest wins, the one before the end is always delivered. `NaN` throws `ArgumentOutOfRangeException`. |
+| `CheckpointAsync()` | Voluntary checkpoint (ADR 0069): throws if the task is cancelled and yields the thread beyond 8 ms. Essential on the main thread, useful in a worker. |
 
-Dans la tâche, le reste du SDK (`HackFile`, `HackDirectory`, `HackProcess`,
-`HackEnvironment`…) marche par le contexte ambiant du processus de la tâche :
-même utilisateur, même session, mêmes capacités accordées que l'app.
+Inside the task, the rest of the SDK (`HackFile`, `HackDirectory`, `HackProcess`,
+`HackEnvironment`…) works through the ambient context of the task's process:
+same user, same session, same capabilities granted as the app.
 
-### Résultat et erreurs
+### Result and errors
 
-| Cas | Ce que voit l'appelant | Code de sortie |
+| Case | What the caller sees | Exit code |
 |---|---|---|
-| Succès | Le résultat désérialisé | `0` |
-| Exception de la tâche | `HackBackgroundJobException` (`OriginalTypeName`, `Message`, `OriginalStackTrace`) : l'objet ne traverse pas | `1` |
-| Annulation | `OperationCanceledException` | `130` |
-| Tuée (`kill -9`, gestionnaire de tâches, OOM) | `HackProcessKilledException` avec `Reason` | `137` |
-| Refusée (méthode introuvable, type non déclaré, autre assembly, plus de 16 Mio) | `ArgumentException` | `127` |
+| Success | The deserialized result | `0` |
+| Task exception | `HackBackgroundJobException` (`OriginalTypeName`, `Message`, `OriginalStackTrace`): the object does not cross | `1` |
+| Cancellation | `OperationCanceledException` | `130` |
+| Killed (`kill -9`, task manager, OOM) | `HackProcessKilledException` with `Reason` | `137` |
+| Refused (method not found, undeclared type, other assembly, more than 16 MiB) | `ArgumentException` | `127` |
 
-`HackProcessKilledException` dérive de `OperationCanceledException` : placer
-son `catch` **avant** celui de l'annulation.
+`HackProcessKilledException` derives from `OperationCanceledException`: put
+its `catch` **before** the cancellation one.
 
-### Montrer et tuer une tâche depuis la fenêtre
+### Showing and killing a task from the window
 
-Une app voit et tue ses propres descendants sans `process.list` ni
-`process.manage` (ADR 0140 §7) :
+An app sees and kills its own descendants without `process.list` or
+`process.manage` (ADR 0140 §7):
 
 ```csharp
 await AppContext.Processes.KillAsync(ProcessId.FromInt64(pid));
 ```
 
-La tâche peut donner son PID dans sa progression (`$"pid {context.ProcessId} · …"`),
-comme le fait la fenêtre d'exemple.
+The task can give its PID in its progress (`$"pid {context.ProcessId} · …"`),
+as the sample window does.
 
-### Tester une app qui utilise `HackBackground`
+### Testing an app that uses `HackBackground`
 
-Sans OS (contexte de test comme `MinimalAppExecutionContext`), la passerelle
-par défaut exécute la tâche **en ligne**, dans le processus du test, avec la
-même sérialisation de l'entrée et du résultat et les mêmes erreurs. Un test qui
-passe ainsi passe à l'identique en worker.
+Without the OS (test context such as `MinimalAppExecutionContext`), the default
+gateway runs the task **inline**, in the test's process, with the
+same serialization of the input and the result and the same errors. A test that
+passes this way passes identically in a worker.
 
 ```csharp
 using IDisposable scope = HackExecutionContext.Enter(new MinimalAppExecutionContext(manifest));
@@ -128,21 +128,21 @@ PrimeCountResult result = await HackBackground.RunAsync<PrimeCountInput, PrimeCo
     SampleJobs.CountPrimes, new PrimeCountInput(100_000));
 ```
 
-## Règles vérifiées au build
+## Rules checked at build time
 
-L'analyseur `HackerOs.Tools.BackgroundAnalyzer` est livré dans le paquet
-`HackerOs.AppSdk` (`analyzers/dotnet/cs`) ; les apps du dépôt le reçoivent par
-`build/HackerOs.Apps.targets`. Toutes ses règles sont des erreurs.
+The `HackerOs.Tools.BackgroundAnalyzer` analyzer is shipped in the
+`HackerOs.AppSdk` package (`analyzers/dotnet/cs`); the repository's apps receive it through
+`build/HackerOs.Apps.targets`. All its rules are errors.
 
-| Code | Refus |
+| Code | Refusal |
 |---|---|
-| `HOSBG0001` | La tâche n'est pas un groupe de méthode statique : lambda (même `static`), méthode anonyme, méthode d'instance, fonction locale non `static`, délégué passé par une variable. |
-| `HOSBG0002` | Le type d'entrée ou de résultat n'est pas atteint depuis un `[JsonSerializable]` d'un contexte déclaré par `[assembly: HackWireContext(...)]`. Un type atteint par un tableau, un argument générique ou une propriété publique d'une racine est accepté, comme `GetTypeInfo` le trouve. |
-| `HOSBG0003` | La méthode ou la classe de tâche est dans une autre assembly que l'app. |
-| `HOSBG0004` | La méthode est générique, ou appartient à un type générique. |
+| `HOSBG0001` | The task is not a static method group: lambda (even `static`), anonymous method, instance method, non-`static` local function, delegate passed through a variable. |
+| `HOSBG0002` | The input or result type is not reached from a `[JsonSerializable]` of a context declared by `[assembly: HackWireContext(...)]`. A type reached through an array, a generic argument or a public property of a root is accepted, as `GetTypeInfo` finds it. |
+| `HOSBG0003` | The task method or class is in an assembly other than the app's. |
+| `HOSBG0004` | The method is generic, or belongs to a generic type. |
 
-L'OS refait les vérifications à l'exécution (un appel par réflexion ne passe
-pas l'analyseur) et lève `ArgumentException`.
+The OS redoes the checks at run time (a call through reflection does not pass
+the analyzer) and throws `ArgumentException`.
 
 ## Architecture
 
@@ -160,81 +160,81 @@ HackBackground.RunAsync ──► IAppExecutionContext.Background
    ◄── résultat désérialisé, progression postée dans le contexte de la fenêtre
 ```
 
-- **SDK** (`Shared/HackerOs.AppSdk/Threading`) : `HackBackground`,
+- **SDK** (`Shared/HackerOs.AppSdk/Threading`): `HackBackground`,
   `HackBackgroundContext`, `HackBackgroundJob<,>`, `IAppBackgroundGateway`,
-  `HackBackgroundWire` (contextes `HackWireContext`, 16 Mio au plus),
-  `HackBackgroundJobRunner` (liaison d'une cible nommée), passerelle en ligne
-  par défaut.
-- **OS** (`Platform/HackerOs.Platform.Core/Execution/BackgroundJobService.cs`) :
-  processus enfant (genre `Terminal`, `argv[0]` = nom), contexte de confiance
-  de l'enfant par la fabrique, file par couple utilisateur et app
-  (`MaxConcurrentJobsPerApp`, nombre de cœurs virtuels), `GetJobs` et
-  `TryGetJob` pour `/proc` et le gestionnaire de tâches.
-- **Workers** (`Platform/HackerOs.Platform.WorkerHost`) : `start` avec `k = 2`,
-  `bg.progress`, `bg.run` et `bgp` pour une tâche lancée depuis un worker
+  `HackBackgroundWire` (`HackWireContext` contexts, 16 MiB at most),
+  `HackBackgroundJobRunner` (binding of a named target), default inline
+  gateway.
+- **OS** (`Platform/HackerOs.Platform.Core/Execution/BackgroundJobService.cs`):
+  child process (kind `Terminal`, `argv[0]` = name), trust context
+  of the child through the factory, queue per user and app pair
+  (`MaxConcurrentJobsPerApp`, number of virtual cores), `GetJobs` and
+  `TryGetJob` for `/proc` and the task manager.
+- **Workers** (`Platform/HackerOs.Platform.WorkerHost`): `start` with `k = 2`,
+  `bg.progress`, `bg.run` and `bgp` for a task launched from a worker
   ([`worker-processes.md`](../dev/worker-processes.md#tâches-hackbackground-adr-0128-adr-0140)).
-- **`/proc/<pid>/status`** : `Name:` porte le nom de la tâche (15 caractères),
-  puis `Job:` et `Host: MainThread|Worker`.
+- **`/proc/<pid>/status`**: `Name:` carries the task name (15 characters),
+  then `Job:` and `Host: MainThread|Worker`.
 
-## Décisions clés
+## Key decisions
 
-- La tâche est nommée (méthode statique ou classe) et ses données passent en
-  JSON : un worker est un autre runtime .NET, sans les objets de la fenêtre.
-- Sans worker, même contrat sur le fil principal, avec la même sérialisation :
-  une app qui marche dans ses tests marche en worker.
-- Un processus par tâche, enfant de l'app : visible, tuable seul. À la
-  fermeture de l'app, demande d'arrêt `DependencyStop` puis mise à mort après
-  5 s sur l'horloge de la simulation (`ProcessStartRequest.ParentExitGracePeriod`,
-  ADR 0147, qui remplace l'ADR 0140 §6) ; `kill -9` de l'app, une limite ou
-  l'OOM killer la tuent tout de suite.
-- Le PID de la tâche ne fait pas partie de la progression (réponse de Benoit,
-  ADR 0147 §3) : la tâche le met dans son message si la fenêtre en a besoin.
-- `nice` est borné et devient la valeur `nice` du processus de la tâche
-  (`ps -o ni`, `/proc/<pid>/stat`) ; il fixe sa place dans la file des workers
+- The task is named (static method or class) and its data goes through
+  JSON: a worker is another .NET runtime, without the window's objects.
+- Without a worker, same contract on the main thread, with the same serialization:
+  an app that works in its tests works in a worker.
+- One process per task, child of the app: visible, killable on its own. When the
+  app closes, a `DependencyStop` stop request then a kill after
+  5 s on the simulation clock (`ProcessStartRequest.ParentExitGracePeriod`,
+  ADR 0147, which replaces ADR 0140 §6); the app's `kill -9`, a limit or
+  the OOM killer kill it immediately.
+- The task's PID is not part of the progress (Benoit's answer,
+  ADR 0147 §3): the task puts it in its message if the window needs it.
+- `nice` is bounded and becomes the `nice` value of the task's process
+  (`ps -o ni`, `/proc/<pid>/stat`); it sets its place in the workers' queue
   (ADR 0127, [`process-priority-and-unresponsive-windows.md`](../dev/process-priority-and-unresponsive-windows.md)).
 
-## Apps de base
+## Base apps
 
-| Traitement | Décision |
+| Processing | Decision |
 |---|---|
-| Recherche dans le dossier du CodeEditor | Tâche `code-editor:search` ([`code-editor.md`](../dev/code-editor.md)). |
-| Compresser, Extraire, « UnZip Here… » de l'explorateur | Tâches `file-explorer:compress` et `file-explorer:extract` ([`file-explorer.md`](../dev/file-explorer.md)). |
-| Copier, déplacer, coller ; téléchargement en `.zip` | Restent dans la fenêtre : appels à l'OS attendus avec des points d'arrêt, question de conflit dans la fenêtre ; octets du téléchargement destinés à la fenêtre (ADR 0140 §9). |
-| Hack Paint | Pas de filtre ; rotation et recadrage restent (tampon jusqu'à 64 Mio, au-delà de la limite de 16 Mio) ([`hack-paint.md`](../dev/hack-paint.md)). |
+| Search in the CodeEditor folder | Task `code-editor:search` ([`code-editor.md`](../dev/code-editor.md)). |
+| Compress, Extract, "UnZip Here…" of the explorer | Tasks `file-explorer:compress` and `file-explorer:extract` ([`file-explorer.md`](../dev/file-explorer.md)). |
+| Copy, move, paste; download as `.zip` | Stay in the window: OS calls awaited with checkpoints, conflict question in the window; download bytes destined for the window (ADR 0140 §9). |
+| Hack Paint | No filter; rotation and cropping remain (buffer up to 64 MiB, beyond the 16 MiB limit) ([`hack-paint.md`](../dev/hack-paint.md)). |
 
-## Exemple
+## Example
 
-`Apps/Samples/HackerOs.Samples.WindowApp`, section « Background Task » :
-compte des nombres premiers (`SampleJobs.CountPrimes`) avec barre de
-progression, « Cancel » (annulation) et « Kill » (tue le processus de la
-tâche ; la fenêtre reste ouverte et affiche `killed`).
+`Apps/Samples/HackerOs.Samples.WindowApp`, "Background Task" section:
+counting prime numbers (`SampleJobs.CountPrimes`) with a progress
+bar, "Cancel" (cancellation) and "Kill" (kills the task's process;
+the window stays open and shows `killed`).
 
 ## Tests
 
-- `Tests/HackerOs.AppSdk.Tests/Threading/HackBackgroundTests.cs` : passerelle en
-  ligne, lambda refusée, type non déclaré, faute, annulation, limitation de la
-  progression.
-- `Tests/HackerOs.AppSdk.Tests/Threading/HackBackgroundAnalyzerTests.cs` : les
-  quatre règles `HOSBG`.
-- `Tests/HackerOs.Platform.WorkerHost.Tests/BackgroundJobTests.cs` : chaque cas
-  sur le fil principal **et** en worker (résultat, processus enfant,
-  progression, classe de tâche, faute, annulation, `kill -9` sans fermer l'app,
-  l'app qui tue sa propre tâche, `kill -9` de l'app, fermeture de l'app avec
-  sortie en `130` ou mise à mort à 5 s, limite de concurrence,
-  `/proc/<pid>/status`, `ps`, entrée refusée, autre assembly).
-- Tests des apps : recherche en tâche (CodeEditor), compression et extraction
-  (explorateur), tâche de l'exemple.
+- `Tests/HackerOs.AppSdk.Tests/Threading/HackBackgroundTests.cs`: inline gateway,
+  lambda refused, undeclared type, fault, cancellation, progress
+  throttling.
+- `Tests/HackerOs.AppSdk.Tests/Threading/HackBackgroundAnalyzerTests.cs`: the
+  four `HOSBG` rules.
+- `Tests/HackerOs.Platform.WorkerHost.Tests/BackgroundJobTests.cs`: each case
+  on the main thread **and** in a worker (result, child process,
+  progress, task class, fault, cancellation, `kill -9` without closing the app,
+  the app killing its own task, `kill -9` of the app, app closing with
+  exit `130` or kill at 5 s, concurrency limit,
+  `/proc/<pid>/status`, `ps`, refused input, other assembly).
+- App tests: search as a task (CodeEditor), compression and extraction
+  (explorer), the sample's task.
 
-## Liste des tâches du chantier `exec/5-background-jobs`
+## Task list of work item `exec/5-background-jobs`
 
-- [x] API du SDK (`HackBackground`, contexte, classe de tâche, options, exception), passerelle en ligne par défaut.
-- [x] `BackgroundJobService` : processus enfant, contexte de confiance, file par utilisateur et app, codes de sortie.
-- [x] Workers : `start` `k = 2`, `bg.progress`, `bg.run`, `bgp`, erreurs `bgfault` et raison `rs`.
-- [x] `/proc/<pid>/status` (`Name`, `Job`, `Host`) et `ps`.
-- [x] Une app gère ses descendants sans `process.manage` (ADR 0140 §7).
-- [x] Analyseur `HOSBG0001` à `HOSBG0004`, livré dans le paquet du SDK et branché sur les apps du dépôt.
-- [x] Recherche du CodeEditor, compression et extraction de l'explorateur en tâches ; raison écrite pour les copies, le téléchargement et Hack Paint.
-- [x] Exemple dans la fenêtre d'exemple.
-- [x] Tests SDK, analyseur, OS et worker, apps.
+- [x] SDK API (`HackBackground`, context, task class, options, exception), default inline gateway.
+- [x] `BackgroundJobService`: child process, trust context, queue per user and app, exit codes.
+- [x] Workers: `start` `k = 2`, `bg.progress`, `bg.run`, `bgp`, `bgfault` errors and `rs` reason.
+- [x] `/proc/<pid>/status` (`Name`, `Job`, `Host`) and `ps`.
+- [x] An app manages its descendants without `process.manage` (ADR 0140 §7).
+- [x] Analyzer `HOSBG0001` to `HOSBG0004`, shipped in the SDK package and wired to the repository's apps.
+- [x] CodeEditor search, explorer compression and extraction as tasks; reason written down for copies, download and Hack Paint.
+- [x] Example in the sample window.
+- [x] SDK, analyzer, OS and worker tests, apps.
 - [x] Documentation, ADR 0140, index.
-- [x] Délai de 5 s à la fermeture de l'app, réponses de Benoit aux deux cartes (ADR 0147).
+- [x] 5 s delay when the app closes, Benoit's answers to the two cards (ADR 0147).

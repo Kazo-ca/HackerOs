@@ -1,40 +1,39 @@
-# API du terminal pour les apps et les commandes
+# Terminal API for apps and commands
 
-Ce document décrit ce qu'une app ou une commande voit du terminal : le composant `TerminalPanel`, l'interface `IHackTerminal`, la lecture d'un mot de passe sans écho et le mode plein écran. Le fonctionnement interne (xterm.js, discipline de ligne, rendu, raccourcis) est dans [`dev/terminal-emulator.md`](../dev/terminal-emulator.md).
+This document describes what an app or a command sees of the terminal: the `TerminalPanel` component, the `IHackTerminal` interface, reading a password without echo and full-screen mode. The internal workings (xterm.js, line discipline, rendering, shortcuts) are in [`dev/terminal-emulator.md`](../dev/terminal-emulator.md).
 
-## Composant `TerminalPanel`
+## `TerminalPanel` component
 
-`TerminalPanel` implémente `IHackTerminal` : un hôte peut y lancer des
-commandes (affichées à l'invite, après les touches déjà tapées), changer de
-dossier par un `cd` visible et lire le texte affiché sans séquences de
-contrôle (`TerminalAnsi.StripControlSequences`).
+`TerminalPanel` implements `IHackTerminal`: a host can launch
+commands in it (displayed at the prompt, after the keys already typed), change
+folder with a visible `cd` and read the displayed text without control
+sequences (`TerminalAnsi.StripControlSequences`).
 
-`TerminalPanel.PushVirtualKey` (clavier virtuel) suit le même chemin que le
-clavier physique ; avec `UseVirtualKeyboard`, la zone de saisie cachée de
-xterm.js reçoit `inputmode="none"`.
+`TerminalPanel.PushVirtualKey` (virtual keyboard) follows the same path as the
+physical keyboard; with `UseVirtualKeyboard`, xterm.js's hidden input area
+receives `inputmode="none"`.
 
-## Entrée standard d'une commande
+## A command's standard input
 
-Pendant qu'une ligne s'exécute, les touches vont à l'entrée standard de la commande, comme un tty en mode canonique : `read`, `cat` et `sh` interactif lisent les lignes envoyées par Entrée, Ctrl+D sur une ligne vide signale la fin d'entrée, Ctrl+C interrompt. Ce que la commande n'a pas lu revient à l'invite suivante, dans la limite de 4096 touches. Le détail de la discipline de ligne est dans [`dev/terminal-emulator.md`](../dev/terminal-emulator.md).
+While a line is running, keys go to the command's standard input, like a tty in canonical mode: `read`, `cat` and interactive `sh` read the lines sent with Enter, Ctrl+D on an empty line signals end of input, Ctrl+C interrupts. What the command has not read comes back at the next prompt, within the limit of 4096 keys. The details of the line discipline are in [`dev/terminal-emulator.md`](../dev/terminal-emulator.md).
 
-## Lire un mot de passe sans écho
+## Reading a password without echo
 
-Une commande peut couper l'écho, comme le drapeau `ECHO` de `termios` (ADR
-0120 §4) : `TerminalInputReader` implémente `ITerminalInputMode`, et
-`TerminalExecutionContext.ReadSecretLineAsync(invite)` met `EchoEnabled` à
-`false` le temps d'une ligne, comme `getpass(3)`. La discipline de ligne
-(`HandleInputKey`) n'affiche alors ni les caractères ni leur effacement
-(Retour arrière, Ctrl+U) ; Entrée passe toujours à la ligne. `passwd` lit
-ainsi les mots de passe.
+A command can turn echo off, like the `ECHO` flag of `termios` (ADR
+0120 §4): `TerminalInputReader` implements `ITerminalInputMode`, and
+`TerminalExecutionContext.ReadSecretLineAsync(prompt)` sets `EchoEnabled` to
+`false` for the duration of one line, like `getpass(3)`. The line discipline
+(`HandleInputKey`) then displays neither the characters nor their erasure
+(Backspace, Ctrl+U); Enter still moves to the next line. `passwd` reads
+passwords this way.
 
-## Commandes plein écran
+## Full-screen commands
 
-Une commande plein écran utilise le contrat `IFullScreenTerminalSession` du SDK : `EnterAlternateScreenAsync` passe sur l'écran alternatif, `RenderAsync` reçoit un `TerminalScreenFrame` (lignes, curseur, libellé accessible) à chaque image, et `ReadKeyAsync` attend la prochaine touche ou le prochain redimensionnement. Une rangée peut porter des séquences de couleur ou de vidéo inverse (SGR) ; elle se termine par `ESC[0m`. Le rendu côté terminal est dans [`dev/terminal-emulator.md`](../dev/terminal-emulator.md#commandes-plein-écran).
+A full-screen command uses the SDK's `IFullScreenTerminalSession` contract: `EnterAlternateScreenAsync` switches to the alternate screen, `RenderAsync` receives a `TerminalScreenFrame` (lines, cursor, accessible label) on each frame, and `ReadKeyAsync` waits for the next key or the next resize. A row can carry color or reverse video sequences (SGR); it ends with `ESC[0m`. Rendering on the terminal side is in [`dev/terminal-emulator.md`](../dev/terminal-emulator.md#commandes-plein-écran).
 
 ## IHackTerminal
 
-`IHackTerminal` (fichier `Shared/HackerOs.AppSdk/Components/IHackTerminal.cs`) a pour membres `RunCommandAsync(commandLine)`, `SetWorkingDirectoryAsync(path)`, `SendInputAsync(text)`, `ReadOutput(maxCharacters)` (65 536 caractères par défaut), `ClearAsync()` et `FocusAsync()`.
+`IHackTerminal` (file `Shared/HackerOs.AppSdk/Components/IHackTerminal.cs`) has the members `RunCommandAsync(commandLine)`, `SetWorkingDirectoryAsync(path)`, `SendInputAsync(text)`, `ReadOutput(maxCharacters)` (65,536 characters by default), `ClearAsync()` and `FocusAsync()`.
 
-Les commandes envoyées par un hôte (`IHackTerminal.RunCommandAsync`) ne sont
-jamais continuées.
-
+Commands sent by a host (`IHackTerminal.RunCommandAsync`) are
+never continued.

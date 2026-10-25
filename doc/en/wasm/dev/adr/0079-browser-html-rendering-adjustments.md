@@ -1,55 +1,55 @@
-# ADR 0079 : ajustements du rendu HTML du navigateur
+# ADR 0079: adjustments to the browser HTML rendering
 
-## Statut
+## Status
 
-Accepté le 2026-10-16, avec le chantier `web/4-browser-html`.
+Accepted on 2026-10-16, with the `web/4-browser-html` work item.
 
-- **Phase du plan :** phase web ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
-- **Complète :** [ADR 0075](0075-browser-html-rendering.md), sans changer ses
-  décisions (iframe sans même origine, sous-ressources chargées en C#, pont).
-- **Documentation :** [`browser-html-rendering.md`](../browser-html-rendering.md).
+- **Plan phase:** web phase ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
+- **Completes:** [ADR 0075](0075-browser-html-rendering.md), without changing its
+  decisions (iframe without same origin, subresources loaded in C#, bridge).
+- **Documentation:** [`browser-html-rendering.md`](../browser-html-rendering.md).
 
-## Contexte
+## Context
 
-La mise en œuvre de l'ADR 0075 a rencontré des points que l'ADR ne tranchait
-pas, ou qu'une iframe sans même origine ne permet pas de faire comme un vrai
-navigateur. Ils sont consignés ici.
+The implementation of ADR 0075 encountered points that the ADR did not settle,
+or that an iframe without same origin does not allow doing like a real
+browser. They are recorded here.
 
-## Décision
+## Decision
 
-1. **`file://` limité au dossier personnel.** Le navigateur ne demande pas
-   `filesystem.system.read` : cette capacité est dangereuse (ADR 0049) et
-   déclenchait une approbation administrateur à chaque lancement, puisque le
-   navigateur n'est pas une app système. Il lit et écrit le dossier de
-   l'utilisateur (`filesystem.user-home.read`/`write`), comme ses
-   téléchargements. Un fichier hors du dossier personnel donne
+1. **`file://` limited to the home folder.** The browser does not request
+   `filesystem.system.read`: this capability is dangerous (ADR 0049) and
+   triggered an administrator approval at each launch, since the
+   browser is not a system app. It reads and writes the user's folder
+   (`filesystem.user-home.read`/`write`), like its
+   downloads. A file outside the home folder gives
    `ERR_ACCESS_DENIED`.
-2. **Sous-ressources en URL `data:` uniquement.** Pas de `blob:` créé par
-   l'hôte : le `srcdoc` porte tout. Une ressource en échec devient `data:,`
-   et apparaît dans l'onglet Network.
-3. **Pas de cadres imbriqués.** `iframe`, `frame`, `object` et `embed`
-   d'une page deviennent `about:blank`, avec un avertissement Console.
-4. **Navigation par script détectée, pas interceptée.** `location` reste
-   `about:srcdoc` dans une iframe sans même origine : `location.href = …`
-   ne peut pas être détourné. `document.URL` et `document.referrer` donnent
-   l'URL réelle ; une navigation par script est détectée (chargement du cadre
-   sans annonce du pont) et remplacée par une page d'erreur
-   `ERR_BLOCKED_BY_CLIENT` plutôt que par un document sans pont.
-5. **Limites acceptées pour cette phase.** Les `import` relatifs de modules
-   ES ne se résolvent pas ; aucun prévol CORS (`OPTIONS`) n'est envoyé, seuls
-   les en-têtes de la réponse sont vérifiés ; `HttpOnly` n'est pas modélisé ;
-   `target="_blank"` ouvre dans le même onglet.
-6. **Boîtes de dialogue.** `alert` devient une bannière non bloquante
-   au-dessus de la page ; `confirm` renvoie `false` et `prompt` `null`, comme
-   un navigateur qui bloque les boîtes de dialogue d'une page.
-7. **Sites de démonstration.** Le site `example.hackeros` du réseau de démo
-   sert des pages HTML de test (`/page.html`, `/form.html`, `/echo`,
-   `/api/ping`) et HackerSearch renvoie `Access-Control-Allow-Origin: *` sur
-   `/api/search`, pour qu'une page d'une autre origine puisse l'appeler.
+2. **Subresources as `data:` URLs only.** No `blob:` created by
+   the host: the `srcdoc` carries everything. A failed resource becomes `data:,`
+   and appears in the Network tab.
+3. **No nested frames.** `iframe`, `frame`, `object` and `embed`
+   of a page become `about:blank`, with a Console warning.
+4. **Script navigation detected, not intercepted.** `location` stays
+   `about:srcdoc` in an iframe without same origin: `location.href = ...`
+   cannot be hijacked. `document.URL` and `document.referrer` give
+   the real URL; a script navigation is detected (frame load
+   without a bridge announcement) and replaced by an
+   `ERR_BLOCKED_BY_CLIENT` error page rather than by a document without a bridge.
+5. **Limits accepted for this phase.** Relative `import`s of ES modules
+   do not resolve; no CORS preflight (`OPTIONS`) is sent, only
+   the response headers are checked; `HttpOnly` is not modeled;
+   `target="_blank"` opens in the same tab.
+6. **Dialog boxes.** `alert` becomes a non-blocking banner
+   above the page; `confirm` returns `false` and `prompt` `null`, like
+   a browser that blocks a page's dialog boxes.
+7. **Demo sites.** The `example.hackeros` site of the demo network
+   serves test HTML pages (`/page.html`, `/form.html`, `/echo`,
+   `/api/ping`) and HackerSearch returns `Access-Control-Allow-Origin: *` on
+   `/api/search`, so that a page from another origin can call it.
 
-## Conséquences
+## Consequences
 
-- Le navigateur ne déclenche plus d'approbation administrateur au lancement.
-- Une page qui navigue par script doit utiliser un lien ou un formulaire
-  pour fonctionner dans HackerOS.
-- Les limites du point 5 pourront être levées par un ADR ultérieur.
+- The browser no longer triggers an administrator approval at launch.
+- A page that navigates by script must use a link or a form
+  to work in HackerOS.
+- The limits of point 5 can be lifted by a later ADR.

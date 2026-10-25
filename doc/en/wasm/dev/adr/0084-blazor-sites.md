@@ -1,150 +1,149 @@
-# ADR 0084 : sites Blazor interactifs dessinés par le navigateur
+# ADR 0084: interactive Blazor sites drawn by the browser
 
-## Statut
+## Status
 
-Accepté le 2026-10-16, avec le chantier `web/9-blazor-sites`.
+Accepted on 2026-10-16, with the `web/9-blazor-sites` work item.
 
-- **Phase du plan :** phase web ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
-- **Complète :** ADR 0073 §1 et §4 (site Blazor d'une app `Web`), ADR 0075 §5
-  (choix de la vue selon la réponse), ADR 0081 §2 (contenu Blazor dans une
-  fenêtre détachée). Ne remplace aucune décision.
-- **Documentation :** [`blazor-sites.md`](../../framework/blazor-sites.md).
+- **Plan phase:** web phase ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
+- **Completes:** ADR 0073 §1 and §4 (Blazor site of a `Web` app), ADR 0075 §5
+  (choice of view according to the response), ADR 0081 §2 (Blazor content in a
+  detached window). Replaces no decision.
+- **Documentation:** [`blazor-sites.md`](../../framework/blazor-sites.md).
 
-## Contexte
+## Context
 
-L'ADR 0073 §4 dit qu'un site Blazor ressemble à une app à fenêtre, mais que son
-composant racine est dessiné dans la zone de page du navigateur, qu'il navigue
-par l'URL de l'onglet et qu'il n'a aucun accès aux fichiers. Il ne dit pas
-comment le navigateur sait qu'une adresse est un site Blazor, sous quelle
-identité tourne ce code, ni comment la navigation, les liens et les erreurs se
-comportent, alors que le `NavigationManager`, le `Router` et `PageTitle` de
-Blazor appartiennent à l'OS lui-même (un seul moteur de rendu pour tout le
-bureau).
+ADR 0073 §4 says that a Blazor site resembles a windowed app, but that its
+root component is drawn in the browser's page area, that it navigates
+through the tab's URL and that it has no file access. It does not say
+how the browser knows that an address is a Blazor site, under what identity this code
+runs, nor how navigation, links and errors behave, whereas Blazor's
+`NavigationManager`, `Router` and `PageTitle` belong to the OS itself (a single
+rendering engine for the whole desktop).
 
-## Décision
+## Decision
 
-### 1. Déclaration
+### 1. Declaration
 
-`AppDefinition.BlazorRoot` (`Type?`, `null` par défaut) désigne le composant
-racine d'une app `Web`. Le générateur de manifestes l'écrit dans
-`web.blazor` (`assembly`, `type`), omis sans racine pour garder les octets des
-autres manifestes. Le validateur exige que le type soit dans l'assembly du point
-d'entrée (`manifest.web.blazor.assembly`), comme les composants intégrables
-(ADR 0063) : le chargement paresseux n'apporte que cette DLL. Un site peut être
-MVC seul, Blazor seul, ou les deux (ADR 0073 §1).
+`AppDefinition.BlazorRoot` (`Type?`, `null` by default) designates the root
+component of a `Web` app. The manifest generator writes it into
+`web.blazor` (`assembly`, `type`), omitted without a root to keep the bytes of the
+other manifests. The validator requires the type to be in the entry point's
+assembly (`manifest.web.blazor.assembly`), like embeddable components
+(ADR 0063): lazy loading brings only that DLL. A site can be
+MVC only, Blazor only, or both (ADR 0073 §1).
 
-### 2. Le site répond comme un site Blazor WebAssembly
+### 2. The site answers like a Blazor WebAssembly site
 
-Pour un site qui a une racine Blazor, `HackWebHost` ajoute après
-`Configure` trois réponses, avec la priorité la plus basse (les routes MVC
-passent d'abord) :
+For a site that has a Blazor root, `HackWebHost` adds after
+`Configure` three responses, with the lowest priority (MVC routes
+go first):
 
-- la **page hôte** (`index.html` d'un vrai site Blazor) pour toute requête
-  `GET`/`HEAD` sans endpoint dont le dernier segment n'a pas d'extension
-  (`MapFallbackToFile` d'ASP.NET Core) : `<div id="app">`, puis
-  `<script src="_framework/blazor.hack.js">` ;
-- `/_framework/blazor.hack.js`, le chargeur, qui dans un autre navigateur
-  (ou une page sans l'OS) affiche seulement que le site demande le navigateur
-  de HackerOS ;
-- `/_framework/blazor.boot.json` : identifiant de l'app, nom, composant racine,
-  assembly d'entrée.
+- the **host page** (`index.html` of a real Blazor site) for any
+  `GET`/`HEAD` request with no endpoint whose last segment has no extension
+  (`MapFallbackToFile` of ASP.NET Core): `<div id="app">`, then
+  `<script src="_framework/blazor.hack.js">`;
+- `/_framework/blazor.hack.js`, the loader, which in another browser
+  (or a page without the OS) only displays that the site requires the HackerOS
+  browser;
+- `/_framework/blazor.boot.json`: app identifier, name, root component,
+  entry assembly.
 
-`curl` voit donc la même chose qu'avec un vrai site Blazor : une page presque
-vide qui charge un script.
+`curl` therefore sees the same thing as with a real Blazor site: an almost
+empty page that loads a script.
 
-### 3. Le navigateur démarre le site comme un moteur de rendu
+### 3. The browser starts the site like a rendering engine
 
-Quand une réponse `text/html` charge `_framework/blazor.hack.js`, le navigateur
-lit `blazor.boot.json` (visible dans l'onglet Network), puis demande à l'OS de
-démarrer le site par `IHackWebSiteHost` (SDK Blazor, implémenté par la
-plateforme, comme `IHackComponentHost`). L'OS :
+When a `text/html` response loads `_framework/blazor.hack.js`, the browser
+reads `blazor.boot.json` (visible in the Network tab), then asks the OS to
+start the site through `IHackWebSiteHost` (Blazor SDK, implemented by the
+platform, like `IHackComponentHost`). The OS:
 
-1. retrouve l'app `Web` qui déclare l'origine et le chemin de la page dans
-   `web.urls`, et refuse si `blazor.boot.json` nomme une autre app (une page ne
-   peut pas démarrer le code d'un autre site) ;
-2. charge son assembly (chargement paresseux) et vérifie que la racine est un
-   composant ;
-3. démarre un **processus de rendu**, enfant du processus du navigateur, comme
-   `chrome --type=renderer` : même identifiant d'app que le site, utilisateur de
-   l'onglet, `argv` `[<hôte>, --type=renderer, <url>]`, capacités accordées au
-   site **moins** `network.listen*` (le code client n'écoute pas). Ce processus
-   est **auxiliaire** : il n'est jamais pris pour l'instance du site, si bien que
-   l'activation à la demande du serveur (ADR 0074 §3) ne change pas. Il tourne
-   sur le fil principal, où le navigateur le dessine (ADR 0073 §1).
+1. finds the `Web` app that declares the page's origin and path in
+   `web.urls`, and refuses if `blazor.boot.json` names another app (a page cannot
+   start another site's code);
+2. loads its assembly (lazy loading) and verifies that the root is a
+   component;
+3. starts a **rendering process**, child of the browser's process, like
+   `chrome --type=renderer`: same app identifier as the site, the tab's user,
+   `argv` `[<host>, --type=renderer, <url>]`, capabilities granted to the
+   site **minus** `network.listen*` (client code does not listen). This process
+   is **auxiliary**: it is never taken for the site's instance, so
+   the server's on-demand activation (ADR 0074 §3) does not change. It runs
+   on the main thread, where the browser draws it (ADR 0073 §1).
 
-Le processus de rendu se termine quand l'onglet change de document, se ferme ou
-recharge la page (un rechargement démarre un nouveau processus, comme un
-navigateur recharge le runtime).
+The rendering process terminates when the tab changes document, closes or
+reloads the page (a reload starts a new process, like a
+browser reloads the runtime).
 
-### 4. Rendu dans la zone de page
+### 4. Rendering in the page area
 
-`HackWebSiteView` (SDK Blazor) dessine le composant racine directement dans la
-zone de page, sans iframe : c'est du code C# installé, au même niveau de
-confiance qu'une app à fenêtre, limité par ses capacités, et son style est isolé
-par le CSS scopé. Le JavaScript des pages HTML reste dans l'iframe isolée de
-l'ADR 0075. Le composant reçoit en cascade le contexte d'exécution du processus
-de rendu (les composants dérivés de `HackComponentBase` appellent le SDK sous
-l'identité du site) et un `HackWebSite` : adresse, navigation, client HTTP,
-titre.
+`HackWebSiteView` (Blazor SDK) draws the root component directly in the page
+area, without an iframe: it is installed C# code, at the same trust level as
+a windowed app, limited by its capabilities, and its style is isolated
+by scoped CSS. The JavaScript of HTML pages stays in the isolated iframe of
+ADR 0075. The component receives as cascading values the rendering process's execution
+context (components derived from `HackComponentBase` call the SDK under
+the site's identity) and an `HackWebSite`: address, navigation, HTTP client,
+title.
 
-Une exception non gérée d'un composant du site est arrêtée par une
-`ErrorBoundary` : le processus de rendu passe en défaut, l'onglet montre la page
-« Aw, Snap! » et la console des outils de développement l'exception. Tuer le
-processus de rendu (gestionnaire de tâches, `kill`) donne la même page. Le reste
-de l'OS n'est jamais touché.
+An unhandled exception from a site component is stopped by an
+`ErrorBoundary`: the rendering process goes into a fault state, the tab shows the
+"Aw, Snap!" page and the developer tools console shows the exception. Killing the
+rendering process (task manager, `kill`) gives the same page. The rest
+of the OS is never affected.
 
-### 5. Navigation par l'URL de l'onglet
+### 5. Navigation through the tab's URL
 
-Le `NavigationManager`, le `Router`, `NavLink` et `PageTitle` de Blazor sont
-ceux de l'OS (DI du moteur de rendu partagé) : un site ne doit pas les utiliser.
-Le SDK fournit leurs équivalents propres à l'onglet :
+Blazor's `NavigationManager`, `Router`, `NavLink` and `PageTitle` are
+those of the OS (DI of the shared rendering engine): a site must not use them.
+The SDK provides their tab-specific equivalents:
 
-- `HackSiteNavigationManager` dérive de `NavigationManager` : `NavigateTo`,
-  `LocationChanged`, `BaseUri`, `ToBaseRelativePath` fonctionnent comme dans
-  Blazor, sur l'adresse de l'onglet ;
-- `HackSiteRouter` trouve les pages par leurs directives `@page` dans
-  l'assembly du site (gabarits de Blazor : `{id:int}`, `{x?}`, `{*rest}`), avec
-  `Found`/`NotFound` et un layout par défaut ;
-- `HackNavLink` et `HackPageTitle` remplacent `NavLink` et `PageTitle`.
+- `HackSiteNavigationManager` derives from `NavigationManager`: `NavigateTo`,
+  `LocationChanged`, `BaseUri`, `ToBaseRelativePath` work as in
+  Blazor, on the tab's address;
+- `HackSiteRouter` finds pages by their `@page` directives in
+  the site's assembly (Blazor templates: `{id:int}`, `{x?}`, `{*rest}`), with
+  `Found`/`NotFound` and a default layout;
+- `HackNavLink` and `HackPageTitle` replace `NavLink` and `PageTitle`.
 
-Les liens `<a href>` dessinés par le site sont interceptés dans la zone de page
-(module JS du composant) : un lien vers une adresse du site devient une
-navigation interne, ajoutée à l'historique de l'onglet sans requête, comme
-`history.pushState` ; un lien vers ailleurs, ou `forceLoad`, est une navigation
-du navigateur. Précédent et suivant entre deux entrées du même site restent dans
-le site ; la barre d'adresse et Recharger font une vraie requête.
+The `<a href>` links drawn by the site are intercepted in the page area
+(component's JS module): a link to an address of the site becomes an internal
+navigation, added to the tab's history without a request, like
+`history.pushState`; a link elsewhere, or `forceLoad`, is a browser
+navigation. Back and forward between two entries of the same site stay in
+the site; the address bar and Reload make a real request.
 
-### 6. Réseau et cookies
+### 6. Network and cookies
 
-`HackWebSite.Http` est un `HackHttpClient` dont `BaseAddress` est l'adresse du
-site (nouvelle propriété du SDK, comme `HttpClient.BaseAddress`), qui partage le
-pot à cookies de l'onglet et s'exécute sous l'identité du processus de rendu :
-un appel `GET api/notes` passe par le réseau simulé et arrive au même site, avec
-la session ouverte par ses pages.
+`HackWebSite.Http` is an `HackHttpClient` whose `BaseAddress` is the site's
+address (new SDK property, like `HttpClient.BaseAddress`), which shares the
+tab's cookie jar and runs under the rendering process's identity:
+a `GET api/notes` call goes through the simulated network and reaches the same site, with
+the session opened by its pages.
 
-### 7. Fenêtre détachée
+### 7. Detached window
 
-La zone de page d'un site Blazor se déplace dans la fenêtre détachée par le
-portail de l'ADR 0081 §2, sans recharger : contrairement à une page HTML, le
-site garde son état (compteurs, formulaires en cours).
+The page area of a Blazor site moves into the detached window through the
+portal of ADR 0081 §2, without reloading: unlike an HTML page, the
+site keeps its state (counters, forms in progress).
 
-## Conséquences
+## Consequences
 
-- Les apps `Web` gagnent un manifeste `web.blazor` facultatif ; le schéma, le
-  sérialiseur et le validateur le connaissent.
-- `ProcessStartRequest` gagne `Auxiliary` : `TryGetSingleton` ignore les
-  processus auxiliaires.
-- `DisplaySurfaceContent.Surface` devient facultatif (section 7) : le
-  navigateur rend sa zone de page une seule fois à travers le portail, et un
-  site Blazor garde son état au détachement.
-- Le site d'exemple `HackerOs.Samples.BlazorSite` est installé dans les deux
-  hôtes (app cachée, `http://blazor-sample.hack/`) : c'est le seul site Blazor
-  que le navigateur peut servir tant qu'aucune app n'en déclare.
-- Un site Blazor utilise les composants de navigation du SDK, pas ceux de
-  Blazor ; un `[Inject] NavigationManager` dans un site obtient celui de l'OS.
-  Le guide le dit, et la page « Aw, Snap! » remplace le bandeau d'erreur global
-  de Blazor.
-- Un formulaire HTML sans gestionnaire `@onsubmit` n'est pas envoyé (aucune
-  navigation de document dans l'OS) : un site poste par `EditForm` ou `Http`.
-- Les requêtes du site par `Http` ne sont pas dans l'onglet Network (seuls le
-  document et `blazor.boot.json` y sont) ; à reprendre si le besoin vient.
+- `Web` apps gain an optional `web.blazor` manifest; the schema, the
+  serializer and the validator know it.
+- `ProcessStartRequest` gains `Auxiliary`: `TryGetSingleton` ignores
+  auxiliary processes.
+- `DisplaySurfaceContent.Surface` becomes optional (section 7): the
+  browser renders its page area only once through the portal, and a
+  Blazor site keeps its state on detaching.
+- The sample site `HackerOs.Samples.BlazorSite` is installed in both
+  hosts (hidden app, `http://blazor-sample.hack/`): it is the only Blazor site
+  that the browser can serve as long as no app declares one.
+- A Blazor site uses the SDK's navigation components, not Blazor's;
+  an `[Inject] NavigationManager` in a site gets the OS's.
+  The guide says so, and the "Aw, Snap!" page replaces Blazor's global
+  error banner.
+- An HTML form without an `@onsubmit` handler is not submitted (no
+  document navigation in the OS): a site posts through `EditForm` or `Http`.
+- The site's `Http` requests are not in the Network tab (only the
+  document and `blazor.boot.json` are); to be revisited if the need arises.

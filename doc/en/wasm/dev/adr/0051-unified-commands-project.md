@@ -1,84 +1,84 @@
-# ADR 0051 : Commandes regroupées, sans exception codée en dur
+# ADR 0051: Grouped commands, with no hard-coded exception
 
-## Statut
+## Status
 
-Accepté le 2026-10-10.
+Accepted on 2026-10-10.
 
-- **Phase du plan :** phase 3 — Shell, commandes et corbeille
+- **Plan phase:** phase 3, Shell, commands and trash
   ([`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md), section 7.3,
-  décision D14).
-- **Remplace :** la section 1 de l'ADR 0034 (exclusion de `cd`, `pwd`,
-  `clear` et `help` du catalogue, parce que le terminal les interceptait).
-  Les sections 2 à 5 de l'ADR 0034 (construction par injection, réseau
-  simulé, capacités corrigées) restent valides.
-- **Complète :** ADR 0042 : `sudo` devient une commande du catalogue ; ses
-  règles (une seule commande élevée, identifiants d'un administrateur,
-  ticket à usage unique) ne changent pas.
-- **S'appuie sur :** ADR 0047 (plusieurs classes `[AppManifest]` dans un
-  projet produisent `manifests/<appId>.json`), ADR 0048 (`IsSystemApp` sur la
-  `ProjectReference`), ADR 0050 (shell et environnement de processus).
+  decision D14).
+- **Replaces:** section 1 of ADR 0034 (exclusion of `cd`, `pwd`,
+  `clear` and `help` from the catalog, because the terminal intercepted them).
+  Sections 2 to 5 of ADR 0034 (construction by injection, simulated
+  network, fixed capabilities) remain valid.
+- **Complements:** ADR 0042: `sudo` becomes a catalog command; its
+  rules (a single elevated command, an administrator's credentials,
+  single-use ticket) do not change.
+- **Builds on:** ADR 0047 (several `[AppManifest]` classes in a
+  project produce `manifests/<appId>.json`), ADR 0048 (`IsSystemApp` on the
+  `ProjectReference`), ADR 0050 (shell and process environment).
 
-## Contexte
+## Context
 
-Les commandes sont 28 projets `Apps/Commands/HackerOs.Commands.*`, chacun avec
-une classe de commande et une classe manifeste. L'hôte a 24 `ProjectReference`
-pour elles, la solution 28 projets, et quatre projets de tests en référencent
-une partie. `TerminalPanel.razor` intercepte `clear`, `pwd`, `cd`, `help` et
-`sudo` avant toute résolution : leurs projets `Cd`, `Pwd`, `Clear` et `Help`
-existent mais ne sont pas référencés par l'hôte (ADR 0034, section 1), et la
-complétion comme `help` listent ces noms en dur.
+The commands are 28 `Apps/Commands/HackerOs.Commands.*` projects, each with
+a command class and a manifest class. The host has 24 `ProjectReference`s
+for them, the solution 28 projects, and four test projects reference
+some of them. `TerminalPanel.razor` intercepts `clear`, `pwd`, `cd`, `help` and
+`sudo` before any resolution: their `Cd`, `Pwd`, `Clear` and `Help` projects
+exist but are not referenced by the host (ADR 0034, section 1), and both
+completion and `help` list these names as hard-coded values.
 
-## Décision
+## Decision
 
-### 1. Un seul projet `HackerOs.Commands`
+### 1. A single `HackerOs.Commands` project
 
-- Nouveau projet `Apps/Commands/HackerOs.Commands/HackerOs.Commands.csproj`.
-  Chaque commande occupe un dossier (`Cat/CatApp.cs`, `Cat/CatCommand.cs`) et
-  garde son espace de noms (`HackerOs.Commands.Cat`), ses classes et sa
-  déclaration `[AppManifest]`.
-- **Les identifiants d'app ne changent pas** (`org.hackeros.commands.cat`…).
-  Les fichiers `apps.config`, `app-permissions.config` et les alias déjà
-  écrits restent valides.
-- Le générateur écrit `manifests/<appId>.json` pour chaque commande (ADR 0047) ;
-  les `manifest.json` des anciens projets disparaissent avec eux.
-- L'hôte n'a plus qu'**une** référence :
+- New project `Apps/Commands/HackerOs.Commands/HackerOs.Commands.csproj`.
+  Each command occupies a folder (`Cat/CatApp.cs`, `Cat/CatCommand.cs`) and
+  keeps its namespace (`HackerOs.Commands.Cat`), its classes and its
+  `[AppManifest]` declaration.
+- **App identifiers do not change** (`org.hackeros.commands.cat`...).
+  The `apps.config` and `app-permissions.config` files and the aliases already
+  written remain valid.
+- The generator writes `manifests/<appId>.json` for each command (ADR 0047);
+  the `manifest.json` files of the old projects disappear with them.
+- The host has only **one** reference left:
   `<ProjectReference Include="..\..\Apps\Commands\HackerOs.Commands\HackerOs.Commands.csproj" IsSystemApp="true" />`.
-  Toutes les commandes intégrées sont donc des apps système, comme les 24
-  actuelles. L'assembly est chargée à la demande en un seul bloc.
-- Les 28 anciens projets sont supprimés de la solution et du disque. Les
-  projets de tests référencent le nouveau projet. Les échantillons
-  (`Apps/Samples/HackerOs.Samples.TerminalApp`) restent un projet à part :
-  c'est le modèle d'une commande tierce.
-- **Format des commandes tierces inchangé :** un projet, une app de type
-  `Terminal` avec sa classe manifeste. Un projet tiers peut aussi regrouper
-  plusieurs commandes de la même manière.
+  All built-in commands are therefore system apps, like the current 24.
+  The assembly is loaded on demand as a single block.
+- The 28 old projects are removed from the solution and from disk. Test
+  projects reference the new project. The samples
+  (`Apps/Samples/HackerOs.Samples.TerminalApp`) remain a separate project:
+  it is the model for a third-party command.
+- **Third-party command format unchanged:** one project, one app of type
+  `Terminal` with its manifest class. A third-party project can also group
+  several commands the same way.
 
-### 2. Plus aucune exception dans le terminal
+### 2. No more exceptions in the terminal
 
-`TerminalPanel` et `ShellInterpreter` ne connaissent **aucun** nom de
-commande. Tout passe par la résolution du catalogue : `cd`, `pwd`, `clear`,
-`help`, `sudo` et les nouvelles commandes `export`, `unset` et `env`. La
-complétion et `help` lisent la liste des commandes installées. Désinstaller
-une commande système reste impossible (ADR 0048), donc `cd` ne peut pas
-disparaître.
+`TerminalPanel` and `ShellInterpreter` know **no** command name.
+Everything goes through catalog resolution: `cd`, `pwd`, `clear`,
+`help`, `sudo` and the new commands `export`, `unset` and `env`. Completion
+and `help` read the list of installed commands. Uninstalling
+a system command remains impossible (ADR 0048), so `cd` cannot
+disappear.
 
-### 3. Accès contrôlé au shell appelant
+### 3. Controlled access to the calling shell
 
-Comme sous Linux, `cd` et `export` doivent agir sur le shell lui-même, pas sur
-leur propre processus. Le SDK donne cet accès :
+As on Linux, `cd` and `export` must act on the shell itself, not on
+their own process. The SDK provides this access:
 
-- `TerminalExecutionContext.Shell`, de type `IShellSession?`
+- `TerminalExecutionContext.Shell`, of type `IShellSession?`
   (`Shared/HackerOs.AppSdk/`).
-- Nouvelle capacité **`shell.control`** (`AppCapabilities.ShellControl`),
-  classée **normale** (ADR 0049) : elle n'agit que sur le shell de
-  l'utilisateur qui a tapé la commande.
-- `Shell` est non nul seulement si la commande déclare `shell.control` et
-  qu'elle est lancée par un shell **interactif**.
-- Seule dans son pipeline (y compris après un `&&`), elle reçoit le **vrai**
-  shell : `cd /tmp && ls` liste `/tmp`.
-- Dans un tube (`cd /tmp | cat`), elle reçoit une **copie** du shell, comme
-  le sous-shell dans lequel bash exécute alors ses commandes internes : la
-  commande réussit, mais ses changements sont perdus à la fin de l'étape.
+- New capability **`shell.control`** (`AppCapabilities.ShellControl`),
+  classified **normal** (ADR 0049): it only acts on the shell of the
+  user who typed the command.
+- `Shell` is non-null only if the command declares `shell.control` and
+  is launched by an **interactive** shell.
+- Alone in its pipeline (including after a `&&`), it receives the **real**
+  shell: `cd /tmp && ls` lists `/tmp`.
+- In a pipe (`cd /tmp | cat`), it receives a **copy** of the shell, like
+  the subshell in which bash then runs its built-ins: the
+  command succeeds, but its changes are lost at the end of the stage.
 
 ```csharp
 public interface IShellSession
@@ -87,83 +87,83 @@ public interface IShellSession
     IReadOnlyDictionary<string, string> Environment { get; }
     IReadOnlyList<string> History { get; }
 
-    // cd : vérifie le dossier (existence, type, droit de traverser) sous l'identité de la commande,
-    // puis met à jour le répertoire du processus du shell, PWD et OLDPWD.
+    // cd: checks the folder (existence, type, right to traverse) under the command's identity,
+    // then updates the shell process's directory, PWD and OLDPWD.
     ValueTask ChangeDirectoryAsync(string path, CancellationToken cancellationToken);
 
-    void SetVariable(string name, string value);   // nom invalide : ArgumentException
+    void SetVariable(string name, string value);   // invalid name: ArgumentException
     void UnsetVariable(string name);
 
-    // help : commandes installées (nom, alias, usage, description).
+    // help: installed commands (name, alias, usage, description).
     IReadOnlyList<ShellCommandInfo> GetCommands();
 
-    // sudo : exécute une commande comme root (section 4).
+    // sudo: runs a command as root (section 4).
     ValueTask<int> RunElevatedAsync(IReadOnlyList<string> argv, TextWriter stdout, TextWriter stderr,
         CancellationToken cancellationToken);
 }
 ```
 
-Le changement est appliqué tout de suite au processus du shell (ADR 0050,
-section 5), pas à la fin de la commande, pour que la suite d'une liste `&&`
-le voie. Une commande déclarant `shell.control` lancée sans shell (par une
-app par `ExecuteCommandIntent`) affiche `<nom>: no shell session` et rend `1`, sauf
-indication contraire ci-dessous.
+The change is applied right away to the shell's process (ADR 0050,
+section 5), not at the end of the command, so that the rest of a `&&` list
+sees it. A command declaring `shell.control` launched without a shell (by an
+app through `ExecuteCommandIntent`) prints `<name>: no shell session` and returns `1`, unless
+stated otherwise below.
 
-### 4. Comportement des commandes concernées
+### 4. Behavior of the affected commands
 
-| Commande | Capacités | Comportement |
+| Command | Capabilities | Behavior |
 |---|---|---|
-| `cd [dir\|-]` | `shell.control`, `filesystem.user-home.read`, `filesystem.system.read` | Sans argument : `HOME`. `-` : `OLDPWD`, affiché. Erreurs Linux (`No such file or directory`, `Not a directory`, `Permission denied`), code `1`. |
-| `pwd` | — | Affiche son **propre** répertoire courant, hérité du shell : fonctionne sans accès au shell, comme `/bin/pwd`. |
-| `clear` | — | Écrit la séquence `ESC[H ESC[2J ESC[3J` sur sa sortie. Le terminal interprète ces séquences et vide l'écran ; `clear > f` écrit la séquence dans `f`, comme sous Linux. |
-| `help [cmd]` | `shell.control` | Liste les commandes installées ou affiche l'usage d'une commande. Sans shell : liste vide et message, code `1`. |
-| `export NOM=valeur…` | `shell.control` | Modifie l'environnement du shell ; les commandes lancées ensuite en héritent. Sans argument : liste `declare -x NOM="valeur"`. |
-| `unset NOM…` | `shell.control` | Retire des variables du shell. |
-| `env` | — | Affiche son propre environnement (hérité du shell), une ligne `NOM=valeur` par variable. `env NOM=v commande` est hors périmètre. |
-| `sudo cmd args…` | `shell.control` | Voir ci-dessous. |
+| `cd [dir\|-]` | `shell.control`, `filesystem.user-home.read`, `filesystem.system.read` | Without an argument: `HOME`. `-`: `OLDPWD`, printed. Linux errors (`No such file or directory`, `Not a directory`, `Permission denied`), code `1`. |
+| `pwd` | n/a | Prints its **own** current directory, inherited from the shell: works without shell access, like `/bin/pwd`. |
+| `clear` | n/a | Writes the sequence `ESC[H ESC[2J ESC[3J` to its output. The terminal interprets these sequences and clears the screen; `clear > f` writes the sequence to `f`, as on Linux. |
+| `help [cmd]` | `shell.control` | Lists the installed commands or prints a command's usage. Without a shell: empty list and a message, code `1`. |
+| `export NAME=value...` | `shell.control` | Modifies the shell's environment; commands launched afterwards inherit it. Without an argument: lists `declare -x NAME="value"`. |
+| `unset NAME...` | `shell.control` | Removes variables from the shell. |
+| `env` | n/a | Prints its own environment (inherited from the shell), one `NAME=value` line per variable. `env NAME=v command` is out of scope. |
+| `sudo cmd args...` | `shell.control` | See below. |
 
-**`sudo`.** La commande appelle `IShellSession.RunElevatedAsync`. Le shell
-garde la fenêtre d'identifiants et le ticket de l'ADR 0042 : il demande les
-identifiants d'un administrateur, crée le ticket `SudoRoot`, lance la commande
-cible comme enfant avec ce ticket, et relie sa sortie à celle de `sudo`. La
-commande cible ne reçoit **jamais** l'accès au shell : `sudo cd /root` affiche
-`sudo: cd: shell builtin` et rend `1`. Un échec d'authentification affiche
-`sudo: authentication failed` et rend `1`. `sudo` dans un tube
-fonctionne (`sudo cat /etc/shadow | wc`) : la copie du shell sait aussi
-exécuter `RunElevatedAsync`.
+**`sudo`.** The command calls `IShellSession.RunElevatedAsync`. The shell
+keeps the credentials window and the ticket of ADR 0042: it asks for the
+credentials of an administrator, creates the `SudoRoot` ticket, launches the target
+command as a child with this ticket, and connects its output to that of `sudo`. The
+target command **never** receives shell access: `sudo cd /root` prints
+`sudo: cd: shell builtin` and returns `1`. An authentication failure prints
+`sudo: authentication failed` and returns `1`. `sudo` in a pipe
+works (`sudo cat /etc/shadow | wc`): the shell copy also knows how to
+run `RunElevatedAsync`.
 
-**Alias.** `alias`, `unalias` et `rmalias` restent la commande `alias` du
-catalogue (alias statiques `unalias`, `rmalias` déclarés dans son manifeste au
-lieu de la réécriture actuelle dans le terminal) ; l'expansion reste dans le
+**Aliases.** `alias`, `unalias` and `rmalias` remain the `alias` command of the
+catalog (static aliases `unalias`, `rmalias` declared in its manifest instead
+of the current rewrite in the terminal); expansion remains in the
 shell (ADR 0050, section 4).
 
-### 5. Approbation ponctuelle après un refus
+### 5. One-off approval after a denial
 
-La reprise « Permission denied — approuver cette opération ? » de l'ADR 0042
-reste une fonction du shell interactif : elle s'applique à une commande seule
-(pas dans un tube ni redirigée, pour ne pas rejouer d'effets de bord), et
-relance la même commande avec le ticket `CapabilityApproval`.
+The "Permission denied: approve this operation?" retry from ADR 0042
+remains a feature of the interactive shell: it applies to a single command
+(not in a pipe nor redirected, so as not to replay side effects), and
+re-runs the same command with the `CapabilityApproval` ticket.
 
-## Conséquences
+## Consequences
 
-- Une seule `ProjectReference` dans l'hôte pour toutes les commandes ; une
-  seule assembly chargée à la demande.
-- Le terminal n'a plus de liste de noms : une commande tierce peut fournir son
-  propre `cd` amélioré en déclarant `shell.control`, sans toucher au terminal.
-- `help`, la complétion et `ps` voient les mêmes commandes que le shell.
-- Les projets de tests et la solution changent de références en une fois ;
-  aucun identifiant d'app ne change.
+- A single `ProjectReference` in the host for all commands; a
+  single assembly loaded on demand.
+- The terminal no longer has a list of names: a third-party command can provide its
+  own improved `cd` by declaring `shell.control`, without touching the terminal.
+- `help`, completion and `ps` see the same commands as the shell.
+- The test projects and the solution change references in one go;
+  no app identifier changes.
 
-## Chantiers d'implémentation
+## Implementation work items
 
-Voir l'ADR 0052 pour le tableau complet de la phase 3. Chantiers de cet ADR :
-`rebuild/3-commands-merge` (section 1, sans changement de comportement) puis
-`rebuild/3-shell-commands` (sections 2 à 5).
+See ADR 0052 for the full phase 3 table. Work items of this ADR:
+`rebuild/3-commands-merge` (section 1, with no behavior change) then
+`rebuild/3-shell-commands` (sections 2 to 5).
 
-## Références
+## References
 
-- ADR 0034 (section 1 remplacée), ADR 0042 (`sudo`, approbation ponctuelle),
-  ADR 0047, ADR 0048, ADR 0049 (classement de `shell.control`), ADR 0050.
+- ADR 0034 (section 1 replaced), ADR 0042 (`sudo`, one-off approval),
+  ADR 0047, ADR 0048, ADR 0049 (classification of `shell.control`), ADR 0050.
 - [`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md), section 7.3.
 - `OS/HackerOs.Ecosystem/HackerOs.Ecosystem.csproj`, `Apps/Commands/`,
   `Shared/HackerOs.AppSdk.Terminal/TerminalPanel.razor`.

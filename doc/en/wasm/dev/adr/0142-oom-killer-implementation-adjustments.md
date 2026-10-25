@@ -1,139 +1,139 @@
-# ADR 0142 : ajustements de la mise en œuvre de l'OOM killer
+# ADR 0142: adjustments to the implementation of the OOM killer
 
-## Statut
+## Status
 
-Accepté le 2026-10-18, chantier `exec/3-oom-killer`.
+Accepted on 2026-10-18, work item `exec/3-oom-killer`.
 
-- **Complète :** ADR 0126 (OOM killer et garde du vrai navigateur). Précise les
-  points que le code a dû trancher et corrige deux hypothèses de l'ADR 0126 :
-  le plafond de la mémoire WebAssembly (§4) et l'emplacement du réglage dans
-  Paramètres (§8).
-- **Doc :** [`oom-killer.md`](../oom-killer.md).
+- **Completes:** ADR 0126 (OOM killer and real-browser guard). Clarifies the
+  points the code had to settle and corrects two assumptions of ADR 0126:
+  the WebAssembly memory ceiling (§4) and the location of the setting in
+  Settings (§8).
+- **Doc:** [`oom-killer.md`](../oom-killer.md).
 
-## Contexte
+## Context
 
-L'ADR 0126 fixe le réglage (`/etc/hackeros/memory.config`), le choix de la
-victime par `oom_score`, les traces du noyau, `oom_score_adj` et la garde du
-vrai navigateur. En l'écrivant, plusieurs détails sont apparus : où vit
-`oom_score_adj`, qui a le droit de le baisser, ce qui reçoit `-1000` dans un OS
-où le bureau n'est pas un processus, quel chiffre comparer au plafond du
-navigateur et comment un worker rend vraiment sa mémoire.
+ADR 0126 fixes the setting (`/etc/hackeros/memory.config`), the choice of the
+victim by `oom_score`, the kernel traces, `oom_score_adj` and the real-browser
+guard. While writing it, several details appeared: where `oom_score_adj` lives,
+who may lower it, what receives `-1000` in an OS where the desktop is not a
+process, which figure to compare with the browser ceiling and how a worker
+really gives its memory back.
 
-## Décision
+## Decision
 
-### 1. Une table à côté du processus
+### 1. A table next to the process
 
-`oom_score_adj` vit dans une table tenue par le gestionnaire de processus
-(`InMemoryProcessOomScoreTable`), comme les limites de l'ADR 0139 §1 :
-l'entrée naît au `Start` et disparaît à la fin du processus. `ProcessRecord` ne
-change pas. `ProcessStartRequest.OomScoreAdjust` (ajout du SDK 1.2) donne la
-valeur de départ ; sans elle, l'enfant hérite de l'entrée de son parent, sinon
-`0`.
+`oom_score_adj` lives in a table held by the process manager
+(`InMemoryProcessOomScoreTable`), like the limits of ADR 0139 §1: the
+entry is born at `Start` and disappears when the process ends. `ProcessRecord`
+does not change. `ProcessStartRequest.OomScoreAdjust` (an addition of SDK 1.2)
+gives the initial value; without it, the child inherits its parent's entry,
+otherwise `0`.
 
-### 2. Plancher : baisser demande un administrateur
+### 2. Floor: lowering requires an administrator
 
-Chaque entrée garde une **valeur** et un **plancher**, comme
-`oom_score_adj_min` de Linux. Une écriture dans `/proc/<pid>/oom_score_adj`
-par le propriétaire peut monter la valeur ou la ramener jusqu'au plancher ;
-descendre sous le plancher demande root élevé (`sudo`) ou le compte système, et
-déplace alors le plancher (comme `CAP_SYS_RESOURCE`). Une valeur déclarée au
-lancement pose la valeur et le plancher. Un enfant hérite des deux.
+Each entry keeps a **value** and a **floor**, like Linux's
+`oom_score_adj_min`. A write to `/proc/<pid>/oom_score_adj`
+by the owner can raise the value or bring it back down to the floor;
+going below the floor requires elevated root (`sudo`) or the system account, and
+then moves the floor (like `CAP_SYS_RESOURCE`). A value declared at
+launch sets the value and the floor. A child inherits both.
 
-### 3. Valeurs par défaut
+### 3. Default values
 
-- Une app **système** applique sa valeur déclarée telle quelle ; une app non
-  système déclarée négative est ramenée à `0` au lancement (le build la refuse
-  déjà, §6 ; le runtime se protège d'un manifeste installé à la main).
-- Sans valeur déclarée, un **service système** reçoit `-500`
-  (`SystemServiceOomScoreAdjust`) ; tout le reste hérite.
-- Le bureau, le gestionnaire de fenêtres et les services de session ne sont
-  **pas des processus** dans HackerOS : ils ne sont jamais candidats, ce qui
-  vaut le `-1000` que l'ADR 0126 §4 leur donnait.
+- A **system** app applies its declared value as is; a non-system app
+  declared negative is brought back to `0` at launch (the build already refuses
+  it, §6; the runtime protects itself against a manifest installed by hand).
+- Without a declared value, a **system service** receives `-500`
+  (`SystemServiceOomScoreAdjust`); everything else inherits.
+- The desktop, the window manager and the session services are
+  **not processes** in HackerOS: they are never candidates, which is
+  equivalent to the `-1000` that ADR 0126 §4 gave them.
 
-### 4. Plafond du navigateur : 2 Gio, et le tas géré
+### 4. Browser ceiling: 2 GiB, and the managed heap
 
-- Le plafond de chaque runtime est le maximum que le runtime .NET déclare pour
-  sa mémoire WebAssembly : 32 768 pages de 64 Kio, **2 Gio**, pas les 4 Gio de
-  wasm32 que l'ADR 0126 §5 supposait. `jsHeapSizeLimit` mesure le tas
-  JavaScript, pas la mémoire WebAssembly : il n'est pas utilisé.
-- Le chiffre comparé au plafond est le **tas géré** (`GC.GetGCMemoryInfo`, et
-  `RuntimeHeapBytes` remonté par chaque worker), pas la taille de
-  `WebAssembly.Memory` : cette mémoire ne rétrécit jamais, une fois grandie
-  elle paraîtrait pleine pour toujours.
+- The ceiling of each runtime is the maximum that the .NET runtime declares for
+  its WebAssembly memory: 32,768 pages of 64 KiB, **2 GiB**, not the 4 GiB of
+  wasm32 that ADR 0126 §5 assumed. `jsHeapSizeLimit` measures the JavaScript
+  heap, not the WebAssembly memory: it is not used.
+- The figure compared with the ceiling is the **managed heap** (`GC.GetGCMemoryInfo`, and
+  `RuntimeHeapBytes` reported by each worker), not the size of
+  `WebAssembly.Memory`: that memory never shrinks, so once grown it
+  would look full forever.
 
-### 5. Un worker qui a hébergé une victime est remplacé
+### 5. A worker that hosted a victim is replaced
 
-Tuer un processus d'un worker ne rend pas la mémoire au navigateur : la mémoire
-WebAssembly du worker garde sa taille. Juste avant le `SIGKILL`, l'OOM killer
-marque le worker de la victime (`IWorkerMemoryReclaimer.RecycleAfterOomKill`) ;
-quand ce worker n'héberge plus aucun processus, le pool le retire et en démarre
-un autre (rôles `pool` et `overflow` ; le worker « prêt » de l'ADR 0071 est
-toujours neuf). Sur le fil principal, l'OS lâche les références et force un
-ramassage, comme l'ADR 0126 §5 le disait.
+Killing a process of a worker does not give the memory back to the browser: the
+worker's WebAssembly memory keeps its size. Just before the `SIGKILL`, the OOM killer
+marks the victim's worker (`IWorkerMemoryReclaimer.RecycleAfterOomKill`);
+when that worker no longer hosts any process, the pool removes it and starts
+another (roles `pool` and `overflow`; the "ready" worker of ADR 0071 is
+always new). On the main thread, the OS drops the references and forces a
+collection, as ADR 0126 §5 said.
 
 ### 6. Code `HOSAPP0024`
 
-Le générateur de manifeste refuse une app non système dont la définition
-déclare `OomScoreAdjust` négatif : erreur `HOSAPP0024` à l'agrégation de
-`BuiltInApplications.json`, là où l'on sait quelles apps sont système. Le
-schéma du manifeste borne `oomScoreAdj` à `-1000…1000`
+The manifest generator refuses a non-system app whose definition
+declares a negative `OomScoreAdjust`: error `HOSAPP0024` when aggregating
+`BuiltInApplications.json`, where it is known which apps are system apps. The
+manifest schema bounds `oomScoreAdj` to `-1000…1000`
 (`manifest.oomScoreAdj.range`).
 
-### 7. Journal du noyau, `/dev/kmsg`, `dmesg`, `/proc/vmstat`
+### 7. Kernel log, `/dev/kmsg`, `dmesg`, `/proc/vmstat`
 
-- `KernelLog` est un tampon de 1 024 lignes de la **session** : recharger la
-  page est un redémarrage, le tampon repart vide. Chaque ligne va aussi dans
-  `/var/log/kern.log` et `/var/log/syslog`.
-- `/dev/kmsg` (mode `0644`, format `prio,seq,usec,-;message`) n'existe que si
-  l'hôte fournit ce journal. Y écrire demande root, comme sous Linux.
-- `dmesg` lit `/dev/kmsg` ; options `-T` (heure locale, par `/proc/uptime`),
-  `-x` (niveau en clair), `-l NIVEAU[,NIVEAU…]`, `-k` (accepté : tout est
-  noyau) et `-h`.
-- `/proc/vmstat` affiche `nr_free_pages`, puis `nr_anon_pages`, `nr_mapped`
-  et `nr_slab_unreclaimable` quand la mémoire est mesurée, puis `oom_kill`.
+- `KernelLog` is a 1,024-line buffer of the **session**: reloading the
+  page is a reboot, the buffer starts empty again. Each line also goes to
+  `/var/log/kern.log` and `/var/log/syslog`.
+- `/dev/kmsg` (mode `0644`, format `prio,seq,usec,-;message`) exists only if
+  the host provides this log. Writing to it requires root, as on Linux.
+- `dmesg` reads `/dev/kmsg`; options `-T` (local time, via `/proc/uptime`),
+  `-x` (level in plain text), `-l LEVEL[,LEVEL…]`, `-k` (accepted: everything is
+  kernel) and `-h`.
+- `/proc/vmstat` shows `nr_free_pages`, then `nr_anon_pages`, `nr_mapped`
+  and `nr_slab_unreclaimable` when memory is measured, then `oom_kill`.
 
-### 8. Onglet Mémoire de premier niveau dans Paramètres
+### 8. Top-level Memory tab in Settings
 
-Paramètres n'a pas de groupe « Système » : la page est un onglet **Mémoire**
-après Utilisateurs (et non « Système › Mémoire » de l'ADR 0126 §1). Elle montre
-`MemTotal`, `MemAvailable`, la source de mesure et `oom_kill`, et écrit le
-document `memory` dans la couche système, ce qui ouvre la demande
-d'administrateur.
+Settings has no "System" group: the page is a **Memory** tab
+after Users (and not "System › Memory" of ADR 0126 §1). It shows
+`MemTotal`, `MemAvailable`, the measurement source and `oom_kill`, and writes the
+`memory` document in the system layer, which triggers the administrator
+prompt.
 
 ### 9. Notifications
 
-Seule une app à **fenêtre** tuée laisse une notification (source
-`org.hackeros.kernel`, nom traduit de l'app). Une commande tuée affiche déjà
-« Killed » et le code 137 dans son terminal. L'avertissement de la garde du
-navigateur va à l'utilisateur de la session, une fois par runtime.
+Only a killed **windowed** app leaves a notification (source
+`org.hackeros.kernel`, translated app name). A killed command already shows
+"Killed" and code 137 in its terminal. The real-browser guard warning
+goes to the session user, once per runtime.
 
 ### 10. `stress --vm`
 
-`stress` gagne `-m N`/`--vm N`, `--vm-bytes B` (`256M` par défaut, suffixes
-`K`, `M`, `G`) et `--vm-keep` : chaque travailleur alloue par blocs de 1 Mio,
-touche un octet tous les 4 Kio, et passe un point d'arrêt entre deux blocs
-(ADR 0069). Sans `--vm-keep`, il libère et recommence.
+`stress` gains `-m N`/`--vm N`, `--vm-bytes B` (`256M` by default, suffixes
+`K`, `M`, `G`) and `--vm-keep`: each worker allocates in 1 MiB blocks,
+touches one byte every 4 KiB, and passes a checkpoint between two blocks
+(ADR 0069). Without `--vm-keep`, it frees and starts again.
 
-### 11. Vérification
+### 11. Verification
 
-- Réglage d'hôte `HackerOs:Hardware:MemoryMiB` : fixe `MemTotal` du profil
-  matériel simulé.
-- `build/verify-hosts.sh` gagne le parcours `ecosystem-oom` : une copie de la
-  publication avec `MemoryMiB=512` (`OOM_MEMORY_MIB`). Le test active l'OOM
-  killer par `printf … | sudo tee /etc/hackeros/memory.config`, lance
-  `stress --vm 1 --vm-bytes` calculé depuis `/proc/meminfo`, attend la sortie
-  137 et « Killed », puis vérifie `dmesg` et `oom_kill 1` dans `/proc/vmstat`.
+- Host setting `HackerOs:Hardware:MemoryMiB`: fixes `MemTotal` of the simulated
+  hardware profile.
+- `build/verify-hosts.sh` gains the `ecosystem-oom` scenario: a copy of the
+  publication with `MemoryMiB=512` (`OOM_MEMORY_MIB`). The test enables the OOM
+  killer with `printf … | sudo tee /etc/hackeros/memory.config`, launches
+  `stress --vm 1 --vm-bytes` computed from `/proc/meminfo`, waits for exit
+  137 and "Killed", then checks `dmesg` and `oom_kill 1` in `/proc/vmstat`.
 
-## Conséquences
+## Consequences
 
 - `ProcessExitReason.OutOfMemory`, `ProcessStartRequest.OomScoreAdjust`,
-  `AppDefinition.OomScoreAdjust` et `AppManifest.OomScoreAdj` entrent dans
-  `PublicAPI.Unshipped.txt` et seront publiés avec le SDK 1.2 (ADR 0132).
-- Une commande intégrée de plus, `dmesg` : 74 commandes et 92 apps avec `nice` et `renice` d'`exec/4`.
-- Un worker remplacé coûte un démarrage de runtime ; cela n'arrive qu'après une
-  mise à mort par l'OOM killer.
+  `AppDefinition.OomScoreAdjust` and `AppManifest.OomScoreAdj` enter
+  `PublicAPI.Unshipped.txt` and will be published with SDK 1.2 (ADR 0132).
+- One more built-in command, `dmesg`: 74 commands and 92 apps with `nice` and `renice` from `exec/4`.
+- A replaced worker costs a runtime startup; this only happens after a
+  kill by the OOM killer.
 
-## Références
+## References
 
 - ADR 0066, 0068, 0069, 0071, 0104, 0125, 0126, 0132, 0139.
 - `proc(5)` (`oom_score`, `oom_score_adj`, `vmstat`), `dmesg(1)`, `stress(1)`.

@@ -1,49 +1,49 @@
-# ADR 0110 : ajustements de la mise en œuvre de la sauvegarde, de l'espace de stockage et des fixtures IndexedDB
+# ADR 0110: implementation adjustments for backup, storage space and IndexedDB fixtures
 
-## Statut
+## Status
 
-Accepté le 2026-10-17 (chantier `v3/7-storage-backup`).
+Accepted on 2026-10-17 (work item `v3/7-storage-backup`).
 
-- **Complète :** [ADR 0099](0099-os-backup-and-low-storage.md). Remplace une
-  phrase de son §4 (fixture de la version 1).
-- Numéro : `0107` (`v3/5`) et `0108` (`v3/10`, renuméroté après une
-  collision) sont pris ; ce chantier prend `0110` pour laisser `0109` à un
-  chantier parallèle et éviter une nouvelle collision.
+- **Complements:** [ADR 0099](0099-os-backup-and-low-storage.md). Replaces a
+  sentence of its §4 (version 1 fixture).
+- Number: `0107` (`v3/5`) and `0108` (`v3/10`, renumbered after a
+  collision) are taken; this work item takes `0110` to leave `0109` to a
+  parallel work item and avoid another collision.
 
-## Contexte
+## Context
 
-La mise en œuvre de l'ADR 0099 a rencontré quatre points que l'ADR ne
-tranche pas, ou qu'il décrit d'une façon impossible à réaliser.
+The implementation of ADR 0099 ran into four points that the ADR does not
+settle, or that it describes in a way that cannot be implemented.
 
-## Décision
+## Decision
 
-1. **Pas de fixture de la version 1.** La version 1 du schéma IndexedDB n'a
-   jamais existé dans l'historique du dépôt : le premier commit (`fdca68e`)
-   est déjà en version 2. `Tests/fixtures/indexeddb/` contient donc les
-   versions 2 (`e46e897`) et 3 (`7a20401`), produites en démarrant l'OS de ces
-   commits. L'étape vers la version 1 du plan de migration reste couverte :
-   elle tourne à chaque démarrage sur une base vide. La règle « tout chantier
-   qui augmente `CurrentVersion` ajoute le vidage de la version précédente »
-   s'applique à partir de la version 2 et est vérifiée par un test sans
-   navigateur (`IndexedDbUpgradeFixtureCatalogTests`).
-2. **Une fusion redémarre aussi.** L'ADR décrit le redémarrage pour le
-   remplacement. La fusion ferme aussi la session et recharge la page : l'OS en
-   marche garde en mémoire des chemins, des réglages et des comptes que la
-   restauration vient de changer sous lui.
-3. **L'entrée d'audit d'une restauration attend hors de la base.** Un
-   remplacement écrase `/var/log/auth.log` lui-même. L'OS garde l'entrée dans
-   le `localStorage` de l'hôte pendant la restauration et l'écrit dans
-   `auth.log` au démarrage suivant, avec le résultat (`success` ou
-   `failure:<raison>`).
-4. **`hackbackup` exige `sudo`** : sans root, la commande s'arrête
-   (`must be run as root`) au lieu d'ouvrir la demande d'administrateur
-   graphique, comme un outil système. Le sélecteur de fichiers s'ouvre
-   **avant** la demande d'administrateur, parce que le navigateur ne l'ouvre
-   que juste après un geste de l'utilisateur.
+1. **No version 1 fixture.** Version 1 of the IndexedDB schema never
+   existed in the repository history: the first commit (`fdca68e`)
+   is already at version 2. `Tests/fixtures/indexeddb/` therefore contains
+   versions 2 (`e46e897`) and 3 (`7a20401`), produced by starting the OS from these
+   commits. The step towards version 1 of the migration plan remains covered:
+   it runs at every startup on an empty database. The rule "any work item
+   that increases `CurrentVersion` adds the dump of the previous version"
+   applies from version 2 on and is checked by a test without a
+   browser (`IndexedDbUpgradeFixtureCatalogTests`).
+2. **A merge restarts too.** The ADR describes the restart for a
+   replace. A merge also closes the session and reloads the page: the running OS
+   keeps in memory paths, settings and accounts that the restore
+   has just changed underneath it.
+3. **The audit entry of a restore waits outside the database.** A
+   replace overwrites `/var/log/auth.log` itself. The OS keeps the entry in
+   the host's `localStorage` during the restore and writes it to
+   `auth.log` at the next startup, with the result (`success` or
+   `failure:<reason>`).
+4. **`hackbackup` requires `sudo`**: without root, the command stops
+   (`must be run as root`) instead of opening the graphical administrator
+   prompt, like a system tool. The file picker opens
+   **before** the administrator prompt, because the browser only opens it
+   right after a user gesture.
 
-## Conséquences
+## Consequences
 
 - [`system-backup.md`](../system-backup.md), [`building-and-testing.md`](../building-and-testing.md)
-  et [`pwa-cache-recovery.md`](../pwa-cache-recovery.md) décrivent le
-  comportement réel.
-- Aucun autre ADR ne change.
+  and [`pwa-cache-recovery.md`](../pwa-cache-recovery.md) describe the actual
+  behavior.
+- No other ADR changes.

@@ -1,126 +1,126 @@
-# ADR 0158 : ajustements du fournisseur de fichiers remplaçable
+# ADR 0158: adjustments to the replaceable file provider
 
-## Statut
+## Status
 
-Accepté le 2026-10-20.
+Accepted on 2026-10-20.
 
-- **Chantier :** `desk/3c-replaceable-file-provider` (chantier 3c du plan
+- **Work item:** `desk/3c-replaceable-file-provider` (work item 3c of the plan
   [`desktop-and-context-menu-plan.md`](../plans/desktop-and-context-menu-plan.md)).
-- **Ajuste :** l'ADR 0156 sur des points de mise en œuvre ; ses décisions
-  restent vraies.
+- **Adjusts:** ADR 0156 on implementation points; its decisions
+  remain true.
 
-## Contexte
+## Context
 
-L'ADR 0156 ouvre `hackeros.file-view` et `hackeros.file-dialogs` à toute app
-fenêtrée et fait choisir le fournisseur par un administrateur, dans
-`/etc/hackeros/components.config`, avec repli journalisé sur l'explorateur.
-Le chantier 3c le met en œuvre. Plusieurs détails n'étaient pas fixés.
+ADR 0156 opens `hackeros.file-view` and `hackeros.file-dialogs` to any windowed
+app and has the provider chosen by an administrator, in
+`/etc/hackeros/components.config`, with a logged fallback to the explorer.
+Work item 3c implements it. Several details were not fixed.
 
-## Décision
+## Decision
 
-### 1. Les contrats ouverts gardent une portée à part
+### 1. The open contracts keep a separate scope
 
-`AppComponentProviderScope.SystemApps` devient
-`AppComponentProviderScope.AdministratorSelected` (API pas encore publiée,
-renommage sans coût). Ces contrats acceptent toute app fenêtrée, mais restent
-les contrôles de l'OS : le choix de l'administrateur ne s'applique qu'à eux, et
-l'absence de tout fournisseur qui se charge reste l'erreur
-`component.unavailable`. `AppManifestValidator.ValidateComponentProviders`,
-`BuiltInApplicationsAggregator.FindReservedComponentContracts` et l'avertissement
-`catalog.component.reserved` disparaissent. Le code **`HOSAPP0025` est retiré
-et ne sera pas réutilisé**.
+`AppComponentProviderScope.SystemApps` becomes
+`AppComponentProviderScope.AdministratorSelected` (API not yet published,
+renaming at no cost). These contracts accept any windowed app, but remain
+OS controls: the administrator's choice applies only to them, and
+the absence of any provider that loads remains the
+`component.unavailable` error. `AppManifestValidator.ValidateComponentProviders`,
+`BuiltInApplicationsAggregator.FindReservedComponentContracts` and the
+`catalog.component.reserved` warning disappear. The code **`HOSAPP0025` is
+removed and will not be reused**.
 
-### 2. Le fichier est lu ligne par ligne, à chaque résolution
+### 2. The file is read line by line, at each resolution
 
-Les noms de contrats contiennent des points : `components.config` n'a pas de
-schéma déclaré. `ComponentProvidersDocument` le lit avec le lecteur tolérant
-des `.config` (ADR 0044 §5) et le réécrit sans toucher aux commentaires
-(ADR 0044 §7). Une clé qui n'est pas un contrat choisi par un administrateur
-est ignorée ; une app inconnue du catalogue aussi, au moment de résoudre.
+Contract names contain dots: `components.config` has no declared
+schema. `ComponentProvidersDocument` reads it with the tolerant reader of
+`.config` files (ADR 0044 §5) and rewrites it without touching comments
+(ADR 0044 §7). A key that is not an administrator-chosen contract
+is ignored; so is an app unknown to the catalog, at resolution time.
 
-Le fichier est relu à chaque résolution d'un contrat (`IComponentProviderSelection`),
-pas mis en cache : un contrôle n'est résolu qu'à son affichage, et une
-modification faite avec `sudo nano` s'applique ainsi au contrôle suivant, sans
-surveillance de fichier. Une installation neuve n'a pas de fichier ; le premier
-choix l'écrit avec un en-tête commenté. Revenir à l'explorateur **retire la
-ligne** : choisir l'explorateur ne l'écrit jamais.
+The file is reread at each resolution of a contract (`IComponentProviderSelection`),
+not cached: a control is resolved only when displayed, and a
+change made with `sudo nano` thus applies to the next control, without
+file watching. A fresh installation has no file; the first
+choice writes it with a commented header. Going back to the explorer **removes the
+line**: choosing the explorer never writes it.
 
-### 3. Une passerelle du SDK, `HackComponentProviders`
+### 3. An SDK gateway, `HackComponentProviders`
 
-Paramètres utilise le SDK public seulement (ADR 0055). Le SDK gagne
-`HackComponentProviders` (`GetOverviewAsync`, `SetProviderAsync`) et ses
-contrats (`IAppComponentProviderAdministrationGateway`,
-`HackComponentContractInfo`, `HackComponentProviderInfo`), sur le modèle de
-`HackPermissionAdministration`. La capacité exigée est **`apps.manage`**, que
-Paramètres déclare déjà : choisir le fournisseur est de l'administration des
-apps, pas besoin d'une capacité de plus.
+Settings uses the public SDK only (ADR 0055). The SDK gains
+`HackComponentProviders` (`GetOverviewAsync`, `SetProviderAsync`) and its
+contracts (`IAppComponentProviderAdministrationGateway`,
+`HackComponentContractInfo`, `HackComponentProviderInfo`), on the model of
+`HackPermissionAdministration`. The required capability is **`apps.manage`**, which
+Settings already declares: choosing the provider is app administration,
+no need for one more capability.
 
-`SetProviderAsync` prend **une liste de contrats et une app** : quand l'app
-fournit les deux contrats, Paramètres propose de régler les deux ensemble
-(case cochée par défaut), et une seule approbation couvre les deux.
+`SetProviderAsync` takes **a list of contracts and an app**: when the app
+provides both contracts, Settings offers to set both together
+(box checked by default), and a single approval covers both.
 
-### 4. L'approbation réutilise la fenêtre des capacités dangereuses
+### 4. Approval reuses the dangerous capabilities window
 
-Pour une app non système, l'OS montre la fenêtre d'approbation de l'ADR 0049
-(`IDangerousCapabilityApprovalPrompt`) : l'app candidate, et une ligne par
-contrat avec son titre et sa phrase de risque (ressources
-`Capability.hackeros.file-view.*` et `Capability.hackeros.file-dialogs.*` du
-cœur). Seule une tentative d'un administrateur vérifiée écrit le fichier ;
-« Refuser » ou la fermeture n'écrivent rien et ne mémorisent rien (pas de
-refus retenu comme pour une capacité). Pour une app système ou le retour à
-l'explorateur, l'agent d'authentification (ADR 0055 §5) demande seulement un
-administrateur.
+For a non-system app, the OS shows the approval window of ADR 0049
+(`IDangerousCapabilityApprovalPrompt`): the candidate app, and one line per
+contract with its title and its risk sentence (core resources
+`Capability.hackeros.file-view.*` and `Capability.hackeros.file-dialogs.*`).
+Only a verified administrator attempt writes the file;
+"Deny" or closing writes nothing and remembers nothing (no refusal retained as
+for a capability). For a system app or the return to the
+explorer, the authentication agent (ADR 0055 §5) only asks for an
+administrator.
 
-Chaque décision est écrite dans `/var/log/auth.log` avec l'action
-**`component.provider`** (sujet `/etc/hackeros/components.config`, propriétés
-`contracts`, `provider` — `default` pour le retour à l'explorateur — et
-`user`). Les échecs de mot de passe et le refus y sont aussi, en `Denied`.
+Each decision is written to `/var/log/auth.log` with the action
+**`component.provider`** (subject `/etc/hackeros/components.config`, properties
+`contracts`, `provider` (`default` for the return to the explorer) and
+`user`). Password failures and the refusal are also there, as `Denied`.
 
-### 5. Le repli est journalisé une fois
+### 5. The fallback is logged once
 
-`HackComponentHost` met le fournisseur choisi en tête. S'il est désactivé pour
-l'utilisateur, ne se charge pas, ou n'est pas un composant intégrable, le
-suivant (l'explorateur) prend le relais et `component.fallback` est écrit en
-avertissement dans `/var/log/syslog` (source `components`), **une fois par
-contrat, app choisie et fournisseur utilisé** pour la durée de la session :
-chaque contrôle affiché répéterait sinon la même ligne.
+`HackComponentHost` puts the chosen provider first. If it is disabled for
+the user, does not load, or is not an embeddable component, the
+next one (the explorer) takes over and `component.fallback` is written as a
+warning in `/var/log/syslog` (source `components`), **once per
+contract, chosen app and provider used** for the duration of the session:
+each displayed control would otherwise repeat the same line.
 
-### 6. Seule une désinstallation pour la machine retire la ligne
+### 6. Only an uninstall for the machine removes the line
 
-L'ADR 0156 §4 dit qu'une désinstallation retire la ligne. Le fichier vaut pour
-toute la machine : seule une désinstallation **pour la machine**
-(`UninstalledForMachine`) la retire, écrite par l'OS comme opération système
-auditée, avec `component.provider.removed` dans `/var/log/syslog`. Une app
-désinstallée pour un seul utilisateur garde sa ligne : cet utilisateur a le
-repli de §5, les autres gardent le choix. Le retrait suit tout changement de
-l'état installé (Paramètres, `apps.config` modifié à la main).
+ADR 0156 §4 says that an uninstall removes the line. The file applies to
+the whole machine: only an uninstall **for the machine**
+(`UninstalledForMachine`) removes it, written by the OS as an audited system
+operation, with `component.provider.removed` in `/var/log/syslog`. An app
+uninstalled for a single user keeps its line: that user has the
+fallback of §5, the others keep the choice. The removal follows any change of
+the installed state (Settings, `apps.config` modified by hand).
 
-### 7. Paramètres : onglet « Composants de l'OS »
+### 7. Settings: "OS Components" tab
 
-Paramètres n'a pas de groupe « Applications » : la page est un onglet à part,
-« Composants de l'OS », placé après « Applications installées ». Il montre,
-pour chaque contrat, les apps qui le fournissent (nom, identifiant, app
-système ou non, par défaut, non installée), celle en service, et le bouton
-« Revenir à l'explorateur de fichiers » quand un choix existe. L'index de
-l'onglet « Application » (ADR 0096 §4) est corrigé au passage : il n'avait pas
-suivi l'ajout de l'onglet Mémoire.
+Settings has no "Applications" group: the page is a separate tab,
+"OS Components", placed after "Installed applications". It shows,
+for each contract, the apps that provide it (name, identifier, system
+app or not, default, not installed), the one in service, and the button
+"Revert to the file explorer" when a choice exists. The index of the
+"Application" tab (ADR 0096 §4) is fixed in passing: it had not
+followed the addition of the Memory tab.
 
-## Conséquences
+## Consequences
 
-- Nouvelles API non livrées (`PublicAPI.Unshipped.txt`) dans `AppSdk`
-  (`HackComponentProviders`, passerelle et enregistrements,
+- New unshipped APIs (`PublicAPI.Unshipped.txt`) in `AppSdk`
+  (`HackComponentProviders`, gateway and records,
   `IAppExecutionContext.ComponentProviderAdministration`), `Platform.Core`
   (`ComponentProviderService`, `ComponentProvidersDocument`,
-  `IComponentProviderSelection`) et `Platform.Blazor`
-  (`HackComponentHost.Selection`, `ReportWarning`) ; elles seront publiées avec
-  le SDK 2.0 (chantier 6).
-- Tests : service (fichier, validation, approbation, refus, retour à
-  l'explorateur, désinstallation), passerelle (capacité, fenêtre d'approbation
-  plutôt que mot de passe, refus), hôte (choix en tête, repli journalisé une
-  fois, app désactivée, contrat ouvert non concerné, `component.unavailable`),
-  catalogue, validateur et agrégation.
+  `IComponentProviderSelection`) and `Platform.Blazor`
+  (`HackComponentHost.Selection`, `ReportWarning`); they will be published with
+  SDK 2.0 (work item 6).
+- Tests: service (file, validation, approval, refusal, return to the
+  explorer, uninstall), gateway (capability, approval window
+  rather than password, refusal), host (choice first, fallback logged once,
+  disabled app, open contract not concerned, `component.unavailable`),
+  catalog, validator and aggregation.
 
-## Références
+## References
 
 - ADR 0044, 0048, 0049, 0055, 0063, 0096, 0148, 0153, 0156.
 - [`embedded-components.md`](../../framework/embedded-components.md),

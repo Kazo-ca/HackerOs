@@ -1,188 +1,188 @@
-# ADR 0155 : ajustements du contrôle de fichiers fourni par l'explorateur
+# ADR 0155: adjustments to the file control provided by the explorer
 
-## Statut
+## Status
 
-Accepté le 2026-10-20.
+Accepted on 2026-10-20.
 
-- **Chantier :** `desk/3-file-control` (chantier 3 du plan
+- **Work item:** `desk/3-file-control` (work item 3 of the plan
   [`desktop-and-context-menu-plan.md`](../plans/desktop-and-context-menu-plan.md) §11).
-- **Ajuste :** l'ADR 0148 §1, §2 et §6, l'ADR 0149 §3 et le plan §7 sur des
-  points de mise en œuvre ; leurs décisions restent vraies.
+- **Adjusts:** ADR 0148 §1, §2 and §6, ADR 0149 §3 and plan §7 on
+  implementation points; their decisions remain true.
 
-## Contexte
+## Context
 
-L'ADR 0148 décide que le SDK ne porte que le contrat `hackeros.file-view` et
-que l'explorateur de fichiers le fournit à l'exécution, avec ses dialogues
-(`hackeros.file-dialogs`) et les menus du plan §7 sur le menu de l'OS
-(ADR 0150). Le chantier 1 a écrit l'hôte de contrats (ADR 0153), le chantier 2
-le menu de l'OS (ADR 0154). Ce chantier fait de l'explorateur le fournisseur du
-contrôle et de ses dialogues, et le fait l'utiliser pour lui-même et pour
-l'éditeur de code. Plusieurs détails n'étaient pas fixés.
+ADR 0148 decides that the SDK carries only the `hackeros.file-view` contract and
+that the file explorer provides it at run time, with its dialogs
+(`hackeros.file-dialogs`) and the menus of plan §7 on the OS menu
+(ADR 0150). Work item 1 wrote the contract host (ADR 0153), work item 2
+the OS menu (ADR 0154). This work item makes the explorer the provider of the
+control and its dialogs, and has it use them for itself and for
+the code editor. Several details were not fixed.
 
-## Décision
+## Decision
 
-### 1. `FileView` devient l'implémentation de l'explorateur, sans changer de place
+### 1. `FileView` becomes the explorer's implementation, without changing place
 
-Le code de `HackerOs.AppSdk.FileView` reste dans sa bibliothèque jusqu'au
-SDK 2.0 (chantier 6, ADR 0149), qui la retire du SDK. D'ici là :
+The code of `HackerOs.AppSdk.FileView` stays in its library until
+SDK 2.0 (work item 6, ADR 0149), which removes it from the SDK. Until then:
 
-- l'explorateur l'utilise comme implémentation interne
-  (`InternalsVisibleTo("HackerOs.Apps.FileExplorer")`) ;
-- le fournisseur `ExplorerFileView` donne en cascade une liaison interne,
-  `FileViewMenuBinding`, à la vue. Avec elle, la vue ne dessine plus son
-  `MudMenu` : chaque ligne, tuile, nœud de l'arbre et le fond portent les
-  attributs de `Menus.Attach` (ADR 0154 §3), et le menu de l'OS s'ouvre dessus ;
-- sans liaison (une app 1.x qui affiche encore `FileView` directement), la vue
-  garde son ancien menu. L'API publique de `FileView` ne change pas.
+- the explorer uses it as an internal implementation
+  (`InternalsVisibleTo("HackerOs.Apps.FileExplorer")`);
+- the `ExplorerFileView` provider gives the view an internal binding,
+  `FileViewMenuBinding`, in cascade. With it, the view no longer draws its
+  `MudMenu`: each row, tile, tree node and the background carry the
+  attributes of `Menus.Attach` (ADR 0154 §3), and the OS menu opens on them;
+- without a binding (a 1.x app that still displays `FileView` directly), the view
+  keeps its old menu. The public API of `FileView` does not change.
 
-Le `MudMenu` de la vue disparaît donc de l'explorateur et de tout hôte du
-contrat, comme l'ADR 0154 l'annonçait.
+The view's `MudMenu` therefore disappears from the explorer and from every host of the
+contract, as ADR 0154 announced.
 
-### 2. L'API du contrat
+### 2. The contract API
 
-Dans `HackerOs.AppSdk.Blazor.Files` :
+In `HackerOs.AppSdk.Blazor.Files`:
 
-- **`HackFileView`** (`HackContractComponent<IHackFileView>`) prend des
-  **paramètres ordinaires** plutôt qu'un enregistrement d'options
-  (`HackFileViewOptions` de l'ADR 0149 §3 n'existe pas) : `InitialDirectory`,
+- **`HackFileView`** (`HackContractComponent<IHackFileView>`) takes
+  **ordinary parameters** rather than an options record
+  (`HackFileViewOptions` of ADR 0149 §3 does not exist): `InitialDirectory`,
   `Mode`/`ModeChanged`, `Features`, `AllowMultiSelect`, `Filter`,
-  `SelectedResource`, et les rappels `Opening`, `Navigated`,
+  `SelectedResource`, and the callbacks `Opening`, `Navigated`,
   `SelectionChanged`, `Renamed`, `Deleted`, `ContextMenuOpening`,
-  `ErrorOccurred`. Tous sont transmis par leur nom au fournisseur ; un test
-  vérifie qu'aucun n'est oublié.
-- **`IHackFileView`** : dossier courant, éléments, sélection, `CanPaste`,
+  `ErrorOccurred`. All are passed by name to the provider; a test
+  verifies that none is forgotten.
+- **`IHackFileView`**: current folder, items, selection, `CanPaste`,
   `IsBusy`, `StateChanged`, `NavigateAsync`, `RefreshAsync`, `RevealAsync`,
-  `ClearSelection`, `RefreshFilter`, `WhenIdleAsync` (une fenêtre qui se ferme
-  attend les copies en cours, ADR 0069), et **`CanExecute`/`ExecuteAsync`**
-  dont les commandes sont les identifiants des entrées de menu. Une barre
-  d'outils et le menu font donc exactement la même chose.
-- **`HackFileViewItem`** : instantané d'un élément (chemin, nom, dossier,
-  taille, type MIME, date). Le même élément de la vue donne toujours le même
-  instantané, pour que le jeton de `Menus.Attach` reste stable.
-- **`HackFileMenuOpeningEventArgs`** : portée, cibles, dossier, menu à
-  modifier, `Cancel`.
-- Dans `HackerOs.AppSdk.Files` (sans Blazor, pour le chantier 4) :
-  **`FileMenuScope`** (`File`, `Directory`, `Background`, `Desktop`) et
-  **`HackFileMenuItems`**, avec deux identifiants de plus que le plan :
-  `open-with-other` (« Choisir une autre application… ») et le préfixe
-  `open-with:<appId>` des apps du sous-menu.
+  `ClearSelection`, `RefreshFilter`, `WhenIdleAsync` (a window that closes
+  waits for ongoing copies, ADR 0069), and **`CanExecute`/`ExecuteAsync`**
+  whose commands are the identifiers of the menu entries. A toolbar
+  and the menu thus do exactly the same thing.
+- **`HackFileViewItem`**: snapshot of an item (path, name, folder,
+  size, MIME type, date). The same view item always gives the same
+  snapshot, so that the `Menus.Attach` token stays stable.
+- **`HackFileMenuOpeningEventArgs`**: scope, targets, folder, menu to
+  modify, `Cancel`.
+- In `HackerOs.AppSdk.Files` (without Blazor, for work item 4):
+  **`FileMenuScope`** (`File`, `Directory`, `Background`, `Desktop`) and
+  **`HackFileMenuItems`**, with two more identifiers than the plan:
+  `open-with-other` ("Choose another application...") and the prefix
+  `open-with:<appId>` for the apps in the submenu.
 
-`SelectedResource` est un ajout : l'éditeur de code ouvre un dossier choisi
-dans le dialogue de l'OS, avec la poignée de ce choix
-(`WithSelectedHandle`). Le contrôle liste et renomme dans ce dossier avec la
-même poignée, comme l'ADR 0148 §4 le prévoit pour les dialogues.
+`SelectedResource` is an addition: the code editor opens a folder chosen
+in the OS dialog, with the handle of that choice
+(`WithSelectedHandle`). The control lists and renames in that folder with the
+same handle, as ADR 0148 §4 provides for dialogs.
 
-### 3. Le contrôle fait lui-même ce que l'explorateur faisait autour
+### 3. The control itself does what the explorer used to do around it
 
-`ExplorerFileView` fait, **avec les droits de l'hôte** (ADR 0148 §4 : ses
-passerelles sont celles de `HostContext`, ses rappels s'exécutent dans le
-contexte ambiant de l'hôte) : la corbeille et la suppression définitive après
-confirmation, le presse-papiers de session, les copies et déplacements avec le
-conflit de noms, l'import de fichiers de l'hôte, l'ouverture par l'app par
-défaut et « Ouvrir avec », le choix « Toujours utiliser » (ADR 0121 §4).
+`ExplorerFileView` does, **with the host's rights** (ADR 0148 §4: its
+gateways are those of `HostContext`, its callbacks run in the host's
+ambient context): the trash and permanent deletion after
+confirmation, the session clipboard, copies and moves with the
+name conflict, import of files from the host, opening with the default
+app and "Open With", the "Always use" choice (ADR 0121 §4).
 
-« N'apparaît que si l'hôte les gère » (plan §7) devient le paramètre
-**`Features`** (`Clipboard`, `Delete`, `Rename`, `CreateFolder`, `DragDrop`,
-`OpenWith`, `Properties`, tout par défaut) : un hôte retire ce qu'il ne veut
-pas, l'entrée disparaît du menu et la touche ne fait rien.
+"Appears only if the host handles them" (plan §7) becomes the
+**`Features`** parameter (`Clipboard`, `Delete`, `Rename`, `CreateFolder`,
+`DragDrop`, `OpenWith`, `Properties`, all by default): a host removes what it does not want,
+the entry disappears from the menu and the key does nothing.
 
-`Opening` laisse l'hôte ouvrir lui-même un élément (`Handled = true`) : l'éditeur
-de code ouvre un fichier dans un onglet plutôt que dans son app par défaut ; un
-dossier non pris en main est ouvert dans la vue. Les erreurs vont à
-`ErrorOccurred`, ou en notification si l'hôte n'en veut pas.
+`Opening` lets the host open an item itself (`Handled = true`): the code
+editor opens a file in a tab rather than in its default app; a
+folder not handled is opened in the view. Errors go to
+`ErrorOccurred`, or to a notification if the host does not want them.
 
-### 4. Les menus
+### 4. The menus
 
-- Un menu vide par contrôle (`Menus.Define`), **rempli à chaque ouverture**
-  par `ExplorerFileMenu` (fonction pure, testée) puis passé à
-  `ContextMenuOpening` de l'hôte.
-- **Cibles** : un élément hors de la sélection devient la sélection ; un
-  élément de la sélection agit sur toute la sélection. Les entrées agissent sur
-  les cibles prises à l'ouverture, pas sur la sélection au moment du clic.
-- **Portée** : `Directory` si toutes les cibles sont des dossiers, `File`
-  sinon, `Background` pour le vide.
-- **Plusieurs éléments** : « Renommer » et « Ouvrir avec » absents,
-  « Propriétés » désactivé ; « Ouvrir » désactivé pour plusieurs dossiers.
-- **« Ouvrir avec ▸ »** sur un fichier : les apps de
-  `IAppCatalogGateway.GetHandlersAsync` (défaut de l'utilisateur en tête), puis
-  un groupe « Choisir une autre application… ». Pas d'« Ouvrir avec » sur un
-  dossier, comme dans le plan.
-- Un groupe vide est gardé entre l'édition et « Propriétés » : les entrées
-  inscrites par les apps y viendront (chantier 4) ; l'OS replie les
-  séparateurs autour d'un groupe vide.
-- Raccourcis affichés : Ctrl+X, Ctrl+C, Ctrl+V, F2, Suppr, Maj+Suppr, F5.
+- One empty menu per control (`Menus.Define`), **filled at each opening**
+  by `ExplorerFileMenu` (pure function, tested) then passed to the host's
+  `ContextMenuOpening`.
+- **Targets**: an item outside the selection becomes the selection; an
+  item in the selection acts on the whole selection. The entries act on the
+  targets taken at opening, not on the selection at the time of the click.
+- **Scope**: `Directory` if all targets are folders, `File`
+  otherwise, `Background` for the empty space.
+- **Several items**: "Rename" and "Open With" absent,
+  "Properties" disabled; "Open" disabled for several folders.
+- **"Open With ▸"** on a file: the apps from
+  `IAppCatalogGateway.GetHandlersAsync` (user's default first), then
+  a group "Choose another application...". No "Open With" on a folder,
+  as in the plan.
+- An empty group is kept between editing and "Properties": the entries
+  registered by apps will come there (work item 4); the OS collapses the
+  separators around an empty group.
+- Displayed shortcuts: Ctrl+X, Ctrl+C, Ctrl+V, F2, Delete, Shift+Delete, F5.
 
-### 5. Les dialogues fournis passent par `IDialogService`
+### 5. The provided dialogs go through `IDialogService`
 
-`IDialogService` gagne trois méthodes à implémentation par défaut (un hôte
-écrit avant répond `Unavailable`) : `OpenWithAsync`,
-`ShowFilePropertiesAsync`, `ResolveFileConflictAsync`, avec leurs
-enregistrements de requête et de résultat (`HackFileDialogs`). La plateforme
-(`DialogCoordinator`) n'est que le proxy : elle met la requête en file avec le
-contexte de l'app appelante, la montre dans une fenêtre modale de cette app
-(`ProvidedFileDialog`, qui donne ce contexte en cascade puis rend
-`hackeros.file-dialogs`), et rend le résultat que le fournisseur donne par
-`Completed`. Une fermeture ou un résultat d'un autre type vaut « rien »
+`IDialogService` gains three methods with a default implementation (a host
+written earlier answers `Unavailable`): `OpenWithAsync`,
+`ShowFilePropertiesAsync`, `ResolveFileConflictAsync`, with their
+request and result records (`HackFileDialogs`). The platform
+(`DialogCoordinator`) is only the proxy: it queues the request with the
+context of the calling app, shows it in a modal window of that app
+(`ProvidedFileDialog`, which gives this context in cascade then renders
+`hackeros.file-dialogs`), and returns the result that the provider gives through
+`Completed`. A closing or a result of another type means "nothing"
 (`Cancelled`, `Closed`, `Skip`).
 
-Le fournisseur `ExplorerFileDialogs` est en markup natif (dans le style du
-sélecteur d'apps de l'OS), plus en MudBlazor : `OpenWithDialog`,
-`FilePropertiesDialog`, `FileConflictDialog`, `OpenWithChoice` et
-`FileExplorerDialogBase` sont retirés de l'explorateur.
+The `ExplorerFileDialogs` provider is in native markup (in the style of the
+OS app picker), no longer MudBlazor: `OpenWithDialog`,
+`FilePropertiesDialog`, `FileConflictDialog`, `OpenWithChoice` and
+`FileExplorerDialogBase` are removed from the explorer.
 
-### 6. La vue des dialogues Ouvrir / Enregistrer
+### 6. The view of the Open / Save dialogs
 
-L'ADR 0148 §2 place aussi dans `hackeros.file-dialogs` la vue de fichiers des
-dialogues Ouvrir / Enregistrer / Choisir un dossier, aujourd'hui
-`VirtualFolderBrowser` dans la plateforme. Ce remplacement touche le pipeline
-des dialogues de la plateforme et les tests UI qui les pilotent ; il n'est
-**pas** dans ce chantier : Benoit a choisi (2026-10-20) un chantier
-`desk/3b` séparé, après celui-ci.
+ADR 0148 §2 also places in `hackeros.file-dialogs` the file view of the
+Open / Save / Choose a folder dialogs, today
+`VirtualFolderBrowser` in the platform. This replacement touches the platform's
+dialog pipeline and the UI tests that drive it; it is
+**not** in this work item: Benoit chose (2026-10-20) a separate
+`desk/3b` work item, after this one.
 
-### 7. Ce qui reste pour les chantiers suivants
+### 7. What remains for the following work items
 
-- `IHackFileOperations` (ADR 0149 §3) : chantier 6. Jusque-là, une app qui
-  copie hors du contrôle utilise encore `FileTransfer`.
-- « UnZip Here… » et « Publish as a web site… » deviennent des entrées
-  inscrites au chantier 4 ; d'ici là, la fenêtre de l'explorateur les ajoute
-  par son propre `ContextMenuOpening` (`FileExplorerMenuEntries`), donc
-  seulement dans sa fenêtre.
-- La portée `Desktop` et son menu : chantier 5.
-- La vue des dialogues Ouvrir / Enregistrer : chantier `desk/3b` (choix de
-  Benoit, 2026-10-20).
+- `IHackFileOperations` (ADR 0149 §3): work item 6. Until then, an app that
+  copies outside the control still uses `FileTransfer`.
+- "UnZip Here..." and "Publish as a web site..." become registered
+  entries in work item 4; until then, the explorer window adds them
+  through its own `ContextMenuOpening` (`FileExplorerMenuEntries`), so
+  only in its window.
+- The `Desktop` scope and its menu: work item 5.
+- The view of the Open / Save dialogs: work item `desk/3b` (Benoit's choice,
+  2026-10-20).
 
-### 8. Rien ne suppose que l'explorateur est le seul fournisseur
+### 8. Nothing assumes the explorer is the only provider
 
-L'ADR 0156, acceptée pendant ce chantier, laisse un administrateur choisir une
-app tierce comme fournisseur des deux contrats ; son code vient dans un
-chantier suivant. Ce chantier la prépare :
+ADR 0156, accepted during this work item, lets an administrator choose a
+third-party app as provider of the two contracts; its code comes in a
+later work item. This work item prepares for it:
 
-- les hôtes (éditeur de code, fenêtre de l'explorateur) ne parlent qu'au
-  contrat : paramètres de `HackFileView`, `IHackFileView`, identifiants de
-  `HackFileMenuItems`, requêtes de `IDialogService` ;
-- la fenêtre de l'explorateur ne touche l'implémentation interne (`FileView`)
-  que pour le fil d'Ariane et les dépôts sur Home et Trash ; avec un autre
-  fournisseur, seuls ces deux extras disparaissent ;
-- `ExplorerFileMenu` et `FileViewMenuBinding` sont internes à l'explorateur :
-  un autre fournisseur construit ses menus lui-même sur le menu de l'OS, avec
-  les mêmes identifiants (ADR 0156 §5) ;
-- le proxy des dialogues (`DialogCoordinator`, `ProvidedFileDialog`) rend le
-  contrat par le registre, pas l'explorateur par son nom.
+- the hosts (code editor, explorer window) only talk to the
+  contract: parameters of `HackFileView`, `IHackFileView`, identifiers of
+  `HackFileMenuItems`, requests of `IDialogService`;
+- the explorer window touches the internal implementation (`FileView`)
+  only for the breadcrumb and the drops on Home and Trash; with another
+  provider, only these two extras disappear;
+- `ExplorerFileMenu` and `FileViewMenuBinding` are internal to the explorer:
+  another provider builds its menus itself on the OS menu, with
+  the same identifiers (ADR 0156 §5);
+- the dialog proxy (`DialogCoordinator`, `ProvidedFileDialog`) renders the
+  contract through the registry, not the explorer by name.
 
-## Conséquences
+## Consequences
 
-- Une correction du contrôle, de ses menus ou de ses dialogues atteint
-  l'explorateur, l'éditeur de code et toute app qui affiche `HackFileView`
-  sans les recompiler.
-- L'éditeur de code ne référence plus `HackerOs.AppSdk.FileView` ; son
-  explorateur latéral affiche `HackFileView` en arbre et ajoute ses entrées
-  (« Nouveau fichier », « Nouveau dossier », « Rechercher dans le dossier »,
-  « Ouvrir dans le terminal ») par `ContextMenuOpening`. Sa propre suppression
-  vers la corbeille est retirée : c'est celle du contrôle.
-- Les ajouts sont dans `PublicAPI.Unshipped.txt` (SDK, plateforme, apps) et
-  publiés avec la 2.0 (ADR 0149 §1).
+- A fix to the control, its menus or its dialogs reaches
+  the explorer, the code editor and any app that displays `HackFileView`
+  without recompiling them.
+- The code editor no longer references `HackerOs.AppSdk.FileView`; its
+  side explorer displays `HackFileView` as a tree and adds its entries
+  ("New File", "New Folder", "Search in Folder",
+  "Open in Terminal") through `ContextMenuOpening`. Its own deletion
+  to the trash is removed: it is the control's.
+- The additions are in `PublicAPI.Unshipped.txt` (SDK, platform, apps) and
+  published with 2.0 (ADR 0149 §1).
 
-## Références
+## References
 
 - [ADR 0148](0148-sdk-contracts-and-os-provided-controls.md),
   [ADR 0149](0149-sdk-2-0-file-view-removal.md),

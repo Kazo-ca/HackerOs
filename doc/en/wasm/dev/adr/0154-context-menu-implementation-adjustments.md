@@ -1,107 +1,107 @@
-# ADR 0154 : ajustements du menu contextuel de l'OS
+# ADR 0154: adjustments to the OS context menu
 
-## Statut
+## Status
 
-Accepté le 2026-10-20.
+Accepted on 2026-10-20.
 
-- **Chantier :** `desk/2-context-menu` (chantier 2 du plan
+- **Work item:** `desk/2-context-menu` (work item 2 of the plan
   [`desktop-and-context-menu-plan.md`](../plans/desktop-and-context-menu-plan.md) §11).
-- **Ajuste :** l'ADR 0150 §1, §4, §5 et §6 sur des points de mise en œuvre ;
-  ses décisions restent vraies.
+- **Adjusts:** ADR 0150 §1, §4, §5 and §6 on implementation points;
+  its decisions remain true.
 
-## Contexte
+## Context
 
-L'ADR 0150 décide un menu unique fourni par la plateforme, multi-niveaux, que
-les apps attachent à leurs éléments par `Menus.Attach`. Quelques détails
-n'étaient pas fixés ou ne pouvaient pas l'être tels quels une fois le code
-écrit sur l'hôte de contrats du chantier 1 (ADR 0153).
+ADR 0150 decides a single multi-level menu provided by the platform, which
+apps attach to their elements through `Menus.Attach`. A few details
+were not fixed or could not be as stated once the code was
+written on the contract host of work item 1 (ADR 0153).
 
-## Décision
+## Decision
 
-### 1. Le fournisseur inscrit, la coquille dessine
+### 1. The provider registers, the shell draws
 
-`HackContextMenu` est un `HackContractComponent<IHackContextMenu>` ; la
-plateforme fournit le contrat par `HackPlatformComponent`
-(`PlatformContextMenu`). Le fournisseur rendu à la place du menu dans la fenêtre
-**ne dessine rien** : il inscrit le menu dans la fenêtre et rend le contrôleur.
-Le menu ouvert est dessiné par `ContextMenuOverlay`, un seul par coquille
-(`DesktopShell`, `MobileShell`), au-dessus de toutes les fenêtres : c'est ce qui
-garantit « un seul menu ouvert dans tout l'OS » et un positionnement dans la
-fenêtre du navigateur, pas dans celle de l'app.
+`HackContextMenu` is a `HackContractComponent<IHackContextMenu>`; the
+platform provides the contract through `HackPlatformComponent`
+(`PlatformContextMenu`). The provider rendered in place of the menu in the window
+**draws nothing**: it registers the menu in the window and returns the controller.
+The open menu is drawn by `ContextMenuOverlay`, a single one per shell
+(`DesktopShell`, `MobileShell`), above all windows: this is what
+guarantees "a single menu open in the whole OS" and positioning in the
+browser window, not in the app's.
 
-Le SDK recueille lui-même les entrées du markup (`HackMenuItem`,
-`HackMenuGroup` en cascade) et ne passe au fournisseur qu'un constructeur
-(`Build`), le nom, le nom accessible et `Opening`. Un menu absent ne montre
-rien à sa place (`HackContractComponent.DefaultUnavailable`, nouveau crochet) ;
-l'OS écrit déjà l'erreur au journal (ADR 0153 §6).
+The SDK itself collects the entries from the markup (`HackMenuItem`,
+`HackMenuGroup` in cascade) and passes the provider only a builder
+(`Build`), the name, the accessible name and `Opening`. A missing menu shows
+nothing in its place (`HackContractComponent.DefaultUnavailable`, new hook);
+the OS already writes the error to the log (ADR 0153 §6).
 
-### 2. Une portée par fenêtre
+### 2. One scope per window
 
-`IHackMenuHost`, interface du SDK mise en œuvre par la plateforme
-(`ContextMenuScope`), est donnée en cascade par `WindowAppRenderer`, **une par
-fenêtre**, détruite avec elle (menus, objets attachés, menu ouvert). L'unicité
-du nom d'un menu vaut donc par fenêtre. `Menus` (type `HackMenus`) existe sur
-`WindowAppBase` **et** sur `HackComponentBase` : `WindowAppBase` ne dérive pas de
-`HackComponentBase`. Hors fenêtre (test unitaire), `Menus.Attach` ne renvoie
-aucun attribut et rien ne s'ouvre.
+`IHackMenuHost`, an SDK interface implemented by the platform
+(`ContextMenuScope`), is given in cascade by `WindowAppRenderer`, **one per
+window**, destroyed with it (menus, attached objects, open menu). The uniqueness
+of a menu's name therefore holds per window. `Menus` (type `HackMenus`) exists on
+`WindowAppBase` **and** on `HackComponentBase`: `WindowAppBase` does not derive from
+`HackComponentBase`. Outside a window (unit test), `Menus.Attach` returns no
+attribute and nothing opens.
 
-### 3. Jetons et libération
+### 3. Tokens and release
 
-Le même objet attaché à nouveau reçoit le même jeton (par référence pour un
-objet, par valeur pour une chaîne ou un type valeur, recréés à chaque rendu) :
-redessiner une liste ne fait pas grossir la table. Les jetons des éléments qui
-quittent la page sont signalés par le script (observation des retraits, vérifiés
-une seconde plus tard pour ne pas oublier un élément redessiné ou déplacé dans
-une fenêtre détachée) ; la fermeture de la fenêtre vide tout.
+The same object attached again receives the same token (by reference for an
+object, by value for a string or a value type, recreated at each render):
+redrawing a list does not make the table grow. The tokens of elements
+leaving the page are reported by the script (observation of removals, checked
+one second later so as not to forget an element redrawn or moved in
+a detached window); closing the window empties everything.
 
-### 4. Le script est celui du composant
+### 4. The script is the component's own
 
-Le script de l'ADR 0150 §5 est `ContextMenuOverlay.razor.js`, module propre au
-composant (AGENTS.md, « Component-scoped »), importé par le C#, plutôt qu'un
-fichier de `wwwroot`. Il respecte un `contextmenu` déjà annulé par une app
-(le menu `MudMenu` actuel de `FileView` reste donc intact jusqu'au chantier 3),
-laisse le menu du navigateur dans un champ de texte non attaché, et ne traite
-que le document du bureau : une fenêtre détachée (ADR 0078) garde le menu du
-navigateur. L'attribut `data-hack-menu-suppress` marque une zone de l'OS qui a
-son propre menu (`HackMenuAttributes.Suppress`).
+The script of ADR 0150 §5 is `ContextMenuOverlay.razor.js`, a module specific to the
+component (AGENTS.md, "Component-scoped"), imported by the C#, rather than a
+`wwwroot` file. It respects a `contextmenu` already canceled by an app
+(the current `MudMenu` of `FileView` thus stays intact until work item 3),
+leaves the browser menu in an unattached text field, and handles
+only the desktop document: a detached window (ADR 0078) keeps the
+browser menu. The `data-hack-menu-suppress` attribute marks an OS area that
+has its own menu (`HackMenuAttributes.Suppress`).
 
-### 5. Ordre et focus
+### 5. Order and focus
 
-- Une action s'exécute **après** la fermeture du menu et le retour du focus à
-  l'élément d'origine, pour qu'une boîte ou un renommage en place qu'elle ouvre
-  garde le focus. Un appui hors du menu ne rend pas le focus (l'utilisateur l'a
-  mis ailleurs) et continue vers sa cible, comme dans Windows.
-- La surbrillance est annoncée par `aria-activedescendant` sur le panneau qui a
-  le focus, plutôt que par un focus déplacé d'entrée en entrée.
-- Ouvert au clavier, le menu met sa première entrée en surbrillance ; ouvert à
-  la souris ou au doigt, aucune.
+- An action runs **after** the menu closes and focus returns to the
+  original element, so that a dialog or in-place rename it opens
+  keeps the focus. A press outside the menu does not give focus back (the user
+  put it elsewhere) and continues to its target, as in Windows.
+- The highlight is announced through `aria-activedescendant` on the panel that has
+  the focus, rather than by focus moved from entry to entry.
+- Opened with the keyboard, the menu highlights its first entry; opened with the
+  mouse or a finger, none.
 
-### 6. Erreurs
+### 6. Errors
 
-Un menu dont le constructeur, `Opening` ou la vérification échoue n'ouvre rien ;
-une action qui lève est attrapée. Les deux sont écrits dans `/var/log/syslog`
-par `ILogger<ContextMenuService>` ; le shell continue.
+A menu whose builder, `Opening` or check fails opens nothing;
+an action that throws is caught. Both are written to `/var/log/syslog`
+by `ILogger<ContextMenuService>`; the shell continues.
 
-### 7. Syntaxe Razor
+### 7. Razor syntax
 
-Une valeur d'attribut qui contient des guillemets s'écrit avec `@(…)` :
+An attribute value that contains quotes is written with `@(…)`:
 `@attributes="@(Menus.Attach("rows", row))"`, `OnClick="@(item => Export(item, "csv"))"`.
-Les exemples de l'ADR 0150 et du plan sans `@(…)` ne compilent pas tels quels.
+The examples of ADR 0150 and of the plan without `@(…)` do not compile as is.
 
-### 8. Icônes
+### 8. Icons
 
-`HackIcon` et `HackIcons` vivent dans `HackerOs.AppSdk.Icons` (à côté
-d'`IconLibrary`) ; `HackerOs.AppSdk.Blazor` référence désormais ce paquet.
+`HackIcon` and `HackIcons` live in `HackerOs.AppSdk.Icons` (next to
+`IconLibrary`); `HackerOs.AppSdk.Blazor` now references this package.
 
-## Conséquences
+## Consequences
 
-- Le chantier 3 construit les menus du contrôle de fichiers sur ce modèle et
-  retire le `MudMenu` de `FileView` ; le chantier 5 crée la portée du bureau
-  (`ContextMenuService.CreateScope(null)`) et marque ses zones.
-- Nouvelles API non livrées (`PublicAPI.Unshipped.txt`) dans `AppSdk.Icons`,
-  `AppSdk.Blazor` et `Platform.Blazor`, publiées avec le SDK 2.0 (chantier 6).
+- Work item 3 builds the file control's menus on this model and
+  removes the `MudMenu` from `FileView`; work item 5 creates the desktop scope
+  (`ContextMenuService.CreateScope(null)`) and marks its areas.
+- New unshipped APIs (`PublicAPI.Unshipped.txt`) in `AppSdk.Icons`,
+  `AppSdk.Blazor` and `Platform.Blazor`, published with SDK 2.0 (work item 6).
 
-## Références
+## References
 
 - ADR 0063, 0078, 0148, 0150, 0153.
 - [`context-menu.md`](../../framework/context-menu.md),

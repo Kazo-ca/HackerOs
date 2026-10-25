@@ -1,9 +1,9 @@
-# Archives : `apps/`
+# Archives: `apps/`
 
-Documents archivés, antérieurs au plan de refonte. Ils restent utiles comme
-référence technique mais ne décrivent plus forcément le code actuel.
+Archived documents, predating the overhaul plan. They remain useful as a
+technical reference but no longer necessarily describe the current code.
 
-| Document | Rôle |
+| Document | Role |
 | --- | --- |
 | [`diagnostic-app.md`](diagnostic-app.md) | HackerOS IndexedDB Diagnostic Application (`org.hackeros.diagnostic`) |
 | [`file-explorer.md`](file-explorer.md) | HackerOS File Explorer Application (`org.hackeros.file-explorer`) |
@@ -11,4 +11,4 @@ référence technique mais ne décrivent plus forcément le code actuel.
 | [`terminal.md`](terminal.md) | HackerOS Terminal Application (`org.hackeros.terminal`) |
 | [`text-editor.md`](text-editor.md) | Text Editor App (`org.hackeros.text-editor`) |
 
-Index des archives : [`../README.md`](../README.md).
+Archive index: [`../README.md`](../README.md).

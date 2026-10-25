@@ -1,38 +1,38 @@
-# Sites Blazor : composants dessinés par le navigateur
+# Blazor sites: components drawn by the browser
 
-Chantier `web/9-blazor-sites` de la phase web (ASP.Hack). Décision :
-[ADR 0084](../dev/adr/0084-blazor-sites.md) (complète l'ADR 0073 §4, l'ADR 0075 §5 et
-l'ADR 0081 §2). Plan : [`asp-hack-plan.md`](../dev/plans/asp-hack-plan.md) §5. S'appuie sur
-`web/4` ([`browser-html-rendering.md`](../dev/browser-html-rendering.md)) pour le
-navigateur, `web/6` ([`asp-hack-mvc.md`](asp-hack-mvc.md)) pour le site et
-`web/10` ([`detached-display-windows.md`](../dev/detached-display-windows.md)) pour la
-fenêtre détachée.
+Work item `web/9-blazor-sites` of the web phase (ASP.Hack). Decision:
+[ADR 0084](../dev/adr/0084-blazor-sites.md) (completes ADR 0073 §4, ADR 0075 §5 and
+ADR 0081 §2). Plan: [`asp-hack-plan.md`](../dev/plans/asp-hack-plan.md) §5. Builds on
+`web/4` ([`browser-html-rendering.md`](../dev/browser-html-rendering.md)) for the
+browser, `web/6` ([`asp-hack-mvc.md`](asp-hack-mvc.md)) for the site and
+`web/10` ([`detached-display-windows.md`](../dev/detached-display-windows.md)) for the
+detached window.
 
-## Objet
+## Purpose
 
-Un site interne peut être **interactif** : ses pages sont des composants Blazor
-dessinés par le navigateur de HackerOS directement dans la zone de page, comme
-un site Blazor WebAssembly dans un vrai navigateur.
+An internal site can be **interactive**: its pages are Blazor components
+drawn by the HackerOS browser directly in the page area, like
+a Blazor WebAssembly site in a real browser.
 
-- Le site reste une app `Web` ordinaire (ADR 0073) : il écoute, sert ses routes
-  MVC ou minimales, et déclare en plus un **composant racine**
+- The site remains an ordinary `Web` app (ADR 0073): it listens, serves its MVC
+  or minimal routes, and additionally declares a **root component**
   (`AppDefinition.BlazorRoot`).
-- Le navigateur reconnaît la **page hôte** du site (elle charge
-  `_framework/blazor.hack.js`), lit `blazor.boot.json` et demande à l'OS de
-  démarrer un **processus de rendu** (`--type=renderer`, comme Chrome) sous
-  l'identité du site et de l'utilisateur de l'onglet.
-- Le site **navigue par l'URL de l'onglet** : ses liens changent l'adresse sans
-  requête, précédent et suivant restent dans le site, la barre d'adresse et
-  Recharger font une vraie requête.
-- Le site n'a **aucune capacité `filesystem.*`** (il n'en déclare pas) ; il
-  appelle ses propres routes par `Site.Http`, un client HTTP sur son adresse
-  avec les cookies de l'onglet.
-- Une exception du site donne la page « Aw, Snap! » du navigateur ; l'OS n'est
-  jamais touché.
+- The browser recognizes the site's **host page** (it loads
+  `_framework/blazor.hack.js`), reads `blazor.boot.json` and asks the OS to
+  start a **renderer process** (`--type=renderer`, like Chrome) under the
+  identity of the site and of the tab's user.
+- The site **navigates by the tab's URL**: its links change the address without a
+  request, back and forward stay inside the site, the address bar and
+  Reload make a real request.
+- The site has **no `filesystem.*` capability** (it declares none); it
+  calls its own routes through `Site.Http`, an HTTP client on its address
+  with the tab's cookies.
+- An exception in the site gives the browser's "Aw, Snap!" page; the OS is
+  never affected.
 
-Le site d'exemple **Blazor Sample Site** (`http://blazor-sample.hack/`) est
-installé dans les deux hôtes : compteur sans rechargement, page avec paramètre
-de route qui appelle l'API du site, page qui plante.
+The sample site **Blazor Sample Site** (`http://blazor-sample.hack/`) is
+installed in both hosts: counter without reload, page with a route parameter
+that calls the site's API, page that crashes.
 
 ## Architecture
 
@@ -52,63 +52,63 @@ de route qui appelle l'API du site, page qui plante.
              clics sur <a href> capturés par HackWebSiteView.razor.js → navigation interne ou du navigateur
 ```
 
-| Fichier | Rôle |
+| File | Role |
 |---|---|
-| `Shared/HackerOs.App.Abstractions/Definition/AppDefinition.cs` | `BlazorRoot` (`Type?`) ; le générateur écrit `web.blazor { assembly, type }` (schéma, sérialiseur, validateur `manifest.web.blazor.assembly`). |
-| `Shared/HackerOs.AppSdk/Net/Hosting/HackBlazorBoot.cs` | `HackBlazorBootManifest` (`appId`, `appName`, `entryAssembly`, `rootComponent`), chemins `_framework/blazor.hack.js` et `_framework/blazor.boot.json`. |
-| `Shared/HackerOs.AppSdk/Net/HackHttp.cs` | `HackHttpClient.BaseAddress` : URI relatives résolues comme `HttpClient.BaseAddress`. |
-| `Shared/HackerOs.AppSdk.Web/Hosting/HackBlazorSiteEndpoints.cs` | Les trois réponses d'un site à racine Blazor, en dernier (`MapFallback`, ordre `1 000 000`) ; `IsHostPage(html)`. |
-| `Shared/HackerOs.AppSdk.Web/Hosting/HackWebApplication.cs`, `HackWebHost.cs` | `MapFallback(pattern, handler)` ; `CreateApplication` ajoute les endpoints Blazor après `Configure`. |
-| `Shared/HackerOs.AppSdk.Web.Blazor/Sites/` | SDK Blazor des sites : `IHackWebSiteHost`, `IHackWebSiteProcess`, `HackWebSiteView`, `HackWebSite`, `HackSiteNavigationManager`, `HackSiteRouter`, `HackSiteLayoutBase`, `HackNavLink`, `HackPageTitle`, `HackSiteErrorBoundary`. |
-| `Platform/HackerOs.Platform.Blazor/Sites/HackWebSiteHost.cs` | Implémentation : trouve l'app par `web.urls`, refuse un `boot.json` d'une autre app, charge l'assembly (paresseux), vérifie la racine, démarre le processus de rendu ; `RendererProcess` relaie `Exited`. |
-| `Platform/HackerOs.Platform.Core/Lifecycle/AppLifecycleOrchestrator.cs` | `StartAuxiliaryAsync(appId, principal, parentPid, argv)` : processus `Auxiliary`, capacités du site moins `network.listen*`, suivi comme une fenêtre (`StopAsync`). |
-| `Platform/HackerOs.Platform.Core/Processes/InMemoryProcessManager.cs` | `ProcessStartRequest.Auxiliary` ; `TryGetSingleton` ignore les processus auxiliaires. |
-| `Apps/System/HackerOs.Apps.Browser/BrowserWindow.razor(.cs)` | Détection de la page hôte, `TryStartSiteAsync`, branche `ShowsSite`, navigation interne (précédent/suivant), « Aw, Snap! », arrêt du processus à la sortie de la page ; zone de page rendue à une seule place à travers `DisplaySurfaceContent`. |
+| `Shared/HackerOs.App.Abstractions/Definition/AppDefinition.cs` | `BlazorRoot` (`Type?`); the generator writes `web.blazor { assembly, type }` (schema, serializer, validator `manifest.web.blazor.assembly`). |
+| `Shared/HackerOs.AppSdk/Net/Hosting/HackBlazorBoot.cs` | `HackBlazorBootManifest` (`appId`, `appName`, `entryAssembly`, `rootComponent`), paths `_framework/blazor.hack.js` and `_framework/blazor.boot.json`. |
+| `Shared/HackerOs.AppSdk/Net/HackHttp.cs` | `HackHttpClient.BaseAddress`: relative URIs resolved like `HttpClient.BaseAddress`. |
+| `Shared/HackerOs.AppSdk.Web/Hosting/HackBlazorSiteEndpoints.cs` | The three responses of a site with a Blazor root, last (`MapFallback`, order `1 000 000`); `IsHostPage(html)`. |
+| `Shared/HackerOs.AppSdk.Web/Hosting/HackWebApplication.cs`, `HackWebHost.cs` | `MapFallback(pattern, handler)`; `CreateApplication` adds the Blazor endpoints after `Configure`. |
+| `Shared/HackerOs.AppSdk.Web.Blazor/Sites/` | Blazor SDK for sites: `IHackWebSiteHost`, `IHackWebSiteProcess`, `HackWebSiteView`, `HackWebSite`, `HackSiteNavigationManager`, `HackSiteRouter`, `HackSiteLayoutBase`, `HackNavLink`, `HackPageTitle`, `HackSiteErrorBoundary`. |
+| `Platform/HackerOs.Platform.Blazor/Sites/HackWebSiteHost.cs` | Implementation: finds the app by `web.urls`, refuses a `boot.json` from another app, loads the assembly (lazily), checks the root, starts the renderer process; `RendererProcess` relays `Exited`. |
+| `Platform/HackerOs.Platform.Core/Lifecycle/AppLifecycleOrchestrator.cs` | `StartAuxiliaryAsync(appId, principal, parentPid, argv)`: `Auxiliary` process, the site's capabilities minus `network.listen*`, tracked like a window (`StopAsync`). |
+| `Platform/HackerOs.Platform.Core/Processes/InMemoryProcessManager.cs` | `ProcessStartRequest.Auxiliary`; `TryGetSingleton` ignores auxiliary processes. |
+| `Apps/System/HackerOs.Apps.Browser/BrowserWindow.razor(.cs)` | Host page detection, `TryStartSiteAsync`, `ShowsSite` branch, internal navigation (back/forward), "Aw, Snap!", process stop when leaving the page; page area rendered in a single place through `DisplaySurfaceContent`. |
 | `Apps/System/HackerOs.Apps.Browser/BrowserErrorPages.cs` | `ForRendererCrash` (`STATUS_ACCESS_VIOLATION`, `RESULT_CODE_KILLED`), `ForSiteNotStarted` (`ERR_SITE_NOT_STARTED`). |
-| `Shared/HackerOs.AppSdk.Blazor/Display/DisplaySurfaceContent.razor.cs` | `Surface` devient facultatif : sans surface, le contenu reste sur place ; un contenu toujours rendu par le portail garde ses composants au détachement. |
-| `Apps/Samples/HackerOs.Samples.BlazorSite/` | Site d'exemple : `BlazorSampleSite` (définition, `/api/greeting/{name}`), `App.razor`, `Layout/MainLayout`, `Pages/Index`, `Pages/Hello`, `Pages/Crash`. Référencé par `OS/HackerOs.Ecosystem` et `test/test`. |
+| `Shared/HackerOs.AppSdk.Blazor/Display/DisplaySurfaceContent.razor.cs` | `Surface` becomes optional: without a surface, the content stays in place; content that is always rendered by the portal keeps its components on detach. |
+| `Apps/Samples/HackerOs.Samples.BlazorSite/` | Sample site: `BlazorSampleSite` (definition, `/api/greeting/{name}`), `App.razor`, `Layout/MainLayout`, `Pages/Index`, `Pages/Hello`, `Pages/Crash`. Referenced by `OS/HackerOs.Ecosystem` and `test/test`. |
 
-### Cycle de vie du processus de rendu
+### Renderer process lifecycle
 
-1. Le navigateur reçoit un `text/html` qui contient `_framework/blazor.hack.js`
-   et lit `blazor.boot.json` (visible dans l'onglet Network).
-2. `HackWebSiteHost` retrouve l'app `Web` installée dont une URL de `web.urls`
-   a le schéma, l'hôte et le port de la page ; refuse si `boot.json` nomme une
-   autre app, si l'app n'a pas de `web.blazor`, ou si le type n'est pas un
-   composant.
-3. `StartAuxiliaryAsync` démarre le processus : enfant du processus du
-   navigateur, `argv` `[<app>, --type=renderer, <url>]`, utilisateur de
-   l'onglet, capacités accordées au site moins `network.listen` et
-   `network.listen.privileged`. Il apparaît dans le gestionnaire de tâches sous
-   l'identifiant de l'app du site ; `TryGetSingleton` l'ignore, donc l'activation
-   à la demande du site (ADR 0074 §3) n'est pas affectée.
-4. Le processus se termine quand l'onglet quitte le document, se ferme, recharge
-   (`IHackWebSiteProcess.StopAsync`) ; une exception non gérée l'arrête en
-   `Fault` ; `kill` ou le gestionnaire de tâches annulent son jeton, la vue
-   reçoit `Exited` et le navigateur montre « Aw, Snap! » (`RESULT_CODE_KILLED`).
+1. The browser receives a `text/html` that contains `_framework/blazor.hack.js`
+   and reads `blazor.boot.json` (visible in the Network tab).
+2. `HackWebSiteHost` finds the installed `Web` app one of whose `web.urls` URLs
+   has the page's scheme, host and port; it refuses if `boot.json` names another
+   app, if the app has no `web.blazor`, or if the type is not a
+   component.
+3. `StartAuxiliaryAsync` starts the process: child of the browser's
+   process, `argv` `[<app>, --type=renderer, <url>]`, the tab's user,
+   capabilities granted to the site minus `network.listen` and
+   `network.listen.privileged`. It appears in the task manager under
+   the site's app identifier; `TryGetSingleton` ignores it, so the site's
+   on-demand activation (ADR 0074 §3) is not affected.
+4. The process ends when the tab leaves the document, closes, or reloads
+   (`IHackWebSiteProcess.StopAsync`); an unhandled exception stops it in
+   `Fault`; `kill` or the task manager cancel its token, the view
+   receives `Exited` and the browser shows "Aw, Snap!" (`RESULT_CODE_KILLED`).
 
 ### Navigation
 
-- `HackWebSiteView.razor.js` écoute `click` en phase de capture sur la zone de
-  page : un `<a href>` du site est arrêté avant le routeur Blazor de l'OS (qui
-  écoute sur `document`) et remis à `OnLinkClicked`. Clics modifiés, bouton
-  secondaire, `download`, `javascript:` passent.
-- Dans le site et sans `forceLoad` : `HackSiteNavigationManager.SetLocation`
-  (le `LocationChanged` du site), puis `OnLocationChanged` → le navigateur met à
-  jour l'adresse et l'historique (`pushState`/`replaceState`), aucune requête.
-- Ailleurs, ou `forceLoad` : `OnNavigate` → navigation ordinaire du navigateur,
-  qui arrête le processus de rendu.
-- Un lien dont `target` existe et n'est pas `_self` (`_top`, `_blank`, un nom)
-  est une navigation du document même vers le site, comme dans Blazor
-  (ADR 0087 §1) : c'est ainsi qu'une page Blazor rejoint les pages MVC du même
-  site (`<a href="/Notes" target="_top">` dans l'exemple Intranet).
-- Précédent/suivant : si la cible est dans le site vivant, le navigateur change
-  l'adresse de la vue (`Url`), qui appelle `SetLocation` ; sinon vraie requête.
-  Recharger fait toujours une vraie requête (nouveau processus de rendu).
+- `HackWebSiteView.razor.js` listens to `click` in the capture phase on the page
+  area: a `<a href>` of the site is stopped before the OS's Blazor router (which
+  listens on `document`) and handed to `OnLinkClicked`. Modified clicks, secondary
+  button, `download`, `javascript:` pass through.
+- Within the site and without `forceLoad`: `HackSiteNavigationManager.SetLocation`
+  (the site's `LocationChanged`), then `OnLocationChanged` → the browser updates
+  the address and history (`pushState`/`replaceState`), no request.
+- Elsewhere, or `forceLoad`: `OnNavigate` → ordinary browser navigation,
+  which stops the renderer process.
+- A link whose `target` exists and is not `_self` (`_top`, `_blank`, a name)
+  is a document navigation even toward the site, as in Blazor
+  (ADR 0087 §1): this is how a Blazor page reaches the MVC pages of the same
+  site (`<a href="/Notes" target="_top">` in the Intranet example).
+- Back/forward: if the target is in the live site, the browser changes
+  the view's address (`Url`), which calls `SetLocation`; otherwise a real request.
+  Reload always makes a real request (new renderer process).
 
 ## Usage
 
-### Déclarer un site Blazor
+### Declaring a Blazor site
 
 ```csharp
 [AppManifest]
@@ -131,11 +131,11 @@ public sealed partial class Intranet : WebAppDefinition
 }
 ```
 
-Le projet référence `HackerOs.AppSdk.Web` et `HackerOs.AppSdk.Web.Blazor` ;
-`_Imports.razor` fait hériter les composants de `HackComponentBase`
-(`@inherits HackComponentBase`) et importe `HackerOs.AppSdk.Web.Blazor.Sites`.
+The project references `HackerOs.AppSdk.Web` and `HackerOs.AppSdk.Web.Blazor`;
+`_Imports.razor` makes the components inherit from `HackComponentBase`
+(`@inherits HackComponentBase`) and imports `HackerOs.AppSdk.Web.Blazor.Sites`.
 
-### Composant racine, pages, layout
+### Root component, pages, layout
 
 ```razor
 @* App.razor *@
@@ -159,83 +159,83 @@ Le projet référence `HackerOs.AppSdk.Web` et `HackerOs.AppSdk.Web.Blazor` ;
 }
 ```
 
-| Type (`HackerOs.AppSdk.Web.Blazor.Sites`) | Rôle |
+| Type (`HackerOs.AppSdk.Web.Blazor.Sites`) | Role |
 |---|---|
-| `HackWebSite` (cascadé) | `AppId`, `Name`, `Navigation`, `Http` (`BaseAddress` = adresse du site, cookies de l'onglet), `Title`, `SetTitle`, `TitleChanged`. |
-| `HackSiteNavigationManager` | `NavigationManager` de l'onglet : `Uri`, `BaseUri`, `NavigateTo(uri, forceLoad, replace)`, `LocationChanged`, `ToBaseRelativePath` ; `IsWithinSite(uri)`. |
-| `HackSiteRouter` | `AppAssembly`, `DefaultLayout`, `NotFound` ; gabarits `@page` de Blazor (`{id:int}`, `{x?}`, `{*rest}`), `[Layout]` et layouts imbriqués, paramètres convertis (`string`, entiers, `bool`, `Guid`, `decimal`, `double`, `float`, `DateTime`, `DateOnly`, `TimeOnly`, nullables). |
-| `HackSiteLayoutBase` | Base d'un layout (`Body`). |
-| `HackNavLink` | `Href`, `Match` (`Prefix`/`All`), `ActiveClass`, attributs libres. |
-| `HackPageTitle` | `Title` → titre de l'onglet. |
-| `HackWebSiteView` | Vue du navigateur : `Process`, `Url`, `Cookies`, `OnLocationChanged`, `OnNavigate`, `OnTitleChanged`, `OnFaulted`. Les apps n'ont pas à l'utiliser. |
-| `IHackWebSiteHost`, `IHackWebSiteProcess` | Contrat implémenté par la plateforme, utilisé par le navigateur. |
+| `HackWebSite` (cascaded) | `AppId`, `Name`, `Navigation`, `Http` (`BaseAddress` = the site's address, the tab's cookies), `Title`, `SetTitle`, `TitleChanged`. |
+| `HackSiteNavigationManager` | The tab's `NavigationManager`: `Uri`, `BaseUri`, `NavigateTo(uri, forceLoad, replace)`, `LocationChanged`, `ToBaseRelativePath`; `IsWithinSite(uri)`. |
+| `HackSiteRouter` | `AppAssembly`, `DefaultLayout`, `NotFound`; Blazor `@page` templates (`{id:int}`, `{x?}`, `{*rest}`), `[Layout]` and nested layouts, converted parameters (`string`, integers, `bool`, `Guid`, `decimal`, `double`, `float`, `DateTime`, `DateOnly`, `TimeOnly`, nullables). |
+| `HackSiteLayoutBase` | Base of a layout (`Body`). |
+| `HackNavLink` | `Href`, `Match` (`Prefix`/`All`), `ActiveClass`, free attributes. |
+| `HackPageTitle` | `Title` → tab title. |
+| `HackWebSiteView` | The browser's view: `Process`, `Url`, `Cookies`, `OnLocationChanged`, `OnNavigate`, `OnTitleChanged`, `OnFaulted`. Apps do not need to use it. |
+| `IHackWebSiteHost`, `IHackWebSiteProcess` | Contract implemented by the platform, used by the browser. |
 
-Les composants du site dérivent de `HackComponentBase` : leurs événements et
-leur cycle de vie s'exécutent sous l'identité du processus de rendu, donc
-`Site.Http`, `HackDns`, etc. passent par ses capacités.
+The site's components derive from `HackComponentBase`: their events and
+lifecycle run under the renderer process's identity, so
+`Site.Http`, `HackDns`, etc. go through its capabilities.
 
-### Ce qu'un site ne fait pas
+### What a site does not do
 
-- Injecter `NavigationManager`, `Router`, `NavLink`, `PageTitle` de Blazor : ce
-  sont ceux de l'OS. Le SDK fournit leurs équivalents ci-dessus.
-- Déclarer `filesystem.*` : la racine Blazor n'a pas plus de droits que le site.
-- Poster un `<form>` sans gestionnaire : aucune navigation de document dans
-  l'OS ; un site poste par `EditForm`/`@onsubmit` et `Site.Http`.
+- Inject Blazor's `NavigationManager`, `Router`, `NavLink`, `PageTitle`: those
+  are the OS's. The SDK provides their equivalents above.
+- Declare `filesystem.*`: the Blazor root has no more rights than the site.
+- Post a `<form>` without a handler: there is no document navigation in
+  the OS; a site posts through `EditForm`/`@onsubmit` and `Site.Http`.
 
-## Décisions clés
+## Key decisions
 
-- **Pas d'iframe** : du code C# installé, limité par ses capacités, dessiné par
-  le moteur de rendu de l'OS (ADR 0073 §1) ; le JavaScript des pages HTML reste
-  isolé (ADR 0075).
-- **Processus de rendu auxiliaire** plutôt que l'instance du site : identité
-  claire dans `ps` et le gestionnaire de tâches, arrêt indépendant, activation à
-  la demande intacte.
-- **Le site répond comme un site Blazor WebAssembly** (page hôte, chargeur,
-  `boot.json`) : `curl` voit la même chose qu'avec un vrai site Blazor, et le
-  navigateur n'a pas de liste d'apps à consulter avant de demander la page.
-- **Interception des liens en phase de capture** : seule façon de passer avant
-  le routeur de l'OS sans toucher à l'hôte.
-- **Zone de page rendue à une seule place** (navigateur) : `DisplaySurfaceContent`
-  accepte un `Surface` nul, si bien qu'un site Blazor garde ses composants et
-  leur état au détachement et au rattachement (ADR 0084 §7). La page HTML reste
-  réécrite au déplacement (ADR 0081 §4).
-- **Site d'exemple installé** : la seule façon de le voir dans les deux hôtes
-  (le catalogue vient de `BuiltInApplications.json` de l'Ecosystem) ; caché du
-  lanceur comme toute app `Web`.
+- **No iframe**: installed C# code, limited by its capabilities, drawn by
+  the OS's rendering engine (ADR 0073 §1); the JavaScript of HTML pages stays
+  isolated (ADR 0075).
+- **Auxiliary renderer process** rather than the site's instance: clear
+  identity in `ps` and the task manager, independent stop, on-demand
+  activation intact.
+- **The site answers like a Blazor WebAssembly site** (host page, loader,
+  `boot.json`): `curl` sees the same thing as with a real Blazor site, and the
+  browser has no list of apps to consult before requesting the page.
+- **Link interception in the capture phase**: the only way to get in front of
+  the OS's router without touching the host.
+- **Page area rendered in a single place** (browser): `DisplaySurfaceContent`
+  accepts a null `Surface`, so that a Blazor site keeps its components and
+  their state on detach and reattach (ADR 0084 §7). The HTML page is still
+  rewritten on move (ADR 0081 §4).
+- **Sample site installed**: the only way to see it in both hosts
+  (the catalog comes from the Ecosystem's `BuiltInApplications.json`); hidden from the
+  launcher like any `Web` app.
 
-## Limites connues
+## Known limits
 
-- Les requêtes du site par `Site.Http` n'apparaissent pas dans l'onglet Network
-  (seuls le document et `blazor.boot.json` y sont).
-- Pas de `[SupplyParameterFromQuery]` : les paramètres viennent du chemin.
-- Un seul site Blazor par onglet ; un onglet par fenêtre (comme avant).
-- Un site Blazor est reconnu par sa page hôte : un site qui écrit sa propre page
-  HTML avec `_framework/blazor.hack.js` est traité comme un site Blazor.
-- Les processus de rendu s'exécutent sur le fil principal (ADR 0073 §1).
+- The site's requests through `Site.Http` do not appear in the Network tab
+  (only the document and `blazor.boot.json` do).
+- No `[SupplyParameterFromQuery]`: parameters come from the path.
+- A single Blazor site per tab; one tab per window (as before).
+- A Blazor site is recognized by its host page: a site that writes its own HTML
+  page with `_framework/blazor.hack.js` is treated as a Blazor site.
+- Renderer processes run on the main thread (ADR 0073 §1).
 
 ## Tests
 
-| Suite | Ce qui est vérifié |
+| Suite | What is checked |
 |---|---|
-| `Tests/HackerOs.App.Abstractions.Tests` | `BlazorRoot` → `web.blazor` (mapper, sérialiseur, schéma `web-blazor.valid.json`, validateur). |
-| `Tests/HackerOs.AppSdk.Web.Tests/Hosting/BlazorSiteEndpointsTests.cs` | Page hôte pour les chemins sans extension, `404` avec extension, routes du site d'abord, `boot.json`, `blazor.hack.js`, site sans racine. |
-| `Tests/HackerOs.AppSdk.Web.Blazor.Tests` | Routeur (gabarits, préséance, conversion), navigation (`NavigateTo`, `SetLocation`, `IsWithinSite`), `HackWebSite` (titre, client). |
-| `Tests/HackerOs.Platform.Core.Tests` | `TryGetSingleton` ignore les auxiliaires ; `StartAuxiliaryAsync` (parent, `argv`, capacités, pas l'instance du site, arrêt en `Fault`). |
-| `Tests/HackerOs.Platform.Blazor.Tests/HackWebSiteHostTests.cs` | App trouvée par origine, `boot.json` d'une autre app refusé, racine absente ou non-composant, arrêt et `Exited`. |
+| `Tests/HackerOs.App.Abstractions.Tests` | `BlazorRoot` → `web.blazor` (mapper, serializer, schema `web-blazor.valid.json`, validator). |
+| `Tests/HackerOs.AppSdk.Web.Tests/Hosting/BlazorSiteEndpointsTests.cs` | Host page for paths without an extension, `404` with an extension, site routes first, `boot.json`, `blazor.hack.js`, site without a root. |
+| `Tests/HackerOs.AppSdk.Web.Blazor.Tests` | Router (templates, precedence, conversion), navigation (`NavigateTo`, `SetLocation`, `IsWithinSite`), `HackWebSite` (title, client). |
+| `Tests/HackerOs.Platform.Core.Tests` | `TryGetSingleton` ignores auxiliaries; `StartAuxiliaryAsync` (parent, `argv`, capabilities, not the site's instance, stop in `Fault`). |
+| `Tests/HackerOs.Platform.Blazor.Tests/HackWebSiteHostTests.cs` | App found by origin, `boot.json` of another app refused, root missing or not a component, stop and `Exited`. |
 | `Tests/HackerOs.Network.Tests` | `HackHttpClient.BaseAddress`. |
-| `Tests/HackerOs.Platform.WorkerHost.Tests/BlazorSiteTests.cs` | `curl` sur un site à racine Blazor : page hôte, `boot.json`, chargeur, API, `404`, fil principal et worker. |
-| `Tests/HackerOs.UI.E2E.Tests/BrowserBlazorSiteTests.cs` | Chromium : site d'exemple dessiné sans iframe, compteur, lien sans rechargement, API, précédent/suivant dans le site, « Aw, Snap! », rechargement, sortie du site. |
+| `Tests/HackerOs.Platform.WorkerHost.Tests/BlazorSiteTests.cs` | `curl` on a site with a Blazor root: host page, `boot.json`, loader, API, `404`, main thread and worker. |
+| `Tests/HackerOs.UI.E2E.Tests/BrowserBlazorSiteTests.cs` | Chromium: sample site drawn without an iframe, counter, link without reload, API, back/forward inside the site, "Aw, Snap!", reload, leaving the site. |
 
-## Tâches
+## Tasks
 
 - [x] ADR 0084.
-- [x] `BlazorRoot`, manifeste `web.blazor` (schéma, sérialiseur, validateur, mapper).
+- [x] `BlazorRoot`, `web.blazor` manifest (schema, serializer, validator, mapper).
 - [x] `ProcessStartRequest.Auxiliary`, `TryGetSingleton`, `StartAuxiliaryAsync`.
-- [x] Page hôte, chargeur et `boot.json` (`HackBlazorSiteEndpoints`, `MapFallback`).
+- [x] Host page, loader and `boot.json` (`HackBlazorSiteEndpoints`, `MapFallback`).
 - [x] `HackHttpClient.BaseAddress`.
-- [x] Bibliothèque `HackerOs.AppSdk.Web.Blazor` (vue, site, navigation, routeur, layout, lien, titre, frontière d'erreur).
-- [x] `HackWebSiteHost` (Platform.Blazor), enregistrement dans l'Ecosystem.
-- [x] Navigateur : démarrage, navigation interne, précédent/suivant, « Aw, Snap! », arrêt, fenêtre détachée sans perte d'état.
-- [x] Site d'exemple dans les deux hôtes.
-- [x] Tests unitaires, `curl` et E2E.
-- [x] Documentation et index.
+- [x] `HackerOs.AppSdk.Web.Blazor` library (view, site, navigation, router, layout, link, title, error boundary).
+- [x] `HackWebSiteHost` (Platform.Blazor), registration in the Ecosystem.
+- [x] Browser: startup, internal navigation, back/forward, "Aw, Snap!", stop, detached window without state loss.
+- [x] Sample site in both hosts.
+- [x] Unit, `curl` and E2E tests.
+- [x] Documentation and index.

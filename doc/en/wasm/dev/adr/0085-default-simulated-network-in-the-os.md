@@ -1,60 +1,60 @@
-# ADR 0085 : le réseau simulé par défaut est branché dans l'OS
+# ADR 0085: the default simulated network is wired into the OS
 
-## Statut
+## Status
 
-Accepté le 2026-10-16, avec la correction de la page d'accueil du navigateur
-(branche `web/browser-home-page-g9yyu5`).
+Accepted on 2026-10-16, with the fix of the browser home page
+(branch `web/browser-home-page-g9yyu5`).
 
-- **Remplace :** la phrase de l'[ADR 0034](0034-wire-terminal-command-catalog.md)
-  « `EcosystemServiceCollectionExtensions.cs` registers
-  `ISimulatedWebsiteRegistry`/`ISimulatedNetworkService` from this seed ». Le
-  reste de l'ADR 0034 (catalogue des commandes, hôtes `.hackeros` de test) est
-  conservé.
-- **Ne touche pas :** l'[ADR 0023](0023-optional-game-domain-and-proxy-fallback.md).
-  Les sites du catalogue par défaut font partie du réseau simulé de l'OS, pas
-  du domaine de jeu (missions, contrats), qui reste optionnel.
-- **Documentation :** [`listening-ports-and-dns.md`](../../framework/listening-ports-and-dns.md),
+- **Supersedes:** the sentence of [ADR 0034](0034-wire-terminal-command-catalog.md)
+  "`EcosystemServiceCollectionExtensions.cs` registers
+  `ISimulatedWebsiteRegistry`/`ISimulatedNetworkService` from this seed". The
+  rest of ADR 0034 (command catalog, `.hackeros` test hosts) is
+  kept.
+- **Does not touch:** [ADR 0023](0023-optional-game-domain-and-proxy-fallback.md).
+  The sites of the default catalog are part of the OS's simulated network, not of
+  the game domain (missions, contracts), which remains optional.
+- **Documentation:** [`listening-ports-and-dns.md`](../../framework/listening-ports-and-dns.md),
   [`browser-html-rendering.md`](../browser-html-rendering.md).
 
-## Contexte
+## Context
 
-Le navigateur s'ouvre sur `https://hackersearch.net` et envoie les recherches
-tapées dans la barre d'adresse à `https://hackersearch.net/search?q=`. Ses
-favoris pointent aussi vers HackMail, CryptoBank, le marché darknet et le
-forum. Ces hôtes existent dans `DefaultSimulatedHostCatalog`, et leurs sites
-dans `Network/Websites/` (chantier `web/2` pour `/api/search` et le
-formulaire). Mais l'hôte Ecosystem ne composait le réseau simulé qu'avec
-`SmokeTestNetworkSeed` (`example.hackeros`, `empty.hackeros`). Seuls les tests
-unitaires (`Wave4NetworkTests`) branchaient le catalogue par défaut.
+The browser opens on `https://hackersearch.net` and sends the searches
+typed in the address bar to `https://hackersearch.net/search?q=`. Its
+bookmarks also point to HackMail, CryptoBank, the darknet market and the
+forum. These hosts exist in `DefaultSimulatedHostCatalog`, and their sites
+in `Network/Websites/` (work item `web/2` for `/api/search` and the
+form). But the Ecosystem host composed the simulated network only with
+`SmokeTestNetworkSeed` (`example.hackeros`, `empty.hackeros`). Only the unit
+tests (`Wave4NetworkTests`) wired the default catalog.
 
-Conséquence : dans les trois hôtes, la page d'accueil du navigateur affichait
-« This site can't be reached » (`ERR_NAME_NOT_RESOLVED`), comme `curl
-hackersearch.net` ou `ping hackmail.com`. `browser-html-rendering.md` le
-notait comme problème connu.
+Consequence: in all three hosts, the browser home page displayed
+"This site can't be reached" (`ERR_NAME_NOT_RESOLVED`), like `curl
+hackersearch.net` or `ping hackmail.com`. `browser-html-rendering.md` noted it
+as a known problem.
 
-## Décision
+## Decision
 
-1. `DefaultSimulatedHostCatalog.BuildWebsites()` rend les contrôleurs des sites
-   du catalogue (HackerSearch, HackMail, CryptoBank, marché darknet, forum),
-   une nouvelle instance par appel, donc des sessions propres à chaque réseau
-   composé.
-2. `AddHackerOsEcosystem` compose le réseau simulé avec
-   `DefaultSimulatedHostCatalog.Build()` **et** `SmokeTestNetworkSeed.Hosts`,
-   et le registre des sites avec leurs contrôleurs. Les hôtes `.hackeros`
-   restent : les tests E2E et la documentation s'en servent.
-3. Le catalogue par défaut garde son hôte `localhost` (`127.0.0.1`, ssh 22 et
-   mysql 3306 sans PID, ADR 0074). Le résolveur `hackdns` répond toujours
-   `localhost` par la boucle locale avant de consulter le réseau simulé : les
-   apps à l'écoute gardent la priorité.
+1. `DefaultSimulatedHostCatalog.BuildWebsites()` returns the controllers of the
+   catalog's sites (HackerSearch, HackMail, CryptoBank, darknet market, forum),
+   a new instance per call, hence sessions specific to each composed
+   network.
+2. `AddHackerOsEcosystem` composes the simulated network with
+   `DefaultSimulatedHostCatalog.Build()` **and** `SmokeTestNetworkSeed.Hosts`,
+   and the site registry with their controllers. The `.hackeros` hosts
+   remain: the E2E tests and the documentation use them.
+3. The default catalog keeps its `localhost` host (`127.0.0.1`, ssh 22 and
+   mysql 3306 without PID, ADR 0074). The `hackdns` resolver always answers
+   `localhost` with the loopback before consulting the simulated network: listening
+   apps keep priority.
 
-## Conséquences
+## Consequences
 
-- Le navigateur affiche HackerSearch à l'ouverture et la recherche de la barre
-  d'adresse donne des résultats. `curl`, `ping`, `nmap` et `nslookup` voient
-  les hôtes du catalogue.
-- Les hôtes et adresses sont ceux de `src/core/network.ts` (`192.168.1.x`), sans
-  collision avec les `10.0.0.x` du jeu de test.
-- Le test `Tests/HackerOs.UI.E2E.Tests/BrowserHomePageTests.cs` ouvre le
-  navigateur hors mode démo et vérifie la page d'accueil puis une recherche.
-- Un futur paquet de contenu (ADR 0023) pourra ajouter des hôtes au même
-  registre ; ce n'est pas tranché ici.
+- The browser displays HackerSearch on opening and the address bar search
+  gives results. `curl`, `ping`, `nmap` and `nslookup` see
+  the catalog's hosts.
+- The hosts and addresses are those of `src/core/network.ts` (`192.168.1.x`), with no
+  collision with the `10.0.0.x` of the test set.
+- The test `Tests/HackerOs.UI.E2E.Tests/BrowserHomePageTests.cs` opens the
+  browser outside demo mode and verifies the home page then a search.
+- A future content pack (ADR 0023) could add hosts to the same
+  registry; this is not settled here.

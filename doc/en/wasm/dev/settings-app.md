@@ -1,110 +1,108 @@
-# App Paramètres (`org.hackeros.settings`)
+# Settings App (`org.hackeros.settings`)
 
-## Objet
+## Purpose
 
-Décrit l'app système `Apps/System/HackerOs.Apps.Settings` : le panneau de
-configuration de l'OS. Elle ne possède aucune donnée : chaque onglet lit et
-écrit des fichiers de l'OS (paramètres en fichiers, ADR 0044) ou appelle une
-façade `Hack*` du SDK. Les décisions qui l'ont façonnée sont l'ADR 0047
-(manifeste), l'ADR 0048 (app système), l'ADR 0096 (arguments `--app=`), les
-ADR 0105, 0120, 0121, 0160 et les sections 8 à 11 de l'ADR 0056.
+Describes the system app `Apps/System/HackerOs.Apps.Settings`: the OS control
+panel. It owns no data: each tab reads and writes OS files (settings as files,
+ADR 0044) or calls an SDK `Hack*` facade. The decisions that shaped it are
+ADR 0047 (manifest), ADR 0048 (system app), ADR 0096 (`--app=` arguments),
+ADR 0105, 0120, 0121, 0160 and sections 8 to 11 of ADR 0056.
 
-Fichiers clés : `SettingsApp.cs` (classe `[AppManifest]`, identifiant, capacités,
-poids de ressources), `SettingsWindow.razor` et `SettingsWindow.razor.cs` (la
-fenêtre, un `MudTabs`), `SettingsWindow.Mobile.cs` (préférences mobiles),
-un panneau `*Panel.razor` par onglet, `Strings.cs` et `Resources/` (textes
-anglais et français). Le `manifest.json` est généré au build à partir de
-`SettingsApp.cs` (ne pas l'éditer). Tests : `Tests/HackerOs.Apps.Settings.Tests`.
+Key files: `SettingsApp.cs` (the `[AppManifest]` class, identifier,
+capabilities, resource weights), `SettingsWindow.razor` and
+`SettingsWindow.razor.cs` (the window, a `MudTabs`), `SettingsWindow.Mobile.cs`
+(mobile preferences), one `*Panel.razor` panel per tab, `Strings.cs` and
+`Resources/` (English and French texts). The `manifest.json` is generated at
+build time from `SettingsApp.cs` (do not edit it). Tests:
+`Tests/HackerOs.Apps.Settings.Tests`.
 
-## Onglets
+## Tabs
 
-L'ordre compte : les arguments `--page=` et les crochets d'index s'y appuient.
+Order matters: the `--page=` arguments and the index hooks rely on it.
 
-| Onglet | Panneau | Contenu principal |
+| Tab | Panel | Main content |
 |---|---|---|
-| Apparence | (dans `SettingsWindow.razor`) | Couche d'écriture (utilisateur ou système), thème du bureau et du mobile, accent, animations, thèmes utilisateur (`/etc/hackeros/themes` et `~/.config/hackeros/themes`, `UserThemeLibrary`) ; écrit `appearance.config`. |
-| Bureau | `DesktopPanel` | Options et disposition du bureau (`desktop.config`, ADR 0160). |
-| Accessibilité | `AccessibilityPanel` | Contraste élevé, taille du texte, mouvement réduit (ADR 0105). |
-| Langue | `LanguagePanel` | Langue de l'interface. |
-| Associations de fichiers | `FileAssociationsPanel` | Applications par défaut, couche système ou utilisateur (`HackFileAssociationLayer`, ADR 0121). |
-| Autorisations accordées | (dans la fenêtre) | Capacités accordées à l'utilisateur. |
-| Permissions | `AppPermissionsPanel` | Décisions par app et approbations des capacités dangereuses (ADR 0049). |
-| Applications installées | `InstalledAppsPanel` | Liste des apps et de leurs commandes, désinstallation et réinstallation (ADR 0048). |
-| Composants de l'OS | `OsComponentsPanel` | Fournisseur choisi pour chaque contrat (`HackComponentProviders.GetOverviewAsync`, `SetProviderAsync`). |
-| Menus des fichiers | `FileMenuEntriesPanel` | Entrées de menu inscrites par les apps (ADR 0151). |
-| Connexion au serveur | `ServerRelayPolicyPanel` (+ la fenêtre) | Serveur optionnel, relais réseau (ADR 0102, 0134). Visible dans tous les cas, l'état vient de `HackServerConnection`. |
-| Synchronisation | (dans la fenêtre) | État de la synchro et conflits (ADR 0101). |
-| Utilisateurs | `UsersPanel` (+ `PasskeysPanel`) | Comptes, mots de passe, ajout et suppression de comptes par un administrateur, clés d'accès de la session (ADR 0120, 0168, 0169 ; voir [Page Utilisateurs](#page-utilisateurs)). |
-| Mémoire | `MemoryPanel` | Fichier `/etc/hackeros/memory.config`, section `[oom-killer]` (ADR 0126). |
-| Sauvegarde | `BackupPanel` | Présent seulement si `HackSystemBackup.IsSupportedFor` le permet (ADR 0099). |
-| À propos | (dans la fenêtre) | Autorité, redémarrage (`HackSystem.RebootAsync`), zone de danger : réinitialisation d'usine (`HackSystem.FactoryResetAsync`), confirmée par la saisie de `RESET`. |
-| Application | `AppDetailsPanel` | Ajouté seulement avec `--app=<id>` (ADR 0096) : détails et réglages d'une app. |
+| Appearance | (in `SettingsWindow.razor`) | Write layer (user or system), desktop and mobile theme, accent, animations, user themes (`/etc/hackeros/themes` and `~/.config/hackeros/themes`, `UserThemeLibrary`); writes `appearance.config`. |
+| Desktop | `DesktopPanel` | Desktop options and layout (`desktop.config`, ADR 0160). |
+| Accessibility | `AccessibilityPanel` | High contrast, text size, reduced motion (ADR 0105). |
+| Language | `LanguagePanel` | Interface language. |
+| File associations | `FileAssociationsPanel` | Default applications, system or user layer (`HackFileAssociationLayer`, ADR 0121). |
+| Granted permissions | (in the window) | Capabilities granted to the user. |
+| Permissions | `AppPermissionsPanel` | Per-app decisions and approvals of dangerous capabilities (ADR 0049). |
+| Installed applications | `InstalledAppsPanel` | List of apps and their commands, uninstall and reinstall (ADR 0048). |
+| OS components | `OsComponentsPanel` | Provider chosen for each contract (`HackComponentProviders.GetOverviewAsync`, `SetProviderAsync`). |
+| File menus | `FileMenuEntriesPanel` | Menu entries registered by apps (ADR 0151). |
+| Server connection | `ServerRelayPolicyPanel` (+ the window) | Optional server, network relay (ADR 0102, 0134). Visible in all cases, the state comes from `HackServerConnection`. |
+| Synchronization | (in the window) | Sync state and conflicts (ADR 0101). |
+| Users | `UsersPanel` (+ `PasskeysPanel`) | Accounts, passwords, adding and deleting accounts by an administrator, session passkeys (ADR 0120, 0168, 0169; see [Users page](#page-utilisateurs)). |
+| Memory | `MemoryPanel` | File `/etc/hackeros/memory.config`, section `[oom-killer]` (ADR 0126). |
+| Backup | `BackupPanel` | Present only if `HackSystemBackup.IsSupportedFor` allows it (ADR 0099). |
+| About | (in the window) | Authority, reboot (`HackSystem.RebootAsync`), danger zone: factory reset (`HackSystem.FactoryResetAsync`), confirmed by typing `RESET`. |
+| Application | `AppDetailsPanel` | Added only with `--app=<id>` (ADR 0096): details and settings of an app. |
 
-## Arguments de lancement
+## Launch arguments
 
-- `--page=appearance` ou `--page=desktop` : ouvre cet onglet (le « Changer le
-  fond » et « Réglages du bureau » du bureau l'utilisent, ADR 0160 §8).
-- `--app=<id>` : ouvre l'onglet « Application » de cette app ; un identifiant
-  vide est ignoré, le dernier gagne.
+- `--page=appearance` or `--page=desktop`: opens that tab (the desktop's
+  "Change background" and "Desktop settings" use it, ADR 0160 §8).
+- `--app=<id>`: opens the "Application" tab of that app; an empty identifier
+  is ignored, the last one wins.
 
-Une valeur inconnue de `--page=` est ignorée.
+An unknown `--page=` value is ignored.
 
-## Accès aux données
+## Data access
 
-| Donnée | Accès | Capacité |
+| Data | Access | Capability |
 |---|---|---|
-| `appearance.config`, `mobile` (documents système) | `HackSettings.OpenSystemAsync` | `filesystem.system.*` pour écrire `/etc` |
-| Apps installées, gestionnaires par défaut | `HackApps` (`GetInstalledAsync`, `GetDefaultHandlersAsync`, `SetDefaultHandlerAsync`, `ResetDefaultHandlerAsync`), `HackAppInstallInfo` | `apps.launch`, `apps.manage`, `file-associations.read` / `.write` |
-| Serveur | `HackServerConnection` | `server.connection.manage` |
-| Processus et services | `HackServiceController`, liste des processus | `process.list`, `services.manage` |
-| Sauvegarde | `HackSystemBackup` | `system.backup` |
-| Redémarrage, réinitialisation | `HackSystem` | `system.power` |
-| Permissions, utilisateurs | `HackPermissionAdministration`, `HackUserAccounts` | `permissions.manage`, `users.manage` |
+| `appearance.config`, `mobile` (system documents) | `HackSettings.OpenSystemAsync` | `filesystem.system.*` to write `/etc` |
+| Installed apps, default handlers | `HackApps` (`GetInstalledAsync`, `GetDefaultHandlersAsync`, `SetDefaultHandlerAsync`, `ResetDefaultHandlerAsync`), `HackAppInstallInfo` | `apps.launch`, `apps.manage`, `file-associations.read` / `.write` |
+| Server | `HackServerConnection` | `server.connection.manage` |
+| Processes and services | `HackServiceController`, process list | `process.list`, `services.manage` |
+| Backup | `HackSystemBackup` | `system.backup` |
+| Reboot, reset | `HackSystem` | `system.power` |
+| Permissions, users | `HackPermissionAdministration`, `HackUserAccounts` | `permissions.manage`, `users.manage` |
 
-Les deux opérations d'administration (redémarrage, réinitialisation) font
-confirmer un administrateur par l'OS dans sa propre fenêtre ; l'app ne voit
-jamais le mot de passe ([`admin-authentication-agent.md`](admin-authentication-agent.md)).
+The two administration operations (reboot, reset) have the OS ask an
+administrator for confirmation in its own window; the app never sees the
+password ([`admin-authentication-agent.md`](admin-authentication-agent.md)).
 
-## Page Utilisateurs
+## Users page
 
-`UsersPanel` (ADR 0120, 0169) et `PasskeysPanel` (ADR 0168), de haut en bas :
+`UsersPanel` (ADR 0120, 0169) and `PasskeysPanel` (ADR 0168), from top to
+bottom:
 
-- **Liste des comptes** : nom de connexion, nom affiché, badges
-  « Administrateur », « Vous », nombre de clés d'accès, état `P`/`NP`/`L`. Pour
-  un administrateur, un lien « Supprimer » sur chaque compte autre que le sien
-  ouvre une confirmation avec la case « Supprimer aussi son dossier
-  personnel `/home/<login>` », décochée par défaut
+- **Account list**: login name, display name, badges "Administrator", "You",
+  number of passkeys, state `P`/`NP`/`L`. For an administrator, a "Delete" link
+  on each account other than their own opens a confirmation with the checkbox
+  "Also delete its home folder `/home/<login>`", unchecked by default
   (`HackUserAccounts.DeleteAsync(login, removeHome)`).
-- **Ajouter un compte** (administrateur seulement) : nom de connexion, nom
-  affiché, type standard ou administrateur, mot de passe initial et
-  confirmation, vérifiés par `HackUserAccounts.ValidateNewAccount` avant
-  l'envoi (`HackUserAccounts.CreateAsync`).
-- **Mes clés d'accès** (tout le monde) : nom, date d'ajout et de dernière
-  utilisation, badge « trousseau » si la clé ouvre le trousseau (PRF), bouton
-  « Retirer », et un champ « Nom » + « Ajouter une clé d'accès » qui lance la
-  demande du navigateur. Sans WebAuthn (page non sécurisée), une note remplace
-  le formulaire. Voir [`passkeys.md`](passkeys.md).
-- **Mon mot de passe**, puis pour un administrateur la **réinitialisation**
-  du mot de passe d'un autre compte (ADR 0120).
+- **Add an account** (administrator only): login name, display name, standard
+  or administrator type, initial password and confirmation, checked by
+  `HackUserAccounts.ValidateNewAccount` before sending
+  (`HackUserAccounts.CreateAsync`).
+- **My passkeys** (everyone): name, date added and date of last use, "keychain"
+  badge if the key opens the keychain (PRF), "Remove" button, and a "Name"
+  field + "Add a passkey" that starts the browser prompt. Without WebAuthn
+  (insecure page), a note replaces the form. See [`passkeys.md`](passkeys.md).
+- **My password**, then for an administrator the **reset** of another
+  account's password (ADR 0120).
 
-Ajouter, supprimer et réinitialiser demandent `users.manage` et la
-confirmation d'un administrateur dans la fenêtre de l'OS (mot de passe ou clé
-d'accès). Gérer ses propres clés d'accès ne demande aucune capacité : le
-navigateur demande la présence de l'utilisateur. La navigation de la fenêtre
-n'est pas concernée par ces panneaux.
+Adding, deleting and resetting require `users.manage` and the confirmation of
+an administrator in the OS window (password or passkey). Managing one's own
+passkeys requires no capability: the browser asks for the user's presence. The
+window navigation is not affected by these panels.
 
-## Ce que l'app ne fait pas
+## What the app does not do
 
-- Elle n'a pas de magasin propre : tout ce qu'elle affiche vient de l'OS.
-- Elle est mono-instance par utilisateur (`SingleInstancePerUser`) et n'a
-  pas de `AutoStart`.
-- Elle est système (`IsSystemApp`, ADR 0048) : non désinstallable.
+- It has no store of its own: everything it displays comes from the OS.
+- It is single-instance per user (`SingleInstancePerUser`) and has no
+  `AutoStart`.
+- It is a system app (`IsSystemApp`, ADR 0048): it cannot be uninstalled.
 
-## Liens
+## Links
 
-- Paramètres en fichiers et couches : [`settings-files.md`](../framework/settings-files.md), [`sensitive-settings.md`](sensitive-settings.md).
-- Associations : [`user-file-associations.md`](user-file-associations.md).
-- Bureau : [`desktop.md`](desktop.md). Accessibilité : [`accessibility.md`](accessibility.md).
-- Thèmes : [`theme-editor.md`](theme-editor.md). Sauvegarde : [`system-backup.md`](system-backup.md).
-- Synchronisation : [`synchronization.md`](synchronization.md). Mémoire : [`oom-killer.md`](oom-killer.md).
-- Installation des apps : [`app-installation.md`](app-installation.md).
+- Settings as files and layers: [`settings-files.md`](../framework/settings-files.md), [`sensitive-settings.md`](sensitive-settings.md).
+- Associations: [`user-file-associations.md`](user-file-associations.md).
+- Desktop: [`desktop.md`](desktop.md). Accessibility: [`accessibility.md`](accessibility.md).
+- Themes: [`theme-editor.md`](theme-editor.md). Backup: [`system-backup.md`](system-backup.md).
+- Synchronization: [`synchronization.md`](synchronization.md). Memory: [`oom-killer.md`](oom-killer.md).
+- App installation: [`app-installation.md`](app-installation.md).

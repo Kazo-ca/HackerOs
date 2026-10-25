@@ -1,83 +1,83 @@
-# ADR 0105 : préférences d'accessibilité en fichiers (contraste élevé, taille du texte, mouvement réduit) et tests automatisés
+# ADR 0105: accessibility preferences as files (high contrast, text size, reduced motion) and automated tests
 
-## Statut
+## Status
 
-Accepté le 2026-10-17 (chantier `v3/1-adr`, pour le chantier `v3/13-accessibility`).
+Accepted on 2026-10-17 (work item `v3/1-adr`, for the work item `v3/13-accessibility`).
 
-- **Complète :** [ADR 0041](0041-shared-theme-catalog-and-scoped-tokens.md)
-  (jetons de thème, attribut `data-motion` de `ThemeScope`), ADR 0044 (réglages
-  en fichiers), [ADR 0095](0095-window-events-sizes-and-keyboard.md) (commandes
-  clavier des fenêtres).
-- **Plan :** [`wasm-v3-completion-plan.md`](../plans/wasm-v3-completion-plan.md),
-  ligne `v3/13-accessibility` ; manque R11. La checklist manuelle
-  d'accessibilité est écartée par Benoit : seuls des tests automatisés.
+- **Complements:** [ADR 0041](0041-shared-theme-catalog-and-scoped-tokens.md)
+  (theme tokens, `data-motion` attribute of `ThemeScope`), ADR 0044 (settings
+  as files), [ADR 0095](0095-window-events-sizes-and-keyboard.md) (window
+  keyboard commands).
+- **Plan:** [`wasm-v3-completion-plan.md`](../plans/wasm-v3-completion-plan.md),
+  line `v3/13-accessibility`; gap R11. The manual accessibility
+  checklist is dropped by Benoit: only automated tests.
 
-## Contexte
+## Context
 
-- Le mouvement réduit n'est géré qu'en CSS (`prefers-reduced-motion` dans
-  `themes.css` et une dizaine de feuilles de composants) et par le réglage
-  `animationsEnabled` de `appearance.config`. Rien pour le contraste ni la
-  taille du texte ; aucune API du SDK.
-- Les scans axe (`AccessibilityAndVisualCoverageTests`) couvrent l'explorateur,
-  Paramètres, le Code Editor, Hack Paint et le bureau, pas le Terminal, le
-  navigateur, la calculatrice ni le moniteur système. Aucun parcours au clavier
-  n'est testé.
+- Reduced motion is only handled in CSS (`prefers-reduced-motion` in
+  `themes.css` and about ten component stylesheets) and by the
+  `animationsEnabled` setting of `appearance.config`. Nothing for contrast or
+  text size; no SDK API.
+- The axe scans (`AccessibilityAndVisualCoverageTests`) cover the explorer,
+  Settings, the Code Editor, Hack Paint and the desktop, not the Terminal, the
+  browser, the calculator or the system monitor. No keyboard walkthrough
+  is tested.
 
-## Décision
+## Decision
 
-### 1. Préférences
+### 1. Preferences
 
-- Fichier `accessibility.config`, en couches comme tout réglage :
-  `/etc/hackeros/accessibility.config` (défaut machine) et
-  `~/.config/hackeros/accessibility.config` (utilisateur). Clés :
+- File `accessibility.config`, layered like any setting:
+  `/etc/hackeros/accessibility.config` (machine default) and
+  `~/.config/hackeros/accessibility.config` (user). Keys:
 
-  | Clé | Valeurs | Défaut |
+  | Key | Values | Default |
   |---|---|---|
-  | `highContrast` | `auto`, `on`, `off` | `auto` (suit `prefers-contrast: more` et `forced-colors: active` de l'hôte) |
+  | `highContrast` | `auto`, `on`, `off` | `auto` (follows the host's `prefers-contrast: more` and `forced-colors: active`) |
   | `textScale` | `1.0`, `1.25`, `1.5`, `2.0` | `1.0` |
-  | `reducedMotion` | `auto`, `on`, `off` | `auto` (suit `prefers-reduced-motion` de l'hôte) |
+  | `reducedMotion` | `auto`, `on`, `off` | `auto` (follows the host's `prefers-reduced-motion`) |
 
-- `animationsEnabled` de `appearance.config` reste lu : `false` équivaut à
-  `reducedMotion = on`. Paramètres n'affiche plus qu'un réglage, « Réduire les
-  animations », dans une nouvelle page **Accessibilité** avec les deux autres.
-- L'écran de connexion utilise les préférences de `/etc` (aucun utilisateur
-  n'est encore connu).
+- `animationsEnabled` of `appearance.config` is still read: `false` is equivalent to
+  `reducedMotion = on`. Settings now displays only one setting, "Reduce
+  animations", in a new **Accessibility** page with the other two.
+- The login screen uses the preferences from `/etc` (no user
+  is known yet).
 
-### 2. Application par le thème
+### 2. Application through the theme
 
-- `ThemeScope` ajoute `data-contrast="high"` et la variable
-  `--hos-text-scale` à côté de `data-motion`.
-- `themes.css` gagne une couche de contraste élevé qui redéfinit les jetons de
-  couleur, de bordure et de focus pour **tous** les thèmes (contraste du texte
-  d'au moins 7:1, indicateur de focus de 3 px), et les tailles de texte de la
-  plateforme passent en `rem` multipliés par `--hos-text-scale`.
-- Les thèmes utilisateur de l'ADR 0103 ne peuvent pas désactiver la couche de
-  contraste élevé : elle s'applique par-dessus.
+- `ThemeScope` adds `data-contrast="high"` and the variable
+  `--hos-text-scale` next to `data-motion`.
+- `themes.css` gains a high-contrast layer that redefines the color,
+  border and focus tokens for **all** themes (text contrast of
+  at least 7:1, 3 px focus indicator), and the platform text sizes
+  switch to `rem` multiplied by `--hos-text-scale`.
+- The user themes of ADR 0103 cannot disable the high-contrast
+  layer: it applies on top.
 
 ### 3. SDK
 
-- `HackAccessibility.GetPreferencesAsync()` renvoie les préférences effectives
-  (après `auto`) et `HackAccessibility.PreferencesChanged` signale un changement.
-- Une app qui dessine elle-même (canvas de Hack Paint, xterm.js du Terminal,
-  Monaco du Code Editor) les applique : police du terminal et de l'éditeur
-  agrandie, thème de contraste élevé de Monaco et de xterm, animations coupées.
+- `HackAccessibility.GetPreferencesAsync()` returns the effective preferences
+  (after `auto`) and `HackAccessibility.PreferencesChanged` signals a change.
+- An app that draws by itself (Hack Paint's canvas, the Terminal's xterm.js,
+  the Code Editor's Monaco) applies them: enlarged terminal and editor
+  font, high-contrast theme for Monaco and xterm, animations turned off.
 
-### 4. Tests automatisés
+### 4. Automated tests
 
-- Scans axe ajoutés pour le Terminal, le navigateur, la calculatrice, le
-  moniteur système, Theme Editor, la page de sauvegarde de Paramètres et la page
-  Accessibilité ; chaque scan tourne aussi avec `highContrast = on`. Une
-  violation sérieuse ou critique fait échouer le test (règle actuelle).
-- Un test E2E de parcours au clavier, sans souris : ouvrir le lanceur, lancer
-  une app, passer d'une fenêtre à l'autre (Alt+`), déplacer une fenêtre
-  (Alt+F7), fermer (Alt+Q), avec un focus toujours visible.
-- Un test vérifie que `textScale = 2.0` ne fait pas déborder le bureau ni les
-  fenêtres des apps système (règle de débordement existante).
+- Axe scans added for the Terminal, the browser, the calculator, the
+  system monitor, Theme Editor, the Settings backup page and the
+  Accessibility page; each scan also runs with `highContrast = on`. A
+  serious or critical violation fails the test (current rule).
+- An E2E keyboard walkthrough test, without a mouse: open the launcher, launch
+  an app, switch from one window to another (Alt+`), move a window
+  (Alt+F7), close (Alt+Q), with focus always visible.
+- A test checks that `textScale = 2.0` does not make the desktop or the
+  windows of the system apps overflow (existing overflow rule).
 
-## Conséquences
+## Consequences
 
-- `v3/13` ajoute le document de réglages, la page Accessibilité, la couche de
-  contraste élevé, `HackAccessibility`, l'adaptation des trois apps qui dessinent
-  elles-mêmes et les tests.
-- `settings-files.md`, `sdk-reference.md`, `building-and-testing.md` (tests axe)
-  et `terminal-emulator.md` sont mis à jour.
+- `v3/13` adds the settings document, the Accessibility page, the
+  high-contrast layer, `HackAccessibility`, the adaptation of the three apps that draw
+  by themselves and the tests.
+- `settings-files.md`, `sdk-reference.md`, `building-and-testing.md` (axe tests)
+  and `terminal-emulator.md` are updated.

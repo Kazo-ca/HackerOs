@@ -1,217 +1,217 @@
-# Mémoire mesurée par processus, en couches
+# Measured per-process memory, in layers
 
-Ce document couvre la mise en œuvre de la mesure mémoire en couches. Ce qu'une app voit (`HackProcess.WorkingSet64`, `PrivateMemorySize64`, champs de `/proc/<pid>/status` et `/proc/meminfo`, mesuré ou simulé) est dans [`../framework/process-resources-api.md`](../framework/process-resources-api.md).
+This document covers the implementation of layered memory measurement. What an app sees (`HackProcess.WorkingSet64`, `PrivateMemorySize64`, fields of `/proc/<pid>/status` and `/proc/meminfo`, measured or simulated) is in [`../framework/process-resources-api.md`](../framework/process-resources-api.md).
 
-Mise en œuvre du chantier `rebuild/5-memory-accounting` de la phase 5
-([`execution-isolation-plan.md`](plans/execution-isolation-plan.md)) :
-[ADR 0068](adr/0068-measured-process-memory.md), branchée sur les interrupteurs
-et le crochet de changement de contexte de l'[ADR 0066](adr/0066-optional-resource-accounting.md)
+Implementation of the `rebuild/5-memory-accounting` work item of phase 5
+([`execution-isolation-plan.md`](plans/execution-isolation-plan.md)):
+[ADR 0068](adr/0068-measured-process-memory.md), wired onto the switches and
+the context-switch hook of [ADR 0066](adr/0066-optional-resource-accounting.md)
 ([`resource-accounting.md`](resource-accounting.md)).
 
-## Rôle
+## Role
 
-Toutes les apps partagent le même tas .NET : le runtime ne dit pas quelle part
-en revient à quelle app. La mesure reconstitue la mémoire de chaque processus
-en quatre couches, comme `/proc/<pid>/status` sous Linux, **sans modifier le
-code des apps** :
+All apps share the same .NET heap: the runtime does not say which part belongs
+to which app. The measurement reconstructs each process's memory in four
+layers, like `/proc/<pid>/status` on Linux, **without changing app code**:
 
-| Couche | Source | Précision | Champ de `/proc/<pid>/status` |
+| Layer | Source | Precision | `/proc/<pid>/status` field |
 |---|---|---|---|
-| Image | taille des assemblies de l'app, mesurée par le build de l'hôte | exacte | `VmExe` (l'assembly de l'app), `RssFile` (+ assemblies partagées) |
-| Ressources de l'OS | octets que l'OS tient pour le processus : tampons de `HackFileStream`, presse-papiers, tubes, sockets en vol, coût fixe par fenêtre | exacte | `VmData` (part noyau) |
-| Allocations | `GC.GetAllocatedBytesForCurrentThread()` lu à chaque changement de contexte | exacte | `HackAllocBytes` |
-| Résidente | tas réel réparti après chaque GC au prorata des allocations récentes, avec décroissance exponentielle | estimation | `RssAnon` |
+| Image | size of the app's assemblies, measured by the host build | exact | `VmExe` (the app's assembly), `RssFile` (+ shared assemblies) |
+| OS resources | bytes the OS holds for the process: `HackFileStream` buffers, clipboard, pipes, in-flight sockets, fixed cost per window | exact | `VmData` (kernel part) |
+| Allocations | `GC.GetAllocatedBytesForCurrentThread()` read at each context switch | exact | `HackAllocBytes` |
+| Resident | real heap distributed after each GC in proportion to recent allocations, with exponential decay | estimate | `RssAnon` |
 
-`VmRSS = RssAnon + RssFile + VmData`. La mesure ne limite rien par elle-même :
-la limite `rss` par processus vient de l'ADR 0125
-([`process-limits.md`](process-limits.md)) et l'OOM killer, **désactivé par
-défaut**, de l'ADR 0126 (qui remplace l'ADR 0068 §3) et de l'ADR 0142
-([`oom-killer.md`](oom-killer.md)) ; il n'agit que si la mémoire est mesurée.
+`VmRSS = RssAnon + RssFile + VmData`. The measurement limits nothing by
+itself: the per-process `rss` limit comes from ADR 0125
+([`process-limits.md`](process-limits.md)) and the OOM killer, **disabled by
+default**, from ADR 0126 (which replaces ADR 0068 §3) and ADR 0142
+([`oom-killer.md`](oom-killer.md)); it only acts if memory is measured.
 
-Mesure coupée (au build par `HackerOsMemoryAccounting=false`, ou par
-`HackerOs:ResourceAccounting:Memory:Enabled=false`) : comportement exact
-d'avant la phase 5 (`VmRSS` simulé, aucune ligne de couche, `meminfo` à trois
-lignes, `MemSource: simulated`).
+Measurement off (at build by `HackerOsMemoryAccounting=false`, or by
+`HackerOs:ResourceAccounting:Memory:Enabled=false`): exact behavior from
+before phase 5 (simulated `VmRSS`, no layer line, three-line `meminfo`,
+`MemSource: simulated`).
 
 ## Architecture
 
-| Élément | Projet | Rôle |
+| Element | Project | Role |
 |---|---|---|
-| `IMemoryAccountant` (`TryGetProcessMemory`, `TryGetSystemMemory`), `ProcessMemoryUsage`, `SystemMemoryUsage` | `Shared/HackerOs.Simulation.Abstractions` (`Processes/`) | contrat lu par `/proc` ; `false` = valeur simulée |
-| `IKernelMemoryLedger`, `KernelMemoryCharge`, `KernelMemoryKind` | idem (`Processes/MemoryAccountingContracts.cs`) | registre de la mémoire tenue par l'OS pour un processus |
-| `NullMemoryAccountant`, `NullKernelMemoryLedger` | `Platform/HackerOs.Platform.Core` (`Processes/Accounting/`) | mesure coupée : rien n'est mesuré, aucune charge ne coûte |
-| `AppImage`, `AppImageAssembly`, `BuiltInApplication.Image` | `Shared/HackerOs.App.Abstractions` | image d'une app dans `BuiltInApplications.json` |
-| `AppImageInspector` | `Tools/HackerOs.Tools.ManifestGenerator` | lit les références de l'assembly (métadonnées, sans charger de code) et mesure les fichiers |
-| `HostAppCatalog.Images` (`BuildKnownLazyApps.Images` dans l'Ecosystem) | `OS/HackerOs.Ecosystem.Host` | images du catalogue de l'hôte, par id d'app |
-| `AllocationTracker` | `Platform/HackerOs.Platform.ResourceAccounting` (`Memory/`) | couche allocations : observateur du crochet de changement de contexte |
-| `KernelMemoryLedger` | idem | couche ressources de l'OS |
-| `MeasuredMemoryAccountant`, `MemoryAccountingConstants` | idem | les quatre couches, la répartition du tas, les constantes |
-| `IManagedHeapProbe`, `GcManagedHeapProbe` | idem | ce qui est lu du GC (remplaçable dans les tests) |
+| `IMemoryAccountant` (`TryGetProcessMemory`, `TryGetSystemMemory`), `ProcessMemoryUsage`, `SystemMemoryUsage` | `Shared/HackerOs.Simulation.Abstractions` (`Processes/`) | contract read by `/proc`; `false` = simulated value |
+| `IKernelMemoryLedger`, `KernelMemoryCharge`, `KernelMemoryKind` | same (`Processes/MemoryAccountingContracts.cs`) | ledger of the memory held by the OS for a process |
+| `NullMemoryAccountant`, `NullKernelMemoryLedger` | `Platform/HackerOs.Platform.Core` (`Processes/Accounting/`) | measurement off: nothing is measured, no charge costs anything |
+| `AppImage`, `AppImageAssembly`, `BuiltInApplication.Image` | `Shared/HackerOs.App.Abstractions` | image of an app in `BuiltInApplications.json` |
+| `AppImageInspector` | `Tools/HackerOs.Tools.ManifestGenerator` | reads the assembly references (metadata, without loading code) and measures the files |
+| `HostAppCatalog.Images` (`BuildKnownLazyApps.Images` in the Ecosystem) | `OS/HackerOs.Ecosystem.Host` | host catalog images, by app id |
+| `AllocationTracker` | `Platform/HackerOs.Platform.ResourceAccounting` (`Memory/`) | allocations layer: observer of the context-switch hook |
+| `KernelMemoryLedger` | same | OS resources layer |
+| `MeasuredMemoryAccountant`, `MemoryAccountingConstants` | same | the four layers, heap distribution, the constants |
+| `IManagedHeapProbe`, `GcManagedHeapProbe` | same | what is read from the GC (replaceable in tests) |
 
 ### Image
 
-Le build de l'hôte mesure l'image de chaque app pendant l'agrégation
-(`CollectHackerOsBuiltInApplications`, [`app-model.md`](../framework/app-model.md)) :
+The host build measures each app's image during aggregation
+(`CollectHackerOsBuiltInApplications`, [`app-model.md`](../framework/app-model.md)):
 
-- `GetHackerOsAppManifests` renvoie aussi le chemin de l'assembly de l'app
-  (`AssemblyPath`) et sa liste de dépendances (`DependenciesFile`, le fichier
-  que `GenerateHackerOsAppManifests` écrit déjà) ;
-- `AppImageInspector` prend la taille de l'assembly de l'app (non partagée),
-  suit ses références, directes ou non, et mesure celles qu'elle trouve dans
-  la liste (partagées) ;
-- le runtime et le framework (`System.*`, `Microsoft.*`, `netstandard`,
-  `mscorlib`) ne comptent pas : ils sont l'OS lui-même, comme le noyau et la
-  libc que partagent tous les processus. Les assemblies de référence (dossier
-  `ref`) sont ignorées.
+- `GetHackerOsAppManifests` also returns the path of the app's assembly
+  (`AssemblyPath`) and its dependency list (`DependenciesFile`, the file that
+  `GenerateHackerOsAppManifests` already writes);
+- `AppImageInspector` takes the size of the app's assembly (unshared),
+  follows its references, direct or not, and measures those it finds in the
+  list (shared);
+- the runtime and the framework (`System.*`, `Microsoft.*`, `netstandard`,
+  `mscorlib`) do not count: they are the OS itself, like the kernel and the
+  libc shared by all processes. Reference assemblies (`ref` folder) are
+  ignored.
 
-Plusieurs apps dans une même assembly (les commandes de `HackerOs.Commands`)
-ont chacune cette assembly en `VmExe`, comme chaque applet BusyBox mappe le
-binaire BusyBox. `/proc/meminfo` compte chaque assembly **une fois**
-(`Mapped`), quel que soit le nombre de processus qui la mappent.
+Several apps in the same assembly (the commands of `HackerOs.Commands`) each
+have this assembly as `VmExe`, like each BusyBox applet maps the BusyBox
+binary. `/proc/meminfo` counts each assembly **once** (`Mapped`), regardless
+of the number of processes that map it.
 
-Une app sans image connue (installée au runtime) n'a pas de couche image.
+An app with no known image (installed at runtime) has no image layer.
 
-### Ressources de l'OS
+### OS resources
 
-Un service de l'OS qui tient de la mémoire pour un processus ouvre une
-`KernelMemoryCharge` sur le registre, la redimensionne quand son tampon change
-et la libère à la fin :
+An OS service that holds memory for a process opens a `KernelMemoryCharge` on
+the ledger, resizes it when its buffer changes and releases it at the end:
 
-| Objet | Qui charge | Taille | Chargé à |
+| Object | Who charges | Size | Charged to |
 |---|---|---|---|
-| Tampon d'écriture de `HackFileStream` | le flux, par `IAppFileSystemGateway.ChargeStreamBuffer()` | capacité du `MemoryStream` | processus de l'app ; libéré à la fermeture du flux |
-| Presse-papiers | `SystemClipboard`, par `AppClipboardGateway` | 2 octets par caractère (types MIME et contenus) | processus qui a copié ; libéré quand le contenu est remplacé ou effacé ; rien pour l'OS ou l'hôte |
-| Tube du shell | `ShellPipe`, créé par `ShellInterpreter` | 2 octets par caractère en attente | processus du shell qui a créé le tube ; libéré à la fermeture de la lecture ou quand l'écriture est fermée et le tube vidé |
-| Socket | `AppNetworkGateway`, pour chaque appel | `SocketBufferBytes` = 144 Kio (`tcp_rmem` 128 Kio + `tcp_wmem` 16 Kio) | processus de l'app, le temps de l'appel |
-| Fenêtre | `MeasuredMemoryAccountant` (lecture directe) | `WindowBytes` = 512 Kio | chaque processus d'app à fenêtre |
+| `HackFileStream` write buffer | the stream, through `IAppFileSystemGateway.ChargeStreamBuffer()` | capacity of the `MemoryStream` | the app's process; released when the stream closes |
+| Clipboard | `SystemClipboard`, through `AppClipboardGateway` | 2 bytes per character (MIME types and contents) | the process that copied; released when the content is replaced or cleared; nothing for the OS or the host |
+| Shell pipe | `ShellPipe`, created by `ShellInterpreter` | 2 bytes per pending character | the shell process that created the pipe; released when reading closes or when writing is closed and the pipe drained |
+| Socket | `AppNetworkGateway`, for each call | `SocketBufferBytes` = 144 KiB (`tcp_rmem` 128 KiB + `tcp_wmem` 16 KiB) | the app's process, for the duration of the call |
+| Window | `MeasuredMemoryAccountant` (direct read) | `WindowBytes` = 512 KiB | each windowed app process |
 
-`IAppFileSystemGateway.ChargeStreamBuffer()` est une méthode d'interface par
-défaut qui rend `KernelMemoryCharge.None` : les doubles de test et les
-passerelles existantes ne changent pas.
+`IAppFileSystemGateway.ChargeStreamBuffer()` is a default interface method
+that returns `KernelMemoryCharge.None`: test doubles and existing gateways do
+not change.
 
 ### Allocations
 
-`AllocationTracker` est inscrit sur le `ContextSwitchDispatcher` dès la
-composition. À chaque changement de contexte, il lit le compteur
-d'allocations du thread et attribue la différence depuis la lecture
-précédente au processus qui vient de quitter le thread (`From`) ; sans
-processus (rendu, compositeur, services de l'OS), elle va à l'OS. La dernière
-lecture et le processus en cours sont gardés par thread : avant chaque lecture
-de `/proc`, la tranche en cours est attribuée (`FlushCurrentThread`), si bien
-qu'un processus qui lit son propre `/proc/self/status` y voit déjà ses
-allocations, comme une tâche en cours sous Linux. Le chemin chaud est sans verrou et, une fois le
-compteur du processus créé, sans allocation.
+`AllocationTracker` is registered on the `ContextSwitchDispatcher` from
+composition. At each context switch, it reads the thread's allocation counter
+and attributes the difference since the previous reading to the process that
+just left the thread (`From`); without a process (rendering, compositor, OS
+services), it goes to the OS. The last reading and the current process are
+kept per thread: before each `/proc` read, the current slice is attributed
+(`FlushCurrentThread`), so a process reading its own `/proc/self/status`
+already sees its allocations there, like a running task under Linux. The hot
+path is lock-free and, once the process counter is created, allocation-free.
 
-### Résidente
+### Resident
 
-À chaque lecture (`status`, `meminfo`), `MeasuredMemoryAccountant` :
+At each read (`status`, `meminfo`), `MeasuredMemoryAccountant`:
 
-1. vieillit le poids de chaque processus vivant (et de l'OS) de
-   `0,5^(Δt / ResidentHalfLife)` et lui ajoute ce qu'il a alloué depuis la
-   lecture précédente ;
-2. oublie les processus morts (allocations et charges) ;
-3. si le nombre de GC de génération 0 a changé (WebAssembly n'a pas
-   `GC.RegisterForFullGCNotification`), ou à la première lecture, reprend la
-   taille du tas (`GC.GetGCMemoryInfo().HeapSizeBytes`, ou
-   `GC.GetTotalMemory(false)` si le runtime répond zéro), en retire la part
-   noyau déjà nommée, et répartit le reste entre les processus et l'OS au
-   prorata de leurs poids. La part de l'OS va dans `Slab` de `meminfo`.
+1. ages the weight of each living process (and of the OS) by
+   `0.5^(Δt / ResidentHalfLife)` and adds what it has allocated since the
+   previous read;
+2. forgets dead processes (allocations and charges);
+3. if the generation 0 GC count has changed (WebAssembly has no
+   `GC.RegisterForFullGCNotification`), or on the first read, takes the heap
+   size again (`GC.GetGCMemoryInfo().HeapSizeBytes`, or
+   `GC.GetTotalMemory(false)` if the runtime answers zero), removes the
+   kernel part already named, and distributes the rest among the processes
+   and the OS in proportion to their weights. The OS part goes to `Slab` in
+   `meminfo`.
 
-Entre deux GC la répartition ne bouge pas : un processus lancé depuis le
-dernier GC n'a pas encore de `RssAnon`.
+Between two GCs the distribution does not move: a process launched since the
+last GC does not yet have `RssAnon`.
 
-### Processus dans un worker
+### Process in a worker
 
-Un processus dans un Web Worker (ADR 0070) reçoit en plus, en `RssAnon`, sa part
-de la mémoire du runtime de son worker (répartie entre les processus du
-worker) et ses allocations mesurées dans le worker ; `/proc/meminfo` compte
-le runtime de chaque worker. Voir [`worker-processes.md`](worker-processes.md).
-Quand la page est isolée (ADR 0131, 0143 §6), la mémoire du runtime d'un worker
-vient de `performance.measureUserAgentSpecificMemory()` (toutes les 20 s,
-valable trois périodes) au lieu du battement de cœur ; `MemSource` reste
-`measured`, et `/proc/hackeros/workers` dit `memory-measure: browser`.
+A process in a Web Worker (ADR 0070) additionally receives, in `RssAnon`, its
+share of the memory of its worker's runtime (distributed among the worker's
+processes) and its allocations measured in the worker; `/proc/meminfo` counts
+the runtime of each worker. See [`worker-processes.md`](worker-processes.md).
+When the page is isolated (ADR 0131, 0143 §6), a worker's runtime memory comes
+from `performance.measureUserAgentSpecificMemory()` (every 20 s, valid for
+three periods) instead of the heartbeat; `MemSource` stays `measured`, and
+`/proc/hackeros/workers` says `memory-measure: browser`.
 
-## Constantes
+## Constants
 
-Définies dans `MemoryAccountingConstants` et `AppNetworkGateway`, rappelées
-dans [`system-metrics.md`](system-metrics.md), vérifiées par
-`MeasuredMemoryAccountantTests.The_constants_are_the_documented_ones` et les
-tests de charge :
+Defined in `MemoryAccountingConstants` and `AppNetworkGateway`, recalled in
+[`system-metrics.md`](system-metrics.md), verified by
+`MeasuredMemoryAccountantTests.The_constants_are_the_documented_ones` and the
+load tests:
 
-| Constante | Valeur | Raison |
+| Constant | Value | Reason |
 |---|---|---|
-| `ResidentHalfLife` | 10 s | un processus qui vient de construire un gros document reste lourd un moment ; un processus inactif s'efface en une minute (six demi-vies, moins de 2 %) |
-| `WindowBytes` | 512 Kio | ce que gestionnaire de fenêtres et compositeur gardent par fenêtre (surface, arbre de rendu, nœuds DOM), invisible au compteur d'allocations puisque le rendu tourne hors du frame de l'app |
-| `AppNetworkGateway.SocketBufferBytes` | 144 Kio | tampons TCP par défaut de Linux (`tcp_rmem` 128 Kio, `tcp_wmem` 16 Kio) |
+| `ResidentHalfLife` | 10 s | a process that has just built a large document stays heavy for a while; an idle process fades out in a minute (six half-lives, under 2%) |
+| `WindowBytes` | 512 KiB | what the window manager and compositor keep per window (surface, render tree, DOM nodes), invisible to the allocation counter since rendering runs outside the app's frame |
+| `AppNetworkGateway.SocketBufferBytes` | 144 KiB | Linux default TCP buffers (`tcp_rmem` 128 KiB, `tcp_wmem` 16 KiB) |
 
-## Utilisation
+## Usage
 
-La lecture de `/proc/<pid>/status`, de `/proc/meminfo` et des propriétés `HackProcess` est décrite dans [`../framework/process-resources-api.md`](../framework/process-resources-api.md).
+Reading `/proc/<pid>/status`, `/proc/meminfo` and the `HackProcess` properties is described in [`../framework/process-resources-api.md`](../framework/process-resources-api.md).
 
-### Charger une ressource de l'OS (code de l'OS)
+### Charging an OS resource (OS code)
 
 ```csharp
 using KernelMemoryCharge buffer = ledger.Charge(pid, KernelMemoryKind.Pipe);
-buffer.Resize(bufferedChars * sizeof(char));   // à chaque changement
-// Dispose libère tout
+buffer.Resize(bufferedChars * sizeof(char));   // on each change
+// Dispose releases everything
 ```
 
 ### Composition
 
-`AddHackerOsResourceAccounting` (`HackerOs.Ecosystem.Host`) compose la mesure quand
-`plan.MemoryActive` et `ResourceAccountingFeatures.IsMemoryAccountingSupported`
-: `AllocationTracker` inscrit sur le diffuseur, `KernelMemoryLedger`
-(`IKernelMemoryLedger`), `MeasuredMemoryAccountant` (`IMemoryAccountant`), avec
-les images que l'hôte lui passe (`AddHackerOsResourceAccounting(configuration,
-images)` ; `AddHackerOsBrowserHost` passe `HostAppCatalog.Images`, le serveur et
-`test/test` passent `BuildKnownLazyApps.Images` ; sans images, aucune app n'a de
-couche image). Sinon, les implémentations nulles
-sont enregistrées. `AddHackerOsEcosystem` passe le registre au presse-papiers,
-au shell, aux passerelles de fichiers et de réseau.
+`AddHackerOsResourceAccounting` (`HackerOs.Ecosystem.Host`) composes the
+measurement when `plan.MemoryActive` and
+`ResourceAccountingFeatures.IsMemoryAccountingSupported`: `AllocationTracker`
+registered on the dispatcher, `KernelMemoryLedger` (`IKernelMemoryLedger`),
+`MeasuredMemoryAccountant` (`IMemoryAccountant`), with the images the host
+passes to it (`AddHackerOsResourceAccounting(configuration, images)`;
+`AddHackerOsBrowserHost` passes `HostAppCatalog.Images`, the server and
+`test/test` pass `BuildKnownLazyApps.Images`; without images, no app has an
+image layer). Otherwise, the null implementations are registered.
+`AddHackerOsEcosystem` passes the ledger to the clipboard, the shell, and the
+file and network gateways.
 
-## Décisions
+## Decisions
 
-- **Image dans `BuiltInApplications.json`, pas dans `manifest.json`.** Le
-  manifeste versionné garde exactement le schéma 1 (ADR 0047) ; les tailles
-  changent à chaque build et n'ont rien à faire dans un diff de PR. Le
-  catalogue de l'hôte est produit dans `obj/` à chaque build : il reçoit un
-  champ optionnel `image`.
-- **Framework hors image.** Compter `System.*` dans chaque app ferait de
-  toutes les apps des géants identiques ; ces assemblies sont l'OS.
-- **Lecture paresseuse, pas d'échantillonneur.** La répartition se fait quand
-  quelqu'un lit `/proc` ; personne ne lit, aucun travail. Le
-  `ResourceSamplingService` n'est pas touché (il nourrit toujours le CPU simulé ; la mesure CPU, ADR 0067, ne s'en sert pas non plus : voir [`cpu-accounting.md`](cpu-accounting.md)).
-- **Contrat `IMemoryAccountant` élargi.** `TryGetResidentBytes(pid)` devient
-  `TryGetProcessMemory(process, active, …)` et `TryGetSystemMemory(active, …)` :
-  le comptable a besoin du type d'app (fenêtre) et de l'id (image), et de la
-  table des processus vivants pour répartir le tas, sans dépendre lui-même du
-  gestionnaire de processus (singleton contre service par portée).
-- **Part noyau retirée du tas avant répartition.** Les tampons des flux et du
-  presse-papiers vivent dans le tas : sans ce retrait, ils seraient comptés
-  deux fois dans `VmRSS`.
-- **Tube chargé au shell.** Sous Linux, les pages d'un tube sont comptées au
-  groupe de mémoire de qui le crée ; ici, le shell.
+- **Image in `BuiltInApplications.json`, not in `manifest.json`.** The
+  versioned manifest keeps exactly schema 1 (ADR 0047); sizes change at every
+  build and have no place in a PR diff. The host catalog is produced in `obj/`
+  at every build: it receives an optional `image` field.
+- **Framework outside the image.** Counting `System.*` in each app would make
+  all apps identical giants; these assemblies are the OS.
+- **Lazy reading, no sampler.** The distribution happens when someone reads
+  `/proc`; nobody reads, no work. The `ResourceSamplingService` is not touched
+  (it still feeds the simulated CPU; the CPU measurement, ADR 0067, does not
+  use it either: see [`cpu-accounting.md`](cpu-accounting.md)).
+- **`IMemoryAccountant` contract widened.** `TryGetResidentBytes(pid)` becomes
+  `TryGetProcessMemory(process, active, …)` and
+  `TryGetSystemMemory(active, …)`: the accountant needs the app type (window)
+  and the id (image), and the table of living processes to distribute the
+  heap, without itself depending on the process manager (singleton versus
+  scoped service).
+- **Kernel part removed from the heap before distribution.** The buffers of
+  streams and the clipboard live in the heap: without this removal, they would
+  be counted twice in `VmRSS`.
+- **Pipe charged to the shell.** Under Linux, a pipe's pages are charged to
+  the memory group of whoever creates it; here, the shell.
 
 ## Tests
 
-| Suite | Couvre |
+| Suite | Covers |
 |---|---|
-| `HackerOs.Platform.ResourceAccounting.Tests` | `AllocationTracker` (attribution entre deux changements, première lecture, oubli, vrai crochet), `KernelMemoryLedger`, `MeasuredMemoryAccountant` (constantes, image, part noyau et fenêtre, répartition, seulement après un GC, demi-vie, part noyau retirée, assemblies partagées comptées une fois, simulé ou mesuré, processus morts), commande réelle `ls` sous le vrai crochet |
-| `HackerOs.Samples.ServiceApp.Tests` | service réel (`SampleTickerService`) mesuré sous le vrai crochet, sans changement de son code |
-| `HackerOs.Ecosystem.Tests` | toutes les apps du catalogue ont leur image ; l'éditeur de texte (fenêtre) mesuré avec la vraie taille de sa DLL ; composition : mesure, registre et observateur présents exactement quand la mémoire est active |
-| `HackerOs.Platform.Core.Tests` | format de `status` et `meminfo` mesurés, processus simulé inchangé ; charges du presse-papiers et des tubes ; `HackProcess.PrivateMemorySize64` |
-| `HackerOs.AppSdk.Tests` | tampon d'un flux d'écriture chargé puis libéré, rien pour un flux de lecture |
-| `HackerOs.Network.Tests` | socket chargée le temps de l'appel |
-| `HackerOs.App.Abstractions.Tests`, `HackerOs.Tools.ManifestGenerator.Tests` | champ `image` strict, aller-retour ; agrégation et mesure de l'image ; framework exclu |
+| `HackerOs.Platform.ResourceAccounting.Tests` | `AllocationTracker` (attribution between two switches, first read, forgetting, real hook), `KernelMemoryLedger`, `MeasuredMemoryAccountant` (constants, image, kernel part and window, distribution, only after a GC, half-life, kernel part removed, shared assemblies counted once, simulated or measured, dead processes), real `ls` command under the real hook |
+| `HackerOs.Samples.ServiceApp.Tests` | real service (`SampleTickerService`) measured under the real hook, without changing its code |
+| `HackerOs.Ecosystem.Tests` | all catalog apps have their image; the text editor (window) measured with the real size of its DLL; composition: measurement, ledger and observer present exactly when memory is active |
+| `HackerOs.Platform.Core.Tests` | format of measured `status` and `meminfo`, simulated process unchanged; clipboard and pipe charges; `HackProcess.PrivateMemorySize64` |
+| `HackerOs.AppSdk.Tests` | write stream buffer charged then released, nothing for a read stream |
+| `HackerOs.Network.Tests` | socket charged for the duration of the call |
+| `HackerOs.App.Abstractions.Tests`, `HackerOs.Tools.ManifestGenerator.Tests` | strict `image` field, round trip; aggregation and image measurement; framework excluded |
 
-## Liste des tâches
+## Task list
 
-- [x] Contrats : `ProcessMemoryUsage`, `SystemMemoryUsage`, `IMemoryAccountant` élargi, `IKernelMemoryLedger`, `KernelMemoryCharge` ; implémentations nulles.
-- [x] Couche image : `AppImageInspector`, champ `image` de `BuiltInApplications.json`, cibles MSBuild, `BuildKnownLazyApps.Images`, pour toutes les apps.
-- [x] Couche ressources de l'OS : flux d'écriture, presse-papiers, tubes, sockets, coût par fenêtre.
-- [x] Couche allocations : `AllocationTracker` sur le crochet de changement de contexte.
-- [x] Couche résidente : répartition du tas après GC, décroissance exponentielle, constantes documentées et testées.
-- [x] Composition selon l'ADR 0066 ; mesure coupée = comportement exact d'avant.
+- [x] Contracts: `ProcessMemoryUsage`, `SystemMemoryUsage`, widened `IMemoryAccountant`, `IKernelMemoryLedger`, `KernelMemoryCharge`; null implementations.
+- [x] Image layer: `AppImageInspector`, `image` field of `BuiltInApplications.json`, MSBuild targets, `BuildKnownLazyApps.Images`, for all apps.
+- [x] OS resources layer: write streams, clipboard, pipes, sockets, per-window cost.
+- [x] Allocations layer: `AllocationTracker` on the context-switch hook.
+- [x] Resident layer: heap distribution after GC, exponential decay, documented and tested constants.
+- [x] Composition according to ADR 0066; measurement off = exact previous behavior.
 - [x] `/proc/<pid>/status`, `/proc/meminfo`, `HackProcess.PrivateMemorySize64`.
-- [x] Tests sur une app à fenêtre, une commande et un service réels, sans modifier leur code.
-- [x] Documentation et index.
+- [x] Tests on a real windowed app, command and service, without changing their code.
+- [x] Documentation and index.

@@ -1,158 +1,158 @@
-# Icônes du bureau, contrôle de fichiers fourni par l'OS et menu contextuel central
+# Desktop icons, OS-provided file control and central context menu
 
-**Statut :** plan **validé par Benoit le 2026-10-19** (récapitulatif accepté,
-réponses aux questions Q1 à Q22 de la section 3). Aucun code n'est écrit. Les
-ADR de la section 10 sont écrits avant le code de chaque chantier.
+**Status:** plan **validated by Benoit on 2026-10-19** (summary accepted,
+answers to questions Q1 to Q22 of section 3). No code is written. The
+ADRs of section 10 are written before the code of each work item.
 
-## 1. Objet
+## 1. Purpose
 
-- Afficher des **icônes sur le bureau** : le contenu de `~/Desktop`, plus
-  Dossier perso et Corbeille, sur une grille où chaque icône garde sa place.
-- Faire de l'**explorateur de fichiers la source de vérité** du contrôle de
-  fichiers : il le fournit à l'OS, s'en sert lui-même, et le bureau comme
-  toute app l'affichent sans en embarquer le code.
-- Réduire le SDK à des **contrats** : interfaces, options, événements, et un
-  composant hôte qui reçoit à l'exécution le rendu fourni par l'OS. Une
-  amélioration de l'OS profite à toutes les apps sans recompilation, et 200
-  apps n'embarquent pas 200 fois le même code.
-- Ajouter un **menu contextuel central**, multi-niveaux, fourni par l'OS,
-  utilisable dans n'importe quelle app, et **extensible par les apps** pour
-  les menus de fichiers, comme les verbes du registre de Windows.
+- Display **icons on the desktop**: the content of `~/Desktop`, plus
+  Home folder and Recycle Bin, on a grid where each icon keeps its place.
+- Make the **file explorer the source of truth** of the file
+  control: it provides it to the OS, uses it itself, and the desktop as well as any app
+  displays it without embedding its code.
+- Reduce the SDK to **contracts**: interfaces, options, events, and a
+  host component that receives at runtime the rendering provided by the OS. An
+  improvement of the OS benefits all apps without recompilation, and 200
+  apps do not embed the same code 200 times.
+- Add a **central context menu**, multi-level, provided by the OS,
+  usable in any app, and **extensible by apps** for
+  file menus, like the verbs of the Windows registry.
 
-## 2. Existant (main, 2026-10-19)
+## 2. Existing state (main, 2026-10-19)
 
-| Élément | État | Où |
+| Element | State | Where |
 |---|---|---|
-| `FileView` | Contrôle complet (arbre, détails, icônes, renommage en place, glisser-déposer, presse-papiers, transferts), **bibliothèque du SDK compilée dans chaque app**, publique depuis le gel 1.0 | `Shared/HackerOs.AppSdk.FileView`, ADR 0037, [`file-explorer.md`](../file-explorer.md) |
-| Menu de `FileView` | Portées fond / dossier / fichier / type, identifiants stables (`open`, `cut`, `copy`, `paste`, `paste-into`, `rename`, `delete`, `delete-permanently`, `new-folder`, `refresh`), `InsertAfter`/`InsertBefore`, **un seul niveau**, fournisseurs **propres à l'instance** (`MudMenu`) | `ContextMenu/FileViewContextMenuContracts.cs` |
-| Entrées ajoutées | « UnZip Here » et « Publish as a web site… », codées dans l'explorateur | `ZipFileContextMenuProvider`, `PublishSiteContextMenuProvider` |
-| « Ouvrir avec » | Boîte de l'explorateur (barre d'outils), « Toujours utiliser » | `OpenWithDialog`, ADR 0121 |
-| Composants intégrables | Contrat `hackeros.terminal` fourni par l'app Terminal, affiché par `HackEmbeddedComponent<T>` | ADR 0063, [`embedded-components.md`](../../framework/embedded-components.md) |
-| Dialogues de l'OS | Contrats `IDialogService`/`IFileDialogService` dans le SDK, mis en œuvre par la plateforme (`VirtualFolderBrowser` pour Ouvrir/Enregistrer ; depuis `desk/3b`, le contrôle `hackeros.file-view`, ADR 0157) | `HackerOs.AppSdk.Blazor`, `Platform.Blazor/Dialogs` |
-| Bureau | `~/Desktop` créé pour chaque utilisateur ; emplacement `DesktopArea.BackgroundContent` prévu mais vide | `FileSystemSeeder`, `DesktopArea.razor` |
-| Intents | Intents définis par les apps, `IntentReceived` pour une instance ouverte | ADR 0096, [`app-intents.md`](../../framework/app-intents.md) |
+| `FileView` | Complete control (tree, details, icons, in-place rename, drag and drop, clipboard, transfers), **SDK library compiled into each app**, public since the 1.0 freeze | `Shared/HackerOs.AppSdk.FileView`, ADR 0037, [`file-explorer.md`](../file-explorer.md) |
+| `FileView` menu | Scopes background / folder / file / type, stable identifiers (`open`, `cut`, `copy`, `paste`, `paste-into`, `rename`, `delete`, `delete-permanently`, `new-folder`, `refresh`), `InsertAfter`/`InsertBefore`, **a single level**, providers **specific to the instance** (`MudMenu`) | `ContextMenu/FileViewContextMenuContracts.cs` |
+| Added entries | "UnZip Here" and "Publish as a web site…", coded in the explorer | `ZipFileContextMenuProvider`, `PublishSiteContextMenuProvider` |
+| "Open with" | Explorer dialog (toolbar), "Always use" | `OpenWithDialog`, ADR 0121 |
+| Embeddable components | `hackeros.terminal` contract provided by the Terminal app, displayed by `HackEmbeddedComponent<T>` | ADR 0063, [`embedded-components.md`](../../framework/embedded-components.md) |
+| OS dialogs | `IDialogService`/`IFileDialogService` contracts in the SDK, implemented by the platform (`VirtualFolderBrowser` for Open/Save; since `desk/3b`, the `hackeros.file-view` control, ADR 0157) | `HackerOs.AppSdk.Blazor`, `Platform.Blazor/Dialogs` |
+| Desktop | `~/Desktop` created for each user; `DesktopArea.BackgroundContent` slot provided but empty | `FileSystemSeeder`, `DesktopArea.razor` |
+| Intents | Intents defined by apps, `IntentReceived` for an open instance | ADR 0096, [`app-intents.md`](../../framework/app-intents.md) |
 
-## 3. Décisions de Benoit (2026-10-19)
+## 3. Benoit's decisions (2026-10-19)
 
-| # | Question | Réponse |
+| # | Question | Answer |
 |---|---|---|
-| Q1 | Contenu du bureau | `~/Desktop` **plus** Dossier perso et Corbeille, affichables au choix de l'utilisateur |
-| Q2 | Rangement | **Grille + position libre** : positions aimantées et mémorisées, « Réorganiser automatiquement », « Aligner sur la grille » |
-| Q3 | Livraison du contrôle | Le SDK fournit **l'interface, pas l'implémentation** ; un composant du SDK reçoit un `RenderFragment` de l'OS à l'exécution. L'explorateur **s'inscrit au démarrage** comme fournisseur du contrôle **et de ses boîtes de dialogue** ; les autres apps n'y font jamais référence ; l'OS sert de proxy, le SDK de contrat |
-| Q4, Q4 bis | Lecture des entrées ajoutées | Comme Windows : la méthode d'inscription s'exécute **à l'installation** (au build pour les apps intégrées) ; le résultat est un fichier lu au démarrage |
-| Q5 | `FileView` public | **SDK 2.0 maintenant** : `FileView` est retiré ; les apps 1.x sont refusées et doivent être recompilées |
-| Q6 | Fournisseur du menu générique | **L'OS** (la plateforme) |
-| Q7 | Filtre par type | **Filtre déclaré** (`types`) et nombre d'éléments sélectionnés |
-| Q8 | Groupes et séparateurs | `after: "X"` = dans le groupe de X ; `afterGroup: "X"` = nouveau groupe après celui de X |
-| Q9 | Ordre entre apps | **Ordre d'installation** |
-| Q10 | Sous-menus des apps | **Oui**, par `parent` (entrée de la même app) |
-| Q11 | Sélection multiple | **Déclarée par entrée** : `All` (défaut), `Each`, `Single` |
-| Q12 | Entrées sans position | **Un groupe commun** en fin de menu |
-| Q13 | `target` | `"self"` **ou l'identifiant d'une autre app** qui déclare l'intent |
-| Q14 | Menu dans le markup d'une app | **Attributs + aide** : `@attributes="Menus.Attach("files", item)"` sur n'importe quel élément |
-| Q15 | Contrôle des entrées ajoutées | **Capacité + réglage** : capacité déclarée, et Paramètres permet de masquer les entrées d'une app |
-| Q16 | Identifiants des entrées par défaut | **Courts** (`open`, `copy`…) avec constantes C# dans le SDK |
-| Q17 | « Ouvrir avec » | Toujours un **sous-menu**, terminé par « Choisir une autre application… » |
-| Q18 | Menu du fond du bureau | **4e portée `Desktop`** |
-| Q19 | Titre traduit | **Clé de ressource**, textes EN et FR copiés à l'installation |
-| Q20 | Mobile | **Menu oui** (appui long), **icônes non** |
-| Q21 | Apps sur le bureau | Fichiers **`.desktop`** |
-| Q22 | Ce document | Dans `docs/`, par une PR vers `main` |
-| Q23 | Fournisseur du contrôle de fichiers (2026-10-20) | **Remplaçable** par une app tierce ; choix d'un administrateur dans Paramètres, l'explorateur par défaut ([ADR 0156](../adr/0156-replaceable-file-control-provider.md)) |
+| Q1 | Desktop content | `~/Desktop` **plus** Home folder and Recycle Bin, which the user can choose to display |
+| Q2 | Arrangement | **Grid + free position**: snapped and remembered positions, "Auto-arrange", "Align to grid" |
+| Q3 | Delivery of the control | The SDK provides **the interface, not the implementation**; an SDK component receives a `RenderFragment` from the OS at runtime. The explorer **registers at startup** as provider of the control **and of its dialog boxes**; other apps never reference it; the OS acts as proxy, the SDK as contract |
+| Q4, Q4 bis | Reading the added entries | Like Windows: the registration method runs **at installation** (at build time for built-in apps); the result is a file read at startup |
+| Q5 | Public `FileView` | **SDK 2.0 now**: `FileView` is removed; 1.x apps are refused and must be recompiled |
+| Q6 | Provider of the generic menu | **The OS** (the platform) |
+| Q7 | Filter by type | **Declared filter** (`types`) and number of selected items |
+| Q8 | Groups and separators | `after: "X"` = in the group of X; `afterGroup: "X"` = new group after the one of X |
+| Q9 | Order between apps | **Installation order** |
+| Q10 | Submenus of apps | **Yes**, by `parent` (entry of the same app) |
+| Q11 | Multiple selection | **Declared per entry**: `All` (default), `Each`, `Single` |
+| Q12 | Entries without position | **A common group** at the end of the menu |
+| Q13 | `target` | `"self"` **or the identifier of another app** that declares the intent |
+| Q14 | Menu in an app's markup | **Attributes + helper**: `@attributes="Menus.Attach("files", item)"` on any element |
+| Q15 | Control of added entries | **Capability + setting**: declared capability, and Settings lets the user hide an app's entries |
+| Q16 | Identifiers of default entries | **Short** (`open`, `copy`…) with C# constants in the SDK |
+| Q17 | "Open with" | Always a **submenu**, ending with "Choose another application…" |
+| Q18 | Desktop background menu | **4th scope `Desktop`** |
+| Q19 | Translated title | **Resource key**, EN and FR texts copied at installation |
+| Q20 | Mobile | **Menu yes** (long press), **icons no** |
+| Q21 | Apps on the desktop | **`.desktop`** files |
+| Q22 | This document | In `docs/`, through a PR to `main` |
+| Q23 | File control provider (2026-10-20) | **Replaceable** by a third-party app; chosen by an administrator in Settings, the default explorer ([ADR 0156](../adr/0156-replaceable-file-control-provider.md)) |
 
-Détails retenus sans question (« défauts » du récapitulatif validé) : repli
-automatique des séparateurs (§6.2), contenu des menus par défaut (§7),
-emplacements des fichiers (§5, §8), Touche Menu et Maj+F10 (§6.3).
+Details retained without a question ("defaults" of the validated summary):
+automatic collapsing of separators (§6.2), content of the default menus (§7),
+file locations (§5, §8), Menu key and Shift+F10 (§6.3).
 
-## 4. Architecture : le SDK contrat, l'OS proxy
+## 4. Architecture: the SDK is the contract, the OS is the proxy
 
 ```text
-App (SDK 2.0 : contrats seulement)
+App (SDK 2.0: contracts only)
   <HackFileView Options=… OnOpened=… />   <button @attributes="Menus.Attach("row", item)">
-        │ contrat hackeros.file-view                │ contrat hackeros.context-menu
+        │ hackeros.file-view contract               │ hackeros.context-menu contract
         ▼                                           ▼
-OS (Platform.Blazor) ── registre des fournisseurs ── HackComponentHost
-        │ lu au démarrage depuis les manifestes      │
+OS (Platform.Blazor) ── provider registry ── HackComponentHost
+        │ read at startup from the manifests         │
         ▼                                           ▼
-Explorateur de fichiers (app système)          Plateforme (shell)
-  FileViewProvider, dialogues de fichiers        ContextMenuProvider, ContextMenuRegistry
-  (chargé au premier usage)                      (/etc/hackeros/context-menus.d/*.json)
+File explorer (system app)                     Platform (shell)
+  FileViewProvider, file dialogs                 ContextMenuProvider, ContextMenuRegistry
+  (loaded on first use)                          (/etc/hackeros/context-menus.d/*.json)
 ```
 
-- **Composant hôte générique.** `HackEmbeddedComponent<T>` (ADR 0063)
-  devient la base : le SDK expose pour chaque contrat un composant typé
-  (`HackFileView`, `HackContextMenu`) avec des paramètres et des
-  `EventCallback` ordinaires ; à l'exécution, l'OS lui donne le
-  `RenderFragment` du fournisseur inscrit et le contrôleur (`IHackFileView`).
-- **Inscription.** Un fournisseur se déclare dans son `[AppManifest]`
-  (`Components`, comme le terminal). L'OS lit les manifestes au démarrage et
-  connaît donc tous les fournisseurs ; le code d'une app n'est chargé qu'au
-  premier usage du contrat (`AppLifecycleOrchestrator.EnsureDescriptorAsync`).
-- **Fournisseurs.**
+- **Generic host component.** `HackEmbeddedComponent<T>` (ADR 0063)
+  becomes the base: the SDK exposes for each contract a typed component
+  (`HackFileView`, `HackContextMenu`) with ordinary parameters and
+  `EventCallback`s; at runtime, the OS gives it the
+  `RenderFragment` of the registered provider and the controller (`IHackFileView`).
+- **Registration.** A provider declares itself in its `[AppManifest]`
+  (`Components`, like the terminal). The OS reads the manifests at startup and
+  thus knows all providers; an app's code is loaded only on
+  first use of the contract (`AppLifecycleOrchestrator.EnsureDescriptorAsync`).
+- **Providers.**
 
-| Contrat | Contrôleur et composant du SDK | Fournisseur |
+| Contract | SDK controller and component | Provider |
 |---|---|---|
-| `hackeros.file-view` | `IHackFileView`, `HackFileView` | Explorateur |
-| `hackeros.file-dialogs` | dialogues Ouvrir avec, Propriétés, conflit de noms, et la vue de fichiers des dialogues Ouvrir / Enregistrer / Choisir un dossier (finalement le contrôle `hackeros.file-view` dans le dialogue de la plateforme, [ADR 0157](../adr/0157-file-dialogs-show-the-file-control.md)) | Explorateur |
-| `hackeros.context-menu` | `IHackContextMenu`, `HackContextMenu`, `Menus.Attach` | Plateforme |
+| `hackeros.file-view` | `IHackFileView`, `HackFileView` | Explorer |
+| `hackeros.file-dialogs` | Open with, Properties, name conflict dialogs, and the file view of the Open / Save / Choose a folder dialogs (finally the `hackeros.file-view` control in the platform dialog, [ADR 0157](../adr/0157-file-dialogs-show-the-file-control.md)) | Explorer |
+| `hackeros.context-menu` | `IHackContextMenu`, `HackContextMenu`, `Menus.Attach` | Platform |
 
-- **Fournisseur remplaçable.** Une app tierce peut fournir `hackeros.file-view`
-  et `hackeros.file-dialogs` à la place de l'explorateur, si un administrateur
-  la choisit dans Paramètres ([ADR 0156](../adr/0156-replaceable-file-control-provider.md)).
-- **Droits.** Le rendu fourni tourne avec **les droits de l'app hôte** :
-  le fournisseur reçoit les passerelles de l'hôte (`HostContext`), jamais les
-  siennes, comme `FileView` aujourd'hui (ADR 0037 §1). Une app ne voit donc
-  pas plus de fichiers en affichant le contrôle de l'explorateur.
-- **Indisponible.** Si le fournisseur manque (app désactivée, chargement en
-  échec), le composant affiche son contenu `Unavailable` ; l'explorateur et
-  la plateforme étant système, ce cas reste une erreur.
+- **Replaceable provider.** A third-party app can provide `hackeros.file-view`
+  and `hackeros.file-dialogs` in place of the explorer, if an administrator
+  chooses it in Settings ([ADR 0156](../adr/0156-replaceable-file-control-provider.md)).
+- **Rights.** The provided rendering runs with **the rights of the host app**:
+  the provider receives the host's gateways (`HostContext`), never its
+  own, like `FileView` today (ADR 0037 §1). An app therefore does not see
+  more files by displaying the explorer's control.
+- **Unavailable.** If the provider is missing (app disabled, loading
+  failed), the component displays its `Unavailable` content; the explorer and
+  the platform being system components, this case remains an error.
 
-## 5. Le bureau
+## 5. The desktop
 
-> Mis en œuvre par le chantier 5 : voir [`desktop.md`](../desktop.md) et
-> l'[ADR 0160](../adr/0160-desktop-implementation-adjustments.md) (le bureau est
-> l'app système `org.hackeros.desktop`, `desktop.config` est un fichier de
-> l'utilisateur seulement).
+> Implemented by work item 5: see [`desktop.md`](../desktop.md) and
+> [ADR 0160](../adr/0160-desktop-implementation-adjustments.md) (the desktop is
+> the system app `org.hackeros.desktop`, `desktop.config` is a user-only
+> file).
 
-- `DesktopShell` remplit `DesktopArea.BackgroundContent` avec `HackFileView`
-  en **mode Bureau** sur `~/Desktop`, avec les droits de la session.
-- **Icônes système** : Dossier perso et Corbeille, entrées virtuelles
-  ajoutées par le bureau (pas des fichiers), cochées dans Paramètres ▸
-  Bureau. Menu de la Corbeille : Ouvrir, Vider la corbeille ; dépôt = mise à
-  la corbeille.
-- **Mode Bureau** du contrôle : grille de cellules, icône à la case choisie,
-  glisser pour déplacer (aimanté), sélection au lasso, renommage en place,
-  glisser-déposer avec l'explorateur et entre fenêtres (ADR 0037 §4).
-- **Positions** dans `~/.config/hackeros/desktop.config`
+- `DesktopShell` fills `DesktopArea.BackgroundContent` with `HackFileView`
+  in **Desktop mode** on `~/Desktop`, with the rights of the session.
+- **System icons**: Home folder and Recycle Bin, virtual entries
+  added by the desktop (not files), checked in Settings ▸
+  Desktop. Recycle Bin menu: Open, Empty the recycle bin; drop = move to
+  the recycle bin.
+- **Desktop mode** of the control: grid of cells, icon in the chosen cell,
+  drag to move (snapped), lasso selection, in-place rename,
+  drag and drop with the explorer and between windows (ADR 0037 §4).
+- **Positions** in `~/.config/hackeros/desktop.config`
   (`[positions]` `nom=colonne,ligne`, `[view]` `auto-arrange`,
-  `icon-size`, `show-home`, `show-trash`) ; un fichier nouveau prend la
-  première case libre ; un nom absent est oublié au prochain
-  enregistrement. Réorganiser automatiquement trie par nom, puis garde
-  l'ordre.
-- **Raccourcis d'apps** : `~/Desktop/<nom>.desktop` au format freedesktop
+  `icon-size`, `show-home`, `show-trash`); a new file takes the
+  first free cell; an absent name is forgotten at the next
+  save. Auto-arrange sorts by name, then keeps
+  the order.
+- **App shortcuts**: `~/Desktop/<nom>.desktop` in the freedesktop format
   (`[Desktop Entry]`, `Type=Application`, `Name`, `Exec=<appId> [args]`,
-  `Icon`). Créés en glissant une app du menu Démarrer sur le bureau ou par
-  « Envoyer vers ▸ Bureau ». Partout où le contrôle les montre : icône et nom
-  de l'app, double-clic = lancement (`LaunchApp`). Un `.desktop` d'une app
-  désinstallée s'affiche grisé.
-- **Mobile** : pas d'icônes ; le lanceur mobile reste tel quel.
+  `Icon`). Created by dragging an app from the Start menu onto the desktop or by
+  "Send to ▸ Desktop". Everywhere the control shows them: icon and name
+  of the app, double-click = launch (`LaunchApp`). A `.desktop` of an
+  uninstalled app is displayed grayed out.
+- **Mobile**: no icons; the mobile launcher stays as is.
 
-## 6. Menu contextuel générique (`hackeros.context-menu`)
+## 6. Generic context menu (`hackeros.context-menu`)
 
-### 6.1 Modèle
+### 6.1 Model
 
-Une entrée : `Id`, `Title`, `Icon` (bibliothèque vectorielle ou image
-d'asset), `IsDisabled`, `IsVisible`, `Children` (sous-menu, profondeur 3 au
-plus), action (callback C# dans l'app, ou intent pour une entrée inscrite).
-Les entrées sont rangées en **groupes** ; un séparateur sépare deux groupes.
+An entry: `Id`, `Title`, `Icon` (vector library or asset image),
+`IsDisabled`, `IsVisible`, `Children` (submenu, depth 3 at
+most), action (C# callback in the app, or intent for a registered entry).
+Entries are arranged in **groups**; a separator separates two groups.
 
-### 6.2 Séparateurs
+### 6.2 Separators
 
-Le menu ne contient jamais deux séparateurs à la suite, ni en tête, ni en
-fin, ni autour d'un groupe vide ou entièrement masqué. Exemple : « Ouvrir
-avec » est seul dans son groupe ; s'il est masqué, son séparateur disparaît.
+The menu never contains two consecutive separators, nor one at the start, nor at the
+end, nor around an empty or entirely hidden group. Example: "Open
+with" is alone in its group; if it is hidden, its separator disappears.
 
-### 6.3 Dans une app
+### 6.3 In an app
 
 ```razor
 <HackContextMenu Name="files">
@@ -170,68 +170,68 @@ avec » est seul dans son groupe ; s'il est masqué, son séparateur disparaît.
 }
 ```
 
-- Le même menu se construit aussi en C# (`Menus.Define("files", builder =>
+- The same menu can also be built in C# (`Menus.Define("files", builder =>
   …)`).
-- `Menus.Attach(name, objet)` renvoie les attributs à poser
-  (`data-hack-menu`, jeton) ; l'objet reste côté C# dans une table de
-  l'instance, vidée quand l'élément quitte le rendu. Un petit script de la
-  plateforme capte `contextmenu`, l'appui long au doigt, la Touche Menu et
-  Maj+F10, et rend la main au C# avec le jeton.
-- Les callbacks ne servent qu'au menu de l'instance qui les déclare.
-- Rendu : composant natif de la plateforme (pas `MudMenu`), thème de l'OS,
-  clavier (flèches, Entrée, Échap, flèche droite pour ouvrir un sous-menu),
-  ARIA `menu`/`menuitem`, repositionné pour rester à l'écran.
+- `Menus.Attach(name, objet)` returns the attributes to set
+  (`data-hack-menu`, token); the object stays on the C# side in a table of
+  the instance, emptied when the element leaves the rendering. A small platform script
+  captures `contextmenu`, the finger long press, the Menu key and
+  Shift+F10, and hands control back to C# with the token.
+- Callbacks only serve the menu of the instance that declares them.
+- Rendering: native platform component (not `MudMenu`), OS theme,
+  keyboard (arrows, Enter, Esc, right arrow to open a submenu),
+  ARIA `menu`/`menuitem`, repositioned to stay on screen.
 
-## 7. Menus du contrôle de fichiers
+## 7. File control menus
 
-Quatre portées : `File`, `Directory`, `Background` (le vide) et `Desktop`
-(= `Background` + entrées du bureau). Identifiants en constantes
+Four scopes: `File`, `Directory`, `Background` (empty space) and `Desktop`
+(= `Background` + desktop entries). Identifiers as constants
 (`HackFileMenuItems.Open`…).
 
 ```text
-Fichier                                  Dossier
-Ouvrir                      open         Ouvrir                      open
+File                                     Folder
+Open                        open         Open                        open
 -                                        -
-Ouvrir avec ▸               open-with    Ouvrir avec ▸               open-with
-   <apps du type, défaut en tête>        -
-   -                                     Couper / Copier             cut, copy
-   Choisir une autre application…        Coller dans le dossier      paste-into
--                                        Renommer                    rename
-Couper / Copier             cut, copy    Supprimer                   delete
-Renommer                    rename       Supprimer définitivement    delete-permanently
-Supprimer                   delete       -
-Supprimer définitivement    delete-perm… <entrées des apps sans position>
+Open with ▸                 open-with    Open with ▸                 open-with
+   <apps for the type, default first>    -
+   -                                     Cut / Copy                  cut, copy
+   Choose another application…           Paste into folder           paste-into
+-                                        Rename                      rename
+Cut / Copy                  cut, copy    Delete                      delete
+Rename                      rename       Delete permanently          delete-permanently
+Delete                      delete       -
+Delete permanently          delete-perm… <entries of apps without position>
 -                                        -
-<entrées des apps sans position>         Propriétés                  properties
+<entries of apps without position>       Properties                  properties
 -
-Propriétés                  properties
+Properties                  properties
 
-Vide                                     Bureau (en plus du vide)
-Nouveau dossier             new-folder   Affichage ▸                 view
-Coller                      paste           Taille des icônes, Réorganiser
-Actualiser                  refresh         automatiquement, Aligner sur la grille,
--                                           Afficher Dossier perso, Afficher Corbeille
-<entrées des apps sans position>         Trier par ▸                 sort
+Empty space                              Desktop (in addition to empty space)
+New folder                  new-folder   View ▸                      view
+Paste                       paste           Icon size, Auto-arrange,
+Refresh                     refresh         Align to grid,
+-                                           Show Home folder, Show Recycle Bin
+<entries of apps without position>       Sort by ▸                   sort
 -                                        -
-Propriétés                  properties   Arrière-plan…               background (ouvre Paramètres)
+Properties                  properties   Background…                 background (opens Settings)
 ```
 
-- « Ouvrir avec » liste les apps qui déclarent le type (associations de
-  l'ADR 0121, défaut de l'utilisateur en tête), puis « Choisir une autre
-  application… », qui ouvre la boîte avec « Toujours utiliser cette app ».
-- « Supprimer définitivement », « Couper / Copier / Coller » n'apparaissent
-  que si l'hôte les gère (comme aujourd'hui).
-- Les entrées « UnZip Here » et « Publish as a web site… » deviennent des
-  **entrées inscrites** : l'explorateur inscrit « Extraire ici » (`types:
-  [".zip"]`, `target: "self"`), Web Server Manager inscrit « Publier comme
-  site web » (portée `Directory`, `target: "self"`). Elles apparaissent
-  donc aussi sur le bureau.
-- Un hôte peut encore ajuster le menu de son instance (événement
-  `ContextMenuOpening` du contrôleur) avec des callbacks, comme en §6.3.
+- "Open with" lists the apps that declare the type (associations of
+  ADR 0121, user's default first), then "Choose another
+  application…", which opens the dialog with "Always use this app".
+- "Delete permanently", "Cut / Copy / Paste" appear
+  only if the host handles them (as today).
+- The entries "UnZip Here" and "Publish as a web site…" become
+  **registered entries**: the explorer registers "Extract here" (`types:
+  [".zip"]`, `target: "self"`), Web Server Manager registers "Publish as a web
+  site" (scope `Directory`, `target: "self"`). They therefore also
+  appear on the desktop.
+- A host can still adjust the menu of its instance (`ContextMenuOpening`
+  event of the controller) with callbacks, as in §6.3.
 
-## 8. Extension par les apps
+## 8. Extension by apps
 
-### 8.1 Déclaration
+### 8.1 Declaration
 
 ```csharp
 [AppManifest]
@@ -256,170 +256,169 @@ public sealed class SuperApp : AppDefinition
 }
 ```
 
-| Paramètre | Rôle |
+| Parameter | Role |
 |---|---|
-| `title` | Clé de ressource de l'app ; textes EN et FR copiés à l'inscription |
-| `name` | Identifiant unique dans l'app (référencé par `parent`) |
-| `target` | `"self"` ou l'identifiant d'une autre app qui déclare l'intent ; vérifié à l'inscription et à l'exécution |
-| `intent` | Intent défini par l'app (ADR 0096) ; absent sur une entrée parent |
-| `icon` | `HackIcons.FromImage(asset)` ou `HackIcons.Vector(bibliothèque, nom)` |
-| `scope` | `File`, `Directory`, `Background`, `Desktop` (combinables) ; `File` par défaut |
-| `types` | Extensions, types de média, `image/*`, `*` ; absent = tous |
-| `selection` | `All` (défaut), `Each`, `Single` |
+| `title` | Resource key of the app; EN and FR texts copied at registration |
+| `name` | Unique identifier within the app (referenced by `parent`) |
+| `target` | `"self"` or the identifier of another app that declares the intent; checked at registration and at runtime |
+| `intent` | Intent defined by the app (ADR 0096); absent on a parent entry |
+| `icon` | `HackIcons.FromImage(asset)` or `HackIcons.Vector(bibliothèque, nom)` |
+| `scope` | `File`, `Directory`, `Background`, `Desktop` (combinable); `File` by default |
+| `types` | Extensions, media types, `image/*`, `*`; absent = all |
+| `selection` | `All` (default), `Each`, `Single` |
 | `first` / `after` / `afterGroup` / `parent` | Position (§8.3) |
 
-### 8.2 Inscription à l'installation
+### 8.2 Registration at installation
 
-- Le générateur de manifeste (`HackerOs.Tools.ManifestGenerator`) appelle la
-  méthode `[RegisterFileContextMenu]` **au build** des apps intégrées et
-  écrit le résultat dans `manifest.json` (`contextMenus`) et
-  `BuiltInApplications.json`. Pour une app installée plus tard, l'OS exécute
-  la méthode **une fois à l'installation**, dans un contexte qui ne fait
-  qu'enregistrer les appels.
-- L'OS écrit `/etc/hackeros/context-menus.d/<appId>.json` (`root 0644`),
-  avec le rang d'installation ; les apps intégrées y sont écrites au premier
-  démarrage et à chaque mise à jour de l'OS. Le démarrage lit ce dossier :
-  aucun code d'app ne tourne pour construire un menu.
-- Désinstaller l'app retire son fichier ; une app désactivée (ADR 0048) voit
-  ses entrées masquées.
-- **Capacité** `shell.context-menu` (normale) exigée pour inscrire des
-  entrées ; sans elle, le générateur produit un diagnostic et l'OS ignore les
-  entrées. Paramètres ▸ Applications liste les entrées de chaque app et
-  permet de les masquer, dans `~/.config/hackeros/context-menus.config`
+- The manifest generator (`HackerOs.Tools.ManifestGenerator`) calls the
+  `[RegisterFileContextMenu]` method **at build time** for built-in apps and
+  writes the result into `manifest.json` (`contextMenus`) and
+  `BuiltInApplications.json`. For an app installed later, the OS runs
+  the method **once at installation**, in a context that only
+  records the calls.
+- The OS writes `/etc/hackeros/context-menus.d/<appId>.json` (`root 0644`),
+  with the installation rank; built-in apps are written there at first
+  startup and at each OS update. Startup reads this folder:
+  no app code runs to build a menu.
+- Uninstalling the app removes its file; a disabled app (ADR 0048) has
+  its entries hidden.
+- **Capability** `shell.context-menu` (normal) required to register
+  entries; without it, the generator produces a diagnostic and the OS ignores the
+  entries. Settings ▸ Applications lists the entries of each app and
+  lets the user hide them, in `~/.config/hackeros/context-menus.config`
   (`[hidden]` `<appId>.<name>=true`).
-  *Mis en œuvre (ADR 0159) : la méthode tourne au build pour toutes les apps
-  (il n'y a pas d'installation de paquet à l'exécution), les titres viennent
-  de `Resources/AppManifest.resx`, et le réglage est l'onglet Paramètres ▸
-  Menus des fichiers.*
-- Le générateur vérifie : `name` unique, `parent` existant dans la même app
-  et sans intent, profondeur ≤ 3, `after`/`afterGroup` qui visent un
-  identifiant connu de l'OS ou de la même app, `target` valide.
+  *Implemented (ADR 0159): the method runs at build time for all apps
+  (there is no package installation at runtime), the titles come
+  from `Resources/AppManifest.resx`, and the setting is the Settings ▸
+  File menus tab.*
+- The generator checks: unique `name`, `parent` existing in the same app
+  and without intent, depth ≤ 3, `after`/`afterGroup` targeting a known
+  identifier of the OS or of the same app, valid `target`.
 
 ### 8.3 Placement
 
-1. Les entrées par défaut forment des groupes (§7).
-2. `first: true` : groupe tout en haut du menu, suivi d'un séparateur ;
-   plusieurs apps y partagent ce groupe.
-3. `after: "X"` : juste après X, **dans le groupe de X**, sans séparateur.
-4. `afterGroup: "X"` : **nouveau groupe** après le groupe de X.
-5. Sans position : le **groupe commun** des apps, avant « Propriétés ».
-6. Plusieurs apps sur la même place : **ordre d'installation**, puis ordre
-   de déclaration dans l'app.
-7. Une ancre absente du menu courant (par exemple `paste-into` sur un
-   fichier) : l'entrée va dans le groupe commun.
-8. Les filtres (`scope`, `types`, `selection`) et les entrées masquées
-   s'appliquent avant le placement ; les séparateurs se replient ensuite
+1. Default entries form groups (§7).
+2. `first: true`: group at the very top of the menu, followed by a separator;
+   several apps share this group there.
+3. `after: "X"`: right after X, **in the group of X**, without separator.
+4. `afterGroup: "X"`: **new group** after the group of X.
+5. Without position: the apps' **common group**, before "Properties".
+6. Several apps in the same place: **installation order**, then declaration
+   order in the app.
+7. An anchor absent from the current menu (for example `paste-into` on a
+   file): the entry goes into the common group.
+8. Filters (`scope`, `types`, `selection`) and hidden entries
+   apply before placement; separators then collapse
    (§6.2).
 
-### 8.4 Exécution
+### 8.4 Execution
 
-- `selection: All` : un lancement avec tous les chemins ; `Each` : un
-  lancement par élément ; `Single` : entrée masquée si plusieurs éléments.
-- L'app cible reçoit l'intent (`AppContext.Intent`, `IntentId` = l'intent
-  déclaré, charge utile `{"paths":[…],"scope":"File"}`) ; sans intent
-  déclaré, les arguments de lancement `["{intent}", "{chemin}", …]`. Une
-  instance unique déjà ouverte reçoit `IntentReceived`.
-- L'app est lancée **avec ses propres droits** : l'entrée de menu ne lui
-  donne aucun accès aux fichiers qu'elle n'aurait pas.
+- `selection: All`: one launch with all paths; `Each`: one
+  launch per item; `Single`: entry hidden if there are several items.
+- The target app receives the intent (`AppContext.Intent`, `IntentId` = the declared
+  intent, payload `{"paths":[…],"scope":"File"}`); without a declared
+  intent, the launch arguments `["{intent}", "{chemin}", …]`. An already open
+  single instance receives `IntentReceived`.
+- The app is launched **with its own rights**: the menu entry gives it
+  no access to files that it would not otherwise have.
 
 ## 9. SDK 2.0
 
-- `HackerOsVersion` passe à `2.0.0`. `AppCatalog` refuse déjà une app
-  d'une autre majeure : toute app 1.x doit être recompilée.
-- **Retiré** : la bibliothèque `HackerOs.AppSdk.FileView` (`FileView`,
+- `HackerOsVersion` goes to `2.0.0`. `AppCatalog` already refuses an app
+  of another major version: any 1.x app must be recompiled.
+- **Removed**: the `HackerOs.AppSdk.FileView` library (`FileView`,
   `FileViewTree`, `FileViewDetails`, `FileViewIcons`, menus
   `IFileViewContextMenuProvider`, `FileViewBreadcrumb`, `FileViewDropZone`,
-  `ShellIcon`…) ; ses types publics passent en `*REMOVED*`. Son code
-  devient l'implémentation interne de l'explorateur.
-- `FileTransfer` (copie, déplacement, conflits Nautilus) reste utile aux
-  apps : il passe dans le SDK comme contrat (`IHackFileOperations`) mis en
-  œuvre par l'explorateur, pour que ses règles ne vivent qu'à un endroit.
-- **Ajouté** : contrats `IHackFileView`, `HackFileView`, `HackContextMenu`,
+  `ShellIcon`…); its public types go to `*REMOVED*`. Its code
+  becomes the internal implementation of the explorer.
+- `FileTransfer` (copy, move, Nautilus conflicts) remains useful to
+  apps: it goes into the SDK as a contract (`IHackFileOperations`) implemented
+  by the explorer, so that its rules live in only one place.
+- **Added**: contracts `IHackFileView`, `HackFileView`, `HackContextMenu`,
   `Menus.Attach`, `[RegisterFileContextMenu]`,
   `RegisterFileContextMenuContext`, `HackFileMenuItems`, `HackIcons`.
-- Les ajouts en attente pour la 1.3 (`PublishAsync`, ADR 0145 ;
-  `HackCrossOriginIsolation`, ADR 0146) partent dans la 2.0.
-- La fixture `Tests/fixtures/sdk-compat` (app 1.0.0) devient la preuve du
-  **refus** d'une app 1.x ; une nouvelle fixture 2.0.0 est ajoutée.
-- `CodeEditor` (explorateur latéral) passe à `HackFileView`.
-- [`sdk-packages.md`](../../framework/sdk-packages.md) gagne une section « SDK 2.0 » avec la
-  liste des ruptures et la migration.
+- The additions pending for 1.3 (`PublishAsync`, ADR 0145;
+  `HackCrossOriginIsolation`, ADR 0146) go into 2.0.
+- The `Tests/fixtures/sdk-compat` fixture (1.0.0 app) becomes the proof of the
+  **refusal** of a 1.x app; a new 2.0.0 fixture is added.
+- `CodeEditor` (side explorer) moves to `HackFileView`.
+- [`sdk-packages.md`](../../framework/sdk-packages.md) gains an "SDK 2.0" section with the
+  list of breaking changes and the migration.
 
-## 10. ADR à écrire
+## 10. ADRs to write
 
-Écrits par le chantier 0 (branche `desk/0-adrs`, vers `desk/base`).
+Written by work item 0 (branch `desk/0-adrs`, towards `desk/base`).
 
-| ADR | Sujet |
+| ADR | Subject |
 |---|---|
-| 0148 | Le SDK ne porte que des contrats ; les contrôles et dialogues partagés sont fournis par l'OS à l'exécution (complète l'ADR 0063, remplace l'ADR 0037 §1 et §8) |
-| 0149 | SDK 2.0 : retrait de `HackerOs.AppSdk.FileView`, contrats de fichiers, migration (amende l'ADR 0114) |
-| 0150 | Menu contextuel central de l'OS (modèle, groupes, séparateurs, `Menus.Attach`, clavier et appui long) |
-| 0151 | Entrées de menu inscrites par les apps (déclaration, inscription à l'installation, placement, exécution, capacité `shell.context-menu`) |
-| 0152 | Icônes du bureau (mode Bureau, positions, icônes système, fichiers `.desktop`) |
+| 0148 | The SDK carries only contracts; shared controls and dialogs are provided by the OS at runtime (completes ADR 0063, replaces ADR 0037 §1 and §8) |
+| 0149 | SDK 2.0: removal of `HackerOs.AppSdk.FileView`, file contracts, migration (amends ADR 0114) |
+| 0150 | Central OS context menu (model, groups, separators, `Menus.Attach`, keyboard and long press) |
+| 0151 | Menu entries registered by apps (declaration, registration at installation, placement, execution, `shell.context-menu` capability) |
+| 0152 | Desktop icons (Desktop mode, positions, system icons, `.desktop` files) |
 
-## 11. Chantiers
+## 11. Work items
 
-Les chantiers s'enchaînent dans cet ordre ; chacun met à jour la
-documentation et l'index [`README.md`](../../README.md).
+The work items follow one another in this order; each updates the
+documentation and the [`README.md`](../../README.md) index.
 
-| # | Chantier | Contenu | Dépend de |
+| # | Work item | Content | Depends on |
 |---|---|---|---|
-| 0 | ADR | ADR 0148 à 0152 | — |
-| 1 | Hôte de contrats générique | Composant hôte typé, registre des fournisseurs lu au démarrage, passage des droits de l'hôte | 0 |
-| 2 | Menu contextuel de l'OS | `hackeros.context-menu`, rendu natif multi-niveaux, `Menus.Attach`, script de la plateforme, clavier, appui long | 1 |
-| 3 | Contrôle de fichiers fourni par l'explorateur | `hackeros.file-view`, `IHackFileView`, menus par défaut (§7) sur le menu de l'OS, « Ouvrir avec » en sous-menu, dialogues fournis, explorateur et éditeur de code migrés | 1, 2 |
-| 4 | Entrées inscrites par les apps | Générateur, `context-menus.d`, placement, capacité, Paramètres, « Extraire ici » et « Publier comme site web » inscrits | 2, 3 |
-| 5 | Bureau | Mode Bureau, positions, icônes système, `.desktop`, menu `Desktop`, Paramètres ▸ Bureau | 3, 4 |
-| 6 | SDK 2.0 | Retrait de `FileView`, `PublicAPI`, fixtures, `sdk-packages.md`, publication 2.0.0, vérification finale | 3, 4, 5 |
+| 0 | ADR | ADR 0148 to 0152 | n/a |
+| 1 | Generic contract host | Typed host component, provider registry read at startup, passing the host's rights | 0 |
+| 2 | OS context menu | `hackeros.context-menu`, native multi-level rendering, `Menus.Attach`, platform script, keyboard, long press | 1 |
+| 3 | File control provided by the explorer | `hackeros.file-view`, `IHackFileView`, default menus (§7) on the OS menu, "Open with" as a submenu, provided dialogs, explorer and code editor migrated | 1, 2 |
+| 4 | Entries registered by apps | Generator, `context-menus.d`, placement, capability, Settings, "Extract here" and "Publish as a web site" registered | 2, 3 |
+| 5 | Desktop | Desktop mode, positions, system icons, `.desktop`, `Desktop` menu, Settings ▸ Desktop | 3, 4 |
+| 6 | SDK 2.0 | Removal of `FileView`, `PublicAPI`, fixtures, `sdk-packages.md`, 2.0.0 publication, final verification | 3, 4, 5 |
 
-## 12. Tâches
+## 12. Tasks
 
-- [x] Débattre de l'idée avec Benoit (Q1 à Q22).
-- [x] Valider le récapitulatif.
-- [x] Écrire ce plan.
-- [x] Chantier 0 : ADR 0148 à 0152 ([0148](../adr/0148-sdk-contracts-and-os-provided-controls.md), [0149](../adr/0149-sdk-2-0-file-view-removal.md), [0150](../adr/0150-os-context-menu.md), [0151](../adr/0151-app-registered-file-menu-entries.md), [0152](../adr/0152-desktop-icons.md)).
-- [x] Chantier 1 : hôte de contrats générique (`HackContractComponent<T>`, registre dans `AppCatalog`, contrats réservés et `HOSAPP0025`, fournisseurs de la plateforme, erreur au journal ; [ADR 0153](../adr/0153-contract-host-implementation-adjustments.md), [`embedded-components.md`](../../framework/embedded-components.md)).
-- [x] Chantier 2 : menu contextuel de l'OS (`HackContextMenu`, `Menus.Attach`/`Define`/`OpenAsync`, fournisseur de la plateforme, rendu natif multi-niveaux et feuille mobile, script du clic droit, de l'appui long, de la Touche Menu et de Maj+F10, clavier et ARIA ; [ADR 0154](../adr/0154-context-menu-implementation-adjustments.md), [`context-menu.md`](../../framework/context-menu.md)).
-- [x] Chantier 3 : contrôle de fichiers fourni par l'explorateur (`HackFileView`, `IHackFileView`, `ExplorerFileView` lié au menu de l'OS, menus du §7 avec « Ouvrir avec » en sous-menu, dialogues fournis par `IDialogService`, explorateur et éditeur de code migrés ; [ADR 0155](../adr/0155-file-control-implementation-adjustments.md), [`file-explorer.md`](../file-explorer.md)). La vue des dialogues Ouvrir / Enregistrer est le chantier `desk/3b`, séparé (choix de Benoit, ADR 0155 §6).
-- [x] Chantier 3b : les dialogues Ouvrir / Enregistrer / Choisir un dossier montrent le contrôle `hackeros.file-view` avec les droits de l'app qui demande (`FileDialogBrowser`, repli sur `VirtualFolderBrowser` sans fournisseur ; [ADR 0157](../adr/0157-file-dialogs-show-the-file-control.md)).
-- [x] Chantier 3c : fournisseur du contrôle de fichiers remplaçable (contrats ouverts à toute app fenêtrée, `HOSAPP0025` retiré, `/etc/hackeros/components.config`, choix de l'administrateur après approbation, repli `component.fallback`, onglet « Composants de l'OS » ; [ADR 0156](../adr/0156-replaceable-file-control-provider.md), [ADR 0158](../adr/0158-replaceable-file-provider-implementation-adjustments.md)).
-- [x] Chantier 4 : entrées inscrites par les apps (`[RegisterFileContextMenu]` exécutée au build pour toutes les apps, `contextMenus` du manifeste, `/etc/hackeros/context-menus.d` aligné au démarrage, filtres, placement, lancement par intent ou arguments, capacité `shell.context-menu`, `HOSAPP0026` à `HOSAPP0028`, Paramètres ▸ Menus des fichiers et `HackFileMenuEntries`, « Extraire ici » et « Publier comme site web… » inscrits ; [ADR 0159](../adr/0159-app-menu-entries-implementation-adjustments.md), [`context-menu.md`](../../framework/context-menu.md#entrées-des-apps-dans-les-menus-des-fichiers-chantier-4)).
-- [x] Chantier 5 : bureau (app système `org.hackeros.desktop` rendue par la coquille sous les fenêtres, mode Bureau du contrôle de fichiers, grille `HackDesktopLayout`, `~/.config/hackeros/desktop.config` par `HackDesktopSettings`, Dossier perso et Corbeille, raccourcis `.desktop` par glisser depuis le menu Démarrer et « Envoyer vers ▸ Bureau », menus Affichage et Trier par, Paramètres ▸ Bureau ; [ADR 0160](../adr/0160-desktop-implementation-adjustments.md), [`desktop.md`](../desktop.md)).
-- [x] Chantier 6 : SDK 2.0 (`HackerOs.AppSdk.FileView` retiré, son code dans l'explorateur sous `FileControl/`, règles de copie `HackFileOperations` dans le SDK, `PublicAPI` publié, version `2.0.0`, apps 1.x refusées au catalogue et au build de l'hôte, fixture `Contoso.Sdk2Compat.2.0.0`, migration dans [`sdk-packages.md`](../../framework/sdk-packages.md#sdk-20) ; [ADR 0161](../adr/0161-sdk-2-0-implementation-adjustments.md)) et vérification finale (§13).
+- [x] Discuss the idea with Benoit (Q1 to Q22).
+- [x] Validate the summary.
+- [x] Write this plan.
+- [x] Work item 0: ADR 0148 to 0152 ([0148](../adr/0148-sdk-contracts-and-os-provided-controls.md), [0149](../adr/0149-sdk-2-0-file-view-removal.md), [0150](../adr/0150-os-context-menu.md), [0151](../adr/0151-app-registered-file-menu-entries.md), [0152](../adr/0152-desktop-icons.md)).
+- [x] Work item 1: generic contract host (`HackContractComponent<T>`, registry in `AppCatalog`, reserved contracts and `HOSAPP0025`, platform providers, error in the log; [ADR 0153](../adr/0153-contract-host-implementation-adjustments.md), [`embedded-components.md`](../../framework/embedded-components.md)).
+- [x] Work item 2: OS context menu (`HackContextMenu`, `Menus.Attach`/`Define`/`OpenAsync`, platform provider, native multi-level rendering and mobile sheet, script for right click, long press, Menu key and Shift+F10, keyboard and ARIA; [ADR 0154](../adr/0154-context-menu-implementation-adjustments.md), [`context-menu.md`](../../framework/context-menu.md)).
+- [x] Work item 3: file control provided by the explorer (`HackFileView`, `IHackFileView`, `ExplorerFileView` bound to the OS menu, menus of §7 with "Open with" as a submenu, dialogs provided by `IDialogService`, explorer and code editor migrated; [ADR 0155](../adr/0155-file-control-implementation-adjustments.md), [`file-explorer.md`](../file-explorer.md)). The view of the Open / Save dialogs is the separate work item `desk/3b` (Benoit's choice, ADR 0155 §6).
+- [x] Work item 3b: the Open / Save / Choose a folder dialogs show the `hackeros.file-view` control with the rights of the requesting app (`FileDialogBrowser`, fallback to `VirtualFolderBrowser` without a provider; [ADR 0157](../adr/0157-file-dialogs-show-the-file-control.md)).
+- [x] Work item 3c: replaceable file control provider (contracts open to any windowed app, `HOSAPP0025` removed, `/etc/hackeros/components.config`, administrator's choice after approval, `component.fallback` fallback, "OS components" tab; [ADR 0156](../adr/0156-replaceable-file-control-provider.md), [ADR 0158](../adr/0158-replaceable-file-provider-implementation-adjustments.md)).
+- [x] Work item 4: entries registered by apps (`[RegisterFileContextMenu]` run at build time for all apps, manifest `contextMenus`, `/etc/hackeros/context-menus.d` aligned at startup, filters, placement, launch by intent or arguments, `shell.context-menu` capability, `HOSAPP0026` to `HOSAPP0028`, Settings ▸ File menus and `HackFileMenuEntries`, "Extract here" and "Publish as a web site…" registered; [ADR 0159](../adr/0159-app-menu-entries-implementation-adjustments.md), [`context-menu.md`](../../framework/context-menu.md#entrées-des-apps-dans-les-menus-des-fichiers-chantier-4)).
+- [x] Work item 5: desktop (system app `org.hackeros.desktop` rendered by the shell under the windows, Desktop mode of the file control, `HackDesktopLayout` grid, `~/.config/hackeros/desktop.config` through `HackDesktopSettings`, Home folder and Recycle Bin, `.desktop` shortcuts by dragging from the Start menu and "Send to ▸ Desktop", View and Sort by menus, Settings ▸ Desktop; [ADR 0160](../adr/0160-desktop-implementation-adjustments.md), [`desktop.md`](../desktop.md)).
+- [x] Work item 6: SDK 2.0 (`HackerOs.AppSdk.FileView` removed, its code in the explorer under `FileControl/`, `HackFileOperations` copy rules in the SDK, `PublicAPI` published, version `2.0.0`, 1.x apps refused at the catalog and at the host build, fixture `Contoso.Sdk2Compat.2.0.0`, migration in [`sdk-packages.md`](../../framework/sdk-packages.md#sdk-20); [ADR 0161](../adr/0161-sdk-2-0-implementation-adjustments.md)) and final verification (§13).
 
-## 13. Vérification finale
+## 13. Final verification
 
-Faite le 2026-10-20 sur la branche `desk/6-sdk-2` (série complète : `desk/base`
-avec les chantiers 0 à 5 et le 6), dans un conteneur Linux, .NET 10.
+Done on 2026-10-20 on the `desk/6-sdk-2` branch (complete series: `desk/base`
+with work items 0 to 5 and 6), in a Linux container, .NET 10.
 
-| Vérification | Résultat |
+| Verification | Result |
 |---|---|
-| `dotnet build HackerOs.sln` (Debug) | réussi, 0 avertissement, 0 erreur |
-| Tests unitaires et d'intégration (41 projets `Tests/*.Tests` hors E2E) | 3 968 réussis, 0 échec |
-| `build/publish-trimmed.sh` et `HackerOs.TrimmedPublish.E2E.Tests` | `RESULT: PASS` ; 136 fichiers `.wasm`, 27,7 Mio, 8,3 Mio en Brotli |
-| `build/verify-hosts.sh` (Ecosystem et ses variantes, hôte de test, serveur) | `RESULT: PASS`, les 13 lignes |
-| `HackerOs.E2E.Tests` | 18 réussis |
-| `HackerOs.UI.E2E.Tests` | 28 réussis |
-| `HackerOs.Templates.E2E.Tests` (dont un hôte qui refuse les apps 1.x par `HOSAPP0021` et lance l'app 2.0) | 6 réussis |
-| `HackerOs.Pwa.E2E.Tests` | 6 réussis |
+| `dotnet build HackerOs.sln` (Debug) | succeeded, 0 warnings, 0 errors |
+| Unit and integration tests (41 `Tests/*.Tests` projects excluding E2E) | 3,968 passed, 0 failed |
+| `build/publish-trimmed.sh` and `HackerOs.TrimmedPublish.E2E.Tests` | `RESULT: PASS`; 136 `.wasm` files, 27.7 MiB, 8.3 MiB in Brotli |
+| `build/verify-hosts.sh` (Ecosystem and its variants, test host, server) | `RESULT: PASS`, all 13 lines |
+| `HackerOs.E2E.Tests` | 18 passed |
+| `HackerOs.UI.E2E.Tests` | 28 passed |
+| `HackerOs.Templates.E2E.Tests` (including a host that refuses 1.x apps with `HOSAPP0021` and launches the 2.0 app) | 6 passed |
+| `HackerOs.Pwa.E2E.Tests` | 6 passed |
 
-Aucun test n'a été désactivé ni ignoré. Les échecs connus d'avant la série
-(PWA sans IPv6, tests instables listés dans
-[`building-and-testing.md`](../building-and-testing.md)) ne se sont pas montrés
-pendant ce passage.
+No test was disabled or ignored. The failures known from before the series
+(PWA without IPv6, unstable tests listed in
+[`building-and-testing.md`](../building-and-testing.md)) did not show up
+during this pass.
 
-Ce que la série livre :
+What the series delivers:
 
-- un SDK fait de contrats : `HackFileView`, les dialogues de fichiers et le menu
-  contextuel sont rendus par l'OS à l'exécution (ADR 0148, 0153) ;
-- le menu contextuel de l'OS (`Menus.Attach`, multi-niveaux, clavier, appui
-  long ; ADR 0150, 0154) ;
-- le contrôle de fichiers fourni par l'explorateur, montré aussi dans les
-  dialogues Ouvrir / Enregistrer, et remplaçable par l'administrateur
-  (ADR 0155, 0156, 0157, 0158) ;
-- les entrées de menu inscrites par les apps (`[RegisterFileContextMenu]`,
-  ADR 0151, 0159) ;
-- le bureau sur `~/Desktop` (ADR 0152, 0160) ;
-- le SDK 2.0.0, qui retire la `FileView` publique et refuse les apps 1.x
+- an SDK made of contracts: `HackFileView`, the file dialogs and the context
+  menu are rendered by the OS at runtime (ADR 0148, 0153);
+- the OS context menu (`Menus.Attach`, multi-level, keyboard, long
+  press; ADR 0150, 0154);
+- the file control provided by the explorer, also shown in the
+  Open / Save dialogs, and replaceable by the administrator
+  (ADR 0155, 0156, 0157, 0158);
+- the menu entries registered by apps (`[RegisterFileContextMenu]`,
+  ADR 0151, 0159);
+- the desktop on `~/Desktop` (ADR 0152, 0160);
+- SDK 2.0.0, which removes the public `FileView` and refuses 1.x apps
   (ADR 0149, 0161).
-

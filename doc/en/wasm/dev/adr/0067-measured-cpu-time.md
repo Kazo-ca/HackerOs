@@ -1,127 +1,127 @@
-# ADR 0067 : temps CPU mesuré par processus et état « Not responding »
+# ADR 0067: measured CPU time per process and the "Not responding" state
 
-## Statut
+## Status
 
-Accepté le 2026-10-16.
+Accepted on 2026-10-16.
 
-- **Phase du plan :** phase 5 — exécution des apps
+- **Plan phase:** phase 5: app execution
   ([`execution-isolation-plan.md`](../plans/execution-isolation-plan.md)).
-- **Optionnel :** interrupteur `HackerOsCpuAccounting` /
+- **Optional:** switch `HackerOsCpuAccounting` /
   `HackerOs:ResourceAccounting:Cpu:Enabled` (ADR 0066).
-- **S'appuie sur :** ADR 0043 (contexte d'exécution ambiant), ADR 0057
+- **Builds on:** ADR 0043 (ambient execution context), ADR 0057
   (`/proc/stat`, `CpuTimeAccounting`, `ResourceSamplingService`).
 
-## Contexte
+## Context
 
-En Blazor WebAssembly, toutes les apps partagent **un seul thread**. Le
-navigateur ne donne aucun temps CPU par app. Mais à chaque instant, un seul
-processus exécute du code : si l'OS sait lequel, il peut chronométrer le temps
-réellement passé dans chacun, comme un noyau qui compte le temps à chaque
-changement de contexte.
+In Blazor WebAssembly, all apps share **a single thread**. The
+browser gives no CPU time per app. But at any instant, only one
+process runs code: if the OS knows which one, it can time the time
+actually spent in each, like a kernel that counts time at each
+context switch.
 
-L'OS sait déjà qui s'exécute : `HackExecutionContext` porte le processus
-courant dans un `AsyncLocal` (ADR 0043), positionné par l'OS au lancement, et
-par `AmbientComponentDispatch` pour les événements et le rendu des composants.
-L'`AsyncLocal` suit le code dans ses continuations asynchrones.
+The OS already knows who is running: `HackExecutionContext` carries the current
+process in an `AsyncLocal` (ADR 0043), set by the OS at launch, and
+by `AmbientComponentDispatch` for component events and rendering.
+The `AsyncLocal` follows the code through its asynchronous continuations.
 
-Benoit veut **mesurer**, pas contraindre : pas de quantum imposé, pas d'arrêt
-automatique. Un processus qui monopolise le thread est seulement signalé
-« Not responding » dans le gestionnaire de tâches.
+Benoit wants to **measure**, not constrain: no imposed quantum, no automatic
+stop. A process that monopolizes the thread is only flagged
+"Not responding" in the task manager.
 
-## Décision
+## Decision
 
-### 1. Les changements de contexte comme points de mesure
+### 1. Context switches as measurement points
 
-Le frame ambiant de `HackExecutionContext` utilise le constructeur
-`AsyncLocal<T>(Action<AsyncLocalValueChangedArgs<T>>)`. Le runtime appelle ce
-rappel à chaque fois que la valeur change, y compris quand il **restaure un
-`ExecutionContext`** au début ou à la fin d'une continuation
-(`ThreadContextChanged == true`). C'est l'équivalent exact d'un changement de
-contexte :
+The ambient frame of `HackExecutionContext` uses the constructor
+`AsyncLocal<T>(Action<AsyncLocalValueChangedArgs<T>>)`. The runtime calls this
+callback every time the value changes, including when it **restores an
+`ExecutionContext`** at the start or end of a continuation
+(`ThreadContextChanged == true`). This is the exact equivalent of a context
+switch:
 
-- passage au processus *P* : l'horloge de *P* démarre ;
-- sortie de *P* : le temps écoulé s'ajoute au temps CPU de *P*.
+- switching to process *P*: *P*'s clock starts;
+- leaving *P*: the elapsed time is added to *P*'s CPU time.
 
-L'horloge est `Stopwatch.GetTimestamp()` (`performance.now()` dans le
-navigateur). Aucun `TaskScheduler` ni aucune boucle n'est remplacé : le rappel
-suffit, et il couvre les événements, les minuteries, les continuations de
-`Task` et le code lancé par l'OS.
+The clock is `Stopwatch.GetTimestamp()` (`performance.now()` in the
+browser). No `TaskScheduler` and no loop is replaced: the callback
+is enough, and it covers events, timers, `Task` continuations and code
+launched by the OS.
 
-Le rappel n'est installé que si la mesure du CPU est active (ADR 0066) : sinon
-le frame est un `AsyncLocal` ordinaire, sans aucun coût ajouté.
+The callback is installed only if CPU measurement is active (ADR 0066): otherwise
+the frame is an ordinary `AsyncLocal`, with no added cost.
 
-### 2. Temps utilisateur et temps système
+### 2. User time and system time
 
-- **`utime`** : temps passé dans le code de l'app (frame ambiant de son
-  processus).
-- **`stime`** : temps passé dans les passerelles de l'OS appelées par l'app
-  (fichiers, réseau, presse-papiers). Les passerelles ouvrent un sous-frame
-  « noyau » du même processus ; le temps y est compté à part.
-- Le temps hors de tout frame (rendu Blazor, boucle de l'OS, minuteries
-  système) est imputé au processus de l'interface graphique de la session (le
-  « compositeur »), comme Xorg ou `gnome-shell` sous Linux. Le reste est du
-  temps `idle`.
+- **`utime`**: time spent in the app's code (ambient frame of its
+  process).
+- **`stime`**: time spent in the OS gateways called by the app
+  (files, network, clipboard). The gateways open a "kernel" subframe of the same
+  process; the time is counted there separately.
+- Time outside any frame (Blazor rendering, OS loop, system
+  timers) is attributed to the session's graphical interface process (the
+  "compositor"), like Xorg or `gnome-shell` on Linux. The rest is
+  `idle` time.
 
-### 3. Où le temps apparaît
+### 3. Where the time appears
 
-- `/proc/<pid>/stat` (nouveau fichier, format Linux : `utime` et `stime` en
-  `USER_HZ`, champs 14 et 15) ;
-- `/proc/<pid>/status` : `Cpu` devient l'usage mesuré sur la dernière seconde,
-  avec `CpuSource: measured` (ADR 0066) ;
-- `/proc/stat` : `CpuTimeAccounting` (ADR 0057) reçoit les vrais temps `user`,
-  `system` et `idle` au lieu des valeurs simulées ;
+- `/proc/<pid>/stat` (new file, Linux format: `utime` and `stime` in
+  `USER_HZ`, fields 14 and 15);
+- `/proc/<pid>/status`: `Cpu` becomes the usage measured over the last second,
+  with `CpuSource: measured` (ADR 0066);
+- `/proc/stat`: `CpuTimeAccounting` (ADR 0057) receives the real `user`,
+  `system` and `idle` times instead of the simulated values;
 - `HackProcess.TotalProcessorTime`, `UserProcessorTime`,
-  `PrivilegedProcessorTime`, calqués sur `System.Diagnostics.Process`.
+  `PrivilegedProcessorTime`, modeled on `System.Diagnostics.Process`.
 
-Le cœur virtuel est unique tant que les processus tournent sur le thread
-principal. Les processus en Web Worker (ADR 0070) ajoutent leurs cœurs.
+The virtual core is unique as long as processes run on the main thread.
+Web Worker processes (ADR 0070) add their cores.
 
-### 4. « Not responding »
+### 4. "Not responding"
 
-Le rappel connaît la durée de chaque tranche. Une tranche de plus de **50 ms**
-est une *long task* (seuil du navigateur) et compte dans un compteur par
-processus (`nonvoluntary_ctxt_switches` reste à zéro : rien n'est préempté).
+The callback knows the duration of each slice. A slice longer than **50 ms**
+is a *long task* (browser threshold) and counts in a per-process
+counter (`nonvoluntary_ctxt_switches` stays at zero: nothing is preempted).
 
-Un processus est **Not responding** quand une seule tranche dure plus de
-`UnresponsiveThresholdMs` (5 s par défaut, ADR 0066). Sur le thread principal,
-cet état n'est visible **qu'après coup**, à la fin de la tranche, puisque rien
-d'autre ne s'exécute pendant ; il reste affiché tant que le processus n'a pas
-répondu à un nouvel événement en moins du seuil. Dans un Web Worker (ADR 0070),
-l'OS le voit **pendant** le blocage, grâce au battement de cœur du worker.
+A process is **Not responding** when a single slice lasts more than
+`UnresponsiveThresholdMs` (5 s by default, ADR 0066). On the main thread,
+this state is visible **only after the fact**, at the end of the slice, since nothing
+else runs in the meantime; it stays displayed until the process has not
+responded to a new event in under the threshold. In a Web Worker (ADR 0070),
+the OS sees it **during** the blocking, thanks to the worker's heartbeat.
 
-L'OS ne fait **rien** de plus : pas de fenêtre « Attendre / Forcer à quitter »,
-pas d'arrêt. Le gestionnaire de tâches affiche « Not responding » dans la
-colonne d'état, et `/proc/<pid>/status` ajoute `Responding: 0|1`.
+The OS does **nothing** more: no "Wait / Force quit" window,
+no stop. The task manager displays "Not responding" in the
+state column, and `/proc/<pid>/status` adds `Responding: 0|1`.
 
-### 5. Coût et garde-fous
+### 5. Cost and safeguards
 
-- Le rappel ne fait que lire l'horloge et additionner dans un tableau indexé
-  par processus : pas d'allocation, pas de verrou sur le thread principal.
-- Un test de performance compare le temps d'un scénario de référence (ouvrir
-  dix fenêtres, taper dans l'éditeur, pipeline shell) avec et sans la mesure ;
-  un écart de plus de 5 % fait échouer le test.
-- Les compteurs vivent en mémoire et repartent de zéro au démarrage.
+- The callback only reads the clock and adds into an array indexed
+  by process: no allocation, no lock on the main thread.
+- A performance test compares the time of a reference scenario (open
+  ten windows, type in the editor, shell pipeline) with and without the measurement;
+  a difference of more than 5% fails the test.
+- The counters live in memory and restart from zero at startup.
 
-### 6. Hôte serveur
+### 6. Server host
 
-Sur `HackerOs.Server` (rendu Interactive Server), plusieurs threads exécutent
-du code en même temps : le rappel reste juste par thread, mais le temps
-`idle` et le compositeur n'ont plus de sens simple. La mesure y est coupée par
-défaut (ADR 0066) jusqu'à un ADR propre à cet hôte.
+On `HackerOs.Server` (Interactive Server rendering), several threads run
+code at the same time: the callback remains correct per thread, but `idle`
+time and the compositor no longer have a simple meaning. The measurement is disabled there by
+default (ADR 0066) until an ADR specific to this host.
 
-## Conséquences
+## Consequences
 
-- Le CPU affiché devient réel pour toutes les apps, sans qu'elles changent une
-  ligne.
-- Une boucle synchrone infinie n'est **pas** interrompue : elle gèle encore
-  l'OS sur le thread principal. Seul un Web Worker (ADR 0070) l'isole.
-- `system-metrics.md` et `task-manager.md` documentent la mesure.
+- The displayed CPU becomes real for all apps, without them changing a
+  line.
+- An infinite synchronous loop is **not** interrupted: it still freezes the
+  OS on the main thread. Only a Web Worker (ADR 0070) isolates it.
+- `system-metrics.md` and `task-manager.md` document the measurement.
 
-## Références
+## References
 
 - [`execution-isolation-plan.md`](../plans/execution-isolation-plan.md)
 - `Shared/HackerOs.AppSdk/HackExecutionContext.cs`,
   `Shared/HackerOs.AppSdk.Blazor/AmbientComponentDispatch.cs`,
   `Platform/HackerOs.Platform.Core/FileSystem/Virtual/ProcFileSystemProvider.cs`.
-- `proc(5)` : `/proc/<pid>/stat`, `/proc/stat`.
+- `proc(5)`: `/proc/<pid>/stat`, `/proc/stat`.
 - ADR 0043, 0057, 0066, 0068, 0070.

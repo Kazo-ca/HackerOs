@@ -1,143 +1,142 @@
-# ADR 0098 : versions et paquets NuGet du SDK et de la plateforme, vérifications du manifeste au chargement, gabarits et gel du SDK 1.0
+# ADR 0098: NuGet versions and packages of the SDK and the platform, manifest checks at load time, templates and freeze of SDK 1.0
 
-## Statut
+## Status
 
-Accepté le 2026-10-17 (chantier `v3/1-adr`, pour les chantiers
-`v3/6-sdk-versioning` et `v3/15-sdk-freeze`).
+Accepted on 2026-10-17 (work item `v3/1-adr`, for the work items
+`v3/6-sdk-versioning` and `v3/15-sdk-freeze`).
 
-- **Complète :** [ADR 0019](0019-sdk-versioning-and-compatibility.md) (SemVer,
-  frontière du SDK, vérification de `sdkCompatibility` « au chargement », jamais
-  faite), ADR 0047 (manifeste généré, `BuiltInApplications.json`), ADR 0048
-  (`IsSystemApp` sur la référence de l'hôte), ADR 0055 et 0059 (frontière du
-  SDK, `HOSAPP0030`/`HOSAPP0031`).
-- **Remplace :** le profil de build du développeur (`BuildProfileManifest`) de
-  l'analyse de migration §14.1, déjà rendu inutile par les ADR 0047 et 0048.
-- **Plan :** [`wasm-v3-completion-plan.md`](../plans/wasm-v3-completion-plan.md),
-  lignes `v3/6` et `v3/15` ; manques R3, R4, R5, R20, R21 ; décision différée
-  n° 11 ; réponse 2 de Benoit (paquets NuGet).
+- **Complements:** [ADR 0019](0019-sdk-versioning-and-compatibility.md) (SemVer,
+  SDK boundary, check of `sdkCompatibility` "at load time", never
+  done), ADR 0047 (generated manifest, `BuiltInApplications.json`), ADR 0048
+  (`IsSystemApp` on the host reference), ADR 0055 and 0059 (SDK
+  boundary, `HOSAPP0030`/`HOSAPP0031`).
+- **Replaces:** the developer build profile (`BuildProfileManifest`) of the
+  migration analysis §14.1, already made useless by ADR 0047 and 0048.
+- **Plan:** [`wasm-v3-completion-plan.md`](../plans/wasm-v3-completion-plan.md),
+  lines `v3/6` and `v3/15`; gaps R3, R4, R5, R20, R21; deferred decision
+  no. 11; Benoit's answer 2 (NuGet packages).
 
-## Contexte
+## Context
 
-- Les bibliothèques du SDK (`HackerOs.App.Abstractions`, `HackerOs.AppSdk`,
+- The SDK libraries (`HackerOs.App.Abstractions`, `HackerOs.AppSdk`,
   `HackerOs.AppSdk.Blazor`, `.Terminal`, `.Web`, `.Web.Blazor`, `.FileView`,
-  `HackerOs.Simulation.Abstractions`) n'ont ni version ni `PackageId`. Seuls
-  trois projets `Shared` et six projets de fenêtrage importent
-  `Platform/Packaging.props` (version unique `0.1.0-local`, analyseur d'API
-  publique). Une app ne se construit qu'à l'intérieur de ce dépôt
-  (`ProjectReference` vers `Shared/*`, `HOSAPP0030` sinon).
-- `sdkCompatibility` n'est vérifié que dans sa forme
-  (`AppManifestValidator.cs:34-38`) ; aucune version courante du SDK n'existe à
-  l'exécution, et le générateur écrit `1.0.0` en dur comme minimum
+  `HackerOs.Simulation.Abstractions`) have neither a version nor a `PackageId`. Only
+  three `Shared` projects and six windowing projects
+  import `Platform/Packaging.props` (single version `0.1.0-local`, public API
+  analyzer). An app can only be built inside this repository
+  (`ProjectReference` to `Shared/*`, `HOSAPP0030` otherwise).
+- `sdkCompatibility` is only checked in its form
+  (`AppManifestValidator.cs:34-38`); no current SDK version exists at
+  runtime, and the generator hard-codes `1.0.0` as the minimum
   (`AppDefinitionMapper.cs:51`).
-- Deux apps peuvent déclarer le même nom de commande : `ShellCommandResolver`
-  prend la première trouvée (`ShellCommandResolver.cs:43-56`).
-- Le hash SHA-256 d'un asset n'est vérifié que dans sa forme
+- Two apps can declare the same command name: `ShellCommandResolver`
+  takes the first one found (`ShellCommandResolver.cs:43-56`).
+- The SHA-256 hash of an asset is only checked in its form
   (`AppManifestValidator.cs:393-396`).
-- `BuildProfileManifest`, son validateur et son sérialiseur ne servent qu'à
-  leurs tests.
-- Le dépôt du jeu (ADR 0092) doit pouvoir construire des apps **et** un hôte
-  d'OS complet avec ses propres apps, sans copier ce dépôt.
+- `BuildProfileManifest`, its validator and its serializer are only used by
+  their tests.
+- The game repository (ADR 0092) must be able to build apps **and** a complete
+  OS host with its own apps, without copying this repository.
 
-## Décision
+## Decision
 
-### 1. Une seule version pour tout ce qui est publié
+### 1. A single version for everything published
 
-- Toutes les bibliothèques publiées partagent un numéro, défini une fois dans
-  `build/Versions.props` (`HackerOsVersion`), importé par
-  `Directory.Build.props`. `Platform/Packaging.props` en hérite au lieu de
-  porter `0.1.0-local`.
-- Jusqu'au gel : `0.9.0-preview.<n>`, `n` augmenté par chaque chantier qui
-  change une API publiée. Au gel (`v3/15`) : `1.0.0`. Ensuite SemVer
-  (ADR 0019) : mineure pour un ajout, majeure pour une rupture.
+- All published libraries share one number, defined once in
+  `build/Versions.props` (`HackerOsVersion`), imported by
+  `Directory.Build.props`. `Platform/Packaging.props` inherits it instead of
+  carrying `0.1.0-local`.
+- Until the freeze: `0.9.0-preview.<n>`, `n` incremented by each work item that
+  changes a published API. At the freeze (`v3/15`): `1.0.0`. Afterwards SemVer
+  (ADR 0019): minor for an addition, major for a break.
 
-### 2. Paquets
+### 2. Packages
 
-| Paquet | Contenu | Pour |
+| Package | Content | For |
 |---|---|---|
-| `HackerOs.App.Abstractions`, `HackerOs.AppSdk`, `HackerOs.AppSdk.Blazor`, `HackerOs.AppSdk.Terminal`, `HackerOs.AppSdk.Web`, `HackerOs.AppSdk.Web.Blazor`, `HackerOs.AppSdk.FileView`, `HackerOs.AppSdk.Icons`, `HackerOs.AppSdk.VirtualKeyboard`, `HackerOs.Theming.Abstractions` | le SDK public | écrire une app |
-| `HackerOs.App.Build` | `build/HackerOs.Apps.targets` en `buildTransitive`, le générateur de manifeste et les règles de frontière du SDK | qu'une app hors du dépôt produise son `manifest.json` comme ici |
-| `HackerOs.Platform.*`, `HackerOs.Infrastructure.Browser`, `HackerOs.Windowing.*`, `HackerOs.Theming.Blazor`, `HackerOs.MobileShell.Blazor` | la plateforme | composer un hôte d'OS |
-| `HackerOs.Ecosystem.Host` | la composition de l'hôte (aujourd'hui dans l'exe `HackerOs.Ecosystem` : `EcosystemServiceCollectionExtensions`, composants racine), sortie dans une bibliothèque ; l'exe devient une coquille qui l'appelle | qu'un autre dépôt fasse son propre hôte PWA avec ses apps en plus des apps de base |
-| `HackerOs.Apps.*`, `HackerOs.Commands` | les apps et commandes de base | les inclure dans un autre hôte |
-| `HackerOs.Templates` | les gabarits `dotnet new` (point 6) | démarrer un projet |
+| `HackerOs.App.Abstractions`, `HackerOs.AppSdk`, `HackerOs.AppSdk.Blazor`, `HackerOs.AppSdk.Terminal`, `HackerOs.AppSdk.Web`, `HackerOs.AppSdk.Web.Blazor`, `HackerOs.AppSdk.FileView`, `HackerOs.AppSdk.Icons`, `HackerOs.AppSdk.VirtualKeyboard`, `HackerOs.Theming.Abstractions` | the public SDK | writing an app |
+| `HackerOs.App.Build` | `build/HackerOs.Apps.targets` as `buildTransitive`, the manifest generator and the SDK boundary rules | letting an app outside the repository produce its `manifest.json` as is done here |
+| `HackerOs.Platform.*`, `HackerOs.Infrastructure.Browser`, `HackerOs.Windowing.*`, `HackerOs.Theming.Blazor`, `HackerOs.MobileShell.Blazor` | the platform | composing an OS host |
+| `HackerOs.Ecosystem.Host` | the host composition (today in the `HackerOs.Ecosystem` exe: `EcosystemServiceCollectionExtensions`, root components), moved into a library; the exe becomes a shell that calls it | letting another repository build its own PWA host with its apps in addition to the base apps |
+| `HackerOs.Apps.*`, `HackerOs.Commands` | the base apps and commands | including them in another host |
+| `HackerOs.Templates` | the `dotnet new` templates (point 6) | starting a project |
 
-- `Simulation.Abstractions` est publié parce que le SDK l'expose, mais reste
-  hors des références autorisées d'une app (ADR 0055).
-- `build/pack-local.sh` (et `.ps1`) fait `dotnet pack` de tout ce qui est
-  publiable vers `artifacts/local-nupkg` (non versionné dans git). Un `nuget.config`
-  d'exemple montre comment un autre dépôt pointe sur ce dossier. GitHub
-  Packages viendra quand la CI remarchera ; rien n'est poussé sur nuget.org.
-- Les cibles de l'hôte acceptent une **`PackageReference`** d'app avec les mêmes
-  métadonnées qu'une `ProjectReference` (`IsSystemApp="true"`, chargement
-  paresseux). Les règles `HOSAPP0030`/`HOSAPP0031` acceptent les paquets du SDK
-  comme les projets du SDK.
+- `Simulation.Abstractions` is published because the SDK exposes it, but remains
+  outside the allowed references of an app (ADR 0055).
+- `build/pack-local.sh` (and `.ps1`) runs `dotnet pack` on everything
+  publishable into `artifacts/local-nupkg` (not versioned in git). A sample `nuget.config`
+  shows how another repository points to this folder. GitHub
+  Packages will come when CI works again; nothing is pushed to nuget.org.
+- The host targets accept an app **`PackageReference`** with the same
+  metadata as a `ProjectReference` (`IsSystemApp="true"`, lazy
+  loading). The `HOSAPP0030`/`HOSAPP0031` rules accept the SDK packages
+  like the SDK projects.
 
-### 3. Compatibilité du SDK vérifiée au chargement
+### 3. SDK compatibility checked at load time
 
-- `HackerOs.App.Abstractions` expose `HackerOsSdk.Version`, tiré de sa version
-  d'assembly au build.
-- Le générateur écrit comme minimum **la version du SDK contre laquelle l'app a
-  été compilée** (au lieu de `1.0.0` en dur), sauf si l'app déclare autre chose.
-- `AppCatalog` refuse une app dont la plage ne contient pas `HackerOsSdk.Version`
-  (précédence SemVer, préversions comprises) : code `catalog.sdk.incompatible`,
-  app listée « incompatible » dans Paramètres avec la plage demandée, jamais
-  lancée.
-- Politique de support (décision différée n° 11) : l'OS charge toute app
-  compilée contre une version **de la même majeure** inférieure ou égale à la
-  sienne ; une API retirée l'est seulement à la majeure suivante, après au
-  moins une mineure marquée `[Obsolete]` (ADR 0019).
+- `HackerOs.App.Abstractions` exposes `HackerOsSdk.Version`, taken from its
+  assembly version at build time.
+- The generator writes as the minimum **the SDK version the app was
+  compiled against** (instead of the hard-coded `1.0.0`), unless the app declares something else.
+- `AppCatalog` rejects an app whose range does not contain `HackerOsSdk.Version`
+  (SemVer precedence, prereleases included): code `catalog.sdk.incompatible`,
+  app listed as "incompatible" in Settings with the requested range, never
+  launched.
+- Support policy (deferred decision no. 11): the OS loads any app
+  compiled against a version **of the same major** lower than or equal to
+  its own; an API is removed only at the next major, after at
+  least one minor marked `[Obsolete]` (ADR 0019).
 
-### 4. Noms de commandes en double
+### 4. Duplicate command names
 
-- **Au build** : l'agrégation de `BuiltInApplications.json` refuse deux apps
-  qui déclarent le même nom ou alias de commande, ou un nom de built-in du
-  shell (ADR 0064), avec le nouveau code **`HOSAPP0022`**.
-- **Au chargement** (apps venues d'ailleurs plus tard) : une app système garde
-  le nom ; sinon le premier dans l'ordre d'activation le garde. La commande de
-  l'autre app n'est pas enregistrée, l'app reste lançable, et l'avertissement
-  `catalog.command.duplicate` est écrit dans `/var/log/syslog`.
+- **At build time**: the aggregation of `BuiltInApplications.json` rejects two apps
+  that declare the same command name or alias, or a shell built-in
+  name (ADR 0064), with the new code **`HOSAPP0022`**.
+- **At load time** (apps coming from elsewhere later): a system app keeps the
+  name; otherwise the first in activation order keeps it. The other
+  app's command is not registered, the app remains launchable, and the warning
+  `catalog.command.duplicate` is written to `/var/log/syslog`.
 
-### 5. Hash des assets vérifié
+### 5. Asset hash checked
 
-- Le générateur calcule le SHA-256 de chaque asset déclaré au build.
-- La plateforme vérifie le hash d'un asset à sa **première lecture** dans la
-  session (icône, schéma de charge utile, fichier embarqué) et garde le résultat
-  en mémoire. Un écart : l'asset est refusé, l'app est marquée « endommagée »
-  dans Paramètres, et l'événement va dans `/var/log/syslog`. Les assemblies
-  chargées paresseusement restent couvertes par l'intégrité du manifeste de
-  boot de Blazor.
+- The generator computes the SHA-256 of each declared asset at build time.
+- The platform checks an asset's hash at its **first read** in the
+  session (icon, payload schema, embedded file) and keeps the result
+  in memory. On a mismatch: the asset is rejected, the app is marked "damaged"
+  in Settings, and the event goes to `/var/log/syslog`. Lazily loaded
+  assemblies remain covered by the integrity of Blazor's boot manifest.
 
-### 6. Gabarits `dotnet new`
+### 6. `dotnet new` templates
 
-`HackerOs.Templates` fournit `hackeros-window` (app à fenêtre),
-`hackeros-command` (commande), `hackeros-service` (service),
-`hackeros-site` (site ASP.Hack) et `hackeros-host` (hôte PWA qui inclut les apps
-de base et les apps du dépôt). Chaque gabarit est construit et testé par un test
-qui fait `dotnet new` puis `dotnet build` contre le flux local.
+`HackerOs.Templates` provides `hackeros-window` (window app),
+`hackeros-command` (command), `hackeros-service` (service),
+`hackeros-site` (ASP.Hack site) and `hackeros-host` (PWA host that includes the base
+apps and the repository's apps). Each template is built and tested by a test
+that runs `dotnet new` then `dotnet build` against the local feed.
 
-### 7. Profil de build retiré
+### 7. Build profile removed
 
 `BuildProfileManifest`, `BuildProfileValidator`, `BuildProfileJsonSerializer`
-et leurs tests sont supprimés. La sélection des apps livrées est la liste des
-références de l'hôte (ADR 0047, 0048). La valeur
-`CapabilityGrantSource.BuildProfile` reste si des accords enregistrés
-l'utilisent déjà (valeur stockée), sinon elle part aussi.
+and their tests are deleted. The selection of shipped apps is the list of
+host references (ADR 0047, 0048). The value
+`CapabilityGrantSource.BuildProfile` remains if saved grants already
+use it (stored value), otherwise it goes too.
 
-### 8. Gel du SDK 1.0 (`v3/15`)
+### 8. SDK 1.0 freeze (`v3/15`)
 
-- Dès `v3/6`, toute bibliothèque publiée a l'analyseur d'API publique, avec
-  ses API en `PublicAPI.Unshipped.txt`.
-- `v3/15` passe tout en `PublicAPI.Shipped.txt`, publie `1.0.0`, et ajoute un
-  test qui charge dans l'OS courant une app compilée contre le paquet `1.0.0`
-  gardé dans `Tests/fixtures`.
+- From `v3/6` on, every published library has the public API analyzer, with
+  its APIs in `PublicAPI.Unshipped.txt`.
+- `v3/15` moves everything to `PublicAPI.Shipped.txt`, publishes `1.0.0`, and adds
+  a test that loads into the current OS an app compiled against the `1.0.0` package
+  kept in `Tests/fixtures`.
 
-## Conséquences
+## Consequences
 
-- `v3/6` et `v3/3` touchent tous deux `AppDefinition` : le second fusionné
-  reprend l'autre (plan, §4).
-- `sdk-developer-guide.md` gagne « construire une app depuis un autre dépôt »
-  (`v3/6`) puis le guide complet du dépôt tiers (`v3/15`) ;
-  `building-and-testing.md`, `project-overview.md`, `sdk-reference.md` et
-  `app-installation.md` sont mis à jour.
-- La sortie de la composition de l'hôte dans `HackerOs.Ecosystem.Host` ne change
-  rien au comportement ; `build/verify-hosts.sh` le vérifie.
+- `v3/6` and `v3/3` both touch `AppDefinition`: whichever is merged second
+  takes over from the other (plan, §4).
+- `sdk-developer-guide.md` gains "build an app from another repository"
+  (`v3/6`) then the complete third-party repository guide (`v3/15`);
+  `building-and-testing.md`, `project-overview.md`, `sdk-reference.md` and
+  `app-installation.md` are updated.
+- Moving the host composition into `HackerOs.Ecosystem.Host` does not change
+  behavior; `build/verify-hosts.sh` checks it.

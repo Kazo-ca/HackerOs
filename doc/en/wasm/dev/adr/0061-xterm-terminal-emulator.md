@@ -1,101 +1,101 @@
-# ADR 0061 : xterm.js comme émulateur du terminal
+# ADR 0061: xterm.js as the terminal emulator
 
-## Statut
+## Status
 
-Accepté le 2026-10-11.
+Accepted on 2026-10-11.
 
-- **Contexte du plan :** après la phase 4 (refonte terminée), demande de
-  Benoit du 2026-10-11 : un rendu du terminal plus réaliste, avec la même
-  librairie que la version legacy (`src/apps/terminal.ts`, xterm.js 5.3).
-- **Ne remplace aucun ADR.** Les ADR 0050 (sortie affichée pendant que la
-  commande tourne), 0051 section 4 (c'est le terminal qui interprète les
-  séquences de `clear`) et 0058 section 4 (complétion par le shell, onglets)
-  restent vrais ; seul le moyen de les réaliser change.
+- **Plan context:** after phase 4 (rebuild finished), request from
+  Benoit on 2026-10-11: a more realistic terminal rendering, with the same
+  library as the legacy version (`src/apps/terminal.ts`, xterm.js 5.3).
+- **Supersedes no ADR.** ADR 0050 (output displayed while the
+  command runs), 0051 section 4 (the terminal interprets the
+  `clear` sequences) and 0058 section 4 (completion by the shell, tabs)
+  remain true; only the means of achieving them changes.
 
-## Contexte
+## Context
 
-Jusqu'ici `TerminalPanel` affichait la sortie dans des `<div>` HTML, une par
-ligne, et la ligne de commande dans un `<input>`. Conséquences :
+Until now `TerminalPanel` displayed the output in HTML `<div>` elements, one per
+line, and the command line in an `<input>`. Consequences:
 
-- les couleurs ANSI étaient retirées (`TerminalControlSequenceDecoder` ne
-  gardait que l'effacement de l'écran) ;
-- pas de vrai curseur, pas de grille de caractères : une ligne trop longue se
-  repliait comme du texte HTML, la sélection prenait les invites ;
-- `nano` passait par un second rendu HTML (`TerminalScreen`), une `<span>` par
-  caractère.
+- ANSI colors were stripped (`TerminalControlSequenceDecoder` kept
+  only the screen clearing);
+- no real cursor, no character grid: a line that was too long
+  wrapped like HTML text, selection picked up the prompts;
+- `nano` went through a second HTML rendering (`TerminalScreen`), one `<span>` per
+  character.
 
-L'éditeur de code utilise déjà la même librairie que le legacy (Monaco, ADR
-0020), embarquée par un bundle npm/esbuild versionné. Le terminal peut suivre
-le même modèle.
+The code editor already uses the same library as the legacy (Monaco, ADR
+0020), embedded by a versioned npm/esbuild bundle. The terminal can follow
+the same model.
 
-## Décision
+## Decision
 
-### 1. xterm.js, embarqué dans la librairie du terminal
+### 1. xterm.js, embedded in the terminal library
 
-`Shared/HackerOs.AppSdk.Terminal` embarque `@xterm/xterm` 6.0.0 et
-`@xterm/addon-fit` 0.11.0, versions figées par `package-lock.json`.
-`build.mjs` (esbuild) produit `wwwroot/xterm/xterm.bundle.js`,
-`xterm.bundle.css` et `xterm.bundle.LICENSE.txt`, versionnés dans le dépôt :
-le build .NET n'exécute pas npm. Une cible MSBuild fait échouer le build si
-le bundle, le lockfile ou la licence manque (comme pour Monaco).
+`Shared/HackerOs.AppSdk.Terminal` embeds `@xterm/xterm` 6.0.0 and
+`@xterm/addon-fit` 0.11.0, versions pinned by `package-lock.json`.
+`build.mjs` (esbuild) produces `wwwroot/xterm/xterm.bundle.js`,
+`xterm.bundle.css` and `xterm.bundle.LICENSE.txt`, versioned in the repository:
+the .NET build does not run npm. An MSBuild target fails the build if
+the bundle, the lockfile or the license is missing (as for Monaco).
 
-Le bundle n'est importé que par `TerminalPanel.razor.js`, le module propre au
-composant ; aucun hôte ne référence de script (règle des hôtes de
-`AGENTS.md`). Les apps (Terminal, CodeEditor, apps tierces) ne changent pas :
-elles utilisent `TerminalPanel` ou `TerminalTabs` comme avant, sans
+The bundle is imported only by `TerminalPanel.razor.js`, the component's own
+module; no host references a script (host rule of
+`AGENTS.md`). The apps (Terminal, CodeEditor, third-party apps) do not change:
+they use `TerminalPanel` or `TerminalTabs` as before, without
 `IJSRuntime` (ADR 0055).
 
-### 2. xterm.js joue le rôle du matériel, la discipline de ligne reste en C#
+### 2. xterm.js plays the role of the hardware, line discipline stays in C#
 
-xterm.js est utilisé comme un terminal physique : il affiche les octets qu'on
-lui écrit (séquences ECMA-48 comprises) et renvoie les octets du clavier
-(`onData`). Tout le reste est en C#, dans la librairie :
+xterm.js is used like a physical terminal: it displays the bytes written to
+it (ECMA-48 sequences included) and returns the keyboard bytes
+(`onData`). Everything else is in C#, in the library:
 
-| Rôle sous Linux | Ici |
+| Role on Linux | Here |
 |---|---|
-| Écran et clavier du terminal | xterm.js (`TerminalPanel.xterm.entry.js`) |
-| Décodage des touches (`0x7f`, `ESC [ A`…) | `TerminalInputDecoder` |
-| Discipline de ligne (`ONLCR`, `^C`, file de frappe) | `TerminalPanel` |
-| readline (édition, historique, complétion) | `TerminalLineEditor` + `IHackShell` |
-| Programme plein écran (smcup, adressage du curseur, rmcup) | `TerminalAnsi.RenderFrame` |
+| Terminal screen and keyboard | xterm.js (`TerminalPanel.xterm.entry.js`) |
+| Key decoding (`0x7f`, `ESC [ A`...) | `TerminalInputDecoder` |
+| Line discipline (`ONLCR`, `^C`, typing queue) | `TerminalPanel` |
+| readline (editing, history, completion) | `TerminalLineEditor` + `IHackShell` |
+| Full-screen program (smcup, cursor addressing, rmcup) | `TerminalAnsi.RenderFrame` |
 
-Les sorties des commandes partent vers xterm.js sans autre transformation que
-`\n` → `\r\n` (le drapeau `ONLCR` d'un tty). Les couleurs, `clear`
-(`ESC[H ESC[2J ESC[3J`) et toute autre séquence sont donc interprétés par
-l'émulateur, comme sous Linux.
+Command outputs go to xterm.js with no transformation other than
+`\n` → `\r\n` (the `ONLCR` flag of a tty). Colors, `clear`
+(`ESC[H ESC[2J ESC[3J`) and any other sequence are therefore interpreted by
+the emulator, as on Linux.
 
-### 3. Contrat inchangé pour les commandes plein écran
+### 3. Unchanged contract for full-screen commands
 
-`IFullScreenTerminalSession` et `TerminalScreenFrame` ne changent pas. Le
-panneau traduit chaque cadre en séquences : `ESC[?1049h` à l'entrée, une
-ligne écrite en place par rangée, curseur positionné, `ESC[?1049l` à la
-sortie (l'écran normal et le curseur reviennent comme avant la commande).
-`TerminalScreen` reste dans la librairie (scénarios du BrowserHarness) mais
-`TerminalPanel` ne l'utilise plus.
+`IFullScreenTerminalSession` and `TerminalScreenFrame` do not change. The
+panel translates each frame into sequences: `ESC[?1049h` on entry, one
+line written in place per row, cursor positioned, `ESC[?1049l` on
+exit (the normal screen and the cursor come back as before the command).
+`TerminalScreen` stays in the library (BrowserHarness scenarios) but
+`TerminalPanel` no longer uses it.
 
-### 4. Raccourcis laissés au navigateur et à l'interface
+### 4. Shortcuts left to the browser and the interface
 
-Le gestionnaire de touches de xterm.js laisse passer : les raccourcis
-d'onglets de `TerminalTabs` (Ctrl+Shift+T/W, Ctrl+PageUp/PageDown), Ctrl+V et
-Ctrl+Shift+V (collage par l'événement `paste` du navigateur), Ctrl+C quand du
-texte est sélectionné et Ctrl+Shift+C (copie). Sans sélection, Ctrl+C envoie
-`^C` au terminal.
+The xterm.js key handler lets through: the tab shortcuts of `TerminalTabs`
+(Ctrl+Shift+T/W, Ctrl+PageUp/PageDown), Ctrl+V and
+Ctrl+Shift+V (paste through the browser's `paste` event), Ctrl+C when
+text is selected and Ctrl+Shift+C (copy). Without a selection, Ctrl+C sends
+`^C` to the terminal.
 
-## Conséquences
+## Consequences
 
-- Couleurs ANSI, curseur clignotant, sélection et copie, repli des lignes à
-  la largeur de la grille, défilement de 5000 lignes.
-- Le bundle ajoute environ 340 Ko (non compressés) à la librairie du
-  terminal. Il n'est chargé qu'à l'ouverture d'un terminal.
-- Les tests unitaires couvrent le décodage, l'édition et le rendu (avec un
-  petit écran virtuel de test) ; le rendu réel se vérifie dans un navigateur.
-- `TerminalControlSequenceDecoder` reste une API publique de la librairie
-  mais `TerminalPanel` ne s'en sert plus.
-- Le lecteur d'écran ne reçoit plus une région `role="log"` : xterm.js a un
-  mode lecteur d'écran (`screenReaderMode`) qui n'est pas activé. À
-  reprendre avec le chantier accessibilité.
-- Hors périmètre : une entrée standard pour les commandes (la frappe pendant
-  une commande attend la prochaine invite), les caractères larges (CJK,
-  emoji sur deux cellules).
+- ANSI colors, blinking cursor, selection and copy, line wrapping at
+  the grid width, 5000 lines of scrollback.
+- The bundle adds about 340 KB (uncompressed) to the terminal
+  library. It is loaded only when a terminal is opened.
+- Unit tests cover decoding, editing and rendering (with a
+  small virtual test screen); the real rendering is verified in a browser.
+- `TerminalControlSequenceDecoder` stays a public API of the library
+  but `TerminalPanel` no longer uses it.
+- The screen reader no longer receives a `role="log"` region: xterm.js has a
+  screen reader mode (`screenReaderMode`) that is not enabled. To be
+  taken up with the accessibility work item.
+- Out of scope: standard input for commands (typing during
+  a command waits for the next prompt), wide characters (CJK,
+  emoji on two cells).
 
-Voir [`terminal-emulator.md`](../terminal-emulator.md).
+See [`terminal-emulator.md`](../terminal-emulator.md).

@@ -1,74 +1,74 @@
-# Réglages sensibles, trousseau et journal d'audit
+# Sensitive settings, keyring and audit log
 
-Mise en œuvre du chantier `v3/8-settings-security` du
-[plan de fin de migration](plans/wasm-v3-completion-plan.md), selon
-l'[ADR 0100](adr/0100-sensitive-settings-and-protected-write-audit.md). Ce
-document décrit le code livré ; l'ADR reste la référence des décisions.
+Implementation of work item `v3/8-settings-security` of the
+[completion plan](plans/wasm-v3-completion-plan.md), according to
+[ADR 0100](adr/0100-sensitive-settings-and-protected-write-audit.md). This
+document describes the shipped code; the ADR remains the reference for the decisions.
 
-## Objectif
+## Goal
 
-- Une clé de réglage non publique (`SettingSensitivity` autre que `Public`) ne
-  se lit que par qui peut lire son fichier privé ; les autres la voient
-  « masquée ».
-- Les secrets (`SecretReference`) sont chiffrés au repos dans un trousseau par
-  utilisateur, déverrouillé à la connexion.
-- Chaque modification sous `/etc`, `/bin` et `/var` (sauf `/var/log`) laisse une
-  ligne dans `/var/log/audit.log`, réussie ou refusée, au format d'`auditd`.
+- A non-public setting key (`SettingSensitivity` other than `Public`) can
+  only be read by whoever can read its private file; others see it
+  "masked".
+- Secrets (`SecretReference`) are encrypted at rest in a per-user keyring,
+  unlocked at login.
+- Each modification under `/etc`, `/bin` and `/var` (except `/var/log`) leaves a
+  line in `/var/log/audit.log`, successful or refused, in `auditd` format.
 
-## 1. Fichiers privés et masquage
+## 1. Private files and masking
 
-### Emplacements
+### Locations
 
-| Couche | Clés publiques | Clés non publiques |
+| Layer | Public keys | Non-public keys |
 | --- | --- | --- |
-| Système | `/etc/<appId>/<doc>.config` (`0644`) | `/etc/<appId>/<doc>.private.config` (`0600`, root) |
-| Utilisateur | `~/.config/<appId>/<doc>.config` | `~/.config/<appId>/<doc>.private.config` (`0600`) |
+| System | `/etc/<appId>/<doc>.config` (`0644`) | `/etc/<appId>/<doc>.private.config` (`0600`, root) |
+| User | `~/.config/<appId>/<doc>.config` | `~/.config/<appId>/<doc>.private.config` (`0600`) |
 
-Le fichier privé n'est lu et surveillé que si le schéma du document a au moins
-une clé non publique (`SettingsPrivateFiles.HasPrivateFields`).
+The private file is read and watched only if the document's schema has at least
+one non-public key (`SettingsPrivateFiles.HasPrivateFields`).
 
-| Sensibilité | Fichier | Couche utilisateur |
+| Sensitivity | File | User layer |
 | --- | --- | --- |
-| `Public` | `<doc>.config` | oui |
-| `Private` | `<doc>.private.config` | oui |
-| `SecretReference` | `<doc>.private.config` ; la valeur est l'identifiant d'une entrée du trousseau | oui |
-| `Restricted` | `<doc>.private.config` de `/etc` seulement | non : ignorée avec un avertissement, et `SetAsync` sur la couche utilisateur lève `InvalidOperationException` |
+| `Public` | `<doc>.config` | yes |
+| `Private` | `<doc>.private.config` | yes |
+| `SecretReference` | `<doc>.private.config`; the value is the identifier of a keyring entry | yes |
+| `Restricted` | `<doc>.private.config` in `/etc` only | no: ignored with a warning, and `SetAsync` on the user layer throws `InvalidOperationException` |
 
-### Lecture (`LayeredConfigResolver`)
+### Reading (`LayeredConfigResolver`)
 
-`LayeredConfigResolver.Resolve(schema, LayeredConfigFiles)` lit jusqu'à quatre
-fichiers. Une clé dans le mauvais fichier est ignorée avec un avertissement,
-comme une ligne invalide :
+`LayeredConfigResolver.Resolve(schema, LayeredConfigFiles)` reads up to four
+files. A key in the wrong file is ignored with a warning,
+like an invalid line:
 
-- `sensitive key 'k' belongs in <chemin privé>, ignored` ;
-- `public key 'k' belongs in <chemin public>, ignored` ;
-- `restricted key 'k' is only honored in the system private file, ignored` ;
+- `sensitive key 'k' belongs in <chemin privé>, ignored`;
+- `public key 'k' belongs in <chemin public>, ignored`;
+- `restricted key 'k' is only honored in the system private file, ignored`;
 - `[locked] is only honored in the public system file, section ignored`.
 
-La section `[locked]` n'est lue que dans le fichier public du système. Pour une
-clé non publique, l'ordre est :
+The `[locked]` section is read only in the system's public file. For a
+non-public key, the order is:
 
-1. valeur utilisateur privée (si la clé n'est ni verrouillée ni `Restricted`) ;
-2. **masquée**, origine utilisateur, si le fichier privé de l'utilisateur est
-   illisible ;
-3. valeur système privée ;
-4. **masquée**, origine système, si le fichier privé du système est illisible ;
-5. valeur par défaut.
+1. private user value (if the key is neither locked nor `Restricted`);
+2. **masked**, user origin, if the user's private file is
+   unreadable;
+3. private system value;
+4. **masked**, system origin, if the system's private file is unreadable;
+5. default value.
 
-Un fichier illisible pour une raison de droits (`PermissionDenied`,
-`CapabilityDenied`, `AuthorityDenied`, `ProtectedEntry`) ne fait pas échouer la
-lecture. `LayeredConfigSnapshot.MaskedKeys` liste les clés masquées ; leur
-entrée dans `Values` garde la valeur par défaut déclarée, jamais la vraie.
+A file unreadable for a permissions reason (`PermissionDenied`,
+`CapabilityDenied`, `AuthorityDenied`, `ProtectedEntry`) does not make the
+read fail. `LayeredConfigSnapshot.MaskedKeys` lists the masked keys; their
+entry in `Values` keeps the declared default value, never the real one.
 
-### Écriture (`SettingsPrivateFiles.Apply`)
+### Writing (`SettingsPrivateFiles.Apply`)
 
-Une écriture lit les deux fichiers de la couche, déplace les clés mal placées
-(dans les deux sens), puis range chaque clé selon sa sensibilité ; retirer une
-clé l'efface des deux fichiers. Le fichier privé est écrit en premier (créé en
-`0600`), puis le fichier public, chacun par une édition à révision
-(`SettingsTextFile.EditAsync`) qui garde commentaires et clés inconnues.
+A write reads the layer's two files, moves misplaced keys
+(in both directions), then files each key according to its sensitivity; removing a
+key erases it from both files. The private file is written first (created
+as `0600`), then the public file, each through a revision-based edit
+(`SettingsTextFile.EditAsync`) that keeps comments and unknown keys.
 
-### API du SDK
+### SDK API
 
 ```csharp
 await using HackSettingsDocument mail = await HackSettings.OpenAsync(AppContext);
@@ -82,61 +82,61 @@ string? password = await mail.GetSecretAsync("Account.password");
 await mail.SetSecretAsync("Account.password", null);          // efface l'entrée et la référence
 ```
 
-- `HackSettingMaskedException` dérive de `UnauthorizedAccessException` et donne
-  `QualifiedKey` et `PrivatePath`.
-- La référence d'un secret est `settings:<document>:<groupe.clé>`.
-- `GetSecretAsync`/`SetSecretAsync` exigent une clé `SecretReference` et ne
-  sont pas offerts sur les documents de l'OS (`NotSupportedException`).
-- L'événement `Changed` signale aussi un changement d'état masqué.
+- `HackSettingMaskedException` derives from `UnauthorizedAccessException` and gives
+  `QualifiedKey` and `PrivatePath`.
+- A secret's reference is `settings:<document>:<group.key>`.
+- `GetSecretAsync`/`SetSecretAsync` require a `SecretReference` key and are
+  not offered on OS documents (`NotSupportedException`).
+- The `Changed` event also signals a change of masked state.
 
-### Exports et diagnostics
+### Exports and diagnostics
 
-`StorageSnapshotRedactor` masque, dans l'instantané de stockage de l'app
-Diagnostics (`AppStorageDiagnosticsGateway`), le contenu des fichiers
-`*.private.config` et de tout fichier sous `~/.local/share/keyrings/` : le
-morceau devient `[masked: ADR 0100]`. La synchronisation ne couvre que le
-dossier personnel, donc le fichier privé de `/etc` (seul porteur des clés
-`Restricted`) n'est jamais synchronisé. La sauvegarde complète de l'ADR 0099,
-réservée à root, garde tout.
+`StorageSnapshotRedactor` masks, in the storage snapshot of the Diagnostics
+app (`AppStorageDiagnosticsGateway`), the content of `*.private.config`
+files and of any file under `~/.local/share/keyrings/`: the
+chunk becomes `[masked: ADR 0100]`. Synchronization covers only the
+home folder, so the private file in `/etc` (the only carrier of `Restricted`
+keys) is never synchronized. The full backup of ADR 0099,
+reserved to root, keeps everything.
 
-## 2. Trousseau de connexion
+## 2. Login keyring
 
-| Élément | Valeur |
+| Element | Value |
 | --- | --- |
-| Fichier | `~/.local/share/keyrings/login.keyring` (`0600`, dossier `0700`) |
-| Chiffrement | AES-256-GCM, nonce de 12 octets neuf à chaque écriture |
-| Clé | Clé maîtresse aléatoire de 32 octets, enveloppée (AES-256-GCM) dans des emplacements : un emplacement mot de passe (PBKDF2-SHA-256, 210 000 itérations, sel de 16 octets) et un emplacement par clé d'accès PRF (SHA-256 de `hackeros-keyring-prf-v1` et de la sortie PRF, ADR 0168) |
-| Moteur | Web Crypto (`cryptoHasher.js`, `WebCryptoKeyringCipher`) dans l'hôte, `ManagedKeyringCipher` (.NET) dans les tests |
-| Format | JSON `hackeros-keyring` v2 : `cipher`, `slots` (`kind` `password` avec `kdf`, `iterations`, `salt` ; ou `passkey` avec `credentialId` ; puis `nonce`, `wrappedKey`), `nonce`, `ciphertext` (base64). Un fichier v1 (entrées scellées directement sous la clé du mot de passe) est lu et réécrit en v2 à la prochaine connexion par mot de passe (`keyring.upgrade`) |
+| File | `~/.local/share/keyrings/login.keyring` (`0600`, folder `0700`) |
+| Encryption | AES-256-GCM, fresh 12-byte nonce at each write |
+| Key | Random 32-byte master key, wrapped (AES-256-GCM) in slots: one password slot (PBKDF2-SHA-256, 210,000 iterations, 16-byte salt) and one slot per passkey PRF (SHA-256 of `hackeros-keyring-prf-v1` and the PRF output, ADR 0168) |
+| Engine | Web Crypto (`cryptoHasher.js`, `WebCryptoKeyringCipher`) in the host, `ManagedKeyringCipher` (.NET) in tests |
+| Format | JSON `hackeros-keyring` v2: `cipher`, `slots` (`kind` `password` with `kdf`, `iterations`, `salt`; or `passkey` with `credentialId`; then `nonce`, `wrappedKey`), `nonce`, `ciphertext` (base64). A v1 file (entries sealed directly under the password key) is read and rewritten as v2 at the next password login (`keyring.upgrade`) |
 
-### Cycle de vie (`UserKeyringService`)
+### Lifecycle (`UserKeyringService`)
 
-- **Connexion** (`LocalSessionService`) : `UnlockAsync(principal, password)`
-  ouvre le trousseau, ou le crée vide. Un utilisateur sans mot de passe n'a pas
-  de trousseau : il reste verrouillé.
-- **Connexion par clé d'accès** (ADR 0168) : `UnlockWithPasskeyAsync(principal,
-  idDeLaClé, sortiePrf)` ouvre le trousseau par l'emplacement de cette clé.
-  Sans sortie PRF ou sans emplacement, le trousseau reste verrouillé ; il n'est
-  jamais mis de côté par ce chemin. Une clé ajoutée pendant que le trousseau
-  est ouvert reçoit son emplacement (`AddPasskeySlotAsync`) ; une clé retirée
-  perd le sien (`RemovePasskeySlotAsync`, possible trousseau verrouillé, car
-  les emplacements sont en clair). Voir [`passkeys.md`](passkeys.md).
-- **Mot de passe différent** (réinitialisé par un administrateur) : le
-  trousseau illisible est renommé `login.keyring.old` et un trousseau vide le
-  remplace, comme sous GNOME.
-- **Déconnexion, arrêt** : `Lock()` efface la clé de la mémoire.
-- **Changement de mot de passe** : `ChangePasswordAsync(userId, nouveau)`
-  remplace seulement l'emplacement mot de passe (nouveau sel) ; les
-  emplacements des clés d'accès restent valides. **Mise à l'écart par un
-  administrateur** : `SetAsideAsync(homePath)`. La commande `passwd` et
-  l'onglet « Utilisateurs » des Paramètres les appellent (ADR 0120, voir
-  [§4](#4-mots-de-passe--passwd-et-réinitialisation) plus bas).
-- Le journal d'authentification (`IAuditLog`) reçoit `keyring.unlock`,
-  `keyring.create`, `keyring.reset` (aussi pour une mise à l'écart par
-  l'administrateur), `keyring.rekey` et `keyring.upgrade` (passage au format 2),
-  sans aucun secret.
+- **Login** (`LocalSessionService`): `UnlockAsync(principal, password)`
+  opens the keyring, or creates it empty. A user without a password has no
+  keyring: it stays locked.
+- **Passkey login** (ADR 0168): `UnlockWithPasskeyAsync(principal,
+  keyId, prfOutput)` opens the keyring through that key's slot.
+  Without a PRF output or without a slot, the keyring stays locked; it is
+  never set aside by this path. A key added while the keyring
+  is open gets its slot (`AddPasskeySlotAsync`); a removed key
+  loses its own (`RemovePasskeySlotAsync`, possible with the keyring locked, because
+  slots are in the clear). See [`passkeys.md`](passkeys.md).
+- **Different password** (reset by an administrator): the
+  unreadable keyring is renamed `login.keyring.old` and an empty keyring replaces it,
+  as under GNOME.
+- **Logout, shutdown**: `Lock()` erases the key from memory.
+- **Password change**: `ChangePasswordAsync(userId, new)`
+  replaces only the password slot (new salt); the passkey
+  slots stay valid. **Set aside by an
+  administrator**: `SetAsideAsync(homePath)`. The `passwd` command and
+  the "Users" tab of Settings call them (ADR 0120, see
+  [§4](#4-mots-de-passe--passwd-et-réinitialisation) below).
+- The authentication log (`IAuditLog`) receives `keyring.unlock`,
+  `keyring.create`, `keyring.reset` (also for a set-aside by the
+  administrator), `keyring.rekey` and `keyring.upgrade` (move to format 2),
+  without any secret.
 
-### API du SDK (`HackKeyring`)
+### SDK API (`HackKeyring`)
 
 ```csharp
 if (HackKeyring.IsUnlocked(AppContext))
@@ -152,139 +152,138 @@ IReadOnlyList<HackKeyringEntry> all = await HackKeyring.ListAllAsync(AppContext)
 string? other = await HackKeyring.GetAsync(AppContext, "org.example.mail", "imap");
 ```
 
-- Une app ne voit que ses propres entrées. Lire celles d'une autre app ou tout
-  lister demande `keyring.read-all` ; sans elle, `UnauthorizedAccessException`.
-- Un trousseau verrouillé lève `HackKeyringLockedException`.
-- Un identifiant fait au plus 256 caractères, sans caractère de contrôle.
-- Chaque méthode existe aussi sans contexte (contexte ambiant de l'ADR 0043).
-- `IAppExecutionContext.Keyring` (`IAppKeyringGateway`) est la passerelle ; elle
-  a une implémentation par défaut toujours verrouillée, pour les contextes de
-  test et les services système (ADR 0097), qui n'ont pas de trousseau.
+- An app sees only its own entries. Reading those of another app or listing
+  everything requires `keyring.read-all`; without it, `UnauthorizedAccessException`.
+- A locked keyring throws `HackKeyringLockedException`.
+- An identifier is at most 256 characters, with no control character.
+- Each method also exists without a context (ambient context of ADR 0043).
+- `IAppExecutionContext.Keyring` (`IAppKeyringGateway`) is the gateway; it
+  has a default implementation that is always locked, for test contexts
+  and system services (ADR 0097), which have no keyring.
 
-## 3. Journal d'audit
+## 3. Audit log
 
-### Écriture
+### Writing
 
-`FileSystemService` reçoit un `IFileSystemAuditSink` optionnel
-(`FileSystemAuditLog` dans l'hôte). Après chaque création, écriture,
-renommage (`rename`), copie (`copy`, sur le chemin de destination),
-suppression et `chmod`, si le chemin ou sa destination est audité
-(`FileSystemAuditPolicy.IsAudited` : `/etc`, `/bin`, `/var` sauf `/var/log`),
-une ligne est mise en file pour l'écrivain unique de journaux (ADR 0045) vers
-`LogFileTarget.AuditLog` : `/var/log/audit.log`, `0600`, rotation 1 Mio × 5.
+`FileSystemService` receives an optional `IFileSystemAuditSink`
+(`FileSystemAuditLog` in the host). After each creation, write,
+rename (`rename`), copy (`copy`, on the destination path),
+deletion and `chmod`, if the path or its destination is audited
+(`FileSystemAuditPolicy.IsAudited`: `/etc`, `/bin`, `/var` except `/var/log`),
+a line is queued for the single log writer (ADR 0045) to
+`LogFileTarget.AuditLog`: `/var/log/audit.log`, `0600`, rotation 1 MiB × 5.
 
 ```
 type=PATH msg=audit(1792218000.123:42): op=write path="/etc/hosts" uid=0 auid=1000 pid=231 comm="nano" app="org.hackeros.commands.nano" res=success UID="root" AUID="alice"
 ```
 
-- `uid` : l'identité qui écrit (`root` pour une opération système ou élevée par
-  `sudo`/approbation) ; `auid` : l'humain d'origine, `unset` pour l'OS.
-- HackerOS n'a pas d'identifiants numériques : `root` vaut `0`, un utilisateur
-  `1000`, `unset` `4294967295` ; les champs `UID=` et `AUID=` donnent les noms,
-  comme les champs enrichis d'`auditd`.
-- Un refus ajoute `err=<code>` (par exemple `err=PermissionDenied`). Le contenu
-  n'est jamais écrit.
-- HackerOS n'a pas d'opération `chown` : il n'y a donc rien à auditer pour elle.
+- `uid`: the identity that writes (`root` for a system operation or one elevated by
+  `sudo`/approval); `auid`: the original human, `unset` for the OS.
+- HackerOS has no numeric identifiers: `root` is `0`, a user
+  `1000`, `unset` `4294967295`; the `UID=` and `AUID=` fields give the names,
+  like `auditd`'s enriched fields.
+- A refusal adds `err=<code>` (for example `err=PermissionDenied`). The content
+  is never written.
+- HackerOS has no `chown` operation: there is therefore nothing to audit for it.
 
-`AuditLineFormat` (Simulation.Abstractions) écrit et relit ces lignes.
+`AuditLineFormat` (Simulation.Abstractions) writes and reads back these lines.
 
-### Lecture
+### Reading
 
-- **`ausearch`** (`org.hackeros.commands.ausearch`, avec `sudo`) : `-f chemin`
-  (le chemin, un fichier dessous, ou un nom de fichier), `-ua`, `-ui`, `-ul`
-  (utilisateur, `uid`, `auid`), `-c comm`, `--success yes|no` (`-sv`),
-  `-if fichier`, `-i` (accepté). Lit les archives `.5` à `.1` puis le journal ;
-  affiche `----`, `time->…` puis la ligne ; `<no matches>` et code 1 sans
-  résultat.
-- **Error Log Viewer** : la famille `audit.log` apparaît pour un
-  administrateur ou une session élevée (`LogSource.RequiresRoot`), et n'est pas
-  lue par la vue « tous les journaux », pour ne pas demander d'élévation à
-  chaque ouverture. Une écriture refusée s'affiche en avertissement, une
-  écriture réussie en information, avec l'app comme source.
+- **`ausearch`** (`org.hackeros.commands.ausearch`, with `sudo`): `-f path`
+  (the path, a file below it, or a file name), `-ua`, `-ui`, `-ul`
+  (user, `uid`, `auid`), `-c comm`, `--success yes|no` (`-sv`),
+  `-if file`, `-i` (accepted). Reads the `.5` to `.1` archives then the log;
+  displays `----`, `time->…` then the line; `<no matches>` and code 1 with no
+  result.
+- **Error Log Viewer**: the `audit.log` family appears for an
+  administrator or an elevated session (`LogSource.RequiresRoot`), and is not
+  read by the "all logs" view, so as not to ask for elevation at
+  each opening. A refused write is displayed as a warning, a successful
+  write as information, with the app as the source.
 
-## 4. Mots de passe : `passwd` et réinitialisation
+## 4. Passwords: `passwd` and reset
 
-Décision : [ADR 0120](adr/0120-passwd-and-administrator-password-reset.md).
+Decision: [ADR 0120](adr/0120-passwd-and-administrator-password-reset.md).
 
-- **`LocalPasswordService`** (`Platform.Core/Sessions`) fait le travail de
-  `passwd` et de `/etc/shadow` : il hache le nouveau mot de passe comme à la
-  création du compte (`LocalPasswordHasher`, PBKDF2-SHA-256, Web Crypto dans
-  le navigateur), l'enregistre par `ILocalUserRepository.SetCredentialAsync`,
-  fait suivre le trousseau et écrit `passwd.change`, `passwd.reset` ou
-  `passwd.delete` dans `auth.log`.
-- **Son propre mot de passe**, sans capacité : le mot de passe courant est
-  vérifié (vide si le compte n'en a pas), le nouveau doit avoir 8 à 256
-  caractères sans caractère de contrôle et différer de l'actuel. Le trousseau
-  est re-chiffré (`ChangePasswordAsync`) ; s'il n'était pas ouvert, il est
-  d'abord ouvert avec l'ancien mot de passe.
-- **Le mot de passe d'un autre compte** : capacité dangereuse `users.manage`
-  et un administrateur par l'agent d'authentification (rien sous `sudo`). Le
-  trousseau du compte est mis de côté (`login.keyring.old`) ; si c'est celui
-  de la session, il est re-chiffré (réinitialisation) ou mis de côté puis
-  verrouillé (retrait). Retirer le mot de passe du dernier administrateur
-  actif qui en a un est refusé.
-- **SDK** : `HackUserAccounts` (`ListAsync`, `ChangePasswordAsync`,
-  `ResetPasswordAsync`, `RemovePasswordAsync`, `ValidateNewPassword`) sur
-  `IAppExecutionContext.UserAccounts`, branché par
+- **`LocalPasswordService`** (`Platform.Core/Sessions`) does the work of
+  `passwd` and `/etc/shadow`: it hashes the new password as at
+  account creation (`LocalPasswordHasher`, PBKDF2-SHA-256, Web Crypto in
+  the browser), stores it through `ILocalUserRepository.SetCredentialAsync`,
+  makes the keyring follow and writes `passwd.change`, `passwd.reset` or
+  `passwd.delete` to `auth.log`.
+- **One's own password**, without a capability: the current password is
+  verified (empty if the account has none), the new one must be 8 to 256
+  characters with no control character and differ from the current one. The keyring
+  is re-encrypted (`ChangePasswordAsync`); if it was not open, it is
+  first opened with the old password.
+- **Another account's password**: dangerous capability `users.manage`
+  and an administrator through the authentication agent (nothing under `sudo`). The
+  account's keyring is set aside (`login.keyring.old`); if it is the session's,
+  it is re-encrypted (reset) or set aside then locked (removal). Removing
+  the password of the last active administrator who has one is refused.
+- **SDK**: `HackUserAccounts` (`ListAsync`, `ChangePasswordAsync`,
+  `ResetPasswordAsync`, `RemovePasswordAsync`, `ValidateNewPassword`) on
+  `IAppExecutionContext.UserAccounts`, wired by
   `SystemAdministrationGatewayServices.Passwords`.
-- **Terminal** : `passwd`, `passwd NOM` et `passwd -d NOM` sous `sudo`,
-  `passwd -S [NOM]` ([`linux-commands.md`](linux-commands.md)). Les mots de
-  passe sont lus écho coupé : `TerminalExecutionContext.ReadSecretLineAsync`
-  coupe `ITerminalInputMode.EchoEnabled` de l'entrée du terminal, comme
-  `getpass(3)` coupe `ECHO` ([`terminal-emulator.md`](terminal-emulator.md)).
-- **Paramètres > Utilisateurs** (`UsersPanel`) : liste des comptes avec leur
-  état `P`/`NP`/`L`, changement de son mot de passe, et pour un administrateur
-  la réinitialisation ou le retrait du mot de passe d'un autre compte, l'ajout
-  et la suppression de comptes (ADR 0169, [`settings-app.md`](settings-app.md)).
-  Les clés d'accès de la session sont dans `PasskeysPanel` (ADR 0168).
+- **Terminal**: `passwd`, `passwd NAME` and `passwd -d NAME` under `sudo`,
+  `passwd -S [NAME]` ([`linux-commands.md`](linux-commands.md)). Passwords are
+  read with echo off: `TerminalExecutionContext.ReadSecretLineAsync`
+  turns off `ITerminalInputMode.EchoEnabled` of the terminal input, as
+  `getpass(3)` turns off `ECHO` ([`terminal-emulator.md`](terminal-emulator.md)).
+- **Settings > Users** (`UsersPanel`): list of accounts with their
+  `P`/`NP`/`L` state, change of one's own password, and for an administrator
+  the reset or removal of another account's password, adding
+  and deleting accounts (ADR 0169, [`settings-app.md`](settings-app.md)).
+  The session's passkeys are in `PasskeysPanel` (ADR 0168).
 
-## Limites connues
+## Known limits
 
-- Les documents de l'OS (`OsSettingsDocument`) n'acceptent que des clés
-  publiques : un schéma avec une clé non publique lève `ArgumentException`.
-- L'app Paramètres n'a pas encore d'écran pour les réglages des apps ; une UI
-  qui en affiche utilise `HackSettingValue.DisplayText` pour le masque.
-- Un fichier créé par une approbation ou `sudo` appartient à l'utilisateur
-  humain (comportement existant de l'ADR 0042), y compris un fichier privé de
-  `/etc` créé ainsi ; son mode reste `0600`.
+- OS documents (`OsSettingsDocument`) accept only public
+  keys: a schema with a non-public key throws `ArgumentException`.
+- The Settings app does not yet have a screen for apps' settings; a UI
+  that displays them uses `HackSettingValue.DisplayText` for the mask.
+- A file created by an approval or `sudo` belongs to the human user
+  (existing behavior of ADR 0042), including a private file in
+  `/etc` created this way; its mode stays `0600`.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Settings/SensitiveSettingsTests.cs` :
-  fichier privé `0600`, masquage d'une valeur système, valeur utilisateur
-  prioritaire, déplacement d'une clé mal placée, `Restricted` refusée côté
-  utilisateur, secret dans le trousseau, avertissements du résolveur.
-- `Tests/HackerOs.Platform.Core.Tests/Keyring/UserKeyringServiceTests.cs` :
-  création et modes, reconnexion, mise à l'écart sur un autre mot de passe,
-  changement de mot de passe, mise à l'écart par l'administrateur, utilisateur
-  sans mot de passe, confinement par app et `keyring.read-all`, chiffrement.
-- `Tests/HackerOs.Platform.Core.Tests/Sessions/PasskeyServiceTests.cs` :
-  emplacement PRF, ouverture par clé d'accès, clé sans PRF, changement de mot
-  de passe qui garde les emplacements, migration du format 1.
-- `Tests/HackerOs.Platform.Core.Tests/FileSystem/FileSystemAuditTests.cs` :
-  politique, format aller-retour, écritures acceptées et refusées dans
-  `audit.log` (`0600`), `uid`/`auid` sous `sudo`.
-- `Tests/HackerOs.Commands.Tests/CoreCommandsTests.cs` : filtres d'`ausearch`.
-- `Tests/HackerOs.Platform.Core.Tests/Sessions/LocalPasswordServiceTests.cs` :
-  changement avec trousseau conservé, mauvais mot de passe courant, règles,
-  réinitialisation qui met le trousseau de côté, retrait refusé au dernier
-  administrateur, passerelle (`users.manage` et administrateur).
-- `Tests/HackerOs.Commands.Wave5.Tests/PasswdCommandTests.cs` : invites écho
-  coupé, confirmation différente, `sudo passwd NOM`, `-d`, `-S`.
-- `Tests/HackerOs.UI.E2E.Tests/PasswdTerminalTests.cs` : `passwd` dans le vrai
-  terminal n'affiche rien de ce qui est tapé, puis seule la nouvelle valeur
-  ouvre la session.
+- `Tests/HackerOs.Platform.Core.Tests/Settings/SensitiveSettingsTests.cs`:
+  private file `0600`, masking of a system value, user value
+  taking priority, moving of a misplaced key, `Restricted` refused on the
+  user side, secret in the keyring, resolver warnings.
+- `Tests/HackerOs.Platform.Core.Tests/Keyring/UserKeyringServiceTests.cs`:
+  creation and modes, reconnection, set-aside on a different password,
+  password change, set-aside by the administrator, user
+  without a password, per-app confinement and `keyring.read-all`, encryption.
+- `Tests/HackerOs.Platform.Core.Tests/Sessions/PasskeyServiceTests.cs`:
+  PRF slot, opening through a passkey, key without PRF, password change
+  that keeps the slots, migration from format 1.
+- `Tests/HackerOs.Platform.Core.Tests/FileSystem/FileSystemAuditTests.cs`:
+  policy, round-trip format, accepted and refused writes in
+  `audit.log` (`0600`), `uid`/`auid` under `sudo`.
+- `Tests/HackerOs.Commands.Tests/CoreCommandsTests.cs`: `ausearch` filters.
+- `Tests/HackerOs.Platform.Core.Tests/Sessions/LocalPasswordServiceTests.cs`:
+  change with keyring kept, wrong current password, rules,
+  reset that sets the keyring aside, removal refused for the last
+  administrator, gateway (`users.manage` and administrator).
+- `Tests/HackerOs.Commands.Wave5.Tests/PasswdCommandTests.cs`: echo-off
+  prompts, different confirmation, `sudo passwd NAME`, `-d`, `-S`.
+- `Tests/HackerOs.UI.E2E.Tests/PasswdTerminalTests.cs`: `passwd` in the real
+  terminal displays nothing of what is typed, then only the new value
+  opens the session.
 
-## Liste des tâches
+## Task list
 
-- [x] Fichier compagnon `<doc>.private.config` (`0600`) et rangement des clés à l'écriture
-- [x] Lecture des quatre fichiers, avertissements des clés mal placées, masquage
+- [x] Companion file `<doc>.private.config` (`0600`) and filing of keys at write
+- [x] Reading of the four files, warnings for misplaced keys, masking
 - [x] `HackSettingValue`, `HackSettingMaskedException`, `GetSecretAsync`/`SetSecretAsync`
-- [x] Trousseau `login.keyring` chiffré AES-GCM (Web Crypto) sous une clé PBKDF2
-- [x] Déverrouillage à la connexion, verrouillage à la déconnexion, mise à l'écart `.old`
-- [x] `HackKeyring` et capacité dangereuse `keyring.read-all`
-- [x] Masquage des fichiers privés et du trousseau dans les instantanés de diagnostic
-- [x] Journal `/var/log/audit.log` écrit par le système de fichiers
-- [x] Commande `ausearch` et lecture du journal d'audit par l'Error Log Viewer
+- [x] `login.keyring` encrypted with AES-GCM (Web Crypto) under a PBKDF2 key
+- [x] Unlock at login, lock at logout, `.old` set-aside
+- [x] `HackKeyring` and dangerous capability `keyring.read-all`
+- [x] Masking of private files and the keyring in diagnostic snapshots
+- [x] `/var/log/audit.log` log written by the file system
+- [x] `ausearch` command and reading of the audit log by the Error Log Viewer
 - [x] Tests
-- [x] Commande `passwd` et réinitialisation par un administrateur (ADR 0120 : `LocalPasswordService`, `HackUserAccounts`, onglet « Utilisateurs »)
+- [x] `passwd` command and reset by an administrator (ADR 0120: `LocalPasswordService`, `HackUserAccounts`, "Users" tab)

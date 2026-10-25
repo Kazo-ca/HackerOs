@@ -1,189 +1,189 @@
-# ADR 0046 : Systèmes de fichiers virtuels `/proc` et `/dev`
+# ADR 0046: Virtual `/proc` and `/dev` file systems
 
-## Statut
+## Status
 
-Accepté le 2026-10-10.
+Accepted on 2026-10-10.
 
-- **Phase du plan :** phase 1 — Fichiers ([`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md), section 5.4, décision D20).
-- **Remplace :** aucun ADR. **Complète :** ADR 0008 (ajout du type d'entrée
-  `CharacterDevice`, réservé aux fournisseurs virtuels).
+- **Plan phase:** phase 1, Files ([`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md), section 5.4, decision D20).
+- **Replaces:** no ADR. **Complements:** ADR 0008 (adds the entry type
+  `CharacterDevice`, reserved for virtual providers).
 
-## Contexte
+## Context
 
-Sous Linux, `ps`, `top` et les gestionnaires de tâches lisent `/proc`, et les
-scripts redirigent vers `/dev/null`. HackerOS a déjà les données nécessaires :
-`IProcessManager` (arbre des processus), `IResourceSimulator` (échantillons CPU,
-mémoire, E/S), `VirtualHardwareProfile` et `ISimulationClock`. Il a aussi déjà
-le mécanisme de montage : `FileSystemMountRouter` choisit le montage le plus
-spécifique et accepte des montages supplémentaires. Mais la composition de l'OS
-ne monte aujourd'hui que le fournisseur IndexedDB.
+On Linux, `ps`, `top` and task managers read `/proc`, and
+scripts redirect to `/dev/null`. HackerOS already has the necessary data:
+`IProcessManager` (process tree), `IResourceSimulator` (CPU,
+memory, I/O samples), `VirtualHardwareProfile` and `ISimulationClock`. It also already has
+the mount mechanism: `FileSystemMountRouter` picks the most
+specific mount and accepts additional mounts. But the OS composition
+today only mounts the IndexedDB provider.
 
-## Décision
+## Decision
 
-### 1. Deux fournisseurs, jamais persistés
+### 1. Two providers, never persisted
 
-| Montage | Classe | `ProviderId` |
+| Mount | Class | `ProviderId` |
 |---|---|---|
 | `/proc` | `ProcFileSystemProvider` | `procfs` |
 | `/dev` | `DevFileSystemProvider` | `devfs` |
 
-- Emplacement : `Platform/HackerOs.Platform.Core/FileSystem/Virtual/`, namespace
-  `HackerOs.Platform.Core.FileSystem.Virtual`. Les deux implémentent
+- Location: `Platform/HackerOs.Platform.Core/FileSystem/Virtual/`, namespace
+  `HackerOs.Platform.Core.FileSystem.Virtual`. Both implement
   `IFileSystemProvider`.
-- **Calculés à chaque lecture.** Aucun appel au stockage, rien n'est écrit dans
+- **Computed on every read.** No call to storage, nothing is written to
   IndexedDB (D20).
-- Branchement dans `EcosystemServiceCollectionExtensions`, utilisé par les deux
-  hôtes WASM :
+- Wiring in `EcosystemServiceCollectionExtensions`, used by both
+  WASM hosts:
   `new FileSystemMountRouter(indexedDbProvider, [new FileSystemMount(VirtualPath.Parse("/proc"), procfs), new FileSystemMount(VirtualPath.Parse("/dev"), devfs)])`.
-  Les montages sont protégés (`isProtectedRoot: true`).
-- **Points de montage visibles :** le routeur ne fusionne pas les montages dans
-  le listage du parent. `FileSystemSeeder` crée donc les dossiers vides `/proc`
-  (`system:system 0555`) et `/dev` (`system:system 0755`) dans le fournisseur
-  racine, comme de vrais points de montage. `ls /` les montre, et le routeur les
-  masque ensuite par le fournisseur virtuel.
-- **Identité des entrées :** `FileSystemEntryId` stable, tiré des 16 premiers
-  octets du SHA-256 de `"<providerId>:<chemin>"`. Pour `/proc/<pid>`, le PID
-  n'est jamais réutilisé pendant un démarrage (ADR 0012), donc l'identité reste
+  The mounts are protected (`isProtectedRoot: true`).
+- **Visible mount points:** the router does not merge mounts into the
+  parent's listing. `FileSystemSeeder` therefore creates the empty folders `/proc`
+  (`system:system 0555`) and `/dev` (`system:system 0755`) in the root
+  provider, like real mount points. `ls /` shows them, and the router then
+  masks them with the virtual provider.
+- **Entry identity:** a stable `FileSystemEntryId`, taken from the first 16
+  bytes of the SHA-256 of `"<providerId>:<path>"`. For `/proc/<pid>`, the PID
+  is never reused during a boot (ADR 0012), so the identity stays
   stable.
-- **Révision :** `ISimulationClock.CurrentTick` au moment de la lecture. Les
-  horodatages sont l'heure de démarrage du processus pour `/proc/<pid>`, l'heure
-  de démarrage de l'OS sinon, et l'heure courante pour le contenu des fichiers.
-- **Taille :** `0` pour tous les fichiers virtuels, comme sous Linux. Le contenu
-  est produit en flux : un lecteur lit jusqu'à la fin de flux, sans se fier à la
-  taille.
-- **Surveillance :** aucun événement de `FileSystemChangeEvent` n'est émis pour
-  ces montages. `inotify` ne fonctionne pas non plus sur `/proc` sous Linux.
+- **Revision:** `ISimulationClock.CurrentTick` at the time of reading. Timestamps
+  are the process start time for `/proc/<pid>`, the OS start
+  time otherwise, and the current time for file contents.
+- **Size:** `0` for all virtual files, as on Linux. Content
+  is produced as a stream: a reader reads to the end of the stream, without relying on the
+  size.
+- **Watching:** no `FileSystemChangeEvent` event is emitted for
+  these mounts. `inotify` does not work on `/proc` on Linux either.
 
-### 2. Opérations non permises
+### 2. Operations not allowed
 
-Les entrées sont exposées avec des bits de mode en lecture seule. Toute
-création, suppression, déplacement, copie vers le montage ou changement de
-permissions répond `PermissionDenied`, comme le refus `EACCES` de Linux. Une
-écriture dans un fichier de `/proc` répond aussi `PermissionDenied`. Le
-`CopyAsync` **depuis** `/proc` vers un autre montage est géré par la façade de
-l'ADR 0043, qui copie le flux.
+Entries are exposed with read-only mode bits. Any
+creation, deletion, move, copy to the mount or permission change
+answers `PermissionDenied`, like Linux's `EACCES` denial. A
+write to a file in `/proc` also answers `PermissionDenied`. `CopyAsync`
+**from** `/proc` to another mount is handled by the ADR 0043 facade,
+which copies the stream.
 
-L'autorisation suit le chemin ordinaire du `FileSystemService` : capacité selon
-le chemin (`/proc` et `/dev` étant hors du dossier personnel, il faut
-`filesystem.system.read`, ou `filesystem.system.write` pour écrire dans `/dev`),
-autorité, puis bits de mode du fournisseur.
+Authorization follows the ordinary `FileSystemService` path: capability depending on
+the path (`/proc` and `/dev` being outside the home folder, this requires
+`filesystem.system.read`, or `filesystem.system.write` to write to `/dev`),
+authority, then the provider's mode bits.
 
-### 3. Contenu de `/proc`
+### 3. Contents of `/proc`
 
-**Visibilité des processus :** `/proc` ne liste que les processus actifs (pas
-`Stopped`). L'appelant voit toujours son propre processus. Il voit les autres
-s'il a la capacité `process.list` ou l'autorité `System`, comme
-`IAppProcessGateway.ListProcesses`. Un PID invisible répond `NotFound`.
+**Process visibility:** `/proc` lists only active processes (not
+`Stopped`). The caller always sees its own process. It sees the others
+if it has the `process.list` capability or `System` authority, like
+`IAppProcessGateway.ListProcesses`. An invisible PID answers `NotFound`.
 
-| Chemin | Type et mode | Contenu |
+| Path | Type and mode | Content |
 |---|---|---|
-| `/proc/<pid>/` | dossier `0555`, propriétaire = utilisateur du processus | — |
-| `/proc/<pid>/status` | fichier `0444` | voir ci-dessous |
-| `/proc/<pid>/cmdline` | fichier `0444` | `appId`, puis les arguments, séparés et terminés par `\0`. **Phase 1 : `appId` seul**, puisque `ProcessRecord` n'a pas encore les arguments (phase 3). |
-| `/proc/<pid>/environ` | fichier `0400` | `CLÉ=valeur\0…`. **Phase 1 : vide.** Rempli par l'environnement par processus de la phase 3 (D13). |
-| `/proc/<pid>/cwd` | lien symbolique `0777` | répertoire courant. **Phase 1 : `/home/<user>`.** Phase 3 : répertoire courant du processus. |
-| `/proc/self` | lien symbolique `0777` | `/proc/<pid de l'appelant>`. Absent si l'appelant n'a pas de processus. |
-| `/proc/meminfo` | fichier `0444` | `MemTotal`, `MemFree`, `MemAvailable` en kB |
-| `/proc/cpuinfo` | fichier `0444` | un bloc par cœur virtuel |
-| `/proc/uptime` | fichier `0444` | `<secondes depuis le démarrage> <secondes d'inactivité>` |
-| `/proc/loadavg` | fichier `0444` | `<1 min> <5 min> <15 min> <actifs>/<total> <dernier pid>` |
+| `/proc/<pid>/` | folder `0555`, owner = the process's user | n/a |
+| `/proc/<pid>/status` | file `0444` | see below |
+| `/proc/<pid>/cmdline` | file `0444` | `appId`, then the arguments, separated and terminated by `\0`. **Phase 1: `appId` only**, since `ProcessRecord` does not have the arguments yet (phase 3). |
+| `/proc/<pid>/environ` | file `0400` | `KEY=value\0...`. **Phase 1: empty.** Filled by the per-process environment of phase 3 (D13). |
+| `/proc/<pid>/cwd` | symbolic link `0777` | current directory. **Phase 1: `/home/<user>`.** Phase 3: the process's current directory. |
+| `/proc/self` | symbolic link `0777` | `/proc/<caller's pid>`. Absent if the caller has no process. |
+| `/proc/meminfo` | file `0444` | `MemTotal`, `MemFree`, `MemAvailable` in kB |
+| `/proc/cpuinfo` | file `0444` | one block per virtual core |
+| `/proc/uptime` | file `0444` | `<seconds since boot> <idle seconds>` |
+| `/proc/loadavg` | file `0444` | `<1 min> <5 min> <15 min> <active>/<total> <last pid>` |
 
-Format de `/proc/<pid>/status`, des paires `Clé:\tvaleur` dans cet ordre :
+Format of `/proc/<pid>/status`, `Key:\tvalue` pairs in this order:
 
 ```text
-Name:	<nom court de l'app, tronqué à 15 caractères comme sous Linux>
-State:	<lettre> (<mot>)
+Name:	<app short name, truncated to 15 characters as on Linux>
+State:	<letter> (<word>)
 Pid:	<pid>
-PPid:	<pid parent, ou 0>
+PPid:	<parent pid, or 0>
 Uid:	<UserId>
 AppId:	<appId>
 Kind:	<window|terminal|service>
 Session:	<SessionId>
-VmRSS:	<mémoire du dernier échantillon, en kB> kB
-Cpu:	<CpuUsage du dernier échantillon, en %>
+VmRSS:	<memory of the last sample, in kB> kB
+Cpu:	<CpuUsage of the last sample, in %>
 ```
 
-Correspondance `ProcessState` → `State` : `Created` → `I (idle)`, `Starting` →
+Mapping `ProcessState` → `State`: `Created` → `I (idle)`, `Starting` →
 `S (sleeping)`, `Running` → `R (running)`, `Stopping` → `T (stopping)`, `Faulted`
 → `Z (zombie)`.
 
-Sources des chiffres :
+Sources of the figures:
 
-- mémoire et CPU par processus : dernier `ProcessResourceSample` de
-  `IResourceSimulator.GetHistory(pid)` ;
-- `MemTotal` : `VirtualHardwareProfile.MemoryCapacityBytes` ;
-- `MemFree` : `MemTotal` moins le `TotalMemoryUsageBytes` du dernier
-  `SystemResourceSample` ;
-- nombre de cœurs de `cpuinfo` : `ceil(VirtualHardwareProfile.CpuCapacity)` ;
-- `uptime` : `CurrentTick × TickDuration` d'`ISimulationClock` ;
-- `loadavg` : moyennes glissantes de `TotalCpuUsage` sur l'historique système
-  borné.
+- per-process memory and CPU: last `ProcessResourceSample` from
+  `IResourceSimulator.GetHistory(pid)`;
+- `MemTotal`: `VirtualHardwareProfile.MemoryCapacityBytes`;
+- `MemFree`: `MemTotal` minus the `TotalMemoryUsageBytes` of the last
+  `SystemResourceSample`;
+- number of `cpuinfo` cores: `ceil(VirtualHardwareProfile.CpuCapacity)`;
+- `uptime`: `CurrentTick × TickDuration` of `ISimulationClock`;
+- `loadavg`: sliding averages of `TotalCpuUsage` over the bounded system
+  history.
 
-Pour connaître l'appelant (`/proc/self`), on ajoute à `AppOperationContext`
-(`Shared/HackerOs.App.Abstractions/AppOperationContext.cs`) une propriété
-`long? ProcessId { get; init; }`. C'est la valeur brute, parce que
-`App.Abstractions` ne référence pas le type `ProcessId`.
-`AppExecutionContextFactory` la renseigne.
+To know the caller (`/proc/self`), a property
+`long? ProcessId { get; init; }` is added to `AppOperationContext`
+(`Shared/HackerOs.App.Abstractions/AppOperationContext.cs`). It is the raw value, because
+`App.Abstractions` does not reference the `ProcessId` type.
+`AppExecutionContextFactory` fills it in.
 
-### 4. Contenu de `/dev`
+### 4. Contents of `/dev`
 
-Nouveau membre `FileSystemEntryKind.CharacterDevice` (complète ADR 0008).
-`ls -l` l'affiche avec le type `c`. Le fournisseur IndexedDB refuse de
-persister ce type (`UnsupportedOperation`). Les `switch` sur `FileSystemEntryKind`
-dans la plateforme et les apps de base doivent être revus pour ce nouveau cas.
+New member `FileSystemEntryKind.CharacterDevice` (complements ADR 0008).
+`ls -l` displays it with type `c`. The IndexedDB provider refuses to
+persist this type (`UnsupportedOperation`). The `switch` statements on `FileSystemEntryKind`
+in the platform and the base apps must be reviewed for this new case.
 
-| Chemin | Mode | Lecture | Écriture |
+| Path | Mode | Read | Write |
 |---|---|---|---|
-| `/dev/null` | `0666` | fin de flux immédiate | acceptée et ignorée |
-| `/dev/zero` | `0666` | flux infini d'octets `0x00` | acceptée et ignorée |
-| `/dev/random` | `0666` | flux infini d'octets aléatoires | acceptée et ignorée |
-| `/dev/urandom` | `0666` | identique à `/dev/random`, comme sous Linux moderne | acceptée et ignorée |
+| `/dev/null` | `0666` | immediate end of stream | accepted and ignored |
+| `/dev/zero` | `0666` | infinite stream of `0x00` bytes | accepted and ignored |
+| `/dev/random` | `0666` | infinite stream of random bytes | accepted and ignored |
+| `/dev/urandom` | `0666` | same as `/dev/random`, as on modern Linux | accepted and ignored |
 
-- L'aléa vient de `System.Security.Cryptography.RandomNumberGenerator`, et non
-  d'`ISimulationRandom` : l'ADR 0012 réserve celui-ci à la simulation
-  déterministe et l'interdit pour tout usage cryptographique.
-- **Flux infinis :** ils lisent par blocs de 4 Kio et respectent l'annulation.
-  `HackFile.ReadAll*` (ADR 0043) lève `HackIOException` sur une entrée
-  `CharacterDevice`, au lieu de geler l'unique thread du navigateur. Il faut
-  passer par `HackFile.OpenReadAsync`, comme `head -c 16 /dev/urandom` le ferait.
-- Une écriture dans un périphérique réussit sans changer de révision ni émettre
-  d'événement.
+- Randomness comes from `System.Security.Cryptography.RandomNumberGenerator`, not
+  from `ISimulationRandom`: ADR 0012 reserves the latter for deterministic
+  simulation and forbids it for any cryptographic use.
+- **Infinite streams:** they read in 4 KiB blocks and honor cancellation.
+  `HackFile.ReadAll*` (ADR 0043) throws `HackIOException` on a
+  `CharacterDevice` entry, instead of freezing the browser's only thread. One must
+  go through `HackFile.OpenReadAsync`, as `head -c 16 /dev/urandom` would.
+- A write to a device succeeds without changing the revision or emitting
+  an event.
 
-### 5. Consommateurs
+### 5. Consumers
 
-- `ps` et le gestionnaire de tâches liront `/proc`. La migration de `ps` se fait
-  en phase 3 avec les commandes, et celle du gestionnaire de tâches en phase 4
-  (plan, section 8.2). Ils gardent `IAppProcessGateway` pour les actions (kill).
-- La redirection `> /dev/null` arrive avec la grammaire du shell de la phase 3.
+- `ps` and the task manager will read `/proc`. The migration of `ps` happens
+  in phase 3 with the commands, and that of the task manager in phase 4
+  (plan, section 8.2). They keep `IAppProcessGateway` for actions (kill).
+- The `> /dev/null` redirection arrives with the shell grammar of phase 3.
 
-### 6. Tests de contrat
+### 6. Contract tests
 
-Dans `Tests/HackerOs.Platform.Core.Tests/FileSystem/Virtual/` :
+In `Tests/HackerOs.Platform.Core.Tests/FileSystem/Virtual/`:
 
-- listage de `/` contenant `proc` et `dev` ;
-- format exact de `status`, `meminfo`, `uptime` et `loadavg` avec une horloge et
-  un simulateur déterministes ;
-- visibilité des PID selon `process.list` ;
-- résolution de `/proc/self` ;
-- refus des mutations (`PermissionDenied`) ;
-- lecture vide de `/dev/null` et écriture ignorée ;
-- lecture bornée de `/dev/zero` par flux ;
-- absence de toute écriture dans le dépôt IndexedDB simulé.
+- listing of `/` containing `proc` and `dev`;
+- exact format of `status`, `meminfo`, `uptime` and `loadavg` with a deterministic
+  clock and simulator;
+- PID visibility depending on `process.list`;
+- resolution of `/proc/self`;
+- refusal of mutations (`PermissionDenied`);
+- empty read of `/dev/null` and ignored write;
+- bounded stream read of `/dev/zero`;
+- absence of any write to the simulated IndexedDB repository.
 
-## Conséquences
+## Consequences
 
-- `cat /proc/meminfo`, `ls /proc` et `echo x > /dev/null` (phase 3) se
-  comportent comme sous Linux.
-- Le contenu de `/proc` est toujours à jour, sans coût de stockage. En
-  contrepartie, chaque lecture recalcule le contenu ; un gestionnaire de tâches
-  qui interroge souvent doit garder un rythme raisonnable (1 s).
-- Le nouveau type `CharacterDevice` touche tous les `switch` exhaustifs sur
-  `FileSystemEntryKind` (explorateur, `ls`, `FileView`).
+- `cat /proc/meminfo`, `ls /proc` and `echo x > /dev/null` (phase 3)
+  behave as on Linux.
+- The contents of `/proc` are always up to date, with no storage cost. In
+  exchange, each read recomputes the content; a task manager
+  that polls often must keep a reasonable pace (1 s).
+- The new `CharacterDevice` type affects all exhaustive `switch` statements on
+  `FileSystemEntryKind` (explorer, `ls`, `FileView`).
 
-## Références
+## References
 
-- ADR 0008 : modèle du système de fichiers virtuel (complété).
-- ADR 0012 : processus, horloge, ressources et aléa.
-- ADR 0043 : API `Hack*`.
-- [`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md), sections 5.4, 7.2 et 8.2.
+- ADR 0008: virtual file system model (complemented).
+- ADR 0012: processes, clock, resources and randomness.
+- ADR 0043: `Hack*` API.
+- [`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md), sections 5.4, 7.2 and 8.2.
 - `Platform/HackerOs.Platform.Core/FileSystem/FileSystemMountRouter.cs`, `Platform/HackerOs.Platform.Core/Processes/`.

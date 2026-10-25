@@ -1,28 +1,28 @@
-# ADR 0077 : sites statiques hébergés, service `hackwebd` et Web Server Manager
+# ADR 0077: hosted static sites, `hackwebd` service and Web Server Manager
 
-## Statut
+## Status
 
-Accepté le 2026-10-16 (proposé le même jour, puis validé par Benoit avec le
-questionnaire de la section 4 du plan).
+Accepted on 2026-10-16 (proposed the same day, then validated by Benoit with the
+questionnaire of section 4 of the plan).
 
-- **Phase du plan :** phase web ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
-- **Dépend de :** ADR 0074 (ports, résolveur), ADR 0075 (rendu HTML).
-- **Suit :** ADR 0044 (paramètres en fichiers).
+- **Plan phase:** web phase ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
+- **Depends on:** ADR 0074 (ports, resolver), ADR 0075 (HTML rendering).
+- **Follows:** ADR 0044 (settings in files).
 
-## Contexte
+## Context
 
-Benoit veut pouvoir déclarer un site web statique à partir du système de
-fichiers et le gérer avec une app façon IIS, appuyée sur un service d'arrière-plan
-émulé qui ne fait que piloter l'OS par le SDK. Les fichiers locaux sont servis
-sur `localhost`.
+Benoit wants to be able to declare a static website from the file
+system and manage it with an IIS-style app, backed by an emulated
+background service that only drives the OS through the SDK. Local files are served
+on `localhost`.
 
-## Décision
+## Decision
 
-### 1. Déclarations en fichiers
+### 1. Declarations in files
 
-Un site hébergé est un fichier `/etc/hackweb/sites/<nom>.site` (JSON), modifiable
-par l'administrateur, comme `applicationHost.config` d'IIS ou
-`sites-available` de nginx :
+A hosted site is a file `/etc/hackweb/sites/<name>.site` (JSON), editable
+by the administrator, like IIS's `applicationHost.config` or
+nginx's `sites-available`:
 
 ```json
 {
@@ -35,58 +35,58 @@ par l'administrateur, comme `applicationHost.config` d'IIS ou
 }
 ```
 
-Un nom autre que `localhost` dans `bindings` est publié par `hackdns`
+A name other than `localhost` in `bindings` is published by `hackdns`
 (ADR 0074 §4).
 
-Qui peut déclarer un site :
+Who can declare a site:
 
-| Où | Qui | Ports |
+| Where | Who | Ports |
 |---|---|---|
-| `/etc/hackweb/sites/` | l'administrateur (approbation) | tous, y compris < 1024 |
-| `~/.config/hackweb/sites/` | tout utilisateur, pour lui-même | 1024 et plus seulement |
+| `/etc/hackweb/sites/` | the administrator (approval) | all, including < 1024 |
+| `~/.config/hackweb/sites/` | any user, for themselves | 1024 and above only |
 
-C'est la différence entre Apache configuré par l'administrateur et un
-`python -m http.server` lancé par un utilisateur. `hackwebd` lit les deux
-emplacements ; un site d'utilisateur qui demande un port < 1024 est refusé et
-l'erreur va dans `/var/log/hackweb/error.log`.
+This is the difference between Apache configured by the administrator and a
+`python -m http.server` launched by a user. `hackwebd` reads both
+locations; a user site that requests a port < 1024 is refused and
+the error goes to `/var/log/hackweb/error.log`.
 
-### 2. Le service `hackwebd`
+### 2. The `hackwebd` service
 
-App système de genre `Service` (worker dédié), démarrée au boot :
+System app of kind `Service` (dedicated worker), started at boot:
 
-- lit `/etc/hackweb/sites/`, surveille le dossier (`HackFileSystemWatcher`) et
-  applique les changements à chaud ;
-- ouvre un `HackHttpListener` par liaison ; sert les fichiers avec les droits du
-  compte de service `www-data` (lecture seule sur `root`) : types MIME,
-  documents par défaut, liste du dossier si permise, `304` par `ETag` et
-  `Last-Modified`, `404` et `403` ;
-- journalise les accès dans `/var/log/hackweb/<nom>.access.log` et les erreurs
-  dans `/var/log/hackweb/error.log` (ADR 0045) ;
-- n'utilise que le SDK public : ni Platform Core, ni service interne.
+- reads `/etc/hackweb/sites/`, watches the folder (`HackFileSystemWatcher`) and
+  applies changes on the fly;
+- opens an `HackHttpListener` per binding; serves files with the rights of the
+  `www-data` service account (read-only on `root`): MIME types,
+  default documents, folder listing if permitted, `304` through `ETag` and
+  `Last-Modified`, `404` and `403`;
+- logs accesses in `/var/log/hackweb/<name>.access.log` and errors
+  in `/var/log/hackweb/error.log` (ADR 0045);
+- uses only the public SDK: neither Platform Core nor any internal service.
 
-### 3. L'app Web Server Manager
+### 3. The Web Server Manager app
 
-App à fenêtre qui pilote `hackwebd` par les fichiers de §1 et
-`HackServiceController` (comme `systemctl`) : liste des sites et de leur état, création depuis un
-dossier (sélecteur de dossier), liaisons, documents par défaut, démarrer/arrêter
-un site, redémarrer le service, ouvrir le site dans le navigateur, consulter ses
-journaux. Un site d'utilisateur s'écrit sans approbation dans
-`~/.config/hackweb/sites/` ; écrire dans `/etc/hackweb` exige une capacité dangereuse
-(`filesystem.system.write`, approbation administrateur).
+Windowed app that drives `hackwebd` through the files of §1 and
+`HackServiceController` (like `systemctl`): list of sites and their state, creation from a
+folder (folder picker), bindings, default documents, start/stop
+a site, restart the service, open the site in the browser, view its
+logs. A user site is written without approval into
+`~/.config/hackweb/sites/`; writing to `/etc/hackweb` requires a dangerous capability
+(`filesystem.system.write`, administrator approval).
 
-L'explorateur gagne « Publier ce dossier comme site » qui ouvre le Manager
-prérempli.
+The explorer gains "Publish this folder as a site", which opens the Manager
+prefilled.
 
-### 4. Sites des projets
+### 4. Project sites
 
-Les sites des apps `Web` (ADR 0073) ne passent pas par `hackwebd` : ils sont
-servis par leur propre processus. Le Manager les liste en lecture seule
-(« externes »), avec leurs URL.
+The sites of `Web` apps (ADR 0073) do not go through `hackwebd`: they are
+served by their own process. The Manager lists them read-only
+("external"), with their URLs.
 
-## Conséquences
+## Consequences
 
-- Nouvelle app système `hackwebd` et nouvelle app « Web Server Manager »
-  (catalogue, `IsSystemApp`).
-- Le compte de service `www-data` est ajouté aux comptes système de l'OS (il
-  n'existe pas encore).
-- `systemctl status hackwebd` affiche le service comme les autres.
+- New system app `hackwebd` and new "Web Server Manager" app
+  (catalog, `IsSystemApp`).
+- The `www-data` service account is added to the OS's system accounts (it
+  does not exist yet).
+- `systemctl status hackwebd` displays the service like the others.

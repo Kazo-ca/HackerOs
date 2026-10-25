@@ -1,20 +1,20 @@
-# Publication Release trimmée
+# Trimmed Release publication
 
-## Objet
+## Purpose
 
-La publication Release de l'hôte Ecosystem (`OS/HackerOs.Ecosystem`) est
-élaguée par ILLink (chantier `v3/14-trimming`, ADR 0106 et 0113) : le code du
-framework .NET que HackerOS n'utilise pas est retiré des fichiers
-WebAssembly. Le premier chargement télécharge moins, et chaque Web Worker
-(ADR 0070) démarre un runtime plus petit.
+The Release publication of the Ecosystem host (`OS/HackerOs.Ecosystem`) is
+trimmed by ILLink (work item `v3/14-trimming`, ADR 0106 and 0113): the .NET
+framework code that HackerOS does not use is removed from the WebAssembly
+files. The first load downloads less, and each Web Worker (ADR 0070) starts a
+smaller runtime.
 
-| Publication de l'Ecosystem | Fichiers `.wasm` | Taille | Brotli |
+| Ecosystem publication | `.wasm` files | Size | Brotli |
 |---|---|---|---|
-| avant (`PublishTrimmed=false`) | 273 | 50,9 Mio | 13,5 Mio |
-| après (trimmée) | 134 | 26,5 Mio | 8,0 Mio |
+| before (`PublishTrimmed=false`) | 273 | 50.9 MiB | 13.5 MiB |
+| after (trimmed) | 134 | 26.5 MiB | 8.0 MiB |
 
-Mesuré le 2026-10-17 avec `build/publish-trimmed.sh --compare` (fichiers des
-satellites `fr/` compris). L'AOT est hors périmètre.
+Measured on 2026-10-17 with `build/publish-trimmed.sh --compare` (files of the
+`fr/` satellites included). AOT is out of scope.
 
 ## Architecture
 
@@ -35,28 +35,27 @@ Ecosystem.csproj            PublishTrimmed=true, TrimMode=partial
             paquets non élaguables (MudBlazor…) : entiers (partial)
 ```
 
-- **Pourquoi des racines.** L'OS n'appelle jamais le code d'une app
-  directement : il charge son assembly à la demande
-  (`BlazorWebAssemblyLazyLoad`) et trouve son point d'entrée, ses composants
-  intégrables et la racine Blazor d'un site par les noms du manifeste
-  (`Assembly.GetType`, `Activator.CreateInstance`, chargement par nom dans les
-  workers). Sans racine, ILLink supprime ces assemblies.
-- **Pourquoi des assemblies entières.** Le code de HackerOS passe ses records à
-  l'interop JavaScript, qui les sérialise par réflexion sans que l'analyse de
-  trimming le voie. Un élagage membre par membre casse le démarrage (stockage
-  « unavailable ») pour seulement 0,4 Mio de Brotli gagné (ADR 0113 §1).
-- **`HackerOs.TrimmerRoots.xml`** (`TrimmerRootDescriptorWriter` du générateur
-  de manifestes) : une ligne `<assembly fullname="…" preserve="all" />` par
-  assembly que nomme un manifeste (point d'entrée, entrées par plateforme,
-  composants, `web.blazor`). Il couvre les apps installées en paquets, même
-  quand leur nom ne commence pas par `HackerOs.`.
-- **Suppressions d'avertissements.** Les attributs `UnconditionalSuppressMessage`
-  restants (découverte des apps, workers, composants intégrables, routeur des
-  sites Blazor, liaison de modèle MVC) citent la racine qui les rend sûrs.
+- **Why roots.** The OS never calls an app's code directly: it loads its
+  assembly on demand (`BlazorWebAssemblyLazyLoad`) and finds its entry point,
+  its embeddable components and a site's Blazor root through the manifest names
+  (`Assembly.GetType`, `Activator.CreateInstance`, loading by name in the
+  workers). Without a root, ILLink removes these assemblies.
+- **Why whole assemblies.** HackerOS code passes its records to JavaScript
+  interop, which serializes them by reflection without the trimming analysis
+  seeing it. Member-by-member trimming breaks startup (storage "unavailable")
+  for only 0.4 MiB of Brotli gained (ADR 0113 §1).
+- **`HackerOs.TrimmerRoots.xml`** (`TrimmerRootDescriptorWriter` of the manifest
+  generator): one `<assembly fullname="…" preserve="all" />` line per assembly
+  that a manifest names (entry point, per-platform entries, components,
+  `web.blazor`). It covers apps installed as packages, even when their name does
+  not start with `HackerOs.`.
+- **Warning suppressions.** The remaining `UnconditionalSuppressMessage`
+  attributes (app discovery, workers, embeddable components, Blazor site router,
+  MVC model binding) cite the root that makes them safe.
 
-## Utilisation
+## Usage
 
-### Publier et tester
+### Publishing and testing
 
 ```bash
 wasm2/HackerOs/build/publish-trimmed.sh            # publie, mesure, sert, teste
@@ -64,58 +63,58 @@ wasm2/HackerOs/build/publish-trimmed.sh --compare  # publie aussi sans trimming 
 wasm2/HackerOs/build/publish-trimmed.sh --skip-build
 ```
 
-Le script publie dans `artifacts/publish-trimmed/publish`, échoue sur toute
-alerte `IL…`, sert la publication sur `127.0.0.1` et `127.0.0.2`, puis lance
-`Tests/HackerOs.TrimmedPublish.E2E.Tests` :
+The script publishes to `artifacts/publish-trimmed/publish`, fails on any `IL…`
+warning, serves the publication on `127.0.0.1` and `127.0.0.2`, then runs
+`Tests/HackerOs.TrimmedPublish.E2E.Tests`:
 
-| Test | Ce qu'il vérifie |
+| Test | What it checks |
 |---|---|
-| `Trimmed_publish_runs_every_app_a_worker_command_and_both_sample_sites` | création du profil ; chaque app fenêtrée du menu Démarrer (lue dans `BuiltInApplications.json`, approbation administrateur comprise) ouvre sa fenêtre sans erreur ; `seq 30 \| grep 1 \| wc -l` et `/proc/hackeros/workers` dans le terminal ; l'Intranet (vue `.cshtml`, script, API REST, tableau Blazor) et le site Blazor d'exemple (compteur, lien, API) dans le navigateur |
-| `Trimmed_publish_boots_offline_after_the_first_load` | sur `127.0.0.2` (le service worker n'est pas enregistré sur `127.0.0.1`) : mise en cache de la version, rechargement sans réseau, connexion, lancement d'une app jamais chargée |
-| `The_calculator_rendered_in_a_worker_works_like_on_the_page` | essai de l'ADR 0133, réglage activé par une réécriture d'`appsettings.json` : la Calculatrice dans un worker calcule à la souris et au clavier, garde son CSS, `Tab`, axe, `Alt+F7`/`Alt+Q`, worker dédié libéré à la fermeture ([`remote-window-rendering.md`](remote-window-rendering.md)) |
-| `Measures_the_calculator_on_the_page_and_in_a_worker` | mesures de l'ADR 0133 (ouverture, latence, mémoire, lots), écrites dans `remote-window-measurements.json` du dossier des artefacts |
+| `Trimmed_publish_runs_every_app_a_worker_command_and_both_sample_sites` | profile creation; each windowed app of the Start menu (read from `BuiltInApplications.json`, administrator approval included) opens its window without error; `seq 30 \| grep 1 \| wc -l` and `/proc/hackeros/workers` in the terminal; the Intranet (`.cshtml` view, script, REST API, Blazor table) and the sample Blazor site (counter, link, API) in the browser |
+| `Trimmed_publish_boots_offline_after_the_first_load` | on `127.0.0.2` (the service worker is not registered on `127.0.0.1`): version caching, reload without network, login, launch of a never-loaded app |
+| `The_calculator_rendered_in_a_worker_works_like_on_the_page` | ADR 0133 trial, setting enabled by rewriting `appsettings.json`: the Calculator in a worker computes with mouse and keyboard, keeps its CSS, `Tab`, axe, `Alt+F7`/`Alt+Q`, dedicated worker released on close ([`remote-window-rendering.md`](remote-window-rendering.md)) |
+| `Measures_the_calculator_on_the_page_and_in_a_worker` | ADR 0133 measurements (opening, latency, memory, batches), written to `remote-window-measurements.json` in the artifacts folder |
 
-Le script exige que les quatre tests passent (`EXPECTED_TESTS`).
+The script requires all four tests to pass (`EXPECTED_TESTS`).
 
-Aucune erreur de console n'est admise. Sans `HACKEROS_TRIMMED_URL`, la suite est
-ignorée (un `dotnet test` de la solution ne la lance pas).
+No console error is allowed. Without `HACKEROS_TRIMMED_URL`, the suite is
+skipped (a `dotnet test` of the solution does not run it).
 
-Ce test fait partie de la porte de fusion locale de `v3/14` et des chantiers
-suivants (ADR 0106 §5). `build/verify-hosts.sh` publie aussi l'Ecosystem en
-Release : son test de démarrage porte donc lui aussi sur la publication trimmée.
+This test is part of the local merge gate of `v3/14` and of the following work
+items (ADR 0106 §5). `build/verify-hosts.sh` also publishes the Ecosystem in
+Release: its startup test therefore also covers the trimmed publication.
 
-### Un hôte d'un autre dépôt
+### A host from another repository
 
-Le gabarit `hackeros-host` publie trimmé de la même façon. Les cibles de
-`HackerOs.App.Build` génèrent les racines et gardent les paquets `HackerOs.*`
-entiers ; les gabarits d'apps partent avec `IsTrimmable=true`, et le paquet
-active l'analyse de trimming dans un projet d'app qui ne la règle pas.
+The `hackeros-host` template publishes trimmed in the same way. The
+`HackerOs.App.Build` targets generate the roots and keep the `HackerOs.*`
+packages whole; app templates start with `IsTrimmable=true`, and the package
+enables the trimming analysis in an app project that does not set it.
 
-### Piège : publications successives
+### Pitfall: successive publications
 
-La conversion WebCIL du SDK est incrémentale par dates de fichiers. Une
-publication non trimmée (`-p:PublishTrimmed=false`) faite après une publication
-trimmée dans le même dossier `obj/` peut reprendre les assemblies élaguées.
-Avant de comparer, supprimer `OS/HackerOs.Ecosystem/obj/Release/net10.0/linked`,
-`webcil` et `tmp-webcil` (le script le fait).
+The SDK's WebCIL conversion is incremental by file dates. A non-trimmed
+publication (`-p:PublishTrimmed=false`) made after a trimmed publication in the
+same `obj/` folder may pick up the trimmed assemblies. Before comparing, delete
+`OS/HackerOs.Ecosystem/obj/Release/net10.0/linked`, `webcil` and `tmp-webcil`
+(the script does it).
 
-## Décisions clés
+## Key decisions
 
-- `TrimMode=partial` (ADR 0106 §1) : les paquets qui ne se déclarent pas
-  élaguables restent entiers.
-- Assemblies HackerOS et apps gardées entières ; seul le framework est élagué
+- `TrimMode=partial` (ADR 0106 §1): packages that do not declare themselves
+  trimmable stay whole.
+- HackerOS and app assemblies kept whole; only the framework is trimmed
   (ADR 0113 §1-2).
-- Pas de table générée pour les pages `[Route]` d'un site Blazor : l'assembly du
-  site est entière (ADR 0113 §3).
-- Test hors ligne sur `127.0.0.2` plutôt que `[::1]` (ADR 0113 §4).
+- No generated table for the `[Route]` pages of a Blazor site: the site's
+  assembly is whole (ADR 0113 §3).
+- Offline test on `127.0.0.2` rather than `[::1]` (ADR 0113 §4).
 
-## Tâches
+## Tasks
 
-- [x] `PublishTrimmed=true` et `TrimMode=partial` dans l'Ecosystem et le gabarit d'hôte.
-- [x] `HackerOs.TrimmerRoots.xml` généré par l'agrégation et passé à ILLink.
-- [x] Assemblies `HackerOs.*` gardées entières à la publication d'un hôte.
-- [x] Justifications des suppressions d'avertissements mises à jour.
-- [x] `HackerOs.App.Build` : analyse de trimming dans les projets d'apps ; gabarits `IsTrimmable=true`.
-- [x] `build/publish-trimmed.sh` et `Tests/HackerOs.TrimmedPublish.E2E.Tests`.
-- [x] Tailles avant et après mesurées (ici et dans `building-and-testing.md`).
+- [x] `PublishTrimmed=true` and `TrimMode=partial` in the Ecosystem and the host template.
+- [x] `HackerOs.TrimmerRoots.xml` generated by the aggregation and passed to ILLink.
+- [x] `HackerOs.*` assemblies kept whole when publishing a host.
+- [x] Warning suppression justifications updated.
+- [x] `HackerOs.App.Build`: trimming analysis in app projects; templates `IsTrimmable=true`.
+- [x] `build/publish-trimmed.sh` and `Tests/HackerOs.TrimmedPublish.E2E.Tests`.
+- [x] Sizes before and after measured (here and in `building-and-testing.md`).
 - [x] ADR 0113.

@@ -1,118 +1,118 @@
-# ADR 0049 : Capacités dangereuses et approbation par un administrateur
+# ADR 0049: Dangerous capabilities and administrator approval
 
-## Statut
+## Status
 
-Accepté le 2026-10-10.
+Accepted on 2026-10-10.
 
-- **Phase du plan :** phase 2 — Modèle d'app ([`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md), section 6.4, décisions D23 à D25).
-- **Complète :** ADR 0002 (le statut système, venu de la politique de confiance,
-  décide désormais aussi des capacités dangereuses) et ADR 0003 (chaque capacité
-  exacte du catalogue reçoit un classement).
-- **Complète :** ADR 0042. L'approbation ponctuelle d'une opération refusée et
-  `sudo` restent en place ; cet ADR ajoute une approbation **durable** des
-  capacités dangereuses, demandée au lancement.
-- **Tranche** la question laissée ouverte par les ADR 0044 et 0045 : les
-  capacités `settings.*` et `diagnostics.*` sont retirées du catalogue.
+- **Plan phase:** phase 2, App model ([`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md), section 6.4, decisions D23 to D25).
+- **Complements:** ADR 0002 (system status, coming from the trust policy,
+  now also decides on dangerous capabilities) and ADR 0003 (each exact
+  capability in the catalog receives a classification).
+- **Complements:** ADR 0042. One-off approval of a denied operation and
+  `sudo` remain in place; this ADR adds a **durable** approval of
+  dangerous capabilities, requested at launch.
+- **Settles** the question left open by ADRs 0044 and 0045: the
+  `settings.*` and `diagnostics.*` capabilities are removed from the catalog.
 
-## Contexte
+## Context
 
-`CleanProfileCapabilityGrantSeeder` accorde à la connexion toutes les capacités
-déclarées par chaque manifeste (`LocalSessionService`, source `BuildProfile`), sans
-rien demander. Une app peut donc déclarer `process.manage` ou
-`network.real.access` et les obtenir en silence. Le dépôt de grants
-(`CapabilityGrantRepository`) est en mémoire et reconstruit à chaque connexion.
-`CapabilityGrantSource.AdministratorApproval` existe mais n'est produit par aucun
-code. `/etc/hackeros/policy.config` déclare `capabilityGrantsLocked`, qui n'est lu
-nulle part.
+`CleanProfileCapabilityGrantSeeder` grants at sign-in all the capabilities
+declared by each manifest (`LocalSessionService`, source `BuildProfile`), without
+asking anything. An app can therefore declare `process.manage` or
+`network.real.access` and obtain them silently. The grant repository
+(`CapabilityGrantRepository`) is in memory and rebuilt on each sign-in.
+`CapabilityGrantSource.AdministratorApproval` exists but is produced by no
+code. `/etc/hackeros/policy.config` declares `capabilityGrantsLocked`, which is read
+nowhere.
 
-## Décision
+## Decision
 
-### 1. Classement des capacités (D23)
+### 1. Classification of capabilities (D23)
 
-`AppCapabilities` gagne un classement exact par identifiant, dans le même fichier
-(`Shared/HackerOs.App.Abstractions/AppCapabilities.cs`) :
+`AppCapabilities` gains an exact classification by identifier, in the same file
+(`Shared/HackerOs.App.Abstractions/AppCapabilities.cs`):
 
 ```csharp
 public enum CapabilityRisk { Normal, Dangerous }
 
-public static CapabilityRisk GetRisk(string capability);      // ArgumentException si inconnue
+public static CapabilityRisk GetRisk(string capability);      // ArgumentException if unknown
 public static bool IsDangerous(string capability);
-public static CapabilityDescription Describe(string capability); // titre et risque, pour l'interface
+public static CapabilityDescription Describe(string capability); // title and risk, for the interface
 ```
 
-| Capacité | Classement | Risque affiché à l'administrateur |
+| Capability | Classification | Risk shown to the administrator |
 |---|---|---|
-| `filesystem.private.read`, `filesystem.private.write` | normale | — |
-| `filesystem.user-selected.read`, `filesystem.user-selected.write` | normale | — |
-| `filesystem.user-home.read`, `filesystem.user-home.write` | normale | — |
-| `filesystem.system.read` | **dangereuse** | Lire des fichiers hors du dossier personnel, dont la configuration du système. |
-| `filesystem.system.write` | **dangereuse** | Modifier des fichiers du système, dont `/etc` et les paramètres de toutes les apps. |
-| `apps.launch` | normale | — |
-| `apps.manage` (**nouvelle**) | **dangereuse** | Installer, désinstaller ou réinstaller des applications. |
-| `dialogs.file-open`, `dialogs.file-save`, `dialogs.folder-select` | normale | — |
-| `file-associations.read` | normale | — |
-| `file-associations.write` | **dangereuse** | Choisir quelle app ouvre chaque type de fichier pour toute la machine. |
-| `process.list` | normale | — |
-| `process.manage` | **dangereuse** | Arrêter les processus d'autres applications. |
-| `services.manage` | **dangereuse** | Démarrer, arrêter et configurer les services du système. |
-| `windows.manage` | **dangereuse** | Lire, déplacer ou fermer les fenêtres d'autres applications. |
-| `notifications.post` | normale | — |
-| `clipboard.read`, `clipboard.write` | normale | — |
-| `network.simulated.read`, `network.simulated.write` | normale | — |
-| `network.real.access` | **dangereuse** | Joindre de vrais serveurs sur Internet par le serveur relais. |
-| `gameplay.domain.access` | normale | — |
+| `filesystem.private.read`, `filesystem.private.write` | normal | n/a |
+| `filesystem.user-selected.read`, `filesystem.user-selected.write` | normal | n/a |
+| `filesystem.user-home.read`, `filesystem.user-home.write` | normal | n/a |
+| `filesystem.system.read` | **dangerous** | Read files outside the home folder, including the system configuration. |
+| `filesystem.system.write` | **dangerous** | Modify system files, including `/etc` and the settings of all apps. |
+| `apps.launch` | normal | n/a |
+| `apps.manage` (**new**) | **dangerous** | Install, uninstall or reinstall applications. |
+| `dialogs.file-open`, `dialogs.file-save`, `dialogs.folder-select` | normal | n/a |
+| `file-associations.read` | normal | n/a |
+| `file-associations.write` | **dangerous** | Choose which app opens each file type for the whole machine. |
+| `process.list` | normal | n/a |
+| `process.manage` | **dangerous** | Stop the processes of other applications. |
+| `services.manage` | **dangerous** | Start, stop and configure system services. |
+| `windows.manage` | **dangerous** | Read, move or close the windows of other applications. |
+| `notifications.post` | normal | n/a |
+| `clipboard.read`, `clipboard.write` | normal | n/a |
+| `network.simulated.read`, `network.simulated.write` | normal | n/a |
+| `network.real.access` | **dangerous** | Reach real servers on the Internet through the relay server. |
+| `gameplay.domain.access` | normal | n/a |
 
-- Toute nouvelle capacité doit recevoir un classement : un test parcourt le
-  catalogue et échoue si une capacité n'en a pas.
-- **Retirées du catalogue :** `settings.read`, `settings.write`,
-  `settings.system.read`, `settings.system.write` (non évaluées depuis
-  l'ADR 0044 ; les paramètres sont des fichiers, couverts par `filesystem.*`) et
-  `diagnostics.read`, `diagnostics.clear` (non évaluées depuis l'ADR 0045). Une
-  définition d'app qui les cite ne compile plus ; un ancien grant en mémoire qui
-  les nomme est simplement ignoré.
-- `apps.manage` est ajoutée maintenant pour que le classement soit complet. Elle
-  protégera l'API publique de gestion des apps en phase 4 (ADR 0048, section 4).
+- Every new capability must receive a classification: a test walks the
+  catalog and fails if a capability has none.
+- **Removed from the catalog:** `settings.read`, `settings.write`,
+  `settings.system.read`, `settings.system.write` (not evaluated since
+  ADR 0044; settings are files, covered by `filesystem.*`) and
+  `diagnostics.read`, `diagnostics.clear` (not evaluated since ADR 0045). An
+  app definition that cites them no longer compiles; an old in-memory grant that
+  names them is simply ignored.
+- `apps.manage` is added now so that the classification is complete. It will
+  protect the public app management API in phase 4 (ADR 0048, section 4).
 
-### 2. Qui reçoit quoi
+### 2. Who receives what
 
-| App | Capacité normale déclarée | Capacité dangereuse déclarée |
+| App | Declared normal capability | Declared dangerous capability |
 |---|---|---|
-| Système (ADR 0048) | accordée d'office, source `BuildProfile` | accordée d'office, source `SystemPolicy` |
-| Non système | accordée d'office, source `BuildProfile` | accordée **seulement** si une décision « allow » existe et que la politique le permet (sections 3 et 4), source `AdministratorApproval` |
+| System (ADR 0048) | granted automatically, source `BuildProfile` | granted automatically, source `SystemPolicy` |
+| Non-system | granted automatically, source `BuildProfile` | granted **only** if an "allow" decision exists and the policy permits it (sections 3 and 4), source `AdministratorApproval` |
 
-Une capacité non déclarée n'est jamais accordée, quel que soit le cas (ADR 0002).
+An undeclared capability is never granted, in any case (ADR 0002).
 
-`CleanProfileCapabilityGrantSeeder.SeedDeclaredCapabilities` reçoit le statut
-système de l'app et les décisions lues (section 4), et applique ce tableau.
+`CleanProfileCapabilityGrantSeeder.SeedDeclaredCapabilities` receives the app's
+system status and the decisions read (section 4), and applies this table.
 
-### 3. Politique de sécurité (D25)
+### 3. Security policy (D25)
 
-Fichier `/etc/hackeros/security.config`, document système seulement
-(`OsSettingsDocument` avec `SystemOnly: true`, comme `policy.config`),
-`system:system 0644` :
+File `/etc/hackeros/security.config`, system-only document
+(`OsSettingsDocument` with `SystemOnly: true`, like `policy.config`),
+`system:system 0644`:
 
 ```text
 # /etc/hackeros/security.config
-# prompt : une app non système qui demande une capacité dangereuse ouvre la
-#          fenêtre d'approbation administrateur (défaut).
-# block  : les capacités dangereuses ne sont jamais accordées aux apps non système.
+# prompt: a non-system app that requests a dangerous capability opens the
+#         administrator approval window (default).
+# block:  dangerous capabilities are never granted to non-system apps.
 dangerousCapabilities=prompt
 ```
 
-- Clé `dangerousCapabilities`, type `Enum` (`prompt`, `block`), défaut `prompt`.
-  Une valeur invalide est ignorée avec un avertissement (ADR 0044), donc `prompt`
-  s'applique.
-- Avec `block`, les décisions « allow » existantes sont ignorées tant que la
-  politique reste à `block`, et l'approbation ponctuelle de l'ADR 0042 n'est plus
-  proposée pour une capacité dangereuse d'une app non système. `sudo` n'est pas
-  concerné : c'est un administrateur qui agit lui-même.
-- La clé `capabilityGrantsLocked` de `policy.config`, jamais évaluée, est retirée
-  du schéma.
+- Key `dangerousCapabilities`, type `Enum` (`prompt`, `block`), default `prompt`.
+  An invalid value is ignored with a warning (ADR 0044), so `prompt`
+  applies.
+- With `block`, existing "allow" decisions are ignored as long as the
+  policy stays at `block`, and the one-off approval of ADR 0042 is no longer
+  offered for a dangerous capability of a non-system app. `sudo` is not
+  affected: it is an administrator acting themselves.
+- The `capabilityGrantsLocked` key of `policy.config`, never evaluated, is removed
+  from the schema.
 
-### 4. Décisions mémorisées
+### 4. Remembered decisions
 
-Fichier machine `/etc/hackeros/app-permissions.config` (`system:system 0644`) et
-fichier utilisateur `~/.config/hackeros/app-permissions.config` :
+Machine file `/etc/hackeros/app-permissions.config` (`system:system 0644`) and
+user file `~/.config/hackeros/app-permissions.config`:
 
 ```text
 # /etc/hackeros/app-permissions.config
@@ -121,162 +121,162 @@ org.example.scanner:network.real.access=allow
 org.example.scanner:filesystem.system.read=deny
 ```
 
-- Clé `<appId>:<capacité>`, valeur `allow` ou `deny`. Lu par
-  `ConfigDocumentFormat.Parse` sans schéma ; une ligne invalide est ignorée avec
-  un avertissement dans `/var/log/syslog`. Une ligne qui vise une app système ou
-  une capacité normale est ignorée sans effet.
-- **Le fichier machine est la seule source d'un « allow ».** Il est écrit par l'OS
-  après une approbation administrateur (section 5), ou par un administrateur avec
+- Key `<appId>:<capability>`, value `allow` or `deny`. Read by
+  `ConfigDocumentFormat.Parse` without a schema; an invalid line is ignored with
+  a warning in `/var/log/syslog`. A line that targets a system app or
+  a normal capability is ignored with no effect.
+- **The machine file is the only source of an "allow".** It is written by the OS
+  after an administrator approval (section 5), or by an administrator with
   `sudo nano`.
-- Le fichier utilisateur ne contient que des `deny` : le refus d'un utilisateur
-  vaut pour lui seul et évite de lui redemander à chaque lancement. Un `allow`
-  dans ce fichier est ignoré avec un avertissement.
+- The user file contains only `deny` entries: a user's refusal
+  applies to them alone and avoids asking them again at every launch. An `allow`
+  in this file is ignored with a warning.
 
-**Capacité dangereuse accordée** à une app non système =
-politique `prompt` **et** `allow` dans le fichier machine **et** pas de `deny`
-dans le fichier utilisateur.
+**Dangerous capability granted** to a non-system app =
+`prompt` policy **and** `allow` in the machine file **and** no `deny`
+in the user file.
 
-Une capacité dangereuse est **en attente** si le fichier machine n'a pas de
-décision et que l'utilisateur ne l'a pas refusée. Une mise à jour d'app qui
-ajoute une capacité dangereuse crée donc une nouvelle demande, pour cette seule
-capacité.
+A dangerous capability is **pending** if the machine file has no
+decision and the user has not denied it. An app update that
+adds a dangerous capability thus creates a new request, for that capability
+only.
 
-### 5. Fenêtre d'approbation au lancement (D23, D24)
+### 5. Approval window at launch (D23, D24)
 
-Au lancement d'une app non système qui a au moins une capacité dangereuse **en
-attente**, `AppLifecycleOrchestrator.LaunchAsync` appelle, avant de créer le
-processus, `IDangerousCapabilityGate.EnsureDecidedAsync(manifest, principal)`
-(`Platform/HackerOs.Platform.Core/Policy/`) :
+When a non-system app that has at least one **pending** dangerous capability
+is launched, `AppLifecycleOrchestrator.LaunchAsync` calls, before creating the
+process, `IDangerousCapabilityGate.EnsureDecidedAsync(manifest, principal)`
+(`Platform/HackerOs.Platform.Core/Policy/`):
 
-1. **Politique `block` :** pas de fenêtre. L'app démarre sans ses capacités
-   dangereuses. Entrée `capability.blocked` dans `/var/log/auth.log`.
-2. **Politique `prompt` :** la passerelle appelle
-   `IDangerousCapabilityApprovalPrompt`, qui a deux implémentations :
-   - **fenêtre spéciale** pour les apps fenêtre et service lancées depuis le
-     bureau (section 6) ;
-   - **mode texte** dans `TerminalPanel` pour une commande lancée depuis le
-     terminal : bandeau d'avertissement, liste des capacités, puis demande du
-     nom et du mot de passe administrateur, comme `sudo`.
-3. **Résultat :**
-   - *Autoriser* : un administrateur activé saisit son nom et son mot de passe,
-     vérifiés par `IAdminElevationVerifier` (ADR 0042). Il peut s'agir d'un autre
-     compte que l'utilisateur courant, comme pour `sudo`. Même un utilisateur
-     administrateur doit saisir son mot de passe (D24). Trois échecs annulent la
-     demande. En cas de succès, l'OS écrit les lignes `allow` dans le fichier
-     machine **avec un contexte système audité** (ADR 0002), puis accorde les
-     grants (source `AdministratorApproval`) avant le démarrage du processus.
-   - *Refuser* : lignes `deny` dans le fichier de l'utilisateur. L'app démarre sans
-     ces capacités.
-   - *Fermer* sans choisir : rien n'est écrit ; l'app démarre sans ces capacités et
-     la question reviendra au prochain lancement.
-4. **Sans session interactive** (service démarré au boot avant toute connexion) :
-   pas de fenêtre, capacités non accordées, entrée `capability.deferred` dans
-   `auth.log`. L'approbation se fait ensuite depuis les Paramètres (section 7).
+1. **`block` policy:** no window. The app starts without its dangerous
+   capabilities. `capability.blocked` entry in `/var/log/auth.log`.
+2. **`prompt` policy:** the gate calls
+   `IDangerousCapabilityApprovalPrompt`, which has two implementations:
+   - **special window** for window and service apps launched from the
+     desktop (section 6);
+   - **text mode** in `TerminalPanel` for a command launched from the
+     terminal: warning banner, list of capabilities, then a request for the
+     administrator name and password, like `sudo`.
+3. **Result:**
+   - *Allow*: an enabled administrator enters their name and password,
+     verified by `IAdminElevationVerifier` (ADR 0042). It can be a different
+     account than the current user, as with `sudo`. Even an administrator
+     user must enter their password (D24). Three failures cancel the
+     request. On success, the OS writes the `allow` lines to the machine
+     file **with an audited system context** (ADR 0002), then grants the
+     grants (source `AdministratorApproval`) before the process starts.
+   - *Deny*: `deny` lines in the user's file. The app starts without
+     these capabilities.
+   - *Close* without choosing: nothing is written; the app starts without these capabilities and
+     the question will come back at the next launch.
+4. **Without an interactive session** (service started at boot before any sign-in):
+   no window, capabilities not granted, `capability.deferred` entry in
+   `auth.log`. Approval is then done from Settings (section 7).
 
-Une app démarrée sans une capacité dangereuse reçoit
-`HackUnauthorizedAccessException` (ADR 0043) quand elle l'utilise, comme pour
-toute capacité absente.
+An app started without a dangerous capability receives
+`HackUnauthorizedAccessException` (ADR 0043) when it uses it, as for
+any missing capability.
 
-### 6. La fenêtre spéciale
+### 6. The special window
 
-Composant natif Blazor `Platform/HackerOs.Platform.Blazor/Security/DangerousCapabilityApprovalOverlay.razor`,
-avec `.razor.css` collocalisé ; pas de MudBlazor, puisqu'il fait partie du
-chrome de l'OS. Il imite le « bureau sécurisé » de l'UAC de Windows :
+Native Blazor component `Platform/HackerOs.Platform.Blazor/Security/DangerousCapabilityApprovalOverlay.razor`,
+with a collocated `.razor.css`; no MudBlazor, since it is part of the
+OS chrome. It imitates the Windows UAC "secure desktop":
 
-- voile sombre sur **tout** le bureau, au-dessus de toutes les fenêtres et de la
-  barre des tâches ; il capte le clavier et la souris tant qu'il est ouvert ;
-- fenêtre centrée, non déplaçable, sans bouton de réduction, visuellement
-  distincte des boîtes de dialogue ordinaires : bandeau rouge « Autorisation
-  administrateur requise », bordure d'alerte, icône de bouclier ;
-- nom, icône, identifiant, éditeur et version de l'app, avec la mention « App non
-  système » ;
-- la liste des capacités demandées, chacune avec son titre et la phrase de risque
-  de `AppCapabilities.Describe` ;
-- champ nom d'administrateur (prérempli avec l'utilisateur courant s'il est
-  administrateur) et champ mot de passe ;
-- boutons **Autoriser** (style danger) et **Refuser** ; Échap équivaut à fermer ;
-- en pied : « Cette décision sera inscrite dans /var/log/auth.log ».
+- dark veil over the **whole** desktop, above all windows and the
+  taskbar; it captures the keyboard and mouse as long as it is open;
+- centered window, not movable, with no minimize button, visually
+  distinct from ordinary dialog boxes: red banner "Administrator
+  authorization required", alert border, shield icon;
+- name, icon, identifier, publisher and version of the app, with the note "Non-system
+  app";
+- the list of requested capabilities, each with its title and the risk sentence
+  from `AppCapabilities.Describe`;
+- administrator name field (prefilled with the current user if they are an
+  administrator) and password field;
+- **Allow** (danger style) and **Deny** buttons; Escape is equivalent to closing;
+- in the footer: "This decision will be recorded in /var/log/auth.log".
 
-Il est rendu par la coque de la plateforme, hors de toute fenêtre d'app : une app
-ne peut pas dessiner par-dessus ni l'imiter dans sa propre fenêtre.
+It is rendered by the platform shell, outside any app window: an app
+cannot draw over it or imitate it in its own window.
 
-### 7. Paramètres > Applications > Permissions
+### 7. Settings > Applications > Permissions
 
-Dans l'app Paramètres, une vue par app (composant à part, pour ne pas entrer en
-conflit avec l'onglet de l'ADR 0048) affiche chaque capacité dangereuse déclarée
-avec son état : *système*, *autorisée*, *refusée par vous*, *refusée par
-l'administrateur*, *bloquée par la politique*, *en attente*.
+In the Settings app, a per-app view (a separate component, so as not to conflict
+with the tab from ADR 0048) shows each declared dangerous capability
+with its state: *system*, *allowed*, *denied by you*, *denied by the
+administrator*, *blocked by policy*, *pending*.
 
-- Autoriser ou révoquer pour la machine écrit dans
-  `/etc/hackeros/app-permissions.config`, donc passe par l'invite d'approbation
-  de l'ADR 0042 ; l'action est journalisée comme en section 8.
-- Un utilisateur peut retirer son propre `deny`.
-- Un administrateur change `dangerousCapabilities` depuis la même page.
-- Un changement prend effet au prochain lancement de l'app : les capacités d'une
-  instance en cours sont figées à son lancement (ADR 0042).
+- Allowing or revoking for the machine writes to
+  `/etc/hackeros/app-permissions.config`, and therefore goes through the approval prompt
+  of ADR 0042; the action is logged as in section 8.
+- A user can remove their own `deny`.
+- An administrator changes `dangerousCapabilities` from the same page.
+- A change takes effect at the app's next launch: the capabilities of a running
+  instance are frozen at its launch (ADR 0042).
 
-### 8. Journal `/var/log/auth.log`
+### 8. Log `/var/log/auth.log`
 
-Chaque décision passe par `IAuditLog` (`FileAuditLog`, ADR 0045) :
+Each decision goes through `IAuditLog` (`FileAuditLog`, ADR 0045):
 
-| Action | Quand | Propriétés |
+| Action | When | Properties |
 |---|---|---|
-| `capability.approve` | succès ou échec de mot de passe dans la fenêtre ou le terminal | `app`, `capabilities`, `requestedBy`, `admin`, `outcome` |
-| `capability.refuse` | l'utilisateur refuse | `app`, `capabilities`, `user` |
-| `capability.blocked` | politique `block` | `app`, `capabilities`, `user` |
-| `capability.deferred` | pas de session interactive | `app`, `capabilities` |
-| `capability.revoke` | révocation depuis les Paramètres | `app`, `capability`, `admin` |
+| `capability.approve` | password success or failure in the window or the terminal | `app`, `capabilities`, `requestedBy`, `admin`, `outcome` |
+| `capability.refuse` | the user denies | `app`, `capabilities`, `user` |
+| `capability.blocked` | `block` policy | `app`, `capabilities`, `user` |
+| `capability.deferred` | no interactive session | `app`, `capabilities` |
+| `capability.revoke` | revocation from Settings | `app`, `capability`, `admin` |
 
-Les mots de passe ne sont jamais journalisés ; le rédacteur existant
-s'applique.
+Passwords are never logged; the existing redactor
+applies.
 
-### 9. Tests de contrat
+### 9. Contract tests
 
-- Chaque capacité du catalogue a un classement ; `settings.*` et `diagnostics.*`
-  n'existent plus.
-- Une app système reçoit ses capacités dangereuses sans fenêtre.
-- Une app non système sans décision ne reçoit pas ses capacités dangereuses, et
-  la passerelle est appelée au lancement.
-- `allow` machine + `prompt` = accordée ; + `block` = refusée ; `deny`
-  utilisateur l'emporte sur `allow` machine ; `allow` dans le fichier utilisateur
-  ignoré.
-- Mot de passe faux trois fois : rien d'écrit, trois entrées `capability.approve`
-  en échec.
-- L'écriture du fichier machine après approbation réussit même si l'utilisateur
-  courant n'est pas administrateur.
-- `block` désactive l'approbation ponctuelle de l'ADR 0042 pour une capacité
-  dangereuse d'une app non système, mais pas `sudo`.
-- Rendu bUnit de la fenêtre : capacités et risques affichés, bouton Autoriser
-  désactivé sans mot de passe.
+- Every capability in the catalog has a classification; `settings.*` and `diagnostics.*`
+  no longer exist.
+- A system app receives its dangerous capabilities without a window.
+- A non-system app without a decision does not receive its dangerous capabilities, and
+  the gate is called at launch.
+- Machine `allow` + `prompt` = granted; + `block` = denied; user `deny`
+  wins over machine `allow`; `allow` in the user file
+  ignored.
+- Wrong password three times: nothing written, three failed `capability.approve`
+  entries.
+- Writing the machine file after approval succeeds even if the current
+  user is not an administrator.
+- `block` disables the one-off approval of ADR 0042 for a dangerous
+  capability of a non-system app, but not `sudo`.
+- bUnit rendering of the window: capabilities and risks displayed, Allow button
+  disabled without a password.
 
-## Conséquences
+## Consequences
 
-- Une app tierce ne peut plus obtenir en silence le droit de tuer des processus,
-  de modifier `/etc` ou de joindre Internet.
-- Les apps système ne voient aucune fenêtre, et aucune app non système de l'hôte
-  Ecosystem ne déclare aujourd'hui de capacité dangereuse : l'expérience de base
-  ne change pas.
-- `cat /etc/hackeros/app-permissions.config` montre ce qu'un administrateur a
-  approuvé, comme `apps.config` montre ce qu'il a désinstallé.
-- Une décision vaut pour la machine entière ; il n'y a pas d'approbation par
-  utilisateur. Un utilisateur peut seulement refuser pour lui.
-- Les commandes du terminal fournies par l'hôte sont système et ne déclenchent
-  jamais l'invite ; seules des commandes tierces la verront.
-- Les apps qui citent `settings.*` ou `diagnostics.*` doivent retirer ces
-  capacités dans le même changement que leur suppression du catalogue.
+- A third-party app can no longer silently obtain the right to kill processes,
+  modify `/etc` or reach the Internet.
+- System apps see no window, and no non-system app of the Ecosystem
+  host declares a dangerous capability today: the base experience
+  does not change.
+- `cat /etc/hackeros/app-permissions.config` shows what an administrator
+  approved, as `apps.config` shows what they uninstalled.
+- A decision applies to the entire machine; there is no per-user
+  approval. A user can only deny for themselves.
+- Terminal commands provided by the host are system and never trigger
+  the prompt; only third-party commands will see it.
+- Apps that cite `settings.*` or `diagnostics.*` must remove those
+  capabilities in the same change as their removal from the catalog.
 
-## Chantiers d'implémentation
+## Implementation work items
 
-| Branche | Contenu | Dépend de |
+| Branch | Content | Depends on |
 |---|---|---|
-| `rebuild/2-capability-classification` | `CapabilityRisk`, `GetRisk`, `IsDangerous`, `Describe`, `apps.manage`, retrait de `settings.*` et `diagnostics.*` (catalogue, définitions d'app, tests), seeder selon la section 2 sans fenêtre (une capacité dangereuse d'une app non système n'est pas accordée), retrait de `capabilityGrantsLocked`. | `2-app-migration` (ADR 0047), `2-system-apps` (ADR 0048) |
-| `rebuild/2-dangerous-approval` | `security.config`, fichiers `app-permissions.config`, `IDangerousCapabilityGate` dans le lancement, fenêtre spéciale, mode texte du terminal, journal `auth.log`, interaction avec l'approbation ponctuelle, vue Permissions des Paramètres. | `2-capability-classification` |
+| `rebuild/2-capability-classification` | `CapabilityRisk`, `GetRisk`, `IsDangerous`, `Describe`, `apps.manage`, removal of `settings.*` and `diagnostics.*` (catalog, app definitions, tests), seeder per section 2 without a window (a dangerous capability of a non-system app is not granted), removal of `capabilityGrantsLocked`. | `2-app-migration` (ADR 0047), `2-system-apps` (ADR 0048) |
+| `rebuild/2-dangerous-approval` | `security.config`, `app-permissions.config` files, `IDangerousCapabilityGate` in the launch, special window, terminal text mode, `auth.log` log, interaction with one-off approval, Permissions view in Settings. | `2-capability-classification` |
 
-## Références
+## References
 
-- ADR 0002 et ADR 0003 (complétés), ADR 0042 (complété), ADR 0043 (exceptions),
-  ADR 0044 (paramètres en fichiers), ADR 0045 (`auth.log`), ADR 0048 (apps
-  système).
+- ADR 0002 and ADR 0003 (complemented), ADR 0042 (complemented), ADR 0043 (exceptions),
+  ADR 0044 (settings as files), ADR 0045 (`auth.log`), ADR 0048 (system
+  apps).
 - [`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md), section 6.4.
 - `Platform/HackerOs.Platform.Core/Policy/CleanProfileCapabilityGrantSeeder.cs`,
   `Shared/HackerOs.App.Abstractions/AppCapabilities.cs`.

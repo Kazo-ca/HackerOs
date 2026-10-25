@@ -1,67 +1,67 @@
-# ADR 0103 : images de Hack Paint dans les fichiers de l'OS et éditeur de thèmes (thèmes utilisateur en fichiers de jetons)
+# ADR 0103: Hack Paint images in OS files and theme editor (user themes as token files)
 
-## Statut
+## Status
 
-Accepté le 2026-10-17 (chantier `v3/1-adr`, pour le chantier `v3/11-apps`).
-Le §2.4 suit la réponse de Benoit du 2026-10-17 : un thème ne contient que des
-jetons vérifiés.
+Accepted on 2026-10-17 (work item `v3/1-adr`, for the work item `v3/11-apps`).
+§2.4 follows Benoit's answer of 2026-10-17: a theme contains only
+verified tokens.
 
-- **Complète :** [ADR 0041](0041-shared-theme-catalog-and-scoped-tokens.md)
-  (catalogue de thèmes, jetons CSS, thèmes « données seulement ») pour les
-  thèmes créés par l'utilisateur, que l'ADR 0041 ne prévoyait pas ; ADR 0044
-  (réglages en fichiers) ; ADR 0055 (apps sur le SDK public).
-- **Plan :** [`wasm-v3-completion-plan.md`](../plans/wasm-v3-completion-plan.md),
-  ligne `v3/11-apps` ; réponse 4 de Benoit (porter l'éditeur de thèmes, comme
-  app système sur le SDK public).
+- **Complements:** [ADR 0041](0041-shared-theme-catalog-and-scoped-tokens.md)
+  (theme catalog, CSS tokens, "data only" themes) for themes
+  created by the user, which ADR 0041 did not provide for; ADR 0044
+  (settings as files); ADR 0055 (apps on the public SDK).
+- **Plan:** [`wasm-v3-completion-plan.md`](../plans/wasm-v3-completion-plan.md),
+  line `v3/11-apps`; Benoit's answer 4 (port the theme editor, as a
+  system app on the public SDK).
 
-## Contexte
+## Context
 
-- Hack Paint (`Apps/System/HackerOs.Apps.HackPaint`) déclare les capacités de
-  lecture et d'écriture du dossier personnel et des dialogues de fichiers, mais
-  n'a ni Ouvrir, ni Enregistrer, ni Exporter : son JS dessine des pixels RGBA sur
-  un canvas.
-- L'éditeur de thèmes de `src/` (`src/apps/theme-editor.ts`, 1 510 lignes, plus
-  l'aide, la documentation et les aperçus) enregistre un JSON dans
-  `/etc/themes/<id>.json` et injecte du CSS libre (`customCss`), que l'ADR 0041
-  juge dangereux.
-- Dans `wasm2`, on ne choisit qu'un thème du catalogue intégré, dans
-  `/etc/hackeros/appearance.config` et `~/.config/hackeros/appearance.config`
-  (clés `desktopThemeId`, `mobileThemeId`, `accent`, `animationsEnabled`).
+- Hack Paint (`Apps/System/HackerOs.Apps.HackPaint`) declares the capabilities to
+  read and write the home folder and file dialogs, but
+  has no Open, no Save, no Export: its JS draws RGBA pixels on a
+  canvas.
+- The theme editor of `src/` (`src/apps/theme-editor.ts`, 1,510 lines, plus
+  help, documentation and previews) saves a JSON in
+  `/etc/themes/<id>.json` and injects free CSS (`customCss`), which ADR 0041
+  considers dangerous.
+- In `wasm2`, one can only choose a theme from the built-in catalog, in
+  `/etc/hackeros/appearance.config` and `~/.config/hackeros/appearance.config`
+  (keys `desktopThemeId`, `mobileThemeId`, `accent`, `animationsEnabled`).
 
-## Décision
+## Decision
 
-### 1. Hack Paint lit et écrit des images
+### 1. Hack Paint reads and writes images
 
-- **Ouvrir** : PNG, JPEG, BMP, GIF (première image) et WebP, décodés par le
-  navigateur (`createImageBitmap` dans le module JS du composant) en pixels RGBA
-  remis au C#. Le fichier est lu par `HackFile` (C#) ; le JS ne touche jamais au
-  système de fichiers.
-- **Enregistrer / Enregistrer sous** : PNG par défaut, JPEG au choix (qualité
-  réglable), encodés par le canvas (`toBlob`) puis écrits par `HackFile`. Les
-  dialogues sont ceux du SDK (`OpenFileAsync`, `SaveFileAsync`).
-- Taille maximale d'une image : 4 096 × 4 096 pixels, et 16 Mio par fichier
-  (ADR 0094) ; au-delà, un message le dit avant de décoder.
-- Titre de fenêtre `nom.png — Hack Paint`, avec `*` quand l'image est modifiée,
-  et confirmation à la fermeture (ADR 0006) si elle n'est pas enregistrée.
-- Hack Paint déclare `FileHandlers` pour ces types, actions `open` et `edit` ;
-  il est le gestionnaire par défaut de `edit` (ADR 0096) pour les images.
-  Il s'ouvre aussi par « Ouvrir avec » et par son nom avec un chemin en
+- **Open**: PNG, JPEG, BMP, GIF (first frame) and WebP, decoded by the
+  browser (`createImageBitmap` in the component's JS module) into RGBA pixels
+  handed to C#. The file is read by `HackFile` (C#); the JS never touches the
+  file system.
+- **Save / Save as**: PNG by default, JPEG as an option (adjustable quality),
+  encoded by the canvas (`toBlob`) then written by `HackFile`. The dialogs
+  are those of the SDK (`OpenFileAsync`, `SaveFileAsync`).
+- Maximum image size: 4,096 × 4,096 pixels, and 16 MiB per file
+  (ADR 0094); beyond that, a message says so before decoding.
+- Window title `nom.png — Hack Paint`, with `*` when the image is modified,
+  and confirmation on close (ADR 0006) if it is not saved.
+- Hack Paint declares `FileHandlers` for these types, actions `open` and `edit`;
+  it is the default `edit` handler (ADR 0096) for images.
+  It also opens through "Open with" and by its name with a path as an
   argument.
 
-### 2. Éditeur de thèmes
+### 2. Theme editor
 
 #### 2.1 App
 
-Nouvelle app système `org.hackeros.theme-editor`
-(`Apps/System/HackerOs.Apps.ThemeEditor`), sur le SDK public seulement. Elle
-reprend de `src/` : l'édition par groupes de jetons (couleurs, typographie,
-espacements, fenêtres, barre des tâches, animations), l'aperçu en direct, l'aide
-et la documentation des jetons ; elle ne reprend pas le CSS libre (§2.4).
+New system app `org.hackeros.theme-editor`
+(`Apps/System/HackerOs.Apps.ThemeEditor`), on the public SDK only. It
+takes from `src/`: editing by token groups (colors, typography,
+spacing, windows, taskbar, animations), live preview, the help
+and the token documentation; it does not take the free CSS (§2.4).
 
-#### 2.2 Fichier de thème
+#### 2.2 Theme file
 
-- Un thème est un fichier texte au format des réglages (ADR 0044), extension
-  **`.theme`** (comme `index.theme` de freedesktop) :
+- A theme is a text file in the settings format (ADR 0044), extension
+  **`.theme`** (like freedesktop's `index.theme`):
 
   ```ini
   [theme]
@@ -76,46 +76,46 @@ et la documentation des jetons ; elle ne reprend pas le CSS libre (§2.4).
   --hos-font-mono = "JetBrains Mono", monospace
   ```
 
-- `base` désigne un thème du catalogue : un jeton absent garde sa valeur.
-- Emplacements, comme les thèmes d'un bureau Linux : `~/.config/hackeros/themes/`
-  (l'utilisateur) et `/etc/hackeros/themes/` (l'administrateur, pour toute la
-  machine). Le fichier est l'export : on le copie, on l'envoie, on l'ouvre.
-- Le catalogue vu par Paramètres et par l'éditeur = thèmes intégrés + thèmes
-  de `/etc` + thèmes de `~`. Un identifiant de `~` qui reprend un identifiant
-  intégré ou de `/etc` est refusé (pas de masquage).
-- `appearance.config` peut désigner un thème utilisateur par son `id`.
+- `base` designates a catalog theme: a missing token keeps its value.
+- Locations, like the themes of a Linux desktop: `~/.config/hackeros/themes/`
+  (the user) and `/etc/hackeros/themes/` (the administrator, for the whole
+  machine). The file is the export: you copy it, send it, open it.
+- The catalog seen by Settings and by the editor = built-in themes + themes
+  from `/etc` + themes from `~`. An identifier in `~` that reuses a built-in
+  or `/etc` identifier is rejected (no shadowing).
+- `appearance.config` can designate a user theme by its `id`.
 
-#### 2.3 Application des jetons
+#### 2.3 Applying the tokens
 
-- `HackerOs.Theming.Abstractions` publie la **liste des jetons** avec leur type
-  (couleur, longueur, durée, famille de polices, nombre) ; l'aide de l'éditeur
-  est générée depuis cette liste.
-- À la lecture, chaque valeur est vérifiée selon son type ; une ligne invalide
-  ou un jeton inconnu est ignoré avec un avertissement (ADR 0044 §5).
-- `ThemeScope` applique les jetons d'un thème utilisateur par
-  `style.setProperty` sur son élément racine, via un petit module JS de
-  `HackerOs.Theming.Blazor` (pas de `style="…"` dans le balisage, ADR 0007).
+- `HackerOs.Theming.Abstractions` publishes the **token list** with their type
+  (color, length, duration, font family, number); the editor's help
+  is generated from this list.
+- On read, each value is checked according to its type; an invalid line
+  or an unknown token is ignored with a warning (ADR 0044 §5).
+- `ThemeScope` applies a user theme's tokens through
+  `style.setProperty` on its root element, via a small JS module of
+  `HackerOs.Theming.Blazor` (no `style="…"` in the markup, ADR 0007).
 
-#### 2.4 Pas de CSS libre (choix de Benoit)
+#### 2.4 No free CSS (Benoit's choice)
 
-Un thème ne contient que des jetons vérifiés : ni CSS libre, ni police ou image
-distante, ni script. C'est la règle « données seulement » de l'ADR 0041 §5
-étendue aux thèmes utilisateur. Le `customCss` de `src/` n'est pas porté.
+A theme contains only verified tokens: no free CSS, no remote font or image,
+no script. This is the "data only" rule of ADR 0041 §5
+extended to user themes. The `customCss` of `src/` is not ported.
 
 ### 3. Code Editor
 
-`v3/11` revérifie les points encore ouverts de l'ancienne liste
-(`P4-W3-002`, `P4-W3-007` : assets hors ligne, gros fichiers, nettoyage des
-workers) contre l'atelier de l'ADR 0062 et corrige ce qui manque ; aucune
-décision nouvelle.
+`v3/11` rechecks the points still open from the old list
+(`P4-W3-002`, `P4-W3-007`: offline assets, large files, worker cleanup)
+against the workshop of ADR 0062 and fixes what is missing; no
+new decision.
 
-## Conséquences
+## Consequences
 
-- `v3/11` modifie Hack Paint, crée l'app Theme Editor, la liste des jetons, le
-  chargement des thèmes en fichiers et leur application, avec des tests
-  (ouverture et enregistrement d'une image, thème invalide ignoré, thème
-  utilisateur appliqué après rechargement) et des scans axe des deux apps
+- `v3/11` modifies Hack Paint, creates the Theme Editor app, the token list, the
+  loading of file-based themes and their application, with tests
+  (opening and saving an image, invalid theme ignored, user
+  theme applied after reload) and axe scans of both apps
   (`v3/13`).
-- Paramètres liste les thèmes utilisateur et ouvre l'éditeur.
-- Nouvelle doc `theme-editor.md`, mises à jour de `project-overview.md`,
-  `settings-files.md` et `sdk-reference.md` (liste des jetons).
+- Settings lists the user themes and opens the editor.
+- New doc `theme-editor.md`, updates to `project-overview.md`,
+  `settings-files.md` and `sdk-reference.md` (token list).

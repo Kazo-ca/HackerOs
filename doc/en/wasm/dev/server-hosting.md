@@ -1,20 +1,20 @@
-# OS servi par `HackerOs.Server` et connexion automatique
+# OS served by `HackerOs.Server` and automatic connection
 
-Chantier `exec/8-server-wasm` (série `exec`), ADR
+Work item `exec/8-server-wasm` (`exec` series), ADRs
 [0130](adr/0130-server-serves-webassembly-os-and-api.md),
-[0134](adr/0134-automatic-server-connection-and-status-icon.md) et
+[0134](adr/0134-automatic-server-connection-and-status-icon.md) and
 [0137](adr/0137-server-hosting-implementation-adjustments.md).
 
-## But
+## Goal
 
-- `HackerOs.Server` sert **le même OS que la PWA** : les fichiers publiés de
-  `OS/HackerOs.Ecosystem`, tels quels. L'OS tourne dans le navigateur en
-  WebAssembly, avec ses Web Workers, ses mesures et `/proc/hackeros`. Le
-  serveur ne garde que son API (comptes, synchronisation, relais réseau,
+- `HackerOs.Server` serves **the same OS as the PWA**: the published files of
+  `OS/HackerOs.Ecosystem`, as is. The OS runs in the browser in
+  WebAssembly, with its Web Workers, its metrics and `/proc/hackeros`. The
+  server keeps only its API (accounts, synchronization, network relay,
   administration).
-- L'OS servi par un serveur **s'y connecte tout seul**, sans question, et une
-  icône de la zone de notification montre l'état. Il continue de marcher sans
-  serveur (AGENTS.md I.1).
+- An OS served by a server **connects to it on its own**, without asking, and an
+  notification area icon shows the state. It keeps working without a
+  server (AGENTS.md I.1).
 
 ## Architecture
 
@@ -29,47 +29,47 @@ Chantier `exec/8-server-wasm` (série `exec`), ADR
  ServerStatusIndicator (barre des tâches, zone de notification)
 ```
 
-| Partie | Fichier |
+| Part | File |
 |---|---|
-| Pipeline du serveur | `Server/HackerOs.Server/Program.cs` |
-| Réécriture des pages vers `index.html` | `Server/HackerOs.Server/Endpoints/OsPageRewrite.cs` |
-| `host-info` et `hackeros-host.json` | `Server/HackerOs.Server/Endpoints/VersionEndpoints.cs` |
-| Contrat | `Server/HackerOs.Server.Contracts/Hosting/HostInfoContracts.cs` |
-| Fichier « pas de serveur » de la PWA | `OS/HackerOs.Ecosystem/wwwroot/hackeros-host.json` |
-| Détection et vérification | `Platform/HackerOs.Platform.Core/ServerConnection/HostInfoClient.cs` |
-| État et reprise | `Platform/HackerOs.Platform.Core/ServerConnection/ServerPresenceService.cs` |
-| Icône et panneau | `Platform/HackerOs.Platform.Blazor/Shell/ServerStatusIndicator.razor` (`.razor.cs`, `.razor.css`) |
-| Zone de notification | `Platform/HackerOs.Taskbar.Blazor/Taskbar.razor` (`NotificationAreaContent`) |
+| Server pipeline | `Server/HackerOs.Server/Program.cs` |
+| Rewriting pages to `index.html` | `Server/HackerOs.Server/Endpoints/OsPageRewrite.cs` |
+| `host-info` and `hackeros-host.json` | `Server/HackerOs.Server/Endpoints/VersionEndpoints.cs` |
+| Contract | `Server/HackerOs.Server.Contracts/Hosting/HostInfoContracts.cs` |
+| PWA "no server" file | `OS/HackerOs.Ecosystem/wwwroot/hackeros-host.json` |
+| Detection and verification | `Platform/HackerOs.Platform.Core/ServerConnection/HostInfoClient.cs` |
+| State and retry | `Platform/HackerOs.Platform.Core/ServerConnection/ServerPresenceService.cs` |
+| Icon and panel | `Platform/HackerOs.Platform.Blazor/Shell/ServerStatusIndicator.razor` (`.razor.cs`, `.razor.css`) |
+| Notification area | `Platform/HackerOs.Taskbar.Blazor/Taskbar.razor` (`NotificationAreaContent`) |
 | Composition | `OS/HackerOs.Ecosystem.Host/EcosystemServiceCollectionExtensions.cs`, `HackerOsBrowserHostExtensions.cs` |
 
-## Démarrer le serveur
+## Starting the server
 
 ```bash
 dotnet run --project Server/HackerOs.Server   # http://localhost:5000 par défaut
 ```
 
-Le navigateur ouvre l'adresse du serveur et reçoit l'OS. Un intergiciel posé
-juste après `builder.Build()` ajoute `Cross-Origin-Opener-Policy` et
-`Cross-Origin-Embedder-Policy: credentialless` à toutes les réponses, selon
-`HackerOs:CrossOriginIsolation` de l'`appsettings.json` du serveur (`auto` par
-défaut ; `off` n'ajoute rien) : la page est isolée (ADR 0131, 0143). En production,
-`dotnet publish Server/HackerOs.Server` copie les fichiers de l'Ecosystem dans
-son `wwwroot`. Toute adresse de page (`/`, un lien profond) reçoit
-`index.html` ; `/api/...`, `/health`, `/openapi`, `/scalar` et les fichiers ne
-sont jamais réécrits.
+The browser opens the server's address and receives the OS. A middleware placed
+right after `builder.Build()` adds `Cross-Origin-Opener-Policy` and
+`Cross-Origin-Embedder-Policy: credentialless` to all responses, according to
+`HackerOs:CrossOriginIsolation` in the server's `appsettings.json` (`auto` by
+default; `off` adds nothing): the page is isolated (ADR 0131, 0143). In production,
+`dotnet publish Server/HackerOs.Server` copies the Ecosystem files into
+its `wwwroot`. Any page address (`/`, a deep link) receives
+`index.html`; `/api/...`, `/health`, `/openapi`, `/scalar` and files are
+never rewritten.
 
-## Connexion automatique
+## Automatic connection
 
-1. Au démarrage du bureau, l'OS lit `/etc/hackeros/server.config`. Si
-   `auto-connect` n'est pas `false` (ou `no`, `off`, `0`), il lit
-   `hackeros-host.json` sur sa propre origine : la PWA répond « pas de
-   serveur », `HackerOs.Server` répond « serveur ».
-2. Le serveur retenu est celui du compte lié à l'appareil (Paramètres, ADR
-   0028), sinon celui qui a servi l'OS.
-3. L'OS appelle `GET /api/hackeros/host-info` : réponse en API 1.x =
-   connecté ; autre version = **Erreur** ; pas de réponse = **Hors ligne**,
-   nouvel essai après 5, 10, 20, 40 puis 60 s. Connecté, il revérifie toutes
-   les 30 s.
+1. At desktop startup, the OS reads `/etc/hackeros/server.config`. If
+   `auto-connect` is not `false` (or `no`, `off`, `0`), it reads
+   `hackeros-host.json` on its own origin: the PWA answers "no
+   server", `HackerOs.Server` answers "server".
+2. The chosen server is the one of the account linked to the device (Settings, ADR
+   0028), otherwise the one that served the OS.
+3. The OS calls `GET /api/hackeros/host-info`: a response in API 1.x =
+   connected; another version = **Error**; no response = **Offline**,
+   retry after 5, 10, 20, 40 then 60 s. Once connected, it rechecks every
+   30 s.
 
 ```ini
 # /etc/hackeros/server.config (facultatif, administrateur)
@@ -77,59 +77,59 @@ sont jamais réécrits.
 auto-connect=false
 ```
 
-## Icône d'état
+## Status icon
 
-| État | Icône | Sens |
+| State | Icon | Meaning |
 |---|---|---|
-| Connecté | nuage coché, vert | le serveur répond, l'appareil a un compte |
-| Connecté, non identifié | nuage, bleu | le serveur répond, pas encore de compte |
-| Connexion… | cercle qui tourne | vérification en cours |
-| Hors ligne | nuage barré, orange | serveur injoignable, l'OS continue |
-| Erreur | nuage avec alerte, rouge | version d'API incompatible ou réponse invalide |
+| Connected | cloud with check mark, green | the server answers, the device has an account |
+| Connected, not identified | cloud, blue | the server answers, no account yet |
+| Connecting… | spinning circle | check in progress |
+| Offline | crossed-out cloud, orange | server unreachable, the OS keeps going |
+| Error | cloud with alert, red | incompatible API version or invalid response |
 
-Sans serveur, l'icône n'apparaît pas. Un clic ouvre le panneau : état,
-adresse, compte, dernière synchronisation, détail d'une erreur, et les boutons
-« S'identifier » (nom du compte et mot de passe, « Se connecter » ou « Créer
-un compte »), « Reconnecter » et « Paramètres du serveur ». Échap ferme le
-panneau ; le changement d'état est annoncé (`aria-live`).
+Without a server, the icon does not appear. A click opens the panel: state,
+address, account, last synchronization, error detail, and the buttons
+"Sign in" (account name and password, "Log in" or "Create an
+account"), "Reconnect" and "Server settings". Escape closes the
+panel; the state change is announced (`aria-live`).
 
-## Comptes depuis plusieurs appareils
+## Accounts from several devices
 
-Le sel PBKDF2 du client est dérivé du nom du compte et la connexion enregistre
-un nouvel appareil : on peut créer le compte dans un navigateur et s'y
-connecter depuis un autre (ADR 0137 §4). Un compte créé avant ce changement
-ne peut plus se connecter par mot de passe.
+The client's PBKDF2 salt is derived from the account name and the login registers
+a new device: you can create the account in one browser and log in to it
+from another (ADR 0137 §4). An account created before this change
+can no longer log in with a password.
 
-## Décisions clés
+## Key decisions
 
-- Fichiers publiés de l'Ecosystem servis tels quels, sans second démarrage à
-  maintenir (ADR 0130 §2, E1 confirmé par Benoit).
-- Connexion sans question, icône dans la zone de notification (ADR 0134, E2
-  de Benoit).
-- Détection par un fichier qui existe partout, pour ne jamais écrire
-  d'erreur dans la console d'une PWA sans serveur (ADR 0137 §1).
+- Published Ecosystem files served as is, with no second startup to
+  maintain (ADR 0130 §2, E1 confirmed by Benoit).
+- Connection without asking, icon in the notification area (ADR 0134, E2
+  from Benoit).
+- Detection through a file that exists everywhere, so as never to write an
+  error in the console of a PWA without a server (ADR 0137 §1).
 
 ## Tests
 
-- `Tests/HackerOs.Server.Tests/ServerOsHostingIntegrationTests.cs` : page de
-  l'OS sur `/` et un lien profond, 404 d'une route d'API inconnue, détection
-  sur les deux adresses, compte créé puis utilisé depuis un deuxième appareil,
-  mauvais mot de passe refusé.
-- `Tests/HackerOs.Platform.Core.Tests/ServerConnection/ServerPresenceServiceTests.cs` :
-  connexion sans compte et sans question, hôte statique sans icône, serveur lié
-  à la main, hors ligne puis reprise avec délai croissant, API incompatible,
-  « S'identifier », `auto-connect=false`, sel identique d'un appareil à l'autre.
-- `build/verify-hosts.sh` (`Tests/HackerOs.HostSmoke.Tests`) : parcours
-  `server` avec workers, mesures et icône ; aucune icône sur les autres.
+- `Tests/HackerOs.Server.Tests/ServerOsHostingIntegrationTests.cs`: OS page
+  on `/` and a deep link, 404 for an unknown API route, detection
+  on both addresses, account created then used from a second device,
+  wrong password refused.
+- `Tests/HackerOs.Platform.Core.Tests/ServerConnection/ServerPresenceServiceTests.cs`:
+  connection without account and without asking, static host without icon, server linked
+  by hand, offline then retry with increasing delay, incompatible API,
+  "Sign in", `auto-connect=false`, identical salt from one device to another.
+- `build/verify-hosts.sh` (`Tests/HackerOs.HostSmoke.Tests`): `server`
+  run with workers, metrics and icon; no icon on the others.
 
-## Liste des tâches
+## Task list
 
-- [x] Servir les fichiers publiés de l'Ecosystem depuis `HackerOs.Server`.
-- [x] Retirer Interactive Server, clients directs et références aux apps.
-- [x] Réécrire les pages de l'OS vers `index.html` dans tous les environnements.
-- [x] `host-info` et `hackeros-host.json` (serveur et PWA).
-- [x] `ServerPresenceService` : détection, vérification, reprise, `auto-connect`.
-- [x] Icône et panneau dans la zone de notification de la barre des tâches.
-- [x] Sel du client stable et appareil enregistré à la connexion.
-- [x] Tests du serveur, de Platform Core et parcours des trois hôtes.
-- [x] Docs, ADR 0137 et index.
+- [x] Serve the published Ecosystem files from `HackerOs.Server`.
+- [x] Remove Interactive Server, direct clients and references to apps.
+- [x] Rewrite OS pages to `index.html` in all environments.
+- [x] `host-info` and `hackeros-host.json` (server and PWA).
+- [x] `ServerPresenceService`: detection, verification, retry, `auto-connect`.
+- [x] Icon and panel in the taskbar notification area.
+- [x] Stable client salt and device registered at login.
+- [x] Server and Platform Core tests and run of the three hosts.
+- [x] Docs, ADR 0137 and index.

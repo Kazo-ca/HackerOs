@@ -1,133 +1,134 @@
-# Explorateur de fichiers : couper, copier, coller et glisser-déposer
+# File explorer: cut, copy, paste and drag and drop
 
-Les API destinées aux apps sont dans [`file-operations-api.md`](../framework/file-operations-api.md) (`HackFileOperations`), [`file-control-api.md`](../framework/file-control-api.md) (`HackFileView` et dialogues) et [`clipboard-api.md`](../framework/clipboard-api.md) (presse-papiers).
+The APIs intended for apps are in [`file-operations-api.md`](../framework/file-operations-api.md) (`HackFileOperations`), [`file-control-api.md`](../framework/file-control-api.md) (`HackFileView` and dialogs) and [`clipboard-api.md`](../framework/clipboard-api.md) (clipboard).
 
-## Objet
+## Purpose
 
-Chantier `rebuild/4-file-explorer` de la phase 4 (ADR 0056 §12, ADR 0058 §1).
-L'explorateur (`Apps/System/HackerOs.Apps.FileExplorer`) atteint la parité avec
-le legacy (`src/apps/file-explorer.ts`) et la dépasse :
+Work item `rebuild/4-file-explorer` of phase 4 (ADR 0056 §12, ADR 0058 §1).
+The explorer (`Apps/System/HackerOs.Apps.FileExplorer`) reaches parity with
+the legacy (`src/apps/file-explorer.ts`) and goes beyond it:
 
-- **couper, copier, coller** par Ctrl+X, Ctrl+C, Ctrl+V, la barre d'outils et le
-  menu contextuel (« Cut », « Copy », « Paste », « Paste Into Folder »), au
-  travers du **presse-papiers de la session** : une autre fenêtre de
-  l'explorateur, ou une autre app, colle ce qu'une fenêtre a coupé ;
-- **conflits de noms à la Nautilus** : une copie dont le nom est pris devient
-  `rapport (copy).txt`, puis `rapport (copy 2).txt`… ; un déplacement demande
-  « Replace », « Keep both » ou « Skip », avec « Apply to all » ;
-- **glisser-déposer** sur un dossier, sur le fond de la vue, sur un nœud de
-  l'arbre, sur un segment du fil d'Ariane, sur les entrées « Home » et « Trash »
-  du panneau Places, sur la vue Corbeille, entre deux fenêtres, et depuis le
-  bureau réel de l'utilisateur (fichiers de l'hôte) ;
-- un **résumé des échecs** à la fin de chaque opération (bandeau et
-  notification), avec la raison par élément ; une erreur n'arrête pas les autres.
-- depuis `web/5-static-sites`, **« Publish as a web site… »** dans le menu d'un
-  dossier : ouvre Web Server Manager avec ce dossier comme racine d'un nouveau
-  site ([`static-sites.md`](static-sites.md)). Depuis `desk/4` (ADR 0159),
-  c'est une entrée **inscrite par Web Server Manager**, et « Extract here »
-  une entrée inscrite par l'explorateur (`[RegisterFileContextMenu]` de
-  `FileExplorerApp`, intent `org.hackeros.file-explorer.extract-here.v1` :
-  l'explorateur s'ouvre sur le dossier de l'archive et l'extrait) ; la fenêtre
-  n'ajoute plus rien par `ContextMenuOpening`. Voir
+- **cut, copy, paste** through Ctrl+X, Ctrl+C, Ctrl+V, the toolbar and the
+  context menu ("Cut", "Copy", "Paste", "Paste Into Folder"), through the
+  **session clipboard**: another explorer window, or another app, pastes what
+  a window has cut;
+- **Nautilus-style name conflicts**: a copy whose name is taken becomes
+  `rapport (copy).txt`, then `rapport (copy 2).txt`…; a move asks
+  "Replace", "Keep both" or "Skip", with "Apply to all";
+- **drag and drop** onto a folder, onto the view background, onto a tree
+  node, onto a breadcrumb segment, onto the "Home" and "Trash" entries of the
+  Places panel, onto the Trash view, between two windows, and from the user's
+  real desktop (host files);
+- a **failure summary** at the end of each operation (banner and
+  notification), with the reason per item; one error does not stop the
+  others.
+- since `web/5-static-sites`, **"Publish as a web site…"** in a folder's menu:
+  opens Web Server Manager with this folder as the root of a new site
+  ([`static-sites.md`](static-sites.md)). Since `desk/4` (ADR 0159), it is an
+  entry **registered by Web Server Manager**, and "Extract here" an entry
+  registered by the explorer (`[RegisterFileContextMenu]` of
+  `FileExplorerApp`, intent `org.hackeros.file-explorer.extract-here.v1`:
+  the explorer opens on the archive's folder and extracts it); the window no
+  longer adds anything through `ContextMenuOpening`. See
   [`context-menu.md`](../framework/context-menu.md#entrées-des-apps-dans-les-menus-des-fichiers-chantier-4).
-- depuis `desk/3-file-control` (ADR 0155), **l'explorateur fournit le contrôle
-  de fichiers de l'OS** (`hackeros.file-view`) et ses dialogues
-  (`hackeros.file-dialogs`), et s'en sert lui-même : voir la section suivante.
+- since `desk/3-file-control` (ADR 0155), **the explorer provides the OS file
+  control** (`hackeros.file-view`) and its dialogs (`hackeros.file-dialogs`),
+  and uses it itself: see the next section.
 
-## Fournisseur du contrôle de fichiers (ADR 0148, ADR 0155)
+## File control provider (ADR 0148, ADR 0155)
 
-La fenêtre masque par défaut les noms commençant par un point, notamment la
-configuration de l'accueil mobile `~/Desktop/.mobile/layout.conf`
-(ADR 0166). Le bouton œil **Afficher les fichiers et dossiers cachés** de la
-barre de vue active/désactive leur affichage pour cette fenêtre. Le prédicat
-est combiné à la recherche via `Filter`, sans modifier les fichiers ni les
-droits ; les descendants de l'arbre et sa navigation clavier suivent ce filtre.
+The window hides names starting with a dot by default, notably the mobile
+home configuration `~/Desktop/.mobile/layout.conf` (ADR 0166). The eye button
+**Show hidden files and folders** in the view bar toggles their display for
+this window. The predicate is combined with the search through `Filter`,
+without modifying files or permissions; the tree's descendants and its
+keyboard navigation follow this filter.
 
-Le manifeste (`FileExplorerApp.Components`) inscrit deux composants :
+The manifest (`FileExplorerApp.Components`) registers two components:
 
-| Contrat | Composant | Rôle |
+| Contract | Component | Role |
 |---|---|---|
-| `hackeros.file-view` | `ExplorerFileView` | `FileView` (implémentation interne, ADR 0155 §1) liée au menu de l'OS, avec la corbeille, le presse-papiers, les transferts et leurs conflits, l'ouverture et « Ouvrir avec ». Contrôleur `IHackFileView`. |
-| `hackeros.file-dialogs` | `ExplorerFileDialogs` | « Ouvrir avec » (« Toujours utiliser »), « Propriétés », conflit de noms, en markup natif. |
+| `hackeros.file-view` | `ExplorerFileView` | `FileView` (internal implementation, ADR 0155 §1) bound to the OS menu, with the trash, the clipboard, transfers and their conflicts, opening and "Open with". Controller `IHackFileView`. |
+| `hackeros.file-dialogs` | `ExplorerFileDialogs` | "Open with" ("Always use"), "Properties", name conflict, in native markup. |
 
 ```text
-App hôte ──► HackFileView (SDK) ──► registre ──► ExplorerFileView (explorateur)
-                                                   ├─ FileView + FileViewMenuBinding ──► Menus.Attach (menu de l'OS)
-                                                   ├─ ExplorerFileMenu (menus du plan §7) ──► ContextMenuOpening de l'hôte
+Host app ──► HackFileView (SDK) ──► registry ──► ExplorerFileView (explorer)
+                                                   ├─ FileView + FileViewMenuBinding ──► Menus.Attach (OS menu)
+                                                   ├─ ExplorerFileMenu (menus of plan §7) ──► host's ContextMenuOpening
                                                    └─ IDialogService ──► DialogCoordinator ──► ProvidedFileDialog ──► ExplorerFileDialogs
 ```
 
-### Mode Bureau et raccourcis (`desk/5`, ADR 0160)
+### Desktop mode and shortcuts (`desk/5`, ADR 0160)
 
-`ExplorerFileView` fournit aussi le mode `Desktop` du contrôle, que l'app
-Bureau affiche sur `~/Desktop` (voir [`desktop.md`](desktop.md)) : la grille
-`FileViewDesktop`, les icônes Dossier perso et Corbeille avec leurs menus
-(Ouvrir, Vider la corbeille, Propriétés) et leurs dépôts, et la Corbeille
-pleine ou vide selon `~/.local/share/Trash/files`. Ouvrir un dossier du bureau
-ouvre une fenêtre de l'explorateur ; l'argument `trash:///` ouvre la fenêtre
-sur la vue Corbeille.
+`ExplorerFileView` also provides the control's `Desktop` mode, which the
+Desktop app displays on `~/Desktop` (see [`desktop.md`](desktop.md)): the
+`FileViewDesktop` grid, the Home and Trash icons with their menus (Open, Empty
+trash, Properties) and their drops, and the Trash full or empty depending on
+`~/.local/share/Trash/files`. Opening a desktop folder opens an explorer
+window; the `trash:///` argument opens the window on the Trash view.
 
-Dans tous les modes, un fichier `.desktop` valide s'affiche avec le nom et
-l'icône de son app (grisé si l'app manque) et l'ouvrir lance l'app ; déposer
-une app glissée du menu Démarrer crée un raccourci dans le dossier visé.
+In all modes, a valid `.desktop` file is displayed with its app's name and
+icon (grayed out if the app is missing) and opening it launches the app;
+dropping an app dragged from the Start menu creates a shortcut in the target
+folder.
 
 ## Architecture
 
-Depuis `desk/3`, ce schéma est celui du fournisseur `ExplorerFileView`, que la
-fenêtre affiche par `HackFileView` (section précédente).
+Since `desk/3`, this diagram is that of the `ExplorerFileView` provider, which
+the window displays through `HackFileView` (previous section).
 
 ```text
-ExplorerFileView ──► FileView (interne)    ── Ctrl+X/C/V, menus ──► ClipboardRequested
-        │                 │  FileView.razor.js  ── dépôts ─────────► DropRequested
-        │                 ├─ FileViewBreadcrumb (fil d'Ariane, cibles de dépôt)
-        │                 └─ FileViewDropZone   (Home, Trash, vue Corbeille)
-        ├──► HackClipboard ──► IAppClipboardGateway ──► AppClipboardGateway ──► SystemClipboard (une sélection par session)
-        └──► HackFileOperations (SDK) ──► HackFile / HackDirectory / HackTrash (contexte ambiant de l'app)
+ExplorerFileView ──► FileView (internal)    ── Ctrl+X/C/V, menus ──► ClipboardRequested
+        │                 │  FileView.razor.js  ── drops ──────────► DropRequested
+        │                 ├─ FileViewBreadcrumb (breadcrumb, drop targets)
+        │                 └─ FileViewDropZone   (Home, Trash, Trash view)
+        ├──► HackClipboard ──► IAppClipboardGateway ──► AppClipboardGateway ──► SystemClipboard (one selection per session)
+        └──► HackFileOperations (SDK) ──► HackFile / HackDirectory / HackTrash (app's ambient context)
 ```
 
-| Pièce | Où | Rôle |
+| Piece | Where | Role |
 |---|---|---|
-| `HackClipboard`, `HackClipboardFileList`, `HackClipboardFileOperation` | `Shared/HackerOs.AppSdk/Clipboard/` | Façade publique : texte et liste de fichiers (format GNOME `x-special/gnome-copied-files`). |
-| `IAppClipboardGateway` | idem | Passerelle `IAppExecutionContext.Clipboard` : `clipboard.read` / `clipboard.write`, événement `Changed`. |
-| `SystemClipboard` | `Platform/HackerOs.Platform.Core/Clipboard/` | Presse-papiers de l'OS : une sélection par session, cibles MIME (`text/plain`, `x-special/gnome-copied-files`), vidée à la déconnexion. En mémoire, comme un vrai presse-papiers. Numéro de séquence, origine et partage du texte avec la vraie machine : [`clipboard.md`](clipboard.md) (ADR 0065). |
-| `AppClipboardGateway` | `Platform/HackerOs.Platform.Core/Execution/` | Passerelle de confiance par instance : vérifie la capacité à chaque appel, ne voit que sa session, rejoue `Changed` dans le contexte ambiant de l'app abonnée. |
-| `HackFileOperations` et contrats (ex-`FileTransfer`) | `Shared/HackerOs.AppSdk/IO/HackFileOperations*.cs` | Copie, déplacement, import de fichiers de l'hôte, envoi à la corbeille ; noms Nautilus, conflits, refus d'un dossier dans lui-même, résumé des échecs. Tourne sur l'API `Hack*`, donc avec les droits de l'app. Dans le SDK depuis la 2.0 (ADR 0161 §2) ; `IDialogService.AsFileConflictResolver` (`HackerOs.AppSdk.Blazor.Files`) pose la question de conflit par `hackeros.file-dialogs`. |
-| `FileView` (ajouts) | `Apps/System/HackerOs.Apps.FileExplorer/FileControl/` (dans `Shared/HackerOs.AppSdk.FileView` avant le SDK 2.0, ADR 0161 §1) | Dépôt sur le fond, `DropRequested`, `ClipboardRequested`, `CanPaste`, `CutPaths` (éléments atténués), Ctrl+A. |
-| `FileViewBreadcrumb`, `FileViewDropZone` | idem | Fil d'Ariane cliquable et déposable ; zone de dépôt générique pour le chrome de l'hôte. |
-| `FileView.razor.js` | idem | Écouteurs natifs `dragover` / `drop` : curseur déplacer/copier, surbrillance de la cible, capture du contenu et des `File` de l'hôte. Depuis l'ADR 0065, Ctrl+V suit l'événement `paste` (`attachPasteTarget`) : des fichiers copiés sur la vraie machine et collés dans la vue sont importés comme un dépôt. |
-| `ExplorerFileDialogs` | `Apps/System/HackerOs.Apps.FileExplorer/` | Fenêtre « Replace / Keep both / Skip » (et « Ouvrir avec », « Propriétés ») du contrat `hackeros.file-dialogs`, en markup natif depuis `desk/3` ; l'ancien `FileConflictDialog` MudBlazor est retiré. |
+| `HackClipboard`, `HackClipboardFileList`, `HackClipboardFileOperation` | `Shared/HackerOs.AppSdk/Clipboard/` | Public facade: text and file list (GNOME format `x-special/gnome-copied-files`). |
+| `IAppClipboardGateway` | same | `IAppExecutionContext.Clipboard` gateway: `clipboard.read` / `clipboard.write`, `Changed` event. |
+| `SystemClipboard` | `Platform/HackerOs.Platform.Core/Clipboard/` | OS clipboard: one selection per session, MIME targets (`text/plain`, `x-special/gnome-copied-files`), cleared at logout. In memory, like a real clipboard. Sequence number, origin and text sharing with the real machine: [`clipboard.md`](clipboard.md) (ADR 0065). |
+| `AppClipboardGateway` | `Platform/HackerOs.Platform.Core/Execution/` | Trusted per-instance gateway: checks the capability on each call, sees only its session, replays `Changed` in the ambient context of the subscribed app. |
+| `HackFileOperations` and contracts (formerly `FileTransfer`) | `Shared/HackerOs.AppSdk/IO/HackFileOperations*.cs` | Copy, move, import of host files, sending to trash; Nautilus names, conflicts, refusal of a folder into itself, failure summary. Runs on the `Hack*` API, hence with the app's rights. In the SDK since 2.0 (ADR 0161 §2); `IDialogService.AsFileConflictResolver` (`HackerOs.AppSdk.Blazor.Files`) asks the conflict question through `hackeros.file-dialogs`. |
+| `FileView` (additions) | `Apps/System/HackerOs.Apps.FileExplorer/FileControl/` (in `Shared/HackerOs.AppSdk.FileView` before SDK 2.0, ADR 0161 §1) | Drop on the background, `DropRequested`, `ClipboardRequested`, `CanPaste`, `CutPaths` (dimmed items), Ctrl+A. |
+| `FileViewBreadcrumb`, `FileViewDropZone` | same | Clickable and droppable breadcrumb; generic drop zone for the host's chrome. |
+| `FileView.razor.js` | same | Native `dragover` / `drop` listeners: move/copy cursor, target highlight, capture of the content and the host's `File` objects. Since ADR 0065, Ctrl+V follows the `paste` event (`attachPasteTarget`): files copied on the real machine and pasted into the view are imported like a drop. |
+| `ExplorerFileDialogs` | `Apps/System/HackerOs.Apps.FileExplorer/` | "Replace / Keep both / Skip" window (and "Open with", "Properties") of the `hackeros.file-dialogs` contract, in native markup since `desk/3`; the old MudBlazor `FileConflictDialog` is removed. |
 
-## Usage et API
+## Usage and API
 
-### Archives en arrière-plan (ADR 0140)
+### Background archives (ADR 0140)
 
-Compresser, Extraire et « Extract here » passent par des tâches
-`HackBackground` ([`background-jobs.md`](../framework/background-jobs.md)) :
-`FileExplorerZipService.CompressInBackgroundAsync` et `ExtractInBackgroundAsync`
-lancent les processus enfants `file-explorer:compress` et
-`file-explorer:extract`, qui lisent, compressent ou décompressent et écrivent
-par leurs propres passerelles (mêmes droits que l'explorateur), dans un Web
-Worker quand l'hôte en a. Une erreur revient comme clé de texte
-(`ZipFailure`) et la fenêtre la traduit. Ces tâches sont suivies comme les
-transferts : une demande d'arrêt attend leur fin.
+Compress, Extract and "Extract here" go through `HackBackground` tasks
+([`background-jobs.md`](../framework/background-jobs.md)):
+`FileExplorerZipService.CompressInBackgroundAsync` and `ExtractInBackgroundAsync`
+launch the child processes `file-explorer:compress` and
+`file-explorer:extract`, which read, compress or decompress and write through
+their own gateways (same rights as the explorer), in a Web Worker when the
+host has one. An error comes back as a text key (`ZipFailure`) and the window
+translates it. These tasks are tracked like transfers: a stop request waits
+for them to finish.
 
-Restent dans la fenêtre, avec leur raison écrite dans le code : les copies et
-déplacements (`HackFileOperations`, appels à l'OS attendus avec un point d'arrêt
-entre deux éléments, et question de conflit dans la fenêtre) et le
-téléchargement d'une sélection en `.zip` (les octets vont au navigateur depuis
-la fenêtre et dépasseraient vite les 16 Mio d'un résultat).
+Staying in the window, with their reason written in the code: copies and
+moves (`HackFileOperations`, OS calls awaited with a checkpoint between two
+items, and the conflict question in the window) and the download of a
+selection as `.zip` (the bytes go to the browser from the window and would
+quickly exceed the 16 MiB of a result).
 
 ### `FileView`
 
-| Paramètre | Rôle |
+| Parameter | Role |
 |---|---|
-| `DropRequested` | Reçoit chaque dépôt (`FileViewDropRequestedEventArgs` : `Destination`, `Entries`, `HostFiles`, `Copy`). Sans lui, la vue déplace (Ctrl : copie) elle-même et ignore les fichiers de l'hôte. |
-| `ClipboardRequested` | Reçoit Ctrl+X/C/V et les entrées de menu (`FileViewClipboardRequestedEventArgs` : `Action`, `Items`, `Destination`). Sans lui, ces entrées n'existent pas. |
-| `CanPaste` | Grise « Paste » et « Paste Into Folder ». |
-| `CutPaths` | Chemins coupés : leurs éléments sont atténués (`FileViewItem.IsCut`). |
+| `DropRequested` | Receives each drop (`FileViewDropRequestedEventArgs`: `Destination`, `Entries`, `HostFiles`, `Copy`). Without it, the view moves (Ctrl: copies) itself and ignores host files. |
+| `ClipboardRequested` | Receives Ctrl+X/C/V and the menu entries (`FileViewClipboardRequestedEventArgs`: `Action`, `Items`, `Destination`). Without it, these entries do not exist. |
+| `CanPaste` | Grays out "Paste" and "Paste Into Folder". |
+| `CutPaths` | Cut paths: their items are dimmed (`FileViewItem.IsCut`). |
 
-`FileViewMenuItem` gagne `IsDisabled`. Identifiants des nouvelles entrées :
-`cut`, `copy`, `paste-into` (dossier), `paste` (fond).
+`FileViewMenuItem` gains `IsDisabled`. Identifiers of the new entries:
+`cut`, `copy`, `paste-into` (folder), `paste` (background).
 
 ```razor
 <FileViewBreadcrumb Owner="_fileView" RootLabel="Computer" />
@@ -135,129 +136,128 @@ la fenêtre et dépasseraient vite les 16 Mio d'un résultat).
 <FileViewDropZone Owner="_fileView" Dropped="OnTrashDropAsync">…</FileViewDropZone>
 ```
 
-Le curseur indique l'opération pendant le survol : déplacer, copier avec Ctrl ou
-pour des fichiers de l'hôte. La cible survolée est encadrée en pointillés.
+The cursor indicates the operation during hover: move, copy with Ctrl or for
+host files. The hovered target is framed with dotted lines.
 
-### Ligne de commande et « Afficher dans le dossier » (ADR 0039, ADR 0096 §1)
+### Command line and "Show in folder" (ADR 0039, ADR 0096 §1)
 
-| Arguments | Effet |
+| Arguments | Effect |
 |---|---|
-| aucun | Ouvre le dossier personnel. |
-| `<dossier>` | Ouvre ce dossier (ouverture d'un `inode/directory`, `xdg-open ~/Documents`). |
-| `<parent> --select=<chemin>` | Ouvre `<parent>`, sélectionne l'élément et le fait défiler jusqu'à lui : c'est ce qu'envoie `RevealFileIntent` (`HackApps.RevealFileAsync`), l'équivalent de `org.freedesktop.FileManager1.ShowItems`. |
-| `--select=<chemin>` seul | Ouvre le dossier parent de `<chemin>` et le sélectionne. |
+| none | Opens the home folder. |
+| `<folder>` | Opens this folder (opening an `inode/directory`, `xdg-open ~/Documents`). |
+| `<parent> --select=<path>` | Opens `<parent>`, selects the item and scrolls to it: this is what `RevealFileIntent` (`HackApps.RevealFileAsync`) sends, the equivalent of `org.freedesktop.FileManager1.ShowItems`. |
+| `--select=<path>` alone | Opens the parent folder of `<path>` and selects it. |
 
-Un argument relatif ou mal formé est ignoré. L'explorateur n'est pas à
-instance unique : chaque demande ouvre une fenêtre, comme Nautilus lancé avec un
-chemin. `FileView.RevealAsync(path)` fait le
-travail : navigation vers le parent, sélection, puis `revealItem` de
-`FileView.razor.js` (`scrollIntoView` puis focus).
+A relative or malformed argument is ignored. The explorer is not
+single-instance: each request opens a window, like Nautilus launched with a
+path. `FileView.RevealAsync(path)` does the work: navigation to the parent,
+selection, then `revealItem` of `FileView.razor.js` (`scrollIntoView` then
+focus).
 
-## Langues (ADR 0104)
+## Languages (ADR 0104)
 
-Tous les textes de l'explorateur (barres d'outils, Emplacements, Corbeille,
-dialogues Ouvrir avec / Propriétés / conflit de noms, menus contextuels,
-messages d'erreur, résumés de transfert) viennent de `Resources/Strings.resx`
-(anglais) et `Resources/Strings.fr.resx` (français), lus par
-`AppContext.GetLocalizer<Strings>()` dans la langue du processus. Le nom de
-l'app est traduit par `Resources/AppManifest.fr.resx`.
+All explorer texts (toolbars, Places, Trash, Open with / Properties / name
+conflict dialogs, context menus, error messages, transfer summaries) come from
+`Resources/Strings.resx` (English) and `Resources/Strings.fr.resx` (French),
+read by `AppContext.GetLocalizer<Strings>()` in the process language. The app
+name is translated by `Resources/AppManifest.fr.resx`.
 
-- Le résumé d'échec d'un transfert est construit par la fenêtre
-  (`Transfer.<Copy|Move|Trash|Upload>.One/Many`) à partir de
-  `FileTransferResult.Failures` ; la raison de chaque échec vient du SDK
-  `FileView`.
-- Dates (colonne « Supprimé le » de la Corbeille, « Modifié » des Propriétés)
-  et tailles suivent `AppContext.FormatCulture` (`LC_TIME`, `LANG`) : date et
-  heure courtes de la locale, unités `o/Ko/Mo/Go` en français.
-- Les noms de fichiers et de dossiers ne sont jamais traduits (`NewFile.txt`,
-  `Archive.zip`, `~/.local/share/Trash`) ; seul le nom proposé pour un nouveau
-  dossier l'est, comme « Dossier sans titre » sous GNOME.
+- The failure summary of a transfer is built by the window
+  (`Transfer.<Copy|Move|Trash|Upload>.One/Many`) from
+  `FileTransferResult.Failures`; the reason for each failure comes from the
+  `FileView` SDK.
+- Dates ("Deleted on" column of the Trash, "Modified" of Properties) and sizes
+  follow `AppContext.FormatCulture` (`LC_TIME`, `LANG`): short date and time
+  of the locale, units `o/Ko/Mo/Go` in French.
+- File and folder names are never translated (`NewFile.txt`, `Archive.zip`,
+  `~/.local/share/Trash`); only the name proposed for a new folder is, like
+  "Untitled Folder" under GNOME.
 
-## Décisions clés
+## Key decisions
 
-- **Un presse-papiers par session, dans Platform Core.** Comme la sélection
-  `CLIPBOARD` de X11 tenue par le gestionnaire de presse-papiers du bureau : toutes
-  les apps de la session le partagent, une autre session ne le voit pas, il est
-  vidé à la déconnexion et ne survit pas à un redémarrage. L'ancienne classe en
-  mémoire `AppClipboardGateway` du SDK, non branchée, est supprimée.
-- **Format GNOME.** La liste est stockée en `x-special/gnome-copied-files` et en
-  `text/plain` : une app qui lit du texte voit les chemins (ADR 0056 §12).
-- **`HackFileOperations` dans le SDK** (ADR 0161 §2, ex-`FileTransfer` de
-  `HackerOs.AppSdk.FileView`). Toute app, tout fournisseur du contrôle de
-  fichiers et toute commande reprennent les mêmes règles ; le code n'utilise que
-  l'API `Hack*`, donc les capacités et les droits de l'app.
-- **`HackDirectory.CopyAsync`.** .NET n'a pas de `Directory.Copy` ; l'ADR 0058
-  demande une copie récursive. Le moteur copie l'arbre en une transaction ; entre
-  deux montages, la façade le recrée entrée par entrée (même repli que
-  `MoveAsync`).
-- **Dépôts lus par un écouteur natif.** Le gestionnaire C# d'un `drop` ne peut pas
-  compter sur `window.event` ; l'écouteur `drop` en phase de capture de
-  `FileView.razor.js` garde le contenu et les `File` de l'hôte, que le C# lit
-  ensuite. Le contenu d'un fichier de l'hôte n'est lu qu'au moment de l'import
-  (`IJSStreamReference`). Le document archivé
-  `old/Global-FileView-And-MessagingSystem/FileViewControl.md` disait le dépôt de
-  fichiers de l'hôte hors de portée : ce n'est plus le cas.
-- **Remplacer un dossier le supprime définitivement**, comme Nautilus en mode
-  « Replace » ; la fenêtre le dit.
-- **Envoi depuis la barre d'outils** : passe par `HackFileOperations.ImportAsync` et ne
-  remplace plus un fichier existant (nom de copie), comme un dépôt.
-- **Capacités de l'explorateur** : `clipboard.read`, `clipboard.write` et
-  `notifications.post` (résumé des échecs), toutes normales.
+- **One clipboard per session, in Platform Core.** Like X11's `CLIPBOARD`
+  selection held by the desktop's clipboard manager: all apps in the session
+  share it, another session does not see it, it is cleared at logout and does
+  not survive a restart. The old in-memory `AppClipboardGateway` class of the
+  SDK, not wired in, is removed.
+- **GNOME format.** The list is stored as `x-special/gnome-copied-files` and
+  as `text/plain`: an app that reads text sees the paths (ADR 0056 §12).
+- **`HackFileOperations` in the SDK** (ADR 0161 §2, formerly `FileTransfer` of
+  `HackerOs.AppSdk.FileView`). Every app, every file control provider and
+  every command take up the same rules; the code only uses the `Hack*` API,
+  hence the app's capabilities and rights.
+- **`HackDirectory.CopyAsync`.** .NET has no `Directory.Copy`; ADR 0058 asks
+  for a recursive copy. The engine copies the tree in one transaction;
+  between two mounts, the facade recreates it entry by entry (same fallback
+  as `MoveAsync`).
+- **Drops read by a native listener.** The C# handler of a `drop` cannot rely
+  on `window.event`; the capture-phase `drop` listener of `FileView.razor.js`
+  keeps the content and the host's `File` objects, which the C# then reads.
+  The content of a host file is only read at import time
+  (`IJSStreamReference`). The archived document
+  `old/Global-FileView-And-MessagingSystem/FileViewControl.md` said dropping
+  host files was out of reach: this is no longer the case.
+- **Replacing a folder deletes it permanently**, like Nautilus in "Replace"
+  mode; the window says so.
+- **Sending from the toolbar**: goes through `HackFileOperations.ImportAsync`
+  and no longer replaces an existing file (copy name), like a drop.
+- **Explorer capabilities**: `clipboard.read`, `clipboard.write` and
+  `notifications.post` (failure summary), all normal.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Execution/AppClipboardGatewayTests.cs` :
-  partage entre apps d'une session, isolement des sessions, capacités,
-  `Changed`, vidage à la déconnexion, façade `HackClipboard`, format GNOME.
-- `Tests/HackerOs.AppSdk.Tests/IO/HackFileOperationsTests.cs` : noms de copie,
-  copie récursive, dossier dans lui-même, déplacement sur place, choix de
-  conflit, « Apply to all », échec isolé, import, corbeille.
-- `Tests/HackerOs.AppSdk.Blazor.Tests/HackFileOperationDialogsTests.cs` : question
-  de conflit posée par le dialogue du fournisseur.
-- `Tests/HackerOs.Apps.FileExplorer.FileControl.Tests/FileViewDropAndClipboardTests.cs` : dépôt
-  sur le fond, remise à `DropRequested`, fichiers de l'hôte, raccourcis,
-  éléments coupés, fil d'Ariane.
-- `Tests/HackerOs.AppSdk.Tests/IO/HackDirectoryTests.cs` : `HackDirectory.CopyAsync`.
-- `Tests/HackerOs.Apps.FileExplorer.Tests/FileExplorerLaunchArgumentsTests.cs` : dossier, `--select`, parent déduit, arguments ignorés (`v3/4`).
+- `Tests/HackerOs.Platform.Core.Tests/Execution/AppClipboardGatewayTests.cs`:
+  sharing between apps of a session, session isolation, capabilities,
+  `Changed`, clearing at logout, `HackClipboard` facade, GNOME format.
+- `Tests/HackerOs.AppSdk.Tests/IO/HackFileOperationsTests.cs`: copy names,
+  recursive copy, folder into itself, in-place move, conflict choice, "Apply
+  to all", isolated failure, import, trash.
+- `Tests/HackerOs.AppSdk.Blazor.Tests/HackFileOperationDialogsTests.cs`:
+  conflict question asked by the provider's dialog.
+- `Tests/HackerOs.Apps.FileExplorer.FileControl.Tests/FileViewDropAndClipboardTests.cs`:
+  drop on the background, handover to `DropRequested`, host files, shortcuts,
+  cut items, breadcrumb.
+- `Tests/HackerOs.AppSdk.Tests/IO/HackDirectoryTests.cs`: `HackDirectory.CopyAsync`.
+- `Tests/HackerOs.Apps.FileExplorer.Tests/FileExplorerLaunchArgumentsTests.cs`: folder, `--select`, deduced parent, ignored arguments (`v3/4`).
 
-## Liste des tâches du chantier `rebuild/4-file-explorer`
+## Task list of work item `rebuild/4-file-explorer`
 
-- [x] `IAppClipboardGateway` complet, `HackClipboard`, `HackClipboardFileList` (format GNOME), anciens membres `[Obsolete]`.
-- [x] `SystemClipboard` et `AppClipboardGateway` dans Platform Core, branchés par la fabrique et l'hôte.
-- [x] `HackDirectory.CopyAsync` (copie récursive).
-- [x] `FileTransfer` : copie, déplacement avec conflits, import de fichiers de l'hôte, corbeille, résumé des échecs.
-- [x] `FileView` : dépôt sur le fond et les nœuds de l'arbre, `DropRequested`, `ClipboardRequested`, `CanPaste`, `CutPaths`, Ctrl+A, entrées de menu.
-- [x] `FileViewBreadcrumb` et `FileViewDropZone` ; écouteurs natifs et fichiers de l'hôte dans `FileView.razor.js`.
-- [x] Explorateur : barre d'outils Cut/Copy/Paste, fil d'Ariane, dépôts sur Home, Trash et la vue Corbeille, fenêtre de conflit, notification des échecs, envoi par `FileTransfer`.
-- [x] Tests, ce document, `app-sdk.md`, `hack-file-api.md`, `trash.md`, plan et index.
+- [x] Complete `IAppClipboardGateway`, `HackClipboard`, `HackClipboardFileList` (GNOME format), old members `[Obsolete]`.
+- [x] `SystemClipboard` and `AppClipboardGateway` in Platform Core, wired by the factory and the host.
+- [x] `HackDirectory.CopyAsync` (recursive copy).
+- [x] `FileTransfer`: copy, move with conflicts, import of host files, trash, failure summary.
+- [x] `FileView`: drop on the background and the tree nodes, `DropRequested`, `ClipboardRequested`, `CanPaste`, `CutPaths`, Ctrl+A, menu entries.
+- [x] `FileViewBreadcrumb` and `FileViewDropZone`; native listeners and host files in `FileView.razor.js`.
+- [x] Explorer: Cut/Copy/Paste toolbar, breadcrumb, drops on Home, Trash and the Trash view, conflict window, failure notification, sending through `FileTransfer`.
+- [x] Tests, this document, `app-sdk.md`, `hack-file-api.md`, `trash.md`, plan and index.
 
-## Tâches du chantier `v3/4-intents`
+## Tasks of work item `v3/4-intents`
 
-- [x] L'explorateur ouvre le dossier passé en argument (il ouvrait toujours le dossier personnel).
-- [x] `--select=<chemin>` : sélection et défilement (`FileView.RevealAsync`, `revealItem`).
-- [x] Tests et ce document.
+- [x] The explorer opens the folder passed as an argument (it always opened the home folder).
+- [x] `--select=<path>`: selection and scrolling (`FileView.RevealAsync`, `revealItem`).
+- [x] Tests and this document.
 
-## Tâches du chantier `v3/4b` (ADR 0121)
+## Tasks of work item `v3/4b` (ADR 0121)
 
-- [x] « Ouvrir avec » propose « Toujours utiliser cette app pour les fichiers
-  .ext » quand l'app choisie déclare l'extension ; le choix est écrit dans
-  `~/.config/hackeros/file-associations.json` par
+- [x] "Open with" offers "Always use this app for .ext files" when the chosen
+  app declares the extension; the choice is written to
+  `~/.config/hackeros/file-associations.json` by
   `AppContext.Catalog.SetUserDefaultHandlerAsync`
   ([`user-file-associations.md`](user-file-associations.md)).
-- [x] L'explorateur déclare `file-associations.read`.
+- [x] The explorer declares `file-associations.read`.
 
-## Tâches du chantier `exec/5-background-jobs` (ADR 0140)
+## Tasks of work item `exec/5-background-jobs` (ADR 0140)
 
-- [x] Compresser, Extraire et « UnZip Here… » en tâches `file-explorer:compress` et `file-explorer:extract`.
-- [x] Copies et téléchargement gardés dans la fenêtre, raison écrite.
-- [x] Test de l'aller-retour compression puis extraction (`FileExplorerZipJobsTests`).
+- [x] Compress, Extract and "UnZip Here…" as `file-explorer:compress` and `file-explorer:extract` tasks.
+- [x] Copies and download kept in the window, reason written.
+- [x] Round-trip test of compression then extraction (`FileExplorerZipJobsTests`).
 
-## Tâches du chantier `desk/3-file-control` (ADR 0155)
+## Tasks of work item `desk/3-file-control` (ADR 0155)
 
-- [x] Contrats du SDK : `HackFileView`, `IHackFileView`, `HackFileViewItem`, `HackFileViewFeatures`, `HackFileMenuOpeningEventArgs`, `FileMenuScope`, `HackFileMenuItems`.
-- [x] `ExplorerFileView` : `FileView` liée au menu de l'OS (`FileViewMenuBinding`), commandes, corbeille, presse-papiers, transferts, ouverture.
-- [x] Menus du plan §7 (`ExplorerFileMenu`), « Ouvrir avec » en sous-menu.
-- [x] Dialogues fournis (`ExplorerFileDialogs`) par `IDialogService` et le proxy de la plateforme ; dialogues MudBlazor retirés.
-- [x] Fenêtre de l'explorateur sur `HackFileView` ; « UnZip Here… » et « Publish as a web site… » par `ContextMenuOpening` (remplacés au chantier 4 par des entrées inscrites, ADR 0159).
-- [x] Éditeur de code sur `HackFileView` ([`code-editor.md`](code-editor.md)).
-- [x] Vue des dialogues Ouvrir / Enregistrer : chantier `desk/3b` ([ADR 0157](adr/0157-file-dialogs-show-the-file-control.md)).
+- [x] SDK contracts: `HackFileView`, `IHackFileView`, `HackFileViewItem`, `HackFileViewFeatures`, `HackFileMenuOpeningEventArgs`, `FileMenuScope`, `HackFileMenuItems`.
+- [x] `ExplorerFileView`: `FileView` bound to the OS menu (`FileViewMenuBinding`), commands, trash, clipboard, transfers, opening.
+- [x] Menus of plan §7 (`ExplorerFileMenu`), "Open with" as a submenu.
+- [x] Dialogs provided (`ExplorerFileDialogs`) through `IDialogService` and the platform proxy; MudBlazor dialogs removed.
+- [x] Explorer window on `HackFileView`; "UnZip Here…" and "Publish as a web site…" through `ContextMenuOpening` (replaced in work item 4 by registered entries, ADR 0159).
+- [x] Code editor on `HackFileView` ([`code-editor.md`](code-editor.md)).
+- [x] View of the Open / Save dialogs: work item `desk/3b` ([ADR 0157](adr/0157-file-dialogs-show-the-file-control.md)).

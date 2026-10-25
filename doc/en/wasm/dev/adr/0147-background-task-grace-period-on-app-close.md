@@ -1,99 +1,99 @@
-# ADR 0147 : délai de 5 s pour les tâches en arrière-plan quand leur app se ferme
+# ADR 0147: 5 s grace period for background tasks when their app closes
 
-## Statut
+## Status
 
-Accepté le 2026-10-19, sur la réponse de Benoit.
+Accepted on 2026-10-19, on Benoit's answer.
 
-- **Fil :** « Exec 5 : tâches de fond ». Ce sont les deux cartes laissées
-  ouvertes par l'ADR 0140.
-- **Remplace :** l'ADR 0140 §6 (« sans délai de grâce »). Le reste de l'ADR 0140
-  ne change pas.
+- **Thread:** "Exec 5: background tasks". These are the two cards left
+  open by ADR 0140.
+- **Replaces:** ADR 0140 §6 ("with no grace period"). The rest of ADR 0140
+  does not change.
 
-## Contexte
+## Context
 
-L'ADR 0140 §6 arrêtait les tâches d'une app au moment même où l'app se
-terminait. Le processus de la tâche sortait aussitôt avec la raison
-`DependencyStop`, et son jeton était annulé.
+ADR 0140 §6 stopped an app's tasks at the very moment the app
+ended. The task's process exited immediately with the reason
+`DependencyStop`, and its token was canceled.
 
-Une tâche qui écrit un fichier, une archive par exemple, n'avait donc aucun
-moment garanti pour finir proprement ou effacer ce qu'elle laissait à moitié
-écrit.
+A task that writes a file, an archive for example, therefore had no guaranteed
+moment to finish cleanly or to delete what it left half
+written.
 
-Deux questions ont été posées à Benoit :
+Two questions were put to Benoit:
 
-1. **Délai de grâce à la fermeture de l'app.**
-   - Choix A : arrêt immédiat, comme jusqu'ici.
-   - Choix B : 5 s, comme un `SIGTERM` suivi d'un `SIGKILL`.
-   - **Réponse : B.**
-2. **PID de la tâche dans `HackBackgroundProgress`.**
-   - Choix A : non, la tâche le met dans son message, comme dans la fenêtre
-     d'exemple.
-   - Choix B : un champ ajouté à l'API et au protocole.
-   - **Réponse : A.**
+1. **Grace period when the app closes.**
+   - Choice A: immediate stop, as so far.
+   - Choice B: 5 s, like a `SIGTERM` followed by a `SIGKILL`.
+   - **Answer: B.**
+2. **Task PID in `HackBackgroundProgress`.**
+   - Choice A: no, the task puts it in its message, as in the sample
+     window.
+   - Choice B: a field added to the API and the protocol.
+   - **Answer: A.**
 
-## Décision
+## Decision
 
-### 1. Signal de mort du parent
+### 1. Parent death signal
 
-`ProcessStartRequest` gagne la propriété `init` `ParentExitGracePeriod`
-(`TimeSpan?`, dans `HackerOs.Simulation.Abstractions`).
+`ProcessStartRequest` gains the `init` property `ParentExitGracePeriod`
+(`TimeSpan?`, in `HackerOs.Simulation.Abstractions`).
 
-Le modèle est `prctl(PR_SET_PDEATHSIG, SIGTERM)` sous Linux, suivi d'un
-`SIGKILL`. Le comportement dépend de la façon dont le parent se termine.
+The model is `prctl(PR_SET_PDEATHSIG, SIGTERM)` under Linux, followed by a
+`SIGKILL`. The behavior depends on how the parent ends.
 
-**Le parent se termine sans `SIGKILL`.** C'est le cas d'une fenêtre fermée,
-d'une déconnexion ou d'une app désactivée (`Kill` avec une raison qui n'est pas
-un signal). Le processus enfant ne disparaît pas avec lui. Il reçoit
-`StopAsync(grâce, DependencyStop)`, ce qui veut dire :
+**The parent ends without `SIGKILL`.** This is the case of a closed window,
+a logout or a disabled app (`Kill` with a reason that is not
+a signal). The child process does not disappear with it. It receives
+`StopAsync(grace, DependencyStop)`, which means:
 
-- il passe à l'état `Stopping` ;
-- `StopRequested` est levé ;
-- son jeton est annulé ;
-- à la fin du délai, il est tué avec la raison `Timeout`, qui compte comme un
+- it moves to the `Stopping` state;
+- `StopRequested` is raised;
+- its token is canceled;
+- at the end of the delay, it is killed with the reason `Timeout`, which counts as a
   `SIGKILL` (ADR 0069).
 
-**Le parent est tué par un `SIGKILL`.** C'est le cas de `kill -9`, d'une limite
-ou de l'OOM killer. L'enfant est alors tué tout de suite, comme avant.
+**The parent is killed by a `SIGKILL`.** This is the case of `kill -9`, a limit
+or the OOM killer. The child is then killed immediately, as before.
 
-**Ce que l'enfant a lui-même lancé.** Il en reste maître pendant le délai. Ce
-qui tourne encore quand il se termine est tué.
+**What the child itself launched.** It remains in charge of it during the delay. What
+is still running when it ends is killed.
 
-**Une valeur `null` ou nulle** garde l'ancien comportement : l'enfant se termine
-avec son parent.
+**A `null` or zero value** keeps the old behavior: the child ends
+with its parent.
 
-Seules les tâches de `HackBackground` utilisent ce délai. Les processus lancés
-par le shell et les autres enfants ne changent pas.
+Only `HackBackground` tasks use this delay. Processes launched
+by the shell and other children do not change.
 
-### 2. Les tâches
+### 2. The tasks
 
-`BackgroundJobService.ParentExitGracePeriod` vaut **5 s** et sert au démarrage
-de chaque tâche. Le délai est compté sur l'horloge de la simulation, comme celui
-de l'ADR 0069.
+`BackgroundJobService.ParentExitGracePeriod` is **5 s** and is used at the start
+of each task. The delay is counted on the simulation clock, like that
+of ADR 0069.
 
-Une tâche qui respecte son jeton (`HackBackgroundContext.CancellationToken`)
-s'arrête pendant le délai et sort avec le code `130`. Une tâche qui l'ignore est
-tuée au bout de 5 s ; sa raison de sortie est alors `Timeout`.
+A task that respects its token (`HackBackgroundContext.CancellationToken`)
+stops during the delay and exits with code `130`. A task that ignores it is
+killed after 5 s; its exit reason is then `Timeout`.
 
-Le fonctionnement est le même sur le fil principal et dans un worker : la
-demande d'arrêt du processus est transmise au worker (ADR 0069, ADR 0070).
+Operation is the same on the main thread and in a worker: the
+process stop request is forwarded to the worker (ADR 0069, ADR 0070).
 
-### 3. Le PID dans la progression
+### 3. The PID in progress
 
-Rien ne change. `HackBackgroundProgress` ne porte pas le PID. Une fenêtre qui
-veut un bouton « Kill » obtient le PID de la tâche par le message de
-progression, ou par `ListProcesses` sur le fil principal (ADR 0140 §7).
+Nothing changes. `HackBackgroundProgress` does not carry the PID. A window that
+wants a "Kill" button gets the task's PID through the progress
+message, or through `ListProcesses` on the main thread (ADR 0140 §7).
 
-## Conséquences
+## Consequences
 
-- `ProcessStartRequest.ParentExitGracePeriod` et
-  `BackgroundJobService.ParentExitGracePeriod` s'ajoutent à
-  `PublicAPI.Unshipped.txt`. Ils seront publiés avec la prochaine mineure, après
-  la 1.2.0. Le SDK de l'app (`HackerOs.AppSdk`) ne change pas.
-- Pendant le délai, `ps` et le gestionnaire de tâches montrent la tâche à l'état
-  `Stopping`. Son parent n'existe plus.
-- Documentation : [`background-jobs.md`](../../framework/background-jobs.md).
-- Tests :
-  - `InMemoryProcessManagerTests` : demande d'arrêt puis kill, et `SIGKILL` du
-    parent ;
-  - `BackgroundJobTests`, dans les deux modes : une tâche qui respecte la
-    demande sort avec `130`, une tâche qui l'ignore est tuée à 5 s.
+- `ProcessStartRequest.ParentExitGracePeriod` and
+  `BackgroundJobService.ParentExitGracePeriod` are added to
+  `PublicAPI.Unshipped.txt`. They will be published with the next minor version, after
+  1.2.0. The app SDK (`HackerOs.AppSdk`) does not change.
+- During the delay, `ps` and the task manager show the task in the
+  `Stopping` state. Its parent no longer exists.
+- Documentation: [`background-jobs.md`](../../framework/background-jobs.md).
+- Tests:
+  - `InMemoryProcessManagerTests`: stop request then kill, and `SIGKILL` of the
+    parent;
+  - `BackgroundJobTests`, in both modes: a task that respects the
+    request exits with `130`, a task that ignores it is killed at 5 s.

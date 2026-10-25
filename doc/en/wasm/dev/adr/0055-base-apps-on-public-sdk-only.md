@@ -1,250 +1,250 @@
-# ADR 0055 : Apps de base sur le SDK public uniquement
+# ADR 0055: Base apps on the public SDK only
 
-## Statut
+## Status
 
-Accepté le 2026-10-10.
+Accepted on 2026-10-10.
 
-- **Phase du plan :** phase 4 — SDK complet et apps de base
+- **Plan phase:** phase 4, Complete SDK and base apps
   ([`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md), section 8.1,
-  décision D21, principe directeur 3).
-- **Complète :** ADR 0019. Ses règles 1 et 2 (une app ne consomme que le SDK
-  public, Platform Core et l'infrastructure navigateur lui restent cachés)
-  n'ont jamais été vérifiées : dix projets sous `Apps/` référencent
-  `HackerOs.Platform.Core`. Cet ADR les rend vérifiables au build, élargit la
-  liste des références permises aux bibliothèques SDK apparues depuis et
-  ajoute la règle sur l'injection. Le reste de l'ADR 0019 (versionnement,
-  dépréciation) ne change pas.
-- **S'appuie sur :** ADR 0016 (MudBlazor permis dans les apps), ADR 0043
-  (contexte ambiant et façades statiques `Hack*`), ADR 0048 (liste de
-  confiance des apps système), ADR 0049 (capacités normales et dangereuses,
-  fenêtre d'approbation, `auth.log`).
-- Les API ajoutées au SDK pour remplacer chaque service interne sont décrites
-  dans l'ADR 0056.
+  decision D21, guiding principle 3).
+- **Complements:** ADR 0019. Its rules 1 and 2 (an app only consumes the public
+  SDK, Platform Core and the browser infrastructure stay hidden from it)
+  were never verified: ten projects under `Apps/` reference
+  `HackerOs.Platform.Core`. This ADR makes them verifiable at build time, extends the
+  list of permitted references to the SDK libraries that have appeared since, and
+  adds the rule on injection. The rest of ADR 0019 (versioning,
+  deprecation) does not change.
+- **Builds on:** ADR 0016 (MudBlazor allowed in apps), ADR 0043
+  (ambient context and static `Hack*` facades), ADR 0048 (trust list
+  of system apps), ADR 0049 (normal and dangerous capabilities,
+  approval window, `auth.log`).
+- The APIs added to the SDK to replace each internal service are described
+  in ADR 0056.
 
-## Contexte
+## Context
 
-Le principe 3 du plan veut qu'une app système n'ait rien de plus qu'une app
-tierce. Aujourd'hui, c'est faux à trois niveaux.
+Principle 3 of the plan wants a system app to have nothing more than a third-party
+app. Today, that is false on three levels.
 
-**Références de projet.** État de `rebuild/base` au 2026-10-10 (dfd9c47) :
+**Project references.** State of `rebuild/base` on 2026-10-10 (dfd9c47):
 
-| Projet | Référence interdite | Utilisée pour |
+| Project | Forbidden reference | Used for |
 |---|---|---|
-| `HackerOs.Apps.Settings` | `Platform.Core`, `Infrastructure.Browser` | catalogue, désinstallation, permissions, thème, serveur et synchronisation, effacement d'IndexedDB |
+| `HackerOs.Apps.Settings` | `Platform.Core`, `Infrastructure.Browser` | catalog, uninstall, permissions, theme, server and synchronization, clearing IndexedDB |
 | `HackerOs.Apps.SystemMonitor` | `Platform.Core` | `AppCatalog`, `AppLifecycleOrchestrator` |
 | `HackerOs.Apps.FileExplorer` | `Platform.Core` | `AppCatalog`, `IAppEnablementRegistry` |
-| `HackerOs.Apps.Diagnostic` | `Platform.Core`, `Infrastructure.Browser` | inspecteur IndexedDB |
-| `HackerOs.Apps.Browser` | `Platform.Core` | aucune (seul un `using` inutile) |
-| `HackerOs.Apps.Calculator`, `HackPaint`, `IconViewer`, `TextEditor` | `Platform.Core` | aucune |
-| `HackerOs.Commands` | `Platform.Core`, `Server.Contracts` | `ShellErrorText` (`cd`), `IServerConnectionService` et `IProxyClient` (`ping`, `curl`, `cat`, `nmap`) |
-| `HackerOs.AppSdk.Terminal` (bibliothèque SDK) | `Platform.Core` | `ShellInterpreter`, `IElevationService` |
+| `HackerOs.Apps.Diagnostic` | `Platform.Core`, `Infrastructure.Browser` | IndexedDB inspector |
+| `HackerOs.Apps.Browser` | `Platform.Core` | none (only an unused `using`) |
+| `HackerOs.Apps.Calculator`, `HackPaint`, `IconViewer`, `TextEditor` | `Platform.Core` | none |
+| `HackerOs.Commands` | `Platform.Core`, `Server.Contracts` | `ShellErrorText` (`cd`), `IServerConnectionService` and `IProxyClient` (`ping`, `curl`, `cat`, `nmap`) |
+| `HackerOs.AppSdk.Terminal` (SDK library) | `Platform.Core` | `ShellInterpreter`, `IElevationService` |
 
-**Injection.** Même sans référence interdite, une app peut injecter un service
-brut de l'OS, car leurs interfaces vivent dans des projets partagés
-(`HackerOs.Simulation.Abstractions`, `HackerOs.App.Abstractions`). Ces
-services ne vérifient aucune capacité :
+**Injection.** Even without a forbidden reference, an app can inject a raw
+OS service, because their interfaces live in shared projects
+(`HackerOs.Simulation.Abstractions`, `HackerOs.App.Abstractions`). These
+services check no capability:
 
-| Service injecté | Projet de l'interface | Apps |
+| Injected service | Interface project | Apps |
 |---|---|---|
 | `ISessionService` | Simulation.Abstractions | FileExplorer, TextEditor, CodeEditor, Settings, `TerminalPanel` |
 | `IProcessManager`, `IEventBus` | Simulation.Abstractions | SystemMonitor |
 | `ISimulatedNetworkService` | Simulation.Abstractions | Browser, `ping`, `curl`, `cat`, `nmap` |
 | `IElevationService` | App.Abstractions | `TerminalPanel` |
-| `IServiceProvider` | .NET | Settings (`AppPermissionsPanel` en tire `AppPermissionAdministration`) |
-| `IJSRuntime` pour autre chose qu'importer son module | .NET | Diagnostic (`navigator.clipboard`), Settings (`location.reload`, suppression de la base IndexedDB) |
+| `IServiceProvider` | .NET | Settings (`AppPermissionsPanel` pulls `AppPermissionAdministration` from it) |
+| `IJSRuntime` for anything other than importing its module | .NET | Diagnostic (`navigator.clipboard`), Settings (`location.reload`, deletion of the IndexedDB database) |
 
-**Vérification.** Rien n'empêche aujourd'hui d'ajouter une telle dépendance :
-aucun test ni aucune étape du build ne contrôle les références ou les
-injections d'un projet d'app.
+**Verification.** Nothing prevents adding such a dependency today:
+no test or build step checks an app project's references or
+injections.
 
-## Décision
+## Decision
 
-### 1. Périmètre
+### 1. Scope
 
-Les règles s'appliquent :
+The rules apply:
 
-- à tout projet d'app, c'est-à-dire tout projet dont `HackerOsAppProject` vaut
-  `true` (projets sous `Apps/`, ADR 0047) ;
-- aux bibliothèques du SDK : `Shared/HackerOs.AppSdk` et
-  `Shared/HackerOs.AppSdk.*`. Une app ne doit pas pouvoir atteindre l'OS par
-  une bibliothèque SDK qui le ferait à sa place.
+- to every app project, that is, every project whose `HackerOsAppProject` is
+  `true` (projects under `Apps/`, ADR 0047);
+- to the SDK libraries: `Shared/HackerOs.AppSdk` and
+  `Shared/HackerOs.AppSdk.*`. An app must not be able to reach the OS through
+  an SDK library that would do it on its behalf.
 
-Les hôtes (`OS/`, `test/`, `Server/`), `Platform/`, `Infrastructure/` et les
-projets de tests ne sont pas concernés.
+The hosts (`OS/`, `test/`, `Server/`), `Platform/`, `Infrastructure/` and the
+test projects are not concerned.
 
-### 2. Références de projet permises
+### 2. Permitted project references
 
-Un projet d'app ne peut référencer que :
+An app project can only reference:
 
-| Projet | Rôle |
+| Project | Role |
 |---|---|
-| `Shared/HackerOs.App.Abstractions` | manifeste, `AppDefinition`, capacités, `VirtualPath` |
-| `Shared/HackerOs.Simulation.Abstractions` | types de données (processus, chemins, réseau simulé…) |
-| `Shared/HackerOs.Theming.Abstractions` | jetons et définitions de thème |
-| `Shared/HackerOs.Game.Abstractions` | contenu de jeu |
-| `Shared/HackerOs.AppSdk` et `Shared/HackerOs.AppSdk.*` | le SDK |
-| `Platform/HackerOs.Theming.Blazor` | composants de thème (catalogue, aperçu) ; il ne dépend que de `Theming.Abstractions` |
-| un autre projet sous `Apps/` | partage de code entre apps |
+| `Shared/HackerOs.App.Abstractions` | manifest, `AppDefinition`, capabilities, `VirtualPath` |
+| `Shared/HackerOs.Simulation.Abstractions` | data types (processes, paths, simulated network...) |
+| `Shared/HackerOs.Theming.Abstractions` | theme tokens and definitions |
+| `Shared/HackerOs.Game.Abstractions` | game content |
+| `Shared/HackerOs.AppSdk` and `Shared/HackerOs.AppSdk.*` | the SDK |
+| `Platform/HackerOs.Theming.Blazor` | theme components (catalog, preview); it only depends on `Theming.Abstractions` |
+| another project under `Apps/` | code sharing between apps |
 
-Toute autre `ProjectReference` fait échouer le build avec **`HOSAPP0002`**, qui
-nomme le projet et la référence. C'est le cas notamment de
+Any other `ProjectReference` fails the build with **`HOSAPP0002`**, which
+names the project and the reference. This is notably the case for
 `Platform.Core`, `Platform.Blazor`, `Windowing.*`, `Taskbar.Blazor`,
-`MobileShell.Blazor`, `Infrastructure.*`, `Server.*` (dont
-`Server.Contracts`) et des hôtes. Les `PackageReference` restent libres :
-un paquet NuGet ne donne pas accès aux services de l'OS.
+`MobileShell.Blazor`, `Infrastructure.*`, `Server.*` (including
+`Server.Contracts`) and the hosts. `PackageReference`s remain free:
+a NuGet package does not give access to OS services.
 
-Une bibliothèque SDK ne peut référencer que les quatre projets
-`*.Abstractions` ci-dessus et d'autres bibliothèques SDK. Toute autre référence
-échoue avec **`HOSSDK0001`**.
+An SDK library can only reference the four `*.Abstractions` projects
+above and other SDK libraries. Any other reference
+fails with **`HOSSDK0001`**.
 
-La vérification est une cible MSBuild de `build/HackerOs.Apps.targets`,
-exécutée avant la compilation, à côté de la génération du manifeste.
+The check is an MSBuild target in `build/HackerOs.Apps.targets`,
+run before compilation, next to manifest generation.
 
-### 3. Injection permise
+### 3. Permitted injection
 
-Dans un projet d'app, un service ne peut être obtenu par injection
-(`@inject`, propriété `[Inject]`, paramètre du constructeur d'une classe
-d'entrée construite par `ActivatorUtilities`, ADR 0034 section 2) que si son
-type est :
+In an app project, a service can only be obtained by injection
+(`@inject`, `[Inject]` property, constructor parameter of an entry class
+built by `ActivatorUtilities`, ADR 0034 section 2) if its
+type is:
 
-1. défini dans une bibliothèque SDK (`HackerOs.AppSdk`, `HackerOs.AppSdk.*`) ;
-2. un service MudBlazor (ADR 0016), par exemple `MudBlazor.IDialogService` ;
-3. `Microsoft.JSInterop.IJSRuntime`, **uniquement** pour importer un module
-   JavaScript de l'app elle-même
-   (`import`, `./_content/<projet de l'app>/…`), comme le prévoit
-   `AGENTS.md`. Tout autre appel (`navigator.*`, `location.*`, `eval`, module
-   d'un autre projet) est interdit.
+1. defined in an SDK library (`HackerOs.AppSdk`, `HackerOs.AppSdk.*`);
+2. a MudBlazor service (ADR 0016), for example `MudBlazor.IDialogService`;
+3. `Microsoft.JSInterop.IJSRuntime`, **only** to import a JavaScript module
+   of the app itself
+   (`import`, `./_content/<app project>/...`), as provided by
+   `AGENTS.md`. Any other call (`navigator.*`, `location.*`, `eval`, module
+   of another project) is forbidden.
 
-Tout le reste est interdit, en particulier : les types de
-`HackerOs.Simulation.Abstractions` et `HackerOs.App.Abstractions`
+Everything else is forbidden, in particular: the types of
+`HackerOs.Simulation.Abstractions` and `HackerOs.App.Abstractions`
 (`ISessionService`, `IProcessManager`, `IEventBus`,
-`ISimulatedNetworkService`, `IElevationService`, `IAppCatalogRepository`…),
-`IServiceProvider`, `ILogger<T>` (le journal passe par
-`IAppLoggingGateway`, ADR 0045) et `NavigationManager`.
+`ISimulatedNetworkService`, `IElevationService`, `IAppCatalogRepository`...),
+`IServiceProvider`, `ILogger<T>` (logging goes through
+`IAppLoggingGateway`, ADR 0045) and `NavigationManager`.
 
-Ces types restent utilisables comme **données** : une app peut manipuler un
-`VirtualPath`, un `ProcessRecord` ou un `AppManifest`. Seule l'obtention d'un
-service de l'OS hors du SDK est interdite.
+These types remain usable as **data**: an app can handle a
+`VirtualPath`, a `ProcessRecord` or an `AppManifest`. Only obtaining an
+OS service outside the SDK is forbidden.
 
-Vérifications :
+Checks:
 
-- **`HOSAPP0003`**, au build : le générateur de manifeste charge déjà
-  l'assembly de l'app (ADR 0047). Il parcourt en plus tous ses types et signale
-  chaque propriété `[Inject]` et chaque paramètre de constructeur d'une classe
-  d'entrée dont le type n'est pas permis. Le build échoue.
-- **Test de sources** (`HackerOs.Ecosystem.Tests`) : pour chaque fichier
-  `.razor` et `.cs` sous `Apps/`, chaque appel `Invoke*Async` sur un
-  `IJSRuntime` doit avoir pour identifiant `"import"` et pour chemin
-  `./_content/<nom du projet>/`. Un appel sur le `IJSObjectReference` du module
-  importé est libre : c'est le code de l'app.
-- Les bibliothèques SDK ne sont pas soumises à `HOSAPP0003`, mais
-  `HOSSDK0001` leur interdit de référencer l'implémentation : elles ne peuvent
-  donc injecter que des contrats du SDK ou des abstractions. Une revue refuse
-  qu'une bibliothèque SDK injecte un service brut de
-  `Simulation.Abstractions` pour le rendre à une app.
+- **`HOSAPP0003`**, at build: the manifest generator already loads the app's
+  assembly (ADR 0047). It additionally walks all its types and reports
+  each `[Inject]` property and each constructor parameter of an entry class
+  whose type is not permitted. The build fails.
+- **Source test** (`HackerOs.Ecosystem.Tests`): for each
+  `.razor` and `.cs` file under `Apps/`, each `Invoke*Async` call on an
+  `IJSRuntime` must have the identifier `"import"` and the path
+  `./_content/<project name>/`. A call on the `IJSObjectReference` of the imported
+  module is free: it is the app's code.
+- SDK libraries are not subject to `HOSAPP0003`, but
+  `HOSSDK0001` forbids them from referencing the implementation: they can
+  therefore only inject SDK contracts or abstractions. A review rejects
+  an SDK library that injects a raw `Simulation.Abstractions` service in order
+  to hand it to an app.
 
-### 4. Comment une app obtient un service de l'OS
+### 4. How an app obtains an OS service
 
-Uniquement par le SDK :
+Only through the SDK:
 
-- une **passerelle** sur `IAppExecutionContext`, propre à l'instance, qui
-  vérifie la capacité requise à chaque appel ;
-- une **façade statique** `Hack*` qui lit le contexte ambiant (ADR 0043) et
-  appelle la passerelle. C'est la forme recommandée aux développeurs.
+- a **gateway** on `IAppExecutionContext`, specific to the instance, which
+  checks the required capability on every call;
+- a static `Hack*` **facade** that reads the ambient context (ADR 0043) and
+  calls the gateway. This is the form recommended to developers.
 
-Chaque nouvelle passerelle suit le modèle des passerelles existantes
-(`Intents`, `Services`, `Watch`) : membre de l'interface avec une
-implémentation par défaut « non prise en charge », pour que les implémentations
-existantes de `IAppExecutionContext` compilent encore (ADR 0019). La fabrique de
-confiance de Platform Core fournit la vraie implémentation.
+Each new gateway follows the model of existing gateways
+(`Intents`, `Services`, `Watch`): an interface member with a default
+"not supported" implementation, so that existing implementations
+of `IAppExecutionContext` still compile (ADR 0019). The Platform Core trusted
+factory provides the real implementation.
 
-Une capacité manquante lève `HackUnauthorizedAccessException` (décision D5) et
-passe par `IAppPermissionErrorGateway`, comme l'API fichier. La capacité exigée
-par chaque API, et son classement, sont fixés par l'ADR 0056. Une capacité
-nouvelle entre dans `AppCapabilities` avec son classement et sa phrase de
-risque, comme l'exige l'ADR 0049.
+A missing capability throws `HackUnauthorizedAccessException` (decision D5) and
+goes through `IAppPermissionErrorGateway`, like the file API. The capability required
+by each API, and its classification, are set by ADR 0056. A new
+capability enters `AppCapabilities` with its classification and risk
+sentence, as ADR 0049 requires.
 
-### 5. Agent d'authentification de l'OS
+### 5. OS authentication agent
 
-Certaines opérations exigent un administrateur en plus de la capacité de l'app
-(désinstaller pour toute la machine, changer la politique de sécurité,
-réinitialiser la machine…). Comme `polkit` sous Linux, **l'app ne voit jamais
-le mot de passe** :
+Some operations require an administrator in addition to the app's capability
+(uninstalling for the whole machine, changing the security policy,
+resetting the machine...). Like `polkit` on Linux, **the app never sees
+the password**:
 
-1. l'app appelle l'API du SDK, sans identifiants ;
-2. la passerelle vérifie la capacité, puis demande à l'agent
-   d'authentification de l'OS de confirmer un administrateur ;
-3. l'agent affiche sa propre fenêtre, dessinée par la plateforme et non par
-   l'app, de la même famille visuelle que la fenêtre d'approbation de
-   l'ADR 0049 : nom de l'app, opération demandée en clair, identifiant et mot
-   de passe d'un administrateur. Dans un terminal, la demande se fait en mode
-   texte, comme `sudo` ;
-4. la vérification réutilise le vérificateur de `sudo` (ADR 0042) ; le
-   résultat est écrit dans `/var/log/auth.log` (app, opération,
-   administrateur, issue) ;
-5. refus ou annulation : `HackUnauthorizedAccessException`.
+1. the app calls the SDK API, without credentials;
+2. the gateway checks the capability, then asks the OS authentication
+   agent to confirm an administrator;
+3. the agent shows its own window, drawn by the platform and not by
+   the app, of the same visual family as the approval window of
+   ADR 0049: app name, operation requested in plain language, an administrator's
+   identifier and password. In a terminal, the request is made in text
+   mode, like `sudo`;
+4. verification reuses the `sudo` verifier (ADR 0042); the
+   result is written to `/var/log/auth.log` (app, operation,
+   administrator, outcome);
+5. refusal or cancellation: `HackUnauthorizedAccessException`.
 
-Un processus lancé par `sudo` (`IsRootElevated`, ADR 0042) agit déjà en root :
-l'agent ne redemande rien. Les API qui passent par l'agent sont marquées
-« administrateur » dans l'ADR 0056.
+A process launched by `sudo` (`IsRootElevated`, ADR 0042) already acts as root:
+the agent asks for nothing more. APIs that go through the agent are marked
+"administrator" in ADR 0056.
 
-Les mots de passe que l'app doit légitimement saisir pour un service tiers (le
-compte du serveur optionnel, par exemple) ne sont pas concernés.
+Passwords that the app must legitimately enter for a third-party service (the
+optional server account, for example) are not concerned.
 
 ### 6. Transition
 
-Les violations listées dans le contexte ne disparaissent pas en un seul
-changement. La cible MSBuild lit donc une liste d'exemptions temporaire,
-`HackerOsSdkBoundaryExemption`, déclarée dans `build/HackerOs.Apps.targets` :
-un élément par projet encore en défaut, avec l'ADR et le chantier qui le
-corrigeront. Un projet exempté produit un avertissement au lieu d'une erreur.
+The violations listed in the context will not disappear in a single
+change. The MSBuild target therefore reads a temporary exemption list,
+`HackerOsSdkBoundaryExemption`, declared in `build/HackerOs.Apps.targets`:
+one item per project still in violation, with the ADR and the work item that
+will fix it. An exempted project produces a warning instead of an error.
 
-- Chaque chantier qui corrige un projet retire son exemption dans le même
-  changement.
-- Le dernier chantier de la phase (ADR 0058, `4-sdk-boundary-final`) supprime
-  le mécanisme d'exemption.
-- Aucun nouveau projet ne peut être ajouté à la liste.
+- Each work item that fixes a project removes its exemption in the same
+  change.
+- The last work item of the phase (ADR 0058, `4-sdk-boundary-final`) removes the
+  exemption mechanism.
+- No new project can be added to the list.
 
-### 7. Apps système et liste de confiance
+### 7. System apps and trust list
 
-La liste de confiance de l'hôte (ADR 0048) ne change pas de forme. Une app
-système reçoit d'office les capacités dangereuses qu'elle déclare : elle
-utilise le même SDK qu'une autre app, mais sans fenêtre d'approbation. Une app
-non système qui déclare une capacité dangereuse passe par la fenêtre
-d'approbation de l'ADR 0049 à son lancement. Les changements de la liste
-qu'entraîne cette phase sont décidés par l'ADR 0056.
+The host's trust list (ADR 0048) does not change shape. A system
+app automatically receives the dangerous capabilities it declares: it
+uses the same SDK as any other app, but without an approval window. A non-system
+app that declares a dangerous capability goes through the approval window
+of ADR 0049 at launch. The list changes
+that this phase entails are decided by ADR 0056.
 
-## Conséquences
+## Consequences
 
-- Une app tierce peut faire tout ce que fait une app système, avec les mêmes
-  API et les mêmes capacités ; seule l'approbation diffère.
-- Le build attrape une dépendance interdite dès qu'elle est ajoutée, au lieu
-  d'une revue.
-- Les commandes du réseau, le terminal et l'app Paramètres perdent leurs accès
-  directs : la logique de repli sur le serveur, de jeton d'accès et de
-  vérification d'administrateur passe dans Platform Core, derrière le SDK.
-- L'architecture est un peu plus lourde côté plateforme : chaque besoin d'une
-  app système devient une passerelle à écrire et à tester.
+- A third-party app can do everything a system app does, with the same
+  APIs and the same capabilities; only approval differs.
+- The build catches a forbidden dependency as soon as it is added, instead of
+  a review.
+- The network commands, the terminal and the Settings app lose their direct
+  access: the logic for server fallback, access tokens and
+  administrator verification moves into Platform Core, behind the SDK.
+- The architecture is a bit heavier on the platform side: each need of a
+  system app becomes a gateway to write and test.
 
-## Alternatives écartées
+## Alternatives rejected
 
-- **Test d'architecture seulement sur `Platform.Core` et `Platform.Blazor`**
-  (texte du plan, section 8.1) : il laisse passer `Infrastructure.Browser`,
-  `Server.Contracts` et l'injection des services de
-  `Simulation.Abstractions`, qui sont la majorité des violations réelles.
-- **Déplacer les interfaces de services hors de `Simulation.Abstractions`**
-  pour que les apps ne puissent plus les nommer : correct à terme, mais ce
-  projet est aussi consommé par le serveur et par Platform Core ; le
-  déplacement toucherait de nombreux fichiers sans rien ajouter à la
-  vérification par type de `HOSAPP0003`.
-- **Analyseur Roslyn** au lieu de la cible MSBuild et du générateur : plus
-  précis pour l'appel `IJSRuntime`, mais un projet de plus à maintenir ; le
-  générateur charge déjà l'assembly.
+- **Architecture test only on `Platform.Core` and `Platform.Blazor`**
+  (plan text, section 8.1): it lets `Infrastructure.Browser`,
+  `Server.Contracts` and the injection of `Simulation.Abstractions`
+  services slip through, which are the majority of real violations.
+- **Move the service interfaces out of `Simulation.Abstractions`**
+  so that apps can no longer name them: correct in the long run, but this
+  project is also consumed by the server and by Platform Core; moving it
+  would touch many files while adding nothing to the type-based
+  check of `HOSAPP0003`.
+- **Roslyn analyzer** instead of the MSBuild target and the generator: more
+  precise for the `IJSRuntime` call, but one more project to maintain; the
+  generator already loads the assembly.
 
-## Références
+## References
 
-- [`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md), sections 3 et 8.1.
-- ADR 0016, 0019, 0034, 0042, 0043, 0047, 0048, 0049 ; ADR 0056 (API),
-  ADR 0058 (chantiers).
+- [`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md), sections 3 and 8.1.
+- ADRs 0016, 0019, 0034, 0042, 0043, 0047, 0048, 0049; ADR 0056 (APIs),
+  ADR 0058 (work items).
 - `build/HackerOs.Apps.targets`, `Tools/HackerOs.Tools.ManifestGenerator`,
   `Shared/HackerOs.AppSdk/IAppExecutionContext.cs`.

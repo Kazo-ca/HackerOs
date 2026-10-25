@@ -1,176 +1,175 @@
-# ADR 0133 : rendu d'une fenêtre dans un worker, verdict de l'essai : on s'arrête
+# ADR 0133: window rendering in a worker, verdict of the trial: we stop
 
-## Statut
+## Status
 
-Accepté le 2026-10-18 par `exec/6-remote-renderer-poc`, avec la recommandation
-soumise à Benoit sur une carte de décision dans le fil « Exec 6 ». La
-recommandation (option A ci-dessous) est appliquée en attendant sa réponse ;
-s'il choisit une autre option, un nouvel ADR remplace celui-ci.
+Accepted on 2026-10-18 by `exec/6-remote-renderer-poc`, with the recommendation
+submitted to Benoit on a decision card in the "Exec 6" thread. The
+recommendation (option A below) is applied while awaiting his answer;
+if he chooses another option, a new ADR replaces this one.
 
-- **Conclut :** l'essai de l'[ADR 0129](0129-window-rendering-in-worker-trial.md).
-- **Ne remplace pas** l'ADR 0070 §1 : les fenêtres restent sur le fil
-  principal (le remplacement n'était prévu que si on y allait).
-- **Doc :** [`remote-window-rendering.md`](../remote-window-rendering.md)
-  (architecture de l'essai, format des opérations, mesures, liste des tâches) ;
-  [`worker-processes.md`](../worker-processes.md) (messages `ui`, `uin`,
+- **Concludes:** the trial of [ADR 0129](0129-window-rendering-in-worker-trial.md).
+- **Does not replace** ADR 0070 §1: windows stay on the main
+  thread (the replacement was only planned if we went ahead).
+- **Doc:** [`remote-window-rendering.md`](../remote-window-rendering.md)
+  (trial architecture, operation format, measurements, task list);
+  [`worker-processes.md`](../worker-processes.md) (`ui`, `uin` messages,
   `start` `k = 3`).
 
-## Contexte
+## Context
 
-L'ADR 0129 demandait un prototype qui rend la Calculatrice dans un Web Worker,
-des mesures sur la publication Release trimmée et un verdict selon six
-critères, **tous** requis pour y aller. Le prototype est construit et marche :
-la Calculatrice s'ouvre dans un worker dédié, se dessine à l'identique, répond
-à la souris et au clavier, et se ferme proprement. Il reste dans le dépôt
-derrière le réglage `HackerOs:RemoteWindowRendering:Enabled`, coupé par défaut.
+ADR 0129 asked for a prototype that renders the Calculator in a Web Worker,
+measurements on the trimmed Release publish and a verdict according to six
+criteria, **all** required to go ahead. The prototype is built and works:
+the Calculator opens in a dedicated worker, draws itself identically, responds
+to the mouse and keyboard, and closes cleanly. It stays in the repository
+behind the setting `HackerOs:RemoteWindowRendering:Enabled`, turned off by default.
 
-## Mesures
+## Measurements
 
-Publication Release trimmée de l'Ecosystem (`artifacts/publish-trimmed`),
-Chromium sans écran, 300 clics sur les touches de la Calculatrice, 6
-ouvertures par mode. Test qui les produit :
+Trimmed Release publish of the Ecosystem (`artifacts/publish-trimmed`),
+headless Chromium, 300 clicks on the Calculator keys, 6
+openings per mode. Test that produces them:
 `Measures_the_calculator_on_the_page_and_in_a_worker`
-(`Tests/HackerOs.TrimmedPublish.E2E.Tests`), qui écrit
+(`Tests/HackerOs.TrimmedPublish.E2E.Tests`), which writes
 `remote-window-measurements.json`.
 
-| Mesure | Sur la page (réglage coupé) | Dans un worker (réglage actif) | Écart |
+| Measurement | On the page (setting off) | In a worker (setting on) | Difference |
 |---|---|---|---|
-| Ouverture, première | 140 ms | 606 ms | +466 ms |
-| Ouverture, suivantes (worker prêt) | 42 à 54 ms (≈ 46) | 358 à 413 ms (≈ 385) | +≈ 340 ms |
-| Clic → DOM modifié, p50 | 2,2 ms | 3,4 ms | +1,2 ms |
-| Clic → DOM modifié, p95 | 4,1 ms | 7,4 ms | +3,3 ms |
-| Clic → image suivante, p50 | 4 ms | 19,7 ms | une image plus tard au plus |
-| Clic → image suivante, p95 | 20,2 ms | 20,1 ms | ≈ 0 |
-| Mémoire linéaire du worker | 55,4 Mio (worker prêt, vide) | **66,5 Mio** | +11,1 Mio pour la fenêtre |
-| Mémoire linéaire de la page | 138 Mio | 138 Mio | inchangée |
-| Premier lot | — | 5 337 octets (85 nœuds) | |
-| Lot suivant, moyenne | — | 72 octets, 140 µs d'encodage | |
+| Opening, first | 140 ms | 606 ms | +466 ms |
+| Opening, subsequent (worker ready) | 42 to 54 ms (≈ 46) | 358 to 413 ms (≈ 385) | +≈ 340 ms |
+| Click → DOM modified, p50 | 2.2 ms | 3.4 ms | +1.2 ms |
+| Click → DOM modified, p95 | 4.1 ms | 7.4 ms | +3.3 ms |
+| Click → next frame, p50 | 4 ms | 19.7 ms | at most one frame later |
+| Click → next frame, p95 | 20.2 ms | 20.1 ms | ≈ 0 |
+| Worker linear memory | 55.4 MiB (worker ready, empty) | **66.5 MiB** | +11.1 MiB for the window |
+| Page linear memory | 138 MiB | 138 MiB | unchanged |
+| First batch | n/a | 5,337 bytes (85 nodes) | |
+| Following batch, average | n/a | 72 bytes, 140 µs of encoding | |
 
-La mémoire est celle de la mémoire linéaire WebAssembly du runtime du worker
-(`HEAPU8.length`), la seule que le navigateur laisse lire dans un worker sans
-isolation cross-origin (ADR 0131). `/proc/hackeros/workers` montre le tas
-managé : 5 694 kio vide, 5 866 kio avec la fenêtre.
+The memory is that of the WebAssembly linear memory of the worker's runtime
+(`HEAPU8.length`), the only one the browser lets you read in a worker without
+cross-origin isolation (ADR 0131). `/proc/hackeros/workers` shows the managed
+heap: 5,694 KiB empty, 5,866 KiB with the window.
 
-### Pourquoi 55 Mio pour un worker vide
+### Why 55 MiB for an empty worker
 
-Chaque worker charge tout le jeu d'assemblies du boot (`workerBootstrap.js`,
-ADR 0070) : 87 assemblies, ≈ 20,3 Mo, plus 1,98 Mo d'assemblies de base.
-`HackerOs.AppSdk.Icons` pèse à lui seul 8,67 Mo ; le runtime natif 3 Mo,
-ICU 0,55 Mo. La fenêtre elle-même n'ajoute que ≈ 11 Mio. Le coût est donc
-celui d'un runtime .NET de plus, pas du rendu.
+Each worker loads the whole boot assembly set (`workerBootstrap.js`,
+ADR 0070): 87 assemblies, ≈ 20.3 MB, plus 1.98 MB of base assemblies.
+`HackerOs.AppSdk.Icons` alone weighs 8.67 MB; the native runtime 3 MB,
+ICU 0.55 MB. The window itself only adds ≈ 11 MiB. The cost is therefore
+that of one more .NET runtime, not of rendering.
 
-## Critères de l'ADR 0129 §4
+## Criteria of ADR 0129 §4
 
-| Critère | Seuil | Résultat | Tenu |
+| Criterion | Threshold | Result | Met |
 |---|---|---|---|
-| Latence ajoutée, p95 | ≤ 16 ms | +3,3 ms jusqu'au DOM, ≈ 0 jusqu'à l'image | oui |
-| Mémoire d'un worker de fenêtre | ≤ 40 Mio | 66,5 Mio | **non** |
-| Ouverture | ≤ 1 s de plus | +≈ 340 ms (worker prêt), +466 ms (premier) | oui |
-| Tests UI de la Calculatrice | verts, app inchangée | test E2E dédié vert (clics, clavier, CSS, `Tab`, raccourcis, fermeture) ; app inchangée | oui |
-| Accessibilité | axe et clavier verts | axe : aucune violation sérieuse ou critique ; `Tab` natif | oui |
-| Framework | aucune API interne ou privée | aucune ; mais avertissement `BL0006` (voir plus bas) | oui, avec réserve |
+| Added latency, p95 | ≤ 16 ms | +3.3 ms up to the DOM, ≈ 0 up to the frame | yes |
+| Memory of a window worker | ≤ 40 MiB | 66.5 MiB | **no** |
+| Opening | ≤ 1 s more | +≈ 340 ms (worker ready), +466 ms (first) | yes |
+| Calculator UI tests | green, app unchanged | dedicated E2E test green (clicks, keyboard, CSS, `Tab`, shortcuts, close); app unchanged | yes |
+| Accessibility | axe and keyboard green | axe: no serious or critical violation; native `Tab` | yes |
+| Framework | no internal or private API | none; but warning `BL0006` (see below) | yes, with a reservation |
 
-## Décision
+## Decision
 
-### 1. On s'arrête
+### 1. We stop
 
-Un critère n'est pas tenu (la mémoire, 66,5 Mio contre 40 Mio). Selon l'ADR
-0129 §4, **`exec/7-window-workers` n'a pas lieu** et rien ne change pour les
-apps :
+One criterion is not met (memory, 66.5 MiB against 40 MiB). According to ADR
+0129 §4, **`exec/7-window-workers` does not happen** and nothing changes for
+apps:
 
-- les fenêtres restent sur le fil principal (ADR 0070 §1, inchangé) ;
-- le validateur du manifeste refuse toujours `AppExecutionHost.Dedicated` pour
-  une fenêtre (`manifest.execution.window`) ;
-- un calcul lourd d'une fenêtre sort par `HackBackground.RunAsync`
-  (ADR 0128), qui est la voie recommandée.
+- windows stay on the main thread (ADR 0070 §1, unchanged);
+- the manifest validator still rejects `AppExecutionHost.Dedicated` for
+  a window (`manifest.execution.window`);
+- a heavy computation in a window goes out through `HackBackground.RunAsync`
+  (ADR 0128), which is the recommended path.
 
-### 2. Le prototype reste, coupé
+### 2. The prototype stays, turned off
 
-Le code de l'essai reste dans le dépôt, sans effet tant que le réglage est
-coupé :
+The trial code stays in the repository, with no effect as long as the setting is
+off:
 
-- `Platform/HackerOs.Platform.RemoteRendering` (nouveau projet) : le
-  `Renderer` du worker, le traducteur d'opérations DOM, l'hôte de fenêtre de la
-  page et son module JavaScript collocalisé ;
-- `HackerOs.Platform.WorkerHost` : messages `ui` et `uin`, `start` `k = 3`,
-  `WorkerRemoteProcessHost.StartWindowAsync`, `RemoteWindowProcess` ;
-- `HackerOs.Platform.Blazor` : `IRemoteWindowRendering`, consulté par
-  `WindowAppRenderer` quand le service existe ;
-- `appsettings.json` de l'Ecosystem : `HackerOs:RemoteWindowRendering`
+- `Platform/HackerOs.Platform.RemoteRendering` (new project): the
+  worker's `Renderer`, the DOM operation translator, the page's window host
+  and its collocated JavaScript module;
+- `HackerOs.Platform.WorkerHost`: messages `ui` and `uin`, `start` `k = 3`,
+  `WorkerRemoteProcessHost.StartWindowAsync`, `RemoteWindowProcess`;
+- `HackerOs.Platform.Blazor`: `IRemoteWindowRendering`, consulted by
+  `WindowAppRenderer` when the service exists;
+- the Ecosystem's `appsettings.json`: `HackerOs:RemoteWindowRendering`
   (`Enabled: false`, `Apps: ["org.hackeros.calculator"]`).
 
-Le garder coûte peu (aucun service enregistré quand le réglage est coupé) et
-permet de refaire les mesures si le coût d'un worker baisse (option D).
-Ces types sont des ajouts publics de la plateforme (`PublicAPI.Unshipped.txt`
-de la plateforme), pas du SDK des apps : aucune app ne peut en dépendre.
+Keeping it costs little (no service registered when the setting is off) and
+allows redoing the measurements if the cost of a worker drops (option D).
+These types are public additions to the platform (`PublicAPI.Unshipped.txt`
+of the platform), not to the apps' SDK: no app can depend on them.
 
-### 3. Ce que l'essai a construit (pour la mémoire)
+### 3. What the trial built (for the record)
 
-- **Le worker traduit, la page exécute** (modèle X11). Plutôt que d'envoyer
-  le `RenderBatch` et de le rejouer côté page, le worker garde un miroir de
-  l'arbre logique de Blazor (composants, régions aplaties, éléments, textes,
-  markup) et écrit des opérations DOM sur des nœuds numérotés : créer un
-  élément, un texte, du markup, retirer, poser ou retirer un attribut, changer
-  un texte, écouter un événement, déplacer, drapeaux `preventDefault` et
-  `stopPropagation`. La page n'a qu'un petit exécuteur
-  (`RemoteWindowHost.razor.js`) ; toute la logique reste en C# (AGENTS.md I.2).
-  L'ADR 0129 §1 parlait d'un format encodé par `WireCodec` : le format est bien
-  à nous et versionné avec le C#, mais en JSON dans le message `ui`, comme les
-  autres messages du protocole.
-- **Événements** : la page renvoie `{h, n, a}` (numéro du gestionnaire, nom,
-  propriétés de l'événement) ; le worker reconstruit les `EventArgs` de
-  Blazor et, pour `input` et `change`, un `EventFieldInfo` pour que `@bind`
-  ne réécrive pas ce que l'utilisateur tape.
-- **Dialogues du SDK** : la boîte de message et la saisie de texte sont
-  ouvertes par l'hôte de la page avec le contexte du processus ; la demande
-  d'identifiants répond « annulé » (aucun mot de passe n'entre dans un
-  worker) ; les dialogues de fichiers sont refusés.
-- **Processus** : un worker dédié, pris au worker prêt (ADR 0071) et terminé à
-  la fermeture ; la fenêtre a son pid, son contexte distant et ses passerelles
+- **The worker translates, the page executes** (X11 model). Rather than sending
+  the `RenderBatch` and replaying it on the page side, the worker keeps a mirror of
+  Blazor's logical tree (components, flattened regions, elements, texts,
+  markup) and writes DOM operations on numbered nodes: create an
+  element, a text, markup, remove, set or remove an attribute, change
+  a text, listen to an event, move, `preventDefault` and
+  `stopPropagation` flags. The page only has a small executor
+  (`RemoteWindowHost.razor.js`); all the logic stays in C# (AGENTS.md I.2).
+  ADR 0129 §1 spoke of a format encoded by `WireCodec`: the format is indeed
+  ours and versioned with the C#, but as JSON in the `ui` message, like the
+  other protocol messages.
+- **Events**: the page sends back `{h, n, a}` (handler number, name,
+  event properties); the worker rebuilds Blazor's `EventArgs` and, for `input` and `change`, an `EventFieldInfo` so that `@bind`
+  does not overwrite what the user types.
+- **SDK dialogs**: the message box and the text input are
+  opened by the page host with the process context; the credentials
+  request answers "canceled" (no password enters
+  a worker); file dialogs are refused.
+- **Process**: a dedicated worker, taken from the ready worker (ADR 0071) and terminated at
+  close; the window has its pid, its remote context and its gateways
   (ADR 0070, 0124).
 
-### 4. Couverture constatée
+### 4. Observed coverage
 
-| Point de l'ADR 0129 §3 | Résultat |
+| Point of ADR 0129 §3 | Result |
 |---|---|
-| CSS isolé | identique au pixel (captures comparées) |
-| Clavier, `Tab` | oui ; `Tab` est natif, le DOM est le vrai DOM de la page |
-| Focus par programme (`FocusAsync`) | **non** : pas d'`IJSRuntime` dans le worker |
-| Raccourcis du gestionnaire de fenêtres (ADR 0095) | oui (`Alt+F7`, `Alt+Q`) : le chrome reste sur la page |
-| `@bind` | oui, testé par les tests unitaires (texte et case à cocher) |
-| Dialogues du SDK | message et saisie relayés (tests unitaires) ; fichiers refusés |
-| Fenêtre détachée (ADR 0078) | **non** : la surface détachée passe par l'interop JavaScript |
-| Langue du processus | par construction (satellites `fr` chargés avant l'app, comme pour une commande) ; non vérifié dans un navigateur |
+| Isolated CSS | pixel-identical (screenshots compared) |
+| Keyboard, `Tab` | yes; `Tab` is native, the DOM is the page's real DOM |
+| Programmatic focus (`FocusAsync`) | **no**: no `IJSRuntime` in the worker |
+| Window manager shortcuts (ADR 0095) | yes (`Alt+F7`, `Alt+Q`): the chrome stays on the page |
+| `@bind` | yes, tested by unit tests (text and checkbox) |
+| SDK dialogs | message and input relayed (unit tests); files refused |
+| Detached window (ADR 0078) | **no**: the detached surface goes through JavaScript interop |
+| Process language | by construction (`fr` satellites loaded before the app, as for a command); not verified in a browser |
 
-### 5. Risque relevé : `BL0006`
+### 5. Risk noted: `BL0006`
 
-`RenderBatch`, `RenderTreeFrame`, `RenderTreeEdit` et `Renderer` sont publics,
-mais l'analyseur de Blazor (`BL0006`) avertit qu'ils « changeront dans une
-version future ». Le critère « aucune API interne » est tenu à la lettre ; en
-pratique, une mise à jour de .NET peut casser le traducteur. Les fichiers qui
-les lisent désactivent `BL0006` avec cette raison, et les tests unitaires
-(`Tests/HackerOs.Platform.RemoteRendering.Tests`) servent de garde-fou à
-chaque montée de version.
+`RenderBatch`, `RenderTreeFrame`, `RenderTreeEdit` and `Renderer` are public,
+but Blazor's analyzer (`BL0006`) warns that they "will change in a future
+version". The criterion "no internal API" is met to the letter; in
+practice, a .NET update can break the translator. The files that
+read them disable `BL0006` with this reason, and the unit tests
+(`Tests/HackerOs.Platform.RemoteRendering.Tests`) serve as a safeguard at
+each version upgrade.
 
-## Options soumises à Benoit
+## Options submitted to Benoit
 
-| Option | Ce qui se passe | Implications |
+| Option | What happens | Implications |
 |---|---|---|
-| **A. On s'arrête (recommandée, appliquée)** | `exec/7` n'a pas lieu ; prototype gardé, coupé. | Rien ne change pour les apps ; la charge lourde passe par `HackBackground`. Aucun coût mémoire. |
-| B. Un worker partagé pour toutes les fenêtres en worker | `exec/7` réécrit l'essai : un seul runtime pour toutes les fenêtres « worker », ≈ 11 Mio par fenêtre ensuite. | Tient le critère mémoire à partir de la 2ᵉ fenêtre, mais une fenêtre qui boucle gèle toutes les autres fenêtres de ce worker : on perd l'isolation qui justifiait l'essai. Nouvel ADR pour changer le critère. |
-| C. On y va quand même, un worker par fenêtre | `exec/7` comme prévu, en acceptant ≈ 66 Mio par fenêtre. | Isolation complète, mais 5 fenêtres coûtent ≈ 330 Mio de plus ; focus par programme et fenêtres détachées restent impossibles. Nouvel ADR qui relève le seuil. |
-| D. D'abord alléger le jeu d'assemblies d'un worker | Chantier séparé : un worker ne charge que ce qu'il lui faut (sans `AppSdk.Icons`, etc.), puis on refait les mesures. | Profite aussi aux commandes et services en worker ; le verdict reste « on s'arrête » jusqu'à la nouvelle mesure. |
+| **A. We stop (recommended, applied)** | `exec/7` does not happen; prototype kept, turned off. | Nothing changes for apps; the heavy load goes through `HackBackground`. No memory cost. |
+| B. One shared worker for all worker windows | `exec/7` rewrites the trial: a single runtime for all "worker" windows, ≈ 11 MiB per window afterwards. | Meets the memory criterion from the 2nd window on, but a window that loops freezes all the other windows of that worker: we lose the isolation that justified the trial. New ADR to change the criterion. |
+| C. We go ahead anyway, one worker per window | `exec/7` as planned, accepting ≈ 66 MiB per window. | Full isolation, but 5 windows cost ≈ 330 MiB more; programmatic focus and detached windows remain impossible. New ADR that raises the threshold. |
+| D. First lighten a worker's assembly set | Separate work item: a worker only loads what it needs (without `AppSdk.Icons`, etc.), then the measurements are redone. | Also benefits commands and services in a worker; the verdict remains "we stop" until the new measurement. |
 
-## Conséquences
+## Consequences
 
-- `exec/7-window-workers` est retiré de la série `exec` (plan des suites de
-  l'étape 5, décision 7) ; `exec/9` et `exec/10` ne l'attendent plus.
-- Le réglage `HackerOs:RemoteWindowRendering` reste documenté comme un essai,
-  coupé par défaut, sans garantie.
-- `build/verify-hosts.sh` et la publication trimmée sont vérifiés avec le
-  réglage coupé et actif.
+- `exec/7-window-workers` is removed from the `exec` series (plan of the
+  step 5 follow-ups, decision 7); `exec/9` and `exec/10` no longer wait for it.
+- The setting `HackerOs:RemoteWindowRendering` remains documented as a trial,
+  turned off by default, with no guarantee.
+- `build/verify-hosts.sh` and the trimmed publish are verified with the
+  setting off and on.
 
-## Références
+## References
 
 - ADR 0070, 0071, 0078, 0095, 0106, 0113, 0124, 0128, 0129, 0131, 0132.
 - `Microsoft.AspNetCore.Components.RenderTree.Renderer` (.NET 10).

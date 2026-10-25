@@ -1,28 +1,28 @@
-# ADR 0073 : apps web (genre `Web`), sites externes et sites hébergés
+# ADR 0073: web apps (`Web` kind), external sites and hosted sites
 
-## Statut
+## Status
 
-Accepté le 2026-10-16 (proposé le même jour, puis validé par Benoit avec le
-questionnaire de la section 4 du plan).
+Accepted on 2026-10-16 (proposed the same day, then validated by Benoit with the
+questionnaire of section 4 of the plan).
 
-- **Phase du plan :** phase web ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
-- **Complète :** ADR 0047 (manifeste en classe C#), ADR 0049 (capacités),
-  ADR 0070 (hôte d'exécution).
+- **Plan phase:** web phase ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
+- **Completes:** ADR 0047 (manifest as a C# class), ADR 0049 (capabilities),
+  ADR 0070 (execution host).
 
-## Contexte
+## Context
 
-Benoit veut des sites web internes : des projets C# façon ASP.NET MVC, des sites
-Blazor interactifs et des sites statiques. Aujourd'hui un site simulé est un
-contrôleur enregistré au démarrage de l'hôte, sans processus ni manifeste
-(`ISimulatedWebsiteController`). Il faut dire ce qu'est un site du point de vue
-du modèle d'app, d'où viennent ses fichiers et à quoi il a droit.
+Benoit wants internal websites: C# projects in the style of ASP.NET MVC, interactive
+Blazor sites and static sites. Today a simulated site is a controller registered
+at host startup, with no process or manifest
+(`ISimulatedWebsiteController`). We need to say what a site is from the point of view
+of the app model, where its files come from and what it is entitled to.
 
-## Décision
+## Decision
 
-### 1. Nouveau genre d'app `Web`
+### 1. New `Web` app kind
 
-`AppKind` gagne `Web` (`"web"` dans `manifest.json`). La définition dérive de
-`WebAppDefinition` (bibliothèque `HackerOs.AppSdk.Web`) :
+`AppKind` gains `Web` (`"web"` in `manifest.json`). The definition derives from
+`WebAppDefinition` (library `HackerOs.AppSdk.Web`):
 
 ```csharp
 [AppManifest]
@@ -36,73 +36,73 @@ public sealed class IntranetApp : WebAppDefinition
 }
 ```
 
-- `Urls` est obligatoire et généré dans le manifeste (champ `web.urls`) ; le
-  résolveur de l'OS le lit (ADR 0074). Un nom pris par deux apps est une erreur
-  de catalogue (`catalog.web.url-conflict`).
-- Un site peut être MVC seul, Blazor seul, ou les deux : les routes MVC passent
-  d'abord, le reste va au composant Blazor.
-- Hôte d'exécution (ADR 0070) : le code serveur de **tous** les sites (MVC,
-  routes, vues) tourne dans **un seul worker partagé**, le worker web, comme un
-  pool d'applications IIS. Chaque site reste un processus distinct (PID, ligne
-  du gestionnaire de tâches, arrêt propre par `SIGTERM`), mais une boucle infinie
-  dans un site bloque tous les sites, pas l'OS ; « Force kill » d'un site qui ne
-  répond pas termine le worker web et donc tous les sites, qui redémarrent à la
-  requête suivante (activation à la demande, ADR 0074 §3). Le worker web
-  démarre avec le premier site appelé. La partie Blazor interactive d'un site
-  tourne sur le thread principal, où le navigateur la dessine (§4).
+- `Urls` is mandatory and generated in the manifest (field `web.urls`); the
+  OS resolver reads it (ADR 0074). A name taken by two apps is a catalog
+  error (`catalog.web.url-conflict`).
+- A site can be MVC only, Blazor only, or both: MVC routes go
+  first, the rest goes to the Blazor component.
+- Execution host (ADR 0070): the server code of **all** sites (MVC,
+  routes, views) runs in **a single shared worker**, the web worker, like an
+  IIS application pool. Each site remains a distinct process (PID, task manager
+  row, clean stop through `SIGTERM`), but an infinite loop
+  in one site blocks all sites, not the OS; "Force kill" of a site that does not
+  respond terminates the web worker and therefore all sites, which restart on the
+  next request (on-demand activation, ADR 0074 §3). The web worker
+  starts with the first site called. The interactive Blazor part of a site
+  runs on the main thread, where the browser draws it (§4).
 
-### 2. Deux sortes de sites, selon d'où viennent les fichiers
+### 2. Two kinds of sites, depending on where the files come from
 
-| Sorte | Origine | Adresse | Fichiers |
+| Kind | Origin | Address | Files |
 |---|---|---|---|
-| **Externe** | un projet C# (app `Web` installée) | les `Urls` de son manifeste (`intranet.hack`) | `wwwroot` du projet, embarqué dans l'app, **lecture seule** ; l'utilisateur le consulte comme un site distant |
-| **Hébergé** | des fichiers de l'OS, déclarés par l'utilisateur (ADR 0077) | `http://localhost:<port>/`, plus un nom de `/etc/hosts` s'il le veut | dossier du système de fichiers, modifiable |
+| **External** | a C# project (installed `Web` app) | the `Urls` of its manifest (`intranet.hack`) | the project's `wwwroot`, embedded in the app, **read-only**; the user browses it like a remote site |
+| **Hosted** | OS files, declared by the user (ADR 0077) | `http://localhost:<port>/`, plus an `/etc/hosts` name if desired | file system folder, modifiable |
 
-Les sites enregistrés statiquement (HackMail, HackerSearch...) restent pris en
-charge tels quels, comme sites externes sans processus.
+Statically registered sites (HackMail, HackerSearch...) remain supported
+as is, as external sites without a process.
 
-### 3. Capacités d'un site
+### 3. Capabilities of a site
 
-- Un site n'a **aucune** capacité `filesystem.*` : ses données ne sont pas dans
-  le système de fichiers de l'OS. Le générateur refuse une `WebAppDefinition`
-  qui en demande (`HOSAPP0050`). Il voit seulement ses ressources embarquées.
-- S'il a besoin d'une base de données, il utilise la base locale du navigateur
-  hôte (IndexedDB, comme le système de fichiers de l'OS lui-même), par un helper
-  du SDK web qui impose un nom de base dérivé de l'identifiant de l'app
-  (`hackweb.<id>`) : un site ne peut ni choisir ni ouvrir la base d'un autre.
-  L'API est calquée sur IndexedDB (magasins d'objets, index, transactions,
-  versions), avec un helper typé par-dessus (`HackWebDb`,
-  `store.GetAsync<Note>(id)`, `PutAsync`, `DeleteAsync`, requêtes par index).
-  IndexedDB étant disponible dans un Web Worker, la base s'ouvre depuis le
-  worker web.
-- La base d'un site est effacée avec l'app à la désinstallation, après
-  confirmation. L'app Diagnostic liste les bases des sites (nom, taille) et
-  permet de les vider ; elles n'apparaissent pas dans les fichiers de l'OS.
-- Seules les données propres au navigateur vont dans le système de fichiers de
-  l'OS : cookies, saisie semi-automatique, et les journaux d'un site quand le
-  site les active pour le débogage (`/var/log/hackweb/<id>.log`).
-- `network.listen` lui est accordé d'office sur ses propres `Urls` ;
-  `network.simulated.read`/`write` sont normales ; `network.real.access` reste
-  dangereuse.
+- A site has **no** `filesystem.*` capability: its data is not in the OS
+  file system. The generator refuses a `WebAppDefinition`
+  that requests one (`HOSAPP0050`). It only sees its embedded resources.
+- If it needs a database, it uses the host browser's local database
+  (IndexedDB, like the OS file system itself), through a
+  web SDK helper that imposes a database name derived from the app identifier
+  (`hackweb.<id>`): a site can neither choose nor open another site's database.
+  The API is modeled on IndexedDB (object stores, indexes, transactions,
+  versions), with a typed helper on top (`HackWebDb`,
+  `store.GetAsync<Note>(id)`, `PutAsync`, `DeleteAsync`, index queries).
+  Since IndexedDB is available in a Web Worker, the database opens from the
+  web worker.
+- A site's database is erased with the app on uninstallation, after
+  confirmation. The Diagnostic app lists the sites' databases (name, size) and
+  lets you empty them; they do not appear in the OS files.
+- Only browser-specific data goes into the OS file system:
+  cookies, autofill, and a site's logs when the
+  site enables them for debugging (`/var/log/hackweb/<id>.log`).
+- `network.listen` is granted automatically on its own `Urls`;
+  `network.simulated.read`/`write` are normal; `network.real.access` stays
+  dangerous.
 
-### 4. Site Blazor interactif
+### 4. Interactive Blazor site
 
-Un site Blazor ressemble à une app à fenêtre, mais son composant racine est
-dessiné dans la zone de page du navigateur HackerOS au lieu d'une fenêtre. Il
-navigue par l'URL de l'onglet (`NavigationManager` propre au site, relié à la
-barre d'adresse). Il ne reçoit pas les services de fenêtre (`WindowAppBase`) ni
-aucune capacité `filesystem.*`. Le composant est isolé par le CSS scopé ; le navigateur ne
-lui transmet aucun service de l'OS hors du SDK permis.
+A Blazor site resembles a windowed app, but its root component is
+drawn in the page area of the HackerOS browser instead of a window. It
+navigates through the tab's URL (the site's own `NavigationManager`, linked to the
+address bar). It does not receive window services (`WindowAppBase`) nor
+any `filesystem.*` capability. The component is isolated by scoped CSS; the browser passes it
+no OS service outside the permitted SDK.
 
-### 5. Ouverture vers la compilation dans l'OS
+### 5. Opening toward compilation in the OS
 
-Le catalogue ne suppose pas qu'une app `Web` vient de la solution : un futur
-compilateur dans l'OS produira la même `WebAppDefinition` et le même manifeste,
-installés par `IAppInstallationService`.
+The catalog does not assume that a `Web` app comes from the solution: a future
+compiler in the OS will produce the same `WebAppDefinition` and the same manifest,
+installed by `IAppInstallationService`.
 
-## Conséquences
+## Consequences
 
-- Le générateur de manifestes, le schéma et `AppCatalog` connaissent `Web` et
+- The manifest generator, the schema and `AppCatalog` know `Web` and
   `web.urls`.
-- Le navigateur devient l'hôte d'affichage des sites Blazor.
-- Les apps existantes ne changent pas.
+- The browser becomes the display host for Blazor sites.
+- Existing apps do not change.

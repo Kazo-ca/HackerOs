@@ -1,13 +1,12 @@
-# Documentation déplacée
+# Documentation moved
 
-La documentation de HackerOS est maintenant à la racine du dépôt, dans
-[`doc/en/wasm/`](../../../doc/en/wasm/README.md) :
+The HackerOS documentation now lives at the repository root, in English in
+[`doc/en/wasm/`](../../../doc/en/wasm/README.md) and in French in
+[`doc/fr/wasm/`](../../../doc/fr/wasm/README.md):
 
-- [`doc/en/wasm/dev/`](../../../doc/en/wasm/dev/) : développement de l'OS (architecture,
-  sous-systèmes, compilation, tests, plans, ADR, pièges) ;
-- [`doc/en/wasm/framework/`](../../../doc/en/wasm/framework/) : créer des apps et des sites
-  avec le framework (SDK, modèle d'app, ASP.Hack) ;
-- [`doc/en/wasm/memory/`](../../../doc/en/wasm/memory/README.md) : mémoire du projet.
+- `dev/`: OS development (architecture, subsystems, build, tests, plans, ADRs, pitfalls);
+- `framework/`: building apps and sites on the framework (SDK, app model, ASP.Hack);
+- `memory/`: project memory.
 
-Les liens vers `wasm2/HackerOs/docs/...` des anciens messages ou commits
-correspondent aux mêmes noms de fichiers sous ces dossiers.
+Links to `wasm2/HackerOs/docs/...` in old messages or commits match the same
+file names under these folders.

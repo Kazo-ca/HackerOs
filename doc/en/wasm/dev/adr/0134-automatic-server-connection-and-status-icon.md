@@ -1,68 +1,68 @@
-# ADR 0134 : connexion automatique au serveur qui sert l'OS, et icône d'état dans la zone de notification
+# ADR 0134: automatic connection to the server that serves the OS, and status icon in the notification area
 
-## Statut
+## Status
 
-Accepté le 2026-10-18 (réponses de Benoit aux questions E1 à E4 du fil
-« ADR des suites de l'étape 5 »).
+Accepted on 2026-10-18 (Benoit's answers to questions E1 to E4 of the thread
+"ADR for the step 5 follow-ups").
 
-- **Remplace :** l'[ADR 0130](0130-server-serves-webassembly-os-and-api.md)
-  §4 (adresse préremplie, connexion au choix de l'utilisateur).
-- **Confirme :** l'ADR 0130 §2 (E1 : le serveur sert les fichiers publiés de
-  l'Ecosystem), l'ADR 0125 §6 (E3 : valeurs Linux pour `nofile` et `nproc`),
-  l'ADR 0132 §2 (E4 : SDK 1.2 publié une fois, à la fin de la série).
-- **Mis en œuvre par :** `exec/8-server-wasm`.
+- **Replaces:** [ADR 0130](0130-server-serves-webassembly-os-and-api.md)
+  §4 (prefilled address, connection at the user's choice).
+- **Confirms:** ADR 0130 §2 (E1: the server serves the published files of
+  the Ecosystem), ADR 0125 §6 (E3: Linux values for `nofile` and `nproc`),
+  ADR 0132 §2 (E4: SDK 1.2 released once, at the end of the series).
+- **Implemented by:** `exec/8-server-wasm`.
 
-## Contexte
+## Context
 
-Benoit a choisi la réponse A à E2, en la précisant : « connexion
-automatique, sans demande de l'utilisateur. Une icône dans la zone de
-notification affiche l'état de la connexion ».
+Benoit chose answer A to E2, specifying it: "automatic connection,
+without asking the user. An icon in the notification area
+shows the connection state".
 
-## Décision
+## Decision
 
-### 1. Connexion sans question
+### 1. Connection without a question
 
-- Au démarrage, l'OS interroge `GET /api/hackeros/host-info` sur sa propre
-  origine (délai court, rien hors ligne). Si le serveur répond, l'OS
-  l'enregistre comme serveur de la machine et **s'y connecte tout de suite**,
-  sans boîte ni question.
-- Se connecter veut dire : vérifier la version de l'API, ouvrir le canal de
-  synchronisation et le relais. Si l'utilisateur de la session a déjà ouvert un
-  compte sur ce serveur (jeton gardé, ADR 0028), la session reprend aussi
-  sans question. Sinon, l'OS est connecté **sans compte** : ce qui demande un
-  compte attend que l'utilisateur s'identifie depuis l'icône (§2).
-- Un serveur perdu en route se retente avec un délai croissant. L'OS ne dépend
-  jamais du serveur (AGENTS.md I.1) : déconnecté, il continue hors ligne.
-- Un administrateur peut couper ce comportement dans
-  `/etc/hackeros/server.config` (`auto-connect=false`) ; l'OS revient alors à
-  la saisie manuelle dans Paramètres.
+- At startup, the OS queries `GET /api/hackeros/host-info` on its own
+  origin (short timeout, nothing offline). If the server answers, the OS
+  registers it as the machine's server and **connects to it right away**,
+  with no box or question.
+- Connecting means: checking the API version, opening the synchronization channel
+  and the relay. If the session user has already opened an
+  account on this server (token kept, ADR 0028), the session also resumes
+  without a question. Otherwise, the OS is connected **without an account**: what requires
+  an account waits until the user identifies themselves from the icon (§2).
+- A server lost along the way is retried with an increasing delay. The OS never depends
+  on the server (AGENTS.md I.1): disconnected, it keeps working offline.
+- An administrator can turn off this behavior in
+  `/etc/hackeros/server.config` (`auto-connect=false`); the OS then goes back to
+  manual entry in Settings.
 
-### 2. Icône d'état
+### 2. Status icon
 
-- Une icône dans la zone de notification de la barre des tâches, visible dès
-  qu'un serveur est configuré (automatiquement ou à la main, Ecosystem
-  compris).
-- États : **Connecté**, **Connecté, non identifié**, **Connexion…**,
-  **Hors ligne** (serveur injoignable), **Erreur** (version incompatible, accès
-  refusé). Infobulle avec l'adresse du serveur et l'état.
-- Un clic ouvre un petit panneau : état, adresse, compte, dernière
-  synchronisation, boutons « S'identifier » (si non identifié), « Reconnecter »
-  et « Paramètres du serveur ».
-- Composant de la plateforme en Blazor natif avec CSS isolé (barre des
-  tâches, AGENTS.md II.1) ; textes en anglais et en français (ADR 0104) ;
-  `aria-live` pour les changements d'état et navigation au clavier
+- An icon in the taskbar's notification area, visible as soon as
+  a server is configured (automatically or by hand, Ecosystem
+  included).
+- States: **Connected**, **Connected, not identified**, **Connecting…**,
+  **Offline** (server unreachable), **Error** (incompatible version, access
+  denied). Tooltip with the server address and state.
+- A click opens a small panel: state, address, account, last
+  synchronization, buttons "Sign in" (if not identified), "Reconnect"
+  and "Server settings".
+- Platform component in native Blazor with isolated CSS (taskbar,
+  AGENTS.md II.1); texts in English and French (ADR 0104);
+  `aria-live` for state changes and keyboard navigation
   (ADR 0105).
 
-## Conséquences
+## Consequences
 
-- `HackerOs.Server` gagne `GET /api/hackeros/host-info` (version de l'API,
-  nom du serveur) ; l'OS gagne la détection et l'icône.
-- Tests : boot servi par le serveur → connexion sans boîte ; serveur arrêté →
-  icône « Hors ligne », OS utilisable ; `auto-connect=false` respecté.
-- Docs : [`server-network-relay.md`](../server-network-relay.md),
-  [`project-overview.md`](../project-overview.md) et la doc de connexion au
-  serveur, au moment du chantier.
+- `HackerOs.Server` gains `GET /api/hackeros/host-info` (API version,
+  server name); the OS gains the detection and the icon.
+- Tests: boot served by the server → connection without a box; server stopped →
+  "Offline" icon, OS usable; `auto-connect=false` respected.
+- Docs: [`server-network-relay.md`](../server-network-relay.md),
+  [`project-overview.md`](../project-overview.md) and the server connection
+  doc, at the time of the work item.
 
-## Références
+## References
 
 - ADR 0028, 0104, 0105, 0125, 0130, 0132.

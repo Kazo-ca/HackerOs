@@ -1,31 +1,31 @@
-# Rendu HTML du navigateur
+# Browser HTML rendering
 
-**Phase web, chantier `web/4-browser-html`** ([`asp-hack-plan.md`](plans/asp-hack-plan.md),
-section 5). Décision : [ADR 0075](adr/0075-browser-html-rendering.md), ajustée
-par l'[ADR 0079](adr/0079-browser-html-rendering-adjustments.md). S'appuie sur
-les corps HTTP réels de [`http-bodies.md`](../framework/http-bodies.md).
+**Web phase, work item `web/4-browser-html`** ([`asp-hack-plan.md`](plans/asp-hack-plan.md),
+section 5). Decision: [ADR 0075](adr/0075-browser-html-rendering.md), adjusted
+by [ADR 0079](adr/0079-browser-html-rendering-adjustments.md). Builds on
+the real HTTP bodies of [`http-bodies.md`](../framework/http-bodies.md).
 
-## Objet
+## Purpose
 
-Avant ce chantier, le navigateur ne dessinait que des `SimulatedPage`
-structurés et affichait le HTML brut comme du texte. Désormais, une réponse
-`text/html` (d'un site du réseau simulé ou d'un fichier local en `file://`)
-devient une **vraie page web** : son CSS s'applique, son JavaScript s'exécute,
-ses `fetch`, ses `XMLHttpRequest`, ses formulaires, ses cookies et son
-`localStorage` fonctionnent. La page reste prisonnière : elle n'atteint ni
-HackerOS, ni Internet, ni les fichiers de l'utilisateur. Tout ce qu'elle
-demande passe par le navigateur, qui décide en C#, comme un vrai navigateur
-applique la politique de même origine et CORS.
+Before this work item, the browser only drew structured `SimulatedPage`s
+and displayed raw HTML as text. Now, a `text/html` response
+(from a simulated-network site or a local `file://` file)
+becomes a **real web page**: its CSS applies, its JavaScript runs,
+its `fetch`, its `XMLHttpRequest`, its forms, its cookies and its
+`localStorage` work. The page remains a prisoner: it reaches neither
+HackerOS, nor the Internet, nor the user's files. Everything it
+asks for goes through the browser, which decides in C#, as a real browser
+applies the same-origin policy and CORS.
 
-Le navigateur gagne aussi :
+The browser also gains:
 
-- les URL `file://` (fichier ou listing « Index of » d'un dossier) ;
-- la vue source (`view-source:` ou `Ctrl+U`) ;
-- des outils de développement avec un onglet **Network** et un onglet
-  **Console** (`F12`) ;
-- des pages d'erreur à la Chromium (`ERR_NAME_NOT_RESOLVED`,
-  `ERR_CONNECTION_REFUSED`, `ERR_FILE_NOT_FOUND`, erreurs HTTP) ;
-- les téléchargements vers `~/Downloads` et l'affichage PDF.
+- `file://` URLs (file or "Index of" listing of a folder);
+- the source view (`view-source:` or `Ctrl+U`);
+- developer tools with a **Network** tab and a **Console**
+  tab (`F12`);
+- Chromium-style error pages (`ERR_NAME_NOT_RESOLVED`,
+  `ERR_CONNECTION_REFUSED`, `ERR_FILE_NOT_FOUND`, HTTP errors);
+- downloads to `~/Downloads` and PDF display.
 
 ## Architecture
 
@@ -46,170 +46,170 @@ PageBridgeHandler ◄── PageBridge.js (dans la page) : fetch, XHR, liens, fo
      └── PageStorage (~/.local/share/hackeros/browser/storage/<site>/local-storage.json)
 ```
 
-Tous les fichiers sont sous `Apps/System/HackerOs.Apps.Browser/` :
+All files are under `Apps/System/HackerOs.Apps.Browser/`:
 
-| Dossier / fichier | Rôle |
+| Folder / file | Role |
 |---|---|
-| `Net/BrowserTransport.cs` | `BrowserRequest`, `BrowserResponse`, `BrowserFetchResult`, `IBrowserTransport`, codes `BrowserErrorCodes`. |
-| `Net/SdkBrowserTransport.cs` | Transport réel : `HackHttpClient` (cookies de l'onglet ou conteneur vide selon les credentials, en-têtes interdits filtrés) et `file:` (fichier ou listing). |
-| `Net/BrowserUrl.cs` | Barre d'adresse (`view-source:`, `about:blank`, chemins `/…` et `~/…`, recherche HackerSearch), résolution relative, origine, clé de stockage par site. |
-| `Net/DirectoryListingPage.cs` | Page « Index of » d'un dossier local. |
-| `Net/BrowserResourceLoader.cs` | Point de passage unique : chaque requête produit une ligne Network et, en échec, un message Console « Failed to load resource ». |
-| `Rendering/HtmlPageComposer.cs` | Analyse le HTML (AngleSharp), inline les sous-ressources, retire `<base>` et les cadres, ajoute charset, `<base href>`, CSP et le script du pont. |
-| `Rendering/SubresourceFetcher.cs` | Charge et met en cache les sous-ressources (300 requêtes et 32 Mio au plus par page) ; refuse `file:` depuis une page web. |
-| `Rendering/CssResourceRewriter.cs` | Réécrit `url()` et `@import` (profondeur 4) en URL data. |
-| `Bridge/PageBridge.js` | Ressource embarquée injectée dans la page : remplace `fetch`, `XMLHttpRequest`, `document.cookie`, `localStorage`/`sessionStorage`, intercepte liens et formulaires, relaie la console et les erreurs. |
-| `Bridge/PageBridgeContracts.cs` | Messages du pont (JSON camelCase, `PageBridgeJsonContext`). |
-| `Bridge/PageBridgeHandler.cs` | Côté C# du pont : règles `fetch` (credentials, CORS, réponses opaques), cookies du document, ressources chargées après coup. |
-| `Storage/PageStorage.cs` | `localStorage` persisté par site (quota 5 Mi), `sessionStorage` en mémoire de l'onglet. |
-| `DevTools/*` | Journal borné (500 entrées) et panneau Network/Console. |
-| `BrowserPageView.razor(.js)` | Crée l'iframe isolée, relaie les messages, détecte une navigation par script. |
-| `BrowserErrorPages.cs`, `BrowserDownloads.cs` | Pages d'erreur et téléchargements. |
+| `Net/BrowserTransport.cs` | `BrowserRequest`, `BrowserResponse`, `BrowserFetchResult`, `IBrowserTransport`, `BrowserErrorCodes` codes. |
+| `Net/SdkBrowserTransport.cs` | Real transport: `HackHttpClient` (tab cookies or empty container depending on credentials, forbidden headers filtered) and `file:` (file or listing). |
+| `Net/BrowserUrl.cs` | Address bar (`view-source:`, `about:blank`, `/…` and `~/…` paths, HackerSearch search), relative resolution, origin, per-site storage key. |
+| `Net/DirectoryListingPage.cs` | "Index of" page of a local folder. |
+| `Net/BrowserResourceLoader.cs` | Single pass-through point: each request produces a Network line and, on failure, a "Failed to load resource" Console message. |
+| `Rendering/HtmlPageComposer.cs` | Parses the HTML (AngleSharp), inlines subresources, removes `<base>` and frames, adds charset, `<base href>`, CSP and the bridge script. |
+| `Rendering/SubresourceFetcher.cs` | Loads and caches subresources (at most 300 requests and 32 MiB per page); refuses `file:` from a web page. |
+| `Rendering/CssResourceRewriter.cs` | Rewrites `url()` and `@import` (depth 4) into data URLs. |
+| `Bridge/PageBridge.js` | Embedded resource injected into the page: replaces `fetch`, `XMLHttpRequest`, `document.cookie`, `localStorage`/`sessionStorage`, intercepts links and forms, relays the console and errors. |
+| `Bridge/PageBridgeContracts.cs` | Bridge messages (camelCase JSON, `PageBridgeJsonContext`). |
+| `Bridge/PageBridgeHandler.cs` | C# side of the bridge: `fetch` rules (credentials, CORS, opaque responses), document cookies, resources loaded afterwards. |
+| `Storage/PageStorage.cs` | `localStorage` persisted per site (5 MiB quota), `sessionStorage` in the tab's memory. |
+| `DevTools/*` | Bounded log (500 entries) and Network/Console panel. |
+| `BrowserPageView.razor(.js)` | Creates the isolated iframe, relays messages, detects a script navigation. |
+| `BrowserErrorPages.cs`, `BrowserDownloads.cs` | Error pages and downloads. |
 
 `SimulatedFileTypes` (`Shared/HackerOs.Simulation.Abstractions/Network/`)
-donne le type MIME d'un fichier local d'après son extension.
-`HackCookieContainer.Remove` (SDK) supprime un cookie expiré par la page.
+gives the MIME type of a local file from its extension.
+`HackCookieContainer.Remove` (SDK) deletes a cookie expired by the page.
 
-## Fonctionnement
+## How it works
 
 ### Navigation
 
-`BrowserWindow.NavigateAsync` annule la navigation précédente, vide les outils
-de développement, puis demande le document au chargeur. La réponse est
-affichée selon son type :
+`BrowserWindow.NavigateAsync` cancels the previous navigation, clears the developer
+tools, then asks the loader for the document. The response is
+displayed according to its type:
 
-- `SimulatedPage` : rendu structuré historique (`SimulatedPageRenderer`), ses
-  formulaires deviennent des navigations `POST` ;
-- statut HTTP d'erreur sans corps affichable : page d'erreur ;
-- `Content-Disposition: attachment` ou corps binaire : enregistré dans
-  `~/Downloads` (nom unique `nom (n).ext`) ;
-- `text/html` : composé puis affiché dans l'iframe ;
-- autre type : `ResponseBodyViewer` (texte, JSON, image, PDF).
+- `SimulatedPage`: historical structured rendering (`SimulatedPageRenderer`), its
+  forms become `POST` navigations;
+- HTTP error status without a displayable body: error page;
+- `Content-Disposition: attachment` or binary body: saved to
+  `~/Downloads` (unique name `name (n).ext`);
+- `text/html`: composed then displayed in the iframe;
+- other type: `ResponseBodyViewer` (text, JSON, image, PDF).
 
-L'historique distingue `Push`, `Replace` (redirection, `history.replaceState`)
-et `Traverse` (précédent/suivant), ce qui corrige l'ancien bug qui tronquait
-l'historique « suivant ».
+The history distinguishes `Push`, `Replace` (redirect, `history.replaceState`)
+and `Traverse` (previous/next), which fixes the old bug that truncated
+the "next" history.
 
-### La page isolée
+### The isolated page
 
-L'iframe est en `srcdoc` avec `sandbox="allow-scripts allow-forms"`, sans
-`allow-same-origin` : la page a une origine opaque et ne peut lire ni le DOM
-de HackerOS ni son stockage. Une meta CSP interdit toute connexion
-(`connect-src 'none'`, `img-src data: blob:`…) : la page ne charge rien
-elle-même, tout ce dont elle a besoin a été inliné en URL `data:` ou passe par
-le pont.
+The iframe is in `srcdoc` with `sandbox="allow-scripts allow-forms"`, without
+`allow-same-origin`: the page has an opaque origin and can read neither the DOM
+of HackerOS nor its storage. A CSP meta forbids any connection
+(`connect-src 'none'`, `img-src data: blob:`…): the page loads nothing
+itself, everything it needs has been inlined as `data:` URLs or goes through
+the bridge.
 
-Le pont communique par `postMessage` avec un jeton propre à chaque document.
-Une réponse qui arrive après que l'onglet a changé de page est jetée.
+The bridge communicates through `postMessage` with a token specific to each document.
+A response that arrives after the tab has changed page is discarded.
 
-### Ce que voit le JavaScript de la page
+### What the page's JavaScript sees
 
-| API | Comportement |
+| API | Behavior |
 |---|---|
-| `fetch`, `XMLHttpRequest`, `navigator.sendBeacon` | Envoyés au navigateur. Même origine : en-têtes complets. Origine différente : CORS vérifié (`Access-Control-Allow-Origin`, `-Allow-Credentials`, `-Expose-Headers`), `no-cors` donne une réponse opaque. `file:` toujours refusé. |
-| `document.cookie` | Cookies de l'onglet pour l'URL de la page (`Max-Age` et `Expires` gérés). Vide sur une page `file:`. |
-| `localStorage` | Persisté par site dans `~/.local/share/hackeros/browser/storage/<clé>/local-storage.json` (clés `https_hôte`, `http_hôte_port`, `file`). Quota 5 Mi, `QuotaExceededError` au-delà. |
-| `sessionStorage` | En mémoire, le temps de l'onglet. |
-| Liens et formulaires | Interceptés : `GET`, `POST` urlencoded, multipart, `text/plain` ; fragment `#` local ; `download` enregistre le fichier. |
-| `history.pushState`/`replaceState` | Met à jour la barre d'adresse et l'historique. |
-| `document.URL`, `document.referrer` | L'URL réelle de la page, pas `about:srcdoc`. |
-| `console.*`, erreurs non gérées | Onglet Console des outils de développement. |
-| `alert` | Bannière au-dessus de la page ; `confirm` renvoie `false`, `prompt` `null`. |
-| Saisie semi-automatique | À l'envoi d'un formulaire, les champs texte nommés (ni mot de passe, ni caché, ni `autocomplete="off"`, ni numéro de carte) vont dans `~/.local/share/hackeros/browser/form-history.json` ; au focus d'un champ, ses valeurs passées sont proposées par une `<datalist>` ; `Ctrl+Maj+Suppr` efface l'historique (ADR 0088 §6, [`asp-hack-site-data.md`](../framework/asp-hack-site-data.md#saisie-semi-automatique)). |
-| `WebSocket`, `EventSource`, `window.open`, géolocalisation | Refusés. |
-| Éléments ajoutés après coup (`img.src = …`, `appendChild`) | Chargés par le navigateur à la demande. |
+| `fetch`, `XMLHttpRequest`, `navigator.sendBeacon` | Sent to the browser. Same origin: full headers. Different origin: CORS checked (`Access-Control-Allow-Origin`, `-Allow-Credentials`, `-Expose-Headers`), `no-cors` gives an opaque response. `file:` always refused. |
+| `document.cookie` | Tab cookies for the page's URL (`Max-Age` and `Expires` handled). Empty on a `file:` page. |
+| `localStorage` | Persisted per site in `~/.local/share/hackeros/browser/storage/<key>/local-storage.json` (keys `https_host`, `http_host_port`, `file`). 5 MiB quota, `QuotaExceededError` beyond that. |
+| `sessionStorage` | In memory, for the lifetime of the tab. |
+| Links and forms | Intercepted: `GET`, urlencoded `POST`, multipart, `text/plain`; local `#` fragment; `download` saves the file. |
+| `history.pushState`/`replaceState` | Updates the address bar and the history. |
+| `document.URL`, `document.referrer` | The page's real URL, not `about:srcdoc`. |
+| `console.*`, unhandled errors | Console tab of the developer tools. |
+| `alert` | Banner above the page; `confirm` returns `false`, `prompt` `null`. |
+| Autocomplete | When a form is submitted, named text fields (neither password, nor hidden, nor `autocomplete="off"`, nor card number) go into `~/.local/share/hackeros/browser/form-history.json`; on focus of a field, its past values are offered through a `<datalist>`; `Ctrl+Shift+Delete` clears the history (ADR 0088 §6, [`asp-hack-site-data.md`](../framework/asp-hack-site-data.md#saisie-semi-automatique)). |
+| `WebSocket`, `EventSource`, `window.open`, geolocation | Refused. |
+| Elements added afterwards (`img.src = …`, `appendChild`) | Loaded by the browser on demand. |
 
 ### `file://`
 
-Le navigateur lit les fichiers locaux avec les droits de l'utilisateur, limités
-à son dossier personnel (le navigateur n'est pas une app système, ADR 0079). Un
-dossier donne une page « Index of ». Une page `file:` peut charger ses fichiers
-relatifs et appeler un site en `fetch` (soumis à CORS, origine `null`) ; une
-page web ne peut jamais charger un `file:` (« Not allowed to load local
-resource »). Le navigateur ouvre les fichiers `.html` et `.htm`
+The browser reads local files with the user's rights, limited
+to their home folder (the browser is not a system app, ADR 0079). A
+folder gives an "Index of" page. A `file:` page can load its relative files
+and call a site with `fetch` (subject to CORS, origin `null`); a
+web page can never load a `file:` ("Not allowed to load local
+resource"). The browser opens `.html` and `.htm` files
 (`FileHandlers`).
 
-### Outils de développement
+### Developer tools
 
-`F12` (ou le bouton) ouvre le panneau du bas. **Network** liste chaque
-requête : nom, méthode, statut, type, taille, durée, en rouge en cas d'échec.
-**Console** liste les messages de la page et du navigateur. Le badge du bouton
-compte les erreurs.
+`F12` (or the button) opens the bottom panel. **Network** lists each
+request: name, method, status, type, size, duration, in red on failure.
+**Console** lists the messages of the page and of the browser. The button's badge
+counts the errors.
 
-### Fenêtre détachée
+### Detached window
 
-Le bouton `⧉` de la barre d'outils déplace l'onglet dans une fenêtre du
-navigateur hôte, hors du bureau, toujours servie par cette fenêtre du
-navigateur de l'OS (chantier `web/10-detached-window`, voir
-[`detached-display-windows.md`](detached-display-windows.md)). L'iframe de la
-page y est recréée et son pont continue de parler à ce navigateur.
+The `⧉` button of the toolbar moves the tab into a window of the host
+browser, outside the desktop, still served by this OS browser
+window (work item `web/10-detached-window`, see
+[`detached-display-windows.md`](detached-display-windows.md)). The page's iframe
+is recreated there and its bridge keeps talking to this browser.
 
-## Utilisation
+## Usage
 
-- Taper `example.hackeros/page.html` ou un chemin (`~/Documents/site/index.html`)
-  dans la barre d'adresse.
-- `Ctrl+U` ou le bouton `</>` : vue source ; `F12` : outils de développement ;
-  `F5` : recharger ; `Alt+←`/`Alt+→` : historique. Ces raccourcis marchent
-  aussi quand le focus est dans la page.
-- Un site qui veut être appelé depuis une autre origine renvoie
-  `Access-Control-Allow-Origin` (HackerSearch le fait sur `/api/search`).
+- Type `example.hackeros/page.html` or a path (`~/Documents/site/index.html`)
+  in the address bar.
+- `Ctrl+U` or the `</>` button: source view; `F12`: developer tools;
+  `F5`: reload; `Alt+←`/`Alt+→`: history. These shortcuts also work
+  when the focus is in the page.
+- A site that wants to be called from another origin returns
+  `Access-Control-Allow-Origin` (HackerSearch does so on `/api/search`).
 
-## Décisions clés
+## Key decisions
 
-- Les sous-ressources sont inlinées par le navigateur en C# (AngleSharp) :
-  la page ne touche jamais le réseau, et chaque requête passe par le réseau
-  simulé, donc dans le journal Network et dans les compteurs de l'app.
-- Le pont est un fichier JS embarqué dans l'assembly, pas un script de l'hôte
-  (AGENTS.md) ; il est injecté dans le document de la page.
-- Une navigation par script (`location.href = …`) ne peut pas être
-  interceptée dans une iframe sans même origine : le cadre la détecte (un
-  chargement sans annonce du pont) et affiche une page « This page navigated by
-  script » plutôt qu'une page sans pont.
-- Ajustements de l'ADR 0075 : voir l'[ADR 0079](adr/0079-browser-html-rendering-adjustments.md).
+- Subresources are inlined by the browser in C# (AngleSharp):
+  the page never touches the network, and each request goes through the simulated
+  network, hence into the Network log and the app's counters.
+- The bridge is a JS file embedded in the assembly, not a host script
+  (AGENTS.md); it is injected into the page's document.
+- A script navigation (`location.href = …`) cannot be
+  intercepted in an iframe without same origin: the frame detects it (a
+  load without an announcement from the bridge) and displays a "This page navigated by
+  script" page rather than a page without a bridge.
+- Adjustments to ADR 0075: see [ADR 0079](adr/0079-browser-html-rendering-adjustments.md).
 
-## Limites connues
+## Known limitations
 
-- Pas de cadres imbriqués (`iframe`, `object`, `embed` deviennent vides).
-- Les `import` relatifs de modules ES ne se résolvent pas (le script est une
-  URL `data:`).
-- Pas de requête de prévol CORS (`OPTIONS`) : seuls les en-têtes de la
-  réponse sont vérifiés.
-- `HttpOnly` n'est pas modélisé côté `document.cookie`.
-- `target="_blank"` ouvre dans le même onglet.
+- No nested frames (`iframe`, `object`, `embed` become empty).
+- Relative `import`s of ES modules do not resolve (the script is a
+  `data:` URL).
+- No CORS preflight request (`OPTIONS`): only the response
+  headers are checked.
+- `HttpOnly` is not modeled on the `document.cookie` side.
+- `target="_blank"` opens in the same tab.
 
 ## Tests
 
-- `Tests/HackerOs.Apps.Browser.Tests` : composition HTML, réécriture CSS, pont
-  (CORS, credentials, cookies), URL, stockage, pages d'erreur, listing,
-  téléchargements, journal des outils de développement.
-- `Tests/HackerOs.UI.E2E.Tests/BrowserHtmlRenderingTests.cs` : dans Chromium,
-  page web avec CSS, script, `fetch` et cookie ; sandbox vérifié ; onglet
-  Network ; vue source ; XHR et formulaire `POST` ; site local `file://` avec
-  `localStorage`, `fetch` CORS, lien et retour ; page d'erreur DNS.
-- `Tests/HackerOs.Apps.Browser.Tests/FormHistoryTests.cs` et
-  `Tests/HackerOs.UI.E2E.Tests/BrowserSiteDataTests.cs` : historique de
-  formulaires (fichier, limites, `<datalist>` dans Chromium).
-- `Tests/HackerOs.UI.E2E.Tests/BrowserHomePageTests.cs` : hors mode démo, le
-  navigateur s'ouvre sur HackerSearch et une recherche tapée dans la barre
-  d'adresse affiche ses résultats (ADR 0085 : le catalogue réseau par défaut
-  est branché dans l'OS).
-- Pages de test : `example.hackeros` (`/page.html`, `/form.html`, `/echo`,
-  `/api/ping`) dans `SmokeTestNetworkSeed`, et le site
-  `~/Documents/e2e-site` du mode démo E2E.
+- `Tests/HackerOs.Apps.Browser.Tests`: HTML composition, CSS rewriting, bridge
+  (CORS, credentials, cookies), URLs, storage, error pages, listing,
+  downloads, developer tools log.
+- `Tests/HackerOs.UI.E2E.Tests/BrowserHtmlRenderingTests.cs`: in Chromium,
+  web page with CSS, script, `fetch` and cookie; sandbox verified; Network
+  tab; source view; XHR and `POST` form; local `file://` site with
+  `localStorage`, CORS `fetch`, link and back; DNS error page.
+- `Tests/HackerOs.Apps.Browser.Tests/FormHistoryTests.cs` and
+  `Tests/HackerOs.UI.E2E.Tests/BrowserSiteDataTests.cs`: form
+  history (file, limits, `<datalist>` in Chromium).
+- `Tests/HackerOs.UI.E2E.Tests/BrowserHomePageTests.cs`: outside demo mode, the
+  browser opens on HackerSearch and a search typed in the address bar
+  displays its results (ADR 0085: the default network catalog
+  is wired into the OS).
+- Test pages: `example.hackeros` (`/page.html`, `/form.html`, `/echo`,
+  `/api/ping`) in `SmokeTestNetworkSeed`, and the site
+  `~/Documents/e2e-site` of the E2E demo mode.
 
-## Liste des tâches
+## Task list
 
-- [x] Types MIME des fichiers locaux (`SimulatedFileTypes`).
-- [x] Transport du navigateur (`http(s)` par le SDK, `file:` et listing).
-- [x] URL de la barre d'adresse, `view-source:`, chemins locaux.
-- [x] Chargeur de sous-ressources et réécriture CSS.
-- [x] Composition HTML (AngleSharp), CSP et injection du pont.
-- [x] Iframe isolée et relais `postMessage` (`BrowserPageView.razor.js`).
-- [x] Pont : `fetch`, XHR, liens, formulaires, cookies, stockage, console, history.
-- [x] `localStorage` persisté par site, `sessionStorage` par onglet.
-- [x] Outils de développement Network et Console.
-- [x] Pages d'erreur réseau et HTTP, téléchargements, PDF.
-- [x] Historique `Push`/`Replace`/`Traverse`.
-- [x] Pages de test dans le réseau de démo et site local E2E.
-- [x] Tests unitaires et E2E.
+- [x] MIME types of local files (`SimulatedFileTypes`).
+- [x] Browser transport (`http(s)` through the SDK, `file:` and listing).
+- [x] Address bar URLs, `view-source:`, local paths.
+- [x] Subresource loader and CSS rewriting.
+- [x] HTML composition (AngleSharp), CSP and bridge injection.
+- [x] Isolated iframe and `postMessage` relay (`BrowserPageView.razor.js`).
+- [x] Bridge: `fetch`, XHR, links, forms, cookies, storage, console, history.
+- [x] `localStorage` persisted per site, `sessionStorage` per tab.
+- [x] Network and Console developer tools.
+- [x] Network and HTTP error pages, downloads, PDF.
+- [x] `Push`/`Replace`/`Traverse` history.
+- [x] Test pages in the demo network and local E2E site.
+- [x] Unit and E2E tests.
 - [x] Documentation, ADR 0079, index.

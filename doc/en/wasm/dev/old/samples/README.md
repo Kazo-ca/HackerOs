@@ -1,10 +1,10 @@
-# Archives : `samples/`
+# Archives: `samples/`
 
-Documents archivés, antérieurs au plan de refonte. Ils restent utiles comme
-référence technique mais ne décrivent plus forcément le code actuel.
+Archived documents, predating the rebuild plan. They remain useful as a
+technical reference but no longer necessarily describe the current code.
 
-| Document | Rôle |
+| Document | Role |
 | --- | --- |
 | [`service-app.md`](service-app.md) | First Session Service App (`org.hackeros.samples.service-app`) |
 
-Index des archives : [`../README.md`](../README.md).
+Archive index: [`../README.md`](../README.md).

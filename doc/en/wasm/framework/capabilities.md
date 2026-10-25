@@ -1,65 +1,65 @@
-# Capacités : catalogue, classement et attribution
+# Capabilities: catalog, classification and grant
 
-## Objectif
+## Goal
 
-Une capacité est un droit exact qu'une app déclare dans sa définition
-(`AppDefinition.Capabilities`) et que l'OS lui accorde, ou non, à la connexion.
-Ce document décrit le catalogue `AppCapabilities`, son classement en capacités
-normales et dangereuses (ADR 0049, section 1) et la règle d'attribution du
-seeder (ADR 0049, section 2).
+A capability is an exact right that an app declares in its definition
+(`AppDefinition.Capabilities`) and that the OS grants it, or not, at login.
+This document describes the `AppCapabilities` catalog, its classification into normal
+and dangerous capabilities (ADR 0049, section 1) and the seeder's grant rule
+(ADR 0049, section 2).
 
-La fenêtre d'approbation administrateur, `security.config`,
-`app-permissions.config` et `auth.log` (ADR 0049, sections 3 à 8) sont décrits
-dans [`dangerous-capability-approval.md`](../dev/dangerous-capability-approval.md). À
-la connexion, une capacité dangereuse d'une app non système n'est **jamais**
-accordée : seule la passerelle de lancement l'accorde, après une décision
-« allow » d'un administrateur.
+The administrator approval window, `security.config`,
+`app-permissions.config` and `auth.log` (ADR 0049, sections 3 to 8) are described
+in [`dangerous-capability-approval.md`](../dev/dangerous-capability-approval.md). At
+login, a dangerous capability of a non-system app is **never**
+granted: only the launch gateway grants it, after an "allow" decision by an
+administrator.
 
-## Catalogue et classement
+## Catalog and classification
 
-`Shared/HackerOs.App.Abstractions/AppCapabilities.cs` contient, pour chaque
-capacité, une `CapabilityDescription` : identifiant, titre affiché, classement
-`CapabilityRisk` et, pour une capacité dangereuse, la phrase de risque montrée à
-l'administrateur. Le catalogue (`AppCapabilities.All`) est exactement l'ensemble
-des clés de cette table : on ne peut pas ajouter une capacité sans choisir son
-classement.
+`Shared/HackerOs.App.Abstractions/AppCapabilities.cs` contains, for each
+capability, a `CapabilityDescription`: identifier, displayed title, `CapabilityRisk`
+classification and, for a dangerous capability, the risk sentence shown to the
+administrator. The catalog (`AppCapabilities.All`) is exactly the set of
+keys of this table: a capability cannot be added without choosing its
+classification.
 
-| Capacité | Classement |
+| Capability | Classification |
 |---|---|
-| `filesystem.private.*`, `filesystem.user-selected.*`, `filesystem.user-home.*` | normale |
-| `filesystem.system.read`, `filesystem.system.write` | **dangereuse** (Diagnostic lit l'isolation par `HackCrossOriginIsolation`, sans capacité, et ne la déclare plus, ADR 0146) |
-| `apps.launch` | normale |
-| `apps.manage` | **dangereuse** (exigée par `HackAppManagement`, ADR 0056 §3, et `HackComponentProviders`, ADR 0156 ; déclarée par Paramètres) |
-| `dialogs.file-open`, `dialogs.file-save`, `dialogs.folder-select` | normale |
-| `file-associations.read` | normale |
-| `file-associations.write` | **dangereuse** |
-| `process.list` | normale |
-| `process.manage`, `services.manage`, `windows.manage` | **dangereuse** |
-| `notifications.post`, `clipboard.read`, `clipboard.write` | normale |
-| `network.simulated.read`, `network.simulated.write` | normale |
-| `network.real.access` | **dangereuse** (vérifiée aussi par le serveur optionnel avant de relayer, ADR 0102 §4 et 0108 §1) |
-| `network.listen` | normale (écouter un port qui n'est pas une URL de son manifeste, [`listening-ports-and-dns.md`](listening-ports-and-dns.md)) |
-| `network.listen.privileged` | **dangereuse** (écouter un port sous 1024, comme `CAP_NET_BIND_SERVICE`) |
-| `shell.control` | normale (ADR 0051 : n'agit que sur le shell de l'utilisateur qui a tapé la commande, voir [`shell-commands.md`](../dev/shell-commands.md)) |
-| `shell.context-menu` | normale (ADR 0151 §6 : ajouter des entrées aux menus des fichiers ; sans elle, le générateur produit `HOSAPP0027` et l'OS ignore les entrées, voir [`context-menu.md`](context-menu.md#entrées-des-apps-dans-les-menus-des-fichiers-chantier-4)) |
-| `permissions.manage` | **dangereuse** (`HackPermissionAdministration`, ADR 0056 §9 ; déclarée par Paramètres) |
-| `server.connection.manage` | **dangereuse** (`HackServerConnection`, ADR 0056 §10 ; déclarée par Paramètres) |
-| `system.power` | **dangereuse** (`HackSystem` : redémarrage, réinitialisation, ADR 0056 §11 ; déclarée par Paramètres) |
-| `system.storage.inspect` | **dangereuse** (`HackStorageDiagnostics`, ADR 0056 §11 ; déclarée par Diagnostic, seule app non système de la base à demander une approbation au premier lancement) |
-| `system.backup` | **dangereuse** (`HackSystemBackup` : sauvegarder et restaurer toute la machine, ADR 0099 §1 ; déclarée par Paramètres, et par `hackbackup` qui exige `sudo`, voir [`system-backup.md`](../dev/system-backup.md)) |
-| `shell.host` | **dangereuse** (ADR 0056 §7 : héberger un shell dont les commandes agissent avec leurs propres droits, voir [`shell-host.md`](shell-host.md)) |
-| `users.manage` | **dangereuse** (ADR 0120 : réinitialiser ou retirer le mot de passe d'un autre compte par `HackUserAccounts`, avec un administrateur ; déclarée par Paramètres et `passwd` ; voir [`sensitive-settings.md`](../dev/sensitive-settings.md)). Phrase de risque : « Réinitialiser ou retirer le mot de passe d'un autre compte, et donc ouvrir sa session. » Changer son propre mot de passe n'en demande aucune. |
-| `keyring.read-all` | **dangereuse** (ADR 0100 §2 : lire les entrées du trousseau de toutes les apps, pour un gestionnaire de mots de passe ; voir [`sensitive-settings.md`](../dev/sensitive-settings.md)). Phrase de risque : « Lire les mots de passe, jetons et clés que toutes vos applications ont enregistrés. » |
+| `filesystem.private.*`, `filesystem.user-selected.*`, `filesystem.user-home.*` | normal |
+| `filesystem.system.read`, `filesystem.system.write` | **dangerous** (Diagnostics reads isolation through `HackCrossOriginIsolation`, without a capability, and no longer declares it, ADR 0146) |
+| `apps.launch` | normal |
+| `apps.manage` | **dangerous** (required by `HackAppManagement`, ADR 0056 §3, and `HackComponentProviders`, ADR 0156; declared by Settings) |
+| `dialogs.file-open`, `dialogs.file-save`, `dialogs.folder-select` | normal |
+| `file-associations.read` | normal |
+| `file-associations.write` | **dangerous** |
+| `process.list` | normal |
+| `process.manage`, `services.manage`, `windows.manage` | **dangerous** |
+| `notifications.post`, `clipboard.read`, `clipboard.write` | normal |
+| `network.simulated.read`, `network.simulated.write` | normal |
+| `network.real.access` | **dangerous** (also checked by the optional server before relaying, ADR 0102 §4 and 0108 §1) |
+| `network.listen` | normal (listen on a port that is not a URL of its manifest, [`listening-ports-and-dns.md`](listening-ports-and-dns.md)) |
+| `network.listen.privileged` | **dangerous** (listen on a port below 1024, like `CAP_NET_BIND_SERVICE`) |
+| `shell.control` | normal (ADR 0051: acts only on the shell of the user who typed the command, see [`shell-commands.md`](../dev/shell-commands.md)) |
+| `shell.context-menu` | normal (ADR 0151 §6: add entries to file menus; without it, the generator produces `HOSAPP0027` and the OS ignores the entries, see [`context-menu.md`](context-menu.md#entrées-des-apps-dans-les-menus-des-fichiers-chantier-4)) |
+| `permissions.manage` | **dangerous** (`HackPermissionAdministration`, ADR 0056 §9; declared by Settings) |
+| `server.connection.manage` | **dangerous** (`HackServerConnection`, ADR 0056 §10; declared by Settings) |
+| `system.power` | **dangerous** (`HackSystem`: restart, reset, ADR 0056 §11; declared by Settings) |
+| `system.storage.inspect` | **dangerous** (`HackStorageDiagnostics`, ADR 0056 §11; declared by Diagnostics, the only non-system app in the base to request an approval at first launch) |
+| `system.backup` | **dangerous** (`HackSystemBackup`: back up and restore the whole machine, ADR 0099 §1; declared by Settings, and by `hackbackup` which requires `sudo`, see [`system-backup.md`](../dev/system-backup.md)) |
+| `shell.host` | **dangerous** (ADR 0056 §7: host a shell whose commands act with their own rights, see [`shell-host.md`](shell-host.md)) |
+| `users.manage` | **dangerous** (ADR 0120: reset or remove another account's password through `HackUserAccounts`, with an administrator; declared by Settings and `passwd`; see [`sensitive-settings.md`](../dev/sensitive-settings.md)). Risk sentence: "Reset or remove the password of another account, and therefore open its session." Changing one's own password requires none. |
+| `keyring.read-all` | **dangerous** (ADR 0100 §2: read the keyring entries of all apps, for a password manager; see [`sensitive-settings.md`](../dev/sensitive-settings.md)). Risk sentence: "Read the passwords, tokens and keys that all your applications have saved." |
 
-Les phrases de risque sont celles de la table de l'ADR 0049.
+The risk sentences are those of the table in ADR 0049.
 
-**Retirées du catalogue :** `settings.read`, `settings.write`,
-`settings.system.read`, `settings.system.write` (ADR 0044 : les paramètres sont
-des fichiers, protégés par `filesystem.*`) et `diagnostics.read`,
-`diagnostics.clear` (ADR 0045 : les journaux sont des fichiers). Une définition
-d'app qui les cite ne compile plus, et un `manifest.json` qui les nomme est
-rejeté par le validateur (`manifest.capability.unknown`). `SettingsScopePolicy`,
-qui ne servait qu'aux tests et lisait `settings.system.*`, est supprimé.
+**Removed from the catalog:** `settings.read`, `settings.write`,
+`settings.system.read`, `settings.system.write` (ADR 0044: settings are
+files, protected by `filesystem.*`) and `diagnostics.read`,
+`diagnostics.clear` (ADR 0045: logs are files). An app definition
+that cites them no longer compiles, and a `manifest.json` that names them is
+rejected by the validator (`manifest.capability.unknown`). `SettingsScopePolicy`,
+which was only used by tests and read `settings.system.*`, is removed.
 
 ## API
 
@@ -71,62 +71,62 @@ CapabilityDescription d = AppCapabilities.Describe(AppCapabilities.FileSystemSys
 // d.RiskDescription: "Modifier des fichiers du système, dont /etc et les paramètres de toutes les apps."
 ```
 
-- `GetRisk` et `Describe` lèvent `ArgumentException` pour un identifiant hors
-  catalogue.
-- `IsDangerous` renvoie `false` pour tout identifiant hors catalogue, en
-  particulier les permissions de sujet (`topic-publish:` / `topic-subscribe:`,
-  ADR 0040), qu'un manifeste peut aussi lister et qui ne sont pas classées.
+- `GetRisk` and `Describe` throw `ArgumentException` for an identifier outside
+  the catalog.
+- `IsDangerous` returns `false` for any identifier outside the catalog, in
+  particular topic permissions (`topic-publish:` / `topic-subscribe:`,
+  ADR 0040), which a manifest can also list and which are not classified.
 
-## Attribution à la connexion
+## Grant at login
 
-`LocalSessionService` appelle, pour chaque manifeste du catalogue,
+`LocalSessionService` calls, for each manifest of the catalog,
 `CleanProfileCapabilityGrantSeeder.SeedDeclaredCapabilities(repository, manifest, userId, isSystemApp)`
-avec `isSystemApp = AppCatalog.IsSystemApp(manifest.Id)` (ADR 0048).
+with `isSystemApp = AppCatalog.IsSystemApp(manifest.Id)` (ADR 0048).
 
-| App | Capacité normale déclarée | Capacité dangereuse déclarée |
+| App | Declared normal capability | Declared dangerous capability |
 |---|---|---|
-| Système | accordée, source `BuildProfile` | accordée, source `SystemPolicy` |
-| Non système | accordée, source `BuildProfile` | **non accordée** ; la passerelle de lancement l'accorde (source `AdministratorApproval`) si une décision « allow » existe |
+| System | granted, source `BuildProfile` | granted, source `SystemPolicy` |
+| Non-system | granted, source `BuildProfile` | **not granted**; the launch gateway grants it (source `AdministratorApproval`) if an "allow" decision exists |
 
-Une capacité non déclarée n'est jamais accordée. `AppLifecycleOrchestrator`
-calcule les capacités d'une instance à partir du dépôt de grants : une app non
-système qui utilise une capacité dangereuse reçoit donc
-`HackUnauthorizedAccessException` comme pour toute capacité absente.
+An undeclared capability is never granted. `AppLifecycleOrchestrator`
+computes an instance's capabilities from the grant repository: a non-system
+app that uses a dangerous capability therefore receives
+`HackUnauthorizedAccessException`, as for any missing capability.
 
-Dans l'hôte Ecosystem, aucune app non système ne déclare de capacité
-dangereuse : l'expérience de base ne change pas.
+In the Ecosystem host, no non-system app declares a dangerous
+capability: the base experience does not change.
 
-## Politique `policy.config`
+## `policy.config` policy
 
-La clé `capabilityGrantsLocked`, jamais évaluée, est retirée du schéma de
-`/etc/hackeros/policy.config`. Il n'y reste que `allowRuntimePackageInstall`.
-Une ancienne ligne `capabilityGrantsLocked=…` dans le fichier est désormais une
-clé inconnue.
+The `capabilityGrantsLocked` key, never evaluated, is removed from the schema of
+`/etc/hackeros/policy.config`. Only `allowRuntimePackageInstall` remains.
+An old `capabilityGrantsLocked=…` line in the file is now an
+unknown key.
 
 ## Tests
 
-- `AppCapabilitiesTests` (`HackerOs.App.Abstractions.Tests`) : classement exact
-  de chaque capacité selon l'ADR, catalogue égal à la table classée, chaque
-  capacité décrite (phrase de risque seulement pour les dangereuses),
-  `settings.*` et `diagnostics.*` absents, permissions de sujet jamais
-  dangereuses.
-- `CleanProfileCapabilityGrantSeederTests` (`HackerOs.Platform.Core.Tests`) :
-  source `BuildProfile` pour une capacité normale, `SystemPolicy` pour une
-  capacité dangereuse d'une app système, aucune grant dangereuse pour une app
-  non système.
+- `AppCapabilitiesTests` (`HackerOs.App.Abstractions.Tests`): exact classification
+  of each capability according to the ADR, catalog equal to the classified table, each
+  capability described (risk sentence only for dangerous ones),
+  `settings.*` and `diagnostics.*` absent, topic permissions never
+  dangerous.
+- `CleanProfileCapabilityGrantSeederTests` (`HackerOs.Platform.Core.Tests`):
+  source `BuildProfile` for a normal capability, `SystemPolicy` for a
+  dangerous capability of a system app, no dangerous grant for a
+  non-system app.
 - `BuildKnownLazyAppsTests.No_non_system_app_of_the_host_declares_a_dangerous_capability`
   (`HackerOs.Ecosystem.Tests`).
-- `PolicySettingsDocumentsTests` : `capabilityGrantsLocked` absent du schéma.
+- `PolicySettingsDocumentsTests`: `capabilityGrantsLocked` absent from the schema.
 
-## Tâches
+## Tasks
 
-- [x] `rebuild/2-capability-classification` : `CapabilityRisk`, `GetRisk`,
-  `IsDangerous`, `Describe`, `apps.manage`, retrait de `settings.*` et
-  `diagnostics.*` (catalogue, définitions d'app, manifestes générés, tests,
-  `SettingsScopePolicy`), seeder selon le statut système, retrait de
+- [x] `rebuild/2-capability-classification`: `CapabilityRisk`, `GetRisk`,
+  `IsDangerous`, `Describe`, `apps.manage`, removal of `settings.*` and
+  `diagnostics.*` (catalog, app definitions, generated manifests, tests,
+  `SettingsScopePolicy`), seeder according to system status, removal of
   `capabilityGrantsLocked`.
-- [x] `rebuild/2-dangerous-approval` (voir
-  [`dangerous-capability-approval.md`](../dev/dangerous-capability-approval.md)) : `security.config`,
-  `app-permissions.config`, `IDangerousCapabilityGate` au lancement, fenêtre
-  spéciale, mode texte du terminal, `auth.log`, vue Permissions des Paramètres.
-- [x] `v3/7-storage-backup` : capacité dangereuse `system.backup` (ADR 0099).
+- [x] `rebuild/2-dangerous-approval` (see
+  [`dangerous-capability-approval.md`](../dev/dangerous-capability-approval.md)): `security.config`,
+  `app-permissions.config`, `IDangerousCapabilityGate` at launch, special
+  window, terminal text mode, `auth.log`, Permissions view of Settings.
+- [x] `v3/7-storage-backup`: dangerous capability `system.backup` (ADR 0099).

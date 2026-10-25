@@ -1,31 +1,31 @@
-# Fenêtres d'affichage (surfaces) : API pour les apps
+# Display windows (surfaces): API for apps
 
-Ce document décrit comment une app ouvre une surface, dessine son contenu dedans, suit ses événements et ouvre une page dans une fenêtre détachée. Le mécanisme interne (portail, initialiseur JS, module `displaySurfaces.js`, navigateur de l'OS) est dans [`dev/detached-display-windows.md`](../dev/detached-display-windows.md).
+This document describes how an app opens a surface, draws its content in it, follows its events and opens a page in a detached window. The internal mechanism (portal, JS initializer, `displaySurfaces.js` module, OS browser) is in [`dev/detached-display-windows.md`](../dev/detached-display-windows.md).
 
-## Types du SDK
+## SDK types
 
-| Fichier | Rôle |
+| File | Role |
 |---|---|
-| `Shared/HackerOs.AppSdk.Blazor/Display/DisplaySurfaceContracts.cs` | Contrat public : `IDisplaySurfaceService`, `IDisplaySurface`, `DisplaySurfaceOptions`, `DisplaySurfaceOpenResult`, `DisplaySurfaceOpenStatus`, `DisplaySurfaceState`. |
-| `Shared/HackerOs.AppSdk.Blazor/Display/DisplaySurfaceContent.razor(.cs,.css)` | Portail : rend son contenu ici, puis déplace son élément dans la surface ; le rend avant d'être supprimé. `Surface` est facultatif (ADR 0084 §7) : sans surface ouverte, le contenu reste en place, ce qui permet de le rendre une seule fois et de garder son état au détachement. |
+| `Shared/HackerOs.AppSdk.Blazor/Display/DisplaySurfaceContracts.cs` | Public contract: `IDisplaySurfaceService`, `IDisplaySurface`, `DisplaySurfaceOptions`, `DisplaySurfaceOpenResult`, `DisplaySurfaceOpenStatus`, `DisplaySurfaceState`. |
+| `Shared/HackerOs.AppSdk.Blazor/Display/DisplaySurfaceContent.razor(.cs,.css)` | Portal: renders its content here, then moves its element into the surface; renders it back before being removed. `Surface` is optional (ADR 0084 §7): with no open surface, the content stays in place, which makes it possible to render it only once and keep its state when detaching. |
 | `Shared/HackerOs.AppSdk/Apps/HackBrowser.cs` | `HackBrowser.OpenAsync(url)`, `HackBrowser.OpenDetachedAsync(url)`. |
 
-## Ouvrir une surface
+## Opening a surface
 
-`IDisplaySurfaceService.OpenAsync(new DisplaySurfaceOptions(titre, largeur, hauteur))`
-appelle `window.open("", "hackeros-surface-<n>", "popup=yes,…")`. Le navigateur
-hôte n'ouvre une fenêtre qu'après un geste de l'utilisateur (environ cinq
-secondes après un clic ou une touche) : l'appel vient d'un gestionnaire de
-clic, ou juste après le lancement qu'un clic a déclenché.
+`IDisplaySurfaceService.OpenAsync(new DisplaySurfaceOptions(title, width, height))`
+calls `window.open("", "hackeros-surface-<n>", "popup=yes,…")`. The host
+browser only opens a window after a user gesture (about five seconds after a
+click or a key press): the call comes from a click handler, or just after the
+launch that a click triggered.
 
-- **Ouverte** : résultat `Opened` avec la surface (`surface-1`, `surface-2`…).
-- **Bloquée** : résultat `Blocked` ; le service publie une notification
-  « Detached window blocked » qui explique comment autoriser les fenêtres
-  surgissantes.
-- **Impossible** (pas de JavaScript interactif : prérendu, tests) :
+- **Opened**: `Opened` result with the surface (`surface-1`, `surface-2`...).
+- **Blocked**: `Blocked` result; the service publishes a
+  "Detached window blocked" notification that explains how to allow pop-up
+  windows.
+- **Impossible** (no interactive JavaScript: prerendering, tests):
   `Unavailable`.
 
-## Dessiner dans une surface
+## Drawing in a surface
 
 ```razor
 @if (_surface is not null)
@@ -36,53 +36,51 @@ clic, ou juste après le lancement qu'un clic a déclenché.
 }
 ```
 
-Le contenu reste un morceau ordinaire de la fenêtre de l'app : mêmes
-paramètres en cascade, même contexte d'exécution, mêmes gestionnaires
-d'événements. Seul son DOM vit dans la surface. Il garde l'apparence de
-l'endroit où il est rendu : le module recopie sur la racine de la surface les
-propriétés CSS personnalisées (`--hos-*`, thème) et le style de texte de
-l'ancre.
+The content remains an ordinary piece of the app's window: same cascading
+parameters, same execution context, same event handlers. Only its DOM lives in
+the surface. It keeps the appearance of the place where it is rendered: the
+module copies the custom CSS properties (`--hos-*`, theme) and the anchor's
+text style onto the surface root.
 
-## Événements d'une surface
+## Surface events
 
-`IDisplaySurface.Changed` signale la taille (`Width`, `Height`), le focus
-(`HasFocus`), le titre et l'état. Il arrive hors de tout événement Blazor et
-hors du contexte de l'app : un composant le traite avec `InvokeAsync` et, s'il
-appelle le SDK, `HackExecutionContext.Enter(AppContext)`.
+`IDisplaySurface.Changed` reports the size (`Width`, `Height`), the focus
+(`HasFocus`), the title and the state. It arrives outside any Blazor event and
+outside the app's context: a component handles it with `InvokeAsync` and, if it
+calls the SDK, `HackExecutionContext.Enter(AppContext)`.
 
-| État | Quand |
+| State | When |
 |---|---|
-| `Open` | La fenêtre montre la surface. |
-| `ClosedByUser` | L'utilisateur a fermé la fenêtre. |
-| `Closed` | Le propriétaire a appelé `CloseAsync`, ou `CloseAllAsync` a été appelé. |
-| `Lost` | La fenêtre a quitté le document de la surface (autre adresse tapée) ; l'OS la ferme. |
+| `Open` | The window shows the surface. |
+| `ClosedByUser` | The user closed the window. |
+| `Closed` | The owner called `CloseAsync`, or `CloseAllAsync` was called. |
+| `Lost` | The window left the surface's document (another address was typed); the OS closes it. |
 
-Quand une surface se termine, son contenu revient sous son ancre dans la
-fenêtre de l'app. Recharger ou fermer l'onglet de l'OS ferme toutes les
-surfaces.
+When a surface ends, its content returns under its anchor in the app's
+window. Reloading or closing the OS tab closes all surfaces.
 
-## Depuis une autre app
+## From another app
 
 ```csharp
-// Depuis un clic : le navigateur hôte refuse une fenêtre sans geste.
+// From a click: the host browser refuses a window without a gesture.
 await HackBrowser.OpenDetachedAsync("https://intranet.hack/rapport");
 ```
 
-Lance le navigateur avec `--detached <url>` (capacité `apps.launch`) : la
-fenêtre détachée s'ouvre avant la première navigation. Si elle est bloquée, la
-page s'affiche dans le navigateur de l'OS, avec le bandeau et la notification.
-`HackBrowser.OpenAsync(url)` ouvre simplement l'adresse dans un nouveau
-navigateur.
+Launches the browser with `--detached <url>` (capability `apps.launch`): the
+detached window opens before the first navigation. If it is blocked, the
+page is displayed in the OS browser, with the banner and the notification.
+`HackBrowser.OpenAsync(url)` simply opens the address in a new
+browser.
 
-## Limites pour les apps
+## Limits for apps
 
-- L'état JavaScript d'une page (variables, formulaire en cours) est perdu au
-  détachement et au rattachement.
-- Les styles rendus dans le corps du bureau (thème de MudBlazor) sont recopiés
-  à l'ouverture ; seuls ceux de `<head>` et les attributs de `<html>` sont
-  suivis ensuite. Un changement de thème met à jour les variables du thème à la
-  prochaine ouverture.
-- Les sites Blazor (ADR 0084, [`blazor-sites.md`](blazor-sites.md)) se
-  détachent comme les autres pages et gardent leur état : la zone de page est
-  rendue une seule fois à travers `DisplaySurfaceContent`, dont le portail
-  déplace le DOM sans recréer les composants.
+- The JavaScript state of a page (variables, form in progress) is lost on
+  detaching and on reattaching.
+- Styles rendered in the desktop body (MudBlazor theme) are copied when
+  opening; only those in `<head>` and the attributes of `<html>` are followed
+  afterwards. A theme change updates the theme variables at the next
+  opening.
+- Blazor sites (ADR 0084, [`blazor-sites.md`](blazor-sites.md)) detach like
+  other pages and keep their state: the page area is rendered only once through
+  `DisplaySurfaceContent`, whose portal moves the DOM without recreating the
+  components.

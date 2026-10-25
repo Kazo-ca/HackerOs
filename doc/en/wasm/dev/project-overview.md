@@ -1,31 +1,31 @@
-# Vue d'ensemble du projet HackerOS
+# HackerOS project overview
 
-## Objet
+## Purpose
 
-HackerOS simule un système d'exploitation de type Linux dans le navigateur,
-pour servir d'environnement où développer des applications. **Aucun jeu sur ce repository** ([ADR 0135](adr/0135-no-game-in-this-repository.md)). C'est
-le portage en C# et Blazor WebAssembly du simulateur JavaScript d'origine
-(`src/`, gardé en lecture seule comme référence de comportement).
+HackerOS simulates a Linux-like operating system in the browser,
+to serve as an environment in which to develop applications. **No game in this repository** ([ADR 0135](adr/0135-no-game-in-this-repository.md)). It is
+the C# and Blazor WebAssembly port of the original JavaScript simulator
+(`src/`, kept read-only as a behavior reference).
 
-Ce document est le point d'entrée pour comprendre le code de `wasm2/HackerOs` :
-les projets de la solution, leurs couches, les hôtes, ce qui se passe au
-démarrage et les règles qui s'appliquent au build. Pour compiler et lancer le
-projet, voir [`building-and-testing.md`](building-and-testing.md). Pour écrire
-une app, voir [`sdk-developer-guide.md`](../framework/sdk-developer-guide.md).
+This document is the entry point for understanding the code of `wasm2/HackerOs`:
+the solution's projects, their layers, the hosts, what happens at
+startup and the rules that apply at build. To build and run the
+project, see [`building-and-testing.md`](building-and-testing.md). To write
+an app, see [`sdk-developer-guide.md`](../framework/sdk-developer-guide.md).
 
-Deux principes guident tout le reste
-([`ecosystem-rebuild-plan.md`](plans/ecosystem-rebuild-plan.md), section 1) :
+Two principles guide everything else
+([`ecosystem-rebuild-plan.md`](plans/ecosystem-rebuild-plan.md), section 1):
 
-1. **Pour le développeur d'app**, ajouter une app est simple : l'API fichier
-   ressemble à `System.IO` (`HackFile`, `HackDirectory`…), le manifeste est une
-   classe C#, et une seule `ProjectReference` installe l'app.
-2. **Pour l'utilisateur**, l'OS se comporte comme un vrai Linux : tout est
-   fichier (paramètres dans `/etc` et `~/.config`, journaux dans `/var/log`,
-   processus dans `/proc`), le shell est complet, les apps de base sont riches.
+1. **For the app developer**, adding an app is simple: the file API
+   looks like `System.IO` (`HackFile`, `HackDirectory`…), the manifest is a
+   C# class, and a single `ProjectReference` installs the app.
+2. **For the user**, the OS behaves like a real Linux: everything is a
+   file (settings in `/etc` and `~/.config`, logs in `/var/log`,
+   processes in `/proc`), the shell is complete, the base apps are rich.
 
-## Couches
+## Layers
 
-Les dépendances vont toujours de haut en bas. Une app ne voit que le SDK.
+Dependencies always go from top to bottom. An app sees only the SDK.
 
 ```text
  Hôtes            OS/HackerOs.Ecosystem (PWA)   test/test (débogage)   Server/HackerOs.Server
@@ -44,214 +44,215 @@ Les dépendances vont toujours de haut en bas. Une app ne voit que le SDK.
  Infrastructure   Infrastructure/HackerOs.Infrastructure.Browser (IndexedDB, interop navigateur)
 ```
 
-La plateforme implémente les contrats ; le SDK n'en connaît que les
-interfaces. Les apps reçoivent un `IAppExecutionContext` construit par la
-plateforme et ne référencent jamais `Platform.*` ni `Infrastructure.*`
-(erreurs `HOSAPP0030`, `HOSAPP0031`, `HOSSDK0001`, voir
+The platform implements the contracts; the SDK knows only their
+interfaces. Apps receive an `IAppExecutionContext` built by the
+platform and never reference `Platform.*` or `Infrastructure.*`
+(errors `HOSAPP0030`, `HOSAPP0031`, `HOSSDK0001`, see
 [`app-sdk.md`](../framework/app-sdk.md)).
 
-## Projets de la solution
+## Solution projects
 
-`HackerOs.sln` regroupe tous les projets ci-dessous (.NET 10, `global.json`).
+`HackerOs.sln` groups all the projects below (.NET 10, `global.json`).
 
-### Contrats (`Shared/`)
+### Contracts (`Shared/`)
 
-| Projet | Contenu |
+| Project | Content |
 |---|---|
-| `HackerOs.App.Abstractions` | Modèle d'app : `AppDefinition` et `[AppManifest]`, `AppManifest` et son validateur, `AppKind`, catalogue des capacités `AppCapabilities`, intentions, plateformes, sérialisation canonique des manifestes. |
-| `HackerOs.Simulation.Abstractions` | Contrats du système simulé : système de fichiers (`VirtualPath`, requêtes et résultats), passerelles d'app (`IAppFileSystemGateway`, `IAppEventGateway`, `IAppLoggingGateway`…), processus, sessions, paramètres, réseau, notifications, horloge, mesures. |
-| `HackerOs.Theming.Abstractions` | Contrats du thème (jetons, apparence). |
+| `HackerOs.App.Abstractions` | App model: `AppDefinition` and `[AppManifest]`, `AppManifest` and its validator, `AppKind`, capability catalog `AppCapabilities`, intents, platforms, canonical serialization of manifests. |
+| `HackerOs.Simulation.Abstractions` | Contracts of the simulated system: file system (`VirtualPath`, requests and results), app gateways (`IAppFileSystemGateway`, `IAppEventGateway`, `IAppLoggingGateway`…), processes, sessions, settings, network, notifications, clock, metrics. |
+| `HackerOs.Theming.Abstractions` | Theme contracts (tokens, appearance). |
 
-### SDK des apps (`Shared/HackerOs.AppSdk*`)
+### App SDK (`Shared/HackerOs.AppSdk*`)
 
-| Projet | Contenu |
+| Project | Content |
 |---|---|
-| `HackerOs.AppSdk` | Façades `Hack*` (fichiers, environnement, paramètres, réseau, processus, presse-papiers, administration…), `IAppExecutionContext`, classes de base `TerminalAppBase`, `ServiceAppBase` et `WebServerAppBase`. |
-| `HackerOs.AppSdk.Blazor` | `WindowAppBase`, `HackComponentBase`, dialogues (fichiers, message, saisie, « Ouvrir avec », propriétés, conflit de noms), graphiques `HackLineChart`, téléchargement et presse-papiers du navigateur ; contrats fournis par l'OS à l'exécution (`HackContractComponent<T>`, `HackFileView`), menu contextuel de l'OS (`Menus.Attach`) et `[RegisterFileContextMenu]` (SDK 2.0). |
-| `HackerOs.AppSdk.Icons` | Bibliothèques d'icônes et composant `HackerIcon`. |
-| `HackerOs.AppSdk.Terminal` | Émulateur de terminal xterm.js (`TerminalPanel`, `TerminalTabs`). |
-| `HackerOs.AppSdk.Web` | ASP.Hack : sites internes façon ASP.NET Core MVC (pipeline, routage, contrôleurs, session ; [`asp-hack-mvc.md`](../framework/asp-hack-mvc.md)). |
-| `HackerOs.AppSdk.Web.Blazor` | Sites Blazor interactifs : routeur, navigation, vue de site dessinée par le navigateur ([`blazor-sites.md`](../framework/blazor-sites.md)). |
-| `HackerOs.AppSdk.VirtualKeyboard` | Clavier virtuel pour le mobile. |
+| `HackerOs.AppSdk` | `Hack*` facades (files, environment, settings, network, processes, clipboard, administration…), `IAppExecutionContext`, base classes `TerminalAppBase`, `ServiceAppBase` and `WebServerAppBase`. |
+| `HackerOs.AppSdk.Blazor` | `WindowAppBase`, `HackComponentBase`, dialogs (files, message, input, "Open with", properties, name conflict), `HackLineChart` charts, browser download and clipboard; contracts provided by the OS at runtime (`HackContractComponent<T>`, `HackFileView`), OS context menu (`Menus.Attach`) and `[RegisterFileContextMenu]` (SDK 2.0). |
+| `HackerOs.AppSdk.Icons` | Icon libraries and `HackerIcon` component. |
+| `HackerOs.AppSdk.Terminal` | xterm.js terminal emulator (`TerminalPanel`, `TerminalTabs`). |
+| `HackerOs.AppSdk.Web` | ASP.Hack: internal sites in the style of ASP.NET Core MVC (pipeline, routing, controllers, session; [`asp-hack-mvc.md`](../framework/asp-hack-mvc.md)). |
+| `HackerOs.AppSdk.Web.Blazor` | Interactive Blazor sites: router, navigation, site view drawn by the browser ([`blazor-sites.md`](../framework/blazor-sites.md)). |
+| `HackerOs.AppSdk.VirtualKeyboard` | Virtual keyboard for mobile. |
 
-Le détail de chaque API est dans la [référence du SDK](../framework/sdk-reference.md).
+The detail of each API is in the [SDK reference](../framework/sdk-reference.md).
 
-### Plateforme (`Platform/`)
+### Platform (`Platform/`)
 
-| Projet | Contenu |
+| Project | Content |
 |---|---|
-| `HackerOs.Platform.Core` | Services de l'OS, sans interface graphique : catalogue d'apps, cycle de vie et processus, système de fichiers et montages (`/proc`, `/dev`), paramètres en fichiers, journaux, politique et capacités, élévation (`sudo`), sessions, shell `hsh` et son interpréteur, réseau simulé, presse-papiers, notifications, horloge, mesures. Les passerelles du SDK y sont implémentées ([`platform-core.md`](platform-core.md) : carte des dossiers). |
-| `HackerOs.Platform.ResourceAccounting` | Mesure optionnelle du CPU et de la mémoire par processus (ADR 0066 à 0068) : crochet de changement de contexte sur le frame ambiant, diffuseur vers les mesures, interrupteurs. Dépend de Platform Core ; un hôte ne le référence que si `HackerOsCpuAccounting` ou `HackerOsMemoryAccounting` vaut `true` ([`resource-accounting.md`](resource-accounting.md)). |
-| `HackerOs.Platform.WorkerHost` | Processus sans interface dans des Web Workers (ADR 0070, 0071) : côté OS, le pool de workers (un par cœur virtuel, worker prêt, débordement, workers dédiés), les sessions qui servent les appels sous les mêmes contrôles de capacités, le battement de cœur et l'escalade ; côté worker, le runtime .NET qui exécute la commande ou le service avec des passerelles distantes. Référencé par l'hôte Ecosystem dans le navigateur seulement ([`worker-processes.md`](worker-processes.md)). |
-| `HackerOs.Platform.RemoteRendering` | Essai de l'ADR 0129, verdict « on s'arrête » (ADR 0133) : une fenêtre Blazor rendue par un `Renderer` dans un worker, ses lots traduits en opérations DOM appliquées par `RemoteWindowHost` sur la page. Coupé par défaut (`HackerOs:RemoteWindowRendering`) ; aucune app ne doit en dépendre ([`remote-window-rendering.md`](remote-window-rendering.md)). |
-| `HackerOs.Platform.Blazor` | Interface de l'OS : bureau, menu Démarrer, hôte de fenêtres (`WindowAppRenderer`), dialogues, fenêtre d'approbation des capacités dangereuses, agent d'authentification, chargement différé des apps. |
-| `HackerOs.Windowing.Abstractions`, `.Core`, `.Blazor` | Gestionnaire de fenêtres (état, déplacement, redimensionnement, ancrage). |
-| `HackerOs.Taskbar.Blazor` | Barre des tâches. |
-| `HackerOs.MobileShell.Blazor` | Interface mobile. |
-| `HackerOs.Theming.Blazor` | Application du thème. |
+| `HackerOs.Platform.Core` | OS services, with no graphical interface: app catalog, lifecycle and processes, file system and mounts (`/proc`, `/dev`), file-based settings, logs, policy and capabilities, elevation (`sudo`), sessions, `hsh` shell and its interpreter, simulated network, clipboard, notifications, clock, metrics. The SDK gateways are implemented there ([`platform-core.md`](platform-core.md): folder map). |
+| `HackerOs.Platform.ResourceAccounting` | Optional per-process CPU and memory measurement (ADR 0066 to 0068): context-switch hook on the ambient frame, broadcaster to the measurements, switches. Depends on Platform Core; a host references it only if `HackerOsCpuAccounting` or `HackerOsMemoryAccounting` is `true` ([`resource-accounting.md`](resource-accounting.md)). |
+| `HackerOs.Platform.WorkerHost` | Processes without an interface in Web Workers (ADR 0070, 0071): on the OS side, the worker pool (one per virtual core, ready worker, overflow, dedicated workers), the sessions that serve calls under the same capability checks, the heartbeat and escalation; on the worker side, the .NET runtime that runs the command or service with remote gateways. Referenced by the Ecosystem host in the browser only ([`worker-processes.md`](worker-processes.md)). |
+| `HackerOs.Platform.RemoteRendering` | Trial of ADR 0129, verdict "we stop here" (ADR 0133): a Blazor window rendered by a `Renderer` in a worker, its batches translated into DOM operations applied by `RemoteWindowHost` on the page. Off by default (`HackerOs:RemoteWindowRendering`); no app must depend on it ([`remote-window-rendering.md`](remote-window-rendering.md)). |
+| `HackerOs.Platform.Blazor` | OS interface: desktop, Start menu, window host (`WindowAppRenderer`), dialogs, approval window for dangerous capabilities, authentication agent, lazy loading of apps. |
+| `HackerOs.Windowing.Abstractions`, `.Core`, `.Blazor` | Window manager (state, moving, resizing, snapping). |
+| `HackerOs.Taskbar.Blazor` | Taskbar. |
+| `HackerOs.MobileShell.Blazor` | Mobile interface. |
+| `HackerOs.Theming.Blazor` | Theme application. |
 
 ### Infrastructure (`Infrastructure/`)
 
-`HackerOs.Infrastructure.Browser` : persistance IndexedDB (fichiers en blocs
-dédupliqués, paramètres hérités, catalogue, sessions), sauvegarde et
-restauration, connexion au serveur optionnel, interop navigateur, démarrage des
-Web Workers (`workerHost.js`, `workerBootstrap.js`). Tout ce qui touche le
-navigateur est ici ([`browser-infrastructure.md`](browser-infrastructure.md)).
+`HackerOs.Infrastructure.Browser`: IndexedDB persistence (files in deduplicated
+blocks, legacy settings, catalog, sessions), backup and
+restore, connection to the optional server, browser interop, startup of
+Web Workers (`workerHost.js`, `workerBootstrap.js`). Everything that touches the
+browser is here ([`browser-infrastructure.md`](browser-infrastructure.md)).
 
 ### Apps (`Apps/`)
 
-| Dossier | Contenu |
+| Folder | Content |
 |---|---|
-| `Apps/System/` | Les 15 apps fenêtrées de base : Bureau (surface cachée rendue par la coquille sous les fenêtres, [`desktop.md`](desktop.md)), Terminal, File Explorer, Text Editor, Code Editor, Settings ([`settings-app.md`](settings-app.md)), System Monitor (gestionnaire de tâches), Error Log Viewer, Diagnostic, Browser, Calculator, HackPaint ([`hack-paint.md`](hack-paint.md)), Theme Editor ([`theme-editor.md`](theme-editor.md)), Icon Viewer, Web Server Manager (avec le service `hackwebd`, [`static-sites.md`](static-sites.md)). |
-| `Apps/Commands/HackerOs.Commands` | Les 74 commandes du shell dans un seul projet (`ls`, `cat`, `cd`, `cp`, `mv`, `rm`, `grep`, `nano`, `sudo`, `ping`, `curl`, `nmap`, et depuis l'ADR 0064 `sort`, `cut`, `zip`, `top`, `htop`, `systemctl`, `ip`, `test`, `read`… : [`linux-commands.md`](linux-commands.md)), une classe `[AppManifest]` par commande (ADR 0051) ; elles tournent dans le pool de Web Workers sauf les 18 marquées `Execution = AppExecutionHost.MainThread` (ADR 0070). |
-| `Apps/Samples/` | Apps d'exemple, une par genre (fenêtre, terminal, service, plateforme, site Blazor, site ASP.Hack complet) ; elles ne sont pas installées dans l'hôte, sauf les deux sites `HackerOs.Samples.BlazorSite` (`http://blazor-sample.hack/`, ADR 0084) et `HackerOs.Samples.Intranet` (`http://intranet.hack/`, ADR 0087, [guide ASP.Hack](../framework/asp-hack-developer-guide.md)), apps cachées installées pour que le navigateur puisse les servir. |
+| `Apps/System/` | The 15 base window apps: Desktop (hidden surface rendered by the shell under the windows, [`desktop.md`](desktop.md)), Terminal, File Explorer, Text Editor, Code Editor, Settings ([`settings-app.md`](settings-app.md)), System Monitor (task manager), Error Log Viewer, Diagnostic, Browser, Calculator, HackPaint ([`hack-paint.md`](hack-paint.md)), Theme Editor ([`theme-editor.md`](theme-editor.md)), Icon Viewer, Web Server Manager (with the `hackwebd` service, [`static-sites.md`](static-sites.md)). |
+| `Apps/Commands/HackerOs.Commands` | The 74 shell commands in a single project (`ls`, `cat`, `cd`, `cp`, `mv`, `rm`, `grep`, `nano`, `sudo`, `ping`, `curl`, `nmap`, and since ADR 0064 `sort`, `cut`, `zip`, `top`, `htop`, `systemctl`, `ip`, `test`, `read`…: [`linux-commands.md`](linux-commands.md)), one `[AppManifest]` class per command (ADR 0051); they run in the Web Worker pool except the 18 marked `Execution = AppExecutionHost.MainThread` (ADR 0070). |
+| `Apps/Samples/` | Sample apps, one per kind (window, terminal, service, platform, Blazor site, full ASP.Hack site); they are not installed in the host, except the two sites `HackerOs.Samples.BlazorSite` (`http://blazor-sample.hack/`, ADR 0084) and `HackerOs.Samples.Intranet` (`http://intranet.hack/`, ADR 0087, [ASP.Hack guide](../framework/asp-hack-developer-guide.md)), hidden apps installed so that the browser can serve them. |
 
-Une app est **système** quand l'hôte la déclare ainsi sur sa `ProjectReference`
-(`IsSystemApp="true"`) : elle n'est pas désinstallable et reçoit d'office ses
-capacités dangereuses. Liste et règles : [`app-model.md`](../framework/app-model.md#apps-système-adr-0048-1).
+An app is **system** when the host declares it so on its `ProjectReference`
+(`IsSystemApp="true"`): it cannot be uninstalled and automatically receives its
+dangerous capabilities. List and rules: [`app-model.md`](../framework/app-model.md#apps-système-adr-0048-1).
 
-### Hôtes
+### Hosts
 
-| Projet | Rôle |
+| Project | Role |
 |---|---|
-| `OS/HackerOs.Ecosystem` | **L'hôte livré** : PWA Blazor WebAssembly autonome (`wwwroot/index.html`, service worker), sans serveur. Il référence `HackerOs.Ecosystem.Host` et les apps, agrège leurs manifestes dans `BuiltInApplications.json` au build, et son `Program.cs` appelle `AddHackerOsBrowserHost`. Tout doit fonctionner avec lui seul, hors ligne. |
-| `OS/HackerOs.Ecosystem.Host` | **L'OS lui-même**, en bibliothèque Razor publiée en paquet (ADR 0098 §2) : bureau (`App.razor`), écran de progression, `EcosystemBootCoordinator`, composition des services (`AddHackerOsEcosystem`, `AddHackerOsBrowserHost`), mesure des ressources, adaptateurs du navigateur, jetons de design (`_content/HackerOs.Ecosystem.Host/css/app.css`), `HostAppCatalog`. Un hôte d'un autre dépôt le référence ([`sdk-packages.md`](../framework/sdk-packages.md)). |
-| `test/test` | Blazor Web App de débogage : rend le même arbre de composants en `InteractiveWebAssembly` pour profiter du débogueur. Pas une cible de distribution. |
-| `Server/HackerOs.Server` | Serveur ASP.NET Core **optionnel** : synchronisation, comptes, relais HTTP/TCP/UDP vers le vrai réseau ([`server-network-relay.md`](server-network-relay.md), politique et quotas dans `appsettings.json`). Il sert aussi l'OS de l'Ecosystem tel quel, exécuté en WebAssembly dans le navigateur comme la PWA ; cet OS s'y connecte tout seul et montre l'état dans la zone de notification (ADR 0130, 0134, [`server-hosting.md`](server-hosting.md)). Aucune app ne doit en dépendre. |
-| `Server/HackerOs.Server.Contracts` | Contrats partagés entre le serveur et le client. |
+| `OS/HackerOs.Ecosystem` | **The shipped host**: standalone Blazor WebAssembly PWA (`wwwroot/index.html`, service worker), no server. It references `HackerOs.Ecosystem.Host` and the apps, aggregates their manifests into `BuiltInApplications.json` at build, and its `Program.cs` calls `AddHackerOsBrowserHost`. Everything must work with it alone, offline. |
+| `OS/HackerOs.Ecosystem.Host` | **The OS itself**, as a Razor library published as a package (ADR 0098 §2): desktop (`App.razor`), progress screen, `EcosystemBootCoordinator`, service composition (`AddHackerOsEcosystem`, `AddHackerOsBrowserHost`), resource measurement, browser adapters, design tokens (`_content/HackerOs.Ecosystem.Host/css/app.css`), `HostAppCatalog`. A host from another repository references it ([`sdk-packages.md`](../framework/sdk-packages.md)). |
+| `test/test` | Debug Blazor Web App: renders the same component tree in `InteractiveWebAssembly` to benefit from the debugger. Not a distribution target. |
+| `Server/HackerOs.Server` | **Optional** ASP.NET Core server: synchronization, accounts, HTTP/TCP/UDP relay to the real network ([`server-network-relay.md`](server-network-relay.md), policy and quotas in `appsettings.json`). It also serves the Ecosystem's OS as is, run in WebAssembly in the browser like the PWA; this OS connects to it on its own and shows the state in the notification area (ADR 0130, 0134, [`server-hosting.md`](server-hosting.md)). No app must depend on it. |
+| `Server/HackerOs.Server.Contracts` | Contracts shared between the server and the client. |
 
-Plus de détails sur les hôtes dans [`old/hosting-model.md`](old/hosting-model.md)
-(antérieur au plan, toujours exact sur ce point).
+More details on the hosts in [`old/hosting-model.md`](old/hosting-model.md)
+(predates the plan, still accurate on this point).
 
-### Outils, exemples et tests
+### Tools, samples and tests
 
-| Dossier | Contenu |
+| Folder | Content |
 |---|---|
-| `Tools/HackerOs.Tools.ManifestGenerator` | Génère `manifest.json` depuis la classe `[AppManifest]` de chaque app, vérifie la frontière du SDK et agrège `BuiltInApplications.json` dans l'hôte ([`app-model.md`](../framework/app-model.md)). |
-| `Tools/HackerOs.Tools.WebRouteGenerator` | Générateur de sources Roslyn branché sur chaque app : table de routes des contrôleurs ASP.Hack et entrée des sites, erreurs `HOSWEB*` (ADR 0082, [`asp-hack-mvc.md`](../framework/asp-hack-mvc.md)). |
-| `Tools/HackerOs.App.Build` | Paquet de l'intégration de build pour un autre dépôt : `build/HackerOs.Apps.targets`, générateur de manifestes, générateur de routes ([`sdk-packages.md`](../framework/sdk-packages.md)). |
-| `Templates/HackerOs.Templates` | Modèles `dotnet new` : `hackeros-window`, `-command`, `-service`, `-site`, `-host` (ADR 0098 §6). |
-| `Tools/HackerOs.Tools.BackgroundAnalyzer` | Analyseur Roslyn des appels à `HackBackground.RunAsync` : vérifie chaque appel contre les règles des tâches de fond (ADR 0128). |
-| `Tools/icon-import` | Script Node d'import des bibliothèques d'icônes. |
-| `Samples/HackerOs.Windowing.SampleHost` | Hôte d'exemple du gestionnaire de fenêtres seul. |
-| `Tests/` | Un projet de tests xUnit par projet de code, des tests d'intégration MSBuild du générateur, des suites E2E Playwright (`HackerOs.E2E.Tests`, `HackerOs.UI.E2E.Tests`, `HackerOs.Pwa.E2E.Tests`) le test de démarrage des trois hôtes (`HackerOs.HostSmoke.Tests`, lancé par `build/verify-hosts.sh`), le test de la publication trimmée (`HackerOs.TrimmedPublish.E2E.Tests`, lancé par `build/publish-trimmed.sh`) le test des modèles (`HackerOs.Templates.E2E.Tests`) et le test de compatibilité du SDK (`HackerOs.SdkCompatibility.Tests`, apps de compatibilité gardées dans `Tests/fixtures/sdk-compat` : 1.0.0 et 1.1.0 refusées, 2.0.0 admise ; ADR 0114, ADR 0149). `HackerOs.Tests.Support` fournit des faux contextes et passerelles ; `HackerOs.E2E.Support`, le lancement de Chromium commun aux suites Playwright. |
-| `build/HackerOs.Apps.targets` | Cibles MSBuild du modèle d'app (génération, agrégation, frontière du SDK, empaquetage des manifestes). |
-| `build/Versions.props`, `build/pack-local.sh`/`.ps1` | Version unique de tout ce qui est publié et production des paquets locaux dans `artifacts/local-nupkg` ([`sdk-packages.md`](../framework/sdk-packages.md)). |
-| `build/HackerOs.ResourceAccounting.targets` | Propriétés `HackerOsCpuAccounting` et `HackerOsMemoryAccounting` ([`resource-accounting.md`](resource-accounting.md)). |
-| `build/asp-hack/`, `build/tools/ship-public-api.sh`, `build/nuget.config.sample`, `build/run-test-suite.ps1`, `build/assemble-pages.ps1` | Générateurs et contrôles ASP.Hack (`HackRazorCompat.cs`, `_ViewImports.cshtml`), publication de la surface publique du SDK, modèle de `nuget.config` pour un autre dépôt, suite de tests complète, assemblage du site Pages (ADR 0167). |
+| `Tools/HackerOs.Tools.ManifestGenerator` | Generates `manifest.json` from each app's `[AppManifest]` class, checks the SDK boundary and aggregates `BuiltInApplications.json` in the host ([`app-model.md`](../framework/app-model.md)). |
+| `Tools/HackerOs.Tools.WebRouteGenerator` | Roslyn source generator wired into each app: route table of ASP.Hack controllers and site entry, `HOSWEB*` errors (ADR 0082, [`asp-hack-mvc.md`](../framework/asp-hack-mvc.md)). |
+| `Tools/HackerOs.App.Build` | Build integration package for another repository: `build/HackerOs.Apps.targets`, manifest generator, route generator ([`sdk-packages.md`](../framework/sdk-packages.md)). |
+| `Templates/HackerOs.Templates` | `dotnet new` templates: `hackeros-window`, `-command`, `-service`, `-site`, `-host` (ADR 0098 §6). |
+| `Tools/HackerOs.Tools.BackgroundAnalyzer` | Roslyn analyzer for calls to `HackBackground.RunAsync`: checks each call against the rules for background tasks (ADR 0128). |
+| `Tools/icon-import` | Node script for importing icon libraries. |
+| `Samples/HackerOs.Windowing.SampleHost` | Sample host for the window manager alone. |
+| `Tests/` | One xUnit test project per code project, MSBuild integration tests of the generator, Playwright E2E suites (`HackerOs.E2E.Tests`, `HackerOs.UI.E2E.Tests`, `HackerOs.Pwa.E2E.Tests`), the startup test of the three hosts (`HackerOs.HostSmoke.Tests`, launched by `build/verify-hosts.sh`), the trimmed publication test (`HackerOs.TrimmedPublish.E2E.Tests`, launched by `build/publish-trimmed.sh`), the templates test (`HackerOs.Templates.E2E.Tests`) and the SDK compatibility test (`HackerOs.SdkCompatibility.Tests`, compatibility apps kept in `Tests/fixtures/sdk-compat`: 1.0.0 and 1.1.0 refused, 2.0.0 admitted; ADR 0114, ADR 0149). `HackerOs.Tests.Support` provides fake contexts and gateways; `HackerOs.E2E.Support`, the Chromium launch shared by the Playwright suites. |
+| `build/HackerOs.Apps.targets` | MSBuild targets of the app model (generation, aggregation, SDK boundary, manifest packaging). |
+| `build/Versions.props`, `build/pack-local.sh`/`.ps1` | Single version of everything published and production of local packages in `artifacts/local-nupkg` ([`sdk-packages.md`](../framework/sdk-packages.md)). |
+| `build/HackerOs.ResourceAccounting.targets` | Properties `HackerOsCpuAccounting` and `HackerOsMemoryAccounting` ([`resource-accounting.md`](resource-accounting.md)). |
+| `build/asp-hack/`, `build/tools/ship-public-api.sh`, `build/nuget.config.sample`, `build/run-test-suite.ps1`, `build/assemble-pages.ps1` | ASP.Hack generators and checks (`HackRazorCompat.cs`, `_ViewImports.cshtml`), publication of the SDK's public surface, `nuget.config` template for another repository, full test suite, assembly of the Pages site (ADR 0167). |
 
-## Le système simulé
+## The simulated system
 
-### Système de fichiers
+### File system
 
-Un arbre Unix unique, persisté dans IndexedDB, avec propriétaires, groupes,
-bits de mode, liens symboliques, révisions optimistes et écritures atomiques.
-Les emplacements à connaître :
+A single Unix tree, persisted in IndexedDB, with owners, groups,
+mode bits, symbolic links, optimistic revisions and atomic writes.
+The locations to know:
 
-| Chemin | Contenu |
+| Path | Content |
 |---|---|
-| `/home/<login>` | Dossier personnel ; `~/.config/<appId>/` paramètres de l'app, `~/.local/share/Trash` corbeille, `~/.local/share/keyrings/login.keyring` trousseau chiffré (ADR 0100). |
-| `/root` | Dossier de `root` (processus lancés par `sudo`). |
-| `/etc/hackeros/` | Configuration de l'OS : `apps.config`, `security.config`, `app-permissions.config`, `appearance.config`, `policy.config`, `ui-platform-preference.config`, `file-associations.json` ; `themes/` (thèmes `.theme` de toute la machine, ADR 0103). |
-| `/etc/<appId>/` | Couche système des paramètres d'une app, avec la section `[locked]` ; clés sensibles dans `<doc>.private.config` (`0600`, ADR 0100). |
-| `/etc/environment`, `/etc/hostname` | Environnement de connexion et nom de machine. |
-| `/var/log/` | `syslog`, `auth.log`, `audit.log` (écritures sous `/etc`, `/bin`, `/var`, ADR 0100), `apps/<appId>.log`, avec rotation. |
-| `/proc/` | Virtuel : processus, `stat`, `diskstats`, `net/dev`, `mounts`… |
-| `/dev/` | Virtuel : `null`, `zero`, `random`, `urandom`. |
+| `/home/<login>` | Home folder; `~/.config/<appId>/` app settings, `~/.local/share/Trash` trash, `~/.local/share/keyrings/login.keyring` encrypted keyring (ADR 0100). |
+| `/root` | `root`'s folder (processes launched by `sudo`). |
+| `/etc/hackeros/` | OS configuration: `apps.config`, `security.config`, `app-permissions.config`, `appearance.config`, `policy.config`, `ui-platform-preference.config`, `file-associations.json`; `themes/` (machine-wide `.theme` themes, ADR 0103). |
+| `/etc/<appId>/` | System layer of an app's settings, with the `[locked]` section; sensitive keys in `<doc>.private.config` (`0600`, ADR 0100). |
+| `/etc/environment`, `/etc/hostname` | Login environment and machine name. |
+| `/var/log/` | `syslog`, `auth.log`, `audit.log` (writes under `/etc`, `/bin`, `/var`, ADR 0100), `apps/<appId>.log`, with rotation. |
+| `/proc/` | Virtual: processes, `stat`, `diskstats`, `net/dev`, `mounts`… |
+| `/dev/` | Virtual: `null`, `zero`, `random`, `urandom`. |
 
-Documents : [`hack-file-api.md`](../framework/hack-file-api.md),
+Documents: [`hack-file-api.md`](../framework/hack-file-api.md),
 [`settings-files.md`](../framework/settings-files.md), [`logging.md`](logging.md),
 [`virtual-proc-and-dev.md`](virtual-proc-and-dev.md),
 [`trash.md`](trash.md).
 
-### Processus, shell et capacités
+### Processes, shell and capabilities
 
-- Chaque app lancée est un **processus** (identifiant, parent, arguments,
-  répertoire courant, variables d'environnement, compteurs d'entrées-sorties),
-  visible dans `/proc` ([`process-environment.md`](process-environment.md),
+- Each launched app is a **process** (identifier, parent, arguments,
+  current directory, environment variables, I/O counters),
+  visible in `/proc` ([`process-environment.md`](process-environment.md),
   [`system-metrics.md`](system-metrics.md)).
-- Le shell `hsh` est un processus enfant du terminal ; il gère tubes,
-  redirections, `&&`, variables et `$?`. Chaque commande est elle-même un
-  processus ([`shell-interpreter.md`](shell-interpreter.md),
+- The `hsh` shell is a child process of the terminal; it handles pipes,
+  redirections, `&&`, variables and `$?`. Each command is itself a
+  process ([`shell-interpreter.md`](shell-interpreter.md),
   [`shell-host.md`](../framework/shell-host.md), [`shell-commands.md`](shell-commands.md)).
-- Dans le navigateur, les commandes et les services tournent dans des
-  **Web Workers** (un par cœur virtuel, plus un worker prêt) : une boucle
-  infinie ne gèle plus l'OS, `kill -9` termine le worker
+- In the browser, commands and services run in **Web Workers** (one per
+  virtual core, plus a ready worker): an infinite loop no longer freezes the OS,
+  `kill -9` terminates the worker
   ([`worker-processes.md`](worker-processes.md), `/proc/hackeros/workers`).
-- Une app déclare des **capacités** dans sa définition. Les capacités normales
-  sont accordées à la connexion ; une capacité **dangereuse** d'une app non
-  système exige l'approbation d'un administrateur
+- An app declares **capabilities** in its definition. Normal capabilities
+  are granted at login; a **dangerous** capability of a non-system app
+  requires an administrator's approval
   ([`capabilities.md`](../framework/capabilities.md),
   [`dangerous-capability-approval.md`](dangerous-capability-approval.md)).
-- `sudo` et l'agent d'authentification de l'OS font confirmer un
-  administrateur sans jamais montrer le mot de passe à l'app
+- `sudo` and the OS authentication agent have an administrator confirm
+  without ever showing the password to the app
   ([`admin-authentication-agent.md`](admin-authentication-agent.md)).
 
-### Démarrage
+### Startup
 
-1. `Program.cs` de l'hôte appelle `AddHackerOsBrowserHost`, qui enregistre les
-   services (`AddHackerOsEcosystem`) et le catalogue lu dans
-   `BuiltInApplications.json` (`HostAppCatalog`, `BuildKnownLazyApps` dans l'Ecosystem).
-2. `EcosystemBootCoordinator` monte le stockage, attache l'écrivain de journaux
-   à `/var/log`, installe `/etc/hackeros/apps.config`, démarre l'horloge
-   simulée et l'échantillonnage des mesures, puis valide politique, sessions et
-   catalogue.
-3. Au premier démarrage, l'écran demande de créer le profil administrateur
-   local ; ensuite, il propose la connexion.
-4. À la connexion, l'OS accorde les capacités, démarre les services
-   `AutoStart` et affiche le bureau. Les DLL des apps sont chargées à la
-   demande, au premier lancement (`BlazorWebAssemblyLazyLoad`).
+1. The host's `Program.cs` calls `AddHackerOsBrowserHost`, which registers the
+   services (`AddHackerOsEcosystem`) and the catalog read from
+   `BuiltInApplications.json` (`HostAppCatalog`, `BuildKnownLazyApps` in the Ecosystem).
+2. `EcosystemBootCoordinator` mounts storage, attaches the log writer
+   to `/var/log`, installs `/etc/hackeros/apps.config`, starts the simulated
+   clock and the metrics sampling, then validates policy, sessions and
+   catalog.
+3. On first startup, the screen asks to create the local administrator
+   profile; afterwards, it offers login.
+4. At login, the OS grants capabilities, starts the `AutoStart`
+   services and displays the desktop. App DLLs are loaded on
+   demand, at first launch (`BlazorWebAssemblyLazyLoad`).
 
-## Règles vérifiées au build
+## Rules checked at build
 
-| Règle | Où | Document |
+| Rule | Where | Document |
 |---|---|---|
-| Avertissements traités comme erreurs, analyse de compatibilité avec le *trimming* | `Directory.Build.props` | — |
-| Publication Release trimmée de l'hôte : racines générées depuis les manifestes, assemblies `HackerOs.*` entières (ADR 0106, 0113) | `build/HackerOs.Apps.targets`, testée par `build/publish-trimmed.sh` | [`trimmed-publish.md`](trimmed-publish.md) |
-| Pas de CSS ni de JavaScript en ligne dans un `.razor` (ADR 0007) | cible `ValidateHackerOsRazorAssets`, `Directory.Build.targets` | [`AGENTS.md`](../../../../AGENTS.md) |
-| Chaque projet sous `Apps/` a une classe `[AppManifest]` valide ; `manifest.json` est régénéré (`HOSAPP0001`…) | `build/HackerOs.Apps.targets` | [`app-model.md`](../framework/app-model.md) |
-| Une app n'utilise que le SDK (`HOSAPP0030`, `HOSAPP0031`, `HOSSDK0001`) | `build/HackerOs.Apps.targets` et générateur | [`app-sdk.md`](../framework/app-sdk.md) |
-| La surface publique du SDK ne change pas sans trace : `PublicAPI.Shipped.txt`/`Unshipped.txt` (RS0016, RS0017) ; une app compilée contre la majeure courante (2.x) est admise, une app 1.x refusée (ADR 0114, ADR 0149) | analyseur d'API publique, `Tests/HackerOs.SdkCompatibility.Tests` | [`sdk-packages.md`](../framework/sdk-packages.md) |
+| Warnings treated as errors, trimming compatibility analysis | `Directory.Build.props` | n/a |
+| Trimmed Release publication of the host: roots generated from the manifests, whole `HackerOs.*` assemblies (ADR 0106, 0113) | `build/HackerOs.Apps.targets`, tested by `build/publish-trimmed.sh` | [`trimmed-publish.md`](trimmed-publish.md) |
+| No inline CSS or JavaScript in a `.razor` (ADR 0007) | target `ValidateHackerOsRazorAssets`, `Directory.Build.targets` | [`AGENTS.md`](../../../../AGENTS.md) |
+| Each project under `Apps/` has a valid `[AppManifest]` class; `manifest.json` is regenerated (`HOSAPP0001`…) | `build/HackerOs.Apps.targets` | [`app-model.md`](../framework/app-model.md) |
+| An app uses only the SDK (`HOSAPP0030`, `HOSAPP0031`, `HOSSDK0001`) | `build/HackerOs.Apps.targets` and generator | [`app-sdk.md`](../framework/app-sdk.md) |
+| The SDK's public surface does not change without a trace: `PublicAPI.Shipped.txt`/`Unshipped.txt` (RS0016, RS0017); an app compiled against the current major (2.x) is admitted, a 1.x app refused (ADR 0114, ADR 0149) | public API analyzer, `Tests/HackerOs.SdkCompatibility.Tests` | [`sdk-packages.md`](../framework/sdk-packages.md) |
 
-## Organisation du travail
+## Work organization
 
-- Le code nouveau va **uniquement** dans `wasm2/HackerOs/` ; `src/` est en
-  lecture seule ([`AGENTS.md`](../../../../AGENTS.md)).
-- La direction est fixée par [`ecosystem-rebuild-plan.md`](plans/ecosystem-rebuild-plan.md) ;
-  les décisions d'architecture sont des ADR dans [`adr/`](adr/), jamais
-  modifiés après acceptation.
-- Les documents sont rédigés en français, avec des noms de fichiers en
-  anglais. Tout ajout ou renommage de document met à jour l'index
-  [`README.md`](../README.md) dans le même changement.
-- Chaque série de chantiers a sa branche d'intégration : `rebuild/base`
-  (phases 1 à 4, fusionnée dans `main`), `web/base` (sites ASP.Hack et Blazor),
-  puis `v3/base` (fin de la migration wasm v3, partie de `web/base`), `v3.1/base`
-  et `exec/base` (suites de la phase 5, partie de `v3.1/base`). Chaque
-  chantier part de la branche de sa série (`v3/<n>-<sujet>`…) et y revient ;
-  seul le propriétaire du dépôt fusionne vers `main`. Le 2026-10-18, à la
-  demande de Benoit, `exec/base` (qui contient toutes les autres séries) a été
-  fusionnée dans `main` : `main` porte désormais tout le travail.
-- État : la migration wasm v3 est terminée, le SDK a été gelé en 1.0.0
-  (ADR 0114), publié en 1.1.0 par la série v3.1 (ADR 0117 §5), en 1.2.0
-  à la fin de la série `exec` (ADR 0132 §2) puis en **2.0.0** à la fin de la
-  série du bureau et du menu contextuel (`desk/base` : contrôle de fichiers
-  fourni par l'explorateur, menu contextuel de l'OS, entrées des apps, icônes
-  du bureau ; ADR 0149, 0161, [`sdk-packages.md`](../framework/sdk-packages.md#sdk-20),
-  bilan dans [`desktop-and-context-menu-plan.md`](plans/desktop-and-context-menu-plan.md#13-vérification-finale)) ; le bilan de la migration est dans
-  [`wasm-v3-final-status.md`](plans/wasm-v3-final-status.md), celui de la série `exec`
-  (limites, OOM killer, priorités, tâches de fond, hôte Server en WebAssembly,
-  isolation cross-origin) dans
-  [`execution-followups-plan.md`](plans/execution-followups-plan.md#11-vérification-finale). La version publiée est **2.0.3** (`build/Versions.props`, publication du
-  2026-10-24) ; un autre dépôt peut se construire sur le SDK 2.x
+- New code goes **only** in `wasm2/HackerOs/`; `src/` is read-only
+  ([`AGENTS.md`](../../../../AGENTS.md)).
+- The direction is set by [`ecosystem-rebuild-plan.md`](plans/ecosystem-rebuild-plan.md);
+  architecture decisions are ADRs in [`adr/`](adr/), never
+  modified after acceptance.
+- Documents are written in French in `doc/fr/` and translated to English in
+  `doc/en/` (same folders and file names, in English); every change updates
+  both languages. Any addition or renaming of a document updates the index
+  [`README.md`](../README.md) in the same change.
+- Each series of work items has its integration branch: `rebuild/base`
+  (phases 1 to 4, merged into `main`), `web/base` (ASP.Hack and Blazor sites),
+  then `v3/base` (end of the wasm v3 migration, started from `web/base`), `v3.1/base`
+  and `exec/base` (follow-ups of phase 5, started from `v3.1/base`). Each
+  work item starts from its series' branch (`v3/<n>-<subject>`…) and returns to it;
+  only the repository owner merges into `main`. On 2026-10-18, at
+  Benoit's request, `exec/base` (which contains all the other series) was
+  merged into `main`: `main` now carries all the work.
+- State: the wasm v3 migration is finished, the SDK was frozen at 1.0.0
+  (ADR 0114), published as 1.1.0 by series v3.1 (ADR 0117 §5), as 1.2.0
+  at the end of the `exec` series (ADR 0132 §2) then as **2.0.0** at the end of the
+  desktop and context menu series (`desk/base`: file control
+  provided by the explorer, OS context menu, app entries, desktop
+  icons; ADR 0149, 0161, [`sdk-packages.md`](../framework/sdk-packages.md#sdk-20),
+  report in [`desktop-and-context-menu-plan.md`](plans/desktop-and-context-menu-plan.md#13-vérification-finale)); the migration status report is in
+  [`wasm-v3-final-status.md`](plans/wasm-v3-final-status.md), that of the `exec` series
+  (limits, OOM killer, priorities, background tasks, Server host in WebAssembly,
+  cross-origin isolation) in
+  [`execution-followups-plan.md`](plans/execution-followups-plan.md#11-vérification-finale). The published version is **2.0.3** (`build/Versions.props`, published on
+  2026-10-24); another repository can build on SDK 2.x
   ([`building-on-hackeros.md`](../framework/building-on-hackeros.md)).
 
-## Tâches de ce document
+## Tasks of this document
 
-- [x] Décrire les couches et la règle de dépendance.
-- [x] Lister chaque projet de la solution et son rôle.
-- [x] Résumer le système simulé (fichiers, processus, shell, capacités) avec les liens vers les documents détaillés.
-- [x] Décrire la séquence de démarrage.
-- [x] Lister les règles vérifiées au build.
-- [x] Relecture finale de la migration v3 (`v3/16-final`) : branches d'intégration et état du projet.
-- [x] Relecture finale de la série `exec` (`exec/10-final`) : SDK 1.2, branches d'intégration.
-- [x] Relecture finale de la série du bureau (`desk/6-sdk-2`) : SDK 2.0, `FileView` hors du SDK, règle de compatibilité.
+- [x] Describe the layers and the dependency rule.
+- [x] List each project of the solution and its role.
+- [x] Summarize the simulated system (files, processes, shell, capabilities) with links to the detailed documents.
+- [x] Describe the startup sequence.
+- [x] List the rules checked at build.
+- [x] Final review of the v3 migration (`v3/16-final`): integration branches and project state.
+- [x] Final review of the `exec` series (`exec/10-final`): SDK 1.2, integration branches.
+- [x] Final review of the desktop series (`desk/6-sdk-2`): SDK 2.0, `FileView` outside the SDK, compatibility rule.

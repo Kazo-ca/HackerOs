@@ -1,110 +1,108 @@
-# ADR 0104 : localisation (anglais et français, `LANG` par processus, `locale.conf`, ressources `.resx`)
+# ADR 0104: localization (English and French, per-process `LANG`, `locale.conf`, `.resx` resources)
 
-## Statut
+## Status
 
-Accepté le 2026-10-17 (chantier `v3/1-adr`, pour le chantier `v3/12-localization`).
+Accepted on 2026-10-17 (work item `v3/1-adr`, for the work item `v3/12-localization`).
 
-- **Complète :** [ADR 0050](0050-shell-grammar-and-process-environment.md)
-  (environnement de processus, `LANG=en_US.UTF-8` par défaut), ADR 0044
-  (réglages en fichiers), ADR 0047 (champ `localizations` du manifeste).
-- **Remplace :** la conception jamais réalisée de `docs/old/localization.md`
-  (cinq cultures, `/etc/hackeros/locale.json`).
-- **Plan :** [`wasm-v3-completion-plan.md`](../plans/wasm-v3-completion-plan.md),
-  ligne `v3/12-localization` ; manque R10 ; réponse 3 de Benoit (anglais et
-  français, anglais par défaut).
+- **Complements:** [ADR 0050](0050-shell-grammar-and-process-environment.md)
+  (process environment, `LANG=en_US.UTF-8` by default), ADR 0044
+  (settings as files), ADR 0047 (`localizations` field of the manifest).
+- **Replaces:** the never-implemented design of `docs/old/localization.md`
+  (five cultures, `/etc/hackeros/locale.json`).
+- **Plan:** [`wasm-v3-completion-plan.md`](../plans/wasm-v3-completion-plan.md),
+  line `v3/12-localization`; gap R10; Benoit's answer 3 (English and
+  French, English by default).
 
-## Contexte
+## Context
 
-- Aucun `.resx`, aucun `IStringLocalizer` : les chaînes sont écrites en dur, en
-  anglais et en français mélangés.
+- No `.resx`, no `IStringLocalizer`: strings are hard-coded, in
+  English and French mixed.
 - `LoginEnvironment` (`Platform/HackerOs.Platform.Core/Processes/LoginEnvironment.cs`)
-  pose `LANG=en_US.UTF-8`, puis applique `/etc/environment`. Rien ne lit `LANG`.
+  sets `LANG=en_US.UTF-8`, then applies `/etc/environment`. Nothing reads `LANG`.
 - `AppManifest.Localizations` (`LocalizationManifest(Culture, ResourcePath)`)
-  existe et reste vide partout.
-- Sous Linux, la langue suit `LANG` et `LC_*` de chaque processus, initialisés
-  depuis `/etc/locale.conf` (système, `localectl`) puis `~/.config/locale.conf`
-  (utilisateur) ; un changement de langue du bureau prend effet à la connexion
-  suivante.
+  exists and is empty everywhere.
+- On Linux, the language follows `LANG` and `LC_*` of each process, initialized
+  from `/etc/locale.conf` (system, `localectl`) then `~/.config/locale.conf`
+  (user); a desktop language change takes effect at the next login.
 
-## Décision
+## Decision
 
-### 1. Langues
+### 1. Languages
 
-- Deux langues : **anglais** (`en`, langue neutre, utilisée par défaut et en
-  repli) et **français** (`fr`). Toute culture `en_*` donne l'anglais, toute
-  culture `fr_*` le français (`fr_CA`, `fr_FR`…), toute autre l'anglais.
-- La culture complète (par exemple `fr_CA`) sert quand même au **format** des
-  dates, nombres et monnaies.
+- Two languages: **English** (`en`, neutral language, used by default and as a
+  fallback) and **French** (`fr`). Any `en_*` culture gives English, any
+  `fr_*` culture gives French (`fr_CA`, `fr_FR`…), any other gives English.
+- The full culture (for example `fr_CA`) is still used for the **format** of
+  dates, numbers and currencies.
 
-### 2. La langue vient de l'environnement du processus
+### 2. The language comes from the process environment
 
-- Ordre à la connexion : défaut `en_US.UTF-8` → `/etc/locale.conf` →
-  `/etc/environment` → `~/.config/locale.conf`. Les fichiers `locale.conf`
-  ont le format de systemd (`LANG=fr_CA.UTF-8`, `LC_TIME=…`).
-- Variables lues : `LC_ALL`, puis `LC_MESSAGES` (textes) ou `LC_TIME` /
-  `LC_NUMERIC` (formats), puis `LANG`, comme la glibc.
-- Chaque processus a sa culture, tirée de **son** environnement :
-  `LANG=en_US.UTF-8 ls` affiche ses messages en anglais même si la session est
-  en français.
-- Le SDK l'expose par `IAppExecutionContext.Culture` (textes) et
-  `.FormatCulture` (formats), et par `HackEnvironment`. C'est la « passerelle de
-  langue » du plan.
-- Le bureau, la barre des tâches, le lanceur et les dialogues de la plateforme
-  prennent la langue de l'utilisateur **à la connexion**. Changer de langue dans
-  Paramètres écrit `~/.config/locale.conf` et indique que le changement prend
-  effet à la prochaine connexion, comme sous GNOME. Les apps lancées ensuite
-  dans la même session gardent l'environnement de la session.
-- Nouvelle commande `localectl` : `status`, `list-locales`
-  (`en_US.UTF-8`, `en_CA.UTF-8`, `fr_FR.UTF-8`, `fr_CA.UTF-8`…), et
-  `set-locale LANG=…` (administrateur, écrit `/etc/locale.conf`).
+- Order at login: default `en_US.UTF-8` → `/etc/locale.conf` →
+  `/etc/environment` → `~/.config/locale.conf`. The `locale.conf` files
+  have the systemd format (`LANG=fr_CA.UTF-8`, `LC_TIME=…`).
+- Variables read: `LC_ALL`, then `LC_MESSAGES` (texts) or `LC_TIME` /
+  `LC_NUMERIC` (formats), then `LANG`, like glibc.
+- Each process has its own culture, taken from **its** environment:
+  `LANG=en_US.UTF-8 ls` displays its messages in English even if the session is
+  in French.
+- The SDK exposes it through `IAppExecutionContext.Culture` (texts) and
+  `.FormatCulture` (formats), and through `HackEnvironment`. This is the plan's
+  "language gateway".
+- The desktop, taskbar, launcher and platform dialogs
+  take the user's language **at login**. Changing the language in
+  Settings writes `~/.config/locale.conf` and indicates that the change takes
+  effect at the next login, as under GNOME. Apps launched afterwards
+  in the same session keep the session environment.
+- New command `localectl`: `status`, `list-locales`
+  (`en_US.UTF-8`, `en_CA.UTF-8`, `fr_FR.UTF-8`, `fr_CA.UTF-8`…), and
+  `set-locale LANG=…` (administrator, writes `/etc/locale.conf`).
 
-### 3. Ressources
+### 3. Resources
 
-- Chaque projet a ses ressources `.resx` (`Resources/<Type>.resx` en anglais,
-  `<Type>.fr.resx` en français) et utilise `IStringLocalizer<T>`
+- Each project has its `.resx` resources (`Resources/<Type>.resx` in English,
+  `<Type>.fr.resx` in French) and uses `IStringLocalizer<T>`
   (`Microsoft.Extensions.Localization`).
-- Le localiseur remis à une app est **lié à la culture de son processus** : il
-  lit `ResourceManager.GetString(clé, culture du processus)`, sans dépendre de
-  `CultureInfo.CurrentUICulture`, qui est commun à tout l'onglet.
-- Clé absente en français : texte anglais, et un avertissement de débogage une
-  fois par clé.
-- Les hôtes déclarent `SatelliteResourceLanguages=en;fr`. Les assemblies
-  satellites des apps chargées paresseusement sont chargées avec elles ; si le
-  chargeur paresseux de Blazor ne le fait pas, `v3/12` charge le satellite `fr`
-  explicitement avec l'assembly de l'app (c'est le premier point à prouver).
+- The localizer handed to an app is **bound to its process's culture**: it
+  reads `ResourceManager.GetString(key, process culture)`, without depending on
+  `CultureInfo.CurrentUICulture`, which is shared by the whole tab.
+- Key missing in French: English text, and a debug warning once per key.
+- The hosts declare `SatelliteResourceLanguages=en;fr`. The satellite assemblies
+  of lazily loaded apps are loaded with them; if Blazor's lazy
+  loader does not do so, `v3/12` loads the `fr` satellite
+  explicitly along with the app assembly (this is the first point to prove).
 
-### 4. Nom et description des apps
+### 4. App name and description
 
-- Le générateur de manifeste lit `Resources/AppManifest.fr.resx` (clés `Name`,
-  `Description`, `Terminal.Usage`) et produit l'asset `localization/fr.json`
-  avec l'entrée `localizations: [{ "culture": "fr", "resourcePath": … }]`.
-- Le lanceur, la barre des tâches, Paramètres et `help` affichent le nom dans la
-  langue de l'utilisateur.
+- The manifest generator reads `Resources/AppManifest.fr.resx` (keys `Name`,
+  `Description`, `Terminal.Usage`) and produces the asset `localization/fr.json`
+  with the entry `localizations: [{ "culture": "fr", "resourcePath": … }]`.
+- The launcher, taskbar, Settings and `help` display the name in the
+  user's language.
 
-### 5. Ce qui est traduit
+### 5. What is translated
 
-- La plateforme (bureau, barre des tâches, lanceur, dialogues, notifications,
-  écrans de connexion et d'erreur), les apps système et les messages des
-  commandes (aide, usage, erreurs).
-- **Pas traduit** : les sorties que des scripts lisent (colonnes de `ls -l`,
-  `ps`, `df`, `top`, `systemctl list-units`), les noms de fichiers et de
-  dossiers du système (`/home`, `~/.config`, `Trash`), les journaux de
-  `/var/log` (en anglais, pour les outils), les codes d'erreur.
-- Les dossiers de l'utilisateur gardent leurs noms anglais : pas de traduction
-  à la `xdg-user-dirs` (`~/Downloads` ne devient pas `~/Téléchargements`).
+- The platform (desktop, taskbar, launcher, dialogs, notifications,
+  login and error screens), the system apps and the command messages
+  (help, usage, errors).
+- **Not translated**: outputs that scripts read (columns of `ls -l`,
+  `ps`, `df`, `top`, `systemctl list-units`), system file and folder
+  names (`/home`, `~/.config`, `Trash`), the logs in
+  `/var/log` (in English, for tools), error codes.
+- User folders keep their English names: no `xdg-user-dirs` style translation
+  (`~/Downloads` does not become `~/Téléchargements`).
 
 ### 6. Tests
 
-- Un test vérifie que chaque `.fr.resx` a toutes les clés de son `.resx`, et
-  inversement.
-- Un test E2E se connecte avec `~/.config/locale.conf` en français et vérifie le
-  lanceur, une app et une commande.
+- A test checks that each `.fr.resx` has all the keys of its `.resx`, and
+  conversely.
+- An E2E test logs in with `~/.config/locale.conf` set to French and checks the
+  launcher, an app and a command.
 
-## Conséquences
+## Consequences
 
-- Chantier le plus long du plan : il peut être découpé en un fil
-  d'infrastructure (§2 à §4) puis un fil par groupe d'apps (plan, §6).
-- `docs/old/localization.md` reçoit en tête un renvoi vers cet ADR (archive, le
-  contenu n'est pas réécrit) ; `process-environment.md`, `sdk-reference.md`,
-  `sdk-developer-guide.md` (« traduire son app ») et `linux-commands.md` sont mis
-  à jour.
+- Longest work item of the plan: it can be split into an infrastructure
+  thread (§2 to §4) then one thread per app group (plan, §6).
+- `docs/old/localization.md` receives a pointer to this ADR at the top (archive, the
+  content is not rewritten); `process-environment.md`, `sdk-reference.md`,
+  `sdk-developer-guide.md` ("translate your app") and `linux-commands.md` are
+  updated.

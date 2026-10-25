@@ -1,109 +1,109 @@
-# ADR 0062 : l'éditeur de code en atelier à la VS Code
+# ADR 0062: the code editor as a VS Code-style workbench
 
-## Statut
+## Status
 
-Accepté le 2026-10-11.
+Accepted on 2026-10-11.
 
-- **Contexte du plan :** après la phase 4 (refonte terminée), demande de
-  Benoit du 2026-10-11 : l'éditeur ne prend pas toute la place, on ne peut ni
-  ouvrir un dossier correctement, ni avoir plusieurs onglets utiles, ni créer
-  de fichiers et de dossiers dans la liste ; il veut les fonctions de VS Code,
-  sans compilation ni « aller à la définition », mais avec la recherche dans
-  tout le dossier ouvert.
-- **Remplace** la dernière puce de la section 4 de l'ADR 0058 (« Le panneau
-  terminal de CodeEditor reste à un seul shell ») : le panneau terminal de
-  l'éditeur a plusieurs onglets, un `hsh` par onglet, comme la console.
-- **Complète** l'ADR 0020 (Monaco, frontière JavaScript collocée, tout le
-  reste en C#) sans en changer les décisions.
+- **Plan context:** after phase 4 (rebuild finished), request from
+  Benoit on 2026-10-11: the editor does not take up all the space, one can neither
+  open a folder properly, nor have several useful tabs, nor create
+  files and folders in the list; he wants the features of VS Code,
+  without compilation or "go to definition", but with search in
+  the whole open folder.
+- **Supersedes** the last bullet of section 4 of ADR 0058 ("The CodeEditor
+  terminal panel stays at a single shell"): the editor's terminal panel has
+  several tabs, one `hsh` per tab, like the console.
+- **Completes** ADR 0020 (Monaco, collocated JavaScript boundary, everything
+  else in C#) without changing its decisions.
 
-## Contexte
+## Context
 
-L'éditeur affichait une barre d'outils, une bande d'onglets, l'arbre
-`FileView` d'un dossier et un seul Monaco dont le contenu était remplacé à
-chaque changement d'onglet (historique d'annulation et défilement perdus).
-La hauteur de Monaco dépendait d'un `flex` sans position absolue : avec le
-panneau terminal ouvert dans la fenêtre par défaut (800 × 560), il ne restait
-qu'une ou deux lignes visibles. Rien ne permettait de créer un fichier dans
-le dossier, de chercher dans ses fichiers ou d'en ouvrir un par son nom.
+The editor displayed a toolbar, a tab strip, the `FileView` tree of a folder
+and a single Monaco whose content was replaced on
+each tab change (undo history and scroll position lost).
+Monaco's height depended on a `flex` without absolute positioning: with the
+terminal panel open in the default window (800 × 560), only
+one or two lines remained visible. Nothing made it possible to create a file in
+the folder, to search in its files or to open one by name.
 
-## Décision
+## Decision
 
-### 1. Disposition de VS Code
+### 1. VS Code layout
 
-La fenêtre suit l'atelier de VS Code : barre de menus (File, Edit, View, Go
-en `MudMenu`, ADR 0016), barre d'activité (Explorer, Search, terminal), barre
-latérale redimensionnable, groupe d'éditeurs (onglets, fil d'Ariane, Monaco),
-panneau terminal redimensionnable, barre d'état (dossier, fichiers non
-enregistrés, Ln/Col, encodage, fin de ligne, langage). Monaco occupe une zone
-en `position: absolute; inset: 0` : il prend toujours tout l'espace restant.
-Sans onglet ouvert, un filigrane rappelle les raccourcis.
+The window follows the VS Code workbench: menu bar (File, Edit, View, Go
+as `MudMenu`, ADR 0016), activity bar (Explorer, Search, terminal), resizable
+sidebar, editor group (tabs, breadcrumb, Monaco),
+resizable terminal panel, status bar (folder, unsaved
+files, Ln/Col, encoding, line ending, language). Monaco occupies an area
+in `position: absolute; inset: 0`: it always takes all the remaining space.
+With no tab open, a watermark recalls the shortcuts.
 
-### 2. Un modèle Monaco par onglet
+### 2. One Monaco model per tab
 
-Chaque onglet a son modèle Monaco (`showDocument`, `closeDocument`), créé à la
-première ouverture : l'historique d'annulation, la sélection et le défilement
-de chaque fichier sont gardés. Le contenu reste possédé par
-`CodeEditorDocument` en C# ; Monaco renvoie `(id, contenu)` à chaque
-modification, et la fenêtre ne se redessine que si l'état « modifié »
-change. Le curseur est remonté à part (`OnCursorChanged`) vers un petit
-composant de la barre d'état.
+Each tab has its own Monaco model (`showDocument`, `closeDocument`), created on
+first opening: the undo history, selection and scroll position
+of each file are kept. The content remains owned by
+`CodeEditorDocument` in C#; Monaco sends back `(id, content)` on each
+modification, and the window is redrawn only if the "modified" state
+changes. The cursor is reported separately (`OnCursorChanged`) to a small
+status bar component.
 
-### 3. Le dossier ouvert est un espace de travail C#
+### 3. The open folder is a C# workspace
 
-`CodeEditorWorkspace` représente le dossier choisi dans la boîte « Open
-Folder » et passe par la passerelle de fichiers liée à ce choix
-(`WithSelectedHandle`). Il liste les fichiers (en sautant `.git`,
-`node_modules`, `bin`, `obj`…, au plus 5 000), crée fichiers et dossiers, et
-sert l'explorateur, la recherche et l'ouverture rapide. Les fichiers du
-dossier sont lus et enregistrés par cette même passerelle.
+`CodeEditorWorkspace` represents the folder chosen in the "Open
+Folder" dialog and goes through the file gateway tied to that choice
+(`WithSelectedHandle`). It lists the files (skipping `.git`,
+`node_modules`, `bin`, `obj`..., at most 5,000), creates files and folders, and
+serves the explorer, the search and quick open. The files of the
+folder are read and saved through that same gateway.
 
-### 4. Recherche et ouverture rapide en C#
+### 4. Search and quick open in C#
 
-La recherche dans le dossier (Ctrl+Maj+F) et l'ouverture rapide (Ctrl+P) sont
-écrites en C# (`CodeEditorWorkspaceSearch`, `CodeEditorQuickOpen`), pas
-dans Monaco : elles lisent des fichiers que Monaco n'a jamais ouverts, et la
-règle de l'ADR 0020 garde la logique en C#. La recherche gère la casse, le mot
-entier, les expressions régulières (.NET, délai de 250 ms par ligne), les
-globs « files to include/exclude », et lit le contenu non enregistré des
-onglets ouverts, comme VS Code. Rechercher et remplacer dans un fichier reste
-celui de Monaco (Ctrl+F, Ctrl+H).
+Search in the folder (Ctrl+Shift+F) and quick open (Ctrl+P) are
+written in C# (`CodeEditorWorkspaceSearch`, `CodeEditorQuickOpen`), not
+in Monaco: they read files that Monaco has never opened, and the
+rule of ADR 0020 keeps the logic in C#. The search handles case, whole
+word, regular expressions (.NET, 250 ms timeout per line), the
+"files to include/exclude" globs, and reads the unsaved content of the open
+tabs, like VS Code. Find and replace within a file stays
+Monaco's (Ctrl+F, Ctrl+H).
 
-### 5. Supprimer passe par la corbeille
+### 5. Deleting goes through the trash
 
-La touche Suppr et le menu de l'explorateur mettent les éléments à la
-corbeille (`HackTrash`, ADR 0052) ; « Delete permanently » demande une
-confirmation, comme dans l'explorateur de fichiers. Les onglets des fichiers
-supprimés restent ouverts avec leur contenu : enregistrer recrée le fichier.
-Renommer un fichier ou un dossier dans l'arbre déplace les onglets concernés
+The Delete key and the explorer menu send items to the
+trash (`HackTrash`, ADR 0052); "Delete permanently" asks for
+confirmation, as in the file explorer. The tabs of deleted
+files stay open with their content: saving recreates the file.
+Renaming a file or folder in the tree moves the tabs concerned
 (`CodeEditorSession.RelocatePaths`).
 
-### 6. Menu contextuel des éléments de `FileView`
+### 6. Context menu of `FileView` items
 
-Le clic droit sur un élément de `FileView` (arbre, détails, icônes) arrête la
-propagation de l'évènement : jusque-là, le gestionnaire du fond recevait aussi
-le clic et remplaçait le menu de l'élément par celui du fond. Toutes les apps
-qui affichent `FileView` en profitent.
+Right-clicking an item of `FileView` (tree, details, icons) stops the
+propagation of the event: until now, the background handler also received the
+click and replaced the item's menu with the background's. All the apps
+that display `FileView` benefit.
 
-## Hors périmètre
+## Out of scope
 
-Compilation et exécution, « aller à la définition », IntelliSense entre
-fichiers, contrôle de source, débogueur, extensions, dossiers multiples :
-Benoit les a exclus. La palette de commandes est celle de Monaco (F1).
+Compilation and execution, "go to definition", cross-file IntelliSense, source
+control, debugger, extensions, multiple folders:
+Benoit excluded them. The command palette is Monaco's (F1).
 
-## Conséquences
+## Consequences
 
-- L'éditeur reste une app sur le SDK public (ADR 0055) : `IJSRuntime` ne sert
-  qu'à importer son propre module.
-- Le bundle Monaco expose une API un peu plus large (`showDocument`,
-  `closeDocument`, `reveal`, `runAction`, `getSelectedText`, `setOptions`) ;
-  il est reconstruit par `npm run build` comme avant.
-- La taille par défaut des fenêtres (800 × 560, `WindowLaunchCoordinator`)
-  n'est pas changée : l'éditeur s'agrandit comme les autres apps.
+- The editor remains an app on the public SDK (ADR 0055): `IJSRuntime` is used
+  only to import its own module.
+- The Monaco bundle exposes a slightly wider API (`showDocument`,
+  `closeDocument`, `reveal`, `runAction`, `getSelectedText`, `setOptions`);
+  it is rebuilt by `npm run build` as before.
+- The default window size (800 × 560, `WindowLaunchCoordinator`)
+  is not changed: the editor grows like the other apps.
 
-## Alternatives écartées
+## Rejected alternatives
 
-- **Recherche par les modèles Monaco** (`model.findMatches`) : il faudrait
-  charger chaque fichier du dossier dans Monaco, et la logique passerait en
+- **Search through Monaco models** (`model.findMatches`): every file of the
+  folder would have to be loaded into Monaco, and the logic would move to
   JavaScript.
-- **Un seul modèle Monaco rechargé** (l'existant) : l'annulation et la
-  position sont perdues à chaque changement d'onglet.
+- **A single reloaded Monaco model** (what exists): undo and
+  position are lost on each tab change.

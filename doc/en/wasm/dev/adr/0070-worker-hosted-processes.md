@@ -1,115 +1,115 @@
-# ADR 0070 : processus sans interface dans des Web Workers
+# ADR 0070: headless processes in Web Workers
 
-## Statut
+## Status
 
-Accepté le 2026-10-16.
+Accepted on 2026-10-16.
 
-- **Phase du plan :** phase 5 — exécution des apps
-  ([`execution-isolation-plan.md`](../plans/execution-isolation-plan.md)). Dernier
-  chantier de la phase : il dépend des ADR 0067 à 0069.
-- **Lève :** l'exclusion « isolation d'exécution (watchdog, Web Workers) » de la
-  section 9 de [`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md).
+- **Plan phase:** phase 5: app execution
+  ([`execution-isolation-plan.md`](../plans/execution-isolation-plan.md)). Last
+  work item of the phase: it depends on ADR 0067 to 0069.
+- **Lifts:** the exclusion "execution isolation (watchdog, Web Workers)" of
+  section 9 of [`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md).
 
-## Contexte
+## Context
 
-Une boucle synchrone infinie sur le thread principal gèle tout l'OS, et rien sur
-ce thread ne peut l'interrompre (ADR 0067 §4). Le seul moyen d'isoler un
-processus est de l'exécuter **ailleurs** : un Web Worker, qui peut être arrêté
-de force par `worker.terminate()`.
+An infinite synchronous loop on the main thread freezes the whole OS, and nothing on
+that thread can interrupt it (ADR 0067 §4). The only way to isolate a
+process is to run it **elsewhere**: a Web Worker, which can be forcibly stopped
+by `worker.terminate()`.
 
-Un Web Worker fait tourner son propre runtime .NET :
+A Web Worker runs its own .NET runtime:
 
-- environ 15 à 40 Mo et 0,5 à 2 s de démarrage à froid, même avec les fichiers
-  en cache ;
-- pas d'accès au DOM : les apps à fenêtre restent sur le thread principal ;
-- tout ce que l'OS possède (fichiers, `/proc`, presse-papiers, réseau) passe par
-  des messages.
+- about 15 to 40 MB and 0.5 to 2 s of cold start, even with files
+  cached;
+- no DOM access: windowed apps stay on the main thread;
+- everything the OS owns (files, `/proc`, clipboard, network) goes through
+  messages.
 
-Un worker par processus rendrait le shell inutilisable (`ls | grep | wc`
-démarrerait trois runtimes). Un pool seul ferait tomber les voisins à chaque
-kill forcé. Benoit a validé un modèle hybride, rendu sûr par l'escalade de
-l'ADR 0069.
+One worker per process would make the shell unusable (`ls | grep | wc`
+would start three runtimes). A pool alone would bring down the neighbors on each
+forced kill. Benoit validated a hybrid model, made safe by the escalation of
+ADR 0069.
 
-## Décision
+## Decision
 
-### 1. Qui tourne où
+### 1. Who runs where
 
-| Genre de processus | Hôte d'exécution |
+| Kind of process | Execution host |
 |---|---|
-| App à fenêtre, composant embarqué | thread principal (inchangé) |
-| Commande, pipeline, script shell | worker du **pool** |
-| Service, tâche longue déclarée | worker **dédié** |
+| Windowed app, embedded component | main thread (unchanged) |
+| Command, pipeline, shell script | **pool** worker |
+| Service, declared long-running task | **dedicated** worker |
 
-Le manifeste déclare l'hôte voulu :
+The manifest declares the desired host:
 `[AppManifest(Execution = AppExecutionHost.Pool | Dedicated | MainThread)]`.
-Défaut : `MainThread` pour une app à fenêtre, `Pool` pour une commande,
-`Dedicated` pour un service (`ServiceAppBase`). Une app peut garder
-`MainThread` si elle a besoin d'un service que le worker n'offre pas.
+Default: `MainThread` for a windowed app, `Pool` for a command,
+`Dedicated` for a service (`ServiceAppBase`). An app can keep
+`MainThread` if it needs a service that the worker does not offer.
 
-### 2. Le pool : un worker par cœur virtuel
+### 2. The pool: one worker per virtual core
 
-- Le pool compte `CpuCapacity` workers (`VirtualHardwareProfile`, arrondi au
-  supérieur, au moins 1, au plus `navigator.hardwareConcurrency - 1`). Ce sont
-  les **cœurs** de la machine simulée : `/proc/cpuinfo` et `/proc/stat` les
-  listent, et l'ADR 0067 compte leur temps.
-- Ils démarrent au boot, en arrière-plan, après l'ouverture de session.
-- L'ordonnanceur de l'OS place chaque nouveau processus sur le worker le moins
-  chargé. Les étapes d'un même pipeline vont sur le **même** worker, pour que
-  leurs tubes restent en mémoire.
+- The pool has `CpuCapacity` workers (`VirtualHardwareProfile`, rounded up,
+  at least 1, at most `navigator.hardwareConcurrency - 1`). These are the
+  **cores** of the simulated machine: `/proc/cpuinfo` and `/proc/stat` list them,
+  and ADR 0067 counts their time.
+- They start at boot, in the background, after session opening.
+- The OS scheduler places each new process on the least loaded worker.
+  The stages of a single pipeline go on the **same** worker, so that
+  their pipes stay in memory.
 
-### 3. Workers dédiés
+### 3. Dedicated workers
 
-- Un worker de réserve, déjà démarré, est gardé prêt : un processus dédié démarre
-  sans attente, et l'OS relance une réserve derrière lui.
-- Un processus dédié qui se termine libère son worker.
+- A spare worker, already started, is kept ready: a dedicated process starts
+  without waiting, and the OS starts a new spare behind it.
+- A dedicated process that terminates frees its worker.
 
-### 4. L'OS vu depuis un worker
+### 4. The OS seen from a worker
 
-- Le worker charge les assemblies du SDK et de l'app, et un **hôte de
-  processus** (`HackerOs.Platform.WorkerHost`) qui implémente
-  `IAppExecutionContext` par des **passerelles distantes** : chaque appel du
-  SDK devient un message vers l'OS sur le thread principal, qui applique les
-  mêmes contrôles de capacités qu'aujourd'hui. Le SDK ne change pas : une
-  commande ne sait pas où elle tourne.
-- Les flux standard (stdin, stdout, stderr) sont des tubes par messages.
-- Le JavaScript (création du worker, `postMessage`, `terminate`) est un module
-  dans le `wwwroot/` de `HackerOs.Infrastructure.Browser`, importé par le code
-  C#. Aucun hôte ne le référence (AGENTS.md).
+- The worker loads the SDK and app assemblies, and a **process
+  host** (`HackerOs.Platform.WorkerHost`) that implements
+  `IAppExecutionContext` through **remote gateways**: each SDK call
+  becomes a message to the OS on the main thread, which applies the
+  same capability checks as today. The SDK does not change: a
+  command does not know where it runs.
+- The standard streams (stdin, stdout, stderr) are message-based pipes.
+- The JavaScript (worker creation, `postMessage`, `terminate`) is a module
+  in the `wwwroot/` of `HackerOs.Infrastructure.Browser`, imported by the C#
+  code. No host references it (AGENTS.md).
 
-### 5. Battement de cœur et escalade
+### 5. Heartbeat and escalation
 
-- Chaque worker envoie un battement de cœur toutes les 250 ms, avec ses temps
-  CPU et la mémoire de son runtime (ADR 0067 et 0068).
-- Sans battement depuis `UnresponsiveThresholdMs`, les processus actifs du worker
-  passent **Not responding** (ADR 0067 §4), visible **pendant** le blocage.
-- L'arrêt d'un processus suit l'ADR 0069 §3. À l'étape 4 (worker muet après le
-  délai de grâce), l'OS termine le worker :
-  - les autres processus de ce worker passent à `Exited (Killed)` avec un
-    message dans `/var/log/syslog` (« killed: worker 2 terminated to stop pid
-    42 ») et leur shell affiche `Killed` ;
-  - un worker du pool est relancé à sa place.
-- Un worker termine son processus dédié de la même manière, sans voisin.
+- Each worker sends a heartbeat every 250 ms, with its CPU times
+  and the memory of its runtime (ADR 0067 and 0068).
+- With no heartbeat for `UnresponsiveThresholdMs`, the worker's active processes
+  become **Not responding** (ADR 0067 §4), visible **during** the blocking.
+- Stopping a process follows ADR 0069 §3. At step 4 (silent worker after the
+  grace period), the OS terminates the worker:
+  - the other processes of that worker move to `Exited (Killed)` with a
+    message in `/var/log/syslog` ("killed: worker 2 terminated to stop pid
+    42") and their shell displays `Killed`;
+  - a pool worker is restarted in its place.
+- A worker terminates its dedicated process the same way, with no neighbor.
 
-### 6. Hors navigateur
+### 6. Outside the browser
 
-`HackerOs.Server` (rendu Interactive Server) n'a pas de Web Worker .NET : tous
-les processus y restent dans le processus serveur. `AppExecutionHost` y est
-ignoré, avec une ligne d'information dans le journal. Cela pourra changer dans
-un ADR propre à cet hôte.
+`HackerOs.Server` (Interactive Server rendering) has no .NET Web Worker: all
+processes stay in the server process there. `AppExecutionHost` is
+ignored there, with an information line in the log. This may change in
+an ADR specific to this host.
 
-## Conséquences
+## Consequences
 
-- Une commande ou un service qui boucle ne gèle plus l'OS, et peut toujours
-  être tué.
-- Démarrer le pool coûte environ `CpuCapacity` × 15 à 40 Mo de mémoire du
-  navigateur.
-- Le prix est une couche de passerelles distantes, à maintenir à parité avec les
-  passerelles locales. Un test de contrat exécute les mêmes scénarios du SDK
-  dans les deux modes.
-- La première version peut limiter le pool aux commandes intégrées
-  (`HackerOs.Commands`), puis l'ouvrir aux autres apps.
+- A command or service that loops no longer freezes the OS, and can always
+  be killed.
+- Starting the pool costs about `CpuCapacity` × 15 to 40 MB of browser
+  memory.
+- The price is a layer of remote gateways, to be maintained in parity with the
+  local gateways. A contract test runs the same SDK scenarios
+  in both modes.
+- The first version may limit the pool to built-in commands
+  (`HackerOs.Commands`), then open it to other apps.
 
-## Références
+## References
 
 - [`execution-isolation-plan.md`](../plans/execution-isolation-plan.md)
-- ADR 0012, 0050, 0054 (shell détaché), 0055, 0067, 0068, 0069.
+- ADR 0012, 0050, 0054 (detached shell), 0055, 0067, 0068, 0069.

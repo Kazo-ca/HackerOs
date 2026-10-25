@@ -1,60 +1,60 @@
-# Priorité et réactivité des apps
+# App priority and responsiveness
 
-Ce document décrit ce qu'une app voit et doit faire pour rester réactive : la priorité `nice` et la fenêtre « Ne répond pas ». La mise en œuvre (détection, file des workers, architecture, tests) est dans [`../dev/process-priority-and-unresponsive-windows.md`](../dev/process-priority-and-unresponsive-windows.md).
+This document describes what an app sees and must do to stay responsive: the `nice` priority and the "Not responding" window. The implementation (detection, worker queue, architecture, tests) is in [`../dev/process-priority-and-unresponsive-windows.md`](../dev/process-priority-and-unresponsive-windows.md).
 
-## Priorité `nice`
+## `nice` priority
 
-La gentillesse (`nice`) d'un processus va de `-20` à `19`, vaut `0` par défaut et est héritée par ses enfants. Elle ne fait qu'ordonner la file d'attente des workers : elle ne ralentit jamais un processus qui tourne.
+The niceness (`nice`) of a process ranges from `-20` to `19`, is `0` by default and is inherited by its children. It only orders the workers' queue: it never slows down a process that is running.
 
 ### API
 
-- `HackProcess.Nice` (`int`, lecture seule) : gentillesse du processus, lue dans `/proc/<pid>/stat` (champ 19).
-- `HackProcess.BasePriority` (`int`, lecture seule) : priorité du processus, `20 + nice` (champ 18 de `/proc/<pid>/stat`).
-- `HackProcess.ParseStatNice(string)` : extrait la gentillesse d'une ligne `/proc/<pid>/stat`.
-- `IAppProcessGateway.GetNice` / `SetNice` (`Simulation.Abstractions`, via `IAppExecutionContext.Processes`) : lire ou changer la gentillesse d'un processus. Monter la valeur se fait sur son propre processus ; la baisser, ou changer un autre utilisateur, demande root. Changer un processus qui n'est ni le sien ni un de ses enfants demande `process.manage` (ADR 0140).
-- `HackBackgroundOptions.Nice` : gentillesse d'une tâche lancée par `HackBackground.RunAsync`, `0` par défaut. Une valeur négative est ramenée à `0` pour un utilisateur qui n'est pas administrateur.
+- `HackProcess.Nice` (`int`, read-only): niceness of the process, read from `/proc/<pid>/stat` (field 19).
+- `HackProcess.BasePriority` (`int`, read-only): priority of the process, `20 + nice` (field 18 of `/proc/<pid>/stat`).
+- `HackProcess.ParseStatNice(string)`: extracts the niceness from a `/proc/<pid>/stat` line.
+- `IAppProcessGateway.GetNice` / `SetNice` (`Simulation.Abstractions`, through `IAppExecutionContext.Processes`): read or change the niceness of a process. Raising the value is done on one's own process; lowering it, or changing another user's process, requires root. Changing a process that is neither one's own nor one of its children requires `process.manage` (ADR 0140).
+- `HackBackgroundOptions.Nice`: niceness of a task launched by `HackBackground.RunAsync`, `0` by default. A negative value is brought back to `0` for a user who is not an administrator.
 
-### Règles
+### Rules
 
-| Règle | Détail |
+| Rule | Detail |
 | --- | --- |
-| Plage | `-20`..`19`, toute valeur hors plage est ramenée aux bornes. |
-| Héritage | Un enfant prend la valeur de son parent, sauf si la demande de lancement en donne une (`ProcessStartRequest.Nice`, `AppLaunchRequest.Nice`). |
-| Baisser | Seul root (`sudo`, ADR 0042) baisse une valeur (`EACCES` sinon : « Permission denied »). |
-| Autre utilisateur | Seul root change la valeur d'un processus d'un autre utilisateur (`EPERM` : « Operation not permitted »). |
-| Capacités | Lire un autre processus demande `process.list` ; changer un processus qui n'est ni le sien ni un de ses enfants demande `process.manage`, comme `kill` (ADR 0140). |
-| Effet | Ordre de la file des workers (ADR 0071), commandes et tâches de fond `HackBackground.RunAsync` (ADR 0128, valeur `HackBackgroundOptions.Nice`, 0 par défaut) : la plus petite valeur d'abord, puis l'ordre d'arrivée. |
-| Worker toujours prêt | Une commande à valeur **positive** ne prend pas le worker toujours prêt pendant qu'un autre worker démarre : il reste pour la prochaine commande interactive. |
-| Thread principal | **Aucun effet.** Un processus du thread principal (fenêtres, commandes `MainThread`) tourne quand il est appelé ; il n'y a pas d'ordonnanceur à pondérer. |
+| Range | `-20`..`19`, any value out of range is clamped to the bounds. |
+| Inheritance | A child takes its parent's value, unless the launch request provides one (`ProcessStartRequest.Nice`, `AppLaunchRequest.Nice`). |
+| Lowering | Only root (`sudo`, ADR 0042) lowers a value (`EACCES` otherwise: "Permission denied"). |
+| Other user | Only root changes the value of another user's process (`EPERM`: "Operation not permitted"). |
+| Capabilities | Reading another process requires `process.list`; changing a process that is neither one's own nor one of its children requires `process.manage`, like `kill` (ADR 0140). |
+| Effect | Order of the workers' queue (ADR 0071), commands and `HackBackground.RunAsync` background tasks (ADR 0128, value `HackBackgroundOptions.Nice`, 0 by default): lowest value first, then arrival order. |
+| Always-ready worker | A command with a **positive** value does not take the always-ready worker while another worker is starting: it stays for the next interactive command. |
+| Main thread | **No effect.** A main thread process (windows, `MainThread` commands) runs when it is called; there is no scheduler to weight. |
 
-## Fenêtre qui ne répond pas
+## Window that is not responding
 
-### Ce que voit l'utilisateur
+### What the user sees
 
-- Le titre affiché prend le suffixe « (Ne répond pas) » / « (Not responding) »,
-  dans la langue de la session. C'est **de l'affichage** : le titre posé par
-  l'app (`SetWindowTitleAsync`) ne change pas et aucun
-  `WindowTitleChangedEvent` n'est émis.
-- Le contenu passe en gris (`filter: grayscale(1) brightness(0.7)`), en fondu
-  sauf sous « réduire les animations » (ADR 0105).
-- La boîte est attachée **à cette fenêtre seulement** : elle couvre son
-  contenu, pas sa barre de titre ; les autres fenêtres et la barre des tâches
-  restent utilisables. `role="alertdialog"`, le focus va sur **Attendre**,
-  `Tab` reste entre les deux boutons, `Échap` vaut **Attendre**.
-- **Attendre** ferme la boîte ; elle revient un seuil plus tard (5 s) si la
-  fenêtre ne répond toujours pas.
-- **Terminer l'application** suit l'escalade de l'ADR 0069 : raison
-  `Terminated`, délai de grâce de **2 s**, puis arrêt forcé (étape 3) et, pour
-  un worker, terminaison du worker (étape 4). La fenêtre se ferme quand son
-  processus se termine.
-- La croix (et `Alt+F4`) d'une fenêtre sans réponse ouvre la même boîte au lieu
-  d'une fermeture que l'app gelée ne pourrait pas traiter.
-### Ce que la boîte ne peut pas faire
+- The displayed title gets the suffix "(Ne répond pas)" / "(Not responding)",
+  in the session's language. This is **display only**: the title set by the
+  app (`SetWindowTitleAsync`) does not change and no
+  `WindowTitleChangedEvent` is emitted.
+- The content turns gray (`filter: grayscale(1) brightness(0.7)`), with a fade
+  except under "reduce animations" (ADR 0105).
+- The dialog is attached to **that window only**: it covers its
+  content, not its title bar; the other windows and the taskbar
+  remain usable. `role="alertdialog"`, focus goes to **Wait**,
+  `Tab` stays between the two buttons, `Esc` is the same as **Wait**.
+- **Wait** closes the dialog; it comes back one threshold later (5 s) if the
+  window still does not respond.
+- **End the application** follows the escalation of ADR 0069: reason
+  `Terminated`, grace period of **2 s**, then forced stop (step 3) and, for
+  a worker, termination of the worker (step 4). The window closes when its
+  process ends.
+- The close button (and `Alt+F4`) of an unresponsive window opens the same dialog instead
+  of a close that the frozen app could not handle.
+### What the dialog cannot do
 
-Une boucle **qui ne rend jamais la main** sur le thread principal gèle tout
-l'OS : ni la boîte ni rien d'autre ne peut s'afficher, et c'est le navigateur
-qui finit par proposer sa propre boîte « Page sans réponse ». Le travail long
-doit partir dans un worker (`HackBackground.RunAsync`, ADR 0128, à venir) ou
-rendre la main régulièrement avec `HackProcess.CheckpointAsync` (ADR 0069) ;
-voir [`cpu-accounting.md`](../dev/cpu-accounting.md) et
+A loop that **never yields** on the main thread freezes the whole
+OS: neither the dialog nor anything else can be displayed, and it is the browser
+that ends up offering its own "Page unresponsive" dialog. Long work
+must go to a worker (`HackBackground.RunAsync`, ADR 0128, upcoming) or
+yield regularly with `HackProcess.CheckpointAsync` (ADR 0069);
+see [`cpu-accounting.md`](../dev/cpu-accounting.md) and
 [`sdk-developer-guide.md`](sdk-developer-guide.md).

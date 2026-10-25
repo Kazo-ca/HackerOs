@@ -2,7 +2,9 @@
 
 Point d'entrée de `doc/fr/wasm/`, la documentation de l'OS HackerOS (code dans
 `wasm2/HackerOs/`). Elle est rédigée en français, les noms de fichiers en
-anglais. Tout ajout, renommage ou retrait de document met à jour cet index
+anglais, et traduite en anglais dans [`doc/en/wasm/`](../../en/wasm/README.md)
+(mêmes dossiers, mêmes noms de fichiers) ; chaque changement met à jour les
+deux langues. Tout ajout, renommage ou retrait de document met à jour cet index
 dans le même changement (voir [`AGENTS.md`](../../../AGENTS.md)).
 
 ## Organisation

@@ -1,89 +1,88 @@
-# ADR 0082 : table de routes ASP.Hack produite par un générateur de sources Roslyn
+# ADR 0082: ASP.Hack route table produced by a Roslyn source generator
 
-## Statut
+## Status
 
-Accepté le 2026-10-16, avec le chantier `web/6-mvc-core`.
+Accepted on 2026-10-16, with the `web/6-mvc-core` work item.
 
-- **Phase du plan :** phase web ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
-- **Remplace :** la phrase de l'[ADR 0076](0076-asp-hack-mvc.md) §3 « la table de
-  routes est générée au build *par le générateur de manifestes* ». Le reste de
-  l'ADR 0076 §3 (table générée au build, pas de réflexion au démarrage, conflits
-  en erreurs `HOSWEB0001`...) est conservé.
-- **Complète :** ADR 0076 §1, §3, §4 et §5 sur les points listés plus bas.
-- **Documentation :** [`asp-hack-mvc.md`](../../framework/asp-hack-mvc.md).
+- **Plan phase:** web phase ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
+- **Supersedes:** the sentence of [ADR 0076](0076-asp-hack-mvc.md) §3 "the route table is
+  generated at build time *by the manifest generator*". The rest of
+  ADR 0076 §3 (table generated at build time, no reflection at startup, conflicts
+  as `HOSWEB0001` errors...) is kept.
+- **Completes:** ADR 0076 §1, §3, §4 and §5 on the points listed below.
+- **Documentation:** [`asp-hack-mvc.md`](../../framework/asp-hack-mvc.md).
 
-## Contexte
+## Context
 
-Le générateur de manifestes (`HackerOs.Tools.ManifestGenerator`, ADR 0047) tourne
-**après** la compilation : il charge l'assembly de l'app et instancie ses
-classes `[AppManifest]`. Il ne peut donc pas ajouter de code à l'assembly. Or
-une table de routes sans réflexion doit **contenir du code** : la création du
-contrôleur (avec ses dépendances), la liaison de chaque paramètre et l'appel de
-l'action. Produire ce code après coup voudrait dire recompiler l'assembly, ou
-retomber sur la réflexion au démarrage, ce que l'ADR 0076 exclut (trimming,
-temps de démarrage dans le worker web).
+The manifest generator (`HackerOs.Tools.ManifestGenerator`, ADR 0047) runs
+**after** compilation: it loads the app's assembly and instantiates its
+`[AppManifest]` classes. It therefore cannot add code to the assembly. Yet
+a route table without reflection must **contain code**: the creation of the
+controller (with its dependencies), the binding of each parameter and the call of
+the action. Producing this code after the fact would mean recompiling the assembly, or
+falling back to reflection at startup, which ADR 0076 excludes (trimming,
+startup time in the web worker).
 
-## Décision
+## Decision
 
-1. **Un générateur de sources Roslyn.** `Tools/HackerOs.Tools.WebRouteGenerator`
-   (`netstandard2.0`, `IIncrementalGenerator`) est branché comme *analyzer* sur
-   chaque projet d'app par `build/HackerOs.Apps.targets` (jamais une dépendance
-   d'exécution ; ignoré par la vérification de frontière du SDK, comme le
-   générateur de manifestes). Pour une app sans contrôleur ni `WebAppDefinition`,
-   il ne produit rien.
-2. **Ce qu'il produit.**
-   - `HackerOs.AppSdk.Web.Generated.HackWebGeneratedRoutes.Table` (interne à
-     l'assembly) : un `HackControllerRouteTable` qui décrit chaque action
-     (`HackControllerActionDescriptor`) avec trois délégués générés :
-     `CreateController` (constructeur public le plus long, services résolus dans
-     la portée de la requête), `BindArguments` (un appel typé du
-     `HackModelBinder` par paramètre, validation `DataAnnotations` recopiée en
-     code) et `Invoke` (appel direct de la méthode, tâche attendue).
-   - Pour chaque `WebAppDefinition` déclarée `partial`, l'entrée du site :
-     `EntryPoint => typeof(<Nom>WebHost)` et une classe
-     `<Nom>WebHost : HackWebHost`. Le générateur de manifestes lit ensuite cet
-     `EntryPoint` comme pour toute app : rien ne change pour lui.
-3. **Un seul analyseur de gabarit.** `Shared/HackerOs.AppSdk.Web/Routing/HackRouteTemplate.cs`
-   est compilé dans la bibliothèque (le routeur s'en sert) **et** lié dans le
-   générateur : le build et l'exécution comprennent un gabarit exactement de la
-   même façon.
-4. **Erreurs de build** (catégorie `HackerOs.Web`, toutes en erreur) :
+1. **A Roslyn source generator.** `Tools/HackerOs.Tools.WebRouteGenerator`
+   (`netstandard2.0`, `IIncrementalGenerator`) is plugged in as an *analyzer* on
+   each app project by `build/HackerOs.Apps.targets` (never a runtime
+   dependency; ignored by the SDK boundary check, like the manifest
+   generator). For an app with no controller or `WebAppDefinition`,
+   it produces nothing.
+2. **What it produces.**
+   - `HackerOs.AppSdk.Web.Generated.HackWebGeneratedRoutes.Table` (internal to
+     the assembly): an `HackControllerRouteTable` that describes each action
+     (`HackControllerActionDescriptor`) with three generated delegates:
+     `CreateController` (longest public constructor, services resolved in
+     the request scope), `BindArguments` (one typed call of
+     `HackModelBinder` per parameter, `DataAnnotations` validation copied as
+     code) and `Invoke` (direct call of the method, task awaited).
+   - For each `WebAppDefinition` declared `partial`, the site's entry:
+     `EntryPoint => typeof(<Name>WebHost)` and a class
+     `<Name>WebHost : HackWebHost`. The manifest generator then reads this
+     `EntryPoint` as for any app: nothing changes for it.
+3. **A single template parser.** `Shared/HackerOs.AppSdk.Web/Routing/HackRouteTemplate.cs`
+   is compiled into the library (the router uses it) **and** linked into the
+   generator: build and runtime understand a template in exactly the same
+   way.
+4. **Build errors** (category `HackerOs.Web`, all errors):
 
-   | Code | Cas |
+   | Code | Case |
    |---|---|
-   | `HOSWEB0001` | Deux actions sur le même gabarit (aux noms de paramètres près) et la même méthode HTTP, même ordre ; ou deux actions conventionnelles au même `{controller}/{action}`. |
-   | `HOSWEB0002` | Gabarit invalide (accolade non fermée, segment complexe, contrainte inconnue, paramètre facultatif suivi d'un segment obligatoire...). |
-   | `HOSWEB0003` | Même nom de route (`Name =`) sur deux gabarits différents. |
-   | `HOSWEB0004` | Paramètre impossible à lier (type sans `IParsable<T>`, deux sources de corps...). |
-   | `HOSWEB0005` | Contrôleur sans constructeur public. |
-   | `HOSWEB0006` | `WebAppDefinition` qui n'est pas une classe `partial` de premier niveau et ne donne pas elle-même son `EntryPoint`. |
-   | `HOSWEB0007` | Action non prise en charge : attribut de méthode HTTP dérivé qui n'est pas celui d'ASP.Hack, type de retour `ref struct` ou pointeur, ou action d'un `HackApiController` sans route d'attribut (comme `[ApiController]` dans ASP.NET Core). Les méthodes génériques, statiques ou `[NonAction]` ne sont pas des actions, comme dans ASP.NET Core. |
+   | `HOSWEB0001` | Two actions on the same template (up to parameter names) and the same HTTP method, same order; or two conventional actions at the same `{controller}/{action}`. |
+   | `HOSWEB0002` | Invalid template (unclosed brace, complex segment, unknown constraint, optional parameter followed by a mandatory segment...). |
+   | `HOSWEB0003` | Same route name (`Name =`) on two different templates. |
+   | `HOSWEB0004` | Parameter that cannot be bound (type without `IParsable<T>`, two body sources...). |
+   | `HOSWEB0005` | Controller without a public constructor. |
+   | `HOSWEB0006` | `WebAppDefinition` that is not a top-level `partial` class and does not itself give its `EntryPoint`. |
+   | `HOSWEB0007` | Unsupported action: derived HTTP method attribute that is not ASP.Hack's, `ref struct` or pointer return type, or action of an `HackApiController` without an attribute route (like `[ApiController]` in ASP.NET Core). Generic, static or `[NonAction]` methods are not actions, as in ASP.NET Core. |
 
-5. **Ajustements de l'ADR 0076.**
-   - §1 : la bibliothèque dépend aussi de `HackerOs.App.Abstractions` (pour
-     `AppDefinition`) et de `Microsoft.Extensions.DependencyInjection` (§6).
-   - §3 : les contraintes `double`, `decimal`, `float`, `datetime`, `required`,
-     `range`, `minlength` et `maxlength` s'ajoutent à la liste ; les segments
-     complexes (`{nom}.{ext}`) ne sont pas pris en charge (`HOSWEB0002`).
-   - §4 : les valeurs de route d'une API anonyme (`new { id = 3 }`) passent par
-     des surcharges génériques (`RedirectToAction<TValues>`, `Url.Action<TValues>`...)
-     au lieu d'un paramètre `object` : le trimming garde ainsi les propriétés lues.
-   - §5 : `View`, `PartialView`, l'anti-falsification et `UseStaticFiles` arrivent
-     avec `web/7-razor-views`, pas avec ce chantier.
-   - Une action qui rend un objet est sérialisée avec son type d'exécution, ou
-     avec son **type déclaré** quand le contexte JSON du site ne connaît pas le
-     type d'exécution (`DeclaredResultType`, comme `ObjectResult.DeclaredType`
-     d'ASP.NET Core) : une liste construite par `[.. items]` a un type interne au
-     compilateur.
+5. **Adjustments to ADR 0076.**
+   - §1: the library also depends on `HackerOs.App.Abstractions` (for
+     `AppDefinition`) and on `Microsoft.Extensions.DependencyInjection` (§6).
+   - §3: the constraints `double`, `decimal`, `float`, `datetime`, `required`,
+     `range`, `minlength` and `maxlength` are added to the list; complex
+     segments (`{nom}.{ext}`) are not supported (`HOSWEB0002`).
+   - §4: the route values of an anonymous object (`new { id = 3 }`) go through
+     generic overloads (`RedirectToAction<TValues>`, `Url.Action<TValues>`...)
+     instead of an `object` parameter: trimming thus keeps the properties read.
+   - §5: `View`, `PartialView`, anti-forgery and `UseStaticFiles` arrive
+     with `web/7-razor-views`, not with this work item.
+   - An action that returns an object is serialized with its runtime type, or
+     with its **declared type** when the site's JSON context does not know the
+     runtime type (`DeclaredResultType`, like ASP.NET Core's `ObjectResult.DeclaredType`):
+     a list built by `[.. items]` has a compiler-internal type.
 
-## Conséquences
+## Consequences
 
-- Aucune réflexion pour trouver ni appeler une action : un site reste
-  compatible avec le trimming (`IsTrimmable` et l'analyseur de trimming sont
-  actifs sur la bibliothèque).
-- Les erreurs de route apparaissent dans l'éditeur (IDE) et au build, avec
-  l'emplacement du code fautif, et non au premier accès au site.
-- Le compilateur dans l'OS (plus tard) pourra réutiliser le même générateur,
-  comme le prévoyait l'ADR 0076.
-- Un projet hors de `Apps/` (les tests, par exemple) qui contient un site doit
-  référencer lui-même le générateur en *analyzer* (`OutputItemType="Analyzer"`).
+- No reflection to find or call an action: a site remains
+  compatible with trimming (`IsTrimmable` and the trimming analyzer are
+  active on the library).
+- Route errors appear in the editor (IDE) and at build time, with
+  the location of the faulty code, and not on first access to the site.
+- The compiler in the OS (later) will be able to reuse the same generator,
+  as ADR 0076 foresaw.
+- A project outside `Apps/` (tests, for example) that contains a site must
+  itself reference the generator as an *analyzer* (`OutputItemType="Analyzer"`).

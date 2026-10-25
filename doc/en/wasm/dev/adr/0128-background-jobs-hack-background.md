@@ -1,34 +1,34 @@
-# ADR 0128 : tâches lourdes en arrière-plan (`HackBackground.RunAsync`)
+# ADR 0128: heavy background tasks (`HackBackground.RunAsync`)
 
-## Statut
+## Status
 
-Accepté le 2026-10-18.
+Accepted on 2026-10-18.
 
-- **Plan :** [`execution-followups-plan.md`](../plans/execution-followups-plan.md),
-  décision 7, étape 1 (réponse Q5 de Benoit : « l'équivalent de `Invoke` dans
-  WinForms, mais à l'inverse ») ; mis en œuvre par `exec/5-background-jobs`,
-  après `exec/1-remote-gateways`.
-- **Complète :** l'ADR 0070 §1 (les apps à fenêtre restent sur le fil
-  principal, mais leurs calculs peuvent en sortir), l'ADR 0124 (chargement des
-  assemblies et charges sérialisables).
+- **Plan:** [`execution-followups-plan.md`](../plans/execution-followups-plan.md),
+  decision 7, step 1 (Benoit's answer Q5: "the equivalent of `Invoke` in
+  WinForms, but the other way around"); implemented by `exec/5-background-jobs`,
+  after `exec/1-remote-gateways`.
+- **Complements:** ADR 0070 §1 (window apps stay on the main
+  thread, but their computations can leave it), ADR 0124 (assembly loading
+  and serializable payloads).
 
-## Contexte
+## Context
 
-Une app à fenêtre tourne sur le fil principal, parce qu'un worker n'a pas de
-DOM. Une boucle lourde (filtre d'image, recherche dans un projet, compression)
-y gèle donc tout le bureau. WinForms règle le cas inverse avec
-`Control.Invoke` : un thread de travail demande au thread de l'interface
-d'exécuter un délégué. Benoit veut le contraire : l'interface demande à un
-« autre thread » d'exécuter la charge lourde.
+A window app runs on the main thread, because a worker has no
+DOM. A heavy loop (image filter, project search, compression)
+therefore freezes the whole desktop there. WinForms handles the opposite case with
+`Control.Invoke`: a worker thread asks the interface thread to
+run a delegate. Benoit wants the opposite: the interface asks
+"another thread" to run the heavy load.
 
-Un worker est un autre runtime .NET avec sa propre mémoire : une lambda qui
-capture des objets de la fenêtre ne peut pas y être envoyée. La tâche doit donc
-être nommable (une méthode statique ou une classe) et ses données
-sérialisables.
+A worker is another .NET runtime with its own memory: a lambda that
+captures window objects cannot be sent there. The task must therefore
+be nameable (a static method or a class) and its data
+serializable.
 
-## Décision
+## Decision
 
-### 1. API (ajout du SDK 1.2, ADR 0132)
+### 1. API (SDK 1.2 addition, ADR 0132)
 
 ```csharp
 namespace HackerOs.AppSdk.Threading;
@@ -50,90 +50,90 @@ public static class HackBackground
 }
 ```
 
-- Variantes sans résultat et synchrones (`Func<TInput, HackBackgroundContext,
-  TResult>`), même forme.
-- `HackBackgroundContext` : `CancellationToken`, `Report(fraction, message)`,
-  `CheckpointAsync()`, `ProcessId`. Le reste du SDK (`HackFile`, `HackProcess`,
-  `HackEnvironment`…) marche dans la tâche par les passerelles distantes.
-- `HackBackgroundOptions` : `Name` (affiché dans `ps`), `Nice` (ADR 0127).
-- Usage :
+- Variants without a result and synchronous ones (`Func<TInput, HackBackgroundContext,
+  TResult>`), same shape.
+- `HackBackgroundContext`: `CancellationToken`, `Report(fraction, message)`,
+  `CheckpointAsync()`, `ProcessId`. The rest of the SDK (`HackFile`, `HackProcess`,
+  `HackEnvironment`…) works in the task through the remote gateways.
+- `HackBackgroundOptions`: `Name` (displayed in `ps`), `Nice` (ADR 0127).
+- Usage:
 
   ```csharp
   byte[] blurred = await HackBackground.RunAsync(ImageJobs.Blur, new BlurInput(pixels, radius),
       progress, cancellationToken: ct);
   ```
 
-### 2. Règles vérifiées au build
+### 2. Rules checked at build time
 
-Un analyseur Roslyn livré avec `HackerOs.AppSdk` (codes `HOSBG0001` et
-suivants, choisis par le chantier) refuse :
+A Roslyn analyzer shipped with `HackerOs.AppSdk` (codes `HOSBG0001` and
+following, chosen by the work item) rejects:
 
-- un délégué qui n'est pas un **groupe de méthode statique** (lambda, méthode
-  locale qui capture, méthode d'instance) ;
-- un `TInput` ou un `TResult` absent du `JsonSerializerContext` déclaré par
-  `[assembly: HackWireContext(…)]` (ADR 0124 §2) ;
-- une méthode qui n'est pas dans l'assembly de l'app appelante.
+- a delegate that is not a **static method group** (lambda, local method
+  that captures, instance method);
+- a `TInput` or `TResult` absent from the `JsonSerializerContext` declared by
+  `[assembly: HackWireContext(…)]` (ADR 0124 §2);
+- a method that is not in the calling app's assembly.
 
-À l'exécution, l'OS refait la vérification (un appel par réflexion ne passe
-pas l'analyseur) et lève `ArgumentException` en cas d'écart.
+At runtime, the OS redoes the check (a call through reflection does not
+go through the analyzer) and throws `ArgumentException` on a mismatch.
 
-### 3. Modèle de processus
+### 3. Process model
 
-- Chaque appel crée un **processus enfant** de l'app appelante : même
-  utilisateur, même session, mêmes capacités accordées, environnement copié,
-  nom `<commande de l'app>:<Name ou méthode>`. Il apparaît dans `ps`, `top` et
-  le gestionnaire de tâches sous l'app.
-- Il tourne dans le **pool** (ADR 0071) ; la file suit `nice` (ADR 0127). Au
-  plus `MaxConcurrentJobsPerApp` (nombre de cœurs virtuels par défaut) tâches
-  d'une même app en parallèle ; les suivantes attendent.
-- Il suit l'arrêt de l'ADR 0069 : annulation du jeton par `cancellationToken`,
-  `SIGTERM` (raison `DependencyStop`) quand l'app se ferme, `SIGKILL` par
-  `kill` ou le gestionnaire de tâches **sans fermer la fenêtre**.
-- Il est soumis aux limites (ADR 0125) et à l'OOM killer (ADR 0126) comme
-  tout processus ; dans un worker, ces limites sont strictes.
+- Each call creates a **child process** of the calling app: same
+  user, same session, same granted capabilities, copied environment,
+  name `<app command>:<Name or method>`. It appears in `ps`, `top` and
+  the task manager under the app.
+- It runs in the **pool** (ADR 0071); the queue follows `nice` (ADR 0127). At
+  most `MaxConcurrentJobsPerApp` (number of virtual cores by default) tasks
+  of the same app in parallel; the following ones wait.
+- It follows the stop of ADR 0069: token cancellation through `cancellationToken`,
+  `SIGTERM` (reason `DependencyStop`) when the app closes, `SIGKILL` through
+  `kill` or the task manager **without closing the window**.
+- It is subject to the limits (ADR 0125) and to the OOM killer (ADR 0126) like
+  any process; in a worker, these limits are strict.
 
-### 4. Résultat et erreurs
+### 4. Result and errors
 
-- La tâche rend le résultat désérialisé ; la progression est livrée dans le
-  contexte de synchronisation de l'appelant, au plus 10 fois par seconde.
-- Annulation : `OperationCanceledException`. Tâche tuée :
-  `HackProcessKilledException` (raison `Killed`, `OutOfMemory`,
-  `CpuLimitExceeded`…). Exception de la tâche : `HackBackgroundJobException`
-  avec le type, le message et la pile d'origine (l'objet ne traverse pas).
-- Entrée ou résultat de plus de 16 Mio (la taille maximale d'un fichier,
-  ADR 0094) : refusé. Au-delà de 1 Mio, le guide recommande de passer un
-  chemin et de lire le fichier dans la tâche.
+- The task returns the deserialized result; progress is delivered in the
+  caller's synchronization context, at most 10 times per second.
+- Cancellation: `OperationCanceledException`. Killed task:
+  `HackProcessKilledException` (reason `Killed`, `OutOfMemory`,
+  `CpuLimitExceeded`…). Task exception: `HackBackgroundJobException`
+  with the original type, message and stack (the object does not cross).
+- Input or result of more than 16 MiB (the maximum file size,
+  ADR 0094): refused. Beyond 1 MiB, the guide recommends passing a
+  path and reading the file in the task.
 
-### 5. Sans worker : même contrat sur le fil principal
+### 5. Without a worker: same contract on the main thread
 
-Quand il n'y a pas de worker (tests sans boucle locale, navigateur sans
-Web Worker, hôte qui les coupe), la tâche tourne sur le fil principal, comme
-processus enfant, **avec la même sérialisation** de l'entrée et du résultat :
-une app qui marche dans les tests marche en worker. `/proc/<pid>/status`
-indique `Host: MainThread`. Appeler `context.CheckpointAsync()` y garde le
-bureau vivant.
+When there is no worker (tests without a local loop, browser without
+Web Worker, host that turns them off), the task runs on the main thread, as a
+child process, **with the same serialization** of the input and result:
+an app that works in tests works in a worker. `/proc/<pid>/status`
+indicates `Host: MainThread`. Calling `context.CheckpointAsync()` there keeps the
+desktop alive.
 
-### 6. Depuis un processus déjà en worker
+### 6. From a process already in a worker
 
-Une commande ou un service en worker peut aussi appeler `RunAsync` : la
-demande passe par l'opération `bg.run` à l'OS, qui place la tâche comme
-ci-dessus. C'est le seul lancement d'enfant permis depuis un worker
-(`StartChild` reste refusé, ADR 0124 §5).
+A command or service in a worker can also call `RunAsync`: the
+request goes through the `bg.run` operation to the OS, which places the task as
+above. This is the only child launch allowed from a worker
+(`StartChild` remains refused, ADR 0124 §5).
 
-## Conséquences
+## Consequences
 
-- Nouvelle bibliothèque d'analyseur dans le paquet `HackerOs.AppSdk`,
-  testée comme le générateur de routes d'ASP.Hack (ADR 0082).
-- Exemple compilé dans `Apps/Samples` (une fenêtre qui lance un calcul long
-  avec progression, annulation et `kill`).
-- Migration des apps de base : recherche du CodeEditor, compression et copies
-  de l'explorateur, filtres de Hack Paint ; chacune passe par
-  `HackBackground.RunAsync` ou garde sa place avec la raison écrite.
-- Docs : nouveau `background-jobs.md`, [`sdk-developer-guide.md`](../../framework/sdk-developer-guide.md),
+- New analyzer library in the `HackerOs.AppSdk` package,
+  tested like the ASP.Hack route generator (ADR 0082).
+- Compiled sample in `Apps/Samples` (a window that launches a long computation
+  with progress, cancellation and `kill`).
+- Migration of the base apps: CodeEditor search, explorer compression and copies,
+  Hack Paint filters; each goes through
+  `HackBackground.RunAsync` or keeps its place with the reason written.
+- Docs: new `background-jobs.md`, [`sdk-developer-guide.md`](../../framework/sdk-developer-guide.md),
   [`sdk-reference.md`](../../framework/sdk-reference.md),
   [`worker-processes.md`](../worker-processes.md).
 
-## Références
+## References
 
 - ADR 0069, 0070, 0071, 0082, 0094, 0124, 0125, 0126, 0127, 0132.
 - `Control.Invoke` (WinForms), `Worker` (HTML), `Task.Run`.

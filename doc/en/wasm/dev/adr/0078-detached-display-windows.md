@@ -1,64 +1,64 @@
-# ADR 0078 : fenêtres d'affichage détachées (préparation du deuxième écran)
+# ADR 0078: detached display windows (preparation for the second screen)
 
-## Statut
+## Status
 
-Accepté le 2026-10-16 (proposé le même jour, puis validé par Benoit avec le
-questionnaire de la section 4 du plan).
+Accepted on 2026-10-16 (proposed the same day, then validated by Benoit with the
+questionnaire of section 4 of the plan).
 
-- **Phase du plan :** phase web ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
-- **Dépend de :** ADR 0075 (iframe isolée).
+- **Plan phase:** web phase ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
+- **Depends on:** ADR 0075 (isolated iframe).
 
-## Contexte
+## Context
 
-Benoit veut ouvrir un site dans une nouvelle fenêtre, hors de l'OS : une fenêtre
-avec l'OS, l'autre avec le même OS mais qui n'affiche que la page. Il veut plus
-tard un deuxième écran dans une autre fenêtre ; ce chantier doit le préparer.
+Benoit wants to open a site in a new window, outside the OS: one window
+with the OS, the other with the same OS but showing only the page. He later wants
+a second screen in another window; this work item must prepare for it.
 
-Démarrer une seconde instance de HackerOS dans la nouvelle fenêtre donnerait un
-second OS : ses processus, sa mémoire et son état seraient séparés, et
-`HackerOs.Server` n'accepte qu'un circuit actif.
+Starting a second instance of HackerOS in the new window would give a
+second OS: its processes, memory and state would be separate, and
+`HackerOs.Server` accepts only one active circuit.
 
-## Décision
+## Decision
 
-### 1. Une seule instance, plusieurs surfaces d'affichage
+### 1. A single instance, several display surfaces
 
-La fenêtre détachée est ouverte par l'instance principale
-(`window.open` sur une page vide de même origine) et **pilotée par elle**. Elle
-ne démarre pas de runtime .NET. L'OS reste unique : processus, fichiers et
-réseau vivent dans l'instance principale.
+The detached window is opened by the main instance
+(`window.open` on an empty same-origin page) and **driven by it**. It
+does not start a .NET runtime. The OS remains unique: processes, files and
+network live in the main instance.
 
-### 2. Le lien d'affichage
+### 2. The display link
 
-`IDisplaySurfaceService` (Platform) gère les surfaces : la principale (le
-bureau) et les surfaces détachées. Chaque surface a un identifiant, une taille,
-un titre, un état (ouverte, fermée par l'utilisateur, perdue). L'ouverture doit
-venir d'un geste de l'utilisateur (règle des bloqueurs de fenêtres
-surgissantes). Le module JS du service crée le document de la surface, y place
-le contenu et relaie les événements de la surface (fermeture, redimensionnement,
-focus). Fermer l'OS ou se déconnecter ferme les surfaces.
+`IDisplaySurfaceService` (Platform) manages the surfaces: the main one (the
+desktop) and the detached surfaces. Each surface has an identifier, a size,
+a title, a state (open, closed by the user, lost). Opening must
+come from a user gesture (rule of popup
+blockers). The service's JS module creates the surface's document, places the
+content in it and relays the surface's events (close, resize,
+focus). Closing the OS or logging out closes the surfaces.
 
-### 3. Pages web dans une surface détachée
+### 3. Web pages in a detached surface
 
-« Ouvrir dans une fenêtre détachée » (menu de l'onglet, et une nouvelle façade
-`HackBrowser.OpenDetached(url)` du SDK) déplace l'onglet dans une surface : l'iframe isolée de l'ADR 0075 y
-est créée, et son pont parle toujours au navigateur de l'instance principale.
-La barre de titre de la surface montre l'adresse ; « Rattacher » remet l'onglet
-dans le navigateur.
+"Open in detached window" (tab menu, and a new `HackBrowser.OpenDetached(url)`
+facade of the SDK) moves the tab into a surface: the isolated iframe of ADR 0075 is
+created there, and its bridge still talks to the main instance's browser.
+The surface's title bar shows the address; "Reattach" puts the tab back
+in the browser.
 
-### 4. Ce qui reste à prouver
+### 4. What remains to be proven
 
-Dessiner un composant Blazor (site Blazor interactif de l'ADR 0073 §4, ou plus
-tard un bureau sur un deuxième écran) dans une surface détachée demande que le
-moteur de rendu de Blazor écrive dans le DOM d'un autre document et y reçoive
-les événements. Le chantier `web/10-detached-window` fait cette preuve ; s'il
-réussit, les sites Blazor s'ouvrent aussi en fenêtre détachée, sinon ils restent
-dans le navigateur de l'OS et un ADR décrit l'autre voie avant le deuxième
-écran.
+Drawing a Blazor component (interactive Blazor site of ADR 0073 §4, or later
+a desktop on a second screen) in a detached surface requires that Blazor's
+rendering engine write into another document's DOM and receive events
+there. The `web/10-detached-window` work item makes this proof; if it
+succeeds, Blazor sites also open in a detached window, otherwise they stay
+in the OS browser and an ADR describes the other path before the second
+screen.
 
-## Conséquences
+## Consequences
 
-- Le deuxième écran sera une surface de plus pour le gestionnaire de fenêtres.
-- Aucune seconde instance, aucun second circuit : compatible avec les trois
-  hôtes.
-- Le navigateur hôte peut bloquer `window.open` ; l'OS affiche alors une
-  notification qui explique comment l'autoriser.
+- The second screen will be one more surface for the window manager.
+- No second instance, no second circuit: compatible with the three
+  hosts.
+- The host browser may block `window.open`; the OS then displays a
+  notification that explains how to allow it.

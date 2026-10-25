@@ -1,19 +1,19 @@
-# Données d'un site : base `HackWebDb`, journal de débogage, saisie semi-automatique
+# Site data: `HackWebDb` database, debug log, autofill
 
-Chantier `web/12-site-data` de la phase web ([`asp-hack-plan.md`](../dev/plans/asp-hack-plan.md)). Décisions :
-[ADR 0088](../dev/adr/0088-site-data-debug-logs-and-form-history.md), qui réalise l'ADR 0073 §3.
-Guide général des sites : [`asp-hack-developer-guide.md`](asp-hack-developer-guide.md).
+Work item `web/12-site-data` of the web phase ([`asp-hack-plan.md`](../dev/plans/asp-hack-plan.md)). Decisions:
+[ADR 0088](../dev/adr/0088-site-data-debug-logs-and-form-history.md), which implements ADR 0073 §3.
+General guide to sites: [`asp-hack-developer-guide.md`](asp-hack-developer-guide.md).
 
-## Objet
+## Purpose
 
-Un site ASP.Hack n'a pas de capacité `filesystem.*` : ses données ne vont pas dans les fichiers de
-l'OS. Ce chantier lui donne trois choses :
+An ASP.Hack site has no `filesystem.*` capability: its data does not go into the OS files. This work item gives it
+three things:
 
-| Brique | Où vivent les données | Qui les voit |
+| Building block | Where the data lives | Who sees it |
 |---|---|---|
-| **`HackWebDb`** : une base IndexedDB par site | base `hackweb.<id de l'app>` du navigateur hôte | le site ; le Diagnostic (liste, taille, effacement) |
-| **Journal de débogage** (`ILogger<T>`) | `/var/log/hackweb/<id>.log`, fichier de l'OS | `cat`, `tail`, `grep` dans un terminal |
-| **Saisie semi-automatique** du navigateur | `~/.local/share/hackeros/browser/form-history.json` | le navigateur de l'OS, pour tous les sites |
+| **`HackWebDb`**: one IndexedDB database per site | `hackweb.<app id>` database of the host browser | the site; Diagnostics (list, size, clearing) |
+| **Debug log** (`ILogger<T>`) | `/var/log/hackweb/<id>.log`, an OS file | `cat`, `tail`, `grep` in a terminal |
+| Browser **autofill** | `~/.local/share/hackeros/browser/form-history.json` | the OS browser, for all sites |
 
 ## Architecture
 
@@ -28,23 +28,23 @@ l'OS. Ce chantier lui donne trois choses :
  Page HTML (iframe) ─ PageBridge.js ─"formhistory"─► BrowserWindow ─► FormHistory ─► form-history.json
 ```
 
-| Classe | Projet | Rôle |
+| Class | Project | Role |
 |---|---|---|
-| `IAppWebDatabaseGateway`, `HackWebDbNames`, contrats `HackWebDb*` | `Shared/HackerOs.AppSdk/WebData` | contrat entre le site et l'OS, en JSON |
-| `InMemoryWebDatabase`, `HackWebDbInMemoryBackend` | idem | moteur IndexedDB en mémoire (hôtes sans navigateur, tests) |
-| `HackWebDb`, `HackWebDbStore<T>`, `HackWebDbIndex<T>`, `HackWebDbTransaction` | `Shared/HackerOs.AppSdk.Web/Data` | API du site |
-| `HackWebLoggingOptions`, `IHackWebDebugLogSink` | `Shared/HackerOs.AppSdk.Web/Logging` | journal de débogage |
-| `AppWebDatabaseGateway`, `IWebSiteDatabaseStore`, `InMemoryWebSiteDatabaseStore` | `Platform/HackerOs.Platform.Core/WebData` | passerelle de confiance, magasin en mémoire |
-| `WebSiteDatabaseInterop`, `wwwroot/webSiteDatabases.js` | `Infrastructure/HackerOs.Infrastructure.Browser` | IndexedDB réel |
-| `IndexedDbWebSiteDatabaseStore` | `OS/HackerOs.Ecosystem/WebData` | magasin de l'hôte Ecosystem |
-| `FormHistory` | `Apps/System/HackerOs.Apps.Browser/Storage` | historique de formulaires |
+| `IAppWebDatabaseGateway`, `HackWebDbNames`, `HackWebDb*` contracts | `Shared/HackerOs.AppSdk/WebData` | contract between the site and the OS, in JSON |
+| `InMemoryWebDatabase`, `HackWebDbInMemoryBackend` | same | in-memory IndexedDB engine (hosts without a browser, tests) |
+| `HackWebDb`, `HackWebDbStore<T>`, `HackWebDbIndex<T>`, `HackWebDbTransaction` | `Shared/HackerOs.AppSdk.Web/Data` | site API |
+| `HackWebLoggingOptions`, `IHackWebDebugLogSink` | `Shared/HackerOs.AppSdk.Web/Logging` | debug log |
+| `AppWebDatabaseGateway`, `IWebSiteDatabaseStore`, `InMemoryWebSiteDatabaseStore` | `Platform/HackerOs.Platform.Core/WebData` | trusted gateway, in-memory store |
+| `WebSiteDatabaseInterop`, `wwwroot/webSiteDatabases.js` | `Infrastructure/HackerOs.Infrastructure.Browser` | real IndexedDB |
+| `IndexedDbWebSiteDatabaseStore` | `OS/HackerOs.Ecosystem/WebData` | Ecosystem host store |
+| `FormHistory` | `Apps/System/HackerOs.Apps.Browser/Storage` | form history |
 
-## La base d'un site
+## A site's database
 
-### Déclarer le schéma
+### Declaring the schema
 
-Comme `IDBOpenDBRequest.onupgradeneeded`, chaque version décrit ce qui change ; les versions se
-suivent sans trou, et l'OS applique celles qui manquent dans l'ordre.
+Like `IDBOpenDBRequest.onupgradeneeded`, each version describes what changes; versions follow
+one another without gaps, and the OS applies the missing ones in order.
 
 ```csharp
 public override void Configure(HackWebApplicationBuilder builder)
@@ -61,9 +61,9 @@ public override void Configure(HackWebApplicationBuilder builder)
 }
 ```
 
-`AddHackWebDb` vérifie les versions au démarrage du site. La base s'ouvre à la première requête.
+`AddHackWebDb` checks the versions when the site starts. The database opens on the first request.
 
-### Lire et écrire
+### Reading and writing
 
 ```csharp
 public sealed class NoteStore(HackWebDb db)
@@ -78,27 +78,27 @@ public sealed class NoteStore(HackWebDb db)
 }
 ```
 
-| Méthode | IndexedDB |
+| Method | IndexedDB |
 |---|---|
 | `GetAsync(key)`, `GetAllAsync(range?, count?)`, `GetAllKeysAsync`, `CountAsync` | `get`, `getAll`, `getAllKeys`, `count` |
-| `AddAsync(value, key?)` | `add` : `ConstraintError` si la clé existe |
-| `PutAsync(value, key?)` | `put` : remplace |
+| `AddAsync(value, key?)` | `add`: `ConstraintError` if the key exists |
+| `PutAsync(value, key?)` | `put`: replaces |
 | `DeleteAsync(key \| range)`, `ClearAsync()` | `delete`, `clear` |
 | `Index(name).GetAsync/GetAllAsync/CountAsync` | `IDBIndex` |
 | `HackWebDbKeyRange.Only/LowerBound/UpperBound/Bound` | `IDBKeyRange` |
-| `HackWebDbKey.Array(...)` | clé tableau |
+| `HackWebDbKey.Array(...)` | array key |
 
-Les clés suivent l'ordre d'IndexedDB : nombres, puis chaînes, puis tableaux.
+Keys follow IndexedDB's order: numbers, then strings, then arrays.
 
-**Clé générée.** Comme dans un navigateur, un objet qui porte `id: 0` est rangé sous la clé `0`.
-Pour laisser le générateur numéroter, l'identifiant n'est pas écrit quand il vaut sa valeur par
-défaut : `[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]` sur `Id`
-(voir `Note` de l'Intranet).
+**Generated key.** As in a browser, an object that carries `id: 0` is stored under key `0`.
+To let the generator number it, the identifier is not written when it equals its default
+value: `[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]` on `Id`
+(see the Intranet's `Note`).
 
 ### Transactions
 
-Une transaction est un lot (ADR 0088 §2) : les écritures sont empilées puis envoyées ensemble, et
-réussissent ou échouent ensemble.
+A transaction is a batch (ADR 0088 §2): writes are queued then sent together, and
+succeed or fail together.
 
 ```csharp
 HackWebDbTransaction tx = db.BeginTransaction("notes", "meta");
@@ -107,35 +107,35 @@ tx.Store<string>("meta").Put("done", "seeded");
 IReadOnlyList<HackWebDbKey?> keys = await tx.CommitAsync();   // une clé par écriture
 ```
 
-Les erreurs sont des `HackWebDbException` dont `Name` reprend la `DOMException` :
+Errors are `HackWebDbException`s whose `Name` repeats the `DOMException`:
 `ConstraintError`, `NotFoundError`, `DataError`, `VersionError`, `InvalidStateError`,
 `QuotaExceededError`.
 
 ### JSON
 
-Les valeurs sont sérialisées avec les options du site (`builder.Json`), donc par son contexte
-généré : le type rangé doit y figurer (`[JsonSerializable(typeof(Note))]`). `string`, `int`,
-`long`, `double` et `bool` fonctionnent sans lui.
+Values are serialized with the site's options (`builder.Json`), so by its generated
+context: the stored type must appear in it (`[JsonSerializable(typeof(Note))]`). `string`, `int`,
+`long`, `double` and `bool` work without it.
 
-### Hors de HackerOS et dans les tests
+### Outside HackerOS and in tests
 
-- `HackWebHost.CreateApplication` sans OS : la base est en mémoire (`hackweb.in-memory`), propre à
-  l'application. Les tests de l'Intranet tournent ainsi sans rien configurer.
-- Pour inspecter la base d'un test, enregistrer la passerelle avant `AddHackWebDb` :
+- `HackWebHost.CreateApplication` without an OS: the database is in memory (`hackweb.in-memory`), specific to
+  the application. The Intranet tests run this way without any configuration.
+- To inspect a test's database, register the gateway before `AddHackWebDb`:
   `services.AddSingleton<IAppWebDatabaseGateway>(new HackWebDbInMemoryBackend("hackweb.test"))`,
-  puis lire `backend.Database.Describe()`.
+  then read `backend.Database.Describe()`.
 
-### Ce que voit l'utilisateur
+### What the user sees
 
-- **Diagnostic** (« IndexedDB Diagnostic », capacité `system.storage.inspect` approuvée par un
-  administrateur) : rubrique *Website databases* avec chaque site, sa version, ses magasins, le
-  nombre d'enregistrements et une taille estimée. *Clear this database* la supprime ; le site la
-  recrée vide à sa requête suivante.
-- **Paramètres → Applications → Désinstaller** : la boîte de confirmation annonce que la base
-  `hackweb.<id>` sera supprimée. Elle l'est après la désinstallation. Réinstaller le site repart
-  d'une base vide.
+- **Diagnostics** ("IndexedDB Diagnostic", capability `system.storage.inspect` approved by an
+  administrator): *Website databases* section with each site, its version, its stores, the
+  number of records and an estimated size. *Clear this database* deletes it; the site
+  recreates it empty at its next request.
+- **Settings → Applications → Uninstall**: the confirmation dialog announces that the
+  `hackweb.<id>` database will be deleted. It is deleted after the uninstall. Reinstalling the site starts
+  from an empty database.
 
-## Journal de débogage
+## Debug log
 
 ```csharp
 builder.Logging.EnableDebugLog();                       // LogLevel.Debug et au-dessus
@@ -156,56 +156,56 @@ $ tail /var/log/hackweb/org.hackeros.samples.intranet.log
 2026-10-17T01:54:42.925Z info: HackerOs.AppSdk.Web.Hosting.Diagnostics[0] Request finished HTTP/1.1 POST http://intranet.hack/Notes/Create - 302 0 - 45.1000ms
 ```
 
-- Format : heure UTC, niveau court d'ASP.NET Core (`trce`, `dbug`, `info`, `warn`, `fail`,
-  `crit`), catégorie, identifiant d'événement, message ; une exception suit sur la même ligne.
-- Sans `EnableDebugLog`, `ILogger<T>` est injectable mais n'écrit rien.
-- Le fichier est écrit par l'OS (`system:system`, `0644`, rotation 1 Mio × 5, ADR 0045).
-- Seule une app `Web` peut écrire ce journal ; une autre reçoit `UnauthorizedAccessException`.
-- Un test enregistre `HackWebDebugLogMemorySink` comme `IHackWebDebugLogSink` pour lire les lignes.
+- Format: UTC time, ASP.NET Core short level (`trce`, `dbug`, `info`, `warn`, `fail`,
+  `crit`), category, event identifier, message; an exception follows on the same line.
+- Without `EnableDebugLog`, `ILogger<T>` is injectable but writes nothing.
+- The file is written by the OS (`system:system`, `0644`, rotation 1 MiB × 5, ADR 0045).
+- Only a `Web` app can write this log; any other receives `UnauthorizedAccessException`.
+- A test registers `HackWebDebugLogMemorySink` as `IHackWebDebugLogSink` to read the lines.
 
-## Saisie semi-automatique
+## Autofill
 
-Dans une page HTML (vues MVC, pages statiques, sites externes simulés) :
+In an HTML page (MVC views, static pages, simulated external sites):
 
-1. À l'envoi d'un formulaire, le pont retient les champs `text`, `search`, `email`, `tel`, `url`,
-   `number` qui ont un `name`. Jamais : mots de passe, champs cachés, `autocomplete="off"` (champ
-   ou formulaire), numéros de carte (13 à 19 chiffres valides selon Luhn), valeurs de plus de 200
-   caractères.
-2. Au focus d'un champ, le pont demande les valeurs de son `name` (20 au plus, les plus utilisées
-   d'abord) et les attache par une `<datalist>`.
-3. `Ctrl+Maj+Suppr` efface l'historique ; un bandeau le confirme.
+1. When a form is submitted, the bridge remembers the `text`, `search`, `email`, `tel`, `url`,
+   `number` fields that have a `name`. Never: passwords, hidden fields, `autocomplete="off"` (field
+   or form), card numbers (13 to 19 digits valid per Luhn), values longer than 200
+   characters.
+2. When a field gets focus, the bridge asks for the values of its `name` (20 at most, most used
+   first) and attaches them through a `<datalist>`.
+3. `Ctrl+Shift+Delete` clears the history; a banner confirms it.
 
-Les formulaires d'un site Blazor (ADR 0084) ne passent pas par le pont et n'en profitent pas.
+Forms of a Blazor site (ADR 0084) do not go through the bridge and do not benefit from it.
 
 ## Tests
 
-| Suite | Ce qu'elle prouve |
+| Suite | What it proves |
 |---|---|
-| `HackerOs.AppSdk.Web.Tests/Data/HackWebDbTests` | générateur de clés, index uniques et `multiEntry`, ordre des clés, plages, transactions atomiques, migrations, `VersionError`, repli en mémoire |
-| `HackerOs.AppSdk.Web.Tests/Logging/HackWebDebugLogTests` | journal muet par défaut, lignes de requêtes, `ILogger<T>`, exceptions, niveau minimal |
-| `HackerOs.Platform.Core.Tests/WebData/WebSiteDatabaseTests` | nom imposé, apps non `Web` refusées, liste et effacement soumis à `system.storage.inspect`, fichier `/var/log/hackweb/<id>.log` |
-| `HackerOs.Platform.Core.Tests/Apps/AppInstallationServiceTests` | la désinstallation d'un site supprime sa base, et seulement la sienne |
-| `HackerOs.Apps.Browser.Tests/FormHistoryTests` | fichier de l'utilisateur, tri par usage, limites, cartes refusées, effacement |
-| `HackerOs.UI.E2E.Tests/BrowserSiteDataTests` | dans Chromium : note de l'Intranet dans IndexedDB, `<datalist>` proposée, ligne du journal lue par `grep`, base listée et effacée par le Diagnostic |
+| `HackerOs.AppSdk.Web.Tests/Data/HackWebDbTests` | key generator, unique and `multiEntry` indexes, key order, ranges, atomic transactions, migrations, `VersionError`, in-memory fallback |
+| `HackerOs.AppSdk.Web.Tests/Logging/HackWebDebugLogTests` | log silent by default, request lines, `ILogger<T>`, exceptions, minimum level |
+| `HackerOs.Platform.Core.Tests/WebData/WebSiteDatabaseTests` | enforced name, non-`Web` apps refused, listing and clearing subject to `system.storage.inspect`, file `/var/log/hackweb/<id>.log` |
+| `HackerOs.Platform.Core.Tests/Apps/AppInstallationServiceTests` | uninstalling a site deletes its database, and only its own |
+| `HackerOs.Apps.Browser.Tests/FormHistoryTests` | user's file, sort by usage, limits, cards refused, clearing |
+| `HackerOs.UI.E2E.Tests/BrowserSiteDataTests` | in Chromium: Intranet note in IndexedDB, `<datalist>` offered, log line read by `grep`, database listed and cleared by Diagnostics |
 
-## Décisions clés
+## Key decisions
 
-- La base passe par une passerelle de l'OS et non par le worker (ADR 0088 §1) : le nom est imposé
-  par l'OS, et le Diagnostic comme la désinstallation en ont besoin.
-- Transactions par lots, parce qu'une transaction IndexedDB ne survit pas à un aller-retour entre
-  le worker et le thread principal.
-- L'historique de formulaires est un fichier de l'utilisateur, comme les cookies et le
-  `localStorage` du navigateur (ADR 0073 §3).
+- The database goes through an OS gateway and not through the worker (ADR 0088 §1): the name is enforced
+  by the OS, and Diagnostics as well as uninstallation need it.
+- Batched transactions, because an IndexedDB transaction does not survive a round trip between
+  the worker and the main thread.
+- Form history is a user file, like the browser's cookies and
+  `localStorage` (ADR 0073 §3).
 
-## Tâches
+## Tasks
 
 - [x] ADR 0088.
-- [x] Contrats `HackWebDb*`, moteur en mémoire, passerelle `IAppExecutionContext.WebDatabase`.
-- [x] Opérations distantes du worker (`wdb.open`, `wdb.exec`, `log.site`).
-- [x] Module `webSiteDatabases.js`, magasin IndexedDB de l'Ecosystem.
-- [x] API `HackWebDb` du SDK web, repli en mémoire hors de l'OS.
-- [x] `ILogger<T>` et journal `/var/log/hackweb/<id>.log`.
-- [x] Diagnostic : liste et effacement ; désinstallation : suppression annoncée et faite.
-- [x] Historique de formulaires du navigateur (`<datalist>`, `Ctrl+Maj+Suppr`).
-- [x] Intranet : notes dans `hackweb.org.hackeros.samples.intranet`, filtre `?author=` par l'index, journal activé.
-- [x] Tests unitaires et E2E Chromium.
+- [x] `HackWebDb*` contracts, in-memory engine, `IAppExecutionContext.WebDatabase` gateway.
+- [x] Worker remote operations (`wdb.open`, `wdb.exec`, `log.site`).
+- [x] `webSiteDatabases.js` module, Ecosystem IndexedDB store.
+- [x] `HackWebDb` API of the web SDK, in-memory fallback outside the OS.
+- [x] `ILogger<T>` and `/var/log/hackweb/<id>.log` log.
+- [x] Diagnostics: listing and clearing; uninstall: deletion announced and done.
+- [x] Browser form history (`<datalist>`, `Ctrl+Shift+Delete`).
+- [x] Intranet: notes in `hackweb.org.hackeros.samples.intranet`, `?author=` filter through the index, log enabled.
+- [x] Unit tests and Chromium E2E.

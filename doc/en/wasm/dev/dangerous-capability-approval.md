@@ -1,30 +1,30 @@
-# Approbation des capacités dangereuses
+# Dangerous capability approval
 
-## Objectif
+## Goal
 
-Une app non système ne reçoit jamais en silence une capacité dangereuse
+A non-system app never silently receives a dangerous capability
 (`process.manage`, `network.real.access`, `filesystem.system.write`,
-`keyring.read-all` de l'ADR 0100, `users.manage` de l'ADR 0120…, voir
-[`capabilities.md`](../framework/capabilities.md)). Au lancement, l'OS demande à un
-administrateur de l'approuver, comme le « bureau sécurisé » de l'UAC de Windows,
-et mémorise la décision dans de vrais fichiers. Ce document décrit
-l'implémentation du chantier `rebuild/2-dangerous-approval` de
-l'[ADR 0049](adr/0049-dangerous-capabilities-and-admin-approval.md)
-(sections 3 à 8).
+`keyring.read-all` from ADR 0100, `users.manage` from ADR 0120…, see
+[`capabilities.md`](../framework/capabilities.md)). At launch, the OS asks an
+administrator to approve it, like the Windows UAC "secure desktop", and
+remembers the decision in real files. This document describes the
+implementation of the `rebuild/2-dangerous-approval` work item of
+[ADR 0049](adr/0049-dangerous-capabilities-and-admin-approval.md)
+(sections 3 to 8).
 
-Les apps système (ADR 0048) ne voient jamais la fenêtre, et aucune app non
-système de l'hôte Ecosystem ne déclare aujourd'hui de capacité dangereuse :
-l'expérience de base ne change pas.
+System apps (ADR 0048) never see the window, and no non-system app of the
+Ecosystem host declares a dangerous capability today: the basic experience
+does not change.
 
-## Fichiers
+## Files
 
-| Fichier | Propriétaire | Contenu |
+| File | Owner | Content |
 |---|---|---|
-| `/etc/hackeros/security.config` | `system:system 0644`, document `SystemOnly` | `dangerousCapabilities=prompt` (défaut) ou `block` |
-| `/etc/hackeros/app-permissions.config` | `system:system 0644` | décisions machine `allow` / `deny` ; **seule source d'un `allow`** |
-| `~/.config/hackeros/app-permissions.config` | l'utilisateur | refus (`deny`) valables pour lui seul |
+| `/etc/hackeros/security.config` | `system:system 0644`, `SystemOnly` document | `dangerousCapabilities=prompt` (default) or `block` |
+| `/etc/hackeros/app-permissions.config` | `system:system 0644` | machine `allow` / `deny` decisions; **the only source of an `allow`** |
+| `~/.config/hackeros/app-permissions.config` | the user | refusals (`deny`) valid for that user only |
 
-Les deux fichiers de `/etc` sont livrés commentés au premier démarrage
+The two `/etc` files are delivered commented out at first startup
 (`SettingsStoreToFilesMigration.MigrateSystemAsync`).
 
 ```text
@@ -34,222 +34,221 @@ org.example.scanner:network.real.access=allow
 org.example.scanner:filesystem.system.read=deny
 ```
 
-- Clé `<appId>:<capacité>`, valeur `allow` ou `deny`, section `[permissions]`.
-- Une ligne invalide (forme, capacité inconnue, valeur) est ignorée avec un
-  avertissement dans `/var/log/syslog`. Une ligne qui vise une capacité normale
-  ou une app système est ignorée sans effet. Un `allow` dans le fichier
-  utilisateur est ignoré avec un avertissement.
-- Une valeur invalide de `dangerousCapabilities` est ignorée (ADR 0044) :
-  `prompt` s'applique.
-- `cat /etc/hackeros/app-permissions.config` montre ce qu'un administrateur a
-  approuvé ; `sudo nano` permet de le modifier à la main.
+- Key `<appId>:<capability>`, value `allow` or `deny`, section `[permissions]`.
+- An invalid line (form, unknown capability, value) is ignored with a warning
+  in `/var/log/syslog`. A line targeting a normal capability or a system app
+  is ignored without effect. An `allow` in the user file is ignored with a
+  warning.
+- An invalid value of `dangerousCapabilities` is ignored (ADR 0044): `prompt`
+  applies.
+- `cat /etc/hackeros/app-permissions.config` shows what an administrator has
+  approved; `sudo nano` allows editing it by hand.
 
-## Table de décision
+## Decision table
 
 `DangerousCapabilityEvaluator.Evaluate(manifest, isSystemApp, policy, decisions)`
-donne l'état de chaque capacité dangereuse déclarée. Pour une app non système,
-la première règle qui s'applique gagne :
+gives the state of each declared dangerous capability. For a non-system app,
+the first rule that applies wins:
 
-| Règle | État (`DangerousCapabilityState`) | Accordée ? |
+| Rule | State (`DangerousCapabilityState`) | Granted? |
 |---|---|---|
-| politique `block` | `BlockedByPolicy` (les `allow` existants sont ignorés) | non |
-| `deny` machine | `DeniedByAdministrator` | non |
-| `deny` utilisateur | `DeniedByUser` (l'emporte sur un `allow` machine) | non |
-| `allow` machine | `Allowed` | **oui**, source `AdministratorApproval` |
-| aucune décision | `Pending` : la passerelle demande | non |
+| `block` policy | `BlockedByPolicy` (existing `allow` entries are ignored) | no |
+| machine `deny` | `DeniedByAdministrator` | no |
+| user `deny` | `DeniedByUser` (wins over a machine `allow`) | no |
+| machine `allow` | `Allowed` | **yes**, source `AdministratorApproval` |
+| no decision | `Pending`: the gate asks | no |
 
-Une app système a l'état `System` pour toutes ses capacités dangereuses
-(accordées à la connexion, source `SystemPolicy`).
+A system app has the `System` state for all its dangerous capabilities
+(granted at login, source `SystemPolicy`).
 
 ## Architecture
 
-| Élément | Projet | Rôle |
+| Element | Project | Role |
 |---|---|---|
-| `SecuritySettingsDocuments`, `DangerousCapabilityPolicy` | Platform.Core/Policy | schéma de `security.config`, lecture de la politique |
-| `AppPermissionsDocument`, `AppPermissionDecisions` | Platform.Core/Policy | chemins, analyse et édition ligne à ligne des deux fichiers |
-| `IAppPermissionStore` / `AppPermissionStore` | Platform.Core/Policy | lecture des deux fichiers ; écriture machine en **contexte système audité**, écriture utilisateur avec ses propres droits |
-| `DangerousCapabilityEvaluator` | Platform.Core/Policy | table de décision pure |
-| `IDangerousCapabilityGate` / `DangerousCapabilityGate` | Platform.Core/Policy | passerelle de lancement, vérification des mots de passe, `auth.log`, alignement des grants |
-| `IDangerousCapabilityApprovalPrompt` | Platform.Core/Policy | contrat de l'invite (fenêtre ou terminal) |
-| `DangerousCapabilityApprovalBroker` | Platform.Blazor/Security | invite par défaut de l'hôte : file des demandes pour la fenêtre |
-| `DangerousCapabilityApprovalOverlay` | Platform.Blazor/Security | la fenêtre spéciale, rendue par `DesktopShell` et `MobileShell` |
-| `ShellHostPrompts` | Platform.Core/Shell | mode texte pour une commande lancée depuis un shell hébergé (`HackShell`, [`shell-host.md`](../framework/shell-host.md)) ; écrit et lit par le `HackCredentialPrompt` du terminal |
-| `AppPermissionAdministration`, `AppPermissionsPanel` | Platform.Core/Policy, Apps.Settings | onglet Permissions des Paramètres |
+| `SecuritySettingsDocuments`, `DangerousCapabilityPolicy` | Platform.Core/Policy | `security.config` schema, policy reading |
+| `AppPermissionsDocument`, `AppPermissionDecisions` | Platform.Core/Policy | paths, parsing and line-by-line editing of the two files |
+| `IAppPermissionStore` / `AppPermissionStore` | Platform.Core/Policy | reading the two files; machine writing in an **audited system context**, user writing with the user's own rights |
+| `DangerousCapabilityEvaluator` | Platform.Core/Policy | pure decision table |
+| `IDangerousCapabilityGate` / `DangerousCapabilityGate` | Platform.Core/Policy | launch gate, password verification, `auth.log`, grant alignment |
+| `IDangerousCapabilityApprovalPrompt` | Platform.Core/Policy | prompt contract (window or terminal) |
+| `DangerousCapabilityApprovalBroker` | Platform.Blazor/Security | host default prompt: request queue for the window |
+| `DangerousCapabilityApprovalOverlay` | Platform.Blazor/Security | the special window, rendered by `DesktopShell` and `MobileShell` |
+| `ShellHostPrompts` | Platform.Core/Shell | text mode for a command launched from a hosted shell (`HackShell`, [`shell-host.md`](../framework/shell-host.md)); written and read through the terminal's `HackCredentialPrompt` |
+| `AppPermissionAdministration`, `AppPermissionsPanel` | Platform.Core/Policy, Apps.Settings | Settings Permissions tab |
 
-### Lancement
+### Launch
 
-`AppLifecycleOrchestrator.LaunchAsync`, après la vérification de singleton et la
-consommation d'un éventuel ticket d'élévation, appelle
+`AppLifecycleOrchestrator.LaunchAsync`, after the singleton check and the
+consumption of any elevation ticket, calls
 `IDangerousCapabilityGate.EnsureDecidedAsync(manifest, principal, request.ApprovalPrompt, request.Interactive)`
-pour toute app qui déclare une capacité dangereuse, **avant** de créer le
-processus :
+for any app that declares a dangerous capability, **before** creating the
+process:
 
-1. App système : rien à faire.
-2. Politique `block` : pas de fenêtre, entrée `capability.blocked`.
-3. Politique `prompt` et au moins une capacité `Pending` :
-   - lancement non interactif (`AppLaunchRequest.Interactive = false`, services
-     démarrés automatiquement avec la session) ou aucune invite disponible
-     (aucune coque affichée) : entrée `capability.deferred`, l'approbation se
-     fera depuis les Paramètres ou au prochain lancement interactif ;
-   - sinon l'invite s'ouvre (`request.ApprovalPrompt`, sinon la fenêtre).
-4. La passerelle accorde les capacités `Allowed` et **révoque** une grant qui
-   ne l'est plus (passage à `block`, refus). Un changement prend donc effet au
-   prochain lancement, et les capacités d'une instance restent figées à son
-   lancement (ADR 0042).
+1. System app: nothing to do.
+2. `block` policy: no window, `capability.blocked` entry.
+3. `prompt` policy and at least one `Pending` capability:
+   - non-interactive launch (`AppLaunchRequest.Interactive = false`, services
+     started automatically with the session) or no prompt available (no shell
+     displayed): `capability.deferred` entry, approval will happen from
+     Settings or at the next interactive launch;
+   - otherwise the prompt opens (`request.ApprovalPrompt`, otherwise the
+     window).
+4. The gate grants the `Allowed` capabilities and **revokes** a grant that no
+   longer is (switch to `block`, denial). A change therefore takes effect at
+   the next launch, and an instance's capabilities stay frozen at its launch
+   (ADR 0042).
 
-Une app démarrée sans une capacité reçoit `HackUnauthorizedAccessException`
-quand elle l'utilise, comme pour toute capacité absente.
+An app started without a capability receives
+`HackUnauthorizedAccessException` when it uses it, as for any missing
+capability.
 
-### Invite
+### Prompt
 
-`DangerousCapabilityApprovalRequest` porte le manifeste, les capacités en
-attente (`AppCapabilities.Describe`), l'utilisateur, le nom d'administrateur à
-préremplir (l'utilisateur seulement s'il est administrateur) et
-`ApproveAsync(login, password)`. L'invite ne décide rien : `ApproveAsync`
-vérifie les identifiants avec `IAdminElevationVerifier` (ADR 0042 ; un autre
-compte que l'utilisateur courant est accepté, comme pour `sudo`), puis écrit les
-lignes `allow` dans le fichier machine en contexte système audité. Même un
-administrateur doit saisir son mot de passe. Après trois échecs,
-`ApproveAsync` refuse sans vérifier et l'invite se ferme : rien n'est écrit.
-Une invite qui répondrait `Approved` sans tentative vérifiée est traitée comme
-une fermeture.
+`DangerousCapabilityApprovalRequest` carries the manifest, the pending
+capabilities (`AppCapabilities.Describe`), the user, the administrator name to
+prefill (the user only if they are an administrator) and
+`ApproveAsync(login, password)`. The prompt decides nothing: `ApproveAsync`
+verifies the credentials with `IAdminElevationVerifier` (ADR 0042; an account
+other than the current user is accepted, as for `sudo`), then writes the
+`allow` lines to the machine file in an audited system context. Even an
+administrator must enter their password. After three failures,
+`ApproveAsync` refuses without verifying and the prompt closes: nothing is
+written. A prompt that answered `Approved` without a verified attempt is
+treated as a close.
 
-| Fin de l'invite | Effet |
+| End of the prompt | Effect |
 |---|---|
-| *Autoriser* réussi | `allow` machine, grants `AdministratorApproval`, `capability.approve` (`success`) |
-| mot de passe faux | une entrée `capability.approve` (`failure:<raison>`) par essai |
-| *Refuser* | `deny` dans le fichier de l'utilisateur, `capability.refuse` ; la question ne revient plus pour lui |
-| Échap / fermer / trois échecs | rien d'écrit, la question revient au prochain lancement |
+| *Allow* succeeded | machine `allow`, `AdministratorApproval` grants, `capability.approve` (`success`) |
+| wrong password | one `capability.approve` entry (`failure:<reason>`) per attempt |
+| *Deny* | `deny` in the user's file, `capability.refuse`; the question no longer comes back for them |
+| Esc / close / three failures | nothing written, the question comes back at the next launch |
 
-### La fenêtre spéciale
+### The special window
 
-`DangerousCapabilityApprovalOverlay` (Blazor natif, `.razor.css` collocalisé,
-sans MudBlazor) est rendu par la coque, hors de toute fenêtre d'app : un voile
-sombre couvre le bureau et la barre des tâches (`z-index` au-dessus de tout),
-capte la souris et le clavier (les raccourcis de la coque ne reçoivent plus les
-touches). Fenêtre centrée, non déplaçable, bandeau rouge « Autorisation
-administrateur requise » avec bouclier, identité de l'app (nom, identifiant,
-éditeur, version, mention « App non système »), capacités avec titre et phrase
-de risque, champs nom et mot de passe, boutons **Refuser** et **Autoriser**
-(désactivé sans nom ni mot de passe), pied « Cette décision sera inscrite dans
-/var/log/auth.log ». Le champ mot de passe prend le focus à l'ouverture.
-Les libellés suivent la langue de la session (ADR 0104) : ceux cités ici sont
-ceux d'une session française ; en anglais, la langue par défaut, la fenêtre
-dit « Administrator authorization required », **Deny** et **Allow**.
+`DangerousCapabilityApprovalOverlay` (native Blazor, collocated `.razor.css`,
+no MudBlazor) is rendered by the shell, outside any app window: a dark veil
+covers the desktop and the taskbar (`z-index` above everything), captures the
+mouse and keyboard (the shell shortcuts no longer receive the keys). Centered
+window, not movable, red banner "Administrator authorization required" with a
+shield, app identity (name, identifier, publisher, version, "Non-system app"
+mention), capabilities with title and risk sentence, name and password
+fields, **Deny** and **Allow** buttons (disabled without name or password),
+footer "This decision will be recorded in /var/log/auth.log". The password
+field takes the focus on opening. The labels follow the session language
+(ADR 0104): those quoted here are the English ones, the default language; in a
+French session the window shows the French equivalents.
 
-`DangerousCapabilityApprovalBroker` montre une demande à la fois. Sans fenêtre
-attachée, une demande finit en `Unavailable` (donc `capability.deferred`) ; si
-la coque disparaît (déconnexion), les demandes en cours sont fermées sans
-décision.
+`DangerousCapabilityApprovalBroker` shows one request at a time. Without an
+attached window, a request ends as `Unavailable` (hence
+`capability.deferred`); if the shell disappears (logout), pending requests are
+closed without a decision.
 
-### Mode texte du terminal
+### Terminal text mode
 
-Un shell hébergé par `HackShell` (ADR 0056 §7) passe son `ShellHostPrompts` à
-l'interpréteur, qui le transmet au lancement de chaque commande. Il
-écrit le bandeau d'avertissement et la liste des capacités dans le terminal,
-propose Oui (administrateur) / Non (refuser) / Annuler, puis demande le nom et le
-mot de passe avec la même boîte que `sudo` (par le `HackCredentialPrompt` du
-terminal : `TerminalCredentialPrompt` pour `TerminalPanel`), jusqu'à trois essais (« Désolé,
-réessayez. »). Les commandes de l'hôte sont système : seules des commandes
-tierces voient ce mode.
+A shell hosted by `HackShell` (ADR 0056 §7) passes its `ShellHostPrompts` to
+the interpreter, which hands it to each command launch. It writes the warning
+banner and the capability list to the terminal, offers Yes (administrator) /
+No (deny) / Cancel, then asks for the name and password with the same box as
+`sudo` (through the terminal's `HackCredentialPrompt`:
+`TerminalCredentialPrompt` for `TerminalPanel`), up to three attempts ("Sorry,
+try again."). Host commands are system: only third-party commands see this
+mode.
 
-### Approbation ponctuelle (ADR 0042) et `block`
+### One-time approval (ADR 0042) and `block`
 
-Avec `dangerousCapabilities=block`, pour une app non système :
+With `dangerousCapabilities=block`, for a non-system app:
 
-- `LaunchAsync` refuse un ticket `CapabilityApproval` qui vise une capacité
-  dangereuse (`ElevationDenied`, `lifecycle.elevation.blocked-by-policy`) ;
-- l'instance reçoit un `OneShotElevationGrantSet` où chaque capacité
-  dangereuse est bloquée (`Block` / `IsBlocked`) : `Grant` est ignoré et
-  `TryConsume` échoue ;
-- `WindowAppBase` ne propose plus l'invite d'approbation ponctuelle pour une
-  capacité bloquée.
+- `LaunchAsync` refuses a `CapabilityApproval` ticket that targets a
+  dangerous capability (`ElevationDenied`,
+  `lifecycle.elevation.blocked-by-policy`);
+- the instance receives a `OneShotElevationGrantSet` where each dangerous
+  capability is blocked (`Block` / `IsBlocked`): `Grant` is ignored and
+  `TryConsume` fails;
+- `WindowAppBase` no longer offers the one-time approval prompt for a blocked
+  capability.
 
-`sudo` n'est pas concerné : c'est un administrateur qui agit lui-même.
+`sudo` is not concerned: it is an administrator acting themselves.
 
-### Paramètres > Permissions
+### Settings > Permissions
 
-Nouvel onglet **Permissions** de l'app Paramètres (`AppPermissionsPanel`,
-composant séparé de l'onglet « Installed Apps » de l'ADR 0048). Il liste chaque
-app qui déclare une capacité dangereuse et l'état de chaque capacité
-(*Système*, *Autorisée*, *Refusée par vous*, *Refusée par l'administrateur*,
-*Bloquée par la politique*, *En attente*), et permet :
+New **Permissions** tab of the Settings app (`AppPermissionsPanel`, component
+separate from the "Installed Apps" tab of ADR 0048). It lists each app that
+declares a dangerous capability and the state of each capability (*System*,
+*Allowed*, *Denied by you*, *Denied by the administrator*, *Blocked by
+policy*, *Pending*), and allows:
 
-- de changer `dangerousCapabilities` (prompt / block) ;
-- d'autoriser, révoquer (`deny` machine) ou remettre en attente (retrait de la
-  ligne) une capacité pour la machine ;
-- de retirer son propre refus (sans administrateur).
+- changing `dangerousCapabilities` (prompt / block);
+- allowing, revoking (machine `deny`) or returning to pending (line removal)
+  a capability for the machine;
+- removing one's own denial (without an administrator).
 
-Chaque action machine ouvre l'invite d'identifiants de l'ADR 0042 ;
-`AppPermissionAdministration` vérifie l'administrateur, écrit en contexte
-système audité et journalise. Le panneau résout ce service de façon optionnelle :
-sur un hôte sans ADR 0049 il affiche un message au lieu d'échouer.
+Each machine action opens the credentials prompt of ADR 0042;
+`AppPermissionAdministration` verifies the administrator, writes in an audited
+system context and logs. The panel resolves this service optionally: on a
+host without ADR 0049 it displays a message instead of failing.
 
-## Journal `/var/log/auth.log`
+## Log `/var/log/auth.log`
 
-Toutes les entrées passent par `IAuditLog` (`FileAuditLog`, ADR 0045) ; les mots
-de passe ne sont jamais journalisés.
+All entries go through `IAuditLog` (`FileAuditLog`, ADR 0045); passwords are
+never logged.
 
-| Action | Quand | Propriétés |
+| Action | When | Properties |
 |---|---|---|
-| `capability.approve` | succès ou échec d'identifiants (fenêtre, terminal, Paramètres) | `app`, `capabilities`, `requestedBy`, `admin`, `outcome` |
-| `capability.refuse` | l'utilisateur refuse | `app`, `capabilities`, `user` |
-| `capability.blocked` | politique `block` au lancement | `app`, `capabilities`, `user` |
-| `capability.deferred` | pas de session interactive / pas d'invite | `app`, `capabilities` |
-| `capability.revoke` | révocation ou remise en attente depuis les Paramètres | `app`, `capability`, `admin`, `decision` |
-| `capability.policy` | changement de `dangerousCapabilities` depuis les Paramètres (ajout de ce chantier) | `dangerousCapabilities`, `admin` |
+| `capability.approve` | credential success or failure (window, terminal, Settings) | `app`, `capabilities`, `requestedBy`, `admin`, `outcome` |
+| `capability.refuse` | the user denies | `app`, `capabilities`, `user` |
+| `capability.blocked` | `block` policy at launch | `app`, `capabilities`, `user` |
+| `capability.deferred` | no interactive session / no prompt | `app`, `capabilities` |
+| `capability.revoke` | revocation or return to pending from Settings | `app`, `capability`, `admin`, `decision` |
+| `capability.policy` | change of `dangerousCapabilities` from Settings (added by this work item) | `dangerousCapabilities`, `admin` |
 
-## Composition (hôtes)
+## Composition (hosts)
 
-`AddHackerOsEcosystem` (Ecosystem, `test/test` et le serveur) enregistre, en
-`Scoped` : `IAppPermissionStore`, `DangerousCapabilityApprovalBroker` (aussi
-comme `IDangerousCapabilityApprovalPrompt`), `IDangerousCapabilityGate`,
-`AppPermissionAdministration`, et passe la passerelle à
-`AppLifecycleOrchestrator`. Le paramètre est optionnel : sans passerelle, une
-app non système ne détient simplement jamais de capacité dangereuse.
+`AddHackerOsEcosystem` (Ecosystem, `test/test` and the server) registers, as
+`Scoped`: `IAppPermissionStore`, `DangerousCapabilityApprovalBroker` (also as
+`IDangerousCapabilityApprovalPrompt`), `IDangerousCapabilityGate`,
+`AppPermissionAdministration`, and passes the gate to
+`AppLifecycleOrchestrator`. The parameter is optional: without a gate, a
+non-system app simply never holds a dangerous capability.
 
-## Décisions
+## Decisions
 
-- La passerelle est le **seul** code qui accorde une capacité dangereuse à une
-  app non système ; elle aligne aussi les grants à chaque lancement (accord et
-  révocation), ce qui rend les fichiers source de vérité sans relire les
-  fichiers à la connexion.
-- La vérification des identifiants est dans la passerelle, pas dans l'invite :
-  une interface (ou une app qui imiterait l'invite) ne peut pas fabriquer une
-  approbation.
-- Le mode texte du terminal demande les identifiants avec la boîte de `sudo`
-  existante, puisque le terminal n'a pas de lecture de ligne pendant
-  l'exécution d'une commande.
-- L'action `capability.policy` complète la table de la section 8 pour tracer le
-  changement de politique fait depuis les Paramètres.
+- The gate is the **only** code that grants a dangerous capability to a
+  non-system app; it also aligns the grants at each launch (grant and
+  revocation), which makes the files the source of truth without rereading the
+  files at login.
+- Credential verification is in the gate, not in the prompt: an interface (or
+  an app imitating the prompt) cannot fabricate an approval.
+- The terminal text mode asks for credentials with the existing `sudo` box,
+  since the terminal has no line reading while a command is running.
+- The `capability.policy` action completes the table of section 8 to trace the
+  policy change made from Settings.
 
 ## Tests
 
-- `DangerousCapabilityApprovalTests` (`HackerOs.Platform.Core.Tests`) :
-  analyse des fichiers, table de décision, app système sans invite, app non
-  système sans décision non accordée et invite appelée au lancement, `allow` +
-  `prompt` accordé / + `block` refusé, `deny` utilisateur prioritaire, `allow`
-  utilisateur ignoré, trois mots de passe faux (rien d'écrit, trois
-  `capability.approve` en échec), écriture machine réussie pour un utilisateur
-  non administrateur, refus, `deferred`, approbation non vérifiée rejetée,
-  révocation au passage à `block`, `block` qui désactive l'approbation
-  ponctuelle mais pas `sudo`, fichiers par défaut, administration des
-  Paramètres.
+- `DangerousCapabilityApprovalTests` (`HackerOs.Platform.Core.Tests`): file
+  parsing, decision table, system app without a prompt, non-system app
+  without a decision not granted and prompt called at launch, `allow` +
+  `prompt` granted / + `block` refused, user `deny` takes priority, user
+  `allow` ignored, three wrong passwords (nothing written, three failed
+  `capability.approve`), successful machine write for a non-administrator
+  user, denial, `deferred`, unverified approval rejected, revocation on
+  switch to `block`, `block` that disables one-time approval but not `sudo`,
+  default files, Settings administration.
 - `DangerousCapabilityApprovalOverlayTests` (`HackerOs.Platform.Blazor.Tests`,
-  rendu `HtmlRenderer`, la solution n'utilisant pas bUnit) : capacités et
-  risques affichés, nom prérempli, bouton Autoriser désactivé sans mot de
-  passe, invite indisponible sans fenêtre, demande fermée quand la coque
-  disparaît.
+  `HtmlRenderer` rendering, the solution not using bUnit): capabilities and
+  risks displayed, prefilled name, Allow button disabled without a password,
+  prompt unavailable without a window, request closed when the shell
+  disappears.
 
-## Tâches
+## Tasks
 
-- [x] `security.config` (schéma, défaut livré, lecture de la politique).
-- [x] `app-permissions.config` machine et utilisateur (analyse, édition, avertissements).
-- [x] Table de décision `DangerousCapabilityEvaluator`.
-- [x] `IDangerousCapabilityGate` appelée par `AppLifecycleOrchestrator.LaunchAsync`, grants alignés.
-- [x] Fenêtre spéciale `DangerousCapabilityApprovalOverlay` dans les deux coques.
-- [x] Mode texte du terminal.
-- [x] Journal `auth.log` (`capability.*`).
-- [x] Interaction avec l'approbation ponctuelle de l'ADR 0042 sous `block`.
-- [x] Vue Permissions des Paramètres.
-- [x] Tests de contrat et rendu de la fenêtre.
+- [x] `security.config` (schema, delivered default, policy reading).
+- [x] Machine and user `app-permissions.config` (parsing, editing, warnings).
+- [x] `DangerousCapabilityEvaluator` decision table.
+- [x] `IDangerousCapabilityGate` called by `AppLifecycleOrchestrator.LaunchAsync`, grants aligned.
+- [x] Special window `DangerousCapabilityApprovalOverlay` in both shells.
+- [x] Terminal text mode.
+- [x] `auth.log` log (`capability.*`).
+- [x] Interaction with the one-time approval of ADR 0042 under `block`.
+- [x] Settings Permissions view.
+- [x] Contract tests and window rendering.

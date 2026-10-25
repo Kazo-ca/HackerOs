@@ -1,164 +1,164 @@
-# ADR 0140 : ajustements de la mise en œuvre de l'ADR 0128 (tâches en arrière-plan)
+# ADR 0140: adjustments to the implementation of ADR 0128 (background tasks)
 
-## Statut
+## Status
 
-Accepté le 2026-10-18.
+Accepted on 2026-10-18.
 
-- **Chantier :** `exec/5-background-jobs` (plan
-  [`execution-followups-plan.md`](../plans/execution-followups-plan.md), décision 7,
-  étape 1).
-- **Complète :** l'ADR 0128, sans en changer la décision. Elle consigne ce que
-  le code a dû préciser ou faire autrement, et pourquoi. Elle amende sur un
-  point la règle de `IAppProcessGateway` (section 7).
+- **Work item:** `exec/5-background-jobs` (plan
+  [`execution-followups-plan.md`](../plans/execution-followups-plan.md), decision 7,
+  step 1).
+- **Completes:** ADR 0128, without changing its decision. It records what
+  the code had to clarify or do differently, and why. It amends the
+  `IAppProcessGateway` rule on one point (section 7).
 
-## Contexte
+## Context
 
-L'ADR 0128 décrit `HackBackground.RunAsync` : une méthode statique de l'app,
-des données sérialisables, un processus enfant placé dans le pool de workers, un
-analyseur au build. Quatre contraintes ont pesé sur la mise en œuvre :
+ADR 0128 describes `HackBackground.RunAsync`: a static method of the app,
+serializable data, a child process placed in the worker pool, an
+analyzer at build time. Four constraints weighed on the implementation:
 
-1. Une app peut tourner sans OS (ses tests unitaires) : `HackBackground` doit y
-   marcher avec le même contrat.
-2. Le protocole des workers (ADR 0070, 0124) ne lance que des points d'entrée
-   d'apps ; une tâche n'en est pas un.
-3. L'ordonnancement par `nice` appartient à `exec/4` (ADR 0127), qui tourne en
-   parallèle.
-4. Les traitements longs des apps de base ne sont pas tous du calcul : certains
-   ont besoin de la fenêtre au milieu (une question à l'utilisateur).
+1. An app can run without an OS (its unit tests): `HackBackground` must work
+   there with the same contract.
+2. The worker protocol (ADR 0070, 0124) only launches app entry points; a task
+   is not one.
+3. Scheduling by `nice` belongs to `exec/4` (ADR 0127), which runs in
+   parallel.
+4. The long-running operations of the base apps are not all computation: some
+   need the window in the middle (a question to the user).
 
-## Décision
+## Decision
 
-### 1. Passerelle `IAppExecutionContext.Background`
+### 1. `IAppExecutionContext.Background` gateway
 
-- Le SDK ajoute `IAppBackgroundGateway` (un seul membre, `RunAsync` d'une
-  `HackBackgroundJobRequest` : cible nommée, entrée JSON, nom, `nice`) et le
-  membre par défaut `IAppExecutionContext.Background`.
-- **Par défaut** (contexte que l'OS n'a pas construit, test d'une app), la tâche
-  s'exécute **en ligne** dans le processus appelant, avec la même sérialisation
-  et les mêmes erreurs. Une app testée ainsi marche à l'identique sous l'OS.
-- La fabrique de confiance (`AppExecutionContextFactory.BackgroundJobs`, une
-  propriété `init` pour ne pas toucher au constructeur livré) branche
-  `BackgroundJobService` de `HackerOs.Platform.Core`.
+- The SDK adds `IAppBackgroundGateway` (a single member, `RunAsync` of a
+  `HackBackgroundJobRequest`: named target, JSON input, name, `nice`) and the
+  default member `IAppExecutionContext.Background`.
+- **By default** (a context the OS did not build, a test of an app), the task
+  runs **inline** in the calling process, with the same serialization
+  and the same errors. An app tested this way behaves identically under the OS.
+- The trusted factory (`AppExecutionContextFactory.BackgroundJobs`, an
+  `init` property so as not to touch the shipped constructor) wires up
+  `BackgroundJobService` from `HackerOs.Platform.Core`.
 
-### 2. Processus d'une tâche
+### 2. Process of a task
 
-- Processus enfant de l'app (`ParentPid`), de genre `Terminal` (sans fenêtre),
-  avec l'`AppId` de l'app, son utilisateur, sa session, son profil de
-  ressources et ses capacités accordées. `argv[0]` est le nom de la tâche.
-- Nom : `<commande de l'app>:<nom>`, où la commande est `Terminal.Name` du
-  manifeste ou le dernier segment de l'ID (`code-editor:search`,
-  `file-explorer:compress`). Le nom est l'option `Name`, sinon la méthode ou la
-  classe ; 1 à 64 caractères, sans `:` ni caractère de contrôle.
-- `/proc/<pid>/status` : `Name:` porte le nom de la tâche, tronqué à
-  15 caractères comme `TASK_COMM_LEN` de Linux ; deux lignes s'ajoutent après
-  `Session:`, `Job:` (le nom entier) et `Host: MainThread|Worker`. `ps` affiche
-  le nom de la tâche dans sa colonne de commande.
-- Codes de sortie : `0` succès, `1` exception de la tâche, `127` tâche refusée
-  (rien de valide à exécuter, comme un `exec` qui échoue), `130` annulée,
-  `137` tuée.
+- Child process of the app (`ParentPid`), of kind `Terminal` (no window),
+  with the app's `AppId`, its user, its session, its resource profile
+  and its granted capabilities. `argv[0]` is the name of the task.
+- Name: `<app command>:<name>`, where the command is the manifest's `Terminal.Name`
+  or the last segment of the ID (`code-editor:search`,
+  `file-explorer:compress`). The name is the `Name` option, otherwise the
+  method or the class; 1 to 64 characters, with no `:` or control character.
+- `/proc/<pid>/status`: `Name:` carries the task name, truncated to
+  15 characters like Linux's `TASK_COMM_LEN`; two lines are added after
+  `Session:`, `Job:` (the full name) and `Host: MainThread|Worker`. `ps` shows
+  the task name in its command column.
+- Exit codes: `0` success, `1` exception in the task, `127` task refused
+  (nothing valid to run, like a failing `exec`), `130` canceled,
+  `137` killed.
 
-### 3. Concurrence et `nice`
+### 3. Concurrency and `nice`
 
-- Au plus `MaxConcurrentJobsPerApp` tâches **par couple utilisateur et app**
-  (nombre de cœurs virtuels, arrondi au-dessus) ; les suivantes attendent dans
-  l'ordre d'arrivée.
-- `nice` est borné à `[-20, 19]` ; une valeur négative est ramenée à `0` pour un
-  utilisateur sans droits d'administrateur ni élévation root (`nice(2)`). Elle
-  est enregistrée (`BackgroundJobInfo.Nice`) mais **n'ordonne pas encore** la
-  file : l'ordonnancement par `nice` arrive avec `exec/4` (ADR 0127), qui le
-  branchera aussi pour les tâches. La ligne `Nice` de `/proc/<pid>/status` est
-  laissée à `exec/4` pour éviter deux formats.
+- At most `MaxConcurrentJobsPerApp` tasks **per user and app pair**
+  (number of virtual cores, rounded up); the following ones wait in
+  arrival order.
+- `nice` is bounded to `[-20, 19]`; a negative value is brought back to `0` for a
+  user without administrator rights or root elevation (`nice(2)`). It is
+  recorded (`BackgroundJobInfo.Nice`) but **does not yet order** the
+  queue: scheduling by `nice` arrives with `exec/4` (ADR 0127), which will
+  wire it up for tasks as well. The `Nice` line of `/proc/<pid>/status` is
+  left to `exec/4` to avoid two formats.
 
-### 4. Protocole des workers
+### 4. Worker protocol
 
-- Démarrage d'une tâche : message `start` avec `k = 2`, la cible `jt`
-  (`asm`, `ty`, `me` facultatif, `it`) et l'entrée `ji`. Le worker charge
-  l'assembly (`KnownAssemblies`, ADR 0138), lie la méthode ou la classe et
-  refuse (code 127) ce qu'il ne trouve pas.
-- Fin : le message `exit` porte `jr` (résultat JSON), `jf` (`ty`, `m`, `st` :
-  type, message et pile de l'exception d'origine) et `jx` (tâche refusée).
-- Progression : note `bg.progress` `{f, m}` du worker vers l'OS.
-- Tâche lancée depuis un worker (ADR 0128 §6) : appel `bg.run` (`jt`, `ji`, `n`,
-  `ni`, numéro `j`) ; l'OS place la tâche et renvoie sa progression par des
-  messages `bgp` (`p`, `j`, `f`, `m`), puis le résultat `{r}`.
-- Erreurs distantes : `bgfault` (`ty`, `st`) pour `HackBackgroundJobException` ;
-  l'erreur `killed` porte la raison `rs`.
+- Starting a task: `start` message with `k = 2`, the target `jt`
+  (`asm`, `ty`, optional `me`, `it`) and the input `ji`. The worker loads
+  the assembly (`KnownAssemblies`, ADR 0138), binds the method or the class and
+  refuses (code 127) what it does not find.
+- End: the `exit` message carries `jr` (JSON result), `jf` (`ty`, `m`, `st`:
+  type, message and stack of the original exception) and `jx` (task refused).
+- Progress: `bg.progress` note `{f, m}` from the worker to the OS.
+- Task launched from a worker (ADR 0128 §6): `bg.run` call (`jt`, `ji`, `n`,
+  `ni`, number `j`); the OS places the task and sends its progress back through
+  `bgp` messages (`p`, `j`, `f`, `m`), then the result `{r}`.
+- Remote errors: `bgfault` (`ty`, `st`) for `HackBackgroundJobException`;
+  the `killed` error carries the reason `rs`.
 
-### 5. Erreurs vues par l'appelant
+### 5. Errors seen by the caller
 
-- `HackProcessKilledException` reçoit la propriété `Reason` et un constructeur
-  `(processId, reason)` : `Killed` par défaut, `OutOfMemory` ou
-  `CpuLimitExceeded` quand l'OS le sait. Elle dérive de
-  `OperationCanceledException` : un `catch` doit la placer avant celui de
-  l'annulation.
-- Tâche refusée (méthode introuvable, type non déclaré, autre assembly, entrée
-  au-delà de 16 Mio) : `ArgumentException`, avant tout processus quand le SDK
-  peut le voir.
-- Progression : au plus une remontée par 100 ms, la dernière l'emporte et la
-  dernière avant la fin est toujours livrée ; `ToString()` donne `42% message`.
+- `HackProcessKilledException` gets the `Reason` property and a constructor
+  `(processId, reason)`: `Killed` by default, `OutOfMemory` or
+  `CpuLimitExceeded` when the OS knows. It derives from
+  `OperationCanceledException`: a `catch` must place it before the cancellation
+  one.
+- Refused task (method not found, undeclared type, other assembly, input
+  beyond 16 MiB): `ArgumentException`, before any process when the SDK
+  can see it.
+- Progress: at most one report per 100 ms, the last one wins and the
+  last one before the end is always delivered; `ToString()` gives `42% message`.
 
-### 6. Fermeture de l'app
+### 6. App closing
 
-- Quand l'app se termine, le gestionnaire de processus termine ses enfants avec
-  la raison `DependencyStop` : le jeton de la tâche est annulé tout de suite,
-  **sans délai de grâce** (pas d'attente de 5 s comme un `SIGTERM` suivi d'un
-  `SIGKILL`). Avec `kill -9` de l'app, les tâches sont tuées aussi.
-- La comptabilité de l'OS (fin du processus, place libérée) ne dépend pas du
-  planificateur de l'appelant : il abandonne ses continuations une fois tué
-  (ADR 0069), d'où des `ConfigureAwait(false)` dans `BackgroundJobService`.
+- When the app ends, the process manager terminates its children with the
+  reason `DependencyStop`: the task's token is canceled immediately,
+  **with no grace period** (no 5 s wait like a `SIGTERM` followed by a
+  `SIGKILL`). With `kill -9` of the app, the tasks are killed too.
+- The OS accounting (end of the process, freed slot) does not depend on the
+  caller's scheduler: it abandons its continuations once killed
+  (ADR 0069), hence the `ConfigureAwait(false)` calls in `BackgroundJobService`.
 
-### 7. Une app gère ses propres enfants (amende `IAppProcessGateway`)
+### 7. An app manages its own children (amends `IAppProcessGateway`)
 
-`StopAsync`, `Kill`, `KillAsync` et `ListProcesses` exigeaient
-`process.manage` / `process.list` pour tout autre processus que le sien. Un
-**descendant** du processus de l'app (une de ses tâches) compte maintenant comme
-le sien : une fenêtre peut afficher et tuer ses tâches sans droit
-supplémentaire, comme un parent Unix signale les processus qu'il a lancés.
-`ListProcesses` reste synchrone et donc indisponible dans un worker ; une tâche
-peut communiquer son PID par sa progression (exemple de la fenêtre d'exemple).
+`StopAsync`, `Kill`, `KillAsync` and `ListProcesses` required
+`process.manage` / `process.list` for any process other than its own. A
+**descendant** of the app's process (one of its tasks) now counts as
+its own: a window can list and kill its tasks without any additional
+right, like a Unix parent signaling the processes it launched.
+`ListProcesses` remains synchronous and therefore unavailable in a worker; a task
+can communicate its PID through its progress (example in the sample window).
 
-### 8. Analyseur
+### 8. Analyzer
 
-- Projet `Tools/HackerOs.Tools.BackgroundAnalyzer` (netstandard2.0), livré dans
-  le paquet `HackerOs.AppSdk` (`analyzers/dotnet/cs`) et branché sur les apps du
-  dépôt par `build/HackerOs.Apps.targets`.
-- Codes : `HOSBG0001` (pas un groupe de méthode statique : lambda, méthode
-  anonyme, méthode d'instance, fonction locale non `static`, délégué passé par
-  une variable), `HOSBG0002` (type d'entrée ou de résultat hors des contextes
-  `HackWireContext`), `HOSBG0003` (méthode ou classe d'une autre assembly),
-  `HOSBG0004` (méthode générique ou d'un type générique).
-- Un type est accepté s'il est une racine `[JsonSerializable]` d'un contexte
-  déclaré **ou** s'il est atteint depuis l'une d'elles (élément de tableau,
-  argument générique, propriété publique), comme
-  `JsonSerializerContext.GetTypeInfo` le trouve à l'exécution.
-- Une fonction locale `static` est acceptée : le compilateur en fait une
-  méthode statique que le worker retrouve par son nom.
+- Project `Tools/HackerOs.Tools.BackgroundAnalyzer` (netstandard2.0), shipped
+  in the `HackerOs.AppSdk` package (`analyzers/dotnet/cs`) and wired to the
+  repository's apps by `build/HackerOs.Apps.targets`.
+- Codes: `HOSBG0001` (not a static method group: lambda, anonymous method,
+  instance method, non-`static` local function, delegate passed through a
+  variable), `HOSBG0002` (input or result type outside the `HackWireContext`
+  contexts), `HOSBG0003` (method or class from another assembly),
+  `HOSBG0004` (generic method or method of a generic type).
+- A type is accepted if it is a `[JsonSerializable]` root of a declared
+  context **or** if it is reached from one of them (array element, generic
+  argument, public property), as `JsonSerializerContext.GetTypeInfo` finds it
+  at run time.
+- A `static` local function is accepted: the compiler turns it into a static
+  method that the worker finds by its name.
 
-### 9. Apps de base
+### 9. Base apps
 
-| Traitement | Décision | Raison |
+| Operation | Decision | Reason |
 |---|---|---|
-| Recherche dans le dossier du CodeEditor (Ctrl+Maj+F) | Tâche `code-editor:search` | La liste des fichiers est faite par la fenêtre ; lecture et recherche (expressions régulières) dans la tâche. Les onglets non enregistrés passent dans l'entrée. |
-| Compresser, Extraire et « UnZip Here… » de l'explorateur | Tâches `file-explorer:compress` et `file-explorer:extract` | Compression et décompression sont du calcul ; la tâche lit et écrit par ses propres passerelles. Les erreurs reviennent comme clé de texte, traduites par la fenêtre. |
-| Copier, déplacer, coller de l'explorateur | Restent dans la fenêtre | Chaque élément est un appel à l'OS attendu, avec un point d'arrêt entre deux (pas de long calcul) ; un conflit de nom pose une question dans la fenêtre entre deux éléments, ce qu'une tâche dans un autre processus ne peut pas faire. |
-| Téléchargement d'une sélection en `.zip` | Reste dans la fenêtre | Les octets doivent finir dans la fenêtre pour le téléchargement du navigateur, et une grande sélection dépasserait les 16 Mio d'un résultat. |
-| Filtres de Hack Paint | Sans objet | Hack Paint n'a pas de filtre. Rotation et recadrage restent : une passe de copies, sur un tampon qui peut faire 64 Mio (4096 × 4096 en RGBA), quatre fois la limite d'une entrée. Un futur filtre passera par une tâche et un fichier temporaire. |
+| Search in the CodeEditor folder (Ctrl+Shift+F) | `code-editor:search` task | The list of files is built by the window; reading and searching (regular expressions) happen in the task. Unsaved tabs are passed in the input. |
+| Compress, Extract and "UnZip Here..." of the explorer | `file-explorer:compress` and `file-explorer:extract` tasks | Compression and decompression are computation; the task reads and writes through its own gateways. Errors come back as a text key, translated by the window. |
+| Copy, move, paste in the explorer | Stay in the window | Each item is an awaited call to the OS, with a checkpoint between two (no long computation); a name conflict asks a question in the window between two items, which a task in another process cannot do. |
+| Download of a selection as `.zip` | Stays in the window | The bytes must end up in the window for the browser download, and a large selection would exceed the 16 MiB of a result. |
+| Hack Paint filters | Not applicable | Hack Paint has no filter. Rotation and cropping remain: a pass of copies, on a buffer that can be 64 MiB (4096 × 4096 in RGBA), four times the limit of an input. A future filter will go through a task and a temporary file. |
 
-L'exemple demandé est une section « Background Task » de
-`Apps/Samples/HackerOs.Samples.WindowApp` (compte des nombres premiers avec
-progression, annulation et bouton Kill), plutôt qu'une nouvelle app : la
-fenêtre d'exemple est déjà celle qui montre le SDK d'une app à fenêtre.
+The requested example is a "Background Task" section of
+`Apps/Samples/HackerOs.Samples.WindowApp` (prime number count with
+progress, cancellation and Kill button), rather than a new app: the sample
+window is already the one that shows the SDK of a windowed app.
 
-## Conséquences
+## Consequences
 
-- Documentation : [`background-jobs.md`](../../framework/background-jobs.md) (nouveau),
+- Documentation: [`background-jobs.md`](../../framework/background-jobs.md) (new),
   [`worker-processes.md`](../worker-processes.md),
   [`sdk-developer-guide.md`](../../framework/sdk-developer-guide.md),
   [`sdk-reference.md`](../../framework/sdk-reference.md), [`code-editor.md`](../code-editor.md),
   [`file-explorer.md`](../file-explorer.md), [`hack-paint.md`](../hack-paint.md).
-- Ajouts publics dans `PublicAPI.Unshipped.txt` du SDK, de
-  `HackerOs.Platform.Core` et de `HackerOs.Platform.WorkerHost` ; publiés avec
-  le SDK 1.2 dans `exec/10` (ADR 0132).
-- `exec/4` branche l'ordonnancement par `nice` des tâches et la ligne `Nice`.
-- Deux questions à Benoit (délai de grâce à la fermeture de l'app, PID dans la
-  progression) ; les défauts de cette ADR s'appliquent en attendant.
+- Public additions in `PublicAPI.Unshipped.txt` of the SDK, of
+  `HackerOs.Platform.Core` and of `HackerOs.Platform.WorkerHost`; published with
+  SDK 1.2 in `exec/10` (ADR 0132).
+- `exec/4` wires up the `nice` scheduling of tasks and the `Nice` line.
+- Two questions for Benoit (grace period when the app closes, PID in the
+  progress); the defaults of this ADR apply in the meantime.

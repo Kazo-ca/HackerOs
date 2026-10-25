@@ -1,10 +1,10 @@
-# Archives : `commands/`
+# Archives: `commands/`
 
-Documents archivés, antérieurs au plan de refonte. Ils restent utiles comme
-référence technique mais ne décrivent plus forcément le code actuel.
+Archived documents, predating the overhaul plan. They remain useful as a
+technical reference but no longer necessarily describe the current code.
 
-| Document | Rôle |
+| Document | Role |
 | --- | --- |
 | [`terminal-commands.md`](terminal-commands.md) | Core Terminal Command Applications (`Apps/Commands/`) |
 
-Index des archives : [`../README.md`](../README.md).
+Archive index: [`../README.md`](../README.md).

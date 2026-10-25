@@ -1,106 +1,106 @@
-# ADR 0130 : `HackerOs.Server` sert l'OS en WebAssembly et ne garde que son API
+# ADR 0130: `HackerOs.Server` serves the OS in WebAssembly and keeps only its API
 
-## Statut
+## Status
 
-Accepté le 2026-10-18. Deux questions sont posées à Benoit (§2 et §4) ; ce qui
-suit applique la réponse recommandée en attendant.
+Accepted on 2026-10-18. Two questions are asked to Benoit (§2 and §4); what
+follows applies the recommended answer while awaiting it.
 
-- **Plan :** [`execution-followups-plan.md`](../plans/execution-followups-plan.md),
-  décision 8 (réponse Q7 de Benoit : « Server = OS en WebAssembly + API ») ;
-  mis en œuvre par `exec/8-server-wasm`.
-- **Remplace :** l'[ADR 0027](0027-server-hosted-blazor-ui.md) (troisième hôte
-  en Interactive Server) et l'[ADR 0036](0036-direct-service-injection-for-server-host.md)
-  (injection directe des services du serveur dans l'interface).
-- **Rend sans objet :** l'ADR 0066 §3 (mesures coupées par défaut sur
-  l'hôte Server), l'ADR 0067 §6, l'ADR 0070 §6, l'ADR 0072 §7 (pas de worker
-  sur cet hôte) et l'ADR 0108 §5 (flux du client direct sans WebSocket).
+- **Plan:** [`execution-followups-plan.md`](../plans/execution-followups-plan.md),
+  decision 8 (Benoit's answer Q7: "Server = OS in WebAssembly + API");
+  implemented by `exec/8-server-wasm`.
+- **Replaces:** [ADR 0027](0027-server-hosted-blazor-ui.md) (third host
+  in Interactive Server) and [ADR 0036](0036-direct-service-injection-for-server-host.md)
+  (direct injection of the server's services into the interface).
+- **Makes moot:** ADR 0066 §3 (measurements turned off by default on the Server
+  host), ADR 0067 §6, ADR 0070 §6, ADR 0072 §7 (no worker
+  on this host) and ADR 0108 §5 (direct client streams without WebSocket).
 
-## Contexte
+## Context
 
-Aujourd'hui (`Server/HackerOs.Server/Program.cs`), le serveur rend toute
-l'interface de l'OS **côté serveur** (`AddInteractiveServerComponents`,
-`Components/App.razor`), un seul circuit à la fois, et l'OS y appelle les
-services du serveur en direct (`DirectServerConnectionClients`). Le code des
-apps tourne donc sur des threads du serveur : pas de Web Worker, pas de
-mesure fiable, et un mode d'exécution différent des deux autres hôtes.
+Today (`Server/HackerOs.Server/Program.cs`), the server renders the whole OS
+interface **on the server side** (`AddInteractiveServerComponents`,
+`Components/App.razor`), a single circuit at a time, and the OS calls the
+server's services directly there (`DirectServerConnectionClients`). App code
+therefore runs on server threads: no Web Worker, no reliable
+measurement, and an execution mode different from the other two hosts.
 
-Benoit pensait que le serveur hébergeait déjà le client WebAssembly et
-n'exécutait que ce qui doit l'être (relais, synchronisation,
-authentification). C'est ce que cet ADR décide.
+Benoit thought the server already hosted the WebAssembly client and
+only executed what must be (relay, synchronization,
+authentication). This is what this ADR decides.
 
-## Décision
+## Decision
 
-### 1. Le serveur envoie le même OS que l'Ecosystem
+### 1. The server sends the same OS as the Ecosystem
 
-- Le navigateur reçoit l'OS **en WebAssembly** depuis le serveur et
-  l'exécute comme l'Ecosystem : mêmes workers, mêmes mesures, même
-  `/proc/hackeros`, même mode hors ligne.
-- Le serveur garde ses points d'API (identité, synchronisation, relais HTTP,
-  TCP et UDP, administration) sans changement de contrat.
-- L'OS parle au serveur **par HTTP et WebSocket**, comme l'Ecosystem connecté
-  à un serveur (ADR 0028, 0102, 0108).
+- The browser receives the OS **in WebAssembly** from the server and
+  runs it like the Ecosystem: same workers, same measurements, same
+  `/proc/hackeros`, same offline mode.
+- The server keeps its API endpoints (identity, synchronization, HTTP relay,
+  TCP and UDP, administration) with no contract change.
+- The OS talks to the server **over HTTP and WebSocket**, like the Ecosystem connected
+  to a server (ADR 0028, 0102, 0108).
 
-### 2. Comment le serveur sert l'OS (question posée à Benoit)
+### 2. How the server serves the OS (question asked to Benoit)
 
-Appliqué en attendant (recommandé) : **les fichiers publiés de l'Ecosystem**,
-tels quels. Le serveur référence `OS/HackerOs.Ecosystem` comme client
-WebAssembly hébergé, sert `_framework/`, `index.html`, le manifeste PWA et le
-service worker de l'Ecosystem (`MapStaticAssets`, repli sur `index.html`), et
-n'a plus aucun composant Razor.
+Applied while awaiting (recommended): **the published files of the Ecosystem**,
+as is. The server references `OS/HackerOs.Ecosystem` as a hosted WebAssembly
+client, serves `_framework/`, `index.html`, the PWA manifest and the
+Ecosystem's service worker (`MapStaticAssets`, fallback to `index.html`), and
+no longer has any Razor component.
 
-- Avantage : un seul démarrage à maintenir (`index.html` de l'Ecosystem),
-  PWA et service worker identiques, isolation cross-origin de l'ADR 0131
-  servie de la même façon.
-- L'autre choix : une Blazor Web App en `InteractiveWebAssembly` avec son
-  propre `App.razor`, comme `test/test`. Il garde un second démarrage à
-  maintenir et un service worker différent, pour un prérendu que l'OS n'utilise
-  pas (il dépend d'IndexedDB). Si Benoit le choisit, un ADR court remplace ce
-  paragraphe.
+- Advantage: a single startup to maintain (the Ecosystem's `index.html`),
+  identical PWA and service worker, cross-origin isolation of ADR 0131
+  served the same way.
+- The other choice: a Blazor Web App in `InteractiveWebAssembly` with its
+  own `App.razor`, like `test/test`. It keeps a second startup to
+  maintain and a different service worker, for a prerender that the OS does not use
+  (it depends on IndexedDB). If Benoit chooses it, a short ADR replaces this
+  paragraph.
 
-### 3. Ce qui est retiré du serveur
+### 3. What is removed from the server
 
 `AddInteractiveServerComponents`, `MapRazorComponents<App>`,
 `Components/App.razor`, `Components/Pages/Home.razor`,
 `DirectServerConnectionClients`, `InProcessAssemblyTransport`,
-`AspNetCoreEcosystemHostEnvironment`, les références aux projets des apps
-système (elles viennent avec l'Ecosystem). Les `TryAddSingleton` de
-`AddHackerOsEcosystem` posés pour l'ADR 0036 restent : ils ne coûtent rien.
+`AspNetCoreEcosystemHostEnvironment`, the references to the system app projects
+(they come with the Ecosystem). The `TryAddSingleton` calls of
+`AddHackerOsEcosystem` placed for ADR 0036 remain: they cost nothing.
 
-### 4. L'OS reconnaît le serveur qui l'a servi (question posée à Benoit)
+### 4. The OS recognizes the server that served it (question asked to Benoit)
 
-Appliqué en attendant (recommandé) : au démarrage, l'OS interroge
-`GET /api/hackeros/host-info` sur sa propre origine (délai court, ignoré hors
-ligne). Si le serveur répond, Paramètres › Serveur est **prérempli** avec
-cette adresse et propose de se connecter ; l'utilisateur décide. L'OS ne
-dépend jamais du serveur (AGENTS.md I.1).
+Applied while awaiting (recommended): at startup, the OS queries
+`GET /api/hackeros/host-info` on its own origin (short timeout, ignored
+offline). If the server answers, Settings › Server is **prefilled** with
+that address and offers to connect; the user decides. The OS never
+depends on the server (AGENTS.md I.1).
 
-L'autre choix : rien de spécial, l'utilisateur saisit l'adresse comme avec
-l'Ecosystem. L'option « connexion obligatoire » n'est pas proposée : elle
-contredirait la règle « rien ne doit exiger le serveur ».
+The other choice: nothing special, the user enters the address as with
+the Ecosystem. The "mandatory connection" option is not offered: it would
+contradict the rule "nothing must require the server".
 
-### 5. Hôtes après le changement
+### 5. Hosts after the change
 
-| Hôte | Rôle |
+| Host | Role |
 |---|---|
-| `OS/HackerOs.Ecosystem` | PWA autonome, hors ligne, sans serveur (inchangé). |
-| `test/test` | Débogage interactif des composants WebAssembly (inchangé). |
-| `Server/HackerOs.Server` | Sert l'OS de l'Ecosystem **et** l'API optionnelle. Plus de rendu côté serveur. |
+| `OS/HackerOs.Ecosystem` | Standalone PWA, offline, no server (unchanged). |
+| `test/test` | Interactive debugging of WebAssembly components (unchanged). |
+| `Server/HackerOs.Server` | Serves the Ecosystem OS **and** the optional API. No more server-side rendering. |
 
-## Conséquences
+## Consequences
 
-- `build/verify-hosts.sh` et `HackerOs.HostSmoke.Tests` : l'hôte Server a des
-  workers et `/proc/hackeros/workers` ; `kill -9` d'une boucle y est vérifié.
-- Les tests du serveur qui passaient par le client direct passent par HTTP.
-- Docs : `AGENTS.md` (section des hôtes), [`project-overview.md`](../project-overview.md),
+- `build/verify-hosts.sh` and `HackerOs.HostSmoke.Tests`: the Server host has
+  workers and `/proc/hackeros/workers`; `kill -9` of a loop is checked there.
+- The server tests that went through the direct client go through HTTP.
+- Docs: `AGENTS.md` (hosts section), [`project-overview.md`](../project-overview.md),
   [`building-and-testing.md`](../building-and-testing.md),
-  [`old/hosting-model.md`](../old/hosting-model.md) (bandeau vers cet ADR),
+  [`old/hosting-model.md`](../old/hosting-model.md) (banner pointing to this ADR),
   [`server-network-relay.md`](../server-network-relay.md),
   [`worker-processes.md`](../worker-processes.md).
-- Plusieurs utilisateurs peuvent ouvrir l'OS depuis le même serveur : chacun a
-  son OS dans son navigateur. L'API reste celle d'aujourd'hui (mono-locataire
-  pour l'administration, ADR 0102).
+- Several users can open the OS from the same server: each has
+  their own OS in their browser. The API remains today's (single-tenant
+  for administration, ADR 0102).
 
-## Références
+## References
 
 - ADR 0027, 0028, 0036, 0066, 0067, 0070, 0072, 0102, 0108, 0131.
-- Hébergement d'un client Blazor WebAssembly par ASP.NET Core.
+- Hosting a Blazor WebAssembly client with ASP.NET Core.

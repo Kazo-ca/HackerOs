@@ -1,43 +1,43 @@
-# ASP.Hack : vues `.cshtml`
+# ASP.Hack: `.cshtml` views
 
-Chantier `web/8-cshtml-views` de la phase web. Décisions : [ADR 0076](../dev/adr/0076-asp-hack-mvc.md)
-§8 et [ADR 0086](../dev/adr/0086-asp-hack-cshtml-views.md). Socle : [`asp-hack-razor-views.md`](asp-hack-razor-views.md)
-(moteur de vues, layouts, sections, anti-falsification, `wwwroot`) et [`asp-hack-mvc.md`](asp-hack-mvc.md).
-Plan : [`asp-hack-plan.md`](../dev/plans/asp-hack-plan.md).
+Work item `web/8-cshtml-views` of the web phase. Decisions: [ADR 0076](../dev/adr/0076-asp-hack-mvc.md)
+§8 and [ADR 0086](../dev/adr/0086-asp-hack-cshtml-views.md). Foundation: [`asp-hack-razor-views.md`](asp-hack-razor-views.md)
+(view engine, layouts, sections, anti-forgery, `wwwroot`) and [`asp-hack-mvc.md`](asp-hack-mvc.md).
+Plan: [`asp-hack-plan.md`](../dev/plans/asp-hack-plan.md).
 
-## Objet
+## Purpose
 
-Un site ASP.Hack peut écrire ses vues comme dans ASP.NET Core MVC : des fichiers
-`.cshtml` avec `@model`, `@inject`, `@section`, `@functions`, des modèles en
-ligne, `_Layout.cshtml`, `_ViewStart.cshtml` et `_ViewImports.cshtml`. Le
-compilateur Razor du SDK .NET les compile au build, sans ASP.NET MVC (qui ne
-tourne pas dans le navigateur) : la classe de base est `HackRazorPage<TModel>`
-d'ASP.Hack. `View()` trouve indifféremment `Views/<Contrôleur>/<Action>.razor`
-ou `.cshtml`, et les deux genres se mêlent (vue `.cshtml` dans un layout
-`.razor`, partial `.razor` dans une vue `.cshtml`, etc.).
+An ASP.Hack site can write its views as in ASP.NET Core MVC: `.cshtml` files
+with `@model`, `@inject`, `@section`, `@functions`, inline
+templates, `_Layout.cshtml`, `_ViewStart.cshtml` and `_ViewImports.cshtml`. The
+.NET SDK's Razor compiler compiles them at build time, without ASP.NET MVC (which does not
+run in the browser): the base class is ASP.Hack's `HackRazorPage<TModel>`.
+`View()` finds either `Views/<Controller>/<Action>.razor`
+or `.cshtml`, and the two kinds can be mixed (`.cshtml` view in a `.razor`
+layout, `.razor` partial in a `.cshtml` view, etc.).
 
-## Preuve de faisabilité
+## Feasibility proof
 
-L'ADR 0076 §8 demandait une preuve avant le code. Elle a été faite avec le SDK
-.NET 10.0.402 sur un projet `Microsoft.NET.Sdk.Razor` minimal :
+ADR 0076 §8 asked for a proof before the code. It was done with the .NET SDK
+10.0.402 on a minimal `Microsoft.NET.Sdk.Razor` project:
 
-1. Le générateur de sources Razor compile un `.cshtml` en mode MVC même sans
-   référence à MVC ; le C# produit appelle des méthodes de la classe de base
+1. The Razor source generator compiles a `.cshtml` in MVC mode even without a
+   reference to MVC; the C# produced calls methods of the base class
    (`WriteLiteral`, `Write`, `BeginWriteAttribute`, `DefineSection`,
-   `PushWriter`...) et ne nomme d'ASP.NET que quelques attributs, trois espaces
-   de noms, `HelperResult` et les types des cinq `@inject` implicites.
-2. Un `_ViewImports.cshtml` racine remplace la classe de base
-   (`@inherits HackRazorPage<TModel>`, `TModel` étant remplacé par le type de
-   `@model`) et les cinq `@inject` implicites (une propriété de même nom gagne).
-3. Avec ces noms déclarés comme types internes au site, une vue avec `@model`,
-   `@inject`, `@section`, `@foreach`, `@if`, `@functions`, un `_ViewStart` et un
-   `_Layout` compile et s'exécute ; le nommage des classes
-   (`AspNetCoreGeneratedDocument.Views_Home_Index`, ou l'espace de noms du
-   `@namespace` le plus proche suivi des dossiers) a été vérifié.
+   `PushWriter`...) and names only a few attributes, three namespaces,
+   `HelperResult` and the types of the five implicit `@inject`s from ASP.NET.
+2. A root `_ViewImports.cshtml` replaces the base class
+   (`@inherits HackRazorPage<TModel>`, `TModel` being replaced by the type of
+   `@model`) and the five implicit `@inject`s (a property of the same name wins).
+3. With these names declared as internal types of the site, a view with `@model`,
+   `@inject`, `@section`, `@foreach`, `@if`, `@functions`, a `_ViewStart` and a
+   `_Layout` compiles and runs; the naming of classes
+   (`AspNetCoreGeneratedDocument.Views_Home_Index`, or the namespace of the
+   nearest `@namespace` followed by the folders) was verified.
 
-Le moteur interprété de repli (question 17 du plan) n'est donc pas construit.
+The interpreted fallback engine (plan question 17) is therefore not built.
 
-## Exemple
+## Example
 
 ```text
 Intranet/
@@ -90,7 +90,7 @@ Intranet/
 }
 ```
 
-Le contrôleur ne change pas : `return View(store.All);`, `return View(note);`.
+The controller does not change: `return View(store.All);`, `return View(note);`.
 
 ## Architecture
 
@@ -116,108 +116,108 @@ IHackHtmlContent, HackHtmlString, HackHelperResult   HackHtmlContent.cs
 HackViewKind, HackViewDescriptor.Kind, HackViewTable.Find(Type)   HackViewTable.cs
 ```
 
-## Pages `.cshtml`
+## `.cshtml` pages
 
-- **Classe de base.** Toute page dérive de `HackRazorPage<TModel>` (sans `@model`,
-  `TModel` est `dynamic`, comme dans ASP.NET ; préférez `@model`). Membres :
-  `Model`, `ViewData`, `ViewContext`, `Context` (la requête), `Request`,
+- **Base class.** Every page derives from `HackRazorPage<TModel>` (without `@model`,
+  `TModel` is `dynamic`, as in ASP.NET; prefer `@model`). Members:
+  `Model`, `ViewData`, `ViewContext`, `Context` (the request), `Request`,
   `ModelState`, `Layout`, `Output`, `RenderBody()`, `RenderSection(...)`,
   `RenderSectionAsync(...)`, `IsSectionDefined`, `IgnoreBody`, `IgnoreSection`.
-- **Encodage.** `@valeur` est encodé en HTML (les lettres accentuées restent
-  lisibles) ; `IHackHtmlContent` (`Html.Raw`, `RenderBody()`, helpers,
-  modèles en ligne) et `MarkupString` sont écrits tels quels. Attributs comme
-  ASP.NET : une partie `null` disparaît avec son espace (`class="note @(x ? "done" : null)"`),
-  un attribut dont la seule valeur est `null` ou `false` disparaît, `true` écrit
-  le nom (`checked="@note.Done"` → `checked="checked"`).
-- **`@inject`.** Résolu dans la portée DI de la requête (les mêmes instances que
-  le contrôleur). Un service absent est une erreur qui nomme la propriété.
-- **`_ViewImports.cshtml`.** Celui de la racine du projet est fourni par le SDK
-  (un projet qui en a un échoue au build) ; mettez vos `@using`, `@inject` ou
-  `@namespace` dans `Views/_ViewImports.cshtml` ou un sous-dossier.
-- **`_ViewStart.cshtml`.** Ceux de `Views/` puis de chaque dossier jusqu'à celui
-  de la vue s'exécutent avant une vue (pas avant un partial ni un layout) ; leur
-  `Layout` devient la valeur initiale de celui de la vue. Leur sortie est ignorée.
-- **Layout.** `Layout = "_Layout"` est un nom de vue cherché comme `View()` le fait
-  (dossier du contrôleur, puis `Shared/`), ou un chemin
-  (`"~/Views/Shared/_Layout.cshtml"`) ; `Layout = null` : sans layout. Un layout
-  `.cshtml` doit appeler `RenderBody()` (ou `IgnoreBody()`). Un layout peut
-  avoir son propre `Layout` (imbrication) et redéfinir une section qu'il a
-  rendue, pour le layout autour de lui :
+- **Encoding.** `@value` is HTML-encoded (accented letters stay
+  readable); `IHackHtmlContent` (`Html.Raw`, `RenderBody()`, helpers,
+  inline templates) and `MarkupString` are written as is. Attributes as in
+  ASP.NET: a `null` part disappears with its space (`class="note @(x ? "done" : null)"`),
+  an attribute whose only value is `null` or `false` disappears, `true` writes
+  the name (`checked="@note.Done"` → `checked="checked"`).
+- **`@inject`.** Resolved in the request's DI scope (the same instances as
+  the controller). A missing service is an error that names the property.
+- **`_ViewImports.cshtml`.** The one at the project root is provided by the SDK
+  (a project that has one fails at build time); put your `@using`, `@inject` or
+  `@namespace` in `Views/_ViewImports.cshtml` or a subfolder.
+- **`_ViewStart.cshtml`.** Those of `Views/` and then of each folder down to that
+  of the view run before a view (not before a partial or a layout); their
+  `Layout` becomes the initial value of the view's. Their output is ignored.
+- **Layout.** `Layout = "_Layout"` is a view name searched the way `View()` does
+  (controller folder, then `Shared/`), or a path
+  (`"~/Views/Shared/_Layout.cshtml"`); `Layout = null`: no layout. A `.cshtml`
+  layout must call `RenderBody()` (or `IgnoreBody()`). A layout can
+  have its own `Layout` (nesting) and redefine a section it
+  rendered, for the layout around it:
   `@section Scripts { @RenderSection("Scripts", required: false) ... }`.
-- **Sections.** `@section Nom { ... }` ; `@RenderSection("Nom")` (requise par
-  défaut) ou `RenderSection("Nom", required: false)`. Une section définie mais
-  jamais rendue est une erreur, comme pour les vues `.razor`. Les sections sont
-  rendues en HTML dès la fin de la page qui les définit.
-- **`ViewData`.** Partagé avec le contrôleur et les layouts ; une clé absente se
-  lit `null` (`ViewData["Starts"]`), pour les deux genres de vues.
+- **Sections.** `@section Name { ... }`; `@RenderSection("Name")` (required by
+  default) or `RenderSection("Name", required: false)`. A section that is defined but
+  never rendered is an error, as for `.razor` views. Sections are
+  rendered to HTML as soon as the page that defines them ends.
+- **`ViewData`.** Shared with the controller and the layouts; a missing key reads
+  as `null` (`ViewData["Starts"]`), for both kinds of views.
 
 ## Helpers
 
-| Membre | Rend |
+| Member | Renders |
 |---|---|
-| `Html.Raw(html)`, `Html.Encode(v)` | HTML tel quel ; texte encodé. |
-| `Html.ActionLink(texte, action, contrôleur?, routeValues?, htmlAttributes?)`, `Html.RouteLink(...)` | `<a href>` produit par la table de routes. |
-| `using (Html.BeginForm(action?, contrôleur?, routeValues?, method: "post", antiforgery: true, htmlAttributes?))` | `<form action method>` ; à la fin, le champ anti-falsification (sauf `GET`) et `</form>`. |
-| `Html.AntiForgeryToken()` | Le champ caché pour un `<form>` écrit à la main. |
-| `Html.TextBox/Hidden/Password/TextArea/CheckBox(nom, ...)` | Champs ; après un `POST` refusé, la valeur postée revient et l'erreur ajoute `input-validation-error`. |
-| `Html.TextBoxFor/HiddenFor/TextAreaFor/CheckBoxFor(m => m.X)`, `NameFor`, `IdFor`, `ValueFor`, `DisplayNameFor`, `LabelFor` | Champs liés au modèle par une chaîne de membres (`m => m.Address.City` → `Address.City`) ; `[Display(Name)]` respecté. |
-| `Html.ValidationMessage(nom)`, `Html.ValidationMessageFor(m => m.X)`, `Html.ValidationSummary(excludePropertyErrors)` | Même HTML que `HackValidationMessage` et `HackValidationSummary` (ADR 0083). |
-| `await Html.PartialAsync(nom, modèle?)`, `await Html.RenderPartialAsync(...)` | Un partial `.cshtml` ou `.razor` (dossier du contrôleur, puis `Shared/`, ou chemin). |
-| `Json.Serialize(valeur)` | JSON avec les options du site (camelCase). |
-| `@(await Component.InvokeAsync<TComposant>(paramètres))` | Un composant Razor rendu dans la page, avec le contexte de la vue (les helpers `.razor` de l'ADR 0083 marchent). Les parenthèses sont nécessaires à cause du `<` générique. |
-| `Url.Action(...)`, `Url.RouteUrl(...)`, `Url.Content("~/...")` | Le `IHackUrlHelper` du site. |
+| `Html.Raw(html)`, `Html.Encode(v)` | HTML as is; encoded text. |
+| `Html.ActionLink(text, action, controller?, routeValues?, htmlAttributes?)`, `Html.RouteLink(...)` | `<a href>` produced by the route table. |
+| `using (Html.BeginForm(action?, controller?, routeValues?, method: "post", antiforgery: true, htmlAttributes?))` | `<form action method>`; at the end, the anti-forgery field (except `GET`) and `</form>`. |
+| `Html.AntiForgeryToken()` | The hidden field for a hand-written `<form>`. |
+| `Html.TextBox/Hidden/Password/TextArea/CheckBox(name, ...)` | Fields; after a refused `POST`, the posted value comes back and the error adds `input-validation-error`. |
+| `Html.TextBoxFor/HiddenFor/TextAreaFor/CheckBoxFor(m => m.X)`, `NameFor`, `IdFor`, `ValueFor`, `DisplayNameFor`, `LabelFor` | Fields bound to the model by a member chain (`m => m.Address.City` → `Address.City`); `[Display(Name)]` respected. |
+| `Html.ValidationMessage(name)`, `Html.ValidationMessageFor(m => m.X)`, `Html.ValidationSummary(excludePropertyErrors)` | Same HTML as `HackValidationMessage` and `HackValidationSummary` (ADR 0083). |
+| `await Html.PartialAsync(name, model?)`, `await Html.RenderPartialAsync(...)` | A `.cshtml` or `.razor` partial (controller folder, then `Shared/`, or path). |
+| `Json.Serialize(value)` | JSON with the site's options (camelCase). |
+| `@(await Component.InvokeAsync<TComponent>(parameters))` | A Razor component rendered in the page, with the view's context (the `.razor` helpers of ADR 0083 work). The parentheses are needed because of the generic `<`. |
+| `Url.Action(...)`, `Url.RouteUrl(...)`, `Url.Content("~/...")` | The site's `IHackUrlHelper`. |
 
-`htmlAttributes` et les valeurs de route d'un objet anonyme passent par
-`HackRoute.Values(new { @class = "nav" })` (un `_` devient `-` : `data_id` →
+`htmlAttributes` and the route values of an anonymous object go through
+`HackRoute.Values(new { @class = "nav" })` (a `_` becomes `-`: `data_id` →
 `data-id`).
 
-## Mélange des genres
+## Mixing kinds
 
-- Une vue `.cshtml` peut avoir un layout `.razor` (`Layout = "_Layout"` trouve
-  `Shared/_Layout.razor`) : ses sections arrivent dans `<HackRenderSection>`.
-- Une vue `.razor` peut prendre un layout `.cshtml` en fixant
-  `Layout = typeof(AspNetCoreGeneratedDocument.Views_Shared__Layout)` ; ses
-  `<HackSection>` sont rendues en HTML avant le layout.
-- `<HackPartial Name="_Card" />` dans un `.razor` rend aussi un partial `.cshtml`.
-- Un `.razor` et un `.cshtml` au même chemin sont l'erreur de build `HOSWEB0008`.
+- A `.cshtml` view can have a `.razor` layout (`Layout = "_Layout"` finds
+  `Shared/_Layout.razor`): its sections arrive in `<HackRenderSection>`.
+- A `.razor` view can take a `.cshtml` layout by setting
+  `Layout = typeof(AspNetCoreGeneratedDocument.Views_Shared__Layout)`; its
+  `<HackSection>`s are rendered to HTML before the layout.
+- `<HackPartial Name="_Card" />` in a `.razor` also renders a `.cshtml` partial.
+- A `.razor` and a `.cshtml` at the same path is the build error `HOSWEB0008`.
 
 ## Tests
 
-- `Tests/HackerOs.AppSdk.Web.Tests/Views/CshtmlViewTests` : table générée et
-  noms de classes, `_ViewStart` imbriqués, `@model`, `@inject`, layout, titre,
-  section, attributs conditionnels, partials des deux genres, modèle en ligne,
-  `Html.Raw`, `Component.InvokeAsync`, `Json.Serialize`, layouts imbriqués et
-  section redéfinie, mélange dans les deux sens, `Layout = null`,
-  `PartialView`, chemin absolu, formulaire lié au modèle avec anti-falsification
-  et erreurs ré-affichées, erreurs (corps non rendu, section requise absente,
-  section orpheline, mauvais modèle), emplacements cherchés.
-- `Generator/WebRouteGeneratorTests` : noms des classes `.cshtml` (`@namespace`
-  du fichier et d'un `_ViewImports.cshtml` avec les dossiers, caractères
-  spéciaux), imports exclus, `HOSWEB0008`.
-- `Tests/HackerOs.Platform.WorkerHost.Tests/MvcSiteTests` : une vue `.cshtml`
-  avec `_ViewStart`, layout `.cshtml`, formulaire et section servie par `curl`
-  dans un OS complet, sur le fil principal et dans le worker `web`.
+- `Tests/HackerOs.AppSdk.Web.Tests/Views/CshtmlViewTests`: generated table and
+  class names, nested `_ViewStart`, `@model`, `@inject`, layout, title,
+  section, conditional attributes, partials of both kinds, inline template,
+  `Html.Raw`, `Component.InvokeAsync`, `Json.Serialize`, nested layouts and
+  redefined section, mixing in both directions, `Layout = null`,
+  `PartialView`, absolute path, model-bound form with anti-forgery
+  and redisplayed errors, errors (body not rendered, required section missing,
+  orphan section, wrong model), searched locations.
+- `Generator/WebRouteGeneratorTests`: `.cshtml` class names (`@namespace`
+  of the file and of a `_ViewImports.cshtml` with the folders, special
+  characters), excluded imports, `HOSWEB0008`.
+- `Tests/HackerOs.Platform.WorkerHost.Tests/MvcSiteTests`: a `.cshtml` view
+  with `_ViewStart`, `.cshtml` layout, form and section served by `curl`
+  in a full OS, on the main thread and in the `web` worker.
 
-## Limites connues
+## Known limits
 
-- Pas de tag helpers (`asp-action`, `asp-for`, `<partial>`) : utilisez les
-  helpers HTML ou `Component.InvokeAsync`. Un `~/` écrit en dur dans un attribut
-  n'est pas résolu : `@Url.Content("~/...")`.
-- Pas de Razor Pages (`@page`), de `ViewBag`, de `TempData` ni de view
-  components MVC ; `Component` rend des composants Razor.
-- `_ViewStart.cshtml` hors de `Views/` n'est pas lu.
-- Les sections sont rendues dès la fin de la page qui les définit, pas à la
-  demande du layout (même HTML, sauf effet de bord).
-- La compilation d'un `.cshtml` **dans l'OS** reste hors périmètre (ADR 0076 §8).
+- No tag helpers (`asp-action`, `asp-for`, `<partial>`): use the HTML
+  helpers or `Component.InvokeAsync`. A hard-coded `~/` in an attribute
+  is not resolved: use `@Url.Content("~/...")`.
+- No Razor Pages (`@page`), `ViewBag`, `TempData` or MVC view
+  components; `Component` renders Razor components.
+- `_ViewStart.cshtml` outside `Views/` is not read.
+- Sections are rendered as soon as the page that defines them ends, not on
+  the layout's request (same HTML, barring side effects).
+- Compiling a `.cshtml` **inside the OS** remains out of scope (ADR 0076 §8).
 
-## Tâches
+## Tasks
 
-- [x] Preuve de faisabilité (compilation au build sans MVC) et ADR 0086.
-- [x] `_ViewImports.cshtml` racine et types de compatibilité ajoutés au build, `RAZORSDK1004` en message.
-- [x] `HackRazorPage`/`HackRazorPage<TModel>` : écriture, attributs, modèles en ligne, sections, corps, activation des `@inject`.
-- [x] Helpers `Html`, `Json`, `Component`, `ModelExpressionProvider`.
-- [x] Moteur : genres `Component`/`RazorPage`, `_ViewStart`, layouts `.cshtml`, mélange, partials des deux genres, `ViewData` sans clé → `null`.
-- [x] Générateur : vues `.cshtml` dans la table, `HOSWEB0008`.
-- [x] Règle de l'ADR 0007 étendue aux `.cshtml`.
-- [x] Tests (pipeline, générateur, bout en bout dans les deux modes).
-- [x] ADR 0086, ce document, index, plan, `asp-hack-mvc.md`, `asp-hack-razor-views.md`.
+- [x] Feasibility proof (build-time compilation without MVC) and ADR 0086.
+- [x] Root `_ViewImports.cshtml` and compatibility types added at build time, `RAZORSDK1004` as a message.
+- [x] `HackRazorPage`/`HackRazorPage<TModel>`: writing, attributes, inline templates, sections, body, activation of `@inject`s.
+- [x] `Html`, `Json`, `Component`, `ModelExpressionProvider` helpers.
+- [x] Engine: `Component`/`RazorPage` kinds, `_ViewStart`, `.cshtml` layouts, mixing, partials of both kinds, `ViewData` without key → `null`.
+- [x] Generator: `.cshtml` views in the table, `HOSWEB0008`.
+- [x] ADR 0007 rule extended to `.cshtml`.
+- [x] Tests (pipeline, generator, end to end in both modes).
+- [x] ADR 0086, this document, index, plan, `asp-hack-mvc.md`, `asp-hack-razor-views.md`.

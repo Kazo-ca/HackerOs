@@ -1,64 +1,64 @@
-# ADR 0106 : publication Release trimmée de l'hôte Ecosystem
+# ADR 0106: trimmed Release publish of the Ecosystem host
 
-## Statut
+## Status
 
-Accepté le 2026-10-17 (chantier `v3/1-adr`, pour le chantier `v3/14-trimming`).
+Accepted on 2026-10-17 (work item `v3/1-adr`, for the work item `v3/14-trimming`).
 
-- **Complète :** ADR 0047 (manifestes générés, chargement paresseux des apps),
-  ADR 0070 (processus dans des workers), ADR 0082 (table de routes ASP.Hack
-  générée), ADR 0084 (sites Blazor).
-- **Plan :** [`wasm-v3-completion-plan.md`](../plans/wasm-v3-completion-plan.md),
-  ligne `v3/14-trimming` ; manque R12. AOT hors périmètre.
+- **Complements:** ADR 0047 (generated manifests, lazy loading of apps),
+  ADR 0070 (processes in workers), ADR 0082 (generated ASP.Hack route table),
+  ADR 0084 (Blazor sites).
+- **Plan:** [`wasm-v3-completion-plan.md`](../plans/wasm-v3-completion-plan.md),
+  line `v3/14-trimming`; gap R12. AOT out of scope.
 
-## Contexte
+## Context
 
-- `HackerOs.Ecosystem.csproj:12` a `PublishTrimmed=False`. Pourtant
-  `Directory.Build.props` met `IsTrimmable=true` et `EnableTrimAnalyzer=true`
-  sur tous les projets hors tests (sauf le serveur et le support E2E), et
-  `TreatWarningsAsErrors` est actif : l'analyse tourne, le trimming jamais.
-- Les apps intégrées sont chargées paresseusement (`BlazorWebAssemblyLazyLoad`,
-  `build/HackerOs.Apps.targets:310-333`) puis instanciées par réflexion :
-  `Activator.CreateInstance` du point d'entrée (`AppLifecycleOrchestrator.cs:136-144`),
-  type cherché par son nom (`AppEntryPointDiscovery.cs:99`), chargement par nom
-  dans les workers (`WorkerAssemblyLoader.cs:38-47`, `WorkerProcessHost.cs:295-300`),
-  types exportés des sites (`HackSiteRouter.cs:231`), liaison de modèle MVC
-  (`HackModelBinder.cs`). Plusieurs avertissements de trimming y sont supprimés
-  par attribut.
-- Ces chemins ne cassent qu'en Release trimmée, jamais en Debug.
+- `HackerOs.Ecosystem.csproj:12` has `PublishTrimmed=False`. Yet
+  `Directory.Build.props` sets `IsTrimmable=true` and `EnableTrimAnalyzer=true`
+  on all non-test projects (except the server and the E2E support), and
+  `TreatWarningsAsErrors` is active: the analysis runs, the trimming never.
+- The built-in apps are lazily loaded (`BlazorWebAssemblyLazyLoad`,
+  `build/HackerOs.Apps.targets:310-333`) then instantiated by reflection:
+  `Activator.CreateInstance` of the entry point (`AppLifecycleOrchestrator.cs:136-144`),
+  type looked up by its name (`AppEntryPointDiscovery.cs:99`), loading by name
+  in the workers (`WorkerAssemblyLoader.cs:38-47`, `WorkerProcessHost.cs:295-300`),
+  exported types of the sites (`HackSiteRouter.cs:231`), MVC model binding
+  (`HackModelBinder.cs`). Several trimming warnings are suppressed there
+  by attribute.
+- These paths only break in a trimmed Release, never in Debug.
 
-## Décision
+## Decision
 
-1. **`PublishTrimmed=True` et `TrimMode=partial`** pour l'Ecosystem : seules les
-   assemblies marquées `IsTrimmable` (les nôtres) sont élaguées ; les paquets
-   tiers (MudBlazor, Monaco, etc.) restent entiers. Passer en `full` demandera un
-   nouvel ADR, avec des mesures.
-2. **Racines générées, pas de suppression aveugle.** Les cibles de l'hôte
-   génèrent, depuis `BuiltInApplications.json`, un descripteur ILLink
-   (`TrimmerRootDescriptor`) qui garde pour chaque app son point d'entrée, sa
-   classe `AppDefinition`, ses composants intégrables (ADR 0063) et, pour un
-   site, ses contrôleurs, vues et composants routables. Les types ainsi
-   construits par réflexion sont donc toujours présents.
-3. Là où une table générée existe déjà (routes et vues ASP.Hack, ADR 0082,
-   0083, 0086), le code l'utilise au lieu de parcourir `GetExportedTypes`. Une
-   suppression d'avertissement qui reste porte un commentaire qui dit quelle
-   racine la rend sûre ; une suppression sans justification est un défaut.
-4. Une app d'un autre dépôt (paquet, ADR 0098) est élaguée à la publication de
-   l'hôte qui l'inclut : le paquet `HackerOs.App.Build` active l'analyse de
-   trimming dans les projets d'app, et les gabarits partent avec
+1. **`PublishTrimmed=True` and `TrimMode=partial`** for the Ecosystem: only the
+   assemblies marked `IsTrimmable` (ours) are trimmed; third-party packages
+   (MudBlazor, Monaco, etc.) stay whole. Moving to `full` will require a
+   new ADR, with measurements.
+2. **Generated roots, no blind suppression.** The host targets
+   generate, from `BuiltInApplications.json`, an ILLink descriptor
+   (`TrimmerRootDescriptor`) that keeps for each app its entry point, its
+   `AppDefinition` class, its embeddable components (ADR 0063) and, for a
+   site, its controllers, views and routable components. The types thus
+   built by reflection are therefore always present.
+3. Where a generated table already exists (ASP.Hack routes and views, ADR 0082,
+   0083, 0086), the code uses it instead of walking `GetExportedTypes`. A
+   warning suppression that remains carries a comment saying which root
+   makes it safe; a suppression without justification is a defect.
+4. An app from another repository (package, ADR 0098) is trimmed at the publish of
+   the host that includes it: the `HackerOs.App.Build` package enables the trimming
+   analysis in app projects, and the templates ship with
    `IsTrimmable=true`.
-5. **Test** : `build/publish-trimmed.sh` publie l'Ecosystem en Release trimmée
-   et une suite Playwright la sert et vérifie le démarrage, la connexion, le
-   lancement de chaque app système, une commande dans un worker, un site
-   ASP.Hack (exemple Intranet) et un site Blazor, hors ligne après le premier
-   chargement. Cette suite fait partie de la porte de fusion locale de `v3/14`
-   et des chantiers suivants.
-6. Le serveur (`IsTrimmable=false`) et l'hôte de test ne sont pas élagués.
+5. **Test**: `build/publish-trimmed.sh` publishes the Ecosystem as a trimmed Release
+   and a Playwright suite serves it and checks startup, login, the
+   launch of each system app, a command in a worker, an ASP.Hack site
+   (Intranet example) and a Blazor site, offline after the first
+   load. This suite is part of the local merge gate of `v3/14`
+   and the following work items.
+6. The server (`IsTrimmable=false`) and the test host are not trimmed.
 
-## Conséquences
+## Consequences
 
-- `v3/14` corrige les avertissements de trimming de tous les projets livrés,
-  ajoute le descripteur généré, le script et la suite E2E, et note la taille de
-  la publication avant et après dans `building-and-testing.md`.
-- Le chantier vient après les chantiers qui ajoutent des API (plan, §4), pour ne
-  pas refaire les racines à chaque ajout.
-- `building-and-testing.md` et `project-overview.md` sont mis à jour.
+- `v3/14` fixes the trimming warnings of all shipped projects,
+  adds the generated descriptor, the script and the E2E suite, and records the size of
+  the publish before and after in `building-and-testing.md`.
+- The work item comes after the work items that add APIs (plan, §4), so as not to
+  redo the roots with each addition.
+- `building-and-testing.md` and `project-overview.md` are updated.

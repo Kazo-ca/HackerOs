@@ -1,27 +1,27 @@
-# Relais réseau du serveur optionnel
+# Network relay of the optional server
 
-Chantier `v3/10-server-proxy` du [plan de fin de migration](plans/wasm-v3-completion-plan.md),
-décisions dans l'[ADR 0102](adr/0102-server-network-relay-tcp-udp-and-policy.md)
-et ses ajustements dans l'[ADR 0108](adr/0108-server-relay-implementation-adjustments.md).
+Work item `v3/10-server-proxy` of the [completion plan](plans/wasm-v3-completion-plan.md),
+decisions in [ADR 0102](adr/0102-server-network-relay-tcp-udp-and-policy.md)
+and its adjustments in [ADR 0108](adr/0108-server-relay-implementation-adjustments.md).
 
-## But
+## Goal
 
-Le serveur optionnel (`Server/HackerOs.Server`) relaie vers le vrai réseau ce
-qu'un navigateur ne peut pas faire seul :
+The optional server (`Server/HackerOs.Server`) relays to the real network what
+a browser cannot do alone:
 
-- les requêtes HTTP de **toutes** les méthodes, avec leur corps ;
-- les **flux TCP** (`HackTcpClient.ConnectAsync`) ;
-- les **datagrammes UDP** (`HackUdpClient`).
+- HTTP requests of **all** methods, with their body;
+- **TCP streams** (`HackTcpClient.ConnectAsync`);
+- **UDP datagrams** (`HackUdpClient`).
 
-Il vérifie lui-même que l'app a le droit d'utiliser le relais, applique une
-politique et des quotas configurés dans `appsettings.json`, et écrit un
-avertissement au démarrage quand cette politique est affaiblie. Sans serveur,
-rien ne change : l'OS se comporte comme une machine sans passerelle par
-défaut.
+It checks itself that the app is allowed to use the relay, applies a
+policy and quotas configured in `appsettings.json`, and writes a
+warning at startup when that policy is weakened. Without a server,
+nothing changes: the OS behaves like a machine without a default
+gateway.
 
-Le relais est une API indépendante du mode de rendu de l'interface servie par
-le serveur (ADR 0102) : ce chantier ne touche pas au rendu, que reprend
-`exec/8`.
+The relay is an API independent of the rendering mode of the interface served by
+the server (ADR 0102): this work item does not touch rendering, which `exec/8`
+takes up.
 
 ## Architecture
 
@@ -33,56 +33,56 @@ HackUdpClient  ──► AppNetworkGateway.ConnectUdpAsync ─┴► OpenStreamA
 Paramètres     ──► HackServerConnection.GetRelayPolicyAsync ────────────► GET  /api/proxy/policy
 ```
 
-### Contrats (`HackerOs.Server.Contracts/Proxy`)
+### Contracts (`HackerOs.Server.Contracts/Proxy`)
 
-| Type | Rôle |
+| Type | Role |
 |---|---|
-| `ProxyHttpRequest` | porte `Body` et `ContentType` ; `Create(...)` calcule `BodyBytes` et `BodyHash` (SHA-256 hexadécimal minuscule). |
-| `ProxyPolicyResponse` | politique effective : relais actif, ports HTTP/TCP/UDP, plages privées, quotas, flux ouverts, apps accordées, avertissements. |
-| `ProxyStreamRoutes`, `ProxyStreamCloseCodes` | routes, paramètres de requête et codes de fermeture des flux. |
-| `ProxyStreamRequest`, `ProxyStreamOpened`, `ProxyStreamClosure` | ouverture d'un flux, adresse épinglée, raison de la fermeture. |
-| `IProxyStreamChannel` | un flux ouvert : `SendAsync`, `ReceiveAsync` (`null` à la fin), `Closure`. |
-| `ProxyStreamException` | refus d'ouverture avec son `ProxyErrorCode`. |
+| `ProxyHttpRequest` | carries `Body` and `ContentType`; `Create(...)` computes `BodyBytes` and `BodyHash` (lowercase hexadecimal SHA-256). |
+| `ProxyPolicyResponse` | effective policy: relay active, HTTP/TCP/UDP ports, private ranges, quotas, open streams, granted apps, warnings. |
+| `ProxyStreamRoutes`, `ProxyStreamCloseCodes` | routes, query parameters and close codes of the streams. |
+| `ProxyStreamRequest`, `ProxyStreamOpened`, `ProxyStreamClosure` | opening of a stream, pinned address, reason for closing. |
+| `IProxyStreamChannel` | an open stream: `SendAsync`, `ReceiveAsync` (`null` at the end), `Closure`. |
+| `ProxyStreamException` | refusal to open with its `ProxyErrorCode`. |
 
-Nouveaux codes d'erreur : `GRANT_MISSING` (403), `RELAY_DISABLED` (503),
-`BODY_MISMATCH` (400), `CONNECTION_REFUSED` et `HOST_UNREACHABLE` (502).
+New error codes: `GRANT_MISSING` (403), `RELAY_DISABLED` (503),
+`BODY_MISMATCH` (400), `CONNECTION_REFUSED` and `HOST_UNREACHABLE` (502).
 
-### Serveur
+### Server
 
-| Classe | Rôle |
+| Class | Role |
 |---|---|
-| `ProxyOptions`, `ProxyRelayPolicy` | section `HackerOs:Proxy` ; `ProxyRelayPolicy.From` pose les valeurs par défaut et calcule les limites effectives. |
-| `ProxyGrantAuthority` | `IsGrantedAsync` : l'app est dans `GrantedApps` ou un enregistrement `grants` synchronisé du compte lui donne `network.real.access`. |
-| `ProxyService` | validations communes (relais actif, app, accord, port, adresse épinglée, plages bloquées, quotas) ; `ExecuteHttpRequestAsync` envoie le corps ; `OpenStreamAsync` connecte le socket. |
-| `SocketProxyStreamConnector`, `SocketProxyStreamChannel` | connexion TCP/UDP (10 s), délai d'inactivité, compteurs d'octets, audit à la fermeture. |
-| `ProxyStreamWebSocketPump` | accepte le WebSocket et pompe les trames dans les deux sens. |
-| `ProxyPolicyStartupReporter` | avertissements au démarrage (événements 1020 à 1022). |
+| `ProxyOptions`, `ProxyRelayPolicy` | `HackerOs:Proxy` section; `ProxyRelayPolicy.From` sets the default values and computes the effective limits. |
+| `ProxyGrantAuthority` | `IsGrantedAsync`: the app is in `GrantedApps` or a synchronized `grants` record of the account gives it `network.real.access`. |
+| `ProxyService` | common validations (relay active, app, grant, port, pinned address, blocked ranges, quotas); `ExecuteHttpRequestAsync` sends the body; `OpenStreamAsync` connects the socket. |
+| `SocketProxyStreamConnector`, `SocketProxyStreamChannel` | TCP/UDP connection (10 s), idle timeout, byte counters, audit at close. |
+| `ProxyStreamWebSocketPump` | accepts the WebSocket and pumps frames in both directions. |
+| `ProxyPolicyStartupReporter` | startup warnings (events 1020 to 1022). |
 
 ### OS
 
-| Classe | Rôle |
+| Class | Role |
 |---|---|
-| `HttpProxyClient` | HTTP et flux (WebSocket `ws`/`wss`, jeton dans `access_token`). |
-| `WebSocketProxyStreamChannel` | attend la trame texte d'ouverture ou la fermeture `4001` ; découpe un envoi TCP en blocs de 64 Kio. |
-| `AppNetworkGateway` | `ConnectTcpAsync`, `ConnectUdpAsync`, relais HTTP avec corps. |
-| `RelayedSocket` | `IHackSocket` sur un flux : compte le trafic (`/proc/net/dev`) et la mémoire du noyau. |
-| `AppServerConnectionGateway.GetRelayPolicyAsync` | politique du serveur pour Paramètres, sans jamais exposer le jeton. |
+| `HttpProxyClient` | HTTP and streams (WebSocket `ws`/`wss`, token in `access_token`). |
+| `WebSocketProxyStreamChannel` | waits for the opening text frame or the `4001` close; splits a TCP send into 64 KiB blocks. |
+| `AppNetworkGateway` | `ConnectTcpAsync`, `ConnectUdpAsync`, HTTP relay with body. |
+| `RelayedSocket` | `IHackSocket` over a stream: counts traffic (`/proc/net/dev`) and kernel memory. |
+| `AppServerConnectionGateway.GetRelayPolicyAsync` | server policy for Settings, without ever exposing the token. |
 
-## Protocole d'un flux
+## Stream protocol
 
-1. Le client ouvre `GET /api/proxy/tcp?host=…&port=…&appId=…&access_token=…`
-   (ou `/udp`) en WebSocket. Le paramètre `access_token` n'est accepté que sur
-   ces deux routes ; ailleurs seul l'en-tête `Authorization` compte.
-2. Le serveur valide la requête et connecte le socket **avant** d'accepter le
+1. The client opens `GET /api/proxy/tcp?host=…&port=…&appId=…&access_token=…`
+   (or `/udp`) as a WebSocket. The `access_token` parameter is accepted only on
+   these two routes; elsewhere only the `Authorization` header counts.
+2. The server validates the request and connects the socket **before** accepting the
    WebSocket.
-3. Succès : la première trame est une trame **texte** JSON
-   `ProxyStreamOpened` (adresse épinglée, port). Toutes les suivantes sont
-   binaires : un message TCP est une suite d'octets (64 Kio au plus), un
-   message UDP est un datagramme (65 507 octets au plus, vide permis).
-4. Refus : le WebSocket est accepté puis fermé avec `4001` et la raison
-   `« <ProxyErrorCode> <message> »` ; le client lève `ProxyStreamException`.
-5. Fin : `4000` quand la cible ferme, `4002` après l'inactivité, `1000` quand
-   le client ferme.
+3. Success: the first frame is a **text** JSON frame
+   `ProxyStreamOpened` (pinned address, port). All the following ones are
+   binary: a TCP message is a sequence of bytes (64 KiB at most), a
+   UDP message is a datagram (65,507 bytes at most, empty allowed).
+4. Refusal: the WebSocket is accepted then closed with `4001` and the reason
+   `"<ProxyErrorCode> <message>"`; the client throws `ProxyStreamException`.
+5. End: `4000` when the target closes, `4002` after inactivity, `1000` when
+   the client closes.
 
 ## Configuration (`appsettings.json`)
 
@@ -113,28 +113,28 @@ Nouveaux codes d'erreur : `GRANT_MISSING` (403), `RELAY_DISABLED` (503),
 }
 ```
 
-Ce sont les valeurs livrées. Une liste absente ou vide garde la
-valeur par défaut : le binder ajoute aux listes initialisées dans le code, donc
-les défauts sont posés par `ProxyRelayPolicy.From`.
+These are the shipped values. A missing or empty list keeps the
+default value: the binder adds to lists initialized in code, so
+the defaults are set by `ProxyRelayPolicy.From`.
 
-- **Tout autoriser** : `AllowAllPorts: true` ouvre tous les ports,
-  `AllowPrivateNetworks: true` les plages privées (10/8, 172.16/12,
-  192.168/16, fc00::/7…). Le bouclage, le lien local, les métadonnées de
-  nuage (169.254.169.254) et les adresses non spécifiées restent toujours
-  bloqués.
-- **Désactiver les quotas** : `Quotas:Enabled: false` lève les limites de
-  taille, de concurrence, de flux et d'inactivité. `MaxRedirectHops` reste
-  appliqué (ADR 0108 §3).
-- **Couper le relais** : `Enabled: false` ; toute requête reçoit
+- **Allow everything**: `AllowAllPorts: true` opens all ports,
+  `AllowPrivateNetworks: true` the private ranges (10/8, 172.16/12,
+  192.168/16, fc00::/7…). Loopback, link-local, cloud
+  metadata (169.254.169.254) and unspecified addresses always remain
+  blocked.
+- **Disable quotas**: `Quotas:Enabled: false` lifts the limits on
+  size, concurrency, streams and inactivity. `MaxRedirectHops` is still
+  applied (ADR 0108 §3).
+- **Turn off the relay**: `Enabled: false`; every request receives
   `RELAY_DISABLED`.
 
-Au démarrage, le serveur journalise un avertissement par affaiblissement
-(`AllowAllPorts`, `AllowPrivateNetworks`, quotas désactivés), un rappel que le
-serveur est mono-utilisateur s'il y en a au moins un, et un avertissement si le
-relais est coupé. Les mêmes phrases sont rendues dans
-`ProxyPolicyResponse.Warnings` et affichées par Paramètres.
+At startup, the server logs one warning per weakening
+(`AllowAllPorts`, `AllowPrivateNetworks`, quotas disabled), a reminder that the
+server is single-user if there is at least one, and a warning if the
+relay is turned off. The same sentences are rendered in
+`ProxyPolicyResponse.Warnings` and displayed by Settings.
 
-## Utilisation dans une app
+## Usage in an app
 
 ```csharp
 // TCP : un flux comme NetworkStream.
@@ -152,53 +152,53 @@ using HackHttpClient http = new();
 HackHttpResponse response = await http.PostAsync(url, new HackStringContent(json, "application/json"));
 ```
 
-- Un socket demande `network.simulated.write` ; le relais demande en plus
-  `network.real.access` (dangereuse).
-- Les lectures et écritures synchrones lèvent `NotSupportedException` : le
-  navigateur n'a qu'un fil.
-- Un hôte du réseau simulé, ou cette machine, n'a pas de flux brut : la
-  connexion est refusée (`SocketError.ConnectionRefused`).
-- Sans serveur ou sans `network.real.access`, un hôte inconnu donne
+- A socket requires `network.simulated.write`; the relay additionally requires
+  `network.real.access` (dangerous).
+- Synchronous reads and writes throw `NotSupportedException`: the
+  browser has only one thread.
+- A host of the simulated network, or this machine, has no raw stream: the
+  connection is refused (`SocketError.ConnectionRefused`).
+- Without a server or without `network.real.access`, an unknown host gives
   `SocketError.HostNotFound`.
 
-| Refus du relais | `SocketError` |
+| Relay refusal | `SocketError` |
 |---|---|
 | `BLOCKED_PORT`, `BLOCKED_ADDRESS`, `CONNECTION_REFUSED` | `ConnectionRefused` |
 | `HOST_UNREACHABLE` | `HostUnreachable` |
 | `GRANT_MISSING`, `RELAY_DISABLED`, `SIMULATED_DOMAIN_BLOCKED` | `HostNotFound` |
-| autre | `ConnectionFailed` (erreur réseau du SDK) |
+| other | `ConnectionFailed` (SDK network error) |
 
-Paramètres (section du serveur) affiche la politique du serveur connecté avec
-`HackServerConnection.GetRelayPolicyAsync()` : ports, plages privées, quotas,
-flux ouverts, apps accordées et avertissements.
+Settings (server section) displays the policy of the connected server with
+`HackServerConnection.GetRelayPolicyAsync()`: ports, private ranges, quotas,
+open streams, granted apps and warnings.
 
-## Décisions clés
+## Key decisions
 
-- Accord vérifié côté serveur par `GrantedApps` **ou** par les accords
-  synchronisés (ADR 0108 §1) : sans la liste, aucun accord n'existerait sur
-  le serveur et le relais refuserait tout. Question posée à Benoit dans le
-  fil « V3 10 : relais du serveur ».
-- Socket connecté avant d'accepter le WebSocket, refus en code de fermeture
-  `4001` : un `WebSocket` de navigateur ne lit pas le statut d'une mise à
-  niveau refusée (ADR 0108 §2).
-- Jeton dans la requête seulement sur les routes de flux : un `WebSocket` de
-  navigateur ne peut pas envoyer `Authorization`.
-- Adresse résolue une fois et épinglée pour la connexion, contre le
-  rebinding DNS.
-- `HEAD` ne demande pas de corps ; toute autre méthode le relaie, vérifié par
-  sa taille et son hash. Une redirection 303, ou 301/302 après un `POST`,
-  devient un `GET` sans corps.
+- Grant checked on the server side by `GrantedApps` **or** by the synchronized
+  grants (ADR 0108 §1): without the list, no grant would exist on
+  the server and the relay would refuse everything. Question put to Benoit in the
+  thread "V3 10: server relay".
+- Socket connected before accepting the WebSocket, refusal as close code
+  `4001`: a browser `WebSocket` does not read the status of a refused
+  upgrade (ADR 0108 §2).
+- Token in the request only on stream routes: a browser `WebSocket` cannot
+  send `Authorization`.
+- Address resolved once and pinned for the connection, against DNS
+  rebinding.
+- `HEAD` does not ask for a body; any other method relays it, checked by
+  its size and hash. A 303 redirect, or 301/302 after a `POST`,
+  becomes a `GET` without a body.
 
-## Liste des tâches
+## Task list
 
-- [x] Corps des requêtes HTTP : contrat, vérification taille et hash, toutes les méthodes, redirections.
-- [x] Options `HackerOs:Proxy` (ports, plages privées, quotas, apps accordées) et politique effective.
-- [x] Contrôle de l'accord côté serveur (`GrantedApps` et accords synchronisés).
-- [x] Flux TCP et UDP : connecteur, canal, pompe WebSocket, codes de fermeture, audit.
-- [x] Jeton dans la requête sur les routes de flux seulement.
-- [x] Avertissements au démarrage et dans la réponse de politique.
-- [x] Client WebSocket de l'OS et client direct du serveur.
-- [x] `HackTcpClient.ConnectAsync`, `HackNetworkStream`, `HackUdpClient`, erreurs d'une vraie pile.
-- [x] `HackServerConnection.GetRelayPolicyAsync` et panneau de Paramètres.
-- [x] Tests : service, endpoints WebSocket, client direct, passerelle réseau, politique.
-- [x] ADR 0108 et documentation.
+- [x] HTTP request bodies: contract, size and hash check, all methods, redirects.
+- [x] `HackerOs:Proxy` options (ports, private ranges, quotas, granted apps) and effective policy.
+- [x] Server-side grant check (`GrantedApps` and synchronized grants).
+- [x] TCP and UDP streams: connector, channel, WebSocket pump, close codes, audit.
+- [x] Token in the request on stream routes only.
+- [x] Startup warnings and in the policy response.
+- [x] OS WebSocket client and direct server client.
+- [x] `HackTcpClient.ConnectAsync`, `HackNetworkStream`, `HackUdpClient`, errors of a real stack.
+- [x] `HackServerConnection.GetRelayPolicyAsync` and Settings panel.
+- [x] Tests: service, WebSocket endpoints, direct client, network gateway, policy.
+- [x] ADR 0108 and documentation.

@@ -1,8 +1,8 @@
-# Documentation de HackerSimulator
+# HackerSimulator documentation
 
-| Dossier | Contenu |
+| Folder | Contents |
 | --- | --- |
-| [`wasm/`](wasm/README.md) | **HackerOS, version WebAssembly** (C#, Blazor, .NET 10) : la version active. Développement de l'OS dans [`wasm/dev/`](wasm/dev/README.md), création d'apps et de sites dans [`wasm/framework/`](wasm/framework/README.md), mémoire du projet dans [`wasm/memory/`](wasm/memory/README.md). |
+| [`wasm/`](wasm/README.md) | **HackerOS, WebAssembly version** (C#, Blazor, .NET 10): the active version. OS development in [`wasm/dev/`](wasm/dev/README.md), app and site creation in [`wasm/framework/`](wasm/framework/README.md), project memory in [`wasm/memory/`](wasm/memory/README.md). |
 
-La version legacy en TypeScript est documentée à côté de son code, dans
+The legacy TypeScript version is documented next to its code, in
 [`../src/README.md`](../../src/README.md).

@@ -1,23 +1,22 @@
-# Sauvegarde de la machine et espace de stockage
+# Machine backup and storage space
 
-Ce document couvre la mise en œuvre de la sauvegarde et de l'espace de stockage. Ce qu'une app voit (API `HackSystemBackup`, archive `.hosbak`, codes `NoSpace` et `FileTooLarge`) est dans [`../framework/system-backup-api.md`](../framework/system-backup-api.md).
+This document covers the implementation of backup and storage space. What an app sees (the `HackSystemBackup` API, the `.hosbak` archive, the `NoSpace` and `FileTooLarge` codes) is in [`../framework/system-backup-api.md`](../framework/system-backup-api.md).
 
-## Objet
+## Purpose
 
-Chantier `v3/7-storage-backup`, d'après l'[ADR 0099](adr/0099-os-backup-and-low-storage.md) :
+Work item `v3/7-storage-backup`, following [ADR 0099](adr/0099-os-backup-and-low-storage.md):
 
-- **Sauvegarde et restauration** de toute la machine (fichiers de tous les
-  utilisateurs, `/etc`, comptes) dans une archive `.hosbak` téléchargée sur
-  l'ordinateur hôte, depuis Paramètres ou la commande `hackbackup`.
-- **Espace faible** : une notification par session, `df` avec les vrais
-  chiffres du navigateur, une réserve pour root comme les blocs réservés
-  d'ext4.
-- **Plus de place** : codes `NoSpace` (`ENOSPC`) et `FileTooLarge` (`EFBIG`,
-  16 Mio par fichier, ADR 0094), jusqu'au message Linux du shell ; les
-  journaux comptent les lignes perdues.
-- **Cache PWA abîmé** et **montées de version IndexedDB testées** : voir
-  [Cache PWA](#cache-pwa-abîmé-adr-0099-3) et
-  [Montées de version](#montées-de-version-indexeddb-adr-0099-4).
+- **Backup and restore** of the whole machine (files of all users, `/etc`,
+  accounts) in a `.hosbak` archive downloaded to the host computer, from
+  Settings or the `hackbackup` command.
+- **Low space**: one notification per session, `df` with the browser's real
+  figures, a reserve for root like ext4's reserved blocks.
+- **No more room**: `NoSpace` (`ENOSPC`) and `FileTooLarge` (`EFBIG`, 16 MiB
+  per file, ADR 0094) codes, all the way to the shell's Linux message; logs
+  count the lost lines.
+- **Damaged PWA cache** and **tested IndexedDB version upgrades**: see
+  [PWA cache](#cache-pwa-abîmé-adr-0099-3) and
+  [Version upgrades](#montées-de-version-indexeddb-adr-0099-4).
 
 ```text
 alice@hackeros:~$ sudo hackbackup create
@@ -29,178 +28,175 @@ mkdir: cannot create directory 'projets': No space left on device
 
 ## Architecture
 
-| Couche | Fichiers |
+| Layer | Files |
 |---|---|
-| Contrats de simulation | `Shared/HackerOs.Simulation.Abstractions/FileSystem/FileSystemResults.cs` (`NoSpace = 1800`, `FileTooLarge = 1801`), `Metrics/StorageSpaceContracts.cs` (`StorageCapacity`, `IStorageCapacityProbe`, `IStorageSpaceGuard`, `StorageSpacePolicy`), `Notifications/NotificationContracts.cs` (`NotificationAction.LaunchApp`) |
-| SDK | `Shared/HackerOs.AppSdk/Administration/HackSystemBackup.cs`, `SystemBackupContracts.cs` (`IAppSystemBackupGateway`, `HackBackupRestoreMode`, `HackBackupInfo`, `HackBackupInvalidException`) ; `IO/HackFileSystemErrorTranslator.cs` et `ShellErrorText.cs` pour les deux codes |
-| SDK Blazor | `Interop/BrowserFilePicker.cs` et `wwwroot/pickFile.js` (pendant de `download.js` pour ouvrir un fichier de l'hôte) |
-| Platform Core | `Backup/SystemBackupService.cs` (`ISystemBackupDevice`, séquence), `Administration/AppSystemBackupGateway.cs`, `Storage/StorageSpaceMonitor.cs`, `FileSystem/FileSystemService.cs` (réserve), `Diagnostics/LogFileWriter.cs` (lignes perdues), `Power/SystemPowerService.cs` (`RestartAfterAsync`) |
-| Infrastructure.Browser | `Backup/IndexedDbBackupService.cs` (gzip, `ReadArchive`, `Inspect`, fusion par `put`), `Storage/BrowserStorageManager.cs` (`IStorageCapacityProbe`), `FileSystem/IndexedDbFileSystemProvider.cs` (`QuotaExceededError` → `NoSpace`), `IndexedDbFileContentRepository.cs` (16 Mio → `FileTooLarge`), `IndexedDbStorageUsageProvider.cs` (`df`) |
-| Hôte Ecosystem | `Administration/BrowserSystemBackupDevice.cs`, `EcosystemServiceCollectionExtensions.cs` (enregistrements), `EcosystemBootCoordinator.cs` (surveillance de l'espace, entrée d'audit d'une restauration) |
-| Apps | `Apps/System/HackerOs.Apps.Settings/BackupPanel.razor` (onglet *Backup*), `Apps/Commands/HackerOs.Commands/Hackbackup/` ; `Platform/HackerOs.Platform.Blazor/Shell/ClockPanel.razor` (boutons d'action des notifications) |
+| Simulation contracts | `Shared/HackerOs.Simulation.Abstractions/FileSystem/FileSystemResults.cs` (`NoSpace = 1800`, `FileTooLarge = 1801`), `Metrics/StorageSpaceContracts.cs` (`StorageCapacity`, `IStorageCapacityProbe`, `IStorageSpaceGuard`, `StorageSpacePolicy`), `Notifications/NotificationContracts.cs` (`NotificationAction.LaunchApp`) |
+| SDK | `Shared/HackerOs.AppSdk/Administration/HackSystemBackup.cs`, `SystemBackupContracts.cs` (`IAppSystemBackupGateway`, `HackBackupRestoreMode`, `HackBackupInfo`, `HackBackupInvalidException`); `IO/HackFileSystemErrorTranslator.cs` and `ShellErrorText.cs` for the two codes |
+| Blazor SDK | `Interop/BrowserFilePicker.cs` and `wwwroot/pickFile.js` (counterpart of `download.js` for opening a host file) |
+| Platform Core | `Backup/SystemBackupService.cs` (`ISystemBackupDevice`, sequence), `Administration/AppSystemBackupGateway.cs`, `Storage/StorageSpaceMonitor.cs`, `FileSystem/FileSystemService.cs` (reserve), `Diagnostics/LogFileWriter.cs` (lost lines), `Power/SystemPowerService.cs` (`RestartAfterAsync`) |
+| Infrastructure.Browser | `Backup/IndexedDbBackupService.cs` (gzip, `ReadArchive`, `Inspect`, merge by `put`), `Storage/BrowserStorageManager.cs` (`IStorageCapacityProbe`), `FileSystem/IndexedDbFileSystemProvider.cs` (`QuotaExceededError` → `NoSpace`), `IndexedDbFileContentRepository.cs` (16 MiB → `FileTooLarge`), `IndexedDbStorageUsageProvider.cs` (`df`) |
+| Ecosystem host | `Administration/BrowserSystemBackupDevice.cs`, `EcosystemServiceCollectionExtensions.cs` (registrations), `EcosystemBootCoordinator.cs` (space monitoring, audit entry of a restore) |
+| Apps | `Apps/System/HackerOs.Apps.Settings/BackupPanel.razor` (*Backup* tab), `Apps/Commands/HackerOs.Commands/Hackbackup/`; `Platform/HackerOs.Platform.Blazor/Shell/ClockPanel.razor` (notification action buttons) |
 
-Les trois hôtes appellent `AddHackerOsEcosystem`. La sauvegarde n'est branchée
-que dans un navigateur (`OperatingSystem.IsBrowser()`) : l'hôte Server en rendu
-serveur n'a pas IndexedDB, `HackSystemBackup.IsSupported` y vaut `false` et
-l'onglet est masqué (ADR 0099, conséquences).
+The three hosts call `AddHackerOsEcosystem`. Backup is wired only in a browser
+(`OperatingSystem.IsBrowser()`): the Server host with server-side rendering has
+no IndexedDB, `HackSystemBackup.IsSupported` is `false` there and the tab is
+hidden (ADR 0099, consequences).
 
-## Sauvegarde et restauration (ADR 0099 §1)
+## Backup and restore (ADR 0099 §1)
 
-L'archive, l'API du SDK et la capacité `system.backup` destinées aux apps sont dans [`../framework/system-backup-api.md`](../framework/system-backup-api.md). Ce qui suit décrit la séquence de la sauvegarde et de la restauration.
+The archive, the SDK API and the `system.backup` capability intended for apps are in [`../framework/system-backup-api.md`](../framework/system-backup-api.md). What follows describes the backup and restore sequence.
 
-### Séquence de `SystemBackupService`
+### `SystemBackupService` sequence
 
-**Création** : export, téléchargement, entrée `system.backup.create` dans
+**Creation**: export, download, `system.backup.create` entry in
 `/var/log/auth.log` (`admin`, `requestedBy`, `file`, `bytes`, `records`).
 
-**Restauration**, comme un outil de sauvegarde système :
+**Restore**, like a system backup tool:
 
-1. sélecteur de l'hôte et validation complète (rien n'est arrêté) ;
-2. demande d'administrateur (`system.backup.restore`) ;
-3. `SystemPowerService.RestartAfterAsync` : vidage des journaux, fermeture
-   de la session (chaque processus est annulé) ;
-4. l'entrée de restauration est gardée **hors de la base** (`localStorage`,
-   clé `hackeros.backup.restore-record`), état `started` ;
-5. restauration en une transaction IndexedDB : **fusion** = `put` de chaque
-   enregistrement de l'archive (même clé : écrasé ; le reste est gardé),
-   **remplacement** = `clear` de chaque magasin puis `put` ;
-6. l'entrée passe à `success` ou `failure:<raison>` ;
-7. redémarrage de l'hôte (`location.reload`), même après un échec ;
-8. au démarrage suivant, `EcosystemBootCoordinator` écrit l'entrée gardée
-   dans `/var/log/auth.log` (`system.backup.restore`, `mode`, `outcome`) puis
-   l'efface.
+1. host picker and full validation (nothing is stopped);
+2. administrator request (`system.backup.restore`);
+3. `SystemPowerService.RestartAfterAsync`: log flush, session close (each
+   process is cancelled);
+4. the restore entry is kept **outside the database** (`localStorage`, key
+   `hackeros.backup.restore-record`), state `started`;
+5. restore in one IndexedDB transaction: **merge** = `put` of each record of
+   the archive (same key: overwritten; the rest is kept), **replace** = `clear`
+   of each store then `put`;
+6. the entry changes to `success` or `failure:<raison>`;
+7. host restart (`location.reload`), even after a failure;
+8. at the next startup, `EcosystemBootCoordinator` writes the kept entry to
+   `/var/log/auth.log` (`system.backup.restore`, `mode`, `outcome`) then
+   erases it.
 
-### Paramètres et `hackbackup`
+### Settings and `hackbackup`
 
-- **Paramètres → Backup** (onglet visible seulement si l'hôte sait
-  sauvegarder) : « Create backup », choix *Merge* ou *Replace* en cartes,
-  « Restore… », message d'erreur de l'archive refusée.
-- **`hackbackup create | restore [--merge|--replace]`** : doit tourner en
-  root (`sudo hackbackup …`), sinon `must be run as root` et code 1, sans
-  ouvrir la demande graphique ; mode par défaut `--merge` ; sélecteur fermé :
-  `no file chosen`, code 1 ; navigateur qui refuse le sélecteur : renvoi vers
-  Paramètres ; usage invalide : code 2. La commande tourne sur le fil
-  principal (`Execution = MainThread`) pour garder le geste de l'utilisateur.
+- **Settings → Backup** (tab visible only if the host can back up): "Create
+  backup", *Merge* or *Replace* choice as cards, "Restore…", error message for
+  a rejected archive.
+- **`hackbackup create | restore [--merge|--replace]`**: must run as root
+  (`sudo hackbackup …`), otherwise `must be run as root` and code 1, without
+  opening the graphical request; default mode `--merge`; picker closed:
+  `no file chosen`, code 1; browser that refuses the picker: pointer to
+  Settings; invalid usage: code 2. The command runs on the main thread
+  (`Execution = MainThread`) to keep the user's gesture.
 
-## Espace de stockage (ADR 0099 §2)
+## Storage space (ADR 0099 §2)
 
-### Mesure et seuils
+### Measurement and thresholds
 
-`BrowserStorageManager` lit `navigator.storage.estimate()` et rend
-`StorageCapacity(UsageBytes, QuotaBytes)` (`null` si le navigateur ne donne
-pas de quota). `StorageSpacePolicy` fixe les seuils :
+`BrowserStorageManager` reads `navigator.storage.estimate()` and returns
+`StorageCapacity(UsageBytes, QuotaBytes)` (`null` if the browser gives no
+quota). `StorageSpacePolicy` sets the thresholds:
 
-| Seuil | Valeur |
+| Threshold | Value |
 |---|---|
-| Espace faible (`IsLow`) | moins de 64 Mio **ou** de 10 % du quota libres |
-| Réserve de root (`ReserveBytes`) | 5 % du quota, au plus 256 Mio |
+| Low space (`IsLow`) | less than 64 MiB **or** 10 % of the quota free |
+| Root reserve (`ReserveBytes`) | 5 % of the quota, at most 256 MiB |
 
-`StorageSpaceMonitor` (service de portée, démarré au boot) mesure toutes les
-30 s, et peu après une écriture persistante qui le demande
-(`IStorageSpaceGuard.RequestRefresh`, au plus une mesure toutes les 5 s). Une
-écriture ne l'attend jamais : `FileSystemService` lit seulement l'état en
-cache `IsRootReserveReached`.
+`StorageSpaceMonitor` (scoped service, started at boot) measures every 30 s,
+and shortly after a persistent write that requests it
+(`IStorageSpaceGuard.RequestRefresh`, at most one measurement every 5 s). A
+write never waits for it: `FileSystemService` only reads the cached state
+`IsRootReserveReached`.
 
 ### Notification
 
-Quand l'espace devient faible, l'utilisateur de la session reçoit **une**
-notification par session (une nouvelle connexion avertit de nouveau) :
-« Low storage space », gravité avertissement, action « Open Diagnostic ».
-Les actions de notification de forme `launch:<appId>`
-(`NotificationAction.LaunchApp`) sont des boutons du panneau de l'horloge qui
-lancent l'app puis ferment la notification.
+When space becomes low, the session's user receives **one** notification per
+session (a new login warns again): "Low storage space", warning severity,
+action "Open Diagnostic". Notification actions of the form `launch:<appId>`
+(`NotificationAction.LaunchApp`) are buttons in the clock panel that launch the
+app then close the notification.
 
-### Réserve de root
+### Root reserve
 
-Le refus d'écriture vu par une app quand l'espace passe sous la réserve de root est décrit dans [`../framework/system-backup-api.md`](../framework/system-backup-api.md).
+The write refusal an app sees when space drops below the root reserve is described in [`../framework/system-backup-api.md`](../framework/system-backup-api.md).
 
-Les codes `NoSpace` et `FileTooLarge` vus par les apps, avec leur message et la liste de leurs origines, sont dans [`../framework/system-backup-api.md`](../framework/system-backup-api.md). Les origines côté navigateur figurent dans le tableau d'architecture ci-dessus.
+The `NoSpace` and `FileTooLarge` codes as seen by apps, with their message and the list of their origins, are in [`../framework/system-backup-api.md`](../framework/system-backup-api.md). The browser-side origins appear in the architecture table above.
 
 ### `df`
 
-`/` montre maintenant l'utilisé et le quota **réels** du navigateur
-(`IndexedDbStorageUsageProvider`) : tout ce que l'origine stocke, pas
-seulement le contenu des fichiers. Sans quota connu, `df` retombe sur les
-octets du contenu des fichiers. Cela remplace la règle de l'ADR 0057 §7 pour
-les chiffres de `df` ([`system-metrics.md`](system-metrics.md)).
+`/` now shows the browser's **real** used space and quota
+(`IndexedDbStorageUsageProvider`): everything the origin stores, not only the
+file contents. With no known quota, `df` falls back to the bytes of the file
+contents. This replaces the rule of ADR 0057 §7 for the figures of `df`
+([`system-metrics.md`](system-metrics.md)).
 
-### Journaux sans place
+### Logs with no room
 
-Quand une écriture de journal échoue avec `NoSpace`, `LogFileWriter` abandonne
-le lot et compte ses lignes (`PendingNoSpaceLoss`). À la première écriture
-réussie de `syslog`, il ajoute une seule ligne
+When a log write fails with `NoSpace`, `LogFileWriter` abandons the batch and
+counts its lines (`PendingNoSpaceLoss`). At the first successful write to
+`syslog`, it adds a single line
 `WARN logging: N lines lost (No space left on device)`
 ([`logging.md`](logging.md)).
 
-## Cache PWA abîmé (ADR 0099 §3)
+## Damaged PWA cache (ADR 0099 §3)
 
-Au démarrage, une erreur d'intégrité ou de chargement des ressources de
-Blazor fait vider le cache du service worker et recharger la page une seule
-fois ; hors ligne, un écran explique qu'il faut se reconnecter une fois. Voir
+At startup, an integrity or loading error of Blazor's resources makes the
+service worker cache be emptied and the page reloaded only once; offline, a
+screen explains that one must reconnect once. See
 [`pwa-cache-recovery.md`](pwa-cache-recovery.md).
 
-## Montées de version IndexedDB (ADR 0099 §4)
+## IndexedDB version upgrades (ADR 0099 §4)
 
-Vidages des versions 2 et 3 dans `Tests/fixtures/indexeddb/` (la version 1 n'a jamais été committée, ADR 0110 §1), test E2E `IndexedDbUpgradeFixtureTests` et procédure : voir
+Dumps of versions 2 and 3 in `Tests/fixtures/indexeddb/` (version 1 was never committed, ADR 0110 §1), E2E test `IndexedDbUpgradeFixtureTests` and procedure: see
 [`building-and-testing.md`](building-and-testing.md#fixtures-de-montée-de-version-indexeddb).
 
-## Décisions
+## Decisions
 
-- Les précisions ci-dessous sont consignées dans
-  l'[ADR 0110](adr/0110-backup-and-storage-implementation-adjustments.md).
-- **Une fusion redémarre aussi.** L'ADR 0099 décrit le redémarrage pour le
-  remplacement ; la fusion le fait aussi, parce que l'OS en marche garde en
-  mémoire des chemins, des réglages et des comptes que la restauration vient
-  de changer sous lui.
-- **L'entrée de restauration attend hors de la base** : un remplacement
-  écrase `/var/log/auth.log` lui-même. Elle est écrite au démarrage suivant.
-- **`hackbackup` exige `sudo`** au lieu d'ouvrir la demande graphique, comme
-  un outil système (`apt` : « are you root? »).
-- **Sélecteur avant administrateur** (voir plus haut).
-- La capacité **`system.backup`** est dangereuse (ADR 0049) : seul Paramètres,
-  app système, la déclare.
+- The clarifications below are recorded in
+  [ADR 0110](adr/0110-backup-and-storage-implementation-adjustments.md).
+- **A merge also restarts.** ADR 0099 describes the restart for replace; merge
+  does it too, because the running OS keeps in memory paths, settings and
+  accounts that the restore has just changed under it.
+- **The restore entry waits outside the database**: a replace overwrites
+  `/var/log/auth.log` itself. It is written at the next startup.
+- **`hackbackup` requires `sudo`** instead of opening the graphical request,
+  like a system tool (`apt`: "are you root?").
+- **Picker before administrator** (see above).
+- The **`system.backup`** capability is dangerous (ADR 0049): only Settings, a
+  system app, declares it.
 
 ## Tests
 
-- `Tests/HackerOs.Infrastructure.Browser.Tests` : `IndexedDbBackupServiceTests`
-  (export puis remplacement atomique, archive falsifiée refusée sans
-  écriture, fusion par `put` sans `clear`, aller-retour gzip et JSON brut,
-  gzip abîmé, autre version de schéma) ; `IndexedDbFileSystemProviderTests`
-  (`QuotaExceededError` → `NoSpace` sans rien écrire, plus de 16 Mio →
-  `FileTooLarge` avant toute écriture).
-- `Tests/HackerOs.Platform.Core.Tests` : `SystemAdministrationGatewayTests`
-  (capacité, hôte sans sauvegarde, création téléchargée et journalisée, refus
-  de l'administrateur sans téléchargement, sélecteur fermé ou archive
-  invalide sans demande ni arrêt, ordre de la restauration, échec qui
-  redémarre et journalise au démarrage suivant) ; `Storage/StorageSpaceMonitorTests`
-  (une notification par utilisateur, réserve de 5 % plafonnée, quota
-  inconnu) ; `FileSystemServiceTests` (réserve : utilisateur refusé, système
-  accepté, nouvelle mesure demandée) ; `LogFileWriterTests` (lignes perdues
-  comptées puis signalées une fois).
-- `Tests/HackerOs.AppSdk.Tests/IO/HackErrorTranslationTests.cs` : deux codes
-  traduits en `HackIOException` et en message Linux.
-- `Tests/HackerOs.Commands.Wave5.Tests/HackbackupCommandTests.cs` : usage,
-  root exigé, création, fusion par défaut, remplacement, archive refusée,
-  hôte sans sauvegarde.
-- `Tests/HackerOs.UI.E2E.Tests/LowStorageSpaceTests.cs` : quota de Chromium abaissé
-  (`Storage.overrideQuotaForOrigin`) à 3 % de libre ; la notification arrive,
-  l'action « Open Diagnostic » est là, et l'administrateur se reconnecte après
-  un rechargement (le système écrit encore dans la réserve).
-- `Tests/HackerOs.App.Abstractions.Tests/AppCapabilitiesTests.cs` :
-  `system.backup` dangereuse.
+- `Tests/HackerOs.Infrastructure.Browser.Tests`: `IndexedDbBackupServiceTests`
+  (export then atomic replace, forged archive rejected without writing, merge
+  by `put` without `clear`, gzip and raw JSON round trip, damaged gzip, other
+  schema version); `IndexedDbFileSystemProviderTests` (`QuotaExceededError` →
+  `NoSpace` without writing anything, more than 16 MiB → `FileTooLarge` before
+  any write).
+- `Tests/HackerOs.Platform.Core.Tests`: `SystemAdministrationGatewayTests`
+  (capability, host without backup, creation downloaded and logged,
+  administrator refusal without download, picker closed or invalid archive
+  without request or stop, restore order, failure that restarts and logs at the
+  next startup); `Storage/StorageSpaceMonitorTests` (one notification per user,
+  5 % reserve capped, unknown quota); `FileSystemServiceTests` (reserve: user
+  refused, system accepted, new measurement requested); `LogFileWriterTests`
+  (lost lines counted then reported once).
+- `Tests/HackerOs.AppSdk.Tests/IO/HackErrorTranslationTests.cs`: two codes
+  translated into `HackIOException` and into a Linux message.
+- `Tests/HackerOs.Commands.Wave5.Tests/HackbackupCommandTests.cs`: usage, root
+  required, creation, default merge, replace, archive rejected, host without
+  backup.
+- `Tests/HackerOs.UI.E2E.Tests/LowStorageSpaceTests.cs`: Chromium quota lowered
+  (`Storage.overrideQuotaForOrigin`) to 3 % free; the notification arrives, the
+  "Open Diagnostic" action is there, and the administrator reconnects after a
+  reload (the system still writes into the reserve).
+- `Tests/HackerOs.App.Abstractions.Tests/AppCapabilitiesTests.cs`:
+  `system.backup` dangerous.
 
-## Liste des tâches
+## Task list
 
-- [x] Codes `NoSpace` et `FileTooLarge`, traduits dans le SDK et le shell.
-- [x] `QuotaExceededError` et contenu de plus de 16 Mio traduits par le fournisseur IndexedDB.
-- [x] Archive `.hosbak` (gzip), validation complète, fusion par écrasement.
-- [x] `StorageSpaceMonitor` : mesure, notification unique, réserve de root.
-- [x] Réserve appliquée par `FileSystemService` ; `df` avec les vrais chiffres.
-- [x] `LogFileWriter` : lignes perdues comptées puis signalées.
-- [x] `HackSystemBackup`, passerelle, `SystemBackupService`, appareil du navigateur, `pickFile.js`.
-- [x] Onglet *Backup* de Paramètres et commande `hackbackup`.
-- [x] Actions de notification qui lancent une app.
-- [x] Cache PWA abîmé : vidage et rechargement une fois, écran hors ligne.
-- [x] Fixtures IndexedDB v2 et v3 (pas de v1, ADR 0110) et test de montée de version.
-- [x] Test E2E du quota (`LowStorageSpaceTests` : notification, réserve de root).
-- [x] Tests unitaires et documentation.
+- [x] `NoSpace` and `FileTooLarge` codes, translated in the SDK and the shell.
+- [x] `QuotaExceededError` and content over 16 MiB translated by the IndexedDB provider.
+- [x] `.hosbak` archive (gzip), full validation, merge by overwriting.
+- [x] `StorageSpaceMonitor`: measurement, single notification, root reserve.
+- [x] Reserve enforced by `FileSystemService`; `df` with the real figures.
+- [x] `LogFileWriter`: lost lines counted then reported.
+- [x] `HackSystemBackup`, gateway, `SystemBackupService`, browser device, `pickFile.js`.
+- [x] Settings *Backup* tab and `hackbackup` command.
+- [x] Notification actions that launch an app.
+- [x] Damaged PWA cache: empty and reload once, offline screen.
+- [x] IndexedDB fixtures v2 and v3 (no v1, ADR 0110) and upgrade test.
+- [x] Quota E2E test (`LowStorageSpaceTests`: notification, root reserve).
+- [x] Unit tests and documentation.

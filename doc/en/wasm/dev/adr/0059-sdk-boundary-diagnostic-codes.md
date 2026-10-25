@@ -1,61 +1,61 @@
-# ADR 0059 : Codes des diagnostics de la frontière du SDK
+# ADR 0059: SDK boundary diagnostic codes
 
-## Statut
+## Status
 
-Accepté le 2026-10-10.
+Accepted on 2026-10-10.
 
-- **Phase du plan :** phase 4 — SDK complet et apps de base, chantier
+- **Plan phase:** phase 4: complete SDK and base apps, work item
   `rebuild/4-sdk-boundary` (ADR 0058).
-- **Remplace en partie :** ADR 0055, sections 2 et 3, pour les seuls numéros
-  de diagnostic. Les règles de l'ADR 0055 ne changent pas.
+- **Partially supersedes:** ADR 0055, sections 2 and 3, for the diagnostic
+  numbers only. The rules of ADR 0055 do not change.
 
-## Contexte
+## Context
 
-L'ADR 0055 attribue deux codes aux nouvelles vérifications de la frontière du
-SDK :
+ADR 0055 assigns two codes to the new checks of the SDK
+boundary:
 
-- `HOSAPP0002` pour une `ProjectReference` interdite dans un projet d'app ;
-- `HOSAPP0003` pour une injection interdite, signalée par le générateur de
-  manifeste.
+- `HOSAPP0002` for a forbidden `ProjectReference` in an app project;
+- `HOSAPP0003` for a forbidden injection, reported by the manifest
+  generator.
 
-Ces deux numéros sont déjà pris depuis l'ADR 0047 et sont émis par le même
-générateur : `HOSAPP0002` signale une classe `[AppManifest]` non publique,
-`HOSAPP0003` une classe `[AppManifest]` abstraite (voir
-[`app-model.md`](../../framework/app-model.md#codes-derreur)). Un même code aurait donc deux
-sens, et les tests qui recherchent `error HOSAPP0002` ne sauraient plus quelle
-règle ils vérifient.
+These two numbers have already been taken since ADR 0047 and are emitted by the same
+generator: `HOSAPP0002` reports a non-public `[AppManifest]` class,
+`HOSAPP0003` an abstract `[AppManifest]` class (see
+[`app-model.md`](../../framework/app-model.md#codes-derreur)). The same code would therefore have two
+meanings, and the tests that look for `error HOSAPP0002` would no longer know which
+rule they are verifying.
 
-## Décision
+## Decision
 
-Les codes de l'ADR 0047 gardent leur sens. Les vérifications de l'ADR 0055
-prennent les numéros libres suivants, dans une plage réservée à la frontière du
-SDK (`HOSAPP0030` à `HOSAPP0039`) :
+The codes of ADR 0047 keep their meaning. The checks of ADR 0055
+take the next free numbers, in a range reserved for the SDK
+boundary (`HOSAPP0030` to `HOSAPP0039`):
 
-| Code | Règle (ADR 0055) | Émis par |
+| Code | Rule (ADR 0055) | Emitted by |
 |---|---|---|
-| `HOSAPP0030` | Un projet d'app référence un projet hors de la liste permise (section 2). | cible MSBuild `ValidateHackerOsSdkBoundary` |
-| `HOSAPP0031` | Un projet d'app injecte un service qui n'est ni un type du SDK, ni un service MudBlazor, ni `IJSRuntime` (section 3). | générateur de manifeste |
-| `HOSSDK0001` | Une bibliothèque SDK référence un projet autre qu'une abstraction ou une autre bibliothèque SDK (section 2). Inchangé. | cible MSBuild `ValidateHackerOsSdkBoundary` |
+| `HOSAPP0030` | An app project references a project outside the allowed list (section 2). | MSBuild target `ValidateHackerOsSdkBoundary` |
+| `HOSAPP0031` | An app project injects a service that is neither an SDK type, nor a MudBlazor service, nor `IJSRuntime` (section 3). | manifest generator |
+| `HOSSDK0001` | An SDK library references a project other than an abstraction or another SDK library (section 2). Unchanged. | MSBuild target `ValidateHackerOsSdkBoundary` |
 
-Partout où l'ADR 0055 et le tableau des chantiers de l'ADR 0058 écrivent
-`HOSAPP0002` (référence) et `HOSAPP0003` (injection), il faut lire
-`HOSAPP0030` et `HOSAPP0031`.
+Everywhere that ADR 0055 and the work item table of ADR 0058 write
+`HOSAPP0002` (reference) and `HOSAPP0003` (injection), read
+`HOSAPP0030` and `HOSAPP0031`.
 
-## Conséquences
+## Consequences
 
-- Aucun code existant ne change : les projets et les tests de l'ADR 0047
-  continuent de fonctionner.
-- La documentation des codes ([`app-model.md`](../../framework/app-model.md#codes-derreur)
-  et [`app-sdk.md`](../../framework/app-sdk.md)) liste les deux nouveaux codes.
+- No existing code changes: the projects and tests of ADR 0047
+  keep working.
+- The documentation of the codes ([`app-model.md`](../../framework/app-model.md#codes-derreur)
+  and [`app-sdk.md`](../../framework/app-sdk.md)) lists the two new codes.
 
-## Alternatives écartées
+## Rejected alternatives
 
-- **Renuméroter les codes de l'ADR 0047** pour libérer `HOSAPP0002` et
-  `HOSAPP0003` : change le sens de codes déjà publiés, déjà testés et déjà
-  décrits par un ADR accepté, sans rien apporter.
+- **Renumbering the codes of ADR 0047** to free `HOSAPP0002` and
+  `HOSAPP0003`: changes the meaning of codes already published, already tested and already
+  described by an accepted ADR, for no benefit.
 
-## Références
+## References
 
-- ADR 0047 (codes `HOSAPP0001` à `HOSAPP0099`), ADR 0055, ADR 0058.
+- ADR 0047 (codes `HOSAPP0001` to `HOSAPP0099`), ADR 0055, ADR 0058.
 - `Tools/HackerOs.Tools.ManifestGenerator/GeneratorDiagnostic.cs`,
   `build/HackerOs.Apps.targets`.

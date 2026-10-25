@@ -1,22 +1,22 @@
-# Taille des fenêtres enregistrée et restaurée
+# Window size saved and restored
 
-## Objet
+## Purpose
 
-Une fenêtre d'app rouvre avec la taille que l'utilisateur lui a donnée, et
-agrandie si elle l'était, mais toujours à sa place de cascade : sa position
-n'est pas retenue. Mis en œuvre par le chantier `v3.1/2-window-geometry` selon
-l'[ADR 0116](adr/0116-window-geometry-restore.md), corrigé par
-l'[ADR 0122](adr/0122-window-size-only-not-position.md) (taille seulement,
-réponse de Benoit), dans la série [`v3-1-series-plan.md`](plans/v3-1-series-plan.md).
-C'est le §10 de l'[ADR 0044](adr/0044-settings-as-files.md).
+An app window reopens with the size the user gave it, and maximized if it was,
+but always at its cascade position: its position is not remembered. Implemented
+by the `v3.1/2-window-geometry` work item according to
+[ADR 0116](adr/0116-window-geometry-restore.md), corrected by
+[ADR 0122](adr/0122-window-size-only-not-position.md) (size only,
+Benoit's answer), in the [`v3-1-series-plan.md`](plans/v3-1-series-plan.md)
+series. It is §10 of [ADR 0044](adr/0044-settings-as-files.md).
 
-C'est le modèle de GNOME : une app GTK retient sa taille et son état agrandi,
-le gestionnaire de fenêtres place la fenêtre. HackerOS tient la géométrie en C#
-(ADR 0009) ; il écrit donc lui-même cette taille, pour toutes les apps.
+This is GNOME's model: a GTK app remembers its size and maximized state, the
+window manager places the window. HackerOS holds the geometry in C# (ADR 0009);
+it therefore writes this size itself, for all apps.
 
-## Fichier d'état
+## State file
 
-Un fichier par app et par utilisateur, propre à l'appareil, jamais synchronisé :
+One file per app and per user, specific to the device, never synchronized:
 `~/.local/state/hackeros/windows/<appId>.config`.
 
 ```ini
@@ -26,67 +26,65 @@ height=640
 maximized=false
 ```
 
-- `width`, `height` : taille **normale** en pixels CSS, culture invariante.
-  Une fenêtre agrandie y garde sa taille de restauration.
-- `maximized` : facultatif, `false` s'il manque. Seul `true` agrandit : une
-  faute de frappe laisse la fenêtre normale.
-- Un fichier sans `width` et `height` valides est ignoré : la fenêtre s'ouvre à
-  sa taille déclarée.
-- Un fichier écrit avant l'ADR 0122 (avec `x=` et `y=`) garde sa taille ; sa
-  position est ignorée, et la prochaine écriture le réécrit sans ces clés.
-- Oublier la taille d'une app : `rm ~/.local/state/hackeros/windows/<appId>.config`.
+- `width`, `height`: **normal** size in CSS pixels, invariant culture. A
+  maximized window keeps its restore size there.
+- `maximized`: optional, `false` if missing. Only `true` maximizes: a typo
+  leaves the window normal.
+- A file without valid `width` and `height` is ignored: the window opens at its
+  declared size.
+- A file written before ADR 0122 (with `x=` and `y=`) keeps its size; its
+  position is ignored, and the next write rewrites it without these keys.
+- To forget an app's size: `rm ~/.local/state/hackeros/windows/<appId>.config`.
 
 ## Architecture
 
-| Classe (Platform.Blazor, `Windows/`) | Rôle |
+| Class (Platform.Blazor, `Windows/`) | Role |
 |---|---|
-| `WindowGeometrySettings` | Chemin du fichier, `Parse` et `Serialize`. |
-| `SavedWindowGeometry` | Taille normale (`Width`, `Height`) et état agrandi lus ou à écrire. |
-| `WindowGeometryPersistence` | Lit et écrit le fichier par `IOsSettingsService`, sous l'identité de l'utilisateur ; n'écrit que si le contenu change ; un échec (pas de session, dossier en lecture seule) est ignoré. |
-| `WindowGeometryRecorder` | Écoute `WindowRuntime.EventsApplied`, garde en mémoire la dernière taille normale et l'état agrandi de chaque fenêtre suivie et l'écrit après 500 ms sans changement, ou tout de suite à la fermeture. |
-| `WindowLaunchCoordinator` | `PresentAsync` lit le fichier avant d'ouvrir la fenêtre, place la fenêtre à sa place de cascade avec la taille lue et corrigée (`RestoredBounds`), agrandit si besoin, puis confie la fenêtre au recorder. |
+| `WindowGeometrySettings` | File path, `Parse` and `Serialize`. |
+| `SavedWindowGeometry` | Normal size (`Width`, `Height`) and maximized state, read or to be written. |
+| `WindowGeometryPersistence` | Reads and writes the file through `IOsSettingsService`, under the user's identity; writes only if the content changes; a failure (no session, read-only folder) is ignored. |
+| `WindowGeometryRecorder` | Listens to `WindowRuntime.EventsApplied`, keeps in memory the last normal size and maximized state of each tracked window and writes it after 500 ms without change, or immediately on close. |
+| `WindowLaunchCoordinator` | `PresentAsync` reads the file before opening the window, places the window at its cascade position with the size read and corrected (`RestoredBounds`), maximizes if needed, then hands the window over to the recorder. |
 
-Les trois services sont `Scoped`, comme `WindowRuntime`
+The three services are `Scoped`, like `WindowRuntime`
 (`EcosystemServiceCollectionExtensions`).
 
-### Écriture
+### Writing
 
-- Déclencheurs : tout lot de faits de `WindowRuntime` qui change la taille
-  normale ou l'état agrandi d'une fenêtre suivie (redimensionnement, agrandir,
-  restaurer, changement de zone de travail). Un déplacement seul n'écrit rien. Le
-  recorder relit l'état du runtime après chaque lot plutôt que chaque fait, pour
-  enregistrer les bornes réellement appliquées.
-- Regroupement : le redimensionnement transmet des échantillons regroupés par
-  image, avec un seul appel interop en cours (ADR 0163) ; les changements d'une
-  même app sont écrits une fois, 500 ms après le dernier. Un déplacement ne
-  transmet sa position finale qu'au relâchement et n'écrit toujours rien sur disque.
-- Fermeture : écriture immédiate de la dernière taille connue.
-- Les écritures d'une même app passent l'une après l'autre ; ouvrir une fenêtre
-  lance tout de suite l'écriture qui attendait encore et attend la fin des
-  écritures de l'app avant de lire le fichier. Une fenêtre rouverte juste après
-  sa fermeture, ou une deuxième fenêtre ouverte pendant le regroupement, voit
-  donc la dernière taille.
-- Jamais enregistré : l'état réduit (la fenêtre garde ce qu'elle avait avant) et
-  la moitié d'écran d'une fenêtre ancrée (elle garde sa taille d'avant
-  l'ancrage et rouvre comme une fenêtre normale).
+- Triggers: any batch of `WindowRuntime` facts that changes the normal size or
+  maximized state of a tracked window (resize, maximize, restore, work area
+  change). A move alone writes nothing. The recorder rereads the runtime state
+  after each batch rather than each fact, to record the bounds actually applied.
+- Batching: resizing transmits samples grouped per frame, with a single interop
+  call in flight (ADR 0163); changes of the same app are written once, 500 ms
+  after the last one. A move transmits its final position only on release and
+  still writes nothing to disk.
+- Close: immediate write of the last known size.
+- Writes of the same app go one after the other; opening a window immediately
+  launches the write that was still waiting and waits for the app's writes to
+  finish before reading the file. A window reopened right after being closed,
+  or a second window opened during batching, therefore sees the last size.
+- Never recorded: the minimized state (the window keeps what it had before) and
+  the half-screen of a snapped window (it keeps its size from before snapping
+  and reopens like a normal window).
 
-### Lecture (ADR 0116 §4, ADR 0122)
+### Reading (ADR 0116 §4, ADR 0122)
 
-1. Pas de fichier, fichier invalide ou `RememberGeometry = false` : place de
-   cascade, taille déclarée (`InitialBounds`, comportement d'avant).
-2. Sinon, place de cascade (`InitialBounds`), avec la taille lue ramenée entre
-   le minimum et le maximum que l'app déclare **aujourd'hui** (une fenêtre de
-   taille fixe prend sa taille déclarée), puis à la zone de travail sans
-   descendre sous le minimum.
-3. Une deuxième fenêtre de la même app prend la place de cascade suivante,
-   comme toute nouvelle fenêtre, avec la même taille.
-4. `maximized=true` : la fenêtre s'ouvre agrandie, la taille lue devient sa
-   taille de restauration. Une fenêtre de taille fixe ne rouvre jamais agrandie.
+1. No file, invalid file or `RememberGeometry = false`: cascade position,
+   declared size (`InitialBounds`, behavior as before).
+2. Otherwise, cascade position (`InitialBounds`), with the size read brought
+   between the minimum and maximum that the app declares **today** (a
+   fixed-size window takes its declared size), then to the work area without
+   going below the minimum.
+3. A second window of the same app takes the next cascade position, like any
+   new window, with the same size.
+4. `maximized=true`: the window opens maximized, the size read becomes its
+   restore size. A fixed-size window never reopens maximized.
 
-## Usage pour une app
+## Usage for an app
 
-Rien à faire : toute app de genre `Window` retient sa taille. Pour refuser
-(une calculatrice, un assistant qui doit toujours s'ouvrir à la même taille) :
+Nothing to do: any app of kind `Window` remembers its size. To opt out (a
+calculator, a wizard that must always open at the same size):
 
 ```csharp
 public override WindowOptions? Window => new()
@@ -96,70 +94,68 @@ public override WindowOptions? Window => new()
 };
 ```
 
-`WindowOptions.RememberGeometry` est un ajout du SDK 1.1
-(`PublicAPI.Shipped.txt` de `HackerOs.App.Abstractions` depuis `v3.1/4-sdk-1-1`). Le générateur écrit
-`window.rememberGeometry` dans `manifest.json` seulement quand il vaut `false` :
-les manifestes des apps qui gardent le défaut restent identiques octet pour
-octet. Le schéma v1 l'accepte comme champ facultatif, le désérialiseur strict
-aussi.
+`WindowOptions.RememberGeometry` is an addition of SDK 1.1
+(`PublicAPI.Shipped.txt` of `HackerOs.App.Abstractions` since `v3.1/4-sdk-1-1`). The generator writes
+`window.rememberGeometry` in `manifest.json` only when it is `false`: the
+manifests of apps that keep the default stay byte-for-byte identical. The v1
+schema accepts it as an optional field, the strict deserializer too.
 
-## Ce qui n'est pas couvert
+## What is not covered
 
-- Interface mobile : plein écran, elle ignore ce fichier.
-- Fenêtres détachées (ADR 0078, 0081) : placées par le système hôte.
-- Fenêtres de l'OS qui ne sont pas des apps (boîtes de dialogue de fichiers,
-  agent d'authentification, « Ouvrir avec ») : jamais suivies.
-- La position : jamais retenue (ADR 0122).
-- Pas de bouton « oublier la taille » dans Paramètres.
+- Mobile interface: full screen, it ignores this file.
+- Detached windows (ADR 0078, 0081): placed by the host system.
+- OS windows that are not apps (file dialogs, authentication agent, "Open
+  with"): never tracked.
+- Position: never remembered (ADR 0122).
+- No "forget size" button in Settings.
 
-## Décisions de mise en œuvre
+## Implementation decisions
 
-- **`PresentAsync` remplace `Present`** : lire le fichier est asynchrone. Le
-  shell présente parfois deux fois le même processus (son propre lancement et le
-  passage du processus à `Running`) ; pendant la lecture, le second appel rend la
-  main sans ouvrir de deuxième fenêtre, et l'existence de la fenêtre est
-  revérifiée après la lecture.
-- **Ancrage reconnu à sa forme** : `WindowRuntime` ne garde pas d'état « ancré »
-  (window-model.md). Une fenêtre normale qui couvre exactement la moitié gauche ou
-  droite de la zone de travail est traitée comme ancrée et n'est pas enregistrée.
-- **`SaveAsync` sans `isEligible`** : c'est le coordinateur qui décide quelles
-  fenêtres suivre (`Track`) ; la ligne retirée a été marquée `*REMOVED*` dans
-  `PublicAPI.Unshipped.txt` de Platform.Blazor (hors promesse du SDK, ADR 0114 §2),
-  puis appliquée à la publication de la 1.1 (« Ruptures hors SDK » de [`sdk-packages.md`](../framework/sdk-packages.md#ruptures-hors-sdk)).
-- **Échecs journalisés** : `WindowGeometryPersistence` écrit un avertissement
-  quand le fichier ne peut être lu ou écrit, puis continue.
-- **Contenu comparé avant écriture** : fermer une fenêtre dont la taille n'a pas
-  changé ne réécrit pas le fichier et ne réveille pas les observateurs.
-- **Taille seulement (ADR 0122)** : livré d'abord avec la position (ADR 0116
-  §1), puis corrigé sur la réponse de Benoit ; `RestoredBounds` prend la taille
-  et l'indice de cascade, `MinimumVisibleTitleBarWidth` a disparu.
-- **En-tête commenté** dans le fichier, comme les autres documents de l'OS.
+- **`PresentAsync` replaces `Present`**: reading the file is asynchronous. The
+  shell sometimes presents the same process twice (its own launch and the
+  process moving to `Running`); during the read, the second call returns
+  without opening a second window, and the window's existence is rechecked after
+  the read.
+- **Snapping recognized by its shape**: `WindowRuntime` keeps no "snapped" state
+  (window-model.md). A normal window that exactly covers the left or right half
+  of the work area is treated as snapped and is not recorded.
+- **`SaveAsync` without `isEligible`**: the coordinator decides which windows to
+  track (`Track`); the removed line was marked `*REMOVED*` in
+  `PublicAPI.Unshipped.txt` of Platform.Blazor (outside the SDK's promise, ADR 0114 §2),
+  then applied at the 1.1 publication ("Breaking changes outside the SDK" in [`sdk-packages.md`](../framework/sdk-packages.md#ruptures-hors-sdk)).
+- **Failures logged**: `WindowGeometryPersistence` writes a warning when the
+  file cannot be read or written, then continues.
+- **Content compared before writing**: closing a window whose size has not
+  changed does not rewrite the file and does not wake observers.
+- **Size only (ADR 0122)**: first delivered with position (ADR 0116 §1), then
+  corrected on Benoit's answer; `RestoredBounds` takes the size and the cascade
+  index, `MinimumVisibleTitleBarWidth` is gone.
+- **Commented header** in the file, like the OS's other documents.
 
 ## Tests
 
-- `WindowGeometryPersistenceTests` (Platform.Blazor) : chemin, aller-retour,
-  état agrandi, `maximized` facultatif, fichier invalide, pas de réécriture,
-  pas de session.
-- `WindowGeometryRestoreTests` (Platform.Blazor) : réouverture avec la même
-  taille à la place de cascade, nouvelle session, déplacement seul sans
-  écriture, agrandie, réduite ou ancrée, regroupement d'un glisser, écriture en
-  attente vidée à l'ouverture, `RememberGeometry = false`, fichier invalide,
-  fichier d'avant l'ADR 0122, double présentation, écran plus petit, tailles
-  déclarées changées, fenêtre fixe, fenêtre de l'OS non suivie.
+- `WindowGeometryPersistenceTests` (Platform.Blazor): path, round trip,
+  maximized state, optional `maximized`, invalid file, no rewrite, no session.
+- `WindowGeometryRestoreTests` (Platform.Blazor): reopening with the same size
+  at the cascade position, new session, move alone without writing, maximized,
+  minimized or snapped, batching of a drag, pending write flushed on opening,
+  `RememberGeometry = false`, invalid file, file from before ADR 0122, double
+  presentation, smaller screen, declared sizes changed, fixed window, untracked
+  OS window.
 - `AppManifestJsonSerializerTests`, `ManifestSchemaConformanceTests`
-  (App.Abstractions) : `rememberGeometry` écrit seulement à `false`, relu, accepté
-  par le schéma.
-- E2E `WindowGeometryRestoreTests` (UI.E2E) : glisser la barre de titre et le
-  coin d'une fenêtre, la fermer, la rouvrir avec la même taille à sa place de
-  cascade, recharger la page, se reconnecter et la retrouver ainsi.
+  (App.Abstractions): `rememberGeometry` written only at `false`, read back,
+  accepted by the schema.
+- E2E `WindowGeometryRestoreTests` (UI.E2E): drag a window's title bar and
+  corner, close it, reopen it with the same size at its cascade position, reload
+  the page, log in again and find it that way.
 
-## Liste des tâches
+## Task list
 
-- [x] `WindowOptions.RememberGeometry`, projection JSON, schéma, désérialiseur strict, `PublicAPI.Unshipped.txt`.
-- [x] Clé `maximized` et `SavedWindowGeometry` ; `SaveAsync` sans `isEligible`, écrit seulement si le contenu change.
-- [x] `WindowGeometryRecorder` : suivi, regroupement de 500 ms, écriture à la fermeture, réduction et ancrage ignorés.
-- [x] `WindowLaunchCoordinator.PresentAsync` : lecture, correction, deuxième instance, agrandie, garde contre la double présentation.
-- [x] `DesktopShell` et injection de dépendances.
-- [x] Tests unitaires et E2E.
-- [x] `window-model.md`, `settings-files.md`, `sdk-developer-guide.md`, `sdk-reference.md`, `app-sdk.md`, bilan v3, plan v3.1, index.
-- [x] ADR 0122 : taille seulement ; position retirée du fichier, de la lecture et des tests.
+- [x] `WindowOptions.RememberGeometry`, JSON projection, schema, strict deserializer, `PublicAPI.Unshipped.txt`.
+- [x] `maximized` key and `SavedWindowGeometry`; `SaveAsync` without `isEligible`, writes only if the content changes.
+- [x] `WindowGeometryRecorder`: tracking, 500 ms batching, write on close, minimizing and snapping ignored.
+- [x] `WindowLaunchCoordinator.PresentAsync`: reading, correction, second instance, maximized, guard against double presentation.
+- [x] `DesktopShell` and dependency injection.
+- [x] Unit and E2E tests.
+- [x] `window-model.md`, `settings-files.md`, `sdk-developer-guide.md`, `sdk-reference.md`, `app-sdk.md`, v3 review, v3.1 plan, index.
+- [x] ADR 0122: size only; position removed from the file, the reading and the tests.

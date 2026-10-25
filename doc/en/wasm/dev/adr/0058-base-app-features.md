@@ -1,215 +1,215 @@
-# ADR 0058 : Fonctionnalités des apps de base
+# ADR 0058: Base app features
 
-## Statut
+## Status
 
-Accepté le 2026-10-10.
+Accepted on 2026-10-10.
 
-- **Phase du plan :** phase 4 — SDK complet et apps de base
+- **Plan phase:** phase 4: complete SDK and base apps
   ([`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md), section 8.2,
-  décision D22).
-- **S'appuie sur :** ADR 0052 (corbeille), ADR 0050 et 0051 (shell), ADR 0055
-  (SDK public uniquement), ADR 0056 (API du SDK), ADR 0057 (`/proc`).
-- Contient le tableau des chantiers de la phase 4 (ADR 0055 à 0058).
+  decision D22).
+- **Builds on:** ADR 0052 (trash), ADR 0050 and 0051 (shell), ADR 0055
+  (public SDK only), ADR 0056 (SDK APIs), ADR 0057 (`/proc`).
+- Contains the table of phase 4 work items (ADR 0055 to 0058).
 
-## Contexte
+## Context
 
-Le plan fixe, pour chaque app de base, ce qui existe et doit rester, et ce qui
-manque par rapport au legacy (`src/apps/`). État constaté sur `rebuild/base`
-(dfd9c47) :
+For each base app, the plan sets what exists and must stay, and what
+is missing compared to the legacy (`src/apps/`). State observed on `rebuild/base`
+(dfd9c47):
 
-| App | Existe | Manque |
+| App | Exists | Missing |
 |---|---|---|
-| Explorateur (`HackerOs.Apps.FileExplorer`) | navigation, historique, création, renommage, corbeille (ADR 0052), zip, propriétés, « ouvrir avec », envoi et téléchargement ; glisser-déposer d'un élément **sur un dossier** de la vue (`FileView.OnItemDropAsync` : déplacer, Ctrl pour copier) | couper, copier, coller ; dépôt sur le fond de la vue, l'arbre ou le fil d'Ariane ; dépôt de fichiers venant du système hôte |
-| Gestionnaire de tâches (`HackerOs.Apps.SystemMonitor`) | onglets Overview, Processes, Services, Hardware ; kill ; mode de démarrage des services | performance avec graphiques, disque, réseau (onglets du legacy : `performance`, `disk`, `network`), détail par processus, filtre, sélection multiple |
-| Éditeur de texte (`HackerOs.Apps.TextEditor`) | ouvrir, enregistrer, enregistrer sous, recherche (`TextEditorFindEngine`), détection des conflits | remplacer, tout remplacer (le legacy les avait) |
-| Console (`HackerOs.Apps.Terminal`, `TerminalPanel`) | historique, répertoire courant, complétion des **noms de commandes** par Tab (phase 3) | complétion des chemins, plusieurs onglets |
+| Explorer (`HackerOs.Apps.FileExplorer`) | navigation, history, creation, renaming, trash (ADR 0052), zip, properties, "open with", upload and download; drag and drop of an item **onto a folder** in the view (`FileView.OnItemDropAsync`: move, Ctrl to copy) | cut, copy, paste; drop onto the view background, the tree or the breadcrumb; drop of files coming from the host system |
+| Task manager (`HackerOs.Apps.SystemMonitor`) | Overview, Processes, Services, Hardware tabs; kill; service start mode | performance with charts, disk, network (legacy tabs: `performance`, `disk`, `network`), per-process detail, filter, multiple selection |
+| Text editor (`HackerOs.Apps.TextEditor`) | open, save, save as, search (`TextEditorFindEngine`), conflict detection | replace, replace all (the legacy had them) |
+| Console (`HackerOs.Apps.Terminal`, `TerminalPanel`) | history, current directory, Tab completion of **command names** (phase 3) | path completion, multiple tabs |
 
-## Décision
+## Decision
 
-Les interfaces restent en anglais, comme le reste des apps. Chaque app
-n'utilise que le SDK (ADR 0055).
+The user interfaces stay in English, like the rest of the apps. Each app
+uses only the SDK (ADR 0055).
 
-### 1. Explorateur de fichiers
+### 1. File explorer
 
-**Couper, copier, coller.**
+**Cut, copy, paste.**
 
-- Raccourcis Ctrl+X, Ctrl+C, Ctrl+V ; entrées « Cut », « Copy », « Paste »
-  dans le menu contextuel et la barre d'outils. « Paste » est grisé quand le
-  presse-papiers ne contient pas de fichiers.
-- Couper et copier écrivent la sélection dans le presse-papiers de l'OS par
-  `HackClipboard.SetFileDropListAsync` (ADR 0056, section 12). Une autre
-  fenêtre de l'explorateur, ou une autre app, peut donc coller.
-- Les éléments coupés s'affichent atténués tant qu'ils sont dans le
-  presse-papiers. Couper ne supprime rien avant le collage.
-- Coller vise le dossier courant, ou le dossier sur lequel porte le menu
-  contextuel (« Paste Into Folder »).
-- Copier : `HackFile.CopyAsync` / copie récursive d'un dossier. Couper :
-  `HackFile.MoveAsync` / `HackDirectory.MoveAsync`, puis le presse-papiers est
-  vidé si tout a réussi. Coller un élément coupé dans son propre dossier ne
-  fait rien.
-- **Noms en conflit**, comme Nautilus : en copie, `rapport.txt` devient
-  `rapport (copy).txt`, puis `rapport (copy 2).txt`… En déplacement, une
-  fenêtre demande « Replace », « Keep both » (même règle de nom) ou « Skip »,
-  avec « Apply to all ».
-- Copier ou déplacer un dossier dans lui-même ou dans un de ses descendants
-  est refusé avant toute écriture.
-- Une erreur sur un élément n'arrête pas les autres ; un résumé des échecs
-  s'affiche à la fin (notification), avec la raison
-  (`HackUnauthorizedAccessException`, système en lecture seule comme `/proc`…).
+- Shortcuts Ctrl+X, Ctrl+C, Ctrl+V; "Cut", "Copy", "Paste" entries
+  in the context menu and the toolbar. "Paste" is grayed out when the
+  clipboard does not contain files.
+- Cut and copy write the selection to the OS clipboard through
+  `HackClipboard.SetFileDropListAsync` (ADR 0056, section 12). Another
+  explorer window, or another app, can therefore paste.
+- Cut items are displayed dimmed while they are in the
+  clipboard. Cutting deletes nothing before the paste.
+- Paste targets the current folder, or the folder the context menu
+  applies to ("Paste Into Folder").
+- Copy: `HackFile.CopyAsync` / recursive copy of a folder. Cut:
+  `HackFile.MoveAsync` / `HackDirectory.MoveAsync`, then the clipboard is
+  emptied if everything succeeded. Pasting a cut item into its own folder
+  does nothing.
+- **Conflicting names**, like Nautilus: on copy, `report.txt` becomes
+  `report (copy).txt`, then `report (copy 2).txt`... On move, a
+  window asks "Replace", "Keep both" (same naming rule) or "Skip",
+  with "Apply to all".
+- Copying or moving a folder into itself or into one of its descendants
+  is refused before any write.
+- An error on one item does not stop the others; a summary of failures
+  is displayed at the end (notification), with the reason
+  (`HackUnauthorizedAccessException`, read-only system like `/proc`...).
 
-**Glisser-déposer**, en complément de l'existant :
+**Drag and drop**, in addition to what exists:
 
-- Dépôt sur le **fond** de la vue : vers le dossier courant.
-- Dépôt sur un nœud de l'**arbre** ou un segment du **fil d'Ariane** : vers ce
-  dossier.
-- Entre deux fenêtres de l'explorateur : le format
-  `application/vnd.hackeros.file-drag+json` de `FileView` est déjà lisible par
-  toute instance ; les mêmes règles s'appliquent.
-- Sur la vue Corbeille : envoi à la corbeille (ADR 0052).
-- Modificateurs : déplacer par défaut, **Ctrl** pour copier (règle actuelle de
-  `FileView`). Le curseur l'indique pendant le survol.
-- **Fichiers du système hôte** (glissés depuis le bureau réel de
-  l'utilisateur) : envoi dans le dossier cible par le chemin d'envoi
-  existant. Conflits de noms comme pour le collage.
-- Ces ajouts vivent dans `HackerOs.AppSdk.FileView` quand ils concernent la
-  vue (fond, arbre), pour que toute app qui affiche une `FileView` en profite.
+- Drop onto the view **background**: to the current folder.
+- Drop onto a node of the **tree** or a segment of the **breadcrumb**: to that
+  folder.
+- Between two explorer windows: the
+  `application/vnd.hackeros.file-drag+json` format of `FileView` is already readable by
+  any instance; the same rules apply.
+- Onto the Trash view: sent to the trash (ADR 0052).
+- Modifiers: move by default, **Ctrl** to copy (current rule of
+  `FileView`). The cursor indicates it during hover.
+- **Host system files** (dragged from the user's real
+  desktop): uploaded into the target folder through the existing
+  upload path. Name conflicts as for paste.
+- These additions live in `HackerOs.AppSdk.FileView` when they concern the
+  view (background, tree), so that any app that displays a `FileView` benefits.
 
-### 2. Gestionnaire de tâches
+### 2. Task manager
 
-Réécrit sur `HackProcess`, `HackServiceController` et `HackDriveInfo`
-(ADR 0056, 0057). Plus d'injection de `IProcessManager`, `AppCatalog`,
-`AppLifecycleOrchestrator` ou `IEventBus`.
+Rewritten on `HackProcess`, `HackServiceController` and `HackDriveInfo`
+(ADR 0056, 0057). No more injection of `IProcessManager`, `AppCatalog`,
+`AppLifecycleOrchestrator` or `IEventBus`.
 
-- **Onglets :** Processes, Performance, Disk, Network, Services. L'onglet
-  « Hardware & System Info » actuel devient une section de Performance
-  (contenu de `/proc/cpuinfo` et `/proc/meminfo`). L'onglet Overview disparaît :
-  son résumé passe en tête de Performance.
-- **Rafraîchissement :** lecture de `/proc` toutes les secondes, comme
-  `top`, suspendue quand la fenêtre est réduite. Les débits sont des
-  différences entre deux lectures.
-- **Processes :** colonnes PID, nom, utilisateur, état, CPU, mémoire,
-  lecture et écriture disque par seconde ; tri par colonne ; **filtre** texte
-  sur nom, id d'app et PID ; **sélection multiple** (Ctrl, Maj, Ctrl+A) ;
-  « End task » sur la sélection, avec confirmation qui liste les processus.
-  Un refus (`process.manage` absent pour un processus) est signalé par
-  processus, sans arrêter les autres.
-- **Détail d'un processus** (double clic ou panneau latéral) : `status`
-  complet, ligne de commande, répertoire courant, environnement si lisible,
-  compteurs `io`, processus parent et enfants.
-- **Performance :** graphique du CPU total et, au choix, par cœur ; graphique
-  de la mémoire utilisée ; 60 secondes d'historique.
-- **Disk :** espace occupé et libre de chaque `HackDriveInfo`, graphique des
-  débits de lecture et d'écriture de `/proc/diskstats`.
-- **Network :** graphique des débits reçus et émis par interface de
-  `/proc/net/dev`, compteurs de paquets et d'erreurs.
-- **Services :** l'existant (liste, démarrer, arrêter, mode de démarrage),
-  sur `HackServiceController`.
-- **Graphiques :** composants Blazor natifs en SVG avec CSS isolé, sans
-  bibliothèque de graphiques (consignes de `AGENTS.md` sur MudBlazor). Les
-  onglets eux-mêmes restent des `MudTabs`.
+- **Tabs:** Processes, Performance, Disk, Network, Services. The current
+  "Hardware & System Info" tab becomes a section of Performance
+  (contents of `/proc/cpuinfo` and `/proc/meminfo`). The Overview tab disappears:
+  its summary moves to the top of Performance.
+- **Refresh:** `/proc` is read every second, like
+  `top`, suspended when the window is minimized. Rates are
+  differences between two reads.
+- **Processes:** columns PID, name, user, state, CPU, memory,
+  disk read and write per second; sort by column; text **filter**
+  on name, app id and PID; **multiple selection** (Ctrl, Shift, Ctrl+A);
+  "End task" on the selection, with a confirmation that lists the processes.
+  A denial (`process.manage` missing for a process) is reported per
+  process, without stopping the others.
+- **Process detail** (double click or side panel): complete `status`,
+  command line, current directory, environment if readable,
+  `io` counters, parent and child processes.
+- **Performance:** chart of total CPU and, optionally, per core; chart
+  of memory used; 60 seconds of history.
+- **Disk:** used and free space of each `HackDriveInfo`, chart of
+  read and write rates from `/proc/diskstats`.
+- **Network:** chart of received and sent rates per interface from
+  `/proc/net/dev`, packet and error counters.
+- **Services:** what exists (list, start, stop, start mode),
+  on `HackServiceController`.
+- **Charts:** native Blazor components in SVG with isolated CSS, without a
+  chart library (`AGENTS.md` guidelines on MudBlazor). The
+  tabs themselves stay `MudTabs`.
 
-### 3. Éditeur de texte
+### 3. Text editor
 
-- **Panneau Rechercher et remplacer**, ouvert par Ctrl+H (Ctrl+F ouvre la
-  recherche seule, comme aujourd'hui) : champ « Replace with », boutons
-  « Replace » et « Replace All ».
-- Options partagées avec la recherche : « Match case » et « Whole word ».
-  Pas d'expressions régulières dans cette phase.
-- « Replace » remplace l'occurrence sélectionnée si elle correspond, puis
-  sélectionne la suivante ; sinon il sélectionne d'abord la suivante.
-- « Replace All » remplace toutes les occurrences en **une seule
-  modification** du document et affiche leur nombre (« 12 replacements »).
-- La logique vit dans `TextEditorFindEngine` (`Replace`, `ReplaceAll`), testée
-  sans interface.
-- Un remplacement rend le document modifié ; la détection des conflits
-  d'écriture à l'enregistrement ne change pas.
+- **Find and replace panel**, opened by Ctrl+H (Ctrl+F opens search
+  alone, as today): "Replace with" field, "Replace" and
+  "Replace All" buttons.
+- Options shared with search: "Match case" and "Whole word".
+  No regular expressions in this phase.
+- "Replace" replaces the selected occurrence if it matches, then
+  selects the next one; otherwise it first selects the next one.
+- "Replace All" replaces all occurrences in **a single
+  modification** of the document and displays their count ("12 replacements").
+- The logic lives in `TextEditorFindEngine` (`Replace`, `ReplaceAll`), tested
+  without a UI.
+- A replacement marks the document as modified; the detection of write
+  conflicts on save does not change.
 
 ### 4. Console
 
-**Complétion par Tab**, faite par le shell (`IHackShell.CompleteAsync`,
-ADR 0056 section 7), comme `bash` et non par l'émulateur de terminal :
+**Tab completion**, done by the shell (`IHackShell.CompleteAsync`,
+ADR 0056 section 7), like `bash` and not by the terminal emulator:
 
-- Premier mot d'une commande (début de ligne, après `|` ou `&&`) : noms des
-  commandes installées et de leurs alias.
-- Autres mots : chemins, relatifs au répertoire du shell, avec `~` développé.
-  Un dossier est complété avec un `/` final. Les fichiers cachés ne sont
-  proposés que si le préfixe commence par `.`.
-- Un seul candidat : il est inséré, suivi d'une espace (ou du `/` d'un
-  dossier). Plusieurs : le plus long préfixe commun est inséré ; un second Tab
-  liste les candidats sous l'invite, comme `bash`.
-- Un chemin illisible (droits, capacité) ne propose rien, sans erreur.
+- First word of a command (start of line, after `|` or `&&`): names of
+  installed commands and their aliases.
+- Other words: paths, relative to the shell's directory, with `~` expanded.
+  A folder is completed with a trailing `/`. Hidden files are
+  offered only if the prefix starts with `.`.
+- A single candidate: it is inserted, followed by a space (or the `/` of a
+  folder). Several: the longest common prefix is inserted; a second Tab
+  lists the candidates below the prompt, like `bash`.
+- An unreadable path (rights, capability) offers nothing, without error.
 
-**Onglets :**
+**Tabs:**
 
-- Chaque onglet est un shell distinct (`HackShell.StartAsync`), donc un
-  **processus** distinct, enfant du processus du terminal, avec son propre
-  répertoire, son environnement, son historique de saisie et son `$?`.
-- Ctrl+Maj+T ouvre un onglet dans le répertoire de l'onglet courant ;
-  Ctrl+Maj+W ferme l'onglet (et termine son shell et ses commandes) ;
-  Ctrl+PgPréc et Ctrl+PgSuiv changent d'onglet ; bouton « + » et croix sur
-  chaque onglet.
-- Titre de l'onglet : nom de la commande en cours, sinon nom du dossier
-  courant (`~` pour le dossier personnel).
-- `exit` ferme l'onglet ; fermer le dernier onglet ferme la fenêtre.
-- Le panneau terminal de CodeEditor reste à un seul shell.
+- Each tab is a distinct shell (`HackShell.StartAsync`), therefore a distinct
+  **process**, child of the terminal's process, with its own
+  directory, environment, input history and `$?`.
+- Ctrl+Shift+T opens a tab in the current tab's directory;
+  Ctrl+Shift+W closes the tab (and terminates its shell and commands);
+  Ctrl+PgUp and Ctrl+PgDn switch tabs; "+" button and close icon on
+  each tab.
+- Tab title: name of the running command, otherwise name of the current
+  folder (`~` for the home folder).
+- `exit` closes the tab; closing the last tab closes the window.
+- The CodeEditor terminal panel stays at a single shell.
 
-## Conséquences
+## Consequences
 
-- Les quatre apps de base atteignent la parité avec le legacy et le
-  dépassent sur la corbeille, le collage entre fenêtres, les mesures réelles
-  de disque et de réseau et les onglets de la console.
-- Les ajouts de glisser-déposer dans `FileView` profitent aux autres apps qui
-  l'affichent (sélecteurs de fichiers, CodeEditor).
-- La complétion dans le shell la rend disponible à tout émulateur de
-  terminal tiers.
+- The four base apps reach parity with the legacy and
+  exceed it on the trash, pasting between windows, real disk
+  and network measurements, and console tabs.
+- The drag-and-drop additions in `FileView` benefit the other apps that
+  display it (file pickers, CodeEditor).
+- Completion in the shell makes it available to any third-party terminal
+  emulator.
 
-## Alternatives écartées
+## Rejected alternatives
 
-- **Complétion dans `TerminalPanel`** (comme celle des noms de commandes
-  aujourd'hui) : chaque émulateur de terminal devrait la refaire, et elle ne
-  verrait pas le répertoire et les alias du shell sans nouvel accès.
-- **Bibliothèque de graphiques** (MudBlazor Charts, Chart.js) : trois
-  courbes simples ne justifient pas une dépendance ni du JavaScript.
-- **Expressions régulières dans « Replace »** : utile, mais absent du legacy ;
-  repoussé pour garder le panneau simple.
+- **Completion in `TerminalPanel`** (like that of command names
+  today): each terminal emulator would have to redo it, and it would not
+  see the shell's directory and aliases without new access.
+- **Chart library** (MudBlazor Charts, Chart.js): three
+  simple curves do not justify a dependency or JavaScript.
+- **Regular expressions in "Replace"**: useful, but absent from the legacy;
+  postponed to keep the panel simple.
 
-## Chantiers d'implémentation de la phase 4
+## Phase 4 implementation work items
 
-Tableau commun aux ADR 0055, 0056, 0057 et 0058. Chaque branche part de
-`rebuild/base` et sa PR vise `rebuild/base`. Chaque chantier qui supprime une
-violation de l'ADR 0055 retire l'exemption du projet concerné dans le même
-changement, et documente ses API dans `docs/app-sdk.md` (créé par
+Table shared by ADR 0055, 0056, 0057 and 0058. Each branch starts from
+`rebuild/base` and its PR targets `rebuild/base`. Each work item that removes a
+violation of ADR 0055 removes the exemption of the project concerned in the same
+change, and documents its APIs in `docs/app-sdk.md` (created by
 `4-sdk-boundary`).
 
-| Branche | Contenu | Dépend de |
+| Branch | Content | Depends on |
 |---|---|---|
-| `rebuild/4-sdk-boundary` | ADR 0055 sections 1 à 3 et 6 : cible MSBuild `HOSAPP0002` / `HOSSDK0001`, contrôle `HOSAPP0003` dans le générateur de manifeste, test de sources `IJSRuntime`, liste d'exemptions des projets en défaut, retrait des références `Platform.Core` inutilisées (Calculator, HackPaint, IconViewer, TextEditor, Browser). Création de `docs/app-sdk.md`. | — |
-| `rebuild/4-sdk-user-and-apps` | ADR 0056 sections 1 à 3 et ADR 0055 section 5 : `HackUser`, `HackEnvironment.GetFolderPath`, `HackApps`, `HackAppManagement`, agent d'authentification de l'OS. Migration de FileExplorer, TextEditor, CodeEditor (utilisateur) et de l'onglet « Installed Apps » de Paramètres. | `4-sdk-boundary` |
-| `rebuild/4-sdk-network` | ADR 0056 section 6 : `IAppNetworkGateway`, `HackDns`, `HackPing`, `HackHttpClient`, `HackTcpClient`, repli réel dans Platform Core, `ShellErrorText` dans le SDK. Migration de Browser, `ping`, `curl`, `cat`, `nmap` ; `HackerOs.Commands` sans `Platform.Core` ni `Server.Contracts`. | `4-sdk-boundary` |
-| `rebuild/4-sdk-shell-host` | ADR 0056 section 7 : capacité `shell.host`, `HackShell`, `IHackShell` (sans la complétion des chemins), `HackCredentialPrompt` ; `TerminalPanel` et `HackerOs.AppSdk.Terminal` sans `Platform.Core` ; `IsSystemApp="true"` pour CodeEditor. | `4-sdk-boundary` |
-| `rebuild/4-sdk-system-admin` | ADR 0056 sections 8 à 11 : `HackSettings.OpenSystemAsync`, `HackPermissionAdministration`, `HackServerConnection`, `HackSystem`, `HackStorageDiagnostics`, capacités `permissions.manage`, `server.connection.manage`, `system.power`, `system.storage.inspect`. Migration du reste de Paramètres et de Diagnostic. | `4-sdk-user-and-apps` |
-| `rebuild/4-proc-metrics` | ADR 0057 : comptage dans la passerelle fichier, la persistance et la passerelle réseau ; `/proc/stat`, `/proc/<pid>/io`, `/proc/diskstats`, `/proc/net/dev`, `/proc/mounts` ; `StorageCapacityBytes` ; `HackDriveInfo`. Mise à jour de `virtual-proc-and-dev.md`. | `4-sdk-network` |
-| `rebuild/4-file-explorer` | ADR 0056 section 12 et ADR 0058 section 1 : `HackClipboard` et opération couper/copier, couper-copier-coller, conflits de noms, glisser-déposer sur le fond, l'arbre, le fil d'Ariane, la corbeille et depuis l'hôte. | `4-sdk-user-and-apps` |
-| `rebuild/4-text-editor` | ADR 0058 section 3 : panneau Rechercher et remplacer, `Replace` et `ReplaceAll` dans `TextEditorFindEngine`. | `4-sdk-user-and-apps` |
-| `rebuild/4-terminal` | ADR 0058 section 4 : `IHackShell.CompleteAsync` (commandes et chemins), onglets de la console. | `4-sdk-shell-host` |
-| `rebuild/4-task-manager` | ADR 0056 sections 4 et 5 et ADR 0058 section 2 : `HackProcess`, `HackServiceController`, réécriture de SystemMonitor (onglets, graphiques, détail, filtre, sélection multiple). | `4-proc-metrics`, `4-sdk-user-and-apps` |
-| `rebuild/4-sdk-boundary-final` | ADR 0055 section 6 : suppression du mécanisme d'exemption, vérification que tout `Apps/` et tout le SDK passent sans exemption, plan et index de la documentation à jour. | tous les autres chantiers de la phase 4 |
+| `rebuild/4-sdk-boundary` | ADR 0055 sections 1 to 3 and 6: MSBuild target `HOSAPP0002` / `HOSSDK0001`, check `HOSAPP0003` in the manifest generator, `IJSRuntime` source test, exemption list of the projects in violation, removal of unused `Platform.Core` references (Calculator, HackPaint, IconViewer, TextEditor, Browser). Creation of `docs/app-sdk.md`. | - |
+| `rebuild/4-sdk-user-and-apps` | ADR 0056 sections 1 to 3 and ADR 0055 section 5: `HackUser`, `HackEnvironment.GetFolderPath`, `HackApps`, `HackAppManagement`, OS authentication agent. Migration of FileExplorer, TextEditor, CodeEditor (user) and of the "Installed Apps" tab of Settings. | `4-sdk-boundary` |
+| `rebuild/4-sdk-network` | ADR 0056 section 6: `IAppNetworkGateway`, `HackDns`, `HackPing`, `HackHttpClient`, `HackTcpClient`, real fallback in Platform Core, `ShellErrorText` in the SDK. Migration of Browser, `ping`, `curl`, `cat`, `nmap`; `HackerOs.Commands` without `Platform.Core` or `Server.Contracts`. | `4-sdk-boundary` |
+| `rebuild/4-sdk-shell-host` | ADR 0056 section 7: capability `shell.host`, `HackShell`, `IHackShell` (without path completion), `HackCredentialPrompt`; `TerminalPanel` and `HackerOs.AppSdk.Terminal` without `Platform.Core`; `IsSystemApp="true"` for CodeEditor. | `4-sdk-boundary` |
+| `rebuild/4-sdk-system-admin` | ADR 0056 sections 8 to 11: `HackSettings.OpenSystemAsync`, `HackPermissionAdministration`, `HackServerConnection`, `HackSystem`, `HackStorageDiagnostics`, capabilities `permissions.manage`, `server.connection.manage`, `system.power`, `system.storage.inspect`. Migration of the rest of Settings and of Diagnostic. | `4-sdk-user-and-apps` |
+| `rebuild/4-proc-metrics` | ADR 0057: counting in the file gateway, the persistence and the network gateway; `/proc/stat`, `/proc/<pid>/io`, `/proc/diskstats`, `/proc/net/dev`, `/proc/mounts`; `StorageCapacityBytes`; `HackDriveInfo`. Update of `virtual-proc-and-dev.md`. | `4-sdk-network` |
+| `rebuild/4-file-explorer` | ADR 0056 section 12 and ADR 0058 section 1: `HackClipboard` and cut/copy operation, cut-copy-paste, name conflicts, drag and drop onto the background, the tree, the breadcrumb, the trash and from the host. | `4-sdk-user-and-apps` |
+| `rebuild/4-text-editor` | ADR 0058 section 3: Find and replace panel, `Replace` and `ReplaceAll` in `TextEditorFindEngine`. | `4-sdk-user-and-apps` |
+| `rebuild/4-terminal` | ADR 0058 section 4: `IHackShell.CompleteAsync` (commands and paths), console tabs. | `4-sdk-shell-host` |
+| `rebuild/4-task-manager` | ADR 0056 sections 4 and 5 and ADR 0058 section 2: `HackProcess`, `HackServiceController`, rewrite of SystemMonitor (tabs, charts, detail, filter, multiple selection). | `4-proc-metrics`, `4-sdk-user-and-apps` |
+| `rebuild/4-sdk-boundary-final` | ADR 0055 section 6: removal of the exemption mechanism, verification that all of `Apps/` and the whole SDK pass without exemption, plan and documentation index up to date. | all the other phase 4 work items |
 
-Ordre :
+Order:
 
-1. `4-sdk-boundary` seul.
-2. En parallèle : `4-sdk-user-and-apps`, `4-sdk-network`, `4-sdk-shell-host`.
-3. Dès que leur dépendance est mergée, en parallèle :
-   `4-sdk-system-admin`, `4-file-explorer` et `4-text-editor` (après
-   `4-sdk-user-and-apps`), `4-proc-metrics` (après `4-sdk-network`),
-   `4-terminal` (après `4-sdk-shell-host`).
-4. `4-task-manager` (après `4-proc-metrics` et `4-sdk-user-and-apps`).
+1. `4-sdk-boundary` alone.
+2. In parallel: `4-sdk-user-and-apps`, `4-sdk-network`, `4-sdk-shell-host`.
+3. As soon as their dependency is merged, in parallel:
+   `4-sdk-system-admin`, `4-file-explorer` and `4-text-editor` (after
+   `4-sdk-user-and-apps`), `4-proc-metrics` (after `4-sdk-network`),
+   `4-terminal` (after `4-sdk-shell-host`).
+4. `4-task-manager` (after `4-proc-metrics` and `4-sdk-user-and-apps`).
 5. `4-sdk-boundary-final`.
 
-## Références
+## References
 
 - [`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md), section 8.2.
-- Legacy : `src/apps/file-explorer.ts`, `src/apps/system-monitor.ts`,
+- Legacy: `src/apps/file-explorer.ts`, `src/apps/system-monitor.ts`,
   `src/apps/text-editor.ts`, `src/apps/terminal.ts`.
 - ADR 0016, 0050, 0051, 0052, 0055, 0056, 0057.
 - `Shared/HackerOs.AppSdk.FileView/FileView.razor.cs`,

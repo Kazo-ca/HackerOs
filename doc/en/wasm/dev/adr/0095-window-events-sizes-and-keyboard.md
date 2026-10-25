@@ -1,128 +1,127 @@
-# ADR 0095 : événements de fenêtre pour les apps, tailles déclarées et commandes clavier
+# ADR 0095: window events for apps, declared sizes and keyboard commands
 
-## Statut
+## Status
 
-Accepté le 2026-10-17 (chantier `v3/1-adr`, pour le chantier `v3/3-window-model`).
-Le §3 suit la réponse de Benoit du 2026-10-17 : touches Linux quand le clavier
-est verrouillé, plus un jeu de remplacement toujours actif.
+Accepted on 2026-10-17 (work item `v3/1-adr`, for work item `v3/3-window-model`).
+§3 follows Benoit's answer of 2026-10-17: Linux keys when the keyboard
+is locked, plus a replacement set that is always active.
 
-- **Complète :** [ADR 0009](0009-window-runtime-strategy.md) (gestionnaire de
-  fenêtres en C#, « les commandes clavier restent en C# », critère 6 de la preuve
-  sans touches choisies) et [ADR 0006](0006-seal-window-component-lifecycle.md)
-  (crochets `OnApp*` de `WindowAppBase`).
-- **Plan :** [`wasm-v3-completion-plan.md`](../plans/wasm-v3-completion-plan.md),
-  ligne `v3/3-window-model` ; manques R7 et R8.
+- **Completes:** [ADR 0009](0009-window-runtime-strategy.md) (window
+  manager in C#, "keyboard commands stay in C#", criterion 6 of the proof
+  without chosen keys) and [ADR 0006](0006-seal-window-component-lifecycle.md)
+  (`OnApp*` hooks of `WindowAppBase`).
+- **Plan:** [`wasm-v3-completion-plan.md`](../plans/wasm-v3-completion-plan.md),
+  row `v3/3-window-model`; gaps R7 and R8.
 
-## Contexte
+## Context
 
-- `WindowRuntime` (`Platform/HackerOs.Windowing.Core/WindowRuntime.cs`) produit
-  déjà les événements `WindowFocused`, `WindowResized`, `WindowVisualStateChanged`
-  (Normal, Minimized, Maximized), mais seuls le bureau, la barre des tâches et la
-  surface de fenêtre s'y abonnent, pour se redessiner. Aucune app ne les reçoit.
+- `WindowRuntime` (`Platform/HackerOs.Windowing.Core/WindowRuntime.cs`) already
+  produces the events `WindowFocused`, `WindowResized`, `WindowVisualStateChanged`
+  (Normal, Minimized, Maximized), but only the desktop, the taskbar and the
+  window surface subscribe to them, to redraw. No app receives them.
 - `WindowLaunchCoordinator` (`Platform/HackerOs.Platform.Blazor/Windows/WindowLaunchCoordinator.cs:73-77`)
-  ouvre toute fenêtre en 800×560 avec un minimum de 360×240, sans maximum. Ni
-  `AppDefinition`, ni `AppManifest`, ni `manifest.schema.v1.json` n'ont de champ
-  de taille.
-- Le bureau ne gère qu'Échap (`DesktopShell.razor:356`). Il n'existe pas de
-  service de raccourcis globaux.
-- Dans un onglet de navigateur, le système hôte capture Alt+Tab, Super et souvent
-  Alt+F4 (qui ferme le navigateur sous Windows) avant la page. Seule l'API
-  Keyboard Lock (`navigator.keyboard.lock()`, en plein écran, Chromium) permet de
-  les recevoir.
+  opens every window at 800×560 with a minimum of 360×240, no maximum. Neither
+  `AppDefinition`, nor `AppManifest`, nor `manifest.schema.v1.json` has a size
+  field.
+- The desktop only handles Escape (`DesktopShell.razor:356`). There is no
+  global shortcut service.
+- In a browser tab, the host system captures Alt+Tab, Super and often
+  Alt+F4 (which closes the browser on Windows) before the page. Only the Keyboard Lock API
+  (`navigator.keyboard.lock()`, in full screen, Chromium) makes it possible to
+  receive them.
 
-## Décision
+## Decision
 
-### 1. Événements de fenêtre dans `WindowAppBase`
+### 1. Window events in `WindowAppBase`
 
-`WindowAppBase` reçoit de nouveaux crochets virtuels, appelés par le framework
-dans le même ordre que les événements de `WindowRuntime`, sur le fil de rendu de
-la fenêtre :
+`WindowAppBase` receives new virtual hooks, called by the framework
+in the same order as the `WindowRuntime` events, on the window's render
+thread:
 
-| Crochet | Appelé quand |
+| Hook | Called when |
 |---|---|
-| `OnWindowActivated()` / `OnWindowDeactivated()` | la fenêtre prend ou perd le focus |
-| `OnWindowStateChanged(HackWindowState previous, HackWindowState current)` | réduction, agrandissement, restauration |
-| `OnWindowResized(HackWindowSize size)` | fin d'un redimensionnement (pas à chaque pixel : un seul appel quand le pointeur est relâché ou après une commande clavier) |
+| `OnWindowActivated()` / `OnWindowDeactivated()` | the window gains or loses focus |
+| `OnWindowStateChanged(HackWindowState previous, HackWindowState current)` | minimize, maximize, restore |
+| `OnWindowResized(HackWindowSize size)` | end of a resize (not at every pixel: a single call when the pointer is released or after a keyboard command) |
 
-- `HackWindowState` (`Normal`, `Minimized`, `Maximized`) et `HackWindowSize`
-  (largeur et hauteur de la zone cliente en pixels CSS) sont des types du SDK
-  (`HackerOs.AppSdk.Blazor`), jamais les types de `HackerOs.Windowing.*`
+- `HackWindowState` (`Normal`, `Minimized`, `Maximized`) and `HackWindowSize`
+  (width and height of the client area in CSS pixels) are SDK types
+  (`HackerOs.AppSdk.Blazor`), never the types of `HackerOs.Windowing.*`
   (ADR 0055).
-- Chaque crochet a sa variante `…Async`. Une exception dans un crochet est
-  journalisée dans `/var/log/apps/<appId>.log` et n'empêche pas la transition :
-  le gestionnaire de fenêtres reste maître de l'état (ADR 0009).
-- Une app réduite continue de tourner, comme sous un vrai gestionnaire de
-  fenêtres ; c'est à elle de ralentir son travail si elle le souhaite, dans
+- Each hook has its `...Async` variant. An exception in a hook is
+  logged in `/var/log/apps/<appId>.log` and does not prevent the transition:
+  the window manager remains master of the state (ADR 0009).
+- A minimized app keeps running, as under a real window manager;
+  it is up to the app to slow its work if it wishes, in
   `OnWindowStateChanged`.
-- Les fenêtres détachées (ADR 0078, 0081) appellent les mêmes crochets à partir
-  des événements `focus`, `blur` et `resize` de la fenêtre du navigateur qui les
-  porte.
+- Detached windows (ADR 0078, 0081) call the same hooks from the
+  `focus`, `blur` and `resize` events of the browser window that
+  carries them.
 
-### 2. Tailles déclarées par l'app
+### 2. App-declared sizes
 
-- `AppDefinition` reçoit une propriété facultative `Window` de type
-  `WindowOptions` :
+- `AppDefinition` receives an optional `Window` property of type
+  `WindowOptions`:
   `DefaultWidth`, `DefaultHeight`, `MinWidth`, `MinHeight`, `MaxWidth?`,
-  `MaxHeight?`, `Resizable` (vrai par défaut).
-- Valeurs par défaut quand rien n'est déclaré : les valeurs actuelles
-  (800×560, minimum 360×240, sans maximum, redimensionnable). Aucune app
-  existante ne change donc d'aspect.
-- Le générateur écrit l'objet `window` dans `manifest.json` ; le schéma v1
-  l'ajoute comme champ facultatif (ajout compatible). Le validateur refuse
-  `window` sur une app qui n'est pas de genre `Window`, une taille négative ou
-  nulle, un minimum plus grand que le défaut ou le défaut plus grand que le
-  maximum (nouveaux codes `manifest.window.*`).
-- `WindowLaunchCoordinator` lit ces valeurs. La taille initiale est ramenée à la
-  zone de travail si l'écran est plus petit ; le minimum, lui, est respecté, et
-  la fenêtre déborde alors comme sur un petit écran réel. L'agrandissement
-  ignore le maximum déclaré (comportement des gestionnaires de fenêtres Linux
-  courants), sauf si `Resizable` est faux : le bouton Agrandir est alors masqué.
-- L'interface mobile (plein écran) ignore ces tailles.
+  `MaxHeight?`, `Resizable` (true by default).
+- Default values when nothing is declared: the current values
+  (800×560, minimum 360×240, no maximum, resizable). No
+  existing app therefore changes appearance.
+- The generator writes the `window` object into `manifest.json`; schema v1
+  adds it as an optional field (compatible addition). The validator refuses
+  `window` on an app that is not of kind `Window`, a negative or zero
+  size, a minimum greater than the default or a default greater than the
+  maximum (new `manifest.window.*` codes).
+- `WindowLaunchCoordinator` reads these values. The initial size is reduced to the
+  work area if the screen is smaller; the minimum, however, is respected, and
+  the window then overflows as on a small real screen. Maximizing
+  ignores the declared maximum (behavior of common Linux window
+  managers), unless `Resizable` is false: the Maximize button is then hidden.
+- The mobile interface (full screen) ignores these sizes.
 
-### 3. Commandes clavier du gestionnaire de fenêtres
+### 3. Window manager keyboard commands
 
-Les raccourcis sont tenus par un service C# de la plateforme
-(`WindowKeyboardCommands`), branché sur le gestionnaire `keydown` du bureau, et
-lus dans un fichier de réglages, comme sous un vrai bureau Linux :
-`/etc/hackeros/keybindings.config` (défaut machine) et
-`~/.config/hackeros/keybindings.config` (choix de l'utilisateur), résolus par
+Shortcuts are held by a platform C# service
+(`WindowKeyboardCommands`), plugged into the desktop's `keydown` handler, and
+read from a settings file, as on a real Linux desktop:
+`/etc/hackeros/keybindings.config` (machine default) and
+`~/.config/hackeros/keybindings.config` (user choice), resolved by
 `LayeredConfigResolver` (ADR 0044).
 
-Deux jeux de touches sont fournis par défaut :
+Two sets of keys are provided by default:
 
-| Action | Touches Linux (actives quand le clavier est verrouillé) | Touches de remplacement (toujours actives) |
+| Action | Linux keys (active when the keyboard is locked) | Replacement keys (always active) |
 |---|---|---|
-| Passer à la fenêtre suivante / précédente (sélecteur affiché tant qu'Alt est tenu) | Alt+Tab / Alt+Maj+Tab | Alt+` / Alt+Maj+` |
-| Fermer la fenêtre (passe par la confirmation de fermeture, ADR 0006) | Alt+F4 | Alt+Q |
-| Menu de la fenêtre | Alt+Espace | Alt+F3 |
-| Déplacer au clavier (flèches, Entrée valide, Échap annule) | Alt+F7 | Alt+F7 |
-| Redimensionner au clavier | Alt+F8 | Alt+F8 |
-| Réduire | Super+Bas (depuis l'état normal) | Alt+F9 |
-| Agrandir / restaurer | Super+Haut / Super+Bas | Alt+F10 |
-| Coller à gauche / à droite | Super+Gauche / Super+Droite | Alt+Maj+Gauche / Alt+Maj+Droite |
+| Switch to next / previous window (switcher displayed while Alt is held) | Alt+Tab / Alt+Shift+Tab | Alt+` / Alt+Shift+` |
+| Close the window (goes through the close confirmation, ADR 0006) | Alt+F4 | Alt+Q |
+| Window menu | Alt+Space | Alt+F3 |
+| Move with the keyboard (arrows, Enter confirms, Escape cancels) | Alt+F7 | Alt+F7 |
+| Resize with the keyboard | Alt+F8 | Alt+F8 |
+| Minimize | Super+Down (from the normal state) | Alt+F9 |
+| Maximize / restore | Super+Up / Super+Down | Alt+F10 |
+| Snap left / right | Super+Left / Super+Right | Alt+Shift+Left / Alt+Shift+Right |
 
-- Les touches de remplacement reprennent celles de GNOME là où le navigateur ne
-  les intercepte pas.
-- Les touches Linux sont actives seulement quand l'OS a obtenu le verrouillage
-  du clavier : en plein écran, la plateforme appelle `navigator.keyboard.lock()`
-  par un module JS de la bibliothèque de fenêtres (seule exception JS, l'API
-  n'existant pas en C#) ; hors plein écran ou sans l'API, elles restent au
-  système hôte.
-- Toutes les actions sont aussi dans le menu de la fenêtre, pour qu'elles
-  restent atteignables sans raccourci (critère 6 de l'ADR 0009).
-- Une app qui gère elle-même une touche (par exemple le Terminal) la reçoit
-  d'abord seulement pour les touches qui ne sont pas des commandes de fenêtre ;
-  les commandes de fenêtre passent toujours avant, comme sous X11 avec un
-  gestionnaire de fenêtres qui a saisi ces touches.
+- The replacement keys take GNOME's where the browser does not
+  intercept them.
+- The Linux keys are active only when the OS has obtained the keyboard
+  lock: in full screen, the platform calls `navigator.keyboard.lock()`
+  through a JS module of the windowing library (the only JS exception, the API
+  not existing in C#); outside full screen or without the API, they remain with the
+  host system.
+- All actions are also in the window menu, so that they
+  remain reachable without a shortcut (criterion 6 of ADR 0009).
+- An app that handles a key itself (for example the Terminal) receives it
+  first only for keys that are not window commands;
+  window commands always go first, as under X11 with a window manager that has grabbed these keys.
 
-## Conséquences
+## Consequences
 
-- `v3/3` ajoute les crochets, `WindowOptions`, le champ `window` du schéma,
-  le service de raccourcis, le fichier `keybindings.config` et des tests
-  unitaires (ordre des crochets, validation) et E2E (Alt+` et Alt+Q dans un
-  onglet).
-- `v3/6` touche aussi `AppDefinition` : le second chantier fusionné reprend
-  l'autre avant (plan, §4).
-- `sdk-reference.md`, `sdk-developer-guide.md`, `app-sdk.md` et la doc du
-  schéma du manifeste décrivent les crochets et `Window`.
-- `v3/13` teste ces parcours clavier avec axe et Playwright.
+- `v3/3` adds the hooks, `WindowOptions`, the schema's `window` field,
+  the shortcut service, the `keybindings.config` file and
+  unit tests (hook order, validation) and E2E tests (Alt+` and Alt+Q in a
+  tab).
+- `v3/6` also touches `AppDefinition`: the second merged work item takes over the
+  other beforehand (plan, §4).
+- `sdk-reference.md`, `sdk-developer-guide.md`, `app-sdk.md` and the manifest
+  schema doc describe the hooks and `Window`.
+- `v3/13` tests these keyboard paths with axe and Playwright.

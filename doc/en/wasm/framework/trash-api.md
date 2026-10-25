@@ -1,14 +1,14 @@
-# Corbeille : format `.trashinfo` et API `HackTrash`
+# Trash: `.trashinfo` format and `HackTrash` API
 
-Ce document décrit ce qu'une app voit de la corbeille : l'API `HackTrash` du SDK, les règles qui s'appliquent à ses opérations, et le format `.trashinfo` que les apps et les autres implémentations lisent ou écrivent. La place de la corbeille dans l'OS, les commandes `rm` et `trash`, l'explorateur et la synchronisation sont dans [`dev/trash.md`](../dev/trash.md).
+This document describes what an app sees of the trash: the SDK's `HackTrash` API, the rules that apply to its operations, and the `.trashinfo` format that apps and other implementations read or write. The place of the trash in the OS, the `rm` and `trash` commands, the explorer and synchronization are in [`dev/trash.md`](../dev/trash.md).
 
-## Format sur disque
+## On-disk format
 
 ```
-~/.local/share/Trash/          (0700, créé à la demande)
-├── files/                     (0700) éléments déplacés tels quels
+~/.local/share/Trash/          (0700, created on demand)
+├── files/                     (0700) items moved as they are
 │   ├── rapport.txt
-│   └── rapport.2.txt          second élément du même nom
+│   └── rapport.2.txt          second item with the same name
 └── info/                      (0700)
     ├── rapport.txt.trashinfo  (0600)
     └── rapport.2.txt.trashinfo
@@ -20,43 +20,43 @@ Path=/home/benoit/Documents/rapport%20final.txt
 DeletionDate=2026-10-10T14:03:27
 ```
 
-- `Path` : chemin absolu d'origine, encodé comme une URL segment par segment
-  (`/` non encodé).
-- `DeletionDate` : heure locale de l'horloge simulée (`IAppClockGateway.UtcNow`
-  converti dans le fuseau local), à la seconde, sans décalage.
-- Noms en collision : `nom.2.ext`, `nom.3.ext`… ; un fichier caché sans
-  extension (`.bashrc`) devient `.bashrc.2`. Un nom est libre s'il n'existe ni
-  dans `info/` ni dans `files/`.
+- `Path`: original absolute path, encoded like a URL segment by segment
+  (`/` not encoded).
+- `DeletionDate`: local time of the simulated clock (`IAppClockGateway.UtcNow`
+  converted to the local time zone), to the second, with no offset.
+- Colliding names: `name.2.ext`, `name.3.ext`...; a hidden file without an
+  extension (`.bashrc`) becomes `.bashrc.2`. A name is free if it exists neither
+  in `info/` nor in `files/`.
 
-- Au listage, un `.trashinfo` sans élément est supprimé ; un élément sans
-  `.trashinfo` est listé avec une origine inconnue.
-- Un élément supprimé sur un autre appareil porte, dans son `.trashinfo`, les clés d'extension `X-HackerOS-Origin=deleted-on-another-device` et `X-HackerOS-Device=<appareil>`, que les autres implémentations ignorent. `HackTrashItem.DeletedOnAnotherDevice` le signale aux apps.
+- When listing, a `.trashinfo` without an item is deleted; an item without a
+  `.trashinfo` is listed with an unknown origin.
+- An item deleted on another device carries, in its `.trashinfo`, the extension keys `X-HackerOS-Origin=deleted-on-another-device` and `X-HackerOS-Device=<device>`, which other implementations ignore. `HackTrashItem.DeletedOnAnotherDevice` reports it to apps.
 
-## Corbeille de l'utilisateur effectif
+## Trash of the effective user
 
-La corbeille est celle de l'utilisateur **effectif** : sous `sudo`, c'est
-`/root/.local/share/Trash/`. Pour le savoir, `IAppExecutionContext` expose
-`IsRootElevated` (membre par défaut `false`, rempli par
-`AppExecutionContextFactory` à partir du lancement élevé de l'ADR 0042).
-`HomeDirectory` ne change pas sous `sudo` (le `~` du shell reste celui de
-l'utilisateur).
+The trash is that of the **effective** user: under `sudo`, it is
+`/root/.local/share/Trash/`. To find out, `IAppExecutionContext` exposes
+`IsRootElevated` (default member `false`, filled in by
+`AppExecutionContextFactory` from the elevated launch of ADR 0042).
+`HomeDirectory` does not change under `sudo` (the shell's `~` remains that of
+the user).
 
-## Règles
+## Rules
 
-| Cas | Comportement |
+| Case | Behavior |
 | --- | --- |
-| Élément du système de fichiers principal | Déplacé dans `files/` (contenu, droits, propriétaire et dates conservés), si l'appelant a le droit de le supprimer (écriture sur le dossier parent, capacités). |
-| `/proc`, `/dev` (montages virtuels) | Refus : `HackIOException` « Cannot move to trash: virtual file system ». Détecté par le `CrossMountOperation` du déplacement ; rien n'est laissé dans `info/`. |
-| Élément déjà dans la corbeille | Supprimé définitivement. |
-| `/`, le dossier personnel, un dossier qui contient la corbeille (`~/.local`, la corbeille elle-même) | Refus : `HackIOException`, code `ProtectedEntry`. |
-| Lien symbolique | Le lien lui-même part à la corbeille, pas sa cible. |
+| Item on the main file system | Moved into `files/` (content, permissions, owner and dates kept), if the caller has the right to delete it (write on the parent folder, capabilities). |
+| `/proc`, `/dev` (virtual mounts) | Refused: `HackIOException` "Cannot move to trash: virtual file system". Detected by the move's `CrossMountOperation`; nothing is left in `info/`. |
+| Item already in the trash | Deleted permanently. |
+| `/`, the home folder, a folder that contains the trash (`~/.local`, the trash itself) | Refused: `HackIOException`, code `ProtectedEntry`. |
+| Symbolic link | The link itself goes to the trash, not its target. |
 
-## API `HackTrash`
+## `HackTrash` API
 
-`Shared/HackerOs.AppSdk/IO/HackTrash.cs`. Classe statique, contexte ambiant de
-l'ADR 0043 (`HackExecutionContext.Current`), exceptions `Hack*`. Aucune
-nouvelle capacité : les capacités `filesystem.*` et les droits décident, comme
-pour `HackFile`.
+`Shared/HackerOs.AppSdk/IO/HackTrash.cs`. Static class, ambient context of
+ADR 0043 (`HackExecutionContext.Current`), `Hack*` exceptions. No
+new capability: the `filesystem.*` capabilities and the permissions decide, as
+for `HackFile`.
 
 ```csharp
 HackTrashItem item = await HackTrash.MoveToTrashAsync("Documents/rapport.txt");
@@ -67,23 +67,22 @@ await HackTrash.EmptyAsync();                                           // vide 
 string root = HackTrash.TrashDirectory;                                 // ~/.local/share/Trash ou /root/...
 ```
 
-| Membre | Détail |
+| Member | Detail |
 | --- | --- |
-| `MoveToTrashAsync(path)` | Chemin manquant → `HackFileNotFoundException`. Renvoie l'élément créé (`Name` = nom dans `files/`). |
-| `GetItemsAsync()` | Trié par date de suppression puis par nom ; vide si la corbeille n'existe pas. |
-| `RestoreAsync(item, destination?)` | Destination, sinon le `Path` lu dans le `.trashinfo` (puis `item.OriginalPath`). Recrée les dossiers parents manquants. Destination occupée → `HackIOException` « already exists », rien n'est écrasé. Origine inconnue sans destination → `HackIOException`. Supprime le `.trashinfo`. |
-| `DeleteAsync(item)` | Supprime l'élément et son `.trashinfo` ; ni l'un ni l'autre → `HackFileNotFoundException`. |
-| `EmptyAsync()` | Supprime tout le contenu de `files/` et `info/` (les dossiers restent). |
-| `TrashDirectory` | Chemin canonique de la corbeille de l'utilisateur effectif. |
+| `MoveToTrashAsync(path)` | Missing path → `HackFileNotFoundException`. Returns the item created (`Name` = name in `files/`). |
+| `GetItemsAsync()` | Sorted by deletion date then by name; empty if the trash does not exist. |
+| `RestoreAsync(item, destination?)` | Destination, otherwise the `Path` read from the `.trashinfo` (then `item.OriginalPath`). Recreates missing parent folders. Destination occupied → `HackIOException` "already exists", nothing is overwritten. Unknown origin without a destination → `HackIOException`. Deletes the `.trashinfo`. |
+| `DeleteAsync(item)` | Deletes the item and its `.trashinfo`; neither of them → `HackFileNotFoundException`. |
+| `EmptyAsync()` | Deletes all the content of `files/` and `info/` (the folders remain). |
+| `TrashDirectory` | Canonical path of the effective user's trash. |
 
-`HackTrashItem(Name, OriginalPath, DeletedAt, IsDirectory, Length)` : `Name` est
-l'identifiant stable ; `Length` est la taille du fichier ou la somme des
-fichiers du dossier. Seul `Name` sert à retrouver l'élément.
+`HackTrashItem(Name, OriginalPath, DeletedAt, IsDirectory, Length)`: `Name` is
+the stable identifier; `Length` is the size of the file or the sum of the
+files in the folder. Only `Name` is used to find the item.
 
-Chaque mise à la corbeille, restauration et suppression définitive est écrite au
-niveau `Information` dans le journal de l'app (`/var/log/apps/<appId>.log`,
+Each move to the trash, restoration and permanent deletion is written at
+`Information` level in the app's log (`/var/log/apps/<appId>.log`,
 ADR 0045).
 
-`HackFile.DeleteAsync` et `HackDirectory.DeleteAsync` restent des suppressions
-définitives, comme `System.IO`.
-
+`HackFile.DeleteAsync` and `HackDirectory.DeleteAsync` remain permanent
+deletions, like `System.IO`.

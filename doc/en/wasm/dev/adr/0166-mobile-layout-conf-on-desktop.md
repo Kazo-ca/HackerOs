@@ -1,31 +1,31 @@
-# ADR 0166 : disposition mobile en fichier conf sous Desktop
+# ADR 0166: mobile layout as a conf file under Desktop
 
-## Statut
+## Status
 
-Accepté le 2026-10-23 à la demande de Benoit. Remplace le chemin et le format
-JSON de l'[ADR 0165](0165-mobile-home-drawer-and-mouse-controls.md) ; les autres
-décisions de cet ADR restent applicables.
+Accepted on 2026-10-23 at Benoit's request. Replaces the path and the JSON
+format of [ADR 0165](0165-mobile-home-drawer-and-mouse-controls.md); the other
+decisions of that ADR remain applicable.
 
-## Décision
+## Decision
 
-- La disposition est `~/Desktop/.mobile/layout.conf`, propre à chaque utilisateur.
-- Le fichier est du texte selon la grammaire des paramètres de l'OS : commentaires
-  `#`, clé `version=1`, section `[dock]` avec `apps=`, section `[pages]` avec des
-  clés numériques contiguës de `1` à N. Chaque valeur est une liste ordonnée
-  d'IDs séparés par des virgules ; une liste vide est permise. Ce format propre
-  à HackerOS s'inspire des fichiers de configuration Linux.
-- `ConfigDocumentFormat` lit la grammaire existante ; les limites et validations
-  de l'accueil restent identiques. Les écritures normalisent le texte.
-- `OsSettingsLocation.UserHome` ajoute une résolution relative au dossier personnel
-  à `OsSettingsFile`, avec les accès et permissions utilisateur existants.
-- Si la destination est absente, une ancienne disposition JSON valide est lue,
-  puis enregistrée en conf. Le fichier source reste intact. Une destination
-  existante, valide ou non, empêche la migration. Aucune nouvelle sauvegarde JSON.
-- Les noms commençant par un point sont filtrés sur le bureau. L'explorateur
-  permet toujours de les révéler avec sa commande des fichiers cachés.
+- The layout is `~/Desktop/.mobile/layout.conf`, specific to each user.
+- The file is text following the OS settings grammar: `#` comments,
+  key `version=1`, section `[dock]` with `apps=`, section `[pages]` with
+  contiguous numeric keys from `1` to N. Each value is an ordered list
+  of comma-separated IDs; an empty list is allowed. This HackerOS-specific
+  format is inspired by Linux configuration files.
+- `ConfigDocumentFormat` reads the existing grammar; the home screen's limits and
+  validations remain identical. Writes normalize the text.
+- `OsSettingsLocation.UserHome` adds a home-folder-relative resolution
+  to `OsSettingsFile`, with the existing user access and permissions.
+- If the destination is absent, a valid old JSON layout is read,
+  then saved as conf. The source file stays intact. An existing destination,
+  valid or not, prevents the migration. No new JSON save.
+- Names starting with a dot are filtered on the desktop. The explorer
+  still lets users reveal them with its hidden files command.
 
-## Vérification
+## Verification
 
-Tests de format, limites, ordre, migration unique et priorité du fichier conf
-dans `MobileHomeLayoutTests` ; persistance et visibilité dans `MobileHomeScreenTests`.
-Format et exemple : [mobile-home-screen.md](../mobile-home-screen.md).
+Tests of format, limits, order, one-time migration and priority of the conf file
+in `MobileHomeLayoutTests`; persistence and visibility in `MobileHomeScreenTests`.
+Format and example: [mobile-home-screen.md](../mobile-home-screen.md).

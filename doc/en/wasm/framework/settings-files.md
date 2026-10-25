@@ -1,124 +1,123 @@
-# Paramètres en fichiers
+# Settings as files
 
-L'accueil mobile utilise `~/Desktop/.mobile/layout.conf` (sections et clés texte,
-ADR 0166 ; migration en lecture de l'ancien JSON) pour les pages
-et le dock. Le document OS à couches `mobile.config` expose `mouseHelpers`
-(défaut `true`) à Paramètres par `HackSettings.OpenSystemAsync(AppContext, "mobile")`.
-Voir [mobile-home-screen.md](../dev/mobile-home-screen.md) et les ADR 0165/0166.
-`OsSettingsFile` peut désormais utiliser `OsSettingsLocation.UserHome` pour
-résoudre un chemin sous le dossier personnel de la session ; les accès restent
-ceux de cet utilisateur, comme pour `UserConfig` et `UserState`.
+Mobile home uses `~/Desktop/.mobile/layout.conf` (text sections and keys,
+ADR 0166; read migration from the old JSON) for pages
+and the dock. The layered OS document `mobile.config` exposes `mouseHelpers`
+(default `true`) to Settings through `HackSettings.OpenSystemAsync(AppContext, "mobile")`.
+See [mobile-home-screen.md](../dev/mobile-home-screen.md) and ADR 0165/0166.
+`OsSettingsFile` can now use `OsSettingsLocation.UserHome` to
+resolve a path under the session's home folder; access remains
+that of this user, as for `UserConfig` and `UserState`.
 
-Mise en œuvre de la section 5.2 du [plan de refonte](../dev/plans/ecosystem-rebuild-plan.md)
-selon l'[ADR 0044](../dev/adr/0044-settings-as-files.md). Ce document décrit le code
-livré ; l'ADR reste la référence des décisions.
+Implementation of section 5.2 of the [rebuild plan](../dev/plans/ecosystem-rebuild-plan.md)
+following [ADR 0044](../dev/adr/0044-settings-as-files.md). This document describes the code
+delivered; the ADR remains the reference for decisions.
 
-## Objectif
+## Goal
 
-Les paramètres des apps et de l'OS sont de vrais fichiers texte du système de
-fichiers simulé. L'app Paramètres, une app tierce et `nano /etc/...` lisent et
-modifient les mêmes fichiers, et seuls les droits du fichier décident qui peut
-écrire. Le magasin IndexedDB `settings` n'est plus utilisé que par la
-migration, en lecture seule.
+App and OS settings are real text files of the simulated file
+system. The Settings app, a third-party app and `nano /etc/...` read and
+modify the same files, and only the file's permissions decide who can
+write. The `settings` IndexedDB store is only used by the
+migration, read-only.
 
-## Emplacements
+## Locations
 
-| Contenu | Couche système | Couche utilisateur |
+| Content | System layer | User layer |
 | --- | --- | --- |
-| Réglages d'une app | `/etc/<appId>/<document>.config` | `~/.config/<appId>/<document>.config` |
-| Réglages de l'OS (apparence, interface, menu Démarrer) | `/etc/hackeros/<document>.config` | `~/.config/hackeros/<document>.config` |
-| Politique (`policy.config`) | `/etc/hackeros/policy.config` | aucune (document `SystemOnly`) |
-| Politique des capacités dangereuses (`security.config`, ADR 0049) | `/etc/hackeros/security.config` | aucune (document `SystemOnly`) |
-| OOM killer (`[oom-killer]` : `enabled=false`, `min-free-percent=5`, ADR 0126, voir [`oom-killer.md`](../dev/oom-killer.md)) | `/etc/hackeros/memory.config` | aucune (couche système seulement) |
-| Fournisseur du contrôle de fichiers et des dialogues de fichiers (`[providers]`, clé = contrat, valeur = app ; absent = explorateur ; ADR 0156 et 0158, voir [`embedded-components.md`](embedded-components.md)) | `/etc/hackeros/components.config` (lu ligne par ligne, sans schéma) | aucune |
-| Entrées que les apps ajoutent aux menus des fichiers (un JSON par app, écrit par l'OS au démarrage et à chaque changement d'installation ; ADR 0151, 0159) | `/etc/hackeros/context-menus.d/<appId>.json` | aucune |
-| Entrées des menus des fichiers masquées par l'utilisateur (`[hidden]`, `<appId>.<name>=true` ; Paramètres ▸ Menus des fichiers ; ADR 0159 §8) | `~/.config/hackeros/context-menus.config` (lu ligne par ligne à chaque ouverture d'un menu) | aucune |
-| Décisions sur les capacités dangereuses (ADR 0049) | `/etc/hackeros/app-permissions.config` (`allow`/`deny`) | `~/.config/hackeros/app-permissions.config` (`deny` seulement) |
-| Accessibilité (`highContrast`, `textScale`, `reducedMotion`, ADR 0105, voir [`accessibility.md`](../dev/accessibility.md)) | `/etc/hackeros/accessibility.config` (aussi lu par l'écran de connexion) | `~/.config/hackeros/accessibility.config` |
-| Associations de fichiers | `/etc/hackeros/file-associations.json` | `~/.config/hackeros/file-associations.json` (même schéma, lu avant le fichier de la machine, ADR 0121, [`user-file-associations.md`](../dev/user-file-associations.md)) |
-| Raccourcis du gestionnaire de fenêtres (`[linux]`, `[fallback]`, ADR 0095, voir [`window-model.md`](window-model.md)) | `/etc/hackeros/keybindings.config` | `~/.config/hackeros/keybindings.config` |
-| Boîte « ne répond pas » (`[unresponsive] dialog`, ADR 0127 §3, voir [`process-priority-and-unresponsive-windows.md`](../dev/process-priority-and-unresponsive-windows.md)) | `/etc/hackeros/window-manager.config` | `~/.config/hackeros/window-manager.config` |
-| Taille des fenêtres (`width`, `height`, `maximized`, ADR 0116 et 0122, voir [`window-geometry.md`](../dev/window-geometry.md)) | aucune | `~/.local/state/hackeros/windows/<appId>.config` |
-| Apps désinstallées (ADR 0048, voir [`app-installation.md`](../dev/app-installation.md)) | `/etc/hackeros/apps.config` | `~/.config/hackeros/apps.config` |
-| Partage du presse-papiers avec l'hôte (clé `sharing`, ADR 0065, voir [`clipboard.md`](../dev/clipboard.md)) | `/etc/hackeros/clipboard.config` | `~/.config/hackeros/clipboard.config` |
-| Synchro périodique (ADR 0101 §4, voir [`synchronization.md`](../dev/synchronization.md)) | `/etc/hackeros/sync.config` (`intervalMinutes`, lu seulement ici) | `~/.config/hackeros/sync.config` (`paused`) |
-| Conflits de synchro en attente (ADR 0101 §2) | aucune | `~/.local/state/hackeros/sync-conflicts.json` |
-| Bureau (`[view]` taille, réorganisation, tri, icônes système ; `[positions]` case de chaque icône ; lu et écrit par `HackDesktopSettings`, sans schéma ; ADR 0152, 0160, voir [`desktop.md`](../dev/desktop.md)) | aucune | `~/.config/hackeros/desktop.config` |
+| An app's settings | `/etc/<appId>/<document>.config` | `~/.config/<appId>/<document>.config` |
+| OS settings (appearance, interface, Start menu) | `/etc/hackeros/<document>.config` | `~/.config/hackeros/<document>.config` |
+| Policy (`policy.config`) | `/etc/hackeros/policy.config` | none (`SystemOnly` document) |
+| Dangerous capability policy (`security.config`, ADR 0049) | `/etc/hackeros/security.config` | none (`SystemOnly` document) |
+| OOM killer (`[oom-killer]`: `enabled=false`, `min-free-percent=5`, ADR 0126, see [`oom-killer.md`](../dev/oom-killer.md)) | `/etc/hackeros/memory.config` | none (system layer only) |
+| Provider of the file control and file dialogs (`[providers]`, key = contract, value = app; absent = explorer; ADR 0156 and 0158, see [`embedded-components.md`](embedded-components.md)) | `/etc/hackeros/components.config` (read line by line, no schema) | none |
+| Entries that apps add to file menus (one JSON per app, written by the OS at startup and on each install change; ADR 0151, 0159) | `/etc/hackeros/context-menus.d/<appId>.json` | none |
+| File menu entries hidden by the user (`[hidden]`, `<appId>.<name>=true`; Settings ▸ File menus; ADR 0159 §8) | `~/.config/hackeros/context-menus.config` (read line by line each time a menu opens) | none |
+| Dangerous capability decisions (ADR 0049) | `/etc/hackeros/app-permissions.config` (`allow`/`deny`) | `~/.config/hackeros/app-permissions.config` (`deny` only) |
+| Accessibility (`highContrast`, `textScale`, `reducedMotion`, ADR 0105, see [`accessibility.md`](../dev/accessibility.md)) | `/etc/hackeros/accessibility.config` (also read by the sign-in screen) | `~/.config/hackeros/accessibility.config` |
+| File associations | `/etc/hackeros/file-associations.json` | `~/.config/hackeros/file-associations.json` (same schema, read before the machine file, ADR 0121, [`user-file-associations.md`](../dev/user-file-associations.md)) |
+| Window manager shortcuts (`[linux]`, `[fallback]`, ADR 0095, see [`window-model.md`](window-model.md)) | `/etc/hackeros/keybindings.config` | `~/.config/hackeros/keybindings.config` |
+| "Not responding" box (`[unresponsive] dialog`, ADR 0127 §3, see [`process-priority-and-unresponsive-windows.md`](../dev/process-priority-and-unresponsive-windows.md)) | `/etc/hackeros/window-manager.config` | `~/.config/hackeros/window-manager.config` |
+| Window size (`width`, `height`, `maximized`, ADR 0116 and 0122, see [`window-geometry.md`](../dev/window-geometry.md)) | none | `~/.local/state/hackeros/windows/<appId>.config` |
+| Uninstalled apps (ADR 0048, see [`app-installation.md`](../dev/app-installation.md)) | `/etc/hackeros/apps.config` | `~/.config/hackeros/apps.config` |
+| Clipboard sharing with the host (key `sharing`, ADR 0065, see [`clipboard.md`](../dev/clipboard.md)) | `/etc/hackeros/clipboard.config` | `~/.config/hackeros/clipboard.config` |
+| Periodic sync (ADR 0101 §4, see [`synchronization.md`](../dev/synchronization.md)) | `/etc/hackeros/sync.config` (`intervalMinutes`, read only here) | `~/.config/hackeros/sync.config` (`paused`) |
+| Pending sync conflicts (ADR 0101 §2) | none | `~/.local/state/hackeros/sync-conflicts.json` |
+| Desktop (`[view]` size, rearrangement, sort, system icons; `[positions]` cell of each icon; read and written by `HackDesktopSettings`, no schema; ADR 0152, 0160, see [`desktop.md`](../dev/desktop.md)) | none | `~/.config/hackeros/desktop.config` |
 
-`~/.local/state/` contient l'état propre à l'appareil : la synchronisation du
-système de fichiers l'ignore (`IFileSystemSyncService.IsDeviceLocal`).
+`~/.local/state/` holds device-specific state: file system
+synchronization ignores it (`IFileSystemSyncService.IsDeviceLocal`).
 
-Au premier démarrage, `/etc/hackeros/` reçoit des fichiers par défaut
-commentés (mode `0644`, propriétaire `root`). Comme ces fichiers listent toutes
-les clés, l'origine affichée d'une valeur de l'OS est « système » et non
-« intégrée » tant que personne n'a rien changé.
+On first startup, `/etc/hackeros/` receives commented default files
+(mode `0644`, owner `root`). Since these files list all the
+keys, the displayed origin of an OS value is "system" and not
+"built-in" as long as nobody has changed anything.
 
-### Clés sensibles (ADR 0100)
+### Sensitive keys (ADR 0100)
 
-Un document qui déclare des clés non publiques (`SettingSensitivity` `Private`,
-`SecretReference` ou `Restricted`) range ces clés dans un fichier compagnon
-`<doc>.private.config` en mode `0600`, à côté de `<doc>.config`, dans chaque
-couche. Quand l'appelant ne peut pas lire le fichier privé, la clé est rendue
-« masquée » au lieu de faire échouer la lecture. Les secrets vont dans le
-trousseau de connexion. Les documents de l'OS n'acceptent que des clés
-publiques. Détails : [`sensitive-settings.md`](../dev/sensitive-settings.md).
+A document that declares non-public keys (`SettingSensitivity` `Private`,
+`SecretReference` or `Restricted`) puts these keys in a companion file
+`<doc>.private.config` in mode `0600`, next to `<doc>.config`, in each
+layer. When the caller cannot read the private file, the key is returned
+"masked" instead of making the read fail. Secrets go in the sign-in
+keyring. OS documents only accept public keys. Details: [`sensitive-settings.md`](../dev/sensitive-settings.md).
 
 ## Architecture
 
-| Couche | Type | Rôle |
+| Layer | Type | Role |
 | --- | --- | --- |
-| Simulation.Abstractions | `ConfigDocumentLines`, `ConfigDocumentEditor` | Lecture ligne par ligne du format `.config` (ADR 0011) et écriture qui ne touche qu'une ligne, en gardant commentaires, lignes vides et clés inconnues. |
-| Simulation.Abstractions | `LayeredConfigResolver`, `LayeredConfigSnapshot` | Fusion des couches, verrous, avertissements `settings: <chemin>:<ligne>: <message>`. |
-| Simulation.Abstractions | `SettingsTextFile`, `SettingsFilesWatcher` | Lecture, écriture (création des dossiers manquants) et surveillance des deux fichiers d'un document par une passerelle de fichiers. |
-| Simulation.Abstractions | `ILegacySettingsStore`, `LegacySettingsRecord` | Contrat de lecture de l'ancien magasin, pour la migration. |
-| AppSdk | `HackSettings`, `HackSettingsDocument` | API typée des apps. |
-| AppSdk.Blazor | `SettingOriginBadge` | Badge réutilisable « à vous », « défaut système », « intégré », « verrouillé par l'admin ». |
-| Platform.Core | `IOsSettingsService`, `OsSettingsService` | Documents de l'OS (`OsSettingsDocument`) et fichiers entiers (`OsSettingsFile`), pour la session courante. |
-| Platform.Core | `SettingsStoreToFilesMigration` | Migration unique depuis IndexedDB, puis fichiers par défaut. |
-| Infrastructure.Browser | `IndexedDbLegacySettingsStore` | Lecture `getAll` du magasin `settings`, sans changer la version du schéma. |
-| Platform.Blazor | `WindowGeometryPersistence`, `WindowGeometryRecorder` | Lit et écrit la taille et l'état agrandi des fenêtres (ADR 0116, ADR 0122) : écrite par le recorder sur les faits de `WindowRuntime`, relue par `WindowLaunchCoordinator` à l'ouverture. |
+| Simulation.Abstractions | `ConfigDocumentLines`, `ConfigDocumentEditor` | Line-by-line reading of the `.config` format (ADR 0011) and writing that only touches one line, keeping comments, empty lines and unknown keys. |
+| Simulation.Abstractions | `LayeredConfigResolver`, `LayeredConfigSnapshot` | Layer merging, locks, `settings: <path>:<line>: <message>` warnings. |
+| Simulation.Abstractions | `SettingsTextFile`, `SettingsFilesWatcher` | Reading, writing (creating missing folders) and watching the two files of a document through a file gateway. |
+| Simulation.Abstractions | `ILegacySettingsStore`, `LegacySettingsRecord` | Contract for reading the old store, for the migration. |
+| AppSdk | `HackSettings`, `HackSettingsDocument` | Typed API for apps. |
+| AppSdk.Blazor | `SettingOriginBadge` | Reusable badge "yours", "system default", "built-in", "locked by admin". |
+| Platform.Core | `IOsSettingsService`, `OsSettingsService` | OS documents (`OsSettingsDocument`) and whole files (`OsSettingsFile`), for the current session. |
+| Platform.Core | `SettingsStoreToFilesMigration` | One-time migration from IndexedDB, then default files. |
+| Infrastructure.Browser | `IndexedDbLegacySettingsStore` | `getAll` read of the `settings` store, without changing the schema version. |
+| Platform.Blazor | `WindowGeometryPersistence`, `WindowGeometryRecorder` | Reads and writes window size and maximized state (ADR 0116, ADR 0122): written by the recorder on `WindowRuntime` facts, reread by `WindowLaunchCoordinator` on opening. |
 
-### Ordre des couches
+### Layer order
 
-Pour chaque clé déclarée :
+For each declared key:
 
-1. clé verrouillée dans la section `[locked]` du fichier système : valeur
-   système, sinon valeur par défaut ;
-2. sinon valeur utilisateur valide ;
-3. sinon valeur système valide ;
-4. sinon valeur par défaut du schéma.
+1. key locked in the `[locked]` section of the system file: system value,
+   otherwise default value;
+2. otherwise valid user value;
+3. otherwise valid system value;
+4. otherwise the schema's default value.
 
-`[locked]` n'est lu que dans le fichier système ; dans un fichier utilisateur
-la section est ignorée avec un avertissement. `locked` est donc un nom de
-groupe réservé, refusé par le schéma et le validateur de manifeste.
+`[locked]` is only read in the system file; in a user file
+the section is ignored with a warning. `locked` is therefore a reserved group
+name, refused by the schema and the manifest validator.
 
-### Analyse tolérante
+### Tolerant parsing
 
-Une ligne mal formée, une clé inconnue ou une valeur invalide est ignorée ; la
-couche suivante s'applique. Chaque problème donne un avertissement envoyé à
-`IAppLoggingGateway` (pour une app) ou à `ILogger` (pour l'OS), une seule fois
-par révision de fichier. L'écriture dans `/var/log` relève du chantier des
-journaux (ADR 0045).
+A malformed line, an unknown key or an invalid value is ignored; the
+next layer applies. Each problem gives a warning sent to
+`IAppLoggingGateway` (for an app) or to `ILogger` (for the OS), only once
+per file revision. Writing to `/var/log` belongs to the logs work item
+(ADR 0045).
 
-### Droits
+### Permissions
 
-| Opération | Capacité de l'app | Droits du fichier |
+| Operation | App capability | File permissions |
 | --- | --- | --- |
-| Lire `~/.config/<appId>/` | `filesystem.private.read` | ceux de l'utilisateur |
-| Écrire `~/.config/<appId>/` | `filesystem.private.write` | ceux de l'utilisateur |
-| Lire `/etc/<appId>/` | `filesystem.private.read` | `0644` : lisible par tous |
-| Écrire `/etc/...` | `filesystem.system.write` | autorité Administrateur, bits de mode, ticket d'approbation de l'ADR 0042 consommé à chaque appel |
+| Read `~/.config/<appId>/` | `filesystem.private.read` | those of the user |
+| Write `~/.config/<appId>/` | `filesystem.private.write` | those of the user |
+| Read `/etc/<appId>/` | `filesystem.private.read` | `0644`: readable by all |
+| Write `/etc/...` | `filesystem.system.write` | Administrator authority, mode bits, ADR 0042 approval ticket consumed on each call |
 
-Une autre app n'a aucun accès au dossier privé `~/.config/<appId>/` d'une app.
+Another app has no access to an app's private folder `~/.config/<appId>/`.
 
-## Utilisation
+## Usage
 
-### Dans une app
+### In an app
 
-Le schéma vient de `AppManifest.Settings` (clés, types, valeurs par défaut,
-groupes). Chaque méthode existe avec le contexte de l'app en paramètre, et sans
-lui : elle utilise alors le contexte ambiant de l'ADR 0043
-(`HackExecutionContext.Current`), comme l'API de fichiers `Hack*`.
+The schema comes from `AppManifest.Settings` (keys, types, default values,
+groups). Each method exists with the app's context as a parameter, and without
+it: it then uses the ambient context of ADR 0043
+(`HackExecutionContext.Current`), like the `Hack*` file API.
 
 ```csharp
 await using HackSettingsDocument settings = await HackSettings.OpenAsync(AppContext);
@@ -133,18 +132,18 @@ int size = await HackSettings.GetAsync<int>(AppContext, "Editor.tab-size"); // l
 int same = await HackSettings.GetAsync<int>("Editor.tab-size");             // contexte ambiant
 ```
 
-- Une clé non déclarée ou un type incompatible lève `ArgumentException`.
-- Écrire une clé verrouillée lève `HackSettingLockedException` (avec le chemin
-  du fichier système).
-- Une erreur de fichier est traduite en `UnauthorizedAccessException`,
-  `FileNotFoundException` ou `IOException`.
-- `SetAsync(key, value, SettingLayer.System)` écrit `/etc/<appId>/` si l'app a
-  la capacité et l'utilisateur les droits du fichier.
+- An undeclared key or an incompatible type throws `ArgumentException`.
+- Writing a locked key throws `HackSettingLockedException` (with the path
+  of the system file).
+- A file error is translated into `UnauthorizedAccessException`,
+  `FileNotFoundException` or `IOException`.
+- `SetAsync(key, value, SettingLayer.System)` writes `/etc/<appId>/` if the app has
+  the capability and the user has the file's permissions.
 
-Plusieurs clés d'une même couche s'écrivent en une seule édition du fichier
-avec `SetManyAsync(values, layer)` (une seule approbation pour `/etc`).
+Several keys of the same layer are written in a single file edit
+with `SetManyAsync(values, layer)` (a single approval for `/etc`).
 
-#### Documents de l'OS (`HackSettings.OpenSystemAsync`, ADR 0056 §8)
+#### OS documents (`HackSettings.OpenSystemAsync`, ADR 0056 §8)
 
 ```csharp
 await using HackSettingsDocument appearance = await HackSettings.OpenSystemAsync(AppContext, "appearance");
@@ -153,123 +152,123 @@ await appearance.SetAsync("accent", "cyan");                       // ~/.config/
 await appearance.SetManyAsync(values, SettingLayer.System);        // /etc/hackeros : sudo ou approbation
 ```
 
-- Documents ouverts : `appearance`, `accessibility` (ADR 0105), `ui-platform-preference`, `security`,
-  `policy`, `clipboard` (ADR 0065) (`OsSettingsDocumentRegistry`, Platform Core). Un autre id lève
+- Documents opened: `appearance`, `accessibility` (ADR 0105), `ui-platform-preference`, `security`,
+  `policy`, `clipboard` (ADR 0065) (`OsSettingsDocumentRegistry`, Platform Core). Any other id throws
   `ArgumentException`.
-- Dans `appearance`, `desktopThemeId` et `mobileThemeId` sont des chaînes
-  libres depuis `v3/11` (ADR 0103) : l'id d'un thème intégré ou d'un fichier
-  `.theme` de `/etc/hackeros/themes/` ou `~/.config/hackeros/themes/` ; un id
-  inconnu donne le thème par défaut (voir [`theme-editor.md`](../dev/theme-editor.md)).
-- Aucune capacité : les droits des fichiers décident (D16). La couche
-  utilisateur est écrite par l'OS au nom de l'utilisateur de la session ; la
-  couche système avec les droits de fichiers de l'app appelante, donc `sudo`
-  ou l'approbation de l'ADR 0042.
-- `Changed` suit `DocumentChanged` de `IOsSettingsService`, dans le contexte
-  ambiant de l'app.
+- In `appearance`, `desktopThemeId` and `mobileThemeId` are free strings
+  since `v3/11` (ADR 0103): the id of a built-in theme or of a `.theme`
+  file in `/etc/hackeros/themes/` or `~/.config/hackeros/themes/`; an unknown
+  id gives the default theme (see [`theme-editor.md`](../dev/theme-editor.md)).
+- No capability: file permissions decide (D16). The user layer
+  is written by the OS on behalf of the session's user; the system
+  layer with the file permissions of the calling app, hence `sudo`
+  or the approval of ADR 0042.
+- `Changed` follows `DocumentChanged` of `IOsSettingsService`, in the app's
+  ambient context.
 
-`IAppExecutionContext.Settings` (l'ancienne passerelle `IAppSettingsGateway`)
-est retiré ; `IAppExecutionContext.HomeDirectory` donne le dossier personnel.
+`IAppExecutionContext.Settings` (the old `IAppSettingsGateway` gateway)
+is removed; `IAppExecutionContext.HomeDirectory` gives the home folder.
 
-### Dans l'OS
+### In the OS
 
-`IOsSettingsService` lit un `OsSettingsDocument` (`ReadAsync` donne un
-`LayeredConfigSnapshot`), écrit une ou plusieurs clés en une seule édition
-(`SetAsync`, `SetManyAsync`), retire une clé (`ResetAsync`), lit et écrit des
-fichiers entiers (`ReadFileAsync`, `ReadValidatedFileAsync`, `WriteFileAsync`)
-et publie `DocumentChanged`. Une écriture système passe le `writer` de l'app
-appelante, pour que ses droits s'appliquent. Les documents de l'OS sont
-déclarés dans `AppearanceSettingsDocuments`, `UiPlatformPreferenceSettingsDocuments`,
-`StartMenuSettingsDocuments`, `PolicySettingsDocuments` et
+`IOsSettingsService` reads an `OsSettingsDocument` (`ReadAsync` gives a
+`LayeredConfigSnapshot`), writes one or several keys in a single edit
+(`SetAsync`, `SetManyAsync`), removes a key (`ResetAsync`), reads and writes whole
+files (`ReadFileAsync`, `ReadValidatedFileAsync`, `WriteFileAsync`)
+and publishes `DocumentChanged`. A system write passes the calling app's `writer`,
+so that its permissions apply. OS documents are
+declared in `AppearanceSettingsDocuments`, `UiPlatformPreferenceSettingsDocuments`,
+`StartMenuSettingsDocuments`, `PolicySettingsDocuments` and
 `FileAssociationSettingsDocuments`.
 
-### App Paramètres
+### Settings app
 
-L'app propose deux cibles : « Moi seulement » (couche utilisateur) et « Tous
-les utilisateurs (défaut système) ». Chaque réglage affiche son origine ; un
-réglage verrouillé est désactivé pour la cible utilisateur. Écrire la couche
-système demande l'approbation administrateur ; un refus affiche un message au
-lieu d'une erreur. L'apparence passe par `HackSettings.OpenSystemAsync`
-(chantier `4-sdk-system-admin`). « Synchroniser » pousse et tire le système de
-fichiers, tire les permissions, pousse et tire les associations, puis relit
-l'apparence. L'onglet « Synchronization » (ADR 0101) montre l'état de la
-synchro périodique, la suspend pour l'utilisateur (`paused` dans
-`~/.config/hackeros/sync.config`), lance un passage et liste les conflits en
-attente avec un bouton qui ouvre le dialogue de conflit. L'onglet « Installed Apps » écrit les fichiers `apps.config`
-(voir [`app-installation.md`](../dev/app-installation.md)).
+The app offers two targets: "Only me" (user layer) and "All
+users (system default)". Each setting displays its origin; a locked
+setting is disabled for the user target. Writing the system layer
+requires administrator approval; a refusal displays a message instead of an
+error. Appearance goes through `HackSettings.OpenSystemAsync`
+(work item `4-sdk-system-admin`). "Synchronize" pushes and pulls the file
+system, pulls permissions, pushes and pulls associations, then rereads
+appearance. The "Synchronization" tab (ADR 0101) shows the state of
+periodic sync, suspends it for the user (`paused` in
+`~/.config/hackeros/sync.config`), launches a run and lists pending
+conflicts with a button that opens the conflict dialog. The "Installed Apps" tab writes the `apps.config` files
+(see [`app-installation.md`](../dev/app-installation.md)).
 
-L'onglet « Langue » (ADR 0104, `LanguagePanel`) n'utilise pas `HackSettings` :
-la locale est un fichier systemd. Il montre la langue, `LANG`, les
-surcharges `LC_MESSAGES`/`LC_ALL` et un exemple de formats de la session (lus
-dans l'environnement du processus Paramètres), puis propose « Suivre la langue
-du système » ou une des `HackLocale.AvailableLocales`. Choisir une locale écrit
-`LANG=<locale>` dans `~/.config/locale.conf` (`HackLocale.FormatLocaleConf`,
-`~/.config` créé au besoin) ; « Suivre la langue du système » retire `LANG` et
-supprime le fichier s'il ne contient rien d'autre (un `LC_TIME` est gardé).
-Le changement s'applique à la prochaine connexion, ce que le panneau affiche.
-`/etc/locale.conf` est montré en lecture seule avec l'indication
-`sudo localectl set-locale`. L'app déclare pour cela
-`filesystem.user-home.read` et `filesystem.user-home.write`. Il n'y a pas de
-bouton « Se déconnecter » : le SDK n'expose pas la déconnexion aux apps.
-Tests : `Tests/HackerOs.Apps.Settings.Tests/LanguagePanelTests.cs`.
+The "Language" tab (ADR 0104, `LanguagePanel`) does not use `HackSettings`:
+the locale is a systemd file. It shows the language, `LANG`, the
+`LC_MESSAGES`/`LC_ALL` overrides and an example of the session's formats (read
+from the Settings process environment), then offers "Follow the system
+language" or one of the `HackLocale.AvailableLocales`. Choosing a locale writes
+`LANG=<locale>` in `~/.config/locale.conf` (`HackLocale.FormatLocaleConf`,
+`~/.config` created if needed); "Follow the system language" removes `LANG` and
+deletes the file if it contains nothing else (a `LC_TIME` is kept).
+The change applies at the next sign-in, which the panel displays.
+`/etc/locale.conf` is shown read-only with the
+`sudo localectl set-locale` hint. The app declares for this
+`filesystem.user-home.read` and `filesystem.user-home.write`. There is no
+"Sign out" button: the SDK does not expose sign-out to apps.
+Tests: `Tests/HackerOs.Apps.Settings.Tests/LanguagePanelTests.cs`.
 
 ## Migration
 
-`SettingsStoreToFilesMigration` lit l'ancien magasin une seule fois :
+`SettingsStoreToFilesMigration` reads the old store only once:
 
-- au démarrage, les documents de l'OS (`OsAdmin`) deviennent des fichiers de
-  `/etc/hackeros/`. Un document invalide est remplacé par la valeur par
-  défaut. Le marqueur `/var/lib/hackeros/migrations/settings-to-files` empêche
-  une seconde copie, donc les modifications de l'administrateur survivent aux
-  redémarrages ;
-- à la connexion, seules les valeurs de l'utilisateur connecté sont copiées :
-  réglages d'app vers `~/.config/<appId>/`, épingles du menu Démarrer vers
-  `~/.config/hackeros/start-menu.json`, géométrie vers `~/.local/state/`. Les
-  anciens dossiers `~/.config/apps/<appId>` sont déplacés vers
-  `~/.config/<appId>`. Le marqueur
-  `~/.local/state/hackeros/migrations/settings-to-files` évite d'écraser ce
-  que l'utilisateur a changé depuis.
+- at startup, the OS documents (`OsAdmin`) become files in
+  `/etc/hackeros/`. An invalid document is replaced by the default
+  value. The marker `/var/lib/hackeros/migrations/settings-to-files` prevents
+  a second copy, so the administrator's changes survive
+  restarts;
+- at sign-in, only the signed-in user's values are copied:
+  app settings to `~/.config/<appId>/`, Start menu pins to
+  `~/.config/hackeros/start-menu.json`, geometry to `~/.local/state/`. The
+  old `~/.config/apps/<appId>` folders are moved to
+  `~/.config/<appId>`. The marker
+  `~/.local/state/hackeros/migrations/settings-to-files` avoids overwriting what
+  the user has changed since.
 
-Une erreur de lecture du magasin est journalisée et n'empêche ni le démarrage
-ni la connexion. Le schéma IndexedDB ne change pas.
+A store read error is logged and prevents neither startup
+nor sign-in. The IndexedDB schema does not change.
 
-## Décisions de mise en œuvre
+## Implementation decisions
 
-- Une écriture de plusieurs clés (`SetManyAsync`) se fait en une seule édition
-  du fichier, pour qu'un observateur ne voie jamais un état à moitié écrit.
-- Une app peut créer `~/.config/<appId>/` sans droit de lecture sur
-  `~/.config` : si l'inspection d'un dossier parent est refusée, on le suppose
-  existant et c'est la création du dossier final qui décide.
-- La synchronisation des paramètres (`ISettingsSyncService`) disparaît : les
-  fichiers sont synchronisés avec le reste du système de fichiers (l'ADR 0044
-  remplace l'ADR 0029).
-- Coût d'une écriture : les réglages passent par le système de fichiers comme
-  tout fichier. Depuis l'ADR 0090, chaque chemin est recherché en une requête à
-  IndexedDB ; enregistrer le choix Mobile/Desktop coûte 51 transactions
-  (235 ms) au lieu de 604 (845 ms). Voir
+- A multi-key write (`SetManyAsync`) is done in a single file
+  edit, so that an observer never sees a half-written state.
+- An app can create `~/.config/<appId>/` without read permission on
+  `~/.config`: if inspection of a parent folder is refused, it is assumed to
+  exist and the creation of the final folder decides.
+- Settings synchronization (`ISettingsSyncService`) disappears: the
+  files are synchronized with the rest of the file system (ADR 0044
+  replaces ADR 0029).
+- Cost of a write: settings go through the file system like
+  any file. Since ADR 0090, each path is looked up in one request to
+  IndexedDB; saving the Mobile/Desktop choice costs 51 transactions
+  (235 ms) instead of 604 (845 ms). See
   [`filesystem-path-lookup.md`](../dev/filesystem-path-lookup.md).
 
-## Tests de contrat
+## Contract tests
 
-Dans `Tests/HackerOs.Platform.Core.Tests/Settings/` :
+In `Tests/HackerOs.Platform.Core.Tests/Settings/`:
 
-- `LayeredConfigResolverTests` : couches, verrous, analyse tolérante, texte
-  des avertissements, groupe réservé ;
-- `ConfigDocumentEditorTests` : écriture qui préserve le texte humain ;
-- `HackSettingsTests` : API du SDK sur le vrai système de fichiers, propriétaire
-  et mode, verrou, réinitialisation, avertissements, droits sur `/etc`,
-  isolement entre apps, notification de changement ;
-- `SettingsStoreToFilesMigrationTests` : fichiers par défaut, copie unique,
-  copie par utilisateur, magasin illisible.
-- `SensitiveSettingsTests` : fichiers privés, masquage, clés mal placées,
-  `Restricted`, secrets dans le trousseau (ADR 0100).
+- `LayeredConfigResolverTests`: layers, locks, tolerant parsing, warning
+  text, reserved group;
+- `ConfigDocumentEditorTests`: writing that preserves human text;
+- `HackSettingsTests`: SDK API on the real file system, owner
+  and mode, lock, reset, warnings, permissions on `/etc`,
+  isolation between apps, change notification;
+- `SettingsStoreToFilesMigrationTests`: default files, one-time copy,
+  per-user copy, unreadable store.
+- `SensitiveSettingsTests`: private files, masking, misplaced keys,
+  `Restricted`, secrets in the keyring (ADR 0100).
 
-## Liste des tâches
+## Task list
 
-- [x] Moteur de couches, verrous et analyse tolérante
-- [x] API typée `HackSettings` dans le SDK
-- [x] Service `IOsSettingsService` et documents de l'OS en fichiers
-- [x] Géométrie des fenêtres dans `~/.local/state`, exclue de la synchronisation
-- [x] Migration depuis le magasin IndexedDB
-- [x] App Paramètres : cible de couche, origine et verrou par réglage
-- [x] Retrait de `IAppSettingsGateway`, de la projection et de la synchronisation des paramètres
-- [x] Tests de contrat
+- [x] Layer engine, locks and tolerant parsing
+- [x] Typed `HackSettings` API in the SDK
+- [x] `IOsSettingsService` service and OS documents as files
+- [x] Window geometry in `~/.local/state`, excluded from synchronization
+- [x] Migration from the IndexedDB store
+- [x] Settings app: layer target, origin and lock per setting
+- [x] Removal of `IAppSettingsGateway`, of the projection and of settings synchronization
+- [x] Contract tests

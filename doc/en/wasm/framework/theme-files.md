@@ -1,10 +1,10 @@
-# Fichiers de thème `.theme`
+# `.theme` theme files
 
-Ce document décrit le format du fichier `.theme`, la liste des jetons et l'API de lecture des thèmes pour les auteurs de thèmes et les outils. L'éditeur de thèmes, la résolution d'un identifiant de thème et la mise en œuvre sont dans [`../dev/theme-editor.md`](../dev/theme-editor.md).
+This document describes the `.theme` file format, the token list and the theme-reading API for theme authors and tools. The theme editor, the resolution of a theme identifier and the implementation are in [`../dev/theme-editor.md`](../dev/theme-editor.md).
 
-## Fichier `.theme`
+## `.theme` file
 
-Format des réglages (ADR 0044), deux sections :
+Settings format (ADR 0044), two sections:
 
 ```ini
 # HackerOS theme (ADR 0103).
@@ -20,87 +20,87 @@ platforms = desktop, mobile
 --hos-font-mono = "JetBrains Mono", monospace
 ```
 
-- `id` : 1 à 64 minuscules, chiffres et tirets ; c'est aussi le nom du fichier
-  et la valeur écrite dans `appearance.config`.
-- `name` : 1 à 80 caractères. `base` : un thème du catalogue (`ThemeCatalog`).
-- `platforms` : `desktop`, `mobile` ou les deux ; absent, celui du thème de base.
-- Taille maximale : 64 Kio.
-- **Lecture tolérante** (ADR 0044 §5) : un jeton inconnu, une valeur invalide ou
-  une ligne mal formée est ignoré avec un avertissement, le reste s'applique.
-  Seule une identité invalide (`id`, `name`, `base`) refuse le thème entier.
-- Média `text/x-hackeros-theme` : l'explorateur ouvre un `.theme` dans
-  l'éditeur de thèmes.
+- `id`: 1 to 64 lowercase letters, digits and hyphens; it is also the file name
+  and the value written in `appearance.config`.
+- `name`: 1 to 80 characters. `base`: a theme from the catalog (`ThemeCatalog`).
+- `platforms`: `desktop`, `mobile` or both; when absent, that of the base theme.
+- Maximum size: 64 KiB.
+- **Tolerant reading** (ADR 0044 §5): an unknown token, an invalid value or
+  a malformed line is ignored with a warning, the rest applies.
+  Only an invalid identity (`id`, `name`, `base`) rejects the whole theme.
+- Media type `text/x-hackeros-theme`: the explorer opens a `.theme` in
+  the theme editor.
 
-### Emplacements
+### Locations
 
-| Dossier | Lu comme | Pour |
+| Folder | Read as | For |
 |---|---|---|
-| `/etc/hackeros/themes/` | le système | l'administrateur, pour toute la machine |
-| `~/.config/hackeros/themes/` | l'utilisateur de la session (les bits de mode décident) | l'utilisateur |
+| `/etc/hackeros/themes/` | the system | the administrator, for the whole machine |
+| `~/.config/hackeros/themes/` | the session user (the mode bits decide) | the user |
 
-Pas de masquage : un fichier dont l'`id` reprend un thème intégré, ou un `id`
-déjà pris par un autre fichier (celui de `/etc` gagne), est refusé avec une
-erreur dans le journal.
+No masking: a file whose `id` reuses a built-in theme, or an `id`
+already taken by another file (the one in `/etc` wins), is refused with an
+error in the log.
 
-## Jetons
+## Tokens
 
-`ThemeTokenCatalog` (`HackerOs.Theming.Abstractions`) liste les 68 jetons
-modifiables, chacun avec un type, un groupe, un libellé, une description et un
-exemple. L'onglet **Documentation** de l'éditeur est généré depuis cette liste.
+`ThemeTokenCatalog` (`HackerOs.Theming.Abstractions`) lists the 68 editable
+tokens, each with a type, a group, a label, a description and an
+example. The **Documentation** tab of the editor is generated from this list.
 
-| Type | Valeurs acceptées (`ThemeTokenValidator`) |
+| Type | Accepted values (`ThemeTokenValidator`) |
 |---|---|
-| Couleur | `#rgb`, `#rgba`, `#rrggbb`, `#rrggbbaa`, `rgb()`/`rgba()`/`hsl()`/`hsla()` à nombres et pourcentages seulement, nom de couleur CSS |
-| Longueur | nombre (éventuellement négatif) avec `px`, `rem`, `em`, `%`, `vh`, `vw`, ou `0` |
-| Durée | `150ms`, `0.2s`, suivi au choix de `ease`, `linear`, `ease-in`, `ease-out`, `ease-in-out` |
-| Famille de polices | noms séparés par des virgules (entre guillemets ou non) |
-| Nombre | entier ou décimal |
+| Color | `#rgb`, `#rgba`, `#rrggbb`, `#rrggbbaa`, `rgb()`/`rgba()`/`hsl()`/`hsla()` with numbers and percentages only, CSS color name |
+| Length | number (possibly negative) with `px`, `rem`, `em`, `%`, `vh`, `vw`, or `0` |
+| Duration | `150ms`, `0.2s`, optionally followed by one of `ease`, `linear`, `ease-in`, `ease-out`, `ease-in-out` |
+| Font family | names separated by commas (quoted or not) |
+| Number | integer or decimal |
 
-Tout le reste est refusé, en particulier `url(`, `var(`, `calc(`,
-`expression(`, `;`, `{`, `}` : un thème ne contient que des données (ADR 0103
-§2.4). Une valeur fait au plus 200 caractères.
+Everything else is refused, in particular `url(`, `var(`, `calc(`,
+`expression(`, `;`, `{`, `}`: a theme contains only data (ADR 0103
+§2.4). A value is at most 200 characters long.
 
-| Groupe | Jetons |
+| Group | Tokens |
 |---|---|
-| Couleurs | `--hos-bg-base`, `-surface`, `-elevated`, `-overlay` ; `--hos-text-primary`, `-secondary`, `-muted`, `-inverse` ; `--hos-border-subtle`, `--hos-border`, `--hos-border-strong`, `--hos-focus-ring` ; `--hos-accent`, `-hover`, `-subtle`, `-glow` ; `--hos-success`, `--hos-warning`, `--hos-error`, `--hos-info` ; `--hos-desktop-background`, `--hos-desktop-grid-opacity` |
-| Typographie | `--hos-font-ui`, `--hos-font-mono`, `--hos-titlebar-font-size`, `--hos-titlebar-font-weight`, `--hos-taskbar-font-size`, `--hos-btn-font-weight` |
-| Espacements | `--hos-radius-sm`, `-md`, `-lg`, `--hos-btn-radius`, `--hos-input-radius`, `--hos-control-height` |
-| Fenêtres | `--hos-window-background`, `-content-background`, `-text`, `-focused-border`, `-radius` ; `--hos-titlebar-height`, `-background`, `-focused-background`, `-text`, `-focused-text` ; `--hos-window-control-size`, `-radius`, `-background`, `-hover-background`, `-color` ; `--hos-window-close-background`, `-hover-background`, `-color` |
-| Barre des tâches | `--hos-taskbar-height`, `-gap`, `-background`, `-button-background`, `-button-hover-background`, `-button-active-background`, `-button-color`, `-button-active-color`, `-button-radius`, `-active-indicator`, `-launcher-background`, `-launcher-color` ; `--hos-launcher-background`, `--hos-launcher-sidebar-background` |
-| Animations | `--hos-transition-fast`, `--hos-transition-normal` (ignorés quand les animations sont coupées) |
+| Colors | `--hos-bg-base`, `-surface`, `-elevated`, `-overlay`; `--hos-text-primary`, `-secondary`, `-muted`, `-inverse`; `--hos-border-subtle`, `--hos-border`, `--hos-border-strong`, `--hos-focus-ring`; `--hos-accent`, `-hover`, `-subtle`, `-glow`; `--hos-success`, `--hos-warning`, `--hos-error`, `--hos-info`; `--hos-desktop-background`, `--hos-desktop-grid-opacity` |
+| Typography | `--hos-font-ui`, `--hos-font-mono`, `--hos-titlebar-font-size`, `--hos-titlebar-font-weight`, `--hos-taskbar-font-size`, `--hos-btn-font-weight` |
+| Spacing | `--hos-radius-sm`, `-md`, `-lg`, `--hos-btn-radius`, `--hos-input-radius`, `--hos-control-height` |
+| Windows | `--hos-window-background`, `-content-background`, `-text`, `-focused-border`, `-radius`; `--hos-titlebar-height`, `-background`, `-focused-background`, `-text`, `-focused-text`; `--hos-window-control-size`, `-radius`, `-background`, `-hover-background`, `-color`; `--hos-window-close-background`, `-hover-background`, `-color` |
+| Taskbar | `--hos-taskbar-height`, `-gap`, `-background`, `-button-background`, `-button-hover-background`, `-button-active-background`, `-button-color`, `-button-active-color`, `-button-radius`, `-active-indicator`, `-launcher-background`, `-launcher-color`; `--hos-launcher-background`, `--hos-launcher-sidebar-background` |
+| Animations | `--hos-transition-fast`, `--hos-transition-normal` (ignored when animations are turned off) |
 
-Les couleurs `accent`, `text-primary`, `text-secondary`, `text-muted`,
-`border`, `success`, `warning`, `error` et `info` reçoivent aussi leur
-compagnon `--hos-…-rgb` (« r, g, b ») calculé, utilisé par les styles qui
-écrivent `rgba(var(--hos-accent-rgb), .2)`.
+The colors `accent`, `text-primary`, `text-secondary`, `text-muted`,
+`border`, `success`, `warning`, `error` and `info` also receive their
+computed `--hos-…-rgb` companion ("r, g, b"), used by styles that
+write `rgba(var(--hos-accent-rgb), .2)`.
 
-## API de lecture
+## Reading API
 
-- `ThemeFile.Parse(texte, origine, chemin)` lit un fichier `.theme` de façon tolérante et rend `ThemeFileParseResult` (thème et diagnostics) ; `ThemeFile.Serialize(UserTheme)` l'écrit.
-- `ThemeFile.IsValidId`, `ThemeFile.Extension` (`.theme`), `ThemeFile.MediaType` (`text/x-hackeros-theme`), `ThemeFile.MaxFileBytes` (64 Kio).
-- `ThemeTokenCatalog` liste les jetons ; `ThemeTokenValidator.TryValidate(type, valeur, culture, out normalisée, out erreur)` vérifie une valeur.
-- `UserThemeLibrary.LoadAsync` lit les dossiers de thèmes par délégués.
+- `ThemeFile.Parse(text, origin, path)` reads a `.theme` file tolerantly and returns `ThemeFileParseResult` (theme and diagnostics); `ThemeFile.Serialize(UserTheme)` writes it.
+- `ThemeFile.IsValidId`, `ThemeFile.Extension` (`.theme`), `ThemeFile.MediaType` (`text/x-hackeros-theme`), `ThemeFile.MaxFileBytes` (64 KiB).
+- `ThemeTokenCatalog` lists the tokens; `ThemeTokenValidator.TryValidate(type, value, culture, out normalized, out error)` checks a value.
+- `UserThemeLibrary.LoadAsync` reads the theme folders through delegates.
 
-## Messages localisés du paquet Theming.Abstractions
+## Localized messages of the Theming.Abstractions package
 
-`HackerOs.Theming.Abstractions` a ses propres `Resources/Strings.resx` /
-`Strings.fr.resx`, lus par un simple `ResourceManager` (le paquet reste sans
-dépendance HackerOS) avec la culture que l'appelant passe : une app donne
-`AppContext.Culture` (l'éditeur la tire de son localiseur, `Strings.CultureOf(L)`),
-la plateforme `SessionLocaleService.Culture`, et `null` donne l'anglais.
-Les propriétés `Label`, `Description` et `Message` restent en anglais ; les
-traductions passent par :
+`HackerOs.Theming.Abstractions` has its own `Resources/Strings.resx` /
+`Strings.fr.resx`, read by a plain `ResourceManager` (the package stays free of
+HackerOS dependencies) with the culture the caller passes: an app gives
+`AppContext.Culture` (the editor takes it from its localizer, `Strings.CultureOf(L)`),
+the platform `SessionLocaleService.Culture`, and `null` gives English.
+The `Label`, `Description` and `Message` properties stay in English; the
+translations go through:
 
-- `ThemeTokenDefinition.GetLabel(culture)` / `GetDescription(culture)` (clé
-  `Token.BgBase.Label` pour `--hos-bg-base`) ;
-- `ThemeTokenValidator.TryValidate(type, valeur, culture, out normalisée, out erreur)` ;
-- `ThemeFileDiagnostic.GetMessage(culture)` et `ToString(culture)`
-  (`chemin:ligne: avertissement: …`). Un diagnostic produit par `ThemeFile` ou
-  `UserThemeLibrary` garde sa clé et ses arguments, il se lit donc dans la
-  langue de celui qui l'affiche. `ToString()` reste en anglais : c'est la
-  forme écrite dans les journaux par `UserThemeCatalogService`.
+- `ThemeTokenDefinition.GetLabel(culture)` / `GetDescription(culture)` (key
+  `Token.BgBase.Label` for `--hos-bg-base`);
+- `ThemeTokenValidator.TryValidate(type, value, culture, out normalized, out error)`;
+- `ThemeFileDiagnostic.GetMessage(culture)` and `ToString(culture)`
+  (`path:line: warning: …`). A diagnostic produced by `ThemeFile` or
+  `UserThemeLibrary` keeps its key and its arguments, so it reads in the
+  language of whoever displays it. `ToString()` stays in English: it is the
+  form written to the logs by `UserThemeCatalogService`.
 
-Ne sont jamais traduits : les noms des thèmes intégrés (`ThemeCatalog`,
-des noms propres : HackerOS, Windows 98, macOS…), les noms de jetons, les ids
-et le contenu d'un fichier `.theme` (clés, valeurs, `platforms = desktop, mobile`,
-commentaires d'en-tête écrits par `Serialize`).
+Never translated: the names of the built-in themes (`ThemeCatalog`,
+proper names: HackerOS, Windows 98, macOS...), token names, ids
+and the content of a `.theme` file (keys, values, `platforms = desktop, mobile`,
+header comments written by `Serialize`).

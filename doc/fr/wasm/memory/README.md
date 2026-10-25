@@ -54,7 +54,7 @@ jour à la fin de chaque série ou quand une convention change.
   d'intégration y va.
 - **Questions** : on peut les noter dans un ADR, mais on les pose toujours à
   Benoit directement, avec des choix, le contexte et les implications.
-- **Documentation** : en français, noms de fichiers en anglais. `dev/` pour le
+- **Documentation** : écrite en français dans `doc/fr/`, traduite en anglais dans `doc/en/` (mêmes dossiers, mêmes noms de fichiers, en anglais) ; chaque changement met à jour les deux langues. Les readme à la racine : `readme.md` en anglais, `readme-fr.md` en français, chacun avec un lien vers l'autre en première ligne. `dev/` pour le
   développement de l'OS, `framework/` pour créer des apps et des sites,
   `memory/` pour ce dossier. Chaque changement met à jour la doc touchée et
   l'index [`../README.md`](../README.md) ; les docs remplacées vont dans

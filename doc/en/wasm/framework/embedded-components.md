@@ -1,14 +1,14 @@
-# Composants intégrables
+# Embeddable components
 
-Une app peut afficher dans sa fenêtre un composant qu'une autre app a
-enregistré auprès de l'OS, sans référencer son assemblage, comme Kate affiche
-la KPart de Konsole. Décision : [ADR 0063](../dev/adr/0063-embeddable-app-components.md).
-Le même mécanisme porte les contrôles et dialogues que l'OS fournit à toutes
-les apps (le SDK ne contient que leurs contrats) :
-[ADR 0148](../dev/adr/0148-sdk-contracts-and-os-provided-controls.md), ajusté par
-l'[ADR 0153](../dev/adr/0153-contract-host-implementation-adjustments.md).
+An app can display in its window a component that another app has
+registered with the OS, without referencing its assembly, the way Kate displays
+Konsole's KPart. Decision: [ADR 0063](../dev/adr/0063-embeddable-app-components.md).
+The same mechanism carries the controls and dialogs that the OS provides to all
+apps (the SDK only contains their contracts):
+[ADR 0148](../dev/adr/0148-sdk-contracts-and-os-provided-controls.md), adjusted by
+[ADR 0153](../dev/adr/0153-contract-host-implementation-adjustments.md).
 
-## Enregistrer un composant (app fournisseur)
+## Registering a component (provider app)
 
 ```csharp
 [AppManifest]
@@ -32,13 +32,13 @@ public sealed class TerminalApp : AppDefinition
 }
 ```
 
-Règles (vérifiées par `AppManifestValidator`) : app `Window`, contrat en mots
-minuscules séparés par des points, un contrat par app, type dans l'assemblage
-du point d'entrée. Le composant dérive de `HackEmbeddableComponent` et reçoit
-`Options` et `ControllerReady` ; `HostContext` est le contexte de la fenêtre
-hôte.
+Rules (checked by `AppManifestValidator`): `Window` app, contract in lowercase
+words separated by dots, one contract per app, type in the entry point's
+assembly. The component derives from `HackEmbeddableComponent` and receives
+`Options` and `ControllerReady`; `HostContext` is the context of the host
+window.
 
-## Embarquer un composant (app hôte)
+## Embedding a component (host app)
 
 ```razor
 <HackEmbeddedComponent TController="IHackTerminal"
@@ -49,16 +49,16 @@ hôte.
 </HackEmbeddedComponent>
 ```
 
-Garder la même instance d'`Options` d'un rendu à l'autre : une nouvelle
-instance est transmise au composant. Le contrôleur reste valable tant que
-`HackEmbeddedComponent` est rendu.
+Keep the same `Options` instance from one render to the next: a new
+instance is passed on to the component. The controller remains valid as long as
+`HackEmbeddedComponent` is rendered.
 
-## Composant typé (contrat fourni par l'OS)
+## Typed component (contract provided by the OS)
 
-Pour un contrat de l'OS, le SDK donne un composant typé que l'app utilise
-comme n'importe quel composant Blazor. Il dérive de
-`HackContractComponent<TController>` et recopie ses paramètres par nom
-(forme réduite ; le vrai `HackFileView` est décrit plus bas) :
+For an OS contract, the SDK gives a typed component that the app uses
+like any Blazor component. It derives from
+`HackContractComponent<TController>` and copies its parameters by name
+(reduced form; the real `HackFileView` is described further down):
 
 ```csharp
 public sealed class HackFileView : HackContractComponent<IHackFileView>
@@ -76,37 +76,37 @@ public sealed class HackFileView : HackContractComponent<IHackFileView>
 }
 ```
 
-Le fournisseur (`HackEmbeddableComponent`) déclare les mêmes noms en
-`[Parameter]`. Un paramètre qu'il ne connaît pas encore (app compilée avec un
-SDK plus récent) est rangé dans `UnmatchedParameters` au lieu de faire
-échouer le rendu ; il ne doit donc pas déclarer son propre
-`CaptureUnmatchedValues`. La base expose `ControllerChanged`, `Unavailable`,
-`Controller` et le crochet `OnControllerChangedAsync`, et ne transmet un
-nouveau jeu de paramètres que si une valeur a changé. En dessous,
-`HackEmbeddedComponent<T>` reçoit ces valeurs par son paramètre `Parameters`
-(`Options` et `ControllerReady` gardent la priorité).
+The provider (`HackEmbeddableComponent`) declares the same names as
+`[Parameter]`. A parameter it does not know yet (app compiled with a
+newer SDK) is put in `UnmatchedParameters` instead of making the render
+fail; it must therefore not declare its own
+`CaptureUnmatchedValues`. The base exposes `ControllerChanged`, `Unavailable`,
+`Controller` and the `OnControllerChangedAsync` hook, and only passes a
+new set of parameters if a value has changed. Underneath,
+`HackEmbeddedComponent<T>` receives these values through its `Parameters` parameter
+(`Options` and `ControllerReady` keep priority).
 
-**Droits.** Le fournisseur est rendu dans la fenêtre de l'hôte, avec
-l'`AppContext` de l'hôte ; les callbacks qu'il invoque (`Opened`…)
-s'exécutent dans le contexte de l'hôte. Une app ne voit pas un fichier de plus
-en affichant le contrôle d'une autre.
+**Rights.** The provider is rendered in the host's window, with the host's
+`AppContext`; the callbacks it invokes (`Opened`...)
+run in the host's context. An app does not see one more file
+by displaying another app's control.
 
-## Registre et fournisseurs
+## Registry and providers
 
-- **Apps.** Le catalogue construit le registre au démarrage à partir des
-  manifestes (`AppCatalog.ComponentProviders`,
-  `GetComponentProviders(contract)`) : apps système d'abord, puis par
-  identifiant. `HackComponentHost` saute les apps désinstallées et charge
-  l'assemblage du fournisseur au premier usage.
-- **Choix de l'administrateur** (ADR 0156, ADR 0158). Pour
-  `hackeros.file-view` et `hackeros.file-dialogs`, `HackComponentHost` lit
-  `/etc/hackeros/components.config` (`IComponentProviderSelection`, relu à
-  chaque résolution) et essaie d'abord l'app choisie ; les autres restent des
-  replis, l'explorateur en premier. Si l'app choisie est désactivée pour
-  l'utilisateur ou ne se charge pas, le suivant prend le relais et
-  `component.fallback` est écrit en avertissement dans `/var/log/syslog`
-  (source `components`), une fois par session. Sans ligne, l'explorateur
-  s'applique.
+- **Apps.** The catalog builds the registry at startup from the
+  manifests (`AppCatalog.ComponentProviders`,
+  `GetComponentProviders(contract)`): system apps first, then by
+  identifier. `HackComponentHost` skips uninstalled apps and loads
+  the provider's assembly on first use.
+- **Administrator's choice** (ADR 0156, ADR 0158). For
+  `hackeros.file-view` and `hackeros.file-dialogs`, `HackComponentHost` reads
+  `/etc/hackeros/components.config` (`IComponentProviderSelection`, reread on
+  each resolution) and tries the chosen app first; the others remain
+  fallbacks, the explorer first. If the chosen app is disabled for the
+  user or fails to load, the next one takes over and
+  `component.fallback` is written as a warning in `/var/log/syslog`
+  (source `components`), once per session. With no line, the explorer
+  applies.
 
   ```ini
   [providers]
@@ -114,41 +114,41 @@ en affichant le contrôle d'une autre.
   hackeros.file-dialogs=com.example.files
   ```
 
-  Le choix se fait dans Paramètres ▸ Composants de l'OS
-  (`HackComponentProviders`, capacité `apps.manage`) : une app non système
-  passe par la fenêtre d'approbation des capacités dangereuses, avec la phrase
-  de risque « Le code de cette app s'exécutera dans toutes les applications
-  qui affichent des fichiers, avec leurs droits. » ; une app système ou le
-  retour à l'explorateur demandent seulement un administrateur. Chaque
-  décision va dans `/var/log/auth.log` (`component.provider`). Une app
-  désinstallée pour la machine perd sa ligne.
-- **Plateforme.** La plateforme inscrit ses propres fournisseurs dans le
-  conteneur de services (`services.AddSingleton(new HackPlatformComponent(contrat, typeof(Composant)))`) ;
-  ils passent avant toute app, sans chargement, et leur `ProviderAppId` vaut
+  The choice is made in Settings ▸ OS components
+  (`HackComponentProviders`, capability `apps.manage`): a non-system app
+  goes through the dangerous capability approval window, with the risk sentence
+  "This app's code will run in every application
+  that displays files, with their rights."; a system app or the
+  return to the explorer only require an administrator. Each
+  decision goes to `/var/log/auth.log` (`component.provider`). An app
+  uninstalled for the machine loses its line.
+- **Platform.** The platform registers its own providers in the
+  service container (`services.AddSingleton(new HackPlatformComponent(contrat, typeof(Composant)))`);
+  they come before any app, without loading, and their `ProviderAppId` is
   `HackComponentResolution.PlatformProviderId` (`"platform"`).
-- **Qui peut fournir** (`AppComponentContracts.GetProviderScope`) :
+- **Who can provide** (`AppComponentContracts.GetProviderScope`):
 
-| Contrat | Fournisseur admis | Refus |
+| Contract | Provider allowed | Refusal |
 | --- | --- | --- |
-| `hackeros.terminal` | toute app fenêtrée | — |
-| `hackeros.file-view`, `hackeros.file-dialogs` | toute app fenêtrée (`AdministratorSelected`) ; l'administrateur choisit celle en service, l'explorateur par défaut (ADR 0156) | — (`HOSAPP0025` est retiré, ADR 0158 §1) |
-| `hackeros.context-menu` | plateforme | `manifest.component.contract.platform` (`HOSAPP0009` au build de l'app) |
+| `hackeros.terminal` | any windowed app | none |
+| `hackeros.file-view`, `hackeros.file-dialogs` | any windowed app (`AdministratorSelected`); the administrator chooses the one in service, the explorer by default (ADR 0156) | none (`HOSAPP0025` is removed, ADR 0158 §1) |
+| `hackeros.context-menu` | platform | `manifest.component.contract.platform` (`HOSAPP0009` at the app's build) |
 
-- **Indisponible.** Un contrat de l'OS (fichiers ou menu) sans aucun
-  fournisseur qui se charge est une erreur de l'OS : `component.unavailable` est écrit dans `/var/log/syslog`
-  (source `components`). Un contrat ouvert sans fournisseur est seulement
-  montré à l'utilisateur (`Unavailable`).
+- **Unavailable.** An OS contract (files or menu) with no
+  provider that loads is an OS error: `component.unavailable` is written in `/var/log/syslog`
+  (source `components`). An open contract without a provider is only
+  shown to the user (`Unavailable`).
 
-## Contrats
+## Contracts
 
-| Contrat | Contrôleur | Options | Fournisseur |
+| Contract | Controller | Options | Provider |
 | --- | --- | --- | --- |
 | `hackeros.terminal` (`HackComponentContracts.Terminal`) | `IHackTerminal` | `HackTerminalOptions` (`WorkingDirectory`, `ShowBanner`, `FocusOnStart`) | Terminal (`TerminalEmbed`) |
-| `hackeros.file-view` (`HackComponentContracts.FileView`) | `IHackFileView`, composant `HackFileView` (ADR 0155) | paramètres de `HackFileView` | Explorateur de fichiers (`ExplorerFileView`) |
-| `hackeros.file-dialogs` (`HackComponentContracts.FileDialogs`) | aucun : ouverts par `IDialogService.OpenWithAsync`, `ShowFilePropertiesAsync`, `ResolveFileConflictAsync` (`HackFileDialogs`, ADR 0155 §5) | paramètres `Dialog`, `Request`, `Completed` | Explorateur de fichiers (`ExplorerFileDialogs`) |
-| `hackeros.context-menu` (`HackComponentContracts.ContextMenu`) | `IHackContextMenu`, composant `HackContextMenu` ([`context-menu.md`](context-menu.md)) | — | Plateforme (`PlatformContextMenu`, qui inscrit le menu ; `ContextMenuOverlay` le dessine, ADR 0154) |
+| `hackeros.file-view` (`HackComponentContracts.FileView`) | `IHackFileView`, component `HackFileView` (ADR 0155) | `HackFileView` parameters | File Explorer (`ExplorerFileView`) |
+| `hackeros.file-dialogs` (`HackComponentContracts.FileDialogs`) | none: opened through `IDialogService.OpenWithAsync`, `ShowFilePropertiesAsync`, `ResolveFileConflictAsync` (`HackFileDialogs`, ADR 0155 §5) | `Dialog`, `Request`, `Completed` parameters | File Explorer (`ExplorerFileDialogs`) |
+| `hackeros.context-menu` (`HackComponentContracts.ContextMenu`) | `IHackContextMenu`, component `HackContextMenu` ([`context-menu.md`](context-menu.md)) | none | Platform (`PlatformContextMenu`, which registers the menu; `ContextMenuOverlay` draws it, ADR 0154) |
 
-### `HackFileView` et `IHackFileView`
+### `HackFileView` and `IHackFileView`
 
 ```razor
 <HackFileView InitialDirectory="@home"
@@ -159,92 +159,92 @@ en affichant le contrôle d'une autre.
               ControllerChanged="files => _files = files" />
 ```
 
-| Paramètre | Rôle |
+| Parameter | Role |
 | --- | --- |
-| `InitialDirectory`, `Mode`/`ModeChanged`, `AllowMultiSelect`, `Filter` | Dossier, disposition (`Details`, `Icons`, `Tree`, `Desktop`), sélection, filtre (rappeler `RefreshFilter`). |
-| `Features` | Ce que le contrôle fait seul (`Clipboard`, `Delete`, `Rename`, `CreateFolder`, `DragDrop`, `OpenWith`, `Properties`) ; une fonction retirée disparaît du menu et sa touche ne fait rien. |
-| `SelectedResource` | Poignée d'un dossier choisi dans le dialogue de l'OS : le contrôle liste avec elle. |
-| `Opening` | Avant l'ouverture d'un élément ; `Handled = true` laisse l'hôte l'ouvrir lui-même. |
-| `Navigated`, `SelectionChanged`, `Renamed`, `Deleted`, `ErrorOccurred` | Ce qui s'est passé ; sans `ErrorOccurred`, les erreurs deviennent des notifications. |
-| `DesktopOptions`, `DesktopPositions`, `DesktopPositionsChanged` | Mode `Desktop` seulement (ADR 0160 §2) : options de `[view]`, case de chaque élément (`::home`, `::trash` pour les icônes système), positions à enregistrer après un déplacement ou un élément nouveau. L'hôte garde `desktop.config`, le fournisseur place avec `HackDesktopLayout`. Voir [`desktop.md`](../dev/desktop.md). |
-| `ContextMenuOpening` | Après la construction du menu du plan §7 : `Scope`, `Items`, `Directory`, `Menu` (trouver, cacher, désactiver, ajouter un groupe), `Cancel`. Les entrées inscrites par les apps sont ajoutées **après** par l'OS (ADR 0159 §4). |
+| `InitialDirectory`, `Mode`/`ModeChanged`, `AllowMultiSelect`, `Filter` | Folder, layout (`Details`, `Icons`, `Tree`, `Desktop`), selection, filter (call `RefreshFilter` again). |
+| `Features` | What the control does on its own (`Clipboard`, `Delete`, `Rename`, `CreateFolder`, `DragDrop`, `OpenWith`, `Properties`); a removed function disappears from the menu and its key does nothing. |
+| `SelectedResource` | Handle of a folder chosen in the OS dialog: the control lists with it. |
+| `Opening` | Before an item is opened; `Handled = true` lets the host open it itself. |
+| `Navigated`, `SelectionChanged`, `Renamed`, `Deleted`, `ErrorOccurred` | What happened; without `ErrorOccurred`, errors become notifications. |
+| `DesktopOptions`, `DesktopPositions`, `DesktopPositionsChanged` | `Desktop` mode only (ADR 0160 §2): `[view]` options, cell of each item (`::home`, `::trash` for system icons), positions to save after a move or a new item. The host keeps `desktop.config`, the provider places with `HackDesktopLayout`. See [`desktop.md`](../dev/desktop.md). |
+| `ContextMenuOpening` | After the plan §7 menu is built: `Scope`, `Items`, `Directory`, `Menu` (find, hide, disable, add a group), `Cancel`. Entries registered by apps are added **afterwards** by the OS (ADR 0159 §4). |
 
-`IHackFileView` : `CurrentDirectory`, `Items`, `SelectedItems`, `CanPaste`,
+`IHackFileView`: `CurrentDirectory`, `Items`, `SelectedItems`, `CanPaste`,
 `IsBusy`, `StateChanged`, `NavigateAsync`, `RefreshAsync`, `RevealAsync`,
-`ClearSelection`, `RefreshFilter`, `WhenIdleAsync`, et
-`CanExecute`/`ExecuteAsync(commande)` dont les commandes sont les
-identifiants de `HackFileMenuItems` (`open`, `cut`, `paste`, `rename`,
-`delete`, `properties`…). Tout s'exécute avec les droits de l'hôte.
+`ClearSelection`, `RefreshFilter`, `WhenIdleAsync`, and
+`CanExecute`/`ExecuteAsync(command)` whose commands are the
+identifiers of `HackFileMenuItems` (`open`, `cut`, `paste`, `rename`,
+`delete`, `properties`...). Everything runs with the host's rights.
 
-Depuis l'ADR 0165, la fenêtre de l'explorateur combine sa recherche avec une
-commande **Afficher les fichiers et dossiers cachés**, désactivée par défaut :
-les noms commençant par un point sont masqués. Ce filtre s'applique aussi aux
-descendants déjà chargés de l'arbre et à leur navigation clavier. La configuration
-de l'accueil mobile est décrite dans [mobile-home-screen.md](../dev/mobile-home-screen.md).
+Since ADR 0165, the explorer window combines its search with a
+**Show hidden files and folders** command, off by default:
+names starting with a dot are hidden. This filter also applies to the
+already loaded descendants of the tree and to their keyboard navigation. The mobile
+home configuration is described in [mobile-home-screen.md](../dev/mobile-home-screen.md).
 
-Un fournisseur du contrôle (l'explorateur, ou l'app tierce choisie par
-l'administrateur) **pose `HackMenuDefinition.FileMenu`** (`HackFileMenuContext` :
-portée, éléments, dossier affiché) sur chaque menu de fichiers qu'il ouvre :
-c'est ce qui permet à l'OS d'y ajouter les entrées des apps (ADR 0159 §4, voir
+A control provider (the explorer, or the third-party app chosen by the
+administrator) **sets `HackMenuDefinition.FileMenu`** (`HackFileMenuContext`:
+scope, items, displayed folder) on each file menu it opens:
+this is what allows the OS to add app entries to it (ADR 0159 §4, see
 [`context-menu.md`](context-menu.md#entrées-des-apps-dans-les-menus-des-fichiers-chantier-4)).
 
 ### `IHackTerminal`
 
-| Membre | Rôle |
+| Member | Role |
 | --- | --- |
-| `RunCommandAsync(ligne, jeton)` | Affiche la ligne à l'invite, l'exécute après les touches déjà tapées, renvoie `HackTerminalCommandResult(CommandLine, ExitStatus, Output)`. Le jeton interrompt la commande (statut 130). |
-| `SetWorkingDirectoryAsync(chemin)` | `cd` visible dans le terminal. |
-| `SendInputAsync(texte)` | Octets du clavier (`\r` = Entrée, `\u0003` = Ctrl+C). |
-| `ReadOutput(max)` | Texte affiché récemment, sans séquences de contrôle (256 Kio gardés). |
-| `ClearAsync()`, `FocusAsync()` | Effacer l'écran, prendre le focus. |
-| `WorkingDirectory`, `Title`, `IsRunning`, `IsBusy` | État. |
-| `OutputReceived`, `CommandCompleted`, `StateChanged`, `Exited` | Événements sur le thread de rendu. |
+| `RunCommandAsync(line, token)` | Displays the line at the prompt, runs it after the keys already typed, returns `HackTerminalCommandResult(CommandLine, ExitStatus, Output)`. The token interrupts the command (status 130). |
+| `SetWorkingDirectoryAsync(path)` | Visible `cd` in the terminal. |
+| `SendInputAsync(text)` | Keyboard bytes (`\r` = Enter, `\u0003` = Ctrl+C). |
+| `ReadOutput(max)` | Recently displayed text, without control sequences (256 KiB kept). |
+| `ClearAsync()`, `FocusAsync()` | Clear the screen, take focus. |
+| `WorkingDirectory`, `Title`, `IsRunning`, `IsBusy` | State. |
+| `OutputReceived`, `CommandCompleted`, `StateChanged`, `Exited` | Events on the render thread. |
 
-Le shell est un enfant du processus de l'hôte : l'hôte doit demander
+The shell is a child of the host's process: the host must request
 `shell.host`.
 
 ## Architecture
 
-| Élément | Projet | Rôle |
+| Item | Project | Role |
 | --- | --- | --- |
-| `AppComponent`, `AppComponentManifest`, `AppManifest.Components` | `HackerOs.App.Abstractions` | Déclaration et manifeste (`components`, omis si vide). |
-| `HackComponentContracts`, `IHackTerminal`, `HackTerminalOptions`, `HackTerminalCommandResult` | `HackerOs.AppSdk` (`.Components`) | Contrats. |
-| `AppComponentContracts`, `AppComponentProviderScope` | `HackerOs.App.Abstractions` | Contrats connus de l'OS et qui peut les fournir (ADR 0148 §3.3, ADR 0156). |
-| `IHackComponentHost`, `HackComponentResolution`, `HackEmbeddableComponent`, `HackEmbeddedComponent<T>`, `HackContractComponent<T>` | `HackerOs.AppSdk.Blazor` (`.Components`) | Côté Blazor du SDK. |
-| `AppCatalog.ComponentProviders`, `AppComponentProvider` | `HackerOs.Platform.Core` | Registre des fournisseurs lu au démarrage. |
-| `HackComponentHost`, `HackPlatformComponent` | `HackerOs.Platform.Blazor` (`.Components`) | Fournisseurs de la plateforme d'abord, puis le choix de l'administrateur (`Selection`), puis le premier fournisseur installé qui se charge (`AppLifecycleOrchestrator.EnsureDescriptorAsync`) ; vérifie le type, écrit `component.fallback` (`ReportWarning`) et `component.unavailable`. |
-| `ComponentProviderService`, `ComponentProvidersDocument`, `IComponentProviderSelection` | `HackerOs.Platform.Core` (`.ComponentProviders`) | `/etc/hackeros/components.config` : lecture, approbation, écriture, audit, retrait à la désinstallation (ADR 0156, ADR 0158). |
-| `HackComponentProviders`, `IAppComponentProviderAdministrationGateway`, `HackComponentContractInfo`, `HackComponentProviderInfo` | `HackerOs.AppSdk` (`.Administration`) | Choix du fournisseur pour Paramètres (`apps.manage`). |
-| `OsComponentsPanel` | `HackerOs.Apps.Settings` | Onglet « Composants de l'OS ». |
-| `TerminalEmbed` | `HackerOs.Apps.Terminal` | Fournisseur de `hackeros.terminal`. |
+| `AppComponent`, `AppComponentManifest`, `AppManifest.Components` | `HackerOs.App.Abstractions` | Declaration and manifest (`components`, omitted if empty). |
+| `HackComponentContracts`, `IHackTerminal`, `HackTerminalOptions`, `HackTerminalCommandResult` | `HackerOs.AppSdk` (`.Components`) | Contracts. |
+| `AppComponentContracts`, `AppComponentProviderScope` | `HackerOs.App.Abstractions` | Contracts known to the OS and who can provide them (ADR 0148 §3.3, ADR 0156). |
+| `IHackComponentHost`, `HackComponentResolution`, `HackEmbeddableComponent`, `HackEmbeddedComponent<T>`, `HackContractComponent<T>` | `HackerOs.AppSdk.Blazor` (`.Components`) | Blazor side of the SDK. |
+| `AppCatalog.ComponentProviders`, `AppComponentProvider` | `HackerOs.Platform.Core` | Provider registry read at startup. |
+| `HackComponentHost`, `HackPlatformComponent` | `HackerOs.Platform.Blazor` (`.Components`) | Platform providers first, then the administrator's choice (`Selection`), then the first installed provider that loads (`AppLifecycleOrchestrator.EnsureDescriptorAsync`); checks the type, writes `component.fallback` (`ReportWarning`) and `component.unavailable`. |
+| `ComponentProviderService`, `ComponentProvidersDocument`, `IComponentProviderSelection` | `HackerOs.Platform.Core` (`.ComponentProviders`) | `/etc/hackeros/components.config`: reading, approval, writing, audit, removal on uninstall (ADR 0156, ADR 0158). |
+| `HackComponentProviders`, `IAppComponentProviderAdministrationGateway`, `HackComponentContractInfo`, `HackComponentProviderInfo` | `HackerOs.AppSdk` (`.Administration`) | Provider choice for Settings (`apps.manage`). |
+| `OsComponentsPanel` | `HackerOs.Apps.Settings` | "OS components" tab. |
+| `TerminalEmbed` | `HackerOs.Apps.Terminal` | Provider of `hackeros.terminal`. |
 
-## Tâches
+## Tasks
 
-- [x] `Components` dans `AppDefinition`, le mappeur, `AppManifest`, le schéma,
-  le sérialiseur, le canonique de test et le validateur.
-- [x] Contrats `IHackTerminal` et `HackTerminalOptions`.
+- [x] `Components` in `AppDefinition`, the mapper, `AppManifest`, the schema,
+  the serializer, the test canonical form and the validator.
+- [x] `IHackTerminal` and `HackTerminalOptions` contracts.
 - [x] `HackEmbeddableComponent`, `HackEmbeddedComponent<T>`,
   `IHackComponentHost`.
-- [x] `HackComponentHost` et `EnsureDescriptorAsync` (chargement paresseux).
-- [x] `TerminalPanel` implémente `IHackTerminal` (file d'entrée, transcription,
-  résultat des commandes) ; `TerminalEmbed` enregistré par l'app Terminal.
-- [x] L'éditeur embarque le terminal par contrat dans son dock.
-- [x] Tests : manifeste, validateur, mappeur, registre, nettoyage des
-  séquences.
-- [x] Chantier 1 du plan du bureau (ADR 0148, ADR 0153) : composant typé
-  `HackContractComponent<T>` et `Parameters`, `UnmatchedParameters`, registre
-  dans `AppCatalog`, contrats réservés (`HOSAPP0025`,
+- [x] `HackComponentHost` and `EnsureDescriptorAsync` (lazy loading).
+- [x] `TerminalPanel` implements `IHackTerminal` (input queue, transcript,
+  command result); `TerminalEmbed` registered by the Terminal app.
+- [x] The editor embeds the terminal through the contract in its dock.
+- [x] Tests: manifest, validator, mapper, registry, sequence
+  cleanup.
+- [x] Work item 1 of the desktop plan (ADR 0148, ADR 0153): typed component
+  `HackContractComponent<T>` and `Parameters`, `UnmatchedParameters`, registry
+  in `AppCatalog`, reserved contracts (`HOSAPP0025`,
   `catalog.component.reserved`, `manifest.component.contract.platform`),
-  `HackPlatformComponent`, `component.unavailable` au journal ; tests du
-  validateur, du catalogue, de l'agrégation, du registre et du composant typé.
-- [x] Chantier 3c du plan du bureau (ADR 0156, ADR 0158) : contrats du
-  fichier ouverts à toute app fenêtrée (`HOSAPP0025` retiré),
-  `/etc/hackeros/components.config`, choix de l'administrateur essayé en
-  premier, repli `component.fallback`, `HackComponentProviders` et onglet
-  « Composants de l'OS » avec la fenêtre d'approbation, `component.provider`
-  dans `auth.log`, ligne retirée à la désinstallation pour la machine ; tests
-  du service, de la passerelle, du registre, du catalogue, du validateur et de
-  l'agrégation.
-- [x] Chantier 3 du plan du bureau (ADR 0155) : `HackFileView`, `IHackFileView`
-  et les dialogues fournis, `ExplorerFileView` et `ExplorerFileDialogs`
-  inscrits par l'explorateur ; test de la transmission de tous les paramètres.
+  `HackPlatformComponent`, `component.unavailable` in the log; tests of the
+  validator, the catalog, aggregation, the registry and the typed component.
+- [x] Work item 3c of the desktop plan (ADR 0156, ADR 0158): file
+  contracts open to any windowed app (`HOSAPP0025` removed),
+  `/etc/hackeros/components.config`, administrator's choice tried
+  first, `component.fallback` fallback, `HackComponentProviders` and the
+  "OS components" tab with the approval window, `component.provider`
+  in `auth.log`, line removed on uninstall for the machine; tests
+  of the service, the gateway, the registry, the catalog, the validator and
+  aggregation.
+- [x] Work item 3 of the desktop plan (ADR 0155): `HackFileView`, `IHackFileView`
+  and the provided dialogs, `ExplorerFileView` and `ExplorerFileDialogs`
+  registered by the explorer; test of the passing of all parameters.

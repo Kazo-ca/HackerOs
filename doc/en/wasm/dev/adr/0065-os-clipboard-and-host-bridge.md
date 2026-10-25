@@ -1,152 +1,152 @@
-# ADR 0065 : presse-papiers de l'OS et partage de texte avec l'hôte
+# ADR 0065: OS clipboard and text sharing with the host
 
-## Statut
+## Status
 
-Accepté le 2026-10-16.
+Accepted on 2026-10-16.
 
-- **Contexte :** décision validée par Benoit : un seul presse-papiers, propriété
-  de l'OS, et un partage de texte avec la vraie machine « à la VirtualBox Guest
-  Additions ». Demandée comme « ADR 0060 » ; ce numéro était déjà pris
-  (ajustements d'administration système), d'où 0065.
-- **Complète** l'ADR 0056 §12 (presse-papiers de fichiers), sans le contredire :
-  `HackClipboard`, le format `x-special/gnome-copied-files` et les capacités
-  `clipboard.read` / `clipboard.write` restent tels quels.
-- **Remplace** l'ADR 0060 §5 : Diagnostic ne copie plus par `BrowserClipboard`
-  mais par `HackClipboard` (il déclare donc de nouveau `clipboard.write`), et
-  `BrowserClipboard` est marqué `[Obsolete]` (ADR 0019).
+- **Context:** decision validated by Benoit: a single clipboard, owned by
+  the OS, and text sharing with the real machine "like VirtualBox Guest
+  Additions". Requested as "ADR 0060"; that number was already taken
+  (system administration adjustments), hence 0065.
+- **Completes** ADR 0056 §12 (file clipboard), without contradicting it:
+  `HackClipboard`, the `x-special/gnome-copied-files` format and the
+  `clipboard.read` / `clipboard.write` capabilities stay as they are.
+- **Supersedes** ADR 0060 §5: Diagnostic no longer copies through `BrowserClipboard`
+  but through `HackClipboard` (so it declares `clipboard.write` again), and
+  `BrowserClipboard` is marked `[Obsolete]` (ADR 0019).
 
-## Contexte
+## Context
 
-Le chantier `rebuild/4-file-explorer` a livré `SystemClipboard`, une sélection
-par session dans Platform Core, partagée par toutes les apps de la session.
-Deux manques restaient :
+The `rebuild/4-file-explorer` work item delivered `SystemClipboard`, a per-session
+selection in Platform Core, shared by all the apps of the session.
+Two gaps remained:
 
-- le texte copié dans HackerOS n'arrivait pas dans le presse-papiers de la vraie
-  machine, sauf par `BrowserClipboard`, une sortie directe qui contournait le
-  presse-papiers de l'OS et toute politique ;
-- un collage depuis la vraie machine n'entrait pas dans le presse-papiers de
-  l'OS : une app qui lisait `HackClipboard` ne voyait pas ce que l'utilisateur
-  venait de copier ailleurs, et des fichiers copiés sur l'hôte ne se collaient
-  pas dans l'explorateur.
+- text copied in HackerOS did not reach the clipboard of the real
+  machine, except through `BrowserClipboard`, a direct output that bypassed the
+  OS clipboard and any policy;
+- a paste from the real machine did not enter the OS clipboard:
+  an app reading `HackClipboard` did not see what the user
+  had just copied elsewhere, and files copied on the host could not be pasted
+  into the explorer.
 
-Un vrai système invité sous VirtualBox règle ce problème par un service des
-Guest Additions qui recopie le texte dans les deux sens, réglable
-(« bidirectionnel », « invité vers hôte », « hôte vers invité », « désactivé »).
+A real guest system under VirtualBox solves this with a Guest Additions
+service that copies the text in both directions, and is configurable
+("bidirectional", "guest to host", "host to guest", "disabled").
 
-## Décision
+## Decision
 
-### 1. Un seul presse-papiers, propriété de l'OS
+### 1. A single clipboard, owned by the OS
 
-- `SystemClipboard` (Platform Core) reste l'unique presse-papiers : une entrée
-  par session (`SystemClipboardEntry`), en mémoire seulement, perdue au
-  redémarrage et vidée à la déconnexion.
-- L'entrée est **multi-formats** : `text/plain`, `x-special/gnome-copied-files`
-  (ADR 0056 §12), et tout autre type MIME par `SetTargets` (extensible).
-- Chaque changement reçoit un **numéro de séquence** par session
-  (`GetSequenceNumber`, comme `GetClipboardSequenceNumber` de Windows) et lève
-  l'événement `Changed`.
-- L'entrée note son **origine** (`SystemClipboardOrigin`) : `Guest` (une app par
-  `HackClipboard`), `GuestNative` (copie native dans un champ de texte ou le
-  terminal), `Host` (collage depuis la vraie machine).
-- Les apps n'y accèdent que par `HackClipboard` et `IAppClipboardGateway`, avec
-  `clipboard.read` / `clipboard.write`. L'ancienne classe en mémoire du SDK
-  (`AppClipboardGateway` non partagée) a déjà été remplacée par la passerelle
-  de Platform Core vers ce service ; rien ne change pour les apps.
+- `SystemClipboard` (Platform Core) remains the only clipboard: one entry
+  per session (`SystemClipboardEntry`), in memory only, lost on
+  reboot and emptied on logout.
+- The entry is **multi-format**: `text/plain`, `x-special/gnome-copied-files`
+  (ADR 0056 §12), and any other MIME type through `SetTargets` (extensible).
+- Each change receives a **sequence number** per session
+  (`GetSequenceNumber`, like Windows' `GetClipboardSequenceNumber`) and raises
+  the `Changed` event.
+- The entry records its **origin** (`SystemClipboardOrigin`): `Guest` (an app through
+  `HackClipboard`), `GuestNative` (native copy in a text field or the
+  terminal), `Host` (paste from the real machine).
+- Apps access it only through `HackClipboard` and `IAppClipboardGateway`, with
+  `clipboard.read` / `clipboard.write`. The old in-memory class of the SDK
+  (unshared `AppClipboardGateway`) has already been replaced by the Platform Core
+  gateway to this service; nothing changes for apps.
 
-### 2. Sortie vers l'hôte
+### 2. Output to the host
 
-- Quand une app met une entrée contenant du `text/plain`, le pont
-  `HostClipboardBridge` le recopie par `navigator.clipboard.writeText`. L'appel
-  part pendant l'activation transitoire du geste qui a copié (Ctrl+C, clic) :
-  le navigateur ne demande pas d'autorisation.
-- Une liste de fichiers sort sous forme de chemins texte (sa cible
-  `text/plain`), jamais sous son format GNOME.
-- Un refus du navigateur (pas de focus, pas d'API) est journalisé ; le
-  presse-papiers de l'OS n'est pas touché.
+- When an app sets an entry containing `text/plain`, the
+  `HostClipboardBridge` copies it through `navigator.clipboard.writeText`. The call
+  is made during the transient activation of the gesture that copied (Ctrl+C, click):
+  the browser does not ask for permission.
+- A file list goes out as text paths (its
+  `text/plain` target), never in its GNOME format.
+- A browser refusal (no focus, no API) is logged; the OS
+  clipboard is not touched.
 
-### 3. Entrée depuis l'hôte
+### 3. Input from the host
 
-- Le module écoute l'événement `paste` sur le document, en phase de capture,
-  avant toute app. `clipboardData` est lisible sans autorisation.
-- Si le texte collé diffère du dernier texte que l'OS sait présent sur l'hôte
-  (écrit par lui ou déjà reçu), il devient l'entrée courante, origine `Host`.
-  Il n'est jamais renvoyé à l'hôte.
-- `navigator.clipboard.readText` n'est **pas** appelé sur le chemin normal (il
-  demanderait une autorisation).
-- Les fichiers collés (`clipboardData.files`) sont notés par nom dans la cible
-  `application/x-hackeros-host-files`, et la `FileView` qui reçoit le collage
-  les importe dans le dossier courant par le même chemin que le dépôt de
-  fichiers de l'hôte (`DropRequested`, puis `FileTransfer.ImportAsync`). Pour
-  cela, Ctrl+V dans une `FileView` suit l'événement `paste`, qui arrive après
-  la mise à jour du presse-papiers, et non plus `keydown` (avec un repli de
-  250 ms pour les navigateurs qui ne lèvent pas `paste` hors d'un champ).
+- The module listens for the `paste` event on the document, in the capture phase,
+  before any app. `clipboardData` is readable without permission.
+- If the pasted text differs from the last text the OS knows to be present on the host
+  (written by it or already received), it becomes the current entry, origin `Host`.
+  It is never sent back to the host.
+- `navigator.clipboard.readText` is **not** called on the normal path (it
+  would ask for permission).
+- Pasted files (`clipboardData.files`) are recorded by name in the
+  `application/x-hackeros-host-files` target, and the `FileView` that receives the paste
+  imports them into the current folder through the same path as the drop of
+  host files (`DropRequested`, then `FileTransfer.ImportAsync`). For
+  this, Ctrl+V in a `FileView` follows the `paste` event, which arrives after
+  the clipboard update, and no longer `keydown` (with a 250 ms fallback
+  for browsers that do not raise `paste` outside a field).
 
-### 4. Réglage `/etc/hackeros/clipboard.config`
+### 4. Setting `/etc/hackeros/clipboard.config`
 
-- Clé `sharing` : `bidirectional` (défaut), `guest-to-host`, `host-to-guest`,
-  `disabled`. Document en couches de l'ADR 0044 : défaut machine dans
-  `/etc/hackeros/clipboard.config`, surcharge dans
-  `~/.config/hackeros/clipboard.config`, verrouillable par `[locked]`.
-- Le nom suit la convention des documents de l'OS (`<document>.config`, ADR
-  0044), et non `clipboard.conf` comme dans la demande.
-- Le fichier est installé commenté au premier démarrage et listé par
-  `OsSettingsDocumentRegistry` (Paramètres peut l'ouvrir par
-  `HackSettings.OpenSystemAsync`). Un changement s'applique sans redémarrer.
-- Le sens refusé est appliqué dans la page, pendant l'événement :
-  - hôte vers invité refusé, ou texte de l'hôte périmé : un collage dans un
-    champ de texte de HackerOS reçoit le texte du presse-papiers de l'OS à la
-    place de celui de l'hôte (`insertText`), et les fichiers ne sont pas
-    importés ;
-  - invité vers hôte refusé : une copie native ne modifie pas le presse-papiers
-    de l'hôte, et le pont n'écrit rien.
+- Key `sharing`: `bidirectional` (default), `guest-to-host`, `host-to-guest`,
+  `disabled`. Layered document of ADR 0044: machine default in
+  `/etc/hackeros/clipboard.config`, override in
+  `~/.config/hackeros/clipboard.config`, lockable with `[locked]`.
+- The name follows the convention of OS documents (`<document>.config`, ADR
+  0044), and not `clipboard.conf` as in the request.
+- The file is installed commented at first boot and listed by
+  `OsSettingsDocumentRegistry` (Settings can open it through
+  `HackSettings.OpenSystemAsync`). A change applies without rebooting.
+- The refused direction is enforced in the page, during the event:
+  - host to guest refused, or stale host text: a paste into a
+    HackerOS text field receives the OS clipboard text instead
+    of the host's (`insertText`), and files are not
+    imported;
+  - guest to host refused: a native copy does not modify the host's
+    clipboard, and the bridge writes nothing.
 
-### 5. Pas de chiffrement
+### 5. No encryption
 
-Les données internes ne sont pas chiffrées : la clé serait forcément dans le
-WASM, donc lisible. À la place, elles ne quittent jamais la mémoire de l'OS ;
-seul le texte part vers l'hôte, et seulement si le réglage le permet.
+Internal data is not encrypted: the key would necessarily be in the
+WASM, hence readable. Instead, it never leaves the OS's memory;
+only the text goes to the host, and only if the setting allows it.
 
-### 6. JavaScript minimal
+### 6. Minimal JavaScript
 
-Un module `hostClipboard.js` dans le `wwwroot/` de
-`HackerOs.Infrastructure.Browser`, importé par `BrowserHostClipboardChannel`
-(contrat `IHostClipboardChannel` dans Simulation.Abstractions). Aucun hôte ne
-le référence. La logique (origines, sens, séquence, session) reste en C# dans
-`HostClipboardBridge`, testable sans navigateur ; le module ne garde que l'état
-nécessaire pour décider de façon synchrone pendant l'événement.
+A `hostClipboard.js` module in the `wwwroot/` of
+`HackerOs.Infrastructure.Browser`, imported by `BrowserHostClipboardChannel`
+(contract `IHostClipboardChannel` in Simulation.Abstractions). No host
+references it. The logic (origins, direction, sequence, session) stays in C# in
+`HostClipboardBridge`, testable without a browser; the module keeps only the state
+needed to decide synchronously during the event.
 
-## Conséquences
+## Consequences
 
-- Le texte copié par n'importe quelle app (Diagnostic, explorateur, éditeur)
-  arrive sur la vraie machine, et un collage de la vraie machine est visible
-  par `HackClipboard.GetTextAsync`.
-- Une copie native dans un champ de HackerOS devient aussi l'entrée courante,
-  comme sur un vrai bureau.
-- Au premier collage après le démarrage, l'OS ne connaît pas encore le contenu
-  de l'hôte : un texte jamais vu est pris comme nouveau. Avec `bidirectional`,
-  c'est sans effet visible (l'OS a déjà écrit son texte sur l'hôte) ; avec
-  `host-to-guest`, ce premier collage peut remplacer une liste de fichiers
-  coupée dans l'OS. C'est le comportement « dernier changement gagnant » de
+- Text copied by any app (Diagnostic, explorer, editor)
+  reaches the real machine, and a paste from the real machine is visible
+  through `HackClipboard.GetTextAsync`.
+- A native copy in a HackerOS field also becomes the current entry,
+  as on a real desktop.
+- On the first paste after startup, the OS does not yet know the host's
+  content: a never-seen text is taken as new. With `bidirectional`,
+  this has no visible effect (the OS already wrote its text to the host); with
+  `host-to-guest`, this first paste can replace a file list
+  cut in the OS. This is the "last change wins" behavior of
   VirtualBox.
-- Diagnostic déclare `clipboard.write` (capacité normale).
-- `BrowserClipboard` reste une version, `[Obsolete]`, puis sera retiré.
+- Diagnostic declares `clipboard.write` (normal capability).
+- `BrowserClipboard` remains for one version, `[Obsolete]`, then will be removed.
 
-## Alternatives écartées
+## Rejected alternatives
 
-- **Lire l'hôte par `navigator.clipboard.readText`** à chaque collage ou à
-  intervalles : demande une autorisation (Firefox, Safari), et la lecture en
-  arrière-plan révélerait à l'OS ce que l'utilisateur copie ailleurs sans geste
-  de sa part.
-- **Chiffrer le presse-papiers en mémoire** : aucune protection réelle, la clé
-  étant dans le même processus.
-- **Garder `BrowserClipboard` comme sortie officielle** : deux presse-papiers,
-  et un réglage `sharing` contournable par n'importe quelle app.
-- **Tout décider en C#** : un collage ou une copie ne peuvent être modifiés que
-  pendant leur distribution, de façon synchrone ; un aller-retour .NET arrive
-  trop tard.
+- **Reading the host through `navigator.clipboard.readText`** on each paste or at
+  intervals: requires permission (Firefox, Safari), and background reading
+  would reveal to the OS what the user copies elsewhere without any gesture
+  on their part.
+- **Encrypting the clipboard in memory**: no real protection, the key
+  being in the same process.
+- **Keeping `BrowserClipboard` as the official output**: two clipboards,
+  and a `sharing` setting that any app can bypass.
+- **Deciding everything in C#**: a paste or a copy can only be modified
+  during their dispatch, synchronously; a .NET round trip arrives
+  too late.
 
-## Références
+## References
 
-- ADR 0019 (versionnage du SDK), ADR 0044 (paramètres en fichiers, `[locked]`),
-  ADR 0055 (frontière du SDK), ADR 0056 §12, ADR 0058 §1, ADR 0060 §5.
+- ADR 0019 (SDK versioning), ADR 0044 (settings in files, `[locked]`),
+  ADR 0055 (SDK boundary), ADR 0056 §12, ADR 0058 §1, ADR 0060 §5.
 - [`clipboard.md`](../clipboard.md), [`file-explorer.md`](../file-explorer.md).

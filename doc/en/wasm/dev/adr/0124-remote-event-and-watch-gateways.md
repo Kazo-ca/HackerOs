@@ -1,130 +1,130 @@
-# ADR 0124 : passerelles distantes d'événements et de surveillance de fichiers, pool ouvert à toute assembly d'app
+# ADR 0124: remote event and file watch gateways, pool open to any app assembly
 
-## Statut
+## Status
 
-Accepté le 2026-10-18.
+Accepted on 2026-10-18.
 
-- **Plan :** [`execution-followups-plan.md`](../plans/execution-followups-plan.md),
-  décision 1 ; écrit par le chantier `exec/0-adr` (branche `exec/1-adr`), mis
-  en œuvre par `exec/1-remote-gateways`.
-- **Remplace :** l'ADR 0072 §3 pour `HackEvents` et `Watch` (le reste de ce
-  paragraphe, hôte de shell et administration, est inchangé).
-- **Complète :** l'ADR 0070 §4 (chargement des assemblies dans un worker),
-  l'ADR 0080 §1 (`hackwebd` sur le fil principal, qui devient sans objet).
+- **Plan:** [`execution-followups-plan.md`](../plans/execution-followups-plan.md),
+  decision 1; written by the work item `exec/0-adr` (branch `exec/1-adr`), implemented
+  by `exec/1-remote-gateways`.
+- **Replaces:** ADR 0072 §3 for `HackEvents` and `Watch` (the rest of this
+  paragraph, shell host and administration, is unchanged).
+- **Complements:** ADR 0070 §4 (loading assemblies in a worker),
+  ADR 0080 §1 (`hackwebd` on the main thread, which becomes moot).
 
-## Contexte
+## Context
 
-Depuis l'ADR 0072, les phases web et v3 ont ajouté des passerelles distantes
-au contexte d'exécution d'un worker (`RemoteAppExecutionContext`) : catalogue
-et applications par défaut, intents, contrôle et notification des services,
-presse-papiers, notifications, ports à l'écoute, base d'un site. Il reste, en
-2026-10-18 sur `v3.1/base` :
+Since ADR 0072, the web and v3 phases have added remote gateways to the
+execution context of a worker (`RemoteAppExecutionContext`): catalog
+and default applications, intents, service control and notification,
+clipboard, notifications, listening ports, a site's database. The following remains, on
+2026-10-18 on `v3.1/base`:
 
-| Membre | Comportement dans un worker |
+| Member | Behavior in a worker |
 |---|---|
-| `IAppEventGateway` (6 membres : événements typés et sujets) | `NotSupportedException` (`RemoteEventGateway`) |
+| `IAppEventGateway` (6 members: typed events and topics) | `NotSupportedException` (`RemoteEventGateway`) |
 | `IAppFileSystemWatchGateway.WatchAsync` | `NotSupportedException` (`RemoteWatchGateway`) |
-| `IAppProcessGateway.StartChild`, `Kill` et `ListProcesses` synchrones | `NotSupportedException` ; les formes asynchrones existent (`KillAsync`, `GetProcessesAsync`) |
+| `IAppProcessGateway.StartChild`, synchronous `Kill` and `ListProcesses` | `NotSupportedException`; the asynchronous forms exist (`KillAsync`, `GetProcessesAsync`) |
 | `IAppFileSystemGateway.WithSelectedHandle` | `NotSupportedException` |
 
-Deux apps restent en `MainThread` pour cette seule raison : le service
-d'exemple (`ServiceSampleApp`, sujet typé `SampleTickerEvent`) et `hackwebd`
-(`HackFileSystemWatcher` sur ses dossiers de configuration, ADR 0080 §1).
+Two apps remain on `MainThread` for this reason alone: the sample service
+(`ServiceSampleApp`, typed topic `SampleTickerEvent`) and `hackwebd`
+(`HackFileSystemWatcher` on its configuration folders, ADR 0080 §1).
 
-Par ailleurs, le pool précharge `HackerOs.Commands.dll` et charge les autres
-assemblies par `INTERNAL.loadLazyAssembly` au premier `start` ; une commande
-d'une autre assembly (un projet d'exemple, une app empaquetée par NuGet dans un
-hôte) n'a jamais été testée en worker. L'installation d'apps **au runtime**
-reste différée (ADR 0094) : toutes les assemblies d'apps sont connues au build
+In addition, the pool preloads `HackerOs.Commands.dll` and loads the other
+assemblies through `INTERNAL.loadLazyAssembly` at the first `start`; a command
+from another assembly (a sample project, an app packaged by NuGet in a
+host) has never been tested in a worker. Installing apps **at runtime**
+remains deferred (ADR 0094): all app assemblies are known at build time
 (`BuildKnownLazyAssemblies`).
 
-## Décision
+## Decision
 
-### 1. Événements entre un worker et l'OS
+### 1. Events between a worker and the OS
 
-Le bus d'événements reste dans l'OS, sur le fil principal. Un worker y accède
-par messages, comme un client X11 parle au serveur :
+The event bus stays in the OS, on the main thread. A worker accesses it
+through messages, like an X11 client talks to the server:
 
-- **Abonnement** : `Subscribe` et `SubscribeChannel` envoient l'opération
-  `ev.sub` (sujet ou type, capacité du canal). L'OS crée l'abonnement **au nom
-  du pid**, avec ses droits, et pousse chaque message par un message `ev`
-  (identifiant d'abonnement, charge sérialisée). Le worker livre les messages
-  dans l'ordre, dans le contexte ambiant du processus (comme `DeliverIntent`).
-- **Désabonnement** : `Dispose` envoie `ev.unsub` ; la fin du processus, la
-  mort de son worker et `SIGKILL` désabonnent côté OS sans attendre le worker.
-- **Publication** : `Publish` envoie `ev.pub` et attend le
-  `TopicPublishResult` (ou la liste des `EventDispatchFault`) de l'OS.
-  `RegisterSharedChannel` passe par `ev.chan` avec la même politique qu'un
-  appel local.
-- **Pression** : un canal borné garde sa capacité côté OS ; quand il déborde,
-  la règle du canal s'applique (comme sur le fil principal). Un abonnement par
-  callback a un crédit de 256 messages en vol ; au-delà, l'OS attend
-  l'accusé du worker, comme pour les flux (crédit de 64 Kio, ADR 0072 §2).
+- **Subscription**: `Subscribe` and `SubscribeChannel` send the operation
+  `ev.sub` (topic or type, channel capacity). The OS creates the subscription **on behalf
+  of the pid**, with its rights, and pushes each message through an `ev` message
+  (subscription identifier, serialized payload). The worker delivers the messages
+  in order, in the process's ambient context (like `DeliverIntent`).
+- **Unsubscription**: `Dispose` sends `ev.unsub`; the end of the process, the
+  death of its worker and `SIGKILL` unsubscribe on the OS side without waiting for the worker.
+- **Publication**: `Publish` sends `ev.pub` and waits for the
+  `TopicPublishResult` (or the list of `EventDispatchFault`) from the OS.
+  `RegisterSharedChannel` goes through `ev.chan` with the same policy as a local
+  call.
+- **Pressure**: a bounded channel keeps its capacity on the OS side; when it overflows,
+  the channel's rule applies (as on the main thread). A callback
+  subscription has a credit of 256 messages in flight; beyond that, the OS waits for
+  the worker's acknowledgement, as for streams (64 KiB credit, ADR 0072 §2).
 
-### 2. Ce qui traverse : charges sérialisables déclarées
+### 2. What crosses: declared serializable payloads
 
-Un objet du tas de l'OS ne peut pas être remis à un autre runtime. Une charge
-traverse si son type est **sérialisable par System.Text.Json avec des
-métadonnées générées** (compatible avec le trimming, ADR 0113) :
+An object from the OS heap cannot be handed to another runtime. A payload
+crosses if its type is **serializable by System.Text.Json with generated
+metadata** (trimming-compatible, ADR 0113):
 
-- les types d'événements du SDK et des contrats de l'OS (`FileSystemChangeEvent`
-  et les autres événements publics) reçoivent leur codec dans le protocole des
-  workers (`WireCodec`, sans réflexion) ;
-- un type défini par l'app est déclaré par un `JsonSerializerContext` de son
-  assembly, nommé par un nouvel attribut du SDK :
-  `[assembly: HackWireContext(typeof(MyAppJsonContext))]`. Le même attribut
-  sert aux tâches de l'ADR 0128.
+- the event types of the SDK and of the OS contracts (`FileSystemChangeEvent`
+  and the other public events) get their codec in the workers protocol
+  (`WireCodec`, without reflection);
+- a type defined by the app is declared by a `JsonSerializerContext` of its
+  assembly, named by a new SDK attribute:
+  `[assembly: HackWireContext(typeof(MyAppJsonContext))]`. The same attribute
+  serves the tasks of ADR 0128.
 
-Un type qui n'est ni l'un ni l'autre lève, **dans le worker**, une
-`NotSupportedException` dont le message nomme le type et l'attribut à ajouter.
-Sur le fil principal, rien ne change : les objets restent passés par référence.
+A type that is neither throws, **in the worker**, a
+`NotSupportedException` whose message names the type and the attribute to add.
+On the main thread, nothing changes: objects are still passed by reference.
 
-### 3. Surveillance de fichiers
+### 3. File watching
 
-`WatchAsync` envoie `watch.open` (chemin, portée). L'OS ouvre la surveillance
-au nom du pid, avec ses droits de lecture, et pousse les
-`FileSystemChangeEvent` par le canal de §1. Fermeture, mort du processus et
-débordement suivent §1.
+`WatchAsync` sends `watch.open` (path, scope). The OS opens the watch
+on behalf of the pid, with its read rights, and pushes the
+`FileSystemChangeEvent` through the channel of §1. Closing, process death and
+overflow follow §1.
 
-### 4. Pool ouvert à toute assembly connue au build
+### 4. Pool open to any assembly known at build time
 
-- Le pool charge à la demande **toute** assembly de `BuildKnownLazyAssemblies`
-  (point d'entrée validé par la découverte de l'OS, ADR 0113), et la garde
-  chargée pour les demandes suivantes de ce worker.
-- `PreloadAssemblies` reste un réglage d'hôte ; il ne contient que
-  `HackerOs.Commands.dll` par défaut.
-- Une assembly qui ne fait pas partie de la liste est refusée (`TypeLoadException`
-  remontée comme échec de lancement, code de sortie 127). L'installation au
-  runtime ne change pas cette règle tant que son propre ADR n'existe pas.
+- The pool loads on demand **any** assembly of `BuildKnownLazyAssemblies`
+  (entry point validated by the OS discovery, ADR 0113), and keeps it
+  loaded for this worker's subsequent requests.
+- `PreloadAssemblies` remains a host setting; it only contains
+  `HackerOs.Commands.dll` by default.
+- An assembly that is not in the list is rejected (`TypeLoadException`
+  reported as a launch failure, exit code 127). Runtime installation
+  does not change this rule until its own ADR exists.
 
-### 5. Ce qui reste refusé dans un worker
+### 5. What remains refused in a worker
 
-`StartChild` et les formes synchrones de `Kill` et `ListProcesses` restent
-refusés (leurs formes asynchrones suffisent) ; `WithSelectedHandle`, l'hôte de
-shell et l'administration aussi. Une app qui en a besoin garde `MainThread`
-avec la raison en commentaire (ADR 0070 §1).
+`StartChild` and the synchronous forms of `Kill` and `ListProcesses` remain
+refused (their asynchronous forms are enough); `WithSelectedHandle`, the shell
+host and administration too. An app that needs them keeps `MainThread`
+with the reason in a comment (ADR 0070 §1).
 
 ### 6. Migration
 
-- `ServiceSampleApp` et `hackwebd` passent en worker dédié (genre `Service`,
-  ADR 0070) ; leur commentaire de raison disparaît.
-- Chaque autre app en `MainThread` est revue : la raison reste écrite si elle
-  tient toujours.
+- `ServiceSampleApp` and `hackwebd` move to a dedicated worker (kind `Service`,
+  ADR 0070); their reason comment disappears.
+- Each other app on `MainThread` is reviewed: the reason stays written if it
+  still holds.
 
-## Conséquences
+## Consequences
 
-- Nouvelles opérations du protocole (`ev.sub`, `ev.unsub`, `ev.pub`, `ev.chan`,
-  `watch.open`, message `ev`) documentées dans
+- New protocol operations (`ev.sub`, `ev.unsub`, `ev.pub`, `ev.chan`,
+  `watch.open`, `ev` message) documented in
   [`worker-processes.md`](../worker-processes.md).
-- Nouvelle API publique `HackWireContextAttribute` (SDK 1.2, ADR 0132).
-- Tests de parité : chaque scénario de `HackEvents` et de `Watch` tourne sur le
-  fil principal et dans la boucle locale des workers (`LoopbackWebWorkerRuntime`)
-  avec le même résultat ; une commande du projet d'exemple tiers tourne en
-  worker dans les tests E2E.
-- Une charge non déclarée échoue en worker et marche sur le fil principal :
-  c'est voulu (le message d'erreur le dit), et le guide du SDK l'explique.
+- New public API `HackWireContextAttribute` (SDK 1.2, ADR 0132).
+- Parity tests: each `HackEvents` and `Watch` scenario runs on the main
+  thread and in the workers' local loop (`LoopbackWebWorkerRuntime`)
+  with the same result; a command from the third-party sample project runs in a
+  worker in the E2E tests.
+- An undeclared payload fails in a worker and works on the main thread:
+  this is intended (the error message says so), and the SDK guide explains it.
 
-## Références
+## References
 
 - ADR 0070, 0072, 0080, 0094, 0113, 0128, 0132.
 - [`worker-processes.md`](../worker-processes.md),

@@ -1,162 +1,157 @@
-# Gestionnaire de tâches
+# Task manager
 
-Mise en œuvre du chantier `rebuild/4-task-manager` de la phase 4 : ADR 0056
-sections 4 et 5 (`HackProcess`, `HackServiceController`) et ADR 0058 section 2
-(réécriture de `HackerOs.Apps.SystemMonitor`). Les mesures lues viennent du
-chantier `4-proc-metrics` ([`system-metrics.md`](system-metrics.md),
+Implementation of the `rebuild/4-task-manager` work item of phase 4: ADR 0056
+sections 4 and 5 (`HackProcess`, `HackServiceController`) and ADR 0058 section 2
+(rewrite of `HackerOs.Apps.SystemMonitor`). The metrics read come from the
+`4-proc-metrics` work item ([`system-metrics.md`](system-metrics.md),
 ADR 0057).
 
-## Rôle
+## Role
 
-L'app « System Monitor » (`org.hackeros.system-monitor`) est le gestionnaire de
-tâches de HackerOS. Comme `top`, elle relit `/proc` toutes les secondes ; tout
-ce qu'elle affiche, une app tierce ou `ps` peut le lire aussi.
+The "System Monitor" app (`org.hackeros.system-monitor`) is HackerOS's task
+manager. Like `top`, it rereads `/proc` every second; everything it displays, a
+third-party app or `ps` can read as well.
 
-| Onglet | Contenu | Source |
+| Tab | Content | Source |
 | --- | --- | --- |
-| Processes | PID, nom, utilisateur, état, CPU, mémoire, lecture et écriture disque par seconde ; tri, filtre, sélection multiple, « End task » (`SIGTERM`), « Force kill » (`SIGKILL`, menu contextuel), détail | `HackProcess` → `/proc/<pid>/status`, `stat`, `cmdline`, `cwd`, `io` |
-| Performance | résumé (ancien onglet Overview), graphique du CPU total ou par cœur, graphique de la mémoire, section matériel (ancien onglet « Hardware & System Info ») | `/proc/stat`, `/proc/meminfo`, `/proc/uptime`, `/proc/loadavg`, `/proc/cpuinfo` |
-| Disk | espace occupé et libre de chaque disque ; débits de lecture et d'écriture, temps d'activité, compteurs | `HackDriveInfo`, `/proc/diskstats` |
-| Network | débits reçus et émis par interface, paquets, erreurs, pertes | `/proc/net/dev` |
-| Services | services installés, état, PID, type de démarrage, démarrer et arrêter | `HackServiceController` |
+| Processes | PID, name, user, state, CPU, memory, disk read and write per second; sort, filter, multiple selection, "End task" (`SIGTERM`), "Force kill" (`SIGKILL`, context menu), details | `HackProcess` → `/proc/<pid>/status`, `stat`, `cmdline`, `cwd`, `io` |
+| Performance | summary (former Overview tab), total or per-core CPU chart, memory chart, hardware section (former "Hardware & System Info" tab) | `/proc/stat`, `/proc/meminfo`, `/proc/uptime`, `/proc/loadavg`, `/proc/cpuinfo` |
+| Disk | used and free space of each disk; read and write rates, active time, counters | `HackDriveInfo`, `/proc/diskstats` |
+| Network | received and sent rates per interface, packets, errors, drops | `/proc/net/dev` |
+| Services | installed services, state, PID, start type, start and stop | `HackServiceController` |
 
-L'app ne référence plus que le SDK : `IProcessManager`, `AppCatalog`,
-`AppLifecycleOrchestrator` et `IEventBus` ont disparu, et son exemption de
-l'ADR 0055 est retirée de `build/HackerOs.Apps.targets`.
+The app now references only the SDK: `IProcessManager`, `AppCatalog`,
+`AppLifecycleOrchestrator` and `IEventBus` are gone, and its ADR 0055 exemption
+is removed from `build/HackerOs.Apps.targets`.
 
 ## Architecture
 
 ### SDK
 
-| Type | Projet | Rôle |
+| Type | Project | Role |
 | --- | --- | --- |
-| `HackProcess`, `HackProcessState`, `HackProcessIoCounters` | `HackerOs.AppSdk` (`Diagnostics/`) | un processus, sur le modèle de `System.Diagnostics.Process`, lu dans `/proc` par la passerelle fichier de l'app |
-| `HackServiceController`, `HackServiceControllerStatus` | `HackerOs.AppSdk` (`ServiceProcess/`) | un service, sur le modèle de `System.ServiceProcess.ServiceController` |
-| `HackLineChart`, `HackChartSeries`, `HackChartGeometry`, `HackChartSize` | `HackerOs.AppSdk.Blazor` (`Charts/`) | graphique en courbes SVG natif, sans bibliothèque ni JavaScript |
+| `HackProcess`, `HackProcessState`, `HackProcessIoCounters` | `HackerOs.AppSdk` (`Diagnostics/`) | a process, modeled on `System.Diagnostics.Process`, read from `/proc` through the app's file gateway |
+| `HackServiceController`, `HackServiceControllerStatus` | `HackerOs.AppSdk` (`ServiceProcess/`) | a service, modeled on `System.ServiceProcess.ServiceController` |
+| `HackLineChart`, `HackChartSeries`, `HackChartGeometry`, `HackChartSize` | `HackerOs.AppSdk.Blazor` (`Charts/`) | native SVG line chart, without a library or JavaScript |
 
 ### App (`Apps/System/HackerOs.Apps.SystemMonitor`)
 
-| Fichier | Rôle |
+| File | Role |
 | --- | --- |
-| `SystemMonitorWindow.razor` (+ `.cs`, `.css`, `.js`) | fenêtre : boucle de rafraîchissement, onglets `MudTabs`, « End task » et « Force kill » avec confirmation |
-| `Metrics/ProcFiles.cs` | parseurs de `stat`, `meminfo`, `cpuinfo`, `uptime`, `loadavg`, `diskstats`, `net/dev` (formats Linux) |
-| `Metrics/ProcReader.cs` | une lecture de `/proc` par le SDK : processus, fichiers système, disques |
-| `Metrics/SystemMetrics.cs` | différences entre deux lectures et historique de 60 valeurs (`MetricHistory`) |
-| `Metrics/Units.cs` | tailles, débits, pourcentages et durées lisibles, indépendants de la culture |
-| `Processes/ProcessTable.cs` | tri, filtre, sélection multiple, processus du panneau de détail |
-| `Processes/EndTaskRunner.cs` | arrêt d'une sélection, refus signalés processus par processus |
-| `Tabs/*.razor` | un composant par onglet et le panneau de détail, chacun avec son CSS isolé |
+| `SystemMonitorWindow.razor` (+ `.cs`, `.css`, `.js`) | window: refresh loop, `MudTabs` tabs, "End task" and "Force kill" with confirmation |
+| `Metrics/ProcFiles.cs` | parsers for `stat`, `meminfo`, `cpuinfo`, `uptime`, `loadavg`, `diskstats`, `net/dev` (Linux formats) |
+| `Metrics/ProcReader.cs` | one read of `/proc` through the SDK: processes, system files, disks |
+| `Metrics/SystemMetrics.cs` | differences between two reads and history of 60 values (`MetricHistory`) |
+| `Metrics/Units.cs` | readable sizes, rates, percentages and durations, culture-independent |
+| `Processes/ProcessTable.cs` | sort, filter, multiple selection, process of the details panel |
+| `Processes/EndTaskRunner.cs` | stopping a selection, refusals reported process by process |
+| `Tabs/*.razor` | one component per tab and the details panel, each with its isolated CSS |
 
-Tous les composants des onglets héritent de `HackComponentBase` : leurs
-gestionnaires d'événements s'exécutent dans le contexte ambiant de l'app
-(ADR 0043). `PerformanceTab`, `DiskTab` et `NetworkTab`, qui n'appellent pas le
-SDK, y sont passés en phase 5 pour que leur temps soit compté à l'app et non au
-compositeur (ADR 0067, [`resource-accounting.md`](resource-accounting.md#apps-existantes)).
+All the tab components inherit from `HackComponentBase`: their event handlers
+run in the app's ambient context (ADR 0043). `PerformanceTab`, `DiskTab` and
+`NetworkTab`, which do not call the SDK, were switched to it in phase 5 so that
+their time is counted for the app and not for the compositor (ADR 0067,
+[`resource-accounting.md`](resource-accounting.md#apps-existantes)).
 
-## Fonctionnement
+## How it works
 
-### Rafraîchissement
+### Refresh
 
-- Un `PeriodicTimer` d'une seconde (`SystemMonitorWindow.RefreshInterval`)
-  appelle `ProcReader.ReadAsync`, puis `SystemMetrics.Apply` et
-  `ProcessTable.SetRows`. Une lecture en cours n'est jamais doublée.
-- **Pause** : quand la fenêtre est réduite (le bureau la masque) ou que
-  l'onglet du navigateur est caché, le module `SystemMonitorWindow.razor.js`
-  le signale (`IntersectionObserver`, `visibilitychange`) et la boucle saute
-  ses lectures. À la restauration, une lecture est faite tout de suite. Un
-  bouton « Pause » suspend aussi le rafraîchissement à la main.
-- **Différences** : la première lecture sert de base. Le CPU est la part de
-  temps occupé entre deux lectures de `/proc/stat`, comme `top` (aucune
-  horloge nécessaire, le temps occupé et le temps libre sont sur la même
-  horloge simulée). Les débits disque, réseau et par processus sont des
-  octets réels divisés par le temps réel écoulé. Un compteur qui recule (OS
-  redémarré) donne `0`.
+- A one-second `PeriodicTimer` (`SystemMonitorWindow.RefreshInterval`) calls
+  `ProcReader.ReadAsync`, then `SystemMetrics.Apply` and
+  `ProcessTable.SetRows`. A read in progress is never doubled.
+- **Pause**: when the window is minimized (the desktop hides it) or the browser
+  tab is hidden, the `SystemMonitorWindow.razor.js` module signals it
+  (`IntersectionObserver`, `visibilitychange`) and the loop skips its reads. On
+  restore, a read is done right away. A "Pause" button also suspends refreshing
+  by hand.
+- **Differences**: the first read serves as a base. CPU is the share of busy
+  time between two reads of `/proc/stat`, like `top` (no clock needed, busy
+  time and idle time are on the same simulated clock). Disk, network and
+  per-process rates are real bytes divided by the real elapsed time. A counter
+  that goes backwards (OS restarted) gives `0`.
 
-### Processus
+### Processes
 
-- Mention « estimated » (ADR 0066) : l'en-tête des colonnes CPU et Memory porte
-  une petite étiquette en pointillés tant qu'une ligne au moins vient du
-  simulateur (`CpuSource:` / `MemSource:` de `/proc/<pid>/status` différent de
-  `measured`, lus dans `HackProcess.Status`). Son infobulle le dit. Voir
-  [`resource-accounting.md`](resource-accounting.md). Avec la mémoire mesurée
-  (ADR 0068, [`memory-accounting.md`](memory-accounting.md)), la colonne
-  Memory montre `VmRSS` mesuré pour toutes les apps intégrées et l'étiquette
-  disparaît de cette colonne dès que toutes les lignes sont mesurées ; le
-  détail d'un processus montre les couches (`RssAnon`, `RssFile`, `VmData`,
-  `VmExe`, `HackAllocBytes`) dans son `status` complet. L'app n'a pas changé :
-  elle lit toujours `HackProcess`.
-- « Not responding » (ADR 0067) : quand `/proc/<pid>/status` porte
-  `Responding: 0` (`HackProcess.Responding` faux), la colonne d'état affiche
-  « Not responding » en rouge à la place de l'état, avec une infobulle ; le tri
-  par état en tient compte. Affichage seulement : le gestionnaire n'arrête
-  rien de lui-même, « End task » reste son seul moyen. Voir
-  [`cpu-accounting.md`](cpu-accounting.md). Pour une app à fenêtre, la fenêtre
-  elle-même affiche aussi « (Not responding) » et la boîte « Attendre |
-  Terminer l'application » (ADR 0127,
+- "estimated" mention (ADR 0066): the header of the CPU and Memory columns
+  carries a small dotted label as long as at least one row comes from the
+  simulator (`CpuSource:` / `MemSource:` of `/proc/<pid>/status` different from
+  `measured`, read in `HackProcess.Status`). Its tooltip says so. See
+  [`resource-accounting.md`](resource-accounting.md). With measured memory
+  (ADR 0068, [`memory-accounting.md`](memory-accounting.md)), the Memory column
+  shows the measured `VmRSS` for all built-in apps and the label disappears
+  from that column as soon as all rows are measured; a process's details show
+  the layers (`RssAnon`, `RssFile`, `VmData`, `VmExe`, `HackAllocBytes`) in its
+  full `status`. The app has not changed: it still reads `HackProcess`.
+- "Not responding" (ADR 0067): when `/proc/<pid>/status` carries
+  `Responding: 0` (`HackProcess.Responding` false), the state column displays
+  "Not responding" in red in place of the state, with a tooltip; sorting by
+  state takes it into account. Display only: the manager stops nothing by
+  itself, "End task" remains its only means. See
+  [`cpu-accounting.md`](cpu-accounting.md). For a windowed app, the window
+  itself also displays "(Not responding)" and the "Wait | End application" box
+  (ADR 0127,
   [`process-priority-and-unresponsive-windows.md`](process-priority-and-unresponsive-windows.md)).
-  Pour un processus dans un Web Worker (ADR 0070), l'état apparaît **pendant**
-  le blocage : son worker ne bat plus depuis 5 s, et le reste de l'interface
-  continue de répondre ; « End task » puis « Force kill » terminent le worker
+  For a process in a Web Worker (ADR 0070), the state appears **during** the
+  blockage: its worker has not beaten for 5 s, and the rest of the interface
+  keeps responding; "End task" then "Force kill" terminate the worker
   ([`worker-processes.md`](worker-processes.md)).
-- Priorité (ADR 0127 §1) : colonne « Priority » (`ProcessColumn.Priority`,
-  `ProcessRow.Nice`) affichée par un bouton bascule (`ProcessTable.ShowPriority`,
-  masquée au départ) ; elle montre la valeur `nice` lue dans
-  `/proc/<pid>/stat` et se trie. Le gestionnaire l'affiche seulement : on la
-  change avec `renice`. Voir [`process-priority-and-unresponsive-windows.md`](process-priority-and-unresponsive-windows.md).
-- Tâches de fond : une tâche `HackBackground.RunAsync` est un processus enfant
-  de son app (ADR 0128, 0140) ; elle apparaît comme une ligne à part, nommée
-  d'après la tâche (`Name:` de `status`, lignes `Job:` et `Host:`), et
-  « End task » l'arrête comme les autres ([`background-jobs.md`](../framework/background-jobs.md)).
-- Un processus tué par l'OOM killer (ADR 0126) ou par sa limite `rss`/`cpu`
-  (ADR 0125) disparaît simplement de la table à la lecture suivante ; une
-  victime de l'OOM killer laisse sa trace dans `dmesg`
+- Priority (ADR 0127 §1): "Priority" column (`ProcessColumn.Priority`,
+  `ProcessRow.Nice`) displayed through a toggle button
+  (`ProcessTable.ShowPriority`, hidden at the start); it shows the `nice` value
+  read from `/proc/<pid>/stat` and can be sorted. The manager only displays it:
+  it is changed with `renice`. See [`process-priority-and-unresponsive-windows.md`](process-priority-and-unresponsive-windows.md).
+- Background tasks: a `HackBackground.RunAsync` task is a child process of its
+  app (ADR 0128, 0140); it appears as a separate row, named after the task
+  (`Name:` of `status`, `Job:` and `Host:` lines), and "End task" stops it like
+  the others ([`background-jobs.md`](../framework/background-jobs.md)).
+- A process killed by the OOM killer (ADR 0126) or by its `rss`/`cpu` limit
+  (ADR 0125) simply disappears from the table at the next read; an OOM killer
+  victim leaves its trace in `dmesg`
   ([`oom-killer.md`](oom-killer.md), [`process-limits.md`](process-limits.md)).
-- Tri par colonne (clic sur l'en-tête ; même colonne : sens inverse ; colonne
-  de mesure : plus grand d'abord). À valeur égale, ordre par PID, pour que les
-  lignes ne sautent pas à chaque seconde.
-- Filtre texte sur le nom, l'id d'app et le PID, insensible à la casse. Une
-  ligne sélectionnée que le filtre cache est désélectionnée : « End task »
-  n'atteint jamais une ligne invisible.
-- Sélection : clic, Ctrl+clic (bascule), Maj+clic (plage depuis le dernier
-  clic, ajoutée avec Ctrl+Maj), Ctrl+A, Échap. La sélection est gardée par PID
-  d'une lecture à l'autre.
-- Clavier dans la table : Suppr pour « End task », Maj+Suppr pour « Force
-  kill », Entrée pour le détail. Clic droit sur une ligne : menu Details, End
-  task, Force kill (la ligne est sélectionnée seule si elle ne l'était pas).
-- **End task** (ADR 0069 §4, `SIGTERM`) : une fenêtre de confirmation liste les
-  processus, puis chacun reçoit `HackProcess.TerminateAsync` : il est averti
-  (`StopRequested`, raison `Terminated`), son jeton est annulé, et il a 5
-  secondes pour se terminer avant que l'OS le tue. Une app à fenêtre garde un
-  brouillon de ses modifications non enregistrées puis sa fenêtre se ferme.
-  Les processus sélectionnés sont signalés ensemble, pas l'un après l'autre :
-  trois processus bloqués ne coûtent pas 15 secondes.
-- **Force kill** (menu contextuel, `SIGKILL`) : confirmation distincte (« it
-  cannot react »), puis `HackProcess.KillAsync` : immédiat, sans
-  `StopRequested`, descendants compris.
-- Dans les deux cas, un refus (`process.manage` absent) est noté pour ce
-  processus et n'arrête pas les autres ; un processus déjà terminé compte comme
-  arrêté. Le résultat s'affiche au-dessus de la table, dans l'ordre de la
-  sélection.
-- **Détail** (double clic, Entrée ou « Details ») : vue d'ensemble, ligne de
-  commande, répertoire courant, parent et enfants cliquables, compteurs `io`,
-  `status` complet, environnement (`environ`) s'il est lisible. `io` et
-  `environ` sont en `0400` : pour le processus d'un autre utilisateur, le
-  panneau l'indique au lieu d'une erreur.
+- Sort by column (click on the header; same column: reverse direction; measure
+  column: largest first). On equal values, order by PID, so that rows do not
+  jump every second.
+- Text filter on the name, the app id and the PID, case-insensitive. A selected
+  row that the filter hides is deselected: "End task" never reaches an
+  invisible row.
+- Selection: click, Ctrl+click (toggle), Shift+click (range from the last
+  click, added with Ctrl+Shift), Ctrl+A, Esc. The selection is kept by PID from
+  one read to the next.
+- Keyboard in the table: Delete for "End task", Shift+Delete for "Force kill",
+  Enter for details. Right-click on a row: menu Details, End task, Force kill
+  (the row is selected alone if it was not).
+- **End task** (ADR 0069 §4, `SIGTERM`): a confirmation window lists the
+  processes, then each receives `HackProcess.TerminateAsync`: it is notified
+  (`StopRequested`, reason `Terminated`), its token is cancelled, and it has 5
+  seconds to finish before the OS kills it. A windowed app keeps a draft of its
+  unsaved changes then its window closes. The selected processes are signaled
+  together, not one after the other: three blocked processes do not cost 15
+  seconds.
+- **Force kill** (context menu, `SIGKILL`): separate confirmation ("it cannot
+  react"), then `HackProcess.KillAsync`: immediate, without `StopRequested`,
+  descendants included.
+- In both cases, a refusal (`process.manage` missing) is noted for that process
+  and does not stop the others; a process already finished counts as stopped.
+  The result is displayed above the table, in selection order.
+- **Details** (double click, Enter or "Details"): overview, command line,
+  current directory, clickable parent and children, `io` counters, full
+  `status`, environment (`environ`) if readable. `io` and `environ` are `0400`:
+  for another user's process, the panel says so instead of showing an error.
 
 ### Services
 
-Colonnes État (`active`, `activating`, `deactivating`, `inactive`, `failed`
-avec sa raison, ADR 0097) et Santé (santé et texte rapportés par le service).
-Une ligne `failed` est mise en évidence et offre « Reset » (`reset-failed`).
-L'état vient du gestionnaire de services (`RefreshStatusAsync` à chaque
-rafraîchissement) ; seul un OS qui ne le fournit pas retombe sur `/proc`.
-La liste et les types de démarrage sont lus à l'ouverture de l'onglet et après
-chaque action ; l'état et le PID suivent les processus lus chaque seconde par
-la fenêtre, donc un service qui s'arrête apparaît arrêté sans recharger la
-liste. Un type de démarrage illisible (service d'une autre app sans
-`services.manage`) s'affiche « unknown ».
+Columns State (`active`, `activating`, `deactivating`, `inactive`, `failed`
+with its reason, ADR 0097) and Health (health and text reported by the
+service). A `failed` row is highlighted and offers "Reset" (`reset-failed`).
+The state comes from the service manager (`RefreshStatusAsync` at each refresh);
+only an OS that does not provide it falls back to `/proc`. The list and the
+start types are read when the tab opens and after each action; the state and
+the PID follow the processes read every second by the window, so a service that
+stops appears stopped without reloading the list. An unreadable start type
+(service of another app without `services.manage`) is shown as "unknown".
 
-## API du SDK
+## SDK API
 
 ### `HackProcess` (ADR 0056 §4)
 
@@ -171,42 +166,43 @@ bool endedByItself = await p.TerminateAsync();                 // SIGTERM, 5 s (
 await p.KillAsync();                                           // SIGKILL
 ```
 
-- Propriétés : `Id`, `ParentId`, `ProcessName`, `AppId`, `Kind`, `UserId`,
+- Properties: `Id`, `ParentId`, `ProcessName`, `AppId`, `Kind`, `UserId`,
   `UserName`, `SessionId`, `State`, `StateCode`, `StartTime`, `WorkingSet64`
-  (`VmRSS`), `PrivateMemorySize64` (`RssAnon` quand la mémoire est mesurée,
-  sinon égal à `WorkingSet64`, ADR 0068), `CpuUsage`, `Arguments`, `CommandLine`, `WorkingDirectory`, `IoCounters`,
-  `ReadBytes`, `WriteBytes`, `Status`, `HasExited` ; `GetChildren(liste)`.
-- Temps CPU (ADR 0067, comme `System.Diagnostics.Process`) :
+  (`VmRSS`), `PrivateMemorySize64` (`RssAnon` when memory is measured,
+  otherwise equal to `WorkingSet64`, ADR 0068), `CpuUsage`, `Arguments`, `CommandLine`, `WorkingDirectory`, `IoCounters`,
+  `ReadBytes`, `WriteBytes`, `Status`, `HasExited`; `GetChildren(liste)`.
+- CPU times (ADR 0067, like `System.Diagnostics.Process`):
   `UserProcessorTime` (`utime`), `PrivilegedProcessorTime` (`stime`),
-  `TotalProcessorTime`, lus dans `/proc/<pid>/stat` (résolution 10 ms) ;
-  `Responding` (`Responding:` de `status`, toujours vrai quand le CPU n'est pas
-  mesuré). `ParseStatTimes(texte)` analyse une ligne `stat`. Voir
+  `TotalProcessorTime`, read from `/proc/<pid>/stat` (10 ms resolution);
+  `Responding` (`Responding:` of `status`, always true when CPU is not
+  measured). `ParseStatTimes(texte)` parses a `stat` line. See
   [`cpu-accounting.md`](cpu-accounting.md).
-- Priorité (ADR 0127 §1) : `Nice` (champ 19 de `stat`, de -20 à 19) et
-  `BasePriority` (`20 + Nice`, le `PR` de `top`) ; `ParseStatNice(texte)`.
-  Changer la priorité passe par `IAppProcessGateway.SetNice` (commande `renice`).
-- Limites (ADR 0125, [`process-limits.md`](process-limits.md)) :
-  `GetResourceLimitsAsync()` lit `/proc/<pid>/limits` (`HackResourceLimits` :
+- Priority (ADR 0127 §1): `Nice` (field 19 of `stat`, from -20 to 19) and
+  `BasePriority` (`20 + Nice`, the `PR` of `top`); `ParseStatNice(texte)`.
+  Changing the priority goes through `IAppProcessGateway.SetNice` (`renice`
+  command).
+- Limits (ADR 0125, [`process-limits.md`](process-limits.md)):
+  `GetResourceLimitsAsync()` reads `/proc/<pid>/limits` (`HackResourceLimits`:
   `Cpu`, `Rss`, `NoFile`, `NProc`, `Enforcement`, `IsCpuMeasured`,
-  `IsMemoryMeasured`) ; `SetResourceLimitAsync(kind, souple, dure)` en change
-  une comme `prlimit` (`process.manage` pour un autre processus, `sudo` pour
-  monter une limite dure ou toucher le processus d'un autre utilisateur).
-- Lecture : `/proc` (liste et date de création de `/proc/<pid>` comme
-  `StartTime`), `status`, `stat`, `cmdline`, `cwd` (cible du lien), `io`, `environ`.
-  Visibilité de `/proc` : son propre processus, les autres avec
-  `process.list`. Lire `/proc` demande `filesystem.system.read`. Par la
-  passerelle (`IAppProcessGateway`), une app voit, arrête et tue aussi ses
-  propres descendants (ses tâches `HackBackground`) sans `process.list` ni
-  `process.manage` (ADR 0140 §7).
-- Action : `KillAsync` (`SIGKILL` : immédiat, descendants compris, pas de
-  `StopRequested`), `TerminateAsync` (`SIGTERM` d'un autre processus, raison
-  `Terminated`, `DefaultTerminateTimeout` = 5 s) et `CloseMainWindowAsync`
-  (même arrêt poli avec la raison `CloseRequested`, `DefaultCloseTimeout`)
-  passent par `IAppProcessGateway`. Les deux arrêts polis renvoient `false`
-  quand l'OS a dû tuer le processus au délai. Voir ADR 0069 et
-  [`app-sdk.md`](../framework/app-sdk.md#arrêt-propre-et-points-darrêt-adr-0069). Exceptions :
-  `HackUnauthorizedAccessException` (capacité `process.manage` absente pour un
-  autre processus), `InvalidOperationException` (processus déjà terminé).
+  `IsMemoryMeasured`); `SetResourceLimitAsync(kind, souple, dure)` changes one
+  like `prlimit` (`process.manage` for another process, `sudo` to raise a hard
+  limit or touch another user's process).
+- Reading: `/proc` (list and creation date of `/proc/<pid>` as `StartTime`),
+  `status`, `stat`, `cmdline`, `cwd` (link target), `io`, `environ`.
+  Visibility of `/proc`: its own process, the others with `process.list`.
+  Reading `/proc` requires `filesystem.system.read`. Through the gateway
+  (`IAppProcessGateway`), an app also sees, stops and kills its own descendants
+  (its `HackBackground` tasks) without `process.list` or `process.manage`
+  (ADR 0140 §7).
+- Action: `KillAsync` (`SIGKILL`: immediate, descendants included, no
+  `StopRequested`), `TerminateAsync` (`SIGTERM` of another process, reason
+  `Terminated`, `DefaultTerminateTimeout` = 5 s) and `CloseMainWindowAsync`
+  (same polite stop with the reason `CloseRequested`, `DefaultCloseTimeout`) go
+  through `IAppProcessGateway`. Both polite stops return `false` when the OS had
+  to kill the process at the deadline. See ADR 0069 and
+  [`app-sdk.md`](../framework/app-sdk.md#arrêt-propre-et-points-darrêt-adr-0069). Exceptions:
+  `HackUnauthorizedAccessException` (`process.manage` capability missing for
+  another process), `InvalidOperationException` (process already finished).
 
 ### `HackServiceController` (ADR 0056 §5)
 
@@ -217,24 +213,24 @@ await sync.StartAsync();
 await sync.SetStartTypeAsync(ServiceStartMode.Automatic);
 ```
 
-- Propriétés : `ServiceName` (id d'app), `DisplayName`, `Description`,
-  `Status` (`Stopped`, `StartPending`, `StopPending`, `Running`, valeurs de
-  `ServiceControllerStatus`, déduit de l'état actif : `failed` donne
+- Properties: `ServiceName` (app id), `DisplayName`, `Description`,
+  `Status` (`Stopped`, `StartPending`, `StopPending`, `Running`, values of
+  `ServiceControllerStatus`, deduced from the active state: `failed` gives
   `Stopped`), `StartType` (`ServiceStartMode?`), `ProcessId`.
-- États façon systemd (ADR 0097) : `ActiveState` (`HackServiceActiveState` :
+- systemd-style states (ADR 0097): `ActiveState` (`HackServiceActiveState`:
   `Inactive`, `Activating`, `Active`, `Deactivating`, `Failed`), `Result`
-  (`HackServiceResult` : `Success`, `ExitCode`, `Exception`, `Killed`,
+  (`HackServiceResult`: `Success`, `ExitCode`, `Exception`, `Killed`,
   `Timeout`), `Health` (`HackServiceHealth`), `StatusText`,
-  `ActiveStateChangedAt`, `ExitCode`. `ResetFailedAsync()` efface `failed` ;
-  `RefreshStatusAsync()` relit l'état seul. `HackServiceStates.ToSystemdName`
-  donne les mots de systemd.
-- Liste : `HackApps.GetInstalledAsync` filtrée sur `AppKind.Service`, triée
-  par nom. État : `HackProcess`. Type de démarrage et actions :
+  `ActiveStateChangedAt`, `ExitCode`. `ResetFailedAsync()` clears `failed`;
+  `RefreshStatusAsync()` rereads the state alone. `HackServiceStates.ToSystemdName`
+  gives systemd's words.
+- List: `HackApps.GetInstalledAsync` filtered on `AppKind.Service`, sorted by
+  name. State: `HackProcess`. Start type and actions:
   `IAppServiceControlGateway`.
-- Capacités : aucune pour lister ; `services.manage` pour agir sur le service
-  d'une autre app et pour lire son type de démarrage. Échecs :
-  `HackUnauthorizedAccessException` (refus), `InvalidOperationException`
-  (service désinstallé, désactivé ou en échec).
+- Capabilities: none to list; `services.manage` to act on another app's service
+  and to read its start type. Failures: `HackUnauthorizedAccessException`
+  (refusal), `InvalidOperationException` (service uninstalled, disabled or
+  failed).
 
 ### `HackLineChart` (`HackerOs.AppSdk.Blazor.Charts`)
 
@@ -245,115 +241,112 @@ await sync.SetStartTypeAsync(ServiceStartMode.Automatic);
                ValueFormatter="FormatPercent" />
 ```
 
-- Paramètres : `Series`, `Title`, `Capacity` (60 par défaut), `Maximum`
-  (`null` : échelle automatique arrondie à 1, 2 ou 5 × 10ⁿ, jamais sous
+- Parameters: `Series`, `Title`, `Capacity` (60 by default), `Maximum`
+  (`null`: automatic scale rounded to 1, 2 or 5 × 10ⁿ, never below
   `MinimumScale`), `ValueFormatter`, `Filled`, `ShowLegend`, `TimeSpanLabel`,
   `Size` (`Small`, `Medium`, `Large`), `Class`.
-- La valeur la plus récente est au bord droit ; les coordonnées SVG sont
-  écrites en culture invariante.
-- Couleurs : `--hos-chart-series-0` à `--hos-chart-series-7`, avec repli sur
-  l'accent et les couleurs d'état du thème.
+- The most recent value is at the right edge; SVG coordinates are written in
+  invariant culture.
+- Colors: `--hos-chart-series-0` to `--hos-chart-series-7`, falling back to the
+  theme's accent and state colors.
 
-## Décisions clés et précisions par rapport aux ADR 0056 et 0058
+## Key decisions and clarifications relative to ADR 0056 and 0058
 
-- **`UserName`** : `/proc/<pid>/status` donne un `Uid` opaque et HackerOS n'a
-  pas de `/etc/passwd`. Le SDK nomme l'utilisateur du processus appelant ;
-  pour un autre, `UserName` vaut l'id, comme `ps` avec un uid inconnu.
-  L'onglet raccourcit un id de 32 caractères en `uid:xxxxxxxx`.
-- **`StartType` nullable** : lire le type de démarrage du service d'une autre
-  app passe par la même règle que le modifier (`services.manage`). Sans elle,
-  la liste reste lisible, le type est `null`.
-- **Ajouts à la liste de l'ADR 0056** : `SessionId`, `StateCode`,
-  `Arguments`, `IoCounters`, `Status`, `GetEnvironmentVariablesAsync`,
-  `GetChildren`, `GetCurrentProcessAsync`, `HackServiceController.ProcessId`
-  et `Description` : tout ce que le détail d'un processus et l'onglet Services
-  affichent, sans autre source que `/proc` et le catalogue.
-  `ParseStatus` et `ParseIo` sont publics pour les apps qui lisent `/proc`
-  elles-mêmes.
-- **Graphique dans le SDK** : l'ADR 0058 demande des composants SVG natifs ;
-  `HackLineChart` vit dans `HackerOs.AppSdk.Blazor` pour qu'une autre app
-  (Diagnostic, une app tierce) le réutilise, comme le demande `AGENTS.md`.
-- **Fenêtre réduite détectée en JavaScript** : le SDK n'expose pas l'état de la
-  fenêtre. Le module de la fenêtre observe sa propre visibilité, seul point que
-  C# ne voit pas ; il est importé depuis `./_content/HackerOs.Apps.SystemMonitor/`
-  (ADR 0055 §3). Le même module empêche Ctrl+A de sélectionner toute la page
-  quand la table a le focus.
-- **Onglets non conservés** (`KeepPanelsAlive="false"`) : seul l'onglet visible
-  se rend chaque seconde. L'état qui doit survivre à un changement d'onglet
-  (tri, filtre, sélection, détail ouvert) vit dans `ProcessTable`, détenu par
-  la fenêtre.
-- **Manifeste** : `filesystem.system.read` s'ajoute à `process.list`,
-  `process.manage` et `services.manage`, comme pour `ps`.
-- **Profil de ressources au lancement** (correction dans Platform Core) :
-  `AppLifecycleOrchestrator` lançait chaque processus avec
-  `ResourceProfile.None`, si bien que le simulateur rendait 0 % de CPU et
-  0 octet de mémoire pour tous, et que les graphiques restaient plats. Il passe
-  maintenant les poids `Resources` du manifeste, comme le prévoit l'ADR 0012 ;
-  le validateur de manifeste impose déjà les mêmes bornes que `ResourceProfile`.
-- **Pas d'effet d'observateur sur le disque.** Le gestionnaire ne doit pas
-  devenir le premier lecteur du disque qu'il surveille :
-  - `HackProcess` lit le lien `cwd` comme `readlink`, sans résoudre sa cible.
-    Suivre le lien faisait résoudre le répertoire courant de chaque processus
-    dans IndexedDB, un segment par transaction, à chaque seconde (environ
-    40 lectures par seconde mesurées sur `hda`, contre 4 au repos) ;
-  - l'espace des disques (`HackDriveInfo`, qui parcourt les entrées
-    IndexedDB) n'est relu que toutes les 10 lectures
-    (`SystemMonitorWindow.DriveRefreshEvery`), comme on ne lance pas `df` en
-    boucle.
+- **`UserName`**: `/proc/<pid>/status` gives an opaque `Uid` and HackerOS has no
+  `/etc/passwd`. The SDK names the calling process's user; for another one,
+  `UserName` is the id, like `ps` with an unknown uid. The tab shortens a
+  32-character id to `uid:xxxxxxxx`.
+- **Nullable `StartType`**: reading the start type of another app's service
+  follows the same rule as changing it (`services.manage`). Without it, the list
+  stays readable, the type is `null`.
+- **Additions to the ADR 0056 list**: `SessionId`, `StateCode`, `Arguments`,
+  `IoCounters`, `Status`, `GetEnvironmentVariablesAsync`, `GetChildren`,
+  `GetCurrentProcessAsync`, `HackServiceController.ProcessId` and `Description`:
+  everything that a process's details and the Services tab display, with no
+  source other than `/proc` and the catalog. `ParseStatus` and `ParseIo` are
+  public for apps that read `/proc` themselves.
+- **Chart in the SDK**: ADR 0058 asks for native SVG components;
+  `HackLineChart` lives in `HackerOs.AppSdk.Blazor` so that another app
+  (Diagnostic, a third-party app) reuses it, as `AGENTS.md` requires.
+- **Minimized window detected in JavaScript**: the SDK does not expose the
+  window's state. The window's module observes its own visibility, the one
+  point that C# does not see; it is imported from
+  `./_content/HackerOs.Apps.SystemMonitor/` (ADR 0055 §3). The same module
+  prevents Ctrl+A from selecting the whole page when the table has focus.
+- **Tabs not kept** (`KeepPanelsAlive="false"`): only the visible tab renders
+  every second. State that must survive a tab change (sort, filter, selection,
+  open details) lives in `ProcessTable`, owned by the window.
+- **Manifest**: `filesystem.system.read` is added to `process.list`,
+  `process.manage` and `services.manage`, as for `ps`.
+- **Resource profile at launch** (fix in Platform Core):
+  `AppLifecycleOrchestrator` launched each process with
+  `ResourceProfile.None`, so that the simulator returned 0 % CPU and 0 bytes of
+  memory for all, and the charts stayed flat. It now passes the manifest's
+  `Resources` weights, as ADR 0012 provides; the manifest validator already
+  enforces the same bounds as `ResourceProfile`.
+- **No observer effect on the disk.** The manager must not become the first
+  reader of the disk it monitors:
+  - `HackProcess` reads the `cwd` link like `readlink`, without resolving its
+    target. Following the link made the current directory of each process be
+    resolved in IndexedDB, one segment per transaction, every second (about 40
+    reads per second measured on `hda`, against 4 at rest);
+  - disk space (`HackDriveInfo`, which walks the IndexedDB entries) is reread
+    only every 10 reads (`SystemMonitorWindow.DriveRefreshEvery`), just as one
+    does not run `df` in a loop.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Execution/HackProcessTests.cs` :
-  `HackProcess` et `HackServiceController` sur le vrai fournisseur `/proc` et
-  `AppFileSystemGateway` ; visibilité sans `process.list`, `io` et `environ`
-  privés, processus terminé, refus et sortie de `KillAsync`, délai de
-  `CloseMainWindowAsync`, raison et délai de `TerminateAsync`, services (état,
-  type illisible, désactivé, refus).
-- `Tests/HackerOs.Platform.Core.Tests/Lifecycle/AppLifecycleOrchestratorTests.cs` :
-  le processus reçoit les poids `Resources` de son manifeste.
-- `Tests/HackerOs.AppSdk.Blazor.Tests/HackChartGeometryTests.cs` : échelle
-  automatique, position des points, aire, culture invariante.
-- `Tests/HackerOs.Apps.SystemMonitor.Tests/` : parseurs `/proc`
-  (`ProcFilesTests`), différences et historique (`SystemMetricsTests`), tri,
-  filtre, sélection et « End task » (`ProcessTableTests`), « End task » en
-  `SIGTERM` 5 s et « Force kill » en `SIGKILL`, sélection signalée ensemble
-  (`EndTaskTests`), unités (`UnitsTests`), manifeste (`SystemMonitorWindowTests`),
-  textes anglais et français et unités françaises (`SystemMonitorLocalizationTests`).
+- `Tests/HackerOs.Platform.Core.Tests/Execution/HackProcessTests.cs`:
+  `HackProcess` and `HackServiceController` on the real `/proc` provider and
+  `AppFileSystemGateway`; visibility without `process.list`, private `io` and
+  `environ`, finished process, refusal and output of `KillAsync`, deadline of
+  `CloseMainWindowAsync`, reason and deadline of `TerminateAsync`, services
+  (state, unreadable type, disabled, refusal).
+- `Tests/HackerOs.Platform.Core.Tests/Lifecycle/AppLifecycleOrchestratorTests.cs`:
+  the process receives the `Resources` weights of its manifest.
+- `Tests/HackerOs.AppSdk.Blazor.Tests/HackChartGeometryTests.cs`: automatic
+  scale, point position, area, invariant culture.
+- `Tests/HackerOs.Apps.SystemMonitor.Tests/`: `/proc` parsers
+  (`ProcFilesTests`), differences and history (`SystemMetricsTests`), sort,
+  filter, selection and "End task" (`ProcessTableTests`), "End task" as
+  `SIGTERM` 5 s and "Force kill" as `SIGKILL`, selection signaled together
+  (`EndTaskTests`), units (`UnitsTests`), manifest (`SystemMonitorWindowTests`),
+  English and French texts and French units (`SystemMonitorLocalizationTests`).
 
-## Langues (ADR 0104)
+## Languages (ADR 0104)
 
-Les textes de l'app sont dans `Resources/Strings.resx` (anglais) et
-`Strings.fr.resx` (français), lus avec `AppContext.GetLocalizer<Strings>()`.
-Les nombres suivent `AppContext.FormatCulture` : `Units` a des surcharges qui
-prennent une culture (`1,5 Mio`, `12,5 %`, `2 j 03:14:15` en français) ; les
-surcharges sans culture restent invariantes. Les noms et valeurs lus dans
-`/proc` (champs de `status`, états systemd) ne sont pas traduits.
+The app's texts are in `Resources/Strings.resx` (English) and
+`Strings.fr.resx` (French), read with `AppContext.GetLocalizer<Strings>()`.
+Numbers follow `AppContext.FormatCulture`: `Units` has overloads that take a
+culture (`1,5 Mio`, `12,5 %`, `2 j 03:14:15` in French); the overloads without
+a culture stay invariant. The names and values read from `/proc` (fields of
+`status`, systemd states) are not translated.
 
-## Liste des tâches du chantier `rebuild/4-task-manager`
+## Task list for work item `rebuild/4-task-manager`
 
-- [x] `HackProcess` : lecture de `/proc/<pid>/status`, `cmdline`, `cwd`, `io`, `environ` ; `KillAsync`, `CloseMainWindowAsync` par `IAppProcessGateway`.
-- [x] `HackServiceController` : liste par `HackApps`, état par `HackProcess`, actions et type de démarrage par `IAppServiceControlGateway`.
-- [x] `HackLineChart` : graphique SVG natif dans `HackerOs.AppSdk.Blazor`.
-- [x] Parseurs `/proc` et calcul des débits par différence, historique de 60 s.
-- [x] Modèle de la table : tri, filtre, sélection multiple (Ctrl, Maj, Ctrl+A), détail.
-- [x] Réécriture de la fenêtre : onglets Processes, Performance, Disk, Network, Services ; détail ; « End task » confirmé, refus par processus ; rafraîchissement d'une seconde suspendu quand la fenêtre est réduite.
-- [x] Retrait de `Platform.Core` et de l'exemption ADR 0055 ; manifeste (`filesystem.system.read`).
-- [x] Correction : profil de ressources du manifeste passé au processus par `AppLifecycleOrchestrator` (CPU et mémoire enfin non nuls).
-- [x] Vérification dans le navigateur (hôte `test/test`) : onglets, tri, Maj+clic, détail, filtre, « End task », pause fenêtre réduite ; correction de l'effet d'observateur sur `hda`.
-- [x] Tests (SDK, graphique, app).
-- [x] Documentation : ce document, `app-sdk.md`, `system-metrics.md`, `virtual-proc-and-dev.md`, index.
+- [x] `HackProcess`: reading of `/proc/<pid>/status`, `cmdline`, `cwd`, `io`, `environ`; `KillAsync`, `CloseMainWindowAsync` through `IAppProcessGateway`.
+- [x] `HackServiceController`: list through `HackApps`, state through `HackProcess`, actions and start type through `IAppServiceControlGateway`.
+- [x] `HackLineChart`: native SVG chart in `HackerOs.AppSdk.Blazor`.
+- [x] `/proc` parsers and computation of rates by difference, 60 s history.
+- [x] Table model: sort, filter, multiple selection (Ctrl, Shift, Ctrl+A), details.
+- [x] Window rewrite: tabs Processes, Performance, Disk, Network, Services; details; confirmed "End task", refusal per process; one-second refresh suspended when the window is minimized.
+- [x] Removal of `Platform.Core` and of the ADR 0055 exemption; manifest (`filesystem.system.read`).
+- [x] Fix: manifest resource profile passed to the process by `AppLifecycleOrchestrator` (CPU and memory finally non-zero).
+- [x] Verification in the browser (host `test/test`): tabs, sort, Shift+click, details, filter, "End task", minimized-window pause; fix of the observer effect on `hda`.
+- [x] Tests (SDK, chart, app).
+- [x] Documentation: this document, `app-sdk.md`, `system-metrics.md`, `virtual-proc-and-dev.md`, index.
 
-## Chantier `rebuild/5-graceful-stop` (ADR 0069)
+## Work item `rebuild/5-graceful-stop` (ADR 0069)
 
-- [x] « End task » passe de `KillAsync` à `TerminateAsync` (`SIGTERM`, 5 s), avec sa confirmation (ADR 0058 §2).
-- [x] « Force kill » (`SIGKILL`) dans le menu contextuel des lignes et sur Maj+Suppr, avec sa propre confirmation.
-- [x] Sélection signalée en parallèle, rapport dans l'ordre de la sélection (`EndTaskRunner`, `EndTaskMode`).
-- [x] Tests : `EndTaskTests`, `HackProcessTests.TerminateAsync_*`.
+- [x] "End task" goes from `KillAsync` to `TerminateAsync` (`SIGTERM`, 5 s), with its confirmation (ADR 0058 §2).
+- [x] "Force kill" (`SIGKILL`) in the rows' context menu and on Shift+Delete, with its own confirmation.
+- [x] Selection signaled in parallel, report in selection order (`EndTaskRunner`, `EndTaskMode`).
+- [x] Tests: `EndTaskTests`, `HackProcessTests.TerminateAsync_*`.
 
-## Chantier `rebuild/5-worker-processes` (ADR 0070, 0071)
+## Work item `rebuild/5-worker-processes` (ADR 0070, 0071)
 
-- [x] `Metrics/ProcFiles.cs` lit `/proc/hackeros/workers` (`ProcWorkers`, `ProcWorker`, `ParseWorkers`) ; `ProcReader` le lit s'il existe.
-- [x] Onglet Performance : section « Workers » (capacité, taille du pool, une carte par worker avec rôle, état, cœur, mémoire, processus) ; « Not responding » en rouge.
-  Depuis `exec/9` (ADR 0131, 0143), quand la page est isolée, la mémoire d'une carte est celle que le navigateur mesure pour ce worker (`memory-measure: browser` dans `/proc/hackeros/workers`) ; l'app n'a pas changé.
-- [x] « Not responding » visible pendant le blocage d'une commande dans un worker ; « Force kill » termine le worker.
-- [x] Tests : `ProcFilesTests` (`ParseWorkers`).
+- [x] `Metrics/ProcFiles.cs` reads `/proc/hackeros/workers` (`ProcWorkers`, `ProcWorker`, `ParseWorkers`); `ProcReader` reads it if it exists.
+- [x] Performance tab: "Workers" section (capacity, pool size, one card per worker with role, state, core, memory, processes); "Not responding" in red.
+  Since `exec/9` (ADR 0131, 0143), when the page is isolated, a card's memory is the one the browser measures for that worker (`memory-measure: browser` in `/proc/hackeros/workers`); the app has not changed.
+- [x] "Not responding" visible while a command blocks in a worker; "Force kill" terminates the worker.
+- [x] Tests: `ProcFilesTests` (`ParseWorkers`).

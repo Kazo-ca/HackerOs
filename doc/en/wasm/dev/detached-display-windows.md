@@ -1,137 +1,135 @@
-# Fenêtres détachées
+# Detached windows
 
-Le contrat des surfaces pour les apps (`IDisplaySurfaceService`, `DisplaySurfaceContent`, événements, `HackBrowser.OpenDetachedAsync`) est dans [`display-surface-api.md`](../framework/display-surface-api.md).
+The surface contract for apps (`IDisplaySurfaceService`, `DisplaySurfaceContent`, events, `HackBrowser.OpenDetachedAsync`) is in [`display-surface-api.md`](../framework/display-surface-api.md).
 
-**Phase web, chantier `web/10-detached-window`** ([`asp-hack-plan.md`](plans/asp-hack-plan.md),
-section 5). Décision : [ADR 0078](adr/0078-detached-display-windows.md),
-précisée par l'[ADR 0081](adr/0081-detached-display-windows-adjustments.md).
+**Web phase, work item `web/10-detached-window`** ([`asp-hack-plan.md`](plans/asp-hack-plan.md),
+section 5). Decision: [ADR 0078](adr/0078-detached-display-windows.md),
+refined by [ADR 0081](adr/0081-detached-display-windows-adjustments.md).
 
-## Objet
+## Purpose
 
-Une page web peut quitter le bureau de HackerOS et s'ouvrir dans une **fenêtre
-du navigateur hôte** : l'utilisateur garde l'OS dans un onglet et la page dans
-une autre fenêtre, qu'il peut placer sur un autre moniteur. Ce n'est pas un
-second HackerOS : la fenêtre ne démarre ni .NET ni OS. Elle est une **surface
-d'affichage** de l'instance principale, comme un deuxième écran branché sur la
-même machine : l'instance principale y dessine, en reçoit les clics et les
-touches, et continue de servir la page (réseau, cookies, `localStorage`).
+A web page can leave the HackerOS desktop and open in a **host browser
+window**: the user keeps the OS in one tab and the page in another window,
+which can be placed on another monitor. This is not a second HackerOS: the
+window starts neither .NET nor an OS. It is a **display surface** of the main
+instance, like a second screen plugged into the same machine: the main
+instance draws on it, receives its clicks and keys, and keeps serving the page
+(network, cookies, `localStorage`).
 
-Le mécanisme est général : n'importe quel contenu Blazor d'une fenêtre d'app
-peut être affiché dans une surface. Il prépare le **deuxième écran** que Benoit
-veut plus tard : un bureau dessiné dans une surface.
+The mechanism is general: any Blazor content of an app window can be
+displayed in a surface. It prepares the **second screen** that Benoit wants
+later: a desktop drawn in a surface.
 
 ## Architecture
 
 ```
-Fenêtre de l'OS (onglet principal)                    Fenêtre détachée (window.open, même origine)
+OS window (main tab)                                  Detached window (window.open, same origin)
 ──────────────────────────────────                    ─────────────────────────────────────────────
 BrowserWindow                                          <body class="hackeros-surface">
- ├─ placeholder « page ouverte dans une fenêtre »       └─ .hackeros-surface-root
- └─ <DisplaySurfaceContent Surface=…> ── déplace ──►       └─ .surface-content (rendu par l'instance
-      barre de la fenêtre + zone de page                       principale : barre, page, iframe isolée)
-           │                                                       │ clics, touches (écouteurs relayés)
-IDisplaySurfaceService (SDK Blazor)                                │ messages du pont de la page
- └─ DisplaySurfaceService (Platform.Blazor) ◄── displaySurfaces.js ◄┘ (remis à la fenêtre principale)
-         │                                       │  styles recopiés, taille, focus, fermeture
-         └─ notification si la fenêtre est bloquée └─ displaySurfaceRelay.js (chargé dans la surface)
-HackerOs.Platform.Blazor.lib.module.js (initialiseur JS, avant Blazor) :
-  écouteurs de `document` reposés sur chaque surface ; `[_bl_…]` cherché aussi dans les surfaces
+ ├─ placeholder "page open in a window"                 └─ .hackeros-surface-root
+ └─ <DisplaySurfaceContent Surface=…> ── moves ──►         └─ .surface-content (rendered by the main
+      window bar + page area                                   instance: bar, page, isolated iframe)
+           │                                                       │ clicks, keys (relayed listeners)
+IDisplaySurfaceService (Blazor SDK)                                │ page bridge messages
+ └─ DisplaySurfaceService (Platform.Blazor) ◄── displaySurfaces.js ◄┘ (delivered to the main window)
+         │                                       │  styles copied, size, focus, close
+         └─ notification if the window is blocked └─ displaySurfaceRelay.js (loaded in the surface)
+HackerOs.Platform.Blazor.lib.module.js (JS initializer, before Blazor):
+  `document` listeners re-attached on each surface; `[_bl_…]` also searched in surfaces
 ```
 
-| Fichier | Rôle |
+| File | Role |
 |---|---|
-| `Platform/HackerOs.Platform.Blazor/Display/DisplaySurfaceService.cs` | Implémentation : ouvre, suit et ferme les surfaces ; publie la notification « fenêtre bloquée ». |
-| `Platform/HackerOs.Platform.Blazor/wwwroot/displaySurfaces.js` | `window.open`, document de la surface (`<base>`, styles recopiés et tenus à jour, apparence héritée de l'ancre), déplacement du contenu, événements `resize`/`focus`/`blur`/fermeture, messages remis à la fenêtre principale. |
-| `Platform/HackerOs.Platform.Blazor/wwwroot/displaySurfaceRelay.js` | Chargé dans la surface : poster un message « depuis » la surface. |
-| `Platform/HackerOs.Platform.Blazor/wwwroot/displaySurface.css` | Style de base du document d'une surface. |
-| `Platform/HackerOs.Platform.Blazor/wwwroot/HackerOs.Platform.Blazor.lib.module.js` | Initialiseur JS (`beforeStart`, `beforeWebStart`) : relais des écouteurs et des `@ref`. |
-| `Apps/System/HackerOs.Apps.Browser/BrowserWindow.razor(.cs,.css)` | Bouton `⧉`, placeholder, barre de la fenêtre détachée, rattachement, argument `--detached`. |
-| `Apps/System/HackerOs.Apps.Browser/BrowserPageView.razor.js` | Réponses du pont envoyées par le relais quand la page est dans une surface. |
+| `Platform/HackerOs.Platform.Blazor/Display/DisplaySurfaceService.cs` | Implementation: opens, tracks and closes surfaces; publishes the "window blocked" notification. |
+| `Platform/HackerOs.Platform.Blazor/wwwroot/displaySurfaces.js` | `window.open`, surface document (`<base>`, copied and kept-up-to-date styles, appearance inherited from the anchor), content move, `resize`/`focus`/`blur`/close events, messages delivered to the main window. |
+| `Platform/HackerOs.Platform.Blazor/wwwroot/displaySurfaceRelay.js` | Loaded in the surface: post a message "from" the surface. |
+| `Platform/HackerOs.Platform.Blazor/wwwroot/displaySurface.css` | Base style of a surface document. |
+| `Platform/HackerOs.Platform.Blazor/wwwroot/HackerOs.Platform.Blazor.lib.module.js` | JS initializer (`beforeStart`, `beforeWebStart`): relay of listeners and `@ref`. |
+| `Apps/System/HackerOs.Apps.Browser/BrowserWindow.razor(.cs,.css)` | `⧉` button, placeholder, detached window bar, reattachment, `--detached` argument. |
+| `Apps/System/HackerOs.Apps.Browser/BrowserPageView.razor.js` | Bridge responses sent by the relay when the page is in a surface. |
 
-## Fonctionnement
+## How it works
 
-### Ouvrir une surface
+### Opening a surface
 
-- **Ouverte** : le module construit le document (titre, `<base>` sur l'adresse
-  de l'OS, feuilles de style du bureau recopiées et mises à jour quand elles
-  changent, attributs de `<html>`), commence à relayer les écouteurs et attend
-  le relais de messages. Résultat `Opened` avec la surface (`surface-1`,
-  `surface-2`…).
+- **Opened**: the module builds the document (title, `<base>` on the OS
+  address, desktop stylesheets copied and updated when they change, `<html>`
+  attributes), starts relaying the listeners and waits for the message relay.
+  Result `Opened` with the surface (`surface-1`, `surface-2`…).
 
-### Dessiner dans une surface
+### Drawing in a surface
 
-Ce qui fait marcher Blazor dans un autre document (ADR 0081 §2) :
+What makes Blazor work in another document (ADR 0081 §2):
 
-- les éléments sont créés par le document principal puis adoptés par celui de
-  la surface ;
-- l'initialiseur JS pose sur chaque surface les écouteurs que Blazor (et
-  MudBlazor) posent sur `document` ;
-- un `@ref` dont l'élément est dans une surface est retrouvé par le sélecteur
-  `[_bl_<id>]`, cherché aussi dans les surfaces.
+- elements are created by the main document and then adopted by the
+  surface's;
+- the JS initializer attaches to each surface the listeners that Blazor (and
+  MudBlazor) attach to `document`;
+- a `@ref` whose element is in a surface is found by the `[_bl_<id>]`
+  selector, also searched in the surfaces.
 
-### Le navigateur
+### The browser
 
-- Le bouton `⧉` (`#browser-btn-detach`) ouvre une surface et y déplace la zone
-  de page : une barre (icône du schéma, titre, adresse, `↻`, `⇲ Reattach`) et
-  la page. La fenêtre du navigateur de l'OS garde sa barre d'adresse, ses
-  outils de développement et sa barre d'état ; la zone de page y montre « This
-  page is open in a detached window » avec **Show the window** et **Bring the
-  page back here**.
-- Le titre de la fenêtre détachée suit le titre de la page.
-- Naviguer depuis l'OS (barre d'adresse, favoris, précédent) ou depuis la page
-  (liens, formulaires) change la page dans la fenêtre détachée.
-- **Reattach** (dans la fenêtre détachée), `⧉` à nouveau ou **Bring the page
-  back here** rattachent l'onglet ; fermer la fenêtre détachée aussi.
-- Le pont de la page isolée (ADR 0075) suit l'iframe : la surface remet ses
-  messages à la fenêtre principale, et les réponses partent par le relais de
-  la surface, seul expéditeur que le pont accepte.
-- Une iframe qui change de document repart de zéro : au détachement comme au
-  rattachement, la page est réécrite à partir du document déjà reçu, sans
-  nouvelle requête, avec ses cookies et son `localStorage` actuels.
+- The `⧉` button (`#browser-btn-detach`) opens a surface and moves the page
+  area into it: a bar (scheme icon, title, address, `↻`, `⇲ Reattach`) and the
+  page. The OS browser window keeps its address bar, its developer tools and
+  its status bar; the page area there shows "This page is open in a detached
+  window" with **Show the window** and **Bring the page back here**.
+- The detached window title follows the page title.
+- Navigating from the OS (address bar, bookmarks, back) or from the page
+  (links, forms) changes the page in the detached window.
+- **Reattach** (in the detached window), `⧉` again or **Bring the page back
+  here** reattach the tab; closing the detached window does too.
+- The isolated page bridge (ADR 0075) follows the iframe: the surface delivers
+  its messages to the main window, and the responses go out through the
+  surface relay, the only sender the bridge accepts.
+- An iframe that changes document starts from scratch: on detaching as on
+  reattaching, the page is rewritten from the document already received,
+  with no new request, with its current cookies and `localStorage`.
 
-## Décisions clés
+## Key decisions
 
-- **Une instance, plusieurs surfaces** (ADR 0078 §1) : aucune seconde instance
-  .NET, aucun second circuit ; marche avec les trois hôtes.
-- **Contrat dans le SDK Blazor** (ADR 0081 §1) : les apps de base n'atteignent
-  l'OS que par le SDK.
-- **Portail plutôt que second moteur de rendu** (ADR 0081 §2) : le contenu est
-  rendu par le moteur principal et déplacé ; l'initialiseur JS comble les deux
-  hypothèses « un seul document » de Blazor.
-- **Page réécrite au déplacement** (ADR 0081 §4) : plutôt que de garder une
-  iframe impossible à déplacer vivante.
-- **Pas de capacité** : une surface montre ce que l'app montre déjà.
+- **One instance, several surfaces** (ADR 0078 §1): no second .NET instance,
+  no second circuit; works with the three hosts.
+- **Contract in the Blazor SDK** (ADR 0081 §1): base apps reach the OS only
+  through the SDK.
+- **Portal rather than a second rendering engine** (ADR 0081 §2): the content
+  is rendered by the main engine and moved; the JS initializer fills in both
+  of Blazor's "single document" assumptions.
+- **Page rewritten on move** (ADR 0081 §4): rather than keeping an iframe that
+  cannot be moved alive.
+- **No capability**: a surface shows what the app already shows.
 
-## Limites connues
+## Known limits
 
-- Un onglet ne peut avoir qu'une fenêtre détachée ; le navigateur de l'OS n'a
-  qu'un onglet par fenêtre.
-- Sur mobile, le navigateur hôte ouvre la fenêtre comme un onglet.
+- A tab can only have one detached window; the OS browser has only one tab
+  per window.
+- On mobile, the host browser opens the window as a tab.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Blazor.Tests/Display/DisplaySurfaceServiceTests.cs` :
-  ouverture, fenêtre bloquée et notification, hôte sans JavaScript, événements
-  et fermeture par l'utilisateur, fermeture par l'OS, titre, montage et focus.
-- `Tests/HackerOs.AppSdk.Tests/Apps/HackBrowserTests.cs` : arguments du
-  lancement, adresse vide, navigateur absent.
-- `Tests/HackerOs.UI.E2E.Tests/BrowserDetachedWindowTests.cs` (Chromium réel,
-  hôte `test/test`) : détacher une page, vérifier son script, son `fetch`, la
-  recopie des styles ; naviguer depuis l'OS et poster un formulaire dans la
-  fenêtre détachée ; cliquer **Reattach** dans la fenêtre détachée (preuve de
-  l'ADR 0078 §4) ; fermer la fenêtre à la main et retrouver la page.
+- `Tests/HackerOs.Platform.Blazor.Tests/Display/DisplaySurfaceServiceTests.cs`:
+  opening, blocked window and notification, host without JavaScript, events
+  and closing by the user, closing by the OS, title, mounting and focus.
+- `Tests/HackerOs.AppSdk.Tests/Apps/HackBrowserTests.cs`: launch arguments,
+  empty address, missing browser.
+- `Tests/HackerOs.UI.E2E.Tests/BrowserDetachedWindowTests.cs` (real Chromium,
+  `test/test` host): detach a page, check its script, its `fetch`, the style
+  copying; navigate from the OS and post a form in the detached window; click
+  **Reattach** in the detached window (proof of ADR 0078 §4); close the window
+  by hand and get the page back.
 
-## Liste des tâches
+## Task list
 
-- [x] Contrat `IDisplaySurfaceService` / `IDisplaySurface` dans le SDK Blazor.
-- [x] Portail `DisplaySurfaceContent`.
-- [x] `DisplaySurfaceService` et module `displaySurfaces.js` (document,
-  styles, événements, fermeture, onglet de l'OS fermé).
-- [x] Initialiseur JS : écouteurs de `document` et `@ref` dans les surfaces.
-- [x] Relais des messages du pont des pages isolées.
-- [x] Navigateur : `⧉`, placeholder, barre de la fenêtre détachée, rattacher,
-  réécriture de la page, titre suivi, `--detached`.
-- [x] `HackBrowser.OpenAsync` et `OpenDetachedAsync`.
-- [x] Notification et bandeau quand la fenêtre est bloquée.
-- [x] Tests unitaires et E2E.
-- [x] ADR 0081, ce document, index, plan, références du SDK.
+- [x] `IDisplaySurfaceService` / `IDisplaySurface` contract in the Blazor SDK.
+- [x] `DisplaySurfaceContent` portal.
+- [x] `DisplaySurfaceService` and `displaySurfaces.js` module (document,
+  styles, events, closing, closed OS tab).
+- [x] JS initializer: `document` listeners and `@ref` in surfaces.
+- [x] Relay of isolated page bridge messages.
+- [x] Browser: `⧉`, placeholder, detached window bar, reattach,
+  page rewrite, tracked title, `--detached`.
+- [x] `HackBrowser.OpenAsync` and `OpenDetachedAsync`.
+- [x] Notification and banner when the window is blocked.
+- [x] Unit and E2E tests.
+- [x] ADR 0081, this document, index, plan, SDK references.

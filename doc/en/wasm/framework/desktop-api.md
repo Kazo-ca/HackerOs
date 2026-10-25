@@ -1,17 +1,17 @@
-# Bureau : API pour les apps
+# Desktop: API for apps
 
-Ce document décrit ce qu'une app utilise pour le bureau : les types `HackDesktop*` du SDK, le fichier `desktop.config`, les raccourcis `.desktop`, le mode Bureau du contrôle de fichiers et l'intent de création de raccourci. L'app Bureau, la coquille, les menus et les surfaces de l'OS sont décrits dans [`dev/desktop.md`](../dev/desktop.md).
+This document describes what an app uses for the desktop: the `HackDesktop*` SDK types, the `desktop.config` file, `.desktop` shortcuts, the Desktop mode of the file control and the shortcut-creation intent. The Desktop app, the shell, the menus and the OS surfaces are described in [`dev/desktop.md`](../dev/desktop.md).
 
-## Types du SDK
+## SDK types
 
-| Élément | Projet | Rôle |
+| Item | Project | Role |
 | --- | --- | --- |
-| `HackDesktopLayout`, `HackDesktopCell`, `HackDesktopOptions`, `HackDesktopItems` | `AppSdk` (`Files/HackDesktop.cs`) | La grille en fonctions pures, partagée par tout fournisseur. |
-| `HackDesktopEntry` | `AppSdk` (`Files/HackDesktopEntry.cs`) | Lecture et écriture des `.desktop`, `CreateShortcutAsync`. |
-| `HackDesktopSettings` | `AppSdk` (`Files/HackDesktopSettings.cs`) | Lecture et écriture de `desktop.config`. |
-| `HackAppIcons.LucideName` | `AppSdk` (`Apps/`) | Icône Lucide d'une app (celle du menu Démarrer), reprise par les raccourcis. |
+| `HackDesktopLayout`, `HackDesktopCell`, `HackDesktopOptions`, `HackDesktopItems` | `AppSdk` (`Files/HackDesktop.cs`) | The grid as pure functions, shared by every provider. |
+| `HackDesktopEntry` | `AppSdk` (`Files/HackDesktopEntry.cs`) | Reading and writing `.desktop` files, `CreateShortcutAsync`. |
+| `HackDesktopSettings` | `AppSdk` (`Files/HackDesktopSettings.cs`) | Reading and writing `desktop.config`. |
+| `HackAppIcons.LucideName` | `AppSdk` (`Apps/`) | The Lucide icon of an app (the one in the Start menu), reused by shortcuts. |
 
-## Fichier `desktop.config`
+## `desktop.config` file
 
 ```ini
 [view]
@@ -28,35 +28,35 @@ show-trash=true
 notes.txt=1,0
 ```
 
-- Fichier de l'utilisateur seulement ; pas de couche `/etc`.
-- Une clé de `[positions]` est un nom de fichier (ou `::home`, `::trash`) où
-  `%`, `=`, `\`, `#`, `;`, `[`, `]`, les caractères de contrôle et les espaces
-  de bord sont écrits `%XX` ; la valeur est `colonne,ligne`, à partir de 0.
-- Une ligne fausse est ignorée. Écrire `[view]` garde les commentaires et les
-  clés inconnues ; `[positions]` est réécrit en entier.
-- Le bureau suit le fichier : le modifier avec `nano` ou Paramètres redessine
-  les icônes.
+- User file only; there is no `/etc` layer.
+- A key in `[positions]` is a file name (or `::home`, `::trash`) where
+  `%`, `=`, `\`, `#`, `;`, `[`, `]`, control characters and leading or trailing
+  spaces are written `%XX`; the value is `column,row`, starting at 0.
+- An invalid line is ignored. Writing `[view]` keeps the comments and unknown
+  keys; `[positions]` is rewritten entirely.
+- The desktop follows the file: editing it with `nano` or Settings redraws
+  the icons.
 
 ```csharp
 HackDesktopSettingsDocument settings = await HackDesktopSettings.ReadAsync();
 await HackDesktopSettings.SaveOptionsAsync(settings.Options with { IconSize = HackDesktopIconSize.Large });
 ```
 
-## Grille (`HackDesktopLayout`)
+## Grid (`HackDesktopLayout`)
 
 
-| Membre | Rôle |
+| Member | Role |
 | --- | --- |
-| `CellSize(size)` | Taille d'une case : petite 76 × 84, moyenne 92 × 100, grande 116 × 128 pixels CSS. |
-| `GridSize(width, height, size)` | Colonnes et lignes qui tiennent (au moins une de chaque). |
-| `Order(items, sort, showHome, showTrash)` | Ordre des éléments nouveaux : Dossier perso, Corbeille, puis dossiers et fichiers selon le tri. |
-| `Arrange(keys, saved, columns, rows, autoArrange, alignToGrid)` | Case affichée de chaque élément, positions à enregistrer et `Changed`. Une position hors de l'écran est gardée (l'élément est montré ailleurs). |
-| `Move(current, moved, anchor, target, columns, rows, autoArrange)` | Positions après un glisser : écarts gardés, cases occupées sautées ; en réorganisation automatique, insertion à la case visée. |
-| `CellAtPoint(x, y, size, columns, rows)` | Case sous un point. |
+| `CellSize(size)` | Size of a cell: small 76 × 84, medium 92 × 100, large 116 × 128 CSS pixels. |
+| `GridSize(width, height, size)` | Columns and rows that fit (at least one of each). |
+| `Order(items, sort, showHome, showTrash)` | Order of new items: Home folder, Trash, then folders and files according to the sort. |
+| `Arrange(keys, saved, columns, rows, autoArrange, alignToGrid)` | Displayed cell of each item, positions to save and `Changed`. A position outside the screen is kept (the item is shown elsewhere). |
+| `Move(current, moved, anchor, target, columns, rows, autoArrange)` | Positions after a drag: offsets kept, occupied cells skipped; with automatic arrangement, insertion at the target cell. |
+| `CellAtPoint(x, y, size, columns, rows)` | Cell under a point. |
 
-Les cases vont de haut en bas, puis de gauche à droite.
+Cells run from top to bottom, then from left to right.
 
-## Raccourcis (`HackDesktopEntry`)
+## Shortcuts (`HackDesktopEntry`)
 
 ```ini
 [Desktop Entry]
@@ -66,16 +66,16 @@ Exec=org.hackeros.text-editor "/home/alice/My notes.txt"
 Icon=file-text
 ```
 
-`TryParse`, `Format`, `IsDesktopFile`, `IsAppId`, `SplitExec`, `JoinExec` et
-`CreateShortcutAsync(dossier, appId, nom)` (écrit `Nom.desktop`, puis
-`Nom (2).desktop`…). Les codes `%f`, `%U`… sont ignorés ; `%%` donne `%`. Un
-fichier qui n'est pas un raccourci valide reste un fichier texte.
+`TryParse`, `Format`, `IsDesktopFile`, `IsAppId`, `SplitExec`, `JoinExec` and
+`CreateShortcutAsync(folder, appId, name)` (writes `Name.desktop`, then
+`Name (2).desktop`...). The codes `%f`, `%U`... are ignored; `%%` gives `%`. A
+file that is not a valid shortcut remains a text file.
 
-Dans tout contrôle de fichiers fourni par l'explorateur, un raccourci montre le
-nom et l'icône de l'app, sans extension ; l'ouvrir lance l'app avec ses
-arguments ; une app absente grise l'icône et l'ouvrir l'explique.
+In every file control provided by the explorer, a shortcut shows the app's
+name and icon, without an extension; opening it launches the app with its
+arguments; a missing app greys out the icon and opening it explains why.
 
-## Contrôle de fichiers en mode Bureau
+## File control in Desktop mode
 
 ```razor
 <HackFileView InitialDirectory="@desktop"
@@ -86,17 +86,17 @@ arguments ; une app absente grise l'icône et l'ouvrir l'explique.
               ContextMenuOpening="OnContextMenuOpening" />
 ```
 
-L'hôte garde le fichier ; le fournisseur place, déplace et signale les
-positions à enregistrer (`DesktopPositionsChanged`) après un déplacement ou
-quand un élément nouveau prend une case. Rien n'est enregistré avant que le
-dossier soit lu, pour ne jamais effacer les positions.
+The host keeps the file; the provider places, moves and reports the positions
+to save (`DesktopPositionsChanged`) after a move or when a new item takes a
+cell. Nothing is saved before the folder has been read, so that positions are
+never erased.
 
-## Lancement et intents
+## Launch and intents
 
-Paramètres s'ouvre directement sur un onglet avec `--page=appearance` ou
+Settings opens directly on a tab with `--page=appearance` or
 `--page=desktop`.
 
 
-« Envoyer vers ▸ Bureau (créer un raccourci) » passe par l'intent `org.hackeros.desktop.create-shortcut.v1`, et le fichier est écrit avec les droits de l'app Bureau.
+"Send to ▸ Desktop (create shortcut)" goes through the `org.hackeros.desktop.create-shortcut.v1` intent, and the file is written with the rights of the Desktop app.
 
-Les entrées `background` et `desktop` des apps (ADR 0159) s'ajoutent au menu du fond ; voir [`context-menu.md`](context-menu.md).
+The `background` and `desktop` entries of apps (ADR 0159) are added to the background menu; see [`context-menu.md`](context-menu.md).

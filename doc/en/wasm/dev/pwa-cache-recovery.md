@@ -1,113 +1,112 @@
-# Récupération d'un cache PWA corrompu
+# Recovery from a corrupted PWA cache
 
-Mise en œuvre de la section 3 de
-[l'ADR 0099](adr/0099-os-backup-and-low-storage.md) (chantier
-`v3/7-storage-backup`), qui complète
-[l'ADR 0017](adr/0017-pwa-cache-and-offline-strategy.md) (cache « cache
-d'abord » versionné, intégrité vérifiée à l'installation).
+Implementation of section 3 of
+[ADR 0099](adr/0099-os-backup-and-low-storage.md) (work item
+`v3/7-storage-backup`), which completes
+[ADR 0017](adr/0017-pwa-cache-and-offline-strategy.md) (versioned "cache
+first" cache, integrity checked at installation).
 
-## Objet
+## Purpose
 
-Une entrée du cache du service worker peut s'abîmer après l'installation
-(disque, écriture interrompue, extension, outil de développement). Le service
-worker la sert telle quelle : il ne revérifie pas l'intégrité à chaque requête.
-Avant ce chantier, Blazor refusait la ressource, le démarrage s'arrêtait sur
-l'anneau de chargement et la barre « An unhandled error has occurred », et
-recharger ne changeait rien. Désormais :
+An entry in the service worker cache can become damaged after installation
+(disk, interrupted write, extension, development tool). The service
+worker serves it as is: it does not recheck integrity on every request.
+Before this work item, Blazor refused the resource, startup stopped on the
+loading ring and the "An unhandled error has occurred" bar, and
+reloading changed nothing. Now:
 
-- **en ligne**, la page demande au service worker de vider son cache et de le
-  reprendre du serveur, puis recharge **une seule fois** ; l'OS démarre ;
-- **hors ligne**, l'écran d'erreur de démarrage explique que le cache est abîmé
-  et qu'il faut se reconnecter une fois ; le cache abîmé n'est pas touché, et
-  le bouton « Retry » répare une fois la connexion revenue.
+- **online**, the page asks the service worker to empty its cache and to
+  fetch it again from the server, then reloads **only once**; the OS starts;
+- **offline**, the startup error screen explains that the cache is damaged
+  and that you must reconnect once; the damaged cache is not touched, and
+  the "Retry" button repairs it once the connection is back.
 
-Les données de l'OS (IndexedDB) ne sont jamais concernées : seul le cache des
-fichiers de l'application est reconstruit.
+OS data (IndexedDB) is never affected: only the application files cache
+is rebuilt.
 
 ## Architecture
 
-| Pièce | Fichier | Rôle |
+| Piece | File | Role |
 |---|---|---|
-| Vérification d'intégrité | Blazor (`dotnet.js`, empreintes SHA-256 de la configuration de démarrage) | Chaque ressource de démarrage est chargée avec `integrity` : des octets abîmés font échouer le chargement (« SRI's integrity checks failed »), puis le démarrage (« Failed to start platform. Reason: … download '…' failed »). |
-| Garde de démarrage | `OS/HackerOs.Ecosystem/wwwroot/index.html` (script en ligne, frontière d'amorçage de l'hôte) | Lance Blazor (`autostart="false"`, puis `Blazor.start()`), détecte l'échec, décide de la réparation, affiche l'écran d'erreur. |
-| Réparation | `OS/HackerOs.Ecosystem/wwwroot/service-worker.published.js`, message `RESET_CACHE` | Vide le cache de la version et le reprend du serveur, ou le garde intact si le serveur est injoignable. |
-| Écran d'erreur | `index.html` (`#hackeros-boot-error`) et `OS/HackerOs.Ecosystem.Host/wwwroot/css/app.css` (servi sous `_content/HackerOs.Ecosystem.Host/css/app.css`) | Trois états (`data-state`) : `repairing`, `offline`, `failed`. Style console sombre ; l'anneau de chargement et la barre d'erreur de Blazor sont masqués (`html.hackeros-boot-failed`). |
+| Integrity check | Blazor (`dotnet.js`, SHA-256 fingerprints of the startup configuration) | Each startup resource is loaded with `integrity`: damaged bytes make the load fail ("SRI's integrity checks failed"), then startup fail ("Failed to start platform. Reason: … download '…' failed"). |
+| Startup guard | `OS/HackerOs.Ecosystem/wwwroot/index.html` (inline script, host bootstrap boundary) | Launches Blazor (`autostart="false"`, then `Blazor.start()`), detects the failure, decides on the repair, displays the error screen. |
+| Repair | `OS/HackerOs.Ecosystem/wwwroot/service-worker.published.js`, `RESET_CACHE` message | Empties the version's cache and fetches it again from the server, or keeps it intact if the server is unreachable. |
+| Error screen | `index.html` (`#hackeros-boot-error`) and `OS/HackerOs.Ecosystem.Host/wwwroot/css/app.css` (served under `_content/HackerOs.Ecosystem.Host/css/app.css`) | Three states (`data-state`): `repairing`, `offline`, `failed`. Dark console style; Blazor's loading ring and error bar are hidden (`html.hackeros-boot-failed`). |
 
-### Déroulé
+### Flow
 
-1. `Blazor.start()` échoue. En .NET 10, l'erreur « Failed to start platform »
-   sort en rejet de promesse non géré et la promesse de `Blazor.start()` reste
-   en attente : la garde écoute donc `unhandledrejection` **et** le rejet de
-   `Blazor.start()`. Si `blazor.webassembly.js` lui-même ne s'est pas chargé
-   (`window.Blazor` absent), c'est aussi un échec de chargement.
-2. Seule une erreur d'intégrité ou de chargement (`integrity`, `SRI`,
-   `download '`, `Failed to fetch`, `Failed to load`, …) déclenche la
-   réparation, et seulement si un service worker contrôle la page. Toute autre
-   erreur affiche l'état `failed`.
-3. Si la garde `sessionStorage['hackeros.bootRecovery']` est déjà posée, la
-   page a déjà réparé et rechargé dans cet onglet : pas de boucle, l'écran
-   `failed` (ou `offline` si `navigator.onLine` est faux) s'affiche.
-4. Sinon l'écran `repairing` s'affiche et la page envoie `RESET_CACHE` au
-   service worker sur un `MessageChannel` (délai maximal 120 s). Le service
-   worker :
-   - sonde le serveur (`service-worker-assets.js`, `cache: 'no-store'`) ; s'il
-     est injoignable, il répond `{ ok: false, reason: 'unreachable' }` sans rien
-     effacer, et la page affiche l'état `offline` ;
-   - sinon il retélécharge tous les fichiers du manifeste, avec leur
-     `integrity`, dans un cache de transit `hackeros-cache-<version>-repair`,
-     vide le cache abîmé, y recopie le transit, puis supprime le transit ;
-   - si le serveur ne peut pas fournir une copie vérifiée de cette version
-     (fichier abîmé sur le serveur, version plus récente déployée), il vide
-     quand même le cache abîmé : les ressources viennent alors du serveur.
-5. Sur `{ ok: true }`, la page pose la garde et recharge. Un démarrage réussi
-   efface la garde : une corruption ultérieure dans le même onglet sera de
-   nouveau réparée.
+1. `Blazor.start()` fails. In .NET 10, the "Failed to start platform" error
+   comes out as an unhandled promise rejection and the promise of `Blazor.start()` stays
+   pending: the guard therefore listens to `unhandledrejection` **and** the rejection of
+   `Blazor.start()`. If `blazor.webassembly.js` itself failed to load
+   (`window.Blazor` absent), that is also a load failure.
+2. Only an integrity or load error (`integrity`, `SRI`,
+   `download '`, `Failed to fetch`, `Failed to load`, …) triggers the
+   repair, and only if a service worker controls the page. Any other
+   error displays the `failed` state.
+3. If the guard `sessionStorage['hackeros.bootRecovery']` is already set, the
+   page has already repaired and reloaded in this tab: no loop, the `failed`
+   screen (or `offline` if `navigator.onLine` is false) is displayed.
+4. Otherwise the `repairing` screen is displayed and the page sends `RESET_CACHE` to the
+   service worker over a `MessageChannel` (maximum delay 120 s). The service
+   worker:
+   - probes the server (`service-worker-assets.js`, `cache: 'no-store'`); if it
+     is unreachable, it answers `{ ok: false, reason: 'unreachable' }` without erasing
+     anything, and the page displays the `offline` state;
+   - otherwise it downloads all the manifest files again, with their
+     `integrity`, into a transit cache `hackeros-cache-<version>-repair`,
+     empties the damaged cache, copies the transit cache into it, then deletes the transit cache;
+   - if the server cannot provide a verified copy of this version
+     (file damaged on the server, newer version deployed), it empties
+     the damaged cache anyway: resources then come from the server.
+5. On `{ ok: true }`, the page sets the guard and reloads. A successful startup
+   clears the guard: a later corruption in the same tab will be
+   repaired again.
 
-Le cache de transit commence par `hackeros-cache-` : s'il restait à moitié
-écrit, la prochaine activation d'une version le supprime comme tout cache
-périmé (ADR 0017).
+The transit cache starts with `hackeros-cache-`: if it were left half
+written, the next activation of a version deletes it like any stale
+cache (ADR 0017).
 
-## Décisions
+## Decisions
 
-- **Réparation demandée par la page, pas par le service worker** : seul Blazor
-  sait qu'une ressource a été refusée ; vérifier l'intégrité à chaque requête
-  dans le service worker coûterait un SHA-256 par fichier à chaque démarrage.
-- **Hors ligne, rien n'est effacé** : vider le cache sans pouvoir le reprendre
-  ôterait aussi `index.html`, donc l'écran qui explique quoi faire.
-- **Un seul rechargement par onglet** (garde dans `sessionStorage`) : si la
-  copie fraîche échoue aussi, l'utilisateur voit une erreur au lieu d'une
-  boucle de rechargements.
-- **Script en ligne dans `index.html`** : la garde doit tourner avant et
-  pendant le démarrage de Blazor, sans dépendre d'une ressource qui pourrait
-  elle-même être abîmée ; aucun `<script src>` n'est ajouté à l'hôte.
-- En mode développement (`localhost`, `127.0.0.1`), aucun service worker n'est
-  enregistré : un échec de démarrage affiche directement l'état `failed`.
+- **Repair requested by the page, not by the service worker**: only Blazor
+  knows that a resource was refused; checking integrity on every request
+  in the service worker would cost one SHA-256 per file at each startup.
+- **Offline, nothing is erased**: emptying the cache without being able to fetch it again
+  would also remove `index.html`, hence the screen that explains what to do.
+- **A single reload per tab** (guard in `sessionStorage`): if the fresh
+  copy fails too, the user sees an error instead of a loop of reloads.
+- **Inline script in `index.html`**: the guard must run before and
+  during Blazor startup, without depending on a resource that could
+  itself be damaged; no `<script src>` is added to the host.
+- In development mode (`localhost`, `127.0.0.1`), no service worker is
+  registered: a startup failure directly displays the `failed` state.
 
 ## Tests
 
-`Tests/HackerOs.Pwa.E2E.Tests/PublishedPwaTests.cs`, contre une publication
-Release servie en statique (le test qui vérifiait que les octets corrompus
-étaient servis tels quels est remplacé) :
+`Tests/HackerOs.Pwa.E2E.Tests/PublishedPwaTests.cs`, against a Release
+publication served statically (the test that checked that corrupted bytes
+were served as is has been replaced):
 
-- `Corrupted_boot_resource_in_the_cache_is_downloaded_again_and_the_app_boots_after_one_reload` :
-  `System.Private.CoreLib.*.wasm` écrasé dans le cache, rechargement ; l'OS
-  démarre après exactement un rechargement de récupération, le cache contient
-  de nouveau le vrai fichier et la garde est effacée.
-- `Corrupted_cache_offline_asks_to_reconnect_once_and_recovers_when_back_online` :
-  même corruption, navigateur hors ligne et serveur arrêté (l'émulation hors
-  ligne de Playwright n'atteint pas les requêtes du service worker) ; l'écran
-  `offline` s'affiche, le cache abîmé est intact ; serveur relancé, « Retry »
-  répare et l'OS démarre.
+- `Corrupted_boot_resource_in_the_cache_is_downloaded_again_and_the_app_boots_after_one_reload`:
+  `System.Private.CoreLib.*.wasm` overwritten in the cache, reload; the OS
+  starts after exactly one recovery reload, the cache contains
+  the real file again and the guard is cleared.
+- `Corrupted_cache_offline_asks_to_reconnect_once_and_recovers_when_back_online`:
+  same corruption, browser offline and server stopped (Playwright's offline
+  emulation does not reach the service worker's requests); the `offline` screen
+  is displayed, the damaged cache is intact; server restarted, "Retry"
+  repairs it and the OS starts.
 
-Sans IPv6 (conteneur cloud), le harnais se lie à `127.0.0.2` au lieu de
-`[::1]` : adresse de bouclage, contexte sécurisé, et non exclue par le filtre
-`localhost`/`127.0.0.1` d'`index.html`.
+Without IPv6 (cloud container), the harness binds to `127.0.0.2` instead of
+`[::1]`: loopback address, secure context, and not excluded by the
+`localhost`/`127.0.0.1` filter of `index.html`.
 
-## Tâches
+## Tasks
 
-- [x] Lancer Blazor manuellement et détecter l'échec de démarrage (rejet non géré en .NET 10).
-- [x] Message `RESET_CACHE` du service worker : sonde, cache de transit vérifié, remplacement.
-- [x] Garde d'un seul rechargement dans `sessionStorage`, effacée par un démarrage réussi.
-- [x] Écran d'erreur de démarrage (états `repairing`, `offline`, `failed`).
-- [x] Tests E2E de récupération en ligne et hors ligne ; repli `127.0.0.2` du harnais.
-- [x] Vérification manuelle (Playwright Node, publication Release servie par `python3 -m http.server`) : en ligne, hors ligne puis reconnexion, fichier abîmé sur le serveur (un seul rechargement, puis état `failed`).
+- [x] Launch Blazor manually and detect the startup failure (unhandled rejection in .NET 10).
+- [x] Service worker `RESET_CACHE` message: probe, verified transit cache, replacement.
+- [x] Single-reload guard in `sessionStorage`, cleared by a successful startup.
+- [x] Startup error screen (states `repairing`, `offline`, `failed`).
+- [x] Online and offline recovery E2E tests; harness fallback to `127.0.0.2`.
+- [x] Manual verification (Playwright Node, Release publication served by `python3 -m http.server`): online, offline then reconnection, file damaged on the server (a single reload, then `failed` state).

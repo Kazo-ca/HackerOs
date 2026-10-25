@@ -1,129 +1,129 @@
-# ADR 0083 : vues `.razor` d'ASP.Hack, anti-falsification et `wwwroot` embarqué
+# ADR 0083: ASP.Hack `.razor` views, anti-forgery and embedded `wwwroot`
 
-## Statut
+## Status
 
-Accepté le 2026-10-16, avec le chantier `web/7-razor-views`.
+Accepted on 2026-10-16, with the `web/7-razor-views` work item.
 
-- **Phase du plan :** phase web ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
-- **Complète :** [ADR 0076](0076-asp-hack-mvc.md) §5 (`View`, `PartialView`), §6
-  (jeton anti-falsification) et §7 (vues `.razor`) ; [ADR 0073](0073-web-apps.md)
-  §2 (`wwwroot` du projet, lecture seule) ; [ADR 0082](0082-asp-hack-route-source-generator.md)
-  (le générateur produit aussi la table des vues).
-- **Amende :** [ADR 0007](0007-enforce-collocated-razor-assets.md) : la vérification au build
-  admet une référence `<script src="...">` sans corps (§6).
-- **Documentation :** [`asp-hack-razor-views.md`](../../framework/asp-hack-razor-views.md).
+- **Plan phase:** web phase ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
+- **Completes:** [ADR 0076](0076-asp-hack-mvc.md) §5 (`View`, `PartialView`), §6
+  (anti-forgery token) and §7 (`.razor` views); [ADR 0073](0073-web-apps.md)
+  §2 (project `wwwroot`, read-only); [ADR 0082](0082-asp-hack-route-source-generator.md)
+  (the generator also produces the view table).
+- **Amends:** [ADR 0007](0007-enforce-collocated-razor-assets.md): the build check
+  admits a `<script src="...">` reference without a body (§6).
+- **Documentation:** [`asp-hack-razor-views.md`](../../framework/asp-hack-razor-views.md).
 
-## Contexte
+## Context
 
-L'ADR 0076 §7 fixe le principe : une vue est un composant Razor compilé au build,
-rendu en HTML statique par `HtmlRenderer`, trouvé par convention
-`Views/<Contrôleur>/<Action>.razor`. Il reste à décider comment `View()` trouve le
-composant sans réflexion (le générateur de routes a exclu la réflexion au
-démarrage, ADR 0082), comment un layout, des sections et des partials
-fonctionnent avec un rendu en une passe de Blazor, comment le jeton
-anti-falsification se transporte dans le réseau simulé, et comment le `wwwroot`
-d'un projet est servi alors qu'un site n'a aucune capacité `filesystem.*`
+ADR 0076 §7 sets the principle: a view is a Razor component compiled at build time,
+rendered as static HTML by `HtmlRenderer`, found by the convention
+`Views/<Controller>/<Action>.razor`. It remains to decide how `View()` finds the
+component without reflection (the route generator excluded reflection at
+startup, ADR 0082), how a layout, sections and partials
+work with a single-pass Blazor rendering, how the anti-forgery
+token travels in the simulated network, and how a project's `wwwroot`
+is served while a site has no `filesystem.*` capability
 (ADR 0073 §3).
 
-## Décision
+## Decision
 
-### 1. Rendu
+### 1. Rendering
 
-`HackViewEngine` rend une vue avec `Microsoft.AspNetCore.Components.Web.HtmlRenderer`
-(statique, sans circuit ni interactivité), dont les services sont la **portée DI
-de la requête** : `@inject` d'une vue reçoit les mêmes instances que le
-contrôleur. Le contexte de la page (`HackViewContext` : requête, action, modèle,
-`ModelState`, `ViewData`, URL, layout, sections) est fourni à tout composant de
-la page par une valeur en cascade fixe.
+`HackViewEngine` renders a view with `Microsoft.AspNetCore.Components.Web.HtmlRenderer`
+(static, without circuit or interactivity), whose services are the **request's DI
+scope**: a view's `@inject` receives the same instances as the
+controller. The page context (`HackViewContext`: request, action, model,
+`ModelState`, `ViewData`, URL, layout, sections) is provided to every component of
+the page by a fixed cascading value.
 
-### 2. Table des vues générée au build
+### 2. View table generated at build time
 
-Le générateur de sources de l'ADR 0082 lit les fichiers `.razor` que le SDK
-Razor lui passe comme `AdditionalFiles` (avec leur chemin relatif `TargetPath`)
-et écrit `HackWebGeneratedRoutes.Views : HackViewTable`, un
-`HackViewDescriptor("Home/Index", typeof(Views.Home.Index))` par fichier sous
-`Views/` (sauf `_Imports.razor`). Il nomme la classe comme le compilateur Razor
-le fait (`<RootNamespace>.<dossiers>.<fichier>`, identifiants assainis, ou le
-`@namespace` du fichier ou d'un `_Imports.razor` au-dessus). L'hôte généré
-`<Nom>WebHost` passe la table au `HackWebHost`. Seule la table est lue à
-l'exécution ; un composant hors de `Views/` reste utilisable par type
-(`View<MonComposant>(model)`).
+The source generator of ADR 0082 reads the `.razor` files that the Razor SDK
+passes it as `AdditionalFiles` (with their relative `TargetPath` path)
+and writes `HackWebGeneratedRoutes.Views : HackViewTable`, one
+`HackViewDescriptor("Home/Index", typeof(Views.Home.Index))` per file under
+`Views/` (except `_Imports.razor`). It names the class as the Razor compiler
+does (`<RootNamespace>.<folders>.<file>`, sanitized identifiers, or the
+`@namespace` of the file or of an `_Imports.razor` above it). The generated host
+`<Name>WebHost` passes the table to `HackWebHost`. Only the table is read at
+runtime; a component outside `Views/` remains usable by type
+(`View<MyComponent>(model)`).
 
-### 3. Vue, modèle, layout, sections, partials
+### 3. View, model, layout, sections, partials
 
-- Classes de base : `HackView` (modèle non typé), `HackView<TModel>` (`Model`
-  typé ; un modèle d'un autre type est une erreur explicite, comme dans ASP.NET
-  MVC), `HackLayout` (`@Body`). Tout composant peut servir de vue ; ces classes
-  ajoutent les raccourcis MVC (`ViewData`, `Url`, `ModelState`, `Request`).
-- **Le layout se rend après la vue**, dans une passe séparée qui reçoit le HTML
-  de la vue comme `Body`, puis le layout du layout, et ainsi de suite (comme un
-  `.cshtml` s'exécute avant son `_Layout`). Ainsi la vue peut fixer
-  `ViewData["Title"]`, changer `Layout` ou définir une section que le layout
-  lira. Le layout vient de `@layout` (attribut `[Layout]`), modifiable par la vue.
-- Sections : `<HackSection Name>` dans la vue, `<HackRenderSection Name Required>`
-  dans le layout ; une section définie et jamais rendue, ou requise et absente,
-  est une erreur, comme dans ASP.NET MVC. Un layout sans `@Body` est une erreur.
-- Partials : `<HackPartial Name Model>` cherche la vue dans le dossier du
-  contrôleur puis `Shared/`, et la rend **dans la même passe** avec un contexte
-  dérivé (même requête et `ViewData`, autre modèle). `PartialView()` rend une vue
-  sans layout ni vérification des sections.
-- Recherche : `View()` → `Views/<Contrôleur>/<Action>`, puis `Views/Shared/<Action>` ;
-  un chemin (`~/Views/X/Y.razor`, `/Views/X/Y`) est pris tel quel. L'erreur
-  liste les emplacements cherchés.
+- Base classes: `HackView` (untyped model), `HackView<TModel>` (typed
+  `Model`; a model of another type is an explicit error, as in ASP.NET
+  MVC), `HackLayout` (`@Body`). Any component can serve as a view; these classes
+  add the MVC shortcuts (`ViewData`, `Url`, `ModelState`, `Request`).
+- **The layout renders after the view**, in a separate pass that receives the view's
+  HTML as `Body`, then the layout's layout, and so on (as a
+  `.cshtml` executes before its `_Layout`). Thus the view can set
+  `ViewData["Title"]`, change `Layout` or define a section that the layout
+  will read. The layout comes from `@layout` (attribute `[Layout]`), modifiable by the view.
+- Sections: `<HackSection Name>` in the view, `<HackRenderSection Name Required>`
+  in the layout; a section defined and never rendered, or required and absent,
+  is an error, as in ASP.NET MVC. A layout without `@Body` is an error.
+- Partials: `<HackPartial Name Model>` looks for the view in the controller's
+  folder then `Shared/`, and renders it **in the same pass** with a
+  derived context (same request and `ViewData`, other model). `PartialView()` renders a view
+  without layout or section checks.
+- Lookup: `View()` → `Views/<Controller>/<Action>`, then `Views/Shared/<Action>`;
+  a path (`~/Views/X/Y.razor`, `/Views/X/Y`) is taken as is. The error
+  lists the locations searched.
 
 ### 4. `HackController`
 
 `View()`, `View(model)`, `View(name)`, `View(name, model)`, `View<TView>(model)`,
-les `PartialView` équivalents, `ViewData`. `HackApiController` n'a pas de vues.
-Comme dans ASP.NET MVC, `View("texte")` désigne un **nom de vue** : un modèle
-`string` se passe par `View(viewName: null, model: texte)` ou dans une classe.
+the equivalent `PartialView`s, `ViewData`. `HackApiController` has no views.
+As in ASP.NET MVC, `View("text")` designates a **view name**: a `string`
+model is passed through `View(viewName: null, model: text)` or in a class.
 
-### 5. Anti-falsification
+### 5. Anti-forgery
 
-`HackAntiforgery` (service du site) suit le schéma d'ASP.NET Core : un secret
-aléatoire de 32 octets dans un cookie `.HackAntiforgery` (`HttpOnly`,
-`SameSite=Strict`, `Path=/`) et, dans chaque formulaire, un jeton de requête
-`nonce ‖ HMAC-SHA256(clé, secret ‖ nonce)` (champ `__RequestVerificationToken`,
-ou en-tête `RequestVerificationToken` pour un script). La clé est tirée au
-démarrage du processus du site et vit en mémoire : après un redémarrage, un
-formulaire déjà affiché est refusé (`400`) et doit être rechargé, comme sans
-anneau de clés persistant. `[ValidateAntiForgeryToken]` est un filtre d'action
-(`400 Bad Request` texte, raison incluse ; `GET`/`HEAD`/`OPTIONS`/`TRACE` jamais
-vérifiés) ; `[IgnoreAntiforgeryToken]` l'annule pour une action. `<HackForm>`
-écrit le champ caché sauf `Antiforgery="false"` ou `Method="get"` ;
-`<HackAntiforgeryToken>` le fournit à un `<form>` écrit à la main.
+`HackAntiforgery` (site service) follows the ASP.NET Core scheme: a 32-byte
+random secret in a `.HackAntiforgery` cookie (`HttpOnly`,
+`SameSite=Strict`, `Path=/`) and, in each form, a request token
+`nonce ‖ HMAC-SHA256(key, secret ‖ nonce)` (field `__RequestVerificationToken`,
+or header `RequestVerificationToken` for a script). The key is drawn at
+startup of the site's process and lives in memory: after a restart, an
+already displayed form is refused (`400`) and must be reloaded, as without a
+persistent key ring. `[ValidateAntiForgeryToken]` is an action filter
+(`400 Bad Request` text, reason included; `GET`/`HEAD`/`OPTIONS`/`TRACE` never
+verified); `[IgnoreAntiforgeryToken]` cancels it for an action. `<HackForm>`
+writes the hidden field unless `Antiforgery="false"` or `Method="get"`;
+`<HackAntiforgeryToken>` provides it to a hand-written `<form>`.
 
-### 6. `wwwroot` embarqué, servi en lecture seule
+### 6. Embedded `wwwroot`, served read-only
 
-- `build/HackerOs.Apps.targets` embarque `wwwroot/**` d'un projet qui référence
-  `HackerOs.AppSdk.Web` comme ressources `wwwroot/<chemin>` (propriété
-  `HackerOsEmbedWebRoot` pour forcer ou interdire), et les retire des contenus :
-  le `wwwroot` d'un site n'est jamais une ressource web statique de l'hôte
-  (`_content/`). Le Razor class library d'une app à fenêtre garde son `wwwroot`
-  habituel.
-- `app.UseStaticFiles()` (`HackStaticFileMiddleware`) sert ces ressources :
-  `Content-Type` par extension (`SimulatedFileTypes`), `ETag`, `304`,
-  `Cache-Control: public, max-age=3600`, `index.html` d'un dossier, `405` hors
-  `GET`/`HEAD` ; une requête sans fichier continue vers les contrôleurs. Les
-  noms sont lus une fois au démarrage et comparés exactement (`..` ne peut rien
-  atteindre).
-- La vérification de l'ADR 0007 (pas de CSS/JS inline dans un `.razor`) admet
-  désormais `<script src="...">` **sans corps** : un layout lie ainsi les scripts
-  du `wwwroot` du site, comme toute page web ; `<style>`, `style=`, `<script>`
-  avec corps et `onxxx=` restent refusés.
+- `build/HackerOs.Apps.targets` embeds `wwwroot/**` of a project that references
+  `HackerOs.AppSdk.Web` as `wwwroot/<path>` resources (property
+  `HackerOsEmbedWebRoot` to force or forbid), and removes them from the content:
+  a site's `wwwroot` is never a static web resource of the host
+  (`_content/`). The Razor class library of a windowed app keeps its usual
+  `wwwroot`.
+- `app.UseStaticFiles()` (`HackStaticFileMiddleware`) serves these resources:
+  `Content-Type` by extension (`SimulatedFileTypes`), `ETag`, `304`,
+  `Cache-Control: public, max-age=3600`, `index.html` of a folder, `405` other than
+  `GET`/`HEAD`; a request with no file continues to the controllers. The
+  names are read once at startup and compared exactly (`..` cannot reach
+  anything).
+- The check of ADR 0007 (no inline CSS/JS in a `.razor`) now admits
+  `<script src="...">` **without a body**: a layout thus links the scripts
+  of the site's `wwwroot`, like any web page; `<style>`, `style=`, `<script>`
+  with a body and `onxxx=` remain refused.
 
-## Conséquences
+## Consequences
 
-- `HackerOs.AppSdk.Web` référence `Microsoft.AspNetCore.Components.Web` (pour
-  `HtmlRenderer` et les composants) ; les projets de test qui ont des vues
-  passent au SDK `Microsoft.NET.Sdk.Razor`.
-- `HackWebApplicationBuilder` et `HackWebHost` gagnent une surcharge avec
-  `HackViewTable` et le type de la définition (assembly du `wwwroot`) ; les
-  anciennes signatures restent (table vide, pas de `wwwroot`).
-- Le chantier `web/8` (`.cshtml`) peut réutiliser `HackViewEngine.FindView`,
-  `HackViewContext` et l'anti-falsification : seule la classe de base de la vue
-  change.
-- Limites acceptées : pas de `TempData` ni de `ViewBag` dynamique ; pas de
-  `@section` imbriquées dans un partial ; un `@namespace` déclaré ailleurs que
-  dans le fichier ou un `_Imports.razor` (par exemple dans `.csproj`) n'est pas
-  lu ; `HEAD` d'un fichier statique n'envoie pas `Content-Length`.
+- `HackerOs.AppSdk.Web` references `Microsoft.AspNetCore.Components.Web` (for
+  `HtmlRenderer` and the components); test projects that have views
+  move to the `Microsoft.NET.Sdk.Razor` SDK.
+- `HackWebApplicationBuilder` and `HackWebHost` gain an overload with
+  `HackViewTable` and the definition type (`wwwroot` assembly); the
+  old signatures remain (empty table, no `wwwroot`).
+- The `web/8` work item (`.cshtml`) can reuse `HackViewEngine.FindView`,
+  `HackViewContext` and anti-forgery: only the view's base class
+  changes.
+- Accepted limits: no `TempData` or dynamic `ViewBag`; no nested
+  `@section` in a partial; a `@namespace` declared elsewhere than in the file or an
+  `_Imports.razor` (for example in `.csproj`) is not
+  read; `HEAD` of a static file does not send `Content-Length`.

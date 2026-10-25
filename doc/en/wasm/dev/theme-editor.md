@@ -1,116 +1,112 @@
-# Thèmes utilisateur et éditeur de thèmes
+# User themes and theme editor
 
-Ce document couvre la mise en œuvre des thèmes utilisateur et de l'éditeur de thèmes. Le format du fichier `.theme`, la liste des jetons et l'API de lecture des messages sont dans [`../framework/theme-files.md`](../framework/theme-files.md).
+This document covers the implementation of user themes and the theme editor. The format of the `.theme` file, the list of tokens and the message-reading API are in [`../framework/theme-files.md`](../framework/theme-files.md).
 
-Chantier `v3/11-apps`, [ADR 0103](adr/0103-hack-paint-image-files-and-theme-editor.md)
-§2 (complète l'ADR 0041). Porté depuis `src/apps/theme-editor.ts`, sans le CSS
-libre (`customCss`) de l'ancienne app.
+Work item `v3/11-apps`, [ADR 0103](adr/0103-hack-paint-image-files-and-theme-editor.md)
+§2 (completes ADR 0041). Ported from `src/apps/theme-editor.ts`, without the
+old app's free CSS (`customCss`).
 
-## Objet
+## Purpose
 
-L'utilisateur crée ses propres thèmes : un fichier `.theme` qui part d'un thème
-intégré (`base`) et remplace quelques **jetons** CSS vérifiés (`--hos-*`). Le
-fichier est un vrai fichier de l'OS : on le crée avec l'éditeur de thèmes, ou
-avec `nano`, on le copie avec `cp`, on l'envoie, on l'ouvre par l'explorateur.
-Paramètres le propose à côté des thèmes intégrés.
+The user creates their own themes: a `.theme` file that starts from a built-in
+theme (`base`) and overrides a few validated CSS **tokens** (`--hos-*`). The
+file is a real OS file: it is created with the theme editor, or with `nano`,
+copied with `cp`, sent, opened through the explorer. Settings offers it next to
+the built-in themes.
 
-## Format et jetons
+## Format and tokens
 
-Le format du fichier `.theme` (sections, emplacements, lecture tolérante, média) et la liste des jetons vérifiés sont décrits dans [`../framework/theme-files.md`](../framework/theme-files.md).
+The format of the `.theme` file (sections, locations, tolerant reading, media) and the list of validated tokens are described in [`../framework/theme-files.md`](../framework/theme-files.md).
 
 ## Architecture
 
-| Pièce | Projet | Rôle |
+| Piece | Project | Role |
 |---|---|---|
-| `ThemeTokenCatalog`, `ThemeTokenValidator` | `Shared/HackerOs.Theming.Abstractions` | liste et vérification des jetons |
-| `ThemeFile` | idem | `Parse` (tolérant) et `Serialize` du format `.theme` |
-| `UserTheme`, `UserThemeLibrary` | idem | thème lu ; lecture des deux dossiers par délégués (`LoadAsync`), règles de non-masquage (`Build`) |
-| `ResolvedTheme.Resolve` | idem | thème réellement dessiné pour un id et une forme (bureau ou mobile) |
-| `ThemeScope`, `ThemePreview` (paramètre `Tokens`) | `Platform/HackerOs.Theming.Blazor` | appliquent les jetons par `style.setProperty` sur leur élément racine, via `wwwroot/themeTokens.js` (seules les propriétés `--hos-*` sont touchées, et seulement les différences) |
-| `UserThemeCatalogService` | `Platform/HackerOs.Platform.Core/Appearance` | catalogue vivant du shell : lit `/etc` comme le système et `~` comme l'utilisateur, surveille les deux dossiers (`SettingsFilesWatcher.ForDirectories`), relit au changement de session, journalise chaque avertissement une fois |
+| `ThemeTokenCatalog`, `ThemeTokenValidator` | `Shared/HackerOs.Theming.Abstractions` | list and validation of tokens |
+| `ThemeFile` | same | `Parse` (tolerant) and `Serialize` of the `.theme` format |
+| `UserTheme`, `UserThemeLibrary` | same | theme read; reading of the two folders through delegates (`LoadAsync`), non-shadowing rules (`Build`) |
+| `ResolvedTheme.Resolve` | same | theme actually drawn for an id and a form factor (desktop or mobile) |
+| `ThemeScope`, `ThemePreview` (`Tokens` parameter) | `Platform/HackerOs.Theming.Blazor` | apply the tokens through `style.setProperty` on their root element, via `wwwroot/themeTokens.js` (only `--hos-*` properties are touched, and only the differences) |
+| `UserThemeCatalogService` | `Platform/HackerOs.Platform.Core/Appearance` | the shell's live catalog: reads `/etc` as the system and `~` as the user, watches the two folders (`SettingsFilesWatcher.ForDirectories`), rereads on session change, logs each warning once |
 | `App.razor` | `OS/HackerOs.Ecosystem` | `ThemeScope ThemeId=@ActiveTheme.BaseThemeId Tokens=@ActiveTheme.UserTheme?.Tokens` |
-| Theme Editor | `Apps/System/HackerOs.Apps.ThemeEditor` | l'app |
-| Paramètres | `Apps/System/HackerOs.Apps.Settings` | thèmes utilisateur dans les listes bureau et mobile, bouton « Open the Theme Editor » |
+| Theme Editor | `Apps/System/HackerOs.Apps.ThemeEditor` | the app |
+| Settings | `Apps/System/HackerOs.Apps.Settings` | user themes in the desktop and mobile lists, "Open the Theme Editor" button |
 
-### Résolution d'un id
+### Resolving an id
 
-`appearance.config` garde `desktopThemeId` et `mobileThemeId` ; depuis v3/11
-ce sont des chaînes libres (plus une énumération, `schemaVersion` reste 2).
+`appearance.config` keeps `desktopThemeId` and `mobileThemeId`; since v3/11
+these are free strings (no longer an enumeration, `schemaVersion` stays 2).
 
-1. Un thème intégré de la bonne forme : il s'applique.
-2. Un thème utilisateur proposé sur cette forme : son thème de base s'applique,
-   puis ses jetons par-dessus. Si sa base vise l'autre forme (un thème basé sur
-   `hackeros` proposé aussi sur mobile), ses jetons s'appliquent sur le thème
-   par défaut de la forme active.
-3. Sinon (id inconnu, fichier supprimé ou refusé, mauvaise forme) : le thème par
-   défaut de la forme, comme avant.
+1. A built-in theme of the right form factor: it applies.
+2. A user theme offered for that form factor: its base theme applies, then its
+   tokens on top. If its base targets the other form factor (a theme based on
+   `hackeros` also offered on mobile), its tokens apply on the default theme of
+   the active form factor.
+3. Otherwise (unknown id, file deleted or rejected, wrong form factor): the
+   form factor's default theme, as before.
 
-## L'éditeur de thèmes
+## The theme editor
 
-App système `org.hackeros.theme-editor`, sur le SDK public seulement (ADR 0055).
-Capacités : dossier personnel en lecture et écriture, dialogues ouvrir et
-enregistrer, et `filesystem.system.read` (dangereuse, accordée aux apps
-système) pour lister `/etc/hackeros/themes`. Fenêtre 1180 × 760, minimum
-820 × 540 (ADR 0095).
+System app `org.hackeros.theme-editor`, on the public SDK only (ADR 0055).
+Capabilities: home folder read and write, open and save dialogs, and
+`filesystem.system.read` (dangerous, granted to system apps) to list
+`/etc/hackeros/themes`. Window 1180 × 760, minimum 820 × 540 (ADR 0095).
 
-- **Barre d'outils** : *New from* (thème de base), *Open…*, *Save* (vers
-  `~/.config/hackeros/themes/<id>.theme`, dossier créé au besoin), *Export…*
-  (n'importe où par le dialogue), *Use on desktop* / *Use on mobile* (écrit
-  l'id dans la couche utilisateur de `appearance` par
-  `HackSettings.OpenSystemAsync`).
-- **Colonne de gauche** : nom, id (suit le nom tant qu'il n'est pas modifié à
-  la main), thème de base, formes proposées, chemin ; liste des thèmes
-  installés et avertissements de leurs fichiers.
-- **Centre** : un onglet par groupe de jetons (MudTabs), un champ typé par
-  jeton (sélecteur de couleur quand la valeur est convertible), erreur sous le
-  champ ; onglet Documentation.
-- **Droite** : aperçu en direct, bureau ou mobile, dans un `ThemeScope`
-  imbriqué (fenêtre, barre des tâches, boutons, champs) et une carte
-  `ThemePreview`.
-- Une valeur invalide reste affichée pour être corrigée, mais n'entre ni dans
-  l'aperçu ni dans le fichier, et bloque l'enregistrement avec la liste des
-  problèmes.
-- Fermer avec des changements non enregistrés demande confirmation
-  (`IWindowCloseGuard`) ; revenir sur la fenêtre relit la liste des thèmes.
-- Un `.theme` ouvert par l'explorateur (« Ouvrir avec ») ou passé en argument
-  au lancement est chargé au démarrage.
+- **Toolbar**: *New from* (base theme), *Open…*, *Save* (to
+  `~/.config/hackeros/themes/<id>.theme`, folder created if needed), *Export…*
+  (anywhere through the dialog), *Use on desktop* / *Use on mobile* (writes the
+  id in the user layer of `appearance` through `HackSettings.OpenSystemAsync`).
+- **Left column**: name, id (follows the name as long as it is not edited by
+  hand), base theme, offered form factors, path; list of installed themes and
+  warnings of their files.
+- **Center**: one tab per token group (MudTabs), a typed field per token (color
+  picker when the value is convertible), error under the field; Documentation
+  tab.
+- **Right**: live preview, desktop or mobile, in a nested `ThemeScope` (window,
+  taskbar, buttons, fields) and a `ThemePreview` card.
+- An invalid value stays displayed so that it can be corrected, but enters
+  neither the preview nor the file, and blocks saving with the list of
+  problems.
+- Closing with unsaved changes asks for confirmation (`IWindowCloseGuard`);
+  returning to the window rereads the theme list.
+- A `.theme` opened through the explorer ("Open with") or passed as an argument
+  at launch is loaded at startup.
 
-### Langues (ADR 0104)
+### Languages (ADR 0104)
 
-Barre d'outils, panneau d'identité, onglets, aperçu, champs de jeton,
-documentation et messages viennent de `Resources/Strings.resx` /
-`Strings.fr.resx`. `ThemeEditorDocument` reçoit le localiseur de la fenêtre
-(nom par défaut « Mon … », problèmes qui empêchent l'enregistrement). Les
-phrases de la documentation contiennent du `<code>` et sont rendues comme
-balisage depuis les ressources de l'assembly (jamais depuis un fichier), d'où
-le `::deep code` de `ThemeTokenDocumentation.razor.css`.
+Toolbar, identity panel, tabs, preview, token fields, documentation and
+messages come from `Resources/Strings.resx` / `Strings.fr.resx`.
+`ThemeEditorDocument` receives the window's localizer (default name "My …",
+problems that prevent saving). The documentation sentences contain `<code>` and
+are rendered as markup from the assembly's resources (never from a file),
+hence the `::deep code` of `ThemeTokenDocumentation.razor.css`.
 
-L'API de lecture du paquet `HackerOs.Theming.Abstractions` (messages localisés, validation des jetons) est dans [`../framework/theme-files.md`](../framework/theme-files.md).
+The reading API of the `HackerOs.Theming.Abstractions` package (localized messages, token validation) is in [`../framework/theme-files.md`](../framework/theme-files.md).
 
-## Décisions clés
+## Key decisions
 
-- Les fichiers sont lus et écrits par la passerelle de fichiers de l'app
-  (`IAppFileSystemGateway`), comme l'éditeur de texte : un fichier choisi dans
-  un dialogue hors du dossier personnel n'est accessible que par le jeton que
-  le dialogue a remis, ce que `HackFile` ne sait pas porter. C'est du C# ; le
-  JS ne touche jamais aux fichiers (ADR 0103 §1 et §2).
-- La lecture des dossiers est partagée par délégués (`UserThemeLibrary.LoadAsync`)
-  pour que le shell (passerelles de l'OS) et les apps (SDK) utilisent les mêmes
-  règles sans nouvelle dépendance.
-- Le service du shell lit `~` avec les droits de l'utilisateur : un fichier
-  illisible (mode `0600` d'un autre) est simplement ignoré.
+- Files are read and written through the app's file gateway
+  (`IAppFileSystemGateway`), like the text editor: a file chosen in a dialog
+  outside the home folder is accessible only through the token the dialog
+  handed over, which `HackFile` cannot carry. This is C#; JS never touches files
+  (ADR 0103 §1 and §2).
+- Folder reading is shared through delegates (`UserThemeLibrary.LoadAsync`) so
+  that the shell (OS gateways) and the apps (SDK) use the same rules without a
+  new dependency.
+- The shell service reads `~` with the user's permissions: an unreadable file
+  (mode `0600` of another user) is simply ignored.
 
-## Tâches
+## Tasks
 
-- [x] Liste des jetons, types et vérification (`ThemeTokenCatalog`, `ThemeTokenValidator`).
-- [x] Format `.theme` : lecture tolérante, écriture, 64 Kio, diagnostics.
-- [x] Bibliothèque : `/etc` et `~`, pas de masquage, résolution par forme.
-- [x] `ThemeScope`/`ThemePreview` appliquent des jetons par `style.setProperty`.
-- [x] `UserThemeCatalogService` : lecture, surveillance des dossiers, changement de session.
-- [x] `appearance.config` : ids de thème en chaînes libres.
-- [x] App Theme Editor : édition par groupes, aperçu, documentation, enregistrer, exporter, utiliser.
-- [x] Paramètres : thèmes utilisateur listés, lien vers l'éditeur.
-- [x] Tests : format, jetons refusés, non-masquage, résolution, thème appliqué
-  après rechargement, modèle de l'éditeur (`Platform.Core.Tests/Appearance`,
+- [x] List of tokens, types and validation (`ThemeTokenCatalog`, `ThemeTokenValidator`).
+- [x] `.theme` format: tolerant reading, writing, 64 KiB, diagnostics.
+- [x] Library: `/etc` and `~`, no shadowing, resolution by form factor.
+- [x] `ThemeScope`/`ThemePreview` apply tokens through `style.setProperty`.
+- [x] `UserThemeCatalogService`: reading, folder watching, session change.
+- [x] `appearance.config`: theme ids as free strings.
+- [x] Theme Editor app: editing by groups, preview, documentation, save, export, use.
+- [x] Settings: user themes listed, link to the editor.
+- [x] Tests: format, rejected tokens, non-shadowing, resolution, theme applied
+  after reload, editor model (`Platform.Core.Tests/Appearance`,
   `HackerOs.Apps.ThemeEditor.Tests`).
-- [ ] Scans axe de l'éditeur : chantier `v3/13`.
+- [ ] Editor axe scans: work item `v3/13`.

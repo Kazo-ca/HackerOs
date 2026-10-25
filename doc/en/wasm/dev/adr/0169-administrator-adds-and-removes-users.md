@@ -1,93 +1,93 @@
-# ADR 0169 : un administrateur ajoute et supprime des comptes
+# ADR 0169: an administrator adds and removes accounts
 
-## Statut
+## Status
 
-Proposé le 2026-10-25, à la demande de Benoit (« ajouter la possibilité de
-pouvoir ajouter ou supprimer des user quand on est administrateur »). La
-question du dossier personnel a été posée à Benoit dans le fil du chantier ; le
-code suit le choix recommandé (★) en attendant sa réponse.
+Proposed on 2026-10-25, at Benoit's request ("add the ability to
+add or remove users when you are an administrator"). The
+question about the home folder was put to Benoit in the work item thread; the
+code follows the recommended choice (★) pending his answer.
 
-- **Complète :** [ADR 0013](0013-local-user-session.md) (comptes et groupes
-  locaux), [ADR 0120](0120-passwd-and-administrator-password-reset.md)
-  (`users.manage`, `HackUserAccounts`, page Paramètres ▸ Utilisateurs).
-- **Va avec :** [ADR 0168](0168-passkey-sign-in.md) (clés d'accès).
-- **Ajoute au SDK 2.1 :** des membres dans `PublicAPI.Unshipped.txt`.
-- **Documents :** [`settings-app.md`](../settings-app.md),
+- **Completes:** [ADR 0013](0013-local-user-session.md) (local accounts and
+  groups), [ADR 0120](0120-passwd-and-administrator-password-reset.md)
+  (`users.manage`, `HackUserAccounts`, Settings ▸ Users page).
+- **Goes with:** [ADR 0168](0168-passkey-sign-in.md) (passkeys).
+- **Adds to SDK 2.1:** members in `PublicAPI.Unshipped.txt`.
+- **Documents:** [`settings-app.md`](../settings-app.md),
   [`../../framework/system-administration.md`](../../framework/system-administration.md).
 
-## Contexte
+## Context
 
-- Le seul compte créé l'est par l'assistant du premier démarrage
-  (administrateur, groupe `administrators`). Rien ne permet d'en ajouter un
-  autre ni d'en supprimer un.
-- `ILocalUserRepository` sait créer un compte mais pas le supprimer. Le dossier
-  personnel est créé à la première connexion (`FileSystemSeeder`).
-- La capacité dangereuse `users.manage` et l'agent d'authentification
-  administrateur existent déjà (ADR 0120).
+- The only account created is created by the first-boot wizard
+  (administrator, `administrators` group). Nothing allows adding another
+  or removing one.
+- `ILocalUserRepository` knows how to create an account but not delete it. The home
+  folder is created at first sign-in (`FileSystemSeeder`).
+- The dangerous capability `users.manage` and the administrator authentication
+  agent already exist (ADR 0120).
 
-## Décision
+## Decision
 
-### 1. Ajouter un compte, comme `useradd -m` + `passwd`
+### 1. Adding an account, like `useradd -m` + `passwd`
 
-- `HackUserAccounts.CreateAsync(new HackNewUserAccount(login, nomAffiché,
-  autorité, motDePasse))` exige `users.manage` **et** un administrateur (fenêtre
-  de l'agent ; rien sous `sudo`). `auth.log` : `users.add`.
-- Le nom de connexion suit `LocalLoginName` (minuscules, chiffres, `-`, `_`,
-  32 caractères au plus), n'est pas réservé (`hackeros-svc`, ADR 0097, `root` et
-  `administrators`) et n'est ni
-  un compte ni un groupe existant. Le nom affiché est obligatoire (128
-  caractères au plus).
-- Le mot de passe initial est obligatoire et suit les règles de l'ADR 0120.
-- Groupes, comme `USERGROUPS_ENAB` : un groupe propre du même nom devient le
-  groupe principal ; un administrateur est aussi membre de `administrators`.
-- Le dossier personnel est créé à la première connexion, comme aujourd'hui.
+- `HackUserAccounts.CreateAsync(new HackNewUserAccount(login, displayName,
+  authority, password))` requires `users.manage` **and** an administrator (agent
+  window; nothing under `sudo`). `auth.log`: `users.add`.
+- The login name follows `LocalLoginName` (lowercase, digits, `-`, `_`,
+  at most 32 characters), is not reserved (`hackeros-svc`, ADR 0097, `root` and
+  `administrators`) and is neither
+  an existing account nor group. The display name is mandatory (at most 128
+  characters).
+- The initial password is mandatory and follows the rules of ADR 0120.
+- Groups, like `USERGROUPS_ENAB`: a private group of the same name becomes the
+  primary group; an administrator is also a member of `administrators`.
+- The home folder is created at first sign-in, as today.
 
-### 2. Supprimer un compte, comme `userdel` ★
+### 2. Deleting an account, like `userdel` ★
 
-- `HackUserAccounts.DeleteAsync(login, supprimerDossier)` exige `users.manage`
-  et un administrateur. `auth.log` : `users.delete`.
-- Refusé pour : le compte de la session (on ne se supprime pas soi-même), le
-  dernier administrateur actif. Le compte de service `hackeros-svc` n'est pas
-  un compte local et ne peut pas être visé.
-- Le compte et ses clés d'accès (ADR 0168) sont supprimés. Le groupe propre du
-  compte est laissé (aucun fichier n'est réattribué). Les autorisations de
-  capacités accordées au compte restent dans leur dépôt, qui n'a pas de
-  recherche par utilisateur : elles sont orphelines et sans effet, car un
-  identifiant de compte (GUID) n'est jamais réutilisé, même pour un compte
-  recréé sous le même nom.
-- **Dossier personnel ★** : une case « Supprimer aussi le dossier personnel »,
-  décochée par défaut (`userdel` le garde, `userdel -r` le supprime). Le
-  dossier est supprimé en opération système, trousseau compris. Gardé, il
-  reste à `/home/<login>` ; un compte recréé sous le même nom le retrouve.
+- `HackUserAccounts.DeleteAsync(login, deleteFolder)` requires `users.manage`
+  and an administrator. `auth.log`: `users.delete`.
+- Refused for: the session's account (one does not delete oneself), the
+  last active administrator. The service account `hackeros-svc` is not
+  a local account and cannot be targeted.
+- The account and its passkeys (ADR 0168) are deleted. The account's private
+  group is left (no file is reassigned). The capability authorizations
+  granted to the account remain in their store, which has no
+  per-user search: they are orphaned and have no effect, because an
+  account identifier (GUID) is never reused, even for an account
+  recreated under the same name.
+- **Home folder ★**: a checkbox "Also delete the home folder",
+  unchecked by default (`userdel` keeps it, `userdel -r` deletes it). The
+  folder is deleted as a system operation, keyring included. If kept, it
+  stays at `/home/<login>`; an account recreated under the same name finds it again.
 
-### 3. Paramètres ▸ Utilisateurs
+### 3. Settings ▸ Users
 
-- Pour un administrateur : un formulaire « Ajouter un utilisateur » (nom de
-  connexion, nom affiché, type standard/administrateur, mot de passe et
-  confirmation) et, dans la liste, un bouton « Supprimer » par compte autre que
-  le sien, avec la case du dossier personnel et une confirmation.
-- Pour tous : une section « Clés d'accès » (ADR 0168 §5) qui liste ses clés,
-  en ajoute et en retire.
-- Seul le contenu de la page Utilisateurs change ; la navigation de
-  Paramètres n'est pas touchée.
+- For an administrator: an "Add user" form (login name, display
+  name, standard/administrator type, password and
+  confirmation) and, in the list, a "Delete" button for each account other than
+  their own, with the home folder checkbox and a confirmation.
+- For everyone: a "Passkeys" section (ADR 0168 §5) that lists their keys,
+  adds and removes them.
+- Only the content of the Users page changes; the Settings navigation
+  is not touched.
 
-### 4. Où vit le code
+### 4. Where the code lives
 
-- `Simulation.Abstractions` : `ILocalUserRepository.DeleteUserAsync`
-  (implémentation par défaut : `NotSupportedException`) ; le dépôt refuse
-  lui-même de supprimer le dernier administrateur actif.
-- `Platform.Core/Sessions/LocalAccountService` : création et suppression,
-  règles du §1 et §2, `auth.log`.
-- `AppUserAccountsGateway` : capacité, agent administrateur, puis le service.
+- `Simulation.Abstractions`: `ILocalUserRepository.DeleteUserAsync`
+  (default implementation: `NotSupportedException`); the repository itself refuses
+  to delete the last active administrator.
+- `Platform.Core/Sessions/LocalAccountService`: creation and deletion,
+  rules of §1 and §2, `auth.log`.
+- `AppUserAccountsGateway`: capability, administrator agent, then the service.
 
-### 5. Question posée à Benoit
+### 5. Question put to Benoit
 
-Dossier personnel à la suppression : **A ★** case décochée par défaut,
-**B** toujours supprimé, **C** jamais supprimé.
+Home folder on deletion: **A ★** checkbox unchecked by default,
+**B** always deleted, **C** never deleted.
 
-## Conséquences
+## Consequences
 
-- Plusieurs personnes peuvent avoir leur session sur la même installation,
-  chacune avec son dossier, ses réglages et son trousseau.
-- Un compte supprimé dont le dossier est gardé laisse des fichiers dont le
-  propriétaire n'existe plus ; `ls -l` montre alors l'identifiant brut.
+- Several people can have their session on the same installation,
+  each with their own folder, settings and keyring.
+- A deleted account whose folder is kept leaves files whose
+  owner no longer exists; `ls -l` then shows the raw identifier.

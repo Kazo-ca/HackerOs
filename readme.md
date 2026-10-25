@@ -1,71 +1,73 @@
-# HackerSimulator : HackerOS
+> [Version française](readme-fr.md)
 
-HackerOS est un **système d'exploitation simulé qui tourne dans le navigateur**,
-écrit en C# avec Blazor WebAssembly (.NET 10). Il offre un environnement complet
-pour développer et exécuter des applications : bureau et fenêtres, système de
-fichiers persistant, processus, shell POSIX et commandes Linux, réseau simulé,
-sites web internes, et un **SDK public** (paquets NuGet) pour créer ses propres
-apps, commandes, services et sites.
+# HackerSimulator: HackerOS
 
-- **Essayer** : <https://hackos.kazo.ca/> (PWA, fonctionne hors ligne).
-- **Code** : [`wasm2/HackerOs/`](wasm2/HackerOs/README.md).
-- **Documentation** (en français) : [`doc/en/wasm/README.md`](doc/en/wasm/README.md).
-- Dépôt source : [Kazo-ca/HackerOs](https://github.com/Kazo-ca/HackerOs).
+HackerOS is a **simulated operating system that runs in the browser**, written
+in C# with Blazor WebAssembly (.NET 10). It provides a complete environment for
+building and running applications: desktop and windows, a persistent file
+system, processes, a POSIX shell and Linux commands, a simulated network,
+internal web sites, and a **public SDK** (NuGet packages) to create your own
+apps, commands, services and sites.
 
-## Démarrer
+- **Try it**: <https://hackos.kazo.ca/> (PWA, works offline).
+- **Code**: [`wasm2/HackerOs/`](wasm2/HackerOs/README.md).
+- **Documentation**: [`doc/en/wasm/README.md`](doc/en/wasm/README.md) (French: [`doc/fr/wasm/README.md`](doc/fr/wasm/README.md)).
+- Source repository: [Kazo-ca/HackerOs](https://github.com/Kazo-ca/HackerOs).
 
-Prérequis : le SDK .NET 10 (`wasm2/HackerOs/global.json`).
+## Getting started
+
+Prerequisite: the .NET 10 SDK (`wasm2/HackerOs/global.json`).
 
 ```bash
 cd wasm2/HackerOs
 dotnet build HackerOs.sln
 dotnet test HackerOs.sln
-dotnet run --project OS/HackerOs.Ecosystem     # l'OS en PWA autonome
+dotnet run --project OS/HackerOs.Ecosystem     # the OS as a standalone PWA
 ```
 
-Les hôtes de débogage, la publication trimmée, les contournements connus et
-l'exécution des tests E2E sont décrits dans
+Debug hosts, the trimmed publish, known workarounds and how to run the E2E
+tests are described in
 [`building-and-testing.md`](doc/en/wasm/dev/building-and-testing.md).
 
 ## Documentation
 
-| Pour… | Lire |
+| To… | Read |
 | --- | --- |
-| Comprendre le code de l'OS | [`project-overview.md`](doc/en/wasm/dev/project-overview.md), puis [`doc/en/wasm/dev/`](doc/en/wasm/dev/README.md) |
-| Écrire une app, une commande ou un service | [`sdk-developer-guide.md`](doc/en/wasm/framework/sdk-developer-guide.md) et [`sdk-reference.md`](doc/en/wasm/framework/sdk-reference.md) |
-| Construire sur HackerOS depuis un autre dépôt | [`building-on-hackeros.md`](doc/en/wasm/framework/building-on-hackeros.md) |
-| Créer un site web interne (ASP.Hack, Blazor) | [`asp-hack-developer-guide.md`](doc/en/wasm/framework/asp-hack-developer-guide.md) |
-| Éviter les problèmes déjà rencontrés | [`pitfalls.md`](doc/en/wasm/dev/pitfalls.md) |
-| Connaître l'état du projet et ses conventions | [`doc/en/wasm/memory/`](doc/en/wasm/memory/README.md) |
-| Les décisions d'architecture | [`doc/en/wasm/dev/adr/`](doc/en/wasm/dev/adr/README.md) |
+| Understand the OS code | [`project-overview.md`](doc/en/wasm/dev/project-overview.md), then [`doc/en/wasm/dev/`](doc/en/wasm/dev/README.md) |
+| Write an app, a command or a service | [`sdk-developer-guide.md`](doc/en/wasm/framework/sdk-developer-guide.md) and [`sdk-reference.md`](doc/en/wasm/framework/sdk-reference.md) |
+| Build on HackerOS from another repository | [`building-on-hackeros.md`](doc/en/wasm/framework/building-on-hackeros.md) |
+| Create an internal web site (ASP.Hack, Blazor) | [`asp-hack-developer-guide.md`](doc/en/wasm/framework/asp-hack-developer-guide.md) |
+| Avoid problems already met | [`pitfalls.md`](doc/en/wasm/dev/pitfalls.md) |
+| Know the project state and its conventions | [`doc/en/wasm/memory/`](doc/en/wasm/memory/README.md) |
+| Architecture decisions | [`doc/en/wasm/dev/adr/`](doc/en/wasm/dev/adr/README.md) |
 
-## Structure du dépôt
+## Repository layout
 
-| Dossier | Contenu |
+| Folder | Contents |
 | --- | --- |
-| [`wasm2/HackerOs/`](wasm2/HackerOs/README.md) | **Version active** : la solution HackerOS (OS, SDK, apps, hôtes, tests). |
-| [`doc/`](doc/README.md) | Documentation. |
-| [`src/`](src/README.md) | Version legacy en TypeScript, gardée en lecture seule comme référence. |
-| [`.github/workflows/`](.github/workflows/) | Vérification et publication GitHub Pages. |
-| `Art/` | Icônes et captures d'écran. |
+| [`wasm2/HackerOs/`](wasm2/HackerOs/README.md) | **Active version**: the HackerOS solution (OS, SDK, apps, hosts, tests). |
+| [`doc/`](doc/README.md) | Documentation, in English ([`doc/en/`](doc/en/README.md)) and French ([`doc/fr/`](doc/fr/README.md)). |
+| [`src/`](src/README.md) | Legacy TypeScript version, kept read-only as a reference. |
+| [`.github/workflows/`](.github/workflows/) | Verification and GitHub Pages publishing. |
+| `Art/` | Icons and screenshots. |
 
-## Version legacy (TypeScript)
+## Legacy version (TypeScript)
 
-La première version, en TypeScript et Webpack, reste dans [`src/`](src/README.md)
-et est publiée sur <https://hackos.kazo.ca/legacy/>. Elle ne reçoit plus de
-nouvelles fonctionnalités. Sa documentation (compilation avec Node.js 20,
-structure, fonctionnalités) est dans [`src/README.md`](src/README.md).
+The first version, written in TypeScript with Webpack, stays in
+[`src/`](src/README.md) and is published at <https://hackos.kazo.ca/legacy/>. It
+no longer gets new features. Its documentation (building with Node.js 20,
+layout, features) is in [`src/README.md`](src/README.md).
 
-Les deux versions sont publiées par un seul
-[workflow GitHub Pages](.github/workflows/deploy-to-pages.yml)
-([guide de déploiement](doc/en/wasm/dev/github-pages-deployment.md)).
+Both versions are published by a single
+[GitHub Pages workflow](.github/workflows/deploy-to-pages.yml)
+([deployment guide](doc/en/wasm/dev/github-pages-deployment.md)).
 
-## Contribuer
+## Contributing
 
-Les règles de contribution sont dans [`CONTRIBUTING.md`](CONTRIBUTING.md) et
-[`AGENTS.md`](AGENTS.md) (emplacement du code, documentation à jour à chaque
-changement, index des dossiers de la doc).
+Contribution rules are in [`CONTRIBUTING.md`](CONTRIBUTING.md) and
+[`AGENTS.md`](AGENTS.md) (where code goes, docs kept current with every change
+in both languages, folder indexes).
 
-## Licence
+## License
 
-Voir [`LICENSE.md`](LICENSE.md).
+See [`LICENSE.md`](LICENSE.md).

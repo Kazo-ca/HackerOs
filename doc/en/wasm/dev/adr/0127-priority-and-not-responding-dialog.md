@@ -1,110 +1,110 @@
-# ADR 0127 : priorité `nice` sans quantum, et boîte « L'application ne répond pas : Attendre | Terminer l'application »
+# ADR 0127: `nice` priority without a quantum, and "The application is not responding: Wait | End the application" dialog
 
-## Statut
+## Status
 
-Accepté le 2026-10-18.
+Accepted on 2026-10-18.
 
-- **Plan :** [`execution-followups-plan.md`](../plans/execution-followups-plan.md),
-  décisions 5 et 6 (réponses Q3 et Q4) ; mis en œuvre par
+- **Plan:** [`execution-followups-plan.md`](../plans/execution-followups-plan.md),
+  decisions 5 and 6 (answers Q3 and Q4); implemented by
   `exec/4-not-responding-ui`.
-- **Complète :** l'ADR 0067 §4 (« l'OS ne fait rien de plus » : il affiche
-  désormais la boîte décrite ici), l'ADR 0069 §3 (escalade), l'ADR 0071 (file
-  du pool).
+- **Complements:** ADR 0067 §4 ("the OS does nothing more": it now
+  displays the dialog described here), ADR 0069 §3 (escalation), ADR 0071 (pool
+  queue).
 
-## Contexte
+## Context
 
-- Blazor WebAssembly n'a qu'un thread .NET par runtime : rien ne peut préempter
-  une tranche. Benoit a refusé un quantum imposé (Q4) : il serait trompeur, car
-  il ne toucherait que le code qui appelle `CheckpointAsync`.
-- L'ADR 0067 marque un processus « Not responding » quand une tranche dépasse
-  `UnresponsiveThresholdMs` (5 s) : pendant le blocage dans un worker, après
-  coup sur le fil principal. L'OS ne propose rien à l'utilisateur.
-- Benoit veut la boîte des navigateurs : « L'application ne répond pas :
-  Attendre | Terminer l'application » (Q3), à la place d'un OOM killer actif
-  par défaut.
+- Blazor WebAssembly has only one .NET thread per runtime: nothing can preempt
+  a slice. Benoit rejected an imposed quantum (Q4): it would be misleading, since
+  it would only affect code that calls `CheckpointAsync`.
+- ADR 0067 marks a process "Not responding" when a slice exceeds
+  `UnresponsiveThresholdMs` (5 s): during the block in a worker, after
+  the fact on the main thread. The OS offers the user nothing.
+- Benoit wants the browsers' dialog: "The application is not responding:
+  Wait | End the application" (Q3), in place of an OOM killer active
+  by default.
 
-## Décision
+## Decision
 
-### 1. `nice` et `renice`
+### 1. `nice` and `renice`
 
-- Valeur `nice` de `-20` à `19`, `0` par défaut, héritée par les enfants.
-  Commandes `nice [-n N] commande…` et `renice -n N -p pid…` ; baisser la
-  valeur (plus prioritaire) demande un administrateur, comme Linux.
-- Effet réel, et le seul : l'**ordre de la file du pool** (ADR 0071) et des
-  tâches de l'ADR 0128 — la plus petite valeur passe d'abord, puis l'ordre
-  d'arrivée — et le choix du worker quand plusieurs sont libres (un processus à
-  `nice` positif évite le worker toujours prêt tant qu'un autre est libre). Sur
-  le fil principal, `nice` n'a aucun effet ; la documentation le dit.
-- Affichage : colonne `NI` de `ps -l`, `ps -o ni` et `top`/`htop`, champ 19 de
-  `/proc/<pid>/stat`, colonne « Priorité » (masquée par défaut) du gestionnaire
-  de tâches.
+- `nice` value from `-20` to `19`, `0` by default, inherited by children.
+  Commands `nice [-n N] command…` and `renice -n N -p pid…`; lowering the
+  value (higher priority) requires an administrator, like Linux.
+- Real effect, and the only one: the **order of the pool queue** (ADR 0071) and of
+  the tasks of ADR 0128 (the smallest value goes first, then arrival
+  order) and the choice of worker when several are free (a process with a positive
+  `nice` avoids the always-ready worker as long as another is free). On
+  the main thread, `nice` has no effect; the documentation says so.
+- Display: `NI` column of `ps -l`, `ps -o ni` and `top`/`htop`, field 19 of
+  `/proc/<pid>/stat`, "Priority" column (hidden by default) of the task
+  manager.
 
-### 2. Quand une fenêtre « ne répond pas »
+### 2. When a window is "not responding"
 
-Le gestionnaire de fenêtres marque la fenêtre d'un processus **sans réponse**
-dans l'un de ces cas :
+The window manager marks a process's window as **not responding**
+in one of these cases:
 
-1. le processus est « Not responding » au sens de l'ADR 0067 §4 (tranche de
-   plus de 5 s ; vu pendant le blocage quand la logique de la fenêtre est dans
-   un worker, ADR 0129) ;
-2. une entrée livrée à la fenêtre (clic, touche, demande de fermeture) attend
-   depuis plus de 5 s pendant que **les tranches de ce processus** occupent le
-   fil principal (boucle découpée en tranches courtes qui ne rend jamais la
-   main aux événements de sa propre fenêtre) ;
-3. sur le fil principal, une tranche de plus de 5 s **vient de finir** et
-   l'utilisateur a essayé d'agir sur la fenêtre pendant le blocage : la boîte
-   s'affiche à la fin de la tranche, comme Windows après un gel.
+1. the process is "Not responding" in the sense of ADR 0067 §4 (slice of
+   more than 5 s; seen during the block when the window's logic is in
+   a worker, ADR 0129);
+2. an input delivered to the window (click, key, close request) has been waiting
+   for more than 5 s while **this process's slices** occupy the main
+   thread (loop cut into short slices that never yields
+   to its own window's events);
+3. on the main thread, a slice of more than 5 s **has just finished** and
+   the user tried to act on the window during the block: the dialog
+   is displayed at the end of the slice, like Windows after a freeze.
 
-L'état cesse quand la fenêtre traite à nouveau ses entrées en moins du seuil.
+The state ends when the window processes its inputs again in less than the threshold.
 
-### 3. Ce que voit l'utilisateur
+### 3. What the user sees
 
-- Le titre affiché reçoit le suffixe « (Ne répond pas) » / « (Not responding) »
-  selon la langue de la session (ADR 0104). C'est un affichage du gestionnaire
-  de fenêtres : le titre posé par l'app (`SetWindowTitleAsync`, ADR 0117) ne
-  change pas et `WindowTitleChangedEvent` n'est pas levé.
-- Le contenu de la fenêtre est grisé (sans animation si le mouvement réduit est
-  demandé, ADR 0105).
-- Une boîte attachée à cette fenêtre seulement (le reste du bureau reste
-  utilisable) : « « Calculatrice » ne répond pas. Vous pouvez attendre qu'elle
-  réponde ou terminer l'application. » avec **Attendre** (bouton par défaut,
-  `Échap`) et **Terminer l'application**. `role="alertdialog"`, focus piégé,
-  testée par la suite d'accessibilité.
-- Cliquer la croix d'une fenêtre sans réponse ouvre la même boîte.
-- **Attendre** ferme la boîte ; si la fenêtre ne répond toujours pas 5 s plus
-  tard, elle revient.
-- **Terminer l'application** suit l'escalade de l'ADR 0069 avec la raison
-  `Terminated` et un délai de grâce de **2 s** (le processus est déjà sans
-  réponse), puis l'étape 3, et l'étape 4 dans un worker. Les fenêtres
-  détachées (ADR 0078) affichent la boîte dans leur propre surface.
-- La boîte, le suffixe et le grisé sont des composants de la plateforme en
-  Blazor natif avec CSS isolé (chrome de fenêtre, AGENTS.md II.1).
+- The displayed title receives the suffix "(Not responding)" / "(Ne répond pas)"
+  depending on the session language (ADR 0104). This is a window manager
+  display: the title set by the app (`SetWindowTitleAsync`, ADR 0117) does not
+  change and `WindowTitleChangedEvent` is not raised.
+- The window content is greyed out (without animation if reduced motion is
+  requested, ADR 0105).
+- A dialog attached to that window only (the rest of the desktop remains
+  usable): ""Calculator" is not responding. You can wait for it to
+  respond or end the application." with **Wait** (default button,
+  `Esc`) and **End the application**. `role="alertdialog"`, focus trapped,
+  tested by the accessibility suite.
+- Clicking the close button of a non-responding window opens the same dialog.
+- **Wait** closes the dialog; if the window is still not responding 5 s
+  later, it comes back.
+- **End the application** follows the escalation of ADR 0069 with the reason
+  `Terminated` and a grace period of **2 s** (the process is already not
+  responding), then step 3, and step 4 in a worker. Detached
+  windows (ADR 0078) display the dialog in their own surface.
+- The dialog, the suffix and the greying are platform components in
+  native Blazor with isolated CSS (window chrome, AGENTS.md II.1).
 
-### 4. Ce que l'OS ne peut pas faire, et le dit
+### 4. What the OS cannot do, and says so
 
-Une boucle sur le fil principal qui ne rend jamais la main gèle tout l'OS :
-aucune boîte de HackerOS ne peut s'afficher, c'est la boîte du vrai navigateur
-qui apparaît. [`cpu-accounting.md`](../cpu-accounting.md) et le guide du SDK
-le disent et renvoient vers `HackBackground.RunAsync` (ADR 0128) et
+A loop on the main thread that never yields freezes the whole OS:
+no HackerOS dialog can be displayed, it is the real browser's dialog
+that appears. [`cpu-accounting.md`](../cpu-accounting.md) and the SDK guide
+say so and point to `HackBackground.RunAsync` (ADR 0128) and
 `CheckpointAsync` (ADR 0069).
 
-### 5. Réglages
+### 5. Settings
 
-`UnresponsiveThresholdMs` (ADR 0066) sert aux trois cas de §2. La boîte se
-coupe dans `/etc/hackeros/window-manager.config` (`[unresponsive]
-dialog=true`) ; coupée, il reste le suffixe et le grisé.
+`UnresponsiveThresholdMs` (ADR 0066) serves the three cases of §2. The dialog is
+turned off in `/etc/hackeros/window-manager.config` (`[unresponsive]
+dialog=true`); when turned off, the suffix and the greying remain.
 
-## Conséquences
+## Consequences
 
-- Aucune app à modifier. `ps`, `top`, `htop` et le gestionnaire de tâches
-  gagnent `NI` ; `nice` et `renice` rejoignent les commandes.
-- Tests : unité (détection des trois cas avec une horloge simulée), UI (boîte,
-  Attendre, Terminer, croix), accessibilité (axe, clavier), parité de `nice`.
-- Docs : [`cpu-accounting.md`](../cpu-accounting.md),
+- No app to modify. `ps`, `top`, `htop` and the task manager
+  gain `NI`; `nice` and `renice` join the commands.
+- Tests: unit (detection of the three cases with a simulated clock), UI (dialog,
+  Wait, End, close button), accessibility (axe, keyboard), `nice` parity.
+- Docs: [`cpu-accounting.md`](../cpu-accounting.md),
   [`window-model.md`](../../framework/window-model.md), [`task-manager.md`](../task-manager.md),
   [`linux-commands.md`](../linux-commands.md).
 
-## Références
+## References
 
 - ADR 0066, 0067, 0069, 0071, 0078, 0104, 0105, 0117, 0128, 0129.
-- `nice(1)`, `renice(1)`, `proc(5)` (`stat`, champ 19).
+- `nice(1)`, `renice(1)`, `proc(5)` (`stat`, field 19).

@@ -1,52 +1,52 @@
-# ADR 0089 : en-tête `Cookie` écrit par l'app
+# ADR 0089: `Cookie` header written by the app
 
-## Statut
+## Status
 
-Accepté le 2026-10-17, avec le chantier `web/14-cookie-header`.
+Accepted on 2026-10-17, with the `web/14-cookie-header` work item.
 
-- **Phase du plan :** phase web, suite ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
-- **Complète :** ADR 0074 §1 et §2 (échanges HTTP de la passerelle réseau,
-  livraison au processus à l'écoute) et ADR 0056 §6 (`HackHttpClient` et son
-  `HackCookieContainer`). Ne remplace aucune décision.
+- **Plan phase:** web phase, continued ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
+- **Completes:** ADR 0074 §1 and §2 (HTTP exchanges of the network gateway,
+  delivery to the listening process) and ADR 0056 §6 (`HackHttpClient` and its
+  `HackCookieContainer`). Replaces no decision.
 
-## Contexte
+## Context
 
-La passerelle réseau de l'OS (`AppNetworkGateway`) envoie à chaque saut les
-cookies du conteneur du client (`HackHttpRequest.Cookies`, le « pot à cookies »).
-Un en-tête `Cookie` que l'app écrivait elle-même, par exemple
-`curl -H 'Cookie: .HackSession=…'`, était retiré avant la livraison au site
-local et n'atteignait jamais les contrôleurs du réseau simulé, qui ne lisent que
-`SimulatedHttpRequest.Cookies`. Constaté par `web/6` (`docs/asp-hack-mvc.md`),
-la limite empêchait de rejouer une session ou un jeton d'anti-falsification à la
-main depuis le terminal, ce que fait tout `curl` réel.
+The OS network gateway (`AppNetworkGateway`) sends at each hop the
+cookies of the client's container (`HackHttpRequest.Cookies`, the "cookie jar").
+A `Cookie` header that the app wrote itself, for example
+`curl -H 'Cookie: .HackSession=...'`, was removed before delivery to the local
+site and never reached the simulated network's controllers, which only read
+`SimulatedHttpRequest.Cookies`. Noted by `web/6` (`docs/asp-hack-mvc.md`),
+the limitation prevented replaying a session or an anti-forgery token by
+hand from the terminal, which any real `curl` does.
 
-## Décision
+## Decision
 
-1. **L'en-tête est envoyé.** Les paires `nom=valeur` de chaque en-tête `Cookie`
-   de la requête (RFC 6265 §4.2 ; seule la première `=` sépare le nom de la
-   valeur) sont fusionnées avec les cookies du pot pour l'hôte du saut, en un
-   seul en-tête `Cookie` vers un site local et dans `Cookies` de la requête vers
-   un site simulé.
-2. **Ce qui est tapé gagne.** Une paire explicite remplace le cookie du pot de
-   même nom ; les autres cookies du pot sont envoyés aussi, dans leur ordre.
-3. **Même hôte seulement.** L'en-tête suit les redirections qui restent sur
-   l'hôte demandé et est retiré quand une redirection part vers un autre hôte,
-   comme `curl` depuis 7.83 (il ne fuit pas vers un tiers).
-4. **Rien n'est stocké.** Un en-tête de requête ne crée pas de cookie : les
-   paires explicites n'entrent jamais dans le pot, ne reviennent pas en
-   `Set-Cookie` dans la réponse et ne sont pas ajoutées au
-   `HackCookieContainer` du client. Seuls les `Set-Cookie` du site y entrent.
-5. **Le navigateur ne change pas.** Son transport retire déjà tout en-tête
-   `Cookie` venant d'une page (`SdkBrowserTransport`), comme un navigateur qui
-   l'interdit au `fetch` ; ses cookies restent ceux de l'onglet. Le relais vers
-   le vrai Internet transmettait déjà les en-têtes tels quels.
+1. **The header is sent.** The `name=value` pairs of each `Cookie` header
+   of the request (RFC 6265 §4.2; only the first `=` separates the name from the
+   value) are merged with the jar's cookies for the hop's host, into a
+   single `Cookie` header toward a local site and into the request's `Cookies` toward
+   a simulated site.
+2. **What is typed wins.** An explicit pair replaces the jar's cookie of the
+   same name; the other cookies of the jar are also sent, in their order.
+3. **Same host only.** The header follows redirects that stay on the requested
+   host and is removed when a redirect goes to another host,
+   like `curl` since 7.83 (it does not leak to a third party).
+4. **Nothing is stored.** A request header does not create a cookie: explicit
+   pairs never enter the jar, do not come back as
+   `Set-Cookie` in the response and are not added to the client's
+   `HackCookieContainer`. Only the site's `Set-Cookie` headers enter it.
+5. **The browser does not change.** Its transport already removes any `Cookie`
+   header coming from a page (`SdkBrowserTransport`), like a browser that
+   forbids it in `fetch`; its cookies remain those of the tab. The relay to
+   the real Internet already forwarded headers as is.
 
-## Conséquences
+## Consequences
 
-- `curl -H 'Cookie: session=…' http://intranet.hack/` atteint le site ; le pot
-  par exécution de `curl` garde son rôle pour les cookies posés en cours de
-  route (redirection après connexion).
-- Tests : `LocalNetworkTests.A_cookie_header_given_to_curl_reaches_the_site_without_entering_the_jar`
-  (site local, deux modes d'exécution) et
+- `curl -H 'Cookie: session=...' http://intranet.hack/` reaches the site; the jar
+  per `curl` execution keeps its role for cookies set along the
+  way (redirect after login).
+- Tests: `LocalNetworkTests.A_cookie_header_given_to_curl_reaches_the_site_without_entering_the_jar`
+  (local site, two execution modes) and
   `Wave4NetworkTests.HackHttpClient_sends_an_explicit_cookie_header_to_a_simulated_site_without_storing_it`
   (HackMail).

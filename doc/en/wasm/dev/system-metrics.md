@@ -1,270 +1,265 @@
-# Mesures système : CPU, disque, réseau et espace disque
+# System metrics: CPU, disk, network and disk space
 
-Mise en œuvre de l'[ADR 0057](adr/0057-proc-metrics-for-task-manager.md),
-chantier `rebuild/4-proc-metrics` de la phase 4 (tableau des chantiers de
-l'[ADR 0058](adr/0058-base-app-features.md)). Les fichiers produits sont décrits
-dans [`virtual-proc-and-dev.md`](virtual-proc-and-dev.md) ; ce document décrit
-les compteurs qui les alimentent.
+Implementation of [ADR 0057](adr/0057-proc-metrics-for-task-manager.md),
+work item `rebuild/4-proc-metrics` of phase 4 (work item table of
+[ADR 0058](adr/0058-base-app-features.md)). The files produced are described in
+[`virtual-proc-and-dev.md`](virtual-proc-and-dev.md); this document describes
+the counters that feed them.
 
-## Rôle
+## Role
 
-Le gestionnaire de tâches ([`task-manager.md`](task-manager.md), chantier
-`4-task-manager`), `ps` et toute app tierce lisent les mesures du système dans
-`/proc`, comme sous Linux :
+The task manager ([`task-manager.md`](task-manager.md), work item
+`4-task-manager`), `ps` and any third-party app read system metrics from
+`/proc`, as on Linux:
 
-| Fichier ou API | Mesure | Source |
+| File or API | Metric | Source |
 | --- | --- | --- |
-| `/proc/stat` | temps CPU cumulé par cœur, en `USER_HZ` | **mesuré** quand la mesure CPU est active (ADR 0067, [`cpu-accounting.md`](cpu-accounting.md)), **simulé** sinon : simulateur de ressources |
-| `/proc/<pid>/stat` | `utime` et `stime` d'un processus ; `priority` et `nice` | temps : **mesuré** au changement de contexte (ADR 0067), sinon reconstruit depuis le simulateur ; priorité : valeur `nice` du gestionnaire de processus (`nice`, `renice`, ADR 0127, [`process-priority-and-unresponsive-windows.md`](process-priority-and-unresponsive-windows.md)) |
-| `/proc/<pid>/io` | octets lus et écrits par un processus | **compté** : service de fichiers et passerelle réseau |
-| `/proc/<pid>/limits`, `/proc/<pid>/fd/` | limites `cpu`, `rss`, `nofile`, `nproc` et descripteurs ouverts (ADR 0125, 0139) | table des limites et table des descripteurs du gestionnaire de processus ([`process-limits.md`](process-limits.md)) |
-| `/proc/<pid>/oom_score`, `/proc/vmstat` (`oom_kill`) | score de l'OOM killer ; nombre de processus tués depuis le démarrage (ADR 0126, 0142) | `VmRSS` mesuré, table `oom_score_adj`, compteur de l'OOM killer ([`oom-killer.md`](oom-killer.md)) |
-| `/proc/diskstats` | requêtes, secteurs et temps du disque `hda` | **compté** : transactions IndexedDB du système de fichiers |
-| `/proc/net/dev` | octets et paquets de `lo` et `eth0` | **compté** : passerelle réseau des apps |
-| `/proc/mounts` | table des montages | routeur de montages |
-| `HackDriveInfo` | taille et espace libre de `/` | profil matériel, contenu stocké, quota du navigateur |
-| `/proc/hackeros/workers` | isolation cross-origin de la page (ADR 0131, 0143), puis Web Workers de l'OS : rôle, état, cœur, mémoire du runtime, âge du battement de cœur, temps occupé, processus (ADR 0070) | **mesuré** : battement de cœur de chaque worker, toutes les 250 ms ; page isolée, mémoire de chaque worker mesurée par le navigateur (`performance.measureUserAgentSpecificMemory()`, toutes les 20 s, `memory-measure: browser`) ([`worker-processes.md`](worker-processes.md)) ; absent quand l'hôte n'a pas de workers |
+| `/proc/stat` | cumulative CPU time per core, in `USER_HZ` | **measured** when CPU accounting is active (ADR 0067, [`cpu-accounting.md`](cpu-accounting.md)), **simulated** otherwise: resource simulator |
+| `/proc/<pid>/stat` | `utime` and `stime` of a process; `priority` and `nice` | time: **measured** at context switch (ADR 0067), otherwise rebuilt from the simulator; priority: `nice` value from the process manager (`nice`, `renice`, ADR 0127, [`process-priority-and-unresponsive-windows.md`](process-priority-and-unresponsive-windows.md)) |
+| `/proc/<pid>/io` | bytes read and written by a process | **counted**: file service and network gateway |
+| `/proc/<pid>/limits`, `/proc/<pid>/fd/` | limits `cpu`, `rss`, `nofile`, `nproc` and open descriptors (ADR 0125, 0139) | limits table and descriptor table of the process manager ([`process-limits.md`](process-limits.md)) |
+| `/proc/<pid>/oom_score`, `/proc/vmstat` (`oom_kill`) | OOM killer score; number of processes killed since startup (ADR 0126, 0142) | measured `VmRSS`, `oom_score_adj` table, OOM killer counter ([`oom-killer.md`](oom-killer.md)) |
+| `/proc/diskstats` | requests, sectors and time of the `hda` disk | **counted**: IndexedDB transactions of the file system |
+| `/proc/net/dev` | bytes and packets of `lo` and `eth0` | **counted**: apps' network gateway |
+| `/proc/mounts` | mount table | mount router |
+| `HackDriveInfo` | size and free space of `/` | hardware profile, stored content, browser quota |
+| `/proc/hackeros/workers` | cross-origin isolation of the page (ADR 0131, 0143), then the OS's Web Workers: role, state, core, runtime memory, heartbeat age, busy time, processes (ADR 0070) | **measured**: heartbeat of each worker, every 250 ms; isolated page, memory of each worker measured by the browser (`performance.measureUserAgentSpecificMemory()`, every 20 s, `memory-measure: browser`) ([`worker-processes.md`](worker-processes.md)); absent when the host has no workers |
 
-Un `cat` d'un gros fichier fait monter `rchar` du processus et les secteurs lus
-de `hda` ; une page chargée par le navigateur fait monter `eth0`. Le navigateur
-ne mesure pas le CPU par app : depuis la phase 5, l'OS le chronomètre lui-même
-à chaque changement de contexte (ADR 0067), quand la mesure est active ; la
-mémoire est mesurée de même (ADR 0068, section « Mémoire mesurée » ci-dessous).
+A `cat` of a large file raises the process's `rchar` and the sectors read of
+`hda`; a page loaded by the browser raises `eth0`. The browser does not measure
+CPU per app: since phase 5, the OS times it itself at each context switch
+(ADR 0067), when accounting is active; memory is measured likewise (ADR 0068,
+"Measured memory" section below).
 
-### Deux sources pour le CPU et la mémoire d'un processus (ADR 0066)
+### Two sources for a process's CPU and memory (ADR 0066)
 
-| Source | Quand | Indicateur |
+| Source | When | Indicator |
 | --- | --- | --- |
-| **simulée** : `IResourceSimulator`, profil `ResourceProfile` de l'app | mesure coupée au build (`HackerOsCpuAccounting`, `HackerOsMemoryAccounting`) ou dans `appsettings.json` (`HackerOs:ResourceAccounting`), mesure pas encore implémentée, processus simulé sans code | `CpuSource: simulated`, `MemSource: simulated` ; mention « estimated » dans le gestionnaire de tâches |
-| **mesurée** : `ICpuTimeAccountant`, `IMemoryAccountant` alimentés par le crochet de changement de contexte | mesure livrée et activée, et le comptable répond pour ce processus | `CpuSource: measured`, `MemSource: measured` |
+| **simulated**: `IResourceSimulator`, the app's `ResourceProfile` profile | accounting switched off at build (`HackerOsCpuAccounting`, `HackerOsMemoryAccounting`) or in `appsettings.json` (`HackerOs:ResourceAccounting`), accounting not yet implemented, simulated process without code | `CpuSource: simulated`, `MemSource: simulated`; "estimated" mention in the task manager |
+| **measured**: `ICpuTimeAccountant`, `IMemoryAccountant` fed by the context-switch hook | accounting delivered and enabled, and the accountant answers for this process | `CpuSource: measured`, `MemSource: measured` |
 
-Le fournisseur `/proc` reçoit les deux comptables par `ProcMetricsSources`
-(`CpuAccountant`, `MemoryAccountant`) et retombe sur le simulateur dès qu'un
-comptable ne répond pas. Depuis la série `exec`, `ProcMetricsSources` porte
-aussi les tables des limites (`ResourceLimits`) et des descripteurs
-(`FileDescriptors`), les tâches `HackBackground` (`BackgroundJobs`), la table
-`oom_score_adj` (`OomScores`), le compteur `OomKills` et l'état de l'isolation
-(`CrossOriginIsolation`). Le chantier `5-accounting-switches` livre les
-interrupteurs, le crochet et les comptables nuls ; le chantier
-`5-memory-accounting` mesure la mémoire (section suivante) ; le chantier
-`5-cpu-accounting` mesure le CPU avec `MeasuredCpuTimeAccountant`
-([`cpu-accounting.md`](cpu-accounting.md)). Détails :
-[`resource-accounting.md`](resource-accounting.md).
+The `/proc` provider receives the two accountants through `ProcMetricsSources`
+(`CpuAccountant`, `MemoryAccountant`) and falls back to the simulator as soon
+as an accountant does not answer. Since the `exec` series,
+`ProcMetricsSources` also carries the limits tables (`ResourceLimits`) and
+descriptor tables (`FileDescriptors`), the `HackBackground` tasks
+(`BackgroundJobs`), the `oom_score_adj` table (`OomScores`), the `OomKills`
+counter and the isolation state (`CrossOriginIsolation`). The
+`5-accounting-switches` work item delivers the switches, the hook and the null
+accountants; the `5-memory-accounting` work item measures memory (next
+section); the `5-cpu-accounting` work item measures CPU with
+`MeasuredCpuTimeAccountant` ([`cpu-accounting.md`](cpu-accounting.md)).
+Details: [`resource-accounting.md`](resource-accounting.md).
 
-### Mémoire mesurée (ADR 0068)
+### Measured memory (ADR 0068)
 
-Quand la mesure de la mémoire est livrée et activée, la mémoire d'un processus
-est reconstituée en quatre couches ([`memory-accounting.md`](memory-accounting.md)) :
+When memory accounting is delivered and enabled, a process's memory is
+reconstructed in four layers ([`memory-accounting.md`](memory-accounting.md)):
 
-| Couche | Champ de `/proc/<pid>/status` | Source | Précision |
+| Layer | `/proc/<pid>/status` field | Source | Accuracy |
 | --- | --- | --- | --- |
-| Image | `VmExe`, `RssFile` | taille des assemblies, mesurée par le build de l'hôte (`BuiltInApplications.json`) | exacte |
-| Ressources de l'OS | `VmData` | tampons de flux, presse-papiers, tubes, sockets en vol, coût fixe par fenêtre | exacte |
-| Allocations | `HackAllocBytes` | `GC.GetAllocatedBytesForCurrentThread()` à chaque changement de contexte | exacte |
-| Résidente | `RssAnon` | tas réel réparti après chaque GC au prorata des allocations récentes | **estimation** |
+| Image | `VmExe`, `RssFile` | size of the assemblies, measured by the host build (`BuiltInApplications.json`) | exact |
+| OS resources | `VmData` | stream buffers, clipboard, pipes, in-flight sockets, fixed cost per window | exact |
+| Allocations | `HackAllocBytes` | `GC.GetAllocatedBytesForCurrentThread()` at each context switch | exact |
+| Resident | `RssAnon` | real heap distributed after each GC in proportion to recent allocations | **estimate** |
 
-`VmRSS = RssAnon + RssFile + VmData`. `/proc/meminfo` garde `MemTotal` du
-profil matériel et ajoute `AnonPages`, `Mapped` (chaque assembly comptée une
-fois) et `Slab` (part noyau des processus et part du tas allouée par l'OS
-lui-même). Ces chiffres mesurés sont aussi ceux qu'appliquent la limite `rss`
-d'un processus (`ulimit -m`, ADR 0125, [`process-limits.md`](process-limits.md))
-et l'OOM killer, **désactivé par défaut** et activé dans
-`/etc/hackeros/memory.config` (ADR 0126, 0142, [`oom-killer.md`](oom-killer.md)) :
-ni l'un ni l'autre n'agit sur une mémoire simulée.
+`VmRSS = RssAnon + RssFile + VmData`. `/proc/meminfo` keeps `MemTotal` from the
+hardware profile and adds `AnonPages`, `Mapped` (each assembly counted once) and
+`Slab` (kernel share of the processes and share of the heap allocated by the OS
+itself). These measured figures are also the ones enforced by a process's `rss`
+limit (`ulimit -m`, ADR 0125, [`process-limits.md`](process-limits.md)) and by
+the OOM killer, **disabled by default** and enabled in
+`/etc/hackeros/memory.config` (ADR 0126, 0142, [`oom-killer.md`](oom-killer.md)):
+neither acts on simulated memory.
 
-Dans une page isolée (ADR 0131, ADR 0143 §6), la mémoire du runtime de chaque
-Web Worker vient du navigateur (`performance.measureUserAgentSpecificMemory()`,
-toutes les 20 s, valable trois périodes) au lieu du battement de cœur ; elle
-est répartie entre les processus du worker comme avant, et `MemSource` reste
+In an isolated page (ADR 0131, ADR 0143 §6), the runtime memory of each Web
+Worker comes from the browser (`performance.measureUserAgentSpecificMemory()`,
+every 20 s, valid for three periods) instead of the heartbeat; it is
+distributed among the worker's processes as before, and `MemSource` stays
 `measured` ([`memory-accounting.md`](memory-accounting.md)).
 
-Règles de calcul (constantes de `MemoryAccountingConstants` et
-`AppNetworkGateway`, couvertes par des tests) :
+Calculation rules (constants of `MemoryAccountingConstants` and
+`AppNetworkGateway`, covered by tests):
 
-| Règle | Valeur |
+| Rule | Value |
 | --- | --- |
-| Demi-vie du poids d'un processus dans la répartition du tas (`ResidentHalfLife`) | 10 s |
-| Coût fixe d'une fenêtre ouverte (`WindowBytes`) | 512 Kio |
-| Tampons d'une opération réseau en vol (`SocketBufferBytes`) | 144 Kio |
-| Presse-papiers, tubes | 2 octets par caractère tenu |
-| Tampon d'un flux d'écriture | capacité du tampon |
+| Half-life of a process's weight in the heap distribution (`ResidentHalfLife`) | 10 s |
+| Fixed cost of an open window (`WindowBytes`) | 512 KiB |
+| Buffers of an in-flight network operation (`SocketBufferBytes`) | 144 KiB |
+| Clipboard, pipes | 2 bytes per character held |
+| Buffer of a write stream | buffer capacity |
 
-La couche résidente reste une estimation : le runtime ne dit pas à qui
-appartient un objet du tas partagé. Un processus lancé depuis le dernier GC
-n'a pas encore de `RssAnon`.
+The resident layer remains an estimate: the runtime does not say who owns an
+object of the shared heap. A process launched since the last GC does not have
+an `RssAnon` yet.
 
-Les compteurs vivent en mémoire, partent de zéro au démarrage et ne sont jamais
-persistés.
+The counters live in memory, start from zero at startup and are never
+persisted.
 
 ## Architecture
 
-### Contrats
+### Contracts
 
-`Shared/HackerOs.Simulation.Abstractions/Metrics/SystemMetricsContracts.cs` :
+`Shared/HackerOs.Simulation.Abstractions/Metrics/SystemMetricsContracts.cs`:
 
-| Contrat | Rôle |
+| Contract | Role |
 | --- | --- |
-| `IProcessIoAccounting`, `ProcessIoCounters` | compteurs de `/proc/<pid>/io` ; `Retain` oublie les processus terminés |
-| `IBlockDeviceStatistics`, `BlockDeviceCounters`, `BlockIoDirection` | statistiques de `hda` (majeur 8, mineur 0) ; `Begin` puis `Complete` par requête |
-| `INetworkInterfaceStatistics`, `NetworkInterfaceCounters`, `NetworkInterfaceNames` | compteurs de `lo` et `eth0` |
-| `ICpuTimeAccounting`, `CpuTimes` | temps `user`, `nice`, `system`, `idle` par cœur |
-| `IStorageUsageProvider`, `StorageUsage` | espace occupé et quota du navigateur |
+| `IProcessIoAccounting`, `ProcessIoCounters` | counters of `/proc/<pid>/io`; `Retain` forgets finished processes |
+| `IBlockDeviceStatistics`, `BlockDeviceCounters`, `BlockIoDirection` | statistics of `hda` (major 8, minor 0); `Begin` then `Complete` per request |
+| `INetworkInterfaceStatistics`, `NetworkInterfaceCounters`, `NetworkInterfaceNames` | counters of `lo` and `eth0` |
+| `ICpuTimeAccounting`, `CpuTimes` | `user`, `nice`, `system`, `idle` times per core |
+| `IStorageUsageProvider`, `StorageUsage` | used space and browser quota |
 
-`VirtualHardwareProfile.StorageCapacityBytes` (8 Gio par défaut,
-`DefaultStorageCapacityBytes`) donne la taille du disque.
+`VirtualHardwareProfile.StorageCapacityBytes` (8 GiB by default,
+`DefaultStorageCapacityBytes`) gives the disk size.
 
-### Implémentations
+### Implementations
 
-| Type | Projet | Rôle |
+| Type | Project | Role |
 | --- | --- | --- |
-| `ProcessIoAccounting`, `BlockDeviceStatistics`, `NetworkInterfaceStatistics`, `CpuTimeAccounting` | `Platform.Core/Metrics` | compteurs en mémoire, sous verrou |
-| `ResourceSamplingService` | `Platform.Core/Processes` | le « tick » de l'ordonnanceur : une fois par seconde simulée, échantillonne chaque processus actif et cumule le temps CPU |
-| `FileSystemService` | `Platform.Core/FileSystem` | compte les lectures et écritures de chaque processus |
-| `AppNetworkGateway` + `NetworkTrafficMeter` | `Platform.Core/Network` | compte le trafic de chaque app |
-| `ProcFileSystemProvider` + `ProcMetricsSources` | `Platform.Core/FileSystem/Virtual` | rend les fichiers |
-| `AppDriveGateway` | `Platform.Core/Execution` | `statfs` de l'OS derrière `HackDriveInfo` |
-| `IndexedDbInteropAdapter` | `Infrastructure.Browser/Interop` | chronomètre chaque transaction et la signale à `hda` |
-| `IndexedDbStorageUsageProvider` | `Infrastructure.Browser/FileSystem` | espace occupé et quota réels du navigateur (`navigator.storage.estimate()`, ADR 0099 §2) ; sans quota connu, contenu dédupliqué |
+| `ProcessIoAccounting`, `BlockDeviceStatistics`, `NetworkInterfaceStatistics`, `CpuTimeAccounting` | `Platform.Core/Metrics` | in-memory counters, under lock |
+| `ResourceSamplingService` | `Platform.Core/Processes` | the scheduler's "tick": once per simulated second, samples each active process and accumulates CPU time |
+| `FileSystemService` | `Platform.Core/FileSystem` | counts each process's reads and writes |
+| `AppNetworkGateway` + `NetworkTrafficMeter` | `Platform.Core/Network` | counts each app's traffic |
+| `ProcFileSystemProvider` + `ProcMetricsSources` | `Platform.Core/FileSystem/Virtual` | renders the files |
+| `AppDriveGateway` | `Platform.Core/Execution` | the OS's `statfs` behind `HackDriveInfo` |
+| `IndexedDbInteropAdapter` | `Infrastructure.Browser/Interop` | times each transaction and reports it to `hda` |
+| `IndexedDbStorageUsageProvider` | `Infrastructure.Browser/FileSystem` | real used space and quota of the browser (`navigator.storage.estimate()`, ADR 0099 §2); with no known quota, deduplicated content |
 
-Branchement : `EcosystemServiceCollectionExtensions` enregistre les compteurs en
-`Scoped` (une instance par machine, comme le gestionnaire de processus), les
-passe au fournisseur `/proc` (`ProcMetricsSources`), au service de fichiers, au
-fournisseur IndexedDB et à `AppExecutionContextFactory`
-(`SystemMetricsServices`). `EcosystemBootCoordinator` démarre
-`ResourceSamplingService` juste après le moteur d'horloge.
+Wiring: `EcosystemServiceCollectionExtensions` registers the counters as
+`Scoped` (one instance per machine, like the process manager), passes them to
+the `/proc` provider (`ProcMetricsSources`), to the file service, to the
+IndexedDB provider and to `AppExecutionContextFactory`
+(`SystemMetricsServices`). `EcosystemBootCoordinator` starts
+`ResourceSamplingService` right after the clock engine.
 
-## Comment chaque mesure est prise
+## How each metric is taken
 
 ### CPU (`/proc/stat`)
 
-Mesure CPU active (ADR 0067) : `CpuTimeAccounting` ignore les échantillons
-simulés et rend sur `cpu0` les vrais temps du thread principal (`user` = somme
-des `utime`, `system` = somme des `stime` plus le compositeur, `idle` = le
-reste) ; les autres cœurs du profil matériel restent `idle`. Avec les Web
-Workers (ADR 0070), le cœur `k` reçoit en plus le temps occupé du worker du
-pool qui porte ce cœur (`cpu0` est donc partagé entre le fil principal et le
-worker du cœur 0), et le `utime` d'un processus dans un worker vient du
-battement de cœur de son worker, plus le temps noyau passé sur le fil principal
-à servir ses appels ; un worker qui ne bat plus compte ce temps comme occupé
-par ses processus (voir [`worker-processes.md`](worker-processes.md)). Voir
-[`cpu-accounting.md`](cpu-accounting.md). La colonne `nice` de `/proc/stat`
-reste à `0` (`CpuTimes.Nice`) : le temps d'un processus dont `nice`/`renice`
-ont changé la priorité (ADR 0127) reste compté dans `user`. Ce qui suit décrit le mode simulé,
-toujours utilisé quand la mesure est coupée.
+CPU accounting active (ADR 0067): `CpuTimeAccounting` ignores simulated
+samples and renders on `cpu0` the real times of the main thread (`user` = sum
+of the `utime`, `system` = sum of the `stime` plus the compositor, `idle` = the
+rest); the other cores of the hardware profile stay `idle`. With Web Workers
+(ADR 0070), core `k` additionally receives the busy time of the pool worker
+that carries that core (`cpu0` is therefore shared between the main thread and
+the core 0 worker), and the `utime` of a process in a worker comes from its
+worker's heartbeat, plus the kernel time spent on the main thread serving its
+calls; a worker that no longer beats counts this time as busy by its processes
+(see [`worker-processes.md`](worker-processes.md)). See
+[`cpu-accounting.md`](cpu-accounting.md). The `nice` column of `/proc/stat`
+stays at `0` (`CpuTimes.Nice`): the time of a process whose priority was
+changed by `nice`/`renice` (ADR 0127) is still counted in `user`. What follows describes the simulated mode,
+always used when accounting is switched off.
 
-Avant ce chantier, rien n'appelait `IResourceSimulator.Tick` dans un hôte réel :
-`status`, `meminfo` et `loadavg` restaient à zéro. `ResourceSamplingService`
-s'inscrit sur l'horloge simulée et, chaque seconde simulée :
+Before this work item, nothing called `IResourceSimulator.Tick` in a real host:
+`status`, `meminfo` and `loadavg` stayed at zero. `ResourceSamplingService`
+subscribes to the simulated clock and, every simulated second:
 
-1. lit les processus actifs ;
-2. demande un échantillon au simulateur (`Tick`) ;
-3. ajoute l'intervalle à `CpuTimeAccounting` ;
-4. oublie les compteurs d'E/S des processus disparus.
+1. reads the active processes;
+2. asks the simulator for a sample (`Tick`);
+3. adds the interval to `CpuTimeAccounting`;
+4. forgets the I/O counters of vanished processes.
 
-`CpuTimeAccounting` donne à chaque cœur `100 × secondes` unités par intervalle.
-Un processus commence sur le cœur `pid mod cœurs` et déborde sur les suivants
-quand il est plein, comme un ordonnanceur avec affinité : deux processus
-occupés tombent sur des cœurs différents. Le temps va dans `system` pour les
-processus de l'OS (services déclarés système par l'hôte et processus inconnus
-du catalogue), dans `user` sinon ; le reste du cœur va dans `idle`.
+`CpuTimeAccounting` gives each core `100 × seconds` units per interval. A
+process starts on core `pid mod cores` and overflows onto the following ones
+when it is full, like a scheduler with affinity: two busy processes land on
+different cores. The time goes into `system` for OS processes (services
+declared system by the host and processes unknown to the catalog), into `user`
+otherwise; the rest of the core goes into `idle`.
 
-Le simulateur tire l'usage de chaque processus de son `ResourceProfile`, c'est-à-dire
-des poids `Resources` déclarés par le manifeste (ADR 0012). Jusqu'au chantier
-`4-task-manager`, `AppLifecycleOrchestrator` lançait chaque processus avec
-`ResourceProfile.None` : le CPU et la mémoire restaient à zéro malgré
-l'échantillonnage. L'orchestrateur passe maintenant le profil du manifeste
-(voir [`task-manager.md`](task-manager.md)).
+The simulator derives each process's usage from its `ResourceProfile`, that is,
+from the `Resources` weights declared by the manifest (ADR 0012). Until the
+`4-task-manager` work item, `AppLifecycleOrchestrator` launched each process
+with `ResourceProfile.None`: CPU and memory stayed at zero despite sampling.
+The orchestrator now passes the manifest's profile (see
+[`task-manager.md`](task-manager.md)).
 
-Une seconde d'échantillonnage garde l'historique borné du simulateur
-(120 échantillons) sur deux minutes, assez pour les graphiques.
+One second of sampling keeps the simulator's bounded history (120 samples) over
+two minutes, enough for the charts.
 
-### Entrées-sorties par processus (`/proc/<pid>/io`)
+### Per-process I/O (`/proc/<pid>/io`)
 
-`FileSystemService` est le seul chemin vers les fichiers, pour les passerelles
-des apps comme pour les commandes, et le seul endroit qui connaît le montage
-d'un chemin. Quand l'appelant a un PID (`AppOperationContext.ProcessId`) :
+`FileSystemService` is the only path to files, for app gateways as well as
+commands, and the only place that knows a path's mount. When the caller has a
+PID (`AppOperationContext.ProcessId`):
 
-- **Lecture** : le flux rendu est enveloppé ; chaque appel de lecture compte un
-  `syscr` et les octets rendus dans `rchar`. Un `head -c 10` d'un gros fichier
-  coûte dix octets.
-- **Écriture** : la source de contenu est enveloppée ; les octets que le
-  fournisseur en tire vont dans `wchar`, avec un `syscw` par écriture.
-- **Stockage** : `read_bytes` et `write_bytes` reçoivent les mêmes octets
-  quand le montage n'est pas virtuel (`/proc` et `/dev` en sont exclus).
+- **Read**: the returned stream is wrapped; each read call counts one `syscr`
+  and the bytes returned in `rchar`. A `head -c 10` of a large file costs ten
+  bytes.
+- **Write**: the content source is wrapped; the bytes the provider pulls from it
+  go into `wchar`, with one `syscw` per write.
+- **Storage**: `read_bytes` and `write_bytes` receive the same bytes when the
+  mount is not virtual (`/proc` and `/dev` are excluded).
 
-`AppNetworkGateway` ajoute le trafic réseau à `rchar` et `wchar`, jamais à
-`read_bytes` ni à `write_bytes`. Une opération système sans processus n'est
-comptée nulle part. `cancelled_write_bytes` reste à `0`.
+`AppNetworkGateway` adds network traffic to `rchar` and `wchar`, never to
+`read_bytes` or `write_bytes`. A system operation without a process is counted
+nowhere. `cancelled_write_bytes` stays at `0`.
 
-### Disque (`/proc/diskstats`)
+### Disk (`/proc/diskstats`)
 
-Le fournisseur IndexedDB passe `IBlockDeviceStatistics` à ses trois
-adaptateurs (métadonnées en lecture, métadonnées en écriture, contenu).
-`IndexedDbInteropAdapter.ExecuteAsync` marque la requête en vol, la chronomètre
-et la termine :
+The IndexedDB provider passes `IBlockDeviceStatistics` to its three adapters
+(metadata read, metadata write, content). `IndexedDbInteropAdapter.ExecuteAsync`
+marks the request in flight, times it and completes it:
 
-- transaction en lecture seule : une lecture ; en lecture-écriture : une
-  écriture ;
-- taille : les octets du fichier pour le contenu, un bloc de 4 Kio pour une
-  transaction de métadonnées (la taille d'une mise à jour d'inode sous Linux) ;
-- une transaction en échec compte dans le temps occupé, pas dans les requêtes
-  terminées ;
-- la recherche d'un chemin est une seule transaction quelle que soit sa
-  profondeur (opération `resolvePath`, ADR 0090), donc une seule lecture, comme
-  un noyau dont le cache des entrées de répertoire évite de relire chaque
-  préfixe.
+- read-only transaction: one read; read-write: one write;
+- size: the file's bytes for content, a 4 KiB block for a metadata transaction
+  (the size of an inode update on Linux);
+- a failed transaction counts in busy time, not in completed requests;
+- looking up a path is a single transaction whatever its depth (`resolvePath`
+  operation, ADR 0090), therefore a single read, like a kernel whose directory
+  entry cache avoids rereading each prefix.
 
-`BlockDeviceStatistics` tient `io_ticks` (temps avec au moins une requête en
-vol) et `time_in_queue` (temps pondéré par la profondeur de file) comme le
-noyau : à chaque changement de file, il ajoute le temps écoulé depuis le
-précédent. Les champs « fusionnées » restent à `0` : il n'y a pas de file à
-fusionner.
+`BlockDeviceStatistics` holds `io_ticks` (time with at least one request in
+flight) and `time_in_queue` (time weighted by queue depth) like the kernel: at
+each queue change, it adds the time elapsed since the previous one. The
+"merged" fields stay at `0`: there is no queue to merge.
 
-### Réseau (`/proc/net/dev`)
+### Network (`/proc/net/dev`)
 
-`AppNetworkGateway` reste le point de passage unique ([`sdk-network.md`](../framework/sdk-network.md)).
-Chaque méthode publique appelle son implémentation, puis `NetworkTrafficMeter`
-compte l'échange sur `eth0` :
+`AppNetworkGateway` remains the single point of passage ([`sdk-network.md`](../framework/sdk-network.md)).
+Each public method calls its implementation, then `NetworkTrafficMeter` counts
+the exchange on `eth0`:
 
-| Opération | Envoyé | Reçu |
+| Operation | Sent | Received |
 | --- | --- | --- |
-| DNS (`Resolve`, `ReverseLookup`) | IP + UDP + question RFC 1035 | question + 16 octets par adresse |
-| Ping | 84 octets (IP + ICMP + 56) | 84 octets si l'hôte répond |
-| HTTP | IP + TCP + ligne de requête, en-têtes, cookies, formulaire | IP + TCP + ligne d'état, en-têtes, corps ; un aller-retour de plus par redirection |
-| Sondage TCP | un SYN de 40 octets par port | un SYN-ACK ou RST par port non filtré |
-| Détection d'OS | 16 sondes | 16 réponses si l'hôte est connu |
+| DNS (`Resolve`, `ReverseLookup`) | IP + UDP + RFC 1035 question | question + 16 bytes per address |
+| Ping | 84 bytes (IP + ICMP + 56) | 84 bytes if the host answers |
+| HTTP | IP + TCP + request line, headers, cookies, form | IP + TCP + status line, headers, body; one extra round trip per redirect |
+| TCP probe | a 40-byte SYN per port | a SYN-ACK or RST per unfiltered port |
+| OS detection | 16 probes | 16 replies if the host is known |
 
-Un paquet est une requête ou une réponse (ADR 0057). Un hôte introuvable,
-injoignable, un délai dépassé ou une connexion refusée comptent la requête et
-une erreur de réception (`errs`). Un appel refusé faute de capacité ne sort
-pas : rien n'est compté. Depuis `web/3-listener-dns`, un échange avec un
-port local (cible résolue en loopback par `hackdns`) est compté sur `lo` et
-non sur `eth0` ([`listening-ports-and-dns.md`](../framework/listening-ports-and-dns.md)).
+A packet is a request or a reply (ADR 0057). A host not found, unreachable, a
+timeout or a refused connection count the request and a receive error (`errs`).
+A call refused for lack of capability does not go out: nothing is counted.
+Since `web/3-listener-dns`, an exchange with a local port (target resolved to
+loopback by `hackdns`) is counted on `lo` and not on `eth0`
+([`listening-ports-and-dns.md`](../framework/listening-ports-and-dns.md)).
 
-### Montages (`/proc/mounts`)
+### Mounts (`/proc/mounts`)
 
-`MountDescription.From` décrit chaque montage du routeur : `procfs` →
-`proc /proc proc ro`, `devfs` → `devfs /dev devfs rw`, tout autre fournisseur →
-`/dev/hda <point> idbfs rw`. Le fournisseur `/proc` lit le routeur à la demande,
-parce que le routeur le contient.
+`MountDescription.From` describes each mount of the router: `procfs` →
+`proc /proc proc ro`, `devfs` → `devfs /dev devfs rw`, any other provider →
+`/dev/hda <point> idbfs rw`. The `/proc` provider reads the router on demand,
+because the router contains it.
 
-### Espace disque (`HackDriveInfo`)
+### Disk space (`HackDriveInfo`)
 
-`AppDriveGateway` rend un `HackDriveSnapshot` par montage non virtuel
-(aujourd'hui `/`) :
+`AppDriveGateway` returns a `HackDriveSnapshot` per non-virtual mount
+(currently `/`):
 
-- **taille** : `StorageCapacityBytes`, ramenée au quota du navigateur quand il
-  est plus petit ;
-- **occupé** : depuis l'ADR 0099 §2, tout ce que l'origine stocke d'après
-  `navigator.storage.estimate()` (fichiers, comptes, réglages, bases des
-  sites). Quand le navigateur ne donne pas de quota, c'est encore la somme des
-  longueurs des contenus distincts référencés par une entrée de fichier (deux
-  fichiers identiques comptent une fois, comme leurs blocs dédupliqués) ;
-- **libre** : taille − occupé, jamais négatif.
+- **size**: `StorageCapacityBytes`, brought down to the browser quota when it is
+  smaller;
+- **used**: since ADR 0099 §2, everything the origin stores according to
+  `navigator.storage.estimate()` (files, accounts, settings, site databases).
+  When the browser gives no quota, it is still the sum of the lengths of the
+  distinct contents referenced by a file entry (two identical files count once,
+  like their deduplicated blocks);
+- **free**: size − used, never negative.
 
-Aucune capacité n'est demandée, comme `df`.
+No capability is required, like `df`.
 
-## Utilisation
+## Usage
 
 ```csharp
 // Usage CPU entre deux lectures, comme top.
@@ -278,63 +273,61 @@ foreach (HackDriveInfo drive in await HackDriveInfo.GetDrivesAsync())
 }
 ```
 
-Lire `/proc` demande `filesystem.system.read`. `/proc/<pid>/io` est en `0400` :
-seuls le propriétaire et l'autorité `System` le lisent.
+Reading `/proc` requires `filesystem.system.read`. `/proc/<pid>/io` is `0400`:
+only the owner and the `System` authority read it.
 
-## Décisions clés et précisions par rapport à l'ADR 0057
+## Key decisions and clarifications relative to ADR 0057
 
-- **Comptage des fichiers dans `FileSystemService`.** L'ADR parle de « la
-  passerelle fichier » : c'est le service derrière toutes les passerelles
-  (`AppFileSystemGateway`, commandes, `HackFile`). Lui seul sait si un chemin
-  touche le stockage ou un montage virtuel.
-- **`ResourceSamplingService` est nouveau.** L'ADR suppose que le simulateur
-  avance à chaque tick ; aucun code ne l'appelait. L'échantillonnage se fait
-  chaque seconde simulée, pas chaque tick de 100 ms, pour garder deux minutes
-  d'historique.
-- **`hda` ne compte que le système de fichiers.** Les autres magasins IndexedDB
-  (utilisateurs, groupes, autorisations, synchronisation) ne sont pas des
-  fichiers ; ils ne passent pas par cet adaptateur instrumenté.
-- **Tailles des métadonnées et des paquets estimées.** IndexedDB ne donne pas la
-  taille de ses écritures de métadonnées, ni le réseau simulé celle de ses
-  paquets : un bloc de 4 Kio par transaction de métadonnées, et des en-têtes IP,
-  TCP, UDP et ICMP standard autour des données réellement échangées.
-- **Temps du disque en temps réel.** Les millisecondes de `diskstats` sont
-  mesurées sur l'horloge réelle : c'est le vrai temps passé par IndexedDB.
-- **`HackDriveInfo` lit ses valeurs une fois.** Le navigateur ne répond qu'en
-  asynchrone ; `GetDrivesAsync` rend des instances figées, à redemander pour des
-  valeurs fraîches.
-- **Chiffres réels du navigateur (ADR 0099 §2).** `df` montre l'utilisé et
-  le quota de `navigator.storage.estimate()` ; la réserve de root et l'alerte
-  d'espace faible utilisent les mêmes chiffres
+- **File counting in `FileSystemService`.** The ADR speaks of "the file
+  gateway": this is the service behind all the gateways
+  (`AppFileSystemGateway`, commands, `HackFile`). Only it knows whether a path
+  touches storage or a virtual mount.
+- **`ResourceSamplingService` is new.** The ADR assumes the simulator advances
+  at each tick; no code called it. Sampling happens every simulated second, not
+  every 100 ms tick, to keep two minutes of history.
+- **`hda` counts only the file system.** The other IndexedDB stores (users,
+  groups, authorizations, synchronization) are not files; they do not go
+  through this instrumented adapter.
+- **Metadata and packet sizes are estimated.** IndexedDB does not give the size
+  of its metadata writes, nor does the simulated network give that of its
+  packets: a 4 KiB block per metadata transaction, and standard IP, TCP, UDP
+  and ICMP headers around the data actually exchanged.
+- **Disk time in real time.** The milliseconds of `diskstats` are measured on
+  the real clock: this is the real time spent by IndexedDB.
+- **`HackDriveInfo` reads its values once.** The browser only answers
+  asynchronously; `GetDrivesAsync` returns frozen instances, to be requested
+  again for fresh values.
+- **Real browser figures (ADR 0099 §2).** `df` shows the used space and quota
+  of `navigator.storage.estimate()`; the root reserve and the low-space alert
+  use the same figures
   ([`system-backup.md`](system-backup.md#espace-de-stockage-adr-0099-2)).
-- **Espace occupé sans les blocs orphelins.** Les blocs en attente de nettoyage
-  ne sont plus référencés par aucun fichier et ne sont pas comptés.
+- **Used space without orphan blocks.** Blocks awaiting cleanup are no longer
+  referenced by any file and are not counted.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/FileSystem/Virtual/ProcMetricsTests.cs` :
-  format exact de `stat`, `diskstats`, `net/dev`, `mounts` ; débordement d'un
-  cœur à l'autre ; échantillonnage par seconde simulée ; `io` compté par le
-  service de fichiers, sans octets de stockage pour `/proc` ; `io` privé ;
-  temps occupé pondéré par la file.
-- `Tests/HackerOs.Platform.Core.Tests/Execution/AppDriveGatewayTests.cs` :
-  taille, quota, espace libre jamais négatif, `HackDriveInfo` dans le contexte
-  ambiant.
-- `Tests/HackerOs.Network.Tests/Wave4NetworkTests.ProcMetrics.cs` : DNS, ping,
-  HTTP et refus de capacité comptés (ou non) sur `eth0` et dans `rchar`/`wchar`.
-- `Tests/HackerOs.Infrastructure.Browser.Tests/IndexedDbFileSystemReaderTests.cs` :
-  espace occupé dédupliqué, transactions signalées à `hda`.
+- `Tests/HackerOs.Platform.Core.Tests/FileSystem/Virtual/ProcMetricsTests.cs`:
+  exact format of `stat`, `diskstats`, `net/dev`, `mounts`; overflow from one
+  core to the next; sampling per simulated second; `io` counted by the file
+  service, without storage bytes for `/proc`; private `io`; busy time weighted
+  by the queue.
+- `Tests/HackerOs.Platform.Core.Tests/Execution/AppDriveGatewayTests.cs`: size,
+  quota, free space never negative, `HackDriveInfo` in the ambient context.
+- `Tests/HackerOs.Network.Tests/Wave4NetworkTests.ProcMetrics.cs`: DNS, ping,
+  HTTP and capability refusal counted (or not) on `eth0` and in `rchar`/`wchar`.
+- `Tests/HackerOs.Infrastructure.Browser.Tests/IndexedDbFileSystemReaderTests.cs`:
+  deduplicated used space, transactions reported to `hda`.
 
-## Liste des tâches du chantier `rebuild/4-proc-metrics`
+## Task list for work item `rebuild/4-proc-metrics`
 
-- [x] Contrats `Metrics` dans Simulation Abstractions ; `VirtualHardwareProfile.StorageCapacityBytes`.
-- [x] Compteurs en mémoire dans `Platform.Core/Metrics`.
-- [x] `ResourceSamplingService` démarré au boot : le simulateur avance enfin.
-- [x] Comptage des fichiers par processus dans `FileSystemService`.
-- [x] Comptage du trafic dans `AppNetworkGateway` (`NetworkTrafficMeter`).
-- [x] Comptage des transactions IndexedDB du système de fichiers pour `hda`.
+- [x] `Metrics` contracts in Simulation Abstractions; `VirtualHardwareProfile.StorageCapacityBytes`.
+- [x] In-memory counters in `Platform.Core/Metrics`.
+- [x] `ResourceSamplingService` started at boot: the simulator finally advances.
+- [x] Per-process file counting in `FileSystemService`.
+- [x] Traffic counting in `AppNetworkGateway` (`NetworkTrafficMeter`).
+- [x] Counting of the file system's IndexedDB transactions for `hda`.
 - [x] `/proc/stat`, `/proc/<pid>/io`, `/proc/diskstats`, `/proc/net/dev`, `/proc/mounts`.
 - [x] `HackDriveInfo`, `IAppDriveGateway`, `IAppExecutionContext.Drives`, `AppDriveGateway`, `IndexedDbStorageUsageProvider`.
-- [x] Câblage dans l'hôte Ecosystem.
+- [x] Wiring in the Ecosystem host.
 - [x] Tests.
-- [x] Documentation : ce document, `virtual-proc-and-dev.md`, `app-sdk.md`, `sdk-network.md`, index.
+- [x] Documentation: this document, `virtual-proc-and-dev.md`, `app-sdk.md`, `sdk-network.md`, index.

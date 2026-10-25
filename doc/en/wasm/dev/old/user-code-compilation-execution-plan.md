@@ -1,114 +1,114 @@
-# Plan de compilation et d'exécution de code utilisateur (hybride WASM/serveur)
+# Plan for compiling and running user code (hybrid WASM/server)
 
-**Statut :** proposition technique — non implémentée, aucune décision `D-xxx`
-actée, aucun code écrit.
+**Status:** technical proposal, not implemented, no `D-xxx` decision
+recorded, no code written.
 
-## 1. Objectif
+## 1. Goal
 
-Permettre de concevoir une application pour l'écosystème HackerOS en C#, de la
-compiler et de l'exécuter directement dans le navigateur (Blazor WebAssembly),
-tout en gardant une voie d'exécution serveur équivalente, **sans dupliquer la
-logique de compilation** entre les deux environnements.
+Make it possible to design an application for the HackerOS ecosystem in C#,
+compile it and run it directly in the browser (Blazor WebAssembly),
+while keeping an equivalent server execution path, **without duplicating the
+compilation logic** between the two environments.
 
-Ce document capture l'exploration de faisabilité menée en session (2026-08-17)
-avant tout engagement d'implémentation. Il sert de point de référence si ce
-chantier est un jour priorisé.
+This document captures the feasibility exploration carried out in a session (2026-08-17)
+before any implementation commitment. It serves as a reference point if this
+work item is ever prioritized.
 
-## 2. Contexte et documents liés
+## 2. Context and related documents
 
-- [ADR 0020](../adr/0020-editor-framework-and-script-sandbox.md) sépare
-  strictement l'édition de code (`vfs.read`/`vfs.write`, aucune exécution) de
-  l'exécution d'un script/programme utilisateur, contrôlée par la capacité
-  `user-scripts.execute` et destinée à tourner dans un sandbox isolé. Ce plan
-  est la suite naturelle de cette décision : il ne la remet pas en cause, il
-  propose comment `user-scripts.execute` pourrait être honorée pour du C#
-  compilé plutôt que pour un simple script.
-- [`code-editor.md`](code-editor.md) documente l'éditeur actuel, qui n'a et ne
-  doit garder aucune capacité de compilation ou d'exécution tant que ce plan
-  (ou une ADR qui en découle) n'est pas accepté.
-- [ADR 0023](../adr/0023-optional-game-domain-and-proxy-fallback.md) établit déjà
-  le pattern architectural repris ici : une interface partagée dans un projet
-  `*.Abstractions`, avec plusieurs implémentations (locale, proxy serveur,
-  fallback) sélectionnées par DI/capability manifest — voir `IGameDomainGateway`.
-  Ce plan applique le même pattern à la compilation/exécution de code.
+- [ADR 0020](../adr/0020-editor-framework-and-script-sandbox.md) strictly separates
+  code editing (`vfs.read`/`vfs.write`, no execution) from
+  running a user script/program, controlled by the `user-scripts.execute`
+  capability and intended to run in an isolated sandbox. This plan
+  is the natural follow-up to that decision: it does not challenge it, it
+  proposes how `user-scripts.execute` could be honored for compiled C#
+  rather than for a simple script.
+- [`code-editor.md`](code-editor.md) documents the current editor, which has and
+  must keep no compilation or execution capability until this plan
+  (or an ADR derived from it) is accepted.
+- [ADR 0023](../adr/0023-optional-game-domain-and-proxy-fallback.md) already establishes
+  the architectural pattern reused here: a shared interface in an
+  `*.Abstractions` project, with several implementations (local, server proxy,
+  fallback) selected by DI/capability manifest; see `IGameDomainGateway`.
+  This plan applies the same pattern to code compilation/execution.
 
-## 3. Faisabilité technique (résumé de l'exploration)
+## 3. Technical feasibility (summary of the exploration)
 
-La compilation et l'exécution de C# arbitraire depuis l'intérieur d'un host
-Blazor WebAssembly sont réalisables, avec des contraintes précises :
+Compiling and running arbitrary C# from inside a Blazor WebAssembly
+host is achievable, with specific constraints:
 
-- **Compilation en mémoire** via Roslyn (`Microsoft.CodeAnalysis.CSharp`,
-  `CSharpCompilation`) puis `Assembly.Load(byte[])` : l'assembly obtenu est
-  exécuté par l'interpréteur IL de Mono, sans besoin de JIT natif. C'est
-  l'approche déjà utilisée par des projets externes connus (ex. Blazor REPL).
-- **Pas de `Reflection.Emit`** : aucune génération d'IL dynamique à la volée
-  n'est possible en WASM. Seule une compilation source complète via Roslyn
-  fonctionne.
-- **Mode AOT** : un assembly chargé dynamiquement à l'exécution ne peut pas
-  être lui-même AOT-compilé ; il retombe sur l'interpréteur (mode mixte
-  supporté depuis .NET 7+). Vérifié dans ce repo : aucun `.csproj` n'active
-  `RunAOTCompilation` aujourd'hui, donc ce chemin n'est pas bloqué en l'état.
-- **Trimming** : la compilation Roslyn a besoin des reference assemblies et de
-  métadonnées de réflexion intactes. `PublishTrimmed` est déjà à `false` sur
-  `HackerOs.Ecosystem` et `HackerOs.Server` aujourd'hui ; un futur passage à
-  `true` sur ces projets casserait ce chemin sans annotations
-  `[DynamicDependency]` complètes.
-- **Isolation** : WebAssembly n'apporte **aucune** isolation contre le propre
-  code hôte C#. Un assembly chargé dynamiquement tourne dans le même
-  processus, avec le même accès JS-interop que le reste de l'application. La
-  garantie d'isolation exigée par l'ADR 0020 ("isolated web-worker sandbox
-  without access to host DOM or sensitive OS APIs") doit donc être construite
-  architecturalement — par exemple un Web Worker dédié sans aucun binding
-  JS-interop vers le DOM/API host, communication limitée à un canal
-  `postMessage` typé — et non supposée fournie par le runtime.
+- **In-memory compilation** via Roslyn (`Microsoft.CodeAnalysis.CSharp`,
+  `CSharpCompilation`) then `Assembly.Load(byte[])`: the resulting assembly is
+  run by the Mono IL interpreter, with no need for a native JIT. This is the
+  approach already used by well-known external projects (e.g. Blazor REPL).
+- **No `Reflection.Emit`**: no on-the-fly dynamic IL generation
+  is possible in WASM. Only full source compilation through Roslyn
+  works.
+- **AOT mode**: an assembly loaded dynamically at runtime cannot
+  itself be AOT-compiled; it falls back to the interpreter (mixed mode
+  supported since .NET 7+). Verified in this repo: no `.csproj` enables
+  `RunAOTCompilation` today, so this path is not blocked as things stand.
+- **Trimming**: Roslyn compilation needs the reference assemblies and
+  reflection metadata intact. `PublishTrimmed` is already `false` on
+  `HackerOs.Ecosystem` and `HackerOs.Server` today; a future switch to
+  `true` on these projects would break this path without complete
+  `[DynamicDependency]` annotations.
+- **Isolation**: WebAssembly provides **no** isolation against the host's own C#
+  code. A dynamically loaded assembly runs in the same
+  process, with the same JS-interop access as the rest of the application. The
+  isolation guarantee required by ADR 0020 ("isolated web-worker sandbox
+  without access to host DOM or sensitive OS APIs") must therefore be built
+  architecturally (for example a dedicated Web Worker with no JS-interop
+  binding to the host DOM/API, communication limited to a typed
+  `postMessage` channel) and not assumed to be provided by the runtime.
 
-## 4. Architecture hybride proposée
+## 4. Proposed hybrid architecture
 
-Sur le modèle de `IGameDomainGateway` (ADR 0023) :
+Modeled on `IGameDomainGateway` (ADR 0023):
 
-- Un nouveau projet partagé, p. ex. `Shared/HackerOs.CodeExecution.Abstractions`,
-  définirait deux contrats distincts :
-  - **`ICompilationService`** — source C# → assembly en mémoire + diagnostics.
-    Peut être **réellement partagé à 100 %** entre client et serveur : Roslyn
-    est du C# portable, une seule implémentation suffit pour les deux côtés.
-  - **`IExecutionSandbox`** — exécution d'un assembly compilé. Le **contrat**
-    est partagé, mais **pas l'implémentation** :
-    - Côté client WASM : exécution locale via l'interpréteur Mono, isolation
-      construite via Worker dédié (voir section 3).
-    - Côté serveur : exécution isolée au niveau OS (conteneur ou processus
-      séparé — .NET moderne n'a plus d'AppDomains), exposée par
-      `HackerOs.Server` et atteinte depuis le client via le pont proxy déjà
-      utilisé pour `curl`/`nmap` (même famille de pattern que le proxy réseau
-      documenté dans `server-implementation-pass.md`).
-- Sélection de l'implémentation (locale vs serveur) au moment de l'exécution,
-  selon disponibilité du serveur et policy — même logique de fallback que
+- A new shared project, e.g. `Shared/HackerOs.CodeExecution.Abstractions`,
+  would define two distinct contracts:
+  - **`ICompilationService`**: C# source → in-memory assembly + diagnostics.
+    Can be **truly shared at 100%** between client and server: Roslyn
+    is portable C#, a single implementation is enough for both sides.
+  - **`IExecutionSandbox`**: running a compiled assembly. The **contract**
+    is shared, but **not the implementation**:
+    - WASM client side: local execution through the Mono interpreter, isolation
+      built through a dedicated Worker (see section 3).
+    - Server side: OS-level isolated execution (container or separate
+      process; modern .NET no longer has AppDomains), exposed by
+      `HackerOs.Server` and reached from the client through the proxy bridge already
+      used for `curl`/`nmap` (same pattern family as the network proxy
+      documented in `server-implementation-pass.md`).
+- Selection of the implementation (local vs server) at execution time,
+  depending on server availability and policy, with the same fallback logic as
   `IGameDomainGateway`/`NullGameDomainGateway`.
-- Gate de capacité manifeste : `user-scripts.execute` (déjà défini par l'ADR
-  0020), qu'il s'agisse de la voie locale ou de la voie serveur.
+- Manifest capability gate: `user-scripts.execute` (already defined by ADR
+  0020), whether for the local path or the server path.
 
-## 5. Hors scope pour l'instant
+## 5. Out of scope for now
 
-- Toute implémentation de code (ce document est volontairement non codé).
-- Le choix définitif du mécanisme d'isolation serveur (conteneur vs sandbox
-  process natif) — nécessite son propre design/ADR le moment venu.
-- Les limites de ressources (CPU, mémoire, temps d'exécution) imposées au code
-  utilisateur exécuté.
-- L'UI/UX d'une éventuelle app "concevoir et exécuter une app pour
-  l'écosystème" — ce document couvre seulement la couche
-  compilation/exécution sous-jacente.
+- Any code implementation (this document is deliberately not coded).
+- The final choice of the server isolation mechanism (container vs native
+  process sandbox), which needs its own design/ADR when the time comes.
+- The resource limits (CPU, memory, execution time) imposed on the executed
+  user code.
+- The UI/UX of a possible "design and run an app for the
+  ecosystem" app; this document covers only the underlying
+  compilation/execution layer.
 
-## 6. Prochaines étapes possibles (non engagées)
+## 6. Possible next steps (not committed)
 
-- [ ] Décision `D-xxx` formelle si ce chantier est un jour priorisé.
-- [ ] ADR dédiée une fois l'architecture validée par le user.
-- [ ] Prototype isolé de compilation seule (sans exécution) pour confirmer
-  Roslyn en mode interpréteur WASM dans ce repo précis, avant tout travail sur
-  le sandbox d'exécution.
+- [ ] Formal `D-xxx` decision if this work item is ever prioritized.
+- [ ] Dedicated ADR once the architecture is validated by the user.
+- [ ] Isolated compile-only prototype (no execution) to confirm
+  Roslyn in WASM interpreter mode in this specific repo, before any work on the
+  execution sandbox.
 
-## 7. Documents de référence
+## 7. Reference documents
 
-- [ADR 0020 — Code editor framework and script sandbox policy](../adr/0020-editor-framework-and-script-sandbox.md)
-- [ADR 0023 — Optional Game Domain integration and network proxy fallback](../adr/0023-optional-game-domain-and-proxy-fallback.md)
+- [ADR 0020: Code editor framework and script sandbox policy](../adr/0020-editor-framework-and-script-sandbox.md)
+- [ADR 0023: Optional Game Domain integration and network proxy fallback](../adr/0023-optional-game-domain-and-proxy-fallback.md)
 - [`code-editor.md`](code-editor.md)
 - [`server-implementation-pass.md`](server-implementation-pass.md)
 - [`progress-and-plan-2026-08-17.md`](progress-and-plan-2026-08-17.md)

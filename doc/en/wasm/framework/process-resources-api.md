@@ -1,15 +1,15 @@
-# Ressources d'un processus côté apps (CPU, mémoire, OOM killer)
+# Process resources for apps (CPU, memory, OOM killer)
 
-Ce document décrit ce qu'une app voit et peut faire avec le temps CPU, la mémoire et l'OOM killer d'un processus : `HackProcess`, `/proc/<pid>/stat`, `/proc/<pid>/status`, `/proc/meminfo` et `/proc/<pid>/oom_score_adj`. La mise en œuvre est dans [`../dev/cpu-accounting.md`](../dev/cpu-accounting.md), [`../dev/memory-accounting.md`](../dev/memory-accounting.md) et [`../dev/oom-killer.md`](../dev/oom-killer.md).
+This document describes what an app sees and can do with the CPU time, memory and OOM killer of a process: `HackProcess`, `/proc/<pid>/stat`, `/proc/<pid>/status`, `/proc/meminfo` and `/proc/<pid>/oom_score_adj`. The implementation is in [`../dev/cpu-accounting.md`](../dev/cpu-accounting.md), [`../dev/memory-accounting.md`](../dev/memory-accounting.md) and [`../dev/oom-killer.md`](../dev/oom-killer.md).
 
-## Ce que la mesure change pour une app
+## What measurement changes for an app
 
-Aucune app ne change une ligne : tout passe par le frame ambiant que l'OS ouvre
-déjà autour de leur code (ADR 0043).
+No app changes a single line: everything goes through the ambient frame that the OS already opens
+around their code (ADR 0043).
 
-## Temps CPU
+## CPU time
 
-### Lire
+### Reading
 
 ```bash
 cat /proc/42/stat
@@ -26,40 +26,40 @@ TimeSpan total = editor.TotalProcessorTime;
 bool responding = editor.Responding;               // false : « Not responding »
 ```
 
-| Fichier | Mesure active | Mesure coupée |
+| File | Measurement on | Measurement off |
 |---|---|---|
-| `/proc/<pid>/stat` | `utime`, `stime` mesurés (champs 14 et 15, `USER_HZ`) | `utime` reconstruit depuis l'historique borné du simulateur (un échantillon par seconde), `stime` à `0` |
-| `/proc/<pid>/status` | `Cpu` = usage de la dernière seconde, `CpuSource: measured`, puis `Responding`, `LongTasks`, `voluntary_ctxt_switches`, `nonvoluntary_ctxt_switches` | exactement le fichier d'avant : `Cpu` simulé, `CpuSource: simulated`, sans les quatre champs |
-| `/proc/stat` | `cpu0` = le thread principal (`user`, `system` = `stime` + compositeur, `idle`) ; le cœur `k` ajoute le temps occupé du worker du pool qui le porte (ADR 0070, [`worker-processes.md`](../dev/worker-processes.md)) ; sans worker, les autres cœurs restent `idle` | temps simulé (ADR 0057) |
+| `/proc/<pid>/stat` | measured `utime`, `stime` (fields 14 and 15, `USER_HZ`) | `utime` rebuilt from the simulator's bounded history (one sample per second), `stime` at `0` |
+| `/proc/<pid>/status` | `Cpu` = usage over the last second, `CpuSource: measured`, then `Responding`, `LongTasks`, `voluntary_ctxt_switches`, `nonvoluntary_ctxt_switches` | exactly the file as before: simulated `Cpu`, `CpuSource: simulated`, without the four fields |
+| `/proc/stat` | `cpu0` = the main thread (`user`, `system` = `stime` + compositor, `idle`); core `k` adds the busy time of the pool worker that carries it (ADR 0070, [`worker-processes.md`](../dev/worker-processes.md)); without a worker, the other cores stay `idle` | simulated time (ADR 0057) |
 
-Un processus qui n'a encore rien exécuté (ou un processus simulé,
-qui n'exécute pas de code) n'est pas mesuré : il garde ses valeurs simulées.
+A process that has not run anything yet (or a simulated process,
+which runs no code) is not measured: it keeps its simulated values.
 
-## Comportement sous charge
+## Behavior under load
 
-- **Attention (ADR 0127 §4)** : une app fenêtrée tourne sur le fil principal.
-  Une boucle longue sans `await` y gèle tout le bureau, souris comprise, et
-  aucune boîte ne peut s'afficher pendant le gel. Un calcul lourd va dans
-  `HackBackground.RunAsync` (ADR 0128) ; une boucle longue qui doit rester sur
-  le fil appelle `CheckpointAsync` (ADR 0069) assez souvent pour rendre la main.
+- **Warning (ADR 0127 §4)**: a windowed app runs on the main thread.
+  A long loop without `await` freezes the whole desktop there, mouse included, and
+  no dialog can be displayed during the freeze. Heavy computation goes into
+  `HackBackground.RunAsync` (ADR 0128); a long loop that must stay on the
+  thread calls `CheckpointAsync` (ADR 0069) often enough to yield control.
 
-Une fenêtre sans réponse est décrite dans [`app-responsiveness-api.md`](app-responsiveness-api.md).
+An unresponsive window is described in [`app-responsiveness-api.md`](app-responsiveness-api.md).
 
-## Sous-frame noyau
+## Kernel sub-frame
 
-- **Sous-frame noyau réservé à l'OS.** `EnterKernel` est interne au SDK et
-  visible de Platform Core seulement : une app ne peut pas déclarer son propre
-  code en temps système.
+- **Kernel sub-frame reserved for the OS.** `EnterKernel` is internal to the SDK and
+  visible to Platform Core only: an app cannot declare its own
+  code as system time.
 
-## Mémoire
+## Memory
 
-### Mesuré ou simulé
+### Measured or simulated
 
-Un processus est mesuré si le catalogue de l'hôte connaît son image (toutes
-les apps intégrées) ou s'il a exécuté du code sous son frame (le shell, une
-app installée au runtime). Les autres (processus simulés sans code) restent
-simulés, comme le veut l'ADR 0066 §4.
-### Lecture
+A process is measured if the host's catalog knows its image (all
+built-in apps) or if it has run code under its frame (the shell, an
+app installed at runtime). The others (simulated processes without code) remain
+simulated, as ADR 0066 §4 requires.
+### Reading
 
 ```text
 $ cat /proc/42/status
@@ -85,27 +85,27 @@ Mapped:            20480 kB
 Slab:               4096 kB
 ```
 
-- `MemTotal` reste celui du `VirtualHardwareProfile`.
-- Mémoire utilisée = `AnonPages + Mapped + Slab` + mémoire simulée des
-  processus restés simulés.
-- `HackProcess.WorkingSet64` lit `VmRSS` ; `HackProcess.PrivateMemorySize64`
-  lit `RssAnon` (et vaut `WorkingSet64` quand la mémoire est simulée), comme
+- `MemTotal` stays that of the `VirtualHardwareProfile`.
+- Used memory = `AnonPages + Mapped + Slab` + simulated memory of the
+  processes that remained simulated.
+- `HackProcess.WorkingSet64` reads `VmRSS`; `HackProcess.PrivateMemorySize64`
+  reads `RssAnon` (and equals `WorkingSet64` when memory is simulated), like
   `System.Diagnostics.Process`.
 
-## Mémoire et OOM killer
+## Memory and OOM killer
 
-L'OOM killer est désactivé par défaut et n'agit que si la mémoire est mesurée (`MemSource` différent de `simulated`). Une app tuée par lui se termine avec la raison `ProcessExitReason.OutOfMemory` (SDK 1.2) ; une app à fenêtre voit sa fenêtre se fermer et l'utilisateur reçoit une notification (ADR 0142 §9).
+The OOM killer is disabled by default and only acts if memory is measured (`MemSource` other than `simulated`). An app killed by it ends with the reason `ProcessExitReason.OutOfMemory` (SDK 1.2); a windowed app sees its window close and the user receives a notification (ADR 0142 §9).
 
-### Fichiers
+### Files
 
-| Chemin | Accès | Contenu |
+| Path | Access | Content |
 | --- | --- | --- |
-| `/proc/<pid>/oom_score` | lecture | Score actuel. |
-| `/proc/<pid>/oom_score_adj` | lecture, écriture | `-1000` à `1000`. Le propriétaire monte la valeur ; descendre sous le plancher demande `sudo`. |
-| `/proc/vmstat` | lecture | `nr_free_pages`, puis `nr_anon_pages`, `nr_mapped`, `nr_slab_unreclaimable` si mesuré, puis `oom_kill`. |
-| `/dev/kmsg` | lecture ; écriture root | `prio,seq,usec,-;message`. |
-| `/var/log/kern.log` | lecture | Lignes du noyau (rotation 1 Mio × 5, ADR 0045). |
-### Déclarer une valeur dans une app
+| `/proc/<pid>/oom_score` | read | Current score. |
+| `/proc/<pid>/oom_score_adj` | read, write | `-1000` to `1000`. The owner raises the value; lowering it below the floor requires `sudo`. |
+| `/proc/vmstat` | read | `nr_free_pages`, then `nr_anon_pages`, `nr_mapped`, `nr_slab_unreclaimable` if measured, then `oom_kill`. |
+| `/dev/kmsg` | read; root write | `prio,seq,usec,-;message`. |
+| `/var/log/kern.log` | read | Kernel lines (rotation 1 MiB × 5, ADR 0045). |
+### Declaring a value in an app
 
 ```csharp
 public sealed class MyServiceDefinition : AppDefinition
@@ -115,5 +115,5 @@ public sealed class MyServiceDefinition : AppDefinition
 }
 ```
 
-Le manifeste généré porte `"oomScoreAdj": -200`. Un service système sans
-valeur reçoit `-500` ; les autres processus héritent de leur parent.
+The generated manifest carries `"oomScoreAdj": -200`. A system service without
+a value receives `-500`; other processes inherit from their parent.

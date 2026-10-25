@@ -1,61 +1,63 @@
-# Accueil et tiroir d’applications mobiles
+# Mobile home screen and app drawer
 
-## Objet
+## Purpose
 
-L’accueil Android/iOS présente des raccourcis sur plusieurs pages et un dock.
-Toutes les apps mobiles compatibles restent accessibles dans le tiroir, même
-sans raccourci. L’[ADR 0165](adr/0165-mobile-home-drawer-and-mouse-controls.md)
-complète le [plan mobile archivé](old/mobile-interface-platform-plan.md).
-L'[ADR 0166](adr/0166-mobile-layout-conf-on-desktop.md) remplace son chemin et
-son format de persistance par un fichier texte sous le bureau.
+The Android/iOS home screen presents shortcuts across several pages and a
+dock. All compatible mobile apps remain accessible in the drawer, even
+without a shortcut. [ADR 0165](adr/0165-mobile-home-drawer-and-mouse-controls.md)
+completes the [archived mobile plan](old/mobile-interface-platform-plan.md).
+[ADR 0166](adr/0166-mobile-layout-conf-on-desktop.md) replaces its path and
+its persistence format with a text file under the desktop.
 
-## Utilisation
+## Usage
 
-- Revenir au desktop : toucher/cliquer la poignée du haut ou glisser vers le bas,
-  puis choisir **Desktop** dans le volet. Le simple clic fonctionne aussi à la souris.
-- Ouvrir le tiroir : glisser vers le haut depuis Accueil (cercle Android, poignée
-  iOS) ou le dock ; ou utiliser **Toutes les applications** dans le dock.
-- Rechercher puis toucher une app la lance. **+** ajoute un raccourci à la page
-  courante ; l’étoile ajoute/retire du dock. Une app déjà ouverte est restaurée.
-- Le tiroir place le focus dans la recherche, garde la tabulation dans ses
-  commandes et restitue le focus à la fermeture ; Échap ferme le tiroir.
-- Accueil masque l’app sans l’arrêter et ferme les panneaux. Retour ferme d’abord
-  le tiroir, le volet ou les récents avant d’interroger l’app. Récents garde ses commandes.
-- Glisser latéralement change de page. Les points, les flèches et les touches
-  gauche/droite offrent des alternatives. Les points se révèlent après navigation.
-- **Modifier**, un appui long ou un clic droit sur une icône entre en édition.
-  Le glisser-déposer souris et les flèches réordonnent les raccourcis. Les flèches
-  de transfert déplacent vers une autre page ; la page suivante est créée si besoin.
-  Une page vide peut être supprimée. Retirer un raccourci ne désinstalle pas l’app.
-- **Paramètres > Apparence > Commandes souris du mode mobile** masque ou révèle
-  les flèches de page et indications de geste. Les gestes restent utilisables à la souris.
+- Return to the desktop: touch/click the top handle or drag down, then choose
+  **Desktop** in the panel. A simple click also works with the mouse.
+- Open the drawer: drag up from Home (Android circle, iOS handle) or the dock;
+  or use **All applications** in the dock.
+- Search then touch an app to launch it. **+** adds a shortcut to the current
+  page; the star adds/removes from the dock. An app that is already open is
+  restored.
+- The drawer puts the focus in the search, keeps Tab within its controls and
+  restores the focus on closing; Esc closes the drawer.
+- Home hides the app without stopping it and closes the panels. Back first
+  closes the drawer, the panel or the recents before querying the app.
+  Recents keeps its controls.
+- Dragging sideways changes page. The dots, the arrows and the left/right keys
+  offer alternatives. The dots appear after navigation.
+- **Edit**, a long press or a right click on an icon enters edit mode.
+  Mouse drag and drop and the arrows reorder the shortcuts. The transfer
+  arrows move to another page; the next page is created if needed. An empty
+  page can be deleted. Removing a shortcut does not uninstall the app.
+- **Settings > Appearance > Mobile mode mouse controls** hides or reveals the
+  page arrows and gesture hints. The gestures remain usable with the mouse.
 
 ## Architecture
 
-| Élément | Responsabilité |
+| Element | Responsibility |
 | --- | --- |
-| `MobileShell` | Compose accueil et app courante, conserve l’état du tiroir pour Retour/Accueil, suit la taille du workspace. |
-| `MobileHomeScreen` et ses fichiers collocatés | Catalogue autorisé, pages, recherche, édition et dock. Paramètres `IsDrawerOpen`, `OnDrawerChanged`, `OnAppSelected`. |
-| `MobileAppIcon` | Image déclarée de l’app, partagée entre pages, dock et tiroir ; repli Lucide. |
-| `MobileHomeLayout` | Modèle interne borné, lecture avec `ConfigDocumentFormat`, écriture texte déterministe et ancienne lecture JSON pour migration seulement. |
-| `MobileHomeLayoutStore` | Fichier VFS caché via `IOsSettingsService`, éditions sérialisées et projection publiée après succès. |
-| `MobileSettingsDocuments` | Schéma du document OS `mobile`, accessible à Paramètres par `HackSettings.OpenSystemAsync`. |
-| `WindowProcessObserver` | Pont processus/fenêtres partagé avec le desktop pour les lancements indirects et arrêts. |
-| `wwwroot/mobileGestures.js` | Primitives navigateur : capture, appui long, clic parasite, taille ; C# décide du sens et des seuils. |
+| `MobileShell` | Composes home and the current app, keeps the drawer state for Back/Home, tracks the workspace size. |
+| `MobileHomeScreen` and its collocated files | Allowed catalog, pages, search, editing and dock. Parameters `IsDrawerOpen`, `OnDrawerChanged`, `OnAppSelected`. |
+| `MobileAppIcon` | Declared image of the app, shared between pages, dock and drawer; Lucide fallback. |
+| `MobileHomeLayout` | Bounded internal model, reading with `ConfigDocumentFormat`, deterministic text writing and legacy JSON reading for migration only. |
+| `MobileHomeLayoutStore` | Hidden VFS file through `IOsSettingsService`, serialized edits and projection published after success. |
+| `MobileSettingsDocuments` | Schema of the `mobile` OS document, accessible to Settings through `HackSettings.OpenSystemAsync`. |
+| `WindowProcessObserver` | Process/window bridge shared with the desktop for indirect launches and stops. |
+| `wwwroot/mobileGestures.js` | Browser primitives: capture, long press, stray click, size; C# decides the direction and the thresholds. |
 
-Les apps proposées sont de genre `Window`, visibles, activées et compatibles
-`mobile` selon leur manifeste. Les noms suivent la langue de session. Tous les
-textes sont disponibles en français et anglais. Les fichiers restent locaux au
-système simulé, sans dépendre du backend optionnel.
+The offered apps are of kind `Window`, visible, enabled and `mobile`-compatible
+according to their manifest. Names follow the session language. All texts are
+available in French and English. The files stay local to the simulated system,
+without depending on the optional backend.
 
-Les quatorze apps système fenêtrées déclarent un `MobileEntryPoint` partagé
-avec leur composant desktop ; le générateur émet la forme `platform` avec les
-deux plateformes. Le filtre du tiroir et l’orchestrateur conservent les contrôles
-de compatibilité pour les autres apps.
+The fourteen windowed system apps declare a `MobileEntryPoint` shared with
+their desktop component; the generator emits the `platform` form with both
+platforms. The drawer filter and the orchestrator keep the compatibility
+checks for the other apps.
 
-## Persistance et paramètres
+## Persistence and settings
 
-`~/Desktop/.mobile/layout.conf` :
+`~/Desktop/.mobile/layout.conf`:
 
 ```ini
 # HackerOS mobile Home layout
@@ -69,82 +71,81 @@ apps=org.hackeros.browser,org.hackeros.settings
 2=org.hackeros.calculator
 ```
 
-Les pages sont numérotées de 1 à N sans trou ; une valeur vide conserve une
-page vide. L'ordre des IDs séparés par des virgules définit les positions.
-Commentaires `#`, sections et clés suivent la grammaire des paramètres de l'OS.
-Limites : 24 pages, 20 raccourcis
-par page, 5 au dock. Il reste toujours une page ; les pages vides sont permises.
-Les doublons, IDs invalides, versions inconnues et fichiers trop grands sont refusés.
-Les IDs indisponibles restent enregistrés et sont masqués temporairement au rendu.
-Un fichier invalide est conservé jusqu’à une action d’édition explicite.
+Pages are numbered from 1 to N with no gap; an empty value keeps an empty
+page. The order of the comma-separated IDs defines the positions. `#`
+comments, sections and keys follow the OS settings grammar. Limits: 24 pages,
+20 shortcuts per page, 5 in the dock. There is always one page; empty pages
+are allowed. Duplicates, invalid IDs, unknown versions and oversized files are
+refused. Unavailable IDs remain recorded and are temporarily hidden at render
+time. An invalid file is kept until an explicit edit action.
 
-Le répertoire `.mobile` se trouve dans le bureau de chaque utilisateur.
-Le bureau masque les noms commençant par un point.
-L’explorateur masque par défaut les noms commençant par un point. Son bouton
-**Afficher les fichiers et dossiers cachés** (œil) active/désactive leur affichage
-dans la fenêtre courante, avec le même filtre que la recherche et sans écriture.
-La disposition fait partie des fichiers du bureau de l'utilisateur.
-Chaque édition remplace un seul fichier ; changer de page n’écrit rien. Aucun
-localStorage ni changement de schéma IndexedDB.
+The `.mobile` directory lives in each user's desktop. The desktop hides names
+starting with a dot. The explorer hides names starting with a dot by default.
+Its **Show hidden files and folders** button (eye) toggles their display in
+the current window, with the same filter as the search and without writing.
+The layout is part of the user's desktop files. Each edit replaces a single
+file; changing page writes nothing. No localStorage and no IndexedDB schema
+change.
 
-Si le nouveau fichier n'existe pas, une ancienne disposition valide de
-`~/.config/hackeros/.mobile/layout.json` est convertie automatiquement au chargement.
-L'ancien fichier reste intact ; aucune écriture JSON n'est effectuée. Un
-`layout.conf` existant est toujours prioritaire, même invalide, et n'est jamais
-écrasé par cette migration. Sans ancien fichier valide, la première édition
-crée la configuration. Les écritures suivantes normalisent son texte.
+If the new file does not exist, a valid legacy layout from
+`~/.config/hackeros/.mobile/layout.json` is converted automatically at load.
+The old file stays intact; no JSON write is performed. An existing
+`layout.conf` always takes priority, even if invalid, and is never overwritten
+by this migration. Without a valid old file, the first edit creates the
+configuration. Subsequent writes normalize its text.
 
-`OsSettingsLocation.UserHome` permet à `OsSettingsFile` de résoudre le chemin
-relatif `Desktop/.mobile/layout.conf` avec les droits de la session.
+`OsSettingsLocation.UserHome` lets `OsSettingsFile` resolve the relative path
+`Desktop/.mobile/layout.conf` with the session's rights.
 
-`/etc/hackeros/mobile.config`, surchargé par `~/.config/hackeros/mobile.config` :
+`/etc/hackeros/mobile.config`, overridden by `~/.config/hackeros/mobile.config`:
 
 ```ini
 mouseHelpers=true
 ```
 
-Le verrouillage administrateur, l’origine des valeurs et les permissions suivent
-le moteur de paramètres à couches. La désactivation masque les aides, jamais les gestes.
+Administrator locking, value origin and permissions follow the layered
+settings engine. Disabling hides the helpers, never the gestures.
 
-## Vérification
+## Verification
 
-- `MobileHomeLayoutTests` : chemin caché, ordre, IDs indisponibles, données invalides
-  laissées intactes, limites/doublons, éditions sérialisées et absence de session,
-  commentaires/espaces, migration unique du JSON et priorité d'un conf existant.
-- Tests de navigation mobile existants : historique, Retour et fermeture des panneaux.
-- `BuildKnownLazyAppsTests` : le catalogue agrégé conserve toutes les assemblies
-  desktop lorsque les apps adoptent `platform.entryPoints` ; la calculatrice
-  déclare la même assembly pour desktop et mobile.
-- `MobileHomeScreenTests` (UI.E2E) : clic du haut, retour desktop, tiroir par geste
-  depuis Accueil, ajout/dock, édition, pagination, option souris en direct et
-  persistance après rechargement, Android/souris et iOS/toucher émulés dans Chromium ;
-  `.mobile` masqué/révélé par la commande de l'explorateur.
-- `FileViewTreeTests` : le filtre des fichiers cachés suit aussi les descendants
-  déjà chargés et l'ordre de navigation clavier.
-- Régressions : changement de shell, volet, récents et navigation clavier du desktop.
+- `MobileHomeLayoutTests`: hidden path, order, unavailable IDs, invalid data
+  left intact, limits/duplicates, serialized edits and absence of a session,
+  comments/whitespace, one-time JSON migration and priority of an existing
+  conf.
+- Existing mobile navigation tests: history, Back and closing of panels.
+- `BuildKnownLazyAppsTests`: the aggregated catalog keeps all desktop
+  assemblies when apps adopt `platform.entryPoints`; the calculator declares
+  the same assembly for desktop and mobile.
+- `MobileHomeScreenTests` (UI.E2E): top click, return to desktop, drawer by
+  gesture from Home, add/dock, editing, pagination, live mouse option and
+  persistence after reload, Android/mouse and iOS/touch emulated in Chromium;
+  `.mobile` hidden/revealed by the explorer command.
+- `FileViewTreeTests`: the hidden files filter also follows the already
+  loaded descendants and the keyboard navigation order.
+- Regressions: shell change, panel, recents and desktop keyboard navigation.
 
-## Liste des tâches
+## Task list
 
-- [x] Corriger la poignée supérieure et le clic parasite après un glissement.
-- [x] Ajouter accueil, dock, tiroir et restauration des apps déjà ouvertes.
-- [x] Enregistrer les pages et le dock dans la configuration VFS cachée.
-- [x] Ajouter édition, pagination et gestes toucher/souris.
-- [x] Ajouter les aides souris et leur option dans les paramètres à couches.
-- [x] Ajouter la commande des fichiers cachés de l'explorateur et filtrer l'arbre.
-- [x] Ajouter les tests et la documentation.
-- [x] Terminer la validation navigateur Android/iOS et les régressions du shell.
-- [x] Déplacer la disposition vers `~/Desktop/.mobile/layout.conf` et migrer l'ancien JSON (ADR 0166).
+- [x] Fix the top handle and the stray click after a drag.
+- [x] Add home, dock, drawer and restoration of already open apps.
+- [x] Save the pages and the dock in the hidden VFS configuration.
+- [x] Add editing, pagination and touch/mouse gestures.
+- [x] Add the mouse helpers and their option in the layered settings.
+- [x] Add the explorer hidden files command and filter the tree.
+- [x] Add the tests and the documentation.
+- [x] Finish the Android/iOS browser validation and the shell regressions.
+- [x] Move the layout to `~/Desktop/.mobile/layout.conf` and migrate the old JSON (ADR 0166).
 
-Validation initiale du 2026-10-23 (ADR 0165) : 53 tests ciblés Platform Blazor (disposition,
-navigation, lancement, géométrie), 20 Paramètres, 94 contrôle de fichiers et
-30 Explorateur réussis. Les sept scénarios navigateur couvrent Android/souris,
-iOS/tactile, changement de shell, choix mobile après rechargement, volet par
-glissement, récents/Retour et raccourcis clavier desktop. Le parcours complet
-vérifie aussi le masquage de `.mobile`. Le build Release du PWA Ecosystem est
-vérifié sans backend.
+Initial validation of 2026-10-23 (ADR 0165): 53 targeted Platform Blazor tests
+(layout, navigation, launch, geometry), 20 Settings, 94 file control and
+30 Explorer passed. The seven browser scenarios cover Android/mouse,
+iOS/touch, shell change, mobile choice after reload, panel by drag,
+recents/Back and desktop keyboard shortcuts. The full flow also verifies the
+hiding of `.mobile`. The Release build of the Ecosystem PWA is verified
+without a backend.
 
-Validation de l'ADR 0166 : les 20 tests de disposition/migration et les deux
-parcours navigateur Android/souris et iOS/tactile passent avec le fichier conf.
-Ils vérifient sa persistance après rechargement, le dossier absent des icônes
-du bureau, sa visibilité explicite dans l'explorateur et la présence de
-`layout.conf`. Compilation Release réussie sans avertissement.
+ADR 0166 validation: the 20 layout/migration tests and the two browser flows
+Android/mouse and iOS/touch pass with the conf file. They verify its
+persistence after reload, the folder being absent from the desktop icons, its
+explicit visibility in the explorer and the presence of `layout.conf`. Release
+compilation succeeded without warnings.

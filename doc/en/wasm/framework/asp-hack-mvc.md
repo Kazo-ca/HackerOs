@@ -1,26 +1,26 @@
-# ASP.Hack MVC : pipeline, routage, contrôleurs et session
+# ASP.Hack MVC: pipeline, routing, controllers and session
 
-Chantier `web/6-mvc-core` de la phase web. Décisions : [ADR 0076](../dev/adr/0076-asp-hack-mvc.md)
-(ASP.Hack MVC) et [ADR 0082](../dev/adr/0082-asp-hack-route-source-generator.md) (table
-de routes produite par un générateur de sources). Plan :
-[`asp-hack-plan.md`](../dev/plans/asp-hack-plan.md). Socle réseau : [`listening-ports-and-dns.md`](listening-ports-and-dns.md).
+Work item `web/6-mvc-core` of the web phase. Decisions: [ADR 0076](../dev/adr/0076-asp-hack-mvc.md)
+(ASP.Hack MVC) and [ADR 0082](../dev/adr/0082-asp-hack-route-source-generator.md) (route table
+produced by a source generator). Plan:
+[`asp-hack-plan.md`](../dev/plans/asp-hack-plan.md). Network foundation: [`listening-ports-and-dns.md`](listening-ports-and-dns.md).
 
-## Objet
+## Purpose
 
-`Shared/HackerOs.AppSdk.Web` permet d'écrire un site interne de HackerOS comme
-un site ASP.NET Core MVC : une classe de démarrage, des middlewares, des
-contrôleurs avec `[HttpGet]`/`[HttpPost]`/`[HttpPut]`/`[HttpPatch]`/`[HttpDelete]`,
-la liaison de modèle, la validation `DataAnnotations`, des résultats JSON, texte,
-fichier ou redirection, l'injection de dépendances par requête et une session
-par cookie. Le site est une app de genre `web` (ADR 0073) : l'OS la démarre au
-premier accès à l'une de ses URL et son code tourne dans le worker `web` partagé.
+`Shared/HackerOs.AppSdk.Web` makes it possible to write an internal HackerOS site like
+an ASP.NET Core MVC site: a startup class, middlewares, controllers
+with `[HttpGet]`/`[HttpPost]`/`[HttpPut]`/`[HttpPatch]`/`[HttpDelete]`,
+model binding, `DataAnnotations` validation, JSON, text,
+file or redirect results, per-request dependency injection and a cookie
+session. The site is an app of kind `web` (ADR 0073): the OS starts it on the
+first access to one of its URLs and its code runs in the shared `web` worker.
 
-Vues `.razor`, `View()`, `PartialView()`, anti-falsification et `wwwroot` :
-[`asp-hack-razor-views.md`](asp-hack-razor-views.md) (`web/7`, ADR 0083). Vues
-`.cshtml` : [`asp-hack-cshtml-views.md`](asp-hack-cshtml-views.md) (`web/8`, ADR 0086).
-Hors de ce chantier : sites Blazor (`web/9`).
+`.razor` views, `View()`, `PartialView()`, anti-forgery and `wwwroot`:
+[`asp-hack-razor-views.md`](asp-hack-razor-views.md) (`web/7`, ADR 0083). `.cshtml`
+views: [`asp-hack-cshtml-views.md`](asp-hack-cshtml-views.md) (`web/8`, ADR 0086).
+Out of this work item: Blazor sites (`web/9`).
 
-## Exemple
+## Example
 
 ```csharp
 [AppManifest]
@@ -61,8 +61,8 @@ public sealed class HomeController : HackController
 }
 ```
 
-`curl http://intranet.hack/api/notes/1` démarre le site, puis lui passe la
-requête par le socket local, comme pour tout site (`web/3`).
+`curl http://intranet.hack/api/notes/1` starts the site, then passes it the
+request through the local socket, as for any site (`web/3`).
 
 ## Architecture
 
@@ -84,193 +84,193 @@ HackHttpListener (worker web)                                  web/3
 UseExceptionPage : toute exception du pipeline → page d'erreur (sinon « 500 Internal Server Error » nu)
 ```
 
-| Dossier | Contenu |
+| Folder | Content |
 |---|---|
 | `Hosting/` | `WebAppDefinition`, `HackWebApplicationBuilder`, `HackWebApplication`, `HackWebHost`, `HackWebJsonOptions`. |
-| `Http/` | `HackHttpContext`, `HackHttpRequest`, `HackHttpResponse`, `HackHeaderDictionary`, `HackValueCollection` (requête, formulaire), cookies, `HackWebRequestData` / `HackWebResponseData` (échange indépendant du transport). |
-| `Routing/` | `HackRouteTemplate` (analyseur partagé avec le générateur), `HackRoutePattern` (correspondance, génération d'URL), `HackEndpoint`, `HackEndpointRouter`, `HackEndpointDataSource`, `HackLinkGenerator`, `HackRouteValueDictionary`. |
-| `Mvc/` | Attributs, `HackControllerBase` / `HackController` / `HackApiController`, `HackModelBinder`, `HackModelStateDictionary`, filtres, résultats, `HackUrlHelper`, `HackActionInvoker`, `HackResults`, contrat `HackControllerActionDescriptor`. |
+| `Http/` | `HackHttpContext`, `HackHttpRequest`, `HackHttpResponse`, `HackHeaderDictionary`, `HackValueCollection` (request, form), cookies, `HackWebRequestData` / `HackWebResponseData` (transport-independent exchange). |
+| `Routing/` | `HackRouteTemplate` (parser shared with the generator), `HackRoutePattern` (matching, URL generation), `HackEndpoint`, `HackEndpointRouter`, `HackEndpointDataSource`, `HackLinkGenerator`, `HackRouteValueDictionary`. |
+| `Mvc/` | Attributes, `HackControllerBase` / `HackController` / `HackApiController`, `HackModelBinder`, `HackModelStateDictionary`, filters, results, `HackUrlHelper`, `HackActionInvoker`, `HackResults`, `HackControllerActionDescriptor` contract. |
 | `Sessions/` | `HackSession`, `HackSessionOptions`, `HackSessionStore`. |
-| `Diagnostics/` | `HackExceptionPage` (page d'erreur au style console). |
-| `Tools/HackerOs.Tools.WebRouteGenerator` | Générateur de sources Roslyn (ADR 0082) : table de routes et `<Nom>WebHost`, erreurs `HOSWEB0001` à `HOSWEB0007` (`HOSWEB0008` : vue `.razor` et `.cshtml` au même chemin, ADR 0086). |
+| `Diagnostics/` | `HackExceptionPage` (console-style error page). |
+| `Tools/HackerOs.Tools.WebRouteGenerator` | Roslyn source generator (ADR 0082): route table and `<Name>WebHost`, errors `HOSWEB0001` to `HOSWEB0007` (`HOSWEB0008`: `.razor` and `.cshtml` view at the same path, ADR 0086). |
 
-## Démarrage
+## Startup
 
-- `WebAppDefinition` : `Kind` est `Web` (scellé), `Category` `internet`,
-  `LaunchVisibility` `Hidden`, `Urls` à fournir. `Configure(builder)` tourne dans
-  le processus du site à chaque démarrage ; par défaut il appelle
+- `WebAppDefinition`: `Kind` is `Web` (sealed), `Category` `internet`,
+  `LaunchVisibility` `Hidden`, `Urls` to be provided. `Configure(builder)` runs in
+  the site's process at each startup; by default it calls
   `builder.Build().MapControllers()`.
-- `HackWebApplicationBuilder` : `Services` (`IServiceCollection`), `Json`
-  (`HackWebJsonOptions.SerializerOptions`, défauts web : camelCase), `Mvc`
-  (`HackMvcOptions.Filters`, filtres globaux), `Build()`. Le fournisseur est
-  construit avec `ValidateScopes` et `ValidateOnBuild`.
-- `HackWebApplication` : `Use(...)` (deux formes, comme ASP.NET Core),
+- `HackWebApplicationBuilder`: `Services` (`IServiceCollection`), `Json`
+  (`HackWebJsonOptions.SerializerOptions`, web defaults: camelCase), `Mvc`
+  (`HackMvcOptions.Filters`, global filters), `Build()`. The provider is
+  built with `ValidateScopes` and `ValidateOnBuild`.
+- `HackWebApplication`: `Use(...)` (two forms, as in ASP.NET Core),
   `UseMiddleware<T>` (`IHackMiddleware`), `UseExceptionPage`,
   `UseStatusCodePages`, `UseCookieSession(options)`, `Map`, `MapMethods`,
   `MapGet`/`MapPost`/`MapPut`/`MapPatch`/`MapDelete`, `MapControllers`,
   `MapControllerRoute(name, pattern[, defaults])`, `MapDefaultControllerRoute`,
-  `ProcessAsync(HackWebRequestData)`, événement `UnhandledException`.
-- `MapControllers()` ajoute la route conventionnelle par défaut
-  `{controller=Home}/{action=Index}/{id?}` si aucun `MapControllerRoute` n'est
-  appelé, au gel du pipeline (première requête).
-- `HackWebHost.CreateApplication(definition, routes)` construit l'application
-  sans OS ni listener : c'est ainsi que les tests appellent un site
+  `ProcessAsync(HackWebRequestData)`, `UnhandledException` event.
+- `MapControllers()` adds the default conventional route
+  `{controller=Home}/{action=Index}/{id?}` if no `MapControllerRoute` is
+  called, when the pipeline is frozen (first request).
+- `HackWebHost.CreateApplication(definition, routes)` builds the application
+  without an OS or listener: this is how tests call a site
   (`ProcessAsync(HackWebRequestData.Create("GET", "http://intranet.hack/"))`),
-  comme `TestServer` d'ASP.NET Core.
+  like ASP.NET Core's `TestServer`.
 
-## Routage
+## Routing
 
-Gabarits ASP.NET Core : littéraux (sans casse), `{p}`, `{p?}`, `{p=défaut}`,
-`{*reste}` / `{**reste}`, contraintes `int`, `long`, `bool`, `guid`, `double`,
+ASP.NET Core templates: literals (case-insensitive), `{p}`, `{p?}`, `{p=default}`,
+`{*rest}` / `{**rest}`, constraints `int`, `long`, `bool`, `guid`, `double`,
 `decimal`, `float`, `datetime`, `alpha`, `required`, `min(n)`, `max(n)`,
 `range(a,b)`, `length(n)`/`length(a,b)`, `minlength(n)`, `maxlength(n)`,
-`regex(...)` (sans casse, délai 100 ms). `{{` et `}}` échappent une accolade.
-Pas de segment complexe.
+`regex(...)` (case-insensitive, 100 ms timeout). `{{` and `}}` escape a brace.
+No complex segments.
 
-Choix de l'endpoint, comme le routage par endpoints d'ASP.NET Core :
+Choice of the endpoint, like ASP.NET Core endpoint routing:
 
-1. `Order` le plus bas (routes d'attribut 0, routes conventionnelles 1, 2...) ;
-2. puis le gabarit le plus précis, segment par segment : littéral, paramètre
-   contraint, paramètre, facultatif, attrape-tout ;
-3. puis un endpoint limité à des méthodes avant un endpoint « toutes méthodes » ;
-4. puis l'ordre d'enregistrement. Deux candidats indiscernables :
+1. lowest `Order` (attribute routes 0, conventional routes 1, 2...);
+2. then the most specific template, segment by segment: literal, constrained
+   parameter, parameter, optional, catch-all;
+3. then an endpoint limited to certain methods before an "all methods" endpoint;
+4. then registration order. Two indistinguishable candidates:
    `HackAmbiguousRouteException` (500).
 
-Le chemin connu mais la méthode refusée donne `405` avec `Allow` ; `OPTIONS`
-sans endpoint donne `204` avec `Allow` ; `HEAD` utilise l'endpoint `GET` et
-renvoie les en-têtes sans corps.
+A known path but a refused method gives `405` with `Allow`; `OPTIONS`
+without an endpoint gives `204` with `Allow`; `HEAD` uses the `GET` endpoint and
+returns the headers without a body.
 
-Routes d'attribut : `[Route]` sur le contrôleur (préfixe) et sur l'action,
-`[HttpGet("...")]`... (`Name`, `Order`), jetons `[controller]`, `[action]`,
-`[area]`, gabarit absolu `/...` ou `~/...` qui ignore le préfixe. Une action
-sans route d'attribut d'un contrôleur à vues suit les routes conventionnelles
-(`controller` et `action` en valeurs requises). Une action d'un
-`HackApiController` doit avoir une route d'attribut (`HOSWEB0007`).
+Attribute routes: `[Route]` on the controller (prefix) and on the action,
+`[HttpGet("...")]`... (`Name`, `Order`), tokens `[controller]`, `[action]`,
+`[area]`, absolute template `/...` or `~/...` which ignores the prefix. An action
+without an attribute route in a view controller follows the conventional routes
+(`controller` and `action` as required values). An action of a
+`HackApiController` must have an attribute route (`HOSWEB0007`).
 
-Génération d'URL : `Url.Action(action, controller, values)`,
-`Url.RouteUrl(name, values)`, `Url.Content("~/...")`, `Url.IsLocalUrl` ; les
-valeurs par défaut en fin de chemin sont omises, les valeurs en trop vont dans
-la requête (`/Home/Details/7?sort=asc`).
+URL generation: `Url.Action(action, controller, values)`,
+`Url.RouteUrl(name, values)`, `Url.Content("~/...")`, `Url.IsLocalUrl`; default
+values at the end of the path are omitted, extra values go into
+the query (`/Home/Details/7?sort=asc`).
 
-## Contrôleurs
+## Controllers
 
-- Un contrôleur est une classe publique, non abstraite, non générique, dérivée
-  de `HackControllerBase`, sans `[NonController]`. Son nom perd le suffixe
-  `Controller`. Ses actions : méthodes publiques d'instance, non génériques,
-  sans `[NonAction]`, hors membres du framework et `Dispose`.
-  `[ActionName]` renomme une action.
-- `HackController` (pages) : `Json(...)`, `OnActionExecuting` /
-  `OnActionExecuted` (le contrôleur est le premier filtre).
-- `HackApiController` : corps JSON par défaut pour les types complexes, `400`
-  automatique (`application/problem+json`, `errors`) si `ModelState` est
-  invalide, et tout statut d'erreur client sans corps (`NotFound()`,
-  `BadRequest()`...) devient un `HackProblemDetails` (RFC 9457 : `type`,
+- A controller is a public, non-abstract, non-generic class derived
+  from `HackControllerBase`, without `[NonController]`. Its name loses the
+  `Controller` suffix. Its actions: public, non-generic instance methods,
+  without `[NonAction]`, other than framework members and `Dispose`.
+  `[ActionName]` renames an action.
+- `HackController` (pages): `Json(...)`, `OnActionExecuting` /
+  `OnActionExecuted` (the controller is the first filter).
+- `HackApiController`: JSON body by default for complex types, automatic `400`
+  (`application/problem+json`, `errors`) if `ModelState` is
+  invalid, and any client error status without a body (`NotFound()`,
+  `BadRequest()`...) becomes a `HackProblemDetails` (RFC 9457: `type`,
   `title`, `status`, `traceId`).
-- Membres de `HackControllerBase` : `HttpContext`, `Request`, `Response`,
-  `RouteValues`, `ModelState`, `Url`, et les aides `Ok`, `NoContent`,
+- Members of `HackControllerBase`: `HttpContext`, `Request`, `Response`,
+  `RouteValues`, `ModelState`, `Url`, and the helpers `Ok`, `NoContent`,
   `StatusCode`, `Content`, `File`, `Redirect`, `RedirectPermanent`,
-  `LocalRedirect` (refuse une URL externe), `RedirectToAction`, `Created`,
-  `CreatedAtAction` (URL absolue), `NotFound`, `BadRequest` (dont
+  `LocalRedirect` (refuses an external URL), `RedirectToAction`, `Created`,
+  `CreatedAtAction` (absolute URL), `NotFound`, `BadRequest` (including
   `BadRequest(ModelState)`), `Unauthorized`, `Forbid`, `Conflict`, `Problem`,
-  `ValidationProblem`, et `TryValidateModel(model, prefix)` pour valider un
-  modèle construit ou fusionné par l'action (un `PATCH`, ADR 0087 §3).
-- Une action rend `void`, `Task`, `ValueTask`, un `IHackActionResult`, un objet
-  (texte brut pour une `string`, JSON sinon, `204` pour `null`) ou une tâche de
-  l'un d'eux. Un paramètre `CancellationToken` reçoit `RequestAborted`.
+  `ValidationProblem`, and `TryValidateModel(model, prefix)` to validate a
+  model built or merged by the action (a `PATCH`, ADR 0087 §3).
+- An action returns `void`, `Task`, `ValueTask`, an `IHackActionResult`, an object
+  (plain text for a `string`, JSON otherwise, `204` for `null`) or a task of
+  one of them. A `CancellationToken` parameter receives `RequestAborted`.
 
-## Liaison de modèle et validation
+## Model binding and validation
 
-| Paramètre | Source |
+| Parameter | Source |
 |---|---|
-| Type simple (`IParsable<T>`, `string`, `enum`, `Nullable<T>`, tableau) | formulaire, puis route, puis requête (comme ASP.NET Core) ; route puis requête pour une API |
-| `[FromRoute]`, `[FromQuery]`, `[FromForm]`, `[FromHeader]` (`Name =`) | la source nommée |
-| Type complexe d'une API, ou `[FromBody]` | corps JSON (`415` si le corps n'est pas JSON) |
-| Type complexe d'un contrôleur à vues | propriétés du formulaire (`Name=...&Tags=a&Tags=b`, case à cocher `on`) |
-| `[FromServices]` | portée DI de la requête |
-| `CancellationToken`, `HackHttpContext` | valeurs spéciales |
+| Simple type (`IParsable<T>`, `string`, `enum`, `Nullable<T>`, array) | form, then route, then query (as in ASP.NET Core); route then query for an API |
+| `[FromRoute]`, `[FromQuery]`, `[FromForm]`, `[FromHeader]` (`Name =`) | the named source |
+| Complex type of an API, or `[FromBody]` | JSON body (`415` if the body is not JSON) |
+| Complex type of a view controller | form properties (`Name=...&Tags=a&Tags=b`, checkbox `on`) |
+| `[FromServices]` | request DI scope |
+| `CancellationToken`, `HackHttpContext` | special values |
 
-Un paramètre non nullable sans valeur par défaut est requis. Les attributs
-`DataAnnotations` du paramètre et des propriétés du modèle sont vérifiés ; les
-erreurs vont dans `ModelState` (clé : nom du paramètre ou de la propriété).
+A non-nullable parameter without a default value is required. The `DataAnnotations`
+attributes of the parameter and of the model's properties are checked;
+errors go into `ModelState` (key: parameter or property name).
 
-## Filtres
+## Filters
 
-`IHackActionFilter` (`OnActionExecuting`, `OnActionExecuted`) et
-`IHackAsyncActionFilter`, en attribut (`HackActionFilterAttribute`, `Order`) ou
-global (`builder.Mvc.Filters`). Ordre : le contrôleur lui-même, puis globaux,
-attributs du contrôleur, attributs de l'action ; le retour se fait dans l'ordre
-inverse. Un filtre qui pose `context.Result` court-circuite l'action.
+`IHackActionFilter` (`OnActionExecuting`, `OnActionExecuted`) and
+`IHackAsyncActionFilter`, as an attribute (`HackActionFilterAttribute`, `Order`) or
+global (`builder.Mvc.Filters`). Order: the controller itself, then global ones,
+controller attributes, action attributes; the return goes in reverse
+order. A filter that sets `context.Result` short-circuits the action.
 
 ## Session
 
-`app.UseCookieSession()` : cookie `.HackSession` (`HttpOnly`, `SameSite=Lax`,
-`Path=/`), identifiant de 32 octets aléatoires en base64url, valeurs en mémoire
-du processus du site, expiration après 20 minutes d'inactivité. Le cookie n'est
-posé que si la session est écrite. `HttpContext.Session` : `GetString`,
+`app.UseCookieSession()`: `.HackSession` cookie (`HttpOnly`, `SameSite=Lax`,
+`Path=/`), identifier of 32 random bytes in base64url, values in the memory
+of the site's process, expiry after 20 minutes of inactivity. The cookie is
+set only if the session is written. `HttpContext.Session`: `GetString`,
 `SetString`, `GetInt32`, `SetInt32`, `TryGetValue`, `Set`, `Remove`, `Clear`,
-`Keys`, `Id`, `IsNew`. La session disparaît quand le site s'arrête (comme la
-session en mémoire d'ASP.NET Core).
+`Keys`, `Id`, `IsNew`. The session disappears when the site stops (like ASP.NET Core's
+in-memory session).
 
-## Contrat pour `web/7` et `web/9`
+## Contract for `web/7` and `web/9`
 
-`web/7` a réalisé sa part de ce contrat ([`asp-hack-razor-views.md`](asp-hack-razor-views.md)) ;
-le contrat reste la référence de `web/9`.
+`web/7` delivered its part of this contract ([`asp-hack-razor-views.md`](asp-hack-razor-views.md));
+the contract remains the reference for `web/9`.
 
-- **Résultats.** Une vue est un `IHackActionResult` : `ExecuteResultAsync(HackActionContext)`
-  reçoit `HttpContext`, `RouteValues`, `ActionDescriptor` et `ModelState`, et
-  écrit dans `HttpContext.Response`. `View()` et `PartialView()` seront ajoutés à
-  `HackController` (le contrôleur à vues), pas à `HackApiController`.
-- **Recherche de vue.** `HackControllerActionDescriptor.ControllerName` et
-  `ActionName` donnent `Views/<Contrôleur>/<Action>` ; le générateur de routes
-  écrit aussi la table des vues (`HackWebGeneratedRoutes.Views`, ADR 0083 §2).
-- **URL.** `IHackUrlHelper` (`Url` du contrôleur) est la base des helpers de
-  vue (`HackLink`, `HackForm`) ; `HackLinkGenerator` est dans les services.
-- **Middlewares.** `UseStaticFiles()` sera un middleware ordinaire
-  (`Use(next => ...)`) qui répond avant le routage des contrôleurs ; un endpoint
-  est choisi avant les middlewares (`HttpContext.Endpoint`), comme
-  `UseRouting` d'ASP.NET Core au début du pipeline.
-- **Services.** Toute la partie `web/7` (moteur de vues, anti-falsification)
-  s'enregistre dans `builder.Services` ; le builder enregistre déjà
-  `HackWebJsonOptions`, `HackMvcOptions`, `HackLinkGenerator` et le magasin de
-  sessions.
-- **Blazor (`web/9`, [`blazor-sites.md`](blazor-sites.md)).** Un site Blazor
-  déclare son composant racine par `BlazorRoot` ; `HackWebHost` sert alors la
-  page hôte et `blazor.boot.json` en repli après les routes de l'app, qui garde
-  `HackWebApplication` pour ses routes de données (`MapGet`, contrôleurs d'API).
+- **Results.** A view is an `IHackActionResult`: `ExecuteResultAsync(HackActionContext)`
+  receives `HttpContext`, `RouteValues`, `ActionDescriptor` and `ModelState`, and
+  writes to `HttpContext.Response`. `View()` and `PartialView()` will be added to
+  `HackController` (the view controller), not to `HackApiController`.
+- **View lookup.** `HackControllerActionDescriptor.ControllerName` and
+  `ActionName` give `Views/<Controller>/<Action>`; the route generator
+  also writes the view table (`HackWebGeneratedRoutes.Views`, ADR 0083 §2).
+- **URL.** `IHackUrlHelper` (the controller's `Url`) is the basis of the view
+  helpers (`HackLink`, `HackForm`); `HackLinkGenerator` is in the services.
+- **Middlewares.** `UseStaticFiles()` will be an ordinary middleware
+  (`Use(next => ...)`) that answers before controller routing; an endpoint
+  is chosen before the middlewares (`HttpContext.Endpoint`), like
+  ASP.NET Core's `UseRouting` at the start of the pipeline.
+- **Services.** The whole `web/7` part (view engine, anti-forgery)
+  registers in `builder.Services`; the builder already registers
+  `HackWebJsonOptions`, `HackMvcOptions`, `HackLinkGenerator` and the session
+  store.
+- **Blazor (`web/9`, [`blazor-sites.md`](blazor-sites.md)).** A Blazor site
+  declares its root component through `BlazorRoot`; `HackWebHost` then serves the
+  host page and `blazor.boot.json` as a fallback after the app's routes, which keeps
+  `HackWebApplication` for its data routes (`MapGet`, API controllers).
 
 ## Tests
 
-- `Tests/HackerOs.AppSdk.Web.Tests` : gabarits et routeur
-  (`RouteTemplateTests`, `EndpointRouterTests`), pipeline complet d'un site de
-  test compilé avec le générateur (`MvcPipelineTests` : CRUD d'API, problèmes,
-  `400` automatique, `415`, filtres, routes conventionnelles, formulaires,
-  redirections, liens, session, fichiers, page d'erreur, DI par requête),
-  générateur piloté sur des extraits de code (`WebRouteGeneratorTests` :
-  `HOSWEB0001` à `HOSWEB0007`, table et entrée produites).
-- `Tests/HackerOs.Platform.WorkerHost.Tests/MvcSiteTests` : un site MVC démarré
-  par `curl` dans un OS complet, sur le fil principal et dans le worker `web`.
+- `Tests/HackerOs.AppSdk.Web.Tests`: templates and router
+  (`RouteTemplateTests`, `EndpointRouterTests`), full pipeline of a test site
+  compiled with the generator (`MvcPipelineTests`: API CRUD, problems,
+  automatic `400`, `415`, filters, conventional routes, forms,
+  redirects, links, session, files, error page, per-request DI),
+  generator driven on code snippets (`WebRouteGeneratorTests`:
+  `HOSWEB0001` to `HOSWEB0007`, table and entry produced).
+- `Tests/HackerOs.Platform.WorkerHost.Tests/MvcSiteTests`: an MVC site started
+  by `curl` in a full OS, on the main thread and in the `web` worker.
 
-## Limites connues
+## Known limits
 
-- Un seul analyseur de gabarit : pas de segments complexes, pas de
-  transformateurs de paramètres, pas de liaison de modèles imbriqués
-  (`Address.City`) ni de dictionnaires.
-- `HEAD` n'envoie pas de `Content-Length` du corps qui aurait été produit.
-- Pas d'environnements (`Development`/`Production`) ni de `TempData`.
-- ~~`curl -H 'Cookie: ...'` est ignoré par la passerelle réseau (`web/3`).~~
-  Corrigé par `web/14` (ADR 0089) : l'en-tête atteint le site, fusionné avec
-  le pot à cookies de la commande.
+- A single template parser: no complex segments, no parameter
+  transformers, no nested model binding
+  (`Address.City`) or dictionaries.
+- `HEAD` does not send a `Content-Length` of the body that would have been produced.
+- No environments (`Development`/`Production`) or `TempData`.
+- ~~`curl -H 'Cookie: ...'` is ignored by the network gateway (`web/3`).~~
+  Fixed by `web/14` (ADR 0089): the header reaches the site, merged with
+  the command's cookie jar.
 
-## Tâches
+## Tasks
 
-- [x] Bibliothèque `HackerOs.AppSdk.Web` : projet, solution, frontière du SDK.
-- [x] HTTP : contexte, requête, réponse, en-têtes, cookies, formulaire, échange indépendant du transport.
-- [x] Routage : gabarits, contraintes, préséance, `405`/`OPTIONS`/`HEAD`, génération d'URL.
-- [x] Générateur de sources (ADR 0082) branché sur les apps, erreurs `HOSWEB0001` à `HOSWEB0007`.
-- [x] Contrôleurs, actions, filtres, `OnActionExecuting`.
-- [x] Liaison de modèle, `DataAnnotations`, `ModelState`, `400` automatique, `415`.
-- [x] Résultats JSON, Content, File, Redirect (dont `LocalRedirect`, `RedirectToAction`), `Created*`, problèmes RFC 9457.
-- [x] DI par requête, session par cookie, page d'erreur.
-- [x] `WebAppDefinition`, `HackWebHost` et entrée générée ; manifeste produit par le générateur de manifestes.
-- [x] Tests unitaires, du générateur et de bout en bout (`curl`, deux modes).
-- [x] ADR 0082, ce document, index, plan.
+- [x] `HackerOs.AppSdk.Web` library: project, solution, SDK boundary.
+- [x] HTTP: context, request, response, headers, cookies, form, transport-independent exchange.
+- [x] Routing: templates, constraints, precedence, `405`/`OPTIONS`/`HEAD`, URL generation.
+- [x] Source generator (ADR 0082) wired to the apps, errors `HOSWEB0001` to `HOSWEB0007`.
+- [x] Controllers, actions, filters, `OnActionExecuting`.
+- [x] Model binding, `DataAnnotations`, `ModelState`, automatic `400`, `415`.
+- [x] JSON, Content, File, Redirect results (including `LocalRedirect`, `RedirectToAction`), `Created*`, RFC 9457 problems.
+- [x] Per-request DI, cookie session, error page.
+- [x] `WebAppDefinition`, `HackWebHost` and generated entry; manifest produced by the manifest generator.
+- [x] Unit, generator and end-to-end tests (`curl`, two modes).
+- [x] ADR 0082, this document, index, plan.

@@ -1,27 +1,27 @@
-# Sites statiques : fichiers `.site`, `hackwebd` et Web Server Manager
+# Static sites: `.site` files, `hackwebd` and Web Server Manager
 
-Le format des fichiers `.site` et l'API `HackWebSiteFile` destinés aux apps et aux outils sont dans [`static-site-files.md`](../framework/static-site-files.md).
+The format of `.site` files and the `HackWebSiteFile` API intended for apps and tools are in [`static-site-files.md`](../framework/static-site-files.md).
 
-Chantier `web/5-static-sites` de la phase web (ASP.Hack). Décisions :
-[ADR 0077](adr/0077-hosted-static-sites.md) et ses ajustements,
-[ADR 0080](adr/0080-hosted-static-sites-adjustments.md). Plan :
-[`asp-hack-plan.md`](plans/asp-hack-plan.md) §5. S'appuie sur `web/3`
-([`listening-ports-and-dns.md`](../framework/listening-ports-and-dns.md)) pour les ports et
-les noms, et sur `web/4` ([`browser-html-rendering.md`](browser-html-rendering.md))
-pour afficher les pages.
+Work item `web/5-static-sites` of the web phase (ASP.Hack). Decisions:
+[ADR 0077](adr/0077-hosted-static-sites.md) and its adjustments,
+[ADR 0080](adr/0080-hosted-static-sites-adjustments.md). Plan:
+[`asp-hack-plan.md`](plans/asp-hack-plan.md) §5. Builds on `web/3`
+([`listening-ports-and-dns.md`](../framework/listening-ports-and-dns.md)) for ports and
+names, and on `web/4` ([`browser-html-rendering.md`](browser-html-rendering.md))
+to display pages.
 
-## Objet
+## Purpose
 
-Publier un dossier comme site web, comme avec IIS, Apache ou nginx :
+Publish a folder as a website, as with IIS, Apache or nginx:
 
-- un site est un **fichier** `.site` (JSON), lisible par `cat` et modifiable à
-  la main ;
-- le service **`hackwebd`** lit ces fichiers, ouvre un port par liaison et sert
-  les fichiers : types MIME, documents par défaut, liste du dossier si permise,
-  `301`, `304`, `403`, `404`, `405`, journaux à la manière de nginx ;
-- l'app **Web Server Manager** (façon gestionnaire IIS) ne fait qu'écrire ces
-  fichiers et piloter le service par le SDK public ;
-- l'explorateur gagne **« Publish as a web site… »** sur un dossier.
+- a site is a `.site` **file** (JSON), readable with `cat` and editable by
+  hand;
+- the **`hackwebd`** service reads these files, opens one port per binding and
+  serves the files: MIME types, default documents, folder listing if allowed,
+  `301`, `304`, `403`, `404`, `405`, nginx-style logs;
+- the **Web Server Manager** app (IIS manager style) only writes these files
+  and drives the service through the public SDK;
+- the explorer gains **"Publish as a web site…"** on a folder.
 
 ## Architecture
 
@@ -40,82 +40,81 @@ Publier un dossier comme site web, comme avec IIS, Apache ou nginx :
  hackdns (OS) ── HostedSiteNameSource (lit les .site en root) ─► « docs.hack » → 127.0.0.1
 ```
 
-| Élément | Projet | Rôle |
+| Element | Project | Role |
 |---|---|---|
-| `HackWebdApp`, `HackWebdService` | `Apps/System/HackerOs.Apps.WebServer` | Le service : réconciliation des écoutes, boucle d'acceptation, journaux. |
-| `StaticFileHandler`, `WwwDataAccess`, `HackWebdLog` | idem, `Daemon/` | Traitement d'une requête, droits de `www-data`, formats des journaux. |
-| `WebServerManagerApp`, `WebServerManagerWindow`, `WebSiteStore` | idem, `Manager/` | L'app à fenêtre et sa logique sans interface. |
-| `WebServerManagerApp.RegisterFileContextMenu`, `PublishSiteIntent` | `Apps/System/HackerOs.Apps.WebServer` | Entrée « Publish as a web site… » des menus de dossiers, inscrite par Web Server Manager (ADR 0151 §8, ADR 0159) : portée `Directory`, un seul dossier, intent `org.hackeros.web-server-manager.publish-site.v1` reçu au lancement ou par `IntentReceived`. Était `PublishSiteContextMenuProvider`, puis `FileExplorerMenuEntries.PublishSite`. |
-| `HostedSiteNameSource` | `Platform/HackerOs.Platform.Core/Network/Local` | Source 4 du résolveur (`IHostedSiteNameSource`, asynchrone). |
-| `IAppLoggingGateway.AppendToLogFile`, `LogFileTarget.ForDaemon` | `Simulation.Abstractions`, `Platform.Core` | Journaux des démons système (ADR 0080 §3). |
+| `HackWebdApp`, `HackWebdService` | `Apps/System/HackerOs.Apps.WebServer` | The service: reconciliation of listeners, accept loop, logs. |
+| `StaticFileHandler`, `WwwDataAccess`, `HackWebdLog` | same, `Daemon/` | Request handling, `www-data` permissions, log formats. |
+| `WebServerManagerApp`, `WebServerManagerWindow`, `WebSiteStore` | same, `Manager/` | The windowed app and its interface-free logic. |
+| `WebServerManagerApp.RegisterFileContextMenu`, `PublishSiteIntent` | `Apps/System/HackerOs.Apps.WebServer` | "Publish as a web site…" entry of the folder menus, registered by Web Server Manager (ADR 0151 §8, ADR 0159): `Directory` scope, a single folder, intent `org.hackeros.web-server-manager.publish-site.v1` received at launch or through `IntentReceived`. Was `PublishSiteContextMenuProvider`, then `FileExplorerMenuEntries.PublishSite`. |
+| `HostedSiteNameSource` | `Platform/HackerOs.Platform.Core/Network/Local` | Source 4 of the resolver (`IHostedSiteNameSource`, asynchronous). |
+| `IAppLoggingGateway.AppendToLogFile`, `LogFileTarget.ForDaemon` | `Simulation.Abstractions`, `Platform.Core` | System daemon logs (ADR 0080 §3). |
 
-Le service et le Manager sont dans **le même assembly** : le Manager pilote
-son service compagnon sans `services.manage`, comme le prévoit la règle des
-services d'une même app. Les deux sont des apps système (`IsSystemApp` sur la
-`ProjectReference` des hôtes).
+The service and the Manager are in **the same assembly**: the Manager drives
+its companion service without `services.manage`, as the rule for services of
+the same app provides. Both are system apps (`IsSystemApp` on the hosts'
+`ProjectReference`).
 
-## Fonctionnement
+## How it works
 
 ### `hackwebd`
 
-- Démarré au boot (`AutoStart`), visible par `systemctl status hackwebd`,
-  arrêtable par `systemctl stop hackwebd` (les ports se libèrent :
-  `curl` répond alors `Failed to connect`, code 7).
-- À chaque changement d'un `.site` (ou au démarrage), il **réconcilie** : un
-  `HackHttpListener` par préfixe normalisé ; un préfixe déjà pris (par un autre
-  site ou un autre programme) est journalisé en `[emerg]` et le site reste
-  « partial » ou « down ».
-- Requête : `GET`, `HEAD`, `OPTIONS` (sinon `405` + `Allow`) ; chemin décodé,
-  segments `.` et `..` résolus par l'analyseur d'URL puis refusés s'il en reste,
-  `\` et NUL refusés (`400`) : jamais de fichier hors de `root`.
-- Dossier sans `/` final : `301`. Dossier : premier document par défaut
-  trouvé, sinon liste « Index of » si `directoryBrowsing`, sinon `403`.
-- Fichier : `Content-Type` par extension (`SimulatedFileTypes`), `ETag`
-  (`"<révision>-<taille>"`), `Last-Modified`, `304` sur `If-None-Match` puis
-  `If-Modified-Since` ; `HEAD` envoie `Content-Length` sans corps.
-- Pages d'erreur et en-tête `Server: hackwebd/1.0` à la manière de nginx.
+- Started at boot (`AutoStart`), visible through `systemctl status hackwebd`,
+  stoppable through `systemctl stop hackwebd` (the ports are released:
+  `curl` then answers `Failed to connect`, code 7).
+- On each change to a `.site` (or at startup), it **reconciles**: one
+  `HackHttpListener` per normalized prefix; a prefix already taken (by another
+  site or another program) is logged as `[emerg]` and the site stays
+  "partial" or "down".
+- Request: `GET`, `HEAD`, `OPTIONS` (otherwise `405` + `Allow`); decoded path,
+  `.` and `..` segments resolved by the URL parser then rejected if any remain,
+  `\` and NUL rejected (`400`): never a file outside `root`.
+- Folder without a trailing `/`: `301`. Folder: first default document found,
+  otherwise "Index of" listing if `directoryBrowsing`, otherwise `403`.
+- File: `Content-Type` by extension (`SimulatedFileTypes`), `ETag`
+  (`"<révision>-<taille>"`), `Last-Modified`, `304` on `If-None-Match` then
+  `If-Modified-Since`; `HEAD` sends `Content-Length` without a body.
+- Error pages and `Server: hackwebd/1.0` header in the nginx style.
 
-### Journaux
+### Logs
 
-| Fichier | Contenu |
+| File | Content |
 |---|---|
-| `/var/log/hackweb/<site>.access.log` | Format « combined » : `127.0.0.1 - - [16/Oct/2026:12:00:00 +0000] "GET / HTTP/1.1" 200 512 "-" "curl/8.5.0"` |
-| `/var/log/hackweb/error.log` | Format nginx : `2026/10/16 12:00:00 [error] 42#0: docs: open() "/…" failed (13: Permission denied for www-data)` ; démarrage, écoutes (`[notice]`), conflits (`[emerg]`), refus, `exiting`. |
+| `/var/log/hackweb/<site>.access.log` | "combined" format: `127.0.0.1 - - [16/Oct/2026:12:00:00 +0000] "GET / HTTP/1.1" 200 512 "-" "curl/8.5.0"` |
+| `/var/log/hackweb/error.log` | nginx format: `2026/10/16 12:00:00 [error] 42#0: docs: open() "/…" failed (13: Permission denied for www-data)`; startup, listeners (`[notice]`), conflicts (`[emerg]`), denials, `exiting`. |
 
-Écrits par `LogFileWriter` (rotation 1 Mio × 5, `system:system 0644`).
+Written by `LogFileWriter` (rotation 1 MiB × 5, `system:system 0644`).
 
-### Résolution des noms
+### Name resolution
 
-`HostedSiteNameSource` lit les `.site` des deux emplacements avec les droits
-de `root`, garde les sites valides et activés et publie leurs hôtes (ni
-`localhost`, ni IP, ni joker). `nslookup docs.hack` répond
-`;; source: hosted site docs (this machine)`. Le nom reste publié quand
-`hackwebd` est arrêté (le fichier existe toujours) : la connexion est alors
-refusée, comme un serveur arrêté derrière un DNS valide.
+`HostedSiteNameSource` reads the `.site` files of both locations with `root`
+permissions, keeps the valid and enabled sites and publishes their hosts (no
+`localhost`, no IP, no wildcard). `nslookup docs.hack` answers
+`;; source: hosted site docs (this machine)`. The name stays published when
+`hackwebd` is stopped (the file still exists): the connection is then refused,
+like a stopped server behind a valid DNS.
 
 ### Web Server Manager
 
-- Trois groupes : **System** (`/etc/hackweb/sites`), **My sites**
-  (`~/.config/hackweb/sites`), **External** (apps `Web` de l'ADR 0073, en
-  lecture seule avec leurs URL).
-- État par site (pastille) : running, partial, down, stopped, invalid,
-  external, calculé d'après les sockets que possède `hackwebd`.
-- Barre du haut : Refresh, Start/Restart/Stop `hackwebd`, « + New site ».
-- Formulaire : nom, portée (mes sites / système), racine (bouton
-  « Browse… », sélecteur de dossier), liaisons (une par ligne), documents par
-  défaut, liste du dossier, activé ; erreurs de `Validate` en direct ;
-  avertissement si `www-data` ne pourra pas lire la racine d'un site système.
-- Save, Start/Stop site (bascule `enabled`), Open in browser
-  (`org.hackeros.browser`), Delete (confirmation), onglet **Logs** (journal
-  d'accès du site, lignes d'`error.log` qui le concernent).
-- Écrire dans `/etc/hackweb` est une écriture système : l'approbation
-  administrateur de la plateforme s'affiche, puis le Manager demande
-  d'appuyer de nouveau sur Save.
-- Lancé avec un dossier en argument (menu de l'explorateur), il ouvre
-  directement un nouveau site prérempli : nom tiré du dossier, premier port
-  libre à partir de 8080 sur `localhost`.
+- Three groups: **System** (`/etc/hackweb/sites`), **My sites**
+  (`~/.config/hackweb/sites`), **External** (`Web` apps from ADR 0073, read-only
+  with their URLs).
+- Per-site state (dot): running, partial, down, stopped, invalid, external,
+  computed from the sockets owned by `hackwebd`.
+- Top bar: Refresh, Start/Restart/Stop `hackwebd`, "+ New site".
+- Form: name, scope (my sites / system), root ("Browse…" button, folder
+  picker), bindings (one per line), default documents, folder listing,
+  enabled; `Validate` errors shown live; warning if `www-data` will not be able
+  to read the root of a system site.
+- Save, Start/Stop site (toggles `enabled`), Open in browser
+  (`org.hackeros.browser`), Delete (confirmation), **Logs** tab (the site's
+  access log, the lines of `error.log` that concern it).
+- Writing to `/etc/hackweb` is a system write: the platform's administrator
+  approval is displayed, then the Manager asks to press Save again.
+- Launched with a folder as an argument (explorer menu), it directly opens a
+  prefilled new site: name taken from the folder, first free port from 8080 on
+  `localhost`.
 
-## Utilisation
+## Usage
 
 ```sh
 mkdir -p ~/www && echo '<h1>Hello</h1>' > ~/www/index.html
@@ -129,57 +128,54 @@ tail /var/log/hackweb/docs.access.log
 systemctl restart hackwebd
 ```
 
-Ou, dans l'explorateur, clic droit sur un dossier → **Publish as a web site…**,
-puis Save dans le Manager et **Open in browser**.
+Or, in the explorer, right-click a folder → **Publish as a web site…**, then
+Save in the Manager and **Open in browser**.
 
-## Décisions clés
+## Key decisions
 
-- Fichiers plutôt que base de configuration : ce que montre le Manager est
-  exactement ce que montre `cat` (ADR 0077 §1).
-- Un seul démon pour tous les sites statiques, un listener par préfixe : le
-  routage par hôte et par chemin reste celui de `http.sys` (ADR 0074).
-- `www-data` simulé, journaux par `AppendToLogFile`, résolveur asynchrone :
-  [ADR 0080](adr/0080-hosted-static-sites-adjustments.md). `hackwebd` tourne
-  en worker dédié depuis que la surveillance de fichiers traverse la frontière
-  du worker ([ADR 0124](adr/0124-remote-event-and-watch-gateways.md) §6,
-  qui rend sans objet le fil principal de l'ADR 0080 §1).
-- `enabled` est une propriété à `set` (pas `init`) : le générateur JSON donne
-  `default` à une propriété `init` absente, ce qui aurait arrêté tout site
-  dont le fichier omet `enabled`.
+- Files rather than a configuration database: what the Manager shows is exactly
+  what `cat` shows (ADR 0077 §1).
+- A single daemon for all static sites, one listener per prefix: routing by host
+  and by path remains that of `http.sys` (ADR 0074).
+- Simulated `www-data`, logs through `AppendToLogFile`, asynchronous resolver:
+  [ADR 0080](adr/0080-hosted-static-sites-adjustments.md). `hackwebd` runs in a
+  dedicated worker since file watching crosses the worker boundary
+  ([ADR 0124](adr/0124-remote-event-and-watch-gateways.md) §6, which makes the
+  main thread of ADR 0080 §1 moot).
+- `enabled` is a `set` property (not `init`): the JSON generator gives
+  `default` to an absent `init` property, which would have stopped every site
+  whose file omits `enabled`.
 
-## Limites connues
+## Known limits
 
-- Pas de `https://`, de requêtes partielles (`Range`), de compression, ni de
-  réécriture d'URL.
-- L'Error Log Viewer ne liste pas `/var/log/hackweb` (lire par `cat`/`tail`
-  ou l'onglet Logs du Manager).
+- No `https://`, partial requests (`Range`), compression, or URL rewriting.
+- The Error Log Viewer does not list `/var/log/hackweb` (read with
+  `cat`/`tail` or the Manager's Logs tab).
 
 ## Tests
 
-- `Tests/HackerOs.Platform.WorkerHost.Tests/StaticSitesTests.cs` : OS complet
-  (processus sur le fil principal et en workers) — site d'utilisateur servi
-  (type, document par défaut, `404`, `nslookup`), `304` par `ETag`, `403` puis
-  liste du dossier après rechargement à chaud, refus d'un port privilégié et
-  formats des journaux, site système sur le port 80 servi en `www-data`
-  (`403` sur un fichier `0600` et sur un dossier personnel), `netstat`,
-  `systemctl stop`.
-- `Tests/HackerOs.Apps.WebServer.Tests` : correspondance URL → fichier
-  (traversées refusées), états des sites, suggestion d'un site depuis un
-  dossier, formats des journaux.
-- `Tests/HackerOs.AppSdk.Tests/Net/HackWebSiteFileTests.cs` : lecture,
-  validation et écriture des `.site`.
-- `Tests/HackerOs.Platform.Core.Tests/Diagnostics/DaemonLogFileTests.cs` :
-  `LogFileTarget.ForDaemon` et la règle « apps système seulement ».
+- `Tests/HackerOs.Platform.WorkerHost.Tests/StaticSitesTests.cs`: full OS
+  (processes on the main thread and in workers): user site served (type,
+  default document, `404`, `nslookup`), `304` by `ETag`, `403` then folder
+  listing after hot reload, refusal of a privileged port and log formats,
+  system site on port 80 served as `www-data` (`403` on a `0600` file and on a
+  home folder), `netstat`, `systemctl stop`.
+- `Tests/HackerOs.Apps.WebServer.Tests`: URL → file mapping (traversals
+  rejected), site states, suggestion of a site from a folder, log formats.
+- `Tests/HackerOs.AppSdk.Tests/Net/HackWebSiteFileTests.cs`: reading,
+  validation and writing of `.site` files.
+- `Tests/HackerOs.Platform.Core.Tests/Diagnostics/DaemonLogFileTests.cs`:
+  `LogFileTarget.ForDaemon` and the "system apps only" rule.
 
-## Liste des tâches
+## Task list
 
-- [x] Format `.site` dans le SDK (`HackWebSite`, `HackWebSiteFile`), validation façon `nginx -t`.
-- [x] `/etc/hackweb/sites` créé par `FileSystemSeeder` ; `~/.config/hackweb/sites` créé par `hackwebd`.
-- [x] Journaux des démons système (`AppendToLogFile`, `LogFileTarget.ForDaemon`, opération `log.file` des workers).
-- [x] `HostedSiteNameSource` et `IHostedSiteNameSource` asynchrone ; `HackAppInfo.Urls` (sites externes).
-- [x] `hackwebd` : réconciliation à chaud, fichiers, documents par défaut, liste, MIME, `301`/`304`/`403`/`404`/`405`, `www-data`.
-- [x] Web Server Manager : groupes, états, formulaire, portée, Browse, Save/Start/Stop/Delete, navigateur, journaux, contrôle du service.
-- [x] Explorateur : « Publish as a web site… » sur un dossier.
-- [x] Hôtes (Ecosystem, test, Server) et solution.
-- [x] Tests de bout en bout et unitaires.
+- [x] `.site` format in the SDK (`HackWebSite`, `HackWebSiteFile`), validation in the style of `nginx -t`.
+- [x] `/etc/hackweb/sites` created by `FileSystemSeeder`; `~/.config/hackweb/sites` created by `hackwebd`.
+- [x] System daemon logs (`AppendToLogFile`, `LogFileTarget.ForDaemon`, workers' `log.file` operation).
+- [x] `HostedSiteNameSource` and asynchronous `IHostedSiteNameSource`; `HackAppInfo.Urls` (external sites).
+- [x] `hackwebd`: hot reconciliation, files, default documents, listing, MIME, `301`/`304`/`403`/`404`/`405`, `www-data`.
+- [x] Web Server Manager: groups, states, form, scope, Browse, Save/Start/Stop/Delete, browser, logs, service control.
+- [x] Explorer: "Publish as a web site…" on a folder.
+- [x] Hosts (Ecosystem, test, Server) and solution.
+- [x] End-to-end and unit tests.
 - [x] Documentation, ADR 0080, index.

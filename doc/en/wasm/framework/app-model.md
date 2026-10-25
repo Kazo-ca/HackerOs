@@ -1,54 +1,54 @@
-# Modèle d'application : `AppDefinition` et manifestes générés
+# App model: `AppDefinition` and generated manifests
 
-Phase 2 du [plan de refonte](../dev/plans/ecosystem-rebuild-plan.md) (sections 6.1 et 6.2),
-décisions de l'[ADR 0047](../dev/adr/0047-app-definition-and-generated-manifests.md).
+Phase 2 of the [rebuild plan](../dev/plans/ecosystem-rebuild-plan.md) (sections 6.1 and 6.2),
+decisions of [ADR 0047](../dev/adr/0047-app-definition-and-generated-manifests.md).
 
-## Objectif
+## Goal
 
-Le manifeste d'une app a une seule source : une classe C# marquée
-`[AppManifest]`. Le build en tire le `manifest.json` de l'app, puis l'hôte
-agrège tous les manifestes dans `BuiltInApplications.json`. Installer une app
-dans l'hôte se résume à une `ProjectReference`.
+An app's manifest has a single source: a C# class marked
+`[AppManifest]`. The build derives the app's `manifest.json` from it, then the host
+aggregates all manifests into `BuiltInApplications.json`. Installing an app
+in the host comes down to a `ProjectReference`.
 
-## `AppDefinition` et `[AppManifest]`
+## `AppDefinition` and `[AppManifest]`
 
-Projet `Shared/HackerOs.App.Abstractions`, dossier `Definition/`, namespace
+Project `Shared/HackerOs.App.Abstractions`, folder `Definition/`, namespace
 `HackerOs.App.Abstractions`.
 
-| Type | Rôle |
+| Type | Role |
 | --- | --- |
-| `AppManifestAttribute` | Marque la classe qui décrit une app. Usage unique, non hérité. Propriété nommée `Execution` (ADR 0070) : où l'OS exécute l'app (voir [Hôte d'exécution](#hôte-dexécution-adr-0070)). |
-| `AppDefinition` | Classe de base abstraite : 4 membres obligatoires (`Id`, `Name`, `Kind`, `EntryPoint`) et des membres facultatifs avec valeur par défaut. |
-| `FileHandler`, `TerminalCommand` | Formes courtes de `FileHandlerManifest` et `TerminalCommandManifest`. |
-| `AppDefinitionMapper` | `ToManifest(definition)` convertit une définition en `AppManifest` (schéma version 1). |
+| `AppManifestAttribute` | Marks the class that describes an app. Single use, not inherited. Named property `Execution` (ADR 0070): where the OS runs the app (see [Execution host](#hôte-dexécution-adr-0070)). |
+| `AppDefinition` | Abstract base class: 4 required members (`Id`, `Name`, `Kind`, `EntryPoint`) and optional members with a default value. |
+| `FileHandler`, `TerminalCommand` | Short forms of `FileHandlerManifest` and `TerminalCommandManifest`. |
+| `AppDefinitionMapper` | `ToManifest(definition)` converts a definition into an `AppManifest` (schema version 1). |
 
-Valeurs par défaut des membres facultatifs :
+Default values of the optional members:
 
-| Membre | Défaut |
+| Member | Default |
 | --- | --- |
 | `Version` | `1.0.0` |
 | `Description` | `Name` |
 | `PublisherId` | `pub.local` |
 | `Category` | `utilities` |
 | `LaunchVisibility` | `Visible` |
-| `Icons`, `Capabilities`, `FileHandlers`, `Dependencies`, `Intents`, `DeclaredTopicPermissions`, `Localizations`, `Assets` | liste vide |
+| `Icons`, `Capabilities`, `FileHandlers`, `Dependencies`, `Intents`, `DeclaredTopicPermissions`, `Localizations`, `Assets` | empty list |
 | `Terminal`, `MobileEntryPoint`, `Settings` | `null` |
-| `[RegisterFileContextMenu]` | aucune méthode ; `contextMenus` est alors omis du manifeste. Une méthode statique de la classe elle-même, exécutée deux fois au build, inscrit les entrées de l'app dans les menus des fichiers (ADR 0151, ADR 0159, [`context-menu.md`](context-menu.md#entrées-des-apps-dans-les-menus-des-fichiers-chantier-4)) ; titres dans `Resources/AppManifest.resx` |
-| `Components` | liste vide ; `components` est alors omis du manifeste (ADR 0063, [`embedded-components.md`](embedded-components.md)) ; `hackeros.context-menu` est refusé (plateforme) ; `hackeros.file-view` et `hackeros.file-dialogs` sont ouverts à toute app fenêtrée, un administrateur choisit celle en service (ADR 0156, ADR 0158) |
+| `[RegisterFileContextMenu]` | no method; `contextMenus` is then omitted from the manifest. A static method of the class itself, run twice at build time, registers the app's entries in file menus (ADR 0151, ADR 0159, [`context-menu.md`](context-menu.md#entrées-des-apps-dans-les-menus-des-fichiers-chantier-4)); titles in `Resources/AppManifest.resx` |
+| `Components` | empty list; `components` is then omitted from the manifest (ADR 0063, [`embedded-components.md`](embedded-components.md)); `hackeros.context-menu` is refused (platform); `hackeros.file-view` and `hackeros.file-dialogs` are open to any windowed app, an administrator chooses the one in service (ADR 0156, ADR 0158) |
 | `SingleInstancePerUser`, `AutoStart`, `SupportsBack` | `false` |
-| `ServiceStartup` | `null` (= `Login`) ; `serviceStartup` est alors omis du manifeste. `Boot` ne vaut que pour une app système de genre `Service` (ADR 0097 §4, ADR 0107) |
-| `OomScoreAdjust` | `null` (hérite ; `-500` pour un service système) ; `oomScoreAdj` est alors omis du manifeste. Négatif seulement pour une app système (`HOSAPP0024`, ADR 0126 §4, ADR 0142, [`oom-killer.md`](../dev/oom-killer.md)) |
+| `ServiceStartup` | `null` (= `Login`); `serviceStartup` is then omitted from the manifest. `Boot` only applies to a system app of kind `Service` (ADR 0097 §4, ADR 0107) |
+| `OomScoreAdjust` | `null` (inherits; `-500` for a system service); `oomScoreAdj` is then omitted from the manifest. Negative only for a system app (`HOSAPP0024`, ADR 0126 §4, ADR 0142, [`oom-killer.md`](../dev/oom-killer.md)) |
 | `Resources` | `AppResourceProfileManifest.None` |
-| `Window` | `null` : la fenêtre prend `WindowOptions.Default` (800×560, minimum 360×240) ; l'objet `window` est alors omis du manifeste (ADR 0095, [`window-model.md`](window-model.md)). Déclaré seulement par une app de genre `Window` (`manifest.window.*`). |
+| `Window` | `null`: the window takes `WindowOptions.Default` (800×560, minimum 360×240); the `window` object is then omitted from the manifest (ADR 0095, [`window-model.md`](window-model.md)). Declared only by an app of kind `Window` (`manifest.window.*`). |
 
-Depuis l'ADR 0165, les quatorze apps système fenêtrées déclarent
-`MobileEntryPoint` avec le même composant que `EntryPoint`. Le générateur
-produit donc la forme `platform` (`desktop`, `mobile`) pour ces apps ; le
-tiroir mobile ne contourne jamais une déclaration de compatibilité absente.
-Les apps tierces restent desktop seulement tant qu'elles ne déclarent pas
-leur point d'entrée mobile.
+Since ADR 0165, the fourteen windowed system apps declare
+`MobileEntryPoint` with the same component as `EntryPoint`. The generator
+therefore produces the `platform` form (`desktop`, `mobile`) for these apps; the
+mobile drawer never bypasses a missing compatibility declaration.
+Third-party apps remain desktop only as long as they do not declare
+their mobile entry point.
 
-Exemple :
+Example:
 
 ```csharp
 [AppManifest]
@@ -67,62 +67,62 @@ public sealed class TextEditorApp : AppDefinition
 }
 ```
 
-### Règles de conversion
+### Conversion rules
 
-- `EntryPoint` devient `{ "assembly": "<assembly>.dll", "type": "<nom complet>" }`.
-- `MobileEntryPoint` non nul produit la forme `platform` (`desktop` et `mobile`).
-  Si c'est le même type que `EntryPoint`, une seule entrée couvre les deux
-  plateformes ; sinon, une entrée par plateforme.
-- `Icons` devient `presentation.iconAssetPaths`.
-  Pour le chrome et la taskbar (ADR 0164), la première image est résolue sous
-  `_content/<assembly>/…` ; le fichier doit être dans `wwwroot/` et déclaré dans
-  `Assets`. Les apps système fenêtrées déclarent chacune `icons/app.svg`, avec
-  une empreinte calculée au build. macOS masque seulement l'icône de la barre
-  de titre ; son dock garde l'icône de l'app.
-- `TerminalCommand.Aliases` nul devient une liste vide.
-- `sdkCompatibility` (ADR 0098 §3) : par défaut, `minimumVersion` est la version
-  du SDK contre laquelle l'app a été compilée. Le générateur la lit dans
-  l'`AssemblyInformationalVersion` de la `HackerOs.App.Abstractions.dll`
-  référencée par l'app (par exemple `2.0.0`, voir
-  [`sdk-packages.md`](sdk-packages.md)) et la passe à
-  `ToManifest(definition, sdkMinimumVersion)` ; `ToManifest(definition)` prend
-  `HackerOsSdk.Version`, la version du SDK chargé. Une app qui veut une plage
-  surcharge `AppDefinition.SdkCompatibility` (minimum et maximum facultatif).
-  Au chargement, `AppCatalog` refuse une app dont la plage n'accepte pas le SDK
-  de l'hôte (`catalog.sdk.incompatible`) : même version majeure que le minimum,
+- `EntryPoint` becomes `{ "assembly": "<assembly>.dll", "type": "<full name>" }`.
+- A non-null `MobileEntryPoint` produces the `platform` form (`desktop` and `mobile`).
+  If it is the same type as `EntryPoint`, a single entry covers both
+  platforms; otherwise, one entry per platform.
+- `Icons` becomes `presentation.iconAssetPaths`.
+  For the chrome and the taskbar (ADR 0164), the first image is resolved under
+  `_content/<assembly>/…`; the file must be in `wwwroot/` and declared in
+  `Assets`. The windowed system apps each declare `icons/app.svg`, with
+  a fingerprint computed at build time. macOS only hides the title bar
+  icon; its dock keeps the app's icon.
+- A null `TerminalCommand.Aliases` becomes an empty list.
+- `sdkCompatibility` (ADR 0098 §3): by default, `minimumVersion` is the version
+  of the SDK against which the app was compiled. The generator reads it from the
+  `AssemblyInformationalVersion` of the `HackerOs.App.Abstractions.dll`
+  referenced by the app (for example `2.0.0`, see
+  [`sdk-packages.md`](sdk-packages.md)) and passes it to
+  `ToManifest(definition, sdkMinimumVersion)`; `ToManifest(definition)` takes
+  `HackerOsSdk.Version`, the version of the loaded SDK. An app that wants a range
+  overrides `AppDefinition.SdkCompatibility` (minimum and optional maximum).
+  At load time, `AppCatalog` refuses an app whose range does not accept the host's
+  SDK (`catalog.sdk.incompatible`): same major version as the minimum,
   minimum ≤ SDK ≤ maximum (`HackerOsSdk.IsCompatible`).
-- `osCompatibility` et `update` ne sont pas exposés par `AppDefinition` : ils
-  restent absents du manifeste généré.
-- `[AppManifest(Execution = …)]` devient `execution`, toujours écrit, résolu
-  (jamais `default`) : voir la section suivante.
+- `osCompatibility` and `update` are not exposed by `AppDefinition`: they
+  remain absent from the generated manifest.
+- `[AppManifest(Execution = …)]` becomes `execution`, always written, resolved
+  (never `default`): see the next section.
 
-### Intents et schémas d'URI (ADR 0096)
+### Intents and URI schemes (ADR 0096)
 
 - `Intents` (`AppIntentDeclarationManifest(IntentId, PayloadSchemaAssetPath)`)
-  déclare les intents que l'app **reçoit**. Un identifiant libre doit être bien
-  formé (`domaine.inversé.nom.vN`, `AppIntentIds.IsWellFormed`) ; le
-  répartiteur route vers les apps installées et activées qui le déclarent, au
-  lieu de répondre `intent.unknown`. Déclarer
-  `org.hackeros.intent.show-app-settings.v1` signifie « j'ai ma propre page de
-  réglages » : l'app est lancée avec `--show-settings`.
-- Un schéma d'URI est un type de média `x-scheme-handler/<schéma>` dans
-  `FileHandlers`, comme sous freedesktop :
-  `new("x-scheme-handler/https", [], ["open"])`. Le navigateur déclare `http` et
+  declares the intents the app **receives**. A free identifier must be well
+  formed (`reversed.domain.name.vN`, `AppIntentIds.IsWellFormed`); the
+  dispatcher routes to the installed and enabled apps that declare it, instead of
+  answering `intent.unknown`. Declaring
+  `org.hackeros.intent.show-app-settings.v1` means "I have my own settings
+  page": the app is launched with `--show-settings`.
+- A URI scheme is a media type `x-scheme-handler/<scheme>` in
+  `FileHandlers`, as under freedesktop:
+  `new("x-scheme-handler/https", [], ["open"])`. The browser declares `http` and
   `https`.
-- Le schéma du manifeste ne change pas. Détails : [`app-intents.md`](app-intents.md).
+- The manifest schema does not change. Details: [`app-intents.md`](app-intents.md).
 
-### Hôte d'exécution (ADR 0070)
+### Execution host (ADR 0070)
 
-L'attribut `[AppManifest]` dit **où** l'OS exécute l'app, par sa propriété
-nommée `Execution` (`AppExecutionHost`, `HackerOs.App.Abstractions`) :
+The `[AppManifest]` attribute says **where** the OS runs the app, through its
+named property `Execution` (`AppExecutionHost`, `HackerOs.App.Abstractions`):
 
-| Valeur | Champ `execution` | Où | Défaut de |
+| Value | `execution` field | Where | Default for |
 | --- | --- | --- | --- |
-| `MainThread` | `mainThread` | le thread principal du navigateur, avec le bureau | app à fenêtre (la seule valeur permise : elle a besoin du DOM) |
-| `Pool` | `pool` | un worker du pool, un par cœur virtuel ; les étapes d'un même pipeline vont sur le même | commande |
-| `Dedicated` | `dedicated` | un worker à lui, pris au worker prêt (ADR 0071) | service |
-| `Web` | `web` | le worker `web`, partagé par tous les sites (ADR 0073 §1) | app web (`AppKind.Web`, la seule à pouvoir l'utiliser) |
-| `Default` | — | laissé tel quel dans l'attribut : le générateur écrit le défaut du genre | — |
+| `MainThread` | `mainThread` | the browser's main thread, with the desktop | windowed app (the only value allowed: it needs the DOM) |
+| `Pool` | `pool` | a pool worker, one per virtual core; the steps of the same pipeline go to the same one | command |
+| `Dedicated` | `dedicated` | a worker of its own, taken from the ready worker (ADR 0071) | service |
+| `Web` | `web` | the `web` worker, shared by all sites (ADR 0073 §1) | web app (`AppKind.Web`, the only one that can use it) |
+| `Default` | none | left as is in the attribute: the generator writes the kind's default | none |
 
 ```csharp
 // ADR 0070: stays on the main thread: it acts on the calling shell (its working directory),
@@ -131,277 +131,277 @@ nommée `Execution` (`AppExecutionHost`, `HackerOs.App.Abstractions`) :
 public sealed class CdApp : AppDefinition { … }
 ```
 
-- Le mappeur lit l'attribut de la classe de définition et écrit la valeur
-  résolue (`AppExecutionHosts.Resolve`) ; une définition sans attribut (tests)
-  reçoit le défaut de son genre.
-- `AppManifest.Execution` est `null` pour un manifeste écrit avant l'ADR 0070 :
-  `AppExecutionHosts.Of(manifest)` donne alors le défaut du genre.
-- Le validateur refuse `pool` ou `dedicated` pour une app à fenêtre
-  (`manifest.execution.window`) et la valeur `default`
-  (`manifest.execution.invalid`) ; le schéma et la liste blanche de
-  `AppManifestJsonSerializer.DeserializeStrict` connaissent `execution`.
-- Une commande ou un service qui a besoin de ce qu'un worker n'offre pas déclare
-  `MainThread`, **avec la raison en commentaire** au-dessus de l'attribut. Dans
-  `HackerOs.Commands` : les built-ins du shell (`cd`, `exit`, `export`,
+- The mapper reads the attribute of the definition class and writes the resolved
+  value (`AppExecutionHosts.Resolve`); a definition without an attribute (tests)
+  gets the default of its kind.
+- `AppManifest.Execution` is `null` for a manifest written before ADR 0070:
+  `AppExecutionHosts.Of(manifest)` then gives the kind's default.
+- The validator refuses `pool` or `dedicated` for a windowed app
+  (`manifest.execution.window`) and the value `default`
+  (`manifest.execution.invalid`); the schema and the whitelist of
+  `AppManifestJsonSerializer.DeserializeStrict` know `execution`.
+- A command or service that needs something a worker does not offer declares
+  `MainThread`, **with the reason as a comment** above the attribute. In
+  `HackerOs.Commands`: the shell built-ins (`cd`, `exit`, `export`,
   `unset`, `jobs`, `read`, `help`, `which`, `kill`, `sudo`, `watch`), `passwd`,
-  `hackbackup`, `nice` et `renice` (ADR 0127), et les commandes plein écran
-  (`nano`, `top`, `htop`). Le service d'exemple et
-  `hackwebd` sont en worker dédié depuis l'ADR 0124. Les autres commandes vont
-  dans le pool (liste à jour dans [`worker-processes.md`](../dev/worker-processes.md)).
-- Le validateur refuse `pool` et `dedicated` pour une app web
-  (`manifest.execution.web`) et `web` pour toute autre app
-  (`manifest.execution.web-only`). Une app web déclare ses URL par
-  `AppDefinition.Urls` (champ `web.urls`) : voir
+  `hackbackup`, `nice` and `renice` (ADR 0127), and the full-screen commands
+  (`nano`, `top`, `htop`). The sample service and
+  `hackwebd` are in a dedicated worker since ADR 0124. The other commands go
+  to the pool (up-to-date list in [`worker-processes.md`](../dev/worker-processes.md)).
+- The validator refuses `pool` and `dedicated` for a web app
+  (`manifest.execution.web`) and `web` for any other app
+  (`manifest.execution.web-only`). A web app declares its URLs through
+  `AppDefinition.Urls` (field `web.urls`): see
   [`listening-ports-and-dns.md`](listening-ports-and-dns.md).
-- Un hôte sans Web Worker ignore `execution` (ADR 0070 §6). Il n'y en a plus
-  dans ce dépôt : `HackerOs.Server` sert l'OS en WebAssembly depuis
-  l'[ADR 0130](../dev/adr/0130-server-serves-webassembly-os-and-api.md).
+- A host without Web Workers ignores `execution` (ADR 0070 §6). There are no more
+  in this repository: `HackerOs.Server` serves the OS in WebAssembly since
+  [ADR 0130](../dev/adr/0130-server-serves-webassembly-os-and-api.md).
 
-Détails du mécanisme : [`worker-processes.md`](../dev/worker-processes.md).
+Details of the mechanism: [`worker-processes.md`](../dev/worker-processes.md).
 
-### Écart avec le texte de l'ADR
+### Deviation from the ADR text
 
-L'ADR 0047 écrit `SettingsSchema? Settings`. `SettingsSchema` vit dans
-`HackerOs.Simulation.Abstractions`, que `HackerOs.App.Abstractions` ne référence
-pas. La propriété utilise donc l'enregistrement de manifeste existant
-`AppSettingsSchemaManifest?`, conformément à la règle de l'ADR « les cas rares
-réutilisent les enregistrements `*Manifest` existants ». Le contenu JSON est le
-même.
+ADR 0047 writes `SettingsSchema? Settings`. `SettingsSchema` lives in
+`HackerOs.Simulation.Abstractions`, which `HackerOs.App.Abstractions` does not
+reference. The property therefore uses the existing manifest record
+`AppSettingsSchemaManifest?`, in accordance with the ADR's rule "rare cases
+reuse the existing `*Manifest` records". The JSON content is the
+same.
 
-### Règles imposées à la classe
+### Rules imposed on the class
 
-Vérifiées par le générateur (voir plus bas) : classe `public`, non abstraite,
-marquée `[AppManifest]`, constructeur public sans paramètre ; `EntryPoint` et
-`MobileEntryPoint` dans la même assembly que la définition ; getters purs (le
-générateur compare deux instanciations) ; `AppManifestValidator` et les règles
-de point d'entrée de `AppEntryPointDiscovery` passent.
+Checked by the generator (see below): `public` class, non-abstract,
+marked `[AppManifest]`, public parameterless constructor; `EntryPoint` and
+`MobileEntryPoint` in the same assembly as the definition; pure getters (the
+generator compares two instantiations); `AppManifestValidator` and the entry
+point rules of `AppEntryPointDiscovery` pass.
 
-## Génération de `manifest.json` au build
+## Generating `manifest.json` at build time
 
-### Outil
+### Tool
 
-`Tools/HackerOs.Tools.ManifestGenerator` (exécutable .NET, framework partagé
-`Microsoft.AspNetCore.App`) remplace l'ancien `HackerOs.Tools.ManifestValidator`.
+`Tools/HackerOs.Tools.ManifestGenerator` (.NET executable, shared framework
+`Microsoft.AspNetCore.App`) replaces the former `HackerOs.Tools.ManifestValidator`.
 
-| Commande | Rôle |
+| Command | Role |
 | --- | --- |
-| `generate --assembly <dll> --project <csproj> --stamp <fichier> [--dependencies <liste>]` | Appelée par MSBuild après la compilation d'une app. |
-| `aggregate --project <hôte.csproj> --apps <liste> --output <BuiltInApplications.json> [--trimmer-roots <racines.xml>]` | Appelée par l'hôte (voir plus bas). |
-| `validate <manifest.json>` | Lecture stricte (schéma v1) et `AppManifestValidator` sur un fichier ; remplace l'ancien validateur. |
+| `generate --assembly <dll> --project <csproj> --stamp <file> [--dependencies <list>]` | Called by MSBuild after an app is compiled. |
+| `aggregate --project <host.csproj> --apps <list> --output <BuiltInApplications.json> [--trimmer-roots <roots.xml>]` | Called by the host (see below). |
+| `validate <manifest.json>` | Strict reading (schema v1) and `AppManifestValidator` on a file; replaces the former validator. |
 
-Fonctionnement de `generate` :
+How `generate` works:
 
-1. charge l'assembly compilée dans un `AssemblyLoadContext` isolé et collectable
-   (`AppAssemblyLoadContext`). Les assemblies du framework partagé et les
-   contrats HackerOS de l'outil viennent du contexte par défaut (une seule
-   identité pour `AppDefinition`) ; les autres viennent de la liste
-   `@(ReferenceCopyLocalPaths)` + `@(ReferencePath)` puis du dossier de sortie
-   de l'app. Les assemblies de référence (`[ReferenceAssembly]`) sont ignorées ;
-2. `AppDefinitionInspector` trouve les classes `[AppManifest]` (par nom
-   d'attribut), applique les règles, instancie chaque classe **deux fois** et
-   compare le JSON canonique ;
-3. si **aucune** erreur, `ManifestWriter` écrit les fichiers (sinon rien n'est
-   écrit) ; un fichier n'est réécrit que si ses octets changent ;
-4. le fichier témoin `obj/<config>/<tfm>/hackeros-app-manifests.txt` liste les
-   manifestes produits.
+1. loads the compiled assembly into an isolated, collectible
+   `AssemblyLoadContext` (`AppAssemblyLoadContext`). The shared framework assemblies
+   and the tool's HackerOS contracts come from the default context (a single
+   identity for `AppDefinition`); the others come from the list
+   `@(ReferenceCopyLocalPaths)` + `@(ReferencePath)` then from the app's output
+   folder. Reference assemblies (`[ReferenceAssembly]`) are ignored;
+2. `AppDefinitionInspector` finds the `[AppManifest]` classes (by attribute
+   name), applies the rules, instantiates each class **twice** and
+   compares the canonical JSON;
+3. if there are **no** errors, `ManifestWriter` writes the files (otherwise nothing is
+   written); a file is rewritten only if its bytes change;
+4. the stamp file `obj/<config>/<tfm>/hackeros-app-manifests.txt` lists the
+   manifests produced.
 
-### Fichiers produits
+### Files produced
 
-- une classe `[AppManifest]` → `manifest.json` à la racine du projet ;
-- plusieurs classes → `manifests/<appId>.json` ; passer d'une forme à l'autre
-  supprime les fichiers de l'ancienne forme.
+- one `[AppManifest]` class → `manifest.json` at the project root;
+- several classes → `manifests/<appId>.json`; switching from one form to the other
+  deletes the files of the old form.
 
-Le JSON est le JSON canonique de l'ADR 0010 (`AppManifestJsonSerializer.SerializeCanonical`),
-schéma version 1, sans champ ajouté. Les fichiers sont **suivis par git** (un
-changement de capacité se voit dans la PR) et ne sont **pas** du contenu MSBuild
-(`Content Remove`) : ils ne sont jamais copiés ni publiés. Une modification à la
-main est écrasée au build suivant.
+The JSON is the canonical JSON of ADR 0010 (`AppManifestJsonSerializer.SerializeCanonical`),
+schema version 1, with no added field. The files are **tracked by git** (a
+capability change shows up in the PR) and are **not** MSBuild content
+(`Content Remove`): they are never copied or published. A manual edit is
+overwritten at the next build.
 
-### Intégration MSBuild
+### MSBuild integration
 
-`build/HackerOs.Apps.targets`, importé par `Directory.Build.targets` :
+`build/HackerOs.Apps.targets`, imported by `Directory.Build.targets`:
 
-| Élément | Rôle |
+| Element | Role |
 | --- | --- |
-| `$(HackerOsAppProject)` | `true` par défaut sous `Apps/` ; un projet ailleurs la positionne lui-même. Il n'y a pas d'exception : un projet sous `Apps/` sans classe `[AppManifest]` échoue avec `HOSAPP0001`. |
-| `ProjectReference` vers le générateur | Ajoutée automatiquement aux projets d'app pour l'ordre de build (`ReferenceOutputAssembly=false`, `PrivateAssets=all` : l'outil n'entre jamais dans le graphe d'un hôte WebAssembly). |
-| Cible `GenerateHackerOsAppManifests` | Après `CopyFilesToOutputDirectory`. Incrémentale : entrées = assembly compilée, outil, liste des dépendances, manifestes existants ; sortie = fichier témoin. |
-| Cible `GetHackerOsAppManifests` | Cible de requête pour l'hôte : les manifestes du projet, avec les métadonnées `AssemblyName`, `AssemblyFileName` et `AppProject`. Vide pour un projet qui n'est pas une app. |
+| `$(HackerOsAppProject)` | `true` by default under `Apps/`; a project elsewhere sets it itself. There is no exception: a project under `Apps/` without an `[AppManifest]` class fails with `HOSAPP0001`. |
+| `ProjectReference` to the generator | Added automatically to app projects for build ordering (`ReferenceOutputAssembly=false`, `PrivateAssets=all`: the tool never enters the graph of a WebAssembly host). |
+| Target `GenerateHackerOsAppManifests` | After `CopyFilesToOutputDirectory`. Incremental: inputs = compiled assembly, tool, dependency list, existing manifests; output = stamp file. |
+| Target `GetHackerOsAppManifests` | Query target for the host: the project's manifests, with the metadata `AssemblyName`, `AssemblyFileName` and `AppProject`. Empty for a project that is not an app. |
 
-### Codes d'erreur
+### Error codes
 
-Chaque erreur est une erreur MSBuild au format canonique, attribuée au `.csproj`,
-avec le nom complet de la classe en cause : `App.csproj : error HOSAPP0005: [Ns.MyApp] ...`.
+Each error is an MSBuild error in canonical format, attributed to the `.csproj`,
+with the full name of the class at fault: `App.csproj : error HOSAPP0005: [Ns.MyApp] ...`.
 
-| Code | Règle |
+| Code | Rule |
 | --- | --- |
-| `HOSAPP0001` | Aucune classe `[AppManifest]` dans le projet d'app. |
-| `HOSAPP0002` | Classe non publique. |
-| `HOSAPP0003` | Classe abstraite. |
-| `HOSAPP0004` | Ne dérive pas de `AppDefinition`. |
-| `HOSAPP0005` | Pas de constructeur public sans paramètre. |
-| `HOSAPP0006` | Le constructeur ou un getter lève une exception. |
-| `HOSAPP0007` | `EntryPoint`/`MobileEntryPoint` nul ou dans une autre assembly. |
-| `HOSAPP0008` | Getters non déterministes (deux instances, deux manifestes). |
-| `HOSAPP0009` | `AppManifestValidator` refuse le manifeste (le code du validateur est rappelé). |
-| `HOSAPP0010` | Règles de `AppEntryPointDiscovery` : type concret, classe de base selon le genre, `IAppBackHandler` si `SupportsBack` ; vérifiées pour chaque plateforme déclarée. |
-| `HOSAPP0011` | Deux classes de la même assembly déclarent le même identifiant. |
-| `HOSAPP0020` | Agrégation : fichier manifeste absent ou JSON non strict. |
-| `HOSAPP0021` | Agrégation : catalogue invalide (identifiant en double, dépendance manquante ou cyclique) ou app que le SDK de l'hôte refuserait (`catalog.sdk.incompatible`, ADR 0098 §3). |
-| `HOSAPP0022` | Agrégation : nom de commande ou alias déclaré par deux apps de l'hôte (comparaison sans casse), ou nom que le shell exécute lui-même (`ShellInterpreter.ReservedNames`) (ADR 0098 §4). |
-| `HOSAPP0023` | Génération : ressource déclarée dans `Assets` absente de `wwwroot/` du projet ; son SHA-256 ne peut pas être calculé (ADR 0098 §5). |
-| `HOSAPP0024` | Agrégation : app non système qui déclare `OomScoreAdjust` négatif (ADR 0126 §4, ADR 0142 §6, [`oom-killer.md`](../dev/oom-killer.md)). |
-| `HOSAPP0025` | Retiré, jamais réutilisé : refusait à une app non système `hackeros.file-view` et `hackeros.file-dialogs` (ADR 0153 §4), que l'ADR 0156 ouvre à toute app fenêtrée (ADR 0158 §1). |
-| `HOSAPP0030` | Frontière du SDK : `ProjectReference` interdite dans un projet d'app (ADR 0055 §2, numéro fixé par l'ADR 0059). Émis par la cible `ValidateHackerOsSdkBoundary`. Voir [`app-sdk.md`](app-sdk.md). |
-| `HOSAPP0031` | Frontière du SDK : service injecté qui n'est ni un type du SDK, ni MudBlazor, ni `IJSRuntime` (ADR 0055 §3, ADR 0059). Voir [`app-sdk.md`](app-sdk.md). |
-| `HOSAPP0040` | Traductions du manifeste (ADR 0104 §4) : `Resources/AppManifest.<culture>.resx` illisible, nom de culture invalide, clé autre que `Name`, `Description`, `Terminal.Usage` (préfixées de l'id dans un projet à plusieurs apps), `Terminal.Usage` pour une app qui n'est pas une commande, ou fichier `localization/` référencé illisible à l'agrégation. Voir [`localization.md`](localization.md). |
-| `HOSAPP0090` | Arguments de l'outil invalides. |
-| `HOSAPP0091` | Assembly de l'app impossible à charger. |
-| `HOSAPP0099` | L'outil a échoué sans diagnostic (plantage). |
+| `HOSAPP0001` | No `[AppManifest]` class in the app project. |
+| `HOSAPP0002` | Non-public class. |
+| `HOSAPP0003` | Abstract class. |
+| `HOSAPP0004` | Does not derive from `AppDefinition`. |
+| `HOSAPP0005` | No public parameterless constructor. |
+| `HOSAPP0006` | The constructor or a getter throws an exception. |
+| `HOSAPP0007` | `EntryPoint`/`MobileEntryPoint` null or in another assembly. |
+| `HOSAPP0008` | Non-deterministic getters (two instances, two manifests). |
+| `HOSAPP0009` | `AppManifestValidator` refuses the manifest (the validator's code is repeated). |
+| `HOSAPP0010` | `AppEntryPointDiscovery` rules: concrete type, base class according to the kind, `IAppBackHandler` if `SupportsBack`; checked for each declared platform. |
+| `HOSAPP0011` | Two classes of the same assembly declare the same identifier. |
+| `HOSAPP0020` | Aggregation: manifest file missing or non-strict JSON. |
+| `HOSAPP0021` | Aggregation: invalid catalog (duplicate identifier, missing or cyclic dependency) or an app that the host's SDK would refuse (`catalog.sdk.incompatible`, ADR 0098 §3). |
+| `HOSAPP0022` | Aggregation: command name or alias declared by two apps of the host (case-insensitive comparison), or a name that the shell executes itself (`ShellInterpreter.ReservedNames`) (ADR 0098 §4). |
+| `HOSAPP0023` | Generation: resource declared in `Assets` missing from the project's `wwwroot/`; its SHA-256 cannot be computed (ADR 0098 §5). |
+| `HOSAPP0024` | Aggregation: non-system app that declares a negative `OomScoreAdjust` (ADR 0126 §4, ADR 0142 §6, [`oom-killer.md`](../dev/oom-killer.md)). |
+| `HOSAPP0025` | Removed, never reused: refused `hackeros.file-view` and `hackeros.file-dialogs` to a non-system app (ADR 0153 §4), which ADR 0156 opens to any windowed app (ADR 0158 §1). |
+| `HOSAPP0030` | SDK boundary: `ProjectReference` forbidden in an app project (ADR 0055 §2, number fixed by ADR 0059). Emitted by the target `ValidateHackerOsSdkBoundary`. See [`app-sdk.md`](app-sdk.md). |
+| `HOSAPP0031` | SDK boundary: injected service that is neither an SDK type, nor MudBlazor, nor `IJSRuntime` (ADR 0055 §3, ADR 0059). See [`app-sdk.md`](app-sdk.md). |
+| `HOSAPP0040` | Manifest translations (ADR 0104 §4): unreadable `Resources/AppManifest.<culture>.resx`, invalid culture name, key other than `Name`, `Description`, `Terminal.Usage` (prefixed with the id in a multi-app project), `Terminal.Usage` for an app that is not a command, or a referenced `localization/` file that is unreadable at aggregation. See [`localization.md`](localization.md). |
+| `HOSAPP0090` | Invalid tool arguments. |
+| `HOSAPP0091` | App assembly cannot be loaded. |
+| `HOSAPP0099` | The tool failed without a diagnostic (crash). |
 
-Les dépendances entre apps ne sont pas vérifiées à la génération (une seule app
-est connue) : elles le sont à l'agrégation dans l'hôte.
+Dependencies between apps are not checked at generation (only one app
+is known): they are checked at aggregation in the host.
 
-### Migration des apps
+### Migrating the apps
 
-Les 44 projets sous `Apps/` (12 apps, 28 commandes, 4 exemples) ont leur classe
-`[AppManifest]` et leur `manifest.json` généré ; il ne reste aucun
-`app.manifest.json` écrit à la main ni aucun champ `StaticManifest`.
-`Apps/System/HackerOs.Apps.Calculator` (`CalculatorApp`) a servi d'exemple.
+The 44 projects under `Apps/` (12 apps, 28 commands, 4 samples) have their
+`[AppManifest]` class and their generated `manifest.json`; there is no hand-written
+`app.manifest.json` left and no `StaticManifest` field.
+`Apps/System/HackerOs.Apps.Calculator` (`CalculatorApp`) served as the example.
 
-Convention de nommage de la classe : nom du point d'entrée sans le suffixe
-`Window` ou `Command`, suivi de `App` (`CalculatorWindow` → `CalculatorApp`,
-`RmCommand` → `RmApp`). Les exemples, dont le point d'entrée porte déjà ce genre
-de nom, utilisent `<Projet>SampleApp` (`TerminalSampleApp`, `WindowSampleApp`,
-`ServiceSampleApp`, `PlatformSampleApp`). La classe est dans le namespace de son
-point d'entrée.
+Class naming convention: name of the entry point without the `Window` or
+`Command` suffix, followed by `App` (`CalculatorWindow` → `CalculatorApp`,
+`RmCommand` → `RmApp`). The samples, whose entry point already carries this kind
+of name, use `<Project>SampleApp` (`TerminalSampleApp`, `WindowSampleApp`,
+`ServiceSampleApp`, `PlatformSampleApp`). The class is in the namespace of its
+entry point.
 
-Les valeurs viennent de l'ancien `app.manifest.json`, qui faisait foi au runtime :
-quand un `StaticManifest` C# divergeait (profil de ressources `None`, description
-abrégée), c'est le JSON qui a été repris. Le code et les tests qui lisaient
-`StaticManifest` utilisent `AppDefinitionMapper.ToManifest(new XxxApp())` ; c'est
-aussi le cas des constructeurs sans paramètre de `SampleTerminalApp` et
+The values come from the old `app.manifest.json`, which was authoritative at runtime:
+when a C# `StaticManifest` diverged (resource profile `None`, shortened
+description), it is the JSON that was taken over. The code and tests that read
+`StaticManifest` use `AppDefinitionMapper.ToManifest(new XxxApp())`; this is
+also the case for the parameterless constructors of `SampleTerminalApp` and
 `SampleTickerService`.
 
-Vérification : un test de migration temporaire
+Verification: a temporary migration test
 (`LegacyManifestMigrationTests`, commit `feat(app-model): [AppManifest] classes
-for the 43 remaining apps`) a comparé, pour les 43 apps, le `manifest.json`
-généré et l'ancien fichier après lecture stricte, normalisation des collections
-facultatives et sérialisation canonique : 43 égaux. Il a été supprimé avec les
-anciens fichiers. Seul écart corrigé avant comparaison : le `app.manifest.json`
-de l'exemple TerminalApp utilisait les clés hors schéma `commandName` et
-`helpSummary` (refusées en lecture stricte) ; ce sont `name` et `usage`, déjà
-utilisées par son `StaticManifest`.
+for the 43 remaining apps`) compared, for the 43 apps, the generated `manifest.json`
+and the old file after strict reading, normalization of the optional
+collections and canonical serialization: 43 equal. It was deleted along with the
+old files. The only discrepancy fixed before comparison: the `app.manifest.json`
+of the TerminalApp sample used the out-of-schema keys `commandName` and
+`helpSummary` (refused by strict reading); they are `name` and `usage`, already
+used by its `StaticManifest`.
 
-### Commandes intégrées : un seul projet (ADR 0051)
+### Built-in commands: a single project (ADR 0051)
 
-Depuis le chantier `rebuild/3-commands-merge`, les commandes intégrées (28, puis
-29 avec `trash` du chantier `rebuild/3-trash`, voir [`trash.md`](../dev/trash.md)) sont
-dans un seul projet, `Apps/Commands/HackerOs.Commands/HackerOs.Commands.csproj` :
+Since work item `rebuild/3-commands-merge`, the built-in commands (28, then
+29 with `trash` of work item `rebuild/3-trash`, see [`trash.md`](../dev/trash.md)) are
+in a single project, `Apps/Commands/HackerOs.Commands/HackerOs.Commands.csproj`:
 
-- un dossier par commande (`Cat/CatApp.cs`, `Cat/CatCommand.cs`), chacune garde
-  son espace de noms (`HackerOs.Commands.Cat`) et sa classe `[AppManifest]` ;
-- le générateur écrit `manifests/<appId>.json` (forme « plusieurs classes ») ;
-  seul `entryPoint.assembly` change, il vaut `HackerOs.Commands.dll` ;
-- **les identifiants d'app ne changent pas** (`org.hackeros.cmd.cat`,
-  `org.hackeros.commands.curl`…) : `apps.config`, `app-permissions.config` et
-  les alias existants restent valides ;
-- l'hôte n'a qu'une `ProjectReference ... IsSystemApp="true"` pour toutes les
-  commandes ; l'assembly est chargée à la demande en un seul bloc
-  (`BuildKnownLazyAssemblies.Names` la contient une seule fois) ;
-- les projets de tests (`HackerOs.Commands.Tests`, `HackerOs.Commands.Wave5.Tests`,
-  `HackerOs.Commands.Nano.Tests`, `HackerOs.Network.Tests`) référencent ce projet.
+- one folder per command (`Cat/CatApp.cs`, `Cat/CatCommand.cs`), each keeping
+  its namespace (`HackerOs.Commands.Cat`) and its `[AppManifest]` class;
+- the generator writes `manifests/<appId>.json` ("several classes" form);
+  only `entryPoint.assembly` changes, it is `HackerOs.Commands.dll`;
+- **app identifiers do not change** (`org.hackeros.cmd.cat`,
+  `org.hackeros.commands.curl`…): `apps.config`, `app-permissions.config` and
+  existing aliases remain valid;
+- the host has only one `ProjectReference ... IsSystemApp="true"` for all
+  commands; the assembly is loaded on demand as a single block
+  (`BuildKnownLazyAssemblies.Names` contains it only once);
+- the test projects (`HackerOs.Commands.Tests`, `HackerOs.Commands.Wave5.Tests`,
+  `HackerOs.Commands.Nano.Tests`, `HackerOs.Network.Tests`) reference this project.
 
-`cd`, `pwd`, `clear`, `help` et `sudo` sont installées et résolues comme les
-autres commandes : le terminal ne connaît aucun nom (chantier
-`rebuild/3-shell-commands`, ADR 0051 sections 2 à 5, voir
-[`shell-commands.md`](../dev/shell-commands.md)). Celles qui agissent sur le shell
-déclarent la capacité `shell.control`. Une commande tierce reste un projet à part (modèle :
+`cd`, `pwd`, `clear`, `help` and `sudo` are installed and resolved like the
+other commands: the terminal knows no names (work item
+`rebuild/3-shell-commands`, ADR 0051 sections 2 to 5, see
+[`shell-commands.md`](../dev/shell-commands.md)). Those that act on the shell
+declare the `shell.control` capability. A third-party command remains a separate project (template:
 `Apps/Samples/HackerOs.Samples.TerminalApp`).
 
 ### Tests
 
-`Tests/HackerOs.Tools.ManifestGenerator.Tests` :
+`Tests/HackerOs.Tools.ManifestGenerator.Tests`:
 
-- `AppDefinitionInspectorTests` : un test par code `HOSAPP0001` à `HOSAPP0011`
-  sur des définitions de test ;
-- `ManifestWriterTests` : formes un/plusieurs fichiers, pas de réécriture si
-  identique, écrasement d'une modification à la main ;
-- `MsBuildIntegrationTests` : build réel des projets hors solution
-  `Tests/ManifestGenerator.Fixtures.SingleApp`, `.MultiApp` et `.NoDefinition`
+- `AppDefinitionInspectorTests`: one test per code `HOSAPP0001` to `HOSAPP0011`
+  on test definitions;
+- `ManifestWriterTests`: one/several file forms, no rewrite if
+  identical, overwriting of a manual edit;
+- `MsBuildIntegrationTests`: real build of the out-of-solution projects
+  `Tests/ManifestGenerator.Fixtures.SingleApp`, `.MultiApp` and `.NoDefinition`
   (`HOSAPP0001`).
 
-### Traductions du manifeste (ADR 0104 §4)
+### Manifest translations (ADR 0104 §4)
 
-Après l'inspection, `generate` lit `Resources/AppManifest.<culture>.resx`
-(`ManifestLocalizationGenerator`) : clés `Name`, `Description`,
-`Terminal.Usage`, préfixées de l'id de l'app dans un projet à plusieurs apps
-(`org.hackeros.commands.ls.Description`). Une clé absente garde le texte
-anglais. Il écrit `localization/<culture>.json` (une app) ou
-`localization/<appId>/<culture>.json` (plusieurs apps), au format
-`{"name","description","terminalUsage"?}`, ajoute l'entrée
-`localizations: [{"culture":"fr","resourcePath":"localization/fr.json"}]` et
-supprime les fichiers périmés. Ces `.resx` ne sont pas compilés dans
-l'assembly ; les fichiers générés sont committés comme `manifest.json` et ne
-sont pas déclarés comme assets. Erreur : `HOSAPP0040`. Voir
+After inspection, `generate` reads `Resources/AppManifest.<culture>.resx`
+(`ManifestLocalizationGenerator`): keys `Name`, `Description`,
+`Terminal.Usage`, prefixed with the app id in a multi-app project
+(`org.hackeros.commands.ls.Description`). A missing key keeps the
+English text. It writes `localization/<culture>.json` (one app) or
+`localization/<appId>/<culture>.json` (several apps), in the format
+`{"name","description","terminalUsage"?}`, adds the entry
+`localizations: [{"culture":"fr","resourcePath":"localization/fr.json"}]` and
+deletes stale files. These `.resx` files are not compiled into the
+assembly; the generated files are committed like `manifest.json` and are
+not declared as assets. Error: `HOSAPP0040`. See
 [`localization.md`](localization.md).
 
-## Agrégation dans l'hôte : `BuiltInApplications.json`
+## Aggregation in the host: `BuiltInApplications.json`
 
-### Déclarer un hôte
+### Declaring a host
 
-Un projet hôte déclare `<HackerOsAppHost>true</HackerOsAppHost>`. Dans ce dépôt,
-seul `OS/HackerOs.Ecosystem` le fait. `test/test` réutilise le catalogue
-compilé de l'Ecosystem (`BuildKnownLazyApps.Catalog`) et ne s'agrège pas
-lui-même ; le serveur sert les fichiers publiés de l'Ecosystem tels quels, apps
-comprises (ADR 0130). Hors du dépôt, un hôte référence le paquet
-`HackerOs.App.Build` et déclare la même propriété (modèle `hackeros-host`, voir
+A host project declares `<HackerOsAppHost>true</HackerOsAppHost>`. In this repository,
+only `OS/HackerOs.Ecosystem` does so. `test/test` reuses the compiled
+catalog of the Ecosystem (`BuildKnownLazyApps.Catalog`) and does not aggregate
+itself; the server serves the Ecosystem's published files as they are, apps
+included (ADR 0130). Outside the repository, a host references the package
+`HackerOs.App.Build` and declares the same property (`hackeros-host` template, see
 [`sdk-packages.md`](sdk-packages.md)).
 
-### Cible `CollectHackerOsBuiltInApplications`
+### Target `CollectHackerOsBuiltInApplications`
 
-Dans `build/HackerOs.Apps.targets`, après `ResolveProjectReferences` (donc avant
-la préparation des ressources et avant les cibles Blazor) :
+In `build/HackerOs.Apps.targets`, after `ResolveProjectReferences` (so before
+resource preparation and before the Blazor targets):
 
-1. pour chaque `ProjectReference` directe (hors références à
-   `ReferenceOutputAssembly=false`), appelle `GetHackerOsAppManifests` avec les
-   mêmes propriétés globales que `ResolveProjectReferences` ; un projet qui
-   n'est pas une app ne renvoie rien et est ignoré ;
-2. associe à chaque manifeste la métadonnée `IsSystemApp` de sa `ProjectReference`
-   (vide = `false`, sens fixé par l'ADR 0048) ;
-3. appelle `ManifestGenerator aggregate`, qui relit chaque manifeste en mode strict,
-   le valide, construit le catalogue avec `AppCatalog.Build` (identifiant en
-   double, dépendance manquante ou cyclique = `HOSAPP0021`) et écrit
-   `obj/<config>/<tfm>/BuiltInApplications.json` seulement si ses octets changent
-   (pas de recompilation inutile) ; elle y mesure aussi l'**image** de chaque
-   app (ADR 0068) à partir du chemin de son assembly et de sa liste de
-   dépendances, que `GetHackerOsAppManifests` renvoie (`AssemblyPath`,
-   `DependenciesFile`) ; enfin elle recopie les textes traduits que référence
-   `localizations` dans la propriété facultative `localized` de chaque entrée
-   (`{"fr":{"name":…}}`, ADR 0104), que `AppCatalog.Localize` applique ;
-4. ajoute ce fichier en `EmbeddedResource` (`HackerOs.BuiltInApplications.json`) ;
-5. ajoute un `BlazorWebAssemblyLazyLoad` pour l'assembly de chaque app (en
-   retirant d'abord un éventuel doublon écrit à la main) ;
-6. passe à ILLink le fichier `obj/<config>/<tfm>/HackerOs.TrimmerRoots.xml` que
-   la même commande écrit (`--trimmer-roots`) : chaque assembly nommée par un
-   manifeste y est gardée entière pour une publication trimmée (ADR 0106,
+1. for each direct `ProjectReference` (excluding references with
+   `ReferenceOutputAssembly=false`), calls `GetHackerOsAppManifests` with the
+   same global properties as `ResolveProjectReferences`; a project that is
+   not an app returns nothing and is ignored;
+2. attaches to each manifest the `IsSystemApp` metadata of its `ProjectReference`
+   (empty = `false`, meaning fixed by ADR 0048);
+3. calls `ManifestGenerator aggregate`, which rereads each manifest in strict mode,
+   validates it, builds the catalog with `AppCatalog.Build` (duplicate identifier,
+   missing or cyclic dependency = `HOSAPP0021`) and writes
+   `obj/<config>/<tfm>/BuiltInApplications.json` only if its bytes change
+   (no needless recompilation); it also measures there each app's
+   **image** (ADR 0068) from the path of its assembly and its list of
+   dependencies, which `GetHackerOsAppManifests` returns (`AssemblyPath`,
+   `DependenciesFile`); finally it copies the translated texts that
+   `localizations` references into the optional `localized` property of each entry
+   (`{"fr":{"name":…}}`, ADR 0104), which `AppCatalog.Localize` applies;
+4. adds this file as an `EmbeddedResource` (`HackerOs.BuiltInApplications.json`);
+5. adds a `BlazorWebAssemblyLazyLoad` for each app's assembly (first
+   removing any hand-written duplicate);
+6. passes to ILLink the file `obj/<config>/<tfm>/HackerOs.TrimmerRoots.xml` that
+   the same command writes (`--trimmer-roots`): each assembly named by a
+   manifest is kept whole there for a trimmed publish (ADR 0106,
    ADR 0113, [`trimmed-publish.md`](../dev/trimmed-publish.md)).
 
-Les apps installées en **paquet** (ADR 0098 §2) suivent le même chemin : chaque
-paquet d'app contient ses manifestes sous `hackeros/manifests/` (leurs traductions
-sous `hackeros/localization/`) et un fichier
-`buildTransitive/<PackageId>.targets` qui les déclare en éléments
-`HackerOsPackagedApp` (métadonnées `PackageId`, `AssemblyFileName`,
-`AssemblyPath`). La cible `_HackerOsCollectPackagedAppManifests` les ajoute à
-la liste ; `IsSystemApp` vient de la `PackageReference` de l'hôte sur ce paquet
-(un paquet d'app arrivé par dépendance n'est jamais système). La cible
-`_HackerOsPackageAppManifests` produit ces fichiers quand un projet d'app est
-empaqueté.
+Apps installed as a **package** (ADR 0098 §2) follow the same path: each
+app package contains its manifests under `hackeros/manifests/` (their translations
+under `hackeros/localization/`) and a file
+`buildTransitive/<PackageId>.targets` that declares them as `HackerOsPackagedApp`
+items (metadata `PackageId`, `AssemblyFileName`,
+`AssemblyPath`). The target `_HackerOsCollectPackagedAppManifests` adds them to
+the list; `IsSystemApp` comes from the host's `PackageReference` on that package
+(an app package that arrives as a dependency is never system). The target
+`_HackerOsPackageAppManifests` produces these files when an app project is
+packaged.
 
-L'ancrage après `ResolveProjectReferences` est vérifié par un
-`dotnet publish -c Release` de l'Ecosystem : `HackerOs.Apps.Calculator` figure
-dans la section `lazyAssembly` de la configuration de démarrage publiée, et le
-générateur n'apparaît pas dans `_framework`.
+The anchoring after `ResolveProjectReferences` is checked by a
+`dotnet publish -c Release` of the Ecosystem: `HackerOs.Apps.Calculator` appears
+in the `lazyAssembly` section of the published boot configuration, and the
+generator does not appear in `_framework`.
 
 ### Format
 
@@ -409,154 +409,154 @@ générateur n'apparaît pas dans `_framework`.
 {"schemaVersion":1,"applications":[{"isSystemApp":false,"manifest":{"schemaVersion":1,"id":"org.hackeros.calculator", "...": "..."},"image":{"assemblies":[{"name":"HackerOs.Apps.Calculator.dll","bytes":17408,"shared":false},{"name":"HackerOs.AppSdk.dll","bytes":400896,"shared":true}]}}]}
 ```
 
-`image` (facultatif, ADR 0068) liste les assemblies que l'app mappe, triées par
-nom, avec leur taille : la sienne (`shared: false`, `VmExe`) et les
-bibliothèques qu'elle référence, directement ou non (`shared: true`), hors
-runtime et framework .NET (`System.*`, `Microsoft.*`). Le calcul est fait par
-`AppImageInspector` (métadonnées seulement, aucun code chargé) ; voir
-[`memory-accounting.md`](../dev/memory-accounting.md). Le `manifest.json` versionné
-ne change pas : les tailles ne vivent que dans ce fichier produit à chaque
+`image` (optional, ADR 0068) lists the assemblies the app maps, sorted by
+name, with their size: its own (`shared: false`, `VmExe`) and the
+libraries it references, directly or not (`shared: true`), excluding the
+.NET runtime and framework (`System.*`, `Microsoft.*`). The computation is done by
+`AppImageInspector` (metadata only, no code loaded); see
+[`memory-accounting.md`](../dev/memory-accounting.md). The versioned `manifest.json`
+does not change: sizes live only in this file produced at each
 build.
 
-`BuiltInApplicationsJsonSerializer` (`HackerOs.App.Abstractions`, à côté
-d'`AppManifestJsonSerializer`) écrit la forme canonique (applications triées par
-identifiant, manifestes canoniques) et relit en mode strict (propriété inconnue
-ou en double, `schemaVersion` autre que 1, `isSystemApp` non booléen = erreur ;
-chaque manifeste passe par `AppManifestJsonSerializer.DeserializeStrict`). Le
-type `BuiltInApplication(IsSystemApp, Manifest, Image)` porte une entrée
-(`Image` vaut `null` quand le champ est absent). Le fichier
-n'est jamais écrit à la main ni versionné.
+`BuiltInApplicationsJsonSerializer` (`HackerOs.App.Abstractions`, next to
+`AppManifestJsonSerializer`) writes the canonical form (applications sorted by
+identifier, canonical manifests) and rereads in strict mode (unknown or
+duplicate property, `schemaVersion` other than 1, non-boolean `isSystemApp` = error;
+each manifest goes through `AppManifestJsonSerializer.DeserializeStrict`). The
+type `BuiltInApplication(IsSystemApp, Manifest, Image)` carries an entry
+(`Image` is `null` when the field is absent). The file
+is never written by hand or versioned.
 
-### Lecture au démarrage
+### Reading at startup
 
-`HostAppCatalog.Load(assembly)` (`HackerOs.Ecosystem.Host`) lit la ressource
-`HackerOs.BuiltInApplications.json` de l'assembly de l'hôte et construit
-`Catalog` avec `AppCatalog.BuildFromBuiltInApplications` : le catalogue porte
-les drapeaux système (voir « Apps système » ci-dessous) ; `Images` donne l'image
-de chaque app (lue par la mesure de la mémoire) et `LazyAssemblyNames` les seules
-assemblies que le chargeur paresseux peut récupérer. Dans l'Ecosystem,
-`BuildKnownLazyApps` (`Catalog`, `Images`, `Host`) et
-`BuildKnownLazyAssemblies.Names` en sont de simples façades sur sa propre
-assembly. Seul le
-JSON est lu : les DLL d'apps restent chargées au premier lancement et les
-classes `AppDefinition` ne sont jamais instanciées au runtime.
+`HostAppCatalog.Load(assembly)` (`HackerOs.Ecosystem.Host`) reads the resource
+`HackerOs.BuiltInApplications.json` of the host's assembly and builds
+`Catalog` with `AppCatalog.BuildFromBuiltInApplications`: the catalog carries
+the system flags (see "System apps" below); `Images` gives each
+app's image (read by memory measurement) and `LazyAssemblyNames` the only
+assemblies that the lazy loader can fetch. In the Ecosystem,
+`BuildKnownLazyApps` (`Catalog`, `Images`, `Host`) and
+`BuildKnownLazyAssemblies.Names` are simple facades over its own
+assembly. Only the
+JSON is read: the app DLLs stay loaded at first launch and the
+`AppDefinition` classes are never instantiated at runtime.
 
-C'est la seule source : `HackerOs.Ecosystem.csproj` n'embarque plus de manifeste
-à la main (`HackerOs.Ecosystem.Manifests.*`) et n'a plus de liste
-`BlazorWebAssemblyLazyLoad`, et la cible de transition
-`_HackerOsMarkLegacySystemManifests` a disparu avec elles : `IsSystemApp` vient
-seulement de `BuiltInApplications.json`. Une ressource absente est une erreur au démarrage.
+It is the only source: `HackerOs.Ecosystem.csproj` no longer embeds a hand-written
+manifest (`HackerOs.Ecosystem.Manifests.*`) and no longer has a
+`BlazorWebAssemblyLazyLoad` list, and the transition target
+`_HackerOsMarkLegacySystemManifests` disappeared with them: `IsSystemApp` comes
+only from `BuiltInApplications.json`. A missing resource is a startup error.
 
-### Installer une app
+### Installing an app
 
-Une fois l'app dotée de sa classe `[AppManifest]` : une `ProjectReference` dans
-`HackerOs.Ecosystem.csproj`, avec `IsSystemApp="true"` si l'hôte la déclare
-système. Rien d'autre.
+Once the app has its `[AppManifest]` class: a `ProjectReference` in
+`HackerOs.Ecosystem.csproj`, with `IsSystemApp="true"` if the host declares it
+system. Nothing else.
 
 ### Tests
 
-- `BuiltInApplicationsJsonSerializerTests` (`HackerOs.App.Abstractions.Tests`) :
-  tri et aller-retour canonique, document vide, normalisation, rejets stricts.
-- `BuiltInApplicationsAggregatorTests` : `IsSystemApp` reporté, identifiant en
-  double refusé (`HOSAPP0021`), manifeste absent ou invalide (`HOSAPP0020`),
-  analyse de la liste.
-- `MsBuildIntegrationTests.Host_embeds_BuiltInApplications_...` : build réel de
-  `Tests/ManifestGenerator.Fixtures.Host` (une app système, un projet à deux apps,
-  un projet qui n'est pas une app, ignoré).
-- `BuildKnownLazyAppsTests` (`HackerOs.Ecosystem.Tests`) : le catalogue contient
-  toutes les apps de l'hôte (75 aujourd'hui : 12 fenêtrées et 63 commandes, `stress` depuis l'ADR 0070) ; toutes viennent de la ressource agrégée (aucune ressource
-  `HackerOs.Ecosystem.Manifests.*`), et la liste de chargement différé est
-  exactement celle de leurs assemblies.
+- `BuiltInApplicationsJsonSerializerTests` (`HackerOs.App.Abstractions.Tests`):
+  sorting and canonical round trip, empty document, normalization, strict rejections.
+- `BuiltInApplicationsAggregatorTests`: `IsSystemApp` carried over, duplicate
+  identifier refused (`HOSAPP0021`), missing or invalid manifest (`HOSAPP0020`),
+  list parsing.
+- `MsBuildIntegrationTests.Host_embeds_BuiltInApplications_...`: real build of
+  `Tests/ManifestGenerator.Fixtures.Host` (a system app, a two-app project,
+  a project that is not an app, ignored).
+- `BuildKnownLazyAppsTests` (`HackerOs.Ecosystem.Tests`): the catalog contains
+  all the host's apps (75 today: 12 windowed and 63 commands, `stress` since ADR 0070); all come from the aggregated resource (no
+  `HackerOs.Ecosystem.Manifests.*` resource), and the lazy loading list is
+  exactly that of their assemblies.
 
-## Version du SDK, commandes, intégrité (ADR 0098 §3-5)
+## SDK version, commands, integrity (ADR 0098 §3-5)
 
-- **Version du SDK** : voir « Règles de conversion ». `AppCatalog.Build` met de côté
-  les apps refusées dans `AppCatalog.Rejected` (code `catalog.sdk.incompatible`, et
-  `catalog.dependency.unavailable` pour une app qui en dépend obligatoirement) au
-  lieu d'échouer : l'OS démarre sans elles, le démarrage l'écrit dans
-  `/var/log/syslog` (catégorie `catalog`) et Paramètres les liste comme
-  incompatibles avec la raison (`HackAppInstallState.Incompatible`, `Problem`).
-- **Commandes en double** : refusées au build (`HOSAPP0022`). Au chargement, si deux
-  apps déclarent quand même le même nom, une app système l'emporte, sinon la
-  première activée ; l'autre perd ce nom (`AppCatalog.FindCommandOwner`,
-  `CommandOwners`), un avertissement `catalog.command.duplicate` va dans
-  `/var/log/syslog`, et `ShellCommandResolver` ne résout que le propriétaire.
-- **Intégrité des ressources** : pour chaque entrée de `Assets`, le générateur calcule
-  le SHA-256 du fichier `wwwroot/<chemin>` du projet et l'écrit dans le manifeste
-  (`HOSAPP0023` s'il manque) ; le générateur relance quand un fichier de
-  `wwwroot/` change. Au runtime, `AppAssetStore` (Platform.Core) lit une ressource
-  par sa source (`IAppAssetSource` ; dans le navigateur
-  `StaticWebAssetAppAssetSource`, `_content/<assembly>/<chemin>`) et vérifie son
-  empreinte à sa **première** lecture de la session, comme `dpkg --verify`. Une
-  ressource altérée est refusée (`AppAssetIntegrityException`), l'app est marquée
-  endommagée (`HackAppInstallState.Damaged` dans Paramètres) et l'événement
-  `catalog.asset.damaged` va dans `/var/log/syslog`. Les assemblies restent
-  couvertes par l'intégrité du manifeste de démarrage de Blazor.
+- **SDK version**: see "Conversion rules". `AppCatalog.Build` sets aside the
+  refused apps in `AppCatalog.Rejected` (code `catalog.sdk.incompatible`, and
+  `catalog.dependency.unavailable` for an app that depends on one of them as required) instead of
+  failing: the OS starts without them, startup writes it to
+  `/var/log/syslog` (category `catalog`) and Settings lists them as
+  incompatible with the reason (`HackAppInstallState.Incompatible`, `Problem`).
+- **Duplicate commands**: refused at build time (`HOSAPP0022`). At load time, if two
+  apps nevertheless declare the same name, a system app wins, otherwise the
+  first enabled one; the other loses that name (`AppCatalog.FindCommandOwner`,
+  `CommandOwners`), a warning `catalog.command.duplicate` goes to
+  `/var/log/syslog`, and `ShellCommandResolver` resolves only the owner.
+- **Resource integrity**: for each `Assets` entry, the generator computes
+  the SHA-256 of the project's `wwwroot/<path>` file and writes it to the manifest
+  (`HOSAPP0023` if it is missing); the generator reruns when a file of
+  `wwwroot/` changes. At runtime, `AppAssetStore` (Platform.Core) reads a resource
+  through its source (`IAppAssetSource`; in the browser
+  `StaticWebAssetAppAssetSource`, `_content/<assembly>/<path>`) and checks its
+  fingerprint on its **first** read of the session, like `dpkg --verify`. A
+  tampered resource is refused (`AppAssetIntegrityException`), the app is marked
+  damaged (`HackAppInstallState.Damaged` in Settings) and the event
+  `catalog.asset.damaged` goes to `/var/log/syslog`. Assemblies remain
+  covered by the integrity of Blazor's boot manifest.
 
-## Apps système (ADR 0048 §1)
+## System apps (ADR 0048 §1)
 
-### Source de confiance
+### Source of trust
 
-Le statut système se déclare **uniquement** sur la `ProjectReference` de l'hôte
-(`IsSystemApp="true"`), recopié par l'agrégation dans `isSystemApp`. Ni
-`AppDefinition`, ni `[AppManifest]`, ni le schéma de `manifest.json` n'ont de champ
-pour cela : un `manifest.json` qui contient `isSystemApp` est rejeté par le
-désérialiseur strict. Une app installée au runtime par le futur magasin sera donc
-toujours non système.
+System status is declared **only** on the host's `ProjectReference`
+(`IsSystemApp="true"`), copied by aggregation into `isSystemApp`. Neither
+`AppDefinition`, nor `[AppManifest]`, nor the `manifest.json` schema has a field
+for it: a `manifest.json` that contains `isSystemApp` is rejected by the
+strict deserializer. An app installed at runtime by the future store will therefore
+always be non-system.
 
 ### API
 
-`AppCatalog` (`Platform/HackerOs.Platform.Core/AppCatalog.cs`) :
+`AppCatalog` (`Platform/HackerOs.Platform.Core/AppCatalog.cs`):
 
-| Membre | Rôle |
+| Member | Role |
 |---|---|
-| `SystemAppIds` | ensemble (ordinal, figé) des identifiants système du catalogue |
-| `IsSystemApp(appId)` | `true` si l'hôte a déclaré l'app système |
-| `Build(manifests)` | catalogue sans app système (tests, catalogue vide) |
-| `Build(manifests, systemAppIds)` | catalogue avec la liste système de l'hôte |
-| `BuildFromBuiltInApplications(applications)` | raccourci depuis les entrées de `BuiltInApplications.json` |
+| `SystemAppIds` | set (ordinal, frozen) of the catalog's system identifiers |
+| `IsSystemApp(appId)` | `true` if the host declared the app system |
+| `Build(manifests)` | catalog without system apps (tests, empty catalog) |
+| `Build(manifests, systemAppIds)` | catalog with the host's system list |
+| `BuildFromBuiltInApplications(applications)` | shortcut from the entries of `BuiltInApplications.json` |
 
-Un identifiant système absent des manifestes fait échouer la construction
-(`catalog.system-app.unknown`) : une faute de frappe ne peut pas laisser une app
-sans protection. `BuildKnownLazyApps.Catalog` est le catalogue injecté par les
-hôtes (`Program.cs`) ; les services de l'OS lisent donc
-`AppCatalog.IsSystemApp` depuis l'injection de dépendances.
+A system identifier absent from the manifests makes construction fail
+(`catalog.system-app.unknown`): a typo cannot leave an app
+unprotected. `BuildKnownLazyApps.Catalog` is the catalog injected by the
+hosts (`Program.cs`); OS services therefore read
+`AppCatalog.IsSystemApp` from dependency injection.
 
-### Apps système de l'hôte Ecosystem
+### System apps of the Ecosystem host
 
-| Système | Non système (désinstallables) |
+| System | Non-system (uninstallable) |
 |---|---|
-| Terminal, File Explorer, Settings, Text Editor, Code Editor (depuis `rebuild/4-sdk-shell-host` : son terminal héberge un shell, ADR 0056 §7), System Monitor, Error Log Viewer, Theme Editor (lit `/etc/hackeros/themes`, ADR 0103), et les 70 commandes (projet `HackerOs.Commands`, `xdg-open` comprise depuis `v3/4`, `xdg-mime` depuis `v3/4b`, `passwd` depuis `v3/8`) | Browser, Calculator, Diagnostic, HackPaint, Icon Viewer |
+| Terminal, File Explorer, Settings, Text Editor, Code Editor (since `rebuild/4-sdk-shell-host`: its terminal hosts a shell, ADR 0056 §7), System Monitor, Error Log Viewer, Theme Editor (reads `/etc/hackeros/themes`, ADR 0103), and the 70 commands (project `HackerOs.Commands`, `xdg-open` included since `v3/4`, `xdg-mime` since `v3/4b`, `passwd` since `v3/8`) | Browser, Calculator, Diagnostics, HackPaint, Icon Viewer |
 
-Effets du statut : une app système n'est pas désinstallable (voir
-[`app-installation.md`](../dev/app-installation.md), ADR 0048 §2-6) ; ses capacités
-dangereuses accordées d'office arrivent avec l'ADR 0049.
+Effects of the status: a system app is not uninstallable (see
+[`app-installation.md`](../dev/app-installation.md), ADR 0048 §2-6); its dangerous
+capabilities granted by default arrive with ADR 0049.
 
 ### Tests
 
-- `AppCatalogTests` (`HackerOs.Platform.Core.Tests`) : pas d'app système par
-  défaut, ensemble exposé et comparaison ordinale, identifiant inconnu refusé,
-  drapeau pris de chaque entrée `BuiltInApplication`.
-- `SystemAppTrustTests` (`HackerOs.App.Abstractions.Tests`) : aucun membre
-  « SystemApp » sur `AppDefinition`, `AppManifest`, `[AppManifest]` ; un
-  `manifest.json` qui revendique `isSystemApp` est rejeté.
+- `AppCatalogTests` (`HackerOs.Platform.Core.Tests`): no system app by
+  default, exposed set and ordinal comparison, unknown identifier refused,
+  flag taken from each `BuiltInApplication` entry.
+- `SystemAppTrustTests` (`HackerOs.App.Abstractions.Tests`): no
+  "SystemApp" member on `AppDefinition`, `AppManifest`, `[AppManifest]`; a
+  `manifest.json` that claims `isSystemApp` is rejected.
 - `BuildKnownLazyAppsTests.System_apps_follow_the_host_ProjectReference_metadata`
-  (`HackerOs.Ecosystem.Tests`) : l'ensemble système du catalogue de l'hôte est
-  exactement la table ci-dessus.
+  (`HackerOs.Ecosystem.Tests`): the system set of the host's catalog is
+  exactly the table above.
 
-## Tâches
+## Tasks
 
-- [x] `rebuild/2-app-definition` : `AppDefinition`, `[AppManifest]`,
-  `FileHandler`, `TerminalCommand`, `AppDefinitionMapper`, tests du mappeur
+- [x] `rebuild/2-app-definition`: `AppDefinition`, `[AppManifest]`,
+  `FileHandler`, `TerminalCommand`, `AppDefinitionMapper`, mapper tests
   (`Tests/HackerOs.App.Abstractions.Tests/Definition`).
-- [x] `rebuild/2-manifest-generator` : `Tools/HackerOs.Tools.ManifestGenerator` (`generate`, `validate`), `build/HackerOs.Apps.targets`, cibles `GenerateHackerOsAppManifests` et `GetHackerOsAppManifests`, erreurs `HOSAPP*`, projets de test, Calculator migrée en exemple.
-- [x] `rebuild/2-builtin-applications` : cible `CollectHackerOsBuiltInApplications`, `BuiltInApplications.json` embarqué, lazy load automatique, `BuildKnownLazyApps` lit le nouveau fichier, `IsSystemApp` transporté.
-- [x] `rebuild/2-system-apps` (ADR 0048) : `AppCatalog.SystemAppIds` et `IsSystemApp`, `AppCatalog.Build(manifests, systemAppIds)` et `BuildFromBuiltInApplications`, `IsSystemApp="true"` posé sur les `ProjectReference` de l'Ecosystem, pont de transition `_HackerOsMarkLegacySystemManifests`, tests.
-- [x] `rebuild/2-app-uninstall` (ADR 0048 §2-6) : désinstallation par `apps.config`, voir [`app-installation.md`](../dev/app-installation.md).
-- [x] `rebuild/5-worker-processes` (ADR 0070) : `AppManifestAttribute.Execution`, `AppExecutionHost`, champ `execution` (schéma, liste blanche, validateur, fixture canonique), défauts par genre dans le mappeur, chaque commande et service déclare son hôte ou reçoit le défaut.
-- [x] `v3/6-sdk-versioning` (ADR 0098) : version du SDK écrite par le générateur et vérifiée au chargement, `HOSAPP0022`/`HOSAPP0023`, propriétaire unique d'une commande, empreintes des ressources et `AppAssetStore`, agrégation des apps en paquet, `HostAppCatalog`.
-- [x] `v3/4-intents` (ADR 0096) : intents déclarés reçus par l'app, schémas d'URI `x-scheme-handler/<schéma>`, commande `xdg-open`.
-- [x] `v3/4b` (ADR 0121) : associations de fichiers et de schémas propres à chaque utilisateur, commande `xdg-mime`.
-- [x] `v3/12-localization` (ADR 0104) : `AppManifest.<culture>.resx` → `localization/`, `HOSAPP0040`, propriété `localized` de `BuiltInApplications.json`, `AppCatalog.Localize`.
-- [x] `exec/3-oom-killer` (ADR 0126, ADR 0142) : `AppDefinition.OomScoreAdjust` (SDK 1.2), champ `oomScoreAdj`, `HOSAPP0024`.
-- [x] `rebuild/2-app-migration` : classes `[AppManifest]` pour les 43 autres apps, test d'égalité avec les anciens JSON, suppression des `app.manifest.json`, `StaticManifest`, des listes manuelles de l'hôte et de la cible `_HackerOsMarkLegacySystemManifests`, de la règle `Content Update` de `Directory.Build.targets` et des exceptions « transition ».
+- [x] `rebuild/2-manifest-generator`: `Tools/HackerOs.Tools.ManifestGenerator` (`generate`, `validate`), `build/HackerOs.Apps.targets`, targets `GenerateHackerOsAppManifests` and `GetHackerOsAppManifests`, `HOSAPP*` errors, test projects, Calculator migrated as an example.
+- [x] `rebuild/2-builtin-applications`: target `CollectHackerOsBuiltInApplications`, embedded `BuiltInApplications.json`, automatic lazy load, `BuildKnownLazyApps` reads the new file, `IsSystemApp` carried over.
+- [x] `rebuild/2-system-apps` (ADR 0048): `AppCatalog.SystemAppIds` and `IsSystemApp`, `AppCatalog.Build(manifests, systemAppIds)` and `BuildFromBuiltInApplications`, `IsSystemApp="true"` set on the Ecosystem's `ProjectReference`s, transition bridge `_HackerOsMarkLegacySystemManifests`, tests.
+- [x] `rebuild/2-app-uninstall` (ADR 0048 §2-6): uninstall through `apps.config`, see [`app-installation.md`](../dev/app-installation.md).
+- [x] `rebuild/5-worker-processes` (ADR 0070): `AppManifestAttribute.Execution`, `AppExecutionHost`, `execution` field (schema, whitelist, validator, canonical fixture), defaults by kind in the mapper, each command and service declares its host or gets the default.
+- [x] `v3/6-sdk-versioning` (ADR 0098): SDK version written by the generator and checked at load time, `HOSAPP0022`/`HOSAPP0023`, single owner of a command, resource fingerprints and `AppAssetStore`, aggregation of packaged apps, `HostAppCatalog`.
+- [x] `v3/4-intents` (ADR 0096): declared intents received by the app, URI schemes `x-scheme-handler/<scheme>`, `xdg-open` command.
+- [x] `v3/4b` (ADR 0121): per-user file and scheme associations, `xdg-mime` command.
+- [x] `v3/12-localization` (ADR 0104): `AppManifest.<culture>.resx` → `localization/`, `HOSAPP0040`, `localized` property of `BuiltInApplications.json`, `AppCatalog.Localize`.
+- [x] `exec/3-oom-killer` (ADR 0126, ADR 0142): `AppDefinition.OomScoreAdjust` (SDK 1.2), `oomScoreAdj` field, `HOSAPP0024`.
+- [x] `rebuild/2-app-migration`: `[AppManifest]` classes for the other 43 apps, equality test with the old JSON files, removal of the `app.manifest.json` files, `StaticManifest`, the host's manual lists and the target `_HackerOsMarkLegacySystemManifests`, the `Content Update` rule of `Directory.Build.targets` and the "transition" exceptions.

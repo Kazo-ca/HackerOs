@@ -1,12 +1,12 @@
-# API fichier `Hack*` et contexte d'exécution ambiant
+# `Hack*` file API and ambient execution context
 
-Implémentation de la section 5.1 du [plan de refonte](../dev/plans/ecosystem-rebuild-plan.md),
-selon l'[ADR 0043](../dev/adr/0043-hack-file-api-and-ambient-context.md).
+Implementation of section 5.1 of the [rebuild plan](../dev/plans/ecosystem-rebuild-plan.md),
+following [ADR 0043](../dev/adr/0043-hack-file-api-and-ambient-context.md).
 
-## Objectif
+## Goal
 
-Donner aux apps une API de fichiers familière à un développeur .NET, calquée sur
-`System.IO`, sans passer de contexte ni gérer les révisions à la main :
+Give apps a file API familiar to a .NET developer, modeled on
+`System.IO`, without passing a context or handling revisions by hand:
 
 ```csharp
 using HackerOs.AppSdk.IO;
@@ -16,72 +16,72 @@ string texte = await HackFile.ReadAllTextAsync("~/notes.txt");
 string[] logs = await HackDirectory.GetFilesAsync("/var/log", "*.log");
 ```
 
-L'app appelante est identifiée par le contexte ambiant que l'OS positionne. Tous
-les appels passent par la passerelle `IAppFileSystemGateway` de l'app : capacités,
-autorité, bits de mode, tickets d'élévation (ADR 0042) et notification d'erreur
-de permission restent appliqués exactement comme avant.
+The calling app is identified by the ambient context that the OS sets. All
+calls go through the app's `IAppFileSystemGateway` gateway: capabilities,
+authority, mode bits, elevation tickets (ADR 0042) and permission error
+notification remain applied exactly as before.
 
 ## Architecture
 
-| Élément | Emplacement | Rôle |
+| Item | Location | Role |
 |---|---|---|
-| `HackExecutionContext` | `Shared/HackerOs.AppSdk/HackExecutionContext.cs` | Contexte ambiant (`AsyncLocal`) : `Current`, `CurrentOrNull`, `WorkingDirectory`, `Enter(context, workingDirectory)`. Depuis la phase 3, `WorkingDirectory` est le répertoire du processus (`HackEnvironment`, [`process-environment.md`](../dev/process-environment.md)), sauf répertoire fixé par `Enter`. Depuis la phase 5, son `AsyncLocal` peut porter le crochet de changement de contexte des mesures de ressources, installé à la composition par `HackerOs.Platform.ResourceAccounting` ([`resource-accounting.md`](../dev/resource-accounting.md)) ; une portée ouverte empêche de l'installer. |
-| `IAppExecutionContext.HomeDirectory` | `Shared/HackerOs.AppSdk/IAppExecutionContext.cs` | Dossier personnel `/home/<login>` (membre par défaut `/home/{UserId}`, remplacé par la plateforme). Sert à `~` et au répertoire courant par défaut. |
-| `IAppExecutionContext.IsRootElevated` | `Shared/HackerOs.AppSdk/IAppExecutionContext.cs` | Lancement en root complet par `sudo` (ADR 0042), membre par défaut `false`. Ne change pas `HomeDirectory` ; sert à la corbeille de l'utilisateur effectif (`/root/.local/share/Trash`, [`trash.md`](../dev/trash.md)). |
-| `HackFile`, `HackDirectory`, `HackPath` | `Shared/HackerOs.AppSdk/IO/` | Façades statiques. `HackPath` est pur, sauf `GetFullPath(path)`. |
-| `HackFileSystemInfo`, `HackFileInfo`, `HackDirectoryInfo` | `IO/HackFileSystemInfo.cs` | Instantanés de métadonnées (`GetAsync`, `RefreshAsync`). |
-| `HackFileStream` | `IO/HackFileStream.cs` | Flux de lecture (enveloppe la lecture du moteur) ou d'écriture (tampon mémoire publié en une écriture atomique). |
-| `HackFileSystemWatcher` | `IO/HackFileSystemWatcher.cs` | Événements `Created`, `Changed`, `Deleted`, `Renamed` au-dessus de `IAppFileSystemWatchGateway`. |
-| `HackWriteOptions` | `IO/HackWriteOptions.cs` | API avancée : `ExpectedRevision`, `CreateMode`. |
-| Exceptions `Hack*` | `IO/HackExceptions.cs` | `HackIOException` et ses dérivées, `HackUnauthorizedAccessException`. |
-| `HackFileSystemErrorTranslator` (interne) | `IO/HackFileSystemErrorTranslator.cs` | Table de traduction `FileSystemErrorCode` → exception. |
-| `HackFileSystemCore` (interne) | `IO/HackFileSystemCore.cs` | Plomberie commune : stat, lecture, publication avec nouvel essai, copie entre montages, énumération. |
+| `HackExecutionContext` | `Shared/HackerOs.AppSdk/HackExecutionContext.cs` | Ambient context (`AsyncLocal`): `Current`, `CurrentOrNull`, `WorkingDirectory`, `Enter(context, workingDirectory)`. Since phase 3, `WorkingDirectory` is the process's directory (`HackEnvironment`, [`process-environment.md`](../dev/process-environment.md)), unless a directory is set by `Enter`. Since phase 5, its `AsyncLocal` can carry the resource-measurement context-switch hook, installed at composition by `HackerOs.Platform.ResourceAccounting` ([`resource-accounting.md`](../dev/resource-accounting.md)); an open scope prevents installing it. |
+| `IAppExecutionContext.HomeDirectory` | `Shared/HackerOs.AppSdk/IAppExecutionContext.cs` | Home folder `/home/<login>` (default member `/home/{UserId}`, replaced by the platform). Used for `~` and the default current directory. |
+| `IAppExecutionContext.IsRootElevated` | `Shared/HackerOs.AppSdk/IAppExecutionContext.cs` | Launch as full root through `sudo` (ADR 0042), default member `false`. Does not change `HomeDirectory`; used for the effective user's trash (`/root/.local/share/Trash`, [`trash.md`](../dev/trash.md)). |
+| `HackFile`, `HackDirectory`, `HackPath` | `Shared/HackerOs.AppSdk/IO/` | Static facades. `HackPath` is pure, except `GetFullPath(path)`. |
+| `HackFileSystemInfo`, `HackFileInfo`, `HackDirectoryInfo` | `IO/HackFileSystemInfo.cs` | Metadata snapshots (`GetAsync`, `RefreshAsync`). |
+| `HackFileStream` | `IO/HackFileStream.cs` | Read stream (wraps the engine's read) or write stream (memory buffer published in a single atomic write). |
+| `HackFileSystemWatcher` | `IO/HackFileSystemWatcher.cs` | `Created`, `Changed`, `Deleted`, `Renamed` events on top of `IAppFileSystemWatchGateway`. |
+| `HackWriteOptions` | `IO/HackWriteOptions.cs` | Advanced API: `ExpectedRevision`, `CreateMode`. |
+| `Hack*` exceptions | `IO/HackExceptions.cs` | `HackIOException` and its derived classes, `HackUnauthorizedAccessException`. |
+| `HackFileSystemErrorTranslator` (internal) | `IO/HackFileSystemErrorTranslator.cs` | `FileSystemErrorCode` → exception translation table. |
+| `HackFileSystemCore` (internal) | `IO/HackFileSystemCore.cs` | Common plumbing: stat, read, publishing with retry, copy across mounts, enumeration. |
 
-### Points d'entrée où l'OS ouvre le contexte
+### Entry points where the OS opens the context
 
-| Type de code | Où | Répertoire courant |
+| Kind of code | Where | Current directory |
 |---|---|---|
-| Commande terminal | `AppLifecycleOrchestrator`, autour de `ExecuteAsync` | celui du processus de la commande (copié du shell à la création) |
-| Service | `ServiceAppBase.RunAsync` et `StopAsync` | dossier personnel |
-| Fenêtre | `WindowAppBase` : `SetParametersAsync`, `IHandleEvent.HandleEventAsync`, `IHandleAfterRender.OnAfterRenderAsync` | dossier personnel |
-| Composant enfant | `HackComponentBase` (nouveau, `HackerOs.AppSdk.Blazor`) reçoit le contexte par `CascadingValue` posé par `WindowAppRenderer` | celui de la fenêtre |
-| Rappels de passerelles | `AppClockGateway.Schedule` et `AppEventGateway.Subscribe` (voie noyau et voie topic) rentrent dans le contexte de leur app (`AppAmbientContextBinding`) | dossier personnel |
+| Terminal command | `AppLifecycleOrchestrator`, around `ExecuteAsync` | that of the command's process (copied from the shell at creation) |
+| Service | `ServiceAppBase.RunAsync` and `StopAsync` | home folder |
+| Window | `WindowAppBase`: `SetParametersAsync`, `IHandleEvent.HandleEventAsync`, `IHandleAfterRender.OnAfterRenderAsync` | home folder |
+| Child component | `HackComponentBase` (new, `HackerOs.AppSdk.Blazor`) receives the context through the `CascadingValue` set by `WindowAppRenderer` | that of the window |
+| Gateway callbacks | `AppClockGateway.Schedule` and `AppEventGateway.Subscribe` (kernel path and topic path) enter their app's context (`AppAmbientContextBinding`) | home folder |
 
-Les autres passerelles de l'ADR n'ont pas de rappel à envelopper :
-`IAppFileSystemWatchGateway` renvoie un canal lu par le code de l'app (le
-`HackFileSystemWatcher` le lit dans une boucle qui hérite du contexte de
-`StartAsync`), et les actions de notification reviennent à l'app par le bus
-d'événements, déjà couvert.
+The ADR's other gateways have no callback to wrap:
+`IAppFileSystemWatchGateway` returns a channel read by the app's code (the
+`HackFileSystemWatcher` reads it in a loop that inherits the context of
+`StartAsync`), and notification actions come back to the app through the event
+bus, already covered.
 
-Une méthode `[JSInvokable]` ne reçoit pas l'`AsyncLocal` : elle appelle
-`HackExecutionContext.Enter(AppContext)` elle-même. Sans contexte, l'API lève
-`HackExecutionContextMissingException` ; elle ne retombe jamais sur une identité
-système.
+A `[JSInvokable]` method does not receive the `AsyncLocal`: it calls
+`HackExecutionContext.Enter(AppContext)` itself. Without a context, the API throws
+`HackExecutionContextMissingException`; it never falls back to a system
+identity.
 
-## Utilisation
+## Usage
 
-### Chemins
+### Paths
 
-- Absolus (`/etc/hosts`), relatifs au répertoire courant (`notes.txt`, `../x`),
-  ou dans le dossier personnel (`~`, `~/docs`).
-- `HackPath.GetFullPath(path, basePath)` résout sans lire le contexte.
-- Les listes renvoient des chemins absolus canoniques, triés par nom (ordinal),
-  en profondeur pour `SearchOption.AllDirectories`, sans suivre les liens
-  symboliques vers des dossiers. Les motifs (`*`, `?`) respectent la casse.
+- Absolute (`/etc/hosts`), relative to the current directory (`notes.txt`, `../x`),
+  or in the home folder (`~`, `~/docs`).
+- `HackPath.GetFullPath(path, basePath)` resolves without reading the context.
+- Listings return canonical absolute paths, sorted by name (ordinal),
+  in depth for `SearchOption.AllDirectories`, without following symbolic
+  links to folders. Patterns (`*`, `?`) are case-sensitive.
 
-### Écriture, umask et révisions
+### Writing, umask and revisions
 
-- Umask fixe de phase 1 : fichier créé en `0644`, dossier en `0755`
-  (`HackWriteOptions.CreateMode` ou `CreateDirectoryAsync(path, mode)` pour autre
-  chose). Seuls les bits `0777` sont acceptés.
-- Une écriture lit la révision courante, crée le fichier s'il manque, écrit, et
-  réessaie **une seule fois** en cas de conflit. Un second conflit lève
+- Fixed phase 1 umask: file created as `0644`, folder as `0755`
+  (`HackWriteOptions.CreateMode` or `CreateDirectoryAsync(path, mode)` for anything
+  else). Only the `0777` bits are accepted.
+- A write reads the current revision, creates the file if it is missing, writes, and
+  retries **only once** on conflict. A second conflict throws
   `HackFileConflictException`.
-- L'ajout (`AppendAll*`, `OpenAppendAsync`) relit le contenu à chaque essai : une
-  modification concurrente n'est jamais écrasée.
-- Contrôle strict (éditeur de texte) : `ExpectedRevision` désactive le nouvel
-  essai. Les surcharges avec `HackWriteOptions` renvoient le `HackFileInfo` validé,
-  dont la `Revision` sert à l'écriture suivante.
+- Appending (`AppendAll*`, `OpenAppendAsync`) rereads the content on each attempt: a
+  concurrent modification is never overwritten.
+- Strict control (text editor): `ExpectedRevision` disables the retry.
+  The overloads with `HackWriteOptions` return the validated `HackFileInfo`,
+  whose `Revision` is used for the next write.
 
 ```csharp
 HackFileInfo fichier = await HackFileInfo.GetAsync(chemin);
@@ -97,20 +97,20 @@ catch (HackFileConflictException conflit)
 }
 ```
 
-- Texte : UTF-8 sans BOM par défaut ; un encodage passé explicitement écrit son
-  préambule (comme .NET). Les lignes se terminent par `\n`. Les fichiers texte
-  sont publiés avec le type `text/plain`.
-- `CopyAsync`/`MoveAsync` entre deux montages : la façade copie le flux (en gardant
-  les bits du fichier source) puis supprime la source.
-- `HackFile.DeleteAsync` supprime définitivement, comme `System.IO`. Pour une
-  suppression réversible, `HackTrash.MoveToTrashAsync` (phase 3, voir
+- Text: UTF-8 without BOM by default; an encoding passed explicitly writes its
+  preamble (like .NET). Lines end with `\n`. Text files
+  are published with the `text/plain` type.
+- `CopyAsync`/`MoveAsync` between two mounts: the facade copies the stream (keeping
+  the source file's bits) then deletes the source.
+- `HackFile.DeleteAsync` deletes permanently, like `System.IO`. For a
+  reversible deletion, `HackTrash.MoveToTrashAsync` (phase 3, see
   [`trash.md`](../dev/trash.md)).
 
-### Flux
+### Streams
 
-`OpenWriteAsync` **remplace** le contenu (contrairement à `File.OpenWrite`, voir
-l'ADR). Le contenu est publié par une seule écriture atomique sur `FlushAsync()`
-ou `DisposeAsync()`. Toujours utiliser `await using` :
+`OpenWriteAsync` **replaces** the content (unlike `File.OpenWrite`, see
+the ADR). The content is published by a single atomic write on `FlushAsync()`
+or `DisposeAsync()`. Always use `await using`:
 
 ```csharp
 await using HackFileStream flux = await HackFile.OpenWriteAsync("~/rapport.txt");
@@ -118,17 +118,17 @@ await using StreamWriter writer = new(flux);
 await writer.WriteLineAsync("ligne");
 ```
 
-Quand l'OS mesure la mémoire (ADR 0068), le tampon d'un flux d'écriture est
-compté dans la part noyau du processus (`VmData` de `/proc/<pid>/status`)
-jusqu'à la fermeture du flux, par `IAppFileSystemGateway.ChargeStreamBuffer()`
-(méthode par défaut qui ne charge rien : une passerelle de test n'a rien à
-faire). Voir [`memory-accounting.md`](../dev/memory-accounting.md).
+When the OS measures memory (ADR 0068), the buffer of a write stream is
+counted in the process's kernel share (`VmData` of `/proc/<pid>/status`)
+until the stream is closed, through `IAppFileSystemGateway.ChargeStreamBuffer()`
+(a default method that charges nothing: a test gateway has nothing to
+do). See [`memory-accounting.md`](../dev/memory-accounting.md).
 
-Le `Flush()` synchrone ne fait rien, et un `Dispose()` synchrone d'un flux qui
-contient des octets non publiés lève `InvalidOperationException` au lieu de les
-perdre. Le flux garde la passerelle de l'app qui l'a ouvert.
+The synchronous `Flush()` does nothing, and a synchronous `Dispose()` of a stream that
+holds unpublished bytes throws `InvalidOperationException` instead of losing
+them. The stream keeps the gateway of the app that opened it.
 
-### Surveillance
+### Watching
 
 ```csharp
 await using HackFileSystemWatcher watcher = new("~/inbox", "*.txt");
@@ -136,77 +136,77 @@ watcher.Created += (_, e) => Console.WriteLine(e.FullPath);
 await watcher.StartAsync();
 ```
 
-Le moteur ne surveille que les enfants directs : `IncludeSubdirectories = true`
-lève `NotSupportedException`. Un déplacement dans le dossier donne `Renamed`, une
-sortie `Deleted`, une entrée `Created`.
+The engine only watches direct children: `IncludeSubdirectories = true`
+throws `NotSupportedException`. A move within the folder gives `Renamed`, a
+move out gives `Deleted`, a move in gives `Created`.
 
 ### Exceptions
 
-| Code moteur | Exception |
+| Engine code | Exception |
 |---|---|
-| `NotFound` (fichier) | `HackFileNotFoundException` |
-| `NotFound` (dossier, ou parent absent à la création) | `HackDirectoryNotFoundException` |
-| `NotFile`, `PermissionDenied`, `CapabilityDenied`, `AuthorityDenied`, `ProtectedEntry` | `HackUnauthorizedAccessException` (avec `RequiredCapability`) |
-| `RevisionConflict` | `HackFileConflictException` (après la règle du nouvel essai) |
+| `NotFound` (file) | `HackFileNotFoundException` |
+| `NotFound` (folder, or missing parent on creation) | `HackDirectoryNotFoundException` |
+| `NotFile`, `PermissionDenied`, `CapabilityDenied`, `AuthorityDenied`, `ProtectedEntry` | `HackUnauthorizedAccessException` (with `RequiredCapability`) |
+| `RevisionConflict` | `HackFileConflictException` (after the retry rule) |
 | `InvalidPath`, `InvalidName`, `RootContainmentViolation` | `ArgumentException` |
 | `UnsupportedOperation` | `NotSupportedException` |
 | `Cancelled` | `OperationCanceledException` |
-| `CrossMountOperation` | aucune : copie puis suppression par la façade |
-| Autres codes, et tout code futur | `HackIOException` |
+| `CrossMountOperation` | none: copy then delete by the facade |
+| Other codes, and any future code | `HackIOException` |
 
-Les exceptions dérivent de `IOException` et `UnauthorizedAccessException` : un
-`catch` ordinaire fonctionne.
+The exceptions derive from `IOException` and `UnauthorizedAccessException`: an
+ordinary `catch` works.
 
-## Décisions clés
+## Key decisions
 
-- **`HomeDirectory` sur `IAppExecutionContext`.** L'ADR parle de `/home/{UserId}`,
-  mais `UserId` est un identifiant opaque alors que le dossier personnel est
-  `/home/<login>`. Le contexte expose donc `HomeDirectory`, rempli par la fabrique
-  avec `AuthenticatedPrincipal.HomePath`. Le fil `rebuild/1-settings-files` ajoute
-  le même membre, avec la même signature.
-- **Infos sans lecture paresseuse.** `HackFileInfo`/`HackDirectoryInfo` ne lisent
-  rien implicitement : `GetAsync` ou `RefreshAsync`. Un fichier absent rapporte les
-  valeurs par défaut de .NET (date 1601-01-01 UTC, `UnixFileMode` à `-1`).
-- **Liens symboliques.** `IsSymbolicLink` et `LinkTarget` décrivent le lien ; les
-  autres propriétés décrivent sa cible, comme `stat`.
-- **`File.Move` d'un dossier** lève `HackFileNotFoundException`, comme .NET ;
-  `HackDirectory.MoveAsync` déplace un dossier ou un fichier.
-- **`HackDirectory.CopyAsync`** (phase 4, `rebuild/4-file-explorer`) : copie
-  récursive d'un dossier vers une destination absente, ajout de HackerOS (.NET n'a
-  pas de `Directory.Copy`) ; le moteur copie l'arbre en une transaction, la façade
-  le recrée entrée par entrée entre deux montages. Voir
+- **`HomeDirectory` on `IAppExecutionContext`.** The ADR mentions `/home/{UserId}`,
+  but `UserId` is an opaque identifier whereas the home folder is
+  `/home/<login>`. The context therefore exposes `HomeDirectory`, filled in by the factory
+  with `AuthenticatedPrincipal.HomePath`. The `rebuild/1-settings-files` thread adds
+  the same member, with the same signature.
+- **Info without lazy reading.** `HackFileInfo`/`HackDirectoryInfo` read
+  nothing implicitly: `GetAsync` or `RefreshAsync`. A missing file reports the
+  .NET default values (date 1601-01-01 UTC, `UnixFileMode` at `-1`).
+- **Symbolic links.** `IsSymbolicLink` and `LinkTarget` describe the link; the
+  other properties describe its target, like `stat`.
+- **`File.Move` of a folder** throws `HackFileNotFoundException`, like .NET;
+  `HackDirectory.MoveAsync` moves a folder or a file.
+- **`HackDirectory.CopyAsync`** (phase 4, `rebuild/4-file-explorer`): recursive
+  copy of a folder to a destination that does not exist, a HackerOS addition (.NET has
+  no `Directory.Copy`); the engine copies the tree in one transaction, the facade
+  recreates it entry by entry across two mounts. See
   [`file-explorer.md`](../dev/file-explorer.md).
-- **Double faux de tests.** `FakeAppFileSystemGateway` (`HackerOs.Tests.Support`)
-  traite maintenant une révision attendue nulle comme une opération
-  inconditionnelle et renvoie `NotFile` pour la lecture ou l'écriture d'un dossier,
-  comme le vrai moteur. `MinimalAppExecutionContext` accepte une passerelle de
-  surveillance et un dossier personnel.
+- **Test double.** `FakeAppFileSystemGateway` (`HackerOs.Tests.Support`)
+  now treats a null expected revision as an unconditional operation
+  and returns `NotFile` for reading or writing a folder,
+  like the real engine. `MinimalAppExecutionContext` accepts a watch gateway
+  and a home folder.
 
 ## Tests
 
-- `Tests/HackerOs.AppSdk.Tests/IO/` : contexte (absence, restauration, imbrication,
-  propagation par `await`, `Task.Run` et `Timer`, services), `HackPath`, `HackFile`
-  (umask, encodage, nouvel essai unique, révision stricte, flux, copie et
-  déplacement entre montages), `HackDirectory`, infos, chaque ligne de la table de
-  traduction, `HackFileSystemWatcher`.
-- `Tests/HackerOs.AppSdk.Blazor.Tests/AmbientContextComponentTests.cs` : cycle de
-  vie, événements et après-rendu d'une fenêtre et d'un `HackComponentBase` enfant.
-- `Tests/HackerOs.Platform.Core.Tests` : `HomeDirectory` de la fabrique, rappels de
-  l'horloge et du bus d'événements, contexte d'une commande terminal.
+- `Tests/HackerOs.AppSdk.Tests/IO/`: context (absence, restoration, nesting,
+  propagation through `await`, `Task.Run` and `Timer`, services), `HackPath`, `HackFile`
+  (umask, encoding, single retry, strict revision, streams, copy and
+  move across mounts), `HackDirectory`, infos, each row of the translation
+  table, `HackFileSystemWatcher`.
+- `Tests/HackerOs.AppSdk.Blazor.Tests/AmbientContextComponentTests.cs`: life
+  cycle, events and after-render of a window and of a child `HackComponentBase`.
+- `Tests/HackerOs.Platform.Core.Tests`: the factory's `HomeDirectory`, callbacks of
+  the clock and event bus, context of a terminal command.
 
-## Liste des tâches
+## Task list
 
-- [x] `HackExecutionContext` et `HackExecutionContextMissingException`.
-- [x] `IAppExecutionContext.HomeDirectory`, rempli par la fabrique.
+- [x] `HackExecutionContext` and `HackExecutionContextMissingException`.
+- [x] `IAppExecutionContext.HomeDirectory`, filled in by the factory.
 - [x] `HackPath`.
-- [x] Exceptions `Hack*` et traduction depuis `FileSystemErrorCode`.
-- [x] `HackFile` (lecture, écriture, ajout, copie, déplacement, suppression, flux, permissions).
-- [x] `HackFile.CreateSymbolicLinkAsync(chemin, cible)` (ADR 0064, `ln -s`) : comme `File.CreateSymbolicLink`, cible gardée telle quelle, lien pendant permis.
+- [x] `Hack*` exceptions and translation from `FileSystemErrorCode`.
+- [x] `HackFile` (read, write, append, copy, move, delete, streams, permissions).
+- [x] `HackFile.CreateSymbolicLinkAsync(path, target)` (ADR 0064, `ln -s`): like `File.CreateSymbolicLink`, target kept as is, dangling link allowed.
 - [x] `HackDirectory`.
 - [x] `HackFileSystemInfo`, `HackFileInfo`, `HackDirectoryInfo`.
 - [x] `HackFileStream`.
 - [x] `HackFileSystemWatcher`.
-- [x] Points d'entrée : terminal, service, fenêtre, `HackComponentBase` + `CascadingValue`, horloge, bus d'événements.
-- [x] Tests de contrat.
-- [ ] Phase 3 : répertoire courant par processus (D13) et umask par processus.
-- [ ] Phase 4 : migrer les apps de base de `AppContext.FileSystem` vers `Hack*`.
+- [x] Entry points: terminal, service, window, `HackComponentBase` + `CascadingValue`, clock, event bus.
+- [x] Contract tests.
+- [ ] Phase 3: current directory per process (D13) and umask per process.
+- [ ] Phase 4: migrate the base apps from `AppContext.FileSystem` to `Hack*`.

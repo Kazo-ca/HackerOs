@@ -1,93 +1,90 @@
 # Hack Paint
 
-App de dessin `org.hackeros.hack-paint` (`Apps/System/HackerOs.Apps.HackPaint`,
-désinstallable). Chantier `v3/11-apps`,
-[ADR 0103](adr/0103-hack-paint-image-files-and-theme-editor.md) §1 : les images
-vivent dans les fichiers de l'OS.
+Drawing app `org.hackeros.hack-paint` (`Apps/System/HackerOs.Apps.HackPaint`,
+uninstallable). Work item `v3/11-apps`,
+[ADR 0103](adr/0103-hack-paint-image-files-and-theme-editor.md) §1: images
+live in the OS files.
 
-## Objet
+## Purpose
 
-Dessiner (pinceau, couleur, taille, zoom, grille, déplacement, recadrage,
-rotation, annuler et rétablir) et **ouvrir, enregistrer, enregistrer sous** des
-images du système de fichiers simulé.
+Draw (brush, color, size, zoom, grid, move, crop, rotate, undo and redo) and
+**open, save, save as** images from the simulated filesystem.
 
 ## Formats
 
 | Action | Formats |
 |---|---|
-| Ouvrir | PNG, JPEG, BMP, GIF (première image), WebP |
-| Enregistrer | PNG par défaut ; JPEG quand le nom finit par `.jpg`/`.jpeg` (qualité 10 à 100, 92 par défaut, image aplatie sur du blanc) |
+| Open | PNG, JPEG, BMP, GIF (first frame), WebP |
+| Save | PNG by default; JPEG when the name ends in `.jpg`/`.jpeg` (quality 10 to 100, 92 by default, image flattened onto white) |
 
-- Taille maximale : 4 096 × 4 096 pixels et 16 Mio par fichier (ADR 0094).
-  L'en-tête est lu en C# (`ImageFileFormat.TryReadHeader`) **avant** tout
-  décodage : un fichier trop grand, endommagé ou d'un autre format donne un
-  message, sans figer l'app.
-- Le fichier enregistré porte son type de média (`image/png`, `image/jpeg`) et
-  est créé en `0644`.
+- Maximum size: 4,096 × 4,096 pixels and 16 MiB per file (ADR 0094).
+  The header is read in C# (`ImageFileFormat.TryReadHeader`) **before** any
+  decoding: a file that is too large, damaged, or of another format yields a
+  message, without freezing the app.
+- The saved file carries its media type (`image/png`, `image/jpeg`) and is
+  created as `0644`.
 
-## Utilisation
+## Usage
 
-- Barre d'outils : *New*, *Open…*, *Save*, *Save As…*, qualité JPEG ; erreurs
-  dans un bandeau, chemin du fichier dans la barre d'état.
-- Raccourcis : Ctrl+N, Ctrl+O, Ctrl+S, Ctrl+Maj+S, Ctrl+Z, Ctrl+Y (le module
-  JS empêche le navigateur de les prendre).
-- Titre de la fenêtre : `nom.png — Hack Paint`, précédé de `*` quand l'image a
-  des changements non enregistrés, posé par `SetWindowTitleAsync` (ADR 0117 §4)
-  et affiché par le gestionnaire de fenêtres (barre de titre, barre des tâches,
-  `` Alt+` ``). Il n'est plus répété dans l'app ; « ouverture… /
-  enregistrement… » s'affiche dans la barre d'état.
-- Fermer avec des changements non enregistrés demande confirmation
-  (`IWindowCloseGuard`, boîte Oui/Non).
-- Ouverture par l'explorateur : Hack Paint déclare `FileHandlers` pour les cinq
-  types (actions `open` et `edit`) et `file-associations.json` en fait le
-  gestionnaire par défaut de `edit` pour `.png .jpg .jpeg .bmp .gif .webp`
-  (ADR 0096). « Ouvrir avec » et un chemin passé au lancement ouvrent aussi le
-  fichier.
-- Fenêtre 960 × 680, minimum 600 × 420 (`AppDefinition.Window`, ADR 0095).
+- Toolbar: *New*, *Open…*, *Save*, *Save As…*, JPEG quality; errors in a
+  banner, file path in the status bar.
+- Shortcuts: Ctrl+N, Ctrl+O, Ctrl+S, Ctrl+Shift+S, Ctrl+Z, Ctrl+Y (the JS
+  module prevents the browser from taking them).
+- Window title: `nom.png — Hack Paint`, preceded by `*` when the image has
+  unsaved changes, set by `SetWindowTitleAsync` (ADR 0117 §4) and displayed by
+  the window manager (title bar, taskbar, `` Alt+` ``). It is no longer
+  repeated in the app; "opening… / saving…" appears in the status bar.
+- Closing with unsaved changes asks for confirmation
+  (`IWindowCloseGuard`, Yes/No box).
+- Opening from the explorer: Hack Paint declares `FileHandlers` for the five
+  types (`open` and `edit` actions) and `file-associations.json` makes it the
+  default handler of `edit` for `.png .jpg .jpeg .bmp .gif .webp`
+  (ADR 0096). "Open with" and a path passed at launch also open the file.
+- Window 960 × 680, minimum 600 × 420 (`AppDefinition.Window`, ADR 0095).
 
 ## Architecture
 
-| Pièce | Rôle |
+| Piece | Role |
 |---|---|
-| `ImageFileFormat` | formats, limites, lecture de l'en-tête (PNG IHDR, GIF, BMP, WebP VP8/VP8L/VP8X, JPEG SOF), format d'enregistrement d'après le nom |
-| `PaintFileStore` | lecture (`ReadAsync`, `Inspect`) et écriture (`WriteAsync`) par la passerelle de fichiers de l'app |
-| `PaintCanvasState` | pixels RGBA, historique, `IsDirty`/`MarkSaved` |
-| `HackPaintWindow.razor(.cs)` | fenêtre, dialogues du SDK (`OpenFileAsync`, `SaveFileAsync`), garde de fermeture |
-| `HackPaintWindow.razor.js` | dessin sur le canvas ; `decodeImage` (`createImageBitmap` → RGBA, erreurs rendues comme codes `decode-failed` / `too-large` que le C# traduit) et `encodeImage` (`toBlob`) ; jamais d'accès aux fichiers |
+| `ImageFileFormat` | formats, limits, header reading (PNG IHDR, GIF, BMP, WebP VP8/VP8L/VP8X, JPEG SOF), save format from the name |
+| `PaintFileStore` | reading (`ReadAsync`, `Inspect`) and writing (`WriteAsync`) through the app's file gateway |
+| `PaintCanvasState` | RGBA pixels, history, `IsDirty`/`MarkSaved` |
+| `HackPaintWindow.razor(.cs)` | window, SDK dialogs (`OpenFileAsync`, `SaveFileAsync`), close guard |
+| `HackPaintWindow.razor.js` | drawing on the canvas; `decodeImage` (`createImageBitmap` → RGBA, errors returned as `decode-failed` / `too-large` codes that the C# translates) and `encodeImage` (`toBlob`); never accesses files |
 
-Les octets sont lus et écrits en C# par `IAppFileSystemGateway`, comme
-l'éditeur de texte : un fichier choisi dans un dialogue hors du dossier
-personnel n'est accessible que par le jeton remis par le dialogue, que `HackFile`
-ne sait pas porter. Le JS ne reçoit que des octets et rend des pixels.
+Bytes are read and written in C# by `IAppFileSystemGateway`, like the text
+editor: a file chosen in a dialog outside the home folder is only accessible
+through the token handed over by the dialog, which `HackFile` cannot carry. The
+JS only receives bytes and returns pixels.
 
-### Calculs hors de la fenêtre (ADR 0140)
+### Computations outside the window (ADR 0140)
 
-Hack Paint n'a pas de filtre d'image. Ses opérations sur toute l'image
-(rotation, recadrage) restent dans la fenêtre plutôt que dans une tâche
-`HackBackground` ([`background-jobs.md`](../framework/background-jobs.md)) : ce sont des
-passes de copies sur le tampon, qui peut faire 64 Mio (4096 × 4096 en RGBA),
-quatre fois ce qu'une entrée de tâche peut porter en JSON (16 Mio), et le
-retour coûterait plus que la passe. Un futur filtre passera par une tâche et un
-fichier temporaire.
+Hack Paint has no image filter. Its whole-image operations (rotation, crop)
+stay in the window rather than in a `HackBackground` task
+([`background-jobs.md`](../framework/background-jobs.md)): they are passes of
+copies over the buffer, which can be 64 MiB (4096 × 4096 in RGBA), four times
+what a task input can carry in JSON (16 MiB), and the return trip would cost
+more than the pass. A future filter will go through a task and a temporary
+file.
 
-## Langues (ADR 0104)
+## Languages (ADR 0104)
 
-Barre d'outils, barre d'état, dialogues et erreurs viennent de
-`Resources/Strings.resx` / `Strings.fr.resx`. `PaintFileStore` écrit ses
-messages dans la langue du processus qui l'appelle
-(`HackLocalization.GetLocalizer<Strings>()`) ; le module JavaScript ne renvoie
-que des codes d'erreur. Le titre garde le nom de produit « Hack Paint » ; seul
-« Untitled » devient « Sans titre ».
+Toolbar, status bar, dialogs and errors come from
+`Resources/Strings.resx` / `Strings.fr.resx`. `PaintFileStore` writes its
+messages in the language of the process that calls it
+(`HackLocalization.GetLocalizer<Strings>()`); the JavaScript module only
+returns error codes. The title keeps the product name "Hack Paint"; only
+"Untitled" becomes "Sans titre".
 
-## Tâches
+## Tasks
 
-- [x] Lecture de l'en-tête et limites avant décodage.
-- [x] Ouvrir (dialogue, explorateur, argument de lancement), décoder par le navigateur.
-- [x] Enregistrer, Enregistrer sous, PNG et JPEG avec qualité.
-- [x] Titre avec `*`, confirmation à la fermeture.
-- [x] Titre posé dans la fenêtre par le SDK 1.1 (chantier `v3.1/3-window-title`, E2E
+- [x] Header reading and limits before decoding.
+- [x] Open (dialog, explorer, launch argument), decode through the browser.
+- [x] Save, Save As, PNG and JPEG with quality.
+- [x] Title with `*`, confirmation on close.
+- [x] Title set in the window by SDK 1.1 (work item `v3.1/3-window-title`, E2E
   `HackPaintWindowTitleTests`).
-- [x] `FileHandlers` et association par défaut `edit` des images.
-- [x] Tests (`HackerOs.Apps.HackPaint.Tests`) : en-têtes des cinq formats,
-  fichiers tronqués, limites, format d'enregistrement, suivi des changements, titre.
-- [ ] Scans axe : chantier `v3/13`.
+- [x] `FileHandlers` and default `edit` association for images.
+- [x] Tests (`HackerOs.Apps.HackPaint.Tests`): headers of the five formats,
+  truncated files, limits, save format, change tracking, title.
+- [ ] axe scans: work item `v3/13`.

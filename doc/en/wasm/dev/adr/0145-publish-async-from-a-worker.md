@@ -1,61 +1,60 @@
-# ADR 0145 : `PublishAsync`, le vrai résultat d'une publication depuis un worker
+# ADR 0145: `PublishAsync`, the real result of a publication from a worker
 
-## Statut
+## Status
 
-Accepté le 2026-10-18.
+Accepted on 2026-10-18.
 
-- **Réponse de Benoit :** option **B** de la carte « Comment traiter Publish
-  d'un événement depuis une app qui tourne dans un worker ? » (2026-10-18,
-  15:12Z, fil « Exec 1 : passerelles distantes »).
-- **Remplace :** le paragraphe « Question ouverte » de l'ADR 0138. L'ADR 0138
-  §3 reste vrai pour `Publish`.
-- **Version :** ajout au SDK après la publication de la 1.2.0 (ADR 0132 §2,
-  chantier `exec/10-final`) ; il reste dans `PublicAPI.Unshipped.txt` et part
-  avec la prochaine mineure (1.3.0), selon SemVer
+- **Benoit's answer:** option **B** of the card "How should an event Publish
+  from an app running in a worker be handled?" (2026-10-18,
+  15:12Z, thread "Exec 1: remote gateways").
+- **Replaces:** the "Open question" paragraph of ADR 0138. ADR 0138
+  §3 remains true for `Publish`.
+- **Version:** addition to the SDK after the publication of 1.2.0 (ADR 0132 §2,
+  work item `exec/10-final`); it stays in `PublicAPI.Unshipped.txt` and ships
+  with the next minor version (1.3.0), according to SemVer
   ([`sdk-packages.md`](../../framework/sdk-packages.md)).
 
-## Contexte
+## Context
 
-Dans un worker, le runtime .NET n'a qu'un thread et ne peut pas attendre l'OS
-de façon synchrone. `IAppEventGateway.Publish(topic, payload)` est synchrone :
-l'ADR 0138 §3 lui fait renvoyer un `Delivered` provisoire et écrire un refus de
-l'OS dans le journal de l'app. Trois choix ont été proposés : garder ce
-comportement seul (A), ajouter une forme asynchrone qui renvoie le vrai
-résultat (B), ou refuser dans un worker les publications hors des sujets de
-l'app (C). Benoit a choisi B.
+In a worker, the .NET runtime has only one thread and cannot wait for the OS
+synchronously. `IAppEventGateway.Publish(topic, payload)` is synchronous:
+ADR 0138 §3 makes it return a provisional `Delivered` and write an OS refusal
+to the app's log. Three choices were proposed: keep this behavior alone (A),
+add an asynchronous form that returns the real result (B), or refuse in a
+worker the publications outside the app's topics (C). Benoit chose B.
 
-## Décision
+## Decision
 
-1. `IAppEventGateway` reçoit
+1. `IAppEventGateway` receives
    `Task<TopicPublishResult> PublishAsync<TPayload>(TopicName topic, TPayload payload, CancellationToken cancellationToken = default)`.
-   Mêmes règles que `Publish` : identité du processus, sujet de l'app ou canal
-   partagé autorisé.
-2. Le membre a une implémentation par défaut qui appelle `Publish`, comme
-   `IAppProcessGateway.KillAsync` (ADR 0072 §4) : une implémentation existante
-   compile toujours, et une app 1.0, 1.1 ou 1.2 n'est pas touchée. Sur le fil
-   principal, `PublishAsync` donne donc exactement le résultat de `Publish`.
-3. Dans un worker, `PublishAsync` est un appel (`call`) de l'opération
-   `ev.pubr`. L'OS publie au nom du pid (même chemin que `ev.pub`) et répond :
-   - `o` : la valeur de `TopicPublishOutcome` ;
-   - `f` : les fautes des abonnés, chacune avec l'encodage d'erreur du
-     protocole (`RemoteErrors`). Le worker les recrée en
-     `EventDispatchFault` avec le type de la charge.
-4. Un refus rendu par `PublishAsync` n'est **pas** écrit dans le journal de
-   l'app : c'est l'app qui lit le résultat. `Publish` garde le comportement
-   de l'ADR 0138 §3 (provisoire, refus au journal).
+   Same rules as `Publish`: identity of the process, the app's topic or the allowed
+   shared channel.
+2. The member has a default implementation that calls `Publish`, like
+   `IAppProcessGateway.KillAsync` (ADR 0072 §4): an existing implementation
+   still compiles, and a 1.0, 1.1 or 1.2 app is not affected. On the main
+   thread, `PublishAsync` therefore gives exactly the result of `Publish`.
+3. In a worker, `PublishAsync` is a call (`call`) of the operation
+   `ev.pubr`. The OS publishes on behalf of the pid (same path as `ev.pub`) and replies:
+   - `o`: the value of `TopicPublishOutcome`;
+   - `f`: the subscribers' faults, each with the protocol's error encoding
+     (`RemoteErrors`). The worker recreates them as
+     `EventDispatchFault` with the payload type.
+4. A refusal returned by `PublishAsync` is **not** written to the app's log:
+   the app is the one reading the result. `Publish` keeps the behavior
+   of ADR 0138 §3 (provisional, refusal in the log).
 
-## Conséquences
+## Consequences
 
-- Une app qui doit connaître le résultat réel appelle `PublishAsync`, partout.
-  Le guide du SDK recommande cette forme pour le code qui peut tourner en
+- An app that needs to know the real result calls `PublishAsync`, everywhere.
+  The SDK guide recommends this form for code that may run in a
   worker.
-- Nouvelle ligne dans `Shared/HackerOs.Simulation.Abstractions/PublicAPI.Unshipped.txt` ;
-  `HackerOsVersion` reste `1.2.0` jusqu'à la prochaine publication.
-- Test : `RemoteEventsTests.PublishAsync_returns_the_outcome_and_the_subscriber_faults_decided_by_the_OS`
-  vérifie le même résultat sur le fil principal et en worker (livré, refusé,
-  faute d'un abonné du fil principal), sans ligne de refus dans le journal.
+- New line in `Shared/HackerOs.Simulation.Abstractions/PublicAPI.Unshipped.txt`;
+  `HackerOsVersion` stays `1.2.0` until the next publication.
+- Test: `RemoteEventsTests.PublishAsync_returns_the_outcome_and_the_subscriber_faults_decided_by_the_OS`
+  checks the same result on the main thread and in a worker (delivered, refused,
+  fault of a main-thread subscriber), with no refusal line in the log.
 
-## Références
+## References
 
 - ADR 0072, 0124, 0132, 0138.
 - [`worker-processes.md`](../worker-processes.md), [`app-sdk.md`](../../framework/app-sdk.md),

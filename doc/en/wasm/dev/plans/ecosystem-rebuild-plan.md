@@ -1,210 +1,209 @@
-# Plan de refonte de l'écosystème HackerOS
+# HackerOS ecosystem rebuild plan
 
-**Statut :** plan validé avec Benoit le 2026-10-10. Les quatre phases sont
-réalisées et fusionnées dans `rebuild/base` (phase 4 terminée le 2026-10-11 par
-`rebuild/4-sdk-boundary-final`) ; la section 12 renvoie au document de chaque
-chantier. Ce document remplace
-`old/implementation-status.md` et `old/integration-task-list.md` comme
-référence de direction pour l'écosystème. Ces deux documents restent dans
-[`old/`](../old/) comme historique.
+**Status:** plan approved with Benoit on 2026-10-10. The four phases are
+done and merged into `rebuild/base` (phase 4 finished on 2026-10-11 by
+`rebuild/4-sdk-boundary-final`); section 12 points to the document of each
+work item. This document replaces
+`old/implementation-status.md` and `old/integration-task-list.md` as the
+direction reference for the ecosystem. These two documents stay in
+[`old/`](../old/) as history.
 
-## 1. Objet
+## 1. Purpose
 
-Remettre l'écosystème de `wasm2/HackerOs` sur de bonnes bases. Le système
-actuel fonctionne, mais il est plus compliqué que le legacy TypeScript de `src/`
-sans être plus agréable à utiliser ni plus simple à étendre. Le but est double,
-et les deux volets comptent autant l'un que l'autre :
+Put the `wasm2/HackerOs` ecosystem back on a good footing. The current
+system works, but it is more complicated than the TypeScript legacy in `src/`
+without being more pleasant to use or simpler to extend. The goal is twofold,
+and both parts matter equally:
 
-1. **Pour le développeur d'app :** ajouter une application doit être simple.
-   L'API fichier ressemble à `System.IO`, le manifeste est une classe C#, et
-   une seule `ProjectReference` suffit à installer une app.
-2. **Pour l'utilisateur :** l'OS se comporte comme un vrai système Linux.
-   Tout est fichier (paramètres, journaux, processus), le shell est complet,
-   et les apps de base sont au moins aussi riches que dans le legacy.
+1. **For the app developer:** adding an application must be simple.
+   The file API looks like `System.IO`, the manifest is a C# class, and
+   a single `ProjectReference` is enough to install an app.
+2. **For the user:** the OS behaves like a real Linux system.
+   Everything is a file (settings, logs, processes), the shell is complete,
+   and the base apps are at least as rich as in the legacy.
 
-Une hypothèse guide tout le plan : un système moins compliqué laisse moins de
-place aux bugs d'intégration.
+One hypothesis guides the whole plan: a less complicated system leaves less
+room for integration bugs.
 
-Le périmètre est l'écosystème : système de fichiers, modèle d'app, services de
-l'OS et apps de base (explorateur de fichiers, console, gestionnaire de
-tâches, éditeur de texte). Les autres apps, le serveur et le mobile sont hors périmètre.
-**Aucun jeu sur ce repository** ([ADR 0135](../adr/0135-no-game-in-this-repository.md)).
+The scope is the ecosystem: file system, app model, OS services and
+base apps (file explorer, console, task manager, text editor). Other apps, the server and mobile are out of scope.
+**No game in this repository** ([ADR 0135](../adr/0135-no-game-in-this-repository.md)).
 
-## 2. Constat de départ
+## 2. Starting point
 
-### 2.1 Ce qui est solide et qu'on garde
+### 2.1 What is solid and kept
 
-- Le moteur de fichiers (`HackerOs.Simulation.Abstractions.FileSystem`,
-  `Platform.Core/FileSystem`) : chemins canoniques, identités d'entrées,
-  révisions optimistes, transactions atomiques, liens symboliques,
-  permissions owner/group/other, montages par chemin.
-- La persistance IndexedDB par blocs dédupliqués
+- The file engine (`HackerOs.Simulation.Abstractions.FileSystem`,
+  `Platform.Core/FileSystem`): canonical paths, entry identities,
+  optimistic revisions, atomic transactions, symbolic links,
+  owner/group/other permissions, mounts by path.
+- IndexedDB persistence in deduplicated blocks
   (`Infrastructure/HackerOs.Infrastructure.Browser`).
-- Le fenêtrage et la barre des tâches (`HackerOs.Windowing.*`,
-  `HackerOs.Taskbar.Blazor`), le mobile, le thème.
-- Le gestionnaire de processus (arbre parent/enfants, kill en cascade), les
-  événements, la messagerie par sujets, les notifications, le presse-papiers,
-  la surveillance de fichiers, les sessions et `sudo`.
+- Windowing and the taskbar (`HackerOs.Windowing.*`,
+  `HackerOs.Taskbar.Blazor`), mobile, the theme.
+- The process manager (parent/child tree, cascading kill), events,
+  topic messaging, notifications, clipboard,
+  file watching, sessions and `sudo`.
 
-### 2.2 Ce qui ne va pas
+### 2.2 What is wrong
 
-| Sujet | Problème constaté | Référence |
+| Subject | Problem found | Reference |
 |---|---|---|
-| API fichier | Écrire une chaîne exige `CreateAsync` avec des bits de mode, puis `WriteAsync` avec la révision attendue, puis une classe `IFileSystemContentSource` maison. | `Apps/System/HackerOs.Apps.TextEditor/TextEditorWindow.razor` (≈ l. 364-460) |
-| Manifeste | Défini deux fois : `app.manifest.json` et une copie C# `StaticManifest` (32 apps). | `Apps/**/app.manifest.json` |
-| Ajout d'une app | Un projet, plus trois entrées dans `HackerOs.Ecosystem.csproj` (`ProjectReference`, `BlazorWebAssemblyLazyLoad`, `EmbeddedResource`). | `OS/HackerOs.Ecosystem/HackerOs.Ecosystem.csproj`, `BuildKnownLazyApps.cs` |
-| Paramètres | Le montage `/etc/hackeros` n'est jamais branché dans l'OS réel : le routeur est créé avec le seul fournisseur IndexedDB. `SettingsFileSystemProvider` n'existe que dans les tests. Les paramètres vivent dans un magasin à part, et la sécurité vient du service de paramètres, pas des droits du fichier. | `OS/HackerOs.Ecosystem/EcosystemServiceCollectionExtensions.cs` (≈ l. 157) |
-| Journaux | `/var/log` est créé mais reste vide. Les logs vont dans un magasin IndexedDB lu uniquement par Error Log Viewer. | `Platform.Core/Diagnostics/` |
-| Shell | Pas de pipes, de redirections, de `&&` ni de variables d'environnement. Le legacy avait les pipes et `env`. | `Shared/HackerOs.AppSdk.Terminal/ShellParser.cs`, `adr/0014-shell-grammar-boundary.md` |
-| Commandes | 28 projets, un par commande. `cd`, `pwd`, `clear` et `help` sont codées en dur dans le terminal. | `Apps/Commands/`, commentaire dans `HackerOs.Ecosystem.csproj` |
-| Corbeille | Inexistante : toute suppression est définitive. | — |
-| Permissions | Toutes les capacités déclarées sont accordées automatiquement à la connexion, sans rien demander. | `Platform.Core/Policy/CleanProfileCapabilityGrantSeeder.cs` |
-| Apps système | Elles injectent des services internes (`ISessionService`, `AppCatalog`, `AppLifecycleOrchestrator`, `IJSRuntime`…). Un développeur externe ne peut pas écrire d'équivalent. | `Apps/System/*/*.razor` (`@inject`) |
-| Apps de base | Explorateur sans couper/copier/coller ni corbeille. Gestionnaire de tâches limité aux processus et services. Éditeur sans remplacer. | voir section 7 |
+| File API | Writing a string requires `CreateAsync` with mode bits, then `WriteAsync` with the expected revision, then a home-made `IFileSystemContentSource` class. | `Apps/System/HackerOs.Apps.TextEditor/TextEditorWindow.razor` (≈ l. 364-460) |
+| Manifest | Defined twice: `app.manifest.json` and a C# copy `StaticManifest` (32 apps). | `Apps/**/app.manifest.json` |
+| Adding an app | A project, plus three entries in `HackerOs.Ecosystem.csproj` (`ProjectReference`, `BlazorWebAssemblyLazyLoad`, `EmbeddedResource`). | `OS/HackerOs.Ecosystem/HackerOs.Ecosystem.csproj`, `BuildKnownLazyApps.cs` |
+| Settings | The `/etc/hackeros` mount is never wired into the real OS: the router is created with the IndexedDB provider alone. `SettingsFileSystemProvider` exists only in tests. Settings live in a separate store, and security comes from the settings service, not from file permissions. | `OS/HackerOs.Ecosystem/EcosystemServiceCollectionExtensions.cs` (≈ l. 157) |
+| Logs | `/var/log` is created but stays empty. Logs go to an IndexedDB store read only by Error Log Viewer. | `Platform.Core/Diagnostics/` |
+| Shell | No pipes, redirections, `&&` or environment variables. The legacy had pipes and `env`. | `Shared/HackerOs.AppSdk.Terminal/ShellParser.cs`, `adr/0014-shell-grammar-boundary.md` |
+| Commands | 28 projects, one per command. `cd`, `pwd`, `clear` and `help` are hard-coded in the terminal. | `Apps/Commands/`, comment in `HackerOs.Ecosystem.csproj` |
+| Trash | Nonexistent: every deletion is permanent. | n/a |
+| Permissions | All declared capabilities are granted automatically at login, without asking anything. | `Platform.Core/Policy/CleanProfileCapabilityGrantSeeder.cs` |
+| System apps | They inject internal services (`ISessionService`, `AppCatalog`, `AppLifecycleOrchestrator`, `IJSRuntime`…). An external developer cannot write an equivalent. | `Apps/System/*/*.razor` (`@inject`) |
+| Base apps | Explorer without cut/copy/paste or trash. Task manager limited to processes and services. Editor without replace. | see section 7 |
 
-## 3. Principes directeurs
+## 3. Guiding principles
 
-1. **Refonte sur place.** On travaille dans `wasm2/HackerOs`. On garde le
-   moteur de fichiers, IndexedDB et le fenêtrage, et on remplace les couches du
-   dessus. On ne crée pas de nouveau dossier racine.
-2. **Tout est fichier.** Paramètres, journaux, processus et périphériques
-   sont lisibles, et modifiables quand c'est permis, par le système de
-   fichiers. Les droits du fichier font foi.
-3. **Un seul SDK public.** Les apps système utilisent exactement le même SDK
-   que les apps tierces. Si une app système a besoin de quelque chose, on
-   l'ajoute au SDK, protégé par une capacité.
-4. **Simplicité pour le développeur.** La rigueur du moteur (révisions,
-   transactions, flux) reste à l'intérieur. Le développeur voit une API
-   familière.
-5. **Imiter Linux.** Quand un comportement existe sous Linux, on le reproduit,
-   sauf raison explicite.
-6. **Nouveaux ADR plutôt que modifications.** Chaque décision qui contredit un
-   ADR accepté fait l'objet d'un nouvel ADR qui le remplace (section 9).
+1. **Rebuild in place.** We work in `wasm2/HackerOs`. We keep the
+   file engine, IndexedDB and windowing, and replace the layers above
+   them. We do not create a new root folder.
+2. **Everything is a file.** Settings, logs, processes and devices
+   are readable, and modifiable when allowed, through the file
+   system. File permissions are authoritative.
+3. **A single public SDK.** System apps use exactly the same SDK
+   as third-party apps. If a system app needs something, we
+   add it to the SDK, protected by a capability.
+4. **Simplicity for the developer.** The engine's rigor (revisions,
+   transactions, streams) stays inside. The developer sees a familiar
+   API.
+5. **Imitate Linux.** When a behavior exists on Linux, we reproduce it,
+   unless there is an explicit reason.
+6. **New ADRs rather than modifications.** Each decision that contradicts an
+   accepted ADR is the subject of a new ADR that replaces it (section 9).
 
-## 4. Registre des décisions
+## 4. Decision register
 
-Décisions prises avec Benoit pendant la discussion du 2026-10-10.
+Decisions made with Benoit during the discussion of 2026-10-10.
 
-| # | Sujet | Décision |
+| # | Subject | Decision |
 |---|---|---|
-| D1 | Objectif | Simplicité pour le développeur et qualité pour l'utilisateur, à égalité. |
-| D2 | Moteur de fichiers | On le garde et on ajoute une façade simple dans le SDK. |
-| D3 | API fichier | API de type `System.IO`, avec le préfixe `Hack` sur chaque type : `HackFile`, `HackDirectory`, `HackPath`, `HackFileInfo`, `HackDirectoryInfo`, `HackFileStream`… |
-| D4 | Forme de l'API | Statique, comme `System.IO`. L'app appelante est identifiée par un contexte d'exécution ambiant, invisible pour le développeur. Méthodes asynchrones seulement (IndexedDB est asynchrone et le navigateur n'a qu'un thread). |
-| D5 | Erreurs fichier | Des exceptions, comme `System.IO` : `HackFileNotFoundException`, `HackDirectoryNotFoundException`, `HackUnauthorizedAccessException`, `HackIOException`… |
-| D6 | Manifeste | Une classe C# marquée `[AppManifest]`, séparée de la fenêtre, qui hérite d'une base abstraite. Propriétés essentielles `abstract` (obligatoires), les autres `virtual` avec une valeur par défaut. |
-| D7 | Découverte | À la compilation. Un générateur produit le `manifest.json` dans le dossier de l'app. L'hôte agrège les apps référencées dans `BuiltInApplications.json`, que l'OS lit au démarrage. Le JSON n'est jamais écrit à la main. Il servira aussi au futur magasin d'apps. |
-| D8 | Installation | Une `ProjectReference` dans l'hôte suffit. Aucune autre ligne à ajouter. |
-| D9 | Apps système | Définies par une liste de confiance dans l'hôte. Une app ne peut pas se déclarer système elle-même. |
-| D10 | Désinstallation | L'app est cachée partout, son lancement est bloqué et ses associations de fichiers sont retirées. Elle reste réinstallable depuis la liste. |
-| D11 | Portée de la désinstallation | Un administrateur désinstalle pour toute la machine. Un utilisateur désinstalle pour son seul profil. Les apps système ne sont pas désinstallables. |
-| D12 | Shell | Pipes `\|`, redirections `>` et `>>`, `&&`, variables d'environnement. |
-| D13 | Processus | Chaque processus a son répertoire courant et son environnement, hérités du parent. |
-| D14 | Commandes | Toutes les commandes deviennent de vraies commandes, sans exception codée en dur dans le terminal. Elles sont regroupées dans un seul projet. |
-| D15 | Corbeille | Une corbeille partagée entre l'explorateur et `rm`. |
-| D16 | Paramètres | Ce sont de vrais fichiers, seule source de vérité. Les droits du fichier décident de l'accès : si on peut modifier le fichier, on peut modifier le paramètre. |
-| D17 | Fichier invalide | L'écriture est acceptée. L'app ignore les clés invalides, utilise ses valeurs par défaut et écrit un avertissement dans le journal. |
-| D18 | Niveaux de paramètres | En couches : `/etc/<app>/` (système), puis `~/.config/<app>/` (utilisateur). L'utilisateur hérite des valeurs système et peut les surcharger, sauf les clés verrouillées par un administrateur. |
-| D19 | Journaux | De vrais fichiers texte dans `/var/log`, avec taille limitée et rotation. |
-| D20 | `/proc` et `/dev` | Purement virtuels : calculés à la lecture, jamais écrits dans IndexedDB. |
-| D21 | Apps de base | Uniquement le SDK public. |
-| D22 | Fonctionnalités des apps de base | Au minimum la parité avec le legacy, plus les ajouts de la section 7. |
-| D23 | Permissions dangereuses | Les capacités sont classées en normales et dangereuses. Les apps système les reçoivent d'office. Toute autre app déclenche une fenêtre d'approbation spéciale. |
-| D24 | Approbation | Seul un administrateur peut approuver, avec son mot de passe, comme `sudo`. |
-| D25 | Politique par défaut | « Autoriser avec approbation ». Un administrateur peut passer à « Toujours bloquer ». |
-| D26 | Ordre | 1. Fichiers ; 2. Modèle d'app ; 3. Shell, commandes et corbeille ; 4. SDK complet et apps de base. |
-| D27 | Plus tard | Isolation d'exécution des apps (watchdog, Web Workers). |
-| D28 | Documentation | Plan en français, noms de fichiers en anglais. Les anciens documents sont déplacés dans `docs/old/`, sauf `docs/adr/`. |
+| D1 | Goal | Simplicity for the developer and quality for the user, on equal footing. |
+| D2 | File engine | We keep it and add a simple facade in the SDK. |
+| D3 | File API | `System.IO`-style API, with the prefix `Hack` on each type: `HackFile`, `HackDirectory`, `HackPath`, `HackFileInfo`, `HackDirectoryInfo`, `HackFileStream`… |
+| D4 | API form | Static, like `System.IO`. The calling app is identified by an ambient execution context, invisible to the developer. Asynchronous methods only (IndexedDB is asynchronous and the browser has only one thread). |
+| D5 | File errors | Exceptions, like `System.IO`: `HackFileNotFoundException`, `HackDirectoryNotFoundException`, `HackUnauthorizedAccessException`, `HackIOException`… |
+| D6 | Manifest | A C# class marked `[AppManifest]`, separate from the window, that inherits from an abstract base. Essential properties `abstract` (required), the others `virtual` with a default value. |
+| D7 | Discovery | At compile time. A generator produces `manifest.json` in the app's folder. The host aggregates the referenced apps into `BuiltInApplications.json`, which the OS reads at startup. The JSON is never written by hand. It will also serve the future app store. |
+| D8 | Installation | A `ProjectReference` in the host is enough. No other line to add. |
+| D9 | System apps | Defined by a trusted list in the host. An app cannot declare itself system. |
+| D10 | Uninstallation | The app is hidden everywhere, its launch is blocked and its file associations are removed. It remains reinstallable from the list. |
+| D11 | Scope of uninstallation | An administrator uninstalls for the whole machine. A user uninstalls for their profile only. System apps are not uninstallable. |
+| D12 | Shell | Pipes `\|`, redirections `>` and `>>`, `&&`, environment variables. |
+| D13 | Processes | Each process has its current directory and environment, inherited from the parent. |
+| D14 | Commands | All commands become real commands, with no exception hard-coded in the terminal. They are grouped in a single project. |
+| D15 | Trash | A trash shared between the explorer and `rm`. |
+| D16 | Settings | They are real files, the only source of truth. File permissions decide access: if you can modify the file, you can modify the setting. |
+| D17 | Invalid file | The write is accepted. The app ignores invalid keys, uses its default values and writes a warning to the log. |
+| D18 | Settings levels | Layered: `/etc/<app>/` (system), then `~/.config/<app>/` (user). The user inherits system values and can override them, except keys locked by an administrator. |
+| D19 | Logs | Real text files in `/var/log`, with limited size and rotation. |
+| D20 | `/proc` and `/dev` | Purely virtual: computed on read, never written to IndexedDB. |
+| D21 | Base apps | Public SDK only. |
+| D22 | Base app features | At least parity with the legacy, plus the additions in section 7. |
+| D23 | Dangerous permissions | Capabilities are classified as normal and dangerous. System apps receive them automatically. Any other app triggers a special approval window. |
+| D24 | Approval | Only an administrator can approve, with their password, like `sudo`. |
+| D25 | Default policy | "Allow with approval". An administrator can switch to "Always block". |
+| D26 | Order | 1. Files; 2. App model; 3. Shell, commands and trash; 4. Full SDK and base apps. |
+| D27 | Later | Execution isolation of apps (watchdog, Web Workers). |
+| D28 | Documentation | Plan in French, file names in English. Old documents are moved into `docs/old/`, except `docs/adr/`. |
 
-## 5. Phase 1 — Fichiers
+## 5. Phase 1: Files
 
-### 5.1 API `Hack*` de type System.IO
+### 5.1 `System.IO`-style `Hack*` API
 
-Nouveau namespace public dans le SDK (proposé : `HackerOs.AppSdk.IO`), sans
-dépendance à Blazor, utilisable par les apps fenêtre, terminal et service.
+New public namespace in the SDK (proposed: `HackerOs.AppSdk.IO`), with no
+dependency on Blazor, usable by window, terminal and service apps.
 
-**Types prévus**, calqués sur `System.IO` :
+**Planned types**, modeled on `System.IO`:
 
-| Type | Équivalent .NET | Exemples de membres |
+| Type | .NET equivalent | Example members |
 |---|---|---|
 | `HackFile` | `File` | `ReadAllTextAsync`, `WriteAllTextAsync`, `AppendAllTextAsync`, `ReadAllBytesAsync`, `WriteAllBytesAsync`, `ReadAllLinesAsync`, `ExistsAsync`, `CopyAsync`, `MoveAsync`, `DeleteAsync`, `OpenReadAsync`, `OpenWriteAsync` |
 | `HackDirectory` | `Directory` | `CreateDirectoryAsync`, `ExistsAsync`, `GetFilesAsync`, `GetDirectoriesAsync`, `EnumerateFileSystemEntriesAsync`, `MoveAsync`, `DeleteAsync(recursive)` |
-| `HackPath` | `Path` | `Combine`, `GetFileName`, `GetExtension`, `GetDirectoryName`, `GetFullPath` (avec `~` et répertoire courant) |
+| `HackPath` | `Path` | `Combine`, `GetFileName`, `GetExtension`, `GetDirectoryName`, `GetFullPath` (with `~` and current directory) |
 | `HackFileInfo` / `HackDirectoryInfo` | `FileInfo` / `DirectoryInfo` | `Length`, `LastWriteTimeUtc`, `Exists`, `Permissions`, `Owner`, `RefreshAsync` |
-| `HackFileStream` | `FileStream` | Flux lecture/écriture qui publie le contenu au `DisposeAsync` |
-| `HackFileSystemWatcher` | `FileSystemWatcher` | Événements créé, modifié, supprimé, renommé (au-dessus de la surveillance existante) |
+| `HackFileStream` | `FileStream` | Read/write stream that publishes the content on `DisposeAsync` |
+| `HackFileSystemWatcher` | `FileSystemWatcher` | Created, modified, deleted, renamed events (on top of the existing watching) |
 
-**Fonctionnement interne :**
-- Chaque appel passe par la passerelle existante `IAppFileSystemGateway`,
-  donc les capacités et les droits restent vérifiés exactement comme
-  aujourd'hui.
-- L'app appelante est identifiée par un contexte ambiant (de type
-  `AsyncLocal`) que l'OS positionne avant d'exécuter du code d'app. Le
-  développeur n'a rien à passer.
-- `WriteAllTextAsync` crée le fichier s'il n'existe pas, avec des droits par
-  défaut dérivés d'un umask (`0644` pour un fichier, `0755` pour un dossier),
-  puis écrit. La révision est gérée à l'intérieur : la façade lit la révision
-  courante et réessaie une fois si elle a changé. Une API avancée reste
-  disponible pour qui veut un contrôle strict des conflits (l'éditeur de
-  texte, par exemple).
-- Les codes `FileSystemErrorCode` sont traduits en exceptions `Hack*`, dans
-  l'esprit des exceptions de `System.IO`.
-- Pas de méthodes synchrones : impossibles sans bloquer l'unique thread du
-  navigateur.
+**Internal operation:**
+- Each call goes through the existing gateway `IAppFileSystemGateway`,
+  so capabilities and permissions are still checked exactly as
+  today.
+- The calling app is identified by an ambient context (of type
+  `AsyncLocal`) that the OS sets before running app code. The
+  developer has nothing to pass.
+- `WriteAllTextAsync` creates the file if it does not exist, with default
+  permissions derived from a umask (`0644` for a file, `0755` for a folder),
+  then writes. The revision is handled inside: the facade reads the current
+  revision and retries once if it changed. An advanced API remains
+  available for whoever wants strict conflict control (the text
+  editor, for example).
+- `FileSystemErrorCode` codes are translated into `Hack*` exceptions, in
+  the spirit of `System.IO` exceptions.
+- No synchronous methods: impossible without blocking the browser's single
+  thread.
 
-### 5.2 Paramètres en fichiers
+### 5.2 Settings as files
 
-Mise en œuvre : [`settings-files.md`](../../framework/settings-files.md).
+Implementation: [`settings-files.md`](../../framework/settings-files.md).
 
-- **Source de vérité :** le fichier. Le magasin IndexedDB `settings` séparé
-  disparaît pour les paramètres d'app et de système. Une migration copie les
-  valeurs existantes dans les fichiers au premier démarrage.
-- **Emplacements :**
-  - système : `/etc/<app>/<document>.config` (et `/etc/hackeros/` pour l'OS) ;
-  - utilisateur : `~/.config/<app>/<document>.config`.
-- **Couches :** valeur par défaut déclarée par l'app, puis `/etc`, puis
-  `~/.config`. Une clé que l'administrateur verrouille dans `/etc` ne peut pas
-  être surchargée. La syntaxe du verrou reste à définir dans l'ADR (section 10).
-- **Sécurité :** uniquement les droits du fichier. `/etc/<app>/` appartient à
-  `root` (`0644`), `~/.config/<app>/` à l'utilisateur.
-- **Format :** le format `.config` ligne par ligne de l'ADR 0011 (`clé=valeur`,
-  `[Groupe]`, `#` commentaire) est conservé.
-- **Erreurs :** une écriture invalide est acceptée. À la lecture, l'app ignore
-  les clés invalides, garde ses valeurs par défaut et écrit un avertissement
-  dans `/var/log/apps/<app>.log`.
-- **API typée :** l'app lit et écrit des valeurs typées par une petite API du
-  SDK (nom proposé : `HackSettings`) qui fait la fusion des couches et
-  surveille les fichiers pour signaler les changements. L'app de Paramètres et
-  `nano /etc/...` voient et modifient les mêmes fichiers.
+- **Source of truth:** the file. The separate IndexedDB `settings` store
+  disappears for app and system settings. A migration copies the existing
+  values into files at first startup.
+- **Locations:**
+  - system: `/etc/<app>/<document>.config` (and `/etc/hackeros/` for the OS);
+  - user: `~/.config/<app>/<document>.config`.
+- **Layers:** default value declared by the app, then `/etc`, then
+  `~/.config`. A key that the administrator locks in `/etc` cannot
+  be overridden. The lock syntax remains to be defined in the ADR (section 10).
+- **Security:** file permissions only. `/etc/<app>/` belongs to
+  `root` (`0644`), `~/.config/<app>/` to the user.
+- **Format:** the line-by-line `.config` format of ADR 0011 (`key=value`,
+  `[Group]`, `#` comment) is kept.
+- **Errors:** an invalid write is accepted. On read, the app ignores
+  invalid keys, keeps its default values and writes a warning
+  to `/var/log/apps/<app>.log`.
+- **Typed API:** the app reads and writes typed values through a small SDK
+  API (proposed name: `HackSettings`) that merges the layers and
+  watches the files to signal changes. The Settings app and
+  `nano /etc/...` see and modify the same files.
 
-### 5.3 Journaux
+### 5.3 Logs
 
-- Fichiers texte :
-  - `/var/log/syslog` : système ;
-  - `/var/log/auth.log` : connexions, `sudo`, approbations de permissions ;
-  - `/var/log/apps/<app>.log` : un fichier par app.
-- Format de ligne inspiré de syslog : date ISO, niveau, source, message.
-- Taille limitée par fichier, avec rotation `.1`, `.2`… et un nombre maximal
-  d'archives (valeurs dans l'ADR).
-- `ILogger` et `IAppLoggingGateway` écrivent dans ces fichiers. Error Log
-  Viewer, `cat`, `tail` et `grep` les lisent.
-- Écriture groupée en arrière-plan pour ne pas ralentir l'app qui journalise.
+- Text files:
+  - `/var/log/syslog`: system;
+  - `/var/log/auth.log`: logins, `sudo`, permission approvals;
+  - `/var/log/apps/<app>.log`: one file per app.
+- Line format inspired by syslog: ISO date, level, source, message.
+- Size limited per file, with rotation `.1`, `.2`… and a maximum number
+  of archives (values in the ADR).
+- `ILogger` and `IAppLoggingGateway` write to these files. Error Log
+  Viewer, `cat`, `tail` and `grep` read them.
+- Batched background writing so as not to slow down the app that logs.
 
-### 5.4 `/proc` et `/dev` virtuels
+### 5.4 Virtual `/proc` and `/dev`
 
-- Deux nouveaux fournisseurs montés dans le routeur existant
-  (`FileSystemMountRouter`), en lecture seule, calculés à chaque lecture et
-  jamais persistés.
-- `/proc/<pid>/` : `status` (nom, état, utilisateur, parent), `cmdline`,
-  `environ`, `cwd` (lien), plus `/proc/meminfo`, `/proc/cpuinfo`, `/proc/uptime`
-  et `/proc/loadavg`, alimentés par le simulateur de ressources existant.
-- `/dev/null` (écriture absorbée, lecture vide), `/dev/zero`, `/dev/random` et
+- Two new providers mounted in the existing router
+  (`FileSystemMountRouter`), read-only, computed on each read and
+  never persisted.
+- `/proc/<pid>/`: `status` (name, state, user, parent), `cmdline`,
+  `environ`, `cwd` (link), plus `/proc/meminfo`, `/proc/cpuinfo`, `/proc/uptime`
+  and `/proc/loadavg`, fed by the existing resource simulator.
+- `/dev/null` (write absorbed, empty read), `/dev/zero`, `/dev/random` and
   `/dev/urandom`.
-- `ps` et le gestionnaire de tâches lisent `/proc`.
+- `ps` and the task manager read `/proc`.
 
-## 6. Phase 2 — Modèle d'app
+## 6. Phase 2: App model
 
-### 6.1 Manifeste en classe C#
+### 6.1 Manifest as a C# class
 
 ```csharp
 [AppManifest]
@@ -223,290 +222,289 @@ public sealed class TextEditorApp : AppDefinition
 }
 ```
 
-- `AppDefinition` (nom proposé) remplace `StaticManifest` et
-  `app.manifest.json` comme source unique.
-- Propriétés `abstract` : identifiant, nom, type d'app, point d'entrée.
-- Propriétés `virtual` avec valeur par défaut : version, description, éditeur,
-  catégorie, icône, capacités, associations de fichiers, métadonnées de
-  commande, points d'entrée par plateforme (bureau, mobile), instance unique,
-  profil de ressources.
-- La validation actuelle (`AppManifestValidator`) s'exécute à la compilation,
-  dans le générateur, et l'erreur fait échouer le build.
+- `AppDefinition` (proposed name) replaces `StaticManifest` and
+  `app.manifest.json` as the single source.
+- `abstract` properties: identifier, name, app kind, entry point.
+- `virtual` properties with a default value: version, description, publisher,
+  category, icon, capabilities, file associations, command
+  metadata, per-platform entry points (desktop, mobile), single instance,
+  resource profile.
+- The current validation (`AppManifestValidator`) runs at compile time,
+  in the generator, and the error fails the build.
 
-### 6.2 Génération et découverte
+### 6.2 Generation and discovery
 
-1. **Dans chaque projet d'app :** une tâche MSBuild exécutée après la
-   compilation instancie la classe `[AppManifest]` et écrit `manifest.json`
-   dans le dossier de l'app. Un générateur Roslyn ne peut pas écrire dans le
-   dossier source, d'où la tâche MSBuild. Le fichier est généré : on ne
-   l'édite jamais à la main.
-2. **Dans l'hôte :** une tâche MSBuild rassemble les `manifest.json` des
-   projets référencés dans `BuiltInApplications.json`, embarqué dans l'hôte.
-3. **Au démarrage :** l'OS lit `BuiltInApplications.json`. Il connaît donc
-   toutes les apps sans charger leurs DLL, et le chargement différé est
-   conservé.
-4. **Une seule référence :** un fichier `.targets` partagé ajoute
-   automatiquement `BlazorWebAssemblyLazyLoad` et la ressource embarquée pour
-   chaque app référencée. Les listes manuelles de `HackerOs.Ecosystem.csproj`
-   et `BuildKnownLazyApps.cs` disparaissent.
+1. **In each app project:** an MSBuild task run after
+   compilation instantiates the `[AppManifest]` class and writes `manifest.json`
+   to the app's folder. A Roslyn generator cannot write to the source
+   folder, hence the MSBuild task. The file is generated: it is never
+   edited by hand.
+2. **In the host:** an MSBuild task gathers the `manifest.json` files of the
+   referenced projects into `BuiltInApplications.json`, embedded in the host.
+3. **At startup:** the OS reads `BuiltInApplications.json`. It therefore knows
+   all the apps without loading their DLLs, and lazy loading is
+   kept.
+4. **A single reference:** a shared `.targets` file automatically adds
+   `BlazorWebAssemblyLazyLoad` and the embedded resource for
+   each referenced app. The manual lists in `HackerOs.Ecosystem.csproj`
+   and `BuildKnownLazyApps.cs` disappear.
 
-### 6.3 Apps système et désinstallation
+### 6.3 System apps and uninstallation
 
-- **Liste de confiance :** l'hôte déclare ses apps système (par exemple dans
-  un fichier de configuration de l'hôte ou une propriété MSBuild sur la
-  `ProjectReference`). Une app ne peut pas s'y inscrire elle-même.
-- **Désinstaller** = cacher du lanceur et de la recherche, bloquer le
-  lancement, retirer les associations de fichiers. Les données de l'app ne
-  sont pas supprimées.
-- **Réinstaller** depuis Paramètres > Applications installées.
-- **Portée :**
-  - administrateur : pour toute la machine (état dans `/etc/hackeros/apps.config`) ;
-  - utilisateur : pour son profil (état dans `~/.config/hackeros/apps.config`).
-- Les apps système ne proposent pas de bouton de désinstallation.
-- Le mécanisme d'activation existant (ADR 0032) est réutilisé et étendu.
+- **Trusted list:** the host declares its system apps (for example in
+  a host configuration file or an MSBuild property on the
+  `ProjectReference`). An app cannot register itself there.
+- **Uninstall** = hide from the launcher and search, block
+  launch, remove file associations. The app's data is not
+  deleted.
+- **Reinstall** from Settings > Installed apps.
+- **Scope:**
+  - administrator: for the whole machine (state in `/etc/hackeros/apps.config`);
+  - user: for their profile (state in `~/.config/hackeros/apps.config`).
+- System apps do not offer an uninstall button.
+- The existing activation mechanism (ADR 0032) is reused and extended.
 
-### 6.4 Permissions dangereuses
+### 6.4 Dangerous permissions
 
-- **Classement :** chaque capacité du catalogue `AppCapabilities` est marquée
-  normale ou dangereuse. Dangereuses, au minimum : lecture ou écriture
-  hors du dossier personnel, écriture dans `/etc`, kill des processus
-  d'autres apps, gestion des apps (installer, désinstaller, activer),
-  paramètres système, accès réseau brut. La liste exacte est fixée par l'ADR.
-- **Apps système :** elles reçoivent leurs capacités dangereuses d'office.
-- **Autres apps :** les capacités normales restent accordées automatiquement,
-  comme aujourd'hui. Une capacité dangereuse n'est jamais accordée sans
-  approbation : `CleanProfileCapabilityGrantSeeder` est modifié en ce sens.
-- **Fenêtre d'approbation spéciale :** visuellement distincte des dialogues
-  ordinaires (bandeau d'avertissement, liste des permissions demandées et de
-  leurs risques). Elle exige le mot de passe d'un administrateur, comme
-  `sudo`. Chaque décision est écrite dans `/var/log/auth.log`.
-- **Politique :** réglage administrateur dans `/etc/hackeros/security.config`,
-  avec deux valeurs : « autoriser avec approbation » (par défaut) et « toujours
-  bloquer ».
+- **Classification:** each capability of the `AppCapabilities` catalog is marked
+  normal or dangerous. Dangerous, at a minimum: reading or writing
+  outside the home folder, writing to `/etc`, killing the processes
+  of other apps, app management (install, uninstall, enable),
+  system settings, raw network access. The exact list is set by the ADR.
+- **System apps:** they receive their dangerous capabilities automatically.
+- **Other apps:** normal capabilities are still granted automatically,
+  as today. A dangerous capability is never granted without
+  approval: `CleanProfileCapabilityGrantSeeder` is modified accordingly.
+- **Special approval window:** visually distinct from ordinary
+  dialogs (warning banner, list of requested permissions and
+  their risks). It requires an administrator's password, like
+  `sudo`. Each decision is written to `/var/log/auth.log`.
+- **Policy:** administrator setting in `/etc/hackeros/security.config`,
+  with two values: "allow with approval" (default) and "always
+  block".
 
-## 7. Phase 3 — Shell, commandes et corbeille
+## 7. Phase 3: Shell, commands and trash
 
-### 7.1 Grammaire du shell
+### 7.1 Shell grammar
 
-- Pipes `cmd1 | cmd2 | cmd3` : la sortie standard d'une commande devient
-  l'entrée standard de la suivante.
-- Redirections `>` (remplacer) et `>>` (ajouter) vers un fichier.
-- `&&` : exécuter la suite seulement si la commande précédente a réussi (code
-  de sortie 0).
-- Variables d'environnement : expansion de `$VAR` et `${VAR}`, affectation par
-  `export VAR=valeur`, affichage par `env`. Variables de base : `HOME`, `USER`,
+- Pipes `cmd1 | cmd2 | cmd3`: the standard output of one command becomes
+  the standard input of the next.
+- Redirections `>` (replace) and `>>` (append) to a file.
+- `&&`: run the next command only if the previous one succeeded (exit
+  code 0).
+- Environment variables: expansion of `$VAR` and `${VAR}`, assignment by
+  `export VAR=value`, display by `env`. Base variables: `HOME`, `USER`,
   `PWD`, `PATH`, `SHELL`.
-- Remplace l'ADR 0014, qui excluait ces éléments de la première tranche.
+- Replaces ADR 0014, which excluded these elements from the first slice.
 
-### 7.2 Environnement par processus
+### 7.2 Per-process environment
 
-- Chaque processus a un répertoire courant et un dictionnaire d'environnement,
-  copiés depuis le parent à la création.
-- Visible dans `/proc/<pid>/environ` et `/proc/<pid>/cwd`.
-- Accessible dans le SDK (nom proposé : `HackEnvironment`, calqué sur
+- Each process has a current directory and an environment dictionary,
+  copied from the parent at creation.
+- Visible in `/proc/<pid>/environ` and `/proc/<pid>/cwd`.
+- Accessible in the SDK (proposed name: `HackEnvironment`, modeled on
   `System.Environment`).
 
-### 7.3 Commandes
+### 7.3 Commands
 
-- Les 28 projets `Apps/Commands/HackerOs.Commands.*` sont fusionnés dans un seul
-  projet (nom proposé : `HackerOs.Commands`). Chaque commande garde sa classe
-  et sa déclaration `[AppManifest]`.
-- `cd`, `pwd`, `clear` et `help` deviennent des commandes normales du
-  catalogue. Comme sous Linux, `cd` et `export` agissent sur le shell
-  lui-même : le SDK leur donne un accès contrôlé à la session du shell
-  appelant.
-- Le format des commandes tierces reste le même : une app de type Terminal
-  avec sa classe manifeste.
+- The 28 `Apps/Commands/HackerOs.Commands.*` projects are merged into a single
+  project (proposed name: `HackerOs.Commands`). Each command keeps its class
+  and its `[AppManifest]` declaration.
+- `cd`, `pwd`, `clear` and `help` become normal catalog commands. As on
+  Linux, `cd` and `export` act on the shell itself: the SDK gives them
+  controlled access to the calling shell's session.
+- The format of third-party commands stays the same: a Terminal-type app
+  with its manifest class.
 
-### 7.4 Corbeille
+### 7.4 Trash
 
-- Emplacement standard Linux (spécification freedesktop) :
-  `~/.local/share/Trash/files/` pour les fichiers, `~/.local/share/Trash/info/`
-  pour l'origine et la date de suppression.
-- L'explorateur et `rm` envoient à la corbeille. L'explorateur propose
-  restaurer, supprimer définitivement et vider la corbeille.
-- API SDK pour les apps (nom proposé : `HackTrash`).
+- Standard Linux location (freedesktop specification):
+  `~/.local/share/Trash/files/` for files, `~/.local/share/Trash/info/`
+  for the origin and deletion date.
+- The explorer and `rm` send to the trash. The explorer offers
+  restore, delete permanently and empty trash.
+- SDK API for apps (proposed name: `HackTrash`).
 
-## 8. Phase 4 — SDK complet et apps de base
+## 8. Phase 4: Full SDK and base apps
 
-### 8.1 Le SDK suffit aux apps système
+### 8.1 The SDK is enough for system apps
 
-- Retirer des apps système toute injection de service interne
+- Remove from system apps any injection of an internal service
   (`ISessionService`, `AppCatalog`, `AppLifecycleOrchestrator`,
-  `IPersistentAppCatalogRepository`, services de synchronisation,
-  `IJSRuntime` direct…).
-- Pour chaque besoin, ajouter au SDK une API publique protégée par une
-  capacité, normale ou dangereuse selon la section 6.4. Exemples : identité de
-  l'utilisateur courant, lecture du catalogue d'apps, démarrage et arrêt
-  d'apps ou de services, téléchargement et envoi de fichiers navigateur.
-- Un test d'architecture fait échouer le build si un projet sous `Apps/`
-  référence `HackerOs.Platform.Core` ou `HackerOs.Platform.Blazor`.
+  `IPersistentAppCatalogRepository`, synchronization services,
+  direct `IJSRuntime`…).
+- For each need, add to the SDK a public API protected by a
+  capability, normal or dangerous according to section 6.4. Examples: identity of
+  the current user, reading the app catalog, starting and stopping
+  apps or services, browser file download and upload.
+- An architecture test fails the build if a project under `Apps/`
+  references `HackerOs.Platform.Core` or `HackerOs.Platform.Blazor`.
 
-### 8.2 Fonctionnalités cibles
+### 8.2 Target features
 
-Au minimum la parité avec le legacy (`src/apps/`), plus ces ajouts.
+At least parity with the legacy (`src/apps/`), plus these additions.
 
-**Explorateur de fichiers**
-- Existant à conserver : navigation, historique, création, renommage,
-  suppression, zip, propriétés, « ouvrir avec », envoi et téléchargement.
-- À ajouter : couper, copier, coller (avec le presse-papiers du SDK),
-  corbeille (section 7.4), glisser-déposer.
+**File explorer**
+- Existing to keep: navigation, history, creation, renaming,
+  deletion, zip, properties, "open with", upload and download.
+- To add: cut, copy, paste (with the SDK clipboard),
+  trash (section 7.4), drag and drop.
 
-**Gestionnaire de tâches**
-- Existant à conserver : liste des processus et services, kill, mode de
-  démarrage des services.
-- À ajouter : onglet performance avec graphiques CPU et mémoire, onglets
-  disque et réseau comme dans le legacy, détail par processus, filtre,
-  sélection multiple. Toutes les données viennent de `/proc`.
+**Task manager**
+- Existing to keep: list of processes and services, kill, service
+  startup mode.
+- To add: performance tab with CPU and memory charts, disk
+  and network tabs as in the legacy, per-process detail, filter,
+  multiple selection. All data comes from `/proc`.
 
-**Éditeur de texte**
-- Existant à conserver : ouvrir, enregistrer, enregistrer sous, recherche,
-  détection des conflits d'écriture.
-- À ajouter : remplacer et tout remplacer.
+**Text editor**
+- Existing to keep: open, save, save as, search,
+  detection of write conflicts.
+- To add: replace and replace all.
 
 **Console**
-- Existant à conserver : historique et répertoire courant.
-- À ajouter : complétion par Tab (commandes et chemins), plusieurs onglets.
-  Pipes, redirections, `&&` et variables viennent de la phase 3.
+- Existing to keep: history and current directory.
+- To add: Tab completion (commands and paths), multiple tabs.
+  Pipes, redirections, `&&` and variables come from phase 3.
 
-## 9. Hors périmètre pour l'instant
+## 9. Out of scope for now
 
-- Isolation d'exécution des apps (watchdog, Web Workers) : une app avec une
-  boucle infinie gèle encore tout l'OS. **Reprise par la phase 5**
-  ([`execution-isolation-plan.md`](execution-isolation-plan.md), ADR 0066 à
+- Execution isolation of apps (watchdog, Web Workers): an app with an
+  infinite loop still freezes the whole OS. **Taken up by phase 5**
+  ([`execution-isolation-plan.md`](execution-isolation-plan.md), ADR 0066 to
   0070, 2026-10-16).
-- Magasin d'apps et installation d'apps tierces au runtime. Le format
-  `manifest.json` généré est déjà pensé pour lui.
-- Serveur, synchronisation, mobile et réseau simulé : non
-  modifiés par ce plan, sauf adaptation aux nouvelles API.
+- App store and installation of third-party apps at runtime. The generated
+  `manifest.json` format is already designed for it.
+- Server, synchronization, mobile and simulated network: not
+  modified by this plan, except for adaptation to the new APIs.
 
-## 10. ADR à écrire
+## 10. ADRs to write
 
-Chaque ADR ci-dessous remplace explicitement l'ADR existant cité, qui n'est
-pas modifié.
+Each ADR below explicitly replaces the cited existing ADR, which is
+not modified.
 
-| Nouvel ADR | Remplace | Contenu |
+| New ADR | Replaces | Content |
 |---|---|---|
-| [0043](../adr/0043-hack-file-api-and-ambient-context.md) API fichier `Hack*` et contexte ambiant | — | D3, D4, D5, section 5.1 |
-| [0044](../adr/0044-settings-as-files.md) Paramètres en fichiers | 0004, 0011 (partiellement), 0029 | D16 à D18, section 5.2, syntaxe du verrou |
-| [0045](../adr/0045-logs-as-files.md) Journaux en fichiers | — | D19, section 5.3, tailles de rotation |
-| [0046](../adr/0046-virtual-proc-and-dev-filesystems.md) Systèmes de fichiers virtuels `/proc` et `/dev` | complète 0008 | D20, section 5.4 |
-| [0047](../adr/0047-app-definition-and-generated-manifests.md) Manifeste en classe C# et génération | 0010 (en partie) | D6, D7, D8, section 6.1-6.2 |
-| [0048](../adr/0048-system-apps-and-uninstall.md) Apps système et désinstallation | complète 0032, remplace en partie 0033 | D9 à D11, section 6.3 |
-| [0049](../adr/0049-dangerous-capabilities-and-admin-approval.md) Permissions dangereuses et approbation | complète 0002, 0003, 0042 | D23 à D25, section 6.4 |
-| [0050](../adr/0050-shell-grammar-and-process-environment.md) Grammaire du shell et environnement de processus | 0014 | D12, D13, section 7.1-7.2 |
-| [0051](../adr/0051-unified-commands-project.md) Commandes regroupées, sans exception codée en dur | 0034 (section 1) | D14, section 7.3 |
-| [0052](../adr/0052-trash.md) Corbeille | — | D15, section 7.4 |
-| [0055](../adr/0055-base-apps-on-public-sdk-only.md) Apps de base sur le SDK public uniquement | complète 0019 | D21, section 8.1 : références et injections permises, vérification au build, agent d'authentification |
-| [0056](../adr/0056-sdk-apis-for-system-apps.md) API du SDK qui remplacent les services internes | complète 0044, 0048, 0049 | section 8.1 : une API et une capacité par besoin des apps système |
-| [0057](../adr/0057-proc-metrics-for-task-manager.md) Mesures système dans `/proc` et `HackDriveInfo` | complète 0046 | section 8.2, gestionnaire de tâches |
-| [0058](../adr/0058-base-app-features.md) Fonctionnalités des apps de base | — | D22, section 8.2, chantiers `rebuild/4-*` |
-| [0059](../adr/0059-sdk-boundary-diagnostic-codes.md) Codes des diagnostics de la frontière du SDK | 0055 (numéros des codes) | `HOSAPP0030` et `HOSAPP0031`, les numéros de l'ADR 0055 étant déjà pris |
-| [0060](../adr/0060-system-administration-sdk-adjustments.md) Ajustements de l'API d'administration du système | 0056 (sections 8, 9 et 11, en partie) | section 8.1 : `SystemPower`, `HackPermissionDecision`, écriture des documents de l'OS, presse-papiers de l'hôte pour Diagnostic |
+| [0043](../adr/0043-hack-file-api-and-ambient-context.md) `Hack*` file API and ambient context | n/a | D3, D4, D5, section 5.1 |
+| [0044](../adr/0044-settings-as-files.md) Settings as files | 0004, 0011 (partially), 0029 | D16 to D18, section 5.2, lock syntax |
+| [0045](../adr/0045-logs-as-files.md) Logs as files | n/a | D19, section 5.3, rotation sizes |
+| [0046](../adr/0046-virtual-proc-and-dev-filesystems.md) Virtual file systems `/proc` and `/dev` | completes 0008 | D20, section 5.4 |
+| [0047](../adr/0047-app-definition-and-generated-manifests.md) Manifest as a C# class and generation | 0010 (in part) | D6, D7, D8, section 6.1-6.2 |
+| [0048](../adr/0048-system-apps-and-uninstall.md) System apps and uninstallation | completes 0032, partly replaces 0033 | D9 to D11, section 6.3 |
+| [0049](../adr/0049-dangerous-capabilities-and-admin-approval.md) Dangerous permissions and approval | completes 0002, 0003, 0042 | D23 to D25, section 6.4 |
+| [0050](../adr/0050-shell-grammar-and-process-environment.md) Shell grammar and process environment | 0014 | D12, D13, section 7.1-7.2 |
+| [0051](../adr/0051-unified-commands-project.md) Grouped commands, no hard-coded exception | 0034 (section 1) | D14, section 7.3 |
+| [0052](../adr/0052-trash.md) Trash | n/a | D15, section 7.4 |
+| [0055](../adr/0055-base-apps-on-public-sdk-only.md) Base apps on the public SDK only | completes 0019 | D21, section 8.1: permitted references and injections, build verification, authentication agent |
+| [0056](../adr/0056-sdk-apis-for-system-apps.md) SDK APIs that replace internal services | completes 0044, 0048, 0049 | section 8.1: one API and one capability per need of system apps |
+| [0057](../adr/0057-proc-metrics-for-task-manager.md) System metrics in `/proc` and `HackDriveInfo` | completes 0046 | section 8.2, task manager |
+| [0058](../adr/0058-base-app-features.md) Base app features | n/a | D22, section 8.2, work items `rebuild/4-*` |
+| [0059](../adr/0059-sdk-boundary-diagnostic-codes.md) SDK boundary diagnostic codes | 0055 (code numbers) | `HOSAPP0030` and `HOSAPP0031`, the numbers of ADR 0055 being already taken |
+| [0060](../adr/0060-system-administration-sdk-adjustments.md) Adjustments to the system administration API | 0056 (sections 8, 9 and 11, in part) | section 8.1: `SystemPower`, `HackPermissionDecision`, writing OS documents, host clipboard for Diagnostic |
 
-## 11. Points de détail à fixer dans les ADR
+## 11. Details to settle in the ADRs
 
-Ces points n'influencent pas la direction du plan. Ils sont tranchés dans
-l'ADR correspondant, avec la valeur proposée ci-dessous par défaut.
+These points do not influence the plan's direction. They are settled in
+the corresponding ADR, with the value proposed below by default.
 
-- `rm` et la corbeille : `rm` envoie à la corbeille et `rm --permanent`
-  supprime définitivement. **Proposé.**
-- Syntaxe du verrou administrateur dans `/etc` : une section `[locked]` qui
-  liste les clés non surchargeables. **Proposé.**
-- Taille de rotation des journaux : 1 Mio par fichier, 5 archives. **Proposé.**
-- Emplacement de la liste des apps système : propriété MSBuild
-  `IsSystemApp="true"` sur la `ProjectReference` de l'hôte. **Proposé.**
+- `rm` and the trash: `rm` sends to the trash and `rm --permanent`
+  deletes permanently. **Proposed.**
+- Administrator lock syntax in `/etc`: a `[locked]` section that
+  lists the non-overridable keys. **Proposed.**
+- Log rotation size: 1 MiB per file, 5 archives. **Proposed.**
+- Location of the system apps list: MSBuild property
+  `IsSystemApp="true"` on the host's `ProjectReference`. **Proposed.**
 
-## 12. Liste des tâches
+## 12. Task list
 
-### Préparation
-- [x] Discuter le constat et lever les ambiguïtés avec Benoit (25 questions).
-- [x] Déplacer les anciens documents dans `docs/old/`, sauf `docs/adr/`, et corriger les liens.
-- [x] Rédiger ce plan et le nouvel index `docs/README.md`.
-- [x] Écrire les ADR de la section 10, phase par phase, avant le code de chaque phase.
-  - [x] Phase 1 : ADR 0043 à 0046 (2026-10-10).
-  - [x] Phase 2 : ADR 0047 à 0049 (2026-10-10), avec leurs chantiers `rebuild/2-*`.
-  - [x] Phase 3 : ADR 0050 à 0052 (2026-10-10), avec leurs chantiers `rebuild/3-*` (tableau dans l'ADR 0052).
-  - [x] Phase 4 : ADR 0055 à 0058 (2026-10-10), avec leurs chantiers `rebuild/4-*` (tableau dans l'ADR 0058).
+### Preparation
+- [x] Discuss the findings and clear up ambiguities with Benoit (25 questions).
+- [x] Move the old documents into `docs/old/`, except `docs/adr/`, and fix the links.
+- [x] Write this plan and the new `docs/README.md` index.
+- [x] Write the ADRs of section 10, phase by phase, before the code of each phase.
+  - [x] Phase 1: ADR 0043 to 0046 (2026-10-10).
+  - [x] Phase 2: ADR 0047 to 0049 (2026-10-10), with their `rebuild/2-*` work items.
+  - [x] Phase 3: ADR 0050 to 0052 (2026-10-10), with their `rebuild/3-*` work items (table in ADR 0052).
+  - [x] Phase 4: ADR 0055 to 0058 (2026-10-10), with their `rebuild/4-*` work items (table in ADR 0058).
 
-### Phase 1 — Fichiers
-- [x] Créer les types `HackFile`, `HackDirectory`, `HackPath`, `HackFileInfo`, `HackDirectoryInfo`, `HackFileStream`, `HackFileSystemWatcher`.
-- [x] Créer les exceptions `Hack*` et la traduction depuis `FileSystemErrorCode`.
-- [x] Mettre en place le contexte d'exécution ambiant positionné par l'OS. Voir [`hack-file-api.md`](../../framework/hack-file-api.md).
-- [x] Remplacer le magasin de paramètres séparé par des fichiers, avec migration des valeurs existantes ([`settings-files.md`](../../framework/settings-files.md)).
-- [x] Implémenter les couches `/etc` puis `~/.config`, le verrou administrateur et la tolérance aux fichiers invalides ([`settings-files.md`](../../framework/settings-files.md)).
-- [x] Créer l'API typée de paramètres et adapter l'app Paramètres ([`settings-files.md`](../../framework/settings-files.md)).
-- [x] Écrire les journaux dans `/var/log` avec rotation, et adapter Error Log Viewer ([`logging.md`](../logging.md)).
-- [x] Monter `/proc` et `/dev` en virtuel ([`virtual-proc-and-dev.md`](../virtual-proc-and-dev.md)).
-- [x] Tests de contrat pour chaque point (section « Tests » de chaque document).
+### Phase 1: Files
+- [x] Create the types `HackFile`, `HackDirectory`, `HackPath`, `HackFileInfo`, `HackDirectoryInfo`, `HackFileStream`, `HackFileSystemWatcher`.
+- [x] Create the `Hack*` exceptions and the translation from `FileSystemErrorCode`.
+- [x] Set up the ambient execution context set by the OS. See [`hack-file-api.md`](../../framework/hack-file-api.md).
+- [x] Replace the separate settings store with files, with migration of existing values ([`settings-files.md`](../../framework/settings-files.md)).
+- [x] Implement the `/etc` then `~/.config` layers, the administrator lock and tolerance for invalid files ([`settings-files.md`](../../framework/settings-files.md)).
+- [x] Create the typed settings API and adapt the Settings app ([`settings-files.md`](../../framework/settings-files.md)).
+- [x] Write logs to `/var/log` with rotation, and adapt Error Log Viewer ([`logging.md`](../logging.md)).
+- [x] Mount `/proc` and `/dev` as virtual ([`virtual-proc-and-dev.md`](../virtual-proc-and-dev.md)).
+- [x] Contract tests for each point ("Tests" section of each document).
 
-### Phase 2 — Modèle d'app
-- [x] Créer `AppDefinition` et l'attribut `[AppManifest]` ([`app-model.md`](../../framework/app-model.md)).
-- [x] Créer la tâche MSBuild de génération de `manifest.json` par app, avec validation.
-- [x] Créer la tâche d'agrégation `BuiltInApplications.json` et le `.targets` « une référence suffit ».
-- [x] Migrer les apps existantes, puis supprimer `app.manifest.json` écrits à la main et `StaticManifest` ([`app-model.md`](../../framework/app-model.md#migration-des-apps)).
-- [x] Implémenter la liste des apps système, la désinstallation machine et utilisateur, et la réinstallation.
-  - [x] Liste des apps système : `AppCatalog.IsSystemApp`, `IsSystemApp="true"` sur les `ProjectReference` de l'hôte (`rebuild/2-system-apps`, [`app-model.md`](../../framework/app-model.md#apps-système-adr-0048-1)).
-  - [x] Désinstallation machine et utilisateur, réinstallation (`rebuild/2-app-uninstall`, ADR 0048, [`app-installation.md`](../app-installation.md)).
-- [x] Classer les capacités, créer la fenêtre d'approbation et la politique de sécurité.
-  - [x] Classement des capacités, retrait de `settings.*` et `diagnostics.*`, seeder selon le statut système (`rebuild/2-capability-classification`, [`capabilities.md`](../../framework/capabilities.md)).
-  - [x] Fenêtre d'approbation et politique de sécurité (`rebuild/2-dangerous-approval`, ADR 0049, [`dangerous-capability-approval.md`](../dangerous-capability-approval.md)).
+### Phase 2: App model
+- [x] Create `AppDefinition` and the `[AppManifest]` attribute ([`app-model.md`](../../framework/app-model.md)).
+- [x] Create the MSBuild task that generates `manifest.json` per app, with validation.
+- [x] Create the `BuiltInApplications.json` aggregation task and the "one reference is enough" `.targets`.
+- [x] Migrate the existing apps, then delete the hand-written `app.manifest.json` files and `StaticManifest` ([`app-model.md`](../../framework/app-model.md#migration-des-apps)).
+- [x] Implement the system apps list, machine and user uninstallation, and reinstallation.
+  - [x] System apps list: `AppCatalog.IsSystemApp`, `IsSystemApp="true"` on the host's `ProjectReference`s (`rebuild/2-system-apps`, [`app-model.md`](../../framework/app-model.md#apps-système-adr-0048-1)).
+  - [x] Machine and user uninstallation, reinstallation (`rebuild/2-app-uninstall`, ADR 0048, [`app-installation.md`](../app-installation.md)).
+- [x] Classify capabilities, create the approval window and the security policy.
+  - [x] Classification of capabilities, removal of `settings.*` and `diagnostics.*`, seeder according to system status (`rebuild/2-capability-classification`, [`capabilities.md`](../../framework/capabilities.md)).
+  - [x] Approval window and security policy (`rebuild/2-dangerous-approval`, ADR 0049, [`dangerous-capability-approval.md`](../dangerous-capability-approval.md)).
 
-### Phase 3 — Shell, commandes et corbeille
-- [x] Étendre le parseur : pipes, redirections, `&&`, variables (`rebuild/3-shell-interpreter`, ADR 0050 et 0054, [`shell-interpreter.md`](../shell-interpreter.md)).
-- [x] Ajouter répertoire courant et environnement par processus (`rebuild/3-process-environment`, ADR 0050 et 0053, [`process-environment.md`](../process-environment.md)).
-- [x] Fusionner les 28 projets de commandes et rendre `cd`, `pwd`, `clear`, `help` normales.
-  - [x] Fusion des 28 projets dans `HackerOs.Commands`, une seule `ProjectReference` dans l'hôte (`rebuild/3-commands-merge`, ADR 0051 §1, [`app-model.md`](../../framework/app-model.md#commandes-intégrées--un-seul-projet-adr-0051)).
-  - [x] `cd`, `pwd`, `clear`, `help`, `sudo`, `export`, `unset`, `env` du catalogue, `IShellSession` et `shell.control`, plus aucun nom codé en dur dans le terminal (`rebuild/3-shell-commands`, ADR 0051 §2-5, [`shell-commands.md`](../shell-commands.md)).
-- [x] Implémenter la corbeille et l'API `HackTrash` (`rebuild/3-trash`, ADR 0052, [`trash.md`](../trash.md)).
+### Phase 3: Shell, commands and trash
+- [x] Extend the parser: pipes, redirections, `&&`, variables (`rebuild/3-shell-interpreter`, ADR 0050 and 0054, [`shell-interpreter.md`](../shell-interpreter.md)).
+- [x] Add current directory and environment per process (`rebuild/3-process-environment`, ADR 0050 and 0053, [`process-environment.md`](../process-environment.md)).
+- [x] Merge the 28 command projects and make `cd`, `pwd`, `clear`, `help` normal.
+  - [x] Merge of the 28 projects into `HackerOs.Commands`, a single `ProjectReference` in the host (`rebuild/3-commands-merge`, ADR 0051 §1, [`app-model.md`](../../framework/app-model.md#commandes-intégrées--un-seul-projet-adr-0051)).
+  - [x] `cd`, `pwd`, `clear`, `help`, `sudo`, `export`, `unset`, `env` from the catalog, `IShellSession` and `shell.control`, no more hard-coded names in the terminal (`rebuild/3-shell-commands`, ADR 0051 §2-5, [`shell-commands.md`](../shell-commands.md)).
+- [x] Implement the trash and the `HackTrash` API (`rebuild/3-trash`, ADR 0052, [`trash.md`](../trash.md)).
 
-### Phase 4 — SDK complet et apps de base
-- [x] Inventorier les services internes injectés par les apps système et ajouter leurs équivalents au SDK.
-  - [x] `HackUser`, `HackEnvironment.GetFolderPath`, `HackApps`, `HackAppManagement` et l'agent d'authentification de l'OS ; FileExplorer, TextEditor et CodeEditor sortent de la liste d'exemptions (`rebuild/4-sdk-user-and-apps`, ADR 0055 §5 et 0056 §1-3, [`app-sdk.md`](../../framework/app-sdk.md), [`admin-authentication-agent.md`](../admin-authentication-agent.md)).
-  - [x] `HackSettings.OpenSystemAsync`, `HackPermissionAdministration`, `HackServerConnection`, `HackSystem`, `HackStorageDiagnostics` ; Paramètres et Diagnostic sortent de la liste d'exemptions, qui est vide (`rebuild/4-sdk-system-admin`, ADR 0056 §8-11 et 0060, [`system-administration.md`](../../framework/system-administration.md)).
-- [x] Ajouter le test d'architecture qui interdit les références internes depuis `Apps/`.
-  - [x] Vérification au build des références et des injections, test `IJSRuntime`, liste d'exemptions temporaire (`rebuild/4-sdk-boundary`, ADR 0055 et 0059, [`app-sdk.md`](../../framework/app-sdk.md)).
-  - [x] Hôte de shell : `HackShell`, capacité `shell.host`, `TerminalPanel` sans `Platform.Core`, CodeEditor système (`rebuild/4-sdk-shell-host`, ADR 0056 §7, [`shell-host.md`](../../framework/shell-host.md)).
-  - [x] Mécanisme d'exemption supprimé : toute violation de la frontière est une erreur, aucun projet ne peut s'y soustraire, toute la solution compile sans diagnostic de frontière (`rebuild/4-sdk-boundary-final`, ADR 0055 §6, [`app-sdk.md`](../../framework/app-sdk.md#fin-des-exemptions-temporaires-adr-0055-6)).
-- [x] Explorateur : couper, copier, coller, corbeille, glisser-déposer (`rebuild/4-file-explorer`, ADR 0056 §12 et 0058 §1, [`file-explorer.md`](../file-explorer.md)).
-  - [x] Presse-papiers de l'OS partagé avec l'hôte (texte, fichiers collés, réglage `clipboard.config`), Diagnostic sur `HackClipboard` (`rebuild/4-file-explorer`, ADR 0065, [`clipboard.md`](../clipboard.md)).
-- [x] Gestionnaire de tâches : performance, disque, réseau, détail, filtre, sélection multiple, via `/proc` (`rebuild/4-proc-metrics` et `rebuild/4-task-manager`, ADR 0057 et 0058 §2, [`system-metrics.md`](../system-metrics.md), [`task-manager.md`](../task-manager.md)).
-- [x] Éditeur : remplacer et tout remplacer (`rebuild/4-text-editor`, ADR 0058 §3, [`text-editor.md`](../text-editor.md)).
-- [x] Console : complétion par Tab et onglets (`rebuild/4-terminal`, ADR 0058 §4, [`terminal-console.md`](../terminal-console.md)).
+### Phase 4: Full SDK and base apps
+- [x] Inventory the internal services injected by system apps and add their equivalents to the SDK.
+  - [x] `HackUser`, `HackEnvironment.GetFolderPath`, `HackApps`, `HackAppManagement` and the OS authentication agent; FileExplorer, TextEditor and CodeEditor leave the exemption list (`rebuild/4-sdk-user-and-apps`, ADR 0055 §5 and 0056 §1-3, [`app-sdk.md`](../../framework/app-sdk.md), [`admin-authentication-agent.md`](../admin-authentication-agent.md)).
+  - [x] `HackSettings.OpenSystemAsync`, `HackPermissionAdministration`, `HackServerConnection`, `HackSystem`, `HackStorageDiagnostics`; Settings and Diagnostic leave the exemption list, which is empty (`rebuild/4-sdk-system-admin`, ADR 0056 §8-11 and 0060, [`system-administration.md`](../../framework/system-administration.md)).
+- [x] Add the architecture test that forbids internal references from `Apps/`.
+  - [x] Build verification of references and injections, `IJSRuntime` test, temporary exemption list (`rebuild/4-sdk-boundary`, ADR 0055 and 0059, [`app-sdk.md`](../../framework/app-sdk.md)).
+  - [x] Shell host: `HackShell`, capability `shell.host`, `TerminalPanel` without `Platform.Core`, system CodeEditor (`rebuild/4-sdk-shell-host`, ADR 0056 §7, [`shell-host.md`](../../framework/shell-host.md)).
+  - [x] Exemption mechanism removed: every boundary violation is an error, no project can escape it, the whole solution compiles without a boundary diagnostic (`rebuild/4-sdk-boundary-final`, ADR 0055 §6, [`app-sdk.md`](../../framework/app-sdk.md#fin-des-exemptions-temporaires-adr-0055-6)).
+- [x] Explorer: cut, copy, paste, trash, drag and drop (`rebuild/4-file-explorer`, ADR 0056 §12 and 0058 §1, [`file-explorer.md`](../file-explorer.md)).
+  - [x] OS clipboard shared with the host (text, pasted files, `clipboard.config` setting), Diagnostic on `HackClipboard` (`rebuild/4-file-explorer`, ADR 0065, [`clipboard.md`](../clipboard.md)).
+- [x] Task manager: performance, disk, network, detail, filter, multiple selection, through `/proc` (`rebuild/4-proc-metrics` and `rebuild/4-task-manager`, ADR 0057 and 0058 §2, [`system-metrics.md`](../system-metrics.md), [`task-manager.md`](../task-manager.md)).
+- [x] Editor: replace and replace all (`rebuild/4-text-editor`, ADR 0058 §3, [`text-editor.md`](../text-editor.md)).
+- [x] Console: Tab completion and tabs (`rebuild/4-terminal`, ADR 0058 §4, [`terminal-console.md`](../terminal-console.md)).
 
-### Après la phase 4 (hors plan initial, ADR 0061 à 0065)
-- [x] Terminal sur xterm.js, discipline de ligne en C#, écran alternatif (`rebuild/terminal-xterm`, PR #115, ADR 0061, [`terminal-emulator.md`](../terminal-emulator.md)).
-- [x] Éditeur de code en atelier à la VS Code (`rebuild/code-editor-workspace` et `rebuild/code-editor-dock`, PR #117 à #119, ADR 0062, [`code-editor.md`](../code-editor.md)) et composants d'app intégrables, terminal embarqué par `IHackTerminal` (ADR 0063, [`embedded-components.md`](../../framework/embedded-components.md)).
-- [x] Shell POSIX, scripts, jobs, apps lancées par leur nom, commandes Linux, `nano` (PR #120 et #121, ADR 0064, [`shell-interpreter.md`](../shell-interpreter.md), [`linux-commands.md`](../linux-commands.md)).
-- [x] Presse-papiers de l'OS partagé avec l'hôte (PR #122, ADR 0065, [`clipboard.md`](../clipboard.md)) — voir la phase 4 ci-dessus.
+### After phase 4 (outside the initial plan, ADR 0061 to 0065)
+- [x] Terminal on xterm.js, line discipline in C#, alternate screen (`rebuild/terminal-xterm`, PR #115, ADR 0061, [`terminal-emulator.md`](../terminal-emulator.md)).
+- [x] VS Code-style workspace code editor (`rebuild/code-editor-workspace` and `rebuild/code-editor-dock`, PRs #117 to #119, ADR 0062, [`code-editor.md`](../code-editor.md)) and embeddable app components, terminal embedded through `IHackTerminal` (ADR 0063, [`embedded-components.md`](../../framework/embedded-components.md)).
+- [x] POSIX shell, scripts, jobs, apps launched by name, Linux commands, `nano` (PRs #120 and #121, ADR 0064, [`shell-interpreter.md`](../shell-interpreter.md), [`linux-commands.md`](../linux-commands.md)).
+- [x] OS clipboard shared with the host (PR #122, ADR 0065, [`clipboard.md`](../clipboard.md)), see phase 4 above.
 
-### Vérification finale de la phase 4 (2026-10-16)
+### Final verification of phase 4 (2026-10-16)
 
-Repasse de `rebuild/4-sdk-boundary-final` sur `rebuild/base` après les PR #115
-à #122, avant la fusion des phases 1 à 4 dans `main` (PR #114) :
+Re-run of `rebuild/4-sdk-boundary-final` on `rebuild/base` after PRs #115
+to #122, before the merge of phases 1 to 4 into `main` (PR #114):
 
-- [x] Frontière du SDK : la solution compile sans aucun avertissement ni
-  diagnostic `HOSAPP0002`, `HOSAPP0003`, `HOSAPP0030`, `HOSAPP0031` ou
-  `HOSSDK0001` ; aucune référence de `Apps/` ou du SDK vers `Platform.*`,
-  `Infrastructure.*` ou `Server.*` ; plus de mécanisme d'exemption ;
-  `SdkBoundarySourceTests` couvre toutes les apps, nouvelles comprises.
-- [x] Apps et composants ajoutés depuis #113 : SDK public seulement, capacités
-  déclarées dans leur `[AppManifest]`, aucune injection de service interne.
-- [x] Aucune API `[Obsolete]` utilisée dans `Apps/`.
-- [x] Une dérive corrigée : la copie du terminal contournait le presse-papiers
-  de l'OS et `clipboard.config` ; elle passe maintenant par le pont de l'ADR
+- [x] SDK boundary: the solution compiles with no warning or
+  diagnostic `HOSAPP0002`, `HOSAPP0003`, `HOSAPP0030`, `HOSAPP0031` or
+  `HOSSDK0001`; no reference from `Apps/` or the SDK to `Platform.*`,
+  `Infrastructure.*` or `Server.*`; no more exemption mechanism;
+  `SdkBoundarySourceTests` covers all apps, new ones included.
+- [x] Apps and components added since #113: public SDK only, capabilities
+  declared in their `[AppManifest]`, no injection of an internal service.
+- [x] No `[Obsolete]` API used in `Apps/`.
+- [x] One drift fixed: the terminal's copy bypassed the OS clipboard
+  and `clipboard.config`; it now goes through the bridge of ADR
   0065 ([`terminal-emulator.md`](../terminal-emulator.md)).
-- [x] Toutes les suites `Tests/*.Tests` hors E2E passent ; documentation sans
-  lien mort, index complets (`docs/README.md`, `docs/old/README.md`).
+- [x] All `Tests/*.Tests` suites excluding E2E pass; documentation with no
+  dead link, complete indexes (`docs/README.md`, `docs/old/README.md`).
 
-Détail : [`app-sdk.md`](../../framework/app-sdk.md#vérification-finale-de-la-phase-4-2026-10-16).
+Detail: [`app-sdk.md`](../../framework/app-sdk.md#vérification-finale-de-la-phase-4-2026-10-16).
 
-## 13. Références
+## 13. References
 
-- [`old/README.md`](../old/README.md) : index de l'ancienne documentation.
-- [`old/virtual-filesystem.md`](../old/virtual-filesystem.md) : moteur de fichiers conservé.
-- [`old/settings-system.md`](../old/settings-system.md) : système de paramètres actuel.
-- [`old/app-contracts.md`](../old/app-contracts.md) et [`old/blazor-app-sdk.md`](../old/blazor-app-sdk.md) : contrats d'app actuels.
-- [`old/ecosystem-maturity-gap-analysis.md`](../old/ecosystem-maturity-gap-analysis.md) : manques identifiés précédemment, dont l'isolation.
-- [`adr/`](../adr/) : décisions d'architecture en vigueur.
-- `src/` : legacy TypeScript, référence de comportement en lecture seule.
+- [`old/README.md`](../old/README.md): index of the old documentation.
+- [`old/virtual-filesystem.md`](../old/virtual-filesystem.md): file engine kept.
+- [`old/settings-system.md`](../old/settings-system.md): current settings system.
+- [`old/app-contracts.md`](../old/app-contracts.md) and [`old/blazor-app-sdk.md`](../old/blazor-app-sdk.md): current app contracts.
+- [`old/ecosystem-maturity-gap-analysis.md`](../old/ecosystem-maturity-gap-analysis.md): previously identified gaps, including isolation.
+- [`adr/`](../adr/): architecture decisions in force.
+- `src/`: TypeScript legacy, read-only behavior reference.

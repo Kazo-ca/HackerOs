@@ -1,61 +1,60 @@
-# ADR 0116 : géométrie des fenêtres enregistrée et restaurée
+# ADR 0116: window geometry saved and restored
 
-## Statut
+## Status
 
-Accepté le 2026-10-17 (chantier `v3.1/1-adr`, pour le chantier
-`v3.1/2-window-geometry`). Une question est posée à Benoit dans le fil du
-chantier (§1) ; ce qui suit applique la réponse recommandée en attendant.
+Accepted on 2026-10-17 (work item `v3.1/1-adr`, for the work item
+`v3.1/2-window-geometry`). A question is asked to Benoit in the work item
+thread (§1); what follows applies the recommended answer while awaiting it.
 
-- **Met en œuvre :** [ADR 0044](0044-settings-as-files.md) §10 (géométrie des
-  fenêtres dans `~/.local/state/hackeros/windows/<appId>.config`, propre à
-  l'appareil, jamais synchronisée).
-- **Complète :** [ADR 0095](0095-window-events-sizes-and-keyboard.md) §2
-  (tailles déclarées par l'app) et [ADR 0009](0009-window-runtime-strategy.md)
-  (géométrie tenue par le gestionnaire de fenêtres en C#).
-- **Plan :** [`v3-1-series-plan.md`](../plans/v3-1-series-plan.md) ; lacune
-  « géométrie jamais relue » de [`wasm-v3-final-status.md`](../plans/wasm-v3-final-status.md).
+- **Implements:** [ADR 0044](0044-settings-as-files.md) §10 (window
+  geometry in `~/.local/state/hackeros/windows/<appId>.config`, device-specific,
+  never synchronized).
+- **Complements:** [ADR 0095](0095-window-events-sizes-and-keyboard.md) §2
+  (sizes declared by the app) and [ADR 0009](0009-window-runtime-strategy.md)
+  (geometry held by the window manager in C#).
+- **Plan:** [`v3-1-series-plan.md`](../plans/v3-1-series-plan.md); gap
+  "geometry never read back" of [`wasm-v3-final-status.md`](../plans/wasm-v3-final-status.md).
 
-## Contexte
+## Context
 
-- `WindowGeometryPersistence` et `WindowGeometrySettings`
+- `WindowGeometryPersistence` and `WindowGeometrySettings`
   (`Platform/HackerOs.Platform.Blazor/Windows/WindowGeometrySettings.cs`)
-  savent lire et écrire `x=`, `y=`, `width=`, `height=` dans le fichier d'état
-  d'une app. Le service est enregistré dans l'injection de dépendances
-  (`EcosystemServiceCollectionExtensions.cs:820`), mais **aucun code ne
-  l'appelle** : rien n'écrit la géométrie, rien ne la relit.
-  `settings-files.md` le présente pourtant comme « restaure et enregistre ».
-- `WindowLaunchCoordinator.InitialBounds` place chaque nouvelle fenêtre en
-  cascade (8 positions décalées de 28 px) à la taille déclarée par l'app
-  (ADR 0095 §2), ramenée à la zone de travail sans descendre sous le minimum.
-- `SaveAsync` attend un indicateur `isEligible` qu'aucun champ du manifeste ne
-  fournit.
-- Sous un vrai bureau, deux modèles existent : Windows et macOS rouvrent une
-  fenêtre là où elle était ; sous GNOME, le gestionnaire de fenêtres ne le fait
-  pas et chaque app GTK enregistre au moins sa taille et son état agrandi.
-  HackerOS tient la géométrie en C# (ADR 0009) ; c'est donc à lui de
-  l'enregistrer, pas à chaque app.
+  know how to read and write `x=`, `y=`, `width=`, `height=` in an app's state
+  file. The service is registered in dependency injection
+  (`EcosystemServiceCollectionExtensions.cs:820`), but **no code calls
+  it**: nothing writes the geometry, nothing reads it back.
+  `settings-files.md` nevertheless presents it as "restores and saves".
+- `WindowLaunchCoordinator.InitialBounds` places each new window in a cascade
+  (8 positions offset by 28 px) at the size declared by the app
+  (ADR 0095 §2), brought back to the work area without going below the minimum.
+- `SaveAsync` expects an `isEligible` flag that no manifest field
+  provides.
+- On a real desktop, two models exist: Windows and macOS reopen a
+  window where it was; under GNOME, the window manager does not do so
+  and each GTK app saves at least its size and maximized state.
+  HackerOS holds the geometry in C# (ADR 0009); it is therefore up to it to
+  save it, not to each app.
 
-## Décision
+## Decision
 
-### 1. Toutes les fenêtres retiennent taille, position et état agrandi (question 1, défaut appliqué)
+### 1. All windows remember size, position and maximized state (question 1, default applied)
 
-- Chaque fenêtre d'app de genre `Window` retient, par app et par utilisateur,
-  sa taille, sa position et le fait qu'elle était agrandie.
-- `WindowOptions` (`HackerOs.App.Abstractions`) reçoit
-  `RememberGeometry` (booléen, vrai par défaut). Une app qui le met à faux
-  (une calculatrice qui veut toujours s'ouvrir au même endroit, un assistant)
-  s'ouvre toujours à sa place de cascade. Le générateur écrit
-  `window.rememberGeometry` dans `manifest.json` seulement quand il vaut faux ;
-  le schéma v1 l'ajoute comme champ facultatif (ajout compatible).
-- C'est un ajout au SDK : la propriété va dans `PublicAPI.Unshipped.txt` et
-  sort avec la 1.1 ([ADR 0117](0117-sdk-window-title-and-sdk-1-1.md) §4).
-- Les fenêtres de l'OS qui ne sont pas des apps (boîtes de dialogue de
-  fichiers, agent d'authentification, sélecteur « Ouvrir avec ») ne retiennent
-  rien.
+- Each window of an app of kind `Window` remembers, per app and per user,
+  its size, its position and whether it was maximized.
+- `WindowOptions` (`HackerOs.App.Abstractions`) receives
+  `RememberGeometry` (boolean, true by default). An app that sets it to false
+  (a calculator that wants to always open at the same place, a wizard)
+  always opens at its cascade position. The generator writes
+  `window.rememberGeometry` in `manifest.json` only when it is false;
+  schema v1 adds it as an optional field (compatible addition).
+- This is an addition to the SDK: the property goes into `PublicAPI.Unshipped.txt` and
+  ships with 1.1 ([ADR 0117](0117-sdk-window-title-and-sdk-1-1.md) §4).
+- OS windows that are not apps (file dialogs, authentication
+  agent, "Open with" picker) remember nothing.
 
-### 2. Format du fichier
+### 2. File format
 
-Le fichier existant garde ses quatre clés et en reçoit une cinquième :
+The existing file keeps its four keys and receives a fifth:
 
 ```ini
 # Géométrie de la fenêtre de org.hackeros.text-editor (ADR 0116)
@@ -66,87 +65,86 @@ height=640
 maximized=false
 ```
 
-- `x`, `y`, `width`, `height` sont toujours la géométrie **normale** (non
-  agrandie, non ancrée), en pixels CSS, culture invariante. Une fenêtre
-  agrandie garde donc sa géométrie de restauration, comme sous X11.
-- `maximized` est facultatif ; absent, il vaut `false`. Un fichier sans les
-  quatre nombres reste ignoré : la fenêtre s'ouvre à sa place de cascade (la
-  règle actuelle de `WindowGeometrySettings.Parse`).
-- L'état réduit n'est jamais enregistré : une fenêtre ne rouvre jamais réduite.
-- Une fenêtre ancrée à gauche ou à droite enregistre sa géométrie d'avant
-  l'ancrage (l'ancrage n'en garde pas, `window-model.md`) : elle rouvre comme
-  une fenêtre normale.
+- `x`, `y`, `width`, `height` are always the **normal** geometry (not
+  maximized, not snapped), in CSS pixels, invariant culture. A maximized
+  window therefore keeps its restore geometry, as under X11.
+- `maximized` is optional; absent, it is `false`. A file without the
+  four numbers is still ignored: the window opens at its cascade position (the
+  current rule of `WindowGeometrySettings.Parse`).
+- The minimized state is never saved: a window never reopens minimized.
+- A window snapped to the left or right saves its geometry from before
+  snapping (snapping keeps none, `window-model.md`): it reopens like
+  a normal window.
 
-### 3. Quand la géométrie est écrite
+### 3. When the geometry is written
 
-- À la fin d'un déplacement ou d'un redimensionnement (pointeur relâché ou
-  commande clavier Alt+F7, Alt+F8 validée), à l'agrandissement, à la
-  restauration et à la fermeture de la fenêtre. Jamais à chaque pixel : les
-  événements de `WindowRuntime` qui alimentent déjà `OnWindowResized`
-  (ADR 0095 §1) servent de déclencheur, avec un regroupement de 500 ms.
-- L'écriture passe par `IOsSettingsService` sous l'identité de l'utilisateur,
-  comme aujourd'hui ; un échec (pas de session, dossier personnel en lecture
-  seule) est ignoré, la géométrie étant un confort.
-- Le fichier est écrit seulement s'il change, pour ne pas réveiller les
-  observateurs de fichiers à chaque fermeture.
+- At the end of a move or a resize (pointer released or keyboard
+  command Alt+F7, Alt+F8 confirmed), at maximize, at restore
+  and at window close. Never at every pixel: the `WindowRuntime`
+  events that already feed `OnWindowResized`
+  (ADR 0095 §1) serve as the trigger, with a 500 ms debounce.
+- The write goes through `IOsSettingsService` under the user's identity,
+  as today; a failure (no session, read-only home folder) is ignored, the geometry
+  being a convenience.
+- The file is written only if it changes, so as not to wake the file
+  watchers at every close.
 
-### 4. Quand la géométrie est relue
+### 4. When the geometry is read back
 
-`WindowLaunchCoordinator` lit le fichier avant d'ouvrir la fenêtre, à la place
-de `InitialBounds` :
+`WindowLaunchCoordinator` reads the file before opening the window, in place
+of `InitialBounds`:
 
-1. fichier absent ou invalide, ou `RememberGeometry` faux : place de cascade
-   (comportement actuel) ;
-2. la taille lue est ramenée entre le minimum et le maximum **déclarés
-   aujourd'hui** par l'app (le manifeste a pu changer depuis l'écriture), puis
-   à la zone de travail, sans descendre sous le minimum ;
-3. la position est corrigée pour que la barre de titre reste atteignable : au
-   moins 48 px de la barre visibles horizontalement, et le haut de la fenêtre
-   dans la zone de travail. Un écran plus petit que la dernière fois (autre
-   appareil, fenêtre du navigateur réduite) ramène donc la fenêtre à l'écran,
-   comme un gestionnaire de fenêtres qui perd un moniteur ;
-4. si une fenêtre de la même app est déjà ouverte (deuxième instance), la
-   nouvelle s'ouvre décalée de 28 px depuis la géométrie lue, pour ne pas
-   recouvrir exactement la première ;
-5. `maximized=true` ouvre la fenêtre agrandie, avec la géométrie lue comme
-   géométrie de restauration.
+1. file missing or invalid, or `RememberGeometry` false: cascade position
+   (current behavior);
+2. the size read is brought between the minimum and the maximum **declared
+   today** by the app (the manifest may have changed since the write), then
+   to the work area, without going below the minimum;
+3. the position is corrected so that the title bar remains reachable: at
+   least 48 px of the bar visible horizontally, and the top of the window
+   within the work area. A screen smaller than last time (other
+   device, reduced browser window) therefore brings the window back onto the screen,
+   like a window manager that loses a monitor;
+4. if a window of the same app is already open (second instance), the
+   new one opens offset by 28 px from the geometry read, so as not to
+   exactly cover the first;
+5. `maximized=true` opens the window maximized, with the geometry read as the
+   restore geometry.
 
-### 5. Ce qui n'est pas couvert
+### 5. What is not covered
 
-- **Interface mobile :** plein écran, elle ignore ce fichier (comme les tailles
-  de l'ADR 0095).
-- **Fenêtres détachées** (ADR 0078, 0081) : leur fenêtre de navigateur est
-  placée par le système hôte ; elles ne lisent ni n'écrivent ce fichier.
-- **Oublier la géométrie :** supprimer le fichier
-  (`rm ~/.local/state/hackeros/windows/<appId>.config`) suffit, comme on
-  efface l'état d'une app sous Linux. Pas de bouton dans Paramètres pour
-  l'instant.
-- **Synchronisation :** aucune, le fichier est sous `~/.local/state`
-  (ADR 0044 §10) ; un autre appareil garde ses propres positions.
+- **Mobile interface:** full screen, it ignores this file (like the sizes
+  of ADR 0095).
+- **Detached windows** (ADR 0078, 0081): their browser window is
+  placed by the host system; they neither read nor write this file.
+- **Forgetting the geometry:** deleting the file
+  (`rm ~/.local/state/hackeros/windows/<appId>.config`) is enough, like clearing
+  an app's state on Linux. No button in Settings for now.
+- **Synchronization:** none, the file is under `~/.local/state`
+  (ADR 0044 §10); another device keeps its own positions.
 
-## Conséquences
+## Consequences
 
-- `v3.1/2-window-geometry` branche `WindowGeometryPersistence` dans
-  `WindowLaunchCoordinator` et sur les événements de `WindowRuntime`, ajoute
-  `maximized`, `WindowOptions.RememberGeometry`, le champ du schéma et son
-  contrôle par le validateur, et retire le paramètre `isEligible` de
-  `SaveAsync` (type de la plateforme, hors promesse du SDK, ADR 0114 §2 ; la
-  ligne retirée est écrite `*REMOVED*`).
-- Tests unitaires : correction de taille et de position (écran plus petit,
-  minimum changé, deuxième instance), état agrandi, `RememberGeometry` faux,
-  fichier invalide. Test E2E : déplacer et redimensionner une fenêtre, la
-  fermer, la rouvrir au même endroit ; recharger la page et retrouver la même
+- `v3.1/2-window-geometry` wires `WindowGeometryPersistence` into
+  `WindowLaunchCoordinator` and into the `WindowRuntime` events, adds
+  `maximized`, `WindowOptions.RememberGeometry`, the schema field and its
+  validator check, and removes the `isEligible` parameter of
+  `SaveAsync` (platform type, outside the SDK promise, ADR 0114 §2; the
+  removed line is written `*REMOVED*`).
+- Unit tests: size and position correction (smaller screen, changed
+  minimum, second instance), maximized state, `RememberGeometry` false,
+  invalid file. E2E test: move and resize a window, close
+  it, reopen it at the same place; reload the page and find the same
   place.
-- `window-model.md`, `settings-files.md`, `app-sdk.md`, `sdk-reference.md` et
-  la doc du schéma du manifeste décrivent le comportement et le champ.
+- `window-model.md`, `settings-files.md`, `app-sdk.md`, `sdk-reference.md` and
+  the manifest schema doc describe the behavior and the field.
 
-## Options écartées
+## Rejected options
 
-- **Seulement sur demande de l'app** (`RememberGeometry` faux par défaut) :
-  aucune app existante n'en profiterait sans être modifiée, et la lacune
-  resterait entière pour les apps des autres dépôts.
-- **Taille seulement, sans position** (modèle GNOME) : plus fidèle à un bureau
-  Linux, mais l'OS tient déjà la géométrie lui-même ; ne garder que la taille
-  surprendrait la plupart des utilisateurs, habitués à Windows ou macOS.
-- **Une géométrie par instance** : il n'existe pas d'identité stable d'une
-  instance entre deux ouvertures ; un fichier par app suffit.
+- **Only on request from the app** (`RememberGeometry` false by default):
+  no existing app would benefit without being modified, and the gap
+  would remain whole for apps from other repositories.
+- **Size only, without position** (GNOME model): more faithful to a Linux
+  desktop, but the OS already holds the geometry itself; keeping only the size
+  would surprise most users, used to Windows or macOS.
+- **One geometry per instance**: there is no stable identity of an
+  instance between two openings; one file per app is enough.

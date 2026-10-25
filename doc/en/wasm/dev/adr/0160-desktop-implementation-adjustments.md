@@ -1,221 +1,221 @@
-# ADR 0160 : bureau, ajustements d'implémentation
+# ADR 0160: desktop, implementation adjustments
 
-## Statut
+## Status
 
-Accepté le 2026-10-20.
+Accepted on 2026-10-20.
 
-- **Chantier :** `desk/5-desktop` (plan
+- **Work item:** `desk/5-desktop` (plan
   [`desktop-and-context-menu-plan.md`](../plans/desktop-and-context-menu-plan.md) §12,
-  chantier 5).
-- **Ajuste :** l'ADR 0152 (§1 hôte du bureau, §2 grille, §3 positions et
-  options, §4 icônes système, §5 raccourcis, §6 menu, §8 Paramètres). Ses
-  décisions restent vraies et sont livrées telles quelles ; cet ADR fixe ce
-  qu'elles laissaient ouvert.
+  work item 5).
+- **Adjusts:** ADR 0152 (§1 desktop host, §2 grid, §3 positions and
+  options, §4 system icons, §5 shortcuts, §6 menu, §8 Settings). Its
+  decisions remain true and are delivered as is; this ADR fixes what
+  they left open.
 
-## Contexte
+## Context
 
-L'ADR 0152 décide que le bureau affiche `~/Desktop` par le contrôle de
-fichiers en **mode Bureau**, avec des positions mémorisées dans
-`~/.config/hackeros/desktop.config`, les icônes Dossier perso et Corbeille, des
-raccourcis `.desktop` et la portée `Desktop` du menu. En l'écrivant, plusieurs
-points ont dû être fixés : qui exécute le bureau et avec quels droits, ce que
-le contrat du contrôle porte pour le mode Bureau, où vit le calcul de la
-grille, comment le menu Démarrer crée un raccourci. Le guide d'utilisation est
+ADR 0152 decides that the desktop displays `~/Desktop` through the file
+control in **Desktop mode**, with positions remembered in
+`~/.config/hackeros/desktop.config`, the Home folder and Trash icons,
+`.desktop` shortcuts and the `Desktop` scope of the menu. While writing it, several
+points had to be fixed: who runs the desktop and with what rights, what
+the control's contract carries for Desktop mode, where the grid computation lives,
+how the Start menu creates a shortcut. The usage guide is
 [`desktop.md`](../desktop.md).
 
-## Décision
+## Decision
 
-### 1. Le bureau est un processus : l'app système `org.hackeros.desktop`
+### 1. The desktop is a process: the system app `org.hackeros.desktop`
 
-Le contrôle de fichiers s'exécute avec les droits de l'app qui l'affiche
-(ADR 0148 §4) : il lui faut un contexte d'app. Le bureau est donc une app
-système, **Bureau** (`org.hackeros.desktop`, projet `HackerOs.Apps.Desktop`),
-cachée du menu Démarrer, à instance unique, qui n'utilise que le SDK public.
-C'est le rôle d'`explorer.exe` sous Windows ou de `xfdesktop` sous Xfce.
+The file control runs with the rights of the app that displays it
+(ADR 0148 §4): it needs an app context. The desktop is therefore a system
+app, **Desktop** (`org.hackeros.desktop`, project `HackerOs.Apps.Desktop`),
+hidden from the Start menu, single instance, which uses only the public SDK.
+This is the role of `explorer.exe` under Windows or `xfdesktop` under Xfce.
 
-- La coquille de bureau (`DesktopShell`) la démarre à l'ouverture de la
-  session (`DesktopSurfaceHost`, dans `DesktopArea.BackgroundContent`) par le
-  chemin normal (`AppLifecycleOrchestrator.LaunchAsync`) : un vrai processus,
-  visible dans `ps` et le gestionnaire des tâches, avec les capacités de son
-  manifeste pour l'utilisateur de la session.
-- La coquille rend son composant d'entrée **hors de toute fenêtre**, dans la
-  couche de fond, avec son contexte et une portée de menus en cascade, comme
-  `WindowAppRenderer` le fait dans une fenêtre. Avant le lancement,
-  `WindowLaunchCoordinator.ReserveShellSurface(appId)` réserve l'app comme
-  surface de la coquille : `PresentAsync` ne lui ouvre jamais de fenêtre, quel
-  que soit celui qui la lance (réservation comptée, libérée quand la coquille
-  se ferme).
-- `kill` ou « Fin de tâche » arrête le bureau : les icônes disparaissent. S'il
-  **plante** (`Faulted`), la coquille le relance une fois, comme Windows
-  relance l'Explorateur ; arrêté volontairement, il revient à la connexion
-  suivante.
-- Sans l'app (hôte qui ne la référence pas, app désactivée), le fond reste vide.
-- La couche de fond devient interactive : `DesktopArea.BackgroundInteractive`
-  (nouveau paramètre, `false` par défaut) la rend cliquable et lisible par les
-  lecteurs d'écran, et laisse passer les clics de la couche des fenêtres là où
-  il n'y a pas de fenêtre.
+- The desktop shell (`DesktopShell`) starts it when the
+  session opens (`DesktopSurfaceHost`, in `DesktopArea.BackgroundContent`) through the
+  normal path (`AppLifecycleOrchestrator.LaunchAsync`): a real process,
+  visible in `ps` and the task manager, with the capabilities of its
+  manifest for the session user.
+- The shell renders its entry component **outside any window**, in the
+  background layer, with its context and a menu scope in cascade, as
+  `WindowAppRenderer` does in a window. Before launch,
+  `WindowLaunchCoordinator.ReserveShellSurface(appId)` reserves the app as a
+  shell surface: `PresentAsync` never opens a window for it, whoever
+  launches it (counted reservation, released when the shell
+  closes).
+- `kill` or "End task" stops the desktop: the icons disappear. If it
+  **crashes** (`Faulted`), the shell restarts it once, as Windows
+  restarts Explorer; stopped voluntarily, it comes back at the next
+  login.
+- Without the app (host that does not reference it, disabled app), the background stays empty.
+- The background layer becomes interactive: `DesktopArea.BackgroundInteractive`
+  (new parameter, `false` by default) makes it clickable and readable by
+  screen readers, and lets the clicks of the window layer through where
+  there is no window.
 
-### 2. Le contrat du mode Bureau
+### 2. The Desktop mode contract
 
-`HackFileView` (ADR 0155 §2) gagne, sans rien changer pour les autres modes :
+`HackFileView` (ADR 0155 §2) gains, changing nothing for the other modes:
 
-| Membre | Rôle |
+| Member | Role |
 | --- | --- |
-| `HackFileViewMode.Desktop` | Grille de bureau. |
-| `DesktopOptions` (`HackDesktopOptions`) | Taille des icônes, réorganisation automatique, alignement, tri, icônes système affichées. |
-| `DesktopPositions` | Case de chaque élément, par nom (`::home`, `::trash` pour les icônes système). |
-| `DesktopPositionsChanged` | Les positions à enregistrer, après un déplacement ou quand un élément nouveau a pris une case. |
+| `HackFileViewMode.Desktop` | Desktop grid. |
+| `DesktopOptions` (`HackDesktopOptions`) | Icon size, automatic rearrangement, alignment, sort, system icons displayed. |
+| `DesktopPositions` | Cell of each item, by name (`::home`, `::trash` for the system icons). |
+| `DesktopPositionsChanged` | The positions to save, after a move or when a new item has taken a cell. |
 
-L'hôte (l'app Bureau) lit et écrit le fichier ; le fournisseur dessine, place
-et déplace. Un fournisseur tiers du contrôle (ADR 0156) reçoit les mêmes
-paramètres. Les types sont dans `HackerOs.AppSdk.Files` (sans Blazor) :
+The host (the Desktop app) reads and writes the file; the provider draws, places
+and moves. A third-party provider of the control (ADR 0156) receives the same
+parameters. The types are in `HackerOs.AppSdk.Files` (without Blazor):
 `HackDesktopCell`, `HackDesktopIconSize`, `HackDesktopSort`,
 `HackDesktopOptions`, `HackDesktopItems`, `HackDesktopLayout`.
 
-### 3. La grille : `HackDesktopLayout`, fonction pure du SDK
+### 3. The grid: `HackDesktopLayout`, a pure SDK function
 
-Le placement est une fonction pure et testée du SDK, pour que tout fournisseur
-place les icônes de la même façon :
+Placement is a pure, tested SDK function, so that every provider
+places the icons the same way:
 
-- cases en **colonnes de haut en bas, puis de gauche à droite** ; le nombre de
-  colonnes et de lignes vient de la taille du bureau mesurée par le
-  fournisseur et de la taille des cellules (petite 76 × 84, moyenne 92 × 100,
-  grande 116 × 128 pixels) ;
-- un élément sans position prend la **première case libre** ; l'ordre des
-  éléments nouveaux est : icônes système, puis le tri de `sort` (dossiers
-  d'abord) ;
-- deux éléments enregistrés sur la même case : le second va à la case libre
-  suivante, et c'est enregistré ;
-- une position hors de l'écran (bureau rétréci) n'est **pas réécrite** :
-  l'élément est montré sur la case libre la plus proche de sa position si
-  `align-to-grid=true`, sinon sur la dernière case libre (ADR 0152 §3) ;
-- un nom absent du dossier n'est pas enregistré, donc oublié au prochain
-  enregistrement ;
-- **réorganisation automatique** : les éléments sont rangés sans trou dans
-  l'ordre de leurs positions enregistrées (les nouveaux à la fin, dans l'ordre
-  du tri) ; glisser une icône l'insère à la case visée, les autres se
-  décalent ;
-- **déplacement** : les éléments glissés gardent leur écart avec celui qu'on
-  tient ; une case occupée envoie l'élément à la case libre suivante.
+- cells in **columns from top to bottom, then from left to right**; the number of
+  columns and rows comes from the desktop size measured by the
+  provider and from the cell size (small 76 × 84, medium 92 × 100,
+  large 116 × 128 pixels);
+- an item without a position takes the **first free cell**; the order of
+  new items is: system icons, then the `sort` order (folders
+  first);
+- two items saved on the same cell: the second goes to the next free
+  cell, and this is saved;
+- an off-screen position (shrunken desktop) is **not rewritten**:
+  the item is shown on the free cell closest to its position if
+  `align-to-grid=true`, otherwise on the last free cell (ADR 0152 §3);
+- a name absent from the folder is not saved, hence forgotten at the next
+  save;
+- **automatic rearrangement**: items are arranged without gaps in
+  the order of their saved positions (new ones at the end, in sort
+  order); dragging an icon inserts it at the targeted cell, the others
+  shift;
+- **move**: the dragged items keep their offset relative to the one being
+  held; an occupied cell sends the item to the next free cell.
 
-« Trier par » est une action : elle écrit `sort` et efface `[positions]` ; tout
-devient nouveau et se range dans l'ordre du tri.
+"Sort by" is an action: it writes `sort` and clears `[positions]`; everything
+becomes new and is arranged in sort order.
 
 ### 4. `desktop.config`
 
-- Un **fichier de l'utilisateur seulement**, `~/.config/hackeros/desktop.config`,
-  comme le fichier de configuration d'un bureau Linux sous `~/.config/` : pas
-  de document de l'OS ni de couche `/etc` (le bureau est propre à chaque
-  utilisateur, et `[positions]` n'a pas de schéma). Le format est lu et écrit
-  par `HackDesktopSettings` (SDK, `HackerOs.AppSdk.Files`) : `Parse`,
+- A **user file only**, `~/.config/hackeros/desktop.config`,
+  like a Linux desktop's configuration file under `~/.config/`: no
+  OS document or `/etc` layer (the desktop is specific to each
+  user, and `[positions]` has no schema). The format is read and written
+  by `HackDesktopSettings` (SDK, `HackerOs.AppSdk.Files`): `Parse`,
   `WithOptions`, `WithPositions`, `ReadAsync`, `SaveOptionsAsync`,
-  `SavePositionsAsync`, avec les droits de l'app ambiante.
+  `SavePositionsAsync`, with the rights of the ambient app.
 - `[view]` (`icon-size`, `auto-arrange`, `align-to-grid`, `sort`, `show-home`,
-  `show-trash`) est réécrit ligne à ligne (`ConfigDocumentEditor`) : les
-  commentaires et les clés inconnues restent. `[positions]` est réécrit en
-  entier, à la fin du fichier. Une ligne ou une valeur fausse est ignorée et
-  le défaut s'applique ; le dossier est créé s'il manque.
-- L'app Bureau suit `~/.config/hackeros` (`HackFileSystemWatcher`) et se
-  redessine quand le fichier change (Paramètres, un éditeur, `nano`).
-- Une clé est un nom de fichier ; `%`, `=`, `\`, `#`, `;`, `[`, `]`, les
-  caractères de contrôle et les espaces de bord y sont encodés en `%XX`.
-  La valeur est `colonne,ligne`, à partir de 0.
+  `show-trash`) is rewritten line by line (`ConfigDocumentEditor`): comments
+  and unknown keys remain. `[positions]` is rewritten in
+  full, at the end of the file. A wrong line or value is ignored and
+  the default applies; the folder is created if missing.
+- The Desktop app follows `~/.config/hackeros` (`HackFileSystemWatcher`) and
+  redraws when the file changes (Settings, an editor, `nano`).
+- A key is a file name; `%`, `=`, `\`, `#`, `;`, `[`, `]`, control
+  characters and edge spaces are encoded there as `%XX`.
+  The value is `column,row`, starting from 0.
 
-### 5. Icônes système
+### 5. System icons
 
-Le **fournisseur** dessine Dossier perso et Corbeille en mode Bureau selon
-`ShowHome` et `ShowTrash`, avec leurs menus (Ouvrir, Propriétés ; Ouvrir,
-Vider la corbeille, Propriétés) et leurs dépôts (dans `~`, à la corbeille).
-Ouvrir la Corbeille lance l'explorateur avec l'argument `trash:///`, comme
-Nautilus. L'icône de la Corbeille est pleine quand `~/.local/share/Trash/files`
-contient un élément. Ces menus ne portent pas `HackMenuDefinition.FileMenu` :
-les entrées des apps (ADR 0151) ne s'y ajoutent pas.
+The **provider** draws Home folder and Trash in Desktop mode according to
+`ShowHome` and `ShowTrash`, with their menus (Open, Properties; Open,
+Empty Trash, Properties) and their drops (into `~`, into the trash).
+Opening the Trash launches the explorer with the argument `trash:///`, like
+Nautilus. The Trash icon is full when `~/.local/share/Trash/files`
+contains an item. These menus do not carry `HackMenuDefinition.FileMenu`:
+the apps' entries (ADR 0151) are not added to them.
 
-### 6. Raccourcis `.desktop`
+### 6. `.desktop` shortcuts
 
-- `HackDesktopEntry` (SDK) lit et écrit le format : `[Desktop Entry]`,
-  `Type=Application`, `Name`, `Exec=<appId> [arguments]` (arguments cités
-  comme le dit la spécification freedesktop), `Icon` facultatif.
-  `CreateShortcutAsync` écrit `<Nom>.desktop`, `<Nom> (2).desktop`… dans un
-  dossier, avec les droits du contexte ambiant.
-- Le **fournisseur** les montre partout (bureau, explorateur, dialogues) avec
-  le nom et l'icône de l'app, sans extension ; les ouvrir lance l'app
-  (`IAppIntentGateway.LaunchAsync`) avec ses arguments ; une app absente du
-  catalogue de l'utilisateur grise l'icône, et l'ouvrir l'explique. Un fichier
-  mal formé reste un fichier texte. Un hôte qui prend l'ouverture
-  (`Opening.Handled`, un dialogue Ouvrir) garde la main.
-- **Glisser une app du menu Démarrer** pose le type
-  `application/vnd.hackeros.app+json` (`{"appId":…}`) ; le contrôle de fichiers
-  l'accepte partout comme un dépôt qui crée un raccourci dans le dossier visé
-  (sur le bureau : à la case du dépôt).
-- **« Envoyer vers ▸ Bureau (créer un raccourci) »** : le menu Démarrer a
-  désormais le menu de l'OS sur chaque app (Ouvrir, Épingler / Désépingler,
-  Envoyer vers ▸ Bureau). La coquille envoie l'intent
-  `org.hackeros.desktop.create-shortcut.v1` (`{"appId":…}`) à l'instance du
-  bureau, qui écrit le fichier avec ses propres droits. L'entrée n'apparaît que
-  si le bureau tourne.
+- `HackDesktopEntry` (SDK) reads and writes the format: `[Desktop Entry]`,
+  `Type=Application`, `Name`, `Exec=<appId> [arguments]` (arguments quoted
+  as the freedesktop specification says), optional `Icon`.
+  `CreateShortcutAsync` writes `<Name>.desktop`, `<Name> (2).desktop`… in a
+  folder, with the rights of the ambient context.
+- The **provider** shows them everywhere (desktop, explorer, dialogs) with
+  the app's name and icon, without extension; opening them launches the app
+  (`IAppIntentGateway.LaunchAsync`) with its arguments; an app absent from
+  the user's catalog grays out the icon, and opening it explains why. A malformed
+  file remains a text file. A host that takes over opening
+  (`Opening.Handled`, an Open dialog) keeps control.
+- **Dragging an app from the Start menu** sets the type
+  `application/vnd.hackeros.app+json` (`{"appId":…}`); the file control
+  accepts it everywhere as a drop that creates a shortcut in the targeted folder
+  (on the desktop: at the drop cell).
+- **"Send to ▸ Desktop (create shortcut)"**: the Start menu now has
+  the OS menu on each app (Open, Pin / Unpin,
+  Send to ▸ Desktop). The shell sends the intent
+  `org.hackeros.desktop.create-shortcut.v1` (`{"appId":…}`) to the desktop
+  instance, which writes the file with its own rights. The entry appears only
+  if the desktop is running.
 
-### 7. Menu du bureau
+### 7. Desktop menu
 
-En mode Bureau, le fond a la portée `Desktop` (ADR 0159 §5 : les entrées
-`background` et `desktop` des apps s'y ajoutent). Le fournisseur donne le menu
-du vide (Nouveau dossier, Coller, Actualiser, Propriétés) ; l'app Bureau y
-ajoute par `ContextMenuOpening` :
+In Desktop mode, the background has the `Desktop` scope (ADR 0159 §5: the apps'
+`background` and `desktop` entries are added to it). The provider gives the
+empty-space menu (New Folder, Paste, Refresh, Properties); the Desktop app adds to it
+through `ContextMenuOpening`:
 
-- « Affichage ▸ » : Grandes / Moyennes / Petites icônes, Réorganiser
-  automatiquement, Aligner sur la grille, Afficher Dossier perso, Afficher
-  Corbeille (cases à cocher) ;
-- « Trier par ▸ » : Nom, Taille, Type, Date de modification ;
-- « Arrière-plan… » : lance Paramètres avec `--page=appearance` ;
-- « Paramètres du bureau… » : lance Paramètres avec `--page=desktop`.
+- "View ▸": Large / Medium / Small icons, Auto arrange,
+  Align to grid, Show Home folder, Show
+  Trash (checkboxes);
+- "Sort by ▸": Name, Size, Type, Date modified;
+- "Background...": launches Settings with `--page=appearance`;
+- "Desktop settings...": launches Settings with `--page=desktop`.
 
-Ouvrir un dossier du bureau ouvre une fenêtre de l'explorateur, pas une
-navigation dans le bureau.
+Opening a desktop folder opens an explorer window, not a
+navigation within the desktop.
 
-### 8. Paramètres ▸ Bureau
+### 8. Settings ▸ Desktop
 
-Un onglet **Bureau**, après Apparence, règle `[view]` du fichier de
-l'utilisateur par `HackDesktopSettings` (taille des icônes, réorganisation
-automatique, alignement, icônes système, tri) et peut oublier les positions.
-Paramètres accepte `--page=appearance` et `--page=desktop`. L'index de
-l'onglet « Application » (`--app=`) est désormais compté à partir des onglets
-fixes et de Sauvegarde (il était décalé d'un depuis l'onglet Menus des
-fichiers).
+A **Desktop** tab, after Appearance, sets `[view]` of the user's file
+through `HackDesktopSettings` (icon size, automatic
+rearrangement, alignment, system icons, sort) and can forget the positions.
+Settings accepts `--page=appearance` and `--page=desktop`. The index of the
+"Application" tab (`--app=`) is now counted from the fixed tabs
+and Backup (it was off by one since the File Menus
+tab).
 
 ### 9. Mobile
 
-`MobileShell` ne démarre pas le bureau : pas d'icônes (ADR 0152 §7).
+`MobileShell` does not start the desktop: no icons (ADR 0152 §7).
 
-## Conséquences
+## Consequences
 
-- Une app de plus dans l'écosystème et ses modèles d'hôte ; le bureau est
-  chargé à la connexion, avec l'assembly de l'explorateur (fournisseur du
-  contrôle).
-- Nouvelles API non livrées (`PublicAPI.Unshipped.txt`) dans `AppSdk`
+- One more app in the ecosystem and its host templates; the desktop is
+  loaded at login, with the explorer's assembly (provider of the
+  control).
+- New unshipped APIs (`PublicAPI.Unshipped.txt`) in `AppSdk`
   (`HackDesktop*`, `HackDesktopEntry`, `HackDesktopSettings`, `HackAppIcons`,
   `HackFileMenuItems.EmptyTrash`), `AppSdk.Blazor`, `AppSdk.FileView`,
-  `Windowing.Blazor` et `Platform.Blazor`, publiées avec le SDK 2.0
-  (chantier 6). `empty-trash` rejoint les entrées par défaut connues du
-  manifeste (`AppContextMenus.DefaultItemIds`).
-- [`settings-files.md`](../../framework/settings-files.md) gagne `desktop.config`,
-  [`embedded-components.md`](../../framework/embedded-components.md) les paramètres du mode
-  Bureau.
+  `Windowing.Blazor` and `Platform.Blazor`, published with SDK 2.0
+  (work item 6). `empty-trash` joins the default entries known to the
+  manifest (`AppContextMenus.DefaultItemIds`).
+- [`settings-files.md`](../../framework/settings-files.md) gains `desktop.config`,
+  [`embedded-components.md`](../../framework/embedded-components.md) the Desktop mode
+  parameters.
 
-## Alternatives écartées
+## Alternatives rejected
 
-- **Un contexte d'app fabriqué par la coquille, sans processus** : un manifeste
-  hors catalogue casse les passerelles qui lisent le catalogue, et le bureau
-  serait invisible dans `ps`.
-- **Le bureau dans l'app Explorateur (deux manifestes dans un projet)** : un
-  projet à plusieurs apps change les chemins du manifeste et des ressources de
-  l'explorateur pour un gain nul.
-- **Le fournisseur écrit `desktop.config` lui-même** : un fournisseur tiers
-  devrait connaître le format ; l'hôte garde le fichier, le fournisseur ne voit
-  que des positions.
-- **Des positions en pixels** : l'ADR 0152 fixe des cases ; une case reste
-  juste quand la taille des icônes change.
+- **An app context fabricated by the shell, without a process**: a manifest
+  outside the catalog breaks the gateways that read the catalog, and the desktop
+  would be invisible in `ps`.
+- **The desktop in the Explorer app (two manifests in one project)**: a
+  multi-app project changes the manifest and resource paths of the
+  explorer for no gain.
+- **The provider writes `desktop.config` itself**: a third-party provider
+  would have to know the format; the host keeps the file, the provider sees
+  only positions.
+- **Positions in pixels**: ADR 0152 fixes cells; a cell stays
+  correct when the icon size changes.
 
-## Références
+## References
 
 - ADR 0037, 0043, 0044, 0048, 0148, 0150, 0151, 0152, 0154, 0155, 0156, 0158,
   0159.

@@ -1,52 +1,52 @@
-# ADR 0092 : le jeu vit dans un dépôt séparé
+# ADR 0092: the game lives in a separate repository
 
-## Statut
+## Status
 
-Accepté le 2026-10-17 (décision de Benoit, réponse du 2026-10-17 01:28Z :
-« Rien en ce qui concerne le jeu, cela sera dans une autre repository qui va
-utiliser l'écosystème que nous créons présentement »).
+Accepted on 2026-10-17 (decision by Benoit, answer of 2026-10-17 01:28Z:
+"Nothing concerning the game, it will be in another repository that will
+use the ecosystem we are currently creating").
 
-- **Remplace :** [ADR 0023](0023-optional-game-domain-and-proxy-fallback.md)
-  (domaine de jeu optionnel dans la solution, capacité `gameplay.domain.access`,
-  `IGameDomainGateway`, propriété `<EnableGameDomain>`).
-- **Plan :** [`wasm-v3-completion-plan.md`](../plans/wasm-v3-completion-plan.md), §1.
+- **Supersedes:** [ADR 0023](0023-optional-game-domain-and-proxy-fallback.md)
+  (optional game domain in the solution, capability `gameplay.domain.access`,
+  `IGameDomainGateway`, property `<EnableGameDomain>`).
+- **Plan:** [`wasm-v3-completion-plan.md`](../plans/wasm-v3-completion-plan.md), §1.
 
-## Contexte
+## Context
 
-L'analyse de migration wasm v3 (`doc/en/wasm/dev/plans/wasm-v3-migration-analyse.md`, vague 6)
-et `doc/en/wasm/gameplay-v3-analyse.md` prévoyaient de construire le jeu
-(missions, contrats, économie, améliorations matérielles, sécurité simulée,
-scripts du joueur, sauvegarde de partie) dans cette solution, sous forme d'un
-domaine optionnel (ADR 0023). Il n'en existe qu'une ébauche :
-`Game/HackerOs.Game.Core` (en mémoire, référencé par aucun hôte),
-`Shared/HackerOs.Game.Abstractions`, `Tests/HackerOs.Game.Tests` et la capacité
-`gameplay.domain.access`. La propriété `<EnableGameDomain>` n'a jamais existé.
+The wasm v3 migration analysis (`doc/en/wasm/dev/plans/wasm-v3-migration-analyse.md`, wave 6)
+and `doc/en/wasm/gameplay-v3-analyse.md` planned to build the game
+(missions, contracts, economy, hardware upgrades, simulated security,
+player scripts, game save) in this solution, as an optional domain
+(ADR 0023). Only a sketch of it exists:
+`Game/HackerOs.Game.Core` (in memory, referenced by no host),
+`Shared/HackerOs.Game.Abstractions`, `Tests/HackerOs.Game.Tests` and the capability
+`gameplay.domain.access`. The `<EnableGameDomain>` property never existed.
 
-## Décision
+## Decision
 
-1. Ce dépôt construit **la plateforme** : l'OS simulé, son SDK public, ses
-   apps et commandes de base, ses hôtes et son serveur optionnel. Il ne
-   contient aucun contenu ni règle de jeu.
-2. Le jeu est développé dans **un autre dépôt**, qui utilise cet écosystème
-   comme le ferait n'importe quel développeur tiers : par le SDK public et les
-   paquets de la plateforme, sans référence à des types internes.
-3. Ce que le jeu demandera à l'OS est ajouté ici sous forme de **points
-   d'extension génériques** du SDK (utiles à toute app), jamais sous forme
-   d'une API propre au jeu.
-4. Le code de jeu existant et la capacité `gameplay.domain.access` sont retirés
-   de la solution (chantier `v3/2-game-removal`). Jusqu'à ce retrait, ils
-   restent en place mais ne doivent pas être étendus.
+1. This repository builds **the platform**: the simulated OS, its public SDK, its
+   base apps and commands, its hosts and its optional server. It
+   contains no game content or rules.
+2. The game is developed in **another repository**, which uses this ecosystem
+   as any third-party developer would: through the public SDK and the
+   platform packages, without reference to internal types.
+3. What the game will ask of the OS is added here as **generic extension
+   points** of the SDK (useful to any app), never as
+   a game-specific API.
+4. The existing game code and the `gameplay.domain.access` capability are removed
+   from the solution (work item `v3/2-game-removal`). Until this removal, they
+   stay in place but must not be extended.
 
-## Conséquences
+## Consequences
 
-- La vague 6 de l'analyse de migration n'est plus un reste à faire de ce dépôt.
-  `doc/en/wasm/gameplay-v3-analyse.md` et `docs/old/migration/wave-6.md` restent
-  des références pour le dépôt du jeu.
-- Permettre à un autre dépôt de construire sur HackerOS devient un objectif :
-  versions et paquets du SDK, gabarits `dotnet new`, gel du SDK 1.0
-  (chantiers `v3/6` et `v3/15`).
-- Le catalogue passera de 32 à 31 capacités au retrait ; `capabilities.md` et
-  `sdk-reference.md` le noteront à ce moment-là.
-- Les commandes réseau (`ping`, `curl`, `nmap`, `cat`) n'ont pas de mode « jeu » :
-  elles utilisent le réseau simulé de l'OS et le relais du serveur optionnel
+- Wave 6 of the migration analysis is no longer a remaining task of this repository.
+  `doc/en/wasm/gameplay-v3-analyse.md` and `docs/old/migration/wave-6.md` remain
+  references for the game repository.
+- Allowing another repository to build on HackerOS becomes an objective:
+  SDK versions and packages, `dotnet new` templates, SDK 1.0 freeze
+  (work items `v3/6` and `v3/15`).
+- The catalog will go from 32 to 31 capabilities at removal; `capabilities.md` and
+  `sdk-reference.md` will note it at that time.
+- The network commands (`ping`, `curl`, `nmap`, `cat`) have no "game" mode:
+  they use the OS's simulated network and the optional server's relay
   (ADR 0056, 0085).

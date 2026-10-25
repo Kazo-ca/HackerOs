@@ -1,14 +1,14 @@
-# Hôte de shell : `HackShell` et capacité `shell.host`
+# Shell host: `HackShell` and the `shell.host` capability
 
-## Objet
+## Purpose
 
-Un émulateur de terminal (la fenêtre Terminal, le panneau terminal de
-l'éditeur de code, ou un terminal tiers) héberge un shell `hsh` par le SDK
-public, sans toucher à `ShellInterpreter`, `ISessionService` ni
-`IElevationService` (ADR 0055). C'est la section 7 de l'ADR 0056, réalisée par
-le chantier `rebuild/4-sdk-shell-host`.
+A terminal emulator (the Terminal window, the code editor's terminal panel,
+or a third-party terminal) hosts an `hsh` shell through the public SDK,
+without touching `ShellInterpreter`, `ISessionService` or
+`IElevationService` (ADR 0055). This is section 7 of ADR 0056, delivered by the
+work item `rebuild/4-sdk-shell-host`.
 
-Comme sous Linux, `gnome-terminal` lance `bash` puis lui transmet les lignes :
+As on Linux, `gnome-terminal` launches `bash` then passes it the lines:
 
 ```text
 Terminal (fenêtre, PID 12)
@@ -17,7 +17,7 @@ Terminal (fenêtre, PID 12)
      └─ grep (PID 15)
 ```
 
-## Utilisation
+## Usage
 
 ```csharp
 await using IHackShell shell = await HackShell.StartAsync(new HackShellOptions
@@ -31,185 +31,184 @@ HackShellCompletion completion = await shell.CompleteAsync("ec", cursor: 2);
 string line = completion.ApplyTo("ec", out int cursor);   // "echo "
 ```
 
-Un composant Razor qui reçoit le contexte de son app en paramètre utilise
+A Razor component that receives its app's context as a parameter uses
 `HackShell.StartAsync(AppContext, options, ct)`.
 
 ### `IHackShell`
 
-| Membre | Rôle |
+| Member | Role |
 |---|---|
-| `ProcessId` | PID du processus `hsh` (`$$`). |
-| `WorkingDirectory` | Répertoire courant du shell (changé par `cd`). |
-| `ExitStatus` | `$?` du dernier pipeline. |
-| `Prompt` | Invite `utilisateur@machine:répertoire$` (`#` pour root), sans l'espace finale. |
-| `HasExited` | Le processus est terminé (shell libéré, ou tué avec son hôte). |
-| `History`, `AddHistory`, `NavigateHistory` | Historique du shell (exposé aussi aux commandes par `IShellSession.History`) ; ↑ et ↓ comme `readline`. |
-| `GetInstalledCommands()` | Commandes installées, triées (ce que liste `help`). |
-| `ExecuteAsync(ligne, stdin, stdout, stderr, ct)` | Exécute une ligne ; la sortie arrive au fil de l'eau. |
-| `ExecuteAsync(ligne, HackShellExecution, ct)` | Même chose avec l'écran alternatif (`FullScreen`) pour `nano`. |
-| `CompleteAsync(ligne, curseur, ct)` | Complétion par Tab (voir plus bas). |
-| `NeedsMoreInput(texte)` | ADR 0064 : la commande est-elle inachevée (`if` sans `fi`, guillemet ouvert, `\|` final…) ? Le terminal affiche alors l'invite `>` ([`terminal-emulator.md`](../dev/terminal-emulator.md)). |
-| `ExecuteAsync(…, HackShellExecution)` : `StandardInput` | ADR 0064 : l'entrée standard que le terminal donne à la ligne (`TerminalInputReader`). |
-| `DisposeAsync()` | Fermeture du terminal : tue les commandes encore en cours, puis termine `hsh` avec `$?`. La commande `exit [n]` fait de même depuis le shell (`HasExited` devient vrai, [`terminal-console.md`](../dev/terminal-console.md)). |
+| `ProcessId` | PID of the `hsh` process (`$$`). |
+| `WorkingDirectory` | Current directory of the shell (changed by `cd`). |
+| `ExitStatus` | `$?` of the last pipeline. |
+| `Prompt` | `user@machine:directory$` prompt (`#` for root), without the trailing space. |
+| `HasExited` | The process has ended (shell released, or killed with its host). |
+| `History`, `AddHistory`, `NavigateHistory` | Shell history (also exposed to commands through `IShellSession.History`); ↑ and ↓ like `readline`. |
+| `GetInstalledCommands()` | Installed commands, sorted (what `help` lists). |
+| `ExecuteAsync(line, stdin, stdout, stderr, ct)` | Runs a line; output arrives as it is produced. |
+| `ExecuteAsync(line, HackShellExecution, ct)` | Same with the alternate screen (`FullScreen`) for `nano`. |
+| `CompleteAsync(line, cursor, ct)` | Tab completion (see below). |
+| `NeedsMoreInput(text)` | ADR 0064: is the command unfinished (`if` without `fi`, open quote, trailing `\|`...)? The terminal then displays the `>` prompt ([`terminal-emulator.md`](../dev/terminal-emulator.md)). |
+| `ExecuteAsync(…, HackShellExecution)`: `StandardInput` | ADR 0064: the standard input that the terminal gives to the line (`TerminalInputReader`). |
+| `DisposeAsync()` | Terminal closing: kills commands still running, then ends `hsh` with `$?`. The `exit [n]` command does the same from the shell (`HasExited` becomes true, [`terminal-console.md`](../dev/terminal-console.md)). |
 
-Une seule ligne s'exécute à la fois ; une seconde attend la fin de la
-première, comme un shell qui lit son terminal. Ctrl+C annule le jeton passé à
-`ExecuteAsync` (code `130`). Après `DisposeAsync`, `ExecuteAsync` lève
+Only one line runs at a time; a second one waits for the end of the
+first, like a shell reading its terminal. Ctrl+C cancels the token passed to
+`ExecuteAsync` (code `130`). After `DisposeAsync`, `ExecuteAsync` throws
 `ObjectDisposedException`.
 
-`stdin` alimente la première commande de chaque pipeline non redirigée
-(`ShellExecutionOptions.StandardInput`). Une commande qui l'a lu n'est pas
-relancée par l'approbation ponctuelle de l'ADR 0042 : son entrée est consommée.
+`stdin` feeds the first non-redirected command of each pipeline
+(`ShellExecutionOptions.StandardInput`). A command that has read it is not
+rerun by the one-time approval of ADR 0042: its input is consumed.
 
-### Complétion
+### Completion
 
-`CompleteAsync` fait la complétion côté shell, comme `bash` (ADR 0058,
-section 4) :
+`CompleteAsync` does completion on the shell side, like `bash` (ADR 0058,
+section 4):
 
-- premier mot d'une commande (début de ligne, après `|`, `&&` ou `;`) : noms des
-  commandes installées et de leurs alias statiques, sensibles à la casse ;
-- autres mots (et premier mot contenant `/`) : chemins, relatifs au
-  répertoire du shell, `~` développé, dossiers finis par `/`, cachés après un
-  `.` tapé, caractères spéciaux échappés par `\` ; un dossier illisible ne
-  propose rien (chantier `4-terminal`, voir
+- first word of a command (start of line, after `|`, `&&` or `;`): names of
+  installed commands and their static aliases, case-sensitive;
+- other words (and a first word containing `/`): paths, relative to the
+  shell's directory, `~` expanded, folders ending with `/`, hidden ones after a
+  typed `.`, special characters escaped with `\`; an unreadable folder
+  offers nothing (work item `4-terminal`, see
   [`terminal-console.md`](../dev/terminal-console.md)).
 
-`HackShellCompletion` donne `WordStart`, `WordLength`, `Candidates` (triés,
-un dossier finit par `/`) et `CommonPrefix`. `ApplyTo` applique la règle de
-Tab : un seul candidat est inséré suivi d'une espace (aucune après un `/`),
-plusieurs insèrent leur préfixe commun. `TerminalPanel` affiche la liste au
-second Tab sur la même ligne, avec `DisplayCandidates` (dernier segment de
-chaque chemin).
+`HackShellCompletion` gives `WordStart`, `WordLength`, `Candidates` (sorted,
+a folder ends with `/`) and `CommonPrefix`. `ApplyTo` applies the Tab rule:
+a single candidate is inserted followed by a space (none after a `/`),
+several insert their common prefix. `TerminalPanel` displays the list on the
+second Tab on the same line, with `DisplayCandidates` (last segment of
+each path).
 
 ### `HackCredentialPrompt`
 
-Les questions que le shell pose à son terminal :
+The questions the shell asks its terminal:
 
-| Méthode | Utilisée pour | Défaut |
+| Method | Used for | Default |
 |---|---|---|
-| `ReadCredentialAsync(HackCredentialRequest)` | `sudo`, approbation ponctuelle (ADR 0042), identifiants d'un administrateur pour les capacités dangereuses | abstraite |
-| `ConfirmAsync(HackConfirmationRequest)` | Oui / Non / Annuler de l'approbation en mode texte (ADR 0049 §5) | `Cancel` |
-| `WriteLineAsync(texte, HackPromptLineKind)` | bandeau d'avertissement, « Sorry, try again. » | ignoré |
+| `ReadCredentialAsync(HackCredentialRequest)` | `sudo`, one-time approval (ADR 0042), an administrator's credentials for dangerous capabilities | abstract |
+| `ConfirmAsync(HackConfirmationRequest)` | Yes / No / Cancel of text-mode approval (ADR 0049 §5) | `Cancel` |
+| `WriteLineAsync(text, HackPromptLineKind)` | warning banner, "Sorry, try again." | ignored |
 
-Le terminal **lit** ; l'OS **vérifie**. `ShellHostPrompts` (Platform Core)
-transmet les identifiants à `IElevationService` (jeton `SudoRoot` ou
-`CapabilityApproval`) ou à `DangerousCapabilityApprovalRequest.ApproveAsync`,
-qui écrit `/etc/hackeros/app-permissions.config` et `/var/log/auth.log`.
-`HackCredential.ToString()` masque le mot de passe.
+The terminal **reads**; the OS **verifies**. `ShellHostPrompts` (Platform Core)
+passes the credentials to `IElevationService` (`SudoRoot` or
+`CapabilityApproval` token) or to `DangerousCapabilityApprovalRequest.ApproveAsync`,
+which writes `/etc/hackeros/app-permissions.config` and `/var/log/auth.log`.
+`HackCredential.ToString()` masks the password.
 
-`TerminalCredentialPrompt` (`HackerOs.AppSdk.Terminal`) est l'implémentation de
-`TerminalPanel` : boîte d'identifiants et boîte Oui / Non / Annuler de la
-plateforme (`IDialogService`), lignes écrites dans le terminal.
+`TerminalCredentialPrompt` (`HackerOs.AppSdk.Terminal`) is the
+`TerminalPanel` implementation: the platform's credentials box and Yes / No / Cancel box
+(`IDialogService`), lines written in the terminal.
 
-## Capacité `shell.host`
+## `shell.host` capability
 
-| Capacité | Classement | Risque affiché |
+| Capability | Classification | Risk displayed |
 |---|---|---|
-| `shell.host` | **dangereuse** | « Exécuter des commandes en votre nom, avec les droits de ces commandes. » |
+| `shell.host` | **dangerous** | "Run commands on your behalf, with the rights of those commands." |
 
-Une commande lancée par le shell s'exécute avec **ses** capacités et sans
-fenêtre : une app qui n'aurait que `notifications.post` pourrait sinon lire
-tout `~` par `cat`. Sans `shell.host`, `HackShell.StartAsync` lève
-`HackUnauthorizedAccessException` (`RequiredCapability = "shell.host"`) et
-aucun processus n'est créé.
+A command launched by the shell runs with **its** capabilities and without a
+window: an app that only had `notifications.post` could otherwise read
+all of `~` through `cat`. Without `shell.host`, `HackShell.StartAsync` throws
+`HackUnauthorizedAccessException` (`RequiredCapability = "shell.host"`) and
+no process is created.
 
-Terminal et CodeEditor la déclarent ; les deux sont des apps système
-(`IsSystemApp="true"` sur leur `ProjectReference` dans
-`HackerOs.Ecosystem.csproj`, ADR 0048), donc la reçoivent sans approbation
-d'administrateur.
+Terminal and CodeEditor declare it; both are system apps
+(`IsSystemApp="true"` on their `ProjectReference` in
+`HackerOs.Ecosystem.csproj`, ADR 0048), so they receive it without administrator
+approval.
 
 ## Architecture
 
-| Type | Projet | Rôle |
+| Type | Project | Role |
 |---|---|---|
-| `HackShell` | `Shared/HackerOs.AppSdk/Shell` | Façade ; traduit le refus de capacité en `HackUnauthorizedAccessException`. |
-| `IHackShell`, `HackShellOptions`, `HackShellExecution`, `HackShellCompletion` | idem | Contrats publics. |
-| `HackCredentialPrompt` et ses types | idem | Questions au terminal. |
-| `IAppShellHostGateway` | idem | Passerelle `IAppExecutionContext.ShellHost` (par défaut : « non prise en charge »). |
-| `AppShellHostGateway` | `Platform/HackerOs.Platform.Core/Execution` | Vérifie `shell.host`, puis appelle le service. |
-| `ShellHostService` | `Platform/HackerOs.Platform.Core/Shell` | Crée le processus `hsh`, son contexte et sa `ShellSession` ; implémente `IHackShell`. |
-| `ShellHostPrompts` | idem | Adapte `HackCredentialPrompt` aux invites de `ShellInterpreter` et à `IDangerousCapabilityApprovalPrompt`. |
-| `ShellCompletion` | idem | Complétion des noms de commande. |
-| `TerminalPanel`, `TerminalCredentialPrompt` | `Shared/HackerOs.AppSdk.Terminal` | Émulateur de terminal sur le SDK seul. |
+| `HackShell` | `Shared/HackerOs.AppSdk/Shell` | Facade; translates the capability refusal into `HackUnauthorizedAccessException`. |
+| `IHackShell`, `HackShellOptions`, `HackShellExecution`, `HackShellCompletion` | same | Public contracts. |
+| `HackCredentialPrompt` and its types | same | Questions to the terminal. |
+| `IAppShellHostGateway` | same | `IAppExecutionContext.ShellHost` gateway (default: "not supported"). |
+| `AppShellHostGateway` | `Platform/HackerOs.Platform.Core/Execution` | Checks `shell.host`, then calls the service. |
+| `ShellHostService` | `Platform/HackerOs.Platform.Core/Shell` | Creates the `hsh` process, its context and its `ShellSession`; implements `IHackShell`. |
+| `ShellHostPrompts` | same | Adapts `HackCredentialPrompt` to the `ShellInterpreter` prompts and to `IDangerousCapabilityApprovalPrompt`. |
+| `ShellCompletion` | same | Command name completion. |
+| `TerminalPanel`, `TerminalCredentialPrompt` | `Shared/HackerOs.AppSdk.Terminal` | Terminal emulator on the SDK alone. |
 
-### Démarrage d'un shell
+### Starting a shell
 
-1. `AppShellHostGateway` vérifie `shell.host` par le vérificateur de capacités de
-   l'app.
-2. `ShellHostService` démarre un processus `org.hackeros.hsh` (`argv[0]` =
-   `hsh`, nom `hsh` dans `/proc/<pid>/status`), enfant du processus de l'app.
-   Le gestionnaire de processus lui copie le répertoire et l'environnement du
-   parent (ADR 0050).
-3. La fabrique de contextes crée le contexte du shell : manifeste
-   `ShellHostService.ShellManifest` (hors catalogue), **capacités de l'app
-   hôte** (une redirection s'ouvre avec les droits du terminal, comme un
-   `fork` garde les droits du parent), même élévation root si l'hôte a été
-   lancé par `sudo`.
-4. Une `ShellSession` est créée sur ce contexte (`TERM`, `PWD`), puis le shell
-   se place dans `WorkingDirectory` avec ses propres droits ; en cas d'échec
-   il reste dans le répertoire hérité.
+1. `AppShellHostGateway` checks `shell.host` through the app's
+   capability checker.
+2. `ShellHostService` starts an `org.hackeros.hsh` process (`argv[0]` =
+   `hsh`, name `hsh` in `/proc/<pid>/status`), child of the app's process.
+   The process manager copies the parent's directory and environment to it
+   (ADR 0050).
+3. The context factory creates the shell's context: manifest
+   `ShellHostService.ShellManifest` (outside the catalog), **capabilities of the host
+   app** (a redirection opens with the terminal's rights, as a
+   `fork` keeps the parent's rights), same root elevation if the host was
+   launched by `sudo`.
+4. A `ShellSession` is created on this context (`TERM`, `PWD`), then the shell
+   moves into `WorkingDirectory` with its own rights; on failure
+   it stays in the inherited directory.
 
-Chaque ligne s'exécute sous le contexte ambiant du shell : `sudo` et les
-commandes ont le shell pour parent. Le jeton de la ligne est lié à celui du
-processus `hsh` : tuer le shell (ou son terminal) arrête la ligne.
+Each line runs under the shell's ambient context: `sudo` and the
+commands have the shell as parent. The line's token is bound to that of the
+`hsh` process: killing the shell (or its terminal) stops the line.
 
-### Commandes dans des Web Workers (ADR 0070)
+### Commands in Web Workers (ADR 0070)
 
-Le shell lui-même (`hsh`, son interpréteur, ses tubes et ses redirections)
-reste sur le fil principal. Chaque commande externe dont le manifeste dit
-`pool` ou `dedicated` y est lancée par `AppLifecycleOrchestrator` dans un Web
-Worker, avec des passerelles distantes : ses flux standard passent par messages
-et ses appels reviennent à l'OS. Toutes les étapes d'un pipeline sont placées
-sur le même worker (`ExecutionPlacement.BeginGroup`). Les commandes intégrées
-(`cd`, `export`, `jobs`, `kill`, `read`…) et celles qui pilotent le shell ou
-l'écran (`sudo`, `nano`, `top`, `watch`…) restent sur le fil principal : `kill`
-répond même quand un worker est bloqué. Une commande tuée (code 137, raison
-`Killed` ou `Timeout`) fait écrire « Killed » sur la sortie d'erreur, comme
-`bash`. Voir [`worker-processes.md`](../dev/worker-processes.md).
+The shell itself (`hsh`, its interpreter, its pipes and its redirections)
+stays on the main thread. Each external command whose manifest says
+`pool` or `dedicated` is launched there by `AppLifecycleOrchestrator` in a Web
+Worker, with remote gateways: its standard streams go through messages
+and its calls come back to the OS. All the steps of a pipeline are placed
+on the same worker (`ExecutionPlacement.BeginGroup`). Built-in commands
+(`cd`, `export`, `jobs`, `kill`, `read`...) and those that drive the shell or
+the screen (`sudo`, `nano`, `top`, `watch`...) stay on the main thread: `kill`
+answers even when a worker is blocked. A killed command (code 137, reason
+`Killed` or `Timeout`) causes "Killed" to be written on the error output, like
+`bash`. See [`worker-processes.md`](../dev/worker-processes.md).
 
-### Fin d'un shell
+### End of a shell
 
-`DisposeAsync` tue d'abord les commandes encore en cours (raison
-`DependencyStop`, comme un `SIGHUP`), puis termine `hsh` avec `$?` comme code
-de sortie. `AppLifecycleOrchestrator` accepte désormais qu'une commande ait été
-tuée pendant qu'elle tournait : son enregistrement de fin est conservé au lieu
-de lever `KeyNotFoundException`.
+`DisposeAsync` first kills the commands still running (reason
+`DependencyStop`, like a `SIGHUP`), then ends `hsh` with `$?` as exit
+code. `AppLifecycleOrchestrator` now accepts that a command has been
+killed while it was running: its end record is kept instead of
+throwing `KeyNotFoundException`.
 
-## Décisions
+## Decisions
 
-- **Le shell est son propre processus**, enfant de l'app hôte (ADR 0056 §7).
-  Avant ce chantier, le shell partageait le processus du terminal (ADR 0050
-  §1) : deux onglets de l'éditeur de code partageaient leur répertoire. Chaque
-  `TerminalPanel` a maintenant le sien. `ExecuteCommandIntent` garde le shell
-  détaché ou celui de l'appelant de l'ADR 0050 §7 : il n'a pas de terminal.
-- **Historique et invite dans `IHackShell`**, en plus des membres listés par
-  l'ADR : l'historique est celui du shell (`IShellSession.History` le donne
-  aux commandes), et l'invite dépend du répertoire du shell.
-- **`HackCredentialPrompt` est une classe abstraite** avec deux méthodes
-  facultatives : un terminal minimal n'implémente que la saisie des
-  identifiants.
-- **`sudo` ne fait qu'un essai** et écrit « Sorry, try again. » avant
-  « sudo: authentication failed », comme avant ce chantier.
-- **Complétion sensible à la casse**, comme `bash` (l'ancien `TerminalPanel`
-  ignorait la casse et prenait le premier candidat).
+- **The shell is its own process**, child of the host app (ADR 0056 §7).
+  Before this work item, the shell shared the terminal's process (ADR 0050
+  §1): two tabs of the code editor shared their directory. Each
+  `TerminalPanel` now has its own. `ExecuteCommandIntent` keeps the detached
+  shell or the caller's shell from ADR 0050 §7: it has no terminal.
+- **History and prompt in `IHackShell`**, in addition to the members listed by
+  the ADR: the history is the shell's (`IShellSession.History` gives it
+  to commands), and the prompt depends on the shell's directory.
+- **`HackCredentialPrompt` is an abstract class** with two optional
+  methods: a minimal terminal only implements credential input.
+- **`sudo` makes only one attempt** and writes "Sorry, try again." before
+  "sudo: authentication failed", as before this work item.
+- **Case-sensitive completion**, like `bash` (the old `TerminalPanel`
+  ignored case and took the first candidate).
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Shell/ShellInterpreterTests.HostedShell.cs` :
-  refus sans `shell.host`, processus enfant et parent des commandes, répertoires
-  et `$?` séparés, `WorkingDirectory` et repli, fin du shell qui tue les
-  commandes, `sudo` par `HackCredentialPrompt`, entrée standard et historique,
-  complétion (positions de commande, alias, casse).
-- `Tests/HackerOs.App.Abstractions.Tests/AppCapabilitiesTests.cs` : `shell.host`
-  dangereuse.
+- `Tests/HackerOs.Platform.Core.Tests/Shell/ShellInterpreterTests.HostedShell.cs`:
+  refusal without `shell.host`, child process and parent of commands, separate
+  directories and `$?`, `WorkingDirectory` and fallback, shell end that kills
+  commands, `sudo` through `HackCredentialPrompt`, standard input and history,
+  completion (command positions, aliases, case).
+- `Tests/HackerOs.App.Abstractions.Tests/AppCapabilitiesTests.cs`: `shell.host`
+  dangerous.
 
-## Liste des tâches du chantier `rebuild/4-sdk-shell-host`
+## Task list for work item `rebuild/4-sdk-shell-host`
 
-- [x] Capacité `shell.host` (dangereuse) dans `AppCapabilities`.
-- [x] `HackShell`, `IHackShell`, `HackShellOptions`, `HackShellExecution`, `HackShellCompletion`, `HackCredentialPrompt`, `IAppShellHostGateway` dans le SDK.
-- [x] `ShellHostService`, `ShellHostPrompts`, `ShellCompletion`, `AppShellHostGateway` ; passerelle branchée par `AppExecutionContextFactory` ; enregistrement dans l'Ecosystem.
+- [x] `shell.host` capability (dangerous) in `AppCapabilities`.
+- [x] `HackShell`, `IHackShell`, `HackShellOptions`, `HackShellExecution`, `HackShellCompletion`, `HackCredentialPrompt`, `IAppShellHostGateway` in the SDK.
+- [x] `ShellHostService`, `ShellHostPrompts`, `ShellCompletion`, `AppShellHostGateway`; gateway wired by `AppExecutionContextFactory`; registration in the Ecosystem.
 - [x] `ShellExecutionOptions.StandardInput`.
-- [x] `TerminalPanel` sur le SDK seul, `TerminalCredentialPrompt` à la place de `TerminalDangerousCapabilityApprovalPrompt`, référence `Platform.Core` retirée, exemption retirée.
-- [x] Terminal et CodeEditor déclarent `shell.host` ; CodeEditor est une app système.
-- [x] Orchestrateur : une commande tuée pendant son exécution ne lève plus d'exception.
-- [x] Tests, ce document, `app-sdk.md`, `capabilities.md`, `shell-interpreter.md`, `shell-commands.md`, `dangerous-capability-approval.md`, plan et index.
+- [x] `TerminalPanel` on the SDK alone, `TerminalCredentialPrompt` in place of `TerminalDangerousCapabilityApprovalPrompt`, `Platform.Core` reference removed, exemption removed.
+- [x] Terminal and CodeEditor declare `shell.host`; CodeEditor is a system app.
+- [x] Orchestrator: a command killed during its execution no longer throws an exception.
+- [x] Tests, this document, `app-sdk.md`, `capabilities.md`, `shell-interpreter.md`, `shell-commands.md`, `dangerous-capability-approval.md`, plan and index.

@@ -1,41 +1,41 @@
-# Administration du système dans le SDK
+# System administration in the SDK
 
-## Objet
+## Purpose
 
-Donne aux apps système les opérations d'administration qui passaient par des
-services internes (ADR 0056 §8 à §11, ajusté par l'ADR 0060) :
+Gives system apps the administration operations that used to go through internal
+services (ADR 0056 §8 to §11, adjusted by ADR 0060):
 
-- lire et écrire les documents de paramètres de l'OS ;
-- administrer les capacités dangereuses (politique, décisions machine) ;
-- se connecter au serveur optionnel et synchroniser ;
-- redémarrer ou réinitialiser la machine ;
-- lire l'instantané brut du stockage ;
-- sauvegarder et restaurer toute la machine (ADR 0099 §1).
+- read and write the OS settings documents;
+- administer dangerous capabilities (policy, machine decisions);
+- connect to the optional server and synchronize;
+- restart or reset the machine;
+- read the raw storage snapshot;
+- back up and restore the whole machine (ADR 0099 §1).
 
-Paramètres et Diagnostic utilisent ces API et ne référencent plus Platform
-Core ni Infrastructure.Browser.
+Settings and Diagnostics use these APIs and no longer reference Platform
+Core or Infrastructure.Browser.
 
 ## Architecture
 
-| Couche | Fichiers |
+| Layer | Files |
 |---|---|
-| SDK (contrats, façades) | `Shared/HackerOs.AppSdk/Administration/` (`HackPermissionAdministration`, `HackComponentProviders`, `HackServerConnection`, `HackSystem`, `HackStorageDiagnostics` et leurs contrats), `Shared/HackerOs.AppSdk/Settings/IAppSystemSettingsGateway.cs`, `SettingsDocumentStores.cs` |
-| Platform Core (passerelles) | `Platform/HackerOs.Platform.Core/Administration/` : `AppSystemSettingsGateway`, `AppPermissionAdministrationGateway`, `AppServerConnectionGateway`, `AppSystemPowerGateway`, `AppStorageDiagnosticsGateway`, `AppSystemBackupGateway`, `AppUserAccountsGateway`, `AdministratorGate`, `SystemAdministrationGatewayServices` |
-| Platform Core (services) | `Power/SystemPowerService.cs` (séquence d'arrêt, `RestartAfterAsync`), `Backup/SystemBackupService.cs`, `Sessions/LocalPasswordService.cs` (ADR 0120), `Settings/OsSettingsDocumentRegistry.cs`, `Policy/AppPermissionAdministration.cs` (`ApplyMachineDecisionAsync`, `ApplyPolicyAsync`) |
-| Hôte Ecosystem | `Administration/BrowserSystemPowerDevice.cs` (`location.reload`, suppression de la base IndexedDB), `Administration/BrowserSystemBackupDevice.cs` (export, téléchargement, sélecteur de l'hôte), `Administration/IndexedDbStorageInspector.cs` (adaptateur de `IndexedDbInspectorService`) |
-| SDK Blazor | `Interop/BrowserClipboard.cs` et `wwwroot/clipboard.js` (presse-papiers de l'hôte), `[Obsolete]` depuis l'ADR 0065 puis retirés au gel du SDK 1.0 (ADR 0114) : Diagnostic copie par `HackClipboard`, que l'OS recopie vers l'hôte ([`clipboard.md`](../dev/clipboard.md)) |
+| SDK (contracts, facades) | `Shared/HackerOs.AppSdk/Administration/` (`HackPermissionAdministration`, `HackComponentProviders`, `HackServerConnection`, `HackSystem`, `HackStorageDiagnostics` and their contracts), `Shared/HackerOs.AppSdk/Settings/IAppSystemSettingsGateway.cs`, `SettingsDocumentStores.cs` |
+| Platform Core (gateways) | `Platform/HackerOs.Platform.Core/Administration/`: `AppSystemSettingsGateway`, `AppPermissionAdministrationGateway`, `AppServerConnectionGateway`, `AppSystemPowerGateway`, `AppStorageDiagnosticsGateway`, `AppSystemBackupGateway`, `AppUserAccountsGateway`, `AdministratorGate`, `SystemAdministrationGatewayServices` |
+| Platform Core (services) | `Power/SystemPowerService.cs` (shutdown sequence, `RestartAfterAsync`), `Backup/SystemBackupService.cs`, `Sessions/LocalPasswordService.cs` (ADR 0120), `Settings/OsSettingsDocumentRegistry.cs`, `Policy/AppPermissionAdministration.cs` (`ApplyMachineDecisionAsync`, `ApplyPolicyAsync`) |
+| Ecosystem host | `Administration/BrowserSystemPowerDevice.cs` (`location.reload`, deletion of the IndexedDB database), `Administration/BrowserSystemBackupDevice.cs` (export, download, host picker), `Administration/IndexedDbStorageInspector.cs` (adapter for `IndexedDbInspectorService`) |
+| Blazor SDK | `Interop/BrowserClipboard.cs` and `wwwroot/clipboard.js` (host clipboard), `[Obsolete]` since ADR 0065 then removed when SDK 1.0 was frozen (ADR 0114): Diagnostics copies through `HackClipboard`, which the OS copies over to the host ([`clipboard.md`](../dev/clipboard.md)) |
 
-`AppExecutionContextFactory` reçoit un `SystemAdministrationGatewayServices`
-(résolutions paresseuses ; `Passwords` est une propriété `init` ajoutée en 1.1) et crée, pour chaque instance, les sept passerelles
-avec les capacités et le principal de l'app. `AdministratorGate` appelle
-l'agent d'authentification de l'OS
-([`admin-authentication-agent.md`](../dev/admin-authentication-agent.md)) : l'app ne
-voit jamais le mot de passe, root par `sudo` passe sans demande, et l'OS agit
-ensuite lui-même.
+`AppExecutionContextFactory` receives a `SystemAdministrationGatewayServices`
+(lazy resolutions; `Passwords` is an `init` property added in 1.1) and creates, for each instance, the seven gateways
+with the app's capabilities and principal. `AdministratorGate` calls
+the OS authentication agent
+([`admin-authentication-agent.md`](../dev/admin-authentication-agent.md)): the app never
+sees the password, root through `sudo` goes through without a prompt, and the OS then
+acts by itself.
 
 ## API
 
-### Documents de l'OS
+### OS documents
 
 ```csharp
 await using HackSettingsDocument appearance = await HackSettings.OpenSystemAsync(AppContext, "appearance");
@@ -43,137 +43,137 @@ await appearance.SetAsync("accent", "cyan");                               // co
 await appearance.SetManyAsync(values, SettingLayer.System);                // /etc : une seule approbation
 ```
 
-Voir [`settings-files.md`](settings-files.md#documents-de-los-hacksettingsopensystemasync-adr-0056-8).
+See [`settings-files.md`](settings-files.md#documents-de-los-hacksettingsopensystemasync-adr-0056-8).
 
 ### Permissions (`permissions.manage`)
 
-| Méthode | Effet | Administrateur |
+| Method | Effect | Administrator |
 |---|---|---|
-| `GetPolicyAsync`, `GetOverviewAsync` | politique et état de chaque capacité dangereuse de chaque app | non |
-| `SetPolicyAsync(Prompt / Block)` | écrit `/etc/hackeros/security.config`, journal `capability.policy` | oui (`permissions.policy`) |
-| `SetMachineDecisionAsync(app, capacité, Allow / Deny / Ask)` | écrit `/etc/hackeros/app-permissions.config`, journal `capability.approve` / `capability.revoke` | oui (`permissions.machine-decision`) |
-| `RemoveOwnDenialAsync(app, capacité)` | retire le refus de l'utilisateur, la question revient au lancement | non |
+| `GetPolicyAsync`, `GetOverviewAsync` | policy and state of each dangerous capability of each app | no |
+| `SetPolicyAsync(Prompt / Block)` | writes `/etc/hackeros/security.config`, log `capability.policy` | yes (`permissions.policy`) |
+| `SetMachineDecisionAsync(app, capability, Allow / Deny / Ask)` | writes `/etc/hackeros/app-permissions.config`, log `capability.approve` / `capability.revoke` | yes (`permissions.machine-decision`) |
+| `RemoveOwnDenialAsync(app, capability)` | removes the user's denial, the question comes back at launch | no |
 
-Une app système ou une capacité non déclarée par l'app est refusée **avant**
-toute demande d'identifiants.
+A system app or a capability not declared by the app is refused **before**
+any credentials request.
 
-### Serveur (`server.connection.manage`)
+### Server (`server.connection.manage`)
 
 `GetStateAsync`, `ConnectAsync`, `CreateAccountAsync`, `DisconnectAsync`,
-`SyncAsync(domaine, sens)`, `GetConflictsAsync`. Domaines : `FileSystem`
-(push, pull), `Grants` (pull seulement : `ArgumentException` sinon),
-`FileAssociations` (push, pull). Sans serveur configuré : `NotConnected`, et
-la synchronisation ne fait rien. Les erreurs réseau deviennent
+`SyncAsync(domain, direction)`, `GetConflictsAsync`. Domains: `FileSystem`
+(push, pull), `Grants` (pull only: `ArgumentException` otherwise),
+`FileAssociations` (push, pull). With no server configured: `NotConnected`, and
+synchronization does nothing. Network errors become
 `HackServerConnectionException`.
 
-`GetRelayPolicyAsync` rend la politique du relais réseau du serveur connecté
-(`HackServerRelayPolicy` : ports, plages privées, quotas, flux ouverts, apps
-accordées, avertissements), ou `null` sans serveur ; Paramètres l'affiche
-dans sa section du serveur ([`server-network-relay.md`](../dev/server-network-relay.md)).
+`GetRelayPolicyAsync` returns the network relay policy of the connected server
+(`HackServerRelayPolicy`: ports, private ranges, quotas, open streams, granted
+apps, warnings), or `null` without a server; Settings displays it
+in its server section ([`server-network-relay.md`](../dev/server-network-relay.md)).
 
-ADR 0101 (chantier `v3/9-sync`) : `GetConflictsAsync` lit les conflits en
-attente enregistrés dans `~/.local/state/hackeros/sync-conflicts.json`
-(`HackSyncConflict` porte `DetectedAt`) ; `ShowConflictsAsync` ouvre le
-dialogue de conflit de l'OS ; `GetSyncStatusAsync` rend un `HackSyncStatus`
-(synchro périodique active, suspendue, en ligne, dernier passage, envoyés,
-reçus, dernière erreur, intervalle) ; `SetSyncPausedAsync` suspend ou reprend
-la synchro de l'utilisateur (`~/.config/hackeros/sync.config`) ;
-`SyncNowAsync` lance un passage complet. Les suppressions, les conflits et la
-synchro périodique sont décrits dans
+ADR 0101 (work item `v3/9-sync`): `GetConflictsAsync` reads the pending conflicts
+recorded in `~/.local/state/hackeros/sync-conflicts.json`
+(`HackSyncConflict` carries `DetectedAt`); `ShowConflictsAsync` opens the OS
+conflict dialog; `GetSyncStatusAsync` returns a `HackSyncStatus`
+(periodic sync active, paused, online, last run, sent,
+received, last error, interval); `SetSyncPausedAsync` pauses or resumes
+the user's sync (`~/.config/hackeros/sync.config`);
+`SyncNowAsync` launches a full run. Deletions, conflicts and
+periodic sync are described in
 [`synchronization.md`](../dev/synchronization.md).
 
-### Alimentation (`system.power`)
+### Power (`system.power`)
 
-`HackSystem.RebootAsync` et `HackSystem.FactoryResetAsync` demandent toujours
-un administrateur (`system.reboot`, `system.factory-reset`). Séquence de
-`SystemPowerService`, comme un `shutdown` :
+`HackSystem.RebootAsync` and `HackSystem.FactoryResetAsync` always ask for
+an administrator (`system.reboot`, `system.factory-reset`). Sequence of
+`SystemPowerService`, like a `shutdown`:
 
-1. entrée d'audit ;
-2. vidage des journaux ;
-3. fermeture de la session (`ISessionService.ShutdownAsync`) ;
-4. pour la réinitialisation, effacement du stockage ;
-5. redémarrage de l'hôte.
+1. audit entry;
+2. log flush;
+3. session closing (`ISessionService.ShutdownAsync`);
+4. for the reset, storage erasure;
+5. host restart.
 
-### Stockage (`system.storage.inspect`)
+### Storage (`system.storage.inspect`)
 
-`HackStorageDiagnostics.GetSnapshotAsync` rend un `HackStorageSnapshot`
-(magasins, nombre d'enregistrements, JSON, chemins résolus, liens) et
-`ToExportJson()`. L'instantané contourne les droits des fichiers : c'est
-pourquoi Diagnostic, app non système, demande un administrateur à son premier
-lancement.
+`HackStorageDiagnostics.GetSnapshotAsync` returns a `HackStorageSnapshot`
+(stores, record count, JSON, resolved paths, links) and
+`ToExportJson()`. The snapshot bypasses file permissions: that is
+why Diagnostics, a non-system app, asks for an administrator on its first
+launch.
 
-`GetWebSiteDatabasesAsync` liste les bases IndexedDB des sites (`hackweb.<id>` :
-version, magasins, nombre d'enregistrements, taille estimée) et
-`DeleteWebSiteDatabaseAsync(name)` en supprime une, avec la même capacité
-(ADR 0088 §4, [`asp-hack-site-data.md`](asp-hack-site-data.md)). Diagnostic les
-montre sous *Website databases*.
+`GetWebSiteDatabasesAsync` lists the sites' IndexedDB databases (`hackweb.<id>`:
+version, stores, record count, estimated size) and
+`DeleteWebSiteDatabaseAsync(name)` deletes one, with the same capability
+(ADR 0088 §4, [`asp-hack-site-data.md`](asp-hack-site-data.md)). Diagnostics shows them
+under *Website databases*.
 
-### Sauvegarde (`system.backup`)
+### Backup (`system.backup`)
 
-`HackSystemBackup.CreateAsync` télécharge une archive `.hosbak` de toute la
-machine sur l'ordinateur hôte ; `RestoreAsync(Merge | Replace)` ouvre le
-sélecteur de l'hôte, valide l'archive, **puis** demande un administrateur,
-ferme la session, restaure et redémarre. Création et restauration vont dans
-`/var/log/auth.log`. Détails : [`system-backup.md`](../dev/system-backup.md).
+`HackSystemBackup.CreateAsync` downloads a `.hosbak` archive of the whole
+machine to the host computer; `RestoreAsync(Merge | Replace)` opens the
+host's picker, validates the archive, **then** asks for an administrator,
+closes the session, restores and restarts. Creation and restoration are logged in
+`/var/log/auth.log`. Details: [`system-backup.md`](../dev/system-backup.md).
 
-### Comptes et mots de passe (`users.manage`)
+### Accounts and passwords (`users.manage`)
 
-`HackUserAccounts.ListAsync` et `ChangePasswordAsync` (son propre mot de passe,
-après le mot de passe courant) ne demandent aucune capacité ;
-`ResetPasswordAsync` et `RemovePasswordAsync` exigent `users.manage` et un
-administrateur (actions `users.password-reset` et `users.password-delete`).
-Le trousseau du compte visé est mis de côté. Détails :
+`HackUserAccounts.ListAsync` and `ChangePasswordAsync` (one's own password,
+after the current password) require no capability;
+`ResetPasswordAsync` and `RemovePasswordAsync` require `users.manage` and an
+administrator (actions `users.password-reset` and `users.password-delete`).
+The target account's keyring is set aside. Details:
 [`sensitive-settings.md`](../dev/sensitive-settings.md#4-mots-de-passe--passwd-et-réinitialisation)
-et [ADR 0120](../dev/adr/0120-passwd-and-administrator-password-reset.md).
+and [ADR 0120](../dev/adr/0120-passwd-and-administrator-password-reset.md).
 
 `CreateAsync(new HackNewUserAccount(login, nomAffiché, autorité, motDePasse))`
-et `DeleteAsync(login, removeHome)` exigent aussi `users.manage` et un
-administrateur (actions `users.add` et `users.delete`, ADR 0169). La création
-donne au compte son propre groupe, et `administrators` pour un administrateur ;
-le dossier personnel naît à la première connexion. La suppression refuse le
-compte de la session et le dernier administrateur actif, emporte les clés
-d'accès du compte et, avec `removeHome`, son dossier `/home/<login>`.
-`ValidateNewAccount` vérifie un compte avant l'envoi (nom de connexion, nom
-affiché de 128 caractères au plus, mot de passe). `HackUserAccount.PasskeyCount`
-donne le nombre de clés d'accès de chaque compte.
+and `DeleteAsync(login, removeHome)` also require `users.manage` and an
+administrator (actions `users.add` and `users.delete`, ADR 0169). Creation
+gives the account its own group, and `administrators` for an administrator;
+the home folder is born at first sign-in. Deletion refuses the
+session's account and the last active administrator, takes with it the account's
+passkeys and, with `removeHome`, its `/home/<login>` folder.
+`ValidateNewAccount` checks an account before sending (login name, display
+name of at most 128 characters, password). `HackUserAccount.PasskeyCount`
+gives the number of passkeys of each account.
 
-Clés d'accès de la session (ADR 0168), sans capacité : `ListPasskeysAsync`,
-`AddPasskeyAsync(nom)` (le navigateur demande la présence de l'utilisateur ;
-`OperationCanceledException` si la demande est fermée, `NotSupportedException`
-sans WebAuthn) et `RemovePasskeyAsync(id)`. `HackPasskey.UnlocksKeyring` dit si
-la clé ouvre le trousseau. Détails : [`passkeys.md`](../dev/passkeys.md).
+Session passkeys (ADR 0168), without a capability: `ListPasskeysAsync`,
+`AddPasskeyAsync(name)` (the browser asks for the user's presence;
+`OperationCanceledException` if the request is closed, `NotSupportedException`
+without WebAuthn) and `RemovePasskeyAsync(id)`. `HackPasskey.UnlocksKeyring` says whether
+the key opens the keyring. Details: [`passkeys.md`](../dev/passkeys.md).
 
-## Décisions
+## Decisions
 
-- Voir l'ADR 0060 : propriété `SystemPower` (pas `System`),
-  `HackPermissionDecision.Ask`, couche système écrite avec les droits de
-  l'appelant, `SetManyAsync`, presse-papiers de l'hôte pour Diagnostic
-  (ce dernier point est remplacé par l'ADR 0065 : `HackClipboard` et
+- See ADR 0060: `SystemPower` property (not `System`),
+  `HackPermissionDecision.Ask`, system layer written with the caller's
+  rights, `SetManyAsync`, host clipboard for Diagnostics
+  (the latter is replaced by ADR 0065: `HackClipboard` and
   `clipboard.write`).
-- `IndexedDbInspectorService` reste dans Infrastructure.Browser ;
-  l'adaptateur vers le SDK vit dans l'hôte Ecosystem.
-- L'ancien chemin par mot de passe de `AppPermissionAdministration` est gardé
-  pour ses tests ; les apps passent par l'agent.
+- `IndexedDbInspectorService` stays in Infrastructure.Browser;
+  the adapter to the SDK lives in the Ecosystem host.
+- The old password path of `AppPermissionAdministration` is kept
+  for its tests; apps go through the agent.
 
 ## Tests
 
-`Tests/HackerOs.Platform.Core.Tests/Administration/SystemAdministrationGatewayTests.cs` :
-document de l'OS lu et écrit sans capacité, couche système refusée à un
-utilisateur simple puis écrite sous root en une édition, document inconnu ;
-capacités exigées ; refus de l'agent sans écriture ; décision machine et
-politique journalisées ; app système refusée avant toute demande ; serveur
-absent ; `Grants` en pull seulement ; redémarrage refusé ; réinitialisation
-dans l'ordre fermeture, effacement, redémarrage ; inspection du stockage ;
-sauvegarde (capacité, hôte sans sauvegarde, refus de l'administrateur,
-sélecteur avant administrateur, ordre de la restauration, échec journalisé au
-démarrage suivant).
-`Tests/HackerOs.Platform.Core.Tests/Sessions/LocalPasswordServiceTests.cs` :
-ajout et suppression de comptes par la passerelle (`users.manage` et
-administrateur), clés d'accès de la session sans capacité ni administrateur.
-`Tests/HackerOs.Platform.Core.Tests/Sessions/LocalAccountServiceTests.cs` :
-groupes, noms réservés ou pris, suppression avec ou sans dossier, refus pour
-soi-même et pour le dernier administrateur.
+`Tests/HackerOs.Platform.Core.Tests/Administration/SystemAdministrationGatewayTests.cs`:
+OS document read and written without a capability, system layer refused to a
+simple user then written under root in one edit, unknown document;
+required capabilities; agent refusal without a write; machine decision and
+policy logged; system app refused before any request; server
+absent; `Grants` pull only; restart refused; reset
+in the order close, erase, restart; storage inspection;
+backup (capability, host without backup, administrator refusal,
+picker before administrator, restore order, failure logged at the next
+startup).
+`Tests/HackerOs.Platform.Core.Tests/Sessions/LocalPasswordServiceTests.cs`:
+adding and removing accounts through the gateway (`users.manage` and
+administrator), session passkeys without capability or administrator.
+`Tests/HackerOs.Platform.Core.Tests/Sessions/LocalAccountServiceTests.cs`:
+groups, reserved or taken names, deletion with or without home folder, refusal for
+oneself and for the last administrator.
 
-## Liste des tâches
+## Task list
 
-Voir [`app-sdk.md`](app-sdk.md#liste-des-tâches-du-chantier-rebuild4-sdk-system-admin).
+See [`app-sdk.md`](app-sdk.md#liste-des-tâches-du-chantier-rebuild4-sdk-system-admin).

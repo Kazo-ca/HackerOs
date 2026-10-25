@@ -77,7 +77,7 @@
 
 3.  **Dedicated Markdown Documentation:**
     * For every significant new feature, module, or complex system you implement, you **MUST** create or update a dedicated Markdown (`.md`) file.
-    * This documentation resides under `doc/en/wasm/` at the repository root: OS development docs (architecture, subsystems, build, tests, plans, pitfalls) in `doc/en/wasm/dev/`, docs for building apps and sites on the framework (SDK, app model, ASP.Hack) in `doc/en/wasm/framework/`, and project memory (state of the series, conventions, next free ADR number) in `doc/en/wasm/memory/`. Architecture decisions are recorded as an ADR under `doc/en/wasm/dev/adr/` when applicable.
+    * This documentation resides under `doc/` at the repository root, **in two languages with the same folders and file names**: French (the original) in `doc/fr/wasm/` and English (its translation) in `doc/en/wasm/`. In each language: OS development docs (architecture, subsystems, build, tests, plans, pitfalls) in `dev/`, docs for building apps and sites on the framework (SDK, app model, ASP.Hack) in `framework/`, and project memory (state of the series, conventions, next free ADR number) in `memory/`. Architecture decisions are recorded as an ADR under `dev/adr/` when applicable. **Every doc change updates both `doc/fr/` and `doc/en/` in the same change.** Root-level readmes follow the same rule: `README.md`/`readme.md` in English, `readme-fr.md` in French, each linking to the other on its first line.
     * **Content of Documentation:**
         * **Purpose:** What the feature does.
         * **Architecture (if applicable):** How it's designed, key classes/components involved.

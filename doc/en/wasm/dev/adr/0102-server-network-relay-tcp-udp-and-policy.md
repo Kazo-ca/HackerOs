@@ -1,101 +1,101 @@
-# ADR 0102 : relais réseau du serveur optionnel (corps HTTP, flux TCP, UDP, accord vérifié, politique dans `appsettings`)
+# ADR 0102: optional server network relay (HTTP body, TCP streams, UDP, verified grant, policy in `appsettings`)
 
-## Statut
+## Status
 
-Accepté le 2026-10-17 (chantier `v3/1-adr`, pour le chantier `v3/10-server-proxy`).
+Accepted on 2026-10-17 (work item `v3/1-adr`, for the work item `v3/10-server-proxy`).
 
-- **Complète :** ADR 0023 (partie relais, le reste est remplacé par l'ADR 0092),
-  [ADR 0035](0035-nmap-tcp-probe-fallback.md) (sonde TCP de `nmap`), ADR 0056 §6
-  (repli sur le réseau réel décidé par l'OS, capacité dangereuse
-  `network.real.access`), ADR 0031 (accords synchronisés, le serveur fait
-  autorité).
-- **Plan :** [`wasm-v3-completion-plan.md`](../plans/wasm-v3-completion-plan.md),
-  ligne `v3/10-server-proxy` ; manque R19.
+- **Complements:** ADR 0023 (relay part, the rest is replaced by ADR 0092),
+  [ADR 0035](0035-nmap-tcp-probe-fallback.md) (TCP probe of `nmap`), ADR 0056 §6
+  (fallback to the real network decided by the OS, dangerous capability
+  `network.real.access`), ADR 0031 (synchronized grants, the server is
+  authoritative).
+- **Plan:** [`wasm-v3-completion-plan.md`](../plans/wasm-v3-completion-plan.md),
+  line `v3/10-server-proxy`; gap R19.
 
-## Contexte
+## Context
 
-- `ProxyEndpoints` expose `POST /api/proxy/http`, `POST /api/proxy/tcp-probe` et
-  `GET /api/proxy/policy`. `Program.cs:21` annonce « HTTP/TCP/UDP », mais
-  `ProxyProtocol.Tcp` et `.Udp` sont refusés par `ValidateRequest`
-  (`ProxyService.cs:386`) et n'ont pas de contrat de flux.
-- `ProxyHttpRequest` porte le hash et la taille du corps, jamais ses octets :
-  un `POST` arrive vide.
-- Les protections SSRF (`ProxyService.cs`) sont des constantes : suffixes
-  simulés refusés, ports 80/443, plages privées bloquées, IP épinglée contre le
-  rebinding DNS. Les quotas aussi (`MaxResponseBytes` 10 Mio,
-  `MaxConcurrentPerDevice` 8, 5 redirections, sonde de 5 s).
-- Le serveur vérifie l'appareil et la présence d'un `AppId`, mais pas que
-  l'app a l'accord `network.real.access`.
+- `ProxyEndpoints` exposes `POST /api/proxy/http`, `POST /api/proxy/tcp-probe` and
+  `GET /api/proxy/policy`. `Program.cs:21` announces "HTTP/TCP/UDP", but
+  `ProxyProtocol.Tcp` and `.Udp` are rejected by `ValidateRequest`
+  (`ProxyService.cs:386`) and have no stream contract.
+- `ProxyHttpRequest` carries the hash and size of the body, never its bytes:
+  a `POST` arrives empty.
+- The SSRF protections (`ProxyService.cs`) are constants: simulated suffixes
+  rejected, ports 80/443, private ranges blocked, IP pinned against DNS
+  rebinding. The quotas too (`MaxResponseBytes` 10 MiB,
+  `MaxConcurrentPerDevice` 8, 5 redirects, 5 s probe).
+- The server checks the device and the presence of an `AppId`, but not that
+  the app has the `network.real.access` grant.
 
-## Décision
+## Decision
 
-### 1. Corps des requêtes HTTP
+### 1. HTTP request bodies
 
-`ProxyHttpRequest` reçoit le corps (`Body`, octets, 10 Mio au plus par défaut)
-avec son type de contenu ; le serveur vérifie qu'il correspond au hash et à la
-taille annoncés, puis l'envoie. `HackHttpClient` (ADR 0056) le transmet quand il
-retombe sur le réseau réel.
+`ProxyHttpRequest` receives the body (`Body`, bytes, at most 10 MiB by default)
+with its content type; the server checks that it matches the announced hash and
+size, then sends it. `HackHttpClient` (ADR 0056) passes it on when it
+falls back to the real network.
 
-### 2. Flux TCP
+### 2. TCP streams
 
-- `GET /api/proxy/tcp?host=…&port=…&appId=…` ouvert en **WebSocket** : chaque
-  message binaire est un morceau du flux dans un sens, la fermeture du
-  WebSocket ferme la connexion TCP (et inversement, avec le code de fermeture
-  qui dit qui a fermé).
-- Mêmes validations que HTTP (suffixes simulés, plages privées, IP épinglée),
-  mais les ports permis viennent de `Proxy:Tcp:AllowedPorts`.
-- Côté OS, `HackTcpClient` (ADR 0056) l'utilise quand la cible n'est pas sur le
-  réseau simulé et que l'app a `network.real.access`.
+- `GET /api/proxy/tcp?host=…&port=…&appId=…` opened as a **WebSocket**: each
+  binary message is a chunk of the stream in one direction, closing the
+  WebSocket closes the TCP connection (and conversely, with the close code
+  telling who closed).
+- Same validations as HTTP (simulated suffixes, private ranges, pinned IP),
+  but the allowed ports come from `Proxy:Tcp:AllowedPorts`.
+- On the OS side, `HackTcpClient` (ADR 0056) uses it when the target is not on the
+  simulated network and the app has `network.real.access`.
 
 ### 3. UDP
 
-- `GET /api/proxy/udp?host=…&port=…&appId=…` en WebSocket : un message binaire
-  est **un** datagramme, dans chaque sens, vers une seule destination (socket
-  UDP « connecté »). Pas de diffusion ni de multidiffusion.
-- Ports permis : `Proxy:Udp:AllowedPorts`, par défaut `53` (DNS) et `123`
-  (NTP). Nouveau `HackUdpClient` dans le SDK réseau.
+- `GET /api/proxy/udp?host=…&port=…&appId=…` as a WebSocket: one binary message
+  is **one** datagram, in each direction, to a single destination ("connected"
+  UDP socket). No broadcast or multicast.
+- Allowed ports: `Proxy:Udp:AllowedPorts`, by default `53` (DNS) and `123`
+  (NTP). New `HackUdpClient` in the network SDK.
 
-### 4. Accord vérifié par le serveur
+### 4. Grant verified by the server
 
-Le serveur refuse (`403`, `ProxyErrorCode.GrantMissing`) une requête dont
-l'app n'a pas l'accord `network.real.access` pour cet utilisateur dans **ses**
-accords synchronisés (ADR 0031, le serveur fait autorité). Le contrôle de l'OS
-reste ; celui du serveur empêche un client modifié de s'en passer.
+The server rejects (`403`, `ProxyErrorCode.GrantMissing`) a request whose
+app does not have the `network.real.access` grant for this user in **its**
+synchronized grants (ADR 0031, the server is authoritative). The OS check
+remains; the server's check prevents a modified client from bypassing it.
 
-### 5. Politique dans `appsettings`
+### 5. Policy in `appsettings`
 
-Section `HackerOs:Proxy` de `appsettings.json`, lue au démarrage par des
-`IOptions` :
+`HackerOs:Proxy` section of `appsettings.json`, read at startup through
+`IOptions`:
 
-| Clé | Défaut | Effet |
+| Key | Default | Effect |
 |---|---|---|
-| `Enabled` | `true` | coupe tout le relais |
-| `Http:AllowedPorts` | `[80, 443]` | ports HTTP |
-| `Tcp:AllowedPorts` | `[80, 443]` | ports des flux TCP (`nmap` garde sa sonde sur tout port, ADR 0035) |
-| `Udp:AllowedPorts` | `[53, 123]` | ports UDP |
-| `AllowAllPorts` | `false` | « tout autoriser » : aucun filtre de port |
-| `AllowPrivateNetworks` | `false` | autorise les plages privées (le réseau local de la machine du serveur) ; la boucle locale et les métadonnées du cloud (`169.254.0.0/16`) restent bloquées |
-| `Quotas:Enabled` | `true` | « désactiver les quotas » |
-| `Quotas:MaxResponseBytes`, `MaxRequestBytes`, `MaxConcurrentPerDevice`, `MaxStreamsPerDevice`, `MaxRedirectHops`, `StreamIdleTimeoutSeconds` | 10 Mio, 10 Mio, 8, 4, 5, 300 | limites |
+| `Enabled` | `true` | turns off the whole relay |
+| `Http:AllowedPorts` | `[80, 443]` | HTTP ports |
+| `Tcp:AllowedPorts` | `[80, 443]` | TCP stream ports (`nmap` keeps its probe on any port, ADR 0035) |
+| `Udp:AllowedPorts` | `[53, 123]` | UDP ports |
+| `AllowAllPorts` | `false` | "allow everything": no port filter |
+| `AllowPrivateNetworks` | `false` | allows private ranges (the local network of the server machine); loopback and cloud metadata (`169.254.0.0/16`) remain blocked |
+| `Quotas:Enabled` | `true` | "disable quotas" |
+| `Quotas:MaxResponseBytes`, `MaxRequestBytes`, `MaxConcurrentPerDevice`, `MaxStreamsPerDevice`, `MaxRedirectHops`, `StreamIdleTimeoutSeconds` | 10 MiB, 10 MiB, 8, 4, 5, 300 | limits |
 
-- Au démarrage, le serveur écrit un **avertissement** pour chaque réglage
-  risqué (`AllowAllPorts`, `AllowPrivateNetworks`, quotas désactivés) et rappelle
-  qu'il est mono-utilisateur.
-- Le relais est une API du serveur, indépendante de la façon dont le serveur
-  sert l'interface : il marche de la même façon aujourd'hui (rendu côté serveur,
-  ADR 0027) et quand le serveur enverra l'OS en WebAssembly avec seulement son
-  API (choix de Benoit du 2026-10-17, chantier `exec/8`).
-- `GET /api/proxy/policy` renvoie la politique effective, que l'OS affiche
-  dans Paramètres (connexion au serveur).
-- Le commentaire de `Program.cs` dit ce qui existe vraiment.
+- At startup, the server writes a **warning** for each risky setting
+  (`AllowAllPorts`, `AllowPrivateNetworks`, disabled quotas) and reminds that
+  it is single-user.
+- The relay is a server API, independent of how the server serves the
+  interface: it works the same way today (server-side rendering,
+  ADR 0027) and when the server serves the OS in WebAssembly with only its
+  API (Benoit's choice of 2026-10-17, work item `exec/8`).
+- `GET /api/proxy/policy` returns the effective policy, which the OS displays
+  in Settings (server connection).
+- The comment in `Program.cs` says what really exists.
 
-## Conséquences
+## Consequences
 
-- `v3/10` ajoute les contrats (`HackerOs.Server.Contracts/Proxy`), les deux
-  points WebSocket, les options, le contrôle des accords, `HackUdpClient`, et des
-  tests serveur (corps transmis, flux TCP aller-retour contre un écho local avec
-  `AllowPrivateNetworks`, datagramme UDP, accord manquant, avertissements).
-- L'hôte Ecosystem sans serveur ne change pas : sans serveur, le réseau réel
-  n'est simplement pas disponible.
-- `sdk-network.md`, `sdk-reference.md`, `capabilities.md` et la doc du serveur
-  (`docs/old/hosting-model.md` par renvoi, `project-overview.md`) sont mis à jour.
+- `v3/10` adds the contracts (`HackerOs.Server.Contracts/Proxy`), the two
+  WebSocket endpoints, the options, the grant check, `HackUdpClient`, and
+  server tests (body passed through, TCP stream round trip against a local echo with
+  `AllowPrivateNetworks`, UDP datagram, missing grant, warnings).
+- The Ecosystem host without a server does not change: without a server, the real network
+  is simply not available.
+- `sdk-network.md`, `sdk-reference.md`, `capabilities.md` and the server docs
+  (`docs/old/hosting-model.md` by reference, `project-overview.md`) are updated.

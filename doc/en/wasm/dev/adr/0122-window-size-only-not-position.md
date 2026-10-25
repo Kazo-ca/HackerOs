@@ -1,35 +1,35 @@
-# ADR 0122 : une fenêtre retient sa taille, pas sa position
+# ADR 0122: a window remembers its size, not its position
 
-## Statut
+## Status
 
-Accepté le 2026-10-17 (série v3.1, correction de `v3.1/2-window-geometry`),
-sur la réponse de Benoit à la question 1 du fil « V3.1 1 » : « 1.c », soit
-« la taille seulement, comme sous GNOME ».
+Accepted on 2026-10-17 (v3.1 series, fix to `v3.1/2-window-geometry`),
+on Benoit's answer to question 1 of the thread "V3.1 1": "1.c", that is
+"size only, as under GNOME".
 
-- **Remplace :** [ADR 0116](0116-window-geometry-restore.md) §1 (« taille,
-  position et état agrandi »), les clés `x` et `y` du §2, et la correction de
-  position et le décalage de la deuxième instance du §4 (points 3 et 4).
-- **Garde :** le reste de l'ADR 0116 : fichier
-  `~/.local/state/hackeros/windows/<appId>.config`, état agrandi, regroupement
-  des écritures (§3), correction de la taille (§4 point 2),
-  `WindowOptions.RememberGeometry`, ce qui n'est pas couvert (§5).
-- **Document :** [`window-geometry.md`](../window-geometry.md).
+- **Replaces:** [ADR 0116](0116-window-geometry-restore.md) §1 ("size,
+  position and maximized state"), the `x` and `y` keys of §2, and the position
+  correction and the second-instance offset of §4 (points 3 and 4).
+- **Keeps:** the rest of ADR 0116: file
+  `~/.local/state/hackeros/windows/<appId>.config`, maximized state, write
+  debouncing (§3), size correction (§4 point 2),
+  `WindowOptions.RememberGeometry`, what is not covered (§5).
+- **Document:** [`window-geometry.md`](../window-geometry.md).
 
-## Contexte
+## Context
 
-L'ADR 0116 recommandait de tout retenir, comme Windows et macOS, et le chantier
-`v3.1/2-window-geometry` (PR #170) l'a livré ainsi. Benoit a choisi l'autre
-modèle : sous GNOME, le gestionnaire de fenêtres ne replace pas une fenêtre, et
-une app GTK ne retient que sa taille et son état agrandi (gedit, Nautilus). Ce
-modèle est plus fidèle au bureau Linux que HackerOS imite.
+ADR 0116 recommended remembering everything, like Windows and macOS, and the work item
+`v3.1/2-window-geometry` (PR #170) delivered it that way. Benoit chose the other
+model: under GNOME, the window manager does not place a window back, and
+a GTK app only remembers its size and maximized state (gedit, Nautilus). This
+model is more faithful to the Linux desktop that HackerOS imitates.
 
-## Décision
+## Decision
 
-- Une fenêtre d'app retient sa **taille normale** et son **état agrandi**.
-  Elle s'ouvre toujours à sa place de cascade (`InitialBounds`), avec la taille
-  lue, corrigée comme avant (tailles déclarées aujourd'hui, zone de travail,
-  jamais sous le minimum).
-- Le fichier ne contient plus que `width`, `height` et `maximized` :
+- An app window remembers its **normal size** and its **maximized state**.
+  It always opens at its cascade position (`InitialBounds`), with the size
+  read, corrected as before (sizes declared today, work area,
+  never below the minimum).
+- The file now contains only `width`, `height` and `maximized`:
 
   ```ini
   # Window size of org.hackeros.text-editor (ADR 0116, ADR 0122)
@@ -38,29 +38,29 @@ modèle est plus fidèle au bureau Linux que HackerOS imite.
   maximized=false
   ```
 
-- Un fichier écrit avant cet ADR (avec `x=` et `y=`) reste lisible : sa taille
-  est reprise, sa position ignorée, et la prochaine écriture le réécrit sans
-  ces clés.
-- Un déplacement seul ne déclenche plus d'écriture ; seuls un changement de
-  taille, l'agrandissement, la restauration et la fermeture en déclenchent.
-- Une deuxième fenêtre de la même app prend la place de cascade suivante, comme
-  toute nouvelle fenêtre, avec la même taille lue.
+- A file written before this ADR (with `x=` and `y=`) remains readable: its size
+  is taken, its position ignored, and the next write rewrites it without
+  those keys.
+- A move alone no longer triggers a write; only a size change,
+  maximize, restore and close do.
+- A second window of the same app takes the next cascade position, like
+  any new window, with the same size read.
 
-## Conséquences
+## Consequences
 
-- `SavedWindowGeometry` porte `Width`, `Height` et `IsMaximized` (plus de
-  `Bounds`) ; `WindowLaunchCoordinator.RestoredBounds` prend la taille lue et
-  l'indice de cascade ; `MinimumVisibleTitleBarWidth` disparaît. Ces types sont
-  dans `HackerOs.Platform.Blazor`, hors de la promesse du SDK (ADR 0114 §2), et
-  n'étaient pas encore publiés (`PublicAPI.Unshipped.txt`).
-- `WindowOptions.RememberGeometry` (SDK 1.1) ne change pas : à `false`, la
-  fenêtre s'ouvre toujours à sa taille déclarée.
-- Tests unitaires et E2E adaptés : la fenêtre rouvre avec la même taille, à sa
-  place de cascade.
+- `SavedWindowGeometry` carries `Width`, `Height` and `IsMaximized` (no more
+  `Bounds`); `WindowLaunchCoordinator.RestoredBounds` takes the size read and
+  the cascade index; `MinimumVisibleTitleBarWidth` disappears. These types are
+  in `HackerOs.Platform.Blazor`, outside the SDK promise (ADR 0114 §2), and
+  were not yet published (`PublicAPI.Unshipped.txt`).
+- `WindowOptions.RememberGeometry` (SDK 1.1) does not change: when `false`, the
+  window always opens at its declared size.
+- Unit and E2E tests adapted: the window reopens with the same size, at its
+  cascade position.
 
-## Options écartées
+## Rejected options
 
-- **Taille, position et état agrandi** (ADR 0116 §1) : ce que font Windows et
-  macOS, écarté par Benoit au profit du modèle GNOME.
-- **Retenir aussi la position sans la relire** : un fichier qui garde une
-  donnée jamais utilisée prête à confusion.
+- **Size, position and maximized state** (ADR 0116 §1): what Windows and
+  macOS do, rejected by Benoit in favor of the GNOME model.
+- **Also remember the position without reading it back**: a file that keeps
+  data that is never used is confusing.

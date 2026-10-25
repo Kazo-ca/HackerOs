@@ -1,14 +1,14 @@
-# Console : complétion des chemins, `exit` et onglets
+# Console: path completion, `exit` and tabs
 
-## Objet
+## Purpose
 
-Chantier `rebuild/4-terminal` de la phase 4 (ADR 0058, section 4). La console
-atteint la parité avec un terminal Linux :
+Work item `rebuild/4-terminal` of phase 4 (ADR 0058, section 4). The console
+reaches parity with a Linux terminal:
 
-- **Tab complète aussi les chemins**, et c'est le shell qui le fait
-  (`IHackShell.CompleteAsync`), pas l'émulateur de terminal ;
-- **`exit [n]`** est une commande du catalogue qui termine le shell ;
-- **plusieurs onglets**, chacun avec son propre shell `hsh`.
+- **Tab also completes paths**, and it is the shell that does it
+  (`IHackShell.CompleteAsync`), not the terminal emulator;
+- **`exit [n]`** is a catalog command that ends the shell;
+- **several tabs**, each with its own `hsh` shell.
 
 ```text
 Terminal (fenêtre, PID 12)
@@ -17,149 +17,146 @@ Terminal (fenêtre, PID 12)
  └─ hsh (PID 14)        ← onglet « ~ »
 ```
 
-Le rendu (grille de caractères, couleurs, édition de la ligne, écran
-alternatif) est décrit dans [`terminal-emulator.md`](terminal-emulator.md)
-(ADR 0061).
+Rendering (character grid, colors, line editing, alternate screen) is described
+in [`terminal-emulator.md`](terminal-emulator.md) (ADR 0061).
 
-## Complétion par Tab
+## Tab completion
 
-Calculée par `ShellCompletion` (Platform Core) dans le contexte d'exécution du
-shell : un chemin relatif part du répertoire **du shell**, et la lecture du
-dossier passe par l'API publique `HackDirectoryInfo` avec les droits du shell,
-comme un `ls` qu'il lancerait.
+Computed by `ShellCompletion` (Platform Core) in the shell's execution context:
+a relative path starts from the **shell's** directory, and reading the folder
+goes through the public `HackDirectoryInfo` API with the shell's permissions,
+like an `ls` it would launch.
 
-| Mot sous le curseur | Candidats |
+| Word under the cursor | Candidates |
 |---|---|
-| Premier mot d'une commande (début de ligne, après `\|` ou `&&`), sans `/` | Commandes installées et alias statiques, sensibles à la casse. |
-| Tout autre mot, ou premier mot avec un `/` (`./build.sh`) | Entrées du dossier désigné par le début du mot. |
-| `~` seul | `~/`. |
-| Mot entre guillemets | Rien (il faudrait fermer le guillemet). |
+| First word of a command (start of line, after `\|` or `&&`), without `/` | Installed commands and static aliases, case-sensitive. |
+| Any other word, or first word with a `/` (`./build.sh`) | Entries of the folder designated by the start of the word. |
+| `~` alone | `~/`. |
+| Word in quotes | Nothing (the quote would have to be closed). |
 
-Règles des chemins :
+Path rules:
 
-- le début tapé (`~/`, `../`, `docs/`) est gardé tel quel, seul le nom est
-  complété ; `~` est développé avec le `HOME` du shell pour la lecture ;
-- un dossier finit par `/` (aucune espace n'est ajoutée après) ;
-- les entrées cachées ne sont proposées que si le nom tapé commence par `.` ;
-- les caractères que le parseur couperait ou développerait (espace, `|`, `&`,
-  `;`, `<`, `>`, `$`, guillemets, `*`, `?`…) sont échappés par `\` :
-  `cat My` donne `cat My\ Notes.txt ` ; un mot déjà échappé (`My\ N`) est
-  reconnu comme un seul mot ;
-- une redirection termine un mot : `echo x >no` complète `notes.txt` ;
-- un dossier absent ou illisible (droits, capacité) ne propose rien, sans
-  erreur.
+- the typed start (`~/`, `../`, `docs/`) is kept as is, only the name is
+  completed; `~` is expanded with the shell's `HOME` for reading;
+- a folder ends with `/` (no space is added after it);
+- hidden entries are offered only if the typed name starts with `.`;
+- characters that the parser would split or expand (space, `|`, `&`, `;`, `<`,
+  `>`, `$`, quotes, `*`, `?`...) are escaped by `\`: `cat My` gives
+  `cat My\ Notes.txt `; an already escaped word (`My\ N`) is recognized as a
+  single word;
+- a redirection ends a word: `echo x >no` completes `notes.txt`;
+- a missing or unreadable folder (permissions, capability) offers nothing,
+  without an error.
 
-`HackShellCompletion.DisplayCandidates` donne ce que le terminal liste au
-second Tab : le dernier segment, sans ses échappements (`My Notes.txt`,
-`sub/`), comme `bash`.
+`HackShellCompletion.DisplayCandidates` gives what the terminal lists on the
+second Tab: the last segment, without its escapes (`My Notes.txt`, `sub/`),
+like `bash`.
 
 ## `exit [n]`
 
-| Appel | Effet |
+| Call | Effect |
 |---|---|
-| `exit` | Le shell sort avec `$?`. |
-| `exit n` | Sort avec `n` modulo 256 (`exit 300` → `44`, `exit -1` → `255`). |
-| `exit abc` | `exit: abc: numeric argument required`, sort avec `2`. |
-| `exit 1 2` | `exit: too many arguments`, code `1`, le shell reste. |
-| `exit 4 \| cat` | Dans un tube, la demande atteint une copie du shell et se perd, comme le sous-shell de `bash`. |
+| `exit` | The shell exits with `$?`. |
+| `exit n` | Exits with `n` modulo 256 (`exit 300` → `44`, `exit -1` → `255`). |
+| `exit abc` | `exit: abc: numeric argument required`, exits with `2`. |
+| `exit 1 2` | `exit: too many arguments`, code `1`, the shell stays. |
+| `exit 4 \| cat` | In a pipe, the request reaches a copy of the shell and is lost, like `bash`'s subshell. |
 
-La commande (`org.hackeros.commands.exit`, capacité `shell.control`) appelle
-`IShellSession.Exit(int?)`. `ShellSession.RequestExit` note le statut ;
-l'interpréteur n'exécute pas la suite de la ligne (`exit 0 && echo late`
-n'affiche rien), puis l'hôte du shell (`ShellHostService`) termine le
-processus `hsh` avec ce statut. `IHackShell.HasExited` devient vrai et
-`ExecuteAsync` lève ensuite `ObjectDisposedException`.
+The command (`org.hackeros.commands.exit`, capability `shell.control`) calls
+`IShellSession.Exit(int?)`. `ShellSession.RequestExit` notes the status; the
+interpreter does not execute the rest of the line (`exit 0 && echo late` prints
+nothing), then the shell host (`ShellHostService`) ends the `hsh` process with
+that status. `IHackShell.HasExited` becomes true and `ExecuteAsync` then throws
+`ObjectDisposedException`.
 
-**Ctrl+D** sur une ligne vide, sans commande en cours, fait la même chose :
-le terminal affiche `exit` et termine le shell avec `$?`.
+**Ctrl+D** on an empty line, with no command running, does the same thing: the
+terminal prints `exit` and ends the shell with `$?`.
 
-`TerminalPanel.OnExitRequested` est appelé quand le shell est sorti. Sans
-abonné, le panneau reste ouvert et affiche `[hsh exited with status n]`.
-Un hôte qui embarque le terminal par contrat (ADR 0063) reçoit aussi
-l'événement `IHackTerminal.Exited` : l'éditeur de code ferme l'onglet du
-terminal intégré, et masque le dock pour le dernier.
+`TerminalPanel.OnExitRequested` is called when the shell has exited. Without a
+subscriber, the panel stays open and prints `[hsh exited with status n]`. A
+host that embeds the terminal by contract (ADR 0063) also receives the
+`IHackTerminal.Exited` event: the code editor closes the integrated terminal's
+tab, and hides the dock for the last one.
 
-## Onglets
+## Tabs
 
-`TerminalTabs` (`Shared/HackerOs.AppSdk.Terminal`) est un composant
-réutilisable : chaque onglet est un `TerminalPanel`, donc un `hsh` distinct
-avec son répertoire, son environnement, son historique et son `$?`. La
-fenêtre Terminal n'est plus qu'un hôte de `TerminalTabs`.
+`TerminalTabs` (`Shared/HackerOs.AppSdk.Terminal`) is a reusable component:
+each tab is a `TerminalPanel`, hence a distinct `hsh` with its directory,
+environment, history and `$?`. The Terminal window is now only a host of
+`TerminalTabs`.
 
-| Action | Effet |
+| Action | Effect |
 |---|---|
-| `+`, Ctrl+Maj+T | Nouvel onglet après l'onglet actif, dans le répertoire de l'onglet actif. |
-| `×`, Ctrl+Maj+W, `exit`, Ctrl+D | Ferme l'onglet ; son shell et ses commandes s'arrêtent (disposition du panneau). L'onglet de droite (sinon de gauche) devient actif. |
-| Ctrl+PgPréc, Ctrl+PgSuiv | Onglet précédent, suivant, en boucle. |
-| Dernier onglet fermé | `OnLastTabClosed` : la fenêtre Terminal arrête son propre processus (`Processes.StopAsync` sur son PID), ce qui ferme la fenêtre. |
+| `+`, Ctrl+Shift+T | New tab after the active tab, in the active tab's directory. |
+| `×`, Ctrl+Shift+W, `exit`, Ctrl+D | Closes the tab; its shell and commands stop (panel disposal). The tab to the right (otherwise to the left) becomes active. |
+| Ctrl+PgUp, Ctrl+PgDn | Previous, next tab, looping. |
+| Last tab closed | `OnLastTabClosed`: the Terminal window stops its own process (`Processes.StopAsync` on its PID), which closes the window. |
 
-Titre d'un onglet (`TerminalPanel.Title`, `OnTitleChanged`) : nom de la
-commande en cours, sinon dernier segment du répertoire de l'invite (`~`,
-`projets`, `/`).
+Title of a tab (`TerminalPanel.Title`, `OnTitleChanged`): name of the running
+command, otherwise last segment of the prompt's directory (`~`, `projets`,
+`/`).
 
-Les raccourcis sont interceptés par `TerminalTabs.razor.js`, qui annule
-l'action du navigateur. Un navigateur peut garder certains raccourcis pour ses
-propres onglets (Chrome garde Ctrl+Maj+T et Ctrl+Maj+W hors application
-installée) ; les boutons `+` et `×` marchent toujours.
+The shortcuts are intercepted by `TerminalTabs.razor.js`, which cancels the
+browser's action. A browser may keep some shortcuts for its own tabs (Chrome
+keeps Ctrl+Shift+T and Ctrl+Shift+W outside an installed app); the `+` and `×`
+buttons always work.
 
-Tab ne déplace pas le focus du navigateur : xterm.js le reçoit et l'envoie au
-terminal (ADR 0061). Le gestionnaire de touches de xterm.js laisse remonter
-les raccourcis d'onglets ci-dessus jusqu'à `TerminalTabs`.
+Tab does not move the browser's focus: xterm.js receives it and sends it to the
+terminal (ADR 0061). xterm.js's key handler lets the tab shortcuts above bubble
+up to `TerminalTabs`.
 
 ### API
 
-| Membre | Rôle |
+| Member | Role |
 |---|---|
-| `TerminalTabs.AppContext`, `CallerAppId`, `InitialCwd` | Comme `TerminalPanel`, pour le premier onglet. |
-| `TerminalTabs.OnLastTabClosed` | Le dernier onglet s'est fermé. |
-| `TerminalTabs.OpenTabAsync`, `CloseActiveTabAsync`, `SwitchTabAsync(±1)` | Les actions des raccourcis. |
-| `TerminalTabSet`, `TerminalTabState` | Règles d'ordre des onglets, testables sans rendu. |
-| `TerminalPanel.Title`, `OnTitleChanged`, `WorkingDirectory`, `FocusAsync` | Ce dont un hôte d'onglets a besoin. |
+| `TerminalTabs.AppContext`, `CallerAppId`, `InitialCwd` | As for `TerminalPanel`, for the first tab. |
+| `TerminalTabs.OnLastTabClosed` | The last tab has closed. |
+| `TerminalTabs.OpenTabAsync`, `CloseActiveTabAsync`, `SwitchTabAsync(±1)` | The shortcut actions. |
+| `TerminalTabSet`, `TerminalTabState` | Tab ordering rules, testable without rendering. |
+| `TerminalPanel.Title`, `OnTitleChanged`, `WorkingDirectory`, `FocusAsync` | What a tab host needs. |
 
-## Décisions
+## Decisions
 
-- **`exit` est une commande du catalogue**, comme `cd` (ADR 0051), et non un
-  nom codé en dur dans le terminal : elle passe par `IShellSession.Exit`, un
-  membre à implémentation par défaut (`NotSupportedException`) pour ne pas
-  casser les autres implémentations.
-- **Candidats = mots complets** (`~/docs/notes.txt`) pour que `ApplyTo` et
-  `CommonPrefix` restent simples ; l'affichage court est
-  `DisplayCandidates`.
-- **Pas de complétion dans les guillemets** ni de `~utilisateur` : absents du
-  legacy, ils compliqueraient le découpage des mots.
-- **La fenêtre se ferme en arrêtant son processus** : le SDK n'a pas d'API
-  « fermer ma fenêtre », et le bureau ferme déjà la fenêtre d'un processus
-  arrêté.
-- **CodeEditor garde ses propres onglets** (ADR 0058) ; depuis l'ADR 0063,
-  chacun embarque le terminal de l'app Terminal par contrat, et l'éditeur
-  réagit à `exit` par `IHackTerminal.Exited`.
-- **`;` n'est pas reconnu par le parseur** : la complétion le traite comme un
-  séparateur pour être prête, mais les exemples utilisent `&&`.
+- **`exit` is a catalog command**, like `cd` (ADR 0051), and not a hard-coded
+  name in the terminal: it goes through `IShellSession.Exit`, a member with a
+  default implementation (`NotSupportedException`) so as not to break other
+  implementations.
+- **Candidates = full words** (`~/docs/notes.txt`) so that `ApplyTo` and
+  `CommonPrefix` stay simple; the short display is `DisplayCandidates`.
+- **No completion inside quotes** and no `~user`: absent from the legacy
+  version, they would complicate word splitting.
+- **The window closes by stopping its process**: the SDK has no "close my
+  window" API, and the desktop already closes the window of a stopped process.
+- **CodeEditor keeps its own tabs** (ADR 0058); since ADR 0063, each embeds the
+  Terminal app's terminal by contract, and the editor reacts to `exit` through
+  `IHackTerminal.Exited`.
+- **`;` is not recognized by the parser**: completion treats it as a separator
+  to be ready, but the examples use `&&`.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Shell/ShellInterpreterTests.HostedShell.cs` :
-  chemins (relatifs, `~`, `../`, absolus, échappements, cachés, redirections,
-  `./`, dossier absent, casse), répertoire du shell, dossier illisible,
-  `DisplayCandidates`, `exit` (statuts, modulo, non numérique, fin du
-  processus, suite de la ligne, tube, trop d'arguments, `$?`).
-- `Tests/HackerOs.Commands.Tests/CoreCommandsTests.cs` : `ExitCommand`.
-- `Tests/HackerOs.AppSdk.Terminal.Tests/TerminalTabSetTests.cs` : ordre,
-  fermeture, bascule des onglets.
-- `Tests/HackerOs.Ecosystem.Tests/BuildKnownLazyAppsTests.cs` : `exit` au
-  catalogue (75 apps, 63 commandes depuis `stress`, ADR 0070).
-- Vérification dans le navigateur (publication Release) : `cd pro` + Tab →
-  `cd projets/`, second Tab liste `alpha/  notes.txt`, le focus reste sur la
-  ligne, un nouvel onglet s'ouvre dans `~/projets`, `exit` ferme l'onglet puis
-  la fenêtre, aucune erreur.
+- `Tests/HackerOs.Platform.Core.Tests/Shell/ShellInterpreterTests.HostedShell.cs`:
+  paths (relative, `~`, `../`, absolute, escapes, hidden, redirections, `./`,
+  missing folder, case), shell directory, unreadable folder,
+  `DisplayCandidates`, `exit` (statuses, modulo, non-numeric, end of process,
+  rest of the line, pipe, too many arguments, `$?`).
+- `Tests/HackerOs.Commands.Tests/CoreCommandsTests.cs`: `ExitCommand`.
+- `Tests/HackerOs.AppSdk.Terminal.Tests/TerminalTabSetTests.cs`: order,
+  closing, tab switching.
+- `Tests/HackerOs.Ecosystem.Tests/BuildKnownLazyAppsTests.cs`: `exit` in the
+  catalog (75 apps, 63 commands since `stress`, ADR 0070).
+- Verification in the browser (Release publication): `cd pro` + Tab →
+  `cd projets/`, second Tab lists `alpha/  notes.txt`, focus stays on the line,
+  a new tab opens in `~/projets`, `exit` closes the tab then the window, no
+  error.
 
-## Liste des tâches du chantier `rebuild/4-terminal`
+## Task list for work item `rebuild/4-terminal`
 
-- [x] Complétion des chemins dans `ShellCompletion`, avec les droits et le répertoire du shell.
-- [x] `HackShellCompletion.DisplayCandidates`, liste courte au second Tab.
-- [x] `IShellSession.Exit`, `ShellSession.RequestExit`, arrêt de la ligne, fin du processus `hsh`.
-- [x] Commande `exit [n]` dans `HackerOs.Commands`.
-- [x] `TerminalTabs`, `TerminalTabSet`, raccourcis, titre des onglets ; fenêtre Terminal sur `TerminalTabs`, fermée avec le dernier onglet.
-- [x] Ctrl+D termine le shell ; Tab ne déplace plus le focus.
-- [x] CodeEditor ferme l'onglet dont le shell sort.
-- [x] Tests, ce document, `shell-host.md`, `shell-commands.md`, `app-sdk.md`, plan et index.
+- [x] Path completion in `ShellCompletion`, with the shell's permissions and directory.
+- [x] `HackShellCompletion.DisplayCandidates`, short list on the second Tab.
+- [x] `IShellSession.Exit`, `ShellSession.RequestExit`, stop of the line, end of the `hsh` process.
+- [x] `exit [n]` command in `HackerOs.Commands`.
+- [x] `TerminalTabs`, `TerminalTabSet`, shortcuts, tab titles; Terminal window on `TerminalTabs`, closed with the last tab.
+- [x] Ctrl+D ends the shell; Tab no longer moves focus.
+- [x] CodeEditor closes the tab whose shell exits.
+- [x] Tests, this document, `shell-host.md`, `shell-commands.md`, `app-sdk.md`, plan and index.

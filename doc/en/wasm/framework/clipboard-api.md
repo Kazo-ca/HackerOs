@@ -1,22 +1,22 @@
-# Presse-papiers : API pour les apps
+# Clipboard: API for apps
 
-Ce document décrit le presse-papiers tel qu'une app le voit : `HackClipboard` (texte et listes de fichiers), le format de liste de fichiers et ce qui sort vers la vraie machine. Le presse-papiers partagé de l'OS, le pont vers l'hôte et le réglage `clipboard.config` sont dans [`dev/clipboard.md`](../dev/clipboard.md).
+This document describes the clipboard as an app sees it: `HackClipboard` (text and file lists), the file list format, and what goes out to the real machine. The OS shared clipboard, the bridge to the host and the `clipboard.config` setting are in [`dev/clipboard.md`](../dev/clipboard.md).
 
 ## Apps
 
-Rien de nouveau : `HackClipboard` reste la seule porte (voir
-la section suivante).
+Nothing new: `HackClipboard` remains the only door (see
+the next section).
 
 ```csharp
 await HackClipboard.SetTextAsync(json);                  // arrive aussi sur la vraie machine
 string? text = await HackClipboard.GetTextAsync();       // y compris un texte collé depuis la vraie machine
 ```
 
-Une app ne parle jamais à `navigator.clipboard`. `BrowserClipboard`
-(`HackerOs.AppSdk.Blazor`), qui contournait le réglage, a été retiré au gel du
-SDK 1.0 (ADR 0114 §3).
+An app never talks to `navigator.clipboard`. `BrowserClipboard`
+(`HackerOs.AppSdk.Blazor`), which bypassed the setting, was removed at the SDK 1.0
+freeze (ADR 0114 §3).
 
-## Presse-papiers (`HackClipboard`)
+## Clipboard (`HackClipboard`)
 
 ```csharp
 await HackClipboard.SetFileDropListAsync(["~/rapport.txt", "Documents"], HackClipboardFileOperation.Cut);
@@ -28,7 +28,7 @@ await HackClipboard.ClearAsync();
 AppContext.Clipboard.Changed += OnClipboardChanged;   // une autre app a coupé ou copié
 ```
 
-Contenu de la cible `x-special/gnome-copied-files`, comme GNOME Files :
+Content of the `x-special/gnome-copied-files` target, like GNOME Files:
 
 ```text
 cut
@@ -36,10 +36,10 @@ file:///home/benoit/rapport.txt
 file:///home/benoit/Documents
 ```
 
-`IAppClipboardGateway.GetFileReferencesAsync` et `SetFileReferencesAsync`, anciennes
-formes de « copier » marquées `[Obsolete]` par l'ADR 0056 §12, sont retirées au gel
-du SDK 1.0 (ADR 0114 §3).
+`IAppClipboardGateway.GetFileReferencesAsync` and `SetFileReferencesAsync`, old
+forms of "copy" marked `[Obsolete]` by ADR 0056 §12, are removed at the SDK 1.0
+freeze (ADR 0114 §3).
 
-## Règles pour les apps
+## Rules for apps
 
-Quand une app copie du texte ou des fichiers, l'entrée devient courante pour l'OS ; son `text/plain` (les chemins pour des fichiers) part vers la vraie machine si `sharing` le permet. Les autres formats ne sortent jamais. Le réglage et les autres cas sont dans [`dev/clipboard.md`](../dev/clipboard.md).
+When an app copies text or files, the entry becomes current for the OS; its `text/plain` (the paths for files) goes out to the real machine if `sharing` allows it. Other formats never go out. The setting and the other cases are in [`dev/clipboard.md`](../dev/clipboard.md).

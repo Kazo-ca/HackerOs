@@ -1,70 +1,70 @@
-# ADR 0066 : mesure des ressources optionnelle, au build et au démarrage
+# ADR 0066: optional resource measurement, at build time and at startup
 
-## Statut
+## Status
 
-Accepté le 2026-10-16.
+Accepted on 2026-10-16.
 
-- **Phase du plan :** phase 5 — exécution des apps
+- **Plan phase:** phase 5: app execution
   ([`execution-isolation-plan.md`](../plans/execution-isolation-plan.md)).
-- **Encadre :** ADR 0067 (temps CPU mesuré) et ADR 0068 (mémoire mesurée).
-- **S'appuie sur :** ADR 0012 (simulateur de ressources, `ResourceProfile`),
+- **Frames:** ADR 0067 (measured CPU time) and ADR 0068 (measured memory).
+- **Builds on:** ADR 0012 (resource simulator, `ResourceProfile`),
   ADR 0057 (`/proc/stat`, `ResourceSamplingService`).
 
-## Contexte
+## Context
 
-Aujourd'hui le CPU et la mémoire d'un processus sont **simulés** : le
-`ResourceSimulator` tire chaque échantillon du `ResourceProfile` déclaré par
-l'app (ADR 0012), et `/proc/<pid>/status` affiche ces valeurs. La phase 5 ajoute
-une **mesure réelle** du temps d'exécution et des allocations de chaque
-processus (ADR 0067 et 0068).
+Today a process's CPU and memory are **simulated**: the
+`ResourceSimulator` draws each sample from the `ResourceProfile` declared by
+the app (ADR 0012), and `/proc/<pid>/status` displays these values. Phase 5 adds
+a **real measurement** of the execution time and allocations of each
+process (ADR 0067 and 0068).
 
-Benoit veut pouvoir couper cette mesure : elle ajoute du travail à chaque
-changement de contexte (surtout pour le CPU), et un usage que nous n'avons pas
-prévu pourrait en souffrir. Elle doit donc se désactiver **au build** (le code
-n'est pas livré) et **au démarrage** (le code est livré mais n'est jamais
-branché).
+Benoit wants to be able to turn this measurement off: it adds work on each
+context switch (especially for the CPU), and a use we did not
+foresee could suffer from it. It must therefore be disabled **at build time** (the code
+is not shipped) and **at startup** (the code is shipped but never
+hooked in).
 
-Contrainte : les hôtes publient avec `PublishTrimmed=False`
-(`OS/HackerOs.Ecosystem/HackerOs.Ecosystem.csproj`). Un simple feature switch
-.NET (`[FeatureSwitchDefinition]`) ne retirerait donc aucun code du binaire.
+Constraint: hosts publish with `PublishTrimmed=False`
+(`OS/HackerOs.Ecosystem/HackerOs.Ecosystem.csproj`). A plain .NET feature switch
+(`[FeatureSwitchDefinition]`) would therefore remove no code from the binary.
 
-## Décision
+## Decision
 
-### 1. Deux mesures indépendantes
+### 1. Two independent measurements
 
-La mesure du CPU (ADR 0067) et celle de la mémoire (ADR 0068) ont chacune leur
-interrupteur. Couper l'une ne touche pas l'autre.
+The CPU measurement (ADR 0067) and the memory measurement (ADR 0068) each have their
+own switch. Turning one off does not affect the other.
 
-### 2. Au build : un projet à part, référencé sous condition
+### 2. At build time: a separate project, referenced conditionally
 
-Le code de mesure vit dans un projet dédié,
-`Platform/HackerOs.Platform.ResourceAccounting`, qui dépend de Platform Core
-et non l'inverse. Platform Core ne connaît que des contrats
-(`ICpuTimeAccountant`, `IMemoryAccountant`, dans Simulation Abstractions) et
-leurs implémentations nulles.
+The measurement code lives in a dedicated project,
+`Platform/HackerOs.Platform.ResourceAccounting`, which depends on Platform Core
+and not the reverse. Platform Core only knows contracts
+(`ICpuTimeAccountant`, `IMemoryAccountant`, in Simulation Abstractions) and
+their null implementations.
 
-Deux propriétés MSBuild, lues par `build/HackerOs.ResourceAccounting.targets`
-importé par chaque hôte :
+Two MSBuild properties, read by `build/HackerOs.ResourceAccounting.targets`
+imported by each host:
 
 ```xml
-<HackerOsCpuAccounting>true</HackerOsCpuAccounting>       <!-- défaut -->
-<HackerOsMemoryAccounting>true</HackerOsMemoryAccounting> <!-- défaut -->
+<HackerOsCpuAccounting>true</HackerOsCpuAccounting>       <!-- default -->
+<HackerOsMemoryAccounting>true</HackerOsMemoryAccounting> <!-- default -->
 ```
 
-- Si les deux valent `false`, l'hôte ne référence pas le projet : le code de
-  mesure **n'est pas dans le binaire**.
-- Chaque propriété devient aussi une `RuntimeHostConfigurationOption`
+- If both are `false`, the host does not reference the project: the measurement
+  code **is not in the binary**.
+- Each property also becomes a `RuntimeHostConfigurationOption`
   (`HackerOs.ResourceAccounting.Cpu.IsSupported`,
-  `HackerOs.ResourceAccounting.Memory.IsSupported`), lue par
-  `AppContext.TryGetSwitch`. Le jour où la publication active le trimming, les
-  propriétés de garde marquées `[FeatureSwitchDefinition]` retirent aussi le
-  code d'une mesure coupée alors que l'autre reste.
+  `HackerOs.ResourceAccounting.Memory.IsSupported`), read by
+  `AppContext.TryGetSwitch`. The day publishing enables trimming, the
+  guard properties marked `[FeatureSwitchDefinition]` also remove the
+  code of a disabled measurement while the other remains.
 
-### 3. Au démarrage : `appsettings.json`
+### 3. At startup: `appsettings.json`
 
-L'hôte Ecosystem reçoit un `wwwroot/appsettings.json` (lu par
-`WebAssemblyHostBuilder.Configuration`) ; `test/test` et `HackerOs.Server`
-lisent le leur.
+The Ecosystem host receives a `wwwroot/appsettings.json` (read by
+`WebAssemblyHostBuilder.Configuration`); `test/test` and `HackerOs.Server`
+read their own.
 
 ```json
 {
@@ -77,43 +77,43 @@ lisent le leur.
 }
 ```
 
-- La valeur est lue **une fois, à la composition des services**. Désactivée,
-  l'OS enregistre l'implémentation nulle et **n'installe aucun crochet** : pas
-  de test « activé ? » dans le chemin chaud.
-- Une mesure coupée au build l'emporte toujours : `Enabled: true` est alors
-  ignoré, avec une ligne d'information dans `/var/log/syslog`.
-- Changer la valeur demande un rechargement de la page, comme un paramètre
-  de démarrage du noyau.
-- Ce réglage est un réglage d'**hôte**, pas un paramètre de l'OS simulé : il
-  ne va pas dans `/etc/hackeros` (ADR 0044), que l'utilisateur de l'OS
-  pourrait modifier.
+- The value is read **once, at service composition**. When disabled,
+  the OS registers the null implementation and **installs no hook**: no
+  "enabled?" test in the hot path.
+- A measurement disabled at build time always wins: `Enabled: true` is then
+  ignored, with an information line in `/var/log/syslog`.
+- Changing the value requires a page reload, like a kernel boot
+  parameter.
+- This setting is a **host** setting, not a parameter of the simulated OS: it
+  does not go in `/etc/hackeros` (ADR 0044), which the OS user
+  could modify.
 
-Valeur par défaut de `HackerOs.Server` : les deux mesures **coupées** tant que
-l'ADR 0067 n'a pas été validé sur un hôte multithread (section 6 de l'ADR
+Default value of `HackerOs.Server`: both measurements **disabled** until
+ADR 0067 has been validated on a multithreaded host (section 6 of ADR
 0067).
 
-### 4. Mesure coupée : retour exact au comportement actuel
+### 4. Measurement disabled: exact return to current behavior
 
-Quand une mesure est coupée, sa valeur revient au `ResourceSimulator`, comme
-aujourd'hui. Rien ne change pour les apps ni pour `/proc`, sauf un indicateur :
+When a measurement is disabled, its value falls back to the `ResourceSimulator`, as
+today. Nothing changes for apps or for `/proc`, except an indicator:
 
-- `/proc/<pid>/status` ajoute `CpuSource: simulated|measured` et
-  `MemSource: simulated|measured` ;
-- le gestionnaire de tâches affiche une mention discrète « estimated » à côté
-  des colonnes simulées.
+- `/proc/<pid>/status` adds `CpuSource: simulated|measured` and
+  `MemSource: simulated|measured`;
+- the task manager displays a discreet "estimated" note next to the simulated
+  columns.
 
-Les processus du contenu de jeu, qui n'exécutent pas de code, restent
-toujours simulés.
+The processes of game content, which do not run code, always
+stay simulated.
 
-## Conséquences
+## Consequences
 
-- Un hôte peut livrer un binaire sans aucune mesure, ou la couper par
-  configuration sans recompiler.
-- Les tests couvrent les quatre combinaisons (CPU et mémoire, activé ou non)
-  et vérifient qu'aucun crochet n'est installé quand la mesure est coupée.
-- `system-metrics.md` documente les deux sources et leur indicateur.
+- A host can ship a binary with no measurement at all, or disable it by
+  configuration without recompiling.
+- Tests cover the four combinations (CPU and memory, enabled or not)
+  and verify that no hook is installed when the measurement is disabled.
+- `system-metrics.md` documents the two sources and their indicator.
 
-## Références
+## References
 
 - [`execution-isolation-plan.md`](../plans/execution-isolation-plan.md)
 - ADR 0012, 0044, 0057, 0067, 0068.

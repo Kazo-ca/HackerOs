@@ -1,64 +1,64 @@
-# Éditeur de texte
+# Text editor
 
-App système `HackerOs.Apps.TextEditor` (`org.hackeros.text-editor`). Ce document
-décrit son fonctionnement actuel et la recherche avec remplacement ajoutée par le
-chantier `rebuild/4-text-editor` (phase 4, [ADR 0058](adr/0058-base-app-features.md) §3).
+System app `HackerOs.Apps.TextEditor` (`org.hackeros.text-editor`). This document
+describes how it currently works and the search with replacement added by the
+`rebuild/4-text-editor` work item (phase 4, [ADR 0058](adr/0058-base-app-features.md) §3).
 
-## Rôle
+## Role
 
-L'éditeur ouvre, modifie et enregistre des fichiers texte du système de fichiers
-virtuel, avec contrôle de version optimiste à l'écriture. Il passe uniquement par
-le SDK public ([`app-sdk.md`](../framework/app-sdk.md)) et n'a plus d'exemption à la frontière
-du SDK depuis `rebuild/4-sdk-user-and-apps`.
+The editor opens, edits and saves text files of the virtual file system, with
+optimistic version control on write. It goes only through the public SDK
+([`app-sdk.md`](../framework/app-sdk.md)) and no longer has an exemption at the
+SDK boundary since `rebuild/4-sdk-user-and-apps`.
 
 ## Architecture
 
-| Élément | Rôle |
+| Element | Role |
 | --- | --- |
-| `TextEditorApp` | Manifeste `[AppManifest]` : capacités `apps.launch`, lecture et écriture du dossier personnel, boîtes de dialogue Ouvrir/Enregistrer, notifications ; gestionnaire de fichiers `text/plain`. |
-| `TextEditorDocument` | État d'un document : chemin, contenu, type MIME, état de chargement, modifié ou non, révision lue. |
-| `TextEditorFindEngine` | Logique de recherche et de remplacement, sans Blazor ni JavaScript, testée seule (`Tests/HackerOs.Apps.TextEditor.Tests`). |
-| `TextEditorWindow.razor` | Fenêtre : menus, barre de recherche et de remplacement, zone de texte, barre d'état, raccourcis clavier. |
-| `TextEditorWindow.razor.js` | Ce que C# n'atteint pas : sélection dans la zone de texte (`selectRange`, `getSelectionRange`) et blocage des raccourcis du navigateur (`guardEditorShortcuts`). |
+| `TextEditorApp` | `[AppManifest]` manifest: capabilities `apps.launch`, home folder read and write, Open/Save dialog boxes, notifications; `text/plain` file handler. |
+| `TextEditorDocument` | State of a document: path, content, MIME type, loading state, modified or not, revision read. |
+| `TextEditorFindEngine` | Search and replace logic, without Blazor or JavaScript, tested on its own (`Tests/HackerOs.Apps.TextEditor.Tests`). |
+| `TextEditorWindow.razor` | Window: menus, search and replace bar, text area, status bar, keyboard shortcuts. |
+| `TextEditorWindow.razor.js` | What C# cannot reach: selection in the text area (`selectRange`, `getSelectionRange`) and blocking of browser shortcuts (`guardEditorShortcuts`). |
 
-### Ouvrir et enregistrer
+### Opening and saving
 
-- Extensions ouvertes : `.txt`, `.log`, `.conf`, `.json`, `.md` ; fichiers binaires
-  et fichiers de plus de 512 Kio refusés.
-- Hors du dossier personnel, l'accès vient du jeton remis par la boîte de dialogue
-  (`WithSelectedHandle`).
-- L'enregistrement envoie la révision lue. Si le fichier a changé entre-temps
-  (`RevisionConflict`), l'éditeur signale le conflit et propose « Save As ».
+- Extensions opened: `.txt`, `.log`, `.conf`, `.json`, `.md`; binary files and
+  files larger than 512 KiB are rejected.
+- Outside the home folder, access comes from the token handed over by the dialog
+  box (`WithSelectedHandle`).
+- Saving sends the revision read. If the file changed in the meantime
+  (`RevisionConflict`), the editor reports the conflict and offers "Save As".
 
-## Rechercher et remplacer (ADR 0058 §3)
+## Find and replace (ADR 0058 §3)
 
-| Raccourci | Action |
+| Shortcut | Action |
 | --- | --- |
-| Ctrl+F | Ouvre la barre de recherche seule ; la referme si elle est déjà dans ce mode. |
-| Ctrl+H | Ouvre la barre avec la ligne « Replace with » ; la referme si elle est déjà dans ce mode. |
-| Entrée / Maj+Entrée (recherche) | Occurrence suivante / précédente, avec retour au début. |
-| Entrée (remplacement) | « Replace ». |
-| Ctrl+Alt+Entrée (remplacement) | « Replace All ». |
-| Échap | Ferme la barre. |
+| Ctrl+F | Opens the search bar alone; closes it if it is already in that mode. |
+| Ctrl+H | Opens the bar with the "Replace with" row; closes it if it is already in that mode. |
+| Enter / Shift+Enter (search) | Next / previous occurrence, wrapping around to the start. |
+| Enter (replace) | "Replace". |
+| Ctrl+Alt+Enter (replace) | "Replace All". |
+| Esc | Closes the bar. |
 
-Le chevron ▸/▾ à gauche affiche ou masque la ligne de remplacement sans fermer la
-barre. Le menu « Edit » propose aussi « Find » et « Replace ».
+The ▸/▾ chevron on the left shows or hides the replace row without closing the
+bar. The "Edit" menu also offers "Find" and "Replace".
 
-- **Options partagées** par la recherche et le remplacement : « Aa » (respecter la
-  casse) et « ab| » (mot entier : l'occurrence ne doit pas être collée à une
-  lettre, un chiffre ou `_`). Pas d'expressions régulières dans cette phase.
-- **Replace** remplace l'occurrence sélectionnée dans la zone de texte si elle
-  correspond à la recherche, puis sélectionne la suivante (après le texte inséré,
-  pour qu'un remplacement qui contient la recherche ne soit pas repris). Sinon il
-  sélectionne seulement l'occurrence suivante : un deuxième clic la remplace.
-- **Replace All** remplace toutes les occurrences en une seule modification du
-  document et affiche leur nombre (« 12 replacements »).
-- Un remplacement est une modification ordinaire : le document devient modifié et
-  l'enregistrement garde la détection des conflits.
-- Le navigateur ne reçoit plus Ctrl+S, Ctrl+O, Ctrl+N, Ctrl+F ni Ctrl+H quand le
-  focus est dans l'éditeur (Ctrl+H ouvrait l'historique de Chrome).
+- **Options shared** by search and replace: "Aa" (match case) and "ab|" (whole
+  word: the occurrence must not be attached to a letter, a digit or `_`). No
+  regular expressions in this phase.
+- **Replace** replaces the occurrence selected in the text area if it matches
+  the search, then selects the next one (after the inserted text, so that a
+  replacement that contains the search is not picked up again). Otherwise it
+  only selects the next occurrence: a second click replaces it.
+- **Replace All** replaces all the occurrences in a single modification of the
+  document and displays their number ("12 replacements").
+- A replacement is an ordinary modification: the document becomes modified and
+  saving keeps conflict detection.
+- The browser no longer receives Ctrl+S, Ctrl+O, Ctrl+N, Ctrl+F or Ctrl+H when
+  the focus is in the editor (Ctrl+H opened Chrome's history).
 
-### API de `TextEditorFindEngine`
+### `TextEditorFindEngine` API
 
 ```csharp
 var options = new TextEditorFindOptions(MatchCase: true, WholeWord: false);
@@ -74,77 +74,73 @@ TextEditorReplaceAllResult all = TextEditorFindEngine.ReplaceAll(content, "cat",
 string summary = TextEditorFindEngine.DescribeReplacementCount(all.Count, L); // "12 replacements", « 12 remplacements »
 ```
 
-`FindMatches(content, query)` sans options garde l'ancien comportement :
-sous-chaîne, sans tenir compte de la casse.
+`FindMatches(content, query)` without options keeps the old behavior:
+substring, case-insensitive.
 
-## Ouvrir et enregistrer un fichier
+## Opening and saving a file
 
-- **Depuis l'explorateur** (double-clic, `OpenFileIntent`) : l'OS lance l'éditeur
-  avec `argv = [id de l'app, chemin]`. `WindowAppBase.LaunchFile` lit ce chemin
-  (premier argument absolu) ; l'éditeur charge le fichier et garde son chemin, donc
-  **Enregistrer** (Ctrl+S) écrit sur place, sans dialogue. Avant, le chemin
-  n'arrivait jamais (`LaunchFilePath` n'était posé par personne) : l'éditeur
-  s'ouvrait vide et Enregistrer se comportait comme Enregistrer sous. Le
-  CodeEditor suit la même règle.
-- **Texte ou binaire** se décide sur le contenu (`HackTextContent.TryDecode`,
-  SDK) : UTF-8 strict sans octet de contrôle autre que tabulation, fins de ligne,
-  saut de page, retour arrière et échappement. Un fichier vide créé par
-  « New File » (étiqueté binaire par le système de fichiers) s'ouvre donc.
-- **Enregistrer sous** vers un autre chemin n'exige plus la révision du fichier
-  ouvert : la cible est créée, ou remplacée après confirmation dans le dialogue
-  (avant : « Destination directory not found »).
-- **Dialogues Ouvrir/Enregistrer** (Platform Blazor) : un double-clic ou Entrée
-  sur un fichier l'ouvre (Ouvrir) ou reprend son nom (Enregistrer, qui demande
-  ensuite avant de remplacer) ; le dialogue remplit sa fenêtre et la liste
-  défile, les boutons du bas ne sont plus coupés.
+- **From the explorer** (double click, `OpenFileIntent`): the OS launches the
+  editor with `argv = [app id, path]`. `WindowAppBase.LaunchFile` reads this
+  path (first absolute argument); the editor loads the file and keeps its path,
+  so **Save** (Ctrl+S) writes in place, without a dialog. Before, the path never
+  arrived (`LaunchFilePath` was set by no one): the editor opened empty and Save
+  behaved like Save as. CodeEditor follows the same rule.
+- **Text or binary** is decided on the content (`HackTextContent.TryDecode`,
+  SDK): strict UTF-8 with no control byte other than tab, line endings, form
+  feed, backspace and escape. An empty file created by "New File" (labeled
+  binary by the file system) therefore opens.
+- **Save as** to another path no longer requires the revision of the open file:
+  the target is created, or replaced after confirmation in the dialog (before:
+  "Destination directory not found").
+- **Open/Save dialogs** (Platform Blazor): a double click or Enter on a file
+  opens it (Open) or takes its name (Save, which then asks before replacing);
+  the dialog fills its window and the list scrolls, the bottom buttons are no
+  longer cut off.
 
-## Arrêt demandé par l'OS (ADR 0069)
+## Stop requested by the OS (ADR 0069)
 
-Quand l'OS demande à l'éditeur de s'arrêter (déconnexion, `kill`, « End
-task ») alors que le document est modifié, `OnAppStopRequestedAsync` écrit le
-texte dans un brouillon `HackRecoveryDraft`
-(`~/.local/state/org.hackeros.text-editor/recovery/draft.json`, dossier
-`0700`) avec le chemin du fichier d'origine ; l'OS attend cette écriture avant
-de fermer la fenêtre. Au lancement suivant sans fichier, le brouillon est
-repris (`TakeAsync`) comme un **nouveau** tampon modifié, titré
-« nom (recovered) », et la barre d'état l'indique : il n'écrase jamais le
-fichier d'origine sans que l'utilisateur choisisse où l'enregistrer. Fermer la
-fenêtre soi-même passe toujours par la question « Save changes? » et ne laisse
-pas de brouillon.
+When the OS asks the editor to stop (logout, `kill`, "End task") while the
+document is modified, `OnAppStopRequestedAsync` writes the text into a
+`HackRecoveryDraft` draft
+(`~/.local/state/org.hackeros.text-editor/recovery/draft.json`, folder
+`0700`) with the path of the original file; the OS waits for this write before
+closing the window. At the next launch without a file, the draft is taken back
+(`TakeAsync`) as a **new** modified buffer, titled
+"name (recovered)", and the status bar says so: it never overwrites the
+original file without the user choosing where to save it. Closing the window
+oneself always goes through the "Save changes?" question and leaves no draft.
 
-## Langues (ADR 0104)
+## Languages (ADR 0104)
 
-Les menus, la barre de recherche, la barre d'état, les dialogues et les
-messages d'erreur viennent de `Resources/Strings.resx` / `Strings.fr.resx`
-(`AppContext.GetLocalizer<Strings>()`). `TextEditorDocument` reçoit le
-localiseur de la fenêtre pour ses titres (« Sans titre », « (récupéré) ») et
-`DescribeReplacementCount` le prend en paramètre ; sans localiseur, ils lisent
-la langue du processus courant (anglais hors d'une app, donc dans les tests
-unitaires). Les pluriels suivent la règle de la langue (0 et 1 au singulier en
-français).
+The menus, the search bar, the status bar, the dialogs and the error messages
+come from `Resources/Strings.resx` / `Strings.fr.resx`
+(`AppContext.GetLocalizer<Strings>()`). `TextEditorDocument` receives the
+window's localizer for its titles ("Untitled", "(recovered)") and
+`DescribeReplacementCount` takes it as a parameter; without a localizer, they
+read the current process's language (English outside an app, hence in unit
+tests). Plurals follow the language's rule (0 and 1 singular in French).
 
-## Décisions
+## Decisions
 
-- Le remplacement ne gère pas les expressions régulières (choix par défaut de
-  l'ADR 0058, retenu pour la phase 4).
-- La sélection réelle de la zone de texte décide de « Replace », comme dans les
-  éditeurs de bureau. Sans le module JavaScript (rendu sans navigateur), l'éditeur
-  se rabat sur l'occurrence courante de la recherche.
-- Le remplacement passe par `TextEditorDocument.Edit` : l'annulation native de la
-  zone de texte (Ctrl+Z) ne couvre pas un remplacement, comme toute valeur écrite
-  par Blazor.
+- Replace does not handle regular expressions (default choice of ADR 0058,
+  retained for phase 4).
+- The actual selection of the text area decides "Replace", as in desktop
+  editors. Without the JavaScript module (rendering without a browser), the
+  editor falls back to the current occurrence of the search.
+- Replacement goes through `TextEditorDocument.Edit`: the text area's native
+  undo (Ctrl+Z) does not cover a replacement, like any value written by Blazor.
 
-## Liste des tâches (`rebuild/4-text-editor`)
+## Task list (`rebuild/4-text-editor`)
 
-- [x] Options « Match case » et « Whole word » dans `TextEditorFindEngine.FindMatches`.
-- [x] `Replace`, `ReplaceAll`, `FindNextFrom` et `DescribeReplacementCount`, testés sans interface.
-- [x] Ligne de remplacement dans la barre de recherche, Ctrl+H, menu « Edit → Replace ».
-- [x] Lecture de la sélection de la zone de texte et blocage des raccourcis du navigateur.
-- [x] Documentation, plan de refonte et index mis à jour.
+- [x] "Match case" and "Whole word" options in `TextEditorFindEngine.FindMatches`.
+- [x] `Replace`, `ReplaceAll`, `FindNextFrom` and `DescribeReplacementCount`, tested without an interface.
+- [x] Replace row in the search bar, Ctrl+H, "Edit → Replace" menu.
+- [x] Reading the text area's selection and blocking browser shortcuts.
+- [x] Documentation, rebuild plan and index updated.
 
-## Liste des tâches (retours après `rebuild/4-text-editor`, livrés avec `rebuild/4-file-explorer`)
+## Task list (feedback after `rebuild/4-text-editor`, delivered with `rebuild/4-file-explorer`)
 
-- [x] Lire le fichier de lancement depuis les arguments du processus (TextEditor, CodeEditor).
-- [x] Décider texte/binaire sur le contenu (`HackTextContent`).
-- [x] Enregistrer sous vers un nouveau fichier.
-- [x] Dialogues Ouvrir/Enregistrer : double-clic, mise en page dans la fenêtre.
+- [x] Read the launch file from the process arguments (TextEditor, CodeEditor).
+- [x] Decide text/binary on the content (`HackTextContent`).
+- [x] Save as to a new file.
+- [x] Open/Save dialogs: double click, layout within the window.

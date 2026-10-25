@@ -1,87 +1,87 @@
-# Mémoire du projet HackerOS
+# HackerOS project memory
 
-État du projet et conventions de travail au **2026-10-25**. Ce dossier sert de
-point de reprise : un nouveau contributeur (humain ou agent) y trouve ce qui
-est fait, comment on travaille et ce qu'il ne faut pas refaire. Il est mis à
-jour à la fin de chaque série ou quand une convention change.
+Project status and working conventions as of **2026-10-25**. This folder serves as a
+resumption point: a new contributor (human or agent) finds here what is
+done, how we work and what must not be redone. It is updated
+at the end of each series or when a convention changes.
 
-## Où en est le projet
+## Where the project stands
 
-- **Code actif** : `wasm2/HackerOs/` (OS simulé en Blazor WebAssembly, .NET 10,
-  solution `HackerOs.sln`). `src/` est l'ancienne version, gardée comme
-  référence.
-- **Version** : HackerOS et le SDK sont en **2.0.3** (`build/Versions.props`).
-  Le SDK 2.0.0 a retiré `HackerOs.AppSdk.FileView` et refuse les apps 1.x
+- **Active code**: `wasm2/HackerOs/` (simulated OS in Blazor WebAssembly, .NET 10,
+  solution `HackerOs.sln`). `src/` is the old version, kept as a
+  reference.
+- **Version**: HackerOS and the SDK are at **2.0.3** (`build/Versions.props`).
+  SDK 2.0.0 removed `HackerOs.AppSdk.FileView` and refuses 1.x apps
   ([ADR 0161](../dev/adr/0161-sdk-2-0-implementation-adjustments.md)).
   `IAppEventGateway.PublishAsync` (ADR 0145), `HackCrossOriginIsolation`
-  (ADR 0146) et le délai de grâce des tâches de fond (ADR 0147) sont les
-  ajouts prévus pour la prochaine mineure.
-- **Séries terminées et fusionnées dans `main`** :
+  (ADR 0146) and the grace period for background tasks (ADR 0147) are the
+  planned additions for the next minor.
+- **Series completed and merged into `main`**:
 
-| Série | Contenu | Bilan |
+| Series | Content | Summary |
 | --- | --- | --- |
-| Refonte, phases 1 à 4 | API fichier `Hack*`, manifeste en classe C#, réglages et journaux en fichiers, `/proc` et `/dev`, shell POSIX, corbeille, capacités dangereuses, apps de base sur le SDK public | [`ecosystem-rebuild-plan.md`](../dev/plans/ecosystem-rebuild-plan.md) |
-| Phase 5 | Mesure CPU et mémoire, « Not responding », arrêt propre, processus en Web Workers | [`execution-isolation-plan.md`](../dev/plans/execution-isolation-plan.md) |
-| Phase web | ASP.Hack (MVC, vues `.razor`/`.cshtml`), sites Blazor, sites statiques, rendu HTML du navigateur, fenêtres détachées | [`asp-hack-plan.md`](../dev/plans/asp-hack-plan.md) |
-| V3 (`v3/1` à `v3/16`) | Fin de la migration wasm v3, SDK 1.0 gelé, publication trimmée | [`wasm-v3-final-status.md`](../dev/plans/wasm-v3-final-status.md) |
-| V3.1 | Géométrie et titre des fenêtres, SDK 1.1 | [`v3-1-series-plan.md`](../dev/plans/v3-1-series-plan.md) |
-| EXEC (`exec/*`) | Limites de processus, OOM killer, passerelles distantes, boîte « ne répond pas », `HackBackground`, OS servi par `HackerOs.Server`, isolation cross-origin, SDK 1.2 | [`execution-followups-plan.md`](../dev/plans/execution-followups-plan.md) |
-| DESK (`desk/0` à `desk/6`) | Contrôle de fichiers fourni par l'OS, menu contextuel central, entrées de menu des apps, bureau, SDK 2.0 | [`desktop-and-context-menu-plan.md`](../dev/plans/desktop-and-context-menu-plan.md) |
+| Rebuild, phases 1 to 4 | `Hack*` file API, manifest as a C# class, settings and logs as files, `/proc` and `/dev`, POSIX shell, trash, dangerous capabilities, base apps on the public SDK | [`ecosystem-rebuild-plan.md`](../dev/plans/ecosystem-rebuild-plan.md) |
+| Phase 5 | CPU and memory measurement, "Not responding", clean stop, processes in Web Workers | [`execution-isolation-plan.md`](../dev/plans/execution-isolation-plan.md) |
+| Web phase | ASP.Hack (MVC, `.razor`/`.cshtml` views), Blazor sites, static sites, browser HTML rendering, detached windows | [`asp-hack-plan.md`](../dev/plans/asp-hack-plan.md) |
+| V3 (`v3/1` to `v3/16`) | End of the wasm v3 migration, SDK 1.0 frozen, trimmed publishing | [`wasm-v3-final-status.md`](../dev/plans/wasm-v3-final-status.md) |
+| V3.1 | Window geometry and title, SDK 1.1 | [`v3-1-series-plan.md`](../dev/plans/v3-1-series-plan.md) |
+| EXEC (`exec/*`) | Process limits, OOM killer, remote gateways, "not responding" box, `HackBackground`, OS served by `HackerOs.Server`, cross-origin isolation, SDK 1.2 | [`execution-followups-plan.md`](../dev/plans/execution-followups-plan.md) |
+| DESK (`desk/0` to `desk/6`) | OS-provided file control, central context menu, app menu entries, desktop, SDK 2.0 | [`desktop-and-context-menu-plan.md`](../dev/plans/desktop-and-context-menu-plan.md) |
 
-- **Depuis DESK** (sur `main`, octobre 2026) : redémarrage proposé quand le
-  build change sous la page (ADR 0162), aperçu local du déplacement des
-  fenêtres (ADR 0163), icônes des apps et menu de l'icône de fenêtre
-  (ADR 0164), accueil et tiroir mobiles (ADR 0165, 0166), publication GitHub
-  Pages combinée PWA + legacy (ADR 0167), paquets NuGet mis à jour.
-- **Clés d'accès et comptes** (octobre 2026, PR vers `main`) : connexion par
-  clé d'accès WebAuthn et trousseau format 2 à emplacements (ADR 0168,
-  [`passkeys.md`](../dev/passkeys.md)), ajout et suppression de comptes par un
-  administrateur (ADR 0169). Ajouts au SDK dans `PublicAPI.Unshipped.txt`
-  (prochaine mineure).
-- **ADR** : 0001 à 0169 existent (quelques numéros sautés) ; 0170 est pris
-  par le menu latéral des Paramètres (PR #210), 0171 et 0172 sont réservés à
-  l'explorateur de fichiers mobile. **Prochain numéro libre : 0173.** Des
-  threads parallèles réservent des numéros distincts.
+- **Since DESK** (on `main`, October 2026): restart offered when the
+  build changes under the page (ADR 0162), local preview of window
+  moves (ADR 0163), app icons and window icon menu
+  (ADR 0164), mobile home and drawer (ADR 0165, 0166), combined PWA + legacy
+  GitHub Pages publishing (ADR 0167), updated NuGet packages.
+- **Passkeys and accounts** (October 2026, PR to `main`): sign-in with a
+  WebAuthn passkey and format 2 keyring with slots (ADR 0168,
+  [`passkeys.md`](../dev/passkeys.md)), adding and removing accounts by an
+  administrator (ADR 0169). SDK additions in `PublicAPI.Unshipped.txt`
+  (next minor).
+- **ADR**: 0001 to 0169 exist (a few numbers skipped); 0170 is taken
+  by the Settings side menu (PR #210), 0171 and 0172 are reserved for the
+  mobile file explorer. **Next free number: 0173.** Parallel
+  threads reserve distinct numbers.
 
-## Conventions de travail
+## Working conventions
 
-- **Aucun jeu sur ce repository** ([ADR 0135](../dev/adr/0135-no-game-in-this-repository.md)) :
-  ni code, ni mention dans la doc, les plans, les ADR ou la mémoire.
-- **Branches** : une branche d'intégration `<série>/base` par série, une branche
-  `<série>/<n>-<sujet>` par chantier, PR vers la branche d'intégration. Les ADR
-  d'une phase sont écrits avant son code.
-- **`main`** : seul Benoit fusionne dans `main` et décide quand une branche
-  d'intégration y va.
-- **Questions** : on peut les noter dans un ADR, mais on les pose toujours à
-  Benoit directement, avec des choix, le contexte et les implications.
-- **Documentation** : en français, noms de fichiers en anglais. `dev/` pour le
-  développement de l'OS, `framework/` pour créer des apps et des sites,
-  `memory/` pour ce dossier. Chaque changement met à jour la doc touchée et
-  l'index [`../README.md`](../README.md) ; les docs remplacées vont dans
-  `dev/old/`. Un ADR n'est jamais modifié : un nouvel ADR le remplace.
-- **Barre de fusion** : build et tests locaux verts (suites E2E une à la fois),
-  `build/publish-trimmed.sh` et la compatibilité du SDK
-  (`Tests/fixtures/sdk-compat`) quand ils sont concernés. Les GitHub Actions
-  tournent de nouveau depuis le 2026-10-24 et vérifient chaque PR vers `main`
-  et `*/base` (tests en échec relancés une fois, Playwright dans un workflow
-  manuel) : [`../dev/ci-workflows.md`](../dev/ci-workflows.md).
-- **SDK** : l'API publique est suivie par `PublicAPI.Shipped.txt` /
-  `PublicAPI.Unshipped.txt` ; un ajout passe par `Unshipped` jusqu'à la
-  publication suivante (`build/tools/ship-public-api.sh`).
+- **No game in this repository** ([ADR 0135](../dev/adr/0135-no-game-in-this-repository.md)):
+  neither code, nor mention in the docs, plans, ADRs or memory.
+- **Branches**: one integration branch `<series>/base` per series, one branch
+  `<series>/<n>-<topic>` per work item, PR to the integration branch. The ADRs
+  of a phase are written before its code.
+- **`main`**: only Benoit merges into `main` and decides when an integration
+  branch goes there.
+- **Questions**: they can be noted in an ADR, but they are always asked to
+  Benoit directly, with choices, context and implications.
+- **Documentation**: written in French in `doc/fr/`, translated to English in `doc/en/` (same folders and file names, in English); every change updates both languages. Root readmes: `readme.md` in English, `readme-fr.md` in French, each linking to the other on its first line. `dev/` for OS
+  development, `framework/` for building apps and sites,
+  `memory/` for this folder. Each change updates the docs it touches and
+  the index [`../README.md`](../README.md); replaced docs go to
+  `dev/old/`. An ADR is never modified: a new ADR replaces it.
+- **Merge bar**: local build and tests green (E2E suites one at a time),
+  `build/publish-trimmed.sh` and SDK compatibility
+  (`Tests/fixtures/sdk-compat`) when they are concerned. GitHub Actions
+  run again since 2026-10-24 and check every PR to `main`
+  and `*/base` (failing tests rerun once, Playwright in a manual
+  workflow): [`../dev/ci-workflows.md`](../dev/ci-workflows.md).
+- **SDK**: the public API is tracked by `PublicAPI.Shipped.txt` /
+  `PublicAPI.Unshipped.txt`; an addition goes through `Unshipped` until the
+  next release (`build/tools/ship-public-api.sh`).
 
-## Environnement et pièges
+## Environment and pitfalls
 
-Les contournements de build (NuGet, conteneur Linux, Playwright) et les tests
-instables connus sont regroupés dans [`../dev/pitfalls.md`](../dev/pitfalls.md)
-et [`../dev/building-and-testing.md`](../dev/building-and-testing.md).
+Build workarounds (NuGet, Linux container, Playwright) and known flaky
+tests are gathered in [`../dev/pitfalls.md`](../dev/pitfalls.md)
+and [`../dev/building-and-testing.md`](../dev/building-and-testing.md).
 
-## Notes historiques
+## Historical notes
 
-Notes écrites pendant les premières phases ; les chemins et nombres qu'elles
-citent datent de leur écriture.
+Notes written during the first phases; the paths and numbers they
+cite date from when they were written.
 
-| Note | Contenu |
+| Note | Content |
 | --- | --- |
-| [`blazor-window-manager-bugs.md`](blazor-window-manager-bugs.md) | Leçons de l'ancien gestionnaire de fenêtres Blazor (appel de base oublié dans `OnAfterRenderAsync`, état de la solution v3 en août 2026). |
-| [`manifest-serializer-notes.md`](manifest-serializer-notes.md) | Sérialiseur strict de `AppManifest` et fixture canonique. |
-| [`p2-idb-008-filesystem-repository.md`](p2-idb-008-filesystem-repository.md) | Analyse des transactions du dépôt de fichiers IndexedDB (phase 2). |
+| [`blazor-window-manager-bugs.md`](blazor-window-manager-bugs.md) | Lessons from the old Blazor window manager (base call forgotten in `OnAfterRenderAsync`, state of the v3 solution in August 2026). |
+| [`manifest-serializer-notes.md`](manifest-serializer-notes.md) | Strict `AppManifest` serializer and canonical fixture. |
+| [`p2-idb-008-filesystem-repository.md`](p2-idb-008-filesystem-repository.md) | Analysis of the IndexedDB file repository transactions (phase 2). |

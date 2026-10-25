@@ -1,135 +1,135 @@
-# SDK des apps et frontière du SDK
+# App SDK and the SDK boundary
 
-## Objet
+## Purpose
 
-Une app HackerOS, système ou tierce, n'obtient les services de l'OS que par le
-SDK public (principe 3 du plan, ADR 0055). Ce document décrit :
+A HackerOS app, system or third-party, obtains OS services only through the
+public SDK (plan principle 3, ADR 0055). This document describes:
 
-- ce qui forme le SDK et ce qu'une app a le droit de référencer et d'injecter ;
-- comment le build vérifie ces règles (codes `HOSAPP0030`, `HOSAPP0031`,
-  `HOSSDK0001`, ADR 0059) ;
-- la fin de la liste d'exemptions temporaire de la phase 4 ;
-- les API du SDK, au fur et à mesure que les chantiers `rebuild/4-*` les
-  ajoutent (ADR 0056).
+- what makes up the SDK and what an app may reference and inject;
+- how the build checks these rules (codes `HOSAPP0030`, `HOSAPP0031`,
+  `HOSSDK0001`, ADR 0059);
+- the end of phase 4's temporary exemption list;
+- the SDK APIs, as the `rebuild/4-*` work items
+  add them (ADR 0056).
 
-Chaque chantier de la phase 4 qui ajoute une API la documente ici, dans la
-section [API du SDK](#api-du-sdk).
+Each phase 4 work item that adds an API documents it here, in the
+section [SDK API](#api-du-sdk).
 
-Pour écrire une app pas à pas, voir le
-[guide du développeur](sdk-developer-guide.md) ; pour la liste complète des
-API publiques, la [référence du SDK](sdk-reference.md).
+To write an app step by step, see the
+[developer guide](sdk-developer-guide.md); for the complete list of
+public APIs, the [SDK reference](sdk-reference.md).
 
-## Ce qui forme le SDK
+## What makes up the SDK
 
-| Projet | Contenu |
+| Project | Content |
 |---|---|
-| `Shared/HackerOs.AppSdk` | `IAppExecutionContext` et ses passerelles, façades statiques `Hack*`, classes de base des points d'entrée (`TerminalAppBase`…). |
-| `Shared/HackerOs.AppSdk.Blazor` | Composants et services Blazor des apps fenêtrées (fenêtre, téléchargement, graphiques, composants intégrables `HackEmbeddedComponent<T>`…). |
-| `Shared/HackerOs.AppSdk.Icons` | Catalogue d'icônes. |
-| `Shared/HackerOs.AppSdk.Terminal` | Terminal xterm.js (`TerminalPanel`, ADR 0061), qui héberge un shell par `HackShell`, et console à onglets (`TerminalTabs`). |
-| `Shared/HackerOs.AppSdk.VirtualKeyboard` | Clavier virtuel. |
+| `Shared/HackerOs.AppSdk` | `IAppExecutionContext` and its gateways, static `Hack*` facades, entry point base classes (`TerminalAppBase`…). |
+| `Shared/HackerOs.AppSdk.Blazor` | Blazor components and services for windowed apps (window, download, charts, embeddable components `HackEmbeddedComponent<T>`…). |
+| `Shared/HackerOs.AppSdk.Icons` | Icon catalog. |
+| `Shared/HackerOs.AppSdk.Terminal` | xterm.js terminal (`TerminalPanel`, ADR 0061), which hosts a shell through `HackShell`, and tabbed console (`TerminalTabs`). |
+| `Shared/HackerOs.AppSdk.VirtualKeyboard` | Virtual keyboard. |
 
-Toute bibliothèque `Shared/HackerOs.AppSdk` ou `Shared/HackerOs.AppSdk.*` est
-une **bibliothèque SDK** (propriété MSBuild `HackerOsSdkLibrary`, calculée par
-`build/HackerOs.Apps.targets`). Un projet de tests nommé de la même façon n'en
-est pas une : seul l'emplacement sous `Shared/` compte.
+Any `Shared/HackerOs.AppSdk` or `Shared/HackerOs.AppSdk.*` library is
+an **SDK library** (MSBuild property `HackerOsSdkLibrary`, computed by
+`build/HackerOs.Apps.targets`). A test project named the same way is not
+one: only the location under `Shared/` counts.
 
-## Règles
+## Rules
 
-### Références de projet (ADR 0055 §2)
+### Project references (ADR 0055 §2)
 
-| Projet | Peut référencer | Sinon |
+| Project | May reference | Otherwise |
 |---|---|---|
-| Projet d'app (`HackerOsAppProject=true`, tout projet sous `Apps/`) | `Shared/HackerOs.{App,Simulation,Theming}.Abstractions`, les bibliothèques SDK, `Platform/HackerOs.Theming.Blazor`, un autre projet sous `Apps/` | `HOSAPP0030` |
-| Bibliothèque SDK | les trois `*.Abstractions` ci-dessus, une autre bibliothèque SDK | `HOSSDK0001` |
+| App project (`HackerOsAppProject=true`, any project under `Apps/`) | `Shared/HackerOs.{App,Simulation,Theming}.Abstractions`, the SDK libraries, `Platform/HackerOs.Theming.Blazor`, another project under `Apps/` | `HOSAPP0030` |
+| SDK library | the three `*.Abstractions` above, another SDK library | `HOSSDK0001` |
 
-Seules les références **directes** du projet comptent : une référence
-transitive est vérifiée dans le projet qui la déclare. Les `PackageReference`
-restent libres. La référence d'ordre de build vers le générateur de manifeste,
-ajoutée par `HackerOs.Apps.targets`, est ignorée.
+Only **direct** references of the project count: a transitive reference
+is checked in the project that declares it. `PackageReference`s
+remain free. The build-order reference to the manifest generator,
+added by `HackerOs.Apps.targets`, is ignored.
 
 ### Injection (ADR 0055 §3)
 
-Une app ne peut obtenir par injection qu'un service dont le type est :
+An app can obtain by injection only a service whose type is:
 
-1. défini dans une bibliothèque SDK ;
-2. un type de MudBlazor (par exemple `MudBlazor.IDialogService`) ;
-3. `Microsoft.JSInterop.IJSRuntime`, seulement pour importer son propre module
-   JavaScript.
+1. defined in an SDK library;
+2. a MudBlazor type (for example `MudBlazor.IDialogService`);
+3. `Microsoft.JSInterop.IJSRuntime`, only to import its own JavaScript
+   module.
 
-Deux points d'injection sont contrôlés, ce sont les seuls que la plateforme
-honore pour une app :
+Two injection points are checked; they are the only ones the platform
+honors for an app:
 
-- chaque propriété `[Inject]` de chaque type de l'assembly (une directive
-  `@inject` compile en propriété `[Inject]`) ;
-- chaque paramètre des constructeurs publics des points d'entrée
-  (`EntryPoint`, `MobileEntryPoint`), que l'hôte construit avec
+- each `[Inject]` property of each type of the assembly (an `@inject`
+  directive compiles to an `[Inject]` property);
+- each parameter of the public constructors of the entry points
+  (`EntryPoint`, `MobileEntryPoint`), which the host builds with
   `ActivatorUtilities` (ADR 0034 §2).
 
-Pour un constructeur de point d'entrée, restent permis : le `AppManifest` que
-l'hôte passe explicitement, les types valeur et `string` (jamais enregistrés
-comme services : un tel constructeur ne sert qu'aux tests, par exemple un
-intervalle de minuterie).
+For an entry point constructor, the following remain allowed: the `AppManifest` that
+the host passes explicitly, value types and `string` (never registered
+as services: such a constructor is only for tests, for example a timer
+interval).
 
-Les types de `Simulation.Abstractions` et `App.Abstractions` restent permis
-comme **données** (une propriété non `[Inject]`, un paramètre de méthode).
+The types of `Simulation.Abstractions` and `App.Abstractions` remain allowed
+as **data** (a non-`[Inject]` property, a method parameter).
 
-### Appels JavaScript (ADR 0055 §3)
+### JavaScript calls (ADR 0055 §3)
 
-Un appel `Invoke*Async` sur un `IJSRuntime` doit avoir la forme :
+An `Invoke*Async` call on an `IJSRuntime` must have the form:
 
 ```csharp
 _module = await JS.InvokeAsync<IJSObjectReference>(
     "import", "./_content/<projet de l'app>/<fichier>.js");
 ```
 
-Les appels sur le `IJSObjectReference` obtenu sont libres : c'est le code de
-l'app. Passer l'`IJSRuntime` à un composant ou à un service d'une bibliothèque
-SDK (par exemple `BrowserFileDownloader` de `HackerOs.AppSdk.Blazor`) est
-permis : c'est le code du SDK qui fait l'appel.
+Calls on the resulting `IJSObjectReference` are free: it is the
+app's code. Passing the `IJSRuntime` to a component or service of an SDK
+library (for example `BrowserFileDownloader` of `HackerOs.AppSdk.Blazor`) is
+allowed: it is the SDK's code that makes the call.
 
-## Vérification
+## Verification
 
-| Règle | Où | Quand | Code |
+| Rule | Where | When | Code |
 |---|---|---|---|
-| Références d'une app | cible `ValidateHackerOsSdkBoundary` de `build/HackerOs.Apps.targets` | avant `ResolveProjectReferences`, donc avant la compilation | `HOSAPP0030` |
-| Références d'une bibliothèque SDK | même cible | idem | `HOSSDK0001` |
-| Paquets `HackerOs.*` d'une app ou d'une bibliothèque SDK (ADR 0098 §2), directs ou transitifs | cible `_ValidateHackerOsPackageBoundary` | après `ResolveAssemblyReferences` : chaque référence de compilation venue d'un paquet `HackerOs.*` doit être permise (app : `*.Abstractions`, `HackerOs.AppSdk*`, `HackerOs.Theming.Blazor`, `HackerOs.App.Build`, `HackerOs.Apps.*`, `HackerOs.Commands` ; bibliothèque SDK : `*.Abstractions` et SDK) | `HOSAPP0030` / `HOSSDK0001` |
-| Injection | `SdkBoundaryInspector` du générateur de manifeste (`Tools/HackerOs.Tools.ManifestGenerator`) | après la compilation, avec la génération de `manifest.json` ; en cas d'erreur, rien n'est écrit | `HOSAPP0031` |
-| `IJSRuntime` | test de sources `SdkBoundarySourceTests` (`Tests/HackerOs.Ecosystem.Tests`) | `dotnet test` | échec du test |
+| An app's references | target `ValidateHackerOsSdkBoundary` of `build/HackerOs.Apps.targets` | before `ResolveProjectReferences`, so before compilation | `HOSAPP0030` |
+| An SDK library's references | same target | same | `HOSSDK0001` |
+| `HackerOs.*` packages of an app or SDK library (ADR 0098 §2), direct or transitive | target `_ValidateHackerOsPackageBoundary` | after `ResolveAssemblyReferences`: each compile reference coming from a `HackerOs.*` package must be allowed (app: `*.Abstractions`, `HackerOs.AppSdk*`, `HackerOs.Theming.Blazor`, `HackerOs.App.Build`, `HackerOs.Apps.*`, `HackerOs.Commands`; SDK library: `*.Abstractions` and SDK) | `HOSAPP0030` / `HOSSDK0001` |
+| Injection | `SdkBoundaryInspector` of the manifest generator (`Tools/HackerOs.Tools.ManifestGenerator`) | after compilation, with the generation of `manifest.json`; on error, nothing is written | `HOSAPP0031` |
+| `IJSRuntime` | source test `SdkBoundarySourceTests` (`Tests/HackerOs.Ecosystem.Tests`) | `dotnet test` | test failure |
 
-Les messages nomment le projet, la référence ou le type en cause, et la
-règle de l'ADR :
+The messages name the project, reference or type at fault, and the
+ADR rule:
 
 ```text
 App.csproj : error HOSAPP0030: [My.App] Forbidden project reference 'Platform/HackerOs.Platform.Core/HackerOs.Platform.Core.csproj'. …
 App.csproj : error HOSAPP0031: [My.App.MyWindow] [Inject] property 'Sessions' injects 'HackerOs.Simulation.Abstractions.Sessions.ISessionService' …
 ```
 
-Le générateur relance l'inspection quand `HackerOs.Apps.targets` change.
+The generator reruns the inspection when `HackerOs.Apps.targets` changes.
 
-Hors du dépôt (paquet `HackerOs.App.Build`, voir [`sdk-packages.md`](sdk-packages.md)),
-la règle des `ProjectReference` ne s'applique pas (elle est écrite en chemins du
-dépôt) ; c'est la règle des paquets qui protège la frontière, et l'inspection de
-l'injection (`HOSAPP0031`) tourne de la même façon.
+Outside the repository (package `HackerOs.App.Build`, see [`sdk-packages.md`](sdk-packages.md)),
+the `ProjectReference` rule does not apply (it is written in repository
+paths); it is the package rule that protects the boundary, and the injection
+inspection (`HOSAPP0031`) runs the same way.
 
-Ces trois vérifications sont toujours des **erreurs** : aucun projet ne peut les
-ramener à des avertissements. Le rôle d'un projet vient de son emplacement
-(`Apps/` pour une app, `Shared/HackerOs.AppSdk*` pour une bibliothèque SDK) ; un
-`.csproj` sous ces dossiers qui fixe lui-même `HackerOsAppProject` ou
-`HackerOsSdkLibrary` fait échouer
-`SdkBoundarySourceTests.No_app_or_sdk_project_overrides_its_boundary_role`, et
-`Build_targets_have_no_exemption_mechanism` échoue si une exemption ou un
-`<Warning>` réapparaît dans `HackerOs.Apps.targets`.
+These three checks are always **errors**: no project can
+downgrade them to warnings. A project's role comes from its location
+(`Apps/` for an app, `Shared/HackerOs.AppSdk*` for an SDK library); a
+`.csproj` under these folders that sets `HackerOsAppProject` or
+`HackerOsSdkLibrary` itself makes
+`SdkBoundarySourceTests.No_app_or_sdk_project_overrides_its_boundary_role` fail, and
+`Build_targets_have_no_exemption_mechanism` fails if an exemption or a
+`<Warning>` reappears in `HackerOs.Apps.targets`.
 
-## Fin des exemptions temporaires (ADR 0055 §6)
+## End of temporary exemptions (ADR 0055 §6)
 
-`4-sdk-boundary` avait introduit une liste `HackerOsSdkBoundaryExemption` dans
-`build/HackerOs.Apps.targets` : un projet listé recevait des avertissements au
-lieu d'erreurs, et le test `IJSRuntime` l'ignorait. Neuf projets y figuraient ;
-chaque chantier de la phase 4 a retiré les siens :
+`4-sdk-boundary` had introduced a `HackerOsSdkBoundaryExemption` list in
+`build/HackerOs.Apps.targets`: a listed project received warnings
+instead of errors, and the `IJSRuntime` test ignored it. Nine projects were on it;
+each phase 4 work item removed its own:
 
-| Projet | Sorti par |
+| Project | Removed by |
 |---|---|
 | `HackerOs.Apps.Browser`, `HackerOs.Commands` | `4-sdk-network` ([`sdk-network.md`](sdk-network.md)) |
 | `HackerOs.AppSdk.Terminal` | `4-sdk-shell-host` ([`shell-host.md`](shell-host.md)) |
@@ -137,68 +137,67 @@ chaque chantier de la phase 4 a retiré les siens :
 | `HackerOs.Apps.SystemMonitor` | `4-task-manager` ([`task-manager.md`](../dev/task-manager.md)) |
 | `HackerOs.Apps.Settings`, `HackerOs.Apps.Diagnostic` | `4-sdk-system-admin` ([`system-administration.md`](system-administration.md)) |
 
-`4-sdk-boundary-final` (2026-10-11) a supprimé le mécanisme : l'élément
-`HackerOsSdkBoundaryExemption`, la cible `_HackerOsResolveSdkBoundaryExemption`
-et sa propriété `_HackerOsSdkBoundaryExempt`, l'avertissement `HOSAPP0030` /
-`HOSSDK0001` de la cible `ValidateHackerOsSdkBoundary`, l'option
-`--boundary-exempt` du générateur et le paramètre `severity` de
-`GeneratorDiagnostic.ToMsBuildLine`. Toutes les apps de `Apps/` et toutes les
-bibliothèques `HackerOs.AppSdk*` compilent sans aucun diagnostic de frontière.
+`4-sdk-boundary-final` (2026-10-11) removed the mechanism: the
+`HackerOsSdkBoundaryExemption` item, the target `_HackerOsResolveSdkBoundaryExemption`
+and its property `_HackerOsSdkBoundaryExempt`, the `HOSAPP0030` /
+`HOSSDK0001` warning of the target `ValidateHackerOsSdkBoundary`, the generator's
+`--boundary-exempt` option and the `severity` parameter of
+`GeneratorDiagnostic.ToMsBuildLine`. All apps in `Apps/` and all
+`HackerOs.AppSdk*` libraries compile without any boundary diagnostic.
 
-Les références `Platform.Core` inutilisées de Calculator, HackPaint,
-IconViewer, TextEditor et Browser ont été retirées par `4-sdk-boundary` :
-Calculator, HackPaint et IconViewer passaient déjà sans exemption.
+The unused `Platform.Core` references of Calculator, HackPaint,
+IconViewer, TextEditor and Browser were removed by `4-sdk-boundary`:
+Calculator, HackPaint and IconViewer already passed without an exemption.
 
-## Comment une app obtient un service de l'OS (ADR 0055 §4)
+## How an app obtains an OS service (ADR 0055 §4)
 
-Uniquement par le SDK :
+Only through the SDK:
 
-- une **passerelle** sur `IAppExecutionContext`, propre à l'instance, qui
-  vérifie la capacité requise à chaque appel. Une nouvelle passerelle est un
-  membre de l'interface avec une implémentation par défaut « non prise en
-  charge », pour que les implémentations existantes compilent encore ; la
-  fabrique de confiance de Platform Core fournit la vraie ;
-- une **façade statique** `Hack*` qui lit le contexte ambiant (ADR 0043) et
-  appelle la passerelle. C'est la forme recommandée.
+- a **gateway** on `IAppExecutionContext`, specific to the instance, which
+  checks the required capability at each call. A new gateway is a
+  member of the interface with a default "not supported" implementation, so that existing implementations still compile; the
+  trusted factory of Platform Core provides the real one;
+- a static `Hack*` **facade** that reads the ambient context (ADR 0043) and
+  calls the gateway. This is the recommended form.
 
-Une capacité manquante lève `HackUnauthorizedAccessException` et passe par
+A missing capability throws `HackUnauthorizedAccessException` and goes through
 `IAppPermissionErrorGateway`.
 
-## API du SDK
+## SDK API
 
-Façades statiques existantes au début de la phase 4 :
+Static facades that existed at the start of phase 4:
 
-| Façade | Rôle | Document |
+| Facade | Role | Document |
 |---|---|---|
-| `HackFile`, `HackDirectory`, `HackPath` | fichiers | [`hack-file-api.md`](hack-file-api.md) |
-| `HackExecutionContext` | contexte ambiant | [`hack-file-api.md`](hack-file-api.md) |
-| `HackEnvironment` | arguments, répertoire courant, variables | [`process-environment.md`](../dev/process-environment.md) |
-| `HackSettings` | paramètres en fichiers | [`settings-files.md`](settings-files.md) |
-| `HackTrash` | corbeille | [`trash.md`](../dev/trash.md), [`trash-api.md`](trash-api.md) |
-| `HackDns`, `HackPing`, `HackHttpClient`, `HackTcpClient`, `HackUdpClient` | réseau, repli réel décidé par l'OS (`4-sdk-network`), sockets relayés (`v3/10`) | [`sdk-network.md`](sdk-network.md) |
-| `HackDriveInfo` | taille et espace libre des disques (`4-proc-metrics`) | [`system-metrics.md`](../dev/system-metrics.md) |
-| `HackCrossOriginIsolation` | page isolée ou non, et ce que ça active (ADR 0146, SDK 2.0) | [`worker-processes.md`](../dev/worker-processes.md#isolation-cross-origin-adr-0131-adr-0143) |
-| `HackClipboard` | presse-papiers de session, texte et liste de fichiers (`4-file-explorer`) | [`file-explorer.md`](../dev/file-explorer.md), [`clipboard-api.md`](clipboard-api.md) |
-| `HackTextContent` | texte ou binaire décidé sur le contenu, comme `file` (`4-file-explorer`) | [`text-editor.md`](../dev/text-editor.md) |
+| `HackFile`, `HackDirectory`, `HackPath` | files | [`hack-file-api.md`](hack-file-api.md) |
+| `HackExecutionContext` | ambient context | [`hack-file-api.md`](hack-file-api.md) |
+| `HackEnvironment` | arguments, current directory, variables | [`process-environment.md`](../dev/process-environment.md) |
+| `HackSettings` | settings as files | [`settings-files.md`](settings-files.md) |
+| `HackTrash` | trash | [`trash.md`](../dev/trash.md), [`trash-api.md`](trash-api.md) |
+| `HackDns`, `HackPing`, `HackHttpClient`, `HackTcpClient`, `HackUdpClient` | network, real fallback decided by the OS (`4-sdk-network`), relayed sockets (`v3/10`) | [`sdk-network.md`](sdk-network.md) |
+| `HackDriveInfo` | disk size and free space (`4-proc-metrics`) | [`system-metrics.md`](../dev/system-metrics.md) |
+| `HackCrossOriginIsolation` | isolated page or not, and what that enables (ADR 0146, SDK 2.0) | [`worker-processes.md`](../dev/worker-processes.md#isolation-cross-origin-adr-0131-adr-0143) |
+| `HackClipboard` | session clipboard, text and file list (`4-file-explorer`) | [`file-explorer.md`](../dev/file-explorer.md), [`clipboard-api.md`](clipboard-api.md) |
+| `HackTextContent` | text or binary decided on the content, like `file` (`4-file-explorer`) | [`text-editor.md`](../dev/text-editor.md) |
 
-Passerelles de `IAppExecutionContext` : `FileSystem`, `Events`,
+Gateways of `IAppExecutionContext`: `FileSystem`, `Events`,
 `Notifications`, `Logging`, `Clock`, `Processes`, `Intents`, `Watch`,
-`Services`, `PermissionErrors`, `Environment`, `Catalog` et `AppManagement`
+`Services`, `PermissionErrors`, `Environment`, `Catalog` and `AppManagement`
 (ADR 0056, `4-sdk-user-and-apps`), `Network` (`4-sdk-network`), `ShellHost`
 (`4-sdk-shell-host`), `Drives` (ADR 0057, `4-proc-metrics`),
 `Clipboard` (ADR 0056 §12, `4-file-explorer`), `SystemSettings`,
-`PermissionAdministration`, `ServerConnection`, `SystemPower` et
+`PermissionAdministration`, `ServerConnection`, `SystemPower` and
 `StorageDiagnostics` (`4-sdk-system-admin`), `Console` (ADR 0064).
 
-`ShellErrorText` (texte court d'une erreur de fichier, pour les commandes comme
-`cd`) est aussi dans le SDK, à côté de `IShellSession` (`4-sdk-network`).
-`ShellErrorText.Describe(exception)` reste en anglais (texte identique à
-`strerror` en locale C) ; `Describe(exception, context)` le donne dans la
-langue du processus de l'app (ADR 0104). De même,
-`HackWebSiteFile.Validate(site, scope, context)` traduit les messages de
-validation d'un `.site` affichés par une app.
+`ShellErrorText` (short text of a file error, for commands like
+`cd`) is also in the SDK, next to `IShellSession` (`4-sdk-network`).
+`ShellErrorText.Describe(exception)` remains in English (text identical to
+`strerror` in the C locale); `Describe(exception, context)` gives it in the
+language of the app's process (ADR 0104). Likewise,
+`HackWebSiteFile.Validate(site, scope, context)` translates the validation
+messages of a `.site` displayed by an app.
 
-### Utilisateur courant (ADR 0056 §1)
+### Current user (ADR 0056 §1)
 
 ```csharp
 HackUserInfo me = HackUser.Current;     // LoginName, DisplayName, HomeDirectory, IsAdministrator
@@ -206,20 +205,20 @@ string docs = HackEnvironment.GetFolderPath(HackSpecialFolder.MyDocuments);   //
 HackUserInfo cached = HackUser.Describe(AppContext);   // sans contexte ambiant (rendu d'un composant)
 ```
 
-- `HackUser.Current` décrit l'utilisateur **effectif** : `HackUser.Root`
-  (`root`, `/root`, administrateur) pour un processus lancé par `sudo`.
-- `HackSpecialFolder` : `UserProfile` (`~`), `Desktop`, `MyDocuments`
+- `HackUser.Current` describes the **effective** user: `HackUser.Root`
+  (`root`, `/root`, administrator) for a process launched by `sudo`.
+- `HackSpecialFolder`: `UserProfile` (`~`), `Desktop`, `MyDocuments`
   (`~/Documents`), `ApplicationData` (`~/.config`), `LocalApplicationData`
-  (`~/.local/share`). Le chemin est calculé, pas vérifié.
-- Aucune capacité. `IAppExecutionContext` gagne `UserLoginName` et
-  `UserDisplayName` (implémentations par défaut ; la fabrique les remplit
-  depuis le principal).
-- Remplace `ISessionService.CurrentPrincipal` dans FileExplorer, TextEditor et
-  CodeEditor. Comme `BuildRenderTree` ne tourne pas dans le contexte ambiant,
-  un composant qui affiche le dossier personnel utilise
+  (`~/.local/share`). The path is computed, not checked.
+- No capability. `IAppExecutionContext` gains `UserLoginName` and
+  `UserDisplayName` (default implementations; the factory fills them
+  from the principal).
+- Replaces `ISessionService.CurrentPrincipal` in FileExplorer, TextEditor and
+  CodeEditor. Since `BuildRenderTree` does not run in the ambient context,
+  a component that displays the home folder uses
   `HackUser.Describe(AppContext)`.
 
-### Catalogue des apps (ADR 0056 §2)
+### App catalog (ADR 0056 §2)
 
 ```csharp
 IReadOnlyList<HackAppInfo> apps = await HackApps.GetInstalledAsync();
@@ -228,34 +227,34 @@ await HackApps.LaunchAsync("org.hackeros.text-editor", ["/home/benoit/notes.md"]
 HackOpenFileResult opened = await HackApps.OpenFileAsync("~/notes.md");   // Opened, ChooserRequired (+ CandidateAppIds), NoHandler
 ```
 
-- `HackAppInfo` : `Id`, `Name`, `Description`, `Kind`, `Category`, `Icon`,
+- `HackAppInfo`: `Id`, `Name`, `Description`, `Kind`, `Category`, `Icon`,
   `Version`, `PublisherId`, `IsSystemApp`, `IsHidden`, `FileHandlers`, `Urls`
-  (adresses `web.urls` d'une app web, vide sinon ; liste des sites externes du
+  (`web.urls` addresses of a web app, empty otherwise; list of external sites of the
   Web Server Manager).
-- `GetInstalledAsync` : apps installées pour l'utilisateur, triées par nom ;
-  une app désinstallée (ADR 0048) n'y figure pas. **Aucune capacité.**
-- `GetHandlersAsync` : apps fenêtrées installées qui déclarent l'extension ou
-  le type MIME ; le défaut en tête : celui de l'utilisateur
-  (`~/.config/hackeros/file-associations.json`), sinon celui de
+- `GetInstalledAsync`: apps installed for the user, sorted by name;
+  an uninstalled app (ADR 0048) is not listed. **No capability.**
+- `GetHandlersAsync`: installed windowed apps that declare the extension or
+  MIME type; the default first: the user's
+  (`~/.config/hackeros/file-associations.json`), otherwise that of
   `/etc/hackeros/file-associations.json` (ADR 0121).
-- `GetDefaultHandlersAsync`, `SetDefaultHandlerAsync(target, appId, action)` et
-  `ResetDefaultHandlerAsync(target, action)` (ADR 0121, chantier `v3/4b`) :
-  défauts de l'utilisateur et de la machine, choix propre à l'utilisateur
-  (`file-associations.read`, plus `filesystem.user-home.write` pour écrire) ;
-  voir [`user-file-associations.md`](../dev/user-file-associations.md).
-- `LaunchAsync` et `OpenFileAsync` passent par `IAppIntentGateway`
-  (`apps.launch`). Échec : `HackAppLaunchException` (app inconnue,
-  désinstallée, ou erreur au démarrage).
-- `EditFileAsync`, `RevealFileAsync`, `OpenUriAsync`, `ShowSettingsAsync` et
-  `SendIntentAsync` (ADR 0096, chantier `v3/4`) passent aussi par
-  `IAppIntentGateway` ; voir [`app-intents.md`](app-intents.md).
-- `HackApps.Changed` (ou `AppContext.Catalog.Changed`, à préférer quand on se
-  désabonne dans `Dispose`, hors contexte ambiant) signale une installation ou
-  une désinstallation ; les gestionnaires s'exécutent dans le contexte de
-  l'app abonnée.
-- Passerelle : `IAppCatalogGateway Catalog` (`AppCatalogGateway`, Platform Core).
+- `GetDefaultHandlersAsync`, `SetDefaultHandlerAsync(target, appId, action)` and
+  `ResetDefaultHandlerAsync(target, action)` (ADR 0121, work item `v3/4b`):
+  user and machine defaults, per-user choice
+  (`file-associations.read`, plus `filesystem.user-home.write` to write);
+  see [`user-file-associations.md`](../dev/user-file-associations.md).
+- `LaunchAsync` and `OpenFileAsync` go through `IAppIntentGateway`
+  (`apps.launch`). Failure: `HackAppLaunchException` (unknown app,
+  uninstalled, or startup error).
+- `EditFileAsync`, `RevealFileAsync`, `OpenUriAsync`, `ShowSettingsAsync` and
+  `SendIntentAsync` (ADR 0096, work item `v3/4`) also go through
+  `IAppIntentGateway`; see [`app-intents.md`](app-intents.md).
+- `HackApps.Changed` (or `AppContext.Catalog.Changed`, preferable when
+  unsubscribing in `Dispose`, outside the ambient context) signals an installation or
+  an uninstallation; handlers run in the context of the
+  subscribed app.
+- Gateway: `IAppCatalogGateway Catalog` (`AppCatalogGateway`, Platform Core).
 
-### Gestion des apps (ADR 0056 §3)
+### App management (ADR 0056 §3)
 
 ```csharp
 IReadOnlyList<HackAppInstallInfo> all = await HackAppManagement.GetAllAsync();   // App, State, UninstallClosure
@@ -263,142 +262,142 @@ IReadOnlyList<string> removed = await HackAppManagement.UninstallAsync("org.hack
 await HackAppManagement.ReinstallAsync("org.hackeros.calculator", HackInstallScope.Machine);
 ```
 
-- **Capacité `apps.manage`** (dangereuse) pour tous les membres. Paramètres la
-  déclare désormais.
-- `HackAppInstallState` : `Installed` (y compris une app système, signalée par
+- **Capability `apps.manage`** (dangerous) for all members. Settings now
+  declares it.
+- `HackAppInstallState`: `Installed` (including a system app, flagged by
   `App.IsSystemApp`), `UninstalledForUser`, `UninstalledForMachine`,
-  `Incompatible` (refusée au chargement : version du SDK, ADR 0098 §3) et
-  `Damaged` (ressource altérée, ADR 0098 §5) ; `HackAppInstallInfo.Problem`
-  donne alors la raison, affichée par Paramètres.
-- Portée `Machine` : l'agent d'authentification de l'OS demande un
-  administrateur ([`admin-authentication-agent.md`](../dev/admin-authentication-agent.md)),
-  puis l'OS écrit `/etc/hackeros/apps.config` lui-même. Refus ou annulation :
+  `Incompatible` (refused at load time: SDK version, ADR 0098 §3) and
+  `Damaged` (tampered resource, ADR 0098 §5); `HackAppInstallInfo.Problem`
+  then gives the reason, displayed by Settings.
+- `Machine` scope: the OS authentication agent asks for an
+  administrator ([`admin-authentication-agent.md`](../dev/admin-authentication-agent.md)),
+  then the OS writes `/etc/hackeros/apps.config` itself. Refusal or cancellation:
   `HackUnauthorizedAccessException`.
-- App système, ou fermeture qui en contient une : `InvalidOperationException`,
-  avant toute demande de mot de passe. Réinstaller pour soi une app
-  désinstallée par l'administrateur : `InvalidOperationException`. App
-  inconnue : `ArgumentException`.
-- Passerelle : `IAppManagementGateway AppManagement` (`AppManagementGateway`,
-  sur `IAppInstallationService`).
+- System app, or a closure that contains one: `InvalidOperationException`,
+  before any password prompt. Reinstalling for oneself an app
+  uninstalled by the administrator: `InvalidOperationException`. Unknown
+  app: `ArgumentException`.
+- Gateway: `IAppManagementGateway AppManagement` (`AppManagementGateway`,
+  on `IAppInstallationService`).
 
-### Réseau (ADR 0056 §6)
+### Network (ADR 0056 §6)
 
-`HackDns`, `HackPing`, `HackHttpClient` et `HackTcpClient`, passerelle
-`IAppNetworkGateway Network`, repli réel décidé par l'OS : voir
+`HackDns`, `HackPing`, `HackHttpClient` and `HackTcpClient`, gateway
+`IAppNetworkGateway Network`, real fallback decided by the OS: see
 [`sdk-network.md`](sdk-network.md).
 
-### Disques (ADR 0057 §7)
+### Disks (ADR 0057 §7)
 
-`HackDriveInfo.GetDrivesAsync()` rend les montages qui ont une taille
-(aujourd'hui `/`), sur le modèle de `System.IO.DriveInfo` : `Name`,
+`HackDriveInfo.GetDrivesAsync()` returns the mounts that have a size
+(today `/`), modeled on `System.IO.DriveInfo`: `Name`,
 `DriveFormat` (`idbfs`), `DriveType` (`Fixed`), `VolumeLabel` (`hda`),
-`TotalSize`, `AvailableFreeSpace`, `TotalFreeSpace`, `RootDirectory`. Aucune
-capacité, comme `df`. Passerelle `IAppDriveGateway Drives`, implémentée par
-`AppDriveGateway` dans Platform Core. Les valeurs sont lues une fois, à l'appel.
-Les mesures CPU, disque et réseau, elles, sont des fichiers de `/proc` : voir
+`TotalSize`, `AvailableFreeSpace`, `TotalFreeSpace`, `RootDirectory`. No
+capability, like `df`. Gateway `IAppDriveGateway Drives`, implemented by
+`AppDriveGateway` in Platform Core. Values are read once, at the call.
+CPU, disk and network measurements, on the other hand, are `/proc` files: see
 [`system-metrics.md`](../dev/system-metrics.md).
 
-### Isolation cross-origin (ADR 0146)
+### Cross-origin isolation (ADR 0146)
 
-`HackCrossOriginIsolation.GetStatusAsync()` (espace `Diagnostics`) rend
-l'isolation que l'OS a décidée au démarrage : `IsIsolated`, `Reason`
+`HackCrossOriginIsolation.GetStatusAsync()` (`Diagnostics` namespace) returns
+the isolation that the OS decided at startup: `IsIsolated`, `Reason`
 (`None`, `Setting`, `MissingHeaders`, `InsecureContext`, `Browser`,
 `NotBrowser`), `Setting` (`Auto`, `On`, `Off`), `EmbedderPolicy`,
 `SharedPipes`, `SynchronousWorkerCalls`, `BrowserMemoryMeasurement`,
-`TimerResolution`. Aucune capacité, comme `uname`. Passerelle
-`IAppCrossOriginIsolationGateway CrossOriginIsolation`, implémentée par
-`AppCrossOriginIsolationGateway` dans Platform Core et par l'opération
-`coi.get` dans un worker. Publié avec le SDK 2.0 (aucune 1.3 n'a été publiée).
+`TimerResolution`. No capability, like `uname`. Gateway
+`IAppCrossOriginIsolationGateway CrossOriginIsolation`, implemented by
+`AppCrossOriginIsolationGateway` in Platform Core and by the operation
+`coi.get` in a worker. Released with SDK 2.0 (no 1.3 was released).
 
-### Processus et services (ADR 0056 §4 et §5)
+### Processes and services (ADR 0056 §4 and §5)
 
-| API | Passerelle | Capacité | Remplace | Document |
+| API | Gateway | Capability | Replaces | Document |
 |---|---|---|---|---|
-| `HackProcess` (`GetProcessesAsync`, `GetProcessByIdAsync`, `GetCurrentProcessAsync`, `RefreshAsync`, `GetEnvironmentVariablesAsync`, `KillAsync`, `TerminateAsync`, `CloseMainWindowAsync`, `Current`, `CheckpointAsync` ; `WorkingSet64` lit `VmRSS`, `PrivateMemorySize64` lit `RssAnon`, ADR 0068 ; `UserProcessorTime`, `PrivilegedProcessorTime`, `TotalProcessorTime`, `Responding` lus dans `/proc/<pid>/stat` et `status`, ADR 0067), `HackCurrentProcess`, `HackStopRequestedEventArgs`, `HackProcessKilledException`, `HackProcessState`, `HackProcessIoCounters` | lecture : `IAppExecutionContext.FileSystem` sur `/proc` ; action : `IAppExecutionContext.Processes` (`IAppProcessGateway`) | `filesystem.system.read` pour lire `/proc` ; `process.list` (normale) pour voir les autres processus ; `process.manage` (dangereuse) pour arrêter un autre processus | `IProcessManager`, `AppLifecycleOrchestrator`, `IEventBus` | [`task-manager.md`](../dev/task-manager.md) |
-| `HackServiceController` (`GetServicesAsync`, `RefreshAsync`, `StartAsync`, `StopAsync`, `SetStartTypeAsync`), `HackServiceControllerStatus` | `Catalog` (liste), `/proc` (état), `Services` (`IAppServiceControlGateway`) | aucune pour lister ; `services.manage` (dangereuse) pour agir sur le service d'une autre app ou lire son type de démarrage | `AppCatalog` filtré sur `AppKind.Service`, orchestrateur | [`task-manager.md`](../dev/task-manager.md) |
+| `HackProcess` (`GetProcessesAsync`, `GetProcessByIdAsync`, `GetCurrentProcessAsync`, `RefreshAsync`, `GetEnvironmentVariablesAsync`, `KillAsync`, `TerminateAsync`, `CloseMainWindowAsync`, `Current`, `CheckpointAsync`; `WorkingSet64` reads `VmRSS`, `PrivateMemorySize64` reads `RssAnon`, ADR 0068; `UserProcessorTime`, `PrivilegedProcessorTime`, `TotalProcessorTime`, `Responding` read from `/proc/<pid>/stat` and `status`, ADR 0067), `HackCurrentProcess`, `HackStopRequestedEventArgs`, `HackProcessKilledException`, `HackProcessState`, `HackProcessIoCounters` | read: `IAppExecutionContext.FileSystem` on `/proc`; action: `IAppExecutionContext.Processes` (`IAppProcessGateway`) | `filesystem.system.read` to read `/proc`; `process.list` (normal) to see other processes; `process.manage` (dangerous) to stop another process | `IProcessManager`, `AppLifecycleOrchestrator`, `IEventBus` | [`task-manager.md`](../dev/task-manager.md) |
+| `HackServiceController` (`GetServicesAsync`, `RefreshAsync`, `StartAsync`, `StopAsync`, `SetStartTypeAsync`), `HackServiceControllerStatus` | `Catalog` (list), `/proc` (state), `Services` (`IAppServiceControlGateway`) | none to list; `services.manage` (dangerous) to act on another app's service or read its startup type | `AppCatalog` filtered on `AppKind.Service`, orchestrator | [`task-manager.md`](../dev/task-manager.md) |
 
-Les données d'un processus viennent de `/proc`, exactement ce que `ps` lit ; il
-n'y a pas d'abonnement aux événements de processus : un gestionnaire de tâches
-relit `/proc` chaque seconde.
+A process's data comes from `/proc`, exactly what `ps` reads; there
+is no subscription to process events: a task manager
+rereads `/proc` every second.
 
-### Arrêt propre et points d'arrêt (ADR 0069)
+### Clean shutdown and checkpoints (ADR 0069)
 
-Quand l'OS arrête un processus poliment (`kill`, « End task »,
-`CloseMainWindowAsync`, déconnexion, extinction), il le passe à `Stopping`,
-lève **une fois** `StopRequested`, annule son jeton, puis attend jusqu'à
-l'échéance (horloge simulée) avant de le tuer. `kill -9` et « Force kill » ne
-préviennent pas.
+When the OS stops a process politely (`kill`, "End task",
+`CloseMainWindowAsync`, logout, shutdown), it moves it to `Stopping`,
+raises `StopRequested` **once**, cancels its token, then waits until the
+deadline (simulated clock) before killing it. `kill -9` and "Force kill" do not
+warn.
 
-| API | Rôle |
+| API | Role |
 |---|---|
-| `HackProcess.Current` (`HackCurrentProcess` : `Id`, `StopToken`, `IsStopRequested`, `StopRequest`, `StopRequested`) | Le processus courant vu de l'intérieur, sur le modèle de `IHostApplicationLifetime.ApplicationStopping`. Aussi `IAppExecutionContext.StopRequested` / `StopRequest`. |
-| `HackStopRequestedEventArgs` (`Reason`, `RequestedAt`, `Deadline`, `GracePeriod`, `Defer(Task)`) | Raison (`CloseRequested`, `Terminated`, `Logout`, `Shutdown`…) et échéance ; `Defer` demande à l'OS d'attendre un travail (brouillon, étape en cours) avant son action par défaut, jamais au-delà de l'échéance. |
-| `HackProcess.CheckpointAsync(token)` | Point d'arrêt volontaire : lève `OperationCanceledException` si l'arrêt est demandé ; rend la main (`Task.Yield`) quand la tranche courante dépasse 8 ms ; sinon retourne tout de suite, sans allocation. |
-| `HackProcess.TerminateAsync(timeout)` | `SIGTERM` d'un autre processus (raison `Terminated`, 5 s par défaut), sous `process.manage` ; `true` si le processus s'est terminé seul. |
-| `HackProcessKilledException` | Levée par toute passerelle appelée pour un processus tué (dérive de `OperationCanceledException`). |
-| `WindowAppBase.OnAppStopRequestedAsync(e)` | Crochet d'une app à fenêtre ; la fenêtre se ferme quand la tâche renvoyée se termine (action par défaut de `SIGTERM`). Pas appelé quand l'utilisateur ferme la fenêtre : `IWindowCloseGuard` s'en charge. |
-| `ServiceAppBase.OnStoppingAsync` | Appelé une seule fois, dès `StopRequested` (`ServiceStopReason.Terminated` pour `kill`/« End task »/`systemctl stop`), et au plus tard à l'arrêt par l'OS. |
-| `HackRecoveryDraft` (`Open`, `SaveAsync`, `TryReadAsync`, `TakeAsync`, `DeleteAsync`) | Brouillon de récupération dans `~/.local/state/<appId>/recovery/` (dossier `0700`), à écrire sur `StopRequested` et à proposer au démarrage suivant. |
+| `HackProcess.Current` (`HackCurrentProcess`: `Id`, `StopToken`, `IsStopRequested`, `StopRequest`, `StopRequested`) | The current process seen from the inside, modeled on `IHostApplicationLifetime.ApplicationStopping`. Also `IAppExecutionContext.StopRequested` / `StopRequest`. |
+| `HackStopRequestedEventArgs` (`Reason`, `RequestedAt`, `Deadline`, `GracePeriod`, `Defer(Task)`) | Reason (`CloseRequested`, `Terminated`, `Logout`, `Shutdown`…) and deadline; `Defer` asks the OS to wait for some work (draft, step in progress) before its default action, never beyond the deadline. |
+| `HackProcess.CheckpointAsync(token)` | Voluntary checkpoint: throws `OperationCanceledException` if a stop is requested; yields (`Task.Yield`) when the current time slice exceeds 8 ms; otherwise returns immediately, without allocation. |
+| `HackProcess.TerminateAsync(timeout)` | `SIGTERM` of another process (reason `Terminated`, 5 s by default), under `process.manage`; `true` if the process ended on its own. |
+| `HackProcessKilledException` | Thrown by any gateway called for a killed process (derives from `OperationCanceledException`). |
+| `WindowAppBase.OnAppStopRequestedAsync(e)` | Hook of a windowed app; the window closes when the returned task completes (default action of `SIGTERM`). Not called when the user closes the window: `IWindowCloseGuard` handles that. |
+| `ServiceAppBase.OnStoppingAsync` | Called only once, as soon as `StopRequested` (`ServiceStopReason.Terminated` for `kill`/"End task"/`systemctl stop`), and at the latest at OS shutdown. |
+| `HackRecoveryDraft` (`Open`, `SaveAsync`, `TryReadAsync`, `TakeAsync`, `DeleteAsync`) | Recovery draft in `~/.local/state/<appId>/recovery/` (`0700` folder), to be written on `StopRequested` and offered at the next startup. |
 
-Escalade (ADR 0069 §3) : délai passé, le processus est tué (`Timeout`) ;
-l'ordonnanceur de son processus (`ProcessTaskScheduler`, installé pour les
-commandes et les services) jette ses continuations, ses abonnements et
-minuteries ne sont plus rappelés, et ses passerelles lèvent
-`HackProcessKilledException`. Les apps à fenêtre restent sur le dispatcher du
-rendu : leurs fenêtres sont fermées.
+Escalation (ADR 0069 §3): once the deadline has passed, the process is killed (`Timeout`);
+its process's scheduler (`ProcessTaskScheduler`, installed for
+commands and services) drops its continuations, its subscriptions and
+timers are no longer called back, and its gateways throw
+`HackProcessKilledException`. Windowed apps stay on the rendering
+dispatcher: their windows are closed.
 
-Ce que font les apps existantes (section 5.1 du
-[plan de la phase 5](../dev/plans/execution-isolation-plan.md)) :
+What existing apps do (section 5.1 of the
+[phase 5 plan](../dev/plans/execution-isolation-plan.md)):
 
-| App | Sur `StopRequested` | Boucles longues avec `CheckpointAsync` |
+| App | On `StopRequested` | Long loops with `CheckpointAsync` |
 |---|---|---|
-| TextEditor | brouillon `HackRecoveryDraft` si le document est modifié ; restauré au démarrage suivant comme nouveau tampon non enregistré | — |
-| CodeEditor | instantané de récupération écrit tout de suite (au lieu d'attendre l'anti-rebond de 1,5 s) | recherche dans le dossier, parcours du dossier |
-| FileExplorer | attend l'élément en cours ; `HackFileOperations` s'arrête entre deux éléments (atomiques) et rapporte les autres « stopped before this item » (`HackFileTransferResult.Cancelled`) | copie, déplacement, import, corbeille, zip, extraction, restauration de la corbeille |
-| Settings | attend l'écriture de réglage en cours, qui n'utilise plus le jeton du processus | — |
-| Services (`SampleTickerService`) | `OnStoppingAsync` (une fois) | — |
-| `HackerOs.Commands` | jeton annulé : sortie 130 ; tuée : 137 | `find`, `grep` (dont `-r`), `du`, `zip`, `unzip`, `locate` |
+| TextEditor | `HackRecoveryDraft` draft if the document is modified; restored at the next startup as a new unsaved buffer | none |
+| CodeEditor | recovery snapshot written right away (instead of waiting for the 1.5 s debounce) | folder search, folder walk |
+| FileExplorer | waits for the current item; `HackFileOperations` stops between two (atomic) items and reports the others "stopped before this item" (`HackFileTransferResult.Cancelled`) | copy, move, import, trash, zip, extraction, trash restore |
+| Settings | waits for the setting write in progress, which no longer uses the process token | none |
+| Services (`SampleTickerService`) | `OnStoppingAsync` (once) | none |
+| `HackerOs.Commands` | token cancelled: exit 130; killed: 137 | `find`, `grep` (including `-r`), `du`, `zip`, `unzip`, `locate` |
 
-HackPaint n'a pas d'enregistrement : rien à garder. Les autres apps n'ont ni
-état non enregistré ni boucle longue.
+HackPaint has no save: nothing to keep. The other apps have neither
+unsaved state nor long loops.
 
-### Processus dans des Web Workers (ADR 0070 et 0071)
+### Processes in Web Workers (ADR 0070 and 0071)
 
-Une commande ou un service peut tourner dans un Web Worker au lieu du fil
-principal. L'app le déclare dans son manifeste — rien d'autre ne change dans
-son code :
+A command or service can run in a Web Worker instead of the main
+thread. The app declares it in its manifest, and nothing else changes in
+its code:
 
 ```csharp
 [AppManifest(Execution = AppExecutionHost.Dedicated)] // ou Pool, MainThread
 public sealed class MyServiceApp : AppDefinition { ... }
 ```
 
-| Valeur | Effet |
+| Value | Effect |
 |---|---|
-| `Default` (omise) | Commande → `Pool`, service → `Dedicated`, fenêtre → `MainThread` (ADR 0070 §1). |
-| `Pool` | Un worker par cœur virtuel ; les étapes d'un pipeline partagent le même worker. |
-| `Dedicated` | Un worker à soi (le worker prêt, remplacé aussitôt). |
-| `MainThread` | Reste sur le fil principal ; à commenter (raison) dans la définition. |
+| `Default` (omitted) | Command → `Pool`, service → `Dedicated`, window → `MainThread` (ADR 0070 §1). |
+| `Pool` | One worker per virtual core; the steps of a pipeline share the same worker. |
+| `Dedicated` | A worker of its own (the ready worker, replaced immediately). |
+| `MainThread` | Stays on the main thread; to be commented (reason) in the definition. |
 
-Dans un worker, `IAppExecutionContext` est servi par des passerelles distantes
-qui envoient chaque appel à l'OS, où **les mêmes vérifications de capacités**
-s'appliquent ; `stdin`/`stdout`/`stderr` passent par messages. `StopRequested`,
-`CheckpointAsync`, les codes 130/137 et `OnStoppingAsync` se comportent comme
-sur le fil principal. Ce qui n'est pas disponible dans un worker (hôte de
-shell, administration, page HTTP du navigateur simulé, `StartChild`, formes
-synchrones de `Kill` et `ListProcesses`, `WithSelectedHandle`, `SetNice`,
-`RegisterSharedChannel` hors d'une portée `VirtualPath`) lève
-`NotSupportedException` : une app qui en a besoin déclare `MainThread`.
-Exception : quand la page est isolée (`crossOriginIsolated`, ADR 0131 et 0143),
-les formes synchrones de `Kill` et `ListProcesses` marchent aussi dans un
-worker, qui attend la réponse de l'OS comme un appel système bloquant.
-Détails : [`worker-processes.md`](../dev/worker-processes.md), [`app-execution-hosts.md`](app-execution-hosts.md).
+In a worker, `IAppExecutionContext` is served by remote gateways
+that send each call to the OS, where **the same capability checks**
+apply; `stdin`/`stdout`/`stderr` go through messages. `StopRequested`,
+`CheckpointAsync`, the 130/137 codes and `OnStoppingAsync` behave as
+on the main thread. What is not available in a worker (shell host,
+administration, the simulated browser's HTTP page, `StartChild`, synchronous
+forms of `Kill` and `ListProcesses`, `WithSelectedHandle`, `SetNice`,
+`RegisterSharedChannel` outside a `VirtualPath` scope) throws
+`NotSupportedException`: an app that needs it declares `MainThread`.
+Exception: when the page is isolated (`crossOriginIsolated`, ADR 0131 and 0143),
+the synchronous forms of `Kill` and `ListProcesses` also work in a
+worker, which waits for the OS's answer like a blocking system call.
+Details: [`worker-processes.md`](../dev/worker-processes.md), [`app-execution-hosts.md`](app-execution-hosts.md).
 
-**Événements et surveillance de fichiers dans un worker (ADR 0124, ADR
-0138).** `HackEvents` et `HackFileSystemWatcher` marchent dans un worker : l'OS
-tient l'abonnement au nom du processus et lui envoie chaque message. La charge
-traverse en JSON ; les événements de l'OS sont déjà pris en charge, un type de
-l'app doit être déclaré par un `JsonSerializerContext` de son assembly :
+**Events and file watching in a worker (ADR 0124, ADR
+0138).** `HackEvents` and `HackFileSystemWatcher` work in a worker: the OS
+holds the subscription on behalf of the process and sends it each message. The payload
+crosses as JSON; OS events are already supported, an app type
+must be declared by a `JsonSerializerContext` of its assembly:
 
 ```csharp
 [assembly: HackWireContext(typeof(MyEventsJsonContext))]
@@ -407,32 +406,32 @@ l'app doit être déclaré par un `JsonSerializerContext` de son assembly :
 internal sealed partial class MyEventsJsonContext : JsonSerializerContext;
 ```
 
-Sans déclaration, l'abonnement ou la publication lève dans le worker une
-`NotSupportedException` qui nomme le type et l'attribut ; sur le fil principal,
-rien ne change. Dans un worker, `Publish` renvoie un résultat provisoire
-(`Delivered`) : un refus de l'OS (sujet d'une autre app, canal verrouillé) est
-écrit dans le journal de l'app ([`app-log-files.md`](app-log-files.md)). `PublishAsync` (ADR 0145, SDK 2.0)
-renvoie le vrai résultat de l'OS, fautes des abonnés comprises, sur le fil
-principal comme dans un worker : c'est la forme à préférer dans le code qui
-peut tourner en worker.
+Without a declaration, subscribing or publishing throws in the worker a
+`NotSupportedException` that names the type and the attribute; on the main thread,
+nothing changes. In a worker, `Publish` returns a provisional result
+(`Delivered`): a refusal by the OS (another app's topic, locked channel) is
+written to the app's log ([`app-log-files.md`](app-log-files.md)). `PublishAsync` (ADR 0145, SDK 2.0)
+returns the OS's real result, subscriber faults included, on the main
+thread as in a worker: it is the form to prefer in code that
+may run in a worker.
 
 ```csharp
 TopicPublishResult result = await context.Events.PublishAsync(topic, new MyTickEvent(1), cancellationToken);
 if (result.Outcome != TopicPublishOutcome.Delivered) { /* refusé par l'OS */ }
 ```
 
-Un abonnement par canal refusé se termine avec l'exception. Les livraisons
-sont toujours asynchrones dans un worker.
+A refused channel subscription ends with the exception. Deliveries
+are always asynchronous in a worker.
 
-### Graphiques (ADR 0058 §2)
+### Charts (ADR 0058 §2)
 
-`HackLineChart` (`HackerOs.AppSdk.Blazor.Charts`) trace en SVG natif une ou
-plusieurs `HackChartSeries`, la valeur la plus récente à droite, avec une
-légende et une échelle automatique ; ni bibliothèque ni JavaScript. Les
-couleurs viennent du thème (`--hos-chart-series-0` à `7`). Voir
+`HackLineChart` (`HackerOs.AppSdk.Blazor.Charts`) draws one or more
+`HackChartSeries` in native SVG, the most recent value on the right, with a
+legend and an automatic scale; no library or JavaScript. Colors
+come from the theme (`--hos-chart-series-0` to `7`). See
 [`task-manager.md`](../dev/task-manager.md).
 
-### Presse-papiers (ADR 0056 §12)
+### Clipboard (ADR 0056 §12)
 
 ```csharp
 await HackClipboard.SetFileDropListAsync(["~/rapport.txt"], HackClipboardFileOperation.Cut);
@@ -440,26 +439,26 @@ HackClipboardFileList? files = await HackClipboard.GetFileDropListAsync();   // 
 string? text = await HackClipboard.GetTextAsync();
 ```
 
-- Un presse-papiers par **session**, partagé par toutes ses apps (`SystemClipboard`,
-  Platform Core), vidé à la déconnexion ; liste de fichiers au format GNOME
-  `x-special/gnome-copied-files`, lisible aussi en texte (les chemins).
-- **Capacités** `clipboard.read` (lecture) et `clipboard.write` (écriture,
-  vidage), normales. `Changed` ne demande aucune capacité.
-- `GetFileReferencesAsync` / `SetFileReferencesAsync`, anciennes formes de
-  « copier », sont retirées au gel du SDK 1.0 (ADR 0114 §3). L'ancienne classe en mémoire `AppClipboardGateway` du SDK est
-  supprimée (la vraie est dans Platform Core).
-- Passerelle : `IAppClipboardGateway Clipboard` (`AppClipboardGateway`, Platform Core).
-- **Partage avec la vraie machine** (ADR 0065) : le texte copié par une app part
-  aussi vers le presse-papiers de l'hôte, et un collage de l'hôte devient
-  l'entrée courante, selon la clé `sharing` de `/etc/hackeros/clipboard.config`.
-  Une app ne parle jamais à `navigator.clipboard` ; `BrowserClipboard` a été
-  retiré au gel du SDK 1.0 (ADR 0114 §3). Voir [`clipboard.md`](../dev/clipboard.md), [`clipboard-api.md`](clipboard-api.md).
-- `HackDirectory.CopyAsync` (copie récursive) et `HackFileOperations`
-  (`HackerOs.AppSdk.IO`, ex-`FileTransfer`, transferts de l'explorateur et de
-  toute app depuis le SDK 2.0) sont décrits dans
+- One clipboard per **session**, shared by all its apps (`SystemClipboard`,
+  Platform Core), cleared at logout; file list in the GNOME
+  format `x-special/gnome-copied-files`, also readable as text (the paths).
+- **Capabilities** `clipboard.read` (read) and `clipboard.write` (write,
+  clear), normal. `Changed` requires no capability.
+- `GetFileReferencesAsync` / `SetFileReferencesAsync`, old forms of
+  "copy", are removed at the SDK 1.0 freeze (ADR 0114 §3). The SDK's old in-memory class `AppClipboardGateway` is
+  removed (the real one is in Platform Core).
+- Gateway: `IAppClipboardGateway Clipboard` (`AppClipboardGateway`, Platform Core).
+- **Sharing with the real machine** (ADR 0065): text copied by an app also goes
+  to the host's clipboard, and a paste from the host becomes the current
+  entry, according to the `sharing` key of `/etc/hackeros/clipboard.config`.
+  An app never talks to `navigator.clipboard`; `BrowserClipboard` was
+  removed at the SDK 1.0 freeze (ADR 0114 §3). See [`clipboard.md`](../dev/clipboard.md), [`clipboard-api.md`](clipboard-api.md).
+- `HackDirectory.CopyAsync` (recursive copy) and `HackFileOperations`
+  (`HackerOs.AppSdk.IO`, formerly `FileTransfer`, transfers of the explorer and of
+  any app since SDK 2.0) are described in
   [`file-explorer.md`](../dev/file-explorer.md).
 
-### Administration du système (ADR 0056 §8 à §11, ADR 0060)
+### System administration (ADR 0056 §8 to §11, ADR 0060)
 
 ```csharp
 await using HackSettingsDocument appearance = await HackSettings.OpenSystemAsync("appearance");
@@ -469,219 +468,219 @@ await HackSystem.RebootAsync();
 HackStorageSnapshot snapshot = await HackStorageDiagnostics.GetSnapshotAsync();
 ```
 
-- `HackSettings.OpenSystemAsync` : documents de l'OS (`appearance`,
-  `ui-platform-preference`, `security`, `policy`), sans capacité ; les droits
-  des fichiers décident. `HackSettingsDocument.SetManyAsync` écrit plusieurs
-  clés en une seule modification (une seule approbation pour `/etc`).
-- `HackComponentProviders` (`apps.manage`, ADR 0156) : l'app qui fournit le
-  contrôle de fichiers et ses dialogues pour toute la machine ; une app non
-  système passe par la fenêtre d'approbation de l'OS.
+- `HackSettings.OpenSystemAsync`: OS documents (`appearance`,
+  `ui-platform-preference`, `security`, `policy`), without a capability; file
+  permissions decide. `HackSettingsDocument.SetManyAsync` writes several
+  keys in a single modification (a single approval for `/etc`).
+- `HackComponentProviders` (`apps.manage`, ADR 0156): the app that provides the
+  file control and its dialogs for the whole machine; a non-system
+  app goes through the OS approval window.
 - `HackPermissionAdministration` (`permissions.manage`), `HackServerConnection`
   (`server.connection.manage`), `HackSystem` (`system.power`),
-  `HackStorageDiagnostics` (`system.storage.inspect`) : capacités dangereuses.
-  Les changements machine et l'alimentation passent par l'agent
-  d'authentification de l'OS.
-- Passerelles : `SystemSettings`, `PermissionAdministration`,
-  `ServerConnection`, `SystemPower` (pas `System`, pour ne pas masquer
-  l'espace de noms) et `StorageDiagnostics`.
-- Détails : [`system-administration.md`](system-administration.md).
+  `HackStorageDiagnostics` (`system.storage.inspect`): dangerous capabilities.
+  Machine changes and power go through the OS authentication
+  agent.
+- Gateways: `SystemSettings`, `PermissionAdministration`,
+  `ServerConnection`, `SystemPower` (not `System`, so as not to hide
+  the namespace) and `StorageDiagnostics`.
+- Details: [`system-administration.md`](system-administration.md).
 
-### Hôte de shell (ADR 0056 §7)
+### Shell host (ADR 0056 §7)
 
-| API | Passerelle | Capacité | Remplace | Document |
+| API | Gateway | Capability | Replaces | Document |
 |---|---|---|---|---|
-| `HackShell.StartAsync`, `IHackShell` (`ExecuteAsync`, `CompleteAsync`, `GetInstalledCommands`, `WorkingDirectory`, `ExitStatus`, `Prompt`, historique), `HackShellOptions`, `HackShellCompletion`, `HackCredentialPrompt` | `IAppExecutionContext.ShellHost` (`IAppShellHostGateway`) | `shell.host` (dangereuse) | `ShellInterpreter`, `ISessionService`, `IElevationService` dans `TerminalPanel` | [`shell-host.md`](shell-host.md) |
+| `HackShell.StartAsync`, `IHackShell` (`ExecuteAsync`, `CompleteAsync`, `GetInstalledCommands`, `WorkingDirectory`, `ExitStatus`, `Prompt`, history), `HackShellOptions`, `HackShellCompletion`, `HackCredentialPrompt` | `IAppExecutionContext.ShellHost` (`IAppShellHostGateway`) | `shell.host` (dangerous) | `ShellInterpreter`, `ISessionService`, `IElevationService` in `TerminalPanel` | [`shell-host.md`](shell-host.md) |
 
-`4-terminal` ajoute la complétion des chemins, `HackShellCompletion.DisplayCandidates`,
-`IShellSession.Exit` (commande `exit`) et le composant d'onglets `TerminalTabs`
-de `HackerOs.AppSdk.Terminal` ([`terminal-console.md`](../dev/terminal-console.md)).
+`4-terminal` adds path completion, `HackShellCompletion.DisplayCandidates`,
+`IShellSession.Exit` (command `exit`) and the `TerminalTabs` tabs component
+of `HackerOs.AppSdk.Terminal` ([`terminal-console.md`](../dev/terminal-console.md)).
 
-Le shell est un processus `hsh` enfant de l'app ; ses commandes sont ses
-enfants et gardent leurs propres capacités. Le terminal lit les identifiants
-(`HackCredentialPrompt`), l'OS les vérifie.
+The shell is an `hsh` process that is a child of the app; its commands are its
+children and keep their own capabilities. The terminal reads the credentials
+(`HackCredentialPrompt`), the OS verifies them.
 
-### Arguments de lancement d'une fenêtre
+### Launch arguments of a window
 
-`WindowAppBase.LaunchArguments` rend les arguments du processus sans `argv[0]`
-(comme `Main(string[] args)`), et `WindowAppBase.LaunchFile` le premier s'il est
-un chemin absolu. Ouvrir un fichier depuis l'explorateur ou avec `open` lance
-l'app associée avec ce chemin : une app de document lit son fichier initial là
-(voir [`text-editor.md`](../dev/text-editor.md)).
+`WindowAppBase.LaunchArguments` returns the process arguments without `argv[0]`
+(like `Main(string[] args)`), and `WindowAppBase.LaunchFile` the first one if it is
+an absolute path. Opening a file from the explorer or with `open` launches
+the associated app with this path: a document app reads its initial file there
+(see [`text-editor.md`](../dev/text-editor.md)).
 
-### Événements et tailles de fenêtre (ADR 0095)
+### Window events and sizes (ADR 0095)
 
-`WindowAppBase` reçoit les crochets `OnWindowActivated`, `OnWindowDeactivated`,
-`OnWindowStateChanged` et `OnWindowResized` (avec leurs versions `Async`) et
-l'état `IsWindowActive`, `WindowState`, `WindowSize`. Les types `HackWindowState`,
-`HackWindowSize` et `IWindowAppEventTarget` sont dans `HackerOs.AppSdk.Blazor` ;
-`WindowOptions` (tailles déclarées par `AppDefinition.Window`, et depuis le SDK 1.1
-`RememberGeometry`, ADR 0116) est dans `HackerOs.App.Abstractions`. Aucune app n'injecte de service pour les recevoir :
-l'OS les appelle. Voir [`window-model.md`](window-model.md).
+`WindowAppBase` receives the hooks `OnWindowActivated`, `OnWindowDeactivated`,
+`OnWindowStateChanged` and `OnWindowResized` (with their `Async` versions) and
+the state `IsWindowActive`, `WindowState`, `WindowSize`. The types `HackWindowState`,
+`HackWindowSize` and `IWindowAppEventTarget` are in `HackerOs.AppSdk.Blazor`;
+`WindowOptions` (sizes declared by `AppDefinition.Window`, and since SDK 1.1
+`RememberGeometry`, ADR 0116) is in `HackerOs.App.Abstractions`. No app injects a service to receive them:
+the OS calls them. See [`window-model.md`](window-model.md).
 
-### Titre de fenêtre (ADR 0117, ADR 0123, SDK 1.1)
+### Window title (ADR 0117, ADR 0123, SDK 1.1)
 
-`WindowAppBase.SetWindowTitleAsync(title)` remplace le titre de la fenêtre de
-l'instance (aucune capacité), `WindowTitle` le lit et
-`FormatWindowTitle(document, modified)` compose `document — App` avec le nom
-traduit de l'app. La plateforme donne à chaque fenêtre une `IAppWindowGateway`
-par valeur en cascade fixe, jamais par injection : une app n'atteint que sa
-propre fenêtre et le SDK ne référence aucun type `HackerOs.Windowing.*`
-(ADR 0055). Voir [`window-model.md`](window-model.md) §4.
+`WindowAppBase.SetWindowTitleAsync(title)` replaces the title of the instance's
+window (no capability), `WindowTitle` reads it and
+`FormatWindowTitle(document, modified)` composes `document — App` with the app's
+translated name. The platform gives each window an `IAppWindowGateway`
+as a fixed cascading value, never by injection: an app reaches only its
+own window and the SDK references no `HackerOs.Windowing.*` type
+(ADR 0055). See [`window-model.md`](window-model.md) §4.
 
-### API du SDK 1.2 (série `exec`, ADR 0124 à 0128, ADR 0132)
+### SDK 1.2 API (`exec` series, ADR 0124 to 0128, ADR 0132)
 
-Ajouts seulement : une app 1.0 ou 1.1 tourne sans changement. Liste complète
-dans la [référence du SDK](sdk-reference.md).
+Additions only: a 1.0 or 1.1 app runs without change. Full list
+in the [SDK reference](sdk-reference.md).
 
-| API | Rôle | Capacité | Document |
+| API | Role | Capability | Document |
 |---|---|---|---|
-| `[assembly: HackWireContext(typeof(…))]` (`HackWireContextAttribute`) | Types d'une app qui traversent la frontière d'un worker : charges de `HackEvents`, entrées et résultats de `HackBackground` | — | [ci-dessus](#processus-dans-des-web-workers-adr-0070-et-0071), [ADR 0124](../dev/adr/0124-remote-event-and-watch-gateways.md) |
-| `HackProcess.GetResourceLimitsAsync` → `HackResourceLimits`, `SetResourceLimitAsync` ; `ProcessLimitExceededException` (`EAGAIN`), `FileSystemErrorCode.TooManyOpenFiles` (`EMFILE`), `ProcessExitReason.CpuLimitExceeded`, `MemoryLimitExceeded` | Limites façon `setrlimit` d'un processus | `process.manage` pour un autre processus | [`process-limits.md`](../dev/process-limits.md) |
-| `AppDefinition.OomScoreAdjust` (manifeste `oomScoreAdj`), `ProcessExitReason.OutOfMemory` | `oom_score_adj` de départ, négatif pour une app système seulement (`HOSAPP0024`) ; raison de fin d'une victime de l'OOM killer | — | [`oom-killer.md`](../dev/oom-killer.md) |
-| `HackProcess.Nice`, `BasePriority`, `IShellSession.RunNicedAsync`, `ProcessNice` | Priorité `nice` d'un processus ; lancer une commande avec un ajustement | `process.manage` hors de son processus et de ses enfants ; `shell.control` | [`process-priority-and-unresponsive-windows.md`](../dev/process-priority-and-unresponsive-windows.md) |
-| `HackBackground.RunAsync`, `HackBackgroundJob<TInput, TResult>`, `HackBackgroundContext`, `IAppExecutionContext.Background` ; analyseur `HOSBG0001` à `HOSBG0004` | Calcul long dans un processus enfant de l'app, placé dans un worker ; méthode statique vérifiée au build | — | [`background-jobs.md`](background-jobs.md) |
+| `[assembly: HackWireContext(typeof(…))]` (`HackWireContextAttribute`) | Types of an app that cross a worker's boundary: `HackEvents` payloads, inputs and results of `HackBackground` | none | [above](#processus-dans-des-web-workers-adr-0070-et-0071), [ADR 0124](../dev/adr/0124-remote-event-and-watch-gateways.md) |
+| `HackProcess.GetResourceLimitsAsync` → `HackResourceLimits`, `SetResourceLimitAsync`; `ProcessLimitExceededException` (`EAGAIN`), `FileSystemErrorCode.TooManyOpenFiles` (`EMFILE`), `ProcessExitReason.CpuLimitExceeded`, `MemoryLimitExceeded` | `setrlimit`-style limits of a process | `process.manage` for another process | [`process-limits.md`](../dev/process-limits.md) |
+| `AppDefinition.OomScoreAdjust` (manifest `oomScoreAdj`), `ProcessExitReason.OutOfMemory` | starting `oom_score_adj`, negative for a system app only (`HOSAPP0024`); exit reason of an OOM killer victim | none | [`oom-killer.md`](../dev/oom-killer.md) |
+| `HackProcess.Nice`, `BasePriority`, `IShellSession.RunNicedAsync`, `ProcessNice` | `nice` priority of a process; launch a command with an adjustment | `process.manage` outside one's own process and its children; `shell.control` | [`process-priority-and-unresponsive-windows.md`](../dev/process-priority-and-unresponsive-windows.md) |
+| `HackBackground.RunAsync`, `HackBackgroundJob<TInput, TResult>`, `HackBackgroundContext`, `IAppExecutionContext.Background`; analyzer `HOSBG0001` to `HOSBG0004` | Long computation in a child process of the app, placed in a worker; static method checked at build time | none | [`background-jobs.md`](background-jobs.md) |
 
-### API du SDK 2.0 (série du bureau, ADR 0148 à 0161)
+### SDK 2.0 API (desktop series, ADR 0148 to 0161)
 
-Une majeure : une app 1.x est refusée et doit être recompilée. Le seul retrait
-est le paquet `HackerOs.AppSdk.FileView` ; le tableau de migration est dans
+A major version: a 1.x app is refused and must be recompiled. The only removal
+is the `HackerOs.AppSdk.FileView` package; the migration table is in
 [`sdk-packages.md`](sdk-packages.md#migration-dune-app-1x).
 
-| API | Rôle | Capacité | Document |
+| API | Role | Capability | Document |
 |---|---|---|---|
-| `HackFileView`, `IHackFileView` (`HackerOs.AppSdk.Blazor.Files`) | Contrôle de fichiers fourni par l'OS (l'explorateur par défaut), avec les droits de l'app qui l'affiche | celles des fichiers montrés | [`embedded-components.md`](embedded-components.md), [`file-explorer.md`](../dev/file-explorer.md), [`file-control-api.md`](file-control-api.md) |
-| `Menus.Attach`, `Menus.Define`, `HackContextMenu`, `HackMenuDefinition` | Menu contextuel de l'OS, multi-niveaux, clavier et appui long | — | [`context-menu.md`](context-menu.md) |
-| `[RegisterFileContextMenu]`, `RegisterFileContextMenuContext`, `HackFileMenuItems` | Entrées d'une app dans les menus des fichiers, inscrites au build | `shell.context-menu` | [`context-menu.md`](context-menu.md#entrées-des-apps-dans-les-menus-des-fichiers-chantier-4) |
-| `HackFileOperations`, `IDialogService.AsFileConflictResolver` | Copie, déplacement, import, corbeille, conflits à la Nautilus (ex-`FileTransfer`) | celles des fichiers | [`file-explorer.md`](../dev/file-explorer.md), [`file-operations-api.md`](file-operations-api.md) |
-| `HackDesktopSettings`, `HackDesktopEntry`, `HackDesktopLayout` | Réglages, raccourcis `.desktop` et grille du bureau | celles du dossier perso | [`desktop.md`](../dev/desktop.md), [`desktop-api.md`](desktop-api.md) |
-| `HackComponentProviders`, `HackFileMenuEntries` | Choisir le fournisseur d'un contrat, masquer une entrée de menu | `apps.manage` | [`embedded-components.md`](embedded-components.md) |
-| `IAppEventGateway.PublishAsync`, `HackCrossOriginIsolation` | Prévus pour une 1.3 jamais publiée (ADR 0145, 0146) | — | ci-dessus |
+| `HackFileView`, `IHackFileView` (`HackerOs.AppSdk.Blazor.Files`) | File control provided by the OS (the default explorer), with the rights of the app that displays it | those of the files shown | [`embedded-components.md`](embedded-components.md), [`file-explorer.md`](../dev/file-explorer.md), [`file-control-api.md`](file-control-api.md) |
+| `Menus.Attach`, `Menus.Define`, `HackContextMenu`, `HackMenuDefinition` | OS context menu, multi-level, keyboard and long press | none | [`context-menu.md`](context-menu.md) |
+| `[RegisterFileContextMenu]`, `RegisterFileContextMenuContext`, `HackFileMenuItems` | Entries of an app in file menus, registered at build time | `shell.context-menu` | [`context-menu.md`](context-menu.md#entrées-des-apps-dans-les-menus-des-fichiers-chantier-4) |
+| `HackFileOperations`, `IDialogService.AsFileConflictResolver` | Copy, move, import, trash, Nautilus-style conflicts (formerly `FileTransfer`) | those of the files | [`file-explorer.md`](../dev/file-explorer.md), [`file-operations-api.md`](file-operations-api.md) |
+| `HackDesktopSettings`, `HackDesktopEntry`, `HackDesktopLayout` | Settings, `.desktop` shortcuts and desktop grid | those of the home folder | [`desktop.md`](../dev/desktop.md), [`desktop-api.md`](desktop-api.md) |
+| `HackComponentProviders`, `HackFileMenuEntries` | Choose the provider of a contract, hide a menu entry | `apps.manage` | [`embedded-components.md`](embedded-components.md) |
+| `IAppEventGateway.PublishAsync`, `HackCrossOriginIsolation` | Planned for a 1.3 that was never released (ADR 0145, 0146) | none | above |
 
-### API ajoutées après la phase 4 (ADR 0061 à 0065)
+### APIs added after phase 4 (ADR 0061 to 0065)
 
-Ces API suivent les mêmes règles (façade ou passerelle, capacité déclarée dans
-le `[AppManifest]`) ; leur détail est dans la
-[référence du SDK](sdk-reference.md) et dans le document de chaque chantier.
+These APIs follow the same rules (facade or gateway, capability declared in
+the `[AppManifest]`); their details are in the
+[SDK reference](sdk-reference.md) and in each work item's document.
 
-| API | Rôle | Capacité | Document |
+| API | Role | Capability | Document |
 |---|---|---|---|
-| `HackConsole`, passerelle `IAppExecutionContext.Console` (`IAppConsoleGateway`) | Flux standard d'une instance : ceux du shell qui l'a lancée par son nom, `/dev/null` depuis le bureau | — | [`shell-interpreter.md`](../dev/shell-interpreter.md#apps-lancées-par-leur-nom) |
-| `IShellSession` : `GetVariable`, `AssignVariable`, `RunAsync`, `Jobs`, `KillJob` ; `IHackShell.NeedsMoreInput` | Built-ins `read`, `watch`, `jobs`, `kill %n` écrits comme des commandes ordinaires ; invite de continuation | `shell.control` ; `shell.host` | [`shell-commands.md`](../dev/shell-commands.md), [`shell-host.md`](shell-host.md) |
-| `IFullScreenTerminalSession` (`TerminalExecutionContext.FullScreen`), `TerminalInputReader` | Écran alternatif (`nano`, `top`, `htop`) et entrée standard du terminal | — | [`terminal-emulator.md`](../dev/terminal-emulator.md), [`terminal-api.md`](terminal-api.md) |
-| `HackFile.CreateSymbolicLinkAsync` | `ln -s` | droits du chemin | [`hack-file-api.md`](hack-file-api.md) |
-| `AppDefinition.Components` (`AppComponent`), `HackEmbeddedComponent<T>`, `HackContractComponent<T>`, `HackEmbeddableComponent`, `HackComponentContracts`, `IHackTerminal` | Composant d'une app affiché par une autre, par contrat (`hackeros.terminal`) | celles de l'app qui affiche le composant (CodeEditor déclare `shell.host` pour le terminal embarqué) | [`embedded-components.md`](embedded-components.md) |
-| `HackClipboard` partagé avec l'hôte (`BrowserClipboard` retiré en 1.0) | Le texte copié part vers la vraie machine selon `clipboard.config` | `clipboard.read`, `clipboard.write` | [`clipboard.md`](../dev/clipboard.md) |
+| `HackConsole`, gateway `IAppExecutionContext.Console` (`IAppConsoleGateway`) | Standard streams of an instance: those of the shell that launched it by name, `/dev/null` from the desktop | none | [`shell-interpreter.md`](../dev/shell-interpreter.md#apps-lancées-par-leur-nom) |
+| `IShellSession`: `GetVariable`, `AssignVariable`, `RunAsync`, `Jobs`, `KillJob`; `IHackShell.NeedsMoreInput` | Built-ins `read`, `watch`, `jobs`, `kill %n` written as ordinary commands; continuation prompt | `shell.control`; `shell.host` | [`shell-commands.md`](../dev/shell-commands.md), [`shell-host.md`](shell-host.md) |
+| `IFullScreenTerminalSession` (`TerminalExecutionContext.FullScreen`), `TerminalInputReader` | Alternate screen (`nano`, `top`, `htop`) and the terminal's standard input | none | [`terminal-emulator.md`](../dev/terminal-emulator.md), [`terminal-api.md`](terminal-api.md) |
+| `HackFile.CreateSymbolicLinkAsync` | `ln -s` | path rights | [`hack-file-api.md`](hack-file-api.md) |
+| `AppDefinition.Components` (`AppComponent`), `HackEmbeddedComponent<T>`, `HackContractComponent<T>`, `HackEmbeddableComponent`, `HackComponentContracts`, `IHackTerminal` | Component of one app displayed by another, by contract (`hackeros.terminal`) | those of the app that displays the component (CodeEditor declares `shell.host` for the embedded terminal) | [`embedded-components.md`](embedded-components.md) |
+| `HackClipboard` shared with the host (`BrowserClipboard` removed in 1.0) | Copied text goes to the real machine according to `clipboard.config` | `clipboard.read`, `clipboard.write` | [`clipboard.md`](../dev/clipboard.md) |
 
-Aucune de ces API ne donne accès à un service interne : les apps qui les
-utilisent (Terminal, CodeEditor, Diagnostic, FileExplorer, `HackerOs.Commands`)
-passent la vérification de la frontière sans exception (voir
-[Vérification finale](#vérification-finale-de-la-phase-4-2026-10-16)).
+None of these APIs gives access to an internal service: the apps that
+use them (Terminal, CodeEditor, Diagnostics, FileExplorer, `HackerOs.Commands`)
+pass the boundary check without exception (see
+[Final verification](#vérification-finale-de-la-phase-4-2026-10-16)).
 
-## Décisions
+## Decisions
 
-- Codes `HOSAPP0030` et `HOSAPP0031` au lieu de `HOSAPP0002` et `HOSAPP0003`,
-  déjà pris par l'ADR 0047 (ADR 0059).
-- Exemption par projet, pas par référence : plus simple à retirer, et un
-  chantier corrige un projet entier (historique : le mécanisme a été supprimé
-  par `4-sdk-boundary-final`).
-- Les avertissements d'un projet exempté ne sont pas transformés en erreurs :
-  `TreatWarningsAsErrors` ne s'applique qu'au compilateur C#, pas aux
-  avertissements MSBuild.
-- Le contrôle d'injection compare les types par nom (assembly, nom complet) :
-  l'assembly de l'app est chargée dans un contexte isolé.
+- Codes `HOSAPP0030` and `HOSAPP0031` instead of `HOSAPP0002` and `HOSAPP0003`,
+  already taken by ADR 0047 (ADR 0059).
+- Exemption per project, not per reference: simpler to remove, and a
+  work item fixes a whole project (history: the mechanism was removed
+  by `4-sdk-boundary-final`).
+- The warnings of an exempted project are not turned into errors:
+  `TreatWarningsAsErrors` applies only to the C# compiler, not to MSBuild
+  warnings.
+- The injection check compares types by name (assembly, full name):
+  the app's assembly is loaded in an isolated context.
 
-- `HackAppInfo` ajoute `PublisherId` et `IsHidden` à la liste de l'ADR 0056 :
-  l'onglet « Installed Apps » affiche l'éditeur, et un lanceur doit savoir
-  qu'une app est cachée. `HackApps.OpenFileAsync` rend un résultat plutôt que
-  rien, parce que l'explorateur doit proposer un choix quand plusieurs apps
-  conviennent. Les méthodes de `HackAppManagement` rendent les ids écrits.
-- Un composant enfant qui n'hérite pas de `HackComponentBase` appelle les
-  passerelles de `AppContext` directement (`AppContext.Catalog`,
-  `AppContext.AppManagement`) : ses gestionnaires d'événements ne sont pas dans
-  le contexte ambiant. *Phase 5 :* les panneaux de Settings (`InstalledAppsPanel`,
-  `AppPermissionsPanel`) héritent désormais de `HackComponentBase` et reçoivent
-  le contexte en cascade, comme tous les composants de `Apps/`
+- `HackAppInfo` adds `PublisherId` and `IsHidden` to ADR 0056's list:
+  the "Installed Apps" tab displays the publisher, and a launcher must know
+  that an app is hidden. `HackApps.OpenFileAsync` returns a result rather than
+  nothing, because the explorer must offer a choice when several apps
+  fit. The methods of `HackAppManagement` return the ids written.
+- A child component that does not inherit from `HackComponentBase` calls the
+  gateways of `AppContext` directly (`AppContext.Catalog`,
+  `AppContext.AppManagement`): its event handlers are not in
+  the ambient context. *Phase 5:* the Settings panels (`InstalledAppsPanel`,
+  `AppPermissionsPanel`) now inherit from `HackComponentBase` and receive
+  the context as a cascading value, like all components in `Apps/`
   ([`resource-accounting.md`](../dev/resource-accounting.md#apps-existantes)).
 
-## Vérification finale de la phase 4 (2026-10-16)
+## Final verification of phase 4 (2026-10-16)
 
-Repasse de `rebuild/4-sdk-boundary-final` sur `rebuild/base` après les PR #115
-à #122 (xterm.js, éditeur de code, composants intégrables, shell POSIX et
-commandes Linux, presse-papiers partagé avec l'hôte) :
+Rerun of `rebuild/4-sdk-boundary-final` on `rebuild/base` after PRs #115
+to #122 (xterm.js, code editor, embeddable components, POSIX shell and
+Linux commands, clipboard shared with the host):
 
-- `dotnet build HackerOs.sln` : 0 avertissement, 0 erreur, aucun diagnostic
-  `HOSAPP0002`, `HOSAPP0003`, `HOSAPP0030`, `HOSAPP0031` ni `HOSSDK0001`.
-- Aucun projet de `Apps/` ni bibliothèque `HackerOs.AppSdk*` ne référence
-  `Platform.Core`, `Platform.Blazor`, `Infrastructure.*` ou `Server.*`. Aucun
-  reste du mécanisme d'exemption hors de l'historique des documents.
-- Injections dans `Apps/` : uniquement `IJSRuntime` (import du module de
-  l'app), `MudBlazor.IDialogService`, et des types du SDK.
-  `SdkBoundarySourceTests` parcourt tous les `.csproj` de `Apps/`, donc aussi
-  `HackerOs.Apps.Terminal` et les nouvelles commandes.
-- Capacités : chaque app et commande ajoutée ou modifiée déclare celles des API
-  qu'elle appelle (par exemple `systemctl` : `services.manage` ; `htop` :
-  `process.manage` ; `jobs`, `read`, `watch` : `shell.control` ; Terminal et
-  CodeEditor : `shell.host`).
-- Aucun appel d'API `[Obsolete]` dans `Apps/` ; depuis le gel du SDK 1.0, le
-  SDK n'en contient plus (`BrowserClipboard`, `Get/SetFileReferencesAsync`
-  retirés, ADR 0114 §3).
-- Corrigé : la copie du terminal (Ctrl+C sur une sélection, Ctrl+Shift+C)
-  écrivait `navigator.clipboard` directement, hors du presse-papiers de l'OS et
-  sans respecter `clipboard.config` (ADR 0065). Elle lève désormais un vrai
-  événement `copy` que le pont reçoit comme une copie native
+- `dotnet build HackerOs.sln`: 0 warnings, 0 errors, no diagnostic
+  `HOSAPP0002`, `HOSAPP0003`, `HOSAPP0030`, `HOSAPP0031` or `HOSSDK0001`.
+- No `Apps/` project or `HackerOs.AppSdk*` library references
+  `Platform.Core`, `Platform.Blazor`, `Infrastructure.*` or `Server.*`. No
+  remnant of the exemption mechanism outside the documents' history.
+- Injections in `Apps/`: only `IJSRuntime` (import of the app's
+  module), `MudBlazor.IDialogService`, and SDK types.
+  `SdkBoundarySourceTests` walks all `.csproj` files of `Apps/`, so also
+  `HackerOs.Apps.Terminal` and the new commands.
+- Capabilities: each app and command added or modified declares those of the APIs
+  it calls (for example `systemctl`: `services.manage`; `htop`:
+  `process.manage`; `jobs`, `read`, `watch`: `shell.control`; Terminal and
+  CodeEditor: `shell.host`).
+- No call to an `[Obsolete]` API in `Apps/`; since the SDK 1.0 freeze, the
+  SDK no longer contains any (`BrowserClipboard`, `Get/SetFileReferencesAsync`
+  removed, ADR 0114 §3).
+- Fixed: the terminal's copy (Ctrl+C on a selection, Ctrl+Shift+C)
+  wrote `navigator.clipboard` directly, outside the OS clipboard and
+  without honoring `clipboard.config` (ADR 0065). It now raises a real
+  `copy` event that the bridge receives as a native copy
   ([`terminal-emulator.md`](../dev/terminal-emulator.md)).
 
-## Liste des tâches du chantier `rebuild/4-sdk-boundary`
+## Task list of work item `rebuild/4-sdk-boundary`
 
-- [x] Cible MSBuild `ValidateHackerOsSdkBoundary` (`HOSAPP0030`, `HOSSDK0001`), références directes seulement.
-- [x] Propriété `HackerOsSdkLibrary` pour les bibliothèques SDK.
-- [x] `SdkBoundaryInspector` dans le générateur (`HOSAPP0031`), option `--boundary-exempt`.
-- [x] Liste `HackerOsSdkBoundaryExemption` (9 projets) et test qui l'empêche de grandir.
-- [x] Test de sources `IJSRuntime` dans `HackerOs.Ecosystem.Tests`.
-- [x] Retrait des références `Platform.Core` inutilisées (Calculator, HackPaint, IconViewer, TextEditor, Browser).
-- [x] Projets de test `ManifestGenerator.Fixtures.ForbiddenReference` et `ForbiddenInjection`, tests unitaires de l'inspecteur.
-- [x] ADR 0059 (numéros des codes), ce document, `app-model.md`, plan et index à jour.
+- [x] MSBuild target `ValidateHackerOsSdkBoundary` (`HOSAPP0030`, `HOSSDK0001`), direct references only.
+- [x] Property `HackerOsSdkLibrary` for SDK libraries.
+- [x] `SdkBoundaryInspector` in the generator (`HOSAPP0031`), `--boundary-exempt` option.
+- [x] `HackerOsSdkBoundaryExemption` list (9 projects) and a test that keeps it from growing.
+- [x] `IJSRuntime` source test in `HackerOs.Ecosystem.Tests`.
+- [x] Removal of unused `Platform.Core` references (Calculator, HackPaint, IconViewer, TextEditor, Browser).
+- [x] Test projects `ManifestGenerator.Fixtures.ForbiddenReference` and `ForbiddenInjection`, unit tests of the inspector.
+- [x] ADR 0059 (code numbers), this document, `app-model.md`, plan and index up to date.
 
-## Liste des tâches du chantier `rebuild/4-sdk-user-and-apps`
+## Task list of work item `rebuild/4-sdk-user-and-apps`
 
 - [x] `HackUser`, `HackUserInfo`, `HackEnvironment.GetFolderPath`, `HackSpecialFolder`.
-- [x] `IAppExecutionContext` : `UserLoginName`, `UserDisplayName`, passerelles `Catalog` et `AppManagement`.
-- [x] `HackApps`, `HackAppInfo`, `IAppCatalogGateway` et `AppCatalogGateway`.
-- [x] `HackAppManagement`, `IAppManagementGateway` et `AppManagementGateway` (`apps.manage`).
-- [x] Agent d'authentification de l'OS, courtier et fenêtre ([`admin-authentication-agent.md`](../dev/admin-authentication-agent.md)).
-- [x] Migration de FileExplorer (« Open with », dossier personnel), TextEditor et CodeEditor ; FileExplorer perd sa référence à `Platform.Core`.
-- [x] Onglet « Installed Apps » de Paramètres sur le SDK ; `apps.manage` déclarée par Paramètres.
-- [x] Exemptions retirées : FileExplorer, TextEditor, CodeEditor ; Paramètres reste pour `4-sdk-system-admin`.
-- [x] Tests : agent, passerelles, `HackUser`, fenêtre.
+- [x] `IAppExecutionContext`: `UserLoginName`, `UserDisplayName`, gateways `Catalog` and `AppManagement`.
+- [x] `HackApps`, `HackAppInfo`, `IAppCatalogGateway` and `AppCatalogGateway`.
+- [x] `HackAppManagement`, `IAppManagementGateway` and `AppManagementGateway` (`apps.manage`).
+- [x] OS authentication agent, broker and window ([`admin-authentication-agent.md`](../dev/admin-authentication-agent.md)).
+- [x] Migration of FileExplorer ("Open with", home folder), TextEditor and CodeEditor; FileExplorer loses its reference to `Platform.Core`.
+- [x] "Installed Apps" tab of Settings on the SDK; `apps.manage` declared by Settings.
+- [x] Exemptions removed: FileExplorer, TextEditor, CodeEditor; Settings remains for `4-sdk-system-admin`.
+- [x] Tests: agent, gateways, `HackUser`, window.
 
-## Liste des tâches du chantier `rebuild/4-file-explorer`
+## Task list of work item `rebuild/4-file-explorer`
 
-- [x] `HackClipboard`, `HackClipboardFileList`, passerelle `IAppExecutionContext.Clipboard` ; `SystemClipboard` et `AppClipboardGateway` dans Platform Core.
-- [x] `HackDirectory.CopyAsync`, `FileTransfer` et les ajouts de `FileView` ([`file-explorer.md`](../dev/file-explorer.md)).
-- [x] Explorateur sur ces API ; capacités `clipboard.read`, `clipboard.write`, `notifications.post` déclarées. Aucune exemption à retirer (FileExplorer était déjà sorti de la liste).
+- [x] `HackClipboard`, `HackClipboardFileList`, gateway `IAppExecutionContext.Clipboard`; `SystemClipboard` and `AppClipboardGateway` in Platform Core.
+- [x] `HackDirectory.CopyAsync`, `FileTransfer` and the additions to `FileView` ([`file-explorer.md`](../dev/file-explorer.md)).
+- [x] Explorer on these APIs; capabilities `clipboard.read`, `clipboard.write`, `notifications.post` declared. No exemption to remove (FileExplorer had already left the list).
 
-## Liste des tâches du chantier `rebuild/4-sdk-system-admin`
+## Task list of work item `rebuild/4-sdk-system-admin`
 
-- [x] Capacités `permissions.manage`, `server.connection.manage`, `system.power`, `system.storage.inspect` (dangereuses).
+- [x] Capabilities `permissions.manage`, `server.connection.manage`, `system.power`, `system.storage.inspect` (dangerous).
 - [x] `HackSettings.OpenSystemAsync`, `HackSettingsDocument.SetManyAsync`, `IAppSystemSettingsGateway`.
-- [x] `HackPermissionAdministration`, `HackServerConnection`, `HackSystem`, `HackStorageDiagnostics` et leurs passerelles Platform Core, avec l'agent d'authentification.
-- [x] `SystemPowerService` (Platform Core) et appareil navigateur (`BrowserSystemPowerDevice`, `IndexedDbStorageInspector` dans l'hôte Ecosystem).
-- [x] Paramètres et Diagnostic sur le SDK public ; exemptions retirées (liste vide).
-- [x] Tests `SystemAdministrationGatewayTests` ; ADR 0060 ; doc [`system-administration.md`](system-administration.md).
+- [x] `HackPermissionAdministration`, `HackServerConnection`, `HackSystem`, `HackStorageDiagnostics` and their Platform Core gateways, with the authentication agent.
+- [x] `SystemPowerService` (Platform Core) and browser device (`BrowserSystemPowerDevice`, `IndexedDbStorageInspector` in the Ecosystem host).
+- [x] Settings and Diagnostics on the public SDK; exemptions removed (empty list).
+- [x] Tests `SystemAdministrationGatewayTests`; ADR 0060; doc [`system-administration.md`](system-administration.md).
 
-## Liste des tâches du chantier `rebuild/4-sdk-boundary-final`
+## Task list of work item `rebuild/4-sdk-boundary-final`
 
-- [x] Vérifier que la liste d'exemptions est vide et que la solution compile sans diagnostic `HOSAPP0030`, `HOSAPP0031` ni `HOSSDK0001`.
-- [x] Supprimer le mécanisme de `build/HackerOs.Apps.targets` (élément, cible `_HackerOsResolveSdkBoundaryExemption`, propriété, avertissement).
-- [x] Supprimer l'option `--boundary-exempt` du générateur et la sévérité `warning` de `GeneratorDiagnostic`.
-- [x] Remplacer les tests de la liste par `Build_targets_have_no_exemption_mechanism` et `No_app_or_sdk_project_overrides_its_boundary_role` ; le test `IJSRuntime` couvre toutes les apps.
-- [x] Ce document, le plan (phase 4 cochée) et l'index à jour.
+- [x] Verify that the exemption list is empty and that the solution compiles without any `HOSAPP0030`, `HOSAPP0031` or `HOSSDK0001` diagnostic.
+- [x] Remove the mechanism from `build/HackerOs.Apps.targets` (item, target `_HackerOsResolveSdkBoundaryExemption`, property, warning).
+- [x] Remove the generator's `--boundary-exempt` option and the `warning` severity of `GeneratorDiagnostic`.
+- [x] Replace the list's tests with `Build_targets_have_no_exemption_mechanism` and `No_app_or_sdk_project_overrides_its_boundary_role`; the `IJSRuntime` test covers all apps.
+- [x] This document, the plan (phase 4 checked) and the index up to date.
 
-### Vérification finale (2026-10-16)
+### Final verification (2026-10-16)
 
-- [x] Build de la solution sans diagnostic de frontière ni avertissement ; références de `Apps/` et du SDK vérifiées.
-- [x] Aucun reste du mécanisme d'exemption ; `SdkBoundarySourceTests` couvre les apps ajoutées depuis #113.
-- [x] Injections et capacités des apps et commandes ajoutées par les PR #115 à #122.
-- [x] Usages d'API `[Obsolete]` dans `Apps/` : aucun.
-- [x] Copie du terminal passée par le pont du presse-papiers (ADR 0065), bundle xterm régénéré.
-- [x] Suites `Tests/*.Tests` hors E2E vertes ; liens de `docs/` vérifiés par script ; index et plan à jour.
+- [x] Solution build without any boundary diagnostic or warning; references of `Apps/` and the SDK verified.
+- [x] No remnant of the exemption mechanism; `SdkBoundarySourceTests` covers the apps added since #113.
+- [x] Injections and capabilities of the apps and commands added by PRs #115 to #122.
+- [x] Uses of `[Obsolete]` APIs in `Apps/`: none.
+- [x] Terminal copy routed through the clipboard bridge (ADR 0065), xterm bundle regenerated.
+- [x] `Tests/*.Tests` suites other than E2E green; links in `docs/` verified by script; index and plan up to date.

@@ -1,141 +1,141 @@
-# ADR 0063 : composants d'app intégrables, enregistrés auprès de l'OS
+# ADR 0063: embeddable app components, registered with the OS
 
-## Statut
+## Status
 
-Accepté le 2026-10-11.
+Accepted on 2026-10-11.
 
-- **Contexte du plan :** après la refonte, demande de Benoit du 2026-10-11 :
-  l'éditeur de code doit avoir un dock en bas avec des onglets (état,
-  terminal, erreurs) et, pour le terminal, « réutiliser le contrôle de
-  l'application de terminal. Terminal doit faire un register de son contrôle
-  dans l'OS qui respecte une interface pour le contrôler depuis
-  l'application ; set the current directory, read output, send commands ».
-- **Complète** l'ADR 0047 (manifeste en classe C#) : `AppDefinition` et
-  `AppManifest` gagnent `Components`.
-- **Remplace** la phrase de l'ADR 0062 §1 sur le « panneau terminal » de
-  l'éditeur : ce panneau devient un dock à onglets (Status, Terminal,
-  Problems) et ses terminaux sont ceux de l'app Terminal, embarqués par
-  contrat, plus des `TerminalPanel` référencés directement.
-- **Respecte** l'ADR 0055 : l'éditeur n'utilise que le SDK public ; il ne
-  référence plus `HackerOs.AppSdk.Terminal`.
+- **Plan context:** after the rebuild, request from Benoit on 2026-10-11:
+  the code editor must have a dock at the bottom with tabs (status,
+  terminal, errors) and, for the terminal, "reuse the control of the
+  terminal application. Terminal must register its control in the OS,
+  respecting an interface to control it from the application; set the current
+  directory, read output, send commands".
+- **Completes** ADR 0047 (manifest as a C# class): `AppDefinition` and
+  `AppManifest` gain `Components`.
+- **Supersedes** the sentence of ADR 0062 §1 about the editor's "terminal
+  panel": this panel becomes a tabbed dock (Status, Terminal,
+  Problems) and its terminals are those of the Terminal app, embedded by
+  contract, instead of `TerminalPanel` referenced directly.
+- **Respects** ADR 0055: the editor uses only the public SDK; it no longer
+  references `HackerOs.AppSdk.Terminal`.
 
-## Contexte
+## Context
 
-Jusqu'ici, une app qui voulait un terminal référençait la bibliothèque
-`HackerOs.AppSdk.Terminal` et dessinait elle-même un `TerminalPanel`. Le
-terminal de l'éditeur et celui de la console avaient le même code, mais
-aucun lien avec l'app Terminal : rien ne permettait de le piloter
-(changer de dossier, lancer une commande, lire la sortie), et une autre app
-aurait dû refaire la même chose.
+Until now, an app that wanted a terminal referenced the library
+`HackerOs.AppSdk.Terminal` and drew a `TerminalPanel` itself. The
+editor's terminal and the console's had the same code, but
+no link to the Terminal app: nothing made it possible to drive it
+(change folder, launch a command, read the output), and another app
+would have had to redo the same thing.
 
-Les bureaux Linux règlent ce cas par des composants enregistrés : KDE charge
-la KPart de Konsole dans Kate ou Dolphin (l'app hôte ne connaît que
-l'interface `TerminalInterface`), GNOME embarque le widget VTE. C'est ce
-modèle qui est retenu.
+Linux desktops handle this case with registered components: KDE loads
+Konsole's KPart in Kate or Dolphin (the host app only knows the
+`TerminalInterface` interface), GNOME embeds the VTE widget. This is the
+model retained.
 
-## Décision
+## Decision
 
-### 1. Une app enregistre des composants dans son manifeste
+### 1. An app registers components in its manifest
 
-`AppDefinition.Components` liste des `AppComponent(Contract, Type)`. Le
-manifeste généré porte `components: [{ contract, assembly, type }]`.
+`AppDefinition.Components` lists `AppComponent(Contract, Type)` entries. The
+generated manifest carries `components: [{ contract, assembly, type }]`.
 
-- Le **contrat** est un nom stable en mots minuscules séparés par des points
-  (`hackeros.terminal`). Il désigne une interface du SDK (le contrôleur) et un
-  enregistrement d'options.
-- Seules les apps `Window` peuvent enregistrer des composants ; un contrat
-  n'est enregistré qu'une fois par app ; le type vit dans l'assemblage du
-  point d'entrée, que le chargement paresseux récupère déjà
+- The **contract** is a stable name in lowercase words separated by dots
+  (`hackeros.terminal`). It designates an SDK interface (the controller) and an
+  options record.
+- Only `Window` apps can register components; a contract is
+  registered only once per app; the type lives in the entry point's
+  assembly, which lazy loading already retrieves
   (`AppManifestValidator`).
-- `components` est **omis** quand l'app n'en a pas (`null` dans
-  `AppManifest`) : les manifestes existants gardent leurs octets.
-- Le schéma, la liste blanche de `AppManifestJsonSerializer`, le canonique de
-  test et le validateur sont mis à jour ensemble (common-pitfalls §2).
+- `components` is **omitted** when the app has none (`null` in
+  `AppManifest`): existing manifests keep their bytes.
+- The schema, the allow list of `AppManifestJsonSerializer`, the test
+  canonical form and the validator are updated together (common-pitfalls §2).
 
-### 2. Le composant hérite de `HackEmbeddableComponent`
+### 2. The component inherits from `HackEmbeddableComponent`
 
-Le composant dérive de `HackEmbeddableComponent` (`HackerOs.AppSdk.Blazor.Components`),
-qui dérive de `HackComponentBase`. Il reçoit :
+The component derives from `HackEmbeddableComponent` (`HackerOs.AppSdk.Blazor.Components`),
+which derives from `HackComponentBase`. It receives:
 
-- le contexte de la fenêtre **hôte** (paramètre en cascade `AppContext`) : il
-  s'exécute dans le processus de l'hôte, avec ses capacités, comme une
-  bibliothèque chargée dans le processus ;
-- `Options` : l'enregistrement d'options du contrat, choisi par l'hôte ;
-- `ControllerReady` : le rappel qui remet le contrôleur à l'hôte une fois le
-  composant prêt.
+- the context of the **host** window (cascading parameter `AppContext`): it
+  runs in the host's process, with its capabilities, like a
+  library loaded into the process;
+- `Options`: the options record of the contract, chosen by the host;
+- `ControllerReady`: the callback that hands the controller to the host once the
+  component is ready.
 
-### 3. L'OS trouve le fournisseur, l'hôte demande un contrat
+### 3. The OS finds the provider, the host asks for a contract
 
-`IHackComponentHost.ResolveAsync(contract)` (implémenté par
-`HackComponentHost` dans `Platform.Blazor`, enregistré dans l'écosystème) :
+`IHackComponentHost.ResolveAsync(contract)` (implemented by
+`HackComponentHost` in `Platform.Blazor`, registered in the ecosystem):
 
-1. liste les apps **installées** qui enregistrent le contrat, les apps système
-   d'abord, puis par identifiant ;
-2. récupère le descripteur de l'app avec
-   `AppLifecycleOrchestrator.EnsureDescriptorAsync`, qui charge son assemblage
-   comme un lancement ;
-3. vérifie que le type existe, n'est pas abstrait et dérive de
-   `HackEmbeddableComponent` ;
-4. renvoie le type, ou la raison pour laquelle rien n'est disponible. Un
-   fournisseur qui ne se charge pas laisse la place au suivant.
+1. lists the **installed** apps that register the contract, system apps
+   first, then by identifier;
+2. retrieves the app's descriptor with
+   `AppLifecycleOrchestrator.EnsureDescriptorAsync`, which loads its assembly
+   like a launch;
+3. checks that the type exists, is not abstract and derives from
+   `HackEmbeddableComponent`;
+4. returns the type, or the reason why nothing is available. A
+   provider that fails to load leaves room for the next one.
 
-L'hôte affiche `<HackEmbeddedComponent TController="…" Contract="…">` : le
-composant résout le contrat, rend le composant fourni et convertit le
-contrôleur reçu en `TController`. Sans fournisseur (app Terminal
-désinstallée, hôte de test), il affiche la raison ou le fragment
-`Unavailable`.
+The host displays `<HackEmbeddedComponent TController="..." Contract="...">`: the
+component resolves the contract, renders the provided component and converts the
+received controller to `TController`. Without a provider (Terminal app
+uninstalled, test host), it displays the reason or the `Unavailable`
+fragment.
 
-### 4. Le premier contrat : `hackeros.terminal`
+### 4. The first contract: `hackeros.terminal`
 
-`HackComponentContracts.Terminal` désigne `IHackTerminal` et
-`HackTerminalOptions` (`HackerOs.AppSdk.Components`). L'app Terminal
-l'enregistre avec `TerminalEmbed`, qui rend le même `TerminalPanel` que sa
-fenêtre ; `TerminalPanel` implémente `IHackTerminal` :
+`HackComponentContracts.Terminal` designates `IHackTerminal` and
+`HackTerminalOptions` (`HackerOs.AppSdk.Components`). The Terminal app
+registers it with `TerminalEmbed`, which renders the same `TerminalPanel` as its
+window; `TerminalPanel` implements `IHackTerminal`:
 
-| Membre | Ce qu'il fait, comme le ferait une personne au clavier |
+| Member | What it does, as a person at the keyboard would |
 | --- | --- |
-| `RunCommandAsync(ligne)` | La ligne est mise dans la file d'entrée du terminal (après les touches déjà tapées), affichée à l'invite, exécutée ; la ligne en cours de saisie est mise de côté puis rendue (comme le push-line de zsh). Renvoie `$?` et la sortie, sans séquences de contrôle. |
-| `SetWorkingDirectoryAsync(chemin)` | Lance un `cd` visible (chemin cité si besoin). |
-| `SendInputAsync(texte)` | Les octets du clavier : texte, `\r` pour Entrée, `\u0003` pour Ctrl+C. |
-| `ReadOutput(max)` | Les 256 derniers Kio affichés : lignes validées, sorties des commandes, messages du terminal ; pas les redessins de la ligne. |
+| `RunCommandAsync(line)` | The line is put in the terminal's input queue (after the keys already typed), displayed at the prompt, executed; the line being typed is set aside then restored (like zsh's push-line). Returns `$?` and the output, without control sequences. |
+| `SetWorkingDirectoryAsync(path)` | Launches a visible `cd` (path quoted if needed). |
+| `SendInputAsync(text)` | The keyboard bytes: text, `\r` for Enter, `\u0003` for Ctrl+C. |
+| `ReadOutput(max)` | The last 256 KiB displayed: committed lines, command outputs, terminal messages; not the redraws of the line. |
 | `ClearAsync`, `FocusAsync` | `clear`, focus. |
-| `WorkingDirectory`, `Title`, `IsRunning`, `IsBusy` | État du shell. |
-| `OutputReceived`, `CommandCompleted`, `StateChanged`, `Exited` | Événements, levés sur le thread de rendu. |
+| `WorkingDirectory`, `Title`, `IsRunning`, `IsBusy` | Shell state. |
+| `OutputReceived`, `CommandCompleted`, `StateChanged`, `Exited` | Events, raised on the render thread. |
 
-Une commande interrompue (Ctrl+C ou jeton annulé) finit avec le statut 130,
-comme dans bash.
+An interrupted command (Ctrl+C or canceled token) ends with status 130,
+as in bash.
 
-### 5. Le dock de l'éditeur
+### 5. The editor's dock
 
-L'éditeur remplace son panneau terminal par un dock à onglets :
+The editor replaces its terminal panel with a tabbed dock:
 
-- **Status** : faits sur l'éditeur (dossier, fichier, langage, taille, onglets,
-  terminaux) et journal horodaté des messages (200 au plus) ; les erreurs
-  restent aussi affichées au-dessus de l'éditeur, les autres messages passent
-  dans la barre d'état ;
-- **Terminal** : un `hsh` par onglet, embarqué par contrat ; « Open in
-  Integrated Terminal » dans l'explorateur déplace le terminal actif par un
-  `cd` visible, ou en ouvre un nouveau s'il est occupé ;
-- **Problems** : vide pour l'instant (pas de diagnostic sans compilation).
+- **Status**: facts about the editor (folder, file, language, size, tabs,
+  terminals) and a timestamped log of messages (200 at most); errors
+  are also still displayed above the editor, other messages go to
+  the status bar;
+- **Terminal**: one `hsh` per tab, embedded by contract; "Open in
+  Integrated Terminal" in the explorer moves the active terminal with a
+  visible `cd`, or opens a new one if it is busy;
+- **Problems**: empty for now (no diagnostics without compilation).
 
-Le dock est caché, pas détruit, quand on le ferme : ses shells continuent.
-Ctrl+J l'affiche ou le cache ; Ctrl+` va à l'onglet Terminal.
+The dock is hidden, not destroyed, when closed: its shells keep running.
+Ctrl+J shows or hides it; Ctrl+` goes to the Terminal tab.
 
-## Conséquences
+## Consequences
 
-- Une app tierce peut embarquer un terminal par le SDK public, avec la
-  capacité `shell.host` (le shell est son enfant).
-- Désinstaller l'app Terminal retire le terminal de l'éditeur, qui affiche
-  pourquoi : c'est le comportement d'un composant fourni par une autre app.
-- D'autres contrats pourront suivre (visionneuse d'images, vue de fichiers)
-  sans changer ce mécanisme.
+- A third-party app can embed a terminal through the public SDK, with the
+  `shell.host` capability (the shell is its child).
+- Uninstalling the Terminal app removes the terminal from the editor, which displays
+  why: this is the behavior of a component provided by another app.
+- Other contracts can follow (image viewer, file view)
+  without changing this mechanism.
 
-## Alternatives écartées
+## Rejected alternatives
 
-- **Référencer `HackerOs.AppSdk.Terminal` dans chaque app** (l'existant) : pas
-  de pilotage, et rien n'est enregistré auprès de l'OS.
-- **Un service DI global par composant** : il faudrait enregistrer chaque
-  composant dans l'écosystème et charger toutes les apps au démarrage ; le
-  manifeste garde le chargement paresseux.
-- **`DynamicComponent`** : ses annotations de découpage échouent au build
-  (IL2111) ; `HackEmbeddedComponent` ouvre le composant lui-même.
+- **Referencing `HackerOs.AppSdk.Terminal` in each app** (what exists): no
+  control, and nothing is registered with the OS.
+- **A global DI service per component**: each component would have to be
+  registered in the ecosystem and all apps loaded at startup; the
+  manifest keeps lazy loading.
+- **`DynamicComponent`**: its trimming annotations fail the build
+  (IL2111); `HackEmbeddedComponent` opens the component itself.

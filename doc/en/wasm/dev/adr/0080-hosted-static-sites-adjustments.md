@@ -1,86 +1,86 @@
-# ADR 0080 : ajustements des sites statiques hébergés
+# ADR 0080: adjustments to hosted static sites
 
-## Statut
+## Status
 
-Accepté le 2026-10-16, avec le chantier `web/5-static-sites`.
+Accepted on 2026-10-16, with the `web/5-static-sites` work item.
 
-- **Phase du plan :** phase web ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
-- **Complète :** [ADR 0077](0077-hosted-static-sites.md). Les sections 1 et 2
-  ci-dessous remplacent deux puces de l'ADR 0077 §2 et sa conséquence sur le
-  compte `www-data` ; le reste de l'ADR 0077 (fichiers `.site`, deux
-  emplacements, Web Server Manager, sites externes) est appliqué tel quel.
-- **Complète aussi :** [ADR 0045](0045-logs-as-files.md) (journaux des démons)
-  et [ADR 0074](0074-listening-ports-and-name-resolution.md) §4 (source des
-  sites hébergés du résolveur).
-- **Documentation :** [`static-sites.md`](../static-sites.md).
+- **Plan phase:** web phase ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
+- **Completes:** [ADR 0077](0077-hosted-static-sites.md). Sections 1 and 2
+  below replace two bullets of ADR 0077 §2 and its consequence on the
+  `www-data` account; the rest of ADR 0077 (`.site` files, two
+  locations, Web Server Manager, external sites) is applied as is.
+- **Also completes:** [ADR 0045](0045-logs-as-files.md) (daemon logs)
+  and [ADR 0074](0074-listening-ports-and-name-resolution.md) §4 (source of the
+  resolver's hosted sites).
+- **Documentation:** [`static-sites.md`](../static-sites.md).
 
-## Contexte
+## Context
 
-La mise en œuvre de l'ADR 0077 a rencontré quatre points que l'ADR ne
-tranchait pas, ou qu'il tranchait d'une façon que la plateforme actuelle ne
-permet pas.
+The implementation of ADR 0077 encountered four points that the ADR did not
+settle, or settled in a way that the current platform does not
+allow.
 
-## Décision
+## Decision
 
-1. **`hackwebd` tourne sur le fil principal, pas dans un worker dédié.** Un
-   Web Worker n'offre pas encore la surveillance de fichiers
-   (`HackFileSystemWatcher` : la passerelle distante ne la porte pas, ADR 0072
-   §3), dont dépend le rechargement à chaud de l'ADR 0077 §2. Le manifeste
-   déclare donc `Execution = MainThread`. Servir un fichier ne fait que lire le
-   système de fichiers par le SDK : le coût sur le fil principal est celui de
-   l'explorateur. Il passera dans un worker quand les workers sauront
-   surveiller un dossier, sans changer son code.
-2. **`www-data` est simulé, pas un compte de l'OS.** L'OS n'a pas de comptes
-   de service et en ajouter un toucherait l'authentification, `/etc/passwd`
-   et les sessions, hors du sujet de ce chantier. `hackwebd` tourne avec
-   l'utilisateur de la session et applique lui-même les droits de `www-data`,
-   qui ne possède aucun fichier et n'est dans aucun groupe :
-   - un **site système** (`/etc/hackweb/sites`) n'est servi que si chaque
-     dossier, de `/` jusqu'au fichier, a le bit `o+x`, et le fichier `o+r`
-     (un dossier listé : `o+r` aussi) ; sinon `403`, comme Apache sur un
-     dossier personnel en `0700` ;
-   - un **site d'utilisateur** (`~/.config/hackweb/sites`) est servi avec les
-     droits de son propriétaire, comme un `python -m http.server` qu'il aurait
-     lancé.
-   Le Manager prévient quand `www-data` ne pourra pas lire la racine choisie.
-3. **Journaux des démons par `IAppLoggingGateway.AppendToLogFile`.** L'ADR
-   0045 réserve l'écriture dans `/var/log` au rédacteur de la plateforme ; une
-   app n'y écrit pas elle-même. Pour garder cette règle et donner à
-   `hackwebd` ses `/var/log/hackweb/<site>.access.log` et `error.log`, la
-   passerelle de journalisation gagne `AppendToLogFile(relativePath, line)` :
-   - réservé aux **apps système** (ADR 0048) ; une autre app reçoit
-     `UnauthorizedAccessException` ;
-   - chemin relatif en deux segments exactement, `<dossier>/<fichier>.log`,
-     jamais sous `apps/` (réservé à l'ADR 0045) ;
-   - la ligne est écrite telle quelle (format du démon, par exemple
-     « combined » d'Apache) par `LogFileWriter`, avec la même rotation à
-     1 Mio × 5 et le mode `system:system 0644` ; un saut de ligne dans la ligne
-     devient `\n` pour qu'aucune entrée ne puisse en forger une autre ;
-   - une app en Web Worker l'appelle par l'opération `log.file` du protocole
-     des workers.
-4. **La source des sites hébergés du résolveur devient asynchrone.**
-   `IHostedSiteNameSource.FindSite(name)` devient `FindSiteAsync(name,
-   cancellationToken)`, parce que la réponse vient des fichiers `.site`. La
-   plateforme l'implémente par `HostedSiteNameSource` : elle lit les deux
-   emplacements avec les droits de `root` (le résolveur est l'OS), garde les
-   sites valides et activés, et publie leurs noms qui ne sont ni `localhost`,
-   ni une adresse IP, ni un joker. Un site système l'emporte sur un site
-   d'utilisateur du même nom. La lecture est mise en cache par révision des
-   fichiers.
+1. **`hackwebd` runs on the main thread, not in a dedicated worker.** A
+   Web Worker does not yet offer file watching
+   (`HackFileSystemWatcher`: the remote gateway does not carry it, ADR 0072
+   §3), on which the hot reload of ADR 0077 §2 depends. The manifest
+   therefore declares `Execution = MainThread`. Serving a file only reads the
+   file system through the SDK: the cost on the main thread is that of the
+   explorer. It will move to a worker when workers can
+   watch a folder, without changing its code.
+2. **`www-data` is simulated, not an OS account.** The OS has no service
+   accounts and adding one would touch authentication, `/etc/passwd`
+   and sessions, outside the subject of this work item. `hackwebd` runs with
+   the session user and applies the rights of `www-data` itself,
+   which owns no file and is in no group:
+   - a **system site** (`/etc/hackweb/sites`) is served only if every
+     folder, from `/` down to the file, has the `o+x` bit, and the file `o+r`
+     (a listed folder: `o+r` too); otherwise `403`, like Apache on a
+     home folder with `0700`;
+   - a **user site** (`~/.config/hackweb/sites`) is served with the
+     rights of its owner, like a `python -m http.server` they would have
+     launched.
+   The Manager warns when `www-data` will not be able to read the chosen root.
+3. **Daemon logs through `IAppLoggingGateway.AppendToLogFile`.** ADR
+   0045 reserves writing to `/var/log` for the platform's writer; an
+   app does not write there itself. To keep this rule and give
+   `hackwebd` its `/var/log/hackweb/<site>.access.log` and `error.log`, the
+   logging gateway gains `AppendToLogFile(relativePath, line)`:
+   - reserved for **system apps** (ADR 0048); another app receives
+     `UnauthorizedAccessException`;
+   - relative path of exactly two segments, `<folder>/<file>.log`,
+     never under `apps/` (reserved by ADR 0045);
+   - the line is written as is (daemon format, for example Apache's
+     "combined") by `LogFileWriter`, with the same rotation at
+     1 MiB × 5 and mode `system:system 0644`; a line break in the line
+     becomes `\n` so that no entry can forge another;
+   - an app in a Web Worker calls it through the `log.file` operation of the
+     worker protocol.
+4. **The resolver's hosted-site source becomes asynchronous.**
+   `IHostedSiteNameSource.FindSite(name)` becomes `FindSiteAsync(name,
+   cancellationToken)`, because the answer comes from the `.site` files. The
+   platform implements it with `HostedSiteNameSource`: it reads both
+   locations with the rights of `root` (the resolver is the OS), keeps the
+   valid and enabled sites, and publishes their names that are neither `localhost`,
+   nor an IP address, nor a wildcard. A system site wins over a user
+   site of the same name. The reading is cached per revision of the
+   files.
 
-Hors ADR 0077, deux limites sont posées :
+Outside ADR 0077, two limits are set:
 
-- une liaison `https://` est refusée à la validation : il n'y a pas encore de
-  certificats simulés ;
-- seuls `GET`, `HEAD` et `OPTIONS` sont servis (`405` avec `Allow` sinon) ; pas
-  de requêtes partielles (`Accept-Ranges: none`).
+- an `https://` binding is refused at validation: there are no
+  simulated certificates yet;
+- only `GET`, `HEAD` and `OPTIONS` are served (`405` with `Allow` otherwise); no
+  partial requests (`Accept-Ranges: none`).
 
-## Conséquences
+## Consequences
 
-- Un démon système peut avoir ses propres journaux sous `/var/log` sans qu'une
-  app écrive dans ce dossier ; les apps ordinaires gardent seulement
+- A system daemon can have its own logs under `/var/log` without an
+  app writing into that folder; ordinary apps keep only
   `/var/log/apps/<appId>.log`.
-- La visionneuse de journaux (`Error Log Viewer`) ne liste pas encore
-  `/var/log/hackweb` : `cat`, `tail` et l'onglet « Logs » du Manager le lisent.
-- Le jour où l'OS aura de vrais comptes de service, la section 2 sera
-  remplacée par un nouvel ADR ; les droits observés resteront les mêmes.
+- The log viewer (`Error Log Viewer`) does not yet list
+  `/var/log/hackweb`: `cat`, `tail` and the Manager's "Logs" tab read it.
+- The day the OS has real service accounts, section 2 will be
+  replaced by a new ADR; the observed rights will stay the same.

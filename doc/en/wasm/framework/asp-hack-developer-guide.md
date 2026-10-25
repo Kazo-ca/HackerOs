@@ -1,52 +1,51 @@
-# Guide du développeur ASP.Hack
+# ASP.Hack developer guide
 
-Chantier `web/11-sample-final`, dernier de la phase web ([`asp-hack-plan.md`](../dev/plans/asp-hack-plan.md)).
-Ce guide montre comment écrire un **site interne** de HackerOS avec ASP.Hack, en
-suivant l'exemple **Intranet** (`Apps/Samples/HackerOs.Samples.Intranet`,
-`http://intranet.hack/`), qui réunit toutes les briques de la phase. Décisions
-propres à ce chantier : [ADR 0087](../dev/adr/0087-asp-hack-intranet-sample-adjustments.md).
-Référence de chaque type : [`sdk-reference.md`](sdk-reference.md#sites-web-asphack).
-Guide des apps fenêtrées, commandes et services : [`sdk-developer-guide.md`](sdk-developer-guide.md).
+Work item `web/11-sample-final`, the last of the web phase ([`asp-hack-plan.md`](../dev/plans/asp-hack-plan.md)).
+This guide shows how to write an **internal site** for HackerOS with ASP.Hack, by
+following the **Intranet** example (`Apps/Samples/HackerOs.Samples.Intranet`,
+`http://intranet.hack/`), which brings together all the building blocks of the phase. Decisions
+specific to this work item: [ADR 0087](../dev/adr/0087-asp-hack-intranet-sample-adjustments.md).
+Reference for each type: [`sdk-reference.md`](sdk-reference.md#sites-web-asphack).
+Guide to windowed apps, commands and services: [`sdk-developer-guide.md`](sdk-developer-guide.md).
 
-## Objet
+## Purpose
 
-ASP.Hack reprend la façon d'écrire un site ASP.NET Core MVC, sans ASP.NET (qui
-ne tourne pas dans le navigateur) : une classe de démarrage, des middlewares,
-des contrôleurs à attributs `[HttpGet]`/`[HttpPost]`..., des vues `.cshtml` ou
-`.razor`, un `wwwroot`, une session par cookie, et, si on le veut, des pages
-Blazor interactives. Le site est une **app de genre `Web`** : un processus de
-l'OS qui écoute un port, démarré à la première requête, visible dans `ps`, le
-gestionnaire de tâches et `netstat -tlnp`.
+ASP.Hack takes up the way of writing an ASP.NET Core MVC site, without ASP.NET (which
+does not run in the browser): a startup class, middlewares,
+controllers with `[HttpGet]`/`[HttpPost]`... attributes, `.cshtml` or
+`.razor` views, a `wwwroot`, a cookie session, and, if wanted, interactive
+Blazor pages. The site is a **`Web` kind app**: an OS process that listens on a port, started on the first request, visible in `ps`, the
+task manager and `netstat -tlnp`.
 
-| Brique | Chantier, document | Dans l'exemple |
+| Building block | Work item, document | In the example |
 |---|---|---|
-| Corps HTTP réels | `web/2`, [`http-bodies.md`](http-bodies.md) | JSON, formulaires, CSS et JS servis avec leur `Content-Type` |
-| Écoute, DNS, activation à la demande | `web/3`, [`listening-ports-and-dns.md`](listening-ports-and-dns.md) | `intranet.hack` résolu par le manifeste, site démarré par `curl` ou le navigateur |
-| Page HTML isolée, pont `fetch` | `web/4`, [`browser-html-rendering.md`](../dev/browser-html-rendering.md) | `health.js`, `people.js`, `notes.js` |
-| Pipeline, routage, contrôleurs, session | `web/6`, [`asp-hack-mvc.md`](asp-hack-mvc.md) | `IntranetSite.Configure`, `Controllers/` |
-| Vues `.razor`, anti-falsification, `wwwroot` | `web/7`, [`asp-hack-razor-views.md`](asp-hack-razor-views.md) | `Views/Notes/`, `Views/Shared/_Layout.razor`, `wwwroot/` |
-| Vues `.cshtml` | `web/8`, [`asp-hack-cshtml-views.md`](asp-hack-cshtml-views.md) | `Views/Home/`, `Views/People/`, `_ViewStart.cshtml` |
-| Site Blazor interactif | `web/9`, [`blazor-sites.md`](blazor-sites.md) | `Board/` sous `/board` |
-| Fenêtre détachée | `web/10`, [`detached-display-windows.md`](../dev/detached-display-windows.md) | bouton `⧉` du navigateur, sur n'importe quelle page |
-| Sites statiques sans code | `web/5`, [`static-sites.md`](../dev/static-sites.md) | (autre sorte de site : fichiers de l'utilisateur servis par `hackwebd`) |
-| Base du site, journal de débogage, saisie semi-automatique | `web/12`, [`asp-hack-site-data.md`](asp-hack-site-data.md) | notes dans la base IndexedDB `hackweb.org.hackeros.samples.intranet`, `ILogger<NotesController>`, titres proposés par le navigateur |
+| Real HTTP bodies | `web/2`, [`http-bodies.md`](http-bodies.md) | JSON, forms, CSS and JS served with their `Content-Type` |
+| Listening, DNS, on-demand activation | `web/3`, [`listening-ports-and-dns.md`](listening-ports-and-dns.md) | `intranet.hack` resolved by the manifest, site started by `curl` or the browser |
+| Isolated HTML page, `fetch` bridge | `web/4`, [`browser-html-rendering.md`](../dev/browser-html-rendering.md) | `health.js`, `people.js`, `notes.js` |
+| Pipeline, routing, controllers, session | `web/6`, [`asp-hack-mvc.md`](asp-hack-mvc.md) | `IntranetSite.Configure`, `Controllers/` |
+| `.razor` views, anti-forgery, `wwwroot` | `web/7`, [`asp-hack-razor-views.md`](asp-hack-razor-views.md) | `Views/Notes/`, `Views/Shared/_Layout.razor`, `wwwroot/` |
+| `.cshtml` views | `web/8`, [`asp-hack-cshtml-views.md`](asp-hack-cshtml-views.md) | `Views/Home/`, `Views/People/`, `_ViewStart.cshtml` |
+| Interactive Blazor site | `web/9`, [`blazor-sites.md`](blazor-sites.md) | `Board/` under `/board` |
+| Detached window | `web/10`, [`detached-display-windows.md`](../dev/detached-display-windows.md) | the browser's `⧉` button, on any page |
+| Static sites without code | `web/5`, [`static-sites.md`](../dev/static-sites.md) | (another kind of site: user files served by `hackwebd`) |
+| Site database, debug log, autofill | `web/12`, [`asp-hack-site-data.md`](asp-hack-site-data.md) | notes in the IndexedDB database `hackweb.org.hackeros.samples.intranet`, `ILogger<NotesController>`, titles suggested by the browser |
 
-## Visiter l'exemple
+## Visiting the example
 
-Lancer un hôte (`dotnet run --project OS/HackerOs.Ecosystem`, voir
-[`building-and-testing.md`](../dev/building-and-testing.md)), ouvrir le navigateur de
-l'OS et taper `intranet.hack`.
+Launch a host (`dotnet run --project OS/HackerOs.Ecosystem`, see
+[`building-and-testing.md`](../dev/building-and-testing.md)), open the OS
+browser and type `intranet.hack`.
 
-| Adresse | Ce qu'on y voit | Ce que ça montre |
+| Address | What you see | What it shows |
 |---|---|---|
-| `/` | Annonces, compteurs, état du site | vue `.cshtml` dans un layout `.razor` ; `health.js` appelle `/health` par `fetch` |
-| `/Home/Profile` | Choix d'un nom | `Html.BeginForm`, `TextBoxFor`, validation, jeton anti-falsification, nom gardé en session |
-| `/People` | Annuaire | recherche faite par le serveur (`?q=`), puis filtrée par `people.js` sur `/api/people` à chaque touche |
-| `/Notes` | Wiki d'équipe | vues `.razor`, partial `_NoteCard`, création/édition/suppression par formulaires (post/redirect/get), étoile qui épingle par `PATCH /api/notes/{id}` ; notes gardées dans la base du site (`HackWebDb`), qui survivent à l'arrêt du site et au redémarrage |
-| `/board` | Tableau de tâches | site Blazor dessiné par le navigateur : ajouter, déplacer, supprimer une carte sans recharger, lien vers `/board/tasks/{id}` |
-| `/api/notes`, `/api/people`, `/api/tasks`, `/api/me`, `/health` | JSON | API REST complète (`GET`, `POST`, `PUT`, `PATCH`, `DELETE`, problèmes RFC 9457) |
+| `/` | Announcements, counters, site status | `.cshtml` view in a `.razor` layout; `health.js` calls `/health` through `fetch` |
+| `/Home/Profile` | Choosing a name | `Html.BeginForm`, `TextBoxFor`, validation, anti-forgery token, name kept in session |
+| `/People` | Directory | search done by the server (`?q=`), then filtered by `people.js` on `/api/people` at each keystroke |
+| `/Notes` | Team wiki | `.razor` views, `_NoteCard` partial, creation/editing/deletion through forms (post/redirect/get), star that pins through `PATCH /api/notes/{id}`; notes kept in the site database (`HackWebDb`), which survive the site stopping and restarting |
+| `/board` | Task board | Blazor site drawn by the browser: add, move, delete a card without reloading, link to `/board/tasks/{id}` |
+| `/api/notes`, `/api/people`, `/api/tasks`, `/api/me`, `/health` | JSON | full REST API (`GET`, `POST`, `PUT`, `PATCH`, `DELETE`, RFC 9457 problems) |
 
-Dans un terminal de l'OS :
+In an OS terminal:
 
 ```text
 $ curl http://intranet.hack/health
@@ -59,12 +58,12 @@ $ netstat -tlnp        # le site écoute :80, sous l'identifiant de l'app
 $ ps aux | grep intranet
 ```
 
-`F12` dans le navigateur ouvre l'onglet **Network** (chaque `fetch` des scripts
-y passe) et **Console** (les `console.log` des scripts).
+`F12` in the browser opens the **Network** tab (every `fetch` from the scripts
+goes through it) and **Console** (the scripts' `console.log`).
 
-## 1. Créer le projet
+## 1. Creating the project
 
-Un site est un projet sous `Apps/` (comme toute app livrée), au SDK Razor :
+A site is a project under `Apps/` (like any shipped app), using the Razor SDK:
 
 ```xml
 <Project Sdk="Microsoft.NET.Sdk.Razor">
@@ -87,20 +86,20 @@ Un site est un projet sous `Apps/` (comme toute app livrée), au SDK Razor :
 </Project>
 ```
 
-Le build (`build/HackerOs.Apps.targets`) ajoute tout seul, parce que le projet
-référence `HackerOs.AppSdk.Web` :
+The build (`build/HackerOs.Apps.targets`) adds by itself, because the project
+references `HackerOs.AppSdk.Web`:
 
-- le générateur de routes (ADR 0082) : table des contrôleurs, table des vues et
-  classe d'entrée `<Définition>WebHost` ;
-- le générateur de manifeste : `manifest.json` (genre `web`, `web.urls`,
-  `web.blazor`) ;
-- l'embarquement de `wwwroot/**` en ressources de l'assembly ;
-- pour les `.cshtml` : le `_ViewImports.cshtml` racine et les types de
-  compatibilité du compilateur Razor (ADR 0086). Ne mettez **pas** de
-  `_ViewImports.cshtml` à la racine du projet (erreur de build) : utilisez
+- the route generator (ADR 0082): controller table, view table and
+  `<Definition>WebHost` entry class;
+- the manifest generator: `manifest.json` (kind `web`, `web.urls`,
+  `web.blazor`);
+- the embedding of `wwwroot/**` as assembly resources;
+- for `.cshtml`: the root `_ViewImports.cshtml` and the Razor compiler's
+  compatibility types (ADR 0086). Do **not** put a
+  `_ViewImports.cshtml` at the project root (build error): use
   `Views/_ViewImports.cshtml`.
 
-Arborescence de l'exemple :
+Layout of the example:
 
 ```text
 HackerOs.Samples.Intranet/
@@ -120,7 +119,7 @@ HackerOs.Samples.Intranet/
   Board/                          partie Blazor : BoardApp (racine), BoardLayout, Pages/BoardPage, Pages/TaskPage
 ```
 
-## 2. Déclarer le site : `WebAppDefinition`
+## 2. Declaring the site: `WebAppDefinition`
 
 ```csharp
 [AppManifest]
@@ -137,20 +136,20 @@ public sealed partial class IntranetSite : WebAppDefinition   // partial : le bu
 }
 ```
 
-- **`Urls`** : les adresses que le DNS de l'OS associe au site (domaine `.hack`
-  pour un site interne, ADR 0074). Le port vient de l'URL (80 par défaut ; un
-  port < 1024 est accordé d'office sur ses propres `Urls`).
-- **Capacités** : `network.listen` pour écouter ; `network.simulated.*` si les
-  pages Blazor appellent l'API du site. Jamais `filesystem.*` : le générateur la
-  refuse (`HOSAPP0050`), les données d'un site ne vont pas dans les fichiers de
-  l'OS (ADR 0073 §3).
-- `Kind` (`Web`), la catégorie (`internet`) et la visibilité (`Hidden` : un site
-  ne s'ouvre pas depuis le lanceur) sont fixés par `WebAppDefinition`.
+- **`Urls`**: the addresses that the OS DNS associates with the site (`.hack` domain
+  for an internal site, ADR 0074). The port comes from the URL (80 by default; a
+  port < 1024 is granted automatically on its own `Urls`).
+- **Capabilities**: `network.listen` to listen; `network.simulated.*` if the
+  Blazor pages call the site's API. Never `filesystem.*`: the generator
+  refuses it (`HOSAPP0050`), a site's data does not go into the OS
+  files (ADR 0073 §3).
+- `Kind` (`Web`), the category (`internet`) and the visibility (`Hidden`: a site
+  is not opened from the launcher) are fixed by `WebAppDefinition`.
 
-## 3. Le démarrage : services, pipeline, endpoints
+## 3. Startup: services, pipeline, endpoints
 
-`Configure` tourne dans le processus du site à chaque démarrage, dans le worker
-`web` partagé quand l'hôte en a un. L'ordre est celui d'ASP.NET Core :
+`Configure` runs in the site's process at each startup, in the shared
+`web` worker when the host has one. The order is that of ASP.NET Core:
 
 ```csharp
 public override void Configure(HackWebApplicationBuilder builder)
@@ -172,17 +171,17 @@ public override void Configure(HackWebApplicationBuilder builder)
 }
 ```
 
-- Enregistrez un `JsonSerializerContext` (génération de sources) pour tous les
-  types échangés : le site est compilé pour le trimming comme toute app.
-- Un singleton vit autant que le processus du site ; un service `Scoped` vit le
-  temps d'une requête (les contrôleurs et les `@inject` des vues de la même
-  requête reçoivent la même instance).
+- Register a `JsonSerializerContext` (source generation) for all the
+  exchanged types: the site is compiled for trimming like any app.
+- A singleton lives as long as the site's process; a `Scoped` service lives for
+  the duration of a request (the controllers and the `@inject`s of the views of the same
+  request receive the same instance).
 
-## 4. Contrôleurs de pages
+## 4. Page controllers
 
-`HackController` (le `Controller` d'ASP.NET) : `View()`, `PartialView()`,
-`ViewData`, `RedirectToAction`, liaison des types complexes depuis le
-formulaire.
+`HackController` (ASP.NET's `Controller`): `View()`, `PartialView()`,
+`ViewData`, `RedirectToAction`, binding of complex types from the
+form.
 
 ```csharp
 public sealed class NotesController(NoteStore store, ILogger<NotesController> logger) : HackController
@@ -204,28 +203,28 @@ public sealed class NotesController(NoteStore store, ILogger<NotesController> lo
 }
 ```
 
-- Une action peut être asynchrone (`Task<IHackActionResult>`, `Task<T>` pour
-  une API) ; un paramètre `CancellationToken` reçoit `RequestAborted`. Le
-  suffixe `Async` d'un nom de méthode est retiré du nom de l'action, comme dans
+- An action can be asynchronous (`Task<IHackActionResult>`, `Task<T>` for
+  an API); a `CancellationToken` parameter receives `RequestAborted`. The
+  `Async` suffix of a method name is removed from the action name, as in
   ASP.NET Core.
 
-- Une action sans route d'attribut suit la route conventionnelle :
-  `/Notes/Edit/4` → `NotesController.Edit(4)`. Deux actions du même nom se
-  distinguent par `[HttpGet]`/`[HttpPost]`.
-- `[ValidateAntiForgeryToken]` refuse un `POST` sans jeton valide (`400`). Le
-  navigateur de l'OS garde le cookie anti-falsification entre la page et
-  l'envoi ; `curl -d` sans jeton reçoit `400`, comme sur un site ASP.NET.
-- La validation vient des `DataAnnotations` du modèle (`[Required]`,
+- An action without an attribute route follows the conventional route:
+  `/Notes/Edit/4` → `NotesController.Edit(4)`. Two actions of the same name are
+  told apart by `[HttpGet]`/`[HttpPost]`.
+- `[ValidateAntiForgeryToken]` refuses a `POST` without a valid token (`400`). The
+  OS browser keeps the anti-forgery cookie between the page and the
+  submission; `curl -d` without a token receives `400`, as on an ASP.NET site.
+- Validation comes from the model's `DataAnnotations` (`[Required]`,
   `[StringLength]`, `[Display(Name)]`...).
-- Session : `HttpContext.Session.SetString("displayName", ...)`, lue partout
-  par `HttpContext.Session.GetString(...)` (`IntranetSession` dans l'exemple).
+- Session: `HttpContext.Session.SetString("displayName", ...)`, read everywhere
+  through `HttpContext.Session.GetString(...)` (`IntranetSession` in the example).
 
-## 5. API REST
+## 5. REST API
 
-`HackApiController` (`[ApiController]` d'ASP.NET) : corps JSON par défaut,
-`400` automatique avec un problème RFC 9457 si `ModelState` est invalide, et
-statuts d'erreur sans corps changés en problèmes. Une action d'API doit avoir
-une route d'attribut (`HOSWEB0007`).
+`HackApiController` (ASP.NET's `[ApiController]`): JSON body by default,
+automatic `400` with an RFC 9457 problem if `ModelState` is invalid, and
+error statuses without a body turned into problems. An API action must have
+an attribute route (`HOSWEB0007`).
 
 ```csharp
 [Route("api/notes")]
@@ -249,48 +248,48 @@ public sealed class NotesApiController(NoteStore store) : HackApiController
 }
 ```
 
-Le chemin connu avec une mauvaise méthode répond `405` avec `Allow`
-(`DELETE /api/notes`). `OPTIONS` répond `204`, `HEAD` utilise le `GET`.
+A known path with the wrong method answers `405` with `Allow`
+(`DELETE /api/notes`). `OPTIONS` answers `204`, `HEAD` uses the `GET`.
 
-## 6. Vues
+## 6. Views
 
-Les deux genres de vues se mêlent ; choisissez par goût, le moteur est le même.
+The two kinds of views mix; choose by taste, the engine is the same.
 
 | | `.cshtml` (ADR 0086) | `.razor` (ADR 0083) |
 |---|---|---|
-| Modèle | `@model HomeViewModel` | `@inherits HackView<Note>` |
-| Layout | `_ViewStart.cshtml` (`Layout = "_Layout"`) ou `Layout = "..."` | `@layout _Layout` |
-| Lien | `@Html.ActionLink("Notes", "Index", "Notes")` | `<HackLink Action="Index" Controller="Notes">` |
-| Formulaire | `@using (Html.BeginForm("Profile", "Home")) { ... }` | `<HackForm Action="Edit" RouteValues="...">` |
-| Champ lié | `@Html.TextBoxFor(m => m.Name)`, `ValidationMessageFor` | `<input name="Title" value="@Model.Title" />`, `<HackValidationMessage For="Title" />` |
+| Model | `@model HomeViewModel` | `@inherits HackView<Note>` |
+| Layout | `_ViewStart.cshtml` (`Layout = "_Layout"`) or `Layout = "..."` | `@layout _Layout` |
+| Link | `@Html.ActionLink("Notes", "Index", "Notes")` | `<HackLink Action="Index" Controller="Notes">` |
+| Form | `@using (Html.BeginForm("Profile", "Home")) { ... }` | `<HackForm Action="Edit" RouteValues="...">` |
+| Bound field | `@Html.TextBoxFor(m => m.Name)`, `ValidationMessageFor` | `<input name="Title" value="@Model.Title" />`, `<HackValidationMessage For="Title" />` |
 | Section | `@section Scripts { ... }` | `<HackSection Name="Scripts">` |
 | Partial | `@await Html.PartialAsync("_Card", x)` | `<HackPartial Name="_NoteCard" Model="note" />` |
 
-Dans l'exemple, le layout est un composant `.razor` (`Views/Shared/_Layout.razor`,
-classe `HackLayout`, code dans `_Layout.razor.cs`) ; les vues `.cshtml` le
-trouvent par `_ViewStart.cshtml`, les vues `.razor` par `@layout _Layout`. Il
-rend le titre (`ViewData.Title`), la navigation (lien actif d'après
-`Request.RouteValues["controller"]`), le nom de session et la section
-`Scripts` de la vue.
+In the example, the layout is a `.razor` component (`Views/Shared/_Layout.razor`,
+class `HackLayout`, code in `_Layout.razor.cs`); `.cshtml` views find it
+through `_ViewStart.cshtml`, `.razor` views through `@layout _Layout`. It
+renders the title (`ViewData.Title`), the navigation (active link based on
+`Request.RouteValues["controller"]`), the session name and the view's
+`Scripts` section.
 
-Règles à connaître :
+Rules to know:
 
-- Pas de style ni de script en ligne (ADR 0007, vérifié au build pour les
-  `.razor` et les `.cshtml`) : le CSS va dans `wwwroot/css`, le JavaScript dans
-  `wwwroot/js`, référencés par `Url.Content("~/...")`. `<script src>` sans corps
-  est permis. Le CSS scopé (`.razor.css`) ne s'applique pas à une vue : la page
-  est rendue dans l'iframe du navigateur, pas dans l'OS.
-- `View("texte")` est un **nom de vue** ; pour un modèle `string`, passez par
-  une classe de modèle.
-- Une valeur écrite par du C# est encodée en HTML (`·` devient `&#xB7;`, que le
-  navigateur affiche normalement).
+- No inline style or script (ADR 0007, checked at build time for
+  `.razor` and `.cshtml`): CSS goes in `wwwroot/css`, JavaScript in
+  `wwwroot/js`, referenced through `Url.Content("~/...")`. `<script src>` without a body
+  is allowed. Scoped CSS (`.razor.css`) does not apply to a view: the page
+  is rendered in the browser's iframe, not in the OS.
+- `View("text")` is a **view name**; for a `string` model, go through
+  a model class.
+- A value written by C# is HTML-encoded (`·` becomes `&#xB7;`, which the
+  browser displays normally).
 
-## 7. JavaScript des pages
+## 7. Page JavaScript
 
-Une page HTML s'affiche dans une iframe isolée (ADR 0075) : son JavaScript
-s'exécute, mais tout ce qu'il demande passe par le navigateur de l'OS et le
-réseau simulé. `fetch`, `XMLHttpRequest`, `document.cookie`, `localStorage`,
-`history.replaceState` marchent ; `WebSocket`, `window.open` non.
+An HTML page is displayed in an isolated iframe (ADR 0075): its JavaScript
+runs, but everything it requests goes through the OS browser and the
+simulated network. `fetch`, `XMLHttpRequest`, `document.cookie`, `localStorage`,
+`history.replaceState` work; `WebSocket`, `window.open` do not.
 
 ```js
 // wwwroot/js/notes.js : épingle une note sans recharger la page
@@ -301,20 +300,20 @@ const response = await fetch(api + "/" + card.dataset.noteId, {
 });
 ```
 
-- Les URL des API passent du serveur au script par des attributs `data-*`
-  (`data-api="@Url.Content("~/api/notes")"`), pas par du script en ligne.
-- Prévoyez le cas sans script (formulaire `GET` de `/People`) : le serveur rend
-  déjà le résultat.
-- Une navigation par script (`location.href = ...`) ne peut pas être suivie
-  dans l'iframe (ADR 0079) : mettez la page à jour sur place, ou utilisez un
-  lien ou un formulaire.
+- API URLs pass from the server to the script through `data-*` attributes
+  (`data-api="@Url.Content("~/api/notes")"`), not through inline script.
+- Plan for the no-script case (`GET` form of `/People`): the server already
+  renders the result.
+- A script navigation (`location.href = ...`) cannot be followed
+  in the iframe (ADR 0079): update the page in place, or use a
+  link or a form.
 
-## 8. Pages Blazor interactives
+## 8. Interactive Blazor pages
 
-`BlazorRoot` donne au site un composant racine. Les chemins qu'aucune route du
-site ne prend (`/board`, `/board/tasks/5`) répondent la page hôte Blazor ; le
-navigateur la reconnaît, démarre un **processus de rendu** du site et dessine
-le composant dans la zone de page, sans iframe (ADR 0084).
+`BlazorRoot` gives the site a root component. Paths that no route of the
+site takes (`/board`, `/board/tasks/5`) answer the Blazor host page; the
+browser recognizes it, starts a **renderer process** for the site and draws
+the component in the page area, without an iframe (ADR 0084).
 
 ```razor
 @* Board/BoardApp.razor *@
@@ -338,29 +337,29 @@ IReadOnlyList<BoardTask>? tasks = await Site.Http.GetFromJsonAsync("api/tasks", 
 HackHttpResponse created = await Site.Http.PostAsync("api/tasks", HackJsonContent.Create(draft, IntranetJsonContext.Default.BoardTask));
 ```
 
-- Chaque composant porte `@inherits HackComponentBase` (ou `HackSiteLayoutBase`
-  pour un layout) : ses événements s'exécutent sous l'identité du processus de
-  rendu. La règle est vérifiée par fichier (`AmbientFrameSourceTests`).
-- Les pages n'ont pas accès aux services du site : elles appellent son API par
-  `Site.Http`, avec les **cookies de l'onglet**. Le tableau lit ainsi `/api/me`
-  et voit le nom choisi sur `/Home/Profile` : même origine, même session.
-- Une page est recréée à chaque navigation : l'état durable vit dans un objet
-  du layout cascadé aux pages (`BoardSession`).
-- **Lier MVC et Blazor** (ADR 0087 §1) : un lien d'une page MVC vers `/board`
-  est un lien ordinaire ; un lien d'une page Blazor vers une page MVC porte
-  `target="_top"` (`<a href="/Notes" target="_top">`), sinon le routeur Blazor
-  le prend pour une page à lui. C'est la règle de Blazor : un lien vers un autre
-  cadre n'est pas intercepté.
-- Ne déclarez pas de route `@page` qui recouvre une route MVC : les routes du
-  site passent avant la page hôte.
+- Each component carries `@inherits HackComponentBase` (or `HackSiteLayoutBase`
+  for a layout): its events run under the identity of the renderer
+  process. The rule is checked per file (`AmbientFrameSourceTests`).
+- Pages have no access to the site's services: they call its API through
+  `Site.Http`, with the **tab's cookies**. The board thus reads `/api/me`
+  and sees the name chosen on `/Home/Profile`: same origin, same session.
+- A page is recreated on each navigation: durable state lives in an object
+  of the layout cascaded to the pages (`BoardSession`).
+- **Linking MVC and Blazor** (ADR 0087 §1): a link from an MVC page to `/board`
+  is an ordinary link; a link from a Blazor page to an MVC page carries
+  `target="_top"` (`<a href="/Notes" target="_top">`), otherwise the Blazor router
+  takes it for one of its own pages. This is Blazor's rule: a link to another
+  frame is not intercepted.
+- Do not declare an `@page` route that overlaps an MVC route: the site's routes
+  take precedence over the host page.
 
-## 9. Tester un site
+## 9. Testing a site
 
-Trois niveaux, tous dans l'exemple :
+Three levels, all in the example:
 
-1. **En mémoire** (`Tests/HackerOs.Samples.Intranet.Tests`, comme `TestServer`
-   d'ASP.NET Core) : le site est construit sans OS ni listener et reçoit des
-   requêtes.
+1. **In memory** (`Tests/HackerOs.Samples.Intranet.Tests`, like ASP.NET Core's
+   `TestServer`): the site is built without an OS or listener and receives
+   requests.
 
    ```csharp
    HackWebApplication app = HackWebHost.CreateApplication(
@@ -368,71 +367,71 @@ Trois niveaux, tous dans l'exemple :
    HackWebResponseData home = await app.ProcessAsync(HackWebRequestData.Create("GET", "http://intranet.hack/"));
    ```
 
-   `HackWebGeneratedRoutes` est interne à l'assembly du site :
+   `HackWebGeneratedRoutes` is internal to the site's assembly:
    `<InternalsVisibleTo Include="HackerOs.Samples.Intranet.Tests" />`.
-   `IntranetClient` y garde les cookies comme un onglet et retrouve le champ
-   anti-falsification d'un formulaire.
-2. **Dans un OS complet** (`Tests/HackerOs.Platform.WorkerHost.Tests/MvcSiteTests`) :
-   `curl` démarre le site à la demande, sur le fil principal et dans le worker
-   `web`.
-3. **Dans Chromium** (`Tests/HackerOs.UI.E2E.Tests/BrowserIntranetTests`) : le
-   navigateur de l'OS parcourt l'exemple (scripts, formulaire, session, tableau
-   Blazor, retour par `target="_top"`). `BrowserSiteDataTests` y vérifie la
-   base IndexedDB du site, la saisie semi-automatique, le journal de débogage
-   et le Diagnostic.
+   `IntranetClient` keeps cookies there like a tab and finds the
+   anti-forgery field of a form.
+2. **In a full OS** (`Tests/HackerOs.Platform.WorkerHost.Tests/MvcSiteTests`):
+   `curl` starts the site on demand, on the main thread and in the `web`
+   worker.
+3. **In Chromium** (`Tests/HackerOs.UI.E2E.Tests/BrowserIntranetTests`): the
+   OS browser walks through the example (scripts, form, session, Blazor
+   board, return through `target="_top"`). `BrowserSiteDataTests` checks there
+   the site's IndexedDB database, autofill, the debug log
+   and Diagnostics.
 
-En mémoire, `HackWebDb` est une base en mémoire propre à l'application : les
-tests n'ont rien à configurer ([`asp-hack-site-data.md`](asp-hack-site-data.md#hors-de-hackeros-et-dans-les-tests)).
+In memory, `HackWebDb` is an in-memory database specific to the application: tests
+have nothing to configure ([`asp-hack-site-data.md`](asp-hack-site-data.md#hors-de-hackeros-et-dans-les-tests)).
 
-## 10. Installer le site dans l'OS
+## 10. Installing the site in the OS
 
-Un site intégré est une `ProjectReference` de l'hôte Ecosystem (le catalogue
-`BuiltInApplications.json` en est tiré) et de `test/test` avec
-`<BlazorWebAssemblyLazyLoad Include="Mon.Site.dll" />` : l'assembly n'est
-chargée qu'à la première requête. Sans `IsSystemApp="true"`, le site est
-désinstallable comme une app ordinaire. Les tests de l'Ecosystem comptent les
-manifestes et les assemblies paresseuses (`BuildKnownLazyAppsTests`,
-`EcosystemBootCoordinatorTests`) : mettez-les à jour.
+A built-in site is a `ProjectReference` of the Ecosystem host (the
+`BuiltInApplications.json` catalog is drawn from it) and of `test/test` with
+`<BlazorWebAssemblyLazyLoad Include="Mon.Site.dll" />`: the assembly is
+loaded only on the first request. Without `IsSystemApp="true"`, the site is
+uninstallable like an ordinary app. The Ecosystem tests count the
+manifests and the lazy assemblies (`BuildKnownLazyAppsTests`,
+`EcosystemBootCoordinatorTests`): update them.
 
-## 11. Déboguer
+## 11. Debugging
 
-| Besoin | Outil |
+| Need | Tool |
 |---|---|
-| Le site tourne-t-il ? | `ps aux`, gestionnaire de tâches, `netstat -tlnp`, `cat /proc/net/tcp` |
-| Le nom se résout-il ? | `nslookup intranet.hack`, `/etc/hosts` l'emporte |
-| Ce que répond le serveur | `curl -i`, vue source du navigateur (`Ctrl+U`) |
-| Requêtes et erreurs des scripts | `F12` : onglets Network et Console |
-| Exception du serveur | `UseExceptionPage()` l'affiche ; sinon `500` nu et une ligne dans le journal de l'OS |
-| Traces du site | `builder.Logging.EnableDebugLog()`, puis `tail /var/log/hackweb/<id>.log` : requêtes, `ILogger<T>`, exceptions |
-| Contenu de la base du site | app « IndexedDB Diagnostic », rubrique *Website databases* (magasins, nombre d'enregistrements, taille ; effacement) |
-| Page Blazor qui plante | « Aw, Snap! » du navigateur ; le processus de rendu finit en défaut, l'OS continue |
-| Redémarrer le site | `kill` du processus : la requête suivante le redémarre (sessions et données en mémoire perdues, base `HackWebDb` conservée) |
+| Is the site running? | `ps aux`, task manager, `netstat -tlnp`, `cat /proc/net/tcp` |
+| Does the name resolve? | `nslookup intranet.hack`, `/etc/hosts` wins |
+| What the server answers | `curl -i`, browser source view (`Ctrl+U`) |
+| Script requests and errors | `F12`: Network and Console tabs |
+| Server exception | `UseExceptionPage()` displays it; otherwise a bare `500` and a line in the OS log |
+| Site traces | `builder.Logging.EnableDebugLog()`, then `tail /var/log/hackweb/<id>.log`: requests, `ILogger<T>`, exceptions |
+| Contents of the site database | app "IndexedDB Diagnostic", *Website databases* section (stores, record count, size; clearing) |
+| Blazor page that crashes | the browser's "Aw, Snap!"; the renderer process ends in fault, the OS carries on |
+| Restarting the site | `kill` the process: the next request restarts it (in-memory sessions and data lost, `HackWebDb` database kept) |
 
-## Limites connues
+## Known limits
 
-- **Données.** Les notes de l'exemple sont dans sa base `HackWebDb` (ADR 0088) ;
-  les cartes du tableau, les annonces et l'annuaire restent en mémoire du
-  processus du site et reviennent à leur état initial quand il s'arrête.
-- Les formulaires d'un site Blazor n'ont pas la saisie semi-automatique du
-  navigateur (ADR 0088 §6).
-- Pas de tag helpers, de Razor Pages (`@page` dans un `.cshtml`), de `TempData`
-  ni de `ViewBag` ; pas d'environnements `Development`/`Production`.
-- Les requêtes `Site.Http` des pages Blazor n'apparaissent pas dans l'onglet
-  Network.
-- Chaque `curl` a son pot à cookies. Pour rejouer une session, passez le
-  cookie à la main : `curl -H 'Cookie: .HackSession=…'` est envoyé au site,
-  fusionné avec le pot (ce qui est tapé gagne), sur l'hôte demandé seulement,
-  sans jamais être stocké (ADR 0089).
-- Compiler un site **dans l'OS** reste hors périmètre (ADR 0076 §8).
+- **Data.** The example's notes are in its `HackWebDb` database (ADR 0088);
+  the board cards, announcements and directory stay in the memory of the
+  site's process and return to their initial state when it stops.
+- Forms of a Blazor site do not have the browser's autofill
+  (ADR 0088 §6).
+- No tag helpers, Razor Pages (`@page` in a `.cshtml`), `TempData`
+  or `ViewBag`; no `Development`/`Production` environments.
+- The `Site.Http` requests of Blazor pages do not appear in the Network
+  tab.
+- Each `curl` has its own cookie jar. To replay a session, pass the
+  cookie by hand: `curl -H 'Cookie: .HackSession=…'` is sent to the site,
+  merged with the jar (what is typed wins), to the requested host only,
+  and never stored (ADR 0089).
+- Compiling a site **inside the OS** remains out of scope (ADR 0076 §8).
 
-## Tâches
+## Tasks
 
-- [x] Lire les documents et ADR 0073 à 0086 de la phase web.
-- [x] Exemple Intranet : définition, services, contrôleurs de pages et d'API, vues `.cshtml` et `.razor` dans un layout commun, `wwwroot` (CSS, trois scripts), session, anti-falsification, tableau Blazor.
-- [x] Liens d'un site Blazor vers ses pages MVC par `target` (ADR 0087 §1).
-- [x] Vues compilables dans une app livrée : classes de base sans annotation de trimming (ADR 0087 §2).
-- [x] `TryValidateModel` sur les contrôleurs (ADR 0087 §3).
-- [x] Exemple installé dans l'Ecosystem et `test/test`, tests de l'Ecosystem mis à jour.
-- [x] Tests en mémoire (`HackerOs.Samples.Intranet.Tests`) et E2E Chromium (`BrowserIntranetTests`).
-- [x] `web/12` : notes de l'exemple dans `HackWebDb`, journal de débogage, filtre `GET /api/notes?author=` par l'index `byAuthor` ([`asp-hack-site-data.md`](asp-hack-site-data.md)).
-- [x] Ce guide, `sdk-reference.md`, ADR 0087, plan, index et documents de la phase mis à jour.
+- [x] Read the documents and ADR 0073 to 0086 of the web phase.
+- [x] Intranet example: definition, services, page and API controllers, `.cshtml` and `.razor` views in a common layout, `wwwroot` (CSS, three scripts), session, anti-forgery, Blazor board.
+- [x] Links from a Blazor site to its MVC pages through `target` (ADR 0087 §1).
+- [x] Views compilable in a shipped app: base classes without trimming annotation (ADR 0087 §2).
+- [x] `TryValidateModel` on controllers (ADR 0087 §3).
+- [x] Example installed in the Ecosystem and `test/test`, Ecosystem tests updated.
+- [x] In-memory tests (`HackerOs.Samples.Intranet.Tests`) and Chromium E2E (`BrowserIntranetTests`).
+- [x] `web/12`: example notes in `HackWebDb`, debug log, `GET /api/notes?author=` filter through the `byAuthor` index ([`asp-hack-site-data.md`](asp-hack-site-data.md)).
+- [x] This guide, `sdk-reference.md`, ADR 0087, plan, index and phase documents updated.

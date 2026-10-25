@@ -1,20 +1,20 @@
-# Fichiers de site statique (`.site`) et API `HackWebSiteFile`
+# Static site files (`.site`) and the `HackWebSiteFile` API
 
-Ce document décrit le format des fichiers `.site` qu'une app ou un outil écrit pour publier un dossier comme site web, et l'API du SDK qui les lit et les écrit. Le service `hackwebd` qui sert ces fichiers, ses journaux et Web Server Manager sont décrits dans [`dev/static-sites.md`](../dev/static-sites.md).
+This document describes the format of the `.site` files that an app or a tool writes to publish a folder as a website, and the SDK API that reads and writes them. The `hackwebd` service that serves these files, its logs and Web Server Manager are described in [`dev/static-sites.md`](../dev/static-sites.md).
 
-## Emplacements
+## Locations
 
-- `/etc/hackweb/sites/<nom>.site` : sites système, tous ports, servis avec les droits de `www-data`.
-- `~/.config/hackweb/sites/<nom>.site` : sites de l'utilisateur, ports 1024 et plus.
+- `/etc/hackweb/sites/<name>.site`: system sites, any port, served with the rights of `www-data`.
+- `~/.config/hackweb/sites/<name>.site`: user sites, ports 1024 and above.
 
-## Types du SDK
+## SDK types
 
-| Élément | Projet | Rôle |
+| Item | Project | Role |
 |---|---|---|
-| `HackWebSite`, `HackWebSiteDeclaration`, `HackWebSiteScope` | `Shared/HackerOs.AppSdk/Net/Hosting` | Contenu d'un `.site` et fichier lu (chemin, portée, propriétaire, erreurs). |
-| `HackWebSiteFile` | idem | Emplacements, `Parse`, `Validate`, `Serialize`, `TryParseBinding`, `ReadAllAsync`. Partagé par le démon, le Manager et le résolveur. |
+| `HackWebSite`, `HackWebSiteDeclaration`, `HackWebSiteScope` | `Shared/HackerOs.AppSdk/Net/Hosting` | Content of a `.site` and the file read (path, scope, owner, errors). |
+| `HackWebSiteFile` | same | Locations, `Parse`, `Validate`, `Serialize`, `TryParseBinding`, `ReadAllAsync`. Shared by the daemon, the Manager and the resolver. |
 
-## Le fichier `.site`
+## The `.site` file
 
 ```json
 {
@@ -27,27 +27,27 @@ Ce document décrit le format des fichiers `.site` qu'une app ou un outil écrit
 }
 ```
 
-- Le fichier s'appelle `<name>.site` ; sinon le site est invalide.
-- Seuls `name`, `root` et `bindings` sont obligatoires ; les commentaires `//`
-  et les virgules finales sont tolérés (fichier édité à la main).
-- `root` : chemin absolu, ni `/`, ni `..`.
-- `bindings` : préfixes `http://hôte[:port]/chemin/` normalisés comme ceux de
-  `HackHttpListener` (`+`, `*` acceptés). `https://` refusé (pas de
-  certificats, ADR 0080). Un site d'utilisateur ne peut pas prendre un port
-  < 1024 : l'erreur va dans `error.log`.
-- Un site invalide ou désactivé n'est pas servi ; il reste listé (état
-  « invalid » ou « stopped ») dans le Manager.
+- The file is named `<name>.site`; otherwise the site is invalid.
+- Only `name`, `root` and `bindings` are required; `//` comments
+  and trailing commas are tolerated (hand-edited file).
+- `root`: absolute path, neither `/` nor `..`.
+- `bindings`: `http://host[:port]/path/` prefixes normalized like those of
+  `HackHttpListener` (`+`, `*` accepted). `https://` refused (no
+  certificates, ADR 0080). A user site cannot take a port
+  < 1024: the error goes to `error.log`.
+- An invalid or disabled site is not served; it stays listed (state
+  "invalid" or "stopped") in the Manager.
 
-## Droits de lecture
+## Read permissions
 
-- Droits : un site d'utilisateur est lu avec les droits de son propriétaire ;
-  un site système applique ceux de `www-data` (bits « other » sur chaque
-  dossier et le fichier) : un site système dans un dossier personnel `0700`
-  répond `403`, comme Apache.
+- Rights: a user site is read with the rights of its owner;
+  a system site applies those of `www-data` ("other" bits on every
+  folder and on the file): a system site in a `0700` home folder
+  answers `403`, like Apache.
 
-## Lire un `.site` avec le SDK
+## Reading a `.site` with the SDK
 
-Pour un développeur d'app, le format est dans le SDK :
+For an app developer, the format is in the SDK:
 
 ```csharp
 IReadOnlyList<HackWebSiteDeclaration> sites = await HackWebSiteFile.ReadAllAsync();

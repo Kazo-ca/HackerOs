@@ -1,124 +1,124 @@
-# ADR 0101 : suppressions synchronisées, conflits résolus par l'utilisateur, synchro périodique et domaines de synchro restants
+# ADR 0101: synchronized deletions, user-resolved conflicts, periodic sync and remaining sync domains
 
-## Statut
+## Status
 
-Accepté le 2026-10-17 (chantier `v3/1-adr`, pour le chantier `v3/9-sync`). Le
-§2 suit la réponse de Benoit du 2026-10-17 : demander tout de suite à
-l'utilisateur quelle version garder.
+Accepted on 2026-10-17 (work item `v3/1-adr`, for the work item `v3/9-sync`).
+§2 follows Benoit's answer of 2026-10-17: ask the user right away
+which version to keep.
 
-- **Complète :** [ADR 0025](0025-record-synchronization-envelope-and-conflict-model.md)
-  (enveloppe, pierres tombales, table des conflits) et
-  [ADR 0030](0030-filesystem-sync.md) (synchro de `/home/{user}`).
-- **Remplace :** la partie AppCatalog de l'[ADR 0033](0033-appcatalog-and-fileassociations-sync.md)
-  (§3 ci-dessous). L'ADR 0029 (synchro des réglages) est déjà remplacé par
-  l'ADR 0044.
-- **Plan :** [`wasm-v3-completion-plan.md`](../plans/wasm-v3-completion-plan.md),
-  ligne `v3/9-sync` ; manque R18 ; décision différée n° 7.
+- **Complements:** [ADR 0025](0025-record-synchronization-envelope-and-conflict-model.md)
+  (envelope, tombstones, conflict table) and
+  [ADR 0030](0030-filesystem-sync.md) (sync of `/home/{user}`).
+- **Replaces:** the AppCatalog part of [ADR 0033](0033-appcatalog-and-fileassociations-sync.md)
+  (§3 below). ADR 0029 (settings sync) is already replaced by
+  ADR 0044.
+- **Plan:** [`wasm-v3-completion-plan.md`](../plans/wasm-v3-completion-plan.md),
+  line `v3/9-sync`; gap R18; deferred decision no. 7.
 
-## Contexte
+## Context
 
-- Le serveur gère les pierres tombales (`SyncService.cs:141`) et la résolution
-  des conflits (`SyncService.cs:162`). Côté client, `FileSystemSyncService` et
-  `FileAssociationsSyncService` envoient toujours `IsTombstone: false`
-  (`IFileSystemSyncService.cs:119`, `IFileAssociationsSyncService.cs:73`) : une
-  suppression locale ne se propage jamais.
-- `ISyncClient.ResolveConflictAsync` existe mais rien ne l'appelle. Les conflits
-  sont seulement gardés en mémoire (`UnresolvedConflicts`) et perdus au
-  rechargement.
-- La synchro se lance seulement à la main (`AppServerConnectionGateway.SyncAsync`).
-  Aucune minuterie.
-- Il n'y a pas de client du domaine `app_catalog` ; il n'y a plus de client
-  `settings` depuis l'ADR 0044.
+- The server handles tombstones (`SyncService.cs:141`) and conflict
+  resolution (`SyncService.cs:162`). On the client side, `FileSystemSyncService` and
+  `FileAssociationsSyncService` always send `IsTombstone: false`
+  (`IFileSystemSyncService.cs:119`, `IFileAssociationsSyncService.cs:73`): a
+  local deletion is never propagated.
+- `ISyncClient.ResolveConflictAsync` exists but nothing calls it. Conflicts
+  are only kept in memory (`UnresolvedConflicts`) and lost on
+  reload.
+- Sync only starts by hand (`AppServerConnectionGateway.SyncAsync`).
+  No timer.
+- There is no client for the `app_catalog` domain; there has been no `settings`
+  client since ADR 0044.
 
-## Décision
+## Decision
 
-### 1. Suppressions
+### 1. Deletions
 
-- Le client garde, pour chaque entrée déjà synchronisée, son état d'enregistrement
-  (magasin IndexedDB des états, version 4 du schéma). Quand une telle entrée est
-  supprimée, il pousse une enveloppe `IsTombstone: true` avec la révision
-  suivante. Une entrée jamais synchronisée ne laisse pas de pierre tombale.
-- Mettre un fichier à la corbeille est un déplacement dans
-  `~/.local/share/Trash` (ADR 0052), donc un renommage synchronisé, pas une
-  suppression. Vider la corbeille produit les pierres tombales.
-- Une pierre tombale **reçue** ne supprime pas définitivement : le fichier local
-  est mis à la corbeille de l'utilisateur, avec l'origine « supprimé sur un
-  autre appareil » dans son `.trashinfo`. L'utilisateur peut donc le récupérer.
-- Le serveur garde une pierre tombale **90 jours**. Un appareil resté hors ligne
-  plus longtemps refait une synchro complète (comparaison des hash) au lieu
-  d'une synchro par curseur ; c'est la profondeur d'historique hors ligne de la
-  décision différée n° 7.
-- `FileAssociationsSyncService` pousse aussi une pierre tombale si
-  `/etc/hackeros/file-associations.json` est supprimé.
+- For each entry already synced, the client keeps its record state
+  (IndexedDB state store, schema version 4). When such an entry is
+  deleted, it pushes an envelope `IsTombstone: true` with the next
+  revision. An entry that was never synced leaves no tombstone.
+- Moving a file to the trash is a move into
+  `~/.local/share/Trash` (ADR 0052), hence a synchronized rename, not a
+  deletion. Emptying the trash produces the tombstones.
+- A **received** tombstone does not delete permanently: the local file
+  is moved to the user's trash, with the origin "deleted on another
+  device" in its `.trashinfo`. The user can therefore recover it.
+- The server keeps a tombstone for **90 days**. A device that stayed offline
+  longer performs a full sync (hash comparison) instead of a
+  cursor sync; this is the offline history depth of deferred
+  decision no. 7.
+- `FileAssociationsSyncService` also pushes a tombstone if
+  `/etc/hackeros/file-associations.json` is deleted.
 
-### 2. Conflits : l'utilisateur choisit tout de suite
+### 2. Conflicts: the user chooses right away
 
-Choix de Benoit du 2026-10-17 (« Demander tout de suite »).
+Benoit's choice of 2026-10-17 ("Ask right away").
 
-- Quand une synchro trouve un conflit sur un fichier (modifié des deux côtés,
-  ou modifié ici et supprimé sur l'autre appareil), l'OS **ouvre tout de suite
-  un dialogue** pour l'utilisateur concerné, s'il est connecté, sinon à sa
-  prochaine connexion. Le dialogue montre le chemin, la date et l'appareil de
-  chaque version, leur taille, et pour un fichier texte un aperçu des deux.
-- Trois choix par fichier :
-  - **Garder la mienne** : `ResolveConflictAsync(ClientWins)` ; la version
-    locale est envoyée.
-  - **Garder celle de l'autre appareil** : `ServerWins` ; la version locale va à
-    la corbeille (ADR 0052), donc on peut la récupérer.
-  - **Garder les deux** : la version du serveur prend le chemin d'origine et la
-    version locale est renommée `<nom>.sync-conflict-<AAAAMMJJ-HHMMSS>-<appareil>.<ext>`
-    dans le même dossier, puis envoyée comme un nouveau fichier.
-- Plusieurs conflits arrivés ensemble sont dans un seul dialogue, avec un choix
-  par fichier et « Appliquer à tous ».
-- **Le fichier reste figé** jusqu'à la réponse : il garde sa version locale,
-  reste modifiable sur cet appareil, mais n'est ni envoyé ni remplacé par la
-  synchro. « Plus tard » ferme le dialogue sans choisir ; le conflit reste en
-  attente, signalé par une notification et listé dans **Paramètres →
-  Synchronisation**, et le dialogue revient à la connexion suivante.
-- Les conflits en attente sont enregistrés dans
-  `~/.local/state/hackeros/sync-conflicts.json` (état local, jamais synchronisé,
-  ADR 0044), donc gardés après un rechargement.
-- Les domaines où le serveur fait autorité (accords, ADR 0025) se résolvent
-  seuls en `ServerWins`, sans rien demander.
+- When a sync finds a conflict on a file (modified on both sides,
+  or modified here and deleted on the other device), the OS **opens a dialog
+  right away** for the user concerned, if they are logged in, otherwise at their
+  next login. The dialog shows the path, the date and the device of
+  each version, their size, and for a text file a preview of both.
+- Three choices per file:
+  - **Keep mine**: `ResolveConflictAsync(ClientWins)`; the local version
+    is sent.
+  - **Keep the other device's**: `ServerWins`; the local version goes to
+    the trash (ADR 0052), so it can be recovered.
+  - **Keep both**: the server version takes the original path and the local
+    version is renamed `<name>.sync-conflict-<YYYYMMDD-HHMMSS>-<device>.<ext>`
+    in the same folder, then sent as a new file.
+- Several conflicts that arrive together are in a single dialog, with one choice
+  per file and "Apply to all".
+- **The file stays frozen** until the answer: it keeps its local version,
+  remains editable on this device, but is neither sent nor replaced by
+  sync. "Later" closes the dialog without choosing; the conflict stays
+  pending, signaled by a notification and listed in **Settings →
+  Synchronization**, and the dialog returns at the next login.
+- Pending conflicts are saved in
+  `~/.local/state/hackeros/sync-conflicts.json` (local state, never synced,
+  ADR 0044), so they are kept after a reload.
+- The domains where the server is authoritative (grants, ADR 0025) resolve
+  themselves as `ServerWins`, without asking anything.
 
-### 3. Domaines restants
+### 3. Remaining domains
 
-- **`filesystem`** : `/home/{user}` sauf `~/.local/state` (ADR 0030, 0044).
-  Les réglages de l'utilisateur (`~/.config`) et son choix d'apps désinstallées
-  (`~/.config/hackeros/apps.config`, ADR 0048) voyagent par ce domaine, comme
-  n'importe quel fichier.
-- **`file_associations`** et **`grants`** : inchangés, avec les pierres
-  tombales.
-- **`app_catalog`** : **pas de client**. Le choix de l'utilisateur est déjà dans
-  `~/.config` (voir plus haut), et l'état machine (`/etc/hackeros/apps.config`)
-  reste propre à chaque appareil, comme les paquets installés sur deux machines
-  Linux. Le serveur garde le domaine (aucune rupture de contrat) mais l'OS ne
-  l'utilise pas. Cela remplace la partie AppCatalog de l'ADR 0033 et le « client
-  du domaine AppCatalog » du plan.
-- **`settings`** : plus de client depuis l'ADR 0044 ; le serveur garde le
-  domaine pour la même raison.
+- **`filesystem`**: `/home/{user}` except `~/.local/state` (ADR 0030, 0044).
+  The user's settings (`~/.config`) and their choice of uninstalled apps
+  (`~/.config/hackeros/apps.config`, ADR 0048) travel through this domain, like
+  any file.
+- **`file_associations`** and **`grants`**: unchanged, with the
+  tombstones.
+- **`app_catalog`**: **no client**. The user's choice is already in
+  `~/.config` (see above), and the machine state (`/etc/hackeros/apps.config`)
+  remains specific to each device, like the packages installed on two Linux
+  machines. The server keeps the domain (no contract break) but the OS does not
+  use it. This replaces the AppCatalog part of ADR 0033 and the "client
+  for the AppCatalog domain" of the plan.
+- **`settings`**: no client since ADR 0044; the server keeps the
+  domain for the same reason.
 
-### 4. Synchro périodique
+### 4. Periodic sync
 
-- Quand l'OS est connecté au serveur, un service de la plateforme synchronise
-  toutes les **5 minutes**, à chaque reconnexion, et 10 secondes après la dernière
-  modification d'un fichier synchronisé (regroupement des écritures).
-- L'intervalle se règle dans `/etc/hackeros/sync.config` (administrateur) ;
-  l'utilisateur peut suspendre sa synchro dans `~/.config/hackeros/sync.config`.
-- Hors ligne ou sans serveur, le service ne fait rien et l'OS marche comme
-  avant (l'Ecosystem ne dépend jamais du serveur).
-- Chaque passage est écrit dans `/var/log/syslog` (domaines, envoyés, reçus,
-  conflits).
+- When the OS is connected to the server, a platform service syncs
+  every **5 minutes**, at each reconnection, and 10 seconds after the last
+  modification of a synced file (grouping of writes).
+- The interval is set in `/etc/hackeros/sync.config` (administrator);
+  the user can pause their sync in `~/.config/hackeros/sync.config`.
+- Offline or without a server, the service does nothing and the OS works as
+  before (the Ecosystem never depends on the server).
+- Each pass is written to `/var/log/syslog` (domains, sent, received,
+  conflicts).
 
-## Conséquences
+## Consequences
 
-- `v3/9` modifie les deux services de synchro du client, ajoute le service
-  périodique, le dialogue de conflit, la page de Paramètres,
-  l'enregistrement des conflits et des tests
-  client et serveur (suppression propagée, pierre tombale reçue mise à la
-  corbeille, dialogue de conflit et ses trois choix, fichier figé tant qu'il
-  n'y a pas de réponse, reprise après rechargement, appareil hors ligne plus de
-  90 jours).
-- Le serveur purge les pierres tombales de plus de 90 jours.
-- La doc de connexion au serveur et de synchro (`system-administration.md`,
-  `trash.md`, `settings-files.md`) est mise à jour.
+- `v3/9` modifies the two client sync services, adds the periodic
+  service, the conflict dialog, the Settings page,
+  the saving of conflicts and client and server
+  tests (propagated deletion, received tombstone moved to the
+  trash, conflict dialog and its three choices, file frozen until
+  there is an answer, resume after reload, device offline more than
+  90 days).
+- The server purges tombstones older than 90 days.
+- The server connection and sync docs (`system-administration.md`,
+  `trash.md`, `settings-files.md`) are updated.

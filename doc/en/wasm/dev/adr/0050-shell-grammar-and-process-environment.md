@@ -1,282 +1,282 @@
-# ADR 0050 : Grammaire du shell et environnement de processus
+# ADR 0050: Shell grammar and process environment
 
-## Statut
+## Status
 
-Accepté le 2026-10-10.
+Accepted on 2026-10-10.
 
-- **Phase du plan :** phase 3 — Shell, commandes et corbeille
-  ([`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md), sections 7.1 et
-  7.2, décisions D12 et D13).
-- **Remplace :** ADR 0014 (grammaire de la première tranche). Les règles de
-  découpage en mots, de guillemets et d'échappement de l'ADR 0014 sont
-  reprises telles quelles ; la liste des opérateurs refusés et l'environnement
-  en lecture seule sont remplacés.
-- **Complète :** ADR 0012 (modèle de processus) et ADR 0046 (`/proc`) : un
-  processus gagne des arguments, un répertoire courant et un environnement,
-  que `/proc/<pid>/cmdline`, `cwd` et `environ` exposent enfin.
-- **Complète :** ADR 0043 : le contexte ambiant porte aussi l'environnement,
-  lu par la nouvelle classe `HackEnvironment`.
+- **Plan phase:** phase 3, Shell, commands and trash
+  ([`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md), sections 7.1 and
+  7.2, decisions D12 and D13).
+- **Replaces:** ADR 0014 (grammar of the first slice). The rules for
+  splitting into words, quoting and escaping from ADR 0014 are
+  taken over as is; the list of rejected operators and the read-only
+  environment are replaced.
+- **Complements:** ADR 0012 (process model) and ADR 0046 (`/proc`): a
+  process gains arguments, a current directory and an environment,
+  which `/proc/<pid>/cmdline`, `cwd` and `environ` finally expose.
+- **Complements:** ADR 0043: the ambient context also carries the environment,
+  read by the new `HackEnvironment` class.
 
-## Contexte
+## Context
 
-Le shell actuel est la méthode `ExecuteInputAsync` de
-`Shared/HackerOs.AppSdk.Terminal/TerminalPanel.razor`. Elle mélange la
-grammaire, la résolution, `sudo`, les alias et l'affichage. Son parseur
-(`ShellParser`) ne connaît ni l'expansion de variables, ni les opérateurs.
-Le texte de la ligne est ensuite reconstruit avec des espaces
-(`$"{cmd} {string.Join(" ", args)}"`) puis redécoupé sur les espaces par
-`AppIntentDispatcher.DispatchExecuteCommandAsync` : un argument entre
-guillemets qui contient un espace est donc coupé en deux.
+The current shell is the `ExecuteInputAsync` method of
+`Shared/HackerOs.AppSdk.Terminal/TerminalPanel.razor`. It mixes
+grammar, resolution, `sudo`, aliases and display. Its parser
+(`ShellParser`) knows neither variable expansion nor operators.
+The line text is then rebuilt with spaces
+(`$"{cmd} {string.Join(" ", args)}"`) and split again on spaces by
+`AppIntentDispatcher.DispatchExecuteCommandAsync`: a quoted argument
+that contains a space is therefore cut in two.
 
-`AppLifecycleOrchestrator.RunTerminalAsync` donne à chaque commande une entrée
-vide, une sortie mise en tampon (`StringWriter`) rendue seulement à la fin, et
-un environnement réduit à `HOME`. `TerminalSession` tient pourtant un
-environnement (`USER`, `HOME`, `SHELL`, `TERM`, `PATH`) qui n'atteint jamais
-les commandes. Les processus n'ont ni arguments, ni répertoire, ni
-environnement : `ProcFileSystemProvider` renvoie l'identifiant d'app pour
-`cmdline`, un `environ` vide et le dossier personnel pour `cwd`.
+`AppLifecycleOrchestrator.RunTerminalAsync` gives each command an empty input,
+an output buffered in a `StringWriter` rendered only at the end, and
+an environment reduced to `HOME`. Yet `TerminalSession` holds an
+environment (`USER`, `HOME`, `SHELL`, `TERM`, `PATH`) that never reaches
+the commands. Processes have no arguments, no directory and no
+environment: `ProcFileSystemProvider` returns the app identifier for
+`cmdline`, an empty `environ` and the home folder for `cwd`.
 
-## Décision
+## Decision
 
-### 1. Un interpréteur sans interface, dans Platform Core
+### 1. A headless interpreter, in Platform Core
 
-Le shell devient un moteur sans interface dans
-`Platform/HackerOs.Platform.Core/Shell/` :
+The shell becomes a headless engine in
+`Platform/HackerOs.Platform.Core/Shell/`:
 
-- `ShellParser` produit un arbre (section 2) ou une erreur structurée (code,
-  position, longueur), sans jamais lever d'exception pour une saisie.
-- `ShellInterpreter` exécute cet arbre : expansion, redirections, tubes,
-  lancement des étapes par `AppLifecycleOrchestrator`, code de sortie.
-- `ShellSession` est l'état d'un shell : son processus, l'historique, le
-  dernier code de sortie. Le répertoire courant et l'environnement ne sont
-  **pas** copiés dans la session : ce sont ceux du processus du shell
+- `ShellParser` produces a tree (section 2) or a structured error (code,
+  position, length), never throwing an exception for an input.
+- `ShellInterpreter` executes this tree: expansion, redirections, pipes,
+  launching the stages through `AppLifecycleOrchestrator`, exit code.
+- `ShellSession` is a shell's state: its process, the history, the
+  last exit code. The current directory and the environment are
+  **not** copied into the session: they are those of the shell's process
   (section 5).
 
-`TerminalPanel` ne garde que l'édition de ligne, l'affichage, l'historique au
-clavier, la complétion et la fenêtre d'identifiants. L'ancien `ShellParser`
-et `TerminalSession` de `HackerOs.AppSdk.Terminal` disparaissent.
-`ExecuteCommandIntent` passe par le même interpréteur, en mode non interactif
-(section 7) : plus aucun découpage sur les espaces.
+`TerminalPanel` keeps only line editing, display, keyboard
+history, completion and the credentials window. The old `ShellParser`
+and `TerminalSession` of `HackerOs.AppSdk.Terminal` disappear.
+`ExecuteCommandIntent` goes through the same interpreter, in non-interactive mode
+(section 7): no more splitting on spaces.
 
-### 2. Grammaire
+### 2. Grammar
 
 ```text
-liste      := pipeline ( "&&" pipeline )*
-pipeline   := commande ( "|" commande )*
-commande   := ( mot | redirection )+
-redirection:= ( ">" | ">>" ) mot
+list       := pipeline ( "&&" pipeline )*
+pipeline   := command ( "|" command )*
+command    := ( word | redirection )+
+redirection:= ( ">" | ">>" ) word
 ```
 
-- **Mots, guillemets et échappements :** inchangés depuis l'ADR 0014
-  (guillemets simples littéraux, guillemets doubles avec expansion et
-  échappements `\"`, `\\`, `\$`, `\n`, `\r`, `\t`, barre oblique inverse hors
-  guillemets).
-- **Opérateurs reconnus** hors guillemets : `|`, `&&`, `>`, `>>`. Ils n'ont pas
-  besoin d'espaces autour (`ls|wc`, `echo a>f` sont valides).
-- **Opérateurs encore refusés** hors guillemets, avec l'erreur
-  `shell.syntax.unsupported` : `;`, `||`, `&` seul, `<`, `2>`, `&>`, `` ` ``,
-  `$(`, `(`, `)`. Ils restent utilisables entre guillemets ou échappés. Ils
-  pourront être ajoutés par un ADR ultérieur sans casser cette grammaire.
-- **Erreurs de syntaxe :** opérateur en tête ou en fin (`| wc`, `ls &&`),
-  deux opérateurs de suite, redirection sans cible, commande vide dans un
-  tube. Code de sortie `2`, aucune commande lancée.
-- **Affectation :** un premier mot de la forme `NOM=valeur` est refusé avec
-  l'erreur `shell.syntax.assignment` (« use export NOM=valeur »). La forme
-  `NOM=valeur commande` est hors périmètre.
-- **Non pris en charge (inchangé) :** globbing, expansion d'accolades,
-  substitution de commande, sous-shells, fonctions, scripts, tâches en
-  arrière-plan.
+- **Words, quotes and escapes:** unchanged from ADR 0014
+  (literal single quotes, double quotes with expansion and
+  escapes `\"`, `\\`, `\$`, `\n`, `\r`, `\t`, backslash outside
+  quotes).
+- **Recognized operators** outside quotes: `|`, `&&`, `>`, `>>`. They do not
+  need spaces around them (`ls|wc`, `echo a>f` are valid).
+- **Operators still rejected** outside quotes, with the error
+  `shell.syntax.unsupported`: `;`, `||`, a lone `&`, `<`, `2>`, `&>`, `` ` ``,
+  `$(`, `(`, `)`. They remain usable inside quotes or escaped. They
+  can be added by a later ADR without breaking this grammar.
+- **Syntax errors:** operator at the start or end (`| wc`, `ls &&`),
+  two operators in a row, redirection without a target, empty command in a
+  pipe. Exit code `2`, no command launched.
+- **Assignment:** a first word of the form `NAME=value` is rejected with
+  the error `shell.syntax.assignment` ("use export NAME=value"). The form
+  `NAME=value command` is out of scope.
+- **Not supported (unchanged):** globbing, brace expansion, command
+  substitution, subshells, functions, scripts, background
+  jobs.
 
 ### 3. Expansion
 
-Elle a lieu après le découpage, mot par mot, et ne relit jamais le résultat
-comme de la syntaxe.
+It takes place after splitting, word by word, and never re-reads the result
+as syntax.
 
-- `$NOM` et `${NOM}` hors guillemets simples, noms
-  `[A-Za-z_][A-Za-z0-9_]*`. Une variable absente donne une chaîne vide.
-- `$?` : code de sortie de la dernière liste exécutée par ce shell.
-- `~` et `~/…` au début d'un mot non entre guillemets : valeur de `HOME`.
-  `~autre` n'est pas pris en charge et reste littéral.
-- **Pas de découpage en mots après expansion** (écart volontaire avec POSIX,
-  repris de l'ADR 0014) : `$X` reste un seul argument même s'il contient des
-  espaces. C'est plus sûr pour des chemins qui contiennent des espaces.
-- La cible d'une redirection est développée de la même façon.
+- `$NAME` and `${NAME}` outside single quotes, names
+  `[A-Za-z_][A-Za-z0-9_]*`. A missing variable yields an empty string.
+- `$?`: exit code of the last list executed by this shell.
+- `~` and `~/...` at the start of an unquoted word: value of `HOME`.
+  `~other` is not supported and remains literal.
+- **No word splitting after expansion** (deliberate deviation from POSIX,
+  taken from ADR 0014): `$X` remains a single argument even if it contains
+  spaces. This is safer for paths that contain spaces.
+- A redirection target is expanded the same way.
 
-### 4. Exécution
+### 4. Execution
 
-**Tubes.** Les étapes d'un tube tournent **en même temps**, comme sous Linux.
-Elles sont reliées par un `ShellPipe` : un tampon en mémoire de 64 Kio (la
-taille par défaut d'un tube Linux). Un écrivain attend quand le tampon est
-plein ; un lecteur attend quand il est vide ; la fin de l'écrivain ferme le
-tube et le lecteur reçoit la fin de flux. Le navigateur n'a qu'un fil
-d'exécution : les lectures synchrones (`Read`, `ReadLine`, `ReadToEnd`) sur un
-tube vide encore ouvert lèvent `InvalidOperationException` avec un message qui
-demande la forme asynchrone. Toutes les commandes actuelles lisent déjà en
-asynchrone. Quand un lecteur se termine avant son écrivain, l'écriture
-suivante lève `HackIOException` (« Broken pipe »), que la commande peut
-ignorer ; l'étape se termine alors avec le code `141` si elle laisse passer
-l'exception, comme `SIGPIPE`.
+**Pipes.** The stages of a pipe run **at the same time**, as on Linux.
+They are connected by a `ShellPipe`: an in-memory buffer of 64 KiB (the
+default size of a Linux pipe). A writer waits when the buffer is
+full; a reader waits when it is empty; the writer ending closes the
+pipe and the reader receives end of stream. The browser has only one thread of
+execution: synchronous reads (`Read`, `ReadLine`, `ReadToEnd`) on an
+empty pipe that is still open throw `InvalidOperationException` with a message that
+asks for the asynchronous form. All current commands already read
+asynchronously. When a reader ends before its writer, the next
+write throws `HackIOException` ("Broken pipe"), which the command can
+ignore; the stage then ends with code `141` if it lets the
+exception through, like `SIGPIPE`.
 
-**Flux.** L'entrée de la première étape est vide (fin de flux immédiate,
-comme `/dev/null`) : l'entrée clavier d'une commande en cours n'est pas
-prévue dans cette phase, `nano` garde son écran plein. La sortie de la
-dernière étape et la sortie d'erreur de **toutes** les étapes vont au
-terminal **au fil de l'eau**, plus seulement à la fin.
-`AppLaunchRequest` gagne des flux optionnels `StandardInput`,
-`StandardOutput` et `StandardError` ; quand ils sont fournis,
-`RunTerminalAsync` les utilise à la place de ses tampons, et
-`AppLaunchResult.StandardOutput`/`StandardError` restent vides. Sans flux
-fournis, le comportement en tampon actuel est conservé pour les autres
-appelants.
+**Streams.** The input of the first stage is empty (immediate end of stream,
+like `/dev/null`): keyboard input to a running command is not
+planned in this phase, `nano` keeps its full screen. The output of the
+last stage and the error output of **all** stages go to the
+terminal **as they are produced**, no longer only at the end.
+`AppLaunchRequest` gains optional `StandardInput`,
+`StandardOutput` and `StandardError` streams; when provided,
+`RunTerminalAsync` uses them in place of its buffers, and
+`AppLaunchResult.StandardOutput`/`StandardError` stay empty. Without streams
+provided, the current buffered behavior is kept for other
+callers.
 
-**Redirections.** C'est le shell, pas la commande, qui ouvre la cible, avant
-de lancer l'étape, avec l'identité et les capacités de l'app qui héberge le
-shell (le Terminal), et sous les droits du fichier (D16). `>` crée ou vide le
-fichier, `>>` crée ou ajoute à la fin. Plusieurs redirections dans une même
-commande sont ouvertes dans l'ordre (chacune crée ou vide son fichier) et la
-dernière reçoit la sortie, comme sous Linux. Une redirection qui échoue
-affiche `hsh: <cible>: <raison>`, ne lance pas l'étape et vaut le code `1`.
-Conséquence voulue et fidèle à Linux : `sudo echo x > /etc/f` échoue, car la
-redirection n'est pas élevée. Une étape redirigée qui n'est pas la dernière
-d'un tube envoie sa sortie au fichier, et l'étape suivante lit une entrée
-vide.
+**Redirections.** The shell, not the command, opens the target, before
+launching the stage, with the identity and capabilities of the app that hosts the
+shell (the Terminal), and under file permissions (D16). `>` creates or empties the
+file, `>>` creates or appends. Several redirections in the same
+command are opened in order (each creates or empties its file) and the
+last one receives the output, as on Linux. A failing redirection
+prints `hsh: <target>: <reason>`, does not launch the stage and gives code `1`.
+Intended consequence, faithful to Linux: `sudo echo x > /etc/f` fails, because the
+redirection is not elevated. A redirected stage that is not the last
+of a pipe sends its output to the file, and the next stage reads an empty
+input.
 
-**`&&`.** Le pipeline suivant ne s'exécute que si le code de sortie du
-précédent vaut `0`. Le code d'un pipeline est celui de sa dernière étape (pas
-de `pipefail`). Le code de la ligne est celui du dernier pipeline exécuté.
+**`&&`.** The next pipeline runs only if the exit code of the
+previous one is `0`. A pipeline's code is that of its last stage (no
+`pipefail`). The line's code is that of the last pipeline executed.
 
-**Codes de sortie** (repris de l'ADR 0014) : `127` commande introuvable, `2`
-erreur de syntaxe, `130` interruption, `1` faute non gérée, `141` tube cassé.
+**Exit codes** (taken from ADR 0014): `127` command not found, `2`
+syntax error, `130` interruption, `1` unhandled fault, `141` broken pipe.
 
-**Interruption.** Ctrl+C annule toutes les étapes du pipeline en cours et
-arrête la liste.
+**Interruption.** Ctrl+C cancels all stages of the current pipeline and
+stops the list.
 
-**Processus.** Chaque étape est un processus enfant du processus du shell
-(`AppLaunchRequest.ParentPid`). Le processus du shell est celui de l'app qui
-l'héberge : la fenêtre Terminal pour le terminal, l'app appelante pour
-`ExecuteCommandIntent`. `ps` montre donc l'arbre `terminal` → `grep`, `wc`.
+**Processes.** Each stage is a child process of the shell's process
+(`AppLaunchRequest.ParentPid`). The shell's process is that of the app that
+hosts it: the Terminal window for the terminal, the calling app for
+`ExecuteCommandIntent`. `ps` therefore shows the tree `terminal` → `grep`, `wc`.
 
-**Alias.** L'expansion des alias reste une étape du shell (comme sous Linux)
-et s'applique au premier mot de chaque commande, avant la résolution. Leur
-fichier ne change pas.
+**Aliases.** Alias expansion remains a shell step (as on Linux)
+and applies to the first word of each command, before resolution. Their
+file does not change.
 
-### 5. Environnement par processus
+### 5. Per-process environment
 
-Un processus porte trois nouvelles données, fixées à sa création :
+A process carries three new pieces of data, fixed at its creation:
 
-- ses **arguments** (`argv`, nom de la commande compris) ;
-- son **répertoire courant**, chemin absolu canonique ;
-- son **environnement**, dictionnaire ordinal nom → valeur.
+- its **arguments** (`argv`, command name included);
+- its **current directory**, canonical absolute path;
+- its **environment**, ordinal dictionary name → value.
 
-Elles vivent dans une table à part, `IProcessEnvironmentTable`
-(`Shared/HackerOs.Simulation.Abstractions/Processes/`), indexée par PID et
-vidée quand le processus se termine. `ProcessRecord` reste un instantané
-immuable et ne change pas.
+They live in a separate table, `IProcessEnvironmentTable`
+(`Shared/HackerOs.Simulation.Abstractions/Processes/`), indexed by PID and
+emptied when the process ends. `ProcessRecord` remains an immutable
+snapshot and does not change.
 
-`ProcessStartRequest` et `AppLaunchRequest` gagnent `Environment` (optionnel)
-et réutilisent `Arguments` et `WorkingDirectory`. À la création :
+`ProcessStartRequest` and `AppLaunchRequest` gain `Environment` (optional)
+and reuse `Arguments` and `WorkingDirectory`. At creation:
 
-1. **avec parent :** copie du répertoire et de l'environnement du parent au
-   moment de la création, puis application des valeurs fournies par la
-   requête ;
-2. **sans parent** (lancement depuis le bureau, service) : environnement de
-   connexion (ci-dessous) et dossier personnel.
+1. **with a parent:** copy of the parent's directory and environment at
+   creation time, then application of the values provided by the
+   request;
+2. **without a parent** (launch from the desktop, service): login environment
+   (below) and home folder.
 
-Une modification ultérieure du parent ne touche jamais un enfant déjà créé, et
-inversement. Un processus ne peut changer que **son propre** répertoire et
-**son propre** environnement (section 6). Changer ceux de son shell parent
-passe par l'accès contrôlé de l'ADR 0051.
+A later change to the parent never touches a child already created, and
+vice versa. A process can only change **its own** directory and
+**its own** environment (section 6). Changing those of its parent shell
+goes through the controlled access of ADR 0051.
 
-**Environnement de connexion**, construit à l'ouverture de session :
+**Login environment**, built when the session opens:
 
-| Variable | Valeur |
+| Variable | Value |
 |---|---|
-| `HOME` | dossier personnel |
-| `USER`, `LOGNAME` | nom de connexion |
+| `HOME` | home folder |
+| `USER`, `LOGNAME` | login name |
 | `SHELL` | `/bin/hsh` |
-| `PATH` | `/bin:/usr/bin` (informatif : la résolution passe par le catalogue) |
-| `PWD` | répertoire courant, tenu à jour par le shell |
+| `PATH` | `/bin:/usr/bin` (informational: resolution goes through the catalog) |
+| `PWD` | current directory, kept up to date by the shell |
 | `LANG` | `en_US.UTF-8` |
 
-Puis les lignes `NOM=valeur` de **`/etc/environment`** (fichier texte, droits
-`0644`, propriétaire root, modifiable par un administrateur, comme
-`pam_env`), qui ajoutent ou remplacent des variables, sauf `HOME`, `USER` et
-`LOGNAME`. Lignes vides et `#` ignorées, ligne invalide ignorée avec un
-avertissement dans le journal (D17). Le shell ajoute `TERM=xterm-256color`
-et `OLDPWD` à son propre environnement. Un environnement utilisateur persistant
-(`~/.profile`) est hors périmètre, faute de scripts.
+Then the `NAME=value` lines of **`/etc/environment`** (text file, permissions
+`0644`, owner root, editable by an administrator, like
+`pam_env`), which add or replace variables, except `HOME`, `USER` and
+`LOGNAME`. Empty lines and `#` lines ignored, invalid line ignored with a
+warning in the log (D17). The shell adds `TERM=xterm-256color`
+and `OLDPWD` to its own environment. A persistent user environment
+(`~/.profile`) is out of scope, for lack of scripts.
 
-**`/proc`** (complète l'ADR 0046) : `/proc/<pid>/cmdline` donne les arguments
-séparés par `\0` (l'identifiant d'app quand il n'y en a pas), `environ` les
-paires `NOM=valeur` séparées par `\0` (droits `0400` inchangés), `cwd` est un
-lien vers le répertoire courant réel.
+**`/proc`** (complements ADR 0046): `/proc/<pid>/cmdline` gives the arguments
+separated by `\0` (the app identifier when there are none), `environ` the
+`NAME=value` pairs separated by `\0` (permissions `0400` unchanged), `cwd` is a
+link to the real current directory.
 
-### 6. `HackEnvironment` dans le SDK
+### 6. `HackEnvironment` in the SDK
 
-`Shared/HackerOs.AppSdk/HackEnvironment.cs`, statique, calqué sur
-`System.Environment`, et lu dans le contexte ambiant de l'ADR 0043 :
+`Shared/HackerOs.AppSdk/HackEnvironment.cs`, static, modeled on
+`System.Environment`, and read from the ambient context of ADR 0043:
 
 ```csharp
 public static class HackEnvironment
 {
-    public static string CurrentDirectory { get; set; }        // set : chemin existant, sinon HackDirectoryNotFoundException
+    public static string CurrentDirectory { get; set; }        // set: existing path, otherwise HackDirectoryNotFoundException
     public static string? GetEnvironmentVariable(string name);
     public static IReadOnlyDictionary<string, string> GetEnvironmentVariables();
-    public static void SetEnvironmentVariable(string name, string? value); // null supprime
+    public static void SetEnvironmentVariable(string name, string? value); // null removes
     public static string[] GetCommandLineArgs();
     public static int ProcessId { get; }
     public static string UserName { get; }
-    public static string MachineName { get; }                  // première ligne de /etc/hostname
+    public static string MachineName { get; }                  // first line of /etc/hostname
     public static string NewLine => "\n";
 }
 ```
 
-- Toutes ces opérations visent le processus courant uniquement ; aucune
-  capacité n'est nécessaire, comme sous Linux.
-- `CurrentDirectory` est le répertoire utilisé par `HackPath` pour les chemins
-  relatifs : `HackExecutionContext.WorkingDirectory` lit désormais le
-  répertoire du processus.
-- `/etc/hostname` (`0644`, root) est créé par l'amorçage du système de
-  fichiers avec `hackeros` s'il est absent ; l'invite du terminal l'utilise
-  au lieu de la valeur codée en dur.
-- `TerminalExecutionContext.Environment` et `WorkingDirectory` restent, pour
-  la compatibilité, et donnent l'état du processus au démarrage de la
-  commande.
+- All these operations target the current process only; no
+  capability is needed, as on Linux.
+- `CurrentDirectory` is the directory used by `HackPath` for relative
+  paths: `HackExecutionContext.WorkingDirectory` now reads the
+  process's directory.
+- `/etc/hostname` (`0644`, root) is created by the file system bootstrap
+  with `hackeros` if it is missing; the terminal prompt uses it
+  instead of the hard-coded value.
+- `TerminalExecutionContext.Environment` and `WorkingDirectory` remain, for
+  compatibility, and give the process state at the start of the
+  command.
 
-### 7. Shell non interactif
+### 7. Non-interactive shell
 
-`ExecuteCommandIntent.CommandLine` est exécutée par `ShellInterpreter` avec la
-même grammaire, dans un shell sans session interactive : pas d'historique,
-pas d'accès au shell pour les commandes (ADR 0051), sortie en tampon dans
-`AppIntentDispatchResult`. Le répertoire de départ est
-`ExecuteCommandIntent.WorkingDirectory`, sinon celui du processus appelant.
-L'autorisation `apps.launch` de l'appelant est vérifiée une fois pour la ligne.
+`ExecuteCommandIntent.CommandLine` is executed by `ShellInterpreter` with the
+same grammar, in a shell without an interactive session: no history,
+no shell access for commands (ADR 0051), output buffered in
+`AppIntentDispatchResult`. The starting directory is
+`ExecuteCommandIntent.WorkingDirectory`, otherwise that of the calling process.
+The caller's `apps.launch` authorization is checked once for the line.
 
-## Conséquences
+## Consequences
 
-- Une seule implémentation du shell, testable sans navigateur, pour le
-  terminal et pour les apps.
-- Les arguments entre guillemets arrivent intacts aux commandes.
-- `ps`, `/proc` et les commandes voient des processus réalistes : arguments,
-  répertoire, environnement, arbre parent-enfant.
-- Les commandes qui lisent leur entrée doivent rester asynchrones ; c'est
-  déjà le cas.
-- La sortie du terminal s'affiche au fil de l'eau, ce qui change le rendu de
-  `ping` et de `curl`.
-- `;`, `||`, `<` et le globbing restent à faire ; ils sont refusés clairement.
+- A single implementation of the shell, testable without a browser, for the
+  terminal and for apps.
+- Quoted arguments reach commands intact.
+- `ps`, `/proc` and commands see realistic processes: arguments,
+  directory, environment, parent-child tree.
+- Commands that read their input must remain asynchronous; this is
+  already the case.
+- Terminal output is displayed as it is produced, which changes the rendering of
+  `ping` and `curl`.
+- `;`, `||`, `<` and globbing remain to be done; they are clearly rejected.
 
-## Chantiers d'implémentation
+## Implementation work items
 
-Voir l'ADR 0052 pour le tableau complet de la phase 3. Chantiers de cet ADR :
-`rebuild/3-process-environment` (sections 5 et 6, `/proc`) puis
-`rebuild/3-shell-interpreter` (sections 1 à 4 et 7).
+See ADR 0052 for the full phase 3 table. Work items of this ADR:
+`rebuild/3-process-environment` (sections 5 and 6, `/proc`) then
+`rebuild/3-shell-interpreter` (sections 1 to 4 and 7).
 
-## Références
+## References
 
-- ADR 0012 (processus), ADR 0014 (remplacé), ADR 0042 (`sudo`), ADR 0043
-  (contexte ambiant), ADR 0046 (`/proc`), ADR 0051 (commandes).
-- [`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md), sections 7.1 et 7.2.
+- ADR 0012 (processes), ADR 0014 (replaced), ADR 0042 (`sudo`), ADR 0043
+  (ambient context), ADR 0046 (`/proc`), ADR 0051 (commands).
+- [`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md), sections 7.1 and 7.2.
 - `Shared/HackerOs.AppSdk.Terminal/TerminalPanel.razor`, `ShellParser.cs`,
-  `TerminalSession.cs` ; `Platform/HackerOs.Platform.Core/Intents/AppIntentDispatcher.cs` ;
-  `Platform/HackerOs.Platform.Core/Lifecycle/AppLifecycleOrchestrator.cs` ;
+  `TerminalSession.cs`; `Platform/HackerOs.Platform.Core/Intents/AppIntentDispatcher.cs`;
+  `Platform/HackerOs.Platform.Core/Lifecycle/AppLifecycleOrchestrator.cs`;
   `Platform/HackerOs.Platform.Core/FileSystem/Virtual/ProcFileSystemProvider.cs`.

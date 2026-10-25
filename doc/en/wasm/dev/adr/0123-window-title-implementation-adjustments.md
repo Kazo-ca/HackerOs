@@ -1,109 +1,108 @@
-# ADR 0123 : ajustements de la mise en œuvre du titre de fenêtre
+# ADR 0123: implementation adjustments for the window title
 
-## Statut
+## Status
 
-Accepté le 2026-10-17 (chantier `v3.1/3-window-title`).
+Accepted on 2026-10-17 (work item `v3.1/3-window-title`).
 
-- **Ajuste :** [ADR 0117](0117-sdk-window-title-and-sdk-1-1.md) §2 à §4, sans
-  changer sa décision (l'app pose tout le titre, l'OS le nettoie et l'affiche).
-- **Applique :** [ADR 0114](0114-sdk-1-0-freeze.md) §1 : tous les ajouts vont dans
-  `PublicAPI.Unshipped.txt` et sortiront dans la 1.1 (chantier `v3.1/4-sdk-1-1`).
-- **Document :** [`window-model.md`](../../framework/window-model.md) §4.
+- **Adjusts:** [ADR 0117](0117-sdk-window-title-and-sdk-1-1.md) §2 to §4, without
+  changing its decision (the app sets the whole title, the OS sanitizes and displays it).
+- **Applies:** [ADR 0114](0114-sdk-1-0-freeze.md) §1: all additions go into
+  `PublicAPI.Unshipped.txt` and will ship in 1.1 (work item `v3.1/4-sdk-1-1`).
+- **Document:** [`window-model.md`](../../framework/window-model.md) §4.
 
-## Contexte
+## Context
 
-L'ADR 0117 décrit l'API (`WindowTitle`, `SetWindowTitleAsync`), une passerelle
-« interne » `IAppWindowGateway`, la commande du runtime et les apps qui
-l'adoptent. La mise en œuvre a dû préciser comment la passerelle arrive à l'app,
-comment une app compose la convention `document — App` avec le nom traduit, et ce
-que deviennent les titres que certaines apps affichaient déjà chez elles.
+ADR 0117 describes the API (`WindowTitle`, `SetWindowTitleAsync`), an "internal"
+gateway `IAppWindowGateway`, the runtime command and the apps that
+adopt it. The implementation had to specify how the gateway reaches the app,
+how an app composes the `document — App` convention with the translated name, and
+what happens to the titles that some apps already displayed themselves.
 
-## Décision
+## Decision
 
-### 1. `IAppWindowGateway` est publique, transmise en valeur en cascade fixe
+### 1. `IAppWindowGateway` is public, passed by value in a fixed cascade
 
-- L'interface est dans `HackerOs.AppSdk.Blazor` et publique : `WindowAppBase` (SDK)
-  l'appelle et la plateforme (`HackerOs.Platform.Blazor`) l'implémente ; aucune
-  `InternalsVisibleTo` ne relie ces deux paquets. Comme `IWindowAppEventTarget`,
-  une app ne l'implémente ni ne l'appelle : elle passe par `WindowAppBase`.
-- Elle n'est **pas** dans l'injection de dépendances. `WindowAppRenderer` crée une
-  instance par fenêtre (`AppWindowGatewayFactory.Create(windowId, manifest)`) et la
-  donne à l'app par un `CascadingValue<IAppWindowGateway>` fixe, à côté du contexte
-  d'exécution. Une app ne peut donc obtenir que la passerelle de sa propre
-  fenêtre : rien ne lui permet d'en nommer une autre (§2 de l'ADR 0117, « une seule
-  fenêtre visée »).
-- La valeur en cascade est posée avant que le composant de l'app soit créé : un
-  titre posé dans `OnAppInitialized[Async]` est appliqué avant le premier rendu.
+- The interface is in `HackerOs.AppSdk.Blazor` and public: `WindowAppBase` (SDK)
+  calls it and the platform (`HackerOs.Platform.Blazor`) implements it; no
+  `InternalsVisibleTo` links these two packages. Like `IWindowAppEventTarget`,
+  an app neither implements nor calls it: it goes through `WindowAppBase`.
+- It is **not** in dependency injection. `WindowAppRenderer` creates one
+  instance per window (`AppWindowGatewayFactory.Create(windowId, manifest)`) and
+  gives it to the app through a fixed `CascadingValue<IAppWindowGateway>`, next to the execution
+  context. An app can therefore only obtain the gateway of its own
+  window: nothing lets it name another (§2 of ADR 0117, "a single
+  window targeted").
+- The cascading value is set before the app component is created: a
+  title set in `OnAppInitialized[Async]` is applied before the first render.
 
-### 2. Convention `document — App` fournie par le SDK
+### 2. `document — App` convention provided by the SDK
 
-- `IAppWindowGateway.DefaultTitle` rend le titre par défaut de la fenêtre : le nom
-  de l'app dans la langue du bureau (ADR 0104 §4), celui que
-  `WindowLaunchCoordinator.DefaultTitle(manifest)` donne à une nouvelle fenêtre.
-- `WindowAppBase.FormatWindowTitle(document, modified)` compose
-  `document — App` avec ce nom, précédé de `*` si `modified`, ou le nom seul sans
-  document. Les apps de base l'utilisent ; une app reste libre d'écrire un autre
-  titre.
+- `IAppWindowGateway.DefaultTitle` returns the window's default title: the app's name
+  in the desktop language (ADR 0104 §4), the one that
+  `WindowLaunchCoordinator.DefaultTitle(manifest)` gives to a new window.
+- `WindowAppBase.FormatWindowTitle(document, modified)` composes
+  `document — App` with this name, preceded by `*` if `modified`, or the name alone without
+  a document. The base apps use it; an app remains free to write another title.
 
-### 3. Détails du comportement
+### 3. Behavior details
 
-- `IAppWindowGateway.SetTitleAsync` rend le titre affiché une fois nettoyé ;
-  `WindowAppBase` ignore un appel qui redemande le titre déjà demandé, pour qu'une
-  app puisse l'appeler après chaque rendu sans aller-retour.
-- Le nettoyage (`WindowTitles.Sanitize`, Windowing.Abstractions) ne coupe jamais
-  une paire de substitution UTF-16 en deux ; la limite de 256 caractères compte
-  l'ellipse.
-- Une fenêtre déjà fermée n'est pas renommée : l'appel ne fait rien, comme une
-  propriété écrite sur une fenêtre X11 détruite.
-- Sans gestionnaire de fenêtres (tests, prérendu), `WindowTitle` rend le dernier
-  titre demandé, coupé aux extrémités, ou le nom du manifeste.
+- `IAppWindowGateway.SetTitleAsync` returns the displayed title once sanitized;
+  `WindowAppBase` ignores a call that asks again for the title already requested, so that an
+  app can call it after each render without a round trip.
+- Sanitizing (`WindowTitles.Sanitize`, Windowing.Abstractions) never splits
+  a UTF-16 surrogate pair in two; the 256 character limit counts the
+  ellipsis.
+- An already closed window is not renamed: the call does nothing, like a
+  property written on a destroyed X11 window.
+- Without a window manager (tests, prerendering), `WindowTitle` returns the last
+  requested title, trimmed at the ends, or the manifest name.
 
-### 4. Fenêtres détachées
+### 4. Detached windows
 
-Les surfaces suivies par `TrackDisplaySurface` prennent le titre de l'app
-seulement après un appel à `SetWindowTitleAsync` avec un titre non vide ; une
-surface suivie ensuite reçoit le titre courant. Le navigateur, qui donne à sa
-surface le titre de la page et n'appelle pas `SetWindowTitleAsync`, garde son
-comportement.
+The surfaces tracked by `TrackDisplaySurface` take the app's title
+only after a call to `SetWindowTitleAsync` with a non-empty title; a
+surface tracked afterwards receives the current title. The browser, which gives its
+surface the page title and does not call `SetWindowTitleAsync`, keeps its
+behavior.
 
-### 5. Titres déjà affichés par les apps
+### 5. Titles already displayed by apps
 
-- **Hack Paint :** le titre quitte l'app (ADR 0117 §4) ; l'indicateur
-  « ouverture… / enregistrement… » passe dans la barre d'état.
-- **Éditeur de texte :** son bandeau de menu garde le nom du document (avec `•`
-  quand il est modifié, et l'alerte d'erreur de chargement), que ses tests E2E
-  lisent ; la fenêtre porte `*notes.txt — Éditeur de texte`.
-- **Éditeur de thèmes :** la barre d'outils garde le titre, identique à celui de
-  la fenêtre.
-- **Éditeur de code :** son bandeau affiche le titre de la fenêtre ; le séparateur
-  devient le tiret cadratin et `*` marque l'onglet actif modifié
-  (`*Program.cs — src — Éditeur de code`). Les clés `Title.Folder`,
-  `Title.Document` et `Title.DocumentFolder` de ses ressources sont retirées.
-- **Explorateur de fichiers :** `/` pour la racine, le nom de la corbeille quand
-  elle est affichée.
+- **Hack Paint:** the title leaves the app (ADR 0117 §4); the
+  "opening… / saving…" indicator moves to the status bar.
+- **Text editor:** its menu banner keeps the document name (with `•`
+  when it is modified, and the load error alert), which its E2E tests
+  read; the window carries `*notes.txt — Éditeur de texte`.
+- **Theme editor:** the toolbar keeps the title, identical to that of the
+  window.
+- **Code Editor:** its banner displays the window title; the separator
+  becomes the em dash and `*` marks the modified active tab
+  (`*Program.cs — src — Éditeur de code`). The keys `Title.Folder`,
+  `Title.Document` and `Title.DocumentFolder` of its resources are removed.
+- **File explorer:** `/` for the root, the name of the trash when
+  it is displayed.
 
-### 6. Bureau mobile
+### 6. Mobile desktop
 
-`MobileShell` passe aussi la fabrique à `WindowAppRenderer` : le titre posé par
-l'app apparaît dans la liste des récents du bureau mobile comme dans la barre des
-tâches du bureau.
+`MobileShell` also passes the factory to `WindowAppRenderer`: the title set by
+the app appears in the mobile desktop's recents list as in the desktop
+taskbar.
 
-## Conséquences
+## Consequences
 
-- Surface ajoutée (dans `PublicAPI.Unshipped.txt`) : SDK Blazor
+- Surface added (in `PublicAPI.Unshipped.txt`): Blazor SDK
   (`IAppWindowGateway`, `WindowAppBase.WindowTitle`, `SetWindowTitleAsync`,
   `FormatWindowTitle`), Windowing (`SetWindowTitleCommand`,
-  `WindowTitleChangedEvent`, `WindowTitles`, `WindowRuntime.SetTitle`), plateforme
+  `WindowTitleChangedEvent`, `WindowTitles`, `WindowRuntime.SetTitle`), platform
   (`AppWindowGatewayFactory`, `WindowAppRenderer.WindowGateways`,
-  `WindowLaunchCoordinator.DefaultTitle`) et les surcharges ajoutées par trois apps
-  de base.
-- Un hôte qui compose lui-même `DesktopShell` ou `MobileShell` doit enregistrer
-  `AppWindowGatewayFactory` (fait par `AddHackerOsEcosystem`).
+  `WindowLaunchCoordinator.DefaultTitle`) and the overloads added by three base
+  apps.
+- A host that composes `DesktopShell` or `MobileShell` itself must register
+  `AppWindowGatewayFactory` (done by `AddHackerOsEcosystem`).
 
-## Options écartées
+## Rejected options
 
-- **Passerelle injectée par DI avec l'identifiant d'instance en paramètre :** une
-  app aurait pu injecter le service et nommer l'instance d'une autre app ; il
-  aurait fallu un registre des contextes pour le refuser.
-- **`InternalsVisibleTo` du SDK vers la plateforme :** lie deux paquets publiés
-  séparément et cache une interface que la plateforme doit pouvoir implémenter.
+- **Gateway injected by DI with the instance identifier as a parameter:** an
+  app could have injected the service and named another app's instance;
+  a registry of contexts would have been needed to refuse it.
+- **`InternalsVisibleTo` from the SDK to the platform:** ties two separately
+  published packages and hides an interface that the platform must be able to implement.

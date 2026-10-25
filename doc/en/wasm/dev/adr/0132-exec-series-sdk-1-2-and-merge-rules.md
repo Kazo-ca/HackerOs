@@ -1,91 +1,89 @@
-# ADR 0132 : série `exec` — ajouts du SDK 1.2, branches et barre de fusion
+# ADR 0132: `exec` series, SDK 1.2 additions, branches and merge bar
 
-## Statut
+## Status
 
-Accepté le 2026-10-18. Une question est posée à Benoit (§2, moment de la
-publication du SDK 1.2) ; ce qui suit applique la réponse recommandée en
-attendant.
+Accepted on 2026-10-18. A question is asked to Benoit (§2, timing of the
+SDK 1.2 release); what follows applies the recommended answer while awaiting it.
 
-- **Plan :** [`execution-followups-plan.md`](../plans/execution-followups-plan.md),
-  sections 5 et 8.
-- **Applique :** l'[ADR 0114](0114-sdk-1-0-freeze.md) (gel du SDK, promesse
-  SemVer) et l'[ADR 0117](0117-sdk-window-title-and-sdk-1-1.md) (publication
-  d'une version mineure dans un chantier final).
+- **Plan:** [`execution-followups-plan.md`](../plans/execution-followups-plan.md),
+  sections 5 and 8.
+- **Applies:** [ADR 0114](0114-sdk-1-0-freeze.md) (SDK freeze, SemVer
+  promise) and [ADR 0117](0117-sdk-window-title-and-sdk-1-1.md) (release
+  of a minor version in a final work item).
 
-## Contexte
+## Context
 
-Le SDK est en 1.1.0, toute sa surface dans `PublicAPI.Shipped.txt`
-(`v3.1/4-sdk-1-1`). Plusieurs chantiers `exec` ajoutent des API publiques :
-`HackWireContextAttribute` (ADR 0124), limites et nouvelles raisons de sortie
+The SDK is at 1.1.0, its whole surface in `PublicAPI.Shipped.txt`
+(`v3.1/4-sdk-1-1`). Several `exec` work items add public APIs:
+`HackWireContextAttribute` (ADR 0124), limits and new exit reasons
 (ADR 0125, 0126), `AppDefinition.OomScoreAdjust` (ADR 0126), `nice` (ADR 0127),
-`HackBackground` et son analyseur (ADR 0128). Il faut dire comment ces ajouts
-arrivent sans casser une app 1.0 ou 1.1.
+`HackBackground` and its analyzer (ADR 0128). We need to say how these additions
+arrive without breaking a 1.0 or 1.1 app.
 
-## Décision
+## Decision
 
-### 1. Ajouts seulement
+### 1. Additions only
 
-- Chaque ajout public va dans `PublicAPI.Unshipped.txt` du projet concerné,
-  dans le chantier qui l'introduit. Aucune ligne de `PublicAPI.Shipped.txt`
-  n'est retirée ni changée : une rupture demanderait un SDK 2.0, hors de cette
-  série.
-- Les valeurs ajoutées aux énumérations (`ProcessExitReason`,
-  `FileSystemErrorCode`) prennent de nouveaux nombres, à la fin.
-- L'app de compatibilité 1.0 (`Tests/fixtures/sdk-compat`) continue de se
-  charger et de tourner ; `exec/10` y ajoute une app compilée en 1.1.0.
+- Each public addition goes into the `PublicAPI.Unshipped.txt` of the project concerned,
+  in the work item that introduces it. No line of `PublicAPI.Shipped.txt`
+  is removed or changed: a break would require an SDK 2.0, outside this
+  series.
+- Values added to enumerations (`ProcessExitReason`,
+  `FileSystemErrorCode`) take new numbers, at the end.
+- The 1.0 compatibility app (`Tests/fixtures/sdk-compat`) keeps
+  loading and running; `exec/10` adds an app compiled at 1.1.0 to it.
 
-### 2. Publication du SDK 1.2 (question posée à Benoit)
+### 2. Release of SDK 1.2 (question asked to Benoit)
 
-Appliqué en attendant (recommandé) : **une seule publication, à la fin**, dans
-`exec/10-final` : `HackerOsVersion` passe à `1.2.0`, les fichiers `Unshipped`
-sont versés dans `Shipped`, [`sdk-packages.md`](../../framework/sdk-packages.md) et
-[`building-on-hackeros.md`](../../framework/building-on-hackeros.md) listent les ajouts.
-Pendant la série, `exec/base` reste en 1.1.0 avec des ajouts non publiés.
+Applied while awaiting (recommended): **a single release, at the end**, in
+`exec/10-final`: `HackerOsVersion` goes to `1.2.0`, the `Unshipped` files
+are moved into `Shipped`, [`sdk-packages.md`](../../framework/sdk-packages.md) and
+[`building-on-hackeros.md`](../../framework/building-on-hackeros.md) list the additions.
+During the series, `exec/base` stays at 1.1.0 with unreleased additions.
 
-L'autre choix : une version mineure par chantier qui ajoute une API (1.2, 1.3,
-…). Le dépôt du jeu pourrait suivre plus tôt, au prix d'une vérification
-complète et d'une app de compatibilité de plus à chaque publication.
+The other choice: a minor version per work item that adds an API (1.2, 1.3,
+…). The game repository could follow earlier, at the cost of a full verification
+and one more compatibility app at each release.
 
-### 3. Branches et fusion
+### 3. Branches and merging
 
-- Branche d'intégration `exec/base`, créée le 2026-10-18 depuis `v3.1/base`
-  (avec le plan validé venu de `web/base`).
-- Chaque chantier : branche `exec/<n>-<sujet>` depuis `exec/base`, PR vers
-  `exec/base`. Le fil fusionne lui-même quand la barre de §4 est passée
-  (choix « Oui » de Benoit sur la carte de lancement des suites, le
-  2026-10-18). **Jamais de fusion vers `main`** : Benoit décide.
-- Avant de fusionner, un chantier qui touche les mêmes fichiers qu'un chantier
-  déjà fusionné ramène `exec/base` dans sa branche.
+- Integration branch `exec/base`, created on 2026-10-18 from `v3.1/base`
+  (with the validated plan coming from `web/base`).
+- Each work item: branch `exec/<n>-<subject>` from `exec/base`, PR to
+  `exec/base`. The thread merges by itself once the bar of §4 is passed
+  (Benoit's "Yes" choice on the follow-up launch card, on
+  2026-10-18). **Never merge to `main`**: Benoit decides.
+- Before merging, a work item that touches the same files as an already merged
+  work item brings `exec/base` into its branch.
 
-### 4. Barre de fusion
+### 4. Merge bar
 
-GitHub Actions ne tourne pas dans ce dépôt (aucun exécuteur depuis août
-2026) : la barre est locale.
+GitHub Actions does not run in this repository (no runner since August
+2026): the bar is local.
 
-- Build de la solution sans avertissement nouveau ; tests unitaires et E2E du
-  périmètre ; échecs préexistants connus listés dans la PR, pas masqués.
-- `build/verify-hosts.sh` sur les trois hôtes, options du chantier activées
-  **et** coupées (plan, principe 6).
-- Publication trimmée (`build/publish-trimmed.sh` et
-  `HackerOs.TrimmedPublish.E2E.Tests`, ADR 0113) et app de compatibilité du
-  SDK, comme depuis `v3/14` et `v3/15`.
-- Docs et index à jour dans le même changement (AGENTS.md III.4).
+- Build of the solution with no new warning; unit and E2E tests of the
+  scope; known pre-existing failures listed in the PR, not hidden.
+- `build/verify-hosts.sh` on the three hosts, work item options enabled
+  **and** turned off (plan, principle 6).
+- Trimmed publish (`build/publish-trimmed.sh` and
+  `HackerOs.TrimmedPublish.E2E.Tests`, ADR 0113) and SDK compatibility app,
+  as since `v3/14` and `v3/15`.
+- Docs and indexes up to date in the same change (AGENTS.md III.4).
 
-### 5. Numéros d'ADR
+### 5. ADR numbers
 
-Ce chantier a pris 0124 à 0132 et réserve **0133** à la décision de l'essai
-de rendu en worker (ADR 0129). Un chantier qui doit consigner des ajustements
-de mise en œuvre prend le prochain numéro libre que le coordinateur lui
-réserve.
+This work item took 0124 to 0132 and reserves **0133** for the decision on the
+worker rendering trial (ADR 0129). A work item that must record implementation
+adjustments takes the next free number that the coordinator reserves for it.
 
-## Conséquences
+## Consequences
 
-- `exec/10-final` fait la publication du SDK 1.2 en plus de la vérification
-  finale et des documents.
-- Le dépôt du jeu reste sur 1.1.0 jusqu'à cette publication.
+- `exec/10-final` does the SDK 1.2 release in addition to the final verification
+  and the documents.
+- The game repository stays on 1.1.0 until this release.
 
-## Références
+## References
 
-- ADR 0098, 0113, 0114, 0117, 0124 à 0131.
+- ADR 0098, 0113, 0114, 0117, 0124 to 0131.
 - [`sdk-packages.md`](../../framework/sdk-packages.md),
   [`building-on-hackeros.md`](../../framework/building-on-hackeros.md).

@@ -1,90 +1,90 @@
-# Agent d'authentification de l'OS
+# OS authentication agent
 
-## Objet
+## Purpose
 
-Certaines opérations demandent un administrateur **en plus** de la capacité de
-l'app : désinstaller une app pour tous les utilisateurs aujourd'hui, et plus
-tard changer la politique de sécurité ou réinitialiser la machine (ADR 0056).
-Comme `polkit` sous Linux, l'app ne voit jamais le mot de passe (ADR 0055,
-section 5) :
+Some operations require an administrator **in addition to** the app's
+capability: uninstalling an app for all users today, and later
+changing the security policy or resetting the machine (ADR 0056).
+Like `polkit` on Linux, the app never sees the password (ADR 0055,
+section 5):
 
-1. l'app appelle une API du SDK, sans identifiants (par exemple
-   `HackAppManagement.UninstallAsync(id, HackInstallScope.Machine)`) ;
-2. la passerelle vérifie la capacité (`apps.manage`), puis demande à l'agent de
-   confirmer un administrateur ;
-3. l'agent affiche sa propre fenêtre, dessinée par la plateforme au-dessus de
-   toutes les fenêtres : l'opération en clair, l'app, l'utilisateur qui la
-   demande, un nom d'administrateur et un mot de passe ;
-4. chaque essai passe par `IAdminElevationVerifier`, le vérificateur de `sudo`
-   (ADR 0042), et l'issue est écrite dans `/var/log/auth.log` ;
-5. si un administrateur s'est authentifié, l'OS fait l'opération lui-même, dans
-   un contexte système audité ; sinon la passerelle lève
+1. the app calls an SDK API, without credentials (for example
+   `HackAppManagement.UninstallAsync(id, HackInstallScope.Machine)`);
+2. the gateway checks the capability (`apps.manage`), then asks the agent to
+   confirm an administrator;
+3. the agent shows its own window, drawn by the platform above
+   all windows: the operation in plain language, the app, the user who is
+   asking, an administrator name and a password;
+4. each attempt goes through `IAdminElevationVerifier`, the `sudo` verifier
+   (ADR 0042), and the outcome is written to `/var/log/auth.log`;
+5. if an administrator authenticated, the OS performs the operation itself, in
+   an audited system context; otherwise the gateway throws
    `HackUnauthorizedAccessException`.
 
-Un processus lancé par `sudo` (`IsRootElevated`) agit déjà en root : l'agent ne
-demande rien et le journal porte `via=sudo`.
+A process launched by `sudo` (`IsRootElevated`) already acts as root: the agent does not
+ask for anything and the log carries `via=sudo`.
 
 ## Architecture
 
-| Élément | Projet | Rôle |
+| Element | Project | Role |
 |---|---|---|
-| `IAdministratorAuthenticationAgent`, `AdministratorAuthenticationRequest`, `AdministratorAuthenticationResult` | `Platform/HackerOs.Platform.Core/Elevation` | contrat appelé par les passerelles |
-| `AdministratorAuthenticationAgent` | idem | implémentation : root direct, trois essais, journal |
-| `IAdministratorAuthenticationPrompt`, `AdministratorAuthenticationPromptRequest`, `AdministratorAuthenticationAttempt` | idem | surface qui montre la demande ; elle ne décide rien |
-| `AdministratorAuthenticationBroker` | `Platform/HackerOs.Platform.Blazor/Security` | file d'attente des demandes, implémente `IAdministratorAuthenticationPrompt` |
-| `AdministratorAuthenticationOverlay` | idem | fenêtre « bureau sécurisé » rendue par `DesktopShell` et `MobileShell` |
+| `IAdministratorAuthenticationAgent`, `AdministratorAuthenticationRequest`, `AdministratorAuthenticationResult` | `Platform/HackerOs.Platform.Core/Elevation` | contract called by the gateways |
+| `AdministratorAuthenticationAgent` | same | implementation: direct root, three attempts, log |
+| `IAdministratorAuthenticationPrompt`, `AdministratorAuthenticationPromptRequest`, `AdministratorAuthenticationAttempt` | same | surface that shows the request; it decides nothing |
+| `AdministratorAuthenticationBroker` | `Platform/HackerOs.Platform.Blazor/Security` | request queue, implements `IAdministratorAuthenticationPrompt` |
+| `AdministratorAuthenticationOverlay` | same | "secure desktop" window rendered by `DesktopShell` and `MobileShell` |
 
-Enregistrement dans l'hôte Ecosystem (`EcosystemServiceCollectionExtensions`) :
-le courtier et l'agent sont `Scoped`, comme la fenêtre d'approbation des
-capacités dangereuses. L'agent est passé à `AppExecutionContextFactory` par
-`AppCatalogGatewayServices`, résolu à la demande (dépendance circulaire avec
-l'orchestrateur sinon).
+Registration in the Ecosystem host (`EcosystemServiceCollectionExtensions`):
+the broker and the agent are `Scoped`, like the approval window for
+dangerous capabilities. The agent is passed to `AppExecutionContextFactory` by
+`AppCatalogGatewayServices`, resolved on demand (otherwise there is a circular dependency with
+the orchestrator).
 
-## Comportement
+## Behavior
 
-- **Pas de surface** (aucun shell rendu, hôte sans interface) : refus
-  immédiat, raison `unavailable`.
-- **Trois essais** au plus, comme la fenêtre d'approbation de l'ADR 0049 ; au
-  troisième échec la fenêtre se ferme, raison `too-many-attempts`, et les
-  essais suivants sont refusés sans vérification.
-- **Annuler** (**Cancel** dans une session anglaise : la fenêtre suit la
-  langue de la session, ADR 0104), Échap, ou la fermeture du shell : raison
-  `cancelled`, rien n'est écrit.
-- **Préremplissage** : le nom de l'utilisateur de la session s'il est
-  administrateur. Il retape quand même son mot de passe (ADR 0049, D24). Un
-  autre compte administrateur peut répondre, comme avec `sudo`.
-- **La fenêtre ne peut pas forger une approbation** : seul un essai vérifié par
-  l'agent compte, quoi que la surface renvoie.
-- **Clé d'accès** (ADR 0168 §4) : quand l'hôte branche
-  `AdministratorAuthenticationAgent.PasskeyVerifier`, la fenêtre montre
-  « Utiliser une clé d'accès » ; `AdminElevationVerifier.VerifyWithPasskeyAsync`
-  vérifie une clé d'accès du compte saisi (raison `no-passkey` s'il n'en a pas).
-  Une demande du navigateur fermée (`passkey-cancelled`) ou un navigateur sans
-  WebAuthn (`passkey-unsupported`) ne compte pas comme un essai raté.
+- **No surface** (no shell rendered, headless host): immediate
+  refusal, reason `unavailable`.
+- **Three attempts** at most, like the approval window of ADR 0049; on
+  the third failure the window closes, reason `too-many-attempts`, and later
+  attempts are refused without verification.
+- **Cancel** (**Cancel** in an English session: the window follows the
+  session language, ADR 0104), Escape, or closing the shell: reason
+  `cancelled`, nothing is written.
+- **Prefill**: the session user's name if they are an
+  administrator. They still retype their password (ADR 0049, D24). Another
+  administrator account can answer, as with `sudo`.
+- **The window cannot forge an approval**: only an attempt verified by the
+  agent counts, whatever the surface returns.
+- **Passkey** (ADR 0168 section 4): when the host wires
+  `AdministratorAuthenticationAgent.PasskeyVerifier`, the window shows
+  "Use a passkey"; `AdminElevationVerifier.VerifyWithPasskeyAsync`
+  verifies a passkey of the entered account (reason `no-passkey` if it has none).
+  A closed browser prompt (`passkey-cancelled`) or a browser without
+  WebAuthn (`passkey-unsupported`) does not count as a failed attempt.
 
-### Journal `/var/log/auth.log`
+### Log `/var/log/auth.log`
 
-Action `admin.authenticate`, une entrée par essai et une pour l'échec final :
+Action `admin.authenticate`, one entry per attempt and one for the final failure:
 
-| Propriété | Contenu |
+| Property | Content |
 |---|---|
-| `app` | id de l'app qui demande |
-| `operation` | id stable de l'opération : `apps.uninstall.machine`, `apps.reinstall.machine`, `permissions.policy`, `permissions.machine-decision`, `system.reboot`, `system.factory-reset`, `users.password-reset`, `users.password-delete`, `users.add`, `users.delete` |
-| `requestedBy` | login de l'utilisateur de la session |
-| `admin` | login saisi (ou `root`, ou `-`) |
-| `outcome` | `success` ou `failure:<raison>` |
-| `via` | `sudo` quand le processus était déjà root |
+| `app` | id of the requesting app |
+| `operation` | stable id of the operation: `apps.uninstall.machine`, `apps.reinstall.machine`, `permissions.policy`, `permissions.machine-decision`, `system.reboot`, `system.factory-reset`, `users.password-reset`, `users.password-delete`, `users.add`, `users.delete` |
+| `requestedBy` | login of the session user |
+| `admin` | login entered (or `root`, or `-`) |
+| `outcome` | `success` or `failure:<reason>` |
+| `via` | `sudo` when the process was already root |
 
-Le mot de passe n'est jamais journalisé.
+The password is never logged.
 
-## Utilisation par une passerelle
+## Use by a gateway
 
 ```csharp
 AdministratorAuthenticationResult auth = await agent.AuthenticateAsync(
     new AdministratorAuthenticationRequest(
         callerManifest,
-        "Uninstall Calculator for all users",   // affiché
-        "apps.uninstall.machine",                // journalisé
+        "Uninstall Calculator for all users",   // displayed
+        "apps.uninstall.machine",                // logged
         principal,
         isRootElevated),
     cancellationToken);
@@ -92,48 +92,48 @@ if (!auth.Succeeded)
 {
     throw new HackUnauthorizedAccessException($"Administrator authentication failed ({auth.FailureReason}).");
 }
-// L'OS agit ensuite lui-même, en contexte système.
+// The OS then acts itself, in a system context.
 ```
 
-`AppManagementGateway` (`Platform/HackerOs.Platform.Core/Execution`) est le
-premier utilisateur. Le chantier `4-sdk-system-admin` le réutilise tel quel
-par `AdministratorGate` (`Platform/HackerOs.Platform.Core/Administration`) :
-`AppPermissionAdministrationGateway` (politique et décisions machine) et
-`AppSystemPowerGateway` (redémarrage, réinitialisation). Voir
+`AppManagementGateway` (`Platform/HackerOs.Platform.Core/Execution`) is the
+first user. The work item `4-sdk-system-admin` reuses it as is
+through `AdministratorGate` (`Platform/HackerOs.Platform.Core/Administration`):
+`AppPermissionAdministrationGateway` (policy and machine decisions) and
+`AppSystemPowerGateway` (reboot, reset). See
 [`system-administration.md`](../framework/system-administration.md).
 
-## Décisions
+## Decisions
 
-- **Une fenêtre distincte** de celle des capacités dangereuses, de la même
-  famille visuelle (bandeau rouge, voile, pied « auth.log ») : l'une approuve
-  des capacités pour une app, l'autre autorise une seule opération.
-- **L'OS écrit lui-même après l'authentification** au lieu d'élargir les droits
-  de l'app : l'app ne reçoit aucun ticket réutilisable, comme `pkexec` qui
-  lance l'assistant en root.
-- **Mode texte du terminal non couvert ici.** L'ADR 0055 demande une saisie en
-  mode texte quand l'opération part d'un terminal. Le terminal ne dispose pas
-  encore d'une invite d'identifiants fournie par l'appelant : elle arrive avec
-  `HackCredentialPrompt` (chantier `4-sdk-shell-host`). D'ici là, une commande
-  qui demande un administrateur voit la fenêtre du bureau, et `sudo` reste le
-  moyen texte d'agir en root.
+- **A separate window** from the one for dangerous capabilities, in the same
+  visual family (red banner, veil, "auth.log" footer): one approves
+  capabilities for an app, the other authorizes a single operation.
+- **The OS writes itself after authentication** instead of widening the app's
+  rights: the app receives no reusable ticket, like `pkexec`, which
+  launches the helper as root.
+- **Terminal text mode not covered here.** ADR 0055 asks for text-mode input
+  when the operation starts from a terminal. The terminal does not yet have
+  a caller-supplied credentials prompt: it arrives with
+  `HackCredentialPrompt` (work item `4-sdk-shell-host`). Until then, a command
+  that asks for an administrator sees the desktop window, and `sudo` remains the
+  text way to act as root.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Elevation/AdministratorAuthenticationAgentTests.cs` :
-  root sans demande, absence de surface, essai faux puis juste, trois échecs,
-  surface qui tente de forger une approbation, demande de clé d'accès fermée
-  qui ne coûte pas d'essai puis clé vérifiée, pas de bouton sans vérificateur.
-- `Tests/HackerOs.Platform.Core.Tests/Execution/AppCatalogGatewayTests.cs` :
-  portée machine refusée ou acceptée, app système refusée avant toute demande,
-  `sudo` sans demande.
-- `Tests/HackerOs.Platform.Blazor.Tests/Security/AdministratorAuthenticationOverlayTests.cs` :
-  rendu de la fenêtre et comportement du courtier.
+- `Tests/HackerOs.Platform.Core.Tests/Elevation/AdministratorAuthenticationAgentTests.cs`:
+  root without a request, no surface, wrong attempt then correct one, three failures,
+  surface that tries to forge an approval, closed passkey request
+  that costs no attempt then verified key, no button without a verifier.
+- `Tests/HackerOs.Platform.Core.Tests/Execution/AppCatalogGatewayTests.cs`:
+  machine scope refused or accepted, system app refused before any request,
+  `sudo` without a request.
+- `Tests/HackerOs.Platform.Blazor.Tests/Security/AdministratorAuthenticationOverlayTests.cs`:
+  window rendering and broker behavior.
 
-## Liste des tâches (`rebuild/4-sdk-user-and-apps`)
+## Task list (`rebuild/4-sdk-user-and-apps`)
 
-- [x] Contrats et implémentation de l'agent dans Platform Core.
-- [x] Courtier et fenêtre dans Platform Blazor, rendus par les deux shells.
-- [x] Enregistrement dans l'hôte Ecosystem et passage à la fabrique de contextes.
-- [x] Utilisation par `HackAppManagement` pour la portée machine.
-- [x] Tests et documentation.
-- [ ] Mode texte dans le terminal (avec `HackCredentialPrompt`, `4-sdk-shell-host`).
+- [x] Agent contracts and implementation in Platform Core.
+- [x] Broker and window in Platform Blazor, rendered by both shells.
+- [x] Registration in the Ecosystem host and passing to the context factory.
+- [x] Use by `HackAppManagement` for the machine scope.
+- [x] Tests and documentation.
+- [ ] Text mode in the terminal (with `HackCredentialPrompt`, `4-sdk-shell-host`).

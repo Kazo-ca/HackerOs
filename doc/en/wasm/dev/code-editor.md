@@ -1,190 +1,179 @@
-# Éditeur de code
+# Code editor
 
-`Apps/System/HackerOs.Apps.CodeEditor` (`org.hackeros.code-editor`) : éditeur
-de code façon VS Code, sur Monaco 0.55 (ADR 0020) et disposé en atelier
-(ADR 0062), avec un dock en bas (ADR 0063). Il ouvre des fichiers et des
-dossiers du système de fichiers virtuel, cherche dans tout un dossier, et
-embarque les terminaux de l'app Terminal.
+`Apps/System/HackerOs.Apps.CodeEditor` (`org.hackeros.code-editor`): a
+VS Code-style code editor, on Monaco 0.55 (ADR 0020) and laid out as a
+workbench (ADR 0062), with a bottom dock (ADR 0063). It opens files and
+folders of the virtual filesystem, searches across a whole folder, and embeds
+the terminals of the Terminal app.
 
-L'ancienne documentation (passage de CodeMirror à Monaco, preuves d'août 2026)
-est archivée dans [`old/code-editor.md`](old/code-editor.md).
+The old documentation (switch from CodeMirror to Monaco, August 2026 evidence)
+is archived in [`old/code-editor.md`](old/code-editor.md).
 
-## Fonctions
+## Features
 
-| Domaine | Ce que l'utilisateur fait |
+| Area | What the user does |
 | --- | --- |
-| Dossier | File › Open Folder… (ou le bouton de l'explorateur vide) ; l'arbre du dossier s'affiche dans la barre latérale ; File › Close Folder. |
-| Explorateur | Un clic montre un fichier sans quitter l'arbre (flèches, Suppr, F2 restent à l'arbre) ; double-clic ou Entrée l'ouvre et donne le focus à l'éditeur. Boutons « New File… », « New Folder… », « Refresh » ; le nom se tape en place dans le dossier sélectionné. L'arbre est le contrôle de fichiers de l'OS (`HackFileView` en mode arbre, fourni par l'explorateur, ADR 0155) : son menu est celui de l'OS (Ouvrir, Ouvrir avec, Couper, Copier, Coller dans le dossier, Renommer, Mettre à la corbeille, Supprimer définitivement, Propriétés), auquel l'éditeur ajoute New File…, New Folder…, Find in Folder… et Open in Integrated Terminal par `ContextMenuOpening`. Glisser-déposer, presse-papiers, corbeille et erreurs (vers la barre d'état) sont ceux du contrôle, avec la poignée du dossier choisi (`SelectedResource`). |
-| Onglets | Plusieurs fichiers ouverts, chacun avec son historique d'annulation, sa sélection et son défilement. Point « ● » sur un onglet modifié, croix au survol ; clic du milieu pour fermer ; nom du dossier ajouté quand deux onglets ont le même nom. Ctrl+Tab et Ctrl+Maj+Tab changent d'onglet. |
-| Recherche | Ctrl+Maj+F ou l'icône loupe : recherche dans tous les fichiers du dossier, pendant la frappe. Options casse (Aa), mot entier (ab), expression régulière (.*), « files to include » et « files to exclude » (`*.cs`, `src/**`). Résultats groupés par fichier, repliables ; un clic ouvre le fichier et sélectionne l'occurrence. Le texte sélectionné dans l'éditeur sert de recherche initiale. |
-| Ouverture rapide | Ctrl+P : liste les fichiers du dossier, filtrés en sous-suite floue (`edwin` trouve `EditorWindow.razor`), flèches et Entrée. Sans dossier ouvert, Ctrl+P ouvre la boîte « Open File ». |
-| Édition | Tout Monaco : rechercher/remplacer dans le fichier (Ctrl+F, Ctrl+H), aller à la ligne (Ctrl+G), commenter (Ctrl+/), formater, palette de commandes de Monaco (F1), multicurseur, mini-carte. View › Word Wrap (Alt+Z), Show/Hide Minimap. |
-| Enregistrement | Ctrl+S, Ctrl+Maj+S (Save As), File › Save All. Les fichiers du dossier ouvert passent par l'accès accordé au dossier. Le contenu non enregistré est sauvegardé pour récupération et restauré au prochain lancement. |
-| Dock du bas | Ctrl+J l'affiche ou le cache (il est caché, pas détruit : les shells continuent). Onglets **Status** (dossier, fichier, langage, onglets ouverts et non enregistrés, terminaux, puis journal horodaté des messages, effaçable), **Terminal** et **Problems** (vide pour l'instant). |
-| Terminal | Ctrl+` ou l'icône du bas de la barre d'activité : onglet Terminal du dock. C'est le terminal de l'app Terminal, embarqué par le contrat `hackeros.terminal` (ADR 0063) : un `hsh` par onglet (« + »), démarré dans le dossier ouvert, titre = commande en cours ou dossier, effacer, tuer. « Open in Integrated Terminal » fait un `cd` visible dans le terminal actif s'il est libre, sinon ouvre un nouveau terminal. `exit` ferme l'onglet ; le dernier cache le dock. Sans app Terminal installée, l'onglet dit pourquoi. |
-| Disposition | Barre latérale (Ctrl+B) et dock redimensionnables par glissement ; la zone Monaco prend toujours tout l'espace restant ; barre d'état avec le dernier message (un clic ouvre Status), Ln/Col, sélection, encodage, fin de ligne et langage (modifiable). Les erreurs restent aussi au-dessus de l'éditeur jusqu'à ce qu'on les ferme. |
+| Folder | File › Open Folder… (or the empty explorer's button); the folder tree appears in the sidebar; File › Close Folder. |
+| Explorer | A click shows a file without leaving the tree (arrows, Delete, F2 stay with the tree); double-click or Enter opens it and gives the focus to the editor. "New File…", "New Folder…", "Refresh" buttons; the name is typed in place in the selected folder. The tree is the OS file control (`HackFileView` in tree mode, provided by the explorer, ADR 0155): its menu is the OS one (Open, Open with, Cut, Copy, Paste into folder, Rename, Move to trash, Delete permanently, Properties), to which the editor adds New File…, New Folder…, Find in Folder… and Open in Integrated Terminal through `ContextMenuOpening`. Drag and drop, clipboard, trash and errors (to the status bar) are those of the control, with the handle of the chosen folder (`SelectedResource`). |
+| Tabs | Several open files, each with its undo history, selection and scroll. A "●" dot on a modified tab, a cross on hover; middle click to close; folder name added when two tabs have the same name. Ctrl+Tab and Ctrl+Shift+Tab switch tabs. |
+| Search | Ctrl+Shift+F or the magnifier icon: search in all files of the folder, as you type. Options: case (Aa), whole word (ab), regular expression (.*), "files to include" and "files to exclude" (`*.cs`, `src/**`). Results grouped by file, collapsible; a click opens the file and selects the occurrence. The text selected in the editor serves as the initial search. |
+| Quick open | Ctrl+P: lists the files of the folder, filtered as a fuzzy subsequence (`edwin` finds `EditorWindow.razor`), arrows and Enter. With no folder open, Ctrl+P opens the "Open File" box. |
+| Editing | All of Monaco: find/replace in the file (Ctrl+F, Ctrl+H), go to line (Ctrl+G), comment (Ctrl+/), format, Monaco command palette (F1), multicursor, minimap. View › Word Wrap (Alt+Z), Show/Hide Minimap. |
+| Saving | Ctrl+S, Ctrl+Shift+S (Save As), File › Save All. Files in the open folder go through the access granted to the folder. Unsaved content is saved for recovery and restored at the next launch. |
+| Bottom dock | Ctrl+J shows or hides it (it is hidden, not destroyed: the shells keep running). **Status** tabs (folder, file, language, open and unsaved tabs, terminals, then a timestamped, clearable message log), **Terminal** and **Problems** (empty for now). |
+| Terminal | Ctrl+` or the icon at the bottom of the activity bar: Terminal tab of the dock. It is the terminal of the Terminal app, embedded through the `hackeros.terminal` contract (ADR 0063): one `hsh` per tab ("+"), started in the open folder, title = running command or folder, clear, kill. "Open in Integrated Terminal" does a visible `cd` in the active terminal if it is idle, otherwise opens a new terminal. `exit` closes the tab; the last one hides the dock. Without the Terminal app installed, the tab says why. |
+| Layout | Sidebar (Ctrl+B) and dock resizable by dragging; the Monaco area always takes all the remaining space; status bar with the last message (a click opens Status), Ln/Col, selection, encoding, line ending and language (changeable). Errors also stay above the editor until dismissed. |
 
-Hors périmètre (ADR 0062) : compilation, exécution, « aller à la définition »,
-IntelliSense entre fichiers, contrôle de source, débogueur, extensions.
+Out of scope (ADR 0062): compilation, execution, "go to definition",
+cross-file IntelliSense, source control, debugger, extensions.
 
 ## Architecture
 
-| Élément | Rôle |
+| Element | Role |
 | --- | --- |
-| `CodeEditorWindow.razor` / `.razor.cs` / `.razor.css` | Atelier : menus, barre d'activité, barre latérale, onglets, fil d'Ariane, zone Monaco, filigrane, dock du bas (Status, Terminal par `HackEmbeddedComponent<IHackTerminal>`, Problems), barre d'état. Possède la session, l'espace de travail, la récupération et le garde de fermeture. |
-| `CodeEditorWindow.razor.js` | Module collocé : `createEditor` (Monaco + nom accessible), `attachWorkbench` (raccourcis capturés avant le navigateur et Monaco, puis `OnShortcut(nom)` ; poignées de redimensionnement qui posent `--sidebar-width` et `--panel-height` sur la racine). |
-| `CodeEditor.monaco.entry.js` → `wwwroot/monaco/monaco.bundle.js` | Thème `hackeros-dark` et `createCodeEditor` : un modèle par onglet (`showDocument`, `closeDocument`), `setLanguage`, `reveal`, `runAction`, `getSelectedText`, `setOptions`, `flush`, `markSaved`, `layout`, `focus`, `destroy` ; renvoie `OnDirtyChanged(id, modifié)` à chaque bascule, `OnEditorChanged(id, contenu)` après 400 ms sans frappe, et `OnCursorChanged(ligne, colonne, sélection)` après 60 ms. |
-| `CodeEditorSession`, `CodeEditorDocument` | Onglets et contenu en C# ; `RelocatePaths` suit un renommage de fichier ou de dossier. |
-| `CodeEditorWorkspace` | Dossier ouvert : liste des fichiers (exclusions `.git`, `.svn`, `.hg`, `node_modules`, `bin`, `obj` ; au plus 5 000), création de fichiers et de dossiers, chemins relatifs. |
-| `CodeEditorSearch.cs` | `CodeEditorTextSearch` (ligne par ligne, 1 000 occurrences par fichier, aperçu coupé autour de l'occurrence), `CodeEditorGlob`, `CodeEditorWorkspaceSearch` (5 000 occurrences au total, fichiers de plus de 1 Mio ignorés), `CodeEditorQuickOpen` (classement flou). |
-| `CodeEditorExplorer`, `CodeEditorSearchView`, `CodeEditorQuickOpenPalette`, `CodeEditorCursorStatus` | Vues de la barre latérale, boîte Ctrl+P et position du curseur, chacune avec son CSS collocé. Depuis `desk/3`, `CodeEditorExplorer` affiche `HackFileView` (plus de référence à `HackerOs.AppSdk.FileView`) : `Opening` ouvre un fichier dans un onglet (`Handled`), `SelectionChanged` le montre, `Renamed` fait suivre les onglets. |
+| `CodeEditorWindow.razor` / `.razor.cs` / `.razor.css` | Workbench: menus, activity bar, sidebar, tabs, breadcrumb, Monaco area, watermark, bottom dock (Status, Terminal through `HackEmbeddedComponent<IHackTerminal>`, Problems), status bar. Owns the session, the workspace, recovery and the close guard. |
+| `CodeEditorWindow.razor.js` | Collocated module: `createEditor` (Monaco + accessible name), `attachWorkbench` (shortcuts captured before the browser and Monaco, then `OnShortcut(name)`; resize handles that set `--sidebar-width` and `--panel-height` on the root). |
+| `CodeEditor.monaco.entry.js` → `wwwroot/monaco/monaco.bundle.js` | `hackeros-dark` theme and `createCodeEditor`: one model per tab (`showDocument`, `closeDocument`), `setLanguage`, `reveal`, `runAction`, `getSelectedText`, `setOptions`, `flush`, `markSaved`, `layout`, `focus`, `destroy`; calls back `OnDirtyChanged(id, modified)` at each toggle, `OnEditorChanged(id, content)` after 400 ms without typing, and `OnCursorChanged(line, column, selection)` after 60 ms. |
+| `CodeEditorSession`, `CodeEditorDocument` | Tabs and content in C#; `RelocatePaths` follows a file or folder rename. |
+| `CodeEditorWorkspace` | Open folder: file list (exclusions `.git`, `.svn`, `.hg`, `node_modules`, `bin`, `obj`; at most 5,000), creation of files and folders, relative paths. |
+| `CodeEditorSearch.cs` | `CodeEditorTextSearch` (line by line, 1,000 occurrences per file, preview cut around the occurrence), `CodeEditorGlob`, `CodeEditorWorkspaceSearch` (5,000 occurrences in total, files over 1 MiB ignored), `CodeEditorQuickOpen` (fuzzy ranking). |
+| `CodeEditorExplorer`, `CodeEditorSearchView`, `CodeEditorQuickOpenPalette`, `CodeEditorCursorStatus` | Sidebar views, Ctrl+P box and cursor position, each with its collocated CSS. Since `desk/3`, `CodeEditorExplorer` displays `HackFileView` (no more reference to `HackerOs.AppSdk.FileView`): `Opening` opens a file in a tab (`Handled`), `SelectionChanged` shows it, `Renamed` makes the tabs follow. |
 
-Le contenu de chaque fichier appartient à `CodeEditorDocument` (C#). Monaco
-garde un modèle par onglet pour l'historique et la position ; quand un onglet
-devient actif, `showDocument` ne remplace le texte du modèle que s'il diffère
-de celui du document (rechargement, récupération).
+The content of each file belongs to `CodeEditorDocument` (C#). Monaco keeps a
+model per tab for the history and position; when a tab becomes active,
+`showDocument` replaces the model's text only if it differs from the
+document's (reload, recovery).
 
-Une touche ne coûte rien côté .NET. Monaco garde le texte et compare la
-version de son modèle à celle du dernier enregistrement
-(`getAlternativeVersionId`) : l'état « modifié » n'est envoyé que quand il
-bascule (`OnDirtyChanged`), et le texte entier n'est envoyé qu'après 400 ms
-sans frappe (`OnEditorChanged`). Avant d'enregistrer, de fermer un onglet ou
-de chercher dans le dossier, la fenêtre appelle `flush` pour recevoir le texte
-en attente ; après un enregistrement, `markSaved` déplace la référence de
-Monaco. La copie de récupération est écrite 1,5 s après la dernière
-modification. Avant, chaque touche envoyait tout le fichier à .NET puis
-relançait l'écriture de récupération : coller 1 000 lignes figeait la page
-133 s dans Chromium sans tête, contre 40 s maintenant (le reste est Monaco
-lui-même), et la frappe dans ce fichier coûte environ 23 % de script en moins.
-La position du curseur est affichée par `CodeEditorCursorStatus`, qui se
-redessine seul.
+A keystroke costs nothing on the .NET side. Monaco keeps the text and compares
+its model's version to that of the last save (`getAlternativeVersionId`): the
+"modified" state is only sent when it toggles (`OnDirtyChanged`), and the
+whole text is only sent after 400 ms without typing (`OnEditorChanged`).
+Before saving, closing a tab or searching the folder, the window calls
+`flush` to receive the pending text; after a save, `markSaved` moves Monaco's
+reference. The recovery copy is written 1.5 s after the last modification.
+Before, each keystroke sent the whole file to .NET and then restarted the
+recovery write: pasting 1,000 lines froze the page for 133 s in headless
+Chromium, versus 40 s now (the rest is Monaco itself), and typing in that
+file costs about 23% less script. The cursor position is displayed by
+`CodeEditorCursorStatus`, which redraws on its own.
 
-Chaque modification annule l'écriture de récupération en attente. Le système
-de fichiers répond alors `Cancelled`, que `CodeEditorRecoveryStore` et
-`CodeEditorFileService` traduisent en statut `Cancelled` sans texte d'erreur :
-la fenêtre ne l'affiche jamais. Avant, ce code brut arrivait dans le bandeau
-d'erreur (« Cancelled ») pendant la frappe.
+Each modification cancels the pending recovery write. The filesystem then
+answers `Cancelled`, which `CodeEditorRecoveryStore` and
+`CodeEditorFileService` translate to a `Cancelled` status without error text:
+the window never displays it. Before, this raw code reached the error banner
+("Cancelled") during typing.
 
-Arrêt demandé par l'OS (ADR 0069 : déconnexion, `kill`, « End task ») :
-`OnAppStopRequestedAsync` annule l'attente de 1,5 s et écrit tout de suite la
-copie de récupération si un onglet est modifié ; l'OS attend cette écriture
-avant de fermer la fenêtre. La recherche dans le dossier et le parcours du
-dossier appellent `HackProcess.CheckpointAsync` entre deux fichiers ou
-dossiers : la page reste fluide et la recherche s'arrête sur une demande
-d'arrêt.
+Stop requested by the OS (ADR 0069: logout, `kill`, "End task"):
+`OnAppStopRequestedAsync` cancels the 1.5 s wait and immediately writes the
+recovery copy if a tab is modified; the OS waits for this write before closing
+the window. The folder search and the folder walk call
+`HackProcess.CheckpointAsync` between two files or folders: the page stays
+fluid and the search stops on a stop request.
 
-Depuis `exec/5` (ADR 0140), la vue Recherche lance la recherche comme **tâche
-en arrière-plan** (`CodeEditorWorkspaceSearch.SearchInBackgroundAsync`,
-[`background-jobs.md`](../framework/background-jobs.md)) : la fenêtre liste le dossier,
-puis le processus enfant `code-editor:search` lit chaque fichier et applique le
-motif, dans un Web Worker quand l'hôte en a. Les onglets non enregistrés
-passent dans l'entrée de la tâche ; un motif invalide est signalé tout de suite,
-sans processus. Une nouvelle frappe annule la tâche précédente (code 130).
-`SearchAsync` reste la recherche en ligne, partagée avec la tâche
-(`SearchFilesAsync`) et utilisée par les tests.
+Since `exec/5` (ADR 0140), the Search view launches the search as a
+**background task** (`CodeEditorWorkspaceSearch.SearchInBackgroundAsync`,
+[`background-jobs.md`](../framework/background-jobs.md)): the window lists the
+folder, then the child process `code-editor:search` reads each file and applies
+the pattern, in a Web Worker when the host has one. Unsaved tabs go into the
+task input; an invalid pattern is reported immediately, without a process. A
+new keystroke cancels the previous task (code 130). `SearchAsync` remains the
+inline search, shared with the task (`SearchFilesAsync`) and used by the tests.
 
-Entrée dans la boîte Ctrl+P et dans la zone de création de l'explorateur
-agit au relâchement de la touche : l'éditeur reprend le focus quand la boîte
-se ferme, et un traitement à l'appui laisserait la fin de la frappe insérer
-un saut de ligne dans le fichier.
+Enter in the Ctrl+P box and in the explorer's creation field acts on key
+release: the editor takes the focus back when the box closes, and handling on
+key down would let the end of the keystroke insert a line break in the file.
 
-## Raccourcis
+## Shortcuts
 
-| Raccourci | Action |
+| Shortcut | Action |
 | --- | --- |
-| Ctrl+N / Ctrl+O | Nouveau fichier texte / ouvrir un fichier |
-| Ctrl+S / Ctrl+Maj+S | Enregistrer / enregistrer sous |
-| Ctrl+W | Fermer l'onglet |
-| Ctrl+P | Aller au fichier (ouverture rapide) |
-| Ctrl+Maj+F / Ctrl+Maj+E | Vue Recherche / vue Explorateur |
-| Ctrl+B | Afficher ou masquer la barre latérale |
-| Ctrl+` | Afficher ou masquer le terminal |
-| Ctrl+J | Afficher ou masquer le dock du bas |
-| Ctrl+Tab / Ctrl+Maj+Tab | Onglet suivant / précédent |
-| Alt+Z | Retour à la ligne automatique |
-| F1, Ctrl+F, Ctrl+H, Ctrl+G, Ctrl+/ | Monaco (palette, rechercher, remplacer, aller à la ligne, commenter) |
+| Ctrl+N / Ctrl+O | New text file / open a file |
+| Ctrl+S / Ctrl+Shift+S | Save / save as |
+| Ctrl+W | Close the tab |
+| Ctrl+P | Go to file (quick open) |
+| Ctrl+Shift+F / Ctrl+Shift+E | Search view / Explorer view |
+| Ctrl+B | Show or hide the sidebar |
+| Ctrl+` | Show or hide the terminal |
+| Ctrl+J | Show or hide the bottom dock |
+| Ctrl+Tab / Ctrl+Shift+Tab | Next / previous tab |
+| Alt+Z | Automatic word wrap |
+| F1, Ctrl+F, Ctrl+H, Ctrl+G, Ctrl+/ | Monaco (palette, find, replace, go to line, comment) |
 
-Dans le terminal, seuls Ctrl+` et Ctrl+J sont interceptés ; les autres touches
-vont au shell. Chrome garde Ctrl+N, Ctrl+W et Ctrl+T pour lui tant que
-HackerOS n'est pas installé en PWA ; chaque commande a aussi son entrée de
-menu.
+In the terminal, only Ctrl+` and Ctrl+J are intercepted; the other keys go to
+the shell. Chrome keeps Ctrl+N, Ctrl+W and Ctrl+T for itself as long as
+HackerOS is not installed as a PWA; each command also has its menu entry.
 
-## Mettre à jour Monaco
+## Updating Monaco
 
-Comme avant : modifier `package.json`, puis dans
-`Apps/System/HackerOs.Apps.CodeEditor` lancer `npm ci && npm run build`, et
-versionner `wwwroot/monaco/`. Le build .NET n'exécute pas npm.
+As before: modify `package.json`, then in
+`Apps/System/HackerOs.Apps.CodeEditor` run `npm ci && npm run build`, and
+version `wwwroot/monaco/`. The .NET build does not run npm.
 
-## Tâches
+## Tasks
 
-- [x] Reproduire les défauts (zone d'édition réduite à une ligne, pas de
-  création dans l'arbre, onglets qui perdent leur état).
-- [x] Monaco : un modèle par onglet, curseur, `reveal`, actions, options,
-  thème `hackeros-dark`.
-- [x] `CodeEditorWorkspace` : liste des fichiers, création, chemins relatifs.
-- [x] Recherche dans le dossier (casse, mot entier, regex, globs, contenu non
-  enregistré) et ouverture rapide floue.
-- [x] Recherche dans le dossier en tâche `HackBackground` (`exec/5`, ADR 0140).
-- [x] Vues Explorateur (création en place, menu contextuel, corbeille) et
-  Recherche ; boîte Ctrl+P.
-- [x] Atelier : menus, barre d'activité, barre latérale et terminal
-  redimensionnables, fil d'Ariane, filigrane, barre d'état Ln/Col.
-- [x] Raccourcis de VS Code capturés par le module collocé.
-- [x] Onglets qui suivent un renommage ; Save All ; Close All.
-- [x] `FileView` : le clic droit sur un élément n'ouvre plus le menu du fond.
-- [x] Tests : espace de travail, recherche, globs, ouverture rapide,
-  déplacement des onglets.
-- [x] Essai dans Chromium : dossier, création, recherche, Ctrl+P, Ctrl+S,
-  suppression, menu contextuel, redimensionnement.
+- [x] Reproduce the defects (editing area reduced to one line, no creation in
+  the tree, tabs that lose their state).
+- [x] Monaco: one model per tab, cursor, `reveal`, actions, options,
+  `hackeros-dark` theme.
+- [x] `CodeEditorWorkspace`: file list, creation, relative paths.
+- [x] Folder search (case, whole word, regex, globs, unsaved content) and
+  fuzzy quick open.
+- [x] Folder search as a `HackBackground` task (`exec/5`, ADR 0140).
+- [x] Explorer views (in-place creation, context menu, trash) and Search;
+  Ctrl+P box.
+- [x] Workbench: menus, activity bar, resizable sidebar and terminal,
+  breadcrumb, watermark, Ln/Col status bar.
+- [x] VS Code shortcuts captured by the collocated module.
+- [x] Tabs that follow a rename; Save All; Close All.
+- [x] `FileView`: right-clicking an item no longer opens the background menu.
+- [x] Tests: workspace, search, globs, quick open, tab relocation.
+- [x] Trial in Chromium: folder, creation, search, Ctrl+P, Ctrl+S, deletion,
+  context menu, resizing.
 
-Lenteur et dock (ADR 0063) :
+Slowness and dock (ADR 0063):
 
-- [x] Mesurer la frappe et le collage dans un fichier de 1 000 lignes, avant
-  et après.
-- [x] Ne plus envoyer le texte à .NET à chaque touche (`OnDirtyChanged`,
-  envoi après une pause, `flush`, `markSaved`).
-- [x] Dock du bas : Status (faits et journal), Terminal, Problems ; Ctrl+J.
-- [x] Terminal de l'app Terminal embarqué par contrat, « Open in Integrated
-  Terminal ».
-- [x] Essai dans Chromium : terminal embarqué, `cd`, titre, onglets, `exit`,
+- [x] Measure typing and pasting in a 1,000-line file, before and after.
+- [x] Stop sending the text to .NET on every keystroke (`OnDirtyChanged`,
+  send after a pause, `flush`, `markSaved`).
+- [x] Bottom dock: Status (facts and log), Terminal, Problems; Ctrl+J.
+- [x] Terminal of the Terminal app embedded by contract, "Open in Integrated
+  Terminal".
+- [x] Trial in Chromium: embedded terminal, `cd`, title, tabs, `exit`,
   Ctrl+J, Status, Problems.
-- [x] Une écriture annulée (récupération remplacée par une frappe plus
-  récente, fenêtre fermée) n'est plus affichée comme une erreur.
+- [x] A cancelled write (recovery replaced by a more recent keystroke, window
+  closed) is no longer displayed as an error.
 
-## Points revérifiés (v3/11, ADR 0103 §3)
+## Re-verified points (v3/11, ADR 0103 §3)
 
-Les deux points encore ouverts dans l'ancien suivi (P4-W3-002, P4-W3-007) ont
-été revus dans le code le 2026-10-17 :
+The two points still open in the old tracking (P4-W3-002, P4-W3-007) were
+reviewed in the code on 2026-10-17:
 
-- **Ressources hors ligne.** Monaco, ses workers (`editor`, `json`, `css`,
-  `html`, `ts`) et sa police `codicon.ttf` sont livrés dans
-  `wwwroot/monaco/` ; aucun CDN. Les workers sont résolus par
-  `new URL(…, import.meta.url)`, donc sous `_content/…` comme le module.
-  **Corrigé :** le service worker publié ne mettait pas les polices en
-  cache (`.ttf` absent de `offlineAssetsInclude`), ce qui faisait
-  disparaître les icônes de Monaco hors ligne. `.ttf`, `.woff2`, `.svg` et
-  `.webp` y sont ajoutés.
-- **Gros fichiers.** Un document est limité à 1 MiB
-  (`CodeEditorDocument.MaxDocumentBytes`) à l'ouverture, à l'écriture et
-  dans la recherche (les fichiers plus gros sont ignorés) ; la récupération
-  est limitée à 8 MiB et l'espace de travail à 5 000 fichiers. Le refus
-  donne un message clair au lieu de figer l'onglet.
-- **Nettoyage des workers.** `DisposeAsync` appelle `destroy` (abonnements,
-  éditeur, tous les modèles, observateur ARIA) puis `dispose` de l'atelier
-  (écouteurs clavier, séparateurs) et libère le module. Sans modèle ouvert,
-  Monaco arrête lui-même ses workers de langage après sa période d'inactivité ;
-  ils sont partagés entre fenêtres, donc on ne les termine pas de force.
-- Reste vrai : la preuve de bout en bout dans une sortie publiée, hors ligne
-  et chargée à la demande n'est pas automatisée (les tests E2E tournent sur
-  l'hôte de développement).
+- **Offline resources.** Monaco, its workers (`editor`, `json`, `css`,
+  `html`, `ts`) and its `codicon.ttf` font are shipped in `wwwroot/monaco/`;
+  no CDN. The workers are resolved by `new URL(…, import.meta.url)`, hence
+  under `_content/…` like the module. **Fixed:** the published service worker
+  did not cache fonts (`.ttf` missing from `offlineAssetsInclude`), which made
+  Monaco's icons disappear offline. `.ttf`, `.woff2`, `.svg` and `.webp` are
+  added there.
+- **Large files.** A document is limited to 1 MiB
+  (`CodeEditorDocument.MaxDocumentBytes`) at opening, at writing and in the
+  search (larger files are ignored); recovery is limited to 8 MiB and the
+  workspace to 5,000 files. The refusal gives a clear message instead of
+  freezing the tab.
+- **Worker cleanup.** `DisposeAsync` calls `destroy` (subscriptions, editor,
+  all models, ARIA observer) then `dispose` of the workbench (keyboard
+  listeners, separators) and releases the module. With no open model, Monaco
+  itself stops its language workers after its idle period; they are shared
+  between windows, so they are not forcibly terminated.
+- Still true: the end-to-end proof in a published, offline and lazily loaded
+  output is not automated (the E2E tests run on the development host).
 
-Contrôle de fichiers de l'OS (`desk/3-file-control`, ADR 0155) :
+OS file control (`desk/3-file-control`, ADR 0155):
 
-- [x] Arbre de l'explorateur latéral sur `HackFileView` (mode arbre, sélection
-  simple, poignée du dossier choisi par `SelectedResource`).
-- [x] Entrées de l'éditeur ajoutées au menu de l'OS par `ContextMenuOpening`
-  (fond : New File…/New Folder… à la place de « Nouveau dossier » ; dossier :
-  les mêmes, Find in Folder…, Open in Integrated Terminal).
-- [x] Suppression propre à l'éditeur retirée (celle du contrôle), textes
-  `Delete.*` et `Dialog.Delete.*` retirés, erreurs du contrôle vers la barre
-  d'état.
+- [x] Side explorer tree on `HackFileView` (tree mode, single selection,
+  handle of the chosen folder through `SelectedResource`).
+- [x] Editor entries added to the OS menu through `ContextMenuOpening`
+  (background: New File…/New Folder… in place of "New folder"; folder: the
+  same, Find in Folder…, Open in Integrated Terminal).
+- [x] Editor-specific deletion removed (the control's), `Delete.*` and
+  `Dialog.Delete.*` texts removed, control errors to the status bar.

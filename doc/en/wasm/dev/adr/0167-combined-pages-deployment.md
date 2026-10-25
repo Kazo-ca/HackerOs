@@ -1,31 +1,31 @@
-# ADR 0167 : publication Pages combinée et builds indépendants
+# ADR 0167: combined Pages publication and independent builds
 
-## Statut
+## Status
 
-Accepté le 2026-10-24 à la demande de Benoit. Complète la publication PWA et
-restreint l'interception du service worker de l'ADR 0131 pour le sous-site legacy.
+Accepted on 2026-10-24 at Benoit's request. Completes the PWA publication and
+restricts the service worker interception of ADR 0131 for the legacy sub-site.
 
-## Décision
+## Decision
 
-- Dépôt public : `https://github.com/Kazo-ca/HackerOs`.
-- Release WASM : `2.0.3`, via la version unique existante de l'ADR 0098.
-- Le workflow Pages publie un seul artefact : PWA autonome à `/`, ancien bundle
-  TypeScript à `/legacy/`, domaine `hackos.kazo.ca`.
-- Deux caches exacts, calculés sur les entrées respectives, permettent de ne
-  reconstruire que la version modifiée. Aucun cache par préfixe ; une sortie
-  absente ou évincée est reconstruite pour que l'artefact reste complet.
-- Le workflow WASM distinct continue la validation et la publication d'un
-  artefact téléchargeable, sans deuxième déploiement concurrent de Pages.
-- L'assemblage ne modifie aucun octet signé par le manifeste PWA. Le worker
-  laisse `/legacy` et `/legacy/**` au réseau, hors fallback et isolation WASM.
-- Les écrans d'information produit affichent le dépôt. Les écrans de connexion
-  et de création de compte annoncent le legacy uniquement sur le nom d'hôte
-  exact `hackos.kazo.ca`, avec des textes anglais/français.
-- Les modifications du legacy autorisées ici restent limitées à son identité,
-  son build de publication et les corrections de démarrage nécessaires à sa
-  conservation sous le nouveau chemin.
+- Public repository: `https://github.com/Kazo-ca/HackerOs`.
+- WASM release: `2.0.3`, through the existing single version of ADR 0098.
+- The Pages workflow publishes a single artifact: standalone PWA at `/`,
+  old TypeScript bundle at `/legacy/`, domain `hackos.kazo.ca`.
+- Two exact caches, computed on the respective inputs, make it possible to rebuild
+  only the modified version. No prefix cache; a missing or evicted output
+  is rebuilt so that the artifact stays complete.
+- The separate WASM workflow continues validation and publication of a
+  downloadable artifact, without a second concurrent Pages deployment.
+- The assembly modifies no byte signed by the PWA manifest. The worker
+  leaves `/legacy` and `/legacy/**` to the network, outside fallback and WASM isolation.
+- The product information screens display the repository. The login and
+  account creation screens announce the legacy site only on the exact host name
+  `hackos.kazo.ca`, with English/French texts.
+- The legacy changes authorized here remain limited to its identity,
+  its publication build and the startup fixes needed to keep it
+  under the new path.
 
-## Usage et vérification
+## Usage and verification
 
-Voir [github-pages-deployment.md](../github-pages-deployment.md) : commandes,
-conditions de cache, script d'assemblage et tests de la publication réelle.
+See [github-pages-deployment.md](../github-pages-deployment.md): commands,
+cache conditions, assembly script and tests of the real publication.

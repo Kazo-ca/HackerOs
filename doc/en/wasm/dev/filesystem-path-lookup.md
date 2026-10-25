@@ -1,87 +1,84 @@
-# Recherche des chemins du système de fichiers
+# Filesystem path lookup
 
-## But
+## Goal
 
-Trouver l'entrée d'un chemin (`/home/<user>/.config/hackeros/<doc>.config`)
-coûtait des dizaines d'allers-retours vers IndexedDB : écrire un réglage prenait
-environ 2 secondes sur un appareil lent. Ce document décrit comment un chemin est
-maintenant recherché en une requête, et comment le mesurer. Décision :
+Finding the entry for a path (`/home/<user>/.config/hackeros/<doc>.config`)
+cost dozens of round trips to IndexedDB: writing a setting took about 2
+seconds on a slow device. This document describes how a path is now looked up
+in one request, and how to measure it. Decision:
 [ADR 0090](adr/0090-filesystem-path-lookup-in-one-request.md).
 
-## Mesures
+## Measurements
 
-Hôte Ecosystem publié en Release, servi en statique, Chromium sans tête,
-profil neuf, clic sur « Mobile » dans le panneau de l'horloge (le choix est écrit
-dans `~/.config/hackeros/ui-platform-preference.config`, création du fichier
-comprise), jusqu'à l'apparition du bouton « Back » du shell mobile. Trois essais,
-2026-10-17 :
+Ecosystem host published in Release, served statically, headless Chromium,
+fresh profile, click on "Mobile" in the clock panel (the choice is written to
+`~/.config/hackeros/ui-platform-preference.config`, file creation included),
+until the mobile shell's "Back" button appears. Three runs, 2026-10-17:
 
-| | Transactions IndexedDB | Durée | Processeur ralenti ×4 (CDP) |
+| | IndexedDB transactions | Duration | CPU throttled ×4 (CDP) |
 |---|---|---|---|
-| `web/base` avant | 604 | 837 à 850 ms | 1 975 à 2 010 ms |
-| Une transaction par recherche (étape 1) | 95 | 260 à 360 ms | |
-| Parcours par le résolveur (étape 2) | 51 | 231 à 242 ms | 997 à 1 028 ms |
+| `web/base` before | 604 | 837 to 850 ms | 1,975 to 2,010 ms |
+| One transaction per lookup (step 1) | 95 | 260 to 360 ms | |
+| Walk through the resolver (step 2) | 51 | 231 to 242 ms | 997 to 1,028 ms |
 
-Le compte des transactions enveloppe `IDBDatabase.prototype.transaction` par un
-script injecté avant le chargement de la page. Le script de mesure n'est pas
-versionné ; il suit le parcours de `ClockPanelMobileToggleTests`.
+The transaction count wraps `IDBDatabase.prototype.transaction` with a script
+injected before the page loads. The measurement script is not versioned; it
+follows the flow of `ClockPanelMobileToggleTests`.
 
 ## Architecture
 
 ```
 FileSystemService.WriteAsync(path)
- ├─ FileSystemPathResolver.ResolveAsync        1 requête : StatComponentsAsync (parcours)
- ├─ AuthorizeAsync → StatAsync(path)           1 requête : resolvePath
- └─ IndexedDbFileSystemProvider.WriteAsync     1 requête : resolvePath, puis contenu et métadonnées
+ ├─ FileSystemPathResolver.ResolveAsync        1 request: StatComponentsAsync (walk)
+ ├─ AuthorizeAsync → StatAsync(path)           1 request: resolvePath
+ └─ IndexedDbFileSystemProvider.WriteAsync     1 request: resolvePath, then content and metadata
 ```
 
-| Élément | Projet | Rôle |
+| Element | Project | Role |
 |---|---|---|
-| `resolvePath` (`indexedDb.js`) | `Infrastructure.Browser/wwwroot` | lit lien puis entrée pour chaque nom dans une seule transaction en lecture seule ; rend les entrées trouvées |
-| `IndexedDbFileSystemReader.ResolveComponentsAsync` | `Infrastructure.Browser/FileSystem` | appelle `resolvePath`, convertit les entrées, signale un lien orphelin comme corruption |
-| `IndexedDbFileSystemReader.ResolveAsync` | idem | `/` : une lecture de l'entrée racine ; sinon la dernière entrée du parcours, ou `null` |
-| `IFileSystemPathWalkProvider` | `Simulation.Abstractions/FileSystem` | capacité facultative d'un fournisseur : métadonnées de chaque composant, sans suivre de lien |
-| `IndexedDbFileSystemProvider.StatComponentsAsync` | `Infrastructure.Browser/FileSystem` | l'implémente pour la racine IndexedDB |
-| `FileSystemPathResolver.TryWalkAsync` | `Platform.Core/FileSystem` | demande le parcours quand tous les préfixes sont sur le même montage ; sinon `lstat` par préfixe |
+| `resolvePath` (`indexedDb.js`) | `Infrastructure.Browser/wwwroot` | reads link then entry for each name in a single read-only transaction; returns the entries found |
+| `IndexedDbFileSystemReader.ResolveComponentsAsync` | `Infrastructure.Browser/FileSystem` | calls `resolvePath`, converts the entries, reports an orphan link as corruption |
+| `IndexedDbFileSystemReader.ResolveAsync` | same | `/`: one read of the root entry; otherwise the last entry of the walk, or `null` |
+| `IFileSystemPathWalkProvider` | `Simulation.Abstractions/FileSystem` | optional provider capability: metadata of each component, without following links |
+| `IndexedDbFileSystemProvider.StatComponentsAsync` | `Infrastructure.Browser/FileSystem` | implements it for the IndexedDB root |
+| `FileSystemPathResolver.TryWalkAsync` | `Platform.Core/FileSystem` | requests the walk when all prefixes are on the same mount; otherwise `lstat` per prefix |
 
-## Règles conservées
+## Rules kept
 
-- Le droit de traverser (`x`) de chaque répertoire intermédiaire, `NotDirectory`,
-  les liens suivis (absolus ou relatifs), la limite de 40 liens et la détection
-  des boucles s'appliquent sur la liste rendue, exactement comme avec les `lstat`
-  successifs.
-- Un chemin qui traverse un point de montage (`/proc`, `/dev`, montage de test)
-  est vérifié préfixe par préfixe, comme avant.
-- Un parcours en échec (stockage, annulation) retombe sur les `lstat` par
-  préfixe, qui rapportent l'erreur précise.
-- Aucun cache : chaque recherche relit IndexedDB, donc un autre onglet ou une
-  synchronisation est vu tout de suite.
+- The traverse permission (`x`) of each intermediate directory, `NotDirectory`,
+  followed links (absolute or relative), the 40-link limit and loop detection
+  apply to the returned list, exactly as with successive `lstat` calls.
+- A path that crosses a mount point (`/proc`, `/dev`, test mount) is checked
+  prefix by prefix, as before.
+- A failing walk (storage, cancellation) falls back to per-prefix `lstat`
+  calls, which report the precise error.
+- No cache: each lookup rereads IndexedDB, so another tab or a sync is seen
+  immediately.
 
 ## Tests
 
-- `Tests/HackerOs.Infrastructure.Browser.Tests/IndexedDbFileSystemReaderTests.cs` :
-  une seule transaction `resolvePath` pour un chemin profond, nom absent,
-  liste partielle, lien orphelin, comptage disque.
-- `Tests/HackerOs.Infrastructure.Browser.Tests/IndexedDbFileSystemProviderTests.cs` :
-  scénarios du fournisseur adaptés au parcours en une transaction.
-- `Tests/HackerOs.Platform.Core.Tests/FileSystem/FileSystemPathResolverTests.cs` :
-  parcours en une requête, premier composant absent, droit de traverser et
-  redémarrage sur un lien, chemin qui traverse un montage.
-- Les suites E2E (`HackerOs.E2E.Tests`, `HackerOs.UI.E2E.Tests`) exercent
-  `resolvePath` dans un vrai navigateur à chaque démarrage.
-- Effet de bord sur les tests UI : le système de fichiers plus rapide a révélé
-  une course dans `E2ESupport.SelectFileExplorerEntryAsync` (le clic sur une
-  ligne arrivait pendant le rechargement de la liste après une navigation, qui
-  efface la sélection). L'aide clique de nouveau tant que la ligne n'est pas
-  restée sélectionnée.
+- `Tests/HackerOs.Infrastructure.Browser.Tests/IndexedDbFileSystemReaderTests.cs`:
+  a single `resolvePath` transaction for a deep path, missing name, partial
+  list, orphan link, disk count.
+- `Tests/HackerOs.Infrastructure.Browser.Tests/IndexedDbFileSystemProviderTests.cs`:
+  provider scenarios adapted to the one-transaction walk.
+- `Tests/HackerOs.Platform.Core.Tests/FileSystem/FileSystemPathResolverTests.cs`:
+  one-request walk, missing first component, traverse permission and restart
+  on a link, path crossing a mount.
+- The E2E suites (`HackerOs.E2E.Tests`, `HackerOs.UI.E2E.Tests`) exercise
+  `resolvePath` in a real browser on every startup.
+- Side effect on the UI tests: the faster filesystem revealed a race in
+  `E2ESupport.SelectFileExplorerEntryAsync` (the click on a row arrived while
+  the list was reloading after a navigation, which clears the selection). The
+  helper clicks again until the row has stayed selected.
 
-## Liste des tâches
+## Task list
 
-- [x] Mesurer l'écriture d'un réglage dans un vrai navigateur (604 transactions, 845 ms).
-- [x] Opération `resolvePath` dans `indexedDb.js` (une transaction par recherche).
-- [x] `IndexedDbFileSystemReader` sur `resolvePath`, tests adaptés.
-- [x] Contrat `IFileSystemPathWalkProvider` et implémentation IndexedDB.
-- [x] `FileSystemPathResolver` : parcours en une requête sur un même montage, repli par préfixe.
-- [x] Mesurer après (51 transactions, 235 ms ; ×4 : 2,0 s → 1,0 s).
-- [x] ADR 0090, index de la doc, notes dans les documents archivés.
-- [ ] Non traité : relectures redondantes du document de réglages autour d'une écriture (environ 100 ms).
+- [x] Measure writing a setting in a real browser (604 transactions, 845 ms).
+- [x] `resolvePath` operation in `indexedDb.js` (one transaction per lookup).
+- [x] `IndexedDbFileSystemReader` on `resolvePath`, tests adapted.
+- [x] `IFileSystemPathWalkProvider` contract and IndexedDB implementation.
+- [x] `FileSystemPathResolver`: one-request walk on a single mount, per-prefix fallback.
+- [x] Measure after (51 transactions, 235 ms; ×4: 2.0 s → 1.0 s).
+- [x] ADR 0090, docs index, notes in the archived documents.
+- [ ] Not handled: redundant rereads of the settings document around a write (about 100 ms).

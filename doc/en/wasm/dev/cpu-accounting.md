@@ -1,183 +1,182 @@
-# Temps CPU mesuré par processus et « Not responding »
+# Measured CPU time per process and "Not responding"
 
-Ce document couvre la mise en œuvre de la mesure du temps CPU. Ce qu'une app voit (`HackProcess`, `/proc/<pid>/stat`, `/proc/<pid>/status`, `/proc/stat`) et les règles à suivre sont dans [`../framework/process-resources-api.md`](../framework/process-resources-api.md).
+This document covers the implementation of CPU time measurement. What an app sees (`HackProcess`, `/proc/<pid>/stat`, `/proc/<pid>/status`, `/proc/stat`) and the rules to follow are in [`../framework/process-resources-api.md`](../framework/process-resources-api.md).
 
-Mise en œuvre du chantier `rebuild/5-cpu-accounting` de la phase 5
-([`execution-isolation-plan.md`](plans/execution-isolation-plan.md)) :
-[ADR 0067](adr/0067-measured-cpu-time.md). Il s'appuie sur les interrupteurs et
-le crochet de changement de contexte de l'ADR 0066
+Implementation of the `rebuild/5-cpu-accounting` work item of phase 5
+([`execution-isolation-plan.md`](plans/execution-isolation-plan.md)):
+[ADR 0067](adr/0067-measured-cpu-time.md). It builds on the switches and the
+context-switch hook of ADR 0066
 ([`resource-accounting.md`](resource-accounting.md)).
 
-## Rôle
+## Role
 
-- Chronométrer le temps que chaque processus passe réellement sur le thread
-  du navigateur : `utime` dans son propre code, `stime` dans les passerelles de
-  l'OS qu'il appelle (fichiers, réseau, presse-papiers, espace disque).
-- Imputer le temps hors de tout processus au compositeur de la session (rendu
-  Blazor, boucle de l'OS) ou au temps `idle`.
-- Signaler les *long tasks* (tranche de plus de 50 ms) et l'état « Not
-  responding » (une tranche de plus de `UnresponsiveThresholdMs`), sans jamais
-  rien interrompre.
-- Exposer ces mesures là où Linux les expose : `/proc/<pid>/stat`,
-  `/proc/<pid>/status`, `/proc/stat`, et `HackProcess` comme
+- Time how long each process actually spends on the browser thread: `utime`
+  in its own code, `stime` in the OS gateways it calls (files, network,
+  clipboard, disk space).
+- Charge the time outside any process to the session compositor (Blazor
+  rendering, OS loop) or to `idle` time.
+- Report *long tasks* (a slice longer than 50 ms) and the "Not responding"
+  state (a slice longer than `UnresponsiveThresholdMs`), without ever
+  interrupting anything.
+- Expose these measurements where Linux exposes them: `/proc/<pid>/stat`,
+  `/proc/<pid>/status`, `/proc/stat`, and `HackProcess` like
   `System.Diagnostics.Process`.
 
 ## Architecture
 
-| Élément | Projet | Rôle |
+| Element | Project | Role |
 |---|---|---|
-| `ProcessCpuTimes`, `MeasuredThreadCpuTimes`, `ICpuTimeAccountant.TryGetProcessTimes` / `TryGetThreadTimes` | `Shared/HackerOs.Simulation.Abstractions` (`Processes/ResourceAccountingContracts.cs`) | contrats lus par `/proc` et `CpuTimeAccounting` |
-| `ExecutionContextSwitch.FromKernel` / `ToKernel`, `IExecutionModeSwitchObserver` | idem | mode (utilisateur ou noyau) du processus quitté et du processus entré ; changement de mode sans changement de processus |
-| `HackExecutionContext.EnterKernel` (interne) | `Shared/HackerOs.AppSdk` | sous-frame « noyau » du processus courant ; ne fait rien sans crochet |
-| `AppFileSystemGateway`, `AppNetworkGateway`, `AppClipboardGateway`, `AppDriveGateway` | `Platform/HackerOs.Platform.Core` | ouvrent le sous-frame noyau autour de chaque appel |
-| `MeasuredCpuTimeAccountant` | `Platform/HackerOs.Platform.ResourceAccounting` | le comptable : tranches, `utime`/`stime`, compositeur, `idle`, long tasks, réponse |
-| `ContextSwitchDispatcher` | idem | diffuse aussi les changements de mode aux mesures qui les observent |
-| `ResourceAccountingServiceCollectionExtensions` | `OS/HackerOs.Ecosystem` | crée le comptable quand la mesure CPU est active et l'inscrit sur le diffuseur |
-| `CpuTimeAccounting` | `Platform/HackerOs.Platform.Core/Metrics` | `/proc/stat` réel quand le comptable mesure |
-| `ProcFileSystemProvider` | `Platform/HackerOs.Platform.Core/FileSystem/Virtual` | `/proc/<pid>/stat` (nouveau), champs mesurés de `status` |
+| `ProcessCpuTimes`, `MeasuredThreadCpuTimes`, `ICpuTimeAccountant.TryGetProcessTimes` / `TryGetThreadTimes` | `Shared/HackerOs.Simulation.Abstractions` (`Processes/ResourceAccountingContracts.cs`) | contracts read by `/proc` and `CpuTimeAccounting` |
+| `ExecutionContextSwitch.FromKernel` / `ToKernel`, `IExecutionModeSwitchObserver` | same | mode (user or kernel) of the process left and of the process entered; mode change without process change |
+| `HackExecutionContext.EnterKernel` (internal) | `Shared/HackerOs.AppSdk` | "kernel" sub-frame of the current process; does nothing without a hook |
+| `AppFileSystemGateway`, `AppNetworkGateway`, `AppClipboardGateway`, `AppDriveGateway` | `Platform/HackerOs.Platform.Core` | open the kernel sub-frame around each call |
+| `MeasuredCpuTimeAccountant` | `Platform/HackerOs.Platform.ResourceAccounting` | the accountant: slices, `utime`/`stime`, compositor, `idle`, long tasks, responsiveness |
+| `ContextSwitchDispatcher` | same | also broadcasts mode changes to the measurements that observe them |
+| `ResourceAccountingServiceCollectionExtensions` | `OS/HackerOs.Ecosystem` | creates the accountant when CPU measurement is active and registers it on the dispatcher |
+| `CpuTimeAccounting` | `Platform/HackerOs.Platform.Core/Metrics` | real `/proc/stat` when the accountant measures |
+| `ProcFileSystemProvider` | `Platform/HackerOs.Platform.Core/FileSystem/Virtual` | `/proc/<pid>/stat` (new), measured fields of `status` |
 | `HackProcess` | `Shared/HackerOs.AppSdk/Diagnostics` | `UserProcessorTime`, `PrivilegedProcessorTime`, `TotalProcessorTime`, `Responding` |
-| `ProcessRow.Responding`, `ProcessesTab` | `Apps/System/HackerOs.Apps.SystemMonitor` | « Not responding » dans la colonne d'état |
+| `ProcessRow.Responding`, `ProcessesTab` | `Apps/System/HackerOs.Apps.SystemMonitor` | "Not responding" in the status column |
 
-### Ce que voit le comptable
+### What the accountant sees
 
 ```
-             Enter(P)        EnterKernel      fin passerelle     Dispose(P)
-temps ──────────┼───────────────┼──────────────────┼──────────────────┼──────────
-hors frame      │  utime de P   │   stime de P     │   utime de P     │ hors frame
-(idle ou        └──────────── une tranche de P (un changement de contexte) ──┘ (compositeur
- compositeur)                                                                    ou idle)
+             Enter(P)        EnterKernel      end of gateway     Dispose(P)
+time ───────────┼───────────────┼──────────────────┼──────────────────┼──────────
+outside frame   │  utime of P   │   stime of P     │   utime of P     │ outside frame
+(idle or        └──────────── one slice of P (a context switch) ──────┘ (compositor
+ compositor)                                                                or idle)
 ```
 
-- **Changement de processus** (`OnContextSwitch`) : le temps écoulé depuis le
-  dernier événement de ce thread va au processus qui sort (`utime` ou `stime`
-  selon `FromKernel`) ; sa tranche se termine. Hors frame, il va au compositeur
-  ou à `idle`.
-- **Changement de mode** (`OnModeSwitch`) : le temps écoulé va au mode quitté ;
-  la tranche continue (même processus).
-- Les continuations asynchrones restaurent le frame : un `await` dans une
-  passerelle reprend en mode noyau, un `await` dans l'app reprend en mode
-  utilisateur. Le sous-frame noyau est une copie du frame de l'app (même
-  processus, même répertoire courant).
+- **Process switch** (`OnContextSwitch`): the time elapsed since the last
+  event of this thread goes to the process leaving (`utime` or `stime`
+  depending on `FromKernel`); its slice ends. Outside a frame, it goes to the
+  compositor or to `idle`.
+- **Mode switch** (`OnModeSwitch`): the elapsed time goes to the mode left;
+  the slice continues (same process).
+- Async continuations restore the frame: an `await` in a gateway resumes in
+  kernel mode, an `await` in the app resumes in user mode. The kernel
+  sub-frame is a copy of the app's frame (same process, same current
+  directory).
 
-### Compositeur ou `idle`
+### Compositor or `idle`
 
-Le crochet voit le thread quitter un processus, pas la boucle d'événements du
-navigateur se vider. Un intervalle hors frame est donc classé selon la façon
-dont le processus est sorti :
+The hook sees the thread leave a process, not the browser event loop emptying.
+An interval outside a frame is therefore classified according to how the
+process was left:
 
-| Sortie | Ce qui suit | Imputation |
+| Exit | What follows | Charge |
 |---|---|---|
-| l'OS ferme la portée lui-même (gestionnaire d'événement, rendu, lancement) | l'OS continue : rendu Blazor, gestionnaire de fenêtres | compositeur, jusqu'à `CompositorSliceBudget` (4 ms, une passe de rendu), le reste en `idle` |
-| le runtime restaure un contexte vide (fin d'une continuation, d'une minuterie) | retour à la boucle d'événements | `idle` |
-| démarrage, avant tout processus | rien | `idle` |
+| the OS closes the scope itself (event handler, render, launch) | the OS continues: Blazor rendering, window manager | compositor, up to `CompositorSliceBudget` (4 ms, one render pass), the rest to `idle` |
+| the runtime restores an empty context (end of a continuation, of a timer) | return to the event loop | `idle` |
+| startup, before any process | nothing | `idle` |
 
-Comme Xorg ou `gnome-shell`, le temps du compositeur est du temps `system` dans
-`/proc/stat`. `idle` est le reste du temps écoulé depuis la création du
-comptable : `user + system + idle` vaut toujours le temps écoulé.
+Like Xorg or `gnome-shell`, the compositor time is `system` time in
+`/proc/stat`. `idle` is the rest of the time elapsed since the accountant was
+created: `user + system + idle` always equals the elapsed time.
 
-### Tranches, long tasks et « Not responding »
+### Slices, long tasks and "Not responding"
 
-- Une **tranche** est une occupation ininterrompue du thread par un processus,
-  modes utilisateur et noyau confondus. Chaque tranche terminée compte dans
-  `voluntary_ctxt_switches` (le processus a rendu le thread) ;
-  `nonvoluntary_ctxt_switches` reste à `0` : rien n'est préempté.
-- Une tranche de plus de **50 ms** est une *long task* (`LongTasks:`).
-- Une tranche de plus de `UnresponsiveThresholdMs` (5 s par défaut,
-  `HackerOs:ResourceAccounting:Cpu:UnresponsiveThresholdMs`) met le processus
-  **Not responding** (`Responding: 0`) ; il redevient `1` dès qu'il termine une
-  tranche sous le seuil, c'est-à-dire qu'il répond vite au prochain événement.
-- Sur le thread principal, l'état n'est visible qu'**après coup**, à la fin de
-  la tranche : rien d'autre ne s'exécute pendant. Une boucle infinie gèle
-  encore l'OS ; seul un Web Worker (ADR 0070) l'isole.
-- Une fenêtre dont le processus reste « Not responding » reçoit le suffixe
-  « (Not responding) », un voile gris et la boîte « Attendre | Terminer
-  l'application » (ADR 0127 §2-3, [`process-priority-and-unresponsive-windows.md`](process-priority-and-unresponsive-windows.md)).
-- Dans un Web Worker (commandes et services, [`worker-processes.md`](worker-processes.md)),
-  le worker mesure les tranches de ses processus avec le même crochet et les
-  envoie dans son battement de cœur (250 ms) ; l'OS les ajoute au temps noyau
-  passé à servir leurs appels. Un worker sans battement depuis 5 s met ses
-  processus **Not responding pendant** le blocage, et ce temps compte comme
-  occupé (ADR 0072 §6).
+- A **slice** is an uninterrupted occupation of the thread by a process, user
+  and kernel modes combined. Each completed slice counts in
+  `voluntary_ctxt_switches` (the process gave up the thread);
+  `nonvoluntary_ctxt_switches` stays at `0`: nothing is preempted.
+- A slice longer than **50 ms** is a *long task* (`LongTasks:`).
+- A slice longer than `UnresponsiveThresholdMs` (5 s by default,
+  `HackerOs:ResourceAccounting:Cpu:UnresponsiveThresholdMs`) puts the process
+  in **Not responding** (`Responding: 0`); it becomes `1` again as soon as it
+  finishes a slice under the threshold, that is, it responds quickly to the
+  next event.
+- On the main thread, the state is only visible **after the fact**, at the end
+  of the slice: nothing else runs meanwhile. An infinite loop still freezes
+  the OS; only a Web Worker (ADR 0070) isolates it.
+- A window whose process stays "Not responding" gets the suffix "(Not
+  responding)", a gray veil and the box "Wait | End the application" (ADR 0127
+  §2-3, [`process-priority-and-unresponsive-windows.md`](process-priority-and-unresponsive-windows.md)).
+- In a Web Worker (commands and services, [`worker-processes.md`](worker-processes.md)),
+  the worker measures the slices of its processes with the same hook and sends
+  them in its heartbeat (250 ms); the OS adds them to the kernel time spent
+  serving their calls. A worker with no heartbeat for 5 s puts its processes
+  in **Not responding during** the blockage, and this time counts as busy
+  (ADR 0072 §6).
 
-### Coût
+### Cost
 
-Résolution : dans le navigateur, `Stopwatch.GetTimestamp` lit
-`performance.now()`, arrondi à 100 µs, ou à 5 µs quand la page est isolée
-(ADR 0131 §4, ADR 0143 §7) ; `/proc/hackeros/workers` affiche la valeur
-mesurée (`timer-resolution-us`).
+Resolution: in the browser, `Stopwatch.GetTimestamp` reads
+`performance.now()`, rounded to 100 µs, or 5 µs when the page is isolated
+(ADR 0131 §4, ADR 0143 §7); `/proc/hackeros/workers` displays the measured
+value (`timer-resolution-us`).
 
-Le chemin chaud lit l'horloge (`Stopwatch.GetTimestamp`), quelques champs
-`[ThreadStatic]`, et additionne avec `Interlocked` dans un emplacement trouvé
-par PID dans un tableau : pas de verrou, pas d'allocation, sauf la première
-fois qu'un processus s'exécute (son emplacement) et quand les PID dépassent le
-tableau (il double, sous verrou, hors du chemin chaud). L'état par thread garde
-le décompte juste quand les tests ou le serveur exécutent du code sur plusieurs
-threads.
+The hot path reads the clock (`Stopwatch.GetTimestamp`), a few `[ThreadStatic]`
+fields, and adds with `Interlocked` into a slot found by PID in an array: no
+lock, no allocation, except the first time a process runs (its slot) and when
+PIDs exceed the array (it doubles, under a lock, off the hot path). The
+per-thread state keeps the count correct when tests or the server run code on
+several threads.
 
-`EnterKernel` rend une structure : un appel de passerelle n'alloue rien pour
-la portée, et sans crochet (mesures coupées) il ne fait rien du tout.
+`EnterKernel` returns a struct: a gateway call allocates nothing for the
+scope, and without a hook (measurements off) it does nothing at all.
 
-## Utilisation
+## Usage
 
-La lecture de ces mesures par une app est décrite dans [`../framework/process-resources-api.md`](../framework/process-resources-api.md). Ce qui suit concerne la configuration.
+How an app reads these measurements is described in [`../framework/process-resources-api.md`](../framework/process-resources-api.md). What follows concerns configuration.
 
-### Configurer
+### Configure
 
-Voir [`resource-accounting.md`](resource-accounting.md) : propriété MSBuild
-`HackerOsCpuAccounting`, section `HackerOs:ResourceAccounting:Cpu` des
-`appsettings.json` (`Enabled`, `UnresponsiveThresholdMs`). Coupée, la mesure
-n'installe rien (si la mémoire est coupée aussi, aucun crochet) et `/proc` rend
-exactement les fichiers d'avant la phase 5, plus le nouveau `stat` simulé.
+See [`resource-accounting.md`](resource-accounting.md): MSBuild property
+`HackerOsCpuAccounting`, `HackerOs:ResourceAccounting:Cpu` section of the
+`appsettings.json` files (`Enabled`, `UnresponsiveThresholdMs`). When off,
+the measurement installs nothing (if memory is off too, no hook) and `/proc`
+returns exactly the files from before phase 5, plus the new simulated `stat`.
 
-## Décisions et précisions par rapport à l'ADR 0067
+## Decisions and clarifications relative to ADR 0067
 
-- **Le compositeur n'est pas un processus.** La session n'a pas de processus
-  d'interface graphique dans la table des processus ; le temps du compositeur
-  est tenu par le comptable (`MeasuredThreadCpuTimes.Compositor`) et compté en
-  `system` dans `/proc/stat`, sans ligne `/proc/<pid>`. Le jour où la session
-  aura un tel processus, il suffira de lui imputer ce compteur.
-- **Budget du compositeur.** Le crochet ne voit pas le retour à la boucle
-  d'événements ; le budget de 4 ms par intervalle évite que le compositeur
-  absorbe l'attente des événements. C'est une approximation : un long travail
-  de l'OS hors de tout processus est compté en partie en `idle`.
-- **Le mode noyau passe par une interface à part.** Le contrat
-  `IExecutionContextSwitchObserver` ne change pas de sens (seuls les
-  changements de processus) ; `ExecutionContextSwitch` gagne deux champs
-  optionnels (`FromKernel`, `ToKernel`) et les changements de mode vont à
-  `IExecutionModeSwitchObserver`, que la mesure de la mémoire peut ignorer.
-- **Usage de la dernière seconde calculé à la lecture.** Le comptable garde,
-  par processus, le total au dernier échantillon ; une lecture plus d'une
-  seconde après le précédent échantillon en prend un nouveau. Pas de minuterie
-  de plus.
-- **`/proc/<pid>/stat` existe même mesure coupée.** C'est un nouveau fichier
-  Linux ; simulé, il reste cohérent avec `Cpu` de `status`.
+- **The compositor is not a process.** The session has no graphical interface
+  process in the process table; the compositor time is held by the accountant
+  (`MeasuredThreadCpuTimes.Compositor`) and counted as `system` in
+  `/proc/stat`, without a `/proc/<pid>` line. The day the session has such a
+  process, it will suffice to charge this counter to it.
+- **Compositor budget.** The hook does not see the return to the event loop;
+  the 4 ms budget per interval prevents the compositor from absorbing the wait
+  for events. This is an approximation: long OS work outside any process is
+  partly counted as `idle`.
+- **Kernel mode goes through a separate interface.** The
+  `IExecutionContextSwitchObserver` contract does not change meaning (process
+  switches only); `ExecutionContextSwitch` gains two optional fields
+  (`FromKernel`, `ToKernel`) and mode changes go to
+  `IExecutionModeSwitchObserver`, which the memory measurement can ignore.
+- **Usage over the last second computed at read time.** The accountant keeps,
+  per process, the total at the last sample; a read more than one second after
+  the previous sample takes a new one. No additional timer.
+- **`/proc/<pid>/stat` exists even with measurement off.** It is a new Linux
+  file; simulated, it stays consistent with `Cpu` of `status`.
 
 ## Tests
 
-| Suite | Couvre |
+| Suite | Covers |
 |---|---|
-| `HackerOs.Platform.ResourceAccounting.Tests` (`MeasuredCpuTimeAccountantTests`) | `utime` dans une portée, `stime` dans une vraie passerelle (directement et par le diffuseur composé comme dans l'OS), processus imbriqués, long tasks et « Not responding » puis retour, compositeur et budget, `idle` après une continuation, somme égale au temps écoulé, usage de la dernière seconde, processus jamais exécuté, croissance du tableau, continuations async réelles |
-| idem (`RealAppsMeasurementTests`) | section 5.1 du plan : la vraie Calculatrice (fenêtre), le vrai `echo` (commande) et le service d'exemple, sans changer leur code ; `/proc/<pid>/stat` (52 champs, `utime`/`stime`) et `status` (`CpuSource: measured`, `Responding: 1`) |
-| idem (`CpuAccountingOverheadTests`, catégorie `Performance`) | scénario de référence (dix fenêtres, frappe dans un éditeur avec rendu à chaque touche et appels de passerelle, pipeline `echo \| grep`) avec et sans mesure : un écart de plus de 5 % fait échouer le test (meilleur de 9 manches alternées, trois tentatives) |
-| `HackerOs.Platform.Core.Tests` | format de `/proc/<pid>/stat` mesuré et simulé, champs ajoutés à `status` seulement quand c'est mesuré, `/proc/stat` mesuré sur un cœur, `HackProcess.*ProcessorTime`, `Responding`, `ParseStatTimes` |
-| `HackerOs.Ecosystem.Tests` | comptable créé et inscrit seulement si la mesure CPU est active (16 combinaisons), seuil lu dans la configuration, `/proc/stat` composé avec la mesure |
-| `HackerOs.Apps.SystemMonitor.Tests` | « Not responding » dans la colonne d'état et le tri |
+| `HackerOs.Platform.ResourceAccounting.Tests` (`MeasuredCpuTimeAccountantTests`) | `utime` in a scope, `stime` in a real gateway (directly and through the composed dispatcher as in the OS), nested processes, long tasks and "Not responding" then return, compositor and budget, `idle` after a continuation, sum equal to elapsed time, usage over the last second, never-run process, array growth, real async continuations |
+| same (`RealAppsMeasurementTests`) | plan section 5.1: the real Calculator (window), the real `echo` (command) and the sample service, without changing their code; `/proc/<pid>/stat` (52 fields, `utime`/`stime`) and `status` (`CpuSource: measured`, `Responding: 1`) |
+| same (`CpuAccountingOverheadTests`, `Performance` category) | reference scenario (ten windows, typing in an editor with rendering on each key and gateway calls, `echo \| grep` pipeline) with and without measurement: a gap of more than 5% fails the test (best of 9 alternating rounds, three attempts) |
+| `HackerOs.Platform.Core.Tests` | format of measured and simulated `/proc/<pid>/stat`, fields added to `status` only when measured, measured `/proc/stat` on one core, `HackProcess.*ProcessorTime`, `Responding`, `ParseStatTimes` |
+| `HackerOs.Ecosystem.Tests` | accountant created and registered only if CPU measurement is active (16 combinations), threshold read from configuration, `/proc/stat` composed with the measurement |
+| `HackerOs.Apps.SystemMonitor.Tests` | "Not responding" in the status column and the sort |
 
-Vérifié à la main : un build de `HackerOs.Ecosystem` avec
-`-p:HackerOsCpuAccounting=false -p:HackerOsMemoryAccounting=false` ne contient
-aucun fichier `HackerOs.Platform.ResourceAccounting*`.
+Checked by hand: a `HackerOs.Ecosystem` build with
+`-p:HackerOsCpuAccounting=false -p:HackerOsMemoryAccounting=false` contains no
+`HackerOs.Platform.ResourceAccounting*` file.
 
-## Liste des tâches
+## Task list
 
-- [x] Contrats : `ProcessCpuTimes`, `MeasuredThreadCpuTimes`, `TryGetProcessTimes`, `TryGetThreadTimes`, mode noyau dans `ExecutionContextSwitch`, `IExecutionModeSwitchObserver`.
-- [x] Sous-frame noyau `HackExecutionContext.EnterKernel`, sans coût quand le crochet est absent.
-- [x] Passerelles fichiers, réseau, presse-papiers et disque en mode noyau.
-- [x] `MeasuredCpuTimeAccountant` : `utime`/`stime`, compositeur, `idle`, tranches, long tasks, « Not responding ».
-- [x] Diffusion des changements de mode par `ContextSwitchDispatcher` ; composition quand la mesure CPU est active.
-- [x] `/proc/<pid>/stat` (format `proc(5)`), champs mesurés de `/proc/<pid>/status`, `/proc/stat` réel via `CpuTimeAccounting`.
+- [x] Contracts: `ProcessCpuTimes`, `MeasuredThreadCpuTimes`, `TryGetProcessTimes`, `TryGetThreadTimes`, kernel mode in `ExecutionContextSwitch`, `IExecutionModeSwitchObserver`.
+- [x] Kernel sub-frame `HackExecutionContext.EnterKernel`, no cost when the hook is absent.
+- [x] File, network, clipboard and disk gateways in kernel mode.
+- [x] `MeasuredCpuTimeAccountant`: `utime`/`stime`, compositor, `idle`, slices, long tasks, "Not responding".
+- [x] Mode change broadcast by `ContextSwitchDispatcher`; composition when CPU measurement is active.
+- [x] `/proc/<pid>/stat` (`proc(5)` format), measured fields of `/proc/<pid>/status`, real `/proc/stat` through `CpuTimeAccounting`.
 - [x] `HackProcess.UserProcessorTime`, `PrivilegedProcessorTime`, `TotalProcessorTime`, `Responding`.
-- [x] Colonne d'état « Not responding » du gestionnaire de tâches (affichage seulement).
-- [x] Mesure coupée : comportement d'avant (vérifié au build et par les tests).
-- [x] Test de surcoût (< 5 %).
-- [x] Apps existantes (section 5.1) : aucune modification de code d'app ; tests sur une fenêtre, une commande et un service réels.
-- [x] Documentation : ce document, `resource-accounting.md`, `system-metrics.md`, `task-manager.md`, `virtual-proc-and-dev.md`, `app-sdk.md`, `sdk-reference.md`, plan, index.
+- [x] "Not responding" status column of the task manager (display only).
+- [x] Measurement off: previous behavior (verified at build and by tests).
+- [x] Overhead test (< 5%).
+- [x] Existing apps (section 5.1): no app code changes; tests on a real window, command and service.
+- [x] Documentation: this document, `resource-accounting.md`, `system-metrics.md`, `task-manager.md`, `virtual-proc-and-dev.md`, `app-sdk.md`, `sdk-reference.md`, plan, index.

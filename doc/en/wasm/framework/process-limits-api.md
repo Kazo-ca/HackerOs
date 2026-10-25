@@ -1,37 +1,37 @@
-# Limites de processus côté apps
+# Process limits for apps
 
-Ce document décrit ce qu'une app voit et peut faire avec les limites de son processus (`HackProcess`, `/proc/<pid>/limits`). La mise en œuvre (tables, contrôleur, lecture de `limits.conf`, commandes du shell) est dans [`../dev/process-limits.md`](../dev/process-limits.md).
+This document describes what an app sees and can do with the limits of its process (`HackProcess`, `/proc/<pid>/limits`). The implementation (tables, controller, reading of `limits.conf`, shell commands) is in [`../dev/process-limits.md`](../dev/process-limits.md).
 
-## Rôle
+## Role
 
-Chaque processus porte quatre limites façon `setrlimit(2)`, avec une valeur
-souple (celle qui s'applique) et une valeur dure (son plafond) :
+Each process carries four `setrlimit(2)`-style limits, with a soft value
+(the one that applies) and a hard value (its ceiling):
 
-| Limite | `ulimit` | `/proc/<pid>/limits` | Défaut (souple / dure) | Effet quand elle est atteinte |
+| Limit | `ulimit` | `/proc/<pid>/limits` | Default (soft / hard) | Effect when reached |
 |---|---|---|---|---|
-| `cpu` | `-t` (secondes) | `Max cpu time` | illimité / illimité | souple : `SIGXCPU` (sortie 152, « CPU time limit exceeded ») ; dure : `SIGKILL` (137, « Killed ») |
-| `rss` | `-m` (Kio) | `Max resident set` | illimité / illimité | `SIGKILL` (137) |
-| `nofile` | `-n` | `Max open files` | 1024 / 524288 | ouverture refusée : `EMFILE`, « Too many open files » |
-| `nproc` | `-u` | `Max processes` | 4096 / 4096 | lancement refusé : `EAGAIN`, « hsh: fork: Resource temporarily unavailable » |
+| `cpu` | `-t` (seconds) | `Max cpu time` | unlimited / unlimited | soft: `SIGXCPU` (exit 152, "CPU time limit exceeded"); hard: `SIGKILL` (137, "Killed") |
+| `rss` | `-m` (KiB) | `Max resident set` | unlimited / unlimited | `SIGKILL` (137) |
+| `nofile` | `-n` | `Max open files` | 1024 / 524288 | open refused: `EMFILE`, "Too many open files" |
+| `nproc` | `-u` | `Max processes` | 4096 / 4096 | launch refused: `EAGAIN`, "hsh: fork: Resource temporarily unavailable" |
 
-## Héritage et application
+## Inheritance and enforcement
 
-Ce sont les défauts du noyau Linux. Un processus hérite des limites de son
-parent ; un processus sans parent prend celles de la session, lues dans
-`/etc/security/limits.conf` à la connexion.
+These are the Linux kernel defaults. A process inherits the limits of its
+parent; a process with no parent takes those of the session, read from
+`/etc/security/limits.conf` at login.
 
-L'application est **stricte dans un Web Worker** (l'OS termine le worker) et
-**au mieux sur le fil principal** (vérifiée entre deux tranches de travail).
-Les limites `cpu` et `rss` ne s'appliquent que là où le CPU et la mémoire sont
-mesurés ([`resource-accounting.md`](../dev/resource-accounting.md)) ; sinon
-`/proc/<pid>/limits` les dit inactives.
+Enforcement is **strict in a Web Worker** (the OS terminates the worker) and
+**best-effort on the main thread** (checked between two slices of work).
+The `cpu` and `rss` limits only apply where CPU and memory are
+measured ([`resource-accounting.md`](../dev/resource-accounting.md)); otherwise
+`/proc/<pid>/limits` reports them as inactive.
 
-## Descripteurs
+## Descriptors
 
-- Un descripteur = une lecture ou un flux d'écriture ouvert ; les écritures
-  d'un bloc, les listes de dossiers et les sockets ne comptent pas.
+- One descriptor = one open read or write stream; single-block writes,
+  folder listings and sockets do not count.
 
-## Fichier `/proc/<pid>/limits`
+## `/proc/<pid>/limits` file
 
 ```text
 Limit                     Soft Limit           Hard Limit           Units     
@@ -42,11 +42,11 @@ Max open files            1024                 524288               files
 # cpu, rss: inactive (not measured)
 ```
 
-La ligne `# enforcement:` vaut `strict (worker)`, `best-effort (main thread)`
-ou `off (HackerOs:ResourceLimits:Enabled=false)`. `/proc/<pid>/fd/` (dossier
-`0500`) liste les descripteurs ouverts sous forme de liens.
+The `# enforcement:` line is `strict (worker)`, `best-effort (main thread)`
+or `off (HackerOs:ResourceLimits:Enabled=false)`. `/proc/<pid>/fd/` (folder
+`0500`) lists the open descriptors as links.
 
-## API du SDK
+## SDK API
 
 ```csharp
 HackProcess self = await HackProcess.GetCurrentProcessAsync();
@@ -54,5 +54,5 @@ HackResourceLimits limits = await self.GetResourceLimitsAsync();
 await self.SetResourceLimitAsync(ResourceLimitKind.NoFile, 256, limits.NoFile.Hard);
 ```
 
-Erreurs : `ArgumentException` (`EINVAL`), `HackUnauthorizedAccessException`
+Errors: `ArgumentException` (`EINVAL`), `HackUnauthorizedAccessException`
 (`EPERM`), `InvalidOperationException` (`ESRCH`).

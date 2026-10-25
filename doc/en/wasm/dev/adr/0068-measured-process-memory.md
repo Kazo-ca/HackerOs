@@ -1,77 +1,77 @@
-# ADR 0068 : mémoire mesurée par processus, en couches
+# ADR 0068: layered measured memory per process
 
-## Statut
+## Status
 
-Accepté le 2026-10-16.
+Accepted on 2026-10-16.
 
-- **Phase du plan :** phase 5 — exécution des apps
+- **Plan phase:** phase 5: app execution
   ([`execution-isolation-plan.md`](../plans/execution-isolation-plan.md)).
-- **Optionnel :** interrupteur `HackerOsMemoryAccounting` /
+- **Optional:** switch `HackerOsMemoryAccounting` /
   `HackerOs:ResourceAccounting:Memory:Enabled` (ADR 0066).
-- **S'appuie sur :** ADR 0067 (frames ambiants et changements de contexte).
+- **Builds on:** ADR 0067 (ambient frames and context switches).
 
-## Contexte
+## Context
 
-Toutes les apps partagent le même tas .NET. Le runtime ne dit pas quelle part
-du tas appartient à quelle app, et le navigateur ne donne qu'une mesure
-globale, et seulement avec l'isolation cross-origin, que nous écartons.
+All apps share the same .NET heap. The runtime does not say which share
+of the heap belongs to which app, and the browser only gives a global
+measurement, and only with cross-origin isolation, which we rule out.
 
-Compter le *marshaling* (les données échangées entre C# et JavaScript) a été
-envisagé et écarté : il mesure le trafic d'interop, pas la mémoire. Une app en
-C# pur qui garde 200 Mo afficherait zéro.
+Counting the *marshaling* (data exchanged between C# and JavaScript) was
+considered and ruled out: it measures interop traffic, not memory. A pure
+C# app that holds 200 MB would display zero.
 
-Benoit veut **mesurer seulement** : pas de limite par processus, pas d'OOM
+Benoit wants to **only measure**: no per-process limit, no OOM
 killer.
 
-## Décision
+## Decision
 
-### 1. Quatre couches
+### 1. Four layers
 
-| Couche | Source | Précision | Champ `/proc/<pid>/status` |
+| Layer | Source | Accuracy | `/proc/<pid>/status` field |
 |---|---|---|---|
-| Image | taille des assemblies de l'app, connue par son `manifest.json` et le catalogue de l'hôte ; une assembly partagée est comptée une fois, dans `RssFile` partagé | exacte | `VmExe`, `RssFile` |
-| Ressources de l'OS | octets tenus par l'OS pour le processus : tampons de `HackFileStream`, entrées du presse-papiers, tubes, sockets, fenêtres ouvertes (coût fixe par fenêtre) | exacte | `VmData` (part noyau) |
-| Allocations | `GC.GetAllocatedBytesForCurrentThread()` lu à chaque changement de contexte (ADR 0067, section 1) ; un seul thread exécute le code, donc la différence revient au processus courant | exacte en octets alloués | `HackAllocBytes` |
-| Mémoire résidente | après chaque GC (`GC.RegisterForFullGCNotification` n'existe pas en WASM : on compare `GC.CollectionCount(0)` à chaque échantillon), le tas réel (`GC.GetGCMemoryInfo().HeapSizeBytes`) est réparti entre les processus au prorata de leurs allocations récentes, avec une décroissance exponentielle | estimation | `VmRSS`, `RssAnon` |
+| Image | size of the app's assemblies, known from its `manifest.json` and the host catalog; a shared assembly is counted once, in shared `RssFile` | exact | `VmExe`, `RssFile` |
+| OS resources | bytes held by the OS for the process: `HackFileStream` buffers, clipboard entries, pipes, sockets, open windows (fixed cost per window) | exact | `VmData` (kernel share) |
+| Allocations | `GC.GetAllocatedBytesForCurrentThread()` read at each context switch (ADR 0067, section 1); a single thread runs code, so the difference goes to the current process | exact in allocated bytes | `HackAllocBytes` |
+| Resident memory | after each GC (`GC.RegisterForFullGCNotification` does not exist in WASM: `GC.CollectionCount(0)` is compared at each sample), the real heap (`GC.GetGCMemoryInfo().HeapSizeBytes`) is distributed among processes in proportion to their recent allocations, with an exponential decay | estimate | `VmRSS`, `RssAnon` |
 
-`VmRSS = RssAnon + RssFile + part noyau`. Les règles de calcul (fenêtre de la
-décroissance, coût d'une fenêtre) sont des constantes documentées dans
-`system-metrics.md` et couvertes par des tests.
+`VmRSS = RssAnon + RssFile + kernel share`. The calculation rules (decay
+window, cost of a window) are constants documented in
+`system-metrics.md` and covered by tests.
 
-### 2. Lecture
+### 2. Reading
 
-- `/proc/<pid>/status` donne les champs ci-dessus, et `MemSource: measured`
-  (ADR 0066) ;
-- `/proc/meminfo` additionne les processus et garde `MemTotal` du
-  `VirtualHardwareProfile` ;
-- `HackProcess.WorkingSet64` (existe déjà, lu dans `VmRSS`) et le nouveau
-  `PrivateMemorySize64` (lu dans `RssAnon`), calqués sur
+- `/proc/<pid>/status` gives the fields above, and `MemSource: measured`
+  (ADR 0066);
+- `/proc/meminfo` sums the processes and keeps `MemTotal` from the
+  `VirtualHardwareProfile`;
+- `HackProcess.WorkingSet64` (already exists, read from `VmRSS`) and the new
+  `PrivateMemorySize64` (read from `RssAnon`), modeled on
   `System.Diagnostics.Process`.
 
-### 3. Pas de limite
+### 3. No limit
 
-Aucune limite, aucun OOM killer : dépasser `MemTotal` ne fait que saturer les
-graphiques. Si une limite devient utile, un nouvel ADR la décidera.
+No limit, no OOM killer: exceeding `MemTotal` only saturates the
+charts. If a limit becomes useful, a new ADR will decide it.
 
-### 4. Dans un Web Worker
+### 4. In a Web Worker
 
-Un processus seul dans son worker (ADR 0070) a son propre runtime : son tas
-est **exactement** le sien, et le worker l'envoie avec son battement de cœur.
-Dans un worker du pool, la répartition de la section 1 s'applique à l'intérieur
-du worker.
+A process alone in its worker (ADR 0070) has its own runtime: its heap
+is **exactly** its own, and the worker sends it with its heartbeat.
+In a pooled worker, the distribution of section 1 applies inside the
+worker.
 
-## Conséquences
+## Consequences
 
-- La mémoire affichée devient crédible pour toutes les apps, sans changement
-  de leur code.
-- La couche résidente reste une estimation, ce que `system-metrics.md` dit
-  clairement.
-- Lire le compteur d'allocations à chaque changement de contexte se fait dans
-  le même rappel que l'ADR 0067. Si seule la mémoire est active, le rappel est
-  installé pour elle seule.
+- The displayed memory becomes credible for all apps, without any change
+  to their code.
+- The resident layer remains an estimate, which `system-metrics.md` states
+  clearly.
+- Reading the allocation counter at each context switch is done in the
+  same callback as ADR 0067. If only memory is active, the callback is
+  installed for it alone.
 
-## Références
+## References
 
 - [`execution-isolation-plan.md`](../plans/execution-isolation-plan.md)
-- `proc(5)` : `/proc/<pid>/status`, `/proc/meminfo`.
+- `proc(5)`: `/proc/<pid>/status`, `/proc/meminfo`.
 - ADR 0012, 0057, 0066, 0067, 0070.

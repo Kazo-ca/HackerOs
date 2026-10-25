@@ -1,45 +1,44 @@
-# Presse-papiers de l'OS et partage avec l'hôte
+# OS clipboard and sharing with the host
 
-L'API du presse-papiers pour les apps (`HackClipboard`, listes de fichiers, format GNOME) est dans [`clipboard-api.md`](../framework/clipboard-api.md).
+The clipboard API for apps (`HackClipboard`, file lists, GNOME format) is in [`clipboard-api.md`](../framework/clipboard-api.md).
 
-## Objet
+## Purpose
 
-Mise en œuvre de l'[ADR 0065](adr/0065-os-clipboard-and-host-bridge.md), qui
-complète l'ADR 0056 §12. HackerOS a **un seul presse-papiers**, tenu par l'OS
-et partagé par toutes les apps de la session ; un pont recopie son texte vers
-le presse-papiers de la vraie machine et y reprend ce que l'utilisateur colle,
-comme les Guest Additions de VirtualBox. L'usage du presse-papiers dans
-l'explorateur (couper, copier, coller, conflits de noms) est décrit dans
-[`file-explorer.md`](file-explorer.md).
+Implementation of [ADR 0065](adr/0065-os-clipboard-and-host-bridge.md), which
+completes ADR 0056 §12. HackerOS has **a single clipboard**, held by the OS
+and shared by all apps of the session; a bridge copies its text to the real
+machine's clipboard and picks up what the user pastes there, like VirtualBox
+Guest Additions. Clipboard use in the explorer (cut, copy, paste, name
+conflicts) is described in [`file-explorer.md`](file-explorer.md).
 
 ## Architecture
 
 ```text
-App ──► HackClipboard ──► IAppClipboardGateway ──► AppClipboardGateway ──► SystemClipboard (une entrée par session)
-                                                       clipboard.read / .write          │ Changed, séquence, origine
+App ──► HackClipboard ──► IAppClipboardGateway ──► AppClipboardGateway ──► SystemClipboard (one entry per session)
+                                                       clipboard.read / .write          │ Changed, sequence, origin
                                                                                           ▼
               /etc/hackeros/clipboard.config ──► HostClipboardBridge (Platform Core)
                                                        │ IHostClipboardChannel / IHostClipboardSink
                                                        ▼
                                    BrowserHostClipboardChannel ──► hostClipboard.js ──► navigator.clipboard.writeText
-                                   (Infrastructure.Browser)        paste / copy / cut ◄── vraie machine
+                                   (Infrastructure.Browser)        paste / copy / cut ◄── real machine
 ```
 
-| Pièce | Où | Rôle |
+| Piece | Where | Role |
 |---|---|---|
-| `SystemClipboard`, `SystemClipboardEntry`, `SystemClipboardOrigin` | `Platform/HackerOs.Platform.Core/Clipboard/` | Le presse-papiers : entrée multi-formats par session, numéro de séquence, origine (`Guest`, `GuestNative`, `Host`), vidé à la déconnexion. En mémoire seulement. |
-| `ClipboardSettingsDocuments`, `ClipboardSharingMode` | idem | Document `clipboard` (clé `sharing`) et sens permis. |
-| `HostClipboardBridge` | idem | Recopie le texte vers l'hôte, applique les collages de l'hôte et les copies natives, relit le réglage à chaud. Toute la logique testable. |
-| `IHostClipboardChannel`, `IHostClipboardSink` | `Shared/HackerOs.Simulation.Abstractions/Clipboard/` | Contrat entre le pont et la page. |
-| `BrowserHostClipboardChannel` | `Infrastructure/HackerOs.Infrastructure.Browser/Interop/` | Importe `hostClipboard.js` et relaie ses rappels. |
-| `hostClipboard.js` | `Infrastructure/HackerOs.Infrastructure.Browser/wwwroot/` | Écoute `paste` (capture, document), `copy` et `cut` (bulle, window) ; appelle `writeText`. |
-| `FileView.attachPasteTarget` | `Apps/System/HackerOs.Apps.FileExplorer/FileControl/FileView.razor.js` | Ctrl+V par l'événement `paste` ; fichiers de l'hôte importés comme un dépôt. |
+| `SystemClipboard`, `SystemClipboardEntry`, `SystemClipboardOrigin` | `Platform/HackerOs.Platform.Core/Clipboard/` | The clipboard: multi-format entry per session, sequence number, origin (`Guest`, `GuestNative`, `Host`), cleared on logout. In memory only. |
+| `ClipboardSettingsDocuments`, `ClipboardSharingMode` | same | `clipboard` document (`sharing` key) and allowed direction. |
+| `HostClipboardBridge` | same | Copies text to the host, applies host pastes and native copies, rereads the setting live. All the testable logic. |
+| `IHostClipboardChannel`, `IHostClipboardSink` | `Shared/HackerOs.Simulation.Abstractions/Clipboard/` | Contract between the bridge and the page. |
+| `BrowserHostClipboardChannel` | `Infrastructure/HackerOs.Infrastructure.Browser/Interop/` | Imports `hostClipboard.js` and relays its callbacks. |
+| `hostClipboard.js` | `Infrastructure/HackerOs.Infrastructure.Browser/wwwroot/` | Listens to `paste` (capture, document), `copy` and `cut` (bubble, window); calls `writeText`. |
+| `FileView.attachPasteTarget` | `Apps/System/HackerOs.Apps.FileExplorer/FileControl/FileView.razor.js` | Ctrl+V through the `paste` event; host files imported like a drop. |
 
-Le pont est enregistré par `AddHackerOsEcosystem` (portée par circuit, comme
-tout ce qui dépend d'`IJSRuntime`) et démarré par `App.razor` après le
-chargement des préférences ; un échec n'empêche jamais le démarrage.
+The bridge is registered by `AddHackerOsEcosystem` (circuit scope, like
+everything that depends on `IJSRuntime`) and started by `App.razor` after the
+preferences are loaded; a failure never prevents startup.
 
-## Usage et API
+## Usage and API
 
 ### OS
 
@@ -49,27 +48,27 @@ clipboard.SetTargets(session, new Dictionary<string, string>
     ["text/plain"] = "bonjour",
     ["text/html"] = "<b>bonjour</b>"
 }, SystemClipboardOrigin.Guest);
-long sequence = clipboard.GetSequenceNumber(session);   // +1 à chaque changement, effacement compris
+long sequence = clipboard.GetSequenceNumber(session);   // +1 on every change, clearing included
 SystemClipboardEntry? entry = clipboard.GetEntry(session);
 ```
 
-### Réglage
+### Setting
 
-`/etc/hackeros/clipboard.config` (installé commenté au premier démarrage) :
+`/etc/hackeros/clipboard.config` (installed commented out at first startup):
 
 ```ini
 sharing=bidirectional
 ```
 
-| Valeur | Invité → hôte | Hôte → invité |
+| Value | Guest → host | Host → guest |
 |---|---|---|
-| `bidirectional` (défaut) | oui | oui |
-| `guest-to-host` | oui | non |
-| `host-to-guest` | non | oui |
-| `disabled` | non | non |
+| `bidirectional` (default) | yes | yes |
+| `guest-to-host` | yes | no |
+| `host-to-guest` | no | yes |
+| `disabled` | no | no |
 
-Un utilisateur surcharge dans `~/.config/hackeros/clipboard.config`, sauf si
-l'administrateur verrouille :
+A user overrides it in `~/.config/hackeros/clipboard.config`, unless the
+administrator locks it:
 
 ```ini
 sharing=disabled
@@ -77,48 +76,48 @@ sharing=disabled
 sharing=true
 ```
 
-## Règles
+## Rules
 
-| Cas | Comportement |
+| Case | Behavior |
 |---|---|
-| Une app copie du texte ou des fichiers | L'entrée devient courante ; son `text/plain` (les chemins pour des fichiers) part vers l'hôte si `sharing` le permet. Les autres formats ne sortent jamais. |
-| Collage avec un texte nouveau pour l'OS | Le texte devient l'entrée courante (origine `Host`), sans écho vers l'hôte. |
-| Collage du texte que l'OS a lui-même écrit | Rien ne change ; le collage natif suit son cours. |
-| Collage de fichiers de l'hôte dans l'explorateur | Noms notés sous `application/x-hackeros-host-files` ; la `FileView` les importe dans le dossier courant (noms de copie si pris, 256 Mio par fichier). Un nouveau Ctrl+V les réimporte tant que le presse-papiers n'a pas changé côté OS. |
-| Hôte → invité refusé, ou texte de l'hôte périmé, collage dans un champ | Le champ reçoit le texte de l'OS (ou rien), jamais celui de l'hôte ; le terminal aussi. |
-| Copie native (champ de texte, terminal) | Devient l'entrée courante (origine `GuestNative`). Si invité → hôte est refusé, l'hôte n'est pas modifié. |
-| Navigateur qui refuse `writeText` | Journal `clipboard: host clipboard call failed` (Debug) ; l'OS garde son entrée. |
-| Déconnexion | L'entrée est effacée et la page oublie le texte. |
+| An app copies text or files | The entry becomes current; its `text/plain` (the paths for files) goes to the host if `sharing` allows it. Other formats never leave. |
+| Paste with text new to the OS | The text becomes the current entry (origin `Host`), with no echo to the host. |
+| Paste of text the OS itself wrote | Nothing changes; the native paste proceeds. |
+| Paste of host files in the explorer | Names noted under `application/x-hackeros-host-files`; the `FileView` imports them into the current folder (copy names if taken, 256 MiB per file). A new Ctrl+V reimports them as long as the clipboard has not changed on the OS side. |
+| Host → guest refused, or stale host text, paste into a field | The field receives the OS text (or nothing), never the host's; the terminal too. |
+| Native copy (text field, terminal) | Becomes the current entry (origin `GuestNative`). If guest → host is refused, the host is not modified. |
+| Browser that refuses `writeText` | Log `clipboard: host clipboard call failed` (Debug); the OS keeps its entry. |
+| Logout | The entry is cleared and the page forgets the text. |
 
-## Décisions clés
+## Key decisions
 
-Voir l'[ADR 0065](adr/0065-os-clipboard-and-host-bridge.md) : un seul
-presse-papiers propriétaire, pas de `readText` (pas d'autorisation), pas de
-chiffrement (clé forcément dans le WASM), sens décidé dans la page pendant
-l'événement, fichier `clipboard.config` plutôt que `clipboard.conf` pour suivre
-la convention de l'ADR 0044.
+See [ADR 0065](adr/0065-os-clipboard-and-host-bridge.md): a single owning
+clipboard, no `readText` (no authorization), no encryption (the key would
+necessarily be in the WASM), direction decided in the page during the event,
+`clipboard.config` file rather than `clipboard.conf` to follow the ADR 0044
+convention.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Clipboard/SystemClipboardTests.cs` :
-  séquence, formats multiples, origine, copie de l'entrée, effacement.
-- `Tests/HackerOs.Platform.Core.Tests/Clipboard/ClipboardSettingsDocumentsTests.cs` :
-  valeurs de `sharing`, fichier installé, surcharge utilisateur, `[locked]`.
-- `Tests/HackerOs.Platform.Core.Tests/Clipboard/HostClipboardBridgeTests.cs` :
-  écriture vers l'hôte, liste de fichiers en chemins, collage sans écho,
-  fichiers de l'hôte, copie native, chaque mode, verrou, changement à chaud,
-  déconnexion, refus du navigateur, absence de session.
-- `Tests/HackerOs.Apps.FileExplorer.FileControl.Tests/FileViewDropAndClipboardTests.cs` :
-  Ctrl+V par l'événement `paste`, fichiers de l'hôte collés.
+- `Tests/HackerOs.Platform.Core.Tests/Clipboard/SystemClipboardTests.cs`:
+  sequence, multiple formats, origin, entry copy, clearing.
+- `Tests/HackerOs.Platform.Core.Tests/Clipboard/ClipboardSettingsDocumentsTests.cs`:
+  `sharing` values, installed file, user override, `[locked]`.
+- `Tests/HackerOs.Platform.Core.Tests/Clipboard/HostClipboardBridgeTests.cs`:
+  write to the host, file list as paths, paste without echo, host files,
+  native copy, each mode, lock, live change, logout, browser refusal, absence
+  of a session.
+- `Tests/HackerOs.Apps.FileExplorer.FileControl.Tests/FileViewDropAndClipboardTests.cs`:
+  Ctrl+V through the `paste` event, host files pasted.
 
-## Liste des tâches
+## Task list
 
-- [x] ADR 0065 (0060 était pris).
-- [x] `SystemClipboard` : entrée multi-formats, numéro de séquence, origine.
-- [x] Document `clipboard.config` (clé `sharing`, `[locked]`), installé au premier démarrage, listé par `OsSettingsDocumentRegistry`.
-- [x] `HostClipboardBridge` et contrat `IHostClipboardChannel`.
-- [x] `BrowserHostClipboardChannel` et `hostClipboard.js` dans Infrastructure.Browser.
-- [x] Enregistrement dans `AddHackerOsEcosystem`, démarrage dans `App.razor`.
-- [x] `FileView` : Ctrl+V par `paste`, fichiers de l'hôte collés importés comme un dépôt.
-- [x] Diagnostic copie par `HackClipboard` (`clipboard.write`) ; `BrowserClipboard` `[Obsolete]`, puis retiré en 1.0 (ADR 0114).
-- [x] Tests et documentation.
+- [x] ADR 0065 (0060 was taken).
+- [x] `SystemClipboard`: multi-format entry, sequence number, origin.
+- [x] `clipboard.config` document (`sharing` key, `[locked]`), installed at first startup, listed by `OsSettingsDocumentRegistry`.
+- [x] `HostClipboardBridge` and `IHostClipboardChannel` contract.
+- [x] `BrowserHostClipboardChannel` and `hostClipboard.js` in Infrastructure.Browser.
+- [x] Registration in `AddHackerOsEcosystem`, startup in `App.razor`.
+- [x] `FileView`: Ctrl+V through `paste`, pasted host files imported like a drop.
+- [x] Copy diagnostic through `HackClipboard` (`clipboard.write`); `BrowserClipboard` `[Obsolete]`, then removed in 1.0 (ADR 0114).
+- [x] Tests and documentation.

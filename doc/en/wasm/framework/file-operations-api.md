@@ -1,8 +1,8 @@
-# Opérations sur les fichiers : API `HackFileOperations`
+# File operations: `HackFileOperations` API
 
-Ce document décrit `HackFileOperations`, l'API du SDK qui copie, déplace, importe et envoie à la corbeille des fichiers, avec ses règles de nommage, de conflit et d'arrêt. Le contrôle de fichiers de l'explorateur, qui s'appuie sur ces opérations, est dans [`dev/file-explorer.md`](../dev/file-explorer.md).
+This document describes `HackFileOperations`, the SDK API that copies, moves, imports and sends files to the trash, with its naming, conflict and stop rules. The explorer's file control, which relies on these operations, is in [`dev/file-explorer.md`](../dev/file-explorer.md).
 
-## Transferts (`HackFileOperations`, ex-`FileTransfer`)
+## Transfers (`HackFileOperations`, formerly `FileTransfer`)
 
 ```csharp
 HackFileTransferResult copied = await HackFileOperations.CopyAsync(paths, "/home/benoit/Backup");
@@ -12,16 +12,16 @@ HackFileTransferResult trashed = await HackFileOperations.MoveToTrashAsync(paths
 string? summary = moved.DescribeFailures("move");   // « Could not move 'x': permission denied. »
 ```
 
-Règles :
+Rules:
 
-| Cas | Comportement |
+| Case | Behavior |
 |---|---|
-| Copie, nom pris (y compris coller dans le même dossier) | `nom (copy).ext`, puis `nom (copy 2).ext`… ; un nom déjà suffixé continue la série. Pas d'extension séparée pour un dossier ou un fichier caché (`.bashrc (copy)`). |
-| Déplacement, nom pris | Fenêtre « Replace » (supprime la destination, dossier compris), « Keep both » (nom de copie), « Skip » ; « Apply to all » vaut pour le reste de l'opération. Fermer la fenêtre = « Skip ». |
-| Couper puis coller dans le dossier d'origine | Rien. |
-| Dossier vers lui-même ou un descendant | Refusé avant toute écriture ; les autres éléments continuent. |
-| Fichiers de l'hôte | Écrits comme une copie (nom de copie si pris), 256 Mio au plus par fichier. |
-| Erreur | Une raison par élément (`permission denied`, `read-only file system`, `no longer exists`…), sans arrêter les autres. |
-| Arrêt demandé (ADR 0069 : jeton annulé, `kill`, « End task », déconnexion) | Entre deux éléments (`HackProcess.CheckpointAsync`, qui rend aussi la main à l'interface) : l'élément en cours, atomique, se termine ; les suivants sont rapportés « stopped before this item » et `FileTransferResult.Cancelled` est vrai. Rien n'est à moitié copié ni perdu en silence. La fenêtre de l'explorateur fait attendre l'OS jusqu'à la fin de l'élément en cours. |
+| Copy, name taken (including pasting into the same folder) | `name (copy).ext`, then `name (copy 2).ext`...; a name already suffixed continues the series. No separate extension for a folder or a hidden file (`.bashrc (copy)`). |
+| Move, name taken | "Replace" window (deletes the destination, folder included), "Keep both" (copy name), "Skip"; "Apply to all" applies to the rest of the operation. Closing the window = "Skip". |
+| Cut then paste into the original folder | Nothing. |
+| Folder onto itself or a descendant | Refused before any write; the other items continue. |
+| Host files | Written like a copy (copy name if taken), 256 MiB at most per file. |
+| Error | One reason per item (`permission denied`, `read-only file system`, `no longer exists`...), without stopping the others. |
+| Stop requested (ADR 0069: canceled token, `kill`, "End task", disconnection) | Between two items (`HackProcess.CheckpointAsync`, which also yields to the interface): the current item, being atomic, finishes; the following ones are reported "stopped before this item" and `FileTransferResult.Cancelled` is true. Nothing is half copied or silently lost. The explorer window makes the OS wait until the current item is done. |
 
-Après un collage d'éléments coupés sans échec, le presse-papiers est vidé.
+After pasting cut items with no failure, the clipboard is emptied.

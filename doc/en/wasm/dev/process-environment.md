@@ -1,78 +1,78 @@
-# Environnement de processus
+# Process environment
 
-Chantier `rebuild/3-process-environment` de la phase 3 : ADR 0050, sections 5
-et 6, précisé par l'ADR 0053.
+Work item `rebuild/3-process-environment` of phase 3: ADR 0050, sections 5
+and 6, clarified by ADR 0053.
 
-## Objectif
+## Goal
 
-Chaque processus HackerOS porte désormais, comme sous Linux :
+Each HackerOS process now carries, as on Linux:
 
-- ses **arguments** (`argv`, nom de la commande compris) ;
-- son **répertoire courant**, chemin absolu canonique ;
-- son **environnement**, dictionnaire `NOM` → valeur.
+- its **arguments** (`argv`, including the command name);
+- its **current directory**, a canonical absolute path;
+- its **environment**, a `NAME` → value dictionary.
 
-Ces valeurs sont fixées à la création (copiées du parent, comme `fork`), ne
-changent que pour le processus lui-même, et sont visibles dans
-`/proc/<pid>/cmdline`, `environ` et `cwd`. Les apps les lisent et les
-modifient avec `HackEnvironment`, calqué sur `System.Environment`.
+These values are set at creation (copied from the parent, like `fork`), change
+only for the process itself, and are visible in
+`/proc/<pid>/cmdline`, `environ` and `cwd`. Apps read and
+modify them with `HackEnvironment`, modeled on `System.Environment`.
 
 ## Architecture
 
-| Élément | Emplacement | Rôle |
+| Element | Location | Role |
 |---|---|---|
-| `IProcessEnvironmentTable`, `ProcessEnvironmentSnapshot`, `ProcessEnvironmentRules` | `Shared/HackerOs.Simulation.Abstractions/Processes/ProcessEnvironmentContracts.cs` | Table par PID : lecture (instantané copié), changement du répertoire et des variables d'un PID, règles de nom (non vide, sans `=` ni NUL) et de valeur (sans NUL). |
-| `ProcessStartRequest.Arguments`, `WorkingDirectory`, `Environment` | `ProcessManagerContracts.cs` | Valeurs demandées à la création. |
-| `InMemoryProcessEnvironmentTable` | `Platform/HackerOs.Platform.Core/Processes/` | Implémentation. `Create` (copie du parent puis valeurs de la requête) et `Remove` sont internes : seul le gestionnaire de processus les appelle. |
-| `InMemoryProcessManager.Environments` | idem | Remplit l'entrée dans `Start`, la vide à toute fin (`Complete`, `Fault`, `Kill`, descendants tués, délai dépassé). |
-| `LoginEnvironment`, `LoginEnvironmentProvider` | `Processes/LoginEnvironment.cs` | Règles de l'environnement de connexion et de `/etc/hostname` ; lecture une fois par session (ADR 0053). |
-| `AppLaunchRequest.Environment` | `Lifecycle/AppLaunchContracts.cs` | Variables ajoutées par l'appelant. |
-| `AppLifecycleOrchestrator` | `Lifecycle/` | Calcule `argv` (`Terminal.Name` du manifeste, sinon l'identifiant d'app, puis les arguments) et l'état de départ (ci-dessous). |
-| `IAppEnvironmentGateway` | `Shared/HackerOs.Simulation.Abstractions/Gateways/AppEnvironmentGatewayContracts.cs` | Vue d'une app sur **son** processus. Aucune capacité requise. |
-| `AppEnvironmentGateway` | `Platform/HackerOs.Platform.Core/Execution/` | Passerelle liée au PID de l'app ; `DetachedAppEnvironmentGateway` quand il n'y a pas de table (tests). |
-| `IAppExecutionContext.Environment` | `Shared/HackerOs.AppSdk/IAppExecutionContext.cs` | Membre par défaut détaché (dossier personnel, `HOME`), remplacé par la fabrique de confiance. |
-| `HackEnvironment` | `Shared/HackerOs.AppSdk/HackEnvironment.cs` | Façade statique du SDK. |
-| `HackExecutionContext.WorkingDirectory` | `Shared/HackerOs.AppSdk/HackExecutionContext.cs` | Lit le répertoire du processus, sauf si `Enter(context, dir)` en a fixé un et qu'aucun `SetCurrentDirectoryAsync` ne l'a remplacé depuis. |
-| `ProcFileSystemProvider` | `FileSystem/Virtual/` | `cmdline`, `environ`, `cwd` lus dans la table à chaque lecture. |
-| `FileSystemSeeder` | `FileSystem/` | Crée `/etc/hostname` (`hackeros`) et `/etc/environment` (commentaire) s'ils sont absents, `0644`, root. Ne les réécrit jamais. |
+| `IProcessEnvironmentTable`, `ProcessEnvironmentSnapshot`, `ProcessEnvironmentRules` | `Shared/HackerOs.Simulation.Abstractions/Processes/ProcessEnvironmentContracts.cs` | Per-PID table: reading (copied snapshot), changing the directory and variables of a PID, rules for names (non-empty, no `=` or NUL) and values (no NUL). |
+| `ProcessStartRequest.Arguments`, `WorkingDirectory`, `Environment` | `ProcessManagerContracts.cs` | Values requested at creation. |
+| `InMemoryProcessEnvironmentTable` | `Platform/HackerOs.Platform.Core/Processes/` | Implementation. `Create` (copy from the parent, then the request's values) and `Remove` are internal: only the process manager calls them. |
+| `InMemoryProcessManager.Environments` | same | Fills the entry in `Start`, empties it on any end (`Complete`, `Fault`, `Kill`, killed descendants, timeout exceeded). |
+| `LoginEnvironment`, `LoginEnvironmentProvider` | `Processes/LoginEnvironment.cs` | Rules for the login environment and `/etc/hostname`; read once per session (ADR 0053). |
+| `AppLaunchRequest.Environment` | `Lifecycle/AppLaunchContracts.cs` | Variables added by the caller. |
+| `AppLifecycleOrchestrator` | `Lifecycle/` | Computes `argv` (`Terminal.Name` from the manifest, otherwise the app identifier, then the arguments) and the starting state (below). |
+| `IAppEnvironmentGateway` | `Shared/HackerOs.Simulation.Abstractions/Gateways/AppEnvironmentGatewayContracts.cs` | An app's view of **its own** process. No capability required. |
+| `AppEnvironmentGateway` | `Platform/HackerOs.Platform.Core/Execution/` | Gateway bound to the app's PID; `DetachedAppEnvironmentGateway` when there is no table (tests). |
+| `IAppExecutionContext.Environment` | `Shared/HackerOs.AppSdk/IAppExecutionContext.cs` | Default detached member (home folder, `HOME`), replaced by the trusted factory. |
+| `HackEnvironment` | `Shared/HackerOs.AppSdk/HackEnvironment.cs` | Static SDK facade. |
+| `HackExecutionContext.WorkingDirectory` | `Shared/HackerOs.AppSdk/HackExecutionContext.cs` | Reads the process directory, unless `Enter(context, dir)` set one and no `SetCurrentDirectoryAsync` has replaced it since. |
+| `ProcFileSystemProvider` | `FileSystem/Virtual/` | `cmdline`, `environ`, `cwd` read from the table on each read. |
+| `FileSystemSeeder` | `FileSystem/` | Creates `/etc/hostname` (`hackeros`) and `/etc/environment` (comment) if they are absent, `0644`, root. Never rewrites them. |
 
-### État de départ d'un processus
+### Starting state of a process
 
-1. **Sans parent** (bureau, service, commande d'un `ExecuteCommandIntent` sans
-   contexte appelant) : environnement de connexion,
-   répertoire `WorkingDirectory` de la requête ou dossier personnel, `PWD` égal
-   à ce répertoire.
-2. **Avec parent** : copie du répertoire et de l'environnement du parent au
-   moment de la création ; un `WorkingDirectory` explicite remplace le
-   répertoire et met `PWD` à jour.
-3. Dans les deux cas, `AppLaunchRequest.Environment` s'applique en dernier.
+1. **Without a parent** (desktop, service, command from an `ExecuteCommandIntent` without
+   a calling context): login environment,
+   the request's `WorkingDirectory` or the home folder, `PWD` equal
+   to that directory.
+2. **With a parent**: copy of the parent's directory and environment at the
+   time of creation; an explicit `WorkingDirectory` replaces the
+   directory and updates `PWD`.
+3. In both cases, `AppLaunchRequest.Environment` applies last.
 
-Environnement de connexion : `HOME`, `USER`, `LOGNAME`, `SHELL=/bin/hsh`,
-`PATH=/bin:/usr/bin` (informatif), `PWD`, `LANG=en_US.UTF-8`, puis la locale
-du système (`/etc/locale.conf`), puis les lignes `NOM=valeur` de
-`/etc/environment` (valeur éventuellement entre guillemets simples ou doubles),
-puis la locale de l'utilisateur (`~/.config/locale.conf`). `HOME`, `USER` et
-`LOGNAME` ne peuvent pas y être remplacés ; les fichiers `locale.conf` ne
-posent que `LANG`, `LANGUAGE` et les `LC_*`. Les lignes vides et `#` sont
-ignorées ; une ligne invalide ou protégée est ignorée avec un avertissement dans
+Login environment: `HOME`, `USER`, `LOGNAME`, `SHELL=/bin/hsh`,
+`PATH=/bin:/usr/bin` (informational), `PWD`, `LANG=en_US.UTF-8`, then the system
+locale (`/etc/locale.conf`), then the `NAME=value` lines of
+`/etc/environment` (value optionally in single or double quotes),
+then the user's locale (`~/.config/locale.conf`). `HOME`, `USER` and
+`LOGNAME` cannot be replaced there; the `locale.conf` files only
+set `LANG`, `LANGUAGE` and the `LC_*`. Empty lines and `#` lines are
+ignored; an invalid or protected line is ignored with a warning in
 `/var/log/syslog`.
 
-`LANG`, `LC_MESSAGES` et `LC_ALL` choisissent la langue des textes du
-processus (anglais ou français), `LC_TIME`/`LC_NUMERIC` le format des dates et
-nombres ; `LANG=fr_FR.UTF-8 help` répond en français dans une session anglaise
+`LANG`, `LC_MESSAGES` and `LC_ALL` choose the language of the process's
+texts (English or French), `LC_TIME`/`LC_NUMERIC` the format of dates and
+numbers; `LANG=fr_FR.UTF-8 help` answers in French in an English session
 (ADR 0104, [`localization.md`](../framework/localization.md)).
 
 ### `/proc`
 
-| Fichier | Contenu |
+| File | Content |
 |---|---|
-| `/proc/<pid>/cmdline` | chaque argument suivi de NUL (`grep\0-i\0two words\0`) |
-| `/proc/<pid>/environ` | chaque paire `NOM=valeur` suivie de NUL, mode `0400` |
-| `/proc/<pid>/cwd` | lien vers le répertoire courant réel |
+| `/proc/<pid>/cmdline` | each argument followed by NUL (`grep\0-i\0two words\0`) |
+| `/proc/<pid>/environ` | each `NAME=value` pair followed by NUL, mode `0400` |
+| `/proc/<pid>/cwd` | link to the real current directory |
 
-Sans entrée dans la table (anciens câblages, doubles de test), on retombe sur
-l'identifiant d'app, un fichier vide et le dossier personnel.
+Without an entry in the table (old wiring, test doubles), it falls back to
+the app identifier, an empty file and the home folder.
 
-## Utilisation
+## Usage
 
 ```csharp
 string[] argv = HackEnvironment.GetCommandLineArgs();      // ["grep", "-i", "motif"]
@@ -85,60 +85,60 @@ string user = HackEnvironment.UserName;                     // nom de connexion
 string host = HackEnvironment.MachineName;                  // /etc/hostname
 ```
 
-Toutes les opérations visent le processus courant. Une commande qui fait
-`export` ou `cd` ne change pas le shell qui l'a lancée : c'est le rôle de
-l'accès contrôlé au shell (ADR 0051, `IShellSession`, voir
+All operations target the current process. A command that does
+`export` or `cd` does not change the shell that launched it: that is the role of
+controlled access to the shell (ADR 0051, `IShellSession`, see
 [`shell-commands.md`](shell-commands.md)).
 
-Depuis l'ADR 0064, le shell distingue aussi les **variables non exportées**
-(`NOM=valeur` sans `export`) : elles vivent dans `ShellSession`, pas dans
-l'environnement du processus `hsh`, et ne sont donc ni dans
-`/proc/<pid>/environ` ni héritées par les commandes. `export NOM` les y
-place ; `NOM=valeur commande` ne passe `NOM` qu'à cette commande
+Since ADR 0064, the shell also distinguishes **unexported variables**
+(`NAME=value` without `export`): they live in `ShellSession`, not in
+the environment of the `hsh` process, and so are neither in
+`/proc/<pid>/environ` nor inherited by commands. `export NAME` puts them
+there; `NAME=value command` passes `NAME` only to that command
 ([`shell-interpreter.md`](shell-interpreter.md#variables)).
 
-`TerminalExecutionContext.WorkingDirectory` et `Environment` restent, pour la
-compatibilité : ils donnent l'état du processus au démarrage de la commande
-(tout l'environnement, plus seulement `HOME`).
+`TerminalExecutionContext.WorkingDirectory` and `Environment` remain, for
+compatibility: they give the process state at the start of the command
+(the whole environment, no longer just `HOME`).
 
-L'invite du terminal affiche le nom de la machine (`alice@hackeros:~$`) lu par
+The terminal prompt displays the machine name (`alice@hackeros:~$`) read by
 `IAppExecutionContext.Environment.MachineName`.
 
-## Décisions clés
+## Key decisions
 
-- **Table à part** plutôt que des champs dans `ProcessRecord`, qui reste un
-  instantané immuable du cycle de vie (ADR 0050).
-- **Copie à la création** : ni partage ni lien vivant entre parent et enfant.
-- **`SetCurrentDirectoryAsync`** au lieu d'un `set` synchrone (ADR 0053).
-- **Lecture des fichiers système une fois par session**, en root (ADR 0053).
-- **Valeur vide conservée** : contrairement à `System.Environment` sous
-  Windows, `""` n'efface pas une variable, comme sous Linux.
-- **Shell** : depuis le chantier `3-shell-interpreter`, le shell est le
-  processus de l'app qui l'héberge ; chaque commande est son enfant et hérite
-  de son répertoire (mis à jour par `cd`) et de son environnement. Voir
+- **Separate table** rather than fields in `ProcessRecord`, which remains an
+  immutable snapshot of the lifecycle (ADR 0050).
+- **Copy at creation**: no sharing or live link between parent and child.
+- **`SetCurrentDirectoryAsync`** instead of a synchronous `set` (ADR 0053).
+- **System files read once per session**, as root (ADR 0053).
+- **Empty value kept**: unlike `System.Environment` on
+  Windows, `""` does not erase a variable, as on Linux.
+- **Shell**: since the `3-shell-interpreter` work item, the shell is the
+  process of the app that hosts it; each command is its child and inherits
+  its directory (updated by `cd`) and its environment. See
   [`shell-interpreter.md`](shell-interpreter.md).
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Processes/ProcessEnvironmentTests.cs` :
-  héritage, isolation, instantanés, nettoyage, validation.
-- `Tests/HackerOs.Platform.Core.Tests/Processes/LoginEnvironmentTests.cs` :
-  règles de `/etc/environment` et `/etc/hostname`, amorçage.
-- `Tests/HackerOs.Platform.Core.Tests/FileSystem/Virtual/ProcFileSystemProviderTests.cs` :
+- `Tests/HackerOs.Platform.Core.Tests/Processes/ProcessEnvironmentTests.cs`:
+  inheritance, isolation, snapshots, cleanup, validation.
+- `Tests/HackerOs.Platform.Core.Tests/Processes/LoginEnvironmentTests.cs`:
+  rules for `/etc/environment` and `/etc/hostname`, bootstrap.
+- `Tests/HackerOs.Platform.Core.Tests/FileSystem/Virtual/ProcFileSystemProviderTests.cs`:
   `cmdline`, `environ`, `cwd`.
-- `Tests/HackerOs.Platform.Core.Tests/Lifecycle/AppLifecycleOrchestratorTests.cs` :
-  processus racine et enfant de bout en bout, lecture une fois par session.
-- `Tests/HackerOs.AppSdk.Tests/HackEnvironmentTests.cs` : façade du SDK.
+- `Tests/HackerOs.Platform.Core.Tests/Lifecycle/AppLifecycleOrchestratorTests.cs`:
+  root and child process end to end, read once per session.
+- `Tests/HackerOs.AppSdk.Tests/HackEnvironmentTests.cs`: SDK facade.
 
-## Liste des tâches
+## Task list
 
-- [x] Contrats `IProcessEnvironmentTable`, `ProcessEnvironmentSnapshot`, champs de `ProcessStartRequest`.
-- [x] `InMemoryProcessEnvironmentTable` et branchement dans `InMemoryProcessManager` (création, fin).
-- [x] Environnement de connexion, `/etc/environment`, `/etc/hostname` et leur amorçage.
-- [x] `argv`, répertoire et environnement calculés par `AppLifecycleOrchestrator`, `AppLaunchRequest.Environment`.
-- [x] `IAppEnvironmentGateway`, `IAppExecutionContext.Environment`, passerelle de la fabrique.
-- [x] `HackEnvironment` et `HackExecutionContext.WorkingDirectory` relié au processus.
+- [x] Contracts `IProcessEnvironmentTable`, `ProcessEnvironmentSnapshot`, fields of `ProcessStartRequest`.
+- [x] `InMemoryProcessEnvironmentTable` and wiring into `InMemoryProcessManager` (creation, end).
+- [x] Login environment, `/etc/environment`, `/etc/hostname` and their bootstrap.
+- [x] `argv`, directory and environment computed by `AppLifecycleOrchestrator`, `AppLaunchRequest.Environment`.
+- [x] `IAppEnvironmentGateway`, `IAppExecutionContext.Environment`, factory gateway.
+- [x] `HackEnvironment` and `HackExecutionContext.WorkingDirectory` linked to the process.
 - [x] `/proc/<pid>/cmdline`, `environ`, `cwd`.
-- [x] Invite du terminal depuis `/etc/hostname`.
-- [x] Câblage de l'hôte Ecosystem.
-- [x] Tests et documentation (ADR 0053).
+- [x] Terminal prompt from `/etc/hostname`.
+- [x] Wiring of the Ecosystem host.
+- [x] Tests and documentation (ADR 0053).

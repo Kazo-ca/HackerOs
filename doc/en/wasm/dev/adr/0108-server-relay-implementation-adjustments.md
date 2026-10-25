@@ -1,98 +1,98 @@
-# ADR 0108 : ajustements de la mise en œuvre du relais du serveur
+# ADR 0108: implementation adjustments for the server relay
 
-## Statut
+## Status
 
-Accepté le 2026-10-17 (chantier `v3/10-server-proxy`).
+Accepted on 2026-10-17 (work item `v3/10-server-proxy`).
 
-- **Complète :** [ADR 0102](0102-server-network-relay-tcp-udp-and-policy.md)
-  (relais du serveur), sans en changer les décisions.
-- **Document :** [`server-network-relay.md`](../server-network-relay.md).
+- **Complements:** [ADR 0102](0102-server-network-relay-tcp-udp-and-policy.md)
+  (server relay), without changing its decisions.
+- **Document:** [`server-network-relay.md`](../server-network-relay.md).
 
-## Contexte
+## Context
 
-En réalisant l'ADR 0102, cinq points n'y étaient pas tranchés ou ne pouvaient
-pas l'être tels quels :
+While implementing ADR 0102, five points were not settled in it or could not be
+as written:
 
-1. §4 veut que le serveur vérifie l'accord `network.real.access` dans **ses**
-   accords synchronisés. Mais l'OS ne pousse jamais d'accord (ADR 0031 §1) et
-   aucune API du serveur n'en émet : la base du serveur n'en contient aucun.
-   Appliqué seul, le contrôle refuserait tout, `curl` compris.
-2. §2 et §3 ouvrent les flux en WebSocket, mais un `WebSocket` de navigateur
-   ne peut pas porter d'en-tête `Authorization`, et il ne peut pas non plus
-   lire le statut HTTP d'une mise à niveau refusée.
-3. §5 ne dit pas ce qu'il advient de `MaxRedirectHops` quand les quotas sont
-   désactivés.
-4. L'ADR 0102 ne dit pas quelle capacité locale demande un flux, ni ce que
-   devient une connexion vers un hôte du réseau simulé, qui n'a pas de flux
-   d'octets bruts.
-5. Le serveur peut aussi servir l'OS en rendu côté serveur (ADR 0027) : le
-   client direct (ADR 0036) doit ouvrir un flux sans WebSocket.
+1. §4 wants the server to check the `network.real.access` grant in **its**
+   synchronized grants. But the OS never pushes a grant (ADR 0031 §1) and
+   no server API issues any: the server database contains none.
+   Applied alone, the check would reject everything, `curl` included.
+2. §2 and §3 open the streams as WebSockets, but a browser `WebSocket`
+   cannot carry an `Authorization` header, and it also cannot
+   read the HTTP status of a refused upgrade.
+3. §5 does not say what happens to `MaxRedirectHops` when quotas are
+   disabled.
+4. ADR 0102 does not say which local capability a stream requires, nor what
+   happens to a connection to a host of the simulated network, which has no
+   raw byte stream.
+5. The server can also serve the OS with server-side rendering (ADR 0027): the
+   direct client (ADR 0036) must open a stream without a WebSocket.
 
-## Décision
+## Decision
 
-### 1. Accord du serveur : liste de l'opérateur, plus les accords synchronisés
+### 1. Server grant: operator list, plus synchronized grants
 
-Le serveur accorde le relais à une app si son identifiant figure dans
-`HackerOs:Proxy:GrantedApps` (`appsettings.json`) **ou** si la dernière
-révision d'un enregistrement `grants` du compte nomme cette app avec
-`network.real.access` sans être révoquée. La liste par défaut contient les
-commandes système qui déclarent `network.real.access` : `curl`, `wget`,
-`ping`, `cat` et `nmap`, que l'OS accorde déjà par sa politique système.
+The server grants the relay to an app if its identifier appears in
+`HackerOs:Proxy:GrantedApps` (`appsettings.json`) **or** if the latest
+revision of a `grants` record of the account names this app with
+`network.real.access` without being revoked. The default list contains the
+system commands that declare `network.real.access`: `curl`, `wget`,
+`ping`, `cat` and `nmap`, which the OS already grants through its system policy.
 
-C'est l'option recommandée de la question posée à Benoit dans le fil
-« V3 10 : relais du serveur » le 2026-10-17 ; si sa réponse en choisit une
-autre, un nouvel ADR remplace ce paragraphe.
+This is the recommended option of the question asked to Benoit in the
+thread "V3 10: server relay" on 2026-10-17; if his answer chooses another,
+a new ADR replaces this paragraph.
 
-L'identifiant d'app reste déclaré par le client : le contrôle empêche un
-client modifié d'ouvrir le relais à une app que le serveur ne connaît pas,
-pas de se faire passer pour `curl`. Le serveur est mono-utilisateur
-(ADR 0027) ; la vraie frontière reste le compte et l'appareil.
+The app identifier remains declared by the client: the check prevents a modified
+client from opening the relay to an app the server does not know,
+not from impersonating `curl`. The server is single-user
+(ADR 0027); the real boundary remains the account and the device.
 
-### 2. Ouverture d'un flux
+### 2. Opening a stream
 
-- Le serveur valide la requête et connecte le socket **avant** d'accepter le
-  WebSocket. En cas de succès, sa première trame est une trame **texte**
-  (`ProxyStreamOpened`, JSON : adresse épinglée et port) ; toutes les trames
-  suivantes sont binaires.
-- Un refus accepte le WebSocket puis le ferme aussitôt avec le code `4001`
-  et la raison `« <ProxyErrorCode> <message> »`. Les autres codes : `4000`
-  la cible a fermé, `4002` inactivité.
-- Le jeton d'accès peut passer dans le paramètre `access_token` de la requête,
-  sur les deux routes de flux seulement, comme SignalR. Ailleurs, seul
-  l'en-tête `Authorization` est accepté.
+- The server validates the request and connects the socket **before** accepting the
+  WebSocket. On success, its first frame is a **text** frame
+  (`ProxyStreamOpened`, JSON: pinned address and port); all
+  following frames are binary.
+- A refusal accepts the WebSocket then closes it immediately with code `4001`
+  and the reason `« <ProxyErrorCode> <message> »`. The other codes: `4000`
+  the target closed, `4002` inactivity.
+- The access token can be passed in the `access_token` query parameter,
+  on the two stream routes only, like SignalR. Elsewhere, only the
+  `Authorization` header is accepted.
 
-### 3. Quotas désactivés
+### 3. Quotas disabled
 
-`Quotas:Enabled = false` lève les limites de taille, de concurrence, de flux
-et d'inactivité. `MaxRedirectHops` reste appliqué : sans lui une boucle de
-redirections ne finit jamais.
+`Quotas:Enabled = false` lifts the limits on size, concurrency, streams
+and inactivity. `MaxRedirectHops` remains applied: without it a redirect
+loop never ends.
 
-### 4. Côté OS
+### 4. OS side
 
-- Un socket TCP ou UDP demande `network.simulated.write` : il transporte des
-  octets arbitraires dans les deux sens, comme une requête `POST`.
-- Le réseau simulé n'a pas de flux bruts : une connexion vers un hôte qu'il
-  connaît, ou vers cette machine, est refusée (`ECONNREFUSED`). Un hôte
-  inconnu passe par le relais si l'app a `network.real.access`, sinon il est
-  introuvable.
-- Un refus du relais devient l'erreur d'une vraie pile : port ou plage
-  bloqués et refus de la cible donnent `ConnectionRefused`, cible muette
-  `HostUnreachable`, accord manquant ou relais coupé `HostNotFound` (pas de
+- A TCP or UDP socket requires `network.simulated.write`: it carries
+  arbitrary bytes in both directions, like a `POST` request.
+- The simulated network has no raw streams: a connection to a host it
+  knows, or to this machine, is refused (`ECONNREFUSED`). An unknown host
+  goes through the relay if the app has `network.real.access`, otherwise it is
+  not found.
+- A relay refusal becomes the error of a real stack: blocked port or range
+  and target refusal give `ConnectionRefused`, silent target
+  `HostUnreachable`, missing grant or relay turned off `HostNotFound` (no
   route).
 
-### 5. Flux en processus
+### 5. In-process streams
 
-`IProxyClient.OpenStreamAsync` a deux implémentations : `HttpProxyClient`
-(WebSocket, hôtes WebAssembly) et `DirectProxyClient` (socket du serveur
-lui-même, OS servi en rendu côté serveur), avec les mêmes validations.
+`IProxyClient.OpenStreamAsync` has two implementations: `HttpProxyClient`
+(WebSocket, WebAssembly hosts) and `DirectProxyClient` (the server's own
+socket, OS served with server-side rendering), with the same validations.
 
-## Conséquences
+## Consequences
 
-- Le vrai réseau marche dès qu'un appareil est connecté, pour les commandes
-  système, sans configuration.
-- Une app tierce qui veut le relais doit être ajoutée par l'opérateur à
-  `GrantedApps`, ou recevoir un accord émis par le serveur (aucune API ne le
-  fait encore, comme le notait déjà l'ADR 0031).
-- Le binder de configuration ajoute aux listes initialisées dans le code au
-  lieu de les remplacer : les valeurs par défaut sont posées par
-  `ProxyRelayPolicy.From`, et une liste vide ou absente garde le défaut.
+- The real network works as soon as a device is connected, for system
+  commands, without configuration.
+- A third-party app that wants the relay must be added by the operator to
+  `GrantedApps`, or receive a grant issued by the server (no API does so
+  yet, as ADR 0031 already noted).
+- The configuration binder appends to lists initialized in code instead of
+  replacing them: default values are set by
+  `ProxyRelayPolicy.From`, and an empty or missing list keeps the default.

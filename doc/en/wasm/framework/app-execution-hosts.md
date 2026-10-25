@@ -1,43 +1,43 @@
-# Hôte d'exécution des apps : fil principal ou Web Worker
+# App execution host: main thread or Web Worker
 
-Ce document décrit ce qu'une app déclare pour choisir où tourne son processus (fil principal ou Web Worker), ce qui traverse la frontière d'un worker et comment lire l'état d'isolation de la page. Le protocole, le pool, l'escalade, les limites de processus et les mesures sont dans [`dev/worker-processes.md`](../dev/worker-processes.md).
+This document describes what an app declares to choose where its process runs (main thread or Web Worker), what crosses a worker boundary, and how to read the page's isolation state. The protocol, the pool, escalation, process limits and measurements are in [`dev/worker-processes.md`](../dev/worker-processes.md).
 
-## Déclarer l'hôte
+## Declaring the host
 
-`[AppManifest(Execution = AppExecutionHost.…)]` déclare l'hôte ; le générateur
-écrit le résultat dans `manifest.json` (`"execution"`).
+`[AppManifest(Execution = AppExecutionHost.…)]` declares the host; the generator
+writes the result to `manifest.json` (`"execution"`).
 
-| Genre | Défaut (`Default`) | Valeurs permises |
+| Kind | Default (`Default`) | Allowed values |
 |---|---|---|
-| Fenêtre, composant embarqué | `mainThread` | `mainThread` (validateur : `manifest.execution.window`) |
-| Commande | `pool` | `pool`, `dedicated`, `mainThread` |
+| Window, embedded component | `mainThread` | `mainThread` (validator: `manifest.execution.window`) |
+| Command | `pool` | `pool`, `dedicated`, `mainThread` |
 | Service | `dedicated` | `dedicated`, `pool`, `mainThread` |
 
-Une fenêtre (composant embarqué compris) reste sur le fil principal : `mainThread` est la seule valeur permise pour elle.
+A window (embedded component included) stays on the main thread: `mainThread` is the only value allowed for it.
 
-## Par défaut
+## By default
 
-Côté app : rien, sinon déclarer l'hôte quand le défaut ne convient pas
-(voir [`app-sdk.md`](app-sdk.md#processus-dans-des-web-workers-adr-0070-et-0071)).
+On the app side: nothing to do, other than declaring the host when the default does not fit
+(see [`app-sdk.md`](app-sdk.md#processus-dans-des-web-workers-adr-0070-et-0071)).
 
-## Ce qui traverse la frontière
+## What crosses the boundary
 
-Les types d'événements de l'OS qui ont un codec dans `WirePayloadCodec` (liste dans l'ADR 0138 §6) et les types d'une app déclarés par `[assembly: HackWireContext(typeof(MyJsonContext))]` traversent la frontière. Un autre type lève une `NotSupportedException` dans le worker, avec le nom de l'attribut à ajouter ; sur le fil principal, rien ne change.
+The OS event types that have a codec in `WirePayloadCodec` (list in ADR 0138 §6) and the types of an app declared by `[assembly: HackWireContext(typeof(MyJsonContext))]` cross the boundary. Any other type throws a `NotSupportedException` in the worker, with the name of the attribute to add; on the main thread, nothing changes.
 
-Les appels de passerelle exécutés par l'OS pour un processus du worker gardent les mêmes vérifications de capacités qu'en local.
+Gateway calls run by the OS for a worker process keep the same capability checks as locally.
 
-## Isolation cross-origin
+## Cross-origin isolation
 
-Une app lit l'état sans capacité par `HackCrossOriginIsolation.GetStatusAsync()`
-(SDK, espace `Diagnostics`, ADR 0146) : mêmes faits que les premières lignes de
-`/proc/hackeros/workers`. Dans un worker, c'est l'appel asynchrone `coi.get`.
-Diagnostic s'en sert pour son badge.
+An app reads the state without any capability through `HackCrossOriginIsolation.GetStatusAsync()`
+(SDK, `Diagnostics` namespace, ADR 0146): the same facts as the first lines of
+`/proc/hackeros/workers`. In a worker, it is the asynchronous call `coi.get`.
+Diagnostics uses it for its badge.
 
-## Tâches `HackBackground`
+## `HackBackground` tasks
 
-Une tâche `HackBackground` lancée par une app (`HackBackground.RunAsync`) tourne dans un worker du pool quand l'hôte en a, ou sur le fil principal sans worker, avec la même sérialisation. Détails : [`dev/worker-processes.md`](../dev/worker-processes.md#tâches-hackbackground-adr-0128-adr-0140) et [`background-jobs.md`](background-jobs.md).
+A `HackBackground` task launched by an app (`HackBackground.RunAsync`) runs in a pool worker when the host has one, or on the main thread when there is no worker, with the same serialization. Details: [`dev/worker-processes.md`](../dev/worker-processes.md#tâches-hackbackground-adr-0128-adr-0140) and [`background-jobs.md`](background-jobs.md).
 
-## Voir aussi
+## See also
 
-- [`app-sdk.md`](app-sdk.md#processus-dans-des-web-workers-adr-0070-et-0071) : résumé côté SDK.
-- [`app-sdk.md`](app-sdk.md#isolation-cross-origin-adr-0146) : `HackCrossOriginIsolation`.
+- [`app-sdk.md`](app-sdk.md#processus-dans-des-web-workers-adr-0070-et-0071): SDK-side summary.
+- [`app-sdk.md`](app-sdk.md#isolation-cross-origin-adr-0146): `HackCrossOriginIsolation`.

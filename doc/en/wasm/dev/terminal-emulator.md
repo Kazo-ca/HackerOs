@@ -1,18 +1,18 @@
-# Émulateur du terminal (xterm.js)
+# Terminal emulator (xterm.js)
 
-Le contrat côté apps et commandes (`TerminalPanel`, `IHackTerminal`, lecture d'un mot de passe sans écho, mode plein écran) est dans [`terminal-api.md`](../framework/terminal-api.md).
+The contract on the side of apps and commands (`TerminalPanel`, `IHackTerminal`, password reading without echo, full-screen mode) is in [`terminal-api.md`](../framework/terminal-api.md).
 
-## Objet
+## Purpose
 
-`TerminalPanel` (`Shared/HackerOs.AppSdk.Terminal`) affiche son shell dans un
-vrai terminal à grille de caractères, xterm.js, la librairie de la version
-legacy (ADR 0061). Les commandes peuvent écrire des couleurs ANSI, `nano`
-utilise l'écran alternatif, et le rendu ressemble à un terminal Linux.
+`TerminalPanel` (`Shared/HackerOs.AppSdk.Terminal`) displays its shell in a real
+character-grid terminal, xterm.js, the library of the legacy version
+(ADR 0061). Commands can write ANSI colors, `nano` uses the alternate screen,
+and the rendering looks like a Linux terminal.
 
-La console (`Apps/System/HackerOs.Apps.Terminal`) utilise `TerminalTabs`.
-L'éditeur de code n'utilise plus `TerminalPanel` directement : il embarque le
-terminal que l'app Terminal enregistre pour le contrat `hackeros.terminal`
-(`TerminalEmbed`, ADR 0063, [`embedded-components.md`](../framework/embedded-components.md)).
+The console (`Apps/System/HackerOs.Apps.Terminal`) uses `TerminalTabs`. The code
+editor no longer uses `TerminalPanel` directly: it embeds the terminal that the
+Terminal app registers for the `hackeros.terminal` contract (`TerminalEmbed`,
+ADR 0063, [`embedded-components.md`](../framework/embedded-components.md)).
 
 ## Architecture
 
@@ -25,107 +25,105 @@ clavier ─▶ xterm.js ──onData("\x1b[A")──▶ TerminalPanel.OnTerminal
 commande ─▶ TerminalOutputWriter ─▶ TerminalPanel.Write ("\n" → "\r\n") ─▶ xterm.js.write
 ```
 
-| Fichier | Rôle |
+| File | Role |
 |---|---|
-| `TerminalPanel.xterm.entry.js` | Point d'entrée du bundle : crée le `Terminal`, le `FitAddon`, le thème (jetons `--hos-*`), le gestionnaire de touches (copie, collage, raccourcis d'onglets) et l'observateur de taille. |
-| `build.mjs`, `package.json`, `package-lock.json` | Construisent `wwwroot/xterm/xterm.bundle.{js,css,LICENSE.txt}`. |
-| `TerminalPanel.razor.js` | Module du composant : `mountTerminal(host, dotNet, options)` renvoie `write`, `focus`, `dimensions`, `dispose`. |
-| `TerminalPanel.razor` | Discipline de ligne : routage des touches, exécution des lignes, invite, sorties, écran alternatif. |
-| `TerminalInputDecoder.cs` | Octets du clavier → `TerminalKeyEvent` (flèches, `ESC[3~`, Ctrl+lettre, Alt, collage multi-lignes). |
-| `TerminalLineEditor.cs` | Ligne en cours d'édition et séquences qui la redessinent, même repliée sur plusieurs rangées. |
-| `TerminalAnsi.cs` | Invite colorée, `ONLCR`, suivi « curseur en début de ligne », rendu d'un `TerminalScreenFrame`. |
+| `TerminalPanel.xterm.entry.js` | Bundle entry point: creates the `Terminal`, the `FitAddon`, the theme (`--hos-*` tokens), the key handler (copy, paste, tab shortcuts) and the size observer. |
+| `build.mjs`, `package.json`, `package-lock.json` | Build `wwwroot/xterm/xterm.bundle.{js,css,LICENSE.txt}`. |
+| `TerminalPanel.razor.js` | Component module: `mountTerminal(host, dotNet, options)` returns `write`, `focus`, `dimensions`, `dispose`. |
+| `TerminalPanel.razor` | Line discipline: key routing, line execution, prompt, outputs, alternate screen. |
+| `TerminalInputDecoder.cs` | Keyboard bytes → `TerminalKeyEvent` (arrows, `ESC[3~`, Ctrl+letter, Alt, multi-line paste). |
+| `TerminalLineEditor.cs` | The line being edited and the sequences that redraw it, even wrapped over several rows. |
+| `TerminalAnsi.cs` | Colored prompt, `ONLCR`, "cursor at start of line" tracking, rendering of a `TerminalScreenFrame`. |
 
-### Thème
+### Theme
 
-Le fond, le texte et le curseur viennent des jetons de design lus sur
-l'élément hôte (`--hos-bg-base`, `--hos-text-primary`, `--hos-accent`) ; la
-police vient de `--hos-font-mono` (`0.875rem`, 14 px à 100 %). La palette des 16 couleurs ANSI est
-celle du legacy, avec le vert d'accent de HackerOS. Le style du cadre est dans
-`TerminalPanel.razor.css` ; la grille elle-même est dessinée par xterm.js.
+The background, text and cursor come from the design tokens read on the host
+element (`--hos-bg-base`, `--hos-text-primary`, `--hos-accent`); the font comes
+from `--hos-font-mono` (`0.875rem`, 14 px at 100 %). The 16-color ANSI palette is
+the legacy one, with HackerOS's accent green. The frame style is in
+`TerminalPanel.razor.css`; the grid itself is drawn by xterm.js.
 
-Accessibilité ([`accessibility.md`](accessibility.md), ADR 0105) : `TerminalPanel` lit
-`AppContext.Accessibility` à l'ouverture et suit `Changed`. La taille de police est relue du
-panneau, dont la taille en `rem` suit la taille du texte ; en contraste élevé, xterm.js reçoit une
-palette dont chaque couleur atteint 7:1 sur fond noir, un curseur et une sélection jaunes ; en
-mouvement réduit, le curseur ne clignote pas. `applyAccessibility` (objet renvoyé par
-`mountTerminal`) applique un changement et réajuste la grille.
+Accessibility ([`accessibility.md`](accessibility.md), ADR 0105): `TerminalPanel` reads
+`AppContext.Accessibility` on opening and follows `Changed`. The font size is reread from the
+panel, whose `rem` size follows the text size; in high contrast, xterm.js receives a
+palette in which every color reaches 7:1 on a black background, a yellow cursor and selection; in
+reduced motion, the cursor does not blink. `applyAccessibility` (object returned by
+`mountTerminal`) applies a change and refits the grid.
 
-## Utilisation au clavier
+## Keyboard usage
 
-| Touche | Effet |
+| Key | Effect |
 |---|---|
-| ← → Début Fin, Ctrl+A/E/B/F | Déplacent le curseur dans la ligne. |
-| Retour arrière, Suppr, Ctrl+H | Effacent un caractère. |
-| Ctrl+W, Alt+Retour arrière | Effacent le mot avant le curseur. |
-| Ctrl+U / Ctrl+K | Effacent jusqu'au début / jusqu'à la fin. |
-| ↑ ↓, Ctrl+P/N | Historique du shell. |
-| Tab | Complétion par le shell ; un second Tab liste les candidats sous la ligne, puis l'invite revient avec la ligne ([`terminal-console.md`](terminal-console.md)). |
-| Ctrl+C | Avec une sélection : copie. Sinon, pendant une commande : l'annule (`^C`). À l'invite : abandonne la ligne. |
-| Ctrl+Shift+C / Ctrl+V / Ctrl+Shift+V | Copie / collage. Un collage de plusieurs lignes exécute chaque ligne. |
-| Ctrl+L | Efface l'écran et garde la ligne en cours. |
-| Ctrl+D | Ligne vide : `exit`. Sinon : efface le caractère sous le curseur. |
+| ← → Home End, Ctrl+A/E/B/F | Move the cursor within the line. |
+| Backspace, Delete, Ctrl+H | Erase one character. |
+| Ctrl+W, Alt+Backspace | Erase the word before the cursor. |
+| Ctrl+U / Ctrl+K | Erase to the start / to the end. |
+| ↑ ↓, Ctrl+P/N | Shell history. |
+| Tab | Completion by the shell; a second Tab lists the candidates under the line, then the prompt returns with the line ([`terminal-console.md`](terminal-console.md)). |
+| Ctrl+C | With a selection: copy. Otherwise, during a command: cancels it (`^C`). At the prompt: abandons the line. |
+| Ctrl+Shift+C / Ctrl+V / Ctrl+Shift+V | Copy / paste. A multi-line paste executes each line. |
+| Ctrl+L | Clears the screen and keeps the current line. |
+| Ctrl+D | Empty line: `exit`. Otherwise: erases the character under the cursor. |
 
-La copie lève un vrai événement `copy` (`document.execCommand("copy")`) au lieu
-d'écrire `navigator.clipboard` : le pont du presse-papiers de l'OS la reçoit
-comme une copie native (origine `GuestNative`) et ne l'envoie à la vraie machine
-que si `/etc/hackeros/clipboard.config` le permet ([`clipboard.md`](clipboard.md),
+Copy raises a real `copy` event (`document.execCommand("copy")`) instead of
+writing `navigator.clipboard`: the OS clipboard bridge receives it as a native
+copy (origin `GuestNative`) and sends it to the real machine only if
+`/etc/hackeros/clipboard.config` allows it ([`clipboard.md`](clipboard.md),
 ADR 0065).
 
-Chrome se réserve Ctrl+W, Ctrl+N et Ctrl+T (fermer l'onglet, nouvelle
-fenêtre, nouvel onglet) tant que HackerOS n'est pas installé en PWA : ces
-touches n'atteignent alors pas le terminal.
+Chrome reserves Ctrl+W, Ctrl+N and Ctrl+T (close tab, new window, new tab)
+as long as HackerOS is not installed as a PWA: these keys then do not reach the
+terminal.
 
-Pendant qu'une ligne s'exécute, les touches vont à l'**entrée standard** de
-ses commandes (ADR 0064 §6, `TerminalInputReader`), comme un tty en mode
-canonique : les caractères sont affichés en écho, Retour arrière et Ctrl+U
-effacent, Entrée envoie la ligne (`read`, `cat`, `sh` interactif la lisent),
-Ctrl+D sur une ligne vide est une fin d'entrée lue une fois, Ctrl+C
-interrompt. Ce que la commande n'a pas lu revient à l'invite suivante comme
-frappe anticipée (4096 touches au plus) : `sleep 5` puis `ls` + Entrée tapé
-pendant l'attente lance `ls` ensuite, comme sous Linux.
+While a line runs, keys go to the **standard input** of its commands
+(ADR 0064 §6, `TerminalInputReader`), like a tty in canonical mode: characters
+are echoed, Backspace and Ctrl+U erase, Enter sends the line (`read`, `cat`,
+interactive `sh` read it), Ctrl+D on an empty line is an end of input read
+once, Ctrl+C interrupts. What the command has not read comes back at the next
+prompt as type-ahead (4096 keys at most): `sleep 5` then `ls` + Enter typed
+during the wait runs `ls` afterwards, as on Linux.
 
-Une commande inachevée (`for f in *; do` + Entrée, guillemet ouvert, `|`
-final, here-document) affiche l'invite de continuation `>` de bash (`PS2`) :
-le terminal le demande au shell par `IHackShell.NeedsMoreInput`, accumule les
-lignes, puis les exécute ensemble ; Ctrl+C abandonne. L'historique garde une
-seule ligne (`TerminalHistory.ToSingleLine` : `for f in *; do echo $f; done`).
+An unfinished command (`for f in *; do` + Enter, open quote, trailing `|`,
+here-document) displays bash's continuation prompt `>` (`PS2`): the terminal
+asks the shell through `IHackShell.NeedsMoreInput`, accumulates the lines, then
+executes them together; Ctrl+C abandons. The history keeps a single line
+(`TerminalHistory.ToSingleLine`: `for f in *; do echo $f; done`).
 
-## Commandes plein écran
+## Full-screen commands
 
-Le contrat `IFullScreenTerminalSession` ne change pas. À l'entrée, le panneau
-écrit `ESC[?1049h` ; chaque `TerminalScreenFrame` est dessiné rangée par
-rangée (coupé à la largeur, sans repli), puis le curseur est placé ou caché.
-Depuis l'ADR 0064, une rangée peut contenir des séquences SGR (couleurs,
-vidéo inverse : `htop`, barres de `nano`) : `TerminalAnsi.FitToColumns` les
-garde entières sans les compter dans la largeur, et un `ESC[0m` termine la
-rangée ;
-à la sortie, `ESC[?1049l` rend l'écran normal tel qu'il était. La taille de
-la grille (`UpdateTerminalViewport`) est donnée à la session dès le début de
-chaque commande, et un redimensionnement envoie `TerminalKey.Resize`.
+The `IFullScreenTerminalSession` contract does not change. On entry, the panel
+writes `ESC[?1049h`; each `TerminalScreenFrame` is drawn row by row (cut to the
+width, without wrapping), then the cursor is placed or hidden. Since ADR 0064,
+a row may contain SGR sequences (colors, reverse video: `htop`, `nano` bars):
+`TerminalAnsi.FitToColumns` keeps them whole without counting them in the
+width, and an `ESC[0m` ends the row;
+on exit, `ESC[?1049l` returns the normal screen as it was. The grid size
+(`UpdateTerminalViewport`) is given to the session from the start of each
+command, and a resize sends `TerminalKey.Resize`.
 
-## Décisions
+## Decisions
 
-- **xterm.js n'est qu'un écran et un clavier.** L'édition de ligne, la
-  complétion et l'historique restent en C# : le shell et son contrat
-  (`IHackShell`) ne changent pas, et le comportement se teste sans navigateur.
-- **Bundle versionné**, comme Monaco : pas de npm au build .NET.
-  `package.json` et `package-lock.json` sont retirés du contenu publié (sinon
-  ils entrent en collision avec ceux du CodeEditor dans la publication de
-  l'hôte Ecosystem).
-- **Sortie d'erreur sans couleur**, comme un vrai terminal ; seuls les
-  messages du terminal lui-même (échec du démarrage du shell, `Fault:`) sont
-  en rouge et les bannières d'approbation en jaune.
-- **Invite colorée comme bash sous Debian** : `user@hôte` en vert gras,
-  le dossier en bleu gras.
-- **`nano` suit GNU nano** (ADR 0064 §7) : `^O` demande le nom du fichier
-  (pré-rempli) et sert aussi d'« enregistrer sous », car xterm.js envoie le
-  même octet `0x0F` pour Ctrl+O et Ctrl+Maj+O ; `^S`, `^W`/`^F`, `^K`/`^U`,
-  `^C`, `^G`, `^A`/`^E`, `^Y`/`^V` ; barre de titre et deux rangées de
-  raccourcis en vidéo inverse ; la ligne du curseur défile horizontalement
-  (`<` et `>` aux bords) ; tabulations sur 8 colonnes. Ctrl+W reste réservé
-  par Chrome hors PWA : `^F` cherche aussi.
+- **xterm.js is only a screen and a keyboard.** Line editing, completion and
+  history stay in C#: the shell and its contract (`IHackShell`) do not change,
+  and the behavior is tested without a browser.
+- **Versioned bundle**, like Monaco: no npm in the .NET build.
+  `package.json` and `package-lock.json` are removed from the published content
+  (otherwise they collide with those of CodeEditor in the Ecosystem host's
+  publication).
+- **Error output without color**, like a real terminal; only the terminal's own
+  messages (shell startup failure, `Fault:`) are in red and the approval banners
+  in yellow.
+- **Colored prompt like bash on Debian**: `user@host` in bold green, the folder
+  in bold blue.
+- **`nano` follows GNU nano** (ADR 0064 §7): `^O` asks for the file name
+  (pre-filled) and also serves as "save as", because xterm.js sends the same
+  byte `0x0F` for Ctrl+O and Ctrl+Shift+O; `^S`, `^W`/`^F`, `^K`/`^U`, `^C`,
+  `^G`, `^A`/`^E`, `^Y`/`^V`; title bar and two rows of shortcuts in reverse
+  video; the cursor line scrolls horizontally (`<` and `>` at the edges); tabs
+  on 8 columns. Ctrl+W remains reserved by Chrome outside a PWA: `^F` searches
+  too.
 
-## Mettre à jour xterm.js
+## Updating xterm.js
 
 ```bash
 cd wasm2/HackerOs/Shared/HackerOs.AppSdk.Terminal
@@ -133,36 +131,36 @@ cd wasm2/HackerOs/Shared/HackerOs.AppSdk.Terminal
 npm install && npm run build
 ```
 
-Puis versionner `package-lock.json` et `wwwroot/xterm/`.
+Then commit `package-lock.json` and `wwwroot/xterm/`.
 
 ## Tests
 
 - `Tests/HackerOs.AppSdk.Terminal.Tests/TerminalInputDecoderTests.cs`
 - `Tests/HackerOs.AppSdk.Terminal.Tests/TerminalLineEditorTests.cs`
 - `Tests/HackerOs.AppSdk.Terminal.Tests/TerminalAnsiTests.cs`
-- `Tests/HackerOs.AppSdk.Terminal.Tests/TerminalInputReaderTests.cs` (entrée standard)
-- `Tests/HackerOs.Commands.Nano.Tests/NanoCommandTests.cs` (Write Out pré-rempli, couper/coller, recherche, défilement horizontal)
-- `VirtualScreen.cs` (dans le même projet) : petit écran à grille de
-  caractères qui applique les séquences écrites, pour vérifier où finissent le
-  texte et le curseur (repli, retour au début du bloc de l'invite, cadres).
+- `Tests/HackerOs.AppSdk.Terminal.Tests/TerminalInputReaderTests.cs` (standard input)
+- `Tests/HackerOs.Commands.Nano.Tests/NanoCommandTests.cs` (pre-filled Write Out, cut/paste, search, horizontal scrolling)
+- `VirtualScreen.cs` (in the same project): a small character-grid screen that
+  applies the written sequences, to check where the text and cursor end up
+  (wrapping, return to the start of the prompt block, frames).
 
-Vérifié dans Chromium sur une publication Release : commandes, repli d'une
-longue ligne, édition au milieu, historique, complétion et liste au second
-Tab, Ctrl+C, Ctrl+L, nouvel onglet et `exit`, `nano` (écran alternatif puis
-retour), terminal intégré de l'éditeur de code.
+Verified in Chromium on a Release publication: commands, wrapping of a long
+line, editing in the middle, history, completion and list on the second Tab,
+Ctrl+C, Ctrl+L, new tab and `exit`, `nano` (alternate screen then return),
+integrated terminal of the code editor.
 
-## Liste des tâches
+## Task list
 
-- [x] Embarquer xterm.js 6.0 et le fit addon (npm/esbuild, bundle versionné, licence, cible MSBuild).
-- [x] Monter le terminal depuis le module du composant, thème depuis les jetons de design.
-- [x] Décoder les octets du clavier en `TerminalKeyEvent` (`TerminalInputDecoder`).
-- [x] Édition de ligne façon readline et redessin sur plusieurs rangées (`TerminalLineEditor`).
-- [x] Sorties des commandes vers xterm.js avec `ONLCR`, invite colorée.
-- [x] Écran alternatif pour les commandes plein écran.
-- [x] Copie, collage, raccourcis d'onglets laissés à l'interface.
-- [x] Clavier virtuel par le même chemin.
-- [x] Tests unitaires, vérification dans un navigateur.
-- [x] Entrée standard des commandes en mode canonique (`TerminalInputReader`, ADR 0064).
-- [x] Couleurs dans les cadres plein écran ; `nano` aux raccourcis de GNU nano (ADR 0064).
-- [x] Écho coupé pour les mots de passe (`ITerminalInputMode`, `ReadSecretLineAsync`, ADR 0120).
-- [x] ADR 0061, cette page, index.
+- [x] Embed xterm.js 6.0 and the fit addon (npm/esbuild, versioned bundle, license, MSBuild target).
+- [x] Mount the terminal from the component module, theme from the design tokens.
+- [x] Decode keyboard bytes into `TerminalKeyEvent` (`TerminalInputDecoder`).
+- [x] Readline-style line editing and redraw over several rows (`TerminalLineEditor`).
+- [x] Command output to xterm.js with `ONLCR`, colored prompt.
+- [x] Alternate screen for full-screen commands.
+- [x] Copy, paste, tab shortcuts left to the interface.
+- [x] Virtual keyboard through the same path.
+- [x] Unit tests, verification in a browser.
+- [x] Standard input of commands in canonical mode (`TerminalInputReader`, ADR 0064).
+- [x] Colors in full-screen frames; `nano` with GNU nano's shortcuts (ADR 0064).
+- [x] Echo off for passwords (`ITerminalInputMode`, `ReadSecretLineAsync`, ADR 0120).
+- [x] ADR 0061, this page, index.

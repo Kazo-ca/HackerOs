@@ -220,8 +220,9 @@ Documents : [`hack-file-api.md`](../framework/hack-file-api.md),
 - La direction est fixée par [`ecosystem-rebuild-plan.md`](plans/ecosystem-rebuild-plan.md) ;
   les décisions d'architecture sont des ADR dans [`adr/`](adr/), jamais
   modifiés après acceptation.
-- Les documents sont rédigés en français, avec des noms de fichiers en
-  anglais. Tout ajout ou renommage de document met à jour l'index
+- Les documents sont rédigés en français dans `doc/fr/` et traduits en anglais
+  dans `doc/en/` (mêmes dossiers, noms de fichiers en anglais) ; chaque
+  changement met à jour les deux langues. Tout ajout ou renommage de document met à jour l'index
   [`README.md`](../README.md) dans le même changement.
 - Chaque série de chantiers a sa branche d'intégration : `rebuild/base`
   (phases 1 à 4, fusionnée dans `main`), `web/base` (sites ASP.Hack et Blazor),

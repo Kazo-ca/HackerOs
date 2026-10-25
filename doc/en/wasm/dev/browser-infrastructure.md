@@ -1,79 +1,79 @@
-# Infrastructure navigateur : `HackerOs.Infrastructure.Browser`
+# Browser infrastructure: `HackerOs.Infrastructure.Browser`
 
-## Objet
+## Purpose
 
-`Infrastructure/HackerOs.Infrastructure.Browser` est la seule couche qui
-touche le navigateur : persistance IndexedDB (ADR 0015), récupération après
-une panne de stockage (ADR 0018), presse-papiers de l'hôte, chiffrement par
-WebCrypto, isolation cross-origin, Web Workers. Le reste de l'OS n'appelle
-jamais `IJSRuntime` directement : il passe par les contrats de
-`Shared/HackerOs.Simulation.Abstractions` que cette couche implémente.
+`Infrastructure/HackerOs.Infrastructure.Browser` is the only layer that
+touches the browser: IndexedDB persistence (ADR 0015), recovery after
+a storage failure (ADR 0018), host clipboard, encryption through
+WebCrypto, cross-origin isolation, Web Workers. The rest of the OS never calls
+`IJSRuntime` directly: it goes through the contracts of
+`Shared/HackerOs.Simulation.Abstractions` that this layer implements.
 
-La plateforme (`Platform/HackerOs.Platform.Core`) ne dépend pas de ce projet
-([`platform-core.md`](platform-core.md)). C'est `AddHackerOsEcosystem`
-(`OS/HackerOs.Ecosystem.Host`) qui enregistre les implémentations
-navigateur, dans la composition de l'hôte.
+The platform (`Platform/HackerOs.Platform.Core`) does not depend on this project
+([`platform-core.md`](platform-core.md)). It is `AddHackerOsEcosystem`
+(`OS/HackerOs.Ecosystem.Host`) that registers the browser
+implementations, in the host's composition.
 
-## Où se trouve quoi
+## What is where
 
-| Dossier | Contenu |
+| Folder | Content |
 |---|---|
-| `Schema/` | `HackerOsIndexedDbSchema` (nom de la base, version, magasins et index), modèle de schéma, politique de stockage des contenus (`FileContentStoragePolicy`). |
-| `FileSystem/` | Fournisseur du système de fichiers (`IndexedDbFileSystemProvider`), lecteur et écrivain, planificateur de mutations, amorçage, maintenance, contenu en blocs. |
-| `Sessions/`, `Policy/`, `Catalog/`, `Settings/`, `ServerConnection/`, `Sync/`, `WebData/` | Un dépôt IndexedDB par domaine (utilisateurs, groupes, grants, catalogue des apps, réglages hérités, connexion serveur, curseurs et états de synchro, bases des sites ASP.Hack). |
-| `Diagnostics/` | Journal de diagnostic et d'audit persistés, inspecteur du stockage. |
-| `Backup/` | Sauvegarde et restauration du stockage (`IndexedDbBackupService`). |
-| `Recovery/` | `BrowserStorageRecoveryClassifier` : traduit une erreur du navigateur en état de récupération (ADR 0018, `StorageRecoveryState`). |
-| `Storage/` | `BrowserStorageManager` : estimation de quota, demande de persistance, seuils d'espace faible. |
-| `Interop/` | `IndexedDbInteropAdapter` (appels JavaScript), `WebCryptoPasswordHasher`, canal du presse-papiers de l'hôte. |
-| `Isolation/` | `BrowserCrossOriginIsolation` : état COOP/COEP (ADR 0131, 0146). |
-| `Workers/` | `BrowserWebWorkerRuntime` : runtime des Web Workers côté navigateur ([`worker-processes.md`](worker-processes.md)). |
-| `Globalization/` | Satellites de langue chargés par le navigateur. |
-| `wwwroot/` | Scripts JavaScript servis sous `_content/HackerOs.Infrastructure.Browser/` : `indexedDb.js`, `storageManager.js`, `webSiteDatabases.js`, `cryptoHasher.js`, `hostClipboard.js`, `crossOriginIsolation.js`, `sharedRing.js` (anneau partagé des pipes des workers), `workerHost.js` et `workerBootstrap.js`. |
+| `Schema/` | `HackerOsIndexedDbSchema` (database name, version, stores and indexes), schema model, content storage policy (`FileContentStoragePolicy`). |
+| `FileSystem/` | File system provider (`IndexedDbFileSystemProvider`), reader and writer, mutation planner, seeding, maintenance, chunked content. |
+| `Sessions/`, `Policy/`, `Catalog/`, `Settings/`, `ServerConnection/`, `Sync/`, `WebData/` | One IndexedDB repository per domain (users, groups, grants, app catalog, legacy settings, server connection, sync cursors and states, ASP.Hack site databases). |
+| `Diagnostics/` | Persisted diagnostic and audit log, storage inspector. |
+| `Backup/` | Storage backup and restore (`IndexedDbBackupService`). |
+| `Recovery/` | `BrowserStorageRecoveryClassifier`: translates a browser error into a recovery state (ADR 0018, `StorageRecoveryState`). |
+| `Storage/` | `BrowserStorageManager`: quota estimation, persistence request, low-space thresholds. |
+| `Interop/` | `IndexedDbInteropAdapter` (JavaScript calls), `WebCryptoPasswordHasher`, host clipboard channel. |
+| `Isolation/` | `BrowserCrossOriginIsolation`: COOP/COEP state (ADR 0131, 0146). |
+| `Workers/` | `BrowserWebWorkerRuntime`: Web Workers runtime on the browser side ([`worker-processes.md`](worker-processes.md)). |
+| `Globalization/` | Language satellites loaded by the browser. |
+| `wwwroot/` | JavaScript scripts served under `_content/HackerOs.Infrastructure.Browser/`: `indexedDb.js`, `storageManager.js`, `webSiteDatabases.js`, `cryptoHasher.js`, `hostClipboard.js`, `crossOriginIsolation.js`, `sharedRing.js` (shared ring of the workers' pipes), `workerHost.js` and `workerBootstrap.js`. |
 
-## Base IndexedDB
+## IndexedDB database
 
-- Nom : `hackeros`. Version courante : **4** (`HackerOsIndexedDbSchema.CurrentVersion`).
-  Changer la version est le seul moyen d'ajouter, retirer ou modifier un
-  magasin ou un index ; chaque montée a son étape de migration.
-- Magasins principaux : `users`, `groups`, `sessions`, `settings`, `fsEntries`
-  (métadonnées : fichiers, dossiers, liens), `fsLinks`, `fsContent` (blocs),
+- Name: `hackeros`. Current version: **4** (`HackerOsIndexedDbSchema.CurrentVersion`).
+  Changing the version is the only way to add, remove or modify a
+  store or an index; each upgrade has its migration step.
+- Main stores: `users`, `groups`, `sessions`, `settings`, `fsEntries`
+  (metadata: files, folders, links), `fsLinks`, `fsContent` (chunks),
   `catalog`, `grants`, `audit`, `diagnostics`, `syncMetadata`, `serverConnection`,
-  `syncCursors`, `syncRecordState`, et une base par site ASP.Hack (`hackweb.<appId>`).
-- Contenu de fichier : découpé en blocs adressés par SHA-256, de 256 Kio au plus
-  par défaut (`FileContentStoragePolicy.DefaultMaxChunkSizeBytes`) ; un bloc identique
-  n'est stocké qu'une fois.
+  `syncCursors`, `syncRecordState`, and one database per ASP.Hack site (`hackweb.<appId>`).
+- File content: split into chunks addressed by SHA-256, of at most 256 KiB
+  by default (`FileContentStoragePolicy.DefaultMaxChunkSizeBytes`); an identical chunk
+  is stored only once.
 
-## Récupération
+## Recovery
 
-`BrowserStorageRecoveryClassifier` range une panne dans l'un des états de
-`StorageRecoveryState` : stockage indisponible, quota épuisé, migration
-échouée, contenu invalide. Le contexte (`StorageRecoveryContext`) distingue le
-démarrage (boot) d'une opération ordinaire. Une réinitialisation destructive
-passe toujours par une confirmation explicite (`AwaitDestructiveConfirmation`).
-La règle : ne jamais transformer une panne opérationnelle en perte de données
-silencieuse (ADR 0018). La procédure de récupération du cache PWA est dans
-[`pwa-cache-recovery.md`](pwa-cache-recovery.md) ; la sauvegarde de la machine
-dans [`system-backup.md`](system-backup.md).
+`BrowserStorageRecoveryClassifier` sorts a failure into one of the states of
+`StorageRecoveryState`: storage unavailable, quota exhausted, migration
+failed, invalid content. The context (`StorageRecoveryContext`) distinguishes
+startup (boot) from an ordinary operation. A destructive reset
+always goes through an explicit confirmation (`AwaitDestructiveConfirmation`).
+The rule: never turn an operational failure into silent data loss
+(ADR 0018). The PWA cache recovery procedure is in
+[`pwa-cache-recovery.md`](pwa-cache-recovery.md); the machine backup
+in [`system-backup.md`](system-backup.md).
 
-## Points à connaître
+## Points to know
 
-- Les mutations de métadonnées sont des lots d'opérations IndexedDB ordonnés,
-  construits par `IndexedDbFileSystemMutationPlanner` pour être atomiques. Les
-  blocs de contenu sont adressés par hachage ; ceux qui ne sont plus référencés
-  sont ramassés par une passe bornée, après une période de rétention
-  (`OrphanRetention`), et jamais sans revalidation de leurs références.
-- Le chemin d'un fichier se résout en une requête (`resolvePath`, ADR 0090,
+- Metadata mutations are ordered batches of IndexedDB operations,
+  built by `IndexedDbFileSystemMutationPlanner` to be atomic. Content
+  chunks are addressed by hash; those that are no longer referenced
+  are collected by a bounded pass, after a retention period
+  (`OrphanRetention`), and never without revalidating their references.
+- A file's path is resolved in one request (`resolvePath`, ADR 0090,
   [`filesystem-path-lookup.md`](filesystem-path-lookup.md)).
-- Les scripts `wwwroot/*.js` sont testés en contrat par
-  `Tests/HackerOs.Infrastructure.Browser.Tests` (tests Node pour `sharedRing.js`)
-  et `Tests/HackerOs.E2E.Tests` (`IndexedDbBrowserContractTests`, dans un vrai navigateur).
-- Les anciennes notes de migration IndexedDB (versions, reprise, contrat de
-  récupération) sont archivées dans [`old/`](old/) ; elles décrivent l'état
-  antérieur et ne font pas foi pour le schéma actuel.
+- The `wwwroot/*.js` scripts are contract-tested by
+  `Tests/HackerOs.Infrastructure.Browser.Tests` (Node tests for `sharedRing.js`)
+  and `Tests/HackerOs.E2E.Tests` (`IndexedDbBrowserContractTests`, in a real browser).
+- The old IndexedDB migration notes (versions, resumption, recovery
+  contract) are archived in [`old/`](old/); they describe the earlier
+  state and are not authoritative for the current schema.
 
-## Liens
+## Links
 
-- Décisions : [ADR 0015](adr/0015-browser-storage-and-indexeddb-adapter.md), [ADR 0018](adr/0018-indexeddb-failure-and-recovery-policy.md), [ADR 0099](adr/0099-os-backup-and-low-storage.md), [ADR 0131](adr/0131-cross-origin-isolation.md).
-- Système de fichiers : [`virtual-proc-and-dev.md`](virtual-proc-and-dev.md), [`../framework/hack-file-api.md`](../framework/hack-file-api.md).
-- Hôte et construction : [`building-and-testing.md`](building-and-testing.md).
+- Decisions: [ADR 0015](adr/0015-browser-storage-and-indexeddb-adapter.md), [ADR 0018](adr/0018-indexeddb-failure-and-recovery-policy.md), [ADR 0099](adr/0099-os-backup-and-low-storage.md), [ADR 0131](adr/0131-cross-origin-isolation.md).
+- File system: [`virtual-proc-and-dev.md`](virtual-proc-and-dev.md), [`../framework/hack-file-api.md`](../framework/hack-file-api.md).
+- Host and build: [`building-and-testing.md`](building-and-testing.md).
