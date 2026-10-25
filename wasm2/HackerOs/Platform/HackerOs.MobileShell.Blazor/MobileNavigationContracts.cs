@@ -2,7 +2,7 @@ namespace HackerOs.MobileShell.Blazor;
 
 /// <summary>
 /// Dispatches the three Mobile system-navigation actions (Triangle/Back, Circle/Home,
-/// Square/Recent, per doc/wasm/dev/old/mobile-interface-platform-plan.md §7.2/§7.3/§7.4/§7.5). The host owns
+/// Square/Recent, per doc/en/wasm/dev/old/mobile-interface-platform-plan.md §7.2/§7.3/§7.4/§7.5). The host owns
 /// how each is fulfilled — e.g. Back may consult a dialog stack, an app's declared
 /// <c>IAppBackHandler</c> (<c>MOB-012</c>, not yet implemented), or a navigation stack
 /// (<c>MOB-011</c>, not yet implemented) before falling back to Home. This bar only dispatches the

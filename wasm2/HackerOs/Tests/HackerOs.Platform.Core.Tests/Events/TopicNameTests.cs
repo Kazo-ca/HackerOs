@@ -5,7 +5,7 @@ namespace HackerOs.Platform.Core.Tests.Events;
 /// <summary>
 /// Validation tests for <c>MSG-002</c> — <see cref="TopicNameBuilder"/> segment validation and
 /// <see cref="TopicNames"/> root construction, per
-/// doc/wasm/dev/old/Global-FileView-And-MessagingSystem/MessagingSystem.md.
+/// doc/en/wasm/dev/old/Global-FileView-And-MessagingSystem/MessagingSystem.md.
 /// </summary>
 public sealed class TopicNameTests
 {

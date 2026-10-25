@@ -5,7 +5,7 @@ using HackerOs.Simulation.Abstractions.Events;
 namespace HackerOs.Simulation.Abstractions.FileSystem;
 
 /// <summary>
-/// Filesystem-watch contracts, per <c>doc/wasm/dev/old/Global-FileView-And-MessagingSystem/MessagingSystem.md</c>
+/// Filesystem-watch contracts, per <c>doc/en/wasm/dev/old/Global-FileView-And-MessagingSystem/MessagingSystem.md</c>
 /// (<c>MSG-011</c> through <c>MSG-015</c>). Built entirely on <see cref="ITopicMessageBus"/> — no
 /// separate watch mechanism.
 /// </summary>

@@ -23,6 +23,7 @@ public sealed class EscalationTests
             because: "sleep yields: its core heartbeats after taking it");
         Task<ShellRun> spinning = os.RunAsync("spin");
         await OsFixture.WaitUntilAsync(() => os.Pool.GetWorkers().Any(w => w.Id == core.Id && w.ProcessIds.Count == 2), because: "spin joins sleep on the free core");
+        await TestCommands.Spinning.WaitAsync(TimeSpan.FromSeconds(10)); // placed is not running yet
         long spinPid = os.FindPid("org.test.spin")!.Value;
         long sleepPid = os.FindPid("org.hackeros.commands.sleep")!.Value;
 
@@ -72,7 +73,7 @@ public sealed class EscalationTests
         await using OsFixture os = await WorkerPoolTests.StartedAsync();
         TestCommands.ArmSpinners();
         Task<ShellRun> spinning = os.RunAsync("spin");
-        await OsFixture.WaitUntilAsync(() => os.FindPid("org.test.spin") is not null);
+        await TestCommands.Spinning.WaitAsync(TimeSpan.FromSeconds(10)); // SIGTERM must find it stuck
         long spinPid = os.FindPid("org.test.spin")!.Value;
 
         Task<ShellRun> kill = os.RunAsync(os.OpenShell(), $"kill {spinPid}");

@@ -40,7 +40,7 @@
 # Logs, published output and failure screenshots go to wasm2/HackerOs/artifacts/verify-hosts/
 # (ignored by git). Prerequisites: .NET SDK 10, python3, curl, and a Chromium Playwright can launch
 # (in a cloud container, /opt/pw-browsers/chromium is used automatically — see
-# doc/wasm/dev/building-and-testing.md).
+# doc/en/wasm/dev/building-and-testing.md).
 
 set -uo pipefail
 
@@ -72,7 +72,7 @@ for tool in dotnet python3 curl setsid; do
     command -v "$tool" >/dev/null || { echo "verify-hosts: '$tool' not found on PATH" >&2; exit 2; }
 done
 
-# Known container workarounds (doc/wasm/dev/building-and-testing.md): NuGet audit advisories on build-only
+# Known container workarounds (doc/en/wasm/dev/building-and-testing.md): NuGet audit advisories on build-only
 # packages, and the local feed directory required by the windowing sample host.
 export NuGetAudit="${NuGetAudit:-false}"
 export DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_NOLOGO=1

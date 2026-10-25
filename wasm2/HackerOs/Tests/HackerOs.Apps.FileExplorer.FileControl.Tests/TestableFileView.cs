@@ -7,7 +7,7 @@ namespace HackerOs.Apps.FileExplorer.FileControl.Tests;
 /// <c>FileViewDetails</c>/<c>FileViewIcons</c>/<c>FileViewTree</c>/<c>FileViewContextMenu</c> and pull in
 /// MudBlazor's JSInterop-dependent render pipeline) so tests can attach a real
 /// <see cref="Microsoft.AspNetCore.Components.RenderHandle"/> and exercise <see cref="FileView"/>'s C#
-/// backing in isolation. See <c>doc/wasm/dev/old/Global-FileView-And-MessagingSystem/FileViewControl.md</c>.
+/// backing in isolation. See <c>doc/en/wasm/dev/old/Global-FileView-And-MessagingSystem/FileViewControl.md</c>.
 /// </summary>
 internal sealed class TestableFileView : FileView
 {

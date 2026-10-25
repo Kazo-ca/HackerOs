@@ -1,5 +1,5 @@
 {
-  "$comment": "IndexedDB fixture produced by booting an old HackerOS build; see doc/wasm/dev/building-and-testing.md.",
+  "$comment": "IndexedDB fixture produced by booting an old HackerOS build; see doc/en/wasm/dev/building-and-testing.md.",
   "databaseName": "hackeros",
   "version": 2,
   "producedFrom": {

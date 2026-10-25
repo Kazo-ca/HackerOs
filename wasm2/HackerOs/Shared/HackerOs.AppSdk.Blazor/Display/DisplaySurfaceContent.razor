@@ -5,7 +5,7 @@
     Shows its child content in a detached display surface (ADR 0078 §4). The content is rendered
     here, by this window's renderer, then its element is moved into the surface's host window: the
     renderer keeps updating it there and its events come back through the surface (see
-    doc/wasm/dev/detached-display-windows.md). The anchor stays behind, empty, so the parent's markup is
+    doc/en/wasm/dev/detached-display-windows.md). The anchor stays behind, empty, so the parent's markup is
     never disturbed.
 *@
 <div class="surface-anchor"><div class="surface-content" @ref="_content">@ChildContent</div></div>

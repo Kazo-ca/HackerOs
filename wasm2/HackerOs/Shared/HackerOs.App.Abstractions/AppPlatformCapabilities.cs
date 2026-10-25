@@ -2,7 +2,7 @@ namespace HackerOs.App.Abstractions;
 
 /// <summary>
 /// Describes how a platform's shell presents system navigation, per
-/// doc/wasm/dev/old/mobile-interface-platform-plan.md §3.2/§7.2. Closed set: unlike <see cref="AppPlatformId"/>
+/// doc/en/wasm/dev/old/mobile-interface-platform-plan.md §3.2/§7.2. Closed set: unlike <see cref="AppPlatformId"/>
 /// itself, the finite ways a shell can offer navigation chrome are enumerable today; a future
 /// platform introducing a genuinely new navigation paradigm can add a member here without touching
 /// <see cref="AppPlatformId"/>'s open registry.

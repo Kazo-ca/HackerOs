@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using HackerOs.App.Abstractions;
@@ -241,6 +242,13 @@ public sealed class WorkerProcessHost
             {
                 writer.WriteStartObject();
                 writer.WriteNumber("p", process.Pid);
+                if (process.RunningFor is { } running)
+                {
+                    // How long its code has had this thread: the OS reads a heartbeat sent a period
+                    // after that as proof the process yields (ADR 0072, section 6).
+                    writer.WriteNumber("rn", running.Ticks);
+                }
+
                 if (_meter?.Get(process.Pid) is { } times)
                 {
                     writer.WriteNumber("ut", times.UserTime.Ticks);
@@ -564,6 +572,7 @@ internal sealed class WorkerProcess
     private readonly WorkerProcessHost _host;
     private readonly CancellationTokenSource _token = new();
     private ServiceAppBase? _service;
+    private long _entered;
 
     public WorkerProcess(WorkerProcessHost host, long pid, RemoteProcessSnapshot snapshot, bool inputAttached, WorkerClock clock)
     {
@@ -596,6 +605,22 @@ internal sealed class WorkerProcess
 
     public RemoteAppExecutionContext Context { get; }
 
+    /// <summary>
+    /// Gets how long ago the process's own code was first given this thread, or <see langword="null"/>
+    /// while it is still being loaded (its assembly load yields before any of its code runs).
+    /// </summary>
+    public TimeSpan? RunningFor
+    {
+        get
+        {
+            long entered = Interlocked.Read(ref _entered);
+            return entered == 0 ? null : Stopwatch.GetElapsedTime(entered);
+        }
+    }
+
+    /// <summary>Notes that the process's own code runs now (called on its scheduler, just before its entry point).</summary>
+    private void MarkEntered() => Interlocked.CompareExchange(ref _entered, Stopwatch.GetTimestamp(), 0);
+
     /// <summary>Runs a command, mapping its ending like the OS does in-process.</summary>
     public async Task<RemoteProcessExit> RunTerminalAsync(TerminalAppBase app, WorkerProcessHost.StartInfo start)
     {
@@ -605,7 +630,11 @@ internal sealed class WorkerProcess
         try
         {
             using IDisposable ambient = HackExecutionContext.Enter(Context);
-            int code = await Control.RunAsync(() => app.ExecuteAsync(terminal, _token.Token).AsTask()).ConfigureAwait(true);
+            int code = await Control.RunAsync(() =>
+            {
+                MarkEntered();
+                return app.ExecuteAsync(terminal, _token.Token).AsTask();
+            }).ConfigureAwait(true);
             return RemoteProcessExit.Exited(code);
         }
         catch (HackProcessKilledException)
@@ -640,7 +669,11 @@ internal sealed class WorkerProcess
         try
         {
             using IDisposable ambient = HackExecutionContext.Enter(Context);
-            string? result = await Control.RunAsync(() => HackBackgroundFaults.RunAsync(job, context)).ConfigureAwait(true);
+            string? result = await Control.RunAsync(() =>
+            {
+                MarkEntered();
+                return HackBackgroundFaults.RunAsync(job, context);
+            }).ConfigureAwait(true);
             return new RemoteProcessExit(RemoteProcessExitStatus.Exited) { JobResult = result };
         }
         catch (HackProcessKilledException)
@@ -674,7 +707,11 @@ internal sealed class WorkerProcess
         try
         {
             using IDisposable ambient = HackExecutionContext.Enter(Context);
-            int code = await Control.RunAsync(() => runner.RunAsync(Window, _token.Token)).ConfigureAwait(true);
+            int code = await Control.RunAsync(() =>
+            {
+                MarkEntered();
+                return runner.RunAsync(Window, _token.Token);
+            }).ConfigureAwait(true);
             return RemoteProcessExit.Exited(code);
         }
         catch (HackProcessKilledException)
@@ -695,6 +732,7 @@ internal sealed class WorkerProcess
         {
             await Control.RunAsync(async () =>
             {
+                MarkEntered();
                 await service.RunAsync(Context, Context.CancellationToken).ConfigureAwait(true);
                 return 0;
             }).ConfigureAwait(true);

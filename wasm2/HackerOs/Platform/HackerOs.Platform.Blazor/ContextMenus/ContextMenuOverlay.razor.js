@@ -1,5 +1,5 @@
 /**
- * Browser side of the OS context menu (ADR 0150 §5, doc/wasm/framework/context-menu.md).
+ * Browser side of the OS context menu (ADR 0150 §5, doc/en/wasm/framework/context-menu.md).
  *
  * C# decides everything about a menu: which one an element opens, what it contains, how keys move
  * in it. This module only does what C# cannot: catch the requests the browser raises (right click,

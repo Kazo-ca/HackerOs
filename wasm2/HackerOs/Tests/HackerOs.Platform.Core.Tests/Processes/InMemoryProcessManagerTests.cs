@@ -138,9 +138,10 @@ public sealed partial class InMemoryProcessManagerTests
 
         // SIGKILL at the end of the grace period, with what it left running.
         fixture.Clock.Advance(5);
-        await WaitUntilAsync(() => !fixture.Manager.TryGetActive(child.Pid, out _));
+        // The leftovers are killed just after the child ends, by the same background task: wait for both.
+        await WaitUntilAsync(() => !fixture.Manager.TryGetActive(child.Pid, out _) && !fixture.Manager.TryGetActive(grandchild.Pid, out _));
         Assert.Equal(ProcessExitReason.Timeout, fixture.Manager.GetHistory().Single(r => r.Pid == child.Pid).ExitReason);
-        Assert.False(fixture.Manager.TryGetActive(grandchild.Pid, out _));
+        Assert.Equal(ProcessExitReason.DependencyStop, fixture.Manager.GetHistory().Single(r => r.Pid == grandchild.Pid).ExitReason);
     }
 
     [Fact]

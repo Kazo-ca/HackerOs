@@ -7,7 +7,7 @@ namespace HackerOs.Pwa.E2E.Tests;
 /// Exercises the real published Release output of OS/HackerOs.Ecosystem — the exact static
 /// site <c>deploy-wasm.yml</c> publishes to GitHub Pages — against the actual
 /// <c>service-worker.published.js</c> and <c>manifest.webmanifest</c>. This is the matrix
-/// described by <c>doc/wasm/dev/old/integration-audit-remediation.md</c> Wave C / <c>P2-PWA-007</c>:
+/// described by <c>doc/en/wasm/dev/old/integration-audit-remediation.md</c> Wave C / <c>P2-PWA-007</c>:
 /// first online visit, installability, service-worker activation, server-unavailable
 /// reload, real browser-offline reload, file/settings persistence, update-waiting/safe
 /// activation, and release-asset consistency (P2-ACC-015 / P2-ACC-016), plus the
@@ -117,7 +117,7 @@ public sealed class PublishedPwaTests(PwaPublishFixture fixture)
         await PwaTestSupport.CreateAndSaveFileAsync(page, directory, "offline-proof.txt", content);
 
         // Real offline (P2-ACC-015): not just "server stopped" — the browser's own network
-        // stack is cut, exactly as doc/wasm/dev/adr/0017-pwa-cache-and-offline-strategy.md requires.
+        // stack is cut, exactly as doc/en/wasm/dev/adr/0017-pwa-cache-and-offline-strategy.md requires.
         await context.SetOfflineAsync(true);
         await page.ReloadAsync(new PageReloadOptions { WaitUntil = WaitUntilState.DOMContentLoaded });
 

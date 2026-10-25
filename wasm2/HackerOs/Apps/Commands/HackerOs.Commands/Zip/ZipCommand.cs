@@ -135,6 +135,7 @@ public sealed class ZipCommand(AppManifest manifest) : TerminalAppBase(manifest)
             {
                 Replace(zip, entryName + "/");
                 ZipArchiveEntry directory = zip.CreateEntry(entryName + "/");
+                StampModified(directory, (await HackDirectoryInfo.GetAsync(source, cancellationToken)).LastWriteTimeUtc);
                 directory.ExternalAttributes = UnixAttributes(await HackFile.GetUnixFileModeAsync(source, cancellationToken), isDirectory: true);
                 if (!quiet)
                 {
@@ -168,6 +169,7 @@ public sealed class ZipCommand(AppManifest manifest) : TerminalAppBase(manifest)
         byte[] content = await HackFile.ReadAllBytesAsync(source, cancellationToken);
         bool updating = Replace(zip, entryName);
         ZipArchiveEntry entry = zip.CreateEntry(entryName, level);
+        StampModified(entry, (await HackFileInfo.GetAsync(source, cancellationToken)).LastWriteTimeUtc);
         entry.ExternalAttributes = UnixAttributes(await HackFile.GetUnixFileModeAsync(source, cancellationToken), isDirectory: false);
         await using (Stream stream = entry.Open())
         {
@@ -182,6 +184,19 @@ public sealed class ZipCommand(AppManifest manifest) : TerminalAppBase(manifest)
         }
 
         return 0;
+    }
+
+    /// <summary>
+    /// Stamps an entry with its file's modification time, as Info-ZIP does: <see cref="ZipArchive.CreateEntry(string)"/>
+    /// would take the host's wall clock, not the OS's simulated one. A time a zip header cannot hold
+    /// (before 1980) keeps the default.
+    /// </summary>
+    private static void StampModified(ZipArchiveEntry entry, DateTime modifiedUtc)
+    {
+        if (modifiedUtc.Year is >= 1980 and <= 2107)
+        {
+            entry.LastWriteTime = new DateTimeOffset(modifiedUtc, TimeSpan.Zero);
+        }
     }
 
     /// <summary>Removes an existing entry of that name (an update); true when there was one.</summary>

@@ -14,7 +14,7 @@
     The service composition lives in HackerOs.Ecosystem, which test/test and the server reference:
     set the properties in a Directory.Build.props or on the command line (-p:HackerOsCpuAccounting=false)
     to switch the whole graph; a property set only in a host's .csproj only changes that host's
-    runtime switch (see doc/wasm/dev/resource-accounting.md).
+    runtime switch (see doc/en/wasm/dev/resource-accounting.md).
   -->
   <PropertyGroup>
     <HackerOsCpuAccounting Condition="'$(HackerOsCpuAccounting)' == ''">true</HackerOsCpuAccounting>

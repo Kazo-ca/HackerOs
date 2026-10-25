@@ -5,7 +5,7 @@ namespace HackerOs.Apps.FileExplorer.FileControl;
 /// <summary>
 /// Selects which renderer <see cref="FileView"/> uses to display its current directory's contents. All
 /// three modes share the same <see cref="FileViewItem"/> data and selection state — switching modes
-/// never loses selection. See <c>doc/wasm/dev/old/Global-FileView-And-MessagingSystem/FileViewControl.md</c>.
+/// never loses selection. See <c>doc/en/wasm/dev/old/Global-FileView-And-MessagingSystem/FileViewControl.md</c>.
 /// </summary>
 public enum FileViewMode
 {

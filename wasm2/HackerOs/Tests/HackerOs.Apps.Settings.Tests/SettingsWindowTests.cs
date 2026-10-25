@@ -42,13 +42,29 @@ public sealed class SettingsAppArgumentTests
     }
 
     [Fact]
-    public void A_page_argument_opens_appearance_or_desktop_and_ignores_unknown_pages()
+    public void A_page_argument_opens_a_known_page_and_ignores_unknown_pages()
     {
-        Assert.Equal(0, SettingsWindow.ReadPageArgument(["--page=appearance"]));
-        Assert.Equal(1, SettingsWindow.ReadPageArgument(["--page=Desktop"]));
-        Assert.Equal(1, SettingsWindow.ReadPageArgument(["--page=desktop", "--page=nowhere"]));
+        Assert.Equal("appearance", SettingsWindow.ReadPageArgument(["--page=appearance"]));
+        Assert.Equal("desktop", SettingsWindow.ReadPageArgument(["--page=Desktop"]));
+        Assert.Equal("desktop", SettingsWindow.ReadPageArgument(["--page=desktop", "--page=nowhere"]));
+        Assert.Equal("users", SettingsWindow.ReadPageArgument(["--page=desktop", "--page=users"]));
         Assert.Null(SettingsWindow.ReadPageArgument(["--page=nowhere"]));
         Assert.Null(SettingsWindow.ReadPageArgument([]));
+    }
+
+    [Fact]
+    public void The_application_page_is_only_opened_by_the_app_argument()
+    {
+        Assert.Null(SettingsWindow.ReadPageArgument(["--page=application"]));
+    }
+
+    [Fact]
+    public void Every_known_page_id_is_accepted_by_the_page_argument()
+    {
+        foreach (SettingsPage page in SettingsWindow.AllPages.Where(static page => page.Id != SettingsWindow.ApplicationPageId))
+        {
+            Assert.Equal(page.Id, SettingsWindow.ReadPageArgument([SettingsWindow.PageArgumentPrefix + page.Id]));
+        }
     }
 
     [Fact]
@@ -57,5 +73,60 @@ public sealed class SettingsAppArgumentTests
         AppManifest manifest = AppDefinitionMapper.ToManifest(new SettingsApp());
 
         Assert.Contains(AppCapabilities.ServicesManage, manifest.Capabilities);
+    }
+}
+
+/// <summary>The side menu of Settings (ADR 0170): its pages, their order and their optional entries.</summary>
+public sealed class SettingsNavigationTests
+{
+    [Fact]
+    public void Appearance_is_first_and_About_is_last()
+    {
+        IReadOnlyList<SettingsPage> pages = SettingsWindow.PagesFor(backupSupported: true, hasAppPage: true);
+
+        Assert.Equal(SettingsWindow.AppearancePageId, pages[0].Id);
+        Assert.Equal("about", pages[^1].Id);
+    }
+
+    [Fact]
+    public void Backup_and_Application_are_listed_only_when_available()
+    {
+        IReadOnlyList<SettingsPage> minimal = SettingsWindow.PagesFor(backupSupported: false, hasAppPage: false);
+        IReadOnlyList<SettingsPage> full = SettingsWindow.PagesFor(backupSupported: true, hasAppPage: true);
+
+        Assert.DoesNotContain(minimal, static page => page.Id == SettingsWindow.BackupPageId);
+        Assert.DoesNotContain(minimal, static page => page.Id == SettingsWindow.ApplicationPageId);
+        Assert.Contains(full, static page => page.Id == SettingsWindow.BackupPageId);
+        Assert.Contains(full, static page => page.Id == SettingsWindow.ApplicationPageId);
+        Assert.Equal(15, minimal.Count);
+        Assert.Equal(SettingsWindow.AllPages.Count, full.Count);
+    }
+
+    [Fact]
+    public void Page_ids_are_unique_and_pages_of_a_group_are_contiguous()
+    {
+        Assert.Equal(SettingsWindow.AllPages.Count, SettingsWindow.AllPages.Select(static page => page.Id).Distinct().Count());
+
+        List<string> groupsInOrder = [];
+        foreach (SettingsPage page in SettingsWindow.AllPages)
+        {
+            if (groupsInOrder.Count == 0 || groupsInOrder[^1] != page.GroupKey)
+            {
+                Assert.DoesNotContain(page.GroupKey, groupsInOrder);
+                groupsInOrder.Add(page.GroupKey);
+            }
+        }
+    }
+
+    [Fact]
+    public void Every_label_and_group_of_the_menu_is_translated()
+    {
+        System.Resources.ResourceManager resources = HackerOs.AppSdk.Globalization.HackLocalization.GetResourceManager(typeof(Strings));
+        foreach (string key in SettingsWindow.AllPages.SelectMany(static page => new[] { page.LabelKey, page.GroupKey })
+                     .Concat(["Nav.AriaLabel", "Nav.Collapse", "Nav.Expand"]))
+        {
+            Assert.False(string.IsNullOrEmpty(resources.GetString(key, System.Globalization.CultureInfo.InvariantCulture)), key);
+            Assert.False(string.IsNullOrEmpty(resources.GetString(key, System.Globalization.CultureInfo.GetCultureInfo("fr"))), key);
+        }
     }
 }

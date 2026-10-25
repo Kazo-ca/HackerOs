@@ -1051,6 +1051,7 @@ public sealed class AppLifecycleOrchestrator
         context.PermissionErrors.PermissionDenied += OnPermissionDenied;
 
         int exitCode;
+        Task<int>? remoteRun = null;
         try
         {
             // ADR 0043/0050: the command runs as this app, in its process's working directory (the
@@ -1060,13 +1061,14 @@ public sealed class AppLifecycleOrchestrator
             // ADR 0069: the command runs on its process's scheduler, so a kill drops its leftovers.
             exitCode = app is null
                 // ADR 0070: the command runs in a worker; the OS keeps its process, context and streams.
-                ? await RunAsProcessAsync(context, () => RunRemoteTerminalAsync(descriptor, context, terminalContext, executionCancellation.Token))
+                ? await RunAsProcessAsync(context, () => remoteRun = RunRemoteTerminalAsync(descriptor, context, terminalContext, executionCancellation.Token))
                 : await RunAsProcessAsync(context, () => app.ExecuteAsync(terminalContext, executionCancellation.Token).AsTask());
         }
         catch (HackProcessKilledException)
         {
             // SIGKILL (kill -9, or a SIGTERM whose grace period ran out): 128 + 9, like a shell reports it.
             exitCode = 137;
+            await WaitForKilledRemoteOutputAsync(remoteRun).ConfigureAwait(false);
         }
         catch (OperationCanceledException) when (executionCancellation.IsCancellationRequested || context.StopRequest is not null)
         {
@@ -1115,6 +1117,33 @@ public sealed class AppLifecycleOrchestrator
             RemoteProcessExitStatus.BrokenPipe => 141,
             _ => throw new RemoteProcessFaultException(exit.FaultMessage ?? "The command faulted in its worker.")
         };
+    }
+
+    /// <summary>How long a killed command in a worker may take to write the output the OS already received.</summary>
+    internal static readonly TimeSpan KilledRemoteOutputTimeout = TimeSpan.FromSeconds(3);
+
+    /// <summary>
+    /// A killed command in a worker ends for its caller only once its session wrote the output the OS
+    /// had received: what an in-process command wrote before <c>SIGKILL</c> is already in its pipe,
+    /// and the same must hold in a worker, where the output arrives as messages. The session ends
+    /// when the worker confirms the kill, or when the OS terminates the worker (ADR 0069, steps 3
+    /// and 4), so the wait is short and bounded.
+    /// </summary>
+    private static async Task WaitForKilledRemoteOutputAsync(Task<int>? remoteRun)
+    {
+        if (remoteRun is null)
+        {
+            return;
+        }
+
+        try
+        {
+            await remoteRun.WaitAsync(KilledRemoteOutputTimeout).ConfigureAwait(false);
+        }
+        catch (Exception exception) when (exception is not OutOfMemoryException)
+        {
+            // Killed, as expected, or still running after the bound: it ended for the OS anyway.
+        }
     }
 
     /// <summary>

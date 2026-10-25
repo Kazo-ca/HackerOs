@@ -3,7 +3,7 @@
 
 @*
     Renders one ShellIconDescriptor regardless of its Kind, so callers never branch on icon kind
-    themselves. Skeleton for FV-007 — see doc/wasm/dev/old/Global-FileView-And-MessagingSystem/FileViewControl.md.
+    themselves. Skeleton for FV-007 — see doc/en/wasm/dev/old/Global-FileView-And-MessagingSystem/FileViewControl.md.
 *@
 <span class="shell-icon" data-kind="@Icon?.Kind">
     @if (Icon is { Kind: ShellIconKind.Vector, LibraryOrPath: not null, Name: not null } vectorIcon

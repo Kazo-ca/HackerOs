@@ -1,0 +1,120 @@
+> [Version française](../../../../fr/wasm/dev/adr/0161-sdk-2-0-implementation-adjustments.md)
+
+# ADR 0161: SDK 2.0, implementation adjustments
+
+## Status
+
+Accepted on 2026-10-20.
+
+- **Work item:** `desk/6-sdk-2` (plan
+  [`desktop-and-context-menu-plan.md`](../plans/desktop-and-context-menu-plan.md) §9
+  and §12, work item 6).
+- **Adjusts:** ADR 0149 (§2 removal, §3 additions, §5 fixtures). Its decisions
+  remain true: `HackerOs.AppSdk.FileView` leaves the SDK, the version moves to
+  `2.0.0`, a 1.x app is refused. This ADR fixes what they left open.
+- **Question put to Benoit** (2026-10-20, thread "Desk 6"): where the
+  copy and move rules live (§2). Benoit's answer on 2026-10-20:
+  "Rules in the SDK".
+
+## Context
+
+ADR 0149 decides the removal of the `FileView` library, the arrival of the
+file contracts and the publication of 2.0. While writing it, it was necessary to
+fix: where the removed code goes, what becomes of `FileTransfer` (which apps
+called outside the control), how the refusal of 1.x apps is proven, and what
+the new fixture carries.
+
+## Decision
+
+### 1. The `FileView` code enters the explorer's assembly
+
+- The sources of `Shared/HackerOs.AppSdk.FileView` go into
+  `Apps/System/HackerOs.Apps.FileExplorer/FileControl/`, namespace
+  `HackerOs.Apps.FileExplorer.FileControl` (a `…FileExplorer.FileView` namespace
+  would hide the `FileView` type in the explorer's code). The project and the
+  `HackerOs.AppSdk.FileView` package disappear; its `PublicAPI` files leave
+  with it (no `*REMOVED*` lines: there is no longer a library to write them
+  in). The break is listed in
+  [`sdk-packages.md`](../../framework/sdk-packages.md#sdk-20).
+- The Razor components remain `public` (the Razor generator declares them
+  so) and appear in the explorer's `PublicAPI`, a base app that
+  the promise does not cover (ADR 0114 §2). An app cannot reach them:
+  the explorer is an on-demand assembly that apps do not
+  reference.
+- The collocated scripts are served under
+  `_content/HackerOs.Apps.FileExplorer/FileControl/…`; the texts move into
+  the explorer's `Resources/FileControl/Strings*.resx`, and those of transfers
+  into the `Strings*.resx` of `HackerOs.AppSdk`.
+- Having become app code (under `Apps/`), its components follow the ambient
+  context rule (ADR 0066, 0067): they derive from `HackComponentBase` and the
+  JavaScript callback `OnPasteShortcutAsync` enters the app's context. The
+  view's time is therefore counted against the app that displays it, no longer against the compositor.
+- The host (`HackerOs.Ecosystem.Host`) no longer registers `IShellIconProvider`:
+  the view takes `DefaultShellIconProvider` when none is provided. The OS
+  therefore no longer references the view's code before the explorer is loaded.
+- The `HackerOs.AppSdk.FileView.Tests` tests become
+  `HackerOs.Apps.FileExplorer.FileControl.Tests`; those of `FileTransfer`
+  become `HackFileOperationsTests` (`HackerOs.AppSdk.Tests`).
+
+### 2. The copy rules stay in the SDK: `HackFileOperations`
+
+ADR 0149 §3 provided for an `IHackFileOperations` contract implemented by the
+explorer. The code shows that `FileTransfer` is only logic on the
+`Hack*` API, run with the rights of the calling app; its only visible part,
+the "Replace / Keep both / Skip" dialog, already goes through
+`hackeros.file-dialogs` (`IDialogService.ResolveFileConflictAsync`). Placing
+the rules at the provider would force every third-party provider (ADR 0156) to
+rewrite them, and would make them unreachable to a command in a worker.
+
+- `HackFileOperations` (static, `HackerOs.AppSdk.IO`, next to `HackFile`
+  and `HackDirectory`) carries `CopyAsync`, `MoveAsync`, `TransferAsync`,
+  `ImportAsync`, `MoveToTrashAsync` and `GetCopyName`, with the types
+  `HackFileTransferMode`, `HackFileConflictChoice`,
+  `HackFileConflictResolution`, `HackFileTransferConflict`,
+  `HackFileConflictResolver`, `HackFileTransferResult`,
+  `HackFileTransferItemResult`, `HackFileTransferFailure` and `HackHostFile`.
+- `IDialogService.AsFileConflictResolver(owner)` (`HackerOs.AppSdk.Blazor`)
+  gives the resolver that asks the question through the
+  `hackeros.file-dialogs` provider.
+- The explorer, the desktop and every provider call these rules; they live in
+  only one place, and the 2.x promise covers them.
+- There is no `IHackFileOperations` type.
+
+### 3. Refusal of 1.x apps and fixtures
+
+- The fixtures `Contoso.Sdk1Compat.1.0.0` and `Contoso.Sdk11Compat.1.1.0` stay
+  as they are. The compatibility tests now check that the
+  catalog **refuses** them (`catalog.sdk.incompatible`, different major version).
+- `Contoso.Sdk2Compat.2.0.0` is produced by `produce-fixture.sh` against the
+  2.0.0 packages, committed and never rebuilt. Its window displays
+  `HackFileView`, its manifest registers a file menu entry
+  (`[RegisterFileContextMenu]`), its command copies a file through
+  `HackFileOperations`. The tests check that it is admitted, that it binds
+  and that its command runs.
+- The scenario of the host generated by the template (`HackerOs.Templates.E2E.Tests`)
+  checks that a host that references both 1.x fixtures does not build
+  (`HOSAPP0021`, the catalog rule applied at build time, ADR 0098 §3), then
+  that with the 2.0 fixture it starts, shows the file control in the
+  third-party window and runs the command.
+
+### 4. Publication
+
+All the entries of `PublicAPI.Unshipped.txt` move into
+`PublicAPI.Shipped.txt` (`build/tools/ship-public-api.sh`) and
+`HackerOsVersion` is `2.0.0`. The generated manifests carry
+`sdkCompatibility.minimumVersion` `2.0.0`.
+
+## Consequences
+
+- A host that references a third-party 1.x app no longer builds, and an OS 2.0
+  that finds one in its catalog shows it as incompatible; it must
+  be recompiled against the 2.0.0 packages.
+- A fix to the copy rules touches the SDK, so it follows SemVer.
+- The view's code is loaded only with the explorer (on-demand
+  assembly): the OS's initial download shrinks accordingly.
+
+## References
+
+- ADR 0058, 0098, 0114, 0148, 0149, 0155, 0156, 0157.
+- [`sdk-packages.md`](../../framework/sdk-packages.md),
+  [`desktop-and-context-menu-plan.md`](../plans/desktop-and-context-menu-plan.md).

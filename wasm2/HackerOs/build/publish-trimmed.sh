@@ -22,7 +22,7 @@
 #
 # Output goes to wasm2/HackerOs/artifacts/publish-trimmed/ (ignored by git). Prerequisites: .NET SDK
 # 10, python3, curl, and a Chromium Playwright can launch (in a cloud container,
-# /opt/pw-browsers/chromium is used automatically — see doc/wasm/dev/building-and-testing.md).
+# /opt/pw-browsers/chromium is used automatically — see doc/en/wasm/dev/building-and-testing.md).
 
 set -uo pipefail
 
@@ -52,7 +52,7 @@ for tool in dotnet python3 curl setsid; do
     command -v "$tool" >/dev/null || { echo "publish-trimmed: '$tool' not found on PATH" >&2; exit 2; }
 done
 
-# Known container workarounds (doc/wasm/dev/building-and-testing.md): NuGet audit advisories on build-only
+# Known container workarounds (doc/en/wasm/dev/building-and-testing.md): NuGet audit advisories on build-only
 # packages, and the Windows-style local feed path of the windowing sample host.
 export NuGetAudit=false
 export MSBUILDDISABLENODEREUSE=1

@@ -155,17 +155,3 @@ body {
     }
 }
 
-/* SettingsWindow sets TabHeaderClass="hos-tab-header" because Blazor CSS
-   isolation cannot reliably reach MudTabs' generated header. Values still
-   come from the shared ThemeScope; this rule owns no palette. */
-.hos-tab-header {
-    background-color: var(--hos-bg-elevated, #172025) !important;
-}
-
-.hos-tab-header .mud-tab {
-    color: var(--hos-text-secondary, #a8bac4) !important;
-}
-
-.hos-tab-header .mud-tab.mud-tab-active {
-    color: var(--hos-text-primary, #f4f7f8) !important;
-}

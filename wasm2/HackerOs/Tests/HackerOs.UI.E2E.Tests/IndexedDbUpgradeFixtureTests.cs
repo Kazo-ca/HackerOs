@@ -13,7 +13,7 @@ namespace HackerOs.UI.E2E.Tests;
 /// <remarks>
 /// <para>
 /// Each fixture under <c>Tests/fixtures/indexeddb/</c> is a dump of the database written by the
-/// real OS of an old commit (procedure: <c>doc/wasm/dev/building-and-testing.md</c>). The test recreates
+/// real OS of an old commit (procedure: <c>doc/en/wasm/dev/building-and-testing.md</c>). The test recreates
 /// that database with raw <c>indexedDB.open(name, oldVersion)</c> from a page of the harness
 /// origin that does not boot Blazor, so the old database exists, at its old version, before the
 /// current OS opens it with <c>HackerOsIndexedDbSchema.CurrentVersion</c> and runs its

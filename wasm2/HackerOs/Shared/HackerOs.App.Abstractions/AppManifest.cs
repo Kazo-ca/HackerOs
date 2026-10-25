@@ -29,7 +29,7 @@ public sealed record AppManifest
     /// <summary>
     /// Gets the managed assembly and type used to activate the app on every platform it supports.
     /// Mutually exclusive with <see cref="Platform"/> — exactly one of the two must be set. This is
-    /// the legacy single-entry-point form; per doc/wasm/dev/old/mobile-interface-platform-plan.md §4.3, a
+    /// the legacy single-entry-point form; per doc/en/wasm/dev/old/mobile-interface-platform-plan.md §4.3, a
     /// manifest using this field is implicitly Desktop-only (see
     /// <see cref="AppManifestPlatformSupport.Resolve"/>).
     /// </summary>
@@ -39,7 +39,7 @@ public sealed record AppManifest
     /// Gets the multi-platform entry-point declaration (<c>MOB-003</c>), or <see langword="null"/>
     /// for a manifest using the legacy single <see cref="EntryPoint"/> field. Mutually exclusive
     /// with <see cref="EntryPoint"/> — exactly one of the two must be set.
-    /// See doc/wasm/dev/old/mobile-interface-platform-plan.md §4.1.
+    /// See doc/en/wasm/dev/old/mobile-interface-platform-plan.md §4.1.
     /// </summary>
     public AppManifestPlatform? Platform { get; init; }
 
@@ -64,7 +64,7 @@ public sealed record AppManifest
 
     /// <summary>
     /// Gets the custom topic permissions this app declares and exports, gating its own shared messaging
-    /// channels. Purely optional per <c>doc/wasm/dev/adr/0040-declared-topic-permissions.md</c> — most apps
+    /// channels. Purely optional per <c>doc/en/wasm/dev/adr/0040-declared-topic-permissions.md</c> — most apps
     /// declare none and rely on the default owner-only/open channel access instead. Every identifier must
     /// be rooted under this app's own topic namespace.
     /// </summary>
@@ -134,7 +134,7 @@ public sealed record AppManifest
 
     /// <summary>
     /// Gets whether this app participates in platform Back navigation
-    /// (doc/wasm/dev/old/mobile-interface-platform-plan.md §8, <c>MOB-012</c>) — a Desktop-only chrome Back
+    /// (doc/en/wasm/dev/old/mobile-interface-platform-plan.md §8, <c>MOB-012</c>) — a Desktop-only chrome Back
     /// button is shown for it, and the Mobile system navigation bar's triangle calls into it first.
     /// Only <see cref="AppKind.Window"/> apps may declare this; <see cref="AppManifestValidator"/>
     /// rejects it otherwise. Declaring it requires the resolved entry-point type to implement
@@ -226,7 +226,7 @@ public sealed record FileHandlerManifest(
 /// app's own topic namespace — produced by a
 /// <c>HackerOs.Simulation.Abstractions.Events.TopicName</c>'s <c>ToPublishPermission()</c>/
 /// <c>ToSubscribePermission()</c> extension, never hand-typed. See
-/// <c>doc/wasm/dev/adr/0040-declared-topic-permissions.md</c>.
+/// <c>doc/en/wasm/dev/adr/0040-declared-topic-permissions.md</c>.
 /// </summary>
 /// <param name="Id">Well-formed topic-permission capability identifier.</param>
 /// <param name="Description">Human-readable description, shown when a requesting app's grant is approved.</param>

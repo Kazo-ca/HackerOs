@@ -25,7 +25,7 @@ public sealed class StaticSitesTests
     {
         await using OsFixture os = await StartAsync(workers);
         await WriteUserSiteAsync(os, "docs", """["http://localhost:8080/", "http://docs.hack:8080/"]""");
-        await StartHackwebdAsync(os, 8080);
+        await StartHackwebdAsync(os, 8080, bindings: 2);
 
         ShellRun index = await os.RunAsync("curl -i http://localhost:8080/").WaitAsync(TimeSpan.FromSeconds(20));
         ShellRun css = await os.RunAsync("curl -i http://localhost:8080/css/site.css").WaitAsync(TimeSpan.FromSeconds(20));
@@ -110,7 +110,7 @@ public sealed class StaticSitesTests
         await RootWriteAsync(os.FileSystem, "/etc/hackweb/sites/intranet.site", SiteJson("intranet", "/var/www/html", """["http://intranet.hack/"]"""), 0b110_100_100);
         // An administrator's site rooted in a 0700 home: www-data cannot enter it.
         await RootWriteAsync(os.FileSystem, "/etc/hackweb/sites/homedocs.site", SiteJson("homedocs", "/home/alice/www", """["http://homedocs.hack/"]"""), 0b110_100_100);
-        await StartHackwebdAsync(os, 80);
+        await StartHackwebdAsync(os, 80, bindings: 2);
 
         ShellRun page = await os.RunAsync("curl http://intranet.hack/").WaitAsync(TimeSpan.FromSeconds(20));
         ShellRun secret = await os.RunAsync("curl -i http://intranet.hack/secret.txt").WaitAsync(TimeSpan.FromSeconds(20));
@@ -157,12 +157,18 @@ public sealed class StaticSitesTests
         return os;
     }
 
-    /// <summary>Starts hackwebd like an administrator would, and waits until it listens on <paramref name="port"/>.</summary>
-    private static async Task StartHackwebdAsync(OsFixture os, int port)
+    /// <summary>
+    /// Starts hackwebd like an administrator would, and waits until it listens on <paramref name="port"/>
+    /// with its <paramref name="bindings"/> prefixes: it opens them one by one, and a request for a
+    /// host not bound yet would go elsewhere (a web app of the fixture named <c>intranet.hack</c>).
+    /// </summary>
+    private static async Task StartHackwebdAsync(OsFixture os, int port, int bindings = 1)
     {
         ShellRun start = await os.RunAsync("systemctl start hackwebd").WaitAsync(TimeSpan.FromSeconds(10));
         Assert.True(start.ExitCode == 0, start.Stderr);
-        await OsFixture.WaitUntilAsync(() => os.Ports.Snapshot().Any(row => row.Port == port), because: $"hackwebd listens on {port}");
+        await OsFixture.WaitUntilAsync(
+            () => os.Ports.Snapshot().Where(row => row.Port == port).Sum(row => row.Prefixes.Count) >= bindings,
+            because: $"hackwebd listens on {port} with {bindings} prefixes");
     }
 
     /// <summary>Writes the site files in <c>~/www</c> and a user site file pointing at them.</summary>
