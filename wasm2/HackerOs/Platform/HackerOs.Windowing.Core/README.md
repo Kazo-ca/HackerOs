@@ -36,3 +36,13 @@ components that render a `WindowRuntime`'s state, and
 
 See `HackerOs.Windowing.SampleHost` in the source repository for a complete,
 minimal host that uses only these three packages.
+
+## Single surface policy
+
+`SingleSurfacePresentationPolicy` decides what a one-window screen (a phone)
+shows. `SelectSurfaceStack` returns the focused or frontmost window, walked up
+to its owner when it is an owner-modal dialog, followed by that owner's modal
+dialogs (a dialog opened from a dialog last); `SelectPrimary` is the top of
+that stack, even before a new dialog has the focus. `WindowsToMinimize` leaves
+the stack alone and `WindowsToMaximize` lists the stack's windows that are not
+maximized yet (ADR 0171).

@@ -108,6 +108,28 @@ mouseHelpers=true
 Le verrouillage administrateur, l’origine des valeurs et les permissions suivent
 le moteur de paramètres à couches. La désactivation masque les aides, jamais les gestes.
 
+## Dialogues en plein écran (ADR 0171)
+
+`MobileShell` crée `FileDialogWindowAdapter`, comme la coquille Desktop : les
+dialogues de la session (Ouvrir, Enregistrer, Choisir un dossier, saisie de
+texte, message, Ouvrir avec, Propriétés, conflit) deviennent des fenêtres.
+`SingleSurfacePresentationPolicy.SelectSurfaceStack` donne la pile affichée :
+la fenêtre de l'app, puis ses dialogues modaux. `SingleSurfaceArea` dessine
+toute la pile agrandie à l'écran ; seule la dernière fenêtre reçoit les
+entrées, le propriétaire reste monté dessous (`inert`) et n'est plus réduit.
+Le bouton Retour du système ferme le dialogue du dessus. Dans les dialogues de
+fichiers, un seul toucher entre dans un dossier ou prend un fichier
+(`HackFileView.OpenOnTap`) ; il n'y a pas de double-clic sur mobile. Les
+dialogues mobiles n'ont pas de barre de titre : ils ont leur bouton Annuler et
+le Retour du système.
+
+Une app peut aussi déclarer une fenêtre propre au téléphone avec
+`AppDefinition.MobileEntryPoint` : l'OS l'ouvre sur la plateforme mobile
+(`AppDescriptor.EntryPointTypeFor`), et retombe sur le point d'entrée principal
+si le type est introuvable. Voir
+[ADR 0171](adr/0171-mobile-file-explorer-and-full-screen-dialogs.md) et
+l'[explorateur mobile](file-explorer.md#explorateur-mobile-adr-0171).
+
 ## Vérification
 
 - `MobileHomeLayoutTests` : chemin caché, ordre, IDs indisponibles, données invalides

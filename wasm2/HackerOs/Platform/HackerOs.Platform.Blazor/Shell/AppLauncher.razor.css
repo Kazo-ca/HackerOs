@@ -219,6 +219,8 @@
     min-width: 0;
     display: flex;
     align-items: center;
+    /* A <button> centres its content: an app with a short description would be shifted to the right. */
+    justify-content: flex-start;
     gap: 0.65rem;
     flex: 1;
     padding: 0.42rem 0.48rem;
@@ -262,6 +264,7 @@
 
 .app-copy {
     min-width: 0;
+    flex: 1 1 auto;
     display: flex;
     flex-direction: column;
     gap: 0.08rem;

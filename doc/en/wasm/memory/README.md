@@ -40,9 +40,12 @@ at the end of each series or when a convention changes.
   [`passkeys.md`](../dev/passkeys.md)), adding and removing accounts by an
   administrator (ADR 0169). SDK additions in `PublicAPI.Unshipped.txt`
   (next minor).
-- **ADR**: 0001 to 0169 exist (a few numbers skipped); 0170 is taken
-  by the Settings side menu (PR #210), 0171 and 0172 are reserved for the
-  mobile file explorer. **Next free number: 0173.** Parallel
+- **Mobile explorer** (October 2026, PR #212 to `main`): mobile entry point of
+  apps honored, mobile file explorer, full-screen dialogs on mobile, one tap
+  opens (`HackFileView.OpenOnTap`) (ADR 0171).
+- **ADR**: 0001 to 0171 exist (a few numbers skipped); 0170 is the
+  Settings side menu (PR #210), 0171 the mobile file explorer, and 0172,
+  reserved with it, was not used. **Next free number: 0173.** Parallel
   threads reserve distinct numbers.
 
 ## Working conventions

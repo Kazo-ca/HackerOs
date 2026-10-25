@@ -63,9 +63,9 @@ public sealed class BuildKnownLazyAppDescriptorRegistry : IAppDescriptorLoader
     {
         AppManifest manifest = _catalog.Manifests[appId];
 
-        // Lazy loading always targets Desktop today: no shell yet resolves discovery for another
-        // platform (that is Phase 2/MOB-008), see AppEntryPointDiscovery.Discover's activePlatform
-        // default.
+        // The Desktop entry point names the assembly to load. Discovery also resolves the entry points
+        // the manifest declares for other platforms in that assembly (a mobile window, ADR 0171 §1), and
+        // the window renderer picks the one of the active platform.
         AppPlatformEntryPointResolution resolution = AppPlatformEntryPointResolver.Instance.Resolve(
             manifest, HackerOs.App.Abstractions.WellKnownAppPlatforms.Desktop);
         if (!resolution.IsResolved || resolution.EntryPoint is not AppEntryPointManifest entryPoint)

@@ -114,9 +114,9 @@ public partial class FileViewIcons : IAsyncDisposable
     internal bool IsTabStop(FileViewItem item) =>
         item.IsSelected || (Owner.SelectedItem is null && ReferenceEquals(item, Owner.Items.FirstOrDefault()));
 
-    internal void OnTileClick(FileViewItem item, MouseEventArgs args) => item.Select(additive: args.CtrlKey);
+    internal Task OnTileClick(FileViewItem item, MouseEventArgs args) => Owner.ClickItemAsync(item, args.CtrlKey);
 
-    internal Task OnTileDoubleClickAsync(FileViewItem item) => Owner.ActivateItemAsync(item);
+    internal Task OnTileDoubleClickAsync(FileViewItem item) => Owner.DoubleClickItemAsync(item);
 
     internal Task OnTileContextMenuAsync(FileViewItem item, MouseEventArgs args) => Owner.OnItemContextMenuAsync(args, item);
 

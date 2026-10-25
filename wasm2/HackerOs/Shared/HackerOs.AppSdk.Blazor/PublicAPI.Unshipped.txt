@@ -294,3 +294,5 @@ static HackerOs.AppSdk.Blazor.TextInputDialogResult.operator !=(HackerOs.AppSdk.
 static HackerOs.AppSdk.Blazor.TextInputDialogResult.operator ==(HackerOs.AppSdk.Blazor.TextInputDialogResult? left, HackerOs.AppSdk.Blazor.TextInputDialogResult? right) -> bool
 ~override HackerOs.AppSdk.Blazor.HackWindowSize.Equals(object obj) -> bool
 ~override HackerOs.AppSdk.Blazor.HackWindowSize.ToString() -> string
+HackerOs.AppSdk.Blazor.Files.HackFileView.OpenOnTap.get -> bool
+HackerOs.AppSdk.Blazor.Files.HackFileView.OpenOnTap.set -> void

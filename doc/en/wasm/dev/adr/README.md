@@ -171,5 +171,6 @@ next free number is given in
 | [`0168-passkey-sign-in.md`](0168-passkey-sign-in.md) | ADR 0168: sign-in with a passkey (WebAuthn) and keyring unlock |
 | [`0169-administrator-adds-and-removes-users.md`](0169-administrator-adds-and-removes-users.md) | ADR 0169: an administrator adds and removes accounts |
 | [`0170-settings-side-menu.md`](0170-settings-side-menu.md) | ADR 0170: collapsible side menu in Settings |
+| [`0171-mobile-file-explorer-and-full-screen-dialogs.md`](0171-mobile-file-explorer-and-full-screen-dialogs.md) | ADR 0171: per-platform entry point, mobile file explorer, full-screen dialogs on mobile, Start menu alignment |
 
 Parent folder index: [`../README.md`](../README.md).

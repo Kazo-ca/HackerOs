@@ -42,6 +42,11 @@ Nouveau dossier et Renommer. Un fichier activé y est pris par le dialogue
 (`Opening` mis à `Handled`), pas ouvert dans son app. Sans fournisseur, la
 plateforme reprend sa liste `VirtualFolderBrowser`.
 
+Sur la plateforme mobile ([ADR 0171](../dev/adr/0171-mobile-file-explorer-and-full-screen-dialogs.md)),
+les dialogues s'ouvrent en plein écran et passent `OpenOnTap` au contrôle :
+un toucher entre dans un dossier ou prend un fichier, sans double-clic. Une
+app peut demander le même comportement avec `<HackFileView OpenOnTap="true">`.
+
 ## Langue
 
 - Les menus et les dialogues du contrôle fourni (`ExplorerFileView`,

@@ -1,0 +1,199 @@
+@using HackerOs.AppSdk.Blazor
+@using HackerOs.AppSdk.Blazor.Files
+@using HackerOs.AppSdk.Files
+@using HackerOs.AppSdk.Icons
+@using HackerOs.Apps.FileExplorer.FileControl
+@using Microsoft.AspNetCore.Components.Forms
+@inherits FileExplorerWindow
+@implements IAppBackHandler
+
+@*
+    The File Explorer on a phone (ADR 0171): the same app, its state and its commands as FileExplorerWindow,
+    which it extends, with the layout of a phone's file manager. A top bar (back, folder name, search, menu),
+    the places as chips and the breadcrumb, the OS file control in a list or a grid where a tap opens, and at
+    the bottom either the actions on the selection, a "Paste here" bar or the "New" button. A long press
+    still opens the OS file menu as a sheet (ADR 0150 §6); the system Back button leaves the search, the
+    selection, then goes back to the previous folder.
+*@
+<div class="mobile-explorer @(_selecting ? "is-selecting" : null)">
+    <header class="mobile-appbar">
+        @if (_selecting)
+        {
+            <button type="button" class="appbar-btn" aria-label="@L["Mobile.EndSelection"]" title="@L["Mobile.EndSelection"]" @onclick="EndSelection">
+                <HackerIcon Library="IconLibrary.Lucide" Name="x" Size="22" />
+            </button>
+            <h1 class="appbar-title" aria-live="polite">@Strings.Plural(L, "Status.Selected", SelectedCount)</h1>
+            <button type="button" class="appbar-btn" aria-label="@L["Mobile.SelectAll"]" title="@L["Mobile.SelectAll"]" @onclick="SelectAll">
+                <HackerIcon Library="IconLibrary.Lucide" Name="list-checks" Size="22" />
+            </button>
+        }
+        else if (_searching)
+        {
+            <button type="button" class="appbar-btn" aria-label="@L["Mobile.CloseSearch"]" title="@L["Mobile.CloseSearch"]" @onclick="CloseSearch">
+                <HackerIcon Library="IconLibrary.Lucide" Name="arrow-left" Size="22" />
+            </button>
+            <input type="search" class="appbar-search" placeholder="@L["Search.Placeholder"]" aria-label="@L["Search.AriaLabel"]"
+                   @bind="_state.SearchQuery" @bind:event="oninput" @bind:after="OnSearchQueryChanged" />
+        }
+        else
+        {
+            <button type="button" class="appbar-btn" disabled="@(!CanGoBack)" aria-label="@L["Mobile.Back"]" title="@L["Mobile.Back"]" @onclick="GoBackAsync">
+                <HackerIcon Library="IconLibrary.Lucide" Name="arrow-left" Size="22" />
+            </button>
+            <h1 class="appbar-title">@FolderName</h1>
+            <button type="button" class="appbar-btn" disabled="@_showTrash" aria-label="@L["Mobile.Search"]" title="@L["Mobile.Search"]" @onclick="OpenSearch">
+                <HackerIcon Library="IconLibrary.Lucide" Name="search" Size="22" />
+            </button>
+            <button type="button" class="appbar-btn" aria-label="@L["Mobile.More"]" title="@L["Mobile.More"]"
+                    aria-expanded="@(_sheet == MobileSheet.Menu ? "true" : "false")" @onclick="() => OpenSheet(MobileSheet.Menu)">
+                <HackerIcon Library="IconLibrary.Lucide" Name="ellipsis-vertical" Size="22" />
+            </button>
+        }
+    </header>
+
+    <nav class="mobile-places" aria-label="@L["Mobile.Places"]">
+        <button type="button" class="place-chip @(!_showTrash && _state.CurrentPath == GetHomePath() ? "active" : null)" @onclick="NavigateHomeAsync">
+            <HackerIcon Library="IconLibrary.Lucide" Name="house" Size="16" /> <span>@L["Places.Home"]</span>
+        </button>
+        <button type="button" class="place-chip @(_showTrash ? "active" : null)" @onclick="ShowTrashAsync">
+            <HackerIcon Library="IconLibrary.Lucide" Name="trash-2" Size="16" /> <span>@L["Places.Trash"]</span>
+        </button>
+    </nav>
+
+    @if (_fileView is not null && !_showTrash)
+    {
+        <div class="mobile-breadcrumb">
+            <FileViewBreadcrumb Owner="_fileView" RootLabel="@L["Breadcrumb.Root"]" />
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(_errorMessage))
+    {
+        <div class="mobile-error" role="alert">
+            <span>@_errorMessage</span>
+            <button type="button" class="appbar-btn" aria-label="@L["Mobile.Close"]" @onclick="DismissError">
+                <HackerIcon Library="IconLibrary.Lucide" Name="x" Size="18" />
+            </button>
+        </div>
+    }
+
+    <main class="mobile-content">
+        @if (_showTrash)
+        {
+            <TrashView @ref="_trashView" Restored="OnTrashRestoredAsync" />
+        }
+
+        <div class="mobile-files @(_showTrash ? "hidden" : null)">
+            <HackFileView InitialDirectory="@_initialDirectory.Value"
+                          Mode="ToContractMode(_state.ViewMode)"
+                          ModeChanged="OnModeChanged"
+                          OpenOnTap="true"
+                          Filter="_searchFilter"
+                          Navigated="OnMobileNavigated"
+                          SelectionChanged="OnMobileSelectionChanged"
+                          ErrorOccurred="ReportError"
+                          ControllerChanged="OnMobileControllerChangedAsync" />
+        </div>
+    </main>
+
+    @if (!_showTrash)
+    {
+        @if (SelectedCount > 0)
+        {
+            <footer class="mobile-actionbar">
+                <button type="button" class="action" disabled="@(!CanRun(HackFileMenuItems.Copy))" @onclick="() => RunAsync(HackFileMenuItems.Copy)">
+                    <HackerIcon Library="IconLibrary.Lucide" Name="copy" Size="20" /><span>@L["Toolbar.Copy"]</span>
+                </button>
+                <button type="button" class="action" disabled="@(!CanRun(HackFileMenuItems.Cut))" @onclick="() => RunAsync(HackFileMenuItems.Cut)">
+                    <HackerIcon Library="IconLibrary.Lucide" Name="scissors" Size="20" /><span>@L["Toolbar.Cut"]</span>
+                </button>
+                <button type="button" class="action" disabled="@(!CanRun(HackFileMenuItems.Rename))" @onclick="() => RunAsync(HackFileMenuItems.Rename)">
+                    <HackerIcon Library="IconLibrary.Lucide" Name="pencil" Size="20" /><span>@L["Toolbar.Rename"]</span>
+                </button>
+                <button type="button" class="action danger" disabled="@(!CanRun(HackFileMenuItems.Delete))" @onclick="() => RunAsync(HackFileMenuItems.Delete)">
+                    <HackerIcon Library="IconLibrary.Lucide" Name="trash-2" Size="20" /><span>@L["Toolbar.Delete"]</span>
+                </button>
+                <button type="button" class="action" aria-expanded="@(_sheet == MobileSheet.Selection ? "true" : "false")" @onclick="() => OpenSheet(MobileSheet.Selection)">
+                    <HackerIcon Library="IconLibrary.Lucide" Name="ellipsis" Size="20" /><span>@L["Mobile.More"]</span>
+                </button>
+            </footer>
+        }
+        else if (CanRun(HackFileMenuItems.Paste))
+        {
+            <footer class="mobile-pastebar">
+                <button type="button" class="paste-btn" @onclick="() => RunAsync(HackFileMenuItems.Paste)">
+                    <HackerIcon Library="IconLibrary.Lucide" Name="clipboard-paste" Size="20" /> <span>@L["Mobile.PasteHere"]</span>
+                </button>
+            </footer>
+        }
+        else
+        {
+            <button type="button" class="mobile-fab" aria-label="@L["Mobile.New"]" title="@L["Mobile.New"]"
+                    aria-expanded="@(_sheet == MobileSheet.New ? "true" : "false")" @onclick="() => OpenSheet(MobileSheet.New)">
+                <HackerIcon Library="IconLibrary.Lucide" Name="plus" Size="26" />
+            </button>
+        }
+    }
+
+    <InputFile id="@_uploadInputId" OnChange="UploadFilesAsync" multiple hidden />
+
+    @if (_sheet != MobileSheet.None)
+    {
+        <div class="mobile-sheet-backdrop" @onclick="CloseSheet">
+            <div class="mobile-sheet" role="menu" @onclick:stopPropagation="true">
+                <span class="sheet-grabber" aria-hidden="true"></span>
+                @switch (_sheet)
+                {
+                    case MobileSheet.New:
+                        <button type="button" role="menuitem" class="sheet-item" @onclick="() => FromSheetAsync(CreateFolderAsync)">
+                            <HackerIcon Library="IconLibrary.Lucide" Name="folder-plus" Size="20" /> <span>@L["Toolbar.NewFolder"]</span>
+                        </button>
+                        <button type="button" role="menuitem" class="sheet-item" @onclick="() => FromSheetAsync(CreateFileAsync)">
+                            <HackerIcon Library="IconLibrary.Lucide" Name="file-plus" Size="20" /> <span>@L["Toolbar.NewFile"]</span>
+                        </button>
+                        <label for="@_uploadInputId" role="menuitem" class="sheet-item" @onclick="CloseSheet">
+                            <HackerIcon Library="IconLibrary.Lucide" Name="upload" Size="20" /> <span>@L["Toolbar.Upload"]</span>
+                        </label>
+                        break;
+                    case MobileSheet.Selection:
+                        <button type="button" role="menuitem" class="sheet-item" disabled="@(SelectedCount != 1)" @onclick="() => FromSheetAsync(() => RunAsync(HackFileMenuItems.Properties))">
+                            <HackerIcon Library="IconLibrary.Lucide" Name="info" Size="20" /> <span>@L["Toolbar.Properties"]</span>
+                        </button>
+                        <button type="button" role="menuitem" class="sheet-item" disabled="@(!CanRun(HackFileMenuItems.OpenWithOther))" @onclick="() => FromSheetAsync(() => RunAsync(HackFileMenuItems.OpenWithOther))">
+                            <HackerIcon Library="IconLibrary.Lucide" Name="external-link" Size="20" /> <span>@L["Toolbar.OpenWith"]</span>
+                        </button>
+                        <button type="button" role="menuitem" class="sheet-item" @onclick="() => FromSheetAsync(DownloadSelectedAsync)">
+                            <HackerIcon Library="IconLibrary.Lucide" Name="download" Size="20" /> <span>@L["Toolbar.Download"]</span>
+                        </button>
+                        <button type="button" role="menuitem" class="sheet-item" @onclick="() => FromSheetAsync(CompressSelectedAsync)">
+                            <HackerIcon Library="IconLibrary.Lucide" Name="archive" Size="20" /> <span>@L["Toolbar.Compress"]</span>
+                        </button>
+                        <button type="button" role="menuitem" class="sheet-item" disabled="@(!CanExtractSelection)" @onclick="() => FromSheetAsync(ExtractSelectedAsync)">
+                            <HackerIcon Library="IconLibrary.Lucide" Name="package-open" Size="20" /> <span>@L["Toolbar.Extract"]</span>
+                        </button>
+                        break;
+                    case MobileSheet.Menu:
+                        <button type="button" role="menuitem" class="sheet-item" @onclick="StartSelection">
+                            <HackerIcon Library="IconLibrary.Lucide" Name="square-check" Size="20" /> <span>@L["Mobile.Select"]</span>
+                        </button>
+                        <button type="button" role="menuitemradio" class="sheet-item @(_state.ViewMode != FileViewMode.Icons ? "active" : null)"
+                                aria-checked="@(_state.ViewMode != FileViewMode.Icons ? "true" : "false")" @onclick="() => ChooseViewMode(FileViewMode.Details)">
+                            <HackerIcon Library="IconLibrary.Lucide" Name="list" Size="20" /> <span>@L["Mobile.ViewList"]</span>
+                        </button>
+                        <button type="button" role="menuitemradio" class="sheet-item @(_state.ViewMode == FileViewMode.Icons ? "active" : null)"
+                                aria-checked="@(_state.ViewMode == FileViewMode.Icons ? "true" : "false")" @onclick="() => ChooseViewMode(FileViewMode.Icons)">
+                            <HackerIcon Library="IconLibrary.Lucide" Name="layout-grid" Size="20" /> <span>@L["Mobile.ViewGrid"]</span>
+                        </button>
+                        <button type="button" role="menuitemcheckbox" class="sheet-item @(_showHiddenFilesAndFolders ? "active" : null)"
+                                aria-checked="@(_showHiddenFilesAndFolders ? "true" : "false")" @onclick="ToggleHiddenFromSheet">
+                            <HackerIcon Library="IconLibrary.Lucide" Name="eye" Size="20" /> <span>@L["View.ShowHidden"]</span>
+                        </button>
+                        <button type="button" role="menuitem" class="sheet-item" @onclick="() => FromSheetAsync(RefreshAsync)">
+                            <HackerIcon Library="IconLibrary.Lucide" Name="refresh-cw" Size="20" /> <span>@L["Nav.Refresh"]</span>
+                        </button>
+                        break;
+                }
+            </div>
+        </div>
+    }
+</div>

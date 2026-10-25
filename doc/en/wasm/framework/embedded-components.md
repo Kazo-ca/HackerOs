@@ -164,6 +164,7 @@ by displaying another app's control.
 | Parameter | Role |
 | --- | --- |
 | `InitialDirectory`, `Mode`/`ModeChanged`, `AllowMultiSelect`, `Filter` | Folder, layout (`Details`, `Icons`, `Tree`, `Desktop`), selection, filter (call `RefreshFilter` again). |
+| `OpenOnTap` | One click or tap opens the item, with no double click, as on a phone; off by default (ADR 0171). |
 | `Features` | What the control does on its own (`Clipboard`, `Delete`, `Rename`, `CreateFolder`, `DragDrop`, `OpenWith`, `Properties`); a removed function disappears from the menu and its key does nothing. |
 | `SelectedResource` | Handle of a folder chosen in the OS dialog: the control lists with it. |
 | `Opening` | Before an item is opened; `Handled = true` lets the host open it itself. |

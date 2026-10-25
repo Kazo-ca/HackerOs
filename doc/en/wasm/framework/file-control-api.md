@@ -42,6 +42,11 @@ New folder and Rename. A file activated there is taken by the dialog
 (`Opening` set to `Handled`), not opened in its app. Without a provider, the
 platform falls back to its `VirtualFolderBrowser` list.
 
+On the mobile platform ([ADR 0171](../dev/adr/0171-mobile-file-explorer-and-full-screen-dialogs.md)),
+the dialogs open full screen and pass `OpenOnTap` to the control: one tap
+enters a folder or takes a file, with no double click. An app can ask for the
+same behavior with `<HackFileView OpenOnTap="true">`.
+
 ## Language
 
 - The menus and dialogs of the provided control (`ExplorerFileView`,

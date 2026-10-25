@@ -466,4 +466,43 @@
     <value>Impossible de mettre {0} à la corbeille : {1}</value>
   </data>
   <data name="View.ShowHidden" xml:space="preserve"><value>Afficher les fichiers et dossiers cachés</value></data>
+  <data name="Mobile.Back" xml:space="preserve">
+    <value>Retour</value>
+  </data>
+  <data name="Mobile.Search" xml:space="preserve">
+    <value>Rechercher</value>
+  </data>
+  <data name="Mobile.CloseSearch" xml:space="preserve">
+    <value>Fermer la recherche</value>
+  </data>
+  <data name="Mobile.More" xml:space="preserve">
+    <value>Plus d'options</value>
+  </data>
+  <data name="Mobile.Select" xml:space="preserve">
+    <value>Sélectionner</value>
+  </data>
+  <data name="Mobile.SelectAll" xml:space="preserve">
+    <value>Tout sélectionner</value>
+  </data>
+  <data name="Mobile.EndSelection" xml:space="preserve">
+    <value>Terminer la sélection</value>
+  </data>
+  <data name="Mobile.New" xml:space="preserve">
+    <value>Nouveau</value>
+  </data>
+  <data name="Mobile.ViewList" xml:space="preserve">
+    <value>Liste</value>
+  </data>
+  <data name="Mobile.ViewGrid" xml:space="preserve">
+    <value>Grille</value>
+  </data>
+  <data name="Mobile.PasteHere" xml:space="preserve">
+    <value>Coller ici</value>
+  </data>
+  <data name="Mobile.Places" xml:space="preserve">
+    <value>Emplacements</value>
+  </data>
+  <data name="Mobile.Close" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
 </root>

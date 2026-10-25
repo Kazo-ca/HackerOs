@@ -108,6 +108,26 @@ mouseHelpers=true
 Administrator locking, value origin and permissions follow the layered
 settings engine. Disabling hides the helpers, never the gestures.
 
+## Full-screen dialogs (ADR 0171)
+
+`MobileShell` creates `FileDialogWindowAdapter`, as the Desktop shell does: the
+session's dialogs (Open, Save, Choose folder, text input, message, Open with,
+Properties, conflict) become windows.
+`SingleSurfacePresentationPolicy.SelectSurfaceStack` gives the stack shown: the
+app's window, then its modal dialogs. `SingleSurfaceArea` draws the whole stack
+maximized to the screen; only the last window takes input, the owner stays
+mounted underneath (`inert`) and is no longer minimized. The system Back button
+closes the top dialog. In the file dialogs, one tap enters a folder or takes a
+file (`HackFileView.OpenOnTap`); there is no double click on mobile. Mobile
+dialogs have no title bar: they have their Cancel button and the system Back.
+
+An app can also declare a phone-specific window with
+`AppDefinition.MobileEntryPoint`: the OS opens it on the mobile platform
+(`AppDescriptor.EntryPointTypeFor`), and falls back to the main entry point when
+the type cannot be found. See
+[ADR 0171](adr/0171-mobile-file-explorer-and-full-screen-dialogs.md) and the
+[mobile explorer](file-explorer.md#mobile-explorer-adr-0171).
+
 ## Verification
 
 - `MobileHomeLayoutTests`: hidden path, order, unavailable IDs, invalid data

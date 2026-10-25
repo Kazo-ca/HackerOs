@@ -49,3 +49,12 @@ static HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor.operator
 override HackerOs.Apps.FileExplorer.FileExplorerApp.Icons.get -> System.Collections.Generic.IReadOnlyList<string!>!
 override HackerOs.Apps.FileExplorer.FileExplorerApp.Assets.get -> System.Collections.Generic.IReadOnlyList<HackerOs.App.Abstractions.AssetManifest!>!
 override HackerOs.Apps.FileExplorer.FileExplorerApp.MobileEntryPoint.get -> System.Type?
+HackerOs.Apps.FileExplorer.FileExplorerMobileWindow
+HackerOs.Apps.FileExplorer.FileExplorerMobileWindow.FileExplorerMobileWindow() -> void
+HackerOs.Apps.FileExplorer.FileExplorerMobileWindow.CanNavigateBack.get -> bool
+HackerOs.Apps.FileExplorer.FileExplorerMobileWindow.CanNavigateBackChanged -> System.Action?
+HackerOs.Apps.FileExplorer.FileExplorerMobileWindow.NavigateBackAsync(HackerOs.AppSdk.Blazor.AppBackRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Blazor.AppBackResult!>
+override HackerOs.Apps.FileExplorer.FileExplorerMobileWindow.OnAppAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+~override HackerOs.Apps.FileExplorer.FileExplorerMobileWindow.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+HackerOs.Apps.FileExplorer.ExplorerFileView.OpenOnTap.get -> bool
+HackerOs.Apps.FileExplorer.ExplorerFileView.OpenOnTap.set -> void

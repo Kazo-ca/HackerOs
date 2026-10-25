@@ -171,5 +171,6 @@ prochain numéro libre est indiqué dans
 | [`0168-passkey-sign-in.md`](0168-passkey-sign-in.md) | ADR 0168 : connexion par clé d'accès (WebAuthn) et déverrouillage du trousseau |
 | [`0169-administrator-adds-and-removes-users.md`](0169-administrator-adds-and-removes-users.md) | ADR 0169 : un administrateur ajoute et supprime des comptes |
 | [`0170-settings-side-menu.md`](0170-settings-side-menu.md) | ADR 0170 : menu latéral réductible dans Paramètres |
+| [`0171-mobile-file-explorer-and-full-screen-dialogs.md`](0171-mobile-file-explorer-and-full-screen-dialogs.md) | ADR 0171 : point d'entrée par plateforme, explorateur de fichiers mobile, dialogues en plein écran sur mobile, alignement du menu Démarrer |
 
 Index du dossier parent : [`../README.md`](../README.md).

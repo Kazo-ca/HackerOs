@@ -1164,3 +1164,6 @@ HackerOs.Platform.Core.Elevation.AdministratorAuthenticationAgent.PasskeyVerifie
 HackerOs.Platform.Core.Elevation.AdministratorAuthenticationAgent.PasskeyVerifier.init -> void
 HackerOs.Platform.Core.Elevation.AdministratorAuthenticationPromptRequest.AuthenticateWithPasskeyAsync.get -> System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<HackerOs.Platform.Core.Elevation.AdministratorAuthenticationAttempt!>!>?
 HackerOs.Platform.Core.Elevation.AdministratorAuthenticationPromptRequest.AuthenticateWithPasskeyAsync.init -> void
+HackerOs.Platform.Core.Discovery.AppDescriptor.PlatformEntryPointTypes.get -> System.Collections.Generic.IReadOnlyDictionary<HackerOs.App.Abstractions.AppPlatformId, System.Type!>!
+HackerOs.Platform.Core.Discovery.AppDescriptor.PlatformEntryPointTypes.init -> void
+HackerOs.Platform.Core.Discovery.AppDescriptor.EntryPointTypeFor(HackerOs.App.Abstractions.AppPlatformId platform) -> System.Type!

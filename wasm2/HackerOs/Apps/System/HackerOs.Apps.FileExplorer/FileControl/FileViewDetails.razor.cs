@@ -103,13 +103,13 @@ public partial class FileViewDetails
     internal async Task OnRowClickAsync(FileViewItem item, MouseEventArgs args)
     {
         await CommitPendingRenameElsewhereAsync(item);
-        item.Select(additive: args.CtrlKey);
+        await Owner.ClickItemAsync(item, args.CtrlKey);
     }
 
     internal async Task OnRowDoubleClickAsync(FileViewItem item)
     {
         await CommitPendingRenameElsewhereAsync(item);
-        await Owner.ActivateItemAsync(item);
+        await Owner.DoubleClickItemAsync(item);
     }
 
     private async Task OnRowContextMenuAsync(FileViewItem item, MouseEventArgs args)

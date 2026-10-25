@@ -14,7 +14,29 @@ namespace HackerOs.Platform.Core.Discovery;
 public sealed record AppDescriptor(
     AppManifest Manifest,
     [property: DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type EntryPointType,
-    Assembly Assembly);
+    Assembly Assembly)
+{
+    /// <summary>
+    /// Gets the entry-point types the manifest declares for other platforms than the one discovery
+    /// resolved <see cref="EntryPointType"/> for, such as a mobile window (<c>MobileEntryPoint</c>, ADR 0171 §1).
+    /// Empty when the app has one entry point for every platform.
+    /// </summary>
+    public IReadOnlyDictionary<AppPlatformId, Type> PlatformEntryPointTypes { get; init; } =
+        new Dictionary<AppPlatformId, Type>();
+
+    /// <summary>
+    /// Gets the entry-point type to show on <paramref name="platform"/>: the one the manifest declares for it,
+    /// or <see cref="EntryPointType"/>.
+    /// </summary>
+    /// <param name="platform">The active platform (Desktop or Mobile).</param>
+    [return: DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+    [UnconditionalSuppressMessage(
+        "Trimming",
+        "IL2073",
+        Justification = "Every platform entry point lives in an app assembly a trimmed host keeps whole (ADR 0113).")]
+    public Type EntryPointTypeFor(AppPlatformId platform) =>
+        PlatformEntryPointTypes.TryGetValue(platform, out Type? type) ? type : EntryPointType;
+}
 
 /// <summary>Describes one deterministic entry-point resolution failure.</summary>
 /// <param name="Code">Stable machine-readable error code.</param>

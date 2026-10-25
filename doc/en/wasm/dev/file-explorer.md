@@ -74,6 +74,29 @@ icon (grayed out if the app is missing) and opening it launches the app;
 dropping an app dragged from the Start menu creates a shortcut in the target
 folder.
 
+## Mobile explorer (ADR 0171)
+
+On the mobile platform, the OS opens `FileExplorerMobileWindow`, the app's
+`MobileEntryPoint` ([ADR 0171](adr/0171-mobile-file-explorer-and-full-screen-dialogs.md)).
+The window inherits `FileExplorerWindow`: same state, same commands, same
+`HackFileView`. Only the layout changes:
+
+- at the top: Back, the folder name, Search and the "⋮" menu (Select, List or
+  Grid, hidden files, Refresh); then the Home and Trash chips and the
+  breadcrumb;
+- at the bottom: the actions on the selection (Copy, Cut, Rename, Delete,
+  More), otherwise "Paste here" when the clipboard holds files, otherwise the
+  "+" button (New folder, New file, Upload);
+- one tap opens the item (`HackFileView.OpenOnTap`); in selection mode, it adds
+  or removes it (`FileView.TapTogglesSelection`); a long press opens the OS file
+  menu;
+- the system Back button (`IAppBackHandler`) closes the sheet, the search, the
+  selection, leaves the Trash, then goes back through the history.
+
+The dialogs the explorer opens (folder name, confirmation, properties) show
+full screen (see
+[`mobile-home-screen.md`](mobile-home-screen.md#full-screen-dialogs-adr-0171)).
+
 ## Architecture
 
 Since `desk/3`, this diagram is that of the `ExplorerFileView` provider, which

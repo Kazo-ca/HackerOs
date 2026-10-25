@@ -32,7 +32,7 @@ public sealed class FileExplorerApp : AppDefinition
     public override Type EntryPoint => typeof(FileExplorerWindow);
 
     /// <inheritdoc />
-    public override Type? MobileEntryPoint => typeof(FileExplorerWindow);
+    public override Type? MobileEntryPoint => typeof(FileExplorerMobileWindow);
 
     /// <inheritdoc />
     public override string PublisherId => "pub.hackeros";

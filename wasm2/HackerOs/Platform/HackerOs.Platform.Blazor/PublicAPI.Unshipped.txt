@@ -224,3 +224,5 @@ HackerOs.Platform.Blazor.Shell.MobileHomeScreen.DisposeAsync() -> System.Threadi
 ~override HackerOs.Platform.Blazor.Shell.MobileHomeScreen.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 HackerOs.Platform.Blazor.Shell.MobileShell.ReportShellGestureAsync(string! surface, double dx, double dy) -> System.Threading.Tasks.Task!
 HackerOs.Platform.Blazor.Shell.MobileShell.ReportMobileWorkspaceSize(double width, double height) -> void
+HackerOs.Platform.Blazor.Dialogs.FileDialogBrowser.OpenOnTap.get -> bool?
+HackerOs.Platform.Blazor.Dialogs.FileDialogBrowser.OpenOnTap.set -> void

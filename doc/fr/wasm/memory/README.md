@@ -40,9 +40,12 @@ jour à la fin de chaque série ou quand une convention change.
   [`passkeys.md`](../dev/passkeys.md)), ajout et suppression de comptes par un
   administrateur (ADR 0169). Ajouts au SDK dans `PublicAPI.Unshipped.txt`
   (prochaine mineure).
-- **ADR** : 0001 à 0169 existent (quelques numéros sautés) ; 0170 est pris
-  par le menu latéral des Paramètres (PR #210), 0171 et 0172 sont réservés à
-  l'explorateur de fichiers mobile. **Prochain numéro libre : 0173.** Des
+- **Explorateur mobile** (octobre 2026, PR #212 vers `main`) : point d'entrée
+  mobile des apps honoré, explorateur de fichiers mobile, dialogues en plein
+  écran sur mobile, un toucher ouvre (`HackFileView.OpenOnTap`) (ADR 0171).
+- **ADR** : 0001 à 0171 existent (quelques numéros sautés) ; 0170 est pris
+  par le menu latéral des Paramètres (PR #210), 0171 est l'explorateur de fichiers
+  mobile et 0172, réservé avec lui, n'a pas servi. **Prochain numéro libre : 0173.** Des
   threads parallèles réservent des numéros distincts.
 
 ## Conventions de travail

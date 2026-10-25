@@ -204,48 +204,48 @@
 </div>
 
 @code {
-    private FileExplorerState _state = default!;
-    private IHackFileView? _files;
-    private VirtualPath _initialDirectory;
-    private string _addressInput = string.Empty;
-    private string? _errorMessage;
-    private IDisposable? _eventSub;
-    private BrowserFileDownloader? _downloader;
-    private Func<HackFileViewItem, bool> _searchFilter = default!;
-    private bool _showTrash;
-    private bool _showHiddenFilesAndFolders;
-    private TrashView? _trashView;
-    private VirtualPath _homeDirectory;
+    private protected FileExplorerState _state = default!;
+    private protected IHackFileView? _files;
+    private protected VirtualPath _initialDirectory;
+    private protected string _addressInput = string.Empty;
+    private protected string? _errorMessage;
+    private protected IDisposable? _eventSub;
+    private protected BrowserFileDownloader? _downloader;
+    private protected Func<HackFileViewItem, bool> _searchFilter = default!;
+    private protected bool _showTrash;
+    private protected bool _showHiddenFilesAndFolders;
+    private protected TrashView? _trashView;
+    private protected VirtualPath _homeDirectory;
 
-    private IStringLocalizer<Strings>? _localizer;
+    private protected IStringLocalizer<Strings>? _localizer;
 
     /// <summary>The File Explorer's texts in its own process's language (ADR 0104).</summary>
-    private IStringLocalizer<Strings> L => _localizer ??= AppContext.GetLocalizer<Strings>();
+    private protected IStringLocalizer<Strings> L => _localizer ??= AppContext.GetLocalizer<Strings>();
 
     /// <summary>
     /// The control's own view, only for the chrome that needs its implementation (breadcrumb, drop zones
     /// on the places). Everything else goes through <c>_files</c>, the contract: when an admin picks
     /// another provider (ADR 0156), this is <see langword="null"/> and only those extras disappear.
     /// </summary>
-    private FileView? _fileView => (_files as ExplorerFileView)?.View;
+    private protected FileView? _fileView => (_files as ExplorerFileView)?.View;
 
-    private int SelectedCount => _files?.SelectedItems.Count ?? 0;
+    private protected int SelectedCount => _files?.SelectedItems.Count ?? 0;
 
-    private bool CanExtractSelection =>
+    private protected bool CanExtractSelection =>
         _files?.SelectedItems is [{ IsDirectory: false } item]
         && item.Name.EndsWith(".zip", StringComparison.OrdinalIgnoreCase);
 
-    private string GetHomePath() => HackUser.Describe(AppContext).HomeDirectory;
+    private protected string GetHomePath() => HackUser.Describe(AppContext).HomeDirectory;
 
     /// <summary>Uploads, trash drops and archive tasks in flight (ADR 0069); the control tracks its own.</summary>
-    private readonly HashSet<Task> _operations = [];
+    private protected readonly HashSet<Task> _operations = [];
 
     /// <summary>
     /// Records a file operation so a stop request can wait for it: each item moves atomically and
     /// <see cref="HackFileOperations"/> stops between two when the process is asked to stop, so the window
     /// closes after the current item, with nothing half-copied and the rest reported as not done.
     /// </summary>
-    private async Task<T> TrackOperation<T>(Task<T> operation)
+    private protected async Task<T> TrackOperation<T>(Task<T> operation)
     {
         _operations.Add(operation);
         try
@@ -303,7 +303,7 @@
     /// The window title (ADR 0117 §4): the current folder's name, <c>Documents — File Explorer</c>;
     /// <c>/</c> for the root and the trash's name while it is shown.
     /// </summary>
-    private string FolderWindowTitle
+    private protected string FolderWindowTitle
     {
         get
         {
@@ -333,7 +333,7 @@
     /// The control is ready: the breadcrumb and the Places drop zones need its view, so render them now,
     /// and select the <c>--select=</c> item when the folder is already listed.
     /// </summary>
-    private async Task OnControllerChangedAsync(IHackFileView? files)
+    private protected async Task OnControllerChangedAsync(IHackFileView? files)
     {
         if (_files is not null)
         {
@@ -366,13 +366,13 @@
     }
 
     /// <summary>Archives to extract once the control is ready ("Extract here", ADR 0151 §8).</summary>
-    private IReadOnlyList<string> _pendingExtracts = [];
+    private protected IReadOnlyList<string> _pendingExtracts = [];
 
     /// <summary>The clipboard, the selection or the operations in flight changed: the toolbar follows.</summary>
-    private void OnFilesStateChanged(object? sender, EventArgs e) => _ = InvokeAsync(StateHasChanged);
+    private protected void OnFilesStateChanged(object? sender, EventArgs e) => _ = InvokeAsync(StateHasChanged);
 
     /// <summary>Item to select once the view lists its folder (<c>--select=</c>, ADR 0096 section 1).</summary>
-    private VirtualPath? _pendingReveal;
+    private protected VirtualPath? _pendingReveal;
 
     /// <summary>
     /// Reads the explorer's command line, like Nautilus's: a folder to open and <c>--select=&lt;path&gt;</c>
@@ -412,18 +412,18 @@
         return (select is { } item && folder is null ? ParentOf(item) : folder, select);
     }
 
-    private const string SelectPrefix = "--select=";
+    private protected const string SelectPrefix = "--select=";
 
     /// <summary>The argument that opens the trash view instead of a folder (ADR 0160 §5).</summary>
     internal const string TrashArgument = "trash:///";
 
-    private static VirtualPath ParentOf(VirtualPath path)
+    private protected static VirtualPath ParentOf(VirtualPath path)
     {
         int separator = path.Value.LastIndexOf('/');
         return separator <= 0 ? VirtualPath.Parse("/") : VirtualPath.Parse(path.Value[..separator]);
     }
 
-    private async Task RevealAsync(VirtualPath path)
+    private protected async Task RevealAsync(VirtualPath path)
     {
         if (_files is null)
         {
@@ -443,29 +443,29 @@
         }
     }
 
-    private void OnSelectionChanged(IReadOnlyList<HackFileViewItem> selection) => StateHasChanged();
+    private protected void OnSelectionChanged(IReadOnlyList<HackFileViewItem> selection) => StateHasChanged();
 
-    private bool MatchesSearchQuery(HackFileViewItem item) =>
+    private protected bool MatchesSearchQuery(HackFileViewItem item) =>
         (_showHiddenFilesAndFolders || !item.Name.StartsWith('.')) &&
         (string.IsNullOrWhiteSpace(_state.SearchQuery) ||
         item.Name.Contains(_state.SearchQuery, StringComparison.OrdinalIgnoreCase));
 
     // Reuse the provider's filter contract: toggling never reads or modifies the hidden files.
-    private void ToggleHiddenFiles()
+    private protected void ToggleHiddenFiles()
     {
         _showHiddenFilesAndFolders = !_showHiddenFilesAndFolders;
         _files?.RefreshFilter();
     }
 
-    private void OnSearchQueryChanged() => _files?.RefreshFilter();
+    private protected void OnSearchQueryChanged() => _files?.RefreshFilter();
 
-    private void ReportError(string message)
+    private protected void ReportError(string message)
     {
         _errorMessage = message;
         _ = InvokeAsync(StateHasChanged);
     }
 
-    private async Task OnNavigated(string path)
+    private protected async Task OnNavigated(string path)
     {
         _showTrash = false;
         _state.NavigateTo(path);
@@ -478,7 +478,7 @@
         }
     }
 
-    private async Task NavigateFileViewAsync(string path)
+    private protected async Task NavigateFileViewAsync(string path)
     {
         _showTrash = false;
         if (_files is null) return;
@@ -494,33 +494,33 @@
         }
     }
 
-    private Task NavigateBackAsync()
+    private protected Task NavigateBackAsync()
     {
         _state.NavigateBack();
         return NavigateFileViewAsync(_state.CurrentPath);
     }
 
-    private Task NavigateForwardAsync()
+    private protected Task NavigateForwardAsync()
     {
         _state.NavigateForward();
         return NavigateFileViewAsync(_state.CurrentPath);
     }
 
-    private Task NavigateUpAsync()
+    private protected Task NavigateUpAsync()
     {
         _state.NavigateUp();
         return NavigateFileViewAsync(_state.CurrentPath);
     }
 
-    private Task NavigateHomeAsync()
+    private protected Task NavigateHomeAsync()
     {
         _state.NavigateTo(GetHomePath());
         return NavigateFileViewAsync(_state.CurrentPath);
     }
 
-    private Task RefreshAsync() => _files?.RefreshAsync() ?? Task.CompletedTask;
+    private protected Task RefreshAsync() => _files?.RefreshAsync() ?? Task.CompletedTask;
 
-    private async Task HandleAddressKeyDownAsync(KeyboardEventArgs args)
+    private protected async Task HandleAddressKeyDownAsync(KeyboardEventArgs args)
     {
         if (args.Key == "Enter")
         {
@@ -529,20 +529,20 @@
         }
     }
 
-    private void SetViewMode(FileViewMode mode)
+    private protected void SetViewMode(FileViewMode mode)
     {
         _state.ViewMode = mode;
         StateHasChanged();
     }
 
-    private void OnModeChanged(HackFileViewMode mode) => _state.ViewMode = mode switch
+    private protected void OnModeChanged(HackFileViewMode mode) => _state.ViewMode = mode switch
     {
         HackFileViewMode.Icons => FileViewMode.Icons,
         HackFileViewMode.Tree => FileViewMode.Tree,
         _ => FileViewMode.Details
     };
 
-    private static HackFileViewMode ToContractMode(FileViewMode mode) => mode switch
+    private protected static HackFileViewMode ToContractMode(FileViewMode mode) => mode switch
     {
         FileViewMode.Icons => HackFileViewMode.Icons,
         FileViewMode.Tree => HackFileViewMode.Tree,
@@ -551,18 +551,18 @@
 
     // ---- Toolbar: the control's commands (ADR 0155 §2) ----------------------------------------------
 
-    private bool CanRun(string command) => _files?.CanExecute(command) ?? false;
+    private protected bool CanRun(string command) => _files?.CanExecute(command) ?? false;
 
-    private Task RunAsync(string command)
+    private protected Task RunAsync(string command)
     {
         _errorMessage = null;
         return _files?.ExecuteAsync(command) ?? Task.CompletedTask;
     }
 
-    private static VirtualPath CombineChild(VirtualPath parent, string name) =>
+    private protected static VirtualPath CombineChild(VirtualPath parent, string name) =>
         VirtualPath.Parse(parent.Value == "/" ? $"/{name}" : $"{parent.Value}/{name}");
 
-    private async Task CreateFolderAsync()
+    private protected async Task CreateFolderAsync()
     {
         if (_files is null) return;
 
@@ -593,7 +593,7 @@
         }
     }
 
-    private async Task CreateFileAsync()
+    private protected async Task CreateFileAsync()
     {
         if (_files is null) return;
 
@@ -627,7 +627,7 @@
     // ---- Trash place (ADR 0052) ----------------------------------------------------------------------
 
     /// <summary>A drop on the Trash place or view: moves the dragged entries to the trash (ADR 0052).</summary>
-    private async Task OnTrashDropAsync(FileViewDropRequestedEventArgs e)
+    private protected async Task OnTrashDropAsync(FileViewDropRequestedEventArgs e)
     {
         if (e.Entries.Count == 0) return;
 
@@ -645,7 +645,7 @@
     /// Shows the end-of-operation summary: the failures (with their reason) in the error banner and as a
     /// desktop notification; nothing when everything went through.
     /// </summary>
-    private void ReportTransfer(HackFileTransferResult result, TransferVerb verb)
+    private protected void ReportTransfer(HackFileTransferResult result, TransferVerb verb)
     {
         string? summary = ExplorerTransferReport.DescribeFailures(L, result, verb);
         _errorMessage = summary;
@@ -664,7 +664,7 @@
         _ = InvokeAsync(StateHasChanged);
     }
 
-    private async Task RefreshAfterTransferAsync()
+    private protected async Task RefreshAfterTransferAsync()
     {
         if (_files is null) return;
         try
@@ -678,7 +678,7 @@
         }
     }
 
-    private async Task ShowTrashAsync()
+    private protected async Task ShowTrashAsync()
     {
         _showTrash = true;
         _errorMessage = null;
@@ -689,7 +689,7 @@
     }
 
     /// <summary>Restored elements may have landed in the folder the control is showing.</summary>
-    private Task OnTrashRestoredAsync(IReadOnlyList<string> paths) => _files?.RefreshAsync() ?? Task.CompletedTask;
+    private protected Task OnTrashRestoredAsync(IReadOnlyList<string> paths) => _files?.RefreshAsync() ?? Task.CompletedTask;
 
     // ---- Upload, download, archives -------------------------------------------------------------------
 
@@ -697,7 +697,7 @@
     /// Toolbar "Upload": imports host files into the current folder, like a drop of host files — a taken
     /// name gets a "(copy)" suffix rather than overwriting (ADR 0058, section 1).
     /// </summary>
-    private async Task UploadFilesAsync(InputFileChangeEventArgs e)
+    private protected async Task UploadFilesAsync(InputFileChangeEventArgs e)
     {
         if (_files is null) return;
 
@@ -718,7 +718,7 @@
     /// in this window for the browser's download, and a large selection would exceed the 16 MiB a
     /// task's result may carry (ADR 0128 section 4). Compress (to a file) uses the task.
     /// </remarks>
-    private async Task DownloadSelectedAsync()
+    private protected async Task DownloadSelectedAsync()
     {
         if (_downloader is null || _files is null) return;
         IReadOnlyList<HackFileViewItem> selected = _files.SelectedItems;
@@ -769,7 +769,7 @@
         }
     }
 
-    private async Task CompressSelectedAsync()
+    private protected async Task CompressSelectedAsync()
     {
         if (_files is null || _files.SelectedItems.Count == 0) return;
         IReadOnlyList<HackFileViewItem> selected = _files.SelectedItems;
@@ -815,11 +815,11 @@
         await _files.RefreshAsync();
     }
 
-    private Task ExtractSelectedAsync() =>
+    private protected Task ExtractSelectedAsync() =>
         CanExtractSelection ? ExtractAsync(_files!.SelectedItems[0].Path, _files.SelectedItems[0].Name) : Task.CompletedTask;
 
     /// <summary>Extracts a <c>.zip</c> into a folder of its name next to it: the toolbar's Extract and the registered "Extract here".</summary>
-    private async Task ExtractAsync(string archivePath, string archiveName)
+    private protected async Task ExtractAsync(string archivePath, string archiveName)
     {
         if (_files is null) return;
 
