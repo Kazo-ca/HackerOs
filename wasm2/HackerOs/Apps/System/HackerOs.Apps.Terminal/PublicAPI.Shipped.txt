@@ -8,12 +8,15 @@ HackerOs.Apps.Terminal.TerminalWindow.TerminalWindow() -> void
 HackerOs.Apps.Terminal._Imports
 HackerOs.Apps.Terminal._Imports.Execute() -> void
 HackerOs.Apps.Terminal._Imports._Imports() -> void
+override HackerOs.Apps.Terminal.TerminalApp.Assets.get -> System.Collections.Generic.IReadOnlyList<HackerOs.App.Abstractions.AssetManifest!>!
 override HackerOs.Apps.Terminal.TerminalApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
 override HackerOs.Apps.Terminal.TerminalApp.Components.get -> System.Collections.Generic.IReadOnlyList<HackerOs.App.Abstractions.AppComponent!>!
 override HackerOs.Apps.Terminal.TerminalApp.Description.get -> string!
 override HackerOs.Apps.Terminal.TerminalApp.EntryPoint.get -> System.Type!
+override HackerOs.Apps.Terminal.TerminalApp.Icons.get -> System.Collections.Generic.IReadOnlyList<string!>!
 override HackerOs.Apps.Terminal.TerminalApp.Id.get -> string!
 override HackerOs.Apps.Terminal.TerminalApp.Kind.get -> HackerOs.App.Abstractions.AppKind
+override HackerOs.Apps.Terminal.TerminalApp.MobileEntryPoint.get -> System.Type?
 override HackerOs.Apps.Terminal.TerminalApp.Name.get -> string!
 override HackerOs.Apps.Terminal.TerminalApp.PublisherId.get -> string!
 override HackerOs.Apps.Terminal.TerminalApp.Resources.get -> HackerOs.App.Abstractions.AppResourceProfileManifest!

@@ -7,12 +7,15 @@ HackerOs.Apps.Diagnostic.DiagnosticWindow.DisposeAsync() -> System.Threading.Tas
 HackerOs.Apps.Diagnostic._Imports
 HackerOs.Apps.Diagnostic._Imports.Execute() -> void
 HackerOs.Apps.Diagnostic._Imports._Imports() -> void
+override HackerOs.Apps.Diagnostic.DiagnosticApp.Assets.get -> System.Collections.Generic.IReadOnlyList<HackerOs.App.Abstractions.AssetManifest!>!
 override HackerOs.Apps.Diagnostic.DiagnosticApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
 override HackerOs.Apps.Diagnostic.DiagnosticApp.Category.get -> string!
 override HackerOs.Apps.Diagnostic.DiagnosticApp.Description.get -> string!
 override HackerOs.Apps.Diagnostic.DiagnosticApp.EntryPoint.get -> System.Type!
+override HackerOs.Apps.Diagnostic.DiagnosticApp.Icons.get -> System.Collections.Generic.IReadOnlyList<string!>!
 override HackerOs.Apps.Diagnostic.DiagnosticApp.Id.get -> string!
 override HackerOs.Apps.Diagnostic.DiagnosticApp.Kind.get -> HackerOs.App.Abstractions.AppKind
+override HackerOs.Apps.Diagnostic.DiagnosticApp.MobileEntryPoint.get -> System.Type?
 override HackerOs.Apps.Diagnostic.DiagnosticApp.Name.get -> string!
 override HackerOs.Apps.Diagnostic.DiagnosticApp.PublisherId.get -> string!
 override HackerOs.Apps.Diagnostic.DiagnosticApp.Resources.get -> HackerOs.App.Abstractions.AppResourceProfileManifest!

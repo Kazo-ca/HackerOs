@@ -1,17 +1,1 @@
 #nullable enable
-HackerOs.Taskbar.Blazor.TaskbarOptions.<Clone>$() -> HackerOs.Taskbar.Blazor.TaskbarOptions!
-HackerOs.Taskbar.Blazor.TaskbarOptions.Equals(HackerOs.Taskbar.Blazor.TaskbarOptions? other) -> bool
-HackerOs.Taskbar.Blazor.TaskbarOptions.TaskbarOptions() -> void
-HackerOs.Taskbar.Blazor.TaskbarWindowItem.<Clone>$() -> HackerOs.Taskbar.Blazor.TaskbarWindowItem!
-HackerOs.Taskbar.Blazor.TaskbarWindowItem.Deconstruct(out HackerOs.Windowing.Abstractions.WindowId Id, out string! Title, out string? IconAssetPath, out bool IsFocused, out bool IsMinimized) -> void
-HackerOs.Taskbar.Blazor.TaskbarWindowItem.Equals(HackerOs.Taskbar.Blazor.TaskbarWindowItem? other) -> bool
-override HackerOs.Taskbar.Blazor.TaskbarOptions.Equals(object? obj) -> bool
-override HackerOs.Taskbar.Blazor.TaskbarOptions.GetHashCode() -> int
-override HackerOs.Taskbar.Blazor.TaskbarOptions.ToString() -> string!
-override HackerOs.Taskbar.Blazor.TaskbarWindowItem.Equals(object? obj) -> bool
-override HackerOs.Taskbar.Blazor.TaskbarWindowItem.GetHashCode() -> int
-override HackerOs.Taskbar.Blazor.TaskbarWindowItem.ToString() -> string!
-static HackerOs.Taskbar.Blazor.TaskbarOptions.operator !=(HackerOs.Taskbar.Blazor.TaskbarOptions? left, HackerOs.Taskbar.Blazor.TaskbarOptions? right) -> bool
-static HackerOs.Taskbar.Blazor.TaskbarOptions.operator ==(HackerOs.Taskbar.Blazor.TaskbarOptions? left, HackerOs.Taskbar.Blazor.TaskbarOptions? right) -> bool
-static HackerOs.Taskbar.Blazor.TaskbarWindowItem.operator !=(HackerOs.Taskbar.Blazor.TaskbarWindowItem? left, HackerOs.Taskbar.Blazor.TaskbarWindowItem? right) -> bool
-static HackerOs.Taskbar.Blazor.TaskbarWindowItem.operator ==(HackerOs.Taskbar.Blazor.TaskbarWindowItem? left, HackerOs.Taskbar.Blazor.TaskbarWindowItem? right) -> bool

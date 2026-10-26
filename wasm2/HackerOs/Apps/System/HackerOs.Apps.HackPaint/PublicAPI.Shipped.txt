@@ -7,6 +7,9 @@ HackerOs.Apps.HackPaint.HackPaintWindow.DisposeAsync() -> System.Threading.Tasks
 HackerOs.Apps.HackPaint.HackPaintWindow.HackPaintWindow() -> void
 HackerOs.Apps.HackPaint.ImageFileFormat
 HackerOs.Apps.HackPaint.ImageFileHeader
+HackerOs.Apps.HackPaint.ImageFileHeader.<Clone>$() -> HackerOs.Apps.HackPaint.ImageFileHeader!
+HackerOs.Apps.HackPaint.ImageFileHeader.Deconstruct(out HackerOs.Apps.HackPaint.ImageFileKind Kind, out int Width, out int Height) -> void
+HackerOs.Apps.HackPaint.ImageFileHeader.Equals(HackerOs.Apps.HackPaint.ImageFileHeader? other) -> bool
 HackerOs.Apps.HackPaint.ImageFileHeader.Height.get -> int
 HackerOs.Apps.HackPaint.ImageFileHeader.Height.init -> void
 HackerOs.Apps.HackPaint.ImageFileHeader.ImageFileHeader(HackerOs.Apps.HackPaint.ImageFileKind Kind, int Width, int Height) -> void
@@ -57,8 +60,11 @@ HackerOs.Apps.HackPaint.PaintCanvasState.Width.get -> int
 HackerOs.Apps.HackPaint.PaintCanvasState.ZoomIn() -> void
 HackerOs.Apps.HackPaint.PaintCanvasState.ZoomOut() -> void
 HackerOs.Apps.HackPaint.PaintFileReadResult
+HackerOs.Apps.HackPaint.PaintFileReadResult.<Clone>$() -> HackerOs.Apps.HackPaint.PaintFileReadResult!
 HackerOs.Apps.HackPaint.PaintFileReadResult.Bytes.get -> byte[]?
 HackerOs.Apps.HackPaint.PaintFileReadResult.Bytes.init -> void
+HackerOs.Apps.HackPaint.PaintFileReadResult.Deconstruct(out byte[]? Bytes, out HackerOs.Apps.HackPaint.ImageFileHeader? Header, out string? Error) -> void
+HackerOs.Apps.HackPaint.PaintFileReadResult.Equals(HackerOs.Apps.HackPaint.PaintFileReadResult? other) -> bool
 HackerOs.Apps.HackPaint.PaintFileReadResult.Error.get -> string?
 HackerOs.Apps.HackPaint.PaintFileReadResult.Error.init -> void
 HackerOs.Apps.HackPaint.PaintFileReadResult.Header.get -> HackerOs.Apps.HackPaint.ImageFileHeader?
@@ -70,24 +76,37 @@ HackerOs.Apps.HackPaint._Imports.Execute() -> void
 HackerOs.Apps.HackPaint._Imports._Imports() -> void
 const HackerOs.Apps.HackPaint.ImageFileFormat.MaxDimension = 4096 -> int
 const HackerOs.Apps.HackPaint.ImageFileFormat.MaxFileBytes = 16777216 -> int
+override HackerOs.Apps.HackPaint.HackPaintApp.Assets.get -> System.Collections.Generic.IReadOnlyList<HackerOs.App.Abstractions.AssetManifest!>!
 override HackerOs.Apps.HackPaint.HackPaintApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
 override HackerOs.Apps.HackPaint.HackPaintApp.Category.get -> string!
 override HackerOs.Apps.HackPaint.HackPaintApp.Description.get -> string!
 override HackerOs.Apps.HackPaint.HackPaintApp.EntryPoint.get -> System.Type!
 override HackerOs.Apps.HackPaint.HackPaintApp.FileHandlers.get -> System.Collections.Generic.IReadOnlyList<HackerOs.App.Abstractions.FileHandler!>!
+override HackerOs.Apps.HackPaint.HackPaintApp.Icons.get -> System.Collections.Generic.IReadOnlyList<string!>!
 override HackerOs.Apps.HackPaint.HackPaintApp.Id.get -> string!
 override HackerOs.Apps.HackPaint.HackPaintApp.Kind.get -> HackerOs.App.Abstractions.AppKind
+override HackerOs.Apps.HackPaint.HackPaintApp.MobileEntryPoint.get -> System.Type?
 override HackerOs.Apps.HackPaint.HackPaintApp.Name.get -> string!
 override HackerOs.Apps.HackPaint.HackPaintApp.PublisherId.get -> string!
 override HackerOs.Apps.HackPaint.HackPaintApp.Resources.get -> HackerOs.App.Abstractions.AppResourceProfileManifest!
 override HackerOs.Apps.HackPaint.HackPaintApp.Window.get -> HackerOs.App.Abstractions.WindowOptions?
 override HackerOs.Apps.HackPaint.HackPaintWindow.OnAppAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
 override HackerOs.Apps.HackPaint.HackPaintWindow.OnAppInitializedAsync() -> System.Threading.Tasks.Task!
+override HackerOs.Apps.HackPaint.ImageFileHeader.Equals(object? obj) -> bool
+override HackerOs.Apps.HackPaint.ImageFileHeader.GetHashCode() -> int
+override HackerOs.Apps.HackPaint.ImageFileHeader.ToString() -> string!
+override HackerOs.Apps.HackPaint.PaintFileReadResult.Equals(object? obj) -> bool
+override HackerOs.Apps.HackPaint.PaintFileReadResult.GetHashCode() -> int
+override HackerOs.Apps.HackPaint.PaintFileReadResult.ToString() -> string!
 static HackerOs.Apps.HackPaint.ImageFileFormat.MediaTypeOf(HackerOs.Apps.HackPaint.ImageFileKind kind) -> string!
 static HackerOs.Apps.HackPaint.ImageFileFormat.OpenExtensions.get -> System.Collections.Generic.IReadOnlyList<string!>!
 static HackerOs.Apps.HackPaint.ImageFileFormat.SaveKindFor(string! fileName) -> HackerOs.Apps.HackPaint.ImageFileKind
 static HackerOs.Apps.HackPaint.ImageFileFormat.TryReadHeader(System.ReadOnlySpan<byte> data, out HackerOs.Apps.HackPaint.ImageFileHeader! header) -> bool
+static HackerOs.Apps.HackPaint.ImageFileHeader.operator !=(HackerOs.Apps.HackPaint.ImageFileHeader? left, HackerOs.Apps.HackPaint.ImageFileHeader? right) -> bool
+static HackerOs.Apps.HackPaint.ImageFileHeader.operator ==(HackerOs.Apps.HackPaint.ImageFileHeader? left, HackerOs.Apps.HackPaint.ImageFileHeader? right) -> bool
 static HackerOs.Apps.HackPaint.PaintCanvasState.CreateBlankBuffer(int width, int height, byte r, byte g, byte b, byte a) -> byte[]!
+static HackerOs.Apps.HackPaint.PaintFileReadResult.operator !=(HackerOs.Apps.HackPaint.PaintFileReadResult? left, HackerOs.Apps.HackPaint.PaintFileReadResult? right) -> bool
+static HackerOs.Apps.HackPaint.PaintFileReadResult.operator ==(HackerOs.Apps.HackPaint.PaintFileReadResult? left, HackerOs.Apps.HackPaint.PaintFileReadResult? right) -> bool
 static HackerOs.Apps.HackPaint.PaintFileStore.Inspect(byte[]! bytes) -> HackerOs.Apps.HackPaint.PaintFileReadResult!
 static HackerOs.Apps.HackPaint.PaintFileStore.ReadAsync(HackerOs.Simulation.Abstractions.Gateways.IAppFileSystemGateway! fileSystem, HackerOs.App.Abstractions.VirtualPath path, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<HackerOs.Apps.HackPaint.PaintFileReadResult!>!
 static HackerOs.Apps.HackPaint.PaintFileStore.WriteAsync(HackerOs.Simulation.Abstractions.Gateways.IAppFileSystemGateway! fileSystem, HackerOs.App.Abstractions.VirtualPath path, byte[]! bytes, string! mediaType, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<string?>!

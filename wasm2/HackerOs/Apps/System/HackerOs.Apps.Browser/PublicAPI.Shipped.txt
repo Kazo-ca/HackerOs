@@ -1,6 +1,9 @@
 #nullable enable
 HackerOs.Apps.Browser.Bridge.BridgeConsoleEvent
+HackerOs.Apps.Browser.Bridge.BridgeConsoleEvent.<Clone>$() -> HackerOs.Apps.Browser.Bridge.BridgeConsoleEvent!
 HackerOs.Apps.Browser.Bridge.BridgeConsoleEvent.BridgeConsoleEvent(string? Level, string? Message, string? Source) -> void
+HackerOs.Apps.Browser.Bridge.BridgeConsoleEvent.Deconstruct(out string? Level, out string? Message, out string? Source) -> void
+HackerOs.Apps.Browser.Bridge.BridgeConsoleEvent.Equals(HackerOs.Apps.Browser.Bridge.BridgeConsoleEvent? other) -> bool
 HackerOs.Apps.Browser.Bridge.BridgeConsoleEvent.Level.get -> string?
 HackerOs.Apps.Browser.Bridge.BridgeConsoleEvent.Level.init -> void
 HackerOs.Apps.Browser.Bridge.BridgeConsoleEvent.Message.get -> string?
@@ -8,21 +11,30 @@ HackerOs.Apps.Browser.Bridge.BridgeConsoleEvent.Message.init -> void
 HackerOs.Apps.Browser.Bridge.BridgeConsoleEvent.Source.get -> string?
 HackerOs.Apps.Browser.Bridge.BridgeConsoleEvent.Source.init -> void
 HackerOs.Apps.Browser.Bridge.BridgeCookieEvent
+HackerOs.Apps.Browser.Bridge.BridgeCookieEvent.<Clone>$() -> HackerOs.Apps.Browser.Bridge.BridgeCookieEvent!
 HackerOs.Apps.Browser.Bridge.BridgeCookieEvent.BridgeCookieEvent(string? Value) -> void
+HackerOs.Apps.Browser.Bridge.BridgeCookieEvent.Deconstruct(out string? Value) -> void
+HackerOs.Apps.Browser.Bridge.BridgeCookieEvent.Equals(HackerOs.Apps.Browser.Bridge.BridgeCookieEvent? other) -> bool
 HackerOs.Apps.Browser.Bridge.BridgeCookieEvent.Value.get -> string?
 HackerOs.Apps.Browser.Bridge.BridgeCookieEvent.Value.init -> void
 HackerOs.Apps.Browser.Bridge.BridgeDialogEvent
+HackerOs.Apps.Browser.Bridge.BridgeDialogEvent.<Clone>$() -> HackerOs.Apps.Browser.Bridge.BridgeDialogEvent!
 HackerOs.Apps.Browser.Bridge.BridgeDialogEvent.BridgeDialogEvent(string? Kind, string? Message) -> void
+HackerOs.Apps.Browser.Bridge.BridgeDialogEvent.Deconstruct(out string? Kind, out string? Message) -> void
+HackerOs.Apps.Browser.Bridge.BridgeDialogEvent.Equals(HackerOs.Apps.Browser.Bridge.BridgeDialogEvent? other) -> bool
 HackerOs.Apps.Browser.Bridge.BridgeDialogEvent.Kind.get -> string?
 HackerOs.Apps.Browser.Bridge.BridgeDialogEvent.Kind.init -> void
 HackerOs.Apps.Browser.Bridge.BridgeDialogEvent.Message.get -> string?
 HackerOs.Apps.Browser.Bridge.BridgeDialogEvent.Message.init -> void
 HackerOs.Apps.Browser.Bridge.BridgeFetchReply
+HackerOs.Apps.Browser.Bridge.BridgeFetchReply.<Clone>$() -> HackerOs.Apps.Browser.Bridge.BridgeFetchReply!
 HackerOs.Apps.Browser.Bridge.BridgeFetchReply.Body.get -> string?
 HackerOs.Apps.Browser.Bridge.BridgeFetchReply.Body.init -> void
 HackerOs.Apps.Browser.Bridge.BridgeFetchReply.BridgeFetchReply(bool Error, string? Message, int Status, string? StatusText, string? Url, bool Redirected, string? Type, bool Opaque, System.Collections.Generic.IReadOnlyList<string![]!>? Headers, string? Body, string? Cookies) -> void
 HackerOs.Apps.Browser.Bridge.BridgeFetchReply.Cookies.get -> string?
 HackerOs.Apps.Browser.Bridge.BridgeFetchReply.Cookies.init -> void
+HackerOs.Apps.Browser.Bridge.BridgeFetchReply.Deconstruct(out bool Error, out string? Message, out int Status, out string? StatusText, out string? Url, out bool Redirected, out string? Type, out bool Opaque, out System.Collections.Generic.IReadOnlyList<string![]!>? Headers, out string? Body, out string? Cookies) -> void
+HackerOs.Apps.Browser.Bridge.BridgeFetchReply.Equals(HackerOs.Apps.Browser.Bridge.BridgeFetchReply? other) -> bool
 HackerOs.Apps.Browser.Bridge.BridgeFetchReply.Error.get -> bool
 HackerOs.Apps.Browser.Bridge.BridgeFetchReply.Error.init -> void
 HackerOs.Apps.Browser.Bridge.BridgeFetchReply.Headers.get -> System.Collections.Generic.IReadOnlyList<string![]!>?
@@ -42,11 +54,14 @@ HackerOs.Apps.Browser.Bridge.BridgeFetchReply.Type.init -> void
 HackerOs.Apps.Browser.Bridge.BridgeFetchReply.Url.get -> string?
 HackerOs.Apps.Browser.Bridge.BridgeFetchReply.Url.init -> void
 HackerOs.Apps.Browser.Bridge.BridgeFetchRequest
+HackerOs.Apps.Browser.Bridge.BridgeFetchRequest.<Clone>$() -> HackerOs.Apps.Browser.Bridge.BridgeFetchRequest!
 HackerOs.Apps.Browser.Bridge.BridgeFetchRequest.Body.get -> string?
 HackerOs.Apps.Browser.Bridge.BridgeFetchRequest.Body.init -> void
 HackerOs.Apps.Browser.Bridge.BridgeFetchRequest.BridgeFetchRequest(string! Method, string! Url, System.Collections.Generic.IReadOnlyList<string![]!>? Headers, string? Body, string? Kind, string? Credentials, string? Mode) -> void
 HackerOs.Apps.Browser.Bridge.BridgeFetchRequest.Credentials.get -> string?
 HackerOs.Apps.Browser.Bridge.BridgeFetchRequest.Credentials.init -> void
+HackerOs.Apps.Browser.Bridge.BridgeFetchRequest.Deconstruct(out string! Method, out string! Url, out System.Collections.Generic.IReadOnlyList<string![]!>? Headers, out string? Body, out string? Kind, out string? Credentials, out string? Mode) -> void
+HackerOs.Apps.Browser.Bridge.BridgeFetchRequest.Equals(HackerOs.Apps.Browser.Bridge.BridgeFetchRequest? other) -> bool
 HackerOs.Apps.Browser.Bridge.BridgeFetchRequest.Headers.get -> System.Collections.Generic.IReadOnlyList<string![]!>?
 HackerOs.Apps.Browser.Bridge.BridgeFetchRequest.Headers.init -> void
 HackerOs.Apps.Browser.Bridge.BridgeFetchRequest.Kind.get -> string?
@@ -58,41 +73,59 @@ HackerOs.Apps.Browser.Bridge.BridgeFetchRequest.Mode.init -> void
 HackerOs.Apps.Browser.Bridge.BridgeFetchRequest.Url.get -> string!
 HackerOs.Apps.Browser.Bridge.BridgeFetchRequest.Url.init -> void
 HackerOs.Apps.Browser.Bridge.BridgeFormHistoryReply
+HackerOs.Apps.Browser.Bridge.BridgeFormHistoryReply.<Clone>$() -> HackerOs.Apps.Browser.Bridge.BridgeFormHistoryReply!
 HackerOs.Apps.Browser.Bridge.BridgeFormHistoryReply.BridgeFormHistoryReply(System.Collections.Generic.IReadOnlyList<string!>! Values) -> void
+HackerOs.Apps.Browser.Bridge.BridgeFormHistoryReply.Deconstruct(out System.Collections.Generic.IReadOnlyList<string!>! Values) -> void
+HackerOs.Apps.Browser.Bridge.BridgeFormHistoryReply.Equals(HackerOs.Apps.Browser.Bridge.BridgeFormHistoryReply? other) -> bool
 HackerOs.Apps.Browser.Bridge.BridgeFormHistoryReply.Values.get -> System.Collections.Generic.IReadOnlyList<string!>!
 HackerOs.Apps.Browser.Bridge.BridgeFormHistoryReply.Values.init -> void
 HackerOs.Apps.Browser.Bridge.BridgeFormHistoryRequest
+HackerOs.Apps.Browser.Bridge.BridgeFormHistoryRequest.<Clone>$() -> HackerOs.Apps.Browser.Bridge.BridgeFormHistoryRequest!
 HackerOs.Apps.Browser.Bridge.BridgeFormHistoryRequest.BridgeFormHistoryRequest(string? Name) -> void
+HackerOs.Apps.Browser.Bridge.BridgeFormHistoryRequest.Deconstruct(out string? Name) -> void
+HackerOs.Apps.Browser.Bridge.BridgeFormHistoryRequest.Equals(HackerOs.Apps.Browser.Bridge.BridgeFormHistoryRequest? other) -> bool
 HackerOs.Apps.Browser.Bridge.BridgeFormHistoryRequest.Name.get -> string?
 HackerOs.Apps.Browser.Bridge.BridgeFormHistoryRequest.Name.init -> void
 HackerOs.Apps.Browser.Bridge.BridgeFormSubmitEvent
+HackerOs.Apps.Browser.Bridge.BridgeFormSubmitEvent.<Clone>$() -> HackerOs.Apps.Browser.Bridge.BridgeFormSubmitEvent!
 HackerOs.Apps.Browser.Bridge.BridgeFormSubmitEvent.BridgeFormSubmitEvent(System.Collections.Generic.IReadOnlyList<string![]!>? Fields) -> void
+HackerOs.Apps.Browser.Bridge.BridgeFormSubmitEvent.Deconstruct(out System.Collections.Generic.IReadOnlyList<string![]!>? Fields) -> void
+HackerOs.Apps.Browser.Bridge.BridgeFormSubmitEvent.Equals(HackerOs.Apps.Browser.Bridge.BridgeFormSubmitEvent? other) -> bool
 HackerOs.Apps.Browser.Bridge.BridgeFormSubmitEvent.Fields.get -> System.Collections.Generic.IReadOnlyList<string![]!>?
 HackerOs.Apps.Browser.Bridge.BridgeFormSubmitEvent.Fields.init -> void
 HackerOs.Apps.Browser.Bridge.BridgeHistoryEvent
+HackerOs.Apps.Browser.Bridge.BridgeHistoryEvent.<Clone>$() -> HackerOs.Apps.Browser.Bridge.BridgeHistoryEvent!
 HackerOs.Apps.Browser.Bridge.BridgeHistoryEvent.BridgeHistoryEvent(string! Url, bool Replace) -> void
+HackerOs.Apps.Browser.Bridge.BridgeHistoryEvent.Deconstruct(out string! Url, out bool Replace) -> void
+HackerOs.Apps.Browser.Bridge.BridgeHistoryEvent.Equals(HackerOs.Apps.Browser.Bridge.BridgeHistoryEvent? other) -> bool
 HackerOs.Apps.Browser.Bridge.BridgeHistoryEvent.Replace.get -> bool
 HackerOs.Apps.Browser.Bridge.BridgeHistoryEvent.Replace.init -> void
 HackerOs.Apps.Browser.Bridge.BridgeHistoryEvent.Url.get -> string!
 HackerOs.Apps.Browser.Bridge.BridgeHistoryEvent.Url.init -> void
 HackerOs.Apps.Browser.Bridge.BridgeKeyEvent
+HackerOs.Apps.Browser.Bridge.BridgeKeyEvent.<Clone>$() -> HackerOs.Apps.Browser.Bridge.BridgeKeyEvent!
 HackerOs.Apps.Browser.Bridge.BridgeKeyEvent.Alt.get -> bool
 HackerOs.Apps.Browser.Bridge.BridgeKeyEvent.Alt.init -> void
 HackerOs.Apps.Browser.Bridge.BridgeKeyEvent.BridgeKeyEvent(string? Key, bool Ctrl, bool Shift, bool Alt) -> void
 HackerOs.Apps.Browser.Bridge.BridgeKeyEvent.Ctrl.get -> bool
 HackerOs.Apps.Browser.Bridge.BridgeKeyEvent.Ctrl.init -> void
+HackerOs.Apps.Browser.Bridge.BridgeKeyEvent.Deconstruct(out string? Key, out bool Ctrl, out bool Shift, out bool Alt) -> void
+HackerOs.Apps.Browser.Bridge.BridgeKeyEvent.Equals(HackerOs.Apps.Browser.Bridge.BridgeKeyEvent? other) -> bool
 HackerOs.Apps.Browser.Bridge.BridgeKeyEvent.Key.get -> string?
 HackerOs.Apps.Browser.Bridge.BridgeKeyEvent.Key.init -> void
 HackerOs.Apps.Browser.Bridge.BridgeKeyEvent.Shift.get -> bool
 HackerOs.Apps.Browser.Bridge.BridgeKeyEvent.Shift.init -> void
 HackerOs.Apps.Browser.Bridge.BridgeNavigateEvent
+HackerOs.Apps.Browser.Bridge.BridgeNavigateEvent.<Clone>$() -> HackerOs.Apps.Browser.Bridge.BridgeNavigateEvent!
 HackerOs.Apps.Browser.Bridge.BridgeNavigateEvent.Body.get -> string?
 HackerOs.Apps.Browser.Bridge.BridgeNavigateEvent.Body.init -> void
 HackerOs.Apps.Browser.Bridge.BridgeNavigateEvent.BridgeNavigateEvent(string! Url, string? Method, string? Body, string? ContentType, string? Target, bool Download, bool Replace) -> void
 HackerOs.Apps.Browser.Bridge.BridgeNavigateEvent.ContentType.get -> string?
 HackerOs.Apps.Browser.Bridge.BridgeNavigateEvent.ContentType.init -> void
+HackerOs.Apps.Browser.Bridge.BridgeNavigateEvent.Deconstruct(out string! Url, out string? Method, out string? Body, out string? ContentType, out string? Target, out bool Download, out bool Replace) -> void
 HackerOs.Apps.Browser.Bridge.BridgeNavigateEvent.Download.get -> bool
 HackerOs.Apps.Browser.Bridge.BridgeNavigateEvent.Download.init -> void
+HackerOs.Apps.Browser.Bridge.BridgeNavigateEvent.Equals(HackerOs.Apps.Browser.Bridge.BridgeNavigateEvent? other) -> bool
 HackerOs.Apps.Browser.Bridge.BridgeNavigateEvent.Method.get -> string?
 HackerOs.Apps.Browser.Bridge.BridgeNavigateEvent.Method.init -> void
 HackerOs.Apps.Browser.Bridge.BridgeNavigateEvent.Replace.get -> bool
@@ -102,19 +135,28 @@ HackerOs.Apps.Browser.Bridge.BridgeNavigateEvent.Target.init -> void
 HackerOs.Apps.Browser.Bridge.BridgeNavigateEvent.Url.get -> string!
 HackerOs.Apps.Browser.Bridge.BridgeNavigateEvent.Url.init -> void
 HackerOs.Apps.Browser.Bridge.BridgeResourceReply
+HackerOs.Apps.Browser.Bridge.BridgeResourceReply.<Clone>$() -> HackerOs.Apps.Browser.Bridge.BridgeResourceReply!
 HackerOs.Apps.Browser.Bridge.BridgeResourceReply.BridgeResourceReply(string! DataUrl) -> void
 HackerOs.Apps.Browser.Bridge.BridgeResourceReply.DataUrl.get -> string!
 HackerOs.Apps.Browser.Bridge.BridgeResourceReply.DataUrl.init -> void
+HackerOs.Apps.Browser.Bridge.BridgeResourceReply.Deconstruct(out string! DataUrl) -> void
+HackerOs.Apps.Browser.Bridge.BridgeResourceReply.Equals(HackerOs.Apps.Browser.Bridge.BridgeResourceReply? other) -> bool
 HackerOs.Apps.Browser.Bridge.BridgeResourceRequest
+HackerOs.Apps.Browser.Bridge.BridgeResourceRequest.<Clone>$() -> HackerOs.Apps.Browser.Bridge.BridgeResourceRequest!
 HackerOs.Apps.Browser.Bridge.BridgeResourceRequest.BridgeResourceRequest(string! Url, string? Kind) -> void
+HackerOs.Apps.Browser.Bridge.BridgeResourceRequest.Deconstruct(out string! Url, out string? Kind) -> void
+HackerOs.Apps.Browser.Bridge.BridgeResourceRequest.Equals(HackerOs.Apps.Browser.Bridge.BridgeResourceRequest? other) -> bool
 HackerOs.Apps.Browser.Bridge.BridgeResourceRequest.Kind.get -> string?
 HackerOs.Apps.Browser.Bridge.BridgeResourceRequest.Kind.init -> void
 HackerOs.Apps.Browser.Bridge.BridgeResourceRequest.Url.get -> string!
 HackerOs.Apps.Browser.Bridge.BridgeResourceRequest.Url.init -> void
 HackerOs.Apps.Browser.Bridge.BridgeStorageEvent
+HackerOs.Apps.Browser.Bridge.BridgeStorageEvent.<Clone>$() -> HackerOs.Apps.Browser.Bridge.BridgeStorageEvent!
 HackerOs.Apps.Browser.Bridge.BridgeStorageEvent.Area.get -> string?
 HackerOs.Apps.Browser.Bridge.BridgeStorageEvent.Area.init -> void
 HackerOs.Apps.Browser.Bridge.BridgeStorageEvent.BridgeStorageEvent(string? Area, string? Op, string? Key, string? Value) -> void
+HackerOs.Apps.Browser.Bridge.BridgeStorageEvent.Deconstruct(out string? Area, out string? Op, out string? Key, out string? Value) -> void
+HackerOs.Apps.Browser.Bridge.BridgeStorageEvent.Equals(HackerOs.Apps.Browser.Bridge.BridgeStorageEvent? other) -> bool
 HackerOs.Apps.Browser.Bridge.BridgeStorageEvent.Key.get -> string?
 HackerOs.Apps.Browser.Bridge.BridgeStorageEvent.Key.init -> void
 HackerOs.Apps.Browser.Bridge.BridgeStorageEvent.Op.get -> string?
@@ -122,12 +164,18 @@ HackerOs.Apps.Browser.Bridge.BridgeStorageEvent.Op.init -> void
 HackerOs.Apps.Browser.Bridge.BridgeStorageEvent.Value.get -> string?
 HackerOs.Apps.Browser.Bridge.BridgeStorageEvent.Value.init -> void
 HackerOs.Apps.Browser.Bridge.BridgeTitleEvent
+HackerOs.Apps.Browser.Bridge.BridgeTitleEvent.<Clone>$() -> HackerOs.Apps.Browser.Bridge.BridgeTitleEvent!
 HackerOs.Apps.Browser.Bridge.BridgeTitleEvent.BridgeTitleEvent(string? Title) -> void
+HackerOs.Apps.Browser.Bridge.BridgeTitleEvent.Deconstruct(out string? Title) -> void
+HackerOs.Apps.Browser.Bridge.BridgeTitleEvent.Equals(HackerOs.Apps.Browser.Bridge.BridgeTitleEvent? other) -> bool
 HackerOs.Apps.Browser.Bridge.BridgeTitleEvent.Title.get -> string?
 HackerOs.Apps.Browser.Bridge.BridgeTitleEvent.Title.init -> void
 HackerOs.Apps.Browser.Bridge.PageBootstrap
+HackerOs.Apps.Browser.Bridge.PageBootstrap.<Clone>$() -> HackerOs.Apps.Browser.Bridge.PageBootstrap!
 HackerOs.Apps.Browser.Bridge.PageBootstrap.Cookies.get -> string!
 HackerOs.Apps.Browser.Bridge.PageBootstrap.Cookies.init -> void
+HackerOs.Apps.Browser.Bridge.PageBootstrap.Deconstruct(out string! Token, out string! Url, out string! Referrer, out string! Cookies, out System.Collections.Generic.IReadOnlyDictionary<string!, string!>! LocalStorage, out System.Collections.Generic.IReadOnlyDictionary<string!, string!>! SessionStorage, out int StorageQuota, out bool IsFile, out HackerOs.Apps.Browser.Bridge.RefreshDirective? Refresh) -> void
+HackerOs.Apps.Browser.Bridge.PageBootstrap.Equals(HackerOs.Apps.Browser.Bridge.PageBootstrap? other) -> bool
 HackerOs.Apps.Browser.Bridge.PageBootstrap.IsFile.get -> bool
 HackerOs.Apps.Browser.Bridge.PageBootstrap.IsFile.init -> void
 HackerOs.Apps.Browser.Bridge.PageBootstrap.LocalStorage.get -> System.Collections.Generic.IReadOnlyDictionary<string!, string!>!
@@ -164,6 +212,9 @@ HackerOs.Apps.Browser.Bridge.PageSession.PageSession(System.Uri! documentUrl, st
 HackerOs.Apps.Browser.Bridge.PageSession.StorageKey.get -> string!
 HackerOs.Apps.Browser.Bridge.PageSession.Token.get -> string!
 HackerOs.Apps.Browser.Bridge.RefreshDirective
+HackerOs.Apps.Browser.Bridge.RefreshDirective.<Clone>$() -> HackerOs.Apps.Browser.Bridge.RefreshDirective!
+HackerOs.Apps.Browser.Bridge.RefreshDirective.Deconstruct(out double Seconds, out string? Url) -> void
+HackerOs.Apps.Browser.Bridge.RefreshDirective.Equals(HackerOs.Apps.Browser.Bridge.RefreshDirective? other) -> bool
 HackerOs.Apps.Browser.Bridge.RefreshDirective.RefreshDirective(double Seconds, string? Url) -> void
 HackerOs.Apps.Browser.Bridge.RefreshDirective.Seconds.get -> double
 HackerOs.Apps.Browser.Bridge.RefreshDirective.Seconds.init -> void
@@ -174,9 +225,12 @@ HackerOs.Apps.Browser.BrowserApp.BrowserApp() -> void
 HackerOs.Apps.Browser.BrowserDownloads
 HackerOs.Apps.Browser.BrowserErrorPages
 HackerOs.Apps.Browser.BrowserErrorView
+HackerOs.Apps.Browser.BrowserErrorView.<Clone>$() -> HackerOs.Apps.Browser.BrowserErrorView!
 HackerOs.Apps.Browser.BrowserErrorView.BrowserErrorView(string! Title, string! Message, string! Code, System.Collections.Generic.IReadOnlyList<string!>! Hints) -> void
 HackerOs.Apps.Browser.BrowserErrorView.Code.get -> string!
 HackerOs.Apps.Browser.BrowserErrorView.Code.init -> void
+HackerOs.Apps.Browser.BrowserErrorView.Deconstruct(out string! Title, out string! Message, out string! Code, out System.Collections.Generic.IReadOnlyList<string!>! Hints) -> void
+HackerOs.Apps.Browser.BrowserErrorView.Equals(HackerOs.Apps.Browser.BrowserErrorView? other) -> bool
 HackerOs.Apps.Browser.BrowserErrorView.Hints.get -> System.Collections.Generic.IReadOnlyList<string!>!
 HackerOs.Apps.Browser.BrowserErrorView.Hints.init -> void
 HackerOs.Apps.Browser.BrowserErrorView.Message.get -> string!
@@ -207,7 +261,10 @@ HackerOs.Apps.Browser.DevTools.ConsoleLevel.Error = 3 -> HackerOs.Apps.Browser.D
 HackerOs.Apps.Browser.DevTools.ConsoleLevel.Log = 1 -> HackerOs.Apps.Browser.DevTools.ConsoleLevel
 HackerOs.Apps.Browser.DevTools.ConsoleLevel.Warning = 2 -> HackerOs.Apps.Browser.DevTools.ConsoleLevel
 HackerOs.Apps.Browser.DevTools.ConsoleLogEntry
+HackerOs.Apps.Browser.DevTools.ConsoleLogEntry.<Clone>$() -> HackerOs.Apps.Browser.DevTools.ConsoleLogEntry!
 HackerOs.Apps.Browser.DevTools.ConsoleLogEntry.ConsoleLogEntry(HackerOs.Apps.Browser.DevTools.ConsoleLevel Level, string! Message, string! Source) -> void
+HackerOs.Apps.Browser.DevTools.ConsoleLogEntry.Deconstruct(out HackerOs.Apps.Browser.DevTools.ConsoleLevel Level, out string! Message, out string! Source) -> void
+HackerOs.Apps.Browser.DevTools.ConsoleLogEntry.Equals(HackerOs.Apps.Browser.DevTools.ConsoleLogEntry? other) -> bool
 HackerOs.Apps.Browser.DevTools.ConsoleLogEntry.Level.get -> HackerOs.Apps.Browser.DevTools.ConsoleLevel
 HackerOs.Apps.Browser.DevTools.ConsoleLogEntry.Level.init -> void
 HackerOs.Apps.Browser.DevTools.ConsoleLogEntry.Message.get -> string!
@@ -231,8 +288,11 @@ HackerOs.Apps.Browser.DevTools.DevToolsPanel.Log.set -> void
 HackerOs.Apps.Browser.DevTools.DevToolsPanel.OnClose.get -> Microsoft.AspNetCore.Components.EventCallback
 HackerOs.Apps.Browser.DevTools.DevToolsPanel.OnClose.set -> void
 HackerOs.Apps.Browser.DevTools.NetworkLogEntry
+HackerOs.Apps.Browser.DevTools.NetworkLogEntry.<Clone>$() -> HackerOs.Apps.Browser.DevTools.NetworkLogEntry!
+HackerOs.Apps.Browser.DevTools.NetworkLogEntry.Deconstruct(out string! Method, out string! Url, out HackerOs.Apps.Browser.DevTools.NetworkRequestKind Kind, out int StatusCode, out string? Error, out string! MediaType, out int Size, out System.TimeSpan Duration) -> void
 HackerOs.Apps.Browser.DevTools.NetworkLogEntry.Duration.get -> System.TimeSpan
 HackerOs.Apps.Browser.DevTools.NetworkLogEntry.Duration.init -> void
+HackerOs.Apps.Browser.DevTools.NetworkLogEntry.Equals(HackerOs.Apps.Browser.DevTools.NetworkLogEntry? other) -> bool
 HackerOs.Apps.Browser.DevTools.NetworkLogEntry.Error.get -> string?
 HackerOs.Apps.Browser.DevTools.NetworkLogEntry.Error.init -> void
 HackerOs.Apps.Browser.DevTools.NetworkLogEntry.IsFailure.get -> bool
@@ -260,24 +320,33 @@ HackerOs.Apps.Browser.DevTools.NetworkRequestKind.Script = 2 -> HackerOs.Apps.Br
 HackerOs.Apps.Browser.DevTools.NetworkRequestKind.Stylesheet = 1 -> HackerOs.Apps.Browser.DevTools.NetworkRequestKind
 HackerOs.Apps.Browser.DevTools.NetworkRequestKind.Xhr = 7 -> HackerOs.Apps.Browser.DevTools.NetworkRequestKind
 HackerOs.Apps.Browser.Net.AddressTarget
+HackerOs.Apps.Browser.Net.AddressTarget.<Clone>$() -> HackerOs.Apps.Browser.Net.AddressTarget!
 HackerOs.Apps.Browser.Net.AddressTarget.AddressTarget(System.Uri! Url, bool ViewSource) -> void
+HackerOs.Apps.Browser.Net.AddressTarget.Deconstruct(out System.Uri! Url, out bool ViewSource) -> void
+HackerOs.Apps.Browser.Net.AddressTarget.Equals(HackerOs.Apps.Browser.Net.AddressTarget? other) -> bool
 HackerOs.Apps.Browser.Net.AddressTarget.Url.get -> System.Uri!
 HackerOs.Apps.Browser.Net.AddressTarget.Url.init -> void
 HackerOs.Apps.Browser.Net.AddressTarget.ViewSource.get -> bool
 HackerOs.Apps.Browser.Net.AddressTarget.ViewSource.init -> void
 HackerOs.Apps.Browser.Net.BrowserErrorCodes
 HackerOs.Apps.Browser.Net.BrowserFetchResult
+HackerOs.Apps.Browser.Net.BrowserFetchResult.<Clone>$() -> HackerOs.Apps.Browser.Net.BrowserFetchResult!
 HackerOs.Apps.Browser.Net.BrowserFetchResult.BrowserFetchResult(HackerOs.Apps.Browser.Net.BrowserResponse? Response, string? ErrorCode) -> void
+HackerOs.Apps.Browser.Net.BrowserFetchResult.Deconstruct(out HackerOs.Apps.Browser.Net.BrowserResponse? Response, out string? ErrorCode) -> void
+HackerOs.Apps.Browser.Net.BrowserFetchResult.Equals(HackerOs.Apps.Browser.Net.BrowserFetchResult? other) -> bool
 HackerOs.Apps.Browser.Net.BrowserFetchResult.ErrorCode.get -> string?
 HackerOs.Apps.Browser.Net.BrowserFetchResult.ErrorCode.init -> void
 HackerOs.Apps.Browser.Net.BrowserFetchResult.Response.get -> HackerOs.Apps.Browser.Net.BrowserResponse?
 HackerOs.Apps.Browser.Net.BrowserFetchResult.Response.init -> void
 HackerOs.Apps.Browser.Net.BrowserRequest
+HackerOs.Apps.Browser.Net.BrowserRequest.<Clone>$() -> HackerOs.Apps.Browser.Net.BrowserRequest!
 HackerOs.Apps.Browser.Net.BrowserRequest.Body.get -> byte[]?
 HackerOs.Apps.Browser.Net.BrowserRequest.Body.init -> void
 HackerOs.Apps.Browser.Net.BrowserRequest.BrowserRequest(string! Method, System.Uri! Url, System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>! Headers, byte[]? Body = null, string? ContentType = null, bool WithCredentials = true) -> void
 HackerOs.Apps.Browser.Net.BrowserRequest.ContentType.get -> string?
 HackerOs.Apps.Browser.Net.BrowserRequest.ContentType.init -> void
+HackerOs.Apps.Browser.Net.BrowserRequest.Deconstruct(out string! Method, out System.Uri! Url, out System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>! Headers, out byte[]? Body, out string? ContentType, out bool WithCredentials) -> void
+HackerOs.Apps.Browser.Net.BrowserRequest.Equals(HackerOs.Apps.Browser.Net.BrowserRequest? other) -> bool
 HackerOs.Apps.Browser.Net.BrowserRequest.Headers.get -> System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>!
 HackerOs.Apps.Browser.Net.BrowserRequest.Headers.init -> void
 HackerOs.Apps.Browser.Net.BrowserRequest.Method.get -> string!
@@ -292,10 +361,13 @@ HackerOs.Apps.Browser.Net.BrowserResourceLoader.Log.get -> HackerOs.Apps.Browser
 HackerOs.Apps.Browser.Net.BrowserResourceLoader.LogBlocked(HackerOs.Apps.Browser.Net.BrowserRequest! request, HackerOs.Apps.Browser.DevTools.NetworkRequestKind kind, string! errorCode, string! consoleMessage) -> void
 HackerOs.Apps.Browser.Net.BrowserResourceLoader.SendAsync(HackerOs.Apps.Browser.Net.BrowserRequest! request, HackerOs.Apps.Browser.DevTools.NetworkRequestKind kind, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.Apps.Browser.Net.BrowserFetchResult!>!
 HackerOs.Apps.Browser.Net.BrowserResponse
+HackerOs.Apps.Browser.Net.BrowserResponse.<Clone>$() -> HackerOs.Apps.Browser.Net.BrowserResponse!
 HackerOs.Apps.Browser.Net.BrowserResponse.Body.get -> byte[]!
 HackerOs.Apps.Browser.Net.BrowserResponse.Body.init -> void
 HackerOs.Apps.Browser.Net.BrowserResponse.BrowserResponse(int StatusCode, string! ReasonPhrase, System.Uri! Url, System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>! Headers, byte[]! Body, HackerOs.Simulation.Abstractions.Network.SimulatedPage? Page = null, int RedirectCount = 0) -> void
 HackerOs.Apps.Browser.Net.BrowserResponse.ContentType.get -> string?
+HackerOs.Apps.Browser.Net.BrowserResponse.Deconstruct(out int StatusCode, out string! ReasonPhrase, out System.Uri! Url, out System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>! Headers, out byte[]! Body, out HackerOs.Simulation.Abstractions.Network.SimulatedPage? Page, out int RedirectCount) -> void
+HackerOs.Apps.Browser.Net.BrowserResponse.Equals(HackerOs.Apps.Browser.Net.BrowserResponse? other) -> bool
 HackerOs.Apps.Browser.Net.BrowserResponse.GetHeader(string! name) -> string?
 HackerOs.Apps.Browser.Net.BrowserResponse.Headers.get -> System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>!
 HackerOs.Apps.Browser.Net.BrowserResponse.Headers.init -> void
@@ -314,7 +386,10 @@ HackerOs.Apps.Browser.Net.BrowserResponse.Url.get -> System.Uri!
 HackerOs.Apps.Browser.Net.BrowserResponse.Url.init -> void
 HackerOs.Apps.Browser.Net.BrowserUrl
 HackerOs.Apps.Browser.Net.DirectoryListingEntry
+HackerOs.Apps.Browser.Net.DirectoryListingEntry.<Clone>$() -> HackerOs.Apps.Browser.Net.DirectoryListingEntry!
+HackerOs.Apps.Browser.Net.DirectoryListingEntry.Deconstruct(out string! Name, out bool IsDirectory, out long? Length, out System.DateTime LastWriteTimeUtc) -> void
 HackerOs.Apps.Browser.Net.DirectoryListingEntry.DirectoryListingEntry(string! Name, bool IsDirectory, long? Length, System.DateTime LastWriteTimeUtc) -> void
+HackerOs.Apps.Browser.Net.DirectoryListingEntry.Equals(HackerOs.Apps.Browser.Net.DirectoryListingEntry? other) -> bool
 HackerOs.Apps.Browser.Net.DirectoryListingEntry.IsDirectory.get -> bool
 HackerOs.Apps.Browser.Net.DirectoryListingEntry.IsDirectory.init -> void
 HackerOs.Apps.Browser.Net.DirectoryListingEntry.LastWriteTimeUtc.get -> System.DateTime
@@ -330,15 +405,21 @@ HackerOs.Apps.Browser.Net.SdkBrowserTransport
 HackerOs.Apps.Browser.Net.SdkBrowserTransport.SdkBrowserTransport(HackerOs.AppSdk.Net.HackCookieContainer! cookies) -> void
 HackerOs.Apps.Browser.Net.SdkBrowserTransport.SendAsync(HackerOs.Apps.Browser.Net.BrowserRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.Apps.Browser.Net.BrowserFetchResult!>!
 HackerOs.Apps.Browser.PageFrameDocument
+HackerOs.Apps.Browser.PageFrameDocument.<Clone>$() -> HackerOs.Apps.Browser.PageFrameDocument!
+HackerOs.Apps.Browser.PageFrameDocument.Deconstruct(out string! Html, out string! Token) -> void
+HackerOs.Apps.Browser.PageFrameDocument.Equals(HackerOs.Apps.Browser.PageFrameDocument? other) -> bool
 HackerOs.Apps.Browser.PageFrameDocument.Html.get -> string!
 HackerOs.Apps.Browser.PageFrameDocument.Html.init -> void
 HackerOs.Apps.Browser.PageFrameDocument.PageFrameDocument(string! Html, string! Token) -> void
 HackerOs.Apps.Browser.PageFrameDocument.Token.get -> string!
 HackerOs.Apps.Browser.PageFrameDocument.Token.init -> void
 HackerOs.Apps.Browser.Rendering.ComposedPage
+HackerOs.Apps.Browser.Rendering.ComposedPage.<Clone>$() -> HackerOs.Apps.Browser.Rendering.ComposedPage!
 HackerOs.Apps.Browser.Rendering.ComposedPage.BaseUrl.get -> System.Uri!
 HackerOs.Apps.Browser.Rendering.ComposedPage.BaseUrl.init -> void
 HackerOs.Apps.Browser.Rendering.ComposedPage.ComposedPage(string! Html, string! Title, System.Uri! BaseUrl, int SubresourceCount) -> void
+HackerOs.Apps.Browser.Rendering.ComposedPage.Deconstruct(out string! Html, out string! Title, out System.Uri! BaseUrl, out int SubresourceCount) -> void
+HackerOs.Apps.Browser.Rendering.ComposedPage.Equals(HackerOs.Apps.Browser.Rendering.ComposedPage? other) -> bool
 HackerOs.Apps.Browser.Rendering.ComposedPage.Html.get -> string!
 HackerOs.Apps.Browser.Rendering.ComposedPage.Html.init -> void
 HackerOs.Apps.Browser.Rendering.ComposedPage.SubresourceCount.get -> int
@@ -353,10 +434,13 @@ HackerOs.Apps.Browser.Rendering.HtmlPageComposer
 HackerOs.Apps.Browser.Rendering.HtmlPageComposer.ComposeAsync(string! html, HackerOs.Apps.Browser.Bridge.PageSession! session, HackerOs.Apps.Browser.Bridge.PageBootstrap! bootstrap) -> System.Threading.Tasks.Task<HackerOs.Apps.Browser.Rendering.ComposedPage!>!
 HackerOs.Apps.Browser.Rendering.HtmlPageComposer.HtmlPageComposer(HackerOs.Apps.Browser.Net.BrowserResourceLoader! loader) -> void
 HackerOs.Apps.Browser.Rendering.LoadedResource
+HackerOs.Apps.Browser.Rendering.LoadedResource.<Clone>$() -> HackerOs.Apps.Browser.Rendering.LoadedResource!
 HackerOs.Apps.Browser.Rendering.LoadedResource.Body.get -> byte[]!
 HackerOs.Apps.Browser.Rendering.LoadedResource.Body.init -> void
 HackerOs.Apps.Browser.Rendering.LoadedResource.ContentType.get -> string!
 HackerOs.Apps.Browser.Rendering.LoadedResource.ContentType.init -> void
+HackerOs.Apps.Browser.Rendering.LoadedResource.Deconstruct(out System.Uri! Url, out string! ContentType, out byte[]! Body) -> void
+HackerOs.Apps.Browser.Rendering.LoadedResource.Equals(HackerOs.Apps.Browser.Rendering.LoadedResource? other) -> bool
 HackerOs.Apps.Browser.Rendering.LoadedResource.LoadedResource(System.Uri! Url, string! ContentType, byte[]! Body) -> void
 HackerOs.Apps.Browser.Rendering.LoadedResource.MediaType.get -> string!
 HackerOs.Apps.Browser.Rendering.LoadedResource.ReadAsString() -> string!
@@ -377,8 +461,11 @@ HackerOs.Apps.Browser.ResponseBodyKind.Pdf = 5 -> HackerOs.Apps.Browser.Response
 HackerOs.Apps.Browser.ResponseBodyKind.Text = 1 -> HackerOs.Apps.Browser.ResponseBodyKind
 HackerOs.Apps.Browser.ResponseBodyPresenter
 HackerOs.Apps.Browser.ResponseBodyView
+HackerOs.Apps.Browser.ResponseBodyView.<Clone>$() -> HackerOs.Apps.Browser.ResponseBodyView!
 HackerOs.Apps.Browser.ResponseBodyView.DataUrl.get -> string!
 HackerOs.Apps.Browser.ResponseBodyView.DataUrl.init -> void
+HackerOs.Apps.Browser.ResponseBodyView.Deconstruct(out HackerOs.Apps.Browser.ResponseBodyKind Kind, out string! MediaType, out int Length, out string! Text, out string! DataUrl) -> void
+HackerOs.Apps.Browser.ResponseBodyView.Equals(HackerOs.Apps.Browser.ResponseBodyView? other) -> bool
 HackerOs.Apps.Browser.ResponseBodyView.Kind.get -> HackerOs.Apps.Browser.ResponseBodyKind
 HackerOs.Apps.Browser.ResponseBodyView.Kind.init -> void
 HackerOs.Apps.Browser.ResponseBodyView.Length.get -> int
@@ -413,12 +500,18 @@ HackerOs.Apps.Browser.Storage.FormHistory.Path.get -> string!
 HackerOs.Apps.Browser.Storage.FormHistory.RecordAsync(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string!, string!>>! fields, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<int>!
 HackerOs.Apps.Browser.Storage.FormHistory.SuggestAsync(string! fieldName, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<string!>!>!
 HackerOs.Apps.Browser.Storage.FormHistoryDocument
+HackerOs.Apps.Browser.Storage.FormHistoryDocument.<Clone>$() -> HackerOs.Apps.Browser.Storage.FormHistoryDocument!
+HackerOs.Apps.Browser.Storage.FormHistoryDocument.Deconstruct(out int Version, out System.Collections.Generic.List<HackerOs.Apps.Browser.Storage.FormHistoryEntry!>! Entries) -> void
 HackerOs.Apps.Browser.Storage.FormHistoryDocument.Entries.get -> System.Collections.Generic.List<HackerOs.Apps.Browser.Storage.FormHistoryEntry!>!
 HackerOs.Apps.Browser.Storage.FormHistoryDocument.Entries.init -> void
+HackerOs.Apps.Browser.Storage.FormHistoryDocument.Equals(HackerOs.Apps.Browser.Storage.FormHistoryDocument? other) -> bool
 HackerOs.Apps.Browser.Storage.FormHistoryDocument.FormHistoryDocument(int Version, System.Collections.Generic.List<HackerOs.Apps.Browser.Storage.FormHistoryEntry!>! Entries) -> void
 HackerOs.Apps.Browser.Storage.FormHistoryDocument.Version.get -> int
 HackerOs.Apps.Browser.Storage.FormHistoryDocument.Version.init -> void
 HackerOs.Apps.Browser.Storage.FormHistoryEntry
+HackerOs.Apps.Browser.Storage.FormHistoryEntry.<Clone>$() -> HackerOs.Apps.Browser.Storage.FormHistoryEntry!
+HackerOs.Apps.Browser.Storage.FormHistoryEntry.Deconstruct(out string! Field, out string! Value, out int TimesUsed, out System.DateTimeOffset FirstUsed, out System.DateTimeOffset LastUsed) -> void
+HackerOs.Apps.Browser.Storage.FormHistoryEntry.Equals(HackerOs.Apps.Browser.Storage.FormHistoryEntry? other) -> bool
 HackerOs.Apps.Browser.Storage.FormHistoryEntry.Field.get -> string!
 HackerOs.Apps.Browser.Storage.FormHistoryEntry.Field.init -> void
 HackerOs.Apps.Browser.Storage.FormHistoryEntry.FirstUsed.get -> System.DateTimeOffset
@@ -470,22 +563,152 @@ const HackerOs.Apps.Browser.Storage.FormHistory.MaxValueLength = 200 -> int
 const HackerOs.Apps.Browser.Storage.FormHistory.MaxValuesPerField = 100 -> int
 const HackerOs.Apps.Browser.Storage.PageStorage.LocalStorageFileName = "local-storage.json" -> string!
 const HackerOs.Apps.Browser.Storage.PageStorage.Quota = 5242880 -> int
+override HackerOs.Apps.Browser.Bridge.BridgeConsoleEvent.Equals(object? obj) -> bool
+override HackerOs.Apps.Browser.Bridge.BridgeConsoleEvent.GetHashCode() -> int
+override HackerOs.Apps.Browser.Bridge.BridgeConsoleEvent.ToString() -> string!
+override HackerOs.Apps.Browser.Bridge.BridgeCookieEvent.Equals(object? obj) -> bool
+override HackerOs.Apps.Browser.Bridge.BridgeCookieEvent.GetHashCode() -> int
+override HackerOs.Apps.Browser.Bridge.BridgeCookieEvent.ToString() -> string!
+override HackerOs.Apps.Browser.Bridge.BridgeDialogEvent.Equals(object? obj) -> bool
+override HackerOs.Apps.Browser.Bridge.BridgeDialogEvent.GetHashCode() -> int
+override HackerOs.Apps.Browser.Bridge.BridgeDialogEvent.ToString() -> string!
+override HackerOs.Apps.Browser.Bridge.BridgeFetchReply.Equals(object? obj) -> bool
+override HackerOs.Apps.Browser.Bridge.BridgeFetchReply.GetHashCode() -> int
+override HackerOs.Apps.Browser.Bridge.BridgeFetchReply.ToString() -> string!
+override HackerOs.Apps.Browser.Bridge.BridgeFetchRequest.Equals(object? obj) -> bool
+override HackerOs.Apps.Browser.Bridge.BridgeFetchRequest.GetHashCode() -> int
+override HackerOs.Apps.Browser.Bridge.BridgeFetchRequest.ToString() -> string!
+override HackerOs.Apps.Browser.Bridge.BridgeFormHistoryReply.Equals(object? obj) -> bool
+override HackerOs.Apps.Browser.Bridge.BridgeFormHistoryReply.GetHashCode() -> int
+override HackerOs.Apps.Browser.Bridge.BridgeFormHistoryReply.ToString() -> string!
+override HackerOs.Apps.Browser.Bridge.BridgeFormHistoryRequest.Equals(object? obj) -> bool
+override HackerOs.Apps.Browser.Bridge.BridgeFormHistoryRequest.GetHashCode() -> int
+override HackerOs.Apps.Browser.Bridge.BridgeFormHistoryRequest.ToString() -> string!
+override HackerOs.Apps.Browser.Bridge.BridgeFormSubmitEvent.Equals(object? obj) -> bool
+override HackerOs.Apps.Browser.Bridge.BridgeFormSubmitEvent.GetHashCode() -> int
+override HackerOs.Apps.Browser.Bridge.BridgeFormSubmitEvent.ToString() -> string!
+override HackerOs.Apps.Browser.Bridge.BridgeHistoryEvent.Equals(object? obj) -> bool
+override HackerOs.Apps.Browser.Bridge.BridgeHistoryEvent.GetHashCode() -> int
+override HackerOs.Apps.Browser.Bridge.BridgeHistoryEvent.ToString() -> string!
+override HackerOs.Apps.Browser.Bridge.BridgeKeyEvent.Equals(object? obj) -> bool
+override HackerOs.Apps.Browser.Bridge.BridgeKeyEvent.GetHashCode() -> int
+override HackerOs.Apps.Browser.Bridge.BridgeKeyEvent.ToString() -> string!
+override HackerOs.Apps.Browser.Bridge.BridgeNavigateEvent.Equals(object? obj) -> bool
+override HackerOs.Apps.Browser.Bridge.BridgeNavigateEvent.GetHashCode() -> int
+override HackerOs.Apps.Browser.Bridge.BridgeNavigateEvent.ToString() -> string!
+override HackerOs.Apps.Browser.Bridge.BridgeResourceReply.Equals(object? obj) -> bool
+override HackerOs.Apps.Browser.Bridge.BridgeResourceReply.GetHashCode() -> int
+override HackerOs.Apps.Browser.Bridge.BridgeResourceReply.ToString() -> string!
+override HackerOs.Apps.Browser.Bridge.BridgeResourceRequest.Equals(object? obj) -> bool
+override HackerOs.Apps.Browser.Bridge.BridgeResourceRequest.GetHashCode() -> int
+override HackerOs.Apps.Browser.Bridge.BridgeResourceRequest.ToString() -> string!
+override HackerOs.Apps.Browser.Bridge.BridgeStorageEvent.Equals(object? obj) -> bool
+override HackerOs.Apps.Browser.Bridge.BridgeStorageEvent.GetHashCode() -> int
+override HackerOs.Apps.Browser.Bridge.BridgeStorageEvent.ToString() -> string!
+override HackerOs.Apps.Browser.Bridge.BridgeTitleEvent.Equals(object? obj) -> bool
+override HackerOs.Apps.Browser.Bridge.BridgeTitleEvent.GetHashCode() -> int
+override HackerOs.Apps.Browser.Bridge.BridgeTitleEvent.ToString() -> string!
+override HackerOs.Apps.Browser.Bridge.PageBootstrap.Equals(object? obj) -> bool
+override HackerOs.Apps.Browser.Bridge.PageBootstrap.GetHashCode() -> int
+override HackerOs.Apps.Browser.Bridge.PageBootstrap.ToString() -> string!
 override HackerOs.Apps.Browser.Bridge.PageBridgeJsonContext.GetTypeInfo(System.Type! type) -> System.Text.Json.Serialization.Metadata.JsonTypeInfo?
+override HackerOs.Apps.Browser.Bridge.RefreshDirective.Equals(object? obj) -> bool
+override HackerOs.Apps.Browser.Bridge.RefreshDirective.GetHashCode() -> int
+override HackerOs.Apps.Browser.Bridge.RefreshDirective.ToString() -> string!
+override HackerOs.Apps.Browser.BrowserApp.Assets.get -> System.Collections.Generic.IReadOnlyList<HackerOs.App.Abstractions.AssetManifest!>!
 override HackerOs.Apps.Browser.BrowserApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
 override HackerOs.Apps.Browser.BrowserApp.Category.get -> string!
 override HackerOs.Apps.Browser.BrowserApp.Description.get -> string!
 override HackerOs.Apps.Browser.BrowserApp.EntryPoint.get -> System.Type!
 override HackerOs.Apps.Browser.BrowserApp.FileHandlers.get -> System.Collections.Generic.IReadOnlyList<HackerOs.App.Abstractions.FileHandler!>!
+override HackerOs.Apps.Browser.BrowserApp.Icons.get -> System.Collections.Generic.IReadOnlyList<string!>!
 override HackerOs.Apps.Browser.BrowserApp.Id.get -> string!
 override HackerOs.Apps.Browser.BrowserApp.Kind.get -> HackerOs.App.Abstractions.AppKind
+override HackerOs.Apps.Browser.BrowserApp.MobileEntryPoint.get -> System.Type?
 override HackerOs.Apps.Browser.BrowserApp.Name.get -> string!
 override HackerOs.Apps.Browser.BrowserApp.PublisherId.get -> string!
 override HackerOs.Apps.Browser.BrowserApp.Resources.get -> HackerOs.App.Abstractions.AppResourceProfileManifest!
+override HackerOs.Apps.Browser.BrowserErrorView.Equals(object? obj) -> bool
+override HackerOs.Apps.Browser.BrowserErrorView.GetHashCode() -> int
+override HackerOs.Apps.Browser.BrowserErrorView.ToString() -> string!
+override HackerOs.Apps.Browser.DevTools.ConsoleLogEntry.Equals(object? obj) -> bool
+override HackerOs.Apps.Browser.DevTools.ConsoleLogEntry.GetHashCode() -> int
+override HackerOs.Apps.Browser.DevTools.ConsoleLogEntry.ToString() -> string!
+override HackerOs.Apps.Browser.DevTools.NetworkLogEntry.Equals(object? obj) -> bool
+override HackerOs.Apps.Browser.DevTools.NetworkLogEntry.GetHashCode() -> int
+override HackerOs.Apps.Browser.DevTools.NetworkLogEntry.ToString() -> string!
+override HackerOs.Apps.Browser.Net.AddressTarget.Equals(object? obj) -> bool
+override HackerOs.Apps.Browser.Net.AddressTarget.GetHashCode() -> int
+override HackerOs.Apps.Browser.Net.AddressTarget.ToString() -> string!
+override HackerOs.Apps.Browser.Net.BrowserFetchResult.Equals(object? obj) -> bool
+override HackerOs.Apps.Browser.Net.BrowserFetchResult.GetHashCode() -> int
+override HackerOs.Apps.Browser.Net.BrowserFetchResult.ToString() -> string!
+override HackerOs.Apps.Browser.Net.BrowserRequest.Equals(object? obj) -> bool
+override HackerOs.Apps.Browser.Net.BrowserRequest.GetHashCode() -> int
+override HackerOs.Apps.Browser.Net.BrowserRequest.ToString() -> string!
+override HackerOs.Apps.Browser.Net.BrowserResponse.Equals(object? obj) -> bool
+override HackerOs.Apps.Browser.Net.BrowserResponse.GetHashCode() -> int
+override HackerOs.Apps.Browser.Net.BrowserResponse.ToString() -> string!
+override HackerOs.Apps.Browser.Net.DirectoryListingEntry.Equals(object? obj) -> bool
+override HackerOs.Apps.Browser.Net.DirectoryListingEntry.GetHashCode() -> int
+override HackerOs.Apps.Browser.Net.DirectoryListingEntry.ToString() -> string!
+override HackerOs.Apps.Browser.PageFrameDocument.Equals(object? obj) -> bool
+override HackerOs.Apps.Browser.PageFrameDocument.GetHashCode() -> int
+override HackerOs.Apps.Browser.PageFrameDocument.ToString() -> string!
+override HackerOs.Apps.Browser.Rendering.ComposedPage.Equals(object? obj) -> bool
+override HackerOs.Apps.Browser.Rendering.ComposedPage.GetHashCode() -> int
+override HackerOs.Apps.Browser.Rendering.ComposedPage.ToString() -> string!
+override HackerOs.Apps.Browser.Rendering.LoadedResource.Equals(object? obj) -> bool
+override HackerOs.Apps.Browser.Rendering.LoadedResource.GetHashCode() -> int
+override HackerOs.Apps.Browser.Rendering.LoadedResource.ToString() -> string!
+override HackerOs.Apps.Browser.ResponseBodyView.Equals(object? obj) -> bool
+override HackerOs.Apps.Browser.ResponseBodyView.GetHashCode() -> int
+override HackerOs.Apps.Browser.ResponseBodyView.ToString() -> string!
 override HackerOs.Apps.Browser.SimulatedPageRenderer.OnParametersSet() -> void
+override HackerOs.Apps.Browser.Storage.FormHistoryDocument.Equals(object? obj) -> bool
+override HackerOs.Apps.Browser.Storage.FormHistoryDocument.GetHashCode() -> int
+override HackerOs.Apps.Browser.Storage.FormHistoryDocument.ToString() -> string!
+override HackerOs.Apps.Browser.Storage.FormHistoryEntry.Equals(object? obj) -> bool
+override HackerOs.Apps.Browser.Storage.FormHistoryEntry.GetHashCode() -> int
+override HackerOs.Apps.Browser.Storage.FormHistoryEntry.ToString() -> string!
+static HackerOs.Apps.Browser.Bridge.BridgeConsoleEvent.operator !=(HackerOs.Apps.Browser.Bridge.BridgeConsoleEvent? left, HackerOs.Apps.Browser.Bridge.BridgeConsoleEvent? right) -> bool
+static HackerOs.Apps.Browser.Bridge.BridgeConsoleEvent.operator ==(HackerOs.Apps.Browser.Bridge.BridgeConsoleEvent? left, HackerOs.Apps.Browser.Bridge.BridgeConsoleEvent? right) -> bool
+static HackerOs.Apps.Browser.Bridge.BridgeCookieEvent.operator !=(HackerOs.Apps.Browser.Bridge.BridgeCookieEvent? left, HackerOs.Apps.Browser.Bridge.BridgeCookieEvent? right) -> bool
+static HackerOs.Apps.Browser.Bridge.BridgeCookieEvent.operator ==(HackerOs.Apps.Browser.Bridge.BridgeCookieEvent? left, HackerOs.Apps.Browser.Bridge.BridgeCookieEvent? right) -> bool
+static HackerOs.Apps.Browser.Bridge.BridgeDialogEvent.operator !=(HackerOs.Apps.Browser.Bridge.BridgeDialogEvent? left, HackerOs.Apps.Browser.Bridge.BridgeDialogEvent? right) -> bool
+static HackerOs.Apps.Browser.Bridge.BridgeDialogEvent.operator ==(HackerOs.Apps.Browser.Bridge.BridgeDialogEvent? left, HackerOs.Apps.Browser.Bridge.BridgeDialogEvent? right) -> bool
 static HackerOs.Apps.Browser.Bridge.BridgeFetchReply.Fail(string! message, string? cookies = null) -> HackerOs.Apps.Browser.Bridge.BridgeFetchReply!
+static HackerOs.Apps.Browser.Bridge.BridgeFetchReply.operator !=(HackerOs.Apps.Browser.Bridge.BridgeFetchReply? left, HackerOs.Apps.Browser.Bridge.BridgeFetchReply? right) -> bool
+static HackerOs.Apps.Browser.Bridge.BridgeFetchReply.operator ==(HackerOs.Apps.Browser.Bridge.BridgeFetchReply? left, HackerOs.Apps.Browser.Bridge.BridgeFetchReply? right) -> bool
+static HackerOs.Apps.Browser.Bridge.BridgeFetchRequest.operator !=(HackerOs.Apps.Browser.Bridge.BridgeFetchRequest? left, HackerOs.Apps.Browser.Bridge.BridgeFetchRequest? right) -> bool
+static HackerOs.Apps.Browser.Bridge.BridgeFetchRequest.operator ==(HackerOs.Apps.Browser.Bridge.BridgeFetchRequest? left, HackerOs.Apps.Browser.Bridge.BridgeFetchRequest? right) -> bool
+static HackerOs.Apps.Browser.Bridge.BridgeFormHistoryReply.operator !=(HackerOs.Apps.Browser.Bridge.BridgeFormHistoryReply? left, HackerOs.Apps.Browser.Bridge.BridgeFormHistoryReply? right) -> bool
+static HackerOs.Apps.Browser.Bridge.BridgeFormHistoryReply.operator ==(HackerOs.Apps.Browser.Bridge.BridgeFormHistoryReply? left, HackerOs.Apps.Browser.Bridge.BridgeFormHistoryReply? right) -> bool
+static HackerOs.Apps.Browser.Bridge.BridgeFormHistoryRequest.operator !=(HackerOs.Apps.Browser.Bridge.BridgeFormHistoryRequest? left, HackerOs.Apps.Browser.Bridge.BridgeFormHistoryRequest? right) -> bool
+static HackerOs.Apps.Browser.Bridge.BridgeFormHistoryRequest.operator ==(HackerOs.Apps.Browser.Bridge.BridgeFormHistoryRequest? left, HackerOs.Apps.Browser.Bridge.BridgeFormHistoryRequest? right) -> bool
+static HackerOs.Apps.Browser.Bridge.BridgeFormSubmitEvent.operator !=(HackerOs.Apps.Browser.Bridge.BridgeFormSubmitEvent? left, HackerOs.Apps.Browser.Bridge.BridgeFormSubmitEvent? right) -> bool
+static HackerOs.Apps.Browser.Bridge.BridgeFormSubmitEvent.operator ==(HackerOs.Apps.Browser.Bridge.BridgeFormSubmitEvent? left, HackerOs.Apps.Browser.Bridge.BridgeFormSubmitEvent? right) -> bool
+static HackerOs.Apps.Browser.Bridge.BridgeHistoryEvent.operator !=(HackerOs.Apps.Browser.Bridge.BridgeHistoryEvent? left, HackerOs.Apps.Browser.Bridge.BridgeHistoryEvent? right) -> bool
+static HackerOs.Apps.Browser.Bridge.BridgeHistoryEvent.operator ==(HackerOs.Apps.Browser.Bridge.BridgeHistoryEvent? left, HackerOs.Apps.Browser.Bridge.BridgeHistoryEvent? right) -> bool
+static HackerOs.Apps.Browser.Bridge.BridgeKeyEvent.operator !=(HackerOs.Apps.Browser.Bridge.BridgeKeyEvent? left, HackerOs.Apps.Browser.Bridge.BridgeKeyEvent? right) -> bool
+static HackerOs.Apps.Browser.Bridge.BridgeKeyEvent.operator ==(HackerOs.Apps.Browser.Bridge.BridgeKeyEvent? left, HackerOs.Apps.Browser.Bridge.BridgeKeyEvent? right) -> bool
+static HackerOs.Apps.Browser.Bridge.BridgeNavigateEvent.operator !=(HackerOs.Apps.Browser.Bridge.BridgeNavigateEvent? left, HackerOs.Apps.Browser.Bridge.BridgeNavigateEvent? right) -> bool
+static HackerOs.Apps.Browser.Bridge.BridgeNavigateEvent.operator ==(HackerOs.Apps.Browser.Bridge.BridgeNavigateEvent? left, HackerOs.Apps.Browser.Bridge.BridgeNavigateEvent? right) -> bool
+static HackerOs.Apps.Browser.Bridge.BridgeResourceReply.operator !=(HackerOs.Apps.Browser.Bridge.BridgeResourceReply? left, HackerOs.Apps.Browser.Bridge.BridgeResourceReply? right) -> bool
+static HackerOs.Apps.Browser.Bridge.BridgeResourceReply.operator ==(HackerOs.Apps.Browser.Bridge.BridgeResourceReply? left, HackerOs.Apps.Browser.Bridge.BridgeResourceReply? right) -> bool
+static HackerOs.Apps.Browser.Bridge.BridgeResourceRequest.operator !=(HackerOs.Apps.Browser.Bridge.BridgeResourceRequest? left, HackerOs.Apps.Browser.Bridge.BridgeResourceRequest? right) -> bool
+static HackerOs.Apps.Browser.Bridge.BridgeResourceRequest.operator ==(HackerOs.Apps.Browser.Bridge.BridgeResourceRequest? left, HackerOs.Apps.Browser.Bridge.BridgeResourceRequest? right) -> bool
+static HackerOs.Apps.Browser.Bridge.BridgeStorageEvent.operator !=(HackerOs.Apps.Browser.Bridge.BridgeStorageEvent? left, HackerOs.Apps.Browser.Bridge.BridgeStorageEvent? right) -> bool
+static HackerOs.Apps.Browser.Bridge.BridgeStorageEvent.operator ==(HackerOs.Apps.Browser.Bridge.BridgeStorageEvent? left, HackerOs.Apps.Browser.Bridge.BridgeStorageEvent? right) -> bool
+static HackerOs.Apps.Browser.Bridge.BridgeTitleEvent.operator !=(HackerOs.Apps.Browser.Bridge.BridgeTitleEvent? left, HackerOs.Apps.Browser.Bridge.BridgeTitleEvent? right) -> bool
+static HackerOs.Apps.Browser.Bridge.BridgeTitleEvent.operator ==(HackerOs.Apps.Browser.Bridge.BridgeTitleEvent? left, HackerOs.Apps.Browser.Bridge.BridgeTitleEvent? right) -> bool
+static HackerOs.Apps.Browser.Bridge.PageBootstrap.operator !=(HackerOs.Apps.Browser.Bridge.PageBootstrap? left, HackerOs.Apps.Browser.Bridge.PageBootstrap? right) -> bool
+static HackerOs.Apps.Browser.Bridge.PageBootstrap.operator ==(HackerOs.Apps.Browser.Bridge.PageBootstrap? left, HackerOs.Apps.Browser.Bridge.PageBootstrap? right) -> bool
 static HackerOs.Apps.Browser.Bridge.PageBridgeHandler.CorsAllows(HackerOs.Apps.Browser.Net.BrowserResponse! response, string! origin, bool withCredentials, out string? reason) -> bool
 static HackerOs.Apps.Browser.Bridge.PageBridgeJsonContext.Default.get -> HackerOs.Apps.Browser.Bridge.PageBridgeJsonContext!
 static HackerOs.Apps.Browser.Bridge.PageBridgeScript.Source.get -> string!
+static HackerOs.Apps.Browser.Bridge.RefreshDirective.operator !=(HackerOs.Apps.Browser.Bridge.RefreshDirective? left, HackerOs.Apps.Browser.Bridge.RefreshDirective? right) -> bool
+static HackerOs.Apps.Browser.Bridge.RefreshDirective.operator ==(HackerOs.Apps.Browser.Bridge.RefreshDirective? left, HackerOs.Apps.Browser.Bridge.RefreshDirective? right) -> bool
 static HackerOs.Apps.Browser.BrowserDownloads.GetFolder(string! homeDirectory) -> string!
 static HackerOs.Apps.Browser.BrowserDownloads.GetUniquePathAsync(string! folder, string! fileName, System.Func<string!, System.Threading.Tasks.Task<bool>!>! exists) -> System.Threading.Tasks.Task<string!>!
 static HackerOs.Apps.Browser.BrowserDownloads.SaveAsync(string! homeDirectory, string! fileName, byte[]! bytes, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<string!>!
@@ -495,11 +718,25 @@ static HackerOs.Apps.Browser.BrowserErrorPages.ForNetworkError(string! code, Sys
 static HackerOs.Apps.Browser.BrowserErrorPages.ForRendererCrash(System.Uri? url, bool killed, System.Globalization.CultureInfo? culture = null) -> HackerOs.Apps.Browser.BrowserErrorView!
 static HackerOs.Apps.Browser.BrowserErrorPages.ForScriptNavigation(System.Globalization.CultureInfo? culture = null) -> HackerOs.Apps.Browser.BrowserErrorView!
 static HackerOs.Apps.Browser.BrowserErrorPages.ForSiteNotStarted(System.Uri! url, string! reason, System.Globalization.CultureInfo? culture = null) -> HackerOs.Apps.Browser.BrowserErrorView!
+static HackerOs.Apps.Browser.BrowserErrorView.operator !=(HackerOs.Apps.Browser.BrowserErrorView? left, HackerOs.Apps.Browser.BrowserErrorView? right) -> bool
+static HackerOs.Apps.Browser.BrowserErrorView.operator ==(HackerOs.Apps.Browser.BrowserErrorView? left, HackerOs.Apps.Browser.BrowserErrorView? right) -> bool
 static HackerOs.Apps.Browser.BrowserWindow.ResolveSubmitUrl(string! finalUrl, string! postPath) -> string!
+static HackerOs.Apps.Browser.DevTools.ConsoleLogEntry.operator !=(HackerOs.Apps.Browser.DevTools.ConsoleLogEntry? left, HackerOs.Apps.Browser.DevTools.ConsoleLogEntry? right) -> bool
+static HackerOs.Apps.Browser.DevTools.ConsoleLogEntry.operator ==(HackerOs.Apps.Browser.DevTools.ConsoleLogEntry? left, HackerOs.Apps.Browser.DevTools.ConsoleLogEntry? right) -> bool
 static HackerOs.Apps.Browser.DevTools.DevToolsPanel.ShortName(string! url) -> string!
+static HackerOs.Apps.Browser.DevTools.NetworkLogEntry.operator !=(HackerOs.Apps.Browser.DevTools.NetworkLogEntry? left, HackerOs.Apps.Browser.DevTools.NetworkLogEntry? right) -> bool
+static HackerOs.Apps.Browser.DevTools.NetworkLogEntry.operator ==(HackerOs.Apps.Browser.DevTools.NetworkLogEntry? left, HackerOs.Apps.Browser.DevTools.NetworkLogEntry? right) -> bool
+static HackerOs.Apps.Browser.Net.AddressTarget.operator !=(HackerOs.Apps.Browser.Net.AddressTarget? left, HackerOs.Apps.Browser.Net.AddressTarget? right) -> bool
+static HackerOs.Apps.Browser.Net.AddressTarget.operator ==(HackerOs.Apps.Browser.Net.AddressTarget? left, HackerOs.Apps.Browser.Net.AddressTarget? right) -> bool
 static HackerOs.Apps.Browser.Net.BrowserFetchResult.Fail(string! errorCode) -> HackerOs.Apps.Browser.Net.BrowserFetchResult!
 static HackerOs.Apps.Browser.Net.BrowserFetchResult.Ok(HackerOs.Apps.Browser.Net.BrowserResponse! response) -> HackerOs.Apps.Browser.Net.BrowserFetchResult!
+static HackerOs.Apps.Browser.Net.BrowserFetchResult.operator !=(HackerOs.Apps.Browser.Net.BrowserFetchResult? left, HackerOs.Apps.Browser.Net.BrowserFetchResult? right) -> bool
+static HackerOs.Apps.Browser.Net.BrowserFetchResult.operator ==(HackerOs.Apps.Browser.Net.BrowserFetchResult? left, HackerOs.Apps.Browser.Net.BrowserFetchResult? right) -> bool
 static HackerOs.Apps.Browser.Net.BrowserRequest.Get(System.Uri! url) -> HackerOs.Apps.Browser.Net.BrowserRequest!
+static HackerOs.Apps.Browser.Net.BrowserRequest.operator !=(HackerOs.Apps.Browser.Net.BrowserRequest? left, HackerOs.Apps.Browser.Net.BrowserRequest? right) -> bool
+static HackerOs.Apps.Browser.Net.BrowserRequest.operator ==(HackerOs.Apps.Browser.Net.BrowserRequest? left, HackerOs.Apps.Browser.Net.BrowserRequest? right) -> bool
+static HackerOs.Apps.Browser.Net.BrowserResponse.operator !=(HackerOs.Apps.Browser.Net.BrowserResponse? left, HackerOs.Apps.Browser.Net.BrowserResponse? right) -> bool
+static HackerOs.Apps.Browser.Net.BrowserResponse.operator ==(HackerOs.Apps.Browser.Net.BrowserResponse? left, HackerOs.Apps.Browser.Net.BrowserResponse? right) -> bool
 static HackerOs.Apps.Browser.Net.BrowserUrl.FromAddressBar(string? input, string! homeDirectory, string! searchUrl) -> HackerOs.Apps.Browser.Net.AddressTarget?
 static HackerOs.Apps.Browser.Net.BrowserUrl.FromLocalPath(string! path) -> System.Uri!
 static HackerOs.Apps.Browser.Net.BrowserUrl.GetOrigin(System.Uri! url) -> string!
@@ -508,14 +745,28 @@ static HackerOs.Apps.Browser.Net.BrowserUrl.IsSameOrigin(System.Uri! first, Syst
 static HackerOs.Apps.Browser.Net.BrowserUrl.Resolve(System.Uri! baseUrl, string? reference) -> System.Uri?
 static HackerOs.Apps.Browser.Net.BrowserUrl.ToDisplayString(System.Uri! url, bool viewSource = false) -> string!
 static HackerOs.Apps.Browser.Net.BrowserUrl.ToLocalPath(System.Uri! url) -> string!
+static HackerOs.Apps.Browser.Net.DirectoryListingEntry.operator !=(HackerOs.Apps.Browser.Net.DirectoryListingEntry? left, HackerOs.Apps.Browser.Net.DirectoryListingEntry? right) -> bool
+static HackerOs.Apps.Browser.Net.DirectoryListingEntry.operator ==(HackerOs.Apps.Browser.Net.DirectoryListingEntry? left, HackerOs.Apps.Browser.Net.DirectoryListingEntry? right) -> bool
 static HackerOs.Apps.Browser.Net.DirectoryListingPage.Build(string! directoryPath, System.Collections.Generic.IEnumerable<HackerOs.Apps.Browser.Net.DirectoryListingEntry!>! entries, System.Globalization.CultureInfo? culture = null, System.Globalization.CultureInfo? formatCulture = null) -> string!
 static HackerOs.Apps.Browser.Net.DirectoryListingPage.FormatSize(long bytes, System.Globalization.CultureInfo? culture = null, System.Globalization.CultureInfo? formatCulture = null) -> string!
+static HackerOs.Apps.Browser.PageFrameDocument.operator !=(HackerOs.Apps.Browser.PageFrameDocument? left, HackerOs.Apps.Browser.PageFrameDocument? right) -> bool
+static HackerOs.Apps.Browser.PageFrameDocument.operator ==(HackerOs.Apps.Browser.PageFrameDocument? left, HackerOs.Apps.Browser.PageFrameDocument? right) -> bool
+static HackerOs.Apps.Browser.Rendering.ComposedPage.operator !=(HackerOs.Apps.Browser.Rendering.ComposedPage? left, HackerOs.Apps.Browser.Rendering.ComposedPage? right) -> bool
+static HackerOs.Apps.Browser.Rendering.ComposedPage.operator ==(HackerOs.Apps.Browser.Rendering.ComposedPage? left, HackerOs.Apps.Browser.Rendering.ComposedPage? right) -> bool
 static HackerOs.Apps.Browser.Rendering.DataUrl.FromBytes(string! mediaType, byte[]! bytes) -> string!
 static HackerOs.Apps.Browser.Rendering.DataUrl.FromText(string! mediaType, string! text) -> string!
 static HackerOs.Apps.Browser.Rendering.HtmlPageComposer.BridgeScript.get -> string!
+static HackerOs.Apps.Browser.Rendering.LoadedResource.operator !=(HackerOs.Apps.Browser.Rendering.LoadedResource? left, HackerOs.Apps.Browser.Rendering.LoadedResource? right) -> bool
+static HackerOs.Apps.Browser.Rendering.LoadedResource.operator ==(HackerOs.Apps.Browser.Rendering.LoadedResource? left, HackerOs.Apps.Browser.Rendering.LoadedResource? right) -> bool
 static HackerOs.Apps.Browser.ResponseBodyPresenter.Present(string? contentType, byte[]! content) -> HackerOs.Apps.Browser.ResponseBodyView!
+static HackerOs.Apps.Browser.ResponseBodyView.operator !=(HackerOs.Apps.Browser.ResponseBodyView? left, HackerOs.Apps.Browser.ResponseBodyView? right) -> bool
+static HackerOs.Apps.Browser.ResponseBodyView.operator ==(HackerOs.Apps.Browser.ResponseBodyView? left, HackerOs.Apps.Browser.ResponseBodyView? right) -> bool
 static HackerOs.Apps.Browser.Storage.FormHistory.GetPath(string! homeDirectory) -> string!
 static HackerOs.Apps.Browser.Storage.FormHistory.IsRememberable(string? value) -> bool
+static HackerOs.Apps.Browser.Storage.FormHistoryDocument.operator !=(HackerOs.Apps.Browser.Storage.FormHistoryDocument? left, HackerOs.Apps.Browser.Storage.FormHistoryDocument? right) -> bool
+static HackerOs.Apps.Browser.Storage.FormHistoryDocument.operator ==(HackerOs.Apps.Browser.Storage.FormHistoryDocument? left, HackerOs.Apps.Browser.Storage.FormHistoryDocument? right) -> bool
+static HackerOs.Apps.Browser.Storage.FormHistoryEntry.operator !=(HackerOs.Apps.Browser.Storage.FormHistoryEntry? left, HackerOs.Apps.Browser.Storage.FormHistoryEntry? right) -> bool
+static HackerOs.Apps.Browser.Storage.FormHistoryEntry.operator ==(HackerOs.Apps.Browser.Storage.FormHistoryEntry? left, HackerOs.Apps.Browser.Storage.FormHistoryEntry? right) -> bool
 static HackerOs.Apps.Browser.Storage.PageStorage.GetRoot(string! homeDirectory) -> string!
 static readonly HackerOs.Apps.Browser.Net.BrowserUrl.AboutBlank -> System.Uri!
 ~HackerOs.Apps.Browser.Bridge.PageBridgeJsonContext.Boolean.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<bool>

@@ -3,6 +3,8 @@ HackerOs.Apps.SystemMonitor.Metrics.CpuTimesSample
 HackerOs.Apps.SystemMonitor.Metrics.CpuTimesSample.Busy.get -> long
 HackerOs.Apps.SystemMonitor.Metrics.CpuTimesSample.CpuTimesSample() -> void
 HackerOs.Apps.SystemMonitor.Metrics.CpuTimesSample.CpuTimesSample(long User, long Nice, long System, long Idle, long IoWait, long Irq, long SoftIrq, long Steal) -> void
+HackerOs.Apps.SystemMonitor.Metrics.CpuTimesSample.Deconstruct(out long User, out long Nice, out long System, out long Idle, out long IoWait, out long Irq, out long SoftIrq, out long Steal) -> void
+HackerOs.Apps.SystemMonitor.Metrics.CpuTimesSample.Equals(HackerOs.Apps.SystemMonitor.Metrics.CpuTimesSample other) -> bool
 HackerOs.Apps.SystemMonitor.Metrics.CpuTimesSample.Idle.get -> long
 HackerOs.Apps.SystemMonitor.Metrics.CpuTimesSample.Idle.init -> void
 HackerOs.Apps.SystemMonitor.Metrics.CpuTimesSample.IoWait.get -> long
@@ -34,8 +36,11 @@ HackerOs.Apps.SystemMonitor.Metrics.MetricHistory.Latest.get -> double
 HackerOs.Apps.SystemMonitor.Metrics.MetricHistory.MetricHistory(int capacity) -> void
 HackerOs.Apps.SystemMonitor.Metrics.MetricHistory.Values.get -> System.Collections.Generic.IReadOnlyList<double>!
 HackerOs.Apps.SystemMonitor.Metrics.MetricsReading
+HackerOs.Apps.SystemMonitor.Metrics.MetricsReading.<Clone>$() -> HackerOs.Apps.SystemMonitor.Metrics.MetricsReading!
+HackerOs.Apps.SystemMonitor.Metrics.MetricsReading.Deconstruct(out double TimestampSeconds, out HackerOs.Apps.SystemMonitor.Metrics.ProcStat? Stat, out HackerOs.Apps.SystemMonitor.Metrics.ProcMemInfo? Memory, out HackerOs.Apps.SystemMonitor.Metrics.ProcLoadAverage? Load, out double? UptimeSeconds, out System.Collections.Generic.IReadOnlyList<HackerOs.Apps.SystemMonitor.Metrics.ProcDiskStat!>! Disks, out System.Collections.Generic.IReadOnlyList<HackerOs.Apps.SystemMonitor.Metrics.ProcNetDevice!>! Network, out System.Collections.Generic.IReadOnlyDictionary<long, HackerOs.Apps.SystemMonitor.Metrics.ProcessIoSample>! ProcessIo, out HackerOs.Apps.SystemMonitor.Metrics.ProcWorkers? Workers) -> void
 HackerOs.Apps.SystemMonitor.Metrics.MetricsReading.Disks.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Apps.SystemMonitor.Metrics.ProcDiskStat!>!
 HackerOs.Apps.SystemMonitor.Metrics.MetricsReading.Disks.init -> void
+HackerOs.Apps.SystemMonitor.Metrics.MetricsReading.Equals(HackerOs.Apps.SystemMonitor.Metrics.MetricsReading? other) -> bool
 HackerOs.Apps.SystemMonitor.Metrics.MetricsReading.Load.get -> HackerOs.Apps.SystemMonitor.Metrics.ProcLoadAverage?
 HackerOs.Apps.SystemMonitor.Metrics.MetricsReading.Load.init -> void
 HackerOs.Apps.SystemMonitor.Metrics.MetricsReading.Memory.get -> HackerOs.Apps.SystemMonitor.Metrics.ProcMemInfo?
@@ -59,13 +64,19 @@ HackerOs.Apps.SystemMonitor.Metrics.NetworkActivity.Name.get -> string!
 HackerOs.Apps.SystemMonitor.Metrics.NetworkActivity.ReceivePerSecond.get -> HackerOs.Apps.SystemMonitor.Metrics.MetricHistory!
 HackerOs.Apps.SystemMonitor.Metrics.NetworkActivity.TransmitPerSecond.get -> HackerOs.Apps.SystemMonitor.Metrics.MetricHistory!
 HackerOs.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry
+HackerOs.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry.<Clone>$() -> HackerOs.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry!
+HackerOs.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry.Deconstruct(out System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>! Fields) -> void
+HackerOs.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry.Equals(HackerOs.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry? other) -> bool
 HackerOs.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry.Fields.get -> System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>!
 HackerOs.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry.Fields.init -> void
 HackerOs.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry.ProcCpuInfoEntry(System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>! Fields) -> void
 HackerOs.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry.this[string! key].get -> string!
 HackerOs.Apps.SystemMonitor.Metrics.ProcDiskStat
+HackerOs.Apps.SystemMonitor.Metrics.ProcDiskStat.<Clone>$() -> HackerOs.Apps.SystemMonitor.Metrics.ProcDiskStat!
 HackerOs.Apps.SystemMonitor.Metrics.ProcDiskStat.BytesRead.get -> long
 HackerOs.Apps.SystemMonitor.Metrics.ProcDiskStat.BytesWritten.get -> long
+HackerOs.Apps.SystemMonitor.Metrics.ProcDiskStat.Deconstruct(out int Major, out int Minor, out string! Name, out long ReadsCompleted, out long ReadsMerged, out long SectorsRead, out long MillisecondsReading, out long WritesCompleted, out long WritesMerged, out long SectorsWritten, out long MillisecondsWriting, out long IosInProgress, out long MillisecondsDoingIo, out long WeightedMillisecondsDoingIo) -> void
+HackerOs.Apps.SystemMonitor.Metrics.ProcDiskStat.Equals(HackerOs.Apps.SystemMonitor.Metrics.ProcDiskStat? other) -> bool
 HackerOs.Apps.SystemMonitor.Metrics.ProcDiskStat.IosInProgress.get -> long
 HackerOs.Apps.SystemMonitor.Metrics.ProcDiskStat.IosInProgress.init -> void
 HackerOs.Apps.SystemMonitor.Metrics.ProcDiskStat.Major.get -> int
@@ -97,6 +108,9 @@ HackerOs.Apps.SystemMonitor.Metrics.ProcDiskStat.WritesMerged.get -> long
 HackerOs.Apps.SystemMonitor.Metrics.ProcDiskStat.WritesMerged.init -> void
 HackerOs.Apps.SystemMonitor.Metrics.ProcFiles
 HackerOs.Apps.SystemMonitor.Metrics.ProcLoadAverage
+HackerOs.Apps.SystemMonitor.Metrics.ProcLoadAverage.<Clone>$() -> HackerOs.Apps.SystemMonitor.Metrics.ProcLoadAverage!
+HackerOs.Apps.SystemMonitor.Metrics.ProcLoadAverage.Deconstruct(out double OneMinute, out double FiveMinutes, out double FifteenMinutes, out long Running, out long Total, out long LastPid) -> void
+HackerOs.Apps.SystemMonitor.Metrics.ProcLoadAverage.Equals(HackerOs.Apps.SystemMonitor.Metrics.ProcLoadAverage? other) -> bool
 HackerOs.Apps.SystemMonitor.Metrics.ProcLoadAverage.FifteenMinutes.get -> double
 HackerOs.Apps.SystemMonitor.Metrics.ProcLoadAverage.FifteenMinutes.init -> void
 HackerOs.Apps.SystemMonitor.Metrics.ProcLoadAverage.FiveMinutes.get -> double
@@ -111,8 +125,11 @@ HackerOs.Apps.SystemMonitor.Metrics.ProcLoadAverage.Running.init -> void
 HackerOs.Apps.SystemMonitor.Metrics.ProcLoadAverage.Total.get -> long
 HackerOs.Apps.SystemMonitor.Metrics.ProcLoadAverage.Total.init -> void
 HackerOs.Apps.SystemMonitor.Metrics.ProcMemInfo
+HackerOs.Apps.SystemMonitor.Metrics.ProcMemInfo.<Clone>$() -> HackerOs.Apps.SystemMonitor.Metrics.ProcMemInfo!
 HackerOs.Apps.SystemMonitor.Metrics.ProcMemInfo.AvailableKilobytes.get -> long
 HackerOs.Apps.SystemMonitor.Metrics.ProcMemInfo.AvailableKilobytes.init -> void
+HackerOs.Apps.SystemMonitor.Metrics.ProcMemInfo.Deconstruct(out long TotalKilobytes, out long FreeKilobytes, out long AvailableKilobytes, out System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>! Fields) -> void
+HackerOs.Apps.SystemMonitor.Metrics.ProcMemInfo.Equals(HackerOs.Apps.SystemMonitor.Metrics.ProcMemInfo? other) -> bool
 HackerOs.Apps.SystemMonitor.Metrics.ProcMemInfo.Fields.get -> System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>!
 HackerOs.Apps.SystemMonitor.Metrics.ProcMemInfo.Fields.init -> void
 HackerOs.Apps.SystemMonitor.Metrics.ProcMemInfo.FreeKilobytes.get -> long
@@ -124,6 +141,9 @@ HackerOs.Apps.SystemMonitor.Metrics.ProcMemInfo.TotalKilobytes.init -> void
 HackerOs.Apps.SystemMonitor.Metrics.ProcMemInfo.UsedBytes.get -> long
 HackerOs.Apps.SystemMonitor.Metrics.ProcMemInfo.UsedPercent.get -> double
 HackerOs.Apps.SystemMonitor.Metrics.ProcNetDevice
+HackerOs.Apps.SystemMonitor.Metrics.ProcNetDevice.<Clone>$() -> HackerOs.Apps.SystemMonitor.Metrics.ProcNetDevice!
+HackerOs.Apps.SystemMonitor.Metrics.ProcNetDevice.Deconstruct(out string! Name, out long ReceiveBytes, out long ReceivePackets, out long ReceiveErrors, out long ReceiveDropped, out long TransmitBytes, out long TransmitPackets, out long TransmitErrors, out long TransmitDropped) -> void
+HackerOs.Apps.SystemMonitor.Metrics.ProcNetDevice.Equals(HackerOs.Apps.SystemMonitor.Metrics.ProcNetDevice? other) -> bool
 HackerOs.Apps.SystemMonitor.Metrics.ProcNetDevice.Name.get -> string!
 HackerOs.Apps.SystemMonitor.Metrics.ProcNetDevice.Name.init -> void
 HackerOs.Apps.SystemMonitor.Metrics.ProcNetDevice.ProcNetDevice(string! Name, long ReceiveBytes, long ReceivePackets, long ReceiveErrors, long ReceiveDropped, long TransmitBytes, long TransmitPackets, long TransmitErrors, long TransmitDropped) -> void
@@ -145,16 +165,22 @@ HackerOs.Apps.SystemMonitor.Metrics.ProcNetDevice.TransmitPackets.get -> long
 HackerOs.Apps.SystemMonitor.Metrics.ProcNetDevice.TransmitPackets.init -> void
 HackerOs.Apps.SystemMonitor.Metrics.ProcReader
 HackerOs.Apps.SystemMonitor.Metrics.ProcRefresh
+HackerOs.Apps.SystemMonitor.Metrics.ProcRefresh.<Clone>$() -> HackerOs.Apps.SystemMonitor.Metrics.ProcRefresh!
+HackerOs.Apps.SystemMonitor.Metrics.ProcRefresh.Deconstruct(out System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Diagnostics.HackProcess!>! Processes, out HackerOs.Apps.SystemMonitor.Metrics.MetricsReading! Metrics) -> void
+HackerOs.Apps.SystemMonitor.Metrics.ProcRefresh.Equals(HackerOs.Apps.SystemMonitor.Metrics.ProcRefresh? other) -> bool
 HackerOs.Apps.SystemMonitor.Metrics.ProcRefresh.Metrics.get -> HackerOs.Apps.SystemMonitor.Metrics.MetricsReading!
 HackerOs.Apps.SystemMonitor.Metrics.ProcRefresh.Metrics.init -> void
 HackerOs.Apps.SystemMonitor.Metrics.ProcRefresh.ProcRefresh(System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Diagnostics.HackProcess!>! Processes, HackerOs.Apps.SystemMonitor.Metrics.MetricsReading! Metrics) -> void
 HackerOs.Apps.SystemMonitor.Metrics.ProcRefresh.Processes.get -> System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Diagnostics.HackProcess!>!
 HackerOs.Apps.SystemMonitor.Metrics.ProcRefresh.Processes.init -> void
 HackerOs.Apps.SystemMonitor.Metrics.ProcStat
+HackerOs.Apps.SystemMonitor.Metrics.ProcStat.<Clone>$() -> HackerOs.Apps.SystemMonitor.Metrics.ProcStat!
 HackerOs.Apps.SystemMonitor.Metrics.ProcStat.BootTime.get -> long
 HackerOs.Apps.SystemMonitor.Metrics.ProcStat.BootTime.init -> void
 HackerOs.Apps.SystemMonitor.Metrics.ProcStat.Cores.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Apps.SystemMonitor.Metrics.CpuTimesSample>!
 HackerOs.Apps.SystemMonitor.Metrics.ProcStat.Cores.init -> void
+HackerOs.Apps.SystemMonitor.Metrics.ProcStat.Deconstruct(out HackerOs.Apps.SystemMonitor.Metrics.CpuTimesSample Total, out System.Collections.Generic.IReadOnlyList<HackerOs.Apps.SystemMonitor.Metrics.CpuTimesSample>! Cores, out long BootTime, out long Processes, out long ProcessesRunning) -> void
+HackerOs.Apps.SystemMonitor.Metrics.ProcStat.Equals(HackerOs.Apps.SystemMonitor.Metrics.ProcStat? other) -> bool
 HackerOs.Apps.SystemMonitor.Metrics.ProcStat.ProcStat(HackerOs.Apps.SystemMonitor.Metrics.CpuTimesSample Total, System.Collections.Generic.IReadOnlyList<HackerOs.Apps.SystemMonitor.Metrics.CpuTimesSample>! Cores, long BootTime, long Processes, long ProcessesRunning) -> void
 HackerOs.Apps.SystemMonitor.Metrics.ProcStat.Processes.get -> long
 HackerOs.Apps.SystemMonitor.Metrics.ProcStat.Processes.init -> void
@@ -163,10 +189,13 @@ HackerOs.Apps.SystemMonitor.Metrics.ProcStat.ProcessesRunning.init -> void
 HackerOs.Apps.SystemMonitor.Metrics.ProcStat.Total.get -> HackerOs.Apps.SystemMonitor.Metrics.CpuTimesSample
 HackerOs.Apps.SystemMonitor.Metrics.ProcStat.Total.init -> void
 HackerOs.Apps.SystemMonitor.Metrics.ProcWorker
+HackerOs.Apps.SystemMonitor.Metrics.ProcWorker.<Clone>$() -> HackerOs.Apps.SystemMonitor.Metrics.ProcWorker!
 HackerOs.Apps.SystemMonitor.Metrics.ProcWorker.BusyMilliseconds.get -> long
 HackerOs.Apps.SystemMonitor.Metrics.ProcWorker.BusyMilliseconds.init -> void
 HackerOs.Apps.SystemMonitor.Metrics.ProcWorker.Core.get -> int?
 HackerOs.Apps.SystemMonitor.Metrics.ProcWorker.Core.init -> void
+HackerOs.Apps.SystemMonitor.Metrics.ProcWorker.Deconstruct(out int Id, out string! Role, out string! State, out int? Core, out long MemoryKilobytes, out long? HeartbeatMilliseconds, out long BusyMilliseconds, out System.Collections.Generic.IReadOnlyList<long>! ProcessIds) -> void
+HackerOs.Apps.SystemMonitor.Metrics.ProcWorker.Equals(HackerOs.Apps.SystemMonitor.Metrics.ProcWorker? other) -> bool
 HackerOs.Apps.SystemMonitor.Metrics.ProcWorker.HeartbeatMilliseconds.get -> long?
 HackerOs.Apps.SystemMonitor.Metrics.ProcWorker.HeartbeatMilliseconds.init -> void
 HackerOs.Apps.SystemMonitor.Metrics.ProcWorker.Id.get -> int
@@ -182,14 +211,19 @@ HackerOs.Apps.SystemMonitor.Metrics.ProcWorker.Role.init -> void
 HackerOs.Apps.SystemMonitor.Metrics.ProcWorker.State.get -> string!
 HackerOs.Apps.SystemMonitor.Metrics.ProcWorker.State.init -> void
 HackerOs.Apps.SystemMonitor.Metrics.ProcWorkers
+HackerOs.Apps.SystemMonitor.Metrics.ProcWorkers.<Clone>$() -> HackerOs.Apps.SystemMonitor.Metrics.ProcWorkers!
 HackerOs.Apps.SystemMonitor.Metrics.ProcWorkers.Capacity.get -> int
 HackerOs.Apps.SystemMonitor.Metrics.ProcWorkers.Capacity.init -> void
+HackerOs.Apps.SystemMonitor.Metrics.ProcWorkers.Deconstruct(out int Capacity, out int PoolSize, out System.Collections.Generic.IReadOnlyList<HackerOs.Apps.SystemMonitor.Metrics.ProcWorker!>! Workers) -> void
+HackerOs.Apps.SystemMonitor.Metrics.ProcWorkers.Equals(HackerOs.Apps.SystemMonitor.Metrics.ProcWorkers? other) -> bool
 HackerOs.Apps.SystemMonitor.Metrics.ProcWorkers.PoolSize.get -> int
 HackerOs.Apps.SystemMonitor.Metrics.ProcWorkers.PoolSize.init -> void
 HackerOs.Apps.SystemMonitor.Metrics.ProcWorkers.ProcWorkers(int Capacity, int PoolSize, System.Collections.Generic.IReadOnlyList<HackerOs.Apps.SystemMonitor.Metrics.ProcWorker!>! Workers) -> void
 HackerOs.Apps.SystemMonitor.Metrics.ProcWorkers.Workers.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Apps.SystemMonitor.Metrics.ProcWorker!>!
 HackerOs.Apps.SystemMonitor.Metrics.ProcWorkers.Workers.init -> void
 HackerOs.Apps.SystemMonitor.Metrics.ProcessIoRate
+HackerOs.Apps.SystemMonitor.Metrics.ProcessIoRate.Deconstruct(out double ReadPerSecond, out double WritePerSecond) -> void
+HackerOs.Apps.SystemMonitor.Metrics.ProcessIoRate.Equals(HackerOs.Apps.SystemMonitor.Metrics.ProcessIoRate other) -> bool
 HackerOs.Apps.SystemMonitor.Metrics.ProcessIoRate.ProcessIoRate() -> void
 HackerOs.Apps.SystemMonitor.Metrics.ProcessIoRate.ProcessIoRate(double ReadPerSecond, double WritePerSecond) -> void
 HackerOs.Apps.SystemMonitor.Metrics.ProcessIoRate.ReadPerSecond.get -> double
@@ -197,6 +231,8 @@ HackerOs.Apps.SystemMonitor.Metrics.ProcessIoRate.ReadPerSecond.init -> void
 HackerOs.Apps.SystemMonitor.Metrics.ProcessIoRate.WritePerSecond.get -> double
 HackerOs.Apps.SystemMonitor.Metrics.ProcessIoRate.WritePerSecond.init -> void
 HackerOs.Apps.SystemMonitor.Metrics.ProcessIoSample
+HackerOs.Apps.SystemMonitor.Metrics.ProcessIoSample.Deconstruct(out long ReadBytes, out long WriteBytes) -> void
+HackerOs.Apps.SystemMonitor.Metrics.ProcessIoSample.Equals(HackerOs.Apps.SystemMonitor.Metrics.ProcessIoSample other) -> bool
 HackerOs.Apps.SystemMonitor.Metrics.ProcessIoSample.ProcessIoSample() -> void
 HackerOs.Apps.SystemMonitor.Metrics.ProcessIoSample.ProcessIoSample(long ReadBytes, long WriteBytes) -> void
 HackerOs.Apps.SystemMonitor.Metrics.ProcessIoSample.ReadBytes.get -> long
@@ -217,7 +253,10 @@ HackerOs.Apps.SystemMonitor.Metrics.SystemMetrics.ReadingCount.get -> int
 HackerOs.Apps.SystemMonitor.Metrics.SystemMetrics.SystemMetrics() -> void
 HackerOs.Apps.SystemMonitor.Metrics.Units
 HackerOs.Apps.SystemMonitor.Processes.EndTaskFailure
+HackerOs.Apps.SystemMonitor.Processes.EndTaskFailure.<Clone>$() -> HackerOs.Apps.SystemMonitor.Processes.EndTaskFailure!
+HackerOs.Apps.SystemMonitor.Processes.EndTaskFailure.Deconstruct(out long Pid, out string! Name, out string! Reason) -> void
 HackerOs.Apps.SystemMonitor.Processes.EndTaskFailure.EndTaskFailure(long Pid, string! Name, string! Reason) -> void
+HackerOs.Apps.SystemMonitor.Processes.EndTaskFailure.Equals(HackerOs.Apps.SystemMonitor.Processes.EndTaskFailure? other) -> bool
 HackerOs.Apps.SystemMonitor.Processes.EndTaskFailure.Name.get -> string!
 HackerOs.Apps.SystemMonitor.Processes.EndTaskFailure.Name.init -> void
 HackerOs.Apps.SystemMonitor.Processes.EndTaskFailure.Pid.get -> long
@@ -228,9 +267,12 @@ HackerOs.Apps.SystemMonitor.Processes.EndTaskMode
 HackerOs.Apps.SystemMonitor.Processes.EndTaskMode.ForceKill = 1 -> HackerOs.Apps.SystemMonitor.Processes.EndTaskMode
 HackerOs.Apps.SystemMonitor.Processes.EndTaskMode.Terminate = 0 -> HackerOs.Apps.SystemMonitor.Processes.EndTaskMode
 HackerOs.Apps.SystemMonitor.Processes.EndTaskReport
+HackerOs.Apps.SystemMonitor.Processes.EndTaskReport.<Clone>$() -> HackerOs.Apps.SystemMonitor.Processes.EndTaskReport!
+HackerOs.Apps.SystemMonitor.Processes.EndTaskReport.Deconstruct(out System.Collections.Generic.IReadOnlyList<HackerOs.Apps.SystemMonitor.Processes.ProcessRow!>! Ended, out System.Collections.Generic.IReadOnlyList<HackerOs.Apps.SystemMonitor.Processes.EndTaskFailure!>! Failures) -> void
 HackerOs.Apps.SystemMonitor.Processes.EndTaskReport.EndTaskReport(System.Collections.Generic.IReadOnlyList<HackerOs.Apps.SystemMonitor.Processes.ProcessRow!>! Ended, System.Collections.Generic.IReadOnlyList<HackerOs.Apps.SystemMonitor.Processes.EndTaskFailure!>! Failures) -> void
 HackerOs.Apps.SystemMonitor.Processes.EndTaskReport.Ended.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Apps.SystemMonitor.Processes.ProcessRow!>!
 HackerOs.Apps.SystemMonitor.Processes.EndTaskReport.Ended.init -> void
+HackerOs.Apps.SystemMonitor.Processes.EndTaskReport.Equals(HackerOs.Apps.SystemMonitor.Processes.EndTaskReport? other) -> bool
 HackerOs.Apps.SystemMonitor.Processes.EndTaskReport.Failures.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Apps.SystemMonitor.Processes.EndTaskFailure!>!
 HackerOs.Apps.SystemMonitor.Processes.EndTaskReport.Failures.init -> void
 HackerOs.Apps.SystemMonitor.Processes.EndTaskRunner
@@ -245,13 +287,16 @@ HackerOs.Apps.SystemMonitor.Processes.ProcessColumn.Priority = 8 -> HackerOs.App
 HackerOs.Apps.SystemMonitor.Processes.ProcessColumn.State = 3 -> HackerOs.Apps.SystemMonitor.Processes.ProcessColumn
 HackerOs.Apps.SystemMonitor.Processes.ProcessColumn.User = 2 -> HackerOs.Apps.SystemMonitor.Processes.ProcessColumn
 HackerOs.Apps.SystemMonitor.Processes.ProcessRow
+HackerOs.Apps.SystemMonitor.Processes.ProcessRow.<Clone>$() -> HackerOs.Apps.SystemMonitor.Processes.ProcessRow!
 HackerOs.Apps.SystemMonitor.Processes.ProcessRow.AppId.get -> string!
 HackerOs.Apps.SystemMonitor.Processes.ProcessRow.AppId.init -> void
 HackerOs.Apps.SystemMonitor.Processes.ProcessRow.CpuEstimated.get -> bool
 HackerOs.Apps.SystemMonitor.Processes.ProcessRow.CpuEstimated.init -> void
 HackerOs.Apps.SystemMonitor.Processes.ProcessRow.CpuPercent.get -> double
 HackerOs.Apps.SystemMonitor.Processes.ProcessRow.CpuPercent.init -> void
+HackerOs.Apps.SystemMonitor.Processes.ProcessRow.Deconstruct(out long Pid, out long? ParentPid, out string! Name, out string! AppId, out string! User, out string! State, out char StateCode, out double CpuPercent, out long MemoryBytes, out double ReadPerSecond, out double WritePerSecond, out bool CpuEstimated, out bool MemoryEstimated, out bool Responding) -> void
 HackerOs.Apps.SystemMonitor.Processes.ProcessRow.DisplayState.get -> string!
+HackerOs.Apps.SystemMonitor.Processes.ProcessRow.Equals(HackerOs.Apps.SystemMonitor.Processes.ProcessRow? other) -> bool
 HackerOs.Apps.SystemMonitor.Processes.ProcessRow.MemoryBytes.get -> long
 HackerOs.Apps.SystemMonitor.Processes.ProcessRow.MemoryBytes.init -> void
 HackerOs.Apps.SystemMonitor.Processes.ProcessRow.MemoryEstimated.get -> bool
@@ -357,12 +402,57 @@ const HackerOs.Apps.SystemMonitor.Metrics.ProcDiskStat.SectorSize = 512 -> int
 const HackerOs.Apps.SystemMonitor.Metrics.SystemMetrics.HistoryLength = 60 -> int
 const HackerOs.Apps.SystemMonitor.Processes.ProcessRow.NotRespondingText = "Not responding" -> string!
 const HackerOs.Apps.SystemMonitor.SystemMonitorWindow.DriveRefreshEvery = 10 -> int
+override HackerOs.Apps.SystemMonitor.Metrics.CpuTimesSample.GetHashCode() -> int
+override HackerOs.Apps.SystemMonitor.Metrics.MetricsReading.Equals(object? obj) -> bool
+override HackerOs.Apps.SystemMonitor.Metrics.MetricsReading.GetHashCode() -> int
+override HackerOs.Apps.SystemMonitor.Metrics.MetricsReading.ToString() -> string!
+override HackerOs.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry.Equals(object? obj) -> bool
+override HackerOs.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry.GetHashCode() -> int
+override HackerOs.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry.ToString() -> string!
+override HackerOs.Apps.SystemMonitor.Metrics.ProcDiskStat.Equals(object? obj) -> bool
+override HackerOs.Apps.SystemMonitor.Metrics.ProcDiskStat.GetHashCode() -> int
+override HackerOs.Apps.SystemMonitor.Metrics.ProcDiskStat.ToString() -> string!
+override HackerOs.Apps.SystemMonitor.Metrics.ProcLoadAverage.Equals(object? obj) -> bool
+override HackerOs.Apps.SystemMonitor.Metrics.ProcLoadAverage.GetHashCode() -> int
+override HackerOs.Apps.SystemMonitor.Metrics.ProcLoadAverage.ToString() -> string!
+override HackerOs.Apps.SystemMonitor.Metrics.ProcMemInfo.Equals(object? obj) -> bool
+override HackerOs.Apps.SystemMonitor.Metrics.ProcMemInfo.GetHashCode() -> int
+override HackerOs.Apps.SystemMonitor.Metrics.ProcMemInfo.ToString() -> string!
+override HackerOs.Apps.SystemMonitor.Metrics.ProcNetDevice.Equals(object? obj) -> bool
+override HackerOs.Apps.SystemMonitor.Metrics.ProcNetDevice.GetHashCode() -> int
+override HackerOs.Apps.SystemMonitor.Metrics.ProcNetDevice.ToString() -> string!
+override HackerOs.Apps.SystemMonitor.Metrics.ProcRefresh.Equals(object? obj) -> bool
+override HackerOs.Apps.SystemMonitor.Metrics.ProcRefresh.GetHashCode() -> int
+override HackerOs.Apps.SystemMonitor.Metrics.ProcRefresh.ToString() -> string!
+override HackerOs.Apps.SystemMonitor.Metrics.ProcStat.Equals(object? obj) -> bool
+override HackerOs.Apps.SystemMonitor.Metrics.ProcStat.GetHashCode() -> int
+override HackerOs.Apps.SystemMonitor.Metrics.ProcStat.ToString() -> string!
+override HackerOs.Apps.SystemMonitor.Metrics.ProcWorker.Equals(object? obj) -> bool
+override HackerOs.Apps.SystemMonitor.Metrics.ProcWorker.GetHashCode() -> int
+override HackerOs.Apps.SystemMonitor.Metrics.ProcWorker.ToString() -> string!
+override HackerOs.Apps.SystemMonitor.Metrics.ProcWorkers.Equals(object? obj) -> bool
+override HackerOs.Apps.SystemMonitor.Metrics.ProcWorkers.GetHashCode() -> int
+override HackerOs.Apps.SystemMonitor.Metrics.ProcWorkers.ToString() -> string!
+override HackerOs.Apps.SystemMonitor.Metrics.ProcessIoRate.GetHashCode() -> int
+override HackerOs.Apps.SystemMonitor.Metrics.ProcessIoSample.GetHashCode() -> int
+override HackerOs.Apps.SystemMonitor.Processes.EndTaskFailure.Equals(object? obj) -> bool
+override HackerOs.Apps.SystemMonitor.Processes.EndTaskFailure.GetHashCode() -> int
+override HackerOs.Apps.SystemMonitor.Processes.EndTaskFailure.ToString() -> string!
+override HackerOs.Apps.SystemMonitor.Processes.EndTaskReport.Equals(object? obj) -> bool
+override HackerOs.Apps.SystemMonitor.Processes.EndTaskReport.GetHashCode() -> int
+override HackerOs.Apps.SystemMonitor.Processes.EndTaskReport.ToString() -> string!
+override HackerOs.Apps.SystemMonitor.Processes.ProcessRow.Equals(object? obj) -> bool
+override HackerOs.Apps.SystemMonitor.Processes.ProcessRow.GetHashCode() -> int
+override HackerOs.Apps.SystemMonitor.Processes.ProcessRow.ToString() -> string!
+override HackerOs.Apps.SystemMonitor.SystemMonitorApp.Assets.get -> System.Collections.Generic.IReadOnlyList<HackerOs.App.Abstractions.AssetManifest!>!
 override HackerOs.Apps.SystemMonitor.SystemMonitorApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
 override HackerOs.Apps.SystemMonitor.SystemMonitorApp.Category.get -> string!
 override HackerOs.Apps.SystemMonitor.SystemMonitorApp.Description.get -> string!
 override HackerOs.Apps.SystemMonitor.SystemMonitorApp.EntryPoint.get -> System.Type!
+override HackerOs.Apps.SystemMonitor.SystemMonitorApp.Icons.get -> System.Collections.Generic.IReadOnlyList<string!>!
 override HackerOs.Apps.SystemMonitor.SystemMonitorApp.Id.get -> string!
 override HackerOs.Apps.SystemMonitor.SystemMonitorApp.Kind.get -> HackerOs.App.Abstractions.AppKind
+override HackerOs.Apps.SystemMonitor.SystemMonitorApp.MobileEntryPoint.get -> System.Type?
 override HackerOs.Apps.SystemMonitor.SystemMonitorApp.Name.get -> string!
 override HackerOs.Apps.SystemMonitor.SystemMonitorApp.PublisherId.get -> string!
 override HackerOs.Apps.SystemMonitor.SystemMonitorApp.Resources.get -> HackerOs.App.Abstractions.AppResourceProfileManifest!
@@ -371,6 +461,14 @@ override HackerOs.Apps.SystemMonitor.SystemMonitorWindow.OnAppAfterRenderAsync(b
 override HackerOs.Apps.SystemMonitor.Tabs.ProcessDetailPanel.OnParametersSetAsync() -> System.Threading.Tasks.Task!
 override HackerOs.Apps.SystemMonitor.Tabs.ServicesTab.OnInitializedAsync() -> System.Threading.Tasks.Task!
 override HackerOs.Apps.SystemMonitor.Tabs.ServicesTab.OnParametersSetAsync() -> System.Threading.Tasks.Task!
+static HackerOs.Apps.SystemMonitor.Metrics.CpuTimesSample.operator !=(HackerOs.Apps.SystemMonitor.Metrics.CpuTimesSample left, HackerOs.Apps.SystemMonitor.Metrics.CpuTimesSample right) -> bool
+static HackerOs.Apps.SystemMonitor.Metrics.CpuTimesSample.operator ==(HackerOs.Apps.SystemMonitor.Metrics.CpuTimesSample left, HackerOs.Apps.SystemMonitor.Metrics.CpuTimesSample right) -> bool
+static HackerOs.Apps.SystemMonitor.Metrics.MetricsReading.operator !=(HackerOs.Apps.SystemMonitor.Metrics.MetricsReading? left, HackerOs.Apps.SystemMonitor.Metrics.MetricsReading? right) -> bool
+static HackerOs.Apps.SystemMonitor.Metrics.MetricsReading.operator ==(HackerOs.Apps.SystemMonitor.Metrics.MetricsReading? left, HackerOs.Apps.SystemMonitor.Metrics.MetricsReading? right) -> bool
+static HackerOs.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry.operator !=(HackerOs.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry? left, HackerOs.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry? right) -> bool
+static HackerOs.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry.operator ==(HackerOs.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry? left, HackerOs.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry? right) -> bool
+static HackerOs.Apps.SystemMonitor.Metrics.ProcDiskStat.operator !=(HackerOs.Apps.SystemMonitor.Metrics.ProcDiskStat? left, HackerOs.Apps.SystemMonitor.Metrics.ProcDiskStat? right) -> bool
+static HackerOs.Apps.SystemMonitor.Metrics.ProcDiskStat.operator ==(HackerOs.Apps.SystemMonitor.Metrics.ProcDiskStat? left, HackerOs.Apps.SystemMonitor.Metrics.ProcDiskStat? right) -> bool
 static HackerOs.Apps.SystemMonitor.Metrics.ProcFiles.ParseCpuInfo(string! text) -> System.Collections.Generic.IReadOnlyList<HackerOs.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry!>!
 static HackerOs.Apps.SystemMonitor.Metrics.ProcFiles.ParseDiskStats(string! text) -> System.Collections.Generic.IReadOnlyList<HackerOs.Apps.SystemMonitor.Metrics.ProcDiskStat!>!
 static HackerOs.Apps.SystemMonitor.Metrics.ProcFiles.ParseLoadAverage(string! text) -> HackerOs.Apps.SystemMonitor.Metrics.ProcLoadAverage!
@@ -379,9 +477,27 @@ static HackerOs.Apps.SystemMonitor.Metrics.ProcFiles.ParseNetDev(string! text) -
 static HackerOs.Apps.SystemMonitor.Metrics.ProcFiles.ParseStat(string! text) -> HackerOs.Apps.SystemMonitor.Metrics.ProcStat!
 static HackerOs.Apps.SystemMonitor.Metrics.ProcFiles.ParseUptime(string! text) -> (double Uptime, double Idle)
 static HackerOs.Apps.SystemMonitor.Metrics.ProcFiles.ParseWorkers(string! text) -> HackerOs.Apps.SystemMonitor.Metrics.ProcWorkers!
+static HackerOs.Apps.SystemMonitor.Metrics.ProcLoadAverage.operator !=(HackerOs.Apps.SystemMonitor.Metrics.ProcLoadAverage? left, HackerOs.Apps.SystemMonitor.Metrics.ProcLoadAverage? right) -> bool
+static HackerOs.Apps.SystemMonitor.Metrics.ProcLoadAverage.operator ==(HackerOs.Apps.SystemMonitor.Metrics.ProcLoadAverage? left, HackerOs.Apps.SystemMonitor.Metrics.ProcLoadAverage? right) -> bool
+static HackerOs.Apps.SystemMonitor.Metrics.ProcMemInfo.operator !=(HackerOs.Apps.SystemMonitor.Metrics.ProcMemInfo? left, HackerOs.Apps.SystemMonitor.Metrics.ProcMemInfo? right) -> bool
+static HackerOs.Apps.SystemMonitor.Metrics.ProcMemInfo.operator ==(HackerOs.Apps.SystemMonitor.Metrics.ProcMemInfo? left, HackerOs.Apps.SystemMonitor.Metrics.ProcMemInfo? right) -> bool
+static HackerOs.Apps.SystemMonitor.Metrics.ProcNetDevice.operator !=(HackerOs.Apps.SystemMonitor.Metrics.ProcNetDevice? left, HackerOs.Apps.SystemMonitor.Metrics.ProcNetDevice? right) -> bool
+static HackerOs.Apps.SystemMonitor.Metrics.ProcNetDevice.operator ==(HackerOs.Apps.SystemMonitor.Metrics.ProcNetDevice? left, HackerOs.Apps.SystemMonitor.Metrics.ProcNetDevice? right) -> bool
 static HackerOs.Apps.SystemMonitor.Metrics.ProcReader.ReadAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.Apps.SystemMonitor.Metrics.ProcRefresh!>!
 static HackerOs.Apps.SystemMonitor.Metrics.ProcReader.ReadCpuInfoAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<HackerOs.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry!>!>!
 static HackerOs.Apps.SystemMonitor.Metrics.ProcReader.ReadDrivesAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.IO.HackDriveInfo!>!>!
+static HackerOs.Apps.SystemMonitor.Metrics.ProcRefresh.operator !=(HackerOs.Apps.SystemMonitor.Metrics.ProcRefresh? left, HackerOs.Apps.SystemMonitor.Metrics.ProcRefresh? right) -> bool
+static HackerOs.Apps.SystemMonitor.Metrics.ProcRefresh.operator ==(HackerOs.Apps.SystemMonitor.Metrics.ProcRefresh? left, HackerOs.Apps.SystemMonitor.Metrics.ProcRefresh? right) -> bool
+static HackerOs.Apps.SystemMonitor.Metrics.ProcStat.operator !=(HackerOs.Apps.SystemMonitor.Metrics.ProcStat? left, HackerOs.Apps.SystemMonitor.Metrics.ProcStat? right) -> bool
+static HackerOs.Apps.SystemMonitor.Metrics.ProcStat.operator ==(HackerOs.Apps.SystemMonitor.Metrics.ProcStat? left, HackerOs.Apps.SystemMonitor.Metrics.ProcStat? right) -> bool
+static HackerOs.Apps.SystemMonitor.Metrics.ProcWorker.operator !=(HackerOs.Apps.SystemMonitor.Metrics.ProcWorker? left, HackerOs.Apps.SystemMonitor.Metrics.ProcWorker? right) -> bool
+static HackerOs.Apps.SystemMonitor.Metrics.ProcWorker.operator ==(HackerOs.Apps.SystemMonitor.Metrics.ProcWorker? left, HackerOs.Apps.SystemMonitor.Metrics.ProcWorker? right) -> bool
+static HackerOs.Apps.SystemMonitor.Metrics.ProcWorkers.operator !=(HackerOs.Apps.SystemMonitor.Metrics.ProcWorkers? left, HackerOs.Apps.SystemMonitor.Metrics.ProcWorkers? right) -> bool
+static HackerOs.Apps.SystemMonitor.Metrics.ProcWorkers.operator ==(HackerOs.Apps.SystemMonitor.Metrics.ProcWorkers? left, HackerOs.Apps.SystemMonitor.Metrics.ProcWorkers? right) -> bool
+static HackerOs.Apps.SystemMonitor.Metrics.ProcessIoRate.operator !=(HackerOs.Apps.SystemMonitor.Metrics.ProcessIoRate left, HackerOs.Apps.SystemMonitor.Metrics.ProcessIoRate right) -> bool
+static HackerOs.Apps.SystemMonitor.Metrics.ProcessIoRate.operator ==(HackerOs.Apps.SystemMonitor.Metrics.ProcessIoRate left, HackerOs.Apps.SystemMonitor.Metrics.ProcessIoRate right) -> bool
+static HackerOs.Apps.SystemMonitor.Metrics.ProcessIoSample.operator !=(HackerOs.Apps.SystemMonitor.Metrics.ProcessIoSample left, HackerOs.Apps.SystemMonitor.Metrics.ProcessIoSample right) -> bool
+static HackerOs.Apps.SystemMonitor.Metrics.ProcessIoSample.operator ==(HackerOs.Apps.SystemMonitor.Metrics.ProcessIoSample left, HackerOs.Apps.SystemMonitor.Metrics.ProcessIoSample right) -> bool
 static HackerOs.Apps.SystemMonitor.Metrics.Units.Bytes(double bytes) -> string!
 static HackerOs.Apps.SystemMonitor.Metrics.Units.Bytes(double bytes, System.Globalization.CultureInfo! culture) -> string!
 static HackerOs.Apps.SystemMonitor.Metrics.Units.Count(long value) -> string!
@@ -392,9 +508,21 @@ static HackerOs.Apps.SystemMonitor.Metrics.Units.Percent(double percent) -> stri
 static HackerOs.Apps.SystemMonitor.Metrics.Units.Percent(double percent, System.Globalization.CultureInfo! culture) -> string!
 static HackerOs.Apps.SystemMonitor.Metrics.Units.Rate(double bytesPerSecond) -> string!
 static HackerOs.Apps.SystemMonitor.Metrics.Units.Rate(double bytesPerSecond, System.Globalization.CultureInfo! culture) -> string!
+static HackerOs.Apps.SystemMonitor.Processes.EndTaskFailure.operator !=(HackerOs.Apps.SystemMonitor.Processes.EndTaskFailure? left, HackerOs.Apps.SystemMonitor.Processes.EndTaskFailure? right) -> bool
+static HackerOs.Apps.SystemMonitor.Processes.EndTaskFailure.operator ==(HackerOs.Apps.SystemMonitor.Processes.EndTaskFailure? left, HackerOs.Apps.SystemMonitor.Processes.EndTaskFailure? right) -> bool
+static HackerOs.Apps.SystemMonitor.Processes.EndTaskReport.operator !=(HackerOs.Apps.SystemMonitor.Processes.EndTaskReport? left, HackerOs.Apps.SystemMonitor.Processes.EndTaskReport? right) -> bool
+static HackerOs.Apps.SystemMonitor.Processes.EndTaskReport.operator ==(HackerOs.Apps.SystemMonitor.Processes.EndTaskReport? left, HackerOs.Apps.SystemMonitor.Processes.EndTaskReport? right) -> bool
 static HackerOs.Apps.SystemMonitor.Processes.EndTaskRunner.End(HackerOs.AppSdk.Diagnostics.HackProcess! process, HackerOs.Apps.SystemMonitor.Processes.EndTaskMode mode, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
 static HackerOs.Apps.SystemMonitor.Processes.EndTaskRunner.EndAsync(System.Collections.Generic.IReadOnlyList<HackerOs.Apps.SystemMonitor.Processes.ProcessRow!>! rows, System.Func<HackerOs.Apps.SystemMonitor.Processes.ProcessRow!, System.Threading.Tasks.Task!>! end) -> System.Threading.Tasks.Task<HackerOs.Apps.SystemMonitor.Processes.EndTaskReport!>!
+static HackerOs.Apps.SystemMonitor.Processes.ProcessRow.operator !=(HackerOs.Apps.SystemMonitor.Processes.ProcessRow? left, HackerOs.Apps.SystemMonitor.Processes.ProcessRow? right) -> bool
+static HackerOs.Apps.SystemMonitor.Processes.ProcessRow.operator ==(HackerOs.Apps.SystemMonitor.Processes.ProcessRow? left, HackerOs.Apps.SystemMonitor.Processes.ProcessRow? right) -> bool
 static readonly HackerOs.Apps.SystemMonitor.SystemMonitorWindow.RefreshInterval -> System.TimeSpan
+~override HackerOs.Apps.SystemMonitor.Metrics.CpuTimesSample.Equals(object obj) -> bool
+~override HackerOs.Apps.SystemMonitor.Metrics.CpuTimesSample.ToString() -> string
+~override HackerOs.Apps.SystemMonitor.Metrics.ProcessIoRate.Equals(object obj) -> bool
+~override HackerOs.Apps.SystemMonitor.Metrics.ProcessIoRate.ToString() -> string
+~override HackerOs.Apps.SystemMonitor.Metrics.ProcessIoSample.Equals(object obj) -> bool
+~override HackerOs.Apps.SystemMonitor.Metrics.ProcessIoSample.ToString() -> string
 ~override HackerOs.Apps.SystemMonitor.SystemMonitorWindow.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.Apps.SystemMonitor.Tabs.DiskTab.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.Apps.SystemMonitor.Tabs.NetworkTab.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

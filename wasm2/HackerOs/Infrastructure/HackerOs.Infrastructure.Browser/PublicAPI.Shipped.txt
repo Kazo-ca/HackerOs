@@ -6,8 +6,11 @@ HackerOs.Infrastructure.Browser.Backup.IndexedDbBackupService.ExportAsync(System
 HackerOs.Infrastructure.Browser.Backup.IndexedDbBackupService.IndexedDbBackupService(Microsoft.JSInterop.IJSRuntime! runtime, System.TimeProvider? timeProvider = null) -> void
 HackerOs.Infrastructure.Browser.Backup.IndexedDbBackupService.RestoreAsync(string! backupJson, HackerOs.Infrastructure.Browser.Backup.IndexedDbRestoreMode mode, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Infrastructure.Browser.Backup.IndexedDbRestoreResult!>
 HackerOs.Infrastructure.Browser.Backup.IndexedDbBackupSummary
+HackerOs.Infrastructure.Browser.Backup.IndexedDbBackupSummary.<Clone>$() -> HackerOs.Infrastructure.Browser.Backup.IndexedDbBackupSummary!
 HackerOs.Infrastructure.Browser.Backup.IndexedDbBackupSummary.CreatedAtUtc.get -> System.DateTimeOffset
 HackerOs.Infrastructure.Browser.Backup.IndexedDbBackupSummary.CreatedAtUtc.init -> void
+HackerOs.Infrastructure.Browser.Backup.IndexedDbBackupSummary.Deconstruct(out System.DateTimeOffset CreatedAtUtc, out int SchemaVersion, out int RecordCount, out System.Collections.Generic.IReadOnlyDictionary<string!, int>! StoreRecordCounts) -> void
+HackerOs.Infrastructure.Browser.Backup.IndexedDbBackupSummary.Equals(HackerOs.Infrastructure.Browser.Backup.IndexedDbBackupSummary? other) -> bool
 HackerOs.Infrastructure.Browser.Backup.IndexedDbBackupSummary.IndexedDbBackupSummary(System.DateTimeOffset CreatedAtUtc, int SchemaVersion, int RecordCount, System.Collections.Generic.IReadOnlyDictionary<string!, int>! StoreRecordCounts) -> void
 HackerOs.Infrastructure.Browser.Backup.IndexedDbBackupSummary.RecordCount.get -> int
 HackerOs.Infrastructure.Browser.Backup.IndexedDbBackupSummary.RecordCount.init -> void
@@ -22,6 +25,9 @@ HackerOs.Infrastructure.Browser.Backup.IndexedDbRestoreMode
 HackerOs.Infrastructure.Browser.Backup.IndexedDbRestoreMode.Merge = 1 -> HackerOs.Infrastructure.Browser.Backup.IndexedDbRestoreMode
 HackerOs.Infrastructure.Browser.Backup.IndexedDbRestoreMode.Replace = 2 -> HackerOs.Infrastructure.Browser.Backup.IndexedDbRestoreMode
 HackerOs.Infrastructure.Browser.Backup.IndexedDbRestoreResult
+HackerOs.Infrastructure.Browser.Backup.IndexedDbRestoreResult.<Clone>$() -> HackerOs.Infrastructure.Browser.Backup.IndexedDbRestoreResult!
+HackerOs.Infrastructure.Browser.Backup.IndexedDbRestoreResult.Deconstruct(out HackerOs.Infrastructure.Browser.Backup.IndexedDbRestoreMode Mode, out int RecordCount) -> void
+HackerOs.Infrastructure.Browser.Backup.IndexedDbRestoreResult.Equals(HackerOs.Infrastructure.Browser.Backup.IndexedDbRestoreResult? other) -> bool
 HackerOs.Infrastructure.Browser.Backup.IndexedDbRestoreResult.IndexedDbRestoreResult(HackerOs.Infrastructure.Browser.Backup.IndexedDbRestoreMode Mode, int RecordCount) -> void
 HackerOs.Infrastructure.Browser.Backup.IndexedDbRestoreResult.Mode.get -> HackerOs.Infrastructure.Browser.Backup.IndexedDbRestoreMode
 HackerOs.Infrastructure.Browser.Backup.IndexedDbRestoreResult.Mode.init -> void
@@ -47,12 +53,15 @@ HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbInspectorService
 HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbInspectorService.IndexedDbInspectorService(Microsoft.JSInterop.IJSRuntime! runtime) -> void
 HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbInspectorService.InspectDatabaseAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot!>
 HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot
+HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.<Clone>$() -> HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot!
 HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.CapturedAtUtc.get -> System.DateTimeOffset
 HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.CapturedAtUtc.init -> void
 HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.DatabaseName.get -> string!
 HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.DatabaseName.init -> void
 HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.DatabaseVersion.get -> int
 HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.DatabaseVersion.init -> void
+HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.Deconstruct(out System.DateTimeOffset CapturedAtUtc, out string! DatabaseName, out int DatabaseVersion, out System.Collections.Generic.IReadOnlyList<HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot!>! Stores, out System.Collections.Generic.IReadOnlyDictionary<string!, string!>! ResolvedPaths, out int TotalLinkCount) -> void
+HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.Equals(HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot? other) -> bool
 HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.IndexedDbSnapshot(System.DateTimeOffset CapturedAtUtc, string! DatabaseName, int DatabaseVersion, System.Collections.Generic.IReadOnlyList<HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot!>! Stores, System.Collections.Generic.IReadOnlyDictionary<string!, string!>! ResolvedPaths, int TotalLinkCount) -> void
 HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.ResolvedPaths.get -> System.Collections.Generic.IReadOnlyDictionary<string!, string!>!
 HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.ResolvedPaths.init -> void
@@ -62,6 +71,9 @@ HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.ToExportJson() -> 
 HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.TotalLinkCount.get -> int
 HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.TotalLinkCount.init -> void
 HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot
+HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot.<Clone>$() -> HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot!
+HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot.Deconstruct(out string! Name, out string! Purpose, out System.Collections.Generic.IReadOnlyList<string!>! KeyPath, out int RecordCount, out string! FormattedJson, out System.Text.Json.JsonElement RawElement) -> void
+HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot.Equals(HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot? other) -> bool
 HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot.FormattedJson.get -> string!
 HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot.FormattedJson.init -> void
 HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot.IndexedDbStoreSnapshot(string! Name, string! Purpose, System.Collections.Generic.IReadOnlyList<string!>! KeyPath, int RecordCount, string! FormattedJson, System.Text.Json.JsonElement RawElement) -> void
@@ -76,10 +88,13 @@ HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot.RawElement.in
 HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot.RecordCount.get -> int
 HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot.RecordCount.init -> void
 HackerOs.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult
+HackerOs.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult.<Clone>$() -> HackerOs.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult!
 HackerOs.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult.CandidateHashes.get -> int
 HackerOs.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult.CandidateHashes.init -> void
+HackerOs.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult.Deconstruct(out int CandidateHashes, out int DeletedChunks, out int RetainedReferencedHashes) -> void
 HackerOs.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult.DeletedChunks.get -> int
 HackerOs.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult.DeletedChunks.init -> void
+HackerOs.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult.Equals(HackerOs.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult? other) -> bool
 HackerOs.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult.IndexedDbFileContentCleanupResult(int CandidateHashes, int DeletedChunks, int RetainedReferencedHashes) -> void
 HackerOs.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult.RetainedReferencedHashes.get -> int
 HackerOs.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult.RetainedReferencedHashes.init -> void
@@ -136,9 +151,11 @@ HackerOs.Infrastructure.Browser.Policy.IndexedDbCapabilityGrantRepository.Indexe
 HackerOs.Infrastructure.Browser.Policy.IndexedDbCapabilityGrantRepository.RevokeAsync(HackerOs.App.Abstractions.Policy.CapabilityGrantId grantId, HackerOs.App.Abstractions.AppAuthority actingAuthority, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.App.Abstractions.Policy.CapabilityGrantMutationResult!>
 HackerOs.Infrastructure.Browser.Recovery.BrowserStorageRecoveryClassifier
 HackerOs.Infrastructure.Browser.Schema.FileContentStoragePolicy
+HackerOs.Infrastructure.Browser.Schema.FileContentStoragePolicy.<Clone>$() -> HackerOs.Infrastructure.Browser.Schema.FileContentStoragePolicy!
 HackerOs.Infrastructure.Browser.Schema.FileContentStoragePolicy.ChunkCountFor(long fileSizeBytes) -> int
 HackerOs.Infrastructure.Browser.Schema.FileContentStoragePolicy.ContentHashAlgorithm.get -> string!
 HackerOs.Infrastructure.Browser.Schema.FileContentStoragePolicy.DeduplicateChunks.get -> bool
+HackerOs.Infrastructure.Browser.Schema.FileContentStoragePolicy.Equals(HackerOs.Infrastructure.Browser.Schema.FileContentStoragePolicy? other) -> bool
 HackerOs.Infrastructure.Browser.Schema.FileContentStoragePolicy.FileContentStoragePolicy(long maxFileSizeBytes, long maxChunkSizeBytes, string! contentHashAlgorithm, bool deduplicateChunks, System.TimeSpan orphanRetention) -> void
 HackerOs.Infrastructure.Browser.Schema.FileContentStoragePolicy.MaxChunkSizeBytes.get -> long
 HackerOs.Infrastructure.Browser.Schema.FileContentStoragePolicy.MaxFileSizeBytes.get -> long
@@ -146,20 +163,26 @@ HackerOs.Infrastructure.Browser.Schema.FileContentStoragePolicy.OrphanRetention.
 HackerOs.Infrastructure.Browser.Schema.FileContentStoragePolicy.RequiresChunking(long fileSizeBytes) -> bool
 HackerOs.Infrastructure.Browser.Schema.HackerOsIndexedDbSchema
 HackerOs.Infrastructure.Browser.Schema.IndexedDbIndexDefinition
+HackerOs.Infrastructure.Browser.Schema.IndexedDbIndexDefinition.<Clone>$() -> HackerOs.Infrastructure.Browser.Schema.IndexedDbIndexDefinition!
+HackerOs.Infrastructure.Browser.Schema.IndexedDbIndexDefinition.Equals(HackerOs.Infrastructure.Browser.Schema.IndexedDbIndexDefinition? other) -> bool
 HackerOs.Infrastructure.Browser.Schema.IndexedDbIndexDefinition.IndexedDbIndexDefinition(string! name, System.Collections.Generic.IReadOnlyList<string!>! keyPath, bool unique = false, bool multiEntry = false) -> void
 HackerOs.Infrastructure.Browser.Schema.IndexedDbIndexDefinition.KeyPath.get -> System.Collections.Generic.IReadOnlyList<string!>!
 HackerOs.Infrastructure.Browser.Schema.IndexedDbIndexDefinition.MultiEntry.get -> bool
 HackerOs.Infrastructure.Browser.Schema.IndexedDbIndexDefinition.Name.get -> string!
 HackerOs.Infrastructure.Browser.Schema.IndexedDbIndexDefinition.Unique.get -> bool
 HackerOs.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition
+HackerOs.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition.<Clone>$() -> HackerOs.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition!
 HackerOs.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition.AutoIncrement.get -> bool
+HackerOs.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition.Equals(HackerOs.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition? other) -> bool
 HackerOs.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition.IndexedDbObjectStoreDefinition(string! name, System.Collections.Generic.IReadOnlyList<string!>! keyPath, bool autoIncrement, System.Collections.Generic.IReadOnlyList<HackerOs.Infrastructure.Browser.Schema.IndexedDbIndexDefinition!>! indexes, string! purpose) -> void
 HackerOs.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition.Indexes.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Infrastructure.Browser.Schema.IndexedDbIndexDefinition!>!
 HackerOs.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition.KeyPath.get -> System.Collections.Generic.IReadOnlyList<string!>!
 HackerOs.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition.Name.get -> string!
 HackerOs.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition.Purpose.get -> string!
 HackerOs.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary
+HackerOs.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary.<Clone>$() -> HackerOs.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary!
 HackerOs.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary.Description.get -> string!
+HackerOs.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary.Equals(HackerOs.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary? other) -> bool
 HackerOs.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary.IndexedDbTransactionBoundary(string! name, System.Collections.Generic.IReadOnlyList<string!>! objectStoreNames, string! description) -> void
 HackerOs.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary.Name.get -> string!
 HackerOs.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary.ObjectStoreNames.get -> System.Collections.Generic.IReadOnlyList<string!>!
@@ -177,6 +200,7 @@ HackerOs.Infrastructure.Browser.Sessions.IndexedDbLocalGroupRepository.FindByNam
 HackerOs.Infrastructure.Browser.Sessions.IndexedDbLocalGroupRepository.IndexedDbLocalGroupRepository(Microsoft.JSInterop.IJSRuntime! runtime) -> void
 HackerOs.Infrastructure.Browser.Sessions.IndexedDbLocalUserRepository
 HackerOs.Infrastructure.Browser.Sessions.IndexedDbLocalUserRepository.CreateUserAsync(HackerOs.Simulation.Abstractions.Sessions.LocalLoginName loginName, string! displayName, HackerOs.App.Abstractions.AppAuthority authority, HackerOs.Simulation.Abstractions.Sessions.LocalGroupId primaryGroupId, System.Collections.Generic.IReadOnlyCollection<HackerOs.Simulation.Abstractions.Sessions.LocalGroupId>? additionalGroupIds = null, HackerOs.Simulation.Abstractions.Sessions.LocalPasswordCredential? credential = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Sessions.LocalUser!>
+HackerOs.Infrastructure.Browser.Sessions.IndexedDbLocalUserRepository.DeleteUserAsync(HackerOs.Simulation.Abstractions.Sessions.LocalUserId id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
 HackerOs.Infrastructure.Browser.Sessions.IndexedDbLocalUserRepository.DisposeAsync() -> System.Threading.Tasks.ValueTask
 HackerOs.Infrastructure.Browser.Sessions.IndexedDbLocalUserRepository.FindByIdAsync(HackerOs.Simulation.Abstractions.Sessions.LocalUserId id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Sessions.LocalUser?>
 HackerOs.Infrastructure.Browser.Sessions.IndexedDbLocalUserRepository.FindByLoginNameAsync(HackerOs.Simulation.Abstractions.Sessions.LocalLoginName loginName, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Sessions.LocalUser?>
@@ -185,6 +209,7 @@ HackerOs.Infrastructure.Browser.Sessions.IndexedDbLocalUserRepository.IndexedDbL
 HackerOs.Infrastructure.Browser.Sessions.IndexedDbLocalUserRepository.SetAuthorityAsync(HackerOs.Simulation.Abstractions.Sessions.LocalUserId id, HackerOs.App.Abstractions.AppAuthority authority, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Sessions.LocalUser!>
 HackerOs.Infrastructure.Browser.Sessions.IndexedDbLocalUserRepository.SetCredentialAsync(HackerOs.Simulation.Abstractions.Sessions.LocalUserId id, HackerOs.Simulation.Abstractions.Sessions.LocalPasswordCredential? credential, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Sessions.LocalUser!>
 HackerOs.Infrastructure.Browser.Sessions.IndexedDbLocalUserRepository.SetEnabledAsync(HackerOs.Simulation.Abstractions.Sessions.LocalUserId id, bool enabled, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Sessions.LocalUser!>
+HackerOs.Infrastructure.Browser.Sessions.IndexedDbLocalUserRepository.SetPasskeysAsync(HackerOs.Simulation.Abstractions.Sessions.LocalUserId id, System.Collections.Generic.IReadOnlyList<HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential!>! passkeys, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Sessions.LocalUser!>
 HackerOs.Infrastructure.Browser.Settings.IndexedDbLegacySettingsStore
 HackerOs.Infrastructure.Browser.Settings.IndexedDbLegacySettingsStore.DisposeAsync() -> System.Threading.Tasks.ValueTask
 HackerOs.Infrastructure.Browser.Settings.IndexedDbLegacySettingsStore.IndexedDbLegacySettingsStore(Microsoft.JSInterop.IJSRuntime! runtime) -> void
@@ -198,9 +223,12 @@ HackerOs.Infrastructure.Browser.Storage.BrowserStorageManager.RequestPersistence
 HackerOs.Infrastructure.Browser.Storage.BrowserStorageQuotaException
 HackerOs.Infrastructure.Browser.Storage.BrowserStorageQuotaException.BrowserStorageQuotaException(string! message, System.Exception! innerException) -> void
 HackerOs.Infrastructure.Browser.Storage.BrowserStorageStatus
+HackerOs.Infrastructure.Browser.Storage.BrowserStorageStatus.<Clone>$() -> HackerOs.Infrastructure.Browser.Storage.BrowserStorageStatus!
 HackerOs.Infrastructure.Browser.Storage.BrowserStorageStatus.AvailableBytes.get -> long
 HackerOs.Infrastructure.Browser.Storage.BrowserStorageStatus.AvailableBytes.init -> void
 HackerOs.Infrastructure.Browser.Storage.BrowserStorageStatus.BrowserStorageStatus(long UsageBytes, long QuotaBytes, long AvailableBytes, bool IsPersisted, bool IsLowSpace) -> void
+HackerOs.Infrastructure.Browser.Storage.BrowserStorageStatus.Deconstruct(out long UsageBytes, out long QuotaBytes, out long AvailableBytes, out bool IsPersisted, out bool IsLowSpace) -> void
+HackerOs.Infrastructure.Browser.Storage.BrowserStorageStatus.Equals(HackerOs.Infrastructure.Browser.Storage.BrowserStorageStatus? other) -> bool
 HackerOs.Infrastructure.Browser.Storage.BrowserStorageStatus.IsLowSpace.get -> bool
 HackerOs.Infrastructure.Browser.Storage.BrowserStorageStatus.IsLowSpace.init -> void
 HackerOs.Infrastructure.Browser.Storage.BrowserStorageStatus.IsPersisted.get -> bool
@@ -263,14 +291,64 @@ const HackerOs.Infrastructure.Browser.Schema.HackerOsIndexedDbSchema.SyncRecordS
 const HackerOs.Infrastructure.Browser.Schema.HackerOsIndexedDbSchema.UserStoreName = "users" -> string!
 const HackerOs.Infrastructure.Browser.Storage.BrowserStorageManager.LowSpaceByteThreshold = 67108864 -> long
 const HackerOs.Infrastructure.Browser.Storage.BrowserStorageManager.LowSpaceRatioThreshold = 0.1 -> double
+override HackerOs.Infrastructure.Browser.Backup.IndexedDbBackupSummary.Equals(object? obj) -> bool
+override HackerOs.Infrastructure.Browser.Backup.IndexedDbBackupSummary.GetHashCode() -> int
+override HackerOs.Infrastructure.Browser.Backup.IndexedDbBackupSummary.ToString() -> string!
+override HackerOs.Infrastructure.Browser.Backup.IndexedDbRestoreResult.Equals(object? obj) -> bool
+override HackerOs.Infrastructure.Browser.Backup.IndexedDbRestoreResult.GetHashCode() -> int
+override HackerOs.Infrastructure.Browser.Backup.IndexedDbRestoreResult.ToString() -> string!
+override HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.Equals(object? obj) -> bool
+override HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.GetHashCode() -> int
+override HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.ToString() -> string!
+override HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot.Equals(object? obj) -> bool
+override HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot.GetHashCode() -> int
+override HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot.ToString() -> string!
+override HackerOs.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult.Equals(object? obj) -> bool
+override HackerOs.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult.GetHashCode() -> int
+override HackerOs.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult.ToString() -> string!
+override HackerOs.Infrastructure.Browser.Schema.FileContentStoragePolicy.Equals(object? obj) -> bool
+override HackerOs.Infrastructure.Browser.Schema.FileContentStoragePolicy.GetHashCode() -> int
+override HackerOs.Infrastructure.Browser.Schema.FileContentStoragePolicy.ToString() -> string!
+override HackerOs.Infrastructure.Browser.Schema.IndexedDbIndexDefinition.Equals(object? obj) -> bool
+override HackerOs.Infrastructure.Browser.Schema.IndexedDbIndexDefinition.GetHashCode() -> int
+override HackerOs.Infrastructure.Browser.Schema.IndexedDbIndexDefinition.ToString() -> string!
+override HackerOs.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition.Equals(object? obj) -> bool
+override HackerOs.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition.GetHashCode() -> int
+override HackerOs.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition.ToString() -> string!
+override HackerOs.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary.Equals(object? obj) -> bool
+override HackerOs.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary.GetHashCode() -> int
+override HackerOs.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary.ToString() -> string!
+override HackerOs.Infrastructure.Browser.Storage.BrowserStorageStatus.Equals(object? obj) -> bool
+override HackerOs.Infrastructure.Browser.Storage.BrowserStorageStatus.GetHashCode() -> int
+override HackerOs.Infrastructure.Browser.Storage.BrowserStorageStatus.ToString() -> string!
 static HackerOs.Infrastructure.Browser.Backup.IndexedDbBackupService.Inspect(string! backupJson) -> HackerOs.Infrastructure.Browser.Backup.IndexedDbBackupSummary!
 static HackerOs.Infrastructure.Browser.Backup.IndexedDbBackupService.ReadArchive(byte[]! archive) -> string!
+static HackerOs.Infrastructure.Browser.Backup.IndexedDbBackupSummary.operator !=(HackerOs.Infrastructure.Browser.Backup.IndexedDbBackupSummary? left, HackerOs.Infrastructure.Browser.Backup.IndexedDbBackupSummary? right) -> bool
+static HackerOs.Infrastructure.Browser.Backup.IndexedDbBackupSummary.operator ==(HackerOs.Infrastructure.Browser.Backup.IndexedDbBackupSummary? left, HackerOs.Infrastructure.Browser.Backup.IndexedDbBackupSummary? right) -> bool
+static HackerOs.Infrastructure.Browser.Backup.IndexedDbRestoreResult.operator !=(HackerOs.Infrastructure.Browser.Backup.IndexedDbRestoreResult? left, HackerOs.Infrastructure.Browser.Backup.IndexedDbRestoreResult? right) -> bool
+static HackerOs.Infrastructure.Browser.Backup.IndexedDbRestoreResult.operator ==(HackerOs.Infrastructure.Browser.Backup.IndexedDbRestoreResult? left, HackerOs.Infrastructure.Browser.Backup.IndexedDbRestoreResult? right) -> bool
+static HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.operator !=(HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot? left, HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot? right) -> bool
+static HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.operator ==(HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot? left, HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot? right) -> bool
+static HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot.operator !=(HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot? left, HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot? right) -> bool
+static HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot.operator ==(HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot? left, HackerOs.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot? right) -> bool
+static HackerOs.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult.operator !=(HackerOs.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult? left, HackerOs.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult? right) -> bool
+static HackerOs.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult.operator ==(HackerOs.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult? left, HackerOs.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult? right) -> bool
 static HackerOs.Infrastructure.Browser.Globalization.BrowserSatelliteAssemblies.LoadAsync(System.Collections.Generic.IEnumerable<string!>! cultures) -> System.Threading.Tasks.Task<bool>!
 static HackerOs.Infrastructure.Browser.Isolation.BrowserCrossOriginIsolation.ProbeAsync(bool wanted) -> System.Threading.Tasks.Task<string?>!
 static HackerOs.Infrastructure.Browser.Recovery.BrowserStorageRecoveryClassifier.AwaitDestructiveConfirmation(HackerOs.Simulation.Abstractions.Recovery.StorageRecoveryActions action, string! affectedData, System.Guid correlationId) -> HackerOs.Simulation.Abstractions.Recovery.StorageRecoveryPresentation!
 static HackerOs.Infrastructure.Browser.Recovery.BrowserStorageRecoveryClassifier.Classify(System.Exception! exception, HackerOs.Simulation.Abstractions.Recovery.StorageRecoveryContext context, System.Guid correlationId) -> HackerOs.Simulation.Abstractions.Recovery.StorageRecoveryPresentation!
 static HackerOs.Infrastructure.Browser.Schema.FileContentStoragePolicy.Default.get -> HackerOs.Infrastructure.Browser.Schema.FileContentStoragePolicy!
+static HackerOs.Infrastructure.Browser.Schema.FileContentStoragePolicy.operator !=(HackerOs.Infrastructure.Browser.Schema.FileContentStoragePolicy? left, HackerOs.Infrastructure.Browser.Schema.FileContentStoragePolicy? right) -> bool
+static HackerOs.Infrastructure.Browser.Schema.FileContentStoragePolicy.operator ==(HackerOs.Infrastructure.Browser.Schema.FileContentStoragePolicy? left, HackerOs.Infrastructure.Browser.Schema.FileContentStoragePolicy? right) -> bool
 static HackerOs.Infrastructure.Browser.Schema.HackerOsIndexedDbSchema.ObjectStores.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition!>!
 static HackerOs.Infrastructure.Browser.Schema.HackerOsIndexedDbSchema.TransactionBoundaries.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary!>!
+static HackerOs.Infrastructure.Browser.Schema.IndexedDbIndexDefinition.operator !=(HackerOs.Infrastructure.Browser.Schema.IndexedDbIndexDefinition? left, HackerOs.Infrastructure.Browser.Schema.IndexedDbIndexDefinition? right) -> bool
+static HackerOs.Infrastructure.Browser.Schema.IndexedDbIndexDefinition.operator ==(HackerOs.Infrastructure.Browser.Schema.IndexedDbIndexDefinition? left, HackerOs.Infrastructure.Browser.Schema.IndexedDbIndexDefinition? right) -> bool
+static HackerOs.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition.operator !=(HackerOs.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition? left, HackerOs.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition? right) -> bool
+static HackerOs.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition.operator ==(HackerOs.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition? left, HackerOs.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition? right) -> bool
+static HackerOs.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary.operator !=(HackerOs.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary? left, HackerOs.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary? right) -> bool
+static HackerOs.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary.operator ==(HackerOs.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary? left, HackerOs.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary? right) -> bool
 static HackerOs.Infrastructure.Browser.Settings.IndexedDbLegacySettingsStore.TryRead(System.Text.Json.JsonElement element, out HackerOs.Simulation.Abstractions.Settings.LegacySettingsRecord? record) -> bool
+static HackerOs.Infrastructure.Browser.Storage.BrowserStorageStatus.operator !=(HackerOs.Infrastructure.Browser.Storage.BrowserStorageStatus? left, HackerOs.Infrastructure.Browser.Storage.BrowserStorageStatus? right) -> bool
+static HackerOs.Infrastructure.Browser.Storage.BrowserStorageStatus.operator ==(HackerOs.Infrastructure.Browser.Storage.BrowserStorageStatus? left, HackerOs.Infrastructure.Browser.Storage.BrowserStorageStatus? right) -> bool
 static readonly HackerOs.Infrastructure.Browser.Schema.FileContentStoragePolicy.DefaultOrphanRetention -> System.TimeSpan

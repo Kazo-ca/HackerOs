@@ -28,10 +28,13 @@ HackerOs.Apps.Calculator.CalculatorWindow.CalculatorWindow() -> void
 HackerOs.Apps.Calculator._Imports
 HackerOs.Apps.Calculator._Imports.Execute() -> void
 HackerOs.Apps.Calculator._Imports._Imports() -> void
+override HackerOs.Apps.Calculator.CalculatorApp.Assets.get -> System.Collections.Generic.IReadOnlyList<HackerOs.App.Abstractions.AssetManifest!>!
 override HackerOs.Apps.Calculator.CalculatorApp.Description.get -> string!
 override HackerOs.Apps.Calculator.CalculatorApp.EntryPoint.get -> System.Type!
+override HackerOs.Apps.Calculator.CalculatorApp.Icons.get -> System.Collections.Generic.IReadOnlyList<string!>!
 override HackerOs.Apps.Calculator.CalculatorApp.Id.get -> string!
 override HackerOs.Apps.Calculator.CalculatorApp.Kind.get -> HackerOs.App.Abstractions.AppKind
+override HackerOs.Apps.Calculator.CalculatorApp.MobileEntryPoint.get -> System.Type?
 override HackerOs.Apps.Calculator.CalculatorApp.Name.get -> string!
 override HackerOs.Apps.Calculator.CalculatorApp.PublisherId.get -> string!
 override HackerOs.Apps.Calculator.CalculatorApp.Resources.get -> HackerOs.App.Abstractions.AppResourceProfileManifest!

@@ -1,7 +1,10 @@
 #nullable enable
 HackerOs.Theming.Abstractions.ResolvedTheme
+HackerOs.Theming.Abstractions.ResolvedTheme.<Clone>$() -> HackerOs.Theming.Abstractions.ResolvedTheme!
 HackerOs.Theming.Abstractions.ResolvedTheme.BaseThemeId.get -> string!
 HackerOs.Theming.Abstractions.ResolvedTheme.BaseThemeId.init -> void
+HackerOs.Theming.Abstractions.ResolvedTheme.Deconstruct(out string! BaseThemeId, out HackerOs.Theming.Abstractions.UserTheme? UserTheme, out bool IsFallback) -> void
+HackerOs.Theming.Abstractions.ResolvedTheme.Equals(HackerOs.Theming.Abstractions.ResolvedTheme? other) -> bool
 HackerOs.Theming.Abstractions.ResolvedTheme.IsFallback.get -> bool
 HackerOs.Theming.Abstractions.ResolvedTheme.IsFallback.init -> void
 HackerOs.Theming.Abstractions.ResolvedTheme.ResolvedTheme(string! BaseThemeId, HackerOs.Theming.Abstractions.UserTheme? UserTheme, bool IsFallback) -> void
@@ -9,13 +12,18 @@ HackerOs.Theming.Abstractions.ResolvedTheme.UserTheme.get -> HackerOs.Theming.Ab
 HackerOs.Theming.Abstractions.ResolvedTheme.UserTheme.init -> void
 HackerOs.Theming.Abstractions.ThemeCatalog
 HackerOs.Theming.Abstractions.ThemeDefinition
+HackerOs.Theming.Abstractions.ThemeDefinition.<Clone>$() -> HackerOs.Theming.Abstractions.ThemeDefinition!
 HackerOs.Theming.Abstractions.ThemeDefinition.DisplayName.get -> string!
+HackerOs.Theming.Abstractions.ThemeDefinition.Equals(HackerOs.Theming.Abstractions.ThemeDefinition? other) -> bool
 HackerOs.Theming.Abstractions.ThemeDefinition.Id.get -> string!
 HackerOs.Theming.Abstractions.ThemeDefinition.Platform.get -> HackerOs.Theming.Abstractions.ThemePlatform
 HackerOs.Theming.Abstractions.ThemeDefinition.SupportsAccentColor.get -> bool
 HackerOs.Theming.Abstractions.ThemeDefinition.ThemeDefinition(string! id, string! displayName, HackerOs.Theming.Abstractions.ThemePlatform platform, bool supportsAccentColor = false) -> void
 HackerOs.Theming.Abstractions.ThemeFile
 HackerOs.Theming.Abstractions.ThemeFileDiagnostic
+HackerOs.Theming.Abstractions.ThemeFileDiagnostic.<Clone>$() -> HackerOs.Theming.Abstractions.ThemeFileDiagnostic!
+HackerOs.Theming.Abstractions.ThemeFileDiagnostic.Deconstruct(out int? Line, out string! Message, out bool IsError, out string? Path) -> void
+HackerOs.Theming.Abstractions.ThemeFileDiagnostic.Equals(HackerOs.Theming.Abstractions.ThemeFileDiagnostic? other) -> bool
 HackerOs.Theming.Abstractions.ThemeFileDiagnostic.GetMessage(System.Globalization.CultureInfo? culture) -> string!
 HackerOs.Theming.Abstractions.ThemeFileDiagnostic.IsError.get -> bool
 HackerOs.Theming.Abstractions.ThemeFileDiagnostic.IsError.init -> void
@@ -28,14 +36,20 @@ HackerOs.Theming.Abstractions.ThemeFileDiagnostic.Path.init -> void
 HackerOs.Theming.Abstractions.ThemeFileDiagnostic.ThemeFileDiagnostic(int? Line, string! Message, bool IsError, string? Path = null) -> void
 HackerOs.Theming.Abstractions.ThemeFileDiagnostic.ToString(System.Globalization.CultureInfo? culture) -> string!
 HackerOs.Theming.Abstractions.ThemeFileParseResult
+HackerOs.Theming.Abstractions.ThemeFileParseResult.<Clone>$() -> HackerOs.Theming.Abstractions.ThemeFileParseResult!
+HackerOs.Theming.Abstractions.ThemeFileParseResult.Deconstruct(out HackerOs.Theming.Abstractions.UserTheme? Theme, out System.Collections.Generic.IReadOnlyList<HackerOs.Theming.Abstractions.ThemeFileDiagnostic!>! Diagnostics) -> void
 HackerOs.Theming.Abstractions.ThemeFileParseResult.Diagnostics.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Theming.Abstractions.ThemeFileDiagnostic!>!
 HackerOs.Theming.Abstractions.ThemeFileParseResult.Diagnostics.init -> void
+HackerOs.Theming.Abstractions.ThemeFileParseResult.Equals(HackerOs.Theming.Abstractions.ThemeFileParseResult? other) -> bool
 HackerOs.Theming.Abstractions.ThemeFileParseResult.Theme.get -> HackerOs.Theming.Abstractions.UserTheme?
 HackerOs.Theming.Abstractions.ThemeFileParseResult.Theme.init -> void
 HackerOs.Theming.Abstractions.ThemeFileParseResult.ThemeFileParseResult(HackerOs.Theming.Abstractions.UserTheme? Theme, System.Collections.Generic.IReadOnlyList<HackerOs.Theming.Abstractions.ThemeFileDiagnostic!>! Diagnostics) -> void
 HackerOs.Theming.Abstractions.ThemeFileSource
+HackerOs.Theming.Abstractions.ThemeFileSource.<Clone>$() -> HackerOs.Theming.Abstractions.ThemeFileSource!
 HackerOs.Theming.Abstractions.ThemeFileSource.Content.get -> string!
 HackerOs.Theming.Abstractions.ThemeFileSource.Content.init -> void
+HackerOs.Theming.Abstractions.ThemeFileSource.Deconstruct(out string! Path, out HackerOs.Theming.Abstractions.ThemeOrigin Origin, out string! Content) -> void
+HackerOs.Theming.Abstractions.ThemeFileSource.Equals(HackerOs.Theming.Abstractions.ThemeFileSource? other) -> bool
 HackerOs.Theming.Abstractions.ThemeFileSource.Origin.get -> HackerOs.Theming.Abstractions.ThemeOrigin
 HackerOs.Theming.Abstractions.ThemeFileSource.Origin.init -> void
 HackerOs.Theming.Abstractions.ThemeFileSource.Path.get -> string!
@@ -48,19 +62,25 @@ HackerOs.Theming.Abstractions.ThemePlatform
 HackerOs.Theming.Abstractions.ThemePlatform.Desktop = 0 -> HackerOs.Theming.Abstractions.ThemePlatform
 HackerOs.Theming.Abstractions.ThemePlatform.Mobile = 1 -> HackerOs.Theming.Abstractions.ThemePlatform
 HackerOs.Theming.Abstractions.ThemePreferences
+HackerOs.Theming.Abstractions.ThemePreferences.<Clone>$() -> HackerOs.Theming.Abstractions.ThemePreferences!
 HackerOs.Theming.Abstractions.ThemePreferences.AccentId.get -> string!
 HackerOs.Theming.Abstractions.ThemePreferences.AccentId.init -> void
 HackerOs.Theming.Abstractions.ThemePreferences.AnimationsEnabled.get -> bool
 HackerOs.Theming.Abstractions.ThemePreferences.AnimationsEnabled.init -> void
+HackerOs.Theming.Abstractions.ThemePreferences.Deconstruct(out string! DesktopThemeId, out string! MobileThemeId, out string! AccentId, out bool AnimationsEnabled) -> void
 HackerOs.Theming.Abstractions.ThemePreferences.DesktopThemeId.get -> string!
 HackerOs.Theming.Abstractions.ThemePreferences.DesktopThemeId.init -> void
+HackerOs.Theming.Abstractions.ThemePreferences.Equals(HackerOs.Theming.Abstractions.ThemePreferences? other) -> bool
 HackerOs.Theming.Abstractions.ThemePreferences.MobileThemeId.get -> string!
 HackerOs.Theming.Abstractions.ThemePreferences.MobileThemeId.init -> void
 HackerOs.Theming.Abstractions.ThemePreferences.ThemePreferences(string! DesktopThemeId, string! MobileThemeId, string! AccentId, bool AnimationsEnabled) -> void
 HackerOs.Theming.Abstractions.ThemeTokenCatalog
 HackerOs.Theming.Abstractions.ThemeTokenDefinition
+HackerOs.Theming.Abstractions.ThemeTokenDefinition.<Clone>$() -> HackerOs.Theming.Abstractions.ThemeTokenDefinition!
+HackerOs.Theming.Abstractions.ThemeTokenDefinition.Deconstruct(out string! Name, out HackerOs.Theming.Abstractions.ThemeTokenType Type, out HackerOs.Theming.Abstractions.ThemeTokenGroup Group, out string! Label, out string! Description, out string! Example, out string? RgbCompanion) -> void
 HackerOs.Theming.Abstractions.ThemeTokenDefinition.Description.get -> string!
 HackerOs.Theming.Abstractions.ThemeTokenDefinition.Description.init -> void
+HackerOs.Theming.Abstractions.ThemeTokenDefinition.Equals(HackerOs.Theming.Abstractions.ThemeTokenDefinition? other) -> bool
 HackerOs.Theming.Abstractions.ThemeTokenDefinition.Example.get -> string!
 HackerOs.Theming.Abstractions.ThemeTokenDefinition.Example.init -> void
 HackerOs.Theming.Abstractions.ThemeTokenDefinition.GetDescription(System.Globalization.CultureInfo? culture) -> string!
@@ -91,8 +111,10 @@ HackerOs.Theming.Abstractions.ThemeTokenType.Length = 1 -> HackerOs.Theming.Abst
 HackerOs.Theming.Abstractions.ThemeTokenType.Number = 4 -> HackerOs.Theming.Abstractions.ThemeTokenType
 HackerOs.Theming.Abstractions.ThemeTokenValidator
 HackerOs.Theming.Abstractions.UserTheme
+HackerOs.Theming.Abstractions.UserTheme.<Clone>$() -> HackerOs.Theming.Abstractions.UserTheme!
 HackerOs.Theming.Abstractions.UserTheme.BaseThemeId.get -> string!
 HackerOs.Theming.Abstractions.UserTheme.BaseThemeId.init -> void
+HackerOs.Theming.Abstractions.UserTheme.Equals(HackerOs.Theming.Abstractions.UserTheme? other) -> bool
 HackerOs.Theming.Abstractions.UserTheme.Id.get -> string!
 HackerOs.Theming.Abstractions.UserTheme.Id.init -> void
 HackerOs.Theming.Abstractions.UserTheme.Name.get -> string!
@@ -110,8 +132,11 @@ HackerOs.Theming.Abstractions.UserTheme.Tokens.init -> void
 HackerOs.Theming.Abstractions.UserTheme.UserTheme(string! id, string! name, string! baseThemeId, System.Collections.Generic.IReadOnlyList<HackerOs.Theming.Abstractions.ThemePlatform>! platforms, System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>! tokens, HackerOs.Theming.Abstractions.ThemeOrigin origin = HackerOs.Theming.Abstractions.ThemeOrigin.User, string? sourcePath = null) -> void
 HackerOs.Theming.Abstractions.UserThemeLibrary
 HackerOs.Theming.Abstractions.UserThemeLibraryResult
+HackerOs.Theming.Abstractions.UserThemeLibraryResult.<Clone>$() -> HackerOs.Theming.Abstractions.UserThemeLibraryResult!
+HackerOs.Theming.Abstractions.UserThemeLibraryResult.Deconstruct(out System.Collections.Generic.IReadOnlyList<HackerOs.Theming.Abstractions.UserTheme!>! Themes, out System.Collections.Generic.IReadOnlyList<HackerOs.Theming.Abstractions.ThemeFileDiagnostic!>! Diagnostics) -> void
 HackerOs.Theming.Abstractions.UserThemeLibraryResult.Diagnostics.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Theming.Abstractions.ThemeFileDiagnostic!>!
 HackerOs.Theming.Abstractions.UserThemeLibraryResult.Diagnostics.init -> void
+HackerOs.Theming.Abstractions.UserThemeLibraryResult.Equals(HackerOs.Theming.Abstractions.UserThemeLibraryResult? other) -> bool
 HackerOs.Theming.Abstractions.UserThemeLibraryResult.Find(string? id) -> HackerOs.Theming.Abstractions.UserTheme?
 HackerOs.Theming.Abstractions.UserThemeLibraryResult.Themes.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Theming.Abstractions.UserTheme!>!
 HackerOs.Theming.Abstractions.UserThemeLibraryResult.Themes.init -> void
@@ -136,8 +161,36 @@ const HackerOs.Theming.Abstractions.WellKnownThemeIds.Windows10 = "windows-10" -
 const HackerOs.Theming.Abstractions.WellKnownThemeIds.Windows7 = "windows-7" -> string!
 const HackerOs.Theming.Abstractions.WellKnownThemeIds.Windows98 = "windows-98" -> string!
 const HackerOs.Theming.Abstractions.WellKnownThemeIds.WindowsXp = "windows-xp" -> string!
+override HackerOs.Theming.Abstractions.ResolvedTheme.Equals(object? obj) -> bool
+override HackerOs.Theming.Abstractions.ResolvedTheme.GetHashCode() -> int
+override HackerOs.Theming.Abstractions.ResolvedTheme.ToString() -> string!
+override HackerOs.Theming.Abstractions.ThemeDefinition.Equals(object? obj) -> bool
+override HackerOs.Theming.Abstractions.ThemeDefinition.GetHashCode() -> int
+override HackerOs.Theming.Abstractions.ThemeDefinition.ToString() -> string!
+override HackerOs.Theming.Abstractions.ThemeFileDiagnostic.Equals(object? obj) -> bool
+override HackerOs.Theming.Abstractions.ThemeFileDiagnostic.GetHashCode() -> int
 override HackerOs.Theming.Abstractions.ThemeFileDiagnostic.ToString() -> string!
+override HackerOs.Theming.Abstractions.ThemeFileParseResult.Equals(object? obj) -> bool
+override HackerOs.Theming.Abstractions.ThemeFileParseResult.GetHashCode() -> int
+override HackerOs.Theming.Abstractions.ThemeFileParseResult.ToString() -> string!
+override HackerOs.Theming.Abstractions.ThemeFileSource.Equals(object? obj) -> bool
+override HackerOs.Theming.Abstractions.ThemeFileSource.GetHashCode() -> int
+override HackerOs.Theming.Abstractions.ThemeFileSource.ToString() -> string!
+override HackerOs.Theming.Abstractions.ThemePreferences.Equals(object? obj) -> bool
+override HackerOs.Theming.Abstractions.ThemePreferences.GetHashCode() -> int
+override HackerOs.Theming.Abstractions.ThemePreferences.ToString() -> string!
+override HackerOs.Theming.Abstractions.ThemeTokenDefinition.Equals(object? obj) -> bool
+override HackerOs.Theming.Abstractions.ThemeTokenDefinition.GetHashCode() -> int
+override HackerOs.Theming.Abstractions.ThemeTokenDefinition.ToString() -> string!
+override HackerOs.Theming.Abstractions.UserTheme.Equals(object? obj) -> bool
+override HackerOs.Theming.Abstractions.UserTheme.GetHashCode() -> int
+override HackerOs.Theming.Abstractions.UserTheme.ToString() -> string!
+override HackerOs.Theming.Abstractions.UserThemeLibraryResult.Equals(object? obj) -> bool
+override HackerOs.Theming.Abstractions.UserThemeLibraryResult.GetHashCode() -> int
+override HackerOs.Theming.Abstractions.UserThemeLibraryResult.ToString() -> string!
 static HackerOs.Theming.Abstractions.ResolvedTheme.Resolve(string? themeId, HackerOs.Theming.Abstractions.ThemePlatform platform, System.Collections.Generic.IEnumerable<HackerOs.Theming.Abstractions.UserTheme!>? userThemes) -> HackerOs.Theming.Abstractions.ResolvedTheme!
+static HackerOs.Theming.Abstractions.ResolvedTheme.operator !=(HackerOs.Theming.Abstractions.ResolvedTheme? left, HackerOs.Theming.Abstractions.ResolvedTheme? right) -> bool
+static HackerOs.Theming.Abstractions.ResolvedTheme.operator ==(HackerOs.Theming.Abstractions.ResolvedTheme? left, HackerOs.Theming.Abstractions.ResolvedTheme? right) -> bool
 static HackerOs.Theming.Abstractions.ThemeCatalog.AccentIds.get -> System.Collections.Generic.IReadOnlyList<string!>!
 static HackerOs.Theming.Abstractions.ThemeCatalog.AllThemes.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Theming.Abstractions.ThemeDefinition!>!
 static HackerOs.Theming.Abstractions.ThemeCatalog.DesktopThemes.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Theming.Abstractions.ThemeDefinition!>!
@@ -146,22 +199,38 @@ static HackerOs.Theming.Abstractions.ThemeCatalog.GetThemes(HackerOs.Theming.Abs
 static HackerOs.Theming.Abstractions.ThemeCatalog.IsKnownAccent(string? accentId) -> bool
 static HackerOs.Theming.Abstractions.ThemeCatalog.MobileThemes.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Theming.Abstractions.ThemeDefinition!>!
 static HackerOs.Theming.Abstractions.ThemeCatalog.TryGet(string? themeId, out HackerOs.Theming.Abstractions.ThemeDefinition? theme) -> bool
+static HackerOs.Theming.Abstractions.ThemeDefinition.operator !=(HackerOs.Theming.Abstractions.ThemeDefinition? left, HackerOs.Theming.Abstractions.ThemeDefinition? right) -> bool
+static HackerOs.Theming.Abstractions.ThemeDefinition.operator ==(HackerOs.Theming.Abstractions.ThemeDefinition? left, HackerOs.Theming.Abstractions.ThemeDefinition? right) -> bool
 static HackerOs.Theming.Abstractions.ThemeFile.FormatPlatform(HackerOs.Theming.Abstractions.ThemePlatform platform) -> string!
 static HackerOs.Theming.Abstractions.ThemeFile.IsValidId(string? id) -> bool
 static HackerOs.Theming.Abstractions.ThemeFile.Parse(string! content, HackerOs.Theming.Abstractions.ThemeOrigin origin = HackerOs.Theming.Abstractions.ThemeOrigin.User, string? path = null) -> HackerOs.Theming.Abstractions.ThemeFileParseResult!
 static HackerOs.Theming.Abstractions.ThemeFile.Serialize(HackerOs.Theming.Abstractions.UserTheme! theme) -> string!
+static HackerOs.Theming.Abstractions.ThemeFileDiagnostic.operator !=(HackerOs.Theming.Abstractions.ThemeFileDiagnostic? left, HackerOs.Theming.Abstractions.ThemeFileDiagnostic? right) -> bool
+static HackerOs.Theming.Abstractions.ThemeFileDiagnostic.operator ==(HackerOs.Theming.Abstractions.ThemeFileDiagnostic? left, HackerOs.Theming.Abstractions.ThemeFileDiagnostic? right) -> bool
+static HackerOs.Theming.Abstractions.ThemeFileParseResult.operator !=(HackerOs.Theming.Abstractions.ThemeFileParseResult? left, HackerOs.Theming.Abstractions.ThemeFileParseResult? right) -> bool
+static HackerOs.Theming.Abstractions.ThemeFileParseResult.operator ==(HackerOs.Theming.Abstractions.ThemeFileParseResult? left, HackerOs.Theming.Abstractions.ThemeFileParseResult? right) -> bool
+static HackerOs.Theming.Abstractions.ThemeFileSource.operator !=(HackerOs.Theming.Abstractions.ThemeFileSource? left, HackerOs.Theming.Abstractions.ThemeFileSource? right) -> bool
+static HackerOs.Theming.Abstractions.ThemeFileSource.operator ==(HackerOs.Theming.Abstractions.ThemeFileSource? left, HackerOs.Theming.Abstractions.ThemeFileSource? right) -> bool
 static HackerOs.Theming.Abstractions.ThemePreferences.Default.get -> HackerOs.Theming.Abstractions.ThemePreferences!
+static HackerOs.Theming.Abstractions.ThemePreferences.operator !=(HackerOs.Theming.Abstractions.ThemePreferences? left, HackerOs.Theming.Abstractions.ThemePreferences? right) -> bool
+static HackerOs.Theming.Abstractions.ThemePreferences.operator ==(HackerOs.Theming.Abstractions.ThemePreferences? left, HackerOs.Theming.Abstractions.ThemePreferences? right) -> bool
 static HackerOs.Theming.Abstractions.ThemeTokenCatalog.All.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Theming.Abstractions.ThemeTokenDefinition!>!
 static HackerOs.Theming.Abstractions.ThemeTokenCatalog.InGroup(HackerOs.Theming.Abstractions.ThemeTokenGroup group) -> System.Collections.Generic.IReadOnlyList<HackerOs.Theming.Abstractions.ThemeTokenDefinition!>!
 static HackerOs.Theming.Abstractions.ThemeTokenCatalog.TryGet(string? name, out HackerOs.Theming.Abstractions.ThemeTokenDefinition? token) -> bool
+static HackerOs.Theming.Abstractions.ThemeTokenDefinition.operator !=(HackerOs.Theming.Abstractions.ThemeTokenDefinition? left, HackerOs.Theming.Abstractions.ThemeTokenDefinition? right) -> bool
+static HackerOs.Theming.Abstractions.ThemeTokenDefinition.operator ==(HackerOs.Theming.Abstractions.ThemeTokenDefinition? left, HackerOs.Theming.Abstractions.ThemeTokenDefinition? right) -> bool
 static HackerOs.Theming.Abstractions.ThemeTokenValidator.ToHexColor(string? color) -> string?
 static HackerOs.Theming.Abstractions.ThemeTokenValidator.TryGetRgbTriplet(string! color, out string! triplet) -> bool
 static HackerOs.Theming.Abstractions.ThemeTokenValidator.TryValidate(HackerOs.Theming.Abstractions.ThemeTokenType type, string? value, System.Globalization.CultureInfo? culture, out string! normalized, out string? error) -> bool
 static HackerOs.Theming.Abstractions.ThemeTokenValidator.TryValidate(HackerOs.Theming.Abstractions.ThemeTokenType type, string? value, out string! normalized, out string? error) -> bool
 static HackerOs.Theming.Abstractions.ThemeTokenValidator.TryValidate(string! tokenName, string? value, out string! normalized, out string? error) -> bool
 static HackerOs.Theming.Abstractions.UserTheme.BuildCssProperties(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string!, string!>>! tokens, bool animationsEnabled = true) -> System.Collections.Generic.IReadOnlyDictionary<string!, string!>!
+static HackerOs.Theming.Abstractions.UserTheme.operator !=(HackerOs.Theming.Abstractions.UserTheme? left, HackerOs.Theming.Abstractions.UserTheme? right) -> bool
+static HackerOs.Theming.Abstractions.UserTheme.operator ==(HackerOs.Theming.Abstractions.UserTheme? left, HackerOs.Theming.Abstractions.UserTheme? right) -> bool
 static HackerOs.Theming.Abstractions.UserThemeLibrary.Build(System.Collections.Generic.IEnumerable<HackerOs.Theming.Abstractions.ThemeFileSource!>! files) -> HackerOs.Theming.Abstractions.UserThemeLibraryResult!
 static HackerOs.Theming.Abstractions.UserThemeLibrary.GetUserDirectory(string! homeDirectory) -> string!
 static HackerOs.Theming.Abstractions.UserThemeLibrary.GetUserThemePath(string! homeDirectory, string! themeId) -> string!
 static HackerOs.Theming.Abstractions.UserThemeLibrary.LoadAsync(System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<string!>!>!>! listFiles, System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<string!>!>! readFile, string? homeDirectory, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.Theming.Abstractions.UserThemeLibraryResult!>!
 static HackerOs.Theming.Abstractions.UserThemeLibraryResult.Empty.get -> HackerOs.Theming.Abstractions.UserThemeLibraryResult!
+static HackerOs.Theming.Abstractions.UserThemeLibraryResult.operator !=(HackerOs.Theming.Abstractions.UserThemeLibraryResult? left, HackerOs.Theming.Abstractions.UserThemeLibraryResult? right) -> bool
+static HackerOs.Theming.Abstractions.UserThemeLibraryResult.operator ==(HackerOs.Theming.Abstractions.UserThemeLibraryResult? left, HackerOs.Theming.Abstractions.UserThemeLibraryResult? right) -> bool

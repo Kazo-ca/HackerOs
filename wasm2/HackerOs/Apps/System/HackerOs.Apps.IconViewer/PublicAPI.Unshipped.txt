@@ -1,4 +1,1 @@
 #nullable enable
-override HackerOs.Apps.IconViewer.IconViewerApp.Icons.get -> System.Collections.Generic.IReadOnlyList<string!>!
-override HackerOs.Apps.IconViewer.IconViewerApp.Assets.get -> System.Collections.Generic.IReadOnlyList<HackerOs.App.Abstractions.AssetManifest!>!
-override HackerOs.Apps.IconViewer.IconViewerApp.MobileEntryPoint.get -> System.Type?

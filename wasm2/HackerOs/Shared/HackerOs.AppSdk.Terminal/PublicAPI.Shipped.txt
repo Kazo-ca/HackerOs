@@ -26,6 +26,9 @@ HackerOs.AppSdk.Terminal.TerminalInputReader.PushEndOfInput() -> void
 HackerOs.AppSdk.Terminal.TerminalInputReader.TakeUnread() -> string!
 HackerOs.AppSdk.Terminal.TerminalInputReader.TerminalInputReader() -> void
 HackerOs.AppSdk.Terminal.TerminalOutputAction
+HackerOs.AppSdk.Terminal.TerminalOutputAction.<Clone>$() -> HackerOs.AppSdk.Terminal.TerminalOutputAction!
+HackerOs.AppSdk.Terminal.TerminalOutputAction.Deconstruct(out HackerOs.AppSdk.Terminal.TerminalOutputActionKind Kind, out string! Text) -> void
+HackerOs.AppSdk.Terminal.TerminalOutputAction.Equals(HackerOs.AppSdk.Terminal.TerminalOutputAction? other) -> bool
 HackerOs.AppSdk.Terminal.TerminalOutputAction.Kind.get -> HackerOs.AppSdk.Terminal.TerminalOutputActionKind
 HackerOs.AppSdk.Terminal.TerminalOutputAction.Kind.init -> void
 HackerOs.AppSdk.Terminal.TerminalOutputAction.TerminalOutputAction(HackerOs.AppSdk.Terminal.TerminalOutputActionKind Kind, string! Text) -> void
@@ -131,6 +134,9 @@ override HackerOs.AppSdk.Terminal.TerminalInputReader.ReadLineAsync(System.Threa
 override HackerOs.AppSdk.Terminal.TerminalInputReader.ReadToEnd() -> string!
 override HackerOs.AppSdk.Terminal.TerminalInputReader.ReadToEndAsync() -> System.Threading.Tasks.Task<string!>!
 override HackerOs.AppSdk.Terminal.TerminalInputReader.ReadToEndAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<string!>!
+override HackerOs.AppSdk.Terminal.TerminalOutputAction.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Terminal.TerminalOutputAction.GetHashCode() -> int
+override HackerOs.AppSdk.Terminal.TerminalOutputAction.ToString() -> string!
 override HackerOs.AppSdk.Terminal.TerminalOutputWriter.Encoding.get -> System.Text.Encoding!
 override HackerOs.AppSdk.Terminal.TerminalOutputWriter.FlushAsync() -> System.Threading.Tasks.Task!
 override HackerOs.AppSdk.Terminal.TerminalOutputWriter.FlushAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task!
@@ -152,6 +158,8 @@ override HackerOs.AppSdk.Terminal.TerminalPanel.OnInitializedAsync() -> System.T
 override HackerOs.AppSdk.Terminal.TerminalTabs.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
 override HackerOs.AppSdk.Terminal.TerminalTabs.OnInitialized() -> void
 static HackerOs.AppSdk.Terminal.TerminalHistory.ToSingleLine(string! text) -> string!
+static HackerOs.AppSdk.Terminal.TerminalOutputAction.operator !=(HackerOs.AppSdk.Terminal.TerminalOutputAction? left, HackerOs.AppSdk.Terminal.TerminalOutputAction? right) -> bool
+static HackerOs.AppSdk.Terminal.TerminalOutputAction.operator ==(HackerOs.AppSdk.Terminal.TerminalOutputAction? left, HackerOs.AppSdk.Terminal.TerminalOutputAction? right) -> bool
 ~override HackerOs.AppSdk.Terminal.TerminalPanel.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.AppSdk.Terminal.TerminalScreen.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.AppSdk.Terminal.TerminalTabs.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

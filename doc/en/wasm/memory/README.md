@@ -12,12 +12,12 @@ at the end of each series or when a convention changes.
 - **Active code**: `wasm2/HackerOs/` (simulated OS in Blazor WebAssembly, .NET 10,
   solution `HackerOs.sln`). `src/` is the old version, kept as a
   reference.
-- **Version**: HackerOS and the SDK are at **2.0.3** (`build/Versions.props`).
+- **Version**: HackerOS and the SDK are at **2.1.0** (`build/Versions.props`).
   SDK 2.0.0 removed `HackerOs.AppSdk.FileView` and refuses 1.x apps
   ([ADR 0161](../dev/adr/0161-sdk-2-0-implementation-adjustments.md)).
-  `IAppEventGateway.PublishAsync` (ADR 0145), `HackCrossOriginIsolation`
-  (ADR 0146) and the grace period for background tasks (ADR 0147) are the
-  planned additions for the next minor.
+  2.1.0 (2026-10-26) is the first version released automatically (tag,
+  GitHub Release, nuget.org; ADR 0173); it folded every addition since 2.0
+  into `Shipped`.
 - **Series completed and merged into `main`**:
 
 | Series | Content | Summary |

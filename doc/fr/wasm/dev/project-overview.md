@@ -244,8 +244,8 @@ Documents : [`hack-file-api.md`](../framework/hack-file-api.md),
   [`wasm-v3-final-status.md`](plans/wasm-v3-final-status.md), celui de la série `exec`
   (limites, OOM killer, priorités, tâches de fond, hôte Server en WebAssembly,
   isolation cross-origin) dans
-  [`execution-followups-plan.md`](plans/execution-followups-plan.md#11-vérification-finale). La version publiée est **2.0.3** (`build/Versions.props`, publication du
-  2026-10-24) ; un autre dépôt peut se construire sur le SDK 2.x
+  [`execution-followups-plan.md`](plans/execution-followups-plan.md#11-vérification-finale). La version publiée est **2.1.0** (`build/Versions.props`, publiée le
+  2026-10-26 par le workflow `Release HackerOS`, ADR 0173) ; un autre dépôt peut se construire sur le SDK 2.x
   ([`building-on-hackeros.md`](../framework/building-on-hackeros.md)).
 
 ## Tâches de ce document

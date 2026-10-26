@@ -22,7 +22,7 @@ resource fingerprints, ADR 0098 §3 to §5) are described in
 
 ## Single version
 
-- `build/Versions.props` defines `HackerOsVersion` (today `2.0.3`, Pages publishing of ADR 0167),
+- `build/Versions.props` defines `HackerOsVersion` (today `2.1.0`, first automatic release of ADR 0173),
   imported by `Directory.Build.props`: each project of the solution carries this
   `Version`.
 - Before the freeze: `0.9.0-preview.<n>`. Since the SDK 1.0 freeze (work item
@@ -310,7 +310,7 @@ host that references it no longer builds (`HOSAPP0021`, the same rule as the
 catalog applied at build time); an OS 2.0 that finds it in its catalog refuses it
 at startup (`catalog.sdk.incompatible`), does not load it, and Settings ▸
 Installed Apps shows it as "Incompatible". It must be recompiled
-against the 2.x packages (2.0.3 today).
+against the 2.x packages (2.1.0 today).
 
 ### Migrating a 1.x app
 
@@ -323,7 +323,7 @@ against the 2.x packages (2.0.3 today).
 | a conflict resolver written by the app | `Dialogs.AsFileConflictResolver(AppContext)`: the "Replace / Keep both / Skip" dialog of the `hackeros.file-dialogs` provider |
 | `ShellIcon`, `ShellIconDescriptor` | `HackIcons.Vector(…)` / `HackIcons.FromImage(…)` (`HackerOs.AppSdk.Icons`) to describe an icon; rendering belongs to the OS |
 
-Then set `HackerOsVersion` to `2.0.3` (or the latest published 2.0.x) and recompile.
+Then set `HackerOsVersion` to `2.1.0` (or the latest published 2.x) and recompile.
 
 ### Additions
 
@@ -345,12 +345,18 @@ All the other SDK changes are additions:
 | `HackerOs.App.Abstractions` | `AppManifest.ContextMenus`, `AppContextMenuEntryManifest` and its titles and icons, `AppContextMenus`, `AppComponentContracts`, `AppComponentProviderScope`, capability `shell.context-menu` | ADR 0151, 0153, 0156 |
 | `HackerOs.Simulation.Abstractions` | `IAppEventGateway.PublishAsync` | ADR 0145 |
 
-### Additions since 2.0.0 (next minor)
+### SDK 2.1
 
-These additions from the work item `exec/5` (which arrived through `main` after the 2.0 cut)
-are in `PublicAPI.Unshipped.txt`; they will go out with the next
-release (2.1.0, a minor according to SemVer since they are additions).
-`HackerOsVersion` stays `2.0.3` until then.
+Published on 2026-10-26, the first version released by the `Release HackerOS`
+workflow ([ADR 0173](../dev/adr/0173-automatic-releases-from-the-version-file.md),
+[`releases.md`](../dev/releases.md)): `v2.1.0` tag, GitHub Release and nuget.org.
+`build/tools/ship-public-api.sh` folded 5866 lines of `PublicAPI.Unshipped.txt`
+into `PublicAPI.Shipped.txt`: the additions that arrived after the 2.0 cut
+(passkeys and account administration, ADR 0168 and 0169;
+`HackFileView.OpenOnTap`, ADR 0171; Settings side menu, ADR 0170; the table
+below) and the record members that public API analyzer 5.x now tracks
+(`<Clone>$`, `Deconstruct`, `Equals`). No `*REMOVED*` line: a minor version
+under SemVer, a 2.0 app runs without being recompiled.
 
 | Library | Addition | Decision |
 |---|---|---|

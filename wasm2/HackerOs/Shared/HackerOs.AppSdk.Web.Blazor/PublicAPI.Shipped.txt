@@ -55,6 +55,9 @@ HackerOs.AppSdk.Web.Blazor.Sites.HackWebSite.SetTitle(string? title) -> void
 HackerOs.AppSdk.Web.Blazor.Sites.HackWebSite.Title.get -> string!
 HackerOs.AppSdk.Web.Blazor.Sites.HackWebSite.TitleChanged -> System.Action<string!>?
 HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStart
+HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStart.<Clone>$() -> HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStart!
+HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStart.Deconstruct(out HackerOs.AppSdk.Web.Blazor.Sites.IHackWebSiteProcess? Process, out string? Error) -> void
+HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStart.Equals(HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStart? other) -> bool
 HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStart.Error.get -> string?
 HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStart.Error.init -> void
 HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStart.HackWebSiteStart(HackerOs.AppSdk.Web.Blazor.Sites.IHackWebSiteProcess? Process, string? Error) -> void
@@ -62,10 +65,13 @@ HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStart.IsStarted.get -> bool
 HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStart.Process.get -> HackerOs.AppSdk.Web.Blazor.Sites.IHackWebSiteProcess?
 HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStart.Process.init -> void
 HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest
+HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest.<Clone>$() -> HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest!
 HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest.Boot.get -> HackerOs.AppSdk.Net.Hosting.HackBlazorBootManifest!
 HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest.Boot.init -> void
 HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest.Browser.get -> HackerOs.AppSdk.IAppExecutionContext!
 HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest.Browser.init -> void
+HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest.Deconstruct(out System.Uri! PageUrl, out HackerOs.AppSdk.Net.Hosting.HackBlazorBootManifest! Boot, out HackerOs.AppSdk.IAppExecutionContext! Browser) -> void
+HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest.Equals(HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest? other) -> bool
 HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest.HackWebSiteStartRequest(System.Uri! PageUrl, HackerOs.AppSdk.Net.Hosting.HackBlazorBootManifest! Boot, HackerOs.AppSdk.IAppExecutionContext! Browser) -> void
 HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest.PageUrl.get -> System.Uri!
 HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest.PageUrl.init -> void
@@ -102,5 +108,15 @@ HackerOs.AppSdk.Web.Blazor.Sites.IHackWebSiteProcess.StopAsync(bool faulted = fa
 HackerOs.AppSdk.Web.Blazor._Imports
 HackerOs.AppSdk.Web.Blazor._Imports.Execute() -> void
 HackerOs.AppSdk.Web.Blazor._Imports._Imports() -> void
+override HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStart.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStart.GetHashCode() -> int
+override HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStart.ToString() -> string!
+override HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest.GetHashCode() -> int
+override HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest.ToString() -> string!
 static HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStart.Failed(string! error) -> HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStart!
 static HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStart.Started(HackerOs.AppSdk.Web.Blazor.Sites.IHackWebSiteProcess! process) -> HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStart!
+static HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStart.operator !=(HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStart? left, HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStart? right) -> bool
+static HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStart.operator ==(HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStart? left, HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStart? right) -> bool
+static HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest.operator !=(HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest? left, HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest? right) -> bool
+static HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest.operator ==(HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest? left, HackerOs.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest? right) -> bool

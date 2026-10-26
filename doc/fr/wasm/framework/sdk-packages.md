@@ -22,7 +22,7 @@ empreintes des ressources, ADR 0098 §3 à §5) sont décrites dans
 
 ## Version unique
 
-- `build/Versions.props` définit `HackerOsVersion` (aujourd'hui `2.0.3`, publication Pages de l'ADR 0167),
+- `build/Versions.props` définit `HackerOsVersion` (aujourd'hui `2.1.0`, première publication automatique de l'ADR 0173),
   importé par `Directory.Build.props` : chaque projet de la solution porte ce
   `Version`.
 - Avant le gel : `0.9.0-preview.<n>`. Depuis le gel du SDK 1.0 (chantier
@@ -312,7 +312,7 @@ hôte qui la référence ne se construit plus (`HOSAPP0021`, la même règle que
 catalogue appliquée au build) ; un OS 2.0 qui la trouve à son catalogue la refuse
 au démarrage (`catalog.sdk.incompatible`), ne la charge pas, et Paramètres ▸
 Applications installées l'affiche « Incompatible ». Elle doit être recompilée
-contre les paquets 2.x (2.0.3 aujourd'hui).
+contre les paquets 2.x (2.1.0 aujourd'hui).
 
 ### Migration d'une app 1.x
 
@@ -325,7 +325,7 @@ contre les paquets 2.x (2.0.3 aujourd'hui).
 | un résolveur de conflit écrit par l'app | `Dialogs.AsFileConflictResolver(AppContext)` : le dialogue « Remplacer / Garder les deux / Ignorer » du fournisseur de `hackeros.file-dialogs` |
 | `ShellIcon`, `ShellIconDescriptor` | `HackIcons.Vector(…)` / `HackIcons.FromImage(…)` (`HackerOs.AppSdk.Icons`) pour décrire une icône ; le rendu appartient à l'OS |
 
-Puis passer `HackerOsVersion` à `2.0.3` (ou la dernière 2.0.x publiée) et recompiler.
+Puis passer `HackerOsVersion` à `2.1.0` (ou la dernière 2.x publiée) et recompiler.
 
 ### Ajouts
 
@@ -347,12 +347,18 @@ Tous les autres changements du SDK sont des ajouts :
 | `HackerOs.App.Abstractions` | `AppManifest.ContextMenus`, `AppContextMenuEntryManifest` et ses titres et icônes, `AppContextMenus`, `AppComponentContracts`, `AppComponentProviderScope`, capacité `shell.context-menu` | ADR 0151, 0153, 0156 |
 | `HackerOs.Simulation.Abstractions` | `IAppEventGateway.PublishAsync` | ADR 0145 |
 
-### Ajouts depuis la 2.0.0 (prochaine mineure)
+### SDK 2.1
 
-Ces ajouts du chantier `exec/5` (arrivés par `main` après la coupe de la 2.0)
-sont dans `PublicAPI.Unshipped.txt` ; ils partiront avec la prochaine
-publication (2.1.0, mineure d'après SemVer puisque ce sont des ajouts).
-`HackerOsVersion` reste `2.0.3` d'ici là.
+Publiée le 2026-10-26, première version sortie par le workflow `Release HackerOS`
+([ADR 0173](../dev/adr/0173-automatic-releases-from-the-version-file.md),
+[`releases.md`](../dev/releases.md)) : tag `v2.1.0`, GitHub Release et nuget.org.
+`build/tools/ship-public-api.sh` a versé 5866 lignes de `PublicAPI.Unshipped.txt`
+dans `PublicAPI.Shipped.txt` : les ajouts arrivés après la coupe de la 2.0
+(clés d'accès et administration des comptes, ADR 0168 et 0169 ;
+`HackFileView.OpenOnTap`, ADR 0171 ; barre latérale des Paramètres, ADR 0170 ;
+le tableau ci-dessous) et les membres de records que l'analyseur d'API publique
+5.x suit désormais (`<Clone>$`, `Deconstruct`, `Equals`). Aucune ligne
+`*REMOVED*` : mineure d'après SemVer, une app 2.0 tourne sans recompilation.
 
 | Bibliothèque | Ajout | Décision |
 |---|---|---|

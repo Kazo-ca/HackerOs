@@ -21,6 +21,8 @@ HackerOs.Apps.TextEditor.TextEditorDocument.TextEditorDocument(Microsoft.Extensi
 HackerOs.Apps.TextEditor.TextEditorDocument.Title.get -> string!
 HackerOs.Apps.TextEditor.TextEditorFindEngine
 HackerOs.Apps.TextEditor.TextEditorFindOptions
+HackerOs.Apps.TextEditor.TextEditorFindOptions.Deconstruct(out bool MatchCase, out bool WholeWord) -> void
+HackerOs.Apps.TextEditor.TextEditorFindOptions.Equals(HackerOs.Apps.TextEditor.TextEditorFindOptions other) -> bool
 HackerOs.Apps.TextEditor.TextEditorFindOptions.MatchCase.get -> bool
 HackerOs.Apps.TextEditor.TextEditorFindOptions.MatchCase.init -> void
 HackerOs.Apps.TextEditor.TextEditorFindOptions.TextEditorFindOptions() -> void
@@ -37,11 +39,15 @@ HackerOs.Apps.TextEditor.TextEditorReplaceAllResult.Content.get -> string!
 HackerOs.Apps.TextEditor.TextEditorReplaceAllResult.Content.init -> void
 HackerOs.Apps.TextEditor.TextEditorReplaceAllResult.Count.get -> int
 HackerOs.Apps.TextEditor.TextEditorReplaceAllResult.Count.init -> void
+HackerOs.Apps.TextEditor.TextEditorReplaceAllResult.Deconstruct(out string! Content, out int Count) -> void
+HackerOs.Apps.TextEditor.TextEditorReplaceAllResult.Equals(HackerOs.Apps.TextEditor.TextEditorReplaceAllResult other) -> bool
 HackerOs.Apps.TextEditor.TextEditorReplaceAllResult.TextEditorReplaceAllResult() -> void
 HackerOs.Apps.TextEditor.TextEditorReplaceAllResult.TextEditorReplaceAllResult(string! Content, int Count) -> void
 HackerOs.Apps.TextEditor.TextEditorReplaceResult
 HackerOs.Apps.TextEditor.TextEditorReplaceResult.Content.get -> string!
 HackerOs.Apps.TextEditor.TextEditorReplaceResult.Content.init -> void
+HackerOs.Apps.TextEditor.TextEditorReplaceResult.Deconstruct(out string! Content, out bool Replaced, out int NextMatchStart) -> void
+HackerOs.Apps.TextEditor.TextEditorReplaceResult.Equals(HackerOs.Apps.TextEditor.TextEditorReplaceResult other) -> bool
 HackerOs.Apps.TextEditor.TextEditorReplaceResult.NextMatchStart.get -> int
 HackerOs.Apps.TextEditor.TextEditorReplaceResult.NextMatchStart.init -> void
 HackerOs.Apps.TextEditor.TextEditorReplaceResult.Replaced.get -> bool
@@ -56,15 +62,21 @@ HackerOs.Apps.TextEditor.TextEditorWindow.TextEditorWindow() -> void
 HackerOs.Apps.TextEditor._Imports
 HackerOs.Apps.TextEditor._Imports.Execute() -> void
 HackerOs.Apps.TextEditor._Imports._Imports() -> void
+override HackerOs.Apps.TextEditor.TextEditorApp.Assets.get -> System.Collections.Generic.IReadOnlyList<HackerOs.App.Abstractions.AssetManifest!>!
 override HackerOs.Apps.TextEditor.TextEditorApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
 override HackerOs.Apps.TextEditor.TextEditorApp.Description.get -> string!
 override HackerOs.Apps.TextEditor.TextEditorApp.EntryPoint.get -> System.Type!
 override HackerOs.Apps.TextEditor.TextEditorApp.FileHandlers.get -> System.Collections.Generic.IReadOnlyList<HackerOs.App.Abstractions.FileHandler!>!
+override HackerOs.Apps.TextEditor.TextEditorApp.Icons.get -> System.Collections.Generic.IReadOnlyList<string!>!
 override HackerOs.Apps.TextEditor.TextEditorApp.Id.get -> string!
 override HackerOs.Apps.TextEditor.TextEditorApp.Kind.get -> HackerOs.App.Abstractions.AppKind
+override HackerOs.Apps.TextEditor.TextEditorApp.MobileEntryPoint.get -> System.Type?
 override HackerOs.Apps.TextEditor.TextEditorApp.Name.get -> string!
 override HackerOs.Apps.TextEditor.TextEditorApp.PublisherId.get -> string!
 override HackerOs.Apps.TextEditor.TextEditorApp.Resources.get -> HackerOs.App.Abstractions.AppResourceProfileManifest!
+override HackerOs.Apps.TextEditor.TextEditorFindOptions.GetHashCode() -> int
+override HackerOs.Apps.TextEditor.TextEditorReplaceAllResult.GetHashCode() -> int
+override HackerOs.Apps.TextEditor.TextEditorReplaceResult.GetHashCode() -> int
 override HackerOs.Apps.TextEditor.TextEditorWindow.OnAppAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
 override HackerOs.Apps.TextEditor.TextEditorWindow.OnAppInitializedAsync() -> System.Threading.Tasks.Task!
 override HackerOs.Apps.TextEditor.TextEditorWindow.OnAppStopRequestedAsync(HackerOs.AppSdk.Diagnostics.HackStopRequestedEventArgs! e) -> System.Threading.Tasks.Task!
@@ -77,4 +89,16 @@ static HackerOs.Apps.TextEditor.TextEditorFindEngine.Next(int currentIndex, int 
 static HackerOs.Apps.TextEditor.TextEditorFindEngine.Previous(int currentIndex, int matchCount) -> int
 static HackerOs.Apps.TextEditor.TextEditorFindEngine.Replace(string! content, string! query, string! replacement, int selectionStart, int selectionLength, HackerOs.Apps.TextEditor.TextEditorFindOptions options = default(HackerOs.Apps.TextEditor.TextEditorFindOptions)) -> HackerOs.Apps.TextEditor.TextEditorReplaceResult
 static HackerOs.Apps.TextEditor.TextEditorFindEngine.ReplaceAll(string! content, string! query, string! replacement, HackerOs.Apps.TextEditor.TextEditorFindOptions options = default(HackerOs.Apps.TextEditor.TextEditorFindOptions)) -> HackerOs.Apps.TextEditor.TextEditorReplaceAllResult
+static HackerOs.Apps.TextEditor.TextEditorFindOptions.operator !=(HackerOs.Apps.TextEditor.TextEditorFindOptions left, HackerOs.Apps.TextEditor.TextEditorFindOptions right) -> bool
+static HackerOs.Apps.TextEditor.TextEditorFindOptions.operator ==(HackerOs.Apps.TextEditor.TextEditorFindOptions left, HackerOs.Apps.TextEditor.TextEditorFindOptions right) -> bool
+static HackerOs.Apps.TextEditor.TextEditorReplaceAllResult.operator !=(HackerOs.Apps.TextEditor.TextEditorReplaceAllResult left, HackerOs.Apps.TextEditor.TextEditorReplaceAllResult right) -> bool
+static HackerOs.Apps.TextEditor.TextEditorReplaceAllResult.operator ==(HackerOs.Apps.TextEditor.TextEditorReplaceAllResult left, HackerOs.Apps.TextEditor.TextEditorReplaceAllResult right) -> bool
+static HackerOs.Apps.TextEditor.TextEditorReplaceResult.operator !=(HackerOs.Apps.TextEditor.TextEditorReplaceResult left, HackerOs.Apps.TextEditor.TextEditorReplaceResult right) -> bool
+static HackerOs.Apps.TextEditor.TextEditorReplaceResult.operator ==(HackerOs.Apps.TextEditor.TextEditorReplaceResult left, HackerOs.Apps.TextEditor.TextEditorReplaceResult right) -> bool
+~override HackerOs.Apps.TextEditor.TextEditorFindOptions.Equals(object obj) -> bool
+~override HackerOs.Apps.TextEditor.TextEditorFindOptions.ToString() -> string
+~override HackerOs.Apps.TextEditor.TextEditorReplaceAllResult.Equals(object obj) -> bool
+~override HackerOs.Apps.TextEditor.TextEditorReplaceAllResult.ToString() -> string
+~override HackerOs.Apps.TextEditor.TextEditorReplaceResult.Equals(object obj) -> bool
+~override HackerOs.Apps.TextEditor.TextEditorReplaceResult.ToString() -> string
 ~override HackerOs.Apps.TextEditor.TextEditorWindow.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

@@ -58,13 +58,16 @@ HackerOs.Apps.ThemeEditor.ThemeTokenField.ValueChanged.set -> void
 HackerOs.Apps.ThemeEditor._Imports
 HackerOs.Apps.ThemeEditor._Imports.Execute() -> void
 HackerOs.Apps.ThemeEditor._Imports._Imports() -> void
+override HackerOs.Apps.ThemeEditor.ThemeEditorApp.Assets.get -> System.Collections.Generic.IReadOnlyList<HackerOs.App.Abstractions.AssetManifest!>!
 override HackerOs.Apps.ThemeEditor.ThemeEditorApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
 override HackerOs.Apps.ThemeEditor.ThemeEditorApp.Category.get -> string!
 override HackerOs.Apps.ThemeEditor.ThemeEditorApp.Description.get -> string!
 override HackerOs.Apps.ThemeEditor.ThemeEditorApp.EntryPoint.get -> System.Type!
 override HackerOs.Apps.ThemeEditor.ThemeEditorApp.FileHandlers.get -> System.Collections.Generic.IReadOnlyList<HackerOs.App.Abstractions.FileHandler!>!
+override HackerOs.Apps.ThemeEditor.ThemeEditorApp.Icons.get -> System.Collections.Generic.IReadOnlyList<string!>!
 override HackerOs.Apps.ThemeEditor.ThemeEditorApp.Id.get -> string!
 override HackerOs.Apps.ThemeEditor.ThemeEditorApp.Kind.get -> HackerOs.App.Abstractions.AppKind
+override HackerOs.Apps.ThemeEditor.ThemeEditorApp.MobileEntryPoint.get -> System.Type?
 override HackerOs.Apps.ThemeEditor.ThemeEditorApp.Name.get -> string!
 override HackerOs.Apps.ThemeEditor.ThemeEditorApp.PublisherId.get -> string!
 override HackerOs.Apps.ThemeEditor.ThemeEditorApp.Resources.get -> HackerOs.App.Abstractions.AppResourceProfileManifest!

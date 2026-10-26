@@ -6,7 +6,7 @@
 
 The guide for a repository that **uses** HackerOS without copying its code: any
 project that wants its own apps and its own OS host. **No game in this repository** ([ADR 0135](../dev/adr/0135-no-game-in-this-repository.md)). It starts from SDK 1.0, frozen by work item `v3/15`
-([ADR 0114](../dev/adr/0114-sdk-1-0-freeze.md)); the current version is **2.0.3**
+([ADR 0114](../dev/adr/0114-sdk-1-0-freeze.md)); the current version is **2.1.0**
 (desktop and context menu series, [ADR 0149](../dev/adr/0149-sdk-2-0-file-view-removal.md)
 and [ADR 0161](../dev/adr/0161-sdk-2-0-implementation-adjustments.md), see "Moving to 2.0";
 1.2 comes from the `exec` series, [ADR 0132](../dev/adr/0132-exec-series-sdk-1-2-and-merge-rules.md) §2,
@@ -36,7 +36,7 @@ nuget.org). In a HackerOS clone, on the desired version:
 ```bash
 git -C ../HackerSimulator checkout <tag ou branche>
 ../HackerSimulator/wasm2/HackerOs/build/pack-local.sh      # ou pack-local.ps1
-# -> ../HackerSimulator/wasm2/HackerOs/artifacts/local-nupkg/*.2.0.3.nupkg
+# -> ../HackerSimulator/wasm2/HackerOs/artifacts/local-nupkg/*.2.1.0.nupkg
 ```
 
 `--output <folder>` writes elsewhere (for example a shared folder of your
@@ -82,7 +82,7 @@ only this one:
 ```xml
 <Project>
   <PropertyGroup>
-    <HackerOsVersion>2.0.3</HackerOsVersion>
+    <HackerOsVersion>2.1.0</HackerOsVersion>
   </PropertyGroup>
 </Project>
 ```
@@ -90,7 +90,7 @@ only this one:
 ## 4. Creating the projects
 
 ```bash
-dotnet new install ../HackerSimulator/wasm2/HackerOs/artifacts/local-nupkg/HackerOs.Templates.2.0.3.nupkg
+dotnet new install ../HackerSimulator/wasm2/HackerOs/artifacts/local-nupkg/HackerOs.Templates.2.1.0.nupkg
 dotnet new hackeros-window  -n Contoso.Notes -o src/Contoso.Notes --appId com.contoso.notes --publisherId pub.contoso
 dotnet new hackeros-command -n Contoso.Hello -o src/Contoso.Hello --appId com.contoso.hello --publisherId pub.contoso
 dotnet new hackeros-service -n Contoso.Sync  -o src/Contoso.Sync  --appId com.contoso.sync  --publisherId pub.contoso
@@ -180,7 +180,7 @@ site; the service worker registers only outside `localhost`. See
 
 A major version: OS 2.0 refuses an app compiled against 1.x, and a host that
 references one no longer builds (`HOSAPP0021`). Every app must be
-recompiled against the 2.x packages (2.0.3 today; verified by `Tests/fixtures/sdk-compat`,
+recompiled against the 2.x packages (2.1.0 today; verified by `Tests/fixtures/sdk-compat`,
 where the 1.0.0 and 1.1.0 apps are refused and the 2.0.0 app runs).
 
 - **Only break**: the `HackerOs.AppSdk.FileView` package no longer exists. An

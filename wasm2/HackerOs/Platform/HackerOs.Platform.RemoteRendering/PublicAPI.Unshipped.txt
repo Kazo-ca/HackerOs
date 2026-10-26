@@ -1,9 +1,1 @@
 #nullable enable
-HackerOs.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.<Clone>$() -> HackerOs.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions!
-HackerOs.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.Equals(HackerOs.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions? other) -> bool
-HackerOs.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.RemoteWindowRenderingOptions() -> void
-override HackerOs.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.Equals(object? obj) -> bool
-override HackerOs.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.GetHashCode() -> int
-override HackerOs.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.ToString() -> string!
-static HackerOs.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.operator !=(HackerOs.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions? left, HackerOs.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions? right) -> bool
-static HackerOs.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.operator ==(HackerOs.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions? left, HackerOs.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions? right) -> bool

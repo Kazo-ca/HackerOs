@@ -1,3 +1,1 @@
 #nullable enable
-static HackerOs.Windowing.Core.SingleSurfacePresentationPolicy.SelectSurfaceStack(System.Collections.Generic.IReadOnlyList<HackerOs.Windowing.Abstractions.WindowRuntimeState!>! windows) -> System.Collections.Generic.IReadOnlyList<HackerOs.Windowing.Abstractions.WindowRuntimeState!>!
-static HackerOs.Windowing.Core.SingleSurfacePresentationPolicy.WindowsToMaximize(System.Collections.Generic.IReadOnlyList<HackerOs.Windowing.Abstractions.WindowRuntimeState!>! windows, HackerOs.Windowing.Abstractions.WindowId? primaryId) -> System.Collections.Generic.IReadOnlyList<HackerOs.Windowing.Abstractions.WindowId>!

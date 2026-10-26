@@ -43,11 +43,17 @@ HackerOs.Taskbar.Blazor.Taskbar.Taskbar() -> void
 HackerOs.Taskbar.Blazor.Taskbar.WindowSource.get -> HackerOs.Taskbar.Blazor.ITaskbarWindowSource?
 HackerOs.Taskbar.Blazor.Taskbar.WindowSource.set -> void
 HackerOs.Taskbar.Blazor.TaskbarOptions
+HackerOs.Taskbar.Blazor.TaskbarOptions.<Clone>$() -> HackerOs.Taskbar.Blazor.TaskbarOptions!
+HackerOs.Taskbar.Blazor.TaskbarOptions.Equals(HackerOs.Taskbar.Blazor.TaskbarOptions? other) -> bool
 HackerOs.Taskbar.Blazor.TaskbarOptions.LauncherLabel.get -> string?
 HackerOs.Taskbar.Blazor.TaskbarOptions.LauncherLabel.init -> void
 HackerOs.Taskbar.Blazor.TaskbarOptions.LauncherMark.get -> string!
 HackerOs.Taskbar.Blazor.TaskbarOptions.LauncherMark.init -> void
+HackerOs.Taskbar.Blazor.TaskbarOptions.TaskbarOptions() -> void
 HackerOs.Taskbar.Blazor.TaskbarWindowItem
+HackerOs.Taskbar.Blazor.TaskbarWindowItem.<Clone>$() -> HackerOs.Taskbar.Blazor.TaskbarWindowItem!
+HackerOs.Taskbar.Blazor.TaskbarWindowItem.Deconstruct(out HackerOs.Windowing.Abstractions.WindowId Id, out string! Title, out string? IconAssetPath, out bool IsFocused, out bool IsMinimized) -> void
+HackerOs.Taskbar.Blazor.TaskbarWindowItem.Equals(HackerOs.Taskbar.Blazor.TaskbarWindowItem? other) -> bool
 HackerOs.Taskbar.Blazor.TaskbarWindowItem.IconAssetPath.get -> string?
 HackerOs.Taskbar.Blazor.TaskbarWindowItem.IconAssetPath.init -> void
 HackerOs.Taskbar.Blazor.TaskbarWindowItem.Id.get -> HackerOs.Windowing.Abstractions.WindowId
@@ -63,4 +69,14 @@ HackerOs.Taskbar.Blazor._Imports
 HackerOs.Taskbar.Blazor._Imports.Execute() -> void
 HackerOs.Taskbar.Blazor._Imports._Imports() -> void
 override HackerOs.Taskbar.Blazor.Taskbar.OnInitialized() -> void
+override HackerOs.Taskbar.Blazor.TaskbarOptions.Equals(object? obj) -> bool
+override HackerOs.Taskbar.Blazor.TaskbarOptions.GetHashCode() -> int
+override HackerOs.Taskbar.Blazor.TaskbarOptions.ToString() -> string!
+override HackerOs.Taskbar.Blazor.TaskbarWindowItem.Equals(object? obj) -> bool
+override HackerOs.Taskbar.Blazor.TaskbarWindowItem.GetHashCode() -> int
+override HackerOs.Taskbar.Blazor.TaskbarWindowItem.ToString() -> string!
+static HackerOs.Taskbar.Blazor.TaskbarOptions.operator !=(HackerOs.Taskbar.Blazor.TaskbarOptions? left, HackerOs.Taskbar.Blazor.TaskbarOptions? right) -> bool
+static HackerOs.Taskbar.Blazor.TaskbarOptions.operator ==(HackerOs.Taskbar.Blazor.TaskbarOptions? left, HackerOs.Taskbar.Blazor.TaskbarOptions? right) -> bool
+static HackerOs.Taskbar.Blazor.TaskbarWindowItem.operator !=(HackerOs.Taskbar.Blazor.TaskbarWindowItem? left, HackerOs.Taskbar.Blazor.TaskbarWindowItem? right) -> bool
+static HackerOs.Taskbar.Blazor.TaskbarWindowItem.operator ==(HackerOs.Taskbar.Blazor.TaskbarWindowItem? left, HackerOs.Taskbar.Blazor.TaskbarWindowItem? right) -> bool
 ~override HackerOs.Taskbar.Blazor.Taskbar.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

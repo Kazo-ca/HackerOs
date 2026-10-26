@@ -44,6 +44,8 @@ HackerOs.Apps.FileExplorer.ExplorerFileView.ModeChanged.set -> void
 HackerOs.Apps.FileExplorer.ExplorerFileView.NavigateAsync(string! path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
 HackerOs.Apps.FileExplorer.ExplorerFileView.Navigated.get -> Microsoft.AspNetCore.Components.EventCallback<string!>
 HackerOs.Apps.FileExplorer.ExplorerFileView.Navigated.set -> void
+HackerOs.Apps.FileExplorer.ExplorerFileView.OpenOnTap.get -> bool
+HackerOs.Apps.FileExplorer.ExplorerFileView.OpenOnTap.set -> void
 HackerOs.Apps.FileExplorer.ExplorerFileView.Opening.get -> Microsoft.AspNetCore.Components.EventCallback<HackerOs.AppSdk.Blazor.Files.HackFileViewOpeningEventArgs!>
 HackerOs.Apps.FileExplorer.ExplorerFileView.Opening.set -> void
 HackerOs.Apps.FileExplorer.ExplorerFileView.RefreshAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
@@ -59,6 +61,9 @@ HackerOs.Apps.FileExplorer.ExplorerFileView.SelectionChanged.set -> void
 HackerOs.Apps.FileExplorer.ExplorerFileView.StateChanged -> System.EventHandler?
 HackerOs.Apps.FileExplorer.ExplorerFileView.WhenIdleAsync() -> System.Threading.Tasks.Task!
 HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext
+HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext.<Clone>$() -> HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext!
+HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext.Deconstruct(out HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuScope Scope, out HackerOs.Apps.FileExplorer.FileControl.FileViewItem? Item) -> void
+HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext.Equals(HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext? other) -> bool
 HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext.FileViewContextMenuContext(HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuScope Scope, HackerOs.Apps.FileExplorer.FileControl.FileViewItem? Item) -> void
 HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext.Item.get -> HackerOs.Apps.FileExplorer.FileControl.FileViewItem?
 HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext.Item.init -> void
@@ -70,6 +75,9 @@ HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuScope.Dire
 HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuScope.File = 2 -> HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuScope
 HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuScope.FileType = 3 -> HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuScope
 HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem
+HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem.<Clone>$() -> HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem!
+HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem.Deconstruct(out string! Id, out string! Label, out HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor? Icon, out System.Func<System.Threading.Tasks.Task!>! OnActivate, out bool IsSeparatorBefore, out bool IsDisabled) -> void
+HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem.Equals(HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem? other) -> bool
 HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem.FileViewMenuItem(string! Id, string! Label, HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor? Icon, System.Func<System.Threading.Tasks.Task!>! OnActivate, bool IsSeparatorBefore = false, bool IsDisabled = false) -> void
 HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem.Icon.get -> HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor?
 HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem.Icon.init -> void
@@ -140,6 +148,9 @@ HackerOs.Apps.FileExplorer.FileControl.Events.FileViewDeletingEventArgs
 HackerOs.Apps.FileExplorer.FileControl.Events.FileViewDeletingEventArgs.FileViewDeletingEventArgs(System.Collections.Generic.IReadOnlyList<HackerOs.Apps.FileExplorer.FileControl.FileViewItem!>! items) -> void
 HackerOs.Apps.FileExplorer.FileControl.Events.FileViewDeletingEventArgs.Items.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Apps.FileExplorer.FileControl.FileViewItem!>!
 HackerOs.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry
+HackerOs.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry.<Clone>$() -> HackerOs.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry!
+HackerOs.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry.Deconstruct(out HackerOs.App.Abstractions.VirtualPath Path, out bool IsDirectory) -> void
+HackerOs.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry.Equals(HackerOs.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry? other) -> bool
 HackerOs.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry.FileViewDraggedEntry(HackerOs.App.Abstractions.VirtualPath Path, bool IsDirectory) -> void
 HackerOs.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry.IsDirectory.get -> bool
 HackerOs.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry.IsDirectory.init -> void
@@ -269,6 +280,9 @@ HackerOs.Apps.FileExplorer.FileControl.FileViewBreadcrumb.Owner.set -> void
 HackerOs.Apps.FileExplorer.FileControl.FileViewBreadcrumb.RootLabel.get -> string!
 HackerOs.Apps.FileExplorer.FileControl.FileViewBreadcrumb.RootLabel.set -> void
 HackerOs.Apps.FileExplorer.FileControl.FileViewColumn
+HackerOs.Apps.FileExplorer.FileControl.FileViewColumn.<Clone>$() -> HackerOs.Apps.FileExplorer.FileControl.FileViewColumn!
+HackerOs.Apps.FileExplorer.FileControl.FileViewColumn.Deconstruct(out string! Key, out string! Header, out System.Func<HackerOs.Apps.FileExplorer.FileControl.FileViewItem!, System.IComparable!>! SortAccessor, out double? Width) -> void
+HackerOs.Apps.FileExplorer.FileControl.FileViewColumn.Equals(HackerOs.Apps.FileExplorer.FileControl.FileViewColumn? other) -> bool
 HackerOs.Apps.FileExplorer.FileControl.FileViewColumn.FileViewColumn(string! Key, string! Header, System.Func<HackerOs.Apps.FileExplorer.FileControl.FileViewItem!, System.IComparable!>! SortAccessor, double? Width = null) -> void
 HackerOs.Apps.FileExplorer.FileControl.FileViewColumn.Header.get -> string!
 HackerOs.Apps.FileExplorer.FileControl.FileViewColumn.Header.init -> void
@@ -359,6 +373,8 @@ HackerOs.Apps.FileExplorer.FileControl.Icons.DefaultShellIconProvider
 HackerOs.Apps.FileExplorer.FileControl.Icons.DefaultShellIconProvider.DefaultShellIconProvider() -> void
 HackerOs.Apps.FileExplorer.FileControl.Icons.DefaultShellIconProvider.Resolve(HackerOs.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest request) -> HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor!
 HackerOs.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest
+HackerOs.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest.Deconstruct(out HackerOs.App.Abstractions.VirtualPath Path, out bool IsDirectory, out string? Extension, out string? MediaType) -> void
+HackerOs.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest.Equals(HackerOs.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest other) -> bool
 HackerOs.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest.Extension.get -> string?
 HackerOs.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest.Extension.init -> void
 HackerOs.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest.FileViewIconRequest() -> void
@@ -378,6 +394,9 @@ HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIcon.ShellIcon() -> void
 HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIcon.Size.get -> int
 HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIcon.Size.set -> void
 HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor
+HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor.<Clone>$() -> HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor!
+HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor.Deconstruct(out HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconKind Kind, out string? LibraryOrPath, out string? Name) -> void
+HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor.Equals(HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor? other) -> bool
 HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor.Kind.get -> HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconKind
 HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor.Kind.init -> void
 HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor.LibraryOrPath.get -> string?
@@ -402,6 +421,11 @@ HackerOs.Apps.FileExplorer.FileControl._Imports.Execute() -> void
 HackerOs.Apps.FileExplorer.FileControl._Imports._Imports() -> void
 HackerOs.Apps.FileExplorer.FileExplorerApp
 HackerOs.Apps.FileExplorer.FileExplorerApp.FileExplorerApp() -> void
+HackerOs.Apps.FileExplorer.FileExplorerMobileWindow
+HackerOs.Apps.FileExplorer.FileExplorerMobileWindow.CanNavigateBack.get -> bool
+HackerOs.Apps.FileExplorer.FileExplorerMobileWindow.CanNavigateBackChanged -> System.Action?
+HackerOs.Apps.FileExplorer.FileExplorerMobileWindow.FileExplorerMobileWindow() -> void
+HackerOs.Apps.FileExplorer.FileExplorerMobileWindow.NavigateBackAsync(HackerOs.AppSdk.Blazor.AppBackRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Blazor.AppBackResult!>
 HackerOs.Apps.FileExplorer.FileExplorerState
 HackerOs.Apps.FileExplorer.FileExplorerState.CanNavigateBack.get -> bool
 HackerOs.Apps.FileExplorer.FileExplorerState.CanNavigateForward.get -> bool
@@ -429,31 +453,63 @@ HackerOs.Apps.FileExplorer.TrashView.TrashView() -> void
 HackerOs.Apps.FileExplorer._Imports
 HackerOs.Apps.FileExplorer._Imports.Execute() -> void
 HackerOs.Apps.FileExplorer._Imports._Imports() -> void
+override HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext.Equals(object? obj) -> bool
+override HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext.GetHashCode() -> int
+override HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext.ToString() -> string!
+override HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem.Equals(object? obj) -> bool
+override HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem.GetHashCode() -> int
+override HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem.ToString() -> string!
+override HackerOs.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry.Equals(object? obj) -> bool
+override HackerOs.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry.GetHashCode() -> int
+override HackerOs.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry.ToString() -> string!
 override HackerOs.Apps.FileExplorer.FileControl.FileView.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
 override HackerOs.Apps.FileExplorer.FileControl.FileView.OnParametersSetAsync() -> System.Threading.Tasks.Task!
 override HackerOs.Apps.FileExplorer.FileControl.FileViewBreadcrumb.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
 override HackerOs.Apps.FileExplorer.FileControl.FileViewBreadcrumb.OnParametersSet() -> void
+override HackerOs.Apps.FileExplorer.FileControl.FileViewColumn.Equals(object? obj) -> bool
+override HackerOs.Apps.FileExplorer.FileControl.FileViewColumn.GetHashCode() -> int
+override HackerOs.Apps.FileExplorer.FileControl.FileViewColumn.ToString() -> string!
 override HackerOs.Apps.FileExplorer.FileControl.FileViewDesktop.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
 override HackerOs.Apps.FileExplorer.FileControl.FileViewDesktop.OnParametersSet() -> void
 override HackerOs.Apps.FileExplorer.FileControl.FileViewDropZone.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+override HackerOs.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest.GetHashCode() -> int
+override HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor.Equals(object? obj) -> bool
+override HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor.GetHashCode() -> int
+override HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor.ToString() -> string!
+override HackerOs.Apps.FileExplorer.FileExplorerApp.Assets.get -> System.Collections.Generic.IReadOnlyList<HackerOs.App.Abstractions.AssetManifest!>!
 override HackerOs.Apps.FileExplorer.FileExplorerApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
 override HackerOs.Apps.FileExplorer.FileExplorerApp.Components.get -> System.Collections.Generic.IReadOnlyList<HackerOs.App.Abstractions.AppComponent!>!
 override HackerOs.Apps.FileExplorer.FileExplorerApp.Description.get -> string!
 override HackerOs.Apps.FileExplorer.FileExplorerApp.EntryPoint.get -> System.Type!
 override HackerOs.Apps.FileExplorer.FileExplorerApp.FileHandlers.get -> System.Collections.Generic.IReadOnlyList<HackerOs.App.Abstractions.FileHandler!>!
+override HackerOs.Apps.FileExplorer.FileExplorerApp.Icons.get -> System.Collections.Generic.IReadOnlyList<string!>!
 override HackerOs.Apps.FileExplorer.FileExplorerApp.Id.get -> string!
 override HackerOs.Apps.FileExplorer.FileExplorerApp.Intents.get -> System.Collections.Generic.IReadOnlyList<HackerOs.App.Abstractions.AppIntentDeclarationManifest!>!
 override HackerOs.Apps.FileExplorer.FileExplorerApp.Kind.get -> HackerOs.App.Abstractions.AppKind
+override HackerOs.Apps.FileExplorer.FileExplorerApp.MobileEntryPoint.get -> System.Type?
 override HackerOs.Apps.FileExplorer.FileExplorerApp.Name.get -> string!
 override HackerOs.Apps.FileExplorer.FileExplorerApp.PublisherId.get -> string!
 override HackerOs.Apps.FileExplorer.FileExplorerApp.Resources.get -> HackerOs.App.Abstractions.AppResourceProfileManifest!
+override HackerOs.Apps.FileExplorer.FileExplorerMobileWindow.OnAppAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
 override HackerOs.Apps.FileExplorer.FileExplorerWindow.OnAppAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
 override HackerOs.Apps.FileExplorer.FileExplorerWindow.OnAppInitialized() -> void
 override HackerOs.Apps.FileExplorer.FileExplorerWindow.OnAppInitializedAsync() -> System.Threading.Tasks.Task!
 override HackerOs.Apps.FileExplorer.FileExplorerWindow.OnAppStopRequestedAsync(HackerOs.AppSdk.Diagnostics.HackStopRequestedEventArgs! e) -> System.Threading.Tasks.Task!
 override HackerOs.Apps.FileExplorer.TrashView.OnInitializedAsync() -> System.Threading.Tasks.Task!
+static HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext.operator !=(HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext? left, HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext? right) -> bool
+static HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext.operator ==(HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext? left, HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext? right) -> bool
+static HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem.operator !=(HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem? left, HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem? right) -> bool
+static HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem.operator ==(HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem? left, HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem? right) -> bool
+static HackerOs.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry.operator !=(HackerOs.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry? left, HackerOs.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry? right) -> bool
+static HackerOs.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry.operator ==(HackerOs.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry? left, HackerOs.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry? right) -> bool
+static HackerOs.Apps.FileExplorer.FileControl.FileViewColumn.operator !=(HackerOs.Apps.FileExplorer.FileControl.FileViewColumn? left, HackerOs.Apps.FileExplorer.FileControl.FileViewColumn? right) -> bool
+static HackerOs.Apps.FileExplorer.FileControl.FileViewColumn.operator ==(HackerOs.Apps.FileExplorer.FileControl.FileViewColumn? left, HackerOs.Apps.FileExplorer.FileControl.FileViewColumn? right) -> bool
+static HackerOs.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest.operator !=(HackerOs.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest left, HackerOs.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest right) -> bool
+static HackerOs.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest.operator ==(HackerOs.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest left, HackerOs.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest right) -> bool
 static HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor.Png(string! assetPathOrUri) -> HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor!
 static HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor.Vector(HackerOs.AppSdk.Icons.IconLibrary library, string! name) -> HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor!
+static HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor.operator !=(HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor? left, HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor? right) -> bool
+static HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor.operator ==(HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor? left, HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor? right) -> bool
 static HackerOs.Apps.FileExplorer.FileExplorerApp.RegisterFileContextMenu(HackerOs.AppSdk.Blazor.Files.RegisterFileContextMenuContext! context) -> void
 ~override HackerOs.Apps.FileExplorer.FileControl.FileView.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.Apps.FileExplorer.FileControl.FileViewBreadcrumb.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
@@ -464,7 +520,10 @@ static HackerOs.Apps.FileExplorer.FileExplorerApp.RegisterFileContextMenu(Hacker
 ~override HackerOs.Apps.FileExplorer.FileControl.FileViewIcons.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.Apps.FileExplorer.FileControl.FileViewTree.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.Apps.FileExplorer.FileControl.FileViewTreeNode.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override HackerOs.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest.Equals(object obj) -> bool
+~override HackerOs.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest.ToString() -> string
 ~override HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIcon.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconLabel.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override HackerOs.Apps.FileExplorer.FileExplorerMobileWindow.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.Apps.FileExplorer.FileExplorerWindow.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.Apps.FileExplorer.TrashView.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
