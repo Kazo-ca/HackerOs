@@ -488,6 +488,9 @@ public partial class FileView : IAsyncDisposable
             ? new HashSet<string>(_selection.Select(item => item.FileName), StringComparer.Ordinal)
             : [];
 
+        // An item being renamed in place survives a reload of the same folder (the watch refreshes
+        // right after "New folder" created it): the views key the typed name by the item (ADR 0175).
+        FileViewItem? renaming = _items.Find(item => item.IsRenaming);
         _items.Clear();
         _selection.Clear();
         _currentDirectoryRevision = snapshot.Revision;
@@ -495,10 +498,15 @@ public partial class FileView : IAsyncDisposable
         foreach (FileSystemDirectoryItem entry in snapshot.Entries)
         {
             VirtualPath itemPath = CombineChild(snapshot.Path, entry.Name.Value);
-            FileViewItem item = new(itemPath, entry.Name.Value, entry.Metadata.Kind == FileSystemEntryKind.Directory, entry.Metadata)
-            {
-                Owner = this
-            };
+            FileViewItem item = renaming is not null
+                && renaming.FullPath == itemPath
+                && renaming.Metadata.Revision == entry.Metadata.Revision
+                ? renaming
+                : new(itemPath, entry.Name.Value, entry.Metadata.Kind == FileSystemEntryKind.Directory, entry.Metadata)
+                {
+                    Owner = this
+                };
+            item.IsSelected = false;
             if (Filter is not null && !Filter(item))
             {
                 continue;
@@ -1276,9 +1284,20 @@ public partial class FileView : IAsyncDisposable
         _jsModule ??= await JavaScript.InvokeAsync<IJSObjectReference>(
             "import", "./_content/HackerOs.Apps.FileExplorer/FileControl/FileView.razor.js");
 
+    /// <summary>
+    /// Gets whether the first folder has been read: until then <see cref="CurrentDirectory"/> is not
+    /// set, and a folder created would land at the root (a toolbar clicked while it loads, ADR 0175).
+    /// </summary>
+    internal bool HasListing => _lastSnapshot is not null;
+
     /// <summary>Creates a new empty folder in the current directory via the control's own context menu.</summary>
     internal async Task CreateFolderAsync(string name)
     {
+        if (!HasListing)
+        {
+            return;
+        }
+
         VirtualPath path = CombineChild(CurrentDirectory, name);
         FileViewCreatingEventArgs creatingArgs = new(CurrentDirectory, name, FileSystemEntryKind.Directory);
         Creating?.Invoke(this, creatingArgs);

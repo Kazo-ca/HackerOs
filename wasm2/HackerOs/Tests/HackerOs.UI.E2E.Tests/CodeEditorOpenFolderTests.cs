@@ -55,6 +55,7 @@ public sealed class CodeEditorOpenFolderTests(ITestOutputHelper output)
             ILocator rename = dialog.Locator("input.file-view-rename-input");
             await rename.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 15000 });
             await rename.FillAsync(ProjectName);
+            await page.ScreenshotAsync(new() { Path = Path.Combine(solutionDirectory, "Tests", "TestResults", "open-folder", $"{(mobile ? "mobile" : "desktop")}.png") });
             await rename.PressAsync("Enter");
             await rename.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Hidden, Timeout = 15000 });
             output.WriteLine("[test] New folder created and renamed in the dialog.");
