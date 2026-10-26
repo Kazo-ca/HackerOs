@@ -1,17 +1,1 @@
 #nullable enable
-HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.<Clone>$() -> HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions!
-HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.Equals(HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions? other) -> bool
-HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.VirtualKeyboardOptions() -> void
-HackerOs.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.<Clone>$() -> HackerOs.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent!
-HackerOs.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.Deconstruct(out HackerOs.AppSdk.VirtualKeyboard.VirtualKey Key, out string? Text, out bool Control, out bool Alt, out bool Shift) -> void
-HackerOs.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.Equals(HackerOs.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent? other) -> bool
-override HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.Equals(object? obj) -> bool
-override HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.GetHashCode() -> int
-override HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.ToString() -> string!
-override HackerOs.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.Equals(object? obj) -> bool
-override HackerOs.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.GetHashCode() -> int
-override HackerOs.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.ToString() -> string!
-static HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.operator !=(HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions? left, HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions? right) -> bool
-static HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.operator ==(HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions? left, HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions? right) -> bool
-static HackerOs.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.operator !=(HackerOs.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent? left, HackerOs.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent? right) -> bool
-static HackerOs.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.operator ==(HackerOs.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent? left, HackerOs.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent? right) -> bool

@@ -10,10 +10,18 @@ HackerOs.Platform.RemoteRendering.Host.RemoteWindowHost.RemoteWindowHost() -> vo
 HackerOs.Platform.RemoteRendering.Host.RemoteWindowHost.Window.get -> HackerOs.Windowing.Abstractions.WindowRuntimeState!
 HackerOs.Platform.RemoteRendering.Host.RemoteWindowHost.Window.set -> void
 HackerOs.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions
+HackerOs.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.<Clone>$() -> HackerOs.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions!
 HackerOs.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.Apps.get -> System.Collections.Generic.IReadOnlyList<string!>!
 HackerOs.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.Apps.init -> void
 HackerOs.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.Enabled.get -> bool
 HackerOs.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.Enabled.init -> void
+HackerOs.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.Equals(HackerOs.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions? other) -> bool
+HackerOs.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.RemoteWindowRenderingOptions() -> void
 HackerOs.Platform.RemoteRendering.RemoteWindowRenderingServiceCollectionExtensions
 const HackerOs.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.SectionName = "HackerOs:RemoteWindowRendering" -> string!
+override HackerOs.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.Equals(object? obj) -> bool
+override HackerOs.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.GetHashCode() -> int
+override HackerOs.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.ToString() -> string!
+static HackerOs.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.operator !=(HackerOs.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions? left, HackerOs.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions? right) -> bool
+static HackerOs.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.operator ==(HackerOs.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions? left, HackerOs.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions? right) -> bool
 static HackerOs.Platform.RemoteRendering.RemoteWindowRenderingServiceCollectionExtensions.AddHackerOsRemoteWindowRendering(this Microsoft.Extensions.DependencyInjection.IServiceCollection! services, HackerOs.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions! options) -> Microsoft.Extensions.DependencyInjection.IServiceCollection!

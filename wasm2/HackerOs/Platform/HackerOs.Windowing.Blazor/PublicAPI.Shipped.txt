@@ -62,6 +62,7 @@ HackerOs.Windowing.Blazor.WindowChrome.OnToggleMaximize.set -> void
 HackerOs.Windowing.Blazor.WindowChrome.OnWindowMenu.get -> Microsoft.AspNetCore.Components.EventCallback<HackerOs.Windowing.Blazor.WindowMenuRequest!>
 HackerOs.Windowing.Blazor.WindowChrome.OnWindowMenu.set -> void
 HackerOs.Windowing.Blazor.WindowChrome.ReportGestureCompletedAsync(string! mode) -> System.Threading.Tasks.Task!
+HackerOs.Windowing.Blazor.WindowChrome.ReportGestureStartedAsync() -> System.Threading.Tasks.Task!
 HackerOs.Windowing.Blazor.WindowChrome.ReportPointerDeltaAsync(string! mode, string? edge, double deltaX, double deltaY, double originX, double originY, double originWidth, double originHeight) -> System.Threading.Tasks.Task!
 HackerOs.Windowing.Blazor.WindowChrome.TitleId.get -> string!
 HackerOs.Windowing.Blazor.WindowChrome.TitleId.set -> void
@@ -96,10 +97,13 @@ HackerOs.Windowing.Blazor.WindowHost.Window.get -> HackerOs.Windowing.Abstractio
 HackerOs.Windowing.Blazor.WindowHost.Window.set -> void
 HackerOs.Windowing.Blazor.WindowHost.WindowHost() -> void
 HackerOs.Windowing.Blazor.WindowMenuRequest
+HackerOs.Windowing.Blazor.WindowMenuRequest.<Clone>$() -> HackerOs.Windowing.Blazor.WindowMenuRequest!
 HackerOs.Windowing.Blazor.WindowMenuRequest.ClientX.get -> double?
 HackerOs.Windowing.Blazor.WindowMenuRequest.ClientX.init -> void
 HackerOs.Windowing.Blazor.WindowMenuRequest.ClientY.get -> double?
 HackerOs.Windowing.Blazor.WindowMenuRequest.ClientY.init -> void
+HackerOs.Windowing.Blazor.WindowMenuRequest.Deconstruct(out HackerOs.Windowing.Abstractions.WindowId WindowId, out double? ClientX, out double? ClientY) -> void
+HackerOs.Windowing.Blazor.WindowMenuRequest.Equals(HackerOs.Windowing.Blazor.WindowMenuRequest? other) -> bool
 HackerOs.Windowing.Blazor.WindowMenuRequest.WindowId.get -> HackerOs.Windowing.Abstractions.WindowId
 HackerOs.Windowing.Blazor.WindowMenuRequest.WindowId.init -> void
 HackerOs.Windowing.Blazor.WindowMenuRequest.WindowMenuRequest(HackerOs.Windowing.Abstractions.WindowId WindowId, double? ClientX, double? ClientY) -> void
@@ -117,7 +121,12 @@ override HackerOs.Windowing.Blazor.DesktopArea.OnAfterRenderAsync(bool firstRend
 override HackerOs.Windowing.Blazor.SingleSurfaceArea.OnParametersSetAsync() -> System.Threading.Tasks.Task!
 override HackerOs.Windowing.Blazor.WindowChrome.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
 override HackerOs.Windowing.Blazor.WindowHost.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+override HackerOs.Windowing.Blazor.WindowMenuRequest.Equals(object? obj) -> bool
+override HackerOs.Windowing.Blazor.WindowMenuRequest.GetHashCode() -> int
+override HackerOs.Windowing.Blazor.WindowMenuRequest.ToString() -> string!
 override HackerOs.Windowing.Blazor.WindowSurface.OnParametersSet() -> void
+static HackerOs.Windowing.Blazor.WindowMenuRequest.operator !=(HackerOs.Windowing.Blazor.WindowMenuRequest? left, HackerOs.Windowing.Blazor.WindowMenuRequest? right) -> bool
+static HackerOs.Windowing.Blazor.WindowMenuRequest.operator ==(HackerOs.Windowing.Blazor.WindowMenuRequest? left, HackerOs.Windowing.Blazor.WindowMenuRequest? right) -> bool
 ~override HackerOs.Windowing.Blazor.DesktopArea.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.Windowing.Blazor.SingleSurfaceArea.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.Windowing.Blazor.WindowChrome.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

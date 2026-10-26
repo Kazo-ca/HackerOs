@@ -173,5 +173,6 @@ next free number is given in
 | [`0170-settings-side-menu.md`](0170-settings-side-menu.md) | ADR 0170: collapsible side menu in Settings |
 | [`0171-mobile-file-explorer-and-full-screen-dialogs.md`](0171-mobile-file-explorer-and-full-screen-dialogs.md) | ADR 0171: per-platform entry point, mobile file explorer, full-screen dialogs on mobile, Start menu alignment |
 | [`0173-automatic-releases-from-the-version-file.md`](0173-automatic-releases-from-the-version-file.md) | ADR 0173: automatic release (tag, GitHub Release, nuget.org) from the version file |
+| [`0174-announce-a-new-version-to-open-sessions.md`](0174-announce-a-new-version-to-open-sessions.md) | ADR 0174: `version.json` read every 5 minutes to announce a new version to open sessions |
 
 Parent folder index: [`../README.md`](../README.md).

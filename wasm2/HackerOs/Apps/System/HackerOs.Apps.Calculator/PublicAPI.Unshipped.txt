@@ -1,4 +1,1 @@
 #nullable enable
-override HackerOs.Apps.Calculator.CalculatorApp.Icons.get -> System.Collections.Generic.IReadOnlyList<string!>!
-override HackerOs.Apps.Calculator.CalculatorApp.Assets.get -> System.Collections.Generic.IReadOnlyList<HackerOs.App.Abstractions.AssetManifest!>!
-override HackerOs.Apps.Calculator.CalculatorApp.MobileEntryPoint.get -> System.Type?

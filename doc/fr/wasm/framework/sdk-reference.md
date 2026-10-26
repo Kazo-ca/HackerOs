@@ -28,7 +28,7 @@ Conventions de l'API :
 ## Bibliothèques
 
 Toutes sont publiées en paquets NuGet locaux du même nom, à la version de
-`build/Versions.props` (`2.0.3` aujourd'hui, publiée le 2026-10-24 ; la majeure 2 date de la fin de la série du bureau, ADR 0149 et 0161 ; `1.2.0` à la fin de la série `exec`, ADR 0132 §2 ; `1.1.0` pour la série v3.1, ADR 0117 §5 ; `1.0.0` au gel du SDK, ADR 0114) ; un autre
+`build/Versions.props` (`2.1.0` aujourd'hui, publiée le 2026-10-26 par le workflow `Release HackerOS`, ADR 0173 ; la majeure 2 date de la fin de la série du bureau, ADR 0149 et 0161 ; `1.2.0` à la fin de la série `exec`, ADR 0132 §2 ; `1.1.0` pour la série v3.1, ADR 0117 §5 ; `1.0.0` au gel du SDK, ADR 0114) ; un autre
 dépôt les consomme comme le décrit [`building-on-hackeros.md`](building-on-hackeros.md).
 La promesse de compatibilité SemVer couvre les bibliothèques de cette page et
 `HackerOs.Theming.Blazor`, pas la plateforme (ADR 0114 §2).
@@ -68,7 +68,7 @@ mineure ; ceux qui sont connus sont listés dans [`sdk-packages.md`](sdk-package
 | `AppSettingsSchemaManifest(SchemaVersion, Fields)`, `AppSettingFieldManifest(Key, ValueType, DefaultValue, Scope, Sensitivity, AllowedValues, Group)` | Schéma des paramètres ; `AppSettingValueType` : `String`, `Integer`, `Boolean`, `Enum`. |
 | `AppResourceProfileManifest` | Poids CPU, mémoire, disque et réseau simulés (`None` par défaut). |
 | `AppDefinitionMapper.ToManifest(definition)` | Définition → `AppManifest` (utile dans les tests). |
-| `HackerOsSdk` | `Version` (version du SDK chargé, par exemple `2.0.3`), `SemanticVersion`, `IsCompatible(range)` (ADR 0098 §3). `AppDefinition.SdkCompatibility` déclare une plage ; par défaut, la version contre laquelle l'app est compilée est le minimum. |
+| `HackerOsSdk` | `Version` (version du SDK chargé, par exemple `2.1.0`), `SemanticVersion`, `IsCompatible(range)` (ADR 0098 §3). `AppDefinition.SdkCompatibility` déclare une plage ; par défaut, la version contre laquelle l'app est compilée est le minimum. |
 | `AppManifest` | Manifeste validé, lu par l'OS ; `AppContext.Manifest` à l'exécution. `OomScoreAdj` (champ `oomScoreAdj`, SDK 1.2, ADR 0126 §4) : valeur de `AppDefinition.OomScoreAdjust`. |
 | `AppCapabilities` | Catalogue des capacités (voir ci-dessous) ; `Describe`, `IsDangerous`, `GetRisk`, `IsKnown`, `RequiresWindowKind`, `All`. |
 | `VirtualPath` | Chemin absolu canonique (`Parse`, `Value`). |

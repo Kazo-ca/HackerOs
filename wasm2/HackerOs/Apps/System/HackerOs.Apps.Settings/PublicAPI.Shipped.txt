@@ -28,6 +28,10 @@ HackerOs.Apps.Settings.MemoryPanel.DisposeAsync() -> System.Threading.Tasks.Valu
 HackerOs.Apps.Settings.MemoryPanel.MemoryPanel() -> void
 HackerOs.Apps.Settings.OsComponentsPanel
 HackerOs.Apps.Settings.OsComponentsPanel.OsComponentsPanel() -> void
+HackerOs.Apps.Settings.PasskeysPanel
+HackerOs.Apps.Settings.PasskeysPanel.Changed.get -> Microsoft.AspNetCore.Components.EventCallback
+HackerOs.Apps.Settings.PasskeysPanel.Changed.set -> void
+HackerOs.Apps.Settings.PasskeysPanel.PasskeysPanel() -> void
 HackerOs.Apps.Settings.ServerRelayPolicyPanel
 HackerOs.Apps.Settings.ServerRelayPolicyPanel.ServerRelayPolicyPanel() -> void
 HackerOs.Apps.Settings.SettingsApp
@@ -41,16 +45,21 @@ HackerOs.Apps.Settings._Imports
 HackerOs.Apps.Settings._Imports.Execute() -> void
 HackerOs.Apps.Settings._Imports._Imports() -> void
 override HackerOs.Apps.Settings.InstalledAppsPanel.OnInitializedAsync() -> System.Threading.Tasks.Task!
+override HackerOs.Apps.Settings.PasskeysPanel.OnInitializedAsync() -> System.Threading.Tasks.Task!
+override HackerOs.Apps.Settings.SettingsApp.Assets.get -> System.Collections.Generic.IReadOnlyList<HackerOs.App.Abstractions.AssetManifest!>!
 override HackerOs.Apps.Settings.SettingsApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
 override HackerOs.Apps.Settings.SettingsApp.Category.get -> string!
 override HackerOs.Apps.Settings.SettingsApp.Description.get -> string!
 override HackerOs.Apps.Settings.SettingsApp.EntryPoint.get -> System.Type!
+override HackerOs.Apps.Settings.SettingsApp.Icons.get -> System.Collections.Generic.IReadOnlyList<string!>!
 override HackerOs.Apps.Settings.SettingsApp.Id.get -> string!
 override HackerOs.Apps.Settings.SettingsApp.Kind.get -> HackerOs.App.Abstractions.AppKind
+override HackerOs.Apps.Settings.SettingsApp.MobileEntryPoint.get -> System.Type?
 override HackerOs.Apps.Settings.SettingsApp.Name.get -> string!
 override HackerOs.Apps.Settings.SettingsApp.PublisherId.get -> string!
 override HackerOs.Apps.Settings.SettingsApp.Resources.get -> HackerOs.App.Abstractions.AppResourceProfileManifest!
 override HackerOs.Apps.Settings.SettingsApp.SingleInstancePerUser.get -> bool
+override HackerOs.Apps.Settings.SettingsWindow.OnAppAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
 override HackerOs.Apps.Settings.SettingsWindow.OnAppInitializedAsync() -> System.Threading.Tasks.Task!
 override HackerOs.Apps.Settings.SettingsWindow.OnAppStopRequestedAsync(HackerOs.AppSdk.Diagnostics.HackStopRequestedEventArgs! e) -> System.Threading.Tasks.Task!
 override HackerOs.Apps.Settings.SettingsWindow.OnIntentReceivedAsync(HackerOs.App.Abstractions.AppIntentDelivery! intent) -> System.Threading.Tasks.Task!
@@ -58,5 +67,6 @@ override HackerOs.Apps.Settings.SettingsWindow.OnWindowActivatedAsync() -> Syste
 override HackerOs.Apps.Settings.UsersPanel.OnInitializedAsync() -> System.Threading.Tasks.Task!
 ~override HackerOs.Apps.Settings.BackupPanel.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.Apps.Settings.InstalledAppsPanel.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override HackerOs.Apps.Settings.PasskeysPanel.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.Apps.Settings.SettingsWindow.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.Apps.Settings.UsersPanel.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

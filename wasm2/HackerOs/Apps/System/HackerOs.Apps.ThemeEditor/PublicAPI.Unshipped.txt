@@ -1,4 +1,1 @@
 #nullable enable
-override HackerOs.Apps.ThemeEditor.ThemeEditorApp.Icons.get -> System.Collections.Generic.IReadOnlyList<string!>!
-override HackerOs.Apps.ThemeEditor.ThemeEditorApp.Assets.get -> System.Collections.Generic.IReadOnlyList<HackerOs.App.Abstractions.AssetManifest!>!
-override HackerOs.Apps.ThemeEditor.ThemeEditorApp.MobileEntryPoint.get -> System.Type?

@@ -1,6 +1,9 @@
 #nullable enable
 HackerOs.Server.Contracts.Admin.AccountDataExportRequest
+HackerOs.Server.Contracts.Admin.AccountDataExportRequest.<Clone>$() -> HackerOs.Server.Contracts.Admin.AccountDataExportRequest!
 HackerOs.Server.Contracts.Admin.AccountDataExportRequest.AccountDataExportRequest(System.Collections.Generic.IReadOnlyList<string!>? IncludeDomains, bool IncludeFileContent, bool IncludeAuditLog, string! Format) -> void
+HackerOs.Server.Contracts.Admin.AccountDataExportRequest.Deconstruct(out System.Collections.Generic.IReadOnlyList<string!>? IncludeDomains, out bool IncludeFileContent, out bool IncludeAuditLog, out string! Format) -> void
+HackerOs.Server.Contracts.Admin.AccountDataExportRequest.Equals(HackerOs.Server.Contracts.Admin.AccountDataExportRequest? other) -> bool
 HackerOs.Server.Contracts.Admin.AccountDataExportRequest.Format.get -> string!
 HackerOs.Server.Contracts.Admin.AccountDataExportRequest.Format.init -> void
 HackerOs.Server.Contracts.Admin.AccountDataExportRequest.IncludeAuditLog.get -> bool
@@ -10,9 +13,12 @@ HackerOs.Server.Contracts.Admin.AccountDataExportRequest.IncludeDomains.init -> 
 HackerOs.Server.Contracts.Admin.AccountDataExportRequest.IncludeFileContent.get -> bool
 HackerOs.Server.Contracts.Admin.AccountDataExportRequest.IncludeFileContent.init -> void
 HackerOs.Server.Contracts.Admin.AccountDataExportStatus
+HackerOs.Server.Contracts.Admin.AccountDataExportStatus.<Clone>$() -> HackerOs.Server.Contracts.Admin.AccountDataExportStatus!
 HackerOs.Server.Contracts.Admin.AccountDataExportStatus.AccountDataExportStatus(System.Guid JobId, string! Status, string? DownloadUrl, System.DateTimeOffset? ExpiresUtc, string? FailureReason) -> void
+HackerOs.Server.Contracts.Admin.AccountDataExportStatus.Deconstruct(out System.Guid JobId, out string! Status, out string? DownloadUrl, out System.DateTimeOffset? ExpiresUtc, out string? FailureReason) -> void
 HackerOs.Server.Contracts.Admin.AccountDataExportStatus.DownloadUrl.get -> string?
 HackerOs.Server.Contracts.Admin.AccountDataExportStatus.DownloadUrl.init -> void
+HackerOs.Server.Contracts.Admin.AccountDataExportStatus.Equals(HackerOs.Server.Contracts.Admin.AccountDataExportStatus? other) -> bool
 HackerOs.Server.Contracts.Admin.AccountDataExportStatus.ExpiresUtc.get -> System.DateTimeOffset?
 HackerOs.Server.Contracts.Admin.AccountDataExportStatus.ExpiresUtc.init -> void
 HackerOs.Server.Contracts.Admin.AccountDataExportStatus.FailureReason.get -> string?
@@ -22,6 +28,7 @@ HackerOs.Server.Contracts.Admin.AccountDataExportStatus.JobId.init -> void
 HackerOs.Server.Contracts.Admin.AccountDataExportStatus.Status.get -> string!
 HackerOs.Server.Contracts.Admin.AccountDataExportStatus.Status.init -> void
 HackerOs.Server.Contracts.Admin.AccountDataSummaryResponse
+HackerOs.Server.Contracts.Admin.AccountDataSummaryResponse.<Clone>$() -> HackerOs.Server.Contracts.Admin.AccountDataSummaryResponse!
 HackerOs.Server.Contracts.Admin.AccountDataSummaryResponse.AccountDataSummaryResponse(System.Guid AccountId, string! Username, System.DateTimeOffset CreatedUtc, int RegisteredDevices, System.Collections.Generic.IReadOnlyList<string!>! SyncedDomains, long TotalSyncedRecords, long StoredContentBytes, long AuditEntryCount, string! DataRetentionPolicy, bool EncryptionAtRest) -> void
 HackerOs.Server.Contracts.Admin.AccountDataSummaryResponse.AccountId.get -> System.Guid
 HackerOs.Server.Contracts.Admin.AccountDataSummaryResponse.AccountId.init -> void
@@ -31,8 +38,10 @@ HackerOs.Server.Contracts.Admin.AccountDataSummaryResponse.CreatedUtc.get -> Sys
 HackerOs.Server.Contracts.Admin.AccountDataSummaryResponse.CreatedUtc.init -> void
 HackerOs.Server.Contracts.Admin.AccountDataSummaryResponse.DataRetentionPolicy.get -> string!
 HackerOs.Server.Contracts.Admin.AccountDataSummaryResponse.DataRetentionPolicy.init -> void
+HackerOs.Server.Contracts.Admin.AccountDataSummaryResponse.Deconstruct(out System.Guid AccountId, out string! Username, out System.DateTimeOffset CreatedUtc, out int RegisteredDevices, out System.Collections.Generic.IReadOnlyList<string!>! SyncedDomains, out long TotalSyncedRecords, out long StoredContentBytes, out long AuditEntryCount, out string! DataRetentionPolicy, out bool EncryptionAtRest) -> void
 HackerOs.Server.Contracts.Admin.AccountDataSummaryResponse.EncryptionAtRest.get -> bool
 HackerOs.Server.Contracts.Admin.AccountDataSummaryResponse.EncryptionAtRest.init -> void
+HackerOs.Server.Contracts.Admin.AccountDataSummaryResponse.Equals(HackerOs.Server.Contracts.Admin.AccountDataSummaryResponse? other) -> bool
 HackerOs.Server.Contracts.Admin.AccountDataSummaryResponse.RegisteredDevices.get -> int
 HackerOs.Server.Contracts.Admin.AccountDataSummaryResponse.RegisteredDevices.init -> void
 HackerOs.Server.Contracts.Admin.AccountDataSummaryResponse.StoredContentBytes.get -> long
@@ -47,7 +56,10 @@ HackerOs.Server.Contracts.Admin.AdminContractsJsonContext
 HackerOs.Server.Contracts.Admin.AdminContractsJsonContext.AdminContractsJsonContext() -> void
 HackerOs.Server.Contracts.Admin.AdminContractsJsonContext.AdminContractsJsonContext(System.Text.Json.JsonSerializerOptions! options) -> void
 HackerOs.Server.Contracts.Admin.ComponentHealth
+HackerOs.Server.Contracts.Admin.ComponentHealth.<Clone>$() -> HackerOs.Server.Contracts.Admin.ComponentHealth!
 HackerOs.Server.Contracts.Admin.ComponentHealth.ComponentHealth(string! Name, string! Status, string? Message) -> void
+HackerOs.Server.Contracts.Admin.ComponentHealth.Deconstruct(out string! Name, out string! Status, out string? Message) -> void
+HackerOs.Server.Contracts.Admin.ComponentHealth.Equals(HackerOs.Server.Contracts.Admin.ComponentHealth? other) -> bool
 HackerOs.Server.Contracts.Admin.ComponentHealth.Message.get -> string?
 HackerOs.Server.Contracts.Admin.ComponentHealth.Message.init -> void
 HackerOs.Server.Contracts.Admin.ComponentHealth.Name.get -> string!
@@ -55,22 +67,31 @@ HackerOs.Server.Contracts.Admin.ComponentHealth.Name.init -> void
 HackerOs.Server.Contracts.Admin.ComponentHealth.Status.get -> string!
 HackerOs.Server.Contracts.Admin.ComponentHealth.Status.init -> void
 HackerOs.Server.Contracts.Admin.DeleteAccountRequest
+HackerOs.Server.Contracts.Admin.DeleteAccountRequest.<Clone>$() -> HackerOs.Server.Contracts.Admin.DeleteAccountRequest!
 HackerOs.Server.Contracts.Admin.DeleteAccountRequest.ConfirmationPhrase.get -> string!
 HackerOs.Server.Contracts.Admin.DeleteAccountRequest.ConfirmationPhrase.init -> void
+HackerOs.Server.Contracts.Admin.DeleteAccountRequest.Deconstruct(out string! ConfirmationPhrase, out int RetainExportDays) -> void
 HackerOs.Server.Contracts.Admin.DeleteAccountRequest.DeleteAccountRequest(string! ConfirmationPhrase, int RetainExportDays) -> void
+HackerOs.Server.Contracts.Admin.DeleteAccountRequest.Equals(HackerOs.Server.Contracts.Admin.DeleteAccountRequest? other) -> bool
 HackerOs.Server.Contracts.Admin.DeleteAccountRequest.RetainExportDays.get -> int
 HackerOs.Server.Contracts.Admin.DeleteAccountRequest.RetainExportDays.init -> void
 HackerOs.Server.Contracts.Admin.DeleteAccountResponse
+HackerOs.Server.Contracts.Admin.DeleteAccountResponse.<Clone>$() -> HackerOs.Server.Contracts.Admin.DeleteAccountResponse!
+HackerOs.Server.Contracts.Admin.DeleteAccountResponse.Deconstruct(out bool Deleted, out string! FinalExportDownloadUrl, out System.DateTimeOffset ExportExpiresUtc) -> void
 HackerOs.Server.Contracts.Admin.DeleteAccountResponse.DeleteAccountResponse(bool Deleted, string! FinalExportDownloadUrl, System.DateTimeOffset ExportExpiresUtc) -> void
 HackerOs.Server.Contracts.Admin.DeleteAccountResponse.Deleted.get -> bool
 HackerOs.Server.Contracts.Admin.DeleteAccountResponse.Deleted.init -> void
+HackerOs.Server.Contracts.Admin.DeleteAccountResponse.Equals(HackerOs.Server.Contracts.Admin.DeleteAccountResponse? other) -> bool
 HackerOs.Server.Contracts.Admin.DeleteAccountResponse.ExportExpiresUtc.get -> System.DateTimeOffset
 HackerOs.Server.Contracts.Admin.DeleteAccountResponse.ExportExpiresUtc.init -> void
 HackerOs.Server.Contracts.Admin.DeleteAccountResponse.FinalExportDownloadUrl.get -> string!
 HackerOs.Server.Contracts.Admin.DeleteAccountResponse.FinalExportDownloadUrl.init -> void
 HackerOs.Server.Contracts.Admin.ServerHealthResponse
+HackerOs.Server.Contracts.Admin.ServerHealthResponse.<Clone>$() -> HackerOs.Server.Contracts.Admin.ServerHealthResponse!
 HackerOs.Server.Contracts.Admin.ServerHealthResponse.Components.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Server.Contracts.Admin.ComponentHealth!>!
 HackerOs.Server.Contracts.Admin.ServerHealthResponse.Components.init -> void
+HackerOs.Server.Contracts.Admin.ServerHealthResponse.Deconstruct(out string! Status, out string! Version, out string! Uptime, out System.Collections.Generic.IReadOnlyList<HackerOs.Server.Contracts.Admin.ComponentHealth!>! Components) -> void
+HackerOs.Server.Contracts.Admin.ServerHealthResponse.Equals(HackerOs.Server.Contracts.Admin.ServerHealthResponse? other) -> bool
 HackerOs.Server.Contracts.Admin.ServerHealthResponse.ServerHealthResponse(string! Status, string! Version, string! Uptime, System.Collections.Generic.IReadOnlyList<HackerOs.Server.Contracts.Admin.ComponentHealth!>! Components) -> void
 HackerOs.Server.Contracts.Admin.ServerHealthResponse.Status.get -> string!
 HackerOs.Server.Contracts.Admin.ServerHealthResponse.Status.init -> void
@@ -79,8 +100,11 @@ HackerOs.Server.Contracts.Admin.ServerHealthResponse.Uptime.init -> void
 HackerOs.Server.Contracts.Admin.ServerHealthResponse.Version.get -> string!
 HackerOs.Server.Contracts.Admin.ServerHealthResponse.Version.init -> void
 HackerOs.Server.Contracts.Hosting.HostInfoResponse
+HackerOs.Server.Contracts.Hosting.HostInfoResponse.<Clone>$() -> HackerOs.Server.Contracts.Hosting.HostInfoResponse!
 HackerOs.Server.Contracts.Hosting.HostInfoResponse.ApiVersion.get -> string?
 HackerOs.Server.Contracts.Hosting.HostInfoResponse.ApiVersion.init -> void
+HackerOs.Server.Contracts.Hosting.HostInfoResponse.Deconstruct(out string! Product, out bool IsServer, out string? ServerVersion, out string? ApiVersion) -> void
+HackerOs.Server.Contracts.Hosting.HostInfoResponse.Equals(HackerOs.Server.Contracts.Hosting.HostInfoResponse? other) -> bool
 HackerOs.Server.Contracts.Hosting.HostInfoResponse.HostInfoResponse(string! Product, bool IsServer, string? ServerVersion = null, string? ApiVersion = null) -> void
 HackerOs.Server.Contracts.Hosting.HostInfoResponse.IsServer.get -> bool
 HackerOs.Server.Contracts.Hosting.HostInfoResponse.IsServer.init -> void
@@ -93,11 +117,14 @@ HackerOs.Server.Contracts.Hosting.HostingContractsJsonContext
 HackerOs.Server.Contracts.Hosting.HostingContractsJsonContext.HostingContractsJsonContext() -> void
 HackerOs.Server.Contracts.Hosting.HostingContractsJsonContext.HostingContractsJsonContext(System.Text.Json.JsonSerializerOptions! options) -> void
 HackerOs.Server.Contracts.Identity.CreateAccountRequest
+HackerOs.Server.Contracts.Identity.CreateAccountRequest.<Clone>$() -> HackerOs.Server.Contracts.Identity.CreateAccountRequest!
 HackerOs.Server.Contracts.Identity.CreateAccountRequest.CreateAccountRequest(string! Username, string! PasswordHash, string! Salt, string! DeviceName, string! DeviceFingerprint) -> void
+HackerOs.Server.Contracts.Identity.CreateAccountRequest.Deconstruct(out string! Username, out string! PasswordHash, out string! Salt, out string! DeviceName, out string! DeviceFingerprint) -> void
 HackerOs.Server.Contracts.Identity.CreateAccountRequest.DeviceFingerprint.get -> string!
 HackerOs.Server.Contracts.Identity.CreateAccountRequest.DeviceFingerprint.init -> void
 HackerOs.Server.Contracts.Identity.CreateAccountRequest.DeviceName.get -> string!
 HackerOs.Server.Contracts.Identity.CreateAccountRequest.DeviceName.init -> void
+HackerOs.Server.Contracts.Identity.CreateAccountRequest.Equals(HackerOs.Server.Contracts.Identity.CreateAccountRequest? other) -> bool
 HackerOs.Server.Contracts.Identity.CreateAccountRequest.PasswordHash.get -> string!
 HackerOs.Server.Contracts.Identity.CreateAccountRequest.PasswordHash.init -> void
 HackerOs.Server.Contracts.Identity.CreateAccountRequest.Salt.get -> string!
@@ -105,21 +132,27 @@ HackerOs.Server.Contracts.Identity.CreateAccountRequest.Salt.init -> void
 HackerOs.Server.Contracts.Identity.CreateAccountRequest.Username.get -> string!
 HackerOs.Server.Contracts.Identity.CreateAccountRequest.Username.init -> void
 HackerOs.Server.Contracts.Identity.CreateAccountResponse
+HackerOs.Server.Contracts.Identity.CreateAccountResponse.<Clone>$() -> HackerOs.Server.Contracts.Identity.CreateAccountResponse!
 HackerOs.Server.Contracts.Identity.CreateAccountResponse.AccountId.get -> System.Guid
 HackerOs.Server.Contracts.Identity.CreateAccountResponse.AccountId.init -> void
 HackerOs.Server.Contracts.Identity.CreateAccountResponse.CreateAccountResponse(System.Guid AccountId, string! Username, System.DateTimeOffset CreatedUtc, System.Guid DeviceId) -> void
 HackerOs.Server.Contracts.Identity.CreateAccountResponse.CreatedUtc.get -> System.DateTimeOffset
 HackerOs.Server.Contracts.Identity.CreateAccountResponse.CreatedUtc.init -> void
+HackerOs.Server.Contracts.Identity.CreateAccountResponse.Deconstruct(out System.Guid AccountId, out string! Username, out System.DateTimeOffset CreatedUtc, out System.Guid DeviceId) -> void
 HackerOs.Server.Contracts.Identity.CreateAccountResponse.DeviceId.get -> System.Guid
 HackerOs.Server.Contracts.Identity.CreateAccountResponse.DeviceId.init -> void
+HackerOs.Server.Contracts.Identity.CreateAccountResponse.Equals(HackerOs.Server.Contracts.Identity.CreateAccountResponse? other) -> bool
 HackerOs.Server.Contracts.Identity.CreateAccountResponse.Username.get -> string!
 HackerOs.Server.Contracts.Identity.CreateAccountResponse.Username.init -> void
 HackerOs.Server.Contracts.Identity.DeviceSummary
+HackerOs.Server.Contracts.Identity.DeviceSummary.<Clone>$() -> HackerOs.Server.Contracts.Identity.DeviceSummary!
+HackerOs.Server.Contracts.Identity.DeviceSummary.Deconstruct(out System.Guid DeviceId, out string! DeviceName, out System.DateTimeOffset RegisteredUtc, out System.DateTimeOffset? LastSeenUtc, out bool IsCurrentDevice) -> void
 HackerOs.Server.Contracts.Identity.DeviceSummary.DeviceId.get -> System.Guid
 HackerOs.Server.Contracts.Identity.DeviceSummary.DeviceId.init -> void
 HackerOs.Server.Contracts.Identity.DeviceSummary.DeviceName.get -> string!
 HackerOs.Server.Contracts.Identity.DeviceSummary.DeviceName.init -> void
 HackerOs.Server.Contracts.Identity.DeviceSummary.DeviceSummary(System.Guid DeviceId, string! DeviceName, System.DateTimeOffset RegisteredUtc, System.DateTimeOffset? LastSeenUtc, bool IsCurrentDevice) -> void
+HackerOs.Server.Contracts.Identity.DeviceSummary.Equals(HackerOs.Server.Contracts.Identity.DeviceSummary? other) -> bool
 HackerOs.Server.Contracts.Identity.DeviceSummary.IsCurrentDevice.get -> bool
 HackerOs.Server.Contracts.Identity.DeviceSummary.IsCurrentDevice.init -> void
 HackerOs.Server.Contracts.Identity.DeviceSummary.LastSeenUtc.get -> System.DateTimeOffset?
@@ -130,54 +163,72 @@ HackerOs.Server.Contracts.Identity.IdentityContractsJsonContext
 HackerOs.Server.Contracts.Identity.IdentityContractsJsonContext.IdentityContractsJsonContext() -> void
 HackerOs.Server.Contracts.Identity.IdentityContractsJsonContext.IdentityContractsJsonContext(System.Text.Json.JsonSerializerOptions! options) -> void
 HackerOs.Server.Contracts.Identity.LoginRequest
+HackerOs.Server.Contracts.Identity.LoginRequest.<Clone>$() -> HackerOs.Server.Contracts.Identity.LoginRequest!
+HackerOs.Server.Contracts.Identity.LoginRequest.Deconstruct(out string! Username, out string! PasswordHash, out string! DeviceFingerprint) -> void
 HackerOs.Server.Contracts.Identity.LoginRequest.DeviceFingerprint.get -> string!
 HackerOs.Server.Contracts.Identity.LoginRequest.DeviceFingerprint.init -> void
+HackerOs.Server.Contracts.Identity.LoginRequest.Equals(HackerOs.Server.Contracts.Identity.LoginRequest? other) -> bool
 HackerOs.Server.Contracts.Identity.LoginRequest.LoginRequest(string! Username, string! PasswordHash, string! DeviceFingerprint) -> void
 HackerOs.Server.Contracts.Identity.LoginRequest.PasswordHash.get -> string!
 HackerOs.Server.Contracts.Identity.LoginRequest.PasswordHash.init -> void
 HackerOs.Server.Contracts.Identity.LoginRequest.Username.get -> string!
 HackerOs.Server.Contracts.Identity.LoginRequest.Username.init -> void
 HackerOs.Server.Contracts.Identity.LoginResponse
+HackerOs.Server.Contracts.Identity.LoginResponse.<Clone>$() -> HackerOs.Server.Contracts.Identity.LoginResponse!
 HackerOs.Server.Contracts.Identity.LoginResponse.AccessToken.get -> string!
 HackerOs.Server.Contracts.Identity.LoginResponse.AccessToken.init -> void
 HackerOs.Server.Contracts.Identity.LoginResponse.AccessTokenExpiresUtc.get -> System.DateTimeOffset
 HackerOs.Server.Contracts.Identity.LoginResponse.AccessTokenExpiresUtc.init -> void
 HackerOs.Server.Contracts.Identity.LoginResponse.AccountId.get -> System.Guid
 HackerOs.Server.Contracts.Identity.LoginResponse.AccountId.init -> void
+HackerOs.Server.Contracts.Identity.LoginResponse.Deconstruct(out System.Guid AccountId, out System.Guid DeviceId, out string! AccessToken, out string! RefreshToken, out System.DateTimeOffset AccessTokenExpiresUtc, out System.DateTimeOffset RefreshTokenExpiresUtc) -> void
 HackerOs.Server.Contracts.Identity.LoginResponse.DeviceId.get -> System.Guid
 HackerOs.Server.Contracts.Identity.LoginResponse.DeviceId.init -> void
+HackerOs.Server.Contracts.Identity.LoginResponse.Equals(HackerOs.Server.Contracts.Identity.LoginResponse? other) -> bool
 HackerOs.Server.Contracts.Identity.LoginResponse.LoginResponse(System.Guid AccountId, System.Guid DeviceId, string! AccessToken, string! RefreshToken, System.DateTimeOffset AccessTokenExpiresUtc, System.DateTimeOffset RefreshTokenExpiresUtc) -> void
 HackerOs.Server.Contracts.Identity.LoginResponse.RefreshToken.get -> string!
 HackerOs.Server.Contracts.Identity.LoginResponse.RefreshToken.init -> void
 HackerOs.Server.Contracts.Identity.LoginResponse.RefreshTokenExpiresUtc.get -> System.DateTimeOffset
 HackerOs.Server.Contracts.Identity.LoginResponse.RefreshTokenExpiresUtc.init -> void
 HackerOs.Server.Contracts.Identity.RefreshTokenRequest
+HackerOs.Server.Contracts.Identity.RefreshTokenRequest.<Clone>$() -> HackerOs.Server.Contracts.Identity.RefreshTokenRequest!
+HackerOs.Server.Contracts.Identity.RefreshTokenRequest.Deconstruct(out string! RefreshToken, out string! DeviceFingerprint) -> void
 HackerOs.Server.Contracts.Identity.RefreshTokenRequest.DeviceFingerprint.get -> string!
 HackerOs.Server.Contracts.Identity.RefreshTokenRequest.DeviceFingerprint.init -> void
+HackerOs.Server.Contracts.Identity.RefreshTokenRequest.Equals(HackerOs.Server.Contracts.Identity.RefreshTokenRequest? other) -> bool
 HackerOs.Server.Contracts.Identity.RefreshTokenRequest.RefreshToken.get -> string!
 HackerOs.Server.Contracts.Identity.RefreshTokenRequest.RefreshToken.init -> void
 HackerOs.Server.Contracts.Identity.RefreshTokenRequest.RefreshTokenRequest(string! RefreshToken, string! DeviceFingerprint) -> void
 HackerOs.Server.Contracts.Identity.RefreshTokenResponse
+HackerOs.Server.Contracts.Identity.RefreshTokenResponse.<Clone>$() -> HackerOs.Server.Contracts.Identity.RefreshTokenResponse!
 HackerOs.Server.Contracts.Identity.RefreshTokenResponse.AccessToken.get -> string!
 HackerOs.Server.Contracts.Identity.RefreshTokenResponse.AccessToken.init -> void
 HackerOs.Server.Contracts.Identity.RefreshTokenResponse.AccessTokenExpiresUtc.get -> System.DateTimeOffset
 HackerOs.Server.Contracts.Identity.RefreshTokenResponse.AccessTokenExpiresUtc.init -> void
+HackerOs.Server.Contracts.Identity.RefreshTokenResponse.Deconstruct(out string! AccessToken, out System.DateTimeOffset AccessTokenExpiresUtc, out string! RefreshToken, out System.DateTimeOffset RefreshTokenExpiresUtc) -> void
+HackerOs.Server.Contracts.Identity.RefreshTokenResponse.Equals(HackerOs.Server.Contracts.Identity.RefreshTokenResponse? other) -> bool
 HackerOs.Server.Contracts.Identity.RefreshTokenResponse.RefreshToken.get -> string!
 HackerOs.Server.Contracts.Identity.RefreshTokenResponse.RefreshToken.init -> void
 HackerOs.Server.Contracts.Identity.RefreshTokenResponse.RefreshTokenExpiresUtc.get -> System.DateTimeOffset
 HackerOs.Server.Contracts.Identity.RefreshTokenResponse.RefreshTokenExpiresUtc.init -> void
 HackerOs.Server.Contracts.Identity.RefreshTokenResponse.RefreshTokenResponse(string! AccessToken, System.DateTimeOffset AccessTokenExpiresUtc, string! RefreshToken, System.DateTimeOffset RefreshTokenExpiresUtc) -> void
 HackerOs.Server.Contracts.Identity.RegisterDeviceRequest
+HackerOs.Server.Contracts.Identity.RegisterDeviceRequest.<Clone>$() -> HackerOs.Server.Contracts.Identity.RegisterDeviceRequest!
+HackerOs.Server.Contracts.Identity.RegisterDeviceRequest.Deconstruct(out string! DeviceName, out string! DeviceFingerprint) -> void
 HackerOs.Server.Contracts.Identity.RegisterDeviceRequest.DeviceFingerprint.get -> string!
 HackerOs.Server.Contracts.Identity.RegisterDeviceRequest.DeviceFingerprint.init -> void
 HackerOs.Server.Contracts.Identity.RegisterDeviceRequest.DeviceName.get -> string!
 HackerOs.Server.Contracts.Identity.RegisterDeviceRequest.DeviceName.init -> void
+HackerOs.Server.Contracts.Identity.RegisterDeviceRequest.Equals(HackerOs.Server.Contracts.Identity.RegisterDeviceRequest? other) -> bool
 HackerOs.Server.Contracts.Identity.RegisterDeviceRequest.RegisterDeviceRequest(string! DeviceName, string! DeviceFingerprint) -> void
 HackerOs.Server.Contracts.Identity.RegisterDeviceResponse
+HackerOs.Server.Contracts.Identity.RegisterDeviceResponse.<Clone>$() -> HackerOs.Server.Contracts.Identity.RegisterDeviceResponse!
+HackerOs.Server.Contracts.Identity.RegisterDeviceResponse.Deconstruct(out System.Guid DeviceId, out string! DeviceName, out System.DateTimeOffset RegisteredUtc) -> void
 HackerOs.Server.Contracts.Identity.RegisterDeviceResponse.DeviceId.get -> System.Guid
 HackerOs.Server.Contracts.Identity.RegisterDeviceResponse.DeviceId.init -> void
 HackerOs.Server.Contracts.Identity.RegisterDeviceResponse.DeviceName.get -> string!
 HackerOs.Server.Contracts.Identity.RegisterDeviceResponse.DeviceName.init -> void
+HackerOs.Server.Contracts.Identity.RegisterDeviceResponse.Equals(HackerOs.Server.Contracts.Identity.RegisterDeviceResponse? other) -> bool
 HackerOs.Server.Contracts.Identity.RegisterDeviceResponse.RegisterDeviceResponse(System.Guid DeviceId, string! DeviceName, System.DateTimeOffset RegisteredUtc) -> void
 HackerOs.Server.Contracts.Identity.RegisterDeviceResponse.RegisteredUtc.get -> System.DateTimeOffset
 HackerOs.Server.Contracts.Identity.RegisterDeviceResponse.RegisteredUtc.init -> void
@@ -192,8 +243,11 @@ HackerOs.Server.Contracts.Proxy.ProxyContractsJsonContext.ProxyContractsJsonCont
 HackerOs.Server.Contracts.Proxy.ProxyContractsJsonContext.ProxyContractsJsonContext(System.Text.Json.JsonSerializerOptions! options) -> void
 HackerOs.Server.Contracts.Proxy.ProxyErrorCode
 HackerOs.Server.Contracts.Proxy.ProxyErrorResponse
+HackerOs.Server.Contracts.Proxy.ProxyErrorResponse.<Clone>$() -> HackerOs.Server.Contracts.Proxy.ProxyErrorResponse!
 HackerOs.Server.Contracts.Proxy.ProxyErrorResponse.AuditId.get -> System.Guid
 HackerOs.Server.Contracts.Proxy.ProxyErrorResponse.AuditId.init -> void
+HackerOs.Server.Contracts.Proxy.ProxyErrorResponse.Deconstruct(out System.Guid? RequestId, out string! ErrorCode, out string! Message, out System.Guid AuditId) -> void
+HackerOs.Server.Contracts.Proxy.ProxyErrorResponse.Equals(HackerOs.Server.Contracts.Proxy.ProxyErrorResponse? other) -> bool
 HackerOs.Server.Contracts.Proxy.ProxyErrorResponse.ErrorCode.get -> string!
 HackerOs.Server.Contracts.Proxy.ProxyErrorResponse.ErrorCode.init -> void
 HackerOs.Server.Contracts.Proxy.ProxyErrorResponse.Message.get -> string!
@@ -202,12 +256,16 @@ HackerOs.Server.Contracts.Proxy.ProxyErrorResponse.ProxyErrorResponse(System.Gui
 HackerOs.Server.Contracts.Proxy.ProxyErrorResponse.RequestId.get -> System.Guid?
 HackerOs.Server.Contracts.Proxy.ProxyErrorResponse.RequestId.init -> void
 HackerOs.Server.Contracts.Proxy.ProxyHeader
+HackerOs.Server.Contracts.Proxy.ProxyHeader.<Clone>$() -> HackerOs.Server.Contracts.Proxy.ProxyHeader!
+HackerOs.Server.Contracts.Proxy.ProxyHeader.Deconstruct(out string! Name, out string! Value) -> void
+HackerOs.Server.Contracts.Proxy.ProxyHeader.Equals(HackerOs.Server.Contracts.Proxy.ProxyHeader? other) -> bool
 HackerOs.Server.Contracts.Proxy.ProxyHeader.Name.get -> string!
 HackerOs.Server.Contracts.Proxy.ProxyHeader.Name.init -> void
 HackerOs.Server.Contracts.Proxy.ProxyHeader.ProxyHeader(string! Name, string! Value) -> void
 HackerOs.Server.Contracts.Proxy.ProxyHeader.Value.get -> string!
 HackerOs.Server.Contracts.Proxy.ProxyHeader.Value.init -> void
 HackerOs.Server.Contracts.Proxy.ProxyHttpRequest
+HackerOs.Server.Contracts.Proxy.ProxyHttpRequest.<Clone>$() -> HackerOs.Server.Contracts.Proxy.ProxyHttpRequest!
 HackerOs.Server.Contracts.Proxy.ProxyHttpRequest.AppId.get -> string!
 HackerOs.Server.Contracts.Proxy.ProxyHttpRequest.AppId.init -> void
 HackerOs.Server.Contracts.Proxy.ProxyHttpRequest.Body.get -> byte[]?
@@ -218,6 +276,8 @@ HackerOs.Server.Contracts.Proxy.ProxyHttpRequest.BodyHash.get -> string?
 HackerOs.Server.Contracts.Proxy.ProxyHttpRequest.BodyHash.init -> void
 HackerOs.Server.Contracts.Proxy.ProxyHttpRequest.ContentType.get -> string?
 HackerOs.Server.Contracts.Proxy.ProxyHttpRequest.ContentType.init -> void
+HackerOs.Server.Contracts.Proxy.ProxyHttpRequest.Deconstruct(out System.Guid RequestId, out HackerOs.Server.Contracts.Proxy.ProxyProtocol Protocol, out string! TargetUrl, out string? HttpMethod, out System.Collections.Generic.IReadOnlyList<HackerOs.Server.Contracts.Proxy.ProxyHeader!>! Headers, out string? BodyHash, out long BodyBytes, out int TimeoutSeconds, out string! AppId, out bool IncludeBody, out byte[]? Body, out string? ContentType) -> void
+HackerOs.Server.Contracts.Proxy.ProxyHttpRequest.Equals(HackerOs.Server.Contracts.Proxy.ProxyHttpRequest? other) -> bool
 HackerOs.Server.Contracts.Proxy.ProxyHttpRequest.Headers.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Server.Contracts.Proxy.ProxyHeader!>!
 HackerOs.Server.Contracts.Proxy.ProxyHttpRequest.Headers.init -> void
 HackerOs.Server.Contracts.Proxy.ProxyHttpRequest.HttpMethod.get -> string?
@@ -234,14 +294,17 @@ HackerOs.Server.Contracts.Proxy.ProxyHttpRequest.TargetUrl.init -> void
 HackerOs.Server.Contracts.Proxy.ProxyHttpRequest.TimeoutSeconds.get -> int
 HackerOs.Server.Contracts.Proxy.ProxyHttpRequest.TimeoutSeconds.init -> void
 HackerOs.Server.Contracts.Proxy.ProxyHttpResponse
+HackerOs.Server.Contracts.Proxy.ProxyHttpResponse.<Clone>$() -> HackerOs.Server.Contracts.Proxy.ProxyHttpResponse!
 HackerOs.Server.Contracts.Proxy.ProxyHttpResponse.BodyBase64.get -> string?
 HackerOs.Server.Contracts.Proxy.ProxyHttpResponse.BodyBase64.init -> void
 HackerOs.Server.Contracts.Proxy.ProxyHttpResponse.BodyBytes.get -> long
 HackerOs.Server.Contracts.Proxy.ProxyHttpResponse.BodyBytes.init -> void
 HackerOs.Server.Contracts.Proxy.ProxyHttpResponse.BodyHash.get -> string?
 HackerOs.Server.Contracts.Proxy.ProxyHttpResponse.BodyHash.init -> void
+HackerOs.Server.Contracts.Proxy.ProxyHttpResponse.Deconstruct(out System.Guid RequestId, out int StatusCode, out string! ReasonPhrase, out System.Collections.Generic.IReadOnlyList<HackerOs.Server.Contracts.Proxy.ProxyHeader!>! Headers, out string? BodyHash, out long BodyBytes, out string! FinalUrl, out int RedirectHops, out long DurationMs, out string? BodyBase64) -> void
 HackerOs.Server.Contracts.Proxy.ProxyHttpResponse.DurationMs.get -> long
 HackerOs.Server.Contracts.Proxy.ProxyHttpResponse.DurationMs.init -> void
+HackerOs.Server.Contracts.Proxy.ProxyHttpResponse.Equals(HackerOs.Server.Contracts.Proxy.ProxyHttpResponse? other) -> bool
 HackerOs.Server.Contracts.Proxy.ProxyHttpResponse.FinalUrl.get -> string!
 HackerOs.Server.Contracts.Proxy.ProxyHttpResponse.FinalUrl.init -> void
 HackerOs.Server.Contracts.Proxy.ProxyHttpResponse.Headers.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Server.Contracts.Proxy.ProxyHeader!>!
@@ -256,6 +319,7 @@ HackerOs.Server.Contracts.Proxy.ProxyHttpResponse.RequestId.init -> void
 HackerOs.Server.Contracts.Proxy.ProxyHttpResponse.StatusCode.get -> int
 HackerOs.Server.Contracts.Proxy.ProxyHttpResponse.StatusCode.init -> void
 HackerOs.Server.Contracts.Proxy.ProxyPolicyResponse
+HackerOs.Server.Contracts.Proxy.ProxyPolicyResponse.<Clone>$() -> HackerOs.Server.Contracts.Proxy.ProxyPolicyResponse!
 HackerOs.Server.Contracts.Proxy.ProxyPolicyResponse.AllowAllPorts.get -> bool
 HackerOs.Server.Contracts.Proxy.ProxyPolicyResponse.AllowAllPorts.init -> void
 HackerOs.Server.Contracts.Proxy.ProxyPolicyResponse.AllowPrivateNetworks.get -> bool
@@ -268,10 +332,12 @@ HackerOs.Server.Contracts.Proxy.ProxyPolicyResponse.CurrentConcurrentRequests.ge
 HackerOs.Server.Contracts.Proxy.ProxyPolicyResponse.CurrentConcurrentRequests.init -> void
 HackerOs.Server.Contracts.Proxy.ProxyPolicyResponse.CurrentStreams.get -> int
 HackerOs.Server.Contracts.Proxy.ProxyPolicyResponse.CurrentStreams.init -> void
+HackerOs.Server.Contracts.Proxy.ProxyPolicyResponse.Deconstruct(out System.Guid DeviceId, out int MaxConcurrentRequests, out int CurrentConcurrentRequests, out long MaxPayloadBytes, out int MaxDurationSeconds, out int MaxRedirectHops, out System.Collections.Generic.IReadOnlyList<string!>! AllowedProtocols, out int AuditRetentionDays, out System.Collections.Generic.IReadOnlyList<string!>! OperatorWeakeningWarnings, out bool Enabled, out System.Collections.Generic.IReadOnlyList<int>? HttpPorts, out System.Collections.Generic.IReadOnlyList<int>? TcpPorts, out System.Collections.Generic.IReadOnlyList<int>? UdpPorts, out bool AllowAllPorts, out bool AllowPrivateNetworks, out bool QuotasEnabled, out long MaxRequestBytes, out int MaxStreamsPerDevice, out int CurrentStreams, out int StreamIdleTimeoutSeconds, out System.Collections.Generic.IReadOnlyList<string!>? GrantedApps) -> void
 HackerOs.Server.Contracts.Proxy.ProxyPolicyResponse.DeviceId.get -> System.Guid
 HackerOs.Server.Contracts.Proxy.ProxyPolicyResponse.DeviceId.init -> void
 HackerOs.Server.Contracts.Proxy.ProxyPolicyResponse.Enabled.get -> bool
 HackerOs.Server.Contracts.Proxy.ProxyPolicyResponse.Enabled.init -> void
+HackerOs.Server.Contracts.Proxy.ProxyPolicyResponse.Equals(HackerOs.Server.Contracts.Proxy.ProxyPolicyResponse? other) -> bool
 HackerOs.Server.Contracts.Proxy.ProxyPolicyResponse.GrantedApps.get -> System.Collections.Generic.IReadOnlyList<string!>?
 HackerOs.Server.Contracts.Proxy.ProxyPolicyResponse.GrantedApps.init -> void
 HackerOs.Server.Contracts.Proxy.ProxyPolicyResponse.HttpPorts.get -> System.Collections.Generic.IReadOnlyList<int>?
@@ -306,8 +372,11 @@ HackerOs.Server.Contracts.Proxy.ProxyProtocol.Tcp = 2 -> HackerOs.Server.Contrac
 HackerOs.Server.Contracts.Proxy.ProxyProtocol.Udp = 3 -> HackerOs.Server.Contracts.Proxy.ProxyProtocol
 HackerOs.Server.Contracts.Proxy.ProxyStreamCloseCodes
 HackerOs.Server.Contracts.Proxy.ProxyStreamClosure
+HackerOs.Server.Contracts.Proxy.ProxyStreamClosure.<Clone>$() -> HackerOs.Server.Contracts.Proxy.ProxyStreamClosure!
 HackerOs.Server.Contracts.Proxy.ProxyStreamClosure.CloseCode.get -> int
 HackerOs.Server.Contracts.Proxy.ProxyStreamClosure.CloseCode.init -> void
+HackerOs.Server.Contracts.Proxy.ProxyStreamClosure.Deconstruct(out int CloseCode, out string? Reason) -> void
+HackerOs.Server.Contracts.Proxy.ProxyStreamClosure.Equals(HackerOs.Server.Contracts.Proxy.ProxyStreamClosure? other) -> bool
 HackerOs.Server.Contracts.Proxy.ProxyStreamClosure.ProxyStreamClosure(int CloseCode, string? Reason) -> void
 HackerOs.Server.Contracts.Proxy.ProxyStreamClosure.Reason.get -> string?
 HackerOs.Server.Contracts.Proxy.ProxyStreamClosure.Reason.init -> void
@@ -318,14 +387,20 @@ HackerOs.Server.Contracts.Proxy.ProxyStreamException.ProxyStreamException(string
 HackerOs.Server.Contracts.Proxy.ProxyStreamException.ProxyStreamException(string! message) -> void
 HackerOs.Server.Contracts.Proxy.ProxyStreamException.ProxyStreamException(string! message, System.Exception! innerException) -> void
 HackerOs.Server.Contracts.Proxy.ProxyStreamOpened
+HackerOs.Server.Contracts.Proxy.ProxyStreamOpened.<Clone>$() -> HackerOs.Server.Contracts.Proxy.ProxyStreamOpened!
+HackerOs.Server.Contracts.Proxy.ProxyStreamOpened.Deconstruct(out string! RemoteAddress, out int RemotePort) -> void
+HackerOs.Server.Contracts.Proxy.ProxyStreamOpened.Equals(HackerOs.Server.Contracts.Proxy.ProxyStreamOpened? other) -> bool
 HackerOs.Server.Contracts.Proxy.ProxyStreamOpened.ProxyStreamOpened(string! RemoteAddress, int RemotePort) -> void
 HackerOs.Server.Contracts.Proxy.ProxyStreamOpened.RemoteAddress.get -> string!
 HackerOs.Server.Contracts.Proxy.ProxyStreamOpened.RemoteAddress.init -> void
 HackerOs.Server.Contracts.Proxy.ProxyStreamOpened.RemotePort.get -> int
 HackerOs.Server.Contracts.Proxy.ProxyStreamOpened.RemotePort.init -> void
 HackerOs.Server.Contracts.Proxy.ProxyStreamRequest
+HackerOs.Server.Contracts.Proxy.ProxyStreamRequest.<Clone>$() -> HackerOs.Server.Contracts.Proxy.ProxyStreamRequest!
 HackerOs.Server.Contracts.Proxy.ProxyStreamRequest.AppId.get -> string!
 HackerOs.Server.Contracts.Proxy.ProxyStreamRequest.AppId.init -> void
+HackerOs.Server.Contracts.Proxy.ProxyStreamRequest.Deconstruct(out string! Host, out int Port, out string! AppId) -> void
+HackerOs.Server.Contracts.Proxy.ProxyStreamRequest.Equals(HackerOs.Server.Contracts.Proxy.ProxyStreamRequest? other) -> bool
 HackerOs.Server.Contracts.Proxy.ProxyStreamRequest.Host.get -> string!
 HackerOs.Server.Contracts.Proxy.ProxyStreamRequest.Host.init -> void
 HackerOs.Server.Contracts.Proxy.ProxyStreamRequest.Port.get -> int
@@ -333,8 +408,11 @@ HackerOs.Server.Contracts.Proxy.ProxyStreamRequest.Port.init -> void
 HackerOs.Server.Contracts.Proxy.ProxyStreamRequest.ProxyStreamRequest(string! Host, int Port, string! AppId) -> void
 HackerOs.Server.Contracts.Proxy.ProxyStreamRoutes
 HackerOs.Server.Contracts.Proxy.ProxyTcpProbeRequest
+HackerOs.Server.Contracts.Proxy.ProxyTcpProbeRequest.<Clone>$() -> HackerOs.Server.Contracts.Proxy.ProxyTcpProbeRequest!
 HackerOs.Server.Contracts.Proxy.ProxyTcpProbeRequest.AppId.get -> string!
 HackerOs.Server.Contracts.Proxy.ProxyTcpProbeRequest.AppId.init -> void
+HackerOs.Server.Contracts.Proxy.ProxyTcpProbeRequest.Deconstruct(out System.Guid RequestId, out string! Host, out int Port, out int TimeoutSeconds, out string! AppId) -> void
+HackerOs.Server.Contracts.Proxy.ProxyTcpProbeRequest.Equals(HackerOs.Server.Contracts.Proxy.ProxyTcpProbeRequest? other) -> bool
 HackerOs.Server.Contracts.Proxy.ProxyTcpProbeRequest.Host.get -> string!
 HackerOs.Server.Contracts.Proxy.ProxyTcpProbeRequest.Host.init -> void
 HackerOs.Server.Contracts.Proxy.ProxyTcpProbeRequest.Port.get -> int
@@ -345,8 +423,11 @@ HackerOs.Server.Contracts.Proxy.ProxyTcpProbeRequest.RequestId.init -> void
 HackerOs.Server.Contracts.Proxy.ProxyTcpProbeRequest.TimeoutSeconds.get -> int
 HackerOs.Server.Contracts.Proxy.ProxyTcpProbeRequest.TimeoutSeconds.init -> void
 HackerOs.Server.Contracts.Proxy.ProxyTcpProbeResponse
+HackerOs.Server.Contracts.Proxy.ProxyTcpProbeResponse.<Clone>$() -> HackerOs.Server.Contracts.Proxy.ProxyTcpProbeResponse!
+HackerOs.Server.Contracts.Proxy.ProxyTcpProbeResponse.Deconstruct(out System.Guid RequestId, out HackerOs.Server.Contracts.Proxy.ProxyTcpProbeState State, out long DurationMs) -> void
 HackerOs.Server.Contracts.Proxy.ProxyTcpProbeResponse.DurationMs.get -> long
 HackerOs.Server.Contracts.Proxy.ProxyTcpProbeResponse.DurationMs.init -> void
+HackerOs.Server.Contracts.Proxy.ProxyTcpProbeResponse.Equals(HackerOs.Server.Contracts.Proxy.ProxyTcpProbeResponse? other) -> bool
 HackerOs.Server.Contracts.Proxy.ProxyTcpProbeResponse.ProxyTcpProbeResponse(System.Guid RequestId, HackerOs.Server.Contracts.Proxy.ProxyTcpProbeState State, long DurationMs) -> void
 HackerOs.Server.Contracts.Proxy.ProxyTcpProbeResponse.RequestId.get -> System.Guid
 HackerOs.Server.Contracts.Proxy.ProxyTcpProbeResponse.RequestId.init -> void
@@ -364,18 +445,24 @@ HackerOs.Server.Contracts.Sync.ContentTransferContractsJsonContext
 HackerOs.Server.Contracts.Sync.ContentTransferContractsJsonContext.ContentTransferContractsJsonContext() -> void
 HackerOs.Server.Contracts.Sync.ContentTransferContractsJsonContext.ContentTransferContractsJsonContext(System.Text.Json.JsonSerializerOptions! options) -> void
 HackerOs.Server.Contracts.Sync.InitiateContentDownloadRequest
+HackerOs.Server.Contracts.Sync.InitiateContentDownloadRequest.<Clone>$() -> HackerOs.Server.Contracts.Sync.InitiateContentDownloadRequest!
 HackerOs.Server.Contracts.Sync.InitiateContentDownloadRequest.ContentHash.get -> string!
 HackerOs.Server.Contracts.Sync.InitiateContentDownloadRequest.ContentHash.init -> void
+HackerOs.Server.Contracts.Sync.InitiateContentDownloadRequest.Deconstruct(out string! ContentHash, out long StartByteOffset) -> void
+HackerOs.Server.Contracts.Sync.InitiateContentDownloadRequest.Equals(HackerOs.Server.Contracts.Sync.InitiateContentDownloadRequest? other) -> bool
 HackerOs.Server.Contracts.Sync.InitiateContentDownloadRequest.InitiateContentDownloadRequest(string! ContentHash, long StartByteOffset) -> void
 HackerOs.Server.Contracts.Sync.InitiateContentDownloadRequest.StartByteOffset.get -> long
 HackerOs.Server.Contracts.Sync.InitiateContentDownloadRequest.StartByteOffset.init -> void
 HackerOs.Server.Contracts.Sync.InitiateContentDownloadResponse
+HackerOs.Server.Contracts.Sync.InitiateContentDownloadResponse.<Clone>$() -> HackerOs.Server.Contracts.Sync.InitiateContentDownloadResponse!
 HackerOs.Server.Contracts.Sync.InitiateContentDownloadResponse.ChunkSizeBytes.get -> int
 HackerOs.Server.Contracts.Sync.InitiateContentDownloadResponse.ChunkSizeBytes.init -> void
 HackerOs.Server.Contracts.Sync.InitiateContentDownloadResponse.ContentHash.get -> string!
 HackerOs.Server.Contracts.Sync.InitiateContentDownloadResponse.ContentHash.init -> void
+HackerOs.Server.Contracts.Sync.InitiateContentDownloadResponse.Deconstruct(out string! DownloadSessionId, out string! ContentHash, out long TotalBytes, out long RemainingBytes, out int ChunkSizeBytes, out System.DateTimeOffset ExpiresUtc) -> void
 HackerOs.Server.Contracts.Sync.InitiateContentDownloadResponse.DownloadSessionId.get -> string!
 HackerOs.Server.Contracts.Sync.InitiateContentDownloadResponse.DownloadSessionId.init -> void
+HackerOs.Server.Contracts.Sync.InitiateContentDownloadResponse.Equals(HackerOs.Server.Contracts.Sync.InitiateContentDownloadResponse? other) -> bool
 HackerOs.Server.Contracts.Sync.InitiateContentDownloadResponse.ExpiresUtc.get -> System.DateTimeOffset
 HackerOs.Server.Contracts.Sync.InitiateContentDownloadResponse.ExpiresUtc.init -> void
 HackerOs.Server.Contracts.Sync.InitiateContentDownloadResponse.InitiateContentDownloadResponse(string! DownloadSessionId, string! ContentHash, long TotalBytes, long RemainingBytes, int ChunkSizeBytes, System.DateTimeOffset ExpiresUtc) -> void
@@ -384,20 +471,26 @@ HackerOs.Server.Contracts.Sync.InitiateContentDownloadResponse.RemainingBytes.in
 HackerOs.Server.Contracts.Sync.InitiateContentDownloadResponse.TotalBytes.get -> long
 HackerOs.Server.Contracts.Sync.InitiateContentDownloadResponse.TotalBytes.init -> void
 HackerOs.Server.Contracts.Sync.InitiateContentUploadRequest
+HackerOs.Server.Contracts.Sync.InitiateContentUploadRequest.<Clone>$() -> HackerOs.Server.Contracts.Sync.InitiateContentUploadRequest!
 HackerOs.Server.Contracts.Sync.InitiateContentUploadRequest.ContentHash.get -> string!
 HackerOs.Server.Contracts.Sync.InitiateContentUploadRequest.ContentHash.init -> void
+HackerOs.Server.Contracts.Sync.InitiateContentUploadRequest.Deconstruct(out string! ContentHash, out long TotalBytes, out System.Guid OwnerAccountId) -> void
+HackerOs.Server.Contracts.Sync.InitiateContentUploadRequest.Equals(HackerOs.Server.Contracts.Sync.InitiateContentUploadRequest? other) -> bool
 HackerOs.Server.Contracts.Sync.InitiateContentUploadRequest.InitiateContentUploadRequest(string! ContentHash, long TotalBytes, System.Guid OwnerAccountId) -> void
 HackerOs.Server.Contracts.Sync.InitiateContentUploadRequest.OwnerAccountId.get -> System.Guid
 HackerOs.Server.Contracts.Sync.InitiateContentUploadRequest.OwnerAccountId.init -> void
 HackerOs.Server.Contracts.Sync.InitiateContentUploadRequest.TotalBytes.get -> long
 HackerOs.Server.Contracts.Sync.InitiateContentUploadRequest.TotalBytes.init -> void
 HackerOs.Server.Contracts.Sync.InitiateContentUploadResponse
+HackerOs.Server.Contracts.Sync.InitiateContentUploadResponse.<Clone>$() -> HackerOs.Server.Contracts.Sync.InitiateContentUploadResponse!
 HackerOs.Server.Contracts.Sync.InitiateContentUploadResponse.AlreadyExists.get -> bool
 HackerOs.Server.Contracts.Sync.InitiateContentUploadResponse.AlreadyExists.init -> void
 HackerOs.Server.Contracts.Sync.InitiateContentUploadResponse.ChunkSizeBytes.get -> int
 HackerOs.Server.Contracts.Sync.InitiateContentUploadResponse.ChunkSizeBytes.init -> void
 HackerOs.Server.Contracts.Sync.InitiateContentUploadResponse.ContentHash.get -> string!
 HackerOs.Server.Contracts.Sync.InitiateContentUploadResponse.ContentHash.init -> void
+HackerOs.Server.Contracts.Sync.InitiateContentUploadResponse.Deconstruct(out string! UploadSessionId, out string! ContentHash, out bool AlreadyExists, out int ChunkSizeBytes, out int TotalChunks, out System.DateTimeOffset ExpiresUtc) -> void
+HackerOs.Server.Contracts.Sync.InitiateContentUploadResponse.Equals(HackerOs.Server.Contracts.Sync.InitiateContentUploadResponse? other) -> bool
 HackerOs.Server.Contracts.Sync.InitiateContentUploadResponse.ExpiresUtc.get -> System.DateTimeOffset
 HackerOs.Server.Contracts.Sync.InitiateContentUploadResponse.ExpiresUtc.init -> void
 HackerOs.Server.Contracts.Sync.InitiateContentUploadResponse.InitiateContentUploadResponse(string! UploadSessionId, string! ContentHash, bool AlreadyExists, int ChunkSizeBytes, int TotalChunks, System.DateTimeOffset ExpiresUtc) -> void
@@ -406,16 +499,22 @@ HackerOs.Server.Contracts.Sync.InitiateContentUploadResponse.TotalChunks.init ->
 HackerOs.Server.Contracts.Sync.InitiateContentUploadResponse.UploadSessionId.get -> string!
 HackerOs.Server.Contracts.Sync.InitiateContentUploadResponse.UploadSessionId.init -> void
 HackerOs.Server.Contracts.Sync.PullRequest
+HackerOs.Server.Contracts.Sync.PullRequest.<Clone>$() -> HackerOs.Server.Contracts.Sync.PullRequest!
 HackerOs.Server.Contracts.Sync.PullRequest.Cursor.get -> string?
 HackerOs.Server.Contracts.Sync.PullRequest.Cursor.init -> void
+HackerOs.Server.Contracts.Sync.PullRequest.Deconstruct(out string! Domain, out string? Cursor, out int MaxRecords) -> void
 HackerOs.Server.Contracts.Sync.PullRequest.Domain.get -> string!
 HackerOs.Server.Contracts.Sync.PullRequest.Domain.init -> void
+HackerOs.Server.Contracts.Sync.PullRequest.Equals(HackerOs.Server.Contracts.Sync.PullRequest? other) -> bool
 HackerOs.Server.Contracts.Sync.PullRequest.MaxRecords.get -> int
 HackerOs.Server.Contracts.Sync.PullRequest.MaxRecords.init -> void
 HackerOs.Server.Contracts.Sync.PullRequest.PullRequest(string! Domain, string? Cursor, int MaxRecords) -> void
 HackerOs.Server.Contracts.Sync.PullResponse
+HackerOs.Server.Contracts.Sync.PullResponse.<Clone>$() -> HackerOs.Server.Contracts.Sync.PullResponse!
+HackerOs.Server.Contracts.Sync.PullResponse.Deconstruct(out string! Domain, out System.Collections.Generic.IReadOnlyList<HackerOs.Server.Contracts.Sync.SyncRecordEnvelope!>! Records, out string? NextCursor, out bool HasMore, out System.DateTimeOffset PulledAtUtc) -> void
 HackerOs.Server.Contracts.Sync.PullResponse.Domain.get -> string!
 HackerOs.Server.Contracts.Sync.PullResponse.Domain.init -> void
+HackerOs.Server.Contracts.Sync.PullResponse.Equals(HackerOs.Server.Contracts.Sync.PullResponse? other) -> bool
 HackerOs.Server.Contracts.Sync.PullResponse.HasMore.get -> bool
 HackerOs.Server.Contracts.Sync.PullResponse.HasMore.init -> void
 HackerOs.Server.Contracts.Sync.PullResponse.NextCursor.get -> string?
@@ -431,26 +530,38 @@ HackerOs.Server.Contracts.Sync.PushOutcome.AlreadyProcessed = 2 -> HackerOs.Serv
 HackerOs.Server.Contracts.Sync.PushOutcome.ConflictsDetected = 1 -> HackerOs.Server.Contracts.Sync.PushOutcome
 HackerOs.Server.Contracts.Sync.PushOutcome.SchemaIncompatible = 3 -> HackerOs.Server.Contracts.Sync.PushOutcome
 HackerOs.Server.Contracts.Sync.PushRequest
+HackerOs.Server.Contracts.Sync.PushRequest.<Clone>$() -> HackerOs.Server.Contracts.Sync.PushRequest!
+HackerOs.Server.Contracts.Sync.PushRequest.Deconstruct(out string! Domain, out System.Collections.Generic.IReadOnlyList<HackerOs.Server.Contracts.Sync.SyncRecordEnvelope!>! Records, out System.Guid IdempotencyKey) -> void
 HackerOs.Server.Contracts.Sync.PushRequest.Domain.get -> string!
 HackerOs.Server.Contracts.Sync.PushRequest.Domain.init -> void
+HackerOs.Server.Contracts.Sync.PushRequest.Equals(HackerOs.Server.Contracts.Sync.PushRequest? other) -> bool
 HackerOs.Server.Contracts.Sync.PushRequest.IdempotencyKey.get -> System.Guid
 HackerOs.Server.Contracts.Sync.PushRequest.IdempotencyKey.init -> void
 HackerOs.Server.Contracts.Sync.PushRequest.PushRequest(string! Domain, System.Collections.Generic.IReadOnlyList<HackerOs.Server.Contracts.Sync.SyncRecordEnvelope!>! Records, System.Guid IdempotencyKey) -> void
 HackerOs.Server.Contracts.Sync.PushRequest.Records.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Server.Contracts.Sync.SyncRecordEnvelope!>!
 HackerOs.Server.Contracts.Sync.PushRequest.Records.init -> void
 HackerOs.Server.Contracts.Sync.PushResponse
+HackerOs.Server.Contracts.Sync.PushResponse.<Clone>$() -> HackerOs.Server.Contracts.Sync.PushResponse!
 HackerOs.Server.Contracts.Sync.PushResponse.AcceptedCount.get -> int
 HackerOs.Server.Contracts.Sync.PushResponse.AcceptedCount.init -> void
 HackerOs.Server.Contracts.Sync.PushResponse.Conflicts.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Server.Contracts.Sync.SyncConflict!>!
 HackerOs.Server.Contracts.Sync.PushResponse.Conflicts.init -> void
+HackerOs.Server.Contracts.Sync.PushResponse.Deconstruct(out HackerOs.Server.Contracts.Sync.PushOutcome Outcome, out int AcceptedCount, out System.Collections.Generic.IReadOnlyList<HackerOs.Server.Contracts.Sync.SyncConflict!>! Conflicts) -> void
+HackerOs.Server.Contracts.Sync.PushResponse.Equals(HackerOs.Server.Contracts.Sync.PushResponse? other) -> bool
 HackerOs.Server.Contracts.Sync.PushResponse.Outcome.get -> HackerOs.Server.Contracts.Sync.PushOutcome
 HackerOs.Server.Contracts.Sync.PushResponse.Outcome.init -> void
 HackerOs.Server.Contracts.Sync.PushResponse.PushResponse(HackerOs.Server.Contracts.Sync.PushOutcome Outcome, int AcceptedCount, System.Collections.Generic.IReadOnlyList<HackerOs.Server.Contracts.Sync.SyncConflict!>! Conflicts) -> void
 HackerOs.Server.Contracts.Sync.QueryUploadProgressRequest
+HackerOs.Server.Contracts.Sync.QueryUploadProgressRequest.<Clone>$() -> HackerOs.Server.Contracts.Sync.QueryUploadProgressRequest!
+HackerOs.Server.Contracts.Sync.QueryUploadProgressRequest.Deconstruct(out string! UploadSessionId) -> void
+HackerOs.Server.Contracts.Sync.QueryUploadProgressRequest.Equals(HackerOs.Server.Contracts.Sync.QueryUploadProgressRequest? other) -> bool
 HackerOs.Server.Contracts.Sync.QueryUploadProgressRequest.QueryUploadProgressRequest(string! UploadSessionId) -> void
 HackerOs.Server.Contracts.Sync.QueryUploadProgressRequest.UploadSessionId.get -> string!
 HackerOs.Server.Contracts.Sync.QueryUploadProgressRequest.UploadSessionId.init -> void
 HackerOs.Server.Contracts.Sync.QueryUploadProgressResponse
+HackerOs.Server.Contracts.Sync.QueryUploadProgressResponse.<Clone>$() -> HackerOs.Server.Contracts.Sync.QueryUploadProgressResponse!
+HackerOs.Server.Contracts.Sync.QueryUploadProgressResponse.Deconstruct(out string! UploadSessionId, out System.Collections.Generic.IReadOnlyList<int>! ReceivedChunks, out bool IsComplete) -> void
+HackerOs.Server.Contracts.Sync.QueryUploadProgressResponse.Equals(HackerOs.Server.Contracts.Sync.QueryUploadProgressResponse? other) -> bool
 HackerOs.Server.Contracts.Sync.QueryUploadProgressResponse.IsComplete.get -> bool
 HackerOs.Server.Contracts.Sync.QueryUploadProgressResponse.IsComplete.init -> void
 HackerOs.Server.Contracts.Sync.QueryUploadProgressResponse.QueryUploadProgressResponse(string! UploadSessionId, System.Collections.Generic.IReadOnlyList<int>! ReceivedChunks, bool IsComplete) -> void
@@ -459,8 +570,11 @@ HackerOs.Server.Contracts.Sync.QueryUploadProgressResponse.ReceivedChunks.init -
 HackerOs.Server.Contracts.Sync.QueryUploadProgressResponse.UploadSessionId.get -> string!
 HackerOs.Server.Contracts.Sync.QueryUploadProgressResponse.UploadSessionId.init -> void
 HackerOs.Server.Contracts.Sync.ResolveSyncConflictRequest
+HackerOs.Server.Contracts.Sync.ResolveSyncConflictRequest.<Clone>$() -> HackerOs.Server.Contracts.Sync.ResolveSyncConflictRequest!
+HackerOs.Server.Contracts.Sync.ResolveSyncConflictRequest.Deconstruct(out System.Guid RecordId, out string! Domain, out HackerOs.Server.Contracts.Sync.ConflictResolution Resolution, out string? MergedPayloadJson, out string? MergedContentHash) -> void
 HackerOs.Server.Contracts.Sync.ResolveSyncConflictRequest.Domain.get -> string!
 HackerOs.Server.Contracts.Sync.ResolveSyncConflictRequest.Domain.init -> void
+HackerOs.Server.Contracts.Sync.ResolveSyncConflictRequest.Equals(HackerOs.Server.Contracts.Sync.ResolveSyncConflictRequest? other) -> bool
 HackerOs.Server.Contracts.Sync.ResolveSyncConflictRequest.MergedContentHash.get -> string?
 HackerOs.Server.Contracts.Sync.ResolveSyncConflictRequest.MergedContentHash.init -> void
 HackerOs.Server.Contracts.Sync.ResolveSyncConflictRequest.MergedPayloadJson.get -> string?
@@ -471,6 +585,9 @@ HackerOs.Server.Contracts.Sync.ResolveSyncConflictRequest.Resolution.get -> Hack
 HackerOs.Server.Contracts.Sync.ResolveSyncConflictRequest.Resolution.init -> void
 HackerOs.Server.Contracts.Sync.ResolveSyncConflictRequest.ResolveSyncConflictRequest(System.Guid RecordId, string! Domain, HackerOs.Server.Contracts.Sync.ConflictResolution Resolution, string? MergedPayloadJson, string? MergedContentHash) -> void
 HackerOs.Server.Contracts.Sync.ResolveSyncConflictResponse
+HackerOs.Server.Contracts.Sync.ResolveSyncConflictResponse.<Clone>$() -> HackerOs.Server.Contracts.Sync.ResolveSyncConflictResponse!
+HackerOs.Server.Contracts.Sync.ResolveSyncConflictResponse.Deconstruct(out bool Resolved, out string? Reason, out long FinalRevision) -> void
+HackerOs.Server.Contracts.Sync.ResolveSyncConflictResponse.Equals(HackerOs.Server.Contracts.Sync.ResolveSyncConflictResponse? other) -> bool
 HackerOs.Server.Contracts.Sync.ResolveSyncConflictResponse.FinalRevision.get -> long
 HackerOs.Server.Contracts.Sync.ResolveSyncConflictResponse.FinalRevision.init -> void
 HackerOs.Server.Contracts.Sync.ResolveSyncConflictResponse.Reason.get -> string?
@@ -479,10 +596,13 @@ HackerOs.Server.Contracts.Sync.ResolveSyncConflictResponse.ResolveSyncConflictRe
 HackerOs.Server.Contracts.Sync.ResolveSyncConflictResponse.Resolved.get -> bool
 HackerOs.Server.Contracts.Sync.ResolveSyncConflictResponse.Resolved.init -> void
 HackerOs.Server.Contracts.Sync.SyncConflict
+HackerOs.Server.Contracts.Sync.SyncConflict.<Clone>$() -> HackerOs.Server.Contracts.Sync.SyncConflict!
 HackerOs.Server.Contracts.Sync.SyncConflict.ClientRevision.get -> long
 HackerOs.Server.Contracts.Sync.SyncConflict.ClientRevision.init -> void
 HackerOs.Server.Contracts.Sync.SyncConflict.ConflictCode.get -> string!
 HackerOs.Server.Contracts.Sync.SyncConflict.ConflictCode.init -> void
+HackerOs.Server.Contracts.Sync.SyncConflict.Deconstruct(out System.Guid RecordId, out long ClientRevision, out long ServerRevision, out System.DateTimeOffset ServerModifiedUtc, out string! ConflictCode) -> void
+HackerOs.Server.Contracts.Sync.SyncConflict.Equals(HackerOs.Server.Contracts.Sync.SyncConflict? other) -> bool
 HackerOs.Server.Contracts.Sync.SyncConflict.RecordId.get -> System.Guid
 HackerOs.Server.Contracts.Sync.SyncConflict.RecordId.init -> void
 HackerOs.Server.Contracts.Sync.SyncConflict.ServerModifiedUtc.get -> System.DateTimeOffset
@@ -495,10 +615,13 @@ HackerOs.Server.Contracts.Sync.SyncContractsJsonContext.SyncContractsJsonContext
 HackerOs.Server.Contracts.Sync.SyncContractsJsonContext.SyncContractsJsonContext(System.Text.Json.JsonSerializerOptions! options) -> void
 HackerOs.Server.Contracts.Sync.SyncDomain
 HackerOs.Server.Contracts.Sync.SyncRecord<T>
+HackerOs.Server.Contracts.Sync.SyncRecord<T>.<Clone>$() -> HackerOs.Server.Contracts.Sync.SyncRecord<T>!
 HackerOs.Server.Contracts.Sync.SyncRecord<T>.ContentHash.get -> string!
 HackerOs.Server.Contracts.Sync.SyncRecord<T>.ContentHash.init -> void
+HackerOs.Server.Contracts.Sync.SyncRecord<T>.Deconstruct(out System.Guid RecordId, out string! Domain, out int SchemaVersion, out System.Guid OwnerAccountId, out System.Guid OriginDeviceId, out long Revision, out System.DateTimeOffset ModifiedUtc, out System.DateTimeOffset? ServerReceivedUtc, out string! ContentHash, out bool IsTombstone, out T? Payload) -> void
 HackerOs.Server.Contracts.Sync.SyncRecord<T>.Domain.get -> string!
 HackerOs.Server.Contracts.Sync.SyncRecord<T>.Domain.init -> void
+HackerOs.Server.Contracts.Sync.SyncRecord<T>.Equals(HackerOs.Server.Contracts.Sync.SyncRecord<T>? other) -> bool
 HackerOs.Server.Contracts.Sync.SyncRecord<T>.IsTombstone.get -> bool
 HackerOs.Server.Contracts.Sync.SyncRecord<T>.IsTombstone.init -> void
 HackerOs.Server.Contracts.Sync.SyncRecord<T>.ModifiedUtc.get -> System.DateTimeOffset
@@ -519,10 +642,13 @@ HackerOs.Server.Contracts.Sync.SyncRecord<T>.ServerReceivedUtc.get -> System.Dat
 HackerOs.Server.Contracts.Sync.SyncRecord<T>.ServerReceivedUtc.init -> void
 HackerOs.Server.Contracts.Sync.SyncRecord<T>.SyncRecord(System.Guid RecordId, string! Domain, int SchemaVersion, System.Guid OwnerAccountId, System.Guid OriginDeviceId, long Revision, System.DateTimeOffset ModifiedUtc, System.DateTimeOffset? ServerReceivedUtc, string! ContentHash, bool IsTombstone, T? Payload) -> void
 HackerOs.Server.Contracts.Sync.SyncRecordEnvelope
+HackerOs.Server.Contracts.Sync.SyncRecordEnvelope.<Clone>$() -> HackerOs.Server.Contracts.Sync.SyncRecordEnvelope!
 HackerOs.Server.Contracts.Sync.SyncRecordEnvelope.ContentHash.get -> string!
 HackerOs.Server.Contracts.Sync.SyncRecordEnvelope.ContentHash.init -> void
+HackerOs.Server.Contracts.Sync.SyncRecordEnvelope.Deconstruct(out System.Guid RecordId, out string! Domain, out int SchemaVersion, out System.Guid OwnerAccountId, out System.Guid OriginDeviceId, out long Revision, out System.DateTimeOffset ModifiedUtc, out System.DateTimeOffset? ServerReceivedUtc, out string! ContentHash, out bool IsTombstone, out string? PayloadJson) -> void
 HackerOs.Server.Contracts.Sync.SyncRecordEnvelope.Domain.get -> string!
 HackerOs.Server.Contracts.Sync.SyncRecordEnvelope.Domain.init -> void
+HackerOs.Server.Contracts.Sync.SyncRecordEnvelope.Equals(HackerOs.Server.Contracts.Sync.SyncRecordEnvelope? other) -> bool
 HackerOs.Server.Contracts.Sync.SyncRecordEnvelope.IsTombstone.get -> bool
 HackerOs.Server.Contracts.Sync.SyncRecordEnvelope.IsTombstone.init -> void
 HackerOs.Server.Contracts.Sync.SyncRecordEnvelope.ModifiedUtc.get -> System.DateTimeOffset
@@ -543,7 +669,10 @@ HackerOs.Server.Contracts.Sync.SyncRecordEnvelope.ServerReceivedUtc.get -> Syste
 HackerOs.Server.Contracts.Sync.SyncRecordEnvelope.ServerReceivedUtc.init -> void
 HackerOs.Server.Contracts.Sync.SyncRecordEnvelope.SyncRecordEnvelope(System.Guid RecordId, string! Domain, int SchemaVersion, System.Guid OwnerAccountId, System.Guid OriginDeviceId, long Revision, System.DateTimeOffset ModifiedUtc, System.DateTimeOffset? ServerReceivedUtc, string! ContentHash, bool IsTombstone, string? PayloadJson) -> void
 HackerOs.Server.Contracts.Versioning.ApiVersionEntry
+HackerOs.Server.Contracts.Versioning.ApiVersionEntry.<Clone>$() -> HackerOs.Server.Contracts.Versioning.ApiVersionEntry!
 HackerOs.Server.Contracts.Versioning.ApiVersionEntry.ApiVersionEntry(string! Version, string! Status, System.DateTimeOffset? SunsetUtc, int MinPwaSchemaVersion, int MaxPwaSchemaVersion) -> void
+HackerOs.Server.Contracts.Versioning.ApiVersionEntry.Deconstruct(out string! Version, out string! Status, out System.DateTimeOffset? SunsetUtc, out int MinPwaSchemaVersion, out int MaxPwaSchemaVersion) -> void
+HackerOs.Server.Contracts.Versioning.ApiVersionEntry.Equals(HackerOs.Server.Contracts.Versioning.ApiVersionEntry? other) -> bool
 HackerOs.Server.Contracts.Versioning.ApiVersionEntry.MaxPwaSchemaVersion.get -> int
 HackerOs.Server.Contracts.Versioning.ApiVersionEntry.MaxPwaSchemaVersion.init -> void
 HackerOs.Server.Contracts.Versioning.ApiVersionEntry.MinPwaSchemaVersion.get -> int
@@ -555,9 +684,12 @@ HackerOs.Server.Contracts.Versioning.ApiVersionEntry.SunsetUtc.init -> void
 HackerOs.Server.Contracts.Versioning.ApiVersionEntry.Version.get -> string!
 HackerOs.Server.Contracts.Versioning.ApiVersionEntry.Version.init -> void
 HackerOs.Server.Contracts.Versioning.ApiVersionResponse
+HackerOs.Server.Contracts.Versioning.ApiVersionResponse.<Clone>$() -> HackerOs.Server.Contracts.Versioning.ApiVersionResponse!
 HackerOs.Server.Contracts.Versioning.ApiVersionResponse.ApiVersionResponse(string! ServerVersion, string! CurrentApiVersion, System.Collections.Generic.IReadOnlyList<HackerOs.Server.Contracts.Versioning.ApiVersionEntry!>! SupportedVersions, int MinCompatiblePwaSchema) -> void
 HackerOs.Server.Contracts.Versioning.ApiVersionResponse.CurrentApiVersion.get -> string!
 HackerOs.Server.Contracts.Versioning.ApiVersionResponse.CurrentApiVersion.init -> void
+HackerOs.Server.Contracts.Versioning.ApiVersionResponse.Deconstruct(out string! ServerVersion, out string! CurrentApiVersion, out System.Collections.Generic.IReadOnlyList<HackerOs.Server.Contracts.Versioning.ApiVersionEntry!>! SupportedVersions, out int MinCompatiblePwaSchema) -> void
+HackerOs.Server.Contracts.Versioning.ApiVersionResponse.Equals(HackerOs.Server.Contracts.Versioning.ApiVersionResponse? other) -> bool
 HackerOs.Server.Contracts.Versioning.ApiVersionResponse.MinCompatiblePwaSchema.get -> int
 HackerOs.Server.Contracts.Versioning.ApiVersionResponse.MinCompatiblePwaSchema.init -> void
 HackerOs.Server.Contracts.Versioning.ApiVersionResponse.ServerVersion.get -> string!
@@ -565,15 +697,21 @@ HackerOs.Server.Contracts.Versioning.ApiVersionResponse.ServerVersion.init -> vo
 HackerOs.Server.Contracts.Versioning.ApiVersionResponse.SupportedVersions.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Server.Contracts.Versioning.ApiVersionEntry!>!
 HackerOs.Server.Contracts.Versioning.ApiVersionResponse.SupportedVersions.init -> void
 HackerOs.Server.Contracts.Versioning.CompatibilityCheckRequest
+HackerOs.Server.Contracts.Versioning.CompatibilityCheckRequest.<Clone>$() -> HackerOs.Server.Contracts.Versioning.CompatibilityCheckRequest!
 HackerOs.Server.Contracts.Versioning.CompatibilityCheckRequest.ClientPwaSchemaVersion.get -> int
 HackerOs.Server.Contracts.Versioning.CompatibilityCheckRequest.ClientPwaSchemaVersion.init -> void
 HackerOs.Server.Contracts.Versioning.CompatibilityCheckRequest.CompatibilityCheckRequest(int ClientPwaSchemaVersion, string! DesiredApiVersion) -> void
+HackerOs.Server.Contracts.Versioning.CompatibilityCheckRequest.Deconstruct(out int ClientPwaSchemaVersion, out string! DesiredApiVersion) -> void
 HackerOs.Server.Contracts.Versioning.CompatibilityCheckRequest.DesiredApiVersion.get -> string!
 HackerOs.Server.Contracts.Versioning.CompatibilityCheckRequest.DesiredApiVersion.init -> void
+HackerOs.Server.Contracts.Versioning.CompatibilityCheckRequest.Equals(HackerOs.Server.Contracts.Versioning.CompatibilityCheckRequest? other) -> bool
 HackerOs.Server.Contracts.Versioning.CompatibilityCheckResponse
+HackerOs.Server.Contracts.Versioning.CompatibilityCheckResponse.<Clone>$() -> HackerOs.Server.Contracts.Versioning.CompatibilityCheckResponse!
 HackerOs.Server.Contracts.Versioning.CompatibilityCheckResponse.CompatibilityCheckResponse(bool Compatible, string? Reason, bool UpgradeRequired, bool VersionSunset) -> void
 HackerOs.Server.Contracts.Versioning.CompatibilityCheckResponse.Compatible.get -> bool
 HackerOs.Server.Contracts.Versioning.CompatibilityCheckResponse.Compatible.init -> void
+HackerOs.Server.Contracts.Versioning.CompatibilityCheckResponse.Deconstruct(out bool Compatible, out string? Reason, out bool UpgradeRequired, out bool VersionSunset) -> void
+HackerOs.Server.Contracts.Versioning.CompatibilityCheckResponse.Equals(HackerOs.Server.Contracts.Versioning.CompatibilityCheckResponse? other) -> bool
 HackerOs.Server.Contracts.Versioning.CompatibilityCheckResponse.Reason.get -> string?
 HackerOs.Server.Contracts.Versioning.CompatibilityCheckResponse.Reason.init -> void
 HackerOs.Server.Contracts.Versioning.CompatibilityCheckResponse.UpgradeRequired.get -> bool
@@ -617,23 +755,253 @@ const HackerOs.Server.Contracts.Sync.SyncDomain.FileAssociations = "file_associa
 const HackerOs.Server.Contracts.Sync.SyncDomain.FileSystem = "filesystem" -> string!
 const HackerOs.Server.Contracts.Sync.SyncDomain.Grants = "grants" -> string!
 const HackerOs.Server.Contracts.Sync.SyncDomain.Settings = "settings" -> string!
+override HackerOs.Server.Contracts.Admin.AccountDataExportRequest.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Admin.AccountDataExportRequest.GetHashCode() -> int
+override HackerOs.Server.Contracts.Admin.AccountDataExportRequest.ToString() -> string!
+override HackerOs.Server.Contracts.Admin.AccountDataExportStatus.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Admin.AccountDataExportStatus.GetHashCode() -> int
+override HackerOs.Server.Contracts.Admin.AccountDataExportStatus.ToString() -> string!
+override HackerOs.Server.Contracts.Admin.AccountDataSummaryResponse.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Admin.AccountDataSummaryResponse.GetHashCode() -> int
+override HackerOs.Server.Contracts.Admin.AccountDataSummaryResponse.ToString() -> string!
 override HackerOs.Server.Contracts.Admin.AdminContractsJsonContext.GetTypeInfo(System.Type! type) -> System.Text.Json.Serialization.Metadata.JsonTypeInfo?
+override HackerOs.Server.Contracts.Admin.ComponentHealth.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Admin.ComponentHealth.GetHashCode() -> int
+override HackerOs.Server.Contracts.Admin.ComponentHealth.ToString() -> string!
+override HackerOs.Server.Contracts.Admin.DeleteAccountRequest.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Admin.DeleteAccountRequest.GetHashCode() -> int
+override HackerOs.Server.Contracts.Admin.DeleteAccountRequest.ToString() -> string!
+override HackerOs.Server.Contracts.Admin.DeleteAccountResponse.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Admin.DeleteAccountResponse.GetHashCode() -> int
+override HackerOs.Server.Contracts.Admin.DeleteAccountResponse.ToString() -> string!
+override HackerOs.Server.Contracts.Admin.ServerHealthResponse.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Admin.ServerHealthResponse.GetHashCode() -> int
+override HackerOs.Server.Contracts.Admin.ServerHealthResponse.ToString() -> string!
+override HackerOs.Server.Contracts.Hosting.HostInfoResponse.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Hosting.HostInfoResponse.GetHashCode() -> int
+override HackerOs.Server.Contracts.Hosting.HostInfoResponse.ToString() -> string!
 override HackerOs.Server.Contracts.Hosting.HostingContractsJsonContext.GetTypeInfo(System.Type! type) -> System.Text.Json.Serialization.Metadata.JsonTypeInfo?
+override HackerOs.Server.Contracts.Identity.CreateAccountRequest.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Identity.CreateAccountRequest.GetHashCode() -> int
+override HackerOs.Server.Contracts.Identity.CreateAccountRequest.ToString() -> string!
+override HackerOs.Server.Contracts.Identity.CreateAccountResponse.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Identity.CreateAccountResponse.GetHashCode() -> int
+override HackerOs.Server.Contracts.Identity.CreateAccountResponse.ToString() -> string!
+override HackerOs.Server.Contracts.Identity.DeviceSummary.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Identity.DeviceSummary.GetHashCode() -> int
+override HackerOs.Server.Contracts.Identity.DeviceSummary.ToString() -> string!
 override HackerOs.Server.Contracts.Identity.IdentityContractsJsonContext.GetTypeInfo(System.Type! type) -> System.Text.Json.Serialization.Metadata.JsonTypeInfo?
+override HackerOs.Server.Contracts.Identity.LoginRequest.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Identity.LoginRequest.GetHashCode() -> int
+override HackerOs.Server.Contracts.Identity.LoginRequest.ToString() -> string!
+override HackerOs.Server.Contracts.Identity.LoginResponse.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Identity.LoginResponse.GetHashCode() -> int
+override HackerOs.Server.Contracts.Identity.LoginResponse.ToString() -> string!
+override HackerOs.Server.Contracts.Identity.RefreshTokenRequest.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Identity.RefreshTokenRequest.GetHashCode() -> int
+override HackerOs.Server.Contracts.Identity.RefreshTokenRequest.ToString() -> string!
+override HackerOs.Server.Contracts.Identity.RefreshTokenResponse.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Identity.RefreshTokenResponse.GetHashCode() -> int
+override HackerOs.Server.Contracts.Identity.RefreshTokenResponse.ToString() -> string!
+override HackerOs.Server.Contracts.Identity.RegisterDeviceRequest.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Identity.RegisterDeviceRequest.GetHashCode() -> int
+override HackerOs.Server.Contracts.Identity.RegisterDeviceRequest.ToString() -> string!
+override HackerOs.Server.Contracts.Identity.RegisterDeviceResponse.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Identity.RegisterDeviceResponse.GetHashCode() -> int
+override HackerOs.Server.Contracts.Identity.RegisterDeviceResponse.ToString() -> string!
 override HackerOs.Server.Contracts.Proxy.ProxyContractsJsonContext.GetTypeInfo(System.Type! type) -> System.Text.Json.Serialization.Metadata.JsonTypeInfo?
+override HackerOs.Server.Contracts.Proxy.ProxyErrorResponse.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Proxy.ProxyErrorResponse.GetHashCode() -> int
+override HackerOs.Server.Contracts.Proxy.ProxyErrorResponse.ToString() -> string!
+override HackerOs.Server.Contracts.Proxy.ProxyHeader.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Proxy.ProxyHeader.GetHashCode() -> int
+override HackerOs.Server.Contracts.Proxy.ProxyHeader.ToString() -> string!
+override HackerOs.Server.Contracts.Proxy.ProxyHttpRequest.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Proxy.ProxyHttpRequest.GetHashCode() -> int
+override HackerOs.Server.Contracts.Proxy.ProxyHttpRequest.ToString() -> string!
+override HackerOs.Server.Contracts.Proxy.ProxyHttpResponse.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Proxy.ProxyHttpResponse.GetHashCode() -> int
+override HackerOs.Server.Contracts.Proxy.ProxyHttpResponse.ToString() -> string!
+override HackerOs.Server.Contracts.Proxy.ProxyPolicyResponse.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Proxy.ProxyPolicyResponse.GetHashCode() -> int
+override HackerOs.Server.Contracts.Proxy.ProxyPolicyResponse.ToString() -> string!
+override HackerOs.Server.Contracts.Proxy.ProxyStreamClosure.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Proxy.ProxyStreamClosure.GetHashCode() -> int
+override HackerOs.Server.Contracts.Proxy.ProxyStreamClosure.ToString() -> string!
+override HackerOs.Server.Contracts.Proxy.ProxyStreamOpened.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Proxy.ProxyStreamOpened.GetHashCode() -> int
+override HackerOs.Server.Contracts.Proxy.ProxyStreamOpened.ToString() -> string!
+override HackerOs.Server.Contracts.Proxy.ProxyStreamRequest.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Proxy.ProxyStreamRequest.GetHashCode() -> int
+override HackerOs.Server.Contracts.Proxy.ProxyStreamRequest.ToString() -> string!
+override HackerOs.Server.Contracts.Proxy.ProxyTcpProbeRequest.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Proxy.ProxyTcpProbeRequest.GetHashCode() -> int
+override HackerOs.Server.Contracts.Proxy.ProxyTcpProbeRequest.ToString() -> string!
+override HackerOs.Server.Contracts.Proxy.ProxyTcpProbeResponse.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Proxy.ProxyTcpProbeResponse.GetHashCode() -> int
+override HackerOs.Server.Contracts.Proxy.ProxyTcpProbeResponse.ToString() -> string!
 override HackerOs.Server.Contracts.Sync.ContentTransferContractsJsonContext.GetTypeInfo(System.Type! type) -> System.Text.Json.Serialization.Metadata.JsonTypeInfo?
+override HackerOs.Server.Contracts.Sync.InitiateContentDownloadRequest.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Sync.InitiateContentDownloadRequest.GetHashCode() -> int
+override HackerOs.Server.Contracts.Sync.InitiateContentDownloadRequest.ToString() -> string!
+override HackerOs.Server.Contracts.Sync.InitiateContentDownloadResponse.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Sync.InitiateContentDownloadResponse.GetHashCode() -> int
+override HackerOs.Server.Contracts.Sync.InitiateContentDownloadResponse.ToString() -> string!
+override HackerOs.Server.Contracts.Sync.InitiateContentUploadRequest.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Sync.InitiateContentUploadRequest.GetHashCode() -> int
+override HackerOs.Server.Contracts.Sync.InitiateContentUploadRequest.ToString() -> string!
+override HackerOs.Server.Contracts.Sync.InitiateContentUploadResponse.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Sync.InitiateContentUploadResponse.GetHashCode() -> int
+override HackerOs.Server.Contracts.Sync.InitiateContentUploadResponse.ToString() -> string!
+override HackerOs.Server.Contracts.Sync.PullRequest.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Sync.PullRequest.GetHashCode() -> int
+override HackerOs.Server.Contracts.Sync.PullRequest.ToString() -> string!
+override HackerOs.Server.Contracts.Sync.PullResponse.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Sync.PullResponse.GetHashCode() -> int
+override HackerOs.Server.Contracts.Sync.PullResponse.ToString() -> string!
+override HackerOs.Server.Contracts.Sync.PushRequest.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Sync.PushRequest.GetHashCode() -> int
+override HackerOs.Server.Contracts.Sync.PushRequest.ToString() -> string!
+override HackerOs.Server.Contracts.Sync.PushResponse.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Sync.PushResponse.GetHashCode() -> int
+override HackerOs.Server.Contracts.Sync.PushResponse.ToString() -> string!
+override HackerOs.Server.Contracts.Sync.QueryUploadProgressRequest.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Sync.QueryUploadProgressRequest.GetHashCode() -> int
+override HackerOs.Server.Contracts.Sync.QueryUploadProgressRequest.ToString() -> string!
+override HackerOs.Server.Contracts.Sync.QueryUploadProgressResponse.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Sync.QueryUploadProgressResponse.GetHashCode() -> int
+override HackerOs.Server.Contracts.Sync.QueryUploadProgressResponse.ToString() -> string!
+override HackerOs.Server.Contracts.Sync.ResolveSyncConflictRequest.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Sync.ResolveSyncConflictRequest.GetHashCode() -> int
+override HackerOs.Server.Contracts.Sync.ResolveSyncConflictRequest.ToString() -> string!
+override HackerOs.Server.Contracts.Sync.ResolveSyncConflictResponse.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Sync.ResolveSyncConflictResponse.GetHashCode() -> int
+override HackerOs.Server.Contracts.Sync.ResolveSyncConflictResponse.ToString() -> string!
+override HackerOs.Server.Contracts.Sync.SyncConflict.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Sync.SyncConflict.GetHashCode() -> int
+override HackerOs.Server.Contracts.Sync.SyncConflict.ToString() -> string!
 override HackerOs.Server.Contracts.Sync.SyncContractsJsonContext.GetTypeInfo(System.Type! type) -> System.Text.Json.Serialization.Metadata.JsonTypeInfo?
+override HackerOs.Server.Contracts.Sync.SyncRecord<T>.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Sync.SyncRecord<T>.GetHashCode() -> int
+override HackerOs.Server.Contracts.Sync.SyncRecord<T>.ToString() -> string!
+override HackerOs.Server.Contracts.Sync.SyncRecordEnvelope.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Sync.SyncRecordEnvelope.GetHashCode() -> int
+override HackerOs.Server.Contracts.Sync.SyncRecordEnvelope.ToString() -> string!
+override HackerOs.Server.Contracts.Versioning.ApiVersionEntry.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Versioning.ApiVersionEntry.GetHashCode() -> int
+override HackerOs.Server.Contracts.Versioning.ApiVersionEntry.ToString() -> string!
+override HackerOs.Server.Contracts.Versioning.ApiVersionResponse.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Versioning.ApiVersionResponse.GetHashCode() -> int
+override HackerOs.Server.Contracts.Versioning.ApiVersionResponse.ToString() -> string!
+override HackerOs.Server.Contracts.Versioning.CompatibilityCheckRequest.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Versioning.CompatibilityCheckRequest.GetHashCode() -> int
+override HackerOs.Server.Contracts.Versioning.CompatibilityCheckRequest.ToString() -> string!
+override HackerOs.Server.Contracts.Versioning.CompatibilityCheckResponse.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Versioning.CompatibilityCheckResponse.GetHashCode() -> int
+override HackerOs.Server.Contracts.Versioning.CompatibilityCheckResponse.ToString() -> string!
 override HackerOs.Server.Contracts.Versioning.VersioningContractsJsonContext.GetTypeInfo(System.Type! type) -> System.Text.Json.Serialization.Metadata.JsonTypeInfo?
+static HackerOs.Server.Contracts.Admin.AccountDataExportRequest.operator !=(HackerOs.Server.Contracts.Admin.AccountDataExportRequest? left, HackerOs.Server.Contracts.Admin.AccountDataExportRequest? right) -> bool
+static HackerOs.Server.Contracts.Admin.AccountDataExportRequest.operator ==(HackerOs.Server.Contracts.Admin.AccountDataExportRequest? left, HackerOs.Server.Contracts.Admin.AccountDataExportRequest? right) -> bool
+static HackerOs.Server.Contracts.Admin.AccountDataExportStatus.operator !=(HackerOs.Server.Contracts.Admin.AccountDataExportStatus? left, HackerOs.Server.Contracts.Admin.AccountDataExportStatus? right) -> bool
+static HackerOs.Server.Contracts.Admin.AccountDataExportStatus.operator ==(HackerOs.Server.Contracts.Admin.AccountDataExportStatus? left, HackerOs.Server.Contracts.Admin.AccountDataExportStatus? right) -> bool
+static HackerOs.Server.Contracts.Admin.AccountDataSummaryResponse.operator !=(HackerOs.Server.Contracts.Admin.AccountDataSummaryResponse? left, HackerOs.Server.Contracts.Admin.AccountDataSummaryResponse? right) -> bool
+static HackerOs.Server.Contracts.Admin.AccountDataSummaryResponse.operator ==(HackerOs.Server.Contracts.Admin.AccountDataSummaryResponse? left, HackerOs.Server.Contracts.Admin.AccountDataSummaryResponse? right) -> bool
 static HackerOs.Server.Contracts.Admin.AdminContractsJsonContext.Default.get -> HackerOs.Server.Contracts.Admin.AdminContractsJsonContext!
+static HackerOs.Server.Contracts.Admin.ComponentHealth.operator !=(HackerOs.Server.Contracts.Admin.ComponentHealth? left, HackerOs.Server.Contracts.Admin.ComponentHealth? right) -> bool
+static HackerOs.Server.Contracts.Admin.ComponentHealth.operator ==(HackerOs.Server.Contracts.Admin.ComponentHealth? left, HackerOs.Server.Contracts.Admin.ComponentHealth? right) -> bool
+static HackerOs.Server.Contracts.Admin.DeleteAccountRequest.operator !=(HackerOs.Server.Contracts.Admin.DeleteAccountRequest? left, HackerOs.Server.Contracts.Admin.DeleteAccountRequest? right) -> bool
+static HackerOs.Server.Contracts.Admin.DeleteAccountRequest.operator ==(HackerOs.Server.Contracts.Admin.DeleteAccountRequest? left, HackerOs.Server.Contracts.Admin.DeleteAccountRequest? right) -> bool
+static HackerOs.Server.Contracts.Admin.DeleteAccountResponse.operator !=(HackerOs.Server.Contracts.Admin.DeleteAccountResponse? left, HackerOs.Server.Contracts.Admin.DeleteAccountResponse? right) -> bool
+static HackerOs.Server.Contracts.Admin.DeleteAccountResponse.operator ==(HackerOs.Server.Contracts.Admin.DeleteAccountResponse? left, HackerOs.Server.Contracts.Admin.DeleteAccountResponse? right) -> bool
+static HackerOs.Server.Contracts.Admin.ServerHealthResponse.operator !=(HackerOs.Server.Contracts.Admin.ServerHealthResponse? left, HackerOs.Server.Contracts.Admin.ServerHealthResponse? right) -> bool
+static HackerOs.Server.Contracts.Admin.ServerHealthResponse.operator ==(HackerOs.Server.Contracts.Admin.ServerHealthResponse? left, HackerOs.Server.Contracts.Admin.ServerHealthResponse? right) -> bool
+static HackerOs.Server.Contracts.Hosting.HostInfoResponse.operator !=(HackerOs.Server.Contracts.Hosting.HostInfoResponse? left, HackerOs.Server.Contracts.Hosting.HostInfoResponse? right) -> bool
+static HackerOs.Server.Contracts.Hosting.HostInfoResponse.operator ==(HackerOs.Server.Contracts.Hosting.HostInfoResponse? left, HackerOs.Server.Contracts.Hosting.HostInfoResponse? right) -> bool
 static HackerOs.Server.Contracts.Hosting.HostingContractsJsonContext.Default.get -> HackerOs.Server.Contracts.Hosting.HostingContractsJsonContext!
+static HackerOs.Server.Contracts.Identity.CreateAccountRequest.operator !=(HackerOs.Server.Contracts.Identity.CreateAccountRequest? left, HackerOs.Server.Contracts.Identity.CreateAccountRequest? right) -> bool
+static HackerOs.Server.Contracts.Identity.CreateAccountRequest.operator ==(HackerOs.Server.Contracts.Identity.CreateAccountRequest? left, HackerOs.Server.Contracts.Identity.CreateAccountRequest? right) -> bool
+static HackerOs.Server.Contracts.Identity.CreateAccountResponse.operator !=(HackerOs.Server.Contracts.Identity.CreateAccountResponse? left, HackerOs.Server.Contracts.Identity.CreateAccountResponse? right) -> bool
+static HackerOs.Server.Contracts.Identity.CreateAccountResponse.operator ==(HackerOs.Server.Contracts.Identity.CreateAccountResponse? left, HackerOs.Server.Contracts.Identity.CreateAccountResponse? right) -> bool
+static HackerOs.Server.Contracts.Identity.DeviceSummary.operator !=(HackerOs.Server.Contracts.Identity.DeviceSummary? left, HackerOs.Server.Contracts.Identity.DeviceSummary? right) -> bool
+static HackerOs.Server.Contracts.Identity.DeviceSummary.operator ==(HackerOs.Server.Contracts.Identity.DeviceSummary? left, HackerOs.Server.Contracts.Identity.DeviceSummary? right) -> bool
 static HackerOs.Server.Contracts.Identity.IdentityContractsJsonContext.Default.get -> HackerOs.Server.Contracts.Identity.IdentityContractsJsonContext!
+static HackerOs.Server.Contracts.Identity.LoginRequest.operator !=(HackerOs.Server.Contracts.Identity.LoginRequest? left, HackerOs.Server.Contracts.Identity.LoginRequest? right) -> bool
+static HackerOs.Server.Contracts.Identity.LoginRequest.operator ==(HackerOs.Server.Contracts.Identity.LoginRequest? left, HackerOs.Server.Contracts.Identity.LoginRequest? right) -> bool
+static HackerOs.Server.Contracts.Identity.LoginResponse.operator !=(HackerOs.Server.Contracts.Identity.LoginResponse? left, HackerOs.Server.Contracts.Identity.LoginResponse? right) -> bool
+static HackerOs.Server.Contracts.Identity.LoginResponse.operator ==(HackerOs.Server.Contracts.Identity.LoginResponse? left, HackerOs.Server.Contracts.Identity.LoginResponse? right) -> bool
+static HackerOs.Server.Contracts.Identity.RefreshTokenRequest.operator !=(HackerOs.Server.Contracts.Identity.RefreshTokenRequest? left, HackerOs.Server.Contracts.Identity.RefreshTokenRequest? right) -> bool
+static HackerOs.Server.Contracts.Identity.RefreshTokenRequest.operator ==(HackerOs.Server.Contracts.Identity.RefreshTokenRequest? left, HackerOs.Server.Contracts.Identity.RefreshTokenRequest? right) -> bool
+static HackerOs.Server.Contracts.Identity.RefreshTokenResponse.operator !=(HackerOs.Server.Contracts.Identity.RefreshTokenResponse? left, HackerOs.Server.Contracts.Identity.RefreshTokenResponse? right) -> bool
+static HackerOs.Server.Contracts.Identity.RefreshTokenResponse.operator ==(HackerOs.Server.Contracts.Identity.RefreshTokenResponse? left, HackerOs.Server.Contracts.Identity.RefreshTokenResponse? right) -> bool
+static HackerOs.Server.Contracts.Identity.RegisterDeviceRequest.operator !=(HackerOs.Server.Contracts.Identity.RegisterDeviceRequest? left, HackerOs.Server.Contracts.Identity.RegisterDeviceRequest? right) -> bool
+static HackerOs.Server.Contracts.Identity.RegisterDeviceRequest.operator ==(HackerOs.Server.Contracts.Identity.RegisterDeviceRequest? left, HackerOs.Server.Contracts.Identity.RegisterDeviceRequest? right) -> bool
+static HackerOs.Server.Contracts.Identity.RegisterDeviceResponse.operator !=(HackerOs.Server.Contracts.Identity.RegisterDeviceResponse? left, HackerOs.Server.Contracts.Identity.RegisterDeviceResponse? right) -> bool
+static HackerOs.Server.Contracts.Identity.RegisterDeviceResponse.operator ==(HackerOs.Server.Contracts.Identity.RegisterDeviceResponse? left, HackerOs.Server.Contracts.Identity.RegisterDeviceResponse? right) -> bool
 static HackerOs.Server.Contracts.Proxy.ProxyContractsJsonContext.Default.get -> HackerOs.Server.Contracts.Proxy.ProxyContractsJsonContext!
+static HackerOs.Server.Contracts.Proxy.ProxyErrorResponse.operator !=(HackerOs.Server.Contracts.Proxy.ProxyErrorResponse? left, HackerOs.Server.Contracts.Proxy.ProxyErrorResponse? right) -> bool
+static HackerOs.Server.Contracts.Proxy.ProxyErrorResponse.operator ==(HackerOs.Server.Contracts.Proxy.ProxyErrorResponse? left, HackerOs.Server.Contracts.Proxy.ProxyErrorResponse? right) -> bool
+static HackerOs.Server.Contracts.Proxy.ProxyHeader.operator !=(HackerOs.Server.Contracts.Proxy.ProxyHeader? left, HackerOs.Server.Contracts.Proxy.ProxyHeader? right) -> bool
+static HackerOs.Server.Contracts.Proxy.ProxyHeader.operator ==(HackerOs.Server.Contracts.Proxy.ProxyHeader? left, HackerOs.Server.Contracts.Proxy.ProxyHeader? right) -> bool
 static HackerOs.Server.Contracts.Proxy.ProxyHttpRequest.Create(System.Guid requestId, string! targetUrl, string! httpMethod, System.Collections.Generic.IReadOnlyList<HackerOs.Server.Contracts.Proxy.ProxyHeader!>! headers, byte[]? body, string? contentType, int timeoutSeconds, string! appId, bool includeBody) -> HackerOs.Server.Contracts.Proxy.ProxyHttpRequest!
+static HackerOs.Server.Contracts.Proxy.ProxyHttpRequest.operator !=(HackerOs.Server.Contracts.Proxy.ProxyHttpRequest? left, HackerOs.Server.Contracts.Proxy.ProxyHttpRequest? right) -> bool
+static HackerOs.Server.Contracts.Proxy.ProxyHttpRequest.operator ==(HackerOs.Server.Contracts.Proxy.ProxyHttpRequest? left, HackerOs.Server.Contracts.Proxy.ProxyHttpRequest? right) -> bool
+static HackerOs.Server.Contracts.Proxy.ProxyHttpResponse.operator !=(HackerOs.Server.Contracts.Proxy.ProxyHttpResponse? left, HackerOs.Server.Contracts.Proxy.ProxyHttpResponse? right) -> bool
+static HackerOs.Server.Contracts.Proxy.ProxyHttpResponse.operator ==(HackerOs.Server.Contracts.Proxy.ProxyHttpResponse? left, HackerOs.Server.Contracts.Proxy.ProxyHttpResponse? right) -> bool
+static HackerOs.Server.Contracts.Proxy.ProxyPolicyResponse.operator !=(HackerOs.Server.Contracts.Proxy.ProxyPolicyResponse? left, HackerOs.Server.Contracts.Proxy.ProxyPolicyResponse? right) -> bool
+static HackerOs.Server.Contracts.Proxy.ProxyPolicyResponse.operator ==(HackerOs.Server.Contracts.Proxy.ProxyPolicyResponse? left, HackerOs.Server.Contracts.Proxy.ProxyPolicyResponse? right) -> bool
+static HackerOs.Server.Contracts.Proxy.ProxyStreamClosure.operator !=(HackerOs.Server.Contracts.Proxy.ProxyStreamClosure? left, HackerOs.Server.Contracts.Proxy.ProxyStreamClosure? right) -> bool
+static HackerOs.Server.Contracts.Proxy.ProxyStreamClosure.operator ==(HackerOs.Server.Contracts.Proxy.ProxyStreamClosure? left, HackerOs.Server.Contracts.Proxy.ProxyStreamClosure? right) -> bool
 static HackerOs.Server.Contracts.Proxy.ProxyStreamException.FromCloseReason(string? reason) -> HackerOs.Server.Contracts.Proxy.ProxyStreamException!
 static HackerOs.Server.Contracts.Proxy.ProxyStreamException.ToCloseReason(string! errorCode, string! message) -> string!
+static HackerOs.Server.Contracts.Proxy.ProxyStreamOpened.operator !=(HackerOs.Server.Contracts.Proxy.ProxyStreamOpened? left, HackerOs.Server.Contracts.Proxy.ProxyStreamOpened? right) -> bool
+static HackerOs.Server.Contracts.Proxy.ProxyStreamOpened.operator ==(HackerOs.Server.Contracts.Proxy.ProxyStreamOpened? left, HackerOs.Server.Contracts.Proxy.ProxyStreamOpened? right) -> bool
+static HackerOs.Server.Contracts.Proxy.ProxyStreamRequest.operator !=(HackerOs.Server.Contracts.Proxy.ProxyStreamRequest? left, HackerOs.Server.Contracts.Proxy.ProxyStreamRequest? right) -> bool
+static HackerOs.Server.Contracts.Proxy.ProxyStreamRequest.operator ==(HackerOs.Server.Contracts.Proxy.ProxyStreamRequest? left, HackerOs.Server.Contracts.Proxy.ProxyStreamRequest? right) -> bool
 static HackerOs.Server.Contracts.Proxy.ProxyStreamRoutes.PathOf(HackerOs.Server.Contracts.Proxy.ProxyProtocol protocol) -> string!
+static HackerOs.Server.Contracts.Proxy.ProxyTcpProbeRequest.operator !=(HackerOs.Server.Contracts.Proxy.ProxyTcpProbeRequest? left, HackerOs.Server.Contracts.Proxy.ProxyTcpProbeRequest? right) -> bool
+static HackerOs.Server.Contracts.Proxy.ProxyTcpProbeRequest.operator ==(HackerOs.Server.Contracts.Proxy.ProxyTcpProbeRequest? left, HackerOs.Server.Contracts.Proxy.ProxyTcpProbeRequest? right) -> bool
+static HackerOs.Server.Contracts.Proxy.ProxyTcpProbeResponse.operator !=(HackerOs.Server.Contracts.Proxy.ProxyTcpProbeResponse? left, HackerOs.Server.Contracts.Proxy.ProxyTcpProbeResponse? right) -> bool
+static HackerOs.Server.Contracts.Proxy.ProxyTcpProbeResponse.operator ==(HackerOs.Server.Contracts.Proxy.ProxyTcpProbeResponse? left, HackerOs.Server.Contracts.Proxy.ProxyTcpProbeResponse? right) -> bool
 static HackerOs.Server.Contracts.Sync.ContentTransferContractsJsonContext.Default.get -> HackerOs.Server.Contracts.Sync.ContentTransferContractsJsonContext!
+static HackerOs.Server.Contracts.Sync.InitiateContentDownloadRequest.operator !=(HackerOs.Server.Contracts.Sync.InitiateContentDownloadRequest? left, HackerOs.Server.Contracts.Sync.InitiateContentDownloadRequest? right) -> bool
+static HackerOs.Server.Contracts.Sync.InitiateContentDownloadRequest.operator ==(HackerOs.Server.Contracts.Sync.InitiateContentDownloadRequest? left, HackerOs.Server.Contracts.Sync.InitiateContentDownloadRequest? right) -> bool
+static HackerOs.Server.Contracts.Sync.InitiateContentDownloadResponse.operator !=(HackerOs.Server.Contracts.Sync.InitiateContentDownloadResponse? left, HackerOs.Server.Contracts.Sync.InitiateContentDownloadResponse? right) -> bool
+static HackerOs.Server.Contracts.Sync.InitiateContentDownloadResponse.operator ==(HackerOs.Server.Contracts.Sync.InitiateContentDownloadResponse? left, HackerOs.Server.Contracts.Sync.InitiateContentDownloadResponse? right) -> bool
+static HackerOs.Server.Contracts.Sync.InitiateContentUploadRequest.operator !=(HackerOs.Server.Contracts.Sync.InitiateContentUploadRequest? left, HackerOs.Server.Contracts.Sync.InitiateContentUploadRequest? right) -> bool
+static HackerOs.Server.Contracts.Sync.InitiateContentUploadRequest.operator ==(HackerOs.Server.Contracts.Sync.InitiateContentUploadRequest? left, HackerOs.Server.Contracts.Sync.InitiateContentUploadRequest? right) -> bool
+static HackerOs.Server.Contracts.Sync.InitiateContentUploadResponse.operator !=(HackerOs.Server.Contracts.Sync.InitiateContentUploadResponse? left, HackerOs.Server.Contracts.Sync.InitiateContentUploadResponse? right) -> bool
+static HackerOs.Server.Contracts.Sync.InitiateContentUploadResponse.operator ==(HackerOs.Server.Contracts.Sync.InitiateContentUploadResponse? left, HackerOs.Server.Contracts.Sync.InitiateContentUploadResponse? right) -> bool
+static HackerOs.Server.Contracts.Sync.PullRequest.operator !=(HackerOs.Server.Contracts.Sync.PullRequest? left, HackerOs.Server.Contracts.Sync.PullRequest? right) -> bool
+static HackerOs.Server.Contracts.Sync.PullRequest.operator ==(HackerOs.Server.Contracts.Sync.PullRequest? left, HackerOs.Server.Contracts.Sync.PullRequest? right) -> bool
+static HackerOs.Server.Contracts.Sync.PullResponse.operator !=(HackerOs.Server.Contracts.Sync.PullResponse? left, HackerOs.Server.Contracts.Sync.PullResponse? right) -> bool
+static HackerOs.Server.Contracts.Sync.PullResponse.operator ==(HackerOs.Server.Contracts.Sync.PullResponse? left, HackerOs.Server.Contracts.Sync.PullResponse? right) -> bool
+static HackerOs.Server.Contracts.Sync.PushRequest.operator !=(HackerOs.Server.Contracts.Sync.PushRequest? left, HackerOs.Server.Contracts.Sync.PushRequest? right) -> bool
+static HackerOs.Server.Contracts.Sync.PushRequest.operator ==(HackerOs.Server.Contracts.Sync.PushRequest? left, HackerOs.Server.Contracts.Sync.PushRequest? right) -> bool
+static HackerOs.Server.Contracts.Sync.PushResponse.operator !=(HackerOs.Server.Contracts.Sync.PushResponse? left, HackerOs.Server.Contracts.Sync.PushResponse? right) -> bool
+static HackerOs.Server.Contracts.Sync.PushResponse.operator ==(HackerOs.Server.Contracts.Sync.PushResponse? left, HackerOs.Server.Contracts.Sync.PushResponse? right) -> bool
+static HackerOs.Server.Contracts.Sync.QueryUploadProgressRequest.operator !=(HackerOs.Server.Contracts.Sync.QueryUploadProgressRequest? left, HackerOs.Server.Contracts.Sync.QueryUploadProgressRequest? right) -> bool
+static HackerOs.Server.Contracts.Sync.QueryUploadProgressRequest.operator ==(HackerOs.Server.Contracts.Sync.QueryUploadProgressRequest? left, HackerOs.Server.Contracts.Sync.QueryUploadProgressRequest? right) -> bool
+static HackerOs.Server.Contracts.Sync.QueryUploadProgressResponse.operator !=(HackerOs.Server.Contracts.Sync.QueryUploadProgressResponse? left, HackerOs.Server.Contracts.Sync.QueryUploadProgressResponse? right) -> bool
+static HackerOs.Server.Contracts.Sync.QueryUploadProgressResponse.operator ==(HackerOs.Server.Contracts.Sync.QueryUploadProgressResponse? left, HackerOs.Server.Contracts.Sync.QueryUploadProgressResponse? right) -> bool
+static HackerOs.Server.Contracts.Sync.ResolveSyncConflictRequest.operator !=(HackerOs.Server.Contracts.Sync.ResolveSyncConflictRequest? left, HackerOs.Server.Contracts.Sync.ResolveSyncConflictRequest? right) -> bool
+static HackerOs.Server.Contracts.Sync.ResolveSyncConflictRequest.operator ==(HackerOs.Server.Contracts.Sync.ResolveSyncConflictRequest? left, HackerOs.Server.Contracts.Sync.ResolveSyncConflictRequest? right) -> bool
+static HackerOs.Server.Contracts.Sync.ResolveSyncConflictResponse.operator !=(HackerOs.Server.Contracts.Sync.ResolveSyncConflictResponse? left, HackerOs.Server.Contracts.Sync.ResolveSyncConflictResponse? right) -> bool
+static HackerOs.Server.Contracts.Sync.ResolveSyncConflictResponse.operator ==(HackerOs.Server.Contracts.Sync.ResolveSyncConflictResponse? left, HackerOs.Server.Contracts.Sync.ResolveSyncConflictResponse? right) -> bool
+static HackerOs.Server.Contracts.Sync.SyncConflict.operator !=(HackerOs.Server.Contracts.Sync.SyncConflict? left, HackerOs.Server.Contracts.Sync.SyncConflict? right) -> bool
+static HackerOs.Server.Contracts.Sync.SyncConflict.operator ==(HackerOs.Server.Contracts.Sync.SyncConflict? left, HackerOs.Server.Contracts.Sync.SyncConflict? right) -> bool
 static HackerOs.Server.Contracts.Sync.SyncContractsJsonContext.Default.get -> HackerOs.Server.Contracts.Sync.SyncContractsJsonContext!
+static HackerOs.Server.Contracts.Sync.SyncRecord<T>.operator !=(HackerOs.Server.Contracts.Sync.SyncRecord<T>? left, HackerOs.Server.Contracts.Sync.SyncRecord<T>? right) -> bool
+static HackerOs.Server.Contracts.Sync.SyncRecord<T>.operator ==(HackerOs.Server.Contracts.Sync.SyncRecord<T>? left, HackerOs.Server.Contracts.Sync.SyncRecord<T>? right) -> bool
+static HackerOs.Server.Contracts.Sync.SyncRecordEnvelope.operator !=(HackerOs.Server.Contracts.Sync.SyncRecordEnvelope? left, HackerOs.Server.Contracts.Sync.SyncRecordEnvelope? right) -> bool
+static HackerOs.Server.Contracts.Sync.SyncRecordEnvelope.operator ==(HackerOs.Server.Contracts.Sync.SyncRecordEnvelope? left, HackerOs.Server.Contracts.Sync.SyncRecordEnvelope? right) -> bool
+static HackerOs.Server.Contracts.Versioning.ApiVersionEntry.operator !=(HackerOs.Server.Contracts.Versioning.ApiVersionEntry? left, HackerOs.Server.Contracts.Versioning.ApiVersionEntry? right) -> bool
+static HackerOs.Server.Contracts.Versioning.ApiVersionEntry.operator ==(HackerOs.Server.Contracts.Versioning.ApiVersionEntry? left, HackerOs.Server.Contracts.Versioning.ApiVersionEntry? right) -> bool
+static HackerOs.Server.Contracts.Versioning.ApiVersionResponse.operator !=(HackerOs.Server.Contracts.Versioning.ApiVersionResponse? left, HackerOs.Server.Contracts.Versioning.ApiVersionResponse? right) -> bool
+static HackerOs.Server.Contracts.Versioning.ApiVersionResponse.operator ==(HackerOs.Server.Contracts.Versioning.ApiVersionResponse? left, HackerOs.Server.Contracts.Versioning.ApiVersionResponse? right) -> bool
+static HackerOs.Server.Contracts.Versioning.CompatibilityCheckRequest.operator !=(HackerOs.Server.Contracts.Versioning.CompatibilityCheckRequest? left, HackerOs.Server.Contracts.Versioning.CompatibilityCheckRequest? right) -> bool
+static HackerOs.Server.Contracts.Versioning.CompatibilityCheckRequest.operator ==(HackerOs.Server.Contracts.Versioning.CompatibilityCheckRequest? left, HackerOs.Server.Contracts.Versioning.CompatibilityCheckRequest? right) -> bool
+static HackerOs.Server.Contracts.Versioning.CompatibilityCheckResponse.operator !=(HackerOs.Server.Contracts.Versioning.CompatibilityCheckResponse? left, HackerOs.Server.Contracts.Versioning.CompatibilityCheckResponse? right) -> bool
+static HackerOs.Server.Contracts.Versioning.CompatibilityCheckResponse.operator ==(HackerOs.Server.Contracts.Versioning.CompatibilityCheckResponse? left, HackerOs.Server.Contracts.Versioning.CompatibilityCheckResponse? right) -> bool
 static HackerOs.Server.Contracts.Versioning.VersioningContractsJsonContext.Default.get -> HackerOs.Server.Contracts.Versioning.VersioningContractsJsonContext!
 ~HackerOs.Server.Contracts.Admin.AdminContractsJsonContext.AccountDataExportRequest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<HackerOs.Server.Contracts.Admin.AccountDataExportRequest>
 ~HackerOs.Server.Contracts.Admin.AdminContractsJsonContext.AccountDataExportStatus.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<HackerOs.Server.Contracts.Admin.AccountDataExportStatus>

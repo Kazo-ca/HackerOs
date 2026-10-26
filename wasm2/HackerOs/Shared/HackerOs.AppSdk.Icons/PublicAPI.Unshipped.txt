@@ -1,17 +1,1 @@
 #nullable enable
-HackerOs.AppSdk.Icons.HackIcon.<Clone>$() -> HackerOs.AppSdk.Icons.HackIcon!
-HackerOs.AppSdk.Icons.HackIcon.Deconstruct(out HackerOs.AppSdk.Icons.HackIconKind Kind, out HackerOs.AppSdk.Icons.IconLibrary Library, out string! Source) -> void
-HackerOs.AppSdk.Icons.HackIcon.Equals(HackerOs.AppSdk.Icons.HackIcon? other) -> bool
-HackerOs.AppSdk.Icons.IconDescriptor.<Clone>$() -> HackerOs.AppSdk.Icons.IconDescriptor!
-HackerOs.AppSdk.Icons.IconDescriptor.Deconstruct(out HackerOs.AppSdk.Icons.IconLibrary Library, out string! Name, out string! DisplayName, out string! ViewBox, out string! Markup, out bool StrokeBased, out string? Variant) -> void
-HackerOs.AppSdk.Icons.IconDescriptor.Equals(HackerOs.AppSdk.Icons.IconDescriptor? other) -> bool
-override HackerOs.AppSdk.Icons.HackIcon.Equals(object? obj) -> bool
-override HackerOs.AppSdk.Icons.HackIcon.GetHashCode() -> int
-override HackerOs.AppSdk.Icons.HackIcon.ToString() -> string!
-override HackerOs.AppSdk.Icons.IconDescriptor.Equals(object? obj) -> bool
-override HackerOs.AppSdk.Icons.IconDescriptor.GetHashCode() -> int
-override HackerOs.AppSdk.Icons.IconDescriptor.ToString() -> string!
-static HackerOs.AppSdk.Icons.HackIcon.operator !=(HackerOs.AppSdk.Icons.HackIcon? left, HackerOs.AppSdk.Icons.HackIcon? right) -> bool
-static HackerOs.AppSdk.Icons.HackIcon.operator ==(HackerOs.AppSdk.Icons.HackIcon? left, HackerOs.AppSdk.Icons.HackIcon? right) -> bool
-static HackerOs.AppSdk.Icons.IconDescriptor.operator !=(HackerOs.AppSdk.Icons.IconDescriptor? left, HackerOs.AppSdk.Icons.IconDescriptor? right) -> bool
-static HackerOs.AppSdk.Icons.IconDescriptor.operator ==(HackerOs.AppSdk.Icons.IconDescriptor? left, HackerOs.AppSdk.Icons.IconDescriptor? right) -> bool

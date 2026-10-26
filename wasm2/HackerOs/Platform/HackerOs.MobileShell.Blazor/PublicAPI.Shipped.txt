@@ -4,6 +4,9 @@ HackerOs.MobileShell.Blazor.IMobileNavigationCommands.RequestBack() -> void
 HackerOs.MobileShell.Blazor.IMobileNavigationCommands.RequestHome() -> void
 HackerOs.MobileShell.Blazor.IMobileNavigationCommands.RequestRecent() -> void
 HackerOs.MobileShell.Blazor.MobileRecentItem
+HackerOs.MobileShell.Blazor.MobileRecentItem.<Clone>$() -> HackerOs.MobileShell.Blazor.MobileRecentItem!
+HackerOs.MobileShell.Blazor.MobileRecentItem.Deconstruct(out HackerOs.Windowing.Abstractions.WindowId Id, out string! Title, out string? IconAssetPath, out bool IsFocused) -> void
+HackerOs.MobileShell.Blazor.MobileRecentItem.Equals(HackerOs.MobileShell.Blazor.MobileRecentItem? other) -> bool
 HackerOs.MobileShell.Blazor.MobileRecentItem.IconAssetPath.get -> string?
 HackerOs.MobileShell.Blazor.MobileRecentItem.IconAssetPath.init -> void
 HackerOs.MobileShell.Blazor.MobileRecentItem.Id.get -> HackerOs.Windowing.Abstractions.WindowId
@@ -26,10 +29,13 @@ HackerOs.MobileShell.Blazor.MobileRecentSurface.OnDismiss.set -> void
 HackerOs.MobileShell.Blazor.MobileRecentSurface.Options.get -> HackerOs.MobileShell.Blazor.MobileRecentSurfaceOptions!
 HackerOs.MobileShell.Blazor.MobileRecentSurface.Options.set -> void
 HackerOs.MobileShell.Blazor.MobileRecentSurfaceOptions
+HackerOs.MobileShell.Blazor.MobileRecentSurfaceOptions.<Clone>$() -> HackerOs.MobileShell.Blazor.MobileRecentSurfaceOptions!
 HackerOs.MobileShell.Blazor.MobileRecentSurfaceOptions.CloseLabelPrefix.get -> string?
 HackerOs.MobileShell.Blazor.MobileRecentSurfaceOptions.CloseLabelPrefix.init -> void
 HackerOs.MobileShell.Blazor.MobileRecentSurfaceOptions.EmptyMessage.get -> string?
 HackerOs.MobileShell.Blazor.MobileRecentSurfaceOptions.EmptyMessage.init -> void
+HackerOs.MobileShell.Blazor.MobileRecentSurfaceOptions.Equals(HackerOs.MobileShell.Blazor.MobileRecentSurfaceOptions? other) -> bool
+HackerOs.MobileShell.Blazor.MobileRecentSurfaceOptions.MobileRecentSurfaceOptions() -> void
 HackerOs.MobileShell.Blazor.MobileRecentSurfaceOptions.Title.get -> string?
 HackerOs.MobileShell.Blazor.MobileRecentSurfaceOptions.Title.init -> void
 HackerOs.MobileShell.Blazor.MobileSystemNavigationBar
@@ -39,14 +45,32 @@ HackerOs.MobileShell.Blazor.MobileSystemNavigationBar.MobileSystemNavigationBar(
 HackerOs.MobileShell.Blazor.MobileSystemNavigationBar.Options.get -> HackerOs.MobileShell.Blazor.MobileSystemNavigationBarOptions!
 HackerOs.MobileShell.Blazor.MobileSystemNavigationBar.Options.set -> void
 HackerOs.MobileShell.Blazor.MobileSystemNavigationBarOptions
+HackerOs.MobileShell.Blazor.MobileSystemNavigationBarOptions.<Clone>$() -> HackerOs.MobileShell.Blazor.MobileSystemNavigationBarOptions!
 HackerOs.MobileShell.Blazor.MobileSystemNavigationBarOptions.BackLabel.get -> string?
 HackerOs.MobileShell.Blazor.MobileSystemNavigationBarOptions.BackLabel.init -> void
+HackerOs.MobileShell.Blazor.MobileSystemNavigationBarOptions.Equals(HackerOs.MobileShell.Blazor.MobileSystemNavigationBarOptions? other) -> bool
 HackerOs.MobileShell.Blazor.MobileSystemNavigationBarOptions.HomeLabel.get -> string?
 HackerOs.MobileShell.Blazor.MobileSystemNavigationBarOptions.HomeLabel.init -> void
+HackerOs.MobileShell.Blazor.MobileSystemNavigationBarOptions.MobileSystemNavigationBarOptions() -> void
 HackerOs.MobileShell.Blazor.MobileSystemNavigationBarOptions.RecentLabel.get -> string?
 HackerOs.MobileShell.Blazor.MobileSystemNavigationBarOptions.RecentLabel.init -> void
 HackerOs.MobileShell.Blazor._Imports
 HackerOs.MobileShell.Blazor._Imports.Execute() -> void
 HackerOs.MobileShell.Blazor._Imports._Imports() -> void
+override HackerOs.MobileShell.Blazor.MobileRecentItem.Equals(object? obj) -> bool
+override HackerOs.MobileShell.Blazor.MobileRecentItem.GetHashCode() -> int
+override HackerOs.MobileShell.Blazor.MobileRecentItem.ToString() -> string!
+override HackerOs.MobileShell.Blazor.MobileRecentSurfaceOptions.Equals(object? obj) -> bool
+override HackerOs.MobileShell.Blazor.MobileRecentSurfaceOptions.GetHashCode() -> int
+override HackerOs.MobileShell.Blazor.MobileRecentSurfaceOptions.ToString() -> string!
+override HackerOs.MobileShell.Blazor.MobileSystemNavigationBarOptions.Equals(object? obj) -> bool
+override HackerOs.MobileShell.Blazor.MobileSystemNavigationBarOptions.GetHashCode() -> int
+override HackerOs.MobileShell.Blazor.MobileSystemNavigationBarOptions.ToString() -> string!
+static HackerOs.MobileShell.Blazor.MobileRecentItem.operator !=(HackerOs.MobileShell.Blazor.MobileRecentItem? left, HackerOs.MobileShell.Blazor.MobileRecentItem? right) -> bool
+static HackerOs.MobileShell.Blazor.MobileRecentItem.operator ==(HackerOs.MobileShell.Blazor.MobileRecentItem? left, HackerOs.MobileShell.Blazor.MobileRecentItem? right) -> bool
+static HackerOs.MobileShell.Blazor.MobileRecentSurfaceOptions.operator !=(HackerOs.MobileShell.Blazor.MobileRecentSurfaceOptions? left, HackerOs.MobileShell.Blazor.MobileRecentSurfaceOptions? right) -> bool
+static HackerOs.MobileShell.Blazor.MobileRecentSurfaceOptions.operator ==(HackerOs.MobileShell.Blazor.MobileRecentSurfaceOptions? left, HackerOs.MobileShell.Blazor.MobileRecentSurfaceOptions? right) -> bool
+static HackerOs.MobileShell.Blazor.MobileSystemNavigationBarOptions.operator !=(HackerOs.MobileShell.Blazor.MobileSystemNavigationBarOptions? left, HackerOs.MobileShell.Blazor.MobileSystemNavigationBarOptions? right) -> bool
+static HackerOs.MobileShell.Blazor.MobileSystemNavigationBarOptions.operator ==(HackerOs.MobileShell.Blazor.MobileSystemNavigationBarOptions? left, HackerOs.MobileShell.Blazor.MobileSystemNavigationBarOptions? right) -> bool
 ~override HackerOs.MobileShell.Blazor.MobileRecentSurface.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.MobileShell.Blazor.MobileSystemNavigationBar.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

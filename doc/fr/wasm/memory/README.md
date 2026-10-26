@@ -12,12 +12,12 @@ jour à la fin de chaque série ou quand une convention change.
 - **Code actif** : `wasm2/HackerOs/` (OS simulé en Blazor WebAssembly, .NET 10,
   solution `HackerOs.sln`). `src/` est l'ancienne version, gardée comme
   référence.
-- **Version** : HackerOS et le SDK sont en **2.0.3** (`build/Versions.props`).
+- **Version** : HackerOS et le SDK sont en **2.1.0** (`build/Versions.props`).
   Le SDK 2.0.0 a retiré `HackerOs.AppSdk.FileView` et refuse les apps 1.x
   ([ADR 0161](../dev/adr/0161-sdk-2-0-implementation-adjustments.md)).
-  `IAppEventGateway.PublishAsync` (ADR 0145), `HackCrossOriginIsolation`
-  (ADR 0146) et le délai de grâce des tâches de fond (ADR 0147) sont les
-  ajouts prévus pour la prochaine mineure.
+  La 2.1.0 (2026-10-26) est la première version publiée automatiquement
+  (tag, GitHub Release, nuget.org ; ADR 0173) ; elle a versé dans `Shipped`
+  tous les ajouts depuis la 2.0.
 - **Séries terminées et fusionnées dans `main`** :
 
 | Série | Contenu | Bilan |
@@ -43,10 +43,10 @@ jour à la fin de chaque série ou quand une convention change.
 - **Explorateur mobile** (octobre 2026, PR #212 vers `main`) : point d'entrée
   mobile des apps honoré, explorateur de fichiers mobile, dialogues en plein
   écran sur mobile, un toucher ouvre (`HackFileView.OpenOnTap`) (ADR 0171).
-- **ADR** : 0001 à 0171 et 0173 existent (quelques numéros sautés) ; 0170 est pris
+- **ADR** : 0001 à 0171, 0173 et 0174 existent (quelques numéros sautés) ; 0170 est pris
   par le menu latéral des Paramètres (PR #210), 0171 est l'explorateur de fichiers
   mobile, 0172, réservé avec lui, n'a pas servi, 0173 est la publication
-  automatique. **Prochain numéro libre : 0174.** Des
+  automatique, 0174 l'annonce d'une nouvelle version (`version.json`). **Prochain numéro libre : 0175.** Des
   threads parallèles réservent des numéros distincts.
 
 ## Conventions de travail

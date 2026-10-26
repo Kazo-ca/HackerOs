@@ -15,10 +15,13 @@ HackerOs.AppSdk.VirtualKeyboard.VirtualKey.PageDown = 13 -> HackerOs.AppSdk.Virt
 HackerOs.AppSdk.VirtualKeyboard.VirtualKey.PageUp = 12 -> HackerOs.AppSdk.VirtualKeyboard.VirtualKey
 HackerOs.AppSdk.VirtualKeyboard.VirtualKey.Tab = 4 -> HackerOs.AppSdk.VirtualKeyboard.VirtualKey
 HackerOs.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent
+HackerOs.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.<Clone>$() -> HackerOs.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent!
 HackerOs.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.Alt.get -> bool
 HackerOs.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.Alt.init -> void
 HackerOs.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.Control.get -> bool
 HackerOs.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.Control.init -> void
+HackerOs.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.Deconstruct(out HackerOs.AppSdk.VirtualKeyboard.VirtualKey Key, out string? Text, out bool Control, out bool Alt, out bool Shift) -> void
+HackerOs.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.Equals(HackerOs.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent? other) -> bool
 HackerOs.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.Key.get -> HackerOs.AppSdk.VirtualKeyboard.VirtualKey
 HackerOs.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.Key.init -> void
 HackerOs.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.Shift.get -> bool
@@ -44,10 +47,12 @@ HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardHost.Options.get -> HackerOs.AppS
 HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardHost.Options.set -> void
 HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardHost.VirtualKeyboardHost() -> void
 HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions
+HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.<Clone>$() -> HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions!
 HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.AltLabel.get -> string!
 HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.AltLabel.init -> void
 HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.ControlLabel.get -> string!
 HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.ControlLabel.init -> void
+HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.Equals(HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions? other) -> bool
 HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.ShiftLabel.get -> string!
 HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.ShiftLabel.init -> void
 HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.ShowArrowKeys.get -> bool
@@ -56,8 +61,19 @@ HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.ShowModifierRow.get -> bo
 HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.ShowModifierRow.init -> void
 HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.ShowSymbolRow.get -> bool
 HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.ShowSymbolRow.init -> void
+HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.VirtualKeyboardOptions() -> void
 HackerOs.AppSdk.VirtualKeyboard._Imports
 HackerOs.AppSdk.VirtualKeyboard._Imports.Execute() -> void
 HackerOs.AppSdk.VirtualKeyboard._Imports._Imports() -> void
+override HackerOs.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.Equals(object? obj) -> bool
+override HackerOs.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.GetHashCode() -> int
+override HackerOs.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.ToString() -> string!
+override HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.Equals(object? obj) -> bool
+override HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.GetHashCode() -> int
+override HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.ToString() -> string!
+static HackerOs.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.operator !=(HackerOs.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent? left, HackerOs.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent? right) -> bool
+static HackerOs.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.operator ==(HackerOs.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent? left, HackerOs.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent? right) -> bool
+static HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.operator !=(HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions? left, HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions? right) -> bool
+static HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.operator ==(HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions? left, HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardOptions? right) -> bool
 ~override HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboard.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.AppSdk.VirtualKeyboard.VirtualKeyboardHost.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

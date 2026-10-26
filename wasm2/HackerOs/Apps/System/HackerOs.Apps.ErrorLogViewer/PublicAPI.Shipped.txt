@@ -5,6 +5,9 @@ HackerOs.Apps.ErrorLogViewer.ErrorLogViewerWindow
 HackerOs.Apps.ErrorLogViewer.ErrorLogViewerWindow.DisposeAsync() -> System.Threading.Tasks.ValueTask
 HackerOs.Apps.ErrorLogViewer.ErrorLogViewerWindow.ErrorLogViewerWindow() -> void
 HackerOs.Apps.ErrorLogViewer.LogFileContent
+HackerOs.Apps.ErrorLogViewer.LogFileContent.<Clone>$() -> HackerOs.Apps.ErrorLogViewer.LogFileContent!
+HackerOs.Apps.ErrorLogViewer.LogFileContent.Deconstruct(out HackerOs.Apps.ErrorLogViewer.LogSource! Source, out System.Collections.Generic.IReadOnlyList<HackerOs.Apps.ErrorLogViewer.LogRow!>! Rows, out int UnparsedLineCount, out HackerOs.Simulation.Abstractions.FileSystem.FileSystemError? Error) -> void
+HackerOs.Apps.ErrorLogViewer.LogFileContent.Equals(HackerOs.Apps.ErrorLogViewer.LogFileContent? other) -> bool
 HackerOs.Apps.ErrorLogViewer.LogFileContent.Error.get -> HackerOs.Simulation.Abstractions.FileSystem.FileSystemError?
 HackerOs.Apps.ErrorLogViewer.LogFileContent.Error.init -> void
 HackerOs.Apps.ErrorLogViewer.LogFileContent.LogFileContent(HackerOs.Apps.ErrorLogViewer.LogSource! Source, System.Collections.Generic.IReadOnlyList<HackerOs.Apps.ErrorLogViewer.LogRow!>! Rows, int UnparsedLineCount, HackerOs.Simulation.Abstractions.FileSystem.FileSystemError? Error) -> void
@@ -20,6 +23,9 @@ HackerOs.Apps.ErrorLogViewer.LogFileReader.LogFileReader(HackerOs.Simulation.Abs
 HackerOs.Apps.ErrorLogViewer.LogFileReader.ReadAsync(HackerOs.Apps.ErrorLogViewer.LogSource! source, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.Apps.ErrorLogViewer.LogFileContent!>!
 HackerOs.Apps.ErrorLogViewer.LogFileReader.TruncateAsync(HackerOs.Apps.ErrorLogViewer.LogSource! source, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.Simulation.Abstractions.FileSystem.FileSystemMutationResult!>!
 HackerOs.Apps.ErrorLogViewer.LogRow
+HackerOs.Apps.ErrorLogViewer.LogRow.<Clone>$() -> HackerOs.Apps.ErrorLogViewer.LogRow!
+HackerOs.Apps.ErrorLogViewer.LogRow.Deconstruct(out HackerOs.Simulation.Abstractions.Diagnostics.LogLine! Line, out HackerOs.Apps.ErrorLogViewer.LogSource! Source, out int LineNumber) -> void
+HackerOs.Apps.ErrorLogViewer.LogRow.Equals(HackerOs.Apps.ErrorLogViewer.LogRow? other) -> bool
 HackerOs.Apps.ErrorLogViewer.LogRow.Line.get -> HackerOs.Simulation.Abstractions.Diagnostics.LogLine!
 HackerOs.Apps.ErrorLogViewer.LogRow.Line.init -> void
 HackerOs.Apps.ErrorLogViewer.LogRow.LineNumber.get -> int
@@ -28,6 +34,9 @@ HackerOs.Apps.ErrorLogViewer.LogRow.LogRow(HackerOs.Simulation.Abstractions.Diag
 HackerOs.Apps.ErrorLogViewer.LogRow.Source.get -> HackerOs.Apps.ErrorLogViewer.LogSource!
 HackerOs.Apps.ErrorLogViewer.LogRow.Source.init -> void
 HackerOs.Apps.ErrorLogViewer.LogSource
+HackerOs.Apps.ErrorLogViewer.LogSource.<Clone>$() -> HackerOs.Apps.ErrorLogViewer.LogSource!
+HackerOs.Apps.ErrorLogViewer.LogSource.Deconstruct(out HackerOs.App.Abstractions.VirtualPath Path, out string! Label, out bool IsArchive) -> void
+HackerOs.Apps.ErrorLogViewer.LogSource.Equals(HackerOs.Apps.ErrorLogViewer.LogSource? other) -> bool
 HackerOs.Apps.ErrorLogViewer.LogSource.IsArchive.get -> bool
 HackerOs.Apps.ErrorLogViewer.LogSource.IsArchive.init -> void
 HackerOs.Apps.ErrorLogViewer.LogSource.Label.get -> string!
@@ -42,18 +51,36 @@ HackerOs.Apps.ErrorLogViewer._Imports.Execute() -> void
 HackerOs.Apps.ErrorLogViewer._Imports._Imports() -> void
 const HackerOs.Apps.ErrorLogViewer.ErrorLogViewerWindow.MaxDisplayedRows = 2000 -> int
 const HackerOs.Apps.ErrorLogViewer.LogFileReader.MaxArchives = 5 -> int
+override HackerOs.Apps.ErrorLogViewer.ErrorLogViewerApp.Assets.get -> System.Collections.Generic.IReadOnlyList<HackerOs.App.Abstractions.AssetManifest!>!
 override HackerOs.Apps.ErrorLogViewer.ErrorLogViewerApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
 override HackerOs.Apps.ErrorLogViewer.ErrorLogViewerApp.Category.get -> string!
 override HackerOs.Apps.ErrorLogViewer.ErrorLogViewerApp.Description.get -> string!
 override HackerOs.Apps.ErrorLogViewer.ErrorLogViewerApp.EntryPoint.get -> System.Type!
+override HackerOs.Apps.ErrorLogViewer.ErrorLogViewerApp.Icons.get -> System.Collections.Generic.IReadOnlyList<string!>!
 override HackerOs.Apps.ErrorLogViewer.ErrorLogViewerApp.Id.get -> string!
 override HackerOs.Apps.ErrorLogViewer.ErrorLogViewerApp.Kind.get -> HackerOs.App.Abstractions.AppKind
+override HackerOs.Apps.ErrorLogViewer.ErrorLogViewerApp.MobileEntryPoint.get -> System.Type?
 override HackerOs.Apps.ErrorLogViewer.ErrorLogViewerApp.Name.get -> string!
 override HackerOs.Apps.ErrorLogViewer.ErrorLogViewerApp.PublisherId.get -> string!
 override HackerOs.Apps.ErrorLogViewer.ErrorLogViewerApp.Resources.get -> HackerOs.App.Abstractions.AppResourceProfileManifest!
 override HackerOs.Apps.ErrorLogViewer.ErrorLogViewerApp.SingleInstancePerUser.get -> bool
 override HackerOs.Apps.ErrorLogViewer.ErrorLogViewerWindow.OnAppInitializedAsync() -> System.Threading.Tasks.Task!
+override HackerOs.Apps.ErrorLogViewer.LogFileContent.Equals(object? obj) -> bool
+override HackerOs.Apps.ErrorLogViewer.LogFileContent.GetHashCode() -> int
+override HackerOs.Apps.ErrorLogViewer.LogFileContent.ToString() -> string!
+override HackerOs.Apps.ErrorLogViewer.LogRow.Equals(object? obj) -> bool
+override HackerOs.Apps.ErrorLogViewer.LogRow.GetHashCode() -> int
+override HackerOs.Apps.ErrorLogViewer.LogRow.ToString() -> string!
+override HackerOs.Apps.ErrorLogViewer.LogSource.Equals(object? obj) -> bool
+override HackerOs.Apps.ErrorLogViewer.LogSource.GetHashCode() -> int
+override HackerOs.Apps.ErrorLogViewer.LogSource.ToString() -> string!
+static HackerOs.Apps.ErrorLogViewer.LogFileContent.operator !=(HackerOs.Apps.ErrorLogViewer.LogFileContent? left, HackerOs.Apps.ErrorLogViewer.LogFileContent? right) -> bool
+static HackerOs.Apps.ErrorLogViewer.LogFileContent.operator ==(HackerOs.Apps.ErrorLogViewer.LogFileContent? left, HackerOs.Apps.ErrorLogViewer.LogFileContent? right) -> bool
 static HackerOs.Apps.ErrorLogViewer.LogFileReader.Parse(HackerOs.Apps.ErrorLogViewer.LogSource! source, string! text) -> HackerOs.Apps.ErrorLogViewer.LogFileContent!
+static HackerOs.Apps.ErrorLogViewer.LogRow.operator !=(HackerOs.Apps.ErrorLogViewer.LogRow? left, HackerOs.Apps.ErrorLogViewer.LogRow? right) -> bool
+static HackerOs.Apps.ErrorLogViewer.LogRow.operator ==(HackerOs.Apps.ErrorLogViewer.LogRow? left, HackerOs.Apps.ErrorLogViewer.LogRow? right) -> bool
+static HackerOs.Apps.ErrorLogViewer.LogSource.operator !=(HackerOs.Apps.ErrorLogViewer.LogSource? left, HackerOs.Apps.ErrorLogViewer.LogSource? right) -> bool
+static HackerOs.Apps.ErrorLogViewer.LogSource.operator ==(HackerOs.Apps.ErrorLogViewer.LogSource? left, HackerOs.Apps.ErrorLogViewer.LogSource? right) -> bool
 static readonly HackerOs.Apps.ErrorLogViewer.LogFileReader.AppLogDirectory -> HackerOs.App.Abstractions.VirtualPath
 static readonly HackerOs.Apps.ErrorLogViewer.LogFileReader.LogDirectory -> HackerOs.App.Abstractions.VirtualPath
 static readonly HackerOs.Apps.ErrorLogViewer.LogFileReader.SyslogPath -> HackerOs.App.Abstractions.VirtualPath

@@ -71,6 +71,25 @@
     <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
   </ItemGroup>
 
+  <!--
+    ADR 0174: wwwroot/version.json carries build/Versions.props, so a running session can see that
+    its origin now serves another version. Written into obj/ at every build and served as a static
+    web asset, never kept in the source tree.
+  -->
+  <Target Name="WriteHackerOsVersionFile" BeforeTargets="ResolveProjectStaticWebAssets">
+    <PropertyGroup>
+      <_HackerOsVersionFile>$(IntermediateOutputPath)hackeros-version/version.json</_HackerOsVersionFile>
+    </PropertyGroup>
+    <WriteLinesToFile File="$(_HackerOsVersionFile)"
+                      Lines="{ &quot;product&quot;: &quot;HackerOS&quot;, &quot;version&quot;: &quot;$(HackerOsVersion)&quot; }"
+                      Overwrite="true"
+                      WriteOnlyWhenDifferent="true" />
+    <ItemGroup>
+      <Content Include="$(_HackerOsVersionFile)" Link="wwwroot/version.json" />
+      <FileWrites Include="$(_HackerOsVersionFile)" />
+    </ItemGroup>
+  </Target>
+
   <!-- ADR 0066: optional CPU/memory accounting (HackerOsCpuAccounting, HackerOsMemoryAccounting). -->
   <Import Project="..\..\build\HackerOs.ResourceAccounting.targets" />
 

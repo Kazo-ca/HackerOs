@@ -4,10 +4,13 @@ HackerOs.Apps.WebServer.Daemon.HackWebdService
 HackerOs.Apps.WebServer.Daemon.HackWebdService.HackWebdService(HackerOs.App.Abstractions.AppManifest! manifest) -> void
 HackerOs.Apps.WebServer.Daemon.HackWebdService.ServedPrefixes.get -> System.Collections.Generic.IReadOnlyDictionary<string!, string!>!
 HackerOs.Apps.WebServer.Daemon.ServedSite
+HackerOs.Apps.WebServer.Daemon.ServedSite.<Clone>$() -> HackerOs.Apps.WebServer.Daemon.ServedSite!
 HackerOs.Apps.WebServer.Daemon.ServedSite.Binding.get -> HackerOs.App.Abstractions.WebBinding
 HackerOs.Apps.WebServer.Daemon.ServedSite.Binding.init -> void
 HackerOs.Apps.WebServer.Daemon.ServedSite.Declaration.get -> HackerOs.AppSdk.Net.Hosting.HackWebSiteDeclaration!
 HackerOs.Apps.WebServer.Daemon.ServedSite.Declaration.init -> void
+HackerOs.Apps.WebServer.Daemon.ServedSite.Deconstruct(out HackerOs.AppSdk.Net.Hosting.HackWebSiteDeclaration! Declaration, out HackerOs.App.Abstractions.WebBinding Binding) -> void
+HackerOs.Apps.WebServer.Daemon.ServedSite.Equals(HackerOs.Apps.WebServer.Daemon.ServedSite? other) -> bool
 HackerOs.Apps.WebServer.Daemon.ServedSite.ServedSite(HackerOs.AppSdk.Net.Hosting.HackWebSiteDeclaration! Declaration, HackerOs.App.Abstractions.WebBinding Binding) -> void
 HackerOs.Apps.WebServer.Daemon.ServedSite.ServesAsWwwData.get -> bool
 HackerOs.Apps.WebServer.Daemon.ServedSite.Site.get -> HackerOs.AppSdk.Net.Hosting.HackWebSite!
@@ -15,6 +18,8 @@ HackerOs.Apps.WebServer.Daemon.StaticFileHandler
 HackerOs.Apps.WebServer.Daemon.StaticFileResult
 HackerOs.Apps.WebServer.Daemon.StaticFileResult.BodyBytes.get -> long
 HackerOs.Apps.WebServer.Daemon.StaticFileResult.BodyBytes.init -> void
+HackerOs.Apps.WebServer.Daemon.StaticFileResult.Deconstruct(out int StatusCode, out long BodyBytes, out string? Error) -> void
+HackerOs.Apps.WebServer.Daemon.StaticFileResult.Equals(HackerOs.Apps.WebServer.Daemon.StaticFileResult other) -> bool
 HackerOs.Apps.WebServer.Daemon.StaticFileResult.Error.get -> string?
 HackerOs.Apps.WebServer.Daemon.StaticFileResult.Error.init -> void
 HackerOs.Apps.WebServer.Daemon.StaticFileResult.StaticFileResult() -> void
@@ -28,18 +33,24 @@ HackerOs.Apps.WebServer.Manager.WebServerManagerWindow
 HackerOs.Apps.WebServer.Manager.WebServerManagerWindow.DisposeAsync() -> System.Threading.Tasks.ValueTask
 HackerOs.Apps.WebServer.Manager.WebServerManagerWindow.WebServerManagerWindow() -> void
 HackerOs.Apps.WebServer.Manager.WebServerSnapshot
+HackerOs.Apps.WebServer.Manager.WebServerSnapshot.<Clone>$() -> HackerOs.Apps.WebServer.Manager.WebServerSnapshot!
 HackerOs.Apps.WebServer.Manager.WebServerSnapshot.Daemon.get -> HackerOs.AppSdk.ServiceProcess.HackServiceController?
 HackerOs.Apps.WebServer.Manager.WebServerSnapshot.Daemon.init -> void
+HackerOs.Apps.WebServer.Manager.WebServerSnapshot.Deconstruct(out HackerOs.AppSdk.ServiceProcess.HackServiceController? Daemon, out System.Collections.Generic.IReadOnlyList<HackerOs.Apps.WebServer.Manager.WebSiteRow!>! Rows, out System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Net.HackTcpListenerInfo!>! Listeners) -> void
+HackerOs.Apps.WebServer.Manager.WebServerSnapshot.Equals(HackerOs.Apps.WebServer.Manager.WebServerSnapshot? other) -> bool
 HackerOs.Apps.WebServer.Manager.WebServerSnapshot.Listeners.get -> System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Net.HackTcpListenerInfo!>!
 HackerOs.Apps.WebServer.Manager.WebServerSnapshot.Listeners.init -> void
 HackerOs.Apps.WebServer.Manager.WebServerSnapshot.Rows.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Apps.WebServer.Manager.WebSiteRow!>!
 HackerOs.Apps.WebServer.Manager.WebServerSnapshot.Rows.init -> void
 HackerOs.Apps.WebServer.Manager.WebServerSnapshot.WebServerSnapshot(HackerOs.AppSdk.ServiceProcess.HackServiceController? Daemon, System.Collections.Generic.IReadOnlyList<HackerOs.Apps.WebServer.Manager.WebSiteRow!>! Rows, System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Net.HackTcpListenerInfo!>! Listeners) -> void
 HackerOs.Apps.WebServer.Manager.WebSiteRow
+HackerOs.Apps.WebServer.Manager.WebSiteRow.<Clone>$() -> HackerOs.Apps.WebServer.Manager.WebSiteRow!
 HackerOs.Apps.WebServer.Manager.WebSiteRow.App.get -> HackerOs.AppSdk.Apps.HackAppInfo?
 HackerOs.Apps.WebServer.Manager.WebSiteRow.App.init -> void
 HackerOs.Apps.WebServer.Manager.WebSiteRow.Declaration.get -> HackerOs.AppSdk.Net.Hosting.HackWebSiteDeclaration?
 HackerOs.Apps.WebServer.Manager.WebSiteRow.Declaration.init -> void
+HackerOs.Apps.WebServer.Manager.WebSiteRow.Deconstruct(out string! Name, out HackerOs.AppSdk.Net.Hosting.HackWebSiteDeclaration? Declaration, out HackerOs.AppSdk.Apps.HackAppInfo? App, out System.Collections.Generic.IReadOnlyList<string!>! Urls, out HackerOs.Apps.WebServer.Manager.WebSiteState State) -> void
+HackerOs.Apps.WebServer.Manager.WebSiteRow.Equals(HackerOs.Apps.WebServer.Manager.WebSiteRow? other) -> bool
 HackerOs.Apps.WebServer.Manager.WebSiteRow.IsEditable.get -> bool
 HackerOs.Apps.WebServer.Manager.WebSiteRow.MainUrl.get -> string?
 HackerOs.Apps.WebServer.Manager.WebSiteRow.Name.get -> string!
@@ -72,6 +83,10 @@ const HackerOs.Apps.WebServer.HackWebdApp.AppId = "org.hackeros.hackwebd" -> str
 const HackerOs.Apps.WebServer.Manager.WebSiteStore.FirstSuggestedPort = 8080 -> int
 const HackerOs.Apps.WebServer.WebServerManagerApp.AppId = "org.hackeros.web-server-manager" -> string!
 const HackerOs.Apps.WebServer.WebServerManagerApp.PublishSiteIntent = "org.hackeros.web-server-manager.publish-site.v1" -> string!
+override HackerOs.Apps.WebServer.Daemon.ServedSite.Equals(object? obj) -> bool
+override HackerOs.Apps.WebServer.Daemon.ServedSite.GetHashCode() -> int
+override HackerOs.Apps.WebServer.Daemon.ServedSite.ToString() -> string!
+override HackerOs.Apps.WebServer.Daemon.StaticFileResult.GetHashCode() -> int
 override HackerOs.Apps.WebServer.HackWebdApp.AutoStart.get -> bool
 override HackerOs.Apps.WebServer.HackWebdApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
 override HackerOs.Apps.WebServer.HackWebdApp.Category.get -> string!
@@ -86,13 +101,22 @@ override HackerOs.Apps.WebServer.HackWebdApp.Resources.get -> HackerOs.App.Abstr
 override HackerOs.Apps.WebServer.HackWebdApp.SingleInstancePerUser.get -> bool
 override HackerOs.Apps.WebServer.Manager.WebServerManagerWindow.OnAppInitializedAsync() -> System.Threading.Tasks.Task!
 override HackerOs.Apps.WebServer.Manager.WebServerManagerWindow.OnIntentReceivedAsync(HackerOs.App.Abstractions.AppIntentDelivery! intent) -> System.Threading.Tasks.Task!
+override HackerOs.Apps.WebServer.Manager.WebServerSnapshot.Equals(object? obj) -> bool
+override HackerOs.Apps.WebServer.Manager.WebServerSnapshot.GetHashCode() -> int
+override HackerOs.Apps.WebServer.Manager.WebServerSnapshot.ToString() -> string!
+override HackerOs.Apps.WebServer.Manager.WebSiteRow.Equals(object? obj) -> bool
+override HackerOs.Apps.WebServer.Manager.WebSiteRow.GetHashCode() -> int
+override HackerOs.Apps.WebServer.Manager.WebSiteRow.ToString() -> string!
+override HackerOs.Apps.WebServer.WebServerManagerApp.Assets.get -> System.Collections.Generic.IReadOnlyList<HackerOs.App.Abstractions.AssetManifest!>!
 override HackerOs.Apps.WebServer.WebServerManagerApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
 override HackerOs.Apps.WebServer.WebServerManagerApp.Category.get -> string!
 override HackerOs.Apps.WebServer.WebServerManagerApp.Description.get -> string!
 override HackerOs.Apps.WebServer.WebServerManagerApp.EntryPoint.get -> System.Type!
+override HackerOs.Apps.WebServer.WebServerManagerApp.Icons.get -> System.Collections.Generic.IReadOnlyList<string!>!
 override HackerOs.Apps.WebServer.WebServerManagerApp.Id.get -> string!
 override HackerOs.Apps.WebServer.WebServerManagerApp.Intents.get -> System.Collections.Generic.IReadOnlyList<HackerOs.App.Abstractions.AppIntentDeclarationManifest!>!
 override HackerOs.Apps.WebServer.WebServerManagerApp.Kind.get -> HackerOs.App.Abstractions.AppKind
+override HackerOs.Apps.WebServer.WebServerManagerApp.MobileEntryPoint.get -> System.Type?
 override HackerOs.Apps.WebServer.WebServerManagerApp.Name.get -> string!
 override HackerOs.Apps.WebServer.WebServerManagerApp.PublisherId.get -> string!
 override HackerOs.Apps.WebServer.WebServerManagerApp.Resources.get -> HackerOs.App.Abstractions.AppResourceProfileManifest!
@@ -100,13 +124,21 @@ override HackerOs.Apps.WebServer.WebServerManagerApp.SingleInstancePerUser.get -
 static HackerOs.Apps.WebServer.Daemon.HackWebdLog.AccessLogPath(string! site) -> string!
 static HackerOs.Apps.WebServer.Daemon.HackWebdLog.FormatAccess(HackerOs.AppSdk.Net.HackHttpListenerRequest! request, int status, long bytes, System.DateTimeOffset time) -> string!
 static HackerOs.Apps.WebServer.Daemon.HackWebdLog.FormatError(string! level, string? site, string! message, System.DateTimeOffset time, long pid) -> string!
+static HackerOs.Apps.WebServer.Daemon.ServedSite.operator !=(HackerOs.Apps.WebServer.Daemon.ServedSite? left, HackerOs.Apps.WebServer.Daemon.ServedSite? right) -> bool
+static HackerOs.Apps.WebServer.Daemon.ServedSite.operator ==(HackerOs.Apps.WebServer.Daemon.ServedSite? left, HackerOs.Apps.WebServer.Daemon.ServedSite? right) -> bool
 static HackerOs.Apps.WebServer.Daemon.StaticFileHandler.DirectoryListing(string! urlPath, System.Collections.Generic.IEnumerable<HackerOs.AppSdk.IO.HackFileSystemInfo!>! entries) -> string!
 static HackerOs.Apps.WebServer.Daemon.StaticFileHandler.HandleAsync(HackerOs.Apps.WebServer.Daemon.ServedSite! site, HackerOs.AppSdk.Net.HackHttpListenerContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<HackerOs.Apps.WebServer.Daemon.StaticFileResult>!
 static HackerOs.Apps.WebServer.Daemon.StaticFileHandler.StatusPage(int status, string! reason) -> string!
 static HackerOs.Apps.WebServer.Daemon.StaticFileHandler.TryMapPath(HackerOs.Apps.WebServer.Daemon.ServedSite! site, System.Uri! url, out string? path) -> bool
+static HackerOs.Apps.WebServer.Daemon.StaticFileResult.operator !=(HackerOs.Apps.WebServer.Daemon.StaticFileResult left, HackerOs.Apps.WebServer.Daemon.StaticFileResult right) -> bool
+static HackerOs.Apps.WebServer.Daemon.StaticFileResult.operator ==(HackerOs.Apps.WebServer.Daemon.StaticFileResult left, HackerOs.Apps.WebServer.Daemon.StaticFileResult right) -> bool
 static HackerOs.Apps.WebServer.Daemon.WwwDataAccess.CanListDirectoryAsync(string! path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
 static HackerOs.Apps.WebServer.Daemon.WwwDataAccess.CanReadFileAsync(string! path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
 static HackerOs.Apps.WebServer.Daemon.WwwDataAccess.CanTraverseAsync(string! path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
+static HackerOs.Apps.WebServer.Manager.WebServerSnapshot.operator !=(HackerOs.Apps.WebServer.Manager.WebServerSnapshot? left, HackerOs.Apps.WebServer.Manager.WebServerSnapshot? right) -> bool
+static HackerOs.Apps.WebServer.Manager.WebServerSnapshot.operator ==(HackerOs.Apps.WebServer.Manager.WebServerSnapshot? left, HackerOs.Apps.WebServer.Manager.WebServerSnapshot? right) -> bool
+static HackerOs.Apps.WebServer.Manager.WebSiteRow.operator !=(HackerOs.Apps.WebServer.Manager.WebSiteRow? left, HackerOs.Apps.WebServer.Manager.WebSiteRow? right) -> bool
+static HackerOs.Apps.WebServer.Manager.WebSiteRow.operator ==(HackerOs.Apps.WebServer.Manager.WebSiteRow? left, HackerOs.Apps.WebServer.Manager.WebSiteRow? right) -> bool
 static HackerOs.Apps.WebServer.Manager.WebSiteStore.CheckWwwDataAsync(string! root, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<string?>!
 static HackerOs.Apps.WebServer.Manager.WebSiteStore.DeleteAsync(HackerOs.AppSdk.Net.Hosting.HackWebSiteDeclaration! declaration, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
 static HackerOs.Apps.WebServer.Manager.WebSiteStore.DirectoryOf(HackerOs.AppSdk.Net.Hosting.HackWebSiteScope scope) -> string!
@@ -116,4 +148,6 @@ static HackerOs.Apps.WebServer.Manager.WebSiteStore.SaveAsync(HackerOs.AppSdk.Ne
 static HackerOs.Apps.WebServer.Manager.WebSiteStore.StateOf(HackerOs.AppSdk.Net.Hosting.HackWebSiteDeclaration! declaration, System.Collections.Generic.IReadOnlySet<string!>! servedPrefixes) -> HackerOs.Apps.WebServer.Manager.WebSiteState
 static HackerOs.Apps.WebServer.Manager.WebSiteStore.Suggest(string! folder, HackerOs.Apps.WebServer.Manager.WebServerSnapshot! snapshot) -> HackerOs.AppSdk.Net.Hosting.HackWebSite!
 static HackerOs.Apps.WebServer.WebServerManagerApp.RegisterFileContextMenu(HackerOs.AppSdk.Blazor.Files.RegisterFileContextMenuContext! context) -> void
+~override HackerOs.Apps.WebServer.Daemon.StaticFileResult.Equals(object obj) -> bool
+~override HackerOs.Apps.WebServer.Daemon.StaticFileResult.ToString() -> string
 ~override HackerOs.Apps.WebServer.Manager.WebServerManagerWindow.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

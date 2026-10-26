@@ -15,11 +15,15 @@
     2.0.0 (chantier desk/6-sdk-2, ADR 0149, ADR 0161): HackerOs.AppSdk.FileView leaves the SDK for
     the contracts the OS provides at run time (HackFileView, the OS context menu, file menu entries,
     desktop settings) and HackFileOperations; an app built on 1.x is refused and must be rebuilt.
+    2.1.0 (ADR 0173, first automatic release): additions since 2.0 (passkeys, user administration,
+    HackFileView.OpenOnTap, ParentExitGracePeriod...) folded into PublicAPI.Shipped.txt. Since ADR
+    0173, changing this number and merging into main is the whole release: the Release HackerOS
+    workflow tags the commit, creates the GitHub Release and pushes the packages to nuget.org.
 
     The App SDK version an app is compiled against comes from this number (HackerOsSdk.Version), and
     the manifest generator writes it as the app's sdkCompatibility.minimumVersion (ADR 0098 §3).
   -->
   <PropertyGroup>
-    <HackerOsVersion>2.0.3</HackerOsVersion>
+    <HackerOsVersion>2.1.0</HackerOsVersion>
   </PropertyGroup>
 </Project>

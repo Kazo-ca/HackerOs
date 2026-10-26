@@ -1,10 +1,1 @@
 #nullable enable
-HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions.<Clone>$() -> HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions!
-HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions.Equals(HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions? other) -> bool
-HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions.WorkerPoolOptions() -> void
-override HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions.Equals(object? obj) -> bool
-override HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions.GetHashCode() -> int
-override HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions.ToString() -> string!
-static HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions.operator !=(HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions? left, HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions? right) -> bool
-static HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions.operator ==(HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions? left, HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions? right) -> bool
-virtual HackerOs.Platform.WorkerHost.Worker.WorkerSynchronousCall.Invoke(int callId, string! message, System.TimeSpan timeout) -> string?

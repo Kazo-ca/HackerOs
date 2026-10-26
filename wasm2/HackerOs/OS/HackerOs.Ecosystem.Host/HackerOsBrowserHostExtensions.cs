@@ -1,5 +1,6 @@
 using System.Runtime.InteropServices.JavaScript;
 using System.Runtime.Versioning;
+using HackerOs.App.Abstractions;
 using HackerOs.Infrastructure.Browser.Isolation;
 using HackerOs.Infrastructure.Browser.Workers;
 using HackerOs.Platform.Blazor.Hosting;
@@ -81,6 +82,14 @@ public static partial class HackerOsBrowserHostExtensions
         // was updated under the page; the host then offers a restart instead of a dead launch.
         builder.Services.AddSingleton<IHostBuildProbe, BrowserHostBuildProbe>();
         builder.Services.AddSingleton(provider => new HostBuildUpdateMonitor(provider.GetRequiredService<IHostBuildProbe>()));
+        // ADR 0174: every five minutes, the OS reads the version.json its origin serves and shows
+        // a newer release next to the restart offer.
+        builder.Services.AddSingleton<IHostReleaseProbe>(new BrowserHostReleaseProbe(
+            new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) }));
+        builder.Services.AddSingleton(provider => new HostReleaseMonitor(
+            provider.GetRequiredService<IHostReleaseProbe>(),
+            HackerOsSdk.Version,
+            provider.GetRequiredService<HostBuildUpdateMonitor>()));
         builder.Services.AddSingleton(provider => new BuildKnownAssemblyLoaderRegistry(
             apps.LazyAssemblyNames,
             provider.GetRequiredService<IBuildKnownAssemblyTransport>(),

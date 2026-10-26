@@ -6,7 +6,10 @@ HackerOs.Apps.CodeEditor.CodeEditorCloseResult.Closed = 0 -> HackerOs.Apps.CodeE
 HackerOs.Apps.CodeEditor.CodeEditorCloseResult.ConfirmationRequired = 1 -> HackerOs.Apps.CodeEditor.CodeEditorCloseResult
 HackerOs.Apps.CodeEditor.CodeEditorCloseResult.NotFound = 2 -> HackerOs.Apps.CodeEditor.CodeEditorCloseResult
 HackerOs.Apps.CodeEditor.CodeEditorCreateResult
+HackerOs.Apps.CodeEditor.CodeEditorCreateResult.<Clone>$() -> HackerOs.Apps.CodeEditor.CodeEditorCreateResult!
 HackerOs.Apps.CodeEditor.CodeEditorCreateResult.CodeEditorCreateResult(bool Succeeded, HackerOs.App.Abstractions.VirtualPath? Path, string? Error = null) -> void
+HackerOs.Apps.CodeEditor.CodeEditorCreateResult.Deconstruct(out bool Succeeded, out HackerOs.App.Abstractions.VirtualPath? Path, out string? Error) -> void
+HackerOs.Apps.CodeEditor.CodeEditorCreateResult.Equals(HackerOs.Apps.CodeEditor.CodeEditorCreateResult? other) -> bool
 HackerOs.Apps.CodeEditor.CodeEditorCreateResult.Error.get -> string?
 HackerOs.Apps.CodeEditor.CodeEditorCreateResult.Error.init -> void
 HackerOs.Apps.CodeEditor.CodeEditorCreateResult.Path.get -> HackerOs.App.Abstractions.VirtualPath?
@@ -32,9 +35,12 @@ HackerOs.Apps.CodeEditor.CodeEditorDocument.TryEdit(string! content) -> HackerOs
 HackerOs.Apps.CodeEditor.CodeEditorDocument.UntitledName.get -> string!
 HackerOs.Apps.CodeEditor.CodeEditorDocument.Utf8ByteCount.get -> int
 HackerOs.Apps.CodeEditor.CodeEditorDocumentRecovery
+HackerOs.Apps.CodeEditor.CodeEditorDocumentRecovery.<Clone>$() -> HackerOs.Apps.CodeEditor.CodeEditorDocumentRecovery!
 HackerOs.Apps.CodeEditor.CodeEditorDocumentRecovery.CodeEditorDocumentRecovery(System.Guid Id, string? Path, string! Content, string! SavedContent, long? Revision, HackerOs.Apps.CodeEditor.CodeEditorSyntaxMode SyntaxMode, string! UntitledName) -> void
 HackerOs.Apps.CodeEditor.CodeEditorDocumentRecovery.Content.get -> string!
 HackerOs.Apps.CodeEditor.CodeEditorDocumentRecovery.Content.init -> void
+HackerOs.Apps.CodeEditor.CodeEditorDocumentRecovery.Deconstruct(out System.Guid Id, out string? Path, out string! Content, out string! SavedContent, out long? Revision, out HackerOs.Apps.CodeEditor.CodeEditorSyntaxMode SyntaxMode, out string! UntitledName) -> void
+HackerOs.Apps.CodeEditor.CodeEditorDocumentRecovery.Equals(HackerOs.Apps.CodeEditor.CodeEditorDocumentRecovery? other) -> bool
 HackerOs.Apps.CodeEditor.CodeEditorDocumentRecovery.Id.get -> System.Guid
 HackerOs.Apps.CodeEditor.CodeEditorDocumentRecovery.Id.init -> void
 HackerOs.Apps.CodeEditor.CodeEditorDocumentRecovery.Path.get -> string?
@@ -48,7 +54,10 @@ HackerOs.Apps.CodeEditor.CodeEditorDocumentRecovery.SyntaxMode.init -> void
 HackerOs.Apps.CodeEditor.CodeEditorDocumentRecovery.UntitledName.get -> string!
 HackerOs.Apps.CodeEditor.CodeEditorDocumentRecovery.UntitledName.init -> void
 HackerOs.Apps.CodeEditor.CodeEditorEditResult
+HackerOs.Apps.CodeEditor.CodeEditorEditResult.<Clone>$() -> HackerOs.Apps.CodeEditor.CodeEditorEditResult!
 HackerOs.Apps.CodeEditor.CodeEditorEditResult.CodeEditorEditResult(bool Succeeded, string? Error = null) -> void
+HackerOs.Apps.CodeEditor.CodeEditorEditResult.Deconstruct(out bool Succeeded, out string? Error) -> void
+HackerOs.Apps.CodeEditor.CodeEditorEditResult.Equals(HackerOs.Apps.CodeEditor.CodeEditorEditResult? other) -> bool
 HackerOs.Apps.CodeEditor.CodeEditorEditResult.Error.get -> string?
 HackerOs.Apps.CodeEditor.CodeEditorEditResult.Error.init -> void
 HackerOs.Apps.CodeEditor.CodeEditorEditResult.Succeeded.get -> bool
@@ -90,9 +99,12 @@ HackerOs.Apps.CodeEditor.CodeEditorGlob
 HackerOs.Apps.CodeEditor.CodeEditorGlob.IsEmpty.get -> bool
 HackerOs.Apps.CodeEditor.CodeEditorGlob.Matches(HackerOs.Apps.CodeEditor.CodeEditorWorkspaceFile! file) -> bool
 HackerOs.Apps.CodeEditor.CodeEditorLoadResult
+HackerOs.Apps.CodeEditor.CodeEditorLoadResult.<Clone>$() -> HackerOs.Apps.CodeEditor.CodeEditorLoadResult!
 HackerOs.Apps.CodeEditor.CodeEditorLoadResult.CodeEditorLoadResult(HackerOs.Apps.CodeEditor.CodeEditorFileStatus Status, HackerOs.App.Abstractions.VirtualPath Path, string? Content = null, long? Revision = null, string? Error = null) -> void
 HackerOs.Apps.CodeEditor.CodeEditorLoadResult.Content.get -> string?
 HackerOs.Apps.CodeEditor.CodeEditorLoadResult.Content.init -> void
+HackerOs.Apps.CodeEditor.CodeEditorLoadResult.Deconstruct(out HackerOs.Apps.CodeEditor.CodeEditorFileStatus Status, out HackerOs.App.Abstractions.VirtualPath Path, out string? Content, out long? Revision, out string? Error) -> void
+HackerOs.Apps.CodeEditor.CodeEditorLoadResult.Equals(HackerOs.Apps.CodeEditor.CodeEditorLoadResult? other) -> bool
 HackerOs.Apps.CodeEditor.CodeEditorLoadResult.Error.get -> string?
 HackerOs.Apps.CodeEditor.CodeEditorLoadResult.Error.init -> void
 HackerOs.Apps.CodeEditor.CodeEditorLoadResult.Path.get -> HackerOs.App.Abstractions.VirtualPath
@@ -103,9 +115,12 @@ HackerOs.Apps.CodeEditor.CodeEditorLoadResult.Status.get -> HackerOs.Apps.CodeEd
 HackerOs.Apps.CodeEditor.CodeEditorLoadResult.Status.init -> void
 HackerOs.Apps.CodeEditor.CodeEditorLoadResult.Succeeded.get -> bool
 HackerOs.Apps.CodeEditor.CodeEditorNavigation
+HackerOs.Apps.CodeEditor.CodeEditorNavigation.<Clone>$() -> HackerOs.Apps.CodeEditor.CodeEditorNavigation!
 HackerOs.Apps.CodeEditor.CodeEditorNavigation.CodeEditorNavigation(HackerOs.App.Abstractions.VirtualPath Path, int Line, int Column, int Length) -> void
 HackerOs.Apps.CodeEditor.CodeEditorNavigation.Column.get -> int
 HackerOs.Apps.CodeEditor.CodeEditorNavigation.Column.init -> void
+HackerOs.Apps.CodeEditor.CodeEditorNavigation.Deconstruct(out HackerOs.App.Abstractions.VirtualPath Path, out int Line, out int Column, out int Length) -> void
+HackerOs.Apps.CodeEditor.CodeEditorNavigation.Equals(HackerOs.Apps.CodeEditor.CodeEditorNavigation? other) -> bool
 HackerOs.Apps.CodeEditor.CodeEditorNavigation.Length.get -> int
 HackerOs.Apps.CodeEditor.CodeEditorNavigation.Length.init -> void
 HackerOs.Apps.CodeEditor.CodeEditorNavigation.Line.get -> int
@@ -126,7 +141,10 @@ HackerOs.Apps.CodeEditor.CodeEditorQuickOpenPalette.OpenAsync() -> System.Thread
 HackerOs.Apps.CodeEditor.CodeEditorQuickOpenPalette.Workspace.get -> HackerOs.Apps.CodeEditor.CodeEditorWorkspace?
 HackerOs.Apps.CodeEditor.CodeEditorQuickOpenPalette.Workspace.set -> void
 HackerOs.Apps.CodeEditor.CodeEditorRecoveryResult
+HackerOs.Apps.CodeEditor.CodeEditorRecoveryResult.<Clone>$() -> HackerOs.Apps.CodeEditor.CodeEditorRecoveryResult!
 HackerOs.Apps.CodeEditor.CodeEditorRecoveryResult.CodeEditorRecoveryResult(HackerOs.Apps.CodeEditor.CodeEditorRecoveryStatus Status, HackerOs.Apps.CodeEditor.CodeEditorSessionRecovery? Session = null, string? Error = null) -> void
+HackerOs.Apps.CodeEditor.CodeEditorRecoveryResult.Deconstruct(out HackerOs.Apps.CodeEditor.CodeEditorRecoveryStatus Status, out HackerOs.Apps.CodeEditor.CodeEditorSessionRecovery? Session, out string? Error) -> void
+HackerOs.Apps.CodeEditor.CodeEditorRecoveryResult.Equals(HackerOs.Apps.CodeEditor.CodeEditorRecoveryResult? other) -> bool
 HackerOs.Apps.CodeEditor.CodeEditorRecoveryResult.Error.get -> string?
 HackerOs.Apps.CodeEditor.CodeEditorRecoveryResult.Error.init -> void
 HackerOs.Apps.CodeEditor.CodeEditorRecoveryResult.HasSession.get -> bool
@@ -150,7 +168,10 @@ HackerOs.Apps.CodeEditor.CodeEditorRecoveryStore.LoadAsync(System.Threading.Canc
 HackerOs.Apps.CodeEditor.CodeEditorRecoveryStore.RecoveryPath.get -> HackerOs.App.Abstractions.VirtualPath
 HackerOs.Apps.CodeEditor.CodeEditorRecoveryStore.SaveAsync(HackerOs.Apps.CodeEditor.CodeEditorSessionRecovery! session, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Apps.CodeEditor.CodeEditorRecoveryResult!>
 HackerOs.Apps.CodeEditor.CodeEditorSaveResult
+HackerOs.Apps.CodeEditor.CodeEditorSaveResult.<Clone>$() -> HackerOs.Apps.CodeEditor.CodeEditorSaveResult!
 HackerOs.Apps.CodeEditor.CodeEditorSaveResult.CodeEditorSaveResult(HackerOs.Apps.CodeEditor.CodeEditorFileStatus Status, HackerOs.App.Abstractions.VirtualPath Path, long? Revision = null, string? Error = null) -> void
+HackerOs.Apps.CodeEditor.CodeEditorSaveResult.Deconstruct(out HackerOs.Apps.CodeEditor.CodeEditorFileStatus Status, out HackerOs.App.Abstractions.VirtualPath Path, out long? Revision, out string? Error) -> void
+HackerOs.Apps.CodeEditor.CodeEditorSaveResult.Equals(HackerOs.Apps.CodeEditor.CodeEditorSaveResult? other) -> bool
 HackerOs.Apps.CodeEditor.CodeEditorSaveResult.Error.get -> string?
 HackerOs.Apps.CodeEditor.CodeEditorSaveResult.Error.init -> void
 HackerOs.Apps.CodeEditor.CodeEditorSaveResult.Path.get -> HackerOs.App.Abstractions.VirtualPath
@@ -161,15 +182,21 @@ HackerOs.Apps.CodeEditor.CodeEditorSaveResult.Status.get -> HackerOs.Apps.CodeEd
 HackerOs.Apps.CodeEditor.CodeEditorSaveResult.Status.init -> void
 HackerOs.Apps.CodeEditor.CodeEditorSaveResult.Succeeded.get -> bool
 HackerOs.Apps.CodeEditor.CodeEditorSearchFileResult
+HackerOs.Apps.CodeEditor.CodeEditorSearchFileResult.<Clone>$() -> HackerOs.Apps.CodeEditor.CodeEditorSearchFileResult!
 HackerOs.Apps.CodeEditor.CodeEditorSearchFileResult.CodeEditorSearchFileResult(HackerOs.Apps.CodeEditor.CodeEditorWorkspaceFile! File, System.Collections.Generic.IReadOnlyList<HackerOs.Apps.CodeEditor.CodeEditorSearchMatch!>! Matches) -> void
+HackerOs.Apps.CodeEditor.CodeEditorSearchFileResult.Deconstruct(out HackerOs.Apps.CodeEditor.CodeEditorWorkspaceFile! File, out System.Collections.Generic.IReadOnlyList<HackerOs.Apps.CodeEditor.CodeEditorSearchMatch!>! Matches) -> void
+HackerOs.Apps.CodeEditor.CodeEditorSearchFileResult.Equals(HackerOs.Apps.CodeEditor.CodeEditorSearchFileResult? other) -> bool
 HackerOs.Apps.CodeEditor.CodeEditorSearchFileResult.File.get -> HackerOs.Apps.CodeEditor.CodeEditorWorkspaceFile!
 HackerOs.Apps.CodeEditor.CodeEditorSearchFileResult.File.init -> void
 HackerOs.Apps.CodeEditor.CodeEditorSearchFileResult.Matches.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Apps.CodeEditor.CodeEditorSearchMatch!>!
 HackerOs.Apps.CodeEditor.CodeEditorSearchFileResult.Matches.init -> void
 HackerOs.Apps.CodeEditor.CodeEditorSearchMatch
+HackerOs.Apps.CodeEditor.CodeEditorSearchMatch.<Clone>$() -> HackerOs.Apps.CodeEditor.CodeEditorSearchMatch!
 HackerOs.Apps.CodeEditor.CodeEditorSearchMatch.CodeEditorSearchMatch(int Line, int Column, int Length, string! LineText, int PreviewOffset) -> void
 HackerOs.Apps.CodeEditor.CodeEditorSearchMatch.Column.get -> int
 HackerOs.Apps.CodeEditor.CodeEditorSearchMatch.Column.init -> void
+HackerOs.Apps.CodeEditor.CodeEditorSearchMatch.Deconstruct(out int Line, out int Column, out int Length, out string! LineText, out int PreviewOffset) -> void
+HackerOs.Apps.CodeEditor.CodeEditorSearchMatch.Equals(HackerOs.Apps.CodeEditor.CodeEditorSearchMatch? other) -> bool
 HackerOs.Apps.CodeEditor.CodeEditorSearchMatch.Length.get -> int
 HackerOs.Apps.CodeEditor.CodeEditorSearchMatch.Length.init -> void
 HackerOs.Apps.CodeEditor.CodeEditorSearchMatch.Line.get -> int
@@ -179,7 +206,10 @@ HackerOs.Apps.CodeEditor.CodeEditorSearchMatch.LineText.init -> void
 HackerOs.Apps.CodeEditor.CodeEditorSearchMatch.PreviewOffset.get -> int
 HackerOs.Apps.CodeEditor.CodeEditorSearchMatch.PreviewOffset.init -> void
 HackerOs.Apps.CodeEditor.CodeEditorSearchQuery
+HackerOs.Apps.CodeEditor.CodeEditorSearchQuery.<Clone>$() -> HackerOs.Apps.CodeEditor.CodeEditorSearchQuery!
 HackerOs.Apps.CodeEditor.CodeEditorSearchQuery.CodeEditorSearchQuery(string! Text, bool MatchCase = false, bool WholeWord = false, bool UseRegex = false, string? Include = null, string? Exclude = null) -> void
+HackerOs.Apps.CodeEditor.CodeEditorSearchQuery.Deconstruct(out string! Text, out bool MatchCase, out bool WholeWord, out bool UseRegex, out string? Include, out string? Exclude) -> void
+HackerOs.Apps.CodeEditor.CodeEditorSearchQuery.Equals(HackerOs.Apps.CodeEditor.CodeEditorSearchQuery? other) -> bool
 HackerOs.Apps.CodeEditor.CodeEditorSearchQuery.Exclude.get -> string?
 HackerOs.Apps.CodeEditor.CodeEditorSearchQuery.Exclude.init -> void
 HackerOs.Apps.CodeEditor.CodeEditorSearchQuery.Include.get -> string?
@@ -193,7 +223,10 @@ HackerOs.Apps.CodeEditor.CodeEditorSearchQuery.UseRegex.init -> void
 HackerOs.Apps.CodeEditor.CodeEditorSearchQuery.WholeWord.get -> bool
 HackerOs.Apps.CodeEditor.CodeEditorSearchQuery.WholeWord.init -> void
 HackerOs.Apps.CodeEditor.CodeEditorSearchResult
+HackerOs.Apps.CodeEditor.CodeEditorSearchResult.<Clone>$() -> HackerOs.Apps.CodeEditor.CodeEditorSearchResult!
 HackerOs.Apps.CodeEditor.CodeEditorSearchResult.CodeEditorSearchResult(System.Collections.Generic.IReadOnlyList<HackerOs.Apps.CodeEditor.CodeEditorSearchFileResult!>! Files, int MatchCount, int FilesSearched, bool Truncated, string? Error = null) -> void
+HackerOs.Apps.CodeEditor.CodeEditorSearchResult.Deconstruct(out System.Collections.Generic.IReadOnlyList<HackerOs.Apps.CodeEditor.CodeEditorSearchFileResult!>! Files, out int MatchCount, out int FilesSearched, out bool Truncated, out string? Error) -> void
+HackerOs.Apps.CodeEditor.CodeEditorSearchResult.Equals(HackerOs.Apps.CodeEditor.CodeEditorSearchResult? other) -> bool
 HackerOs.Apps.CodeEditor.CodeEditorSearchResult.Error.get -> string?
 HackerOs.Apps.CodeEditor.CodeEditorSearchResult.Error.init -> void
 HackerOs.Apps.CodeEditor.CodeEditorSearchResult.Files.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Apps.CodeEditor.CodeEditorSearchFileResult!>!
@@ -230,11 +263,14 @@ HackerOs.Apps.CodeEditor.CodeEditorSession.NewDocument() -> HackerOs.Apps.CodeEd
 HackerOs.Apps.CodeEditor.CodeEditorSession.OpenDocument(HackerOs.App.Abstractions.VirtualPath path, string! content, long revision, HackerOs.Apps.CodeEditor.CodeEditorSyntaxMode? syntaxMode = null) -> HackerOs.Apps.CodeEditor.CodeEditorDocument!
 HackerOs.Apps.CodeEditor.CodeEditorSession.RelocatePaths(HackerOs.App.Abstractions.VirtualPath oldPath, HackerOs.App.Abstractions.VirtualPath newPath) -> int
 HackerOs.Apps.CodeEditor.CodeEditorSessionRecovery
+HackerOs.Apps.CodeEditor.CodeEditorSessionRecovery.<Clone>$() -> HackerOs.Apps.CodeEditor.CodeEditorSessionRecovery!
 HackerOs.Apps.CodeEditor.CodeEditorSessionRecovery.ActiveDocumentId.get -> System.Guid?
 HackerOs.Apps.CodeEditor.CodeEditorSessionRecovery.ActiveDocumentId.init -> void
 HackerOs.Apps.CodeEditor.CodeEditorSessionRecovery.CodeEditorSessionRecovery(System.Collections.Generic.IReadOnlyList<HackerOs.Apps.CodeEditor.CodeEditorDocumentRecovery!>! Documents, System.Guid? ActiveDocumentId, int NextUntitledSequence) -> void
+HackerOs.Apps.CodeEditor.CodeEditorSessionRecovery.Deconstruct(out System.Collections.Generic.IReadOnlyList<HackerOs.Apps.CodeEditor.CodeEditorDocumentRecovery!>! Documents, out System.Guid? ActiveDocumentId, out int NextUntitledSequence) -> void
 HackerOs.Apps.CodeEditor.CodeEditorSessionRecovery.Documents.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Apps.CodeEditor.CodeEditorDocumentRecovery!>!
 HackerOs.Apps.CodeEditor.CodeEditorSessionRecovery.Documents.init -> void
+HackerOs.Apps.CodeEditor.CodeEditorSessionRecovery.Equals(HackerOs.Apps.CodeEditor.CodeEditorSessionRecovery? other) -> bool
 HackerOs.Apps.CodeEditor.CodeEditorSessionRecovery.NextUntitledSequence.get -> int
 HackerOs.Apps.CodeEditor.CodeEditorSessionRecovery.NextUntitledSequence.init -> void
 HackerOs.Apps.CodeEditor.CodeEditorSyntaxMode
@@ -270,8 +306,11 @@ HackerOs.Apps.CodeEditor.CodeEditorWorkspace.RelativePathOf(HackerOs.App.Abstrac
 HackerOs.Apps.CodeEditor.CodeEditorWorkspace.Root.get -> HackerOs.App.Abstractions.VirtualPath
 HackerOs.Apps.CodeEditor.CodeEditorWorkspace.SelectedResource.get -> HackerOs.Simulation.Abstractions.FileSystem.FileSystemSelectedResourceHandle?
 HackerOs.Apps.CodeEditor.CodeEditorWorkspaceFile
+HackerOs.Apps.CodeEditor.CodeEditorWorkspaceFile.<Clone>$() -> HackerOs.Apps.CodeEditor.CodeEditorWorkspaceFile!
 HackerOs.Apps.CodeEditor.CodeEditorWorkspaceFile.CodeEditorWorkspaceFile(HackerOs.App.Abstractions.VirtualPath Path, string! RelativePath, long Length) -> void
+HackerOs.Apps.CodeEditor.CodeEditorWorkspaceFile.Deconstruct(out HackerOs.App.Abstractions.VirtualPath Path, out string! RelativePath, out long Length) -> void
 HackerOs.Apps.CodeEditor.CodeEditorWorkspaceFile.Directory.get -> string!
+HackerOs.Apps.CodeEditor.CodeEditorWorkspaceFile.Equals(HackerOs.Apps.CodeEditor.CodeEditorWorkspaceFile? other) -> bool
 HackerOs.Apps.CodeEditor.CodeEditorWorkspaceFile.Length.get -> long
 HackerOs.Apps.CodeEditor.CodeEditorWorkspaceFile.Length.init -> void
 HackerOs.Apps.CodeEditor.CodeEditorWorkspaceFile.Name.get -> string!
@@ -280,7 +319,10 @@ HackerOs.Apps.CodeEditor.CodeEditorWorkspaceFile.Path.init -> void
 HackerOs.Apps.CodeEditor.CodeEditorWorkspaceFile.RelativePath.get -> string!
 HackerOs.Apps.CodeEditor.CodeEditorWorkspaceFile.RelativePath.init -> void
 HackerOs.Apps.CodeEditor.CodeEditorWorkspaceListing
+HackerOs.Apps.CodeEditor.CodeEditorWorkspaceListing.<Clone>$() -> HackerOs.Apps.CodeEditor.CodeEditorWorkspaceListing!
 HackerOs.Apps.CodeEditor.CodeEditorWorkspaceListing.CodeEditorWorkspaceListing(System.Collections.Generic.IReadOnlyList<HackerOs.Apps.CodeEditor.CodeEditorWorkspaceFile!>! Files, bool Truncated) -> void
+HackerOs.Apps.CodeEditor.CodeEditorWorkspaceListing.Deconstruct(out System.Collections.Generic.IReadOnlyList<HackerOs.Apps.CodeEditor.CodeEditorWorkspaceFile!>! Files, out bool Truncated) -> void
+HackerOs.Apps.CodeEditor.CodeEditorWorkspaceListing.Equals(HackerOs.Apps.CodeEditor.CodeEditorWorkspaceListing? other) -> bool
 HackerOs.Apps.CodeEditor.CodeEditorWorkspaceListing.Files.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Apps.CodeEditor.CodeEditorWorkspaceFile!>!
 HackerOs.Apps.CodeEditor.CodeEditorWorkspaceListing.Files.init -> void
 HackerOs.Apps.CodeEditor.CodeEditorWorkspaceListing.Truncated.get -> bool
@@ -298,37 +340,110 @@ const HackerOs.Apps.CodeEditor.CodeEditorTextSearch.MaxMatchesPerFile = 1000 -> 
 const HackerOs.Apps.CodeEditor.CodeEditorTextSearch.MaxPreviewLength = 240 -> int
 const HackerOs.Apps.CodeEditor.CodeEditorWorkspace.MaxFiles = 5000 -> int
 const HackerOs.Apps.CodeEditor.CodeEditorWorkspaceSearch.MaxTotalMatches = 5000 -> int
+override HackerOs.Apps.CodeEditor.CodeEditorApp.Assets.get -> System.Collections.Generic.IReadOnlyList<HackerOs.App.Abstractions.AssetManifest!>!
 override HackerOs.Apps.CodeEditor.CodeEditorApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
 override HackerOs.Apps.CodeEditor.CodeEditorApp.Category.get -> string!
 override HackerOs.Apps.CodeEditor.CodeEditorApp.Description.get -> string!
 override HackerOs.Apps.CodeEditor.CodeEditorApp.EntryPoint.get -> System.Type!
+override HackerOs.Apps.CodeEditor.CodeEditorApp.Icons.get -> System.Collections.Generic.IReadOnlyList<string!>!
 override HackerOs.Apps.CodeEditor.CodeEditorApp.Id.get -> string!
 override HackerOs.Apps.CodeEditor.CodeEditorApp.Kind.get -> HackerOs.App.Abstractions.AppKind
+override HackerOs.Apps.CodeEditor.CodeEditorApp.MobileEntryPoint.get -> System.Type?
 override HackerOs.Apps.CodeEditor.CodeEditorApp.Name.get -> string!
 override HackerOs.Apps.CodeEditor.CodeEditorApp.PublisherId.get -> string!
 override HackerOs.Apps.CodeEditor.CodeEditorApp.Resources.get -> HackerOs.App.Abstractions.AppResourceProfileManifest!
+override HackerOs.Apps.CodeEditor.CodeEditorCreateResult.Equals(object? obj) -> bool
+override HackerOs.Apps.CodeEditor.CodeEditorCreateResult.GetHashCode() -> int
+override HackerOs.Apps.CodeEditor.CodeEditorCreateResult.ToString() -> string!
+override HackerOs.Apps.CodeEditor.CodeEditorDocumentRecovery.Equals(object? obj) -> bool
+override HackerOs.Apps.CodeEditor.CodeEditorDocumentRecovery.GetHashCode() -> int
+override HackerOs.Apps.CodeEditor.CodeEditorDocumentRecovery.ToString() -> string!
+override HackerOs.Apps.CodeEditor.CodeEditorEditResult.Equals(object? obj) -> bool
+override HackerOs.Apps.CodeEditor.CodeEditorEditResult.GetHashCode() -> int
+override HackerOs.Apps.CodeEditor.CodeEditorEditResult.ToString() -> string!
 override HackerOs.Apps.CodeEditor.CodeEditorExplorer.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+override HackerOs.Apps.CodeEditor.CodeEditorLoadResult.Equals(object? obj) -> bool
+override HackerOs.Apps.CodeEditor.CodeEditorLoadResult.GetHashCode() -> int
+override HackerOs.Apps.CodeEditor.CodeEditorLoadResult.ToString() -> string!
+override HackerOs.Apps.CodeEditor.CodeEditorNavigation.Equals(object? obj) -> bool
+override HackerOs.Apps.CodeEditor.CodeEditorNavigation.GetHashCode() -> int
+override HackerOs.Apps.CodeEditor.CodeEditorNavigation.ToString() -> string!
 override HackerOs.Apps.CodeEditor.CodeEditorQuickOpenPalette.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+override HackerOs.Apps.CodeEditor.CodeEditorRecoveryResult.Equals(object? obj) -> bool
+override HackerOs.Apps.CodeEditor.CodeEditorRecoveryResult.GetHashCode() -> int
+override HackerOs.Apps.CodeEditor.CodeEditorRecoveryResult.ToString() -> string!
+override HackerOs.Apps.CodeEditor.CodeEditorSaveResult.Equals(object? obj) -> bool
+override HackerOs.Apps.CodeEditor.CodeEditorSaveResult.GetHashCode() -> int
+override HackerOs.Apps.CodeEditor.CodeEditorSaveResult.ToString() -> string!
+override HackerOs.Apps.CodeEditor.CodeEditorSearchFileResult.Equals(object? obj) -> bool
+override HackerOs.Apps.CodeEditor.CodeEditorSearchFileResult.GetHashCode() -> int
+override HackerOs.Apps.CodeEditor.CodeEditorSearchFileResult.ToString() -> string!
+override HackerOs.Apps.CodeEditor.CodeEditorSearchMatch.Equals(object? obj) -> bool
+override HackerOs.Apps.CodeEditor.CodeEditorSearchMatch.GetHashCode() -> int
+override HackerOs.Apps.CodeEditor.CodeEditorSearchMatch.ToString() -> string!
+override HackerOs.Apps.CodeEditor.CodeEditorSearchQuery.Equals(object? obj) -> bool
+override HackerOs.Apps.CodeEditor.CodeEditorSearchQuery.GetHashCode() -> int
+override HackerOs.Apps.CodeEditor.CodeEditorSearchQuery.ToString() -> string!
+override HackerOs.Apps.CodeEditor.CodeEditorSearchResult.Equals(object? obj) -> bool
+override HackerOs.Apps.CodeEditor.CodeEditorSearchResult.GetHashCode() -> int
+override HackerOs.Apps.CodeEditor.CodeEditorSearchResult.ToString() -> string!
 override HackerOs.Apps.CodeEditor.CodeEditorSearchView.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
 override HackerOs.Apps.CodeEditor.CodeEditorSearchView.OnParametersSet() -> void
+override HackerOs.Apps.CodeEditor.CodeEditorSessionRecovery.Equals(object? obj) -> bool
+override HackerOs.Apps.CodeEditor.CodeEditorSessionRecovery.GetHashCode() -> int
+override HackerOs.Apps.CodeEditor.CodeEditorSessionRecovery.ToString() -> string!
 override HackerOs.Apps.CodeEditor.CodeEditorWindow.OnAppAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
 override HackerOs.Apps.CodeEditor.CodeEditorWindow.OnAppInitialized() -> void
 override HackerOs.Apps.CodeEditor.CodeEditorWindow.OnAppInitializedAsync() -> System.Threading.Tasks.Task!
 override HackerOs.Apps.CodeEditor.CodeEditorWindow.OnAppStopRequestedAsync(HackerOs.AppSdk.Diagnostics.HackStopRequestedEventArgs! e) -> System.Threading.Tasks.Task!
+override HackerOs.Apps.CodeEditor.CodeEditorWorkspaceFile.Equals(object? obj) -> bool
+override HackerOs.Apps.CodeEditor.CodeEditorWorkspaceFile.GetHashCode() -> int
+override HackerOs.Apps.CodeEditor.CodeEditorWorkspaceFile.ToString() -> string!
+override HackerOs.Apps.CodeEditor.CodeEditorWorkspaceListing.Equals(object? obj) -> bool
+override HackerOs.Apps.CodeEditor.CodeEditorWorkspaceListing.GetHashCode() -> int
+override HackerOs.Apps.CodeEditor.CodeEditorWorkspaceListing.ToString() -> string!
+static HackerOs.Apps.CodeEditor.CodeEditorCreateResult.operator !=(HackerOs.Apps.CodeEditor.CodeEditorCreateResult? left, HackerOs.Apps.CodeEditor.CodeEditorCreateResult? right) -> bool
+static HackerOs.Apps.CodeEditor.CodeEditorCreateResult.operator ==(HackerOs.Apps.CodeEditor.CodeEditorCreateResult? left, HackerOs.Apps.CodeEditor.CodeEditorCreateResult? right) -> bool
 static HackerOs.Apps.CodeEditor.CodeEditorDocument.CreateLoaded(HackerOs.App.Abstractions.VirtualPath path, string! content, long revision, HackerOs.Apps.CodeEditor.CodeEditorSyntaxMode? syntaxMode = null) -> HackerOs.Apps.CodeEditor.CodeEditorDocument!
 static HackerOs.Apps.CodeEditor.CodeEditorDocument.CreateNew(int sequence) -> HackerOs.Apps.CodeEditor.CodeEditorDocument!
 static HackerOs.Apps.CodeEditor.CodeEditorDocument.Restore(HackerOs.Apps.CodeEditor.CodeEditorDocumentRecovery! recovery) -> HackerOs.Apps.CodeEditor.CodeEditorDocument!
+static HackerOs.Apps.CodeEditor.CodeEditorDocumentRecovery.operator !=(HackerOs.Apps.CodeEditor.CodeEditorDocumentRecovery? left, HackerOs.Apps.CodeEditor.CodeEditorDocumentRecovery? right) -> bool
+static HackerOs.Apps.CodeEditor.CodeEditorDocumentRecovery.operator ==(HackerOs.Apps.CodeEditor.CodeEditorDocumentRecovery? left, HackerOs.Apps.CodeEditor.CodeEditorDocumentRecovery? right) -> bool
+static HackerOs.Apps.CodeEditor.CodeEditorEditResult.operator !=(HackerOs.Apps.CodeEditor.CodeEditorEditResult? left, HackerOs.Apps.CodeEditor.CodeEditorEditResult? right) -> bool
+static HackerOs.Apps.CodeEditor.CodeEditorEditResult.operator ==(HackerOs.Apps.CodeEditor.CodeEditorEditResult? left, HackerOs.Apps.CodeEditor.CodeEditorEditResult? right) -> bool
 static HackerOs.Apps.CodeEditor.CodeEditorGlob.Parse(string? globs) -> HackerOs.Apps.CodeEditor.CodeEditorGlob!
+static HackerOs.Apps.CodeEditor.CodeEditorLoadResult.operator !=(HackerOs.Apps.CodeEditor.CodeEditorLoadResult? left, HackerOs.Apps.CodeEditor.CodeEditorLoadResult? right) -> bool
+static HackerOs.Apps.CodeEditor.CodeEditorLoadResult.operator ==(HackerOs.Apps.CodeEditor.CodeEditorLoadResult? left, HackerOs.Apps.CodeEditor.CodeEditorLoadResult? right) -> bool
+static HackerOs.Apps.CodeEditor.CodeEditorNavigation.operator !=(HackerOs.Apps.CodeEditor.CodeEditorNavigation? left, HackerOs.Apps.CodeEditor.CodeEditorNavigation? right) -> bool
+static HackerOs.Apps.CodeEditor.CodeEditorNavigation.operator ==(HackerOs.Apps.CodeEditor.CodeEditorNavigation? left, HackerOs.Apps.CodeEditor.CodeEditorNavigation? right) -> bool
 static HackerOs.Apps.CodeEditor.CodeEditorQuickOpen.Filter(System.Collections.Generic.IReadOnlyList<HackerOs.Apps.CodeEditor.CodeEditorWorkspaceFile!>! files, string? text) -> System.Collections.Generic.IReadOnlyList<HackerOs.Apps.CodeEditor.CodeEditorWorkspaceFile!>!
 static HackerOs.Apps.CodeEditor.CodeEditorQuickOpen.Score(HackerOs.Apps.CodeEditor.CodeEditorWorkspaceFile! file, string! query) -> int
+static HackerOs.Apps.CodeEditor.CodeEditorRecoveryResult.operator !=(HackerOs.Apps.CodeEditor.CodeEditorRecoveryResult? left, HackerOs.Apps.CodeEditor.CodeEditorRecoveryResult? right) -> bool
+static HackerOs.Apps.CodeEditor.CodeEditorRecoveryResult.operator ==(HackerOs.Apps.CodeEditor.CodeEditorRecoveryResult? left, HackerOs.Apps.CodeEditor.CodeEditorRecoveryResult? right) -> bool
+static HackerOs.Apps.CodeEditor.CodeEditorSaveResult.operator !=(HackerOs.Apps.CodeEditor.CodeEditorSaveResult? left, HackerOs.Apps.CodeEditor.CodeEditorSaveResult? right) -> bool
+static HackerOs.Apps.CodeEditor.CodeEditorSaveResult.operator ==(HackerOs.Apps.CodeEditor.CodeEditorSaveResult? left, HackerOs.Apps.CodeEditor.CodeEditorSaveResult? right) -> bool
+static HackerOs.Apps.CodeEditor.CodeEditorSearchFileResult.operator !=(HackerOs.Apps.CodeEditor.CodeEditorSearchFileResult? left, HackerOs.Apps.CodeEditor.CodeEditorSearchFileResult? right) -> bool
+static HackerOs.Apps.CodeEditor.CodeEditorSearchFileResult.operator ==(HackerOs.Apps.CodeEditor.CodeEditorSearchFileResult? left, HackerOs.Apps.CodeEditor.CodeEditorSearchFileResult? right) -> bool
+static HackerOs.Apps.CodeEditor.CodeEditorSearchMatch.operator !=(HackerOs.Apps.CodeEditor.CodeEditorSearchMatch? left, HackerOs.Apps.CodeEditor.CodeEditorSearchMatch? right) -> bool
+static HackerOs.Apps.CodeEditor.CodeEditorSearchMatch.operator ==(HackerOs.Apps.CodeEditor.CodeEditorSearchMatch? left, HackerOs.Apps.CodeEditor.CodeEditorSearchMatch? right) -> bool
+static HackerOs.Apps.CodeEditor.CodeEditorSearchQuery.operator !=(HackerOs.Apps.CodeEditor.CodeEditorSearchQuery? left, HackerOs.Apps.CodeEditor.CodeEditorSearchQuery? right) -> bool
+static HackerOs.Apps.CodeEditor.CodeEditorSearchQuery.operator ==(HackerOs.Apps.CodeEditor.CodeEditorSearchQuery? left, HackerOs.Apps.CodeEditor.CodeEditorSearchQuery? right) -> bool
 static HackerOs.Apps.CodeEditor.CodeEditorSearchResult.Empty.get -> HackerOs.Apps.CodeEditor.CodeEditorSearchResult!
+static HackerOs.Apps.CodeEditor.CodeEditorSearchResult.operator !=(HackerOs.Apps.CodeEditor.CodeEditorSearchResult? left, HackerOs.Apps.CodeEditor.CodeEditorSearchResult? right) -> bool
+static HackerOs.Apps.CodeEditor.CodeEditorSearchResult.operator ==(HackerOs.Apps.CodeEditor.CodeEditorSearchResult? left, HackerOs.Apps.CodeEditor.CodeEditorSearchResult? right) -> bool
 static HackerOs.Apps.CodeEditor.CodeEditorSession.Restore(HackerOs.Apps.CodeEditor.CodeEditorSessionRecovery! recovery) -> HackerOs.Apps.CodeEditor.CodeEditorSession!
+static HackerOs.Apps.CodeEditor.CodeEditorSessionRecovery.operator !=(HackerOs.Apps.CodeEditor.CodeEditorSessionRecovery? left, HackerOs.Apps.CodeEditor.CodeEditorSessionRecovery? right) -> bool
+static HackerOs.Apps.CodeEditor.CodeEditorSessionRecovery.operator ==(HackerOs.Apps.CodeEditor.CodeEditorSessionRecovery? left, HackerOs.Apps.CodeEditor.CodeEditorSessionRecovery? right) -> bool
 static HackerOs.Apps.CodeEditor.CodeEditorSyntaxModeDetector.FromPath(HackerOs.App.Abstractions.VirtualPath path) -> HackerOs.Apps.CodeEditor.CodeEditorSyntaxMode
 static HackerOs.Apps.CodeEditor.CodeEditorTextSearch.BuildMatcher(HackerOs.Apps.CodeEditor.CodeEditorSearchQuery! query, out string? error) -> System.Text.RegularExpressions.Regex?
 static HackerOs.Apps.CodeEditor.CodeEditorTextSearch.Search(string! content, System.Text.RegularExpressions.Regex! matcher) -> System.Collections.Generic.IReadOnlyList<HackerOs.Apps.CodeEditor.CodeEditorSearchMatch!>!
 static HackerOs.Apps.CodeEditor.CodeEditorWorkspace.Combine(HackerOs.App.Abstractions.VirtualPath directory, string! name) -> HackerOs.App.Abstractions.VirtualPath
 static HackerOs.Apps.CodeEditor.CodeEditorWorkspace.ParentOf(HackerOs.App.Abstractions.VirtualPath path) -> HackerOs.App.Abstractions.VirtualPath
 static HackerOs.Apps.CodeEditor.CodeEditorWorkspace.ValidateName(string? name) -> string?
+static HackerOs.Apps.CodeEditor.CodeEditorWorkspaceFile.operator !=(HackerOs.Apps.CodeEditor.CodeEditorWorkspaceFile? left, HackerOs.Apps.CodeEditor.CodeEditorWorkspaceFile? right) -> bool
+static HackerOs.Apps.CodeEditor.CodeEditorWorkspaceFile.operator ==(HackerOs.Apps.CodeEditor.CodeEditorWorkspaceFile? left, HackerOs.Apps.CodeEditor.CodeEditorWorkspaceFile? right) -> bool
+static HackerOs.Apps.CodeEditor.CodeEditorWorkspaceListing.operator !=(HackerOs.Apps.CodeEditor.CodeEditorWorkspaceListing? left, HackerOs.Apps.CodeEditor.CodeEditorWorkspaceListing? right) -> bool
+static HackerOs.Apps.CodeEditor.CodeEditorWorkspaceListing.operator ==(HackerOs.Apps.CodeEditor.CodeEditorWorkspaceListing? left, HackerOs.Apps.CodeEditor.CodeEditorWorkspaceListing? right) -> bool
 static readonly HackerOs.Apps.CodeEditor.CodeEditorWorkspace.ExcludedDirectories -> System.Collections.Generic.IReadOnlySet<string!>!
 ~override HackerOs.Apps.CodeEditor.CodeEditorCursorStatus.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.Apps.CodeEditor.CodeEditorExplorer.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

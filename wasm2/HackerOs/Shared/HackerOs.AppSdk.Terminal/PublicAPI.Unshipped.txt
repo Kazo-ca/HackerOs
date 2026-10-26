@@ -1,9 +1,1 @@
 #nullable enable
-HackerOs.AppSdk.Terminal.TerminalOutputAction.<Clone>$() -> HackerOs.AppSdk.Terminal.TerminalOutputAction!
-HackerOs.AppSdk.Terminal.TerminalOutputAction.Deconstruct(out HackerOs.AppSdk.Terminal.TerminalOutputActionKind Kind, out string! Text) -> void
-HackerOs.AppSdk.Terminal.TerminalOutputAction.Equals(HackerOs.AppSdk.Terminal.TerminalOutputAction? other) -> bool
-override HackerOs.AppSdk.Terminal.TerminalOutputAction.Equals(object? obj) -> bool
-override HackerOs.AppSdk.Terminal.TerminalOutputAction.GetHashCode() -> int
-override HackerOs.AppSdk.Terminal.TerminalOutputAction.ToString() -> string!
-static HackerOs.AppSdk.Terminal.TerminalOutputAction.operator !=(HackerOs.AppSdk.Terminal.TerminalOutputAction? left, HackerOs.AppSdk.Terminal.TerminalOutputAction? right) -> bool
-static HackerOs.AppSdk.Terminal.TerminalOutputAction.operator ==(HackerOs.AppSdk.Terminal.TerminalOutputAction? left, HackerOs.AppSdk.Terminal.TerminalOutputAction? right) -> bool

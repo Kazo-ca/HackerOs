@@ -13,6 +13,9 @@ HackerOs.AppSdk.Web.Antiforgery.HackAntiforgeryOptions.HackAntiforgeryOptions() 
 HackerOs.AppSdk.Web.Antiforgery.HackAntiforgeryOptions.HeaderName.get -> string!
 HackerOs.AppSdk.Web.Antiforgery.HackAntiforgeryOptions.HeaderName.set -> void
 HackerOs.AppSdk.Web.Antiforgery.HackAntiforgeryTokenSet
+HackerOs.AppSdk.Web.Antiforgery.HackAntiforgeryTokenSet.<Clone>$() -> HackerOs.AppSdk.Web.Antiforgery.HackAntiforgeryTokenSet!
+HackerOs.AppSdk.Web.Antiforgery.HackAntiforgeryTokenSet.Deconstruct(out string! RequestToken, out string! FormFieldName, out string! HeaderName) -> void
+HackerOs.AppSdk.Web.Antiforgery.HackAntiforgeryTokenSet.Equals(HackerOs.AppSdk.Web.Antiforgery.HackAntiforgeryTokenSet? other) -> bool
 HackerOs.AppSdk.Web.Antiforgery.HackAntiforgeryTokenSet.FormFieldName.get -> string!
 HackerOs.AppSdk.Web.Antiforgery.HackAntiforgeryTokenSet.FormFieldName.init -> void
 HackerOs.AppSdk.Web.Antiforgery.HackAntiforgeryTokenSet.HackAntiforgeryTokenSet(string! RequestToken, string! FormFieldName, string! HeaderName) -> void
@@ -156,6 +159,9 @@ HackerOs.AppSdk.Web.Hosting.IHackMiddleware.InvokeAsync(HackerOs.AppSdk.Web.Http
 HackerOs.AppSdk.Web.Hosting.WebAppDefinition
 HackerOs.AppSdk.Web.Hosting.WebAppDefinition.WebAppDefinition() -> void
 HackerOs.AppSdk.Web.Http.HackConnectionInfo
+HackerOs.AppSdk.Web.Http.HackConnectionInfo.<Clone>$() -> HackerOs.AppSdk.Web.Http.HackConnectionInfo!
+HackerOs.AppSdk.Web.Http.HackConnectionInfo.Deconstruct(out string! Id, out System.Net.IPEndPoint! RemoteEndPoint, out System.Net.IPEndPoint! LocalEndPoint) -> void
+HackerOs.AppSdk.Web.Http.HackConnectionInfo.Equals(HackerOs.AppSdk.Web.Http.HackConnectionInfo? other) -> bool
 HackerOs.AppSdk.Web.Http.HackConnectionInfo.HackConnectionInfo(string! Id, System.Net.IPEndPoint! RemoteEndPoint, System.Net.IPEndPoint! LocalEndPoint) -> void
 HackerOs.AppSdk.Web.Http.HackConnectionInfo.Id.get -> string!
 HackerOs.AppSdk.Web.Http.HackConnectionInfo.Id.init -> void
@@ -252,10 +258,13 @@ HackerOs.AppSdk.Web.Http.HackValueCollection.HackValueCollection() -> void
 HackerOs.AppSdk.Web.Http.HackValueCollection.Keys.get -> System.Collections.Generic.IReadOnlyList<string!>!
 HackerOs.AppSdk.Web.Http.HackValueCollection.this[string! name].get -> string?
 HackerOs.AppSdk.Web.Http.HackWebRequestData
+HackerOs.AppSdk.Web.Http.HackWebRequestData.<Clone>$() -> HackerOs.AppSdk.Web.Http.HackWebRequestData!
 HackerOs.AppSdk.Web.Http.HackWebRequestData.Body.get -> System.ReadOnlyMemory<byte>
 HackerOs.AppSdk.Web.Http.HackWebRequestData.Body.init -> void
 HackerOs.AppSdk.Web.Http.HackWebRequestData.ContentType.get -> string?
 HackerOs.AppSdk.Web.Http.HackWebRequestData.ContentType.init -> void
+HackerOs.AppSdk.Web.Http.HackWebRequestData.Deconstruct(out string! Method, out System.Uri! Url, out System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>! Headers, out string? ContentType, out System.ReadOnlyMemory<byte> Body) -> void
+HackerOs.AppSdk.Web.Http.HackWebRequestData.Equals(HackerOs.AppSdk.Web.Http.HackWebRequestData? other) -> bool
 HackerOs.AppSdk.Web.Http.HackWebRequestData.HackWebRequestData(string! Method, System.Uri! Url, System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>! Headers, string? ContentType, System.ReadOnlyMemory<byte> Body) -> void
 HackerOs.AppSdk.Web.Http.HackWebRequestData.Headers.get -> System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>!
 HackerOs.AppSdk.Web.Http.HackWebRequestData.Headers.init -> void
@@ -268,10 +277,13 @@ HackerOs.AppSdk.Web.Http.HackWebRequestData.RemoteEndPoint.init -> void
 HackerOs.AppSdk.Web.Http.HackWebRequestData.Url.get -> System.Uri!
 HackerOs.AppSdk.Web.Http.HackWebRequestData.Url.init -> void
 HackerOs.AppSdk.Web.Http.HackWebResponseData
+HackerOs.AppSdk.Web.Http.HackWebResponseData.<Clone>$() -> HackerOs.AppSdk.Web.Http.HackWebResponseData!
 HackerOs.AppSdk.Web.Http.HackWebResponseData.Body.get -> byte[]!
 HackerOs.AppSdk.Web.Http.HackWebResponseData.Body.init -> void
 HackerOs.AppSdk.Web.Http.HackWebResponseData.ContentType.get -> string?
 HackerOs.AppSdk.Web.Http.HackWebResponseData.ContentType.init -> void
+HackerOs.AppSdk.Web.Http.HackWebResponseData.Deconstruct(out int StatusCode, out string? ReasonPhrase, out System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>! Headers, out string? ContentType, out byte[]! Body) -> void
+HackerOs.AppSdk.Web.Http.HackWebResponseData.Equals(HackerOs.AppSdk.Web.Http.HackWebResponseData? other) -> bool
 HackerOs.AppSdk.Web.Http.HackWebResponseData.GetHeader(string! name) -> string?
 HackerOs.AppSdk.Web.Http.HackWebResponseData.HackWebResponseData(int StatusCode, string? ReasonPhrase, System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>! Headers, string? ContentType, byte[]! Body) -> void
 HackerOs.AppSdk.Web.Http.HackWebResponseData.Headers.get -> System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>!
@@ -347,6 +359,9 @@ HackerOs.AppSdk.Web.Mvc.HackActionFilterAttribute.HackActionFilterAttribute() ->
 HackerOs.AppSdk.Web.Mvc.HackActionFilterAttribute.Order.get -> int
 HackerOs.AppSdk.Web.Mvc.HackActionFilterAttribute.Order.set -> void
 HackerOs.AppSdk.Web.Mvc.HackActionParameterDescriptor
+HackerOs.AppSdk.Web.Mvc.HackActionParameterDescriptor.<Clone>$() -> HackerOs.AppSdk.Web.Mvc.HackActionParameterDescriptor!
+HackerOs.AppSdk.Web.Mvc.HackActionParameterDescriptor.Deconstruct(out string! Name, out System.Type! ParameterType, out HackerOs.AppSdk.Web.Mvc.HackBindingSource Source) -> void
+HackerOs.AppSdk.Web.Mvc.HackActionParameterDescriptor.Equals(HackerOs.AppSdk.Web.Mvc.HackActionParameterDescriptor? other) -> bool
 HackerOs.AppSdk.Web.Mvc.HackActionParameterDescriptor.HackActionParameterDescriptor(string! Name, System.Type! ParameterType, HackerOs.AppSdk.Web.Mvc.HackBindingSource Source) -> void
 HackerOs.AppSdk.Web.Mvc.HackActionParameterDescriptor.Name.get -> string!
 HackerOs.AppSdk.Web.Mvc.HackActionParameterDescriptor.Name.init -> void
@@ -357,6 +372,9 @@ HackerOs.AppSdk.Web.Mvc.HackActionParameterDescriptor.Source.init -> void
 HackerOs.AppSdk.Web.Mvc.HackApiController
 HackerOs.AppSdk.Web.Mvc.HackApiController.HackApiController() -> void
 HackerOs.AppSdk.Web.Mvc.HackAttributeRouteInfo
+HackerOs.AppSdk.Web.Mvc.HackAttributeRouteInfo.<Clone>$() -> HackerOs.AppSdk.Web.Mvc.HackAttributeRouteInfo!
+HackerOs.AppSdk.Web.Mvc.HackAttributeRouteInfo.Deconstruct(out string! Template, out System.Collections.Generic.IReadOnlyList<string!>! HttpMethods, out int Order, out string? Name) -> void
+HackerOs.AppSdk.Web.Mvc.HackAttributeRouteInfo.Equals(HackerOs.AppSdk.Web.Mvc.HackAttributeRouteInfo? other) -> bool
 HackerOs.AppSdk.Web.Mvc.HackAttributeRouteInfo.HackAttributeRouteInfo(string! Template, System.Collections.Generic.IReadOnlyList<string!>! HttpMethods, int Order = 0, string? Name = null) -> void
 HackerOs.AppSdk.Web.Mvc.HackAttributeRouteInfo.HttpMethods.get -> System.Collections.Generic.IReadOnlyList<string!>!
 HackerOs.AppSdk.Web.Mvc.HackAttributeRouteInfo.HttpMethods.init -> void
@@ -429,8 +447,11 @@ HackerOs.AppSdk.Web.Mvc.HackControllerBase.Url.get -> HackerOs.AppSdk.Web.Mvc.IH
 HackerOs.AppSdk.Web.Mvc.HackControllerBase.Url.set -> void
 HackerOs.AppSdk.Web.Mvc.HackControllerContext
 HackerOs.AppSdk.Web.Mvc.HackControllerRouteTable
+HackerOs.AppSdk.Web.Mvc.HackControllerRouteTable.<Clone>$() -> HackerOs.AppSdk.Web.Mvc.HackControllerRouteTable!
 HackerOs.AppSdk.Web.Mvc.HackControllerRouteTable.Actions.get -> System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Web.Mvc.HackControllerActionDescriptor!>!
 HackerOs.AppSdk.Web.Mvc.HackControllerRouteTable.Actions.init -> void
+HackerOs.AppSdk.Web.Mvc.HackControllerRouteTable.Deconstruct(out System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Web.Mvc.HackControllerActionDescriptor!>! Actions) -> void
+HackerOs.AppSdk.Web.Mvc.HackControllerRouteTable.Equals(HackerOs.AppSdk.Web.Mvc.HackControllerRouteTable? other) -> bool
 HackerOs.AppSdk.Web.Mvc.HackControllerRouteTable.HackControllerRouteTable(System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Web.Mvc.HackControllerActionDescriptor!>! Actions) -> void
 HackerOs.AppSdk.Web.Mvc.HackCreatedAtActionResult
 HackerOs.AppSdk.Web.Mvc.HackCreatedAtActionResult.ActionName.get -> string?
@@ -639,10 +660,13 @@ HackerOs.AppSdk.Web.Routing.HackRouteConstraint.Argument.get -> string?
 HackerOs.AppSdk.Web.Routing.HackRouteConstraint.Name.get -> string!
 HackerOs.AppSdk.Web.Routing.HackRouteConstraint.Text.get -> string!
 HackerOs.AppSdk.Web.Routing.HackRouteMatch
+HackerOs.AppSdk.Web.Routing.HackRouteMatch.<Clone>$() -> HackerOs.AppSdk.Web.Routing.HackRouteMatch!
 HackerOs.AppSdk.Web.Routing.HackRouteMatch.AllowedMethods.get -> System.Collections.Generic.IReadOnlyList<string!>!
 HackerOs.AppSdk.Web.Routing.HackRouteMatch.AllowedMethods.init -> void
+HackerOs.AppSdk.Web.Routing.HackRouteMatch.Deconstruct(out HackerOs.AppSdk.Web.Routing.HackRouteMatchKind Kind, out HackerOs.AppSdk.Web.Routing.HackEndpoint? Endpoint, out HackerOs.AppSdk.Web.Routing.HackRouteValueDictionary! Values, out System.Collections.Generic.IReadOnlyList<string!>! AllowedMethods) -> void
 HackerOs.AppSdk.Web.Routing.HackRouteMatch.Endpoint.get -> HackerOs.AppSdk.Web.Routing.HackEndpoint?
 HackerOs.AppSdk.Web.Routing.HackRouteMatch.Endpoint.init -> void
+HackerOs.AppSdk.Web.Routing.HackRouteMatch.Equals(HackerOs.AppSdk.Web.Routing.HackRouteMatch? other) -> bool
 HackerOs.AppSdk.Web.Routing.HackRouteMatch.HackRouteMatch(HackerOs.AppSdk.Web.Routing.HackRouteMatchKind Kind, HackerOs.AppSdk.Web.Routing.HackEndpoint? Endpoint, HackerOs.AppSdk.Web.Routing.HackRouteValueDictionary! Values, System.Collections.Generic.IReadOnlyList<string!>! AllowedMethods) -> void
 HackerOs.AppSdk.Web.Routing.HackRouteMatch.Kind.get -> HackerOs.AppSdk.Web.Routing.HackRouteMatchKind
 HackerOs.AppSdk.Web.Routing.HackRouteMatch.Kind.init -> void
@@ -654,6 +678,9 @@ HackerOs.AppSdk.Web.Routing.HackRouteMatchKind.MethodNotAllowed = 2 -> HackerOs.
 HackerOs.AppSdk.Web.Routing.HackRouteMatchKind.NotFound = 0 -> HackerOs.AppSdk.Web.Routing.HackRouteMatchKind
 HackerOs.AppSdk.Web.Routing.HackRouteMatchKind.Options = 3 -> HackerOs.AppSdk.Web.Routing.HackRouteMatchKind
 HackerOs.AppSdk.Web.Routing.HackRouteNameMetadata
+HackerOs.AppSdk.Web.Routing.HackRouteNameMetadata.<Clone>$() -> HackerOs.AppSdk.Web.Routing.HackRouteNameMetadata!
+HackerOs.AppSdk.Web.Routing.HackRouteNameMetadata.Deconstruct(out string! Name) -> void
+HackerOs.AppSdk.Web.Routing.HackRouteNameMetadata.Equals(HackerOs.AppSdk.Web.Routing.HackRouteNameMetadata? other) -> bool
 HackerOs.AppSdk.Web.Routing.HackRouteNameMetadata.HackRouteNameMetadata(string! Name) -> void
 HackerOs.AppSdk.Web.Routing.HackRouteNameMetadata.Name.get -> string!
 HackerOs.AppSdk.Web.Routing.HackRouteNameMetadata.Name.init -> void
@@ -936,6 +963,9 @@ HackerOs.AppSdk.Web.Views.IHackHtmlContent.WriteTo(System.IO.TextWriter! writer)
 abstract HackerOs.AppSdk.Web.Views.HackRazorPage.ExecuteAsync() -> System.Threading.Tasks.Task!
 const HackerOs.AppSdk.Web.Data.HackWebDbServiceCollectionExtensions.InMemoryName = "hackweb.in-memory" -> string!
 const HackerOs.AppSdk.Web.Hosting.HackBlazorSiteEndpoints.FallbackOrder = 1000000 -> int
+override HackerOs.AppSdk.Web.Antiforgery.HackAntiforgeryTokenSet.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Web.Antiforgery.HackAntiforgeryTokenSet.GetHashCode() -> int
+override HackerOs.AppSdk.Web.Antiforgery.HackAntiforgeryTokenSet.ToString() -> string!
 override HackerOs.AppSdk.Web.Antiforgery.HackAntiforgeryValidationFailedResult.ExecuteResultAsync(HackerOs.AppSdk.Web.Mvc.HackActionContext! context) -> System.Threading.Tasks.Task!
 override HackerOs.AppSdk.Web.Antiforgery.IgnoreAntiforgeryTokenAttribute.OnActionExecuting(HackerOs.AppSdk.Web.Mvc.HackActionExecutingContext! context) -> void
 override HackerOs.AppSdk.Web.Antiforgery.ValidateAntiForgeryTokenAttribute.OnActionExecuting(HackerOs.AppSdk.Web.Mvc.HackActionExecutingContext! context) -> void
@@ -947,11 +977,35 @@ override HackerOs.AppSdk.Web.Hosting.HackWebHost.OnStoppingAsync(HackerOs.AppSdk
 override HackerOs.AppSdk.Web.Hosting.HackWebHost.ProcessRequestAsync(HackerOs.AppSdk.Net.HackHttpListenerContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task!
 override HackerOs.AppSdk.Web.Hosting.WebAppDefinition.Category.get -> string!
 override HackerOs.AppSdk.Web.Hosting.WebAppDefinition.LaunchVisibility.get -> HackerOs.App.Abstractions.AppLaunchVisibility
+override HackerOs.AppSdk.Web.Http.HackConnectionInfo.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Web.Http.HackConnectionInfo.GetHashCode() -> int
+override HackerOs.AppSdk.Web.Http.HackConnectionInfo.ToString() -> string!
 override HackerOs.AppSdk.Web.Http.HackHttpRequest.ToString() -> string!
+override HackerOs.AppSdk.Web.Http.HackWebRequestData.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Web.Http.HackWebRequestData.GetHashCode() -> int
+override HackerOs.AppSdk.Web.Http.HackWebRequestData.ToString() -> string!
+override HackerOs.AppSdk.Web.Http.HackWebResponseData.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Web.Http.HackWebResponseData.GetHashCode() -> int
+override HackerOs.AppSdk.Web.Http.HackWebResponseData.ToString() -> string!
+override HackerOs.AppSdk.Web.Mvc.HackActionParameterDescriptor.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Web.Mvc.HackActionParameterDescriptor.GetHashCode() -> int
+override HackerOs.AppSdk.Web.Mvc.HackActionParameterDescriptor.ToString() -> string!
+override HackerOs.AppSdk.Web.Mvc.HackAttributeRouteInfo.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Web.Mvc.HackAttributeRouteInfo.GetHashCode() -> int
+override HackerOs.AppSdk.Web.Mvc.HackAttributeRouteInfo.ToString() -> string!
 override HackerOs.AppSdk.Web.Mvc.HackControllerActionDescriptor.ToString() -> string!
+override HackerOs.AppSdk.Web.Mvc.HackControllerRouteTable.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Web.Mvc.HackControllerRouteTable.GetHashCode() -> int
+override HackerOs.AppSdk.Web.Mvc.HackControllerRouteTable.ToString() -> string!
 override HackerOs.AppSdk.Web.Mvc.HackCreatedAtActionResult.ExecuteResultAsync(HackerOs.AppSdk.Web.Mvc.HackActionContext! context) -> System.Threading.Tasks.Task!
 override HackerOs.AppSdk.Web.Mvc.HackCreatedResult.ExecuteResultAsync(HackerOs.AppSdk.Web.Mvc.HackActionContext! context) -> System.Threading.Tasks.Task!
 override HackerOs.AppSdk.Web.Routing.HackEndpoint.ToString() -> string!
+override HackerOs.AppSdk.Web.Routing.HackRouteMatch.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Web.Routing.HackRouteMatch.GetHashCode() -> int
+override HackerOs.AppSdk.Web.Routing.HackRouteMatch.ToString() -> string!
+override HackerOs.AppSdk.Web.Routing.HackRouteNameMetadata.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Web.Routing.HackRouteNameMetadata.GetHashCode() -> int
+override HackerOs.AppSdk.Web.Routing.HackRouteNameMetadata.ToString() -> string!
 override HackerOs.AppSdk.Web.Routing.HackRoutePattern.ToString() -> string!
 override HackerOs.AppSdk.Web.Routing.HackRouteTemplate.ToString() -> string!
 override HackerOs.AppSdk.Web.Views.HackHelperResult.ToString() -> string!
@@ -960,6 +1014,8 @@ override HackerOs.AppSdk.Web.Views.HackPartial.SetParametersAsync(Microsoft.AspN
 override HackerOs.AppSdk.Web.Views.HackViewDescriptor.ToString() -> string!
 override abstract HackerOs.AppSdk.Web.Hosting.WebAppDefinition.Urls.get -> System.Collections.Generic.IReadOnlyList<string!>!
 override sealed HackerOs.AppSdk.Web.Hosting.WebAppDefinition.Kind.get -> HackerOs.App.Abstractions.AppKind
+static HackerOs.AppSdk.Web.Antiforgery.HackAntiforgeryTokenSet.operator !=(HackerOs.AppSdk.Web.Antiforgery.HackAntiforgeryTokenSet? left, HackerOs.AppSdk.Web.Antiforgery.HackAntiforgeryTokenSet? right) -> bool
+static HackerOs.AppSdk.Web.Antiforgery.HackAntiforgeryTokenSet.operator ==(HackerOs.AppSdk.Web.Antiforgery.HackAntiforgeryTokenSet? left, HackerOs.AppSdk.Web.Antiforgery.HackAntiforgeryTokenSet? right) -> bool
 static HackerOs.AppSdk.Web.Data.HackWebDbKey.Array(params HackerOs.AppSdk.Web.Data.HackWebDbKey[]! parts) -> HackerOs.AppSdk.Web.Data.HackWebDbKey
 static HackerOs.AppSdk.Web.Data.HackWebDbKey.FromJson(string! json) -> HackerOs.AppSdk.Web.Data.HackWebDbKey
 static HackerOs.AppSdk.Web.Data.HackWebDbKey.implicit operator HackerOs.AppSdk.Web.Data.HackWebDbKey(double value) -> HackerOs.AppSdk.Web.Data.HackWebDbKey
@@ -976,12 +1032,24 @@ static HackerOs.AppSdk.Web.Data.HackWebDbServiceCollectionExtensions.AddHackWebD
 static HackerOs.AppSdk.Web.Hosting.HackBlazorSiteEndpoints.IsHostPage(string! html) -> bool
 static HackerOs.AppSdk.Web.Hosting.HackBlazorSiteEndpoints.Map(HackerOs.AppSdk.Web.Hosting.HackWebApplication! application, HackerOs.AppSdk.Web.Hosting.WebAppDefinition! definition) -> void
 static HackerOs.AppSdk.Web.Hosting.HackWebHost.CreateApplication(HackerOs.AppSdk.Web.Hosting.WebAppDefinition! definition, HackerOs.AppSdk.Web.Mvc.HackControllerRouteTable! routes, System.Collections.Generic.IReadOnlyList<string!>? urls = null, HackerOs.AppSdk.Web.Views.HackViewTable? views = null) -> HackerOs.AppSdk.Web.Hosting.HackWebApplication!
+static HackerOs.AppSdk.Web.Http.HackConnectionInfo.operator !=(HackerOs.AppSdk.Web.Http.HackConnectionInfo? left, HackerOs.AppSdk.Web.Http.HackConnectionInfo? right) -> bool
+static HackerOs.AppSdk.Web.Http.HackConnectionInfo.operator ==(HackerOs.AppSdk.Web.Http.HackConnectionInfo? left, HackerOs.AppSdk.Web.Http.HackConnectionInfo? right) -> bool
 static HackerOs.AppSdk.Web.Http.HackValueCollection.Empty.get -> HackerOs.AppSdk.Web.Http.HackValueCollection!
 static HackerOs.AppSdk.Web.Http.HackValueCollection.From(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string!, string!>>! fields) -> HackerOs.AppSdk.Web.Http.HackValueCollection!
 static HackerOs.AppSdk.Web.Http.HackValueCollection.Parse(string? encoded) -> HackerOs.AppSdk.Web.Http.HackValueCollection!
 static HackerOs.AppSdk.Web.Http.HackWebRequestData.Create(string! method, string! url, params System.Collections.Generic.KeyValuePair<string!, string!>[]! headers) -> HackerOs.AppSdk.Web.Http.HackWebRequestData!
 static HackerOs.AppSdk.Web.Http.HackWebRequestData.Create(string! method, string! url, string! contentType, string! body, params System.Collections.Generic.KeyValuePair<string!, string!>[]! headers) -> HackerOs.AppSdk.Web.Http.HackWebRequestData!
+static HackerOs.AppSdk.Web.Http.HackWebRequestData.operator !=(HackerOs.AppSdk.Web.Http.HackWebRequestData? left, HackerOs.AppSdk.Web.Http.HackWebRequestData? right) -> bool
+static HackerOs.AppSdk.Web.Http.HackWebRequestData.operator ==(HackerOs.AppSdk.Web.Http.HackWebRequestData? left, HackerOs.AppSdk.Web.Http.HackWebRequestData? right) -> bool
+static HackerOs.AppSdk.Web.Http.HackWebResponseData.operator !=(HackerOs.AppSdk.Web.Http.HackWebResponseData? left, HackerOs.AppSdk.Web.Http.HackWebResponseData? right) -> bool
+static HackerOs.AppSdk.Web.Http.HackWebResponseData.operator ==(HackerOs.AppSdk.Web.Http.HackWebResponseData? left, HackerOs.AppSdk.Web.Http.HackWebResponseData? right) -> bool
+static HackerOs.AppSdk.Web.Mvc.HackActionParameterDescriptor.operator !=(HackerOs.AppSdk.Web.Mvc.HackActionParameterDescriptor? left, HackerOs.AppSdk.Web.Mvc.HackActionParameterDescriptor? right) -> bool
+static HackerOs.AppSdk.Web.Mvc.HackActionParameterDescriptor.operator ==(HackerOs.AppSdk.Web.Mvc.HackActionParameterDescriptor? left, HackerOs.AppSdk.Web.Mvc.HackActionParameterDescriptor? right) -> bool
+static HackerOs.AppSdk.Web.Mvc.HackAttributeRouteInfo.operator !=(HackerOs.AppSdk.Web.Mvc.HackAttributeRouteInfo? left, HackerOs.AppSdk.Web.Mvc.HackAttributeRouteInfo? right) -> bool
+static HackerOs.AppSdk.Web.Mvc.HackAttributeRouteInfo.operator ==(HackerOs.AppSdk.Web.Mvc.HackAttributeRouteInfo? left, HackerOs.AppSdk.Web.Mvc.HackAttributeRouteInfo? right) -> bool
 static HackerOs.AppSdk.Web.Mvc.HackControllerRouteTable.Empty.get -> HackerOs.AppSdk.Web.Mvc.HackControllerRouteTable!
+static HackerOs.AppSdk.Web.Mvc.HackControllerRouteTable.operator !=(HackerOs.AppSdk.Web.Mvc.HackControllerRouteTable? left, HackerOs.AppSdk.Web.Mvc.HackControllerRouteTable? right) -> bool
+static HackerOs.AppSdk.Web.Mvc.HackControllerRouteTable.operator ==(HackerOs.AppSdk.Web.Mvc.HackControllerRouteTable? left, HackerOs.AppSdk.Web.Mvc.HackControllerRouteTable? right) -> bool
 static HackerOs.AppSdk.Web.Mvc.HackEmptyResult.Instance.get -> HackerOs.AppSdk.Web.Mvc.HackEmptyResult!
 static HackerOs.AppSdk.Web.Mvc.HackResults.BadRequest() -> HackerOs.AppSdk.Web.Mvc.IHackActionResult!
 static HackerOs.AppSdk.Web.Mvc.HackResults.Created(string? uri, object? value) -> HackerOs.AppSdk.Web.Mvc.IHackActionResult!
@@ -1001,6 +1069,10 @@ static HackerOs.AppSdk.Web.Mvc.HackValueParsers.Enum<T>() -> HackerOs.AppSdk.Web
 static HackerOs.AppSdk.Web.Mvc.HackValueParsers.Nullable<T>(HackerOs.AppSdk.Web.Mvc.HackValueParser<T>! inner) -> HackerOs.AppSdk.Web.Mvc.HackValueParser<T?>!
 static HackerOs.AppSdk.Web.Mvc.HackValueParsers.Parsable<T>() -> HackerOs.AppSdk.Web.Mvc.HackValueParser<T>!
 static HackerOs.AppSdk.Web.Mvc.HackValueParsers.String.get -> HackerOs.AppSdk.Web.Mvc.HackValueParser<string!>!
+static HackerOs.AppSdk.Web.Routing.HackRouteMatch.operator !=(HackerOs.AppSdk.Web.Routing.HackRouteMatch? left, HackerOs.AppSdk.Web.Routing.HackRouteMatch? right) -> bool
+static HackerOs.AppSdk.Web.Routing.HackRouteMatch.operator ==(HackerOs.AppSdk.Web.Routing.HackRouteMatch? left, HackerOs.AppSdk.Web.Routing.HackRouteMatch? right) -> bool
+static HackerOs.AppSdk.Web.Routing.HackRouteNameMetadata.operator !=(HackerOs.AppSdk.Web.Routing.HackRouteNameMetadata? left, HackerOs.AppSdk.Web.Routing.HackRouteNameMetadata? right) -> bool
+static HackerOs.AppSdk.Web.Routing.HackRouteNameMetadata.operator ==(HackerOs.AppSdk.Web.Routing.HackRouteNameMetadata? left, HackerOs.AppSdk.Web.Routing.HackRouteNameMetadata? right) -> bool
 static HackerOs.AppSdk.Web.Routing.HackRoutePattern.Parse(string! template, System.Collections.Generic.IReadOnlyDictionary<string!, string!>? requiredValues = null) -> HackerOs.AppSdk.Web.Routing.HackRoutePattern!
 static HackerOs.AppSdk.Web.Routing.HackRoutePattern.SplitPath(string! path) -> string![]!
 static HackerOs.AppSdk.Web.Routing.HackRouteTemplate.Parse(string! template) -> HackerOs.AppSdk.Web.Routing.HackRouteTemplate!
@@ -1011,6 +1083,7 @@ static HackerOs.AppSdk.Web.Views.HackRoute.Values<TValues>(TValues values) -> Sy
 static HackerOs.AppSdk.Web.Views.HackViewEngine.EnsureModelType(System.Type! viewType, object? model) -> void
 static HackerOs.AppSdk.Web.Views.HackViewTable.Empty.get -> HackerOs.AppSdk.Web.Views.HackViewTable!
 virtual HackerOs.AppSdk.Web.Hosting.WebAppDefinition.Configure(HackerOs.AppSdk.Web.Hosting.HackWebApplicationBuilder! builder) -> void
+virtual HackerOs.AppSdk.Web.Mvc.HackActionExecutionDelegate.Invoke() -> System.Threading.Tasks.Task<HackerOs.AppSdk.Web.Mvc.HackActionExecutedContext!>!
 virtual HackerOs.AppSdk.Web.Mvc.HackActionFilterAttribute.OnActionExecuted(HackerOs.AppSdk.Web.Mvc.HackActionExecutedContext! context) -> void
 virtual HackerOs.AppSdk.Web.Mvc.HackActionFilterAttribute.OnActionExecuting(HackerOs.AppSdk.Web.Mvc.HackActionExecutingContext! context) -> void
 virtual HackerOs.AppSdk.Web.Mvc.HackActionFilterAttribute.OnActionExecutionAsync(HackerOs.AppSdk.Web.Mvc.HackActionExecutingContext! context, HackerOs.AppSdk.Web.Mvc.HackActionExecutionDelegate! next) -> System.Threading.Tasks.Task!
@@ -1063,6 +1136,8 @@ virtual HackerOs.AppSdk.Web.Mvc.HackObjectResult.ExecuteResultAsync(HackerOs.App
 virtual HackerOs.AppSdk.Web.Mvc.HackRedirectResult.ExecuteResultAsync(HackerOs.AppSdk.Web.Mvc.HackActionContext! context) -> System.Threading.Tasks.Task!
 virtual HackerOs.AppSdk.Web.Mvc.HackRedirectResult.ResolveUrl(HackerOs.AppSdk.Web.Mvc.HackActionContext! context) -> string!
 virtual HackerOs.AppSdk.Web.Mvc.HackStatusCodeResult.ExecuteResultAsync(HackerOs.AppSdk.Web.Mvc.HackActionContext! context) -> System.Threading.Tasks.Task!
+virtual HackerOs.AppSdk.Web.Mvc.HackValueParser<T>.Invoke(string! text, out T value) -> bool
+virtual HackerOs.AppSdk.Web.Routing.HackRequestDelegate.Invoke(HackerOs.AppSdk.Web.Http.HackHttpContext! context) -> System.Threading.Tasks.Task!
 virtual HackerOs.AppSdk.Web.Views.HackRazorPage.BeginWriteAttribute(string! name, string! prefix, int prefixOffset, string! suffix, int suffixOffset, int attributeValuesCount) -> void
 virtual HackerOs.AppSdk.Web.Views.HackRazorPage.DefineSection(string! name, System.Func<System.Threading.Tasks.Task!>! section) -> void
 virtual HackerOs.AppSdk.Web.Views.HackRazorPage.EndWriteAttribute() -> void

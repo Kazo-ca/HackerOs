@@ -29,10 +29,12 @@ HackerOs.Platform.WorkerHost.Host.WorkerPool.RecycleAfterOomKill(long pid) -> bo
 HackerOs.Platform.WorkerHost.Host.WorkerPool.StartAsync() -> System.Threading.Tasks.Task!
 HackerOs.Platform.WorkerHost.Host.WorkerPool.WorkerPool(HackerOs.Simulation.Abstractions.Workers.IWebWorkerRuntime! runtime, HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions! options, HackerOs.Simulation.Abstractions.Time.ISimulationClock! clock, System.Func<HackerOs.Simulation.Abstractions.Processes.IProcessManager?>? processes = null, System.Action<string!, long?>? log = null, HackerOs.Platform.Core.Lifecycle.SystemStartupSignal? startup = null) -> void
 HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions
+HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions.<Clone>$() -> HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions!
 HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions.BusyThreshold.get -> System.TimeSpan
 HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions.BusyThreshold.init -> void
 HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions.EntryAssembly.get -> string!
 HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions.EntryAssembly.init -> void
+HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions.Equals(HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions? other) -> bool
 HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions.HeartbeatPeriod.get -> System.TimeSpan
 HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions.HeartbeatPeriod.init -> void
 HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions.IdleWaitTimeout.get -> System.TimeSpan
@@ -53,6 +55,7 @@ HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions.UnresponsiveThreshold.get ->
 HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions.UnresponsiveThreshold.init -> void
 HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions.VirtualCores.get -> int
 HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions.VirtualCores.init -> void
+HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions.WorkerPoolOptions() -> void
 HackerOs.Platform.WorkerHost.Host.WorkerRemoteProcessHost
 HackerOs.Platform.WorkerHost.Host.WorkerRemoteProcessHost.CanRunBackgroundJobs.get -> bool
 HackerOs.Platform.WorkerHost.Host.WorkerRemoteProcessHost.RunBackgroundJobAsync(HackerOs.Platform.Core.Execution.RemoteBackgroundJobLaunch! launch, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<HackerOs.Platform.Core.Execution.RemoteProcessExit!>!
@@ -101,10 +104,16 @@ HackerOs.Platform.WorkerHost.Worker.WorkerWindowRun.Send(System.Action<System.Te
 HackerOs.Platform.WorkerHost.Worker.WorkerWindowRun.SetReceiver(System.Action<System.Text.Json.JsonElement>! receiver) -> void
 HackerOs.Platform.WorkerHost.WorkerProcessServiceCollectionExtensions
 const HackerOs.Platform.WorkerHost.WorkerProcessServiceCollectionExtensions.LogCategory = "workers" -> string!
+override HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions.Equals(object? obj) -> bool
+override HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions.GetHashCode() -> int
+override HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions.ToString() -> string!
 static HackerOs.Platform.WorkerHost.Browser.BrowserWorkerEntryPoint.Receive(string! message) -> void
 static HackerOs.Platform.WorkerHost.Browser.BrowserWorkerEntryPoint.Start() -> void
+static HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions.operator !=(HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions? left, HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions? right) -> bool
+static HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions.operator ==(HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions? left, HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions? right) -> bool
 static HackerOs.Platform.WorkerHost.Worker.ResolvedAssemblyLoader.ResolveType(string! assemblyFile, string! typeName) -> System.Type!
 static HackerOs.Platform.WorkerHost.WorkerProcessServiceCollectionExtensions.AddHackerOsWorkerProcesses(this Microsoft.Extensions.DependencyInjection.IServiceCollection! services, System.Func<HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions!, HackerOs.Platform.WorkerHost.Host.WorkerPoolOptions!>? configure = null) -> Microsoft.Extensions.DependencyInjection.IServiceCollection!
 static readonly HackerOs.Platform.WorkerHost.Host.RemoteWindowProcess.CloseTimeout -> System.TimeSpan
 virtual HackerOs.Platform.WorkerHost.Worker.ResolvedAssemblyLoader.LoadEntryTypeAsync(string! assemblyFile, string! typeName) -> System.Threading.Tasks.Task<System.Type!>!
 virtual HackerOs.Platform.WorkerHost.Worker.ResolvedAssemblyLoader.PreloadAsync(System.Collections.Generic.IReadOnlyList<string!>! assemblyFiles) -> System.Threading.Tasks.Task!
+virtual HackerOs.Platform.WorkerHost.Worker.WorkerSynchronousCall.Invoke(int callId, string! message, System.TimeSpan timeout) -> string?

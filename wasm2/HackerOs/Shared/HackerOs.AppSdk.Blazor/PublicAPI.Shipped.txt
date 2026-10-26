@@ -1,10 +1,16 @@
 #nullable enable
 HackerOs.AppSdk.Blazor.AppBackRequest
+HackerOs.AppSdk.Blazor.AppBackRequest.<Clone>$() -> HackerOs.AppSdk.Blazor.AppBackRequest!
 HackerOs.AppSdk.Blazor.AppBackRequest.AppBackRequest(HackerOs.AppSdk.Blazor.AppBackSource Source) -> void
+HackerOs.AppSdk.Blazor.AppBackRequest.Deconstruct(out HackerOs.AppSdk.Blazor.AppBackSource Source) -> void
+HackerOs.AppSdk.Blazor.AppBackRequest.Equals(HackerOs.AppSdk.Blazor.AppBackRequest? other) -> bool
 HackerOs.AppSdk.Blazor.AppBackRequest.Source.get -> HackerOs.AppSdk.Blazor.AppBackSource
 HackerOs.AppSdk.Blazor.AppBackRequest.Source.init -> void
 HackerOs.AppSdk.Blazor.AppBackResult
+HackerOs.AppSdk.Blazor.AppBackResult.<Clone>$() -> HackerOs.AppSdk.Blazor.AppBackResult!
 HackerOs.AppSdk.Blazor.AppBackResult.AppBackResult(HackerOs.AppSdk.Blazor.AppBackResultStatus Status) -> void
+HackerOs.AppSdk.Blazor.AppBackResult.Deconstruct(out HackerOs.AppSdk.Blazor.AppBackResultStatus Status) -> void
+HackerOs.AppSdk.Blazor.AppBackResult.Equals(HackerOs.AppSdk.Blazor.AppBackResult? other) -> bool
 HackerOs.AppSdk.Blazor.AppBackResult.Status.get -> HackerOs.AppSdk.Blazor.AppBackResultStatus
 HackerOs.AppSdk.Blazor.AppBackResult.Status.init -> void
 HackerOs.AppSdk.Blazor.AppBackResultStatus
@@ -18,28 +24,37 @@ HackerOs.AppSdk.Blazor.AppBackSource.DesktopChromeButton = 1 -> HackerOs.AppSdk.
 HackerOs.AppSdk.Blazor.AppBackSource.KeyboardShortcut = 2 -> HackerOs.AppSdk.Blazor.AppBackSource
 HackerOs.AppSdk.Blazor.AppBackSource.SystemNavigationBar = 0 -> HackerOs.AppSdk.Blazor.AppBackSource
 HackerOs.AppSdk.Blazor.AppChooserDialogRequest
+HackerOs.AppSdk.Blazor.AppChooserDialogRequest.<Clone>$() -> HackerOs.AppSdk.Blazor.AppChooserDialogRequest!
+HackerOs.AppSdk.Blazor.AppChooserDialogRequest.AppChooserDialogRequest() -> void
 HackerOs.AppSdk.Blazor.AppChooserDialogRequest.Candidates.get -> System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Blazor.AppChooserOption!>!
 HackerOs.AppSdk.Blazor.AppChooserDialogRequest.Candidates.init -> void
 HackerOs.AppSdk.Blazor.AppChooserDialogRequest.Content.get -> string!
 HackerOs.AppSdk.Blazor.AppChooserDialogRequest.Content.init -> void
+HackerOs.AppSdk.Blazor.AppChooserDialogRequest.Equals(HackerOs.AppSdk.Blazor.AppChooserDialogRequest? other) -> bool
 HackerOs.AppSdk.Blazor.AppChooserDialogRequest.OfferAlwaysUse.get -> bool
 HackerOs.AppSdk.Blazor.AppChooserDialogRequest.OfferAlwaysUse.init -> void
 HackerOs.AppSdk.Blazor.AppChooserDialogRequest.Title.get -> string!
 HackerOs.AppSdk.Blazor.AppChooserDialogRequest.Title.init -> void
 HackerOs.AppSdk.Blazor.AppChooserDialogResult
+HackerOs.AppSdk.Blazor.AppChooserDialogResult.<Clone>$() -> HackerOs.AppSdk.Blazor.AppChooserDialogResult!
 HackerOs.AppSdk.Blazor.AppChooserDialogResult.AlwaysUse.get -> bool
 HackerOs.AppSdk.Blazor.AppChooserDialogResult.AlwaysUse.init -> void
 HackerOs.AppSdk.Blazor.AppChooserDialogResult.AppChooserDialogResult(HackerOs.AppSdk.Blazor.AppChooserStatus Status, string? AppId, bool AlwaysUse) -> void
 HackerOs.AppSdk.Blazor.AppChooserDialogResult.AppId.get -> string?
 HackerOs.AppSdk.Blazor.AppChooserDialogResult.AppId.init -> void
+HackerOs.AppSdk.Blazor.AppChooserDialogResult.Deconstruct(out HackerOs.AppSdk.Blazor.AppChooserStatus Status, out string? AppId, out bool AlwaysUse) -> void
+HackerOs.AppSdk.Blazor.AppChooserDialogResult.Equals(HackerOs.AppSdk.Blazor.AppChooserDialogResult? other) -> bool
 HackerOs.AppSdk.Blazor.AppChooserDialogResult.Status.get -> HackerOs.AppSdk.Blazor.AppChooserStatus
 HackerOs.AppSdk.Blazor.AppChooserDialogResult.Status.init -> void
 HackerOs.AppSdk.Blazor.AppChooserOption
+HackerOs.AppSdk.Blazor.AppChooserOption.<Clone>$() -> HackerOs.AppSdk.Blazor.AppChooserOption!
 HackerOs.AppSdk.Blazor.AppChooserOption.AppChooserOption(string! AppId, string! Name, string? Description = null) -> void
 HackerOs.AppSdk.Blazor.AppChooserOption.AppId.get -> string!
 HackerOs.AppSdk.Blazor.AppChooserOption.AppId.init -> void
+HackerOs.AppSdk.Blazor.AppChooserOption.Deconstruct(out string! AppId, out string! Name, out string? Description) -> void
 HackerOs.AppSdk.Blazor.AppChooserOption.Description.get -> string?
 HackerOs.AppSdk.Blazor.AppChooserOption.Description.init -> void
+HackerOs.AppSdk.Blazor.AppChooserOption.Equals(HackerOs.AppSdk.Blazor.AppChooserOption? other) -> bool
 HackerOs.AppSdk.Blazor.AppChooserOption.Name.get -> string!
 HackerOs.AppSdk.Blazor.AppChooserOption.Name.init -> void
 HackerOs.AppSdk.Blazor.AppChooserStatus
@@ -47,6 +62,9 @@ HackerOs.AppSdk.Blazor.AppChooserStatus.Cancelled = 1 -> HackerOs.AppSdk.Blazor.
 HackerOs.AppSdk.Blazor.AppChooserStatus.Selected = 0 -> HackerOs.AppSdk.Blazor.AppChooserStatus
 HackerOs.AppSdk.Blazor.Charts.HackChartGeometry
 HackerOs.AppSdk.Blazor.Charts.HackChartSeries
+HackerOs.AppSdk.Blazor.Charts.HackChartSeries.<Clone>$() -> HackerOs.AppSdk.Blazor.Charts.HackChartSeries!
+HackerOs.AppSdk.Blazor.Charts.HackChartSeries.Deconstruct(out string! Name, out System.Collections.Generic.IReadOnlyList<double>! Values) -> void
+HackerOs.AppSdk.Blazor.Charts.HackChartSeries.Equals(HackerOs.AppSdk.Blazor.Charts.HackChartSeries? other) -> bool
 HackerOs.AppSdk.Blazor.Charts.HackChartSeries.HackChartSeries(string! Name, System.Collections.Generic.IReadOnlyList<double>! Values) -> void
 HackerOs.AppSdk.Blazor.Charts.HackChartSeries.Name.get -> string!
 HackerOs.AppSdk.Blazor.Charts.HackChartSeries.Name.init -> void
@@ -81,10 +99,13 @@ HackerOs.AppSdk.Blazor.Charts.HackLineChart.Title.set -> void
 HackerOs.AppSdk.Blazor.Charts.HackLineChart.ValueFormatter.get -> System.Func<double, string!>?
 HackerOs.AppSdk.Blazor.Charts.HackLineChart.ValueFormatter.set -> void
 HackerOs.AppSdk.Blazor.Components.HackComponentResolution
+HackerOs.AppSdk.Blazor.Components.HackComponentResolution.<Clone>$() -> HackerOs.AppSdk.Blazor.Components.HackComponentResolution!
 HackerOs.AppSdk.Blazor.Components.HackComponentResolution.ComponentType.get -> System.Type?
 HackerOs.AppSdk.Blazor.Components.HackComponentResolution.ComponentType.init -> void
 HackerOs.AppSdk.Blazor.Components.HackComponentResolution.Contract.get -> string!
 HackerOs.AppSdk.Blazor.Components.HackComponentResolution.Contract.init -> void
+HackerOs.AppSdk.Blazor.Components.HackComponentResolution.Deconstruct(out string! Contract, out System.Type? ComponentType, out string? ProviderAppId, out string? Error) -> void
+HackerOs.AppSdk.Blazor.Components.HackComponentResolution.Equals(HackerOs.AppSdk.Blazor.Components.HackComponentResolution? other) -> bool
 HackerOs.AppSdk.Blazor.Components.HackComponentResolution.Error.get -> string?
 HackerOs.AppSdk.Blazor.Components.HackComponentResolution.Error.init -> void
 HackerOs.AppSdk.Blazor.Components.HackComponentResolution.HackComponentResolution(string! Contract, System.Type? ComponentType, string? ProviderAppId, string? Error) -> void
@@ -206,8 +227,11 @@ HackerOs.AppSdk.Blazor.ContextMenus.HackMenuOpeningEventArgs.HackMenuOpeningEven
 HackerOs.AppSdk.Blazor.ContextMenus.HackMenuOpeningEventArgs.Item.get -> object?
 HackerOs.AppSdk.Blazor.ContextMenus.HackMenuOpeningEventArgs.Menu.get -> HackerOs.AppSdk.Blazor.ContextMenus.HackMenuDefinition!
 HackerOs.AppSdk.Blazor.ContextMenus.HackMenuRegistration
+HackerOs.AppSdk.Blazor.ContextMenus.HackMenuRegistration.<Clone>$() -> HackerOs.AppSdk.Blazor.ContextMenus.HackMenuRegistration!
 HackerOs.AppSdk.Blazor.ContextMenus.HackMenuRegistration.Build.get -> System.Func<HackerOs.AppSdk.Blazor.ContextMenus.HackMenuDefinition!>!
 HackerOs.AppSdk.Blazor.ContextMenus.HackMenuRegistration.Build.init -> void
+HackerOs.AppSdk.Blazor.ContextMenus.HackMenuRegistration.Deconstruct(out string! Name, out System.Func<HackerOs.AppSdk.Blazor.ContextMenus.HackMenuDefinition!>! Build, out Microsoft.AspNetCore.Components.EventCallback<HackerOs.AppSdk.Blazor.ContextMenus.HackMenuOpeningEventArgs!> Opening) -> void
+HackerOs.AppSdk.Blazor.ContextMenus.HackMenuRegistration.Equals(HackerOs.AppSdk.Blazor.ContextMenus.HackMenuRegistration? other) -> bool
 HackerOs.AppSdk.Blazor.ContextMenus.HackMenuRegistration.HackMenuRegistration(string! Name, System.Func<HackerOs.AppSdk.Blazor.ContextMenus.HackMenuDefinition!>! Build, Microsoft.AspNetCore.Components.EventCallback<HackerOs.AppSdk.Blazor.ContextMenus.HackMenuOpeningEventArgs!> Opening) -> void
 HackerOs.AppSdk.Blazor.ContextMenus.HackMenuRegistration.Name.get -> string!
 HackerOs.AppSdk.Blazor.ContextMenus.HackMenuRegistration.Name.init -> void
@@ -230,12 +254,18 @@ HackerOs.AppSdk.Blazor.ContextMenus.IHackMenuHost.Close() -> void
 HackerOs.AppSdk.Blazor.ContextMenus.IHackMenuHost.OpenAsync(string! name, object? item, double clientX, double clientY) -> System.Threading.Tasks.Task<bool>!
 HackerOs.AppSdk.Blazor.ContextMenus.IHackMenuHost.Register(HackerOs.AppSdk.Blazor.ContextMenus.HackMenuRegistration! registration) -> System.IDisposable!
 HackerOs.AppSdk.Blazor.CredentialPromptDialogRequest
+HackerOs.AppSdk.Blazor.CredentialPromptDialogRequest.<Clone>$() -> HackerOs.AppSdk.Blazor.CredentialPromptDialogRequest!
+HackerOs.AppSdk.Blazor.CredentialPromptDialogRequest.CredentialPromptDialogRequest() -> void
 HackerOs.AppSdk.Blazor.CredentialPromptDialogRequest.Description.get -> string!
 HackerOs.AppSdk.Blazor.CredentialPromptDialogRequest.Description.init -> void
+HackerOs.AppSdk.Blazor.CredentialPromptDialogRequest.Equals(HackerOs.AppSdk.Blazor.CredentialPromptDialogRequest? other) -> bool
 HackerOs.AppSdk.Blazor.CredentialPromptDialogRequest.Title.get -> string!
 HackerOs.AppSdk.Blazor.CredentialPromptDialogRequest.Title.init -> void
 HackerOs.AppSdk.Blazor.CredentialPromptDialogResult
+HackerOs.AppSdk.Blazor.CredentialPromptDialogResult.<Clone>$() -> HackerOs.AppSdk.Blazor.CredentialPromptDialogResult!
 HackerOs.AppSdk.Blazor.CredentialPromptDialogResult.CredentialPromptDialogResult(HackerOs.AppSdk.Blazor.CredentialPromptStatus Status, string? LoginName, string? Password) -> void
+HackerOs.AppSdk.Blazor.CredentialPromptDialogResult.Deconstruct(out HackerOs.AppSdk.Blazor.CredentialPromptStatus Status, out string? LoginName, out string? Password) -> void
+HackerOs.AppSdk.Blazor.CredentialPromptDialogResult.Equals(HackerOs.AppSdk.Blazor.CredentialPromptDialogResult? other) -> bool
 HackerOs.AppSdk.Blazor.CredentialPromptDialogResult.LoginName.get -> string?
 HackerOs.AppSdk.Blazor.CredentialPromptDialogResult.LoginName.init -> void
 HackerOs.AppSdk.Blazor.CredentialPromptDialogResult.Password.get -> string?
@@ -253,7 +283,10 @@ HackerOs.AppSdk.Blazor.Display.DisplaySurfaceContent.DisposeAsync() -> System.Th
 HackerOs.AppSdk.Blazor.Display.DisplaySurfaceContent.Surface.get -> HackerOs.AppSdk.Blazor.Display.IDisplaySurface?
 HackerOs.AppSdk.Blazor.Display.DisplaySurfaceContent.Surface.set -> void
 HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOpenResult
+HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOpenResult.<Clone>$() -> HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOpenResult!
+HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOpenResult.Deconstruct(out HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOpenStatus Status, out HackerOs.AppSdk.Blazor.Display.IDisplaySurface? Surface) -> void
 HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOpenResult.DisplaySurfaceOpenResult(HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOpenStatus Status, HackerOs.AppSdk.Blazor.Display.IDisplaySurface? Surface) -> void
+HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOpenResult.Equals(HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOpenResult? other) -> bool
 HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOpenResult.Status.get -> HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOpenStatus
 HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOpenResult.Status.init -> void
 HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOpenResult.Surface.get -> HackerOs.AppSdk.Blazor.Display.IDisplaySurface?
@@ -263,7 +296,10 @@ HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOpenStatus.Blocked = 1 -> HackerOs.
 HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOpenStatus.Opened = 0 -> HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOpenStatus
 HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOpenStatus.Unavailable = 2 -> HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOpenStatus
 HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOptions
+HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOptions.<Clone>$() -> HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOptions!
+HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOptions.Deconstruct(out string! Title, out int Width, out int Height) -> void
 HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOptions.DisplaySurfaceOptions(string! Title, int Width = 1024, int Height = 768) -> void
+HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOptions.Equals(HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOptions? other) -> bool
 HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOptions.Height.get -> int
 HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOptions.Height.init -> void
 HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOptions.Title.get -> string!
@@ -294,8 +330,11 @@ HackerOs.AppSdk.Blazor.Display.IDisplaySurfaceService.OpenAsync(HackerOs.AppSdk.
 HackerOs.AppSdk.Blazor.Display.IDisplaySurfaceService.Surfaces.get -> System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Blazor.Display.IDisplaySurface!>!
 HackerOs.AppSdk.Blazor.Display.IDisplaySurfaceService.SurfacesChanged -> System.Action?
 HackerOs.AppSdk.Blazor.FileDialogFilter
+HackerOs.AppSdk.Blazor.FileDialogFilter.<Clone>$() -> HackerOs.AppSdk.Blazor.FileDialogFilter!
+HackerOs.AppSdk.Blazor.FileDialogFilter.Deconstruct(out string! DisplayName, out System.Collections.Generic.IReadOnlyList<string!>! Extensions, out System.Collections.Generic.IReadOnlyList<string!>! MediaTypes) -> void
 HackerOs.AppSdk.Blazor.FileDialogFilter.DisplayName.get -> string!
 HackerOs.AppSdk.Blazor.FileDialogFilter.DisplayName.init -> void
+HackerOs.AppSdk.Blazor.FileDialogFilter.Equals(HackerOs.AppSdk.Blazor.FileDialogFilter? other) -> bool
 HackerOs.AppSdk.Blazor.FileDialogFilter.Extensions.get -> System.Collections.Generic.IReadOnlyList<string!>!
 HackerOs.AppSdk.Blazor.FileDialogFilter.Extensions.init -> void
 HackerOs.AppSdk.Blazor.FileDialogFilter.FileDialogFilter(string! DisplayName, System.Collections.Generic.IReadOnlyList<string!>! Extensions, System.Collections.Generic.IReadOnlyList<string!>! MediaTypes) -> void
@@ -309,10 +348,13 @@ HackerOs.AppSdk.Blazor.Files.FileConflictDialogChoice.KeepBoth = 1 -> HackerOs.A
 HackerOs.AppSdk.Blazor.Files.FileConflictDialogChoice.Replace = 0 -> HackerOs.AppSdk.Blazor.Files.FileConflictDialogChoice
 HackerOs.AppSdk.Blazor.Files.FileConflictDialogChoice.Skip = 2 -> HackerOs.AppSdk.Blazor.Files.FileConflictDialogChoice
 HackerOs.AppSdk.Blazor.Files.FileConflictDialogRequest
+HackerOs.AppSdk.Blazor.Files.FileConflictDialogRequest.<Clone>$() -> HackerOs.AppSdk.Blazor.Files.FileConflictDialogRequest!
+HackerOs.AppSdk.Blazor.Files.FileConflictDialogRequest.Deconstruct(out string! SourcePath, out string! DestinationPath, out bool SourceIsDirectory, out bool DestinationIsDirectory) -> void
 HackerOs.AppSdk.Blazor.Files.FileConflictDialogRequest.DestinationIsDirectory.get -> bool
 HackerOs.AppSdk.Blazor.Files.FileConflictDialogRequest.DestinationIsDirectory.init -> void
 HackerOs.AppSdk.Blazor.Files.FileConflictDialogRequest.DestinationPath.get -> string!
 HackerOs.AppSdk.Blazor.Files.FileConflictDialogRequest.DestinationPath.init -> void
+HackerOs.AppSdk.Blazor.Files.FileConflictDialogRequest.Equals(HackerOs.AppSdk.Blazor.Files.FileConflictDialogRequest? other) -> bool
 HackerOs.AppSdk.Blazor.Files.FileConflictDialogRequest.FileConflictDialogRequest(string! SourcePath, string! DestinationPath, bool SourceIsDirectory, bool DestinationIsDirectory) -> void
 HackerOs.AppSdk.Blazor.Files.FileConflictDialogRequest.OfferApplyToAll.get -> bool
 HackerOs.AppSdk.Blazor.Files.FileConflictDialogRequest.OfferApplyToAll.init -> void
@@ -321,16 +363,25 @@ HackerOs.AppSdk.Blazor.Files.FileConflictDialogRequest.SourceIsDirectory.init ->
 HackerOs.AppSdk.Blazor.Files.FileConflictDialogRequest.SourcePath.get -> string!
 HackerOs.AppSdk.Blazor.Files.FileConflictDialogRequest.SourcePath.init -> void
 HackerOs.AppSdk.Blazor.Files.FileConflictDialogResult
+HackerOs.AppSdk.Blazor.Files.FileConflictDialogResult.<Clone>$() -> HackerOs.AppSdk.Blazor.Files.FileConflictDialogResult!
 HackerOs.AppSdk.Blazor.Files.FileConflictDialogResult.ApplyToAll.get -> bool
 HackerOs.AppSdk.Blazor.Files.FileConflictDialogResult.ApplyToAll.init -> void
 HackerOs.AppSdk.Blazor.Files.FileConflictDialogResult.Choice.get -> HackerOs.AppSdk.Blazor.Files.FileConflictDialogChoice
 HackerOs.AppSdk.Blazor.Files.FileConflictDialogResult.Choice.init -> void
+HackerOs.AppSdk.Blazor.Files.FileConflictDialogResult.Deconstruct(out HackerOs.AppSdk.Blazor.Files.FileConflictDialogChoice Choice, out bool ApplyToAll) -> void
+HackerOs.AppSdk.Blazor.Files.FileConflictDialogResult.Equals(HackerOs.AppSdk.Blazor.Files.FileConflictDialogResult? other) -> bool
 HackerOs.AppSdk.Blazor.Files.FileConflictDialogResult.FileConflictDialogResult(HackerOs.AppSdk.Blazor.Files.FileConflictDialogChoice Choice, bool ApplyToAll) -> void
 HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogRequest
+HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogRequest.<Clone>$() -> HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogRequest!
+HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogRequest.Deconstruct(out string! Path) -> void
+HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogRequest.Equals(HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogRequest? other) -> bool
 HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogRequest.FilePropertiesDialogRequest(string! Path) -> void
 HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogRequest.Path.get -> string!
 HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogRequest.Path.init -> void
 HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogResult
+HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogResult.<Clone>$() -> HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogResult!
+HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogResult.Deconstruct(out HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogStatus Status) -> void
+HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogResult.Equals(HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogResult? other) -> bool
 HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogResult.FilePropertiesDialogResult(HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogStatus Status) -> void
 HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogResult.Status.get -> HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogStatus
 HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogResult.Status.init -> void
@@ -339,8 +390,11 @@ HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogStatus.Closed = 0 -> HackerOs.A
 HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogStatus.Unavailable = 1 -> HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogStatus
 HackerOs.AppSdk.Blazor.Files.HackFileDialogs
 HackerOs.AppSdk.Blazor.Files.HackFileMenuContext
+HackerOs.AppSdk.Blazor.Files.HackFileMenuContext.<Clone>$() -> HackerOs.AppSdk.Blazor.Files.HackFileMenuContext!
+HackerOs.AppSdk.Blazor.Files.HackFileMenuContext.Deconstruct(out HackerOs.AppSdk.Files.FileMenuScope Scope, out System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Blazor.Files.HackFileViewItem!>! Items, out string! Directory) -> void
 HackerOs.AppSdk.Blazor.Files.HackFileMenuContext.Directory.get -> string!
 HackerOs.AppSdk.Blazor.Files.HackFileMenuContext.Directory.init -> void
+HackerOs.AppSdk.Blazor.Files.HackFileMenuContext.Equals(HackerOs.AppSdk.Blazor.Files.HackFileMenuContext? other) -> bool
 HackerOs.AppSdk.Blazor.Files.HackFileMenuContext.HackFileMenuContext(HackerOs.AppSdk.Files.FileMenuScope Scope, System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Blazor.Files.HackFileViewItem!>! Items, string! Directory) -> void
 HackerOs.AppSdk.Blazor.Files.HackFileMenuContext.Items.get -> System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Blazor.Files.HackFileViewItem!>!
 HackerOs.AppSdk.Blazor.Files.HackFileMenuContext.Items.init -> void
@@ -383,6 +437,8 @@ HackerOs.AppSdk.Blazor.Files.HackFileView.ModeChanged.get -> Microsoft.AspNetCor
 HackerOs.AppSdk.Blazor.Files.HackFileView.ModeChanged.set -> void
 HackerOs.AppSdk.Blazor.Files.HackFileView.Navigated.get -> Microsoft.AspNetCore.Components.EventCallback<string!>
 HackerOs.AppSdk.Blazor.Files.HackFileView.Navigated.set -> void
+HackerOs.AppSdk.Blazor.Files.HackFileView.OpenOnTap.get -> bool
+HackerOs.AppSdk.Blazor.Files.HackFileView.OpenOnTap.set -> void
 HackerOs.AppSdk.Blazor.Files.HackFileView.Opening.get -> Microsoft.AspNetCore.Components.EventCallback<HackerOs.AppSdk.Blazor.Files.HackFileViewOpeningEventArgs!>
 HackerOs.AppSdk.Blazor.Files.HackFileView.Opening.set -> void
 HackerOs.AppSdk.Blazor.Files.HackFileView.Renamed.get -> Microsoft.AspNetCore.Components.EventCallback<HackerOs.AppSdk.Blazor.Files.HackFileViewRenamedEventArgs!>
@@ -392,6 +448,9 @@ HackerOs.AppSdk.Blazor.Files.HackFileView.SelectedResource.set -> void
 HackerOs.AppSdk.Blazor.Files.HackFileView.SelectionChanged.get -> Microsoft.AspNetCore.Components.EventCallback<System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Blazor.Files.HackFileViewItem!>!>
 HackerOs.AppSdk.Blazor.Files.HackFileView.SelectionChanged.set -> void
 HackerOs.AppSdk.Blazor.Files.HackFileViewDeletedEventArgs
+HackerOs.AppSdk.Blazor.Files.HackFileViewDeletedEventArgs.<Clone>$() -> HackerOs.AppSdk.Blazor.Files.HackFileViewDeletedEventArgs!
+HackerOs.AppSdk.Blazor.Files.HackFileViewDeletedEventArgs.Deconstruct(out System.Collections.Generic.IReadOnlyList<string!>! Paths, out bool Permanent) -> void
+HackerOs.AppSdk.Blazor.Files.HackFileViewDeletedEventArgs.Equals(HackerOs.AppSdk.Blazor.Files.HackFileViewDeletedEventArgs? other) -> bool
 HackerOs.AppSdk.Blazor.Files.HackFileViewDeletedEventArgs.HackFileViewDeletedEventArgs(System.Collections.Generic.IReadOnlyList<string!>! Paths, bool Permanent) -> void
 HackerOs.AppSdk.Blazor.Files.HackFileViewDeletedEventArgs.Paths.get -> System.Collections.Generic.IReadOnlyList<string!>!
 HackerOs.AppSdk.Blazor.Files.HackFileViewDeletedEventArgs.Paths.init -> void
@@ -408,6 +467,9 @@ HackerOs.AppSdk.Blazor.Files.HackFileViewFeatures.OpenWith = 32 -> HackerOs.AppS
 HackerOs.AppSdk.Blazor.Files.HackFileViewFeatures.Properties = 64 -> HackerOs.AppSdk.Blazor.Files.HackFileViewFeatures
 HackerOs.AppSdk.Blazor.Files.HackFileViewFeatures.Rename = 4 -> HackerOs.AppSdk.Blazor.Files.HackFileViewFeatures
 HackerOs.AppSdk.Blazor.Files.HackFileViewItem
+HackerOs.AppSdk.Blazor.Files.HackFileViewItem.<Clone>$() -> HackerOs.AppSdk.Blazor.Files.HackFileViewItem!
+HackerOs.AppSdk.Blazor.Files.HackFileViewItem.Deconstruct(out string! Path, out string! Name, out bool IsDirectory, out long Size, out string! MediaType, out System.DateTimeOffset ModifiedAt) -> void
+HackerOs.AppSdk.Blazor.Files.HackFileViewItem.Equals(HackerOs.AppSdk.Blazor.Files.HackFileViewItem? other) -> bool
 HackerOs.AppSdk.Blazor.Files.HackFileViewItem.HackFileViewItem(string! Path, string! Name, bool IsDirectory, long Size, string! MediaType, System.DateTimeOffset ModifiedAt) -> void
 HackerOs.AppSdk.Blazor.Files.HackFileViewItem.IsDirectory.get -> bool
 HackerOs.AppSdk.Blazor.Files.HackFileViewItem.IsDirectory.init -> void
@@ -432,6 +494,9 @@ HackerOs.AppSdk.Blazor.Files.HackFileViewOpeningEventArgs.Handled.get -> bool
 HackerOs.AppSdk.Blazor.Files.HackFileViewOpeningEventArgs.Handled.set -> void
 HackerOs.AppSdk.Blazor.Files.HackFileViewOpeningEventArgs.Item.get -> HackerOs.AppSdk.Blazor.Files.HackFileViewItem!
 HackerOs.AppSdk.Blazor.Files.HackFileViewRenamedEventArgs
+HackerOs.AppSdk.Blazor.Files.HackFileViewRenamedEventArgs.<Clone>$() -> HackerOs.AppSdk.Blazor.Files.HackFileViewRenamedEventArgs!
+HackerOs.AppSdk.Blazor.Files.HackFileViewRenamedEventArgs.Deconstruct(out string! OldPath, out string! NewPath) -> void
+HackerOs.AppSdk.Blazor.Files.HackFileViewRenamedEventArgs.Equals(HackerOs.AppSdk.Blazor.Files.HackFileViewRenamedEventArgs? other) -> bool
 HackerOs.AppSdk.Blazor.Files.HackFileViewRenamedEventArgs.HackFileViewRenamedEventArgs(string! OldPath, string! NewPath) -> void
 HackerOs.AppSdk.Blazor.Files.HackFileViewRenamedEventArgs.NewPath.get -> string!
 HackerOs.AppSdk.Blazor.Files.HackFileViewRenamedEventArgs.NewPath.init -> void
@@ -453,16 +518,22 @@ HackerOs.AppSdk.Blazor.Files.IHackFileView.SelectedItems.get -> System.Collectio
 HackerOs.AppSdk.Blazor.Files.IHackFileView.StateChanged -> System.EventHandler?
 HackerOs.AppSdk.Blazor.Files.IHackFileView.WhenIdleAsync() -> System.Threading.Tasks.Task!
 HackerOs.AppSdk.Blazor.Files.OpenWithDialogRequest
+HackerOs.AppSdk.Blazor.Files.OpenWithDialogRequest.<Clone>$() -> HackerOs.AppSdk.Blazor.Files.OpenWithDialogRequest!
 HackerOs.AppSdk.Blazor.Files.OpenWithDialogRequest.CandidateAppIds.get -> System.Collections.Generic.IReadOnlyList<string!>?
 HackerOs.AppSdk.Blazor.Files.OpenWithDialogRequest.CandidateAppIds.init -> void
+HackerOs.AppSdk.Blazor.Files.OpenWithDialogRequest.Deconstruct(out string! Path) -> void
+HackerOs.AppSdk.Blazor.Files.OpenWithDialogRequest.Equals(HackerOs.AppSdk.Blazor.Files.OpenWithDialogRequest? other) -> bool
 HackerOs.AppSdk.Blazor.Files.OpenWithDialogRequest.OpenWithDialogRequest(string! Path) -> void
 HackerOs.AppSdk.Blazor.Files.OpenWithDialogRequest.Path.get -> string!
 HackerOs.AppSdk.Blazor.Files.OpenWithDialogRequest.Path.init -> void
 HackerOs.AppSdk.Blazor.Files.OpenWithDialogResult
+HackerOs.AppSdk.Blazor.Files.OpenWithDialogResult.<Clone>$() -> HackerOs.AppSdk.Blazor.Files.OpenWithDialogResult!
 HackerOs.AppSdk.Blazor.Files.OpenWithDialogResult.AlwaysUse.get -> bool
 HackerOs.AppSdk.Blazor.Files.OpenWithDialogResult.AlwaysUse.init -> void
 HackerOs.AppSdk.Blazor.Files.OpenWithDialogResult.AppId.get -> string?
 HackerOs.AppSdk.Blazor.Files.OpenWithDialogResult.AppId.init -> void
+HackerOs.AppSdk.Blazor.Files.OpenWithDialogResult.Deconstruct(out HackerOs.AppSdk.Blazor.Files.OpenWithDialogStatus Status, out string? AppId, out bool AlwaysUse) -> void
+HackerOs.AppSdk.Blazor.Files.OpenWithDialogResult.Equals(HackerOs.AppSdk.Blazor.Files.OpenWithDialogResult? other) -> bool
 HackerOs.AppSdk.Blazor.Files.OpenWithDialogResult.OpenWithDialogResult(HackerOs.AppSdk.Blazor.Files.OpenWithDialogStatus Status, string? AppId, bool AlwaysUse) -> void
 HackerOs.AppSdk.Blazor.Files.OpenWithDialogResult.Status.get -> HackerOs.AppSdk.Blazor.Files.OpenWithDialogStatus
 HackerOs.AppSdk.Blazor.Files.OpenWithDialogResult.Status.init -> void
@@ -482,8 +553,10 @@ HackerOs.AppSdk.Blazor.HackComponentBase.AppContext.set -> void
 HackerOs.AppSdk.Blazor.HackComponentBase.HackComponentBase() -> void
 HackerOs.AppSdk.Blazor.HackComponentBase.Menus.get -> HackerOs.AppSdk.Blazor.ContextMenus.HackMenus!
 HackerOs.AppSdk.Blazor.HackWindowSize
+HackerOs.AppSdk.Blazor.HackWindowSize.Deconstruct(out double Width, out double Height) -> void
 HackerOs.AppSdk.Blazor.HackWindowSize.DisplaySurfaceId.get -> string?
 HackerOs.AppSdk.Blazor.HackWindowSize.DisplaySurfaceId.init -> void
+HackerOs.AppSdk.Blazor.HackWindowSize.Equals(HackerOs.AppSdk.Blazor.HackWindowSize other) -> bool
 HackerOs.AppSdk.Blazor.HackWindowSize.HackWindowSize() -> void
 HackerOs.AppSdk.Blazor.HackWindowSize.HackWindowSize(double Width, double Height) -> void
 HackerOs.AppSdk.Blazor.HackWindowSize.Height.get -> double
@@ -532,19 +605,28 @@ HackerOs.AppSdk.Blazor.Interop.BrowserFilePicker.BrowserFilePicker(Microsoft.JSI
 HackerOs.AppSdk.Blazor.Interop.BrowserFilePicker.DisposeAsync() -> System.Threading.Tasks.ValueTask
 HackerOs.AppSdk.Blazor.Interop.BrowserFilePicker.PickAsync(string? accept = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Blazor.Interop.BrowserPickedFile?>
 HackerOs.AppSdk.Blazor.Interop.BrowserPickedFile
+HackerOs.AppSdk.Blazor.Interop.BrowserPickedFile.<Clone>$() -> HackerOs.AppSdk.Blazor.Interop.BrowserPickedFile!
 HackerOs.AppSdk.Blazor.Interop.BrowserPickedFile.BrowserPickedFile(string! Name, byte[]! Content) -> void
 HackerOs.AppSdk.Blazor.Interop.BrowserPickedFile.Content.get -> byte[]!
 HackerOs.AppSdk.Blazor.Interop.BrowserPickedFile.Content.init -> void
+HackerOs.AppSdk.Blazor.Interop.BrowserPickedFile.Deconstruct(out string! Name, out byte[]! Content) -> void
+HackerOs.AppSdk.Blazor.Interop.BrowserPickedFile.Equals(HackerOs.AppSdk.Blazor.Interop.BrowserPickedFile? other) -> bool
 HackerOs.AppSdk.Blazor.Interop.BrowserPickedFile.Name.get -> string!
 HackerOs.AppSdk.Blazor.Interop.BrowserPickedFile.Name.init -> void
 HackerOs.AppSdk.Blazor.MessageBoxDialogRequest
+HackerOs.AppSdk.Blazor.MessageBoxDialogRequest.<Clone>$() -> HackerOs.AppSdk.Blazor.MessageBoxDialogRequest!
 HackerOs.AppSdk.Blazor.MessageBoxDialogRequest.Content.get -> string!
 HackerOs.AppSdk.Blazor.MessageBoxDialogRequest.Content.init -> void
 HackerOs.AppSdk.Blazor.MessageBoxDialogRequest.DialogType.get -> HackerOs.AppSdk.Blazor.MessageBoxType
 HackerOs.AppSdk.Blazor.MessageBoxDialogRequest.DialogType.init -> void
+HackerOs.AppSdk.Blazor.MessageBoxDialogRequest.Equals(HackerOs.AppSdk.Blazor.MessageBoxDialogRequest? other) -> bool
+HackerOs.AppSdk.Blazor.MessageBoxDialogRequest.MessageBoxDialogRequest() -> void
 HackerOs.AppSdk.Blazor.MessageBoxDialogRequest.Title.get -> string!
 HackerOs.AppSdk.Blazor.MessageBoxDialogRequest.Title.init -> void
 HackerOs.AppSdk.Blazor.MessageBoxDialogResult
+HackerOs.AppSdk.Blazor.MessageBoxDialogResult.<Clone>$() -> HackerOs.AppSdk.Blazor.MessageBoxDialogResult!
+HackerOs.AppSdk.Blazor.MessageBoxDialogResult.Deconstruct(out HackerOs.AppSdk.Blazor.MessageBoxResult Result) -> void
+HackerOs.AppSdk.Blazor.MessageBoxDialogResult.Equals(HackerOs.AppSdk.Blazor.MessageBoxDialogResult? other) -> bool
 HackerOs.AppSdk.Blazor.MessageBoxDialogResult.MessageBoxDialogResult(HackerOs.AppSdk.Blazor.MessageBoxResult Result) -> void
 HackerOs.AppSdk.Blazor.MessageBoxDialogResult.Result.get -> HackerOs.AppSdk.Blazor.MessageBoxResult
 HackerOs.AppSdk.Blazor.MessageBoxDialogResult.Result.init -> void
@@ -577,49 +659,67 @@ HackerOs.AppSdk.Blazor.NullWindowAppFrameworkLifecycle
 HackerOs.AppSdk.Blazor.NullWindowAppFrameworkLifecycle.NullWindowAppFrameworkLifecycle() -> void
 HackerOs.AppSdk.Blazor.NullWindowAppFrameworkLifecycle.OnAfterRenderAsync(HackerOs.AppSdk.Blazor.WindowAppBase! app, bool firstRender) -> System.Threading.Tasks.Task!
 HackerOs.AppSdk.Blazor.OpenFileDialogRequest
+HackerOs.AppSdk.Blazor.OpenFileDialogRequest.<Clone>$() -> HackerOs.AppSdk.Blazor.OpenFileDialogRequest!
 HackerOs.AppSdk.Blazor.OpenFileDialogRequest.AllowMultiple.get -> bool
 HackerOs.AppSdk.Blazor.OpenFileDialogRequest.AllowMultiple.init -> void
+HackerOs.AppSdk.Blazor.OpenFileDialogRequest.Equals(HackerOs.AppSdk.Blazor.OpenFileDialogRequest? other) -> bool
 HackerOs.AppSdk.Blazor.OpenFileDialogRequest.Filters.get -> System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Blazor.FileDialogFilter!>!
 HackerOs.AppSdk.Blazor.OpenFileDialogRequest.Filters.init -> void
 HackerOs.AppSdk.Blazor.OpenFileDialogRequest.InitialDirectory.get -> HackerOs.App.Abstractions.VirtualPath?
 HackerOs.AppSdk.Blazor.OpenFileDialogRequest.InitialDirectory.init -> void
+HackerOs.AppSdk.Blazor.OpenFileDialogRequest.OpenFileDialogRequest() -> void
 HackerOs.AppSdk.Blazor.OpenFileDialogRequest.RequestedAccess.get -> HackerOs.AppSdk.Blazor.SelectedFileAccess
 HackerOs.AppSdk.Blazor.OpenFileDialogRequest.RequestedAccess.init -> void
 HackerOs.AppSdk.Blazor.OpenFileDialogRequest.Title.get -> string?
 HackerOs.AppSdk.Blazor.OpenFileDialogRequest.Title.init -> void
 HackerOs.AppSdk.Blazor.OpenFileDialogResult
+HackerOs.AppSdk.Blazor.OpenFileDialogResult.<Clone>$() -> HackerOs.AppSdk.Blazor.OpenFileDialogResult!
+HackerOs.AppSdk.Blazor.OpenFileDialogResult.Deconstruct(out HackerOs.AppSdk.Blazor.FileDialogStatus Status, out System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Blazor.SelectedFileResource!>! Resources) -> void
+HackerOs.AppSdk.Blazor.OpenFileDialogResult.Equals(HackerOs.AppSdk.Blazor.OpenFileDialogResult? other) -> bool
 HackerOs.AppSdk.Blazor.OpenFileDialogResult.OpenFileDialogResult(HackerOs.AppSdk.Blazor.FileDialogStatus Status, System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Blazor.SelectedFileResource!>! Resources) -> void
 HackerOs.AppSdk.Blazor.OpenFileDialogResult.Resources.get -> System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Blazor.SelectedFileResource!>!
 HackerOs.AppSdk.Blazor.OpenFileDialogResult.Resources.init -> void
 HackerOs.AppSdk.Blazor.OpenFileDialogResult.Status.get -> HackerOs.AppSdk.Blazor.FileDialogStatus
 HackerOs.AppSdk.Blazor.OpenFileDialogResult.Status.init -> void
 HackerOs.AppSdk.Blazor.SaveFileDialogRequest
+HackerOs.AppSdk.Blazor.SaveFileDialogRequest.<Clone>$() -> HackerOs.AppSdk.Blazor.SaveFileDialogRequest!
 HackerOs.AppSdk.Blazor.SaveFileDialogRequest.ConfirmOverwrite.get -> bool
 HackerOs.AppSdk.Blazor.SaveFileDialogRequest.ConfirmOverwrite.init -> void
 HackerOs.AppSdk.Blazor.SaveFileDialogRequest.DefaultExtension.get -> string?
 HackerOs.AppSdk.Blazor.SaveFileDialogRequest.DefaultExtension.init -> void
+HackerOs.AppSdk.Blazor.SaveFileDialogRequest.Equals(HackerOs.AppSdk.Blazor.SaveFileDialogRequest? other) -> bool
 HackerOs.AppSdk.Blazor.SaveFileDialogRequest.Filters.get -> System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Blazor.FileDialogFilter!>!
 HackerOs.AppSdk.Blazor.SaveFileDialogRequest.Filters.init -> void
 HackerOs.AppSdk.Blazor.SaveFileDialogRequest.InitialDirectory.get -> HackerOs.App.Abstractions.VirtualPath?
 HackerOs.AppSdk.Blazor.SaveFileDialogRequest.InitialDirectory.init -> void
+HackerOs.AppSdk.Blazor.SaveFileDialogRequest.SaveFileDialogRequest() -> void
 HackerOs.AppSdk.Blazor.SaveFileDialogRequest.SuggestedFileName.get -> string?
 HackerOs.AppSdk.Blazor.SaveFileDialogRequest.SuggestedFileName.init -> void
 HackerOs.AppSdk.Blazor.SaveFileDialogRequest.Title.get -> string?
 HackerOs.AppSdk.Blazor.SaveFileDialogRequest.Title.init -> void
 HackerOs.AppSdk.Blazor.SaveFileDialogResult
+HackerOs.AppSdk.Blazor.SaveFileDialogResult.<Clone>$() -> HackerOs.AppSdk.Blazor.SaveFileDialogResult!
+HackerOs.AppSdk.Blazor.SaveFileDialogResult.Deconstruct(out HackerOs.AppSdk.Blazor.FileDialogStatus Status, out HackerOs.AppSdk.Blazor.SelectedFileResource? Resource) -> void
+HackerOs.AppSdk.Blazor.SaveFileDialogResult.Equals(HackerOs.AppSdk.Blazor.SaveFileDialogResult? other) -> bool
 HackerOs.AppSdk.Blazor.SaveFileDialogResult.Resource.get -> HackerOs.AppSdk.Blazor.SelectedFileResource?
 HackerOs.AppSdk.Blazor.SaveFileDialogResult.Resource.init -> void
 HackerOs.AppSdk.Blazor.SaveFileDialogResult.SaveFileDialogResult(HackerOs.AppSdk.Blazor.FileDialogStatus Status, HackerOs.AppSdk.Blazor.SelectedFileResource? Resource) -> void
 HackerOs.AppSdk.Blazor.SaveFileDialogResult.Status.get -> HackerOs.AppSdk.Blazor.FileDialogStatus
 HackerOs.AppSdk.Blazor.SaveFileDialogResult.Status.init -> void
 HackerOs.AppSdk.Blazor.SelectFolderDialogRequest
+HackerOs.AppSdk.Blazor.SelectFolderDialogRequest.<Clone>$() -> HackerOs.AppSdk.Blazor.SelectFolderDialogRequest!
 HackerOs.AppSdk.Blazor.SelectFolderDialogRequest.AllowCreateFolder.get -> bool
 HackerOs.AppSdk.Blazor.SelectFolderDialogRequest.AllowCreateFolder.init -> void
+HackerOs.AppSdk.Blazor.SelectFolderDialogRequest.Equals(HackerOs.AppSdk.Blazor.SelectFolderDialogRequest? other) -> bool
 HackerOs.AppSdk.Blazor.SelectFolderDialogRequest.InitialDirectory.get -> HackerOs.App.Abstractions.VirtualPath?
 HackerOs.AppSdk.Blazor.SelectFolderDialogRequest.InitialDirectory.init -> void
+HackerOs.AppSdk.Blazor.SelectFolderDialogRequest.SelectFolderDialogRequest() -> void
 HackerOs.AppSdk.Blazor.SelectFolderDialogRequest.Title.get -> string?
 HackerOs.AppSdk.Blazor.SelectFolderDialogRequest.Title.init -> void
 HackerOs.AppSdk.Blazor.SelectFolderDialogResult
+HackerOs.AppSdk.Blazor.SelectFolderDialogResult.<Clone>$() -> HackerOs.AppSdk.Blazor.SelectFolderDialogResult!
+HackerOs.AppSdk.Blazor.SelectFolderDialogResult.Deconstruct(out HackerOs.AppSdk.Blazor.FileDialogStatus Status, out HackerOs.AppSdk.Blazor.SelectedFolderResource? Resource) -> void
+HackerOs.AppSdk.Blazor.SelectFolderDialogResult.Equals(HackerOs.AppSdk.Blazor.SelectFolderDialogResult? other) -> bool
 HackerOs.AppSdk.Blazor.SelectFolderDialogResult.Resource.get -> HackerOs.AppSdk.Blazor.SelectedFolderResource?
 HackerOs.AppSdk.Blazor.SelectFolderDialogResult.Resource.init -> void
 HackerOs.AppSdk.Blazor.SelectFolderDialogResult.SelectFolderDialogResult(HackerOs.AppSdk.Blazor.FileDialogStatus Status, HackerOs.AppSdk.Blazor.SelectedFolderResource? Resource) -> void
@@ -629,12 +729,18 @@ HackerOs.AppSdk.Blazor.SelectedFileAccess
 HackerOs.AppSdk.Blazor.SelectedFileAccess.Read = 0 -> HackerOs.AppSdk.Blazor.SelectedFileAccess
 HackerOs.AppSdk.Blazor.SelectedFileAccess.ReadWrite = 1 -> HackerOs.AppSdk.Blazor.SelectedFileAccess
 HackerOs.AppSdk.Blazor.SelectedFileResource
+HackerOs.AppSdk.Blazor.SelectedFileResource.<Clone>$() -> HackerOs.AppSdk.Blazor.SelectedFileResource!
+HackerOs.AppSdk.Blazor.SelectedFileResource.Deconstruct(out HackerOs.App.Abstractions.VirtualPath Path, out HackerOs.Simulation.Abstractions.FileSystem.FileSystemSelectedResourceHandle! Handle) -> void
+HackerOs.AppSdk.Blazor.SelectedFileResource.Equals(HackerOs.AppSdk.Blazor.SelectedFileResource? other) -> bool
 HackerOs.AppSdk.Blazor.SelectedFileResource.Handle.get -> HackerOs.Simulation.Abstractions.FileSystem.FileSystemSelectedResourceHandle!
 HackerOs.AppSdk.Blazor.SelectedFileResource.Handle.init -> void
 HackerOs.AppSdk.Blazor.SelectedFileResource.Path.get -> HackerOs.App.Abstractions.VirtualPath
 HackerOs.AppSdk.Blazor.SelectedFileResource.Path.init -> void
 HackerOs.AppSdk.Blazor.SelectedFileResource.SelectedFileResource(HackerOs.App.Abstractions.VirtualPath Path, HackerOs.Simulation.Abstractions.FileSystem.FileSystemSelectedResourceHandle! Handle) -> void
 HackerOs.AppSdk.Blazor.SelectedFolderResource
+HackerOs.AppSdk.Blazor.SelectedFolderResource.<Clone>$() -> HackerOs.AppSdk.Blazor.SelectedFolderResource!
+HackerOs.AppSdk.Blazor.SelectedFolderResource.Deconstruct(out HackerOs.App.Abstractions.VirtualPath Path, out HackerOs.Simulation.Abstractions.FileSystem.FileSystemSelectedResourceHandle! Handle) -> void
+HackerOs.AppSdk.Blazor.SelectedFolderResource.Equals(HackerOs.AppSdk.Blazor.SelectedFolderResource? other) -> bool
 HackerOs.AppSdk.Blazor.SelectedFolderResource.Handle.get -> HackerOs.Simulation.Abstractions.FileSystem.FileSystemSelectedResourceHandle!
 HackerOs.AppSdk.Blazor.SelectedFolderResource.Handle.init -> void
 HackerOs.AppSdk.Blazor.SelectedFolderResource.Path.get -> HackerOs.App.Abstractions.VirtualPath
@@ -647,15 +753,21 @@ HackerOs.AppSdk.Blazor.Settings.SettingOriginBadge.SettingOriginBadge() -> void
 HackerOs.AppSdk.Blazor.Settings.SettingOriginBadge.Source.get -> HackerOs.Simulation.Abstractions.Settings.SettingLayer
 HackerOs.AppSdk.Blazor.Settings.SettingOriginBadge.Source.set -> void
 HackerOs.AppSdk.Blazor.TextInputDialogRequest
+HackerOs.AppSdk.Blazor.TextInputDialogRequest.<Clone>$() -> HackerOs.AppSdk.Blazor.TextInputDialogRequest!
 HackerOs.AppSdk.Blazor.TextInputDialogRequest.Content.get -> string!
 HackerOs.AppSdk.Blazor.TextInputDialogRequest.Content.init -> void
 HackerOs.AppSdk.Blazor.TextInputDialogRequest.DefaultValue.get -> string?
 HackerOs.AppSdk.Blazor.TextInputDialogRequest.DefaultValue.init -> void
+HackerOs.AppSdk.Blazor.TextInputDialogRequest.Equals(HackerOs.AppSdk.Blazor.TextInputDialogRequest? other) -> bool
 HackerOs.AppSdk.Blazor.TextInputDialogRequest.Placeholder.get -> string?
 HackerOs.AppSdk.Blazor.TextInputDialogRequest.Placeholder.init -> void
+HackerOs.AppSdk.Blazor.TextInputDialogRequest.TextInputDialogRequest() -> void
 HackerOs.AppSdk.Blazor.TextInputDialogRequest.Title.get -> string!
 HackerOs.AppSdk.Blazor.TextInputDialogRequest.Title.init -> void
 HackerOs.AppSdk.Blazor.TextInputDialogResult
+HackerOs.AppSdk.Blazor.TextInputDialogResult.<Clone>$() -> HackerOs.AppSdk.Blazor.TextInputDialogResult!
+HackerOs.AppSdk.Blazor.TextInputDialogResult.Deconstruct(out HackerOs.AppSdk.Blazor.TextInputStatus Status, out string? Value) -> void
+HackerOs.AppSdk.Blazor.TextInputDialogResult.Equals(HackerOs.AppSdk.Blazor.TextInputDialogResult? other) -> bool
 HackerOs.AppSdk.Blazor.TextInputDialogResult.Status.get -> HackerOs.AppSdk.Blazor.TextInputStatus
 HackerOs.AppSdk.Blazor.TextInputDialogResult.Status.init -> void
 HackerOs.AppSdk.Blazor.TextInputDialogResult.TextInputDialogResult(HackerOs.AppSdk.Blazor.TextInputStatus Status, string? Value) -> void
@@ -709,14 +821,123 @@ const HackerOs.AppSdk.Blazor.ContextMenus.HackMenuDefinition.MaxDepth = 3 -> int
 const HackerOs.AppSdk.Blazor.Files.HackFileDialogs.Conflict = "conflict" -> string!
 const HackerOs.AppSdk.Blazor.Files.HackFileDialogs.OpenWith = "open-with" -> string!
 const HackerOs.AppSdk.Blazor.Files.HackFileDialogs.Properties = "properties" -> string!
+override HackerOs.AppSdk.Blazor.AppBackRequest.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.AppBackRequest.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.AppBackRequest.ToString() -> string!
+override HackerOs.AppSdk.Blazor.AppBackResult.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.AppBackResult.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.AppBackResult.ToString() -> string!
+override HackerOs.AppSdk.Blazor.AppChooserDialogRequest.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.AppChooserDialogRequest.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.AppChooserDialogRequest.ToString() -> string!
+override HackerOs.AppSdk.Blazor.AppChooserDialogResult.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.AppChooserDialogResult.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.AppChooserDialogResult.ToString() -> string!
+override HackerOs.AppSdk.Blazor.AppChooserOption.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.AppChooserOption.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.AppChooserOption.ToString() -> string!
+override HackerOs.AppSdk.Blazor.Charts.HackChartSeries.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.Charts.HackChartSeries.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.Charts.HackChartSeries.ToString() -> string!
+override HackerOs.AppSdk.Blazor.Components.HackComponentResolution.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.Components.HackComponentResolution.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.Components.HackComponentResolution.ToString() -> string!
 override HackerOs.AppSdk.Blazor.Components.HackContractComponent<TController>.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder! builder) -> void
 override HackerOs.AppSdk.Blazor.Components.HackContractComponent<TController>.OnParametersSet() -> void
 override HackerOs.AppSdk.Blazor.Components.HackEmbeddedComponent<TController>.OnParametersSetAsync() -> System.Threading.Tasks.Task!
+override HackerOs.AppSdk.Blazor.ContextMenus.HackMenuRegistration.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.ContextMenus.HackMenuRegistration.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.ContextMenus.HackMenuRegistration.ToString() -> string!
+override HackerOs.AppSdk.Blazor.CredentialPromptDialogRequest.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.CredentialPromptDialogRequest.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.CredentialPromptDialogRequest.ToString() -> string!
+override HackerOs.AppSdk.Blazor.CredentialPromptDialogResult.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.CredentialPromptDialogResult.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.CredentialPromptDialogResult.ToString() -> string!
+override HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOpenResult.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOpenResult.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOpenResult.ToString() -> string!
+override HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOptions.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOptions.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOptions.ToString() -> string!
+override HackerOs.AppSdk.Blazor.FileDialogFilter.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.FileDialogFilter.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.FileDialogFilter.ToString() -> string!
+override HackerOs.AppSdk.Blazor.Files.FileConflictDialogRequest.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.Files.FileConflictDialogRequest.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.Files.FileConflictDialogRequest.ToString() -> string!
+override HackerOs.AppSdk.Blazor.Files.FileConflictDialogResult.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.Files.FileConflictDialogResult.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.Files.FileConflictDialogResult.ToString() -> string!
+override HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogRequest.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogRequest.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogRequest.ToString() -> string!
+override HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogResult.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogResult.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogResult.ToString() -> string!
+override HackerOs.AppSdk.Blazor.Files.HackFileMenuContext.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.Files.HackFileMenuContext.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.Files.HackFileMenuContext.ToString() -> string!
+override HackerOs.AppSdk.Blazor.Files.HackFileViewDeletedEventArgs.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.Files.HackFileViewDeletedEventArgs.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.Files.HackFileViewDeletedEventArgs.ToString() -> string!
+override HackerOs.AppSdk.Blazor.Files.HackFileViewItem.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.Files.HackFileViewItem.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.Files.HackFileViewItem.ToString() -> string!
+override HackerOs.AppSdk.Blazor.Files.HackFileViewRenamedEventArgs.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.Files.HackFileViewRenamedEventArgs.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.Files.HackFileViewRenamedEventArgs.ToString() -> string!
+override HackerOs.AppSdk.Blazor.Files.OpenWithDialogRequest.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.Files.OpenWithDialogRequest.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.Files.OpenWithDialogRequest.ToString() -> string!
+override HackerOs.AppSdk.Blazor.Files.OpenWithDialogResult.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.Files.OpenWithDialogResult.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.Files.OpenWithDialogResult.ToString() -> string!
 override HackerOs.AppSdk.Blazor.HackComponentBase.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView parameters) -> System.Threading.Tasks.Task!
+override HackerOs.AppSdk.Blazor.HackWindowSize.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.Interop.BrowserPickedFile.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.Interop.BrowserPickedFile.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.Interop.BrowserPickedFile.ToString() -> string!
+override HackerOs.AppSdk.Blazor.MessageBoxDialogRequest.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.MessageBoxDialogRequest.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.MessageBoxDialogRequest.ToString() -> string!
+override HackerOs.AppSdk.Blazor.MessageBoxDialogResult.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.MessageBoxDialogResult.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.MessageBoxDialogResult.ToString() -> string!
 override HackerOs.AppSdk.Blazor.MessageboxResult.Equals(object? obj) -> bool
 override HackerOs.AppSdk.Blazor.MessageboxResult.GetHashCode() -> int
 override HackerOs.AppSdk.Blazor.MessageboxType.Equals(object? obj) -> bool
 override HackerOs.AppSdk.Blazor.MessageboxType.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.OpenFileDialogRequest.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.OpenFileDialogRequest.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.OpenFileDialogRequest.ToString() -> string!
+override HackerOs.AppSdk.Blazor.OpenFileDialogResult.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.OpenFileDialogResult.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.OpenFileDialogResult.ToString() -> string!
+override HackerOs.AppSdk.Blazor.SaveFileDialogRequest.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.SaveFileDialogRequest.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.SaveFileDialogRequest.ToString() -> string!
+override HackerOs.AppSdk.Blazor.SaveFileDialogResult.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.SaveFileDialogResult.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.SaveFileDialogResult.ToString() -> string!
+override HackerOs.AppSdk.Blazor.SelectFolderDialogRequest.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.SelectFolderDialogRequest.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.SelectFolderDialogRequest.ToString() -> string!
+override HackerOs.AppSdk.Blazor.SelectFolderDialogResult.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.SelectFolderDialogResult.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.SelectFolderDialogResult.ToString() -> string!
+override HackerOs.AppSdk.Blazor.SelectedFileResource.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.SelectedFileResource.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.SelectedFileResource.ToString() -> string!
+override HackerOs.AppSdk.Blazor.SelectedFolderResource.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.SelectedFolderResource.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.SelectedFolderResource.ToString() -> string!
+override HackerOs.AppSdk.Blazor.TextInputDialogRequest.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.TextInputDialogRequest.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.TextInputDialogRequest.ToString() -> string!
+override HackerOs.AppSdk.Blazor.TextInputDialogResult.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.TextInputDialogResult.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.TextInputDialogResult.ToString() -> string!
 override sealed HackerOs.AppSdk.Blazor.WindowAppBase.OnAfterRender(bool firstRender) -> void
 override sealed HackerOs.AppSdk.Blazor.WindowAppBase.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
 override sealed HackerOs.AppSdk.Blazor.WindowAppBase.OnInitialized() -> void
@@ -725,16 +946,70 @@ override sealed HackerOs.AppSdk.Blazor.WindowAppBase.OnParametersSet() -> void
 override sealed HackerOs.AppSdk.Blazor.WindowAppBase.OnParametersSetAsync() -> System.Threading.Tasks.Task!
 override sealed HackerOs.AppSdk.Blazor.WindowAppBase.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView parameters) -> System.Threading.Tasks.Task!
 override sealed HackerOs.AppSdk.Blazor.WindowAppBase.ShouldRender() -> bool
+static HackerOs.AppSdk.Blazor.AppBackRequest.operator !=(HackerOs.AppSdk.Blazor.AppBackRequest? left, HackerOs.AppSdk.Blazor.AppBackRequest? right) -> bool
+static HackerOs.AppSdk.Blazor.AppBackRequest.operator ==(HackerOs.AppSdk.Blazor.AppBackRequest? left, HackerOs.AppSdk.Blazor.AppBackRequest? right) -> bool
 static HackerOs.AppSdk.Blazor.AppBackResult.Handled.get -> HackerOs.AppSdk.Blazor.AppBackResult!
 static HackerOs.AppSdk.Blazor.AppBackResult.NotHandled.get -> HackerOs.AppSdk.Blazor.AppBackResult!
+static HackerOs.AppSdk.Blazor.AppBackResult.operator !=(HackerOs.AppSdk.Blazor.AppBackResult? left, HackerOs.AppSdk.Blazor.AppBackResult? right) -> bool
+static HackerOs.AppSdk.Blazor.AppBackResult.operator ==(HackerOs.AppSdk.Blazor.AppBackResult? left, HackerOs.AppSdk.Blazor.AppBackResult? right) -> bool
+static HackerOs.AppSdk.Blazor.AppChooserDialogRequest.operator !=(HackerOs.AppSdk.Blazor.AppChooserDialogRequest? left, HackerOs.AppSdk.Blazor.AppChooserDialogRequest? right) -> bool
+static HackerOs.AppSdk.Blazor.AppChooserDialogRequest.operator ==(HackerOs.AppSdk.Blazor.AppChooserDialogRequest? left, HackerOs.AppSdk.Blazor.AppChooserDialogRequest? right) -> bool
+static HackerOs.AppSdk.Blazor.AppChooserDialogResult.operator !=(HackerOs.AppSdk.Blazor.AppChooserDialogResult? left, HackerOs.AppSdk.Blazor.AppChooserDialogResult? right) -> bool
+static HackerOs.AppSdk.Blazor.AppChooserDialogResult.operator ==(HackerOs.AppSdk.Blazor.AppChooserDialogResult? left, HackerOs.AppSdk.Blazor.AppChooserDialogResult? right) -> bool
+static HackerOs.AppSdk.Blazor.AppChooserOption.operator !=(HackerOs.AppSdk.Blazor.AppChooserOption? left, HackerOs.AppSdk.Blazor.AppChooserOption? right) -> bool
+static HackerOs.AppSdk.Blazor.AppChooserOption.operator ==(HackerOs.AppSdk.Blazor.AppChooserOption? left, HackerOs.AppSdk.Blazor.AppChooserOption? right) -> bool
 static HackerOs.AppSdk.Blazor.Charts.HackChartGeometry.BuildArea(System.Collections.Generic.IReadOnlyList<double>! values, int capacity, double maximum) -> string!
 static HackerOs.AppSdk.Blazor.Charts.HackChartGeometry.BuildPoints(System.Collections.Generic.IReadOnlyList<double>! values, int capacity, double maximum) -> string!
 static HackerOs.AppSdk.Blazor.Charts.HackChartGeometry.NiceMaximum(System.Collections.Generic.IEnumerable<HackerOs.AppSdk.Blazor.Charts.HackChartSeries!>! series, double floor = 1) -> double
+static HackerOs.AppSdk.Blazor.Charts.HackChartSeries.operator !=(HackerOs.AppSdk.Blazor.Charts.HackChartSeries? left, HackerOs.AppSdk.Blazor.Charts.HackChartSeries? right) -> bool
+static HackerOs.AppSdk.Blazor.Charts.HackChartSeries.operator ==(HackerOs.AppSdk.Blazor.Charts.HackChartSeries? left, HackerOs.AppSdk.Blazor.Charts.HackChartSeries? right) -> bool
 static HackerOs.AppSdk.Blazor.Components.HackComponentResolution.Resolved(string! contract, System.Type! componentType, string! providerAppId) -> HackerOs.AppSdk.Blazor.Components.HackComponentResolution!
 static HackerOs.AppSdk.Blazor.Components.HackComponentResolution.Unavailable(string! contract, string! error, string? providerAppId = null) -> HackerOs.AppSdk.Blazor.Components.HackComponentResolution!
+static HackerOs.AppSdk.Blazor.Components.HackComponentResolution.operator !=(HackerOs.AppSdk.Blazor.Components.HackComponentResolution? left, HackerOs.AppSdk.Blazor.Components.HackComponentResolution? right) -> bool
+static HackerOs.AppSdk.Blazor.Components.HackComponentResolution.operator ==(HackerOs.AppSdk.Blazor.Components.HackComponentResolution? left, HackerOs.AppSdk.Blazor.Components.HackComponentResolution? right) -> bool
+static HackerOs.AppSdk.Blazor.ContextMenus.HackMenuRegistration.operator !=(HackerOs.AppSdk.Blazor.ContextMenus.HackMenuRegistration? left, HackerOs.AppSdk.Blazor.ContextMenus.HackMenuRegistration? right) -> bool
+static HackerOs.AppSdk.Blazor.ContextMenus.HackMenuRegistration.operator ==(HackerOs.AppSdk.Blazor.ContextMenus.HackMenuRegistration? left, HackerOs.AppSdk.Blazor.ContextMenus.HackMenuRegistration? right) -> bool
+static HackerOs.AppSdk.Blazor.CredentialPromptDialogRequest.operator !=(HackerOs.AppSdk.Blazor.CredentialPromptDialogRequest? left, HackerOs.AppSdk.Blazor.CredentialPromptDialogRequest? right) -> bool
+static HackerOs.AppSdk.Blazor.CredentialPromptDialogRequest.operator ==(HackerOs.AppSdk.Blazor.CredentialPromptDialogRequest? left, HackerOs.AppSdk.Blazor.CredentialPromptDialogRequest? right) -> bool
+static HackerOs.AppSdk.Blazor.CredentialPromptDialogResult.operator !=(HackerOs.AppSdk.Blazor.CredentialPromptDialogResult? left, HackerOs.AppSdk.Blazor.CredentialPromptDialogResult? right) -> bool
+static HackerOs.AppSdk.Blazor.CredentialPromptDialogResult.operator ==(HackerOs.AppSdk.Blazor.CredentialPromptDialogResult? left, HackerOs.AppSdk.Blazor.CredentialPromptDialogResult? right) -> bool
 static HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOpenResult.Unavailable.get -> HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOpenResult!
+static HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOpenResult.operator !=(HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOpenResult? left, HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOpenResult? right) -> bool
+static HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOpenResult.operator ==(HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOpenResult? left, HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOpenResult? right) -> bool
+static HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOptions.operator !=(HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOptions? left, HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOptions? right) -> bool
+static HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOptions.operator ==(HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOptions? left, HackerOs.AppSdk.Blazor.Display.DisplaySurfaceOptions? right) -> bool
+static HackerOs.AppSdk.Blazor.FileDialogFilter.operator !=(HackerOs.AppSdk.Blazor.FileDialogFilter? left, HackerOs.AppSdk.Blazor.FileDialogFilter? right) -> bool
+static HackerOs.AppSdk.Blazor.FileDialogFilter.operator ==(HackerOs.AppSdk.Blazor.FileDialogFilter? left, HackerOs.AppSdk.Blazor.FileDialogFilter? right) -> bool
+static HackerOs.AppSdk.Blazor.Files.FileConflictDialogRequest.operator !=(HackerOs.AppSdk.Blazor.Files.FileConflictDialogRequest? left, HackerOs.AppSdk.Blazor.Files.FileConflictDialogRequest? right) -> bool
+static HackerOs.AppSdk.Blazor.Files.FileConflictDialogRequest.operator ==(HackerOs.AppSdk.Blazor.Files.FileConflictDialogRequest? left, HackerOs.AppSdk.Blazor.Files.FileConflictDialogRequest? right) -> bool
+static HackerOs.AppSdk.Blazor.Files.FileConflictDialogResult.operator !=(HackerOs.AppSdk.Blazor.Files.FileConflictDialogResult? left, HackerOs.AppSdk.Blazor.Files.FileConflictDialogResult? right) -> bool
+static HackerOs.AppSdk.Blazor.Files.FileConflictDialogResult.operator ==(HackerOs.AppSdk.Blazor.Files.FileConflictDialogResult? left, HackerOs.AppSdk.Blazor.Files.FileConflictDialogResult? right) -> bool
+static HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogRequest.operator !=(HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogRequest? left, HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogRequest? right) -> bool
+static HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogRequest.operator ==(HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogRequest? left, HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogRequest? right) -> bool
+static HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogResult.operator !=(HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogResult? left, HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogResult? right) -> bool
+static HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogResult.operator ==(HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogResult? left, HackerOs.AppSdk.Blazor.Files.FilePropertiesDialogResult? right) -> bool
+static HackerOs.AppSdk.Blazor.Files.HackFileMenuContext.operator !=(HackerOs.AppSdk.Blazor.Files.HackFileMenuContext? left, HackerOs.AppSdk.Blazor.Files.HackFileMenuContext? right) -> bool
+static HackerOs.AppSdk.Blazor.Files.HackFileMenuContext.operator ==(HackerOs.AppSdk.Blazor.Files.HackFileMenuContext? left, HackerOs.AppSdk.Blazor.Files.HackFileMenuContext? right) -> bool
 static HackerOs.AppSdk.Blazor.Files.HackFileOperationDialogs.AsFileConflictResolver(this HackerOs.AppSdk.Blazor.IDialogService! dialogs, HackerOs.AppSdk.IAppExecutionContext! owner, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> HackerOs.AppSdk.IO.HackFileConflictResolver!
+static HackerOs.AppSdk.Blazor.Files.HackFileViewDeletedEventArgs.operator !=(HackerOs.AppSdk.Blazor.Files.HackFileViewDeletedEventArgs? left, HackerOs.AppSdk.Blazor.Files.HackFileViewDeletedEventArgs? right) -> bool
+static HackerOs.AppSdk.Blazor.Files.HackFileViewDeletedEventArgs.operator ==(HackerOs.AppSdk.Blazor.Files.HackFileViewDeletedEventArgs? left, HackerOs.AppSdk.Blazor.Files.HackFileViewDeletedEventArgs? right) -> bool
+static HackerOs.AppSdk.Blazor.Files.HackFileViewItem.operator !=(HackerOs.AppSdk.Blazor.Files.HackFileViewItem? left, HackerOs.AppSdk.Blazor.Files.HackFileViewItem? right) -> bool
+static HackerOs.AppSdk.Blazor.Files.HackFileViewItem.operator ==(HackerOs.AppSdk.Blazor.Files.HackFileViewItem? left, HackerOs.AppSdk.Blazor.Files.HackFileViewItem? right) -> bool
+static HackerOs.AppSdk.Blazor.Files.HackFileViewRenamedEventArgs.operator !=(HackerOs.AppSdk.Blazor.Files.HackFileViewRenamedEventArgs? left, HackerOs.AppSdk.Blazor.Files.HackFileViewRenamedEventArgs? right) -> bool
+static HackerOs.AppSdk.Blazor.Files.HackFileViewRenamedEventArgs.operator ==(HackerOs.AppSdk.Blazor.Files.HackFileViewRenamedEventArgs? left, HackerOs.AppSdk.Blazor.Files.HackFileViewRenamedEventArgs? right) -> bool
+static HackerOs.AppSdk.Blazor.Files.OpenWithDialogRequest.operator !=(HackerOs.AppSdk.Blazor.Files.OpenWithDialogRequest? left, HackerOs.AppSdk.Blazor.Files.OpenWithDialogRequest? right) -> bool
+static HackerOs.AppSdk.Blazor.Files.OpenWithDialogRequest.operator ==(HackerOs.AppSdk.Blazor.Files.OpenWithDialogRequest? left, HackerOs.AppSdk.Blazor.Files.OpenWithDialogRequest? right) -> bool
+static HackerOs.AppSdk.Blazor.Files.OpenWithDialogResult.operator !=(HackerOs.AppSdk.Blazor.Files.OpenWithDialogResult? left, HackerOs.AppSdk.Blazor.Files.OpenWithDialogResult? right) -> bool
+static HackerOs.AppSdk.Blazor.Files.OpenWithDialogResult.operator ==(HackerOs.AppSdk.Blazor.Files.OpenWithDialogResult? left, HackerOs.AppSdk.Blazor.Files.OpenWithDialogResult? right) -> bool
 static HackerOs.AppSdk.Blazor.Files.RegisterFileContextMenuContext.ToScopes(HackerOs.AppSdk.Files.FileMenuScope scope) -> System.Collections.Generic.IReadOnlyList<string!>!
+static HackerOs.AppSdk.Blazor.HackWindowSize.operator !=(HackerOs.AppSdk.Blazor.HackWindowSize left, HackerOs.AppSdk.Blazor.HackWindowSize right) -> bool
+static HackerOs.AppSdk.Blazor.HackWindowSize.operator ==(HackerOs.AppSdk.Blazor.HackWindowSize left, HackerOs.AppSdk.Blazor.HackWindowSize right) -> bool
+static HackerOs.AppSdk.Blazor.Interop.BrowserPickedFile.operator !=(HackerOs.AppSdk.Blazor.Interop.BrowserPickedFile? left, HackerOs.AppSdk.Blazor.Interop.BrowserPickedFile? right) -> bool
+static HackerOs.AppSdk.Blazor.Interop.BrowserPickedFile.operator ==(HackerOs.AppSdk.Blazor.Interop.BrowserPickedFile? left, HackerOs.AppSdk.Blazor.Interop.BrowserPickedFile? right) -> bool
+static HackerOs.AppSdk.Blazor.MessageBoxDialogRequest.operator !=(HackerOs.AppSdk.Blazor.MessageBoxDialogRequest? left, HackerOs.AppSdk.Blazor.MessageBoxDialogRequest? right) -> bool
+static HackerOs.AppSdk.Blazor.MessageBoxDialogRequest.operator ==(HackerOs.AppSdk.Blazor.MessageBoxDialogRequest? left, HackerOs.AppSdk.Blazor.MessageBoxDialogRequest? right) -> bool
+static HackerOs.AppSdk.Blazor.MessageBoxDialogResult.operator !=(HackerOs.AppSdk.Blazor.MessageBoxDialogResult? left, HackerOs.AppSdk.Blazor.MessageBoxDialogResult? right) -> bool
+static HackerOs.AppSdk.Blazor.MessageBoxDialogResult.operator ==(HackerOs.AppSdk.Blazor.MessageBoxDialogResult? left, HackerOs.AppSdk.Blazor.MessageBoxDialogResult? right) -> bool
 static HackerOs.AppSdk.Blazor.MessageboxResult.Cancel.get -> HackerOs.AppSdk.Blazor.MessageboxResult
 static HackerOs.AppSdk.Blazor.MessageboxResult.No.get -> HackerOs.AppSdk.Blazor.MessageboxResult
 static HackerOs.AppSdk.Blazor.MessageboxResult.Ok.get -> HackerOs.AppSdk.Blazor.MessageboxResult
@@ -763,6 +1038,26 @@ static HackerOs.AppSdk.Blazor.MessageboxType.operator ==(HackerOs.AppSdk.Blazor.
 static HackerOs.AppSdk.Blazor.MessageboxType.operator ==(HackerOs.AppSdk.Blazor.MessageboxType left, HackerOs.AppSdk.Blazor.MessageBoxType right) -> bool
 static HackerOs.AppSdk.Blazor.MessageboxType.operator ==(HackerOs.AppSdk.Blazor.MessageboxType left, HackerOs.AppSdk.Blazor.MessageboxType right) -> bool
 static HackerOs.AppSdk.Blazor.NullWindowAppFrameworkLifecycle.Instance.get -> HackerOs.AppSdk.Blazor.NullWindowAppFrameworkLifecycle!
+static HackerOs.AppSdk.Blazor.OpenFileDialogRequest.operator !=(HackerOs.AppSdk.Blazor.OpenFileDialogRequest? left, HackerOs.AppSdk.Blazor.OpenFileDialogRequest? right) -> bool
+static HackerOs.AppSdk.Blazor.OpenFileDialogRequest.operator ==(HackerOs.AppSdk.Blazor.OpenFileDialogRequest? left, HackerOs.AppSdk.Blazor.OpenFileDialogRequest? right) -> bool
+static HackerOs.AppSdk.Blazor.OpenFileDialogResult.operator !=(HackerOs.AppSdk.Blazor.OpenFileDialogResult? left, HackerOs.AppSdk.Blazor.OpenFileDialogResult? right) -> bool
+static HackerOs.AppSdk.Blazor.OpenFileDialogResult.operator ==(HackerOs.AppSdk.Blazor.OpenFileDialogResult? left, HackerOs.AppSdk.Blazor.OpenFileDialogResult? right) -> bool
+static HackerOs.AppSdk.Blazor.SaveFileDialogRequest.operator !=(HackerOs.AppSdk.Blazor.SaveFileDialogRequest? left, HackerOs.AppSdk.Blazor.SaveFileDialogRequest? right) -> bool
+static HackerOs.AppSdk.Blazor.SaveFileDialogRequest.operator ==(HackerOs.AppSdk.Blazor.SaveFileDialogRequest? left, HackerOs.AppSdk.Blazor.SaveFileDialogRequest? right) -> bool
+static HackerOs.AppSdk.Blazor.SaveFileDialogResult.operator !=(HackerOs.AppSdk.Blazor.SaveFileDialogResult? left, HackerOs.AppSdk.Blazor.SaveFileDialogResult? right) -> bool
+static HackerOs.AppSdk.Blazor.SaveFileDialogResult.operator ==(HackerOs.AppSdk.Blazor.SaveFileDialogResult? left, HackerOs.AppSdk.Blazor.SaveFileDialogResult? right) -> bool
+static HackerOs.AppSdk.Blazor.SelectFolderDialogRequest.operator !=(HackerOs.AppSdk.Blazor.SelectFolderDialogRequest? left, HackerOs.AppSdk.Blazor.SelectFolderDialogRequest? right) -> bool
+static HackerOs.AppSdk.Blazor.SelectFolderDialogRequest.operator ==(HackerOs.AppSdk.Blazor.SelectFolderDialogRequest? left, HackerOs.AppSdk.Blazor.SelectFolderDialogRequest? right) -> bool
+static HackerOs.AppSdk.Blazor.SelectFolderDialogResult.operator !=(HackerOs.AppSdk.Blazor.SelectFolderDialogResult? left, HackerOs.AppSdk.Blazor.SelectFolderDialogResult? right) -> bool
+static HackerOs.AppSdk.Blazor.SelectFolderDialogResult.operator ==(HackerOs.AppSdk.Blazor.SelectFolderDialogResult? left, HackerOs.AppSdk.Blazor.SelectFolderDialogResult? right) -> bool
+static HackerOs.AppSdk.Blazor.SelectedFileResource.operator !=(HackerOs.AppSdk.Blazor.SelectedFileResource? left, HackerOs.AppSdk.Blazor.SelectedFileResource? right) -> bool
+static HackerOs.AppSdk.Blazor.SelectedFileResource.operator ==(HackerOs.AppSdk.Blazor.SelectedFileResource? left, HackerOs.AppSdk.Blazor.SelectedFileResource? right) -> bool
+static HackerOs.AppSdk.Blazor.SelectedFolderResource.operator !=(HackerOs.AppSdk.Blazor.SelectedFolderResource? left, HackerOs.AppSdk.Blazor.SelectedFolderResource? right) -> bool
+static HackerOs.AppSdk.Blazor.SelectedFolderResource.operator ==(HackerOs.AppSdk.Blazor.SelectedFolderResource? left, HackerOs.AppSdk.Blazor.SelectedFolderResource? right) -> bool
+static HackerOs.AppSdk.Blazor.TextInputDialogRequest.operator !=(HackerOs.AppSdk.Blazor.TextInputDialogRequest? left, HackerOs.AppSdk.Blazor.TextInputDialogRequest? right) -> bool
+static HackerOs.AppSdk.Blazor.TextInputDialogRequest.operator ==(HackerOs.AppSdk.Blazor.TextInputDialogRequest? left, HackerOs.AppSdk.Blazor.TextInputDialogRequest? right) -> bool
+static HackerOs.AppSdk.Blazor.TextInputDialogResult.operator !=(HackerOs.AppSdk.Blazor.TextInputDialogResult? left, HackerOs.AppSdk.Blazor.TextInputDialogResult? right) -> bool
+static HackerOs.AppSdk.Blazor.TextInputDialogResult.operator ==(HackerOs.AppSdk.Blazor.TextInputDialogResult? left, HackerOs.AppSdk.Blazor.TextInputDialogResult? right) -> bool
 virtual HackerOs.AppSdk.Blazor.Components.HackContractComponent<TController>.DefaultUnavailable.get -> Microsoft.AspNetCore.Components.RenderFragment<string!>?
 virtual HackerOs.AppSdk.Blazor.Components.HackContractComponent<TController>.OnControllerChangedAsync(TController? controller) -> System.Threading.Tasks.Task!
 virtual HackerOs.AppSdk.Blazor.Components.HackContractComponent<TController>.Options.get -> object?
@@ -786,4 +1081,6 @@ virtual HackerOs.AppSdk.Blazor.WindowAppBase.OnWindowStateChangedAsync(HackerOs.
 virtual HackerOs.AppSdk.Blazor.WindowAppBase.ShouldRenderApp() -> bool
 ~override HackerOs.AppSdk.Blazor.Charts.HackLineChart.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.AppSdk.Blazor.Components.HackEmbeddedComponent<TController>.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override HackerOs.AppSdk.Blazor.HackWindowSize.Equals(object obj) -> bool
+~override HackerOs.AppSdk.Blazor.HackWindowSize.ToString() -> string
 ~override HackerOs.AppSdk.Blazor.Settings.SettingOriginBadge.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
