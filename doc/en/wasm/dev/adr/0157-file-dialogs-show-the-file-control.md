@@ -67,7 +67,8 @@ opens in the dialog as in a window.
 - The file type filter becomes `Filter` (name and MIME type); folders
   remain visible. Changing the type calls `RefreshFilter`.
 - The dialog draws its bar above the control: parent folder, breadcrumb
-  (the control has none, ADR 0155 §8) and the Details / Icons choice.
+  (the control has none, ADR 0155 §8), "New folder" when `CreateFolder`
+  is allowed (ADR 0175) and the Details / Icons choice.
   The control's errors (`ErrorOccurred`) are displayed in the dialog
   until the next folder.
 - Choosing a folder creates its folder without revision of the parent (the contract

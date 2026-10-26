@@ -21,9 +21,11 @@
                        AllowDirectorySelection="true"
                        Features="@(Presentation.Request.AllowCreateFolder ? HackFileViewFeatures.CreateFolder | HackFileViewFeatures.Rename : HackFileViewFeatures.None)"
                        DirectoryChanged="DirectoryChanged"
-                       SelectionChanged="SelectionChanged" />
+                       SelectionChanged="SelectionChanged"
+                       FileControlChanged="FileControlChanged" />
 
-    @if (Presentation.Request.AllowCreateFolder)
+    @* The OS file control has its own "New folder" button (ADR 0175); the platform's browser does not. *@
+    @if (Presentation.Request.AllowCreateFolder && !_fileControlShown)
     {
         <div class="create-control">
             <input value="@_newFolderName" @oninput="ChangeFolderName" aria-label="@L["FileDialog.NewFolderName"]" />
@@ -60,6 +62,7 @@
     private string? _error;
     private bool _creating;
     private bool _initialized;
+    private bool _fileControlShown;
     private VirtualPath SelectedPath => _selectedChild ?? _currentDirectory;
 
     private VirtualPath EffectiveInitialDirectory =>
@@ -88,6 +91,7 @@
         _selectedChild = null;
     }
 
+    private void FileControlChanged(bool shown) => _fileControlShown = shown;
     private void SelectionChanged(IReadOnlyList<VirtualPath> paths) => _selectedChild = paths.FirstOrDefault();
     private void ChangeFolderName(ChangeEventArgs args) { _newFolderName = args.Value?.ToString() ?? string.Empty; _error = null; }
 

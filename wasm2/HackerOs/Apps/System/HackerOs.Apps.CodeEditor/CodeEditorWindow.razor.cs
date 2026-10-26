@@ -612,7 +612,9 @@ public partial class CodeEditorWindow
         SelectFolderDialogResult result = await base.SelectFolderAsync(new SelectFolderDialogRequest
         {
             Title = L["Dialog.OpenFolder"],
-            InitialDirectory = initialDirectory
+            InitialDirectory = initialDirectory,
+            // A new project starts in a folder made here (ADR 0175).
+            AllowCreateFolder = true
         }, AppContext.CancellationToken);
 
         if (result.Status != FileDialogStatus.Selected || result.Resource is null)

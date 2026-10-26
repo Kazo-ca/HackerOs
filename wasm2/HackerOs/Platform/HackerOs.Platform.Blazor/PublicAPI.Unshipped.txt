@@ -1,1 +1,3 @@
 #nullable enable
+HackerOs.Platform.Blazor.Dialogs.FileDialogBrowser.FileControlChanged.get -> Microsoft.AspNetCore.Components.EventCallback<bool>
+HackerOs.Platform.Blazor.Dialogs.FileDialogBrowser.FileControlChanged.set -> void

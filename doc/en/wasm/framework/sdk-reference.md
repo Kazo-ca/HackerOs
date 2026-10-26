@@ -410,7 +410,7 @@ Guide: [`asp-hack-site-data.md`](asp-hack-site-data.md).
 |---|---|
 | `OpenFileDialogRequest` → `OpenFileDialogResult` | `Title`, `InitialDirectory`, `Filters` (`FileDialogFilter(DisplayName, Extensions, MediaTypes)`), `AllowMultiple`, `RequestedAccess` (`Read`, `ReadWrite`); result `Status`, `Resources` |
 | `SaveFileDialogRequest` → `SaveFileDialogResult` | `Title`, `InitialDirectory`, `SuggestedFileName`, `DefaultExtension`, `Filters`, `ConfirmOverwrite`; result `Status`, `Resource` |
-| `SelectFolderDialogRequest` → `SelectFolderDialogResult` | `Title`, `InitialDirectory`, `AllowCreateFolder` |
+| `SelectFolderDialogRequest` → `SelectFolderDialogResult` | `Title`, `InitialDirectory`, `AllowCreateFolder` ("New folder" button in the dialog's toolbar, ADR 0175) |
 | `MessageBoxDialogRequest` → `MessageBoxDialogResult` | `Title`, `Content`, `DialogType` (`MessageBoxType`); result `MessageBoxResult` |
 | `TextInputDialogRequest` → `TextInputDialogResult` | `Title`, `Content`, `DefaultValue`, `Placeholder`; result `Status` (`TextInputStatus`) and `Value` |
 | `AppChooserDialogRequest` → `AppChooserDialogResult` | "Open with" chooser (ADR 0096): `Title`, `Content`, `Candidates` (`AppChooserOption(AppId, Name, Description)`), `OfferAlwaysUse`; result `Status` (`AppChooserStatus`), `AppId`, `AlwaysUse` |

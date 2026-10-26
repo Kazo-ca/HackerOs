@@ -3,6 +3,7 @@ using HackerOs.App.Abstractions.Policy;
 using HackerOs.AppSdk;
 using HackerOs.AppSdk.Blazor.Components;
 using HackerOs.AppSdk.Blazor.Files;
+using HackerOs.AppSdk.Files;
 using HackerOs.AppSdk.Components;
 using HackerOs.Platform.Blazor.Dialogs;
 using HackerOs.Platform.Blazor.Tests.Localization;
@@ -139,6 +140,43 @@ public sealed class FileDialogBrowserTests
 
         await harness.InvokeAsync(() => harness.View!.Navigated.InvokeAsync("/home/user"));
         Assert.DoesNotContain("Access denied: /root", harness.Html, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task The_toolbar_offers_new_folder_when_the_dialog_allows_it()
+    {
+        // ADR 0175: the Choose folder and Save dialogs create a folder from their toolbar, on the
+        // desktop and the phone alike, with the control's own "New folder" (named, then in rename).
+        MinimalAppExecutionContext context = new(Manifest());
+        List<bool> fileControl = [];
+        await using DialogHarness harness = await DialogHarness.RenderAsync(provided: true, new Dictionary<string, object?>
+        {
+            [nameof(FileDialogBrowser.Context)] = context,
+            [nameof(FileDialogBrowser.FileSystem)] = context.FileSystem,
+            [nameof(FileDialogBrowser.Features)] = HackFileViewFeatures.CreateFolder | HackFileViewFeatures.Rename,
+            [nameof(FileDialogBrowser.FileControlChanged)] = EventCallback.Factory.Create<bool>(new object(), fileControl.Add),
+        });
+
+        Assert.Equal([true], fileControl);
+        Assert.Contains("new-folder", harness.Html, StringComparison.Ordinal);
+        Assert.Contains("New folder", harness.Html, StringComparison.Ordinal);
+
+        // The control can run it here, so the button is enabled; a click runs it (UI.E2E CodeEditorOpenFolderTests).
+        Assert.DoesNotMatch("class=\"toolbar-button new-folder\"[^>]*disabled", harness.Html);
+    }
+
+    [Fact]
+    public async Task An_open_dialog_has_no_new_folder_button()
+    {
+        MinimalAppExecutionContext context = new(Manifest());
+        await using DialogHarness harness = await DialogHarness.RenderAsync(provided: true, new Dictionary<string, object?>
+        {
+            [nameof(FileDialogBrowser.Context)] = context,
+            [nameof(FileDialogBrowser.FileSystem)] = context.FileSystem,
+        });
+
+        Assert.Contains("file-dialog-toolbar", harness.Html, StringComparison.Ordinal);
+        Assert.DoesNotContain("new-folder", harness.Html, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -293,7 +331,9 @@ public sealed class FileDialogBrowserTests
         public Task<bool> RevealAsync(string path, CancellationToken cancellationToken = default) => Task.FromResult(true);
         public void ClearSelection() { }
         public void RefreshFilter() { }
-        public bool CanExecute(string command) => false;
+        public bool CanExecute(string command) =>
+            command == HackFileMenuItems.NewFolder && (Features & HackFileViewFeatures.CreateFolder) != 0;
+
         public Task ExecuteAsync(string command) => Task.CompletedTask;
         public Task WhenIdleAsync() => Task.CompletedTask;
 
