@@ -8,8 +8,10 @@ Allow another repository to build HackerOS apps
 **and** a complete OS host with its own apps, without copying this repository
 ([ADR 0098](../dev/adr/0098-sdk-versions-packages-and-manifest-checks.md) §1, §2, §6).
 Everything published carries a single version, comes out as NuGet packages in a
-**local** feed (`artifacts/local-nupkg`, never nuget.org), and five `dotnet new`
-templates create the projects.
+**local** feed (`artifacts/local-nupkg`), and five `dotnet new` templates
+create the projects. Since [ADR 0173](../dev/adr/0173-automatic-releases-from-the-version-file.md),
+every version merged into `main` is also published to nuget.org and to the
+GitHub Releases ([`releases.md`](../dev/releases.md)).
 
 The step-by-step guide for a third-party repository (layout, host, tests, version
 upgrade) is [`building-on-hackeros.md`](building-on-hackeros.md).

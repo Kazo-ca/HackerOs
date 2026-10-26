@@ -1,3 +1,4 @@
+using System.Reflection;
 using Microsoft.Playwright;
 
 namespace HackerOs.Pwa.E2E.Tests;
@@ -5,6 +6,10 @@ namespace HackerOs.Pwa.E2E.Tests;
 /// <summary>Checks the real combined Pages artifact, including legacy navigation under the root PWA worker.</summary>
 public sealed class PublishedPagesTests
 {
+    private static readonly string HackerOsVersion = typeof(PublishedPagesTests).Assembly
+        .GetCustomAttributes<AssemblyMetadataAttribute>()
+        .Single(attribute => attribute.Key == "HackerOsVersion").Value!;
+
     [PagesArtifactFact]
     public async Task Wasm_and_legacy_load_independently_after_the_service_worker_takes_control()
     {
@@ -19,14 +24,14 @@ public sealed class PublishedPagesTests
         await PwaTestSupport.NavigateWhenReadyAsync(page, host.Address);
         await PwaTestSupport.WaitForServiceWorkerControllerAsync(page);
         await PwaTestSupport.WaitForOnboardingAsync(page);
-        await Assertions.Expect(page.Locator(".project-release")).ToContainTextAsync("2.0.3");
+        await Assertions.Expect(page.Locator(".project-release")).ToContainTextAsync(HackerOsVersion);
         await Assertions.Expect(page.Locator(".project-information a").First).ToHaveAttributeAsync("href", "https://github.com/Kazo-ca/HackerOs");
         await Assertions.Expect(page.Locator(".legacy-notice")).ToHaveCountAsync(0);
 
         await PwaTestSupport.CreateLocalProfileAndReachDesktopAsync(page);
         await PwaTestSupport.OpenAppAsync(page, "Settings");
         await page.GetByRole(AriaRole.Tab, new() { Name = "About System", Exact = true }).ClickAsync();
-        await Assertions.Expect(page.Locator(".system-info-box")).ToContainTextAsync("HackerOS 2.0.3");
+        await Assertions.Expect(page.Locator(".system-info-box")).ToContainTextAsync($"HackerOS {HackerOsVersion}");
         await Assertions.Expect(page.Locator(".system-info-box a")).ToHaveAttributeAsync("href", "https://github.com/Kazo-ca/HackerOs");
 
         await page.GotoAsync(host.Address + "/legacy/");

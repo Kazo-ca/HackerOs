@@ -172,5 +172,6 @@ prochain numéro libre est indiqué dans
 | [`0169-administrator-adds-and-removes-users.md`](0169-administrator-adds-and-removes-users.md) | ADR 0169 : un administrateur ajoute et supprime des comptes |
 | [`0170-settings-side-menu.md`](0170-settings-side-menu.md) | ADR 0170 : menu latéral réductible dans Paramètres |
 | [`0171-mobile-file-explorer-and-full-screen-dialogs.md`](0171-mobile-file-explorer-and-full-screen-dialogs.md) | ADR 0171 : point d'entrée par plateforme, explorateur de fichiers mobile, dialogues en plein écran sur mobile, alignement du menu Démarrer |
+| [`0173-automatic-releases-from-the-version-file.md`](0173-automatic-releases-from-the-version-file.md) | ADR 0173 : publication automatique (tag, GitHub Release, nuget.org) à partir du fichier de version |
 
 Index du dossier parent : [`../README.md`](../README.md).

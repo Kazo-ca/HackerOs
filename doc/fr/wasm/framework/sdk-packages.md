@@ -8,8 +8,10 @@ Permettre à un autre dépôt de construire des apps HackerOS
 **et** un hôte d'OS complet avec ses propres apps, sans copier ce dépôt
 ([ADR 0098](../dev/adr/0098-sdk-versions-packages-and-manifest-checks.md) §1, §2, §6).
 Tout ce qui est publié porte une seule version, sort en paquets NuGet dans un
-flux **local** (`artifacts/local-nupkg`, jamais nuget.org), et cinq modèles
-`dotnet new` créent les projets.
+flux **local** (`artifacts/local-nupkg`), et cinq modèles `dotnet new` créent
+les projets. Depuis l'[ADR 0173](../dev/adr/0173-automatic-releases-from-the-version-file.md),
+chaque version fusionnée dans `main` est aussi publiée sur nuget.org et dans les
+Releases GitHub ([`releases.md`](../dev/releases.md)).
 
 Le guide pas à pas d'un dépôt tiers (disposition, hôte, tests, montée de
 version) est [`building-on-hackeros.md`](building-on-hackeros.md).
