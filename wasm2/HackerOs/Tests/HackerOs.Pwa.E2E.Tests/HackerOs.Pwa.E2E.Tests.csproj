@@ -28,6 +28,11 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <!-- ADR 0173: the published pages show build/Versions.props; the test reads the same number. -->
+  <ItemGroup>
+    <AssemblyMetadata Include="HackerOsVersion" Value="$(HackerOsVersion)" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\HackerOs.E2E.Support\HackerOs.E2E.Support.csproj" />
     <Using Include="HackerOs.E2E.Support" />

@@ -1,0 +1,190 @@
+name: Release HackerOS
+
+# ADR 0173: wasm2/HackerOs/build/Versions.props is the only version of HackerOS. When a
+# commit of main carries a version that has no v<version> tag yet, and "Verify HackerOS
+# WASM" passed on that commit, this workflow packs every published library, pushes the
+# packages to nuget.org (when publishing is configured), then tags the commit and creates
+# the GitHub Release with the packages and the WASM site attached.
+#
+# The tag is the "already released" marker: a commit of main whose version is already
+# tagged releases nothing, so only a change of the version publishes.
+#
+# Manual run (workflow_dispatch, on main): releases the version of main if it is not tagged
+# yet; with "republish" checked, packs the tagged version again and pushes it to nuget.org
+# (packages already there are skipped), for a release made before NuGet was configured.
+on:
+  workflow_run:
+    workflows: [ "Verify HackerOS WASM" ]
+    types: [ completed ]
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      republish:
+        description: Push the packages of the already released version to nuget.org again
+        type: boolean
+        default: false
+
+permissions:
+  contents: write  # tag and GitHub Release
+  id-token: write  # nuget.org Trusted Publishing (NuGet/login)
+
+# Never two releases at once, and never cancel one halfway through a push.
+concurrency:
+  group: release-hackeros
+  cancel-in-progress: false
+
+env:
+  DOTNET_NOLOGO: "true"
+  DOTNET_CLI_TELEMETRY_OPTOUT: "true"
+  HACKEROS_SOLUTION_DIR: wasm2/HackerOs
+  RELEASE_DIR: wasm2/HackerOs/artifacts/release
+  NUGET_SOURCE: https://api.nuget.org/v3/index.json
+
+jobs:
+  release:
+    if: >-
+      (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'workflow_run' &&
+       github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.event == 'push')
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout the verified commit
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Decide what to release
+        id: plan
+        shell: bash
+        env:
+          REPUBLISH: ${{ github.event.inputs.republish || 'false' }}
+        run: |
+          version="$(sed -n 's:.*<HackerOsVersion>\(.*\)</HackerOsVersion>.*:\1:p' "$HACKEROS_SOLUTION_DIR/build/Versions.props")"
+          if ! [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
+            echo "::error title=Version::build/Versions.props has no valid HackerOsVersion ('$version')."
+            exit 1
+          fi
+          tag="v$version"
+          if git ls-remote --exit-code --tags origin "refs/tags/$tag" > /dev/null; then
+            if [[ "$REPUBLISH" == "true" ]]; then
+              mode="republish"
+              git checkout --quiet "$tag"
+            else
+              mode="none"
+            fi
+          else
+            mode="release"
+          fi
+          prerelease="false"
+          [[ "$version" == *-* ]] && prerelease="true"
+          {
+            echo "version=$version"
+            echo "tag=$tag"
+            echo "mode=$mode"
+            echo "prerelease=$prerelease"
+            echo "sha=$(git rev-parse HEAD)"
+          } >> "$GITHUB_OUTPUT"
+          case "$mode" in
+            none) echo "### HackerOS $version is already released ($tag): nothing to do." >> "$GITHUB_STEP_SUMMARY" ;;
+            release) echo "### Releasing HackerOS $version ($tag)" >> "$GITHUB_STEP_SUMMARY" ;;
+            republish) echo "### Pushing the packages of HackerOS $version ($tag) to nuget.org again" >> "$GITHUB_STEP_SUMMARY" ;;
+          esac
+
+      - name: Setup .NET 10
+        if: steps.plan.outputs.mode != 'none'
+        uses: ./.github/actions/setup-dotnet-sdk
+
+      - name: Install WASM workload
+        if: steps.plan.outputs.mode != 'none'
+        run: dotnet workload install wasm-tools
+
+      - name: Pack the published libraries
+        if: steps.plan.outputs.mode != 'none'
+        working-directory: ${{ env.HACKEROS_SOLUTION_DIR }}
+        run: build/pack-local.sh --configuration Release --output artifacts/release/nupkg --ci
+
+      # Only HackerOs.* packages of this version leave the runner (never a test fixture).
+      - name: Check the packages
+        if: steps.plan.outputs.mode != 'none'
+        shell: bash
+        env:
+          VERSION: ${{ steps.plan.outputs.version }}
+        run: |
+          shopt -s nullglob
+          packages=("$RELEASE_DIR"/nupkg/HackerOs.*."$VERSION".nupkg)
+          if [[ ${#packages[@]} -eq 0 ]]; then
+            echo "::error title=Packages::No HackerOs.*.$VERSION.nupkg was produced."
+            exit 1
+          fi
+          mkdir -p "$RELEASE_DIR/assets"
+          cp "$RELEASE_DIR"/nupkg/HackerOs.*."$VERSION".nupkg "$RELEASE_DIR"/nupkg/HackerOs.*."$VERSION".snupkg "$RELEASE_DIR/assets/"
+          {
+            echo "${#packages[@]} packages:"
+            for package in "${packages[@]}"; do echo "- $(basename "$package")"; done
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Publish the WASM site
+        if: steps.plan.outputs.mode == 'release'
+        working-directory: ${{ env.HACKEROS_SOLUTION_DIR }}
+        run: >-
+          dotnet publish OS/HackerOs.Ecosystem/HackerOs.Ecosystem.csproj
+          --configuration Release
+          --output artifacts/release/publish
+
+      - name: Zip the WASM site
+        if: steps.plan.outputs.mode == 'release'
+        shell: bash
+        env:
+          VERSION: ${{ steps.plan.outputs.version }}
+        run: |
+          archive="$PWD/$RELEASE_DIR/assets/hackeros-wasm-$VERSION.zip"
+          (cd "$RELEASE_DIR/publish/wwwroot" && zip -q -r "$archive" .)
+
+      # Trusted Publishing when the NUGET_USER variable is set (short-lived key, no secret
+      # stored); otherwise the NUGET_API_KEY secret; otherwise no push, with a warning.
+      - name: Get a nuget.org key (Trusted Publishing)
+        id: nuget-login
+        if: steps.plan.outputs.mode != 'none' && vars.NUGET_USER != ''
+        uses: NuGet/login@v1
+        with:
+          user: ${{ vars.NUGET_USER }}
+
+      - name: Push the packages to nuget.org
+        if: steps.plan.outputs.mode != 'none'
+        shell: bash
+        env:
+          VERSION: ${{ steps.plan.outputs.version }}
+          TRUSTED_KEY: ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
+          SECRET_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: |
+          key="${TRUSTED_KEY:-$SECRET_KEY}"
+          if [[ -z "$key" ]]; then
+            echo "::warning title=NuGet::nuget.org publishing is not configured (NUGET_USER variable or NUGET_API_KEY secret): packages are only attached to the GitHub Release."
+            echo "NuGet: not configured, nothing pushed." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          # dotnet nuget push also pushes the .snupkg next to each .nupkg.
+          for package in "$RELEASE_DIR"/nupkg/HackerOs.*."$VERSION".nupkg; do
+            dotnet nuget push "$package" --api-key "$key" --source "$NUGET_SOURCE" --skip-duplicate
+          done
+          echo "NuGet: packages pushed to nuget.org." >> "$GITHUB_STEP_SUMMARY"
+
+      # Last: the tag marks the version as released, so a failure above is retried by
+      # rerunning the workflow (the push skips packages already on nuget.org).
+      - name: Create the tag and the GitHub Release
+        if: steps.plan.outputs.mode == 'release'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.plan.outputs.version }}
+          TAG: ${{ steps.plan.outputs.tag }}
+          SHA: ${{ steps.plan.outputs.sha }}
+          PRERELEASE: ${{ steps.plan.outputs.prerelease }}
+        run: |
+          flags=(--title "HackerOS $VERSION" --target "$SHA" --generate-notes)
+          if [[ "$PRERELEASE" == "true" ]]; then flags+=(--prerelease); else flags+=(--latest); fi
+          gh release create "$TAG" "${flags[@]}" "$RELEASE_DIR"/assets/*
+          echo "Release: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/tag/$TAG" >> "$GITHUB_STEP_SUMMARY"

@@ -43,9 +43,10 @@ jour à la fin de chaque série ou quand une convention change.
 - **Explorateur mobile** (octobre 2026, PR #212 vers `main`) : point d'entrée
   mobile des apps honoré, explorateur de fichiers mobile, dialogues en plein
   écran sur mobile, un toucher ouvre (`HackFileView.OpenOnTap`) (ADR 0171).
-- **ADR** : 0001 à 0171 existent (quelques numéros sautés) ; 0170 est pris
+- **ADR** : 0001 à 0171 et 0173 existent (quelques numéros sautés) ; 0170 est pris
   par le menu latéral des Paramètres (PR #210), 0171 est l'explorateur de fichiers
-  mobile et 0172, réservé avec lui, n'a pas servi. **Prochain numéro libre : 0173.** Des
+  mobile, 0172, réservé avec lui, n'a pas servi, 0173 est la publication
+  automatique. **Prochain numéro libre : 0174.** Des
   threads parallèles réservent des numéros distincts.
 
 ## Conventions de travail
@@ -73,6 +74,10 @@ jour à la fin de chaque série ou quand une convention change.
 - **SDK** : l'API publique est suivie par `PublicAPI.Shipped.txt` /
   `PublicAPI.Unshipped.txt` ; un ajout passe par `Unshipped` jusqu'à la
   publication suivante (`build/tools/ship-public-api.sh`).
+- **Publier** : changer `HackerOsVersion` dans `build/Versions.props` et
+  fusionner dans `main` ; le workflow `Release HackerOS` crée le tag, la
+  Release GitHub et pousse sur nuget.org ([`releases.md`](../dev/releases.md),
+  ADR 0173).
 
 ## Environnement et pièges
 

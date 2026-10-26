@@ -15,6 +15,7 @@ detailed in [`github-pages-deployment.md`](github-pages-deployment.md).
 | **Verify local Windowing and Taskbar packages** (`window-taskbar-packages.yml`) | PR or push (`main`, `*/base`) that touches the windowing, theme, icon, taskbar projects or the SampleHost example | Packages and symbols produced in dependency order, example restored **only** from these packages, built and published. |
 | **Deploy to GitHub Pages** (`deploy-to-pages.yml`) | Push to `main` (deploys); PR that touches the legacy (`src/**`, `package*.json`, `tsconfig*.json`, `webpack.config.js`), `assemble-pages.ps1` or this workflow (builds without deploying); manual | Legacy build for `/legacy/`, WASM publication, assembly of the combined site. A PR has its own concurrency group: it never cancels a `main` deployment. |
 | **Verify HackerOS browser tests (manual)** (`verify-browser-tests.yml`) | Manual only (`workflow_dispatch`) | The six Playwright projects, with the Chromium installed by Playwright. |
+| **Release HackerOS** (`release.yml`) | Successful end of *Verify HackerOS WASM* after a push to `main`; manual (`republish` option) | Publishes a version whose `v<version>` tag does not exist yet: `HackerOs.*` packages, zipped WASM site, push to nuget.org, tag and GitHub Release ([`releases.md`](releases.md), ADR 0173). |
 
 PRs to `main` as well as to an integration branch `<series>/base` are
 verified: the `pull_request` trigger has no branch filter. The push to
@@ -70,7 +71,7 @@ versions as deprecated.
 
 ## .NET SDK installation
 
-The four workflows install the SDK through the local action
+The five workflows install the SDK through the local action
 `.github/actions/setup-dotnet-sdk`. It reads the latest version of the
 channel (`latest-sdk` from
 `https://builds.dotnet.microsoft.com/dotnet/release-metadata/10.0/releases.json`)

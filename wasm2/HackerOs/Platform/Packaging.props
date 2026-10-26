@@ -6,10 +6,10 @@
     build/pack-local.sh packs the whole solution and only gets these.
 
     The version is not set here: every project carries $(HackerOsVersion) from build/Versions.props
-    (ADR 0098 §1). Packages are local-only: produced into artifacts/local-nupkg and consumed from
-    that folder by another repository (nuget.config sample: build/nuget.config.sample), never pushed
-    to nuget.org. PackageTags below are a default; a package overrides them when another vocabulary
-    is more accurate.
+    (ADR 0098 §1). build/pack-local.sh produces them into artifacts/local-nupkg, consumed from that
+    folder by another repository (nuget.config sample: build/nuget.config.sample); the Release
+    workflow pushes each new version to nuget.org (ADR 0173). PackageTags below are a default; a
+    package overrides them when another vocabulary is more accurate.
 
     Every published library has the public API analyzer (ADR 0098 §8): its surface is listed in
     PublicAPI.Shipped.txt / PublicAPI.Unshipped.txt next to the project.
