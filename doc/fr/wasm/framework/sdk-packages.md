@@ -352,7 +352,7 @@ Tous les autres changements du SDK sont des ajouts :
 Publiée le 2026-10-26, première version sortie par le workflow `Release HackerOS`
 ([ADR 0173](../dev/adr/0173-automatic-releases-from-the-version-file.md),
 [`releases.md`](../dev/releases.md)) : tag `v2.1.0`, GitHub Release et nuget.org.
-`build/tools/ship-public-api.sh` a versé 5866 lignes de `PublicAPI.Unshipped.txt`
+`build/tools/ship-public-api.sh` a versé 5880 lignes de `PublicAPI.Unshipped.txt`
 dans `PublicAPI.Shipped.txt` : les ajouts arrivés après la coupe de la 2.0
 (clés d'accès et administration des comptes, ADR 0168 et 0169 ;
 `HackFileView.OpenOnTap`, ADR 0171 ; barre latérale des Paramètres, ADR 0170 ;

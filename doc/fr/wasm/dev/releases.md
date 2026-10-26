@@ -69,6 +69,14 @@ Onglet **Actions** ▸ *Release HackerOS* ▸ *Run workflow* (branche `main`) :
   nuget.org. Sert quand une Release a été créée avant la configuration de
   NuGet.
 
+## Annonce aux sessions ouvertes
+
+Le site publié contient `/version.json` (`{ "product": "HackerOS", "version": "2.1.0" }`),
+écrit par le build depuis `build/Versions.props`. Chaque session ouverte le relit
+toutes les 5 minutes ; quand le site sert une autre version, un bandeau dit
+« HackerOS <version> est disponible » avec « Redémarrer pour mettre à jour »
+([ADR 0174](adr/0174-announce-a-new-version-to-open-sessions.md)).
+
 ## Configurer la publication sur nuget.org
 
 Deux possibilités ; la première est recommandée (aucune clé à stocker ni à

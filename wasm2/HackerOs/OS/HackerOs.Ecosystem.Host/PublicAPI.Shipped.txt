@@ -27,6 +27,7 @@ HackerOs.Ecosystem.EcosystemBootResult.PolicyRevision.init -> void
 HackerOs.Ecosystem.EcosystemBootResult.Users.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Simulation.Abstractions.Sessions.LocalUser!>!
 HackerOs.Ecosystem.EcosystemBootResult.Users.init -> void
 HackerOs.Ecosystem.EcosystemHostState
+HackerOs.Ecosystem.EcosystemHostState.AvailableVersion.get -> string?
 HackerOs.Ecosystem.EcosystemHostState.BeginInitialization() -> void
 HackerOs.Ecosystem.EcosystemHostState.BeginLoginProgress() -> void
 HackerOs.Ecosystem.EcosystemHostState.CompleteIdentityLoad(System.Collections.Generic.IReadOnlyList<HackerOs.Simulation.Abstractions.Sessions.LocalUser!>! users) -> void
@@ -34,6 +35,7 @@ HackerOs.Ecosystem.EcosystemHostState.CompleteLogin() -> void
 HackerOs.Ecosystem.EcosystemHostState.EcosystemHostState() -> void
 HackerOs.Ecosystem.EcosystemHostState.FatalCorrelationId.get -> System.Guid?
 HackerOs.Ecosystem.EcosystemHostState.Recovery.get -> HackerOs.Simulation.Abstractions.Recovery.StorageRecoveryPresentation?
+HackerOs.Ecosystem.EcosystemHostState.SetAvailableVersion(string! version) -> void
 HackerOs.Ecosystem.EcosystemHostState.SetUpdateAvailable(bool available) -> void
 HackerOs.Ecosystem.EcosystemHostState.ShowFatal(System.Guid correlationId) -> void
 HackerOs.Ecosystem.EcosystemHostState.ShowRecovery(HackerOs.Simulation.Abstractions.Recovery.StorageRecoveryPresentation! recovery) -> void

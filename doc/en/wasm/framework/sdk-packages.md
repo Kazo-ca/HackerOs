@@ -350,7 +350,7 @@ All the other SDK changes are additions:
 Published on 2026-10-26, the first version released by the `Release HackerOS`
 workflow ([ADR 0173](../dev/adr/0173-automatic-releases-from-the-version-file.md),
 [`releases.md`](../dev/releases.md)): `v2.1.0` tag, GitHub Release and nuget.org.
-`build/tools/ship-public-api.sh` folded 5866 lines of `PublicAPI.Unshipped.txt`
+`build/tools/ship-public-api.sh` folded 5880 lines of `PublicAPI.Unshipped.txt`
 into `PublicAPI.Shipped.txt`: the additions that arrived after the 2.0 cut
 (passkeys and account administration, ADR 0168 and 0169;
 `HackFileView.OpenOnTap`, ADR 0171; Settings side menu, ADR 0170; the table

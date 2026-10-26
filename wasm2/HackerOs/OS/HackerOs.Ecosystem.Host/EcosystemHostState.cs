@@ -62,8 +62,20 @@ public sealed class EcosystemHostState
         View = EcosystemHostView.Fatal;
     }
 
+    /// <summary>Gets the newer version the origin serves (ADR 0174), or <see langword="null"/> when only the build changed or nothing waits.</summary>
+    public string? AvailableVersion { get; private set; }
+
     /// <summary>Updates the non-blocking update indicator.</summary>
     public void SetUpdateAvailable(bool available) => UpdateAvailable = available;
+
+    /// <summary>Shows the update indicator with the version the origin serves now (ADR 0174).</summary>
+    /// <param name="version">The served version, for example <c>2.2.0</c>.</param>
+    public void SetAvailableVersion(string version)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(version);
+        AvailableVersion = version;
+        UpdateAvailable = true;
+    }
 }
 
 /// <summary>Identifies the single boot-critical surface rendered by the ecosystem host.</summary>

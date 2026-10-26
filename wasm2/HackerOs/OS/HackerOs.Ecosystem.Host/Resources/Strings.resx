@@ -102,6 +102,9 @@
   <data name="Update.Ready" xml:space="preserve">
     <value>A HackerOS update is ready.</value>
   </data>
+  <data name="Update.VersionReady" xml:space="preserve">
+    <value>HackerOS {0} is available.</value>
+  </data>
   <data name="Update.Restart" xml:space="preserve">
     <value>Restart to update</value>
   </data>

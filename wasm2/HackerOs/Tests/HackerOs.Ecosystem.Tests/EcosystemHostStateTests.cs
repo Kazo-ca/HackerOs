@@ -41,6 +41,12 @@ public sealed class EcosystemHostStateTests
 
         state.SetUpdateAvailable(true);
         Assert.True(state.UpdateAvailable);
+        Assert.Null(state.AvailableVersion);
+
+        // ADR 0174: the served version.json names the release that waits.
+        state.SetAvailableVersion("2.2.0");
+        Assert.True(state.UpdateAvailable);
+        Assert.Equal("2.2.0", state.AvailableVersion);
         Assert.Equal(EcosystemHostView.Recovery, state.View);
 
         state.CompleteLogin();

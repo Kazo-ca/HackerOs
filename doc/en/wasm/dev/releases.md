@@ -68,6 +68,14 @@ failed jobs*) starts over, and packages already on nuget.org are skipped
 - with **republish**: packs the already tagged version again and pushes it to
   nuget.org. Useful when a Release was created before NuGet was set up.
 
+## Announcement to open sessions
+
+The published site contains `/version.json` (`{ "product": "HackerOS", "version": "2.1.0" }`),
+written by the build from `build/Versions.props`. Every open session reads it
+again every 5 minutes; when the site serves another version, a banner says
+"HackerOS <version> is available" with "Restart to update"
+([ADR 0174](adr/0174-announce-a-new-version-to-open-sessions.md)).
+
 ## Setting up publishing to nuget.org
 
 Two options; the first is recommended (no key to store or renew).

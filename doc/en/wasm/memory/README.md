@@ -43,10 +43,10 @@ at the end of each series or when a convention changes.
 - **Mobile explorer** (October 2026, PR #212 to `main`): mobile entry point of
   apps honored, mobile file explorer, full-screen dialogs on mobile, one tap
   opens (`HackFileView.OpenOnTap`) (ADR 0171).
-- **ADR**: 0001 to 0171 and 0173 exist (a few numbers skipped); 0170 is the
+- **ADR**: 0001 to 0171, 0173 and 0174 exist (a few numbers skipped); 0170 is the
   Settings side menu (PR #210), 0171 the mobile file explorer, 0172,
-  reserved with it, was not used, and 0173 is the automatic release. **Next
-  free number: 0174.** Parallel
+  reserved with it, was not used, 0173 is the automatic release, and 0174 the new-version announcement
+  (`version.json`). **Next free number: 0175.** Parallel
   threads reserve distinct numbers.
 
 ## Working conventions

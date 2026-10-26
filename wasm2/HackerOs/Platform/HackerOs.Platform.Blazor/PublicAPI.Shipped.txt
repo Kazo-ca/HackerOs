@@ -409,11 +409,21 @@ HackerOs.Platform.Blazor.LazyLoading.HostBuildUpdateMonitor.CheckAsync(System.Th
 HackerOs.Platform.Blazor.LazyLoading.HostBuildUpdateMonitor.HostBuildUpdateMonitor(HackerOs.Platform.Blazor.LazyLoading.IHostBuildProbe! probe) -> void
 HackerOs.Platform.Blazor.LazyLoading.HostBuildUpdateMonitor.IsUpdatePending.get -> bool
 HackerOs.Platform.Blazor.LazyLoading.HostBuildUpdateMonitor.UpdatePending -> System.Action?
+HackerOs.Platform.Blazor.LazyLoading.HostReleaseMonitor
+HackerOs.Platform.Blazor.LazyLoading.HostReleaseMonitor.AvailableVersion.get -> string?
+HackerOs.Platform.Blazor.LazyLoading.HostReleaseMonitor.CheckAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
+HackerOs.Platform.Blazor.LazyLoading.HostReleaseMonitor.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Platform.Blazor.LazyLoading.HostReleaseMonitor.HostReleaseMonitor(HackerOs.Platform.Blazor.LazyLoading.IHostReleaseProbe! probe, string! runningVersion, HackerOs.Platform.Blazor.LazyLoading.HostBuildUpdateMonitor? buildMonitor = null) -> void
+HackerOs.Platform.Blazor.LazyLoading.HostReleaseMonitor.ReleaseAvailable -> System.Action<string!>?
+HackerOs.Platform.Blazor.LazyLoading.HostReleaseMonitor.RunningVersion.get -> string!
+HackerOs.Platform.Blazor.LazyLoading.HostReleaseMonitor.Start(System.TimeSpan interval) -> void
 HackerOs.Platform.Blazor.LazyLoading.IBuildKnownAssemblyTransport
 HackerOs.Platform.Blazor.LazyLoading.IBuildKnownAssemblyTransport.LoadAsync(System.Collections.Generic.IReadOnlyList<string!>! assemblyNames, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<System.Reflection.Assembly!>!>!
 HackerOs.Platform.Blazor.LazyLoading.IHostBuildProbe
 HackerOs.Platform.Blazor.LazyLoading.IHostBuildProbe.GetRunningBuildAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<string?>
 HackerOs.Platform.Blazor.LazyLoading.IHostBuildProbe.GetServedBuildAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<string?>
+HackerOs.Platform.Blazor.LazyLoading.IHostReleaseProbe
+HackerOs.Platform.Blazor.LazyLoading.IHostReleaseProbe.GetServedVersionDocumentAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<string?>
 HackerOs.Platform.Blazor.LazyLoading.StaticWebAssetAppAssetSource
 HackerOs.Platform.Blazor.LazyLoading.StaticWebAssetAppAssetSource.Dispose() -> void
 HackerOs.Platform.Blazor.LazyLoading.StaticWebAssetAppAssetSource.ReadAsync(HackerOs.App.Abstractions.AppManifest! manifest, string! assetPath, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<byte[]?>
@@ -974,6 +984,7 @@ static HackerOs.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome.NotDec
 static HackerOs.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome.operator !=(HackerOs.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome? left, HackerOs.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome? right) -> bool
 static HackerOs.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome.operator ==(HackerOs.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome? left, HackerOs.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome? right) -> bool
 static HackerOs.Platform.Blazor.LazyLoading.HostBuildIdentity.FromMarkup(string? markup) -> string?
+static HackerOs.Platform.Blazor.LazyLoading.HostReleaseMonitor.ParseVersion(string? document) -> string?
 static HackerOs.Platform.Blazor.LazyLoading.StaticWebAssetAppAssetSource.RelativeUrl(HackerOs.App.Abstractions.AppManifest! manifest, string! assetPath) -> string!
 static HackerOs.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.RawSignals.operator !=(HackerOs.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.RawSignals? left, HackerOs.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.RawSignals? right) -> bool
 static HackerOs.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.RawSignals.operator ==(HackerOs.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.RawSignals? left, HackerOs.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.RawSignals? right) -> bool
@@ -1002,6 +1013,7 @@ static HackerOs.Platform.Blazor.Windows.WindowMenuItem.operator ==(HackerOs.Plat
 static HackerOs.Platform.Blazor.Windows.WindowMenuState.operator !=(HackerOs.Platform.Blazor.Windows.WindowMenuState? left, HackerOs.Platform.Blazor.Windows.WindowMenuState? right) -> bool
 static HackerOs.Platform.Blazor.Windows.WindowMenuState.operator ==(HackerOs.Platform.Blazor.Windows.WindowMenuState? left, HackerOs.Platform.Blazor.Windows.WindowMenuState? right) -> bool
 static readonly HackerOs.Platform.Blazor.ContextMenus.ContextMenuRow.Separator -> HackerOs.Platform.Blazor.ContextMenus.ContextMenuRow!
+static readonly HackerOs.Platform.Blazor.LazyLoading.HostReleaseMonitor.DefaultInterval -> System.TimeSpan
 static readonly HackerOs.Platform.Blazor.Windows.WindowGeometryRecorder.DefaultDebounce -> System.TimeSpan
 static readonly HackerOs.Platform.Blazor.Windows.WindowResponsivenessHost.SampleInterval -> System.TimeSpan
 static readonly HackerOs.Platform.Blazor.Windows.WindowResponsivenessMonitor.LongInputDelay -> System.TimeSpan

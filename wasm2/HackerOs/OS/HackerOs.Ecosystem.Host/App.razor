@@ -44,7 +44,7 @@
     @if (State.UpdateAvailable)
     {
         <aside class="update-notice" role="status">
-            <span>@L["Update.Ready"] @L["Update.Detail"]</span>
+            <span>@(State.AvailableVersion is { } version ? L["Update.VersionReady", version] : L["Update.Ready"]) @L["Update.Detail"]</span>
             <button type="button" disabled="@IsRestartingForUpdate" @onclick="RestartForUpdateAsync">@L["Update.Restart"]</button>
         </aside>
     }
@@ -223,6 +223,9 @@
     // ADR 0162: only the browser host registers it (a server prerender of this component has none).
     private HackerOs.Platform.Blazor.LazyLoading.HostBuildUpdateMonitor? BuildMonitor { get; set; }
 
+    // ADR 0174: reads the served version.json every five minutes (browser host only).
+    private HackerOs.Platform.Blazor.LazyLoading.HostReleaseMonitor? ReleaseMonitor { get; set; }
+
     private ThemePlatform ActiveThemePlatform =>
         PlatformPreference.Current.ActivePlatform == WellKnownAppPlatforms.Mobile
             ? ThemePlatform.Mobile
@@ -267,6 +270,18 @@
             State.SetUpdateAvailable(BuildMonitor.IsUpdatePending);
         }
 
+        ReleaseMonitor = Services.GetService<HackerOs.Platform.Blazor.LazyLoading.HostReleaseMonitor>();
+        if (ReleaseMonitor is not null)
+        {
+            ReleaseMonitor.ReleaseAvailable += OnReleaseAvailable;
+            if (ReleaseMonitor.AvailableVersion is { } available)
+            {
+                State.SetAvailableVersion(available);
+            }
+
+            ReleaseMonitor.Start(HackerOs.Platform.Blazor.LazyLoading.HostReleaseMonitor.DefaultInterval);
+        }
+
         // Boot creates/reconciles canonical settings documents. Preferences are then loaded before
         // a user can reach a desktop, so the saved theme never depends on opening Settings first.
         await InitializeHostAsync();
@@ -281,6 +296,12 @@
     private void OnBuildUpdatePending() => InvokeAsync(() =>
     {
         State.SetUpdateAvailable(true);
+        StateHasChanged();
+    });
+
+    private void OnReleaseAvailable(string version) => InvokeAsync(() =>
+    {
+        State.SetAvailableVersion(version);
         StateHasChanged();
     });
 
@@ -312,6 +333,11 @@
         if (BuildMonitor is not null)
         {
             BuildMonitor.UpdatePending -= OnBuildUpdatePending;
+        }
+
+        if (ReleaseMonitor is not null)
+        {
+            ReleaseMonitor.ReleaseAvailable -= OnReleaseAvailable;
         }
     }
 
