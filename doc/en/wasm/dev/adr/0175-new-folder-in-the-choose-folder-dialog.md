@@ -41,13 +41,21 @@ control) and [ADR 0171](0171-mobile-file-explorer-and-full-screen-dialogs.md)
 3. **The Save dialog** already allowed `CreateFolder`: it gets the same button.
 4. **Code Editor** passes `AllowCreateFolder = true` for "Open Folder": the folder
    of a new project can be created there.
-5. The SDK does not change: `AllowCreateFolder` keeps its `false` default. Each
+5. **Two fixes in the file control**, found by the browser test:
+   - `CanExecute(NewFolder)` waits for the folder's first listing
+     (`FileView.HasListing`): a click while it loaded created the folder at the
+     root (`/New Folder`, refused for lack of rights).
+   - A reload of the same folder keeps the item being renamed (same path, same
+     revision): the folder watch reloads the list right after the creation,
+     which cleared the rename.
+6. The SDK does not change: `AllowCreateFolder` keeps its `false` default. Each
    app chooses; WebServer and Code Editor turn it on.
 
 ## Consequences
 
 - The dialog does not open a second dialog (a text input would wait behind the
   active dialog): the name is typed in the list, as in the explorer.
-- Tests: `FileDialogBrowserTests` (the button is there when the dialog allows it,
+- Tests: `FileViewTests` (no creation before the first listing, the rename
+  survives a reload), `FileDialogBrowserTests` (the button is there when the dialog allows it,
   absent from an Open dialog, `FileControlChanged`) and UI.E2E
   `CodeEditorOpenFolderTests` (desktop and mobile: New folder, rename, Select).

@@ -43,7 +43,14 @@ le contrôle de fichiers) et l'[ADR 0171](0171-mobile-file-explorer-and-full-scr
    bouton.
 4. **Code Editor** passe `AllowCreateFolder = true` pour « Open Folder » : on peut
    y créer le dossier d'un nouveau projet.
-5. Le SDK ne change pas : `AllowCreateFolder` garde sa valeur par défaut `false`.
+5. **Deux corrections du contrôle de fichiers**, trouvées par le test navigateur :
+   - `CanExecute(NewFolder)` attend la première lecture du dossier
+     (`FileView.HasListing`) : un clic pendant le chargement créait le dossier à la
+     racine (`/New Folder`, refusé faute de droit).
+   - Un rechargement du même dossier garde l'élément en cours de renommage
+     (même chemin, même révision) : la surveillance du dossier recharge la liste
+     juste après la création, ce qui effaçait le renommage.
+6. Le SDK ne change pas : `AllowCreateFolder` garde sa valeur par défaut `false`.
    Chaque app choisit ; WebServer et Code Editor l'activent.
 
 ## Conséquences
@@ -51,7 +58,8 @@ le contrôle de fichiers) et l'[ADR 0171](0171-mobile-file-explorer-and-full-scr
 - Le dialogue n'ouvre pas de second dialogue (une saisie de texte attendrait
   derrière le dialogue actif) : le nom se tape dans la liste, comme dans
   l'explorateur.
-- Tests : `FileDialogBrowserTests` (le bouton est là quand le dialogue le permet,
+- Tests : `FileViewTests` (pas de création avant la première lecture, le
+  renommage survit à un rechargement), `FileDialogBrowserTests` (le bouton est là quand le dialogue le permet,
   absent d'un dialogue Ouvrir, `FileControlChanged`) et UI.E2E
   `CodeEditorOpenFolderTests` (bureau et mobile : Nouveau dossier, renommage,
   Sélectionner).
