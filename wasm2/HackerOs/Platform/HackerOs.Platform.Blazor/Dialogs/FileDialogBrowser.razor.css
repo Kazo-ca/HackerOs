@@ -55,6 +55,22 @@
     padding: 0.3rem;
 }
 
+/* "New folder" (ADR 0175): icon and label; the label goes on a narrow dialog, the title stays. */
+.toolbar-button.new-folder {
+    gap: 0.35rem;
+    padding: 0.3rem 0.55rem;
+}
+
+@media (max-width: 30rem) {
+    .toolbar-button.new-folder {
+        padding: 0.3rem;
+    }
+
+    .toolbar-label {
+        display: none;
+    }
+}
+
 .breadcrumb:hover:not(:disabled),
 .toolbar-button:hover:not(:disabled) {
     background: var(--hos-btn-hover-bg, var(--hos-bg-elevated, #182825));

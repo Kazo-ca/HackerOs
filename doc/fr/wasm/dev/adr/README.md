@@ -174,5 +174,6 @@ prochain numéro libre est indiqué dans
 | [`0171-mobile-file-explorer-and-full-screen-dialogs.md`](0171-mobile-file-explorer-and-full-screen-dialogs.md) | ADR 0171 : point d'entrée par plateforme, explorateur de fichiers mobile, dialogues en plein écran sur mobile, alignement du menu Démarrer |
 | [`0173-automatic-releases-from-the-version-file.md`](0173-automatic-releases-from-the-version-file.md) | ADR 0173 : publication automatique (tag, GitHub Release, nuget.org) à partir du fichier de version |
 | [`0174-announce-a-new-version-to-open-sessions.md`](0174-announce-a-new-version-to-open-sessions.md) | ADR 0174 : `version.json` lu toutes les 5 minutes pour annoncer une nouvelle version aux sessions ouvertes |
+| [`0175-new-folder-in-the-choose-folder-dialog.md`](0175-new-folder-in-the-choose-folder-dialog.md) | ADR 0175 : bouton « Nouveau dossier » dans la barre des dialogues Choisir un dossier et Enregistrer ; activé pour « Open Folder » de Code Editor |
 
 Index du dossier parent : [`../README.md`](../README.md).

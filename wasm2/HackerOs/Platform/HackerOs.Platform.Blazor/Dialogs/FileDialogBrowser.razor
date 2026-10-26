@@ -3,6 +3,7 @@
 @using HackerOs.AppSdk
 @using HackerOs.AppSdk.Blazor.ContextMenus
 @using HackerOs.AppSdk.Blazor.Files
+@using HackerOs.AppSdk.Files
 @using HackerOs.Simulation.Abstractions.FileSystem
 @using Microsoft.AspNetCore.Components.Web
 @using MudBlazor
@@ -42,6 +43,19 @@
                                 @onclick="() => NavigateAsync(breadcrumb.Path)">@breadcrumb.Label</button>
                     }
                 </div>
+                @if (CanCreateFolder)
+                {
+                    @* The control's own "New folder" (ADR 0175): a folder named "New folder", in rename. *@
+                    <button type="button"
+                            class="toolbar-button new-folder"
+                            title="@L["FileDialog.NewFolder"]"
+                            aria-label="@L["FileDialog.NewFolder"]"
+                            disabled="@(!_controller.CanExecute(HackFileMenuItems.NewFolder))"
+                            @onclick="CreateFolderAsync">
+                        <MudIcon Icon="@Icons.Material.Filled.CreateNewFolder" Size="Size.Small" />
+                        <span class="toolbar-label">@L["FileDialog.NewFolder"]</span>
+                    </button>
+                }
                 <div class="view-modes" role="group" aria-label="@L["FileDialog.View"]">
                     <button type="button"
                             class="toolbar-button"

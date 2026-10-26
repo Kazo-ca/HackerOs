@@ -493,6 +493,22 @@ public sealed class FileViewTests
     }
 
     [Fact]
+    public async Task CreateFolderAsync_before_the_first_listing_creates_nothing()
+    {
+        // ADR 0175: a dialog's "New folder" clicked while the folder is still loading must not
+        // create the folder at the root, where CurrentDirectory points until the first listing.
+        FileViewTestFixture fixture = await FileViewTestFixture.CreateAsync();
+        TestableFileView view = new() { FileSystem = fixture.FileSystem, InitialDirectory = VirtualPath.Parse("/home/user") };
+        Assert.False(view.HasListing);
+
+        await view.CreateFolderAsync("New Folder");
+
+        FileSystemResult<FileSystemEntrySnapshot> stat = await fixture.Service.StatAsync(
+            new FileSystemStatRequest(VirtualPath.Parse("/New Folder")), fixture.UserContext());
+        Assert.False(stat.Succeeded);
+    }
+
+    [Fact]
     public async Task CreateFolderInteractiveAsync_picks_a_unique_name_selects_and_enters_rename()
     {
         FileViewTestFixture fixture = await FileViewTestFixture.CreateAsync();
@@ -506,6 +522,26 @@ public sealed class FileViewTests
         FileViewItem created = view.Items.Single(i => i.FileName == "New Folder (2)");
         Assert.Same(created, view.SelectedItem);
         Assert.True(created.IsRenaming);
+    }
+
+    [Fact]
+    public async Task A_reload_of_the_folder_keeps_the_new_folder_in_rename()
+    {
+        // ADR 0175: the watch reloads the folder right after "New folder" created it; the rename
+        // the user is typing in must survive, still selected.
+        FileViewTestFixture fixture = await FileViewTestFixture.CreateAsync();
+        TestComponentRenderer renderer = new(EmptyServices());
+        TestableFileView view = new() { FileSystem = fixture.FileSystem, InitialDirectory = VirtualPath.Parse("/home/user") };
+        await renderer.RenderAsync(view);
+        await renderer.RunAsync(() => view.CreateFolderInteractiveAsync());
+        FileViewItem renaming = view.Items.Single(i => i.IsRenaming);
+
+        await renderer.RunAsync(() => view.RefreshAsync());
+
+        FileViewItem after = view.Items.Single(i => i.FileName == renaming.FileName);
+        Assert.Same(renaming, after);
+        Assert.True(after.IsRenaming);
+        Assert.Same(after, view.SelectedItem);
     }
 
     [Fact]

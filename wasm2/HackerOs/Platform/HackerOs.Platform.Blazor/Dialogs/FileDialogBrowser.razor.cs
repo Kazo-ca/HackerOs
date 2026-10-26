@@ -1,6 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
 using HackerOs.App.Abstractions;
 using HackerOs.AppSdk;
 using HackerOs.AppSdk.Blazor.Files;
+using HackerOs.AppSdk.Files;
 using HackerOs.Platform.Blazor.ContextMenus;
 using HackerOs.Platform.Core.Shell;
 using HackerOs.Simulation.Abstractions.FileSystem;
@@ -116,6 +118,19 @@ public sealed partial class FileDialogBrowser
     [Parameter]
     public EventCallback<VirtualPath> FileActivated { get; set; }
 
+    /// <summary>
+    /// Raised with whether the OS file control is shown (<see langword="true"/>) or the platform's
+    /// browser (<see langword="false"/>, no provider): a dialog offers its own way to create a folder
+    /// only in the platform's browser, the control's toolbar button doing it otherwise.
+    /// </summary>
+    [Parameter]
+    public EventCallback<bool> FileControlChanged { get; set; }
+
+    /// <summary>Gets whether the toolbar offers "New folder": the dialog allows it and the control is shown.</summary>
+    [MemberNotNullWhen(true, nameof(_controller))]
+    private bool CanCreateFolder =>
+        _controller is not null && (Features & HackFileViewFeatures.CreateFolder) != 0;
+
     /// <summary>The OS context menus; absent in a host without the platform shell (a test page).</summary>
     [Inject]
     private IServiceProvider Services { get; set; } = default!;
@@ -192,13 +207,30 @@ public sealed partial class FileDialogBrowser
         _menus = null;
     }
 
-    private void OnControllerChanged(IHackFileView? controller)
+    private Task OnControllerChanged(IHackFileView? controller)
     {
         _controller = controller;
         if (controller is not null && !string.IsNullOrEmpty(controller.CurrentDirectory))
         {
             _currentDirectory = VirtualPath.Parse(controller.CurrentDirectory);
         }
+
+        return FileControlChanged.InvokeAsync(controller is not null);
+    }
+
+    /// <summary>
+    /// The toolbar's "New folder": the control's own command, as its file menu runs it, so the folder
+    /// is created with the requesting app's rights, then selected in rename (ADR 0175).
+    /// </summary>
+    private async Task CreateFolderAsync()
+    {
+        if (!CanCreateFolder)
+        {
+            return;
+        }
+
+        _error = null;
+        await _controller.ExecuteAsync(HackFileMenuItems.NewFolder);
     }
 
     /// <summary>A file activated: the dialog takes it instead of the control opening it in its default app.</summary>

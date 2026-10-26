@@ -222,7 +222,7 @@ public sealed partial class ExplorerFileView : IHackFileView
             HackFileMenuItems.PasteInto => CanPaste && selection is [{ IsDirectory: true }],
             HackFileMenuItems.Rename => selection.Count == 1 && Has(HackFileViewFeatures.Rename),
             HackFileMenuItems.Delete or HackFileMenuItems.DeletePermanently => selection.Count > 0 && Has(HackFileViewFeatures.Delete),
-            HackFileMenuItems.NewFolder => Has(HackFileViewFeatures.CreateFolder),
+            HackFileMenuItems.NewFolder => Has(HackFileViewFeatures.CreateFolder) && _view.HasListing,
             HackFileMenuItems.Refresh => true,
             HackFileMenuItems.Properties => selection.Count <= 1 && Has(HackFileViewFeatures.Properties),
             _ => false

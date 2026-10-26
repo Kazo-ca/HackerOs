@@ -67,7 +67,8 @@ s'ouvre dans le dialogue comme dans une fenêtre.
 - Le filtre du type de fichier devient `Filter` (nom et type MIME) ; les
   dossiers restent visibles. Changer de type appelle `RefreshFilter`.
 - Le dialogue dessine au-dessus du contrôle sa barre : dossier parent, fil
-  d'Ariane (le contrôle n'en a pas, ADR 0155 §8) et le choix Détails / Icônes.
+  d'Ariane (le contrôle n'en a pas, ADR 0155 §8), « Nouveau dossier » quand
+  `CreateFolder` est permis (ADR 0175) et le choix Détails / Icônes.
   Les erreurs du contrôle (`ErrorOccurred`) s'affichent dans le dialogue
   jusqu'au dossier suivant.
 - Choisir un dossier crée son dossier sans révision du parent (le contrat
