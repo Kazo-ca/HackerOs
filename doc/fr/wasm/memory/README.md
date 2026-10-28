@@ -46,7 +46,7 @@ jour à la fin de chaque série ou quand une convention change.
 - **ADR** : 0001 à 0171, 0173 à 0177 existent (quelques numéros sautés) ; 0170 est pris
   par le menu latéral des Paramètres (PR #210), 0171 est l'explorateur de fichiers
   mobile, 0172, réservé avec lui, n'a pas servi, 0173 est la publication
-  automatique, 0174 l'annonce d'une nouvelle version (`version.json`), 0175 le bouton « Nouveau dossier » des dialogues Choisir un dossier et Enregistrer, 0176 le dépôt template d'apps (sous-module en débogage, paquets en production), 0177 la barre de titre des fenêtres agrandies et ancrées. **Prochain numéro libre : 0178.** Des
+  automatique, 0174 l'annonce d'une nouvelle version (`version.json`), 0175 le bouton « Nouveau dossier » des dialogues Choisir un dossier et Enregistrer, 0176 le dépôt template d'apps (sous-module en débogage, paquets en production), 0177 la barre de titre des fenêtres agrandies et ancrées. **Prochain numéro libre : 0180** (0178 et 0179 réservés par le chantier multi-moniteur). Des
   threads parallèles réservent des numéros distincts.
 
 ## Conventions de travail
