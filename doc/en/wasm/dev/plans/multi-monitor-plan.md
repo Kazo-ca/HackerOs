@@ -3,12 +3,14 @@
 # Multi-monitor: series plan
 
 **Status:** series started by Benoit on 2026-10-28 ("we can start the
-multi-monitor feature"). ADRs [0178](../adr/0178-extended-screens-in-display-surfaces.md)
-and [0179](../adr/0179-per-screen-taskbars-and-other-screen-menus.md) are written
-before the code (work item 0). Work item 1 done: screens in the window manager
-([`window-runtime-displays.md`](../window-runtime-displays.md)). Work item 2 done:
-window portal ([`window-portal.md`](../window-portal.md)). Work item 3 done:
-screen service ([`screen-service.md`](../screen-service.md), [ADR 0180](../adr/0180-screen-service-placement-and-memory.md)).
+multi-monitor feature") and **finished on 2026-10-28**: work items 0 to 8 merged
+into `multi-monitor/base` (PRs #220, #221, #224, #223, #228, #231, #232, #233,
+#230), ADR 0177 merged in, final check in §8, PR to `main` to be merged only on
+Benoit's approval. ADRs written:
+[0178](../adr/0178-extended-screens-in-display-surfaces.md),
+[0179](../adr/0179-per-screen-taskbars-and-other-screen-menus.md),
+[0180](../adr/0180-screen-service-placement-and-memory.md) and
+[0183](../adr/0183-drag-a-window-between-screens.md).
 
 ## 1. Purpose
 
@@ -91,3 +93,31 @@ The answers will be copied here and into the ADRs.
 - Reloading the OS closes the secondary screens; one click reopens them.
 - An iframe in a window that changes screens reloads.
 - No mirroring, no multiple screens on mobile.
+
+## 8. Final check (work item 9, 2026-10-28)
+
+- **ADR 0177 merged in**: `main` (PR #222, title bar of maximized and snapped
+  windows) is merged into the series. Conflicts resolved in `WindowRuntime`,
+  `WindowKeyboardCommands`, `WindowChrome` and `WindowGeometryRecorder`:
+  snapping (`SnapWindowCommand`) uses the work area of the window's screen, and
+  a snapped window that changes screen stays snapped on the same half, with its
+  geometry from before the snap mapped to the target screen (two tests in
+  `WindowRuntimeDisplayTests`).
+- **Build**: `HackerOs.sln` in Debug and Release, 0 errors, 0 warnings.
+- **Tests**: every suite, one at a time, in Release. Remaining failures, all
+  known before the series or flaky: `E2E.Tests`
+  `Window_runtime_renders_and_handles_mouse_and_touch_pointer_gestures` and
+  `Window_runtime_handles_every_resize_edge_in_real_browser` (already failing on
+  `multi-monitor/base`, still failing after ADR 0177); `UI.E2E` two axe tests
+  (launcher `label-content-name-mismatch`, also on `main`) and
+  `LowStorageSpaceTests`; `WorkerHost` `LocalNetworkTests` (flaky, green on
+  rerun).
+- **Trimmed publish**: `build/publish-trimmed.sh` publishes and runs `TrimmedPublish.E2E`: 3 of 4 tests green (offline boot, every app and both sites, calculator measurement). The test of the calculator rendered in a worker fails on axe `label-content-name-mismatch` for the `MC`, `MR`, `M+`, `M-`, `AC` and `x²` keys (labels "Memory clear", etc.): the same rule as the known launcher failure, in an app the series does not touch.
+- **SDK**: `SdkCompatibility.Tests` green; the series does not change the app
+  SDK (Q1). Public additions of `HackerOs.Windowing.*` are in
+  `PublicAPI.Unshipped.txt`, for the next version.
+- **Docs**: general index and folder indexes, project memory
+  ([`../../memory/README.md`](../../memory/README.md), next free ADR 0184).
+- **Question still open** (work item 7): a small system screens API for the
+  Identify, New screen, Restore, Full screen and permission buttons in
+  Settings ▸ Screens; left to Benoit.

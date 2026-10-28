@@ -35,8 +35,8 @@ l'écran 1). `Bounds` et `RestoreBounds` sont dans les coordonnées de cet écra
 
 Déplacer, redimensionner, agrandir et contraindre une fenêtre se font dans la zone
 de **son** écran. Il y a toujours un seul focus et un seul ordre Z pour tout l'OS.
-`WindowKeyboardCommands` (ancrage, menu de fenêtre) et `WindowGeometryRecorder`
-(détection de l'ancrage) lisent aussi la zone de l'écran de la fenêtre.
+`WindowKeyboardCommands` (ancrage, menu de fenêtre) lit aussi la zone de l'écran de la
+fenêtre, et `SnapWindowCommand` (ADR 0177) contraint la moitié dans cette zone.
 
 ## 3. Commandes et événements
 
@@ -57,15 +57,16 @@ appeler `OnWindowResized` quand la taille de la zone client change.
 | État de la fenêtre | Sur l'écran cible |
 | --- | --- |
 | Agrandie | Reste agrandie et remplit la zone cible. Sa géométrie de restauration garde sa position relative. |
-| Ancrée (moitié gauche ou droite exacte de sa zone) | Reste ancrée du même côté, sur la moitié de la zone cible. |
+| Ancrée (`IsSnapped`, ou moitié gauche ou droite exacte de sa zone) | Reste ancrée du même côté, sur la moitié de la zone cible ; sa géométrie d'avant l'ancrage garde sa position relative. |
 | Normale | Garde sa taille et sa position relative au coin haut-gauche, en proportion de la taille des zones, puis elle est ramenée dans la zone cible (le minimum déclaré l'emporte, ADR 0095 §2). |
 | Réduite | Change d'écran et reste réduite. Si elle a été réduite depuis l'état agrandi, elle remplit la zone cible. |
 
 Le focus et l'ordre Z ne changent pas.
 
-L'ADR 0177 (fil « Corriger les boutons des fenêtres maximisées ») ajoute une mémoire
-de la taille d'avant l'ancrage. Quand il arrive dans la série, cette mémoire suit la
-fenêtre comme sa géométrie de restauration.
+L'ADR 0177 (barre de titre des fenêtres agrandies et ancrées) garde la géométrie
+d'avant l'ancrage dans `RestoreBounds`. Intégrée au chantier 9, elle suit la fenêtre
+comme sa géométrie de restauration : restaurer la fenêtre sur l'écran cible lui rend
+cette géométrie convertie vers cet écran.
 
 ## 5. Fenêtres modales
 
