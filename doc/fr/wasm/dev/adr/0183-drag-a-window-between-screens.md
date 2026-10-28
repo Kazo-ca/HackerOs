@@ -31,7 +31,7 @@ Mise en œuvre : [`drag-between-screens.md`](../drag-between-screens.md).
 
 ## Décision
 
-1. **Écran sous le pointeur.** Pendant un déplacement, `windowScreenDrop.js` cherche
+1. **Écran sous le pointeur.** Pendant un déplacement, `WindowChrome.razor.js` cherche
    l'écran sous le pointeur à chaque mouvement :
    - si le pointeur est dans la fenêtre du navigateur où le geste a commencé, ce sont
      les couches de cette fenêtre qui décident (position dans la page) ;

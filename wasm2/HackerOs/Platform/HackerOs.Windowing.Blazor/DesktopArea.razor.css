@@ -49,7 +49,7 @@
     display: contents;
 }
 
-/* ADR 0183: where a window dragged from another screen will land. Placed by windowScreenDrop.js. */
+/* ADR 0183: where a window dragged from another screen will land. Placed by WindowChrome.razor.js. */
 .window-layer ::deep .window-drop-preview {
     position: absolute;
     left: var(--window-drop-x, 0);

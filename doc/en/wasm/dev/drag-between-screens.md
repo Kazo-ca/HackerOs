@@ -19,8 +19,7 @@ as usual.
 
 | File | Role |
 | --- | --- |
-| `Platform/HackerOs.Windowing.Blazor/wwwroot/windowScreenDrop.js` | Learns where each screen window's page starts on the physical desktop, finds the screen under the pointer, draws and removes the outline. |
-| `Platform/HackerOs.Windowing.Blazor/WindowChrome.razor.js` | During a move: screen under the pointer on every movement, outline, and on release `ReportScreenDropAsync` instead of the normal move. |
+| `Platform/HackerOs.Windowing.Blazor/WindowChrome.razor.js` | Learns where each screen window's page starts on the physical desktop, finds the screen under the pointer on every movement of a move, draws and removes the outline, and on release calls `ReportScreenDropAsync` instead of the normal move. All in this one module: tests load it alone from a `data:` URL, where a relative import fails. |
 | `Platform/HackerOs.Windowing.Blazor/WindowChrome.razor` | `ReportScreenDropAsync(screen, x, y)`: `MoveWindowToDisplayCommand` then `MoveWindowCommand`. |
 | `Platform/HackerOs.Windowing.Blazor/DesktopArea.razor.css` | Style of the `.window-drop-preview` outline. |
 | `Platform/HackerOs.Platform.Blazor/Shell/DesktopShell.razor` | Ignores a drop on a screen already closed. |

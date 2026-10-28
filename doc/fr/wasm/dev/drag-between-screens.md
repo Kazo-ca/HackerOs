@@ -19,8 +19,7 @@ son propre écran, la fenêtre se déplace comme d'habitude.
 
 | Fichier | Rôle |
 | --- | --- |
-| `Platform/HackerOs.Windowing.Blazor/wwwroot/windowScreenDrop.js` | Apprend où la page de chaque fenêtre d'écran commence sur le bureau physique, trouve l'écran sous le pointeur, dessine et retire le contour. |
-| `Platform/HackerOs.Windowing.Blazor/WindowChrome.razor.js` | Pendant un déplacement : écran sous le pointeur à chaque mouvement, contour, et au relâchement `ReportScreenDropAsync` au lieu du déplacement normal. |
+| `Platform/HackerOs.Windowing.Blazor/WindowChrome.razor.js` | Apprend où la page de chaque fenêtre d'écran commence sur le bureau physique, trouve l'écran sous le pointeur à chaque mouvement d'un déplacement, dessine et retire le contour, et au relâchement appelle `ReportScreenDropAsync` au lieu du déplacement normal. Tout est dans ce seul module : des tests le chargent seul depuis une URL `data:`, où un import relatif échoue. |
 | `Platform/HackerOs.Windowing.Blazor/WindowChrome.razor` | `ReportScreenDropAsync(écran, x, y)` : `MoveWindowToDisplayCommand` puis `MoveWindowCommand`. |
 | `Platform/HackerOs.Windowing.Blazor/DesktopArea.razor.css` | Style du contour `.window-drop-preview`. |
 | `Platform/HackerOs.Platform.Blazor/Shell/DesktopShell.razor` | Ignore un dépôt sur un écran déjà fermé. |
