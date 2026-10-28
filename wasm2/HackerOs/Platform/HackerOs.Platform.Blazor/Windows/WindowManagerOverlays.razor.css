@@ -100,61 +100,8 @@
     letter-spacing: 0.06em;
 }
 
-.window-menu-scrim {
-    position: fixed;
-    inset: 0;
-    z-index: 8990;
-}
-
-.window-menu {
-    position: fixed;
-    top: var(--window-menu-y, 3rem);
-    left: var(--window-menu-x, 1rem);
-    z-index: 9000;
-    display: grid;
-    min-width: 15rem;
-    padding: 0.3rem;
-    border: 1px solid var(--hos-window-border-color, #315249);
-    border-radius: var(--hos-radius-sm, 0.3rem);
-    background: var(--hos-bg-elevated, #0f1a1b);
-    box-shadow: 0 14px 32px rgb(0 0 0 / 50%);
-    font-family: var(--hos-font-ui, system-ui, sans-serif);
-    outline: none;
-}
-
-.window-menu-item {
-    display: flex;
-    justify-content: space-between;
-    gap: 1.5rem;
-    padding: 0.4rem 0.6rem;
-    border: 0;
-    border-radius: var(--hos-radius-xs, 0.2rem);
-    background: transparent;
-    color: var(--hos-text-primary, #f4f7f8);
-    font: inherit;
-    font-size: 0.82rem;
-    text-align: start;
-    cursor: pointer;
-}
-
-.window-menu-item.is-highlighted:not(:disabled) {
-    background: color-mix(in srgb, var(--hos-window-focused-border, #55d6a1) 18%, transparent);
-}
-
-.window-menu-item:disabled {
-    color: var(--hos-text-muted, #5f7570);
-    cursor: default;
-}
-
-.window-menu-shortcut {
-    color: var(--hos-text-secondary, #9fb7b0);
-    font-family: var(--hos-font-mono, ui-monospace, monospace);
-    font-size: 0.74rem;
-}
-
 @media (prefers-reduced-motion: no-preference) {
-    .window-switcher,
-    .window-menu {
+    .window-switcher {
         animation: window-overlay-in 90ms ease-out;
     }
 }

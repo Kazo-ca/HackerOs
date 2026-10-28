@@ -33,6 +33,9 @@
 
             <div class="secondary-screen-overlays" data-screen-overlay-slot data-display="@screen.Id.Number"></div>
 
+            @* ADR 0179 §6: this screen's number while « Autre écran ▸ Écran N » is highlighted. *@
+            <ScreenIdentifyVeil Number="screen.Id.Number" />
+
             @if (IsSecureDialogShown)
             {
                 <div class="secondary-screen-secure-veil" role="alertdialog" aria-modal="true" aria-labelledby="@($"secure-veil-{screen.Id.Number}")">

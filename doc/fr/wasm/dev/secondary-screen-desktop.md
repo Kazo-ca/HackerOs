@@ -105,5 +105,5 @@ les clics.
   un écran secondaire a son bouton `⤢`.
 - Les jetons de menu des éléments retirés dans un écran secondaire ne sont libérés qu'à la
   fermeture de la session (l'observateur des retraits suit le document principal).
-- Une fenêtre ne change pas encore d'écran depuis l'interface : menus et raccourcis au chantier 6,
-  glisser au chantier 8.
+- Une fenêtre change d'écran par les menus « Autre écran » et les raccourcis (chantier 6,
+  [`other-screen-menus.md`](other-screen-menus.md)) ; le glisser vient au chantier 8.

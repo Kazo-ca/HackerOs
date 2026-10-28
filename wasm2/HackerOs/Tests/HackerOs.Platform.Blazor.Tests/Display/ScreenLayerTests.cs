@@ -135,6 +135,7 @@ public sealed class ScreenLayerTests
                 provider.GetRequiredService<WindowRuntime>()));
             services.AddSingleton<DangerousCapabilityApprovalBroker>();
             services.AddSingleton<AdministratorAuthenticationBroker>();
+            services.AddSingleton(new HackerOs.Platform.Blazor.ContextMenus.ContextMenuService());
             Harness harness = new(services.BuildServiceProvider());
             ScreenOpenResult opened = await harness._provider.GetRequiredService<ScreenService>().OpenScreenAsync();
             Assert.Equal(ScreenOpenStatus.Opened, opened.Status);

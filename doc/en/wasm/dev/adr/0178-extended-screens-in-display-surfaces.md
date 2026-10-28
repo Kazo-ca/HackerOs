@@ -125,4 +125,4 @@ merged. The interface (taskbars, menus, veil, settings) is in
 - [x] Windows rendered once and moved through a portal (work item 2, [`window-portal.md`](../window-portal.md)).
 - [x] Screen service, permission, fallback, restore (work item 3, [ADR 0180](0180-screen-service-placement-and-memory.md), [`screen-service.md`](../screen-service.md)).
 - [x] Desktop and overlays in each screen (work item 4, [`secondary-screen-desktop.md`](../secondary-screen-desktop.md)).
-- [ ] Keyboard shortcuts (work item 6).
+- [x] Keyboard shortcuts (work item 6, [`other-screen-menus.md`](../other-screen-menus.md)).
