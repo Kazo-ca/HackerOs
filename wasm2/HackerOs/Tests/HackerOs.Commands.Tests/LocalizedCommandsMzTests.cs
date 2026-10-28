@@ -78,7 +78,7 @@ public sealed class LocalizedCommandsMzTests
         // references it from manifests/<appId>.json (ADR 0104, section 4): read what was committed.
         string project = FindCommandsProject();
         string[] manifests = Directory.GetFiles(Path.Combine(project, "manifests"), "*.json");
-        Assert.Equal(76, manifests.Length);
+        Assert.Equal(77, manifests.Length);
         foreach (string file in manifests)
         {
             AppManifest manifest = AppManifestJsonSerializer.DeserializeStrict(File.ReadAllText(file));

@@ -279,7 +279,8 @@ public sealed class AppExecutionContextFactory
                 _fileSystem,
                 _clock,
                 language,
-                _appCatalog.Assets);
+                _appCatalog.Assets,
+                _appCatalog.Packages);
         AppClipboardGateway clipboardGateway = new(_clipboard, capabilities, process.SessionId, process.Pid);
 
         AppFileSystemGateway fileSystem = new(
@@ -526,7 +527,14 @@ public sealed record AppCatalogGatewayServices(
     Func<Intents.FileAssociationResolver>? FileAssociations = null,
     Func<Apps.IAppInstallationService>? Installation = null,
     Func<Elevation.IAdministratorAuthenticationAgent>? AuthenticationAgent = null,
-    Func<Apps.AppAssetStore>? Assets = null);
+    Func<Apps.AppAssetStore>? Assets = null)
+{
+    /// <summary>
+    /// Gets the installer of apps from their GitHub repository (ADR 0182) behind
+    /// <c>HackAppPackages</c>; <see langword="null"/> leaves it unsupported.
+    /// </summary>
+    public Func<Apps.Packages.AppPackageInstaller?>? Packages { get; init; }
+}
 
 /// <summary>
 /// Services behind the measurements of ADR 0057 that the factory hands to each context.

@@ -1,5 +1,6 @@
 using System.Reflection;
 using HackerOs.App.Abstractions;
+using HackerOs.Platform.Core.Apps.Packages;
 
 namespace HackerOs.Tools.ManifestGenerator;
 
@@ -10,6 +11,8 @@ namespace HackerOs.Tools.ManifestGenerator;
 /// project compiles; writes its <c>manifest.json</c>.</item>
 /// <item><c>aggregate</c>: run by the <c>CollectHackerOsBuiltInApplications</c> MSBuild target of a
 /// host; writes its <c>BuiltInApplications.json</c>.</item>
+/// <item><c>pack</c>: run by the <c>HackerOsPack</c> MSBuild target of an app project; writes its
+/// <c>.hackapp</c> package and adds it to <c>index.json</c> (ADR 0182 §1, §2).</item>
 /// <item><c>validate &lt;file&gt;</c>: strict schema-v1 read and <c>AppManifestValidator</c> pass on
 /// one manifest file (absorbs the former <c>HackerOs.Tools.ManifestValidator</c>).</item>
 /// </list>
@@ -34,6 +37,7 @@ public static class Program
             {
                 "generate" => Generate(ParseOptions(args.AsSpan(1))),
                 "aggregate" => Aggregate(ParseOptions(args.AsSpan(1))),
+                "pack" => Pack(ParseOptions(args.AsSpan(1))),
                 "validate" when args.Length == 2 => Validate(args[1]),
                 _ => Fail("ManifestGenerator", new GeneratorDiagnostic(GeneratorCodes.InvalidArguments, "arguments", $"Unknown command line: {string.Join(' ', args)}"))
             };
@@ -146,6 +150,43 @@ public static class Program
         return 0;
     }
 
+    /// <summary>
+    /// <c>pack --manifest &lt;manifest.json&gt; --bin &lt;output dir&gt; --webroot &lt;wwwroot&gt; --output &lt;packages dir&gt;</c>:
+    /// writes <c>&lt;version&gt;/&lt;appId&gt;-&lt;version&gt;.hackapp</c> and updates <c>index.json</c>
+    /// in the packages folder, the content of the app repository's <c>hackeros-packages</c> branch.
+    /// </summary>
+    private static int Pack(IReadOnlyDictionary<string, string> options)
+    {
+        string manifestPath = Path.GetFullPath(Required(options, "manifest"));
+        string bin = Path.GetFullPath(Required(options, "bin"));
+        string webroot = Path.GetFullPath(Required(options, "webroot"));
+        string output = Path.GetFullPath(Required(options, "output"));
+        try
+        {
+            byte[] package = AppPackageWriter.Write(
+                File.ReadAllBytes(manifestPath),
+                assembly => File.ReadAllBytes(Path.Combine(bin, assembly)),
+                asset => File.ReadAllBytes(Path.Combine(webroot, asset)));
+            AppPackage read = AppPackage.Read(package);
+            string relativePath = AppPackageWriter.GetPackagePath(read.AppId, read.Version);
+            string packagePath = Path.Combine(output, relativePath);
+            Directory.CreateDirectory(Path.GetDirectoryName(packagePath)!);
+            File.WriteAllBytes(packagePath, package);
+            string indexPath = Path.Combine(output, AppPackageSource.IndexFileName);
+            byte[] index = AppPackageWriter.AddToIndex(
+                File.Exists(indexPath) ? File.ReadAllBytes(indexPath) : null,
+                read.AppId,
+                new AppPackageIndexEntry(read.Version, relativePath, AppPackage.Sha256(package)));
+            File.WriteAllBytes(indexPath, index);
+            Console.WriteLine($"HackerOS package: {read.AppId} {read.Version} -> {packagePath}");
+            return 0;
+        }
+        catch (Exception exception) when (exception is AppPackageException or IOException or UnauthorizedAccessException)
+        {
+            return Fail(manifestPath, new GeneratorDiagnostic(GeneratorCodes.PackageFailed, manifestPath, exception.Message));
+        }
+    }
+
     private static int Validate(string manifestPath)
     {
         if (!File.Exists(manifestPath))
@@ -199,6 +240,7 @@ public static class Program
         Console.WriteLine("HackerOS manifest generator (ADR 0047)");
         Console.WriteLine("  generate --assembly <app.dll> --project <app.csproj> --stamp <file> [--dependencies <list file>]");
         Console.WriteLine("  aggregate --project <host.csproj> --apps <list file> --output <BuiltInApplications.json> [--trimmer-roots <roots.xml>]");
+        Console.WriteLine("  pack --manifest <manifest.json> --bin <output dir> --webroot <wwwroot> --output <packages dir>");
         Console.WriteLine("  validate <manifest.json>");
     }
 }

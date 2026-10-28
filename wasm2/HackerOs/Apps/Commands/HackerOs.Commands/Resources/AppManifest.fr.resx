@@ -162,6 +162,12 @@
   <data name="org.hackeros.commands.hackbackup.Terminal.Usage" xml:space="preserve">
     <value>hackbackup create | restore [--merge|--replace]</value>
   </data>
+  <data name="org.hackeros.commands.hackpkg.Description" xml:space="preserve">
+    <value>Installe, met à jour et retire des apps depuis leur dépôt GitHub</value>
+  </data>
+  <data name="org.hackeros.commands.hackpkg.Terminal.Usage" xml:space="preserve">
+    <value>hackpkg install &lt;dépôt&gt;[@version] [--allow-untrusted] | remove &lt;appId&gt; | update [&lt;appId&gt;] | list | info &lt;dépôt&gt; | sources</value>
+  </data>
   <data name="org.hackeros.commands.head.Description" xml:space="preserve">
     <value>Affiche le début des fichiers</value>
   </data>

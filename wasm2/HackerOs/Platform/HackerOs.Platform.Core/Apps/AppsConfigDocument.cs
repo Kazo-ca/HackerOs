@@ -1,4 +1,5 @@
 using HackerOs.App.Abstractions;
+using HackerOs.Platform.Core.Apps.Packages;
 using HackerOs.Simulation.Abstractions.Settings;
 
 namespace HackerOs.Platform.Core.Apps;
@@ -18,6 +19,12 @@ public static class AppsConfigDocument
 {
     /// <summary>Section holding the uninstalled app IDs.</summary>
     public const string Section = "uninstalled";
+
+    /// <summary>
+    /// Machine-file section holding the apps installed from a package (ADR 0182 §5):
+    /// <c>org.kazo.webamp=github:Kazo-ca/HackerOs-App-Webamp@1.0.0</c>.
+    /// </summary>
+    public const string InstalledSection = "installed";
 
     /// <summary>File name under <c>/etc/hackeros</c> and <c>~/.config/hackeros</c>.</summary>
     public const string FileName = "apps.config";
@@ -135,6 +142,67 @@ public static class AppsConfigDocument
     }
 
     /// <summary>
+    /// Reads the <c>[installed]</c> section (ADR 0182 §5). Never fails: a line whose value is not a
+    /// source pinned to a version is skipped with a warning; the last occurrence of a key wins.
+    /// </summary>
+    /// <param name="content">Machine file content, or <see langword="null"/> when absent.</param>
+    /// <param name="path">File path, used in warnings.</param>
+    public static InstalledAppsReadResult ReadInstalled(string? content, VirtualPath path)
+    {
+        if (string.IsNullOrEmpty(content))
+        {
+            return InstalledAppsReadResult.Empty;
+        }
+
+        Dictionary<string, AppPackageSource> sources = new(StringComparer.Ordinal);
+        List<string> warnings = [];
+        foreach (ConfigLine line in ConfigDocumentLines.Parse(content))
+        {
+            if (line.Kind != ConfigLineKind.KeyValue
+                || line.InMalformedSection
+                || !string.Equals(line.Group, InstalledSection, StringComparison.Ordinal)
+                || line.Key is not { Length: > 0 } appId)
+            {
+                continue;
+            }
+
+            string value = (line.Value ?? string.Empty).Trim();
+            if (!AppPackageSource.TryParse(value, out AppPackageSource? source) || source.Version is null)
+            {
+                warnings.Add($"apps: {path.Value}:{line.LineNumber}: '{value}' is not a package source with a version, line ignored");
+                sources.Remove(appId);
+                continue;
+            }
+
+            sources[appId] = source;
+        }
+
+        return new InstalledAppsReadResult(sources, warnings);
+    }
+
+    /// <summary>Records an installed package, keeping every other line exactly.</summary>
+    /// <param name="content">Current machine file content, or <see langword="null"/> for a new file.</param>
+    /// <param name="appId">Installed app.</param>
+    /// <param name="source">Its source, pinned to the installed version.</param>
+    public static string SetInstalled(string? content, string appId, AppPackageSource source)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(appId);
+        ArgumentNullException.ThrowIfNull(source);
+        if (source.Version is null)
+        {
+            throw new ArgumentException("An installed source carries its version.", nameof(source));
+        }
+
+        return ConfigDocumentEditor.SetValue(string.IsNullOrEmpty(content) ? MachineDefaultContent : content, InstalledSection, appId, source.ToString());
+    }
+
+    /// <summary>Forgets an installed package, keeping every other line exactly.</summary>
+    /// <param name="content">Current machine file content.</param>
+    /// <param name="appId">Removed app.</param>
+    public static string RemoveInstalled(string? content, string appId) =>
+        ConfigDocumentEditor.RemoveValue(content ?? string.Empty, InstalledSection, appId);
+
+    /// <summary>
     /// Expands a set of uninstalled apps with every catalog app that depends on one of them through
     /// a chain of non-optional dependencies: such an app cannot run, so it counts as uninstalled too.
     /// </summary>
@@ -188,6 +256,15 @@ public static class AppsConfigDocument
 
         return closure;
     }
+}
+
+/// <summary>Apps installed from a package, read from the <c>[installed]</c> section of the machine file.</summary>
+/// <param name="Sources">Source pinned to its installed version, by app ID.</param>
+/// <param name="Warnings">One <c>/var/log/syslog</c> line per ignored line.</param>
+public sealed record InstalledAppsReadResult(IReadOnlyDictionary<string, AppPackageSource> Sources, IReadOnlyList<string> Warnings)
+{
+    /// <summary>Nothing installed, no warning.</summary>
+    public static InstalledAppsReadResult Empty { get; } = new(new Dictionary<string, AppPackageSource>(StringComparer.Ordinal), []);
 }
 
 /// <summary>Uninstalled app IDs read from one <c>apps.config</c> file.</summary>

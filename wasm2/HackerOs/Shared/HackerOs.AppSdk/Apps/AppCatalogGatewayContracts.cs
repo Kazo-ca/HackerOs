@@ -158,6 +158,47 @@ public interface IAppManagementGateway
     async ValueTask<HackUninstallReport> UninstallWithReportAsync(
         string appId, HackInstallScope scope, CancellationToken cancellationToken = default) =>
         new(await UninstallAsync(appId, scope, cancellationToken).ConfigureAwait(false), []);
+
+    /// <summary>Reads <c>/etc/hackeros/app-sources.config</c> (ADR 0182 §3).</summary>
+    /// <param name="cancellationToken">Cancels the read.</param>
+    /// <exception cref="NotSupportedException">The gateway predates ADR 0182.</exception>
+    ValueTask<HackPackageSources> GetPackageSourcesAsync(CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This app-management gateway cannot install packages.");
+
+    /// <summary>Lists the apps installed from a package (ADR 0182 §5).</summary>
+    /// <param name="cancellationToken">Cancels the read.</param>
+    /// <exception cref="NotSupportedException">The gateway predates ADR 0182.</exception>
+    ValueTask<IReadOnlyList<HackInstalledPackage>> GetInstalledPackagesAsync(CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This app-management gateway cannot install packages.");
+
+    /// <summary>Downloads and reads the <c>index.json</c> of a repository (ADR 0182 §2).</summary>
+    /// <param name="source"><c>github:owner/repo</c>, <c>owner/repo</c> or <c>https://github.com/owner/repo</c>.</param>
+    /// <param name="cancellationToken">Cancels the download.</param>
+    /// <exception cref="NotSupportedException">The gateway predates ADR 0182.</exception>
+    ValueTask<HackPackageInfo> GetPackageInfoAsync(string source, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This app-management gateway cannot install packages.");
+
+    /// <summary>
+    /// Installs or updates an app from its repository for every user (ADR 0182 §5), after an
+    /// administrator authenticated. The app appears at the next start of the OS.
+    /// </summary>
+    /// <param name="source">The repository, optionally followed by <c>@version</c>.</param>
+    /// <param name="allowUntrusted">Accepts an owner missing from <c>[trusted]</c>.</param>
+    /// <param name="cancellationToken">Cancels the download, the authentication and the writes.</param>
+    /// <exception cref="NotSupportedException">The gateway predates ADR 0182.</exception>
+    ValueTask<HackPackageInstallReport> InstallPackageAsync(
+        string source, bool allowUntrusted = false, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This app-management gateway cannot install packages.");
+
+    /// <summary>
+    /// Removes an app installed from a package, for every user, after an administrator
+    /// authenticated. Its users' settings stay; it leaves the catalog at the next start of the OS.
+    /// </summary>
+    /// <param name="appId">The installed app.</param>
+    /// <param name="cancellationToken">Cancels the authentication and the writes.</param>
+    /// <exception cref="NotSupportedException">The gateway predates ADR 0182.</exception>
+    ValueTask<HackInstalledPackage> RemovePackageAsync(string appId, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This app-management gateway cannot install packages.");
 }
 
 /// <summary>One running process of an app, as an uninstall lists it (ADR 0097, section 5).</summary>

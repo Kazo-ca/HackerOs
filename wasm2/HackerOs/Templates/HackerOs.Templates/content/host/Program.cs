@@ -5,4 +5,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 // project, aggregated into this assembly by the build (HackerOsAppHost).
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.AddHackerOsBrowserHost(HostAppCatalog.Load(typeof(Program).Assembly));
-await builder.Build().RunAsync();
+// ADR 0182: apps installed from packages (hackpkg) join the catalog before the OS starts.
+WebAssemblyHost host = builder.Build();
+await host.LoadInstalledAppsAsync();
+await host.RunAsync();
