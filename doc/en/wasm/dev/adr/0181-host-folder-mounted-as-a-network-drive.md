@@ -4,10 +4,10 @@
 
 ## Status
 
-Proposed on 2026-10-28 at Benoit's request ("add the ability to mount a local folder of
-the computer […] I would like it to be mounted as a network drive in HackOs"). The
-choices marked **(question)** were asked to Benoit in the thread; the decision follows
-the recommendation until he answers, and this ADR will be updated with his answers.
+Accepted on 2026-10-28. Proposed the same day at Benoit's request ("add the ability to
+mount a local folder of the computer […] I would like it to be mounted as a network drive
+in HackOs"). The choices marked **(decided by Benoit)** were asked to him in the thread;
+he chose the recommendation for all six questions (2026-10-28).
 
 Complements [ADR 0008](0008-virtual-filesystem-model.md) (file system model),
 [ADR 0046](0046-virtual-proc-and-dev-filesystems.md) (`/proc` and `/dev` mounts) and
@@ -67,17 +67,17 @@ Complements [ADR 0008](0008-virtual-filesystem-model.md) (file system model),
    neither the size nor the free space: `TotalSize` and `AvailableFreeSpace` are 0 and
    `df` prints `-`. `HackDriveInfo.IsReady` is false until the browser's permission is
    granted.
-4. **Where (question).** A drive is mounted on a direct child of `/mnt`. With no chosen
+4. **Where (decided by Benoit).** A drive is mounted on a direct child of `/mnt`. With no chosen
    point, it is `/mnt/<folder name>` (then `-2`, `-3`… when the name is taken), created
    at mount (`0700`, owned by the user) and removed at unmount. A chosen point must be
    missing or an empty folder of the user. `/mnt` is created at boot (`0755`, root).
    Outside the home folder, the drive is part of neither the sync nor the backup
    (section 9).
-5. **Who (question).** Any user mounts a folder for themselves, like a Windows network
+5. **Who (decided by Benoit).** Any user mounts a folder for themselves, like a Windows network
    drive: their choice in the browser's dialog is already an explicit approval. The
    mount point belongs to them; other accounts cannot enter it (mode `0700`). Only the
    owner and an administrator unmount or reconnect a drive.
-6. **App access (question).** The ordinary file rules apply, as for `/tmp`: outside the
+6. **App access (decided by Benoit).** The ordinary file rules apply, as for `/tmp`: outside the
    home folder, an app needs `filesystem.system.read` or `filesystem.system.write` (the
    file explorer and the commands have them), or goes through the open and save
    dialogs. No new capability.
@@ -97,7 +97,7 @@ Complements [ADR 0008](0008-virtual-filesystem-model.md) (file system model),
    device-local state, never synced, because the handles only work in this browser. The
    handles are in the IndexedDB database `hackeros-host-folders` (a handle is not JSON).
    When the user signs in, each drive is mounted again; when the browser answers
-   `prompt`, it is mounted **disconnected** (question): it shows in the file explorer
+   `prompt`, it is mounted **disconnected** (decided by Benoit): it shows in the file explorer
    with "Reconnect", and every operation answers `ProviderUnavailable` until the click.
    A drive whose handle is gone is removed from the list. When the user signs out, their
    drives are unmounted (the list and the handles stay).
@@ -105,7 +105,7 @@ Complements [ADR 0008](0008-virtual-filesystem-model.md) (file system model),
    included in the OS backup ([ADR 0099](0099-os-backup-and-low-storage.md)): it is
    already on the computer, the sync only walks the home folder, and the backup only the
    IndexedDB database.
-10. **Delete (question).** Deleting on a drive is permanent, after confirmation, with no
+10. **Delete (decided by Benoit).** Deleting on a drive is permanent, after confirmation, with no
     trash, like on a Windows network drive: the file explorer switches to a permanent
     delete as soon as a chosen item is on a drive.
 11. **File explorer.** The (desktop) sidebar gets a "Network drives" section: one item
@@ -117,11 +117,13 @@ Complements [ADR 0008](0008-virtual-filesystem-model.md) (file system model),
     (Enter counts as the gesture); `mount -o remount <point>` reconnects;
     `umount <point>` unmounts. Exit codes follow util-linux: 1 for usage, 32 for a
     failure. `df` shows a network drive with `host:<name>` and `-` sizes.
-13. **Browsers without the API (question).** On Firefox, Safari and mobile, "Connect a
+13. **Browsers without the API (decided by Benoit).** On Firefox, Safari and mobile, "Connect a
     network drive" is hidden, and `mount -t hostfs` answers "hostfs: not supported by
     this browser".
 
 ## Questions asked to Benoit
+
+Benoit's answer (2026-10-28): the recommendation for all six.
 
 1. Where to mount: `/mnt/<name>` (recommended), `/media/<user>/<name>` or
    `~/Réseau/<name>`.

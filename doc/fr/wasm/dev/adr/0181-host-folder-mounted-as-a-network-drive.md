@@ -4,11 +4,11 @@
 
 ## Statut
 
-Proposé le 2026-10-28 à la demande de Benoit (« ajouter la possibilité de monter un
-dossier local de l'ordinateur […] j'aimerais qu'il soit monté comme un disque réseau
-dans HackOs »). Les choix marqués **(question)** ont été posés à Benoit dans le fil ;
-la décision suit la recommandation tant qu'il n'a pas répondu, et l'ADR sera mise à
-jour avec ses réponses.
+Accepté le 2026-10-28. Proposé le même jour à la demande de Benoit (« ajouter la
+possibilité de monter un dossier local de l'ordinateur […] j'aimerais qu'il soit monté
+comme un disque réseau dans HackOs »). Les choix marqués **(décidé par Benoit)** lui
+ont été posés dans le fil ; il a retenu la recommandation pour les six questions
+(2026-10-28).
 
 Complète l'[ADR 0008](0008-virtual-filesystem-model.md) (modèle du système de
 fichiers), l'[ADR 0046](0046-virtual-proc-and-dev-filesystems.md) (montages `/proc` et
@@ -74,18 +74,18 @@ fichiers), l'[ADR 0046](0046-virtual-proc-and-dev-filesystems.md) (montages `/pr
    libre : `TotalSize` et `AvailableFreeSpace` valent 0 et `df` affiche `-`.
    `HackDriveInfo.IsReady` est faux tant que la permission du navigateur n'est pas
    accordée.
-4. **Où (question).** Un lecteur se monte sur un enfant direct de `/mnt`. Sans point
+4. **Où (décidé par Benoit).** Un lecteur se monte sur un enfant direct de `/mnt`. Sans point
    choisi, c'est `/mnt/<nom du dossier>` (puis `-2`, `-3`… si le nom est pris), créé
    au montage (`0700`, propriétaire l'utilisateur) et supprimé au démontage. Un point
    choisi doit être absent ou un dossier vide de l'utilisateur. `/mnt` est créé au
    démarrage (`0755`, root). Hors du home, le lecteur n'entre ni dans la
    synchronisation ni dans la sauvegarde (section 9).
-5. **Qui (question).** Tout utilisateur monte un dossier pour lui-même, comme un
+5. **Qui (décidé par Benoit).** Tout utilisateur monte un dossier pour lui-même, comme un
    lecteur réseau Windows : son choix dans le dialogue du navigateur est déjà une
    approbation explicite. Le point de montage lui appartient ; les autres comptes n'y
    entrent pas (mode `0700`). Seuls le propriétaire et un administrateur démontent ou
    reconnectent un lecteur.
-6. **Accès des apps (question).** Les règles de fichiers ordinaires s'appliquent,
+6. **Accès des apps (décidé par Benoit).** Les règles de fichiers ordinaires s'appliquent,
    comme pour `/tmp` : hors du home, une app a besoin de `filesystem.system.read` ou
    `filesystem.system.write` (l'explorateur et les commandes les ont), ou passe par les
    dialogues d'ouverture et d'enregistrement. Aucune capacité nouvelle.
@@ -106,7 +106,7 @@ fichiers), l'[ADR 0046](0046-virtual-proc-and-dev-filesystems.md) (montages `/pr
    valent que dans ce navigateur. Les handles sont dans la base IndexedDB
    `hackeros-host-folders` (un handle n'est pas du JSON). À la connexion de
    l'utilisateur, chaque lecteur est remonté ; si le navigateur répond `prompt`, il est
-   monté **déconnecté** (question) : il apparaît dans l'explorateur avec
+   monté **déconnecté** (décidé par Benoit) : il apparaît dans l'explorateur avec
    « Reconnecter », et toute opération répond `ProviderUnavailable` jusqu'au clic. Un
    lecteur dont le handle a disparu est retiré de la liste. À la déconnexion de
    l'utilisateur, ses lecteurs sont démontés (la liste et les handles restent).
@@ -114,7 +114,7 @@ fichiers), l'[ADR 0046](0046-virtual-proc-and-dev-filesystems.md) (montages `/pr
    synchronisé avec le serveur ni inclus dans la sauvegarde de l'OS
    ([ADR 0099](0099-os-backup-and-low-storage.md)) : il est déjà sur l'ordinateur, et
    la synchronisation ne parcourt que le home, la sauvegarde que la base IndexedDB.
-10. **Suppression (question).** Supprimer sur un lecteur est définitif, après
+10. **Suppression (décidé par Benoit).** Supprimer sur un lecteur est définitif, après
     confirmation, sans corbeille, comme sur un lecteur réseau Windows : l'explorateur
     passe en suppression définitive dès qu'un élément choisi est sur un lecteur.
 11. **Explorateur.** La barre latérale (version bureau) gagne une section « Lecteurs
@@ -126,11 +126,13 @@ fichiers), l'[ADR 0046](0046-virtual-proc-and-dev-filesystems.md) (montages `/pr
     (Entrée compte comme geste) ; `mount -o remount <point>` reconnecte ;
     `umount <point>` démonte. Codes de sortie de util-linux : 1 pour l'usage, 32 pour
     un échec. `df` montre un lecteur réseau avec `host:<nom>` et des tailles `-`.
-13. **Navigateurs sans l'API (question).** Sur Firefox, Safari et mobile,
+13. **Navigateurs sans l'API (décidé par Benoit).** Sur Firefox, Safari et mobile,
     « Connecter un lecteur réseau » est masqué, et `mount -t hostfs` répond
     « hostfs: not supported by this browser ».
 
 ## Questions posées à Benoit
+
+Réponse de Benoit (2026-10-28) : la recommandation pour les six.
 
 1. Où monter : `/mnt/<nom>` (recommandé), `/media/<utilisateur>/<nom>` ou
    `~/Réseau/<nom>`.
