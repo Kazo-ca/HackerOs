@@ -218,6 +218,35 @@
         }
     }
 
+    /// <summary>
+    /// Ends a move whose pointer was released over another screen (ADR 0183): the window changes
+    /// screen, keeping its components, then takes the dropped position in that screen's work area.
+    /// </summary>
+    /// <param name="displayNumber">The number of the screen under the pointer.</param>
+    /// <param name="x">The window's left edge in that screen's window layer.</param>
+    /// <param name="y">The window's top edge in that screen's window layer.</param>
+    [JSInvokable]
+    public async Task ReportScreenDropAsync(int displayNumber, double x, double y)
+    {
+        if (Window.VisualState != WindowVisualState.Normal
+            || !Window.Constraints.IsMovable
+            || displayNumber < 1
+            || !double.IsFinite(x) || !double.IsFinite(y))
+        {
+            return;
+        }
+
+        WindowId gestureWindowId = Window.Id;
+        DisplayId target = DisplayId.FromNumber(displayNumber);
+        await OnFocus.InvokeAsync(gestureWindowId);
+        if (target != Window.DisplayId)
+        {
+            await OnGesture.InvokeAsync(new MoveWindowToDisplayCommand(gestureWindowId, target));
+        }
+
+        await OnGesture.InvokeAsync(new MoveWindowCommand(gestureWindowId, x, y));
+    }
+
     /// <summary>Converts a cumulative browser-reported pointer delta into an authoritative C# command.</summary>
     [JSInvokable]
     public async Task ReportPointerDeltaAsync(

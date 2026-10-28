@@ -62,10 +62,61 @@ public sealed class WindowPointerGeometryTests
         Assert.Empty(commands);
     }
 
-    private static WindowRuntimeState Window() => new(
+    [Fact]
+    public async Task A_window_dropped_on_another_screen_changes_screen_then_takes_the_dropped_position()
+    {
+        List<WindowCommand> commands = [];
+        WindowRuntimeState window = Window();
+        WindowChrome chrome = new()
+        {
+            Window = window,
+            OnGesture = EventCallback.Factory.Create<WindowCommand>(this, commands.Add),
+        };
+
+        await chrome.ReportScreenDropAsync(2, 120.5, 64);
+
+        Assert.Equal(
+            [new MoveWindowToDisplayCommand(window.Id, DisplayId.FromNumber(2)), new MoveWindowCommand(window.Id, 120.5, 64)],
+            commands);
+    }
+
+    [Theory]
+    [InlineData(0, 10, 10)]
+    [InlineData(2, double.NaN, 10)]
+    [InlineData(2, 10, double.PositiveInfinity)]
+    public async Task An_invalid_screen_drop_never_reaches_the_runtime(int display, double x, double y)
+    {
+        List<WindowCommand> commands = [];
+        WindowChrome chrome = new()
+        {
+            Window = Window(),
+            OnGesture = EventCallback.Factory.Create<WindowCommand>(this, commands.Add),
+        };
+
+        await chrome.ReportScreenDropAsync(display, x, y);
+
+        Assert.Empty(commands);
+    }
+
+    [Fact]
+    public async Task A_maximized_window_is_never_dropped_on_another_screen()
+    {
+        List<WindowCommand> commands = [];
+        WindowChrome chrome = new()
+        {
+            Window = Window(WindowVisualState.Maximized),
+            OnGesture = EventCallback.Factory.Create<WindowCommand>(this, commands.Add),
+        };
+
+        await chrome.ReportScreenDropAsync(2, 10, 10);
+
+        Assert.Empty(commands);
+    }
+
+    private static WindowRuntimeState Window(WindowVisualState state = WindowVisualState.Normal) => new(
         WindowId.FromGuid(Guid.NewGuid()), "org.hackeros.test", WindowOwnerId.FromGuid(Guid.NewGuid()),
         "Test window", null, new WindowBounds(48.25, 42.5, 640.75, 480.5), null, 1,
-        WindowVisualState.Normal, new WindowConstraints(true, 320, 240));
+        state, new WindowConstraints(true, 320, 240));
 
     /// <summary>Static rendering never imports the interactive pointer module.</summary>
     private sealed class NoJsRuntime : IJSRuntime

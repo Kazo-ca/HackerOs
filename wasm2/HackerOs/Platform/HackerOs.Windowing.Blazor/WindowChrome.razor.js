@@ -1,7 +1,10 @@
+import { clearDropPreview, screenUnderPointer, showDropPreview, trackScreens } from "./windowScreenDrop.js";
+
 const registrations = new WeakMap();
 
 export function attachWindowGestures(root, dotNetReference) {
     detachWindowGestures(root);
+    trackScreens();
     let active = null;
     let disposed = false;
 
@@ -26,9 +29,25 @@ export function attachWindowGestures(root, dotNetReference) {
         let pending = null;
         let ending = false;
         let queue = dotNetReference.invokeMethodAsync("ReportGestureStartedAsync");
+        // Drag to another screen (ADR 0183): the screen the window is on, where the title bar was
+        // grabbed, and the screen under the pointer when it differs.
+        const sourceDocument = host.ownerDocument;
+        const currentDisplay = Number(host.closest(".window-layer[data-display]")?.dataset.display ?? 1);
+        const hostRect = host.getBoundingClientRect();
+        const grab = [startX - hostRect.left, startY - hostRect.top];
+        const dropState = { preview: null };
+        let drop = null;
 
         const clearPreview = () => {
             host.style.removeProperty("--window-drag-translation");
+            clearDropPreview(dropState);
+        };
+        const trackDrop = moveEvent => {
+            const found = screenUnderPointer(sourceDocument, moveEvent);
+            drop = found && found.display !== currentDisplay
+                ? { ...found, x: found.x - grab[0], y: Math.max(0, found.y - grab[1]) }
+                : null;
+            showDropPreview(dropState, drop, sourceDocument, origin[2], origin[3]);
         };
         const cleanup = () => {
             cancelAnimationFrame(frame);
@@ -67,6 +86,7 @@ export function attachWindowGestures(root, dotNetReference) {
             if (!values.every(Number.isFinite)) return;
             delta = values;
             if (mode === "move") {
+                trackDrop(moveEvent);
                 // Only a temporary compositor translation: no authoritative geometry or storage.
                 if (!frame) frame = requestAnimationFrame(() => {
                     frame = 0;
@@ -95,7 +115,11 @@ export function attachWindowGestures(root, dotNetReference) {
             cleanup();
             queue = queue.then(async () => {
                 if (disposed) return;
-                if (mode === "move" || pending) await report(delta);
+                if (mode === "move" && drop) {
+                    await dotNetReference.invokeMethodAsync("ReportScreenDropAsync", drop.display, drop.x, drop.y);
+                } else if (mode === "move" || pending) {
+                    await report(delta);
+                }
                 if (!disposed) await dotNetReference.invokeMethodAsync("ReportGestureCompletedAsync", mode);
             });
             queue.then(() => {

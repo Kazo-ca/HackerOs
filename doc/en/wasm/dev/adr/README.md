@@ -179,5 +179,6 @@ next free number is given in
 | [`0178-extended-screens-in-display-surfaces.md`](0178-extended-screens-in-display-surfaces.md) | ADR 0178: multi-monitor extended screens, one screen per display surface, `DisplayId` and work area per screen in `WindowRuntime`, windows moved through a portal, screen service (Chrome/Edge with `window-management`, fallback elsewhere) |
 | [`0179-per-screen-taskbars-and-other-screen-menus.md`](0179-per-screen-taskbars-and-other-screen-menus.md) | ADR 0179: one taskbar per screen (`primary-taskbar` setting), "Other screen" submenu on the icon and the Maximize button, identification veil, `screens.config` and Settings ▸ Screens |
 | [`0180-screen-service-placement-and-memory.md`](0180-screen-service-placement-and-memory.md) | ADR 0180: screen service, monitor chosen before `window.open`, move after the permission, place read every second, `[screens]` with `open` and one place per screen, "Restore screens" |
+| [`0183-drag-a-window-between-screens.md`](0183-drag-a-window-between-screens.md) | ADR 0183: drag a window from one screen to another by its title bar, screen under the pointer found from its position on the physical desktop, outline on the target screen, screen changed on release |
 
 Parent folder index: [`../README.md`](../README.md).

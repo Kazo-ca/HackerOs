@@ -42,6 +42,10 @@ screen to the runtime (`AddDisplayCommand`) before rendering its area.
 
 See `doc/en/wasm/dev/window-portal.md` in the source repository (ADR 0178 §3).
 
+With shared layers, a window dragged by its title bar and released over another screen's layer
+(in the same page or in another browser window) moves to that screen, where it was dropped
+(`WindowChrome.ReportScreenDropAsync`, ADR 0183, `doc/en/wasm/dev/drag-between-screens.md`).
+
 ## Localization
 
 The package's texts (accessible labels, window buttons such as Minimize, Maximize, Restore, Close, Back) live in `Resources/Strings.resx`
