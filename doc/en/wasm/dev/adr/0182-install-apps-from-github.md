@@ -208,6 +208,8 @@ Asked to Benoit in the thread on 2026-10-28, each with its choices.
 - Installed code is not isolated from the OS; the list of trusted sources and an
   administrator's approval stand in for that. Isolation (app in a Web Worker,
   [ADR 0070](0070-worker-hosted-processes.md)) remains possible later.
+  An app's JavaScript (`wwwroot/` resources) also runs in the OS origin and can
+  read its IndexedDB, unless it is served in an isolated iframe.
 - Packages are not signed: the SHA-256 values in `index.json` protect against a
   damaged download, not against a compromised repository. Signing remains to be
   decided with the Store.

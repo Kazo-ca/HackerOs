@@ -214,6 +214,8 @@ Posées à Benoit dans le fil du 2026-10-28, chacune avec ses choix.
 - Le code installé n'est pas isolé de l'OS ; la liste des sources de confiance
   et l'approbation d'un administrateur en tiennent lieu. Une isolation (app en
   Web Worker, [ADR 0070](0070-worker-hosted-processes.md)) reste possible plus tard.
+  Le JavaScript d'une app (ressources `wwwroot/`) tourne lui aussi dans l'origine
+  de l'OS et peut lire son IndexedDB, sauf s'il est servi dans un iframe isolé.
 - Les paquets ne sont pas signés : les SHA-256 d'`index.json` protègent d'un
   téléchargement abîmé, pas d'un dépôt compromis. La signature reste à décider
   avec le Store.
