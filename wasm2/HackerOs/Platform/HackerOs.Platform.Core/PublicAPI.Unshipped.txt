@@ -79,6 +79,7 @@ HackerOs.Platform.Core.Apps.Packages.AppPackageSource.TrustKey.get -> string!
 HackerOs.Platform.Core.Apps.Packages.AppPackageSource.Version.get -> HackerOs.App.Abstractions.SemanticVersion?
 HackerOs.Platform.Core.Apps.Packages.AppPackageSource.Version.init -> void
 HackerOs.Platform.Core.Apps.Packages.AppPackageSource.WithVersion(HackerOs.App.Abstractions.SemanticVersion version) -> HackerOs.Platform.Core.Apps.Packages.AppPackageSource!
+HackerOs.Platform.Core.Apps.Packages.AppPackageWriter
 HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig
 HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.<Clone>$() -> HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig!
 HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.AppSourcesConfig(string! GitHubHost, System.Collections.Generic.IReadOnlySet<string!>! TrustedKeys, System.Collections.Generic.IReadOnlyList<string!>! Warnings) -> void
@@ -213,6 +214,9 @@ static HackerOs.Platform.Core.Apps.Packages.AppPackagePlan.operator ==(HackerOs.
 static HackerOs.Platform.Core.Apps.Packages.AppPackageSource.TryParse(string? text, out HackerOs.Platform.Core.Apps.Packages.AppPackageSource? source) -> bool
 static HackerOs.Platform.Core.Apps.Packages.AppPackageSource.operator !=(HackerOs.Platform.Core.Apps.Packages.AppPackageSource? left, HackerOs.Platform.Core.Apps.Packages.AppPackageSource? right) -> bool
 static HackerOs.Platform.Core.Apps.Packages.AppPackageSource.operator ==(HackerOs.Platform.Core.Apps.Packages.AppPackageSource? left, HackerOs.Platform.Core.Apps.Packages.AppPackageSource? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.AppPackageWriter.AddToIndex(byte[]? existing, string! appId, HackerOs.Platform.Core.Apps.Packages.AppPackageIndexEntry! entry) -> byte[]!
+static HackerOs.Platform.Core.Apps.Packages.AppPackageWriter.GetPackagePath(string! appId, HackerOs.App.Abstractions.SemanticVersion version) -> string!
+static HackerOs.Platform.Core.Apps.Packages.AppPackageWriter.Write(byte[]! manifestJson, System.Func<string!, byte[]!>! readAssembly, System.Func<string!, byte[]!>! readAsset) -> byte[]!
 static HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.operator !=(HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig? left, HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig? right) -> bool
 static HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.operator ==(HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig? left, HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig? right) -> bool
 static HackerOs.Platform.Core.Apps.Packages.AppSourcesConfigDocument.MachinePath.get -> HackerOs.App.Abstractions.VirtualPath
