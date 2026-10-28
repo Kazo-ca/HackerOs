@@ -8,6 +8,38 @@ HackerOs.Platform.Core.Apps.InstalledAppsReadResult.Sources.get -> System.Collec
 HackerOs.Platform.Core.Apps.InstalledAppsReadResult.Sources.init -> void
 HackerOs.Platform.Core.Apps.InstalledAppsReadResult.Warnings.get -> System.Collections.Generic.IReadOnlyList<string!>!
 HackerOs.Platform.Core.Apps.InstalledAppsReadResult.Warnings.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackage
+HackerOs.Platform.Core.Apps.Packages.AppPackage.AppId.get -> string!
+HackerOs.Platform.Core.Apps.Packages.AppPackage.Assemblies.get -> System.Collections.Generic.IReadOnlyDictionary<string!, byte[]!>!
+HackerOs.Platform.Core.Apps.Packages.AppPackage.Files.get -> System.Collections.Generic.IReadOnlyDictionary<string!, byte[]!>!
+HackerOs.Platform.Core.Apps.Packages.AppPackage.Manifest.get -> HackerOs.App.Abstractions.AppManifest!
+HackerOs.Platform.Core.Apps.Packages.AppPackage.Version.get -> HackerOs.App.Abstractions.SemanticVersion
+HackerOs.Platform.Core.Apps.Packages.AppPackageApiCheck
+HackerOs.Platform.Core.Apps.Packages.AppPackageException
+HackerOs.Platform.Core.Apps.Packages.AppPackageException.AppPackageException(string! code, string! message) -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageException.Code.get -> string!
+HackerOs.Platform.Core.Apps.Packages.AppPackageIndex
+HackerOs.Platform.Core.Apps.Packages.AppPackageIndex.<Clone>$() -> HackerOs.Platform.Core.Apps.Packages.AppPackageIndex!
+HackerOs.Platform.Core.Apps.Packages.AppPackageIndex.AppId.get -> string!
+HackerOs.Platform.Core.Apps.Packages.AppPackageIndex.AppId.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageIndex.AppPackageIndex(string! AppId, System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.Apps.Packages.AppPackageIndexEntry!>! Versions) -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageIndex.Deconstruct(out string! AppId, out System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.Apps.Packages.AppPackageIndexEntry!>! Versions) -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageIndex.Equals(HackerOs.Platform.Core.Apps.Packages.AppPackageIndex? other) -> bool
+HackerOs.Platform.Core.Apps.Packages.AppPackageIndex.Find(HackerOs.App.Abstractions.SemanticVersion version) -> HackerOs.Platform.Core.Apps.Packages.AppPackageIndexEntry?
+HackerOs.Platform.Core.Apps.Packages.AppPackageIndex.Latest.get -> HackerOs.Platform.Core.Apps.Packages.AppPackageIndexEntry?
+HackerOs.Platform.Core.Apps.Packages.AppPackageIndex.Versions.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.Apps.Packages.AppPackageIndexEntry!>!
+HackerOs.Platform.Core.Apps.Packages.AppPackageIndex.Versions.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageIndexEntry
+HackerOs.Platform.Core.Apps.Packages.AppPackageIndexEntry.<Clone>$() -> HackerOs.Platform.Core.Apps.Packages.AppPackageIndexEntry!
+HackerOs.Platform.Core.Apps.Packages.AppPackageIndexEntry.AppPackageIndexEntry(HackerOs.App.Abstractions.SemanticVersion Version, string! Path, string! Sha256) -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageIndexEntry.Deconstruct(out HackerOs.App.Abstractions.SemanticVersion Version, out string! Path, out string! Sha256) -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageIndexEntry.Equals(HackerOs.Platform.Core.Apps.Packages.AppPackageIndexEntry? other) -> bool
+HackerOs.Platform.Core.Apps.Packages.AppPackageIndexEntry.Path.get -> string!
+HackerOs.Platform.Core.Apps.Packages.AppPackageIndexEntry.Path.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageIndexEntry.Sha256.get -> string!
+HackerOs.Platform.Core.Apps.Packages.AppPackageIndexEntry.Sha256.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageIndexEntry.Version.get -> HackerOs.App.Abstractions.SemanticVersion
+HackerOs.Platform.Core.Apps.Packages.AppPackageIndexEntry.Version.init -> void
 HackerOs.Platform.Core.Apps.Packages.AppPackageSource
 HackerOs.Platform.Core.Apps.Packages.AppPackageSource.<Clone>$() -> HackerOs.Platform.Core.Apps.Packages.AppPackageSource!
 HackerOs.Platform.Core.Apps.Packages.AppPackageSource.AppPackageSource(string! Owner, string! Repository, HackerOs.App.Abstractions.SemanticVersion? Version = null) -> void
@@ -38,7 +70,35 @@ HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.TrustedKeys.init -> void
 HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.Warnings.get -> System.Collections.Generic.IReadOnlyList<string!>!
 HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.Warnings.init -> void
 HackerOs.Platform.Core.Apps.Packages.AppSourcesConfigDocument
+HackerOs.Platform.Core.Apps.Packages.IRuntimeApiSurface
+HackerOs.Platform.Core.Apps.Packages.IRuntimeApiSurface.HasAssembly(string! assemblyName) -> bool
+HackerOs.Platform.Core.Apps.Packages.IRuntimeApiSurface.HasField(string! assemblyName, string! typeName, string! fieldName) -> bool
+HackerOs.Platform.Core.Apps.Packages.IRuntimeApiSurface.HasMethod(string! assemblyName, string! typeName, string! methodName, int genericArity, int parameterCount) -> bool
+HackerOs.Platform.Core.Apps.Packages.IRuntimeApiSurface.HasType(string! assemblyName, string! typeName) -> bool
+HackerOs.Platform.Core.Apps.Packages.LoadedRuntimeApiSurface
+HackerOs.Platform.Core.Apps.Packages.LoadedRuntimeApiSurface.HasAssembly(string! assemblyName) -> bool
+HackerOs.Platform.Core.Apps.Packages.LoadedRuntimeApiSurface.HasField(string! assemblyName, string! typeName, string! fieldName) -> bool
+HackerOs.Platform.Core.Apps.Packages.LoadedRuntimeApiSurface.HasMethod(string! assemblyName, string! typeName, string! methodName, int genericArity, int parameterCount) -> bool
+HackerOs.Platform.Core.Apps.Packages.LoadedRuntimeApiSurface.HasType(string! assemblyName, string! typeName) -> bool
+HackerOs.Platform.Core.Apps.Packages.MissingRuntimeApi
+HackerOs.Platform.Core.Apps.Packages.MissingRuntimeApi.<Clone>$() -> HackerOs.Platform.Core.Apps.Packages.MissingRuntimeApi!
+HackerOs.Platform.Core.Apps.Packages.MissingRuntimeApi.Assembly.get -> string!
+HackerOs.Platform.Core.Apps.Packages.MissingRuntimeApi.Assembly.init -> void
+HackerOs.Platform.Core.Apps.Packages.MissingRuntimeApi.Deconstruct(out string! Assembly, out string! Member) -> void
+HackerOs.Platform.Core.Apps.Packages.MissingRuntimeApi.Equals(HackerOs.Platform.Core.Apps.Packages.MissingRuntimeApi? other) -> bool
+HackerOs.Platform.Core.Apps.Packages.MissingRuntimeApi.Member.get -> string!
+HackerOs.Platform.Core.Apps.Packages.MissingRuntimeApi.Member.init -> void
+HackerOs.Platform.Core.Apps.Packages.MissingRuntimeApi.MissingRuntimeApi(string! Assembly, string! Member) -> void
 const HackerOs.Platform.Core.Apps.AppsConfigDocument.InstalledSection = "installed" -> string!
+const HackerOs.Platform.Core.Apps.Packages.AppPackage.AssetFolder = "wwwroot/" -> string!
+const HackerOs.Platform.Core.Apps.Packages.AppPackage.DescriptionFileName = "hackeros-package.json" -> string!
+const HackerOs.Platform.Core.Apps.Packages.AppPackage.Extension = ".hackapp" -> string!
+const HackerOs.Platform.Core.Apps.Packages.AppPackage.LibraryFolder = "lib/" -> string!
+const HackerOs.Platform.Core.Apps.Packages.AppPackage.ManifestFileName = "manifest.json" -> string!
+const HackerOs.Platform.Core.Apps.Packages.AppPackage.MaximumArchiveBytes = 67108864 -> long
+const HackerOs.Platform.Core.Apps.Packages.AppPackage.MaximumExtractedBytes = 134217728 -> long
+const HackerOs.Platform.Core.Apps.Packages.AppPackage.MaximumFiles = 2000 -> int
+const HackerOs.Platform.Core.Apps.Packages.AppPackageIndex.MaximumBytes = 1048576 -> int
 const HackerOs.Platform.Core.Apps.Packages.AppPackageSource.GitHubScheme = "github:" -> string!
 const HackerOs.Platform.Core.Apps.Packages.AppPackageSource.IndexFileName = "index.json" -> string!
 const HackerOs.Platform.Core.Apps.Packages.AppPackageSource.PackagesBranch = "hackeros-packages" -> string!
@@ -52,18 +112,37 @@ const HackerOs.Platform.Core.Apps.Packages.AppSourcesConfigDocument.TrustedSecti
 override HackerOs.Platform.Core.Apps.InstalledAppsReadResult.Equals(object? obj) -> bool
 override HackerOs.Platform.Core.Apps.InstalledAppsReadResult.GetHashCode() -> int
 override HackerOs.Platform.Core.Apps.InstalledAppsReadResult.ToString() -> string!
+override HackerOs.Platform.Core.Apps.Packages.AppPackageIndex.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.Apps.Packages.AppPackageIndex.GetHashCode() -> int
+override HackerOs.Platform.Core.Apps.Packages.AppPackageIndex.ToString() -> string!
+override HackerOs.Platform.Core.Apps.Packages.AppPackageIndexEntry.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.Apps.Packages.AppPackageIndexEntry.GetHashCode() -> int
+override HackerOs.Platform.Core.Apps.Packages.AppPackageIndexEntry.ToString() -> string!
 override HackerOs.Platform.Core.Apps.Packages.AppPackageSource.Equals(object? obj) -> bool
 override HackerOs.Platform.Core.Apps.Packages.AppPackageSource.GetHashCode() -> int
 override HackerOs.Platform.Core.Apps.Packages.AppPackageSource.ToString() -> string!
 override HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.Equals(object? obj) -> bool
 override HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.GetHashCode() -> int
 override HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.ToString() -> string!
+override HackerOs.Platform.Core.Apps.Packages.MissingRuntimeApi.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.Apps.Packages.MissingRuntimeApi.GetHashCode() -> int
+override HackerOs.Platform.Core.Apps.Packages.MissingRuntimeApi.ToString() -> string!
 static HackerOs.Platform.Core.Apps.AppsConfigDocument.ReadInstalled(string? content, HackerOs.App.Abstractions.VirtualPath path) -> HackerOs.Platform.Core.Apps.InstalledAppsReadResult!
 static HackerOs.Platform.Core.Apps.AppsConfigDocument.RemoveInstalled(string? content, string! appId) -> string!
 static HackerOs.Platform.Core.Apps.AppsConfigDocument.SetInstalled(string? content, string! appId, HackerOs.Platform.Core.Apps.Packages.AppPackageSource! source) -> string!
 static HackerOs.Platform.Core.Apps.InstalledAppsReadResult.Empty.get -> HackerOs.Platform.Core.Apps.InstalledAppsReadResult!
 static HackerOs.Platform.Core.Apps.InstalledAppsReadResult.operator !=(HackerOs.Platform.Core.Apps.InstalledAppsReadResult? left, HackerOs.Platform.Core.Apps.InstalledAppsReadResult? right) -> bool
 static HackerOs.Platform.Core.Apps.InstalledAppsReadResult.operator ==(HackerOs.Platform.Core.Apps.InstalledAppsReadResult? left, HackerOs.Platform.Core.Apps.InstalledAppsReadResult? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.AppPackage.GetDeclaredAssemblies(HackerOs.App.Abstractions.AppManifest! manifest) -> System.Collections.Generic.IReadOnlySet<string!>!
+static HackerOs.Platform.Core.Apps.Packages.AppPackage.IsSafeRelativePath(string! path) -> bool
+static HackerOs.Platform.Core.Apps.Packages.AppPackage.Read(byte[]! archive) -> HackerOs.Platform.Core.Apps.Packages.AppPackage!
+static HackerOs.Platform.Core.Apps.Packages.AppPackage.Sha256(byte[]! bytes) -> string!
+static HackerOs.Platform.Core.Apps.Packages.AppPackageApiCheck.FindMissing(System.Collections.Generic.IReadOnlyDictionary<string!, byte[]!>! assemblies, HackerOs.Platform.Core.Apps.Packages.IRuntimeApiSurface! runtime) -> System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.Apps.Packages.MissingRuntimeApi!>!
+static HackerOs.Platform.Core.Apps.Packages.AppPackageIndex.Parse(byte[]! bytes) -> HackerOs.Platform.Core.Apps.Packages.AppPackageIndex!
+static HackerOs.Platform.Core.Apps.Packages.AppPackageIndex.operator !=(HackerOs.Platform.Core.Apps.Packages.AppPackageIndex? left, HackerOs.Platform.Core.Apps.Packages.AppPackageIndex? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.AppPackageIndex.operator ==(HackerOs.Platform.Core.Apps.Packages.AppPackageIndex? left, HackerOs.Platform.Core.Apps.Packages.AppPackageIndex? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.AppPackageIndexEntry.operator !=(HackerOs.Platform.Core.Apps.Packages.AppPackageIndexEntry? left, HackerOs.Platform.Core.Apps.Packages.AppPackageIndexEntry? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.AppPackageIndexEntry.operator ==(HackerOs.Platform.Core.Apps.Packages.AppPackageIndexEntry? left, HackerOs.Platform.Core.Apps.Packages.AppPackageIndexEntry? right) -> bool
 static HackerOs.Platform.Core.Apps.Packages.AppPackageSource.TryParse(string? text, out HackerOs.Platform.Core.Apps.Packages.AppPackageSource? source) -> bool
 static HackerOs.Platform.Core.Apps.Packages.AppPackageSource.operator !=(HackerOs.Platform.Core.Apps.Packages.AppPackageSource? left, HackerOs.Platform.Core.Apps.Packages.AppPackageSource? right) -> bool
 static HackerOs.Platform.Core.Apps.Packages.AppPackageSource.operator ==(HackerOs.Platform.Core.Apps.Packages.AppPackageSource? left, HackerOs.Platform.Core.Apps.Packages.AppPackageSource? right) -> bool
@@ -71,3 +150,6 @@ static HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.operator !=(HackerO
 static HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.operator ==(HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig? left, HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig? right) -> bool
 static HackerOs.Platform.Core.Apps.Packages.AppSourcesConfigDocument.MachinePath.get -> HackerOs.App.Abstractions.VirtualPath
 static HackerOs.Platform.Core.Apps.Packages.AppSourcesConfigDocument.Read(string? content) -> HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig!
+static HackerOs.Platform.Core.Apps.Packages.LoadedRuntimeApiSurface.Instance.get -> HackerOs.Platform.Core.Apps.Packages.LoadedRuntimeApiSurface!
+static HackerOs.Platform.Core.Apps.Packages.MissingRuntimeApi.operator !=(HackerOs.Platform.Core.Apps.Packages.MissingRuntimeApi? left, HackerOs.Platform.Core.Apps.Packages.MissingRuntimeApi? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.MissingRuntimeApi.operator ==(HackerOs.Platform.Core.Apps.Packages.MissingRuntimeApi? left, HackerOs.Platform.Core.Apps.Packages.MissingRuntimeApi? right) -> bool
