@@ -176,5 +176,7 @@ prochain numéro libre est indiqué dans
 | [`0174-announce-a-new-version-to-open-sessions.md`](0174-announce-a-new-version-to-open-sessions.md) | ADR 0174 : `version.json` lu toutes les 5 minutes pour annoncer une nouvelle version aux sessions ouvertes |
 | [`0175-new-folder-in-the-choose-folder-dialog.md`](0175-new-folder-in-the-choose-folder-dialog.md) | ADR 0175 : bouton « Nouveau dossier » dans la barre des dialogues Choisir un dossier et Enregistrer ; activé pour « Open Folder » de Code Editor |
 | [`0176-app-repository-template.md`](0176-app-repository-template.md) | ADR 0176 : dépôt template d'apps généré par `hackeros-solution`, sous-module de l'OS (source en `Debug`, paquets nuget.org en `Release`), modèles visibles dans Visual Studio |
+| [`0178-extended-screens-in-display-surfaces.md`](0178-extended-screens-in-display-surfaces.md) | ADR 0178 : écrans étendus multi-moniteur, un écran par surface d'affichage, `DisplayId` et zone de travail par écran dans `WindowRuntime`, fenêtres déplacées par portail, service d'écrans (Chrome/Edge avec `window-management`, repli ailleurs) |
+| [`0179-per-screen-taskbars-and-other-screen-menus.md`](0179-per-screen-taskbars-and-other-screen-menus.md) | ADR 0179 : une barre des tâches par écran (réglage `primary-taskbar`), sous-menu « Autre écran » sur l'icône et le bouton Agrandir, voile d'identification, `screens.config` et Paramètres ▸ Écrans |
 
 Index du dossier parent : [`../README.md`](../README.md).
