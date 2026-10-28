@@ -182,6 +182,14 @@ public static class AppCapabilities
     public const string ShellContextMenu = "shell.context-menu";
 
     /// <summary>
+    /// List, open, restore, close and identify the secondary screens, and ask for the host's window
+    /// management permission, through <c>HackScreens</c> (ADR 0184), as Settings &gt; Screens does.
+    /// Normal: each call runs during the user's own click, and the windows of a closed screen come
+    /// back to screen 1.
+    /// </summary>
+    public const string ScreensManage = "screens.manage";
+
+    /// <summary>
     /// Exact classification of every catalog capability (ADR 0049 section 1). The catalog is the
     /// key set of this table, so a capability cannot be added without choosing its risk.
     /// </summary>
@@ -271,6 +279,7 @@ public static class AppCapabilities
             "Lire tout le trousseau",
             "Lire les mots de passe, jetons et clés que toutes vos applications ont enregistrés."),
         Normal(ShellContextMenu, "Ajouter des entrées aux menus des fichiers"),
+        Normal(ScreensManage, "Gérer les écrans"),
         Dangerous(
             UsersManage,
             "Gérer les mots de passe des comptes",

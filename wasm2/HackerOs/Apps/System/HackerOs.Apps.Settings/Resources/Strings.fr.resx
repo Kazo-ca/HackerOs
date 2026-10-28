@@ -1427,4 +1427,73 @@
   <data name="Screens.Error.CannotSave" xml:space="preserve">
     <value>Impossible d'enregistrer {0} : {1}</value>
   </data>
+  <data name="Screens.Open.Title" xml:space="preserve">
+    <value>Écrans ouverts</value>
+  </data>
+  <data name="Screens.Open.Size" xml:space="preserve">
+    <value>{0} × {1}</value>
+  </data>
+  <data name="Screens.Open.IsFullScreen" xml:space="preserve">
+    <value>Plein écran</value>
+  </data>
+  <data name="Screens.Open.ThisWindow" xml:space="preserve">
+    <value>Cette fenêtre</value>
+  </data>
+  <data name="Screens.Open.Close" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
+  <data name="Screens.Open.CloseLabel" xml:space="preserve">
+    <value>Fermer l'écran {0}</value>
+  </data>
+  <data name="Screens.Open.Identify" xml:space="preserve">
+    <value>Identifier</value>
+  </data>
+  <data name="Screens.Open.New" xml:space="preserve">
+    <value>Nouvel écran</value>
+  </data>
+  <data name="Screens.Open.Restore" xml:space="preserve">
+    <value>Restaurer les écrans ({0})</value>
+  </data>
+  <data name="Screens.Open.FullScreen" xml:space="preserve">
+    <value>Plein écran</value>
+  </data>
+  <data name="Screens.Open.LeaveFullScreen" xml:space="preserve">
+    <value>Quitter le plein écran</value>
+  </data>
+  <data name="Screens.Open.NoMonitorName" xml:space="preserve">
+    <value>Nom du moniteur indisponible</value>
+  </data>
+  <data name="Screens.Open.Blocked" xml:space="preserve">
+    <value>Le navigateur a bloqué la fenêtre. Autorisez les fenêtres surgissantes pour HackerOS, puis réessayez.</value>
+  </data>
+  <data name="Screens.Open.LimitReached" xml:space="preserve">
+    <value>Les écrans 2 à 9 sont tous ouverts.</value>
+  </data>
+  <data name="Screens.Open.Unavailable" xml:space="preserve">
+    <value>Cet hôte ne peut pas ouvrir d'écrans.</value>
+  </data>
+  <data name="Screens.Open.FullScreenRefused" xml:space="preserve">
+    <value>Le navigateur a refusé le plein écran.</value>
+  </data>
+  <data name="Screens.Permission.Granted" xml:space="preserve">
+    <value>Gestion des fenêtres autorisée : chaque nouvel écran va sur un moniteur libre.</value>
+  </data>
+  <data name="Screens.Permission.Denied" xml:space="preserve">
+    <value>Gestion des fenêtres refusée : placez vous-même la fenêtre de chaque écran. Changez-le dans les paramètres du site du navigateur.</value>
+  </data>
+  <data name="Screens.Permission.Prompt" xml:space="preserve">
+    <value>Gestion des fenêtres pas encore demandée : le navigateur la demande au prochain nouvel écran.</value>
+  </data>
+  <data name="Screens.Permission.Unsupported" xml:space="preserve">
+    <value>Ce navigateur ne place pas les fenêtres sur un moniteur : placez vous-même la fenêtre de chaque écran.</value>
+  </data>
+  <data name="Screens.Permission.Unknown" xml:space="preserve">
+    <value>Gestion des fenêtres : état inconnu.</value>
+  </data>
+  <data name="Screens.Permission.Ask" xml:space="preserve">
+    <value>Autoriser maintenant</value>
+  </data>
+  <data name="Screens.Error.Request" xml:space="preserve">
+    <value>La demande a échoué : {0}</value>
+  </data>
 </root>

@@ -1,1 +1,83 @@
 #nullable enable
+HackerOs.AppSdk.Administration.HackScreenInfo
+HackerOs.AppSdk.Administration.HackScreenInfo.<Clone>$() -> HackerOs.AppSdk.Administration.HackScreenInfo!
+HackerOs.AppSdk.Administration.HackScreenInfo.Deconstruct(out int Number, out string? MonitorName, out int Width, out int Height, out bool IsFullScreen) -> void
+HackerOs.AppSdk.Administration.HackScreenInfo.Equals(HackerOs.AppSdk.Administration.HackScreenInfo? other) -> bool
+HackerOs.AppSdk.Administration.HackScreenInfo.HackScreenInfo(int Number, string? MonitorName, int Width, int Height, bool IsFullScreen) -> void
+HackerOs.AppSdk.Administration.HackScreenInfo.Height.get -> int
+HackerOs.AppSdk.Administration.HackScreenInfo.Height.init -> void
+HackerOs.AppSdk.Administration.HackScreenInfo.IsFullScreen.get -> bool
+HackerOs.AppSdk.Administration.HackScreenInfo.IsFullScreen.init -> void
+HackerOs.AppSdk.Administration.HackScreenInfo.MonitorName.get -> string?
+HackerOs.AppSdk.Administration.HackScreenInfo.MonitorName.init -> void
+HackerOs.AppSdk.Administration.HackScreenInfo.Number.get -> int
+HackerOs.AppSdk.Administration.HackScreenInfo.Number.init -> void
+HackerOs.AppSdk.Administration.HackScreenInfo.Width.get -> int
+HackerOs.AppSdk.Administration.HackScreenInfo.Width.init -> void
+HackerOs.AppSdk.Administration.HackScreenOpenStatus
+HackerOs.AppSdk.Administration.HackScreenOpenStatus.Blocked = 1 -> HackerOs.AppSdk.Administration.HackScreenOpenStatus
+HackerOs.AppSdk.Administration.HackScreenOpenStatus.LimitReached = 3 -> HackerOs.AppSdk.Administration.HackScreenOpenStatus
+HackerOs.AppSdk.Administration.HackScreenOpenStatus.Opened = 0 -> HackerOs.AppSdk.Administration.HackScreenOpenStatus
+HackerOs.AppSdk.Administration.HackScreenOpenStatus.Unavailable = 2 -> HackerOs.AppSdk.Administration.HackScreenOpenStatus
+HackerOs.AppSdk.Administration.HackScreenPermission
+HackerOs.AppSdk.Administration.HackScreenPermission.Denied = 4 -> HackerOs.AppSdk.Administration.HackScreenPermission
+HackerOs.AppSdk.Administration.HackScreenPermission.Granted = 3 -> HackerOs.AppSdk.Administration.HackScreenPermission
+HackerOs.AppSdk.Administration.HackScreenPermission.Prompt = 2 -> HackerOs.AppSdk.Administration.HackScreenPermission
+HackerOs.AppSdk.Administration.HackScreenPermission.Unknown = 0 -> HackerOs.AppSdk.Administration.HackScreenPermission
+HackerOs.AppSdk.Administration.HackScreenPermission.Unsupported = 1 -> HackerOs.AppSdk.Administration.HackScreenPermission
+HackerOs.AppSdk.Administration.HackScreens
+HackerOs.AppSdk.Administration.HackScreensState
+HackerOs.AppSdk.Administration.HackScreensState.<Clone>$() -> HackerOs.AppSdk.Administration.HackScreensState!
+HackerOs.AppSdk.Administration.HackScreensState.CallerScreen.get -> int
+HackerOs.AppSdk.Administration.HackScreensState.CallerScreen.init -> void
+HackerOs.AppSdk.Administration.HackScreensState.CanOpenScreen.get -> bool
+HackerOs.AppSdk.Administration.HackScreensState.CanOpenScreen.init -> void
+HackerOs.AppSdk.Administration.HackScreensState.Deconstruct(out System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Administration.HackScreenInfo!>! Screens, out HackerOs.AppSdk.Administration.HackScreenPermission Permission, out bool CanOpenScreen, out System.Collections.Generic.IReadOnlyList<int>! RestorableScreens, out int CallerScreen) -> void
+HackerOs.AppSdk.Administration.HackScreensState.Equals(HackerOs.AppSdk.Administration.HackScreensState? other) -> bool
+HackerOs.AppSdk.Administration.HackScreensState.HackScreensState(System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Administration.HackScreenInfo!>! Screens, HackerOs.AppSdk.Administration.HackScreenPermission Permission, bool CanOpenScreen, System.Collections.Generic.IReadOnlyList<int>! RestorableScreens, int CallerScreen) -> void
+HackerOs.AppSdk.Administration.HackScreensState.Permission.get -> HackerOs.AppSdk.Administration.HackScreenPermission
+HackerOs.AppSdk.Administration.HackScreensState.Permission.init -> void
+HackerOs.AppSdk.Administration.HackScreensState.RestorableScreens.get -> System.Collections.Generic.IReadOnlyList<int>!
+HackerOs.AppSdk.Administration.HackScreensState.RestorableScreens.init -> void
+HackerOs.AppSdk.Administration.HackScreensState.Screens.get -> System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Administration.HackScreenInfo!>!
+HackerOs.AppSdk.Administration.HackScreensState.Screens.init -> void
+HackerOs.AppSdk.Administration.IAppScreensGateway
+HackerOs.AppSdk.Administration.IAppScreensGateway.CloseScreenAsync(int number, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+HackerOs.AppSdk.Administration.IAppScreensGateway.GetState() -> HackerOs.AppSdk.Administration.HackScreensState!
+HackerOs.AppSdk.Administration.IAppScreensGateway.IdentifyAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+HackerOs.AppSdk.Administration.IAppScreensGateway.IsSupported.get -> bool
+HackerOs.AppSdk.Administration.IAppScreensGateway.OpenScreenAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Administration.HackScreenOpenStatus>
+HackerOs.AppSdk.Administration.IAppScreensGateway.RequestPermissionAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Administration.HackScreenPermission>
+HackerOs.AppSdk.Administration.IAppScreensGateway.RestoreScreensAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<int>
+HackerOs.AppSdk.Administration.IAppScreensGateway.ToggleFullScreenAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+HackerOs.AppSdk.Administration.IAppScreensGateway.WatchAsync(System.Func<System.Threading.Tasks.ValueTask>! onChanged, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.IAsyncDisposable!>
+HackerOs.AppSdk.IAppExecutionContext.Screens.get -> HackerOs.AppSdk.Administration.IAppScreensGateway!
+override HackerOs.AppSdk.Administration.HackScreenInfo.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Administration.HackScreenInfo.GetHashCode() -> int
+override HackerOs.AppSdk.Administration.HackScreenInfo.ToString() -> string!
+override HackerOs.AppSdk.Administration.HackScreensState.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Administration.HackScreensState.GetHashCode() -> int
+override HackerOs.AppSdk.Administration.HackScreensState.ToString() -> string!
+static HackerOs.AppSdk.Administration.HackScreenInfo.operator !=(HackerOs.AppSdk.Administration.HackScreenInfo? left, HackerOs.AppSdk.Administration.HackScreenInfo? right) -> bool
+static HackerOs.AppSdk.Administration.HackScreenInfo.operator ==(HackerOs.AppSdk.Administration.HackScreenInfo? left, HackerOs.AppSdk.Administration.HackScreenInfo? right) -> bool
+static HackerOs.AppSdk.Administration.HackScreens.CloseScreenAsync(HackerOs.AppSdk.IAppExecutionContext! context, int number, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+static HackerOs.AppSdk.Administration.HackScreens.CloseScreenAsync(int number, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+static HackerOs.AppSdk.Administration.HackScreens.GetState() -> HackerOs.AppSdk.Administration.HackScreensState!
+static HackerOs.AppSdk.Administration.HackScreens.GetState(HackerOs.AppSdk.IAppExecutionContext! context) -> HackerOs.AppSdk.Administration.HackScreensState!
+static HackerOs.AppSdk.Administration.HackScreens.IdentifyAsync(HackerOs.AppSdk.IAppExecutionContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+static HackerOs.AppSdk.Administration.HackScreens.IdentifyAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+static HackerOs.AppSdk.Administration.HackScreens.IsSupported.get -> bool
+static HackerOs.AppSdk.Administration.HackScreens.IsSupportedFor(HackerOs.AppSdk.IAppExecutionContext! context) -> bool
+static HackerOs.AppSdk.Administration.HackScreens.OpenScreenAsync(HackerOs.AppSdk.IAppExecutionContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Administration.HackScreenOpenStatus>!
+static HackerOs.AppSdk.Administration.HackScreens.OpenScreenAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Administration.HackScreenOpenStatus>!
+static HackerOs.AppSdk.Administration.HackScreens.RequestPermissionAsync(HackerOs.AppSdk.IAppExecutionContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Administration.HackScreenPermission>!
+static HackerOs.AppSdk.Administration.HackScreens.RequestPermissionAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Administration.HackScreenPermission>!
+static HackerOs.AppSdk.Administration.HackScreens.RestoreScreensAsync(HackerOs.AppSdk.IAppExecutionContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<int>!
+static HackerOs.AppSdk.Administration.HackScreens.RestoreScreensAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<int>!
+static HackerOs.AppSdk.Administration.HackScreens.ToggleFullScreenAsync(HackerOs.AppSdk.IAppExecutionContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
+static HackerOs.AppSdk.Administration.HackScreens.ToggleFullScreenAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
+static HackerOs.AppSdk.Administration.HackScreens.WatchAsync(HackerOs.AppSdk.IAppExecutionContext! context, System.Func<System.Threading.Tasks.ValueTask>! onChanged, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.IAsyncDisposable!>!
+static HackerOs.AppSdk.Administration.HackScreens.WatchAsync(System.Func<System.Threading.Tasks.ValueTask>! onChanged, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.IAsyncDisposable!>!
+static HackerOs.AppSdk.Administration.HackScreensState.operator !=(HackerOs.AppSdk.Administration.HackScreensState? left, HackerOs.AppSdk.Administration.HackScreensState? right) -> bool
+static HackerOs.AppSdk.Administration.HackScreensState.operator ==(HackerOs.AppSdk.Administration.HackScreensState? left, HackerOs.AppSdk.Administration.HackScreensState? right) -> bool
+static HackerOs.AppSdk.UnsupportedAdministrationGateways.Screens.get -> HackerOs.AppSdk.Administration.IAppScreensGateway!

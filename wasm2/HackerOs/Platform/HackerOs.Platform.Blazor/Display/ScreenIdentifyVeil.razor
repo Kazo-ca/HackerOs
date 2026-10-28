@@ -4,13 +4,28 @@
 @using HackerOs.Platform.Blazor.Windows
 @implements IDisposable
 @inject ContextMenuService ContextMenus
+@inject IServiceProvider Services
 @*
     ADR 0179 §6: while « Écran N » of the « Autre écran » submenu is under the pointer or the
     keyboard focus, every screen shows its own number on a 33 % black veil; the square of screen N is
     highlighted. The screen that shows the menu hides its veil (CSS: its document holds the
     overlays). The veil never takes a click: the pointer passing over it removes it.
+    ADR 0184 §5: « Identifier » (HackScreens.IdentifyAsync) lights every screen's veil, this one
+    included, with no square highlighted, for a few seconds.
 *@
-@if (Target is { } target && !_dismissed)
+@if (IsIdentifying && !_dismissed)
+{
+    <div class="screen-identify-veil is-identify"
+         data-screen-identify="@Number"
+         aria-hidden="true"
+         @onpointerenter="Dismiss"
+         @onpointermove="Dismiss"
+         @onpointerdown="Dismiss"
+         @onpointerdown:preventDefault="true">
+        <div class="screen-identify-number">@Number</div>
+    </div>
+}
+else if (Target is { } target && !_dismissed)
 {
     <div class="screen-identify-veil @(target == Number ? "is-target" : null)"
          data-screen-identify="@Number"
@@ -26,6 +41,8 @@
 @code {
     private bool _dismissed;
     private int? _lastTarget;
+    private bool _lastIdentifying;
+    private ScreenService? _screens;
 
     /// <summary>Gets or sets the number of the screen this veil covers.</summary>
     [Parameter, EditorRequired]
@@ -43,8 +60,30 @@
             ? number
             : null;
 
+    private bool IsIdentifying => _screens?.IsIdentifying == true;
+
     /// <inheritdoc />
-    protected override void OnInitialized() => ContextMenus.HighlightChanged += OnHighlightChanged;
+    protected override void OnInitialized()
+    {
+        ContextMenus.HighlightChanged += OnHighlightChanged;
+        // A host without screens (tests, mobile) has no service: only the menu lights the veil.
+        _screens = (ScreenService?)Services.GetService(typeof(ScreenService));
+        if (_screens is not null)
+        {
+            _screens.Changed += OnScreensChanged;
+        }
+    }
+
+    private void OnScreensChanged()
+    {
+        bool identifying = IsIdentifying;
+        if (identifying != _lastIdentifying)
+        {
+            _lastIdentifying = identifying;
+            _dismissed = false;
+            _ = InvokeAsync(StateHasChanged);
+        }
+    }
 
     private void OnHighlightChanged()
     {
@@ -62,5 +101,12 @@
     private void Dismiss() => _dismissed = true;
 
     /// <inheritdoc />
-    public void Dispose() => ContextMenus.HighlightChanged -= OnHighlightChanged;
+    public void Dispose()
+    {
+        ContextMenus.HighlightChanged -= OnHighlightChanged;
+        if (_screens is not null)
+        {
+            _screens.Changed -= OnScreensChanged;
+        }
+    }
 }

@@ -353,7 +353,7 @@ public sealed class ScreenServiceTests(ITestOutputHelper output)
             await page.BringToFrontAsync();
             await E2ESupport.OpenAppAsync(page, "Settings", output);
             await page.Locator("#settings-nav-screens").ClickAsync();
-            ILocator list = page.Locator(".scr-list");
+            ILocator list = page.Locator(".scr-list[aria-labelledby='scr-list-title']");
             await Assertions.Expect(list).ToContainTextAsync("This browser tab", new() { Timeout = 15000 });
             await Assertions.Expect(list.Locator(".scr-item", new() { HasText = "Screen 2" })).ToContainTextAsync("Open, or offered at the next sign-in");
 
@@ -370,6 +370,60 @@ public sealed class ScreenServiceTests(ITestOutputHelper output)
             await page.GetByRole(AriaRole.Radio, new() { Name = "Every window of every screen" }).ClickAsync();
             await Assertions.Expect(primaryItems).ToHaveCountAsync(2, new() { Timeout = 15000 });
             output.WriteLine("[test] and back to every window.");
+            Assert.Empty(errors);
+        }
+        finally
+        {
+            E2ESupport.StopProcess(server);
+        }
+    }
+
+    [Fact]
+    public async Task Settings_screens_opens_identifies_and_closes_a_screen()
+    {
+        string solutionDirectory = E2ESupport.FindSolutionDirectory();
+        int port = E2ESupport.ReservePort();
+        string address = $"http://127.0.0.1:{port}";
+        using Process server = E2ESupport.StartHarness(solutionDirectory, address, testDemo: false, output);
+
+        try
+        {
+            using IPlaywright playwright = await Playwright.CreateAsync();
+            await using IBrowser browser = await ChromiumLauncher.LaunchAsync(playwright, new BrowserTypeLaunchOptions { Headless = true });
+            await using IBrowserContext context = await browser.NewContextAsync();
+            IPage page = await context.NewPageAsync();
+            List<string> errors = E2ESupport.AttachDiagnostics(page, output);
+
+            await E2ESupport.NavigateWhenReadyAsync(page, address, output);
+            await E2ESupport.CreateLocalProfileAndReachDesktopAsync(page, output);
+            await E2ESupport.OpenAppAsync(page, "Settings", output);
+            await page.Locator("#settings-nav-screens").ClickAsync();
+
+            // ADR 0184: HackScreens lists screen 1, the screen of this window.
+            ILocator open = page.Locator(".scr-panel", new() { Has = page.Locator("#scr-open-title") });
+            await Assertions.Expect(open.Locator(".scr-item[data-screen='1']")).ToContainTextAsync("This window", new() { Timeout = 15000 });
+            await Assertions.Expect(open.Locator(".scr-item")).ToHaveCountAsync(1);
+
+            // « New screen » opens screen 2 during the click; the list follows at once.
+            IPage screen = await page.RunAndWaitForPopupAsync(() => page.Locator("#scr-new").ClickAsync());
+            E2ESupport.AttachDiagnostics(screen, output);
+            await Assertions.Expect(screen.Locator(".secondary-screen[data-display='2']")).ToBeVisibleAsync(new() { Timeout = 20000 });
+            await Assertions.Expect(open.Locator(".scr-item[data-screen='2']")).ToBeVisibleAsync(new() { Timeout = 10000 });
+            output.WriteLine("[test] New screen opened screen 2 from Settings.");
+
+            // « Identify » shows each screen its number for a few seconds.
+            await page.Locator("#scr-identify").ClickAsync();
+            ILocator veil = screen.Locator(".screen-identify-veil.is-identify[data-screen-identify='2']");
+            await Assertions.Expect(veil).ToBeVisibleAsync(new() { Timeout = 5000 });
+            await Assertions.Expect(veil.Locator(".screen-identify-number")).ToHaveTextAsync("2");
+            await Assertions.Expect(veil).ToHaveCountAsync(0, new() { Timeout = 10000 });
+            output.WriteLine("[test] Identify lit screen 2's number, then it went away.");
+
+            // « Close » closes screen 2 and the list drops it.
+            await page.GetByRole(AriaRole.Button, new() { Name = "Close screen 2" }).ClickAsync();
+            await Assertions.Expect(open.Locator(".scr-item[data-screen='2']")).ToHaveCountAsync(0, new() { Timeout = 10000 });
+            await WaitUntilClosedAsync(screen);
+            output.WriteLine("[test] Close closed screen 2.");
             Assert.Empty(errors);
         }
         finally
@@ -485,6 +539,18 @@ public sealed class ScreenServiceTests(ITestOutputHelper output)
         await page.Keyboard.TypeAsync(command);
         await page.Keyboard.PressAsync("Enter");
         await WaitForTextAsync(rows, text => Count(text, ":~$") > prompts, $"the prompt after '{command}'");
+    }
+
+    /// <summary>Waits for the window of a screen to close.</summary>
+    private static async Task WaitUntilClosedAsync(IPage screen)
+    {
+        DateTime deadline = DateTime.UtcNow.AddSeconds(10);
+        while (!screen.IsClosed && DateTime.UtcNow < deadline)
+        {
+            await Task.Delay(100);
+        }
+
+        Assert.True(screen.IsClosed, "The window of screen 2 stayed open.");
     }
 
     private static int Count(string text, string part)

@@ -126,6 +126,7 @@ export async function start(ref) {
     if (!started) {
         started = true;
         document.addEventListener("visibilitychange", () => call("OnPrimaryVisibility", document.visibilityState === "hidden"));
+        document.addEventListener("fullscreenchange", () => call("OnPrimaryFullScreen", Boolean(document.fullscreenElement)));
         try {
             const status = await navigator.permissions.query({ name: "window-management" });
             status.addEventListener("change", reportPermission);
@@ -229,15 +230,24 @@ export function forget(id) {
 }
 
 /**
- * Enters or leaves full screen in a screen's window. Called from a click in that window: the
- * browser needs the gesture in the window that goes full screen.
+ * Asks for the "window-management" permission (Settings > Screens, ADR 0184), during a click;
+ * returns the state after the user answered.
+ */
+export async function requestPermission() {
+    await requestDetails();
+    return await permissionState();
+}
+
+/**
+ * Enters or leaves full screen in a screen's window, or in the main tab when id is null. Called
+ * from a click in that window: the browser needs the gesture in the window that goes full screen.
  */
 export async function toggleFullScreen(id) {
-    const entry = tracked.get(id);
-    if (!entry) {
+    const entry = id ? tracked.get(id) : null;
+    if (id && !entry) {
         return false;
     }
-    const doc = entry.window.document;
+    const doc = entry ? entry.window.document : document;
     try {
         if (doc.fullscreenElement) {
             await doc.exitFullscreen();

@@ -66,6 +66,7 @@ public sealed class AppCapabilitiesTests
         { AppCapabilities.NetworkListenPrivileged, CapabilityRisk.Dangerous },
         { AppCapabilities.ShellControl, CapabilityRisk.Normal },
         { AppCapabilities.ShellContextMenu, CapabilityRisk.Normal },
+        { AppCapabilities.ScreensManage, CapabilityRisk.Normal },
         { AppCapabilities.PermissionsManage, CapabilityRisk.Dangerous },
         { AppCapabilities.ServerConnectionManage, CapabilityRisk.Dangerous },
         { AppCapabilities.SystemPower, CapabilityRisk.Dangerous },

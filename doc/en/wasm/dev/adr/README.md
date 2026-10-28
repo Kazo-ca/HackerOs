@@ -181,5 +181,6 @@ next free number is given in
 | [`0179-per-screen-taskbars-and-other-screen-menus.md`](0179-per-screen-taskbars-and-other-screen-menus.md) | ADR 0179: one taskbar per screen (`primary-taskbar` setting), "Other screen" submenu on the icon and the Maximize button, identification veil, `screens.config` and Settings ▸ Screens |
 | [`0180-screen-service-placement-and-memory.md`](0180-screen-service-placement-and-memory.md) | ADR 0180: screen service, monitor chosen before `window.open`, move after the permission, place read every second, `[screens]` with `open` and one place per screen, "Restore screens" |
 | [`0183-drag-a-window-between-screens.md`](0183-drag-a-window-between-screens.md) | ADR 0183: drag a window from one screen to another by its title bar, screen under the pointer found from its position on the physical desktop, outline on the target screen, screen changed on release |
+| [`0184-screens-administration-sdk.md`](0184-screens-administration-sdk.md) | ADR 0184: system screens API `HackScreens` for Settings ▸ Screens (normal capability `screens.manage`), list, open, restore, close, identify, full screen, permission |
 
 Parent folder index: [`../README.md`](../README.md).

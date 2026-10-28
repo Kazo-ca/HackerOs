@@ -44,3 +44,15 @@ static HackerOs.Platform.Core.Shell.ScreensSettingsDocuments.PrimaryTaskbarQuali
 static HackerOs.Platform.Core.Shell.ScreensSettingsDocuments.ReadPrimaryTaskbar(HackerOs.Simulation.Abstractions.Settings.LayeredConfigSnapshot! snapshot) -> HackerOs.Platform.Core.Shell.PrimaryTaskbarMode
 HackerOs.Platform.Core.Shell.WindowKeyboardAction.MoveToNextScreen = 14 -> HackerOs.Platform.Core.Shell.WindowKeyboardAction
 HackerOs.Platform.Core.Shell.WindowKeyboardAction.MoveToPreviousScreen = 13 -> HackerOs.Platform.Core.Shell.WindowKeyboardAction
+HackerOs.Platform.Core.Administration.IScreenControl
+HackerOs.Platform.Core.Administration.IScreenControl.Changed -> System.Action?
+HackerOs.Platform.Core.Administration.IScreenControl.CloseScreenAsync(int number) -> System.Threading.Tasks.Task!
+HackerOs.Platform.Core.Administration.IScreenControl.GetState(System.Guid appInstanceId) -> HackerOs.AppSdk.Administration.HackScreensState!
+HackerOs.Platform.Core.Administration.IScreenControl.IdentifyAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task!
+HackerOs.Platform.Core.Administration.IScreenControl.OpenScreenAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Administration.HackScreenOpenStatus>!
+HackerOs.Platform.Core.Administration.IScreenControl.RequestPermissionAsync() -> System.Threading.Tasks.Task<HackerOs.AppSdk.Administration.HackScreenPermission>!
+HackerOs.Platform.Core.Administration.IScreenControl.RestoreScreensAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<int>!
+HackerOs.Platform.Core.Administration.IScreenControl.ToggleFullScreenAsync(System.Guid appInstanceId) -> System.Threading.Tasks.Task<bool>!
+HackerOs.Platform.Core.Administration.SystemAdministrationGatewayServices.Screens.get -> System.Func<HackerOs.Platform.Core.Administration.IScreenControl!>?
+HackerOs.Platform.Core.Administration.SystemAdministrationGatewayServices.Screens.init -> void
+HackerOs.Platform.Core.Administration.IScreenControl.IsAvailable.get -> bool

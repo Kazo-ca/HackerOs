@@ -43,6 +43,7 @@ classification.
 | `network.listen` | normal (listen on a port that is not a URL of its manifest, [`listening-ports-and-dns.md`](listening-ports-and-dns.md)) |
 | `network.listen.privileged` | **dangerous** (listen on a port below 1024, like `CAP_NET_BIND_SERVICE`) |
 | `shell.control` | normal (ADR 0051: acts only on the shell of the user who typed the command, see [`shell-commands.md`](../dev/shell-commands.md)) |
+| `screens.manage` | normal (ADR 0184: list, open, restore, close and identify screens through `HackScreens`, as Settings ▸ Screens does; each call comes from a user click) |
 | `shell.context-menu` | normal (ADR 0151 §6: add entries to file menus; without it, the generator produces `HOSAPP0027` and the OS ignores the entries, see [`context-menu.md`](context-menu.md#app-entries-in-the-file-menus-work-item-4)) |
 | `permissions.manage` | **dangerous** (`HackPermissionAdministration`, ADR 0056 §9; declared by Settings) |
 | `server.connection.manage` | **dangerous** (`HackServerConnection`, ADR 0056 §10; declared by Settings) |
