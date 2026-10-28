@@ -1175,10 +1175,6 @@ public static class EcosystemServiceCollectionExtensions
         return result.Catalog ?? throw new InvalidOperationException("The empty app catalog must be valid.");
     }
 
-    /// <summary>
-    /// The CPU measurement as <c>/proc</c> reads it: with Web Workers, their processes' times come from
-    /// their heartbeats (ADR 0070, section 5); otherwise the main thread's accountant.
-    /// </summary>
     /// <summary>The network drive service, resolved once, returned by the drive gateway (ADR 0181).</summary>
     private static Func<NetworkDriveService?> NetworkDrivesOf(IServiceProvider provider)
     {
@@ -1186,6 +1182,10 @@ public static class EcosystemServiceCollectionExtensions
         return () => drives;
     }
 
+    /// <summary>
+    /// The CPU measurement as <c>/proc</c> reads it: with Web Workers, their processes' times come from
+    /// their heartbeats (ADR 0070, section 5); otherwise the main thread's accountant.
+    /// </summary>
     private static ICpuTimeAccountant CpuAccountant(IServiceProvider provider) =>
         (ICpuTimeAccountant?)provider.GetService<WorkerAwareCpuTimeAccountant>() ?? provider.GetRequiredService<ICpuTimeAccountant>();
 
