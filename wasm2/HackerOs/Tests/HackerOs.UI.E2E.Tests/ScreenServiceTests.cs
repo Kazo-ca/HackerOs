@@ -353,7 +353,7 @@ public sealed class ScreenServiceTests(ITestOutputHelper output)
             await page.BringToFrontAsync();
             await E2ESupport.OpenAppAsync(page, "Settings", output);
             await page.Locator("#settings-nav-screens").ClickAsync();
-            ILocator list = page.Locator(".scr-list");
+            ILocator list = page.Locator(".scr-list[aria-labelledby='scr-list-title']");
             await Assertions.Expect(list).ToContainTextAsync("This browser tab", new() { Timeout = 15000 });
             await Assertions.Expect(list.Locator(".scr-item", new() { HasText = "Screen 2" })).ToContainTextAsync("Open, or offered at the next sign-in");
 
