@@ -1,3 +1,63 @@
 #nullable enable
 HackerOs.Platform.Blazor.Dialogs.FileDialogBrowser.FileControlChanged.get -> Microsoft.AspNetCore.Components.EventCallback<bool>
 HackerOs.Platform.Blazor.Dialogs.FileDialogBrowser.FileControlChanged.set -> void
+HackerOs.Platform.Blazor.Display.ScreenLayer
+HackerOs.Platform.Blazor.Display.ScreenLayer.ScreenLayer() -> void
+HackerOs.Platform.Blazor.Display.ScreenOpenResult
+HackerOs.Platform.Blazor.Display.ScreenOpenResult.<Clone>$() -> HackerOs.Platform.Blazor.Display.ScreenOpenResult!
+HackerOs.Platform.Blazor.Display.ScreenOpenResult.Deconstruct(out HackerOs.Platform.Blazor.Display.ScreenOpenStatus Status, out HackerOs.Platform.Blazor.Display.SecondaryScreen? Screen) -> void
+HackerOs.Platform.Blazor.Display.ScreenOpenResult.Equals(HackerOs.Platform.Blazor.Display.ScreenOpenResult? other) -> bool
+HackerOs.Platform.Blazor.Display.ScreenOpenResult.Screen.get -> HackerOs.Platform.Blazor.Display.SecondaryScreen?
+HackerOs.Platform.Blazor.Display.ScreenOpenResult.Screen.init -> void
+HackerOs.Platform.Blazor.Display.ScreenOpenResult.ScreenOpenResult(HackerOs.Platform.Blazor.Display.ScreenOpenStatus Status, HackerOs.Platform.Blazor.Display.SecondaryScreen? Screen) -> void
+HackerOs.Platform.Blazor.Display.ScreenOpenResult.Status.get -> HackerOs.Platform.Blazor.Display.ScreenOpenStatus
+HackerOs.Platform.Blazor.Display.ScreenOpenResult.Status.init -> void
+HackerOs.Platform.Blazor.Display.ScreenOpenStatus
+HackerOs.Platform.Blazor.Display.ScreenOpenStatus.Blocked = 1 -> HackerOs.Platform.Blazor.Display.ScreenOpenStatus
+HackerOs.Platform.Blazor.Display.ScreenOpenStatus.LimitReached = 3 -> HackerOs.Platform.Blazor.Display.ScreenOpenStatus
+HackerOs.Platform.Blazor.Display.ScreenOpenStatus.Opened = 0 -> HackerOs.Platform.Blazor.Display.ScreenOpenStatus
+HackerOs.Platform.Blazor.Display.ScreenOpenStatus.Unavailable = 2 -> HackerOs.Platform.Blazor.Display.ScreenOpenStatus
+HackerOs.Platform.Blazor.Display.ScreenPermission
+HackerOs.Platform.Blazor.Display.ScreenPermission.Denied = 4 -> HackerOs.Platform.Blazor.Display.ScreenPermission
+HackerOs.Platform.Blazor.Display.ScreenPermission.Granted = 3 -> HackerOs.Platform.Blazor.Display.ScreenPermission
+HackerOs.Platform.Blazor.Display.ScreenPermission.Prompt = 2 -> HackerOs.Platform.Blazor.Display.ScreenPermission
+HackerOs.Platform.Blazor.Display.ScreenPermission.Unknown = 0 -> HackerOs.Platform.Blazor.Display.ScreenPermission
+HackerOs.Platform.Blazor.Display.ScreenPermission.Unsupported = 1 -> HackerOs.Platform.Blazor.Display.ScreenPermission
+HackerOs.Platform.Blazor.Display.ScreenService
+HackerOs.Platform.Blazor.Display.ScreenService.CanOpenScreen.get -> bool
+HackerOs.Platform.Blazor.Display.ScreenService.Changed -> System.Action?
+HackerOs.Platform.Blazor.Display.ScreenService.CloseScreenAsync(HackerOs.Windowing.Abstractions.DisplayId id) -> System.Threading.Tasks.Task!
+HackerOs.Platform.Blazor.Display.ScreenService.DismissRestoreAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+HackerOs.Platform.Blazor.Display.ScreenService.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Platform.Blazor.Display.ScreenService.IsPrimaryHidden.get -> bool
+HackerOs.Platform.Blazor.Display.ScreenService.OnPermission(string! state) -> void
+HackerOs.Platform.Blazor.Display.ScreenService.OnPrimaryVisibility(bool hidden) -> void
+HackerOs.Platform.Blazor.Display.ScreenService.OnScreenFullScreen(string! surfaceId, bool fullScreen) -> void
+HackerOs.Platform.Blazor.Display.ScreenService.OnScreenGeometry(string! surfaceId, int left, int top, int width, int height) -> void
+HackerOs.Platform.Blazor.Display.ScreenService.OnScreenMonitorLost(string! surfaceId) -> System.Threading.Tasks.Task!
+HackerOs.Platform.Blazor.Display.ScreenService.OnScreenPlaced(string! surfaceId, string! label) -> void
+HackerOs.Platform.Blazor.Display.ScreenService.OpenScreenAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.Platform.Blazor.Display.ScreenOpenResult!>!
+HackerOs.Platform.Blazor.Display.ScreenService.Permission.get -> HackerOs.Platform.Blazor.Display.ScreenPermission
+HackerOs.Platform.Blazor.Display.ScreenService.RestorableScreens.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Windowing.Abstractions.DisplayId>!
+HackerOs.Platform.Blazor.Display.ScreenService.RestoreScreensAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<int>!
+HackerOs.Platform.Blazor.Display.ScreenService.ScreenService(HackerOs.Platform.Blazor.Display.DisplaySurfaceService! surfaces, Microsoft.JSInterop.IJSRuntime! jsRuntime, HackerOs.Windowing.Core.WindowRuntime! runtime, HackerOs.Platform.Core.Settings.IOsSettingsService? settings = null, Microsoft.Extensions.Logging.ILogger<HackerOs.Platform.Blazor.Display.ScreenService!>? logger = null, HackerOs.Platform.Core.Globalization.SessionLocaleService? locale = null) -> void
+HackerOs.Platform.Blazor.Display.ScreenService.Screens.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Blazor.Display.SecondaryScreen!>!
+HackerOs.Platform.Blazor.Display.ScreenService.StartAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+HackerOs.Platform.Blazor.Display.ScreenService.ToggleFullScreenAsync(HackerOs.Windowing.Abstractions.DisplayId id) -> System.Threading.Tasks.Task<bool>!
+HackerOs.Platform.Blazor.Display.SecondaryScreen
+HackerOs.Platform.Blazor.Display.SecondaryScreen.Geometry.get -> HackerOs.Platform.Core.Shell.ScreenGeometry?
+HackerOs.Platform.Blazor.Display.SecondaryScreen.Id.get -> HackerOs.Windowing.Abstractions.DisplayId
+HackerOs.Platform.Blazor.Display.SecondaryScreen.IsFullScreen.get -> bool
+HackerOs.Platform.Blazor.Display.SecondaryScreen.MonitorLabel.get -> string?
+HackerOs.Platform.Blazor.Display.SecondaryScreen.Surface.get -> HackerOs.AppSdk.Blazor.Display.IDisplaySurface!
+override HackerOs.Platform.Blazor.Display.ScreenOpenResult.Equals(object? obj) -> bool
+override HackerOs.Platform.Blazor.Display.ScreenOpenResult.GetHashCode() -> int
+override HackerOs.Platform.Blazor.Display.ScreenOpenResult.ToString() -> string!
+static HackerOs.Platform.Blazor.Display.ScreenOpenResult.operator !=(HackerOs.Platform.Blazor.Display.ScreenOpenResult? left, HackerOs.Platform.Blazor.Display.ScreenOpenResult? right) -> bool
+static HackerOs.Platform.Blazor.Display.ScreenOpenResult.operator ==(HackerOs.Platform.Blazor.Display.ScreenOpenResult? left, HackerOs.Platform.Blazor.Display.ScreenOpenResult? right) -> bool
+~override HackerOs.Platform.Blazor.Display.ScreenLayer.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+HackerOs.Platform.Blazor.Display.ScreenLayer.Dispose() -> void
+HackerOs.Platform.Blazor.Display.ScreenLayer.ScreenContent.get -> Microsoft.AspNetCore.Components.RenderFragment<HackerOs.Platform.Blazor.Display.SecondaryScreen!>?
+HackerOs.Platform.Blazor.Display.ScreenLayer.ScreenContent.set -> void
+override HackerOs.Platform.Blazor.Display.ScreenLayer.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+override HackerOs.Platform.Blazor.Display.ScreenLayer.OnInitialized() -> void

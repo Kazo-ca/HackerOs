@@ -1,0 +1,108 @@
+/* ADR 0178 §4, ADR 0180: a secondary screen fills its window; the offer to restore the screens of
+   the last session sits above the taskbar of screen 1. */
+.secondary-screen {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    background: var(--hos-desktop-background, var(--hos-bg-base, #101417));
+    color: var(--hos-text-primary, #f4f7f8);
+    font-family: var(--hos-font-ui, system-ui, sans-serif);
+}
+
+.secondary-screen-desktop {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+}
+
+.secondary-screen-number {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-size: clamp(4rem, 18vmin, 12rem);
+    font-weight: 700;
+    opacity: 0.12;
+    user-select: none;
+}
+
+.secondary-screen-banner {
+    position: absolute;
+    top: 0.75rem;
+    left: 50%;
+    z-index: 9000;
+    max-width: min(40rem, calc(100% - 6rem));
+    padding: 0.6rem 1rem;
+    transform: translateX(-50%);
+    border: 1px solid var(--hos-warning, #f2c66d);
+    border-radius: var(--hos-radius-md, 0.45rem);
+    background: color-mix(in srgb, var(--hos-warning, #f2c66d) 18%, var(--hos-bg-elevated, #1b252a));
+    text-align: center;
+}
+
+.secondary-screen-fullscreen {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    z-index: 9001;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 1px solid var(--hos-border, #2c3a41);
+    border-radius: var(--hos-radius-md, 0.45rem);
+    background: var(--hos-bg-elevated, #1b252a);
+    color: inherit;
+    font-size: 1.1rem;
+    cursor: pointer;
+    opacity: 0.45;
+}
+
+.secondary-screen-fullscreen:hover,
+.secondary-screen-fullscreen:focus-visible {
+    opacity: 1;
+}
+
+.screens-restore {
+    position: absolute;
+    right: 1rem;
+    bottom: calc(var(--hos-taskbar-height, 2.75rem) + 1rem);
+    z-index: 5000;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    max-width: min(24rem, calc(100vw - 2rem));
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--hos-border, #2c3a41);
+    border-radius: var(--hos-radius-md, 0.45rem);
+    background: var(--hos-bg-elevated, #1b252a);
+    color: var(--hos-text-primary, #f4f7f8);
+    box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 35%);
+}
+
+.screens-restore-message {
+    margin: 0;
+}
+
+.screens-restore-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.screens-restore-actions button {
+    padding: 0.35rem 0.8rem;
+    border: 1px solid var(--hos-border, #2c3a41);
+    border-radius: var(--hos-radius-sm, 0.3rem);
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+}
+
+.screens-restore-actions .screens-restore-primary {
+    border-color: var(--hos-accent, #4fd1c5);
+    background: var(--hos-accent, #4fd1c5);
+    color: var(--hos-text-on-accent, #0b0f14);
+}

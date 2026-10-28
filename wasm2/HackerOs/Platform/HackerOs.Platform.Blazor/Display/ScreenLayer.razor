@@ -1,0 +1,82 @@
+@namespace HackerOs.Platform.Blazor.Display
+@using HackerOs.AppSdk.Blazor.Display
+@using Microsoft.Extensions.Localization
+@implements IDisposable
+@inject ScreenService ScreenService
+@inject IStringLocalizer<Strings> L
+@*
+    ADR 0178 §4, ADR 0180: the secondary screens and the « Restaurer les écrans » offer. Each screen
+    is a display surface; its content is rendered here and moved into the screen's window. Until
+    each screen has its own desktop (chantier 4), a screen shows its number on the desktop colour.
+*@
+
+@foreach (SecondaryScreen screen in ScreenService.Screens)
+{
+    <DisplaySurfaceContent @key="screen.Surface.Id" Surface="screen.Surface">
+        <div class="secondary-screen" data-display="@screen.Id.Number">
+            <div class="secondary-screen-desktop">
+                @if (ScreenContent is not null)
+                {
+                    @ScreenContent(screen)
+                }
+                else
+                {
+                    <div class="secondary-screen-number" aria-hidden="true">@screen.Id.Number</div>
+                }
+            </div>
+
+            @if (ScreenService.IsPrimaryHidden)
+            {
+                <div class="secondary-screen-banner" role="status">@L["Screens.PrimaryHidden"]</div>
+            }
+
+            <button type="button"
+                    class="secondary-screen-fullscreen"
+                    title="@(screen.IsFullScreen ? L["Screens.ExitFullScreen"] : L["Screens.FullScreen"])"
+                    aria-label="@(screen.IsFullScreen ? L["Screens.ExitFullScreen"] : L["Screens.FullScreen"])"
+                    @onclick="() => ToggleFullScreenAsync(screen)">
+                @(screen.IsFullScreen ? "⤡" : "⤢")
+            </button>
+        </div>
+    </DisplaySurfaceContent>
+}
+
+@if (ScreenService.RestorableScreens.Count > 0)
+{
+    <aside class="screens-restore" role="region" aria-label="@L["Screens.Restore.Action"]">
+        <p class="screens-restore-message">@L["Screens.Restore.Message"]</p>
+        <div class="screens-restore-actions">
+            <button type="button" id="screens-restore" class="screens-restore-primary" @onclick="RestoreAsync">@L["Screens.Restore.Action"]</button>
+            <button type="button" id="screens-restore-dismiss" @onclick="DismissAsync">@L["Screens.Restore.Dismiss"]</button>
+        </div>
+    </aside>
+}
+
+@code {
+    /// <summary>What a secondary screen shows (its desktop, chantier 4); its number without it.</summary>
+    [Parameter]
+    public RenderFragment<SecondaryScreen>? ScreenContent { get; set; }
+
+    /// <inheritdoc />
+    protected override void OnInitialized() => ScreenService.Changed += OnChanged;
+
+    /// <inheritdoc />
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await ScreenService.StartAsync();
+        }
+    }
+
+    private void OnChanged() => _ = InvokeAsync(StateHasChanged);
+
+    private Task ToggleFullScreenAsync(SecondaryScreen screen) => ScreenService.ToggleFullScreenAsync(screen.Id);
+
+    private Task RestoreAsync() => ScreenService.RestoreScreensAsync();
+
+    private Task DismissAsync() => ScreenService.DismissRestoreAsync();
+
+    /// <inheritdoc />
+    public void Dispose() => ScreenService.Changed -= OnChanged;
+}

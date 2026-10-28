@@ -88,8 +88,12 @@ Plan: [`multi-monitor-plan.md`](../plans/multi-monitor-plan.md).
    [screens]
    ; screens of the last session, for "Restore screens"
    ; and the remembered position in fallback mode (ADR 0178 §4)
+   open=2
    2=1920,0,1920,1080
    ```
+
+   The `open` key (screens to reopen) and the meaning of the numbered lines (place
+   kept even after closing) are refined by [ADR 0180](0180-screen-service-placement-and-memory.md).
 
    **Settings ▸ Screens**: list of open screens (number, and monitor name when
    the browser gives it), Identify, New screen, Restore screens and Full screen

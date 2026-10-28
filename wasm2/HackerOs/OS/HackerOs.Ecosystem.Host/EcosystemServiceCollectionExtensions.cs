@@ -914,11 +914,20 @@ public static class EcosystemServiceCollectionExtensions
             provider.GetRequiredService<IFileDialogService>()));
         services.AddScoped<IDialogService>(provider => provider.GetRequiredService<DialogCoordinator>());
         // Detached display surfaces (ADR 0078): windows of the host browser driven by this instance.
-        services.AddScoped<IDisplaySurfaceService>(provider => new DisplaySurfaceService(
+        services.AddScoped(provider => new DisplaySurfaceService(
             provider.GetRequiredService<IJSRuntime>(),
             provider.GetRequiredService<INotificationQueue>(),
             provider.GetRequiredService<ISessionService>(),
             provider.GetRequiredService<ISimulationClock>(),
+            provider.GetRequiredService<HackerOs.Platform.Core.Globalization.SessionLocaleService>()));
+        services.AddScoped<IDisplaySurfaceService>(provider => provider.GetRequiredService<DisplaySurfaceService>());
+        // ADR 0178 §4: the secondary screens, each a display surface registered in WindowRuntime.
+        services.AddScoped(provider => new ScreenService(
+            provider.GetRequiredService<DisplaySurfaceService>(),
+            provider.GetRequiredService<IJSRuntime>(),
+            provider.GetRequiredService<WindowRuntime>(),
+            provider.GetRequiredService<IOsSettingsService>(),
+            provider.GetService<ILogger<ScreenService>>(),
             provider.GetRequiredService<HackerOs.Platform.Core.Globalization.SessionLocaleService>()));
         // ADR 0150: the OS context menu. The platform provides the contract hackeros.context-menu
         // itself; the service holds each window's menus and the one menu open in the OS.

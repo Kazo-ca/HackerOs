@@ -6,7 +6,8 @@
 multi-monitor feature"). ADRs [0178](../adr/0178-extended-screens-in-display-surfaces.md)
 and [0179](../adr/0179-per-screen-taskbars-and-other-screen-menus.md) are written
 before the code (work item 0). Work item 1 done: screens in the window manager
-([`window-runtime-displays.md`](../window-runtime-displays.md)).
+([`window-runtime-displays.md`](../window-runtime-displays.md)). Work item 3 done:
+screen service ([`screen-service.md`](../screen-service.md), [ADR 0180](../adr/0180-screen-service-placement-and-memory.md)).
 
 ## 1. Purpose
 
