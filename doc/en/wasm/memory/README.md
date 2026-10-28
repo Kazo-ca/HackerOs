@@ -2,7 +2,7 @@
 
 # HackerOS project memory
 
-Project status and working conventions as of **2026-10-25**. This folder serves as a
+Project status and working conventions as of **2026-10-28**. This folder serves as a
 resumption point: a new contributor (human or agent) finds here what is
 done, how we work and what must not be redone. It is updated
 at the end of each series or when a convention changes.
@@ -29,6 +29,7 @@ at the end of each series or when a convention changes.
 | V3.1 | Window geometry and title, SDK 1.1 | [`v3-1-series-plan.md`](../dev/plans/v3-1-series-plan.md) |
 | EXEC (`exec/*`) | Process limits, OOM killer, remote gateways, "not responding" box, `HackBackground`, OS served by `HackerOs.Server`, cross-origin isolation, SDK 1.2 | [`execution-followups-plan.md`](../dev/plans/execution-followups-plan.md) |
 | DESK (`desk/0` to `desk/6`) | OS-provided file control, central context menu, app menu entries, desktop, SDK 2.0 | [`desktop-and-context-menu-plan.md`](../dev/plans/desktop-and-context-menu-plan.md) |
+| Multi-monitor (`multi-monitor/0` to `multi-monitor/9`) | Extended desktop: one screen per display surface, `DisplayId` and work area per screen, windows moved through a portal, screen service (Chrome/Edge, fallback elsewhere), one taskbar per screen, "Other screen" menus and identification veil, Settings ▸ Screens, drag between screens; no change to the app SDK | [`multi-monitor-plan.md`](../dev/plans/multi-monitor-plan.md) |
 
 - **Since DESK** (on `main`, October 2026): restart offered when the
   build changes under the page (ADR 0162), local preview of window
@@ -43,10 +44,10 @@ at the end of each series or when a convention changes.
 - **Mobile explorer** (October 2026, PR #212 to `main`): mobile entry point of
   apps honored, mobile file explorer, full-screen dialogs on mobile, one tap
   opens (`HackFileView.OpenOnTap`) (ADR 0171).
-- **ADR**: 0001 to 0171, 0173 to 0176 exist (a few numbers skipped); 0170 is the
+- **ADR**: 0001 to 0171, 0173 to 0180 and 0183 exist (a few numbers skipped); 0170 is the
   Settings side menu (PR #210), 0171 the mobile file explorer, 0172,
   reserved with it, was not used, 0173 is the automatic release, and 0174 the new-version announcement
-  (`version.json`), 0175 the "New folder" button of the Choose folder and Save dialogs, 0176 the app repository template (submodule for debugging, packages for production). **Next free number: 0177.** Parallel
+  (`version.json`), 0175 the "New folder" button of the Choose folder and Save dialogs, 0176 the app repository template (submodule for debugging, packages for production), 0177 the title bar of maximized and snapped windows, 0178 to 0180 and 0183 the multi-monitor series (0181 and 0182 are reserved by other threads). **Next free number: 0184**. Parallel
   threads reserve distinct numbers.
 
 ## Working conventions

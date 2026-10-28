@@ -111,3 +111,20 @@ static HackerOs.Windowing.Abstractions.RemoveDisplayCommand.operator ==(HackerOs
 static HackerOs.Windowing.Abstractions.WindowDisplayChangedEvent.operator !=(HackerOs.Windowing.Abstractions.WindowDisplayChangedEvent? left, HackerOs.Windowing.Abstractions.WindowDisplayChangedEvent? right) -> bool
 static HackerOs.Windowing.Abstractions.WindowDisplayChangedEvent.operator ==(HackerOs.Windowing.Abstractions.WindowDisplayChangedEvent? left, HackerOs.Windowing.Abstractions.WindowDisplayChangedEvent? right) -> bool
 ~override HackerOs.Windowing.Abstractions.DisplayId.Equals(object obj) -> bool
+HackerOs.Windowing.Abstractions.SnapWindowCommand
+HackerOs.Windowing.Abstractions.SnapWindowCommand.Bounds.get -> HackerOs.Windowing.Abstractions.WindowBounds
+HackerOs.Windowing.Abstractions.SnapWindowCommand.Bounds.init -> void
+HackerOs.Windowing.Abstractions.SnapWindowCommand.Deconstruct(out HackerOs.Windowing.Abstractions.WindowId WindowId, out HackerOs.Windowing.Abstractions.WindowBounds Bounds) -> void
+HackerOs.Windowing.Abstractions.SnapWindowCommand.Equals(HackerOs.Windowing.Abstractions.SnapWindowCommand? other) -> bool
+HackerOs.Windowing.Abstractions.SnapWindowCommand.SnapWindowCommand(HackerOs.Windowing.Abstractions.WindowId WindowId, HackerOs.Windowing.Abstractions.WindowBounds Bounds) -> void
+HackerOs.Windowing.Abstractions.SnapWindowCommand.WindowId.get -> HackerOs.Windowing.Abstractions.WindowId
+HackerOs.Windowing.Abstractions.SnapWindowCommand.WindowId.init -> void
+HackerOs.Windowing.Abstractions.WindowRuntimeState.IsSnapped.get -> bool
+HackerOs.Windowing.Abstractions.WindowRuntimeState.IsSnapped.init -> void
+override HackerOs.Windowing.Abstractions.SnapWindowCommand.<Clone>$() -> HackerOs.Windowing.Abstractions.SnapWindowCommand!
+override HackerOs.Windowing.Abstractions.SnapWindowCommand.Equals(object? obj) -> bool
+override HackerOs.Windowing.Abstractions.SnapWindowCommand.GetHashCode() -> int
+override HackerOs.Windowing.Abstractions.SnapWindowCommand.ToString() -> string!
+override sealed HackerOs.Windowing.Abstractions.SnapWindowCommand.Equals(HackerOs.Windowing.Abstractions.WindowCommand? other) -> bool
+static HackerOs.Windowing.Abstractions.SnapWindowCommand.operator !=(HackerOs.Windowing.Abstractions.SnapWindowCommand? left, HackerOs.Windowing.Abstractions.SnapWindowCommand? right) -> bool
+static HackerOs.Windowing.Abstractions.SnapWindowCommand.operator ==(HackerOs.Windowing.Abstractions.SnapWindowCommand? left, HackerOs.Windowing.Abstractions.SnapWindowCommand? right) -> bool

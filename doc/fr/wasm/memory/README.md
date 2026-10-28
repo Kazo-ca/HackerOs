@@ -2,7 +2,7 @@
 
 # Mémoire du projet HackerOS
 
-État du projet et conventions de travail au **2026-10-25**. Ce dossier sert de
+État du projet et conventions de travail au **2026-10-28**. Ce dossier sert de
 point de reprise : un nouveau contributeur (humain ou agent) y trouve ce qui
 est fait, comment on travaille et ce qu'il ne faut pas refaire. Il est mis à
 jour à la fin de chaque série ou quand une convention change.
@@ -29,6 +29,7 @@ jour à la fin de chaque série ou quand une convention change.
 | V3.1 | Géométrie et titre des fenêtres, SDK 1.1 | [`v3-1-series-plan.md`](../dev/plans/v3-1-series-plan.md) |
 | EXEC (`exec/*`) | Limites de processus, OOM killer, passerelles distantes, boîte « ne répond pas », `HackBackground`, OS servi par `HackerOs.Server`, isolation cross-origin, SDK 1.2 | [`execution-followups-plan.md`](../dev/plans/execution-followups-plan.md) |
 | DESK (`desk/0` à `desk/6`) | Contrôle de fichiers fourni par l'OS, menu contextuel central, entrées de menu des apps, bureau, SDK 2.0 | [`desktop-and-context-menu-plan.md`](../dev/plans/desktop-and-context-menu-plan.md) |
+| Multi-moniteur (`multi-monitor/0` à `multi-monitor/9`) | Bureau étendu : un écran par surface d'affichage, `DisplayId` et zone de travail par écran, fenêtres déplacées par portail, service d'écrans (Chrome/Edge, repli ailleurs), une barre des tâches par écran, menus « Autre écran » et voile d'identification, Paramètres ▸ Écrans, glisser entre écrans ; aucun changement du SDK des apps | [`multi-monitor-plan.md`](../dev/plans/multi-monitor-plan.md) |
 
 - **Depuis DESK** (sur `main`, octobre 2026) : redémarrage proposé quand le
   build change sous la page (ADR 0162), aperçu local du déplacement des
@@ -43,10 +44,10 @@ jour à la fin de chaque série ou quand une convention change.
 - **Explorateur mobile** (octobre 2026, PR #212 vers `main`) : point d'entrée
   mobile des apps honoré, explorateur de fichiers mobile, dialogues en plein
   écran sur mobile, un toucher ouvre (`HackFileView.OpenOnTap`) (ADR 0171).
-- **ADR** : 0001 à 0171, 0173 à 0176 existent (quelques numéros sautés) ; 0170 est pris
+- **ADR** : 0001 à 0171, 0173 à 0180 et 0183 existent (quelques numéros sautés) ; 0170 est pris
   par le menu latéral des Paramètres (PR #210), 0171 est l'explorateur de fichiers
   mobile, 0172, réservé avec lui, n'a pas servi, 0173 est la publication
-  automatique, 0174 l'annonce d'une nouvelle version (`version.json`), 0175 le bouton « Nouveau dossier » des dialogues Choisir un dossier et Enregistrer, 0176 le dépôt template d'apps (sous-module en débogage, paquets en production). **Prochain numéro libre : 0177.** Des
+  automatique, 0174 l'annonce d'une nouvelle version (`version.json`), 0175 le bouton « Nouveau dossier » des dialogues Choisir un dossier et Enregistrer, 0176 le dépôt template d'apps (sous-module en débogage, paquets en production), 0177 la barre de titre des fenêtres agrandies et ancrées, 0178 à 0180 et 0183 la série multi-moniteur (0181 et 0182 sont réservés par d'autres fils). **Prochain numéro libre : 0184**. Des
   threads parallèles réservent des numéros distincts.
 
 ## Conventions de travail

@@ -279,6 +279,40 @@ public sealed class WindowRuntimeDisplayTests
     }
 
     [Fact]
+    public void A_snapped_window_stays_snapped_on_the_target_screen_with_its_geometry_from_before_the_snap()
+    {
+        WindowRuntime runtime = RuntimeWithSecondScreen();
+        WindowRuntimeState window = CreateState(1);
+        runtime.Apply(new CreateWindowCommand(window));
+        runtime.Apply(new SnapWindowCommand(window.Id, new WindowBounds(640, 0, 640, 720)));
+
+        runtime.Apply(new MoveWindowToDisplayCommand(window.Id, Second));
+
+        WindowRuntimeState moved = Find(runtime, window.Id);
+        Assert.True(moved.IsSnapped);
+        Assert.Equal(new WindowBounds(960, 0, 960, 1040), moved.Bounds);
+        Assert.Equal(FirstWindowOnSecond, moved.RestoreBounds);
+
+        runtime.Apply(new RestoreWindowCommand(window.Id));
+
+        WindowRuntimeState restored = Find(runtime, window.Id);
+        Assert.False(restored.IsSnapped);
+        Assert.Equal(FirstWindowOnSecond, restored.Bounds);
+    }
+
+    [Fact]
+    public void Snapping_on_a_secondary_screen_uses_that_screen_work_area()
+    {
+        WindowRuntime runtime = RuntimeWithSecondScreen();
+        WindowRuntimeState window = CreateState(1, bounds: new WindowBounds(100, 100, 640, 480)) with { DisplayId = Second };
+        runtime.Apply(new CreateWindowCommand(window));
+
+        runtime.Apply(new SnapWindowCommand(window.Id, new WindowBounds(0, 0, 960, 1040)));
+
+        Assert.Equal(new WindowBounds(0, 0, 960, 1040), Find(runtime, window.Id).Bounds);
+    }
+
+    [Fact]
     public void Screen_one_cannot_be_removed_and_an_unknown_screen_is_ignored()
     {
         WindowRuntime runtime = new(PrimaryArea);

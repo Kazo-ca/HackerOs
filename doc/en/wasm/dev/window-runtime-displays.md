@@ -34,8 +34,8 @@ default). `Bounds` and `RestoreBounds` are in that screen's coordinates.
 
 Moving, resizing, maximizing and constraining a window happen in the work area of
 **its** screen. There is still one focus and one Z order for the whole OS.
-`WindowKeyboardCommands` (snapping, window menu) and `WindowGeometryRecorder`
-(snap detection) also read the work area of the window's screen.
+`WindowKeyboardCommands` (snapping, window menu) also reads the work area of the
+window's screen, and `SnapWindowCommand` (ADR 0177) constrains the half in that area.
 
 ## 3. Commands and events
 
@@ -56,15 +56,16 @@ and the restore geometry. `WindowAppEventDispatcher` uses it to call
 | Window state | On the target screen |
 | --- | --- |
 | Maximized | Stays maximized and fills the target work area. Its restore geometry keeps its relative position. |
-| Snapped (exact left or right half of its work area) | Stays snapped on the same side, on the half of the target work area. |
+| Snapped (`IsSnapped`, or exact left or right half of its work area) | Stays snapped on the same side, on the half of the target work area; its geometry from before the snap keeps its relative position. |
 | Normal | Keeps its size and its position relative to the top-left corner, in proportion to the work area sizes, then it is kept inside the target work area (the declared minimum wins, ADR 0095 §2). |
 | Minimized | Changes screen and stays minimized. If it was minimized from maximized, it fills the target work area. |
 
 Focus and Z order do not change.
 
-ADR 0177 (thread "Corriger les boutons des fenêtres maximisées") adds a memory of
-the size before snapping. When it reaches the series, that memory follows the
-window like its restore geometry.
+ADR 0177 (title bar of maximized and snapped windows) keeps the geometry from
+before the snap in `RestoreBounds`. Merged in by work item 9, it follows the window
+like its restore geometry: restoring the window on the target screen gives back
+that geometry mapped to that screen.
 
 ## 5. Modal windows
 

@@ -3,12 +3,14 @@
 # Multi-moniteur : plan de la série
 
 **Statut :** série lancée par Benoit le 2026-10-28 (« On peut débuter la
-fonctionnalité multi-moniteur »). Les ADR [0178](../adr/0178-extended-screens-in-display-surfaces.md)
-et [0179](../adr/0179-per-screen-taskbars-and-other-screen-menus.md) sont écrits
-avant le code (chantier 0). Chantier 1 fait : écrans dans le gestionnaire de fenêtres
-([`window-runtime-displays.md`](../window-runtime-displays.md)). Chantier 2 fait :
-portail des fenêtres ([`window-portal.md`](../window-portal.md)). Chantier 3 fait :
-service d'écrans ([`screen-service.md`](../screen-service.md), [ADR 0180](../adr/0180-screen-service-placement-and-memory.md)).
+fonctionnalité multi-moniteur ») et **terminée le 2026-10-28** : chantiers 0 à 8
+fusionnés dans `multi-monitor/base` (PR #220, #221, #224, #223, #228, #231, #232,
+#233, #230), ADR 0177 intégré, vérification finale au §8, PR vers `main` à
+fusionner sur l'autorisation de Benoit seulement. ADR écrits :
+[0178](../adr/0178-extended-screens-in-display-surfaces.md),
+[0179](../adr/0179-per-screen-taskbars-and-other-screen-menus.md),
+[0180](../adr/0180-screen-service-placement-and-memory.md) et
+[0183](../adr/0183-drag-a-window-between-screens.md).
 
 ## 1. Objet
 
@@ -93,3 +95,31 @@ Les réponses seront reportées ici et dans les ADR.
 - Recharger l'OS ferme les écrans secondaires ; un clic les rouvre.
 - Une iframe dans une fenêtre qui change d'écran se recharge.
 - Pas de miroir, pas de multi-écran sur mobile.
+
+## 8. Vérification finale (chantier 9, 2026-10-28)
+
+- **ADR 0177 intégré** : `main` (PR #222, barre de titre des fenêtres agrandies
+  et ancrées) est fusionné dans la série. Conflits résolus dans
+  `WindowRuntime`, `WindowKeyboardCommands`, `WindowChrome` et
+  `WindowGeometryRecorder` : l'ancrage (`SnapWindowCommand`) utilise la zone de
+  travail de l'écran de la fenêtre, et une fenêtre ancrée qui change d'écran
+  reste ancrée sur la même moitié, avec sa géométrie d'avant l'ancrage
+  convertie vers l'écran cible (deux tests dans `WindowRuntimeDisplayTests`).
+- **Build** : `HackerOs.sln` en Debug et en Release, 0 erreur, 0 avertissement.
+- **Tests** : toutes les suites, une à la fois, en Release. Échecs restants,
+  tous connus avant la série ou instables :
+  `E2E.Tests` `Window_runtime_renders_and_handles_mouse_and_touch_pointer_gestures`
+  et `Window_runtime_handles_every_resize_edge_in_real_browser` (déjà en échec
+  sur `multi-monitor/base`, toujours en échec après ADR 0177) ; `UI.E2E` deux
+  tests axe (`label-content-name-mismatch` du lanceur, aussi sur `main`) et
+  `LowStorageSpaceTests` ; `WorkerHost` `LocalNetworkTests` (instable, vert à la
+  relance).
+- **Publication trimmée** : `build/publish-trimmed.sh` publie et lance `TrimmedPublish.E2E` : 3 tests sur 4 verts (démarrage hors ligne, toutes les apps et les deux sites, mesure de la calculatrice). Le test de la calculatrice rendue dans un worker échoue sur axe `label-content-name-mismatch` des touches `MC`, `MR`, `M+`, `M-`, `AC` et `x²` (étiquettes « Memory clear », etc.) : même règle que l'échec connu du lanceur, dans une app que la série ne touche pas.
+- **SDK** : `SdkCompatibility.Tests` vert ; la série ne change pas le SDK des
+  apps (Q1). Les ajouts publics de `HackerOs.Windowing.*` sont dans
+  `PublicAPI.Unshipped.txt`, pour la prochaine version.
+- **Docs** : index général et index des dossiers, mémoire du projet
+  ([`../../memory/README.md`](../../memory/README.md), prochain ADR libre 0184).
+- **Question encore ouverte** (chantier 7) : une petite API système des écrans
+  pour les boutons Identifier, Nouvel écran, Restaurer, Plein écran et
+  permission dans Paramètres ▸ Écrans ; décision laissée à Benoit.
