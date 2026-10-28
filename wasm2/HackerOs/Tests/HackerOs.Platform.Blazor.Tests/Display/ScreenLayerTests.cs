@@ -38,6 +38,19 @@ public sealed class ScreenLayerTests
     }
 
     [Fact]
+    public async Task A_secondary_screen_shows_its_taskbar_under_its_desktop()
+    {
+        await using Harness harness = await Harness.WithOneScreenAsync();
+
+        string html = await harness.RenderAsync(withTaskbar: true);
+
+        int desktop = html.IndexOf("data-desktop-for=\"2\"", StringComparison.Ordinal);
+        int taskbar = html.IndexOf("data-taskbar-for=\"2\"", StringComparison.Ordinal);
+        Assert.True(desktop >= 0 && taskbar > desktop, html);
+        Assert.True(html.IndexOf("secondary-screen-desktop", StringComparison.Ordinal) < desktop);
+    }
+
+    [Fact]
     public async Task A_pending_approval_veils_the_secondary_screens()
     {
         await using Harness harness = await Harness.WithOneScreenAsync();
@@ -141,7 +154,7 @@ public sealed class ScreenLayerTests
             return harness;
         }
 
-        public async Task<string> RenderAsync()
+        public async Task<string> RenderAsync(bool withTaskbar = false)
         {
             await using HtmlRenderer renderer = new(_provider, NullLoggerFactory.Instance);
             RenderFragment<SecondaryScreen> desktop = screen => builder =>
@@ -150,10 +163,21 @@ public sealed class ScreenLayerTests
                 builder.AddAttribute(1, "data-desktop-for", screen.Id.Number);
                 builder.CloseElement();
             };
+            RenderFragment<SecondaryScreen> taskbar = screen => builder =>
+            {
+                builder.OpenElement(0, "footer");
+                builder.AddAttribute(1, "data-taskbar-for", screen.Id.Number);
+                builder.CloseElement();
+            };
+            Dictionary<string, object?> parameters = new() { [nameof(ScreenLayer.ScreenContent)] = desktop };
+            if (withTaskbar)
+            {
+                parameters[nameof(ScreenLayer.ScreenTaskbar)] = taskbar;
+            }
+
             return await renderer.Dispatcher.InvokeAsync(async () =>
             {
-                var root = await renderer.RenderComponentAsync<ScreenLayer>(ParameterView.FromDictionary(
-                    new Dictionary<string, object?> { [nameof(ScreenLayer.ScreenContent)] = desktop }));
+                var root = await renderer.RenderComponentAsync<ScreenLayer>(ParameterView.FromDictionary(parameters));
                 return root.ToHtmlString();
             });
         }

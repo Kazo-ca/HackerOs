@@ -50,6 +50,7 @@ ScreenService ── AddDisplay / ChangeViewport / RemoveDisplay ──► Windo
 | `CloseScreenAsync(écran)` | Ferme un écran ; il n'est plus restauré. |
 | `ToggleFullScreenAsync(écran)` | Plein écran de l'écran, depuis un clic fait dans cet écran. |
 | `Screens`, `RestorableScreens`, `Permission`, `IsPrimaryHidden`, `CanOpenScreen`, `Changed` | État lu par l'interface. |
+| `PrimaryTaskbar`, `SetPrimaryTaskbarAsync(mode)` | Réglage `primary-taskbar` de `[taskbar]`, suivi pendant la session (chantier 5, [`per-screen-taskbars.md`](per-screen-taskbars.md)). |
 
 `ScreenOpenStatus` : `Opened`, `Blocked` (fenêtre refusée), `Unavailable` (hôte sans
 JavaScript), `LimitReached` (numéros 2 à 9 pris). `ScreenPermission` : `Unknown`,

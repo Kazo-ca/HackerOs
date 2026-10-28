@@ -68,3 +68,7 @@ HackerOs.Platform.Blazor.Display.ScreenOverlayHost.ChildContent.get -> Microsoft
 HackerOs.Platform.Blazor.Display.ScreenOverlayHost.ChildContent.set -> void
 override HackerOs.Platform.Blazor.Display.ScreenOverlayHost.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
 HackerOs.Platform.Blazor.Display.ScreenOverlayHost.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Platform.Blazor.Display.ScreenLayer.ScreenTaskbar.get -> Microsoft.AspNetCore.Components.RenderFragment<HackerOs.Platform.Blazor.Display.SecondaryScreen!>?
+HackerOs.Platform.Blazor.Display.ScreenLayer.ScreenTaskbar.set -> void
+HackerOs.Platform.Blazor.Display.ScreenService.PrimaryTaskbar.get -> HackerOs.Platform.Core.Shell.PrimaryTaskbarMode
+HackerOs.Platform.Blazor.Display.ScreenService.SetPrimaryTaskbarAsync(HackerOs.Platform.Core.Shell.PrimaryTaskbarMode mode, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!

@@ -7,7 +7,7 @@ namespace HackerOs.UI.E2E.Tests;
 /// <summary>
 /// The screen service (ADR 0178 §4, ADR 0180) in a real Chromium: a screen listed in
 /// <c>~/.config/hackeros/screens.config</c> is offered after a reload, « Restore screens » opens it
-/// as a second window that shows screen 2, and a screen the user closes is not offered again.
+/// as a second window that shows screen 2 with its taskbar (ADR 0179 §1), and a screen the user closes is not offered again.
 /// Headless Chromium has no second monitor: the window opens at its remembered place (fallback).
 /// </summary>
 public sealed class ScreenServiceTests(ITestOutputHelper output)
@@ -102,9 +102,11 @@ public sealed class ScreenServiceTests(ITestOutputHelper output)
             await Assertions.Expect(screen.Locator(".secondary-screen .background-layer")).ToHaveCountAsync(0);
             int[] fills = await desktop.EvaluateAsync<int[]>(
                 "area => { const r = area.getBoundingClientRect(); return [Math.round(r.width), Math.round(r.height), innerWidth, innerHeight]; }");
+            // The desktop fills the window above the screen's taskbar (ADR 0179 §1).
+            int taskbarHeight = await screen.Locator(".secondary-screen footer.taskbar-container").EvaluateAsync<int>("bar => Math.round(bar.getBoundingClientRect().height)");
             Assert.Equal(fills[2], fills[0]);
-            Assert.Equal(fills[3], fills[1]);
-            output.WriteLine($"[test] screen 2 shows its desktop, {fills[0]}×{fills[1]}.");
+            Assert.InRange(fills[1] + taskbarHeight, fills[3] - 1, fills[3] + 1);
+            output.WriteLine($"[test] screen 2 shows its desktop, {fills[0]}×{fills[1]}, above a {taskbarHeight}px taskbar.");
 
             // Two windows on screen 1, so that the switcher has somewhere to go.
             await E2ESupport.OpenAppAsync(page, "Text Editor", output);
@@ -143,6 +145,80 @@ public sealed class ScreenServiceTests(ITestOutputHelper output)
             await Assertions.Expect(page.Locator(".window-switcher")).ToBeVisibleAsync();
             await page.Keyboard.UpAsync("Alt");
             output.WriteLine("[test] the overlays came back to screen 1 when screen 2 closed.");
+        }
+        finally
+        {
+            E2ESupport.StopProcess(server);
+        }
+    }
+
+    [Fact]
+    public async Task Each_screen_has_its_taskbar_and_start_menu_and_screen_1_can_list_only_its_windows()
+    {
+        string solutionDirectory = E2ESupport.FindSolutionDirectory();
+        int port = E2ESupport.ReservePort();
+        string address = $"http://127.0.0.1:{port}";
+        using Process server = E2ESupport.StartHarness(solutionDirectory, address, testDemo: false, output);
+
+        try
+        {
+            using IPlaywright playwright = await Playwright.CreateAsync();
+            await using IBrowser browser = await ChromiumLauncher.LaunchAsync(playwright, new BrowserTypeLaunchOptions { Headless = true });
+            await using IBrowserContext context = await browser.NewContextAsync();
+            IPage page = await context.NewPageAsync();
+            E2ESupport.AttachDiagnostics(page, output);
+
+            await E2ESupport.NavigateWhenReadyAsync(page, address, output);
+            await E2ESupport.CreateLocalProfileAndReachDesktopAsync(page, output);
+            IPage screen = await RestoreScreenTwoAsync(page);
+
+            // ADR 0179 §1: screen 2 has its taskbar, under its desktop, which leaves it out of the work area.
+            ILocator taskbar = screen.Locator(".secondary-screen footer.taskbar-container");
+            await Assertions.Expect(taskbar).ToBeVisibleAsync(new() { Timeout = 20000 });
+            await Assertions.Expect(taskbar.Locator(".taskbar-clock")).ToBeVisibleAsync();
+            await Assertions.Expect(taskbar.Locator(".taskbar-notification-area")).ToHaveCountAsync(0);
+            await Assertions.Expect(taskbar.Locator(".logout-trigger")).ToHaveCountAsync(0);
+            int[] layout = await screen.EvaluateAsync<int[]>(
+                """
+                () => {
+                    const desktop = document.querySelector('.secondary-screen .desktop-area').getBoundingClientRect();
+                    const bar = document.querySelector('.secondary-screen footer.taskbar-container').getBoundingClientRect();
+                    return [Math.round(desktop.bottom), Math.round(bar.top), Math.round(bar.bottom), innerHeight];
+                }
+                """);
+            Assert.True(layout[0] <= layout[1] + 1, $"desktop bottom {layout[0]}, taskbar top {layout[1]}");
+            Assert.Equal(layout[3], layout[2]);
+            output.WriteLine($"[test] screen 2 has its taskbar at {layout[1]}..{layout[2]} of {layout[3]}.");
+
+            // The Start menu of screen 2 shows on screen 2, and its app opens on screen 2.
+            await screen.BringToFrontAsync();
+            await E2ESupport.OpenAppAsync(screen, "Text Editor", output);
+            await Assertions.Expect(page.Locator(".launcher-popover")).ToHaveCountAsync(0);
+            await Assertions.Expect(screen.Locator(".window-layer[data-display='2'] article.window-host")).ToHaveCountAsync(1, new() { Timeout = 15000 });
+            await Assertions.Expect(taskbar.Locator(".taskbar-item")).ToHaveCountAsync(1);
+
+            // Screen 1's Start menu opens on screen 1.
+            await page.BringToFrontAsync();
+            await E2ESupport.OpenAppAsync(page, "Terminal", output);
+            await Assertions.Expect(screen.Locator(".launcher-popover")).ToHaveCountAsync(0);
+            ILocator primaryItems = page.Locator(".desktop-shell > footer.taskbar-container .taskbar-item");
+            await Assertions.Expect(page.Locator(".desktop-workspace article.window-host")).ToHaveCountAsync(1, new() { Timeout = 15000 });
+            await Assertions.Expect(taskbar.Locator(".taskbar-item")).ToHaveCountAsync(1);
+
+            // primary-taskbar = all (default): screen 1's taskbar lists both windows.
+            await Assertions.Expect(primaryItems).ToHaveCountAsync(2);
+            output.WriteLine("[test] screen 1 lists every window, screen 2 its own.");
+
+            // primary-taskbar = own: screen 1's taskbar keeps only its terminal, as soon as the file changes.
+            ILocator rows = page.Locator("[data-terminal-panel] .xterm-rows").First;
+            await WaitForTextAsync(rows, text => text.Contains('$', StringComparison.Ordinal), "the shell prompt");
+            await page.Locator("[data-terminal-panel] .xterm-screen").First.ClickAsync();
+            await RunAsync(page, rows, "echo '[taskbar]' >> ~/.config/hackeros/screens.config");
+            await RunAsync(page, rows, "echo 'primary-taskbar = own' >> ~/.config/hackeros/screens.config");
+            await Assertions.Expect(primaryItems).ToHaveCountAsync(1, new() { Timeout = 15000 });
+            await Assertions.Expect(primaryItems.First).ToContainTextAsync("Terminal");
+            await Assertions.Expect(taskbar.Locator(".taskbar-item")).ToHaveCountAsync(1);
+            output.WriteLine("[test] with primary-taskbar = own, screen 1 lists only its window.");
         }
         finally
         {

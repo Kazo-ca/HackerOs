@@ -31,7 +31,7 @@ le portail des fenêtres ([`window-portal.md`](window-portal.md)) et sur le serv
 ## 2. Zone de travail
 
 La zone de travail d'un écran secondaire est la taille de **son bureau**, plus celle de sa
-fenêtre : la barre des tâches de l'écran (chantier 5) restera en dehors.
+fenêtre : la barre des tâches de l'écran (chantier 5, [`per-screen-taskbars.md`](per-screen-taskbars.md)) reste en dehors.
 
 - `ScreenService` envoie seulement `AddDisplayCommand` avec la taille de la fenêtre, à
   l'ouverture. Il ne change plus la zone quand la fenêtre change de taille.

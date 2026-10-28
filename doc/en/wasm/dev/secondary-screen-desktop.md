@@ -31,7 +31,7 @@ the screen where the user acts, secure dialogs on screen 1). It builds on the wi
 ## 2. Work area
 
 A secondary screen's work area is the size of **its desktop**, no longer of its window: the
-screen's taskbar (work item 5) will stay outside it.
+screen's taskbar (work item 5, [`per-screen-taskbars.md`](per-screen-taskbars.md)) stays outside it.
 
 - `ScreenService` only sends `AddDisplayCommand` with the window's size, on open. It no longer
   changes the area when the window is resized.

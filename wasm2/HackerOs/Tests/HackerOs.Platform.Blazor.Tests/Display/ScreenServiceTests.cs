@@ -219,6 +219,40 @@ public sealed class ScreenServiceTests
     }
 
     [Fact]
+    public async Task The_taskbar_of_screen_1_lists_every_window_until_the_file_says_own()
+    {
+        Harness harness = new();
+        await harness.Service.StartAsync();
+        Assert.Equal(PrimaryTaskbarMode.All, harness.Service.PrimaryTaskbar);
+        Assert.Equal(1, harness.Settings.Watches);
+        int changes = 0;
+        harness.Service.Changed += () => changes++;
+
+        harness.Settings.Edit(ScreensSettingsDocuments.PrimaryTaskbarQualifiedKey, "own");
+        for (int attempt = 0; attempt < 200 && harness.Service.PrimaryTaskbar != PrimaryTaskbarMode.Own; attempt++)
+        {
+            await Task.Delay(10);
+        }
+
+        Assert.Equal(PrimaryTaskbarMode.Own, harness.Service.PrimaryTaskbar);
+        Assert.Equal(1, changes);
+    }
+
+    [Fact]
+    public async Task Primary_taskbar_is_read_at_start_and_written_to_the_user_file()
+    {
+        Harness harness = new();
+        harness.Settings.Values[ScreensSettingsDocuments.PrimaryTaskbarQualifiedKey] = "own";
+        await harness.Service.StartAsync();
+        Assert.Equal(PrimaryTaskbarMode.Own, harness.Service.PrimaryTaskbar);
+
+        await harness.Service.SetPrimaryTaskbarAsync(PrimaryTaskbarMode.All);
+
+        Assert.Equal(PrimaryTaskbarMode.All, harness.Service.PrimaryTaskbar);
+        Assert.Equal("primary-taskbar = all", harness.Settings.Line(ScreensSettingsDocuments.PrimaryTaskbarQualifiedKey));
+    }
+
+    [Fact]
     public async Task Without_javascript_no_screen_opens()
     {
         WindowRuntime runtime = new(new WindowBounds(0, 0, 1280, 720));
@@ -308,7 +342,16 @@ public sealed class ScreenServiceTests
 
         public int Writes { get; private set; }
 
-        public event EventHandler<OsSettingsChangedEventArgs>? DocumentChanged { add { } remove { } }
+        public event EventHandler<OsSettingsChangedEventArgs>? DocumentChanged;
+
+        public int Watches { get; private set; }
+
+        /// <summary>Changes a value as an edit of the file would, and says so.</summary>
+        public void Edit(string key, string value)
+        {
+            Values[key] = value;
+            DocumentChanged?.Invoke(this, new OsSettingsChangedEventArgs(ScreensSettingsDocuments.DocumentId));
+        }
 
         public string? CurrentHomeDirectory => "/home/alice";
 
@@ -362,7 +405,11 @@ public sealed class ScreenServiceTests
         public ValueTask WriteFileAsync(OsSettingsFile file, string content, IAppFileSystemGateway? writer = null, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
-        public ValueTask WatchAsync(OsSettingsDocument document, CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
+        public ValueTask WatchAsync(OsSettingsDocument document, CancellationToken cancellationToken = default)
+        {
+            Assert.Equal(ScreensSettingsDocuments.DocumentId, document.DocumentId);
+            Watches++;
+            return ValueTask.CompletedTask;
+        }
     }
 }
