@@ -150,6 +150,106 @@ public sealed class ScreenServiceTests(ITestOutputHelper output)
         }
     }
 
+    [Fact]
+    public async Task The_other_screen_menus_identify_the_screens_and_move_a_window_between_them()
+    {
+        string solutionDirectory = E2ESupport.FindSolutionDirectory();
+        int port = E2ESupport.ReservePort();
+        string address = $"http://127.0.0.1:{port}";
+        using Process server = E2ESupport.StartHarness(solutionDirectory, address, testDemo: false, output);
+
+        try
+        {
+            using IPlaywright playwright = await Playwright.CreateAsync();
+            await using IBrowser browser = await ChromiumLauncher.LaunchAsync(playwright, new BrowserTypeLaunchOptions { Headless = true });
+            await using IBrowserContext context = await browser.NewContextAsync();
+            IPage page = await context.NewPageAsync();
+            List<string> errors = E2ESupport.AttachDiagnostics(page, output);
+
+            await E2ESupport.NavigateWhenReadyAsync(page, address, output);
+            await E2ESupport.CreateLocalProfileAndReachDesktopAsync(page, output);
+            IPage screen = await RestoreScreenTwoAsync(page);
+            await page.BringToFrontAsync();
+            await E2ESupport.OpenAppAsync(page, "Text Editor", output);
+            ILocator editor = page.Locator("article.window-host.is-focused");
+            await Assertions.Expect(editor).ToBeVisibleAsync();
+
+            // ADR 0179 §4: right click on Maximize opens snap, full screen and « Other screen ».
+            await editor.Locator(".chrome-button-maximize").ClickAsync(new() { Button = MouseButton.Right });
+            ILocator maximizeMenu = page.Locator("[data-context-menu='window-maximize-menu'][data-menu-level='0']");
+            await Assertions.Expect(maximizeMenu).ToBeVisibleAsync();
+            Assert.Equal(
+                ["Snap left", "Snap right", "Full screen (Linux keys)", "Other screen"],
+                await maximizeMenu.Locator(".hack-context-menu-title").AllInnerTextsAsync());
+            await page.Keyboard.PressAsync("Escape");
+            await Assertions.Expect(maximizeMenu).ToHaveCountAsync(0);
+
+            // ADR 0179 §5-6: the window menu's submenu; hovering « Screen 2 » shows each other screen its number.
+            await editor.Locator(".chrome-button-menu").ClickAsync(new() { Button = MouseButton.Right });
+            ILocator windowMenu = page.Locator("[data-context-menu='window-menu'][data-menu-level='0']");
+            await Assertions.Expect(windowMenu).ToBeVisibleAsync();
+            await windowMenu.Locator("[data-menu-item='window.other-screen']").HoverAsync();
+            ILocator screens = page.Locator("[data-context-menu='window-menu'][data-menu-level='1']");
+            await Assertions.Expect(screens).ToBeVisibleAsync();
+            Assert.Equal(
+                ["Screen 1", "Screen 2", "New screen"],
+                await screens.Locator(".hack-context-menu-title").AllInnerTextsAsync());
+            await Assertions.Expect(screens.Locator("[data-menu-item='window.screen.1']")).ToHaveAttributeAsync("aria-disabled", "true");
+            await screens.Locator("[data-menu-item='window.screen.2']").HoverAsync();
+            ILocator veil = screen.Locator(".screen-identify-veil[data-screen-identify='2']");
+            await Assertions.Expect(veil).ToBeVisibleAsync();
+            await Assertions.Expect(veil).ToHaveClassAsync(new System.Text.RegularExpressions.Regex("is-target"));
+            await Assertions.Expect(veil.Locator(".screen-identify-number")).ToHaveTextAsync("2");
+            Assert.Equal(0.33, await veil.EvaluateAsync<double>("v => Number(getComputedStyle(v).backgroundColor.match(/[\\d.]+\\)$/)[0].replace(')', ''))"), 2);
+            // The screen that shows the menu keeps it usable: no veil there.
+            await Assertions.Expect(page.Locator(".screen-identify-veil")).ToBeHiddenAsync();
+            output.WriteLine("[test] hovering Screen 2 shows the number on screen 2 only.");
+
+            // The veil goes away when the pointer passes over it, and when the pointer leaves the entry.
+            await screen.Mouse.MoveAsync(200, 200);
+            await screen.Mouse.MoveAsync(210, 210);
+            await Assertions.Expect(veil).ToHaveCountAsync(0);
+            await screens.Locator("[data-menu-item='window.new-screen']").HoverAsync();
+            await screens.Locator("[data-menu-item='window.screen.2']").HoverAsync();
+            await Assertions.Expect(veil).ToBeVisibleAsync();
+            await windowMenu.Locator("[data-menu-item='window.close']").HoverAsync();
+            await Assertions.Expect(veil).ToHaveCountAsync(0);
+            output.WriteLine("[test] the veil leaves with the pointer.");
+
+            // Choosing « Screen 2 » moves the window there.
+            await windowMenu.Locator("[data-menu-item='window.other-screen']").HoverAsync();
+            await screens.Locator("[data-menu-item='window.screen.2']").ClickAsync();
+            await Assertions.Expect(page.Locator("[data-context-menu]")).ToHaveCountAsync(0);
+            await Assertions.Expect(screen.Locator(".window-layer[data-display='2'] article.window-host")).ToHaveCountAsync(1, new() { Timeout = 10000 });
+            await Assertions.Expect(screen.Locator(".screen-identify-veil")).ToHaveCountAsync(0);
+            output.WriteLine("[test] the window moved to screen 2.");
+
+            // ADR 0178 §6: the fallback shortcut moves the active window to the previous screen.
+            await screen.BringToFrontAsync();
+            ILocator moved = screen.Locator(".window-layer[data-display='2'] article.window-host");
+            await moved.Locator("header h2").ClickAsync();
+            await screen.Keyboard.PressAsync("Control+Alt+Shift+ArrowLeft");
+            await Assertions.Expect(screen.Locator(".window-layer[data-display='2'] article.window-host")).ToHaveCountAsync(0, new() { Timeout = 10000 });
+            await Assertions.Expect(page.Locator(".desktop-workspace article.window-host")).ToHaveCountAsync(1);
+            output.WriteLine("[test] the shortcut brought the window back to screen 1.");
+
+            // « New screen » opens screen 3 during the click and moves the window there.
+            await page.BringToFrontAsync();
+            await editor.Locator(".chrome-button-menu").ClickAsync(new() { Button = MouseButton.Right });
+            await windowMenu.Locator("[data-menu-item='window.other-screen']").HoverAsync();
+            IPage third = await page.RunAndWaitForPopupAsync(() => screens.Locator("[data-menu-item='window.new-screen']").ClickAsync());
+            E2ESupport.AttachDiagnostics(third, output);
+            await Assertions.Expect(third.Locator(".secondary-screen[data-display='3']")).ToBeVisibleAsync(new() { Timeout = 20000 });
+            await Assertions.Expect(third.Locator(".window-layer[data-display='3'] article.window-host")).ToHaveCountAsync(1, new() { Timeout = 10000 });
+            output.WriteLine("[test] New screen opened screen 3 with the window.");
+            Assert.Empty(errors);
+        }
+        finally
+        {
+            E2ESupport.StopProcess(server);
+        }
+    }
+
     // Writes the file a previous session would have left (screen 2 open, at 40,40 and 900×700),
     // signs in again and restores the screen.
     private async Task<IPage> RestoreScreenTwoAsync(IPage page)

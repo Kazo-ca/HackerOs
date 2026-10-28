@@ -23,6 +23,7 @@
 @inject WindowAppEventDispatcher WindowEvents
 @inject AppWindowGatewayFactory WindowGateways
 @inject WindowKeyboardCommands KeyboardCommands
+@inject HackerOs.Platform.Blazor.Display.ScreenService Screens
 @inject ISessionService SessionService
 @inject ISimulationClock SimulationClock
 @inject IEventBus EventBus
@@ -113,6 +114,9 @@
     <HackerOs.Platform.Blazor.Display.ScreenLayer ScreenContent="SecondaryDesktopFragment" />
 
     @* ADR 0179 §2: these overlays show on the screen where the user acts. *@
+    @* ADR 0179 §6: the number of screen 1 while « Autre écran ▸ Écran N » is highlighted. *@
+    <HackerOs.Platform.Blazor.Display.ScreenIdentifyVeil Number="1" />
+
     <HackerOs.Platform.Blazor.Display.ScreenOverlayHost>
         @* ADR 0095 §3: window switcher, keyboard move/resize and window menu. *@
         <WindowManagerOverlays Commands="KeyboardCommands" />
@@ -337,7 +341,14 @@
     }
 
     private void HandleWindowMenu(WindowMenuRequest request) =>
-        KeyboardCommands.OpenMenu(request.WindowId, request.ClientX, request.ClientY);
+        KeyboardCommands.OpenMenu(request.WindowId, request.ClientX, request.ClientY, request.Kind);
+
+    /// <summary>« Nouvel écran » (ADR 0178 §4): opens a screen during the click; <see langword="null"/> when the browser refused.</summary>
+    private async Task<DisplayId?> OpenScreenAsync()
+    {
+        HackerOs.Platform.Blazor.Display.ScreenOpenResult result = await Screens.OpenScreenAsync();
+        return result is { Status: HackerOs.Platform.Blazor.Display.ScreenOpenStatus.Opened, Screen: { } screen } ? screen.Id : null;
+    }
 
     private void HandleGesture(WindowCommand command)
     {
@@ -395,6 +406,7 @@
 
     private IDisposable? _processSubscription;
     private Func<WindowId, Task>? _closeWindow;
+    private Func<Task<DisplayId?>>? _openScreen;
 
 
     protected override void OnInitialized()
@@ -403,6 +415,8 @@
         FileDialogAdapter.Changed += Rerender;
         _closeWindow = HandleClose;
         KeyboardCommands.CloseWindow = _closeWindow;
+        _openScreen = OpenScreenAsync;
+        KeyboardCommands.OpenScreen = _openScreen;
         _processSubscription = new WindowProcessObserver(EventBus, ProcessManager, Orchestrator, WindowRuntime, LaunchCoordinator, work => InvokeAsync(work));
 
         _taskbarWindowSource = new TaskbarWindowSourceAdapter(WindowRuntime);
@@ -442,6 +456,11 @@
         if (ReferenceEquals(KeyboardCommands.CloseWindow, _closeWindow))
         {
             KeyboardCommands.CloseWindow = null;
+        }
+
+        if (ReferenceEquals(KeyboardCommands.OpenScreen, _openScreen))
+        {
+            KeyboardCommands.OpenScreen = null;
         }
 
         _processSubscription?.Dispose();

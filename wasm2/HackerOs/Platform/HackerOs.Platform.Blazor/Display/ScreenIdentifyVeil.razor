@@ -1,0 +1,66 @@
+@namespace HackerOs.Platform.Blazor.Display
+@using System.Globalization
+@using HackerOs.Platform.Blazor.ContextMenus
+@using HackerOs.Platform.Blazor.Windows
+@implements IDisposable
+@inject ContextMenuService ContextMenus
+@*
+    ADR 0179 §6: while « Écran N » of the « Autre écran » submenu is under the pointer or the
+    keyboard focus, every screen shows its own number on a 33 % black veil; the square of screen N is
+    highlighted. The screen that shows the menu hides its veil (CSS: its document holds the
+    overlays). The veil never takes a click: the pointer passing over it removes it.
+*@
+@if (Target is { } target && !_dismissed)
+{
+    <div class="screen-identify-veil @(target == Number ? "is-target" : null)"
+         data-screen-identify="@Number"
+         aria-hidden="true"
+         @onpointerenter="Dismiss"
+         @onpointermove="Dismiss"
+         @onpointerdown="Dismiss"
+         @onpointerdown:preventDefault="true">
+        <div class="screen-identify-number">@Number</div>
+    </div>
+}
+
+@code {
+    private bool _dismissed;
+    private int? _lastTarget;
+
+    /// <summary>Gets or sets the number of the screen this veil covers.</summary>
+    [Parameter, EditorRequired]
+    public int Number { get; set; }
+
+    /// <summary>The screen named by the highlighted entry, or <see langword="null"/>.</summary>
+    private int? Target => TargetOf(ContextMenus.Highlighted?.Id);
+
+    /// <summary>Reads the screen number of an « Écran N » entry id.</summary>
+    /// <param name="itemId">The highlighted entry's id.</param>
+    internal static int? TargetOf(string? itemId) =>
+        itemId is not null
+        && itemId.StartsWith(WindowManagerOverlays.ScreenItemIdPrefix, StringComparison.Ordinal)
+        && int.TryParse(itemId.AsSpan(WindowManagerOverlays.ScreenItemIdPrefix.Length), NumberStyles.None, CultureInfo.InvariantCulture, out int number)
+            ? number
+            : null;
+
+    /// <inheritdoc />
+    protected override void OnInitialized() => ContextMenus.HighlightChanged += OnHighlightChanged;
+
+    private void OnHighlightChanged()
+    {
+        // A new entry shows the veil again, even after the pointer removed it.
+        int? target = Target;
+        if (target != _lastTarget)
+        {
+            _lastTarget = target;
+            _dismissed = false;
+        }
+
+        _ = InvokeAsync(StateHasChanged);
+    }
+
+    private void Dismiss() => _dismissed = true;
+
+    /// <inheritdoc />
+    public void Dispose() => ContextMenus.HighlightChanged -= OnHighlightChanged;
+}

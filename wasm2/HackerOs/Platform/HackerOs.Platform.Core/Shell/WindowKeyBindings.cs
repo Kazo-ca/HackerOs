@@ -49,6 +49,12 @@ public enum WindowKeyboardAction
     /// host grants the keyboard lock, hence the Linux keys.
     /// </summary>
     ToggleFullScreen,
+
+    /// <summary>Move the active window to the previous screen, by number (ADR 0178 §6).</summary>
+    MoveToPreviousScreen,
+
+    /// <summary>Move the active window to the next screen, by number (ADR 0178 §6).</summary>
+    MoveToNextScreen,
 }
 
 /// <summary>Which of the two default key sets a binding belongs to (ADR 0095 §3).</summary>
@@ -318,6 +324,8 @@ public static class WindowKeyBindingsSettingsDocuments
         (WindowKeyboardAction.SnapLeft, "snap-left", "Super+Left", "Alt+Shift+Left"),
         (WindowKeyboardAction.SnapRight, "snap-right", "Super+Right", "Alt+Shift+Right"),
         (WindowKeyboardAction.ToggleFullScreen, "toggle-fullscreen", "", "Alt+F11"),
+        (WindowKeyboardAction.MoveToPreviousScreen, "move-to-previous-screen", "Super+Shift+Left", "Ctrl+Alt+Shift+Left"),
+        (WindowKeyboardAction.MoveToNextScreen, "move-to-next-screen", "Super+Shift+Right", "Ctrl+Alt+Shift+Right"),
     ];
 
     /// <summary>Gets the declared schema: one string key per action in each of the two sections.</summary>
