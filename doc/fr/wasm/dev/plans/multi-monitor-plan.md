@@ -5,7 +5,8 @@
 **Statut :** série lancée par Benoit le 2026-10-28 (« On peut débuter la
 fonctionnalité multi-moniteur »). Les ADR [0178](../adr/0178-extended-screens-in-display-surfaces.md)
 et [0179](../adr/0179-per-screen-taskbars-and-other-screen-menus.md) sont écrits
-avant le code (chantier 0). Aucun code n'est encore écrit.
+avant le code (chantier 0). Chantier 1 fait : écrans dans le gestionnaire de fenêtres
+([`window-runtime-displays.md`](../window-runtime-displays.md)).
 
 ## 1. Objet
 

@@ -5,7 +5,8 @@
 **Status:** series started by Benoit on 2026-10-28 ("we can start the
 multi-monitor feature"). ADRs [0178](../adr/0178-extended-screens-in-display-surfaces.md)
 and [0179](../adr/0179-per-screen-taskbars-and-other-screen-menus.md) are written
-before the code (work item 0). No code is written yet.
+before the code (work item 0). Work item 1 done: screens in the window manager
+([`window-runtime-displays.md`](../window-runtime-displays.md)).
 
 ## 1. Purpose
 

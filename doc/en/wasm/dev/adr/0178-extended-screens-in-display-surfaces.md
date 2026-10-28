@@ -121,7 +121,7 @@ merged. The interface (taskbars, menus, veil, settings) is in
 
 ## Tasks
 
-- [ ] `DisplayId`, work areas per screen and commands in `WindowRuntime` (work item 1).
+- [x] `DisplayId`, work areas per screen and commands in `WindowRuntime` (work item 1, [`window-runtime-displays.md`](../window-runtime-displays.md)).
 - [ ] Windows rendered once and moved through a portal (work item 2).
 - [ ] Screen service, permission, fallback, restore (work item 3).
 - [ ] Desktop and overlays in each screen (work item 4).

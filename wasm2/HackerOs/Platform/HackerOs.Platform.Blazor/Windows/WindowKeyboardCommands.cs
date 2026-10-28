@@ -318,7 +318,7 @@ public sealed class WindowKeyboardCommands : IDisposable
         }
 
         CancelMode();
-        WindowBounds anchor = window.VisualState == WindowVisualState.Maximized ? _runtime.WorkArea : window.Bounds;
+        WindowBounds anchor = window.VisualState == WindowVisualState.Maximized ? _runtime.GetWorkArea(window.DisplayId) : window.Bounds;
         Menu = new WindowMenuState(windowId, clientX ?? anchor.X + 4, clientY ?? anchor.Y + 32);
         Changed?.Invoke();
     }
@@ -564,7 +564,7 @@ public sealed class WindowKeyboardCommands : IDisposable
             Apply(new RestoreWindowCommand(window.Id));
         }
 
-        WindowBounds area = _runtime.WorkArea;
+        WindowBounds area = _runtime.GetWorkArea(window.DisplayId);
         double width = Math.Floor(area.Width / 2);
         WindowBounds half = new(left ? area.X : area.X + area.Width - width, area.Y, width, area.Height);
         bool resized = Apply(new ResizeWindowCommand(window.Id, half));

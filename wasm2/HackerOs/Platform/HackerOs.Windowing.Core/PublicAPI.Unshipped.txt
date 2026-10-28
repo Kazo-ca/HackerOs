@@ -1,1 +1,4 @@
 #nullable enable
+HackerOs.Windowing.Core.WindowRuntime.Displays.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Windowing.Abstractions.DisplayId>!
+HackerOs.Windowing.Core.WindowRuntime.GetWorkArea(HackerOs.Windowing.Abstractions.DisplayId displayId) -> HackerOs.Windowing.Abstractions.WindowBounds
+HackerOs.Windowing.Core.WindowRuntime.NextDisplayId.get -> HackerOs.Windowing.Abstractions.DisplayId

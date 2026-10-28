@@ -1,1 +1,113 @@
 #nullable enable
+HackerOs.Windowing.Abstractions.AddDisplayCommand
+HackerOs.Windowing.Abstractions.AddDisplayCommand.AddDisplayCommand(HackerOs.Windowing.Abstractions.DisplayId DisplayId, HackerOs.Windowing.Abstractions.WindowBounds WorkArea) -> void
+HackerOs.Windowing.Abstractions.AddDisplayCommand.Deconstruct(out HackerOs.Windowing.Abstractions.DisplayId DisplayId, out HackerOs.Windowing.Abstractions.WindowBounds WorkArea) -> void
+HackerOs.Windowing.Abstractions.AddDisplayCommand.DisplayId.get -> HackerOs.Windowing.Abstractions.DisplayId
+HackerOs.Windowing.Abstractions.AddDisplayCommand.DisplayId.init -> void
+HackerOs.Windowing.Abstractions.AddDisplayCommand.Equals(HackerOs.Windowing.Abstractions.AddDisplayCommand? other) -> bool
+HackerOs.Windowing.Abstractions.AddDisplayCommand.WorkArea.get -> HackerOs.Windowing.Abstractions.WindowBounds
+HackerOs.Windowing.Abstractions.AddDisplayCommand.WorkArea.init -> void
+HackerOs.Windowing.Abstractions.ChangeViewportCommand.ChangeViewportCommand(HackerOs.Windowing.Abstractions.WindowBounds workArea, HackerOs.Windowing.Abstractions.DisplayId displayId) -> void
+HackerOs.Windowing.Abstractions.ChangeViewportCommand.DisplayId.get -> HackerOs.Windowing.Abstractions.DisplayId
+HackerOs.Windowing.Abstractions.ChangeViewportCommand.DisplayId.init -> void
+HackerOs.Windowing.Abstractions.DisplayAddedEvent
+HackerOs.Windowing.Abstractions.DisplayAddedEvent.Deconstruct(out HackerOs.Windowing.Abstractions.DisplayId DisplayId, out HackerOs.Windowing.Abstractions.WindowBounds WorkArea) -> void
+HackerOs.Windowing.Abstractions.DisplayAddedEvent.DisplayAddedEvent(HackerOs.Windowing.Abstractions.DisplayId DisplayId, HackerOs.Windowing.Abstractions.WindowBounds WorkArea) -> void
+HackerOs.Windowing.Abstractions.DisplayAddedEvent.DisplayId.get -> HackerOs.Windowing.Abstractions.DisplayId
+HackerOs.Windowing.Abstractions.DisplayAddedEvent.DisplayId.init -> void
+HackerOs.Windowing.Abstractions.DisplayAddedEvent.Equals(HackerOs.Windowing.Abstractions.DisplayAddedEvent? other) -> bool
+HackerOs.Windowing.Abstractions.DisplayAddedEvent.WorkArea.get -> HackerOs.Windowing.Abstractions.WindowBounds
+HackerOs.Windowing.Abstractions.DisplayAddedEvent.WorkArea.init -> void
+HackerOs.Windowing.Abstractions.DisplayId
+HackerOs.Windowing.Abstractions.DisplayId.DisplayId() -> void
+HackerOs.Windowing.Abstractions.DisplayId.Equals(HackerOs.Windowing.Abstractions.DisplayId other) -> bool
+HackerOs.Windowing.Abstractions.DisplayId.IsPrimary.get -> bool
+HackerOs.Windowing.Abstractions.DisplayId.Number.get -> int
+HackerOs.Windowing.Abstractions.DisplayRemovedEvent
+HackerOs.Windowing.Abstractions.DisplayRemovedEvent.Deconstruct(out HackerOs.Windowing.Abstractions.DisplayId DisplayId) -> void
+HackerOs.Windowing.Abstractions.DisplayRemovedEvent.DisplayId.get -> HackerOs.Windowing.Abstractions.DisplayId
+HackerOs.Windowing.Abstractions.DisplayRemovedEvent.DisplayId.init -> void
+HackerOs.Windowing.Abstractions.DisplayRemovedEvent.DisplayRemovedEvent(HackerOs.Windowing.Abstractions.DisplayId DisplayId) -> void
+HackerOs.Windowing.Abstractions.DisplayRemovedEvent.Equals(HackerOs.Windowing.Abstractions.DisplayRemovedEvent? other) -> bool
+HackerOs.Windowing.Abstractions.MoveWindowToDisplayCommand
+HackerOs.Windowing.Abstractions.MoveWindowToDisplayCommand.Deconstruct(out HackerOs.Windowing.Abstractions.WindowId WindowId, out HackerOs.Windowing.Abstractions.DisplayId DisplayId) -> void
+HackerOs.Windowing.Abstractions.MoveWindowToDisplayCommand.DisplayId.get -> HackerOs.Windowing.Abstractions.DisplayId
+HackerOs.Windowing.Abstractions.MoveWindowToDisplayCommand.DisplayId.init -> void
+HackerOs.Windowing.Abstractions.MoveWindowToDisplayCommand.Equals(HackerOs.Windowing.Abstractions.MoveWindowToDisplayCommand? other) -> bool
+HackerOs.Windowing.Abstractions.MoveWindowToDisplayCommand.MoveWindowToDisplayCommand(HackerOs.Windowing.Abstractions.WindowId WindowId, HackerOs.Windowing.Abstractions.DisplayId DisplayId) -> void
+HackerOs.Windowing.Abstractions.MoveWindowToDisplayCommand.WindowId.get -> HackerOs.Windowing.Abstractions.WindowId
+HackerOs.Windowing.Abstractions.MoveWindowToDisplayCommand.WindowId.init -> void
+HackerOs.Windowing.Abstractions.RemoveDisplayCommand
+HackerOs.Windowing.Abstractions.RemoveDisplayCommand.Deconstruct(out HackerOs.Windowing.Abstractions.DisplayId DisplayId) -> void
+HackerOs.Windowing.Abstractions.RemoveDisplayCommand.DisplayId.get -> HackerOs.Windowing.Abstractions.DisplayId
+HackerOs.Windowing.Abstractions.RemoveDisplayCommand.DisplayId.init -> void
+HackerOs.Windowing.Abstractions.RemoveDisplayCommand.Equals(HackerOs.Windowing.Abstractions.RemoveDisplayCommand? other) -> bool
+HackerOs.Windowing.Abstractions.RemoveDisplayCommand.RemoveDisplayCommand(HackerOs.Windowing.Abstractions.DisplayId DisplayId) -> void
+HackerOs.Windowing.Abstractions.WindowDisplayChangedEvent
+HackerOs.Windowing.Abstractions.WindowDisplayChangedEvent.Bounds.get -> HackerOs.Windowing.Abstractions.WindowBounds
+HackerOs.Windowing.Abstractions.WindowDisplayChangedEvent.Bounds.init -> void
+HackerOs.Windowing.Abstractions.WindowDisplayChangedEvent.Deconstruct(out HackerOs.Windowing.Abstractions.WindowId WindowId, out HackerOs.Windowing.Abstractions.DisplayId PreviousDisplayId, out HackerOs.Windowing.Abstractions.DisplayId DisplayId, out HackerOs.Windowing.Abstractions.WindowBounds Bounds, out HackerOs.Windowing.Abstractions.WindowBounds? RestoreBounds) -> void
+HackerOs.Windowing.Abstractions.WindowDisplayChangedEvent.DisplayId.get -> HackerOs.Windowing.Abstractions.DisplayId
+HackerOs.Windowing.Abstractions.WindowDisplayChangedEvent.DisplayId.init -> void
+HackerOs.Windowing.Abstractions.WindowDisplayChangedEvent.Equals(HackerOs.Windowing.Abstractions.WindowDisplayChangedEvent? other) -> bool
+HackerOs.Windowing.Abstractions.WindowDisplayChangedEvent.PreviousDisplayId.get -> HackerOs.Windowing.Abstractions.DisplayId
+HackerOs.Windowing.Abstractions.WindowDisplayChangedEvent.PreviousDisplayId.init -> void
+HackerOs.Windowing.Abstractions.WindowDisplayChangedEvent.RestoreBounds.get -> HackerOs.Windowing.Abstractions.WindowBounds?
+HackerOs.Windowing.Abstractions.WindowDisplayChangedEvent.RestoreBounds.init -> void
+HackerOs.Windowing.Abstractions.WindowDisplayChangedEvent.WindowDisplayChangedEvent(HackerOs.Windowing.Abstractions.WindowId WindowId, HackerOs.Windowing.Abstractions.DisplayId PreviousDisplayId, HackerOs.Windowing.Abstractions.DisplayId DisplayId, HackerOs.Windowing.Abstractions.WindowBounds Bounds, HackerOs.Windowing.Abstractions.WindowBounds? RestoreBounds) -> void
+HackerOs.Windowing.Abstractions.WindowDisplayChangedEvent.WindowId.get -> HackerOs.Windowing.Abstractions.WindowId
+HackerOs.Windowing.Abstractions.WindowDisplayChangedEvent.WindowId.init -> void
+HackerOs.Windowing.Abstractions.WindowRuntimeState.DisplayId.get -> HackerOs.Windowing.Abstractions.DisplayId
+HackerOs.Windowing.Abstractions.WindowRuntimeState.DisplayId.init -> void
+HackerOs.Windowing.Abstractions.WindowViewportChangedEvent.DisplayId.get -> HackerOs.Windowing.Abstractions.DisplayId
+HackerOs.Windowing.Abstractions.WindowViewportChangedEvent.DisplayId.init -> void
+HackerOs.Windowing.Abstractions.WindowViewportChangedEvent.WindowViewportChangedEvent(HackerOs.Windowing.Abstractions.WindowBounds workArea, System.Collections.Generic.IReadOnlyList<HackerOs.Windowing.Abstractions.WindowRuntimeState!>! windows, HackerOs.Windowing.Abstractions.DisplayId displayId) -> void
+override HackerOs.Windowing.Abstractions.AddDisplayCommand.<Clone>$() -> HackerOs.Windowing.Abstractions.AddDisplayCommand!
+override HackerOs.Windowing.Abstractions.AddDisplayCommand.Equals(object? obj) -> bool
+override HackerOs.Windowing.Abstractions.AddDisplayCommand.GetHashCode() -> int
+override HackerOs.Windowing.Abstractions.AddDisplayCommand.ToString() -> string!
+override HackerOs.Windowing.Abstractions.DisplayAddedEvent.<Clone>$() -> HackerOs.Windowing.Abstractions.DisplayAddedEvent!
+override HackerOs.Windowing.Abstractions.DisplayAddedEvent.Equals(object? obj) -> bool
+override HackerOs.Windowing.Abstractions.DisplayAddedEvent.GetHashCode() -> int
+override HackerOs.Windowing.Abstractions.DisplayAddedEvent.ToString() -> string!
+override HackerOs.Windowing.Abstractions.DisplayId.GetHashCode() -> int
+override HackerOs.Windowing.Abstractions.DisplayId.ToString() -> string!
+override HackerOs.Windowing.Abstractions.DisplayRemovedEvent.<Clone>$() -> HackerOs.Windowing.Abstractions.DisplayRemovedEvent!
+override HackerOs.Windowing.Abstractions.DisplayRemovedEvent.Equals(object? obj) -> bool
+override HackerOs.Windowing.Abstractions.DisplayRemovedEvent.GetHashCode() -> int
+override HackerOs.Windowing.Abstractions.DisplayRemovedEvent.ToString() -> string!
+override HackerOs.Windowing.Abstractions.MoveWindowToDisplayCommand.<Clone>$() -> HackerOs.Windowing.Abstractions.MoveWindowToDisplayCommand!
+override HackerOs.Windowing.Abstractions.MoveWindowToDisplayCommand.Equals(object? obj) -> bool
+override HackerOs.Windowing.Abstractions.MoveWindowToDisplayCommand.GetHashCode() -> int
+override HackerOs.Windowing.Abstractions.MoveWindowToDisplayCommand.ToString() -> string!
+override HackerOs.Windowing.Abstractions.RemoveDisplayCommand.<Clone>$() -> HackerOs.Windowing.Abstractions.RemoveDisplayCommand!
+override HackerOs.Windowing.Abstractions.RemoveDisplayCommand.Equals(object? obj) -> bool
+override HackerOs.Windowing.Abstractions.RemoveDisplayCommand.GetHashCode() -> int
+override HackerOs.Windowing.Abstractions.RemoveDisplayCommand.ToString() -> string!
+override HackerOs.Windowing.Abstractions.WindowDisplayChangedEvent.<Clone>$() -> HackerOs.Windowing.Abstractions.WindowDisplayChangedEvent!
+override HackerOs.Windowing.Abstractions.WindowDisplayChangedEvent.Equals(object? obj) -> bool
+override HackerOs.Windowing.Abstractions.WindowDisplayChangedEvent.GetHashCode() -> int
+override HackerOs.Windowing.Abstractions.WindowDisplayChangedEvent.ToString() -> string!
+override sealed HackerOs.Windowing.Abstractions.AddDisplayCommand.Equals(HackerOs.Windowing.Abstractions.WindowCommand? other) -> bool
+override sealed HackerOs.Windowing.Abstractions.DisplayAddedEvent.Equals(HackerOs.Windowing.Abstractions.WindowEvent? other) -> bool
+override sealed HackerOs.Windowing.Abstractions.DisplayRemovedEvent.Equals(HackerOs.Windowing.Abstractions.WindowEvent? other) -> bool
+override sealed HackerOs.Windowing.Abstractions.MoveWindowToDisplayCommand.Equals(HackerOs.Windowing.Abstractions.WindowCommand? other) -> bool
+override sealed HackerOs.Windowing.Abstractions.RemoveDisplayCommand.Equals(HackerOs.Windowing.Abstractions.WindowCommand? other) -> bool
+override sealed HackerOs.Windowing.Abstractions.WindowDisplayChangedEvent.Equals(HackerOs.Windowing.Abstractions.WindowEvent? other) -> bool
+static HackerOs.Windowing.Abstractions.AddDisplayCommand.operator !=(HackerOs.Windowing.Abstractions.AddDisplayCommand? left, HackerOs.Windowing.Abstractions.AddDisplayCommand? right) -> bool
+static HackerOs.Windowing.Abstractions.AddDisplayCommand.operator ==(HackerOs.Windowing.Abstractions.AddDisplayCommand? left, HackerOs.Windowing.Abstractions.AddDisplayCommand? right) -> bool
+static HackerOs.Windowing.Abstractions.DisplayAddedEvent.operator !=(HackerOs.Windowing.Abstractions.DisplayAddedEvent? left, HackerOs.Windowing.Abstractions.DisplayAddedEvent? right) -> bool
+static HackerOs.Windowing.Abstractions.DisplayAddedEvent.operator ==(HackerOs.Windowing.Abstractions.DisplayAddedEvent? left, HackerOs.Windowing.Abstractions.DisplayAddedEvent? right) -> bool
+static HackerOs.Windowing.Abstractions.DisplayId.FromNumber(int number) -> HackerOs.Windowing.Abstractions.DisplayId
+static HackerOs.Windowing.Abstractions.DisplayId.Primary.get -> HackerOs.Windowing.Abstractions.DisplayId
+static HackerOs.Windowing.Abstractions.DisplayId.operator !=(HackerOs.Windowing.Abstractions.DisplayId left, HackerOs.Windowing.Abstractions.DisplayId right) -> bool
+static HackerOs.Windowing.Abstractions.DisplayId.operator ==(HackerOs.Windowing.Abstractions.DisplayId left, HackerOs.Windowing.Abstractions.DisplayId right) -> bool
+static HackerOs.Windowing.Abstractions.DisplayRemovedEvent.operator !=(HackerOs.Windowing.Abstractions.DisplayRemovedEvent? left, HackerOs.Windowing.Abstractions.DisplayRemovedEvent? right) -> bool
+static HackerOs.Windowing.Abstractions.DisplayRemovedEvent.operator ==(HackerOs.Windowing.Abstractions.DisplayRemovedEvent? left, HackerOs.Windowing.Abstractions.DisplayRemovedEvent? right) -> bool
+static HackerOs.Windowing.Abstractions.MoveWindowToDisplayCommand.operator !=(HackerOs.Windowing.Abstractions.MoveWindowToDisplayCommand? left, HackerOs.Windowing.Abstractions.MoveWindowToDisplayCommand? right) -> bool
+static HackerOs.Windowing.Abstractions.MoveWindowToDisplayCommand.operator ==(HackerOs.Windowing.Abstractions.MoveWindowToDisplayCommand? left, HackerOs.Windowing.Abstractions.MoveWindowToDisplayCommand? right) -> bool
+static HackerOs.Windowing.Abstractions.RemoveDisplayCommand.operator !=(HackerOs.Windowing.Abstractions.RemoveDisplayCommand? left, HackerOs.Windowing.Abstractions.RemoveDisplayCommand? right) -> bool
+static HackerOs.Windowing.Abstractions.RemoveDisplayCommand.operator ==(HackerOs.Windowing.Abstractions.RemoveDisplayCommand? left, HackerOs.Windowing.Abstractions.RemoveDisplayCommand? right) -> bool
+static HackerOs.Windowing.Abstractions.WindowDisplayChangedEvent.operator !=(HackerOs.Windowing.Abstractions.WindowDisplayChangedEvent? left, HackerOs.Windowing.Abstractions.WindowDisplayChangedEvent? right) -> bool
+static HackerOs.Windowing.Abstractions.WindowDisplayChangedEvent.operator ==(HackerOs.Windowing.Abstractions.WindowDisplayChangedEvent? left, HackerOs.Windowing.Abstractions.WindowDisplayChangedEvent? right) -> bool
+~override HackerOs.Windowing.Abstractions.DisplayId.Equals(object obj) -> bool

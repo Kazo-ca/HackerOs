@@ -113,7 +113,7 @@ public sealed class WindowGeometryRecorder : IDisposable
         lock (_gate)
         {
             TrackedWindow tracked = new(appId);
-            Capture(tracked, window, _runtime.WorkArea);
+            Capture(tracked, window, _runtime.GetWorkArea(window.DisplayId));
             _tracked[windowId] = tracked;
         }
     }
@@ -176,10 +176,10 @@ public sealed class WindowGeometryRecorder : IDisposable
             // Every other fact (move, resize, maximize, restore, work-area change) is read back from
             // the runtime's snapshots rather than from each event, so the recorder always sees the
             // constrained bounds the runtime actually applied.
-            WindowBounds workArea = _runtime.WorkArea;
             foreach (WindowRuntimeState window in _runtime.Windows)
             {
-                if (_tracked.TryGetValue(window.Id, out TrackedWindow? tracked) && Capture(tracked, window, workArea))
+                if (_tracked.TryGetValue(window.Id, out TrackedWindow? tracked)
+                    && Capture(tracked, window, _runtime.GetWorkArea(window.DisplayId)))
                 {
                     Schedule(tracked.AppId, tracked.Snapshot(), _debounce);
                 }
