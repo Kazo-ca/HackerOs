@@ -1,6 +1,7 @@
 using System.Globalization;
 using HackerOs.Platform.Blazor.Windows;
 using HackerOs.Platform.Core.Globalization;
+using HackerOs.Platform.Core.Shell;
 using HackerOs.Simulation.Abstractions.Time;
 using HackerOs.Taskbar.Blazor;
 using HackerOs.Windowing.Core;
@@ -12,16 +13,29 @@ namespace HackerOs.Platform.Blazor.Shell;
 public sealed class TaskbarWindowSourceAdapter : ITaskbarWindowSource, IDisposable
 {
     private readonly WindowRuntime _runtime;
+    private readonly Func<WindowRuntimeState, bool>? _lists;
 
     /// <summary>Creates an adapter over the desktop window runtime.</summary>
     public TaskbarWindowSourceAdapter(WindowRuntime runtime)
+        : this(runtime, lists: null)
+    {
+    }
+
+    /// <summary>Creates an adapter that lists only the windows <paramref name="lists"/> keeps (the taskbar of one screen, ADR 0179 §1).</summary>
+    /// <param name="runtime">The desktop window runtime.</param>
+    /// <param name="lists">Whether a window shows on this taskbar; <see langword="null"/> lists every window.</param>
+    internal TaskbarWindowSourceAdapter(WindowRuntime runtime, Func<WindowRuntimeState, bool>? lists)
     {
         _runtime = runtime ?? throw new ArgumentNullException(nameof(runtime));
+        _lists = lists;
         _runtime.StateChanged += OnRuntimeStateChanged;
     }
 
     /// <inheritdoc />
-    public IReadOnlyList<TaskbarWindowItem> Windows => [.. _runtime.Windows.Select(ToItem)];
+    public IReadOnlyList<TaskbarWindowItem> Windows => [.. _runtime.Windows.Where(window => _lists?.Invoke(window) ?? true).Select(ToItem)];
+
+    /// <summary>Tells the taskbar to read the list again, after what <c>lists</c> keeps changed.</summary>
+    internal void Refresh() => Changed?.Invoke();
 
     /// <inheritdoc />
     public event Action? Changed;
@@ -37,6 +51,22 @@ public sealed class TaskbarWindowSourceAdapter : ITaskbarWindowSource, IDisposab
 
     /// <inheritdoc />
     public void Dispose() => _runtime.StateChanged -= OnRuntimeStateChanged;
+}
+
+/// <summary>Which windows the taskbar of a screen lists (ADR 0179 §1).</summary>
+internal static class TaskbarScreenFilter
+{
+    /// <summary>
+    /// The taskbar of a secondary screen lists the windows of its screen; the taskbar of screen 1 lists
+    /// every window (<see cref="PrimaryTaskbarMode.All"/>) or only those of screen 1 (<see cref="PrimaryTaskbarMode.Own"/>).
+    /// </summary>
+    /// <param name="taskbar">The screen of the taskbar.</param>
+    /// <param name="primaryTaskbar">The <c>primary-taskbar</c> setting.</param>
+    /// <param name="window">The screen of the window.</param>
+    public static bool Lists(DisplayId taskbar, PrimaryTaskbarMode primaryTaskbar, DisplayId window) =>
+        taskbar.IsPrimary
+            ? primaryTaskbar == PrimaryTaskbarMode.All || window.IsPrimary
+            : window == taskbar;
 }
 
 /// <summary>Dispatches taskbar-initiated window commands onto the authoritative window runtime.</summary>
@@ -82,27 +112,55 @@ public sealed class TaskbarLauncherAdapter : ITaskbarLauncher
     /// <inheritdoc />
     public bool IsOpen { get; private set; }
 
+    /// <summary>Gets the screen the launcher shows on while open: the screen of the taskbar that opened it (ADR 0179 §1).</summary>
+    internal DisplayId Display { get; private set; }
+
     /// <inheritdoc />
     public event Action? Changed;
 
     /// <inheritdoc />
-    public void Toggle() => SetOpen(!IsOpen);
+    public void Toggle() => ToggleOn(IsOpen ? Display : DisplayId.Primary);
 
     /// <summary>Opens the launcher.</summary>
-    public void Open() => SetOpen(true);
+    public void Open() => SetOpen(true, IsOpen ? Display : DisplayId.Primary);
 
     /// <summary>Closes the launcher.</summary>
-    public void Close() => SetOpen(false);
+    public void Close() => SetOpen(false, Display);
 
-    private void SetOpen(bool value)
+    /// <summary>
+    /// The Start button of <paramref name="display"/>'s taskbar: closes the launcher open on that screen,
+    /// otherwise opens it there (moving it from another screen).
+    /// </summary>
+    /// <param name="display">The screen of the taskbar clicked.</param>
+    internal void ToggleOn(DisplayId display) => SetOpen(!(IsOpen && Display == display), display);
+
+    /// <summary>The launcher as the taskbar of <paramref name="display"/> sees it: open only when it shows on that screen.</summary>
+    /// <param name="display">The screen of the taskbar.</param>
+    internal ITaskbarLauncher For(DisplayId display) => new ScreenView(this, display);
+
+    private void SetOpen(bool value, DisplayId display)
     {
-        if (IsOpen == value)
+        if (IsOpen == value && (!value || Display == display))
         {
             return;
         }
 
         IsOpen = value;
+        Display = value ? display : Display;
         Changed?.Invoke();
+    }
+
+    private sealed class ScreenView(TaskbarLauncherAdapter launcher, DisplayId display) : ITaskbarLauncher
+    {
+        public bool IsOpen => launcher.IsOpen && launcher.Display == display;
+
+        public void Toggle() => launcher.ToggleOn(display);
+
+        public event Action? Changed
+        {
+            add => launcher.Changed += value;
+            remove => launcher.Changed -= value;
+        }
     }
 }
 

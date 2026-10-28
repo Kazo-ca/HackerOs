@@ -39,7 +39,7 @@ export function trackFocus(element) {
  * Does nothing when the focus is already inside it (a click, or an app that focused itself).
  */
 export function focusWindow(element) {
-    if (!element || element.hidden || element.contains(document.activeElement)) {
+    if (!element || element.hidden || element.contains(element.ownerDocument.activeElement)) {
         return;
     }
     const last = element.__hosLastFocus;

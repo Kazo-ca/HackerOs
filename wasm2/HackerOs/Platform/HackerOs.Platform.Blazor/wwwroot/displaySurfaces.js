@@ -5,7 +5,10 @@
 // content), moving rendered content in and out, and reporting the window's events (resize, focus,
 // close) to DisplaySurfaceService. The window runs no .NET runtime: the main instance renders into
 // it, and the JS initializer (HackerOs.Platform.Blazor.lib.module.js) mirrors Blazor's event
-// listeners onto its document.
+// listeners onto its document. A secondary screen (ADR 0178 §4) is a surface opened with a
+// placement: screens.js chooses its monitor and follows it.
+
+import * as screens from "./screens.js";
 
 const REGISTRY_KEY = Symbol.for("hackeros.displaySurfaces.documentListeners");
 const MIRRORED = "data-hackeros-mirrored";
@@ -154,6 +157,7 @@ function end(surface, reason) {
     }
     surface.ending = true;
     surfaces.delete(surface.id);
+    screens.forget(surface.id);
     clearInterval(surface.poll);
     surface.styleObserver?.disconnect();
     surface.themeObserver?.disconnect();
@@ -187,10 +191,17 @@ function hookUnload() {
     });
 }
 
-export async function open(dotnet, id, title, width, height) {
+export async function open(dotnet, id, title, width, height, placement) {
+    // A screen's monitor is chosen before window.open: the permission prompt, if any, needs the
+    // user's gesture, which opening the window uses up.
+    const plan = placement ? await screens.prepare(placement) : null;
+    const place = plan?.features;
+    const features = place
+        ? `popup=yes,left=${place.left},top=${place.top},width=${place.width},height=${place.height}`
+        : `popup=yes,width=${width},height=${height}`;
     let win = null;
     try {
-        win = window.open("", `hackeros-${id}`, `popup=yes,width=${width},height=${height}`);
+        win = window.open("", `hackeros-${id}`, features);
     } catch {
         win = null;
     }
@@ -209,8 +220,9 @@ export async function open(dotnet, id, title, width, height) {
     watch(surface);
     surfaces.set(id, surface);
     hookUnload();
+    const monitor = plan ? screens.settle(id, win, plan) : null;
     await surface.relayLoaded;
-    return { status: "opened", width: Math.round(win.innerWidth || width), height: Math.round(win.innerHeight || height) };
+    return { status: "opened", width: Math.round(win.innerWidth || width), height: Math.round(win.innerHeight || height), monitor };
 }
 
 // The content leaves the desktop's ancestors (a theme scope, a window's colours): it keeps their

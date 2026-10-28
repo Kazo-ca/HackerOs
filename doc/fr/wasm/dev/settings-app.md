@@ -22,7 +22,7 @@ anglais et français). Le `manifest.json` est généré au build à partir de
 ## Menu latéral (ADR 0170)
 
 Les pages sont dans un menu à gauche, groupé : Personnalisation (Apparence,
-Bureau, Accessibilité, Langue), Applications (Associations de fichiers à
+Bureau, Écrans, Accessibilité, Langue), Applications (Associations de fichiers à
 Menus des fichiers, Application), Réseau (Connexion au serveur,
 Synchronisation), Système (Utilisateurs, Mémoire, Sauvegarde, À propos).
 
@@ -44,6 +44,7 @@ Synchronisation), Système (Utilisateurs, Mémoire, Sauvegarde, À propos).
 |---|---|---|
 | Apparence (`appearance`) | (dans `SettingsWindow.razor`) | Couche d'écriture (utilisateur ou système), thème du bureau et du mobile, accent, animations, thèmes utilisateur (`/etc/hackeros/themes` et `~/.config/hackeros/themes`, `UserThemeLibrary`) ; écrit `appearance.config`. |
 | Bureau (`desktop`) | `DesktopPanel` | Options et disposition du bureau (`desktop.config`, ADR 0160). |
+| Écrans (`screens`) | `ScreensPanel` | Écrans ouverts par `HackScreens` (Identifier, Nouvel écran, Restaurer, Fermer, Plein écran, permission ; ADR 0184) ; `screens.config` : choix de `primary-taskbar`, écrans retenus et Oublier (ADR 0179 §7, [`screens-settings.md`](screens-settings.md)). |
 | Accessibilité (`accessibility`) | `AccessibilityPanel` | Contraste élevé, taille du texte, mouvement réduit (ADR 0105). |
 | Langue (`language`) | `LanguagePanel` | Langue de l'interface. |
 | Associations de fichiers (`file-associations`) | `FileAssociationsPanel` | Applications par défaut, couche système ou utilisateur (`HackFileAssociationLayer`, ADR 0121). |

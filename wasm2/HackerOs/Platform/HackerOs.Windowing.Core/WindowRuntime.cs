@@ -7,7 +7,7 @@ public sealed class WindowRuntime
 {
     private readonly Dictionary<WindowId, WindowRuntimeState> _windows = [];
     private readonly HashSet<WindowId> _pendingClose = [];
-    private WindowBounds _workArea;
+    private readonly Dictionary<DisplayId, WindowBounds> _workAreas = [];
     private int _nextZOrder;
 
     /// <summary>Event raised whenever window state or active windows change.</summary>
@@ -20,11 +20,38 @@ public sealed class WindowRuntime
     /// </summary>
     public event Action<IReadOnlyList<WindowEvent>>? EventsApplied;
 
-    /// <summary>Gets the current desktop work area.</summary>
-    public WindowBounds WorkArea => _workArea;
+    /// <summary>Gets the current work area of screen 1 (<see cref="DisplayId.Primary"/>).</summary>
+    public WindowBounds WorkArea => _workAreas[DisplayId.Primary];
 
-    /// <summary>Creates a runtime for the supplied desktop work area.</summary>
-    public WindowRuntime(WindowBounds workArea) => _workArea = workArea;
+    /// <summary>Gets the registered screens, screen 1 first, then by number (ADR 0178 §2).</summary>
+    public IReadOnlyList<DisplayId> Displays => [.. _workAreas.Keys.OrderBy(display => display.Number)];
+
+    /// <summary>
+    /// Gets the screen a new screen should take: the smallest free number (ADR 0178 §5).
+    /// </summary>
+    public DisplayId NextDisplayId
+    {
+        get
+        {
+            int number = 1;
+            while (_workAreas.ContainsKey(DisplayId.FromNumber(number)))
+            {
+                number++;
+            }
+
+            return DisplayId.FromNumber(number);
+        }
+    }
+
+    /// <summary>Creates a runtime whose screen 1 has the supplied work area.</summary>
+    public WindowRuntime(WindowBounds workArea) => _workAreas[DisplayId.Primary] = workArea;
+
+    /// <summary>Gets the work area of a registered screen.</summary>
+    /// <param name="displayId">The screen.</param>
+    /// <exception cref="KeyNotFoundException">The screen is not registered.</exception>
+    public WindowBounds GetWorkArea(DisplayId displayId) => _workAreas.TryGetValue(displayId, out WindowBounds area)
+        ? area
+        : throw new KeyNotFoundException($"Screen '{displayId}' is not registered.");
 
     /// <summary>Gets stable snapshots ordered from back to front.</summary>
     public IReadOnlyList<WindowRuntimeState> Windows =>
@@ -53,7 +80,10 @@ public sealed class WindowRuntime
             RequestWindowCloseCommand close => RequestClose(close.WindowId),
             CancelWindowCloseCommand close => CancelClose(close.WindowId),
             ForceWindowCloseCommand close => ForceClose(close.WindowId),
-            ChangeViewportCommand viewport => ChangeViewport(viewport.WorkArea),
+            ChangeViewportCommand viewport => ChangeViewport(viewport.DisplayId, viewport.WorkArea),
+            AddDisplayCommand add => AddDisplay(add.DisplayId, add.WorkArea),
+            RemoveDisplayCommand remove => RemoveDisplay(remove.DisplayId),
+            MoveWindowToDisplayCommand move => MoveToDisplay(move.WindowId, move.DisplayId),
             SetWindowTitleCommand title => ChangeTitle(title.WindowId, title.Title),
             SetWindowRespondingCommand responding => ChangeResponding(responding.WindowId, responding.IsResponding),
             null => throw new ArgumentNullException(nameof(command)),
@@ -92,13 +122,20 @@ public sealed class WindowRuntime
             throw new InvalidOperationException($"Owner window '{ownerId}' is not registered.");
         }
 
+        // A modal window shows on its owner's screen (ADR 0178 §2); any other window on the screen it names.
+        DisplayId displayId = initialState is { Modality: WindowModality.OwnerModal, OwnerId: WindowId modalOwner }
+            ? _windows[modalOwner].DisplayId
+            : initialState.DisplayId;
+        WindowBounds area = GetWorkArea(displayId);
+
         WindowId? previousFocus = _windows.Values.SingleOrDefault(window => window.IsFocused)?.Id;
         ClearFocus();
         WindowRuntimeState created = Copy(
             initialState,
-            bounds: Constrain(initialState.Bounds, initialState.Constraints),
+            bounds: Constrain(initialState.Bounds, initialState.Constraints, area),
             zOrder: NextZOrder(),
-            isFocused: true);
+            isFocused: true,
+            displayId: displayId);
         _windows.Add(created.Id, created);
         return [new WindowCreatedEvent(created), new WindowFocusedEvent(previousFocus, created.Id, created.ZOrder)];
     }
@@ -137,7 +174,8 @@ public sealed class WindowRuntime
 
         WindowBounds bounds = Constrain(
             new WindowBounds(command.X, command.Y, current.Bounds.Width, current.Bounds.Height),
-            current.Constraints);
+            current.Constraints,
+            AreaOf(current));
         // Moving a snapped window takes it off its tile (ADR 0177): it keeps its current size and
         // forgets the geometry from before the snap. A title-bar drag restores that geometry first.
         _windows[current.Id] = current.IsSnapped
@@ -154,7 +192,7 @@ public sealed class WindowRuntime
             throw new InvalidOperationException("This window is not resizable.");
         }
 
-        WindowBounds bounds = Constrain(command.Bounds, current.Constraints);
+        WindowBounds bounds = Constrain(command.Bounds, current.Constraints, AreaOf(current));
         _windows[current.Id] = Copy(current, bounds: bounds);
         return [new WindowResizedEvent(current.Id, current.Bounds, bounds)];
     }
@@ -186,7 +224,7 @@ public sealed class WindowRuntime
         WindowBounds previousGeometry = current.VisualState == WindowVisualState.Maximized || current.IsSnapped
             ? current.RestoreBounds ?? current.Bounds
             : current.Bounds;
-        WindowBounds bounds = Constrain(command.Bounds, current.Constraints);
+        WindowBounds bounds = Constrain(command.Bounds, current.Constraints, AreaOf(current));
         _windows[current.Id] = Copy(
             current,
             bounds: bounds,
@@ -210,7 +248,7 @@ public sealed class WindowRuntime
     private IReadOnlyList<WindowEvent> Unsnap(WindowRuntimeState current)
     {
         WindowBounds bounds = current.RestoreBounds is WindowBounds previous
-            ? Constrain(previous, current.Constraints)
+            ? Constrain(previous, current.Constraints, AreaOf(current))
             : current.Bounds;
         _windows[current.Id] = Copy(current, bounds: bounds, restoreBounds: null, replaceRestoreBounds: true, isSnapped: false);
         return [new WindowResizedEvent(current.Id, current.Bounds, bounds), new WindowResizeCompletedEvent(current.Id, bounds)];
@@ -232,7 +270,7 @@ public sealed class WindowRuntime
             // A snapped window keeps the geometry from before its snap, so restoring after the
             // maximize undoes the snap too (ADR 0177).
             restoreBounds = current.VisualState == WindowVisualState.Normal && !current.IsSnapped ? current.Bounds : restoreBounds;
-            bounds = _workArea;
+            bounds = AreaOf(current);
             isSnapped = false;
         }
         // A snapped window that was minimized comes back on its tile, keeping its geometry from
@@ -310,16 +348,17 @@ public sealed class WindowRuntime
         return events;
     }
 
-    private IReadOnlyList<WindowEvent> ChangeViewport(WindowBounds workArea)
+    private IReadOnlyList<WindowEvent> ChangeViewport(DisplayId displayId, WindowBounds workArea)
     {
-        _workArea = workArea;
-        foreach (WindowRuntimeState window in _windows.Values.ToArray())
+        _ = GetWorkArea(displayId);
+        _workAreas[displayId] = workArea;
+        foreach (WindowRuntimeState window in _windows.Values.Where(window => window.DisplayId == displayId).ToArray())
         {
             WindowBounds bounds = window.VisualState == WindowVisualState.Maximized
                 ? workArea
-                : Constrain(window.Bounds, window.Constraints);
+                : Constrain(window.Bounds, window.Constraints, workArea);
             WindowBounds? restoreBounds = window.RestoreBounds is WindowBounds restore
-                ? Constrain(restore, window.Constraints)
+                ? Constrain(restore, window.Constraints, workArea)
                 : null;
             _windows[window.Id] = Copy(
                 window,
@@ -328,8 +367,157 @@ public sealed class WindowRuntime
                 replaceRestoreBounds: true);
         }
 
-        return [new WindowViewportChangedEvent(workArea, Windows)];
+        return [new WindowViewportChangedEvent(workArea, Windows, displayId)];
     }
+
+    private IReadOnlyList<WindowEvent> AddDisplay(DisplayId displayId, WindowBounds workArea)
+    {
+        if (!_workAreas.TryAdd(displayId, workArea))
+        {
+            throw new InvalidOperationException($"Screen '{displayId}' is already registered.");
+        }
+
+        return [new DisplayAddedEvent(displayId, workArea)];
+    }
+
+    /// <summary>
+    /// Brings every window of a removed screen back to screen 1 in its current state (ADR 0178 §2),
+    /// like the content of a closed display surface returning under its anchor. Focus and stacking
+    /// order do not change.
+    /// </summary>
+    private IReadOnlyList<WindowEvent> RemoveDisplay(DisplayId displayId)
+    {
+        if (displayId.IsPrimary)
+        {
+            throw new InvalidOperationException("Screen 1 cannot be removed.");
+        }
+
+        if (!_workAreas.ContainsKey(displayId))
+        {
+            return [];
+        }
+
+        List<WindowEvent> events = [];
+        foreach (WindowRuntimeState window in Windows.Where(window => window.DisplayId == displayId))
+        {
+            events.Add(Relocate(window, DisplayId.Primary));
+        }
+
+        _workAreas.Remove(displayId);
+        events.Add(new DisplayRemovedEvent(displayId));
+        return events;
+    }
+
+    /// <summary>
+    /// Moves a window and its owner-modal family to another screen (ADR 0178 §2): moving a modal
+    /// window moves its owner, and moving an owner moves its modal windows. Focus and stacking order
+    /// do not change.
+    /// </summary>
+    private IReadOnlyList<WindowEvent> MoveToDisplay(WindowId id, DisplayId displayId)
+    {
+        _ = Get(id);
+        _ = GetWorkArea(displayId);
+        List<WindowEvent> events = [];
+        foreach (WindowRuntimeState window in ModalFamily(id).Where(window => window.DisplayId != displayId))
+        {
+            events.Add(Relocate(window, displayId));
+        }
+
+        return events;
+    }
+
+    /// <summary>
+    /// Places <paramref name="window"/> on <paramref name="target"/> in the same visual state. A
+    /// window filling its screen (maximized, or minimized from maximized) fills the target; a normal
+    /// window snapped to one half takes the same half; any other geometry keeps its position relative
+    /// to the screen and is kept inside the target work area.
+    /// </summary>
+    private WindowDisplayChangedEvent Relocate(WindowRuntimeState window, DisplayId target)
+    {
+        WindowBounds source = AreaOf(window);
+        WindowBounds area = GetWorkArea(target);
+        WindowBounds bounds;
+        if (window.VisualState == WindowVisualState.Maximized || window.Bounds == source)
+        {
+            bounds = area;
+        }
+        else if ((SnappedSide(window.Bounds, source) ?? (window.IsSnapped ? IsLeftHalf(window.Bounds, source) : null)) is bool left)
+        {
+            bounds = Constrain(HalfOf(area, left), window.Constraints, area);
+        }
+        else
+        {
+            bounds = Constrain(MapRelative(window.Bounds, source, area), window.Constraints, area);
+        }
+
+        WindowBounds? restoreBounds = window.RestoreBounds is WindowBounds restore
+            ? Constrain(MapRelative(restore, source, area), window.Constraints, area)
+            : null;
+        _windows[window.Id] = Copy(
+            window,
+            bounds: bounds,
+            restoreBounds: restoreBounds,
+            replaceRestoreBounds: true,
+            displayId: target);
+        return new WindowDisplayChangedEvent(window.Id, window.DisplayId, target, bounds, restoreBounds);
+    }
+
+    /// <summary>Gets the windows linked to <paramref name="id"/> by owner-modal relations, back to front.</summary>
+    private IReadOnlyList<WindowRuntimeState> ModalFamily(WindowId id)
+    {
+        WindowRuntimeState root = Get(id);
+        while (root is { Modality: WindowModality.OwnerModal, OwnerId: WindowId ownerId }
+               && _windows.TryGetValue(ownerId, out WindowRuntimeState? owner))
+        {
+            root = owner;
+        }
+
+        HashSet<WindowId> family = [root.Id];
+        Queue<WindowId> pending = new([root.Id]);
+        while (pending.TryDequeue(out WindowId current))
+        {
+            foreach (WindowRuntimeState child in _windows.Values.Where(window =>
+                         window.Modality == WindowModality.OwnerModal && window.OwnerId == current))
+            {
+                if (family.Add(child.Id))
+                {
+                    pending.Enqueue(child.Id);
+                }
+            }
+        }
+
+        return [.. Windows.Where(window => family.Contains(window.Id))];
+    }
+
+    /// <summary>Keeps the offset from the screen's top-left corner in proportion to the screen size.</summary>
+    private static WindowBounds MapRelative(WindowBounds bounds, WindowBounds source, WindowBounds target) => new(
+        target.X + ((bounds.X - source.X) * target.Width / source.Width),
+        target.Y + ((bounds.Y - source.Y) * target.Height / source.Height),
+        bounds.Width,
+        bounds.Height);
+
+    /// <summary>The left or right half-tile of <paramref name="area"/>, as keyboard snapping draws it.</summary>
+    private static WindowBounds HalfOf(WindowBounds area, bool left)
+    {
+        double width = Math.Floor(area.Width / 2);
+        return new WindowBounds(left ? area.X : area.X + area.Width - width, area.Y, width, area.Height);
+    }
+
+    /// <summary>
+    /// <see langword="true"/> for the left half-tile of <paramref name="area"/>, <see langword="false"/>
+    /// for the right one, <see langword="null"/> for any other geometry.
+    /// </summary>
+    private static bool? SnappedSide(WindowBounds bounds, WindowBounds area) =>
+        bounds == HalfOf(area, left: true) ? true
+        : bounds == HalfOf(area, left: false) ? false
+        : null;
+
+    /// <summary>
+    /// Which half a snapped window sits on when its size constraints kept it off the exact half-tile
+    /// (ADR 0177): <see langword="true"/> when its centre is left of the screen's centre.
+    /// </summary>
+    private static bool? IsLeftHalf(WindowBounds bounds, WindowBounds area) =>
+        bounds.X + (bounds.Width / 2) < area.X + (area.Width / 2);
 
     private IReadOnlyList<WindowEvent> ChangeTitle(WindowId id, string requestedTitle)
     {
@@ -380,6 +568,8 @@ public sealed class WindowRuntime
             : throw new InvalidOperationException("Move and resize commands require a normal window.");
     }
 
+    private WindowBounds AreaOf(WindowRuntimeState window) => _workAreas[window.DisplayId];
+
     private WindowRuntimeState Get(WindowId id) => _windows.TryGetValue(id, out WindowRuntimeState? window)
         ? window
         : throw new KeyNotFoundException($"Window '{id}' is not registered.");
@@ -395,20 +585,20 @@ public sealed class WindowRuntime
     private int NextZOrder() => checked(++_nextZOrder);
 
     /// <summary>
-    /// Keeps a normal window inside the work area. The declared minimum always wins (ADR 0095 §2):
+    /// Keeps a normal window inside a work area. The declared minimum always wins (ADR 0095 §2):
     /// on a work area smaller than it, the window keeps its minimum size and overflows to the right
     /// and bottom, as on a small real screen, with its title bar kept reachable at the top-left.
     /// </summary>
-    private WindowBounds Constrain(WindowBounds requested, WindowConstraints constraints)
+    private static WindowBounds Constrain(WindowBounds requested, WindowConstraints constraints, WindowBounds workArea)
     {
         double minimumWidth = constraints.MinWidth;
         double minimumHeight = constraints.MinHeight;
-        double maximumWidth = Math.Max(minimumWidth, Math.Min(constraints.MaxWidth ?? _workArea.Width, _workArea.Width));
-        double maximumHeight = Math.Max(minimumHeight, Math.Min(constraints.MaxHeight ?? _workArea.Height, _workArea.Height));
+        double maximumWidth = Math.Max(minimumWidth, Math.Min(constraints.MaxWidth ?? workArea.Width, workArea.Width));
+        double maximumHeight = Math.Max(minimumHeight, Math.Min(constraints.MaxHeight ?? workArea.Height, workArea.Height));
         double width = Math.Clamp(requested.Width, minimumWidth, maximumWidth);
         double height = Math.Clamp(requested.Height, minimumHeight, maximumHeight);
-        double x = Math.Max(_workArea.X, Math.Min(requested.X, _workArea.X + _workArea.Width - width));
-        double y = Math.Max(_workArea.Y, Math.Min(requested.Y, _workArea.Y + _workArea.Height - height));
+        double x = Math.Max(workArea.X, Math.Min(requested.X, workArea.X + workArea.Width - width));
+        double y = Math.Max(workArea.Y, Math.Min(requested.Y, workArea.Y + workArea.Height - height));
         return new WindowBounds(x, y, width, height);
     }
 
@@ -421,6 +611,7 @@ public sealed class WindowRuntime
         WindowVisualState? visualState = null,
         bool? isFocused = null,
         string? title = null,
+        DisplayId? displayId = null,
         bool? isSnapped = null) =>
         new(
             state.Id,
@@ -441,6 +632,7 @@ public sealed class WindowRuntime
             state.SupportsBack)
         {
             IsResponding = state.IsResponding,
+            DisplayId = displayId ?? state.DisplayId,
             IsSnapped = isSnapped ?? state.IsSnapped,
         };
 }

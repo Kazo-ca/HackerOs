@@ -1,1 +1,4 @@
 #nullable enable
+HackerOs.Apps.Settings.ScreensPanel
+HackerOs.Apps.Settings.ScreensPanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Apps.Settings.ScreensPanel.ScreensPanel() -> void

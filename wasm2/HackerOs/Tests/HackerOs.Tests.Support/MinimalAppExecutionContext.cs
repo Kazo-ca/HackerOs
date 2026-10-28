@@ -32,7 +32,9 @@ public sealed class MinimalAppExecutionContext(
     bool isRootElevated = false,
     IAppClipboardGateway? clipboard = null,
     ProcessId? processId = null,
-    HackerOs.AppSdk.Apps.IAppCatalogGateway? catalog = null) : IAppExecutionContext
+    HackerOs.AppSdk.Apps.IAppCatalogGateway? catalog = null,
+    HackerOs.AppSdk.Settings.IAppSystemSettingsGateway? systemSettings = null,
+    HackerOs.AppSdk.Administration.IAppScreensGateway? screens = null) : IAppExecutionContext
 {
     public AppManifest Manifest { get; } = manifest;
     public Guid InstanceId { get; } = Guid.NewGuid();
@@ -62,6 +64,14 @@ public sealed class MinimalAppExecutionContext(
 
     // Without a catalog, the interface's own default applies (every call throws NotSupportedException).
     HackerOs.AppSdk.Apps.IAppCatalogGateway IAppExecutionContext.Catalog => catalog ?? UnsupportedCatalog.Instance;
+
+    // Without OS settings documents, the interface's own default applies (every call throws NotSupportedException).
+    HackerOs.AppSdk.Settings.IAppSystemSettingsGateway IAppExecutionContext.SystemSettings =>
+        systemSettings ?? UnsupportedAdministrationGateways.SystemSettings;
+
+    // Without screens, the interface's own default applies (a host without secondary screens).
+    HackerOs.AppSdk.Administration.IAppScreensGateway IAppExecutionContext.Screens =>
+        screens ?? UnsupportedAdministrationGateways.Screens;
 
     private static NotSupportedException Unsupported(string gatewayName) =>
         new($"'{gatewayName}' was not provided to this test's MinimalAppExecutionContext.");

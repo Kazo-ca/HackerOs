@@ -391,6 +391,14 @@ public sealed class AppExecutionContextFactory
             context.FileMenuEntryAdministration = administration.FileMenuEntries;
         }
 
+        if (_administration?.Screens is { } screens)
+        {
+            // ADR 0184: the secondary screens, for the windows this instance owns, set like the backup gateway.
+            AppScreensGateway screensGateway = new(screens, capabilities, context.InstanceId);
+            screensGateway.BindAmbientContext(context);
+            context.Screens = screensGateway;
+        }
+
         if (_shellHostProvider is not null)
         {
             // ADR 0056 section 7: the shell is a child process of this one, with this instance's

@@ -1,0 +1,59 @@
+@namespace HackerOs.Platform.Blazor.Display
+@using Microsoft.JSInterop
+@implements IAsyncDisposable
+@inject IJSRuntime JSRuntime
+@*
+    ADR 0179 §2: the overlays that show where the user acts (window menu, OS context menu, window
+    switcher, keyboard move). They render once, here; screenOverlays.js moves this container into
+    the overlay slot of the screen that received the last press or key, before the overlays react.
+*@
+<div @ref="_container" class="screen-overlays">@ChildContent</div>
+
+@code {
+    private const string ModulePath = "./_content/HackerOs.Platform.Blazor/screenOverlays.js";
+
+    private ElementReference _container;
+    private IJSObjectReference? _module;
+
+    /// <summary>The overlays that follow the screen where the user acts.</summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <inheritdoc />
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            return;
+        }
+
+        try
+        {
+            _module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", ModulePath);
+            await _module.InvokeVoidAsync("attachScreenOverlays", _container);
+        }
+        catch (Exception exception) when (exception is JSException or JSDisconnectedException or InvalidOperationException)
+        {
+            // No browser (component tests, prerendering): the overlays stay on screen 1.
+            _module = null;
+        }
+    }
+
+    /// <inheritdoc />
+    public async ValueTask DisposeAsync()
+    {
+        if (_module is null)
+        {
+            return;
+        }
+
+        try
+        {
+            await _module.InvokeVoidAsync("detachScreenOverlays");
+            await _module.DisposeAsync();
+        }
+        catch (JSDisconnectedException)
+        {
+        }
+    }
+}

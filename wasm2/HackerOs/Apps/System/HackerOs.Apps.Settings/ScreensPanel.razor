@@ -1,0 +1,135 @@
+@inherits HackerOs.AppSdk.Blazor.HackComponentBase
+@implements IAsyncDisposable
+@using HackerOs.AppSdk.Administration
+
+@*
+    Settings > Screens (ADR 0179 §7, ADR 0180): what the taskbar of screen 1 lists, the secondary
+    screens ~/.config/hackeros/screens.config remembers, and where the commands that open, restore
+    and move screens live. ADR 0184: on a host with screens, HackScreens lists the open screens and
+    opens, restores, closes, identifies them, puts the screen of this window in full screen and asks
+    for the window management permission, each from the user's click.
+*@
+@if (!_loaded)
+{
+    <p class="setting-desc">@(_message is null ? L["Common.Loading"] : string.Empty)</p>
+}
+else
+{
+    @if (_live is { } live)
+    {
+        <div class="setting-group scr-panel">
+            <h4 id="scr-open-title">@L["Screens.Open.Title"]</h4>
+            <ul class="scr-list" aria-labelledby="scr-open-title">
+                @foreach (HackScreenInfo screen in live.Screens)
+                {
+                    <li class="scr-item" @key="screen.Number" data-screen="@screen.Number">
+                        <span class="scr-number" aria-hidden="true">@screen.Number</span>
+                        <span class="scr-text">
+                            <strong>@L["Screens.List.Screen", screen.Number]</strong>
+                            <span class="scr-state">@MonitorText(screen)</span>
+                            <span class="scr-place">@L["Screens.Open.Size", screen.Width, screen.Height]</span>
+                            @if (screen.IsFullScreen)
+                            {
+                                <span class="scr-state">@L["Screens.Open.IsFullScreen"]</span>
+                            }
+                            @if (screen.Number == live.CallerScreen)
+                            {
+                                <span class="scr-state">@L["Screens.Open.ThisWindow"]</span>
+                            }
+                        </span>
+                        @if (screen.Number > 1)
+                        {
+                            <button type="button" class="btn-secondary scr-close" disabled="@_isBusy"
+                                    aria-label="@L["Screens.Open.CloseLabel", screen.Number]"
+                                    @onclick="() => CloseScreenAsync(screen.Number)">@L["Screens.Open.Close"]</button>
+                        }
+                    </li>
+                }
+            </ul>
+            <div class="scr-actions">
+                <button type="button" class="btn-secondary" id="scr-identify" disabled="@_isBusy" @onclick="IdentifyAsync">@L["Screens.Open.Identify"]</button>
+                <button type="button" class="btn-secondary" id="scr-new" disabled="@(_isBusy || !live.CanOpenScreen)" @onclick="OpenScreenAsync">@L["Screens.Open.New"]</button>
+                @if (live.RestorableScreens.Count > 0)
+                {
+                    <button type="button" class="btn-secondary" id="scr-restore" disabled="@_isBusy" @onclick="RestoreScreensAsync">@L["Screens.Open.Restore", live.RestorableScreens.Count]</button>
+                }
+                <button type="button" class="btn-secondary" id="scr-fullscreen" disabled="@_isBusy" @onclick="ToggleFullScreenAsync">@(CallerIsFullScreen(live) ? L["Screens.Open.LeaveFullScreen"] : L["Screens.Open.FullScreen"])</button>
+            </div>
+            <p class="setting-desc scr-permission" id="scr-permission">
+                @PermissionText(live.Permission)
+                @if (live.Permission == HackScreenPermission.Prompt)
+                {
+                    <button type="button" class="btn-secondary scr-permission-ask" disabled="@_isBusy" @onclick="RequestPermissionAsync">@L["Screens.Permission.Ask"]</button>
+                }
+            </p>
+        </div>
+    }
+
+    <div class="setting-group scr-panel">
+        <h4 id="scr-taskbar-title">@L["Screens.Taskbar.Title"] <SettingOriginBadge Source="@SourceOf(PrimaryTaskbarKey)" IsLocked="@IsLocked(PrimaryTaskbarKey)" /></h4>
+        <p class="setting-desc">@L["Screens.Taskbar.Description"]</p>
+        <div class="scr-options" role="radiogroup" aria-labelledby="scr-taskbar-title">
+            @foreach (string mode in TaskbarModes)
+            {
+                <button type="button" role="radio" class="@OptionClass(_primaryTaskbar == mode)"
+                        aria-checked="@(_primaryTaskbar == mode ? "true" : "false")"
+                        disabled="@(_isBusy || IsLocked(PrimaryTaskbarKey))"
+                        @onclick="() => SetPrimaryTaskbarAsync(mode)">
+                    <span class="scr-tag" aria-hidden="true">@mode</span>
+                    <span class="scr-label">@(mode == PrimaryTaskbarOwn ? L["Screens.Taskbar.Own"] : L["Screens.Taskbar.All"])</span>
+                </button>
+            }
+        </div>
+    </div>
+
+    <div class="setting-group scr-panel">
+        <h4 id="scr-list-title">@L["Screens.List.Title"]</h4>
+        <p class="setting-desc">@LocalizedMarkup.Format(L["Screens.List.Description"], LocalizedMarkup.Code(UserFilePath))</p>
+        <ul class="scr-list" aria-labelledby="scr-list-title">
+            <li class="scr-item">
+                <span class="scr-number" aria-hidden="true">1</span>
+                <span class="scr-text">
+                    <strong>@L["Screens.List.Screen", 1]</strong>
+                    <span class="scr-state">@L["Screens.List.Primary"]</span>
+                </span>
+            </li>
+            @foreach (RememberedScreen screen in _screens)
+            {
+                <li class="scr-item" @key="screen.Number">
+                    <span class="scr-number" aria-hidden="true">@screen.Number</span>
+                    <span class="scr-text">
+                        <strong>@L["Screens.List.Screen", screen.Number]</strong>
+                        <span class="scr-state">@(screen.IsOpen ? L["Screens.List.Open"] : L["Screens.List.Closed"])</span>
+                        <span class="scr-place">@PlaceText(screen)</span>
+                    </span>
+                    @if (screen.CanForget)
+                    {
+                        <button type="button" class="btn-secondary scr-forget" disabled="@_isBusy"
+                                aria-label="@L["Screens.List.ForgetLabel", screen.Number]"
+                                @onclick="() => ForgetAsync(screen.Number)">@L["Screens.List.Forget"]</button>
+                    }
+                </li>
+            }
+        </ul>
+        @if (_screens.Count == 0)
+        {
+            <p class="setting-desc scr-note">@L["Screens.List.None"]</p>
+        }
+    </div>
+
+    <div class="setting-group scr-panel">
+        <h4>@L["Screens.Help.Title"]</h4>
+        <ul class="scr-help">
+            <li>@L["Screens.Help.New"]</li>
+            <li>@LocalizedMarkup.Format(L["Screens.Help.Move"], LocalizedMarkup.Code("Super+Shift+←"), LocalizedMarkup.Code("Super+Shift+→"))</li>
+            <li>@L["Screens.Help.Restore"]</li>
+            <li>@L["Screens.Help.FullScreen"]</li>
+            <li>@L["Screens.Help.Permission"]</li>
+        </ul>
+    </div>
+}
+
+@if (_message is not null)
+{
+    <div class="@(_messageIsError ? "scr-message is-error" : "scr-message")" role="@(_messageIsError ? "alert" : "status")">@_message</div>
+}

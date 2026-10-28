@@ -1,28 +1,49 @@
+using HackerOs.AppSdk.Blazor.ContextMenus;
+using HackerOs.Platform.Blazor.ContextMenus;
 using HackerOs.Platform.Core.Shell;
 using HackerOs.Windowing.Abstractions;
+using HackerOs.Windowing.Blazor;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 
 namespace HackerOs.Platform.Blazor.Windows;
 
 /// <summary>
 /// Draws the window manager's keyboard surfaces (ADR 0095 §3) and connects the browser's key events
-/// to <see cref="WindowKeyboardCommands"/> through <c>WindowManagerOverlays.razor.js</c>.
+/// to <see cref="WindowKeyboardCommands"/> through <c>WindowManagerOverlays.razor.js</c>. The window
+/// menus open in the OS context menu (ADR 0179 §3), which gives them the « Autre écran » submenu.
 /// </summary>
 public sealed partial class WindowManagerOverlays : ComponentBase
 {
+    /// <summary>Name of the window menu in the OS context menu (<c>data-context-menu</c>).</summary>
+    internal const string WindowMenuName = "window-menu";
+
+    /// <summary>Name of the Maximize/Restore button's menu.</summary>
+    internal const string MaximizeMenuName = "window-maximize-menu";
+
+    /// <summary>Id of the « Autre écran » entry.</summary>
+    internal const string OtherScreenItemId = "window.other-screen";
+
+    /// <summary>Id of the « Nouvel écran » entry.</summary>
+    internal const string NewScreenItemId = "window.new-screen";
+
+    /// <summary>Id prefix of the « Écran N » entries, followed by the number (the screen veil reads it).</summary>
+    internal const string ScreenItemIdPrefix = "window.screen.";
+
     private const string ModulePath = "./_content/HackerOs.Platform.Blazor/Windows/WindowManagerOverlays.razor.js";
 
+    private readonly List<IDisposable> _registrations = [];
     private IJSObjectReference? _module;
     private DotNetObjectReference<WindowManagerOverlays>? _selfReference;
-    private ElementReference _menuElement;
-    private WindowMenuState? _renderedMenu;
-    private int _menuIndex;
+    private ContextMenuScope? _menuScope;
+    private WindowMenuState? _openedMenu;
     private bool _disposed;
 
     [Inject]
     private IJSRuntime JSRuntime { get; set; } = default!;
+
+    [Inject]
+    private ContextMenuService ContextMenus { get; set; } = default!;
 
     /// <summary>Gets or sets the window manager's keyboard commands.</summary>
     [Parameter, EditorRequired]
@@ -33,6 +54,10 @@ public sealed partial class WindowManagerOverlays : ComponentBase
     {
         Commands.Changed += OnCommandsChanged;
         Commands.ToggleFullScreen ??= ToggleFullScreenAsync;
+        _menuScope = ContextMenus.CreateScope(null);
+        _registrations.Add(_menuScope.Register(new HackMenuRegistration(WindowMenuName, () => BuildMenu(WindowMenuKind.Window), default)));
+        _registrations.Add(_menuScope.Register(new HackMenuRegistration(MaximizeMenuName, () => BuildMenu(WindowMenuKind.MaximizeButton), default)));
+        ContextMenus.Changed += OnContextMenuChanged;
     }
 
     /// <inheritdoc />
@@ -53,22 +78,6 @@ public sealed partial class WindowManagerOverlays : ComponentBase
             }
 
             await Commands.StartAsync();
-        }
-
-        if (Commands.Menu is { } menu && !ReferenceEquals(menu, _renderedMenu))
-        {
-            _renderedMenu = menu;
-            _menuIndex = 0;
-            if (_module is not null)
-            {
-                await _module.InvokeVoidAsync("placeWindowMenu", _menuElement, menu.X, menu.Y);
-            }
-
-            await _menuElement.FocusAsync();
-        }
-        else if (Commands.Menu is null)
-        {
-            _renderedMenu = null;
         }
     }
 
@@ -98,6 +107,13 @@ public sealed partial class WindowManagerOverlays : ComponentBase
     {
         _disposed = true;
         Commands.Changed -= OnCommandsChanged;
+        ContextMenus.Changed -= OnContextMenuChanged;
+        foreach (IDisposable registration in _registrations)
+        {
+            registration.Dispose();
+        }
+
+        _menuScope?.Dispose();
         if (_module is not null)
         {
             try
@@ -162,8 +178,98 @@ public sealed partial class WindowManagerOverlays : ComponentBase
                 }
             }
 
+            await SyncMenuAsync();
             StateHasChanged();
         });
+    }
+
+    /// <summary>Follows <see cref="WindowKeyboardCommands.Menu"/>: opens it in the OS context menu, or closes it there.</summary>
+    private async Task SyncMenuAsync()
+    {
+        if (_menuScope is null)
+        {
+            return;
+        }
+
+        WindowMenuState? menu = Commands.Menu;
+        if (menu is null)
+        {
+            _openedMenu = null;
+            _menuScope.Close();
+            return;
+        }
+
+        if (ReferenceEquals(menu, _openedMenu))
+        {
+            return;
+        }
+
+        _openedMenu = menu;
+        bool opened = await ContextMenus.OpenAsync(
+            _menuScope,
+            menu.Kind == WindowMenuKind.MaximizeButton ? MaximizeMenuName : WindowMenuName,
+            menu.WindowId,
+            menu.X,
+            menu.Y,
+            menu.FromKeyboard ? ContextMenuOrigin.Keyboard : ContextMenuOrigin.Pointer);
+        if (!opened && ReferenceEquals(Commands.Menu, menu))
+        {
+            Commands.CloseMenu();
+        }
+    }
+
+    /// <summary>The OS context menu closed, or another menu replaced the window menu: the window menu is closed too.</summary>
+    private void OnContextMenuChanged()
+    {
+        if (_disposed || _openedMenu is null || ContextMenus.Current?.Scope == _menuScope)
+        {
+            return;
+        }
+
+        _openedMenu = null;
+        Commands.CloseMenu();
+    }
+
+    /// <summary>Builds the open window menu (ADR 0179 §3-5): its commands, then « Autre écran ▸ ».</summary>
+    private HackMenuDefinition BuildMenu(WindowMenuKind kind)
+    {
+        HackMenuDefinition definition = new(kind == WindowMenuKind.MaximizeButton ? MaximizeMenuName : WindowMenuName)
+        {
+            Label = L["WindowMenu.Label"],
+        };
+        if (_openedMenu is not { } menu)
+        {
+            return definition;
+        }
+
+        WindowId windowId = menu.WindowId;
+        HackMenuGroupDefinition commands = definition.AddGroup();
+        foreach (WindowMenuItem item in Commands.GetMenuItems(windowId, kind))
+        {
+            WindowKeyboardAction action = item.Action;
+            HackMenuItemDefinition entry = commands.Add("window." + WindowKeyBindingsSettingsDocuments.KeyOf(action), item.Label);
+            entry.Shortcut = item.Shortcut;
+            entry.IsDisabled = !item.IsEnabled;
+            entry.OnClick = EventCallback.Factory.Create<object?>(this, () => Commands.ExecuteForWindowAsync(action, windowId));
+        }
+
+        HackMenuItemDefinition otherScreen = definition.AddGroup().Add(OtherScreenItemId, L["WindowMenu.OtherScreen"]);
+        HackMenuGroupDefinition screens = new();
+        foreach (WindowScreenMenuItem screen in Commands.GetScreenMenuItems(windowId))
+        {
+            DisplayId display = screen.Display;
+            HackMenuItemDefinition entry = screens.Add(ScreenItemIdPrefix + display.Number.ToString(System.Globalization.CultureInfo.InvariantCulture), screen.Label);
+            entry.IsDisabled = !screen.IsEnabled;
+            entry.OnClick = EventCallback.Factory.Create<object?>(this, () => Commands.MoveToScreen(windowId, display));
+        }
+
+        otherScreen.Children.Add(screens);
+        HackMenuGroupDefinition create = new();
+        HackMenuItemDefinition newScreen = create.Add(NewScreenItemId, L["WindowMenu.NewScreen"]);
+        newScreen.IsDisabled = !Commands.CanOpenScreen;
+        newScreen.OnClick = EventCallback.Factory.Create<object?>(this, () => Commands.MoveToNewScreenAsync(windowId));
+        otherScreen.Children.Add(create);
+        return definition;
     }
 
     private async Task ToggleFullScreenAsync()
@@ -172,67 +278,5 @@ public sealed partial class WindowManagerOverlays : ComponentBase
         {
             await _module.InvokeVoidAsync("toggleFullScreen");
         }
-    }
-
-    private void CloseMenu() => Commands.CloseMenu();
-
-    private async Task RunMenuItemAsync(WindowMenuItem item)
-    {
-        if (Commands.Menu is { } menu && item.IsEnabled)
-        {
-            await Commands.ExecuteForWindowAsync(item.Action, menu.WindowId);
-        }
-    }
-
-    /// <summary>Arrow keys move the highlight, Enter or Space runs it, Escape closes the menu.</summary>
-    private async Task HandleMenuKeyDownAsync(KeyboardEventArgs args)
-    {
-        if (Commands.Menu is not { } menu)
-        {
-            return;
-        }
-
-        IReadOnlyList<WindowMenuItem> items = Commands.GetMenuItems(menu.WindowId);
-        if (items.Count == 0)
-        {
-            Commands.CloseMenu();
-            return;
-        }
-
-        switch (args.Key)
-        {
-            case "Escape":
-                Commands.CloseMenu();
-                break;
-            case "ArrowDown":
-                _menuIndex = NextEnabled(items, _menuIndex, +1);
-                break;
-            case "ArrowUp":
-                _menuIndex = NextEnabled(items, _menuIndex, -1);
-                break;
-            case "Home":
-                _menuIndex = NextEnabled(items, -1, +1);
-                break;
-            case "End":
-                _menuIndex = NextEnabled(items, items.Count, -1);
-                break;
-            case "Enter" or " ":
-                await RunMenuItemAsync(items[Math.Clamp(_menuIndex, 0, items.Count - 1)]);
-                break;
-        }
-    }
-
-    private static int NextEnabled(IReadOnlyList<WindowMenuItem> items, int from, int direction)
-    {
-        for (int step = 1; step <= items.Count; step++)
-        {
-            int index = ((from + (direction * step)) % items.Count + items.Count) % items.Count;
-            if (items[index].IsEnabled)
-            {
-                return index;
-            }
-        }
-
-        return Math.Clamp(from, 0, items.Count - 1);
     }
 }

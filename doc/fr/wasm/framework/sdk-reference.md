@@ -92,6 +92,7 @@ Détails : [`app-model.md`](app-model.md).
 | `ProcessManage` | `process.manage` | **dangereuse** | arrêter les processus des autres apps |
 | `ServicesManage` | `services.manage` | **dangereuse** | `HackServiceController` sur les services des autres apps |
 | `WindowsManage` | `windows.manage` | **dangereuse** | fenêtres des autres apps |
+| `ScreensManage` | `screens.manage` | normale | `HackScreens` (écrans secondaires, ADR 0184) |
 | `NotificationsPost` | `notifications.post` | normale | `AppContext.Notifications` |
 | `ClipboardRead` / `Write` | `clipboard.read` / `.write` | normale | `HackClipboard` |
 | `NetworkSimulatedRead` / `Write` | `network.simulated.read` / `.write` | normale | réseau simulé |
@@ -314,6 +315,7 @@ les lit ici. Voir [`accessibility.md`](../dev/accessibility.md).
 | `HackServerConnection` | `GetStateAsync`, `ConnectAsync`, `CreateAccountAsync`, `DisconnectAsync`, `SyncAsync`, `GetConflictsAsync`, `GetRelayPolicyAsync`, `ShowConflictsAsync`, `GetSyncStatusAsync` (`HackSyncStatus`), `SetSyncPausedAsync`, `SyncNowAsync` ([`synchronization.md`](../dev/synchronization.md)) | `server.connection.manage` |
 | `HackSystem` | `RebootAsync`, `FactoryResetAsync` | `system.power` + administrateur |
 | `HackStorageDiagnostics` | `GetSnapshotAsync`, `GetWebSiteDatabasesAsync`, `DeleteWebSiteDatabaseAsync` (bases `hackweb.*` des sites, ADR 0088 §4) | `system.storage.inspect` |
+| `HackScreens` | `IsSupported`, `IsSupportedFor(context)`, `GetState` (`HackScreensState`, `HackScreenInfo`), `WatchAsync`, `OpenScreenAsync` → `HackScreenOpenStatus`, `RestoreScreensAsync`, `CloseScreenAsync(number)`, `IdentifyAsync`, `ToggleFullScreenAsync`, `RequestPermissionAsync` → `HackScreenPermission` ; ouvrir, plein écran et permission seulement pendant un clic (ADR 0184, [`screens-settings.md`](../dev/screens-settings.md)) | `screens.manage` |
 | `HackSystemBackup` | `IsSupported`, `IsSupportedFor(context)`, `CreateAsync` → `HackBackupInfo(FileName, SizeBytes, RecordCount, CreatedAtUtc)`, `RestoreAsync(HackBackupRestoreMode.Merge \| Replace)` → `HackBackupInfo?` (`null` : sélecteur fermé) ; `HackBackupInvalidException` pour une archive refusée (ADR 0099 §1, [`system-backup-api.md`](system-backup-api.md) ; mise en œuvre : [`system-backup.md`](../dev/system-backup.md)) | `system.backup` + administrateur |
 
 Détails : [`system-administration.md`](system-administration.md),

@@ -769,6 +769,8 @@ public static class EcosystemServiceCollectionExtensions
                 ApprovalPrompt = () => provider.GetRequiredService<IDangerousCapabilityApprovalPrompt>(),
                 // HackFileMenuEntries (ADR 0159 §8): Settings lists and hides the registered entries.
                 FileMenuEntries = () => provider.GetRequiredService<HackerOs.Platform.Core.ContextMenus.FileContextMenuAdministration>(),
+                // HackScreens (ADR 0184): Settings > Screens drives the secondary screens of the browser host.
+                Screens = OperatingSystem.IsBrowser() ? () => provider.GetRequiredService<ScreenControl>() : null,
             })
         {
             // HackBackground (ADR 0128): each task a child process, in a worker when the host has some.
@@ -914,12 +916,25 @@ public static class EcosystemServiceCollectionExtensions
             provider.GetRequiredService<IFileDialogService>()));
         services.AddScoped<IDialogService>(provider => provider.GetRequiredService<DialogCoordinator>());
         // Detached display surfaces (ADR 0078): windows of the host browser driven by this instance.
-        services.AddScoped<IDisplaySurfaceService>(provider => new DisplaySurfaceService(
+        services.AddScoped(provider => new DisplaySurfaceService(
             provider.GetRequiredService<IJSRuntime>(),
             provider.GetRequiredService<INotificationQueue>(),
             provider.GetRequiredService<ISessionService>(),
             provider.GetRequiredService<ISimulationClock>(),
             provider.GetRequiredService<HackerOs.Platform.Core.Globalization.SessionLocaleService>()));
+        services.AddScoped<IDisplaySurfaceService>(provider => provider.GetRequiredService<DisplaySurfaceService>());
+        // ADR 0178 §4: the secondary screens, each a display surface registered in WindowRuntime.
+        services.AddScoped(provider => new ScreenService(
+            provider.GetRequiredService<DisplaySurfaceService>(),
+            provider.GetRequiredService<IJSRuntime>(),
+            provider.GetRequiredService<WindowRuntime>(),
+            provider.GetRequiredService<IOsSettingsService>(),
+            provider.GetService<ILogger<ScreenService>>(),
+            provider.GetRequiredService<HackerOs.Platform.Core.Globalization.SessionLocaleService>()));
+        // ADR 0184: HackScreens over the screen service and the window manager.
+        services.AddScoped(provider => new ScreenControl(
+            provider.GetRequiredService<ScreenService>(),
+            provider.GetRequiredService<WindowRuntime>()));
         // ADR 0150: the OS context menu. The platform provides the contract hackeros.context-menu
         // itself; the service holds each window's menus and the one menu open in the OS.
         services.AddScoped(provider => new HackerOs.Platform.Blazor.ContextMenus.ContextMenuService(

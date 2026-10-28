@@ -145,6 +145,9 @@ internal sealed class AppExecutionContext : IAppExecutionContext
     public IAppFileMenuEntryAdministrationGateway FileMenuEntryAdministration { get => Guarded(field); internal set; } = UnsupportedAdministrationGateways.FileMenuEntries;
 
     /// <inheritdoc />
+    public IAppScreensGateway Screens { get => Guarded(field); internal set; } = UnsupportedAdministrationGateways.Screens;
+
+    /// <inheritdoc />
     public string UserLoginName { get; }
 
     /// <inheritdoc />

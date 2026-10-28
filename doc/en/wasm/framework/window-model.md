@@ -62,6 +62,9 @@ has already happened and continues.
 - `WindowRuntime` (Windowing.Core) already produces facts (`WindowFocusedEvent`,
   `WindowVisualStateChangedEvent`, `WindowViewportChangedEvent`, `WindowClosedEvent`). It
   now publishes each batch through the `EventsApplied` event, before `StateChanged`.
+- Screens: a window has a `DisplayId` and each screen its own work area; changing screen
+  calls `OnWindowResized` if the size changes (ADR 0178, [`window-runtime-displays.md`](../dev/window-runtime-displays.md)). The window
+  is not recreated: its element moves into its screen's layer ([`window-portal.md`](../dev/window-portal.md)).
 - New fact: `CompleteWindowResizeCommand` → `WindowResizeCompletedEvent(id, bounds)`. The
   chrome (`WindowChrome.razor.js`) sends it when a resize gesture ends; the
   keyboard sends it when a resize is confirmed.
@@ -162,6 +165,7 @@ an empty value removes the key.
 | `toggle-maximize` | | `Alt+F10` |
 | `snap-left` / `snap-right` | `Super+Left` / `Super+Right` | `Alt+Shift+Left` / `Alt+Shift+Right` |
 | `toggle-fullscreen` | | `Alt+F11` |
+| `move-to-previous-screen` / `move-to-next-screen` | `Super+Shift+Left` / `Super+Shift+Right` | `Ctrl+Alt+Shift+Left` / `Ctrl+Alt+Shift+Right` |
 
 The Linux keys are only active if the keyboard is locked (`navigator.keyboard.lock()`,
 called in full screen): otherwise, the host system intercepts them. The replacement keys
@@ -187,7 +191,13 @@ that has focus. A letter is recognized by its physical key when Alt changes the 
   icon in the title bar. A left click on the icon only activates the
   window; the rest of the title bar does not open the menu. It contains all actions with their active shortcut:
   Maximize/Restore, Minimize, Move, Resize, Snap left/right, Full screen,
-  Close. Arrows, Enter and Esc work there.
+  Close, then **Other screen ▸** (Screen 1, Screen 2…, New screen). It opens in the OS context
+  menu (ADR 0179 §3): arrows, Enter, Esc and the submenu work from the keyboard.
+- **Maximize/Restore button menu** (ADR 0179 §4): right click on the button. Snap left, Snap
+  right, Full screen, then Other screen ▸. The left click does not change.
+- **Change screen** (ADR 0178 §6): `move-to-previous-screen` / `move-to-next-screen` send the
+  active window to the screen before or after it, by number, going round. Details in
+  [`../dev/other-screen-menus.md`](../dev/other-screen-menus.md).
 - **Close** follows the path of the Close button (`IWindowCloseGuard` included).
 - **Keyboard focus**: the window that becomes the active window (switcher, closing the one
   on top, taskbar) also receives keyboard focus: the last control that had it in

@@ -4,6 +4,7 @@ using HackerOs.Platform.Core.Settings;
 using HackerOs.Platform.Core.Shell;
 using HackerOs.Simulation.Abstractions.Settings;
 using HackerOs.Windowing.Abstractions;
+using HackerOs.Windowing.Blazor;
 using HackerOs.Windowing.Core;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -46,7 +47,20 @@ public sealed record WindowMenuItem(WindowKeyboardAction Action, string Label, s
 /// <param name="WindowId">Window the menu acts on.</param>
 /// <param name="X">Left position in viewport CSS pixels.</param>
 /// <param name="Y">Top position in viewport CSS pixels.</param>
-public sealed record WindowMenuState(WindowId WindowId, double X, double Y);
+public sealed record WindowMenuState(WindowId WindowId, double X, double Y)
+{
+    /// <summary>Gets which menu is open: the window menu, or the Maximize button's (ADR 0179 §3-4).</summary>
+    public WindowMenuKind Kind { get; init; } = WindowMenuKind.Window;
+
+    /// <summary>Gets whether the keyboard opened it (<c>Alt+Space</c>): its first entry then takes the highlight.</summary>
+    public bool FromKeyboard { get; init; }
+}
+
+/// <summary>One screen of the « Autre écran » submenu (ADR 0179 §5).</summary>
+/// <param name="Display">The screen.</param>
+/// <param name="Label">Text of the entry (« Écran 2 »).</param>
+/// <param name="IsEnabled">Whether the window can move there: the window's own screen is shown but disabled.</param>
+public sealed record WindowScreenMenuItem(DisplayId Display, string Label, bool IsEnabled);
 
 /// <summary>
 /// The window manager's keyboard commands (ADR 0095 §3): shortcuts read from
@@ -117,6 +131,13 @@ public sealed class WindowKeyboardCommands : IDisposable
 
     /// <summary>Gets or sets the routine that enters or leaves full screen (keyboard lock), when the host offers one.</summary>
     public Func<Task>? ToggleFullScreen { get; set; }
+
+    /// <summary>
+    /// Gets or sets the routine that opens a new screen (ADR 0178 §4) and returns it, or
+    /// <see langword="null"/> when the host browser refused; « Nouvel écran » is disabled without it.
+    /// It runs during the click that chose the entry, the gesture the browser asks for.
+    /// </summary>
+    public Func<Task<DisplayId?>>? OpenScreen { get; set; }
 
     /// <summary>Gets every binding read from the file, active or not.</summary>
     public IReadOnlyList<WindowKeyBinding> Bindings => _bindings;
@@ -251,6 +272,9 @@ public sealed class WindowKeyboardCommands : IDisposable
                 }
 
                 return false;
+            case WindowKeyboardAction.MoveToPreviousScreen or WindowKeyboardAction.MoveToNextScreen:
+                return AdjacentScreen(window.DisplayId, action == WindowKeyboardAction.MoveToNextScreen) is { } target
+                    && MoveToScreen(windowId, target);
             default:
                 return false;
         }
@@ -310,7 +334,15 @@ public sealed class WindowKeyboardCommands : IDisposable
     /// <param name="windowId">Window.</param>
     /// <param name="clientX">Pointer position, or <see langword="null"/> to place it at the window's corner.</param>
     /// <param name="clientY">Pointer position, or <see langword="null"/>.</param>
-    public void OpenMenu(WindowId windowId, double? clientX, double? clientY)
+    public void OpenMenu(WindowId windowId, double? clientX, double? clientY) =>
+        OpenMenu(windowId, clientX, clientY, WindowMenuKind.Window);
+
+    /// <summary>Opens one of the menus of a window (ADR 0179 §3-4).</summary>
+    /// <param name="windowId">Window.</param>
+    /// <param name="clientX">Pointer position, or <see langword="null"/> to place it at the window's corner (keyboard).</param>
+    /// <param name="clientY">Pointer position, or <see langword="null"/>.</param>
+    /// <param name="kind">The window menu or the Maximize button's menu.</param>
+    public void OpenMenu(WindowId windowId, double? clientX, double? clientY, WindowMenuKind kind)
     {
         if (Find(windowId) is not { } window)
         {
@@ -318,8 +350,12 @@ public sealed class WindowKeyboardCommands : IDisposable
         }
 
         CancelMode();
-        WindowBounds anchor = window.VisualState == WindowVisualState.Maximized ? _runtime.WorkArea : window.Bounds;
-        Menu = new WindowMenuState(windowId, clientX ?? anchor.X + 4, clientY ?? anchor.Y + 32);
+        WindowBounds anchor = window.VisualState == WindowVisualState.Maximized ? _runtime.GetWorkArea(window.DisplayId) : window.Bounds;
+        Menu = new WindowMenuState(windowId, clientX ?? anchor.X + 4, clientY ?? anchor.Y + 32)
+        {
+            Kind = kind,
+            FromKeyboard = clientX is null || clientY is null,
+        };
         Changed?.Invoke();
     }
 
@@ -358,6 +394,81 @@ public sealed class WindowKeyboardCommands : IDisposable
         ];
     }
 
+    /// <summary>Gets the entries of one of a window's menus (ADR 0179 §3-4), without the « Autre écran » submenu.</summary>
+    /// <param name="windowId">Window.</param>
+    /// <param name="kind">The window menu, or the Maximize button's: snap left, snap right, full screen.</param>
+    public IReadOnlyList<WindowMenuItem> GetMenuItems(WindowId windowId, WindowMenuKind kind)
+    {
+        IReadOnlyList<WindowMenuItem> items = GetMenuItems(windowId);
+        return kind == WindowMenuKind.MaximizeButton
+            ? [.. items.Where(static item => item.Action is WindowKeyboardAction.SnapLeft or WindowKeyboardAction.SnapRight or WindowKeyboardAction.ToggleFullScreen)]
+            : items;
+    }
+
+    /// <summary>
+    /// Gets the screens of the « Autre écran » submenu (ADR 0179 §5): every screen by number, the
+    /// window's own screen disabled so the numbers keep their place.
+    /// </summary>
+    /// <param name="windowId">Window.</param>
+    public IReadOnlyList<WindowScreenMenuItem> GetScreenMenuItems(WindowId windowId)
+    {
+        if (Find(windowId) is not { } window)
+        {
+            return [];
+        }
+
+        return
+        [
+            .. _runtime.Displays.Select(display => new WindowScreenMenuItem(
+                display,
+                string.Format(System.Globalization.CultureInfo.CurrentCulture, _text["WindowMenu.Screen"], display.Number),
+                display != window.DisplayId)),
+        ];
+    }
+
+    /// <summary>Gets whether « Nouvel écran » can open one more screen.</summary>
+    public bool CanOpenScreen => OpenScreen is not null && _runtime.NextDisplayId.Number <= ScreensSettingsDocuments.MaxScreenNumber;
+
+    /// <summary>Moves a window to another screen (« Autre écran ▸ Écran N », ADR 0179 §5).</summary>
+    /// <param name="windowId">Window.</param>
+    /// <param name="display">Target screen.</param>
+    /// <returns><see langword="true"/> when the window moved.</returns>
+    public bool MoveToScreen(WindowId windowId, DisplayId display)
+    {
+        CloseMenu();
+        if (Find(windowId) is not { } window || window.DisplayId == display || _runtime.IsInteractionBlocked(windowId)
+            || !_runtime.Displays.Contains(display))
+        {
+            return false;
+        }
+
+        bool moved = Apply(new MoveWindowToDisplayCommand(windowId, display));
+        if (moved && window.VisualState != WindowVisualState.Minimized)
+        {
+            Apply(new FocusWindowCommand(windowId));
+        }
+
+        return moved;
+    }
+
+    /// <summary>
+    /// Opens a new screen and moves the window there (« Nouvel écran », ADR 0178 §4). Call it from
+    /// the click that chose the entry: the browser opens a window only during a gesture.
+    /// </summary>
+    /// <param name="windowId">Window.</param>
+    /// <returns><see langword="true"/> when the screen opened and the window moved.</returns>
+    public async Task<bool> MoveToNewScreenAsync(WindowId windowId)
+    {
+        CloseMenu();
+        if (!CanOpenScreen || Find(windowId) is null || _runtime.IsInteractionBlocked(windowId))
+        {
+            return false;
+        }
+
+        DisplayId? opened = await OpenScreen!().ConfigureAwait(true);
+        return opened is { } display && MoveToScreen(windowId, display);
+    }
+
     /// <summary>
     /// Gets the shortcut shown for an action: the first active chord, so a menu never advertises a
     /// key the host system would swallow.
@@ -389,6 +500,27 @@ public sealed class WindowKeyboardCommands : IDisposable
 
         await ToggleFullScreen().ConfigureAwait(true);
         return true;
+    }
+
+    /// <summary>The screen before or after <paramref name="current"/> by number, going round; <see langword="null"/> with one screen.</summary>
+    private DisplayId? AdjacentScreen(DisplayId current, bool next)
+    {
+        IReadOnlyList<DisplayId> displays = _runtime.Displays;
+        int index = -1;
+        for (int candidate = 0; candidate < displays.Count; candidate++)
+        {
+            if (displays[candidate] == current)
+            {
+                index = candidate;
+            }
+        }
+
+        if (displays.Count < 2 || index < 0)
+        {
+            return null;
+        }
+
+        return displays[(index + (next ? 1 : -1) + displays.Count) % displays.Count];
     }
 
     private WindowRuntimeState? ActiveWindow() => _runtime.Windows.FirstOrDefault(window => window.IsFocused);
@@ -562,7 +694,7 @@ public sealed class WindowKeyboardCommands : IDisposable
     /// </summary>
     private bool Snap(WindowRuntimeState window, bool left)
     {
-        WindowBounds area = _runtime.WorkArea;
+        WindowBounds area = _runtime.GetWorkArea(window.DisplayId);
         double width = Math.Floor(area.Width / 2);
         WindowBounds half = new(left ? area.X : area.X + area.Width - width, area.Y, width, area.Height);
         return Apply(new SnapWindowCommand(window.Id, half));

@@ -227,7 +227,8 @@ ouvre garde donc son focus). Mouvement réduit : pas d'animation.
 
 - Une fenêtre détachée dans une autre fenêtre du navigateur (ADR 0078) garde le
   menu du navigateur : le menu de l'OS n'est dessiné que dans le document du
-  bureau.
+  bureau et dans les écrans secondaires (ADR 0179 §2,
+  `dev/secondary-screen-desktop.md`).
 - L'ordre des entrées du markup est celui de leur premier rendu (voir
   `IsVisible` plus haut).
 

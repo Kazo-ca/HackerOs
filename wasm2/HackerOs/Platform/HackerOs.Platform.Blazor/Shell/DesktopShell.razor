@@ -23,6 +23,7 @@
 @inject WindowAppEventDispatcher WindowEvents
 @inject AppWindowGatewayFactory WindowGateways
 @inject WindowKeyboardCommands KeyboardCommands
+@inject HackerOs.Platform.Blazor.Display.ScreenService Screens
 @inject ISessionService SessionService
 @inject ISimulationClock SimulationClock
 @inject IEventBus EventBus
@@ -35,6 +36,7 @@
 <div class="desktop-shell" @onkeydown="HandleShellKeyDown">
     <div class="desktop-workspace">
         <DesktopArea Windows="WindowRuntime.Windows"
+                     Layers="_windowLayers"
                      BackgroundContent="EffectiveBackgroundContent"
                      BackgroundInteractive="UsesDesktopSurface"
                      OnFocus="HandleFocus"
@@ -68,7 +70,7 @@
         </DesktopArea>
     </div>
 
-    @if (_launcher.IsOpen)
+    @if (_launcher.IsOpen && _launcher.Display.IsPrimary)
     {
         <AppLauncher OnClose="CloseLauncher" OnAppSelected="HandleAppSelected" OnSendToDesktop="SendToDesktopCallback" />
     }
@@ -85,7 +87,7 @@
 
     <HackerOs.Taskbar.Blazor.Taskbar WindowSource="_taskbarWindowSource"
                                       Commands="_taskbarCommands"
-                                      Launcher="_launcher"
+                                      Launcher="_primaryLauncher"
                                       StatusSource="_taskbarStatus"
                                       ClockPanelSource="_clockPanel"
                                       ClockPanelContent="@ClockPanelFragment"
@@ -108,11 +110,20 @@
     @* ADR 0127 §2: samples which windows stop answering their inputs. *@
     <WindowResponsivenessHost />
 
-    @* ADR 0095 §3: window switcher, keyboard move/resize and window menu. *@
-    <WindowManagerOverlays Commands="KeyboardCommands" />
+    @* ADR 0178 §4: the secondary screens, each with its desktop, and the « Restaurer les écrans » offer. *@
+    <HackerOs.Platform.Blazor.Display.ScreenLayer ScreenContent="SecondaryDesktopFragment" ScreenTaskbar="SecondaryTaskbarFragment" />
 
-    @* ADR 0150 §6: the OS context menu, above every window. *@
-    <HackerOs.Platform.Blazor.ContextMenus.ContextMenuOverlay />
+    @* ADR 0179 §2: these overlays show on the screen where the user acts. *@
+    @* ADR 0179 §6: the number of screen 1 while « Autre écran ▸ Écran N » is highlighted. *@
+    <HackerOs.Platform.Blazor.Display.ScreenIdentifyVeil Number="1" />
+
+    <HackerOs.Platform.Blazor.Display.ScreenOverlayHost>
+        @* ADR 0095 §3: window switcher, keyboard move/resize and window menu. *@
+        <WindowManagerOverlays Commands="KeyboardCommands" />
+
+        @* ADR 0150 §6: the OS context menu, above every window. *@
+        <HackerOs.Platform.Blazor.ContextMenus.ContextMenuOverlay />
+    </HackerOs.Platform.Blazor.Display.ScreenOverlayHost>
 
     @* ADR 0049: secure-desktop approval, above every window and the taskbar. *@
     @* ADR 0101: synchronization conflicts and the session's periodic sync. *@
@@ -127,6 +138,8 @@
     private TaskbarWindowSourceAdapter _taskbarWindowSource = null!;
     private TaskbarCommandDispatcherAdapter _taskbarCommands = null!;
     private TaskbarLauncherAdapter _launcher = null!;
+    private HackerOs.Taskbar.Blazor.ITaskbarLauncher _primaryLauncher = null!;
+    private readonly Dictionary<DisplayId, TaskbarWindowSourceAdapter> _screenTaskbarSources = [];
     private TaskbarClockPanelSourceAdapter _clockPanel = null!;
     private TaskbarStatusSourceAdapter _taskbarStatus = null!;
     private TaskbarSessionCommandsAdapter _taskbarSessionCommands = null!;
@@ -175,7 +188,70 @@
 
     private DesktopSurfaceHost? _desktopSurface;
 
+    /// <summary>The window layers of every screen: windows render once and move to their screen's layer (ADR 0178 §3).</summary>
+    private readonly WindowLayers _windowLayers = new();
+
     private bool UsesDesktopSurface => BackgroundContent is null && ShowDesktopIcons;
+
+    /// <summary>
+    /// The desktop of a secondary screen (ADR 0178 §1): the wallpaper only, the icons stay on
+    /// screen 1. It shares the window layers, so the windows of its screen move into it (they stay
+    /// rendered, with their callbacks, by the area of screen 1), and it measures the screen's work area.
+    /// </summary>
+    private RenderFragment<HackerOs.Platform.Blazor.Display.SecondaryScreen> SecondaryDesktopFragment => screen =>
+        @<DesktopArea Windows="WindowRuntime.Windows"
+                      Layers="_windowLayers"
+                      DisplayId="screen.Id"
+                      OnGesture="HandleGesture" />;
+
+    /// <summary>
+    /// The taskbar of a secondary screen (ADR 0179 §1): the windows of its screen, its Start button
+    /// and its clock. The notification area, the clock panel and the session button stay on screen 1.
+    /// The Start menu opened from it shows on that screen.
+    /// </summary>
+    private RenderFragment<HackerOs.Platform.Blazor.Display.SecondaryScreen> SecondaryTaskbarFragment => screen =>
+        @<text>
+            @if (_launcher.IsOpen && _launcher.Display == screen.Id)
+            {
+                <AppLauncher OnClose="CloseLauncher" OnAppSelected="HandleAppSelected" OnSendToDesktop="SendToDesktopCallback" />
+            }
+            <HackerOs.Taskbar.Blazor.Taskbar WindowSource="ScreenTaskbarSource(screen.Id)"
+                                              Commands="_taskbarCommands"
+                                              Launcher="_launcher.For(screen.Id)"
+                                              StatusSource="_taskbarStatus" />
+        </text>;
+
+    /// <summary>The window list of a secondary screen's taskbar, kept while the screen is open.</summary>
+    private TaskbarWindowSourceAdapter ScreenTaskbarSource(DisplayId display)
+    {
+        if (!_screenTaskbarSources.TryGetValue(display, out TaskbarWindowSourceAdapter? source))
+        {
+            source = new TaskbarWindowSourceAdapter(
+                WindowRuntime,
+                window => TaskbarScreenFilter.Lists(display, Screens.PrimaryTaskbar, window.DisplayId));
+            _screenTaskbarSources[display] = source;
+        }
+
+        return source;
+    }
+
+    private void OnScreensChanged()
+    {
+        // primary-taskbar may have changed; the taskbars of closed screens are gone.
+        _taskbarWindowSource.Refresh();
+        foreach (DisplayId closed in _screenTaskbarSources.Keys.Where(display => Screens.Screens.All(screen => screen.Id != display)).ToArray())
+        {
+            _screenTaskbarSources.Remove(closed, out TaskbarWindowSourceAdapter? source);
+            source?.Dispose();
+        }
+
+        if (_launcher.IsOpen && !_launcher.Display.IsPrimary && Screens.Screens.All(screen => screen.Id != _launcher.Display))
+        {
+            _launcher.Close();
+        }
+
+        Rerender();
+    }
 
     private RenderFragment? EffectiveBackgroundContent => BackgroundContent ?? (ShowDesktopIcons ? DesktopSurfaceFragment : null);
 
@@ -248,17 +324,24 @@
 
     private async Task HandleAppSelected(AppManifest manifest)
     {
+        // ADR 0179 §1: an app started from a screen's Start menu opens on that screen; from screen 1's
+        // notification area, on screen 1.
+        DisplayId display = _launcher.IsOpen ? _launcher.Display : DisplayId.Primary;
         _launcher.Close();
         if (SessionService.CurrentPrincipal is not AuthenticatedPrincipal principal)
         {
             return;
         }
 
-        AppLaunchResult result = await Orchestrator.LaunchAsync(
-            new AppLaunchRequest(manifest.Id, principal, []));
-        if (result.IsSuccess)
+        AppLaunchResult result;
+        using (LaunchCoordinator.OpenOnDisplay(manifest.Id, display))
         {
-            await LaunchCoordinator.PresentAsync(manifest, result);
+            result = await Orchestrator.LaunchAsync(
+                new AppLaunchRequest(manifest.Id, principal, []));
+            if (result.IsSuccess)
+            {
+                await LaunchCoordinator.PresentAsync(manifest, result);
+            }
         }
         _launchError = result.IsSuccess
             ? null
@@ -316,10 +399,29 @@
     }
 
     private void HandleWindowMenu(WindowMenuRequest request) =>
-        KeyboardCommands.OpenMenu(request.WindowId, request.ClientX, request.ClientY);
+        KeyboardCommands.OpenMenu(request.WindowId, request.ClientX, request.ClientY, request.Kind);
+
+    /// <summary>« Nouvel écran » (ADR 0178 §4): opens a screen during the click; <see langword="null"/> when the browser refused.</summary>
+    private async Task<DisplayId?> OpenScreenAsync()
+    {
+        HackerOs.Platform.Blazor.Display.ScreenOpenResult result = await Screens.OpenScreenAsync();
+        return result is { Status: HackerOs.Platform.Blazor.Display.ScreenOpenStatus.Opened, Screen: { } screen } ? screen.Id : null;
+    }
 
     private void HandleGesture(WindowCommand command)
     {
+        // A secondary screen's desktop may report its size once more after its screen was removed.
+        if (command is ChangeViewportCommand viewport && !WindowRuntime.Displays.Contains(viewport.DisplayId))
+        {
+            return;
+        }
+
+        // A window dropped on a screen that closed during the drag stays on its own screen (ADR 0183).
+        if (command is MoveWindowToDisplayCommand drop && !WindowRuntime.Displays.Contains(drop.DisplayId))
+        {
+            return;
+        }
+
         try
         {
             WindowRuntime.Apply(command);
@@ -368,6 +470,7 @@
 
     private IDisposable? _processSubscription;
     private Func<WindowId, Task>? _closeWindow;
+    private Func<Task<DisplayId?>>? _openScreen;
 
 
     protected override void OnInitialized()
@@ -376,11 +479,17 @@
         FileDialogAdapter.Changed += Rerender;
         _closeWindow = HandleClose;
         KeyboardCommands.CloseWindow = _closeWindow;
+        _openScreen = OpenScreenAsync;
+        KeyboardCommands.OpenScreen = _openScreen;
         _processSubscription = new WindowProcessObserver(EventBus, ProcessManager, Orchestrator, WindowRuntime, LaunchCoordinator, work => InvokeAsync(work));
 
-        _taskbarWindowSource = new TaskbarWindowSourceAdapter(WindowRuntime);
+        _taskbarWindowSource = new TaskbarWindowSourceAdapter(
+            WindowRuntime,
+            window => TaskbarScreenFilter.Lists(DisplayId.Primary, Screens.PrimaryTaskbar, window.DisplayId));
         _taskbarCommands = new TaskbarCommandDispatcherAdapter(WindowRuntime, CloseCoordinator, CloseGuards);
         _launcher = new TaskbarLauncherAdapter();
+        _primaryLauncher = _launcher.For(DisplayId.Primary);
+        Screens.Changed += OnScreensChanged;
         _launcher.Changed += Rerender;
         _clockPanel = new TaskbarClockPanelSourceAdapter();
         _clockPanel.Changed += Rerender;
@@ -417,10 +526,22 @@
             KeyboardCommands.CloseWindow = null;
         }
 
+        if (ReferenceEquals(KeyboardCommands.OpenScreen, _openScreen))
+        {
+            KeyboardCommands.OpenScreen = null;
+        }
+
         _processSubscription?.Dispose();
         _launcher.Changed -= Rerender;
         _clockPanel.Changed -= Rerender;
         _taskbarWindowSource.Dispose();
+        Screens.Changed -= OnScreensChanged;
+        foreach (TaskbarWindowSourceAdapter source in _screenTaskbarSources.Values)
+        {
+            source.Dispose();
+        }
+
+        _screenTaskbarSources.Clear();
         _taskbarStatus.Dispose();
     }
 }

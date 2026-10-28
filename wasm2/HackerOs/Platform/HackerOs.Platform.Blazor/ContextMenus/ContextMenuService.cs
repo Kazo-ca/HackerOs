@@ -77,6 +77,31 @@ public sealed class ContextMenuService
     public ContextMenuSession? Current { get; private set; }
 
     /// <summary>
+    /// Gets the entry under the pointer or the keyboard focus in the open menu, or
+    /// <see langword="null"/> (ADR 0179 §6: the screen identification veil follows it).
+    /// </summary>
+    internal HackMenuItemDefinition? Highlighted { get; private set; }
+
+    /// <summary>Raised when <see cref="Highlighted"/> changed.</summary>
+    internal event Action? HighlightChanged;
+
+    /// <summary>Records the entry the overlay shows under the pointer or the keyboard focus.</summary>
+    /// <param name="item">The entry, or <see langword="null"/> when the pointer or focus left it.</param>
+    internal void SetHighlighted(HackMenuItemDefinition? item)
+    {
+        if (Current is null)
+        {
+            item = null;
+        }
+
+        if (!ReferenceEquals(item, Highlighted))
+        {
+            Highlighted = item;
+            HighlightChanged?.Invoke();
+        }
+    }
+
+    /// <summary>
     /// Creates the menus of one window (or of an OS area such as the desktop); disposing it removes
     /// its menus and attached objects, and closes its open menu.
     /// </summary>
@@ -174,6 +199,7 @@ public sealed class ContextMenuService
             return false;
         }
 
+        SetHighlighted(null);
         Current = new ContextMenuSession(scope, name, item, menu.Label, root, clientX, clientY, origin);
         Changed?.Invoke();
         return true;
@@ -204,6 +230,7 @@ public sealed class ContextMenuService
         }
 
         Current = null;
+        SetHighlighted(null);
         Changed?.Invoke();
     }
 

@@ -1,0 +1,19 @@
+.screen-portal-scenario {
+    display: block;
+}
+
+.screen-portal-screens {
+    display: flex;
+    gap: 20px;
+}
+
+.screen-portal-screen {
+    width: 480px;
+    height: 400px;
+}
+
+.screen-portal-controls {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+}
