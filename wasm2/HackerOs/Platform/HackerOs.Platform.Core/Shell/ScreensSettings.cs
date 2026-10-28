@@ -62,13 +62,30 @@ public readonly record struct ScreenGeometry(int Left, int Top, int Width, int H
 }
 
 /// <summary>
+/// Which windows the taskbar of screen 1 lists (ADR 0179 §1): every window, or only the windows of
+/// screen 1. The taskbars of the other screens always list the windows of their screen.
+/// </summary>
+public enum PrimaryTaskbarMode
+{
+    /// <summary>Every window of every screen (<c>primary-taskbar=all</c>, the default).</summary>
+    All,
+
+    /// <summary>Only the windows of screen 1 (<c>primary-taskbar=own</c>).</summary>
+    Own,
+}
+
+/// <summary>
 /// The screens file (ADR 0179 §7, ADR 0180): <c>/etc/hackeros/screens.config</c> and
 /// <c>~/.config/hackeros/screens.config</c>. This type declares the <c>[screens]</c> section the
 /// screen service writes: <c>open</c> lists the secondary screens open in the last session (for
-/// « Restaurer les écrans ») and each numbered line remembers where that screen's window was.
+/// « Restaurer les écrans ») and each numbered line remembers where that screen's window was. The
+/// <c>[taskbar]</c> section holds <c>primary-taskbar</c> (ADR 0179 §1).
 /// </summary>
 /// <example>
 /// <code>
+/// [taskbar]
+/// primary-taskbar = own
+///
 /// [screens]
 /// open = 2,3
 /// 2 = 1920,0,1920,1080
@@ -86,14 +103,27 @@ public static class ScreensSettingsDocuments
     /// <summary>Key of the list of the screens open in the last session.</summary>
     public const string OpenKey = "open";
 
+    /// <summary>Section of the taskbar settings.</summary>
+    public const string TaskbarGroup = "taskbar";
+
+    /// <summary>Key of what the taskbar of screen 1 lists: <c>all</c> or <c>own</c>.</summary>
+    public const string PrimaryTaskbarKey = "primary-taskbar";
+
+    /// <summary>Value of <see cref="PrimaryTaskbarMode.All"/>.</summary>
+    public const string PrimaryTaskbarAll = "all";
+
+    /// <summary>Value of <see cref="PrimaryTaskbarMode.Own"/>.</summary>
+    public const string PrimaryTaskbarOwn = "own";
+
     /// <summary>Highest screen number the file remembers: the screen service opens no more screens.</summary>
     public const int MaxScreenNumber = 9;
 
-    /// <summary>Gets the declared schema: <c>open</c> and one line per secondary screen number.</summary>
+    /// <summary>Gets the declared schema: <c>primary-taskbar</c>, <c>open</c> and one line per secondary screen number.</summary>
     public static SettingsSchema Schema { get; } = new(
         schemaVersion: 1,
         fields:
         [
+            new SettingFieldDeclaration(PrimaryTaskbarKey, SettingValueType.String, PrimaryTaskbarAll, SettingSensitivity.Public, Group: TaskbarGroup),
             new SettingFieldDeclaration(OpenKey, SettingValueType.String, string.Empty, SettingSensitivity.Public, Group: ScreensGroup),
             .. Enumerable.Range(2, MaxScreenNumber - 1).Select(static number => new SettingFieldDeclaration(
                 number.ToString(CultureInfo.InvariantCulture), SettingValueType.String, string.Empty, SettingSensitivity.Public, Group: ScreensGroup)),
@@ -101,6 +131,9 @@ public static class ScreensSettingsDocuments
 
     /// <summary>Gets the layered document.</summary>
     public static OsSettingsDocument Document { get; } = new(DocumentId, Schema);
+
+    /// <summary>Gets the qualified key of the <c>primary-taskbar</c> line.</summary>
+    public static string PrimaryTaskbarQualifiedKey => $"{TaskbarGroup}.{PrimaryTaskbarKey}";
 
     /// <summary>Gets the qualified key of the <c>open</c> line.</summary>
     public static string OpenQualifiedKey => $"{ScreensGroup}.{OpenKey}";
@@ -166,4 +199,23 @@ public static class ScreensSettingsDocuments
         ArgumentNullException.ThrowIfNull(numbers);
         return string.Join(',', numbers.Select(static number => number.ToString(CultureInfo.InvariantCulture)));
     }
+
+    /// <summary>
+    /// Reads what the taskbar of screen 1 lists. <c>own</c> (any case) is <see cref="PrimaryTaskbarMode.Own"/>;
+    /// anything else, or no line, keeps the default <see cref="PrimaryTaskbarMode.All"/>.
+    /// </summary>
+    /// <param name="snapshot">Snapshot of <see cref="Document"/>.</param>
+    public static PrimaryTaskbarMode ReadPrimaryTaskbar(LayeredConfigSnapshot snapshot)
+    {
+        ArgumentNullException.ThrowIfNull(snapshot);
+        return snapshot.Values.TryGetValue(PrimaryTaskbarQualifiedKey, out string? value)
+            && string.Equals(value?.Trim(), PrimaryTaskbarOwn, StringComparison.OrdinalIgnoreCase)
+                ? PrimaryTaskbarMode.Own
+                : PrimaryTaskbarMode.All;
+    }
+
+    /// <summary>Writes the value of the <c>primary-taskbar</c> line.</summary>
+    /// <param name="mode">What the taskbar of screen 1 lists.</param>
+    public static string FormatPrimaryTaskbar(PrimaryTaskbarMode mode) =>
+        mode == PrimaryTaskbarMode.Own ? PrimaryTaskbarOwn : PrimaryTaskbarAll;
 }

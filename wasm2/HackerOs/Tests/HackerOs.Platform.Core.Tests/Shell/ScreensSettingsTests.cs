@@ -77,4 +77,54 @@ public sealed class ScreensSettingsTests
     {
         Assert.Throws<ArgumentOutOfRangeException>(() => ScreensSettingsDocuments.GeometryQualifiedKey(number));
     }
+
+    [Fact]
+    public async Task Without_a_line_the_taskbar_of_screen_1_lists_every_window()
+    {
+        SettingsFilesHarness harness = new();
+        await harness.BootAsync();
+        await harness.LoginAsync(harness.Alice);
+
+        LayeredConfigSnapshot snapshot = await harness.Settings.ReadAsync(ScreensSettingsDocuments.Document);
+
+        Assert.Equal(PrimaryTaskbarMode.All, ScreensSettingsDocuments.ReadPrimaryTaskbar(snapshot));
+    }
+
+    [Theory]
+    [InlineData("own", PrimaryTaskbarMode.Own)]
+    [InlineData(" OWN ", PrimaryTaskbarMode.Own)]
+    [InlineData("all", PrimaryTaskbarMode.All)]
+    [InlineData("mine", PrimaryTaskbarMode.All)]
+    public async Task The_user_file_says_what_the_taskbar_of_screen_1_lists(string value, PrimaryTaskbarMode expected)
+    {
+        SettingsFilesHarness harness = new();
+        await harness.BootAsync();
+        await harness.LoginAsync(harness.Alice);
+        await harness.WriteAsRootAsync(
+            "/home/alice/.config/hackeros/screens.config",
+            $"[taskbar]\nprimary-taskbar = {value}\n");
+
+        LayeredConfigSnapshot snapshot = await harness.Settings.ReadAsync(ScreensSettingsDocuments.Document);
+
+        Assert.Equal(expected, ScreensSettingsDocuments.ReadPrimaryTaskbar(snapshot));
+    }
+
+    [Fact]
+    public async Task Writing_primary_taskbar_round_trips_in_the_taskbar_section()
+    {
+        SettingsFilesHarness harness = new();
+        await harness.BootAsync();
+        await harness.LoginAsync(harness.Alice);
+
+        await harness.Settings.SetManyAsync(
+            ScreensSettingsDocuments.Document,
+            [new(ScreensSettingsDocuments.PrimaryTaskbarQualifiedKey, ScreensSettingsDocuments.FormatPrimaryTaskbar(PrimaryTaskbarMode.Own))]);
+
+        string? content = await harness.ReadAsync("/home/alice/.config/hackeros/screens.config");
+        Assert.NotNull(content);
+        Assert.Contains("[taskbar]", content, StringComparison.Ordinal);
+        Assert.Contains("primary-taskbar", content, StringComparison.Ordinal);
+        LayeredConfigSnapshot snapshot = await harness.Settings.ReadAsync(ScreensSettingsDocuments.Document);
+        Assert.Equal(PrimaryTaskbarMode.Own, ScreensSettingsDocuments.ReadPrimaryTaskbar(snapshot));
+    }
 }

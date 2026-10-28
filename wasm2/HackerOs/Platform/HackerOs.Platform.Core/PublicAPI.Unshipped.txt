@@ -32,5 +32,15 @@ static HackerOs.Platform.Core.Shell.ScreensSettingsDocuments.ReadGeometries(Hack
 static HackerOs.Platform.Core.Shell.ScreensSettingsDocuments.ReadOpenScreens(HackerOs.Simulation.Abstractions.Settings.LayeredConfigSnapshot! snapshot) -> System.Collections.Generic.IReadOnlyList<int>!
 static HackerOs.Platform.Core.Shell.ScreensSettingsDocuments.Schema.get -> HackerOs.Simulation.Abstractions.Settings.SettingsSchema!
 ~override HackerOs.Platform.Core.Shell.ScreenGeometry.Equals(object obj) -> bool
+HackerOs.Platform.Core.Shell.PrimaryTaskbarMode
+HackerOs.Platform.Core.Shell.PrimaryTaskbarMode.All = 0 -> HackerOs.Platform.Core.Shell.PrimaryTaskbarMode
+HackerOs.Platform.Core.Shell.PrimaryTaskbarMode.Own = 1 -> HackerOs.Platform.Core.Shell.PrimaryTaskbarMode
+const HackerOs.Platform.Core.Shell.ScreensSettingsDocuments.PrimaryTaskbarAll = "all" -> string!
+const HackerOs.Platform.Core.Shell.ScreensSettingsDocuments.PrimaryTaskbarKey = "primary-taskbar" -> string!
+const HackerOs.Platform.Core.Shell.ScreensSettingsDocuments.PrimaryTaskbarOwn = "own" -> string!
+const HackerOs.Platform.Core.Shell.ScreensSettingsDocuments.TaskbarGroup = "taskbar" -> string!
+static HackerOs.Platform.Core.Shell.ScreensSettingsDocuments.FormatPrimaryTaskbar(HackerOs.Platform.Core.Shell.PrimaryTaskbarMode mode) -> string!
+static HackerOs.Platform.Core.Shell.ScreensSettingsDocuments.PrimaryTaskbarQualifiedKey.get -> string!
+static HackerOs.Platform.Core.Shell.ScreensSettingsDocuments.ReadPrimaryTaskbar(HackerOs.Simulation.Abstractions.Settings.LayeredConfigSnapshot! snapshot) -> HackerOs.Platform.Core.Shell.PrimaryTaskbarMode
 HackerOs.Platform.Core.Shell.WindowKeyboardAction.MoveToNextScreen = 14 -> HackerOs.Platform.Core.Shell.WindowKeyboardAction
 HackerOs.Platform.Core.Shell.WindowKeyboardAction.MoveToPreviousScreen = 13 -> HackerOs.Platform.Core.Shell.WindowKeyboardAction

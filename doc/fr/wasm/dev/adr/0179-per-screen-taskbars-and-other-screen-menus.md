@@ -122,7 +122,7 @@ l'icône de fenêtre). Plan : [`multi-monitor-plan.md`](../plans/multi-monitor-p
 ## Tâches
 
 - [x] Une couche d'overlays par écran et le voile des dialogues sécurisés (chantier 4, [`secondary-screen-desktop.md`](../secondary-screen-desktop.md)).
-- [ ] Barres des tâches par écran et réglage `primary-taskbar` (chantier 5).
+- [x] Barres des tâches par écran et réglage `primary-taskbar` (chantier 5, [`per-screen-taskbars.md`](../per-screen-taskbars.md)).
 - [x] Menu de fenêtre par le menu contextuel de l'OS, menu du bouton Agrandir,
   sous-menu « Autre écran », voile (chantier 6, [`other-screen-menus.md`](../other-screen-menus.md)).
 - [ ] Paramètres ▸ Écrans et `screens.config` (chantier 7).
