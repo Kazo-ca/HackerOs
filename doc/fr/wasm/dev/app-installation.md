@@ -235,6 +235,46 @@ Ailleurs : `ShellCommandResolverTests.Uninstalled_commands_are_neither_resolved_
 et les tests existants du lanceur, du résolveur d'associations et du
 répartiteur d'intentions, qui s'appuient déjà sur le registre.
 
+## Apps installées depuis un dépôt GitHub
+
+L'ADR [0182](adr/0182-install-apps-from-github.md) ajoute une troisième
+origine d'app, à côté des apps système et des apps intégrées : un paquet
+`.hackapp` publié par le dépôt GitHub de l'app sur sa branche
+`hackeros-packages`, lu par `raw.githubusercontent.com`.
+
+```text
+hackpkg install Kazo-ca/HackerOs-App-Webamp      # dernière version
+hackpkg install Kazo-ca/HackerOs-App-Webamp@1.0.0
+hackpkg update                                   # toutes les apps installées
+hackpkg list | info <dépôt> | sources | remove <appId>
+```
+
+- **Sources de confiance** : `/etc/hackeros/app-sources.config` (créé au
+  démarrage, mode 0644) ; seul `github.com/Kazo-ca` est dans `[trusted]` par
+  défaut. Un autre propriétaire demande `--allow-untrusted`, puis une
+  approbation administrateur dédiée.
+- **Vérifications avant la demande d'administrateur** : SHA-256 du paquet
+  (`index.json`) et de chaque fichier, identifiant, `sdkCompatibility`, API
+  présentes dans l'OS, app sur le fil principal.
+- **Écriture** : `/usr/lib/hackeros/apps/<appId>/<version>/` et une ligne
+  `<appId>=github:owner/repo@version` dans `[installed]` de
+  `/etc/hackeros/apps.config`. Le dossier de la version précédente est retiré.
+- **Redémarrage** : le catalogue est construit au démarrage (Q5) ; l'app
+  apparaît après un redémarrage de HackerOS. `hackpkg list` affiche
+  `(restart pending)` d'ici là.
+- **Capacités dangereuses** : demandées au premier lancement, comme pour toute
+  app non système.
+- **Publication** : `dotnet build -c Release -t:HackerOsPack` dans le projet de
+  l'app écrit le paquet et `index.json` dans `bin/hackeros-packages` (propriété
+  `HackerOsPackageOutput`), à pousser sur la branche `hackeros-packages`.
+- **Limites de la première version** : voir la section du même nom de l'ADR
+  0182 (ressources `wwwroot` non servies, fil principal seulement, dépendances
+  NuGet tierces non transportées).
+
+Tests : `AppPackageGatewayTests`, `AppPackageWriterTests`, `AppPackageTests`
+(Platform.Core), `HackpkgCommandTests` (Commands.Wave5) et le scénario
+`hackpkg` de `CommandParityTests`.
+
 ## Tâches
 
 - [x] `IAppInstallationService`, `AppInstallationService`, `AppsConfigDocument`.

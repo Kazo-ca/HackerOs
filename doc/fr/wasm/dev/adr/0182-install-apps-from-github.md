@@ -56,7 +56,7 @@ Les points marqués **(Qn)** suivent la réponse de Benoit à la question Qn.
 Un **paquet d'app HackerOS** est une archive zip d'extension `.hackapp` :
 
 ```text
-hackeros-package.json      identité, version, SDK visé, liste des fichiers et SHA-256
+hackeros-package.json      identité, version, liste des fichiers et SHA-256
 manifest.json              manifeste généré (ADR 0010, ADR 0047)
 lib/<Assembly>.dll         assemblies de l'app (IL, pas WebCIL)
 wwwroot/...                ressources déclarées dans Assets
@@ -68,14 +68,21 @@ wwwroot/...                ressources déclarées dans Assets
 {
   "appId": "org.kazo.webamp",
   "version": "1.0.0",
-  "sdkVersion": "2.1.0",
-  "files": { "lib/Kazo.Webamp.dll": "sha256-…", "manifest.json": "sha256-…" }
+  "files": { "lib/Kazo.Webamp.dll": "3f2a…", "manifest.json": "9c41…" }
 }
 ```
 
-La cible MSBuild `HackerOsPack` (paquet `HackerOs.App.Build`) produit le paquet
-après `dotnet publish -c Release`. Le workflow CI du modèle `hackeros-solution`
-(ADR 0176 §1) l'appelle à chaque tag `v*`.
+Les SHA-256 sont écrits en hexadécimal minuscule, sans préfixe. Le SDK visé
+n'est pas répété : c'est `sdkCompatibility` du manifeste. `lib/` ne contient que
+les assemblies que le manifeste nomme (points d'entrée et composants).
+
+La cible MSBuild `HackerOsPack` (paquet `HackerOs.App.Build`) produit le paquet :
+`dotnet build -c Release -t:HackerOsPack` écrit
+`<version>/<appId>-<version>.hackapp` et met à jour `index.json` dans
+`HackerOsPackageOutput` (par défaut `bin/hackeros-packages/`), le contenu de la
+branche `hackeros-packages`. Le même contenu donne le même paquet, donc le même
+SHA-256. Le workflow CI du modèle `hackeros-solution` (ADR 0176 §1) l'appellera
+à chaque tag `v*`.
 
 ### 2. Où l'OS trouve le paquet **(Q2)**
 
@@ -144,15 +151,22 @@ hackpkg install ...`, ou l'agent d'authentification de l'OS (ADR 0055 §5).
    SHA-256 contre `index.json`, puis chaque fichier contre
    `hackeros-package.json`.
 2. Refuser si `appId` est celui d'une app intégrée ou d'une app déjà installée
-   depuis une autre source ; si `sdkVersion` a un autre majeur que le SDK de
-   l'OS ou un mineur plus grand (`apps.package.sdk-incompatible:<v>`) ; si le
-   manifeste ne passe pas les contrôles de l'ADR 0098.
+   depuis une autre source (`apps.package.built-in`, `apps.package.other-source`) ;
+   si `sdkCompatibility` du manifeste exclut le SDK de l'OS
+   (`apps.package.sdk-incompatible`) ; si le manifeste ne passe pas les
+   contrôles de l'ADR 0098 ; si l'app ne tourne pas sur le fil principal
+   (`apps.package.worker-unsupported` : un Web Worker ne peut pas charger une
+   assembly depuis le système de fichiers).
 3. **(Q1)** Vérifier chaque référence de membre des assemblies (méthodes,
    champs, types) contre le runtime chargé, par `System.Reflection.Metadata` :
    une API élaguée de l'OS refuse l'installation avec la liste des membres
    manquants (`apps.package.missing-api:<membre>`).
-4. Afficher les capacités demandées ; les capacités dangereuses passent par
-   l'approbation de l'ADR 0049, avant toute écriture.
+4. Demander l'administrateur (ou rien sous `sudo`), après le téléchargement et
+   les contrôles : aucun mot de passe n'est demandé pour un paquet refusé. Le
+   texte de la demande dit si la source n'est pas de confiance. `hackpkg` affiche
+   ensuite les capacités de l'app ; une app installée n'est pas une app système,
+   donc ses capacités dangereuses sont demandées à chaque utilisateur à son
+   premier lancement (ADR 0049, section 7).
 5. Écrire les fichiers dans `/usr/lib/hackeros/apps/<appId>/<version>/`
    (`root:root`, dossiers `0755`, fichiers `0644`) et la source dans
    `/etc/hackeros/apps.config`, nouvelle section :
@@ -173,12 +187,14 @@ Au démarrage, avant que le catalogue ne serve, l'hôte relit `[installed]` et
 les manifestes de `/usr/lib/hackeros/apps/` et construit le catalogue avec les
 apps intégrées puis les apps installées (une app installée invalide est écartée
 avec un avertissement, jamais bloquante). Au lancement, l'assembly est lue depuis
-`/usr/lib/hackeros/apps/...` et chargée par `Assembly.Load(byte[])` au lieu du
-chargement paresseux de Blazor ; les ressources sont servies par
-`AppAssetStore` depuis le même dossier.
+`/usr/lib/hackeros/apps/...` et chargée par
+`AssemblyLoadContext.Default.LoadFromStream` au lieu du chargement paresseux de
+Blazor ; les ressources sont servies par `AppAssetStore` depuis le même dossier.
+Le fichier `/etc/hackeros/app-sources.config` est créé au démarrage s'il
+n'existe pas.
 
-`hackpkg remove` arrête l'app (ADR 0048), retire la ligne de `[installed]` et
-le dossier. Les réglages de l'utilisateur (`~/.config/<appId>/`) restent, comme
+`hackpkg remove` retire la ligne de `[installed]` et le dossier ; une instance
+déjà ouverte continue jusqu'au redémarrage, qui retire l'app du catalogue. Les réglages de l'utilisateur (`~/.config/<appId>/`) restent, comme
 pour une désinstallation. `[uninstalled]` garde son sens : il retire une app
 intégrée sans rien effacer.
 
@@ -237,14 +253,31 @@ Questions posées à Benoit le 2026-10-28 ; il a choisi **A** aux quatre premiè
 - La sauvegarde du système ([ADR 0099](0099-os-backup-and-low-storage.md))
   inclut `/usr/lib/hackeros/apps`.
 
+### Limites de la première version
+
+- Les ressources `wwwroot/` d'une app installée (images, JavaScript, CSS) sont
+  copiées et vérifiées par `AppAssetStore`, mais pas servies à l'adresse
+  `_content/<assembly>/…` que Blazor utilise : une balise `<img>` ou
+  `<script src>` ne les trouve pas. Une app qui enveloppe un projet JavaScript
+  (Webamp, IRC) attend donc un chantier qui les serve (service worker ou
+  adresses `blob:`).
+- Une app installée tourne sur le fil principal seulement.
+- Les dépendances d'une app autres que le SDK (paquets NuGet tiers) ne sont pas
+  emportées : seules les assemblies que le manifeste nomme vont dans `lib/`.
+- L'hôte Blazor Web App (`test/test`) ne charge pas les apps installées ; seul
+  l'hôte WebAssembly le fait.
+
 ## Tâches
 
 - [x] Réponses de Benoit à Q1 à Q5 (A aux quatre premières, C à Q5, 2026-10-28).
 - [ ] Plus tard : ajout au catalogue sans redémarrage (Q5 B).
-- [ ] Cible `HackerOsPack` dans `HackerOs.App.Build` et workflow de publication dans `hackeros-solution`.
-- [ ] `app-sources.config` (lecture, migration de création).
-- [ ] Section `[installed]` dans `AppsConfigDocument` ; inscription au catalogue en cours de session.
-- [ ] Chargement d'une assembly installée depuis le système de fichiers, ressources par `AppAssetStore`.
-- [ ] Vérification des références contre le runtime (Q1).
-- [ ] Commande `hackpkg` et sa doc (`linux-commands.md`, `app-installation.md`).
-- [ ] Tests unitaires (lecture des fichiers, contrôles du paquet) et test de bout en bout avec un paquet de test servi localement.
+- [x] Cible `HackerOsPack` dans `HackerOs.App.Build` (commande `pack` du générateur de manifestes).
+- [ ] Workflow de publication dans `hackeros-solution` (dépôt `Kazo-ca/HackerOs-AppTemplate`).
+- [x] `app-sources.config` (lecture, création au démarrage).
+- [x] Section `[installed]` dans `AppsConfigDocument` ; inscription au catalogue au démarrage.
+- [x] Chargement d'une assembly installée depuis le système de fichiers, ressources par `AppAssetStore`.
+- [x] Vérification des références contre le runtime (Q1).
+- [x] Commande `hackpkg` et sa doc (`linux-commands.md`, `app-installation.md`).
+- [x] Tests unitaires (sources, paquet, index, vérification des références, passerelle, commande).
+- [ ] Test de bout en bout dans le navigateur avec un paquet de test servi localement.
+- [ ] Servir les ressources `wwwroot/` d'une app installée (voir « Limites »).

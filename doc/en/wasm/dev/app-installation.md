@@ -235,6 +235,43 @@ Elsewhere: `ShellCommandResolverTests.Uninstalled_commands_are_neither_resolved_
 and the existing tests of the launcher, the association resolver and the
 intent dispatcher, which already rely on the registry.
 
+## Apps installed from a GitHub repository
+
+ADR [0182](adr/0182-install-apps-from-github.md) adds a third origin of apps,
+next to system apps and built-in apps: a `.hackapp` package published by the
+app's GitHub repository on its `hackeros-packages` branch, read through
+`raw.githubusercontent.com`.
+
+```text
+hackpkg install Kazo-ca/HackerOs-App-Webamp      # latest version
+hackpkg install Kazo-ca/HackerOs-App-Webamp@1.0.0
+hackpkg update                                   # every installed app
+hackpkg list | info <repo> | sources | remove <appId>
+```
+
+- **Trusted sources**: `/etc/hackeros/app-sources.config` (created at startup,
+  mode 0644); only `github.com/Kazo-ca` is in `[trusted]` by default. Another
+  owner needs `--allow-untrusted`, then a dedicated administrator approval.
+- **Checks before the administrator prompt**: SHA-256 of the package
+  (`index.json`) and of each file, identifier, `sdkCompatibility`, APIs present
+  in the OS, app on the main thread.
+- **Writing**: `/usr/lib/hackeros/apps/<appId>/<version>/` and a line
+  `<appId>=github:owner/repo@version` in `[installed]` of
+  `/etc/hackeros/apps.config`. The previous version's folder is removed.
+- **Restart**: the catalog is built at startup (Q5); the app appears after a
+  restart of HackerOS. `hackpkg list` shows `(restart pending)` until then.
+- **Dangerous capabilities**: asked at first launch, as for any non-system app.
+- **Publishing**: `dotnet build -c Release -t:HackerOsPack` in the app project
+  writes the package and `index.json` to `bin/hackeros-packages` (property
+  `HackerOsPackageOutput`), to push to the `hackeros-packages` branch.
+- **Limits of the first version**: see the section of the same name in ADR
+  0182 (`wwwroot` resources not served, main thread only, third-party NuGet
+  dependencies not carried).
+
+Tests: `AppPackageGatewayTests`, `AppPackageWriterTests`, `AppPackageTests`
+(Platform.Core), `HackpkgCommandTests` (Commands.Wave5) and the `hackpkg`
+scenario of `CommandParityTests`.
+
 ## Tasks
 
 - [x] `IAppInstallationService`, `AppInstallationService`, `AppsConfigDocument`.
