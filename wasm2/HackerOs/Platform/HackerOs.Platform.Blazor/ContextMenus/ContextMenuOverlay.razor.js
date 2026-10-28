@@ -59,6 +59,27 @@ function menuTarget(start) {
     return target;
 }
 
+/**
+ * Whether the OS menu is drawn for a document: the desktop's, or a secondary screen's (ADR 0179 §2),
+ * where the overlays move when the user acts there. A page detached by the OS browser (ADR 0078)
+ * keeps the browser's own menu.
+ */
+function isScreen(doc) {
+    if (!doc) {
+        return false;
+    }
+
+    if (doc === document) {
+        return true;
+    }
+
+    try {
+        return doc.querySelector("[data-screen-overlay-slot]") !== null;
+    } catch {
+        return false;
+    }
+}
+
 function insideMenu(node) {
     return !!state.layer && node instanceof Node && state.layer.contains(node);
 }
@@ -76,8 +97,8 @@ function request(target, x, y, origin) {
 
 function onContextMenu(event) {
     // Content moved to a detached window (ADR 0078) keeps the browser's menu: the OS menu is drawn
-    // on the desktop's document only.
-    if (!state.dotNet || event.defaultPrevented || event.target?.ownerDocument !== document) {
+    // on the desktop's document and on the secondary screens only.
+    if (!state.dotNet || event.defaultPrevented || !isScreen(event.target?.ownerDocument)) {
         return;
     }
 
@@ -119,7 +140,7 @@ function onKeyDown(event) {
         return;
     }
 
-    const focused = document.activeElement;
+    const focused = (event.target?.ownerDocument ?? document).activeElement;
     const target = menuTarget(focused);
     if (!target) {
         return;
@@ -145,7 +166,7 @@ function onPointerDown(event) {
         state.dotNet?.invokeMethodAsync("OnDismissed").catch(() => { });
     }
 
-    if ((event.pointerType !== "touch" && event.pointerType !== "pen") || event.target?.ownerDocument !== document) {
+    if ((event.pointerType !== "touch" && event.pointerType !== "pen") || !isScreen(event.target?.ownerDocument)) {
         return;
     }
 
@@ -323,7 +344,7 @@ export function menuOpened() {
     if (state.pendingTarget) {
         state.restoreTarget = state.pendingTarget;
     } else if (!state.open) {
-        const active = document.activeElement;
+        const active = (state.layer?.ownerDocument ?? document).activeElement;
         state.restoreTarget = active && active !== document.body && !insideMenu(active) ? active : null;
     }
 
@@ -350,15 +371,18 @@ export function placeMenu(layer, x, y) {
         return;
     }
 
+    // The viewport of the screen the menu is shown on (ADR 0179 §2).
+    const doc = layer.ownerDocument ?? document;
+    const view = doc.defaultView ?? window;
     const margin = 4;
-    const width = window.innerWidth;
-    const height = window.innerHeight;
+    const width = view.innerWidth;
+    const height = view.innerHeight;
     for (const panel of layer.querySelectorAll("[data-menu-level]")) {
         const rect = panel.getBoundingClientRect();
         let left;
         let top;
         const parentId = panel.getAttribute("data-parent-row");
-        const parent = parentId ? document.getElementById(parentId) : null;
+        const parent = parentId ? doc.getElementById(parentId) : null;
         if (!parent) {
             left = x + rect.width + margin > width ? x - rect.width : x;
             top = y + rect.height + margin > height ? y - rect.height : y;

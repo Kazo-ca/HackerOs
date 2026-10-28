@@ -113,8 +113,10 @@ export function attachWindowKeyboard(dotNet, bindings) {
     state.dotNet = dotNet;
     state.bindings = bindings ?? [];
     state.grab = "none";
-    window.addEventListener("keydown", onKeyDown, true);
-    window.addEventListener("keyup", onKeyUp, true);
+    // On `document`, which the display surfaces mirror onto each secondary screen (ADR 0179 §2):
+    // the shortcuts work in every screen's window.
+    document.addEventListener("keydown", onKeyDown, true);
+    document.addEventListener("keyup", onKeyUp, true);
     window.addEventListener("blur", onBlur);
     document.addEventListener("fullscreenchange", onFullScreenChange);
 }
@@ -128,8 +130,8 @@ export function updateWindowKeyboard(bindings, grab) {
 }
 
 export function detachWindowKeyboard() {
-    window.removeEventListener("keydown", onKeyDown, true);
-    window.removeEventListener("keyup", onKeyUp, true);
+    document.removeEventListener("keydown", onKeyDown, true);
+    document.removeEventListener("keyup", onKeyUp, true);
     window.removeEventListener("blur", onBlur);
     document.removeEventListener("fullscreenchange", onFullScreenChange);
     state.dotNet = null;
@@ -148,17 +150,4 @@ export async function toggleFullScreen() {
     } catch {
         // Refused by the host (no user gesture, policy): the state does not change.
     }
-}
-
-/** Places the menu at the requested point, kept inside the viewport. */
-export function placeWindowMenu(menu, x, y) {
-    if (!menu) {
-        return;
-    }
-
-    const rect = menu.getBoundingClientRect();
-    const left = Math.max(4, Math.min(x, window.innerWidth - rect.width - 4));
-    const top = Math.max(4, Math.min(y, window.innerHeight - rect.height - 4));
-    menu.style.setProperty("--window-menu-x", `${left}px`);
-    menu.style.setProperty("--window-menu-y", `${top}px`);
 }

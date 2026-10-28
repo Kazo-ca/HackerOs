@@ -158,6 +158,14 @@ public sealed record WindowRuntimeState
     public bool IsResponding { get; init; } = true;
 
     /// <summary>
+    /// Gets the screen that shows the window (ADR 0178 §2). <see cref="Bounds"/> and
+    /// <see cref="RestoreBounds"/> are in that screen's coordinates. Defaults to
+    /// <see cref="DisplayId.Primary"/>; only <see cref="MoveWindowToDisplayCommand"/> and
+    /// <see cref="RemoveDisplayCommand"/> change it once the window exists.
+    /// </summary>
+    public DisplayId DisplayId { get; init; }
+
+    /// <summary>
     /// Gets whether the window is tiled on half of the work area by a snap (ADR 0177). A snapped
     /// window stays <see cref="WindowVisualState.Normal"/> and keeps its geometry from before the snap
     /// in <see cref="RestoreBounds"/>: restoring it, or dragging its title bar, gives that geometry back.

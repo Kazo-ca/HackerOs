@@ -162,6 +162,12 @@
   <data name="org.hackeros.commands.hackbackup.Terminal.Usage" xml:space="preserve">
     <value>hackbackup create | restore [--merge|--replace]</value>
   </data>
+  <data name="org.hackeros.commands.hackpkg.Description" xml:space="preserve">
+    <value>Installe, met à jour et retire des apps depuis leur dépôt GitHub</value>
+  </data>
+  <data name="org.hackeros.commands.hackpkg.Terminal.Usage" xml:space="preserve">
+    <value>hackpkg install &lt;dépôt&gt;[@version] [--allow-untrusted] | remove &lt;appId&gt; | update [&lt;appId&gt;] | list | info &lt;dépôt&gt; | sources</value>
+  </data>
   <data name="org.hackeros.commands.head.Description" xml:space="preserve">
     <value>Affiche le début des fichiers</value>
   </data>
@@ -227,6 +233,12 @@
   </data>
   <data name="org.hackeros.commands.mkdir.Terminal.Usage" xml:space="preserve">
     <value>mkdir [-pv] &lt;dossier...&gt;</value>
+  </data>
+  <data name="org.hackeros.commands.mount.Description" xml:space="preserve">
+    <value>Monte un dossier de l'ordinateur comme lecteur réseau</value>
+  </data>
+  <data name="org.hackeros.commands.mount.Terminal.Usage" xml:space="preserve">
+    <value>mount [-l] | mount -t hostfs [/mnt/nom] | mount -o remount /mnt/nom</value>
   </data>
   <data name="org.hackeros.commands.mv.Description" xml:space="preserve">
     <value>Déplace ou renomme des fichiers et des dossiers</value>
@@ -389,6 +401,12 @@
   </data>
   <data name="org.hackeros.commands.true.Terminal.Usage" xml:space="preserve">
     <value>true</value>
+  </data>
+  <data name="org.hackeros.commands.umount.Description" xml:space="preserve">
+    <value>Démonte un lecteur réseau</value>
+  </data>
+  <data name="org.hackeros.commands.umount.Terminal.Usage" xml:space="preserve">
+    <value>umount /mnt/nom</value>
   </data>
   <data name="org.hackeros.commands.uniq.Description" xml:space="preserve">
     <value>Signale ou omet les lignes répétées</value>

@@ -11,7 +11,7 @@ namespace HackerOs.Commands.Df;
 /// <summary>
 /// <c>df [-h] [-k] [-T] [-a]</c> (ADR 0064): space of the mounted disks from
 /// <see cref="HackDriveInfo"/> (the IndexedDB disk <c>/dev/hda</c> on <c>/</c>, ADR 0057), in
-/// 1K-blocks or human-readable sizes; <c>-a</c> also lists the pseudo filesystems of
+/// 1K-blocks or human-readable sizes, and the network drives of ADR 0181 (<c>host:&lt;folder&gt;</c>, no size); <c>-a</c> also lists the pseudo filesystems of
 /// <c>/proc/mounts</c> (<c>proc</c>, <c>devtmpfs</c>) with no blocks, as Linux does.
 /// </summary>
 public sealed class DfCommand(AppManifest manifest) : TerminalAppBase(manifest)
@@ -66,6 +66,13 @@ public sealed class DfCommand(AppManifest manifest) : TerminalAppBase(manifest)
         {
             long used = drive.TotalSize - drive.AvailableFreeSpace;
             string percent = drive.TotalSize == 0 ? "-" : $"{(int)Math.Ceiling(used * 100.0 / drive.TotalSize)}%";
+            if (drive.DriveType == HackDriveType.Network)
+            {
+                // ADR 0181: the browser gives neither the size nor the free space of a host folder.
+                rows.Add(["host:" + drive.VolumeLabel, drive.DriveFormat, "-", "-", "-", "-", drive.Name]);
+                continue;
+            }
+
             rows.Add(
             [
                 "/dev/" + drive.VolumeLabel, drive.DriveFormat, Size(drive.TotalSize, human), Size(used, human),

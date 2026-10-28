@@ -816,11 +816,16 @@ public sealed class ProcFileSystemProvider : VirtualFileSystemProvider
         StringBuilder builder = new();
         foreach (MountDescription mount in mounts)
         {
-            builder.Append(CultureInfo.InvariantCulture, $"{mount.Source} {mount.MountPoint} {mount.Type} {mount.Options} 0 0\n");
+            // Like the kernel's \040, a space in a network drive's name never splits a field.
+            builder.Append(
+                CultureInfo.InvariantCulture,
+                $"{EscapeMountField(mount.Source)} {EscapeMountField(mount.MountPoint)} {mount.Type} {mount.Options} 0 0\n");
         }
 
         return builder.ToString();
     }
+
+    private static string EscapeMountField(string value) => value.Replace(" ", "\\040", StringComparison.Ordinal);
 
     /// <summary>Gets the highest PID handed out so far, live or exited.</summary>
     private long LastPid(IEnumerable<ProcessRecord> active) =>

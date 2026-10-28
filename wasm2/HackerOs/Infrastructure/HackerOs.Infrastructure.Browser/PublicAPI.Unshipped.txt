@@ -1,1 +1,8 @@
 #nullable enable
+HackerOs.Infrastructure.Browser.Interop.BrowserHostFolderAccess
+HackerOs.Infrastructure.Browser.Interop.BrowserHostFolderAccess.BrowserHostFolderAccess(Microsoft.JSInterop.IJSRuntime! runtime) -> void
+HackerOs.Infrastructure.Browser.Interop.BrowserHostFolderAccess.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Infrastructure.Browser.Interop.BrowserHostFolderAccess.ForgetAsync(string! key, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+HackerOs.Infrastructure.Browser.Interop.BrowserHostFolderAccess.IsSupportedAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+HackerOs.Infrastructure.Browser.Interop.BrowserHostFolderAccess.LoadAsync(string! key, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.IHostFolder?>
+HackerOs.Infrastructure.Browser.Interop.BrowserHostFolderAccess.PickAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.HostFolderPick?>

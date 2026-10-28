@@ -21,8 +21,8 @@ Core or Infrastructure.Browser.
 
 | Layer | Files |
 |---|---|
-| SDK (contracts, facades) | `Shared/HackerOs.AppSdk/Administration/` (`HackPermissionAdministration`, `HackComponentProviders`, `HackServerConnection`, `HackSystem`, `HackStorageDiagnostics` and their contracts), `Shared/HackerOs.AppSdk/Settings/IAppSystemSettingsGateway.cs`, `SettingsDocumentStores.cs` |
-| Platform Core (gateways) | `Platform/HackerOs.Platform.Core/Administration/`: `AppSystemSettingsGateway`, `AppPermissionAdministrationGateway`, `AppServerConnectionGateway`, `AppSystemPowerGateway`, `AppStorageDiagnosticsGateway`, `AppSystemBackupGateway`, `AppUserAccountsGateway`, `AdministratorGate`, `SystemAdministrationGatewayServices` |
+| SDK (contracts, facades) | `Shared/HackerOs.AppSdk/Administration/` (`HackPermissionAdministration`, `HackComponentProviders`, `HackServerConnection`, `HackSystem`, `HackStorageDiagnostics`, `HackScreens` and their contracts), `Shared/HackerOs.AppSdk/Settings/IAppSystemSettingsGateway.cs`, `SettingsDocumentStores.cs` |
+| Platform Core (gateways) | `Platform/HackerOs.Platform.Core/Administration/`: `AppSystemSettingsGateway`, `AppPermissionAdministrationGateway`, `AppServerConnectionGateway`, `AppSystemPowerGateway`, `AppStorageDiagnosticsGateway`, `AppSystemBackupGateway`, `AppUserAccountsGateway`, `AppScreensGateway` (over `IScreenControl`, ADR 0184), `AdministratorGate`, `SystemAdministrationGatewayServices` |
 | Platform Core (services) | `Power/SystemPowerService.cs` (shutdown sequence, `RestartAfterAsync`), `Backup/SystemBackupService.cs`, `Sessions/LocalPasswordService.cs` (ADR 0120), `Settings/OsSettingsDocumentRegistry.cs`, `Policy/AppPermissionAdministration.cs` (`ApplyMachineDecisionAsync`, `ApplyPolicyAsync`) |
 | Ecosystem host | `Administration/BrowserSystemPowerDevice.cs` (`location.reload`, deletion of the IndexedDB database), `Administration/BrowserSystemBackupDevice.cs` (export, download, host picker), `Administration/IndexedDbStorageInspector.cs` (adapter for `IndexedDbInspectorService`) |
 | Blazor SDK | `Interop/BrowserClipboard.cs` and `wwwroot/clipboard.js` (host clipboard), `[Obsolete]` since ADR 0065 then removed when SDK 1.0 was frozen (ADR 0114): Diagnostics copies through `HackClipboard`, which the OS copies over to the host ([`clipboard.md`](../dev/clipboard.md)) |
@@ -117,6 +117,16 @@ machine to the host computer; `RestoreAsync(Merge | Replace)` opens the
 host's picker, validates the archive, **then** asks for an administrator,
 closes the session, restores and restarts. Creation and restoration are logged in
 `/var/log/auth.log`. Details: [`system-backup.md`](../dev/system-backup.md).
+
+### Screens (`screens.manage`)
+
+`HackScreens` (ADR 0184) lists, opens, restores, closes and identifies the
+session's secondary screens, puts the calling window's screen in full screen
+and asks for the `window-management` permission. A normal capability, with no
+administrator: the browser already confines each call to the user's click.
+`IsSupportedFor(context)` is false on a host without screens (mobile, tests).
+Host side: `ScreenControl` over `ScreenService`
+([`screens-settings.md`](../dev/screens-settings.md)).
 
 ### Accounts and passwords (`users.manage`)
 

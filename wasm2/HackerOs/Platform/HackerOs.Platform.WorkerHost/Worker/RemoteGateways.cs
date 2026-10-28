@@ -685,6 +685,26 @@ internal sealed class RemoteDriveGateway(RemoteProcessChannel channel) : IAppDri
 {
     public async ValueTask<IReadOnlyList<HackDriveSnapshot>> GetDrivesAsync(CancellationToken cancellationToken = default) =>
         WireCodec.ReadDrives(await channel.CallAsync(RemoteOps.Drives, null, cancellationToken).ConfigureAwait(false));
+
+    public async ValueTask<bool> IsHostFolderSupportedAsync(CancellationToken cancellationToken = default) =>
+        (await channel.CallAsync(RemoteOps.DriveHostSupported, null, cancellationToken).ConfigureAwait(false)).GetProperty("s").GetBoolean();
+
+    // ADR 0181: the browser's folder dialog opens on the page; the user gesture that led here is the page's.
+    public async ValueTask<HackDriveSnapshot?> MountHostFolderAsync(string? mountPoint, CancellationToken cancellationToken = default) =>
+        WireCodec.ReadDrive(await channel.CallAsync(RemoteOps.DriveMount, writer =>
+        {
+            if (mountPoint is not null)
+            {
+                writer.WriteString("p", mountPoint);
+            }
+        }, cancellationToken).ConfigureAwait(false));
+
+    public async ValueTask<bool> ReconnectAsync(string mountPoint, CancellationToken cancellationToken = default) =>
+        (await channel.CallAsync(RemoteOps.DriveReconnect, writer => writer.WriteString("p", mountPoint), cancellationToken)
+            .ConfigureAwait(false)).GetProperty("s").GetBoolean();
+
+    public async ValueTask UnmountAsync(string mountPoint, CancellationToken cancellationToken = default) =>
+        await channel.CallAsync(RemoteOps.DriveUnmount, writer => writer.WriteString("p", mountPoint), cancellationToken).ConfigureAwait(false);
 }
 
 /// <summary><see cref="IAppCrossOriginIsolationGateway"/> in a worker (ADR 0146): the OS answers with the page's status.</summary>

@@ -27,6 +27,7 @@ public sealed class CommandParityTests
         new("df", ["df", "df -h -T"]),
         new("localectl", ["localectl", "localectl list-locales", "localectl set-locale LANG=xx_YY.UTF-8", "localectl set-locale LANG=fr_FR.UTF-8", "localectl bogus"]),
         new("hackbackup", ["hackbackup", "hackbackup create", "hackbackup restore --bogus"]),
+        new("hackpkg", ["hackpkg", "hackpkg bogus", "hackpkg install --bogus", "hackpkg list --allow-untrusted"]),
         new("diff", ["diff notes.txt notes.txt", "diff -u notes.txt numbers.txt"]),
         new("dmesg", ["dmesg -l emerg", "dmesg -l nosuch", "dmesg --bogus"]),
         new("dirname", ["dirname /a/b/c /d"]),
@@ -49,6 +50,7 @@ public sealed class CommandParityTests
         new("locate", ["locate notes", "locate -c txt"]),
         new("ls", ["ls", "ls -l docs", "ls -a", "ls /nope"]),
         new("mkdir", ["mkdir new", "mkdir -p a/b/c", "mkdir new"]),
+        new("mount", ["mount", "mount -t nfs /mnt/x", "mount --bogus"]),
         new("mv", ["mv notes.txt moved.txt", "mv missing.txt x"]),
         new("nano", ["nano notes.txt"]),
         new("netstat", ["netstat", "netstat -i"]),
@@ -79,6 +81,7 @@ public sealed class CommandParityTests
         new("true", ["true"]),
         new("uniq", ["sort words.txt | uniq -c", "uniq -d words.txt"]),
         new("unset", ["export TEMP_VAR=1 && unset TEMP_VAR && env | grep TEMP_VAR"]),
+        new("umount", ["umount", "umount /mnt/nowhere"]),
         new("unzip", ["zip -r -q archive.zip docs", "unzip -l archive.zip", "unzip -o -d extracted archive.zip", "unzip -t archive.zip"]),
         new("watch", ["watch -e -n 1 cat missing.txt", "watch -e false"]),
         new("wc", ["wc notes.txt", "cat notes.txt | wc -l", "wc -w words.txt numbers.txt"]),
@@ -114,7 +117,7 @@ public sealed class CommandParityTests
             .Where(name => !covered.Contains(name))];
 
         Assert.Empty(missing);
-        Assert.Equal(74, OsFixture.BuiltInCommands.Count);
+        Assert.Equal(77, OsFixture.BuiltInCommands.Count);
     }
 
     [Fact]

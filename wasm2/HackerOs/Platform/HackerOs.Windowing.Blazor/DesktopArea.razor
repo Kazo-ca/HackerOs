@@ -19,25 +19,26 @@
             @BackgroundContent
         </section>
     }
-    <section class="@WindowLayerClass" aria-label="@L["Desktop.OpenWindows"]">
-        @foreach (WindowRuntimeState window in Windows)
+    <section @ref="_windowLayer" class="@WindowLayerClass" aria-label="@L["Desktop.OpenWindows"]" data-display="@DisplayId.Number">
+        @foreach (WindowRuntimeState window in RenderedWindows)
         {
-            <WindowHost @key="window.Id"
-                        Window="window"
-                        IsInteractionBlocked="@IsBlocked(window.Id)"
-                        OnFocus="OnFocus"
-                        OnMinimize="OnMinimize"
-                        OnToggleMaximize="OnToggleMaximize"
-                        OnClose="OnClose"
-                        OnBack="OnBack"
-                        OnWindowMenu="OnWindowMenu"
-                        OnGesture="OnGesture"
-                        Overlay="@(WindowOverlay?.Invoke(window))">
-                @if (WindowContent is not null)
-                {
-                    @WindowContent(window)
-                }
-            </WindowHost>
+            <WindowPortal @key="window.Id" Target="@LayerFor(window)">
+                <WindowHost Window="window"
+                            IsInteractionBlocked="@IsBlocked(window.Id)"
+                            OnFocus="OnFocus"
+                            OnMinimize="OnMinimize"
+                            OnToggleMaximize="OnToggleMaximize"
+                            OnClose="OnClose"
+                            OnBack="OnBack"
+                            OnWindowMenu="OnWindowMenu"
+                            OnGesture="OnGesture"
+                            Overlay="@(WindowOverlay?.Invoke(window))">
+                    @if (WindowContent is not null)
+                    {
+                        @WindowContent(window)
+                    }
+                </WindowHost>
+            </WindowPortal>
         }
     </section>
 </main>
@@ -47,12 +48,32 @@
     private string WindowLayerClass => BackgroundInteractive && BackgroundContent is not null ? "window-layer pass-through" : "window-layer";
 
     private ElementReference _desktopElement;
+    private ElementReference _windowLayer;
+    private WindowLayers? _registeredLayers;
+    private DisplayId _registeredDisplay;
     private IJSObjectReference? _module;
     private DotNetObjectReference<DesktopArea>? _dotNetHelper;
 
     /// <summary>Gets or sets stable window snapshots ordered back-to-front.</summary>
     [Parameter, EditorRequired]
     public IReadOnlyList<WindowRuntimeState> Windows { get; set; } = [];
+
+    /// <summary>
+    /// Gets or sets the screen this area shows (ADR 0178 §3): its size changes go to that screen's
+    /// work area, and it shows only that screen's windows. Screen 1 by default. A screen other than
+    /// screen 1 must be added to the window runtime (<see cref="AddDisplayCommand"/>) before its
+    /// area renders.
+    /// </summary>
+    [Parameter]
+    public DisplayId DisplayId { get; set; }
+
+    /// <summary>
+    /// Gets or sets the window layers shared by the areas of every screen (ADR 0178 §3). The area
+    /// of screen 1 then renders every window once and moves each one into the layer of its screen;
+    /// the other areas render none. Without it, the area renders the windows of its own screen.
+    /// </summary>
+    [Parameter]
+    public WindowLayers? Layers { get; set; }
 
     /// <summary>Gets or sets content rendered for each window snapshot.</summary>
     [Parameter]
@@ -115,12 +136,57 @@
     {
         if (OnGesture.HasDelegate)
         {
-            await OnGesture.InvokeAsync(new ChangeViewportCommand(new WindowBounds(0, 0, width, height)));
+            await OnGesture.InvokeAsync(new ChangeViewportCommand(new WindowBounds(0, 0, width, height), DisplayId));
         }
     }
 
+    /// <summary>The windows this area renders: all of them for screen 1 with shared layers, none for the other screens, else its own screen's.</summary>
+    private IEnumerable<WindowRuntimeState> RenderedWindows => Layers is null
+        ? Windows.Where(window => window.DisplayId == DisplayId)
+        : DisplayId.IsPrimary ? Windows : [];
+
+    /// <summary>The layer a window moves to, or <see langword="null"/> to stay in this area (its screen, or a screen not shown).</summary>
+    private ElementReference? LayerFor(WindowRuntimeState window) =>
+        Layers is not null && window.DisplayId != DisplayId && Layers.TryGetLayer(window.DisplayId, out ElementReference layer)
+            ? layer
+            : null;
+
+    /// <inheritdoc />
+    protected override void OnParametersSet()
+    {
+        if (ReferenceEquals(_registeredLayers, Layers) && _registeredDisplay == DisplayId)
+        {
+            return;
+        }
+
+        LeaveLayers();
+    }
+
+    private void LeaveLayers()
+    {
+        if (_registeredLayers is null)
+        {
+            return;
+        }
+
+        _registeredLayers.Changed -= OnLayersChanged;
+        _registeredLayers.Unregister(_registeredDisplay, _windowLayer);
+        _registeredLayers = null;
+    }
+
+    private void OnLayersChanged() => _ = InvokeAsync(StateHasChanged);
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (Layers is not null && _registeredLayers is null)
+        {
+            // Registered after the first render, once the layer element exists.
+            _registeredLayers = Layers;
+            _registeredDisplay = DisplayId;
+            Layers.Changed += OnLayersChanged;
+            Layers.Register(DisplayId, _windowLayer);
+        }
+
         if (firstRender)
         {
             _dotNetHelper = DotNetObjectReference.Create(this);
@@ -145,6 +211,7 @@
 
     public async ValueTask DisposeAsync()
     {
+        LeaveLayers();
         _dotNetHelper?.Dispose();
         if (_module is not null)
         {

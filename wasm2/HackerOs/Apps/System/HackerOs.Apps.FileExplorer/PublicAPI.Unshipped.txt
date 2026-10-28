@@ -1,1 +1,13 @@
 #nullable enable
+HackerOs.Apps.FileExplorer.NetworkDrivesSidebar
+HackerOs.Apps.FileExplorer.NetworkDrivesSidebar.CurrentPath.get -> string?
+HackerOs.Apps.FileExplorer.NetworkDrivesSidebar.CurrentPath.set -> void
+HackerOs.Apps.FileExplorer.NetworkDrivesSidebar.Failed.get -> Microsoft.AspNetCore.Components.EventCallback<string!>
+HackerOs.Apps.FileExplorer.NetworkDrivesSidebar.Failed.set -> void
+HackerOs.Apps.FileExplorer.NetworkDrivesSidebar.Navigate.get -> Microsoft.AspNetCore.Components.EventCallback<string!>
+HackerOs.Apps.FileExplorer.NetworkDrivesSidebar.Navigate.set -> void
+HackerOs.Apps.FileExplorer.NetworkDrivesSidebar.NetworkDrivesSidebar() -> void
+HackerOs.Apps.FileExplorer.NetworkDrivesSidebar.ReloadAsync() -> System.Threading.Tasks.Task!
+override HackerOs.Apps.FileExplorer.NetworkDrivesSidebar.OnInitializedAsync() -> System.Threading.Tasks.Task!
+override HackerOs.Apps.FileExplorer.NetworkDrivesSidebar.OnParametersSetAsync() -> System.Threading.Tasks.Task!
+~override HackerOs.Apps.FileExplorer.NetworkDrivesSidebar.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

@@ -701,4 +701,40 @@
   <data name="Security.PasskeyUnsupported" xml:space="preserve">
     <value>This browser cannot use a passkey here. Attempts left: {0}.</value>
   </data>
+  <data name="Screens.WindowTitle" xml:space="preserve">
+    <value>HackerOS — Screen {0}</value>
+  </data>
+  <data name="Screens.FullScreen" xml:space="preserve">
+    <value>Full screen</value>
+  </data>
+  <data name="Screens.ExitFullScreen" xml:space="preserve">
+    <value>Leave full screen</value>
+  </data>
+  <data name="Screens.PrimaryHidden" xml:space="preserve">
+    <value>The main HackerOS tab is hidden: the browser slows the whole OS down. Keep it visible.</value>
+  </data>
+  <data name="Screens.Restore.Message" xml:space="preserve">
+    <value>The screens of your last session are closed.</value>
+  </data>
+  <data name="Screens.Restore.Action" xml:space="preserve">
+    <value>Restore screens</value>
+  </data>
+  <data name="Screens.Restore.Dismiss" xml:space="preserve">
+    <value>Dismiss</value>
+  </data>
+  <data name="Screens.SecureDialog.Message" xml:space="preserve">
+    <value>A security request is waiting on screen 1. Answer it there to go on.</value>
+  </data>
+  <data name="Screens.SecureDialog.Action" xml:space="preserve">
+    <value>Go to screen 1</value>
+  </data>
+  <data name="WindowMenu.OtherScreen" xml:space="preserve">
+    <value>Other screen</value>
+  </data>
+  <data name="WindowMenu.Screen" xml:space="preserve">
+    <value>Screen {0}</value>
+  </data>
+  <data name="WindowMenu.NewScreen" xml:space="preserve">
+    <value>New screen</value>
+  </data>
 </root>

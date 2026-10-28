@@ -17,6 +17,7 @@ public sealed class WindowLaunchCoordinator
     private readonly WindowGeometryRecorder? _geometry;
     private readonly HashSet<WindowOwnerId> _presenting = [];
     private readonly Dictionary<string, int> _shellSurfaces = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, DisplayId> _targetDisplays = new(StringComparer.Ordinal);
 
     /// <summary>Initializes the coordinator over the authoritative desktop window runtime.</summary>
     /// <param name="windows">The desktop window runtime.</param>
@@ -182,6 +183,9 @@ public sealed class WindowLaunchCoordinator
             return true;
         }
 
+        // Read before the first await: the launch that named the screen may end while the geometry is read.
+        DisplayId display = TargetDisplay(manifest.Id);
+
         try
         {
             WindowOptions options = manifest.Window ?? WindowOptions.Default;
@@ -196,10 +200,16 @@ public sealed class WindowLaunchCoordinator
                 return true;
             }
 
-            int cascadeIndex = _windows.Windows.Count % 8;
+            if (!_windows.Displays.Contains(display))
+            {
+                display = DisplayId.Primary;
+            }
+
+            WindowBounds workArea = _windows.GetWorkArea(display);
+            int cascadeIndex = _windows.Windows.Count(window => window.DisplayId == display) % 8;
             WindowBounds bounds = saved is null
-                ? InitialBounds(options, cascadeIndex, _windows.WorkArea)
-                : RestoredBounds(options, saved.Width, saved.Height, cascadeIndex, _windows.WorkArea);
+                ? InitialBounds(options, cascadeIndex, workArea)
+                : RestoredBounds(options, saved.Width, saved.Height, cascadeIndex, workArea);
             // Icons are package-relative in the manifest. All shell surfaces consume this resolved
             // RCL URL from the window snapshot instead of requesting icons/app.svg from the host.
             WindowRuntimeState state = new(
@@ -216,7 +226,10 @@ public sealed class WindowLaunchCoordinator
                 visualState: WindowVisualState.Normal,
                 constraints: ToConstraints(options),
                 modality: WindowModality.Modeless,
-                supportsBack: manifest.SupportsBack);
+                supportsBack: manifest.SupportsBack)
+            {
+                DisplayId = display,
+            };
             _windows.Apply(new CreateWindowCommand(state));
 
             // Maximized last time: open maximized with the saved bounds as restore geometry. A fixed-size
@@ -299,6 +312,47 @@ public sealed class WindowLaunchCoordinator
 
         WindowBounds slot = InitialBounds(options, cascadeIndex, workArea);
         return new WindowBounds(slot.X, slot.Y, width, height);
+    }
+
+    /// <summary>
+    /// Makes the next window of <paramref name="appId"/> open on <paramref name="display"/> until the
+    /// returned scope is disposed (ADR 0179 §1): the Start menu of a screen's taskbar opens its apps on
+    /// that screen. Without a scope, a new window opens on the screen of the focused window.
+    /// </summary>
+    /// <param name="appId">The app being launched.</param>
+    /// <param name="display">The screen its window opens on.</param>
+    /// <returns>Ends the request.</returns>
+    internal IDisposable OpenOnDisplay(string appId, DisplayId display)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(appId);
+        _targetDisplays[appId] = display;
+        return new TargetDisplayScope(this, appId, display);
+    }
+
+    /// <summary>The screen a new window of <paramref name="appId"/> opens on (ADR 0179 §1).</summary>
+    private DisplayId TargetDisplay(string appId) =>
+        _targetDisplays.TryGetValue(appId, out DisplayId requested)
+            ? requested
+            : _windows.Windows.FirstOrDefault(window => window.IsFocused)?.DisplayId ?? DisplayId.Primary;
+
+    private sealed class TargetDisplayScope(WindowLaunchCoordinator owner, string appId, DisplayId display) : IDisposable
+    {
+        private bool _disposed;
+
+        public void Dispose()
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            _disposed = true;
+            // A newer launch of the same app may have named another screen meanwhile.
+            if (owner._targetDisplays.TryGetValue(appId, out DisplayId current) && current == display)
+            {
+                owner._targetDisplays.Remove(appId);
+            }
+        }
     }
 
     private bool FocusExisting(WindowOwnerId ownerInstanceId)

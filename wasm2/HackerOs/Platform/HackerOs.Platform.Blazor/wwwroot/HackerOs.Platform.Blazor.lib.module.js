@@ -26,6 +26,16 @@ function installDocumentListenerRegistry() {
     const nativeRemove = EventTarget.prototype.removeEventListener;
     const listeners = [];
     const documents = new Set();
+    const watchers = new Set();
+    const tell = (change, target) => {
+        for (const watcher of watchers) {
+            try {
+                watcher(change, target);
+            } catch {
+                // One watcher failing must not stop the others.
+            }
+        }
+    };
 
     const sameCapture = (a, b) => !!(typeof a === "object" ? a?.capture : a) === !!(typeof b === "object" ? b?.capture : b);
 
@@ -78,6 +88,7 @@ function installDocumentListenerRegistry() {
             for (const entry of listeners) {
                 nativeAdd.call(target, entry.type, entry.listener, entry.options);
             }
+            tell("attach", target);
         },
         // Stops mirroring onto a surface's document (closed, lost).
         detach(target) {
@@ -91,6 +102,21 @@ function installDocumentListenerRegistry() {
                     // The window is already gone.
                 }
             }
+            tell("detach", target);
+        },
+        // Tells a watcher about every surface document, now and later ("attach", then "detach"),
+        // for modules that listen on a surface's window rather than on its document (ADR 0178 §4).
+        // Returns the function that stops watching.
+        watch(watcher) {
+            watchers.add(watcher);
+            for (const target of documents) {
+                try {
+                    watcher("attach", target);
+                } catch {
+                    // A window closing under us.
+                }
+            }
+            return () => watchers.delete(watcher);
         },
     };
 }

@@ -95,6 +95,7 @@
                  aria-expanded="@(menuRow.Submenu is null ? null : expanded ? "true" : "false")"
                  data-menu-item="@item.Id"
                  @onpointerenter="() => Hover(level, row)"
+                 @onpointerleave="() => Unhover(level, row)"
                  @onclick="() => ClickAsync(level, row)">
                 <span class="hack-context-menu-icon" aria-hidden="true">
                     @if (item.Icon is { Kind: HackIconKind.Vector } vector)

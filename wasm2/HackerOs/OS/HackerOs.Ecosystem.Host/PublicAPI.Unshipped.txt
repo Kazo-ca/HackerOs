@@ -1,1 +1,20 @@
 #nullable enable
+HackerOs.Ecosystem.HostAppCatalog.Installed.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.Apps.Packages.InstalledApp!>!
+HackerOs.Ecosystem.HostAppCatalog.WithInstalledApps(HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage! image, out System.Collections.Generic.IReadOnlyList<string!>! warnings) -> HackerOs.Ecosystem.HostAppCatalog!
+HackerOs.Ecosystem.InstalledAppAssemblyTransport
+HackerOs.Ecosystem.InstalledAppAssemblyTransport.InstalledAppAssemblyTransport(HackerOs.Platform.Blazor.LazyLoading.IBuildKnownAssemblyTransport! inner, HackerOs.Ecosystem.InstalledAppsBoot! installed) -> void
+HackerOs.Ecosystem.InstalledAppAssemblyTransport.LoadAsync(System.Collections.Generic.IReadOnlyList<string!>! assemblyNames, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<System.Reflection.Assembly!>!>!
+HackerOs.Ecosystem.InstalledAppAssetSource
+HackerOs.Ecosystem.InstalledAppAssetSource.InstalledAppAssetSource(HackerOs.Platform.Core.Apps.IAppAssetSource! inner, HackerOs.Ecosystem.InstalledAppsBoot! installed) -> void
+HackerOs.Ecosystem.InstalledAppAssetSource.ReadAsync(HackerOs.App.Abstractions.AppManifest! manifest, string! assetPath, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<byte[]?>
+HackerOs.Ecosystem.InstalledAppsBoot
+HackerOs.Ecosystem.InstalledAppsBoot.Apply(HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage! image, HackerOs.Platform.Core.Apps.Packages.InstalledAppFileReader! read) -> void
+HackerOs.Ecosystem.InstalledAppsBoot.BuiltIn.get -> HackerOs.Ecosystem.HostAppCatalog!
+HackerOs.Ecosystem.InstalledAppsBoot.Current.get -> HackerOs.Ecosystem.HostAppCatalog!
+HackerOs.Ecosystem.InstalledAppsBoot.Find(string! appId) -> HackerOs.Platform.Core.Apps.Packages.InstalledApp?
+HackerOs.Ecosystem.InstalledAppsBoot.FindByAssembly(string! assemblyName) -> HackerOs.Platform.Core.Apps.Packages.InstalledApp?
+HackerOs.Ecosystem.InstalledAppsBoot.InstalledAppsBoot(HackerOs.Ecosystem.HostAppCatalog! builtIn) -> void
+HackerOs.Ecosystem.InstalledAppsBoot.IsLoaded.get -> bool
+HackerOs.Ecosystem.InstalledAppsBoot.Warnings.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.Ecosystem.InstalledAppsBootExtensions
+static HackerOs.Ecosystem.InstalledAppsBootExtensions.LoadInstalledAppsAsync(this Microsoft.AspNetCore.Components.WebAssembly.Hosting.WebAssemblyHost! host) -> System.Threading.Tasks.Task!

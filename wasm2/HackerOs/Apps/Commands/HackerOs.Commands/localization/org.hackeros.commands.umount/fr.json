@@ -1,0 +1,5 @@
+{
+  "name": "umount",
+  "description": "Démonte un lecteur réseau",
+  "terminalUsage": "umount /mnt/nom"
+}

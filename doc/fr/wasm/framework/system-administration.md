@@ -21,8 +21,8 @@ Core ni Infrastructure.Browser.
 
 | Couche | Fichiers |
 |---|---|
-| SDK (contrats, façades) | `Shared/HackerOs.AppSdk/Administration/` (`HackPermissionAdministration`, `HackComponentProviders`, `HackServerConnection`, `HackSystem`, `HackStorageDiagnostics` et leurs contrats), `Shared/HackerOs.AppSdk/Settings/IAppSystemSettingsGateway.cs`, `SettingsDocumentStores.cs` |
-| Platform Core (passerelles) | `Platform/HackerOs.Platform.Core/Administration/` : `AppSystemSettingsGateway`, `AppPermissionAdministrationGateway`, `AppServerConnectionGateway`, `AppSystemPowerGateway`, `AppStorageDiagnosticsGateway`, `AppSystemBackupGateway`, `AppUserAccountsGateway`, `AdministratorGate`, `SystemAdministrationGatewayServices` |
+| SDK (contrats, façades) | `Shared/HackerOs.AppSdk/Administration/` (`HackPermissionAdministration`, `HackComponentProviders`, `HackServerConnection`, `HackSystem`, `HackStorageDiagnostics`, `HackScreens` et leurs contrats), `Shared/HackerOs.AppSdk/Settings/IAppSystemSettingsGateway.cs`, `SettingsDocumentStores.cs` |
+| Platform Core (passerelles) | `Platform/HackerOs.Platform.Core/Administration/` : `AppSystemSettingsGateway`, `AppPermissionAdministrationGateway`, `AppServerConnectionGateway`, `AppSystemPowerGateway`, `AppStorageDiagnosticsGateway`, `AppSystemBackupGateway`, `AppUserAccountsGateway`, `AppScreensGateway` (sur `IScreenControl`, ADR 0184), `AdministratorGate`, `SystemAdministrationGatewayServices` |
 | Platform Core (services) | `Power/SystemPowerService.cs` (séquence d'arrêt, `RestartAfterAsync`), `Backup/SystemBackupService.cs`, `Sessions/LocalPasswordService.cs` (ADR 0120), `Settings/OsSettingsDocumentRegistry.cs`, `Policy/AppPermissionAdministration.cs` (`ApplyMachineDecisionAsync`, `ApplyPolicyAsync`) |
 | Hôte Ecosystem | `Administration/BrowserSystemPowerDevice.cs` (`location.reload`, suppression de la base IndexedDB), `Administration/BrowserSystemBackupDevice.cs` (export, téléchargement, sélecteur de l'hôte), `Administration/IndexedDbStorageInspector.cs` (adaptateur de `IndexedDbInspectorService`) |
 | SDK Blazor | `Interop/BrowserClipboard.cs` et `wwwroot/clipboard.js` (presse-papiers de l'hôte), `[Obsolete]` depuis l'ADR 0065 puis retirés au gel du SDK 1.0 (ADR 0114) : Diagnostic copie par `HackClipboard`, que l'OS recopie vers l'hôte ([`clipboard.md`](../dev/clipboard.md)) |
@@ -117,6 +117,16 @@ machine sur l'ordinateur hôte ; `RestoreAsync(Merge | Replace)` ouvre le
 sélecteur de l'hôte, valide l'archive, **puis** demande un administrateur,
 ferme la session, restaure et redémarre. Création et restauration vont dans
 `/var/log/auth.log`. Détails : [`system-backup.md`](../dev/system-backup.md).
+
+### Écrans (`screens.manage`)
+
+`HackScreens` (ADR 0184) liste, ouvre, restaure, ferme et identifie les écrans
+secondaires de la session, met l'écran de la fenêtre appelante en plein écran et
+demande la permission `window-management`. Capacité normale, sans
+administrateur : le navigateur limite déjà chaque appel au clic de
+l'utilisateur. `IsSupportedFor(context)` est faux sur un hôte sans écrans
+(mobile, tests). Mise en œuvre côté hôte : `ScreenControl` sur `ScreenService`
+([`screens-settings.md`](../dev/screens-settings.md)).
 
 ### Comptes et mots de passe (`users.manage`)
 

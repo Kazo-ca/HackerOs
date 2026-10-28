@@ -701,4 +701,40 @@
   <data name="Security.PasskeyUnsupported" xml:space="preserve">
     <value>Ce navigateur ne peut pas utiliser de clé d’accès ici. Essais restants : {0}.</value>
   </data>
+  <data name="Screens.WindowTitle" xml:space="preserve">
+    <value>HackerOS — Écran {0}</value>
+  </data>
+  <data name="Screens.FullScreen" xml:space="preserve">
+    <value>Plein écran</value>
+  </data>
+  <data name="Screens.ExitFullScreen" xml:space="preserve">
+    <value>Quitter le plein écran</value>
+  </data>
+  <data name="Screens.PrimaryHidden" xml:space="preserve">
+    <value>L'onglet principal de HackerOS est caché : le navigateur ralentit alors tout l'OS. Gardez-le visible.</value>
+  </data>
+  <data name="Screens.Restore.Message" xml:space="preserve">
+    <value>Les écrans de votre dernière session sont fermés.</value>
+  </data>
+  <data name="Screens.Restore.Action" xml:space="preserve">
+    <value>Restaurer les écrans</value>
+  </data>
+  <data name="Screens.Restore.Dismiss" xml:space="preserve">
+    <value>Ignorer</value>
+  </data>
+  <data name="Screens.SecureDialog.Message" xml:space="preserve">
+    <value>Une demande de sécurité attend sur l'écran 1. Répondez-y là pour continuer.</value>
+  </data>
+  <data name="Screens.SecureDialog.Action" xml:space="preserve">
+    <value>Aller à l'écran 1</value>
+  </data>
+  <data name="WindowMenu.OtherScreen" xml:space="preserve">
+    <value>Autre écran</value>
+  </data>
+  <data name="WindowMenu.Screen" xml:space="preserve">
+    <value>Écran {0}</value>
+  </data>
+  <data name="WindowMenu.NewScreen" xml:space="preserve">
+    <value>Nouvel écran</value>
+  </data>
 </root>

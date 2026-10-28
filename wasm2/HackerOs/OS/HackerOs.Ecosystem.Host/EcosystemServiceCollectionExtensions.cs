@@ -16,6 +16,7 @@ using HackerOs.Platform.Core.Backup;
 using HackerOs.Platform.Core.Storage;
 using HackerOs.Infrastructure.Browser.Storage;
 using HackerOs.Platform.Core.Apps;
+using HackerOs.Platform.Core.Apps.Packages;
 using HackerOs.Platform.Core;
 using HackerOs.Platform.WorkerHost.Host;
 using HackerOs.Simulation.Abstractions.Workers;
@@ -27,6 +28,7 @@ using HackerOs.Platform.Core.Execution;
 using HackerOs.Platform.Core.Isolation;
 using HackerOs.Platform.Core.Keyring;
 using HackerOs.Platform.Core.FileSystem;
+using HackerOs.Platform.Core.FileSystem.HostFolders;
 using HackerOs.Platform.Core.FileSystem.Virtual;
 using HackerOs.Platform.Core.Intents;
 using HackerOs.Platform.Core.Lifecycle;
@@ -219,7 +221,7 @@ public static class EcosystemServiceCollectionExtensions
         // /proc and /dev are virtual, read-only mounts computed on every read and never written to
         // IndexedDB (ADR 0046). The process manager is resolved lazily: it depends on the session
         // service, which depends on FileSystemSeeder, which reaches /proc through this router.
-        services.AddScoped<IFileSystemMountRouter>(provider =>
+        services.AddScoped<FileSystemMountRouter>(provider =>
             new FileSystemMountRouter(provider.GetRequiredService<IFileSystemProvider>(),
             [
                 new FileSystemMount(ProcFileSystemProvider.DefaultMountPath, new ProcFileSystemProvider(
@@ -261,6 +263,17 @@ public static class EcosystemServiceCollectionExtensions
                     provider.GetRequiredService<ISimulationClock>(),
                     () => provider.GetService<KernelLog>()))
             ]));
+        // ADR 0181: network drives (folders of the host computer) are mounted while the OS runs.
+        services.AddScoped<IFileSystemMountRouter>(provider => provider.GetRequiredService<FileSystemMountRouter>());
+        services.AddScoped<IDynamicFileSystemMountRouter>(provider => provider.GetRequiredService<FileSystemMountRouter>());
+        services.AddScoped<IHostFolderAccess>(provider =>
+            new BrowserHostFolderAccess(provider.GetRequiredService<Microsoft.JSInterop.IJSRuntime>()));
+        services.AddScoped<NetworkDriveService>(provider => new NetworkDriveService(
+            provider.GetRequiredService<IDynamicFileSystemMountRouter>(),
+            provider.GetRequiredService<IHostFolderAccess>(),
+            () => provider.GetRequiredService<ISessionService>().CurrentPrincipal,
+            provider.GetService<IEventBus>(),
+            logger: provider.GetService<ILogger<NetworkDriveService>>()));
         // Depends on IFileSystemMountRouter, which is Scoped (see above) — see this file's
         // IJSRuntime scoping note.
         services.AddScoped<IFileSystemPathResolver, FileSystemPathResolver>();
@@ -654,6 +667,11 @@ public static class EcosystemServiceCollectionExtensions
             provider.GetRequiredService<AppCatalog>(),
             provider.GetRequiredService<IAppAssetSource>(),
             provider.GetService<ILogger<AppAssetStore>>()));
+        // ADR 0182: apps installed from their GitHub repository; the OS downloads with fetch itself.
+        services.TryAddSingleton<IAppPackageDownloader>(static _ => new HttpAppPackageDownloader(new HttpClient()));
+        services.TryAddSingleton(static provider => new AppPackageInstaller(
+            provider.GetRequiredService<IAppPackageDownloader>(),
+            logger: provider.GetService<ILogger<AppPackageInstaller>>()));
         services.AddSingleton<AppEnablementRegistry>(provider =>
             new AppEnablementRegistry(provider.GetRequiredService<AppCatalog>()));
         services.AddSingleton<IAppEnablementRegistry>(provider =>
@@ -715,7 +733,10 @@ public static class EcosystemServiceCollectionExtensions
                 () => provider.GetRequiredService<FileAssociationResolver>(),
                 () => provider.GetRequiredService<IAppInstallationService>(),
                 () => provider.GetRequiredService<IAdministratorAuthenticationAgent>(),
-                () => provider.GetRequiredService<AppAssetStore>()),
+                () => provider.GetRequiredService<AppAssetStore>())
+            {
+                Packages = () => provider.GetService<AppPackageInstaller>()
+            },
             // Lazy for the same reason: ShellInterpreter depends on the orchestrator (ADR 0056 section 7).
             shellHostProvider: () => provider.GetRequiredService<ShellHostService>(),
             // ADR 0057: traffic counters for /proc/net/dev and /proc/<pid>/io, and HackDriveInfo.
@@ -725,7 +746,12 @@ public static class EcosystemServiceCollectionExtensions
                 new AppDriveGateway(
                     () => provider.GetRequiredService<IFileSystemMountRouter>(),
                     provider.GetRequiredService<VirtualHardwareProfile>(),
-                    provider.GetRequiredService<IStorageUsageProvider>()),
+                    provider.GetRequiredService<IStorageUsageProvider>())
+                {
+                    // ADR 0181: HackDriveInfo.MountHostFolderAsync, ReconnectAsync and UnmountAsync.
+                    // Resolved now, with the execution factory, so it sees the first login event.
+                    NetworkDrives = NetworkDrivesOf(provider)
+                },
                 // ADR 0068: write-stream buffers and sockets in flight, charged to each app's process.
                 provider.GetRequiredService<IKernelMemoryLedger>())
             {
@@ -769,6 +795,8 @@ public static class EcosystemServiceCollectionExtensions
                 ApprovalPrompt = () => provider.GetRequiredService<IDangerousCapabilityApprovalPrompt>(),
                 // HackFileMenuEntries (ADR 0159 §8): Settings lists and hides the registered entries.
                 FileMenuEntries = () => provider.GetRequiredService<HackerOs.Platform.Core.ContextMenus.FileContextMenuAdministration>(),
+                // HackScreens (ADR 0184): Settings > Screens drives the secondary screens of the browser host.
+                Screens = OperatingSystem.IsBrowser() ? () => provider.GetRequiredService<ScreenControl>() : null,
             })
         {
             // HackBackground (ADR 0128): each task a child process, in a worker when the host has some.
@@ -914,12 +942,25 @@ public static class EcosystemServiceCollectionExtensions
             provider.GetRequiredService<IFileDialogService>()));
         services.AddScoped<IDialogService>(provider => provider.GetRequiredService<DialogCoordinator>());
         // Detached display surfaces (ADR 0078): windows of the host browser driven by this instance.
-        services.AddScoped<IDisplaySurfaceService>(provider => new DisplaySurfaceService(
+        services.AddScoped(provider => new DisplaySurfaceService(
             provider.GetRequiredService<IJSRuntime>(),
             provider.GetRequiredService<INotificationQueue>(),
             provider.GetRequiredService<ISessionService>(),
             provider.GetRequiredService<ISimulationClock>(),
             provider.GetRequiredService<HackerOs.Platform.Core.Globalization.SessionLocaleService>()));
+        services.AddScoped<IDisplaySurfaceService>(provider => provider.GetRequiredService<DisplaySurfaceService>());
+        // ADR 0178 §4: the secondary screens, each a display surface registered in WindowRuntime.
+        services.AddScoped(provider => new ScreenService(
+            provider.GetRequiredService<DisplaySurfaceService>(),
+            provider.GetRequiredService<IJSRuntime>(),
+            provider.GetRequiredService<WindowRuntime>(),
+            provider.GetRequiredService<IOsSettingsService>(),
+            provider.GetService<ILogger<ScreenService>>(),
+            provider.GetRequiredService<HackerOs.Platform.Core.Globalization.SessionLocaleService>()));
+        // ADR 0184: HackScreens over the screen service and the window manager.
+        services.AddScoped(provider => new ScreenControl(
+            provider.GetRequiredService<ScreenService>(),
+            provider.GetRequiredService<WindowRuntime>()));
         // ADR 0150: the OS context menu. The platform provides the contract hackeros.context-menu
         // itself; the service holds each window's menus and the one menu open in the OS.
         services.AddScoped(provider => new HackerOs.Platform.Blazor.ContextMenus.ContextMenuService(
@@ -1156,6 +1197,13 @@ public static class EcosystemServiceCollectionExtensions
     {
         AppCatalogBuildResult result = AppCatalog.Build([]);
         return result.Catalog ?? throw new InvalidOperationException("The empty app catalog must be valid.");
+    }
+
+    /// <summary>The network drive service, resolved once, returned by the drive gateway (ADR 0181).</summary>
+    private static Func<NetworkDriveService?> NetworkDrivesOf(IServiceProvider provider)
+    {
+        NetworkDriveService drives = provider.GetRequiredService<NetworkDriveService>();
+        return () => drives;
     }
 
     /// <summary>

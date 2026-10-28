@@ -12,13 +12,13 @@ public sealed class BuildKnownLazyAppsTests
         AppCatalog catalog = BuildKnownLazyApps.Catalog;
 
         // 14 window apps (Theme Editor with ADR 0103), the hackwebd service (ADR 0077), the sample Blazor site (ADR 0084), the Intranet
-        // sample (web/11) and 74 commands (stress joined with ADR 0070, nslookup with ADR 0074,
+        // sample (web/11) and 77 commands (stress joined with ADR 0070, nslookup with ADR 0074,
         // ausearch with ADR 0100, xdg-open with ADR 0096, hackbackup with ADR 0099, localectl with ADR 0104,
-        // xdg-mime with ADR 0121, passwd with ADR 0120, prlimit with ADR 0125, nice and renice with ADR 0127, dmesg with ADR 0126), plus sample-cmd, the third-party command the worker
+        // xdg-mime with ADR 0121, passwd with ADR 0120, prlimit with ADR 0125, nice and renice with ADR 0127, dmesg with ADR 0126, mount and umount with ADR 0181, hackpkg with ADR 0182), plus sample-cmd, the third-party command the worker
         // pool loads on demand (ADR 0124 §4).
-        Assert.Equal(93, catalog.Manifests.Count);
+        Assert.Equal(96, catalog.Manifests.Count);
         // ADR 0064: the Linux commands added with the POSIX shell.
-        foreach (string command in new[] { "locate", "zip", "unzip", "cut", "tee", "whoami", "df", "du", "top", "htop", "systemctl", "watch", "jobs", "wget", "ip", "netstat", "ln", "test", "read", "stress", "nslookup", "ausearch", "xdg-open", "localectl", "xdg-mime", "prlimit", "dmesg" })
+        foreach (string command in new[] { "locate", "zip", "unzip", "cut", "tee", "whoami", "df", "du", "top", "htop", "systemctl", "watch", "jobs", "wget", "ip", "netstat", "ln", "test", "read", "stress", "nslookup", "ausearch", "xdg-open", "localectl", "xdg-mime", "prlimit", "dmesg", "mount", "umount" })
         {
             Assert.Contains($"org.hackeros.commands.{command}", catalog.Manifests.Keys);
         }
@@ -145,7 +145,7 @@ public sealed class BuildKnownLazyAppsTests
         string[] commands = [.. catalog.Manifests.Values
             .Where(manifest => manifest.Kind == AppKind.Terminal && manifest.Id != "org.hackeros.samples.terminal-app")
             .Select(manifest => manifest.Id)];
-        Assert.Equal(74, commands.Length);
+        Assert.Equal(77, commands.Length);
 
         Assert.Equal(
             systemWindows.Concat(commands).Order(StringComparer.Ordinal),

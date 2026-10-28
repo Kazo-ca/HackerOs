@@ -1352,4 +1352,148 @@
   <data name="Passkeys.Error.NotFound" xml:space="preserve">
     <value>The passkey {0} no longer exists.</value>
   </data>
+  <data name="Tab.Screens" xml:space="preserve">
+    <value>Screens</value>
+  </data>
+  <data name="Screens.Taskbar.Title" xml:space="preserve">
+    <value>Taskbar of screen 1</value>
+  </data>
+  <data name="Screens.Taskbar.Description" xml:space="preserve">
+    <value>The taskbars of the other screens always list the windows of their own screen. The change applies at once.</value>
+  </data>
+  <data name="Screens.Taskbar.All" xml:space="preserve">
+    <value>Every window of every screen</value>
+  </data>
+  <data name="Screens.Taskbar.Own" xml:space="preserve">
+    <value>Only the windows of screen 1</value>
+  </data>
+  <data name="Screens.List.Title" xml:space="preserve">
+    <value>Remembered screens</value>
+  </data>
+  <data name="Screens.List.Description" xml:space="preserve">
+    <value>Each secondary screen opens in its own browser window. HackerOS remembers where it was in {0}, even after it closes.</value>
+  </data>
+  <data name="Screens.List.Screen" xml:space="preserve">
+    <value>Screen {0}</value>
+  </data>
+  <data name="Screens.List.Primary" xml:space="preserve">
+    <value>This browser tab</value>
+  </data>
+  <data name="Screens.List.Open" xml:space="preserve">
+    <value>Open, or offered at the next sign-in</value>
+  </data>
+  <data name="Screens.List.Closed" xml:space="preserve">
+    <value>Closed</value>
+  </data>
+  <data name="Screens.List.Place" xml:space="preserve">
+    <value>{0} × {1} at ({2}, {3})</value>
+  </data>
+  <data name="Screens.List.NoPlace" xml:space="preserve">
+    <value>Place not remembered yet</value>
+  </data>
+  <data name="Screens.List.Forget" xml:space="preserve">
+    <value>Forget</value>
+  </data>
+  <data name="Screens.List.ForgetLabel" xml:space="preserve">
+    <value>Forget the place of screen {0}</value>
+  </data>
+  <data name="Screens.List.None" xml:space="preserve">
+    <value>No secondary screen yet.</value>
+  </data>
+  <data name="Screens.Help.Title" xml:space="preserve">
+    <value>Open and move screens</value>
+  </data>
+  <data name="Screens.Help.New" xml:space="preserve">
+    <value>New screen: right-click the icon of a window, or its Maximize button, then Other screen ▸ New screen.</value>
+  </data>
+  <data name="Screens.Help.Move" xml:space="preserve">
+    <value>Move the focused window to the previous or next screen with {0} or {1}, or with Other screen ▸ Screen N. Hovering a screen in that menu shows its number on every screen.</value>
+  </data>
+  <data name="Screens.Help.Restore" xml:space="preserve">
+    <value>After you sign in, the Restore screens card above the taskbar reopens the screens of your last session.</value>
+  </data>
+  <data name="Screens.Help.FullScreen" xml:space="preserve">
+    <value>Full screen: the ⤢ button at the top right of each secondary screen; Esc leaves it.</value>
+  </data>
+  <data name="Screens.Help.Permission" xml:space="preserve">
+    <value>In Chrome and Edge, allow window management when the browser asks: each new screen then goes to a free monitor. Elsewhere, place the window yourself; HackerOS remembers its place.</value>
+  </data>
+  <data name="Screens.Saved" xml:space="preserve">
+    <value>Saved.</value>
+  </data>
+  <data name="Screens.Error.CannotRead" xml:space="preserve">
+    <value>Cannot read screens.config: {0}</value>
+  </data>
+  <data name="Screens.Error.CannotSave" xml:space="preserve">
+    <value>Cannot save {0}: {1}</value>
+  </data>
+  <data name="Screens.Open.Title" xml:space="preserve">
+    <value>Open screens</value>
+  </data>
+  <data name="Screens.Open.Size" xml:space="preserve">
+    <value>{0} × {1}</value>
+  </data>
+  <data name="Screens.Open.IsFullScreen" xml:space="preserve">
+    <value>Full screen</value>
+  </data>
+  <data name="Screens.Open.ThisWindow" xml:space="preserve">
+    <value>This window</value>
+  </data>
+  <data name="Screens.Open.Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="Screens.Open.CloseLabel" xml:space="preserve">
+    <value>Close screen {0}</value>
+  </data>
+  <data name="Screens.Open.Identify" xml:space="preserve">
+    <value>Identify</value>
+  </data>
+  <data name="Screens.Open.New" xml:space="preserve">
+    <value>New screen</value>
+  </data>
+  <data name="Screens.Open.Restore" xml:space="preserve">
+    <value>Restore screens ({0})</value>
+  </data>
+  <data name="Screens.Open.FullScreen" xml:space="preserve">
+    <value>Full screen</value>
+  </data>
+  <data name="Screens.Open.LeaveFullScreen" xml:space="preserve">
+    <value>Leave full screen</value>
+  </data>
+  <data name="Screens.Open.NoMonitorName" xml:space="preserve">
+    <value>Monitor name not available</value>
+  </data>
+  <data name="Screens.Open.Blocked" xml:space="preserve">
+    <value>The browser blocked the window. Allow pop-ups for HackerOS, then try again.</value>
+  </data>
+  <data name="Screens.Open.LimitReached" xml:space="preserve">
+    <value>Screens 2 to 9 are all open.</value>
+  </data>
+  <data name="Screens.Open.Unavailable" xml:space="preserve">
+    <value>This host cannot open screens.</value>
+  </data>
+  <data name="Screens.Open.FullScreenRefused" xml:space="preserve">
+    <value>The browser refused full screen.</value>
+  </data>
+  <data name="Screens.Permission.Granted" xml:space="preserve">
+    <value>Window management allowed: each new screen goes to a free monitor.</value>
+  </data>
+  <data name="Screens.Permission.Denied" xml:space="preserve">
+    <value>Window management refused: place each screen's window yourself. Change it in the browser's site settings.</value>
+  </data>
+  <data name="Screens.Permission.Prompt" xml:space="preserve">
+    <value>Window management not asked yet: the browser asks at the next new screen.</value>
+  </data>
+  <data name="Screens.Permission.Unsupported" xml:space="preserve">
+    <value>This browser cannot place windows on a monitor: place each screen's window yourself.</value>
+  </data>
+  <data name="Screens.Permission.Unknown" xml:space="preserve">
+    <value>Window management: state unknown.</value>
+  </data>
+  <data name="Screens.Permission.Ask" xml:space="preserve">
+    <value>Allow now</value>
+  </data>
+  <data name="Screens.Error.Request" xml:space="preserve">
+    <value>The request failed: {0}</value>
+  </data>
 </root>

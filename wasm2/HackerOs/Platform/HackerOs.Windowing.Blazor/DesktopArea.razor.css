@@ -42,3 +42,24 @@
 .window-layer.pass-through ::deep .window-host {
     pointer-events: auto;
 }
+
+/* ADR 0178 §3: a window's portal boxes do not exist for layout; the window is placed in its layer. */
+.window-layer ::deep .window-portal-anchor,
+.window-layer ::deep .window-portal {
+    display: contents;
+}
+
+/* ADR 0183: where a window dragged from another screen will land. Placed by WindowChrome.razor.js. */
+.window-layer ::deep .window-drop-preview {
+    position: absolute;
+    left: var(--window-drop-x, 0);
+    top: var(--window-drop-y, 0);
+    width: var(--window-drop-width, 0);
+    height: var(--window-drop-height, 0);
+    box-sizing: border-box;
+    border: 2px solid var(--hos-accent, #42d392);
+    border-radius: var(--hos-window-radius, 6px);
+    background: color-mix(in srgb, var(--hos-accent, #42d392) 15%, transparent);
+    pointer-events: none;
+    z-index: 2147483000;
+}

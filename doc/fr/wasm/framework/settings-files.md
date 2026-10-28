@@ -156,7 +156,7 @@ await appearance.SetManyAsync(values, SettingLayer.System);        // /etc/hacke
 ```
 
 - Documents ouverts : `appearance`, `accessibility` (ADR 0105), `ui-platform-preference`, `security`,
-  `policy`, `clipboard` (ADR 0065) (`OsSettingsDocumentRegistry`, Platform Core). Un autre id lève
+  `policy`, `clipboard` (ADR 0065), `screens` (ADR 0179 §7, Paramètres ▸ Écrans) (`OsSettingsDocumentRegistry`, Platform Core). Un autre id lève
   `ArgumentException`.
 - Dans `appearance`, `desktopThemeId` et `mobileThemeId` sont des chaînes
   libres depuis `v3/11` (ADR 0103) : l'id d'un thème intégré ou d'un fichier

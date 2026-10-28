@@ -69,7 +69,34 @@ public sealed class DisplaySurfaceService : IDisplaySurfaceService, IAsyncDispos
     public event Action? SurfacesChanged;
 
     /// <inheritdoc />
-    public async Task<DisplaySurfaceOpenResult> OpenAsync(DisplaySurfaceOptions options, CancellationToken cancellationToken = default)
+    public async Task<DisplaySurfaceOpenResult> OpenAsync(DisplaySurfaceOptions options, CancellationToken cancellationToken = default) =>
+        (await OpenCoreAsync(options, placement: null, notifyBlocked: true, cancellationToken)).Result;
+
+    /// <summary>
+    /// Opens the surface of a secondary screen (ADR 0178 §4): like <see cref="OpenAsync"/>, but
+    /// <c>screens.js</c> places the window on a free monitor when the host allows it, or where
+    /// <paramref name="placement"/> remembers it, and follows it afterwards. Used by
+    /// <see cref="ScreenService"/>.
+    /// </summary>
+    /// <param name="options">Title and size used when no placement applies.</param>
+    /// <param name="placement">Where the screen's window was last time; its geometry may be empty.</param>
+    /// <param name="notifyBlocked">Whether a blocked window posts the notification.</param>
+    /// <param name="cancellationToken">Cancels the request.</param>
+    internal Task<ScreenSurfaceOpenResult> OpenScreenSurfaceAsync(
+        DisplaySurfaceOptions options,
+        ScreenPlacementRequest placement,
+        bool notifyBlocked,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(placement);
+        return OpenCoreAsync(options, placement, notifyBlocked, cancellationToken);
+    }
+
+    private async Task<ScreenSurfaceOpenResult> OpenCoreAsync(
+        DisplaySurfaceOptions options,
+        ScreenPlacementRequest? placement,
+        bool notifyBlocked,
+        CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(options);
         ObjectDisposedException.ThrowIf(_disposed, this);
@@ -80,29 +107,36 @@ public sealed class DisplaySurfaceService : IDisplaySurfaceService, IAsyncDispos
         {
             IJSObjectReference module = await GetModuleAsync(cancellationToken);
             _self ??= DotNetObjectReference.Create(this);
-            reply = await module.InvokeAsync<SurfaceOpenReply>(
-                "open", cancellationToken, _self, id, options.Title, Math.Max(200, options.Width), Math.Max(150, options.Height));
+            int width = Math.Max(200, options.Width);
+            int height = Math.Max(150, options.Height);
+            reply = placement is null
+                ? await module.InvokeAsync<SurfaceOpenReply>("open", cancellationToken, _self, id, options.Title, width, height)
+                : await module.InvokeAsync<SurfaceOpenReply>("open", cancellationToken, _self, id, options.Title, width, height, placement);
         }
         catch (InvalidOperationException)
         {
             // Prerendering or a host without interactive JavaScript: no window can be opened.
-            return DisplaySurfaceOpenResult.Unavailable;
+            return new ScreenSurfaceOpenResult(DisplaySurfaceOpenResult.Unavailable, null);
         }
         catch (JSDisconnectedException)
         {
-            return DisplaySurfaceOpenResult.Unavailable;
+            return new ScreenSurfaceOpenResult(DisplaySurfaceOpenResult.Unavailable, null);
         }
 
         if (reply.Status != "opened")
         {
-            PostBlockedNotification(options.Title);
-            return new DisplaySurfaceOpenResult(DisplaySurfaceOpenStatus.Blocked, null);
+            if (notifyBlocked)
+            {
+                PostBlockedNotification(options.Title);
+            }
+
+            return new ScreenSurfaceOpenResult(new DisplaySurfaceOpenResult(DisplaySurfaceOpenStatus.Blocked, null), null);
         }
 
         Surface surface = new(this, id, options.Title, reply.Width, reply.Height);
         _surfaces.Add(surface);
         SurfacesChanged?.Invoke();
-        return new DisplaySurfaceOpenResult(DisplaySurfaceOpenStatus.Opened, surface);
+        return new ScreenSurfaceOpenResult(new DisplaySurfaceOpenResult(DisplaySurfaceOpenStatus.Opened, surface), reply.Monitor);
     }
 
     /// <inheritdoc />
@@ -212,7 +246,8 @@ public sealed class DisplaySurfaceService : IDisplaySurfaceService, IAsyncDispos
     private sealed record SurfaceOpenReply(
         [property: JsonPropertyName("status")] string Status,
         [property: JsonPropertyName("width")] int Width,
-        [property: JsonPropertyName("height")] int Height);
+        [property: JsonPropertyName("height")] int Height,
+        [property: JsonPropertyName("monitor")] string? Monitor = null);
 
     /// <summary>One detached surface, driven through the service's module.</summary>
     private sealed class Surface(DisplaySurfaceService owner, string id, string title, int width, int height) : IDisplaySurface
@@ -303,3 +338,20 @@ public sealed class DisplaySurfaceService : IDisplaySurfaceService, IAsyncDispos
         }
     }
 }
+
+/// <summary>Where a secondary screen's window goes (ADR 0178 §4); sent to <c>screens.js</c>.</summary>
+/// <param name="Remembered">Where the screen's window was last time, or <see langword="null"/>.</param>
+internal sealed record ScreenPlacementRequest(
+    [property: JsonPropertyName("remembered")] ScreenPlacementRect? Remembered);
+
+/// <summary>A window placement in CSS pixels of the host's virtual desktop.</summary>
+internal sealed record ScreenPlacementRect(
+    [property: JsonPropertyName("left")] int Left,
+    [property: JsonPropertyName("top")] int Top,
+    [property: JsonPropertyName("width")] int Width,
+    [property: JsonPropertyName("height")] int Height);
+
+/// <summary>How opening a screen's surface ended.</summary>
+/// <param name="Result">The surface result.</param>
+/// <param name="Monitor">Label of the monitor the window was placed on (may be empty), or <see langword="null"/> when the user places it.</param>
+internal sealed record ScreenSurfaceOpenResult(DisplaySurfaceOpenResult Result, string? Monitor);

@@ -123,6 +123,12 @@ public static class GeneratorCodes
     /// </summary>
     public const string ContextMenuTarget = "HOSAPP0028";
 
+    /// <summary>
+    /// <c>pack</c> (ADR 0182 §1): the app package could not be written, or the OS would refuse it
+    /// (a declared assembly or asset is missing, or the manifest is invalid).
+    /// </summary>
+    public const string PackageFailed = "HOSAPP0060";
+
     /// <summary>The tool was called with invalid arguments.</summary>
     public const string InvalidArguments = "HOSAPP0090";
 

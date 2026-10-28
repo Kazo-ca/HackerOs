@@ -43,6 +43,7 @@ classement.
 | `network.listen` | normale (écouter un port qui n'est pas une URL de son manifeste, [`listening-ports-and-dns.md`](listening-ports-and-dns.md)) |
 | `network.listen.privileged` | **dangereuse** (écouter un port sous 1024, comme `CAP_NET_BIND_SERVICE`) |
 | `shell.control` | normale (ADR 0051 : n'agit que sur le shell de l'utilisateur qui a tapé la commande, voir [`shell-commands.md`](../dev/shell-commands.md)) |
+| `screens.manage` | normale (ADR 0184 : lister, ouvrir, restaurer, fermer et identifier les écrans par `HackScreens`, comme Paramètres ▸ Écrans ; chaque appel part d'un clic de l'utilisateur) |
 | `shell.context-menu` | normale (ADR 0151 §6 : ajouter des entrées aux menus des fichiers ; sans elle, le générateur produit `HOSAPP0027` et l'OS ignore les entrées, voir [`context-menu.md`](context-menu.md#entrées-des-apps-dans-les-menus-des-fichiers-chantier-4)) |
 | `permissions.manage` | **dangereuse** (`HackPermissionAdministration`, ADR 0056 §9 ; déclarée par Paramètres) |
 | `server.connection.manage` | **dangereuse** (`HackServerConnection`, ADR 0056 §10 ; déclarée par Paramètres) |

@@ -273,6 +273,29 @@
     </ItemGroup>
   </Target>
 
+  <!--
+    HackerOsPack (ADR 0182 §1, §2): "dotnet build -c Release -t:HackerOsPack" writes every app of the
+    project as <version>/<appId>-<version>.hackapp and adds it to index.json in HackerOsPackageOutput,
+    the content of the repository's hackeros-packages branch (default: bin/hackeros-packages/).
+  -->
+  <PropertyGroup>
+    <HackerOsPackageOutput Condition="'$(HackerOsPackageOutput)' == ''">$(MSBuildProjectDirectory)/bin/hackeros-packages</HackerOsPackageOutput>
+  </PropertyGroup>
+
+  <Target Name="HackerOsPack"
+          DependsOnTargets="Build;_HackerOsAppManifestPaths;_HackerOsResolveManifestGeneratorPath"
+          Condition="'$(HackerOsAppProject)' == 'true'">
+    <ReadLinesFromFile File="$(_HackerOsManifestStamp)" Condition="Exists('$(_HackerOsManifestStamp)')">
+      <Output TaskParameter="Lines" ItemName="_HackerOsPackManifest" />
+    </ReadLinesFromFile>
+    <Error Condition="'@(_HackerOsPackManifest)' == ''" Code="HOSAPP0060" Text="No HackerOS manifest was generated for $(MSBuildProjectName): nothing to pack." />
+    <PropertyGroup>
+      <_HackerOsPackBin>$(TargetDir.TrimEnd('/\'))</_HackerOsPackBin>
+      <_HackerOsPackOutput>$(HackerOsPackageOutput.TrimEnd('/\'))</_HackerOsPackOutput>
+    </PropertyGroup>
+    <Exec Command="&quot;$(_HackerOsDotnetHost)&quot; &quot;$(_HackerOsManifestGeneratorPath)&quot; pack --manifest &quot;%(_HackerOsPackManifest.Identity)&quot; --bin &quot;$(_HackerOsPackBin)&quot; --webroot &quot;$(MSBuildProjectDirectory)/wwwroot&quot; --output &quot;$(_HackerOsPackOutput)&quot;" />
+  </Target>
+
   <!-- ===================================================================================== -->
   <!-- SDK boundary (ADR 0055, codes per ADR 0059)                                            -->
   <!-- ===================================================================================== -->

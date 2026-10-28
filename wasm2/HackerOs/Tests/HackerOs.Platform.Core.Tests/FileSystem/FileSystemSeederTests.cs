@@ -17,7 +17,7 @@ public sealed class FileSystemSeederTests
 
         string[] paths =
         [
-            "/", "/bin", "/etc", "/home", "/tmp", "/var", "/var/log", "/var/log/apps",
+            "/", "/bin", "/etc", "/home", "/mnt", "/tmp", "/var", "/var/log", "/var/log/apps",
             "/home/alice", "/home/alice/Desktop", "/home/alice/Documents",
             "/home/alice/Downloads", "/home/alice/.config",
             "/home/alice/.config/hackeros", "/etc/hackeros", "/var/lib/hackeros",

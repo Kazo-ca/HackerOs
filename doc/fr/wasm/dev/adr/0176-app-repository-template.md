@@ -38,8 +38,8 @@ débogage (« les deux selon le profil ») ; Visual Studio par les modèles
    un projet de tests, `Directory.Build.props`, `global.json`, `.gitignore`,
    `.gitmodules`, un workflow CI et un `README.md`. Il est publié avec les autres
    modèles, à la version de la release.
-2. **Dépôt template GitHub.** Un dépôt de l'organisation Kazo-ca, marqué
-   « Template repository », contient la sortie de `dotnet new hackeros-solution`.
+2. **Dépôt template GitHub.** [`Kazo-ca/HackerOs-AppTemplate`](https://github.com/Kazo-ca/HackerOs-AppTemplate)
+   (créé par Benoit le 2026-10-28), marqué « Template repository », contient la sortie de `dotnet new hackeros-solution`.
    Il est régénéré depuis le modèle, jamais modifié à la main ailleurs que dans
    le modèle.
 3. **Sous-module obligatoire.** `external/HackerOs` pointe vers le dépôt
@@ -100,4 +100,5 @@ débogage (« les deux selon le profil ») ; Visual Studio par les modèles
 - [ ] Mode source externe dans `HackerOs.Apps.targets` (`HackerOsUseSource`, `HackerOsSourceRoot`).
 - [ ] Modèle `hackeros-solution` (sous-module, import de `Versions.props`, profils, CI).
 - [ ] Test des deux profils dans `HackerOs.Templates.E2E.Tests`.
-- [ ] Créer le dépôt template depuis le modèle (Benoit crée le dépôt dans Kazo-ca).
+- [x] Créer le dépôt `Kazo-ca/HackerOs-AppTemplate` (Benoit, 2026-10-28).
+- [ ] Y pousser la sortie de `dotnet new hackeros-solution` et le marquer « Template repository ».

@@ -54,8 +54,42 @@ public sealed record CancelWindowCloseCommand(WindowId WindowId) : WindowCommand
 /// <summary>Requests unconditional final removal after lifecycle coordination.</summary>
 public sealed record ForceWindowCloseCommand(WindowId WindowId) : WindowCommand;
 
-/// <summary>Reports a new desktop work area that may constrain every window.</summary>
-public sealed record ChangeViewportCommand(WindowBounds WorkArea) : WindowCommand;
+/// <summary>Reports a new desktop work area that may constrain every window of one screen.</summary>
+public sealed record ChangeViewportCommand(WindowBounds WorkArea) : WindowCommand
+{
+    /// <summary>Reports a new work area for screen <paramref name="displayId"/> (ADR 0178 §2).</summary>
+    /// <param name="workArea">The screen's new work area.</param>
+    /// <param name="displayId">The screen whose work area changed; it must be registered.</param>
+    public ChangeViewportCommand(WindowBounds workArea, DisplayId displayId)
+        : this(workArea) => DisplayId = displayId;
+
+    /// <summary>Gets the screen whose work area changed; <see cref="DisplayId.Primary"/> by default.</summary>
+    public DisplayId DisplayId { get; init; }
+}
+
+/// <summary>
+/// Registers a new screen of the extended desktop with its work area (ADR 0178 §2). The screen
+/// starts empty; windows reach it with <see cref="MoveWindowToDisplayCommand"/>.
+/// </summary>
+/// <param name="DisplayId">The new screen; it must not be registered yet.</param>
+/// <param name="WorkArea">The screen's work area, in its own coordinates.</param>
+public sealed record AddDisplayCommand(DisplayId DisplayId, WindowBounds WorkArea) : WindowCommand;
+
+/// <summary>
+/// Removes a screen whose surface closed, was lost, or whose monitor was unplugged (ADR 0178 §2):
+/// its windows come back to screen 1 and keep their visual state. Screen 1 cannot be removed.
+/// </summary>
+/// <param name="DisplayId">The screen to remove.</param>
+public sealed record RemoveDisplayCommand(DisplayId DisplayId) : WindowCommand;
+
+/// <summary>
+/// Moves a window to another screen and keeps its visual state (ADR 0178 §2): a maximized window
+/// stays maximized, a window snapped to one half stays on that half, a normal window keeps its
+/// relative position, a minimized one stays minimized. Its owner-modal family moves with it.
+/// </summary>
+/// <param name="WindowId">The window to move.</param>
+/// <param name="DisplayId">The target screen; it must be registered.</param>
+public sealed record MoveWindowToDisplayCommand(WindowId WindowId, DisplayId DisplayId) : WindowCommand;
 
 /// <summary>
 /// Replaces a window's displayed title (ADR 0117 §3), like an X11 client writing
@@ -117,4 +151,40 @@ public sealed record WindowTitleChangedEvent(WindowId WindowId, string PreviousT
 public sealed record WindowRespondingChangedEvent(WindowId WindowId, bool IsResponding) : WindowEvent;
 
 /// <summary>Reports a work-area change and the resulting window snapshots.</summary>
-public sealed record WindowViewportChangedEvent(WindowBounds WorkArea, IReadOnlyList<WindowRuntimeState> Windows) : WindowEvent;
+public sealed record WindowViewportChangedEvent(WindowBounds WorkArea, IReadOnlyList<WindowRuntimeState> Windows) : WindowEvent
+{
+    /// <summary>Reports a work-area change of screen <paramref name="displayId"/> (ADR 0178 §2).</summary>
+    /// <param name="workArea">The screen's new work area.</param>
+    /// <param name="windows">The snapshots of every window after the change.</param>
+    /// <param name="displayId">The screen whose work area changed.</param>
+    public WindowViewportChangedEvent(WindowBounds workArea, IReadOnlyList<WindowRuntimeState> windows, DisplayId displayId)
+        : this(workArea, windows) => DisplayId = displayId;
+
+    /// <summary>Gets the screen whose work area changed; <see cref="DisplayId.Primary"/> by default.</summary>
+    public DisplayId DisplayId { get; init; }
+}
+
+/// <summary>Reports that a screen joined the extended desktop (ADR 0178 §2).</summary>
+/// <param name="DisplayId">The new screen.</param>
+/// <param name="WorkArea">Its work area.</param>
+public sealed record DisplayAddedEvent(DisplayId DisplayId, WindowBounds WorkArea) : WindowEvent;
+
+/// <summary>
+/// Reports that a screen left the extended desktop (ADR 0178 §2). It follows the
+/// <see cref="WindowDisplayChangedEvent"/> of every window that came back to screen 1.
+/// </summary>
+/// <param name="DisplayId">The removed screen.</param>
+public sealed record DisplayRemovedEvent(DisplayId DisplayId) : WindowEvent;
+
+/// <summary>Reports that a window now shows on another screen (ADR 0178 §2).</summary>
+/// <param name="WindowId">The window that moved.</param>
+/// <param name="PreviousDisplayId">The screen it left.</param>
+/// <param name="DisplayId">The screen it shows on now.</param>
+/// <param name="Bounds">Its bounds in the new screen's coordinates.</param>
+/// <param name="RestoreBounds">Its restore geometry in the new screen's coordinates, if any.</param>
+public sealed record WindowDisplayChangedEvent(
+    WindowId WindowId,
+    DisplayId PreviousDisplayId,
+    DisplayId DisplayId,
+    WindowBounds Bounds,
+    WindowBounds? RestoreBounds) : WindowEvent;

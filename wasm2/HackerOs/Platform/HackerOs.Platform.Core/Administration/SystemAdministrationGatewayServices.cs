@@ -64,6 +64,12 @@ public sealed record SystemAdministrationGatewayServices(
     public Func<ContextMenus.FileContextMenuAdministration>? FileMenuEntries { get; init; }
 
     /// <summary>
+    /// Gets the secondary screens behind <c>HackScreens</c> (ADR 0184); <see langword="null"/> on a
+    /// host without screens leaves the gateway unsupported.
+    /// </summary>
+    public Func<IScreenControl>? Screens { get; init; }
+
+    /// <summary>
     /// Gets the approval window of the dangerous capabilities (ADR 0049), which a third-party
     /// component provider goes through (ADR 0156 §3); <see langword="null"/> refuses such a choice.
     /// </summary>

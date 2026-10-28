@@ -19,6 +19,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Apps\System\HackerOs.Apps.Settings\HackerOs.Apps.Settings.csproj" />
     <ProjectReference Include="..\HackerOs.Tests.Support\HackerOs.Tests.Support.csproj" />
+    <!-- ScreensPanelTests checks the panel against the OS schema of screens.config. -->
+    <ProjectReference Include="..\..\Platform\HackerOs.Platform.Core\HackerOs.Platform.Core.csproj" />
   </ItemGroup>
 
 </Project>

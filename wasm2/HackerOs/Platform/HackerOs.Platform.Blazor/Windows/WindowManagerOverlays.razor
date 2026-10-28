@@ -47,38 +47,4 @@
     </aside>
 }
 
-@if (Commands.Menu is { } menu)
-{
-    IReadOnlyList<WindowMenuItem> items = Commands.GetMenuItems(menu.WindowId);
-    <div class="window-menu-scrim" @onpointerdown="CloseMenu"></div>
-    <nav @ref="_menuElement"
-         class="window-menu"
-         role="menu"
-         tabindex="-1"
-         aria-label="@L["WindowMenu.Label"]"
-         data-window-menu-for="@menu.WindowId"
-         @onkeydown="HandleMenuKeyDownAsync"
-         @onkeydown:preventDefault="true"
-         @onkeydown:stopPropagation="true">
-        @for (int index = 0; index < items.Count; index++)
-        {
-            WindowMenuItem item = items[index];
-            int itemIndex = index;
-            <button type="button"
-                    class="window-menu-item @(itemIndex == _menuIndex ? "is-highlighted" : null)"
-                    role="menuitem"
-                    tabindex="-1"
-                    disabled="@(!item.IsEnabled)"
-                    aria-disabled="@(item.IsEnabled ? "false" : "true")"
-                    data-window-action="@WindowKeyBindingsSettingsDocuments.KeyOf(item.Action)"
-                    @onpointerenter="() => _menuIndex = itemIndex"
-                    @onclick="() => RunMenuItemAsync(item)">
-                <span class="window-menu-label">@item.Label</span>
-                @if (item.Shortcut is { } shortcut)
-                {
-                    <kbd class="window-menu-shortcut">@shortcut</kbd>
-                }
-            </button>
-        }
-    </nav>
-}
+@* ADR 0179 §3: the window menus open in the OS context menu (ContextMenuOverlay), for its submenus. *@

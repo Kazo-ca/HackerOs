@@ -2,6 +2,8 @@ using HackerOs.App.Abstractions;
 using HackerOs.AppSdk;
 using HackerOs.AppSdk.IO;
 using HackerOs.Platform.Core.Execution;
+using HackerOs.Platform.Core.FileSystem.HostFolders;
+using HackerOs.Platform.Core.Tests.FileSystem.HostFolders;
 using HackerOs.Platform.Core.Tests.FileSystem.Virtual;
 using HackerOs.Simulation.Abstractions.Gateways;
 using HackerOs.Simulation.Abstractions.Metrics;
@@ -62,6 +64,45 @@ public sealed class AppDriveGatewayTests
         Assert.Equal(750, drive.AvailableFreeSpace);
         Assert.Equal(750, drive.TotalFreeSpace);
         Assert.Equal("/", drive.RootDirectory.FullName);
+    }
+
+    [Fact]
+    public async Task A_network_drive_is_listed_with_no_size_and_mounted_through_HackDriveInfo()
+    {
+        VirtualFileSystemFixture fixture = await VirtualFileSystemFixture.CreateSeededAsync();
+        FakeHostFolderAccess access = new() { NextPick = new FakeHostFolder("Projects") };
+        NetworkDriveService drives = new(
+            fixture.Router, access, () => NetworkDriveServiceTests.Principal("alice", AppAuthority.User));
+        AppDriveGateway gateway = new(
+            () => fixture.Router, VirtualHardwareProfile.Default, new FixedUsage(new StorageUsage(0, null)))
+        {
+            NetworkDrives = () => drives
+        };
+        using IDisposable scope = HackExecutionContext.Enter(new DriveOnlyContext(gateway));
+
+        Assert.True(await HackDriveInfo.IsHostFolderSupportedAsync());
+        HackDriveInfo? mounted = await HackDriveInfo.MountHostFolderAsync();
+        HackDriveInfo[] all = await HackDriveInfo.GetDrivesAsync();
+
+        Assert.NotNull(mounted);
+        Assert.Equal("/mnt/Projects", mounted.Name);
+        Assert.Equal(HackDriveType.Network, mounted.DriveType);
+        Assert.Equal("hostfs", mounted.DriveFormat);
+        Assert.Equal("Projects", mounted.VolumeLabel);
+        Assert.Equal(["/", "/mnt/Projects"], all.Select(static drive => drive.Name));
+        await HackDriveInfo.UnmountAsync("/mnt/Projects");
+        Assert.Single(await HackDriveInfo.GetDrivesAsync());
+        await Assert.ThrowsAsync<IOException>(() => HackDriveInfo.UnmountAsync("/mnt/Projects"));
+    }
+
+    [Fact]
+    public async Task Without_a_network_drive_service_mounting_is_not_supported()
+    {
+        VirtualFileSystemFixture fixture = new();
+        AppDriveGateway gateway = new(() => fixture.Router, VirtualHardwareProfile.Default);
+
+        Assert.False(await gateway.IsHostFolderSupportedAsync());
+        await Assert.ThrowsAsync<NotSupportedException>(() => gateway.MountHostFolderAsync(null).AsTask());
     }
 
     private sealed class FixedUsage(StorageUsage usage) : IStorageUsageProvider

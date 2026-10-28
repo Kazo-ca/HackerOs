@@ -55,7 +55,11 @@
         </button>
         @if (Window.Constraints.IsResizable)
         {
-        <button type="button" class="chrome-button chrome-button-maximize" aria-label="@ToggleLabel" title="@ToggleLabel" @onclick="ToggleMaximizeAsync">
+        @* ADR 0179 §4: right click opens snap, full screen and « Autre écran »; left click is unchanged (ADR 0177). *@
+        <button type="button" class="chrome-button chrome-button-maximize" aria-label="@ToggleLabel" title="@ToggleLabel" @onclick="ToggleMaximizeAsync"
+                @oncontextmenu="OpenMaximizeMenuAtPointerAsync"
+                @oncontextmenu:preventDefault="@OnWindowMenu.HasDelegate"
+                @oncontextmenu:stopPropagation="@OnWindowMenu.HasDelegate">
             @if (Window.VisualState == WindowVisualState.Maximized)
             {
                 <svg viewBox="0 0 12 12" aria-hidden="true" focusable="false">
@@ -173,6 +177,17 @@
         await OnWindowMenu.InvokeAsync(new WindowMenuRequest(Window.Id, args.ClientX, args.ClientY));
     }
 
+    private async Task OpenMaximizeMenuAtPointerAsync(MouseEventArgs args)
+    {
+        if (!OnWindowMenu.HasDelegate)
+        {
+            return;
+        }
+
+        await OnFocus.InvokeAsync(Window.Id);
+        await OnWindowMenu.InvokeAsync(new WindowMenuRequest(Window.Id, args.ClientX, args.ClientY) { Kind = WindowMenuKind.MaximizeButton });
+    }
+
     private Task FocusIconAsync() => OnFocus.InvokeAsync(Window.Id);
 
     private async Task BackAsync()
@@ -217,6 +232,35 @@
             // snapshot includes C# constraints, even if WindowHost's JS projection is still pending.
             await _module.InvokeVoidAsync("completeWindowMove", _interactionLayer, Window.Bounds.X, Window.Bounds.Y);
         }
+    }
+
+    /// <summary>
+    /// Ends a move whose pointer was released over another screen (ADR 0183): the window changes
+    /// screen, keeping its components, then takes the dropped position in that screen's work area.
+    /// </summary>
+    /// <param name="displayNumber">The number of the screen under the pointer.</param>
+    /// <param name="x">The window's left edge in that screen's window layer.</param>
+    /// <param name="y">The window's top edge in that screen's window layer.</param>
+    [JSInvokable]
+    public async Task ReportScreenDropAsync(int displayNumber, double x, double y)
+    {
+        if (Window.VisualState != WindowVisualState.Normal
+            || !Window.Constraints.IsMovable
+            || displayNumber < 1
+            || !double.IsFinite(x) || !double.IsFinite(y))
+        {
+            return;
+        }
+
+        WindowId gestureWindowId = Window.Id;
+        DisplayId target = DisplayId.FromNumber(displayNumber);
+        await OnFocus.InvokeAsync(gestureWindowId);
+        if (target != Window.DisplayId)
+        {
+            await OnGesture.InvokeAsync(new MoveWindowToDisplayCommand(gestureWindowId, target));
+        }
+
+        await OnGesture.InvokeAsync(new MoveWindowCommand(gestureWindowId, x, y));
     }
 
     /// <summary>

@@ -49,6 +49,8 @@ public sealed class FileSystemSeeder(
         await EnsureDirectoryAsync("/var/log/apps", 0x01ED, system, cancellationToken);
         await EnsureMountPointAsync("/proc", 0x016D, system, cancellationToken);
         await EnsureMountPointAsync("/dev", 0x01ED, system, cancellationToken);
+        // ADR 0181: network drives (folders of the host computer) are mounted in /mnt/<name>.
+        await EnsureMountPointAsync("/mnt", 0x01ED, system, cancellationToken);
 
         // ADR 0044: OS settings (system layer) and OS state such as migration markers.
         await EnsureDirectoryAsync("/etc/hackeros", 0x01ED, system, cancellationToken);
@@ -66,6 +68,9 @@ public sealed class FileSystemSeeder(
         // ADR 0074, section 4: the static host table read first by hackdns, root-owned 0644.
         await EnsureFileAsync(
             Network.Local.HackDnsResolver.HostsFilePath.Value, Network.Local.HackDnsResolver.DefaultHostsFileContent, 0x01A4, system, cancellationToken);
+        // ADR 0182, section 3: hosts the OS downloads app packages from and trusted owners, root-owned 0644.
+        await EnsureFileAsync(
+            Apps.Packages.AppSourcesConfigDocument.MachinePath.Value, Apps.Packages.AppSourcesConfigDocument.DefaultContent, 0x01A4, system, cancellationToken);
 
         // ADR 0125, section 3: pam_limits-style session limits, every line commented, root-owned 0644.
         await EnsureDirectoryAsync("/etc/security", 0x01ED, system, cancellationToken);

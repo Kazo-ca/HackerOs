@@ -505,4 +505,25 @@
   <data name="Mobile.Close" xml:space="preserve">
     <value>Close</value>
   </data>
+  <data name="Network.Heading" xml:space="preserve">
+    <value>Network drives</value>
+  </data>
+  <data name="Network.Connect" xml:space="preserve">
+    <value>Connect a network drive…</value>
+  </data>
+  <data name="Network.ConnectTooltip" xml:space="preserve">
+    <value>Mount a folder of this computer as a network drive</value>
+  </data>
+  <data name="Network.Reconnect" xml:space="preserve">
+    <value>{0}: click to reconnect (the browser asks for its permission again)</value>
+  </data>
+  <data name="Network.Disconnect" xml:space="preserve">
+    <value>Disconnect {0}</value>
+  </data>
+  <data name="Network.PermissionRefused" xml:space="preserve">
+    <value>{0}: the browser refused the access to the folder</value>
+  </data>
+  <data name="Network.Error" xml:space="preserve">
+    <value>Network drive: {0}</value>
+  </data>
 </root>

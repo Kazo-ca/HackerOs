@@ -107,6 +107,7 @@ compilation à niveaux et comparer des passes faites dans les mêmes conditions.
 | `View("texte")` d'ASP.Hack cherche une vue nommée « texte » | Même résolution de surcharge qu'ASP.NET Core | Passer une classe de modèle ou `View(viewName: null, model: x)` ([`../framework/asp-hack-razor-views.md`](../framework/asp-hack-razor-views.md)). |
 | `curl -d` vers un formulaire ASP.Hack répond 400 | Anti-falsification : chaque `curl` a son propre pot à cookies | Comportement attendu. |
 | Les terminaux xterm.js effacent la dernière cellule ou ont un fond noir forcé | `ESC[K` après une ligne pleine efface la dernière cellule ; `xterm.css` peint `.xterm-viewport` en noir | Gérés dans la discipline de ligne C# et surchargés en CSS isolé ([`terminal-emulator.md`](terminal-emulator.md)). |
+| Un élément déplacé dans un écran secondaire ne reçoit plus de `ResizeObserver` ni de touches (`window.addEventListener`) | Un observateur ne suit que la mise en page de sa fenêtre, et le registre des surfaces ne reproduit que les écouteurs posés sur `document` | Créer l'observateur avec `element.ownerDocument.defaultView.ResizeObserver` ; écouter sur `document`, ou sur la fenêtre de chaque surface avec `watch(…)` du registre ([`secondary-screen-desktop.md`](secondary-screen-desktop.md)). |
 
 ## 6. IndexedDB et fichiers
 
