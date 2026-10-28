@@ -127,7 +127,7 @@ chantiers : [`multi-monitor-plan.md`](../plans/multi-monitor-plan.md).
 
 ## Tâches
 
-- [ ] `DisplayId`, zones par écran et commandes dans `WindowRuntime` (chantier 1).
+- [x] `DisplayId`, zones par écran et commandes dans `WindowRuntime` (chantier 1, [`window-runtime-displays.md`](../window-runtime-displays.md)).
 - [ ] Fenêtres rendues une fois et déplacées par portail (chantier 2).
 - [ ] Service d'écrans, permission, repli, restauration (chantier 3).
 - [ ] Bureau et overlays dans chaque écran (chantier 4).

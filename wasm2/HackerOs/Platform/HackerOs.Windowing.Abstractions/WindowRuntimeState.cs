@@ -153,4 +153,12 @@ public sealed record WindowRuntimeState
     /// <c>_NET_WM_PING</c> timeout on X11. <see cref="Title"/> itself never carries the suffix.
     /// </summary>
     public bool IsResponding { get; init; } = true;
+
+    /// <summary>
+    /// Gets the screen that shows the window (ADR 0178 §2). <see cref="Bounds"/> and
+    /// <see cref="RestoreBounds"/> are in that screen's coordinates. Defaults to
+    /// <see cref="DisplayId.Primary"/>; only <see cref="MoveWindowToDisplayCommand"/> and
+    /// <see cref="RemoveDisplayCommand"/> change it once the window exists.
+    /// </summary>
+    public DisplayId DisplayId { get; init; }
 }

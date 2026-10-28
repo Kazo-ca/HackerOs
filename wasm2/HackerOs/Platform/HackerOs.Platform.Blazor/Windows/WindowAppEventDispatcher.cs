@@ -135,6 +135,14 @@ public sealed class WindowAppEventDispatcher : IDisposable
                 case WindowResizeCompletedEvent completed when _registrations.TryGetValue(completed.WindowId, out Registration? registration):
                     ReportSizeIfChanged(registration, completed.Bounds);
                     break;
+                case WindowDisplayChangedEvent moved when _registrations.TryGetValue(moved.WindowId, out Registration? relocated):
+                    // A window that changed screen may have taken another size (ADR 0178 §2).
+                    if (relocated.State != WindowVisualState.Minimized)
+                    {
+                        ReportSizeIfChanged(relocated, moved.Bounds);
+                    }
+
+                    break;
                 case WindowViewportChangedEvent viewport:
                     foreach (WindowRuntimeState window in viewport.Windows)
                     {

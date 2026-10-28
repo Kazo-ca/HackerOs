@@ -62,6 +62,8 @@ déjà eu lieu et continue.
 - `WindowRuntime` (Windowing.Core) produit déjà des faits (`WindowFocusedEvent`,
   `WindowVisualStateChangedEvent`, `WindowViewportChangedEvent`, `WindowClosedEvent`). Il publie
   maintenant chaque lot par l'événement `EventsApplied`, avant `StateChanged`.
+- Écrans : une fenêtre a un `DisplayId` et chaque écran sa zone de travail ; changer d'écran
+  appelle `OnWindowResized` si la taille change (ADR 0178, [`window-runtime-displays.md`](../dev/window-runtime-displays.md)).
 - Nouveau fait : `CompleteWindowResizeCommand` → `WindowResizeCompletedEvent(id, bounds)`. Le
   chrome (`WindowChrome.razor.js`) l'envoie quand un geste de redimensionnement se termine ; le
   clavier l'envoie quand on valide un redimensionnement.
