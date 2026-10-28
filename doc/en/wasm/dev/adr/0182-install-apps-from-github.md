@@ -4,15 +4,17 @@
 
 ## Status
 
-Proposed on 2026-10-28, waiting for Benoit's answers to questions Q1 to Q4
-("Open questions" section). Benoit's request the same day: "we'll just make a
+Accepted on 2026-10-28 by Benoit, who chose the recommended option for all four
+questions ("Answers" section): API check at install time, `hackeros-packages`
+branch, only `Kazo-ca` repositories trusted by default, machine-wide
+installation by an administrator. Request of the same day: "we'll just make a
 terminal command to install an application from its GitHub repository. So we
 must make sure GitHub is allowed as a trusted host." Complements
 [ADR 0176](0176-app-repository-template.md) (app repository template),
 [ADR 0048](0048-system-apps-and-uninstall.md) (`apps.config`),
 [ADR 0049](0049-dangerous-capabilities-and-admin-approval.md) (dangerous
 capabilities) and [ADR 0098](0098-sdk-versions-packages-and-manifest-checks.md)
-(SDK versions and manifest checks). No code is written before the answers.
+(SDK versions and manifest checks).
 
 ## Context
 
@@ -43,10 +45,9 @@ capabilities) and [ADR 0098](0098-sdk-versions-packages-and-manifest-checks.md)
   SDK through reflection. Trust in the source is therefore the real barrier,
   not capabilities.
 
-## Proposed decision
+## Decision
 
-Points marked **(Qn)** depend on an open question; the text follows the
-recommended option.
+Points marked **(Qn)** follow Benoit's answer to question Qn.
 
 ### 1. The app package
 
@@ -181,9 +182,9 @@ Store or Microsoft Store, will read the list in the
 service as `hackpkg`. Note in [`../plans/hackeros-store.md`](../plans/hackeros-store.md),
 to pick up once apps are published.
 
-## Open questions
+## Answers
 
-Asked to Benoit in the thread on 2026-10-28, each with its choices.
+Questions asked to Benoit on 2026-10-28; he chose **A** for all four.
 
 - **Q1. Trimmed framework.** A (recommended): check references at install time,
   refuse with the list of missing APIs. B: the official host no longer trims the
@@ -222,7 +223,7 @@ Asked to Benoit in the thread on 2026-10-28, each with its choices.
 
 ## Tasks
 
-- [ ] Benoit's answers to Q1 to Q4; update this ADR.
+- [x] Benoit's answers to Q1 to Q4 (A for all, 2026-10-28).
 - [ ] `HackerOsPack` target in `HackerOs.App.Build` and publishing workflow in `hackeros-solution`.
 - [ ] `app-sources.config` (reading, creation migration).
 - [ ] `[installed]` section in `AppsConfigDocument`; registration in the catalog during the session.

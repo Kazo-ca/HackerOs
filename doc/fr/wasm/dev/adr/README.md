@@ -176,6 +176,6 @@ prochain numéro libre est indiqué dans
 | [`0174-announce-a-new-version-to-open-sessions.md`](0174-announce-a-new-version-to-open-sessions.md) | ADR 0174 : `version.json` lu toutes les 5 minutes pour annoncer une nouvelle version aux sessions ouvertes |
 | [`0175-new-folder-in-the-choose-folder-dialog.md`](0175-new-folder-in-the-choose-folder-dialog.md) | ADR 0175 : bouton « Nouveau dossier » dans la barre des dialogues Choisir un dossier et Enregistrer ; activé pour « Open Folder » de Code Editor |
 | [`0176-app-repository-template.md`](0176-app-repository-template.md) | ADR 0176 : dépôt template d'apps généré par `hackeros-solution`, sous-module de l'OS (source en `Debug`, paquets nuget.org en `Release`), modèles visibles dans Visual Studio |
-| [`0182-install-apps-from-github.md`](0182-install-apps-from-github.md) | ADR 0182 (proposée) : commande `hackpkg` qui installe une app depuis son dépôt GitHub, paquets `.hackapp` sur la branche `hackeros-packages`, GitHub (`raw.githubusercontent.com`) comme hôte de confiance dans `/etc/hackeros/app-sources.config` |
+| [`0182-install-apps-from-github.md`](0182-install-apps-from-github.md) | ADR 0182 : commande `hackpkg` qui installe une app depuis son dépôt GitHub, paquets `.hackapp` sur la branche `hackeros-packages`, GitHub (`raw.githubusercontent.com`) comme hôte de confiance dans `/etc/hackeros/app-sources.config` |
 
 Index du dossier parent : [`../README.md`](../README.md).

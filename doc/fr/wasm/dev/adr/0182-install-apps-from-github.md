@@ -4,16 +4,17 @@
 
 ## Statut
 
-Proposé le 2026-10-28, en attente des réponses de Benoit aux questions Q1 à Q4
-(section « Questions ouvertes »). Demande de Benoit du même jour : « on va juste
-faire une commande dans le terminal pour installer une application à partir de
-son GitHub repository. Donc on doit s'assurer d'autoriser GitHub comme host de
-confiance. » Complète l'[ADR 0176](0176-app-repository-template.md) (dépôt
-template d'apps), l'[ADR 0048](0048-system-apps-and-uninstall.md)
+Accepté le 2026-10-28 par Benoit, qui a choisi l'option recommandée aux quatre
+questions (section « Réponses ») : vérification des API à l'installation,
+branche `hackeros-packages`, seuls les dépôts de `Kazo-ca` de confiance par
+défaut, installation pour la machine par un administrateur. Demande du même
+jour : « on va juste faire une commande dans le terminal pour installer une
+application à partir de son GitHub repository. Donc on doit s'assurer
+d'autoriser GitHub comme host de confiance. » Complète l'[ADR 0176](0176-app-repository-template.md)
+(dépôt template d'apps), l'[ADR 0048](0048-system-apps-and-uninstall.md)
 (`apps.config`), l'[ADR 0049](0049-dangerous-capabilities-and-admin-approval.md)
 (capacités dangereuses) et l'[ADR 0098](0098-sdk-versions-packages-and-manifest-checks.md)
-(versions du SDK et contrôles du manifeste). Aucun code n'est écrit avant les
-réponses.
+(versions du SDK et contrôles du manifeste).
 
 ## Contexte
 
@@ -46,10 +47,9 @@ réponses.
   contourner le SDK par réflexion. La confiance dans la source est donc la vraie
   barrière, pas les capacités.
 
-## Décision proposée
+## Décision
 
-Les points marqués **(Qn)** dépendent d'une question ouverte ; le texte suit
-l'option recommandée.
+Les points marqués **(Qn)** suivent la réponse de Benoit à la question Qn.
 
 ### 1. Le paquet d'app
 
@@ -185,9 +185,9 @@ installera par le même service que `hackpkg`. Note dans
 [`../plans/hackeros-store.md`](../plans/hackeros-store.md), à reprendre quand des
 apps seront publiées.
 
-## Questions ouvertes
+## Réponses
 
-Posées à Benoit dans le fil du 2026-10-28, chacune avec ses choix.
+Questions posées à Benoit le 2026-10-28 ; il a choisi **A** aux quatre.
 
 - **Q1. Framework élagué.** A (recommandé) : vérification des références à
   l'installation, refus avec la liste des API manquantes. B : l'hôte officiel
@@ -229,7 +229,7 @@ Posées à Benoit dans le fil du 2026-10-28, chacune avec ses choix.
 
 ## Tâches
 
-- [ ] Réponses de Benoit à Q1 à Q4 ; mettre à jour cette ADR.
+- [x] Réponses de Benoit à Q1 à Q4 (A partout, 2026-10-28).
 - [ ] Cible `HackerOsPack` dans `HackerOs.App.Build` et workflow de publication dans `hackeros-solution`.
 - [ ] `app-sources.config` (lecture, migration de création).
 - [ ] Section `[installed]` dans `AppsConfigDocument` ; inscription au catalogue en cours de session.
