@@ -98,6 +98,7 @@
                 </button>
             </FileViewDropZone>
         }
+        <NetworkDrivesSidebar CurrentPath="@(_showTrash ? null : _state.CurrentPath)" Navigate="OpenNetworkDriveAsync" Failed="ReportError" />
     </nav>
 
     <div class="explorer-main">
@@ -509,6 +510,13 @@
     private protected Task NavigateUpAsync()
     {
         _state.NavigateUp();
+        return NavigateFileViewAsync(_state.CurrentPath);
+    }
+
+    /// <summary>Opens a network drive, or home after its unmount (ADR 0181, section 11).</summary>
+    private protected Task OpenNetworkDriveAsync(string path)
+    {
+        _state.NavigateTo(path);
         return NavigateFileViewAsync(_state.CurrentPath);
     }
 

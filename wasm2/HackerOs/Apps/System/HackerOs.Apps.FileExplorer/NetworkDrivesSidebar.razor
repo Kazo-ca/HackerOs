@@ -1,0 +1,35 @@
+@using HackerOs.AppSdk.IO
+@using HackerOs.AppSdk.Icons
+@inherits HackerOs.AppSdk.Blazor.HackComponentBase
+
+@*
+    "Network drives" of the Places sidebar (ADR 0181, section 11): the folders of the computer mounted
+    in /mnt, a disconnected one greyed with a reconnect click, an eject button to unmount, and
+    "Connect a network drive…", shown only where the browser can (Chrome and Edge on a computer).
+*@
+@if (_supported || _drives.Count > 0)
+{
+    <div class="sidebar-heading network-heading">@L["Network.Heading"]</div>
+    @foreach (HackDriveInfo drive in _drives)
+    {
+        <div class="network-drive">
+            <button class="sidebar-entry @(drive.IsReady ? "" : "disconnected") @(IsCurrent(drive) ? "active" : "")"
+                    @onclick="() => OpenAsync(drive)"
+                    title="@(drive.IsReady ? drive.Name : L["Network.Reconnect", drive.VolumeLabel])"
+                    disabled="@_busy">
+                <HackerIcon Library="IconLibrary.Lucide" Name="@(drive.IsReady ? "hard-drive" : "unplug")" Size="16" />
+                <span>@drive.VolumeLabel</span>
+            </button>
+            <button class="network-eject" @onclick="() => UnmountAsync(drive)" title="@L["Network.Disconnect", drive.VolumeLabel]"
+                    aria-label="@L["Network.Disconnect", drive.VolumeLabel]" disabled="@_busy">
+                <HackerIcon Library="IconLibrary.Lucide" Name="circle-x" Size="14" />
+            </button>
+        </div>
+    }
+    @if (_supported)
+    {
+        <button class="sidebar-entry network-connect" @onclick="MountAsync" title="@L["Network.ConnectTooltip"]" disabled="@_busy">
+            <HackerIcon Library="IconLibrary.Lucide" Name="folder-plus" Size="16" /> <span>@L["Network.Connect"]</span>
+        </button>
+    }
+}

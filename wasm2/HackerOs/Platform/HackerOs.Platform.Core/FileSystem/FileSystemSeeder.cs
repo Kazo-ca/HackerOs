@@ -49,6 +49,8 @@ public sealed class FileSystemSeeder(
         await EnsureDirectoryAsync("/var/log/apps", 0x01ED, system, cancellationToken);
         await EnsureMountPointAsync("/proc", 0x016D, system, cancellationToken);
         await EnsureMountPointAsync("/dev", 0x01ED, system, cancellationToken);
+        // ADR 0181: network drives (folders of the host computer) are mounted in /mnt/<name>.
+        await EnsureMountPointAsync("/mnt", 0x01ED, system, cancellationToken);
 
         // ADR 0044: OS settings (system layer) and OS state such as migration markers.
         await EnsureDirectoryAsync("/etc/hackeros", 0x01ED, system, cancellationToken);

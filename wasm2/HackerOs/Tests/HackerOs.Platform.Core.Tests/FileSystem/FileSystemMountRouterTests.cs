@@ -66,6 +66,43 @@ public sealed class FileSystemMountRouterTests
         ]));
     }
 
+    [Fact]
+    public void Dynamic_mount_is_resolved_then_removed_and_raises_changes()
+    {
+        StubProvider root = new("root");
+        StubProvider drive = new("hostfs:/mnt/projects");
+        FileSystemMountRouter router = new(root);
+        int changes = 0;
+        router.MountsChanged += () => changes++;
+
+        router.Mount(new FileSystemMount(VirtualPath.Parse("/mnt/projects"), drive));
+
+        Assert.Same(drive, router.Resolve(VirtualPath.Parse("/mnt/projects/notes.txt")).Mount.Provider);
+        Assert.True(router.Unmount(VirtualPath.Parse("/mnt/projects")));
+        Assert.Same(root, router.Resolve(VirtualPath.Parse("/mnt/projects/notes.txt")).Mount.Provider);
+        Assert.False(router.Unmount(VirtualPath.Parse("/mnt/projects")));
+        Assert.Equal(2, changes);
+    }
+
+    [Fact]
+    public void Dynamic_mount_refuses_taken_nested_and_containing_paths()
+    {
+        StubProvider root = new("root");
+        FileSystemMountRouter router = new(root,
+        [
+            new FileSystemMount(VirtualPath.Parse("/proc"), new StubProvider("proc"))
+        ]);
+        router.Mount(new FileSystemMount(VirtualPath.Parse("/mnt/a"), new StubProvider("a")));
+
+        Assert.Throws<InvalidOperationException>(() =>
+            router.Mount(new FileSystemMount(VirtualPath.Parse("/mnt/a"), new StubProvider("again"))));
+        Assert.Throws<InvalidOperationException>(() =>
+            router.Mount(new FileSystemMount(VirtualPath.Parse("/proc/drive"), new StubProvider("inside"))));
+        Assert.Throws<InvalidOperationException>(() =>
+            router.Mount(new FileSystemMount(VirtualPath.Parse("/mnt"), new StubProvider("around"))));
+        Assert.Throws<InvalidOperationException>(() => router.Unmount(VirtualPath.Parse("/proc")));
+    }
+
     private sealed class StubProvider(string providerId) : IFileSystemProvider
     {
         public string ProviderId { get; } = providerId;

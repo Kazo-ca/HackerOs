@@ -1,0 +1,5 @@
+{
+  "name": "mount",
+  "description": "Monte un dossier de l'ordinateur comme lecteur réseau",
+  "terminalUsage": "mount [-l] | mount -t hostfs [/mnt/nom] | mount -o remount /mnt/nom"
+}

@@ -505,4 +505,25 @@
   <data name="Mobile.Close" xml:space="preserve">
     <value>Fermer</value>
   </data>
+  <data name="Network.Heading" xml:space="preserve">
+    <value>Lecteurs réseau</value>
+  </data>
+  <data name="Network.Connect" xml:space="preserve">
+    <value>Connecter un lecteur réseau…</value>
+  </data>
+  <data name="Network.ConnectTooltip" xml:space="preserve">
+    <value>Monter un dossier de cet ordinateur comme lecteur réseau</value>
+  </data>
+  <data name="Network.Reconnect" xml:space="preserve">
+    <value>{0} : cliquer pour reconnecter (le navigateur redemande sa permission)</value>
+  </data>
+  <data name="Network.Disconnect" xml:space="preserve">
+    <value>Déconnecter {0}</value>
+  </data>
+  <data name="Network.PermissionRefused" xml:space="preserve">
+    <value>{0} : le navigateur a refusé l'accès au dossier</value>
+  </data>
+  <data name="Network.Error" xml:space="preserve">
+    <value>Lecteur réseau : {0}</value>
+  </data>
 </root>

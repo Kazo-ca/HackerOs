@@ -811,6 +811,24 @@ internal sealed class RemoteProcessSession
                 var drives = await c.Drives.GetDrivesAsync(cancellationToken).ConfigureAwait(false);
                 return writer => WireCodec.WriteDrives(writer, drives);
             }
+            case RemoteOps.DriveHostSupported:
+            {
+                bool supported = await c.Drives.IsHostFolderSupportedAsync(cancellationToken).ConfigureAwait(false);
+                return writer => writer.WriteBoolean("s", supported);
+            }
+            case RemoteOps.DriveMount:
+            {
+                HackerOs.AppSdk.IO.HackDriveSnapshot? drive = await c.Drives.MountHostFolderAsync(a.GetOptionalString("p"), cancellationToken).ConfigureAwait(false);
+                return writer => WireCodec.WriteDrive(writer, drive);
+            }
+            case RemoteOps.DriveReconnect:
+            {
+                bool ready = await c.Drives.ReconnectAsync(a.GetString("p"), cancellationToken).ConfigureAwait(false);
+                return writer => writer.WriteBoolean("s", ready);
+            }
+            case RemoteOps.DriveUnmount:
+                await c.Drives.UnmountAsync(a.GetString("p"), cancellationToken).ConfigureAwait(false);
+                return static _ => { };
             case RemoteOps.CrossOriginIsolation:
             {
                 HackCrossOriginIsolationStatus isolation = await c.CrossOriginIsolation.GetStatusAsync(cancellationToken).ConfigureAwait(false);

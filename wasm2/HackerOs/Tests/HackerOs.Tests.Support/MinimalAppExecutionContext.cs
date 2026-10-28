@@ -34,7 +34,8 @@ public sealed class MinimalAppExecutionContext(
     ProcessId? processId = null,
     HackerOs.AppSdk.Apps.IAppCatalogGateway? catalog = null,
     HackerOs.AppSdk.Settings.IAppSystemSettingsGateway? systemSettings = null,
-    HackerOs.AppSdk.Administration.IAppScreensGateway? screens = null) : IAppExecutionContext
+    HackerOs.AppSdk.Administration.IAppScreensGateway? screens = null,
+    HackerOs.AppSdk.IO.IAppDriveGateway? drives = null) : IAppExecutionContext
 {
     public AppManifest Manifest { get; } = manifest;
     public Guid InstanceId { get; } = Guid.NewGuid();
@@ -72,6 +73,8 @@ public sealed class MinimalAppExecutionContext(
     // Without screens, the interface's own default applies (a host without secondary screens).
     HackerOs.AppSdk.Administration.IAppScreensGateway IAppExecutionContext.Screens =>
         screens ?? UnsupportedAdministrationGateways.Screens;
+
+    public HackerOs.AppSdk.IO.IAppDriveGateway Drives => drives ?? throw Unsupported(nameof(Drives));
 
     private static NotSupportedException Unsupported(string gatewayName) =>
         new($"'{gatewayName}' was not provided to this test's MinimalAppExecutionContext.");

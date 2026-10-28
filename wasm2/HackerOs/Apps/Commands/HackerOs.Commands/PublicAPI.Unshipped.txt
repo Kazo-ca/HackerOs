@@ -1,1 +1,31 @@
 #nullable enable
+HackerOs.Commands.Mount.MountApp
+HackerOs.Commands.Mount.MountApp.MountApp() -> void
+HackerOs.Commands.Mount.MountCommand
+HackerOs.Commands.Mount.MountCommand.MountCommand(HackerOs.App.Abstractions.AppManifest! manifest) -> void
+HackerOs.Commands.Umount.UmountApp
+HackerOs.Commands.Umount.UmountApp.UmountApp() -> void
+HackerOs.Commands.Umount.UmountCommand
+HackerOs.Commands.Umount.UmountCommand.UmountCommand(HackerOs.App.Abstractions.AppManifest! manifest) -> void
+override HackerOs.Commands.Mount.MountApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override HackerOs.Commands.Mount.MountApp.Description.get -> string!
+override HackerOs.Commands.Mount.MountApp.EntryPoint.get -> System.Type!
+override HackerOs.Commands.Mount.MountApp.Id.get -> string!
+override HackerOs.Commands.Mount.MountApp.Kind.get -> HackerOs.App.Abstractions.AppKind
+override HackerOs.Commands.Mount.MountApp.LaunchVisibility.get -> HackerOs.App.Abstractions.AppLaunchVisibility
+override HackerOs.Commands.Mount.MountApp.Name.get -> string!
+override HackerOs.Commands.Mount.MountApp.PublisherId.get -> string!
+override HackerOs.Commands.Mount.MountApp.Resources.get -> HackerOs.App.Abstractions.AppResourceProfileManifest!
+override HackerOs.Commands.Mount.MountApp.Terminal.get -> HackerOs.App.Abstractions.TerminalCommand?
+override HackerOs.Commands.Mount.MountCommand.ExecuteAsync(HackerOs.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override HackerOs.Commands.Umount.UmountApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override HackerOs.Commands.Umount.UmountApp.Description.get -> string!
+override HackerOs.Commands.Umount.UmountApp.EntryPoint.get -> System.Type!
+override HackerOs.Commands.Umount.UmountApp.Id.get -> string!
+override HackerOs.Commands.Umount.UmountApp.Kind.get -> HackerOs.App.Abstractions.AppKind
+override HackerOs.Commands.Umount.UmountApp.LaunchVisibility.get -> HackerOs.App.Abstractions.AppLaunchVisibility
+override HackerOs.Commands.Umount.UmountApp.Name.get -> string!
+override HackerOs.Commands.Umount.UmountApp.PublisherId.get -> string!
+override HackerOs.Commands.Umount.UmountApp.Resources.get -> HackerOs.App.Abstractions.AppResourceProfileManifest!
+override HackerOs.Commands.Umount.UmountApp.Terminal.get -> HackerOs.App.Abstractions.TerminalCommand?
+override HackerOs.Commands.Umount.UmountCommand.ExecuteAsync(HackerOs.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
