@@ -26,8 +26,8 @@ the content of a display surface ([`detached-display-windows.md`](detached-displ
 | `WindowPortal` (public, used by `DesktopArea`) | Wraps each `WindowHost`. It leaves an empty anchor in the window list and moves the window's element into the target layer, or back under the anchor. |
 | `WindowPortal.js` | Keeps each element by a key, not by `ElementReference`: Blazor finds a referenced element with a query on the document, which no longer finds an element left in a layer that was just removed. |
 
-`DesktopShell` creates a `WindowLayers` and passes it to its `DesktopArea`. Work item 4 will
-add the area of each secondary screen, in its surface.
+`DesktopShell` creates a `WindowLayers` and passes it to its `DesktopArea` and to the area of
+each secondary screen, rendered in its surface (work item 4, [`secondary-screen-desktop.md`](secondary-screen-desktop.md)).
 
 ## 3. Rules
 

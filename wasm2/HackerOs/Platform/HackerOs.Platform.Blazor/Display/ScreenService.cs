@@ -92,8 +92,8 @@ public sealed class SecondaryScreen
 /// The screen service (ADR 0178 §4, ADR 0180): opens each secondary screen as a display surface,
 /// on a free monitor when the host has the Window Management API (Chrome, Edge) and the user allows
 /// it, or where the user put it last time otherwise. It registers each screen in
-/// <see cref="WindowRuntime"/> (<see cref="AddDisplayCommand"/>, <see cref="ChangeViewportCommand"/>,
-/// <see cref="RemoveDisplayCommand"/>), remembers the screens of the session in
+/// <see cref="WindowRuntime"/> (<see cref="AddDisplayCommand"/>, <see cref="RemoveDisplayCommand"/>;
+/// the screen's desktop then sends its <see cref="ChangeViewportCommand"/>), remembers the screens of the session in
 /// <c>~/.config/hackeros/screens.config</c> to offer « Restaurer les écrans » after a reload,
 /// follows unplugged monitors, and tells the screens when the main tab is hidden.
 /// </summary>
@@ -464,7 +464,8 @@ public sealed class ScreenService : IAsyncDisposable
         return new ScreenOpenResult(ScreenOpenStatus.Opened, screen);
     }
 
-    // Until each screen has its own desktop (chantier 4), the screen's work area is its window.
+    // The screen's first work area is its window; its desktop then measures it (ADR 0178 §1), so
+    // that the screen's own bars stay outside it.
     private static WindowBounds WorkAreaOf(int width, int height) => new(0, 0, Math.Max(1, width), Math.Max(1, height));
 
     private void OnSurfaceChanged(IDisplaySurface surface)
@@ -479,9 +480,9 @@ public sealed class ScreenService : IAsyncDisposable
         {
             if (surface.Width != screen.Width || surface.Height != screen.Height)
             {
+                // The work area follows the screen's desktop (DesktopArea), not the window.
                 screen.Width = surface.Width;
                 screen.Height = surface.Height;
-                _runtime.Apply(new ChangeViewportCommand(WorkAreaOf(screen.Width, screen.Height), screen.Id));
                 Changed?.Invoke();
             }
 

@@ -120,6 +120,7 @@ Plan: [`multi-monitor-plan.md`](../plans/multi-monitor-plan.md).
 
 ## Tasks
 
+- [x] One overlay layer per screen and the veil of the secure dialogs (work item 4, [`secondary-screen-desktop.md`](../secondary-screen-desktop.md)).
 - [ ] Per-screen taskbars and the `primary-taskbar` setting (work item 5).
 - [ ] Window menu through the OS context menu, Maximize button menu, "Other
   screen" submenu, veil (work item 6).

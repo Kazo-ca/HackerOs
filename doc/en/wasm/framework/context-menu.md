@@ -226,7 +226,8 @@ opens therefore keeps its focus). Reduced motion: no animation.
 ### Known limits
 
 - A window detached into another browser window (ADR 0078) keeps the
-  browser menu: the OS menu is only drawn in the desktop document.
+  browser menu: the OS menu is only drawn in the desktop document and in the
+  secondary screens (ADR 0179 §2, `dev/secondary-screen-desktop.md`).
 - The order of markup entries is that of their first render (see
   `IsVisible` above).
 

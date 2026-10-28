@@ -722,4 +722,10 @@
   <data name="Screens.Restore.Dismiss" xml:space="preserve">
     <value>Ignorer</value>
   </data>
+  <data name="Screens.SecureDialog.Message" xml:space="preserve">
+    <value>Une demande de sécurité attend sur l'écran 1. Répondez-y là pour continuer.</value>
+  </data>
+  <data name="Screens.SecureDialog.Action" xml:space="preserve">
+    <value>Aller à l'écran 1</value>
+  </data>
 </root>

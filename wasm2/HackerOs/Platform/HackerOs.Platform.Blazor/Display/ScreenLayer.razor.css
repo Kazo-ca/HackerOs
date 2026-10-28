@@ -106,3 +106,44 @@
     background: var(--hos-accent, #4fd1c5);
     color: var(--hos-text-on-accent, #0b0f14);
 }
+
+/* ADR 0179 §2: the overlays moved to this screen place themselves in its viewport. */
+.secondary-screen-overlays {
+    display: contents;
+}
+
+/* ADR 0179 §2: a secure dialog waits on screen 1; this screen sends the user there. */
+.secondary-screen-secure-veil {
+    position: absolute;
+    inset: 0;
+    z-index: 9500;
+    display: grid;
+    place-items: center;
+    background: rgb(0 0 0 / 55%);
+}
+
+.secondary-screen-secure-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+    max-width: min(28rem, calc(100% - 2rem));
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--hos-warning, #f2c66d);
+    border-radius: var(--hos-radius-md, 0.45rem);
+    background: var(--hos-bg-elevated, #1b252a);
+    text-align: center;
+}
+
+.secondary-screen-secure-card p {
+    margin: 0;
+}
+
+.secondary-screen-secure-action {
+    padding: 0.35rem 0.8rem;
+    border: 1px solid var(--hos-accent, #4fd1c5);
+    border-radius: var(--hos-radius-sm, 0.3rem);
+    background: var(--hos-accent, #4fd1c5);
+    color: var(--hos-text-on-accent, #0b0f14);
+    cursor: pointer;
+}

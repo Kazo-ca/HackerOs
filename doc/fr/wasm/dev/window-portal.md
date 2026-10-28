@@ -28,8 +28,8 @@ d'affichage ([`detached-display-windows.md`](detached-display-windows.md)).
 | `WindowPortal` (public, utilisé par `DesktopArea`) | Entoure chaque `WindowHost`. Il laisse une ancre vide dans la liste des fenêtres et déplace l'élément de la fenêtre dans la couche cible, ou le remet sous l'ancre. |
 | `WindowPortal.js` | Garde chaque élément par une clé, pas par `ElementReference` : Blazor retrouve un élément référencé par une recherche dans le document, qui ne trouve plus un élément resté dans une couche qui vient d'être retirée. |
 
-`DesktopShell` crée un `WindowLayers` et le passe à son `DesktopArea`. Le chantier 4
-ajoutera la zone de chaque écran secondaire, dans sa surface.
+`DesktopShell` crée un `WindowLayers` et le passe à son `DesktopArea` et à la zone de chaque
+écran secondaire, rendue dans sa surface (chantier 4, [`secondary-screen-desktop.md`](secondary-screen-desktop.md)).
 
 ## 3. Règles
 

@@ -107,6 +107,7 @@ same conditions.
 | ASP.Hack `View("texte")` looks for a view named "texte" | Same overload resolution as ASP.NET Core | Pass a model class or `View(viewName: null, model: x)` ([`../framework/asp-hack-razor-views.md`](../framework/asp-hack-razor-views.md)). |
 | `curl -d` to an ASP.Hack form answers 400 | Anti-forgery: each `curl` has its own cookie jar | Expected behavior. |
 | xterm.js terminals erase the last cell or have a forced black background | `ESC[K` after a full line erases the last cell; `xterm.css` paints `.xterm-viewport` black | Handled in the C# line discipline and overridden in isolated CSS ([`terminal-emulator.md`](terminal-emulator.md)). |
+| An element moved into a secondary screen no longer gets `ResizeObserver` callbacks or keys (`window.addEventListener`) | An observer only follows its own window's layout, and the surface registry only copies listeners put on `document` | Create the observer with `element.ownerDocument.defaultView.ResizeObserver`; listen on `document`, or on each surface's window with the registry's `watch(…)` ([`secondary-screen-desktop.md`](secondary-screen-desktop.md)). |
 
 ## 6. IndexedDB and files
 

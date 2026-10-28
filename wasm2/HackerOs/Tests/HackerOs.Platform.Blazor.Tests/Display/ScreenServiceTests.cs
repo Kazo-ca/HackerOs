@@ -44,14 +44,16 @@ public sealed class ScreenServiceTests
     }
 
     [Fact]
-    public async Task A_resized_window_changes_the_work_area_of_its_screen_only()
+    public async Task A_resized_window_leaves_the_work_area_to_the_screen_desktop()
     {
         Harness harness = new();
         SecondaryScreen screen = (await harness.Service.OpenScreenAsync()).Screen!;
+        WindowBounds opened = harness.Runtime.GetWorkArea(screen.Id);
 
         harness.SurfaceService.OnSurfaceEvent(screen.Surface.Id, "resize", 800, 600);
 
-        Assert.Equal(new WindowBounds(0, 0, 800, 600), harness.Runtime.GetWorkArea(screen.Id));
+        // ADR 0178 §1: the screen's DesktopArea measures its work area, without the screen's bars.
+        Assert.Equal(opened, harness.Runtime.GetWorkArea(screen.Id));
         Assert.Equal(new WindowBounds(0, 0, 1280, 720), harness.Runtime.WorkArea);
     }
 

@@ -80,13 +80,15 @@ La place de l'écran reste dans sa ligne numérotée.
 
 ## 5. Dans la fenêtre d'un écran
 
-- **Bureau** : jusqu'au chantier 4, le numéro de l'écran sur la couleur du bureau.
-  `ScreenLayer.ScreenContent` reçoit le bureau de l'écran au chantier 4.
+- **Bureau** : `ScreenLayer.ScreenContent` reçoit le bureau de l'écran (chantier 4,
+  [`secondary-screen-desktop.md`](secondary-screen-desktop.md)) ; sans lui, le numéro de l'écran
+  sur la couleur du bureau.
 - **Plein écran** : bouton `⤢` en haut à droite, `⤡` pour en sortir (ou `Échap`).
 - **Bandeau** : « L'onglet principal de HackerOS est caché… » tant que l'onglet
   principal est caché (`visibilitychange`).
-- **Zone de travail** : la taille intérieure de la fenêtre (le chantier 4 retire la
-  barre des tâches de l'écran).
+- **Zone de travail** : la taille intérieure de la fenêtre à l'ouverture, puis celle du
+  bureau de l'écran, qu'il mesure lui-même (chantier 4) ; le service ne la change plus quand
+  la fenêtre change de taille.
 
 ## 6. Tests
 
