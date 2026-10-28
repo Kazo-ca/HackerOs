@@ -5,6 +5,7 @@ using HackerOs.Infrastructure.Browser.Isolation;
 using HackerOs.Infrastructure.Browser.Workers;
 using HackerOs.Platform.Blazor.Hosting;
 using HackerOs.Platform.Blazor.LazyLoading;
+using HackerOs.Platform.Core;
 using HackerOs.Platform.Core.Apps;
 using HackerOs.Platform.Core.Isolation;
 using HackerOs.Platform.Core.ServerConnection;
@@ -16,6 +17,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace HackerOs.Ecosystem;
 
@@ -77,7 +79,13 @@ public static partial class HackerOsBrowserHostExtensions
         }
 
         builder.Services.AddSingleton<IEcosystemHostEnvironment, WebAssemblyEcosystemHostEnvironment>();
-        builder.Services.AddSingleton<IBuildKnownAssemblyTransport, WebAssemblyLazyAssemblyTransport>();
+        // ADR 0182 §5: the apps installed from packages join the catalog once, before the OS starts
+        // (Program.cs calls LoadInstalledAppsAsync); everything below reads the final catalog.
+        InstalledAppsBoot installedApps = new(apps);
+        builder.Services.AddSingleton(installedApps);
+        builder.Services.AddSingleton<WebAssemblyLazyAssemblyTransport>();
+        builder.Services.AddSingleton<IBuildKnownAssemblyTransport>(provider => new InstalledAppAssemblyTransport(
+            provider.GetRequiredService<WebAssemblyLazyAssemblyTransport>(), installedApps));
         // ADR 0162: an app asset that fails to load after a rebuild or a deployment means the OS
         // was updated under the page; the host then offers a restart instead of a dead launch.
         builder.Services.AddSingleton<IHostBuildProbe, BrowserHostBuildProbe>();
@@ -91,14 +99,15 @@ public static partial class HackerOsBrowserHostExtensions
             HackerOsSdk.Version,
             provider.GetRequiredService<HostBuildUpdateMonitor>()));
         builder.Services.AddSingleton(provider => new BuildKnownAssemblyLoaderRegistry(
-            apps.LazyAssemblyNames,
+            installedApps.Current.LazyAssemblyNames,
             provider.GetRequiredService<IBuildKnownAssemblyTransport>(),
             provider.GetRequiredService<HostBuildUpdateMonitor>()));
         builder.Services.AddSingleton(provider => new BuildKnownLazyAppDescriptorRegistry(
-            apps.Catalog,
+            installedApps.Current.Catalog,
             provider.GetRequiredService<BuildKnownAssemblyLoaderRegistry>()));
         // ADR 0098 §5: app assets are the static web assets of their package, checked at first read.
-        builder.Services.AddSingleton<IAppAssetSource>(new StaticWebAssetAppAssetSource(new Uri(builder.HostEnvironment.BaseAddress)));
+        builder.Services.AddSingleton<IAppAssetSource>(new InstalledAppAssetSource(
+            new StaticWebAssetAppAssetSource(new Uri(builder.HostEnvironment.BaseAddress)), installedApps));
         // ADR 0134, ADR 0137: the OS asks its own origin whether a HackerOS server served it.
         Uri ownOrigin = new(builder.HostEnvironment.BaseAddress);
         builder.Services.AddScoped<IHostInfoClient>(provider => new HttpHostInfoClient(provider.GetRequiredService<HttpClient>(), ownOrigin));
@@ -112,6 +121,7 @@ public static partial class HackerOsBrowserHostExtensions
             apps.Catalog,
             provider => provider.GetRequiredService<BuildKnownLazyAppDescriptorRegistry>().Descriptors,
             provider => provider.GetRequiredService<BuildKnownLazyAppDescriptorRegistry>());
+        builder.Services.Replace(ServiceDescriptor.Singleton<AppCatalog>(_ => installedApps.Current.Catalog));
 
         // ADR 0070/0071: commands and services run in Web Workers; the pool warms up once the desktop
         // is shown. The JavaScript ships in HackerOs.Infrastructure.Browser's wwwroot, imported by

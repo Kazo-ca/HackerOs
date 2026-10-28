@@ -75,6 +75,32 @@ HackerOs.Platform.Core.Apps.Packages.IRuntimeApiSurface.HasAssembly(string! asse
 HackerOs.Platform.Core.Apps.Packages.IRuntimeApiSurface.HasField(string! assemblyName, string! typeName, string! fieldName) -> bool
 HackerOs.Platform.Core.Apps.Packages.IRuntimeApiSurface.HasMethod(string! assemblyName, string! typeName, string! methodName, int genericArity, int parameterCount) -> bool
 HackerOs.Platform.Core.Apps.Packages.IRuntimeApiSurface.HasType(string! assemblyName, string! typeName) -> bool
+HackerOs.Platform.Core.Apps.Packages.InstalledApp
+HackerOs.Platform.Core.Apps.Packages.InstalledApp.<Clone>$() -> HackerOs.Platform.Core.Apps.Packages.InstalledApp!
+HackerOs.Platform.Core.Apps.Packages.InstalledApp.AppId.get -> string!
+HackerOs.Platform.Core.Apps.Packages.InstalledApp.AssemblyNames.get -> System.Collections.Generic.IReadOnlySet<string!>!
+HackerOs.Platform.Core.Apps.Packages.InstalledApp.Deconstruct(out HackerOs.Platform.Core.Apps.Packages.AppPackageSource! Source, out HackerOs.App.Abstractions.AppManifest! Manifest) -> void
+HackerOs.Platform.Core.Apps.Packages.InstalledApp.Directory.get -> HackerOs.App.Abstractions.VirtualPath
+HackerOs.Platform.Core.Apps.Packages.InstalledApp.Equals(HackerOs.Platform.Core.Apps.Packages.InstalledApp? other) -> bool
+HackerOs.Platform.Core.Apps.Packages.InstalledApp.GetAssemblyPath(string! fileName) -> HackerOs.App.Abstractions.VirtualPath
+HackerOs.Platform.Core.Apps.Packages.InstalledApp.GetAssetPath(string! assetPath) -> HackerOs.App.Abstractions.VirtualPath
+HackerOs.Platform.Core.Apps.Packages.InstalledApp.InstalledApp(HackerOs.Platform.Core.Apps.Packages.AppPackageSource! Source, HackerOs.App.Abstractions.AppManifest! Manifest) -> void
+HackerOs.Platform.Core.Apps.Packages.InstalledApp.Manifest.get -> HackerOs.App.Abstractions.AppManifest!
+HackerOs.Platform.Core.Apps.Packages.InstalledApp.Manifest.init -> void
+HackerOs.Platform.Core.Apps.Packages.InstalledApp.Source.get -> HackerOs.Platform.Core.Apps.Packages.AppPackageSource!
+HackerOs.Platform.Core.Apps.Packages.InstalledApp.Source.init -> void
+HackerOs.Platform.Core.Apps.Packages.InstalledApp.Version.get -> HackerOs.App.Abstractions.SemanticVersion
+HackerOs.Platform.Core.Apps.Packages.InstalledAppFileReader
+HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage
+HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage.<Clone>$() -> HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage!
+HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage.Apps.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.Apps.Packages.InstalledApp!>!
+HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage.Apps.init -> void
+HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage.Deconstruct(out System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.Apps.Packages.InstalledApp!>! Apps, out System.Collections.Generic.IReadOnlyList<string!>! Warnings) -> void
+HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage.Equals(HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage? other) -> bool
+HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage.InstalledAppsImage(System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.Apps.Packages.InstalledApp!>! Apps, System.Collections.Generic.IReadOnlyList<string!>! Warnings) -> void
+HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage.Warnings.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage.Warnings.init -> void
+HackerOs.Platform.Core.Apps.Packages.InstalledAppsLayout
 HackerOs.Platform.Core.Apps.Packages.LoadedRuntimeApiSurface
 HackerOs.Platform.Core.Apps.Packages.LoadedRuntimeApiSurface.HasAssembly(string! assemblyName) -> bool
 HackerOs.Platform.Core.Apps.Packages.LoadedRuntimeApiSurface.HasField(string! assemblyName, string! typeName, string! fieldName) -> bool
@@ -109,6 +135,7 @@ const HackerOs.Platform.Core.Apps.Packages.AppSourcesConfigDocument.FileName = "
 const HackerOs.Platform.Core.Apps.Packages.AppSourcesConfigDocument.GitHubHostKey = "github" -> string!
 const HackerOs.Platform.Core.Apps.Packages.AppSourcesConfigDocument.HostsSection = "hosts" -> string!
 const HackerOs.Platform.Core.Apps.Packages.AppSourcesConfigDocument.TrustedSection = "trusted" -> string!
+const HackerOs.Platform.Core.Apps.Packages.InstalledAppsLayout.Root = "/usr/lib/hackeros/apps" -> string!
 override HackerOs.Platform.Core.Apps.InstalledAppsReadResult.Equals(object? obj) -> bool
 override HackerOs.Platform.Core.Apps.InstalledAppsReadResult.GetHashCode() -> int
 override HackerOs.Platform.Core.Apps.InstalledAppsReadResult.ToString() -> string!
@@ -124,6 +151,12 @@ override HackerOs.Platform.Core.Apps.Packages.AppPackageSource.ToString() -> str
 override HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.Equals(object? obj) -> bool
 override HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.GetHashCode() -> int
 override HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.ToString() -> string!
+override HackerOs.Platform.Core.Apps.Packages.InstalledApp.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.Apps.Packages.InstalledApp.GetHashCode() -> int
+override HackerOs.Platform.Core.Apps.Packages.InstalledApp.ToString() -> string!
+override HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage.GetHashCode() -> int
+override HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage.ToString() -> string!
 override HackerOs.Platform.Core.Apps.Packages.MissingRuntimeApi.Equals(object? obj) -> bool
 override HackerOs.Platform.Core.Apps.Packages.MissingRuntimeApi.GetHashCode() -> int
 override HackerOs.Platform.Core.Apps.Packages.MissingRuntimeApi.ToString() -> string!
@@ -150,6 +183,16 @@ static HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.operator !=(HackerO
 static HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.operator ==(HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig? left, HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig? right) -> bool
 static HackerOs.Platform.Core.Apps.Packages.AppSourcesConfigDocument.MachinePath.get -> HackerOs.App.Abstractions.VirtualPath
 static HackerOs.Platform.Core.Apps.Packages.AppSourcesConfigDocument.Read(string? content) -> HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig!
+static HackerOs.Platform.Core.Apps.Packages.InstalledApp.operator !=(HackerOs.Platform.Core.Apps.Packages.InstalledApp? left, HackerOs.Platform.Core.Apps.Packages.InstalledApp? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.InstalledApp.operator ==(HackerOs.Platform.Core.Apps.Packages.InstalledApp? left, HackerOs.Platform.Core.Apps.Packages.InstalledApp? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage.Empty.get -> HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage!
+static HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage.LoadAsync(HackerOs.Platform.Core.Apps.Packages.InstalledAppFileReader! read, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage!>!
+static HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage.operator !=(HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage? left, HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage.operator ==(HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage? left, HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.InstalledAppsLayout.CreateReader(HackerOs.Simulation.Abstractions.FileSystem.IFileSystemProvider! provider) -> HackerOs.Platform.Core.Apps.Packages.InstalledAppFileReader!
+static HackerOs.Platform.Core.Apps.Packages.InstalledAppsLayout.GetAppDirectory(string! appId) -> HackerOs.App.Abstractions.VirtualPath
+static HackerOs.Platform.Core.Apps.Packages.InstalledAppsLayout.GetDirectory(string! appId, HackerOs.App.Abstractions.SemanticVersion version) -> HackerOs.App.Abstractions.VirtualPath
 static HackerOs.Platform.Core.Apps.Packages.LoadedRuntimeApiSurface.Instance.get -> HackerOs.Platform.Core.Apps.Packages.LoadedRuntimeApiSurface!
 static HackerOs.Platform.Core.Apps.Packages.MissingRuntimeApi.operator !=(HackerOs.Platform.Core.Apps.Packages.MissingRuntimeApi? left, HackerOs.Platform.Core.Apps.Packages.MissingRuntimeApi? right) -> bool
 static HackerOs.Platform.Core.Apps.Packages.MissingRuntimeApi.operator ==(HackerOs.Platform.Core.Apps.Packages.MissingRuntimeApi? left, HackerOs.Platform.Core.Apps.Packages.MissingRuntimeApi? right) -> bool
+virtual HackerOs.Platform.Core.Apps.Packages.InstalledAppFileReader.Invoke(HackerOs.App.Abstractions.VirtualPath path, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<byte[]?>
