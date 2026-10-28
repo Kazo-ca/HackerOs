@@ -41,7 +41,8 @@ chantiers : [`multi-monitor-plan.md`](../plans/multi-monitor-plan.md).
 
 1. **Un écran = une surface.** L'écran 1 est l'onglet principal. Chaque écran
    de plus est une surface ouverte par le service d'écrans, qui y rend un
-   `DesktopArea` par le portail. Il n'y a qu'un mode : le **bureau étendu**. Le
+   `DesktopArea` par le portail, avec le fond d'écran seulement : les icônes de
+   `~/Desktop` restent sur l'écran 1 (réponse de Benoit du 2026-10-28). Il n'y a qu'un mode : le **bureau étendu**. Le
    miroir est impossible (un élément DOM ne vit qu'à un endroit) et n'est pas
    proposé.
 2. **Écrans dans le gestionnaire de fenêtres** (`HackerOs.Windowing.Abstractions`,

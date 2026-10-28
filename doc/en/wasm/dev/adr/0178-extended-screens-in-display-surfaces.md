@@ -38,7 +38,8 @@ merged. The interface (taskbars, menus, veil, settings) is in
 
 1. **One screen = one surface.** Screen 1 is the main tab. Every additional
    screen is a surface opened by the screen service, which renders a
-   `DesktopArea` in it through the portal. There is only one mode: the
+   `DesktopArea` in it through the portal, with the wallpaper only: the
+   `~/Desktop` icons stay on screen 1 (Benoit's answer of 2026-10-28). There is only one mode: the
    **extended desktop**. Mirroring is impossible (a DOM element lives in one
    place only) and is not offered.
 2. **Screens in the window manager** (`HackerOs.Windowing.Abstractions`, public

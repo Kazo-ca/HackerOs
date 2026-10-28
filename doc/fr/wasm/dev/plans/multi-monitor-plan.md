@@ -48,7 +48,7 @@ revient par une PR vers `multi-monitor/base`.
 | 1 | `multi-monitor/1-window-runtime-displays` | `DisplayId`, zone de travail par écran, `AddDisplayCommand`, `RemoveDisplayCommand`, `MoveWindowToDisplayCommand` et leurs événements ; changement d'écran dans chaque état ; modale qui suit son propriétaire ; écran retiré. API publique en `Unshipped`. Tests unitaires. Aucun changement visible. | 0, ADR 0177 |
 | 2 | `multi-monitor/2-window-portal` | Fenêtres rendues une fois et déplacées par portail dans la couche de fenêtres de leur écran ; `DesktopArea` filtré par écran. Tests navigateur (aucun composant recréé). | 1 |
 | 3 | `multi-monitor/3-screen-service` | Service d'écrans : permission `window-management`, `getScreenDetails`, une surface par écran sur un moniteur libre, `screenschange`, repli avec position retenue, plein écran par bouton, « Restaurer les écrans », bandeau « onglet principal caché ». | 1 |
-| 4 | `multi-monitor/4-secondary-desktop` | `DesktopArea` dans chaque écran, couche d'overlays par écran (menu de fenêtre, menu contextuel, sélecteur, déplacement au clavier), dialogues sécurisés renvoyés vers l'écran 1. Fond et icônes selon la réponse à Q2 (§6). | 2, 3 |
+| 4 | `multi-monitor/4-secondary-desktop` | `DesktopArea` dans chaque écran, couche d'overlays par écran (menu de fenêtre, menu contextuel, sélecteur, déplacement au clavier), dialogues sécurisés renvoyés vers l'écran 1. Fond d'écran seulement sur les écrans secondaires ; les icônes restent sur l'écran 1 (Q2). | 2, 3 |
 | 5 | `multi-monitor/5-taskbars` | Une barre des tâches par écran, filtre par écran, réglage `primary-taskbar`, menu Démarrer sur l'écran cliqué, nouvelles fenêtres sur le bon écran, notifications sur l'écran 1. | 4 |
 | 6 | `multi-monitor/6-other-screen-menus` | Menu de fenêtre par le menu contextuel de l'OS, nouveau menu du bouton Agrandir/Restaurer, sous-menu « Autre écran », Nouvel écran, voile d'identification, raccourcis `MoveToPreviousScreen` / `MoveToNextScreen`. | 4, ADR 0177 |
 | 7 | `multi-monitor/7-screen-settings` | `screens.config` (système et utilisateur), Paramètres ▸ Écrans. | 5, 6 |
@@ -79,7 +79,7 @@ peut avancer en parallèle des chantiers 5 à 7.
 | N° | Question | Choix recommandé |
 | --- | --- | --- |
 | Q1 | Une API du SDK pour les écrans (lister les écrans, écran de ma fenêtre) entre-t-elle dans cette série ? | **Répondu le 2026-10-28 : plus tard.** La série ne touche pas au SDK des apps. |
-| Q2 | Que montre le bureau d'un écran secondaire ? | Le fond d'écran seulement ; les icônes de `~/Desktop` restent sur l'écran 1, comme Windows. |
+| Q2 | Que montre le bureau d'un écran secondaire ? | **Répondu le 2026-10-28 : le fond d'écran seulement.** Les icônes de `~/Desktop` restent sur l'écran 1. |
 
 Les réponses seront reportées ici et dans les ADR.
 

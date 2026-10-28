@@ -48,7 +48,7 @@ shown, and comes back through a PR into `multi-monitor/base`.
 | 1 | `multi-monitor/1-window-runtime-displays` | `DisplayId`, work area per screen, `AddDisplayCommand`, `RemoveDisplayCommand`, `MoveWindowToDisplayCommand` and their events; changing screens in each state; modal following its owner; screen removed. Public API in `Unshipped`. Unit tests. No visible change. | 0, ADR 0177 |
 | 2 | `multi-monitor/2-window-portal` | Windows rendered once and moved through a portal into their screen's window layer; `DesktopArea` filtered by screen. Browser tests (no component recreated). | 1 |
 | 3 | `multi-monitor/3-screen-service` | Screen service: `window-management` permission, `getScreenDetails`, one surface per screen on a free monitor, `screenschange`, fallback with remembered position, full screen by button, "Restore screens", "main tab hidden" banner. | 1 |
-| 4 | `multi-monitor/4-secondary-desktop` | `DesktopArea` in each screen, overlay layer per screen (window menu, context menu, switcher, keyboard move), secure dialogs pointed to screen 1. Background and icons according to the answer to Q2 (§6). | 2, 3 |
+| 4 | `multi-monitor/4-secondary-desktop` | `DesktopArea` in each screen, overlay layer per screen (window menu, context menu, switcher, keyboard move), secure dialogs pointed to screen 1. Wallpaper only on secondary screens; icons stay on screen 1 (Q2). | 2, 3 |
 | 5 | `multi-monitor/5-taskbars` | One taskbar per screen, per-screen filter, `primary-taskbar` setting, Start menu on the clicked screen, new windows on the right screen, notifications on screen 1. | 4 |
 | 6 | `multi-monitor/6-other-screen-menus` | Window menu through the OS context menu, new Maximize/Restore button menu, "Other screen" submenu, New screen, identification veil, `MoveToPreviousScreen` / `MoveToNextScreen` shortcuts. | 4, ADR 0177 |
 | 7 | `multi-monitor/7-screen-settings` | `screens.config` (system and user), Settings ▸ Screens. | 5, 6 |
@@ -77,7 +77,7 @@ parallel with items 5 to 7.
 | No. | Question | Recommended choice |
 | --- | --- | --- |
 | Q1 | Is an SDK API for screens (list screens, my window's screen) part of this series? | **Answered on 2026-10-28: later.** The series does not touch the app SDK. |
-| Q2 | What does a secondary screen's desktop show? | The wallpaper only; the `~/Desktop` icons stay on screen 1, as in Windows. |
+| Q2 | What does a secondary screen's desktop show? | **Answered on 2026-10-28: the wallpaper only.** The `~/Desktop` icons stay on screen 1. |
 
 The answers will be copied here and into the ADRs.
 
