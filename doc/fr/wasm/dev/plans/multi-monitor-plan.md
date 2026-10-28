@@ -78,7 +78,7 @@ peut avancer en parallèle des chantiers 5 à 7.
 
 | N° | Question | Choix recommandé |
 | --- | --- | --- |
-| Q1 | Une API du SDK pour les écrans (lister les écrans, écran de ma fenêtre) entre-t-elle dans cette série ? | Plus tard : aucune app n'en a besoin pour le premier usage. |
+| Q1 | Une API du SDK pour les écrans (lister les écrans, écran de ma fenêtre) entre-t-elle dans cette série ? | **Répondu le 2026-10-28 : plus tard.** La série ne touche pas au SDK des apps. |
 | Q2 | Que montre le bureau d'un écran secondaire ? | Le fond d'écran seulement ; les icônes de `~/Desktop` restent sur l'écran 1, comme Windows. |
 
 Les réponses seront reportées ici et dans les ADR.

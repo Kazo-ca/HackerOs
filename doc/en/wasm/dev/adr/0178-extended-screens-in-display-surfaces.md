@@ -95,8 +95,8 @@ merged. The interface (taskbars, menus, veil, settings) is in
    `Ctrl+Alt+Shift+Right`. Menus are described by ADR 0179.
 7. **Out of scope**: the mobile interface (`MobileShell`) has a single screen.
    Dragging a window from one screen to another with the mouse comes in a
-   separate work item (Benoit's decision: menu and shortcut first). Plan §6 says
-   whether an SDK API for screens is part of the series.
+   separate work item (Benoit's decision: menu and shortcut first). No SDK API for
+   screens is added (Benoit's answer of 2026-10-28: later).
 
 ## Consequences
 

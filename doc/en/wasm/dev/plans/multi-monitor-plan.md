@@ -76,7 +76,7 @@ parallel with items 5 to 7.
 
 | No. | Question | Recommended choice |
 | --- | --- | --- |
-| Q1 | Is an SDK API for screens (list screens, my window's screen) part of this series? | Later: no app needs it for the first use. |
+| Q1 | Is an SDK API for screens (list screens, my window's screen) part of this series? | **Answered on 2026-10-28: later.** The series does not touch the app SDK. |
 | Q2 | What does a secondary screen's desktop show? | The wallpaper only; the `~/Desktop` icons stay on screen 1, as in Windows. |
 
 The answers will be copied here and into the ADRs.

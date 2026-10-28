@@ -99,8 +99,8 @@ chantiers : [`multi-monitor-plan.md`](../plans/multi-monitor-plan.md).
    `Ctrl+Alt+Shift+Right`. Les menus sont décrits par l'ADR 0179.
 7. **Hors périmètre** : l'interface mobile (`MobileShell`) n'a qu'un écran. Le
    glisser d'une fenêtre d'un écran à l'autre à la souris vient dans un chantier
-   à part (décision de Benoit : menu et raccourci d'abord). Le plan §6 dit si
-   une API du SDK pour les écrans entre dans la série.
+   à part (décision de Benoit : menu et raccourci d'abord). Aucune API du SDK
+   pour les écrans n'est ajoutée (réponse de Benoit du 2026-10-28 : plus tard).
 
 ## Conséquences
 
