@@ -7,9 +7,9 @@ mise en œuvre de l'[ADR 0178 §4](adr/0178-extended-screens-in-display-surfaces
 précisée par l'[ADR 0180](adr/0180-screen-service-placement-and-memory.md). Le
 service ouvre chaque écran secondaire dans une fenêtre du navigateur hôte, l'enregistre
 dans le gestionnaire de fenêtres ([`window-runtime-displays.md`](window-runtime-displays.md))
-et s'en souvient d'une session à l'autre. Les menus « Nouvel écran » (chantier 6) et
-la page Paramètres ▸ Écrans (chantier 7) s'en serviront ; ce chantier montre seulement
-l'offre « Restaurer les écrans ».
+et s'en souvient d'une session à l'autre. Les menus « Nouvel écran » (chantier 6) s'en servent ; la
+page Paramètres ▸ Écrans (chantier 7, [`screens-settings.md`](screens-settings.md)) lit et écrit
+seulement `screens.config`. Ce chantier montre l'offre « Restaurer les écrans ».
 
 ## 1. Architecture
 

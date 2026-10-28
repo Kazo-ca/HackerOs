@@ -124,4 +124,4 @@ Plan: [`multi-monitor-plan.md`](../plans/multi-monitor-plan.md).
 - [x] Per-screen taskbars and the `primary-taskbar` setting (work item 5, [`per-screen-taskbars.md`](../per-screen-taskbars.md)).
 - [x] Window menu through the OS context menu, Maximize button menu, "Other
   screen" submenu, veil (work item 6, [`other-screen-menus.md`](../other-screen-menus.md)).
-- [ ] Settings ▸ Screens and `screens.config` (work item 7).
+- [x] Settings ▸ Screens and `screens.config` (work item 7, [`screens-settings.md`](../screens-settings.md)).

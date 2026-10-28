@@ -36,7 +36,7 @@ primary-taskbar = own   ; all | own
 | `ScreensSettingsDocuments.ReadPrimaryTaskbar(snapshot)` | `own` (sans tenir compte de la casse ni des espaces) donne `Own` ; toute autre valeur, ou pas de ligne, donne `All`. |
 | `ScreensSettingsDocuments.FormatPrimaryTaskbar(mode)` | `all` ou `own`. |
 | `ScreenService.PrimaryTaskbar` | Valeur lue au démarrage, puis suivie : le service surveille le fichier (`WatchAsync`) et relit **seulement** `primary-taskbar` à chaque changement. Les écrans à restaurer ne sont lus qu'au démarrage. |
-| `ScreenService.SetPrimaryTaskbarAsync(mode)` | Change la valeur et l'écrit dans le fichier de l'utilisateur ; Paramètres ▸ Écrans (chantier 7) s'en servira. |
+| `ScreenService.SetPrimaryTaskbarAsync(mode)` | Change la valeur et l'écrit dans le fichier de l'utilisateur ; les tests s'en servent ; Paramètres ▸ Écrans écrit le fichier, que le service suit (chantier 7). |
 
 Un changement lève `ScreenService.Changed`, et `DesktopShell` redemande la liste à la barre de
 l'écran 1 : modifier le fichier au terminal suffit, sans recharger.
@@ -114,5 +114,5 @@ Le paquet `HackerOs.Taskbar.Blazor` ne change pas : le filtre vit dans l'adaptat
 - La barre d'un écran secondaire n'a pas de panneau d'horloge (notifications, calendrier) : il reste
   sur l'écran 1.
 - La barre de l'écran 1 en mode `all` ne dit pas sur quel écran est chaque fenêtre.
-- Le choix de `primary-taskbar` dans Paramètres ▸ Écrans arrive au chantier 7 ; en attendant, le
-  réglage s'écrit dans le fichier.
+- Paramètres ▸ Écrans choisit `primary-taskbar` en écrivant le fichier, que le service suit
+  (chantier 7, [`screens-settings.md`](screens-settings.md)).
