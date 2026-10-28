@@ -72,3 +72,38 @@ HackerOs.Platform.Blazor.Display.ScreenLayer.ScreenTaskbar.get -> Microsoft.AspN
 HackerOs.Platform.Blazor.Display.ScreenLayer.ScreenTaskbar.set -> void
 HackerOs.Platform.Blazor.Display.ScreenService.PrimaryTaskbar.get -> HackerOs.Platform.Core.Shell.PrimaryTaskbarMode
 HackerOs.Platform.Blazor.Display.ScreenService.SetPrimaryTaskbarAsync(HackerOs.Platform.Core.Shell.PrimaryTaskbarMode mode, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+HackerOs.Platform.Blazor.Display.ScreenIdentifyVeil
+HackerOs.Platform.Blazor.Display.ScreenIdentifyVeil.Dispose() -> void
+HackerOs.Platform.Blazor.Display.ScreenIdentifyVeil.Number.get -> int
+HackerOs.Platform.Blazor.Display.ScreenIdentifyVeil.Number.set -> void
+HackerOs.Platform.Blazor.Display.ScreenIdentifyVeil.ScreenIdentifyVeil() -> void
+HackerOs.Platform.Blazor.Windows.WindowKeyboardCommands.CanOpenScreen.get -> bool
+HackerOs.Platform.Blazor.Windows.WindowKeyboardCommands.GetMenuItems(HackerOs.Windowing.Abstractions.WindowId windowId, HackerOs.Windowing.Blazor.WindowMenuKind kind) -> System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Blazor.Windows.WindowMenuItem!>!
+HackerOs.Platform.Blazor.Windows.WindowKeyboardCommands.GetScreenMenuItems(HackerOs.Windowing.Abstractions.WindowId windowId) -> System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Blazor.Windows.WindowScreenMenuItem!>!
+HackerOs.Platform.Blazor.Windows.WindowKeyboardCommands.MoveToNewScreenAsync(HackerOs.Windowing.Abstractions.WindowId windowId) -> System.Threading.Tasks.Task<bool>!
+HackerOs.Platform.Blazor.Windows.WindowKeyboardCommands.MoveToScreen(HackerOs.Windowing.Abstractions.WindowId windowId, HackerOs.Windowing.Abstractions.DisplayId display) -> bool
+HackerOs.Platform.Blazor.Windows.WindowKeyboardCommands.OpenMenu(HackerOs.Windowing.Abstractions.WindowId windowId, double? clientX, double? clientY, HackerOs.Windowing.Blazor.WindowMenuKind kind) -> void
+HackerOs.Platform.Blazor.Windows.WindowKeyboardCommands.OpenScreen.get -> System.Func<System.Threading.Tasks.Task<HackerOs.Windowing.Abstractions.DisplayId?>!>?
+HackerOs.Platform.Blazor.Windows.WindowKeyboardCommands.OpenScreen.set -> void
+HackerOs.Platform.Blazor.Windows.WindowMenuState.FromKeyboard.get -> bool
+HackerOs.Platform.Blazor.Windows.WindowMenuState.FromKeyboard.init -> void
+HackerOs.Platform.Blazor.Windows.WindowMenuState.Kind.get -> HackerOs.Windowing.Blazor.WindowMenuKind
+HackerOs.Platform.Blazor.Windows.WindowMenuState.Kind.init -> void
+HackerOs.Platform.Blazor.Windows.WindowScreenMenuItem
+HackerOs.Platform.Blazor.Windows.WindowScreenMenuItem.<Clone>$() -> HackerOs.Platform.Blazor.Windows.WindowScreenMenuItem!
+HackerOs.Platform.Blazor.Windows.WindowScreenMenuItem.Deconstruct(out HackerOs.Windowing.Abstractions.DisplayId Display, out string! Label, out bool IsEnabled) -> void
+HackerOs.Platform.Blazor.Windows.WindowScreenMenuItem.Display.get -> HackerOs.Windowing.Abstractions.DisplayId
+HackerOs.Platform.Blazor.Windows.WindowScreenMenuItem.Display.init -> void
+HackerOs.Platform.Blazor.Windows.WindowScreenMenuItem.Equals(HackerOs.Platform.Blazor.Windows.WindowScreenMenuItem? other) -> bool
+HackerOs.Platform.Blazor.Windows.WindowScreenMenuItem.IsEnabled.get -> bool
+HackerOs.Platform.Blazor.Windows.WindowScreenMenuItem.IsEnabled.init -> void
+HackerOs.Platform.Blazor.Windows.WindowScreenMenuItem.Label.get -> string!
+HackerOs.Platform.Blazor.Windows.WindowScreenMenuItem.Label.init -> void
+HackerOs.Platform.Blazor.Windows.WindowScreenMenuItem.WindowScreenMenuItem(HackerOs.Windowing.Abstractions.DisplayId Display, string! Label, bool IsEnabled) -> void
+override HackerOs.Platform.Blazor.Display.ScreenIdentifyVeil.OnInitialized() -> void
+override HackerOs.Platform.Blazor.Windows.WindowScreenMenuItem.Equals(object? obj) -> bool
+override HackerOs.Platform.Blazor.Windows.WindowScreenMenuItem.GetHashCode() -> int
+override HackerOs.Platform.Blazor.Windows.WindowScreenMenuItem.ToString() -> string!
+static HackerOs.Platform.Blazor.Windows.WindowScreenMenuItem.operator !=(HackerOs.Platform.Blazor.Windows.WindowScreenMenuItem? left, HackerOs.Platform.Blazor.Windows.WindowScreenMenuItem? right) -> bool
+static HackerOs.Platform.Blazor.Windows.WindowScreenMenuItem.operator ==(HackerOs.Platform.Blazor.Windows.WindowScreenMenuItem? left, HackerOs.Platform.Blazor.Windows.WindowScreenMenuItem? right) -> bool
+~override HackerOs.Platform.Blazor.Display.ScreenIdentifyVeil.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

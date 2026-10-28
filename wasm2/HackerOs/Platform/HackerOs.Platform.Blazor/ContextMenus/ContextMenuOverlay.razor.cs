@@ -190,19 +190,61 @@ public sealed partial class ContextMenuOverlay : ComponentBase
     private void Hover(int level, int row)
     {
         // The sheet has no hover: a finger taps.
-        if (!IsSheet)
+        if (!IsSheet && _navigator is { } navigator)
         {
-            _navigator?.Hover(level, row);
+            navigator.Hover(level, row);
+
+            // ADR 0179 §6: a disabled entry (the window's own screen) still names its screen.
+            Service.SetHighlighted(level < navigator.Levels.Count && row < navigator.Levels[level].Level.Rows.Count
+                ? navigator.Levels[level].Level.Rows[row].Item
+                : null);
+        }
+    }
+
+    private void Unhover(int level, int row)
+    {
+        if (!IsSheet && _navigator is { } navigator && level < navigator.Levels.Count
+            && row < navigator.Levels[level].Level.Rows.Count
+            && ReferenceEquals(Service.Highlighted, navigator.Levels[level].Level.Rows[row].Item))
+        {
+            Service.SetHighlighted(null);
         }
     }
 
     private Task ClickAsync(int level, int row) =>
         _navigator is null ? Task.CompletedTask : ApplyAsync(_navigator.Click(level, row));
 
-    private Task HandleKeyAsync(KeyboardEventArgs args) =>
-        _navigator is null ? Task.CompletedTask : ApplyAsync(_navigator.HandleKey(args.Key));
+    private async Task HandleKeyAsync(KeyboardEventArgs args)
+    {
+        if (_navigator is null)
+        {
+            return;
+        }
 
-    private void Back() => _navigator?.Back();
+        ContextMenuNavigation navigation = _navigator.HandleKey(args.Key);
+        PublishKeyboardHighlight();
+        await ApplyAsync(navigation);
+    }
+
+    private void Back()
+    {
+        _navigator?.Back();
+        PublishKeyboardHighlight();
+    }
+
+    /// <summary>The entry the keyboard highlights in the deepest open level, for the screen veil (ADR 0179 §6).</summary>
+    private void PublishKeyboardHighlight()
+    {
+        if (_navigator is { } navigator && navigator.Active is { Highlight: >= 0 } active
+            && active.Highlight < active.Level.Rows.Count)
+        {
+            Service.SetHighlighted(active.Level.Rows[active.Highlight].Item);
+        }
+        else
+        {
+            Service.SetHighlighted(null);
+        }
+    }
 
     private Task DismissAsync()
     {

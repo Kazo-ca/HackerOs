@@ -42,3 +42,5 @@ const HackerOs.Platform.Core.Shell.ScreensSettingsDocuments.TaskbarGroup = "task
 static HackerOs.Platform.Core.Shell.ScreensSettingsDocuments.FormatPrimaryTaskbar(HackerOs.Platform.Core.Shell.PrimaryTaskbarMode mode) -> string!
 static HackerOs.Platform.Core.Shell.ScreensSettingsDocuments.PrimaryTaskbarQualifiedKey.get -> string!
 static HackerOs.Platform.Core.Shell.ScreensSettingsDocuments.ReadPrimaryTaskbar(HackerOs.Simulation.Abstractions.Settings.LayeredConfigSnapshot! snapshot) -> HackerOs.Platform.Core.Shell.PrimaryTaskbarMode
+HackerOs.Platform.Core.Shell.WindowKeyboardAction.MoveToNextScreen = 14 -> HackerOs.Platform.Core.Shell.WindowKeyboardAction
+HackerOs.Platform.Core.Shell.WindowKeyboardAction.MoveToPreviousScreen = 13 -> HackerOs.Platform.Core.Shell.WindowKeyboardAction

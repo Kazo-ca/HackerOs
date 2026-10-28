@@ -104,5 +104,5 @@ covers the whole screen and takes the clicks.
   secondary screen has its `⤢` button.
 - Menu tokens of elements removed inside a secondary screen are released only when the session
   ends (the removal observer follows the main document).
-- A window cannot change screen from the interface yet: menus and shortcuts in work item 6,
-  dragging in work item 8.
+- A window changes screen through the "Other screen" menus and the shortcuts (work item 6,
+  [`other-screen-menus.md`](other-screen-menus.md)); dragging comes in work item 8.

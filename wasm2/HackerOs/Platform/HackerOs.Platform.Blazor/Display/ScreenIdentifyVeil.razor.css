@@ -1,0 +1,34 @@
+/* ADR 0179 §6: 33 % black over the whole screen, a black square with the screen's number in white. */
+.screen-identify-veil {
+    position: fixed;
+    inset: 0;
+    z-index: 9500;
+    display: grid;
+    place-items: center;
+    background: rgb(0 0 0 / 33%);
+}
+
+.screen-identify-number {
+    display: grid;
+    place-items: center;
+    width: clamp(6rem, 22vmin, 14rem);
+    aspect-ratio: 1;
+    border: 4px solid transparent;
+    border-radius: var(--hos-radius-md, 0.45rem);
+    background: #000;
+    color: #fff;
+    font-family: var(--hos-font-ui, system-ui, sans-serif);
+    font-size: clamp(3.5rem, 14vmin, 9rem);
+    font-weight: 700;
+    line-height: 1;
+    user-select: none;
+}
+
+.screen-identify-veil.is-target .screen-identify-number {
+    border-color: var(--hos-accent, #42d392);
+}
+
+/* The screen that shows the menu keeps it usable: the overlays live in its document. */
+:root:has(.screen-overlays) .screen-identify-veil {
+    display: none;
+}
