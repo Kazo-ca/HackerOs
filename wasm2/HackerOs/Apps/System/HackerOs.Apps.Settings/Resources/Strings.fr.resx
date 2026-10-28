@@ -1352,4 +1352,79 @@
   <data name="Passkeys.Error.NotFound" xml:space="preserve">
     <value>La clé d'accès {0} n'existe plus.</value>
   </data>
+  <data name="Tab.Screens" xml:space="preserve">
+    <value>Écrans</value>
+  </data>
+  <data name="Screens.Taskbar.Title" xml:space="preserve">
+    <value>Barre des tâches de l'écran 1</value>
+  </data>
+  <data name="Screens.Taskbar.Description" xml:space="preserve">
+    <value>Les barres des tâches des autres écrans montrent toujours les fenêtres de leur écran. Le changement s'applique tout de suite.</value>
+  </data>
+  <data name="Screens.Taskbar.All" xml:space="preserve">
+    <value>Toutes les fenêtres de tous les écrans</value>
+  </data>
+  <data name="Screens.Taskbar.Own" xml:space="preserve">
+    <value>Seulement les fenêtres de l'écran 1</value>
+  </data>
+  <data name="Screens.List.Title" xml:space="preserve">
+    <value>Écrans retenus</value>
+  </data>
+  <data name="Screens.List.Description" xml:space="preserve">
+    <value>Chaque écran secondaire s'ouvre dans sa propre fenêtre du navigateur. HackerOS retient sa place dans {0}, même après sa fermeture.</value>
+  </data>
+  <data name="Screens.List.Screen" xml:space="preserve">
+    <value>Écran {0}</value>
+  </data>
+  <data name="Screens.List.Primary" xml:space="preserve">
+    <value>Cet onglet du navigateur</value>
+  </data>
+  <data name="Screens.List.Open" xml:space="preserve">
+    <value>Ouvert, ou proposé à la prochaine connexion</value>
+  </data>
+  <data name="Screens.List.Closed" xml:space="preserve">
+    <value>Fermé</value>
+  </data>
+  <data name="Screens.List.Place" xml:space="preserve">
+    <value>{0} × {1} à ({2}, {3})</value>
+  </data>
+  <data name="Screens.List.NoPlace" xml:space="preserve">
+    <value>Place pas encore retenue</value>
+  </data>
+  <data name="Screens.List.Forget" xml:space="preserve">
+    <value>Oublier</value>
+  </data>
+  <data name="Screens.List.ForgetLabel" xml:space="preserve">
+    <value>Oublier la place de l'écran {0}</value>
+  </data>
+  <data name="Screens.List.None" xml:space="preserve">
+    <value>Aucun écran secondaire pour l'instant.</value>
+  </data>
+  <data name="Screens.Help.Title" xml:space="preserve">
+    <value>Ouvrir et déplacer les écrans</value>
+  </data>
+  <data name="Screens.Help.New" xml:space="preserve">
+    <value>Nouvel écran : clic droit sur l'icône d'une fenêtre, ou sur son bouton Agrandir, puis Autre écran ▸ Nouvel écran.</value>
+  </data>
+  <data name="Screens.Help.Move" xml:space="preserve">
+    <value>Envoyez la fenêtre active vers l'écran précédent ou suivant avec {0} ou {1}, ou par Autre écran ▸ Écran N. Survoler un écran dans ce menu affiche son numéro sur chaque écran.</value>
+  </data>
+  <data name="Screens.Help.Restore" xml:space="preserve">
+    <value>Après la connexion, la carte Restaurer les écrans au-dessus de la barre des tâches rouvre les écrans de votre dernière session.</value>
+  </data>
+  <data name="Screens.Help.FullScreen" xml:space="preserve">
+    <value>Plein écran : le bouton ⤢ en haut à droite de chaque écran secondaire ; Échap en sort.</value>
+  </data>
+  <data name="Screens.Help.Permission" xml:space="preserve">
+    <value>Dans Chrome et Edge, autorisez la gestion des fenêtres quand le navigateur le demande : chaque nouvel écran va alors sur un moniteur libre. Ailleurs, placez la fenêtre vous-même ; HackerOS retient sa place.</value>
+  </data>
+  <data name="Screens.Saved" xml:space="preserve">
+    <value>Enregistré.</value>
+  </data>
+  <data name="Screens.Error.CannotRead" xml:space="preserve">
+    <value>Impossible de lire screens.config : {0}</value>
+  </data>
+  <data name="Screens.Error.CannotSave" xml:space="preserve">
+    <value>Impossible d'enregistrer {0} : {1}</value>
+  </data>
 </root>

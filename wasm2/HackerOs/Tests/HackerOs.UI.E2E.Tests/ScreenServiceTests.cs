@@ -326,6 +326,58 @@ public sealed class ScreenServiceTests(ITestOutputHelper output)
         }
     }
 
+    [Fact]
+    public async Task Settings_screens_lists_the_open_screen_and_its_taskbar_choice_applies_at_once()
+    {
+        string solutionDirectory = E2ESupport.FindSolutionDirectory();
+        int port = E2ESupport.ReservePort();
+        string address = $"http://127.0.0.1:{port}";
+        using Process server = E2ESupport.StartHarness(solutionDirectory, address, testDemo: false, output);
+
+        try
+        {
+            using IPlaywright playwright = await Playwright.CreateAsync();
+            await using IBrowser browser = await ChromiumLauncher.LaunchAsync(playwright, new BrowserTypeLaunchOptions { Headless = true });
+            await using IBrowserContext context = await browser.NewContextAsync();
+            IPage page = await context.NewPageAsync();
+            List<string> errors = E2ESupport.AttachDiagnostics(page, output);
+
+            await E2ESupport.NavigateWhenReadyAsync(page, address, output);
+            await E2ESupport.CreateLocalProfileAndReachDesktopAsync(page, output);
+            IPage screen = await RestoreScreenTwoAsync(page);
+            await screen.BringToFrontAsync();
+            await E2ESupport.OpenAppAsync(screen, "Text Editor", output);
+            await Assertions.Expect(screen.Locator(".window-layer[data-display='2'] article.window-host")).ToHaveCountAsync(1, new() { Timeout = 15000 });
+
+            // ADR 0179 §7: Settings ▸ Screens on screen 1 lists screen 2 as open.
+            await page.BringToFrontAsync();
+            await E2ESupport.OpenAppAsync(page, "Settings", output);
+            await page.Locator("#settings-nav-screens").ClickAsync();
+            ILocator list = page.Locator(".scr-list");
+            await Assertions.Expect(list).ToContainTextAsync("This browser tab", new() { Timeout = 15000 });
+            await Assertions.Expect(list.Locator(".scr-item", new() { HasText = "Screen 2" })).ToContainTextAsync("Open, or offered at the next sign-in");
+
+            // The choice reaches the screen service through the file: screen 1's taskbar drops the editor of screen 2.
+            ILocator primaryItems = page.Locator(".desktop-shell > footer.taskbar-container .taskbar-item");
+            await Assertions.Expect(primaryItems).ToHaveCountAsync(2, new() { Timeout = 15000 });
+            ILocator own = page.GetByRole(AriaRole.Radio, new() { Name = "Only the windows of screen 1" });
+            await own.ClickAsync();
+            await Assertions.Expect(own).ToHaveAttributeAsync("aria-checked", "true");
+            await Assertions.Expect(primaryItems).ToHaveCountAsync(1, new() { Timeout = 15000 });
+            await Assertions.Expect(primaryItems.First).ToContainTextAsync("Settings");
+            output.WriteLine("[test] Settings ▸ Screens switched screen 1's taskbar to its own windows.");
+
+            await page.GetByRole(AriaRole.Radio, new() { Name = "Every window of every screen" }).ClickAsync();
+            await Assertions.Expect(primaryItems).ToHaveCountAsync(2, new() { Timeout = 15000 });
+            output.WriteLine("[test] and back to every window.");
+            Assert.Empty(errors);
+        }
+        finally
+        {
+            E2ESupport.StopProcess(server);
+        }
+    }
+
     // Writes the file a previous session would have left (screen 2 open, at 40,40 and 900×700),
     // signs in again and restores the screen.
     private async Task<IPage> RestoreScreenTwoAsync(IPage page)

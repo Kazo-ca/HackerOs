@@ -424,6 +424,13 @@
                 </div>
                 break;
 
+                @* ADR 0179 §7: primary-taskbar and the remembered screens of screens.config. *@
+            case "screens":
+                <div class="settings-page">
+                    <ScreensPanel />
+                </div>
+                break;
+
                 @* ADR 0126: the OOM killer of /etc/hackeros/memory.config. *@
             case "memory":
                 <div class="settings-page">
