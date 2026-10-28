@@ -93,7 +93,7 @@ public sealed class WindowGeometryRestoreTests
     {
         Desktop desktop = new();
         WindowId window = await desktop.OpenAsync();
-        desktop.Runtime.Apply(new ResizeWindowCommand(window, new WindowBounds(0, 0, 640, 720)));
+        desktop.Runtime.Apply(new SnapWindowCommand(window, new WindowBounds(0, 0, 640, 720)));
         desktop.Runtime.Apply(new MinimizeWindowCommand(window));
         await desktop.CloseAsync(window);
 

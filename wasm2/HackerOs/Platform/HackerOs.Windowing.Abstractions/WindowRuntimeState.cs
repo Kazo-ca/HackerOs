@@ -103,7 +103,10 @@ public sealed record WindowRuntimeState
     /// <summary>Gets the current normal-state geometry.</summary>
     public WindowBounds Bounds { get; }
 
-    /// <summary>Gets geometry captured before maximizing.</summary>
+    /// <summary>
+    /// Gets geometry captured before maximizing, or before snapping when <see cref="IsSnapped"/> is
+    /// <see langword="true"/> (ADR 0177).
+    /// </summary>
     public WindowBounds? RestoreBounds { get; }
 
     /// <summary>Gets the deterministic stacking order.</summary>
@@ -153,4 +156,11 @@ public sealed record WindowRuntimeState
     /// <c>_NET_WM_PING</c> timeout on X11. <see cref="Title"/> itself never carries the suffix.
     /// </summary>
     public bool IsResponding { get; init; } = true;
+
+    /// <summary>
+    /// Gets whether the window is tiled on half of the work area by a snap (ADR 0177). A snapped
+    /// window stays <see cref="WindowVisualState.Normal"/> and keeps its geometry from before the snap
+    /// in <see cref="RestoreBounds"/>: restoring it, or dragging its title bar, gives that geometry back.
+    /// </summary>
+    public bool IsSnapped { get; init; }
 }
