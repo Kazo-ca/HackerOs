@@ -187,9 +187,27 @@ public sealed partial class ExplorerFileView
 
     // ---- Deletion (ADR 0052, section 5) --------------------------------------------------------------
 
+    /// <summary>Whether one of <paramref name="items"/> is on a network drive (a folder of the computer, ADR 0181).</summary>
+    private async Task<bool> AnyOnNetworkDriveAsync(IReadOnlyList<FileViewItem> items)
+    {
+        HackDriveInfo[] drives;
+        try
+        {
+            drives = await HackDriveInfo.GetDrivesAsync(HostContext.CancellationToken);
+        }
+        catch (NotSupportedException)
+        {
+            return false;
+        }
+
+        return items.Any(item => drives.Any(drive => drive.DriveType == HackDriveType.Network
+            && item.FullPath.Value.StartsWith(drive.Name + "/", StringComparison.Ordinal)));
+    }
+
     /// <summary>
     /// Moves <paramref name="items"/> to the trash, or — for Shift+Delete / "Delete permanently" and only
-    /// after a confirmation — deletes them for good, with the host's permissions.
+    /// after a confirmation — deletes them for good, with the host's permissions. A network drive has no
+    /// trash (ADR 0181, section 10): its items are always deleted for good, after the confirmation.
     /// </summary>
     private async Task DeleteItemsAsync(IReadOnlyList<FileViewItem> items, bool permanent)
     {
@@ -197,6 +215,8 @@ public sealed partial class ExplorerFileView
         {
             return;
         }
+
+        permanent = permanent || await AnyOnNetworkDriveAsync(items);
 
         if (permanent)
         {

@@ -1,1 +1,74 @@
 #nullable enable
+HackerOs.Platform.Core.Execution.AppDriveGateway.IsHostFolderSupportedAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+HackerOs.Platform.Core.Execution.AppDriveGateway.MountHostFolderAsync(string? mountPoint, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.IO.HackDriveSnapshot?>
+HackerOs.Platform.Core.Execution.AppDriveGateway.NetworkDrives.get -> System.Func<HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDriveService?>?
+HackerOs.Platform.Core.Execution.AppDriveGateway.NetworkDrives.init -> void
+HackerOs.Platform.Core.Execution.AppDriveGateway.ReconnectAsync(string! mountPoint, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+HackerOs.Platform.Core.Execution.AppDriveGateway.UnmountAsync(string! mountPoint, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+HackerOs.Platform.Core.FileSystem.FileSystemMountRouter.Mount(HackerOs.Simulation.Abstractions.FileSystem.FileSystemMount! mount) -> void
+HackerOs.Platform.Core.FileSystem.FileSystemMountRouter.MountsChanged -> System.Action?
+HackerOs.Platform.Core.FileSystem.FileSystemMountRouter.Unmount(HackerOs.App.Abstractions.VirtualPath path) -> bool
+HackerOs.Platform.Core.FileSystem.HostFolders.HostFolderFileSystemProvider
+HackerOs.Platform.Core.FileSystem.HostFolders.HostFolderFileSystemProvider.CopyAsync(HackerOs.Simulation.Abstractions.FileSystem.FileSystemCopyRequest! request, HackerOs.Simulation.Abstractions.FileSystem.FileSystemAuthorizationContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.FileSystemMutationResult!>
+HackerOs.Platform.Core.FileSystem.HostFolders.HostFolderFileSystemProvider.CreateAsync(HackerOs.Simulation.Abstractions.FileSystem.FileSystemCreateRequest! request, HackerOs.Simulation.Abstractions.FileSystem.FileSystemAuthorizationContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.FileSystemMutationResult!>
+HackerOs.Platform.Core.FileSystem.HostFolders.HostFolderFileSystemProvider.DeleteAsync(HackerOs.Simulation.Abstractions.FileSystem.FileSystemDeleteRequest! request, HackerOs.Simulation.Abstractions.FileSystem.FileSystemAuthorizationContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.FileSystemMutationResult!>
+HackerOs.Platform.Core.FileSystem.HostFolders.HostFolderFileSystemProvider.EnumerateAsync(HackerOs.Simulation.Abstractions.FileSystem.FileSystemEnumerateRequest! request, HackerOs.Simulation.Abstractions.FileSystem.FileSystemAuthorizationContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.FileSystemResult<HackerOs.Simulation.Abstractions.FileSystem.FileSystemDirectorySnapshot!>!>
+HackerOs.Platform.Core.FileSystem.HostFolders.HostFolderFileSystemProvider.Folder.get -> HackerOs.Simulation.Abstractions.FileSystem.IHostFolder!
+HackerOs.Platform.Core.FileSystem.HostFolders.HostFolderFileSystemProvider.GroupId.get -> string!
+HackerOs.Platform.Core.FileSystem.HostFolders.HostFolderFileSystemProvider.HostFolderFileSystemProvider(HackerOs.App.Abstractions.VirtualPath mountPath, HackerOs.Simulation.Abstractions.FileSystem.IHostFolder! folder, string! ownerId, string! groupId, bool connected, System.TimeProvider? timeProvider = null, System.Func<System.Guid>? transactionIdFactory = null) -> void
+HackerOs.Platform.Core.FileSystem.HostFolders.HostFolderFileSystemProvider.IsConnected.get -> bool
+HackerOs.Platform.Core.FileSystem.HostFolders.HostFolderFileSystemProvider.MountPath.get -> HackerOs.App.Abstractions.VirtualPath
+HackerOs.Platform.Core.FileSystem.HostFolders.HostFolderFileSystemProvider.MountedAtUtc.get -> System.DateTimeOffset
+HackerOs.Platform.Core.FileSystem.HostFolders.HostFolderFileSystemProvider.MoveAsync(HackerOs.Simulation.Abstractions.FileSystem.FileSystemMoveRequest! request, HackerOs.Simulation.Abstractions.FileSystem.FileSystemAuthorizationContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.FileSystemMutationResult!>
+HackerOs.Platform.Core.FileSystem.HostFolders.HostFolderFileSystemProvider.OwnerId.get -> string!
+HackerOs.Platform.Core.FileSystem.HostFolders.HostFolderFileSystemProvider.ProviderId.get -> string!
+HackerOs.Platform.Core.FileSystem.HostFolders.HostFolderFileSystemProvider.ReadAsync(HackerOs.Simulation.Abstractions.FileSystem.FileSystemReadRequest! request, HackerOs.Simulation.Abstractions.FileSystem.FileSystemAuthorizationContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.FileSystemResult<HackerOs.Simulation.Abstractions.FileSystem.FileSystemContentReadHandle!>!>
+HackerOs.Platform.Core.FileSystem.HostFolders.HostFolderFileSystemProvider.SetConnected(bool connected) -> void
+HackerOs.Platform.Core.FileSystem.HostFolders.HostFolderFileSystemProvider.SetPermissionsAsync(HackerOs.Simulation.Abstractions.FileSystem.FileSystemSetPermissionsRequest! request, HackerOs.Simulation.Abstractions.FileSystem.FileSystemAuthorizationContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.FileSystemMutationResult!>
+HackerOs.Platform.Core.FileSystem.HostFolders.HostFolderFileSystemProvider.StatAsync(HackerOs.Simulation.Abstractions.FileSystem.FileSystemStatRequest! request, HackerOs.Simulation.Abstractions.FileSystem.FileSystemAuthorizationContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.FileSystemResult<HackerOs.Simulation.Abstractions.FileSystem.FileSystemEntrySnapshot!>!>
+HackerOs.Platform.Core.FileSystem.HostFolders.HostFolderFileSystemProvider.WriteAsync(HackerOs.Simulation.Abstractions.FileSystem.FileSystemWriteRequest! request, HackerOs.Simulation.Abstractions.FileSystem.IFileSystemContentSource! content, HackerOs.Simulation.Abstractions.FileSystem.FileSystemAuthorizationContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.FileSystemMutationResult!>
+HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDrive
+HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDrive.<Clone>$() -> HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDrive!
+HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDrive.Deconstruct(out HackerOs.App.Abstractions.VirtualPath MountPoint, out string! Name, out string! OwnerId, out bool IsConnected) -> void
+HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDrive.Equals(HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDrive? other) -> bool
+HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDrive.IsConnected.get -> bool
+HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDrive.IsConnected.init -> void
+HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDrive.MountPoint.get -> HackerOs.App.Abstractions.VirtualPath
+HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDrive.MountPoint.init -> void
+HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDrive.Name.get -> string!
+HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDrive.Name.init -> void
+HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDrive.NetworkDrive(HackerOs.App.Abstractions.VirtualPath MountPoint, string! Name, string! OwnerId, bool IsConnected) -> void
+HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDrive.OwnerId.get -> string!
+HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDrive.OwnerId.init -> void
+HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDriveError
+HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDriveError.InvalidMountPoint = 2 -> HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDriveError
+HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDriveError.NotMounted = 3 -> HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDriveError
+HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDriveError.NotOwner = 4 -> HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDriveError
+HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDriveError.NotSignedIn = 1 -> HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDriveError
+HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDriveError.NotSupported = 0 -> HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDriveError
+HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDriveError.PermissionDenied = 6 -> HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDriveError
+HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDriveError.UserActivationRequired = 5 -> HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDriveError
+HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDriveException
+HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDriveException.Error.get -> HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDriveError
+HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDriveException.NetworkDriveException(HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDriveError error, string! message) -> void
+HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDriveService
+HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDriveService.Changed -> System.Action?
+HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDriveService.Dispose() -> void
+HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDriveService.Find(HackerOs.App.Abstractions.VirtualPath mountPoint) -> HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDrive?
+HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDriveService.GetDrives() -> System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDrive!>!
+HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDriveService.IsSupportedAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDriveService.MountAsync(string? mountPoint, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDrive?>
+HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDriveService.NetworkDriveService(HackerOs.Simulation.Abstractions.FileSystem.IDynamicFileSystemMountRouter! router, HackerOs.Simulation.Abstractions.FileSystem.IHostFolderAccess! access, System.Func<HackerOs.Simulation.Abstractions.Sessions.AuthenticatedPrincipal?>! principal, HackerOs.Simulation.Abstractions.Events.IEventBus? eventBus = null, System.TimeProvider? timeProvider = null, Microsoft.Extensions.Logging.ILogger<HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDriveService!>? logger = null) -> void
+HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDriveService.ReconnectAsync(string! mountPoint, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDriveService.RestoreAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDriveService.UnmountAllAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDriveService.UnmountAsync(string! mountPoint, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+const HackerOs.Platform.Core.FileSystem.HostFolders.HostFolderFileSystemProvider.FileSystemType = "hostfs" -> string!
+const HackerOs.Platform.Core.FileSystem.HostFolders.HostFolderFileSystemProvider.ProviderIdPrefix = "hostfs:" -> string!
+const HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDriveService.TableRelativePath = ".local/state/hackeros/network-drives.json" -> string!
+override HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDrive.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDrive.GetHashCode() -> int
+override HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDrive.ToString() -> string!
+static HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDrive.operator !=(HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDrive? left, HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDrive? right) -> bool
+static HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDrive.operator ==(HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDrive? left, HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDrive? right) -> bool
+static readonly HackerOs.Platform.Core.FileSystem.HostFolders.NetworkDriveService.MountRoot -> HackerOs.App.Abstractions.VirtualPath

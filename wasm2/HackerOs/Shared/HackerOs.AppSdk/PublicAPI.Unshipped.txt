@@ -1,1 +1,14 @@
 #nullable enable
+HackerOs.AppSdk.IO.HackDriveSnapshot.DriveType.get -> HackerOs.AppSdk.IO.HackDriveType
+HackerOs.AppSdk.IO.HackDriveSnapshot.DriveType.init -> void
+HackerOs.AppSdk.IO.HackDriveSnapshot.IsReady.get -> bool
+HackerOs.AppSdk.IO.HackDriveSnapshot.IsReady.init -> void
+HackerOs.AppSdk.IO.HackDriveType.Network = 1 -> HackerOs.AppSdk.IO.HackDriveType
+HackerOs.AppSdk.IO.IAppDriveGateway.IsHostFolderSupportedAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+HackerOs.AppSdk.IO.IAppDriveGateway.MountHostFolderAsync(string? mountPoint, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.IO.HackDriveSnapshot?>
+HackerOs.AppSdk.IO.IAppDriveGateway.ReconnectAsync(string! mountPoint, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+HackerOs.AppSdk.IO.IAppDriveGateway.UnmountAsync(string! mountPoint, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+static HackerOs.AppSdk.IO.HackDriveInfo.IsHostFolderSupportedAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
+static HackerOs.AppSdk.IO.HackDriveInfo.MountHostFolderAsync(string? mountPoint = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.IO.HackDriveInfo?>!
+static HackerOs.AppSdk.IO.HackDriveInfo.ReconnectAsync(string! mountPoint, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
+static HackerOs.AppSdk.IO.HackDriveInfo.UnmountAsync(string! mountPoint, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!

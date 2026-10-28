@@ -829,11 +829,7 @@ internal static class WireCodec
         foreach (HackDriveSnapshot drive in drives)
         {
             writer.WriteStartObject();
-            writer.WriteString("n", drive.Name);
-            writer.WriteString("f", drive.DriveFormat);
-            writer.WriteString("l", drive.VolumeLabel);
-            writer.WriteNumber("t", drive.TotalSize);
-            writer.WriteNumber("a", drive.AvailableFreeSpace);
+            WriteDriveFields(writer, drive);
             writer.WriteEndObject();
         }
 
@@ -841,8 +837,40 @@ internal static class WireCodec
     }
 
     public static IReadOnlyList<HackDriveSnapshot> ReadDrives(JsonElement element) =>
-        [.. element.GetProperty("dr").EnumerateArray().Select(static drive => new HackDriveSnapshot(
-            drive.GetString("n"), drive.GetString("f"), drive.GetString("l"), drive.GetInt64("t"), drive.GetInt64("a")))];
+        [.. element.GetProperty("dr").EnumerateArray().Select(ReadDriveFields)];
+
+    /// <summary>One drive, or none (<c>MountHostFolderAsync</c> when the user closed the dialog).</summary>
+    public static void WriteDrive(Utf8JsonWriter writer, HackDriveSnapshot? drive)
+    {
+        if (drive is not null)
+        {
+            writer.WriteStartObject("d");
+            WriteDriveFields(writer, drive);
+            writer.WriteEndObject();
+        }
+    }
+
+    public static HackDriveSnapshot? ReadDrive(JsonElement element) =>
+        element.GetOptional("d") is { } drive ? ReadDriveFields(drive) : null;
+
+    private static void WriteDriveFields(Utf8JsonWriter writer, HackDriveSnapshot drive)
+    {
+        writer.WriteString("n", drive.Name);
+        writer.WriteString("f", drive.DriveFormat);
+        writer.WriteString("l", drive.VolumeLabel);
+        writer.WriteNumber("t", drive.TotalSize);
+        writer.WriteNumber("a", drive.AvailableFreeSpace);
+        // ADR 0181: network drives, which are not ready until the browser grants its permission.
+        writer.WriteNumber("ty", (int)drive.DriveType);
+        writer.WriteBoolean("rd", drive.IsReady);
+    }
+
+    private static HackDriveSnapshot ReadDriveFields(JsonElement drive) =>
+        new(drive.GetString("n"), drive.GetString("f"), drive.GetString("l"), drive.GetInt64("t"), drive.GetInt64("a"))
+        {
+            DriveType = drive.GetOptional("ty") is { } type ? (HackDriveType)type.GetInt32() : HackDriveType.Fixed,
+            IsReady = drive.GetOptional("rd")?.GetBoolean() ?? true
+        };
 
     public static void WriteCrossOriginIsolation(Utf8JsonWriter writer, HackCrossOriginIsolationStatus status)
     {

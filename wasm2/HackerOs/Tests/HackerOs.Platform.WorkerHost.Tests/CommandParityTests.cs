@@ -49,6 +49,7 @@ public sealed class CommandParityTests
         new("locate", ["locate notes", "locate -c txt"]),
         new("ls", ["ls", "ls -l docs", "ls -a", "ls /nope"]),
         new("mkdir", ["mkdir new", "mkdir -p a/b/c", "mkdir new"]),
+        new("mount", ["mount", "mount -t nfs /mnt/x", "mount --bogus"]),
         new("mv", ["mv notes.txt moved.txt", "mv missing.txt x"]),
         new("nano", ["nano notes.txt"]),
         new("netstat", ["netstat", "netstat -i"]),
@@ -79,6 +80,7 @@ public sealed class CommandParityTests
         new("true", ["true"]),
         new("uniq", ["sort words.txt | uniq -c", "uniq -d words.txt"]),
         new("unset", ["export TEMP_VAR=1 && unset TEMP_VAR && env | grep TEMP_VAR"]),
+        new("umount", ["umount", "umount /mnt/nowhere"]),
         new("unzip", ["zip -r -q archive.zip docs", "unzip -l archive.zip", "unzip -o -d extracted archive.zip", "unzip -t archive.zip"]),
         new("watch", ["watch -e -n 1 cat missing.txt", "watch -e false"]),
         new("wc", ["wc notes.txt", "cat notes.txt | wc -l", "wc -w words.txt numbers.txt"]),
@@ -114,7 +116,7 @@ public sealed class CommandParityTests
             .Where(name => !covered.Contains(name))];
 
         Assert.Empty(missing);
-        Assert.Equal(74, OsFixture.BuiltInCommands.Count);
+        Assert.Equal(76, OsFixture.BuiltInCommands.Count);
     }
 
     [Fact]

@@ -95,12 +95,22 @@ public sealed record MountDescription(string Source, string MountPoint, string T
 
     /// <summary>
     /// Describes one router mount the way <c>/proc/mounts</c> lists it (ADR 0057 section 6): the
-    /// <c>procfs</c> and <c>devfs</c> providers by their Linux-style pseudo-source, everything
-    /// else as the persistent disk <c>/dev/hda</c>.
+    /// <c>procfs</c> and <c>devfs</c> providers by their Linux-style pseudo-source, a network drive
+    /// as <c>host:&lt;folder&gt;</c> (ADR 0181, section 3), everything else as the persistent disk
+    /// <c>/dev/hda</c>.
     /// </summary>
     public static MountDescription From(FileSystemMount mount)
     {
         ArgumentNullException.ThrowIfNull(mount);
+        if (mount.Provider is HostFolders.HostFolderFileSystemProvider host)
+        {
+            return new MountDescription(
+                "host:" + host.Folder.Name,
+                mount.Path.Value,
+                HostFolders.HostFolderFileSystemProvider.FileSystemType,
+                "rw,nosuid,nodev");
+        }
+
         return mount.Provider.ProviderId switch
         {
             "procfs" => new MountDescription("proc", mount.Path.Value, "proc", "ro"),

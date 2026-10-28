@@ -27,6 +27,7 @@ using HackerOs.Platform.Core.Execution;
 using HackerOs.Platform.Core.Isolation;
 using HackerOs.Platform.Core.Keyring;
 using HackerOs.Platform.Core.FileSystem;
+using HackerOs.Platform.Core.FileSystem.HostFolders;
 using HackerOs.Platform.Core.FileSystem.Virtual;
 using HackerOs.Platform.Core.Intents;
 using HackerOs.Platform.Core.Lifecycle;
@@ -219,7 +220,7 @@ public static class EcosystemServiceCollectionExtensions
         // /proc and /dev are virtual, read-only mounts computed on every read and never written to
         // IndexedDB (ADR 0046). The process manager is resolved lazily: it depends on the session
         // service, which depends on FileSystemSeeder, which reaches /proc through this router.
-        services.AddScoped<IFileSystemMountRouter>(provider =>
+        services.AddScoped<FileSystemMountRouter>(provider =>
             new FileSystemMountRouter(provider.GetRequiredService<IFileSystemProvider>(),
             [
                 new FileSystemMount(ProcFileSystemProvider.DefaultMountPath, new ProcFileSystemProvider(
@@ -261,6 +262,17 @@ public static class EcosystemServiceCollectionExtensions
                     provider.GetRequiredService<ISimulationClock>(),
                     () => provider.GetService<KernelLog>()))
             ]));
+        // ADR 0181: network drives (folders of the host computer) are mounted while the OS runs.
+        services.AddScoped<IFileSystemMountRouter>(provider => provider.GetRequiredService<FileSystemMountRouter>());
+        services.AddScoped<IDynamicFileSystemMountRouter>(provider => provider.GetRequiredService<FileSystemMountRouter>());
+        services.AddScoped<IHostFolderAccess>(provider =>
+            new BrowserHostFolderAccess(provider.GetRequiredService<Microsoft.JSInterop.IJSRuntime>()));
+        services.AddScoped<NetworkDriveService>(provider => new NetworkDriveService(
+            provider.GetRequiredService<IDynamicFileSystemMountRouter>(),
+            provider.GetRequiredService<IHostFolderAccess>(),
+            () => provider.GetRequiredService<ISessionService>().CurrentPrincipal,
+            provider.GetService<IEventBus>(),
+            logger: provider.GetService<ILogger<NetworkDriveService>>()));
         // Depends on IFileSystemMountRouter, which is Scoped (see above) — see this file's
         // IJSRuntime scoping note.
         services.AddScoped<IFileSystemPathResolver, FileSystemPathResolver>();
@@ -725,7 +737,12 @@ public static class EcosystemServiceCollectionExtensions
                 new AppDriveGateway(
                     () => provider.GetRequiredService<IFileSystemMountRouter>(),
                     provider.GetRequiredService<VirtualHardwareProfile>(),
-                    provider.GetRequiredService<IStorageUsageProvider>()),
+                    provider.GetRequiredService<IStorageUsageProvider>())
+                {
+                    // ADR 0181: HackDriveInfo.MountHostFolderAsync, ReconnectAsync and UnmountAsync.
+                    // Resolved now, with the execution factory, so it sees the first login event.
+                    NetworkDrives = NetworkDrivesOf(provider)
+                },
                 // ADR 0068: write-stream buffers and sockets in flight, charged to each app's process.
                 provider.GetRequiredService<IKernelMemoryLedger>())
             {
@@ -1162,6 +1179,13 @@ public static class EcosystemServiceCollectionExtensions
     /// The CPU measurement as <c>/proc</c> reads it: with Web Workers, their processes' times come from
     /// their heartbeats (ADR 0070, section 5); otherwise the main thread's accountant.
     /// </summary>
+    /// <summary>The network drive service, resolved once, returned by the drive gateway (ADR 0181).</summary>
+    private static Func<NetworkDriveService?> NetworkDrivesOf(IServiceProvider provider)
+    {
+        NetworkDriveService drives = provider.GetRequiredService<NetworkDriveService>();
+        return () => drives;
+    }
+
     private static ICpuTimeAccountant CpuAccountant(IServiceProvider provider) =>
         (ICpuTimeAccountant?)provider.GetService<WorkerAwareCpuTimeAccountant>() ?? provider.GetRequiredService<ICpuTimeAccountant>();
 

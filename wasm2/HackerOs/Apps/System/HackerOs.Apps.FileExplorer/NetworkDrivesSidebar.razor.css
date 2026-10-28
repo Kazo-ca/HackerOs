@@ -1,0 +1,85 @@
+/* Same look as the Places entries of FileExplorerWindow.razor.css (scoped CSS does not cross components). */
+.sidebar-heading {
+    padding: 0.2rem 0.5rem 0.4rem;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--hos-text-muted, #6e7681);
+}
+
+.network-heading {
+    margin-top: 0.75rem;
+}
+
+.network-drive {
+    display: flex;
+    align-items: center;
+    gap: 0.15rem;
+}
+
+.network-drive .sidebar-entry {
+    flex: 1;
+    min-width: 0;
+}
+
+.network-drive .sidebar-entry span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.sidebar-entry {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.5rem;
+    border: 1px solid transparent;
+    border-radius: var(--hos-radius-sm, 6px);
+    background: transparent;
+    color: var(--hos-text-secondary, #8b949e);
+    font-family: inherit;
+    font-size: 0.82rem;
+    text-align: left;
+    cursor: pointer;
+    transition: background var(--hos-transition-fast, 120ms ease),
+                color var(--hos-transition-fast, 120ms ease);
+}
+
+.sidebar-entry:hover {
+    color: var(--hos-text-primary, #f0f6fc);
+    background: var(--hos-list-hover-bg, rgba(66, 211, 146, 0.06));
+}
+
+.sidebar-entry.active {
+    color: var(--hos-accent, #42d392);
+    border-color: var(--hos-accent-subtle, #123a2b);
+    background: var(--hos-list-selected-bg, var(--hos-accent-subtle, #123a2b));
+}
+
+.sidebar-entry.disconnected {
+    opacity: 0.6;
+    font-style: italic;
+}
+
+.network-eject {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.3rem;
+    border: none;
+    border-radius: var(--hos-radius-sm, 6px);
+    background: transparent;
+    color: var(--hos-text-muted, #6e7681);
+    cursor: pointer;
+}
+
+.network-eject:hover,
+.network-eject:focus-visible {
+    color: var(--hos-danger, #f85149);
+    background: var(--hos-list-hover-bg, rgba(66, 211, 146, 0.06));
+}
+
+.sidebar-entry:disabled,
+.network-eject:disabled {
+    cursor: progress;
+}
