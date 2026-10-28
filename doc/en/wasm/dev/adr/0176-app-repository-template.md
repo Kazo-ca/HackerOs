@@ -38,8 +38,8 @@ templates, with no VSIX extension. Complements [ADR 0098](0098-sdk-versions-pack
    app, a test project, `Directory.Build.props`, `global.json`, `.gitignore`,
    `.gitmodules`, a CI workflow and a `README.md`. It ships with the other
    templates, at the release's version.
-2. **GitHub template repository.** A repository in the Kazo-ca organization,
-   marked "Template repository", holds the output of `dotnet new hackeros-solution`.
+2. **GitHub template repository.** [`Kazo-ca/HackerOs-AppTemplate`](https://github.com/Kazo-ca/HackerOs-AppTemplate)
+   (created by Benoit on 2026-10-28), marked "Template repository", holds the output of `dotnet new hackeros-solution`.
    It is regenerated from the template, never edited by hand anywhere but in the
    template.
 3. **Mandatory submodule.** `external/HackerOs` points to the main repository, at
@@ -99,4 +99,5 @@ templates, with no VSIX extension. Complements [ADR 0098](0098-sdk-versions-pack
 - [ ] External source mode in `HackerOs.Apps.targets` (`HackerOsUseSource`, `HackerOsSourceRoot`).
 - [ ] `hackeros-solution` template (submodule, `Versions.props` import, profiles, CI).
 - [ ] Test of both profiles in `HackerOs.Templates.E2E.Tests`.
-- [ ] Create the template repository from the template (Benoit creates the repository in Kazo-ca).
+- [x] Create the `Kazo-ca/HackerOs-AppTemplate` repository (Benoit, 2026-10-28).
+- [ ] Push the output of `dotnet new hackeros-solution` to it and mark it "Template repository".
