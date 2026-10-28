@@ -1,0 +1,75 @@
+@using HackerOs.Windowing.Core
+@using HackerOs.Windowing.Abstractions
+@*
+    Two screens side by side in one page (ADR 0178 §3): the window renders once in screen 1's area,
+    and changing screen only moves its element into screen 2's window layer.
+*@
+
+<section class="screen-portal-scenario" data-status="ready">
+    <nav class="screen-portal-controls" aria-label="Screen test controls">
+        <button type="button" id="move-to-screen-2" @onclick="() => Move(Screen2)">Move to screen 2</button>
+        <button type="button" id="move-to-screen-1" @onclick="() => Move(DisplayId.Primary)">Move to screen 1</button>
+        <button type="button" id="toggle-screen-2" @onclick="ToggleScreen2">Toggle screen 2</button>
+    </nav>
+    <div class="screen-portal-screens">
+        <div class="screen-portal-screen" data-screen="1">
+            <DesktopArea Windows="_runtime.Windows"
+                         Layers="_layers"
+                         OnFocus="Focus"
+                         OnGesture="Apply">
+                <WindowContent Context="window">
+                    <PortalProbe />
+                </WindowContent>
+            </DesktopArea>
+        </div>
+        @if (_showScreen2)
+        {
+            <div class="screen-portal-screen" data-screen="2">
+                <DesktopArea Windows="_runtime.Windows"
+                             DisplayId="Screen2"
+                             Layers="_layers"
+                             OnFocus="Focus"
+                             OnGesture="Apply" />
+            </div>
+        }
+    </div>
+</section>
+
+@code {
+    private static readonly DisplayId Screen2 = DisplayId.FromNumber(2);
+    private static readonly WindowId ProbeId = WindowId.FromGuid(Guid.Parse("20000000-0000-0000-0000-000000000001"));
+    private readonly WindowRuntime _runtime = new(new WindowBounds(0, 0, 480, 400));
+    private readonly WindowLayers _layers = new();
+    private bool _showScreen2 = true;
+
+    /// <inheritdoc />
+    protected override void OnInitialized()
+    {
+        _runtime.Apply(new AddDisplayCommand(Screen2, new WindowBounds(0, 0, 480, 400)));
+        _runtime.Apply(new CreateWindowCommand(new WindowRuntimeState(
+            ProbeId,
+            "org.hackeros.browser.portal",
+            WindowOwnerId.FromGuid(Guid.NewGuid()),
+            "Portal",
+            null,
+            new WindowBounds(40, 40, 300, 220),
+            null,
+            0,
+            WindowVisualState.Normal,
+            new WindowConstraints(true, 240, 180))));
+    }
+
+    private Task Focus(WindowId id) => Apply(new FocusWindowCommand(id));
+
+    private Task Move(DisplayId display) => Apply(new MoveWindowToDisplayCommand(ProbeId, display));
+
+    /// <summary>Removes screen 2's area while the window is still on it, like a closed surface.</summary>
+    private void ToggleScreen2() => _showScreen2 = !_showScreen2;
+
+    private Task Apply(WindowCommand command)
+    {
+        _runtime.Apply(command);
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+}
