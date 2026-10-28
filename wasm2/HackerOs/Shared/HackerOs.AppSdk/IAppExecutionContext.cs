@@ -315,6 +315,13 @@ public interface IAppExecutionContext
     IAppFileMenuEntryAdministrationGateway FileMenuEntryAdministration => UnsupportedAdministrationGateways.FileMenuEntries;
 
     /// <summary>
+    /// Gets this instance's gateway to the secondary screens of the session, behind
+    /// <see cref="HackScreens"/> (ADR 0184; capability <c>screens.manage</c>). Defaults to an
+    /// unsupported gateway; the trusted platform factory overrides it on a host with screens.
+    /// </summary>
+    IAppScreensGateway Screens => UnsupportedAdministrationGateways.Screens;
+
+    /// <summary>
     /// Gets this instance's ability to host interactive shells (<c>shell.host</c>, ADR 0056
     /// section 7), read by <see cref="Shell.HackShell"/>. Defaults to an unsupported gateway so
     /// existing <see cref="IAppExecutionContext"/> implementations that predate this member keep
@@ -419,6 +426,37 @@ public static class UnsupportedAdministrationGateways
 
     /// <summary>Unsupported <see cref="IAppFileMenuEntryAdministrationGateway"/>.</summary>
     public static IAppFileMenuEntryAdministrationGateway FileMenuEntries { get; } = new UnsupportedFileMenuEntries();
+
+    /// <summary>Unsupported <see cref="IAppScreensGateway"/>: a host without secondary screens.</summary>
+    public static IAppScreensGateway Screens { get; } = new UnsupportedScreens();
+
+    private sealed class UnsupportedScreens : IAppScreensGateway
+    {
+        public bool IsSupported => false;
+
+        public HackScreensState GetState() => throw new NotSupportedException(Message);
+
+        public ValueTask<IAsyncDisposable> WatchAsync(Func<ValueTask> onChanged, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException(Message);
+
+        public ValueTask<HackScreenOpenStatus> OpenScreenAsync(CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException(Message);
+
+        public ValueTask<int> RestoreScreensAsync(CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException(Message);
+
+        public ValueTask CloseScreenAsync(int number, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException(Message);
+
+        public ValueTask IdentifyAsync(CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException(Message);
+
+        public ValueTask<bool> ToggleFullScreenAsync(CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException(Message);
+
+        public ValueTask<HackScreenPermission> RequestPermissionAsync(CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException(Message);
+    }
 
     private sealed class UnsupportedFileMenuEntries : IAppFileMenuEntryAdministrationGateway
     {

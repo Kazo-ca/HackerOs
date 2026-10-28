@@ -83,6 +83,6 @@ my window, placing a window) stays for later. Implementation: [`screens-settings
 
 ## Tasks
 
-- [ ] `HackScreens`, `IAppScreensGateway`, `screens.manage` capability.
-- [ ] `AppScreensGateway`, `IScreenControl`, `ScreenControl`, identification by the service.
-- [ ] Settings ▸ Screens buttons, tests, docs and index.
+- [x] `HackScreens`, `IAppScreensGateway`, `screens.manage` capability.
+- [x] `AppScreensGateway`, `IScreenControl`, `ScreenControl`, identification by the service.
+- [x] Settings ▸ Screens buttons, tests, docs and index.

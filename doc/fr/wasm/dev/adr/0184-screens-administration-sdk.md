@@ -85,6 +85,6 @@ fenêtre) reste à plus tard. Mise en œuvre : [`screens-settings.md`](../screen
 
 ## Tâches
 
-- [ ] `HackScreens`, `IAppScreensGateway`, capacité `screens.manage`.
-- [ ] `AppScreensGateway`, `IScreenControl`, `ScreenControl`, identification par le service.
-- [ ] Boutons de Paramètres ▸ Écrans, tests, docs et index.
+- [x] `HackScreens`, `IAppScreensGateway`, capacité `screens.manage`.
+- [x] `AppScreensGateway`, `IScreenControl`, `ScreenControl`, identification par le service.
+- [x] Boutons de Paramètres ▸ Écrans, tests, docs et index.

@@ -92,6 +92,7 @@ Details: [`app-model.md`](app-model.md).
 | `ProcessManage` | `process.manage` | **dangerous** | stopping other apps' processes |
 | `ServicesManage` | `services.manage` | **dangerous** | `HackServiceController` on other apps' services |
 | `WindowsManage` | `windows.manage` | **dangerous** | other apps' windows |
+| `ScreensManage` | `screens.manage` | normal | `HackScreens` (secondary screens, ADR 0184) |
 | `NotificationsPost` | `notifications.post` | normal | `AppContext.Notifications` |
 | `ClipboardRead` / `Write` | `clipboard.read` / `.write` | normal | `HackClipboard` |
 | `NetworkSimulatedRead` / `Write` | `network.simulated.read` / `.write` | normal | simulated network |
@@ -314,6 +315,7 @@ reads them here. See [`accessibility.md`](../dev/accessibility.md).
 | `HackServerConnection` | `GetStateAsync`, `ConnectAsync`, `CreateAccountAsync`, `DisconnectAsync`, `SyncAsync`, `GetConflictsAsync`, `GetRelayPolicyAsync`, `ShowConflictsAsync`, `GetSyncStatusAsync` (`HackSyncStatus`), `SetSyncPausedAsync`, `SyncNowAsync` ([`synchronization.md`](../dev/synchronization.md)) | `server.connection.manage` |
 | `HackSystem` | `RebootAsync`, `FactoryResetAsync` | `system.power` + administrator |
 | `HackStorageDiagnostics` | `GetSnapshotAsync`, `GetWebSiteDatabasesAsync`, `DeleteWebSiteDatabaseAsync` (the sites' `hackweb.*` databases, ADR 0088 §4) | `system.storage.inspect` |
+| `HackScreens` | `IsSupported`, `IsSupportedFor(context)`, `GetState` (`HackScreensState`, `HackScreenInfo`), `WatchAsync`, `OpenScreenAsync` → `HackScreenOpenStatus`, `RestoreScreensAsync`, `CloseScreenAsync(number)`, `IdentifyAsync`, `ToggleFullScreenAsync`, `RequestPermissionAsync` → `HackScreenPermission`; open, full screen and permission only during a click (ADR 0184, [`screens-settings.md`](../dev/screens-settings.md)) | `screens.manage` |
 | `HackSystemBackup` | `IsSupported`, `IsSupportedFor(context)`, `CreateAsync` → `HackBackupInfo(FileName, SizeBytes, RecordCount, CreatedAtUtc)`, `RestoreAsync(HackBackupRestoreMode.Merge \| Replace)` → `HackBackupInfo?` (`null`: picker closed); `HackBackupInvalidException` for a rejected archive (ADR 0099 §1, [`system-backup-api.md`](system-backup-api.md); implementation: [`system-backup.md`](../dev/system-backup.md)) | `system.backup` + administrator |
 
 Details: [`system-administration.md`](system-administration.md),

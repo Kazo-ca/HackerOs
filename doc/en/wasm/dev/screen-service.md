@@ -49,6 +49,10 @@ ScreenService ── AddDisplay / ChangeViewport / RemoveDisplay ──► Windo
 | `DismissRestoreAsync()` | Drops the offer and writes it. |
 | `CloseScreenAsync(screen)` | Closes a screen; it is no longer restored. |
 | `ToggleFullScreenAsync(screen)` | Full screen for the screen, from a click made in that screen. |
+| `TogglePrimaryFullScreenAsync()`, `IsPrimaryFullScreen` | Full screen for the main tab (screen 1), from a click (ADR 0184). |
+| `IdentifyAsync()`, `IsIdentifying` | Shows each screen's number for 3 s; a new call starts again (ADR 0184). |
+| `RequestPermissionAsync()` | Asks for the `window-management` permission during a click and returns the answer (ADR 0184). |
+| `IsStarted` | True after `StartAsync` and until disposal: `ScreenControl` derives `HackScreens.IsSupported` from it. |
 | `Screens`, `RestorableScreens`, `Permission`, `IsPrimaryHidden`, `CanOpenScreen`, `Changed` | State read by the UI. |
 | `PrimaryTaskbar`, `SetPrimaryTaskbarAsync(mode)` | `[taskbar]`'s `primary-taskbar` setting, followed during the session (work item 5, [`per-screen-taskbars.md`](per-screen-taskbars.md)). |
 

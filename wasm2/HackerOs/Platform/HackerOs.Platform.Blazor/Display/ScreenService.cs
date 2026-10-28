@@ -122,6 +122,7 @@ public sealed class ScreenService : IAsyncDisposable
     private IJSObjectReference? _module;
     private DotNetObjectReference<ScreenService>? _self;
     private CancellationTokenSource? _pendingGeometrySave;
+    private CancellationTokenSource? _identifying;
     private bool _started;
     private bool _disposed;
 
@@ -171,6 +172,21 @@ public sealed class ScreenService : IAsyncDisposable
 
     /// <summary>Gets whether one more screen can open.</summary>
     public bool CanOpenScreen => _runtime.NextDisplayId.Number <= ScreensSettingsDocuments.MaxScreenNumber;
+
+    /// <summary>Gets whether the desktop shell started the service (<see cref="StartAsync"/>); the mobile shell never does.</summary>
+    public bool IsStarted => _started && !_disposed;
+
+    /// <summary>Gets whether the main tab is in full screen.</summary>
+    public bool IsPrimaryFullScreen { get; private set; }
+
+    /// <summary>
+    /// Gets whether every screen shows its number (« Identifier », ADR 0184 §5): the veil of each screen
+    /// is lit, with no square highlighted, until <see cref="IdentifyDuration"/> has passed.
+    /// </summary>
+    public bool IsIdentifying => _identifying is not null;
+
+    /// <summary>Gets or sets how long « Identifier » shows the numbers.</summary>
+    internal TimeSpan IdentifyDuration { get; set; } = TimeSpan.FromSeconds(3);
 
     /// <summary>Gets or sets how long the service waits after a window moved before writing its place.</summary>
     internal TimeSpan GeometrySaveDelay { get; set; } = TimeSpan.FromSeconds(1);
@@ -322,6 +338,81 @@ public sealed class ScreenService : IAsyncDisposable
         }
     }
 
+    /// <summary>
+    /// Enters or leaves full screen in the main tab (screen 1). Call it from a click in the main tab.
+    /// </summary>
+    /// <returns><see langword="true"/> when the browser accepted.</returns>
+    public async Task<bool> TogglePrimaryFullScreenAsync()
+    {
+        try
+        {
+            return await (await GetModuleAsync()).InvokeAsync<bool>("toggleFullScreen", (string?)null);
+        }
+        catch (Exception exception) when (exception is InvalidOperationException or JSDisconnectedException or JSException)
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Shows each screen's number on its veil for <see cref="IdentifyDuration"/> (ADR 0184 §5); a new
+    /// call starts the delay again.
+    /// </summary>
+    /// <param name="cancellationToken">Cancels the wait; the numbers go out at once.</param>
+    public async Task IdentifyAsync(CancellationToken cancellationToken = default)
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+        CancellationTokenSource identifying = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        Interlocked.Exchange(ref _identifying, identifying)?.Cancel();
+        Changed?.Invoke();
+        try
+        {
+            await Task.Delay(IdentifyDuration, identifying.Token);
+        }
+        catch (OperationCanceledException)
+        {
+            // A new call took over, or the caller gave up: the numbers go out below unless taken over.
+        }
+
+        if (Interlocked.CompareExchange(ref _identifying, null, identifying) == identifying)
+        {
+            Changed?.Invoke();
+        }
+
+        identifying.Dispose();
+    }
+
+    /// <summary>
+    /// Asks the browser for the <c>window-management</c> permission (ADR 0184). Call it from a click:
+    /// the browser shows its prompt only during a gesture.
+    /// </summary>
+    /// <returns>The permission after the user answered.</returns>
+    public async Task<ScreenPermission> RequestPermissionAsync()
+    {
+        try
+        {
+            string state = await (await GetModuleAsync()).InvokeAsync<string>("requestPermission");
+            OnPermission(state);
+        }
+        catch (Exception exception) when (exception is InvalidOperationException or JSDisconnectedException or JSException)
+        {
+            // A host without interactive JavaScript keeps its state.
+        }
+
+        return Permission;
+    }
+
+    /// <summary>Called by <c>screens.js</c> when the main tab entered or left full screen. Not part of the public contract.</summary>
+    [JSInvokable]
+    public void OnPrimaryFullScreen(bool fullScreen)
+    {
+        if (IsPrimaryFullScreen != fullScreen)
+        {
+            IsPrimaryFullScreen = fullScreen;
+            Changed?.Invoke();
+        }
+    }
+
     /// <summary>Called by <c>screens.js</c> when a screen's window moved or changed size. Not part of the public contract.</summary>
     [JSInvokable]
     public void OnScreenGeometry(string surfaceId, int left, int top, int width, int height)
@@ -403,6 +494,7 @@ public sealed class ScreenService : IAsyncDisposable
 
         _disposed = true;
         _pendingGeometrySave?.Cancel();
+        Interlocked.Exchange(ref _identifying, null)?.Cancel();
         if (_settings is not null)
         {
             _settings.DocumentChanged -= OnSettingsChanged;

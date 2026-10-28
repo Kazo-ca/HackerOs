@@ -29,6 +29,6 @@
 }
 
 /* The screen that shows the menu keeps it usable: the overlays live in its document. */
-:root:has(.screen-overlays) .screen-identify-veil {
+:root:has(.screen-overlays) .screen-identify-veil:not(.is-identify) {
     display: none;
 }

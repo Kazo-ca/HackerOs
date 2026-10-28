@@ -1,6 +1,8 @@
 using System.Globalization;
 using HackerOs.AppSdk;
+using HackerOs.AppSdk.Administration;
 using HackerOs.AppSdk.Globalization;
+using HackerOs.AppSdk.IO;
 using HackerOs.AppSdk.Settings;
 using HackerOs.Simulation.Abstractions.Settings;
 using Microsoft.Extensions.Localization;
@@ -14,11 +16,16 @@ namespace HackerOs.Apps.Settings;
 /// </summary>
 /// <remarks>
 /// <para>
+/// ADR 0184: on a host with screens, <see cref="HackScreens"/> lists the open screens and opens,
+/// restores, closes, identifies them, puts the screen of this window in full screen and asks for the
+/// <c>window-management</c> permission (capability <c>screens.manage</c>). The browser accepts a new
+/// window, a full screen or its prompt only during the click, so each button calls it straight away.
+/// </para>
+/// <para>
 /// Both choices go to the user layer, <c>~/.config/hackeros/screens.config</c>, through
 /// <see cref="HackSettings.OpenSystemAsync(IAppExecutionContext, string, CancellationToken)"/>: the
-/// screen service follows <c>primary-taskbar</c> at once. The panel uses the public SDK only, which has
-/// no screens API (question Q1 of the multi-monitor plan): opening, restoring, identifying and moving
-/// screens stay in the window menus, the restore card and the full screen button of each screen.
+/// screen service follows <c>primary-taskbar</c> at once. The panel uses the public SDK only; moving a
+/// window to another screen stays in the window menus.
 /// </para>
 /// <para>
 /// A screen listed in <c>open</c> is open, or offered at the next sign-in; the screen service owns that
@@ -51,6 +58,8 @@ public sealed partial class ScreensPanel
     private static readonly string[] TaskbarModes = [PrimaryTaskbarAll, PrimaryTaskbarOwn];
 
     private HackSettingsDocument? _document;
+    private HackScreensState? _live;
+    private IAsyncDisposable? _liveWatch;
     private string _primaryTaskbar = PrimaryTaskbarAll;
     private IReadOnlyList<RememberedScreen> _screens = [];
     private string? _message;
@@ -70,6 +79,9 @@ public sealed partial class ScreensPanel
 
     /// <summary>Gets the secondary screens the file remembers, by number.</summary>
     internal IReadOnlyList<RememberedScreen> Screens => _screens;
+
+    /// <summary>Gets the open screens, or <see langword="null"/> on a host without screens.</summary>
+    internal HackScreensState? Live => _live;
 
     /// <summary>Gets the text of the last outcome, or <see langword="null"/>.</summary>
     internal string? Message => _message;
@@ -93,6 +105,134 @@ public sealed partial class ScreensPanel
         catch (Exception exception) when (exception is NotSupportedException or IOException or UnauthorizedAccessException or ArgumentException)
         {
             ShowError(L["Screens.Error.CannotRead", exception.Message]);
+        }
+
+        await StartLiveAsync();
+    }
+
+    /// <summary>Opens a secondary screen. Called by the button's click: the browser needs that gesture.</summary>
+    internal async Task OpenScreenAsync()
+    {
+        HackScreenOpenStatus status = await RunAsync(() => HackScreens.OpenScreenAsync(Context, CancellationToken.None), HackScreenOpenStatus.Unavailable);
+        switch (status)
+        {
+            case HackScreenOpenStatus.Blocked:
+                ShowError(L["Screens.Open.Blocked"]);
+                break;
+            case HackScreenOpenStatus.LimitReached:
+                ShowError(L["Screens.Open.LimitReached"]);
+                break;
+            case HackScreenOpenStatus.Unavailable:
+                ShowError(L["Screens.Open.Unavailable"]);
+                break;
+        }
+    }
+
+    /// <summary>Reopens the screens of the last session. Called by the button's click.</summary>
+    internal async Task RestoreScreensAsync()
+    {
+        int opened = await RunAsync(() => HackScreens.RestoreScreensAsync(Context, CancellationToken.None), 0);
+        if (opened == 0 && _message is null)
+        {
+            ShowError(L["Screens.Open.Blocked"]);
+        }
+    }
+
+    /// <summary>Closes a secondary screen; its windows come back to screen 1.</summary>
+    /// <param name="number">The screen, 2 to 9.</param>
+    internal Task CloseScreenAsync(int number) =>
+        RunAsync(async () =>
+        {
+            await HackScreens.CloseScreenAsync(Context, number, CancellationToken.None);
+            return true;
+        }, false);
+
+    /// <summary>Shows each screen's number for a few seconds.</summary>
+    internal Task IdentifyAsync() =>
+        RunAsync(async () =>
+        {
+            await HackScreens.IdentifyAsync(Context, CancellationToken.None);
+            return true;
+        }, false);
+
+    /// <summary>Puts the screen of this window in full screen, or takes it out. Called by the button's click.</summary>
+    internal async Task ToggleFullScreenAsync()
+    {
+        if (!await RunAsync(() => HackScreens.ToggleFullScreenAsync(Context, CancellationToken.None), true))
+        {
+            ShowError(L["Screens.Open.FullScreenRefused"]);
+        }
+    }
+
+    /// <summary>Asks the browser for the window management permission. Called by the button's click.</summary>
+    internal Task RequestPermissionAsync() =>
+        RunAsync(() => HackScreens.RequestPermissionAsync(Context, CancellationToken.None), HackScreenPermission.Unknown);
+
+    /// <summary>Reads the open screens and follows them, on a host that has some.</summary>
+    private async Task StartLiveAsync()
+    {
+        if (!HackScreens.IsSupportedFor(Context))
+        {
+            return;
+        }
+
+        try
+        {
+            _live = HackScreens.GetState(Context);
+            _liveWatch = await HackScreens.WatchAsync(Context, OnLiveChangedAsync, Context.CancellationToken);
+        }
+        catch (Exception exception) when (exception is HackUnauthorizedAccessException or NotSupportedException)
+        {
+            // Without screens.manage, or once the screens went away, the page keeps the file part.
+            _live = null;
+        }
+    }
+
+    /// <summary>Runs one screen request, shows a refusal, then reads the screens again.</summary>
+    private async Task<T> RunAsync<T>(Func<Task<T>> request, T fallback)
+    {
+        if (_isBusy || _live is null)
+        {
+            return fallback;
+        }
+
+        _isBusy = true;
+        _message = null;
+        T result = fallback;
+        try
+        {
+            result = await request();
+        }
+        catch (Exception exception) when (exception is HackUnauthorizedAccessException or NotSupportedException or InvalidOperationException)
+        {
+            ShowError(L["Screens.Error.Request", exception.Message]);
+        }
+        finally
+        {
+            _isBusy = false;
+        }
+
+        RefreshLive();
+        StateHasChanged();
+        return result;
+    }
+
+    private ValueTask OnLiveChangedAsync() =>
+        new(InvokeAsync(() =>
+        {
+            RefreshLive();
+            StateHasChanged();
+        }));
+
+    private void RefreshLive()
+    {
+        try
+        {
+            _live = _live is null ? null : HackScreens.GetState(Context);
+        }
+        catch (Exception exception) when (exception is HackUnauthorizedAccessException or NotSupportedException)
+        {
+            _live = null;
         }
     }
 
@@ -151,6 +291,11 @@ public sealed partial class ScreensPanel
     /// <inheritdoc />
     public async ValueTask DisposeAsync()
     {
+        if (_liveWatch is not null)
+        {
+            await _liveWatch.DisposeAsync();
+        }
+
         if (_document is not null)
         {
             _document.Changed -= OnDocumentChanged;
@@ -223,6 +368,22 @@ public sealed partial class ScreensPanel
     private string PlaceText(RememberedScreen screen) => screen.Place is { } place
         ? L["Screens.List.Place", place.Width, place.Height, place.Left, place.Top]
         : L["Screens.List.NoPlace"];
+
+    private string MonitorText(HackScreenInfo screen) => screen.Number == 1
+        ? L["Screens.List.Primary"]
+        : screen.MonitorName ?? L["Screens.Open.NoMonitorName"];
+
+    private static bool CallerIsFullScreen(HackScreensState live) =>
+        live.Screens.FirstOrDefault(screen => screen.Number == live.CallerScreen)?.IsFullScreen == true;
+
+    private string PermissionText(HackScreenPermission permission) => permission switch
+    {
+        HackScreenPermission.Granted => L["Screens.Permission.Granted"],
+        HackScreenPermission.Denied => L["Screens.Permission.Denied"],
+        HackScreenPermission.Prompt => L["Screens.Permission.Prompt"],
+        HackScreenPermission.Unsupported => L["Screens.Permission.Unsupported"],
+        _ => L["Screens.Permission.Unknown"],
+    };
 
     private static string OptionClass(bool selected) => selected ? "scr-option is-selected" : "scr-option";
 

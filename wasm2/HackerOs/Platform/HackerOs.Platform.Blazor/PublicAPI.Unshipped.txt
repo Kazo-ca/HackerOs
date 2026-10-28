@@ -107,3 +107,22 @@ override HackerOs.Platform.Blazor.Windows.WindowScreenMenuItem.ToString() -> str
 static HackerOs.Platform.Blazor.Windows.WindowScreenMenuItem.operator !=(HackerOs.Platform.Blazor.Windows.WindowScreenMenuItem? left, HackerOs.Platform.Blazor.Windows.WindowScreenMenuItem? right) -> bool
 static HackerOs.Platform.Blazor.Windows.WindowScreenMenuItem.operator ==(HackerOs.Platform.Blazor.Windows.WindowScreenMenuItem? left, HackerOs.Platform.Blazor.Windows.WindowScreenMenuItem? right) -> bool
 ~override HackerOs.Platform.Blazor.Display.ScreenIdentifyVeil.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+HackerOs.Platform.Blazor.Display.ScreenControl
+HackerOs.Platform.Blazor.Display.ScreenControl.Changed -> System.Action?
+HackerOs.Platform.Blazor.Display.ScreenControl.CloseScreenAsync(int number) -> System.Threading.Tasks.Task!
+HackerOs.Platform.Blazor.Display.ScreenControl.Dispose() -> void
+HackerOs.Platform.Blazor.Display.ScreenControl.GetState(System.Guid appInstanceId) -> HackerOs.AppSdk.Administration.HackScreensState!
+HackerOs.Platform.Blazor.Display.ScreenControl.IdentifyAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task!
+HackerOs.Platform.Blazor.Display.ScreenControl.OpenScreenAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Administration.HackScreenOpenStatus>!
+HackerOs.Platform.Blazor.Display.ScreenControl.RequestPermissionAsync() -> System.Threading.Tasks.Task<HackerOs.AppSdk.Administration.HackScreenPermission>!
+HackerOs.Platform.Blazor.Display.ScreenControl.RestoreScreensAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<int>!
+HackerOs.Platform.Blazor.Display.ScreenControl.ScreenControl(HackerOs.Platform.Blazor.Display.ScreenService! screens, HackerOs.Windowing.Core.WindowRuntime! runtime) -> void
+HackerOs.Platform.Blazor.Display.ScreenControl.ToggleFullScreenAsync(System.Guid appInstanceId) -> System.Threading.Tasks.Task<bool>!
+HackerOs.Platform.Blazor.Display.ScreenService.IdentifyAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+HackerOs.Platform.Blazor.Display.ScreenService.IsIdentifying.get -> bool
+HackerOs.Platform.Blazor.Display.ScreenService.IsPrimaryFullScreen.get -> bool
+HackerOs.Platform.Blazor.Display.ScreenService.OnPrimaryFullScreen(bool fullScreen) -> void
+HackerOs.Platform.Blazor.Display.ScreenService.RequestPermissionAsync() -> System.Threading.Tasks.Task<HackerOs.Platform.Blazor.Display.ScreenPermission>!
+HackerOs.Platform.Blazor.Display.ScreenService.TogglePrimaryFullScreenAsync() -> System.Threading.Tasks.Task<bool>!
+HackerOs.Platform.Blazor.Display.ScreenControl.IsAvailable.get -> bool
+HackerOs.Platform.Blazor.Display.ScreenService.IsStarted.get -> bool

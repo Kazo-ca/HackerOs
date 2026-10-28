@@ -285,6 +285,9 @@
   <data name="Capability.shell.context-menu.Title" xml:space="preserve">
     <value>Add entries to the file menus</value>
   </data>
+  <data name="Capability.screens.manage.Title" xml:space="preserve">
+    <value>Manage screens</value>
+  </data>
   <data name="Capability.shell.host.Risk" xml:space="preserve">
     <value>Run commands on your behalf, with the rights of those commands.</value>
   </data>

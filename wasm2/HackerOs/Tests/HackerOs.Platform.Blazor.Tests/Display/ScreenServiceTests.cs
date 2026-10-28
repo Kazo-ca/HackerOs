@@ -1,4 +1,5 @@
 using System.Text.Json;
+using HackerOs.AppSdk.Administration;
 using HackerOs.AppSdk.Blazor.Display;
 using HackerOs.Platform.Blazor.Display;
 using HackerOs.Platform.Core.Settings;
@@ -267,6 +268,123 @@ public sealed class ScreenServiceTests
         Assert.Equal([DisplayId.Primary], runtime.Displays);
     }
 
+    [Fact]
+    public async Task Screen_control_lists_screen_1_first_and_finds_the_screen_of_the_callers_window()
+    {
+        Harness harness = new();
+        using ScreenControl control = new(harness.Service, harness.Runtime);
+        Assert.False(control.IsAvailable);
+        harness.Surfaces.OpenReply = """{"status":"opened","width":1900,"height":1000,"monitor":"DELL U2720Q"}""";
+        await harness.Service.StartAsync();
+        Assert.True(control.IsAvailable);
+        Guid caller = Guid.NewGuid();
+        Assert.Equal(HackScreenOpenStatus.Opened, await control.OpenScreenAsync(CancellationToken.None));
+        WindowId window = CreateWindow(harness.Runtime, caller);
+        harness.Runtime.Apply(new MoveWindowToDisplayCommand(window, DisplayId.FromNumber(2)));
+
+        HackScreensState state = control.GetState(caller);
+
+        Assert.Equal(
+            [new HackScreenInfo(1, null, 1280, 720, false), new HackScreenInfo(2, "DELL U2720Q", 1900, 1000, false)],
+            state.Screens);
+        Assert.Equal(HackScreenPermission.Granted, state.Permission);
+        Assert.True(state.CanOpenScreen);
+        Assert.Empty(state.RestorableScreens);
+        Assert.Equal(2, state.CallerScreen);
+        // An instance without windows is on screen 1.
+        Assert.Equal(1, control.GetState(Guid.NewGuid()).CallerScreen);
+    }
+
+    [Fact]
+    public async Task Screen_control_full_screen_targets_the_screen_of_the_callers_window()
+    {
+        Harness harness = new();
+        using ScreenControl control = new(harness.Service, harness.Runtime);
+        await harness.Service.StartAsync();
+        SecondaryScreen screen = (await harness.Service.OpenScreenAsync()).Screen!;
+        Guid caller = Guid.NewGuid();
+        WindowId window = CreateWindow(harness.Runtime, caller);
+
+        Assert.True(await control.ToggleFullScreenAsync(caller));
+        harness.Runtime.Apply(new MoveWindowToDisplayCommand(window, screen.Id));
+        Assert.True(await control.ToggleFullScreenAsync(caller));
+
+        object?[][] calls = [.. harness.Screens.Calls.Where(call => call.Identifier == "toggleFullScreen").Select(call => call.Arguments)];
+        Assert.Equal(2, calls.Length);
+        Assert.Null(calls[0][0]);
+        Assert.Equal(screen.Surface.Id, calls[1][0]);
+        harness.Service.OnPrimaryFullScreen(true);
+        Assert.True(control.GetState(caller).Screens[0].IsFullScreen);
+    }
+
+    [Fact]
+    public async Task Identify_lights_every_number_then_puts_them_out()
+    {
+        Harness harness = new();
+        harness.Service.IdentifyDuration = TimeSpan.FromMilliseconds(80);
+        List<bool> seen = [];
+        harness.Service.Changed += () => seen.Add(harness.Service.IsIdentifying);
+
+        Task identifying = harness.Service.IdentifyAsync();
+        Assert.True(harness.Service.IsIdentifying);
+        await identifying;
+
+        Assert.False(harness.Service.IsIdentifying);
+        Assert.Equal([true, false], seen);
+    }
+
+    [Fact]
+    public async Task A_second_identify_starts_the_delay_again()
+    {
+        Harness harness = new();
+        harness.Service.IdentifyDuration = TimeSpan.FromMilliseconds(150);
+        Task first = harness.Service.IdentifyAsync();
+        await Task.Delay(50);
+        Task second = harness.Service.IdentifyAsync();
+
+        await first;
+        Assert.True(harness.Service.IsIdentifying);
+        await second;
+        Assert.False(harness.Service.IsIdentifying);
+    }
+
+    [Fact]
+    public async Task Asking_for_the_permission_reports_the_answer()
+    {
+        Harness harness = new();
+        using ScreenControl control = new(harness.Service, harness.Runtime);
+        await harness.Service.StartAsync();
+
+        Assert.Equal(HackScreenPermission.Denied, await control.RequestPermissionAsync());
+        Assert.Equal(ScreenPermission.Denied, harness.Service.Permission);
+    }
+
+    [Fact]
+    public void The_sdk_enums_match_the_service_enums_value_for_value()
+    {
+        Assert.Equal(Enum.GetNames<ScreenPermission>(), Enum.GetNames<HackScreenPermission>());
+        Assert.Equal(Enum.GetNames<ScreenOpenStatus>(), Enum.GetNames<HackScreenOpenStatus>());
+    }
+
+    private static WindowId CreateWindow(WindowRuntime runtime, Guid owner)
+    {
+        WindowId window = WindowId.FromGuid(Guid.NewGuid());
+        runtime.Apply(new CreateWindowCommand(new WindowRuntimeState(
+            window,
+            "org.hackeros.settings",
+            WindowOwnerId.FromGuid(owner),
+            "Settings",
+            null,
+            new WindowBounds(10, 10, 400, 300),
+            null,
+            0,
+            WindowVisualState.Normal,
+            new WindowConstraints(true, 320, 240, 2000, 1200),
+            WindowModality.Modeless,
+            null)));
+        return window;
+    }
+
     private sealed class Harness
     {
         public Harness()
@@ -327,6 +445,7 @@ public sealed class ScreenServiceTests
                 "open" => OpenReplies.Count > 0 ? OpenReplies.Dequeue() : OpenReply,
                 "start" => """{"permission":"granted","hidden":false}""",
                 "toggleFullScreen" => "true",
+                "requestPermission" => "\"denied\"",
                 _ => "null",
             };
             return ValueTask.FromResult(JsonSerializer.Deserialize<TValue>(json)!);
