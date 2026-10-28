@@ -117,6 +117,21 @@ public sealed class WindowKeyboardCommandsTests
         Assert.True(await commands.ExecuteAsync(WindowKeyboardAction.SnapLeft));
 
         Assert.Equal(new WindowBounds(0, 0, 640, 720), runtime.Windows[0].Bounds);
+        Assert.True(runtime.Windows[0].IsSnapped);
+    }
+
+    [Fact]
+    public async Task Restore_or_minimize_undoes_a_snap()
+    {
+        (WindowRuntime runtime, WindowKeyboardCommands commands) = Create(out _, 1);
+        WindowBounds origin = runtime.Windows[0].Bounds;
+        Assert.True(await commands.ExecuteAsync(WindowKeyboardAction.SnapRight));
+
+        Assert.True(await commands.ExecuteAsync(WindowKeyboardAction.RestoreOrMinimize));
+
+        Assert.Equal(WindowVisualState.Normal, runtime.Windows[0].VisualState);
+        Assert.False(runtime.Windows[0].IsSnapped);
+        Assert.Equal(origin, runtime.Windows[0].Bounds);
     }
 
     [Fact]

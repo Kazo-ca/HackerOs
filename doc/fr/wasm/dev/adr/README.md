@@ -176,5 +176,6 @@ prochain numéro libre est indiqué dans
 | [`0174-announce-a-new-version-to-open-sessions.md`](0174-announce-a-new-version-to-open-sessions.md) | ADR 0174 : `version.json` lu toutes les 5 minutes pour annoncer une nouvelle version aux sessions ouvertes |
 | [`0175-new-folder-in-the-choose-folder-dialog.md`](0175-new-folder-in-the-choose-folder-dialog.md) | ADR 0175 : bouton « Nouveau dossier » dans la barre des dialogues Choisir un dossier et Enregistrer ; activé pour « Open Folder » de Code Editor |
 | [`0176-app-repository-template.md`](0176-app-repository-template.md) | ADR 0176 : dépôt template d'apps généré par `hackeros-solution`, sous-module de l'OS (source en `Debug`, paquets nuget.org en `Release`), modèles visibles dans Visual Studio |
+| [`0177-title-bar-of-maximized-and-snapped-windows.md`](0177-title-bar-of-maximized-and-snapped-windows.md) | ADR 0177 : barre de titre des fenêtres agrandies et ancrées (boutons au-dessus des poignées, ancrage qui garde la géométrie d'avant, glisser pour restaurer, double-clic pour agrandir) |
 
 Index du dossier parent : [`../README.md`](../README.md).

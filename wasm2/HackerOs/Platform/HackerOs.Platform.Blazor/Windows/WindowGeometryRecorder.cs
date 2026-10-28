@@ -23,8 +23,8 @@ namespace HackerOs.Platform.Blazor.Windows;
 /// window writes at once, since the window will produce no further fact.
 /// </para>
 /// <para>
-/// Snapping (keyboard <c>snap-left</c>/<c>snap-right</c>) leaves a normal window covering exactly one
-/// half of the work area and keeps no restore geometry (window-model.md). Such a half-tile is not
+/// Snapping (keyboard <c>snap-left</c>/<c>snap-right</c>) leaves a normal window covering one half of
+/// the work area, marked <see cref="WindowRuntimeState.IsSnapped"/> (ADR 0177). Such a half-tile is not
 /// recorded: the window keeps the geometry it had before the snap and reopens as a normal window.
 /// </para>
 /// </remarks>
@@ -113,7 +113,7 @@ public sealed class WindowGeometryRecorder : IDisposable
         lock (_gate)
         {
             TrackedWindow tracked = new(appId);
-            Capture(tracked, window, _runtime.WorkArea);
+            Capture(tracked, window);
             _tracked[windowId] = tracked;
         }
     }
@@ -176,10 +176,9 @@ public sealed class WindowGeometryRecorder : IDisposable
             // Every other fact (move, resize, maximize, restore, work-area change) is read back from
             // the runtime's snapshots rather than from each event, so the recorder always sees the
             // constrained bounds the runtime actually applied.
-            WindowBounds workArea = _runtime.WorkArea;
             foreach (WindowRuntimeState window in _runtime.Windows)
             {
-                if (_tracked.TryGetValue(window.Id, out TrackedWindow? tracked) && Capture(tracked, window, workArea))
+                if (_tracked.TryGetValue(window.Id, out TrackedWindow? tracked) && Capture(tracked, window))
                 {
                     Schedule(tracked.AppId, tracked.Snapshot(), _debounce);
                 }
@@ -188,7 +187,7 @@ public sealed class WindowGeometryRecorder : IDisposable
     }
 
     /// <summary>Updates <paramref name="tracked"/> from a snapshot; returns whether its saved geometry changed.</summary>
-    private static bool Capture(TrackedWindow tracked, WindowRuntimeState window, WindowBounds workArea)
+    private static bool Capture(TrackedWindow tracked, WindowRuntimeState window)
     {
         WindowBounds? normal = tracked.NormalBounds;
         bool maximized = tracked.IsMaximized;
@@ -196,7 +195,7 @@ public sealed class WindowGeometryRecorder : IDisposable
         {
             case WindowVisualState.Normal:
                 maximized = false;
-                if (!IsSnapped(window.Bounds, workArea))
+                if (!window.IsSnapped)
                 {
                     normal = window.Bounds;
                 }
@@ -224,16 +223,6 @@ public sealed class WindowGeometryRecorder : IDisposable
         tracked.NormalBounds = normal;
         tracked.IsMaximized = maximized;
         return true;
-    }
-
-    /// <summary>Whether <paramref name="bounds"/> is exactly the left or right half-tile produced by snapping.</summary>
-    private static bool IsSnapped(WindowBounds bounds, WindowBounds workArea)
-    {
-        double half = Math.Floor(workArea.Width / 2);
-        return bounds.Width == half
-            && bounds.Height == workArea.Height
-            && bounds.Y == workArea.Y
-            && (bounds.X == workArea.X || bounds.X == workArea.X + workArea.Width - half);
     }
 
     /// <summary>Replaces the app's pending write with one that runs after <paramref name="delay"/>.</summary>

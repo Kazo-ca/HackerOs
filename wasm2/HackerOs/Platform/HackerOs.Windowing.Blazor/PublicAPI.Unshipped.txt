@@ -1,1 +1,3 @@
 #nullable enable
+HackerOs.Windowing.Blazor.WindowChrome.ReportDragRestoreAsync(double pointerX, double pointerY, double grabRatioX, double grabOffsetY) -> System.Threading.Tasks.Task<double[]?>!
+HackerOs.Windowing.Blazor.WindowChrome.ReportTitleDoubleClickAsync() -> System.Threading.Tasks.Task!

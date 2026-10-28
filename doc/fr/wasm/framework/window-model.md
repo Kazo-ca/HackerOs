@@ -176,7 +176,13 @@ qui a le focus. Une lettre est reconnue par sa touche physique quand Alt change 
   Alt passe à la fenêtre choisie (restaurée si elle était réduite). Échap annule.
 - **Déplacer / redimensionner** : un bandeau indique le mode ; les flèches déplacent ou
   redimensionnent de 10 px (1 px avec Ctrl), Entrée garde, Échap remet la fenêtre où elle était.
-- **Ancrer** : moitié gauche ou droite de la zone de travail.
+- **Ancrer** : moitié gauche ou droite de la zone de travail. La fenêtre garde sa géométrie
+  d'avant (ADR 0177) : `restore-or-minimize`, ou glisser sa barre de titre, la lui rend ; Agrandir
+  l'agrandit et Restaurer la remet ensuite à sa taille d'avant l'ancrage.
+- **Barre de titre** (ADR 0177) : un double-clic hors des boutons bascule agrandi ↔ normal ;
+  glisser la barre de titre d'une fenêtre agrandie ou ancrée la remet à sa taille d'avant, sous le
+  pointeur. Une fenêtre agrandie n'a pas de poignées de redimensionnement, et les boutons passent
+  toujours au-dessus des poignées.
 - **Menu de fenêtre** (ADR 0164) : `Alt+Space`/`Alt+F3` ou clic droit sur l'icône
   de l'app dans la barre de titre. Un clic gauche sur l'icône active seulement la
   fenêtre ; le reste de la barre de titre n'ouvre pas le menu. Il contient toutes les actions avec leur raccourci actif :
@@ -299,8 +305,9 @@ les récents du bureau mobile et le nom accessible du cadre (`aria-labelledby`).
 - **Taille mesurée** dans le navigateur, estimée seulement en repli (tests, rendu serveur).
 - **`/etc/hackeros/keybindings.config` livré en commentaires** : les valeurs actives viennent du
   code tant que personne n'écrit le fichier, comme les autres documents de l'OS.
-- **Ancrer ne garde pas de géométrie de restauration** : la fenêtre ancrée est une fenêtre normale.
-  La taille enregistrée (ADR 0116, 0122) ignore cette moitié d'écran et garde celle d'avant l'ancrage.
+- **Ancrer garde la géométrie d'avant** (ADR 0177, remplace « Ancrer ne garde pas de géométrie de
+  restauration ») : la fenêtre ancrée reste `Normal`, avec `IsSnapped` et `RestoreBounds`. La taille
+  enregistrée (ADR 0116, 0122) ignore cette moitié d'écran et garde celle d'avant l'ancrage.
 - **Touches dans une iframe** (navigateur, sites) : elles restent dans l'iframe, la page ne les voit
   pas ; il faut d'abord rendre le focus au bureau.
 - **Correction** : réduire une fenêtre en arrière-plan levait une exception dans `WindowRuntime`

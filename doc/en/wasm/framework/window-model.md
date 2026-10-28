@@ -176,7 +176,13 @@ that has focus. A letter is recognized by its physical key when Alt changes the 
   Alt switches to the chosen window (restored if it was minimized). Esc cancels.
 - **Move / resize**: a banner indicates the mode; arrows move or
   resize by 10 px (1 px with Ctrl), Enter keeps, Esc puts the window back where it was.
-- **Snap**: left or right half of the work area.
+- **Snap**: left or right half of the work area. The window keeps its earlier geometry
+  (ADR 0177): `restore-or-minimize`, or dragging its title bar, gives it back; Maximize maximizes
+  it and Restore then puts it back to its size from before the snap.
+- **Title bar** (ADR 0177): a double click outside the buttons toggles maximized ↔ normal;
+  dragging the title bar of a maximized or snapped window gives it back its earlier size, under
+  the pointer. A maximized window has no resize handles, and the buttons always sit above the
+  handles.
 - **Window menu** (ADR 0164): `Alt+Space`/`Alt+F3` or right click on the app
   icon in the title bar. A left click on the icon only activates the
   window; the rest of the title bar does not open the menu. It contains all actions with their active shortcut:
@@ -299,8 +305,9 @@ the mobile desktop's recents and the frame's accessible name (`aria-labelledby`)
 - **Measured size** in the browser, estimated only as a fallback (tests, server rendering).
 - **`/etc/hackeros/keybindings.config` shipped as comments**: active values come from
   the code as long as nobody writes the file, like the other OS documents.
-- **Snapping keeps no restore geometry**: the snapped window is a normal window.
-  The saved size (ADR 0116, 0122) ignores this half screen and keeps the one from before snapping.
+- **Snapping keeps the earlier geometry** (ADR 0177, replaces "Snapping keeps no restore
+  geometry"): the snapped window stays `Normal`, with `IsSnapped` and `RestoreBounds`. The saved
+  size (ADR 0116, 0122) ignores this half screen and keeps the one from before snapping.
 - **Keys in an iframe** (browser, sites): they stay in the iframe, the page does not see
   them; focus must first be given back to the desktop.
 - **Fix**: minimizing a background window threw an exception in `WindowRuntime`

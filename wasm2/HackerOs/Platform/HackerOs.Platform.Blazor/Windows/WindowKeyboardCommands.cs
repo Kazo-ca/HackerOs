@@ -231,7 +231,7 @@ public sealed class WindowKeyboardCommands : IDisposable
             case WindowKeyboardAction.Maximize:
                 return resizable && window.VisualState != WindowVisualState.Maximized && Apply(new MaximizeWindowCommand(windowId));
             case WindowKeyboardAction.RestoreOrMinimize:
-                return window.VisualState == WindowVisualState.Maximized
+                return window.VisualState == WindowVisualState.Maximized || window.IsSnapped
                     ? Apply(new RestoreWindowCommand(windowId))
                     : Apply(new MinimizeWindowCommand(windowId));
             case WindowKeyboardAction.ToggleMaximize:
@@ -556,20 +556,16 @@ public sealed class WindowKeyboardCommands : IDisposable
         }
     }
 
-    /// <summary>Tiles a window on one half of the work area, restoring it first when maximized.</summary>
+    /// <summary>
+    /// Tiles a window on one half of the work area. The runtime keeps its geometry from before the
+    /// snap, which a restore or a title-bar drag gives back (ADR 0177).
+    /// </summary>
     private bool Snap(WindowRuntimeState window, bool left)
     {
-        if (window.VisualState != WindowVisualState.Normal)
-        {
-            Apply(new RestoreWindowCommand(window.Id));
-        }
-
         WindowBounds area = _runtime.WorkArea;
         double width = Math.Floor(area.Width / 2);
         WindowBounds half = new(left ? area.X : area.X + area.Width - width, area.Y, width, area.Height);
-        bool resized = Apply(new ResizeWindowCommand(window.Id, half));
-        Apply(new CompleteWindowResizeCommand(window.Id));
-        return resized;
+        return Apply(new SnapWindowCommand(window.Id, half));
     }
 
     private void OnSettingsChanged(object? sender, OsSettingsChangedEventArgs args)
