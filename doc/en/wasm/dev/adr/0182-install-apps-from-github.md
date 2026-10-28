@@ -4,10 +4,10 @@
 
 ## Status
 
-Accepted on 2026-10-28 by Benoit, who chose the recommended option for all four
+Accepted on 2026-10-28 by Benoit, who chose the recommended option for the first four
 questions ("Answers" section): API check at install time, `hackeros-packages`
 branch, only `Kazo-ca` repositories trusted by default, machine-wide
-installation by an administrator. Request of the same day: "we'll just make a
+installation by an administrator; then C for Q5: the app appears after a restart, immediate addition comes later. Request of the same day: "we'll just make a
 terminal command to install an application from its GitHub repository. So we
 must make sure GitHub is allowed as a trusted host." Complements
 [ADR 0176](0176-app-repository-template.md) (app repository template),
@@ -159,12 +159,17 @@ Install, remove and update are **machine** operations: `sudo hackpkg install
    org.kazo.webamp=github:Kazo-ca/HackerOs-App-Webamp@1.0.0
    ```
 
-6. Add the app to the catalog during the session (launcher, search, "Open
-   with", terminal); log to `/var/log/syslog`
+6. **(Q5)** Log to `/var/log/syslog` and offer to restart the OS ("Restart to
+   finish installing", as in ADR 0162): the app appears in the launcher, search,
+   "Open with" and the terminal after the restart. The catalog stays frozen
+   during a session; immediate addition comes in a separate work item. Example
+   line
    (`apps: org.kazo.webamp 1.0.0 installed from github:Kazo-ca/HackerOs-App-Webamp (by=alice)`).
 
-At startup, `AppInstallationService` reads `[installed]` again and registers
-these apps in the catalog after the built-in apps. On launch, the assembly is
+At startup, before the catalog is used, the host reads `[installed]` and the
+manifests under `/usr/lib/hackeros/apps/` and builds the catalog with the
+built-in apps then the installed apps (an invalid installed app is left out
+with a warning, never blocking). On launch, the assembly is
 read from `/usr/lib/hackeros/apps/...` and loaded with `Assembly.Load(byte[])`
 instead of Blazor's lazy loading; resources are served by `AppAssetStore` from
 the same folder.
@@ -184,7 +189,7 @@ to pick up once apps are published.
 
 ## Answers
 
-Questions asked to Benoit on 2026-10-28; he chose **A** for all four.
+Questions asked to Benoit on 2026-10-28; he chose **A** for the first four and **C** for the fifth.
 
 - **Q1. Trimmed framework.** A (recommended): check references at install time,
   refuse with the list of missing APIs. B: the official host no longer trims the
@@ -202,10 +207,15 @@ Questions asked to Benoit on 2026-10-28; he chose **A** for all four.
   required (like `apt`). B: also per user (`~/.local/share/hackeros/apps`),
   without an administrator; any user can then run third-party code in the
   shared runtime.
+- **Q5. Immediate addition or after a restart** (asked after reading the code:
+  the catalog is built once at startup and read by about fifty files). A: after
+  a restart. B: immediately, mutable catalog. C (chosen): A now, B in a separate
+  work item later.
 
 ## Consequences
 
-- An app can be added to an already published OS, without recompiling the host.
+- An app can be added to an already published OS, without recompiling the host;
+  it appears after the OS restarts.
 - Installed code is not isolated from the OS; the list of trusted sources and an
   administrator's approval stand in for that. Isolation (app in a Web Worker,
   [ADR 0070](0070-worker-hosted-processes.md)) remains possible later.
@@ -223,7 +233,8 @@ Questions asked to Benoit on 2026-10-28; he chose **A** for all four.
 
 ## Tasks
 
-- [x] Benoit's answers to Q1 to Q4 (A for all, 2026-10-28).
+- [x] Benoit's answers to Q1 to Q5 (A for the first four, C for Q5, 2026-10-28).
+- [ ] Later: adding to the catalog without a restart (Q5 B).
 - [ ] `HackerOsPack` target in `HackerOs.App.Build` and publishing workflow in `hackeros-solution`.
 - [ ] `app-sources.config` (reading, creation migration).
 - [ ] `[installed]` section in `AppsConfigDocument`; registration in the catalog during the session.

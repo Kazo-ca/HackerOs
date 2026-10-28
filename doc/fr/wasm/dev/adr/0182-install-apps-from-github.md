@@ -5,9 +5,9 @@
 ## Statut
 
 Accepté le 2026-10-28 par Benoit, qui a choisi l'option recommandée aux quatre
-questions (section « Réponses ») : vérification des API à l'installation,
+premières questions (section « Réponses ») : vérification des API à l'installation,
 branche `hackeros-packages`, seuls les dépôts de `Kazo-ca` de confiance par
-défaut, installation pour la machine par un administrateur. Demande du même
+défaut, installation pour la machine par un administrateur ; puis C à Q5 : l'app apparaît après un redémarrage, l'ajout immédiat viendra plus tard. Demande du même
 jour : « on va juste faire une commande dans le terminal pour installer une
 application à partir de son GitHub repository. Donc on doit s'assurer
 d'autoriser GitHub comme host de confiance. » Complète l'[ADR 0176](0176-app-repository-template.md)
@@ -162,12 +162,17 @@ hackpkg install ...`, ou l'agent d'authentification de l'OS (ADR 0055 §5).
    org.kazo.webamp=github:Kazo-ca/HackerOs-App-Webamp@1.0.0
    ```
 
-6. Ajouter l'app au catalogue en cours de session (lanceur, recherche,
-   « Ouvrir avec », terminal) ; journaliser dans `/var/log/syslog`
+6. **(Q5)** Journaliser dans `/var/log/syslog` et proposer de redémarrer l'OS
+   (« Redémarrer pour terminer l'installation », comme l'ADR 0162) : l'app
+   apparaît au lanceur, à la recherche, à « Ouvrir avec » et au terminal après le
+   redémarrage. Le catalogue reste figé pendant une session ; l'ajout immédiat
+   viendra dans un chantier séparé. Exemple de ligne
    (`apps: org.kazo.webamp 1.0.0 installed from github:Kazo-ca/HackerOs-App-Webamp (by=alice)`).
 
-Au démarrage, `AppInstallationService` relit `[installed]` et inscrit ces apps
-au catalogue après les apps intégrées. Au lancement, l'assembly est lue depuis
+Au démarrage, avant que le catalogue ne serve, l'hôte relit `[installed]` et
+les manifestes de `/usr/lib/hackeros/apps/` et construit le catalogue avec les
+apps intégrées puis les apps installées (une app installée invalide est écartée
+avec un avertissement, jamais bloquante). Au lancement, l'assembly est lue depuis
 `/usr/lib/hackeros/apps/...` et chargée par `Assembly.Load(byte[])` au lieu du
 chargement paresseux de Blazor ; les ressources sont servies par
 `AppAssetStore` depuis le même dossier.
@@ -187,7 +192,7 @@ apps seront publiées.
 
 ## Réponses
 
-Questions posées à Benoit le 2026-10-28 ; il a choisi **A** aux quatre.
+Questions posées à Benoit le 2026-10-28 ; il a choisi **A** aux quatre premières et **C** à la cinquième.
 
 - **Q1. Framework élagué.** A (recommandé) : vérification des références à
   l'installation, refus avec la liste des API manquantes. B : l'hôte officiel
@@ -207,10 +212,15 @@ Questions posées à Benoit le 2026-10-28 ; il a choisi **A** aux quatre.
   administrateur requis (comme `apt`). B : aussi par utilisateur
   (`~/.local/share/hackeros/apps`), sans administrateur ; tout utilisateur peut
   alors faire tourner du code tiers dans le runtime partagé.
+- **Q5. Ajout immédiat ou après redémarrage** (posée après lecture du code : le
+  catalogue est construit une fois au démarrage et lu par une cinquantaine de
+  fichiers). A : après redémarrage. B : tout de suite, catalogue modifiable. C
+  (choisie) : A maintenant, B dans un chantier séparé plus tard.
 
 ## Conséquences
 
-- Une app peut être ajoutée à un OS déjà publié, sans recompiler l'hôte.
+- Une app peut être ajoutée à un OS déjà publié, sans recompiler l'hôte ; elle
+  apparaît après un redémarrage de l'OS.
 - Le code installé n'est pas isolé de l'OS ; la liste des sources de confiance
   et l'approbation d'un administrateur en tiennent lieu. Une isolation (app en
   Web Worker, [ADR 0070](0070-worker-hosted-processes.md)) reste possible plus tard.
@@ -229,7 +239,8 @@ Questions posées à Benoit le 2026-10-28 ; il a choisi **A** aux quatre.
 
 ## Tâches
 
-- [x] Réponses de Benoit à Q1 à Q4 (A partout, 2026-10-28).
+- [x] Réponses de Benoit à Q1 à Q5 (A aux quatre premières, C à Q5, 2026-10-28).
+- [ ] Plus tard : ajout au catalogue sans redémarrage (Q5 B).
 - [ ] Cible `HackerOsPack` dans `HackerOs.App.Build` et workflow de publication dans `hackeros-solution`.
 - [ ] `app-sources.config` (lecture, migration de création).
 - [ ] Section `[installed]` dans `AppsConfigDocument` ; inscription au catalogue en cours de session.
