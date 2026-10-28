@@ -222,6 +222,60 @@ public sealed class WindowLaunchCoordinatorTests
         Assert.Equal(700, bounds.Height);
     }
 
+    [Fact]
+    public async Task An_app_started_from_a_screen_start_menu_opens_on_that_screen()
+    {
+        WindowRuntime runtime = new(new WindowBounds(0, 0, 1280, 720));
+        DisplayId screen2 = DisplayId.FromNumber(2);
+        runtime.Apply(new AddDisplayCommand(screen2, new WindowBounds(0, 0, 900, 600)));
+        WindowLaunchCoordinator coordinator = new(runtime);
+        AppManifest manifest = CreateManifest();
+
+        using (coordinator.OpenOnDisplay(manifest.Id, screen2))
+        {
+            await coordinator.PresentAsync(manifest, CreateProcess());
+        }
+
+        WindowRuntimeState window = Assert.Single(runtime.Windows);
+        Assert.Equal(screen2, window.DisplayId);
+        Assert.True(window.Bounds.Width <= 900);
+        Assert.True(window.Bounds.Height <= 600);
+    }
+
+    [Fact]
+    public async Task A_window_opened_otherwise_opens_on_the_screen_of_the_focused_window()
+    {
+        WindowRuntime runtime = new(new WindowBounds(0, 0, 1280, 720));
+        DisplayId screen2 = DisplayId.FromNumber(2);
+        runtime.Apply(new AddDisplayCommand(screen2, new WindowBounds(0, 0, 900, 600)));
+        WindowLaunchCoordinator coordinator = new(runtime);
+        AppManifest manifest = CreateManifest();
+        using (coordinator.OpenOnDisplay(manifest.Id, screen2))
+        {
+            await coordinator.PresentAsync(manifest, CreateProcess());
+        }
+
+        // The scope ended: a second process (a command, another app) follows the focused window.
+        await coordinator.PresentAsync(manifest with { Id = "org.hackeros.other" }, CreateProcess());
+
+        Assert.All(runtime.Windows, window => Assert.Equal(screen2, window.DisplayId));
+    }
+
+    [Fact]
+    public async Task A_screen_closed_before_the_window_opens_falls_back_to_screen_1()
+    {
+        WindowRuntime runtime = new(new WindowBounds(0, 0, 1280, 720));
+        WindowLaunchCoordinator coordinator = new(runtime);
+        AppManifest manifest = CreateManifest();
+
+        using (coordinator.OpenOnDisplay(manifest.Id, DisplayId.FromNumber(4)))
+        {
+            await coordinator.PresentAsync(manifest, CreateProcess());
+        }
+
+        Assert.Equal(DisplayId.Primary, Assert.Single(runtime.Windows).DisplayId);
+    }
+
     private static AppManifest CreateManifest() => new()
     {
         Id = "org.hackeros.test-window",

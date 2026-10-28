@@ -70,7 +70,7 @@
         </DesktopArea>
     </div>
 
-    @if (_launcher.IsOpen)
+    @if (_launcher.IsOpen && _launcher.Display.IsPrimary)
     {
         <AppLauncher OnClose="CloseLauncher" OnAppSelected="HandleAppSelected" OnSendToDesktop="SendToDesktopCallback" />
     }
@@ -87,7 +87,7 @@
 
     <HackerOs.Taskbar.Blazor.Taskbar WindowSource="_taskbarWindowSource"
                                       Commands="_taskbarCommands"
-                                      Launcher="_launcher"
+                                      Launcher="_primaryLauncher"
                                       StatusSource="_taskbarStatus"
                                       ClockPanelSource="_clockPanel"
                                       ClockPanelContent="@ClockPanelFragment"
@@ -111,7 +111,7 @@
     <WindowResponsivenessHost />
 
     @* ADR 0178 §4: the secondary screens, each with its desktop, and the « Restaurer les écrans » offer. *@
-    <HackerOs.Platform.Blazor.Display.ScreenLayer ScreenContent="SecondaryDesktopFragment" />
+    <HackerOs.Platform.Blazor.Display.ScreenLayer ScreenContent="SecondaryDesktopFragment" ScreenTaskbar="SecondaryTaskbarFragment" />
 
     @* ADR 0179 §2: these overlays show on the screen where the user acts. *@
     @* ADR 0179 §6: the number of screen 1 while « Autre écran ▸ Écran N » is highlighted. *@
@@ -138,6 +138,8 @@
     private TaskbarWindowSourceAdapter _taskbarWindowSource = null!;
     private TaskbarCommandDispatcherAdapter _taskbarCommands = null!;
     private TaskbarLauncherAdapter _launcher = null!;
+    private HackerOs.Taskbar.Blazor.ITaskbarLauncher _primaryLauncher = null!;
+    private readonly Dictionary<DisplayId, TaskbarWindowSourceAdapter> _screenTaskbarSources = [];
     private TaskbarClockPanelSourceAdapter _clockPanel = null!;
     private TaskbarStatusSourceAdapter _taskbarStatus = null!;
     private TaskbarSessionCommandsAdapter _taskbarSessionCommands = null!;
@@ -201,6 +203,55 @@
                       Layers="_windowLayers"
                       DisplayId="screen.Id"
                       OnGesture="HandleGesture" />;
+
+    /// <summary>
+    /// The taskbar of a secondary screen (ADR 0179 §1): the windows of its screen, its Start button
+    /// and its clock. The notification area, the clock panel and the session button stay on screen 1.
+    /// The Start menu opened from it shows on that screen.
+    /// </summary>
+    private RenderFragment<HackerOs.Platform.Blazor.Display.SecondaryScreen> SecondaryTaskbarFragment => screen =>
+        @<text>
+            @if (_launcher.IsOpen && _launcher.Display == screen.Id)
+            {
+                <AppLauncher OnClose="CloseLauncher" OnAppSelected="HandleAppSelected" OnSendToDesktop="SendToDesktopCallback" />
+            }
+            <HackerOs.Taskbar.Blazor.Taskbar WindowSource="ScreenTaskbarSource(screen.Id)"
+                                              Commands="_taskbarCommands"
+                                              Launcher="_launcher.For(screen.Id)"
+                                              StatusSource="_taskbarStatus" />
+        </text>;
+
+    /// <summary>The window list of a secondary screen's taskbar, kept while the screen is open.</summary>
+    private TaskbarWindowSourceAdapter ScreenTaskbarSource(DisplayId display)
+    {
+        if (!_screenTaskbarSources.TryGetValue(display, out TaskbarWindowSourceAdapter? source))
+        {
+            source = new TaskbarWindowSourceAdapter(
+                WindowRuntime,
+                window => TaskbarScreenFilter.Lists(display, Screens.PrimaryTaskbar, window.DisplayId));
+            _screenTaskbarSources[display] = source;
+        }
+
+        return source;
+    }
+
+    private void OnScreensChanged()
+    {
+        // primary-taskbar may have changed; the taskbars of closed screens are gone.
+        _taskbarWindowSource.Refresh();
+        foreach (DisplayId closed in _screenTaskbarSources.Keys.Where(display => Screens.Screens.All(screen => screen.Id != display)).ToArray())
+        {
+            _screenTaskbarSources.Remove(closed, out TaskbarWindowSourceAdapter? source);
+            source?.Dispose();
+        }
+
+        if (_launcher.IsOpen && !_launcher.Display.IsPrimary && Screens.Screens.All(screen => screen.Id != _launcher.Display))
+        {
+            _launcher.Close();
+        }
+
+        Rerender();
+    }
 
     private RenderFragment? EffectiveBackgroundContent => BackgroundContent ?? (ShowDesktopIcons ? DesktopSurfaceFragment : null);
 
@@ -273,17 +324,24 @@
 
     private async Task HandleAppSelected(AppManifest manifest)
     {
+        // ADR 0179 §1: an app started from a screen's Start menu opens on that screen; from screen 1's
+        // notification area, on screen 1.
+        DisplayId display = _launcher.IsOpen ? _launcher.Display : DisplayId.Primary;
         _launcher.Close();
         if (SessionService.CurrentPrincipal is not AuthenticatedPrincipal principal)
         {
             return;
         }
 
-        AppLaunchResult result = await Orchestrator.LaunchAsync(
-            new AppLaunchRequest(manifest.Id, principal, []));
-        if (result.IsSuccess)
+        AppLaunchResult result;
+        using (LaunchCoordinator.OpenOnDisplay(manifest.Id, display))
         {
-            await LaunchCoordinator.PresentAsync(manifest, result);
+            result = await Orchestrator.LaunchAsync(
+                new AppLaunchRequest(manifest.Id, principal, []));
+            if (result.IsSuccess)
+            {
+                await LaunchCoordinator.PresentAsync(manifest, result);
+            }
         }
         _launchError = result.IsSuccess
             ? null
@@ -425,9 +483,13 @@
         KeyboardCommands.OpenScreen = _openScreen;
         _processSubscription = new WindowProcessObserver(EventBus, ProcessManager, Orchestrator, WindowRuntime, LaunchCoordinator, work => InvokeAsync(work));
 
-        _taskbarWindowSource = new TaskbarWindowSourceAdapter(WindowRuntime);
+        _taskbarWindowSource = new TaskbarWindowSourceAdapter(
+            WindowRuntime,
+            window => TaskbarScreenFilter.Lists(DisplayId.Primary, Screens.PrimaryTaskbar, window.DisplayId));
         _taskbarCommands = new TaskbarCommandDispatcherAdapter(WindowRuntime, CloseCoordinator, CloseGuards);
         _launcher = new TaskbarLauncherAdapter();
+        _primaryLauncher = _launcher.For(DisplayId.Primary);
+        Screens.Changed += OnScreensChanged;
         _launcher.Changed += Rerender;
         _clockPanel = new TaskbarClockPanelSourceAdapter();
         _clockPanel.Changed += Rerender;
@@ -473,6 +535,13 @@
         _launcher.Changed -= Rerender;
         _clockPanel.Changed -= Rerender;
         _taskbarWindowSource.Dispose();
+        Screens.Changed -= OnScreensChanged;
+        foreach (TaskbarWindowSourceAdapter source in _screenTaskbarSources.Values)
+        {
+            source.Dispose();
+        }
+
+        _screenTaskbarSources.Clear();
         _taskbarStatus.Dispose();
     }
 }

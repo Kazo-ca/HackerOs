@@ -50,6 +50,7 @@ ScreenService ── AddDisplay / ChangeViewport / RemoveDisplay ──► Windo
 | `CloseScreenAsync(screen)` | Closes a screen; it is no longer restored. |
 | `ToggleFullScreenAsync(screen)` | Full screen for the screen, from a click made in that screen. |
 | `Screens`, `RestorableScreens`, `Permission`, `IsPrimaryHidden`, `CanOpenScreen`, `Changed` | State read by the UI. |
+| `PrimaryTaskbar`, `SetPrimaryTaskbarAsync(mode)` | `[taskbar]`'s `primary-taskbar` setting, followed during the session (work item 5, [`per-screen-taskbars.md`](per-screen-taskbars.md)). |
 
 `ScreenOpenStatus`: `Opened`, `Blocked` (window refused), `Unavailable` (host
 without JavaScript), `LimitReached` (numbers 2 to 9 taken). `ScreenPermission`:

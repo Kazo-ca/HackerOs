@@ -163,6 +163,12 @@ public sealed class ScreenService : IAsyncDisposable
     /// <summary>Gets the screens of the previous session that « Restaurer les écrans » reopens, in order.</summary>
     public IReadOnlyList<DisplayId> RestorableScreens => [.. _restorable];
 
+    /// <summary>
+    /// Gets which windows the taskbar of screen 1 lists (<c>primary-taskbar</c> of <c>screens.config</c>,
+    /// ADR 0179 §1). Followed while the session runs: an edit of the file applies at once.
+    /// </summary>
+    public PrimaryTaskbarMode PrimaryTaskbar { get; private set; }
+
     /// <summary>Gets whether one more screen can open.</summary>
     public bool CanOpenScreen => _runtime.NextDisplayId.Number <= ScreensSettingsDocuments.MaxScreenNumber;
 
@@ -183,6 +189,7 @@ public sealed class ScreenService : IAsyncDisposable
 
         _started = true;
         await ReadSettingsAsync(cancellationToken);
+        await WatchSettingsAsync(cancellationToken);
         try
         {
             IJSObjectReference module = await GetModuleAsync(cancellationToken);
@@ -396,6 +403,11 @@ public sealed class ScreenService : IAsyncDisposable
 
         _disposed = true;
         _pendingGeometrySave?.Cancel();
+        if (_settings is not null)
+        {
+            _settings.DocumentChanged -= OnSettingsChanged;
+        }
+
         foreach (SecondaryScreen screen in _screens)
         {
             screen.Surface.Changed -= OnSurfaceChanged;
@@ -525,11 +537,77 @@ public sealed class ScreenService : IAsyncDisposable
 
             _restorable.Clear();
             _restorable.AddRange(ScreensSettingsDocuments.ReadOpenScreens(snapshot).Select(DisplayId.FromNumber));
+            PrimaryTaskbar = ScreensSettingsDocuments.ReadPrimaryTaskbar(snapshot);
         }
         catch (Exception exception) when (exception is not OperationCanceledException)
         {
             _logger.LogWarning(exception, "screens: screens.config could not be read; no screen is restored");
         }
+    }
+
+    private async Task WatchSettingsAsync(CancellationToken cancellationToken)
+    {
+        if (_settings is null)
+        {
+            return;
+        }
+
+        _settings.DocumentChanged += OnSettingsChanged;
+        try
+        {
+            await _settings.WatchAsync(ScreensSettingsDocuments.Document, cancellationToken);
+        }
+        catch (Exception exception) when (exception is not OperationCanceledException)
+        {
+            _logger.LogWarning(exception, "screens: changes to screens.config are not followed");
+        }
+    }
+
+    private void OnSettingsChanged(object? sender, OsSettingsChangedEventArgs args)
+    {
+        if (!_disposed && args.Concerns(ScreensSettingsDocuments.DocumentId))
+        {
+            _ = ReloadPrimaryTaskbarAsync();
+        }
+    }
+
+    /// <summary>Only <c>primary-taskbar</c> follows the file: the screens to restore are read once, at start.</summary>
+    private async Task ReloadPrimaryTaskbarAsync()
+    {
+        try
+        {
+            LayeredConfigSnapshot snapshot = await _settings!.ReadAsync(ScreensSettingsDocuments.Document, CancellationToken.None);
+            PrimaryTaskbarMode mode = ScreensSettingsDocuments.ReadPrimaryTaskbar(snapshot);
+            if (mode != PrimaryTaskbar && !_disposed)
+            {
+                PrimaryTaskbar = mode;
+                Changed?.Invoke();
+            }
+        }
+        catch (Exception exception)
+        {
+            _logger.LogWarning(exception, "screens: screens.config could not be read again");
+        }
+    }
+
+    /// <summary>
+    /// Sets which windows the taskbar of screen 1 lists and writes it to the user's
+    /// <c>screens.config</c> (Paramètres ▸ Écrans, chantier 7).
+    /// </summary>
+    /// <param name="mode">What the taskbar of screen 1 lists.</param>
+    /// <param name="cancellationToken">Cancels the write.</param>
+    public async Task SetPrimaryTaskbarAsync(PrimaryTaskbarMode mode, CancellationToken cancellationToken = default)
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+        if (mode != PrimaryTaskbar)
+        {
+            PrimaryTaskbar = mode;
+            Changed?.Invoke();
+        }
+
+        await WriteAsync(
+            [new(ScreensSettingsDocuments.PrimaryTaskbarQualifiedKey, ScreensSettingsDocuments.FormatPrimaryTaskbar(mode))],
+            cancellationToken);
     }
 
     private void ScheduleGeometrySave()
