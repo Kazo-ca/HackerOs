@@ -46,6 +46,116 @@ public sealed class WindowRuntimeTests
     }
 
     [Fact]
+    public void Restore_gives_a_snapped_window_its_geometry_from_before_the_snap()
+    {
+        WindowRuntime runtime = new(new WindowBounds(0, 0, 1280, 720));
+        WindowRuntimeState initial = CreateState(1);
+        runtime.Apply(new CreateWindowCommand(initial));
+
+        IReadOnlyList<WindowEvent> snapEvents = runtime.Apply(new SnapWindowCommand(initial.Id, new WindowBounds(0, 0, 640, 720)));
+        WindowRuntimeState snapped = Assert.Single(runtime.Windows);
+        Assert.True(snapped.IsSnapped);
+        Assert.Equal(WindowVisualState.Normal, snapped.VisualState);
+        Assert.Equal(new WindowBounds(0, 0, 640, 720), snapped.Bounds);
+        Assert.Equal(initial.Bounds, snapped.RestoreBounds);
+        Assert.IsType<WindowResizeCompletedEvent>(snapEvents[^1]);
+
+        // A second snap keeps the geometry from before the first one.
+        runtime.Apply(new SnapWindowCommand(initial.Id, new WindowBounds(640, 0, 640, 720)));
+        Assert.Equal(initial.Bounds, Assert.Single(runtime.Windows).RestoreBounds);
+
+        IReadOnlyList<WindowEvent> restoreEvents = runtime.Apply(new RestoreWindowCommand(initial.Id));
+        WindowRuntimeState restored = Assert.Single(runtime.Windows);
+        Assert.False(restored.IsSnapped);
+        Assert.Equal(initial.Bounds, restored.Bounds);
+        Assert.Null(restored.RestoreBounds);
+        Assert.Equal(initial.Bounds, Assert.IsType<WindowResizeCompletedEvent>(restoreEvents[^1]).Bounds);
+    }
+
+    [Fact]
+    public void Maximizing_a_snapped_window_then_restoring_it_undoes_the_snap()
+    {
+        WindowRuntime runtime = new(new WindowBounds(0, 0, 1280, 720));
+        WindowRuntimeState initial = CreateState(1);
+        runtime.Apply(new CreateWindowCommand(initial));
+        runtime.Apply(new SnapWindowCommand(initial.Id, new WindowBounds(0, 0, 640, 720)));
+
+        runtime.Apply(new MaximizeWindowCommand(initial.Id));
+        WindowRuntimeState maximized = Assert.Single(runtime.Windows);
+        Assert.False(maximized.IsSnapped);
+        Assert.Equal(initial.Bounds, maximized.RestoreBounds);
+
+        runtime.Apply(new RestoreWindowCommand(initial.Id));
+        Assert.Equal(initial.Bounds, Assert.Single(runtime.Windows).Bounds);
+    }
+
+    [Fact]
+    public void Snapping_a_maximized_window_keeps_its_geometry_from_before_the_maximize()
+    {
+        WindowRuntime runtime = new(new WindowBounds(0, 0, 1280, 720));
+        WindowRuntimeState initial = CreateState(1);
+        runtime.Apply(new CreateWindowCommand(initial));
+        runtime.Apply(new MaximizeWindowCommand(initial.Id));
+
+        IReadOnlyList<WindowEvent> events = runtime.Apply(new SnapWindowCommand(initial.Id, new WindowBounds(640, 0, 640, 720)));
+
+        WindowRuntimeState snapped = Assert.Single(runtime.Windows);
+        Assert.Equal(WindowVisualState.Normal, snapped.VisualState);
+        Assert.True(snapped.IsSnapped);
+        Assert.Equal(initial.Bounds, snapped.RestoreBounds);
+        Assert.Equal(WindowVisualState.Normal, Assert.IsType<WindowVisualStateChangedEvent>(events[0]).State);
+    }
+
+    [Fact]
+    public void A_minimized_snapped_window_comes_back_on_its_tile()
+    {
+        WindowRuntime runtime = new(new WindowBounds(0, 0, 1280, 720));
+        WindowRuntimeState initial = CreateState(1);
+        runtime.Apply(new CreateWindowCommand(initial));
+        runtime.Apply(new SnapWindowCommand(initial.Id, new WindowBounds(0, 0, 640, 720)));
+
+        runtime.Apply(new MinimizeWindowCommand(initial.Id));
+        runtime.Apply(new RestoreWindowCommand(initial.Id));
+
+        WindowRuntimeState back = Assert.Single(runtime.Windows);
+        Assert.True(back.IsSnapped);
+        Assert.Equal(new WindowBounds(0, 0, 640, 720), back.Bounds);
+        Assert.Equal(initial.Bounds, back.RestoreBounds);
+    }
+
+    [Fact]
+    public void Moving_a_snapped_window_takes_it_off_its_tile_with_its_current_size()
+    {
+        WindowRuntime runtime = new(new WindowBounds(0, 0, 1280, 720));
+        WindowRuntimeState initial = CreateState(1);
+        runtime.Apply(new CreateWindowCommand(initial));
+        runtime.Apply(new SnapWindowCommand(initial.Id, new WindowBounds(0, 0, 640, 720)));
+
+        runtime.Apply(new MoveWindowCommand(initial.Id, 100, 0));
+
+        WindowRuntimeState moved = Assert.Single(runtime.Windows);
+        Assert.False(moved.IsSnapped);
+        Assert.Null(moved.RestoreBounds);
+        Assert.Equal(new WindowBounds(100, 0, 640, 720), moved.Bounds);
+    }
+
+    [Fact]
+    public void Snap_throws_for_a_non_resizable_or_minimized_window()
+    {
+        WindowRuntime runtime = new(new WindowBounds(0, 0, 1280, 720));
+        WindowRuntimeState fixedSize = CreateState(1, constraints: new WindowConstraints(false, 320, 240, 1200, 900));
+        WindowRuntimeState minimized = CreateState(2);
+        runtime.Apply(new CreateWindowCommand(fixedSize));
+        runtime.Apply(new CreateWindowCommand(minimized));
+        runtime.Apply(new MinimizeWindowCommand(minimized.Id));
+
+        Assert.Throws<InvalidOperationException>(
+            () => runtime.Apply(new SnapWindowCommand(fixedSize.Id, new WindowBounds(0, 0, 640, 720))));
+        Assert.Throws<InvalidOperationException>(
+            () => runtime.Apply(new SnapWindowCommand(minimized.Id, new WindowBounds(0, 0, 640, 720))));
+    }
+
+    [Fact]
     public void Resize_enforces_constraints_and_normal_state()
     {
         WindowRuntime runtime = new(new WindowBounds(0, 0, 1280, 720));
