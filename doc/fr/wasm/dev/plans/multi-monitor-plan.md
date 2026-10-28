@@ -23,7 +23,7 @@ son propre bureau, sa barre des tâches et ses fenêtres. Une fenêtre passe d'u
 | Changer une fenêtre d'écran | **Menu et raccourci d'abord** ; le glisser à la souris vient dans un chantier séparé. |
 | Menus | Clic droit sur l'icône : menu actuel, séparateur, « Autre écran ▸ » (Écran 1, Écran 2, …, séparateur, Nouvel écran). Clic droit sur Agrandir/Restaurer : Ancrer à gauche, Ancrer à droite, Plein écran (touches Linux), séparateur, « Autre écran ▸ ». |
 | Voile d'identification | Au survol d'« Écran N », voile noir à 33 % sur les autres écrans, carré noir et numéro blanc au centre. **Chaque écran montre son propre numéro**, l'écran survolé en surbrillance. Le voile disparaît si le pointeur le survole. |
-| Fusions | Une branche et une PR par chantier vers `multi-monitor/base`. **Rien n'est fusionné dans `multi-monitor/base` sans l'accord explicite de Benoit.** À la fin, une PR vers `main`, que seul Benoit autorise à fusionner. |
+| Fusions | Une branche et une PR par chantier vers `multi-monitor/base`. Depuis le 2026-10-28, Benoit autorise la fusion de ces PR sans sa validation, pour passer à l'étape suivante. À la fin, une PR vers `main`, que seul Benoit autorise à fusionner. |
 | Fil des boutons | Quand « Corriger les boutons des fenêtres maximisées » (ADR 0177) est fusionné, ses changements sont intégrés dans **toutes** les branches de la série, sans conflit. |
 
 ## 3. Existant (main, 2026-10-28)
@@ -60,8 +60,8 @@ peut avancer en parallèle des chantiers 5 à 7.
 
 ## 5. Règles de la série
 
-- **Fusions** : aucune PR n'est fusionnée dans `multi-monitor/base` sans
-  l'accord explicite de Benoit. La PR finale vers `main` n'est fusionnée que sur
+- **Fusions** : les PR de chantier sont fusionnées dans `multi-monitor/base`
+  sans attendre Benoit (autorisation du 2026-10-28). La PR finale vers `main` n'est fusionnée que sur
   son autorisation.
 - **ADR 0177** : dès que le fil des boutons est fusionné, `main` est fusionné
   dans `multi-monitor/base`, puis dans chaque branche de chantier ouverte. Les

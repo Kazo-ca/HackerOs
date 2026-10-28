@@ -23,7 +23,7 @@ without losing its state.
 | Moving a window to another screen | **Menu and shortcut first**; dragging with the mouse comes in a separate work item. |
 | Menus | Right click on the icon: current menu, separator, "Other screen ▸" (Screen 1, Screen 2, …, separator, New screen). Right click on Maximize/Restore: Snap left, Snap right, Full screen (Linux keys), separator, "Other screen ▸". |
 | Identification veil | When hovering "Screen N", black veil at 33% on the other screens, black square and white number in the center. **Each screen shows its own number**, the hovered screen highlighted. The veil disappears if the pointer moves over it. |
-| Merges | One branch and one PR per work item into `multi-monitor/base`. **Nothing is merged into `multi-monitor/base` without Benoit's explicit approval.** At the end, one PR to `main`, which only Benoit allows to merge. |
+| Merges | One branch and one PR per work item into `multi-monitor/base`. Since 2026-10-28, Benoit allows these PRs to be merged without Benoit's review, to move to the next step. At the end, one PR to `main`, which only Benoit allows to merge. |
 | Buttons thread | When "Fix the buttons of maximized windows" (ADR 0177) is merged, its changes are brought into **every** branch of the series, without conflicts. |
 
 ## 3. Existing state (main, 2026-10-28)
@@ -60,8 +60,8 @@ parallel with items 5 to 7.
 
 ## 5. Series rules
 
-- **Merges**: no PR is merged into `multi-monitor/base` without Benoit's
-  explicit approval. The final PR to `main` is only merged on Benoit's authorization.
+- **Merges**: work-item PRs are merged into `multi-monitor/base` without
+  waiting for Benoit (permission of 2026-10-28). The final PR to `main` is only merged on Benoit's authorization.
 - **ADR 0177**: as soon as the buttons thread is merged, `main` is merged into
   `multi-monitor/base`, then into each open work-item branch. Conflicts are
   resolved in the series, never by rewriting history.
