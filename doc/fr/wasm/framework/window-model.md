@@ -165,6 +165,7 @@ une valeur vide retire la touche.
 | `toggle-maximize` | | `Alt+F10` |
 | `snap-left` / `snap-right` | `Super+Left` / `Super+Right` | `Alt+Shift+Left` / `Alt+Shift+Right` |
 | `toggle-fullscreen` | | `Alt+F11` |
+| `move-to-previous-screen` / `move-to-next-screen` | `Super+Shift+Left` / `Super+Shift+Right` | `Ctrl+Alt+Shift+Left` / `Ctrl+Alt+Shift+Right` |
 
 Les touches Linux ne sont actives que si le clavier est verrouillé (`navigator.keyboard.lock()`,
 appelé en plein écran) : sans cela, le système hôte les intercepte. Les touches de remplacement
@@ -184,7 +185,13 @@ qui a le focus. Une lettre est reconnue par sa touche physique quand Alt change 
   de l'app dans la barre de titre. Un clic gauche sur l'icône active seulement la
   fenêtre ; le reste de la barre de titre n'ouvre pas le menu. Il contient toutes les actions avec leur raccourci actif :
   Agrandir/Restaurer, Réduire, Déplacer, Redimensionner, Ancrer à gauche/droite, Plein écran,
-  Fermer. Flèches, Entrée et Échap y fonctionnent.
+  Fermer, puis **Autre écran ▸** (Écran 1, Écran 2…, Nouvel écran). Il s'ouvre dans le menu
+  contextuel de l'OS (ADR 0179 §3) : flèches, Entrée, Échap et sous-menu au clavier y fonctionnent.
+- **Menu du bouton Agrandir/Restaurer** (ADR 0179 §4) : clic droit sur le bouton. Ancrer à
+  gauche, Ancrer à droite, Plein écran, puis Autre écran ▸. Le clic gauche ne change pas.
+- **Changer d'écran** (ADR 0178 §6) : `move-to-previous-screen` / `move-to-next-screen` envoient la
+  fenêtre active sur l'écran d'avant ou d'après, par numéro, en faisant le tour. Détails dans
+  [`../dev/other-screen-menus.md`](../dev/other-screen-menus.md).
 - **Fermer** suit le chemin du bouton Fermer (`IWindowCloseGuard` compris).
 - **Focus clavier** : la fenêtre qui devient la fenêtre active (sélecteur, fermeture de celle du
   dessus, barre des tâches) reçoit aussi le focus clavier : le dernier contrôle qui l'avait dans

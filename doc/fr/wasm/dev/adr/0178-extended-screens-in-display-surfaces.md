@@ -131,4 +131,4 @@ chantiers : [`multi-monitor-plan.md`](../plans/multi-monitor-plan.md).
 - [x] Fenêtres rendues une fois et déplacées par portail (chantier 2, [`window-portal.md`](../window-portal.md)).
 - [x] Service d'écrans, permission, repli, restauration (chantier 3, [ADR 0180](0180-screen-service-placement-and-memory.md), [`screen-service.md`](../screen-service.md)).
 - [x] Bureau et overlays dans chaque écran (chantier 4, [`secondary-screen-desktop.md`](../secondary-screen-desktop.md)).
-- [ ] Raccourcis clavier (chantier 6).
+- [x] Raccourcis clavier (chantier 6, [`other-screen-menus.md`](../other-screen-menus.md)).

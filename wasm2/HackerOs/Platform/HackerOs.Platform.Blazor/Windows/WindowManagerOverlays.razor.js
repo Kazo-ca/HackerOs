@@ -151,17 +151,3 @@ export async function toggleFullScreen() {
         // Refused by the host (no user gesture, policy): the state does not change.
     }
 }
-
-/** Places the menu at the requested point, kept inside the viewport of the screen it is shown on. */
-export function placeWindowMenu(menu, x, y) {
-    if (!menu) {
-        return;
-    }
-
-    const view = menu.ownerDocument?.defaultView ?? window;
-    const rect = menu.getBoundingClientRect();
-    const left = Math.max(4, Math.min(x, view.innerWidth - rect.width - 4));
-    const top = Math.max(4, Math.min(y, view.innerHeight - rect.height - 4));
-    menu.style.setProperty("--window-menu-x", `${left}px`);
-    menu.style.setProperty("--window-menu-y", `${top}px`);
-}

@@ -50,7 +50,7 @@ public sealed class WindowAppIconTests(ITestOutputHelper output)
             await WaitForImageAsync(icon);
             await WaitForImageAsync(taskbarIcon);
             ILocator iconButton = window.Locator(".chrome-button-menu");
-            ILocator menu = page.Locator("nav.window-menu");
+            ILocator menu = page.Locator("[data-context-menu='window-menu']");
             await iconButton.ClickAsync();
             await Assertions.Expect(menu).ToHaveCountAsync(0);
             await window.Locator("header h2").ClickAsync(new() { Button = MouseButton.Right });

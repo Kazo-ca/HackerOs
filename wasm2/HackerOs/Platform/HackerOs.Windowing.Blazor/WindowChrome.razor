@@ -55,7 +55,11 @@
         </button>
         @if (Window.Constraints.IsResizable)
         {
-        <button type="button" class="chrome-button chrome-button-maximize" aria-label="@ToggleLabel" title="@ToggleLabel" @onclick="ToggleMaximizeAsync">
+        @* ADR 0179 §4: right click opens snap, full screen and « Autre écran »; left click is unchanged (ADR 0177). *@
+        <button type="button" class="chrome-button chrome-button-maximize" aria-label="@ToggleLabel" title="@ToggleLabel" @onclick="ToggleMaximizeAsync"
+                @oncontextmenu="OpenMaximizeMenuAtPointerAsync"
+                @oncontextmenu:preventDefault="@OnWindowMenu.HasDelegate"
+                @oncontextmenu:stopPropagation="@OnWindowMenu.HasDelegate">
             @if (Window.VisualState == WindowVisualState.Maximized)
             {
                 <svg viewBox="0 0 12 12" aria-hidden="true" focusable="false">
@@ -170,6 +174,17 @@
 
         await OnFocus.InvokeAsync(Window.Id);
         await OnWindowMenu.InvokeAsync(new WindowMenuRequest(Window.Id, args.ClientX, args.ClientY));
+    }
+
+    private async Task OpenMaximizeMenuAtPointerAsync(MouseEventArgs args)
+    {
+        if (!OnWindowMenu.HasDelegate)
+        {
+            return;
+        }
+
+        await OnFocus.InvokeAsync(Window.Id);
+        await OnWindowMenu.InvokeAsync(new WindowMenuRequest(Window.Id, args.ClientX, args.ClientY) { Kind = WindowMenuKind.MaximizeButton });
     }
 
     private Task FocusIconAsync() => OnFocus.InvokeAsync(Window.Id);

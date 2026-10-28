@@ -728,4 +728,13 @@
   <data name="Screens.SecureDialog.Action" xml:space="preserve">
     <value>Aller à l'écran 1</value>
   </data>
+  <data name="WindowMenu.OtherScreen" xml:space="preserve">
+    <value>Autre écran</value>
+  </data>
+  <data name="WindowMenu.Screen" xml:space="preserve">
+    <value>Écran {0}</value>
+  </data>
+  <data name="WindowMenu.NewScreen" xml:space="preserve">
+    <value>Nouvel écran</value>
+  </data>
 </root>

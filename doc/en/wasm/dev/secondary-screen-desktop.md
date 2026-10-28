@@ -104,5 +104,6 @@ covers the whole screen and takes the clicks.
   secondary screen has its `⤢` button.
 - Menu tokens of elements removed inside a secondary screen are released only when the session
   ends (the removal observer follows the main document).
-- Menus and shortcuts to move a window to another screen: work item 6. Dragging by the title bar
-  is done in work item 8 ([`drag-between-screens.md`](drag-between-screens.md)).
+- A window changes screen through the "Other screen" menus and the shortcuts (work item 6,
+  [`other-screen-menus.md`](other-screen-menus.md)), and by dragging its title bar (work item 8,
+  [`drag-between-screens.md`](drag-between-screens.md)).

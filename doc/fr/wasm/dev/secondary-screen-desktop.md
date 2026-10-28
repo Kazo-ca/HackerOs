@@ -105,5 +105,6 @@ les clics.
   un écran secondaire a son bouton `⤢`.
 - Les jetons de menu des éléments retirés dans un écran secondaire ne sont libérés qu'à la
   fermeture de la session (l'observateur des retraits suit le document principal).
-- Menus et raccourcis pour changer une fenêtre d'écran : chantier 6. Le glisser par la barre de
-  titre est fait au chantier 8 ([`drag-between-screens.md`](drag-between-screens.md)).
+- Une fenêtre change d'écran par les menus « Autre écran » et les raccourcis (chantier 6,
+  [`other-screen-menus.md`](other-screen-menus.md)), et en glissant sa barre de titre (chantier 8,
+  [`drag-between-screens.md`](drag-between-screens.md)).

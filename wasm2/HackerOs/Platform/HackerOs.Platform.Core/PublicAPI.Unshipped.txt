@@ -32,3 +32,5 @@ static HackerOs.Platform.Core.Shell.ScreensSettingsDocuments.ReadGeometries(Hack
 static HackerOs.Platform.Core.Shell.ScreensSettingsDocuments.ReadOpenScreens(HackerOs.Simulation.Abstractions.Settings.LayeredConfigSnapshot! snapshot) -> System.Collections.Generic.IReadOnlyList<int>!
 static HackerOs.Platform.Core.Shell.ScreensSettingsDocuments.Schema.get -> HackerOs.Simulation.Abstractions.Settings.SettingsSchema!
 ~override HackerOs.Platform.Core.Shell.ScreenGeometry.Equals(object obj) -> bool
+HackerOs.Platform.Core.Shell.WindowKeyboardAction.MoveToNextScreen = 14 -> HackerOs.Platform.Core.Shell.WindowKeyboardAction
+HackerOs.Platform.Core.Shell.WindowKeyboardAction.MoveToPreviousScreen = 13 -> HackerOs.Platform.Core.Shell.WindowKeyboardAction
