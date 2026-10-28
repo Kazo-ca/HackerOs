@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Capabilities" xml:space="preserve">
+    <value>  capabilities: {0}</value>
+  </data>
+  <data name="DangerousNote" xml:space="preserve">
+    <value>  (!) dangerous: the app asks each user before using it, at its first launch</value>
+  </data>
+  <data name="Downloading" xml:space="preserve">
+    <value>hackpkg: reading {0}...</value>
+  </data>
+  <data name="InfoApp" xml:space="preserve">
+    <value>app:       {0}</value>
+  </data>
+  <data name="InfoInstalled" xml:space="preserve">
+    <value>installed: {0}</value>
+  </data>
+  <data name="InfoLatest" xml:space="preserve">
+    <value>latest:    {0}</value>
+  </data>
+  <data name="InfoSource" xml:space="preserve">
+    <value>source:    {0}</value>
+  </data>
+  <data name="InfoTrusted" xml:space="preserve">
+    <value>trusted:   {0}</value>
+  </data>
+  <data name="InfoVersions" xml:space="preserve">
+    <value>versions:  {0}</value>
+  </data>
+  <data name="Installed" xml:space="preserve">
+    <value>hackpkg: {0} {1} installed from {2}</value>
+  </data>
+  <data name="InvalidOption" xml:space="preserve">
+    <value>hackpkg: invalid option '{0}'</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>no</value>
+  </data>
+  <data name="NotInstalled" xml:space="preserve">
+    <value>hackpkg: {0} was not installed from a package</value>
+  </data>
+  <data name="NothingInstalled" xml:space="preserve">
+    <value>hackpkg: no app installed from a package</value>
+  </data>
+  <data name="PendingRestart" xml:space="preserve">
+    <value>(restart pending)</value>
+  </data>
+  <data name="Removed" xml:space="preserve">
+    <value>hackpkg: {0} {1} removed; its users' settings are kept. Restart HackerOS to finish</value>
+  </data>
+  <data name="RestartRequired" xml:space="preserve">
+    <value>hackpkg: restart HackerOS to finish: the app appears after the restart</value>
+  </data>
+  <data name="SourcesHost" xml:space="preserve">
+    <value>host:    {0}</value>
+  </data>
+  <data name="SourcesTrusted" xml:space="preserve">
+    <value>trusted: {0}</value>
+  </data>
+  <data name="UnknownCommand" xml:space="preserve">
+    <value>hackpkg: unknown command '{0}'</value>
+  </data>
+  <data name="Unsupported" xml:space="preserve">
+    <value>hackpkg: this HackerOS host cannot install apps from a repository</value>
+  </data>
+  <data name="Untrusted" xml:space="preserve">
+    <value>hackpkg: warning: {0} is not a trusted source; its code runs with the same rights as the OS</value>
+  </data>
+  <data name="UpToDate" xml:space="preserve">
+    <value>hackpkg: {0} {1} is up to date</value>
+  </data>
+  <data name="Updated" xml:space="preserve">
+    <value>hackpkg: {0} updated from {1} to {2}</value>
+  </data>
+  <data name="Usage" xml:space="preserve">
+    <value>usage: hackpkg install &lt;repo&gt;[@version] [--allow-untrusted] | remove &lt;appId&gt; | update [&lt;appId&gt;] | list | info &lt;repo&gt; | sources</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>yes</value>
+  </data>
+</root>

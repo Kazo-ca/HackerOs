@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Capabilities" xml:space="preserve">
+    <value>  capacités : {0}</value>
+  </data>
+  <data name="DangerousNote" xml:space="preserve">
+    <value>  (!) dangereuse : l'app la demande à chaque utilisateur à son premier lancement</value>
+  </data>
+  <data name="Downloading" xml:space="preserve">
+    <value>hackpkg : lecture de {0}...</value>
+  </data>
+  <data name="InfoApp" xml:space="preserve">
+    <value>app :          {0}</value>
+  </data>
+  <data name="InfoInstalled" xml:space="preserve">
+    <value>installée :    {0}</value>
+  </data>
+  <data name="InfoLatest" xml:space="preserve">
+    <value>dernière :     {0}</value>
+  </data>
+  <data name="InfoSource" xml:space="preserve">
+    <value>source :       {0}</value>
+  </data>
+  <data name="InfoTrusted" xml:space="preserve">
+    <value>de confiance : {0}</value>
+  </data>
+  <data name="InfoVersions" xml:space="preserve">
+    <value>versions :     {0}</value>
+  </data>
+  <data name="Installed" xml:space="preserve">
+    <value>hackpkg : {0} {1} installée depuis {2}</value>
+  </data>
+  <data name="InvalidOption" xml:space="preserve">
+    <value>hackpkg : option invalide « {0} »</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>non</value>
+  </data>
+  <data name="NotInstalled" xml:space="preserve">
+    <value>hackpkg : {0} n'a pas été installée depuis un paquet</value>
+  </data>
+  <data name="NothingInstalled" xml:space="preserve">
+    <value>hackpkg : aucune app installée depuis un paquet</value>
+  </data>
+  <data name="PendingRestart" xml:space="preserve">
+    <value>(redémarrage en attente)</value>
+  </data>
+  <data name="Removed" xml:space="preserve">
+    <value>hackpkg : {0} {1} retirée ; les réglages de ses utilisateurs sont gardés. Redémarrez HackerOS pour terminer</value>
+  </data>
+  <data name="RestartRequired" xml:space="preserve">
+    <value>hackpkg : redémarrez HackerOS pour terminer : l'app apparaît après le redémarrage</value>
+  </data>
+  <data name="SourcesHost" xml:space="preserve">
+    <value>hôte :         {0}</value>
+  </data>
+  <data name="SourcesTrusted" xml:space="preserve">
+    <value>de confiance : {0}</value>
+  </data>
+  <data name="UnknownCommand" xml:space="preserve">
+    <value>hackpkg : commande inconnue « {0} »</value>
+  </data>
+  <data name="Unsupported" xml:space="preserve">
+    <value>hackpkg : cet hôte HackerOS ne peut pas installer d'apps depuis un dépôt</value>
+  </data>
+  <data name="Untrusted" xml:space="preserve">
+    <value>hackpkg : attention : {0} n'est pas une source de confiance ; son code a les mêmes droits que l'OS</value>
+  </data>
+  <data name="UpToDate" xml:space="preserve">
+    <value>hackpkg : {0} {1} est à jour</value>
+  </data>
+  <data name="Updated" xml:space="preserve">
+    <value>hackpkg : {0} mise à jour de {1} vers {2}</value>
+  </data>
+  <data name="Usage" xml:space="preserve">
+    <value>usage : hackpkg install &lt;dépôt&gt;[@version] [--allow-untrusted] | remove &lt;appId&gt; | update [&lt;appId&gt;] | list | info &lt;dépôt&gt; | sources</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>oui</value>
+  </data>
+</root>

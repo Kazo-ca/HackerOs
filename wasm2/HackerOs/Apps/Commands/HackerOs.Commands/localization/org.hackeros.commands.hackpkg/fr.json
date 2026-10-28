@@ -1,0 +1,5 @@
+{
+  "name": "hackpkg",
+  "description": "Installe, met à jour et retire des apps depuis leur dépôt GitHub",
+  "terminalUsage": "hackpkg install <dépôt>[@version] [--allow-untrusted] | remove <appId> | update [<appId>] | list | info <dépôt> | sources"
+}

@@ -27,6 +27,7 @@ public sealed class CommandParityTests
         new("df", ["df", "df -h -T"]),
         new("localectl", ["localectl", "localectl list-locales", "localectl set-locale LANG=xx_YY.UTF-8", "localectl set-locale LANG=fr_FR.UTF-8", "localectl bogus"]),
         new("hackbackup", ["hackbackup", "hackbackup create", "hackbackup restore --bogus"]),
+        new("hackpkg", ["hackpkg", "hackpkg bogus", "hackpkg install --bogus", "hackpkg list --allow-untrusted"]),
         new("diff", ["diff notes.txt notes.txt", "diff -u notes.txt numbers.txt"]),
         new("dmesg", ["dmesg -l emerg", "dmesg -l nosuch", "dmesg --bogus"]),
         new("dirname", ["dirname /a/b/c /d"]),
@@ -114,7 +115,7 @@ public sealed class CommandParityTests
             .Where(name => !covered.Contains(name))];
 
         Assert.Empty(missing);
-        Assert.Equal(74, OsFixture.BuiltInCommands.Count);
+        Assert.Equal(75, OsFixture.BuiltInCommands.Count);
     }
 
     [Fact]

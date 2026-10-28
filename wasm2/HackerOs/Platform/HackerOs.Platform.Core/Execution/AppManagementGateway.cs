@@ -27,7 +27,7 @@ namespace HackerOs.Platform.Core.Execution;
 /// <c>~/.config/hackeros/apps.config</c>.
 /// </para>
 /// </remarks>
-internal sealed class AppManagementGateway : IAppManagementGateway
+internal sealed partial class AppManagementGateway : IAppManagementGateway
 {
     private readonly AppCatalog _catalog;
     private readonly Func<IAppInstallationService> _installation;
@@ -40,6 +40,7 @@ internal sealed class AppManagementGateway : IAppManagementGateway
     private readonly ISimulationClock _clock;
     private readonly Func<System.Globalization.CultureInfo> _language;
     private readonly Func<AppAssetStore>? _assets;
+    private readonly Func<Apps.Packages.AppPackageInstaller?>? _packages;
 
     /// <summary>Creates the gateway for one app instance.</summary>
     /// <param name="catalog">The app catalog.</param>
@@ -56,6 +57,7 @@ internal sealed class AppManagementGateway : IAppManagementGateway
     /// prompt; English when <see langword="null"/>.
     /// </param>
     /// <param name="assets">Integrity of the installed apps' assets (ADR 0098 §5), or <see langword="null"/>.</param>
+    /// <param name="packages">Installs apps from their repository (ADR 0182), or <see langword="null"/> to refuse it.</param>
     public AppManagementGateway(
         AppCatalog catalog,
         Func<IAppInstallationService> installation,
@@ -67,9 +69,11 @@ internal sealed class AppManagementGateway : IAppManagementGateway
         IFileSystemService fileSystem,
         ISimulationClock clock,
         Func<System.Globalization.CultureInfo>? language = null,
-        Func<AppAssetStore>? assets = null)
+        Func<AppAssetStore>? assets = null,
+        Func<Apps.Packages.AppPackageInstaller?>? packages = null)
     {
         _assets = assets;
+        _packages = packages;
         _catalog = catalog ?? throw new ArgumentNullException(nameof(catalog));
         _installation = installation ?? throw new ArgumentNullException(nameof(installation));
         _agent = agent;

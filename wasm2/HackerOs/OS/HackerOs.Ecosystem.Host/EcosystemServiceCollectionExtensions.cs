@@ -16,6 +16,7 @@ using HackerOs.Platform.Core.Backup;
 using HackerOs.Platform.Core.Storage;
 using HackerOs.Infrastructure.Browser.Storage;
 using HackerOs.Platform.Core.Apps;
+using HackerOs.Platform.Core.Apps.Packages;
 using HackerOs.Platform.Core;
 using HackerOs.Platform.WorkerHost.Host;
 using HackerOs.Simulation.Abstractions.Workers;
@@ -654,6 +655,11 @@ public static class EcosystemServiceCollectionExtensions
             provider.GetRequiredService<AppCatalog>(),
             provider.GetRequiredService<IAppAssetSource>(),
             provider.GetService<ILogger<AppAssetStore>>()));
+        // ADR 0182: apps installed from their GitHub repository; the OS downloads with fetch itself.
+        services.TryAddSingleton<IAppPackageDownloader>(static _ => new HttpAppPackageDownloader(new HttpClient()));
+        services.TryAddSingleton(static provider => new AppPackageInstaller(
+            provider.GetRequiredService<IAppPackageDownloader>(),
+            logger: provider.GetService<ILogger<AppPackageInstaller>>()));
         services.AddSingleton<AppEnablementRegistry>(provider =>
             new AppEnablementRegistry(provider.GetRequiredService<AppCatalog>()));
         services.AddSingleton<IAppEnablementRegistry>(provider =>
@@ -715,7 +721,10 @@ public static class EcosystemServiceCollectionExtensions
                 () => provider.GetRequiredService<FileAssociationResolver>(),
                 () => provider.GetRequiredService<IAppInstallationService>(),
                 () => provider.GetRequiredService<IAdministratorAuthenticationAgent>(),
-                () => provider.GetRequiredService<AppAssetStore>()),
+                () => provider.GetRequiredService<AppAssetStore>())
+            {
+                Packages = () => provider.GetService<AppPackageInstaller>()
+            },
             // Lazy for the same reason: ShellInterpreter depends on the orchestrator (ADR 0056 section 7).
             shellHostProvider: () => provider.GetRequiredService<ShellHostService>(),
             // ADR 0057: traffic counters for /proc/net/dev and /proc/<pid>/io, and HackDriveInfo.

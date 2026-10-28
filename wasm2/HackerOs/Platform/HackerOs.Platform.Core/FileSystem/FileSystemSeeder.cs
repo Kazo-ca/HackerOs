@@ -66,6 +66,9 @@ public sealed class FileSystemSeeder(
         // ADR 0074, section 4: the static host table read first by hackdns, root-owned 0644.
         await EnsureFileAsync(
             Network.Local.HackDnsResolver.HostsFilePath.Value, Network.Local.HackDnsResolver.DefaultHostsFileContent, 0x01A4, system, cancellationToken);
+        // ADR 0182, section 3: hosts the OS downloads app packages from and trusted owners, root-owned 0644.
+        await EnsureFileAsync(
+            Apps.Packages.AppSourcesConfigDocument.MachinePath.Value, Apps.Packages.AppSourcesConfigDocument.DefaultContent, 0x01A4, system, cancellationToken);
 
         // ADR 0125, section 3: pam_limits-style session limits, every line commented, root-owned 0644.
         await EnsureDirectoryAsync("/etc/security", 0x01ED, system, cancellationToken);

@@ -12,6 +12,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Admin.App.InstallPackage" xml:space="preserve">
+    <value>Installer {0} {1} depuis {2} pour tous les utilisateurs</value>
+  </data>
+  <data name="Admin.App.InstallUntrustedPackage" xml:space="preserve">
+    <value>Installer {0} {1} depuis {2}, une source non approuvée, pour tous les utilisateurs : son code aura les mêmes droits que l'OS</value>
+  </data>
+  <data name="Admin.App.RemovePackage" xml:space="preserve">
+    <value>Retirer {0}, installée depuis {1}, pour tous les utilisateurs</value>
+  </data>
   <data name="Admin.App.Reinstall" xml:space="preserve">
     <value>Réinstaller {0} pour tous les utilisateurs</value>
   </data>
