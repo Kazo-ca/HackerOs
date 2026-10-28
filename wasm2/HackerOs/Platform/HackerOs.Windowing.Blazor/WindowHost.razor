@@ -19,6 +19,7 @@
          data-window-width="@Window.Bounds.Width.ToString(System.Globalization.CultureInfo.InvariantCulture)"
          data-window-height="@Window.Bounds.Height.ToString(System.Globalization.CultureInfo.InvariantCulture)"
          data-window-state="@Window.VisualState"
+         data-window-snapped="@(Window.IsSnapped ? "true" : null)"
          data-window-z="@Window.ZOrder"
          hidden="@(Window.VisualState == WindowVisualState.Minimized ? true : null)"
          @onpointerdown="FocusAsync">

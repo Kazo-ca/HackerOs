@@ -83,8 +83,9 @@
         </button>
     </div>
 </header>
-@if (Window.Constraints.IsResizable)
+@if (Window.Constraints.IsResizable && Window.VisualState == WindowVisualState.Normal)
 {
+    @* A maximized window has no edge to drag: no handle may sit over its title bar buttons. *@
     @foreach (string edge in ResizeEdges)
     {
         <span class="resize-handle resize-@edge" data-window-gesture="resize" data-resize-edge="@edge" aria-hidden="true"></span>
@@ -260,6 +261,55 @@
         }
 
         await OnGesture.InvokeAsync(new MoveWindowCommand(gestureWindowId, x, y));
+    }
+
+    /// <summary>
+    /// Toggles maximize after a double click on the title bar (ADR 0177): a maximized window is
+    /// restored, any other one (snapped included) is maximized when it is resizable.
+    /// </summary>
+    [JSInvokable]
+    public async Task ReportTitleDoubleClickAsync()
+    {
+        if (Window.VisualState != WindowVisualState.Maximized && !Window.Constraints.IsResizable)
+        {
+            return;
+        }
+
+        await ToggleMaximizeAsync();
+    }
+
+    /// <summary>
+    /// Starts dragging a maximized or snapped window by its title bar (ADR 0177): the window gets back
+    /// its geometry from before the maximize or the snap and is placed so that the pointer keeps its
+    /// relative place on the title bar.
+    /// </summary>
+    /// <param name="pointerX">Pointer position in desktop coordinates.</param>
+    /// <param name="pointerY">Pointer position in desktop coordinates.</param>
+    /// <param name="grabRatioX">Where the title bar was grabbed, from 0 (left edge) to 1 (right edge).</param>
+    /// <param name="grabOffsetY">Distance from the top of the window to the pointer when grabbed.</param>
+    /// <returns>The restored bounds as <c>[x, y, width, height]</c>, or <see langword="null"/> when nothing was restored.</returns>
+    [JSInvokable]
+    public async Task<double[]?> ReportDragRestoreAsync(double pointerX, double pointerY, double grabRatioX, double grabOffsetY)
+    {
+        bool restorable = Window.VisualState == WindowVisualState.Maximized || Window.IsSnapped;
+        if (!restorable || !Window.Constraints.IsMovable
+            || !double.IsFinite(pointerX) || !double.IsFinite(pointerY)
+            || !double.IsFinite(grabRatioX) || !double.IsFinite(grabOffsetY))
+        {
+            return null;
+        }
+
+        WindowId windowId = Window.Id;
+        WindowBounds restored = Window.RestoreBounds ?? Window.Bounds;
+        double ratio = Math.Clamp(grabRatioX, 0, 1);
+        await OnFocus.InvokeAsync(windowId);
+        await OnGesture.InvokeAsync(new RestoreWindowCommand(windowId));
+        await OnGesture.InvokeAsync(new MoveWindowCommand(
+            windowId,
+            pointerX - (restored.Width * ratio),
+            pointerY - Math.Max(0, grabOffsetY)));
+        WindowBounds bounds = Window.Bounds;
+        return [bounds.X, bounds.Y, bounds.Width, bounds.Height];
     }
 
     /// <summary>Converts a cumulative browser-reported pointer delta into an authoritative C# command.</summary>

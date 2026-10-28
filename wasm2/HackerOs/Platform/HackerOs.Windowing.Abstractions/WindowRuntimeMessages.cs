@@ -28,8 +28,22 @@ public sealed record MinimizeWindowCommand(WindowId WindowId) : WindowCommand;
 /// <summary>Requests maximization within the current work area.</summary>
 public sealed record MaximizeWindowCommand(WindowId WindowId) : WindowCommand;
 
-/// <summary>Requests restoration to the last normal geometry.</summary>
+/// <summary>
+/// Requests restoration to the last normal geometry: a maximized or minimized window becomes normal,
+/// and a snapped window gets back the geometry it had before it was snapped (ADR 0177).
+/// </summary>
 public sealed record RestoreWindowCommand(WindowId WindowId) : WindowCommand;
+
+/// <summary>
+/// Tiles a window on <paramref name="Bounds"/> (half of the work area) and keeps the geometry it had
+/// before in <see cref="WindowRuntimeState.RestoreBounds"/>, so <see cref="RestoreWindowCommand"/>,
+/// or dragging its title bar, gives it back (ADR 0177). The window stays
+/// <see cref="WindowVisualState.Normal"/> and <see cref="WindowRuntimeState.IsSnapped"/> becomes
+/// <see langword="true"/>.
+/// </summary>
+/// <param name="WindowId">The window to tile.</param>
+/// <param name="Bounds">The tile, constrained like any normal geometry.</param>
+public sealed record SnapWindowCommand(WindowId WindowId, WindowBounds Bounds) : WindowCommand;
 
 /// <summary>Requests a graceful, cancellable close.</summary>
 public sealed record RequestWindowCloseCommand(WindowId WindowId) : WindowCommand;

@@ -76,6 +76,7 @@ public sealed class WindowRuntime
             MinimizeWindowCommand minimize => ChangeVisualState(minimize.WindowId, WindowVisualState.Minimized),
             MaximizeWindowCommand maximize => ChangeVisualState(maximize.WindowId, WindowVisualState.Maximized),
             RestoreWindowCommand restore => ChangeVisualState(restore.WindowId, WindowVisualState.Normal),
+            SnapWindowCommand snap => Snap(snap),
             RequestWindowCloseCommand close => RequestClose(close.WindowId),
             CancelWindowCloseCommand close => CancelClose(close.WindowId),
             ForceWindowCloseCommand close => ForceClose(close.WindowId),
@@ -175,7 +176,11 @@ public sealed class WindowRuntime
             new WindowBounds(command.X, command.Y, current.Bounds.Width, current.Bounds.Height),
             current.Constraints,
             AreaOf(current));
-        _windows[current.Id] = Copy(current, bounds: bounds);
+        // Moving a snapped window takes it off its tile (ADR 0177): it keeps its current size and
+        // forgets the geometry from before the snap. A title-bar drag restores that geometry first.
+        _windows[current.Id] = current.IsSnapped
+            ? Copy(current, bounds: bounds, restoreBounds: null, replaceRestoreBounds: true, isSnapped: false)
+            : Copy(current, bounds: bounds);
         return [new WindowMovedEvent(current.Id, current.Bounds, bounds)];
     }
 
@@ -198,22 +203,79 @@ public sealed class WindowRuntime
         return [new WindowResizeCompletedEvent(id, current.Bounds)];
     }
 
+    /// <summary>
+    /// Tiles a window and keeps its previous geometry to restore it later (ADR 0177). A maximized
+    /// window keeps the geometry it had before it was maximized; a snapped one keeps the geometry from
+    /// before its first snap.
+    /// </summary>
+    private IReadOnlyList<WindowEvent> Snap(SnapWindowCommand command)
+    {
+        WindowRuntimeState current = Get(command.WindowId);
+        if (current.VisualState == WindowVisualState.Minimized)
+        {
+            throw new InvalidOperationException("A minimized window must be restored before it can be snapped.");
+        }
+
+        if (!current.Constraints.IsResizable)
+        {
+            throw new InvalidOperationException("This window is not resizable.");
+        }
+
+        WindowBounds previousGeometry = current.VisualState == WindowVisualState.Maximized || current.IsSnapped
+            ? current.RestoreBounds ?? current.Bounds
+            : current.Bounds;
+        WindowBounds bounds = Constrain(command.Bounds, current.Constraints, AreaOf(current));
+        _windows[current.Id] = Copy(
+            current,
+            bounds: bounds,
+            restoreBounds: previousGeometry,
+            replaceRestoreBounds: true,
+            visualState: WindowVisualState.Normal,
+            isSnapped: true);
+
+        List<WindowEvent> events = [];
+        if (current.VisualState == WindowVisualState.Maximized)
+        {
+            events.Add(new WindowVisualStateChangedEvent(current.Id, current.VisualState, WindowVisualState.Normal, bounds, previousGeometry));
+        }
+
+        events.Add(new WindowResizedEvent(current.Id, current.Bounds, bounds));
+        events.Add(new WindowResizeCompletedEvent(current.Id, bounds));
+        return events;
+    }
+
+    /// <summary>Gives a snapped window back the geometry it had before the snap (ADR 0177).</summary>
+    private IReadOnlyList<WindowEvent> Unsnap(WindowRuntimeState current)
+    {
+        WindowBounds bounds = current.RestoreBounds is WindowBounds previous
+            ? Constrain(previous, current.Constraints, AreaOf(current))
+            : current.Bounds;
+        _windows[current.Id] = Copy(current, bounds: bounds, restoreBounds: null, replaceRestoreBounds: true, isSnapped: false);
+        return [new WindowResizedEvent(current.Id, current.Bounds, bounds), new WindowResizeCompletedEvent(current.Id, bounds)];
+    }
+
     private IReadOnlyList<WindowEvent> ChangeVisualState(WindowId id, WindowVisualState requestedState)
     {
         WindowRuntimeState current = Get(id);
         if (current.VisualState == requestedState)
         {
-            return [];
+            return requestedState == WindowVisualState.Normal && current.IsSnapped ? Unsnap(current) : [];
         }
 
         WindowBounds bounds = current.Bounds;
         WindowBounds? restoreBounds = current.RestoreBounds;
+        bool isSnapped = current.IsSnapped;
         if (requestedState == WindowVisualState.Maximized)
         {
-            restoreBounds = current.VisualState == WindowVisualState.Normal ? current.Bounds : restoreBounds;
+            // A snapped window keeps the geometry from before its snap, so restoring after the
+            // maximize undoes the snap too (ADR 0177).
+            restoreBounds = current.VisualState == WindowVisualState.Normal && !current.IsSnapped ? current.Bounds : restoreBounds;
             bounds = AreaOf(current);
+            isSnapped = false;
         }
-        else if (requestedState == WindowVisualState.Normal && restoreBounds is not null)
+        // A snapped window that was minimized comes back on its tile, keeping its geometry from
+        // before the snap.
+        else if (requestedState == WindowVisualState.Normal && !current.IsSnapped && restoreBounds is not null)
         {
             bounds = restoreBounds.Value;
             restoreBounds = null;
@@ -226,7 +288,8 @@ public sealed class WindowRuntime
             restoreBounds: restoreBounds,
             replaceRestoreBounds: true,
             visualState: requestedState,
-            isFocused: retainFocus);
+            isFocused: retainFocus,
+            isSnapped: isSnapped);
         _windows[id] = changed;
 
         List<WindowEvent> events = [new WindowVisualStateChangedEvent(id, current.VisualState, requestedState, bounds, restoreBounds)];
@@ -378,7 +441,7 @@ public sealed class WindowRuntime
         {
             bounds = area;
         }
-        else if (SnappedSide(window.Bounds, source) is bool left)
+        else if ((SnappedSide(window.Bounds, source) ?? (window.IsSnapped ? IsLeftHalf(window.Bounds, source) : null)) is bool left)
         {
             bounds = Constrain(HalfOf(area, left), window.Constraints, area);
         }
@@ -448,6 +511,13 @@ public sealed class WindowRuntime
         bounds == HalfOf(area, left: true) ? true
         : bounds == HalfOf(area, left: false) ? false
         : null;
+
+    /// <summary>
+    /// Which half a snapped window sits on when its size constraints kept it off the exact half-tile
+    /// (ADR 0177): <see langword="true"/> when its centre is left of the screen's centre.
+    /// </summary>
+    private static bool? IsLeftHalf(WindowBounds bounds, WindowBounds area) =>
+        bounds.X + (bounds.Width / 2) < area.X + (area.Width / 2);
 
     private IReadOnlyList<WindowEvent> ChangeTitle(WindowId id, string requestedTitle)
     {
@@ -541,7 +611,8 @@ public sealed class WindowRuntime
         WindowVisualState? visualState = null,
         bool? isFocused = null,
         string? title = null,
-        DisplayId? displayId = null) =>
+        DisplayId? displayId = null,
+        bool? isSnapped = null) =>
         new(
             state.Id,
             state.AppId,
@@ -562,5 +633,6 @@ public sealed class WindowRuntime
         {
             IsResponding = state.IsResponding,
             DisplayId = displayId ?? state.DisplayId,
+            IsSnapped = isSnapped ?? state.IsSnapped,
         };
 }
