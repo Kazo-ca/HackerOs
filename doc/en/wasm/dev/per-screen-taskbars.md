@@ -36,7 +36,7 @@ primary-taskbar = own   ; all | own
 | `ScreensSettingsDocuments.ReadPrimaryTaskbar(snapshot)` | `own` (ignoring case and spaces) gives `Own`; any other value, or no line, gives `All`. |
 | `ScreensSettingsDocuments.FormatPrimaryTaskbar(mode)` | `all` or `own`. |
 | `ScreenService.PrimaryTaskbar` | Read at start, then followed: the service watches the file (`WatchAsync`) and reads **only** `primary-taskbar` again on each change. The screens to restore are read at start only. |
-| `ScreenService.SetPrimaryTaskbarAsync(mode)` | Changes the value and writes it to the user's file; Settings ▸ Screens (work item 7) will use it. |
+| `ScreenService.SetPrimaryTaskbarAsync(mode)` | Changes the value and writes it to the user's file; the tests use it; Settings ▸ Screens writes the file, which the service follows (work item 7). |
 
 A change raises `ScreenService.Changed`, and `DesktopShell` makes screen 1's taskbar read its list
 again: editing the file in the terminal is enough, no reload.
@@ -112,5 +112,5 @@ The `HackerOs.Taskbar.Blazor` package does not change: the filter lives in the O
 
 - A secondary screen's taskbar has no clock panel (notifications, calendar): it stays on screen 1.
 - Screen 1's taskbar in `all` mode does not say which screen each window is on.
-- Choosing `primary-taskbar` in Settings ▸ Screens comes with work item 7; until then, the setting is
-  written in the file.
+- Settings ▸ Screens chooses `primary-taskbar` by writing the file, which the service follows
+  (work item 7, [`screens-settings.md`](screens-settings.md)).

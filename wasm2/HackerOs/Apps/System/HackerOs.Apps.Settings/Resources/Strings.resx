@@ -1352,4 +1352,79 @@
   <data name="Passkeys.Error.NotFound" xml:space="preserve">
     <value>The passkey {0} no longer exists.</value>
   </data>
+  <data name="Tab.Screens" xml:space="preserve">
+    <value>Screens</value>
+  </data>
+  <data name="Screens.Taskbar.Title" xml:space="preserve">
+    <value>Taskbar of screen 1</value>
+  </data>
+  <data name="Screens.Taskbar.Description" xml:space="preserve">
+    <value>The taskbars of the other screens always list the windows of their own screen. The change applies at once.</value>
+  </data>
+  <data name="Screens.Taskbar.All" xml:space="preserve">
+    <value>Every window of every screen</value>
+  </data>
+  <data name="Screens.Taskbar.Own" xml:space="preserve">
+    <value>Only the windows of screen 1</value>
+  </data>
+  <data name="Screens.List.Title" xml:space="preserve">
+    <value>Remembered screens</value>
+  </data>
+  <data name="Screens.List.Description" xml:space="preserve">
+    <value>Each secondary screen opens in its own browser window. HackerOS remembers where it was in {0}, even after it closes.</value>
+  </data>
+  <data name="Screens.List.Screen" xml:space="preserve">
+    <value>Screen {0}</value>
+  </data>
+  <data name="Screens.List.Primary" xml:space="preserve">
+    <value>This browser tab</value>
+  </data>
+  <data name="Screens.List.Open" xml:space="preserve">
+    <value>Open, or offered at the next sign-in</value>
+  </data>
+  <data name="Screens.List.Closed" xml:space="preserve">
+    <value>Closed</value>
+  </data>
+  <data name="Screens.List.Place" xml:space="preserve">
+    <value>{0} × {1} at ({2}, {3})</value>
+  </data>
+  <data name="Screens.List.NoPlace" xml:space="preserve">
+    <value>Place not remembered yet</value>
+  </data>
+  <data name="Screens.List.Forget" xml:space="preserve">
+    <value>Forget</value>
+  </data>
+  <data name="Screens.List.ForgetLabel" xml:space="preserve">
+    <value>Forget the place of screen {0}</value>
+  </data>
+  <data name="Screens.List.None" xml:space="preserve">
+    <value>No secondary screen yet.</value>
+  </data>
+  <data name="Screens.Help.Title" xml:space="preserve">
+    <value>Open and move screens</value>
+  </data>
+  <data name="Screens.Help.New" xml:space="preserve">
+    <value>New screen: right-click the icon of a window, or its Maximize button, then Other screen ▸ New screen.</value>
+  </data>
+  <data name="Screens.Help.Move" xml:space="preserve">
+    <value>Move the focused window to the previous or next screen with {0} or {1}, or with Other screen ▸ Screen N. Hovering a screen in that menu shows its number on every screen.</value>
+  </data>
+  <data name="Screens.Help.Restore" xml:space="preserve">
+    <value>After you sign in, the Restore screens card above the taskbar reopens the screens of your last session.</value>
+  </data>
+  <data name="Screens.Help.FullScreen" xml:space="preserve">
+    <value>Full screen: the ⤢ button at the top right of each secondary screen; Esc leaves it.</value>
+  </data>
+  <data name="Screens.Help.Permission" xml:space="preserve">
+    <value>In Chrome and Edge, allow window management when the browser asks: each new screen then goes to a free monitor. Elsewhere, place the window yourself; HackerOS remembers its place.</value>
+  </data>
+  <data name="Screens.Saved" xml:space="preserve">
+    <value>Saved.</value>
+  </data>
+  <data name="Screens.Error.CannotRead" xml:space="preserve">
+    <value>Cannot read screens.config: {0}</value>
+  </data>
+  <data name="Screens.Error.CannotSave" xml:space="preserve">
+    <value>Cannot save {0}: {1}</value>
+  </data>
 </root>

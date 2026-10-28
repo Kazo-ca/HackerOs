@@ -7,9 +7,9 @@ implementing [ADR 0178 §4](adr/0178-extended-screens-in-display-surfaces.md), r
 by [ADR 0180](adr/0180-screen-service-placement-and-memory.md). The service opens
 each secondary screen in a window of the host browser, registers it in the window
 manager ([`window-runtime-displays.md`](window-runtime-displays.md)) and remembers it
-from one session to the next. The "New screen" menus (chantier 6) and the
-Settings ▸ Screens page (chantier 7) will use it; this chantier only shows the
-"Restore screens" offer.
+from one session to the next. The "New screen" menus (work item 6) use it; the
+Settings ▸ Screens page (work item 7, [`screens-settings.md`](screens-settings.md)) only reads and
+writes `screens.config`. This work item shows the "Restore screens" offer.
 
 ## 1. Architecture
 

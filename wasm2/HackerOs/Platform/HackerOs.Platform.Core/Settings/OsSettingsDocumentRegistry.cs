@@ -22,7 +22,9 @@ public static class OsSettingsDocumentRegistry
         [Clipboard.ClipboardSettingsDocuments.Document.DocumentId] = Clipboard.ClipboardSettingsDocuments.Document,
         [WindowKeyBindingsSettingsDocuments.Document.DocumentId] = WindowKeyBindingsSettingsDocuments.Document,
         // ADR 0126: Settings > Memory switches the OOM killer through HackSettings.OpenSystemAsync.
-        [Processes.MemorySettingsDocuments.Document.DocumentId] = Processes.MemorySettingsDocuments.Document
+        [Processes.MemorySettingsDocuments.Document.DocumentId] = Processes.MemorySettingsDocuments.Document,
+        // ADR 0179 §7: Settings > Screens chooses primary-taskbar and forgets remembered screen places.
+        [ScreensSettingsDocuments.Document.DocumentId] = ScreensSettingsDocuments.Document
     };
 
     /// <summary>Gets every listed document id.</summary>
