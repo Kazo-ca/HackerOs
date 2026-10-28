@@ -63,7 +63,8 @@ has already happened and continues.
   `WindowVisualStateChangedEvent`, `WindowViewportChangedEvent`, `WindowClosedEvent`). It
   now publishes each batch through the `EventsApplied` event, before `StateChanged`.
 - Screens: a window has a `DisplayId` and each screen its own work area; changing screen
-  calls `OnWindowResized` if the size changes (ADR 0178, [`window-runtime-displays.md`](../dev/window-runtime-displays.md)).
+  calls `OnWindowResized` if the size changes (ADR 0178, [`window-runtime-displays.md`](../dev/window-runtime-displays.md)). The window
+  is not recreated: its element moves into its screen's layer ([`window-portal.md`](../dev/window-portal.md)).
 - New fact: `CompleteWindowResizeCommand` → `WindowResizeCompletedEvent(id, bounds)`. The
   chrome (`WindowChrome.razor.js`) sends it when a resize gesture ends; the
   keyboard sends it when a resize is confirmed.

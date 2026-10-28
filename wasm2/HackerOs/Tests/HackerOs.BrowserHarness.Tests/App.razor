@@ -25,6 +25,10 @@
     {
         <FileDialogBrowserScenario />
     }
+    else if (IsScreenPortalScenario)
+    {
+        <ScreenPortalBrowserScenario />
+    }
     else if (IsWindowScenario)
     {
         <WindowBrowserScenario />
@@ -66,6 +70,7 @@
     private string _status = "running";
     private string _message = "Running browser storage contracts.";
     private bool _started;
+    private bool IsScreenPortalScenario => new Uri(Navigation.Uri).Query.Contains("scenario=screen-portal", StringComparison.Ordinal);
     private bool IsWindowScenario => new Uri(Navigation.Uri).Query.Contains("scenario=window", StringComparison.Ordinal);
     private bool IsDialogScenario => new Uri(Navigation.Uri).Query.Contains("scenario=dialog", StringComparison.Ordinal);
     private bool IsTerminalFullScreenScenario => new Uri(Navigation.Uri).Query.Contains("scenario=terminal-full-screen", StringComparison.Ordinal);
@@ -88,6 +93,7 @@
         {
             string query = new Uri(Navigation.Uri).Query;
             if (query.Contains("scenario=window", StringComparison.Ordinal)
+                || query.Contains("scenario=screen-portal", StringComparison.Ordinal)
                 || query.Contains("scenario=dialog", StringComparison.Ordinal)
                 || query.Contains("scenario=terminal-full-screen", StringComparison.Ordinal)
                 || query.Contains("scenario=virtual-keyboard-terminal", StringComparison.Ordinal)

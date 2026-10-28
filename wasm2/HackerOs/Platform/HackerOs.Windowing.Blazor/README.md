@@ -28,6 +28,20 @@ Pair this package with `HackerOs.Taskbar.Blazor` for a taskbar over the same
 runtime. See `HackerOs.Windowing.SampleHost` in the source repository for a
 complete, minimal host that uses only these packages.
 
+## Several screens
+
+Give every `DesktopArea` the same `WindowLayers` and its own `DisplayId`. The area of
+screen 1 renders each window once; a window on another screen has its element moved into
+that screen's window layer (`WindowPortal`), so changing screen never recreates it. Add the
+screen to the runtime (`AddDisplayCommand`) before rendering its area.
+
+```razor
+<DesktopArea Windows="Runtime.Windows" Layers="Layers" ... />
+<DesktopArea Windows="Runtime.Windows" Layers="Layers" DisplayId="DisplayId.FromNumber(2)" ... />
+```
+
+See `doc/en/wasm/dev/window-portal.md` in the source repository (ADR 0178 §3).
+
 ## Localization
 
 The package's texts (accessible labels, window buttons such as Minimize, Maximize, Restore, Close, Back) live in `Resources/Strings.resx`

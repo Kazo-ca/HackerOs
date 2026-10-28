@@ -35,6 +35,7 @@
 <div class="desktop-shell" @onkeydown="HandleShellKeyDown">
     <div class="desktop-workspace">
         <DesktopArea Windows="WindowRuntime.Windows"
+                     Layers="_windowLayers"
                      BackgroundContent="EffectiveBackgroundContent"
                      BackgroundInteractive="UsesDesktopSurface"
                      OnFocus="HandleFocus"
@@ -177,6 +178,9 @@
     public bool ShowDesktopIcons { get; set; } = true;
 
     private DesktopSurfaceHost? _desktopSurface;
+
+    /// <summary>The window layers of every screen: windows render once and move to their screen's layer (ADR 0178 §3).</summary>
+    private readonly WindowLayers _windowLayers = new();
 
     private bool UsesDesktopSurface => BackgroundContent is null && ShowDesktopIcons;
 

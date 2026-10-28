@@ -63,7 +63,8 @@ déjà eu lieu et continue.
   `WindowVisualStateChangedEvent`, `WindowViewportChangedEvent`, `WindowClosedEvent`). Il publie
   maintenant chaque lot par l'événement `EventsApplied`, avant `StateChanged`.
 - Écrans : une fenêtre a un `DisplayId` et chaque écran sa zone de travail ; changer d'écran
-  appelle `OnWindowResized` si la taille change (ADR 0178, [`window-runtime-displays.md`](../dev/window-runtime-displays.md)).
+  appelle `OnWindowResized` si la taille change (ADR 0178, [`window-runtime-displays.md`](../dev/window-runtime-displays.md)). La fenêtre
+  n'est pas recréée : son élément passe dans la couche de son écran ([`window-portal.md`](../dev/window-portal.md)).
 - Nouveau fait : `CompleteWindowResizeCommand` → `WindowResizeCompletedEvent(id, bounds)`. Le
   chrome (`WindowChrome.razor.js`) l'envoie quand un geste de redimensionnement se termine ; le
   clavier l'envoie quand on valide un redimensionnement.

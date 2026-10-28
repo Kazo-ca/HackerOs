@@ -42,3 +42,9 @@
 .window-layer.pass-through ::deep .window-host {
     pointer-events: auto;
 }
+
+/* ADR 0178 §3: a window's portal boxes do not exist for layout; the window is placed in its layer. */
+.window-layer ::deep .window-portal-anchor,
+.window-layer ::deep .window-portal {
+    display: contents;
+}

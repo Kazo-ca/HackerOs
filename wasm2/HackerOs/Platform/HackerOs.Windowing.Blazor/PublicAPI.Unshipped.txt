@@ -1,1 +1,18 @@
 #nullable enable
+HackerOs.Windowing.Blazor.DesktopArea.DisplayId.get -> HackerOs.Windowing.Abstractions.DisplayId
+HackerOs.Windowing.Blazor.DesktopArea.DisplayId.set -> void
+HackerOs.Windowing.Blazor.DesktopArea.Layers.get -> HackerOs.Windowing.Blazor.WindowLayers?
+HackerOs.Windowing.Blazor.DesktopArea.Layers.set -> void
+HackerOs.Windowing.Blazor.WindowLayers
+HackerOs.Windowing.Blazor.WindowLayers.Changed -> System.Action?
+HackerOs.Windowing.Blazor.WindowLayers.Displays.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Windowing.Abstractions.DisplayId>!
+HackerOs.Windowing.Blazor.WindowLayers.TryGetLayer(HackerOs.Windowing.Abstractions.DisplayId displayId, out Microsoft.AspNetCore.Components.ElementReference layer) -> bool
+HackerOs.Windowing.Blazor.WindowLayers.WindowLayers() -> void
+override HackerOs.Windowing.Blazor.DesktopArea.OnParametersSet() -> void
+HackerOs.Windowing.Blazor.WindowPortal
+HackerOs.Windowing.Blazor.WindowPortal.ChildContent.get -> Microsoft.AspNetCore.Components.RenderFragment?
+HackerOs.Windowing.Blazor.WindowPortal.ChildContent.set -> void
+HackerOs.Windowing.Blazor.WindowPortal.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Windowing.Blazor.WindowPortal.Target.get -> Microsoft.AspNetCore.Components.ElementReference?
+HackerOs.Windowing.Blazor.WindowPortal.Target.set -> void
+HackerOs.Windowing.Blazor.WindowPortal.WindowPortal() -> void

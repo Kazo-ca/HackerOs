@@ -1,0 +1,15 @@
+@*
+    Window content with state of its own: the screen portal scenario checks that changing screen
+    keeps this component (same instance number, same count, same text in the input).
+*@
+<div class="portal-probe" data-instance="@_instance">
+    <span class="portal-count">@_count</span>
+    <button type="button" class="portal-increment" @onclick="() => _count++">Count</button>
+    <input class="portal-input" aria-label="Probe text" />
+</div>
+
+@code {
+    private static int s_created;
+    private readonly int _instance = Interlocked.Increment(ref s_created);
+    private int _count;
+}
