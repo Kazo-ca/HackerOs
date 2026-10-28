@@ -16,6 +16,7 @@ HackerOs.Windowing.Blazor.WindowPortal.DisposeAsync() -> System.Threading.Tasks.
 HackerOs.Windowing.Blazor.WindowPortal.Target.get -> Microsoft.AspNetCore.Components.ElementReference?
 HackerOs.Windowing.Blazor.WindowPortal.Target.set -> void
 HackerOs.Windowing.Blazor.WindowPortal.WindowPortal() -> void
+HackerOs.Windowing.Blazor.WindowChrome.ReportScreenDropAsync(int displayNumber, double x, double y) -> System.Threading.Tasks.Task!
 HackerOs.Windowing.Blazor.WindowMenuKind
 HackerOs.Windowing.Blazor.WindowMenuKind.MaximizeButton = 1 -> HackerOs.Windowing.Blazor.WindowMenuKind
 HackerOs.Windowing.Blazor.WindowMenuKind.Window = 0 -> HackerOs.Windowing.Blazor.WindowMenuKind

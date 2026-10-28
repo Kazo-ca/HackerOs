@@ -416,6 +416,12 @@
             return;
         }
 
+        // A window dropped on a screen that closed during the drag stays on its own screen (ADR 0183).
+        if (command is MoveWindowToDisplayCommand drop && !WindowRuntime.Displays.Contains(drop.DisplayId))
+        {
+            return;
+        }
+
         try
         {
             WindowRuntime.Apply(command);

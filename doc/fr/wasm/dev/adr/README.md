@@ -179,5 +179,6 @@ prochain numéro libre est indiqué dans
 | [`0178-extended-screens-in-display-surfaces.md`](0178-extended-screens-in-display-surfaces.md) | ADR 0178 : écrans étendus multi-moniteur, un écran par surface d'affichage, `DisplayId` et zone de travail par écran dans `WindowRuntime`, fenêtres déplacées par portail, service d'écrans (Chrome/Edge avec `window-management`, repli ailleurs) |
 | [`0179-per-screen-taskbars-and-other-screen-menus.md`](0179-per-screen-taskbars-and-other-screen-menus.md) | ADR 0179 : une barre des tâches par écran (réglage `primary-taskbar`), sous-menu « Autre écran » sur l'icône et le bouton Agrandir, voile d'identification, `screens.config` et Paramètres ▸ Écrans |
 | [`0180-screen-service-placement-and-memory.md`](0180-screen-service-placement-and-memory.md) | ADR 0180 : service d'écrans, moniteur choisi avant `window.open`, déplacement après la permission, place lue chaque seconde, `[screens]` avec `open` et une place par écran, « Restaurer les écrans » |
+| [`0183-drag-a-window-between-screens.md`](0183-drag-a-window-between-screens.md) | ADR 0183 : glisser une fenêtre d'un écran à l'autre par sa barre de titre, écran sous le pointeur trouvé par la position sur le bureau physique, contour dans l'écran cible, changement d'écran au relâchement |
 
 Index du dossier parent : [`../README.md`](../README.md).
