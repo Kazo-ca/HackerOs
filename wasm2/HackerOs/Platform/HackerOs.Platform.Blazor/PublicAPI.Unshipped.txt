@@ -61,3 +61,10 @@ HackerOs.Platform.Blazor.Display.ScreenLayer.ScreenContent.get -> Microsoft.AspN
 HackerOs.Platform.Blazor.Display.ScreenLayer.ScreenContent.set -> void
 override HackerOs.Platform.Blazor.Display.ScreenLayer.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
 override HackerOs.Platform.Blazor.Display.ScreenLayer.OnInitialized() -> void
+HackerOs.Platform.Blazor.Display.ScreenOverlayHost
+HackerOs.Platform.Blazor.Display.ScreenOverlayHost.ScreenOverlayHost() -> void
+~override HackerOs.Platform.Blazor.Display.ScreenOverlayHost.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+HackerOs.Platform.Blazor.Display.ScreenOverlayHost.ChildContent.get -> Microsoft.AspNetCore.Components.RenderFragment?
+HackerOs.Platform.Blazor.Display.ScreenOverlayHost.ChildContent.set -> void
+override HackerOs.Platform.Blazor.Display.ScreenOverlayHost.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+HackerOs.Platform.Blazor.Display.ScreenOverlayHost.DisposeAsync() -> System.Threading.Tasks.ValueTask

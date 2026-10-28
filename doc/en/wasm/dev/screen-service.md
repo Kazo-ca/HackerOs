@@ -80,12 +80,15 @@ The screen's place stays in its numbered line.
 
 ## 5. Inside a screen's window
 
-- **Desktop**: until chantier 4, the screen's number on the desktop colour.
-  `ScreenLayer.ScreenContent` receives the screen's desktop in chantier 4.
+- **Desktop**: `ScreenLayer.ScreenContent` receives the screen's desktop (work item 4,
+  [`secondary-screen-desktop.md`](secondary-screen-desktop.md)); without it, the screen's number
+  on the desktop colour.
 - **Full screen**: `⤢` button at the top right, `⤡` to leave (or `Esc`).
 - **Banner**: "The main HackerOS tab is hidden…" while the main tab is hidden
   (`visibilitychange`).
-- **Work area**: the window's inner size (chantier 4 takes the screen's taskbar off).
+- **Work area**: the window's inner size on open, then the size of the screen's desktop,
+  which measures it itself (work item 4); the service no longer changes it when the window
+  is resized.
 
 ## 6. Tests
 

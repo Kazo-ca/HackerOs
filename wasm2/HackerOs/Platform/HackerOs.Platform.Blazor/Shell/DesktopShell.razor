@@ -109,14 +109,17 @@
     @* ADR 0127 §2: samples which windows stop answering their inputs. *@
     <WindowResponsivenessHost />
 
-    @* ADR 0095 §3: window switcher, keyboard move/resize and window menu. *@
-    <WindowManagerOverlays Commands="KeyboardCommands" />
+    @* ADR 0178 §4: the secondary screens, each with its desktop, and the « Restaurer les écrans » offer. *@
+    <HackerOs.Platform.Blazor.Display.ScreenLayer ScreenContent="SecondaryDesktopFragment" />
 
-    @* ADR 0178 §4: the secondary screens and the « Restaurer les écrans » offer. *@
-    <HackerOs.Platform.Blazor.Display.ScreenLayer />
+    @* ADR 0179 §2: these overlays show on the screen where the user acts. *@
+    <HackerOs.Platform.Blazor.Display.ScreenOverlayHost>
+        @* ADR 0095 §3: window switcher, keyboard move/resize and window menu. *@
+        <WindowManagerOverlays Commands="KeyboardCommands" />
 
-    @* ADR 0150 §6: the OS context menu, above every window. *@
-    <HackerOs.Platform.Blazor.ContextMenus.ContextMenuOverlay />
+        @* ADR 0150 §6: the OS context menu, above every window. *@
+        <HackerOs.Platform.Blazor.ContextMenus.ContextMenuOverlay />
+    </HackerOs.Platform.Blazor.Display.ScreenOverlayHost>
 
     @* ADR 0049: secure-desktop approval, above every window and the taskbar. *@
     @* ADR 0101: synchronization conflicts and the session's periodic sync. *@
@@ -183,6 +186,17 @@
     private readonly WindowLayers _windowLayers = new();
 
     private bool UsesDesktopSurface => BackgroundContent is null && ShowDesktopIcons;
+
+    /// <summary>
+    /// The desktop of a secondary screen (ADR 0178 §1): the wallpaper only, the icons stay on
+    /// screen 1. It shares the window layers, so the windows of its screen move into it (they stay
+    /// rendered, with their callbacks, by the area of screen 1), and it measures the screen's work area.
+    /// </summary>
+    private RenderFragment<HackerOs.Platform.Blazor.Display.SecondaryScreen> SecondaryDesktopFragment => screen =>
+        @<DesktopArea Windows="WindowRuntime.Windows"
+                      Layers="_windowLayers"
+                      DisplayId="screen.Id"
+                      OnGesture="HandleGesture" />;
 
     private RenderFragment? EffectiveBackgroundContent => BackgroundContent ?? (ShowDesktopIcons ? DesktopSurfaceFragment : null);
 
@@ -327,6 +341,12 @@
 
     private void HandleGesture(WindowCommand command)
     {
+        // A secondary screen's desktop may report its size once more after its screen was removed.
+        if (command is ChangeViewportCommand viewport && !WindowRuntime.Displays.Contains(viewport.DisplayId))
+        {
+            return;
+        }
+
         try
         {
             WindowRuntime.Apply(command);

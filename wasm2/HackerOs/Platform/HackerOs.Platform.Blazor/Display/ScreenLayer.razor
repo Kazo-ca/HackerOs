@@ -1,13 +1,19 @@
 @namespace HackerOs.Platform.Blazor.Display
 @using HackerOs.AppSdk.Blazor.Display
+@using HackerOs.Platform.Blazor.Security
+@using Microsoft.Extensions.DependencyInjection
 @using Microsoft.Extensions.Localization
+@using Microsoft.JSInterop
 @implements IDisposable
 @inject ScreenService ScreenService
 @inject IStringLocalizer<Strings> L
+@inject IJSRuntime JSRuntime
+@inject IServiceProvider Services
 @*
     ADR 0178 §4, ADR 0180: the secondary screens and the « Restaurer les écrans » offer. Each screen
-    is a display surface; its content is rendered here and moved into the screen's window. Until
-    each screen has its own desktop (chantier 4), a screen shows its number on the desktop colour.
+    is a display surface; its content is rendered here and moved into the screen's window: its
+    desktop (ScreenContent, ADR 0178 §1), the slot the overlays move to when the user acts there
+    (ADR 0179 §2), and a veil that sends the user to screen 1 while a secure dialog waits there.
 *@
 
 @foreach (SecondaryScreen screen in ScreenService.Screens)
@@ -24,6 +30,18 @@
                     <div class="secondary-screen-number" aria-hidden="true">@screen.Id.Number</div>
                 }
             </div>
+
+            <div class="secondary-screen-overlays" data-screen-overlay-slot data-display="@screen.Id.Number"></div>
+
+            @if (IsSecureDialogShown)
+            {
+                <div class="secondary-screen-secure-veil" role="alertdialog" aria-modal="true" aria-labelledby="@($"secure-veil-{screen.Id.Number}")">
+                    <div class="secondary-screen-secure-card">
+                        <p id="@($"secure-veil-{screen.Id.Number}")">@L["Screens.SecureDialog.Message"]</p>
+                        <button type="button" class="secondary-screen-secure-action" @onclick="FocusPrimaryAsync">@L["Screens.SecureDialog.Action"]</button>
+                    </div>
+                </div>
+            }
 
             @if (ScreenService.IsPrimaryHidden)
             {
@@ -53,12 +71,34 @@
 }
 
 @code {
-    /// <summary>What a secondary screen shows (its desktop, chantier 4); its number without it.</summary>
+    private const string OverlaysModulePath = "./_content/HackerOs.Platform.Blazor/screenOverlays.js";
+
+    private DangerousCapabilityApprovalBroker? _approvals;
+    private AdministratorAuthenticationBroker? _authentications;
+
+    /// <summary>What a secondary screen shows (its desktop, ADR 0178 §1); its number without it.</summary>
     [Parameter]
     public RenderFragment<SecondaryScreen>? ScreenContent { get; set; }
 
+    /// <summary>A secure dialog (ADR 0049) waits on screen 1: the other screens send the user there (ADR 0179 §2).</summary>
+    private bool IsSecureDialogShown => _approvals?.Current is not null || _authentications?.Current is not null;
+
     /// <inheritdoc />
-    protected override void OnInitialized() => ScreenService.Changed += OnChanged;
+    protected override void OnInitialized()
+    {
+        ScreenService.Changed += OnChanged;
+        _approvals = Services.GetService<DangerousCapabilityApprovalBroker>();
+        _authentications = Services.GetService<AdministratorAuthenticationBroker>();
+        if (_approvals is not null)
+        {
+            _approvals.Changed += OnChanged;
+        }
+
+        if (_authentications is not null)
+        {
+            _authentications.Changed += OnChanged;
+        }
+    }
 
     /// <inheritdoc />
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -77,6 +117,31 @@
 
     private Task DismissAsync() => ScreenService.DismissRestoreAsync();
 
+    private async Task FocusPrimaryAsync()
+    {
+        try
+        {
+            await using IJSObjectReference module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", OverlaysModulePath);
+            await module.InvokeVoidAsync("focusPrimary");
+        }
+        catch (Exception exception) when (exception is JSException or JSDisconnectedException or InvalidOperationException)
+        {
+            // No browser: the message still says where to go.
+        }
+    }
+
     /// <inheritdoc />
-    public void Dispose() => ScreenService.Changed -= OnChanged;
+    public void Dispose()
+    {
+        ScreenService.Changed -= OnChanged;
+        if (_approvals is not null)
+        {
+            _approvals.Changed -= OnChanged;
+        }
+
+        if (_authentications is not null)
+        {
+            _authentications.Changed -= OnChanged;
+        }
+    }
 }

@@ -1,0 +1,5 @@
+/* ADR 0179 §2: the container takes no room; every overlay places itself in the viewport of the
+   screen it is shown on. */
+.screen-overlays {
+    display: contents;
+}
