@@ -119,7 +119,7 @@ Les réponses seront reportées ici et dans les ADR.
   apps (Q1). Les ajouts publics de `HackerOs.Windowing.*` sont dans
   `PublicAPI.Unshipped.txt`, pour la prochaine version.
 - **Docs** : index général et index des dossiers, mémoire du projet
-  ([`../../memory/README.md`](../../memory/README.md), prochain ADR libre 0184).
-- **Question encore ouverte** (chantier 7) : une petite API système des écrans
-  pour les boutons Identifier, Nouvel écran, Restaurer, Plein écran et
-  permission dans Paramètres ▸ Écrans ; décision laissée à Benoit.
+  ([`../../memory/README.md`](../../memory/README.md), prochain ADR libre 0185).
+- **Chantier 7b** (PR #236, après cette vérification) : API système des écrans
+  `HackScreens` pour les boutons de Paramètres ▸ Écrans
+  ([ADR 0184](../adr/0184-screens-administration-sdk.md)).
