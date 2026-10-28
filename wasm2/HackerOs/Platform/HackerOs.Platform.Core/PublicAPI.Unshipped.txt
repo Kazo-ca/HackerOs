@@ -1,1 +1,73 @@
 #nullable enable
+HackerOs.Platform.Core.Apps.InstalledAppsReadResult
+HackerOs.Platform.Core.Apps.InstalledAppsReadResult.<Clone>$() -> HackerOs.Platform.Core.Apps.InstalledAppsReadResult!
+HackerOs.Platform.Core.Apps.InstalledAppsReadResult.Deconstruct(out System.Collections.Generic.IReadOnlyDictionary<string!, HackerOs.Platform.Core.Apps.Packages.AppPackageSource!>! Sources, out System.Collections.Generic.IReadOnlyList<string!>! Warnings) -> void
+HackerOs.Platform.Core.Apps.InstalledAppsReadResult.Equals(HackerOs.Platform.Core.Apps.InstalledAppsReadResult? other) -> bool
+HackerOs.Platform.Core.Apps.InstalledAppsReadResult.InstalledAppsReadResult(System.Collections.Generic.IReadOnlyDictionary<string!, HackerOs.Platform.Core.Apps.Packages.AppPackageSource!>! Sources, System.Collections.Generic.IReadOnlyList<string!>! Warnings) -> void
+HackerOs.Platform.Core.Apps.InstalledAppsReadResult.Sources.get -> System.Collections.Generic.IReadOnlyDictionary<string!, HackerOs.Platform.Core.Apps.Packages.AppPackageSource!>!
+HackerOs.Platform.Core.Apps.InstalledAppsReadResult.Sources.init -> void
+HackerOs.Platform.Core.Apps.InstalledAppsReadResult.Warnings.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.Platform.Core.Apps.InstalledAppsReadResult.Warnings.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageSource
+HackerOs.Platform.Core.Apps.Packages.AppPackageSource.<Clone>$() -> HackerOs.Platform.Core.Apps.Packages.AppPackageSource!
+HackerOs.Platform.Core.Apps.Packages.AppPackageSource.AppPackageSource(string! Owner, string! Repository, HackerOs.App.Abstractions.SemanticVersion? Version = null) -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageSource.Deconstruct(out string! Owner, out string! Repository, out HackerOs.App.Abstractions.SemanticVersion? Version) -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageSource.Equals(HackerOs.Platform.Core.Apps.Packages.AppPackageSource? other) -> bool
+HackerOs.Platform.Core.Apps.Packages.AppPackageSource.GetFileUri(string! host, string! relativePath) -> System.Uri!
+HackerOs.Platform.Core.Apps.Packages.AppPackageSource.GetIndexUri(string! host) -> System.Uri!
+HackerOs.Platform.Core.Apps.Packages.AppPackageSource.IsSameRepository(HackerOs.Platform.Core.Apps.Packages.AppPackageSource! other) -> bool
+HackerOs.Platform.Core.Apps.Packages.AppPackageSource.Name.get -> string!
+HackerOs.Platform.Core.Apps.Packages.AppPackageSource.Owner.get -> string!
+HackerOs.Platform.Core.Apps.Packages.AppPackageSource.Owner.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageSource.Repository.get -> string!
+HackerOs.Platform.Core.Apps.Packages.AppPackageSource.Repository.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageSource.TrustKey.get -> string!
+HackerOs.Platform.Core.Apps.Packages.AppPackageSource.Version.get -> HackerOs.App.Abstractions.SemanticVersion?
+HackerOs.Platform.Core.Apps.Packages.AppPackageSource.Version.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageSource.WithVersion(HackerOs.App.Abstractions.SemanticVersion version) -> HackerOs.Platform.Core.Apps.Packages.AppPackageSource!
+HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig
+HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.<Clone>$() -> HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig!
+HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.AppSourcesConfig(string! GitHubHost, System.Collections.Generic.IReadOnlySet<string!>! TrustedKeys, System.Collections.Generic.IReadOnlyList<string!>! Warnings) -> void
+HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.Deconstruct(out string! GitHubHost, out System.Collections.Generic.IReadOnlySet<string!>! TrustedKeys, out System.Collections.Generic.IReadOnlyList<string!>! Warnings) -> void
+HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.Equals(HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig? other) -> bool
+HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.GitHubHost.get -> string!
+HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.GitHubHost.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.IsTrusted(HackerOs.Platform.Core.Apps.Packages.AppPackageSource! source) -> bool
+HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.TrustedKeys.get -> System.Collections.Generic.IReadOnlySet<string!>!
+HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.TrustedKeys.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.Warnings.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.Warnings.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppSourcesConfigDocument
+const HackerOs.Platform.Core.Apps.AppsConfigDocument.InstalledSection = "installed" -> string!
+const HackerOs.Platform.Core.Apps.Packages.AppPackageSource.GitHubScheme = "github:" -> string!
+const HackerOs.Platform.Core.Apps.Packages.AppPackageSource.IndexFileName = "index.json" -> string!
+const HackerOs.Platform.Core.Apps.Packages.AppPackageSource.PackagesBranch = "hackeros-packages" -> string!
+const HackerOs.Platform.Core.Apps.Packages.AppSourcesConfigDocument.DefaultContent = "# Where the OS downloads app packages, and whose apps it trusts (ADR 0182).\n# hackpkg contacts only the hosts below, itself, never through an app.\n[hosts]\ngithub=raw.githubusercontent.com\n\n# GitHub owners whose apps install without a warning. Others need\n# 'hackpkg install --allow-untrusted' and an administrator's confirmation.\n[trusted]\ngithub.com/Kazo-ca=true\n" -> string!
+const HackerOs.Platform.Core.Apps.Packages.AppSourcesConfigDocument.DefaultGitHubHost = "raw.githubusercontent.com" -> string!
+const HackerOs.Platform.Core.Apps.Packages.AppSourcesConfigDocument.DefaultTrustedKey = "github.com/Kazo-ca" -> string!
+const HackerOs.Platform.Core.Apps.Packages.AppSourcesConfigDocument.FileName = "app-sources.config" -> string!
+const HackerOs.Platform.Core.Apps.Packages.AppSourcesConfigDocument.GitHubHostKey = "github" -> string!
+const HackerOs.Platform.Core.Apps.Packages.AppSourcesConfigDocument.HostsSection = "hosts" -> string!
+const HackerOs.Platform.Core.Apps.Packages.AppSourcesConfigDocument.TrustedSection = "trusted" -> string!
+override HackerOs.Platform.Core.Apps.InstalledAppsReadResult.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.Apps.InstalledAppsReadResult.GetHashCode() -> int
+override HackerOs.Platform.Core.Apps.InstalledAppsReadResult.ToString() -> string!
+override HackerOs.Platform.Core.Apps.Packages.AppPackageSource.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.Apps.Packages.AppPackageSource.GetHashCode() -> int
+override HackerOs.Platform.Core.Apps.Packages.AppPackageSource.ToString() -> string!
+override HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.GetHashCode() -> int
+override HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.ToString() -> string!
+static HackerOs.Platform.Core.Apps.AppsConfigDocument.ReadInstalled(string? content, HackerOs.App.Abstractions.VirtualPath path) -> HackerOs.Platform.Core.Apps.InstalledAppsReadResult!
+static HackerOs.Platform.Core.Apps.AppsConfigDocument.RemoveInstalled(string? content, string! appId) -> string!
+static HackerOs.Platform.Core.Apps.AppsConfigDocument.SetInstalled(string? content, string! appId, HackerOs.Platform.Core.Apps.Packages.AppPackageSource! source) -> string!
+static HackerOs.Platform.Core.Apps.InstalledAppsReadResult.Empty.get -> HackerOs.Platform.Core.Apps.InstalledAppsReadResult!
+static HackerOs.Platform.Core.Apps.InstalledAppsReadResult.operator !=(HackerOs.Platform.Core.Apps.InstalledAppsReadResult? left, HackerOs.Platform.Core.Apps.InstalledAppsReadResult? right) -> bool
+static HackerOs.Platform.Core.Apps.InstalledAppsReadResult.operator ==(HackerOs.Platform.Core.Apps.InstalledAppsReadResult? left, HackerOs.Platform.Core.Apps.InstalledAppsReadResult? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.AppPackageSource.TryParse(string? text, out HackerOs.Platform.Core.Apps.Packages.AppPackageSource? source) -> bool
+static HackerOs.Platform.Core.Apps.Packages.AppPackageSource.operator !=(HackerOs.Platform.Core.Apps.Packages.AppPackageSource? left, HackerOs.Platform.Core.Apps.Packages.AppPackageSource? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.AppPackageSource.operator ==(HackerOs.Platform.Core.Apps.Packages.AppPackageSource? left, HackerOs.Platform.Core.Apps.Packages.AppPackageSource? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.operator !=(HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig? left, HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.operator ==(HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig? left, HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.AppSourcesConfigDocument.MachinePath.get -> HackerOs.App.Abstractions.VirtualPath
+static HackerOs.Platform.Core.Apps.Packages.AppSourcesConfigDocument.Read(string? content) -> HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig!
