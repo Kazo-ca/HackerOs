@@ -7,7 +7,8 @@ fonctionnalité multi-moniteur »). Les ADR [0178](../adr/0178-extended-screens-
 et [0179](../adr/0179-per-screen-taskbars-and-other-screen-menus.md) sont écrits
 avant le code (chantier 0). Chantier 1 fait : écrans dans le gestionnaire de fenêtres
 ([`window-runtime-displays.md`](../window-runtime-displays.md)). Chantier 2 fait :
-portail des fenêtres ([`window-portal.md`](../window-portal.md)).
+portail des fenêtres ([`window-portal.md`](../window-portal.md)). Chantier 3 fait :
+service d'écrans ([`screen-service.md`](../screen-service.md), [ADR 0180](../adr/0180-screen-service-placement-and-memory.md)).
 
 ## 1. Objet
 

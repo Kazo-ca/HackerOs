@@ -1,1 +1,34 @@
 #nullable enable
+HackerOs.Platform.Core.Shell.ScreenGeometry
+HackerOs.Platform.Core.Shell.ScreenGeometry.Deconstruct(out int Left, out int Top, out int Width, out int Height) -> void
+HackerOs.Platform.Core.Shell.ScreenGeometry.Equals(HackerOs.Platform.Core.Shell.ScreenGeometry other) -> bool
+HackerOs.Platform.Core.Shell.ScreenGeometry.Height.get -> int
+HackerOs.Platform.Core.Shell.ScreenGeometry.Height.init -> void
+HackerOs.Platform.Core.Shell.ScreenGeometry.Left.get -> int
+HackerOs.Platform.Core.Shell.ScreenGeometry.Left.init -> void
+HackerOs.Platform.Core.Shell.ScreenGeometry.ScreenGeometry() -> void
+HackerOs.Platform.Core.Shell.ScreenGeometry.ScreenGeometry(int Left, int Top, int Width, int Height) -> void
+HackerOs.Platform.Core.Shell.ScreenGeometry.Top.get -> int
+HackerOs.Platform.Core.Shell.ScreenGeometry.Top.init -> void
+HackerOs.Platform.Core.Shell.ScreenGeometry.Width.get -> int
+HackerOs.Platform.Core.Shell.ScreenGeometry.Width.init -> void
+HackerOs.Platform.Core.Shell.ScreensSettingsDocuments
+const HackerOs.Platform.Core.Shell.ScreenGeometry.MinimumHeight = 150 -> int
+const HackerOs.Platform.Core.Shell.ScreenGeometry.MinimumWidth = 200 -> int
+const HackerOs.Platform.Core.Shell.ScreensSettingsDocuments.DocumentId = "screens" -> string!
+const HackerOs.Platform.Core.Shell.ScreensSettingsDocuments.MaxScreenNumber = 9 -> int
+const HackerOs.Platform.Core.Shell.ScreensSettingsDocuments.OpenKey = "open" -> string!
+const HackerOs.Platform.Core.Shell.ScreensSettingsDocuments.ScreensGroup = "screens" -> string!
+override HackerOs.Platform.Core.Shell.ScreenGeometry.GetHashCode() -> int
+override HackerOs.Platform.Core.Shell.ScreenGeometry.ToString() -> string!
+static HackerOs.Platform.Core.Shell.ScreenGeometry.TryParse(string? text, out HackerOs.Platform.Core.Shell.ScreenGeometry geometry) -> bool
+static HackerOs.Platform.Core.Shell.ScreenGeometry.operator !=(HackerOs.Platform.Core.Shell.ScreenGeometry left, HackerOs.Platform.Core.Shell.ScreenGeometry right) -> bool
+static HackerOs.Platform.Core.Shell.ScreenGeometry.operator ==(HackerOs.Platform.Core.Shell.ScreenGeometry left, HackerOs.Platform.Core.Shell.ScreenGeometry right) -> bool
+static HackerOs.Platform.Core.Shell.ScreensSettingsDocuments.Document.get -> HackerOs.Platform.Core.Settings.OsSettingsDocument!
+static HackerOs.Platform.Core.Shell.ScreensSettingsDocuments.FormatOpenScreens(System.Collections.Generic.IEnumerable<int>! numbers) -> string!
+static HackerOs.Platform.Core.Shell.ScreensSettingsDocuments.GeometryQualifiedKey(int number) -> string!
+static HackerOs.Platform.Core.Shell.ScreensSettingsDocuments.OpenQualifiedKey.get -> string!
+static HackerOs.Platform.Core.Shell.ScreensSettingsDocuments.ReadGeometries(HackerOs.Simulation.Abstractions.Settings.LayeredConfigSnapshot! snapshot) -> System.Collections.Generic.IReadOnlyDictionary<int, HackerOs.Platform.Core.Shell.ScreenGeometry>!
+static HackerOs.Platform.Core.Shell.ScreensSettingsDocuments.ReadOpenScreens(HackerOs.Simulation.Abstractions.Settings.LayeredConfigSnapshot! snapshot) -> System.Collections.Generic.IReadOnlyList<int>!
+static HackerOs.Platform.Core.Shell.ScreensSettingsDocuments.Schema.get -> HackerOs.Simulation.Abstractions.Settings.SettingsSchema!
+~override HackerOs.Platform.Core.Shell.ScreenGeometry.Equals(object obj) -> bool

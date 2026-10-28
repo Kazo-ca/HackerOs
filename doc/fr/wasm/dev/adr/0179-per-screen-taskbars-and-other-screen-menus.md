@@ -90,8 +90,12 @@ l'icône de fenêtre). Plan : [`multi-monitor-plan.md`](../plans/multi-monitor-p
    [screens]
    ; écrans de la dernière session, pour « Restaurer les écrans »
    ; et la position retenue en mode repli (ADR 0178 §4)
+   open=2
    2=1920,0,1920,1080
    ```
+
+   La clé `open` (écrans à rouvrir) et le sens des lignes numérotées (place gardée
+   même après la fermeture) sont précisés par l'[ADR 0180](0180-screen-service-placement-and-memory.md).
 
    **Paramètres ▸ Écrans** : liste des écrans ouverts (numéro et nom du
    moniteur quand le navigateur le donne), boutons Identifier, Nouvel écran,
