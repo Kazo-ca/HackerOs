@@ -117,7 +117,7 @@ The answers will be copied here and into the ADRs.
   SDK (Q1). Public additions of `HackerOs.Windowing.*` are in
   `PublicAPI.Unshipped.txt`, for the next version.
 - **Docs**: general index and folder indexes, project memory
-  ([`../../memory/README.md`](../../memory/README.md), next free ADR 0184).
-- **Question still open** (work item 7): a small system screens API for the
-  Identify, New screen, Restore, Full screen and permission buttons in
-  Settings ▸ Screens; left to Benoit.
+  ([`../../memory/README.md`](../../memory/README.md), next free ADR 0185).
+- **Work item 7b** (PR #236, after this check): `HackScreens` system screens API
+  for the Settings ▸ Screens buttons
+  ([ADR 0184](../adr/0184-screens-administration-sdk.md)).
