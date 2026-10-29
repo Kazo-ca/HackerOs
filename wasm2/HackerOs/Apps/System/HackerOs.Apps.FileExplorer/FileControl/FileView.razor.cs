@@ -390,6 +390,8 @@ public partial class FileView : IAsyncDisposable
             IJSObjectReference module = await EnsureJsModuleAsync();
             _pasteCallbacks ??= DotNetObjectReference.Create(this);
             await module.InvokeAsync<bool>("attachTooltips", _rootElement, _pasteCallbacks, FileViewTooltip.DelayMilliseconds);
+            // ADR 0185 §14: the folder tiles of the Icons mode that come on screen get their preview.
+            await module.InvokeAsync<bool>("attachFolderPreviews", _rootElement, _pasteCallbacks);
         }
 
         if (_pendingReveal is { } reveal && JavaScript is not null)
@@ -427,6 +429,11 @@ public partial class FileView : IAsyncDisposable
         }
 
         await AttachWatchAsync(path, cancellationToken);
+        if (path != CurrentDirectory)
+        {
+            await StopPreviewWatchesAsync();
+        }
+
         _lastSnapshot = result.Value;
         RebuildItems(result.Value!, preserveSelection: false);
         CurrentDirectory = path;
@@ -1475,6 +1482,7 @@ public partial class FileView : IAsyncDisposable
     /// <inheritdoc />
     public async ValueTask DisposeAsync()
     {
+        await StopPreviewWatchesAsync();
         _watchLoopCts?.Cancel();
         _watchLoopCts?.Dispose();
         if (_watchSubscription is not null)

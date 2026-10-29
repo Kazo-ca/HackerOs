@@ -329,3 +329,11 @@ as a folder" points (§6 to §9) are not part of this series.
   file or a folder is the SDK's new `HackDesktopLink` (`Type=Link`, see
   [`desktop-api.md`](../framework/desktop-api.md)), which the control shows and opens. Tests:
   `HackDesktopLinkTests`, `FileExplorerMenuActionsTests`.
+- [x] `explorer/7-folder-previews` (§14): in Icons mode, a folder's icon becomes an open folder with
+  the small icons of its first 4 entries (folders first, then by name, hidden entries left out); an
+  empty folder keeps the closed icon. The content is read only for tiles on screen
+  (`attachFolderPreviews` in `FileView.razor.js`, an `IntersectionObserver` that calls
+  `FileView.LoadFolderPreviewsAsync`), then cached per folder revision (`FileView.Previews.cs`). Each
+  previewed folder is watched (its immediate children, 64 folders at most): a change inside it reads
+  the preview again while the old one stays drawn; these watches end when the view leaves the folder. Details, tree and desktop modes do not change;
+  a replaced icon (shortcut) gets no preview. Tests: `FileViewFolderPreviewTests`.

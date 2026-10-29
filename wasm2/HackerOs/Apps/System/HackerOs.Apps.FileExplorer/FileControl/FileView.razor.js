@@ -348,3 +348,62 @@ export function attachTooltips(root, callbacks, delay) {
     root.__hackerOsTooltips = true;
     return true;
 }
+
+// ADR 0185 §14: tells .NET which folder tiles of the Icons mode came on screen, so their content is
+// read for the preview only when it can be seen. Tiles mark themselves with data-folder-preview; new
+// tiles (a navigation, a refresh, a mode change) are found by a mutation observer.
+export function attachFolderPreviews(root, callbacks) {
+    if (!root || root.__hackerOsFolderPreviews || typeof IntersectionObserver === 'undefined') {
+        return false;
+    }
+
+    const pending = new Set();
+    let timer = 0;
+    const flush = () => {
+        timer = 0;
+        const paths = [...pending];
+        pending.clear();
+        if (paths.length > 0) {
+            callbacks.invokeMethodAsync('LoadFolderPreviewsAsync', paths).catch(() => { });
+        }
+    };
+
+    const visible = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+            const path = entry.target.getAttribute('data-folder-preview');
+            if (entry.isIntersecting && path) {
+                pending.add(path);
+            }
+        }
+
+        if (pending.size > 0 && !timer) {
+            timer = setTimeout(flush, 60);
+        }
+    });
+
+    const observed = new WeakSet();
+    const scan = () => {
+        for (const element of root.querySelectorAll('[data-folder-preview]')) {
+            if (!observed.has(element)) {
+                observed.add(element);
+                visible.observe(element);
+            }
+        }
+    };
+
+    // A tile kept by Blazor whose attribute changed (another folder) is observed again.
+    const changes = new MutationObserver((records) => {
+        for (const record of records) {
+            if (record.type === 'attributes' && record.target.hasAttribute('data-folder-preview')) {
+                visible.unobserve(record.target);
+                visible.observe(record.target);
+            }
+        }
+
+        scan();
+    });
+    changes.observe(root, { childList: true, subtree: true, attributes: true, attributeFilter: ['data-folder-preview'] });
+    scan();
+    root.__hackerOsFolderPreviews = true;
+    return true;
+}
