@@ -297,3 +297,8 @@ as a folder" points (§6 to §9) are not part of this series.
   that hides everything shows `No results for "x".` (`FileView.NoMatchText`, set by the explorer window);
   another filter shows "Nothing to show here.". Nothing on the desktop or in the tree. The Open and Save
   dialogs get it too. Tests: `FileViewEmptyStateTests`.
+- [x] `explorer/2-stray-drop` (§3): a drop outside every drop zone does nothing, in every window
+  (detached windows included): the browser no longer opens the file. The guard is installed by the JS
+  initializer of `HackerOs.Platform.Blazor` (`installStrayDropGuard`): `dragover` and `drop` listeners on
+  `window`, bubble phase, that act only when no zone cancelled the event ("not allowed" cursor, default
+  action cancelled). Text fields keep the browser's own text drop.

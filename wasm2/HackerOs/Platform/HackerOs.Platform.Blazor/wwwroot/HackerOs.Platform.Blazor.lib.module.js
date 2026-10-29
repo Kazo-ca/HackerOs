@@ -14,6 +14,8 @@
 //
 // Nothing else changes: listeners still go to `document` first, in the same order, and any other
 // query answers exactly as before.
+//
+// It also installs the stray drop guard (installStrayDropGuard, below).
 
 const REGISTRY_KEY = Symbol.for("hackeros.displaySurfaces.documentListeners");
 
@@ -121,12 +123,60 @@ function installDocumentListenerRegistry() {
     };
 }
 
+// ADR 0185 §3: a drop that lands outside every drop zone does nothing, in every window. Without this
+// the browser opens a host file dropped next to a zone (a text file replaced the whole OS). The zones
+// (FileView, the desktop, the Places entries, apps) cancel `dragover` themselves, through Blazor or their
+// own listener; these window listeners run last (bubble phase on the window) and only act when nobody
+// did: they refuse the drop (dropEffect "none", the "not allowed" cursor) and cancel the default action.
+// Text fields keep the browser's own text drop.
+const DROP_GUARD_KEY = Symbol.for("hackeros.strayDropGuard");
+
+function isEditableTarget(target) {
+    const element = target instanceof Node && target.nodeType !== Node.ELEMENT_NODE ? target.parentElement : target;
+    return !!(element && typeof element.closest === "function" && element.closest("input, textarea, [contenteditable]:not([contenteditable='false'])"));
+}
+
+export function installStrayDropGuard(target) {
+    if (!target || target[DROP_GUARD_KEY]) {
+        return false;
+    }
+
+    target[DROP_GUARD_KEY] = true;
+    target.addEventListener("dragover", (e) => {
+        if (e.defaultPrevented || isEditableTarget(e.target)) {
+            return;
+        }
+        e.preventDefault();
+        if (e.dataTransfer) {
+            e.dataTransfer.dropEffect = "none";
+        }
+    });
+    target.addEventListener("drop", (e) => {
+        if (!e.defaultPrevented && !isEditableTarget(e.target)) {
+            e.preventDefault();
+        }
+    });
+    return true;
+}
+
+function installStrayDropGuards() {
+    installStrayDropGuard(window);
+    // Detached display windows (ADR 0078) get the same guard.
+    window[REGISTRY_KEY]?.watch((change, surfaceDocument) => {
+        if (change === "attach") {
+            installStrayDropGuard(surfaceDocument.defaultView);
+        }
+    });
+}
+
 // WebAssembly standalone host (HackerOs.Ecosystem) and legacy initializers.
 export function beforeStart() {
     installDocumentListenerRegistry();
+    installStrayDropGuards();
 }
 
 // Blazor Web App hosts (test host, HackerOs.Server).
 export function beforeWebStart() {
     installDocumentListenerRegistry();
+    installStrayDropGuards();
 }
