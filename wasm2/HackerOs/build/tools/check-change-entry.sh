@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # ADR 0186 section 5: fails when the commits between <base> and <head> change the product but add no
 # entry to the change list. The product is wasm2/HackerOs outside Tests/, docs/, changes/ and
-# Markdown files. An entry is a new file wasm2/HackerOs/changes/unreleased/<guid>.json (its format
-# is checked by ChangeEntriesTests). The Change list entry workflow skips this script when the pull
-# request carries the no-changelog label.
+# Markdown files. An entry is a new file wasm2/HackerOs/changes/unreleased/<guid>.json, or the new
+# changes/<version>.json of a release pull request (formats checked by ChangeEntriesTests). The
+# Change list entry workflow skips this script when the pull request carries the no-changelog label.
 #
 #   build/tools/check-change-entry.sh <base> <head>   (default: origin/main HEAD)
 set -euo pipefail
@@ -22,7 +22,8 @@ done < <(git diff --name-only "$merge_base" "$head")
 
 entries=()
 while IFS= read -r path; do
-  [[ "$path" == wasm2/HackerOs/changes/unreleased/*.json ]] && entries+=("$path")
+  # A release pull request (collect-changes.sh) adds changes/<version>.json instead.
+  [[ "$path" == wasm2/HackerOs/changes/unreleased/*.json || "$path" =~ ^wasm2/HackerOs/changes/[0-9]+\.[0-9]+\.[0-9]+\.json$ ]] && entries+=("$path")
 done < <(git diff --name-only --diff-filter=A "$merge_base" "$head")
 
 summary="${GITHUB_STEP_SUMMARY:-/dev/null}"

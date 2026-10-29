@@ -155,7 +155,9 @@ Benoit and will be corrected here if he prefers the released version only.
    `WhatsNewService.NotifyNewChangesAsync`, launcher dot; the page is a menu entry of its own next to
    About, reached also from About's **What's new?** button).
 4. Publications: `collect-changes.sh`, Release text in `release.yml`, `PackageReleaseNotes`,
-   `CHANGELOG.md` and `CHANGELOG-fr.md`.
+   `CHANGELOG.md` and `CHANGELOG-fr.md`. **Done** (`whats-new/4-release-notes`: `collect`, `notes`
+   and `changelog` commands of `Tools/HackerOs.Tools.ChangeList`; the PR check also accepts a new
+   `changes/<version>.json`).
 5. PR check: **Change list entry** workflow and `no-changelog` label. **Done with this ADR.**
 
 Each work item updates the docs in both languages and the README indexes.
@@ -166,6 +168,6 @@ Each work item updates the docs in both languages and the README indexes.
   per PR, but release notes and the what's new page no longer have to be written separately.
 - Entries are written for readers, not for code reviewers: a short sentence that says what the
   person can now do.
-- Until work items 2 to 4 are done, entries are only read by the test and by humans; `release.yml`
-  keeps GitHub's generated notes.
+- Since work items 2 to 4 (2026-10-29), the entries feed the OS what's new page, the GitHub
+  Release, the NuGet release notes and the two changelogs.
 - Practical guide: [`change-list.md`](../change-list.md).
