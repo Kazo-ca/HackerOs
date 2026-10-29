@@ -1,0 +1,19 @@
+{
+  "id": "561f5a45-1250-4faa-a9d6-a421c27167cc",
+  "category": "new",
+  "audience": [
+    "user"
+  ],
+  "title": {
+    "en": "Settings ▸ Screens",
+    "fr": "Paramètres ▸ Écrans"
+  },
+  "description": {
+    "en": "A new Settings page lists your screens, opens or closes them, restores them after a restart and remembers where each one goes.",
+    "fr": "Une nouvelle page de Paramètres liste vos écrans, les ouvre ou les ferme, les restaure après un redémarrage et retient la place de chacun."
+  },
+  "pr": 238,
+  "links": [
+    "doc/en/wasm/dev/adr/0180-screen-service-placement-and-memory.md"
+  ]
+}

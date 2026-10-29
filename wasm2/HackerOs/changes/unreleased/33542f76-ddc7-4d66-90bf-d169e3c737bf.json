@@ -1,0 +1,19 @@
+{
+  "id": "33542f76-ddc7-4d66-90bf-d169e3c737bf",
+  "category": "fixed",
+  "audience": [
+    "user"
+  ],
+  "title": {
+    "en": "Title bar of maximized and snapped windows",
+    "fr": "Barre de titre des fenêtres agrandies et ancrées"
+  },
+  "description": {
+    "en": "The buttons of a maximized or snapped window stay clickable, dragging the title bar restores the window, and a double-click maximizes it.",
+    "fr": "Les boutons d'une fenêtre agrandie ou ancrée restent cliquables, glisser la barre de titre restaure la fenêtre, et un double-clic l'agrandit."
+  },
+  "pr": 222,
+  "links": [
+    "doc/en/wasm/dev/adr/0177-title-bar-of-maximized-and-snapped-windows.md"
+  ]
+}

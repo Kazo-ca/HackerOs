@@ -236,7 +236,7 @@ points to its PR.
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Guest start and credits | Try the OS without creating an account, then keep your files by creating one; credits on the sign-in screen. | [0187](dev/adr/0187-guest-start-and-sign-in-credits.md) | [#243](https://github.com/Kazo-ca/HackerOs/issues/243) |
-| What's new since your last visit | List of changes per version, shown in the OS and reused in the release notes. | [0186 (PR #260)](https://github.com/Kazo-ca/HackerOs/pull/260) | [#252](https://github.com/Kazo-ca/HackerOs/issues/252) |
+| What's new since your last visit | List of changes per version, shown in the OS and reused in the release notes. | [0186](dev/adr/0186-whats-new-change-list.md) | [#252](https://github.com/Kazo-ca/HackerOs/issues/252) |
 
 ### Hack Store
 

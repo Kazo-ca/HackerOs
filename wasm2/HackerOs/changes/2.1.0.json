@@ -1,0 +1,155 @@
+{
+  "version": "2.1.0",
+  "date": "2026-10-26",
+  "entries": [
+    {
+      "id": "ae8010fb-2d9c-40e7-8db5-6b9cb6870f1e",
+      "category": "new",
+      "audience": [
+        "user"
+      ],
+      "title": {
+        "en": "Sign in with a passkey",
+        "fr": "Connexion par clé d'accès"
+      },
+      "description": {
+        "en": "Add a passkey to your account in Settings ▸ Users and sign in with Windows Hello, Touch ID or a security key. The passkey also unlocks your keyring.",
+        "fr": "Ajoutez une clé d'accès à votre compte dans Paramètres ▸ Utilisateurs et connectez-vous avec Windows Hello, Touch ID ou une clé de sécurité. La clé d'accès déverrouille aussi votre trousseau."
+      },
+      "pr": 211,
+      "links": [
+        "doc/en/wasm/dev/adr/0168-passkey-sign-in.md"
+      ]
+    },
+    {
+      "id": "8ba716fa-5f9c-4146-9fb8-4f31adec101d",
+      "category": "new",
+      "audience": [
+        "user"
+      ],
+      "title": {
+        "en": "Administrators add and remove accounts",
+        "fr": "Un administrateur ajoute et supprime des comptes"
+      },
+      "description": {
+        "en": "An administrator can create a new account or remove an existing one from Settings ▸ Users.",
+        "fr": "Un administrateur peut créer un compte ou supprimer un compte existant dans Paramètres ▸ Utilisateurs."
+      },
+      "pr": 211,
+      "links": [
+        "doc/en/wasm/dev/adr/0169-administrator-adds-and-removes-users.md"
+      ]
+    },
+    {
+      "id": "778b70dc-1d17-44b8-843e-b91f006b103f",
+      "category": "improved",
+      "audience": [
+        "user"
+      ],
+      "title": {
+        "en": "Collapsible side menu in Settings",
+        "fr": "Menu latéral réductible dans Paramètres"
+      },
+      "description": {
+        "en": "Settings pages are listed in a side menu that can be collapsed to icons, and that becomes a menu button on a phone.",
+        "fr": "Les pages de Paramètres sont listées dans un menu latéral qui se réduit aux icônes, et qui devient un bouton de menu sur un téléphone."
+      },
+      "pr": 210,
+      "links": [
+        "doc/en/wasm/dev/adr/0170-settings-side-menu.md"
+      ]
+    },
+    {
+      "id": "4f8ca4a3-a531-4f44-b30e-6d129ffe4887",
+      "category": "improved",
+      "audience": [
+        "user"
+      ],
+      "title": {
+        "en": "File Explorer and file dialogs on phones",
+        "fr": "Explorateur de fichiers et dialogues sur téléphone"
+      },
+      "description": {
+        "en": "File Explorer has a layout made for phones, a tap opens a file, and file dialogs fill the whole screen on mobile.",
+        "fr": "L'explorateur de fichiers a une disposition faite pour les téléphones, un toucher ouvre un fichier, et les dialogues de fichiers occupent tout l'écran sur mobile."
+      },
+      "pr": 212,
+      "links": [
+        "doc/en/wasm/dev/adr/0171-mobile-file-explorer-and-full-screen-dialogs.md"
+      ]
+    },
+    {
+      "id": "73aaa4f3-706c-4b20-8490-4f7383832360",
+      "category": "fixed",
+      "audience": [
+        "user"
+      ],
+      "title": {
+        "en": "Start menu alignment",
+        "fr": "Alignement du menu Démarrer"
+      },
+      "description": {
+        "en": "The Start menu now lines up with its taskbar button.",
+        "fr": "Le menu Démarrer est maintenant aligné sur son bouton de la barre des tâches."
+      },
+      "pr": 212,
+      "links": [
+        "doc/en/wasm/dev/adr/0171-mobile-file-explorer-and-full-screen-dialogs.md"
+      ]
+    },
+    {
+      "id": "23ea76fc-298c-4eab-836c-87fdc05d2d18",
+      "category": "new",
+      "audience": [
+        "user"
+      ],
+      "title": {
+        "en": "Notice when a new version is available",
+        "fr": "Avis quand une nouvelle version est disponible"
+      },
+      "description": {
+        "en": "Open sessions check for a new version every 5 minutes and show a banner that offers to restart into it.",
+        "fr": "Les sessions ouvertes cherchent une nouvelle version toutes les 5 minutes et affichent un bandeau qui propose de redémarrer pour l'utiliser."
+      },
+      "pr": 217,
+      "links": [
+        "doc/en/wasm/dev/adr/0174-announce-a-new-version-to-open-sessions.md"
+      ]
+    },
+    {
+      "id": "5547521c-2a44-4c13-baae-5982d1ea2a1a",
+      "category": "developer",
+      "audience": [
+        "developer"
+      ],
+      "title": {
+        "en": "Packages published to nuget.org on every release",
+        "fr": "Paquets publiés sur nuget.org à chaque version"
+      },
+      "description": {
+        "en": "Every HackerOs.* package, with its symbols, is published to nuget.org and attached to the GitHub Release when the version changes on main.",
+        "fr": "Chaque paquet HackerOs.*, avec ses symboles, est publié sur nuget.org et joint à la GitHub Release quand la version change sur main."
+      },
+      "pr": 216,
+      "links": [
+        "doc/en/wasm/dev/adr/0173-automatic-releases-from-the-version-file.md"
+      ]
+    },
+    {
+      "id": "7e6a01b2-a86b-4c8a-94b0-990df270f8cd",
+      "category": "developer",
+      "audience": [
+        "developer"
+      ],
+      "title": {
+        "en": "SDK 2.1: passkeys, user accounts, OpenOnTap and background job grace period",
+        "fr": "SDK 2.1 : clés d'accès, comptes, OpenOnTap et délai de grâce des tâches de fond"
+      },
+      "description": {
+        "en": "The SDK additions since 2.0 are shipped: passkey and user administration APIs, HackFileView.OpenOnTap for touch screens, and BackgroundJobService.ParentExitGracePeriod.",
+        "fr": "Les ajouts au SDK depuis 2.0 sont publiés : API des clés d'accès et de l'administration des comptes, HackFileView.OpenOnTap pour les écrans tactiles, et BackgroundJobService.ParentExitGracePeriod."
+      },
+      "pr": 217
+    }
+  ]
+}

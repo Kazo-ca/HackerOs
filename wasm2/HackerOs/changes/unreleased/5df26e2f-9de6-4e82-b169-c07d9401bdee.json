@@ -1,0 +1,19 @@
+{
+  "id": "5df26e2f-9de6-4e82-b169-c07d9401bdee",
+  "category": "developer",
+  "audience": [
+    "developer"
+  ],
+  "title": {
+    "en": "HackScreens system API",
+    "fr": "API système HackScreens"
+  },
+  "description": {
+    "en": "System apps with the screens.manage capability can list, open, restore, close and identify screens through HackScreens.",
+    "fr": "Les apps système qui ont la capacité screens.manage peuvent lister, ouvrir, restaurer, fermer et identifier les écrans avec HackScreens."
+  },
+  "pr": 238,
+  "links": [
+    "doc/en/wasm/dev/adr/0184-screens-administration-sdk.md"
+  ]
+}

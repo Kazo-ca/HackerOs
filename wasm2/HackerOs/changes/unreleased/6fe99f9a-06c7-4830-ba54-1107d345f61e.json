@@ -1,0 +1,16 @@
+{
+  "id": "6fe99f9a-06c7-4830-ba54-1107d345f61e",
+  "category": "fixed",
+  "audience": [
+    "user"
+  ],
+  "title": {
+    "en": "Update notice above the taskbar",
+    "fr": "Avis de mise à jour au-dessus de la barre des tâches"
+  },
+  "description": {
+    "en": "The \"Update ready\" notice is no longer hidden under the taskbar.",
+    "fr": "L'avis « Update ready » n'est plus caché sous la barre des tâches."
+  },
+  "pr": 258
+}

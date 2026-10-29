@@ -242,7 +242,7 @@ dans `main`, le lien mène à sa PR.
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Démarrer en invité et crédits | Essayer l'OS sans créer de compte, puis garder ses fichiers en créant son compte ; crédits sur l'écran de connexion. | [0187](dev/adr/0187-guest-start-and-sign-in-credits.md) | [#243](https://github.com/Kazo-ca/HackerOs/issues/243) |
-| Nouveautés depuis la dernière visite | Liste des changements par version, affichée dans l'OS et reprise dans les notes de version. | [0186 (PR #260)](https://github.com/Kazo-ca/HackerOs/pull/260) | [#252](https://github.com/Kazo-ca/HackerOs/issues/252) |
+| Nouveautés depuis la dernière visite | Liste des changements par version, affichée dans l'OS et reprise dans les notes de version. | [0186](dev/adr/0186-whats-new-change-list.md) | [#252](https://github.com/Kazo-ca/HackerOs/issues/252) |
 
 ### Hack Store
 

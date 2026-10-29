@@ -1,0 +1,19 @@
+{
+  "id": "b8176b31-4c58-4cdc-82e0-013884575d4a",
+  "category": "new",
+  "audience": [
+    "user"
+  ],
+  "title": {
+    "en": "Drag a window to another screen",
+    "fr": "Glisser une fenêtre vers un autre écran"
+  },
+  "description": {
+    "en": "Drag a window by its title bar onto another screen; an outline shows where it will land.",
+    "fr": "Glissez une fenêtre par sa barre de titre vers un autre écran ; un contour montre où elle arrivera."
+  },
+  "pr": 238,
+  "links": [
+    "doc/en/wasm/dev/adr/0183-drag-a-window-between-screens.md"
+  ]
+}
