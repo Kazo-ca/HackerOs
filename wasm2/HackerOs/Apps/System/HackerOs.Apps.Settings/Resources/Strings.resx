@@ -1228,7 +1228,8 @@
 <data name="Mobile.HelpersDescription" xml:space="preserve"><value>Show page arrows and gesture hints on the mobile Home screen. Swipes remain available with touch and mouse.</value></data>
 <data name="Mobile.HelpersLabel" xml:space="preserve"><value>Show mobile mouse helpers</value></data>
 <data name="Mobile.HelpersError" xml:space="preserve"><value>Unable to update mobile mouse helpers.</value></data>
-  <data name="About.Repository" xml:space="preserve"><value>GitHub repository</value></data>
+  <data name="About.Repository" xml:space="preserve"><value>GitHub project:</value></data>
+  <data name="About.Author" xml:space="preserve"><value>Author:</value></data>
   <data name="Users.Badge.Passkeys" xml:space="preserve">
     <value>{0} passkey(s)</value>
   </data>

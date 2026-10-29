@@ -1228,7 +1228,8 @@
 <data name="Mobile.HelpersDescription" xml:space="preserve"><value>Afficher les flèches de page et les indications de geste sur l’accueil mobile. Les gestes restent disponibles au toucher et à la souris.</value></data>
 <data name="Mobile.HelpersLabel" xml:space="preserve"><value>Afficher les aides souris du mode mobile</value></data>
 <data name="Mobile.HelpersError" xml:space="preserve"><value>Impossible de mettre à jour les aides souris mobiles.</value></data>
-  <data name="About.Repository" xml:space="preserve"><value>Dépôt GitHub</value></data>
+  <data name="About.Repository" xml:space="preserve"><value>Projet GitHub :</value></data>
+  <data name="About.Author" xml:space="preserve"><value>Auteur :</value></data>
   <data name="Users.Badge.Passkeys" xml:space="preserve">
     <value>{0} clé(s) d'accès</value>
   </data>

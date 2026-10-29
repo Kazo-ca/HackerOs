@@ -129,4 +129,15 @@ public sealed class SettingsNavigationTests
             Assert.False(string.IsNullOrEmpty(resources.GetString(key, System.Globalization.CultureInfo.GetCultureInfo("fr"))), key);
         }
     }
+
+    [Theory]
+    [InlineData("en", "Author:", "GitHub project:")]
+    [InlineData("fr", "Auteur :", "Projet GitHub :")]
+    public void About_credit_labels_follow_the_session_language(string culture, string author, string project)
+    {
+        System.Resources.ResourceManager resources = HackerOs.AppSdk.Globalization.HackLocalization.GetResourceManager(typeof(Strings));
+        System.Globalization.CultureInfo info = System.Globalization.CultureInfo.GetCultureInfo(culture);
+        Assert.Equal(author, resources.GetString("About.Author", info));
+        Assert.Equal(project, resources.GetString("About.Repository", info));
+    }
 }

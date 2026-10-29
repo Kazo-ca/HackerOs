@@ -72,13 +72,16 @@ d'isolation au legacy. Les autres chemins gardent la stratégie offline existant
 
 ## Informations visibles
 
-- Connexion et création du premier compte : version du build et URL GitHub.
+- Connexion et création du premier compte : version du build, « Auteur : Benoit Robin »
+  (lien vers https://kazo.ca) et « Projet GitHub : [icône] Kazo-ca/HackerOs » (lien vers
+  le dépôt), libellés dans la langue du système ([ADR 0187](adr/0187-guest-start-and-sign-in-credits.md)).
   Si le nom d'hôte est exactement `hackos.kazo.ca`, un message indique le
   déplacement de l'original vers `https://hackos.kazo.ca/legacy`. Les ports
   n'affectent pas ce test ; les sous-domaines ressemblants et les paramètres
   d'URL ne l'activent pas.
-- Récupération et erreurs fatales du WASM : même référence au dépôt et à la version.
-- Paramètres, À propos : version courante via `HackerOsSdk.Version` et URL GitHub.
+- Récupération et erreurs fatales du WASM : mêmes crédits et même version.
+- Paramètres, À propos : version courante via `HackerOsSdk.Version`, auteur (lien kazo.ca)
+  et projet GitHub au même format.
 - Paramètres legacy, About : URL GitHub visible, version legacy inchangée.
 - Les métadonnées des paquets pointent aussi vers le nouveau dépôt. La version
   commune est définie une seule fois dans `build/Versions.props` (`2.1.0`).
