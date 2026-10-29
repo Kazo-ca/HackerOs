@@ -14,7 +14,11 @@ must make sure GitHub is allowed as a trusted host." Complements
 [ADR 0048](0048-system-apps-and-uninstall.md) (`apps.config`),
 [ADR 0049](0049-dangerous-capabilities-and-admin-approval.md) (dangerous
 capabilities) and [ADR 0098](0098-sdk-versions-packages-and-manifest-checks.md)
-(SDK versions and manifest checks).
+(SDK versions and manifest checks). **Revised on 2026-10-29 by
+[ADR 0189](0189-app-sources-trust-and-per-user-install.md)**: per-user
+install without an administrator from a trusted source and two-step validation
+of system-wide installs replace the answer to Q4; §6 (Store) is described by
+[ADR 0188](0188-hack-store-and-app-catalog.md).
 
 ## Context
 

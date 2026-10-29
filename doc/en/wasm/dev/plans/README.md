@@ -18,6 +18,6 @@ summarized in [`../../memory/README.md`](../../memory/README.md).
 | [`v3-1-series-plan.md`](v3-1-series-plan.md) | Series v3.1 (branch `v3.1/base`, 2026-10-17): gaps of the v3 migration fixed before the follow-ups of step 5; restoration of window geometry (ADR 0116), window title set by the app and publication of SDK 1.1 (ADR 0117), merge of `v3/base` (per-user associations, `passwd`), branches, dependencies and merge bar. |
 | [`wasm-v3-migration-analyse.md`](wasm-v3-migration-analyse.md) | Analysis of the wasm v3 migration (starting point of the end-of-migration plan). Historical. |
 | [`authentication-task-list.md`](authentication-task-list.md) | Former task list for WebAssembly authentication. Historical. |
-| [`hackeros-store.md`](hackeros-store.md) | Note for the future **HackerOs Store** system app (in the style of the Play Store) that will read the list in the `Kazo-ca/HackerOs-AppMarketPlace` repository and install through the ADR 0182 service; to pick up once apps are published. |
+| [`hackeros-store.md`](hackeros-store.md) | **Hack Store** plan, **approved on 2026-10-29**: system app (in the style of the Play Store) pinned by default, reviewed `Kazo-ca/HackerOs-AppMarketPlace` catalog, trusted sources and per-user install, theme packs in v2; ADRs [0188](../adr/0188-hack-store-and-app-catalog.md) to [0190](../adr/0190-theme-packs.md) and the ordered list of work items (none started). |
 
 Parent folder index: [`../README.md`](../README.md).

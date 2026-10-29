@@ -1,41 +1,79 @@
 > [Version française](../../../../fr/wasm/dev/plans/hackeros-store.md)
 
-# Note: the HackerOs Store app
+# Plan: the Hack Store
 
-Note of 2026-10-28, to pick up **once apps are published** in their
-repositories. No work item opened. This is the "separate plan" announced for the
-app store by [`ecosystem-rebuild-plan.md`](ecosystem-rebuild-plan.md)
-(section 9) and [`wasm-v3-completion-plan.md`](wasm-v3-completion-plan.md)
-(question 1).
+Plan **approved on 2026-10-29** by Benoit, in the "Plan the Hack Store"
+thread. No work item has started: this document lists what to do, in order.
+It replaces the note of 2026-10-28 ("HackerOs Store"), which announced this
+separate plan for the app store of
+[`ecosystem-rebuild-plan.md`](ecosystem-rebuild-plan.md) (section 9) and
+[`wasm-v3-completion-plan.md`](wasm-v3-completion-plan.md) (question 1).
 
-## Idea
+## Goal
 
-A **HackerOs Store** system app, in the style of the Play Store or Microsoft
-Store, lists the apps that can be installed in HackerOS, shows their page and
-installs, updates or removes them in one click.
+A **Hack Store** system app, in the style of the Play Store or Microsoft Store,
+pinned by default in the Start menu, that lists the apps that can be installed
+in HackerOS, shows their page, and installs, updates or removes them in one
+click. Apps come from a reviewed catalog (`Kazo-ca/HackerOs-AppMarketPlace`),
+where each version is built by us from its source code. In v2, the Store also
+offers theme packs.
 
-## What already exists or is proposed
+## Decisions
 
-- The [`Kazo-ca/HackerOs-AppMarketPlace`](https://github.com/Kazo-ca/HackerOs-AppMarketPlace)
-  repository exists (empty on 2026-10-28): it will hold the list of app
-  repositories.
-- The [`Kazo-ca/HackerOs-AppTemplate`](https://github.com/Kazo-ca/HackerOs-AppTemplate)
-  repository exists (empty on 2026-10-28): starting point of an app,
-  [ADR 0176](../adr/0176-app-repository-template.md).
-- Installing from a GitHub repository at the terminal (`hackpkg`), its
-  `.hackapp` packages and its trusted sources: [ADR 0182](../adr/0182-install-apps-from-github.md).
-  The Store goes through the same installation service; it only adds the
-  interface and the list.
+| ADR | Topic |
+| --- | --- |
+| [0188](../adr/0188-hack-store-and-app-catalog.md) | The Hack Store app (v1), its default pin, updates, the catalog repository format (one folder per version), the GitHub actions that check and publish, the action for app authors |
+| [0189](../adr/0189-app-sources-trust-and-per-user-install.md) | Trusted sources (built into the OS or added by an administrator), per-user install without an administrator, block list, two-step validation of system installs; revises ADR 0182 Q4 |
+| [0190](../adr/0190-theme-packs.md) | v2: `.hacktheme` packs (themes, wallpapers, icons, sounds, cursors) and the OS systems to build first |
 
-## To decide when the time comes
+Already in place: [ADR 0176](../adr/0176-app-repository-template.md) (app
+repository template) and [ADR 0182](../adr/0182-install-apps-from-github.md)
+(`.hackapp` packages, `hackpkg`).
 
-- Format of the list in `HackerOs-AppMarketPlace` (for example an `apps.json`:
-  repository, category, short description, screenshots), read through
-  `raw.githubusercontent.com` like the packages.
-- Who adds an app to the list (pull request reviewed by Benoit?) and whether a
-  listed app becomes a trusted source.
-- Package signing, transactional installation and data migration from one
-  version to the next (question 1 of `wasm-v3-completion-plan.md`).
-- An app's page: icon and screenshots from the package or the repository.
-- Updates: checked at startup, next to the announcement of a new OS version
-  ([ADR 0174](../adr/0174-announce-a-new-version-to-open-sessions.md)).
+## What to do, in order
+
+Each line is a work item, with its branch and PR.
+
+1. **`hackeros-solution` template**: ADR 0176 tasks, plus the workflow that
+   publishes to the catalog (ADR 0188 §7). Catalog apps start from this
+   template.
+2. **`wwwroot/` assets of installed apps**: serve them (service worker or
+   `blob:` addresses), a known ADR 0182 limit. Needed for any app that wraps a
+   JavaScript project.
+3. **Trust and per-user install** (ADR 0189): `app-sources.config`
+   (`[catalogs]`, `[updates]`, values set at build, sources added by an
+   administrator), `app-policy.config`, install into
+   `~/.local/share/hackeros/apps`, catalog built when the session opens,
+   two-step validation window, `hackpkg --user/--system`, `sources`, `policy`,
+   Settings ▸ Apps ▸ Sources.
+4. **`HackerOs-AppMarketPlace` repository** (ADR 0188 §4 to §6):
+   `categories.json`, PR template, `validate.yml` (format, manifest, commit,
+   build, API check, CodeQL, capabilities comment), `publish.yml`, `packages`
+   branch, `catalog.json`, 3 versions kept.
+5. **Hack Store app v1** (ADR 0188 §1 to §3): home by category, search, app
+   pages, Install / Open / Update / Uninstall, Installed tab, "Restart to
+   finish", update checks (startup then every 6 hours), badge and
+   notification, default pin and migration of existing profiles, desktop and
+   mobile. `hackpkg install <appId>` from catalogs.
+6. **First catalog app**: a third-party app, in its own repository and made
+   from the template, that tests the whole chain (app repository → PR to the
+   catalog → checks → publishing → install by the Store).
+7. **Later**: adding an app to the catalog without a restart (ADR 0182, Q5 B);
+   package signing; transactional install and data migration between versions
+   (question 1 of `wasm-v3-completion-plan.md`).
+
+### v2: theme packs (ADR 0190)
+
+8. `.hacktheme` format, checks, install, Store Themes tab (`.theme` theme packs
+   only at first).
+9. One work item per new OS system, each with its ADR: image wallpapers, icon
+   packs, event sounds, cursor themes. The Store accepts each part of a pack
+   once its system exists.
+
+## Rules
+
+- This repository holds the code of no catalog app: each app lives in its own
+  repository. **No game in this repository**
+  ([ADR 0135](../adr/0135-no-game-in-this-repository.md)).
+- No automatic merge to `main`; Benoit decides.
+- Each work item updates the documentation indexes (French and English).
