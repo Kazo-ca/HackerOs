@@ -189,3 +189,44 @@ static HackerOs.AppSdk.Apps.HackPackageInstallReport.operator !=(HackerOs.AppSdk
 static HackerOs.AppSdk.Apps.HackPackageInstallReport.operator ==(HackerOs.AppSdk.Apps.HackPackageInstallReport? left, HackerOs.AppSdk.Apps.HackPackageInstallReport? right) -> bool
 static HackerOs.AppSdk.Apps.HackPackageSources.operator !=(HackerOs.AppSdk.Apps.HackPackageSources? left, HackerOs.AppSdk.Apps.HackPackageSources? right) -> bool
 static HackerOs.AppSdk.Apps.HackPackageSources.operator ==(HackerOs.AppSdk.Apps.HackPackageSources? left, HackerOs.AppSdk.Apps.HackPackageSources? right) -> bool
+HackerOs.AppSdk.IO.HackDirectoryInfo.GetTotalSizeAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.IO.HackDirectorySize!>!
+HackerOs.AppSdk.IO.HackDirectorySize
+HackerOs.AppSdk.IO.HackDirectorySize.<Clone>$() -> HackerOs.AppSdk.IO.HackDirectorySize!
+HackerOs.AppSdk.IO.HackDirectorySize.Deconstruct(out long Length, out long FileCount, out long DirectoryCount, out bool IsComplete) -> void
+HackerOs.AppSdk.IO.HackDirectorySize.DirectoryCount.get -> long
+HackerOs.AppSdk.IO.HackDirectorySize.DirectoryCount.init -> void
+HackerOs.AppSdk.IO.HackDirectorySize.Equals(HackerOs.AppSdk.IO.HackDirectorySize? other) -> bool
+HackerOs.AppSdk.IO.HackDirectorySize.FileCount.get -> long
+HackerOs.AppSdk.IO.HackDirectorySize.FileCount.init -> void
+HackerOs.AppSdk.IO.HackDirectorySize.HackDirectorySize(long Length, long FileCount, long DirectoryCount, bool IsComplete) -> void
+HackerOs.AppSdk.IO.HackDirectorySize.IsComplete.get -> bool
+HackerOs.AppSdk.IO.HackDirectorySize.IsComplete.init -> void
+HackerOs.AppSdk.IO.HackDirectorySize.Length.get -> long
+HackerOs.AppSdk.IO.HackDirectorySize.Length.init -> void
+override HackerOs.AppSdk.IO.HackDirectorySize.Equals(object? obj) -> bool
+override HackerOs.AppSdk.IO.HackDirectorySize.GetHashCode() -> int
+override HackerOs.AppSdk.IO.HackDirectorySize.ToString() -> string!
+static HackerOs.AppSdk.IO.HackDirectory.GetTotalSizeAsync(string! path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.IO.HackDirectorySize!>!
+static HackerOs.AppSdk.IO.HackDirectorySize.operator !=(HackerOs.AppSdk.IO.HackDirectorySize? left, HackerOs.AppSdk.IO.HackDirectorySize? right) -> bool
+static HackerOs.AppSdk.IO.HackDirectorySize.operator ==(HackerOs.AppSdk.IO.HackDirectorySize? left, HackerOs.AppSdk.IO.HackDirectorySize? right) -> bool
+HackerOs.AppSdk.Files.HackDesktopLink
+HackerOs.AppSdk.Files.HackDesktopLink.<Clone>$() -> HackerOs.AppSdk.Files.HackDesktopLink!
+HackerOs.AppSdk.Files.HackDesktopLink.Deconstruct(out string! Name, out string! Target, out string? Icon) -> void
+HackerOs.AppSdk.Files.HackDesktopLink.Equals(HackerOs.AppSdk.Files.HackDesktopLink? other) -> bool
+HackerOs.AppSdk.Files.HackDesktopLink.Format() -> string!
+HackerOs.AppSdk.Files.HackDesktopLink.HackDesktopLink(string! Name, string! Target, string? Icon = null) -> void
+HackerOs.AppSdk.Files.HackDesktopLink.Icon.get -> string?
+HackerOs.AppSdk.Files.HackDesktopLink.Icon.init -> void
+HackerOs.AppSdk.Files.HackDesktopLink.Name.get -> string!
+HackerOs.AppSdk.Files.HackDesktopLink.Name.init -> void
+HackerOs.AppSdk.Files.HackDesktopLink.Target.get -> string!
+HackerOs.AppSdk.Files.HackDesktopLink.Target.init -> void
+override HackerOs.AppSdk.Files.HackDesktopLink.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Files.HackDesktopLink.GetHashCode() -> int
+override HackerOs.AppSdk.Files.HackDesktopLink.ToString() -> string!
+static HackerOs.AppSdk.Files.HackDesktopLink.CreateLinkAsync(string! directory, string! target, string? name = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<string!>!
+static HackerOs.AppSdk.Files.HackDesktopLink.PathFromUrl(string? url) -> string?
+static HackerOs.AppSdk.Files.HackDesktopLink.ToUrl(string! path) -> string!
+static HackerOs.AppSdk.Files.HackDesktopLink.TryParse(string? content, out HackerOs.AppSdk.Files.HackDesktopLink? link) -> bool
+static HackerOs.AppSdk.Files.HackDesktopLink.operator !=(HackerOs.AppSdk.Files.HackDesktopLink? left, HackerOs.AppSdk.Files.HackDesktopLink? right) -> bool
+static HackerOs.AppSdk.Files.HackDesktopLink.operator ==(HackerOs.AppSdk.Files.HackDesktopLink? left, HackerOs.AppSdk.Files.HackDesktopLink? right) -> bool

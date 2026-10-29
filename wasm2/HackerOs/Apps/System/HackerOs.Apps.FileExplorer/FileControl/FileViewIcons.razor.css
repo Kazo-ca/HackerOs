@@ -57,3 +57,40 @@
     width: 100%;
     text-align: center;
 }
+
+/* ADR 0185 §2: the empty-folder or no-result message, centred in the grid. */
+.file-view-empty {
+    flex: 1 1 100%;
+    align-self: center;
+    margin-top: 2rem;
+    text-align: center;
+    color: var(--hos-text-secondary, #8b949e);
+    font-style: italic;
+    pointer-events: none;
+}
+
+/* ADR 0185 §14: the icons of a folder's first entries, in a small grid over the open folder. */
+.file-view-tile-icon {
+    position: relative;
+    display: inline-flex;
+}
+
+.file-view-folder-preview {
+    position: absolute;
+    right: -7px;
+    bottom: -5px;
+    display: grid;
+    grid-template-columns: repeat(2, 11px);
+    gap: 1px;
+    padding: 2px;
+    border: 1px solid var(--hos-border, #30363d);
+    border-radius: var(--hos-radius-sm, 4px);
+    background: var(--hos-bg-elevated, #1c2128);
+    pointer-events: none;
+}
+
+.file-view-folder-preview ::deep .shell-icon {
+    display: inline-flex;
+    width: 11px;
+    height: 11px;
+}

@@ -100,6 +100,7 @@
         }
         <NetworkDrivesSidebar CurrentPath="@(_showTrash ? null : _state.CurrentPath)" Navigate="OpenNetworkDriveAsync" Failed="ReportError" />
     </nav>
+    <ExplorerSidebarResizer Width="_sidebarWidth" WidthChanged="OnSidebarWidthChangedAsync" PanelSelector=".explorer-sidebar" Label="@L["Places.Resize"]" />
 
     <div class="explorer-main">
     @if (_showTrash && _fileView is not null)
@@ -173,10 +174,6 @@
     {
         <div class="error-state">@_errorMessage</div>
     }
-    else if (_files is not null && _files.Items.Count == 0)
-    {
-        <div class="empty-state">@L["Empty"]</div>
-    }
 
     <!-- Directory Content View: the OS file control, provided by this same app -->
     <div class="explorer-content">
@@ -186,6 +183,7 @@
                       Filter="_searchFilter"
                       Navigated="OnNavigated"
                       SelectionChanged="OnSelectionChanged"
+                      ContextMenuOpening="OnFileMenuOpeningAsync"
                       ErrorOccurred="ReportError"
                       ControllerChanged="OnControllerChangedAsync" />
     </div>
@@ -217,6 +215,9 @@
     private protected bool _showHiddenFilesAndFolders;
     private protected TrashView? _trashView;
     private protected VirtualPath _homeDirectory;
+
+    /// <summary>The Places panel's width, read from the user's explorer settings (ADR 0185 §1).</summary>
+    private protected int _sidebarWidth = FileExplorerSettings.DefaultSidebarWidth;
 
     private protected IStringLocalizer<Strings>? _localizer;
 
@@ -328,6 +329,28 @@
         await SetWindowTitleAsync(FolderWindowTitle);
         _downloader = new BrowserFileDownloader(JSRuntime);
         await base.OnAppInitializedAsync();
+        try
+        {
+            _sidebarWidth = await FileExplorerSettings.ReadSidebarWidthAsync(_homeDirectory.Value, AppContext.CancellationToken);
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or AppGatewayAccessDeniedException)
+        {
+            // Unreadable settings: the default width.
+        }
+    }
+
+    /// <summary>The Places panel was resized (ADR 0185 §1): keep the width and save it for the next windows.</summary>
+    private protected async Task OnSidebarWidthChangedAsync(int width)
+    {
+        _sidebarWidth = width;
+        try
+        {
+            await FileExplorerSettings.SaveSidebarWidthAsync(_homeDirectory.Value, width, AppContext.CancellationToken);
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or AppGatewayAccessDeniedException)
+        {
+            // Not saved: the width still applies to this window.
+        }
     }
 
     /// <summary>
@@ -458,7 +481,16 @@
         _files?.RefreshFilter();
     }
 
-    private protected void OnSearchQueryChanged() => _files?.RefreshFilter();
+    /// <remarks>A search that hides everything says so inside the list (ADR 0185 §2).</remarks>
+    private protected void OnSearchQueryChanged()
+    {
+        if (_fileView is not null)
+        {
+            _fileView.NoMatchText = string.IsNullOrWhiteSpace(_state.SearchQuery) ? null : L["Search.NoResults", _state.SearchQuery.Trim()].Value;
+        }
+
+        _files?.RefreshFilter();
+    }
 
     private protected void ReportError(string message)
     {
@@ -726,10 +758,12 @@
     /// in this window for the browser's download, and a large selection would exceed the 16 MiB a
     /// task's result may carry (ADR 0128 section 4). Compress (to a file) uses the task.
     /// </remarks>
-    private protected async Task DownloadSelectedAsync()
+    private protected Task DownloadSelectedAsync() => _files is null ? Task.CompletedTask : DownloadAsync(_files.SelectedItems);
+
+    /// <summary>Downloads one file as it is, or else a <c>.zip</c> of the items (the toolbar, the menu, "Send to ▸ My computer").</summary>
+    private protected async Task DownloadAsync(IReadOnlyList<HackFileViewItem> selected)
     {
-        if (_downloader is null || _files is null) return;
-        IReadOnlyList<HackFileViewItem> selected = _files.SelectedItems;
+        if (_downloader is null) return;
 
         if (selected.Count == 1)
         {
@@ -777,16 +811,20 @@
         }
     }
 
-    private protected async Task CompressSelectedAsync()
-    {
-        if (_files is null || _files.SelectedItems.Count == 0) return;
-        IReadOnlyList<HackFileViewItem> selected = _files.SelectedItems;
+    private protected Task CompressSelectedAsync() => _files is null ? Task.CompletedTask : CompressAsync(_files.SelectedItems);
 
-        string defaultName = selected.Count == 1 ? selected[0].Name + ".zip" : "Archive.zip";
+    /// <summary>
+    /// Compresses the items into a <c>.zip</c> of the folder shown, named by the user (the toolbar, the
+    /// menu's "Compress to .zip…"), or by <see cref="CompressToDefaultNameAsync"/> ("Send to ▸ Compressed folder").
+    /// </summary>
+    private protected async Task CompressAsync(IReadOnlyList<HackFileViewItem> selected)
+    {
+        if (_files is null || selected.Count == 0) return;
+
         TextInputDialogResult result = await base.TextInput(
             title: L["Dialog.Compress.Title"],
             content: L["Dialog.Compress.Prompt"],
-            defaultValue: defaultName,
+            defaultValue: DefaultArchiveName(selected),
             placeholder: L["Dialog.Compress.Placeholder"]);
 
         if (result.Status != TextInputStatus.Submitted || string.IsNullOrWhiteSpace(result.Value)) return;
@@ -805,6 +843,14 @@
             ReportError(L["Error.AlreadyExists", archiveName]);
             return;
         }
+
+        await CompressToAsync(selected, destPath);
+    }
+
+    /// <summary>Compresses the items into <paramref name="destPath"/> in a child process, then shows the folder again.</summary>
+    private protected async Task CompressToAsync(IReadOnlyList<HackFileViewItem> selected, VirtualPath destPath)
+    {
+        if (_files is null) return;
 
         // ADR 0128/0140: deflating is CPU work; a child process of the explorer does it, off the window's thread.
         string? error = await TrackOperation(FileExplorerZipService.CompressInBackgroundAsync(

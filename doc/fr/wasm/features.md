@@ -115,6 +115,11 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   ([`project-overview.md`](dev/project-overview.md#système-de-fichiers))
 - **Explorateur de fichiers** avec vues, recherche, glisser-déposer,
   téléversement et téléchargement. ([`file-explorer.md`](dev/file-explorer.md))
+- **Explorateur amélioré** : panneau de gauche redimensionnable, bulles au
+  survol, taille totale des dossiers, aperçu du contenu des dossiers, menu
+  Compresser, Télécharger, Copier le chemin et Envoyer vers, glisser hors du
+  navigateur pour télécharger (Chrome et Edge), lecteurs réseau rafraîchis
+  tout seuls. ([ADR 0185](dev/adr/0185-file-explorer-improvements.md))
 - **Corbeille** avec restauration. ([`trash.md`](dev/trash.md))
 - **Applications par défaut** par type de fichier, propres à chaque
   utilisateur. ([`user-file-associations.md`](dev/user-file-associations.md))
@@ -229,7 +234,7 @@ dans `main`, le lien mène à sa PR.
 
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
-| Améliorations de l'explorateur de fichiers | Panneau redimensionnable, taille des dossiers, `.zip` ouvert comme un dossier, glisser vers l'ordinateur pour télécharger, menu Envoyer vers, aperçu des dossiers. | [0185](dev/adr/0185-file-explorer-improvements.md) | [#241](https://github.com/Kazo-ca/HackerOs/issues/241) |
+| Archive `.zip` ouverte comme un dossier | L'explorateur parcourt une archive `.zip` en lecture seule ; un fichier ouvert est extrait dans `/tmp`. Le reste de l'ADR est disponible. | [0185](dev/adr/0185-file-explorer-improvements.md) | [#241](https://github.com/Kazo-ca/HackerOs/issues/241) |
 | Fenêtres et barre des tâches | Bulles de notification, fuseau horaire, animations des fenêtres, menus de la barre, aperçus au survol. | À venir | [#242](https://github.com/Kazo-ca/HackerOs/issues/242) |
 
 ### Comptes et accueil

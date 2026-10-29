@@ -286,3 +286,85 @@ l'app est traduit par `Resources/AppManifest.fr.resx`.
 - [x] Fenêtre de l'explorateur sur `HackFileView` ; « UnZip Here… » et « Publish as a web site… » par `ContextMenuOpening` (remplacés au chantier 4 par des entrées inscrites, ADR 0159).
 - [x] Éditeur de code sur `HackFileView` ([`code-editor.md`](code-editor.md)).
 - [x] Vue des dialogues Ouvrir / Enregistrer : chantier `desk/3b` ([ADR 0157](adr/0157-file-dialogs-show-the-file-control.md)).
+
+## Série `explorer/base` (ADR 0185)
+
+Améliorations décidées dans l'[ADR 0185](adr/0185-file-explorer-improvements.md) (issue #241). Les points
+« archive ouverte comme un dossier » (§6 à §9) ne font pas partie de cette série.
+
+- [x] `explorer/1-empty-state` (§2) : le message de dossier vide est dans la liste du contrôle partagé
+  (`FileView.EmptyText`) : une ligne sous les en-têtes en mode Détails, centré en mode Icônes. Une
+  recherche qui cache tout affiche « Aucun résultat pour « x » » (`FileView.NoMatchText`, donné par la
+  fenêtre de l'explorateur) ; un autre filtre affiche « Aucun élément à afficher ici. ». Rien sur le
+  bureau ni dans l'arbre. Les dialogues Ouvrir et Enregistrer en profitent. Tests :
+  `FileViewEmptyStateTests`.
+- [x] `explorer/2-stray-drop` (§3) : un dépôt qui tombe hors de toute zone de dépôt ne fait rien, dans
+  toutes les fenêtres (fenêtres détachées comprises) : le navigateur n'ouvre plus le fichier. Garde
+  installée par l'initialiseur JS de `HackerOs.Platform.Blazor` (`installStrayDropGuard`) : écouteurs
+  `dragover` et `drop` sur `window`, en phase de bouillonnement, qui n'agissent que si aucune zone n'a
+  annulé l'évènement (curseur « interdit », action par défaut annulée). Les champs de texte gardent le
+  dépôt de texte du navigateur.
+- [x] `explorer/3-resizable-sidebar` (§1) : une poignée sur le bord droit du panneau Places
+  (`ExplorerSidebarResizer`, rôle `separator`) : glisser la redimensionne entre 140 et 400 px, un
+  double-clic remet la largeur par défaut (150 px), les flèches gauche et droite la changent de 16 px,
+  Début et Fin vont aux bornes. La largeur est retenue par utilisateur dans
+  `~/.config/hackeros/file-explorer.json` (`sidebarWidth`, `FileExplorerSettings` garde les autres clés).
+  Bureau seulement : la fenêtre mobile n'a pas de panneau. Tests : `FileExplorerSettingsTests`.
+- [x] `explorer/4-hover-tooltips` (§16) : une bulle au style de l'OS apparaît après 600 ms de souris
+  immobile sur un élément : nom complet, type, taille (fichier), date de modification et nombre
+  d'éléments (dossier). Elle vit dans le contrôle partagé (`attachTooltips` de `FileView.razor.js`,
+  lignes données par `FileView.GetItemTooltipAsync` et `FileViewTooltip`), donc le bureau et les
+  dialogues l'ont aussi. Souris seulement : jamais au toucher (sur mobile, l'appui long ouvre le menu).
+  Un clic, une touche, la molette, un glisser ou la sortie de l'élément la cachent. Tests :
+  `FileViewTooltipTests`.
+- [x] `explorer/5-recursive-size` (§5) : taille totale récursive dans le service de fichiers
+  (`IAppFileSystemGateway.MeasureAsync`, `FileSystemTreeSize`, `FileSystemTreeMeasure`) et le SDK
+  (`HackDirectory.GetTotalSizeAsync`, `HackDirectoryInfo.GetTotalSizeAsync`, `HackDirectorySize`, voir
+  [`hack-file-api.md`](../framework/hack-file-api.md)), ajoutés aux `PublicAPI.Unshipped.txt`. Le
+  dialogue Propriétés d'un dossier affiche « 1 234 octets (5 fichiers, 2 dossiers) ». Tests :
+  `HackDirectorySizeTests`.
+- [x] `explorer/6-file-menu-actions` (§10 à §13) : la fenêtre de l'explorateur (bureau et mobile)
+  ajoute au menu d'un ou plusieurs éléments, juste avant Propriétés : « Compresser en .zip… » (nom
+  demandé, prérempli), « Télécharger » (un fichier tel quel, sinon un `.zip`), « Copier le chemin »
+  (chemins absolus, un par ligne, dans le presse-papiers texte) et « Envoyer vers ▸ » : Bureau (un
+  raccourci vers chaque élément, pas une copie), Dossier compressé (`.zip` à côté, nom par défaut
+  numéroté s'il est pris), Mon ordinateur (téléchargement) et chaque lecteur réseau prêt (copie à sa
+  racine). Code dans `FileExplorerWindow.Menu.cs`, par l'évènement `ContextMenuOpening` du contrôle :
+  le bureau et les dialogues gardent le menu du contrôle. Le raccourci vers un fichier ou un dossier
+  est le nouveau `HackDesktopLink` du SDK (`Type=Link`, voir
+  [`desktop-api.md`](../framework/desktop-api.md)), que le contrôle affiche et ouvre. Tests :
+  `HackDesktopLinkTests`, `FileExplorerMenuActionsTests`.
+- [x] `explorer/7-folder-previews` (§14) : en mode Icônes, l'icône d'un dossier devient un dossier
+  ouvert avec les mini-icônes de ses 4 premiers éléments (dossiers d'abord, puis par nom, éléments
+  cachés exclus) ; un dossier vide garde l'icône fermée. Le contenu n'est lu que pour les tuiles
+  visibles (`attachFolderPreviews` de `FileView.razor.js`, un `IntersectionObserver` qui appelle
+  `FileView.LoadFolderPreviewsAsync`), puis gardé en cache par révision du dossier
+  (`FileView.Previews.cs`). Chaque dossier prévisualisé est surveillé (ses enfants directs, au plus
+  64 dossiers) : un changement dedans relit l'aperçu en gardant l'ancien affiché ; ces surveillances
+  s'arrêtent quand la vue quitte le dossier. Les modes Détails, arbre
+  et bureau ne changent pas ; une icône remplacée (raccourci) n'a pas d'aperçu. Tests :
+  `FileViewFolderPreviewTests`.
+- [x] `explorer/8-network-drive-refresh` (§15) : un dossier de lecteur réseau affiché (ou surveillé
+  par n'importe quelle app) suit les changements faits sur l'ordinateur hôte. Quand une app surveille
+  un dossier d'un lecteur réseau (`AppFileSystemWatchGateway`), le service de fichiers
+  (`IExternalFileSystemChanges.TrackExternalChanges`) relit ce dossier toutes les 5 secondes pendant
+  que la page est visible, tout de suite quand elle revient (onglet réaffiché ou focus,
+  `IHostActivitySignal` / `BrowserHostActivitySignal`), et tout de suite quand le `FileSystemObserver`
+  du navigateur signale un changement (`IObservableHostFolder`, Chrome récent). Chaque lecture est
+  comparée à la précédente (`HostFolderChangeTracker`) : les éléments créés, supprimés ou modifiés
+  sont publiés par le même chemin que les écritures de l'OS, et la révision du dossier monte. Une
+  seule boucle par dossier, arrêtée quand la dernière surveillance se termine. Tests :
+  `HostFolderChangeTrackerTests`. Non vérifié dans un vrai navigateur : il faut un vrai dossier hôte
+  choisi par l'utilisateur.
+- [x] `explorer/9-drag-out-download` (§4, §5) : glisser des éléments hors du navigateur les télécharge
+  (Chrome et Edge, entrée `DownloadURL`) : un fichier seul tel quel, un dossier ou plusieurs éléments en
+  `.zip` (`Dossier.zip`, ou `Archive.zip` pour plusieurs). Le navigateur ne prend le contenu que pendant
+  le `dragstart`, donc il est préparé dès l'appui du bouton gauche de la souris sur un élément
+  (`attachExternalDrag` de `FileView.razor.js` appelle `FileView.PrepareExternalDragAsync` avec les
+  éléments sélectionnés) : la taille donnée par l'OS décide d'abord (`FileMetadata.Length`, ou
+  `MeasureAsync` pour un dossier), puis le contenu est lu ou compressé dans un blob de la page
+  (`prepareDownload`, un seul à la fois). Au-delà d'environ 50 Mo rien n'est préparé et le glisser
+  affiche une bulle « Trop gros pour glisser hors du navigateur (taille) : utilisez Télécharger » ; le
+  glisser vers un dossier de HackerOS reste possible. Valable pour toutes les vues du contrôle partagé,
+  bureau compris ; pas au toucher. Si le glisser commence avant la fin de la préparation (gros dossier),
+  il reste interne. Code dans `FileView.ExternalDrag.cs`. Tests : `FileViewExternalDragTests`.

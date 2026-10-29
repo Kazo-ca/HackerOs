@@ -130,6 +130,16 @@ Le `Flush()` synchrone ne fait rien, et un `Dispose()` synchrone d'un flux qui
 contient des octets non publiés lève `InvalidOperationException` au lieu de les
 perdre. Le flux garde la passerelle de l'app qui l'a ouvert.
 
+### Taille totale d'un dossier (ADR 0185 §5)
+
+`HackDirectory.GetTotalSizeAsync(path)` (ou `HackDirectoryInfo.GetTotalSizeAsync()`) rend un
+`HackDirectorySize` : somme des longueurs des fichiers, nombre de fichiers et de sous-dossiers, comme
+`du -sb`, sans lire aucun contenu. Les liens symboliques ne sont ni suivis ni comptés. Un sous-dossier
+illisible est sauté et `IsComplete` vaut alors `false`. Sous le SDK, c'est la méthode
+`IAppFileSystemGateway.MeasureAsync` du service de fichiers (membre par défaut qui parcourt avec
+`StatAsync` et `EnumerateAsync`, donc avec les droits de l'appelant ; algorithme partagé
+`FileSystemTreeMeasure`). Le dialogue Propriétés d'un dossier l'affiche.
+
 ### Surveillance
 
 ```csharp

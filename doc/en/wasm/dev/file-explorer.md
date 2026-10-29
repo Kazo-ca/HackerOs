@@ -286,3 +286,76 @@ name is translated by `Resources/AppManifest.fr.resx`.
 - [x] Explorer window on `HackFileView`; "UnZip Here…" and "Publish as a web site…" through `ContextMenuOpening` (replaced in work item 4 by registered entries, ADR 0159).
 - [x] Code editor on `HackFileView` ([`code-editor.md`](code-editor.md)).
 - [x] View of the Open / Save dialogs: work item `desk/3b` ([ADR 0157](adr/0157-file-dialogs-show-the-file-control.md)).
+
+## Series `explorer/base` (ADR 0185)
+
+Improvements decided in [ADR 0185](adr/0185-file-explorer-improvements.md) (issue #241). The "archive opened
+as a folder" points (§6 to §9) are not part of this series.
+
+- [x] `explorer/1-empty-state` (§2): the empty-folder message is inside the shared control's list
+  (`FileView.EmptyText`): a row under the column headers in Details mode, centred in Icons mode. A search
+  that hides everything shows `No results for "x".` (`FileView.NoMatchText`, set by the explorer window);
+  another filter shows "Nothing to show here.". Nothing on the desktop or in the tree. The Open and Save
+  dialogs get it too. Tests: `FileViewEmptyStateTests`.
+- [x] `explorer/2-stray-drop` (§3): a drop outside every drop zone does nothing, in every window
+  (detached windows included): the browser no longer opens the file. The guard is installed by the JS
+  initializer of `HackerOs.Platform.Blazor` (`installStrayDropGuard`): `dragover` and `drop` listeners on
+  `window`, bubble phase, that act only when no zone cancelled the event ("not allowed" cursor, default
+  action cancelled). Text fields keep the browser's own text drop.
+- [x] `explorer/3-resizable-sidebar` (§1): a handle on the right edge of the Places panel
+  (`ExplorerSidebarResizer`, role `separator`): dragging resizes it between 140 and 400 px, a double
+  click restores the default width (150 px), the left and right arrows change it by 16 px, Home and End
+  go to the bounds. The width is kept per user in `~/.config/hackeros/file-explorer.json`
+  (`sidebarWidth`; `FileExplorerSettings` keeps the other keys). Desktop only: the mobile window has no
+  panel. Tests: `FileExplorerSettingsTests`.
+- [x] `explorer/4-hover-tooltips` (§16): an OS-styled bubble appears after the mouse rests 600 ms on
+  an item: full name, type, size (file), modification date and item count (folder). It lives in the
+  shared control (`attachTooltips` in `FileView.razor.js`, lines from `FileView.GetItemTooltipAsync` and
+  `FileViewTooltip`), so the desktop and the dialogs get it too. Mouse only: never on touch (on a phone
+  the long press opens the menu). A click, a key, the wheel, a drag or leaving the item hides it.
+  Tests: `FileViewTooltipTests`.
+- [x] `explorer/5-recursive-size` (§5): recursive total size in the file service
+  (`IAppFileSystemGateway.MeasureAsync`, `FileSystemTreeSize`, `FileSystemTreeMeasure`) and the SDK
+  (`HackDirectory.GetTotalSizeAsync`, `HackDirectoryInfo.GetTotalSizeAsync`, `HackDirectorySize`, see
+  [`hack-file-api.md`](../framework/hack-file-api.md)), added to the `PublicAPI.Unshipped.txt` files. The
+  folder Properties dialog shows "1,234 bytes (5 files, 2 folders)". Tests: `HackDirectorySizeTests`.
+- [x] `explorer/6-file-menu-actions` (§10 to §13): the explorer window (desktop and mobile) adds to the
+  menu of one or more items, just before Properties: "Compress to .zip…" (name asked, prefilled),
+  "Download" (one file as it is, otherwise a `.zip`), "Copy path" (absolute paths, one per line, on the
+  text clipboard) and "Send to ▸": Desktop (a shortcut to each item, not a copy), Compressed folder (a
+  `.zip` next to them, default name numbered when taken), My computer (download) and each network drive
+  that is ready (a copy at its root). Code in `FileExplorerWindow.Menu.cs`, through the control's
+  `ContextMenuOpening` event: the desktop and the dialogs keep the control's menu. The shortcut to a
+  file or a folder is the SDK's new `HackDesktopLink` (`Type=Link`, see
+  [`desktop-api.md`](../framework/desktop-api.md)), which the control shows and opens. Tests:
+  `HackDesktopLinkTests`, `FileExplorerMenuActionsTests`.
+- [x] `explorer/7-folder-previews` (§14): in Icons mode, a folder's icon becomes an open folder with
+  the small icons of its first 4 entries (folders first, then by name, hidden entries left out); an
+  empty folder keeps the closed icon. The content is read only for tiles on screen
+  (`attachFolderPreviews` in `FileView.razor.js`, an `IntersectionObserver` that calls
+  `FileView.LoadFolderPreviewsAsync`), then cached per folder revision (`FileView.Previews.cs`). Each
+  previewed folder is watched (its immediate children, 64 folders at most): a change inside it reads
+  the preview again while the old one stays drawn; these watches end when the view leaves the folder. Details, tree and desktop modes do not change;
+  a replaced icon (shortcut) gets no preview. Tests: `FileViewFolderPreviewTests`.
+- [x] `explorer/8-network-drive-refresh` (§15): a network drive folder that is shown (or watched by
+  any app) follows the changes made on the host computer. When an app watches a network drive folder
+  (`AppFileSystemWatchGateway`), the file service (`IExternalFileSystemChanges.TrackExternalChanges`)
+  lists that folder again every 5 seconds while the page is visible, at once when the page comes back
+  (tab shown again or focus, `IHostActivitySignal` / `BrowserHostActivitySignal`), and at once when
+  the browser's `FileSystemObserver` reports a change (`IObservableHostFolder`, recent Chrome). Each
+  listing is compared with the previous one (`HostFolderChangeTracker`): created, deleted or modified
+  entries are published through the same path as the OS's own writes, and the folder's revision is
+  raised. One loop per folder, stopped when the last watch ends. Tests:
+  `HostFolderChangeTrackerTests`. Not checked in a real browser: it needs a real host folder picked
+  by the user.
+- [x] `explorer/9-drag-out-download` (§4, §5): dragging items out of the browser downloads them
+  (Chrome and Edge, `DownloadURL` entry): one file as it is, a folder or several items as a `.zip`
+  (`Folder.zip`, or `Archive.zip` for several). The browser takes the content only during `dragstart`,
+  so it is prepared as soon as the left mouse button goes down on an item (`attachExternalDrag` in
+  `FileView.razor.js` calls `FileView.PrepareExternalDragAsync` with the selected items): the size the
+  OS gives decides first (`FileMetadata.Length`, or `MeasureAsync` for a folder), then the content is
+  read or compressed into a blob of the page (`prepareDownload`, one at a time). Beyond about 50 MB
+  nothing is prepared and the drag shows a bubble "Too large to drag out of the browser (size): use
+  Download"; dragging into a HackerOS folder still works. Applies to every view of the shared control,
+  the desktop included; not on touch. If the drag starts before the preparation ends (large folder), it
+  stays internal. Code in `FileView.ExternalDrag.cs`. Tests: `FileViewExternalDragTests`.

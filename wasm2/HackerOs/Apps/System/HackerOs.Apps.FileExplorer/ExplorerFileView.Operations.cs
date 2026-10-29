@@ -50,10 +50,16 @@ public sealed partial class ExplorerFileView
             return;
         }
 
+        await OpenPathAsync(item.FullPath);
+    }
+
+    /// <summary>Opens a file by its path with its default app, or asks which app when several can.</summary>
+    private async Task OpenPathAsync(VirtualPath path)
+    {
         AppIntentOpenFileResult result;
         try
         {
-            result = await HostContext.Intents.OpenFileAsync(item.FullPath, cancellationToken: HostContext.CancellationToken);
+            result = await HostContext.Intents.OpenFileAsync(path, cancellationToken: HostContext.CancellationToken);
         }
         catch (Exception exception) when (exception is AppGatewayAccessDeniedException or NotSupportedException)
         {
@@ -66,7 +72,7 @@ public sealed partial class ExplorerFileView
             case AppIntentOpenFileOutcome.Opened:
                 break;
             case AppIntentOpenFileOutcome.ChooserRequired:
-                await ChooseAppAsync(item, result.CandidateAppIds ?? []);
+                await ChooseAppAsync(path, result.CandidateAppIds ?? []);
                 break;
             case AppIntentOpenFileOutcome.NoHandler:
                 await ReportErrorAsync(L["Error.NoHandler"]);
@@ -81,9 +87,9 @@ public sealed partial class ExplorerFileView
     /// "Choose another app…" (or the choice the OS asks for when several apps can open the file): the
     /// provided "Open with" dialog, then "Always use" written as the user's default (ADR 0121 §4).
     /// </summary>
-    /// <param name="item">The item to open.</param>
+    /// <param name="path">The file to open.</param>
     /// <param name="candidateAppIds">The apps to offer; <see langword="null"/> offers every window app.</param>
-    private async Task ChooseAppAsync(FileViewItem item, IReadOnlyList<string>? candidateAppIds)
+    private async Task ChooseAppAsync(VirtualPath path, IReadOnlyList<string>? candidateAppIds)
     {
         if (Dialogs is not { } dialogs)
         {
@@ -93,17 +99,17 @@ public sealed partial class ExplorerFileView
 
         OpenWithDialogResult choice = await dialogs.OpenWithAsync(
             HostContext,
-            new OpenWithDialogRequest(item.FullPath.Value) { CandidateAppIds = candidateAppIds },
+            new OpenWithDialogRequest(path.Value) { CandidateAppIds = candidateAppIds },
             HostContext.CancellationToken);
         switch (choice.Status)
         {
             case OpenWithDialogStatus.Selected when choice.AppId is { } appId:
                 if (choice.AlwaysUse)
                 {
-                    await RememberChoiceAsync(appId, item.FullPath.Value);
+                    await RememberChoiceAsync(appId, path.Value);
                 }
 
-                await LaunchWithAsync(appId, item.FullPath.Value);
+                await LaunchWithAsync(appId, path.Value);
                 break;
             case OpenWithDialogStatus.Unavailable:
                 await ReportErrorAsync(L["Error.DialogsUnavailable"]);

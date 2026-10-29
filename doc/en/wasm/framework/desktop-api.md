@@ -10,6 +10,7 @@ This document describes what an app uses for the desktop: the `HackDesktop*` SDK
 | --- | --- | --- |
 | `HackDesktopLayout`, `HackDesktopCell`, `HackDesktopOptions`, `HackDesktopItems` | `AppSdk` (`Files/HackDesktop.cs`) | The grid as pure functions, shared by every provider. |
 | `HackDesktopEntry` | `AppSdk` (`Files/HackDesktopEntry.cs`) | Reading and writing `.desktop` files, `CreateShortcutAsync`. |
+| `HackDesktopLink` | `AppSdk` (`Files/HackDesktopLink.cs`) | Shortcut to a file or a folder (`Type=Link`), `CreateLinkAsync` (ADR 0185 §13). |
 | `HackDesktopSettings` | `AppSdk` (`Files/HackDesktopSettings.cs`) | Reading and writing `desktop.config`. |
 | `HackAppIcons.LucideName` | `AppSdk` (`Apps/`) | The Lucide icon of an app (the one in the Start menu), reused by shortcuts. |
 
@@ -76,6 +77,30 @@ file that is not a valid shortcut remains a text file.
 In every file control provided by the explorer, a shortcut shows the app's
 name and icon, without an extension; opening it launches the app with its
 arguments; a missing app greys out the icon and opening it explains why.
+
+## Shortcuts to a file or a folder (`HackDesktopLink`)
+
+The explorer's "Send to ▸ Desktop" writes a shortcut of type `Link` (ADR 0185
+§13), in the freedesktop.org format:
+
+```ini
+[Desktop Entry]
+Type=Link
+Name=report.txt
+URL=file:///home/alice/My%20documents/report.txt
+```
+
+`URL` is a `file://` URL of an absolute path, each segment percent-encoded
+(`ToUrl`, `PathFromUrl`); no other scheme is read. `TryParse`, `Format` and
+`CreateLinkAsync(folder, target, name?)` (writes `name.desktop`, then
+`name (2).desktop`...; the default name is the target's, which is not checked).
+An app shortcut (`Type=Application`) is not a link, and the other way round.
+
+In every file control provided by the explorer, a link shows its name with the
+Lucide icon `folder-symlink` (folder) or `file-symlink` (file); a missing target
+greys the icon. Opening it enters the folder (in a new explorer window on the
+desktop) or opens the file with its app; a missing target says so. The link does
+not follow a moved target.
 
 ## File control in Desktop mode
 

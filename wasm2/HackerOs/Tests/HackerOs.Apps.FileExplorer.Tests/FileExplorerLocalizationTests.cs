@@ -19,7 +19,7 @@ public sealed class FileExplorerLocalizationTests
         IStringLocalizer<Strings> english = EnglishContext.GetLocalizer<Strings>();
 
         Assert.Equal("Nouveau dossier", french["Toolbar.NewFolder"]);
-        Assert.Equal("Ce dossier est vide.", french["Empty"]);
+        Assert.Equal("Aucun résultat pour « zz ».", french["Search.NoResults", "zz"]);
         Assert.Equal("1 élément", Strings.Plural(french, "Status.Items", 1));
         Assert.Equal("3 éléments", Strings.Plural(french, "Status.Items", 3));
         Assert.Equal("New Folder", english["Toolbar.NewFolder"]);

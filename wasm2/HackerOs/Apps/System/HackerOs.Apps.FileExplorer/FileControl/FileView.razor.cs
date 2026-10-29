@@ -266,6 +266,30 @@ public partial class FileView : IAsyncDisposable
     /// <summary>Gets whether the current directory has been read once: before that, <see cref="Items"/> is empty only because nothing is loaded.</summary>
     internal bool IsLoaded => _lastSnapshot is not null;
 
+    /// <summary>
+    /// Gets or sets the text shown when <see cref="Filter"/> hides every entry of a folder that has some,
+    /// e.g. <c>No results for "x"</c> from the explorer's search box; a generic text otherwise.
+    /// </summary>
+    internal string? NoMatchText { get; set; }
+
+    /// <summary>
+    /// Gets the message drawn inside the list when it shows nothing (ADR 0185 §2): the folder is empty, or
+    /// the filter hides everything; <see langword="null"/> while loading, when there are items, and on
+    /// the desktop and in the tree, which draw no such message.
+    /// </summary>
+    internal string? EmptyText
+    {
+        get
+        {
+            if (_lastSnapshot is null || Items.Count > 0 || Mode is FileViewMode.Desktop or FileViewMode.Tree)
+            {
+                return null;
+            }
+
+            return _lastSnapshot.Entries.Count == 0 ? L["Empty.Folder"] : NoMatchText ?? L["Empty.NoMatch"];
+        }
+    }
+
     /// <summary>Gets the current directory's items.</summary>
     public IReadOnlyList<FileViewItem> Items { get; private set; } = [];
 
@@ -360,6 +384,21 @@ public partial class FileView : IAsyncDisposable
             _pasteTargetAttached = await module.InvokeAsync<bool>("attachPasteTarget", _rootElement, _pasteCallbacks);
         }
 
+        if (firstRender && JavaScript is not null)
+        {
+            // ADR 0185 §16: the bubble after a pause of the mouse on an item (never on touch).
+            IJSObjectReference module = await EnsureJsModuleAsync();
+            _pasteCallbacks ??= DotNetObjectReference.Create(this);
+            await module.InvokeAsync<bool>("attachTooltips", _rootElement, _pasteCallbacks, FileViewTooltip.DelayMilliseconds);
+            // ADR 0185 §14: the folder tiles of the Icons mode that come on screen get their preview.
+            await module.InvokeAsync<bool>("attachFolderPreviews", _rootElement, _pasteCallbacks);
+            if (AllowDragDrop)
+            {
+                // ADR 0185 §4-5: a press of the mouse on an item prepares its content for a drag out of the browser.
+                await module.InvokeAsync<bool>("attachExternalDrag", _rootElement, _pasteCallbacks);
+            }
+        }
+
         if (_pendingReveal is { } reveal && JavaScript is not null)
         {
             _pendingReveal = null;
@@ -395,6 +434,11 @@ public partial class FileView : IAsyncDisposable
         }
 
         await AttachWatchAsync(path, cancellationToken);
+        if (path != CurrentDirectory)
+        {
+            await StopPreviewWatchesAsync();
+        }
+
         _lastSnapshot = result.Value;
         RebuildItems(result.Value!, preserveSelection: false);
         CurrentDirectory = path;
@@ -888,8 +932,10 @@ public partial class FileView : IAsyncDisposable
             return;
         }
 
+        // ADR 0185 §4-5: the content prepared at the press, when it is for these items, goes out of the browser too.
+        (string downloadKey, string? hint) = ExternalDragArguments(SelectedItems);
         IJSObjectReference module = await EnsureJsModuleAsync();
-        await module.InvokeAsync<bool>("setDragData", DragMimeType, json);
+        await module.InvokeAsync<bool>("setDragData", DragMimeType, json, downloadKey, hint);
     }
 
     /// <summary>
@@ -911,8 +957,9 @@ public partial class FileView : IAsyncDisposable
             data[DragMimeType] = json;
         }
 
+        (string downloadKey, string? hint) = ExternalDragArguments(items);
         IJSObjectReference module = await EnsureJsModuleAsync();
-        await module.InvokeAsync<bool>("setDragDataMany", data);
+        await module.InvokeAsync<bool>("setDragDataMany", data, downloadKey, hint);
     }
 
     /// <summary>
@@ -1290,6 +1337,38 @@ public partial class FileView : IAsyncDisposable
     /// </summary>
     internal bool HasListing => _lastSnapshot is not null;
 
+    /// <summary>
+    /// Gets the lines of the hover bubble of the item at <paramref name="path"/> (ADR 0185 §16), counting a
+    /// folder's entries; <see langword="null"/> when the item is no longer listed or is being renamed.
+    /// </summary>
+    [JSInvokable]
+    public async Task<string[]?> GetItemTooltipAsync(string path)
+    {
+        // Called from JavaScript, outside any frame: enter the app's frame first (ADR 0161 §1).
+        using IDisposable? scope = AppContext is { } context ? HackExecutionContext.Enter(context) : null;
+        FileViewItem? item = Items.FirstOrDefault(candidate => candidate.FullPath.Value == path);
+        if (item is null || item.IsRenaming)
+        {
+            return null;
+        }
+
+        int? childCount = null;
+        if (item.IsDirectory)
+        {
+            try
+            {
+                FileSystemResult<FileSystemDirectorySnapshot> listing = await FileSystem.EnumerateAsync(new FileSystemEnumerateRequest(item.FullPath));
+                childCount = listing.Succeeded ? listing.Value!.Entries.Count : null;
+            }
+            catch (Exception exception) when (exception is InvalidOperationException or UnauthorizedAccessException or IOException)
+            {
+                // The bubble goes without the count.
+            }
+        }
+
+        return [.. FileViewTooltip.Describe(item, childCount, L)];
+    }
+
     /// <summary>Creates a new empty folder in the current directory via the control's own context menu.</summary>
     internal async Task CreateFolderAsync(string name)
     {
@@ -1413,6 +1492,7 @@ public partial class FileView : IAsyncDisposable
     /// <inheritdoc />
     public async ValueTask DisposeAsync()
     {
+        await StopPreviewWatchesAsync();
         _watchLoopCts?.Cancel();
         _watchLoopCts?.Dispose();
         if (_watchSubscription is not null)

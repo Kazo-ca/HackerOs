@@ -110,6 +110,11 @@ This section lists what is released in the `main` branch and online.
   ([`project-overview.md`](dev/project-overview.md#file-system))
 - **File explorer** with views, search, drag and drop, upload and download.
   ([`file-explorer.md`](dev/file-explorer.md))
+- **Improved file explorer**: resizable left pane, hover tooltips, total
+  folder size, folder content previews, Compress, Download, Copy path and
+  Send to menu, drag out of the browser to download (Chrome and Edge),
+  network drives refreshed on their own.
+  ([ADR 0185](dev/adr/0185-file-explorer-improvements.md))
 - **Trash** with restore. ([`trash.md`](dev/trash.md))
 - **Default applications** per file type, for each user.
   ([`user-file-associations.md`](dev/user-file-associations.md))
@@ -223,7 +228,7 @@ points to its PR.
 
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
-| File explorer improvements | Resizable pane, folder sizes, `.zip` opened as a folder, drag to the computer to download, Send to menu, folder previews. | [0185](dev/adr/0185-file-explorer-improvements.md) | [#241](https://github.com/Kazo-ca/HackerOs/issues/241) |
+| `.zip` archive opened as a folder | The explorer browses a `.zip` archive read-only; an opened file is extracted to `/tmp`. The rest of the ADR is available. | [0185](dev/adr/0185-file-explorer-improvements.md) | [#241](https://github.com/Kazo-ca/HackerOs/issues/241) |
 | Windows and taskbar | Notification toasts, time zone, window animations, taskbar menus, hover previews. | Coming | [#242](https://github.com/Kazo-ca/HackerOs/issues/242) |
 
 ### Accounts and welcome

@@ -74,6 +74,8 @@ public sealed class FileViewDragDropTests
         (FakeJSRuntime jsRuntime, _) = NewDragDropRuntime();
         (TestComponentRenderer renderer, TestableFileView view) = await RenderViewAsync(fixture, jsRuntime, allowDragDrop: false);
         FileViewItem item = view.Items.Single(i => i.FileName == "a.txt");
+        // The first render loads the module for the hover bubbles (ADR 0185 §16): only the drag matters here.
+        jsRuntime.CalledIdentifiers.Clear();
 
         await renderer.RunAsync(() => view.OnItemDragStartAsync(item, new DragEventArgs()));
 

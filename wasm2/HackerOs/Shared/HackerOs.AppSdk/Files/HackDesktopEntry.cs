@@ -55,51 +55,9 @@ public sealed record HackDesktopEntry(string Name, string AppId, IReadOnlyList<s
     public static bool TryParse(string? content, [NotNullWhen(true)] out HackDesktopEntry? entry)
     {
         entry = null;
-        if (string.IsNullOrWhiteSpace(content) || content.Length > MaxFileSize)
+        if (ReadGroup(content) is not { } values)
         {
             return false;
-        }
-
-        string? group = null;
-        bool seenGroup = false;
-        Dictionary<string, string> values = new(StringComparer.Ordinal);
-        foreach (string rawLine in content.Split('\n'))
-        {
-            string line = rawLine.TrimEnd('\r').Trim();
-            if (line.Length == 0 || line[0] == '#')
-            {
-                continue;
-            }
-
-            if (line[0] == '[')
-            {
-                if (line[^1] != ']')
-                {
-                    return false;
-                }
-
-                group = line[1..^1];
-                // The specification: the "Desktop Entry" group comes first.
-                if (!seenGroup && group != Group)
-                {
-                    return false;
-                }
-
-                seenGroup = true;
-                continue;
-            }
-
-            int separator = line.IndexOf('=');
-            if (separator <= 0 || group is null)
-            {
-                return false;
-            }
-
-            if (group == Group)
-            {
-                // The first occurrence of a key wins, as in GLib's key file reader.
-                values.TryAdd(line[..separator].Trim(), line[(separator + 1)..].Trim());
-            }
         }
 
         if (!values.TryGetValue("Type", out string? type) || type != "Application"
@@ -161,7 +119,71 @@ public sealed record HackDesktopEntry(string Name, string AppId, IReadOnlyList<s
         }
 
         HackDesktopEntry entry = new(string.IsNullOrWhiteSpace(name) ? appId : name.Trim(), appId, arguments ?? []);
-        string stem = FileNameStem(entry.Name, appId);
+        return await WriteUniqueAsync(directory, FileNameStem(entry.Name, appId), entry.Format(), cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Reads the <c>[Desktop Entry]</c> group of a key file; <see langword="null"/> when the text is not
+    /// one (empty, too large, another group first, a line that is neither a group, a comment nor a key).
+    /// The first occurrence of a key wins, as in GLib's key file reader.
+    /// </summary>
+    internal static Dictionary<string, string>? ReadGroup(string? content)
+    {
+        if (string.IsNullOrWhiteSpace(content) || content.Length > MaxFileSize)
+        {
+            return null;
+        }
+
+        string? group = null;
+        bool seenGroup = false;
+        Dictionary<string, string> values = new(StringComparer.Ordinal);
+        foreach (string rawLine in content.Split('\n'))
+        {
+            string line = rawLine.TrimEnd('\r').Trim();
+            if (line.Length == 0 || line[0] == '#')
+            {
+                continue;
+            }
+
+            if (line[0] == '[')
+            {
+                if (line[^1] != ']')
+                {
+                    return null;
+                }
+
+                group = line[1..^1];
+                // The specification: the "Desktop Entry" group comes first.
+                if (!seenGroup && group != Group)
+                {
+                    return null;
+                }
+
+                seenGroup = true;
+                continue;
+            }
+
+            int separator = line.IndexOf('=');
+            if (separator <= 0 || group is null)
+            {
+                return null;
+            }
+
+            if (group == Group)
+            {
+                values.TryAdd(line[..separator].Trim(), line[(separator + 1)..].Trim());
+            }
+        }
+
+        return values;
+    }
+
+    /// <summary>
+    /// Writes <paramref name="text"/> to <c>&lt;stem&gt;.desktop</c> in <paramref name="directory"/>, or to
+    /// <c>&lt;stem&gt; (2).desktop</c> and so on when the name is taken; returns the path written.
+    /// </summary>
+    internal static async Task<string> WriteUniqueAsync(string directory, string stem, string text, CancellationToken cancellationToken)
+    {
         string folder = directory.TrimEnd('/');
         for (int attempt = 1; ; attempt++)
         {
@@ -172,7 +194,7 @@ public sealed record HackDesktopEntry(string Name, string AppId, IReadOnlyList<s
                 continue;
             }
 
-            await HackFile.WriteAllTextAsync(path, entry.Format(), cancellationToken).ConfigureAwait(false);
+            await HackFile.WriteAllTextAsync(path, text, cancellationToken).ConfigureAwait(false);
             return path;
         }
     }
@@ -280,7 +302,7 @@ public sealed record HackDesktopEntry(string Name, string AppId, IReadOnlyList<s
     }
 
     /// <summary>The escapes of a "string" value: <c>\s</c>, <c>\n</c>, <c>\t</c>, <c>\r</c>, <c>\\</c>.</summary>
-    private static string UnescapeString(string value)
+    internal static string UnescapeString(string value)
     {
         if (!value.Contains('\\'))
         {
@@ -310,7 +332,7 @@ public sealed record HackDesktopEntry(string Name, string AppId, IReadOnlyList<s
         return text.ToString();
     }
 
-    private static string EscapeString(string value)
+    internal static string EscapeString(string value)
     {
         StringBuilder text = new(value.Length);
         for (int index = 0; index < value.Length; index++)
@@ -332,7 +354,7 @@ public sealed record HackDesktopEntry(string Name, string AppId, IReadOnlyList<s
     }
 
     /// <summary>A file name from the shortcut's name: no slash, no control character, no leading dot.</summary>
-    private static string FileNameStem(string name, string appId)
+    internal static string FileNameStem(string name, string fallback)
     {
         string cleaned = new([.. name.Select(static c => c == '/' || char.IsControl(c) ? '-' : c)]);
         cleaned = cleaned.Trim().TrimStart('.');
@@ -341,6 +363,6 @@ public sealed record HackDesktopEntry(string Name, string AppId, IReadOnlyList<s
             cleaned = cleaned[..200];
         }
 
-        return cleaned.Length == 0 ? appId : cleaned;
+        return cleaned.Length == 0 ? fallback : cleaned;
     }
 }
