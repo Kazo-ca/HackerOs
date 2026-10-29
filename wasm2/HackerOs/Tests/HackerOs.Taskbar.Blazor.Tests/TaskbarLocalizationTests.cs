@@ -54,6 +54,17 @@ public sealed class TaskbarLocalizationTests
     }
 
     [Fact]
+    public async Task The_clock_shows_the_time_in_the_source_time_zone()
+    {
+        // ADR 0193: 09:00 UTC is 05:00 in Toronto (daylight saving time) and 18:00 in Tokyo.
+        string toronto = await RenderAsync(localizer: null, new Status(CultureInfo.InvariantCulture, TimeZoneInfo.FindSystemTimeZoneById("America/Toronto")));
+        string tokyo = await RenderAsync(localizer: null, new Status(CultureInfo.InvariantCulture, TimeZoneInfo.FindSystemTimeZoneById("Asia/Tokyo")));
+
+        Assert.Equal("05:00:00", ClockText(toronto));
+        Assert.Equal("18:00:00", ClockText(tokyo));
+    }
+
+    [Fact]
     public async Task A_host_label_still_wins_over_the_package_text()
     {
         string html = await RenderAsync(
@@ -113,11 +124,13 @@ public sealed class TaskbarLocalizationTests
         public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures) => [];
     }
 
-    private sealed class Status(CultureInfo culture) : ITaskbarStatusSource
+    private sealed class Status(CultureInfo culture, TimeZoneInfo? zone = null) : ITaskbarStatusSource
     {
         public DateTimeOffset UtcNow => NineAm;
 
         public CultureInfo FormatCulture => culture;
+
+        public TimeZoneInfo TimeZone => zone ?? TimeZoneInfo.Utc;
 
         public event Action? Changed
         {

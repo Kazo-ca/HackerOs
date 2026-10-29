@@ -84,7 +84,7 @@
                     <dt>@L["Properties.Permissions"]</dt>
                     <dd class="mono">@_metadata.Permissions.ToString()</dd>
                     <dt>@L["Properties.Modified"]</dt>
-                    <dd>@_metadata.Timestamps.ContentModifiedAtUtc.ToLocalTime().ToString("f", FormatCulture)</dd>
+                    <dd>@TimeZoneInfo.ConvertTime(_metadata.Timestamps.ContentModifiedAtUtc, HostContext.TimeZone).ToString("f", FormatCulture)</dd>
                 </dl>
             }
             <footer class="dialog-actions">

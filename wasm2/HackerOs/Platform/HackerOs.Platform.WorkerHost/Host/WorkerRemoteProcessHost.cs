@@ -210,6 +210,8 @@ public sealed class WorkerRemoteProcessHost : IRemoteProcessHost
         WireCodec.WriteStrings(writer, "caps", context.GrantedCapabilities.Order(StringComparer.Ordinal));
         writer.WriteString("s", context.SessionId.Value.ToString("N"));
         WireCodec.WriteProcess(writer, "pr", context.Processes.OwnProcess);
+        // ADR 0193: the session's time zone at start; the worker's own TZ still wins.
+        writer.WriteString("tz", HackerOs.AppSdk.Globalization.HackTimeZone.GetId(context.TimeZone));
         if (context.Intent is { } intent)
         {
             WireCodec.WriteIntentDelivery(writer, "it", intent);

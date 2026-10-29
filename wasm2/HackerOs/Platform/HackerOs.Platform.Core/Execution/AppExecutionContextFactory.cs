@@ -191,6 +191,13 @@ public sealed class AppExecutionContextFactory
     public Func<BackgroundJobService>? BackgroundJobs { get; init; }
 
     /// <summary>
+    /// Gets the session's time zone behind <see cref="IAppExecutionContext.TimeZone"/> (ADR 0193): a
+    /// process without its own <c>TZ</c> follows it, live. <see langword="null"/> keeps the SDK's
+    /// default, the device's zone.
+    /// </summary>
+    public Globalization.SessionTimeZoneService? TimeZones { get; init; }
+
+    /// <summary>
     /// Creates a new trusted context for one running app instance, wiring every scoped gateway to
     /// the acting app/user/process.
     /// </summary>
@@ -366,6 +373,11 @@ public sealed class AppExecutionContextFactory
         if (administration.SystemBackup is not null)
         {
             context.SystemBackup = administration.SystemBackup;
+        }
+
+        if (TimeZones is { } timeZones)
+        {
+            context.SessionTimeZone = () => timeZones.TimeZone;
         }
 
         if (_metrics?.CrossOriginIsolation is { } isolation)

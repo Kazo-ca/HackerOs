@@ -143,11 +143,12 @@
     public TaskbarOptions Options { get; set; } = new();
 
     /// <summary>
-    /// The clock text in the long time pattern of the source's culture (ADR 0104): 24-hour
-    /// <c>HH:mm:ss</c> for French or a non-localizing host, <c>h:mm:ss AM</c> for American English.
+    /// The clock text in the source's time zone (ADR 0193) and in the long time pattern of its
+    /// culture (ADR 0104): 24-hour <c>HH:mm:ss</c> for French or a non-localizing host,
+    /// <c>h:mm:ss AM</c> for American English.
     /// </summary>
     private string FormattedTime => StatusSource is { } status
-        ? status.UtcNow.ToString("T", status.FormatCulture)
+        ? TimeZoneInfo.ConvertTime(status.UtcNow, status.TimeZone).ToString("T", status.FormatCulture)
         : string.Empty;
 
     /// <summary>Gets the taskbar's texts: the host's session language, or English without localization.</summary>

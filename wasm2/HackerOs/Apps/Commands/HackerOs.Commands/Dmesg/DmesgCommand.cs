@@ -115,7 +115,7 @@ public sealed class DmesgCommand : TerminalAppBase
                 output.Append(CultureInfo.InvariantCulture, $"kern  :{LevelNames[record.Level],-6}: ");
             }
 
-            output.Append(wallClock ? FormatWallClock(bootTime + record.SinceBoot) : FormatStamp(record.SinceBoot));
+            output.Append(wallClock ? FormatWallClock(bootTime + record.SinceBoot, context.App.TimeZone) : FormatStamp(record.SinceBoot));
             output.Append(' ').Append(record.Message).Append('\n');
         }
 
@@ -157,9 +157,10 @@ public sealed class DmesgCommand : TerminalAppBase
 
     /// <summary>Formats a wall-clock time as <c>dmesg -T</c> does, in the C locale: <c>[Sat Oct 18 07:12:34 2026]</c>.</summary>
     /// <param name="utc">The time.</param>
-    internal static string FormatWallClock(DateTimeOffset utc)
+    /// <param name="zone">The process's time zone (ADR 0193).</param>
+    internal static string FormatWallClock(DateTimeOffset utc, TimeZoneInfo zone)
     {
-        DateTimeOffset local = TimeZoneInfo.ConvertTime(utc, TimeZoneInfo.Local);
+        DateTimeOffset local = TimeZoneInfo.ConvertTime(utc, zone);
         return "[" + local.ToString("ddd MMM d HH:mm:ss yyyy", CultureInfo.InvariantCulture) + "]";
     }
 

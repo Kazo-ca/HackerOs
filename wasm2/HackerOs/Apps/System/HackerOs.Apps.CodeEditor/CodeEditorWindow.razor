@@ -302,7 +302,7 @@
                         {
                             StatusEntry entry = _statusLog[i];
                             <li class="status-entry @(entry.IsError ? "is-error" : null)">
-                                <time datetime="@entry.Time.ToString("O")">@entry.Time.ToLocalTime().ToString("HH:mm:ss", AppContext.FormatCulture)</time>
+                                <time datetime="@entry.Time.ToString("O")">@TimeZoneInfo.ConvertTime(entry.Time, AppContext.TimeZone).ToString("HH:mm:ss", AppContext.FormatCulture)</time>
                                 <span class="status-level">@(entry.IsError ? L["StatusLog.Error"] : L["StatusLog.Info"])</span>
                                 <span>@entry.Message</span>
                             </li>

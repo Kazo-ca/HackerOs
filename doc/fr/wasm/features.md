@@ -212,6 +212,9 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   ([`localization.md`](framework/localization.md))
 - **Accessibilité** : préférences d'affichage et d'animation, navigation au
   clavier. ([`accessibility.md`](dev/accessibility.md))
+- **Heure locale et fuseau horaire** : l'horloge, `date`, `ls -l` et les apps
+  affichent l'heure dans le fuseau de l'utilisateur, automatique ou choisi dans
+  Paramètres ▸ Date et heure. ([`time-zone.md`](framework/time-zone.md))
 
 ### Pour les développeurs
 
@@ -241,7 +244,7 @@ dans `main`, le lien mène à sa PR.
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Archive `.zip` ouverte comme un dossier | L'explorateur parcourt une archive `.zip` en lecture seule ; un fichier ouvert est extrait dans `/tmp`. Le reste de l'ADR est disponible. | [0185](dev/adr/0185-file-explorer-improvements.md) | [#241](https://github.com/Kazo-ca/HackerOs/issues/241) |
-| Fenêtres et barre des tâches | Bulles de notification, fuseau horaire, animations des fenêtres, aperçus au survol. Les menus de la barre sont disponibles ([ADR 0194](dev/adr/0194-taskbar-context-menus.md)). | À venir | [#242](https://github.com/Kazo-ca/HackerOs/issues/242) |
+| Fenêtres et barre des tâches | Bulles de notification, animations des fenêtres, aperçus au survol. Le fuseau horaire ([ADR 0193](dev/adr/0193-local-time-and-time-zone.md)) et les menus de la barre ([ADR 0194](dev/adr/0194-taskbar-context-menus.md)) sont disponibles. | À venir | [#242](https://github.com/Kazo-ca/HackerOs/issues/242) |
 
 ### Comptes et accueil
 
