@@ -230,3 +230,82 @@ static HackerOs.AppSdk.Files.HackDesktopLink.ToUrl(string! path) -> string!
 static HackerOs.AppSdk.Files.HackDesktopLink.TryParse(string? content, out HackerOs.AppSdk.Files.HackDesktopLink? link) -> bool
 static HackerOs.AppSdk.Files.HackDesktopLink.operator !=(HackerOs.AppSdk.Files.HackDesktopLink? left, HackerOs.AppSdk.Files.HackDesktopLink? right) -> bool
 static HackerOs.AppSdk.Files.HackDesktopLink.operator ==(HackerOs.AppSdk.Files.HackDesktopLink? left, HackerOs.AppSdk.Files.HackDesktopLink? right) -> bool
+HackerOs.AppSdk.IAppExecutionContext.WhatsNew.get -> HackerOs.AppSdk.WhatsNew.IAppWhatsNewGateway!
+HackerOs.AppSdk.WhatsNew.HackChangeCategory
+HackerOs.AppSdk.WhatsNew.HackChangeCategory.Developer = 3 -> HackerOs.AppSdk.WhatsNew.HackChangeCategory
+HackerOs.AppSdk.WhatsNew.HackChangeCategory.Fixed = 2 -> HackerOs.AppSdk.WhatsNew.HackChangeCategory
+HackerOs.AppSdk.WhatsNew.HackChangeCategory.Improved = 1 -> HackerOs.AppSdk.WhatsNew.HackChangeCategory
+HackerOs.AppSdk.WhatsNew.HackChangeCategory.New = 0 -> HackerOs.AppSdk.WhatsNew.HackChangeCategory
+HackerOs.AppSdk.WhatsNew.HackChangeEntry
+HackerOs.AppSdk.WhatsNew.HackChangeEntry.<Clone>$() -> HackerOs.AppSdk.WhatsNew.HackChangeEntry!
+HackerOs.AppSdk.WhatsNew.HackChangeEntry.Category.get -> HackerOs.AppSdk.WhatsNew.HackChangeCategory
+HackerOs.AppSdk.WhatsNew.HackChangeEntry.Category.init -> void
+HackerOs.AppSdk.WhatsNew.HackChangeEntry.Deconstruct(out string! Id, out HackerOs.AppSdk.WhatsNew.HackChangeCategory Category, out string! Title, out string? Description, out System.Uri? PullRequestUrl, out System.Collections.Generic.IReadOnlyList<System.Uri!>! Links, out bool IsNew) -> void
+HackerOs.AppSdk.WhatsNew.HackChangeEntry.Description.get -> string?
+HackerOs.AppSdk.WhatsNew.HackChangeEntry.Description.init -> void
+HackerOs.AppSdk.WhatsNew.HackChangeEntry.Equals(HackerOs.AppSdk.WhatsNew.HackChangeEntry? other) -> bool
+HackerOs.AppSdk.WhatsNew.HackChangeEntry.HackChangeEntry(string! Id, HackerOs.AppSdk.WhatsNew.HackChangeCategory Category, string! Title, string? Description, System.Uri? PullRequestUrl, System.Collections.Generic.IReadOnlyList<System.Uri!>! Links, bool IsNew) -> void
+HackerOs.AppSdk.WhatsNew.HackChangeEntry.Id.get -> string!
+HackerOs.AppSdk.WhatsNew.HackChangeEntry.Id.init -> void
+HackerOs.AppSdk.WhatsNew.HackChangeEntry.IsNew.get -> bool
+HackerOs.AppSdk.WhatsNew.HackChangeEntry.IsNew.init -> void
+HackerOs.AppSdk.WhatsNew.HackChangeEntry.Links.get -> System.Collections.Generic.IReadOnlyList<System.Uri!>!
+HackerOs.AppSdk.WhatsNew.HackChangeEntry.Links.init -> void
+HackerOs.AppSdk.WhatsNew.HackChangeEntry.PullRequestUrl.get -> System.Uri?
+HackerOs.AppSdk.WhatsNew.HackChangeEntry.PullRequestUrl.init -> void
+HackerOs.AppSdk.WhatsNew.HackChangeEntry.Title.get -> string!
+HackerOs.AppSdk.WhatsNew.HackChangeEntry.Title.init -> void
+HackerOs.AppSdk.WhatsNew.HackChangeGroup
+HackerOs.AppSdk.WhatsNew.HackChangeGroup.<Clone>$() -> HackerOs.AppSdk.WhatsNew.HackChangeGroup!
+HackerOs.AppSdk.WhatsNew.HackChangeGroup.Date.get -> System.DateOnly?
+HackerOs.AppSdk.WhatsNew.HackChangeGroup.Date.init -> void
+HackerOs.AppSdk.WhatsNew.HackChangeGroup.Deconstruct(out string? Version, out string? Since, out System.DateOnly? Date, out System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.WhatsNew.HackChangeEntry!>! Entries) -> void
+HackerOs.AppSdk.WhatsNew.HackChangeGroup.Entries.get -> System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.WhatsNew.HackChangeEntry!>!
+HackerOs.AppSdk.WhatsNew.HackChangeGroup.Entries.init -> void
+HackerOs.AppSdk.WhatsNew.HackChangeGroup.Equals(HackerOs.AppSdk.WhatsNew.HackChangeGroup? other) -> bool
+HackerOs.AppSdk.WhatsNew.HackChangeGroup.HackChangeGroup(string? Version, string? Since, System.DateOnly? Date, System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.WhatsNew.HackChangeEntry!>! Entries) -> void
+HackerOs.AppSdk.WhatsNew.HackChangeGroup.IsNextVersion.get -> bool
+HackerOs.AppSdk.WhatsNew.HackChangeGroup.Since.get -> string?
+HackerOs.AppSdk.WhatsNew.HackChangeGroup.Since.init -> void
+HackerOs.AppSdk.WhatsNew.HackChangeGroup.Version.get -> string?
+HackerOs.AppSdk.WhatsNew.HackChangeGroup.Version.init -> void
+HackerOs.AppSdk.WhatsNew.HackChangeList
+HackerOs.AppSdk.WhatsNew.HackChangeList.<Clone>$() -> HackerOs.AppSdk.WhatsNew.HackChangeList!
+HackerOs.AppSdk.WhatsNew.HackChangeList.Deconstruct(out System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.WhatsNew.HackChangeGroup!>! Groups, out int NewCount) -> void
+HackerOs.AppSdk.WhatsNew.HackChangeList.Equals(HackerOs.AppSdk.WhatsNew.HackChangeList? other) -> bool
+HackerOs.AppSdk.WhatsNew.HackChangeList.Groups.get -> System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.WhatsNew.HackChangeGroup!>!
+HackerOs.AppSdk.WhatsNew.HackChangeList.Groups.init -> void
+HackerOs.AppSdk.WhatsNew.HackChangeList.HackChangeList(System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.WhatsNew.HackChangeGroup!>! Groups, int NewCount) -> void
+HackerOs.AppSdk.WhatsNew.HackChangeList.NewCount.get -> int
+HackerOs.AppSdk.WhatsNew.HackChangeList.NewCount.init -> void
+HackerOs.AppSdk.WhatsNew.HackWhatsNew
+HackerOs.AppSdk.WhatsNew.IAppWhatsNewGateway
+HackerOs.AppSdk.WhatsNew.IAppWhatsNewGateway.GetAsync(System.Globalization.CultureInfo! culture, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.WhatsNew.HackChangeList!>
+HackerOs.AppSdk.WhatsNew.IAppWhatsNewGateway.IsSupported.get -> bool
+HackerOs.AppSdk.WhatsNew.IAppWhatsNewGateway.MarkSeenAsync(System.Collections.Generic.IReadOnlyCollection<string!>! ids, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+HackerOs.AppSdk.WhatsNew.IAppWhatsNewGateway.WatchAsync(System.Func<System.Threading.Tasks.ValueTask>! onChanged, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.IAsyncDisposable!>
+override HackerOs.AppSdk.WhatsNew.HackChangeEntry.Equals(object? obj) -> bool
+override HackerOs.AppSdk.WhatsNew.HackChangeEntry.GetHashCode() -> int
+override HackerOs.AppSdk.WhatsNew.HackChangeEntry.ToString() -> string!
+override HackerOs.AppSdk.WhatsNew.HackChangeGroup.Equals(object? obj) -> bool
+override HackerOs.AppSdk.WhatsNew.HackChangeGroup.GetHashCode() -> int
+override HackerOs.AppSdk.WhatsNew.HackChangeGroup.ToString() -> string!
+override HackerOs.AppSdk.WhatsNew.HackChangeList.Equals(object? obj) -> bool
+override HackerOs.AppSdk.WhatsNew.HackChangeList.GetHashCode() -> int
+override HackerOs.AppSdk.WhatsNew.HackChangeList.ToString() -> string!
+static HackerOs.AppSdk.UnsupportedAdministrationGateways.WhatsNew.get -> HackerOs.AppSdk.WhatsNew.IAppWhatsNewGateway!
+static HackerOs.AppSdk.WhatsNew.HackChangeEntry.operator !=(HackerOs.AppSdk.WhatsNew.HackChangeEntry? left, HackerOs.AppSdk.WhatsNew.HackChangeEntry? right) -> bool
+static HackerOs.AppSdk.WhatsNew.HackChangeEntry.operator ==(HackerOs.AppSdk.WhatsNew.HackChangeEntry? left, HackerOs.AppSdk.WhatsNew.HackChangeEntry? right) -> bool
+static HackerOs.AppSdk.WhatsNew.HackChangeGroup.operator !=(HackerOs.AppSdk.WhatsNew.HackChangeGroup? left, HackerOs.AppSdk.WhatsNew.HackChangeGroup? right) -> bool
+static HackerOs.AppSdk.WhatsNew.HackChangeGroup.operator ==(HackerOs.AppSdk.WhatsNew.HackChangeGroup? left, HackerOs.AppSdk.WhatsNew.HackChangeGroup? right) -> bool
+static HackerOs.AppSdk.WhatsNew.HackChangeList.Empty.get -> HackerOs.AppSdk.WhatsNew.HackChangeList!
+static HackerOs.AppSdk.WhatsNew.HackChangeList.operator !=(HackerOs.AppSdk.WhatsNew.HackChangeList? left, HackerOs.AppSdk.WhatsNew.HackChangeList? right) -> bool
+static HackerOs.AppSdk.WhatsNew.HackChangeList.operator ==(HackerOs.AppSdk.WhatsNew.HackChangeList? left, HackerOs.AppSdk.WhatsNew.HackChangeList? right) -> bool
+static HackerOs.AppSdk.WhatsNew.HackWhatsNew.GetAsync(HackerOs.AppSdk.IAppExecutionContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.WhatsNew.HackChangeList!>!
+static HackerOs.AppSdk.WhatsNew.HackWhatsNew.GetAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.WhatsNew.HackChangeList!>!
+static HackerOs.AppSdk.WhatsNew.HackWhatsNew.IsSupported.get -> bool
+static HackerOs.AppSdk.WhatsNew.HackWhatsNew.IsSupportedFor(HackerOs.AppSdk.IAppExecutionContext! context) -> bool
+static HackerOs.AppSdk.WhatsNew.HackWhatsNew.MarkSeenAsync(HackerOs.AppSdk.IAppExecutionContext! context, System.Collections.Generic.IReadOnlyCollection<string!>! ids, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+static HackerOs.AppSdk.WhatsNew.HackWhatsNew.MarkSeenAsync(System.Collections.Generic.IReadOnlyCollection<string!>! ids, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+static HackerOs.AppSdk.WhatsNew.HackWhatsNew.WatchAsync(HackerOs.AppSdk.IAppExecutionContext! context, System.Func<System.Threading.Tasks.ValueTask>! onChanged, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.IAsyncDisposable!>!
+static HackerOs.AppSdk.WhatsNew.HackWhatsNew.WatchAsync(System.Func<System.Threading.Tasks.ValueTask>! onChanged, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.IAsyncDisposable!>!

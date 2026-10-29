@@ -98,6 +98,9 @@ public static partial class HackerOsBrowserHostExtensions
             provider.GetRequiredService<IHostReleaseProbe>(),
             HackerOsSdk.Version,
             provider.GetRequiredService<HostBuildUpdateMonitor>()));
+        // ADR 0186: the change list the build serves as whats-new.json, for Settings > What's new.
+        builder.Services.AddSingleton<HackerOs.Platform.Core.WhatsNew.IWhatsNewSource>(new BrowserWhatsNewSource(
+            new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) }));
         builder.Services.AddSingleton(provider => new BuildKnownAssemblyLoaderRegistry(
             installedApps.Current.LazyAssemblyNames,
             provider.GetRequiredService<IBuildKnownAssemblyTransport>(),

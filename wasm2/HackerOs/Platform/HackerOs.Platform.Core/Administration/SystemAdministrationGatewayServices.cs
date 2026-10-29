@@ -70,6 +70,12 @@ public sealed record SystemAdministrationGatewayServices(
     public Func<IScreenControl>? Screens { get; init; }
 
     /// <summary>
+    /// Gets the change list behind <c>HackWhatsNew</c> (ADR 0186); <see langword="null"/> on a host
+    /// that serves none leaves the gateway with an empty list.
+    /// </summary>
+    public Func<WhatsNew.WhatsNewService>? WhatsNew { get; init; }
+
+    /// <summary>
     /// Gets the approval window of the dangerous capabilities (ADR 0049), which a third-party
     /// component provider goes through (ADR 0156 §3); <see langword="null"/> refuses such a choice.
     /// </summary>

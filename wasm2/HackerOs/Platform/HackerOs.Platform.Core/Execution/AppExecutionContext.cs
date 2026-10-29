@@ -148,6 +148,9 @@ internal sealed class AppExecutionContext : IAppExecutionContext
     public IAppScreensGateway Screens { get => Guarded(field); internal set; } = UnsupportedAdministrationGateways.Screens;
 
     /// <inheritdoc />
+    public HackerOs.AppSdk.WhatsNew.IAppWhatsNewGateway WhatsNew { get => Guarded(field); internal set; } = UnsupportedAdministrationGateways.WhatsNew;
+
+    /// <inheritdoc />
     public string UserLoginName { get; }
 
     /// <inheritdoc />

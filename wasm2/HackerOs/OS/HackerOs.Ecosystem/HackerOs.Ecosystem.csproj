@@ -90,6 +90,54 @@
     </ItemGroup>
   </Target>
 
+  <!--
+    ADR 0186 §4.1: wwwroot/whats-new.json carries the user entries of the change list (changes/),
+    grouped by version, for the What's new page of Settings. Written into obj/ by
+    Tools/HackerOs.Tools.ChangeList and served as a static web asset, like version.json.
+    The project reference only orders the build: the tool never ships.
+  -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\Tools\HackerOs.Tools.ChangeList\HackerOs.Tools.ChangeList.csproj"
+                      ReferenceOutputAssembly="false"
+                      Private="false"
+                      PrivateAssets="all"
+                      SkipGetTargetFrameworkProperties="true"
+                      GlobalPropertiesToRemove="TargetFramework;RuntimeIdentifier;SelfContained" />
+    <_HackerOsChangeFile Include="..\..\changes\**\*.json" />
+  </ItemGroup>
+
+  <Target Name="_HackerOsResolveChangeListTool">
+    <PropertyGroup>
+      <_HackerOsWhatsNewFile>$(IntermediateOutputPath)hackeros-whats-new/whats-new.json</_HackerOsWhatsNewFile>
+    </PropertyGroup>
+    <MSBuild Projects="..\..\Tools\HackerOs.Tools.ChangeList\HackerOs.Tools.ChangeList.csproj"
+             Targets="GetTargetPath"
+             Properties="Configuration=$(Configuration)"
+             RemoveProperties="TargetFramework;RuntimeIdentifier;SelfContained">
+      <Output TaskParameter="TargetOutputs" PropertyName="_HackerOsChangeListTool" />
+    </MSBuild>
+  </Target>
+
+  <Target Name="_HackerOsGenerateWhatsNewFile"
+          DependsOnTargets="_HackerOsResolveChangeListTool"
+          Inputs="@(_HackerOsChangeFile);$(MSBuildThisFileDirectory)..\..\build\Versions.props;$(_HackerOsChangeListTool)"
+          Outputs="$(_HackerOsWhatsNewFile)">
+    <PropertyGroup>
+      <_HackerOsDotnet>$(DOTNET_HOST_PATH)</_HackerOsDotnet>
+      <_HackerOsDotnet Condition="'$(_HackerOsDotnet)' == ''">dotnet</_HackerOsDotnet>
+    </PropertyGroup>
+    <Exec Command="&quot;$(_HackerOsDotnet)&quot; &quot;$(_HackerOsChangeListTool)&quot; site --changes &quot;$(MSBuildThisFileDirectory)..\..\changes&quot; --version $(HackerOsVersion) --output &quot;$(_HackerOsWhatsNewFile)&quot;" />
+    <!-- The tool skips an unchanged file; touch it so the target stays up to date. -->
+    <Touch Files="$(_HackerOsWhatsNewFile)" />
+  </Target>
+
+  <Target Name="WriteHackerOsWhatsNewFile" BeforeTargets="ResolveProjectStaticWebAssets" DependsOnTargets="_HackerOsGenerateWhatsNewFile">
+    <ItemGroup>
+      <Content Include="$(_HackerOsWhatsNewFile)" Link="wwwroot/whats-new.json" />
+      <FileWrites Include="$(_HackerOsWhatsNewFile)" />
+    </ItemGroup>
+  </Target>
+
   <!-- ADR 0066: optional CPU/memory accounting (HackerOsCpuAccounting, HackerOsMemoryAccounting). -->
   <Import Project="..\..\build\HackerOs.ResourceAccounting.targets" />
 

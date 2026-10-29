@@ -154,7 +154,8 @@ Benoit et sera corrigée ici s'il préfère seulement la version publiée.
 1. ADR 0186 + format : dossier `changes/`, `ChangeEntriesTests`, entrées de 2.1.0 et de la
    prochaine version. **Fait avec cette ADR.**
 2. Fichier servi + service : `/whats-new.json` au build, service des nouveautés, état par compte,
-   règle du nouveau compte.
+   règle du nouveau compte. **Fait** (`whats-new/2-served-file-and-service` : `Tools/HackerOs.Tools.ChangeList`,
+   `WhatsNewService`, SDK `HackWhatsNew`).
 3. Interface : page Paramètres ▸ À propos ▸ Nouveautés, notification après connexion, pastille du
    menu Démarrer, textes en anglais et en français.
 4. Publications : `collect-changes.sh`, texte de la Release dans `release.yml`,

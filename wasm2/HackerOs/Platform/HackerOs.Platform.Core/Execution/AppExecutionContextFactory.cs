@@ -400,6 +400,14 @@ public sealed class AppExecutionContextFactory
             context.Screens = screensGateway;
         }
 
+        if (_administration?.WhatsNew is { } whatsNew)
+        {
+            // ADR 0186: the change list of the session user, no capability, set like the backup gateway.
+            HackerOs.Platform.Core.WhatsNew.AppWhatsNewGateway whatsNewGateway = new(whatsNew);
+            whatsNewGateway.BindAmbientContext(context);
+            context.WhatsNew = whatsNewGateway;
+        }
+
         if (_shellHostProvider is not null)
         {
             // ADR 0056 section 7: the shell is a child process of this one, with this instance's

@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Change list tool (ADR 0186). Reads wasm2/HackerOs/changes/ (one file per change in unreleased/,
+    one file per published version) and writes what the build and the releases need from it:
+    the /whats-new.json the OS reads (run by the HackerOs.Ecosystem build). It never ships to the
+    browser, so trim analysis does not apply.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsTrimmable>false</IsTrimmable>
+    <EnableTrimAnalyzer>false</EnableTrimAnalyzer>
+    <RollForward>Major</RollForward>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="HackerOs.Tools.ChangeList.Tests" />
+  </ItemGroup>
+
+</Project>

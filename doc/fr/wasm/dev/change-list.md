@@ -74,6 +74,37 @@ wasm2/HackerOs/build/tools/check-change-entry.sh origin/main HEAD
 Dans une série, chaque PR de chantier vers `<série>/base` ajoute son entrée : la PR finale vers
 `main` les apporte toutes.
 
+## Dans l'OS : `/whats-new.json`
+
+Au build de `OS/HackerOs.Ecosystem`, l'outil `Tools/HackerOs.Tools.ChangeList` lit `changes/` et
+écrit `obj/…/hackeros-whats-new/whats-new.json`, servi à la racine du site comme `/version.json`
+(ADR 0186 §4.1). Il ne garde que les entrées dont le public contient `user`, groupées par
+version, la plus récente en haut ; les entrées de `unreleased/` forment le premier groupe
+(`"version": null`, `"since": "<HackerOsVersion>"`). Dans un groupe, les entrées sont triées par
+catégorie (`new`, `improved`, `fixed`, `developer`), puis de la PR la plus récente à la plus
+ancienne. Les chemins de `links` deviennent des URL GitHub et `pr` donne aussi `prUrl`.
+
+Pour voir le fichier sans construire l'OS :
+
+```bash
+dotnet run --project wasm2/HackerOs/Tools/HackerOs.Tools.ChangeList -- \
+  site --changes wasm2/HackerOs/changes --version 2.1.0 --output /tmp/whats-new.json
+```
+
+Côté OS :
+
+- `WhatsNewService` (Platform.Core, `HackerOs.Platform.Core.WhatsNew`) lit le fichier une fois par
+  page (un nouveau déploiement recharge la page) et garde, pour chaque compte, les IDs déjà vus
+  dans `~/.local/state/hackeros/whats-new.json` : `{ "seen": [ "<id>", … ] }`. Un ID qui sort de
+  la liste reste dans le fichier : une entrée ne redevient jamais nouvelle.
+- **Nouveau compte** (ADR 0186 §5) : quand ce fichier n'existe pas encore (ou ne se lit pas), tout
+  est marqué vu sauf les entrées de la dernière version publiée et celles de la prochaine version
+  déjà déployée, et le fichier est écrit tout de suite. Sans liste servie (hors ligne), rien
+  n'est écrit : la règle attend une liste.
+- Les apps lisent la liste par le SDK, sans capacité : `HackWhatsNew.GetAsync()` (textes dans la
+  langue de l'app, repli sur l'anglais), `MarkSeenAsync(ids)` et `WatchAsync` (voir
+  [`sdk-reference.md`](../framework/sdk-reference.md)).
+
 ## À la sortie d'une version
 
 Les entrées de `unreleased/` sont regroupées dans `changes/<version>.json` dans la PR qui change
