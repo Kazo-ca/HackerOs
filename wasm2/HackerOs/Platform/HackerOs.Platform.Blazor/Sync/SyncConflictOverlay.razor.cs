@@ -46,6 +46,10 @@ public sealed partial class SyncConflictOverlay
     [Inject]
     public IServiceProvider Services { get; set; } = default!;
 
+    /// <summary>Converts a time to the session's time zone (ADR 0193), or the device's when the host has none.</summary>
+    private DateTimeOffset ToLocal(DateTimeOffset time) =>
+        TimeZoneInfo.ConvertTime(time, Services.GetService<SessionTimeZoneService>()?.TimeZone ?? TimeZoneInfo.Local);
+
     private bool AllRemoteKnown => _center?.Conflicts.All(conflict => conflict.Remote is not null) == true;
 
     /// <inheritdoc />
@@ -90,7 +94,7 @@ public sealed partial class SyncConflictOverlay
         else
         {
             AddFact(builder, 10, L["Sync.Modified"], version.ModifiedAtUtc is { } modified
-                ? modified.ToLocalTime().ToString("g", Locale.FormatCulture)
+                ? ToLocal(modified).ToString("g", Locale.FormatCulture)
                 : L["Sync.Unknown"]);
             AddFact(builder, 20, L["Sync.Size"], version.Length is { } length ? FormatSize(length, L, Locale.FormatCulture) : "—");
         }

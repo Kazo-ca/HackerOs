@@ -230,3 +230,17 @@ static HackerOs.AppSdk.Files.HackDesktopLink.ToUrl(string! path) -> string!
 static HackerOs.AppSdk.Files.HackDesktopLink.TryParse(string? content, out HackerOs.AppSdk.Files.HackDesktopLink? link) -> bool
 static HackerOs.AppSdk.Files.HackDesktopLink.operator !=(HackerOs.AppSdk.Files.HackDesktopLink? left, HackerOs.AppSdk.Files.HackDesktopLink? right) -> bool
 static HackerOs.AppSdk.Files.HackDesktopLink.operator ==(HackerOs.AppSdk.Files.HackDesktopLink? left, HackerOs.AppSdk.Files.HackDesktopLink? right) -> bool
+HackerOs.AppSdk.Globalization.HackTimeZone
+HackerOs.AppSdk.IAppExecutionContext.TimeZone.get -> System.TimeZoneInfo!
+const HackerOs.AppSdk.Globalization.HackTimeZone.Automatic = "auto" -> string!
+const HackerOs.AppSdk.Globalization.HackTimeZone.Variable = "TZ" -> string!
+static HackerOs.AppSdk.Globalization.HackTimeZone.Available.get -> System.Collections.Generic.IReadOnlyList<System.TimeZoneInfo!>!
+static HackerOs.AppSdk.Globalization.HackTimeZone.Current.get -> System.TimeZoneInfo!
+static HackerOs.AppSdk.Globalization.HackTimeZone.Device.get -> System.TimeZoneInfo!
+static HackerOs.AppSdk.Globalization.HackTimeZone.FormatOffset(System.TimeZoneInfo! zone, System.DateTimeOffset time) -> string!
+static HackerOs.AppSdk.Globalization.HackTimeZone.GetId(System.TimeZoneInfo! zone) -> string!
+static HackerOs.AppSdk.Globalization.HackTimeZone.Now.get -> System.DateTimeOffset
+static HackerOs.AppSdk.Globalization.HackTimeZone.Resolve(string? id, System.TimeZoneInfo? fallback = null) -> System.TimeZoneInfo!
+static HackerOs.AppSdk.Globalization.HackTimeZone.ToLocal(System.DateTimeOffset time) -> System.DateTimeOffset
+static HackerOs.AppSdk.Globalization.HackTimeZone.ToLocal(System.DateTimeOffset time, System.TimeZoneInfo! zone) -> System.DateTimeOffset
+static HackerOs.AppSdk.Globalization.HackTimeZone.TryFind(string? id, out System.TimeZoneInfo? zone) -> bool

@@ -1,1 +1,2 @@
 #nullable enable
+HackerOs.Taskbar.Blazor.ITaskbarStatusSource.TimeZone.get -> System.TimeZoneInfo!

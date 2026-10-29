@@ -1,0 +1,5 @@
+{
+  "name": "date",
+  "description": "Affiche la date et l'heure actuelles dans le fuseau horaire du processus",
+  "terminalUsage": "date [-u] [-I|-R] [+FORMAT]"
+}

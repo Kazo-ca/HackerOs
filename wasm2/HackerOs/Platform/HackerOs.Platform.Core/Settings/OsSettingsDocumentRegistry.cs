@@ -24,7 +24,9 @@ public static class OsSettingsDocumentRegistry
         // ADR 0126: Settings > Memory switches the OOM killer through HackSettings.OpenSystemAsync.
         [Processes.MemorySettingsDocuments.Document.DocumentId] = Processes.MemorySettingsDocuments.Document,
         // ADR 0179 §7: Settings > Screens chooses primary-taskbar and forgets remembered screen places.
-        [ScreensSettingsDocuments.Document.DocumentId] = ScreensSettingsDocuments.Document
+        [ScreensSettingsDocuments.Document.DocumentId] = ScreensSettingsDocuments.Document,
+        // ADR 0193 §2: Settings > Date and time chooses the user's time zone.
+        [Globalization.TimeZoneSettingsDocuments.Document.DocumentId] = Globalization.TimeZoneSettingsDocuments.Document
     };
 
     /// <summary>Gets every listed document id.</summary>

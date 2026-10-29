@@ -73,6 +73,12 @@ public interface ITaskbarStatusSource
     /// </summary>
     System.Globalization.CultureInfo FormatCulture => System.Globalization.CultureInfo.InvariantCulture;
 
+    /// <summary>
+    /// Gets the time zone the clock shows <see cref="UtcNow"/> in, e.g. the session's zone
+    /// (ADR 0193). Hosts that choose no zone keep UTC.
+    /// </summary>
+    TimeZoneInfo TimeZone => TimeZoneInfo.Utc;
+
     /// <summary>Raised when the status has changed and the taskbar should re-render.</summary>
     event Action? Changed;
 }

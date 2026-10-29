@@ -16,10 +16,10 @@
                 <li class="account passkey">
                     <span class="account-login">@passkey.Name</span>
                     <span class="account-name">
-                        @L["Passkeys.Created", passkey.CreatedAtUtc.ToLocalTime().ToString("g")]
+                        @L["Passkeys.Created", TimeZoneInfo.ConvertTime(passkey.CreatedAtUtc, Context.TimeZone).ToString("g", Context.FormatCulture)]
                         @if (passkey.LastUsedAtUtc is { } lastUsed)
                         {
-                            <text> · @L["Passkeys.LastUsed", lastUsed.ToLocalTime().ToString("g")]</text>
+                            <text> · @L["Passkeys.LastUsed", TimeZoneInfo.ConvertTime(lastUsed, Context.TimeZone).ToString("g", Context.FormatCulture)]</text>
                         }
                     </span>
                     <span class="account-badges">

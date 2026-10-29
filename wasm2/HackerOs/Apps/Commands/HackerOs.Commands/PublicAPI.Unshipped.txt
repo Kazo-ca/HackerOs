@@ -44,3 +44,18 @@ override HackerOs.Commands.Hackpkg.HackpkgApp.PublisherId.get -> string!
 override HackerOs.Commands.Hackpkg.HackpkgApp.Resources.get -> HackerOs.App.Abstractions.AppResourceProfileManifest!
 override HackerOs.Commands.Hackpkg.HackpkgApp.Terminal.get -> HackerOs.App.Abstractions.TerminalCommand?
 override HackerOs.Commands.Hackpkg.HackpkgCommand.ExecuteAsync(HackerOs.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+HackerOs.Commands.Date.DateApp
+HackerOs.Commands.Date.DateApp.DateApp() -> void
+HackerOs.Commands.Date.DateCommand
+HackerOs.Commands.Date.DateCommand.DateCommand(HackerOs.App.Abstractions.AppManifest! manifest) -> void
+override HackerOs.Commands.Date.DateCommand.ExecuteAsync(HackerOs.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override HackerOs.Commands.Date.DateApp.Id.get -> string!
+override HackerOs.Commands.Date.DateApp.Name.get -> string!
+override HackerOs.Commands.Date.DateApp.Kind.get -> HackerOs.App.Abstractions.AppKind
+override HackerOs.Commands.Date.DateApp.EntryPoint.get -> System.Type!
+override HackerOs.Commands.Date.DateApp.PublisherId.get -> string!
+override HackerOs.Commands.Date.DateApp.Description.get -> string!
+override HackerOs.Commands.Date.DateApp.LaunchVisibility.get -> HackerOs.App.Abstractions.AppLaunchVisibility
+override HackerOs.Commands.Date.DateApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override HackerOs.Commands.Date.DateApp.Terminal.get -> HackerOs.App.Abstractions.TerminalCommand?
+override HackerOs.Commands.Date.DateApp.Resources.get -> HackerOs.App.Abstractions.AppResourceProfileManifest!

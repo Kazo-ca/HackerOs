@@ -231,6 +231,13 @@
                 </div>
                 break;
 
+                @* ADR 0193 §7: the user's time zone (~/.config/hackeros/datetime.config). *@
+            case "datetime":
+                <div class="settings-page">
+                    <DateTimePanel />
+                </div>
+                break;
+
             case "file-associations":
                 <div class="settings-page">
                     <FileAssociationsPanel />
@@ -362,7 +369,7 @@
                                 <span>@L["Sync.Last"]</span>
                                 <strong>
                                     @(_syncStatus.LastSyncAt is { } lastSync
-                                        ? L["Sync.LastDetail", lastSync.ToLocalTime().ToString("g", Formats), _syncStatus.LastSent, _syncStatus.LastReceived].Value
+                                        ? L["Sync.LastDetail", TimeZoneInfo.ConvertTime(lastSync, AppContext.TimeZone).ToString("g", Formats), _syncStatus.LastSent, _syncStatus.LastReceived].Value
                                         : L["Sync.Never"].Value)
                                 </strong>
                             </div>
@@ -406,7 +413,7 @@
                                         <code>~/@conflict.Path</code>
                                         @if (conflict.DetectedAt is { } detectedAt)
                                         {
-                                            <span class="sync-conflict-date">@L["Sync.Conflicts.Since", detectedAt.ToLocalTime().ToString("g", Formats)]</span>
+                                            <span class="sync-conflict-date">@L["Sync.Conflicts.Since", TimeZoneInfo.ConvertTime(detectedAt, AppContext.TimeZone).ToString("g", Formats)]</span>
                                         }
                                     </li>
                                 }

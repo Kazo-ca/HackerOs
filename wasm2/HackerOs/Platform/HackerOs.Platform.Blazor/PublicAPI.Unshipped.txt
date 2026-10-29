@@ -126,3 +126,5 @@ HackerOs.Platform.Blazor.Display.ScreenService.RequestPermissionAsync() -> Syste
 HackerOs.Platform.Blazor.Display.ScreenService.TogglePrimaryFullScreenAsync() -> System.Threading.Tasks.Task<bool>!
 HackerOs.Platform.Blazor.Display.ScreenControl.IsAvailable.get -> bool
 HackerOs.Platform.Blazor.Display.ScreenService.IsStarted.get -> bool
+HackerOs.Platform.Blazor.Shell.TaskbarStatusSourceAdapter.TaskbarStatusSourceAdapter(HackerOs.Simulation.Abstractions.Time.ISimulationClock! clock, HackerOs.Platform.Core.Globalization.SessionLocaleService? locale, HackerOs.Platform.Core.Globalization.SessionTimeZoneService? timeZones) -> void
+HackerOs.Platform.Blazor.Shell.TaskbarStatusSourceAdapter.TimeZone.get -> System.TimeZoneInfo!

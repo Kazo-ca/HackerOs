@@ -369,3 +369,21 @@ HackerOs.Platform.Core.FileSystem.IExternalFileSystemChanges
 HackerOs.Platform.Core.FileSystem.IExternalFileSystemChanges.TrackExternalChanges(HackerOs.App.Abstractions.VirtualPath directory) -> System.IDisposable?
 HackerOs.Platform.Core.FileSystem.FileSystemService.HostActivity.get -> HackerOs.Simulation.Abstractions.FileSystem.IHostActivitySignal?
 HackerOs.Platform.Core.FileSystem.FileSystemService.HostActivity.set -> void
+HackerOs.Platform.Core.Globalization.SessionTimeZoneService
+HackerOs.Platform.Core.Globalization.SessionTimeZoneService.Changed -> System.Action?
+HackerOs.Platform.Core.Globalization.TimeZoneSettingsDocuments
+const HackerOs.Platform.Core.Globalization.TimeZoneSettingsDocuments.TimeZoneKey = "timeZone" -> string!
+static HackerOs.Platform.Core.Globalization.TimeZoneSettingsDocuments.Schema.get -> HackerOs.Simulation.Abstractions.Settings.SettingsSchema!
+static HackerOs.Platform.Core.Globalization.TimeZoneSettingsDocuments.Document.get -> HackerOs.Platform.Core.Settings.OsSettingsDocument!
+static HackerOs.Platform.Core.Globalization.TimeZoneSettingsDocuments.ToSetting(HackerOs.Simulation.Abstractions.Settings.LayeredConfigSnapshot! snapshot) -> string!
+HackerOs.Platform.Core.Globalization.SessionTimeZoneService.SessionTimeZoneService(HackerOs.Platform.Core.Settings.IOsSettingsService! settings) -> void
+HackerOs.Platform.Core.Globalization.SessionTimeZoneService.Setting.get -> string!
+HackerOs.Platform.Core.Globalization.SessionTimeZoneService.TimeZone.get -> System.TimeZoneInfo!
+HackerOs.Platform.Core.Globalization.SessionTimeZoneService.SessionTimeZoneService(HackerOs.Platform.Core.Settings.IOsSettingsService! settings, System.TimeZoneInfo! device) -> void
+HackerOs.Platform.Core.Globalization.SessionTimeZoneService.ToLocal(System.DateTimeOffset time) -> System.DateTimeOffset
+HackerOs.Platform.Core.Globalization.SessionTimeZoneService.InitializeAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+HackerOs.Platform.Core.Globalization.SessionTimeZoneService.Apply(string? setting) -> void
+HackerOs.Platform.Core.Globalization.SessionTimeZoneService.RefreshAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+HackerOs.Platform.Core.Globalization.SessionTimeZoneService.Dispose() -> void
+HackerOs.Platform.Core.Execution.AppExecutionContextFactory.TimeZones.get -> HackerOs.Platform.Core.Globalization.SessionTimeZoneService?
+HackerOs.Platform.Core.Execution.AppExecutionContextFactory.TimeZones.init -> void

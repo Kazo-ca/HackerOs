@@ -30,6 +30,7 @@ internal sealed class RemoteAppExecutionContext : IAppExecutionContext
 {
     private readonly RemotePermissionErrorGateway _permissionErrors = new();
     private readonly CancellationToken _cancellationToken;
+    private readonly string? _timeZoneId;
     private EventHandler<HackStopRequestedEventArgs>? _stopRequested;
 
     public RemoteAppExecutionContext(
@@ -50,6 +51,7 @@ internal sealed class RemoteAppExecutionContext : IAppExecutionContext
         GrantedCapabilities = snapshot.GrantedCapabilities;
         SessionId = snapshot.SessionId;
         ProcessId = snapshot.Process.Pid;
+        _timeZoneId = snapshot.TimeZoneId;
         _cancellationToken = cancellationToken;
         Capabilities = new RemoteCapabilityChecker(snapshot.Manifest.Id, snapshot.UserId, snapshot.GrantedCapabilities);
         FileSystem = new RemoteFileSystemGateway(channel);
@@ -184,6 +186,14 @@ internal sealed class RemoteAppExecutionContext : IAppExecutionContext
 
     public IAppEnvironmentGateway Environment { get; }
 
+    /// <inheritdoc />
+    /// <remarks>The process's own <c>TZ</c> wins, then the session's zone at start (ADR 0193 section 4).</remarks>
+    public TimeZoneInfo TimeZone =>
+        HackerOs.AppSdk.Globalization.HackTimeZone.TryFind(
+            Environment.GetVariable(HackerOs.AppSdk.Globalization.HackTimeZone.Variable), out TimeZoneInfo? zone)
+            ? zone
+            : HackerOs.AppSdk.Globalization.HackTimeZone.Resolve(_timeZoneId);
+
     public IAppNetworkGateway Network { get; }
 
     public IAppCatalogGateway Catalog { get; }
@@ -255,4 +265,8 @@ internal sealed record RemoteProcessSnapshot(
     IReadOnlyDictionary<string, string> Variables,
     string EnvironmentUserName,
     string MachineName,
-    AppIntentDelivery? Intent = null);
+    AppIntentDelivery? Intent = null)
+{
+    /// <summary>Gets the session's time zone when the process started (ADR 0193), or <see langword="null"/>.</summary>
+    public string? TimeZoneId { get; init; }
+}
