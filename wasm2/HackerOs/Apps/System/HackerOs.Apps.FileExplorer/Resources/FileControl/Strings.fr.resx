@@ -84,4 +84,10 @@
   <data name="Type.Folder" xml:space="preserve">
     <value>Dossier</value>
   </data>
+  <data name="Empty.Folder" xml:space="preserve">
+    <value>Ce dossier est vide.</value>
+  </data>
+  <data name="Empty.NoMatch" xml:space="preserve">
+    <value>Aucun élément à afficher ici.</value>
+  </data>
 </root>

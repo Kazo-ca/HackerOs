@@ -58,6 +58,12 @@
         </div>
     }
 
+    @if (Owner.EmptyText is { } emptyText)
+    {
+        @* ADR 0185 §2: centred in the grid, which stays a drop target with its background menu. *@
+        <div class="file-view-empty" role="status">@emptyText</div>
+    }
+
     @if (_isMarqueeActive)
     {
         <div class="file-view-marquee" @attributes="GetMarqueeAttributes()"></div>

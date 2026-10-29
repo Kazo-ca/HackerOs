@@ -286,3 +286,15 @@ l'app est traduit par `Resources/AppManifest.fr.resx`.
 - [x] Fenêtre de l'explorateur sur `HackFileView` ; « UnZip Here… » et « Publish as a web site… » par `ContextMenuOpening` (remplacés au chantier 4 par des entrées inscrites, ADR 0159).
 - [x] Éditeur de code sur `HackFileView` ([`code-editor.md`](code-editor.md)).
 - [x] Vue des dialogues Ouvrir / Enregistrer : chantier `desk/3b` ([ADR 0157](adr/0157-file-dialogs-show-the-file-control.md)).
+
+## Série `explorer/base` (ADR 0185)
+
+Améliorations décidées dans l'[ADR 0185](adr/0185-file-explorer-improvements.md) (issue #241). Les points
+« archive ouverte comme un dossier » (§6 à §9) ne font pas partie de cette série.
+
+- [x] `explorer/1-empty-state` (§2) : le message de dossier vide est dans la liste du contrôle partagé
+  (`FileView.EmptyText`) : une ligne sous les en-têtes en mode Détails, centré en mode Icônes. Une
+  recherche qui cache tout affiche « Aucun résultat pour « x » » (`FileView.NoMatchText`, donné par la
+  fenêtre de l'explorateur) ; un autre filtre affiche « Aucun élément à afficher ici. ». Rien sur le
+  bureau ni dans l'arbre. Les dialogues Ouvrir et Enregistrer en profitent. Tests :
+  `FileViewEmptyStateTests`.
