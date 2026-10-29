@@ -743,4 +743,7 @@
   <data name="Security.Confirm" xml:space="preserve">
     <value>Confirmer</value>
   </data>
+  <data name="Launcher.Guest.CreateAccount" xml:space="preserve">
+    <value>Invité · Créer mon compte</value>
+  </data>
 </root>

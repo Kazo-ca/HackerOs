@@ -27,6 +27,12 @@ public sealed record HackUserAccount(
 
     /// <summary>Gets how many passkeys can sign the account in (ADR 0168).</summary>
     public int PasskeyCount { get; init; }
+
+    /// <summary>
+    /// Gets whether this is the guest account (ADR 0187): the passwordless administrator offered
+    /// while no registered account exists, turned into a real account by "Create my account".
+    /// </summary>
+    public bool IsGuest { get; init; }
 }
 
 /// <summary>
@@ -120,4 +126,13 @@ public interface IAppUserAccountsGateway
     /// <returns><see langword="true"/> when a passkey was removed.</returns>
     ValueTask<bool> RemovePasskeyAsync(string passkeyId, CancellationToken cancellationToken = default) =>
         throw new NotSupportedException("This HackerOS host has no passkeys.");
+
+    /// <summary>
+    /// Asks the system to show its "Create my account" form (ADR 0187): only the guest's session
+    /// may; the guest session closes and the sign-in screen shows the form.
+    /// </summary>
+    /// <param name="cancellationToken">Cancels the request.</param>
+    /// <returns><see langword="true"/> when the form will be shown; <see langword="false"/> otherwise.</returns>
+    ValueTask<bool> RequestGuestAccountCreationAsync(CancellationToken cancellationToken = default) =>
+        ValueTask.FromResult(false);
 }

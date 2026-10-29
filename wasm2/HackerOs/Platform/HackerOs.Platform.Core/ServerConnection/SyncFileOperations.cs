@@ -37,6 +37,29 @@ internal sealed class SyncFileOperations(IFileSystemService fileSystem, FileSyst
         return result.Succeeded ? result.Value : null;
     }
 
+    /// <summary>Creates one entry (a directory, or a symbolic link to <paramref name="symbolicLinkTarget"/>).</summary>
+    /// <exception cref="IOException">The entry could not be created.</exception>
+    public async ValueTask CreateAsync(
+        VirtualPath path, FileSystemEntryKind kind, FileSystemPermissions permissions, string? symbolicLinkTarget)
+    {
+        FileSystemMutationResult created = await fileSystem.CreateAsync(
+            new FileSystemCreateRequest(path, kind, permissions, symbolicLinkTarget: symbolicLinkTarget), context, CancellationToken.None).ConfigureAwait(false);
+        if (!created.Succeeded)
+        {
+            throw Failure("create", path, created);
+        }
+    }
+
+    /// <summary>Lists the immediate children of a directory; an unreadable directory gives none.</summary>
+    public async ValueTask<IReadOnlyList<VirtualPath>> ListAsync(VirtualPath directory, CancellationToken cancellationToken)
+    {
+        FileSystemResult<FileSystemDirectorySnapshot> listed = await fileSystem.EnumerateAsync(
+            new FileSystemEnumerateRequest(directory, FileSystemLinkBehavior.NoFollow), context, cancellationToken).ConfigureAwait(false);
+        return listed.Succeeded
+            ? [.. listed.Value!.Entries.Select(entry => VirtualPath.Parse($"{directory.Value.TrimEnd('/')}/{entry.Name.Value}"))]
+            : [];
+    }
+
     /// <summary>Reads a whole file; an unreadable file gives <see langword="null"/>.</summary>
     public async ValueTask<byte[]?> TryReadAllBytesAsync(VirtualPath path, CancellationToken cancellationToken)
     {
