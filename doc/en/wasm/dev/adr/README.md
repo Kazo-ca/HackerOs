@@ -184,5 +184,6 @@ next free number is given in
 | [`0182-install-apps-from-github.md`](0182-install-apps-from-github.md) | ADR 0182: `hackpkg` command that installs an app from its GitHub repository, `.hackapp` packages on the `hackeros-packages` branch, GitHub (`raw.githubusercontent.com`) as a trusted host in `/etc/hackeros/app-sources.config` |
 | [`0183-drag-a-window-between-screens.md`](0183-drag-a-window-between-screens.md) | ADR 0183: drag a window from one screen to another by its title bar, screen under the pointer found from its position on the physical desktop, outline on the target screen, screen changed on release |
 | [`0184-screens-administration-sdk.md`](0184-screens-administration-sdk.md) | ADR 0184: system screens API `HackScreens` for Settings ▸ Screens (normal capability `screens.manage`), list, open, restore, close, identify, full screen, permission |
+| [`0185-file-explorer-improvements.md`](0185-file-explorer-improvements.md) | ADR 0185: File Explorer improvements (resizable panel, empty folder inside the list, drop outside a zone does nothing, drag out of the browser to download, `.zip` browsed read-only, Compress and Send to ▸, folder previews, network drive refresh, hover tooltips), to implement later in the `explorer/base` series |
 
 Parent folder index: [`../README.md`](../README.md).

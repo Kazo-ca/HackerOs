@@ -44,10 +44,10 @@ jour à la fin de chaque série ou quand une convention change.
 - **Explorateur mobile** (octobre 2026, PR #212 vers `main`) : point d'entrée
   mobile des apps honoré, explorateur de fichiers mobile, dialogues en plein
   écran sur mobile, un toucher ouvre (`HackFileView.OpenOnTap`) (ADR 0171).
-- **ADR** : 0001 à 0171 et 0173 à 0184 existent (quelques numéros sautés) ; 0170 est pris
+- **ADR** : 0001 à 0171 et 0173 à 0185 existent (quelques numéros sautés) ; 0170 est pris
   par le menu latéral des Paramètres (PR #210), 0171 est l'explorateur de fichiers
   mobile, 0172, réservé avec lui, n'a pas servi, 0173 est la publication
-  automatique, 0174 l'annonce d'une nouvelle version (`version.json`), 0175 le bouton « Nouveau dossier » des dialogues Choisir un dossier et Enregistrer, 0176 le dépôt template d'apps (sous-module en débogage, paquets en production), 0177 la barre de titre des fenêtres agrandies et ancrées, 0178 à 0180, 0183 et 0184 la série multi-moniteur, 0181 un dossier de l'ordinateur monté comme lecteur réseau, 0182 l'installation d'une app depuis GitHub au terminal (`hackpkg`). **Prochain numéro libre : 0185**. Des
+  automatique, 0174 l'annonce d'une nouvelle version (`version.json`), 0175 le bouton « Nouveau dossier » des dialogues Choisir un dossier et Enregistrer, 0176 le dépôt template d'apps (sous-module en débogage, paquets en production), 0177 la barre de titre des fenêtres agrandies et ancrées, 0178 à 0180, 0183 et 0184 la série multi-moniteur, 0181 un dossier de l'ordinateur monté comme lecteur réseau, 0182 l'installation d'une app depuis GitHub au terminal (`hackpkg`), 0185 les améliorations de File Explorer (à faire). **Prochain numéro libre : 0186**. Des
   threads parallèles réservent des numéros distincts.
 
 ## Conventions de travail
