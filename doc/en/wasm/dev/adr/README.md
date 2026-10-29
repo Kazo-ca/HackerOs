@@ -184,5 +184,6 @@ next free number is given in
 | [`0182-install-apps-from-github.md`](0182-install-apps-from-github.md) | ADR 0182: `hackpkg` command that installs an app from its GitHub repository, `.hackapp` packages on the `hackeros-packages` branch, GitHub (`raw.githubusercontent.com`) as a trusted host in `/etc/hackeros/app-sources.config` |
 | [`0183-drag-a-window-between-screens.md`](0183-drag-a-window-between-screens.md) | ADR 0183: drag a window from one screen to another by its title bar, screen under the pointer found from its position on the physical desktop, outline on the target screen, screen changed on release |
 | [`0184-screens-administration-sdk.md`](0184-screens-administration-sdk.md) | ADR 0184: system screens API `HackScreens` for Settings ▸ Screens (normal capability `screens.manage`), list, open, restore, close, identify, full screen, permission |
+| [`0187-guest-start-and-sign-in-credits.md`](0187-guest-start-and-sign-in-credits.md) | ADR 0187: start as a guest without an account (password-less administrator guest, only when no account exists, never recreated; "Create my account" migrates or deletes the guest) and credits on the sign-in page (author Benoit Robin → kazo.ca, GitHub project Kazo-ca/HackerOs), to be implemented later |
 
 Parent folder index: [`../README.md`](../README.md).
