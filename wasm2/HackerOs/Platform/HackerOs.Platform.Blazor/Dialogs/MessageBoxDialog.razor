@@ -1,8 +1,15 @@
 @using HackerOs.AppSdk.Blazor
+@using HackerOs.AppSdk.Icons
 @inject IStringLocalizer<Strings> L
 
-<div class="message-box-dialog" role="dialog" aria-modal="true">
+<div class="message-box-dialog" role="@(Presentation.Request.Icon == MessageBoxIcon.Error ? "alertdialog" : "dialog")" aria-modal="true">
     <div class="message-box-body">
+        @if (IconName(Presentation.Request.Icon) is { } icon)
+        {
+            <span class="message-box-icon @Presentation.Request.Icon.ToString().ToLowerInvariant()" aria-hidden="true">
+                <HackerIcon Library="IconLibrary.Lucide" Name="@icon" Size="28" />
+            </span>
+        }
         <p class="message-box-content">@Presentation.Request.Content</p>
     </div>
     <footer class="message-box-actions">
@@ -45,6 +52,16 @@
     [Parameter]
     [EditorRequired]
     public DialogCoordinator Coordinator { get; set; } = default!;
+
+    /// <summary>The Lucide icon of a message box kind, or <see langword="null"/> for none.</summary>
+    internal static string? IconName(MessageBoxIcon icon) => icon switch
+    {
+        MessageBoxIcon.Information => "info",
+        MessageBoxIcon.Warning => "triangle-alert",
+        MessageBoxIcon.Error => "circle-x",
+        MessageBoxIcon.Question => "circle-help",
+        _ => null
+    };
 
     private void HandleOk() => Coordinator.SelectMessageBox(Presentation.Id, MessageBoxResult.Ok);
     private void HandleCancel() => Coordinator.SelectMessageBox(Presentation.Id, MessageBoxResult.Cancel);

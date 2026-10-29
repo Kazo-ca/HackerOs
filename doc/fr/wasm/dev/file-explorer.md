@@ -368,3 +368,13 @@ Améliorations décidées dans l'[ADR 0185](adr/0185-file-explorer-improvements.
   glisser vers un dossier de HackerOS reste possible. Valable pour toutes les vues du contrôle partagé,
   bureau compris ; pas au toucher. Si le glisser commence avant la fin de la préparation (gros dossier),
   il reste interne. Code dans `FileView.ExternalDrag.cs`. Tests : `FileViewExternalDragTests`.
+- [x] `explorer/network-drives-sidebar-alignment` (après la série, demande de Benoit du 2026-10-29) :
+  la section « Network drives » du panneau de gauche est alignée à gauche comme « Places » (le style
+  global des boutons centrait leur contenu ; `.sidebar-entry` force `justify-content: flex-start`). Un
+  nom trop long ne passe plus à la ligne et n'est plus coupé : il reste sur une ligne, et le panneau
+  affiche une barre de défilement horizontale (`overflow-x: auto` sur `.explorer-sidebar`).
+- [x] Erreurs en boîte de message (demande de Benoit du 2026-10-29) : les erreurs de l'explorateur ne
+  s'affichent plus en texte rouge au-dessus de la liste (ni dans le bandeau du mobile). Elles ouvrent la
+  boîte de message du SDK de type Erreur (`MessageBoxIcon.Error`, bouton OK, titre « Explorateur de
+  fichiers ») ; la même erreur signalée deux fois n'ouvre qu'une boîte. Tout passe par `ReportError`
+  de `FileExplorerWindow.razor`.

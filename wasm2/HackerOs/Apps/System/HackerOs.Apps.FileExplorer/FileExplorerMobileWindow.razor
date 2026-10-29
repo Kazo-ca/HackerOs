@@ -67,16 +67,6 @@
         </div>
     }
 
-    @if (!string.IsNullOrEmpty(_errorMessage))
-    {
-        <div class="mobile-error" role="alert">
-            <span>@_errorMessage</span>
-            <button type="button" class="appbar-btn" aria-label="@L["Mobile.Close"]" @onclick="DismissError">
-                <HackerIcon Library="IconLibrary.Lucide" Name="x" Size="18" />
-            </button>
-        </div>
-    }
-
     <main class="mobile-content">
         @if (_showTrash)
         {

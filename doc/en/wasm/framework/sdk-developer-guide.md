@@ -282,7 +282,7 @@ the theme chosen by the user:
 | `LaunchArguments`, `LaunchFile` | Process arguments without `argv[0]`; first argument if it is an absolute path. |
 | `OnAppInitialized[Async]`, `OnAppParametersSet[Async]`, `OnAppAfterRender[Async]`, `ShouldRenderApp` | Life cycle. The Blazor methods (`OnInitializedAsync`...) are sealed: override these instead. |
 | `OpenFileAsync`, `SaveFileAsync`, `SelectFolderAsync` | OS file dialogs (capabilities `dialogs.file-open`, `dialogs.file-save`, `dialogs.folder-select`); the result carries the chosen path (`Resource.Path`, `Resources`). |
-| `MessageBox`, `TextInput` | Message box and text input. |
+| `MessageBox`, `TextInput` | Message box and text input. `MessageBox(title, message, MessageBoxType.Ok, MessageBoxIcon.Error)` shows an error with its icon (next SDK version). |
 | `WindowTitle`, `SetWindowTitleAsync`, `FormatWindowTitle` | Window title (ADR 0117, SDK 1.1): the app writes the whole title, by convention `document — App` with `*` in front if the document is modified; `null` gives back the app name. See below. |
 | `OnPermissionErrorRaised` | Override to display a permission error yourself (set `ErrorHandled = true`) instead of the OS notification. |
 | `OnAppStopRequestedAsync(e)` | The OS requests a stop (`kill`, "End task", sign-out; ADR 0069): finish or cancel the operation in progress, write a draft of unsaved changes (`HackRecoveryDraft`). The window closes when the returned task completes, at the latest at `e.Deadline`. |
