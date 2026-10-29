@@ -28,6 +28,7 @@ internal sealed class RemoteDialogService(WorkerWindowRun run) : IDialogService
             writer.WriteString("title", request.Title);
             writer.WriteString("content", request.Content);
             writer.WriteNumber("type", (int)request.DialogType);
+            writer.WriteNumber("icon", (int)request.Icon);
         }, cancellationToken).ConfigureAwait(true);
         return new MessageBoxDialogResult((MessageBoxResult)answer.GetProperty("r").GetInt32());
     }

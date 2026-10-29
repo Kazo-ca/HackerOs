@@ -213,5 +213,4 @@ public partial class FileExplorerMobileWindow
         ToggleHiddenFiles();
     }
 
-    private void DismissError() => _errorMessage = null;
 }

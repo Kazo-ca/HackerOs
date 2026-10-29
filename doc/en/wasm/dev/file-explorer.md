@@ -359,3 +359,12 @@ as a folder" points (§6 to §9) are not part of this series.
   Download"; dragging into a HackerOS folder still works. Applies to every view of the shared control,
   the desktop included; not on touch. If the drag starts before the preparation ends (large folder), it
   stays internal. Code in `FileView.ExternalDrag.cs`. Tests: `FileViewExternalDragTests`.
+- [x] `explorer/network-drives-sidebar-alignment` (after the series, Benoit's request of 2026-10-29):
+  the "Network drives" section of the left panel is left-aligned like "Places" (the global button style
+  centred their content; `.sidebar-entry` now sets `justify-content: flex-start`). A name too long no
+  longer wraps nor gets cut: it stays on one line and the panel shows a horizontal scrollbar
+  (`overflow-x: auto` on `.explorer-sidebar`).
+- [x] Errors in a message box (Benoit's request of 2026-10-29): the explorer's errors no longer show
+  as red text above the list (nor in the mobile banner). They open the SDK message box of type Error
+  (`MessageBoxIcon.Error`, OK button, title "File Explorer"); the same error reported twice opens one
+  box. Everything goes through `ReportError` in `FileExplorerWindow.razor`.

@@ -204,6 +204,27 @@ public abstract partial class WindowAppBase : ComponentBase, IHandleEvent, IHand
             cancellationToken);
     }
 
+    /// <summary>Displays a message box dialog with an icon, such as <see cref="MessageBoxIcon.Error"/> for a failure.</summary>
+    protected ValueTask<MessageBoxDialogResult> MessageBox(
+        string title,
+        string content,
+        MessageBoxType dialogType,
+        MessageBoxIcon icon,
+        CancellationToken cancellationToken = default)
+    {
+        EnsureBasicDialogService();
+        return Dialogs.MessageBoxAsync(
+            AppContext,
+            new MessageBoxDialogRequest
+            {
+                Title = title,
+                Content = content,
+                DialogType = dialogType,
+                Icon = icon
+            },
+            cancellationToken);
+    }
+
     /// <summary>Displays a text input dialog.</summary>
     protected ValueTask<TextInputDialogResult> TextInput(
         string title,

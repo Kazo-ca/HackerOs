@@ -27,6 +27,27 @@ public enum MessageBoxType
 }
 
 /// <summary>
+/// The icon a message box shows next to its message, which tells what kind of message it is.
+/// </summary>
+public enum MessageBoxIcon
+{
+    /// <summary>No icon: the message alone.</summary>
+    None,
+
+    /// <summary>An information icon.</summary>
+    Information,
+
+    /// <summary>A warning icon.</summary>
+    Warning,
+
+    /// <summary>An error icon: something the user asked for failed.</summary>
+    Error,
+
+    /// <summary>A question icon.</summary>
+    Question
+}
+
+/// <summary>
 /// Alias wrapper for <see cref="MessageBoxType"/> to support alternate casing.
 /// </summary>
 public readonly struct MessageboxType : IEquatable<MessageboxType>, IEquatable<MessageBoxType>
@@ -162,6 +183,9 @@ public sealed record MessageBoxDialogRequest
 
     /// <summary>Gets the message box button configuration.</summary>
     public MessageBoxType DialogType { get; init; } = MessageBoxType.Ok;
+
+    /// <summary>Gets the icon shown next to the message; <see cref="MessageBoxIcon.None"/> by default.</summary>
+    public MessageBoxIcon Icon { get; init; } = MessageBoxIcon.None;
 }
 
 /// <summary>

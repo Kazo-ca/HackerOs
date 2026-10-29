@@ -108,23 +108,6 @@
     border-bottom: 1px solid var(--hos-border-subtle, #21262d);
 }
 
-.mobile-error {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin: 0.5rem 0.75rem 0;
-    padding: 0.25rem 0.25rem 0.25rem 0.75rem;
-    border: 1px solid var(--hos-danger, #f85149);
-    border-radius: var(--hos-radius-sm, 6px);
-    background: color-mix(in srgb, var(--hos-danger, #f85149) 14%, transparent);
-    font-size: 0.9rem;
-}
-
-.mobile-error > span {
-    flex: 1;
-    min-width: 0;
-}
-
 .mobile-content,
 .mobile-files {
     position: relative;

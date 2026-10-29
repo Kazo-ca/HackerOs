@@ -1,1 +1,10 @@
 #nullable enable
+HackerOs.AppSdk.Blazor.MessageBoxDialogRequest.Icon.get -> HackerOs.AppSdk.Blazor.MessageBoxIcon
+HackerOs.AppSdk.Blazor.MessageBoxDialogRequest.Icon.init -> void
+HackerOs.AppSdk.Blazor.MessageBoxIcon
+HackerOs.AppSdk.Blazor.MessageBoxIcon.Error = 3 -> HackerOs.AppSdk.Blazor.MessageBoxIcon
+HackerOs.AppSdk.Blazor.MessageBoxIcon.Information = 1 -> HackerOs.AppSdk.Blazor.MessageBoxIcon
+HackerOs.AppSdk.Blazor.MessageBoxIcon.None = 0 -> HackerOs.AppSdk.Blazor.MessageBoxIcon
+HackerOs.AppSdk.Blazor.MessageBoxIcon.Question = 4 -> HackerOs.AppSdk.Blazor.MessageBoxIcon
+HackerOs.AppSdk.Blazor.MessageBoxIcon.Warning = 2 -> HackerOs.AppSdk.Blazor.MessageBoxIcon
+HackerOs.AppSdk.Blazor.WindowAppBase.MessageBox(string! title, string! content, HackerOs.AppSdk.Blazor.MessageBoxType dialogType, HackerOs.AppSdk.Blazor.MessageBoxIcon icon, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Blazor.MessageBoxDialogResult!>

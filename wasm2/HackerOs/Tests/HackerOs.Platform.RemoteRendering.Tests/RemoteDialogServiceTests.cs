@@ -29,6 +29,19 @@ public sealed class RemoteDialogServiceTests
     }
 
     [Fact]
+    public async Task A_message_box_carries_its_icon_to_the_page()
+    {
+        await using WindowHarness window = await WindowHarness.MountAsync<CounterWindow>();
+        RemoteDialogService dialogs = new(window.Run);
+
+        _ = dialogs.MessageBoxAsync(
+            window.Run.Context, new MessageBoxDialogRequest { Title = "Title", Content = "Body", Icon = MessageBoxIcon.Error });
+
+        JsonElement request = Assert.Single(window.Outputs);
+        Assert.Equal((int)MessageBoxIcon.Error, request.GetProperty("icon").GetInt32());
+    }
+
+    [Fact]
     public async Task A_text_input_returns_the_typed_text()
     {
         await using WindowHarness window = await WindowHarness.MountAsync<CounterWindow>();
