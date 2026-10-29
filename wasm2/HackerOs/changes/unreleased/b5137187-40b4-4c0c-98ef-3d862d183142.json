@@ -13,7 +13,7 @@
     "en": "The clock, the date command, ls -l and the apps now use your time zone: the device's by default, or one chosen in Settings > Date and time. Apps read it with HackTimeZone and IAppExecutionContext.TimeZone.",
     "fr": "L'horloge, la commande date, ls -l et les apps utilisent maintenant votre fuseau horaire : celui de l'appareil par défaut, ou celui choisi dans Paramètres > Date et heure. Les apps le lisent avec HackTimeZone et IAppExecutionContext.TimeZone."
   },
-  "pr": 0,
+  "pr": 283,
   "links": [
     "doc/en/wasm/dev/adr/0193-local-time-and-time-zone.md"
   ]
