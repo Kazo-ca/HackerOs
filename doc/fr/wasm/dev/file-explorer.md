@@ -334,3 +334,13 @@ Améliorations décidées dans l'[ADR 0185](adr/0185-file-explorer-improvements.
   est le nouveau `HackDesktopLink` du SDK (`Type=Link`, voir
   [`desktop-api.md`](../framework/desktop-api.md)), que le contrôle affiche et ouvre. Tests :
   `HackDesktopLinkTests`, `FileExplorerMenuActionsTests`.
+- [x] `explorer/7-folder-previews` (§14) : en mode Icônes, l'icône d'un dossier devient un dossier
+  ouvert avec les mini-icônes de ses 4 premiers éléments (dossiers d'abord, puis par nom, éléments
+  cachés exclus) ; un dossier vide garde l'icône fermée. Le contenu n'est lu que pour les tuiles
+  visibles (`attachFolderPreviews` de `FileView.razor.js`, un `IntersectionObserver` qui appelle
+  `FileView.LoadFolderPreviewsAsync`), puis gardé en cache par révision du dossier
+  (`FileView.Previews.cs`). Chaque dossier prévisualisé est surveillé (ses enfants directs, au plus
+  64 dossiers) : un changement dedans relit l'aperçu en gardant l'ancien affiché ; ces surveillances
+  s'arrêtent quand la vue quitte le dossier. Les modes Détails, arbre
+  et bureau ne changent pas ; une icône remplacée (raccourci) n'a pas d'aperçu. Tests :
+  `FileViewFolderPreviewTests`.

@@ -39,7 +39,20 @@
              @ondragover:preventDefault="@(item.IsDirectory && Owner.AllowDragDrop)"
              @ondrop="@(args => OnTileDropAsync(item, args))"
              @ondrop:stopPropagation="@item.IsDirectory">
-            <ShellIcon Icon="ResolveIcon(item)" Size="32" />
+            @* ADR 0185 §14: a folder shows the icons of its first entries once its tile was on screen. *@
+            @{ IReadOnlyList<ShellIconDescriptor>? preview = PreviewFor(item); }
+            <span class="file-view-tile-icon" data-folder-preview="@(WantsPreview(item) ? item.FullPath.Value : null)">
+                <ShellIcon Icon="@(preview is { Count: > 0 } ? OpenFolderIcon : ResolveIcon(item))" Size="32" />
+                @if (preview is { Count: > 0 })
+                {
+                    <span class="file-view-folder-preview" aria-hidden="true">
+                        @foreach (ShellIconDescriptor icon in preview)
+                        {
+                            <ShellIcon Icon="icon" Size="11" />
+                        }
+                    </span>
+                }
+            </span>
             @if (item.IsRenaming)
             {
                 <input class="file-view-rename-input"
