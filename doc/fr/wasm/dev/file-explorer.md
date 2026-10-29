@@ -356,3 +356,15 @@ Améliorations décidées dans l'[ADR 0185](adr/0185-file-explorer-improvements.
   seule boucle par dossier, arrêtée quand la dernière surveillance se termine. Tests :
   `HostFolderChangeTrackerTests`. Non vérifié dans un vrai navigateur : il faut un vrai dossier hôte
   choisi par l'utilisateur.
+- [x] `explorer/9-drag-out-download` (§4, §5) : glisser des éléments hors du navigateur les télécharge
+  (Chrome et Edge, entrée `DownloadURL`) : un fichier seul tel quel, un dossier ou plusieurs éléments en
+  `.zip` (`Dossier.zip`, ou `Archive.zip` pour plusieurs). Le navigateur ne prend le contenu que pendant
+  le `dragstart`, donc il est préparé dès l'appui du bouton gauche de la souris sur un élément
+  (`attachExternalDrag` de `FileView.razor.js` appelle `FileView.PrepareExternalDragAsync` avec les
+  éléments sélectionnés) : la taille donnée par l'OS décide d'abord (`FileMetadata.Length`, ou
+  `MeasureAsync` pour un dossier), puis le contenu est lu ou compressé dans un blob de la page
+  (`prepareDownload`, un seul à la fois). Au-delà d'environ 50 Mo rien n'est préparé et le glisser
+  affiche une bulle « Trop gros pour glisser hors du navigateur (taille) : utilisez Télécharger » ; le
+  glisser vers un dossier de HackerOS reste possible. Valable pour toutes les vues du contrôle partagé,
+  bureau compris ; pas au toucher. Si le glisser commence avant la fin de la préparation (gros dossier),
+  il reste interne. Code dans `FileView.ExternalDrag.cs`. Tests : `FileViewExternalDragTests`.

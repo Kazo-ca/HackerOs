@@ -348,3 +348,14 @@ as a folder" points (§6 to §9) are not part of this series.
   raised. One loop per folder, stopped when the last watch ends. Tests:
   `HostFolderChangeTrackerTests`. Not checked in a real browser: it needs a real host folder picked
   by the user.
+- [x] `explorer/9-drag-out-download` (§4, §5): dragging items out of the browser downloads them
+  (Chrome and Edge, `DownloadURL` entry): one file as it is, a folder or several items as a `.zip`
+  (`Folder.zip`, or `Archive.zip` for several). The browser takes the content only during `dragstart`,
+  so it is prepared as soon as the left mouse button goes down on an item (`attachExternalDrag` in
+  `FileView.razor.js` calls `FileView.PrepareExternalDragAsync` with the selected items): the size the
+  OS gives decides first (`FileMetadata.Length`, or `MeasureAsync` for a folder), then the content is
+  read or compressed into a blob of the page (`prepareDownload`, one at a time). Beyond about 50 MB
+  nothing is prepared and the drag shows a bubble "Too large to drag out of the browser (size): use
+  Download"; dragging into a HackerOS folder still works. Applies to every view of the shared control,
+  the desktop included; not on touch. If the drag starts before the preparation ends (large folder), it
+  stays internal. Code in `FileView.ExternalDrag.cs`. Tests: `FileViewExternalDragTests`.

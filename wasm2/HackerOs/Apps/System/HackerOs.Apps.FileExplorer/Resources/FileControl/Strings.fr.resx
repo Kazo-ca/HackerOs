@@ -84,6 +84,9 @@
   <data name="Type.Folder" xml:space="preserve">
     <value>Dossier</value>
   </data>
+  <data name="Drag.TooLarge" xml:space="preserve">
+    <value>Trop gros pour glisser hors du navigateur ({0}) : utilisez Télécharger.</value>
+  </data>
   <data name="Empty.Folder" xml:space="preserve">
     <value>Ce dossier est vide.</value>
   </data>

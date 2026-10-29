@@ -25,3 +25,4 @@ override HackerOs.Apps.FileExplorer.NetworkDrivesSidebar.OnInitializedAsync() ->
 override HackerOs.Apps.FileExplorer.NetworkDrivesSidebar.OnParametersSetAsync() -> System.Threading.Tasks.Task!
 ~override HackerOs.Apps.FileExplorer.NetworkDrivesSidebar.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 HackerOs.Apps.FileExplorer.FileControl.FileView.LoadFolderPreviewsAsync(string![]! paths) -> System.Threading.Tasks.Task!
+HackerOs.Apps.FileExplorer.FileControl.FileView.PrepareExternalDragAsync(string! path, string![]! selectedPaths) -> System.Threading.Tasks.Task!
