@@ -200,6 +200,9 @@ This section lists what is released in the `main` branch and online.
   ([`localization.md`](framework/localization.md))
 - **Accessibility**: display and animation preferences, keyboard navigation.
   ([`accessibility.md`](dev/accessibility.md))
+- **Local time and time zone**: the clock, `date`, `ls -l` and the apps show
+  the time in the user's zone, automatic or chosen in Settings ▸ Date and time.
+  ([`time-zone.md`](framework/time-zone.md))
 
 ### For developers
 
@@ -229,7 +232,7 @@ points to its PR.
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | `.zip` archive opened as a folder | The explorer browses a `.zip` archive read-only; an opened file is extracted to `/tmp`. The rest of the ADR is available. | [0185](dev/adr/0185-file-explorer-improvements.md) | [#241](https://github.com/Kazo-ca/HackerOs/issues/241) |
-| Windows and taskbar | Notification toasts, time zone, window animations, taskbar menus, hover previews. | Coming | [#242](https://github.com/Kazo-ca/HackerOs/issues/242) |
+| Windows and taskbar | Notification toasts, window animations, taskbar menus, hover previews. The time zone is available ([ADR 0193](dev/adr/0193-local-time-and-time-zone.md)). | Coming | [#242](https://github.com/Kazo-ca/HackerOs/issues/242) |
 
 ### Accounts and welcome
 

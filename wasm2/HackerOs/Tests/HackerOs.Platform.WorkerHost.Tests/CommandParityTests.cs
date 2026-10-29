@@ -29,6 +29,7 @@ public sealed class CommandParityTests
         new("hackbackup", ["hackbackup", "hackbackup create", "hackbackup restore --bogus"]),
         new("hackpkg", ["hackpkg", "hackpkg bogus", "hackpkg install --bogus", "hackpkg list --allow-untrusted"]),
         new("diff", ["diff notes.txt notes.txt", "diff -u notes.txt numbers.txt"]),
+        new("date", ["date -u +%Y", "date --bogus", "date 1200"]),
         new("dmesg", ["dmesg -l emerg", "dmesg -l nosuch", "dmesg --bogus"]),
         new("dirname", ["dirname /a/b/c /d"]),
         new("du", ["du -s docs", "du -a -h docs"]),
@@ -117,7 +118,7 @@ public sealed class CommandParityTests
             .Where(name => !covered.Contains(name))];
 
         Assert.Empty(missing);
-        Assert.Equal(77, OsFixture.BuiltInCommands.Count);
+        Assert.Equal(78, OsFixture.BuiltInCommands.Count);
     }
 
     [Fact]
