@@ -89,7 +89,7 @@ public sealed partial class ExplorerFileView
         return id switch
         {
             HackFileMenuItems.Open => OpenItemsAsync(targets),
-            HackFileMenuItems.OpenWithOther => ChooseAppAsync(targets[0], candidateAppIds: null),
+            HackFileMenuItems.OpenWithOther => ChooseAppAsync(targets[0].FullPath, candidateAppIds: null),
             HackFileMenuItems.Cut => PutOnClipboardAsync(targets, HackClipboardFileOperation.Cut),
             HackFileMenuItems.Copy => PutOnClipboardAsync(targets, HackClipboardFileOperation.Copy),
             HackFileMenuItems.PasteInto => PasteIntoAsync(targets[0].FullPath),

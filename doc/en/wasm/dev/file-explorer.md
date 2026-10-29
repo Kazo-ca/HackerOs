@@ -319,3 +319,13 @@ as a folder" points (§6 to §9) are not part of this series.
   (`HackDirectory.GetTotalSizeAsync`, `HackDirectoryInfo.GetTotalSizeAsync`, `HackDirectorySize`, see
   [`hack-file-api.md`](../framework/hack-file-api.md)), added to the `PublicAPI.Unshipped.txt` files. The
   folder Properties dialog shows "1,234 bytes (5 files, 2 folders)". Tests: `HackDirectorySizeTests`.
+- [x] `explorer/6-file-menu-actions` (§10 to §13): the explorer window (desktop and mobile) adds to the
+  menu of one or more items, just before Properties: "Compress to .zip…" (name asked, prefilled),
+  "Download" (one file as it is, otherwise a `.zip`), "Copy path" (absolute paths, one per line, on the
+  text clipboard) and "Send to ▸": Desktop (a shortcut to each item, not a copy), Compressed folder (a
+  `.zip` next to them, default name numbered when taken), My computer (download) and each network drive
+  that is ready (a copy at its root). Code in `FileExplorerWindow.Menu.cs`, through the control's
+  `ContextMenuOpening` event: the desktop and the dialogs keep the control's menu. The shortcut to a
+  file or a folder is the SDK's new `HackDesktopLink` (`Type=Link`, see
+  [`desktop-api.md`](../framework/desktop-api.md)), which the control shows and opens. Tests:
+  `HackDesktopLinkTests`, `FileExplorerMenuActionsTests`.

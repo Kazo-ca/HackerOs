@@ -538,4 +538,37 @@
   <data name="Properties.Measuring" xml:space="preserve">
     <value>Calculating…</value>
   </data>
+  <data name="Error.LinkTargetMissing" xml:space="preserve">
+    <value>This shortcut opens {0}, which no longer exists.</value>
+  </data>
+  <data name="Error.CopyPath" xml:space="preserve">
+    <value>Could not copy the path: {0}</value>
+  </data>
+  <data name="Error.SendToDesktop" xml:space="preserve">
+    <value>Could not put a shortcut to {0} on the desktop: {1}</value>
+  </data>
+  <data name="Menu.Compress" xml:space="preserve">
+    <value>Compress to .zip…</value>
+  </data>
+  <data name="Menu.Download" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="Menu.CopyPath" xml:space="preserve">
+    <value>Copy path</value>
+  </data>
+  <data name="Menu.SendTo" xml:space="preserve">
+    <value>Send to</value>
+  </data>
+  <data name="Menu.SendTo.Desktop" xml:space="preserve">
+    <value>Desktop (create shortcut)</value>
+  </data>
+  <data name="Menu.SendTo.Zip" xml:space="preserve">
+    <value>Compressed folder (.zip)</value>
+  </data>
+  <data name="Menu.SendTo.Computer" xml:space="preserve">
+    <value>My computer (download)</value>
+  </data>
+  <data name="Menu.SendTo.Drive" xml:space="preserve">
+    <value>{0} (network drive)</value>
+  </data>
 </root>

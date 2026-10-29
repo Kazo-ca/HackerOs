@@ -183,6 +183,7 @@
                       Filter="_searchFilter"
                       Navigated="OnNavigated"
                       SelectionChanged="OnSelectionChanged"
+                      ContextMenuOpening="OnFileMenuOpeningAsync"
                       ErrorOccurred="ReportError"
                       ControllerChanged="OnControllerChangedAsync" />
     </div>
@@ -757,10 +758,12 @@
     /// in this window for the browser's download, and a large selection would exceed the 16 MiB a
     /// task's result may carry (ADR 0128 section 4). Compress (to a file) uses the task.
     /// </remarks>
-    private protected async Task DownloadSelectedAsync()
+    private protected Task DownloadSelectedAsync() => _files is null ? Task.CompletedTask : DownloadAsync(_files.SelectedItems);
+
+    /// <summary>Downloads one file as it is, or else a <c>.zip</c> of the items (the toolbar, the menu, "Send to ▸ My computer").</summary>
+    private protected async Task DownloadAsync(IReadOnlyList<HackFileViewItem> selected)
     {
-        if (_downloader is null || _files is null) return;
-        IReadOnlyList<HackFileViewItem> selected = _files.SelectedItems;
+        if (_downloader is null) return;
 
         if (selected.Count == 1)
         {
@@ -808,16 +811,20 @@
         }
     }
 
-    private protected async Task CompressSelectedAsync()
-    {
-        if (_files is null || _files.SelectedItems.Count == 0) return;
-        IReadOnlyList<HackFileViewItem> selected = _files.SelectedItems;
+    private protected Task CompressSelectedAsync() => _files is null ? Task.CompletedTask : CompressAsync(_files.SelectedItems);
 
-        string defaultName = selected.Count == 1 ? selected[0].Name + ".zip" : "Archive.zip";
+    /// <summary>
+    /// Compresses the items into a <c>.zip</c> of the folder shown, named by the user (the toolbar, the
+    /// menu's "Compress to .zip…"), or by <see cref="CompressToDefaultNameAsync"/> ("Send to ▸ Compressed folder").
+    /// </summary>
+    private protected async Task CompressAsync(IReadOnlyList<HackFileViewItem> selected)
+    {
+        if (_files is null || selected.Count == 0) return;
+
         TextInputDialogResult result = await base.TextInput(
             title: L["Dialog.Compress.Title"],
             content: L["Dialog.Compress.Prompt"],
-            defaultValue: defaultName,
+            defaultValue: DefaultArchiveName(selected),
             placeholder: L["Dialog.Compress.Placeholder"]);
 
         if (result.Status != TextInputStatus.Submitted || string.IsNullOrWhiteSpace(result.Value)) return;
@@ -836,6 +843,14 @@
             ReportError(L["Error.AlreadyExists", archiveName]);
             return;
         }
+
+        await CompressToAsync(selected, destPath);
+    }
+
+    /// <summary>Compresses the items into <paramref name="destPath"/> in a child process, then shows the folder again.</summary>
+    private protected async Task CompressToAsync(IReadOnlyList<HackFileViewItem> selected, VirtualPath destPath)
+    {
+        if (_files is null) return;
 
         // ADR 0128/0140: deflating is CPU work; a child process of the explorer does it, off the window's thread.
         string? error = await TrackOperation(FileExplorerZipService.CompressInBackgroundAsync(

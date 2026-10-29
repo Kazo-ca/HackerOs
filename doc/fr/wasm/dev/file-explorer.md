@@ -323,3 +323,14 @@ Améliorations décidées dans l'[ADR 0185](adr/0185-file-explorer-improvements.
   [`hack-file-api.md`](../framework/hack-file-api.md)), ajoutés aux `PublicAPI.Unshipped.txt`. Le
   dialogue Propriétés d'un dossier affiche « 1 234 octets (5 fichiers, 2 dossiers) ». Tests :
   `HackDirectorySizeTests`.
+- [x] `explorer/6-file-menu-actions` (§10 à §13) : la fenêtre de l'explorateur (bureau et mobile)
+  ajoute au menu d'un ou plusieurs éléments, juste avant Propriétés : « Compresser en .zip… » (nom
+  demandé, prérempli), « Télécharger » (un fichier tel quel, sinon un `.zip`), « Copier le chemin »
+  (chemins absolus, un par ligne, dans le presse-papiers texte) et « Envoyer vers ▸ » : Bureau (un
+  raccourci vers chaque élément, pas une copie), Dossier compressé (`.zip` à côté, nom par défaut
+  numéroté s'il est pris), Mon ordinateur (téléchargement) et chaque lecteur réseau prêt (copie à sa
+  racine). Code dans `FileExplorerWindow.Menu.cs`, par l'évènement `ContextMenuOpening` du contrôle :
+  le bureau et les dialogues gardent le menu du contrôle. Le raccourci vers un fichier ou un dossier
+  est le nouveau `HackDesktopLink` du SDK (`Type=Link`, voir
+  [`desktop-api.md`](../framework/desktop-api.md)), que le contrôle affiche et ouvre. Tests :
+  `HackDesktopLinkTests`, `FileExplorerMenuActionsTests`.
