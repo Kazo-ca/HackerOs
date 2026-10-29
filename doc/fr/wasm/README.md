@@ -21,6 +21,7 @@ dans le même changement (voir [`AGENTS.md`](../../../AGENTS.md)).
 
 | Document | Rôle |
 | --- | --- |
+| [`features.md`](features.md) | Présentation de HackerOS : résumé, but de l'écosystème, avantages pour les développeurs, façons de l'utiliser et de le déployer, fonctionnalités disponibles, et fonctionnalités en cours de développement avec leurs ADR et issues. À tenir à jour à chaque PR vers `main`. |
 | [`project-overview.md`](dev/project-overview.md) | Vue d'ensemble du projet : couches, rôle de chaque projet de la solution, hôtes, système simulé (fichiers, processus, shell, capacités), démarrage, règles vérifiées au build. **Point d'entrée pour comprendre le code.** |
 | [`pitfalls.md`](dev/pitfalls.md) | Pièges rencontrés pendant la refonte et comment ils ont été réglés. |
 | [`memory/README.md`](memory/README.md) | État actuel du projet et conventions (séries terminées, version du SDK, prochain ADR). |
