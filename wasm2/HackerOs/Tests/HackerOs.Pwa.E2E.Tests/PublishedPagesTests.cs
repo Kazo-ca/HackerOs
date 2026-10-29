@@ -25,14 +25,16 @@ public sealed class PublishedPagesTests
         await PwaTestSupport.WaitForServiceWorkerControllerAsync(page);
         await PwaTestSupport.WaitForOnboardingAsync(page);
         await Assertions.Expect(page.Locator(".project-release")).ToContainTextAsync(HackerOsVersion);
-        await Assertions.Expect(page.Locator(".project-information a").First).ToHaveAttributeAsync("href", "https://github.com/Kazo-ca/HackerOs");
+        await Assertions.Expect(page.Locator(".project-information a.project-repository")).ToHaveAttributeAsync("href", "https://github.com/Kazo-ca/HackerOs");
+        await Assertions.Expect(page.Locator(".project-information a.project-author")).ToHaveAttributeAsync("href", "https://kazo.ca");
         await Assertions.Expect(page.Locator(".legacy-notice")).ToHaveCountAsync(0);
 
         await PwaTestSupport.CreateLocalProfileAndReachDesktopAsync(page);
         await PwaTestSupport.OpenAppAsync(page, "Settings");
         await page.GetByRole(AriaRole.Tab, new() { Name = "About System", Exact = true }).ClickAsync();
         await Assertions.Expect(page.Locator(".system-info-box")).ToContainTextAsync($"HackerOS {HackerOsVersion}");
-        await Assertions.Expect(page.Locator(".system-info-box a")).ToHaveAttributeAsync("href", "https://github.com/Kazo-ca/HackerOs");
+        await Assertions.Expect(page.Locator(".system-info-box a.about-repository")).ToHaveAttributeAsync("href", "https://github.com/Kazo-ca/HackerOs");
+        await Assertions.Expect(page.Locator(".system-info-box a.about-author")).ToHaveAttributeAsync("href", "https://kazo.ca");
 
         await page.GotoAsync(host.Address + "/legacy/");
         await Assertions.Expect(page.Locator("#desktop")).ToBeVisibleAsync();

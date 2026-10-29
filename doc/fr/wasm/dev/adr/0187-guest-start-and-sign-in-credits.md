@@ -6,7 +6,8 @@
 
 Accepté le 2026-10-29. Décisions prises avec Benoit dans le fil « Démarrer en invité et
 crédits de connexion » (questions 1 à 10 posées le 2026-10-28, réponses le 2026-10-29).
-Pas encore mis en œuvre : le travail est noté dans les choses à faire, pour plus tard.
+Partie B (crédits, §7 à §9) mise en œuvre le 2026-10-29 (branche `login/1-credits`). Partie A
+(compte invité) pas encore mise en œuvre : le travail est noté dans les choses à faire.
 
 - **Complète :** [ADR 0013](0013-local-user-session.md) (comptes et session locale),
   [ADR 0120](0120-passwd-and-administrator-password-reset.md) (`passwd`, Paramètres ▸

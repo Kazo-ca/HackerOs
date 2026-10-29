@@ -109,6 +109,8 @@
     <value>Redémarrer pour mettre à jour</value>
   </data>
   <data name="Project.LegacyMoved" xml:space="preserve"><value>La version d’origine a été déplacée vers</value></data>
+  <data name="Project.Author" xml:space="preserve"><value>Auteur :</value></data>
+  <data name="Project.GitHub" xml:space="preserve"><value>Projet GitHub :</value></data>
   <data name="Login.UsePasskey" xml:space="preserve">
     <value>Se connecter avec une clé d'accès</value>
   </data>

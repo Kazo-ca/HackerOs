@@ -6,7 +6,8 @@
 
 Accepted on 2026-10-29. Decisions made with Benoit in the thread "Démarrer en invité et
 crédits de connexion" (questions 1 to 10 asked on 2026-10-28, answers on 2026-10-29).
-Not implemented yet: the work is recorded in the to-do list, for later.
+Part B (credits, §7 to §9) implemented on 2026-10-29 (branch `login/1-credits`). Part A
+(guest account) not implemented yet: the work is recorded in the to-do list.
 
 - **Complements:** [ADR 0013](0013-local-user-session.md) (local accounts and session),
   [ADR 0120](0120-passwd-and-administrator-password-reset.md) (`passwd`, Settings ▸ Users),
