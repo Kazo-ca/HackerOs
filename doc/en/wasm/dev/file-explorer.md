@@ -302,3 +302,9 @@ as a folder" points (§6 to §9) are not part of this series.
   initializer of `HackerOs.Platform.Blazor` (`installStrayDropGuard`): `dragover` and `drop` listeners on
   `window`, bubble phase, that act only when no zone cancelled the event ("not allowed" cursor, default
   action cancelled). Text fields keep the browser's own text drop.
+- [x] `explorer/3-resizable-sidebar` (§1): a handle on the right edge of the Places panel
+  (`ExplorerSidebarResizer`, role `separator`): dragging resizes it between 140 and 400 px, a double
+  click restores the default width (150 px), the left and right arrows change it by 16 px, Home and End
+  go to the bounds. The width is kept per user in `~/.config/hackeros/file-explorer.json`
+  (`sidebarWidth`; `FileExplorerSettings` keeps the other keys). Desktop only: the mobile window has no
+  panel. Tests: `FileExplorerSettingsTests`.

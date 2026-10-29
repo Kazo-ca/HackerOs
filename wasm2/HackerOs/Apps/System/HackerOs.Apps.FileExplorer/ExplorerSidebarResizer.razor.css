@@ -1,0 +1,18 @@
+/* ADR 0185 §1: a thin grab strip on the panel's right edge, highlighted on hover, focus and drag. */
+.explorer-sidebar-resizer {
+    flex: 0 0 5px;
+    margin-left: -3px;
+    cursor: col-resize;
+    touch-action: none;
+    position: relative;
+    z-index: 1;
+    background: transparent;
+    transition: background-color 0.12s ease;
+}
+
+.explorer-sidebar-resizer:hover,
+.explorer-sidebar-resizer.dragging,
+.explorer-sidebar-resizer:focus-visible {
+    background: var(--hos-accent, #42d392);
+    outline: none;
+}

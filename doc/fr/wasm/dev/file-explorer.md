@@ -304,3 +304,9 @@ Améliorations décidées dans l'[ADR 0185](adr/0185-file-explorer-improvements.
   `dragover` et `drop` sur `window`, en phase de bouillonnement, qui n'agissent que si aucune zone n'a
   annulé l'évènement (curseur « interdit », action par défaut annulée). Les champs de texte gardent le
   dépôt de texte du navigateur.
+- [x] `explorer/3-resizable-sidebar` (§1) : une poignée sur le bord droit du panneau Places
+  (`ExplorerSidebarResizer`, rôle `separator`) : glisser la redimensionne entre 140 et 400 px, un
+  double-clic remet la largeur par défaut (150 px), les flèches gauche et droite la changent de 16 px,
+  Début et Fin vont aux bornes. La largeur est retenue par utilisateur dans
+  `~/.config/hackeros/file-explorer.json` (`sidebarWidth`, `FileExplorerSettings` garde les autres clés).
+  Bureau seulement : la fenêtre mobile n'a pas de panneau. Tests : `FileExplorerSettingsTests`.

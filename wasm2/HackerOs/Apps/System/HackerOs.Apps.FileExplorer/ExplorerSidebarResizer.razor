@@ -1,0 +1,22 @@
+@using Microsoft.JSInterop
+@inherits HackerOs.AppSdk.Blazor.HackComponentBase
+@implements IAsyncDisposable
+@inject IJSRuntime JSRuntime
+
+@*
+    The handle on the right edge of the Places panel (ADR 0185 §1): drag it to resize the panel between
+    140 and 400 px, double-click it for the default width, or focus it and use the arrow keys. The window
+    keeps the width and saves it in the user's explorer settings.
+*@
+<div class="explorer-sidebar-resizer"
+     role="separator"
+     aria-orientation="vertical"
+     aria-label="@Label"
+     title="@Label"
+     aria-valuemin="@FileExplorerSettings.MinSidebarWidth"
+     aria-valuemax="@FileExplorerSettings.MaxSidebarWidth"
+     aria-valuenow="@Width"
+     tabindex="0"
+     @ref="_handle"
+     @ondblclick="ResetAsync"
+     @onkeydown="OnKeyDownAsync"></div>
