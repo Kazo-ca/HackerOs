@@ -52,7 +52,28 @@ public static class HackDirectory
         }
     }
 
-    /// <summary>Lists the files of a directory.</summary>
+    /// <summary>
+    /// Gets the total size of a folder's whole content, or of a file (ADR 0185 §5): the sum of the files'
+    /// lengths, as the OS reports them, without reading any content (<c>du -sb</c>). Symbolic links below
+    /// are neither followed nor counted; a subfolder that cannot be read is skipped and
+    /// <see cref="HackDirectorySize.IsComplete"/> is then <see langword="false"/>.
+    /// </summary>
+    /// <exception cref="HackDirectoryNotFoundException">Nothing exists at <paramref name="path"/>.</exception>
+    /// <exception cref="HackUnauthorizedAccessException">The folder itself cannot be listed.</exception>
+    public static async Task<HackDirectorySize> GetTotalSizeAsync(string path, CancellationToken cancellationToken = default)
+    {
+        VirtualPath target = HackPath.Resolve(path, nameof(path));
+        FileSystemResult<FileSystemTreeSize> result = await HackFileSystemCore.Gateway.MeasureAsync(target, cancellationToken).ConfigureAwait(false);
+        if (!result.Succeeded)
+        {
+            throw HackFileSystemErrorTranslator.Translate(result.Error!, HackEntryTarget.Directory, target.Value);
+        }
+
+        FileSystemTreeSize size = result.Value!;
+        return new HackDirectorySize(size.Length, size.FileCount, size.DirectoryCount, size.IsComplete);
+    }
+
+        /// <summary>Lists the files of a directory.</summary>
     public static Task<string[]> GetFilesAsync(
         string path, string searchPattern = "*", SearchOption searchOption = SearchOption.TopDirectoryOnly, CancellationToken cancellationToken = default) =>
         CollectAsync(path, searchPattern, searchOption, includeFiles: true, includeDirectories: false, cancellationToken);

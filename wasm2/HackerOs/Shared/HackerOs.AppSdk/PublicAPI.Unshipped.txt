@@ -189,3 +189,23 @@ static HackerOs.AppSdk.Apps.HackPackageInstallReport.operator !=(HackerOs.AppSdk
 static HackerOs.AppSdk.Apps.HackPackageInstallReport.operator ==(HackerOs.AppSdk.Apps.HackPackageInstallReport? left, HackerOs.AppSdk.Apps.HackPackageInstallReport? right) -> bool
 static HackerOs.AppSdk.Apps.HackPackageSources.operator !=(HackerOs.AppSdk.Apps.HackPackageSources? left, HackerOs.AppSdk.Apps.HackPackageSources? right) -> bool
 static HackerOs.AppSdk.Apps.HackPackageSources.operator ==(HackerOs.AppSdk.Apps.HackPackageSources? left, HackerOs.AppSdk.Apps.HackPackageSources? right) -> bool
+HackerOs.AppSdk.IO.HackDirectoryInfo.GetTotalSizeAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.IO.HackDirectorySize!>!
+HackerOs.AppSdk.IO.HackDirectorySize
+HackerOs.AppSdk.IO.HackDirectorySize.<Clone>$() -> HackerOs.AppSdk.IO.HackDirectorySize!
+HackerOs.AppSdk.IO.HackDirectorySize.Deconstruct(out long Length, out long FileCount, out long DirectoryCount, out bool IsComplete) -> void
+HackerOs.AppSdk.IO.HackDirectorySize.DirectoryCount.get -> long
+HackerOs.AppSdk.IO.HackDirectorySize.DirectoryCount.init -> void
+HackerOs.AppSdk.IO.HackDirectorySize.Equals(HackerOs.AppSdk.IO.HackDirectorySize? other) -> bool
+HackerOs.AppSdk.IO.HackDirectorySize.FileCount.get -> long
+HackerOs.AppSdk.IO.HackDirectorySize.FileCount.init -> void
+HackerOs.AppSdk.IO.HackDirectorySize.HackDirectorySize(long Length, long FileCount, long DirectoryCount, bool IsComplete) -> void
+HackerOs.AppSdk.IO.HackDirectorySize.IsComplete.get -> bool
+HackerOs.AppSdk.IO.HackDirectorySize.IsComplete.init -> void
+HackerOs.AppSdk.IO.HackDirectorySize.Length.get -> long
+HackerOs.AppSdk.IO.HackDirectorySize.Length.init -> void
+override HackerOs.AppSdk.IO.HackDirectorySize.Equals(object? obj) -> bool
+override HackerOs.AppSdk.IO.HackDirectorySize.GetHashCode() -> int
+override HackerOs.AppSdk.IO.HackDirectorySize.ToString() -> string!
+static HackerOs.AppSdk.IO.HackDirectory.GetTotalSizeAsync(string! path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.IO.HackDirectorySize!>!
+static HackerOs.AppSdk.IO.HackDirectorySize.operator !=(HackerOs.AppSdk.IO.HackDirectorySize? left, HackerOs.AppSdk.IO.HackDirectorySize? right) -> bool
+static HackerOs.AppSdk.IO.HackDirectorySize.operator ==(HackerOs.AppSdk.IO.HackDirectorySize? left, HackerOs.AppSdk.IO.HackDirectorySize? right) -> bool

@@ -32,6 +32,8 @@ public sealed partial class ExplorerFileDialogs
     // Properties
     private FileSystemEntryMetadata? _metadata;
     private string? _statError;
+    private FileSystemTreeSize? _folderSize;
+    private bool _folderSizeFailed;
 
     // Conflict
     private bool _applyToAll;
@@ -116,6 +118,10 @@ public sealed partial class ExplorerFileDialogs
             if (stat.Succeeded)
             {
                 _metadata = stat.Value!.Metadata;
+                if (_metadata.Kind == FileSystemEntryKind.Directory)
+                {
+                    _ = MeasureFolderAsync(VirtualPath.Parse(path));
+                }
             }
             else
             {
@@ -127,6 +133,36 @@ public sealed partial class ExplorerFileDialogs
             _statError = L["Error.Item", NameOf(path), exception.Message];
         }
     }
+
+    /// <summary>A folder's total size (ADR 0185 §5), measured after the dialog shows, with the asking app's rights.</summary>
+    private async Task MeasureFolderAsync(VirtualPath path)
+    {
+        try
+        {
+            FileSystemResult<FileSystemTreeSize> measured = await HostContext.FileSystem.MeasureAsync(path, HostContext.CancellationToken);
+            _folderSize = measured.Succeeded ? measured.Value : null;
+            _folderSizeFailed = !measured.Succeeded;
+        }
+        catch (Exception exception) when (exception is AppGatewayAccessDeniedException or OperationCanceledException or InvalidOperationException)
+        {
+            _folderSizeFailed = true;
+        }
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+    /// <summary>The Size line: a file's length, a folder's total with its content counts, or "--".</summary>
+    private string SizeText => _metadata switch
+    {
+        FileMetadata file => L["Properties.Bytes", file.Length.ToString("N0", FormatCulture)],
+        { Kind: FileSystemEntryKind.Directory } when _folderSize is { } size => L[
+            size.IsComplete ? "Properties.FolderSize" : "Properties.FolderSizePartial",
+            size.Length.ToString("N0", FormatCulture),
+            size.FileCount.ToString("N0", FormatCulture),
+            size.DirectoryCount.ToString("N0", FormatCulture)],
+        { Kind: FileSystemEntryKind.Directory } when !_folderSizeFailed => L["Properties.Measuring"],
+        _ => "--"
+    };
 
     private Task ChooseApp(string? appId) =>
         appId is null ? Task.CompletedTask : CompleteAsync(new OpenWithDialogResult(OpenWithDialogStatus.Selected, appId, CanRemember && _alwaysUse));

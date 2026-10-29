@@ -529,4 +529,13 @@
   <data name="Places.Resize" xml:space="preserve">
     <value>Redimensionner le panneau latéral (double-clic : largeur par défaut)</value>
   </data>
+  <data name="Properties.FolderSize" xml:space="preserve">
+    <value>{0} octets ({1} fichiers, {2} dossiers)</value>
+  </data>
+  <data name="Properties.FolderSizePartial" xml:space="preserve">
+    <value>Au moins {0} octets ({1} fichiers, {2} dossiers ; certains dossiers sont illisibles)</value>
+  </data>
+  <data name="Properties.Measuring" xml:space="preserve">
+    <value>Calcul en cours…</value>
+  </data>
 </root>

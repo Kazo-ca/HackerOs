@@ -225,6 +225,10 @@ public sealed class HackDirectoryInfo : HackFileSystemInfo
     /// <summary>Gets the root directory.</summary>
     public HackDirectoryInfo Root => new("/", null, null);
 
+    /// <summary>Gets the total size of this folder's whole content (ADR 0185 §5); see <see cref="HackDirectory.GetTotalSizeAsync"/>.</summary>
+    public Task<HackDirectorySize> GetTotalSizeAsync(CancellationToken cancellationToken = default) =>
+        HackDirectory.GetTotalSizeAsync(FullName, cancellationToken);
+
     /// <summary>Creates the directory and any missing parent, then refreshes the snapshot.</summary>
     public async Task CreateAsync(CancellationToken cancellationToken = default)
     {

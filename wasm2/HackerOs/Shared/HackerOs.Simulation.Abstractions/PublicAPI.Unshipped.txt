@@ -1,4 +1,18 @@
 #nullable enable
+HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeMeasure
+HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize
+HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize.<Clone>$() -> HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize!
+HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize.Deconstruct(out long Length, out long FileCount, out long DirectoryCount, out bool IsComplete) -> void
+HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize.DirectoryCount.get -> long
+HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize.DirectoryCount.init -> void
+HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize.Equals(HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize? other) -> bool
+HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize.FileCount.get -> long
+HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize.FileCount.init -> void
+HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize.FileSystemTreeSize(long Length, long FileCount, long DirectoryCount, bool IsComplete) -> void
+HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize.IsComplete.get -> bool
+HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize.IsComplete.init -> void
+HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize.Length.get -> long
+HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize.Length.init -> void
 HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry
 HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry.<Clone>$() -> HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry!
 HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry.Deconstruct(out string! Name, out HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntryKind Kind, out long Length, out System.DateTimeOffset? LastModifiedUtc) -> void
@@ -60,12 +74,19 @@ HackerOs.Simulation.Abstractions.FileSystem.IHostFolderAccess.ForgetAsync(string
 HackerOs.Simulation.Abstractions.FileSystem.IHostFolderAccess.IsSupportedAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
 HackerOs.Simulation.Abstractions.FileSystem.IHostFolderAccess.LoadAsync(string! key, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.IHostFolder?>
 HackerOs.Simulation.Abstractions.FileSystem.IHostFolderAccess.PickAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.HostFolderPick?>
+HackerOs.Simulation.Abstractions.Gateways.IAppFileSystemGateway.MeasureAsync(HackerOs.App.Abstractions.VirtualPath path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.FileSystemResult<HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize!>!>
+override HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize.Equals(object? obj) -> bool
+override HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize.GetHashCode() -> int
+override HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize.ToString() -> string!
 override HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry.Equals(object? obj) -> bool
 override HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry.GetHashCode() -> int
 override HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry.ToString() -> string!
 override HackerOs.Simulation.Abstractions.FileSystem.HostFolderPick.Equals(object? obj) -> bool
 override HackerOs.Simulation.Abstractions.FileSystem.HostFolderPick.GetHashCode() -> int
 override HackerOs.Simulation.Abstractions.FileSystem.HostFolderPick.ToString() -> string!
+static HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeMeasure.MeasureAsync(HackerOs.App.Abstractions.VirtualPath path, System.Func<HackerOs.App.Abstractions.VirtualPath, System.Threading.CancellationToken, System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.FileSystemResult<HackerOs.Simulation.Abstractions.FileSystem.FileSystemEntrySnapshot!>!>>! stat, System.Func<HackerOs.App.Abstractions.VirtualPath, System.Threading.CancellationToken, System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.FileSystemResult<HackerOs.Simulation.Abstractions.FileSystem.FileSystemDirectorySnapshot!>!>>! enumerate, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.FileSystemResult<HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize!>!>
+static HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize.operator !=(HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize? left, HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize? right) -> bool
+static HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize.operator ==(HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize? left, HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize? right) -> bool
 static HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry.operator !=(HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry? left, HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry? right) -> bool
 static HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry.operator ==(HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry? left, HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry? right) -> bool
 static HackerOs.Simulation.Abstractions.FileSystem.HostFolderPick.operator !=(HackerOs.Simulation.Abstractions.FileSystem.HostFolderPick? left, HackerOs.Simulation.Abstractions.FileSystem.HostFolderPick? right) -> bool

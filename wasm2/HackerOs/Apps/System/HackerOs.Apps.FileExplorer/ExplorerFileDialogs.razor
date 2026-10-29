@@ -78,7 +78,7 @@
                     <dt>@L["Properties.Kind"]</dt>
                     <dd>@KindText(_metadata.Kind)</dd>
                     <dt>@L["Properties.Size"]</dt>
-                    <dd>@(_metadata is FileMetadata file ? L["Properties.Bytes", file.Length.ToString("N0", FormatCulture)] : "--")</dd>
+                    <dd>@SizeText</dd>
                     <dt>@L["Properties.Owner"]</dt>
                     <dd class="mono">@_metadata.OwnerId</dd>
                     <dt>@L["Properties.Permissions"]</dt>

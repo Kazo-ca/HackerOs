@@ -148,6 +148,21 @@ public interface IAppFileSystemGateway
         FileSystemSetPermissionsRequest request, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Measures the total size of a file or of a folder's whole content from the entries' metadata
+    /// (ADR 0185 §5), without reading any content. Defaults to a walk through <see cref="StatAsync"/>
+    /// and <see cref="EnumerateAsync"/>, so every folder below is checked against the caller's rights.
+    /// </summary>
+    /// <param name="path">The file or folder to measure.</param>
+    /// <param name="cancellationToken">Cancels the walk.</param>
+    /// <returns>The totals, or the error of <paramref name="path"/> itself.</returns>
+    ValueTask<FileSystemResult<FileSystemTreeSize>> MeasureAsync(VirtualPath path, CancellationToken cancellationToken = default) =>
+        FileSystemTreeMeasure.MeasureAsync(
+            path,
+            (entry, token) => StatAsync(new FileSystemStatRequest(entry), token),
+            (folder, token) => EnumerateAsync(new FileSystemEnumerateRequest(folder), token),
+            cancellationToken);
+
+    /// <summary>
     /// Applies a trusted, short-lived selected-resource handle (e.g. from a file-open dialog) to
     /// every operation issued by the returned scoped gateway, in place of a broad capability.
     /// </summary>

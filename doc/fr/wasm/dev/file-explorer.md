@@ -317,3 +317,9 @@ Améliorations décidées dans l'[ADR 0185](adr/0185-file-explorer-improvements.
   dialogues l'ont aussi. Souris seulement : jamais au toucher (sur mobile, l'appui long ouvre le menu).
   Un clic, une touche, la molette, un glisser ou la sortie de l'élément la cachent. Tests :
   `FileViewTooltipTests`.
+- [x] `explorer/5-recursive-size` (§5) : taille totale récursive dans le service de fichiers
+  (`IAppFileSystemGateway.MeasureAsync`, `FileSystemTreeSize`, `FileSystemTreeMeasure`) et le SDK
+  (`HackDirectory.GetTotalSizeAsync`, `HackDirectoryInfo.GetTotalSizeAsync`, `HackDirectorySize`, voir
+  [`hack-file-api.md`](../framework/hack-file-api.md)), ajoutés aux `PublicAPI.Unshipped.txt`. Le
+  dialogue Propriétés d'un dossier affiche « 1 234 octets (5 fichiers, 2 dossiers) ». Tests :
+  `HackDirectorySizeTests`.
