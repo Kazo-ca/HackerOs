@@ -314,3 +314,8 @@ as a folder" points (§6 to §9) are not part of this series.
   `FileViewTooltip`), so the desktop and the dialogs get it too. Mouse only: never on touch (on a phone
   the long press opens the menu). A click, a key, the wheel, a drag or leaving the item hides it.
   Tests: `FileViewTooltipTests`.
+- [x] `explorer/5-recursive-size` (§5): recursive total size in the file service
+  (`IAppFileSystemGateway.MeasureAsync`, `FileSystemTreeSize`, `FileSystemTreeMeasure`) and the SDK
+  (`HackDirectory.GetTotalSizeAsync`, `HackDirectoryInfo.GetTotalSizeAsync`, `HackDirectorySize`, see
+  [`hack-file-api.md`](../framework/hack-file-api.md)), added to the `PublicAPI.Unshipped.txt` files. The
+  folder Properties dialog shows "1,234 bytes (5 files, 2 folders)". Tests: `HackDirectorySizeTests`.
