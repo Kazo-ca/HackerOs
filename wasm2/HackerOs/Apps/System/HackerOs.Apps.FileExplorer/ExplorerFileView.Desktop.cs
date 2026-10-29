@@ -320,6 +320,13 @@ public sealed partial class ExplorerFileView
                 item.IconOverride = ShellIconDescriptor.Vector(IconLibrary.Lucide, HackAppIcons.LucideName(entry.AppId, app?.Category));
                 item.IsDimmed = app is null;
             }
+            else if (state.Link is { } link)
+            {
+                // ADR 0185 §13: a shortcut to a file or a folder, greyed when its target is gone.
+                item.DisplayName = link.Name;
+                item.IconOverride = ShellIconDescriptor.Vector(IconLibrary.Lucide, state.LinkToFolder == true ? "folder-symlink" : "file-symlink");
+                item.IsDimmed = state.LinkToFolder is null;
+            }
 
             return;
         }
@@ -356,7 +363,7 @@ public sealed partial class ExplorerFileView
             {
                 (string path, long revision) = _pendingShortcuts.First();
                 _pendingShortcuts.Remove(path);
-                _shortcuts[path] = new ShortcutState(revision, await ReadShortcutAsync(path));
+                _shortcuts[path] = await ReadShortcutAsync(path, revision);
             }
         }
         finally
@@ -380,22 +387,54 @@ public sealed partial class ExplorerFileView
         }
     }
 
-    private async Task<HackDesktopEntry?> ReadShortcutAsync(string path)
+    /// <summary>Reads a <c>.desktop</c> file: an app shortcut, a link to a file or folder (with its target's kind), or neither.</summary>
+    private async Task<ShortcutState> ReadShortcutAsync(string path, long revision)
+    {
+        string content;
+        try
+        {
+            content = await HackFile.ReadAllTextAsync(path, HostContext.CancellationToken);
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+        {
+            return new ShortcutState(revision, null);
+        }
+
+        if (HackDesktopEntry.TryParse(content, out HackDesktopEntry? entry))
+        {
+            return new ShortcutState(revision, entry);
+        }
+
+        if (HackDesktopLink.TryParse(content, out HackDesktopLink? link))
+        {
+            return new ShortcutState(revision, null, link, await IsFolderAsync(link.Target));
+        }
+
+        return new ShortcutState(revision, null);
+    }
+
+    /// <summary>Whether <paramref name="path"/> is a folder (<see langword="true"/>), a file (<see langword="false"/>), or not there (<see langword="null"/>).</summary>
+    private async Task<bool?> IsFolderAsync(string path)
     {
         try
         {
-            string content = await HackFile.ReadAllTextAsync(path, HostContext.CancellationToken);
-            return HackDesktopEntry.TryParse(content, out HackDesktopEntry? entry) ? entry : null;
+            if (await HackDirectory.ExistsAsync(path, HostContext.CancellationToken))
+            {
+                return true;
+            }
+
+            return await HackFile.ExistsAsync(path, HostContext.CancellationToken) ? false : null;
         }
-        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or ArgumentException)
         {
             return null;
         }
     }
 
     /// <summary>
-    /// Opening a shortcut launches its app with its arguments (ADR 0152 §5); <see langword="false"/> when
-    /// the file is not a shortcut, which then opens as any file.
+    /// Opening a shortcut launches its app with its arguments (ADR 0152 §5), or opens the file or folder
+    /// it links to (ADR 0185 §13); <see langword="false"/> when the file is not a shortcut, which then
+    /// opens as any file.
     /// </summary>
     private async Task<bool> TryLaunchShortcutAsync(FileViewItem item)
     {
@@ -404,10 +443,16 @@ public sealed partial class ExplorerFileView
             return false;
         }
 
-        HackDesktopEntry? entry = _shortcuts.TryGetValue(item.FullPath.Value, out ShortcutState? state) && state.Revision == item.Metadata.Revision
-            ? state.Entry
-            : await ReadShortcutAsync(item.FullPath.Value);
-        if (entry is null)
+        ShortcutState state = _shortcuts.TryGetValue(item.FullPath.Value, out ShortcutState? known) && known.Revision == item.Metadata.Revision
+            ? known
+            : await ReadShortcutAsync(item.FullPath.Value, item.Metadata.Revision);
+        if (state.Link is { } link)
+        {
+            await OpenLinkAsync(link);
+            return true;
+        }
+
+        if (state.Entry is not { } entry)
         {
             return false;
         }
@@ -437,6 +482,48 @@ public sealed partial class ExplorerFileView
         return true;
     }
 
+    /// <summary>
+    /// Opens the target of a link shortcut: a folder is entered (in a new explorer window on a desktop),
+    /// a file opens with its app. The target is checked again: it may have moved since the listing.
+    /// </summary>
+    private async Task OpenLinkAsync(HackDesktopLink link)
+    {
+        bool? folder = await IsFolderAsync(link.Target);
+        if (folder is null)
+        {
+            await ReportErrorAsync(L["Error.LinkTargetMissing", link.Target]);
+            return;
+        }
+
+        VirtualPath target = VirtualPath.Parse(link.Target);
+        if (folder == false)
+        {
+            await OpenPathAsync(target);
+        }
+        else if (IsDesktop || _view is null)
+        {
+            try
+            {
+                await HostContext.Intents.OpenFileAsync(target, "inode/directory", HostContext.CancellationToken);
+            }
+            catch (Exception exception) when (exception is AppGatewayAccessDeniedException or NotSupportedException)
+            {
+                await ReportErrorAsync(L["Error.OpenDenied"]);
+            }
+        }
+        else
+        {
+            try
+            {
+                await _view.NavigateAsync(target);
+            }
+            catch (InvalidOperationException exception)
+            {
+                await ReportErrorAsync(exception.Message);
+            }
+        }
+    }
+
     /// <summary>An app dropped from the Start menu: a shortcut to it in <paramref name="destination"/> (ADR 0160 §6).</summary>
     private async Task CreateShortcutsAsync(IReadOnlyList<string> appIds, VirtualPath destination)
     {
@@ -460,6 +547,10 @@ public sealed partial class ExplorerFileView
         }
     }
 
-    /// <summary>A shortcut read at one revision of its file; <see cref="Entry"/> is <see langword="null"/> for a file that is not one.</summary>
-    private sealed record ShortcutState(long Revision, HackDesktopEntry? Entry);
+    /// <summary>
+    /// A <c>.desktop</c> file read at one revision: an app shortcut (<see cref="Entry"/>), a link
+    /// (<see cref="Link"/>, with <see cref="LinkToFolder"/> <see langword="null"/> when its target is gone),
+    /// or neither for a file that is not a shortcut.
+    /// </summary>
+    private sealed record ShortcutState(long Revision, HackDesktopEntry? Entry, HackDesktopLink? Link = null, bool? LinkToFolder = null);
 }

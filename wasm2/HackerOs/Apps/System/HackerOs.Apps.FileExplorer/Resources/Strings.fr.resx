@@ -538,4 +538,37 @@
   <data name="Properties.Measuring" xml:space="preserve">
     <value>Calcul en cours…</value>
   </data>
+  <data name="Error.LinkTargetMissing" xml:space="preserve">
+    <value>Ce raccourci ouvre {0}, qui n'existe plus.</value>
+  </data>
+  <data name="Error.CopyPath" xml:space="preserve">
+    <value>Impossible de copier le chemin : {0}</value>
+  </data>
+  <data name="Error.SendToDesktop" xml:space="preserve">
+    <value>Impossible de mettre un raccourci vers {0} sur le bureau : {1}</value>
+  </data>
+  <data name="Menu.Compress" xml:space="preserve">
+    <value>Compresser en .zip…</value>
+  </data>
+  <data name="Menu.Download" xml:space="preserve">
+    <value>Télécharger</value>
+  </data>
+  <data name="Menu.CopyPath" xml:space="preserve">
+    <value>Copier le chemin</value>
+  </data>
+  <data name="Menu.SendTo" xml:space="preserve">
+    <value>Envoyer vers</value>
+  </data>
+  <data name="Menu.SendTo.Desktop" xml:space="preserve">
+    <value>Bureau (créer un raccourci)</value>
+  </data>
+  <data name="Menu.SendTo.Zip" xml:space="preserve">
+    <value>Dossier compressé (.zip)</value>
+  </data>
+  <data name="Menu.SendTo.Computer" xml:space="preserve">
+    <value>Mon ordinateur (télécharger)</value>
+  </data>
+  <data name="Menu.SendTo.Drive" xml:space="preserve">
+    <value>{0} (lecteur réseau)</value>
+  </data>
 </root>
