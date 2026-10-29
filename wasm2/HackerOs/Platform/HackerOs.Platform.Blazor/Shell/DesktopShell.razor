@@ -72,7 +72,7 @@
 
     @if (_launcher.IsOpen && _launcher.Display.IsPrimary)
     {
-        <AppLauncher OnClose="CloseLauncher" OnAppSelected="HandleAppSelected" OnSendToDesktop="SendToDesktopCallback" />
+        <AppLauncher OnClose="CloseLauncher" OnAppSelected="HandleAppSelected" OnSendToDesktop="SendToDesktopCallback" OnCreateAccount="OpenUsersSettingsAsync" />
     }
 
     @if (!string.IsNullOrEmpty(_launchError))
@@ -164,6 +164,12 @@
             ? HandleAppSelected(settings)
             : Task.CompletedTask;
 
+    /// <summary>ADR 0187 section 5: the guest's Start menu reminder opens Settings ▸ Users.</summary>
+    private Task OpenUsersSettingsAsync() =>
+        Catalog.Manifests.TryGetValue(SettingsAppId, out AppManifest? settings)
+            ? LaunchAsync(settings, ["--page=users"])
+            : Task.CompletedTask;
+
     /// <summary>The Settings app, opened from the server icon's panel.</summary>
     private const string SettingsAppId = "org.hackeros.settings";
 
@@ -213,7 +219,7 @@
         @<text>
             @if (_launcher.IsOpen && _launcher.Display == screen.Id)
             {
-                <AppLauncher OnClose="CloseLauncher" OnAppSelected="HandleAppSelected" OnSendToDesktop="SendToDesktopCallback" />
+                <AppLauncher OnClose="CloseLauncher" OnAppSelected="HandleAppSelected" OnSendToDesktop="SendToDesktopCallback" OnCreateAccount="OpenUsersSettingsAsync" />
             }
             <HackerOs.Taskbar.Blazor.Taskbar WindowSource="ScreenTaskbarSource(screen.Id)"
                                               Commands="_taskbarCommands"
@@ -322,7 +328,9 @@
         }
     }
 
-    private async Task HandleAppSelected(AppManifest manifest)
+    private Task HandleAppSelected(AppManifest manifest) => LaunchAsync(manifest, []);
+
+    private async Task LaunchAsync(AppManifest manifest, IReadOnlyList<string> arguments)
     {
         // ADR 0179 §1: an app started from a screen's Start menu opens on that screen; from screen 1's
         // notification area, on screen 1.
@@ -337,7 +345,7 @@
         using (LaunchCoordinator.OpenOnDisplay(manifest.Id, display))
         {
             result = await Orchestrator.LaunchAsync(
-                new AppLaunchRequest(manifest.Id, principal, []));
+                new AppLaunchRequest(manifest.Id, principal, arguments));
             if (result.IsSuccess)
             {
                 await LaunchCoordinator.PresentAsync(manifest, result);

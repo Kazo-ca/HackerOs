@@ -738,6 +738,31 @@ public sealed class AppLifecycleOrchestrator
     }
 
     /// <summary>
+    /// Stops every app instance of one login session, windows included, through the bounded stop
+    /// path (each app may keep a recovery draft first): what a sign-out does before the session
+    /// ends, as <c>loginctl terminate-session</c>. The shell still shown closes their windows, so
+    /// none is left for the next session.
+    /// </summary>
+    /// <param name="sessionId">The session that is ending.</param>
+    /// <param name="reason">Reason recorded against stopped processes (<see cref="ProcessExitReason.Logout"/>).</param>
+    /// <returns>How many instances were stopped.</returns>
+    public async Task<int> StopSessionAppsAsync(SessionId sessionId, ProcessExitReason reason = ProcessExitReason.Logout)
+    {
+        List<KeyValuePair<ProcessId, RunningInstance>> snapshot;
+        lock (_sync)
+        {
+            snapshot = [.. _running.Where(entry => entry.Value.Context.SessionId == sessionId)];
+        }
+
+        foreach ((ProcessId pid, RunningInstance instance) in snapshot)
+        {
+            await StopInstanceAsync(pid, instance, reason).ConfigureAwait(false);
+        }
+
+        return snapshot.Count;
+    }
+
+    /// <summary>
     /// Gets when an automatic service actually starts (ADR 0097, section 4): <see cref="AppServiceStartup.Boot"/>
     /// only for a system app; a non-system app asking for it starts at login, with a warning in
     /// <c>/var/log/syslog</c> (once per boot).

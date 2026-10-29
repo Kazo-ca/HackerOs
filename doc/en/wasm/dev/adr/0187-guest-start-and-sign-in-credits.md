@@ -7,7 +7,8 @@
 Accepted on 2026-10-29. Decisions made with Benoit in the thread "Démarrer en invité et
 crédits de connexion" (questions 1 to 10 asked on 2026-10-28, answers on 2026-10-29).
 Part B (credits, §7 to §9) implemented on 2026-10-29 (branch `login/1-credits`). Part A
-(guest account) not implemented yet: the work is recorded in the to-do list.
+(guest account) implemented on 2026-10-29 (`guest/base` series, PRs #279, #281 and #286);
+see "Implementation" below and [`guest-account.md`](../guest-account.md).
 
 - **Complements:** [ADR 0013](0013-local-user-session.md) (local accounts and session),
   [ADR 0120](0120-passwd-and-administrator-password-reset.md) (`passwd`, Settings ▸ Users),
@@ -176,3 +177,26 @@ One PR per work item; credits first (small and independent).
 5. "Create my account" form with the migrate / delete choice: sign-in page, Settings ▸ Users
    (banner), Start menu tile (§4, §5).
 6. Documentation: `settings-app.md`, user guide, FR and EN.
+
+All items are done (2026-10-29).
+
+## Implementation
+
+Differences and details compared with the decision (part A):
+
+- **The form belongs to the OS.** "Create my account" shows on the sign-in screen, like the
+  first account form. From Settings ▸ Users or the Start menu, the app asks the OS for this
+  form (`HackUserAccounts.RequestGuestAccountCreationAsync`): the guest session closes (its
+  apps stop), then the form opens. The app therefore never sees the password, and the
+  conversion runs with no session open, like `usermod`, which refuses a signed-in user. The
+  new account's session then opens.
+- **The home folder is copied, not renamed.** The folders the system created for the guest
+  belong to the `guest` login name; they are copied as the new login (like `cp -a` then
+  `chown -R`), then `/home/guest` is deleted. Modification dates are those of the copy.
+- **Keyring.** The guest has no keyring (no password): nothing to re-encrypt; the account's
+  keyring is created at its first sign-in.
+- **Rewritten paths**: text files of `~/.config` and symbolic link targets.
+- **Sign-out.** While testing, two faults of the normal sign-out were fixed: the screen
+  stayed on the boot screen after "Sign out", and windows of the previous session stayed
+  open. The session's apps are now stopped before the session ends
+  (`AppLifecycleOrchestrator.StopSessionAppsAsync`).

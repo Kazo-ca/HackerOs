@@ -1497,4 +1497,19 @@
   <data name="Screens.Error.Request" xml:space="preserve">
     <value>The request failed: {0}</value>
   </data>
+  <data name="Users.Guest.Title" xml:space="preserve">
+    <value>You are using the guest account</value>
+  </data>
+  <data name="Users.Guest.Description" xml:space="preserve">
+    <value>The guest account has no password. Create your own account to protect your files: you can keep the guest's files, settings and apps, or start over with an empty account.</value>
+  </data>
+  <data name="Users.Guest.SignOutNotice" xml:space="preserve">
+    <value>The guest session closes first: save your work in open apps.</value>
+  </data>
+  <data name="Users.Guest.Create" xml:space="preserve">
+    <value>Create my account</value>
+  </data>
+  <data name="Users.Guest.Unavailable" xml:space="preserve">
+    <value>The account form could not be opened. Sign out, then choose Create my account on the sign-in screen.</value>
+  </data>
 </root>

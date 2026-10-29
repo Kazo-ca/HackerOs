@@ -23,6 +23,24 @@ public sealed class EcosystemHostStateTests
     }
 
     [Fact]
+    public void The_lone_guest_is_offered_without_a_password_form()
+    {
+        EcosystemHostState state = new();
+        LocalUser guest = CreateUser("guest") with { IsGuest = true };
+
+        state.CompleteIdentityLoad([guest]);
+        Assert.Equal(EcosystemHostView.Login, state.View);
+        Assert.Same(guest, state.LoneGuest);
+
+        state.CompleteIdentityLoad([guest, CreateUser("alice")]);
+        Assert.Null(state.LoneGuest);
+
+        // The mark identifies the guest, not the login name.
+        state.CompleteIdentityLoad([CreateUser("guest")]);
+        Assert.Null(state.LoneGuest);
+    }
+
+    [Fact]
     public void Recovery_fatal_desktop_and_update_states_are_explicit()
     {
         EcosystemHostState state = new();

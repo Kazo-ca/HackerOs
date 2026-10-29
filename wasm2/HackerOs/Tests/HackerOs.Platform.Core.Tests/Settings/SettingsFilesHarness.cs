@@ -26,7 +26,7 @@ internal sealed class SettingsFilesHarness
     private int _transactionId = 100;
     private readonly DateTimeOffset _now = new(2026, 10, 10, 12, 0, 0, TimeSpan.Zero);
 
-    internal SettingsFilesHarness(ILegacySettingsStore? legacyStore = null, bool withKeyring = false)
+    internal SettingsFilesHarness(ILegacySettingsStore? legacyStore = null, bool withKeyring = false, bool withAccounts = true)
     {
         TimeProvider timeProvider = new FixedTimeProvider(_now);
         InMemoryFileSystemRepository repository = new(
@@ -47,15 +47,23 @@ internal sealed class SettingsFilesHarness
         Migration = new SettingsStoreToFilesMigration(FileSystem, Clock, legacyStore ?? new EmptyLegacySettingsStore());
 
         Users = new InMemoryLocalUserRepository(() => _now);
-        InMemoryLocalGroupRepository groups = new();
-        LocalGroup aliceGroup = groups.CreateGroup(LocalLoginName.Parse("alice"));
-        LocalGroup bobGroup = groups.CreateGroup(LocalLoginName.Parse("bob"));
-        Alice = Users.CreateUser(
-            LocalLoginName.Parse("alice"), "Alice", AppAuthority.User, aliceGroup.Id,
-            credential: LocalPasswordHasher.Create(Password, iterations: 100));
-        Bob = Users.CreateUser(
-            LocalLoginName.Parse("bob"), "Bob", AppAuthority.User, bobGroup.Id,
-            credential: LocalPasswordHasher.Create(Password, iterations: 100));
+        if (withAccounts)
+        {
+            LocalGroup aliceGroup = Groups.CreateGroup(LocalLoginName.Parse("alice"));
+            LocalGroup bobGroup = Groups.CreateGroup(LocalLoginName.Parse("bob"));
+            Alice = Users.CreateUser(
+                LocalLoginName.Parse("alice"), "Alice", AppAuthority.User, aliceGroup.Id,
+                credential: LocalPasswordHasher.Create(Password, iterations: 100));
+            Bob = Users.CreateUser(
+                LocalLoginName.Parse("bob"), "Bob", AppAuthority.User, bobGroup.Id,
+                credential: LocalPasswordHasher.Create(Password, iterations: 100));
+        }
+        else
+        {
+            // A fresh installation (ADR 0187): no account at all.
+            Alice = null!;
+            Bob = null!;
+        }
 
         // ADR 0100: a keyring with .NET's AES-GCM and a tiny work factor, unlocked by the session.
         Keyring = withKeyring
@@ -83,6 +91,7 @@ internal sealed class SettingsFilesHarness
     internal InMemoryEventBus EventBus { get; }
     internal ManualSimulationClock Clock { get; }
     internal InMemoryLocalUserRepository Users { get; }
+    internal InMemoryLocalGroupRepository Groups { get; } = new();
     internal LocalUser Alice { get; }
     internal LocalUser Bob { get; }
     internal LocalSessionService Session { get; }

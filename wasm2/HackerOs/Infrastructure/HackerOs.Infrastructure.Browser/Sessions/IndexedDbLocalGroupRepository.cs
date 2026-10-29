@@ -86,6 +86,45 @@ public sealed class IndexedDbLocalGroupRepository : ILocalGroupRepository, IAsyn
     }
 
     /// <inheritdoc />
+    public async ValueTask<LocalGroup> RenameGroupAsync(
+        LocalGroupId id,
+        LocalLoginName name,
+        CancellationToken cancellationToken = default)
+    {
+        if (await FindByIdAsync(id, cancellationToken).ConfigureAwait(false) is null)
+        {
+            throw new InvalidOperationException($"Local group '{id}' does not exist.");
+        }
+
+        LocalGroup renamed = new(id, name);
+        try
+        {
+            await _adapter.ExecuteAsync(
+                TransactionBoundary,
+                IndexedDbTransactionMode.ReadWrite,
+                [new IndexedDbOperation("put", HackerOsIndexedDbSchema.GroupStoreName, Value: LocalGroupRecord.FromDomain(renamed))],
+                cancellationToken).ConfigureAwait(false);
+        }
+        catch (JSException exception) when (exception.Message.Contains("ConstraintError", StringComparison.Ordinal))
+        {
+            throw new InvalidOperationException($"Group name '{name}' is already in use.", exception);
+        }
+
+        return renamed;
+    }
+
+    /// <inheritdoc />
+    public async ValueTask DeleteGroupAsync(LocalGroupId id, CancellationToken cancellationToken = default)
+    {
+        await EnsureOpenAsync(cancellationToken).ConfigureAwait(false);
+        await _adapter.ExecuteAsync(
+            TransactionBoundary,
+            IndexedDbTransactionMode.ReadWrite,
+            [new IndexedDbOperation("delete", HackerOsIndexedDbSchema.GroupStoreName, Key: id.ToString())],
+            cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
     public ValueTask DisposeAsync() => _adapter.DisposeAsync();
 
     private ValueTask EnsureOpenAsync(CancellationToken cancellationToken) =>

@@ -65,6 +65,23 @@ public partial class AppLauncher : ComponentBase, IDisposable
     [Parameter]
     public EventCallback<AppManifest> OnAppSelected { get; set; }
 
+    /// <summary>
+    /// Raised by the guest's "Create my account" reminder (ADR 0187 section 5): the desktop shell
+    /// opens Settings ▸ Users.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnCreateAccount { get; set; }
+
+    /// <summary>The guest account is the only one named <c>guest</c>: the login is reserved (ADR 0187).</summary>
+    private bool IsGuestSession => OnCreateAccount.HasDelegate
+        && _principal?.LoginName.Value == HackerOs.Platform.Core.Sessions.GuestAccountService.LoginName;
+
+    private async Task CreateAccountAsync()
+    {
+        await CloseAsync();
+        await OnCreateAccount.InvokeAsync();
+    }
+
     private bool HasSearchQuery => !string.IsNullOrWhiteSpace(_searchQuery);
 
     private bool CanManagePins => _principal is not null && !_isUpdatingPreferences;

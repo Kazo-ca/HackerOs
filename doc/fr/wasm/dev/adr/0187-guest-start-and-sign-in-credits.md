@@ -7,7 +7,8 @@
 Accepté le 2026-10-29. Décisions prises avec Benoit dans le fil « Démarrer en invité et
 crédits de connexion » (questions 1 à 10 posées le 2026-10-28, réponses le 2026-10-29).
 Partie B (crédits, §7 à §9) mise en œuvre le 2026-10-29 (branche `login/1-credits`). Partie A
-(compte invité) pas encore mise en œuvre : le travail est noté dans les choses à faire.
+(compte invité) mise en œuvre le 2026-10-29 (série `guest/base`, PR #279, #281 et #286) ;
+voir « Mise en œuvre » plus bas et [`guest-account.md`](../guest-account.md).
 
 - **Complète :** [ADR 0013](0013-local-user-session.md) (comptes et session locale),
   [ADR 0120](0120-passwd-and-administrator-password-reset.md) (`passwd`, Paramètres ▸
@@ -184,3 +185,29 @@ Une PR par chantier ; les crédits d'abord (petit et indépendant).
 5. Formulaire « Créer mon compte » avec le choix migrer / supprimer : page de connexion,
    Paramètres ▸ Utilisateurs (bandeau), tuile du menu Démarrer (§4, §5).
 6. Documentation : `settings-app.md`, guide de l'utilisateur, FR et EN.
+
+Tous les points sont faits (2026-10-29).
+
+## Mise en œuvre
+
+Écarts et précisions par rapport à la décision (partie A) :
+
+- **Le formulaire appartient à l'OS.** « Créer mon compte » s'affiche sur l'écran de
+  connexion, comme le formulaire du premier compte. Depuis Paramètres ▸ Utilisateurs ou le
+  menu Démarrer, l'app demande ce formulaire à l'OS
+  (`HackUserAccounts.RequestGuestAccountCreationAsync`) : la session invité se ferme (ses
+  apps s'arrêtent), puis le formulaire s'ouvre. L'app ne voit donc jamais le mot de passe,
+  et la conversion se fait sans session ouverte, comme `usermod` qui refuse un utilisateur
+  connecté. Ensuite la session du compte créé s'ouvre.
+- **Le dossier personnel est copié, pas renommé.** Les dossiers que le système a créés pour
+  l'invité appartiennent au nom de connexion `guest` ; ils sont donc recopiés au nom du
+  nouveau login (comme `cp -a` puis `chown -R`), puis `/home/guest` est supprimé. Les dates
+  de modification sont celles de la copie.
+- **Trousseau.** L'invité n'a pas de trousseau (pas de mot de passe) : rien à rechiffrer ; le
+  trousseau du compte est créé à sa première connexion.
+- **Réécriture des chemins** : fichiers texte de `~/.config` et cibles des liens symboliques.
+- **Fermeture de session.** En testant, deux défauts de la fermeture de session normale ont
+  été corrigés : l'écran restait sur le démarrage après « Fermer la session », et les
+  fenêtres de la session précédente restaient ouvertes. Les apps de la session sont
+  maintenant arrêtées avant la fin de la session
+  (`AppLifecycleOrchestrator.StopSessionAppsAsync`).

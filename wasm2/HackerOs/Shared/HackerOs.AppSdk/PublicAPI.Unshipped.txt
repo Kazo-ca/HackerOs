@@ -230,3 +230,8 @@ static HackerOs.AppSdk.Files.HackDesktopLink.ToUrl(string! path) -> string!
 static HackerOs.AppSdk.Files.HackDesktopLink.TryParse(string? content, out HackerOs.AppSdk.Files.HackDesktopLink? link) -> bool
 static HackerOs.AppSdk.Files.HackDesktopLink.operator !=(HackerOs.AppSdk.Files.HackDesktopLink? left, HackerOs.AppSdk.Files.HackDesktopLink? right) -> bool
 static HackerOs.AppSdk.Files.HackDesktopLink.operator ==(HackerOs.AppSdk.Files.HackDesktopLink? left, HackerOs.AppSdk.Files.HackDesktopLink? right) -> bool
+HackerOs.AppSdk.Administration.HackUserAccount.IsGuest.get -> bool
+HackerOs.AppSdk.Administration.HackUserAccount.IsGuest.init -> void
+HackerOs.AppSdk.Administration.IAppUserAccountsGateway.RequestGuestAccountCreationAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+static HackerOs.AppSdk.Administration.HackUserAccounts.RequestGuestAccountCreationAsync(HackerOs.AppSdk.IAppExecutionContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
+static HackerOs.AppSdk.Administration.HackUserAccounts.RequestGuestAccountCreationAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!

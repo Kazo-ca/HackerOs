@@ -250,3 +250,10 @@
     font-size: 0.72rem;
     color: #6f838e;
 }
+
+/* ADR 0187: the lone guest confirms without a password. */
+.dca-guest-confirm {
+    margin: 0;
+    font-size: 0.85rem;
+    line-height: 1.5;
+}

@@ -52,6 +52,12 @@ public sealed record SystemAdministrationGatewayServices(
     public Func<PasskeyService>? Passkeys { get; init; }
 
     /// <summary>
+    /// Gets the "Create my account" requests behind <c>HackUserAccounts</c> (ADR 0187); <see langword="null"/>
+    /// on a host without a guest account.
+    /// </summary>
+    public Func<GuestAccountRequests>? GuestRequests { get; init; }
+
+    /// <summary>
     /// Gets the service behind <c>HackComponentProviders</c> (ADR 0156); <see langword="null"/> leaves
     /// the gateway unsupported.
     /// </summary>

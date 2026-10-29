@@ -1,3 +1,5 @@
+using HackerOs.App.Abstractions.Policy;
+using HackerOs.Platform.Core.Elevation;
 using HackerOs.Platform.Core.Policy;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -35,6 +37,7 @@ public sealed partial class DangerousCapabilityApprovalOverlay
     private string? _error;
     private bool _isVerifying;
     private bool _focusPending;
+    private bool _confirmOnly;
 
     /// <summary>Gets or sets the overlay's texts, in the session language (ADR 0104).</summary>
     [Inject]
@@ -44,8 +47,16 @@ public sealed partial class DangerousCapabilityApprovalOverlay
     [Inject]
     public DangerousCapabilityApprovalBroker Broker { get; set; } = default!;
 
-    /// <summary>Gets whether <em>Allow</em> is enabled: a name and a password are both required.</summary>
-    private bool CanApprove => !_isVerifying && !string.IsNullOrWhiteSpace(_login) && !string.IsNullOrEmpty(_password);
+    /// <summary>Gets or sets the services, to reach the verifier when the host has one (ADR 0187).</summary>
+    [Inject]
+    private IServiceProvider Services { get; set; } = default!;
+
+    /// <summary>
+    /// Gets whether <em>Allow</em> is enabled: a name and a password are both required, except for
+    /// the lone guest of ADR 0187, who confirms without a password.
+    /// </summary>
+    private bool CanApprove =>
+        !_isVerifying && !string.IsNullOrWhiteSpace(_login) && (_confirmOnly || !string.IsNullOrEmpty(_password));
 
     /// <inheritdoc />
     protected override void OnInitialized()
@@ -67,7 +78,10 @@ public sealed partial class DangerousCapabilityApprovalOverlay
         try
         {
             // Take the keyboard as soon as the overlay appears, like a secure desktop.
-            await (string.IsNullOrEmpty(_login) ? _loginInput : _passwordInput).FocusAsync();
+            if (!_confirmOnly)
+            {
+                await (string.IsNullOrEmpty(_login) ? _loginInput : _passwordInput).FocusAsync();
+            }
         }
         catch (InvalidOperationException)
         {
@@ -101,7 +115,34 @@ public sealed partial class DangerousCapabilityApprovalOverlay
         _password = string.Empty;
         _error = null;
         _isVerifying = false;
+        _confirmOnly = false;
         _focusPending = next is not null;
+        if (next is not null)
+        {
+            _ = ShowGuestConfirmationAsync(next);
+        }
+    }
+
+    /// <summary>
+    /// ADR 0187 section 2: when the suggested administrator is the lone guest, the window asks for a
+    /// plain confirmation. The verifier still decides: it accepts the empty password for that account only.
+    /// </summary>
+    private async Task ShowGuestConfirmationAsync(DangerousCapabilityApprovalBroker.PendingApproval pending)
+    {
+        if (Services.GetService(typeof(IAdminElevationVerifier)) is not AdminElevationVerifier verifier
+            || !await verifier.CanConfirmWithoutPasswordAsync(pending.Request.SuggestedAdministratorLogin))
+        {
+            return;
+        }
+
+        await InvokeAsync(() =>
+        {
+            if (ReferenceEquals(_current, pending))
+            {
+                _confirmOnly = true;
+                StateHasChanged();
+            }
+        });
     }
 
     private async Task ApproveAsync()
@@ -113,7 +154,7 @@ public sealed partial class DangerousCapabilityApprovalOverlay
 
         _isVerifying = true;
         _error = null;
-        string password = _password;
+        string password = _confirmOnly ? string.Empty : _password;
         _password = string.Empty;
         DangerousCapabilityApprovalAttempt attempt;
         try
