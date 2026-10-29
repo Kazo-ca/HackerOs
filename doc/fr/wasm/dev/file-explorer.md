@@ -344,3 +344,15 @@ Améliorations décidées dans l'[ADR 0185](adr/0185-file-explorer-improvements.
   s'arrêtent quand la vue quitte le dossier. Les modes Détails, arbre
   et bureau ne changent pas ; une icône remplacée (raccourci) n'a pas d'aperçu. Tests :
   `FileViewFolderPreviewTests`.
+- [x] `explorer/8-network-drive-refresh` (§15) : un dossier de lecteur réseau affiché (ou surveillé
+  par n'importe quelle app) suit les changements faits sur l'ordinateur hôte. Quand une app surveille
+  un dossier d'un lecteur réseau (`AppFileSystemWatchGateway`), le service de fichiers
+  (`IExternalFileSystemChanges.TrackExternalChanges`) relit ce dossier toutes les 5 secondes pendant
+  que la page est visible, tout de suite quand elle revient (onglet réaffiché ou focus,
+  `IHostActivitySignal` / `BrowserHostActivitySignal`), et tout de suite quand le `FileSystemObserver`
+  du navigateur signale un changement (`IObservableHostFolder`, Chrome récent). Chaque lecture est
+  comparée à la précédente (`HostFolderChangeTracker`) : les éléments créés, supprimés ou modifiés
+  sont publiés par le même chemin que les écritures de l'OS, et la révision du dossier monte. Une
+  seule boucle par dossier, arrêtée quand la dernière surveillance se termine. Tests :
+  `HostFolderChangeTrackerTests`. Non vérifié dans un vrai navigateur : il faut un vrai dossier hôte
+  choisi par l'utilisateur.

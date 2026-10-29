@@ -32,7 +32,7 @@ namespace HackerOs.Platform.Core.FileSystem;
 /// provider, while the system (logs) and the administrator keep writing.
 /// </para>
 /// </remarks>
-public sealed class FileSystemService : IFileSystemService
+public sealed class FileSystemService : IFileSystemService, IExternalFileSystemChanges
 {
     private readonly IFileSystemMountRouter _router;
     private readonly IFileSystemPathResolver _pathResolver;
@@ -43,6 +43,7 @@ public sealed class FileSystemService : IFileSystemService
     private readonly IProcessIoAccounting? _ioAccounting;
     private readonly IFileSystemAuditSink? _audit;
     private readonly IStorageSpaceGuard? _spaceGuard;
+    private HostFolders.HostFolderChangeTracker? _hostChanges;
 
     /// <summary>Initializes the mounted filesystem service.</summary>
     /// <param name="router">Mount table.</param>
@@ -92,6 +93,13 @@ public sealed class FileSystemService : IFileSystemService
 
     /// <inheritdoc />
     public string ProviderId => "mounted-filesystem";
+
+    /// <summary>
+    /// Gets or sets whether the page is visible, for the network drives' outside changes (ADR 0185 §15):
+    /// a watched folder is listed again on a timer only while it is; <see langword="null"/> counts it
+    /// always visible. Read when the first folder is tracked.
+    /// </summary>
+    public IHostActivitySignal? HostActivity { get; set; }
 
     /// <inheritdoc />
     public async ValueTask<FileSystemResult<FileSystemContentReadHandle>> ReadAsync(
@@ -858,6 +866,23 @@ public sealed class FileSystemService : IFileSystemService
             handle.Entry,
             handle.Descriptor,
             new ReadCountingStream(handle.Content, read => accounting.RecordRead(pid, read, fromStorage)));
+    }
+
+    /// <inheritdoc />
+    /// <remarks>Only the folders of a network drive change outside the OS (ADR 0185 §15); any other folder returns <see langword="null"/>.</remarks>
+    public IDisposable? TrackExternalChanges(VirtualPath directory)
+    {
+        if (_router.Resolve(directory).Mount.Provider is not HostFolders.HostFolderFileSystemProvider drive)
+        {
+            return null;
+        }
+
+        HostFolders.HostFolderChangeTracker tracker = LazyInitializer.EnsureInitialized(
+            ref _hostChanges,
+            () => new HostFolders.HostFolderChangeTracker(
+                (path, entryKind, revision, kind) => PublishChange(path, entryKind, revision, kind),
+                HostActivity));
+        return tracker.Track(drive, directory);
     }
 
     /// <summary>Publishes one change notification for <paramref name="affectedPath"/> to its parent directory's topic.</summary>

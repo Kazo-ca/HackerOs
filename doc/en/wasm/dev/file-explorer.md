@@ -337,3 +337,14 @@ as a folder" points (§6 to §9) are not part of this series.
   previewed folder is watched (its immediate children, 64 folders at most): a change inside it reads
   the preview again while the old one stays drawn; these watches end when the view leaves the folder. Details, tree and desktop modes do not change;
   a replaced icon (shortcut) gets no preview. Tests: `FileViewFolderPreviewTests`.
+- [x] `explorer/8-network-drive-refresh` (§15): a network drive folder that is shown (or watched by
+  any app) follows the changes made on the host computer. When an app watches a network drive folder
+  (`AppFileSystemWatchGateway`), the file service (`IExternalFileSystemChanges.TrackExternalChanges`)
+  lists that folder again every 5 seconds while the page is visible, at once when the page comes back
+  (tab shown again or focus, `IHostActivitySignal` / `BrowserHostActivitySignal`), and at once when
+  the browser's `FileSystemObserver` reports a change (`IObservableHostFolder`, recent Chrome). Each
+  listing is compared with the previous one (`HostFolderChangeTracker`): created, deleted or modified
+  entries are published through the same path as the OS's own writes, and the folder's revision is
+  raised. One loop per folder, stopped when the last watch ends. Tests:
+  `HostFolderChangeTrackerTests`. Not checked in a real browser: it needs a real host folder picked
+  by the user.

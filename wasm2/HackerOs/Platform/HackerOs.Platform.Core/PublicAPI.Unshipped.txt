@@ -364,3 +364,8 @@ static HackerOs.Platform.Core.Apps.Packages.LoadedRuntimeApiSurface.Instance.get
 static HackerOs.Platform.Core.Apps.Packages.MissingRuntimeApi.operator !=(HackerOs.Platform.Core.Apps.Packages.MissingRuntimeApi? left, HackerOs.Platform.Core.Apps.Packages.MissingRuntimeApi? right) -> bool
 static HackerOs.Platform.Core.Apps.Packages.MissingRuntimeApi.operator ==(HackerOs.Platform.Core.Apps.Packages.MissingRuntimeApi? left, HackerOs.Platform.Core.Apps.Packages.MissingRuntimeApi? right) -> bool
 virtual HackerOs.Platform.Core.Apps.Packages.InstalledAppFileReader.Invoke(HackerOs.App.Abstractions.VirtualPath path, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<byte[]?>
+HackerOs.Platform.Core.FileSystem.FileSystemService.TrackExternalChanges(HackerOs.App.Abstractions.VirtualPath directory) -> System.IDisposable?
+HackerOs.Platform.Core.FileSystem.IExternalFileSystemChanges
+HackerOs.Platform.Core.FileSystem.IExternalFileSystemChanges.TrackExternalChanges(HackerOs.App.Abstractions.VirtualPath directory) -> System.IDisposable?
+HackerOs.Platform.Core.FileSystem.FileSystemService.HostActivity.get -> HackerOs.Simulation.Abstractions.FileSystem.IHostActivitySignal?
+HackerOs.Platform.Core.FileSystem.FileSystemService.HostActivity.set -> void

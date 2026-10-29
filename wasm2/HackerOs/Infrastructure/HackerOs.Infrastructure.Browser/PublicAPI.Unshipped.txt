@@ -6,3 +6,9 @@ HackerOs.Infrastructure.Browser.Interop.BrowserHostFolderAccess.ForgetAsync(stri
 HackerOs.Infrastructure.Browser.Interop.BrowserHostFolderAccess.IsSupportedAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
 HackerOs.Infrastructure.Browser.Interop.BrowserHostFolderAccess.LoadAsync(string! key, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.IHostFolder?>
 HackerOs.Infrastructure.Browser.Interop.BrowserHostFolderAccess.PickAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.HostFolderPick?>
+HackerOs.Infrastructure.Browser.Interop.BrowserHostActivitySignal
+HackerOs.Infrastructure.Browser.Interop.BrowserHostActivitySignal.BrowserHostActivitySignal(Microsoft.JSInterop.IJSRuntime! runtime) -> void
+HackerOs.Infrastructure.Browser.Interop.BrowserHostActivitySignal.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Infrastructure.Browser.Interop.BrowserHostActivitySignal.IsVisible.get -> bool
+HackerOs.Infrastructure.Browser.Interop.BrowserHostActivitySignal.OnActivity(bool visible, bool resumed) -> void
+HackerOs.Infrastructure.Browser.Interop.BrowserHostActivitySignal.Resumed -> System.Action?
