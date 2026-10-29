@@ -151,7 +151,9 @@ Benoit and will be corrected here if he prefers the released version only.
    new account rule. **Done** (`whats-new/2-served-file-and-service`: `Tools/HackerOs.Tools.ChangeList`,
    `WhatsNewService`, SDK `HackWhatsNew`).
 3. User interface: Settings ▸ About ▸ What's new page, notification after sign-in, Start menu dot,
-   English and French texts.
+   English and French texts. **Done** (`whats-new/3-whats-new-page`: `WhatsNewPanel`,
+   `WhatsNewService.NotifyNewChangesAsync`, launcher dot; the page is a menu entry of its own next to
+   About, reached also from About's **What's new?** button).
 4. Publications: `collect-changes.sh`, Release text in `release.yml`, `PackageReleaseNotes`,
    `CHANGELOG.md` and `CHANGELOG-fr.md`.
 5. PR check: **Change list entry** workflow and `no-changelog` label. **Done with this ADR.**

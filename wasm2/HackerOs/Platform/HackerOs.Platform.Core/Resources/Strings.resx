@@ -687,4 +687,16 @@ Cancel: decide at the next launch.</value>
   <data name="Admin.DeleteUserAndHome" xml:space="preserve">
     <value>Delete the account {0} and its home folder</value>
   </data>
+  <data name="WhatsNew.Notification.Title" xml:space="preserve">
+    <value>What's new</value>
+  </data>
+  <data name="WhatsNew.Notification.One" xml:space="preserve">
+    <value>1 new change since your last visit.</value>
+  </data>
+  <data name="WhatsNew.Notification.Many" xml:space="preserve">
+    <value>{0} new changes since your last visit.</value>
+  </data>
+  <data name="WhatsNew.Notification.View" xml:space="preserve">
+    <value>View</value>
+  </data>
 </root>

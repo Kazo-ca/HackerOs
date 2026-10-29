@@ -1497,4 +1497,52 @@
   <data name="Screens.Error.Request" xml:space="preserve">
     <value>La demande a échoué : {0}</value>
   </data>
+  <data name="Tab.WhatsNew" xml:space="preserve">
+    <value>Nouveautés</value>
+  </data>
+  <data name="About.WhatsNew" xml:space="preserve">
+    <value>Quoi de neuf ?</value>
+  </data>
+  <data name="WhatsNew.Empty" xml:space="preserve">
+    <value>Aucun changement à montrer. La liste vient avec l'OS ; elle peut manquer quand l'OS est hors ligne.</value>
+  </data>
+  <data name="WhatsNew.Summary.None" xml:space="preserve">
+    <value>Vous avez vu tous les changements.</value>
+  </data>
+  <data name="WhatsNew.Summary.One" xml:space="preserve">
+    <value>1 nouveauté depuis votre dernière visite.</value>
+  </data>
+  <data name="WhatsNew.Summary.Many" xml:space="preserve">
+    <value>{0} nouveautés depuis votre dernière visite.</value>
+  </data>
+  <data name="WhatsNew.Group.Next" xml:space="preserve">
+    <value>Depuis {0} (prochaine version)</value>
+  </data>
+  <data name="WhatsNew.Group.Version" xml:space="preserve">
+    <value>Version {0}</value>
+  </data>
+  <data name="WhatsNew.Group.VersionWithDate" xml:space="preserve">
+    <value>Version {0} — {1}</value>
+  </data>
+  <data name="WhatsNew.Badge.New" xml:space="preserve">
+    <value>Nouveau</value>
+  </data>
+  <data name="WhatsNew.Category.New" xml:space="preserve">
+    <value>Fonctionnalité</value>
+  </data>
+  <data name="WhatsNew.Category.Improved" xml:space="preserve">
+    <value>Amélioré</value>
+  </data>
+  <data name="WhatsNew.Category.Fixed" xml:space="preserve">
+    <value>Corrigé</value>
+  </data>
+  <data name="WhatsNew.Category.Developer" xml:space="preserve">
+    <value>Développeurs</value>
+  </data>
+  <data name="WhatsNew.Link.More" xml:space="preserve">
+    <value>En savoir plus</value>
+  </data>
+  <data name="WhatsNew.Link.PullRequest" xml:space="preserve">
+    <value>Pull request</value>
+  </data>
 </root>

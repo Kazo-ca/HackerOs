@@ -32,6 +32,7 @@
 @inject IStringLocalizer<Strings> L
 @inject HackerOs.Platform.Core.AppCatalog Catalog
 @inject HackerOs.Platform.Core.Globalization.SessionLocaleService SessionLocale
+@inject IServiceProvider Services
 
 <div class="desktop-shell" @onkeydown="HandleShellKeyDown">
     <div class="desktop-workspace">
@@ -471,6 +472,7 @@
     private IDisposable? _processSubscription;
     private Func<WindowId, Task>? _closeWindow;
     private Func<Task<DisplayId?>>? _openScreen;
+    private WhatsNewAttention? _whatsNew;
 
 
     protected override void OnInitialized()
@@ -495,6 +497,9 @@
         _clockPanel.Changed += Rerender;
         _taskbarStatus = new TaskbarStatusSourceAdapter(SimulationClock, SessionLocale);
         _taskbarSessionCommands = new TaskbarSessionCommandsAdapter(OpenLogout);
+        // ADR 0186 §4.5: the Start button's dot and the sign-in notification of unseen changes.
+        _whatsNew = new WhatsNewAttention(Services, _launcher.SetAttention);
+        _ = _whatsNew.StartAsync();
     }
 
     private void Rerender()
@@ -543,5 +548,6 @@
 
         _screenTaskbarSources.Clear();
         _taskbarStatus.Dispose();
+        _whatsNew?.Dispose();
     }
 }

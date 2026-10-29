@@ -16,6 +16,7 @@
 @inject AppWindowGatewayFactory WindowGateways
 @inject IJSRuntime JSRuntime
 @inject IStringLocalizer<Strings> L
+@inject IServiceProvider Services
 
 <div class="mobile-shell" @ref="_shellRoot">
     <div class="mobile-shell-workspace">
@@ -79,7 +80,7 @@
                               OnDismiss="CloseRecent" />
     }
 
-    <MobileSystemNavigationBar Commands="_systemNavigationCommands" />
+    <MobileSystemNavigationBar Commands="_systemNavigationCommands" HomeHasAttention="_hasWhatsNew" />
 
     @* ADR 0049: secure-desktop approval, above every app screen and the navigation bar. *@
     @* ADR 0101: synchronization conflicts and the session's periodic sync. *@
@@ -107,6 +108,8 @@
     private DotNetObjectReference<MobileShell>? _selfReference;
     private bool _isShadeOpen;
     private bool _showRecent;
+    private WhatsNewAttention? _whatsNew;
+    private bool _hasWhatsNew;
 
     /// <inheritdoc />
     protected override void OnInitialized()
@@ -124,6 +127,13 @@
             CloseOverlays,
             ToggleRecent);
         InitializeMobileHome();
+        // ADR 0186 §4.5: the Home button's dot and the sign-in notification of unseen changes.
+        _whatsNew = new WhatsNewAttention(Services, value =>
+        {
+            _hasWhatsNew = value;
+            Rerender();
+        });
+        _ = _whatsNew.StartAsync();
     }
 
     /// <inheritdoc />
@@ -235,6 +245,7 @@
         WindowRuntime.StateChanged -= Rerender;
         FileDialogAdapter.Changed -= Rerender;
         _mobileProcessObserver?.Dispose();
+        _whatsNew?.Dispose();
         _navigationHistory.Dispose();
 
         if (_module is not null)

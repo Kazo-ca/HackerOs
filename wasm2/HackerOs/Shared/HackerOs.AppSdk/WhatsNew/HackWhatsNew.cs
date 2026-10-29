@@ -26,7 +26,7 @@ public static class HackWhatsNew
         return context.WhatsNew.IsSupported;
     }
 
-    /// <summary>Reads the change list in the app's language (<see cref="CultureInfo.CurrentUICulture"/>).</summary>
+    /// <summary>Reads the change list in the app's language (<see cref="IAppExecutionContext.Culture"/>, ADR 0104).</summary>
     /// <param name="cancellationToken">Cancels the read.</param>
     /// <returns>The list; <see cref="HackChangeList.Empty"/> when the host has none or cannot read it.</returns>
     public static Task<HackChangeList> GetAsync(CancellationToken cancellationToken = default) =>
@@ -39,7 +39,7 @@ public static class HackWhatsNew
     {
         ArgumentNullException.ThrowIfNull(context);
         return context.WhatsNew.IsSupported
-            ? await context.WhatsNew.GetAsync(CultureInfo.CurrentUICulture, cancellationToken).ConfigureAwait(false)
+            ? await context.WhatsNew.GetAsync(context.Culture, cancellationToken).ConfigureAwait(false)
             : HackChangeList.Empty;
     }
 

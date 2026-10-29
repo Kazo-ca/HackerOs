@@ -99,6 +99,22 @@
     box-shadow: inset 0 -0.16rem var(--hos-taskbar-active-indicator, var(--hos-accent, #42d392));
 }
 
+/* ADR 0186 §4.5: changes the user has not seen yet. */
+.launcher-trigger {
+    position: relative;
+}
+
+.launcher-attention {
+    position: absolute;
+    top: 0.2rem;
+    right: 0.2rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--hos-taskbar-attention, var(--hos-warning, #d5a84f));
+    box-shadow: 0 0 0 2px var(--hos-taskbar-launcher-background, var(--hos-taskbar-button-background, #0d1417));
+}
+
 .launcher-mark {
     color: currentColor;
     font-family: var(--hos-font-mono, monospace);

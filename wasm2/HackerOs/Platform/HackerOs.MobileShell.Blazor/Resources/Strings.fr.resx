@@ -18,6 +18,9 @@
   <data name="Navigation.Home" xml:space="preserve">
     <value>Accueil</value>
   </data>
+  <data name="Navigation.HomeWithNews" xml:space="preserve">
+    <value>{0}, nouveautés à voir</value>
+  </data>
   <data name="Navigation.Label" xml:space="preserve">
     <value>Navigation système</value>
   </data>

@@ -157,7 +157,9 @@ Benoit et sera corrigée ici s'il préfère seulement la version publiée.
    règle du nouveau compte. **Fait** (`whats-new/2-served-file-and-service` : `Tools/HackerOs.Tools.ChangeList`,
    `WhatsNewService`, SDK `HackWhatsNew`).
 3. Interface : page Paramètres ▸ À propos ▸ Nouveautés, notification après connexion, pastille du
-   menu Démarrer, textes en anglais et en français.
+   menu Démarrer, textes en anglais et en français. **Fait** (`whats-new/3-whats-new-page` :
+   `WhatsNewPanel`, `WhatsNewService.NotifyNewChangesAsync`, pastille du lanceur ; la page est une
+   entrée du menu à côté de À propos, ouverte aussi par le bouton **Quoi de neuf ?** de À propos).
 4. Publications : `collect-changes.sh`, texte de la Release dans `release.yml`,
    `PackageReleaseNotes`, `CHANGELOG.md` et `CHANGELOG-fr.md`.
 5. Contrôle de PR : workflow **Change list entry** et étiquette `no-changelog`. **Fait avec cette

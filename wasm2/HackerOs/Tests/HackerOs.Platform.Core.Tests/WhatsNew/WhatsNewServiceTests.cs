@@ -1,9 +1,13 @@
 using System.Globalization;
+using HackerOs.App.Abstractions;
 using HackerOs.AppSdk.WhatsNew;
+using HackerOs.Platform.Core.Notifications;
 using HackerOs.Platform.Core.Settings;
 using HackerOs.Platform.Core.WhatsNew;
 using HackerOs.Simulation.Abstractions;
 using HackerOs.Simulation.Abstractions.Gateways;
+using HackerOs.Simulation.Abstractions.Notifications;
+using HackerOs.Simulation.Abstractions.Sessions;
 using HackerOs.Simulation.Abstractions.Settings;
 
 namespace HackerOs.Platform.Core.Tests.WhatsNew;
@@ -180,6 +184,73 @@ public sealed class WhatsNewServiceTests
         Assert.Equal([new Uri("https://example.com/doc")], entry.Links);
     }
 
+    [Fact]
+    public async Task The_sign_in_notification_counts_the_new_changes_and_opens_the_Settings_page_once()
+    {
+        InMemoryNotificationQueue queue = new(maxEntriesPerUser: 10);
+        AuthenticatedPrincipal alice = Principal("alice");
+        WhatsNewService service = new(new FakeSource(Document), new FakeSettings(), notifications: queue, currentUser: () => alice);
+
+        Assert.True(await service.NotifyNewChangesAsync());
+        Assert.False(await service.NotifyNewChangesAsync());
+
+        Notification notification = Assert.Single(queue.GetActive(alice.UserId, DateTimeOffset.UtcNow));
+        Assert.Equal(WhatsNewService.NotificationSourceAppId, notification.SourceAppId);
+        Assert.Equal("What's new", notification.Title);
+        Assert.Equal("2 new changes since your last visit.", notification.Message);
+        NotificationAction action = Assert.Single(notification.Actions);
+        Assert.Equal("View", action.Label);
+        Assert.True(action.TryGetLaunchedApp(out string? appId));
+        Assert.Equal("org.hackeros.settings", appId);
+        Assert.Equal(["--page=whats-new"], action.LaunchArguments);
+    }
+
+    [Fact]
+    public async Task The_sign_in_notification_speaks_the_session_language()
+    {
+        InMemoryNotificationQueue queue = new(maxEntriesPerUser: 10);
+        AuthenticatedPrincipal alice = Principal("alice");
+        FakeSettings settings = new();
+        settings.Files["whats-new.json"] = WhatsNewService.SerializeState([Next, Latest, Older]);
+        WhatsNewService service = new(new FakeSource(Document), settings, notifications: queue, currentUser: () => alice, language: () => French);
+
+        await service.NotifyNewChangesAsync();
+
+        Notification notification = Assert.Single(queue.GetActive(alice.UserId, DateTimeOffset.UtcNow));
+        Assert.Equal("Nouveautés", notification.Title);
+        Assert.Equal("1 nouveauté depuis votre dernière visite.", notification.Message);
+        Assert.Equal("Voir", notification.Actions[0].Label);
+    }
+
+    [Fact]
+    public async Task Nothing_new_posts_no_notification()
+    {
+        InMemoryNotificationQueue queue = new(maxEntriesPerUser: 10);
+        AuthenticatedPrincipal alice = Principal("alice");
+        FakeSettings settings = new();
+        settings.Files["whats-new.json"] = WhatsNewService.SerializeState([Next, Latest, Older, Oldest]);
+        WhatsNewService service = new(new FakeSource(Document), settings, notifications: queue, currentUser: () => alice);
+
+        Assert.False(await service.NotifyNewChangesAsync());
+        Assert.Empty(queue.GetActive(alice.UserId, DateTimeOffset.UtcNow));
+    }
+
+    [Fact]
+    public void A_launch_action_carries_its_arguments_and_an_old_one_has_none()
+    {
+        NotificationAction withArguments = NotificationAction.LaunchApp("org.hackeros.settings", "View", ["--page=whats-new", "--x"]);
+        NotificationAction plain = NotificationAction.LaunchApp("org.hackeros.diagnostic", "Open");
+
+        Assert.True(withArguments.TryGetLaunchedApp(out string? appId));
+        Assert.Equal("org.hackeros.settings", appId);
+        Assert.Equal(["--page=whats-new", "--x"], withArguments.LaunchArguments);
+        Assert.True(plain.TryGetLaunchedApp(out appId));
+        Assert.Equal("org.hackeros.diagnostic", appId);
+        Assert.Empty(plain.LaunchArguments);
+        Assert.Empty(new NotificationAction("reply", "Reply").LaunchArguments);
+        Assert.Throws<ArgumentException>(() => NotificationAction.LaunchApp("a", "b", ["x\u001Fy"]));
+    }
+
     [Theory]
     [InlineData(null)]
     [InlineData("")]
@@ -187,6 +258,22 @@ public sealed class WhatsNewServiceTests
     [InlineData("{ broken")]
     public void A_missing_or_malformed_document_is_an_empty_list(string? document) =>
         Assert.Empty(WhatsNewCatalog.Parse(document).Groups);
+
+    private static AuthenticatedPrincipal Principal(string login)
+    {
+        LocalGroupId group = LocalGroupId.FromGuid(Guid.NewGuid());
+        return new AuthenticatedPrincipal(
+            SessionId.FromGuid(Guid.NewGuid()),
+            LocalUserId.FromGuid(Guid.NewGuid()),
+            LocalLoginName.Parse(login),
+            login,
+            AppAuthority.User,
+            group,
+            [group],
+            InstallationId.FromGuid(Guid.NewGuid()),
+            DeviceId.FromGuid(Guid.NewGuid()),
+            DateTimeOffset.UtcNow);
+    }
 
     private static string Entry(string id, string category) =>
         $$"""{ "id": "{{id}}", "category": "{{category}}", "title": { "en": "Title {{id}}", "fr": "Titre {{id}}" } }""";
