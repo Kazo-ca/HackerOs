@@ -39,6 +39,14 @@ in the source repository for a complete, minimal host that uses only these
 packages, including sample `ITaskbarWindowSource`/`ITaskbarCommandDispatcher`/
 `ITaskbarLauncher`/`ITaskbarStatusSource` implementations.
 
+## Context menus
+
+`ITaskbarContextMenus` (the `ContextMenus` parameter) lets the host give the taskbar its own
+context menus (ADR 0194): `TaskbarAttributes` are set on the taskbar itself and
+`WindowItemAttributes(id)` on the button of each window, with `@attributes`. The taskbar never
+reads them; the host's menu system does (HackerOS attaches its OS context menu there). Without the
+parameter the browser's menu stays.
+
 ## Localization
 
 The package's texts (accessible labels, the launcher label and the window states) live in `Resources/Strings.resx`

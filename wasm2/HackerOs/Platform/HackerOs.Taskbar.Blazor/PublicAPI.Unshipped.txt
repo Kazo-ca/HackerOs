@@ -1,1 +1,6 @@
 #nullable enable
+HackerOs.Taskbar.Blazor.ITaskbarContextMenus
+HackerOs.Taskbar.Blazor.ITaskbarContextMenus.TaskbarAttributes.get -> System.Collections.Generic.IReadOnlyDictionary<string!, object!>?
+HackerOs.Taskbar.Blazor.ITaskbarContextMenus.WindowItemAttributes(HackerOs.Windowing.Abstractions.WindowId id) -> System.Collections.Generic.IReadOnlyDictionary<string!, object!>?
+HackerOs.Taskbar.Blazor.Taskbar.ContextMenus.get -> HackerOs.Taskbar.Blazor.ITaskbarContextMenus?
+HackerOs.Taskbar.Blazor.Taskbar.ContextMenus.set -> void
