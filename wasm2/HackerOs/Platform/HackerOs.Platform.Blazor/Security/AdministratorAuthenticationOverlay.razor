@@ -36,6 +36,13 @@
                 </dl>
 
                 <form class="aaa-credentials" @onsubmit="AuthenticateAsync" @onsubmit:preventDefault="true">
+                    @if (_confirmOnly)
+                    {
+                        @* ADR 0187 section 2: the lone guest confirms without a password. *@
+                        <p class="aaa-guest-confirm">@L["Security.GuestConfirm"]</p>
+                    }
+                    else
+                    {
                     <label>
                         <span>@L["Security.AdministratorName"]</span>
                         <input @ref="_loginInput"
@@ -55,6 +62,7 @@
                                @bind="_password"
                                @bind:event="oninput" />
                     </label>
+                    }
 
                     @if (!string.IsNullOrEmpty(_error))
                     {
@@ -63,7 +71,7 @@
 
                     <div class="aaa-actions">
                         <button type="button" class="aaa-cancel" disabled="@_isVerifying" @onclick="Cancel">@L["Common.Cancel"]</button>
-                        @if (request.AuthenticateWithPasskeyAsync is not null)
+                        @if (request.AuthenticateWithPasskeyAsync is not null && !_confirmOnly)
                         {
                             <button type="button" class="aaa-passkey" disabled="@(!CanUsePasskey)" @onclick="AuthenticateWithPasskeyAsync">
                                 <HackerIcon Library="IconLibrary.Lucide" Name="fingerprint" Size="16" Title="" />
@@ -71,7 +79,7 @@
                             </button>
                         }
                         <button type="submit" class="aaa-authenticate" disabled="@(!CanAuthenticate)">
-                            @(_isVerifying ? L["Security.Verifying"] : L["Auth.Authenticate"])
+                            @(_isVerifying ? L["Security.Verifying"] : _confirmOnly ? L["Security.Confirm"] : L["Auth.Authenticate"])
                         </button>
                     </div>
                 </form>

@@ -194,3 +194,10 @@
 .aaa-facts code {
     color: #8aa0ab;
 }
+
+/* ADR 0187: the lone guest confirms without a password. */
+.aaa-guest-confirm {
+    margin: 0;
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
