@@ -298,3 +298,9 @@ Améliorations décidées dans l'[ADR 0185](adr/0185-file-explorer-improvements.
   fenêtre de l'explorateur) ; un autre filtre affiche « Aucun élément à afficher ici. ». Rien sur le
   bureau ni dans l'arbre. Les dialogues Ouvrir et Enregistrer en profitent. Tests :
   `FileViewEmptyStateTests`.
+- [x] `explorer/2-stray-drop` (§3) : un dépôt qui tombe hors de toute zone de dépôt ne fait rien, dans
+  toutes les fenêtres (fenêtres détachées comprises) : le navigateur n'ouvre plus le fichier. Garde
+  installée par l'initialiseur JS de `HackerOs.Platform.Blazor` (`installStrayDropGuard`) : écouteurs
+  `dragover` et `drop` sur `window`, en phase de bouillonnement, qui n'agissent que si aucune zone n'a
+  annulé l'évènement (curseur « interdit », action par défaut annulée). Les champs de texte gardent le
+  dépôt de texte du navigateur.
