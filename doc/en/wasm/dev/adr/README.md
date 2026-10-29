@@ -189,5 +189,6 @@ next free number is given in
 | [`0189-app-sources-trust-and-per-user-install.md`](0189-app-sources-trust-and-per-user-install.md) | ADR 0189: trusted app sources (built into the OS or added by an administrator), per-user install without an administrator, `app-policy.config` block list, two-step validation of system-wide installs; revises ADR 0182 Q4 |
 | [`0190-theme-packs.md`](0190-theme-packs.md) | ADR 0190: Hack Store v2, code-free `.hacktheme` packs (themes, wallpapers, icons, sounds, cursors), and the OS systems to build first |
 | [`0185-file-explorer-improvements.md`](0185-file-explorer-improvements.md) | ADR 0185: File Explorer improvements (resizable panel, empty folder inside the list, drop outside a zone does nothing, drag out of the browser to download, `.zip` browsed read-only, Compress and Send to ▸, folder previews, network drive refresh, hover tooltips), to implement later in the `explorer/base` series |
+| [`0192-features-overview-and-ported-apps.md`](0192-features-overview-and-ported-apps.md) | ADR 0192: features overview (`features.md`), "In development" section kept current by every PR to `main`, and exception to ADR 0135 §2 to name the apps ported in their own repositories |
 
 Parent folder index: [`../README.md`](../README.md).

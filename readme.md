@@ -10,6 +10,7 @@ internal web sites, and a **public SDK** (NuGet packages) to create your own
 apps, commands, services and sites.
 
 - **Try it**: <https://hackos.kazo.ca/> (PWA, works offline).
+- **Features**: [HackerOS overview and features](doc/en/wasm/features.md): what HackerOS offers today, the goal of the ecosystem, ways to deploy it, and what is in development.
 - **Code**: [`wasm2/HackerOs/`](wasm2/HackerOs/README.md).
 - **Documentation**: [`doc/en/wasm/README.md`](doc/en/wasm/README.md) (French: [`doc/fr/wasm/README.md`](doc/fr/wasm/README.md)).
 - Source repository: [Kazo-ca/HackerOs](https://github.com/Kazo-ca/HackerOs).
@@ -33,6 +34,7 @@ tests are described in
 
 | To… | Read |
 | --- | --- |
+| Discover what HackerOS offers and what is coming | [`features.md`](doc/en/wasm/features.md) |
 | Understand the OS code | [`project-overview.md`](doc/en/wasm/dev/project-overview.md), then [`doc/en/wasm/dev/`](doc/en/wasm/dev/README.md) |
 | Write an app, a command or a service | [`sdk-developer-guide.md`](doc/en/wasm/framework/sdk-developer-guide.md) and [`sdk-reference.md`](doc/en/wasm/framework/sdk-reference.md) |
 | Build on HackerOS from another repository | [`building-on-hackeros.md`](doc/en/wasm/framework/building-on-hackeros.md) |
