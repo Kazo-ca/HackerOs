@@ -68,6 +68,12 @@ internal sealed class FakeJSObjectReference : IJSObjectReference
             return ValueTask.FromResult((TValue)(object)true);
         }
 
+        // The hover bubbles' listeners (ADR 0185 §16), installed after the first render too: same no-op.
+        if (identifier == "attachTooltips" && !Handlers.ContainsKey(identifier))
+        {
+            return ValueTask.FromResult((TValue)(object)true);
+        }
+
         CalledIdentifiers.Add(identifier);
         Calls.Add((identifier, args));
         if (!Handlers.TryGetValue(identifier, out Func<object?[]?, object?>? handler))

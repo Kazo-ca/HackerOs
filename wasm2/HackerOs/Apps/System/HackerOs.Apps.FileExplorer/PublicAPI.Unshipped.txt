@@ -11,6 +11,7 @@ HackerOs.Apps.FileExplorer.ExplorerSidebarResizer.Width.get -> int
 HackerOs.Apps.FileExplorer.ExplorerSidebarResizer.Width.set -> void
 HackerOs.Apps.FileExplorer.ExplorerSidebarResizer.WidthChanged.get -> Microsoft.AspNetCore.Components.EventCallback<int>
 HackerOs.Apps.FileExplorer.ExplorerSidebarResizer.WidthChanged.set -> void
+HackerOs.Apps.FileExplorer.FileControl.FileView.GetItemTooltipAsync(string! path) -> System.Threading.Tasks.Task<string![]?>!
 HackerOs.Apps.FileExplorer.NetworkDrivesSidebar
 HackerOs.Apps.FileExplorer.NetworkDrivesSidebar.CurrentPath.get -> string?
 HackerOs.Apps.FileExplorer.NetworkDrivesSidebar.CurrentPath.set -> void

@@ -310,3 +310,10 @@ Améliorations décidées dans l'[ADR 0185](adr/0185-file-explorer-improvements.
   Début et Fin vont aux bornes. La largeur est retenue par utilisateur dans
   `~/.config/hackeros/file-explorer.json` (`sidebarWidth`, `FileExplorerSettings` garde les autres clés).
   Bureau seulement : la fenêtre mobile n'a pas de panneau. Tests : `FileExplorerSettingsTests`.
+- [x] `explorer/4-hover-tooltips` (§16) : une bulle au style de l'OS apparaît après 600 ms de souris
+  immobile sur un élément : nom complet, type, taille (fichier), date de modification et nombre
+  d'éléments (dossier). Elle vit dans le contrôle partagé (`attachTooltips` de `FileView.razor.js`,
+  lignes données par `FileView.GetItemTooltipAsync` et `FileViewTooltip`), donc le bureau et les
+  dialogues l'ont aussi. Souris seulement : jamais au toucher (sur mobile, l'appui long ouvre le menu).
+  Un clic, une touche, la molette, un glisser ou la sortie de l'élément la cachent. Tests :
+  `FileViewTooltipTests`.

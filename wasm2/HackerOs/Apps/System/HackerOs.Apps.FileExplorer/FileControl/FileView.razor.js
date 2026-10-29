@@ -248,3 +248,103 @@ export function focusItem(containerEl, path) {
 
     return false;
 }
+
+// Hover bubble (ADR 0185 §16): after `delay` ms of the mouse resting on an item ([data-item-path]), asks C#
+// for its lines (GetItemTooltipAsync) and shows them in a bubble placed under the pointer, inside the view.
+// Mouse only: a touch never shows one (on a phone the long press opens the menu). Any click, key, wheel,
+// drag or leaving the item hides it.
+export function attachTooltips(root, callbacks, delay) {
+    if (!root || root.__hackerOsTooltips) {
+        return false;
+    }
+
+    let timer = 0;
+    let current = null;
+    let bubble = null;
+    let token = 0;
+    let pointer = { x: 0, y: 0 };
+
+    const hide = () => {
+        clearTimeout(timer);
+        timer = 0;
+        current = null;
+        token++;
+        if (bubble) {
+            bubble.remove();
+            bubble = null;
+        }
+    };
+
+    const show = (lines) => {
+        bubble = root.ownerDocument.createElement('div');
+        bubble.className = 'file-view-tooltip';
+        bubble.setAttribute('role', 'tooltip');
+        lines.forEach((line, index) => {
+            const row = root.ownerDocument.createElement('div');
+            row.className = index === 0 ? 'file-view-tooltip-title' : 'file-view-tooltip-line';
+            row.textContent = line;
+            bubble.appendChild(row);
+        });
+        root.appendChild(bubble);
+
+        // Placed in the view's own coordinates (it scrolls, and windows may be transformed), kept inside it.
+        const rect = root.getBoundingClientRect();
+        const scaleX = root.offsetWidth ? rect.width / root.offsetWidth : 1;
+        const scaleY = root.offsetHeight ? rect.height / root.offsetHeight : 1;
+        let left = (pointer.x - rect.left) / scaleX + 12;
+        let top = (pointer.y - rect.top) / scaleY + 18;
+        const maxLeft = root.clientWidth - bubble.offsetWidth - 4;
+        const maxTop = root.clientHeight - bubble.offsetHeight - 4;
+        if (top > maxTop) {
+            top = Math.max(4, (pointer.y - rect.top) / scaleY - bubble.offsetHeight - 8);
+        }
+        bubble.style.left = `${Math.max(4, Math.min(left, maxLeft)) + root.scrollLeft}px`;
+        bubble.style.top = `${Math.max(4, Math.min(top, Math.max(4, maxTop))) + root.scrollTop}px`;
+    };
+
+    const onPointerOver = e => {
+        if (e.pointerType !== 'mouse') {
+            return;
+        }
+
+        const item = e.target instanceof Element ? e.target.closest('[data-item-path]') : null;
+        if (item === current) {
+            return;
+        }
+
+        hide();
+        if (!item || !root.contains(item) || item.querySelector('input')) {
+            return;
+        }
+
+        current = item;
+        const mine = token;
+        pointer = { x: e.clientX, y: e.clientY };
+        timer = setTimeout(async () => {
+            let lines = null;
+            try {
+                lines = await callbacks.invokeMethodAsync('GetItemTooltipAsync', item.getAttribute('data-item-path'));
+            } catch {
+                return;
+            }
+            if (mine === token && current === item && Array.isArray(lines) && lines.length > 0 && item.isConnected) {
+                show(lines);
+            }
+        }, delay);
+    };
+
+    root.addEventListener('pointerover', onPointerOver);
+    root.addEventListener('pointermove', e => {
+        if (!bubble) {
+            pointer = { x: e.clientX, y: e.clientY };
+        }
+    });
+    root.addEventListener('pointerleave', hide);
+    root.addEventListener('pointerdown', hide, true);
+    root.addEventListener('keydown', hide, true);
+    root.addEventListener('wheel', hide, { passive: true });
+    root.addEventListener('dragstart', hide, true);
+    root.addEventListener('contextmenu', hide, true);
+    root.__hackerOsTooltips = true;
+    return true;
+}

@@ -32,7 +32,7 @@ public partial class FileViewDetails
     }
 
     /// <summary>Formats one entry's Type column value: <c>"Folder"</c>, <c>".ext File"</c>, or plain <c>"File"</c> when it has no extension.</summary>
-    private static string FormatType(FileViewItem item, Microsoft.Extensions.Localization.IStringLocalizer<Strings> text)
+    internal static string FormatType(FileViewItem item, Microsoft.Extensions.Localization.IStringLocalizer<Strings> text)
     {
         if (item.IsDirectory)
         {
@@ -228,7 +228,7 @@ public partial class FileViewDetails
     }
 
     /// <summary>Formats a size with a binary unit, in the owner's language (<c>1,5 Ko</c> in French).</summary>
-    private static string FormatBytes(long bytes, Microsoft.Extensions.Localization.IStringLocalizer<Strings> text)
+    internal static string FormatBytes(long bytes, Microsoft.Extensions.Localization.IStringLocalizer<Strings> text)
     {
         string[] units = ["Size.Bytes", "Size.Kilobytes", "Size.Megabytes", "Size.Gigabytes"];
         double size = bytes;
