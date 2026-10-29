@@ -533,6 +533,37 @@ public sealed class HostFolderFileSystemProvider : IFileSystemProvider
     private void Touch(VirtualPath directory) =>
         _directoryRevisions.AddOrUpdate(directory.Value, 2, static (_, revision) => revision + 1);
 
+    /// <summary>
+    /// Lists a folder as the change tracker compares it (ADR 0185 §15): each entry's kind and revision,
+    /// by name. Throws as <see cref="IHostFolder.ListAsync"/> does (disconnected, gone).
+    /// </summary>
+    internal async ValueTask<IReadOnlyDictionary<string, (FileSystemEntryKind Kind, long Revision)>> SnapshotAsync(
+        VirtualPath directory,
+        CancellationToken cancellationToken)
+    {
+        IReadOnlyList<HostFolderEntry> entries = await Folder.ListAsync(Segments(directory), cancellationToken).ConfigureAwait(false);
+        Dictionary<string, (FileSystemEntryKind, long)> snapshot = new(StringComparer.Ordinal);
+        foreach (HostFolderEntry entry in entries)
+        {
+            VirtualPath path = VirtualPath.Parse($"{directory.Value.TrimEnd('/')}/{entry.Name}");
+            snapshot[entry.Name] = entry.Kind == HostFolderEntryKind.Directory
+                ? (FileSystemEntryKind.Directory, DirectoryRevision(path))
+                : (FileSystemEntryKind.File, FileRevision(entry));
+        }
+
+        return snapshot;
+    }
+
+    /// <summary>The segments of a folder of this drive, for <see cref="IObservableHostFolder.ObserveAsync"/>.</summary>
+    internal IReadOnlyList<string> RelativeSegments(VirtualPath directory) => Segments(directory);
+
+    /// <summary>A change made on the host was found in <paramref name="directory"/>: raises its counter and returns it.</summary>
+    internal long NoteHostChange(VirtualPath directory)
+    {
+        Touch(directory);
+        return DirectoryRevision(directory);
+    }
+
     /// <summary>Drops the counters of a removed folder and its subfolders; a new folder there starts over.</summary>
     private void ForgetDirectories(VirtualPath removed)
     {

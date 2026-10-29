@@ -294,3 +294,43 @@ export function move(id, source, destination) {
         return true;
     });
 }
+
+// ADR 0185 §15: tells .NET when a folder of the host changes, through the browser's FileSystemObserver
+// (recent Chrome). Returns 0 when the browser has none: the platform then lists the folder on a timer.
+const observers = new Map();
+let nextObserverId = 1;
+
+export async function observe(id, path, callbacks) {
+    if (typeof FileSystemObserver === 'undefined') {
+        return 0;
+    }
+
+    return await guard(async () => {
+        const handle = await directory(id, path);
+        const observer = new FileSystemObserver(() => {
+            callbacks.invokeMethodAsync('OnChanged').catch(() => { });
+        });
+        await observer.observe(handle);
+        const observerId = nextObserverId++;
+        observers.set(observerId, observer);
+        return observerId;
+    });
+}
+
+export function unobserve(observerId) {
+    const observer = observers.get(observerId);
+    if (observer) {
+        observer.disconnect();
+        observers.delete(observerId);
+    }
+}
+
+// ADR 0185 §15: whether the page is visible, and when it comes back (shown again, or focused).
+export function watchActivity(callbacks) {
+    const report = (resumed) => callbacks
+        .invokeMethodAsync('OnActivity', document.visibilityState === 'visible', resumed)
+        .catch(() => { });
+    document.addEventListener('visibilitychange', () => report(document.visibilityState === 'visible'));
+    window.addEventListener('focus', () => report(true));
+    return document.visibilityState === 'visible';
+}

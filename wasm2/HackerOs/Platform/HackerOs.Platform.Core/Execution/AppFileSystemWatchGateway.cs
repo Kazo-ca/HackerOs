@@ -64,6 +64,24 @@ public sealed class AppFileSystemWatchGateway : IAppFileSystemWatchGateway
                 CapabilityPolicyEvaluation.DenyMissing(1));
         }
 
-        return _topicBus.SubscribeChannel<FileSystemChangeEvent>(FileSystemTopics.ForDirectory(path), _identity);
+        ITopicChannelSubscription<FileSystemChangeEvent> subscription =
+            _topicBus.SubscribeChannel<FileSystemChangeEvent>(FileSystemTopics.ForDirectory(path), _identity);
+
+        // ADR 0185 §15: a network drive's folder also reports what changed on the host, while watched.
+        IDisposable? tracking = (_fileSystem as FileSystem.IExternalFileSystemChanges)?.TrackExternalChanges(path);
+        return tracking is null ? subscription : new TrackedSubscription(subscription, tracking);
+    }
+
+    /// <summary>A subscription that also ends the tracking of outside changes when disposed.</summary>
+    private sealed class TrackedSubscription(ITopicChannelSubscription<FileSystemChangeEvent> inner, IDisposable tracking)
+        : ITopicChannelSubscription<FileSystemChangeEvent>
+    {
+        public System.Threading.Channels.ChannelReader<TopicMessage<FileSystemChangeEvent>> Reader => inner.Reader;
+
+        public async ValueTask DisposeAsync()
+        {
+            tracking.Dispose();
+            await inner.DisposeAsync().ConfigureAwait(false);
+        }
     }
 }

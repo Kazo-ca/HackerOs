@@ -91,3 +91,8 @@ static HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry.operator !=(H
 static HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry.operator ==(HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry? left, HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry? right) -> bool
 static HackerOs.Simulation.Abstractions.FileSystem.HostFolderPick.operator !=(HackerOs.Simulation.Abstractions.FileSystem.HostFolderPick? left, HackerOs.Simulation.Abstractions.FileSystem.HostFolderPick? right) -> bool
 static HackerOs.Simulation.Abstractions.FileSystem.HostFolderPick.operator ==(HackerOs.Simulation.Abstractions.FileSystem.HostFolderPick? left, HackerOs.Simulation.Abstractions.FileSystem.HostFolderPick? right) -> bool
+HackerOs.Simulation.Abstractions.FileSystem.IHostActivitySignal
+HackerOs.Simulation.Abstractions.FileSystem.IHostActivitySignal.IsVisible.get -> bool
+HackerOs.Simulation.Abstractions.FileSystem.IHostActivitySignal.Resumed -> System.Action?
+HackerOs.Simulation.Abstractions.FileSystem.IObservableHostFolder
+HackerOs.Simulation.Abstractions.FileSystem.IObservableHostFolder.ObserveAsync(System.Collections.Generic.IReadOnlyList<string!>! path, System.Action! changed, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.IAsyncDisposable?>

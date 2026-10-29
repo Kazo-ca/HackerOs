@@ -172,8 +172,32 @@ public sealed class BrowserHostFolderAccess : IHostFolderAccess, IAsyncDisposabl
 }
 
 /// <summary>One open host folder: a number of <c>hostFolder.js</c> standing for its handle.</summary>
-internal sealed class BrowserHostFolder(IJSObjectReference module, int id, string name) : IHostFolder
+internal sealed class BrowserHostFolder(IJSObjectReference module, int id, string name) : IHostFolder, IObservableHostFolder
 {
+    /// <inheritdoc />
+    public async ValueTask<IAsyncDisposable?> ObserveAsync(IReadOnlyList<string> path, Action changed, CancellationToken cancellationToken = default)
+    {
+        DotNetObjectReference<ObserverCallback> callback = DotNetObjectReference.Create(new ObserverCallback(changed));
+        int observerId;
+        try
+        {
+            observerId = await BrowserHostFolderAccess.Call(() => module.InvokeAsync<int>("observe", cancellationToken, id, path, callback)).ConfigureAwait(false);
+        }
+        catch
+        {
+            callback.Dispose();
+            throw;
+        }
+
+        if (observerId == 0)
+        {
+            callback.Dispose();
+            return null;
+        }
+
+        return new Observation(module, observerId, callback);
+    }
+
     public string Name { get; } = name;
 
     public ValueTask<HostFolderPermission> QueryPermissionAsync(CancellationToken cancellationToken = default) =>
@@ -237,4 +261,31 @@ internal sealed class BrowserHostFolder(IJSObjectReference module, int id, strin
         entry.LastModified is { } milliseconds ? DateTimeOffset.FromUnixTimeMilliseconds((long)milliseconds) : null);
 
     private sealed record WireEntry(string Name, string Kind, long Size, double? LastModified);
+
+    /// <summary>Receives the browser observer's calls.</summary>
+    internal sealed class ObserverCallback(Action changed)
+    {
+        [JSInvokable]
+        public void OnChanged() => changed();
+    }
+
+    /// <summary>One folder observed by the browser; disposing it stops the observer.</summary>
+    private sealed class Observation(IJSObjectReference module, int observerId, DotNetObjectReference<ObserverCallback> callback) : IAsyncDisposable
+    {
+        public async ValueTask DisposeAsync()
+        {
+            try
+            {
+                await module.InvokeVoidAsync("unobserve", observerId).ConfigureAwait(false);
+            }
+            catch (Exception exception) when (exception is JSException or JSDisconnectedException or ObjectDisposedException)
+            {
+                // The page or the module is gone: the observer went with it.
+            }
+            finally
+            {
+                callback.Dispose();
+            }
+        }
+    }
 }
