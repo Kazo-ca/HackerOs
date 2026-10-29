@@ -72,6 +72,37 @@ wasm2/HackerOs/build/tools/check-change-entry.sh origin/main HEAD
 In a series, each work item PR to `<series>/base` adds its entry: the final PR to `main` brings
 them all.
 
+## In the OS: `/whats-new.json`
+
+When `OS/HackerOs.Ecosystem` builds, the `Tools/HackerOs.Tools.ChangeList` tool reads `changes/`
+and writes `obj/…/hackeros-whats-new/whats-new.json`, served at the root of the site like
+`/version.json` (ADR 0186 §4.1). It keeps only the entries whose audience contains `user`,
+grouped by version, the most recent first; the entries of `unreleased/` make the first group
+(`"version": null`, `"since": "<HackerOsVersion>"`). In a group, entries are sorted by category
+(`new`, `improved`, `fixed`, `developer`), then from the most recent PR to the oldest. The paths
+of `links` become GitHub URLs and `pr` also gives `prUrl`.
+
+To see the file without building the OS:
+
+```bash
+dotnet run --project wasm2/HackerOs/Tools/HackerOs.Tools.ChangeList -- \
+  site --changes wasm2/HackerOs/changes --version 2.1.0 --output /tmp/whats-new.json
+```
+
+In the OS:
+
+- `WhatsNewService` (Platform.Core, `HackerOs.Platform.Core.WhatsNew`) reads the file once per
+  page (a new deployment reloads the page) and keeps, for each account, the IDs already seen in
+  `~/.local/state/hackeros/whats-new.json`: `{ "seen": [ "<id>", … ] }`. An ID that leaves the
+  list stays in the file: an entry never becomes new again.
+- **New account** (ADR 0186 §5): when that file does not exist yet (or cannot be read), everything
+  is marked seen except the entries of the latest published version and those of the next version
+  already deployed, and the file is written at once. With no served list (offline), nothing is
+  written: the rule waits for a list.
+- Apps read the list through the SDK, with no capability: `HackWhatsNew.GetAsync()` (texts in the
+  app's language, English as fallback), `MarkSeenAsync(ids)` and `WatchAsync` (see
+  [`sdk-reference.md`](../framework/sdk-reference.md)).
+
 ## When a version is released
 
 The entries of `unreleased/` are grouped into `changes/<version>.json` in the PR that changes

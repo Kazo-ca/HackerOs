@@ -288,6 +288,12 @@ capability. `HackAccessibilityPreferences.Scale(pixels)` enlarges a size in pixe
 drawn in HTML with the tokens; an app that draws by itself (canvas, terminal, editor)
 reads them here. See [`accessibility.md`](../dev/accessibility.md).
 
+### What's new (`HackerOs.AppSdk.WhatsNew`)
+
+| API | Members | Capability |
+|---|---|---|
+| `HackWhatsNew` | `IsSupported`, `IsSupportedFor(context)`, `GetAsync` → `HackChangeList(Groups, NewCount)` (`HackChangeGroup(Version, Since, Date, Entries)`, `HackChangeEntry(Id, Category, Title, Description, PullRequestUrl, Links, IsNew)`, `HackChangeCategory`), `MarkSeenAsync(ids)`, `WatchAsync`: the OS change list in the app's language, and what the session user has already seen (ADR 0186, [`change-list.md`](../dev/change-list.md)). With no served list, the list is empty. | none |
+
 ### Embeddable components (`HackerOs.AppSdk.Components`)
 
 | Type | Role | Document |
