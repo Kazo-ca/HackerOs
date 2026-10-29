@@ -34,3 +34,33 @@
     overflow: hidden;
     background: transparent;
 }
+
+/* ADR 0185 §16: the hover bubble, placed by FileView.razor.js inside the view (hence ::deep). */
+.file-view {
+    position: relative;
+}
+
+.file-view ::deep .file-view-tooltip {
+    position: absolute;
+    z-index: 20;
+    max-width: 320px;
+    padding: 0.45rem 0.6rem;
+    border: 1px solid var(--hos-border, #30363d);
+    border-radius: var(--hos-radius-sm, 4px);
+    background: var(--hos-bg-elevated, #1c2128);
+    color: var(--hos-text-primary, #f0f6fc);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+    font-size: 0.78rem;
+    line-height: 1.35;
+    pointer-events: none;
+    overflow-wrap: anywhere;
+}
+
+.file-view ::deep .file-view-tooltip-title {
+    font-weight: 600;
+    margin-bottom: 0.15rem;
+}
+
+.file-view ::deep .file-view-tooltip-line {
+    color: var(--hos-text-secondary, #8b949e);
+}

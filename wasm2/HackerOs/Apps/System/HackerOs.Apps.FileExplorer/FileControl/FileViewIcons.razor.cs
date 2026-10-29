@@ -1,5 +1,6 @@
 using HackerOs.AppSdk;
 using HackerOs.AppSdk.Blazor;
+using HackerOs.AppSdk.Icons;
 using HackerOs.Apps.FileExplorer.FileControl.Icons;
 using HackerOs.Simulation.Abstractions.FileSystem;
 using Microsoft.AspNetCore.Components;
@@ -190,6 +191,15 @@ public partial class FileViewIcons : IAsyncDisposable
         Owner.CancelRename(item);
         return Task.CompletedTask;
     }
+
+    /// <summary>The icon of a folder whose preview shows entries (ADR 0185 §14).</summary>
+    private static readonly ShellIconDescriptor OpenFolderIcon = ShellIconDescriptor.Vector(IconLibrary.Lucide, "folder-open");
+
+    /// <summary>Whether a tile gets a preview: a folder drawn with the provider's icon (not an override).</summary>
+    internal static bool WantsPreview(FileViewItem item) => item.IsDirectory && item.IconOverride is null;
+
+    /// <summary>The preview of a folder's tile, <see langword="null"/> when none was read yet or the tile gets none.</summary>
+    internal IReadOnlyList<ShellIconDescriptor>? PreviewFor(FileViewItem item) => WantsPreview(item) ? Owner.GetFolderPreview(item) : null;
 
     private ShellIconDescriptor ResolveIcon(FileViewItem item)
     {

@@ -130,6 +130,16 @@ The synchronous `Flush()` does nothing, and a synchronous `Dispose()` of a strea
 holds unpublished bytes throws `InvalidOperationException` instead of losing
 them. The stream keeps the gateway of the app that opened it.
 
+### Total size of a folder (ADR 0185 §5)
+
+`HackDirectory.GetTotalSizeAsync(path)` (or `HackDirectoryInfo.GetTotalSizeAsync()`) returns a
+`HackDirectorySize`: the sum of the files' lengths, the number of files and of subfolders, like
+`du -sb`, without reading any content. Symbolic links are neither followed nor counted. A subfolder
+that cannot be read is skipped and `IsComplete` is then `false`. Under the SDK it is the file service's
+`IAppFileSystemGateway.MeasureAsync` (a default member that walks with `StatAsync` and
+`EnumerateAsync`, so with the caller's rights; shared algorithm `FileSystemTreeMeasure`). The folder
+Properties dialog shows it.
+
 ### Watching
 
 ```csharp

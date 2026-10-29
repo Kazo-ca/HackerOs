@@ -73,13 +73,16 @@ strategy.
 
 ## Visible information
 
-- Login and first account creation: build version and GitHub URL. If the host
+- Login and first account creation: build version, "Author: Benoit Robin" (link to
+  https://kazo.ca) and "GitHub project: [icon] Kazo-ca/HackerOs" (link to the
+  repository), labels in the system language
+  ([ADR 0187](adr/0187-guest-start-and-sign-in-credits.md)). If the host
   name is exactly `hackos.kazo.ca`, a message indicates the move of the
   original to `https://hackos.kazo.ca/legacy`. Ports do not affect this test;
   look-alike subdomains and URL parameters do not enable it.
-- WASM recovery and fatal errors: same reference to the repository and the
-  version.
-- Settings, About: current version through `HackerOsSdk.Version` and GitHub URL.
+- WASM recovery and fatal errors: same credits and the same version.
+- Settings, About: current version through `HackerOsSdk.Version`, author (kazo.ca
+  link) and GitHub project in the same format.
 - Legacy Settings, About: GitHub URL visible, legacy version unchanged.
 - Package metadata also points to the new repository. The common version is
   defined once in `build/Versions.props` (`2.1.0`).

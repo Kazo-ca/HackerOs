@@ -1,5 +1,8 @@
 .project-information { display: grid; gap: .5rem; padding: 1rem 0; border-top: 1px solid var(--hos-border-subtle, #314247); font-size: .8rem; line-height: 1.6; color: var(--hos-text-secondary, #a8bac4); }
 .project-release { font-weight: 650; color: var(--hos-text-primary, #e5f4f0); }
 a { color: var(--hos-accent, #42d392); overflow-wrap: anywhere; text-underline-offset: .2em; }
+.project-credit { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem; }
+a.project-repository { display: inline-flex; align-items: center; gap: .35rem; }
+.github-mark { flex: none; }
 a:focus-visible { outline: 2px solid var(--hos-focus-ring, #42d392); outline-offset: 3px; }
 .legacy-notice { margin: .35rem 0 0; padding: .8rem; border: 1px solid var(--hos-border-subtle, #314247); border-radius: var(--hos-radius-md, .75rem); background: var(--hos-bg-surface, #172025); }

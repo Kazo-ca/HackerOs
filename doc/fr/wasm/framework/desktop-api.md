@@ -10,6 +10,7 @@ Ce document décrit ce qu'une app utilise pour le bureau : les types `HackDeskto
 | --- | --- | --- |
 | `HackDesktopLayout`, `HackDesktopCell`, `HackDesktopOptions`, `HackDesktopItems` | `AppSdk` (`Files/HackDesktop.cs`) | La grille en fonctions pures, partagée par tout fournisseur. |
 | `HackDesktopEntry` | `AppSdk` (`Files/HackDesktopEntry.cs`) | Lecture et écriture des `.desktop`, `CreateShortcutAsync`. |
+| `HackDesktopLink` | `AppSdk` (`Files/HackDesktopLink.cs`) | Raccourci vers un fichier ou un dossier (`Type=Link`), `CreateLinkAsync` (ADR 0185 §13). |
 | `HackDesktopSettings` | `AppSdk` (`Files/HackDesktopSettings.cs`) | Lecture et écriture de `desktop.config`. |
 | `HackAppIcons.LucideName` | `AppSdk` (`Apps/`) | Icône Lucide d'une app (celle du menu Démarrer), reprise par les raccourcis. |
 
@@ -76,6 +77,31 @@ fichier qui n'est pas un raccourci valide reste un fichier texte.
 Dans tout contrôle de fichiers fourni par l'explorateur, un raccourci montre le
 nom et l'icône de l'app, sans extension ; l'ouvrir lance l'app avec ses
 arguments ; une app absente grise l'icône et l'ouvrir l'explique.
+
+## Raccourcis vers un fichier ou un dossier (`HackDesktopLink`)
+
+« Envoyer vers ▸ Bureau » de l'explorateur écrit un raccourci de type `Link`
+(ADR 0185 §13), au format freedesktop.org :
+
+```ini
+[Desktop Entry]
+Type=Link
+Name=report.txt
+URL=file:///home/alice/Mes%20documents/report.txt
+```
+
+`URL` est une URL `file://` d'un chemin absolu, chaque segment encodé en
+pourcentage (`ToUrl`, `PathFromUrl`) ; aucun autre schéma n'est lu. `TryParse`,
+`Format` et `CreateLinkAsync(dossier, cible, nom?)` (écrit `nom.desktop`, puis
+`nom (2).desktop`… ; le nom par défaut est celui de la cible, qui n'est pas
+vérifiée). Un raccourci d'app (`Type=Application`) n'est pas un lien, et
+inversement.
+
+Dans tout contrôle de fichiers fourni par l'explorateur, un lien montre son nom
+avec l'icône Lucide `folder-symlink` (dossier) ou `file-symlink` (fichier) ; une
+cible disparue grise l'icône. L'ouvrir entre dans le dossier (dans une nouvelle
+fenêtre de l'explorateur sur le bureau) ou ouvre le fichier avec son app ; une
+cible disparue l'explique. Le lien ne suit pas une cible déplacée.
 
 ## Contrôle de fichiers en mode Bureau
 

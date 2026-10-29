@@ -400,13 +400,14 @@
     padding-bottom: 6px;
     border-bottom: 1px solid var(--hos-border-subtle, #27343a);
 }
-}
 
 .info-line span {
     color: var(--hos-text-secondary, #a8bac4);
 }
 
 .info-line a { color: var(--hos-accent, #42d392); overflow-wrap: anywhere; text-align: right; }
+.info-line a.about-repository { display: inline-flex; align-items: center; gap: .35rem; }
+.github-mark { flex: none; }
 
 .danger-zone {
     border-color: var(--hos-error, #ff8f87);

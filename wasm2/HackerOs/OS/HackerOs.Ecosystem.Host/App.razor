@@ -43,7 +43,7 @@
     <MudSnackbarProvider />
     @if (State.UpdateAvailable)
     {
-        <aside class="update-notice" role="status">
+        <aside class="@UpdateNoticeClass" role="status">
             <span>@(State.AvailableVersion is { } version ? L["Update.VersionReady", version] : L["Update.Ready"]) @L["Update.Detail"]</span>
             <button type="button" disabled="@IsRestartingForUpdate" @onclick="RestartForUpdateAsync">@L["Update.Restart"]</button>
         </aside>
@@ -225,6 +225,16 @@
 
     // ADR 0174: reads the served version.json every five minutes (browser host only).
     private HackerOs.Platform.Blazor.LazyLoading.HostReleaseMonitor? ReleaseMonitor { get; set; }
+
+    /// <summary>
+    /// The update notice stays above the desktop taskbar or the mobile navigation bar of the shown
+    /// session (issue #242); the sign-in screens have no bar, so it keeps the bottom corner there.
+    /// </summary>
+    private string UpdateNoticeClass => State.View != EcosystemHostView.Desktop
+        ? "update-notice"
+        : PlatformPreference.Current.ActivePlatform == WellKnownAppPlatforms.Mobile
+            ? "update-notice above-mobile-nav"
+            : "update-notice above-taskbar";
 
     private ThemePlatform ActiveThemePlatform =>
         PlatformPreference.Current.ActivePlatform == WellKnownAppPlatforms.Mobile

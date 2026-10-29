@@ -109,6 +109,8 @@
     <value>Restart to update</value>
   </data>
   <data name="Project.LegacyMoved" xml:space="preserve"><value>The original version has moved to</value></data>
+  <data name="Project.Author" xml:space="preserve"><value>Author:</value></data>
+  <data name="Project.GitHub" xml:space="preserve"><value>GitHub project:</value></data>
   <data name="Login.UsePasskey" xml:space="preserve">
     <value>Sign in with a passkey</value>
   </data>

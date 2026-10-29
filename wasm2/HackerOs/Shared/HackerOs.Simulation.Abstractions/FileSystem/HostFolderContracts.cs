@@ -165,3 +165,33 @@ public interface IHostFolderAccess
     /// <summary>Removes a stored folder; nothing happens when the key is unknown.</summary>
     ValueTask ForgetAsync(string key, CancellationToken cancellationToken = default);
 }
+
+/// <summary>
+/// A host folder that can tell when its content changes on the host computer (ADR 0185 §15): the
+/// browser's <c>FileSystemObserver</c>, where it exists. A folder without it is read again on a timer.
+/// </summary>
+public interface IObservableHostFolder
+{
+    /// <summary>
+    /// Calls <paramref name="changed"/> whenever something changes in the folder at <paramref name="path"/>
+    /// (its direct entries at least), until the returned handle is disposed.
+    /// </summary>
+    /// <param name="path">The folder, as segments relative to the host folder; empty for its root.</param>
+    /// <param name="changed">Called after a change; it may be called from any context, more than once per change.</param>
+    /// <param name="cancellationToken">Cancels the setup.</param>
+    /// <returns>The handle that stops observing, or <see langword="null"/> when this browser cannot observe.</returns>
+    ValueTask<IAsyncDisposable?> ObserveAsync(IReadOnlyList<string> path, Action changed, CancellationToken cancellationToken = default);
+}
+
+/// <summary>
+/// Whether the user can see HackerOS (ADR 0185 §15): a network drive is read again on a timer only
+/// while the page is visible, and at once when the page comes back (shown again or focused).
+/// </summary>
+public interface IHostActivitySignal
+{
+    /// <summary>Gets whether the page is visible.</summary>
+    bool IsVisible { get; }
+
+    /// <summary>Raised when the page is shown again or gets the focus back.</summary>
+    event Action? Resumed;
+}

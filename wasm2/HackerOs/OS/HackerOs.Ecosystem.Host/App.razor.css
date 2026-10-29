@@ -143,11 +143,14 @@ code {
     word-break: break-word;
 }
 
+/* Above the taskbar (z-index 900), the mobile navigation bar (1200) and the windows, like the
+   desktop shell's other notices (5000); below the window menus and screen overlays (9000). */
 .update-notice {
+    --update-notice-offset: 0px;
     position: fixed;
-    z-index: 100;
+    z-index: 5000;
     right: 1rem;
-    bottom: 1rem;
+    bottom: calc(var(--update-notice-offset) + 1rem);
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -156,6 +159,15 @@ code {
     border: 1px solid var(--hos-accent, #42d392);
     border-radius: var(--hos-radius-sm, 0.25rem);
     background: var(--hos-bg-surface, #151c20);
+}
+
+.update-notice.above-taskbar {
+    --update-notice-offset: var(--hos-taskbar-height, 2.75rem);
+}
+
+/* The navigation bar's height plus its vertical padding (MobileSystemNavigationBar.razor.css). */
+.update-notice.above-mobile-nav {
+    --update-notice-offset: calc(var(--hos-mobile-nav-height, 3.5rem) + 0.75rem + env(safe-area-inset-bottom));
 }
 
 .update-notice button {
@@ -187,7 +199,7 @@ code {
 @media (max-width: 30rem) {
     .update-notice {
         right: 0.75rem;
-        bottom: 0.75rem;
+        bottom: calc(var(--update-notice-offset) + 0.75rem);
         left: 0.75rem;
         flex-wrap: wrap;
     }

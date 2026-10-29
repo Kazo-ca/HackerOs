@@ -84,4 +84,28 @@
   <data name="Type.Folder" xml:space="preserve">
     <value>Folder</value>
   </data>
+  <data name="Drag.TooLarge" xml:space="preserve">
+    <value>Too large to drag out of the browser ({0}): use Download.</value>
+  </data>
+  <data name="Empty.Folder" xml:space="preserve">
+    <value>This folder is empty.</value>
+  </data>
+  <data name="Empty.NoMatch" xml:space="preserve">
+    <value>Nothing to show here.</value>
+  </data>
+  <data name="Tooltip.Type" xml:space="preserve">
+    <value>Type: {0}</value>
+  </data>
+  <data name="Tooltip.Size" xml:space="preserve">
+    <value>Size: {0}</value>
+  </data>
+  <data name="Tooltip.Modified" xml:space="preserve">
+    <value>Modified: {0}</value>
+  </data>
+  <data name="Tooltip.ItemCount.One" xml:space="preserve">
+    <value>Contains 1 item</value>
+  </data>
+  <data name="Tooltip.ItemCount.Many" xml:space="preserve">
+    <value>Contains {0} items</value>
+  </data>
 </root>

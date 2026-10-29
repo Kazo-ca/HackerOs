@@ -1,0 +1,19 @@
+{
+  "id": "6405992b-e960-41ab-9d44-1106b411b980",
+  "category": "new",
+  "audience": [
+    "user"
+  ],
+  "title": {
+    "en": "Credits on the sign-in screen",
+    "fr": "Crédits sur l'écran de connexion"
+  },
+  "description": {
+    "en": "The sign-in screens and Settings ▸ About show the author and a link to the GitHub project.",
+    "fr": "Les écrans de connexion et Paramètres ▸ À propos affichent l'auteur et un lien vers le projet GitHub."
+  },
+  "pr": 262,
+  "links": [
+    "doc/en/wasm/dev/adr/0187-guest-start-and-sign-in-credits.md"
+  ]
+}

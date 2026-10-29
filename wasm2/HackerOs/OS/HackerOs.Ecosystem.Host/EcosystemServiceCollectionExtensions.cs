@@ -278,7 +278,15 @@ public static class EcosystemServiceCollectionExtensions
         // IJSRuntime scoping note.
         services.AddScoped<IFileSystemPathResolver, FileSystemPathResolver>();
         services.AddSingleton<IFileSystemAuthorizer, FileSystemAuthorizer>();
-        services.AddScoped<IFileSystemService, FileSystemService>();
+        // ADR 0185 §15: a network drive's watched folders are listed again while the page is visible.
+        services.AddScoped<IHostActivitySignal>(provider =>
+            new BrowserHostActivitySignal(provider.GetRequiredService<Microsoft.JSInterop.IJSRuntime>()));
+        services.AddScoped<IFileSystemService>(provider =>
+        {
+            FileSystemService service = ActivatorUtilities.CreateInstance<FileSystemService>(provider);
+            service.HostActivity = provider.GetService<IHostActivitySignal>();
+            return service;
+        });
         services.AddTransient<FileSystemSeeder>();
         // Depends on IFileSystemService, which is Scoped (see above) — see this file's IJSRuntime
         // scoping note.

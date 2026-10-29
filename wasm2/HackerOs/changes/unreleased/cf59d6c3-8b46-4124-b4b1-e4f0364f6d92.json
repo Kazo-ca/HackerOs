@@ -1,0 +1,19 @@
+{
+  "id": "cf59d6c3-8b46-4124-b4b1-e4f0364f6d92",
+  "category": "developer",
+  "audience": [
+    "developer"
+  ],
+  "title": {
+    "en": "Recursive total size in the file API",
+    "fr": "Taille totale récursive dans l'API de fichiers"
+  },
+  "description": {
+    "en": "The file service and the SDK compute the total size of a folder and its content.",
+    "fr": "Le service de fichiers et le SDK calculent la taille totale d'un dossier et de son contenu."
+  },
+  "pr": 275,
+  "links": [
+    "doc/en/wasm/dev/adr/0185-file-explorer-improvements.md"
+  ]
+}
