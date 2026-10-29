@@ -1,3 +1,4 @@
+using HackerOs.AppSdk;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
@@ -63,10 +64,12 @@ public sealed partial class ExplorerSidebarResizer
 
     /// <summary>Called by the script at the end of a drag with the width the panel was given.</summary>
     [JSInvokable]
-    public Task OnResized(int width)
+    public async Task OnResized(int width)
     {
+        // Called from JavaScript, outside any frame: enter the app's frame first (ADR 0161 §1).
+        using IDisposable? scope = AppContext is { } context ? HackExecutionContext.Enter(context) : null;
         _appliedWidth = FileExplorerSettings.ClampSidebarWidth(width);
-        return CommitAsync(width);
+        await CommitAsync(width);
     }
 
     /// <summary>Gets the width after a key press on the focused handle, or <see langword="null"/> for any other key.</summary>

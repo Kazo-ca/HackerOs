@@ -1344,6 +1344,8 @@ public partial class FileView : IAsyncDisposable
     [JSInvokable]
     public async Task<string[]?> GetItemTooltipAsync(string path)
     {
+        // Called from JavaScript, outside any frame: enter the app's frame first (ADR 0161 §1).
+        using IDisposable? scope = AppContext is { } context ? HackExecutionContext.Enter(context) : null;
         FileViewItem? item = Items.FirstOrDefault(candidate => candidate.FullPath.Value == path);
         if (item is null || item.IsRenaming)
         {
