@@ -228,6 +228,24 @@ public static class HackUserAccounts
         return Call(context, gateway => gateway.RemovePasskeyAsync(passkeyId, cancellationToken));
     }
 
+    /// <summary>Asks for the system's "Create my account" form (ambient context).</summary>
+    /// <param name="cancellationToken">Cancels the request.</param>
+    /// <returns><see langword="true"/> when the form will be shown.</returns>
+    public static Task<bool> RequestGuestAccountCreationAsync(CancellationToken cancellationToken = default) =>
+        RequestGuestAccountCreationAsync(HackExecutionContext.Current, cancellationToken);
+
+    /// <summary>
+    /// Asks for the system's "Create my account" form (ADR 0187 section 5), from the guest's
+    /// session only: the guest session closes and the sign-in screen shows the form, where the user
+    /// chooses to migrate the guest into their account or to delete it. The app never sees the new
+    /// password. No capability is needed: the form only ever converts the guest.
+    /// </summary>
+    /// <param name="context">The calling app's context.</param>
+    /// <param name="cancellationToken">Cancels the request.</param>
+    /// <returns><see langword="true"/> when the form will be shown; <see langword="false"/> outside the guest's session.</returns>
+    public static Task<bool> RequestGuestAccountCreationAsync(IAppExecutionContext context, CancellationToken cancellationToken = default) =>
+        Call(context, gateway => gateway.RequestGuestAccountCreationAsync(cancellationToken));
+
     /// <summary>
     /// Checks a new account against the rules of ADR 0169: a login name of lowercase letters,
     /// digits, <c>-</c> and <c>_</c> starting with a letter (32 characters at most), a display name,

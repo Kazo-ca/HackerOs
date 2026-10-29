@@ -1,0 +1,17 @@
+{
+  "id": "1db7d5e7-659d-4d81-b2ca-1b43812ee7cf",
+  "category": "fixed",
+  "audience": [
+    "user"
+  ],
+  "title": {
+    "en": "Signing out returns to the sign-in screen",
+    "fr": "Fermer la session ramène à l'écran de connexion"
+  },
+  "description": {
+    "en": "After Sign out, the sign-in screen appears again instead of staying on the boot screen, and the windows of the closed session no longer remain open for the next one.",
+    "fr": "Après Fermer la session, l'écran de connexion revient au lieu de rester sur l'écran de démarrage, et les fenêtres de la session fermée ne restent plus ouvertes pour la suivante."
+  },
+  "pr": 286,
+  "links": []
+}

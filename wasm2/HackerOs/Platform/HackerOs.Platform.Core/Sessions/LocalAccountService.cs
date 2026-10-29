@@ -20,7 +20,7 @@ public sealed class LocalAccountService
     /// <summary>Group every administrator account belongs to, as the first one created at setup.</summary>
     public const string AdministratorsGroupName = "administrators";
 
-    private static readonly string[] ReservedLogins = [ServiceAccount.LoginName, "root", AdministratorsGroupName];
+    private static readonly string[] ReservedLogins = [ServiceAccount.LoginName, "root", AdministratorsGroupName, GuestAccountService.LoginName];
 
     private readonly ILocalUserRepository _users;
     private readonly ILocalGroupRepository _groups;
@@ -57,7 +57,7 @@ public sealed class LocalAccountService
         _iterations = iterations;
     }
 
-    /// <summary>Gets whether a login name is reserved for the system (<c>hackeros-svc</c>, <c>root</c>, <c>administrators</c>).</summary>
+    /// <summary>Gets whether a login name is reserved for the system (<c>hackeros-svc</c>, <c>root</c>, <c>administrators</c>, <c>guest</c>).</summary>
     /// <param name="loginName">A login name.</param>
     /// <returns><see langword="true"/> when no account may take it.</returns>
     public static bool IsReserved(string loginName) =>
@@ -98,6 +98,13 @@ public sealed class LocalAccountService
                 || await _groups.FindByNameAsync(loginName, cancellationToken).ConfigureAwait(false) is not null)
             {
                 throw new ArgumentException($"useradd: user '{loginName.Value}' already exists", nameof(account));
+            }
+
+            // ADR 0187 section 4: while the guest exists, the first registered account is created
+            // from it ("Create my account": migrate or delete the guest), never beside it.
+            if ((await _users.GetAllAsync(cancellationToken).ConfigureAwait(false)).Any(static user => user.IsGuest))
+            {
+                throw new ArgumentException("useradd: create your own account from the guest account first", nameof(account));
             }
 
             LocalPasswordCredential credential = await LocalPasswordHasher

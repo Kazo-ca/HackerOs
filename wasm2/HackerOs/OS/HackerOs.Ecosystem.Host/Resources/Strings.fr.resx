@@ -88,7 +88,7 @@
     <value>Les mots de passe doivent être identiques et contenir au moins huit caractères.</value>
   </data>
   <data name="Setup.ReservedLogin" xml:space="preserve">
-    <value>« {0} » est réservé aux services du système.</value>
+    <value>« {0} » est réservé au système.</value>
   </data>
   <data name="Setup.Submit" xml:space="preserve">
     <value>Créer le profil local</value>
@@ -122,5 +122,56 @@
   </data>
   <data name="Login.PasskeyUnsupported" xml:space="preserve">
     <value>Ce navigateur ne peut pas utiliser de clé d'accès sur cette page (HTTPS ou localhost est nécessaire).</value>
+  </data>
+  <data name="Guest.DisplayName" xml:space="preserve">
+    <value>Invité</value>
+  </data>
+  <data name="Guest.Separator" xml:space="preserve">
+    <value>ou</value>
+  </data>
+  <data name="Guest.Start" xml:space="preserve">
+    <value>Démarrer en invité</value>
+  </data>
+  <data name="Guest.StartHint" xml:space="preserve">
+    <value>Aucun compte à créer : l'invité garde ses fichiers d'une visite à l'autre, et vous pourrez créer votre compte plus tard.</value>
+  </data>
+  <data name="Guest.Continue" xml:space="preserve">
+    <value>Continuer en invité</value>
+  </data>
+  <data name="Guest.Unavailable" xml:space="preserve">
+    <value>Un compte existe déjà : l'invité n'est plus disponible.</value>
+  </data>
+  <data name="GuestAccount.Open" xml:space="preserve">
+    <value>Créer mon compte</value>
+  </data>
+  <data name="GuestAccount.Intro" xml:space="preserve">
+    <value>Choisissez un nom de connexion et un mot de passe. Votre compte sera administrateur, et le compte invité ne sera plus proposé.</value>
+  </data>
+  <data name="GuestAccount.Choice" xml:space="preserve">
+    <value>Que faire de l'invité</value>
+  </data>
+  <data name="GuestAccount.Migrate" xml:space="preserve">
+    <value>Migrer</value>
+  </data>
+  <data name="GuestAccount.MigrateHint" xml:space="preserve">
+    <value>Recommandé. L'invité devient votre compte et garde ses fichiers, ses réglages et ses applications.</value>
+  </data>
+  <data name="GuestAccount.Delete" xml:space="preserve">
+    <value>Supprimer l'invité</value>
+  </data>
+  <data name="GuestAccount.DeleteHint" xml:space="preserve">
+    <value>Un nouveau compte vide est créé et l'invité est supprimé.</value>
+  </data>
+  <data name="GuestAccount.DeleteWarning" xml:space="preserve">
+    <value>Tous les fichiers du dossier personnel de l'invité seront supprimés. Les applications installées pour tous les utilisateurs restent.</value>
+  </data>
+  <data name="GuestAccount.Submit" xml:space="preserve">
+    <value>Créer mon compte</value>
+  </data>
+  <data name="GuestAccount.Back" xml:space="preserve">
+    <value>Retour</value>
+  </data>
+  <data name="GuestAccount.Title" xml:space="preserve">
+    <value>Créer mon compte</value>
   </data>
 </root>

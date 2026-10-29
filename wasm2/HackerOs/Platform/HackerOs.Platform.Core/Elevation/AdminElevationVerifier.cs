@@ -33,13 +33,42 @@ public sealed class AdminElevationVerifier : IAdminElevationVerifier
     }
 
     /// <inheritdoc />
+    /// <remarks>
+    /// ADR 0187 section 2: the guest account, while it is the only account and has no password,
+    /// confirms with an empty password (a plain confirmation in the prompt, Enter at <c>sudo</c>).
+    /// Any other account without a password is still refused.
+    /// </remarks>
     public Task<AdminElevationVerificationResult> VerifyAsync(
         string loginName, string password, CancellationToken cancellationToken = default) =>
         VerifyCoreAsync(
             loginName,
             async (user, token) => user.Credential is { } credential
-                && await LocalPasswordHasher.VerifyAsync(password ?? string.Empty, credential, _asyncHasher, token).ConfigureAwait(false),
+                ? await LocalPasswordHasher.VerifyAsync(password ?? string.Empty, credential, _asyncHasher, token).ConfigureAwait(false)
+                : string.IsNullOrEmpty(password) && await IsLoneGuestAsync(user, token).ConfigureAwait(false),
             cancellationToken);
+
+    /// <summary>
+    /// Gets whether <paramref name="loginName"/> may confirm an elevation without a password: the
+    /// guest account of ADR 0187 while it is the only account and has none. Prompts use it to show
+    /// a plain confirmation; the verification itself still goes through <see cref="VerifyAsync"/>.
+    /// </summary>
+    /// <param name="loginName">The administrator login the prompt suggests.</param>
+    /// <param name="cancellationToken">Cancels the read.</param>
+    public async Task<bool> CanConfirmWithoutPasswordAsync(string? loginName, CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(loginName))
+        {
+            return false;
+        }
+
+        LocalUser? lone = GuestAccountService.FindLoneGuest(await _users.GetAllAsync(cancellationToken).ConfigureAwait(false));
+        return lone is not null && string.Equals(lone.LoginName.Value, loginName.Trim(), StringComparison.OrdinalIgnoreCase);
+    }
+
+    private async Task<bool> IsLoneGuestAsync(LocalUser user, CancellationToken cancellationToken) =>
+        user.IsGuest
+        && GuestAccountService.FindLoneGuest(await _users.GetAllAsync(cancellationToken).ConfigureAwait(false)) is { } lone
+        && lone.Id == user.Id;
 
     /// <summary>
     /// Verifies that a login belongs to an enabled Administrator who confirms with one of their

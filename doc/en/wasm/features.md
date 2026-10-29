@@ -165,6 +165,10 @@ This section lists what is released in the `main` branch and online.
 - **Multiple accounts** with passwords, administrators and `sudo`. An
   administrator adds and removes users.
   ([ADR 0169](dev/adr/0169-administrator-adds-and-removes-users.md))
+- **Start as a guest**: try the OS without creating an account, then "Create
+  my account", keeping the guest's files or not; credits on the sign-in
+  screen. ([`guest-account.md`](dev/guest-account.md),
+  [ADR 0187](dev/adr/0187-guest-start-and-sign-in-credits.md))
 - **Passkeys**: sign in with a fingerprint, face, device PIN or security key.
   ([`passkeys.md`](dev/passkeys.md))
 - **Application capabilities** and administrator approval of sensitive
@@ -238,7 +242,6 @@ points to its PR.
 
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
-| Guest start and credits | Try the OS without creating an account, then keep your files by creating one; credits on the sign-in screen. | [0187](dev/adr/0187-guest-start-and-sign-in-credits.md) | [#243](https://github.com/Kazo-ca/HackerOs/issues/243) |
 | What's new since your last visit | List of changes per version, shown in the OS and reused in the release notes. | [0186](dev/adr/0186-whats-new-change-list.md) | [#252](https://github.com/Kazo-ca/HackerOs/issues/252) |
 
 ### Hack Store

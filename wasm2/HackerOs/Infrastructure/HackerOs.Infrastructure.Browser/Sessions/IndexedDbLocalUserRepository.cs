@@ -47,21 +47,72 @@ public sealed partial class IndexedDbLocalUserRepository : ILocalUserRepository,
             now,
             now);
 
-        await EnsureOpenAsync(cancellationToken).ConfigureAwait(false);
+        await AddAsync(user, cancellationToken).ConfigureAwait(false);
+        return user;
+    }
+
+    /// <inheritdoc />
+    public async ValueTask<LocalUser> CreateGuestUserAsync(
+        LocalLoginName loginName,
+        string displayName,
+        AppAuthority authority,
+        LocalGroupId primaryGroupId,
+        IReadOnlyCollection<LocalGroupId> additionalGroupIds,
+        CancellationToken cancellationToken = default)
+    {
+        DateTimeOffset now = _timeProvider.GetUtcNow();
+        LocalUser guest = new(
+            LocalUserId.FromGuid(Guid.NewGuid()),
+            loginName,
+            displayName,
+            enabled: true,
+            authority,
+            primaryGroupId,
+            additionalGroupIds,
+            credential: null,
+            revision: 1,
+            now,
+            now)
+        {
+            IsGuest = true
+        };
+
+        await AddAsync(guest, cancellationToken).ConfigureAwait(false);
+        return guest;
+    }
+
+    /// <inheritdoc />
+    public async ValueTask<LocalUser> ConvertGuestUserAsync(
+        LocalUserId id,
+        LocalLoginName loginName,
+        string displayName,
+        LocalPasswordCredential credential,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(credential);
+        LocalUser? current = await FindByIdAsync(id, cancellationToken).ConfigureAwait(false);
+        if (current is not { IsGuest: true })
+        {
+            throw new InvalidOperationException($"Local user '{id}' is not the guest account.");
+        }
+
         try
         {
-            await _adapter.ExecuteAsync(
-                TransactionBoundary,
-                IndexedDbTransactionMode.ReadWrite,
-                [new IndexedDbOperation("add", HackerOsIndexedDbSchema.UserStoreName, Value: LocalUserRecord.FromDomain(user))],
+            return await MutateAsync(
+                id,
+                user => user with
+                {
+                    LoginName = loginName.Value,
+                    DisplayName = displayName,
+                    Credential = LocalCredentialRecord.FromDomain(credential),
+                    IsGuest = null
+                },
                 cancellationToken).ConfigureAwait(false);
         }
         catch (JSException exception) when (exception.Message.Contains("ConstraintError", StringComparison.Ordinal))
         {
             throw new InvalidOperationException($"Login name '{loginName}' is already in use.", exception);
         }
-
-        return user;
     }
 
     /// <inheritdoc />
@@ -225,6 +276,23 @@ public sealed partial class IndexedDbLocalUserRepository : ILocalUserRepository,
         return updated.ToDomain();
     }
 
+    private async ValueTask AddAsync(LocalUser user, CancellationToken cancellationToken)
+    {
+        await EnsureOpenAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            await _adapter.ExecuteAsync(
+                TransactionBoundary,
+                IndexedDbTransactionMode.ReadWrite,
+                [new IndexedDbOperation("add", HackerOsIndexedDbSchema.UserStoreName, Value: LocalUserRecord.FromDomain(user))],
+                cancellationToken).ConfigureAwait(false);
+        }
+        catch (JSException exception) when (exception.Message.Contains("ConstraintError", StringComparison.Ordinal))
+        {
+            throw new InvalidOperationException($"Login name '{user.LoginName}' is already in use.", exception);
+        }
+    }
+
     private ValueTask EnsureOpenAsync(CancellationToken cancellationToken) =>
         _adapter.OpenAsync(IndexedDbMigrationPlan.CreateCurrent(), cancellationToken);
 
@@ -240,7 +308,8 @@ public sealed partial class IndexedDbLocalUserRepository : ILocalUserRepository,
         [property: JsonPropertyName("revision")] long Revision,
         [property: JsonPropertyName("createdAtUtc")] DateTimeOffset CreatedAtUtc,
         [property: JsonPropertyName("updatedAtUtc")] DateTimeOffset UpdatedAtUtc,
-        [property: JsonPropertyName("passkeys")] LocalPasskeyRecord[]? Passkeys = null)
+        [property: JsonPropertyName("passkeys")] LocalPasskeyRecord[]? Passkeys = null,
+        [property: JsonPropertyName("isGuest")] bool? IsGuest = null)
     {
         internal static LocalUserRecord FromDomain(LocalUser user) => new(
             user.Id.ToString(),
@@ -254,7 +323,8 @@ public sealed partial class IndexedDbLocalUserRepository : ILocalUserRepository,
             user.Revision,
             user.CreatedAtUtc,
             user.UpdatedAtUtc,
-            user.Passkeys.Count == 0 ? null : [.. user.Passkeys.Select(LocalPasskeyRecord.FromDomain)]);
+            user.Passkeys.Count == 0 ? null : [.. user.Passkeys.Select(LocalPasskeyRecord.FromDomain)],
+            user.IsGuest ? true : null);
 
         internal static LocalUser ToDomain(JsonElement element) =>
             JsonSerializer.Deserialize(element, LocalUserJsonContext.Default.LocalUserRecord)!.ToDomain();
@@ -273,7 +343,9 @@ public sealed partial class IndexedDbLocalUserRepository : ILocalUserRepository,
             UpdatedAtUtc)
         {
             // Records written before ADR 0168 have no "passkeys" property.
-            Passkeys = this.Passkeys is null ? [] : [.. this.Passkeys.Select(static passkey => passkey.ToDomain())]
+            Passkeys = this.Passkeys is null ? [] : [.. this.Passkeys.Select(static passkey => passkey.ToDomain())],
+            // Only the guest account of ADR 0187 has the property.
+            IsGuest = this.IsGuest == true
         };
     }
 

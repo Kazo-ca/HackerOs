@@ -35,6 +35,7 @@ public partial class UsersPanel
     private bool _addFailed;
     private string? _loadError;
     private bool _busy;
+    private string? _guestMessage;
 
     private string _current = string.Empty;
     private string _ownNew = string.Empty;
@@ -62,6 +63,9 @@ public partial class UsersPanel
     private bool CurrentHasPassword => CurrentAccount?.HasPassword ?? true;
 
     private bool CurrentIsAdministrator => CurrentAccount?.IsAdministrator ?? false;
+
+    /// <summary>ADR 0187 section 4: no account is added beside the guest; it creates its own first.</summary>
+    private bool GuestExists => _accounts.Any(account => account.IsGuest);
 
     private IReadOnlyList<HackUserAccount> OtherAccounts => _accounts.Where(account => !account.IsCurrentUser).ToArray();
 
@@ -203,6 +207,28 @@ public partial class UsersPanel
         {
             _busy = false;
         }
+    }
+
+    /// <summary>
+    /// ADR 0187 section 5: asks the OS for its "Create my account" form; it closes the guest
+    /// session (this window included) and shows the form on the sign-in screen.
+    /// </summary>
+    internal async Task CreateMyAccountAsync()
+    {
+        _guestMessage = null;
+        try
+        {
+            if (!await HackUserAccounts.RequestGuestAccountCreationAsync(Context, Context.CancellationToken))
+            {
+                _guestMessage = L["Users.Guest.Unavailable"];
+            }
+        }
+        catch (Exception exception) when (exception is UnauthorizedAccessException or InvalidOperationException or NotSupportedException)
+        {
+            _guestMessage = L["Users.Error.Failed", exception.Message];
+        }
+
+        StateHasChanged();
     }
 
     /// <summary>ADR 0169 §1: adds an account; the OS asks an administrator first.</summary>

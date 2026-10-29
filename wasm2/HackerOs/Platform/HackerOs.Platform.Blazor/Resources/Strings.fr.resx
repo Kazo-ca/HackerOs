@@ -737,4 +737,13 @@
   <data name="WindowMenu.NewScreen" xml:space="preserve">
     <value>Nouvel écran</value>
   </data>
+  <data name="Security.GuestConfirm" xml:space="preserve">
+    <value>Vous êtes connecté en invité, le seul compte de cet ordinateur : confirmez pour continuer, aucun mot de passe n'est demandé.</value>
+  </data>
+  <data name="Security.Confirm" xml:space="preserve">
+    <value>Confirmer</value>
+  </data>
+  <data name="Launcher.Guest.CreateAccount" xml:space="preserve">
+    <value>Invité · Créer mon compte</value>
+  </data>
 </root>

@@ -171,6 +171,10 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
 - **Plusieurs comptes** avec mot de passe, administrateurs et `sudo`. Un
   administrateur ajoute et retire des utilisateurs.
   ([ADR 0169](dev/adr/0169-administrator-adds-and-removes-users.md))
+- **Démarrer en invité** : essayer l'OS sans créer de compte, puis
+  « Créer mon compte » en gardant ou non les fichiers de l'invité ; crédits
+  sur l'écran de connexion. ([`guest-account.md`](dev/guest-account.md),
+  [ADR 0187](dev/adr/0187-guest-start-and-sign-in-credits.md))
 - **Clés d'accès (passkeys)** : connexion par empreinte, visage, NIP de
   l'appareil ou clé de sécurité. ([`passkeys.md`](dev/passkeys.md))
 - **Capacités des applications** et approbation des capacités sensibles par un
@@ -244,7 +248,6 @@ dans `main`, le lien mène à sa PR.
 
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
-| Démarrer en invité et crédits | Essayer l'OS sans créer de compte, puis garder ses fichiers en créant son compte ; crédits sur l'écran de connexion. | [0187](dev/adr/0187-guest-start-and-sign-in-credits.md) | [#243](https://github.com/Kazo-ca/HackerOs/issues/243) |
 | Nouveautés depuis la dernière visite | Liste des changements par version, affichée dans l'OS et reprise dans les notes de version. | [0186](dev/adr/0186-whats-new-change-list.md) | [#252](https://github.com/Kazo-ca/HackerOs/issues/252) |
 
 ### Hack Store

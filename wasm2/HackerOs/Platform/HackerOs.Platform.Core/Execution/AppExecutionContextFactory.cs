@@ -466,7 +466,8 @@ public sealed class AppExecutionContextFactory
             new AppUserAccountsGateway(_administration.Passwords, capabilities, gate)
             {
                 Accounts = _administration.Accounts,
-                Passkeys = _administration.Passkeys
+                Passkeys = _administration.Passkeys,
+                GuestRequests = _administration.GuestRequests
             },
             new AppComponentProviderAdministrationGateway(_administration.ComponentProviders, _administration.ApprovalPrompt, capabilities, gate),
             new AppFileMenuEntryAdministrationGateway(_administration.FileMenuEntries, capabilities, language));

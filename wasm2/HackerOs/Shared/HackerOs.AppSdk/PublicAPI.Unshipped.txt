@@ -244,3 +244,8 @@ static HackerOs.AppSdk.Globalization.HackTimeZone.Resolve(string? id, System.Tim
 static HackerOs.AppSdk.Globalization.HackTimeZone.ToLocal(System.DateTimeOffset time) -> System.DateTimeOffset
 static HackerOs.AppSdk.Globalization.HackTimeZone.ToLocal(System.DateTimeOffset time, System.TimeZoneInfo! zone) -> System.DateTimeOffset
 static HackerOs.AppSdk.Globalization.HackTimeZone.TryFind(string? id, out System.TimeZoneInfo? zone) -> bool
+HackerOs.AppSdk.Administration.HackUserAccount.IsGuest.get -> bool
+HackerOs.AppSdk.Administration.HackUserAccount.IsGuest.init -> void
+HackerOs.AppSdk.Administration.IAppUserAccountsGateway.RequestGuestAccountCreationAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+static HackerOs.AppSdk.Administration.HackUserAccounts.RequestGuestAccountCreationAsync(HackerOs.AppSdk.IAppExecutionContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
+static HackerOs.AppSdk.Administration.HackUserAccounts.RequestGuestAccountCreationAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
