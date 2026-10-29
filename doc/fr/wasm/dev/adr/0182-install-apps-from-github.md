@@ -14,7 +14,11 @@ d'autoriser GitHub comme host de confiance. » Complète l'[ADR 0176](0176-app-r
 (dépôt template d'apps), l'[ADR 0048](0048-system-apps-and-uninstall.md)
 (`apps.config`), l'[ADR 0049](0049-dangerous-capabilities-and-admin-approval.md)
 (capacités dangereuses) et l'[ADR 0098](0098-sdk-versions-packages-and-manifest-checks.md)
-(versions du SDK et contrôles du manifeste).
+(versions du SDK et contrôles du manifeste). **Révisée le 2026-10-29 par
+l'[ADR 0189](0189-app-sources-trust-and-per-user-install.md)** : installation
+pour soi sans administrateur depuis une source de confiance et validation en deux
+étapes de l'installation système remplacent la réponse à Q4 ; le §6 (Store) est
+décrit par l'[ADR 0188](0188-hack-store-and-app-catalog.md).
 
 ## Contexte
 
