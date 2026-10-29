@@ -737,4 +737,10 @@
   <data name="WindowMenu.NewScreen" xml:space="preserve">
     <value>New screen</value>
   </data>
+  <data name="Security.GuestConfirm" xml:space="preserve">
+    <value>You are signed in as the guest, the only account on this computer: confirm to continue, no password is asked.</value>
+  </data>
+  <data name="Security.Confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
 </root>

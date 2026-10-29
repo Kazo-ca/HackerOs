@@ -54,6 +54,13 @@
                 </ul>
 
                 <form class="dca-credentials" @onsubmit="ApproveAsync" @onsubmit:preventDefault="true">
+                    @if (_confirmOnly)
+                    {
+                        @* ADR 0187 section 2: the lone guest confirms without a password. *@
+                        <p class="dca-guest-confirm">@L["Security.GuestConfirm"]</p>
+                    }
+                    else
+                    {
                     <label>
                         <span>@L["Security.AdministratorName"]</span>
                         <input @ref="_loginInput"
@@ -73,6 +80,7 @@
                                @bind="_password"
                                @bind:event="oninput" />
                     </label>
+                    }
 
                     @if (!string.IsNullOrEmpty(_error))
                     {
