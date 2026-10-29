@@ -53,6 +53,7 @@ Please help keep this project open and inclusive. By participating, you agree to
 - Update documentation when adding or changing features
 - Use clear, concise language
 - Include code examples where helpful
+- Keep the features overview current: a PR to `main` that ships, changes or plans a feature updates [`doc/fr/wasm/features.md`](doc/fr/wasm/features.md) and [`doc/en/wasm/features.md`](doc/en/wasm/features.md) (see the checkbox in the PR template)
 
 ## Branching Strategy
 

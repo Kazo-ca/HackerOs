@@ -93,6 +93,7 @@
     * If you are not sure a doc needs updating, search `doc/en/wasm/` (including `doc/en/wasm/dev/adr/`) for the feature/contract name before finishing, rather than assuming no doc mentions it.
     * A change that touches public API surface, manifests, capabilities, settings, or host composition and ships with no doc/ADR update should be treated as incomplete, the same way shipping with no tests would be.
     * [`doc/en/wasm/README.md`](doc/en/wasm/README.md) is the index of every doc in that folder (archived docs are indexed by `doc/en/wasm/dev/old/README.md`). Adding, renaming, or removing a doc **MUST** update that index in the same change. Every folder under `doc/` has a `README.md` that indexes its content (for example `doc/en/wasm/dev/README.md`, `doc/en/wasm/framework/README.md`, `doc/en/wasm/dev/adr/README.md`): the same change also updates the `README.md` of the folder that holds the doc.
+    * [`doc/en/wasm/features.md`](doc/en/wasm/features.md) (French original: [`doc/fr/wasm/features.md`](doc/fr/wasm/features.md)) is the product overview linked from the root readme. Every PR to `main` that ships, changes or plans a feature **MUST** update it in both languages: move a shipped feature from "In development" to "Available features", add a row for a new feature ADR or `TODO` issue, and replace an ADR's PR link by the ADR once merged. The PR template ([`.github/pull_request_template.md`](.github/pull_request_template.md)) has a checkbox for it.
 
 ---
 
