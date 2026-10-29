@@ -292,7 +292,10 @@ public sealed class WorkerProcessHost
             WireCodec.ReadDictionary(environment, "vars"),
             environment.GetString("user"),
             environment.GetString("host"),
-            identity.GetOptional("it") is { } intent ? WireCodec.ReadIntentDelivery(intent) : null);
+            identity.GetOptional("it") is { } intent ? WireCodec.ReadIntentDelivery(intent) : null)
+        {
+            TimeZoneId = identity.GetOptionalString("tz")
+        };
 
         WorkerProcess process = new(this, pid, snapshot, root.GetFlag("in"), _clock);
         lock (_gate)

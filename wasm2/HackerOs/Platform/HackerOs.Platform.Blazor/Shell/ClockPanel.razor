@@ -14,6 +14,7 @@
 @inject IServiceProvider Services
 @inject IStringLocalizer<Strings> L
 @inject HackerOs.Platform.Core.Globalization.SessionLocaleService SessionLocale
+@inject HackerOs.Platform.Core.Globalization.SessionTimeZoneService TimeZones
 
 <div class="clock-panel" role="dialog" aria-label="@L["Clock.Panel"]" @onkeydown="HandleKeyDownAsync">
     <section class="clock-panel-section" aria-label="@L["Clock.Notifications"]">
@@ -149,7 +150,8 @@
         }
     }
 
-    private DateTimeOffset Today => SimulationClock.UtcNow;
+    // ADR 0193: the calendar's today is the session's local date, not UTC's.
+    private DateTimeOffset Today => TimeZones.ToLocal(SimulationClock.UtcNow);
 
     private IReadOnlyList<Notification> ActiveNotifications
     {

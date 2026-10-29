@@ -23,6 +23,7 @@
 @inject UiPlatformPreferenceService PlatformPreference
 @inject ThemePreferenceService ThemePreference
 @inject AccessibilityPreferenceService Accessibility
+@inject HackerOs.Platform.Core.Globalization.SessionTimeZoneService TimeZones
 @inject UserThemeCatalogService UserThemes
 @inject HackerOs.Platform.Core.Clipboard.HostClipboardBridge HostClipboard
 @inject HackerOs.Platform.Core.Globalization.SessionLocaleService SessionLocale
@@ -463,6 +464,8 @@
             await ThemePreference.InitializeAsync();
             // After the appearance: animationsEnabled = false counts as reducedMotion = on.
             await Accessibility.InitializeAsync();
+            // ADR 0193: the time zone of the clock and of the apps (datetime.config).
+            await TimeZones.InitializeAsync();
             await UserThemes.InitializeAsync();
             // Shares clipboard text with the real machine (ADR 0065); never fails the boot.
             await HostClipboard.StartAsync();

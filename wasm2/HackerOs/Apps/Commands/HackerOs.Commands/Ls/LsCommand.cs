@@ -96,7 +96,9 @@ public sealed class LsCommand : TerminalAppBase
                     mode += item.Metadata.Permissions.Owner.HasFlag(FileSystemAccess.Execute) ? "x" : "-";
                     long length = item.Metadata is FileMetadata fm ? fm.Length : 0;
                     string size = length.ToString(CultureInfo.InvariantCulture).PadLeft(8);
-                    string time = item.Metadata.Timestamps.ContentModifiedAtUtc.ToString("MMM dd HH:mm", CultureInfo.InvariantCulture);
+                    // ADR 0193: in the process's time zone (its TZ, else the session's), like GNU ls.
+                    string time = TimeZoneInfo.ConvertTime(item.Metadata.Timestamps.ContentModifiedAtUtc, context.App.TimeZone)
+                        .ToString("MMM dd HH:mm", CultureInfo.InvariantCulture);
                     string ownerStr = item.Metadata.OwnerId.PadRight(8);
                     context.StandardOutput.WriteLine($"{kindChar}{mode}  {ownerStr}  {size}  {time}  {item.Name.Value}");
                 }

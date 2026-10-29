@@ -825,6 +825,8 @@ public static class EcosystemServiceCollectionExtensions
         {
             // HackBackground (ADR 0128): each task a child process, in a worker when the host has some.
             BackgroundJobs = () => provider.GetRequiredService<BackgroundJobService>(),
+            // ADR 0193: IAppExecutionContext.TimeZone follows Settings > Date and time.
+            TimeZones = provider.GetRequiredService<HackerOs.Platform.Core.Globalization.SessionTimeZoneService>(),
         });
         services.AddScoped<BackgroundJobService>(provider => new BackgroundJobService(
             provider.GetRequiredService<IProcessManager>(),
@@ -1151,6 +1153,8 @@ public static class EcosystemServiceCollectionExtensions
         // so Scoped like the environment probe above).
         services.AddScoped<HackerOs.Platform.Core.Appearance.IHostAccessibilityProbe, BrowserHostAccessibilityProbe>();
         services.AddScoped<HackerOs.Platform.Core.Appearance.AccessibilityPreferenceService>();
+        // ADR 0193: the session's time zone (datetime.config), live like the accessibility preferences.
+        services.AddScoped<HackerOs.Platform.Core.Globalization.SessionTimeZoneService>();
         // ADR 0103: user themes of /etc/hackeros/themes and ~/.config/hackeros/themes.
         services.AddScoped<HackerOs.Platform.Core.Appearance.UserThemeCatalogService>(provider =>
             new HackerOs.Platform.Core.Appearance.UserThemeCatalogService(

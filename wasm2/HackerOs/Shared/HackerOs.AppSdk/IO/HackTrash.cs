@@ -532,9 +532,9 @@ public static class HackTrash
         return name;
     }
 
-    /// <summary>"Current local time" of the simulated clock, as written in <c>DeletionDate</c>.</summary>
+    /// <summary>"Current local time" of the simulated clock in the app's time zone (ADR 0193), as written in <c>DeletionDate</c>.</summary>
     private static DateTimeOffset LocalNow(IAppExecutionContext context) =>
-        TimeZoneInfo.ConvertTime(context.Clock.UtcNow, TimeZoneInfo.Local);
+        TimeZoneInfo.ConvertTime(context.Clock.UtcNow, context.TimeZone);
 
     private static void Log(IAppExecutionContext context, string message) =>
         context.Logging.Log(DiagnosticSeverity.Information, message);

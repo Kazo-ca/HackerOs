@@ -30,6 +30,10 @@ public sealed partial class ServerStatusIndicator
     [Inject]
     private IStringLocalizer<Strings> L { get; set; } = null!;
 
+    /// <summary>Converts a time to the session's time zone (ADR 0193), or the device's when the host has none.</summary>
+    private DateTimeOffset LocalTime(DateTimeOffset time) =>
+        TimeZoneInfo.ConvertTime(time, Services.GetService<HackerOs.Platform.Core.Globalization.SessionTimeZoneService>()?.TimeZone ?? TimeZoneInfo.Local);
+
     /// <summary>Opens Settings at its server page ("Server settings" in the panel). The button is hidden without it.</summary>
     [Parameter]
     public EventCallback OnOpenSettings { get; set; }

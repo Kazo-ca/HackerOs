@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+    <data name="Usage" xml:space="preserve">
+    <value>Utilisation : date [-u] [-I|-R] [+FORMAT]&#10;Affiche la date et l'heure dans le fuseau horaire du processus (sa variable TZ, sinon Paramètres &gt; Date et heure).&#10;  -u, --utc        affiche le temps universel coordonné (UTC)&#10;  -I, --iso-8601   affiche la date au format ISO 8601 (2026-10-29)&#10;  -R, --rfc-email  affiche la date et l'heure au format RFC 5322&#10;  +FORMAT          %Y %m %d %e %H %M %S %Z %z %a %b %A %B %j %s %F %T %D %R %%</value>
+  </data>
+  <data name="InvalidOption" xml:space="preserve">
+    <value>date : option non valide « {0} »</value>
+  </data>
+  <data name="ExtraOperand" xml:space="preserve">
+    <value>date : opérande supplémentaire « {0} »</value>
+  </data>
+  <data name="CannotSet" xml:space="preserve">
+    <value>date : impossible de régler la date « {0} » : l'horloge de HackerOS est l'horloge de la simulation</value>
+  </data>
+</root>

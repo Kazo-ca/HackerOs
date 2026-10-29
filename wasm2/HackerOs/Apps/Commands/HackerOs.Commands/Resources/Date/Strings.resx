@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+    <data name="Usage" xml:space="preserve">
+    <value>Usage: date [-u] [-I|-R] [+FORMAT]&#10;Print the current date and time in the time zone of the process (its TZ, else Settings &gt; Date and time).&#10;  -u, --utc        print Coordinated Universal Time (UTC)&#10;  -I, --iso-8601   print the date in ISO 8601 format (2026-10-29)&#10;  -R, --rfc-email  print the date and time in RFC 5322 format&#10;  +FORMAT          %Y %m %d %e %H %M %S %Z %z %a %b %A %B %j %s %F %T %D %R %%</value>
+  </data>
+  <data name="InvalidOption" xml:space="preserve">
+    <value>date: invalid option '{0}'</value>
+  </data>
+  <data name="ExtraOperand" xml:space="preserve">
+    <value>date: extra operand '{0}'</value>
+  </data>
+  <data name="CannotSet" xml:space="preserve">
+    <value>date: cannot set the date '{0}': the clock of HackerOS is the simulation clock</value>
+  </data>
+</root>

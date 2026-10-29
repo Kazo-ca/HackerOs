@@ -1,0 +1,87 @@
+@using HackerOs.AppSdk.Globalization
+@inherits HackerOs.AppSdk.Blazor.HackComponentBase
+@implements IAsyncDisposable
+
+@*
+    Settings > Date and time (ADR 0193): the current time in the chosen zone and in UTC, and the
+    time zone, written to ~/.config/hackeros/datetime.config. The clock follows a change at once.
+*@
+<div class="setting-group datetime-panel datetime-state">
+    <h4 id="datetime-state-title">@L["DateTime.State.Title"]</h4>
+    <dl class="datetime-readout" aria-labelledby="datetime-state-title">
+        <dt>@L["DateTime.State.Local"]</dt>
+        <dd class="datetime-local">@LocalNow.ToString("F", Context.FormatCulture)</dd>
+        <dt>UTC</dt>
+        <dd class="datetime-utc">@Context.Clock.UtcNow.ToString("F", Context.FormatCulture)</dd>
+        <dt>@L["DateTime.State.Zone"]</dt>
+        <dd class="datetime-zone"><code>@HackTimeZone.GetId(EffectiveZone)</code> (@HackTimeZone.FormatOffset(EffectiveZone, Context.Clock.UtcNow))</dd>
+    </dl>
+</div>
+
+@if (!_loaded)
+{
+    <p class="setting-desc">@L["Common.Loading"]</p>
+}
+else
+{
+    <div class="setting-group datetime-panel">
+        <h4 id="datetime-zone-title">@L["DateTime.Zone.Title"] <SettingOriginBadge Source="@Source" IsLocked="@IsLocked" /></h4>
+        <p class="setting-desc">
+            @LocalizedMarkup.Format(L["DateTime.Zone.Description"],
+                LocalizedMarkup.Code("~/.config/hackeros/" + DocumentFileName),
+                LocalizedMarkup.Code("TZ"))
+        </p>
+        <div class="datetime-options" role="radiogroup" aria-labelledby="datetime-zone-title">
+            <button type="button" role="radio" class="@OptionClass(IsAutomatic)"
+                    aria-checked="@(IsAutomatic ? "true" : "false")"
+                    disabled="@(_isBusy || IsLocked)"
+                    @onclick="() => SetAsync(HackTimeZone.Automatic)">
+                <span class="datetime-tag" aria-hidden="true">AUTO</span>
+                <span class="datetime-text">
+                    <span class="datetime-label">@L["DateTime.Zone.Automatic"]</span>
+                    <span class="datetime-detail">@L["DateTime.Zone.Automatic.Detail", Describe(HackTimeZone.Device)]</span>
+                </span>
+            </button>
+            <button type="button" role="radio" class="@OptionClass(!IsAutomatic)"
+                    aria-checked="@(!IsAutomatic ? "true" : "false")"
+                    disabled="@(_isBusy || IsLocked)"
+                    @onclick="ChooseListAsync">
+                <span class="datetime-tag" aria-hidden="true">IANA</span>
+                <span class="datetime-text">
+                    <span class="datetime-label">@L["DateTime.Zone.Manual"]</span>
+                    <span class="datetime-detail">@(IsAutomatic ? L["DateTime.Zone.Manual.Detail"].Value : Describe(EffectiveZone))</span>
+                </span>
+            </button>
+        </div>
+
+        @if (!IsAutomatic || _listOpen)
+        {
+            <div class="datetime-picker">
+                <label for="datetime-zone-search">@L["DateTime.Zone.Search"]</label>
+                <input id="datetime-zone-search" type="search" class="datetime-search" autocomplete="off"
+                       value="@_filter" disabled="@(_isBusy || IsLocked)"
+                       placeholder="@L["DateTime.Zone.Search.Placeholder"]"
+                       @oninput="OnFilterInput" />
+                <label for="datetime-zone-list">@L["DateTime.Zone.List"]</label>
+                <select id="datetime-zone-list" class="datetime-list" size="8"
+                        disabled="@(_isBusy || IsLocked)"
+                        @onchange="OnZoneChanged">
+                    @foreach (TimeZoneInfo zone in FilteredZones)
+                    {
+                        string id = HackTimeZone.GetId(zone);
+                        <option value="@id" selected="@(id == Setting)">@Describe(zone)</option>
+                    }
+                </select>
+                @if (!FilteredZones.Any())
+                {
+                    <p class="setting-desc">@L["DateTime.Zone.NoMatch", _filter]</p>
+                }
+            </div>
+        }
+    </div>
+}
+
+@if (_message is not null)
+{
+    <div class="@(_messageIsError ? "datetime-message is-error" : "datetime-message")" role="@(_messageIsError ? "alert" : "status")">@_message</div>
+}
