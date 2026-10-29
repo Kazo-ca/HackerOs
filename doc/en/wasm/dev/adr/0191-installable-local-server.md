@@ -4,11 +4,9 @@
 
 ## Status
 
-Proposed on 2026-10-29 (thread "Évaluer un serveur local installable"). Benoit
-asked for the ADR and the tracking issue [#267](https://github.com/Kazo-ca/HackerOs/issues/267).
-The choices in §2 to §5 are the recommended options of questions Q1 to Q4 asked
-to Benoit in the thread; if he picks another one, this ADR is updated before the
-first code chantier.
+Accepted on 2026-10-29 by Benoit (thread "Évaluer un serveur local installable"),
+who chose the recommended options of questions Q1 to Q4 (§1, §2, §4). Tracking
+issue [#267](https://github.com/Kazo-ca/HackerOs/issues/267).
 
 - **Complements:** [ADR 0102](0102-server-network-relay-tcp-udp-and-policy.md) and
   [ADR 0108](0108-server-relay-implementation-adjustments.md) (relay),
