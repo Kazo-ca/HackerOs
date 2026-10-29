@@ -12,6 +12,12 @@ public sealed class EcosystemHostState
     /// <summary>Gets users eligible for the login surface.</summary>
     public IReadOnlyList<LocalUser> Users { get; private set; } = [];
 
+    /// <summary>
+    /// Gets the guest account of ADR 0187 when it is the only account: the sign-in screen then
+    /// offers "Continue as Guest" instead of the password form; otherwise <see langword="null"/>.
+    /// </summary>
+    public LocalUser? LoneGuest => Users is [{ IsGuest: true, Credential: null } guest] ? guest : null;
+
     /// <summary>Gets the active storage recovery presentation.</summary>
     public StorageRecoveryPresentation? Recovery { get; private set; }
 

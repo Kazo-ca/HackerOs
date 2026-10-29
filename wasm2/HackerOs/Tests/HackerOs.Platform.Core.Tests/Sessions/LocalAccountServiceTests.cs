@@ -55,6 +55,7 @@ public sealed class LocalAccountServiceTests
     [InlineData("root")]
     [InlineData("hackeros-svc")]
     [InlineData("administrators")]
+    [InlineData("guest")]
     [InlineData("alice")]
     [InlineData("Not Valid")]
     public async Task A_reserved_taken_or_malformed_name_is_refused_and_logged(string login)

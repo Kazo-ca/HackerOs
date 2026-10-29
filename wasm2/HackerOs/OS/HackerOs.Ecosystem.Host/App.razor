@@ -15,6 +15,7 @@
 @implements IDisposable
 @inject ILocalUserRepository UserRepository
 @inject ILocalGroupRepository GroupRepository
+@inject GuestAccountService GuestAccounts
 @inject ISessionService SessionService
 @inject EcosystemBootCoordinator BootCoordinator
 @inject IEcosystemHostEnvironment HostEnvironment
@@ -80,6 +81,12 @@
                     }
                     <button type="submit" disabled="@IsSubmitting">@L["Setup.Submit"]</button>
                 </form>
+                @* ADR 0187 section 2: offered only here, while no account exists at all. *@
+                <div class="guest-start">
+                    <p class="guest-separator" aria-hidden="true"><span>@L["Guest.Separator"]</span></p>
+                    <button type="button" class="guest-button" disabled="@IsSubmitting" @onclick="StartAsGuestAsync">@L["Guest.Start"]</button>
+                    <p class="guest-hint">@L["Guest.StartHint"]</p>
+                </div>
                 <ProjectInformation />
             </section>
             break;
@@ -87,6 +94,20 @@
             <section class="auth-surface" aria-labelledby="login-title">
                 <div class="boot-mark" aria-hidden="true">H_</div>
                 <h1 id="login-title">@L["Login.Title"]</h1>
+                @if (State.LoneGuest is { } guest)
+                {
+                    @* ADR 0187 section 3: while the guest is the only account, it signs in directly. *@
+                    <div class="guest-login">
+                        <p class="guest-name">@guest.DisplayName</p>
+                        @if (!string.IsNullOrEmpty(FormError))
+                        {
+                            <p class="form-error" role="alert">@FormError</p>
+                        }
+                        <button type="button" class="guest-button" disabled="@IsSubmitting" @onclick="ContinueAsGuestAsync">@L["Guest.Continue"]</button>
+                    </div>
+                }
+                else
+                {
                 <form @onsubmit="LoginAsync" @onsubmit:preventDefault>
                     <label for="login-user">@L["Login.User"]</label>
                     <select id="login-user" autocomplete="username" required @bind="SelectedLogin">
@@ -107,6 +128,7 @@
                         <button type="button" class="passkey-login" disabled="@IsSubmitting" @onclick="LoginWithPasskeyAsync">@L["Login.UsePasskey"]</button>
                     }
                 </form>
+                }
                 <ProjectInformation />
             </section>
             break;
@@ -410,10 +432,11 @@
             return;
         }
 
-        // The system services' account (ADR 0097) is built in: no login account may take its name.
-        if (ServiceAccount.IsReserved(SetupLogin.Trim()))
+        // The system services' account (ADR 0097) is built in and `guest` belongs to the guest
+        // account (ADR 0187): no login account may take a reserved name.
+        if (LocalAccountService.IsReserved(SetupLogin))
         {
-            FormError = L["Setup.ReservedLogin", ServiceAccount.LoginName];
+            FormError = L["Setup.ReservedLogin", SetupLogin.Trim()];
             return;
         }
 
@@ -450,6 +473,68 @@
         {
             IsSubmitting = false;
         }
+    }
+
+    /// <summary>
+    /// ADR 0187 sections 1 and 2: creates the guest account (no password, administrator, display
+    /// name in the system language) and opens its session. Refused once any account exists.
+    /// </summary>
+    private async Task StartAsGuestAsync()
+    {
+        FormError = null;
+        IsSubmitting = true;
+        try
+        {
+            LocalUser guest = await GuestAccounts.CreateAsync(L["Guest.DisplayName"]);
+            await SignInGuestAsync(guest.LoginName);
+        }
+        catch (Exception exception) when (exception is FormatException or InvalidOperationException)
+        {
+            State.CompleteIdentityLoad(await UserRepository.GetAllAsync());
+            FormError = L["Guest.Unavailable"];
+        }
+        finally
+        {
+            IsSubmitting = false;
+        }
+    }
+
+    /// <summary>ADR 0187 section 3: the lone guest account signs in without a password.</summary>
+    private async Task ContinueAsGuestAsync()
+    {
+        FormError = null;
+        IsSubmitting = true;
+        try
+        {
+            if (await GuestAccounts.FindLoneGuestAsync() is not { } guest)
+            {
+                State.CompleteIdentityLoad(await UserRepository.GetAllAsync());
+                FormError = L["Guest.Unavailable"];
+                return;
+            }
+
+            await SignInGuestAsync(guest.LoginName);
+        }
+        catch (Exception exception) when (exception is FormatException or InvalidOperationException)
+        {
+            State.CompleteIdentityLoad(State.Users);
+            FormError = L["Login.Rejected"];
+        }
+        finally
+        {
+            IsSubmitting = false;
+        }
+    }
+
+    private async Task SignInGuestAsync(LocalLoginName loginName)
+    {
+        State.BeginLoginProgress();
+        StateHasChanged();
+        await Task.Delay(50);
+        AuthenticatedPrincipal principal = await SessionService.LoginAsync(loginName, password: null);
+        await UseSessionLocaleAsync(principal);
+        ClearPasswords();
+        State.CompleteLogin();
     }
 
     private async Task LoginAsync()

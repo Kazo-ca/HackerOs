@@ -88,7 +88,7 @@
     <value>Passwords must match and contain at least eight characters.</value>
   </data>
   <data name="Setup.ReservedLogin" xml:space="preserve">
-    <value>'{0}' is reserved for the system services.</value>
+    <value>'{0}' is reserved for the system.</value>
   </data>
   <data name="Setup.Submit" xml:space="preserve">
     <value>Create local profile</value>
@@ -122,5 +122,23 @@
   </data>
   <data name="Login.PasskeyUnsupported" xml:space="preserve">
     <value>This browser cannot use a passkey on this page (HTTPS or localhost is needed).</value>
+  </data>
+  <data name="Guest.DisplayName" xml:space="preserve">
+    <value>Guest</value>
+  </data>
+  <data name="Guest.Separator" xml:space="preserve">
+    <value>or</value>
+  </data>
+  <data name="Guest.Start" xml:space="preserve">
+    <value>Start as a Guest</value>
+  </data>
+  <data name="Guest.StartHint" xml:space="preserve">
+    <value>No account to create: the guest keeps its files from one visit to the next, and you can create your own account later.</value>
+  </data>
+  <data name="Guest.Continue" xml:space="preserve">
+    <value>Continue as Guest</value>
+  </data>
+  <data name="Guest.Unavailable" xml:space="preserve">
+    <value>An account already exists: the guest can no longer be used.</value>
   </data>
 </root>
