@@ -518,6 +518,11 @@ public static class EcosystemServiceCollectionExtensions
             provider.GetRequiredService<IPasskeyAuthenticator>(),
             provider.GetRequiredService<IAuditLog>(),
             provider.GetRequiredService<UserKeyringService>()));
+        // ADR 0187: the guest account, offered while no account exists.
+        services.AddScoped<GuestAccountService>(provider => new GuestAccountService(
+            provider.GetRequiredService<ILocalUserRepository>(),
+            provider.GetRequiredService<ILocalGroupRepository>(),
+            provider.GetRequiredService<IAuditLog>()));
         services.AddScoped<LocalAccountService>(provider =>
         {
             WebCryptoPasswordHasher hasher = provider.GetRequiredService<WebCryptoPasswordHasher>();

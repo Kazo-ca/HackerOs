@@ -24,6 +24,49 @@ public interface ILocalUserRepository
         LocalPasswordCredential? credential = null,
         CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Creates and stores the guest account of ADR 0187: enabled, without a password, marked
+    /// <see cref="LocalUser.IsGuest"/>. Callers check that no other account exists.
+    /// </summary>
+    /// <param name="loginName">Login name of the guest (<c>guest</c>).</param>
+    /// <param name="displayName">Display name, in the system language.</param>
+    /// <param name="authority">Login authority (Administrator).</param>
+    /// <param name="primaryGroupId">The guest's own group.</param>
+    /// <param name="additionalGroupIds">Additional groups (<c>administrators</c>).</param>
+    /// <param name="cancellationToken">Cancels the write to the user store.</param>
+    /// <returns>The guest account.</returns>
+    /// <exception cref="InvalidOperationException">The login name is already in use.</exception>
+    /// <exception cref="NotSupportedException">The store cannot keep a guest account (the default).</exception>
+    ValueTask<LocalUser> CreateGuestUserAsync(
+        LocalLoginName loginName,
+        string displayName,
+        AppAuthority authority,
+        LocalGroupId primaryGroupId,
+        IReadOnlyCollection<LocalGroupId> additionalGroupIds,
+        CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This user store cannot keep a guest account.");
+
+    /// <summary>
+    /// Turns the guest account into a registered account in place (ADR 0187 section 4), as
+    /// <c>usermod -l NEW -c NAME</c> then <c>passwd</c>: same <see cref="LocalUser.Id"/>, new login and
+    /// display name, the password set and the guest mark removed. Callers move the home directory.
+    /// </summary>
+    /// <param name="id">The guest account.</param>
+    /// <param name="loginName">The new login name.</param>
+    /// <param name="displayName">The new display name.</param>
+    /// <param name="credential">The new password credential.</param>
+    /// <param name="cancellationToken">Cancels the write to the user store.</param>
+    /// <returns>The registered account.</returns>
+    /// <exception cref="InvalidOperationException">No such guest account, or the login name is in use.</exception>
+    /// <exception cref="NotSupportedException">The store cannot convert the guest (the default).</exception>
+    ValueTask<LocalUser> ConvertGuestUserAsync(
+        LocalUserId id,
+        LocalLoginName loginName,
+        string displayName,
+        LocalPasswordCredential credential,
+        CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This user store cannot convert a guest account.");
+
     /// <summary>Attempts to find a user by opaque ID.</summary>
     ValueTask<LocalUser?> FindByIdAsync(LocalUserId id, CancellationToken cancellationToken = default);
 
@@ -115,4 +158,27 @@ public interface ILocalGroupRepository
     ValueTask<LocalGroup?> FindByNameAsync(
         LocalLoginName name,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Renames one group, keeping its <see cref="LocalGroup.Id"/>, as <c>groupmod -n</c> (used when
+    /// the guest account becomes a registered one, ADR 0187 section 4).
+    /// </summary>
+    /// <param name="id">The group to rename.</param>
+    /// <param name="name">Its new name.</param>
+    /// <param name="cancellationToken">Cancels the write to the group store.</param>
+    /// <returns>The renamed group.</returns>
+    /// <exception cref="InvalidOperationException">No such group, or the name is in use.</exception>
+    /// <exception cref="NotSupportedException">The store cannot rename groups (the default).</exception>
+    ValueTask<LocalGroup> RenameGroupAsync(
+        LocalGroupId id,
+        LocalLoginName name,
+        CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This group store cannot rename groups.");
+
+    /// <summary>Deletes one group, as <c>groupdel</c>; deleting a missing group does nothing.</summary>
+    /// <param name="id">The group to delete.</param>
+    /// <param name="cancellationToken">Cancels the write to the group store.</param>
+    /// <exception cref="NotSupportedException">The store cannot delete groups (the default).</exception>
+    ValueTask DeleteGroupAsync(LocalGroupId id, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This group store cannot delete groups.");
 }

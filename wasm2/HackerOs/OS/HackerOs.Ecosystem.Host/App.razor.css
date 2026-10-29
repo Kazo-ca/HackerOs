@@ -216,3 +216,39 @@ code {
         opacity: 0.55;
     }
 }
+
+/* ADR 0187: the guest start under the first-run form, and the guest sign-in. */
+.guest-start,
+.guest-login {
+    display: grid;
+    gap: 0.5rem;
+}
+
+.guest-separator {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+}
+
+.guest-separator::before,
+.guest-separator::after {
+    content: "";
+    flex: 1;
+    border-top: 1px solid var(--hos-border, #34444c);
+}
+
+.guest-button {
+    border-color: var(--hos-border, #34444c);
+    background: transparent;
+}
+
+.guest-hint {
+    font-size: 0.85rem;
+}
+
+.guest-name {
+    color: var(--hos-text-primary, #f4f7f8);
+    font-size: 1.1rem;
+}

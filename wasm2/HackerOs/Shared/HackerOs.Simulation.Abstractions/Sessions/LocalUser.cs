@@ -167,6 +167,12 @@ public sealed record LocalUser
     /// <summary>Gets the WebAuthn passkeys that can sign this user in (ADR 0168); empty by default.</summary>
     public IReadOnlyList<LocalPasskeyCredential> Passkeys { get; init; } = [];
 
+    /// <summary>
+    /// Gets whether this is the guest account of ADR 0187: the passwordless administrator offered
+    /// while no registered account exists. The mark, not the login name, identifies it.
+    /// </summary>
+    public bool IsGuest { get; init; }
+
     /// <summary>Gets the user's home directory path, derived from the login name.</summary>
     public string HomePath => $"/home/{LoginName.Value}";
 }
