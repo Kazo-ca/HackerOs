@@ -1,0 +1,67 @@
+@inherits HackerOs.AppSdk.Blazor.HackComponentBase
+@implements IAsyncDisposable
+@using HackerOs.AppSdk.WhatsNew
+
+@*
+    Settings > What's new (ADR 0186 §4): the OS change list, one group per version, the most recent
+    first; the changes the user has not seen carry a New badge, which they keep while the page is
+    open and lose when it closes.
+*@
+@if (!_loaded)
+{
+    <p class="setting-desc">@L["Common.Loading"]</p>
+}
+else if (_list.Groups.Count == 0)
+{
+    <p class="setting-desc wn-empty">@L["WhatsNew.Empty"]</p>
+}
+else
+{
+    <p class="setting-desc wn-summary" role="status">
+        @(_newIds.Count switch
+        {
+            0 => L["WhatsNew.Summary.None"],
+            1 => L["WhatsNew.Summary.One"],
+            _ => L["WhatsNew.Summary.Many", _newIds.Count]
+        })
+    </p>
+    @foreach (HackChangeGroup group in _list.Groups)
+    {
+        string headingId = "wn-group-" + (group.Version ?? "next").Replace('.', '-');
+        <section class="setting-group wn-group" @key="group.Version" aria-labelledby="@headingId">
+            <h4 id="@headingId">@GroupTitle(group)</h4>
+            <ul class="wn-list">
+                @foreach (HackChangeEntry entry in group.Entries)
+                {
+                    <li class="wn-entry @(entry.IsNew ? "is-new" : string.Empty)" @key="entry.Id" data-change-id="@entry.Id">
+                        <div class="wn-entry-head">
+                            <span class="wn-category wn-category-@entry.Category.ToString().ToLowerInvariant()">@CategoryLabel(entry.Category)</span>
+                            @if (entry.IsNew)
+                            {
+                                <span class="wn-badge">@L["WhatsNew.Badge.New"]</span>
+                            }
+                            <strong class="wn-title">@entry.Title</strong>
+                        </div>
+                        @if (entry.Description is { } description)
+                        {
+                            <p class="wn-description">@description</p>
+                        }
+                        @if (entry.PullRequestUrl is not null || entry.Links.Count > 0)
+                        {
+                            <p class="wn-links">
+                                @foreach (Uri link in entry.Links)
+                                {
+                                    <a href="@link" target="_blank" rel="noopener noreferrer">@L["WhatsNew.Link.More"]</a>
+                                }
+                                @if (entry.PullRequestUrl is { } pullRequest)
+                                {
+                                    <a href="@pullRequest" target="_blank" rel="noopener noreferrer">@L["WhatsNew.Link.PullRequest"]</a>
+                                }
+                            </p>
+                        }
+                    </li>
+                }
+            </ul>
+        </section>
+    }
+}

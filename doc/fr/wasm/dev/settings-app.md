@@ -24,7 +24,7 @@ anglais et français). Le `manifest.json` est généré au build à partir de
 Les pages sont dans un menu à gauche, groupé : Personnalisation (Apparence,
 Bureau, Écrans, Accessibilité, Langue), Applications (Associations de fichiers à
 Menus des fichiers, Application), Réseau (Connexion au serveur,
-Synchronisation), Système (Utilisateurs, Mémoire, Sauvegarde, À propos).
+Synchronisation), Système (Utilisateurs, Mémoire, Sauvegarde, Nouveautés, À propos).
 
 - Le bouton en tête du menu le réduit à une barre d'icônes ou le développe avec
   ses libellés. L'état n'est pas enregistré (choix de Benoit, 2026-10-25) : le
@@ -58,7 +58,8 @@ Synchronisation), Système (Utilisateurs, Mémoire, Sauvegarde, À propos).
 | Utilisateurs (`users`) | `UsersPanel` (+ `PasskeysPanel`) | Comptes, mots de passe, ajout et suppression de comptes par un administrateur, clés d'accès de la session (ADR 0120, 0168, 0169 ; voir [Page Utilisateurs](#page-utilisateurs)). |
 | Mémoire (`memory`) | `MemoryPanel` | Fichier `/etc/hackeros/memory.config`, section `[oom-killer]` (ADR 0126). |
 | Sauvegarde (`backup`) | `BackupPanel` | Présent seulement si `HackSystemBackup.IsSupportedFor` le permet (ADR 0099). |
-| À propos (`about`) | (dans la fenêtre) | Autorité, redémarrage (`HackSystem.RebootAsync`), zone de danger : réinitialisation d'usine (`HackSystem.FactoryResetAsync`), confirmée par la saisie de `RESET`. |
+| Nouveautés (`whats-new`) | `WhatsNewPanel` | Liste des changements de l'OS par version, la prochaine en premier, avec un badge **Nouveau** sur ce qui n'a pas été vu ; tout devient vu à la fermeture de la page (`HackWhatsNew`, ADR 0186). La notification après connexion l'ouvre avec `--page=whats-new`. |
+| À propos (`about`) | (dans la fenêtre) | Autorité, redémarrage (`HackSystem.RebootAsync`), zone de danger : réinitialisation d'usine (`HackSystem.FactoryResetAsync`), confirmée par la saisie de `RESET`. Un bouton **Quoi de neuf ?** à côté de la version ouvre la page Nouveautés. |
 | Application (`application`) | `AppDetailsPanel` | Ajouté seulement avec `--app=<id>` (ADR 0096) : détails et réglages d'une app. |
 
 ## Arguments de lancement

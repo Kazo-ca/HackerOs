@@ -2,6 +2,8 @@ using System.Globalization;
 using System.Text.Json;
 using HackerOs.AppSdk.WhatsNew;
 using HackerOs.Platform.Core.Settings;
+using HackerOs.Simulation.Abstractions.Notifications;
+using HackerOs.Simulation.Abstractions.Sessions;
 using Microsoft.Extensions.Logging;
 
 namespace HackerOs.Platform.Core.WhatsNew;
@@ -22,15 +24,34 @@ namespace HackerOs.Platform.Core.WhatsNew;
 /// already deployed (<see cref="WhatsNewCatalog.LatestIds"/>), and the file is written at once. Without
 /// a served list (offline), nothing is written, so the rule waits for a list.
 /// </para>
+/// <para>
+/// <b>Sign-in notification.</b> <see cref="NotifyNewChangesAsync"/>, called by the shell once the
+/// desktop shows, posts « 3 new changes since your last visit » with a <b>View</b> action that opens
+/// Settings ▸ What's new, once per account and page (ADR 0186 §4.5).
+/// </para>
 /// </remarks>
 public sealed class WhatsNewService
 {
     /// <summary>The account's state file: <c>~/.local/state/hackeros/whats-new.json</c>.</summary>
     public static readonly OsSettingsFile StateFile = new(OsSettingsLocation.UserState, "whats-new.json");
 
+    /// <summary>Source app id of the sign-in notification.</summary>
+    public const string NotificationSourceAppId = "org.hackeros.whats-new";
+
+    /// <summary>App the notification opens.</summary>
+    public const string SettingsAppId = "org.hackeros.settings";
+
+    /// <summary>Argument that opens the What's new page of Settings.</summary>
+    public const string SettingsPageArgument = "--page=whats-new";
+
     private readonly IWhatsNewSource _source;
     private readonly IOsSettingsService _settings;
     private readonly ILogger? _logger;
+    private readonly INotificationQueue? _notifications;
+    private readonly Func<AuthenticatedPrincipal?> _currentUser;
+    private readonly Func<CultureInfo> _language;
+    private readonly TimeProvider _time;
+    private readonly HashSet<LocalUserId> _notifiedUsers = [];
     private readonly SemaphoreSlim _gate = new(1, 1);
     private WhatsNewCatalog? _catalog;
     private string? _stateHome;
@@ -40,11 +61,26 @@ public sealed class WhatsNewService
     /// <param name="source">Reads the served <c>whats-new.json</c>.</param>
     /// <param name="settings">Reads and writes the session user's state file.</param>
     /// <param name="logger">Receives unreadable-state warnings; optional.</param>
-    public WhatsNewService(IWhatsNewSource source, IOsSettingsService settings, ILogger<WhatsNewService>? logger = null)
+    /// <param name="notifications">Queue receiving the sign-in notification; <see langword="null"/> posts none.</param>
+    /// <param name="currentUser">Session user who gets it (resolved lazily).</param>
+    /// <param name="language">Language of the session (ADR 0104), read when it is posted; English when <see langword="null"/>.</param>
+    /// <param name="time">Time of the notification; defaults to the system clock.</param>
+    public WhatsNewService(
+        IWhatsNewSource source,
+        IOsSettingsService settings,
+        ILogger<WhatsNewService>? logger = null,
+        INotificationQueue? notifications = null,
+        Func<AuthenticatedPrincipal?>? currentUser = null,
+        Func<CultureInfo>? language = null,
+        TimeProvider? time = null)
     {
         _source = source ?? throw new ArgumentNullException(nameof(source));
         _settings = settings ?? throw new ArgumentNullException(nameof(settings));
         _logger = logger;
+        _notifications = notifications;
+        _currentUser = currentUser ?? (static () => null);
+        _language = language ?? (static () => HackerOs.AppSdk.Globalization.HackLocale.DefaultLanguage);
+        _time = time ?? TimeProvider.System;
     }
 
     /// <summary>Raised after the changes seen by the session user changed.</summary>
@@ -147,6 +183,47 @@ public sealed class WhatsNewService
         {
             Changed?.Invoke();
         }
+    }
+
+    /// <summary>
+    /// Posts the sign-in notification when the session user has new entries: once per account for
+    /// the life of the page, whether or not there was anything to say.
+    /// </summary>
+    /// <param name="cancellationToken">Cancels the read.</param>
+    /// <returns><see langword="true"/> when a notification was posted.</returns>
+    public async ValueTask<bool> NotifyNewChangesAsync(CancellationToken cancellationToken = default)
+    {
+        if (_notifications is null || _currentUser() is not { } user)
+        {
+            return false;
+        }
+
+        lock (_notifiedUsers)
+        {
+            if (!_notifiedUsers.Add(user.UserId))
+            {
+                return false;
+            }
+        }
+
+        int count = await GetNewCountAsync(cancellationToken).ConfigureAwait(false);
+        if (count == 0)
+        {
+            return false;
+        }
+
+        Microsoft.Extensions.Localization.IStringLocalizer text = Strings.For(_language());
+        _notifications.Enqueue(new Notification(
+            NotificationId.FromGuid(Guid.NewGuid()),
+            user.UserId,
+            NotificationSourceAppId,
+            NotificationSeverity.Information,
+            text["WhatsNew.Notification.Title"],
+            count == 1 ? text["WhatsNew.Notification.One"] : text["WhatsNew.Notification.Many", count],
+            [NotificationAction.LaunchApp(SettingsAppId, text["WhatsNew.Notification.View"], [SettingsPageArgument])],
+            _time.GetUtcNow(),
+            expiresAtUtc: null));
+        return true;
     }
 
     private async ValueTask<IReadOnlySet<string>> GetSeenAsync(WhatsNewCatalog catalog, CancellationToken cancellationToken)

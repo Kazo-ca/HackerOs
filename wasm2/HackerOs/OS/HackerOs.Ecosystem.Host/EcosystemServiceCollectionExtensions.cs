@@ -972,7 +972,10 @@ public static class EcosystemServiceCollectionExtensions
         services.AddScoped(provider => new HackerOs.Platform.Core.WhatsNew.WhatsNewService(
             provider.GetRequiredService<HackerOs.Platform.Core.WhatsNew.IWhatsNewSource>(),
             provider.GetRequiredService<IOsSettingsService>(),
-            provider.GetService<ILogger<HackerOs.Platform.Core.WhatsNew.WhatsNewService>>()));
+            provider.GetService<ILogger<HackerOs.Platform.Core.WhatsNew.WhatsNewService>>(),
+            provider.GetRequiredService<INotificationQueue>(),
+            () => provider.GetRequiredService<ISessionService>().CurrentPrincipal,
+            () => provider.GetRequiredService<HackerOs.Platform.Core.Globalization.SessionLocaleService>().Culture));
         services.AddScoped(provider => new ScreenControl(
             provider.GetRequiredService<ScreenService>(),
             provider.GetRequiredService<WindowRuntime>()));

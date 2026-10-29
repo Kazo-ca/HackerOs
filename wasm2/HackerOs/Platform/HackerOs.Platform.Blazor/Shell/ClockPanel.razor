@@ -211,7 +211,7 @@
     }
 
     /// <summary>
-    /// Runs a notification action. A launch action (<see cref="NotificationAction.LaunchApp"/>, used
+    /// Runs a notification action. A launch action (<see cref="NotificationAction.LaunchApp(string, string, IReadOnlyList{string})"/>, used
     /// by OS notifications such as the low-storage warning of ADR 0099) launches its app, which the
     /// shell then presents, and dismisses the notification; other actions belong to their app.
     /// </summary>
@@ -224,7 +224,7 @@
             return;
         }
 
-        AppLaunchResult result = await orchestrator.LaunchAsync(new AppLaunchRequest(appId, principal, []));
+        AppLaunchResult result = await orchestrator.LaunchAsync(new AppLaunchRequest(appId, principal, [.. action.LaunchArguments]));
         if (result.IsSuccess)
         {
             NotificationQueue.Dismiss(notification.Id);

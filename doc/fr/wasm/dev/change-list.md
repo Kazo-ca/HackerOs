@@ -105,6 +105,20 @@ Côté OS :
   langue de l'app, repli sur l'anglais), `MarkSeenAsync(ids)` et `WatchAsync` (voir
   [`sdk-reference.md`](../framework/sdk-reference.md)).
 
+Ce que voit l'utilisateur (ADR 0186 §4.4 et §4.5) :
+
+- **Paramètres ▸ Nouveautés** (`--page=whats-new`, aussi par le bouton **Quoi de neuf ?** de
+  À propos) : un groupe par version, la prochaine en premier (« Depuis 2.1.0 (prochaine
+  version) »), une étiquette de catégorie et un badge **Nouveau** sur ce qui n'a pas été vu, les
+  liens « En savoir plus » et « Pull request ». Les badges restent pendant la visite ; les
+  entrées deviennent vues quand la page se ferme (autre page choisie ou Paramètres fermé).
+- **Notification après la connexion**, une fois par compte et par chargement de la page, s'il
+  reste des entrées non vues : « 3 nouveautés depuis votre dernière visite », bouton **Voir** qui
+  ouvre la page. Elle est dans le panneau de l'horloge. Le bouton d'une notification peut
+  maintenant passer des arguments à l'app : `NotificationAction.LaunchApp(appId, label, arguments)`.
+- **Pastille** sur le bouton Démarrer (bureau) et sur le bouton Accueil (mobile) tant qu'il reste
+  des entrées non vues ; leur nom accessible le dit aussi.
+
 ## À la sortie d'une version
 
 Les entrées de `unreleased/` sont regroupées dans `changes/<version>.json` dans la PR qui change

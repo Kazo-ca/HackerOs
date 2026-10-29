@@ -103,6 +103,20 @@ In the OS:
   app's language, English as fallback), `MarkSeenAsync(ids)` and `WatchAsync` (see
   [`sdk-reference.md`](../framework/sdk-reference.md)).
 
+What the user sees (ADR 0186 §4.4 and §4.5):
+
+- **Settings ▸ What's new** (`--page=whats-new`, also through the **What's new?** button of
+  About): one group per version, the next one first ("Since 2.1.0 (next version)"), a category
+  label and a **New** badge on what was not seen, and "Learn more" and "Pull request" links. The
+  badges stay during the visit; the entries become seen when the page closes (another page
+  chosen or Settings closed).
+- **Notification after sign-in**, once per account and page load, when unseen entries remain:
+  "3 new changes since your last visit", with a **View** button that opens the page. It is in the
+  clock panel. A notification button can now pass arguments to the app:
+  `NotificationAction.LaunchApp(appId, label, arguments)`.
+- **Dot** on the Start button (desktop) and on the Home button (mobile) while unseen entries
+  remain; their accessible name says it too.
+
 ## When a version is released
 
 The entries of `unreleased/` are grouped into `changes/<version>.json` in the PR that changes
