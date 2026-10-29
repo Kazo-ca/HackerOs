@@ -106,4 +106,16 @@ public sealed class GuestAccountServiceTests
         Assert.Null(await _guests.FindLoneGuestAsync());
         await Assert.ThrowsAsync<InvalidOperationException>(() => _harness.Session.LoginAsync(guest.LoginName, password: null));
     }
+
+    [Fact]
+    public async Task No_account_is_added_beside_the_guest()
+    {
+        await _guests.CreateAsync("Guest");
+        LocalAccountService accounts = new(_harness.Users, _harness.Groups, _harness.Audit, _harness.FileSystem, iterations: 10);
+
+        await Assert.ThrowsAsync<ArgumentException>(() => accounts.CreateAsync(
+            "guest", new HackerOs.AppSdk.Administration.HackNewUserAccount("carol", "Carol", AppAuthority.User, NewPassword)).AsTask());
+    }
+
+    private const string NewPassword = "correct horse 42";
 }

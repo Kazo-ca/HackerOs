@@ -100,6 +100,13 @@ public sealed class LocalAccountService
                 throw new ArgumentException($"useradd: user '{loginName.Value}' already exists", nameof(account));
             }
 
+            // ADR 0187 section 4: while the guest exists, the first registered account is created
+            // from it ("Create my account": migrate or delete the guest), never beside it.
+            if ((await _users.GetAllAsync(cancellationToken).ConfigureAwait(false)).Any(static user => user.IsGuest))
+            {
+                throw new ArgumentException("useradd: create your own account from the guest account first", nameof(account));
+            }
+
             LocalPasswordCredential credential = await LocalPasswordHasher
                 .CreateAsync(account.Password, _iterations, _asyncHasher, cancellationToken)
                 .ConfigureAwait(false);

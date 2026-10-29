@@ -2,6 +2,7 @@
 @using HackerOs.Simulation.Abstractions.Sessions
 @inject ISessionService SessionService
 @inject IProcessManager ProcessManager
+@inject HackerOs.Platform.Core.Lifecycle.AppLifecycleOrchestrator Orchestrator
 @inject IStringLocalizer<Strings> L
 
 <div class="modal-backdrop" @onclick="CancelAsync">
@@ -78,6 +79,12 @@
         _errorMessage = null;
         try
         {
+            // The session's apps stop first, while the desktop can still close their windows.
+            if (SessionService.CurrentPrincipal is { } principal)
+            {
+                await Orchestrator.StopSessionAppsAsync(principal.SessionId);
+            }
+
             await SessionService.LogoutAsync();
             if (OnLoggedOut.HasDelegate)
             {

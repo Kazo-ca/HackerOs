@@ -1,6 +1,23 @@
 @inherits HackerOs.AppSdk.Blazor.HackComponentBase
 @using HackerOs.AppSdk.Administration
 
+@if (CurrentAccount is { IsGuest: true })
+{
+    @* ADR 0187 section 5: the guest is invited to create its account; the form belongs to the OS. *@
+    <div class="setting-group users-panel guest-banner" role="region" aria-label="@L["Users.Guest.Title"]">
+        <h4>@L["Users.Guest.Title"]</h4>
+        <p class="setting-desc">@L["Users.Guest.Description"]</p>
+        <p class="setting-desc">@L["Users.Guest.SignOutNotice"]</p>
+        <div class="form-actions">
+            <button type="button" class="btn-secondary" disabled="@_busy" @onclick="CreateMyAccountAsync">@L["Users.Guest.Create"]</button>
+        </div>
+        @if (!string.IsNullOrEmpty(_guestMessage))
+        {
+            <p class="dialog-error" role="alert">@_guestMessage</p>
+        }
+    </div>
+}
+
 <div class="setting-group users-panel">
     <h4>@L["Users.List.Title"]</h4>
     <p class="setting-desc">
@@ -64,7 +81,7 @@
     }
 </div>
 
-@if (CurrentIsAdministrator)
+@if (CurrentIsAdministrator && !GuestExists)
 {
     <div class="setting-group users-panel">
         <h4>@L["Users.Add.Title"]</h4>

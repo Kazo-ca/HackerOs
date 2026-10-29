@@ -93,8 +93,45 @@
         case EcosystemHostView.Login:
             <section class="auth-surface" aria-labelledby="login-title">
                 <div class="boot-mark" aria-hidden="true">H_</div>
-                <h1 id="login-title">@L["Login.Title"]</h1>
-                @if (State.LoneGuest is { } guest)
+                <h1 id="login-title">@(State.LoneGuest is not null && ShowGuestAccountForm ? L["GuestAccount.Title"] : L["Login.Title"])</h1>
+                @if (State.LoneGuest is not null && ShowGuestAccountForm)
+                {
+                    @* ADR 0187 section 4: "Create my account" belongs to the host, like the first-run form,
+                       and runs with the guest session closed (usermod refuses a signed-in user). *@
+                    <form class="guest-account" @onsubmit="CreateMyAccountAsync" @onsubmit:preventDefault>
+                        <p>@L["GuestAccount.Intro"]</p>
+                        <label for="account-login">@L["Setup.LoginName"]</label>
+                        <input id="account-login" autocomplete="username" maxlength="32" required @bind="SetupLogin" />
+                        <label for="account-display">@L["Setup.DisplayName"]</label>
+                        <input id="account-display" autocomplete="name" maxlength="80" required @bind="SetupDisplayName" />
+                        <label for="account-password">@L["Common.Password"]</label>
+                        <input id="account-password" type="password" autocomplete="new-password" minlength="8" required @bind="SetupPassword" />
+                        <label for="account-confirm">@L["Setup.ConfirmPassword"]</label>
+                        <input id="account-confirm" type="password" autocomplete="new-password" minlength="8" required @bind="SetupPasswordConfirmation" />
+                        <fieldset class="guest-choice">
+                            <legend>@L["GuestAccount.Choice"]</legend>
+                            <label class="guest-option">
+                                <input type="radio" name="guest-choice" checked="@KeepGuestFiles" @onchange="() => KeepGuestFiles = true" />
+                                <span><strong>@L["GuestAccount.Migrate"]</strong> <span class="guest-option-hint">@L["GuestAccount.MigrateHint"]</span></span>
+                            </label>
+                            <label class="guest-option">
+                                <input type="radio" name="guest-choice" checked="@(!KeepGuestFiles)" @onchange="() => KeepGuestFiles = false" />
+                                <span><strong>@L["GuestAccount.Delete"]</strong> <span class="guest-option-hint">@L["GuestAccount.DeleteHint"]</span></span>
+                            </label>
+                        </fieldset>
+                        @if (!KeepGuestFiles)
+                        {
+                            <p class="form-warning" role="note">@L["GuestAccount.DeleteWarning"]</p>
+                        }
+                        @if (!string.IsNullOrEmpty(FormError))
+                        {
+                            <p class="form-error" role="alert">@FormError</p>
+                        }
+                        <button type="submit" disabled="@IsSubmitting">@L["GuestAccount.Submit"]</button>
+                        <button type="button" class="guest-button" disabled="@IsSubmitting" @onclick="CloseGuestAccountForm">@L["GuestAccount.Back"]</button>
+                    </form>
+                }
+                else if (State.LoneGuest is { } guest)
                 {
                     @* ADR 0187 section 3: while the guest is the only account, it signs in directly. *@
                     <div class="guest-login">
@@ -104,6 +141,7 @@
                             <p class="form-error" role="alert">@FormError</p>
                         }
                         <button type="button" class="guest-button" disabled="@IsSubmitting" @onclick="ContinueAsGuestAsync">@L["Guest.Continue"]</button>
+                        <button type="button" class="guest-create" disabled="@IsSubmitting" @onclick="OpenGuestAccountForm">@L["GuestAccount.Open"]</button>
                     </div>
                 }
                 else
@@ -240,6 +278,9 @@
     private string LoginPassword { get; set; } = string.Empty;
     private string? FormError { get; set; }
     private bool IsSubmitting { get; set; }
+    private bool ShowGuestAccountForm { get; set; }
+    private bool KeepGuestFiles { get; set; } = true;
+    private GuestAccountRequests? GuestRequests { get; set; }
     private bool IsRestartingForUpdate { get; set; }
 
     // ADR 0162: only the browser host registers it (a server prerender of this component has none).
@@ -314,6 +355,13 @@
             ReleaseMonitor.Start(HackerOs.Platform.Blazor.LazyLoading.HostReleaseMonitor.DefaultInterval);
         }
 
+        // ADR 0187 section 5: Settings ▸ Users and the Start menu ask from inside the guest session.
+        GuestRequests = Services.GetService<GuestAccountRequests>();
+        if (GuestRequests is not null)
+        {
+            GuestRequests.CreateAccountRequested += OnCreateAccountRequested;
+        }
+
         // Boot creates/reconciles canonical settings documents. Preferences are then loaded before
         // a user can reach a desktop, so the saved theme never depends on opening Settings first.
         await InitializeHostAsync();
@@ -370,6 +418,11 @@
         if (ReleaseMonitor is not null)
         {
             ReleaseMonitor.ReleaseAvailable -= OnReleaseAvailable;
+        }
+
+        if (GuestRequests is not null)
+        {
+            GuestRequests.CreateAccountRequested -= OnCreateAccountRequested;
         }
     }
 
@@ -537,6 +590,96 @@
         State.CompleteLogin();
     }
 
+    private void OpenGuestAccountForm()
+    {
+        FormError = null;
+        KeepGuestFiles = true;
+        ShowGuestAccountForm = true;
+    }
+
+    private void CloseGuestAccountForm()
+    {
+        FormError = null;
+        ClearPasswords();
+        ShowGuestAccountForm = false;
+    }
+
+    /// <summary>
+    /// ADR 0187 section 5: the guest asked from its session. The session is closed first (its apps
+    /// stop as on a sign-out), then the sign-in screen opens on the "Create my account" form.
+    /// </summary>
+    private void OnCreateAccountRequested() => InvokeAsync(async () =>
+    {
+        if (State.View != EcosystemHostView.Desktop
+            || SessionService.CurrentPrincipal is not { } principal
+            || await GuestAccounts.FindGuestAsync() is not { } guest
+            || guest.Id != principal.UserId)
+        {
+            return;
+        }
+
+        // As a sign-out from the session menu: the session's apps stop while the desktop can still
+        // close their windows, then the session ends.
+        await Services.GetRequiredService<HackerOs.Platform.Core.Lifecycle.AppLifecycleOrchestrator>()
+            .StopSessionAppsAsync(principal.SessionId);
+        await SessionService.LogoutAsync();
+        State.BeginInitialization();
+        StateHasChanged();
+        await InitializeHostAsync();
+        OpenGuestAccountForm();
+        StateHasChanged();
+    });
+
+    /// <summary>
+    /// ADR 0187 section 4: the guest becomes an administrator with a password, by migration (same
+    /// account, home moved) or by replacement (new account, guest and its files deleted); the new
+    /// account then signs in with that password.
+    /// </summary>
+    private async Task CreateMyAccountAsync()
+    {
+        FormError = null;
+        if (SetupPassword.Length < 8 || !StringComparer.Ordinal.Equals(SetupPassword, SetupPasswordConfirmation))
+        {
+            FormError = L["Setup.PasswordRules"];
+            return;
+        }
+
+        if (LocalAccountService.IsReserved(SetupLogin))
+        {
+            FormError = L["Setup.ReservedLogin", SetupLogin.Trim()];
+            return;
+        }
+
+        IsSubmitting = true;
+        try
+        {
+            HackerOs.AppSdk.Administration.HackNewUserAccount account = new(
+                SetupLogin.Trim(), SetupDisplayName, AppAuthority.Administrator, SetupPassword);
+            LocalUser created = KeepGuestFiles
+                ? await GuestAccounts.MigrateAsync(account)
+                : await GuestAccounts.ReplaceAsync(account);
+            State.BeginLoginProgress();
+            StateHasChanged();
+            await Task.Delay(50);
+            AuthenticatedPrincipal principal = await SessionService.LoginAsync(created.LoginName, SetupPassword);
+            ShowGuestAccountForm = false;
+            await UseSessionLocaleAsync(principal);
+            ClearPasswords();
+            State.CompleteLogin();
+        }
+        catch (Exception exception) when (exception is ArgumentException or FormatException or InvalidOperationException)
+        {
+            State.CompleteIdentityLoad(await UserRepository.GetAllAsync());
+            SelectedLogin = State.Users.FirstOrDefault()?.LoginName.Value ?? string.Empty;
+            ShowGuestAccountForm = State.LoneGuest is not null;
+            FormError = exception.Message;
+        }
+        finally
+        {
+            IsSubmitting = false;
+        }
+    }
+
     private async Task LoginAsync()
     {
         FormError = null;
@@ -637,9 +780,13 @@
         LoginPassword = string.Empty;
     }
 
-    private void HandleLoggedOut()
+    /// <summary>
+    /// After a sign-out the sign-in screen is loaded again. Returned as a task so the callback
+    /// renders again once the users are loaded: a discarded task left the boot screen shown.
+    /// </summary>
+    private Task HandleLoggedOut()
     {
         State.BeginInitialization();
-        _ = InitializeHostAsync();
+        return InitializeHostAsync();
     }
 }

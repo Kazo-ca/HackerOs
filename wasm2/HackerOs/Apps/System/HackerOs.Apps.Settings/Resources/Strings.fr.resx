@@ -1497,4 +1497,19 @@
   <data name="Screens.Error.Request" xml:space="preserve">
     <value>La demande a échoué : {0}</value>
   </data>
+  <data name="Users.Guest.Title" xml:space="preserve">
+    <value>Vous utilisez le compte invité</value>
+  </data>
+  <data name="Users.Guest.Description" xml:space="preserve">
+    <value>Le compte invité n'a pas de mot de passe. Créez votre propre compte pour protéger vos fichiers : vous pourrez garder les fichiers, les réglages et les applications de l'invité, ou repartir d'un compte vide.</value>
+  </data>
+  <data name="Users.Guest.SignOutNotice" xml:space="preserve">
+    <value>La session invité se ferme d'abord : enregistrez votre travail dans les applications ouvertes.</value>
+  </data>
+  <data name="Users.Guest.Create" xml:space="preserve">
+    <value>Créer mon compte</value>
+  </data>
+  <data name="Users.Guest.Unavailable" xml:space="preserve">
+    <value>Le formulaire de compte n'a pas pu s'ouvrir. Fermez la session, puis choisissez Créer mon compte sur l'écran de connexion.</value>
+  </data>
 </root>

@@ -141,4 +141,37 @@
   <data name="Guest.Unavailable" xml:space="preserve">
     <value>Un compte existe déjà : l'invité n'est plus disponible.</value>
   </data>
+  <data name="GuestAccount.Open" xml:space="preserve">
+    <value>Créer mon compte</value>
+  </data>
+  <data name="GuestAccount.Intro" xml:space="preserve">
+    <value>Choisissez un nom de connexion et un mot de passe. Votre compte sera administrateur, et le compte invité ne sera plus proposé.</value>
+  </data>
+  <data name="GuestAccount.Choice" xml:space="preserve">
+    <value>Que faire de l'invité</value>
+  </data>
+  <data name="GuestAccount.Migrate" xml:space="preserve">
+    <value>Migrer</value>
+  </data>
+  <data name="GuestAccount.MigrateHint" xml:space="preserve">
+    <value>Recommandé. L'invité devient votre compte et garde ses fichiers, ses réglages et ses applications.</value>
+  </data>
+  <data name="GuestAccount.Delete" xml:space="preserve">
+    <value>Supprimer l'invité</value>
+  </data>
+  <data name="GuestAccount.DeleteHint" xml:space="preserve">
+    <value>Un nouveau compte vide est créé et l'invité est supprimé.</value>
+  </data>
+  <data name="GuestAccount.DeleteWarning" xml:space="preserve">
+    <value>Tous les fichiers du dossier personnel de l'invité seront supprimés. Les applications installées pour tous les utilisateurs restent.</value>
+  </data>
+  <data name="GuestAccount.Submit" xml:space="preserve">
+    <value>Créer mon compte</value>
+  </data>
+  <data name="GuestAccount.Back" xml:space="preserve">
+    <value>Retour</value>
+  </data>
+  <data name="GuestAccount.Title" xml:space="preserve">
+    <value>Créer mon compte</value>
+  </data>
 </root>

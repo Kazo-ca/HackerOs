@@ -141,4 +141,37 @@
   <data name="Guest.Unavailable" xml:space="preserve">
     <value>An account already exists: the guest can no longer be used.</value>
   </data>
+  <data name="GuestAccount.Open" xml:space="preserve">
+    <value>Create my account</value>
+  </data>
+  <data name="GuestAccount.Intro" xml:space="preserve">
+    <value>Choose a login name and a password. Your account will be an administrator, and the guest account will no longer be offered.</value>
+  </data>
+  <data name="GuestAccount.Choice" xml:space="preserve">
+    <value>What happens to the guest</value>
+  </data>
+  <data name="GuestAccount.Migrate" xml:space="preserve">
+    <value>Migrate</value>
+  </data>
+  <data name="GuestAccount.MigrateHint" xml:space="preserve">
+    <value>Recommended. The guest becomes your account and keeps its files, settings and apps.</value>
+  </data>
+  <data name="GuestAccount.Delete" xml:space="preserve">
+    <value>Delete the guest</value>
+  </data>
+  <data name="GuestAccount.DeleteHint" xml:space="preserve">
+    <value>A new empty account is created and the guest is deleted.</value>
+  </data>
+  <data name="GuestAccount.DeleteWarning" xml:space="preserve">
+    <value>Every file in the guest's home folder will be deleted. Apps installed for every user stay.</value>
+  </data>
+  <data name="GuestAccount.Submit" xml:space="preserve">
+    <value>Create my account</value>
+  </data>
+  <data name="GuestAccount.Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="GuestAccount.Title" xml:space="preserve">
+    <value>Create my account</value>
+  </data>
 </root>
