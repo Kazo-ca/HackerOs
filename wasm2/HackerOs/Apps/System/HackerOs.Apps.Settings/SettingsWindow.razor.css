@@ -556,6 +556,65 @@
     margin-top: 8px;
 }
 
+/* Settings > Server Connection: one field per row, label above its input, like the Users panel
+   (UsersPanel.razor.css; scoped CSS does not cross components). */
+.server-connection-status {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.server-connection-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 420px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.75rem;
+    color: var(--hos-text-secondary, #a8bac4);
+}
+
+.text-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: var(--hos-input-padding, 8px 10px);
+    border: var(--hos-input-border, 1px solid var(--hos-border, #3a4b53));
+    border-radius: var(--hos-input-radius, var(--hos-radius-sm, 0.25rem));
+    box-shadow: var(--hos-input-shadow, none);
+    background-color: var(--hos-input-bg, #101417);
+    color: var(--hos-input-color, var(--hos-text-primary, #f4f7f8));
+    font-family: inherit;
+    font-size: 0.9rem;
+}
+
+.text-input:focus {
+    outline: none;
+    border-color: var(--hos-input-focus-border, var(--hos-accent, #42d392));
+    box-shadow: var(--hos-input-focus-ring, 0 0 0 1px var(--hos-accent, #42d392));
+}
+
+.text-input:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.server-connection-form .dialog-error {
+    margin: 0;
+}
+
+.server-connection-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+}
+
 .dialog-footer {
     display: flex;
     justify-content: flex-end;
