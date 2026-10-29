@@ -90,13 +90,19 @@ jamais le mot de passe ([`admin-authentication-agent.md`](admin-authentication-a
 
 `UsersPanel` (ADR 0120, 0169) et `PasskeysPanel` (ADR 0168), de haut en bas :
 
+- **Bandeau de l'invité** (session du compte invité seulement, ADR 0187) :
+  « Vous utilisez le compte invité » et le bouton « Créer mon compte », qui
+  demande le formulaire à l'OS (`HackUserAccounts.RequestGuestAccountCreationAsync`) ;
+  la session invité se ferme et le formulaire s'ouvre sur l'écran de
+  connexion. Voir [`guest-account.md`](guest-account.md).
 - **Liste des comptes** : nom de connexion, nom affiché, badges
   « Administrateur », « Vous », nombre de clés d'accès, état `P`/`NP`/`L`. Pour
   un administrateur, un lien « Supprimer » sur chaque compte autre que le sien
   ouvre une confirmation avec la case « Supprimer aussi son dossier
   personnel `/home/<login>` », décochée par défaut
   (`HackUserAccounts.DeleteAsync(login, removeHome)`).
-- **Ajouter un compte** (administrateur seulement) : nom de connexion, nom
+- **Ajouter un compte** (administrateur seulement, et absent tant que le
+  compte invité existe) : nom de connexion, nom
   affiché, type standard ou administrateur, mot de passe initial et
   confirmation, vérifiés par `HackUserAccounts.ValidateNewAccount` avant
   l'envoi (`HackUserAccounts.CreateAsync`).
