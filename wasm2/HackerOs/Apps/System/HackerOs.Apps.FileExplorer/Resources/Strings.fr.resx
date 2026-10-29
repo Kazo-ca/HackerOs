@@ -526,4 +526,7 @@
   <data name="Search.NoResults" xml:space="preserve">
     <value>Aucun résultat pour « {0} ».</value>
   </data>
+  <data name="Places.Resize" xml:space="preserve">
+    <value>Redimensionner le panneau latéral (double-clic : largeur par défaut)</value>
+  </data>
 </root>

@@ -236,6 +236,9 @@
     gap: 0.15rem;
     width: 150px;
     flex-shrink: 0;
+    min-width: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
     padding: 0.5rem 0.4rem;
     background: var(--hos-sidebar-bg, var(--hos-bg-surface, #11151a));
     border-right: 1px solid var(--hos-border-subtle, #21262d);

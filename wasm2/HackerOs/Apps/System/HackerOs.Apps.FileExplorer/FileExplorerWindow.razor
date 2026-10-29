@@ -100,6 +100,7 @@
         }
         <NetworkDrivesSidebar CurrentPath="@(_showTrash ? null : _state.CurrentPath)" Navigate="OpenNetworkDriveAsync" Failed="ReportError" />
     </nav>
+    <ExplorerSidebarResizer Width="_sidebarWidth" WidthChanged="OnSidebarWidthChangedAsync" PanelSelector=".explorer-sidebar" Label="@L["Places.Resize"]" />
 
     <div class="explorer-main">
     @if (_showTrash && _fileView is not null)
@@ -214,6 +215,9 @@
     private protected TrashView? _trashView;
     private protected VirtualPath _homeDirectory;
 
+    /// <summary>The Places panel's width, read from the user's explorer settings (ADR 0185 §1).</summary>
+    private protected int _sidebarWidth = FileExplorerSettings.DefaultSidebarWidth;
+
     private protected IStringLocalizer<Strings>? _localizer;
 
     /// <summary>The File Explorer's texts in its own process's language (ADR 0104).</summary>
@@ -324,6 +328,28 @@
         await SetWindowTitleAsync(FolderWindowTitle);
         _downloader = new BrowserFileDownloader(JSRuntime);
         await base.OnAppInitializedAsync();
+        try
+        {
+            _sidebarWidth = await FileExplorerSettings.ReadSidebarWidthAsync(_homeDirectory.Value, AppContext.CancellationToken);
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or AppGatewayAccessDeniedException)
+        {
+            // Unreadable settings: the default width.
+        }
+    }
+
+    /// <summary>The Places panel was resized (ADR 0185 §1): keep the width and save it for the next windows.</summary>
+    private protected async Task OnSidebarWidthChangedAsync(int width)
+    {
+        _sidebarWidth = width;
+        try
+        {
+            await FileExplorerSettings.SaveSidebarWidthAsync(_homeDirectory.Value, width, AppContext.CancellationToken);
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or AppGatewayAccessDeniedException)
+        {
+            // Not saved: the width still applies to this window.
+        }
     }
 
     /// <summary>

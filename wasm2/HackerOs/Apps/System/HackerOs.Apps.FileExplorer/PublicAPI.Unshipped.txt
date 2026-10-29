@@ -1,4 +1,16 @@
 #nullable enable
+HackerOs.Apps.FileExplorer.ExplorerSidebarResizer
+HackerOs.Apps.FileExplorer.ExplorerSidebarResizer.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Apps.FileExplorer.ExplorerSidebarResizer.ExplorerSidebarResizer() -> void
+HackerOs.Apps.FileExplorer.ExplorerSidebarResizer.Label.get -> string!
+HackerOs.Apps.FileExplorer.ExplorerSidebarResizer.Label.set -> void
+HackerOs.Apps.FileExplorer.ExplorerSidebarResizer.OnResized(int width) -> System.Threading.Tasks.Task!
+HackerOs.Apps.FileExplorer.ExplorerSidebarResizer.PanelSelector.get -> string!
+HackerOs.Apps.FileExplorer.ExplorerSidebarResizer.PanelSelector.set -> void
+HackerOs.Apps.FileExplorer.ExplorerSidebarResizer.Width.get -> int
+HackerOs.Apps.FileExplorer.ExplorerSidebarResizer.Width.set -> void
+HackerOs.Apps.FileExplorer.ExplorerSidebarResizer.WidthChanged.get -> Microsoft.AspNetCore.Components.EventCallback<int>
+HackerOs.Apps.FileExplorer.ExplorerSidebarResizer.WidthChanged.set -> void
 HackerOs.Apps.FileExplorer.NetworkDrivesSidebar
 HackerOs.Apps.FileExplorer.NetworkDrivesSidebar.CurrentPath.get -> string?
 HackerOs.Apps.FileExplorer.NetworkDrivesSidebar.CurrentPath.set -> void
