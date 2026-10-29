@@ -1,3 +1,4 @@
+using HackerOs.AppSdk;
 using HackerOs.App.Abstractions;
 using HackerOs.Apps.FileExplorer.FileControl.Icons;
 using HackerOs.Simulation.Abstractions.Events;
@@ -53,6 +54,8 @@ public partial class FileView
     [JSInvokable]
     public async Task LoadFolderPreviewsAsync(string[] paths)
     {
+        // Called from JavaScript, outside any frame: enter the app's frame first (ADR 0161 §1).
+        using IDisposable? scope = AppContext is { } context ? HackExecutionContext.Enter(context) : null;
         HashSet<string> wanted = new(paths ?? [], StringComparer.Ordinal);
         bool changed = false;
         foreach (FileViewItem item in Items.Where(item => item.IsDirectory && wanted.Contains(item.FullPath.Value)).ToList())

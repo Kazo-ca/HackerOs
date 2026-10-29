@@ -1,3 +1,4 @@
+using HackerOs.AppSdk;
 using System.IO.Compression;
 using HackerOs.App.Abstractions;
 using HackerOs.Simulation.Abstractions.FileSystem;
@@ -33,6 +34,8 @@ public partial class FileView
     [JSInvokable]
     public async Task PrepareExternalDragAsync(string path, string[] selectedPaths)
     {
+        // Called from JavaScript, outside any frame: enter the app's frame first (ADR 0161 §1).
+        using IDisposable? scope = AppContext is { } context ? HackExecutionContext.Enter(context) : null;
         if (!AllowDragDrop || string.IsNullOrEmpty(path))
         {
             return;
