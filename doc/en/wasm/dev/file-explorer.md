@@ -308,3 +308,9 @@ as a folder" points (§6 to §9) are not part of this series.
   go to the bounds. The width is kept per user in `~/.config/hackeros/file-explorer.json`
   (`sidebarWidth`; `FileExplorerSettings` keeps the other keys). Desktop only: the mobile window has no
   panel. Tests: `FileExplorerSettingsTests`.
+- [x] `explorer/4-hover-tooltips` (§16): an OS-styled bubble appears after the mouse rests 600 ms on
+  an item: full name, type, size (file), modification date and item count (folder). It lives in the
+  shared control (`attachTooltips` in `FileView.razor.js`, lines from `FileView.GetItemTooltipAsync` and
+  `FileViewTooltip`), so the desktop and the dialogs get it too. Mouse only: never on touch (on a phone
+  the long press opens the menu). A click, a key, the wheel, a drag or leaving the item hides it.
+  Tests: `FileViewTooltipTests`.

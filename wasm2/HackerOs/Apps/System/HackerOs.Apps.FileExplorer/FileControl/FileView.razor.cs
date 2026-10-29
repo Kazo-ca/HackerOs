@@ -384,6 +384,14 @@ public partial class FileView : IAsyncDisposable
             _pasteTargetAttached = await module.InvokeAsync<bool>("attachPasteTarget", _rootElement, _pasteCallbacks);
         }
 
+        if (firstRender && JavaScript is not null)
+        {
+            // ADR 0185 §16: the bubble after a pause of the mouse on an item (never on touch).
+            IJSObjectReference module = await EnsureJsModuleAsync();
+            _pasteCallbacks ??= DotNetObjectReference.Create(this);
+            await module.InvokeAsync<bool>("attachTooltips", _rootElement, _pasteCallbacks, FileViewTooltip.DelayMilliseconds);
+        }
+
         if (_pendingReveal is { } reveal && JavaScript is not null)
         {
             _pendingReveal = null;
@@ -1313,6 +1321,36 @@ public partial class FileView : IAsyncDisposable
     /// set, and a folder created would land at the root (a toolbar clicked while it loads, ADR 0175).
     /// </summary>
     internal bool HasListing => _lastSnapshot is not null;
+
+    /// <summary>
+    /// Gets the lines of the hover bubble of the item at <paramref name="path"/> (ADR 0185 §16), counting a
+    /// folder's entries; <see langword="null"/> when the item is no longer listed or is being renamed.
+    /// </summary>
+    [JSInvokable]
+    public async Task<string[]?> GetItemTooltipAsync(string path)
+    {
+        FileViewItem? item = Items.FirstOrDefault(candidate => candidate.FullPath.Value == path);
+        if (item is null || item.IsRenaming)
+        {
+            return null;
+        }
+
+        int? childCount = null;
+        if (item.IsDirectory)
+        {
+            try
+            {
+                FileSystemResult<FileSystemDirectorySnapshot> listing = await FileSystem.EnumerateAsync(new FileSystemEnumerateRequest(item.FullPath));
+                childCount = listing.Succeeded ? listing.Value!.Entries.Count : null;
+            }
+            catch (Exception exception) when (exception is InvalidOperationException or UnauthorizedAccessException or IOException)
+            {
+                // The bubble goes without the count.
+            }
+        }
+
+        return [.. FileViewTooltip.Describe(item, childCount, L)];
+    }
 
     /// <summary>Creates a new empty folder in the current directory via the control's own context menu.</summary>
     internal async Task CreateFolderAsync(string name)

@@ -90,4 +90,19 @@
   <data name="Empty.NoMatch" xml:space="preserve">
     <value>Aucun élément à afficher ici.</value>
   </data>
+  <data name="Tooltip.Type" xml:space="preserve">
+    <value>Type : {0}</value>
+  </data>
+  <data name="Tooltip.Size" xml:space="preserve">
+    <value>Taille : {0}</value>
+  </data>
+  <data name="Tooltip.Modified" xml:space="preserve">
+    <value>Modifié : {0}</value>
+  </data>
+  <data name="Tooltip.ItemCount.One" xml:space="preserve">
+    <value>Contient 1 élément</value>
+  </data>
+  <data name="Tooltip.ItemCount.Many" xml:space="preserve">
+    <value>Contient {0} éléments</value>
+  </data>
 </root>
