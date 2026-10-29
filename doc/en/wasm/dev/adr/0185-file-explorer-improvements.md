@@ -5,8 +5,10 @@
 ## Status
 
 Accepted on 2026-10-29. Decisions made with Benoit in the "Améliorer l'explorateur de fichiers"
-thread (questions Q1 to Q18 asked on 2026-10-28, answered on 2026-10-29). Not implemented yet:
-the work is noted in the to-do list, for later.
+thread (questions Q1 to Q18 asked on 2026-10-28, answered on 2026-10-29). Partly implemented
+on 2026-10-29 in the `explorer/base` series (chantiers 1 to 9): every point except the archive
+opened as a folder (points 6 to 9), still to do (issue #241). See the implementation note at the
+end.
 
 ## Context
 
@@ -162,4 +164,20 @@ Answers of 2026-10-29. "Recommendation" means Benoit took the recommended option
 - Only Chrome and Edge allow dragging out of the browser, and only a recent Chrome has
   `FileSystemObserver`; elsewhere, periodic re-reading costs one folder read every 5 seconds
   while the window is visible.
-- Implementation: later, in the `explorer/base` series.
+- Implementation: `explorer/base` series, see the note below.
+
+## Implementation note (2026-10-29)
+
+Each chantier is detailed in [`file-explorer.md`](../file-explorer.md). Points to remember:
+
+- Point 12: the shortcut to a file or a folder is a `.desktop` file of type `Type=Link`, with
+  `URL=file:///path` (each segment percent-encoded). It complements ADR 0160, and the SDK's
+  `HackDesktopLink` reads and writes it.
+- Points 10 to 13: the menu entries are added by the explorer window, through the control's
+  `ContextMenuOpening` event; the desktop and the dialogs keep the control's menu.
+- Point 15: following the changes made on the host lives in the file service
+  (`IExternalFileSystemChanges`), not in the explorer: every app that watches a network drive
+  folder gets it.
+- Points 4 and 5: dragging out of the browser applies to every view of the shared control, the
+  desktop included. If the drag starts before the preparation ends, it stays internal.
+- Points 6 to 9 (archive opened as a folder): not done yet.

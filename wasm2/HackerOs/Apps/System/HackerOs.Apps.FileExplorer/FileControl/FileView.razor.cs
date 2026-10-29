@@ -392,6 +392,11 @@ public partial class FileView : IAsyncDisposable
             await module.InvokeAsync<bool>("attachTooltips", _rootElement, _pasteCallbacks, FileViewTooltip.DelayMilliseconds);
             // ADR 0185 §14: the folder tiles of the Icons mode that come on screen get their preview.
             await module.InvokeAsync<bool>("attachFolderPreviews", _rootElement, _pasteCallbacks);
+            if (AllowDragDrop)
+            {
+                // ADR 0185 §4-5: a press of the mouse on an item prepares its content for a drag out of the browser.
+                await module.InvokeAsync<bool>("attachExternalDrag", _rootElement, _pasteCallbacks);
+            }
         }
 
         if (_pendingReveal is { } reveal && JavaScript is not null)
@@ -927,8 +932,10 @@ public partial class FileView : IAsyncDisposable
             return;
         }
 
+        // ADR 0185 §4-5: the content prepared at the press, when it is for these items, goes out of the browser too.
+        (string downloadKey, string? hint) = ExternalDragArguments(SelectedItems);
         IJSObjectReference module = await EnsureJsModuleAsync();
-        await module.InvokeAsync<bool>("setDragData", DragMimeType, json);
+        await module.InvokeAsync<bool>("setDragData", DragMimeType, json, downloadKey, hint);
     }
 
     /// <summary>
@@ -950,8 +957,9 @@ public partial class FileView : IAsyncDisposable
             data[DragMimeType] = json;
         }
 
+        (string downloadKey, string? hint) = ExternalDragArguments(items);
         IJSObjectReference module = await EnsureJsModuleAsync();
-        await module.InvokeAsync<bool>("setDragDataMany", data);
+        await module.InvokeAsync<bool>("setDragDataMany", data, downloadKey, hint);
     }
 
     /// <summary>

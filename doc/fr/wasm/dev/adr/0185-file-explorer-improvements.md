@@ -5,8 +5,10 @@
 ## Statut
 
 Accepté le 2026-10-29. Décisions prises avec Benoit dans le fil « Améliorer l'explorateur de
-fichiers » (questions Q1 à Q18 posées le 2026-10-28, réponses le 2026-10-29). Pas encore mis en
-œuvre : le travail est noté dans les choses à faire, pour plus tard.
+fichiers » (questions Q1 à Q18 posées le 2026-10-28, réponses le 2026-10-29). Mis en œuvre
+en partie le 2026-10-29 dans la série `explorer/base` (chantiers 1 à 9) : tous les points sauf
+l'archive ouverte comme un dossier (points 6 à 9), qui reste à faire (issue #241). Voir la note
+de mise en œuvre à la fin.
 
 ## Contexte
 
@@ -171,4 +173,21 @@ Réponses du 2026-10-29. « Recommandation » veut dire que Benoit a pris l'opti
 - Seuls Chrome et Edge permettent le glisser hors du navigateur, et seul un Chrome récent a
   `FileSystemObserver` ; ailleurs, la relecture périodique coûte une lecture du dossier toutes
   les 5 secondes tant que la fenêtre est visible.
-- Mise en œuvre : à faire plus tard, dans la série `explorer/base`.
+- Mise en œuvre : série `explorer/base`, voir la note ci-dessous.
+
+## Note de mise en œuvre (2026-10-29)
+
+Le détail de chaque chantier est dans [`file-explorer.md`](../file-explorer.md). Points à retenir :
+
+- Point 12 : le raccourci vers un fichier ou un dossier est un fichier `.desktop` de type
+  `Type=Link`, avec `URL=file:///chemin` (chaque segment encodé en pourcentage). C'est un
+  complément de l'ADR 0160, lu et écrit par `HackDesktopLink` du SDK.
+- Points 10 à 13 : les entrées du menu sont ajoutées par la fenêtre de l'explorateur, par
+  l'évènement `ContextMenuOpening` du contrôle ; le bureau et les dialogues gardent le menu du
+  contrôle.
+- Point 15 : le suivi des changements faits sur l'hôte est dans le service de fichiers
+  (`IExternalFileSystemChanges`), pas dans l'explorateur : toute app qui surveille un dossier de
+  lecteur réseau en profite.
+- Points 4 et 5 : le glisser hors du navigateur vaut pour toutes les vues du contrôle partagé,
+  bureau compris. Si le glisser commence avant la fin de la préparation, il reste interne.
+- Points 6 à 9 (archive ouverte comme un dossier) : pas encore faits.

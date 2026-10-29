@@ -68,9 +68,9 @@ internal sealed class FakeJSObjectReference : IJSObjectReference
             return ValueTask.FromResult((TValue)(object)true);
         }
 
-        // The hover bubbles' listeners (ADR 0185 §16) and the folder previews' observer (§14), installed
-        // after the first render too: same no-op.
-        if (identifier is "attachTooltips" or "attachFolderPreviews" && !Handlers.ContainsKey(identifier))
+        // The hover bubbles' listeners (ADR 0185 §16), the folder previews' observer (§14) and the press
+        // listener of the drag out of the browser (§4-5), installed after the first render too: same no-op.
+        if (identifier is "attachTooltips" or "attachFolderPreviews" or "attachExternalDrag" && !Handlers.ContainsKey(identifier))
         {
             return ValueTask.FromResult((TValue)(object)true);
         }
