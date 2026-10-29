@@ -202,8 +202,7 @@
     padding: 0.5rem;
 }
 
-.loading-state,
-.empty-state {
+.loading-state {
     padding: 2rem;
     text-align: center;
     color: var(--hos-text-muted, #6e7681);

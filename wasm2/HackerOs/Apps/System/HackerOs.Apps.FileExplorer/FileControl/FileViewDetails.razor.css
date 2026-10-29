@@ -80,3 +80,18 @@
     padding: 0 0.25rem;
     width: 100%;
 }
+
+/* ADR 0185 §2: the empty-folder or no-result message, a row under the headers. */
+.file-view-details tbody tr.file-view-empty-row,
+.file-view-details tbody tr.file-view-empty-row:hover {
+    border-bottom: none;
+    background: transparent;
+}
+
+.file-view-details td.file-view-empty {
+    padding: 1.5rem 0.6rem;
+    text-align: center;
+    border-right: none;
+    color: var(--hos-text-secondary, #8b949e);
+    font-style: italic;
+}

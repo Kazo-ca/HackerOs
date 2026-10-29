@@ -78,5 +78,12 @@
                 }
             </tr>
         }
+        @if (Owner.EmptyText is { } emptyText)
+        {
+            @* ADR 0185 §2: inside the list, under the headers; the row is not an item, the view's drop and menu stay. *@
+            <tr class="file-view-empty-row" role="row">
+                <td role="gridcell" class="file-view-empty" colspan="@EffectiveColumns.Count">@emptyText</td>
+            </tr>
+        }
     </tbody>
 </table>

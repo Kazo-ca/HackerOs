@@ -57,3 +57,14 @@
     width: 100%;
     text-align: center;
 }
+
+/* ADR 0185 §2: the empty-folder or no-result message, centred in the grid. */
+.file-view-empty {
+    flex: 1 1 100%;
+    align-self: center;
+    margin-top: 2rem;
+    text-align: center;
+    color: var(--hos-text-secondary, #8b949e);
+    font-style: italic;
+    pointer-events: none;
+}

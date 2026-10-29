@@ -286,3 +286,14 @@ name is translated by `Resources/AppManifest.fr.resx`.
 - [x] Explorer window on `HackFileView`; "UnZip Here…" and "Publish as a web site…" through `ContextMenuOpening` (replaced in work item 4 by registered entries, ADR 0159).
 - [x] Code editor on `HackFileView` ([`code-editor.md`](code-editor.md)).
 - [x] View of the Open / Save dialogs: work item `desk/3b` ([ADR 0157](adr/0157-file-dialogs-show-the-file-control.md)).
+
+## Series `explorer/base` (ADR 0185)
+
+Improvements decided in [ADR 0185](adr/0185-file-explorer-improvements.md) (issue #241). The "archive opened
+as a folder" points (§6 to §9) are not part of this series.
+
+- [x] `explorer/1-empty-state` (§2): the empty-folder message is inside the shared control's list
+  (`FileView.EmptyText`): a row under the column headers in Details mode, centred in Icons mode. A search
+  that hides everything shows `No results for "x".` (`FileView.NoMatchText`, set by the explorer window);
+  another filter shows "Nothing to show here.". Nothing on the desktop or in the tree. The Open and Save
+  dialogs get it too. Tests: `FileViewEmptyStateTests`.

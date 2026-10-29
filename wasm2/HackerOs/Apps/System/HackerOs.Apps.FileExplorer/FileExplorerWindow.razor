@@ -173,10 +173,6 @@
     {
         <div class="error-state">@_errorMessage</div>
     }
-    else if (_files is not null && _files.Items.Count == 0)
-    {
-        <div class="empty-state">@L["Empty"]</div>
-    }
 
     <!-- Directory Content View: the OS file control, provided by this same app -->
     <div class="explorer-content">
@@ -458,7 +454,16 @@
         _files?.RefreshFilter();
     }
 
-    private protected void OnSearchQueryChanged() => _files?.RefreshFilter();
+    /// <remarks>A search that hides everything says so inside the list (ADR 0185 §2).</remarks>
+    private protected void OnSearchQueryChanged()
+    {
+        if (_fileView is not null)
+        {
+            _fileView.NoMatchText = string.IsNullOrWhiteSpace(_state.SearchQuery) ? null : L["Search.NoResults", _state.SearchQuery.Trim()].Value;
+        }
+
+        _files?.RefreshFilter();
+    }
 
     private protected void ReportError(string message)
     {
