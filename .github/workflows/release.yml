@@ -184,7 +184,18 @@ jobs:
           SHA: ${{ steps.plan.outputs.sha }}
           PRERELEASE: ${{ steps.plan.outputs.prerelease }}
         run: |
-          flags=(--title "HackerOS $VERSION" --target "$SHA" --generate-notes)
+          # ADR 0186 §7: the text comes from changes/<version>.json (every entry, in English);
+          # GitHub's generated notes only for a version released before the change list existed.
+          notes="$RELEASE_DIR/release-notes.md"
+          if [[ -f "$HACKEROS_SOLUTION_DIR/changes/$VERSION.json" ]]; then
+            dotnet run --project "$HACKEROS_SOLUTION_DIR/Tools/HackerOs.Tools.ChangeList/HackerOs.Tools.ChangeList.csproj" -c Release -- \
+              notes --changes "$HACKEROS_SOLUTION_DIR/changes" --version "$VERSION" --kind release \
+              --repository "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" --output "$notes"
+            flags=(--title "HackerOS $VERSION" --target "$SHA" --notes-file "$notes")
+          else
+            echo "::warning title=Release notes::changes/$VERSION.json is missing (build/tools/collect-changes.sh): GitHub generates the notes."
+            flags=(--title "HackerOS $VERSION" --target "$SHA" --generate-notes)
+          fi
           if [[ "$PRERELEASE" == "true" ]]; then flags+=(--prerelease); else flags+=(--latest); fi
           gh release create "$TAG" "${flags[@]}" "$RELEASE_DIR"/assets/*
           echo "Release: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/tag/$TAG" >> "$GITHUB_STEP_SUMMARY"

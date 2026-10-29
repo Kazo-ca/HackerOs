@@ -42,8 +42,15 @@ mapfile -t projects < <(cd "$root" && grep -rl --include='*.csproj' -e 'Packagin
   echo '] } }'
 } > "$filter"
 
+# ADR 0186 §7: PackageReleaseNotes of every package = the developer entries of this version
+# (changes/<version>.json, or changes/unreleased/ before the version is collected) and the Release link.
+notes="$root/artifacts/package-release-notes.txt"
+dotnet run --project "$root/Tools/HackerOs.Tools.ChangeList/HackerOs.Tools.ChangeList.csproj" -c Release -- \
+  notes --changes "$root/changes" --version "$version" --kind package --output "$notes"
+
 echo "Packing ${#projects[@]} projects, version $version, into $output"
-dotnet pack "$filter" -c "$configuration" -o "$output" -p:ContinuousIntegrationBuild="$continuous_integration"
+dotnet pack "$filter" -c "$configuration" -o "$output" -p:ContinuousIntegrationBuild="$continuous_integration" \
+  -p:HackerOsPackageReleaseNotesFile="$notes"
 
 cache="${NUGET_PACKAGES:-$HOME/.nuget/packages}"
 for package in "$output"/*."$version".nupkg; do

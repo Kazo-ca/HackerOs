@@ -197,6 +197,12 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   [`logging.md`](dev/logging.md))
 - **Annonce des nouvelles versions** : une session ouverte apprend qu'une
   nouvelle version est disponible. ([ADR 0174](dev/adr/0174-announce-a-new-version-to-open-sessions.md))
+- **Nouveautés depuis la dernière visite** : la page Paramètres ▸ Nouveautés liste
+  les changements par version avec un badge **Nouveau** ; une notification après la
+  connexion et une pastille sur le menu Démarrer signalent ce qui n'a pas été vu.
+  La même liste écrit les notes de la GitHub Release, des paquets NuGet et
+  [`CHANGELOG-fr.md`](../../../CHANGELOG-fr.md).
+  ([`change-list.md`](dev/change-list.md), [ADR 0186](dev/adr/0186-whats-new-change-list.md))
 
 ### Personnalisation
 
@@ -242,7 +248,6 @@ dans `main`, le lien mène à sa PR.
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Démarrer en invité et crédits | Essayer l'OS sans créer de compte, puis garder ses fichiers en créant son compte ; crédits sur l'écran de connexion. | [0187](dev/adr/0187-guest-start-and-sign-in-credits.md) | [#243](https://github.com/Kazo-ca/HackerOs/issues/243) |
-| Nouveautés depuis la dernière visite | Liste des changements par version, affichée dans l'OS et reprise dans les notes de version. | [0186](dev/adr/0186-whats-new-change-list.md) | [#252](https://github.com/Kazo-ca/HackerOs/issues/252) |
 
 ### Hack Store
 

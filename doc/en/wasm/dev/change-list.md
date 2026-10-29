@@ -63,7 +63,8 @@ files does not need one.
 The **Change list entry** workflow (`.github/workflows/changelog-entry.yml`) runs on every PR to
 `main` and calls `wasm2/HackerOs/build/tools/check-change-entry.sh <base> <head>`. It fails when
 the PR touches `wasm2/HackerOs` (outside `Tests/`, `docs/`, `changes/` and `.md`) without adding a
-file in `changes/unreleased/`, unless it has the `no-changelog` label. To run it before pushing:
+file in `changes/unreleased/` (or a new `changes/<version>.json`, see below), unless it has the
+`no-changelog` label. To run it before pushing:
 
 ```bash
 wasm2/HackerOs/build/tools/check-change-entry.sh origin/main HEAD
@@ -119,8 +120,34 @@ What the user sees (ADR 0186 §4.4 and §4.5):
 
 ## When a version is released
 
-The entries of `unreleased/` are grouped into `changes/<version>.json` in the PR that changes
-`build/Versions.props` (script `build/tools/collect-changes.sh`, coming with work item 4 of
-ADR 0186). Until then, do it by hand: create
-`{ "version": "x.y.z", "date": "yyyy-mm-dd", "entries": [ … ] }` with the entries, without
-changing their IDs, and delete the files of `unreleased/`.
+In the PR that changes `build/Versions.props`, run:
+
+```bash
+wasm2/HackerOs/build/tools/collect-changes.sh            # today's date (UTC)
+wasm2/HackerOs/build/tools/collect-changes.sh --date 2026-11-02
+```
+
+The script (tool `Tools/HackerOs.Tools.ChangeList`, `collect` command):
+
+1. moves every entry of `unreleased/` into `changes/<version>.json`, the version being the one of
+   `Versions.props`, without changing their content or IDs (**New** badges already seen stay
+   seen), then deletes the files of `unreleased/`;
+2. regenerates `CHANGELOG.md` (English) and `CHANGELOG-fr.md` (French) at the root of the
+   repository.
+
+It refuses to run when `changes/<version>.json` already exists or `unreleased/` is empty.
+`--changelog-only` only regenerates the two changelogs. The PR check accepts a new
+`changes/<version>.json` as an entry.
+
+Then, on the merge into `main`, with nothing more to do:
+
+- **GitHub Release**: `release.yml` writes the text with the `notes --kind release` command: every
+  entry of the version, in English, grouped by category, with links to the PRs and the docs. When
+  `changes/<version>.json` is missing, GitHub generates the notes as before, with a warning.
+- **NuGet**: `build/pack-local.sh` writes `artifacts/package-release-notes.txt` (`notes --kind
+  package` command) and passes it to `dotnet pack`; `Platform/Packaging.props` puts it in the
+  `PackageReleaseNotes` of every `HackerOs.*` package: the `developer` entries of the version and
+  the link to the Release. Before the collection (local package), the `unreleased/` entries are used.
+- **Changelogs**: `CHANGELOG.md` and `CHANGELOG-fr.md` only list published versions. The test
+  `ReleaseNotesTests.The_changelogs_of_the_repository_are_up_to_date` fails when they no longer
+  match `changes/`: never edit them by hand.

@@ -5,6 +5,11 @@ namespace HackerOs.Tools.ChangeList;
 /// <list type="bullet">
 /// <item><c>site --changes &lt;dir&gt; --version &lt;v&gt; --output &lt;file&gt; [--repository &lt;url&gt;]</c>:
 /// writes the <c>whats-new.json</c> the OS reads (run by the <c>HackerOs.Ecosystem</c> build).</item>
+/// <item><c>collect --changes &lt;dir&gt; --version &lt;v&gt; --date &lt;yyyy-MM-dd&gt;</c>: moves
+/// <c>unreleased/</c> into <c>&lt;version&gt;.json</c> (run by <c>build/tools/collect-changes.sh</c>).</item>
+/// <item><c>notes --changes &lt;dir&gt; --version &lt;v&gt; --kind release|package --output &lt;file&gt; [--repository &lt;url&gt;]</c>:
+/// writes the GitHub Release text (<c>release.yml</c>) or the <c>PackageReleaseNotes</c> (<c>build/pack-local.sh</c>).</item>
+/// <item><c>changelog --changes &lt;dir&gt; --output-directory &lt;dir&gt;</c>: writes <c>CHANGELOG.md</c> and <c>CHANGELOG-fr.md</c>.</item>
 /// </list>
 /// Errors are printed in MSBuild's canonical format and the exit code is non-zero.
 /// </summary>
@@ -27,6 +32,9 @@ public static class Program
             return args[0] switch
             {
                 "site" => Site(options),
+                "collect" => Collect(options),
+                "notes" => Notes(options),
+                "changelog" => Changelog(options),
                 _ => Fail($"Unknown command: {args[0]}")
             };
         }
@@ -43,6 +51,37 @@ public static class Program
         WhatsNewDocument.Write(
             WhatsNewDocument.Build(folder, Required(options, "version"), repository),
             Required(options, "output"));
+        return 0;
+    }
+
+    private static int Collect(IReadOnlyDictionary<string, string> options)
+    {
+        string output = ChangeCollector.Collect(Required(options, "changes"), Required(options, "version"), Required(options, "date"));
+        Console.WriteLine($"Collected the next version into {output}");
+        return 0;
+    }
+
+    private static int Notes(IReadOnlyDictionary<string, string> options)
+    {
+        ChangeFolder folder = ChangeFolder.Load(Required(options, "changes"));
+        string version = Required(options, "version");
+        string repository = options.TryGetValue("repository", out string? url) ? url : WhatsNewDocument.DefaultRepositoryUrl;
+        string text = Required(options, "kind") switch
+        {
+            "release" => ReleaseNotes.Release(folder, version, repository),
+            "package" => ReleaseNotes.Package(folder, version, repository),
+            string kind => throw new ArgumentException($"--kind must be release or package, got: {kind}")
+        };
+        ReleaseNotes.Write(text, Required(options, "output"));
+        return 0;
+    }
+
+    private static int Changelog(IReadOnlyDictionary<string, string> options)
+    {
+        ChangeFolder folder = ChangeFolder.Load(Required(options, "changes"));
+        string directory = Required(options, "output-directory");
+        ReleaseNotes.Write(ReleaseNotes.Changelog(folder, "en"), Path.Combine(directory, ReleaseNotes.EnglishChangelog));
+        ReleaseNotes.Write(ReleaseNotes.Changelog(folder, "fr"), Path.Combine(directory, ReleaseNotes.FrenchChangelog));
         return 0;
     }
 
@@ -77,5 +116,8 @@ public static class Program
         Console.WriteLine("""
             HackerOS change list tool (ADR 0186)
               site --changes <dir> --version <v> --output <file> [--repository <url>]
+              collect --changes <dir> --version <v> --date <yyyy-MM-dd>
+              notes --changes <dir> --version <v> --kind release|package --output <file> [--repository <url>]
+              changelog --changes <dir> --output-directory <dir>
             """);
 }
