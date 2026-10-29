@@ -1,0 +1,19 @@
+{
+  "id": "708b8639-5d88-418d-b248-009c3c04ad9f",
+  "category": "new",
+  "audience": [
+    "user"
+  ],
+  "title": {
+    "en": "Use several screens",
+    "fr": "Utiliser plusieurs écrans"
+  },
+  "description": {
+    "en": "Extend HackerOS to other monitors: each screen gets its own desktop, and windows move from one screen to another.",
+    "fr": "Étendez HackerOS à d'autres moniteurs : chaque écran a son propre bureau, et les fenêtres passent d'un écran à l'autre."
+  },
+  "pr": 238,
+  "links": [
+    "doc/en/wasm/dev/adr/0178-extended-screens-in-display-surfaces.md"
+  ]
+}

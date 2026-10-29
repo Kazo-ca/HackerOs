@@ -16,14 +16,16 @@ détaillée dans [`github-pages-deployment.md`](github-pages-deployment.md).
 | **Deploy to GitHub Pages** (`deploy-to-pages.yml`) | Push sur `main` (déploie) ; PR qui touche le legacy (`src/**`, `package*.json`, `tsconfig*.json`, `webpack.config.js`), `assemble-pages.ps1` ou ce workflow (construit sans déployer) ; manuel | Build legacy pour `/legacy/`, publication WASM, assemblage du site combiné. Une PR a son propre groupe de concurrence : elle n'annule jamais un déploiement de `main`. |
 | **Verify HackerOS browser tests (manual)** (`verify-browser-tests.yml`) | Manuel seulement (`workflow_dispatch`) | Les six projets Playwright, avec le Chromium installé par Playwright. |
 | **Release HackerOS** (`release.yml`) | Fin réussie de *Verify HackerOS WASM* après un push sur `main` ; manuel (option `republish`) | Publie une version dont le tag `v<version>` n'existe pas encore : paquets `HackerOs.*`, site WASM zippé, envoi sur nuget.org, tag et GitHub Release ([`releases.md`](releases.md), ADR 0173). |
+| **Change list entry** (`changelog-entry.yml`) | Toute PR vers `main` (ouverte, poussée, étiquette ajoutée ou retirée) | Une PR qui touche le produit (`wasm2/HackerOs` hors `Tests/`, `docs/`, `changes/` et fichiers `.md`) ajoute au moins une entrée `wasm2/HackerOs/changes/unreleased/<guid>.json`, sauf avec l'étiquette `no-changelog` ([`change-list.md`](change-list.md), ADR 0186). Le format des entrées est vérifié par `ChangeEntriesTests` dans *Verify HackerOS WASM*. |
 
 Les PR vers `main` comme vers une branche d'intégration `<série>/base` sont
 vérifiées : le déclencheur `pull_request` n'a pas de filtre de branche. Le
 push sur `*/base` vérifie aussi l'état de la branche après chaque fusion d'un
 chantier.
 
-Une PR qui ne touche que la doc (`doc/**`, `*.md` à la racine) ne lance aucun
-workflow. Les `README.md` des projets sous `wasm2/HackerOs` restent des
+Une PR qui ne touche que la doc (`doc/**`, `*.md` à la racine) ne lance que
+*Change list entry* (vers `main`), qui passe tout de suite puisqu'elle ne touche pas
+le produit. Les `README.md` des projets sous `wasm2/HackerOs` restent des
 entrées du build (paquets NuGet, `AnalyzerReleases.*.md`) : les modifier lance
 la vérification.
 

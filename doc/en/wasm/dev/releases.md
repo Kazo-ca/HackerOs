@@ -35,6 +35,8 @@ Pick the number following SemVer
 2. For a minor or major version, fold the public API:
    `build/tools/ship-public-api.sh` (`--check` to see without changing anything).
 3. Change `HackerOsVersion` in `build/Versions.props`.
+   In the same PR, group the entries of `changes/unreleased/` into
+   `changes/<version>.json` ([`change-list.md`](change-list.md), ADR 0186).
 4. (Advised) build once (`dotnet build HackerOs.sln -c Release`) and commit the
    rewritten manifests; the build regenerates them anyway.
 5. Open the PR to `main`, wait for the green verification, merge.

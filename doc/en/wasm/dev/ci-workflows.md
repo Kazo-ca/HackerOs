@@ -16,12 +16,14 @@ detailed in [`github-pages-deployment.md`](github-pages-deployment.md).
 | **Deploy to GitHub Pages** (`deploy-to-pages.yml`) | Push to `main` (deploys); PR that touches the legacy (`src/**`, `package*.json`, `tsconfig*.json`, `webpack.config.js`), `assemble-pages.ps1` or this workflow (builds without deploying); manual | Legacy build for `/legacy/`, WASM publication, assembly of the combined site. A PR has its own concurrency group: it never cancels a `main` deployment. |
 | **Verify HackerOS browser tests (manual)** (`verify-browser-tests.yml`) | Manual only (`workflow_dispatch`) | The six Playwright projects, with the Chromium installed by Playwright. |
 | **Release HackerOS** (`release.yml`) | Successful end of *Verify HackerOS WASM* after a push to `main`; manual (`republish` option) | Publishes a version whose `v<version>` tag does not exist yet: `HackerOs.*` packages, zipped WASM site, push to nuget.org, tag and GitHub Release ([`releases.md`](releases.md), ADR 0173). |
+| **Change list entry** (`changelog-entry.yml`) | Any PR to `main` (opened, pushed, label added or removed) | A PR that touches the product (`wasm2/HackerOs` outside `Tests/`, `docs/`, `changes/` and `.md` files) adds at least one entry `wasm2/HackerOs/changes/unreleased/<guid>.json`, unless it has the `no-changelog` label ([`change-list.md`](change-list.md), ADR 0186). The format of the entries is checked by `ChangeEntriesTests` in *Verify HackerOS WASM*. |
 
 PRs to `main` as well as to an integration branch `<series>/base` are
 verified: the `pull_request` trigger has no branch filter. The push to
 `*/base` also verifies the state of the branch after each work item merge.
 
-A PR that only touches docs (`doc/**`, `*.md` at the root) runs no workflow.
+A PR that only touches docs (`doc/**`, `*.md` at the root) only runs
+*Change list entry* (to `main`), which passes at once since it does not touch the product.
 The `README.md` files of the projects under `wasm2/HackerOs` remain build
 inputs (NuGet packages, `AnalyzerReleases.*.md`): modifying them triggers the
 verification.

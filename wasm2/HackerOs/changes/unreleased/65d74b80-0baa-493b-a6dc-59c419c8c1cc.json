@@ -1,0 +1,19 @@
+{
+  "id": "65d74b80-0baa-493b-a6dc-59c419c8c1cc",
+  "category": "new",
+  "audience": [
+    "user"
+  ],
+  "title": {
+    "en": "A taskbar on every screen and an \"Other screen\" menu",
+    "fr": "Une barre des tâches par écran et un menu « Autre écran »"
+  },
+  "description": {
+    "en": "Each screen can have its own taskbar. The window icon and the Maximize button offer to send a window to another screen, and a shortcut identifies each screen.",
+    "fr": "Chaque écran peut avoir sa propre barre des tâches. L'icône de fenêtre et le bouton Agrandir proposent d'envoyer une fenêtre vers un autre écran, et un raccourci identifie chaque écran."
+  },
+  "pr": 238,
+  "links": [
+    "doc/en/wasm/dev/adr/0179-per-screen-taskbars-and-other-screen-menus.md"
+  ]
+}

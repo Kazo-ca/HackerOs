@@ -1,0 +1,40 @@
+name: Change list entry
+
+# ADR 0186 section 5: a pull request to main that changes the product (wasm2/HackerOs outside
+# Tests/, docs/, changes/ and Markdown files) adds at least one entry in
+# wasm2/HackerOs/changes/unreleased/<guid>.json, unless it carries the no-changelog label.
+# Series PRs to a <series>/base branch add their entry already, so the final PR to main passes.
+# The format of the entries is checked by ChangeEntriesTests in the Verify HackerOS WASM workflow.
+on:
+  pull_request:
+    branches: [ "main" ]
+    types: [ opened, synchronize, reopened, labeled, unlabeled, ready_for_review ]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: "changelog-entry-${{ github.event.pull_request.number }}"
+  cancel-in-progress: true
+
+jobs:
+  entry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Skipped by the no-changelog label
+        if: contains(github.event.pull_request.labels.*.name, 'no-changelog')
+        run: echo "The no-changelog label is set; no change list entry is required." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Checkout
+        if: ${{ !contains(github.event.pull_request.labels.*.name, 'no-changelog') }}
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Require a change list entry
+        if: ${{ !contains(github.event.pull_request.labels.*.name, 'no-changelog') }}
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: bash wasm2/HackerOs/build/tools/check-change-entry.sh "$BASE_SHA" "$HEAD_SHA"
