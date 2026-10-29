@@ -204,3 +204,5 @@ open streams, granted apps and warnings.
 - [x] `HackServerConnection.GetRelayPolicyAsync` and Settings panel.
 - [x] Tests: service, WebSocket endpoints, direct client, network gateway, policy.
 - [x] ADR 0108 and documentation.
+
+See also [ADR 0191](adr/0191-installable-local-server.md): server installable on the computer or the local network.

@@ -204,3 +204,5 @@ flux ouverts, apps accordées et avertissements.
 - [x] `HackServerConnection.GetRelayPolicyAsync` et panneau de Paramètres.
 - [x] Tests : service, endpoints WebSocket, client direct, passerelle réseau, politique.
 - [x] ADR 0108 et documentation.
+
+Voir aussi l'[ADR 0191](adr/0191-installable-local-server.md) : serveur installable sur l'ordinateur ou le réseau local.
