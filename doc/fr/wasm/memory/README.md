@@ -58,7 +58,7 @@ jour à la fin de chaque série ou quand une convention change.
   (plusieurs sessions ouvertes en même temps).
 - **Série `todo/`** (2026-10-30, branche `todo/base`, une PR finale vers
   `main` pour Benoit) : toutes les issues `TODO` ouvertes, une branche
-  `todo/<n>-<sujet>` chacune. Les ADR 0197 à 0205 lui sont réservées. Fait
+  `todo/<n>-<sujet>` chacune. Les ADR 0197 à 0211 lui sont réservées. Fait
   dans `todo/base` : bulles de notification et « Update ready » en
   notification (ADR 0197, chantier 1 de #242,
   [`notification-toasts.md`](../dev/notification-toasts.md)).
@@ -72,8 +72,8 @@ jour à la fin de chaque série ou quand une convention change.
   0191 serveur local installable, 0192 `features.md` et exception à l'ADR 0135,
   0193 heure locale, 0194 menus de la barre des tâches, 0195 bouton
   Marche/arrêt du menu Démarrer. 0196 est prise par la PR #294 (point des
-  notifications non lues), 0197 à 0205 sont réservées par la série `todo/`
-  (0197 bulles de notification). **Prochain numéro libre : 0206.** Avant d'en
+  notifications non lues), 0197 à 0211 sont réservées par la série `todo/`
+  (0197 bulles de notification). **Prochain numéro libre : 0212.** Avant d'en
   prendre un, vérifier `dev/adr/` sur `main` et les PR ouvertes.
 
 ## Conventions de travail

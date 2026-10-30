@@ -58,7 +58,7 @@ at the end of each series or when a convention changes.
   sessions open at once).
 - **`todo/` series** (2026-10-30, branch `todo/base`, one final PR to `main`
   for Benoit): every open `TODO` issue, one branch `todo/<n>-<topic>` each.
-  ADR 0197 to 0205 are reserved for it. Done in `todo/base`: notification
+  ADR 0197 to 0211 are reserved for it. Done in `todo/base`: notification
   bubbles and "Update ready" as a notification (ADR 0197, work item 1 of #242,
   [`notification-toasts.md`](../dev/notification-toasts.md)).
 - **ADR**: 0001 to 0171 and 0173 to 0195 exist on `main` (a few numbers skipped;
@@ -70,8 +70,8 @@ at the end of each series or when a convention changes.
   0188 to 0190 Hack Store ([`hackeros-store.md`](../dev/plans/hackeros-store.md)),
   0191 installable local server, 0192 `features.md` and exception to ADR 0135,
   0193 local time, 0194 taskbar menus, 0195 Start menu Power button.
-  0196 is taken by PR #294 (unread dot), 0197 to 0205 are reserved by the
-  `todo/` series (0197 notification bubbles). **Next free number: 0206.**
+  0196 is taken by PR #294 (unread dot), 0197 to 0211 are reserved by the
+  `todo/` series (0197 notification bubbles). **Next free number: 0212.**
   Before taking one, check `dev/adr/` on `main` and the open PRs.
 
 ## Working conventions
