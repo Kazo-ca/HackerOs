@@ -167,6 +167,7 @@ Le paquet est produit avec les deux mesures de ressources compilées
 | `hackeros-service` | service démarré à la connexion (`ServiceAppBase`, horloge simulée) | idem |
 | `hackeros-site` | site ASP.Hack (`WebAppDefinition`, `wwwroot/` embarqué) | `HackerOs.AppSdk.Web`, `HackerOs.App.Build` |
 | `hackeros-host` | hôte Blazor WebAssembly : `Program.cs`, `index.html`, `appsettings.json`, les apps de base en paquets (système comme dans l'Ecosystem) | `HackerOs.Ecosystem.Host`, `HackerOs.App.Build`, `HackerOs.Apps.*`, `HackerOs.Commands` |
+| `hackeros-solution` | dépôt d'app entier : app, hôte, tests, sous-module HackerOS (sources en `Debug`, paquets en `Release`), CI, publication dans le Hack Store ([`app-repository.md`](app-repository.md), ADR 0207) | ceux de l'app et de l'hôte, à la version du sous-module |
 
 Les modèles d'app partent avec `IsTrimmable=true` ; `hackeros-host` publie en
 Release trimmée (`PublishTrimmed=true`, `TrimMode=partial`) et
@@ -176,7 +177,10 @@ pas (ADR 0106 §4, ADR 0113, [`trimmed-publish.md`](../dev/trimmed-publish.md)).
 
 Paramètres des modèles d'app : `--appId` (défaut `com.example.my-app`) et
 `--publisherId` (défaut `pub.example`) ; le nom du projet (`-n`) devient
-l'espace de noms et le nom affiché.
+l'espace de noms et le nom affiché. `hackeros-solution` prend aussi `--repository` (`propriétaire/nom`).
+Chaque modèle a un `.template.config/ide.host.json` (icône, libellés des
+paramètres) pour Visual Studio et Rider (ADR 0176 §7), et les modèles d'app
+déclarent `HackerOsAppProject=true` (ADR 0207 §4).
 
 Chaque projet généré déclare `<HackerOsVersion>` une fois et l'utilise pour
 toutes ses références `HackerOs.*`. Dans les sources du modèle, la valeur est

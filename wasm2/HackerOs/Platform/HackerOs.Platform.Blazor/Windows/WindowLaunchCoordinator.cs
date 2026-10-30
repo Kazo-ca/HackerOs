@@ -18,6 +18,8 @@ public sealed class WindowLaunchCoordinator
     private readonly HashSet<WindowOwnerId> _presenting = [];
     private readonly Dictionary<string, int> _shellSurfaces = new(StringComparer.Ordinal);
     private readonly Dictionary<string, DisplayId> _targetDisplays = new(StringComparer.Ordinal);
+    private Core.Appearance.IconPackService? _iconPacks;
+    private Func<string, AppManifest?> _findManifest = static _ => null;
 
     /// <summary>Initializes the coordinator over the authoritative desktop window runtime.</summary>
     /// <param name="windows">The desktop window runtime.</param>
@@ -46,16 +48,83 @@ public sealed class WindowLaunchCoordinator
     /// <param name="geometry">
     /// Window geometry memory (ADR 0116); <see langword="null"/> opens every window at its cascade slot.
     /// </param>
-    [Microsoft.Extensions.DependencyInjection.ActivatorUtilitiesConstructor]
     public WindowLaunchCoordinator(
         WindowRuntime windows,
         Core.AppCatalog catalog,
         Core.Globalization.SessionLocaleService locale,
         WindowGeometryRecorder? geometry = null)
+        : this(windows, catalog, locale, geometry, iconPacks: null)
+    {
+    }
+
+    /// <summary>
+    /// Initializes the coordinator with translated titles, window geometry memory and the icon pack
+    /// (ADR 0203 §4): the OS's own composition.
+    /// </summary>
+    /// <param name="windows">The desktop window runtime.</param>
+    /// <param name="catalog">The catalog holding the translated names and the manifests of open windows.</param>
+    /// <param name="locale">The session language.</param>
+    /// <param name="geometry">Window geometry memory (ADR 0116), or <see langword="null"/>.</param>
+    /// <param name="iconPacks">The selected icon pack, or <see langword="null"/> to keep the apps' own icons.</param>
+    [Microsoft.Extensions.DependencyInjection.ActivatorUtilitiesConstructor]
+    public WindowLaunchCoordinator(
+        WindowRuntime windows,
+        Core.AppCatalog catalog,
+        Core.Globalization.SessionLocaleService locale,
+        WindowGeometryRecorder? geometry,
+        Core.Appearance.IconPackService? iconPacks)
         : this(windows, manifest => catalog.Localize(manifest, locale.Culture).Name, geometry)
     {
         ArgumentNullException.ThrowIfNull(catalog);
         ArgumentNullException.ThrowIfNull(locale);
+        UseIconPacks(iconPacks, appId => catalog.Manifests.GetValueOrDefault(appId));
+    }
+
+    /// <summary>
+    /// Draws the windows with the selected icon pack (ADR 0203 §4): new windows take the pack's image,
+    /// and the open ones change icon as soon as the pack changes, as a window manager re-reads
+    /// <c>_NET_WM_ICON</c>.
+    /// </summary>
+    /// <param name="iconPacks">The icon pack service, or <see langword="null"/> to keep the apps' own icons.</param>
+    /// <param name="findManifest">Finds the manifest of an open window's app.</param>
+    internal void UseIconPacks(Core.Appearance.IconPackService? iconPacks, Func<string, AppManifest?> findManifest)
+    {
+        if (_iconPacks is not null)
+        {
+            _iconPacks.Changed -= RefreshWindowIcons;
+        }
+
+        _iconPacks = iconPacks;
+        _findManifest = findManifest ?? throw new ArgumentNullException(nameof(findManifest));
+        if (_iconPacks is not null)
+        {
+            _iconPacks.Changed += RefreshWindowIcons;
+        }
+    }
+
+    /// <summary>
+    /// The icon of a window of <paramref name="manifest"/>: the pack's image when it has one, else the
+    /// app's first declared icon (ADR 0164), served from its library under <c>_content/&lt;assembly&gt;/</c>.
+    /// </summary>
+    /// <param name="manifest">The app's manifest.</param>
+    /// <returns>An image URL, or <see langword="null"/> for the generic window symbol.</returns>
+    public string? IconFor(AppManifest manifest)
+    {
+        ArgumentNullException.ThrowIfNull(manifest);
+        string? declared = manifest.Presentation.IconAssetPaths.FirstOrDefault();
+        return _iconPacks?.FindAppImage(manifest.Id, manifest.Presentation.Category, declared is not null)
+            ?? (declared is null ? null : LazyLoading.StaticWebAssetAppAssetSource.RelativeUrl(manifest, declared));
+    }
+
+    private void RefreshWindowIcons()
+    {
+        foreach (WindowRuntimeState window in _windows.Windows.ToArray())
+        {
+            if (_findManifest(window.AppId) is { } manifest)
+            {
+                _windows.Apply(new SetWindowIconCommand(window.Id, IconFor(manifest)));
+            }
+        }
     }
 
     private WindowLaunchCoordinator(WindowRuntime windows, Func<AppManifest, string> title, WindowGeometryRecorder? geometry)
@@ -211,15 +280,14 @@ public sealed class WindowLaunchCoordinator
                 ? InitialBounds(options, cascadeIndex, workArea)
                 : RestoredBounds(options, saved.Width, saved.Height, cascadeIndex, workArea);
             // Icons are package-relative in the manifest. All shell surfaces consume this resolved
-            // RCL URL from the window snapshot instead of requesting icons/app.svg from the host.
+            // URL (the icon pack's image or the RCL URL) from the window snapshot instead of
+            // requesting icons/app.svg from the host.
             WindowRuntimeState state = new(
                 WindowId.FromGuid(Guid.NewGuid()),
                 manifest.Id,
                 ownerInstanceId,
                 _title(manifest),
-                manifest.Presentation.IconAssetPaths.FirstOrDefault() is { } iconPath
-                    ? LazyLoading.StaticWebAssetAppAssetSource.RelativeUrl(manifest, iconPath)
-                    : null,
+                IconFor(manifest),
                 bounds,
                 restoreBounds: null,
                 zOrder: 0,

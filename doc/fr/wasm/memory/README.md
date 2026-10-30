@@ -56,12 +56,22 @@ jour à la fin de chaque série ou quand une convention change.
 - **Bouton Marche/arrêt dans le menu Démarrer** (ADR 0195, PR #291, fusionnée
   le 2026-10-30) : « Changer d'utilisateur » reste grisé, issue `TODO` #290
   (plusieurs sessions ouvertes en même temps).
-- **Série `todo/`** (2026-10-30, branche `todo/base`, une PR finale vers
-  `main` pour Benoit) : toutes les issues `TODO` ouvertes, une branche
-  `todo/<n>-<sujet>` chacune. Les ADR 0197 à 0211 lui sont réservées. Fait
-  dans `todo/base` : bulles de notification et « Update ready » en
-  notification (ADR 0197, chantier 1 de #242,
-  [`notification-toasts.md`](../dev/notification-toasts.md)).
+- **Série `todo/base`** (2026-10-30, toutes les issues `TODO` en parallèle,
+  une PR finale vers `main`, branches `todo/<n>-<sujet>`, ADR 0197 à 0211
+  réservées) : chantier 1 du Hack Store fait, modèle
+  `hackeros-solution` et workflow de publication vers le catalogue (ADR 0207,
+  [`app-repository.md`](../framework/app-repository.md), issue #246). Le
+  dépôt `HackerOs-AppTemplate` ne sera régénéré qu'avec un sous-module sur la
+  release qui contient ce modèle (PR en brouillon dans ce dépôt).
+- **Packs d'icônes** (ADR 0203, issue `TODO` #255, série `todo/base`) : packs
+  PNG pour les apps et les fichiers dans `/usr/share/icons` et
+  `~/.local/share/icons`, choisis dans Paramètres ▸ Apparence (document de
+  réglages `icons`, clé `iconPackId`) ; le pack Néon intégré est installé
+  d'office. Voir [`icon-packs.md`](../dev/icon-packs.md).
+- **Bulles de notification** (ADR 0197, chantier 1 de #242, série
+  `todo/base`) : bulles des notifications et « Update ready » en
+  notification persistante avec « Redémarrer ». Voir
+  [`notification-toasts.md`](../dev/notification-toasts.md).
 - **ADR** : 0001 à 0171 et 0173 à 0195 existent sur `main` (quelques numéros sautés ;
   0141 et 0172 n'ont pas servi). Repères récents : 0173 publication automatique,
   0174 annonce de nouvelle version, 0175 « Nouveau dossier » des dialogues, 0176
@@ -71,9 +81,11 @@ jour à la fin de chaque série ou quand une convention change.
   invité et crédits, 0188 à 0190 Hack Store ([`hackeros-store.md`](../dev/plans/hackeros-store.md)),
   0191 serveur local installable, 0192 `features.md` et exception à l'ADR 0135,
   0193 heure locale, 0194 menus de la barre des tâches, 0195 bouton
-  Marche/arrêt du menu Démarrer. 0196 est prise par la PR #294 (point des
-  notifications non lues), 0197 à 0211 sont réservées par la série `todo/`
-  (0197 bulles de notification). **Prochain numéro libre : 0212.** Avant d'en
+  Marche/arrêt du menu Démarrer ; série `todo/base` : 0197 bulles de
+  notification, 0203 packs d'icônes, 0207 modèle `hackeros-solution` (les
+  autres numéros jusqu'à 0211 sont réservés par ses chantiers). 0196 est prise
+  par la PR #294 (point des notifications non lues). **Prochain numéro libre :
+  0212.** Avant d'en
   prendre un, vérifier `dev/adr/` sur `main` et les PR ouvertes.
 
 ## Conventions de travail
@@ -106,8 +118,8 @@ section **IV** de [`AGENTS.md`](../../../../AGENTS.md), que Claude Code lit par
   `build/publish-trimmed.sh` et la compatibilité du SDK
   (`Tests/fixtures/sdk-compat`) quand ils sont concernés. Les GitHub Actions
   tournent de nouveau depuis le 2026-10-24 et vérifient chaque PR vers `main`
-  et `*/base` (tests en échec relancés une fois, Playwright dans un workflow
-  manuel) : [`../dev/ci-workflows.md`](../dev/ci-workflows.md).
+  et `*/base` (tests en échec relancés une fois ; Playwright chaque nuit sur `main`
+  si `main` a changé, un échec ouvre une issue) : [`../dev/ci-workflows.md`](../dev/ci-workflows.md).
 - **SDK** : l'API publique est suivie par `PublicAPI.Shipped.txt` /
   `PublicAPI.Unshipped.txt` ; un ajout passe par `Unshipped` jusqu'à la
   publication suivante (`build/tools/ship-public-api.sh`).
