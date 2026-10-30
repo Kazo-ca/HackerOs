@@ -62,6 +62,11 @@ jour à la fin de chaque série ou quand une convention change.
   [`app-repository.md`](../framework/app-repository.md), issue #246). Le
   dépôt `HackerOs-AppTemplate` ne sera régénéré qu'avec un sous-module sur la
   release qui contient ce modèle (PR en brouillon dans ce dépôt).
+- **Packs d'icônes** (ADR 0203, issue `TODO` #255, série `todo/base`) : packs
+  PNG pour les apps et les fichiers dans `/usr/share/icons` et
+  `~/.local/share/icons`, choisis dans Paramètres ▸ Apparence (document de
+  réglages `icons`, clé `iconPackId`) ; le pack Néon intégré est installé
+  d'office. Voir [`icon-packs.md`](../dev/icon-packs.md).
 - **ADR** : 0001 à 0171 et 0173 à 0195 existent sur `main` (quelques numéros sautés ;
   0141 et 0172 n'ont pas servi). Repères récents : 0173 publication automatique,
   0174 annonce de nouvelle version, 0175 « Nouveau dossier » des dialogues, 0176

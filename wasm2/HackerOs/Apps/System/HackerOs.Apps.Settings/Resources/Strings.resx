@@ -1617,4 +1617,28 @@
   <data name="Users.Guest.Unavailable" xml:space="preserve">
     <value>The account form could not be opened. Sign out, then choose Create my account on the sign-in screen.</value>
   </data>
+  <data name="IconPack.Title" xml:space="preserve">
+    <value>Icon pack</value>
+  </data>
+  <data name="IconPack.Description" xml:space="preserve">
+    <value>Replaces the icons of apps, folders and files with the PNG images of a pack. Install a pack for everyone in {0} (administrator) or for yourself in {1}: a folder holding icon-pack.json.</value>
+  </data>
+  <data name="IconPack.BuiltIn" xml:space="preserve">
+    <value>Built-in icons</value>
+  </data>
+  <data name="IconPack.BuiltIn.Description" xml:space="preserve">
+    <value>The OS's vector icons</value>
+  </data>
+  <data name="IconPack.None" xml:space="preserve">
+    <value>No icon pack is installed yet.</value>
+  </data>
+  <data name="IconPack.Warnings" xml:space="preserve">
+    <value>{0} warning(s) in the icon packs: refused images or folders, written to the system log.</value>
+  </data>
+  <data name="IconPack.Saved" xml:space="preserve">
+    <value>Icon pack applied.</value>
+  </data>
+  <data name="IconPack.Error.CannotRead" xml:space="preserve">
+    <value>Cannot read the icon packs: {0}</value>
+  </data>
 </root>

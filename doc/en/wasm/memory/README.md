@@ -62,6 +62,10 @@ at the end of each series or when a convention changes.
   [`app-repository.md`](../framework/app-repository.md), issue #246). The
   `HackerOs-AppTemplate` repository will only be regenerated with a submodule
   on the release that contains this template (draft PR in that repository).
+- **Icon packs** (ADR 0203, `TODO` issue #255, series `todo/base`): PNG packs
+  for apps and files under `/usr/share/icons` and `~/.local/share/icons`, chosen
+  in Settings ▸ Appearance (`icons` settings document, key `iconPackId`); the
+  built-in Néon pack is seeded. See [`icon-packs.md`](../dev/icon-packs.md).
 - **ADR**: 0001 to 0171 and 0173 to 0195 exist on `main` (a few numbers skipped;
   0141 and 0172 were not used). Recent landmarks: 0173 automatic release, 0174
   new-version announcement, 0175 "New folder" in dialogs, 0176 app repository
