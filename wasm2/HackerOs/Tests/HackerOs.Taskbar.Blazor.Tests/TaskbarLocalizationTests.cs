@@ -78,7 +78,20 @@ public sealed class TaskbarLocalizationTests
     private static string ClockText(string html) =>
         Regex.Match(html, "<span class=\"clock-text\"[^>]*>([^<]*)</span>").Groups[1].Value;
 
-    private static async Task<string> RenderAsync(Type? localizer, ITaskbarStatusSource status, TaskbarOptions? options = null)
+    [Fact]
+    public async Task Unseen_changes_put_a_dot_on_the_launcher_and_say_so_in_its_name()
+    {
+        string plain = await RenderAsync(localizer: null, new Status(CultureInfo.InvariantCulture));
+        string english = await RenderAsync(localizer: null, new Status(CultureInfo.InvariantCulture), launcher: new Launcher(hasAttention: true));
+        string french = await RenderAsync(typeof(FrenchStringLocalizer<>), new Status(CultureInfo.InvariantCulture), launcher: new Launcher(hasAttention: true));
+
+        Assert.DoesNotContain("launcher-attention", plain, StringComparison.Ordinal);
+        Assert.Contains("class=\"launcher-attention\" aria-hidden=\"true\"", english, StringComparison.Ordinal);
+        Assert.Contains("aria-label=\"App launcher, new changes to see\"", english, StringComparison.Ordinal);
+        Assert.Contains("aria-label=\"Lanceur d'applications, nouveautés à voir\"", french, StringComparison.Ordinal);
+    }
+
+    private static async Task<string> RenderAsync(Type? localizer, ITaskbarStatusSource status, TaskbarOptions? options = null, Launcher? launcher = null)
     {
         ServiceCollection services = new();
         services.AddSingleton<IIconCatalog, IconCatalog>();
@@ -92,7 +105,7 @@ public sealed class TaskbarLocalizationTests
         Dictionary<string, object?> parameters = new()
         {
             [nameof(Taskbar.WindowSource)] = new OneWindow(),
-            [nameof(Taskbar.Launcher)] = new Launcher(),
+            [nameof(Taskbar.Launcher)] = launcher ?? new Launcher(),
             [nameof(Taskbar.StatusSource)] = status,
         };
         if (options is not null)
@@ -151,9 +164,11 @@ public sealed class TaskbarLocalizationTests
         }
     }
 
-    private sealed class Launcher : ITaskbarLauncher
+    private sealed class Launcher(bool hasAttention = false) : ITaskbarLauncher
     {
         public bool IsOpen => false;
+
+        public bool HasAttention => hasAttention;
 
         public event Action? Changed
         {

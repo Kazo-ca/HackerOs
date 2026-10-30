@@ -821,6 +821,8 @@ public static class EcosystemServiceCollectionExtensions
                 FileMenuEntries = () => provider.GetRequiredService<HackerOs.Platform.Core.ContextMenus.FileContextMenuAdministration>(),
                 // HackScreens (ADR 0184): Settings > Screens drives the secondary screens of the browser host.
                 Screens = OperatingSystem.IsBrowser() ? () => provider.GetRequiredService<ScreenControl>() : null,
+                // HackWhatsNew (ADR 0186): the served change list, on a host that registers its source.
+                WhatsNew = provider.GetService<HackerOs.Platform.Core.WhatsNew.IWhatsNewSource>() is null ? null : () => provider.GetRequiredService<HackerOs.Platform.Core.WhatsNew.WhatsNewService>(),
             })
         {
             // HackBackground (ADR 0128): each task a child process, in a worker when the host has some.
@@ -984,6 +986,14 @@ public static class EcosystemServiceCollectionExtensions
             provider.GetService<ILogger<ScreenService>>(),
             provider.GetRequiredService<HackerOs.Platform.Core.Globalization.SessionLocaleService>()));
         // ADR 0184: HackScreens over the screen service and the window manager.
+        // ADR 0186: what changed since the user's last visit, over the host's IWhatsNewSource.
+        services.AddScoped(provider => new HackerOs.Platform.Core.WhatsNew.WhatsNewService(
+            provider.GetRequiredService<HackerOs.Platform.Core.WhatsNew.IWhatsNewSource>(),
+            provider.GetRequiredService<IOsSettingsService>(),
+            provider.GetService<ILogger<HackerOs.Platform.Core.WhatsNew.WhatsNewService>>(),
+            provider.GetRequiredService<INotificationQueue>(),
+            () => provider.GetRequiredService<ISessionService>().CurrentPrincipal,
+            () => provider.GetRequiredService<HackerOs.Platform.Core.Globalization.SessionLocaleService>().Culture));
         services.AddScoped(provider => new ScreenControl(
             provider.GetRequiredService<ScreenService>(),
             provider.GetRequiredService<WindowRuntime>()));

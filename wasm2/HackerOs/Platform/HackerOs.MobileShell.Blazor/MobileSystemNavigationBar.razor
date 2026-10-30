@@ -9,6 +9,10 @@
     </button>
     <button type="button" class="mobile-nav-button" data-shell-gesture="drawer" aria-label="@HomeLabel" title="@HomeLabel" @onclick="HandleHome">
         <span class="mobile-home-indicator" aria-hidden="true"></span>
+        @if (HomeHasAttention)
+        {
+            <span class="mobile-nav-attention" aria-hidden="true"></span>
+        }
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <circle cx="12" cy="12" r="8" />
         </svg>
@@ -30,6 +34,13 @@
     [Parameter, EditorRequired]
     public IMobileNavigationCommands Commands { get; set; } = null!;
 
+    /// <summary>
+    /// Gets or sets whether Home (which opens the app drawer) carries a dot: changes the user has not
+    /// seen yet (ADR 0186 §4.5).
+    /// </summary>
+    [Parameter]
+    public bool HomeHasAttention { get; set; }
+
     /// <summary>Gets or sets host-supplied accessible labels for the three buttons.</summary>
     [Parameter]
     public MobileSystemNavigationBarOptions Options { get; set; } = new();
@@ -39,7 +50,9 @@
     private void HandleRecent() => Commands.RequestRecent();
 
     private string BackLabel => Options.BackLabel ?? L["Navigation.Back"];
-    private string HomeLabel => Options.HomeLabel ?? L["Navigation.Home"];
+    private string HomeLabel => HomeHasAttention
+        ? L["Navigation.HomeWithNews", Options.HomeLabel ?? L["Navigation.Home"]]
+        : Options.HomeLabel ?? L["Navigation.Home"];
     private string RecentLabel => Options.RecentLabel ?? L["Navigation.Recent"];
 
     /// <summary>Gets the package's texts: the host's session language, or English without localization (ADR 0104).</summary>

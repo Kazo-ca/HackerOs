@@ -289,6 +289,12 @@ capacité. `HackAccessibilityPreferences.Scale(pixels)` agrandit une taille en p
 qui est dessiné en HTML avec les jetons ; une app qui dessine elle-même (canvas, terminal, éditeur)
 les lit ici. Voir [`accessibility.md`](../dev/accessibility.md).
 
+### Nouveautés (`HackerOs.AppSdk.WhatsNew`)
+
+| API | Membres | Capacité |
+|---|---|---|
+| `HackWhatsNew` | `IsSupported`, `IsSupportedFor(context)`, `GetAsync` → `HackChangeList(Groups, NewCount)` (`HackChangeGroup(Version, Since, Date, Entries)`, `HackChangeEntry(Id, Category, Title, Description, PullRequestUrl, Links, IsNew)`, `HackChangeCategory`), `MarkSeenAsync(ids)`, `WatchAsync` : liste des changements de l'OS dans la langue de l'app, et ce que l'utilisateur de la session a déjà vu (ADR 0186, [`change-list.md`](../dev/change-list.md)). Sans liste servie, la liste est vide. | aucune |
+
 ### Composants intégrables (`HackerOs.AppSdk.Components`)
 
 | Type | Rôle | Document |

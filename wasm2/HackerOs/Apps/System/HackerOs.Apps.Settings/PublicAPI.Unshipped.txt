@@ -2,6 +2,9 @@
 HackerOs.Apps.Settings.ScreensPanel
 HackerOs.Apps.Settings.ScreensPanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
 HackerOs.Apps.Settings.ScreensPanel.ScreensPanel() -> void
+HackerOs.Apps.Settings.WhatsNewPanel
+HackerOs.Apps.Settings.WhatsNewPanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Apps.Settings.WhatsNewPanel.WhatsNewPanel() -> void
 HackerOs.Apps.Settings.DateTimePanel
 HackerOs.Apps.Settings.DateTimePanel.DateTimePanel() -> void
 HackerOs.Apps.Settings.DateTimePanel.DisposeAsync() -> System.Threading.Tasks.ValueTask

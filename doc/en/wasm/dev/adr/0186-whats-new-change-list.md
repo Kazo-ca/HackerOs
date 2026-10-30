@@ -148,11 +148,16 @@ Benoit and will be corrected here if he prefers the released version only.
 1. ADR 0186 + format: `changes/` folder, `ChangeEntriesTests`, entries of 2.1.0 and of the next
    version. **Done with this ADR.**
 2. Served file + service: `/whats-new.json` at build time, what's new service, per-account state,
-   new account rule.
+   new account rule. **Done** (`whats-new/2-served-file-and-service`: `Tools/HackerOs.Tools.ChangeList`,
+   `WhatsNewService`, SDK `HackWhatsNew`).
 3. User interface: Settings ▸ About ▸ What's new page, notification after sign-in, Start menu dot,
-   English and French texts.
+   English and French texts. **Done** (`whats-new/3-whats-new-page`: `WhatsNewPanel`,
+   `WhatsNewService.NotifyNewChangesAsync`, launcher dot; the page is a menu entry of its own next to
+   About, reached also from About's **What's new?** button).
 4. Publications: `collect-changes.sh`, Release text in `release.yml`, `PackageReleaseNotes`,
-   `CHANGELOG.md` and `CHANGELOG-fr.md`.
+   `CHANGELOG.md` and `CHANGELOG-fr.md`. **Done** (`whats-new/4-release-notes`: `collect`, `notes`
+   and `changelog` commands of `Tools/HackerOs.Tools.ChangeList`; the PR check also accepts a new
+   `changes/<version>.json`).
 5. PR check: **Change list entry** workflow and `no-changelog` label. **Done with this ADR.**
 
 Each work item updates the docs in both languages and the README indexes.
@@ -163,6 +168,6 @@ Each work item updates the docs in both languages and the README indexes.
   per PR, but release notes and the what's new page no longer have to be written separately.
 - Entries are written for readers, not for code reviewers: a short sentence that says what the
   person can now do.
-- Until work items 2 to 4 are done, entries are only read by the test and by humans; `release.yml`
-  keeps GitHub's generated notes.
+- Since work items 2 to 4 (2026-10-29), the entries feed the OS what's new page, the GitHub
+  Release, the NuGet release notes and the two changelogs.
 - Practical guide: [`change-list.md`](../change-list.md).

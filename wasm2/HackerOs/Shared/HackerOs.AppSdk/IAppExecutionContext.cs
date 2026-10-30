@@ -331,6 +331,13 @@ public interface IAppExecutionContext
     IAppScreensGateway Screens => UnsupportedAdministrationGateways.Screens;
 
     /// <summary>
+    /// Gets this instance's gateway to the change list of the session user, behind
+    /// <see cref="WhatsNew.HackWhatsNew"/> (ADR 0186; no capability). Defaults to a gateway with an
+    /// empty list; the trusted platform factory overrides it on a host that serves one.
+    /// </summary>
+    WhatsNew.IAppWhatsNewGateway WhatsNew => UnsupportedAdministrationGateways.WhatsNew;
+
+    /// <summary>
     /// Gets this instance's ability to host interactive shells (<c>shell.host</c>, ADR 0056
     /// section 7), read by <see cref="Shell.HackShell"/>. Defaults to an unsupported gateway so
     /// existing <see cref="IAppExecutionContext"/> implementations that predate this member keep
@@ -438,6 +445,30 @@ public static class UnsupportedAdministrationGateways
 
     /// <summary>Unsupported <see cref="IAppScreensGateway"/>: a host without secondary screens.</summary>
     public static IAppScreensGateway Screens { get; } = new UnsupportedScreens();
+
+    /// <summary>Unsupported <see cref="WhatsNew.IAppWhatsNewGateway"/>: a host without a change list, whose list is empty.</summary>
+    public static WhatsNew.IAppWhatsNewGateway WhatsNew { get; } = new UnsupportedWhatsNew();
+
+    private sealed class UnsupportedWhatsNew : WhatsNew.IAppWhatsNewGateway
+    {
+        public bool IsSupported => false;
+
+        public ValueTask<WhatsNew.HackChangeList> GetAsync(System.Globalization.CultureInfo culture, CancellationToken cancellationToken = default) =>
+            ValueTask.FromResult(HackerOs.AppSdk.WhatsNew.HackChangeList.Empty);
+
+        public ValueTask MarkSeenAsync(IReadOnlyCollection<string> ids, CancellationToken cancellationToken = default) =>
+            ValueTask.CompletedTask;
+
+        public ValueTask<IAsyncDisposable> WatchAsync(Func<ValueTask> onChanged, CancellationToken cancellationToken = default) =>
+            ValueTask.FromResult<IAsyncDisposable>(NoSubscription.Instance);
+
+        private sealed class NoSubscription : IAsyncDisposable
+        {
+            public static NoSubscription Instance { get; } = new();
+
+            public ValueTask DisposeAsync() => ValueTask.CompletedTask;
+        }
+    }
 
     private sealed class UnsupportedScreens : IAppScreensGateway
     {

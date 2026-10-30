@@ -24,7 +24,7 @@ it). Tests: `Tests/HackerOs.Apps.Settings.Tests`.
 Pages are in a grouped menu on the left: Personalization (Appearance, Desktop,
 Screens, Accessibility, Language), Applications (File associations to File menus,
 Application), Network (Server connection, Synchronization), System (Users,
-Memory, Backup, About).
+Memory, Backup, What's new, About).
 
 - The button at the top of the menu collapses it to an icon bar or expands it
   with its labels. The state is not saved (Benoit's choice, 2026-10-25): the
@@ -58,7 +58,8 @@ Memory, Backup, About).
 | Users (`users`) | `UsersPanel` (+ `PasskeysPanel`) | Accounts, passwords, adding and deleting accounts by an administrator, session passkeys (ADR 0120, 0168, 0169; see [Users page](#users-page)). |
 | Memory (`memory`) | `MemoryPanel` | File `/etc/hackeros/memory.config`, section `[oom-killer]` (ADR 0126). |
 | Backup (`backup`) | `BackupPanel` | Present only if `HackSystemBackup.IsSupportedFor` allows it (ADR 0099). |
-| About (`about`) | (in the window) | Authority, reboot (`HackSystem.RebootAsync`), danger zone: factory reset (`HackSystem.FactoryResetAsync`), confirmed by typing `RESET`. |
+| What's new (`whats-new`) | `WhatsNewPanel` | The OS change list by version, the next one first, with a **New** badge on unseen changes; they become seen when the page closes (`HackWhatsNew`, ADR 0186). The sign-in notification opens it with `--page=whats-new`. |
+| About (`about`) | (in the window) | Authority, reboot (`HackSystem.RebootAsync`), danger zone: factory reset (`HackSystem.FactoryResetAsync`), confirmed by typing `RESET`. A **What's new?** button next to the version opens the What's new page. |
 | Application (`application`) | `AppDetailsPanel` | Added only with `--app=<id>` (ADR 0096): details and settings of an app. |
 
 ## Launch arguments

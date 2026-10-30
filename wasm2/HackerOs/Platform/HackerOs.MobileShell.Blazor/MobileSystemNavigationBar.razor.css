@@ -48,3 +48,7 @@
 
 .mobile-nav-button[data-shell-gesture="drawer"] svg { display: var(--hos-mobile-home-icon-display, block); }
 .mobile-home-indicator { display: var(--hos-mobile-home-indicator-display, none); width: 4.5rem; height: .25rem; border-radius: 999px; background: currentColor; }
+
+/* ADR 0186 §4.5: changes the user has not seen yet. */
+.mobile-nav-button[data-shell-gesture="drawer"] { position: relative; }
+.mobile-nav-attention { position: absolute; top: .35rem; right: .35rem; width: .5rem; height: .5rem; border-radius: 50%; background: var(--hos-mobile-nav-attention, var(--hos-warning, #d5a84f)); }

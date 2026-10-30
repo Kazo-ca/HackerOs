@@ -36,6 +36,7 @@ public sealed class MinimalAppExecutionContext(
     HackerOs.AppSdk.Settings.IAppSystemSettingsGateway? systemSettings = null,
     HackerOs.AppSdk.Administration.IAppScreensGateway? screens = null,
     HackerOs.AppSdk.IO.IAppDriveGateway? drives = null,
+    HackerOs.AppSdk.WhatsNew.IAppWhatsNewGateway? whatsNew = null,
     HackerOs.AppSdk.Administration.IAppUserAccountsGateway? userAccounts = null) : IAppExecutionContext
 {
     public AppManifest Manifest { get; } = manifest;
@@ -75,6 +76,9 @@ public sealed class MinimalAppExecutionContext(
     HackerOs.AppSdk.Administration.IAppScreensGateway IAppExecutionContext.Screens =>
         screens ?? UnsupportedAdministrationGateways.Screens;
 
+    // Without a change list, the interface's own default applies (an empty list).
+    HackerOs.AppSdk.WhatsNew.IAppWhatsNewGateway IAppExecutionContext.WhatsNew =>
+        whatsNew ?? UnsupportedAdministrationGateways.WhatsNew;
     HackerOs.AppSdk.Administration.IAppUserAccountsGateway IAppExecutionContext.UserAccounts =>
         userAccounts ?? UnsupportedAdministrationGateways.UserAccounts;
 

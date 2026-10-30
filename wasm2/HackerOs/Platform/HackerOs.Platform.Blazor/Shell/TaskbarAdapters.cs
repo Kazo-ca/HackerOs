@@ -119,7 +119,21 @@ public sealed class TaskbarLauncherAdapter : ITaskbarLauncher
     public event Action? Changed;
 
     /// <inheritdoc />
+    public bool HasAttention { get; private set; }
+
+    /// <inheritdoc />
     public void Toggle() => ToggleOn(IsOpen ? Display : DisplayId.Primary);
+
+    /// <summary>Shows or hides the dot of the Start button: changes the user has not seen (ADR 0186 §4.5).</summary>
+    /// <param name="value">Whether there is something new.</param>
+    public void SetAttention(bool value)
+    {
+        if (HasAttention != value)
+        {
+            HasAttention = value;
+            Changed?.Invoke();
+        }
+    }
 
     /// <summary>Opens the launcher.</summary>
     public void Open() => SetOpen(true, IsOpen ? Display : DisplayId.Primary);
@@ -153,6 +167,8 @@ public sealed class TaskbarLauncherAdapter : ITaskbarLauncher
     private sealed class ScreenView(TaskbarLauncherAdapter launcher, DisplayId display) : ITaskbarLauncher
     {
         public bool IsOpen => launcher.IsOpen && launcher.Display == display;
+
+        public bool HasAttention => launcher.HasAttention;
 
         public void Toggle() => launcher.ToggleOn(display);
 

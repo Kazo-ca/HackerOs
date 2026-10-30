@@ -369,6 +369,79 @@ HackerOs.Platform.Core.FileSystem.IExternalFileSystemChanges
 HackerOs.Platform.Core.FileSystem.IExternalFileSystemChanges.TrackExternalChanges(HackerOs.App.Abstractions.VirtualPath directory) -> System.IDisposable?
 HackerOs.Platform.Core.FileSystem.FileSystemService.HostActivity.get -> HackerOs.Simulation.Abstractions.FileSystem.IHostActivitySignal?
 HackerOs.Platform.Core.FileSystem.FileSystemService.HostActivity.set -> void
+HackerOs.Platform.Core.Administration.SystemAdministrationGatewayServices.WhatsNew.get -> System.Func<HackerOs.Platform.Core.WhatsNew.WhatsNewService!>?
+HackerOs.Platform.Core.Administration.SystemAdministrationGatewayServices.WhatsNew.init -> void
+HackerOs.Platform.Core.WhatsNew.IWhatsNewSource
+HackerOs.Platform.Core.WhatsNew.IWhatsNewSource.GetDocumentAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<string?>
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalog
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalog.<Clone>$() -> HackerOs.Platform.Core.WhatsNew.WhatsNewCatalog!
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalog.Deconstruct(out System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogGroup!>! Groups) -> void
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalog.Entries.get -> System.Collections.Generic.IEnumerable<HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogEntry!>!
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalog.Equals(HackerOs.Platform.Core.WhatsNew.WhatsNewCatalog? other) -> bool
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalog.Groups.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogGroup!>!
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalog.Groups.init -> void
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalog.LatestIds.get -> System.Collections.Generic.IReadOnlySet<string!>!
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalog.WhatsNewCatalog(System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogGroup!>! Groups) -> void
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogEntry
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogEntry.<Clone>$() -> HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogEntry!
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogEntry.Category.get -> HackerOs.AppSdk.WhatsNew.HackChangeCategory
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogEntry.Category.init -> void
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogEntry.Deconstruct(out string! Id, out HackerOs.AppSdk.WhatsNew.HackChangeCategory Category, out System.Collections.Generic.IReadOnlyDictionary<string!, string!>! Title, out System.Collections.Generic.IReadOnlyDictionary<string!, string!>! Description, out System.Uri? PullRequestUrl, out System.Collections.Generic.IReadOnlyList<System.Uri!>! Links) -> void
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogEntry.Description.get -> System.Collections.Generic.IReadOnlyDictionary<string!, string!>!
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogEntry.Description.init -> void
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogEntry.Equals(HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogEntry? other) -> bool
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogEntry.Id.get -> string!
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogEntry.Id.init -> void
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogEntry.Links.get -> System.Collections.Generic.IReadOnlyList<System.Uri!>!
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogEntry.Links.init -> void
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogEntry.Localize(System.Globalization.CultureInfo! culture, bool isNew) -> HackerOs.AppSdk.WhatsNew.HackChangeEntry!
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogEntry.PullRequestUrl.get -> System.Uri?
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogEntry.PullRequestUrl.init -> void
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogEntry.Title.get -> System.Collections.Generic.IReadOnlyDictionary<string!, string!>!
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogEntry.Title.init -> void
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogEntry.WhatsNewCatalogEntry(string! Id, HackerOs.AppSdk.WhatsNew.HackChangeCategory Category, System.Collections.Generic.IReadOnlyDictionary<string!, string!>! Title, System.Collections.Generic.IReadOnlyDictionary<string!, string!>! Description, System.Uri? PullRequestUrl, System.Collections.Generic.IReadOnlyList<System.Uri!>! Links) -> void
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogGroup
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogGroup.<Clone>$() -> HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogGroup!
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogGroup.Date.get -> System.DateOnly?
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogGroup.Date.init -> void
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogGroup.Deconstruct(out string? Version, out string? Since, out System.DateOnly? Date, out System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogEntry!>! Entries) -> void
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogGroup.Entries.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogEntry!>!
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogGroup.Entries.init -> void
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogGroup.Equals(HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogGroup? other) -> bool
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogGroup.Since.get -> string?
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogGroup.Since.init -> void
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogGroup.Version.get -> string?
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogGroup.Version.init -> void
+HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogGroup.WhatsNewCatalogGroup(string? Version, string? Since, System.DateOnly? Date, System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogEntry!>! Entries) -> void
+HackerOs.Platform.Core.WhatsNew.WhatsNewService
+HackerOs.Platform.Core.WhatsNew.WhatsNewService.Changed -> System.Action?
+HackerOs.Platform.Core.WhatsNew.WhatsNewService.GetAsync(System.Globalization.CultureInfo! culture, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.WhatsNew.HackChangeList!>
+HackerOs.Platform.Core.WhatsNew.WhatsNewService.GetCatalogAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Platform.Core.WhatsNew.WhatsNewCatalog!>
+HackerOs.Platform.Core.WhatsNew.WhatsNewService.GetNewCountAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<int>
+HackerOs.Platform.Core.WhatsNew.WhatsNewService.MarkSeenAsync(System.Collections.Generic.IEnumerable<string!>! ids, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+override HackerOs.Platform.Core.WhatsNew.WhatsNewCatalog.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.WhatsNew.WhatsNewCatalog.GetHashCode() -> int
+override HackerOs.Platform.Core.WhatsNew.WhatsNewCatalog.ToString() -> string!
+override HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogEntry.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogEntry.GetHashCode() -> int
+override HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogEntry.ToString() -> string!
+override HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogGroup.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogGroup.GetHashCode() -> int
+override HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogGroup.ToString() -> string!
+static HackerOs.Platform.Core.WhatsNew.WhatsNewCatalog.Empty.get -> HackerOs.Platform.Core.WhatsNew.WhatsNewCatalog!
+static HackerOs.Platform.Core.WhatsNew.WhatsNewCatalog.Parse(string? document) -> HackerOs.Platform.Core.WhatsNew.WhatsNewCatalog!
+static HackerOs.Platform.Core.WhatsNew.WhatsNewCatalog.operator !=(HackerOs.Platform.Core.WhatsNew.WhatsNewCatalog? left, HackerOs.Platform.Core.WhatsNew.WhatsNewCatalog? right) -> bool
+static HackerOs.Platform.Core.WhatsNew.WhatsNewCatalog.operator ==(HackerOs.Platform.Core.WhatsNew.WhatsNewCatalog? left, HackerOs.Platform.Core.WhatsNew.WhatsNewCatalog? right) -> bool
+static HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogEntry.operator !=(HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogEntry? left, HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogEntry? right) -> bool
+static HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogEntry.operator ==(HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogEntry? left, HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogEntry? right) -> bool
+static HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogGroup.operator !=(HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogGroup? left, HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogGroup? right) -> bool
+static HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogGroup.operator ==(HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogGroup? left, HackerOs.Platform.Core.WhatsNew.WhatsNewCatalogGroup? right) -> bool
+static readonly HackerOs.Platform.Core.WhatsNew.WhatsNewService.StateFile -> HackerOs.Platform.Core.Settings.OsSettingsFile!
+HackerOs.Platform.Core.WhatsNew.WhatsNewService.NotifyNewChangesAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+HackerOs.Platform.Core.WhatsNew.WhatsNewService.WhatsNewService(HackerOs.Platform.Core.WhatsNew.IWhatsNewSource! source, HackerOs.Platform.Core.Settings.IOsSettingsService! settings, Microsoft.Extensions.Logging.ILogger<HackerOs.Platform.Core.WhatsNew.WhatsNewService!>? logger = null, HackerOs.Simulation.Abstractions.Notifications.INotificationQueue? notifications = null, System.Func<HackerOs.Simulation.Abstractions.Sessions.AuthenticatedPrincipal?>? currentUser = null, System.Func<System.Globalization.CultureInfo!>? language = null, System.TimeProvider? time = null) -> void
+const HackerOs.Platform.Core.WhatsNew.WhatsNewService.NotificationSourceAppId = "org.hackeros.whats-new" -> string!
+const HackerOs.Platform.Core.WhatsNew.WhatsNewService.SettingsAppId = "org.hackeros.settings" -> string!
+const HackerOs.Platform.Core.WhatsNew.WhatsNewService.SettingsPageArgument = "--page=whats-new" -> string!
 HackerOs.Platform.Core.Globalization.SessionTimeZoneService
 HackerOs.Platform.Core.Globalization.SessionTimeZoneService.Changed -> System.Action?
 HackerOs.Platform.Core.Globalization.TimeZoneSettingsDocuments

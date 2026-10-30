@@ -457,10 +457,20 @@
                 </div>
                 break;
 
+                @* ADR 0186: the OS change list, its New badges cleared when the page closes. *@
+            case WhatsNewPageId:
+                <div class="settings-page">
+                    <WhatsNewPanel />
+                </div>
+                break;
+
             case "about":
                 <div class="settings-page">
                     <div class="system-info-box">
-                        <div class="info-line"><span>@L["About.OsVersion"]</span> <strong>HackerOS @HackerOsSdk.Version</strong></div>
+                        <div class="info-line">
+                            <span>@L["About.OsVersion"]</span> <strong>HackerOS @HackerOsSdk.Version</strong>
+                            <button type="button" class="btn-secondary about-whats-new" @onclick="() => SelectPage(WhatsNewPageId)">@L["About.WhatsNew"]</button>
+                        </div>
                         <div class="info-line"><span>@L["About.Author"]</span> <a class="about-author" href="https://kazo.ca" target="_blank" rel="noopener noreferrer">Benoit Robin</a></div>
                         <div class="info-line">
                             <span>@L["About.Repository"]</span>

@@ -8,12 +8,16 @@
         {
             <button type="button"
                     class="launcher-trigger @(Launcher.IsOpen ? "is-active" : "")"
-                    aria-label="@L["Taskbar.Launcher"]"
+                    aria-label="@(Launcher.HasAttention ? L["Taskbar.LauncherWithNews"] : L["Taskbar.Launcher"])"
                     aria-haspopup="dialog"
                     aria-expanded="@Launcher.IsOpen.ToString().ToLowerInvariant()"
                     @onclick="HandleLauncherToggleClick">
                 <span class="launcher-mark" aria-hidden="true">@Options.LauncherMark</span>
                 <span class="launcher-label">@(Options.LauncherLabel ?? L["Taskbar.LauncherLabel"])</span>
+                @if (Launcher.HasAttention)
+                {
+                    <span class="launcher-attention" aria-hidden="true"></span>
+                }
             </button>
         }
     </div>

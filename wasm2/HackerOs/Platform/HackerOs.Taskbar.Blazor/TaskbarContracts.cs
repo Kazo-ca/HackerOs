@@ -54,6 +54,12 @@ public interface ITaskbarLauncher
 
     /// <summary>Raised when <see cref="IsOpen"/> changes for a reason external to the taskbar (e.g. Escape).</summary>
     event Action? Changed;
+
+    /// <summary>
+    /// Gets whether the launcher has something new to show: the trigger then carries a dot (ADR 0186
+    /// §4.5, changes the user has not seen). <see cref="Changed"/> is raised when it changes.
+    /// </summary>
+    bool HasAttention => false;
 }
 
 /// <summary>
