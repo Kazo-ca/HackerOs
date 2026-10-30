@@ -102,6 +102,10 @@
     [Parameter]
     public EventCallback<WindowCommand> OnGesture { get; set; }
 
+    /// <summary>Gets or sets how this window shows while the user peeks at a window from the taskbar (ADR 0199 §5).</summary>
+    [Parameter]
+    public WindowPeekState PeekState { get; set; }
+
     /// <summary>Gets or sets whether an owner-modal child blocks this host.</summary>
     [Parameter]
     public bool IsInteractionBlocked { get; set; }
@@ -118,7 +122,13 @@
         "window-host",
         Window.IsFocused ? "is-focused" : "is-background",
         Window.VisualState == WindowVisualState.Maximized ? "is-maximized" : "is-normal",
-        Window.IsResponding ? string.Empty : "is-not-responding").TrimEnd();
+        Window.IsResponding ? string.Empty : "is-not-responding",
+        PeekState switch
+        {
+            WindowPeekState.Shown => "is-peek-shown",
+            WindowPeekState.SeeThrough => "is-peek-see-through",
+            _ => string.Empty,
+        }).TrimEnd();
 
     private Task FocusAsync(PointerEventArgs _) =>
         IsInteractionBlocked ? Task.CompletedTask : OnFocus.InvokeAsync(Window.Id);

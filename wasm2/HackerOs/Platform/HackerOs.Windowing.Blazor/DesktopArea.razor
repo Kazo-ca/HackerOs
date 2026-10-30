@@ -25,6 +25,7 @@
             <WindowPortal @key="window.Id" Target="@LayerFor(window)">
                 <WindowHost Window="window"
                             IsInteractionBlocked="@IsBlocked(window.Id)"
+                            PeekState="@PeekStateOf(window)"
                             OnFocus="OnFocus"
                             OnMinimize="OnMinimize"
                             OnToggleMaximize="OnToggleMaximize"
@@ -101,6 +102,13 @@
     /// </summary>
     [Parameter]
     public RenderFragment<WindowRuntimeState>? WindowOverlay { get; set; }
+
+    /// <summary>
+    /// Gets or sets the window the user peeks at from its taskbar preview (ADR 0199 §5): it shows
+    /// alone on its screen, the other windows of that screen see-through. No peek when null.
+    /// </summary>
+    [Parameter]
+    public WindowId? PeekWindowId { get; set; }
 
     /// <summary>Gets or sets the focus request callback.</summary>
     [Parameter]
@@ -202,6 +210,23 @@
                 Console.Error.WriteLine($"[DesktopArea] Failed to initialize resize observer: {ex.Message}");
             }
         }
+    }
+
+    /// <summary>How one window shows during the peek: the peeked window and its dialogs stay, the other windows of its screen turn see-through.</summary>
+    private WindowPeekState PeekStateOf(WindowRuntimeState window)
+    {
+        if (PeekWindowId is not { } peeked
+            || Windows.FirstOrDefault(candidate => candidate.Id == peeked) is not { } target)
+        {
+            return WindowPeekState.None;
+        }
+
+        if (window.Id == peeked || window.OwnerId == peeked)
+        {
+            return WindowPeekState.Shown;
+        }
+
+        return window.DisplayId == target.DisplayId ? WindowPeekState.SeeThrough : WindowPeekState.None;
     }
 
     private bool IsBlocked(WindowId id) => Windows.Any(window =>

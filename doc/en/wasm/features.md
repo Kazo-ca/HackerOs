@@ -90,6 +90,8 @@ This section lists what is released in the `main` branch and online.
   right click on the taskbar gives the window menu, "New window", the task
   manager, "Show the desktop" and cascaded or tiled windows.
   ([`taskbar-context-menus.md`](dev/taskbar-context-menus.md))
+  Hovering a window's button shows a live preview; resting on it shows the
+  window alone ("peek"). ([`taskbar-window-previews.md`](dev/taskbar-window-previews.md))
   The Start menu shows the signed-in user and their Power button: sign out or
   restart. ([ADR 0195](dev/adr/0195-start-menu-power-button.md))
 - **Multiple screens**: each extra screen opens in its own browser window,
@@ -248,7 +250,7 @@ points to its PR.
 | --- | --- | --- | --- |
 | `.zip` archive opened as a folder | The explorer browses a `.zip` archive read-only; an opened file is extracted to `/tmp`. The rest of the ADR is available. | [0185](dev/adr/0185-file-explorer-improvements.md) | [#241](https://github.com/Kazo-ca/HackerOs/issues/241) |
 | Switch user | Open another session without closing the first one, from the Start menu's Power button (greyed out for now, always greyed out for the guest). | [0195](dev/adr/0195-start-menu-power-button.md) | [#290](https://github.com/Kazo-ca/HackerOs/issues/290) |
-| Windows and taskbar | Notification toasts, window animations, hover previews. The time zone ([ADR 0193](dev/adr/0193-local-time-and-time-zone.md)) and the taskbar menus ([ADR 0194](dev/adr/0194-taskbar-context-menus.md)) are available. | Coming | [#242](https://github.com/Kazo-ca/HackerOs/issues/242) |
+| Windows and taskbar | Notification toasts, window animations. The time zone ([ADR 0193](dev/adr/0193-local-time-and-time-zone.md)), the taskbar menus ([ADR 0194](dev/adr/0194-taskbar-context-menus.md)) and the hover previews ([ADR 0199](dev/adr/0199-taskbar-window-previews.md)) are available. | Coming | [#242](https://github.com/Kazo-ca/HackerOs/issues/242) |
 
 ### Hack Store
 

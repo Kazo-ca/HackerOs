@@ -56,6 +56,10 @@ at the end of each series or when a convention changes.
 - **Power button in the Start menu** (ADR 0195, PR #291, merged on
   2026-10-30): "Switch user" stays greyed out, `TODO` issue #290 (several
   sessions open at once).
+- **Taskbar previews** (ADR 0199, work item 5 of issue #242, `todo/` series,
+  branch `todo/13-taskbar-previews` into `todo/base`): reduced live copy of a
+  window when hovering its button, and peek. Number 0199 taken from the
+  0197 to 0205 reservation of the `todo/` series.
 - **ADR**: 0001 to 0171 and 0173 to 0195 exist on `main` (a few numbers skipped;
   0141 and 0172 were not used). Recent landmarks: 0173 automatic release, 0174
   new-version announcement, 0175 "New folder" in dialogs, 0176 app repository
