@@ -328,3 +328,12 @@ HackerOs.AppSdk.Administration.HackUserAccount.IsGuest.init -> void
 HackerOs.AppSdk.Administration.IAppUserAccountsGateway.RequestGuestAccountCreationAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
 static HackerOs.AppSdk.Administration.HackUserAccounts.RequestGuestAccountCreationAsync(HackerOs.AppSdk.IAppExecutionContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
 static HackerOs.AppSdk.Administration.HackUserAccounts.RequestGuestAccountCreationAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
+HackerOs.AppSdk.Net.HackHttpResponse.Source.get -> HackerOs.AppSdk.Net.HackHttpResponseSource
+HackerOs.AppSdk.Net.HackHttpResponse.Source.init -> void
+HackerOs.AppSdk.Net.HackHttpResponseSource
+HackerOs.AppSdk.Net.HackHttpResponseSource.LocalSite = 1 -> HackerOs.AppSdk.Net.HackHttpResponseSource
+HackerOs.AppSdk.Net.HackHttpResponseSource.RealNetwork = 2 -> HackerOs.AppSdk.Net.HackHttpResponseSource
+HackerOs.AppSdk.Net.HackHttpResponseSource.Simulated = 0 -> HackerOs.AppSdk.Net.HackHttpResponseSource
+HackerOs.AppSdk.Net.HackNetworkError.BlockedByAdministrator = 8 -> HackerOs.AppSdk.Net.HackNetworkError
+HackerOs.AppSdk.Net.HackNetworkError.TimedOut = 7 -> HackerOs.AppSdk.Net.HackNetworkError
+static HackerOs.AppSdk.Net.HackCookieContainer.DomainMatches(string! host, string! domain) -> bool

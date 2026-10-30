@@ -56,6 +56,10 @@ at the end of each series or when a convention changes.
 - **Power button in the Start menu** (ADR 0195, PR #291, merged on
   2026-10-30): "Switch user" stays greyed out, `TODO` issue #290 (several
   sessions open at once).
+- **Real sites in the browser** (ADR 0210, `todo/base` series, issue #266): the
+  Browser is a system app with `network.real.access`; with a connected server it
+  opens real sites through the proxy, cookies included. The public proxy and the
+  Wayback Machine are left.
 - **ADR**: 0001 to 0171 and 0173 to 0195 exist on `main` (a few numbers skipped;
   0141 and 0172 were not used). Recent landmarks: 0173 automatic release, 0174
   new-version announcement, 0175 "New folder" in dialogs, 0176 app repository
@@ -112,7 +116,7 @@ of [`AGENTS.md`](../../../../AGENTS.md), which Claude Code reads through
 
 | Note | Content |
 | --- | --- |
-| [`decisions-not-built.md`](decisions-not-built.md) | Decisions Benoit took in discussion that are not coded nor written anywhere else yet: windows and taskbar (remaining work items of #242), real sites in the browser (#266), ported third-party apps, server-hosted apps, ideas taken from daedalOS, editors. |
+| [`decisions-not-built.md`](decisions-not-built.md) | Decisions Benoit took in discussion that are not coded nor written anywhere else yet: windows and taskbar (remaining work items of #242), real sites in the browser (#266: public proxy and Wayback left), ported third-party apps, server-hosted apps, ideas taken from daedalOS, editors. |
 | [`known-test-failures.md`](known-test-failures.md) | Known pre-existing test failures (to name in a PR, not to hide) and recent environment tips. |
 
 ## Environment and pitfalls

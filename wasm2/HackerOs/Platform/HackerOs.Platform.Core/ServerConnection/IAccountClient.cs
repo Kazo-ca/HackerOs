@@ -96,9 +96,34 @@ public sealed class HttpAccountClient(HttpClient httpClient) : IAccountClient
 }
 
 /// <summary>Thrown when the optional server rejects an account/auth/proxy request.</summary>
-public sealed class ServerConnectionException(string message, string? serverBody = null)
-    : Exception(message)
+public sealed class ServerConnectionException : Exception
 {
+    /// <summary>Creates the exception.</summary>
+    /// <param name="message">What failed.</param>
+    /// <param name="serverBody">The raw response body the server returned, if any.</param>
+    public ServerConnectionException(string message, string? serverBody = null)
+        : base(message)
+    {
+        ServerBody = serverBody;
+    }
+
+    /// <summary>Creates the exception for a proxy refusal carrying its <c>ProxyErrorCode</c> (ADR 0210 §6).</summary>
+    /// <param name="message">What failed.</param>
+    /// <param name="serverBody">The raw response body the server returned, if any.</param>
+    /// <param name="proxyErrorCode">The relay's error code (<c>BLOCKED_PORT</c>, <c>QUOTA_EXCEEDED</c>…).</param>
+    public ServerConnectionException(string message, string? serverBody, string? proxyErrorCode)
+        : base(message)
+    {
+        ServerBody = serverBody;
+        ProxyErrorCode = proxyErrorCode;
+    }
+
     /// <summary>Gets the raw response body the server returned, if any, for diagnostics.</summary>
-    public string? ServerBody { get; } = serverBody;
+    public string? ServerBody { get; }
+
+    /// <summary>
+    /// Gets the relay's error code (<c>HackerOs.Server.Contracts.Proxy.ProxyErrorCode</c>) when the
+    /// proxy refused a request, so the OS can tell a blocked port from a full quota; otherwise <see langword="null"/>.
+    /// </summary>
+    public string? ProxyErrorCode { get; }
 }

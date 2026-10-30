@@ -484,3 +484,7 @@ HackerOs.Platform.Core.Sessions.GuestAccountRequests.GuestAccountRequests() -> v
 HackerOs.Platform.Core.Sessions.GuestAccountRequests.HasListener.get -> bool
 HackerOs.Platform.Core.Sessions.GuestAccountRequests.RequestCreateAccount() -> bool
 HackerOs.Platform.Core.Lifecycle.AppLifecycleOrchestrator.StopSessionAppsAsync(HackerOs.Simulation.Abstractions.Sessions.SessionId sessionId, HackerOs.Simulation.Abstractions.Processes.ProcessExitReason reason = HackerOs.Simulation.Abstractions.Processes.ProcessExitReason.Logout) -> System.Threading.Tasks.Task<int>!
+HackerOs.Platform.Core.ServerConnection.ServerConnectionException.ProxyErrorCode.get -> string?
+HackerOs.Platform.Core.ServerConnection.ServerConnectionException.ServerConnectionException(string! message, string? serverBody, string? proxyErrorCode) -> void
+const HackerOs.Platform.Core.ServerConnection.HttpProxyClient.MaxConcurrentRequests = 6 -> int
+const HackerOs.Platform.Core.ServerConnection.HttpProxyClient.QuotaRetries = 3 -> int

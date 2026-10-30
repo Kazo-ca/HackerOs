@@ -143,8 +143,10 @@ This section lists what is released in the `main` branch and online.
 
 - **Text editor** and **code editor** with syntax highlighting.
   ([`text-editor.md`](dev/text-editor.md), [`code-editor.md`](dev/code-editor.md))
-- **Web browser** for the sites of the simulated network.
-  ([`browser-html-rendering.md`](dev/browser-html-rendering.md))
+- **Web browser** for the sites of the simulated network and, with a connected
+  HackerOS server, real sites through its proxy (cookies and signing in to
+  accounts included); an address-bar icon tells where the page came from.
+  ([`browser-html-rendering.md`](dev/browser-html-rendering.md), [ADR 0210](dev/adr/0210-browser-real-sites-through-the-proxy.md))
 - **Settings**: accounts, appearance, screens, language, accessibility,
   system. ([`settings-app.md`](dev/settings-app.md))
 - **Task manager** and system monitor (processes, memory, CPU).
@@ -275,7 +277,6 @@ points to its PR.
 
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
-| Real sites in the browser | Show a real web site through the HackerOS server relay. | Coming | [#266](https://github.com/Kazo-ca/HackerOs/issues/266) |
 | Installable local server | HackerOS server to install on your computer or local network (Windows, Linux, macOS, Docker), used by the online OS. | [0191 (PR #269)](https://github.com/Kazo-ca/HackerOs/pull/269) | [#267](https://github.com/Kazo-ca/HackerOs/issues/267) |
 
 ### Optional ported applications

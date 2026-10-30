@@ -18,7 +18,16 @@
         </div>
 
         <div class="address-bar">
+            @if (Indicator.SourceIcon.Length > 0)
+            {
+                <span id="browser-source" class="address-source @Indicator.SourceClass" title="@Indicator.SourceTitle"
+                      role="img" aria-label="@Indicator.SourceTitle">@Indicator.SourceIcon</span>
+            }
             <span class="address-scheme @SchemeClass" title="@SchemeTitle">@SchemeIcon</span>
+            @if (Indicator.NotSecureLabel is { Length: > 0 })
+            {
+                <span id="browser-not-secure" class="address-not-secure">@Indicator.NotSecureLabel</span>
+            }
             <input id="browser-address-input"
                    type="text"
                    class="address-input"

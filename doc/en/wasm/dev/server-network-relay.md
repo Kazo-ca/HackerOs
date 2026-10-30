@@ -109,7 +109,7 @@ New error codes: `GRANT_MISSING` (403), `RELAY_DISABLED` (503),
     "GrantedApps": [
       "org.hackeros.commands.curl", "org.hackeros.commands.wget",
       "org.hackeros.commands.ping", "org.hackeros.cmd.cat",
-      "org.hackeros.commands.nmap"
+      "org.hackeros.commands.nmap", "org.hackeros.browser"
     ]
   }
 }
@@ -190,6 +190,13 @@ open streams, granted apps and warnings.
 - `HEAD` does not ask for a body; any other method relays it, checked by
   its size and hash. A 303 redirect, or 301/302 after a `POST`,
   becomes a `GET` without a body.
+
+- Real sites in the browser (ADR 0210): the `Cookie` header is relayed (only
+  `Host`, `Authorization`, `X-Forwarded-For` and `X-Real-IP` stay blocked); with
+  `FollowRedirects = false`, the server returns the redirect as is (`Location`,
+  `Set-Cookie`) and the OS follows the hops; the Browser (`org.hackeros.browser`)
+  is in the default `GrantedApps`. The quota of 8 requests per device stays a
+  refusal: the OS keeps at most 6 in flight and retries a `QUOTA_EXCEEDED`.
 
 ## Task list
 

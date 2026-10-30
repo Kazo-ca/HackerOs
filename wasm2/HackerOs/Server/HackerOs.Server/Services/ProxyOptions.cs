@@ -119,8 +119,8 @@ public sealed record ProxyRelayPolicy(
     public static readonly IReadOnlyList<int> DefaultUdpPorts = [53, 123];
 
     /// <summary>
-    /// The system commands that declare <c>network.real.access</c> (curl, wget, ping, cat, nmap):
-    /// granted by default, as the OS grants them through its system policy.
+    /// The system apps that declare <c>network.real.access</c> (curl, wget, ping, cat, nmap and the
+    /// Browser, ADR 0210 §1): granted by default, as the OS grants them through its system policy.
     /// </summary>
     public static readonly IReadOnlyList<string> DefaultGrantedApps =
     [
@@ -128,7 +128,8 @@ public sealed record ProxyRelayPolicy(
         "org.hackeros.commands.wget",
         "org.hackeros.commands.ping",
         "org.hackeros.cmd.cat",
-        "org.hackeros.commands.nmap"
+        "org.hackeros.commands.nmap",
+        "org.hackeros.browser"
     ];
 
     /// <summary>The default policy, as an absent <c>HackerOs:Proxy</c> section gives.</summary>

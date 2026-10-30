@@ -1,1 +1,3 @@
 #nullable enable
+HackerOs.Server.Contracts.Proxy.ProxyHttpRequest.FollowRedirects.get -> bool
+HackerOs.Server.Contracts.Proxy.ProxyHttpRequest.FollowRedirects.init -> void

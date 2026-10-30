@@ -26,20 +26,17 @@ everywhere (ADR 0178 to 0184).
 
 ## Browser: showing real sites (issue #266)
 
-Analysis of 2026-10-29, no ADR. Decisions:
+Analysis of 2026-10-29. The HackerOS server proxy is built
+([ADR 0210](../dev/adr/0210-browser-real-sites-through-the-proxy.md), `todo/base`
+series): the Browser's right, cookies, redirects, source icon, "Not secure",
+errors. Decisions still to build:
 
-- No direct iframe to the real site. Fetched content goes through the existing
-  pipeline (fetched in C#, rendered in an isolated `srcdoc`, ADR 0079).
-- Source order: simulated network → HackerOs server proxy → public third-party
-  proxy (can be turned off) → Wayback Machine automatically as a last resort.
+- Source order: simulated network → HackerOs server proxy (done) → public
+  third-party proxy (can be turned off) → Wayback Machine automatically as a
+  last resort. One source icon per new source (public proxy, archive).
+- No direct iframe to the real site: everything goes through the isolated `srcdoc`.
 - Firefox and Safari: show "not supported" when a function needs
   Chrome/Edge.
-- Address bar: an icon shows where the page comes from (simulated, server,
-  proxy, archive), a lock for HTTPS and a "not secure" warning.
-- Gaps to fill (listed in #266): the Browser lacks the `network.real.access`
-  capability and a server-side `GrantedApps` entry; cookies are dropped in
-  `SendRealAsync` and the `Cookie` header is blocked server-side; the
-  8-concurrent-requests quota rejects a page's resources.
 
 ## Ported third-party apps (`Kazo-ca/HackerOs-App-*` repositories)
 
