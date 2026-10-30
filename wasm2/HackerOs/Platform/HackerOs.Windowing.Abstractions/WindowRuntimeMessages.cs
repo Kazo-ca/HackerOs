@@ -109,6 +109,14 @@ public sealed record SetWindowTitleCommand(WindowId WindowId, string Title) : Wi
 /// <param name="IsResponding">Whether the window answers its inputs.</param>
 public sealed record SetWindowRespondingCommand(WindowId WindowId, bool IsResponding) : WindowCommand;
 
+/// <summary>
+/// Replaces a window's icon (ADR 0203 §4), like an X11 client writing <c>_NET_WM_ICON</c>: the shell
+/// issues it when the icon pack changes, so the title bar and the taskbar of open windows follow.
+/// </summary>
+/// <param name="WindowId">The window whose icon changes.</param>
+/// <param name="IconAssetPath">The new image URL, or <see langword="null"/> for the generic window symbol.</param>
+public sealed record SetWindowIconCommand(WindowId WindowId, string? IconAssetPath) : WindowCommand;
+
 /// <summary>Base contract for an immutable fact emitted after a window transition.</summary>
 public abstract record WindowEvent;
 
@@ -146,6 +154,9 @@ public sealed record WindowClosedEvent(WindowId WindowId, bool WasForced) : Wind
 
 /// <summary>Reports that a window's displayed title changed (ADR 0117 §3).</summary>
 public sealed record WindowTitleChangedEvent(WindowId WindowId, string PreviousTitle, string Title) : WindowEvent;
+
+/// <summary>Reports that a window's icon changed (ADR 0203 §4).</summary>
+public sealed record WindowIconChangedEvent(WindowId WindowId, string? PreviousIconAssetPath, string? IconAssetPath) : WindowEvent;
 
 /// <summary>Reports that a window started or stopped answering its inputs (ADR 0127 §2).</summary>
 public sealed record WindowRespondingChangedEvent(WindowId WindowId, bool IsResponding) : WindowEvent;

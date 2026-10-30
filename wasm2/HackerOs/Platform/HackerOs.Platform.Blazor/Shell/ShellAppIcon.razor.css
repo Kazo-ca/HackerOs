@@ -1,0 +1,10 @@
+.shell-app-icon-image {
+    display: block;
+    object-fit: contain;
+    image-rendering: auto;
+}
+
+.shell-app-icon-image.is-fill {
+    width: 100%;
+    height: 100%;
+}

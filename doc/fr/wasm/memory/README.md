@@ -56,6 +56,11 @@ jour à la fin de chaque série ou quand une convention change.
 - **Bouton Marche/arrêt dans le menu Démarrer** (ADR 0195, PR #291, fusionnée
   le 2026-10-30) : « Changer d'utilisateur » reste grisé, issue `TODO` #290
   (plusieurs sessions ouvertes en même temps).
+- **Packs d'icônes** (ADR 0203, issue `TODO` #255, série `todo/base`) : packs
+  PNG pour les apps et les fichiers dans `/usr/share/icons` et
+  `~/.local/share/icons`, choisis dans Paramètres ▸ Apparence (document de
+  réglages `icons`, clé `iconPackId`) ; le pack Néon intégré est installé
+  d'office. Voir [`icon-packs.md`](../dev/icon-packs.md).
 - **ADR** : 0001 à 0171 et 0173 à 0195 existent sur `main` (quelques numéros sautés ;
   0141 et 0172 n'ont pas servi). Repères récents : 0173 publication automatique,
   0174 annonce de nouvelle version, 0175 « Nouveau dossier » des dialogues, 0176
