@@ -78,7 +78,7 @@ L'écosystème se compose de :
 | **Avec le serveur HackerOS** | Organisations, utilisateurs avancés | Le serveur ASP.NET Core optionnel sert l'OS et ajoute les comptes synchronisés entre appareils et le relais vers le vrai réseau. Voir [`server-hosting.md`](dev/server-hosting.md). |
 | **Intégré dans son propre produit** | Développeurs, entreprises | Les paquets NuGet et le modèle `dotnet new hackeros-host` permettent de composer son propre hôte avec ses propres applications. Voir [`building-on-hackeros.md`](framework/building-on-hackeros.md). |
 | **Développer des applications** | Développeurs | Paquets NuGet du SDK, modèles `dotnet new`, dépôt modèle, puis installation au terminal avec `hackpkg`. Voir [`sdk-developer-guide.md`](framework/sdk-developer-guide.md). |
-| **Serveur local installable** | Utilisateurs avancés | *En cours de développement* : voir [Réseau et serveur](#réseau-et-serveur). |
+| **Serveur local installable** | Utilisateurs avancés | Chaque version publie le serveur HackerOS pour Windows, Linux et macOS (`hackeros-server-<version>-<système>`) et l'image Docker `ghcr.io/kazo-ca/hackeros-server`. Il s'installe comme service sur son ordinateur ou sur une machine du réseau local, sans être exposé à internet, et l'OS en ligne s'y relie par un code d'appairage (Paramètres > Connexion au serveur > Serveur local). Voir [`installable-server.md`](dev/installable-server.md). |
 
 ## Fonctionnalités disponibles
 
@@ -173,6 +173,11 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   [`blazor-sites.md`](framework/blazor-sites.md))
 - **Accès au vrai réseau** par le serveur optionnel, pour les applications
   autorisées. ([`server-network-relay.md`](dev/server-network-relay.md))
+- **Serveur local installable** : le serveur HackerOS s'installe comme service
+  (Windows, Linux, macOS, Docker) sur son ordinateur ou sur une machine du
+  réseau local en HTTPS, et l'OS, même en ligne sur GitHub Pages, s'y relie
+  par un code d'appairage. ([`installable-server.md`](dev/installable-server.md),
+  [ADR 0191](dev/adr/0191-installable-local-server.md))
 
 ### Comptes et sécurité
 
@@ -227,6 +232,10 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
 - **Heure locale et fuseau horaire** : l'horloge, `date`, `ls -l` et les apps
   affichent l'heure dans le fuseau de l'utilisateur, automatique ou choisi dans
   Paramètres ▸ Date et heure. ([`time-zone.md`](framework/time-zone.md))
+- **Packs d'icônes** : des images PNG remplacent les icônes des applications,
+  des dossiers et des fichiers partout dans l'OS, choisies dans Paramètres ▸
+  Apparence ; pack d'exemple « Néon » fourni. ([`icon-packs.md`](dev/icon-packs.md),
+  [ADR 0203](dev/adr/0203-icon-packs.md))
 
 ### Pour les développeurs
 
@@ -235,15 +244,26 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   composants Blazor. ([`sdk-reference.md`](framework/sdk-reference.md),
   [`sdk-packages.md`](framework/sdk-packages.md))
 - **Modèles `dotnet new`** pour une application fenêtrée, une commande, un
-  service, un site ou un hôte complet.
+  service, un site, un hôte complet ou un dépôt d'application entier, visibles
+  dans Visual Studio et Rider.
   ([`sdk-developer-guide.md`](framework/sdk-developer-guide.md))
 - **Installation d'une application depuis son dépôt GitHub** avec la commande
   `hackpkg`. ([ADR 0182](dev/adr/0182-install-apps-from-github.md),
-  [`app-installation.md`](dev/app-installation.md))
-- **Dépôt modèle d'application** : sous-module de l'OS pour le débogage,
-  paquets NuGet en production. ([ADR 0176](dev/adr/0176-app-repository-template.md))
+  [`app-installation.md`](dev/app-installation.md)) Ses images, scripts et Web
+  Workers sont servis à la même adresse que pour une application compilée dans
+  l'OS : une application qui enveloppe un projet JavaScript marche une fois
+  installée. ([ADR 0206](dev/adr/0206-serve-installed-app-assets.md))
+- **Modèle de dépôt d'application `hackeros-solution`** : application, hôte
+  et tests prêts à lancer, sous-module de l'OS pour le débogage dans ses
+  sources, paquets NuGet en production, CI et soumission au catalogue du Hack
+  Store par un tag. ([ADR 0176](dev/adr/0176-app-repository-template.md),
+  [ADR 0207](dev/adr/0207-solution-template-implementation.md),
+  [`app-repository.md`](framework/app-repository.md))
 - **Versions publiées automatiquement** : GitHub Release, paquets NuGet et
   archive de l'OS à chaque nouvelle version. ([`releases.md`](dev/releases.md))
+- **Tests navigateur chaque nuit** : les suites Playwright tournent la nuit sur
+  `main` quand il a changé ; un échec ouvre une issue.
+  ([`ci-workflows.md`](dev/ci-workflows.md#tests-navigateur-chaque-nuit))
 
 ## En cours de développement
 
@@ -262,8 +282,6 @@ dans `main`, le lien mène à sa PR.
 
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
-| Modèle de solution et publication | Modèle `hackeros-solution` et publication d'une application vers le catalogue. | [0176](dev/adr/0176-app-repository-template.md), [0188](dev/adr/0188-hack-store-and-app-catalog.md) | [#246](https://github.com/Kazo-ca/HackerOs/issues/246) |
-| Ressources des applications installées | Servir les images, scripts et workers d'une application installée. | [0182](dev/adr/0182-install-apps-from-github.md) | [#247](https://github.com/Kazo-ca/HackerOs/issues/247) |
 | Sources de confiance et installation pour soi | Catalogues de confiance, installation sans administrateur, liste noire, validation par un administrateur. | [0189](dev/adr/0189-app-sources-trust-and-per-user-install.md) | [#248](https://github.com/Kazo-ca/HackerOs/issues/248) |
 | Catalogue des applications | Format du catalogue, vérification et publication des applications proposées. | [0188](dev/adr/0188-hack-store-and-app-catalog.md) | [AppMarketPlace #1](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/1) |
 | Application Hack Store v1 | Parcourir, installer, mettre à jour et désinstaller des applications en un clic. | [0188](dev/adr/0188-hack-store-and-app-catalog.md) | [#249](https://github.com/Kazo-ca/HackerOs/issues/249) |
@@ -275,7 +293,6 @@ dans `main`, le lien mène à sa PR.
 | --- | --- | --- | --- |
 | Packs de thèmes | Format `.hacktheme` et onglet Thèmes du Hack Store. | [0190](dev/adr/0190-theme-packs.md) | [#253](https://github.com/Kazo-ca/HackerOs/issues/253) |
 | Fonds d'écran en image | Choisir une image comme fond d'écran, par écran. | [0190](dev/adr/0190-theme-packs.md) | [#254](https://github.com/Kazo-ca/HackerOs/issues/254) |
-| Packs d'icônes | Remplacer les icônes des applications et des fichiers. | [0190](dev/adr/0190-theme-packs.md) | [#255](https://github.com/Kazo-ca/HackerOs/issues/255) |
 | Sons de l'OS | Sons pour les notifications, les erreurs et l'ouverture de session. | [0190](dev/adr/0190-theme-packs.md) | [#256](https://github.com/Kazo-ca/HackerOs/issues/256) |
 | Thèmes de curseurs | Curseurs personnalisés choisis dans Paramètres. | [0190](dev/adr/0190-theme-packs.md) | [#257](https://github.com/Kazo-ca/HackerOs/issues/257) |
 
@@ -284,7 +301,6 @@ dans `main`, le lien mène à sa PR.
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Vrais sites dans le navigateur | Afficher un vrai site web par le relais du serveur HackerOS. | À venir | [#266](https://github.com/Kazo-ca/HackerOs/issues/266) |
-| Serveur local installable | Serveur HackerOS à installer sur son ordinateur ou son réseau local (Windows, Linux, macOS, Docker), utilisé par l'OS en ligne. | [0191 (PR #269)](https://github.com/Kazo-ca/HackerOs/pull/269) | [#267](https://github.com/Kazo-ca/HackerOs/issues/267) |
 
 ### Applications optionnelles portées
 

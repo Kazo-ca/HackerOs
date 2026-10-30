@@ -128,3 +128,35 @@ override HackerOs.Windowing.Abstractions.SnapWindowCommand.ToString() -> string!
 override sealed HackerOs.Windowing.Abstractions.SnapWindowCommand.Equals(HackerOs.Windowing.Abstractions.WindowCommand? other) -> bool
 static HackerOs.Windowing.Abstractions.SnapWindowCommand.operator !=(HackerOs.Windowing.Abstractions.SnapWindowCommand? left, HackerOs.Windowing.Abstractions.SnapWindowCommand? right) -> bool
 static HackerOs.Windowing.Abstractions.SnapWindowCommand.operator ==(HackerOs.Windowing.Abstractions.SnapWindowCommand? left, HackerOs.Windowing.Abstractions.SnapWindowCommand? right) -> bool
+HackerOs.Windowing.Abstractions.SetWindowIconCommand
+HackerOs.Windowing.Abstractions.SetWindowIconCommand.Deconstruct(out HackerOs.Windowing.Abstractions.WindowId WindowId, out string? IconAssetPath) -> void
+HackerOs.Windowing.Abstractions.SetWindowIconCommand.Equals(HackerOs.Windowing.Abstractions.SetWindowIconCommand? other) -> bool
+HackerOs.Windowing.Abstractions.SetWindowIconCommand.IconAssetPath.get -> string?
+HackerOs.Windowing.Abstractions.SetWindowIconCommand.IconAssetPath.init -> void
+HackerOs.Windowing.Abstractions.SetWindowIconCommand.SetWindowIconCommand(HackerOs.Windowing.Abstractions.WindowId WindowId, string? IconAssetPath) -> void
+HackerOs.Windowing.Abstractions.SetWindowIconCommand.WindowId.get -> HackerOs.Windowing.Abstractions.WindowId
+HackerOs.Windowing.Abstractions.SetWindowIconCommand.WindowId.init -> void
+HackerOs.Windowing.Abstractions.WindowIconChangedEvent
+HackerOs.Windowing.Abstractions.WindowIconChangedEvent.Deconstruct(out HackerOs.Windowing.Abstractions.WindowId WindowId, out string? PreviousIconAssetPath, out string? IconAssetPath) -> void
+HackerOs.Windowing.Abstractions.WindowIconChangedEvent.Equals(HackerOs.Windowing.Abstractions.WindowIconChangedEvent? other) -> bool
+HackerOs.Windowing.Abstractions.WindowIconChangedEvent.IconAssetPath.get -> string?
+HackerOs.Windowing.Abstractions.WindowIconChangedEvent.IconAssetPath.init -> void
+HackerOs.Windowing.Abstractions.WindowIconChangedEvent.PreviousIconAssetPath.get -> string?
+HackerOs.Windowing.Abstractions.WindowIconChangedEvent.PreviousIconAssetPath.init -> void
+HackerOs.Windowing.Abstractions.WindowIconChangedEvent.WindowIconChangedEvent(HackerOs.Windowing.Abstractions.WindowId WindowId, string? PreviousIconAssetPath, string? IconAssetPath) -> void
+HackerOs.Windowing.Abstractions.WindowIconChangedEvent.WindowId.get -> HackerOs.Windowing.Abstractions.WindowId
+HackerOs.Windowing.Abstractions.WindowIconChangedEvent.WindowId.init -> void
+override HackerOs.Windowing.Abstractions.SetWindowIconCommand.<Clone>$() -> HackerOs.Windowing.Abstractions.SetWindowIconCommand!
+override HackerOs.Windowing.Abstractions.SetWindowIconCommand.Equals(object? obj) -> bool
+override HackerOs.Windowing.Abstractions.SetWindowIconCommand.GetHashCode() -> int
+override HackerOs.Windowing.Abstractions.SetWindowIconCommand.ToString() -> string!
+override HackerOs.Windowing.Abstractions.WindowIconChangedEvent.<Clone>$() -> HackerOs.Windowing.Abstractions.WindowIconChangedEvent!
+override HackerOs.Windowing.Abstractions.WindowIconChangedEvent.Equals(object? obj) -> bool
+override HackerOs.Windowing.Abstractions.WindowIconChangedEvent.GetHashCode() -> int
+override HackerOs.Windowing.Abstractions.WindowIconChangedEvent.ToString() -> string!
+override sealed HackerOs.Windowing.Abstractions.SetWindowIconCommand.Equals(HackerOs.Windowing.Abstractions.WindowCommand? other) -> bool
+override sealed HackerOs.Windowing.Abstractions.WindowIconChangedEvent.Equals(HackerOs.Windowing.Abstractions.WindowEvent? other) -> bool
+static HackerOs.Windowing.Abstractions.SetWindowIconCommand.operator !=(HackerOs.Windowing.Abstractions.SetWindowIconCommand? left, HackerOs.Windowing.Abstractions.SetWindowIconCommand? right) -> bool
+static HackerOs.Windowing.Abstractions.SetWindowIconCommand.operator ==(HackerOs.Windowing.Abstractions.SetWindowIconCommand? left, HackerOs.Windowing.Abstractions.SetWindowIconCommand? right) -> bool
+static HackerOs.Windowing.Abstractions.WindowIconChangedEvent.operator !=(HackerOs.Windowing.Abstractions.WindowIconChangedEvent? left, HackerOs.Windowing.Abstractions.WindowIconChangedEvent? right) -> bool
+static HackerOs.Windowing.Abstractions.WindowIconChangedEvent.operator ==(HackerOs.Windowing.Abstractions.WindowIconChangedEvent? left, HackerOs.Windowing.Abstractions.WindowIconChangedEvent? right) -> bool

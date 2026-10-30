@@ -48,7 +48,8 @@ Decided on 2026-10-28:
 - Each wrapped open-source project lives in its own repository
   (`HackerOs-App-Webamp`, `HackerOs-App-IRC` with KiwiIRC,
   `HackerOs-App-BoxedWine`, and others), created from `HackerOs-AppTemplate`
-  (ADR 0176) and listed in `HackerOs-AppMarketPlace` (Hack Store catalog,
+  (ADR 0176, `hackeros-solution` template of ADR 0207; the template repository
+  is regenerated at the release that contains this template) and listed in `HackerOs-AppMarketPlace` (Hack Store catalog,
   ADR 0188).
 - Each repository's licence follows the wrapped project's (GPL-2.0 for
   BoxedWine, for example), not MIT by default.
@@ -60,7 +61,8 @@ Decided on 2026-10-28:
   published host is trimmed, so an app loaded at run time may miss APIs
   (`MissingMethodException`); an app's JavaScript runs on the same origin as
   the OS; an app wrapping JavaScript needs the installed apps' `wwwroot` work
-  item (issue #247).
+  item (issue #247, built by ADR 0206 in the `todo/base` series: files served
+  at `_content/<assembly>/` by the service worker, Web Workers included).
 
 ## Server-hosted apps ("server sandbox")
 

@@ -1,0 +1,60 @@
+<Project>
+  <!--
+    External source mode (ADR 0176 §4-5, ADR 0207 §2-3): the third build mode of an app, next to the
+    repository mode and the package mode of HackerOs.Apps.targets.
+
+    A repository made with the hackeros-solution template keeps this repository as a submodule
+    (external/HackerOs, on a release tag) and imports this file from its Directory.Build.targets when
+    $(HackerOsUseSource) is true (by default in Debug). It then turns every PackageReference to a
+    HackerOS package into a ProjectReference to the project of the same name in the submodule, so a
+    debugger steps into the SDK and the OS, and imports HackerOs.Apps.targets in place of the
+    HackerOs.App.Build package for the projects that are apps or hosts.
+
+    There is no list to keep in sync: every HackerOS package is the project of the same name, one
+    folder below an area of this repository (Shared/, Platform/, OS/, Infrastructure/, Server/,
+    Tools/) or two folders below Apps/ (Apps/System, Apps/Commands). The Release profile is the
+    package mode, unchanged.
+
+    Properties (set by the template's Directory.Build.props):
+      HackerOsSourceRoot   the HackerOS root in the submodule (folder of HackerOs.sln), trailing slash.
+      HackerOsUseSource    true for this mode.
+      HackerOsAppProject   true in an app project (the templates write it), HackerOsAppHost in a host.
+  -->
+
+  <PropertyGroup>
+    <HackerOsExternalSource>true</HackerOsExternalSource>
+    <_HackerOsExternalSourceRoot>$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)..'))</_HackerOsExternalSourceRoot>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Every project of the submodule that may be a package, keyed by its file name (= its package id). -->
+    <_HackerOsSourceProjectFile Include="$(_HackerOsExternalSourceRoot)Shared/*/*.csproj;$(_HackerOsExternalSourceRoot)Platform/*/*.csproj;$(_HackerOsExternalSourceRoot)OS/*/*.csproj;$(_HackerOsExternalSourceRoot)Infrastructure/*/*.csproj;$(_HackerOsExternalSourceRoot)Server/*/*.csproj;$(_HackerOsExternalSourceRoot)Tools/*/*.csproj;$(_HackerOsExternalSourceRoot)Apps/*/*/*.csproj">
+      <SourceProject>%(FullPath)</SourceProject>
+    </_HackerOsSourceProjectFile>
+    <_HackerOsSourceProject Include="@(_HackerOsSourceProjectFile->'%(Filename)')" />
+
+    <!-- The HackerOS packages this project references (an intersection by package id). -->
+    <_HackerOsSourceUnreferenced Include="@(_HackerOsSourceProject)" />
+    <_HackerOsSourceUnreferenced Remove="@(PackageReference)" />
+    <_HackerOsSourceReferenced Include="@(_HackerOsSourceProject)" />
+    <_HackerOsSourceReferenced Remove="@(_HackerOsSourceUnreferenced)" />
+    <!-- HackerOs.App.Build becomes the import below: its project is the package's builder, not a library. -->
+    <_HackerOsSourceReferenced Remove="HackerOs.App.Build" />
+
+    <!-- A host's base apps keep their IsSystemApp metadata (ADR 0048) on the project reference. -->
+    <_HackerOsSourceSystemPackage Include="@(PackageReference->WithMetadataValue('IsSystemApp', 'true'))" />
+    <_HackerOsSourceUserReferenced Include="@(_HackerOsSourceReferenced)" />
+    <_HackerOsSourceUserReferenced Remove="@(_HackerOsSourceSystemPackage)" />
+    <_HackerOsSourceSystemReferenced Include="@(_HackerOsSourceReferenced)" />
+    <_HackerOsSourceSystemReferenced Remove="@(_HackerOsSourceUserReferenced)" />
+
+    <ProjectReference Include="@(_HackerOsSourceUserReferenced->'%(SourceProject)')" />
+    <ProjectReference Include="@(_HackerOsSourceSystemReferenced->'%(SourceProject)')" IsSystemApp="true" />
+
+    <PackageReference Remove="@(_HackerOsSourceReferenced)" />
+    <PackageReference Remove="HackerOs.App.Build" />
+  </ItemGroup>
+
+  <Import Project="$(MSBuildThisFileDirectory)HackerOs.Apps.targets"
+          Condition="'$(HackerOsAppProject)' == 'true' or '$(HackerOsAppHost)' == 'true'" />
+</Project>

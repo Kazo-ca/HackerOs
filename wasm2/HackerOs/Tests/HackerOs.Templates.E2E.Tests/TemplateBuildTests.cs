@@ -30,6 +30,69 @@ public sealed class TemplateBuildTests(TemplateWorkspace workspace)
     }
 
     /// <summary>
+    /// ADR 0176 §8, ADR 0207: a repository made with <c>hackeros-solution</c>, its HackerOS submodule
+    /// replaced by this repository (<c>HackerOsSourceRoot</c>), builds and tests both profiles. Debug
+    /// compiles HackerOS from the sources (every HackerOS reference is a project, the host aggregates
+    /// the app with the base apps, system apps included); Release takes the packages of the local
+    /// feed. Without the submodule the build stops with HOSAPP0070.
+    /// </summary>
+    [Fact]
+    public async Task The_solution_template_builds_and_tests_both_profiles()
+    {
+        string directory = Path.Combine(workspace.Root, "Contoso.Board");
+        string sourceRoot = "-p:HackerOsSourceRoot=" + workspace.RepositoryRoot + Path.DirectorySeparatorChar;
+        await workspace.RunCheckedAsync(workspace.Root, "new", "hackeros-solution", "-n", "Contoso.Board", "-o", directory,
+            "--appId", "com.contoso.board", "--repository", "contoso/HackerOs-App-Board");
+
+        Assert.True(File.Exists(Path.Combine(directory, "Contoso.Board.sln")));
+        Assert.Contains("external/HackerOs", File.ReadAllText(Path.Combine(directory, ".gitmodules")), StringComparison.Ordinal);
+        Assert.Contains("contoso/HackerOs-App-Board", File.ReadAllText(Path.Combine(directory, "store", "store.json")), StringComparison.Ordinal);
+        Assert.Contains("src/Contoso.Board", File.ReadAllText(Path.Combine(directory, ".github", "workflows", "publish-to-hack-store.yml")), StringComparison.Ordinal);
+
+        (int missingExit, string missingOutput) = await workspace.RunAsync(directory, "build", "-c", "Release");
+        Assert.NotEqual(0, missingExit);
+        Assert.Contains("HOSAPP0070", missingOutput, StringComparison.Ordinal);
+
+        // Debug: the sources of the submodule.
+        await workspace.RunCheckedAsync(directory, "build", "-c", "Debug", sourceRoot);
+        await workspace.RunCheckedAsync(directory, "test", "-c", "Debug", "--no-build", sourceRoot);
+        string host = Path.Combine(directory, "src", "Contoso.Board.Os");
+        AssertHackerOsReferences(Path.Combine(host, "obj", "source", "project.assets.json"), "project");
+        string debugCatalog = File.ReadAllText(Path.Combine(host, "obj", "source", "Debug", "net10.0", "BuiltInApplications.json"));
+        Assert.Contains("\"com.contoso.board\"", debugCatalog, StringComparison.Ordinal);
+        Assert.Contains("\"org.hackeros.terminal\"", debugCatalog, StringComparison.Ordinal);
+        Assert.Contains("\"isSystemApp\":true", debugCatalog, StringComparison.Ordinal);
+        using (JsonDocument manifest = JsonDocument.Parse(File.ReadAllText(Path.Combine(directory, "src", "Contoso.Board", "manifest.json"))))
+        {
+            Assert.Equal("com.contoso.board", manifest.RootElement.GetProperty("id").GetString());
+            Assert.Equal(workspace.Version, manifest.RootElement.GetProperty("sdkCompatibility").GetProperty("minimumVersion").GetString());
+        }
+
+        // Release: the packages, at the submodule's version.
+        await workspace.RunCheckedAsync(directory, "build", "-c", "Release", sourceRoot);
+        await workspace.RunCheckedAsync(directory, "test", "-c", "Release", "--no-build", sourceRoot);
+        AssertHackerOsReferences(Path.Combine(host, "obj", "project.assets.json"), "package");
+        string releaseCatalog = File.ReadAllText(Path.Combine(host, "obj", "Release", "net10.0", "BuiltInApplications.json"));
+        Assert.Contains("\"com.contoso.board\"", releaseCatalog, StringComparison.Ordinal);
+
+        // The publishing workflow packs the app the same way (ADR 0188 §7, ADR 0182).
+        await workspace.RunCheckedAsync(directory, "build", Path.Combine("src", "Contoso.Board"), "-c", "Release", "-t:HackerOsPack", sourceRoot);
+        Assert.True(File.Exists(Path.Combine(directory, "src", "Contoso.Board", "bin", "hackeros-packages", "index.json")));
+    }
+
+    /// <summary>Every HackerOS library of a restore output has the expected type (<c>project</c> or <c>package</c>).</summary>
+    private static void AssertHackerOsReferences(string assetsFile, string expectedType)
+    {
+        using JsonDocument assets = JsonDocument.Parse(File.ReadAllText(assetsFile));
+        JsonProperty[] hackerOs = assets.RootElement.GetProperty("libraries").EnumerateObject()
+            .Where(library => library.Name.StartsWith("HackerOs.", StringComparison.Ordinal))
+            .ToArray();
+        Assert.Contains(hackerOs, library => library.Name.StartsWith("HackerOs.AppSdk/", StringComparison.Ordinal));
+        Assert.Contains(hackerOs, library => library.Name.StartsWith("HackerOs.Ecosystem.Host/", StringComparison.Ordinal));
+        Assert.All(hackerOs, library => Assert.Equal(expectedType, library.Value.GetProperty("type").GetString()));
+    }
+
+    /// <summary>
     /// The host template, with a generated window app and command added as project references, builds,
     /// aggregates them with the base app packages, boots in Chromium and runs both.
     /// </summary>

@@ -2,13 +2,22 @@
 // Implements Cache-First offline shell strategy, atomic cache versioning,
 // asset integrity checking, and safe update activation (P2-PWA-002 through P2-PWA-005),
 // plus the corrupted-cache recovery of ADR 0099 §3 (RESET_CACHE message, see onMessage)
-// and the cross-origin isolation headers of ADR 0131 §2 (see withIsolationHeaders).
+// and the cross-origin isolation headers of ADR 0131 §2 (see withIsolationHeaders), and the
+// wwwroot/ files of installed apps of ADR 0206 (see installedAppAssets.sw.js).
 
 self.importScripts('./service-worker-assets.js');
+self.importScripts('./_content/HackerOs.Infrastructure.Browser/installedAppAssets.sw.js');
+const installedAppAssets = self.hackerOsInstalledAppAssets;
 
 self.addEventListener('install', event => event.waitUntil(onInstall(event)));
 self.addEventListener('activate', event => event.waitUntil(onActivate(event)));
 self.addEventListener('fetch', event => {
+    // ADR 0206: registered by the OS on a development host, this worker only serves installed apps.
+    if (installedAppAssets.installedAppsOnly) {
+        if (installedAppAssets.handles(event.request)) event.respondWith(installedAppAssets.respond(event.request));
+        return;
+    }
+
     const url = new URL(event.request.url);
     const legacyPath = new URL('legacy/', self.registration.scope).pathname;
     // Pages also hosts the original application. Let its requests reach the network:
@@ -95,6 +104,12 @@ async function withIsolationHeaders(response, refresh) {
 }
 
 async function onInstall(event) {
+    if (installedAppAssets.installedAppsOnly) {
+        // No release cache on a development host: take over at once, the OS waits for it.
+        await self.skipWaiting();
+        return;
+    }
+
     console.info('HackerOS Service Worker: Installing release asset cache', cacheName);
 
     const cache = await caches.open(cacheName);
@@ -137,6 +152,14 @@ async function fetchShellOrAsset(event) {
     // Cache-First strategy for static assets and HTML shell (P2-PWA-004)
     const shouldServeIndexHtml = event.request.mode === 'navigate'
         && !manifestUrlList.some(url => url === event.request.url);
+
+    // ADR 0206: an installed app's file, copied by the OS, comes before the release cache.
+    if (!shouldServeIndexHtml && installedAppAssets.handles(event.request)) {
+        const installed = await installedAppAssets.match(event.request);
+        if (installed) {
+            return installed;
+        }
+    }
 
     const request = shouldServeIndexHtml ? 'index.html' : event.request;
     const cache = await caches.open(cacheName);

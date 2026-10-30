@@ -810,7 +810,11 @@ public static class EcosystemServiceCollectionExtensions
                     () => provider.GetRequiredService<IProxyClient>(),
                     () => provider.GetRequiredService<SyncScheduler>(),
                     () => provider.GetRequiredService<SyncConflictCenter>(),
-                    () => provider.GetRequiredService<IOsSettingsService>()),
+                    () => provider.GetRequiredService<IOsSettingsService>())
+                {
+                    // ADR 0191 §6: the "Test" button of Settings > Local server.
+                    HostInfo = () => provider.GetRequiredService<IHostInfoClient>()
+                },
                 () => provider.GetRequiredService<SystemPowerService>(),
                 () => provider.GetRequiredService<IStorageInspector>(),
                 () => provider.GetRequiredService<IAdministratorAuthenticationAgent>(),
@@ -1182,6 +1186,14 @@ public static class EcosystemServiceCollectionExtensions
                 provider.GetRequiredService<IOsSettingsService>(),
                 provider.GetService<ITopicMessageBus>(),
                 provider.GetService<ILogger<HackerOs.Platform.Core.Appearance.UserThemeCatalogService>>()));
+        // ADR 0203: the icon pack named by icons.config, read from /usr/share/icons or ~/.local/share/icons.
+        services.AddScoped<HackerOs.Platform.Core.Appearance.IconPackService>(provider =>
+            new HackerOs.Platform.Core.Appearance.IconPackService(
+                provider.GetRequiredService<IFileSystemService>(),
+                provider.GetRequiredService<ISessionService>(),
+                provider.GetRequiredService<ISimulationClock>(),
+                provider.GetRequiredService<IOsSettingsService>(),
+                provider.GetService<ILogger<HackerOs.Platform.Core.Appearance.IconPackService>>()));
         services.AddScoped<WindowGeometryPersistence>();
         // ADR 0116: remembers app window geometry from WindowRuntime's facts; read back by
         // WindowLaunchCoordinator. Scoped like WindowRuntime.

@@ -29,7 +29,14 @@ public sealed record ServerConnectionGatewayServices(
     Func<IProxyClient>? Proxy = null,
     Func<SyncScheduler>? Scheduler = null,
     Func<SyncConflictCenter>? ConflictCenter = null,
-    Func<IOsSettingsService>? Settings = null);
+    Func<IOsSettingsService>? Settings = null)
+{
+    /// <summary>
+    /// Host discovery client, for <see cref="IAppServerConnectionGateway.TestAsync"/> (ADR 0191 §6);
+    /// without it a test reports that this host cannot test an address.
+    /// </summary>
+    public Func<IHostInfoClient>? HostInfo { get; init; }
+}
 
 /// <summary>
 /// Trusted <see cref="IAppServerConnectionGateway"/> (ADR 0056, section 10) over the server
@@ -101,6 +108,62 @@ internal sealed class AppServerConnectionGateway : IAppServerConnectionGateway
     public ValueTask<HackServerConnectionState> CreateAccountAsync(
         Uri serverUrl, string login, string password, CancellationToken cancellationToken = default) =>
         ConnectCoreAsync(serverUrl, login, password, createAccount: true, cancellationToken);
+
+    /// <inheritdoc />
+    public async ValueTask<HackServerConnectionState> PairAsync(Uri serverUrl, string code, CancellationToken cancellationToken = default)
+    {
+        _capabilities.Require(AppCapabilities.ServerConnectionManage);
+        if (_services is null)
+        {
+            throw new HackServerConnectionException("This HackerOS host has no optional-server support.");
+        }
+
+        try
+        {
+            ServerState state = await _services.Connection()
+                .ConnectWithPairingCodeAsync(serverUrl, code, cancellationToken).ConfigureAwait(false);
+
+            // ADR 0101 section 4: a (re)connection triggers a pass.
+            _services.Scheduler?.Invoke().RequestSync();
+            return ToPublic(state);
+        }
+        catch (Exception exception) when (exception is ServerConnectionException or HttpRequestException)
+        {
+            throw new HackServerConnectionException($"Could not pair: {exception.Message}", exception);
+        }
+    }
+
+    /// <inheritdoc />
+    public async ValueTask<HackServerProbe> TestAsync(Uri serverUrl, CancellationToken cancellationToken = default)
+    {
+        _capabilities.Require(AppCapabilities.ServerConnectionManage);
+        ArgumentNullException.ThrowIfNull(serverUrl);
+        if (_services?.HostInfo is not { } hostInfo)
+        {
+            return new HackServerProbe(false, null, null, "This HackerOS host cannot test a server address.");
+        }
+
+        try
+        {
+            HackerOs.Server.Contracts.Hosting.HostInfoResponse info =
+                await hostInfo().GetHostInfoAsync(serverUrl, cancellationToken).ConfigureAwait(false);
+            return info.IsServer
+                ? new HackServerProbe(true, info.ServerVersion, info.ApiVersion, null)
+                : new HackServerProbe(false, null, null, $"{serverUrl} answered, but not as a HackerOS server.");
+        }
+        catch (ServerConnectionException exception)
+        {
+            return new HackServerProbe(false, null, null, exception.Message);
+        }
+        catch (Exception exception) when (exception is HttpRequestException
+            or TaskCanceledException && !cancellationToken.IsCancellationRequested)
+        {
+            // A browser reports a refused connection, a blocked one (mixed content, an untrusted
+            // certificate, CORS) and an unknown name the same way: say which ones to check.
+            return new HackServerProbe(false, null, null,
+                $"{serverUrl} could not be reached (is the server started? for HTTPS, is its certificate approved on this device?): {exception.Message}");
+        }
+    }
 
     /// <inheritdoc />
     public async ValueTask DisconnectAsync(CancellationToken cancellationToken = default)
