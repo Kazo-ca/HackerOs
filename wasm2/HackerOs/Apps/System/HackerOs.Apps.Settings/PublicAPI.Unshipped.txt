@@ -8,3 +8,8 @@ HackerOs.Apps.Settings.WhatsNewPanel.WhatsNewPanel() -> void
 HackerOs.Apps.Settings.DateTimePanel
 HackerOs.Apps.Settings.DateTimePanel.DateTimePanel() -> void
 HackerOs.Apps.Settings.DateTimePanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Apps.Settings.IconPackPanel
+HackerOs.Apps.Settings.IconPackPanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Apps.Settings.IconPackPanel.IconPackPanel() -> void
+HackerOs.Apps.Settings.IconPackPanel.TargetLayer.get -> HackerOs.Simulation.Abstractions.Settings.SettingLayer
+HackerOs.Apps.Settings.IconPackPanel.TargetLayer.set -> void

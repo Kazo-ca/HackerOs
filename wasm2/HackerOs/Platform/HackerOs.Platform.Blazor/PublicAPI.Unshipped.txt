@@ -140,3 +140,16 @@ HackerOs.Platform.Blazor.Shell.DesktopShell.OnRestart.get -> Microsoft.AspNetCor
 HackerOs.Platform.Blazor.Shell.DesktopShell.OnRestart.set -> void
 HackerOs.Platform.Blazor.Shell.LogoutDialog.Restart.get -> bool
 HackerOs.Platform.Blazor.Shell.LogoutDialog.Restart.set -> void
+HackerOs.Platform.Blazor.Shell.ShellAppIcon
+HackerOs.Platform.Blazor.Shell.ShellAppIcon.App.get -> HackerOs.App.Abstractions.AppManifest!
+HackerOs.Platform.Blazor.Shell.ShellAppIcon.App.set -> void
+HackerOs.Platform.Blazor.Shell.ShellAppIcon.Dispose() -> void
+HackerOs.Platform.Blazor.Shell.ShellAppIcon.Fill.get -> bool
+HackerOs.Platform.Blazor.Shell.ShellAppIcon.Fill.set -> void
+HackerOs.Platform.Blazor.Shell.ShellAppIcon.ShellAppIcon() -> void
+HackerOs.Platform.Blazor.Shell.ShellAppIcon.Size.get -> int
+HackerOs.Platform.Blazor.Shell.ShellAppIcon.Size.set -> void
+HackerOs.Platform.Blazor.Shell.ShellAppIcon.UseDeclaredImage.get -> bool
+HackerOs.Platform.Blazor.Shell.ShellAppIcon.UseDeclaredImage.set -> void
+HackerOs.Platform.Blazor.Windows.WindowLaunchCoordinator.IconFor(HackerOs.App.Abstractions.AppManifest! manifest) -> string?
+HackerOs.Platform.Blazor.Windows.WindowLaunchCoordinator.WindowLaunchCoordinator(HackerOs.Windowing.Core.WindowRuntime! windows, HackerOs.Platform.Core.AppCatalog! catalog, HackerOs.Platform.Core.Globalization.SessionLocaleService! locale, HackerOs.Platform.Blazor.Windows.WindowGeometryRecorder? geometry, HackerOs.Platform.Core.Appearance.IconPackService? iconPacks) -> void
