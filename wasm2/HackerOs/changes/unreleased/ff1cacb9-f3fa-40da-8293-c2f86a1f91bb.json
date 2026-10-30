@@ -12,6 +12,7 @@
     "en": "Each new notification from the OS or an app now shows as a bubble for 6 seconds, above the taskbar of the first screen or at the top of a phone screen, then stays in the clock panel. Pointing at a bubble keeps it open. A ready update arrives the same way, with its Restart to update button.",
     "fr": "Chaque nouvelle notification de l'OS ou d'une app s'affiche maintenant en bulle pendant 6 secondes, au-dessus de la barre des tâches du premier écran ou en haut de l'écran d'un téléphone, puis reste dans le panneau de l'horloge. Pointer une bulle la garde ouverte. Une mise à jour prête arrive de la même façon, avec son bouton Redémarrer pour mettre à jour."
   },
+  "pr": 309,
   "links": [
     "doc/en/wasm/dev/adr/0197-notification-toasts.md"
   ]
