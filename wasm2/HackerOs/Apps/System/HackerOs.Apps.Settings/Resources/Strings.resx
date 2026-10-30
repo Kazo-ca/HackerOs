@@ -1617,4 +1617,82 @@
   <data name="Users.Guest.Unavailable" xml:space="preserve">
     <value>The account form could not be opened. Sign out, then choose Create my account on the sign-in screen.</value>
   </data>
+  <data name="Wallpaper.Title" xml:space="preserve">
+    <value>Wallpaper</value>
+  </data>
+  <data name="Wallpaper.Description" xml:space="preserve">
+    <value>A PNG, JPEG or WebP image over the theme's background. Images placed in {0} are offered to every user, those in {1} to you only; "Browse…" picks any image you can open.</value>
+  </data>
+  <data name="Wallpaper.Screens.AriaLabel" xml:space="preserve">
+    <value>Screen</value>
+  </data>
+  <data name="Wallpaper.Screens.Primary" xml:space="preserve">
+    <value>Screen 1 and the others</value>
+  </data>
+  <data name="Wallpaper.Screens.Other" xml:space="preserve">
+    <value>Screen {0}</value>
+  </data>
+  <data name="Wallpaper.Theme" xml:space="preserve">
+    <value>Theme background</value>
+  </data>
+  <data name="Wallpaper.SameAsPrimary" xml:space="preserve">
+    <value>Same as screen 1</value>
+  </data>
+  <data name="Wallpaper.BuiltIn.hacker-grid" xml:space="preserve">
+    <value>Grid</value>
+  </data>
+  <data name="Wallpaper.BuiltIn.circuit" xml:space="preserve">
+    <value>Circuit</value>
+  </data>
+  <data name="Wallpaper.BuiltIn.aurora" xml:space="preserve">
+    <value>Aurora</value>
+  </data>
+  <data name="Wallpaper.BuiltIn.nebula" xml:space="preserve">
+    <value>Nebula</value>
+  </data>
+  <data name="Wallpaper.Origin.system" xml:space="preserve">
+    <value>system</value>
+  </data>
+  <data name="Wallpaper.Origin.user" xml:space="preserve">
+    <value>mine</value>
+  </data>
+  <data name="Wallpaper.Origin.pack" xml:space="preserve">
+    <value>pack</value>
+  </data>
+  <data name="Wallpaper.Origin.file" xml:space="preserve">
+    <value>file</value>
+  </data>
+  <data name="Wallpaper.Browse" xml:space="preserve">
+    <value>Browse…</value>
+  </data>
+  <data name="Wallpaper.Browse.Title" xml:space="preserve">
+    <value>Choose a wallpaper</value>
+  </data>
+  <data name="Wallpaper.Browse.Filter" xml:space="preserve">
+    <value>Images (PNG, JPEG, WebP)</value>
+  </data>
+  <data name="Wallpaper.Fit.Label" xml:space="preserve">
+    <value>Fit</value>
+  </data>
+  <data name="Wallpaper.Fit.fill" xml:space="preserve">
+    <value>Fill</value>
+  </data>
+  <data name="Wallpaper.Fit.fit" xml:space="preserve">
+    <value>Fit</value>
+  </data>
+  <data name="Wallpaper.Fit.stretch" xml:space="preserve">
+    <value>Stretch</value>
+  </data>
+  <data name="Wallpaper.Fit.center" xml:space="preserve">
+    <value>Center</value>
+  </data>
+  <data name="Wallpaper.Fit.tile" xml:space="preserve">
+    <value>Tile</value>
+  </data>
+  <data name="Wallpaper.Error.Format" xml:space="preserve">
+    <value>{0} is not a PNG, JPEG or WebP image.</value>
+  </data>
+  <data name="Wallpaper.Saved" xml:space="preserve">
+    <value>Wallpaper saved.</value>
+  </data>
 </root>

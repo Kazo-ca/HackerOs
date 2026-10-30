@@ -211,6 +211,10 @@ This section lists what is released in the `main` branch and online.
 
 - **OS themes**, and an editor to create your own.
   ([`theme-files.md`](framework/theme-files.md))
+- **Image wallpapers**: a PNG, JPEG or WebP image (4 shipped with the OS,
+  your own or those of a shared folder), for every screen or one screen at a
+  time, in Settings ▸ Appearance.
+  ([ADR 0202](dev/adr/0202-desktop-wallpaper-images.md), [`wallpapers.md`](dev/wallpapers.md))
 - **English and French**, the language follows the user's locale.
   ([`localization.md`](framework/localization.md))
 - **Accessibility**: display and animation preferences, keyboard navigation.
@@ -266,7 +270,6 @@ points to its PR.
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Theme packs | `.hacktheme` format and the Hack Store Themes tab. | [0190](dev/adr/0190-theme-packs.md) | [#253](https://github.com/Kazo-ca/HackerOs/issues/253) |
-| Image wallpapers | Choose an image as wallpaper, per screen. | [0190](dev/adr/0190-theme-packs.md) | [#254](https://github.com/Kazo-ca/HackerOs/issues/254) |
 | Icon packs | Replace application and file icons. | [0190](dev/adr/0190-theme-packs.md) | [#255](https://github.com/Kazo-ca/HackerOs/issues/255) |
 | OS sounds | Sounds for notifications, errors and sign-in. | [0190](dev/adr/0190-theme-packs.md) | [#256](https://github.com/Kazo-ca/HackerOs/issues/256) |
 | Cursor themes | Custom cursors chosen in Settings. | [0190](dev/adr/0190-theme-packs.md) | [#257](https://github.com/Kazo-ca/HackerOs/issues/257) |

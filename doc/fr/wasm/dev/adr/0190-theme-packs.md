@@ -96,7 +96,7 @@ peut être accepté dès que le Store gère les packs.
 - [ ] Format `.hacktheme` et vérifications (CI du catalogue et installation).
 - [ ] Installation pour soi et pour le système, catalogues qui lisent les packs.
 - [ ] Onglet Thèmes du Hack Store.
-- [ ] Chantier : fonds d'écran en image.
+- [x] Chantier : fonds d'écran en image ([ADR 0202](0202-desktop-wallpaper-images.md)).
 - [ ] Chantier : packs d'icônes.
 - [ ] Chantier : sons des évènements de l'OS.
 - [ ] Chantier : thèmes de curseurs.

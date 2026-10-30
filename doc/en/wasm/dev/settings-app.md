@@ -42,7 +42,7 @@ Memory, Backup, What's new, About).
 
 | Page (id) | Panel | Main content |
 |---|---|---|
-| Appearance (`appearance`) | (in `SettingsWindow.razor`) | Write layer (user or system), desktop and mobile theme, accent, animations, user themes (`/etc/hackeros/themes` and `~/.config/hackeros/themes`, `UserThemeLibrary`); writes `appearance.config`. |
+| Appearance (`appearance`) | (in `SettingsWindow.razor`) | Write layer (user or system), desktop and mobile theme, accent, animations, user themes (`/etc/hackeros/themes` and `~/.config/hackeros/themes`, `UserThemeLibrary`), wallpaper (`WallpaperPanel`, ADR 0202); writes `appearance.config`. |
 | Desktop (`desktop`) | `DesktopPanel` | Desktop options and layout (`desktop.config`, ADR 0160). |
 | Screens (`screens`) | `ScreensPanel` | Open screens through `HackScreens` (Identify, New screen, Restore, Close, Full screen, permission; ADR 0184); `screens.config`: `primary-taskbar` choice, remembered screens and Forget (ADR 0179 §7, [`screens-settings.md`](screens-settings.md)). |
 | Accessibility (`accessibility`) | `AccessibilityPanel` | High contrast, text size, reduced motion (ADR 0105). |

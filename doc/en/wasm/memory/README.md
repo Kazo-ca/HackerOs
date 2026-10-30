@@ -56,6 +56,12 @@ at the end of each series or when a convention changes.
 - **Power button in the Start menu** (ADR 0195, PR #291, merged on
   2026-10-30): "Switch user" stays greyed out, `TODO` issue #290 (several
   sessions open at once).
+- **`todo/base` series** (2026-10-30, in progress): the `TODO` issues done in
+  parallel, one `todo/<n>-<topic>` branch per work item, PR to `todo/base`,
+  then one `todo/base` → `main` PR that Benoit approves. ADR 0197 to 0205 are
+  reserved for the series' work items. Done: image wallpapers
+  ([ADR 0202](../dev/adr/0202-desktop-wallpaper-images.md), issue #254,
+  [`wallpapers.md`](../dev/wallpapers.md)).
 - **ADR**: 0001 to 0171 and 0173 to 0195 exist on `main` (a few numbers skipped;
   0141 and 0172 were not used). Recent landmarks: 0173 automatic release, 0174
   new-version announcement, 0175 "New folder" in dialogs, 0176 app repository

@@ -484,3 +484,55 @@ HackerOs.Platform.Core.Sessions.GuestAccountRequests.GuestAccountRequests() -> v
 HackerOs.Platform.Core.Sessions.GuestAccountRequests.HasListener.get -> bool
 HackerOs.Platform.Core.Sessions.GuestAccountRequests.RequestCreateAccount() -> bool
 HackerOs.Platform.Core.Lifecycle.AppLifecycleOrchestrator.StopSessionAppsAsync(HackerOs.Simulation.Abstractions.Sessions.SessionId sessionId, HackerOs.Simulation.Abstractions.Processes.ProcessExitReason reason = HackerOs.Simulation.Abstractions.Processes.ProcessExitReason.Logout) -> System.Threading.Tasks.Task<int>!
+HackerOs.Platform.Core.Appearance.WallpaperImage
+HackerOs.Platform.Core.Appearance.WallpaperImage.<Clone>$() -> HackerOs.Platform.Core.Appearance.WallpaperImage!
+HackerOs.Platform.Core.Appearance.WallpaperImage.AssetPath.get -> string?
+HackerOs.Platform.Core.Appearance.WallpaperImage.AssetPath.init -> void
+HackerOs.Platform.Core.Appearance.WallpaperImage.Content.get -> byte[]?
+HackerOs.Platform.Core.Appearance.WallpaperImage.Content.init -> void
+HackerOs.Platform.Core.Appearance.WallpaperImage.Deconstruct(out string! Value, out HackerOs.Theming.Abstractions.WallpaperFit Fit, out string? AssetPath, out byte[]? Content, out string? MediaType) -> void
+HackerOs.Platform.Core.Appearance.WallpaperImage.Equals(HackerOs.Platform.Core.Appearance.WallpaperImage? other) -> bool
+HackerOs.Platform.Core.Appearance.WallpaperImage.Fit.get -> HackerOs.Theming.Abstractions.WallpaperFit
+HackerOs.Platform.Core.Appearance.WallpaperImage.Fit.init -> void
+HackerOs.Platform.Core.Appearance.WallpaperImage.MediaType.get -> string?
+HackerOs.Platform.Core.Appearance.WallpaperImage.MediaType.init -> void
+HackerOs.Platform.Core.Appearance.WallpaperImage.Value.get -> string!
+HackerOs.Platform.Core.Appearance.WallpaperImage.Value.init -> void
+HackerOs.Platform.Core.Appearance.WallpaperImage.WallpaperImage(string! Value, HackerOs.Theming.Abstractions.WallpaperFit Fit, string? AssetPath, byte[]? Content, string? MediaType) -> void
+HackerOs.Platform.Core.Appearance.WallpaperPreferences
+HackerOs.Platform.Core.Appearance.WallpaperPreferences.<Clone>$() -> HackerOs.Platform.Core.Appearance.WallpaperPreferences!
+HackerOs.Platform.Core.Appearance.WallpaperPreferences.Deconstruct(out string! Wallpaper, out HackerOs.Theming.Abstractions.WallpaperFit Fit, out System.Collections.Generic.IReadOnlyDictionary<int, string!>! Screens) -> void
+HackerOs.Platform.Core.Appearance.WallpaperPreferences.Equals(HackerOs.Platform.Core.Appearance.WallpaperPreferences? other) -> bool
+HackerOs.Platform.Core.Appearance.WallpaperPreferences.Fit.get -> HackerOs.Theming.Abstractions.WallpaperFit
+HackerOs.Platform.Core.Appearance.WallpaperPreferences.Fit.init -> void
+HackerOs.Platform.Core.Appearance.WallpaperPreferences.ForScreen(int screenNumber) -> string!
+HackerOs.Platform.Core.Appearance.WallpaperPreferences.SameAs(HackerOs.Platform.Core.Appearance.WallpaperPreferences? other) -> bool
+HackerOs.Platform.Core.Appearance.WallpaperPreferences.Screens.get -> System.Collections.Generic.IReadOnlyDictionary<int, string!>!
+HackerOs.Platform.Core.Appearance.WallpaperPreferences.Screens.init -> void
+HackerOs.Platform.Core.Appearance.WallpaperPreferences.Wallpaper.get -> string!
+HackerOs.Platform.Core.Appearance.WallpaperPreferences.Wallpaper.init -> void
+HackerOs.Platform.Core.Appearance.WallpaperPreferences.WallpaperPreferences(string! Wallpaper, HackerOs.Theming.Abstractions.WallpaperFit Fit, System.Collections.Generic.IReadOnlyDictionary<int, string!>! Screens) -> void
+HackerOs.Platform.Core.Appearance.WallpaperService
+HackerOs.Platform.Core.Appearance.WallpaperService.Changed -> System.Action?
+HackerOs.Platform.Core.Appearance.WallpaperService.Current.get -> HackerOs.Platform.Core.Appearance.WallpaperPreferences!
+HackerOs.Platform.Core.Appearance.WallpaperService.Dispose() -> void
+HackerOs.Platform.Core.Appearance.WallpaperService.EnsureInitializedAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+HackerOs.Platform.Core.Appearance.WallpaperService.GetImageAsync(int screenNumber, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.Platform.Core.Appearance.WallpaperImage?>!
+HackerOs.Platform.Core.Appearance.WallpaperService.RefreshAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+HackerOs.Platform.Core.Appearance.WallpaperService.WallpaperService(HackerOs.Platform.Core.Settings.IOsSettingsService! settings, HackerOs.Simulation.Abstractions.FileSystem.IFileSystemService! fileSystem, HackerOs.Simulation.Abstractions.Sessions.ISessionService! session, HackerOs.Simulation.Abstractions.Time.ISimulationClock! clock, Microsoft.Extensions.Logging.ILogger<HackerOs.Platform.Core.Appearance.WallpaperService!>? logger = null) -> void
+const HackerOs.Platform.Core.Appearance.AppearanceSettingsDocuments.MaxWallpaperScreen = 9 -> int
+const HackerOs.Platform.Core.Appearance.AppearanceSettingsDocuments.WallpaperFitKey = "wallpaperFit" -> string!
+const HackerOs.Platform.Core.Appearance.AppearanceSettingsDocuments.WallpaperKey = "wallpaper" -> string!
+override HackerOs.Platform.Core.Appearance.WallpaperImage.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.Appearance.WallpaperImage.GetHashCode() -> int
+override HackerOs.Platform.Core.Appearance.WallpaperImage.ToString() -> string!
+override HackerOs.Platform.Core.Appearance.WallpaperPreferences.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.Appearance.WallpaperPreferences.GetHashCode() -> int
+override HackerOs.Platform.Core.Appearance.WallpaperPreferences.ToString() -> string!
+static HackerOs.Platform.Core.Appearance.AppearanceSettingsDocuments.WallpaperScreenKey(int number) -> string!
+static HackerOs.Platform.Core.Appearance.WallpaperImage.operator !=(HackerOs.Platform.Core.Appearance.WallpaperImage? left, HackerOs.Platform.Core.Appearance.WallpaperImage? right) -> bool
+static HackerOs.Platform.Core.Appearance.WallpaperImage.operator ==(HackerOs.Platform.Core.Appearance.WallpaperImage? left, HackerOs.Platform.Core.Appearance.WallpaperImage? right) -> bool
+static HackerOs.Platform.Core.Appearance.WallpaperPreferences.Default.get -> HackerOs.Platform.Core.Appearance.WallpaperPreferences!
+static HackerOs.Platform.Core.Appearance.WallpaperPreferences.FromSnapshot(HackerOs.Simulation.Abstractions.Settings.LayeredConfigSnapshot! snapshot) -> HackerOs.Platform.Core.Appearance.WallpaperPreferences!
+static HackerOs.Platform.Core.Appearance.WallpaperPreferences.operator !=(HackerOs.Platform.Core.Appearance.WallpaperPreferences? left, HackerOs.Platform.Core.Appearance.WallpaperPreferences? right) -> bool
+static HackerOs.Platform.Core.Appearance.WallpaperPreferences.operator ==(HackerOs.Platform.Core.Appearance.WallpaperPreferences? left, HackerOs.Platform.Core.Appearance.WallpaperPreferences? right) -> bool

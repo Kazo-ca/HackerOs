@@ -56,6 +56,12 @@ jour à la fin de chaque série ou quand une convention change.
 - **Bouton Marche/arrêt dans le menu Démarrer** (ADR 0195, PR #291, fusionnée
   le 2026-10-30) : « Changer d'utilisateur » reste grisé, issue `TODO` #290
   (plusieurs sessions ouvertes en même temps).
+- **Série `todo/base`** (2026-10-30, en cours) : les issues `TODO` faites en
+  parallèle, une branche `todo/<n>-<sujet>` par chantier, PR vers `todo/base`,
+  puis une PR `todo/base` → `main` que Benoit approuve. ADR 0197 à 0205
+  réservées aux chantiers de la série. Fait : fonds d'écran en image
+  ([ADR 0202](../dev/adr/0202-desktop-wallpaper-images.md), issue #254,
+  [`wallpapers.md`](../dev/wallpapers.md)).
 - **ADR** : 0001 à 0171 et 0173 à 0195 existent sur `main` (quelques numéros sautés ;
   0141 et 0172 n'ont pas servi). Repères récents : 0173 publication automatique,
   0174 annonce de nouvelle version, 0175 « Nouveau dossier » des dialogues, 0176

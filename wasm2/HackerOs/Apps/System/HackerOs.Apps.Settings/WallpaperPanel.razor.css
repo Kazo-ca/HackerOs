@@ -1,0 +1,132 @@
+/* ADR 0202 §5: the wallpapers as a grid of thumbnails, the chosen one outlined with the accent. */
+.wallpaper-screens {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 0.75rem;
+}
+
+.wallpaper-screen {
+    padding: 0.3rem 0.75rem;
+    border: 1px solid var(--hos-border, rgba(255, 255, 255, 0.15));
+    border-radius: 999px;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+}
+
+.wallpaper-screen.is-selected {
+    border-color: var(--hos-accent, #42d392);
+    background: color-mix(in srgb, var(--hos-accent, #42d392) 18%, transparent);
+}
+
+.wallpaper-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+    gap: 0.75rem;
+}
+
+.wallpaper-option {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 0.4rem;
+    border: 2px solid transparent;
+    border-radius: 0.6rem;
+    background: var(--hos-surface-raised, rgba(255, 255, 255, 0.04));
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.wallpaper-option:hover:not(:disabled),
+.wallpaper-option:focus-visible {
+    border-color: color-mix(in srgb, var(--hos-accent, #42d392) 55%, transparent);
+}
+
+.wallpaper-option.is-selected {
+    border-color: var(--hos-accent, #42d392);
+}
+
+.wallpaper-option:disabled {
+    cursor: default;
+    opacity: 0.6;
+}
+
+.wallpaper-thumb {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 0.4rem;
+    object-fit: cover;
+    background: var(--hos-bg-base, #101417);
+}
+
+/* "The theme's background": the desktop's own background token, as the shell draws it. */
+.wallpaper-thumb-theme {
+    background: var(--hos-desktop-background, #07100f);
+}
+
+.wallpaper-label {
+    overflow: hidden;
+    font-size: 0.8rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.wallpaper-origin {
+    opacity: 0.65;
+    font-size: 0.72rem;
+}
+
+.wallpaper-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.25rem;
+    margin-top: 0.85rem;
+}
+
+.wallpaper-fit {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.wallpaper-fit select {
+    padding: 0.3rem 0.5rem;
+    border: 1px solid var(--hos-border, rgba(255, 255, 255, 0.15));
+    border-radius: 0.4rem;
+    background: var(--hos-input-background, rgba(0, 0, 0, 0.25));
+    color: inherit;
+}
+
+.wallpaper-message.is-error {
+    color: var(--hos-danger, #ff6b6b);
+}
+
+/* The Settings window's button look; its scoped styles do not reach this component. */
+.wallpaper-browse {
+    min-height: var(--hos-btn-min-height, 2.25rem);
+    padding: var(--hos-btn-padding, 6px 14px);
+    border: var(--hos-btn-border, 1px solid var(--hos-border, #3a4b53));
+    border-radius: var(--hos-btn-radius, var(--hos-radius-sm, 0.25rem));
+    background-color: var(--hos-btn-bg, var(--hos-bg-base, #101417));
+    box-shadow: var(--hos-btn-shadow, none);
+    color: var(--hos-btn-color, var(--hos-text-secondary, #a8bac4));
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: var(--hos-btn-font-weight, bold);
+    cursor: pointer;
+}
+
+.wallpaper-browse:hover:not(:disabled) {
+    border-color: var(--hos-btn-hover-border, var(--hos-accent, #42d392));
+    background-color: var(--hos-btn-hover-bg, var(--hos-bg-elevated, #1b252a));
+    color: var(--hos-btn-hover-color, var(--hos-text-primary, #f4f7f8));
+}
+
+.wallpaper-browse:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}

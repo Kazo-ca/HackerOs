@@ -1,0 +1,78 @@
+@using HackerOs.Theming.Abstractions
+@using HackerOs.Simulation.Abstractions.Settings
+@inherits HackerOs.AppSdk.Blazor.HackComponentBase
+
+@*
+    Settings > Appearance > Wallpaper (ADR 0202 §5): the wallpaper keys of appearance.config. The
+    shell follows the file and shows the new image at once. Behavior lives in WallpaperPanel.razor.cs.
+*@
+<div class="setting-group wallpaper-panel">
+    <h4 id="wallpaper-title">@L["Wallpaper.Title"] <SettingOriginBadge Source="@SourceOf(SelectedKey)" IsLocked="@IsLocked(SelectedKey)" /></h4>
+    <p class="setting-desc">
+        @LocalizedMarkup.Format(L["Wallpaper.Description"],
+            LocalizedMarkup.Code(WallpaperCatalog.SystemDirectory),
+            LocalizedMarkup.Code("~/.local/share/hackeros/wallpapers"))
+    </p>
+
+    @if (_screens.Count > 1)
+    {
+        <div class="wallpaper-screens" role="radiogroup" aria-label="@L["Wallpaper.Screens.AriaLabel"]">
+            @foreach (int number in _screens)
+            {
+                <button type="button" role="radio" class="@ScreenClass(number)"
+                        aria-checked="@(number == _screen ? "true" : "false")"
+                        @onclick="() => SelectScreen(number)">
+                    @(number == 1 ? L["Wallpaper.Screens.Primary"] : L["Wallpaper.Screens.Other", number])
+                </button>
+            }
+        </div>
+    }
+
+    <div class="wallpaper-options" role="radiogroup" aria-labelledby="wallpaper-title">
+        <button type="button" role="radio" class="@OptionClass(string.Empty)"
+                aria-checked="@Checked(string.Empty)" disabled="@IsDisabled"
+                @onclick="() => ChooseAsync(string.Empty)">
+            <span class="wallpaper-thumb wallpaper-thumb-theme" aria-hidden="true"></span>
+            <span class="wallpaper-label">@(_screen == 1 ? L["Wallpaper.Theme"] : L["Wallpaper.SameAsPrimary"])</span>
+        </button>
+        @foreach (BuiltInWallpaper wallpaper in WallpaperCatalog.BuiltIn)
+        {
+            <button type="button" role="radio" class="@OptionClass(wallpaper.Value)"
+                    aria-checked="@Checked(wallpaper.Value)" disabled="@IsDisabled"
+                    @onclick="() => ChooseAsync(wallpaper.Value)">
+                <img class="wallpaper-thumb" src="@wallpaper.AssetPath" alt="" loading="lazy" />
+                <span class="wallpaper-label">@L["Wallpaper.BuiltIn." + wallpaper.Id]</span>
+            </button>
+        }
+        @foreach (LibraryImage image in _library)
+        {
+            <button type="button" role="radio" class="@OptionClass(image.Path)"
+                    aria-checked="@Checked(image.Path)" disabled="@IsDisabled"
+                    title="@image.Path"
+                    @onclick="() => ChooseAsync(image.Path)">
+                <img class="wallpaper-thumb" alt="" data-wallpaper-path="@image.Path" @ref="_thumbnails[image.Path]" />
+                <span class="wallpaper-label">@image.Name <span class="wallpaper-origin">@L["Wallpaper.Origin." + image.Origin]</span></span>
+            </button>
+        }
+    </div>
+
+    <div class="wallpaper-actions">
+        <button type="button" class="wallpaper-browse" id="settings-wallpaper-browse" disabled="@(IsDisabled || BrowseImage is null)" @onclick="BrowseAsync">
+            @L["Wallpaper.Browse"]
+        </button>
+        <label class="wallpaper-fit" for="settings-wallpaper-fit">
+            @L["Wallpaper.Fit.Label"]
+            <select id="settings-wallpaper-fit" value="@_fit" disabled="@(_document is null || _isBusy || IsBlocked(FitKey))" @onchange="OnFitChangedAsync">
+                @foreach (string fit in WallpaperCatalog.FitValues)
+                {
+                    <option value="@fit">@L["Wallpaper.Fit." + fit]</option>
+                }
+            </select>
+        </label>
+    </div>
+
+    @if (_message is not null)
+    {
+        <p class="@(_messageIsError ? "setting-desc wallpaper-message is-error" : "setting-desc wallpaper-message")" role="status">@_message</p>
+    }
+</div>

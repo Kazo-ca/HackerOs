@@ -1,0 +1,9 @@
+@*
+    ADR 0202 §4: the wallpaper image of one screen, over the theme's background and grid. Rendered
+    only while the screen has a wallpaper that can be shown; otherwise the theme's background stays.
+    The image is drawn by DesktopWallpaper.razor.js, which turns a file's bytes into a blob address.
+*@
+@if (_image is not null)
+{
+    <div @ref="_element" class="@CssClass" aria-hidden="true" data-wallpaper="@_image.Value"></div>
+}

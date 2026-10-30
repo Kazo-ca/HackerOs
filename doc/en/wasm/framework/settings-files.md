@@ -162,6 +162,9 @@ await appearance.SetManyAsync(values, SettingLayer.System);        // /etc/hacke
   since `v3/11` (ADR 0103): the id of a built-in theme or of a `.theme`
   file in `/etc/hackeros/themes/` or `~/.config/hackeros/themes/`; an unknown
   id gives the default theme (see [`theme-editor.md`](../dev/theme-editor.md)).
+- In `appearance`, `wallpaper`, `wallpaperFit` and `wallpaperScreen2` to
+  `wallpaperScreen9` choose the wallpaper (ADR 0202, see
+  [`wallpapers.md`](../dev/wallpapers.md)).
 - No capability: file permissions decide (D16). The user layer
   is written by the OS on behalf of the session's user; the system
   layer with the file permissions of the calling app, hence `sudo`

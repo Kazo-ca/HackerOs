@@ -42,6 +42,7 @@
                      Layers="_windowLayers"
                      BackgroundContent="EffectiveBackgroundContent"
                      BackgroundInteractive="UsesDesktopSurface"
+                     WallpaperContent="PrimaryWallpaper"
                      OnFocus="HandleFocus"
                      OnMinimize="HandleMinimize"
                      OnToggleMaximize="HandleToggleMaximize"
@@ -224,7 +225,14 @@
         @<DesktopArea Windows="WindowRuntime.Windows"
                       Layers="_windowLayers"
                       DisplayId="screen.Id"
+                      WallpaperContent="@(ScreenWallpaper(screen.Id.Number))"
                       OnGesture="HandleGesture" />;
+
+    /// <summary>The wallpaper of screen 1 (ADR 0202 §4).</summary>
+    private RenderFragment PrimaryWallpaper => ScreenWallpaper(1);
+
+    /// <summary>The wallpaper of a screen: its own choice, otherwise the one of screen 1 (ADR 0202 §1).</summary>
+    private static RenderFragment ScreenWallpaper(int number) => @<DesktopWallpaper ScreenNumber="number" />;
 
     /// <summary>
     /// The taskbar of a secondary screen (ADR 0179 §1): the windows of its screen, its Start button
