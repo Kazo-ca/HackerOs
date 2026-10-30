@@ -100,6 +100,31 @@ public sealed class FileSystemSeeder(
         await EnsureDirectoryAsync("/etc/hackweb", 0x01ED, system, cancellationToken);
         await EnsureDirectoryAsync("/etc/hackweb/sites", 0x01ED, system, cancellationToken);
 
+        // ADR 0203 §6: the icon packs shipped with the OS, root-owned 0644 like /usr/share/icons on Linux.
+        await EnsureDirectoryAsync("/usr", 0x01ED, system, cancellationToken);
+        await EnsureDirectoryAsync("/usr/share", 0x01ED, system, cancellationToken);
+        await EnsureDirectoryAsync(Theming.Abstractions.IconPacks.IconPackLibrary.SystemDirectory, 0x01ED, system, cancellationToken);
+        foreach (BuiltInIconPacks.PackFile file in BuiltInIconPacks.Files)
+        {
+            string target = $"{Theming.Abstractions.IconPacks.IconPackLibrary.SystemDirectory}/{file.RelativePath}";
+            string folder = Theming.Abstractions.IconPacks.IconPackLibrary.SystemDirectory;
+            foreach (string part in file.RelativePath.Split('/')[..^1])
+            {
+                folder += "/" + part;
+                await EnsureDirectoryAsync(folder, 0x01ED, system, cancellationToken);
+            }
+
+            if (file.RelativePath.EndsWith(".json", StringComparison.Ordinal))
+            {
+                // icon-pack.json stays a text file, readable with cat and editable with nano.
+                await EnsureFileAsync(target, System.Text.Encoding.UTF8.GetString(file.Content), 0x01A4, system, cancellationToken);
+            }
+            else
+            {
+                await EnsureFileAsync(target, file.Content, 0x01A4, system, cancellationToken);
+            }
+        }
+
         string home = $"/home/{userName.Value}";
         await EnsureDirectoryAsync(home, 0x01C0, userProvisioning, cancellationToken);
         await EnsureDirectoryAsync($"{home}/Desktop", 0x01C0, userProvisioning, cancellationToken);
@@ -199,9 +224,26 @@ public sealed class FileSystemSeeder(
     /// Creates a file with <paramref name="content"/> when nothing exists at <paramref name="pathValue"/>.
     /// An existing file is never touched: an administrator's edits survive every login.
     /// </summary>
-    private async ValueTask EnsureFileAsync(
+    private ValueTask EnsureFileAsync(
         string pathValue,
         string content,
+        ushort mode,
+        FileSystemAuthorizationContext context,
+        CancellationToken cancellationToken) =>
+        EnsureFileAsync(pathValue, new SeedSource(System.Text.Encoding.UTF8.GetBytes(content), FileSystemContentDescriptor.Text()), mode, context, cancellationToken);
+
+    /// <summary>Creates a binary file (an image of a shipped icon pack) when nothing exists at <paramref name="pathValue"/>.</summary>
+    private ValueTask EnsureFileAsync(
+        string pathValue,
+        byte[] content,
+        ushort mode,
+        FileSystemAuthorizationContext context,
+        CancellationToken cancellationToken) =>
+        EnsureFileAsync(pathValue, new SeedSource(content, FileSystemContentDescriptor.Binary(MediaTypeOf(pathValue))), mode, context, cancellationToken);
+
+    private async ValueTask EnsureFileAsync(
+        string pathValue,
+        SeedSource content,
         ushort mode,
         FileSystemAuthorizationContext context,
         CancellationToken cancellationToken)
@@ -237,7 +279,7 @@ public sealed class FileSystemSeeder(
 
         FileSystemMutationResult written = await _fileSystem.WriteAsync(
             new FileSystemWriteRequest(path),
-            new SeedTextSource(content),
+            content,
             context,
             cancellationToken);
         if (!written.Succeeded)
@@ -262,12 +304,16 @@ public sealed class FileSystemSeeder(
             _timeProvider.GetUtcNow().ToUniversalTime());
     }
 
-    /// <summary>UTF-8 text content of one seeded file.</summary>
-    private sealed class SeedTextSource(string content) : IFileSystemContentSource
-    {
-        private readonly byte[] _bytes = System.Text.Encoding.UTF8.GetBytes(content);
+    private static string MediaTypeOf(string path) =>
+        path.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ? "image/png"
+        : "application/octet-stream";
 
-        public FileSystemContentDescriptor Descriptor { get; } = FileSystemContentDescriptor.Text();
+    /// <summary>Content of one seeded file: UTF-8 text or the bytes of an image.</summary>
+    private sealed class SeedSource(byte[] bytes, FileSystemContentDescriptor descriptor) : IFileSystemContentSource
+    {
+        private readonly byte[] _bytes = bytes;
+
+        public FileSystemContentDescriptor Descriptor { get; } = descriptor;
 
         public long? Length => _bytes.LongLength;
 

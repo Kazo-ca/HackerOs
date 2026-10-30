@@ -12,3 +12,8 @@ HackerOs.Apps.Settings.AppSourcesPanel
 HackerOs.Apps.Settings.AppSourcesPanel.AppSourcesPanel() -> void
 override HackerOs.Apps.Settings.AppSourcesPanel.OnInitializedAsync() -> System.Threading.Tasks.Task!
 ~override HackerOs.Apps.Settings.AppSourcesPanel.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+HackerOs.Apps.Settings.IconPackPanel
+HackerOs.Apps.Settings.IconPackPanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Apps.Settings.IconPackPanel.IconPackPanel() -> void
+HackerOs.Apps.Settings.IconPackPanel.TargetLayer.get -> HackerOs.Simulation.Abstractions.Settings.SettingLayer
+HackerOs.Apps.Settings.IconPackPanel.TargetLayer.set -> void

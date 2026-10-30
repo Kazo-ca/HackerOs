@@ -1,0 +1,4 @@
+[submodule "external/HackerOs"]
+	path = external/HackerOs
+	url = https://github.com/Kazo-ca/HackerOs.git
+	shallow = true

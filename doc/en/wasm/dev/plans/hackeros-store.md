@@ -36,7 +36,10 @@ Each line is a work item, with its branch and PR.
 
 1. **`hackeros-solution` template**: ADR 0176 tasks, plus the workflow that
    publishes to the catalog (ADR 0188 §7). Catalog apps start from this
-   template.
+   template. **Done** (branch `todo/1-hackstore-solution-template`,
+   [ADR 0207](../adr/0207-solution-template-implementation.md),
+   [`app-repository.md`](../../framework/app-repository.md)); the template
+   repository is regenerated at the next release.
 2. **`wwwroot/` assets of installed apps**: serve them (service worker or
    `blob:` addresses), a known ADR 0182 limit. Needed for any app that wraps a
    JavaScript project.
@@ -45,7 +48,9 @@ Each line is a work item, with its branch and PR.
    administrator), `app-policy.config`, install into
    `~/.local/share/hackeros/apps`, catalog built when the session opens,
    two-step validation window, `hackpkg --user/--system`, `sources`, `policy`,
-   Settings ▸ Apps ▸ Sources.
+   Settings ▸ Apps ▸ Sources. **Done** (issue #248,
+   [ADR 0208](../adr/0208-hack-store-sources-trust-build.md): catalog loaded at
+   startup and hidden per session).
 4. **`HackerOs-AppMarketPlace` repository** (ADR 0188 §4 to §6):
    `categories.json`, PR template, `validate.yml` (format, manifest, commit,
    build, API check, CodeQL, capabilities comment), `publish.yml`, `packages`

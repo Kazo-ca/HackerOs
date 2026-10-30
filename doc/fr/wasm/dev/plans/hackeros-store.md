@@ -36,7 +36,10 @@ Chaque ligne est un chantier, avec sa branche et sa PR.
 
 1. **Modèle `hackeros-solution`** : tâches de l'ADR 0176, plus le workflow de
    publication vers le catalogue (ADR 0188 §7). Les apps du catalogue partent
-   de ce modèle.
+   de ce modèle. **Fait** (branche `todo/1-hackstore-solution-template`,
+   [ADR 0207](../adr/0207-solution-template-implementation.md),
+   [`app-repository.md`](../../framework/app-repository.md)) ; le dépôt
+   template est régénéré à la release suivante.
 2. **Ressources `wwwroot/` des apps installées** : les servir (service worker
    ou adresses `blob:`), limite connue de l'ADR 0182. Nécessaire pour toute
    app qui enveloppe un projet JavaScript.
@@ -45,7 +48,9 @@ Chaque ligne est un chantier, avec sa branche et sa PR.
    ajoutées par un administrateur), `app-policy.config`, installation dans
    `~/.local/share/hackeros/apps`, catalogue construit à l'ouverture de la
    session, fenêtre de validation en deux étapes, `hackpkg --user/--system`,
-   `sources`, `policy`, Paramètres ▸ Apps ▸ Sources.
+   `sources`, `policy`, Paramètres ▸ Apps ▸ Sources. **Fait** (issue #248,
+   [ADR 0208](../adr/0208-hack-store-sources-trust-build.md) : catalogue chargé
+   au démarrage et masqué par session).
 4. **Dépôt `HackerOs-AppMarketPlace`** (ADR 0188 §4 à §6) : `categories.json`,
    modèle de PR, `validate.yml` (format, manifeste, commit, compilation,
    vérification des API, CodeQL, commentaire des capacités), `publish.yml`,

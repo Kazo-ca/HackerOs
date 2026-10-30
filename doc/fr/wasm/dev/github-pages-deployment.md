@@ -41,8 +41,9 @@ déploiement de `main`. Vue d'ensemble : [`ci-workflows.md`](ci-workflows.md).
 
 Playwright n'est exécuté ni par Pages, ni par les vérifications automatiques
 sur `main`. Les six projets de tests navigateur restent disponibles dans
-`.github/workflows/verify-browser-tests.yml`, lancé uniquement par
-**Actions → Verify HackerOS browser tests (manual) → Run workflow**. Ce workflow
+`.github/workflows/verify-browser-tests.yml`, lancé chaque nuit sur `main`
+quand `main` a changé, ou par **Actions → Verify HackerOS browser tests → Run
+workflow** ([`ci-workflows.md`](ci-workflows.md#tests-navigateur-chaque-nuit)). Ce workflow
 conserve ses diagnostics et n'effectue aucun déploiement. Voir
 [les suites de tests](building-and-testing.md#tester) pour les commandes locales.
 
@@ -50,7 +51,7 @@ conserve ses diagnostics et n'effectue aucun déploiement. Voir
 
 - [x] Publication Pages indépendante de Playwright.
 - [x] Vérification automatique des 41 projets sans navigateur.
-- [x] Six projets Playwright conservés dans un workflow manuel dédié.
+- [x] Six projets Playwright conservés dans un workflow dédié (chaque nuit sur `main` et manuel).
 - [x] Sélection des projets vérifiée avec `run-test-suite.ps1 -ListOnly`.
 
 ## Assemblage et routage

@@ -25,6 +25,7 @@
 @inject AccessibilityPreferenceService Accessibility
 @inject HackerOs.Platform.Core.Globalization.SessionTimeZoneService TimeZones
 @inject UserThemeCatalogService UserThemes
+@inject IconPackService IconPacks
 @inject HackerOs.Platform.Core.Clipboard.HostClipboardBridge HostClipboard
 @inject HackerOs.Platform.Core.Globalization.SessionLocaleService SessionLocale
 @inject IStringLocalizer<Strings> L
@@ -467,6 +468,8 @@
             // ADR 0193: the time zone of the clock and of the apps (datetime.config).
             await TimeZones.InitializeAsync();
             await UserThemes.InitializeAsync();
+            // ADR 0203: the icon pack of icons.config.
+            await IconPacks.InitializeAsync();
             // Shares clipboard text with the real machine (ADR 0065); never fails the boot.
             await HostClipboard.StartAsync();
         }
