@@ -235,6 +235,9 @@ This section lists what is released in the `main` branch and online.
   NuGet packages in production. ([ADR 0176](dev/adr/0176-app-repository-template.md))
 - **Automatic releases**: GitHub Release, NuGet packages and OS archive for
   each new version. ([`releases.md`](dev/releases.md))
+- **Browser tests every night**: the Playwright suites run at night on `main`
+  when it changed; a failure opens an issue.
+  ([`ci-workflows.md`](dev/ci-workflows.md#browser-tests-every-night))
 
 ## In development
 
