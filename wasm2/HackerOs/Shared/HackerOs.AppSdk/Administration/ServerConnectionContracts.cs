@@ -12,6 +12,16 @@ public sealed record HackServerConnectionState(bool IsConnected, Uri? ServerUrl,
     public static HackServerConnectionState NotConnected { get; } = new(false, null, null, null);
 }
 
+/// <summary>
+/// What an address answered to <see cref="HackServerConnection.TestAsync(Uri, CancellationToken)"/>
+/// (ADR 0191 §6): whether a HackerOS server is there, before linking this device to it.
+/// </summary>
+/// <param name="IsServer">Whether a HackerOS server answered.</param>
+/// <param name="ServerVersion">The server's version, when it answered.</param>
+/// <param name="ApiVersion">The server's API version, when it answered.</param>
+/// <param name="Error">Why the test failed (unreachable, not a HackerOS server), in English; <see langword="null"/> on success.</param>
+public sealed record HackServerProbe(bool IsServer, string? ServerVersion, string? ApiVersion, string? Error);
+
 /// <summary>What a synchronization moves (ADR 0029 to 0033).</summary>
 public enum HackSyncDomain
 {
@@ -145,6 +155,26 @@ public interface IAppServerConnectionGateway
     /// <param name="cancellationToken">Cancels the request.</param>
     ValueTask<HackServerConnectionState> CreateAccountAsync(
         Uri serverUrl, string login, string password, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Links this device to a server account with a one-time pairing code the server printed
+    /// (ADR 0191 §6), without the account's password.
+    /// </summary>
+    /// <param name="serverUrl">Absolute server base URL.</param>
+    /// <param name="code">The pairing code.</param>
+    /// <param name="cancellationToken">Cancels the request.</param>
+    /// <exception cref="HackServerConnectionException">The server refused the code or could not be reached.</exception>
+    ValueTask<HackServerConnectionState> PairAsync(Uri serverUrl, string code, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This server connection gateway cannot pair a device.");
+
+    /// <summary>
+    /// Asks <paramref name="serverUrl"/> whether it is a HackerOS server, without linking this device.
+    /// Only called when the user asks (ADR 0191 §3: the OS never probes an address by itself).
+    /// </summary>
+    /// <param name="serverUrl">Absolute server base URL.</param>
+    /// <param name="cancellationToken">Cancels the request.</param>
+    ValueTask<HackServerProbe> TestAsync(Uri serverUrl, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This server connection gateway cannot test an address.");
 
     /// <summary>Unlinks this device; local data stays the source of truth.</summary>
     /// <param name="cancellationToken">Cancels the request.</param>

@@ -75,8 +75,10 @@ warning, serves the publication on `127.0.0.1` and `127.0.0.2`, then runs
 | `Trimmed_publish_boots_offline_after_the_first_load` | on `127.0.0.2` (the service worker is not registered on `127.0.0.1`): version caching, reload without network, login, launch of a never-loaded app |
 | `The_calculator_rendered_in_a_worker_works_like_on_the_page` | ADR 0133 trial, setting enabled by rewriting `appsettings.json`: the Calculator in a worker computes with mouse and keyboard, keeps its CSS, `Tab`, axe, `Alt+F7`/`Alt+Q`, dedicated worker released on close ([`remote-window-rendering.md`](remote-window-rendering.md)) |
 | `Measures_the_calculator_on_the_page_and_in_a_worker` | ADR 0133 measurements (opening, latency, memory, batches), written to `remote-window-measurements.json` in the artifacts folder |
+| `An_installed_app_finds_its_wwwroot_files_and_its_worker_scripts` | ADR 0206: the test package `Tests/fixtures/installed-app` (packed by the script with `HackerOsPack`, answered by Playwright in place of `raw.githubusercontent.com`) is installed with `sudo hackpkg install`, the OS restarts, the app imports its module, starts its Web Worker (relative `importScripts`) and shows its image; on `127.0.0.1`, through the `installed-apps` mode service worker |
+| `The_published_service_worker_serves_installed_app_files_to_a_worker` | ADR 0206 on `127.0.0.2`: the published service worker answers files of the `hackeros-installed-apps` cache to a Web Worker under cross-origin isolation |
 
-The script requires all four tests to pass (`EXPECTED_TESTS`).
+The script requires all six tests to pass (`EXPECTED_TESTS`).
 
 No console error is allowed. Without `HACKEROS_TRIMMED_URL`, the suite is
 skipped (a `dotnet test` of the solution does not run it).

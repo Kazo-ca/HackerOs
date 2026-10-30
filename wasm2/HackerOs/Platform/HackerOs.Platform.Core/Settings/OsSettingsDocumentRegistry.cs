@@ -28,7 +28,9 @@ public static class OsSettingsDocumentRegistry
         // ADR 0193 §2: Settings > Date and time chooses the user's time zone.
         [Globalization.TimeZoneSettingsDocuments.Document.DocumentId] = Globalization.TimeZoneSettingsDocuments.Document,
         // ADR 0205 §3: Settings > Appearance chooses the cursor theme.
-        [CursorSettingsDocuments.Document.DocumentId] = CursorSettingsDocuments.Document
+        [CursorSettingsDocuments.Document.DocumentId] = CursorSettingsDocuments.Document,
+        // ADR 0203 §3: Settings > Appearance chooses the icon pack.
+        [IconPackSettingsDocuments.Document.DocumentId] = IconPackSettingsDocuments.Document
     };
 
     /// <summary>Gets every listed document id.</summary>

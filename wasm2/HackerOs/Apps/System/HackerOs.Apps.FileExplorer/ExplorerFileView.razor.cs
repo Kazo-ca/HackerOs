@@ -263,27 +263,39 @@ public sealed partial class ExplorerFileView : IHackFileView
     /// <inheritdoc />
     protected override void OnParametersSet()
     {
-        if (!_initialDirectorySet)
-        {
-            _initialDirectorySet = true;
-            try
-            {
-                _initialDirectory = VirtualPath.Parse(string.IsNullOrWhiteSpace(InitialDirectory) ? "/" : InitialDirectory);
-            }
-            catch (Exception exception) when (exception is FormatException or ArgumentException)
-            {
-                _initialDirectory = VirtualPath.Parse("/");
-            }
-        }
-
+        SetInitialDirectory();
         _binding.AllowRename = Has(HackFileViewFeatures.Rename);
         _binding.AllowDelete = Has(HackFileViewFeatures.Delete);
         ConfigureDesktop();
     }
 
+    /// <summary>Reads <see cref="InitialDirectory"/> once; an empty or invalid value starts at <c>/</c>.</summary>
+    private void SetInitialDirectory()
+    {
+        if (_initialDirectorySet)
+        {
+            return;
+        }
+
+        _initialDirectorySet = true;
+        try
+        {
+            _initialDirectory = VirtualPath.Parse(string.IsNullOrWhiteSpace(InitialDirectory) ? "/" : InitialDirectory);
+        }
+        catch (Exception exception) when (exception is FormatException or ArgumentException)
+        {
+            _initialDirectory = VirtualPath.Parse("/");
+        }
+    }
+
     /// <inheritdoc />
     protected override async Task OnInitializedAsync()
     {
+        // Blazor renders FileView at the first await below, before OnParametersSet runs: its start
+        // folder must be known by then, or it lists "/" (which the desktop may not read).
+        SetInitialDirectory();
+        // ADR 0203: the selected icon pack draws the files and shortcuts from the first listing.
+        await StartIconPackAsync();
         if (!Has(HackFileViewFeatures.Clipboard))
         {
             return;
@@ -346,6 +358,7 @@ public sealed partial class ExplorerFileView : IHackFileView
         }
 
         await StopDesktopAsync();
+        await StopIconPackAsync();
     }
 
     private void Unsubscribe()

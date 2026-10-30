@@ -1,0 +1,16 @@
+@using HackerOs.AppSdk.Icons
+@using HackerOs.AppSdk.Apps
+
+@*
+    The icon the shell draws for an app (ADR 0160 §6, ADR 0203 §4): the selected icon pack's image when
+    it has one, else the app's declared image when the surface shows it (ADR 0164), else the shared
+    Lucide icon of its category.
+*@
+@if (ImageUrl is { } url)
+{
+    <img class="@(Fill ? "shell-app-icon-image is-fill" : "shell-app-icon-image")" src="@url" alt="" width="@Size" height="@Size" draggable="false" />
+}
+else
+{
+    <HackerIcon Library="IconLibrary.Lucide" Name="@HackAppIcons.LucideName(App.Id, App.Presentation.Category)" Size="Size" Title="" />
+}

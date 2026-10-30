@@ -57,7 +57,7 @@
                                                 @attributes="AppMenuAttributes(app)"
                                                 @onclick="() => LaunchAppAsync(app)">
                                             <span class="app-icon-shell" aria-hidden="true">
-                                                <HackerIcon Library="IconLibrary.Lucide" Name="@GetAppIconName(app)" Size="20" Title="" />
+                                                <ShellAppIcon App="app" Size="20" />
                                             </span>
                                             <span class="app-copy">
                                                 <strong>@app.Name</strong>
@@ -158,7 +158,7 @@
                                                     @attributes="AppMenuAttributes(app)"
                                                     @onclick="() => LaunchAppAsync(app)">
                                                 <span class="app-icon-shell" aria-hidden="true">
-                                                    <HackerIcon Library="IconLibrary.Lucide" Name="@GetAppIconName(app)" Size="20" Title="" />
+                                                    <ShellAppIcon App="app" Size="20" />
                                                 </span>
                                                 <span class="app-copy">
                                                     <strong>@app.Name</strong>

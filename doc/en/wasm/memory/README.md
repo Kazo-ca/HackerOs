@@ -50,9 +50,12 @@ at the end of each series or when a convention changes.
   the computer mounted as a network drive (ADR 0181), `hackpkg install` from
   GitHub (ADR 0182), features overview `features.md` (ADR 0192), local time
   and time zone (ADR 0193, work item 2 of issue #242), taskbar context menus
-  (ADR 0194, work item 4 of #242). The Hack Store ADRs (0188 to 0190) and the
-  installable local server ADR (0191) are accepted, nothing is coded (`TODO`
-  issues #246 to #257, #267).
+  (ADR 0194, work item 4 of #242). The Hack Store ADRs (0188 to 0190) are
+  accepted, nothing is coded (`TODO` issues #246 to #257). The installable
+  local server (ADR 0191, issue #267) is coded in the `todo/base` series (work
+  item `todo/14-installable-server`,
+  [`installable-server.md`](../dev/installable-server.md)); the Windows and
+  macOS scripts and the Docker image still need a real run.
 - **Power button in the Start menu** (ADR 0195, PR #291, merged on
   2026-10-30): "Switch user" stays greyed out, `TODO` issue #290 (several
   sessions open at once).
@@ -63,6 +66,18 @@ at the end of each series or when a convention changes.
   to the whole surface by `cursorTheme.js`. Two questions asked to Benoit
   (default theme, reach inside apps); the code follows the recommendations
   (System, everywhere).
+- **`todo/base` series** (2026-10-30, every `TODO` issue in parallel, one
+  final PR to `main`): Hack Store work item 1 done, `hackeros-solution`
+  template and catalog publishing workflow (ADR 0207,
+  [`app-repository.md`](../framework/app-repository.md), issue #246). The
+  `HackerOs-AppTemplate` repository will only be regenerated with a submodule
+  on the release that contains this template (draft PR in that repository).
+  ADR 0206 is taken by issue #247 (installed apps' `wwwroot/` served by the
+  service worker, [ADR 0206](../dev/adr/0206-serve-installed-app-assets.md)).
+- **Icon packs** (ADR 0203, `TODO` issue #255, series `todo/base`): PNG packs
+  for apps and files under `/usr/share/icons` and `~/.local/share/icons`, chosen
+  in Settings ▸ Appearance (`icons` settings document, key `iconPackId`); the
+  built-in Néon pack is seeded. See [`icon-packs.md`](../dev/icon-packs.md).
 - **ADR**: 0001 to 0171 and 0173 to 0195 exist on `main` (a few numbers skipped;
   0141 and 0172 were not used). Recent landmarks: 0173 automatic release, 0174
   new-version announcement, 0175 "New folder" in dialogs, 0176 app repository
@@ -71,8 +86,9 @@ at the end of each series or when a convention changes.
   what's new ([`change-list.md`](../dev/change-list.md)), 0187 guest and credits,
   0188 to 0190 Hack Store ([`hackeros-store.md`](../dev/plans/hackeros-store.md)),
   0191 installable local server, 0192 `features.md` and exception to ADR 0135,
-  0193 local time, 0194 taskbar menus, 0195 Start menu Power button.
-  **Next free number: 0196.** Before taking one, check `dev/adr/` on
+  0193 local time, 0194 taskbar menus, 0195 Start menu Power button;
+  `todo/base` series: 0207 `hackeros-solution` template (the series' other
+  numbers are reserved by its work items). **Next free number: 0196.** Before taking one, check `dev/adr/` on
   `main` and the open PRs.
 
 ## Working conventions
@@ -105,8 +121,8 @@ of [`AGENTS.md`](../../../../AGENTS.md), which Claude Code reads through
   `build/publish-trimmed.sh` and SDK compatibility
   (`Tests/fixtures/sdk-compat`) when they are concerned. GitHub Actions
   run again since 2026-10-24 and check every PR to `main`
-  and `*/base` (failing tests rerun once, Playwright in a manual
-  workflow): [`../dev/ci-workflows.md`](../dev/ci-workflows.md).
+  and `*/base` (failing tests rerun once; Playwright every night on `main`
+  when `main` changed, a failure opens an issue): [`../dev/ci-workflows.md`](../dev/ci-workflows.md).
 - **SDK**: the public API is tracked by `PublicAPI.Shipped.txt` /
   `PublicAPI.Unshipped.txt`; an addition goes through `Unshipped` until the
   next release (`build/tools/ship-public-api.sh`).
