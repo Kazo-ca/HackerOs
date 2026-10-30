@@ -100,6 +100,7 @@ public sealed partial class LocalServerPanel
         finally
         {
             _isTesting = false;
+            StateHasChanged();
         }
     }
 
@@ -127,6 +128,7 @@ public sealed partial class LocalServerPanel
         finally
         {
             _isPairing = false;
+            StateHasChanged();
         }
 
         if (state is { IsConnected: true })
