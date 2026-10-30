@@ -230,15 +230,23 @@ This section lists what is released in the `main` branch and online.
   ([`sdk-reference.md`](framework/sdk-reference.md),
   [`sdk-packages.md`](framework/sdk-packages.md))
 - **`dotnet new` templates** for a windowed application, a command, a
-  service, a site or a complete host.
+  service, a site, a complete host or a whole application repository, shown
+  in Visual Studio and Rider.
   ([`sdk-developer-guide.md`](framework/sdk-developer-guide.md))
 - **Install an application from its GitHub repository** with the `hackpkg`
   command. ([ADR 0182](dev/adr/0182-install-apps-from-github.md),
   [`app-installation.md`](dev/app-installation.md))
-- **Application template repository**: the OS as a submodule for debugging,
-  NuGet packages in production. ([ADR 0176](dev/adr/0176-app-repository-template.md))
+- **`hackeros-solution` application repository template**: application, host
+  and tests ready to run, the OS as a submodule to debug in its sources, NuGet
+  packages in production, CI and submission to the Hack Store catalog with a
+  tag. ([ADR 0176](dev/adr/0176-app-repository-template.md),
+  [ADR 0207](dev/adr/0207-solution-template-implementation.md),
+  [`app-repository.md`](framework/app-repository.md))
 - **Automatic releases**: GitHub Release, NuGet packages and OS archive for
   each new version. ([`releases.md`](dev/releases.md))
+- **Browser tests every night**: the Playwright suites run at night on `main`
+  when it changed; a failure opens an issue.
+  ([`ci-workflows.md`](dev/ci-workflows.md#browser-tests-every-night))
 
 ## In development
 
@@ -258,7 +266,6 @@ points to its PR.
 
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
-| Solution template and publishing | `hackeros-solution` template and publishing an application to the catalog. | [0176](dev/adr/0176-app-repository-template.md), [0188](dev/adr/0188-hack-store-and-app-catalog.md) | [#246](https://github.com/Kazo-ca/HackerOs/issues/246) |
 | Assets of installed applications | Serve the images, scripts and workers of an installed application. | [0182](dev/adr/0182-install-apps-from-github.md) | [#247](https://github.com/Kazo-ca/HackerOs/issues/247) |
 | Trusted sources and per-user install | Trusted catalogs, install without an administrator, block list, administrator approval. | [0189](dev/adr/0189-app-sources-trust-and-per-user-install.md) | [#248](https://github.com/Kazo-ca/HackerOs/issues/248) |
 | Application catalog | Catalog format, checking and publishing of the offered applications. | [0188](dev/adr/0188-hack-store-and-app-catalog.md) | [AppMarketPlace #1](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/1) |

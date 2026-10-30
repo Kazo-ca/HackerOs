@@ -95,10 +95,13 @@ débogage (« les deux selon le profil ») ; Visual Studio par les modèles
 
 ## Tâches
 
-- [ ] Corriger `building-on-hackeros.md` (fr et en) : paquets et modèles sur nuget.org.
-- [ ] `ide.host.json` pour les cinq modèles existants.
-- [ ] Mode source externe dans `HackerOs.Apps.targets` (`HackerOsUseSource`, `HackerOsSourceRoot`).
-- [ ] Modèle `hackeros-solution` (sous-module, import de `Versions.props`, profils, CI).
-- [ ] Test des deux profils dans `HackerOs.Templates.E2E.Tests`.
+Mises en œuvre par l'[ADR 0207](0207-solution-template-implementation.md) (chantier `todo/1-hackstore-solution-template`).
+
+
+- [x] Corriger `building-on-hackeros.md` (fr et en) : paquets et modèles sur nuget.org.
+- [x] `ide.host.json` pour les cinq modèles existants.
+- [x] Mode source externe dans `HackerOs.Apps.targets` (`HackerOsUseSource`, `HackerOsSourceRoot`).
+- [x] Modèle `hackeros-solution` (sous-module, import de `Versions.props`, profils, CI).
+- [x] Test des deux profils dans `HackerOs.Templates.E2E.Tests`.
 - [x] Créer le dépôt `Kazo-ca/HackerOs-AppTemplate` (Benoit, 2026-10-28).
-- [ ] Y pousser la sortie de `dotnet new hackeros-solution` et le marquer « Template repository ».
+- [ ] Y pousser la sortie de `dotnet new hackeros-solution` et le marquer « Template repository » (PR en brouillon, voir l'ADR 0207 §11).

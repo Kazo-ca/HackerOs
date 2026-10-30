@@ -1,0 +1,9 @@
+{
+  "$schema": "http://json.schemastore.org/ide.host",
+  "order": 4,
+  "icon": "icon.png",
+  "symbolInfo": [
+    { "id": "appId", "name": { "text": "Application id (reverse-DNS)" }, "isVisible": true },
+    { "id": "publisherId", "name": { "text": "Publisher id" }, "isVisible": true }
+  ]
+}

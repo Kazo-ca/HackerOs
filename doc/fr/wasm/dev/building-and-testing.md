@@ -319,9 +319,10 @@ contrôle sans navigateur.
 tests en échec et signale comme instable un test qui passe au nouvel essai ;
 sans ce paramètre, le script reste strict.
 
-Dans GitHub Actions, les suites Playwright se lancent uniquement via
-**Verify HackerOS browser tests (manual)** (`verify-browser-tests.yml`,
-`workflow_dispatch`). Elles n'appartiennent pas au déploiement Pages.
+Dans GitHub Actions, les suites Playwright se lancent via
+**Verify HackerOS browser tests** (`verify-browser-tests.yml`) : chaque nuit
+sur `main` si `main` a changé, ou à la main (`workflow_dispatch`) ; voir
+[`ci-workflows.md`](ci-workflows.md#tests-navigateur-chaque-nuit). Elles n'appartiennent pas au déploiement Pages.
 Les scénarios conditionnels des hôtes déjà lancés ou de la publication élaguée
 gardent leurs variables d'activation documentées ci-dessous.
 
@@ -465,7 +466,7 @@ dotnet test Tests/HackerOs.UI.E2E.Tests -c Release --no-build --filter "FullyQua
 - **GitHub Actions** : sans exécuteur d'août au 23 octobre 2026, les workflows
   tournent de nouveau depuis le 2026-10-24 et vérifient chaque PR vers `main`
   et `*/base` depuis le 2026-10-25 ([`ci-workflows.md`](ci-workflows.md) ;
-  Playwright dans le workflow manuel `verify-browser-tests.yml`). Un build et
+  Playwright chaque nuit sur `main` dans `verify-browser-tests.yml`). Un build et
   des tests locaux verts restent exigés avant de fusionner.
 - Dans un conteneur cloud, les suites Playwright tournent sur le Chromium de
   `/opt/pw-browsers` ([repli](#chromium-pour-playwright)). État au

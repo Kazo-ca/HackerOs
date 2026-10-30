@@ -1,0 +1,15 @@
+@inherits WindowAppBase
+
+<div class="app-window">
+    <header class="app-header">@Manifest.Name</header>
+    <main class="app-body">
+        <p>Signed in as <strong>@AppContext.UserId</strong>.</p>
+        <button class="app-button" @onclick="Increment">Clicked @_count times</button>
+    </main>
+</div>
+
+@code {
+    private int _count;
+
+    private void Increment() => _count++;
+}
