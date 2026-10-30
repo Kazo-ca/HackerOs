@@ -36,7 +36,10 @@ Chaque ligne est un chantier, avec sa branche et sa PR.
 
 1. **Modèle `hackeros-solution`** : tâches de l'ADR 0176, plus le workflow de
    publication vers le catalogue (ADR 0188 §7). Les apps du catalogue partent
-   de ce modèle.
+   de ce modèle. **Fait** (branche `todo/1-hackstore-solution-template`,
+   [ADR 0207](../adr/0207-solution-template-implementation.md),
+   [`app-repository.md`](../../framework/app-repository.md)) ; le dépôt
+   template est régénéré à la release suivante.
 2. **Ressources `wwwroot/` des apps installées** : les servir (service worker
    ou adresses `blob:`), limite connue de l'ADR 0182. Nécessaire pour toute
    app qui enveloppe un projet JavaScript.

@@ -14,7 +14,7 @@ détaillée dans [`github-pages-deployment.md`](github-pages-deployment.md).
 | **Verify HackerOS WASM** (`deploy-wasm.yml`) | Toute PR qui touche `wasm2/HackerOs/**` (sauf `wasm2/HackerOs/docs/**`) ou ce workflow ; push sur `main` et sur `*/base` ; manuel | Paquets locaux Windowing/Taskbar, restauration, build Release (avertissements en erreurs), scan Razor (pas de `<style>`, `<script>` ni gestionnaire `on*` en ligne), paquets vulnérables, tous les tests sans navigateur, publication de la PWA. |
 | **Verify local Windowing and Taskbar packages** (`window-taskbar-packages.yml`) | PR ou push (`main`, `*/base`) qui touche les projets de fenêtrage, de thème, d'icônes, de barre des tâches ou l'exemple SampleHost | Paquets et symboles produits dans l'ordre des dépendances, exemple restauré **uniquement** depuis ces paquets, compilé et publié. |
 | **Deploy to GitHub Pages** (`deploy-to-pages.yml`) | Push sur `main` (déploie) ; PR qui touche le legacy (`src/**`, `package*.json`, `tsconfig*.json`, `webpack.config.js`), `assemble-pages.ps1` ou ce workflow (construit sans déployer) ; manuel | Build legacy pour `/legacy/`, publication WASM, assemblage du site combiné. Une PR a son propre groupe de concurrence : elle n'annule jamais un déploiement de `main`. |
-| **Verify HackerOS browser tests (manual)** (`verify-browser-tests.yml`) | Manuel seulement (`workflow_dispatch`) | Les six projets Playwright, avec le Chromium installé par Playwright. |
+| **Verify HackerOS browser tests** (`verify-browser-tests.yml`) | Chaque nuit sur `main` (06:17 UTC), **seulement si `main` a changé depuis le dernier commit testé** ; manuel (tourne toujours) | Les six projets Playwright, avec le Chromium installé par Playwright. Un échec la nuit ouvre ou complète une issue ([section dédiée](#tests-navigateur-chaque-nuit)). |
 | **Release HackerOS** (`release.yml`) | Fin réussie de *Verify HackerOS WASM* après un push sur `main` ; manuel (option `republish`) | Publie une version dont le tag `v<version>` n'existe pas encore : paquets `HackerOs.*`, site WASM zippé, envoi sur nuget.org, tag et GitHub Release ([`releases.md`](releases.md), ADR 0173). |
 | **Change list entry** (`changelog-entry.yml`) | Toute PR vers `main` (ouverte, poussée, étiquette ajoutée ou retirée) | Une PR qui touche le produit (`wasm2/HackerOs` hors `Tests/`, `docs/`, `changes/` et fichiers `.md`) ajoute au moins une entrée `wasm2/HackerOs/changes/unreleased/<guid>.json`, sauf avec l'étiquette `no-changelog` ([`change-list.md`](change-list.md), ADR 0186). Le format des entrées est vérifié par `ChangeEntriesTests` dans *Verify HackerOS WASM*. |
 
@@ -62,7 +62,40 @@ mérite d'être stabilisé.
    (`./build/run-test-suite.ps1 -Suite NonBrowser`) après un build Release.
 
 Un build et des tests locaux verts restent exigés avant de fusionner : la
-vérification GitHub ne lance pas les suites Playwright.
+vérification GitHub des PR ne lance pas les suites Playwright (elles tournent la
+nuit sur `main`, voir ci-dessous).
+
+## Tests navigateur chaque nuit
+
+Décision de Benoit (2026-10-30, issue #292) : les six projets Playwright
+tournent **chaque nuit sur `main`**, pas à chaque PR, parce que des tests
+navigateur instables connus
+([`known-test-failures.md`](../memory/known-test-failures.md)) bloqueraient les
+PR. Le workflow `verify-browser-tests.yml` a trois jobs :
+
+1. **`changes`** : un lancement planifié cherche le dernier lancement de ce
+   workflow sur `main` qui a fini ses tests (réussi ou en échec ; un lancement
+   annulé ou hors délai ne compte pas) et compare son commit à celui de `main`.
+   S'ils sont égaux, `main` n'a pas changé : les tests sont sautés et le résumé
+   du job le dit. Un lancement manuel teste toujours.
+2. **`browser-tests`** : build Release, Chromium de Playwright, puis
+   `run-test-suite.ps1 -Suite Browser -RetryFailedTests 1` (un test qui passe
+   au second essai est signalé « Flaky test », voir plus haut). L'artefact
+   `hackeros-browser-tests-<essai>` garde les `.trx` et les traces 14 jours.
+3. **`report`** (seulement sur `main`) : un échec ouvre l'issue « Les tests
+   navigateur de la nuit échouent sur main », ou y ajoute un commentaire si
+   elle est déjà ouverte (lien du lancement et commit). Le premier lancement
+   vert suivant la ferme avec un commentaire.
+
+Un échec reste donc visible trois fois : le statut rouge du workflow,
+l'issue ouverte (avec sa notification) et le commit de `main` concerné. Si
+`main` ne bouge pas après un échec, la nuit suivante ne relance pas les tests :
+l'issue reste ouverte jusqu'au prochain commit testé vert. Pour retester sans
+commit, lancer le workflow à la main sur `main` (Actions ▸ Verify HackerOS
+browser tests ▸ Run workflow).
+
+GitHub ne lance un `schedule` que depuis la branche par défaut : le
+déclencheur nocturne compte à partir de son arrivée dans `main`.
 
 ## Versions des actions
 
