@@ -1,6 +1,8 @@
 using HackerOs.App.Abstractions;
 using HackerOs.Platform.Core.Processes;
+using HackerOs.Platform.Core.Sounds;
 using HackerOs.Simulation.Abstractions.FileSystem;
+using HackerOs.Simulation.Abstractions.Sounds;
 
 namespace HackerOs.Platform.Core.FileSystem;
 
@@ -82,6 +84,11 @@ public sealed class FileSystemSeeder(
         await EnsureDirectoryAsync("/etc/hackweb", 0x01ED, system, cancellationToken);
         await EnsureDirectoryAsync("/etc/hackweb/sites", 0x01ED, system, cancellationToken);
 
+        // ADR 0204: the built-in sound themes, freedesktop.org layout (/usr/share/sounds/<id>/).
+        await EnsureDirectoryAsync("/usr", 0x01ED, system, cancellationToken);
+        await EnsureDirectoryAsync("/usr/share", 0x01ED, system, cancellationToken);
+        await SeedSoundThemesAsync(system, cancellationToken);
+
         string home = $"/home/{userName.Value}";
         await EnsureDirectoryAsync(home, 0x01C0, userProvisioning, cancellationToken);
         await EnsureDirectoryAsync($"{home}/Desktop", 0x01C0, userProvisioning, cancellationToken);
@@ -94,6 +101,39 @@ public sealed class FileSystemSeeder(
         await EnsureDirectoryAsync($"{home}/.local", 0x01ED, userProvisioning, cancellationToken);
         await EnsureDirectoryAsync($"{home}/.local/state", 0x01ED, userProvisioning, cancellationToken);
         await EnsureDirectoryAsync($"{home}/.local/state/hackeros", 0x01ED, userProvisioning, cancellationToken);
+        // ADR 0204: the user's own sound themes, one folder per theme.
+        await EnsureDirectoryAsync($"{home}/.local/share", 0x01ED, userProvisioning, cancellationToken);
+        await EnsureDirectoryAsync(
+            OsSoundEvents.GetUserThemesDirectory(home), 0x01ED, userProvisioning, cancellationToken);
+    }
+
+    /// <summary>
+    /// Installs every built-in sound theme (ADR 0204 section 4): <c>index.theme</c> and one
+    /// <c>stereo/&lt;sound-name&gt;.oga</c> per event, root-owned 0644. Existing files are kept.
+    /// </summary>
+    private async ValueTask SeedSoundThemesAsync(FileSystemAuthorizationContext system, CancellationToken cancellationToken)
+    {
+        await EnsureDirectoryAsync(OsSoundEvents.SystemThemesDirectory, 0x01ED, system, cancellationToken);
+        foreach (BuiltInSoundTheme theme in BuiltInSoundThemes.All)
+        {
+            string directory = BuiltInSoundThemes.GetDirectory(theme.Id);
+            await EnsureDirectoryAsync(directory, 0x01ED, system, cancellationToken);
+            await EnsureDirectoryAsync(directory + "/stereo", 0x01ED, system, cancellationToken);
+            await EnsureFileAsync(
+                $"{directory}/{OsSoundEvents.IndexFileName}", BuiltInSoundThemes.GetIndexContent(theme), 0x01A4, system, cancellationToken);
+            foreach (OsSoundEvent soundEvent in OsSoundEvents.All)
+            {
+                if (BuiltInSoundThemes.ReadSound(theme.Id, soundEvent) is { } audio)
+                {
+                    await EnsureFileAsync(
+                        BuiltInSoundThemes.GetSoundPath(theme.Id, soundEvent),
+                        new SeedBytesSource(audio, "audio/ogg"),
+                        0x01A4,
+                        system,
+                        cancellationToken);
+                }
+            }
+        }
     }
 
     /// <summary>
@@ -181,9 +221,21 @@ public sealed class FileSystemSeeder(
     /// Creates a file with <paramref name="content"/> when nothing exists at <paramref name="pathValue"/>.
     /// An existing file is never touched: an administrator's edits survive every login.
     /// </summary>
-    private async ValueTask EnsureFileAsync(
+    private ValueTask EnsureFileAsync(
         string pathValue,
         string content,
+        ushort mode,
+        FileSystemAuthorizationContext context,
+        CancellationToken cancellationToken) =>
+        EnsureFileAsync(pathValue, new SeedTextSource(content), mode, context, cancellationToken);
+
+    /// <summary>
+    /// Creates a file with the bytes of <paramref name="content"/> when nothing exists at
+    /// <paramref name="pathValue"/>; an existing file is never touched.
+    /// </summary>
+    private async ValueTask EnsureFileAsync(
+        string pathValue,
+        IFileSystemContentSource content,
         ushort mode,
         FileSystemAuthorizationContext context,
         CancellationToken cancellationToken)
@@ -219,7 +271,7 @@ public sealed class FileSystemSeeder(
 
         FileSystemMutationResult written = await _fileSystem.WriteAsync(
             new FileSystemWriteRequest(path),
-            new SeedTextSource(content),
+            content,
             context,
             cancellationToken);
         if (!written.Succeeded)
@@ -257,6 +309,20 @@ public sealed class FileSystemSeeder(
         {
             cancellationToken.ThrowIfCancellationRequested();
             return ValueTask.FromResult<Stream>(new MemoryStream(_bytes, writable: false));
+        }
+    }
+
+    /// <summary>Binary content of one seeded file, such as a built-in sound.</summary>
+    private sealed class SeedBytesSource(byte[] bytes, string mediaType) : IFileSystemContentSource
+    {
+        public FileSystemContentDescriptor Descriptor { get; } = FileSystemContentDescriptor.Binary(mediaType);
+
+        public long? Length => bytes.LongLength;
+
+        public ValueTask<Stream> OpenReadAsync(CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return ValueTask.FromResult<Stream>(new MemoryStream(bytes, writable: false));
         }
     }
 

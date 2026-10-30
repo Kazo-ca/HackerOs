@@ -26,7 +26,9 @@ public static class OsSettingsDocumentRegistry
         // ADR 0179 §7: Settings > Screens chooses primary-taskbar and forgets remembered screen places.
         [ScreensSettingsDocuments.Document.DocumentId] = ScreensSettingsDocuments.Document,
         // ADR 0193 §2: Settings > Date and time chooses the user's time zone.
-        [Globalization.TimeZoneSettingsDocuments.Document.DocumentId] = Globalization.TimeZoneSettingsDocuments.Document
+        [Globalization.TimeZoneSettingsDocuments.Document.DocumentId] = Globalization.TimeZoneSettingsDocuments.Document,
+        // ADR 0204 §3: Settings > Sound turns the event sounds on or off, picks the theme and the volume.
+        [Sounds.SoundSettingsDocuments.Document.DocumentId] = Sounds.SoundSettingsDocuments.Document
     };
 
     /// <summary>Gets every listed document id.</summary>

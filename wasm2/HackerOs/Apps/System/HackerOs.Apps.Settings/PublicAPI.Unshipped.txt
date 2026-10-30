@@ -8,3 +8,6 @@ HackerOs.Apps.Settings.WhatsNewPanel.WhatsNewPanel() -> void
 HackerOs.Apps.Settings.DateTimePanel
 HackerOs.Apps.Settings.DateTimePanel.DateTimePanel() -> void
 HackerOs.Apps.Settings.DateTimePanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Apps.Settings.SoundPanel
+HackerOs.Apps.Settings.SoundPanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Apps.Settings.SoundPanel.SoundPanel() -> void
