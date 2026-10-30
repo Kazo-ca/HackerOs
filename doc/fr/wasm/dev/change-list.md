@@ -117,8 +117,10 @@ Ce que voit l'utilisateur (ADR 0186 §4.4 et §4.5) :
   reste des entrées non vues : « 3 nouveautés depuis votre dernière visite », bouton **Voir** qui
   ouvre la page. Elle est dans le panneau de l'horloge. Le bouton d'une notification peut
   maintenant passer des arguments à l'app : `NotificationAction.LaunchApp(appId, label, arguments)`.
-- **Pastille** sur le bouton Démarrer (bureau) et sur le bouton Accueil (mobile) tant qu'il reste
-  des entrées non vues ; leur nom accessible le dit aussi.
+- **Point des notifications non lues** à côté de l'horloge (bureau) et sur la poignée du volet de
+  notifications (mobile), avec le nombre dans l'infobulle ; ouvrir le panneau les marque lues
+  ([ADR 0196](adr/0196-unread-notifications-dot.md), qui remplace la pastille du bouton Démarrer).
+  Quand toutes les entrées sont vues, la notification des nouveautés se ferme seule.
 
 ## À la sortie d'une version
 

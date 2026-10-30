@@ -140,3 +140,5 @@ HackerOs.Platform.Blazor.Shell.DesktopShell.OnRestart.get -> Microsoft.AspNetCor
 HackerOs.Platform.Blazor.Shell.DesktopShell.OnRestart.set -> void
 HackerOs.Platform.Blazor.Shell.LogoutDialog.Restart.get -> bool
 HackerOs.Platform.Blazor.Shell.LogoutDialog.Restart.set -> void
+HackerOs.Platform.Blazor.Shell.TaskbarClockPanelSourceAdapter.UnreadCount.get -> int
+HackerOs.Platform.Blazor.Shell.TaskbarClockPanelSourceAdapter.SetUnreadCount(int value) -> void

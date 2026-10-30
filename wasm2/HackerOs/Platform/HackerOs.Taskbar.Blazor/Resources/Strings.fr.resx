@@ -15,6 +15,12 @@
   <data name="Taskbar.Clock" xml:space="preserve">
     <value>Horloge système, notifications et calendrier</value>
   </data>
+  <data name="Taskbar.ClockWithOneUnread" xml:space="preserve">
+    <value>Horloge système, notifications et calendrier : 1 notification non lue</value>
+  </data>
+  <data name="Taskbar.ClockWithUnread" xml:space="preserve">
+    <value>Horloge système, notifications et calendrier : {0} notifications non lues</value>
+  </data>
   <data name="Taskbar.Item.Background" xml:space="preserve">
     <value>{0} (en arrière-plan)</value>
   </data>

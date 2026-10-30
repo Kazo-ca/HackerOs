@@ -92,6 +92,8 @@ This section lists what is released in the `main` branch and online.
   ([`taskbar-context-menus.md`](dev/taskbar-context-menus.md))
   The Start menu shows the signed-in user and their Power button: sign out or
   restart. ([ADR 0195](dev/adr/0195-start-menu-power-button.md))
+  A dot next to the clock shows unread notifications, with their count on
+  hover. ([ADR 0196](dev/adr/0196-unread-notifications-dot.md))
 - **Multiple screens**: each extra screen opens in its own browser window,
   with its own taskbar, and the OS remembers them. Windows can be dragged from
   one screen to another. ([`screen-service.md`](dev/screen-service.md),
@@ -201,8 +203,8 @@ This section lists what is released in the `main` branch and online.
 - **New version announcements**: an open session learns that a new version is
   available. ([ADR 0174](dev/adr/0174-announce-a-new-version-to-open-sessions.md))
 - **What's new since your last visit**: the Settings ▸ What's new page lists the
-  changes by version with a **New** badge; a notification after sign-in and a dot
-  on the Start menu point out what has not been seen. The same list writes the
+  changes by version with a **New** badge; a notification after sign-in points out
+  what has not been seen. The same list writes the
   notes of the GitHub Release, of the NuGet packages and
   [`CHANGELOG.md`](../../../CHANGELOG.md).
   ([`change-list.md`](dev/change-list.md), [ADR 0186](dev/adr/0186-whats-new-change-list.md))

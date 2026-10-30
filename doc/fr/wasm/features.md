@@ -96,6 +96,8 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   les fenêtres en cascade ou en mosaïque. ([`taskbar-context-menus.md`](dev/taskbar-context-menus.md))
   Le menu Démarrer montre l'utilisateur connecté et son bouton Marche/arrêt :
   se déconnecter ou redémarrer. ([ADR 0195](dev/adr/0195-start-menu-power-button.md))
+  Un point à côté de l'horloge signale les notifications non lues, avec leur
+  nombre au survol. ([ADR 0196](dev/adr/0196-unread-notifications-dot.md))
 - **Plusieurs écrans** : chaque écran supplémentaire s'ouvre dans sa propre
   fenêtre du navigateur, avec sa barre des tâches, et l'OS s'en souvient. On
   glisse une fenêtre d'un écran à l'autre. ([`screen-service.md`](dev/screen-service.md),
@@ -207,7 +209,7 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   nouvelle version est disponible. ([ADR 0174](dev/adr/0174-announce-a-new-version-to-open-sessions.md))
 - **Nouveautés depuis la dernière visite** : la page Paramètres ▸ Nouveautés liste
   les changements par version avec un badge **Nouveau** ; une notification après la
-  connexion et une pastille sur le menu Démarrer signalent ce qui n'a pas été vu.
+  connexion signale ce qui n'a pas été vu.
   La même liste écrit les notes de la GitHub Release, des paquets NuGet et
   [`CHANGELOG-fr.md`](../../../CHANGELOG-fr.md).
   ([`change-list.md`](dev/change-list.md), [ADR 0186](dev/adr/0186-whats-new-change-list.md))

@@ -6,3 +6,4 @@ HackerOs.Taskbar.Blazor.ITaskbarContextMenus.WindowItemAttributes(HackerOs.Windo
 HackerOs.Taskbar.Blazor.Taskbar.ContextMenus.get -> HackerOs.Taskbar.Blazor.ITaskbarContextMenus?
 HackerOs.Taskbar.Blazor.Taskbar.ContextMenus.set -> void
 HackerOs.Taskbar.Blazor.ITaskbarStatusSource.TimeZone.get -> System.TimeZoneInfo!
+HackerOs.Taskbar.Blazor.ITaskbarClockPanelSource.UnreadCount.get -> int

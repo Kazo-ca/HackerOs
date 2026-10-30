@@ -206,6 +206,23 @@ public sealed class WhatsNewServiceTests
     }
 
     [Fact]
+    public async Task Seeing_every_change_dismisses_the_sign_in_notification_and_seeing_some_keeps_it()
+    {
+        InMemoryNotificationQueue queue = new(maxEntriesPerUser: 10);
+        AuthenticatedPrincipal alice = Principal("alice");
+        FakeSettings settings = new();
+        settings.Files["whats-new.json"] = WhatsNewService.SerializeState([Older, Oldest]);
+        WhatsNewService service = new(new FakeSource(Document), settings, notifications: queue, currentUser: () => alice);
+        Assert.True(await service.NotifyNewChangesAsync());
+
+        await service.MarkSeenAsync([Next]);
+        Assert.Single(queue.GetActive(alice.UserId, DateTimeOffset.UtcNow));
+
+        await service.MarkSeenAsync([Latest]);
+        Assert.Empty(queue.GetActive(alice.UserId, DateTimeOffset.UtcNow));
+    }
+
+    [Fact]
     public async Task The_sign_in_notification_speaks_the_session_language()
     {
         InMemoryNotificationQueue queue = new(maxEntriesPerUser: 10);

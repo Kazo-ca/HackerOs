@@ -197,8 +197,23 @@ public sealed class TaskbarClockPanelSourceAdapter : ITaskbarClockPanelSource
     /// <inheritdoc />
     public void Toggle() => SetOpen(!IsOpen);
 
+    /// <inheritdoc />
+    public int UnreadCount { get; private set; }
+
     /// <summary>Closes the clock panel.</summary>
     public void Close() => SetOpen(false);
+
+    /// <summary>Sets the number of unread notifications the clock's dot stands for (ADR 0196).</summary>
+    /// <param name="value">The count; 0 hides the dot.</param>
+    public void SetUnreadCount(int value)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegative(value);
+        if (UnreadCount != value)
+        {
+            UnreadCount = value;
+            Changed?.Invoke();
+        }
+    }
 
     private void SetOpen(bool value)
     {
