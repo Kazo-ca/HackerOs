@@ -179,26 +179,61 @@ public interface IAppManagementGateway
         throw new NotSupportedException("This app-management gateway cannot install packages.");
 
     /// <summary>
-    /// Installs or updates an app from its repository for every user (ADR 0182 §5), after an
-    /// administrator authenticated. The app appears at the next start of the OS.
+    /// Installs or updates an app from its repository (ADR 0182 §5, ADR 0189): for the session
+    /// user without an administrator from a trusted source, otherwise for the system after an
+    /// administrator's two-step approval. The app appears at the next start of the OS.
     /// </summary>
     /// <param name="source">The repository, optionally followed by <c>@version</c>.</param>
-    /// <param name="allowUntrusted">Accepts an owner missing from <c>[trusted]</c>.</param>
-    /// <param name="cancellationToken">Cancels the download, the authentication and the writes.</param>
+    /// <param name="scope">For whom; <see cref="HackPackageScope.Auto"/> picks the personal install when allowed.</param>
+    /// <param name="cancellationToken">Cancels the download, the approval and the writes.</param>
     /// <exception cref="NotSupportedException">The gateway predates ADR 0182.</exception>
     ValueTask<HackPackageInstallReport> InstallPackageAsync(
-        string source, bool allowUntrusted = false, CancellationToken cancellationToken = default) =>
+        string source, HackPackageScope scope = HackPackageScope.Auto, CancellationToken cancellationToken = default) =>
         throw new NotSupportedException("This app-management gateway cannot install packages.");
 
     /// <summary>
-    /// Removes an app installed from a package, for every user, after an administrator
-    /// authenticated. Its users' settings stay; it leaves the catalog at the next start of the OS.
+    /// Removes an app installed from a package: the session user's own copy without an
+    /// administrator, a system one after the two-step approval. Settings stay; it leaves the
+    /// catalog at the next start of the OS.
     /// </summary>
     /// <param name="appId">The installed app.</param>
-    /// <param name="cancellationToken">Cancels the authentication and the writes.</param>
+    /// <param name="scope">Which copy; <see cref="HackPackageScope.Auto"/> takes the user's own, else the system's.</param>
+    /// <param name="cancellationToken">Cancels the approval and the writes.</param>
     /// <exception cref="NotSupportedException">The gateway predates ADR 0182.</exception>
-    ValueTask<HackInstalledPackage> RemovePackageAsync(string appId, CancellationToken cancellationToken = default) =>
+    ValueTask<HackInstalledPackage> RemovePackageAsync(
+        string appId, HackPackageScope scope = HackPackageScope.Auto, CancellationToken cancellationToken = default) =>
         throw new NotSupportedException("This app-management gateway cannot install packages.");
+
+    /// <summary>Adds a catalog or a GitHub source to <c>app-sources.config</c>, after an administrator authenticated (ADR 0189 §1).</summary>
+    /// <param name="source"><c>name=https://…/catalog.json</c>, <c>github:owner</c> or <c>github:owner/repo</c>.</param>
+    /// <param name="trusted">Whether its apps install for one user without an administrator.</param>
+    /// <param name="cancellationToken">Cancels the authentication and the write.</param>
+    /// <exception cref="NotSupportedException">The gateway predates ADR 0189.</exception>
+    ValueTask<HackPackageSources> AddPackageSourceAsync(string source, bool trusted, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This app-management gateway cannot change the app sources.");
+
+    /// <summary>Removes a source from <c>app-sources.config</c>, after an administrator authenticated.</summary>
+    /// <param name="source">A catalog name (<c>catalog:name</c>) or a GitHub owner or repository.</param>
+    /// <param name="cancellationToken">Cancels the authentication and the write.</param>
+    /// <exception cref="NotSupportedException">The gateway predates ADR 0189.</exception>
+    ValueTask<HackPackageSources> RemovePackageSourceAsync(string source, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This app-management gateway cannot change the app sources.");
+
+    /// <summary>Reads the administrator's block list, <c>/etc/hackeros/app-policy.config</c> (ADR 0189 §5).</summary>
+    /// <param name="cancellationToken">Cancels the read.</param>
+    /// <exception cref="NotSupportedException">The gateway predates ADR 0189.</exception>
+    ValueTask<HackPackagePolicy> GetPackagePolicyAsync(CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This app-management gateway has no app block list.");
+
+    /// <summary>Blocks or unblocks an app, a category or a capability, after an administrator authenticated.</summary>
+    /// <param name="kind">Kind of rule.</param>
+    /// <param name="value">App ID, category or capability.</param>
+    /// <param name="blocked"><see langword="true"/> to block, <see langword="false"/> to unblock.</param>
+    /// <param name="cancellationToken">Cancels the authentication and the write.</param>
+    /// <exception cref="NotSupportedException">The gateway predates ADR 0189.</exception>
+    ValueTask<HackPackagePolicy> SetPackagePolicyAsync(
+        HackPackageBlockKind kind, string value, bool blocked, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This app-management gateway has no app block list.");
 }
 
 /// <summary>One running process of an app, as an uninstall lists it (ADR 0097, section 5).</summary>

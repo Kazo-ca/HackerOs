@@ -8,3 +8,7 @@ HackerOs.Apps.Settings.WhatsNewPanel.WhatsNewPanel() -> void
 HackerOs.Apps.Settings.DateTimePanel
 HackerOs.Apps.Settings.DateTimePanel.DateTimePanel() -> void
 HackerOs.Apps.Settings.DateTimePanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Apps.Settings.AppSourcesPanel
+HackerOs.Apps.Settings.AppSourcesPanel.AppSourcesPanel() -> void
+override HackerOs.Apps.Settings.AppSourcesPanel.OnInitializedAsync() -> System.Threading.Tasks.Task!
+~override HackerOs.Apps.Settings.AppSourcesPanel.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

@@ -38,7 +38,7 @@ public sealed class HackpkgApp : AppDefinition
     /// <inheritdoc />
     public override TerminalCommand? Terminal => new(
         "hackpkg",
-        "hackpkg install <repo>[@version] [--allow-untrusted] | remove <appId> | update [<appId>] | list | info <repo> | sources");
+        "hackpkg install <repo>[@version] [--user|--system] | remove <appId> [--user|--system] | update [<appId>] | list | info <repo> | sources [add|remove <source>] | policy");
 
     /// <inheritdoc />
     public override AppResourceProfileManifest Resources => new(

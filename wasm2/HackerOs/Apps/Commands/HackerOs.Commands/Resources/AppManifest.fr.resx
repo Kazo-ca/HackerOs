@@ -172,7 +172,7 @@
     <value>Installe, met à jour et retire des apps depuis leur dépôt GitHub</value>
   </data>
   <data name="org.hackeros.commands.hackpkg.Terminal.Usage" xml:space="preserve">
-    <value>hackpkg install &lt;dépôt&gt;[@version] [--allow-untrusted] | remove &lt;appId&gt; | update [&lt;appId&gt;] | list | info &lt;dépôt&gt; | sources</value>
+    <value>hackpkg install &lt;dépôt&gt;[@version] [--user|--system] | remove &lt;appId&gt; [--user|--system] | update [&lt;appId&gt;] | list | info &lt;dépôt&gt; | sources [add|remove &lt;source&gt;] | policy</value>
   </data>
   <data name="org.hackeros.commands.head.Description" xml:space="preserve">
     <value>Affiche le début des fichiers</value>

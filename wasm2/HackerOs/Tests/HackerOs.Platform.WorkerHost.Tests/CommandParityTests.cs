@@ -27,7 +27,7 @@ public sealed class CommandParityTests
         new("df", ["df", "df -h -T"]),
         new("localectl", ["localectl", "localectl list-locales", "localectl set-locale LANG=xx_YY.UTF-8", "localectl set-locale LANG=fr_FR.UTF-8", "localectl bogus"]),
         new("hackbackup", ["hackbackup", "hackbackup create", "hackbackup restore --bogus"]),
-        new("hackpkg", ["hackpkg", "hackpkg bogus", "hackpkg install --bogus", "hackpkg list --allow-untrusted"]),
+        new("hackpkg", ["hackpkg", "hackpkg bogus", "hackpkg install --bogus", "hackpkg list --user"]),
         new("diff", ["diff notes.txt notes.txt", "diff -u notes.txt numbers.txt"]),
         new("date", ["date -u +%Y", "date --bogus", "date 1200"]),
         new("dmesg", ["dmesg -l emerg", "dmesg -l nosuch", "dmesg --bogus"]),

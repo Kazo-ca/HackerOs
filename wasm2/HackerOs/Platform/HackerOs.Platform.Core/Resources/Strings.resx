@@ -699,4 +699,13 @@ Cancel: decide at the next launch.</value>
   <data name="WhatsNew.Notification.View" xml:space="preserve">
     <value>View</value>
   </data>
+  <data name="Admin.App.InstallUntrustedPackageForUser" xml:space="preserve">
+    <value>Install {0} {1} from {2}, an untrusted source, for {3} only: its code will run with the same rights as the OS</value>
+  </data>
+  <data name="Admin.App.EditAppSources" xml:space="preserve">
+    <value>Change the app sources: {0}</value>
+  </data>
+  <data name="Admin.App.EditAppPolicy" xml:space="preserve">
+    <value>Change the app block list: {0}</value>
+  </data>
 </root>

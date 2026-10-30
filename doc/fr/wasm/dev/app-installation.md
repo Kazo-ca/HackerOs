@@ -243,22 +243,63 @@ origine d'app, à côté des apps système et des apps intégrées : un paquet
 `hackeros-packages`, lu par `raw.githubusercontent.com`.
 
 ```text
-hackpkg install Kazo-ca/HackerOs-App-Webamp      # dernière version
-hackpkg install Kazo-ca/HackerOs-App-Webamp@1.0.0
-hackpkg update                                   # toutes les apps installées
-hackpkg list | info <dépôt> | sources | remove <appId>
+hackpkg install Kazo-ca/HackerOs-App-Webamp            # pour soi si la source est de confiance
+hackpkg install Kazo-ca/HackerOs-App-Webamp@1.0.0 --system   # pour tous, validation admin
+hackpkg update                                         # toutes les apps installées
+hackpkg list | info <dépôt> | remove <appId> [--user|--system]
+hackpkg sources [add <source> [--trusted] | remove <source>]
+hackpkg policy [block|unblock app|category|capability <valeur>]
 ```
 
-- **Sources de confiance** : `/etc/hackeros/app-sources.config` (créé au
-  démarrage, mode 0644) ; seul `github.com/Kazo-ca` est dans `[trusted]` par
-  défaut. Un autre propriétaire demande `--allow-untrusted`, puis une
-  approbation administrateur dédiée.
+L'ADR [0189](adr/0189-app-sources-trust-and-per-user-install.md) (mise en
+œuvre décrite par l'ADR [0208](adr/0208-hack-store-sources-trust-build.md))
+ajoute les sources de confiance, l'installation pour soi, la liste noire et la
+validation en deux étapes :
+
+- **Sources** : `/etc/hackeros/app-sources.config` (créé au démarrage, mode
+  0644) a quatre sections. `[hosts]` donne l'hôte de téléchargement ;
+  `[catalogs]` les catalogues (`official=https://…/catalog.json`) ;
+  `[trusted]` les sources (`catalog:<nom>`, `github.com/<owner>` ou
+  `github.com/<owner>/<repo>`) mises à `true` (de confiance) ou `false`
+  (ajoutée mais non fiable) ; `[updates]` l'intervalle `interval-hours`
+  (1 à 720, 6 par défaut). Les valeurs par défaut sont fixées à la compilation
+  de l'hôte (catalogue officiel, `catalog:official` et `github.com/Kazo-ca` de
+  confiance) par les propriétés MSBuild `HackerOsAppCatalogs`,
+  `HackerOsTrustedAppSources` et `HackerOsAppUpdateIntervalHours`. Un
+  administrateur ajoute une source sans redéployer, par `hackpkg sources add`,
+  Paramètres ▸ Apps ▸ Sources et liste noire, ou `sudo nano`.
+- **Niveaux de confiance** : *vérifiée* pour le catalogue officiel, *de
+  confiance* pour une source intégrée ou marquée `true`, *non fiable* sinon.
+- **Liste noire** : `/etc/hackeros/app-policy.config` (créé au démarrage) a
+  `[blocked-apps]`, `[blocked-categories]` et `[blocked-capabilities]`, avec des
+  défauts fixés à la compilation (`HackerOsBlockedApps`,
+  `HackerOsBlockedAppCategories`, `HackerOsBlockedAppCapabilities`). Une app
+  bloquée ne s'installe pas pour soi : seulement pour tous, après validation.
+- **Installation pour soi** : sans `--system`, une app d'une source de
+  confiance, non bloquée et pas déjà installée pour le système s'installe dans
+  `~/.local/share/hackeros/apps/<appId>/<version>/` avec une ligne dans
+  `[installed]` de `~/.config/hackeros/installed-apps.config`, sans
+  administrateur. Une seule copie à la fois : une installation pour tous retire
+  les copies personnelles, et une copie personnelle d'une app déjà installée
+  pour le système est refusée.
+- **Validation en deux étapes** : une installation pour tous, une source non
+  fiable (même pour soi) et une désinstallation pour tous demandent, à chaque
+  fois et même sous `sudo`, une connexion administrateur fraîche puis la
+  fenêtre qui montre l'app, sa version, sa taille, sa source, son niveau de
+  confiance et ses capacités (`AppInstallApprovalOverlay`). La même fenêtre sert
+  au Store et à `hackpkg`. `--allow-untrusted` n'existe plus. Modifier les
+  sources ou la liste noire demande une seule authentification administrateur.
+- **Catalogue** : il est construit au démarrage de la page, avec les apps
+  personnelles de tous les utilisateurs ; chaque session ne voit que les
+  siennes (`InstalledPackageCatalog`). Si deux utilisateurs ont des versions
+  différentes de la même app, la plus récente est chargée pour les deux.
 - **Vérifications avant la demande d'administrateur** : SHA-256 du paquet
   (`index.json`) et de chaque fichier, identifiant, `sdkCompatibility`, API
   présentes dans l'OS, app sur le fil principal.
-- **Écriture** : `/usr/lib/hackeros/apps/<appId>/<version>/` et une ligne
+- **Écriture pour tous** : `/usr/lib/hackeros/apps/<appId>/<version>/` et une ligne
   `<appId>=github:owner/repo@version` dans `[installed]` de
-  `/etc/hackeros/apps.config`. Le dossier de la version précédente est retiré.
+  `/etc/hackeros/apps.config`. Le dossier de la version précédente est retiré ;
+  `hackpkg update` garde chaque copie là où elle est.
 - **Redémarrage** : le catalogue est construit au démarrage (Q5) ; l'app
   apparaît après un redémarrage de HackerOS. `hackpkg list` affiche
   `(restart pending)` d'ici là.
@@ -271,9 +312,11 @@ hackpkg list | info <dépôt> | sources | remove <appId>
   0182 (ressources `wwwroot` non servies, fil principal seulement, dépendances
   NuGet tierces non transportées).
 
-Tests : `AppPackageGatewayTests`, `AppPackageWriterTests`, `AppPackageTests`
-(Platform.Core), `HackpkgCommandTests` (Commands.Wave5) et le scénario
-`hackpkg` de `CommandParityTests`.
+Tests : `AppPackageGatewayTests`, `AppSourcesAndPolicyTests`,
+`InstalledAppsImageTests`, `AppPackageWriterTests`, `AppPackageTests`
+(Platform.Core), `AppInstallApprovalOverlayTests` (Platform.Blazor),
+`HackpkgCommandTests` (Commands.Wave5) et le scénario `hackpkg` de
+`CommandParityTests`.
 
 ## Tâches
 

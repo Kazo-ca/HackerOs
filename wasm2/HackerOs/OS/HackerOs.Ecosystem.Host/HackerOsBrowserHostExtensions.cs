@@ -83,6 +83,8 @@ public static partial class HackerOsBrowserHostExtensions
         // (Program.cs calls LoadInstalledAppsAsync); everything below reads the final catalog.
         InstalledAppsBoot installedApps = new(apps);
         builder.Services.AddSingleton(installedApps);
+        // ADR 0189 §3: the same registry the boot fills, so each session hides the others' personal apps.
+        builder.Services.AddSingleton(installedApps.Packages);
         builder.Services.AddSingleton<WebAssemblyLazyAssemblyTransport>();
         builder.Services.AddSingleton<IBuildKnownAssemblyTransport>(provider => new InstalledAppAssemblyTransport(
             provider.GetRequiredService<WebAssemblyLazyAssemblyTransport>(), installedApps));

@@ -39,6 +39,12 @@ public sealed class InstalledAppsBoot
     /// <summary>Gets the lines to write to <c>/var/log/syslog</c> about installed apps left out.</summary>
     public IReadOnlyList<string> Warnings { get; private set; } = [];
 
+    /// <summary>
+    /// Gets the installed apps the catalog accepted, with who sees each one (ADR 0189 §3): filled by
+    /// <see cref="Apply"/>, shared with every session of the page.
+    /// </summary>
+    public InstalledPackageCatalog Packages { get; } = new();
+
     /// <summary>Gets whether the installed apps were read (the catalog can no longer change).</summary>
     public bool IsLoaded { get; private set; }
 
@@ -56,6 +62,7 @@ public sealed class InstalledAppsBoot
 
         Current = BuiltIn.WithInstalledApps(image, out IReadOnlyList<string> warnings);
         Warnings = [.. image.Warnings, .. warnings];
+        Packages.Apply(Current.Installed);
         _read = read;
         IsLoaded = true;
     }
@@ -137,7 +144,8 @@ public sealed class InstalledAppAssetSource(IAppAssetSource inner, InstalledApps
 public static class InstalledAppsBootExtensions
 {
     /// <summary>
-    /// Reads <c>[installed]</c> of <c>/etc/hackeros/apps.config</c> and each app's manifest straight
+    /// Reads <c>[installed]</c> of <c>/etc/hackeros/apps.config</c>, of every user's
+    /// <c>~/.config/hackeros/installed-apps.config</c> (ADR 0189 §3) and each app's manifest straight
     /// from IndexedDB, then joins those apps to the catalog. Call between <c>Build()</c> and
     /// <c>RunAsync()</c>; any failure leaves the built-in apps only.
     /// </summary>
@@ -154,11 +162,12 @@ public static class InstalledAppsBootExtensions
 
         // The scope lives as long as the page: its provider serves the installed files afterwards.
         IServiceScope scope = host.Services.CreateScope();
-        InstalledAppFileReader read = InstalledAppsLayout.CreateReader(scope.ServiceProvider.GetRequiredService<IndexedDbFileSystemProvider>());
+        IndexedDbFileSystemProvider provider = scope.ServiceProvider.GetRequiredService<IndexedDbFileSystemProvider>();
+        InstalledAppFileReader read = InstalledAppsLayout.CreateReader(provider);
         InstalledAppsImage image;
         try
         {
-            image = await InstalledAppsImage.LoadAsync(read).ConfigureAwait(true);
+            image = await InstalledAppsImage.LoadAsync(read, InstalledAppsLayout.CreateHomeLister(provider)).ConfigureAwait(true);
         }
         catch (Exception exception)
         {

@@ -41,6 +41,7 @@ public partial class SettingsWindow
         new("capabilities", "Nav.Group.Applications", "Tab.CapabilityGrants", Icons.Material.Filled.Security),
         new("permissions", "Nav.Group.Applications", "Tab.Permissions", Icons.Material.Filled.AdminPanelSettings),
         new("installed-apps", "Nav.Group.Applications", "Tab.InstalledApps", Icons.Material.Filled.Apps),
+        new("app-sources", "Nav.Group.Applications", "Tab.AppSources", Icons.Material.Filled.Storefront),
         new("os-components", "Nav.Group.Applications", "Tab.OsComponents", Icons.Material.Filled.Widgets),
         new("file-menus", "Nav.Group.Applications", "Tab.FileMenus", Icons.Material.Filled.MenuOpen),
         new(ApplicationPageId, "Nav.Group.Applications", "Tab.Application", Icons.Material.Filled.Info),
