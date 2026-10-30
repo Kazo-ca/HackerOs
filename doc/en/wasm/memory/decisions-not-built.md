@@ -61,7 +61,8 @@ Decided on 2026-10-28:
   published host is trimmed, so an app loaded at run time may miss APIs
   (`MissingMethodException`); an app's JavaScript runs on the same origin as
   the OS; an app wrapping JavaScript needs the installed apps' `wwwroot` work
-  item (issue #247).
+  item (issue #247, built by ADR 0206 in the `todo/base` series: files served
+  at `_content/<assembly>/` by the service worker, Web Workers included).
 
 ## Server-hosted apps ("server sandbox")
 

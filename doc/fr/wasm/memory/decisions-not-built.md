@@ -65,7 +65,9 @@ Décidé le 2026-10-28 :
   en ont ; l'hôte publié est trimmé, donc une app chargée à l'exécution peut
   manquer d'API (`MissingMethodException`) ; le JavaScript d'une app tourne
   sur la même origine que l'OS ; une app qui enveloppe du JavaScript a besoin
-  du chantier `wwwroot` des apps installées (issue #247).
+  du chantier `wwwroot` des apps installées (issue #247, fait par l'ADR 0206
+  dans la série `todo/base` : fichiers servis à `_content/<assemblage>/` par le
+  service worker, Web Workers compris).
 
 ## Apps hébergées par le serveur (« bac à sable serveur »)
 

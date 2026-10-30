@@ -1,1 +1,106 @@
 #nullable enable
+HackerOs.Theming.Abstractions.IconPacks.IconPack
+HackerOs.Theming.Abstractions.IconPacks.IconPack.FindApp(string? appId) -> string?
+HackerOs.Theming.Abstractions.IconPacks.IconPack.FindApp(string? appId, string? category) -> string?
+HackerOs.Theming.Abstractions.IconPacks.IconPack.FindCategory(string? category) -> string?
+HackerOs.Theming.Abstractions.IconPacks.IconPack.FindFile(bool isDirectory, string? extension) -> string?
+HackerOs.Theming.Abstractions.IconPacks.IconPack.IconPack(HackerOs.Theming.Abstractions.IconPacks.IconPackInfo! info, System.Collections.Generic.IReadOnlyDictionary<string!, string!>! images) -> void
+HackerOs.Theming.Abstractions.IconPacks.IconPack.Images.get -> System.Collections.Generic.IReadOnlyDictionary<string!, string!>!
+HackerOs.Theming.Abstractions.IconPacks.IconPack.Info.get -> HackerOs.Theming.Abstractions.IconPacks.IconPackInfo!
+HackerOs.Theming.Abstractions.IconPacks.IconPackFileAccess
+HackerOs.Theming.Abstractions.IconPacks.IconPackFileAccess.<Clone>$() -> HackerOs.Theming.Abstractions.IconPacks.IconPackFileAccess!
+HackerOs.Theming.Abstractions.IconPacks.IconPackFileAccess.Deconstruct(out System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<string!>!>!>! ListDirectories, out System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<string!>!>!>! ListFiles, out System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<byte[]!>!>! ReadAllBytes) -> void
+HackerOs.Theming.Abstractions.IconPacks.IconPackFileAccess.Equals(HackerOs.Theming.Abstractions.IconPacks.IconPackFileAccess? other) -> bool
+HackerOs.Theming.Abstractions.IconPacks.IconPackFileAccess.IconPackFileAccess(System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<string!>!>!>! ListDirectories, System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<string!>!>!>! ListFiles, System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<byte[]!>!>! ReadAllBytes) -> void
+HackerOs.Theming.Abstractions.IconPacks.IconPackFileAccess.ListDirectories.get -> System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<string!>!>!>!
+HackerOs.Theming.Abstractions.IconPacks.IconPackFileAccess.ListDirectories.init -> void
+HackerOs.Theming.Abstractions.IconPacks.IconPackFileAccess.ListFiles.get -> System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<string!>!>!>!
+HackerOs.Theming.Abstractions.IconPacks.IconPackFileAccess.ListFiles.init -> void
+HackerOs.Theming.Abstractions.IconPacks.IconPackFileAccess.ReadAllBytes.get -> System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<byte[]!>!>!
+HackerOs.Theming.Abstractions.IconPacks.IconPackFileAccess.ReadAllBytes.init -> void
+HackerOs.Theming.Abstractions.IconPacks.IconPackInfo
+HackerOs.Theming.Abstractions.IconPacks.IconPackInfo.<Clone>$() -> HackerOs.Theming.Abstractions.IconPacks.IconPackInfo!
+HackerOs.Theming.Abstractions.IconPacks.IconPackInfo.Author.get -> string?
+HackerOs.Theming.Abstractions.IconPacks.IconPackInfo.Author.init -> void
+HackerOs.Theming.Abstractions.IconPacks.IconPackInfo.Deconstruct(out string! Id, out string! Name, out string? Author, out string? Version, out string? Description, out string! RootPath, out HackerOs.Theming.Abstractions.IconPacks.IconPackOrigin Origin) -> void
+HackerOs.Theming.Abstractions.IconPacks.IconPackInfo.Description.get -> string?
+HackerOs.Theming.Abstractions.IconPacks.IconPackInfo.Description.init -> void
+HackerOs.Theming.Abstractions.IconPacks.IconPackInfo.Equals(HackerOs.Theming.Abstractions.IconPacks.IconPackInfo? other) -> bool
+HackerOs.Theming.Abstractions.IconPacks.IconPackInfo.IconPackInfo(string! Id, string! Name, string? Author, string? Version, string? Description, string! RootPath, HackerOs.Theming.Abstractions.IconPacks.IconPackOrigin Origin) -> void
+HackerOs.Theming.Abstractions.IconPacks.IconPackInfo.Id.get -> string!
+HackerOs.Theming.Abstractions.IconPacks.IconPackInfo.Id.init -> void
+HackerOs.Theming.Abstractions.IconPacks.IconPackInfo.Name.get -> string!
+HackerOs.Theming.Abstractions.IconPacks.IconPackInfo.Name.init -> void
+HackerOs.Theming.Abstractions.IconPacks.IconPackInfo.Origin.get -> HackerOs.Theming.Abstractions.IconPacks.IconPackOrigin
+HackerOs.Theming.Abstractions.IconPacks.IconPackInfo.Origin.init -> void
+HackerOs.Theming.Abstractions.IconPacks.IconPackInfo.RootPath.get -> string!
+HackerOs.Theming.Abstractions.IconPacks.IconPackInfo.RootPath.init -> void
+HackerOs.Theming.Abstractions.IconPacks.IconPackInfo.Version.get -> string?
+HackerOs.Theming.Abstractions.IconPacks.IconPackInfo.Version.init -> void
+HackerOs.Theming.Abstractions.IconPacks.IconPackLibrary
+HackerOs.Theming.Abstractions.IconPacks.IconPackListResult
+HackerOs.Theming.Abstractions.IconPacks.IconPackListResult.<Clone>$() -> HackerOs.Theming.Abstractions.IconPacks.IconPackListResult!
+HackerOs.Theming.Abstractions.IconPacks.IconPackListResult.Deconstruct(out System.Collections.Generic.IReadOnlyList<HackerOs.Theming.Abstractions.IconPacks.IconPackInfo!>! Packs, out System.Collections.Generic.IReadOnlyList<string!>! Diagnostics) -> void
+HackerOs.Theming.Abstractions.IconPacks.IconPackListResult.Diagnostics.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.Theming.Abstractions.IconPacks.IconPackListResult.Diagnostics.init -> void
+HackerOs.Theming.Abstractions.IconPacks.IconPackListResult.Equals(HackerOs.Theming.Abstractions.IconPacks.IconPackListResult? other) -> bool
+HackerOs.Theming.Abstractions.IconPacks.IconPackListResult.Find(string? id) -> HackerOs.Theming.Abstractions.IconPacks.IconPackInfo?
+HackerOs.Theming.Abstractions.IconPacks.IconPackListResult.IconPackListResult(System.Collections.Generic.IReadOnlyList<HackerOs.Theming.Abstractions.IconPacks.IconPackInfo!>! Packs, System.Collections.Generic.IReadOnlyList<string!>! Diagnostics) -> void
+HackerOs.Theming.Abstractions.IconPacks.IconPackListResult.Packs.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Theming.Abstractions.IconPacks.IconPackInfo!>!
+HackerOs.Theming.Abstractions.IconPacks.IconPackListResult.Packs.init -> void
+HackerOs.Theming.Abstractions.IconPacks.IconPackLoadResult
+HackerOs.Theming.Abstractions.IconPacks.IconPackLoadResult.<Clone>$() -> HackerOs.Theming.Abstractions.IconPacks.IconPackLoadResult!
+HackerOs.Theming.Abstractions.IconPacks.IconPackLoadResult.Deconstruct(out HackerOs.Theming.Abstractions.IconPacks.IconPack! Pack, out System.Collections.Generic.IReadOnlyList<string!>! Diagnostics) -> void
+HackerOs.Theming.Abstractions.IconPacks.IconPackLoadResult.Diagnostics.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.Theming.Abstractions.IconPacks.IconPackLoadResult.Diagnostics.init -> void
+HackerOs.Theming.Abstractions.IconPacks.IconPackLoadResult.Equals(HackerOs.Theming.Abstractions.IconPacks.IconPackLoadResult? other) -> bool
+HackerOs.Theming.Abstractions.IconPacks.IconPackLoadResult.IconPackLoadResult(HackerOs.Theming.Abstractions.IconPacks.IconPack! Pack, System.Collections.Generic.IReadOnlyList<string!>! Diagnostics) -> void
+HackerOs.Theming.Abstractions.IconPacks.IconPackLoadResult.Pack.get -> HackerOs.Theming.Abstractions.IconPacks.IconPack!
+HackerOs.Theming.Abstractions.IconPacks.IconPackLoadResult.Pack.init -> void
+HackerOs.Theming.Abstractions.IconPacks.IconPackOrigin
+HackerOs.Theming.Abstractions.IconPacks.IconPackOrigin.System = 0 -> HackerOs.Theming.Abstractions.IconPacks.IconPackOrigin
+HackerOs.Theming.Abstractions.IconPacks.IconPackOrigin.User = 1 -> HackerOs.Theming.Abstractions.IconPacks.IconPackOrigin
+const HackerOs.Theming.Abstractions.IconPacks.IconPack.AppsFolder = "apps" -> string!
+const HackerOs.Theming.Abstractions.IconPacks.IconPack.CategoriesFolder = "categories" -> string!
+const HackerOs.Theming.Abstractions.IconPacks.IconPack.FileImageName = "file" -> string!
+const HackerOs.Theming.Abstractions.IconPacks.IconPack.FilesFolder = "files" -> string!
+const HackerOs.Theming.Abstractions.IconPacks.IconPack.FolderImageName = "folder" -> string!
+const HackerOs.Theming.Abstractions.IconPacks.IconPackLibrary.BuiltInId = "builtin" -> string!
+const HackerOs.Theming.Abstractions.IconPacks.IconPackLibrary.ImageExtension = ".png" -> string!
+const HackerOs.Theming.Abstractions.IconPacks.IconPackLibrary.ManifestFileName = "icon-pack.json" -> string!
+const HackerOs.Theming.Abstractions.IconPacks.IconPackLibrary.MaxImageBytes = 262144 -> int
+const HackerOs.Theming.Abstractions.IconPacks.IconPackLibrary.MaxImages = 1024 -> int
+const HackerOs.Theming.Abstractions.IconPacks.IconPackLibrary.MaxManifestBytes = 16384 -> int
+const HackerOs.Theming.Abstractions.IconPacks.IconPackLibrary.MaxPackBytes = 8388608 -> int
+const HackerOs.Theming.Abstractions.IconPacks.IconPackLibrary.PackIdKey = "iconPackId" -> string!
+const HackerOs.Theming.Abstractions.IconPacks.IconPackLibrary.SettingsDocumentId = "icons" -> string!
+const HackerOs.Theming.Abstractions.IconPacks.IconPackLibrary.SystemDirectory = "/usr/share/icons" -> string!
+const HackerOs.Theming.Abstractions.IconPacks.IconPackLibrary.SystemThemePackDirectory = "/usr/share/hackeros/theme-packs" -> string!
+const HackerOs.Theming.Abstractions.IconPacks.IconPackLibrary.ThemePackIconsFolder = "icons" -> string!
+override HackerOs.Theming.Abstractions.IconPacks.IconPackFileAccess.Equals(object? obj) -> bool
+override HackerOs.Theming.Abstractions.IconPacks.IconPackFileAccess.GetHashCode() -> int
+override HackerOs.Theming.Abstractions.IconPacks.IconPackFileAccess.ToString() -> string!
+override HackerOs.Theming.Abstractions.IconPacks.IconPackInfo.Equals(object? obj) -> bool
+override HackerOs.Theming.Abstractions.IconPacks.IconPackInfo.GetHashCode() -> int
+override HackerOs.Theming.Abstractions.IconPacks.IconPackInfo.ToString() -> string!
+override HackerOs.Theming.Abstractions.IconPacks.IconPackListResult.Equals(object? obj) -> bool
+override HackerOs.Theming.Abstractions.IconPacks.IconPackListResult.GetHashCode() -> int
+override HackerOs.Theming.Abstractions.IconPacks.IconPackListResult.ToString() -> string!
+override HackerOs.Theming.Abstractions.IconPacks.IconPackLoadResult.Equals(object? obj) -> bool
+override HackerOs.Theming.Abstractions.IconPacks.IconPackLoadResult.GetHashCode() -> int
+override HackerOs.Theming.Abstractions.IconPacks.IconPackLoadResult.ToString() -> string!
+static HackerOs.Theming.Abstractions.IconPacks.IconPackFileAccess.operator !=(HackerOs.Theming.Abstractions.IconPacks.IconPackFileAccess? left, HackerOs.Theming.Abstractions.IconPacks.IconPackFileAccess? right) -> bool
+static HackerOs.Theming.Abstractions.IconPacks.IconPackFileAccess.operator ==(HackerOs.Theming.Abstractions.IconPacks.IconPackFileAccess? left, HackerOs.Theming.Abstractions.IconPacks.IconPackFileAccess? right) -> bool
+static HackerOs.Theming.Abstractions.IconPacks.IconPackInfo.operator !=(HackerOs.Theming.Abstractions.IconPacks.IconPackInfo? left, HackerOs.Theming.Abstractions.IconPacks.IconPackInfo? right) -> bool
+static HackerOs.Theming.Abstractions.IconPacks.IconPackInfo.operator ==(HackerOs.Theming.Abstractions.IconPacks.IconPackInfo? left, HackerOs.Theming.Abstractions.IconPacks.IconPackInfo? right) -> bool
+static HackerOs.Theming.Abstractions.IconPacks.IconPackLibrary.GetUserDirectory(string! homeDirectory) -> string!
+static HackerOs.Theming.Abstractions.IconPacks.IconPackLibrary.GetUserThemePackDirectory(string! homeDirectory) -> string!
+static HackerOs.Theming.Abstractions.IconPacks.IconPackLibrary.IsValidId(string? id) -> bool
+static HackerOs.Theming.Abstractions.IconPacks.IconPackLibrary.ListAsync(HackerOs.Theming.Abstractions.IconPacks.IconPackFileAccess! files, string? homeDirectory, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.Theming.Abstractions.IconPacks.IconPackListResult!>!
+static HackerOs.Theming.Abstractions.IconPacks.IconPackLibrary.LoadAsync(HackerOs.Theming.Abstractions.IconPacks.IconPackInfo! info, HackerOs.Theming.Abstractions.IconPacks.IconPackFileAccess! files, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.Theming.Abstractions.IconPacks.IconPackLoadResult!>!
+static HackerOs.Theming.Abstractions.IconPacks.IconPackLibrary.TryParseManifest(string! content, string! rootPath, HackerOs.Theming.Abstractions.IconPacks.IconPackOrigin origin, out HackerOs.Theming.Abstractions.IconPacks.IconPackInfo? info, out string? error) -> bool
+static HackerOs.Theming.Abstractions.IconPacks.IconPackListResult.Empty.get -> HackerOs.Theming.Abstractions.IconPacks.IconPackListResult!
+static HackerOs.Theming.Abstractions.IconPacks.IconPackListResult.operator !=(HackerOs.Theming.Abstractions.IconPacks.IconPackListResult? left, HackerOs.Theming.Abstractions.IconPacks.IconPackListResult? right) -> bool
+static HackerOs.Theming.Abstractions.IconPacks.IconPackListResult.operator ==(HackerOs.Theming.Abstractions.IconPacks.IconPackListResult? left, HackerOs.Theming.Abstractions.IconPacks.IconPackListResult? right) -> bool
+static HackerOs.Theming.Abstractions.IconPacks.IconPackLoadResult.operator !=(HackerOs.Theming.Abstractions.IconPacks.IconPackLoadResult? left, HackerOs.Theming.Abstractions.IconPacks.IconPackLoadResult? right) -> bool
+static HackerOs.Theming.Abstractions.IconPacks.IconPackLoadResult.operator ==(HackerOs.Theming.Abstractions.IconPacks.IconPackLoadResult? left, HackerOs.Theming.Abstractions.IconPacks.IconPackLoadResult? right) -> bool

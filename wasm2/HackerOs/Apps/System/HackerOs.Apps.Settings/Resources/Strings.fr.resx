@@ -1689,4 +1689,28 @@
   <data name="LocalServer.PairFailed" xml:space="preserve">
     <value>L'appairage a échoué : {0}</value>
   </data>
+  <data name="IconPack.Title" xml:space="preserve">
+    <value>Pack d'icônes</value>
+  </data>
+  <data name="IconPack.Description" xml:space="preserve">
+    <value>Remplace les icônes des applications, des dossiers et des fichiers par les images PNG d'un pack. Installez un pack pour tous dans {0} (administrateur) ou pour vous dans {1} : un dossier qui contient icon-pack.json.</value>
+  </data>
+  <data name="IconPack.BuiltIn" xml:space="preserve">
+    <value>Icônes intégrées</value>
+  </data>
+  <data name="IconPack.BuiltIn.Description" xml:space="preserve">
+    <value>Les icônes vectorielles de l'OS</value>
+  </data>
+  <data name="IconPack.None" xml:space="preserve">
+    <value>Aucun pack d'icônes n'est encore installé.</value>
+  </data>
+  <data name="IconPack.Warnings" xml:space="preserve">
+    <value>{0} avertissement(s) dans les packs d'icônes : images ou dossiers refusés, écrits dans le journal système.</value>
+  </data>
+  <data name="IconPack.Saved" xml:space="preserve">
+    <value>Pack d'icônes appliqué.</value>
+  </data>
+  <data name="IconPack.Error.CannotRead" xml:space="preserve">
+    <value>Impossible de lire les packs d'icônes : {0}</value>
+  </data>
 </root>

@@ -76,8 +76,10 @@ alerte `IL…`, sert la publication sur `127.0.0.1` et `127.0.0.2`, puis lance
 | `Trimmed_publish_boots_offline_after_the_first_load` | sur `127.0.0.2` (le service worker n'est pas enregistré sur `127.0.0.1`) : mise en cache de la version, rechargement sans réseau, connexion, lancement d'une app jamais chargée |
 | `The_calculator_rendered_in_a_worker_works_like_on_the_page` | essai de l'ADR 0133, réglage activé par une réécriture d'`appsettings.json` : la Calculatrice dans un worker calcule à la souris et au clavier, garde son CSS, `Tab`, axe, `Alt+F7`/`Alt+Q`, worker dédié libéré à la fermeture ([`remote-window-rendering.md`](remote-window-rendering.md)) |
 | `Measures_the_calculator_on_the_page_and_in_a_worker` | mesures de l'ADR 0133 (ouverture, latence, mémoire, lots), écrites dans `remote-window-measurements.json` du dossier des artefacts |
+| `An_installed_app_finds_its_wwwroot_files_and_its_worker_scripts` | ADR 0206 : le paquet de test `Tests/fixtures/installed-app` (emballé par le script avec `HackerOsPack`, servi par Playwright à la place de `raw.githubusercontent.com`) est installé par `sudo hackpkg install`, l'OS redémarre, l'app importe son module, lance son Web Worker (`importScripts` relatif) et affiche son image ; sur `127.0.0.1`, par le service worker du mode `installed-apps` |
+| `The_published_service_worker_serves_installed_app_files_to_a_worker` | ADR 0206 sur `127.0.0.2` : le service worker publié sert les fichiers du cache `hackeros-installed-apps` à un Web Worker sous isolation cross-origin |
 
-Le script exige que les quatre tests passent (`EXPECTED_TESTS`).
+Le script exige que les six tests passent (`EXPECTED_TESTS`).
 
 Aucune erreur de console n'est admise. Sans `HACKEROS_TRIMMED_URL`, la suite est
 ignorée (un `dotnet test` de la solution ne la lance pas).

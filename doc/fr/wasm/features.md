@@ -228,6 +228,10 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
 - **Heure locale et fuseau horaire** : l'horloge, `date`, `ls -l` et les apps
   affichent l'heure dans le fuseau de l'utilisateur, automatique ou choisi dans
   Paramètres ▸ Date et heure. ([`time-zone.md`](framework/time-zone.md))
+- **Packs d'icônes** : des images PNG remplacent les icônes des applications,
+  des dossiers et des fichiers partout dans l'OS, choisies dans Paramètres ▸
+  Apparence ; pack d'exemple « Néon » fourni. ([`icon-packs.md`](dev/icon-packs.md),
+  [ADR 0203](dev/adr/0203-icon-packs.md))
 
 ### Pour les développeurs
 
@@ -241,7 +245,10 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   ([`sdk-developer-guide.md`](framework/sdk-developer-guide.md))
 - **Installation d'une application depuis son dépôt GitHub** avec la commande
   `hackpkg`. ([ADR 0182](dev/adr/0182-install-apps-from-github.md),
-  [`app-installation.md`](dev/app-installation.md))
+  [`app-installation.md`](dev/app-installation.md)) Ses images, scripts et Web
+  Workers sont servis à la même adresse que pour une application compilée dans
+  l'OS : une application qui enveloppe un projet JavaScript marche une fois
+  installée. ([ADR 0206](dev/adr/0206-serve-installed-app-assets.md))
 - **Modèle de dépôt d'application `hackeros-solution`** : application, hôte
   et tests prêts à lancer, sous-module de l'OS pour le débogage dans ses
   sources, paquets NuGet en production, CI et soumission au catalogue du Hack
@@ -272,7 +279,6 @@ dans `main`, le lien mène à sa PR.
 
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
-| Ressources des applications installées | Servir les images, scripts et workers d'une application installée. | [0182](dev/adr/0182-install-apps-from-github.md) | [#247](https://github.com/Kazo-ca/HackerOs/issues/247) |
 | Sources de confiance et installation pour soi | Catalogues de confiance, installation sans administrateur, liste noire, validation par un administrateur. | [0189](dev/adr/0189-app-sources-trust-and-per-user-install.md) | [#248](https://github.com/Kazo-ca/HackerOs/issues/248) |
 | Catalogue des applications | Format du catalogue, vérification et publication des applications proposées. | [0188](dev/adr/0188-hack-store-and-app-catalog.md) | [AppMarketPlace #1](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/1) |
 | Application Hack Store v1 | Parcourir, installer, mettre à jour et désinstaller des applications en un clic. | [0188](dev/adr/0188-hack-store-and-app-catalog.md) | [#249](https://github.com/Kazo-ca/HackerOs/issues/249) |
@@ -284,7 +290,6 @@ dans `main`, le lien mène à sa PR.
 | --- | --- | --- | --- |
 | Packs de thèmes | Format `.hacktheme` et onglet Thèmes du Hack Store. | [0190](dev/adr/0190-theme-packs.md) | [#253](https://github.com/Kazo-ca/HackerOs/issues/253) |
 | Fonds d'écran en image | Choisir une image comme fond d'écran, par écran. | [0190](dev/adr/0190-theme-packs.md) | [#254](https://github.com/Kazo-ca/HackerOs/issues/254) |
-| Packs d'icônes | Remplacer les icônes des applications et des fichiers. | [0190](dev/adr/0190-theme-packs.md) | [#255](https://github.com/Kazo-ca/HackerOs/issues/255) |
 | Sons de l'OS | Sons pour les notifications, les erreurs et l'ouverture de session. | [0190](dev/adr/0190-theme-packs.md) | [#256](https://github.com/Kazo-ca/HackerOs/issues/256) |
 | Thèmes de curseurs | Curseurs personnalisés choisis dans Paramètres. | [0190](dev/adr/0190-theme-packs.md) | [#257](https://github.com/Kazo-ca/HackerOs/issues/257) |
 
