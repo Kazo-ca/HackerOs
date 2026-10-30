@@ -154,11 +154,16 @@ Benoit et sera corrigée ici s'il préfère seulement la version publiée.
 1. ADR 0186 + format : dossier `changes/`, `ChangeEntriesTests`, entrées de 2.1.0 et de la
    prochaine version. **Fait avec cette ADR.**
 2. Fichier servi + service : `/whats-new.json` au build, service des nouveautés, état par compte,
-   règle du nouveau compte.
+   règle du nouveau compte. **Fait** (`whats-new/2-served-file-and-service` : `Tools/HackerOs.Tools.ChangeList`,
+   `WhatsNewService`, SDK `HackWhatsNew`).
 3. Interface : page Paramètres ▸ À propos ▸ Nouveautés, notification après connexion, pastille du
-   menu Démarrer, textes en anglais et en français.
+   menu Démarrer, textes en anglais et en français. **Fait** (`whats-new/3-whats-new-page` :
+   `WhatsNewPanel`, `WhatsNewService.NotifyNewChangesAsync`, pastille du lanceur ; la page est une
+   entrée du menu à côté de À propos, ouverte aussi par le bouton **Quoi de neuf ?** de À propos).
 4. Publications : `collect-changes.sh`, texte de la Release dans `release.yml`,
-   `PackageReleaseNotes`, `CHANGELOG.md` et `CHANGELOG-fr.md`.
+   `PackageReleaseNotes`, `CHANGELOG.md` et `CHANGELOG-fr.md`. **Fait** (`whats-new/4-release-notes` :
+   commandes `collect`, `notes` et `changelog` de `Tools/HackerOs.Tools.ChangeList` ; le contrôle de
+   PR accepte aussi un nouveau `changes/<version>.json`).
 5. Contrôle de PR : workflow **Change list entry** et étiquette `no-changelog`. **Fait avec cette
    ADR.**
 
@@ -171,6 +176,6 @@ Chaque chantier met à jour la doc dans les deux langues et les index README.
   part.
 - Les entrées sont écrites pour les lecteurs, pas pour les relecteurs du code : une phrase
   courte qui dit ce que la personne peut faire de nouveau.
-- Tant que les chantiers 2 à 4 ne sont pas faits, les entrées ne sont lues que par le test et
-  par les humains ; `release.yml` garde les notes générées par GitHub.
+- Depuis les chantiers 2 à 4 (2026-10-29), les entrées alimentent la page des nouveautés de l'OS,
+  la GitHub Release, les notes des paquets NuGet et les deux journaux des changements.
 - Guide pratique : [`change-list.md`](../change-list.md).

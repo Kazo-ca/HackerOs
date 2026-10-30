@@ -68,7 +68,10 @@ Both versions are published by a single
 
 Contribution rules are in [`CONTRIBUTING.md`](CONTRIBUTING.md) and
 [`AGENTS.md`](AGENTS.md) (where code goes, docs kept current with every change
-in both languages, folder indexes).
+in both languages, folder indexes, working with the maintainer: questions,
+`TODO` issues, branches, merges). Claude Code reads them through
+[`CLAUDE.md`](CLAUDE.md); the project's state and memory are in
+[`doc/en/wasm/memory/`](doc/en/wasm/memory/README.md).
 
 ## License
 

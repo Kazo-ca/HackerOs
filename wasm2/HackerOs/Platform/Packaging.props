@@ -35,6 +35,8 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <!-- ADR 0186 §7: build/pack-local.sh writes the release notes of the version into this file. -->
+    <PackageReleaseNotes Condition="'$(HackerOsPackageReleaseNotesFile)' != '' and Exists('$(HackerOsPackageReleaseNotesFile)')">$([System.IO.File]::ReadAllText('$(HackerOsPackageReleaseNotesFile)'))</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

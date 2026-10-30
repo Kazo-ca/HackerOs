@@ -200,6 +200,12 @@ This section lists what is released in the `main` branch and online.
   [`logging.md`](dev/logging.md))
 - **New version announcements**: an open session learns that a new version is
   available. ([ADR 0174](dev/adr/0174-announce-a-new-version-to-open-sessions.md))
+- **What's new since your last visit**: the Settings ▸ What's new page lists the
+  changes by version with a **New** badge; a notification after sign-in and a dot
+  on the Start menu point out what has not been seen. The same list writes the
+  notes of the GitHub Release, of the NuGet packages and
+  [`CHANGELOG.md`](../../../CHANGELOG.md).
+  ([`change-list.md`](dev/change-list.md), [ADR 0186](dev/adr/0186-whats-new-change-list.md))
 
 ### Personalization
 
@@ -243,12 +249,6 @@ points to its PR.
 | `.zip` archive opened as a folder | The explorer browses a `.zip` archive read-only; an opened file is extracted to `/tmp`. The rest of the ADR is available. | [0185](dev/adr/0185-file-explorer-improvements.md) | [#241](https://github.com/Kazo-ca/HackerOs/issues/241) |
 | Switch user | Open another session without closing the first one, from the Start menu's Power button (greyed out for now, always greyed out for the guest). | [0195](dev/adr/0195-start-menu-power-button.md) | [#290](https://github.com/Kazo-ca/HackerOs/issues/290) |
 | Windows and taskbar | Notification toasts, window animations, hover previews. The time zone ([ADR 0193](dev/adr/0193-local-time-and-time-zone.md)) and the taskbar menus ([ADR 0194](dev/adr/0194-taskbar-context-menus.md)) are available. | Coming | [#242](https://github.com/Kazo-ca/HackerOs/issues/242) |
-
-### Accounts and welcome
-
-| Feature | Description | ADR | Issue |
-| --- | --- | --- | --- |
-| What's new since your last visit | List of changes per version, shown in the OS and reused in the release notes. | [0186](dev/adr/0186-whats-new-change-list.md) | [#252](https://github.com/Kazo-ca/HackerOs/issues/252) |
 
 ### Hack Store
 

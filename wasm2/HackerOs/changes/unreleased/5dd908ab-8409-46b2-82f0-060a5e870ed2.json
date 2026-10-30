@@ -1,0 +1,18 @@
+{
+  "id": "5dd908ab-8409-46b2-82f0-060a5e870ed2",
+  "category": "new",
+  "audience": [
+    "user"
+  ],
+  "title": {
+    "en": "See what's new since your last visit",
+    "fr": "Voir les nouveautés depuis votre dernière visite"
+  },
+  "description": {
+    "en": "Settings ▸ What's new lists the changes of each version with a New badge on the ones you have not seen. After you sign in, a notification tells you how many there are, and a dot on the Start button stays until you have seen them.",
+    "fr": "Paramètres ▸ Nouveautés liste les changements de chaque version avec un badge Nouveau sur ceux que vous n'avez pas vus. Après la connexion, une notification dit combien il y en a, et une pastille reste sur le bouton Démarrer jusqu'à ce que vous les ayez vus."
+  },
+  "links": [
+    "doc/en/wasm/dev/change-list.md"
+  ]
+}

@@ -25,6 +25,9 @@ public partial class SettingsWindow
     /// <summary>Id of the "Application" page, only listed for <c>--app=&lt;id&gt;</c> (ADR 0096 §4).</summary>
     internal const string ApplicationPageId = "application";
 
+    /// <summary>Id of the "What's new" page (<c>--page=whats-new</c>, ADR 0186 §4.5), opened by the sign-in notification.</summary>
+    internal const string WhatsNewPageId = "whats-new";
+
     /// <summary>Every page in menu order; <see cref="PagesFor"/> drops the optional ones.</summary>
     internal static IReadOnlyList<SettingsPage> AllPages { get; } =
     [
@@ -46,6 +49,7 @@ public partial class SettingsWindow
         new("users", "Nav.Group.System", "Tab.Users", Icons.Material.Filled.People),
         new("memory", "Nav.Group.System", "Tab.Memory", Icons.Material.Filled.Memory),
         new(BackupPageId, "Nav.Group.System", "Tab.Backup", Icons.Material.Filled.Backup),
+        new(WhatsNewPageId, "Nav.Group.System", "Tab.WhatsNew", Icons.Material.Filled.NewReleases),
         new("about", "Nav.Group.System", "Tab.About", Icons.Material.Filled.Info),
     ];
 

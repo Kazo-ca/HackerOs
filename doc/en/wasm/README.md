@@ -177,4 +177,9 @@ in the same change (see [`AGENTS.md`](../../../AGENTS.md)).
 
 See [`memory/README.md`](memory/README.md): state of the series, conventions
 (branches, merges, ADRs, documentation), build environment and historical
-notes.
+notes; [`memory/decisions-not-built.md`](memory/decisions-not-built.md)
+(decisions taken in discussion, not built yet) and
+[`memory/known-test-failures.md`](memory/known-test-failures.md) (known
+pre-existing test failures). The rules for working with the maintainer are in
+section IV of [`AGENTS.md`](../../../AGENTS.md), which Claude Code reads through
+[`CLAUDE.md`](../../../CLAUDE.md).

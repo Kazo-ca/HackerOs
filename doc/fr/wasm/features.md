@@ -205,6 +205,12 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   [`logging.md`](dev/logging.md))
 - **Annonce des nouvelles versions** : une session ouverte apprend qu'une
   nouvelle version est disponible. ([ADR 0174](dev/adr/0174-announce-a-new-version-to-open-sessions.md))
+- **Nouveautés depuis la dernière visite** : la page Paramètres ▸ Nouveautés liste
+  les changements par version avec un badge **Nouveau** ; une notification après la
+  connexion et une pastille sur le menu Démarrer signalent ce qui n'a pas été vu.
+  La même liste écrit les notes de la GitHub Release, des paquets NuGet et
+  [`CHANGELOG-fr.md`](../../../CHANGELOG-fr.md).
+  ([`change-list.md`](dev/change-list.md), [ADR 0186](dev/adr/0186-whats-new-change-list.md))
 
 ### Personnalisation
 
@@ -248,12 +254,6 @@ dans `main`, le lien mène à sa PR.
 | Archive `.zip` ouverte comme un dossier | L'explorateur parcourt une archive `.zip` en lecture seule ; un fichier ouvert est extrait dans `/tmp`. Le reste de l'ADR est disponible. | [0185](dev/adr/0185-file-explorer-improvements.md) | [#241](https://github.com/Kazo-ca/HackerOs/issues/241) |
 | Changer d'utilisateur | Ouvrir une autre session sans fermer la première, depuis le bouton Marche/arrêt du menu Démarrer (grisé pour l'instant, toujours grisé pour l'invité). | [0195](dev/adr/0195-start-menu-power-button.md) | [#290](https://github.com/Kazo-ca/HackerOs/issues/290) |
 | Fenêtres et barre des tâches | Bulles de notification, animations des fenêtres, aperçus au survol. Le fuseau horaire ([ADR 0193](dev/adr/0193-local-time-and-time-zone.md)) et les menus de la barre ([ADR 0194](dev/adr/0194-taskbar-context-menus.md)) sont disponibles. | À venir | [#242](https://github.com/Kazo-ca/HackerOs/issues/242) |
-
-### Comptes et accueil
-
-| Fonctionnalité | Description | ADR | Issue |
-| --- | --- | --- | --- |
-| Nouveautés depuis la dernière visite | Liste des changements par version, affichée dans l'OS et reprise dans les notes de version. | [0186](dev/adr/0186-whats-new-change-list.md) | [#252](https://github.com/Kazo-ca/HackerOs/issues/252) |
 
 ### Hack Store
 

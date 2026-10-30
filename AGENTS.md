@@ -97,4 +97,33 @@
 
 ---
 
+## IV. WORKING WITH THE MAINTAINER:
+
+These rules were given by the maintainer (Benoit) over the course of the project. Every agent follows them, whoever it works for. The current state of the project (series, next free ADR, decisions not built yet, known test failures) is in [`doc/en/wasm/memory/README.md`](doc/en/wasm/memory/README.md) (French original: [`doc/fr/wasm/memory/README.md`](doc/fr/wasm/memory/README.md)); read it before starting.
+
+1.  **Language:** talk to the maintainer in **French** (he writes in French). If another developer writes in another language, answer in theirs. Docs stay French first (`doc/fr/`), translated in `doc/en/`; file names stay English.
+
+2.  **Questions (permanent rule, 2026-10-17):** when a decision is open, you may write it in an ADR, but you **MUST also ask the maintainer directly**, in the conversation: each question with 2 to 4 answer choices, its context, the implications of each choice when they are not obvious, and the recommended choice marked. A question left only inside a document does not count. When he answers "ok" or leaves a question blank, the recommendation is taken.
+
+3.  **"Add it to the to-do list" (2026-10-29):** "ajouter à la liste des choses à faire" (or similar) means **create a GitHub issue labelled `TODO`** on the repository concerned (HackerOs or one of the `HackerOs-App-*` / `HackerOs-AppTemplate` / `HackerOs-AppMarketPlace` repositories). The issue ends with a **"Dépendances"** section (blocked by / unblocks / related, with links). "Qu'est-ce qu'il reste à faire ?" means: list the open `TODO` issues first (they have priority), then what the docs say.
+
+4.  **Branches (2026-10-29):** every branch name describes its content, for example `multi-monitor/5-taskbars`, `desk/3c-replaceable-file-provider`, `docs/features-overview`. **Never** a generic name such as `claude/project-thread-xxxx` or `feature/1`.
+    * A **series** of related work uses an integration branch `<series>/base` created from `main`, one branch `<series>/<n>-<topic>` per work item ("chantier") created from it, and a PR to `<series>/base`. When the series is done, one PR `<series>/base` → `main`.
+    * A small standalone change uses a descriptive branch from `main` and a PR to `main`.
+    * The ADRs of a series or phase are written and merged **before** its code. "Discussion only" or "on ne code pas" means notes, ADRs and `TODO` issues, no code.
+
+5.  **Never merge into `main` (2026-10-11):** only the maintainer merges into `main`, or an agent when he explicitly asks it to for that PR. He also decides when a `<series>/base` goes to `main`; do not ask him about it. An agent may merge its own work-item PRs into a `<series>/base` once checks are green. GitHub branch deletion is done by the maintainer.
+
+6.  **ADR numbers:** take the next free number at writing time. Check `doc/fr/wasm/dev/adr/` on `main` **and** the open PRs (an open PR may already hold a number), then record the number taken in the memory README. Parallel work items reserve distinct numbers.
+
+7.  **"Aucun jeu sur ce repository" ([ADR 0135](doc/en/wasm/dev/adr/0135-no-game-in-this-repository.md)):** no game code, and no mention of any game, game repository, game version or game compatibility in code, docs, plans, ADRs or memory of this repository. Use the sentence "Aucun jeu sur ce repository" instead. The only exception is `features.md`, which names the optional ported apps in progress ([ADR 0192](doc/en/wasm/dev/adr/0192-features-overview-and-ported-apps.md)).
+
+8.  **Change entries (ADR 0186):** a PR to `main` that touches product files under `wasm2/HackerOs/` (outside `Tests/`, `docs/`, `changes/` and `.md` files) adds a `wasm2/HackerOs/changes/unreleased/<guid>.json` entry (English and French text), or carries the `no-changelog` label; work-item PRs to a `<series>/base` add theirs. Check locally with `wasm2/HackerOs/build/tools/check-change-entry.sh` after committing. A version-bump PR runs `wasm2/HackerOs/build/tools/collect-changes.sh` (brought by the `whats-new/base` series) ([`doc/en/wasm/dev/change-list.md`](doc/en/wasm/dev/change-list.md), [`doc/en/wasm/dev/releases.md`](doc/en/wasm/dev/releases.md)).
+
+9.  **Merge bar:** a green local build and test run is required before asking for a merge (E2E suites one at a time; `wasm2/HackerOs/build/publish-trimmed.sh` and the SDK compatibility fixture `wasm2/HackerOs/Tests/fixtures/sdk-compat` when concerned). GitHub Actions also check every PR. Never skip, disable or quarantine a test to get green; a failure listed as pre-existing in the memory is named in the PR, not hidden.
+
+10. **Reporting:** lead with the result. Name what was checked (commands, tests, links). Say plainly when something failed or was skipped.
+
+---
+
 **Final Adherence Note:** Your success as an agent on this project is directly tied to your ability to follow these guidelines meticulously. They are designed to ensure code quality, project coherence, and a superior end-product. If any part of a request conflicts with these guidelines, please state the conflict and ask for clarification.

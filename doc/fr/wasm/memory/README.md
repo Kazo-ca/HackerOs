@@ -2,7 +2,7 @@
 
 # Mémoire du projet HackerOS
 
-État du projet et conventions de travail au **2026-10-28**. Ce dossier sert de
+État du projet et conventions de travail au **2026-10-30**. Ce dossier sert de
 point de reprise : un nouveau contributeur (humain ou agent) y trouve ce qui
 est fait, comment on travaille et ce qu'il ne faut pas refaire. Il est mis à
 jour à la fin de chaque série ou quand une convention change.
@@ -30,6 +30,8 @@ jour à la fin de chaque série ou quand une convention change.
 | EXEC (`exec/*`) | Limites de processus, OOM killer, passerelles distantes, boîte « ne répond pas », `HackBackground`, OS servi par `HackerOs.Server`, isolation cross-origin, SDK 1.2 | [`execution-followups-plan.md`](../dev/plans/execution-followups-plan.md) |
 | DESK (`desk/0` à `desk/6`) | Contrôle de fichiers fourni par l'OS, menu contextuel central, entrées de menu des apps, bureau, SDK 2.0 | [`desktop-and-context-menu-plan.md`](../dev/plans/desktop-and-context-menu-plan.md) |
 | Multi-moniteur (`multi-monitor/0` à `multi-monitor/9`) | Bureau étendu : un écran par surface d'affichage, `DisplayId` et zone de travail par écran, fenêtres déplacées par portail, service d'écrans (Chrome/Edge, repli ailleurs), une barre des tâches par écran, menus « Autre écran » et voile d'identification, Paramètres ▸ Écrans, glisser entre écrans ; aucun changement du SDK des apps | [`multi-monitor-plan.md`](../dev/plans/multi-monitor-plan.md) |
+| File Explorer (`explorer/1` à `explorer/9`) | Barre latérale redimensionnable, état vide dans la liste, glisser vers l'ordinateur, raccourcis, lecteurs réseau suivis, erreurs en `MessageBox` ; reste le `.zip` ouvert comme dossier (issue #241) | [ADR 0185](../dev/adr/0185-file-explorer-improvements.md), [`file-explorer.md`](../dev/file-explorer.md) |
+| Invité (`guest/*`) | Démarrage en invité quand aucun compte n'existe, élévation par simple confirmation, « Créer mon compte » (migrer ou supprimer l'invité), crédits à la connexion | [ADR 0187](../dev/adr/0187-guest-start-and-sign-in-credits.md), [`guest-account.md`](../dev/guest-account.md) |
 
 - **Depuis DESK** (sur `main`, octobre 2026) : redémarrage proposé quand le
   build change sous la page (ADR 0162), aperçu local du déplacement des
@@ -44,17 +46,43 @@ jour à la fin de chaque série ou quand une convention change.
 - **Explorateur mobile** (octobre 2026, PR #212 vers `main`) : point d'entrée
   mobile des apps honoré, explorateur de fichiers mobile, dialogues en plein
   écran sur mobile, un toucher ouvre (`HackFileView.OpenOnTap`) (ADR 0171).
-- **ADR** : 0001 à 0171 et 0173 à 0190 existent (quelques numéros sautés) ; 0170 est pris
-  par le menu latéral des Paramètres (PR #210), 0171 est l'explorateur de fichiers
-  mobile, 0172, réservé avec lui, n'a pas servi, 0173 est la publication
-  automatique, 0174 l'annonce d'une nouvelle version (`version.json`), 0175 le bouton « Nouveau dossier » des dialogues Choisir un dossier et Enregistrer, 0176 le dépôt template d'apps (sous-module en débogage, paquets en production), 0177 la barre de titre des fenêtres agrandies et ancrées, 0178 à 0180, 0183 et 0184 la série multi-moniteur, 0181 un dossier de l'ordinateur monté comme lecteur réseau, 0182 l'installation d'une app depuis GitHub au terminal (`hackpkg`), 0185 les améliorations de File Explorer (série `explorer/base`, tout sauf le `.zip` ouvert comme dossier, issue #241), 0186 la liste des changements et les nouveautés ([`change-list.md`](../dev/change-list.md)), 0187 le démarrage en invité et les crédits, 0188 à 0190 le Hack Store (catalogue, confiance et installation pour soi, packs de thèmes ; plan [`hackeros-store.md`](../dev/plans/hackeros-store.md)). 0191 réservée par le serveur local installable (PR #269), 0192 la présentation des fonctionnalités (`features.md`) et l'exception à l'ADR 0135 pour les apps portées. **Prochain numéro libre : 0193**. Des
-  threads parallèles réservent des numéros distincts.
+- **Depuis le multi-moniteur** (sur `main`, 28 au 30 octobre 2026) : dossier de
+  l'ordinateur monté comme lecteur réseau (ADR 0181), `hackpkg install` depuis
+  GitHub (ADR 0182), présentation des fonctionnalités `features.md` (ADR 0192),
+  heure locale et fuseau horaire (ADR 0193, chantier 2 de l'issue #242),
+  menus contextuels de la barre des tâches (ADR 0194, chantier 4 de #242).
+  Les ADR du Hack Store (0188 à 0190) et du serveur local installable (0191)
+  sont acceptées, rien n'est codé (issues `TODO` #246 à #257, #267).
+- **Bouton Marche/arrêt dans le menu Démarrer** (ADR 0195, PR #291, fusionnée
+  le 2026-10-30) : « Changer d'utilisateur » reste grisé, issue `TODO` #290
+  (plusieurs sessions ouvertes en même temps).
+- **ADR** : 0001 à 0171 et 0173 à 0195 existent sur `main` (quelques numéros sautés ;
+  0141 et 0172 n'ont pas servi). Repères récents : 0173 publication automatique,
+  0174 annonce de nouvelle version, 0175 « Nouveau dossier » des dialogues, 0176
+  dépôt template d'apps, 0177 barre de titre des fenêtres agrandies, 0178 à 0180,
+  0183 et 0184 multi-moniteur, 0181 lecteur réseau, 0182 `hackpkg`, 0185 File
+  Explorer, 0186 nouveautés ([`change-list.md`](../dev/change-list.md)), 0187
+  invité et crédits, 0188 à 0190 Hack Store ([`hackeros-store.md`](../dev/plans/hackeros-store.md)),
+  0191 serveur local installable, 0192 `features.md` et exception à l'ADR 0135,
+  0193 heure locale, 0194 menus de la barre des tâches, 0195 bouton
+  Marche/arrêt du menu Démarrer. **Prochain numéro libre : 0196.** Avant d'en
+  prendre un, vérifier `dev/adr/` sur `main` et les PR ouvertes.
 
 ## Conventions de travail
 
+Les règles de travail avec Benoit (langue, questions, issues `TODO`, noms de
+branche, fusion vers `main`, numéros d'ADR, entrées de changement) sont dans la
+section **IV** de [`AGENTS.md`](../../../../AGENTS.md), que Claude Code lit par
+[`CLAUDE.md`](../../../../CLAUDE.md). En résumé :
+
+- **Langue** : on répond à Benoit en français.
+- **À faire** : « ajouter à la liste des choses à faire » = une issue GitHub
+  avec le label `TODO` et une section « Dépendances » ; « qu'est-ce qu'il reste
+  à faire » = les issues `TODO` ouvertes d'abord, puis la doc.
 - **Aucun jeu sur ce repository** ([ADR 0135](../dev/adr/0135-no-game-in-this-repository.md)) :
   ni code, ni mention dans la doc, les plans, les ADR ou la mémoire.
-- **Branches** : une branche d'intégration `<série>/base` par série, une branche
+- **Branches** : noms descriptifs (`taskbar/4-context-menus`), jamais
+  `claude/project-thread-…`. Une branche d'intégration `<série>/base` par série, une branche
   `<série>/<n>-<sujet>` par chantier, PR vers la branche d'intégration. Les ADR
   d'une phase sont écrits avant son code.
 - **`main`** : seul Benoit fusionne dans `main` et décide quand une branche
@@ -79,6 +107,13 @@ jour à la fin de chaque série ou quand une convention change.
   fusionner dans `main` ; le workflow `Release HackerOS` crée le tag, la
   Release GitHub et pousse sur nuget.org ([`releases.md`](../dev/releases.md),
   ADR 0173).
+
+## Décisions et contexte hors du code
+
+| Note | Contenu |
+| --- | --- |
+| [`decisions-not-built.md`](decisions-not-built.md) | Décisions prises par Benoit en discussion et pas encore codées ni écrites ailleurs : fenêtres et barre des tâches (chantiers restants de #242), vrais sites dans le navigateur (#266), apps tierces portées, apps hébergées par le serveur, idées tirées de daedalOS, éditeurs. |
+| [`known-test-failures.md`](known-test-failures.md) | Échecs de tests préexistants connus (à nommer dans une PR, pas à cacher) et astuces d'environnement récentes. |
 
 ## Environnement et pièges
 

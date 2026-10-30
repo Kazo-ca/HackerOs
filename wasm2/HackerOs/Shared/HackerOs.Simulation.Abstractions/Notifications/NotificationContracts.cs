@@ -75,22 +75,51 @@ public sealed record NotificationAction
     /// </summary>
     /// <param name="appId">App launched when the action is chosen.</param>
     /// <param name="label">Label of the action.</param>
-    public static NotificationAction LaunchApp(string appId, string label)
+    public static NotificationAction LaunchApp(string appId, string label) => LaunchApp(appId, label, []);
+
+    /// <summary>
+    /// Creates an action that launches <paramref name="appId"/> with <paramref name="arguments"/>,
+    /// such as the sign-in notification that opens Settings ▸ What's new with
+    /// <c>--page=whats-new</c> (ADR 0186 §4.5).
+    /// </summary>
+    /// <param name="appId">App launched when the action is chosen.</param>
+    /// <param name="label">Label of the action.</param>
+    /// <param name="arguments">Its command line; no argument may hold <see cref="ArgumentSeparator"/>.</param>
+    public static NotificationAction LaunchApp(string appId, string label, IReadOnlyList<string> arguments)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(appId);
-        return new NotificationAction(LaunchAppPrefix + appId, label);
+        ArgumentNullException.ThrowIfNull(arguments);
+        if (appId.Contains(ArgumentSeparator, StringComparison.Ordinal)
+            || arguments.Any(static argument => argument is null || argument.Contains(ArgumentSeparator, StringComparison.Ordinal)))
+        {
+            throw new ArgumentException("An app id or argument cannot hold the argument separator.", nameof(arguments));
+        }
+
+        return new NotificationAction(
+            LaunchAppPrefix + appId + string.Concat(arguments.Select(static argument => ArgumentSeparator + argument)),
+            label);
     }
 
-    /// <summary>Gets the app this action launches, when it was made by <see cref="LaunchApp"/>.</summary>
+    /// <summary>Separates the app id and the arguments of a launch action's <see cref="Id"/> (the unit separator, U+001F).</summary>
+    public const char ArgumentSeparator = '\u001F';
+
+    /// <summary>Gets the app this action launches, when it was made by <see cref="LaunchApp(string, string)"/>.</summary>
     /// <param name="appId">The app id, or <see langword="null"/>.</param>
     /// <returns><see langword="true"/> for a launch action.</returns>
     public bool TryGetLaunchedApp([System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out string? appId)
     {
         appId = Id.StartsWith(LaunchAppPrefix, StringComparison.Ordinal) && Id.Length > LaunchAppPrefix.Length
-            ? Id[LaunchAppPrefix.Length..]
+            ? Id[LaunchAppPrefix.Length..].Split(ArgumentSeparator)[0]
             : null;
+        appId = string.IsNullOrEmpty(appId) ? null : appId;
         return appId is not null;
     }
+
+    /// <summary>Gets the command line of a launch action (empty for any other action).</summary>
+    public IReadOnlyList<string> LaunchArguments =>
+        Id.StartsWith(LaunchAppPrefix, StringComparison.Ordinal)
+            ? Id[LaunchAppPrefix.Length..].Split(ArgumentSeparator)[1..]
+            : [];
 }
 
 /// <summary>

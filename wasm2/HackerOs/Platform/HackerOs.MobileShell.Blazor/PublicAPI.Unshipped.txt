@@ -1,1 +1,3 @@
 #nullable enable
+HackerOs.MobileShell.Blazor.MobileSystemNavigationBar.HomeHasAttention.get -> bool
+HackerOs.MobileShell.Blazor.MobileSystemNavigationBar.HomeHasAttention.set -> void

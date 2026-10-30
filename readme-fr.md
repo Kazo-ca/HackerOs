@@ -68,7 +68,10 @@ Les deux versions sont publiées par un seul
 
 Les règles de contribution sont dans [`CONTRIBUTING.md`](CONTRIBUTING.md) et
 [`AGENTS.md`](AGENTS.md) (emplacement du code, documentation à jour à chaque
-changement, index des dossiers de la doc).
+changement, index des dossiers de la doc, travail avec le mainteneur :
+questions, issues `TODO`, branches, fusions). Claude Code les lit par
+[`CLAUDE.md`](CLAUDE.md) ; l'état et la mémoire du projet sont dans
+[`doc/fr/wasm/memory/`](doc/fr/wasm/memory/README.md).
 
 ## Licence
 

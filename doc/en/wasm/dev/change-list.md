@@ -63,7 +63,8 @@ files does not need one.
 The **Change list entry** workflow (`.github/workflows/changelog-entry.yml`) runs on every PR to
 `main` and calls `wasm2/HackerOs/build/tools/check-change-entry.sh <base> <head>`. It fails when
 the PR touches `wasm2/HackerOs` (outside `Tests/`, `docs/`, `changes/` and `.md`) without adding a
-file in `changes/unreleased/`, unless it has the `no-changelog` label. To run it before pushing:
+file in `changes/unreleased/` (or a new `changes/<version>.json`, see below), unless it has the
+`no-changelog` label. To run it before pushing:
 
 ```bash
 wasm2/HackerOs/build/tools/check-change-entry.sh origin/main HEAD
@@ -72,10 +73,81 @@ wasm2/HackerOs/build/tools/check-change-entry.sh origin/main HEAD
 In a series, each work item PR to `<series>/base` adds its entry: the final PR to `main` brings
 them all.
 
+## In the OS: `/whats-new.json`
+
+When `OS/HackerOs.Ecosystem` builds, the `Tools/HackerOs.Tools.ChangeList` tool reads `changes/`
+and writes `obj/…/hackeros-whats-new/whats-new.json`, served at the root of the site like
+`/version.json` (ADR 0186 §4.1). It keeps only the entries whose audience contains `user`,
+grouped by version, the most recent first; the entries of `unreleased/` make the first group
+(`"version": null`, `"since": "<HackerOsVersion>"`). In a group, entries are sorted by category
+(`new`, `improved`, `fixed`, `developer`), then from the most recent PR to the oldest. The paths
+of `links` become GitHub URLs and `pr` also gives `prUrl`.
+
+To see the file without building the OS:
+
+```bash
+dotnet run --project wasm2/HackerOs/Tools/HackerOs.Tools.ChangeList -- \
+  site --changes wasm2/HackerOs/changes --version 2.1.0 --output /tmp/whats-new.json
+```
+
+In the OS:
+
+- `WhatsNewService` (Platform.Core, `HackerOs.Platform.Core.WhatsNew`) reads the file once per
+  page (a new deployment reloads the page) and keeps, for each account, the IDs already seen in
+  `~/.local/state/hackeros/whats-new.json`: `{ "seen": [ "<id>", … ] }`. An ID that leaves the
+  list stays in the file: an entry never becomes new again.
+- **New account** (ADR 0186 §5): when that file does not exist yet (or cannot be read), everything
+  is marked seen except the entries of the latest published version and those of the next version
+  already deployed, and the file is written at once. With no served list (offline), nothing is
+  written: the rule waits for a list.
+- Apps read the list through the SDK, with no capability: `HackWhatsNew.GetAsync()` (texts in the
+  app's language, English as fallback), `MarkSeenAsync(ids)` and `WatchAsync` (see
+  [`sdk-reference.md`](../framework/sdk-reference.md)).
+
+What the user sees (ADR 0186 §4.4 and §4.5):
+
+- **Settings ▸ What's new** (`--page=whats-new`, also through the **What's new?** button of
+  About): one group per version, the next one first ("Since 2.1.0 (next version)"), a category
+  label and a **New** badge on what was not seen, and "Learn more" and "Pull request" links. The
+  badges stay during the visit; the entries become seen when the page closes (another page
+  chosen or Settings closed).
+- **Notification after sign-in**, once per account and page load, when unseen entries remain:
+  "3 new changes since your last visit", with a **View** button that opens the page. It is in the
+  clock panel. A notification button can now pass arguments to the app:
+  `NotificationAction.LaunchApp(appId, label, arguments)`.
+- **Dot** on the Start button (desktop) and on the Home button (mobile) while unseen entries
+  remain; their accessible name says it too.
+
 ## When a version is released
 
-The entries of `unreleased/` are grouped into `changes/<version>.json` in the PR that changes
-`build/Versions.props` (script `build/tools/collect-changes.sh`, coming with work item 4 of
-ADR 0186). Until then, do it by hand: create
-`{ "version": "x.y.z", "date": "yyyy-mm-dd", "entries": [ … ] }` with the entries, without
-changing their IDs, and delete the files of `unreleased/`.
+In the PR that changes `build/Versions.props`, run:
+
+```bash
+wasm2/HackerOs/build/tools/collect-changes.sh            # today's date (UTC)
+wasm2/HackerOs/build/tools/collect-changes.sh --date 2026-11-02
+```
+
+The script (tool `Tools/HackerOs.Tools.ChangeList`, `collect` command):
+
+1. moves every entry of `unreleased/` into `changes/<version>.json`, the version being the one of
+   `Versions.props`, without changing their content or IDs (**New** badges already seen stay
+   seen), then deletes the files of `unreleased/`;
+2. regenerates `CHANGELOG.md` (English) and `CHANGELOG-fr.md` (French) at the root of the
+   repository.
+
+It refuses to run when `changes/<version>.json` already exists or `unreleased/` is empty.
+`--changelog-only` only regenerates the two changelogs. The PR check accepts a new
+`changes/<version>.json` as an entry.
+
+Then, on the merge into `main`, with nothing more to do:
+
+- **GitHub Release**: `release.yml` writes the text with the `notes --kind release` command: every
+  entry of the version, in English, grouped by category, with links to the PRs and the docs. When
+  `changes/<version>.json` is missing, GitHub generates the notes as before, with a warning.
+- **NuGet**: `build/pack-local.sh` writes `artifacts/package-release-notes.txt` (`notes --kind
+  package` command) and passes it to `dotnet pack`; `Platform/Packaging.props` puts it in the
+  `PackageReleaseNotes` of every `HackerOs.*` package: the `developer` entries of the version and
+  the link to the Release. Before the collection (local package), the `unreleased/` entries are used.
+- **Changelogs**: `CHANGELOG.md` and `CHANGELOG-fr.md` only list published versions. The test
+  `ReleaseNotesTests.The_changelogs_of_the_repository_are_up_to_date` fails when they no longer
+  match `changes/`: never edit them by hand.

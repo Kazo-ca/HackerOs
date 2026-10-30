@@ -687,4 +687,16 @@ Annuler : décider au prochain lancement.</value>
   <data name="Admin.DeleteUserAndHome" xml:space="preserve">
     <value>Supprimer le compte {0} et son dossier personnel</value>
   </data>
+  <data name="WhatsNew.Notification.Title" xml:space="preserve">
+    <value>Nouveautés</value>
+  </data>
+  <data name="WhatsNew.Notification.One" xml:space="preserve">
+    <value>1 nouveauté depuis votre dernière visite.</value>
+  </data>
+  <data name="WhatsNew.Notification.Many" xml:space="preserve">
+    <value>{0} nouveautés depuis votre dernière visite.</value>
+  </data>
+  <data name="WhatsNew.Notification.View" xml:space="preserve">
+    <value>Voir</value>
+  </data>
 </root>
