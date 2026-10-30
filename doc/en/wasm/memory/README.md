@@ -56,12 +56,14 @@ at the end of each series or when a convention changes.
 - **Power button in the Start menu** (ADR 0195, PR #291, merged on
   2026-10-30): "Switch user" stays greyed out, `TODO` issue #290 (several
   sessions open at once).
-- **`todo/base` series** (2026-10-30, in progress): the `TODO` issues done in
-  parallel, one `todo/<n>-<topic>` branch per work item, PR to `todo/base`,
-  then one `todo/base` → `main` PR that Benoit approves. ADR 0197 to 0205 are
-  reserved for the series' work items. Done: image wallpapers
-  ([ADR 0202](../dev/adr/0202-desktop-wallpaper-images.md), issue #254,
-  [`wallpapers.md`](../dev/wallpapers.md)).
+- **`todo/base` series** (2026-10-30, every `TODO` issue in parallel, one
+  final PR to `main`): Hack Store work item 1 done, `hackeros-solution`
+  template and catalog publishing workflow (ADR 0207,
+  [`app-repository.md`](../framework/app-repository.md), issue #246). The
+  `HackerOs-AppTemplate` repository will only be regenerated with a submodule
+  on the release that contains this template (draft PR in that repository).
+  Image wallpapers done too ([ADR 0202](../dev/adr/0202-desktop-wallpaper-images.md),
+  issue #254, [`wallpapers.md`](../dev/wallpapers.md)).
 - **ADR**: 0001 to 0171 and 0173 to 0195 exist on `main` (a few numbers skipped;
   0141 and 0172 were not used). Recent landmarks: 0173 automatic release, 0174
   new-version announcement, 0175 "New folder" in dialogs, 0176 app repository
@@ -70,8 +72,9 @@ at the end of each series or when a convention changes.
   what's new ([`change-list.md`](../dev/change-list.md)), 0187 guest and credits,
   0188 to 0190 Hack Store ([`hackeros-store.md`](../dev/plans/hackeros-store.md)),
   0191 installable local server, 0192 `features.md` and exception to ADR 0135,
-  0193 local time, 0194 taskbar menus, 0195 Start menu Power button.
-  **Next free number: 0196.** Before taking one, check `dev/adr/` on
+  0193 local time, 0194 taskbar menus, 0195 Start menu Power button;
+  `todo/base` series: 0207 `hackeros-solution` template (the series' other
+  numbers are reserved by its work items). **Next free number: 0196.** Before taking one, check `dev/adr/` on
   `main` and the open PRs.
 
 ## Working conventions
@@ -104,8 +107,8 @@ of [`AGENTS.md`](../../../../AGENTS.md), which Claude Code reads through
   `build/publish-trimmed.sh` and SDK compatibility
   (`Tests/fixtures/sdk-compat`) when they are concerned. GitHub Actions
   run again since 2026-10-24 and check every PR to `main`
-  and `*/base` (failing tests rerun once, Playwright in a manual
-  workflow): [`../dev/ci-workflows.md`](../dev/ci-workflows.md).
+  and `*/base` (failing tests rerun once; Playwright every night on `main`
+  when `main` changed, a failure opens an issue): [`../dev/ci-workflows.md`](../dev/ci-workflows.md).
 - **SDK**: the public API is tracked by `PublicAPI.Shipped.txt` /
   `PublicAPI.Unshipped.txt`; an addition goes through `Unshipped` until the
   next release (`build/tools/ship-public-api.sh`).

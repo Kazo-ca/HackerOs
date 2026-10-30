@@ -1,0 +1,1 @@
+A HackerOS window app made with the hackeros-solution template.

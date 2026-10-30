@@ -1,0 +1,97 @@
+# Submits a version of the app to the Hack Store catalog (ADR 0188 §4, §7).
+#
+# On a tag v<version> (the app's Version in its [AppManifest] class), this workflow:
+#   1. checks the HackerOS submodule and builds the app in Release, as CI does;
+#   2. packs it (HackerOsPack, ADR 0182) and checks the manifest version equals the tag;
+#   3. makes the catalog folder apps/<appId>_<version>/ from store/ (icon, short descriptions,
+#      descriptions, screenshots, store.json + the tag's commit) and the generated manifest.json;
+#   4. leaves that folder as an artifact of the run; with the HACK_STORE_TOKEN secret (a token of
+#      the author allowed to fork and open pull requests), it also opens the pull request to
+#      HackerOs-AppMarketPlace from the author's fork.
+# The catalog never takes a binary from the author: its own CI compiles the app at that commit.
+name: Publish to the Hack Store
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  APP_DIRECTORY: src/HackerOs.Template.Solution
+  MARKETPLACE: Kazo-ca/HackerOs-AppMarketPlace
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Check the HackerOS submodule
+        run: bash .github/scripts/check-hackeros-submodule.sh
+
+      - name: Build and pack (Release)
+        run: dotnet build "$APP_DIRECTORY" -c Release -t:HackerOsPack
+
+      - name: Make the catalog folder
+        id: folder
+        run: |
+          manifest="$APP_DIRECTORY/manifest.json"
+          app_id="$(jq -r .id "$manifest")"
+          version="$(jq -r .version "$manifest")"
+          if [[ "$GITHUB_REF_TYPE" == "tag" && "${GITHUB_REF_NAME#v}" != "$version" ]]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match the app version $version (manifest.json)."
+            exit 1
+          fi
+          name="${app_id}_${version}"
+          folder="artifacts/hack-store/apps/$name"
+          mkdir -p "$folder"
+          cp store/icon.png "$folder/"
+          cp store/short_description.*.txt store/description.*.md "$folder/"
+          if [[ -d store/screenshots ]]; then cp -r store/screenshots "$folder/"; fi
+          cp "$manifest" "$folder/manifest.json"
+          jq --arg commit "$GITHUB_SHA" '. + {commit: $commit}' store/store.json > "$folder/store.json"
+          echo "name=$name" >> "$GITHUB_OUTPUT"
+          echo "app_id=$app_id" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hack-store-${{ steps.folder.outputs.name }}
+          path: artifacts/hack-store
+
+      - name: Open the pull request to the catalog
+        env:
+          GH_TOKEN: ${{ secrets.HACK_STORE_TOKEN }}
+          NAME: ${{ steps.folder.outputs.name }}
+          APP_ID: ${{ steps.folder.outputs.app_id }}
+          VERSION: ${{ steps.folder.outputs.version }}
+        run: |
+          if [[ -z "$GH_TOKEN" ]]; then
+            echo "No HACK_STORE_TOKEN secret: submit the artifact hack-store-$NAME to $MARKETPLACE by hand."
+            exit 0
+          fi
+          user="$(gh api user --jq .login)"
+          gh repo fork "$MARKETPLACE" --clone=false --remote=false
+          fork="$user/${MARKETPLACE#*/}"
+          git clone --depth 1 "https://x-access-token:$GH_TOKEN@github.com/$fork.git" marketplace
+          cd marketplace
+          git fetch --depth 1 "https://github.com/$MARKETPLACE.git" main
+          git checkout -B "$NAME" FETCH_HEAD
+          mkdir -p apps
+          cp -r "../artifacts/hack-store/apps/$NAME" apps/
+          git add "apps/$NAME"
+          git -c user.name="$user" -c user.email="$user@users.noreply.github.com" commit -m "Add $APP_ID $VERSION"
+          # The branch lives in the author's fork only; re-running the workflow replaces it.
+          git push --force origin "$NAME"
+          gh pr create --repo "$MARKETPLACE" --base main --head "$user:$NAME" \
+            --title "$APP_ID $VERSION" \
+            --body "Submitted by the publish workflow of $GITHUB_SERVER_URL/$GITHUB_REPOSITORY (commit $GITHUB_SHA)."
