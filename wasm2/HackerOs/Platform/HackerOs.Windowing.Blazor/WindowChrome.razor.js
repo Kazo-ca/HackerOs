@@ -228,6 +228,8 @@ export function attachWindowGestures(root, dotNetReference) {
         const sourceDocument = host.ownerDocument;
         const currentDisplay = Number(host.closest(".window-layer[data-display]")?.dataset.display ?? 1);
         const hostRect = host.getBoundingClientRect();
+        // The window layer does not move during a drag: its box places the drag preview (ADR 0198 §3).
+        const layerBox = host.offsetParent?.getBoundingClientRect() ?? null;
         const grab = [startX - hostRect.left, startY - hostRect.top];
         const dropState = { preview: null };
         let drop = null;
@@ -318,6 +320,14 @@ export function attachWindowGestures(root, dotNetReference) {
                     // would otherwise draw the displacement twice for one or more painted frames.
                     host.style.setProperty("--window-drag-translation",
                         `calc(${origin[0] + delta[0]}px - var(--window-x, 0px)) calc(${origin[1] + delta[1]}px - var(--window-y, 0px))`);
+                    // Where the window is drawn: a drag that ends in a snap animates from here
+                    // (ADR 0198 §3, read by WindowHost.razor.js on the next render).
+                    if (layerBox) {
+                        host.__hosPreviewBox = {
+                            left: layerBox.left + origin[0] + delta[0], top: layerBox.top + origin[1] + delta[1],
+                            width: origin[2], height: origin[3]
+                        };
+                    }
                 });
             } else {
                 const wasPending = pending !== null;

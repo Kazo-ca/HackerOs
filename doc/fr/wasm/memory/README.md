@@ -56,6 +56,10 @@ jour à la fin de chaque série ou quand une convention change.
 - **Bouton Marche/arrêt dans le menu Démarrer** (ADR 0195, PR #291, fusionnée
   le 2026-10-30) : « Changer d'utilisateur » reste grisé, issue `TODO` #290
   (plusieurs sessions ouvertes en même temps).
+- **Animations des fenêtres** (ADR 0198, chantier 3 de #242, branche
+  `todo/12-window-animations` vers `todo/base`) : ouvrir, fermer, minimiser vers
+  la barre de son écran, restaurer, agrandir, snap ; variables
+  `--hos-window-anim-*` ([`window-animations.md`](../dev/window-animations.md)).
 - **ADR** : 0001 à 0171 et 0173 à 0195 existent sur `main` (quelques numéros sautés ;
   0141 et 0172 n'ont pas servi). Repères récents : 0173 publication automatique,
   0174 annonce de nouvelle version, 0175 « Nouveau dossier » des dialogues, 0176

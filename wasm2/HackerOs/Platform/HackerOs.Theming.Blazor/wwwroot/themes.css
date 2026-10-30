@@ -57,6 +57,10 @@
     --hos-inset-highlight: inset 0 1px rgb(255 255 255 / 7%);
     --hos-transition-fast: 120ms ease;
     --hos-transition-normal: 180ms ease;
+    /* Window animations (ADR 0198): open, close, minimize, restore, maximize and snap. */
+    --hos-window-anim-duration: 180ms;
+    --hos-window-anim-easing: cubic-bezier(0.2, 0, 0, 1);
+    --hos-window-anim-scale: 0.95;
     /* Controls, inputs, and buttons. */
     --hos-control-height: 2.25rem;
     --hos-btn-bg: var(--hos-bg-surface);
@@ -1478,12 +1482,14 @@
 ) {
     --hos-transition-fast: 0ms;
     --hos-transition-normal: 0ms;
+    --hos-window-anim-duration: 0ms;
 }
 
 @media (prefers-reduced-motion: reduce) {
     :where([data-theme], [data-hos-theme]) {
         --hos-transition-fast: 0ms;
         --hos-transition-normal: 0ms;
+        --hos-window-anim-duration: 0ms;
     }
 }
 

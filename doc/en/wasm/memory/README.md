@@ -56,6 +56,10 @@ at the end of each series or when a convention changes.
 - **Power button in the Start menu** (ADR 0195, PR #291, merged on
   2026-10-30): "Switch user" stays greyed out, `TODO` issue #290 (several
   sessions open at once).
+- **Window animations** (ADR 0198, work item 3 of #242, branch
+  `todo/12-window-animations` into `todo/base`): open, close, minimize into the
+  taskbar of its screen, restore, maximize, snap; `--hos-window-anim-*`
+  variables ([`window-animations.md`](../dev/window-animations.md)).
 - **ADR**: 0001 to 0171 and 0173 to 0195 exist on `main` (a few numbers skipped;
   0141 and 0172 were not used). Recent landmarks: 0173 automatic release, 0174
   new-version announcement, 0175 "New folder" in dialogs, 0176 app repository

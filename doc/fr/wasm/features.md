@@ -89,7 +89,9 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
 - **Bureau** avec icônes, raccourcis et menus contextuels, comme sur un OS de
   bureau. ([`desktop.md`](dev/desktop.md))
 - **Fenêtres** déplaçables, redimensionnables, agrandies ou ancrées sur les
-  bords de l'écran. ([`window-model.md`](framework/window-model.md))
+  bords de l'écran, avec des animations sobres pour ouvrir, fermer, minimiser
+  vers la barre, agrandir et ancrer, coupées par « Réduire les animations ».
+  ([`window-model.md`](framework/window-model.md), [`window-animations.md`](dev/window-animations.md))
 - **Barre des tâches et menu Démarrer** avec les applications épinglées et les
   fenêtres ouvertes. Un clic droit sur la barre donne le menu de la fenêtre,
   « Nouvelle fenêtre », le gestionnaire des tâches, « Afficher le bureau » et
@@ -253,7 +255,7 @@ dans `main`, le lien mène à sa PR.
 | --- | --- | --- | --- |
 | Archive `.zip` ouverte comme un dossier | L'explorateur parcourt une archive `.zip` en lecture seule ; un fichier ouvert est extrait dans `/tmp`. Le reste de l'ADR est disponible. | [0185](dev/adr/0185-file-explorer-improvements.md) | [#241](https://github.com/Kazo-ca/HackerOs/issues/241) |
 | Changer d'utilisateur | Ouvrir une autre session sans fermer la première, depuis le bouton Marche/arrêt du menu Démarrer (grisé pour l'instant, toujours grisé pour l'invité). | [0195](dev/adr/0195-start-menu-power-button.md) | [#290](https://github.com/Kazo-ca/HackerOs/issues/290) |
-| Fenêtres et barre des tâches | Bulles de notification, animations des fenêtres, aperçus au survol. Le fuseau horaire ([ADR 0193](dev/adr/0193-local-time-and-time-zone.md)) et les menus de la barre ([ADR 0194](dev/adr/0194-taskbar-context-menus.md)) sont disponibles. | À venir | [#242](https://github.com/Kazo-ca/HackerOs/issues/242) |
+| Fenêtres et barre des tâches | Bulles de notification, aperçus au survol. Le fuseau horaire ([ADR 0193](dev/adr/0193-local-time-and-time-zone.md)), les menus de la barre ([ADR 0194](dev/adr/0194-taskbar-context-menus.md)) et les animations des fenêtres ([ADR 0198](dev/adr/0198-window-animations.md)) sont disponibles. | À venir | [#242](https://github.com/Kazo-ca/HackerOs/issues/242) |
 
 ### Hack Store
 
