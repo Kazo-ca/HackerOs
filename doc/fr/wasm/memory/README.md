@@ -57,7 +57,7 @@ jour à la fin de chaque série ou quand une convention change.
   le 2026-10-30) : « Changer d'utilisateur » reste grisé, issue `TODO` #290
   (plusieurs sessions ouvertes en même temps).
 - **Point des notifications non lues à côté de l'horloge** (ADR 0196, branche
-  `notifications/1-clock-dot`, PR vers `main`) : remplace la pastille du menu
+  `notifications/1-clock-dot`, PR #294 vers `main`) : remplace la pastille du menu
   Démarrer des nouveautés ; questions Q1 à Q6 posées à Benoit, recommandations
   appliquées en attendant.
 - **ADR** : 0001 à 0171 et 0173 à 0196 existent sur `main` (quelques numéros sautés ;

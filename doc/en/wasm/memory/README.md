@@ -57,7 +57,7 @@ at the end of each series or when a convention changes.
   2026-10-30): "Switch user" stays greyed out, `TODO` issue #290 (several
   sessions open at once).
 - **Unread notifications dot next to the clock** (ADR 0196, branch
-  `notifications/1-clock-dot`, PR to `main`): replaces the what's new Start menu
+  `notifications/1-clock-dot`, PR #294 to `main`): replaces the what's new Start menu
   dot; questions Q1 to Q6 asked to Benoit, recommendations applied meanwhile.
 - **ADR**: 0001 to 0171 and 0173 to 0196 exist on `main` (a few numbers skipped;
   0141 and 0172 were not used). Recent landmarks: 0173 automatic release, 0174
