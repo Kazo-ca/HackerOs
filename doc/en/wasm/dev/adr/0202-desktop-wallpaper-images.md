@@ -100,9 +100,9 @@ screens is the one of `screens.config` (ADR 0180).
 ### 6. Outside this work item
 
 - **Mobile** (Q1): the mobile home screen keeps its theme's background.
-  Separate `TODO` issue.
+  `TODO` issue [#297](https://github.com/Kazo-ca/HackerOs/issues/297).
 - **"Set as wallpaper"** in the File Explorer's context menu of images (Q3):
-  separate `TODO` issue.
+  `TODO` issue [#298](https://github.com/Kazo-ca/HackerOs/issues/298).
 
 ## Consequences
 
@@ -136,5 +136,5 @@ the recommendation applied while waiting for his answer:
 - [x] Wallpaper panel in Settings ▸ Appearance.
 - [x] 4 shipped wallpapers (WebP).
 - [x] Tests: catalog, schema, service, panel.
-- [ ] Mobile (`TODO` issue).
-- [ ] "Set as wallpaper" in the File Explorer (`TODO` issue).
+- [ ] Mobile (#297).
+- [ ] "Set as wallpaper" in the File Explorer (#298).

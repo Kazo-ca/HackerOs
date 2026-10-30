@@ -39,8 +39,6 @@ public sealed partial class WallpaperPanel : IAsyncDisposable
     /// <summary>Most library images listed, so a huge folder does not load every file.</summary>
     internal const int MaxLibraryImages = 60;
 
-    private const string ModulePath = "./_content/HackerOs.Apps.Settings/WallpaperPanel.razor.js";
-
     private readonly Dictionary<string, ElementReference> _thumbnails = new(StringComparer.Ordinal);
     private readonly HashSet<string> _drawnThumbnails = new(StringComparer.Ordinal);
     private HackSettingsDocument? _document;
@@ -125,7 +123,7 @@ public sealed partial class WallpaperPanel : IAsyncDisposable
 
         try
         {
-            _module ??= await JS.InvokeAsync<IJSObjectReference>("import", ModulePath);
+            _module ??= await JS.InvokeAsync<IJSObjectReference>("import", "./_content/HackerOs.Apps.Settings/WallpaperPanel.razor.js");
             foreach (LibraryImage image in pending)
             {
                 _drawnThumbnails.Add(image.Path);

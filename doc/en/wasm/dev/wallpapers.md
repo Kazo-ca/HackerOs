@@ -69,5 +69,5 @@ A `nano ~/.config/hackeros/appearance.config` changes the wallpaper on save.
 
 ## Outside this work item
 
-Mobile wallpaper and "Set as wallpaper" in the File Explorer: `TODO` issues
+Mobile wallpaper and "Set as wallpaper" in the File Explorer: `TODO` issues #297 and #298
 (ADR 0202 §6).

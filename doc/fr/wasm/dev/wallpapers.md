@@ -70,4 +70,4 @@ Un `nano ~/.config/hackeros/appearance.config` change le fond à l'enregistremen
 ## Hors de ce chantier
 
 Fond d'écran du mobile et « Définir comme fond d'écran » dans l'explorateur :
-issues `TODO` (ADR 0202 §6).
+issues `TODO` #297 et #298 (ADR 0202 §6).

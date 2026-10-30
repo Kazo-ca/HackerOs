@@ -102,9 +102,9 @@ limite de 9 écrans est celle de `screens.config` (ADR 0180).
 ### 6. Hors de ce chantier
 
 - **Mobile** (Q1) : l'écran d'accueil mobile garde le fond de son thème.
-  Issue `TODO` à part.
+  Issue `TODO` [#297](https://github.com/Kazo-ca/HackerOs/issues/297).
 - **« Définir comme fond d'écran »** dans le menu contextuel des images de
-  l'explorateur (Q3) : issue `TODO` à part.
+  l'explorateur (Q3) : issue `TODO` [#298](https://github.com/Kazo-ca/HackerOs/issues/298).
 
 ## Conséquences
 
@@ -138,5 +138,5 @@ la recommandation appliquée en attendant sa réponse :
 - [x] Panneau Fond d'écran dans Paramètres ▸ Apparence.
 - [x] 4 fonds livrés (WebP).
 - [x] Tests : catalogue, schéma, service, panneau.
-- [ ] Mobile (issue `TODO`).
-- [ ] « Définir comme fond d'écran » dans l'explorateur (issue `TODO`).
+- [ ] Mobile (#297).
+- [ ] « Définir comme fond d'écran » dans l'explorateur (#298).
