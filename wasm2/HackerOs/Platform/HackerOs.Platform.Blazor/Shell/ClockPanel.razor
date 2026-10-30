@@ -1,5 +1,4 @@
 @using HackerOs.App.Abstractions
-@using HackerOs.Platform.Core.Lifecycle
 @using HackerOs.Platform.Core.Shell
 @using HackerOs.Simulation.Abstractions.Notifications
 @using HackerOs.Simulation.Abstractions.Sessions
@@ -213,27 +212,15 @@
     }
 
     /// <summary>
-    /// Runs a notification action. A launch action (<see cref="NotificationAction.LaunchApp(string, string, IReadOnlyList{string})"/>, used
-    /// by OS notifications such as the low-storage warning of ADR 0099) launches its app, which the
-    /// shell then presents, and dismisses the notification; other actions belong to their app.
+    /// Runs a notification action the same way as the notification bubbles (ADR 0197 §4): an action
+    /// the host registered, or a launch action, runs and dismisses the notification, then the panel
+    /// closes; other actions belong to their app.
     /// </summary>
     private async Task InvokeActionAsync(Notification notification, NotificationAction action)
     {
-        if (!action.TryGetLaunchedApp(out string? appId)
-            || SessionService.CurrentPrincipal is not AuthenticatedPrincipal principal
-            || Services.GetService(typeof(AppLifecycleOrchestrator)) is not AppLifecycleOrchestrator orchestrator)
+        if (await NotificationActionRunner.RunAsync(Services, notification, action) && OnClose.HasDelegate)
         {
-            return;
-        }
-
-        AppLaunchResult result = await orchestrator.LaunchAsync(new AppLaunchRequest(appId, principal, [.. action.LaunchArguments]));
-        if (result.IsSuccess)
-        {
-            NotificationQueue.Dismiss(notification.Id);
-            if (OnClose.HasDelegate)
-            {
-                await OnClose.InvokeAsync();
-            }
+            await OnClose.InvokeAsync();
         }
 
         StateHasChanged();

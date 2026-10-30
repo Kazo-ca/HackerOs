@@ -56,6 +56,12 @@ jour à la fin de chaque série ou quand une convention change.
 - **Bouton Marche/arrêt dans le menu Démarrer** (ADR 0195, PR #291, fusionnée
   le 2026-10-30) : « Changer d'utilisateur » reste grisé, issue `TODO` #290
   (plusieurs sessions ouvertes en même temps).
+- **Série `todo/`** (2026-10-30, branche `todo/base`, une PR finale vers
+  `main` pour Benoit) : toutes les issues `TODO` ouvertes, une branche
+  `todo/<n>-<sujet>` chacune. Les ADR 0197 à 0205 lui sont réservées. Fait
+  dans `todo/base` : bulles de notification et « Update ready » en
+  notification (ADR 0197, chantier 1 de #242,
+  [`notification-toasts.md`](../dev/notification-toasts.md)).
 - **ADR** : 0001 à 0171 et 0173 à 0195 existent sur `main` (quelques numéros sautés ;
   0141 et 0172 n'ont pas servi). Repères récents : 0173 publication automatique,
   0174 annonce de nouvelle version, 0175 « Nouveau dossier » des dialogues, 0176
@@ -65,7 +71,9 @@ jour à la fin de chaque série ou quand une convention change.
   invité et crédits, 0188 à 0190 Hack Store ([`hackeros-store.md`](../dev/plans/hackeros-store.md)),
   0191 serveur local installable, 0192 `features.md` et exception à l'ADR 0135,
   0193 heure locale, 0194 menus de la barre des tâches, 0195 bouton
-  Marche/arrêt du menu Démarrer. **Prochain numéro libre : 0196.** Avant d'en
+  Marche/arrêt du menu Démarrer. 0196 est prise par la PR #294 (point des
+  notifications non lues), 0197 à 0205 sont réservées par la série `todo/`
+  (0197 bulles de notification). **Prochain numéro libre : 0206.** Avant d'en
   prendre un, vérifier `dev/adr/` sur `main` et les PR ouvertes.
 
 ## Conventions de travail

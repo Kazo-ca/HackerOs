@@ -56,6 +56,11 @@ at the end of each series or when a convention changes.
 - **Power button in the Start menu** (ADR 0195, PR #291, merged on
   2026-10-30): "Switch user" stays greyed out, `TODO` issue #290 (several
   sessions open at once).
+- **`todo/` series** (2026-10-30, branch `todo/base`, one final PR to `main`
+  for Benoit): every open `TODO` issue, one branch `todo/<n>-<topic>` each.
+  ADR 0197 to 0205 are reserved for it. Done in `todo/base`: notification
+  bubbles and "Update ready" as a notification (ADR 0197, work item 1 of #242,
+  [`notification-toasts.md`](../dev/notification-toasts.md)).
 - **ADR**: 0001 to 0171 and 0173 to 0195 exist on `main` (a few numbers skipped;
   0141 and 0172 were not used). Recent landmarks: 0173 automatic release, 0174
   new-version announcement, 0175 "New folder" in dialogs, 0176 app repository
@@ -65,8 +70,9 @@ at the end of each series or when a convention changes.
   0188 to 0190 Hack Store ([`hackeros-store.md`](../dev/plans/hackeros-store.md)),
   0191 installable local server, 0192 `features.md` and exception to ADR 0135,
   0193 local time, 0194 taskbar menus, 0195 Start menu Power button.
-  **Next free number: 0196.** Before taking one, check `dev/adr/` on
-  `main` and the open PRs.
+  0196 is taken by PR #294 (unread dot), 0197 to 0205 are reserved by the
+  `todo/` series (0197 notification bubbles). **Next free number: 0206.**
+  Before taking one, check `dev/adr/` on `main` and the open PRs.
 
 ## Working conventions
 

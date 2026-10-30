@@ -75,8 +75,9 @@ warning, serves the publication on `127.0.0.1` and `127.0.0.2`, then runs
 | `Trimmed_publish_boots_offline_after_the_first_load` | on `127.0.0.2` (the service worker is not registered on `127.0.0.1`): version caching, reload without network, login, launch of a never-loaded app |
 | `The_calculator_rendered_in_a_worker_works_like_on_the_page` | ADR 0133 trial, setting enabled by rewriting `appsettings.json`: the Calculator in a worker computes with mouse and keyboard, keeps its CSS, `Tab`, axe, `Alt+F7`/`Alt+Q`, dedicated worker released on close ([`remote-window-rendering.md`](remote-window-rendering.md)) |
 | `Measures_the_calculator_on_the_page_and_in_a_worker` | ADR 0133 measurements (opening, latency, memory, batches), written to `remote-window-measurements.json` in the artifacts folder |
+| `Trimmed_publish_shows_a_new_notification_as_a_bubble_above_the_taskbar` | ADR 0197: the what's new notification posted at a new account's sign-in shows as a bubble above the taskbar (source "HackerOS", title, "View" button), leaves by itself after about 6 s and stays in the clock panel ([`notification-toasts.md`](notification-toasts.md)) |
 
-The script requires all four tests to pass (`EXPECTED_TESTS`).
+The script requires all five tests to pass (`EXPECTED_TESTS`).
 
 No console error is allowed. Without `HACKEROS_TRIMMED_URL`, the suite is
 skipped (a `dotnet test` of the solution does not run it).

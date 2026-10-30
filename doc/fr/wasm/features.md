@@ -96,6 +96,10 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   les fenêtres en cascade ou en mosaïque. ([`taskbar-context-menus.md`](dev/taskbar-context-menus.md))
   Le menu Démarrer montre l'utilisateur connecté et son bouton Marche/arrêt :
   se déconnecter ou redémarrer. ([ADR 0195](dev/adr/0195-start-menu-power-button.md))
+- **Bulles de notification** : chaque notification de l'OS ou d'une app
+  s'affiche quelques secondes au-dessus de la barre (en haut sur téléphone),
+  puis reste dans le panneau de l'horloge. Une mise à jour prête y arrive avec
+  son bouton « Redémarrer ». ([`notification-toasts.md`](dev/notification-toasts.md))
 - **Plusieurs écrans** : chaque écran supplémentaire s'ouvre dans sa propre
   fenêtre du navigateur, avec sa barre des tâches, et l'OS s'en souvient. On
   glisse une fenêtre d'un écran à l'autre. ([`screen-service.md`](dev/screen-service.md),
@@ -253,7 +257,7 @@ dans `main`, le lien mène à sa PR.
 | --- | --- | --- | --- |
 | Archive `.zip` ouverte comme un dossier | L'explorateur parcourt une archive `.zip` en lecture seule ; un fichier ouvert est extrait dans `/tmp`. Le reste de l'ADR est disponible. | [0185](dev/adr/0185-file-explorer-improvements.md) | [#241](https://github.com/Kazo-ca/HackerOs/issues/241) |
 | Changer d'utilisateur | Ouvrir une autre session sans fermer la première, depuis le bouton Marche/arrêt du menu Démarrer (grisé pour l'instant, toujours grisé pour l'invité). | [0195](dev/adr/0195-start-menu-power-button.md) | [#290](https://github.com/Kazo-ca/HackerOs/issues/290) |
-| Fenêtres et barre des tâches | Bulles de notification, animations des fenêtres, aperçus au survol. Le fuseau horaire ([ADR 0193](dev/adr/0193-local-time-and-time-zone.md)) et les menus de la barre ([ADR 0194](dev/adr/0194-taskbar-context-menus.md)) sont disponibles. | À venir | [#242](https://github.com/Kazo-ca/HackerOs/issues/242) |
+| Fenêtres et barre des tâches | Animations des fenêtres, aperçus au survol. Le fuseau horaire ([ADR 0193](dev/adr/0193-local-time-and-time-zone.md)), les menus de la barre ([ADR 0194](dev/adr/0194-taskbar-context-menus.md)) et les bulles de notification ([ADR 0197](dev/adr/0197-notification-toasts.md)) sont disponibles. | À venir | [#242](https://github.com/Kazo-ca/HackerOs/issues/242) |
 
 ### Hack Store
 

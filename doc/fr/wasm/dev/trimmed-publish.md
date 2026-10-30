@@ -76,8 +76,9 @@ alerte `IL…`, sert la publication sur `127.0.0.1` et `127.0.0.2`, puis lance
 | `Trimmed_publish_boots_offline_after_the_first_load` | sur `127.0.0.2` (le service worker n'est pas enregistré sur `127.0.0.1`) : mise en cache de la version, rechargement sans réseau, connexion, lancement d'une app jamais chargée |
 | `The_calculator_rendered_in_a_worker_works_like_on_the_page` | essai de l'ADR 0133, réglage activé par une réécriture d'`appsettings.json` : la Calculatrice dans un worker calcule à la souris et au clavier, garde son CSS, `Tab`, axe, `Alt+F7`/`Alt+Q`, worker dédié libéré à la fermeture ([`remote-window-rendering.md`](remote-window-rendering.md)) |
 | `Measures_the_calculator_on_the_page_and_in_a_worker` | mesures de l'ADR 0133 (ouverture, latence, mémoire, lots), écrites dans `remote-window-measurements.json` du dossier des artefacts |
+| `Trimmed_publish_shows_a_new_notification_as_a_bubble_above_the_taskbar` | ADR 0197 : la notification des nouveautés postée à la connexion d'un nouveau compte apparaît en bulle au-dessus de la barre (source « HackerOS », titre, bouton « Voir »), part seule après environ 6 s et reste dans le panneau de l'horloge ([`notification-toasts.md`](notification-toasts.md)) |
 
-Le script exige que les quatre tests passent (`EXPECTED_TESTS`).
+Le script exige que les cinq tests passent (`EXPECTED_TESTS`).
 
 Aucune erreur de console n'est admise. Sans `HACKEROS_TRIMMED_URL`, la suite est
 ignorée (un `dotnet test` de la solution ne la lance pas).

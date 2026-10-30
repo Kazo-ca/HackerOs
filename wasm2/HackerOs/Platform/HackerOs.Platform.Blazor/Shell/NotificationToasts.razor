@@ -1,0 +1,50 @@
+@using HackerOs.Simulation.Abstractions.Notifications
+@using HackerOs.Simulation.Abstractions.Sessions
+@using HackerOs.Simulation.Abstractions.Time
+@implements IDisposable
+@inject INotificationQueue NotificationQueue
+@inject ISessionService SessionService
+@inject ISimulationClock SimulationClock
+@inject IServiceProvider Services
+@inject IStringLocalizer<Strings> L
+
+@* ADR 0197: the live region exists before its first bubble, so screen readers announce each one. *@
+<div class="notification-toasts @PlacementClass" role="region" aria-label="@L["Toast.Region"]" aria-live="polite">
+    @foreach (NotificationToast toast in _feed.Toasts)
+    {
+        Notification notification = toast.Notification;
+        <article @key="notification.Id"
+                 class="notification-toast @SeverityClass(notification.Severity)"
+                 aria-label="@notification.Title"
+                 @onmouseenter="() => _feed.Hold(notification.Id)"
+                 @onmouseleave="() => _feed.Release(notification.Id)"
+                 @onfocusin="() => _feed.Hold(notification.Id)"
+                 @onfocusout="() => _feed.Release(notification.Id)">
+            <header class="notification-toast-header">
+                <span class="notification-toast-source">@SourceLabel(notification.SourceAppId)</span>
+                <button type="button"
+                        class="notification-toast-close"
+                        aria-label="@L["Toast.Close"]"
+                        title="@L["Toast.Close"]"
+                        @onclick="() => _feed.Close(notification.Id)">
+                    ×
+                </button>
+            </header>
+            <h4 class="notification-toast-title">@notification.Title</h4>
+            <p class="notification-toast-message">@notification.Message</p>
+            @if (notification.Actions.Count > 0)
+            {
+                <div class="notification-toast-actions">
+                    @foreach (NotificationAction action in notification.Actions)
+                    {
+                        <button type="button"
+                                class="notification-toast-action"
+                                @onclick="() => RunActionAsync(notification, action)">
+                            @action.Label
+                        </button>
+                    }
+                </div>
+            }
+        </article>
+    }
+</div>
