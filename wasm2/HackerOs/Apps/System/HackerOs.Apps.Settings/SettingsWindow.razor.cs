@@ -425,6 +425,16 @@ public partial class SettingsWindow : IAsyncDisposable
         }
     }
 
+    /// <summary>The Local server panel linked this device with a pairing code (ADR 0191 §6).</summary>
+    private async Task OnLocalServerPairedAsync(HackServerConnectionState state)
+    {
+        _connectionState = state;
+        _connectionErrorMessage = null;
+
+        // ADR 0029 Decision 7: sync once immediately after a successful connect.
+        await SyncNowAsync();
+    }
+
     private async Task DisconnectAsync()
     {
         if (_isConnecting)

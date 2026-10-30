@@ -26,3 +26,7 @@ override HackerOs.Apps.FileExplorer.NetworkDrivesSidebar.OnParametersSetAsync() 
 ~override HackerOs.Apps.FileExplorer.NetworkDrivesSidebar.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 HackerOs.Apps.FileExplorer.FileControl.FileView.LoadFolderPreviewsAsync(string![]! paths) -> System.Threading.Tasks.Task!
 HackerOs.Apps.FileExplorer.FileControl.FileView.PrepareExternalDragAsync(string! path, string![]! selectedPaths) -> System.Threading.Tasks.Task!
+HackerOs.Apps.FileExplorer.FileControl.Icons.IconPackShellIconProvider
+HackerOs.Apps.FileExplorer.FileControl.Icons.IconPackShellIconProvider.IconPackShellIconProvider(HackerOs.Theming.Abstractions.IconPacks.IconPack! pack, HackerOs.Apps.FileExplorer.FileControl.Icons.IShellIconProvider? fallback = null) -> void
+HackerOs.Apps.FileExplorer.FileControl.Icons.IconPackShellIconProvider.Pack.get -> HackerOs.Theming.Abstractions.IconPacks.IconPack!
+HackerOs.Apps.FileExplorer.FileControl.Icons.IconPackShellIconProvider.Resolve(HackerOs.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest request) -> HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor!

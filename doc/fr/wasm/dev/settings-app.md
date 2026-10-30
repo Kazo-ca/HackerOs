@@ -53,7 +53,7 @@ Synchronisation), Système (Utilisateurs, Mémoire, Sauvegarde, Nouveautés, À 
 | Applications installées (`installed-apps`) | `InstalledAppsPanel` | Liste des apps et de leurs commandes, désinstallation et réinstallation (ADR 0048). |
 | Composants de l'OS (`os-components`) | `OsComponentsPanel` | Fournisseur choisi pour chaque contrat (`HackComponentProviders.GetOverviewAsync`, `SetProviderAsync`). |
 | Menus des fichiers (`file-menus`) | `FileMenuEntriesPanel` | Entrées de menu inscrites par les apps (ADR 0151). |
-| Connexion au serveur (`server`) | `ServerRelayPolicyPanel` (+ la fenêtre) | Serveur optionnel, relais réseau (ADR 0102, 0134). Visible dans tous les cas, l'état vient de `HackServerConnection`. |
+| Connexion au serveur (`server`) | `ServerRelayPolicyPanel` (+ la fenêtre) | Serveur optionnel, relais réseau (ADR 0102, 0134). Visible dans tous les cas, l'état vient de `HackServerConnection`. Sans connexion, `LocalServerPanel` liste les téléchargements du serveur installable, teste une adresse et appaire l'appareil par code ([`installable-server.md`](installable-server.md), ADR 0191). |
 | Synchronisation (`sync`) | (dans la fenêtre) | État de la synchro et conflits (ADR 0101). |
 | Utilisateurs (`users`) | `UsersPanel` (+ `PasskeysPanel`) | Comptes, mots de passe, ajout et suppression de comptes par un administrateur, clés d'accès de la session (ADR 0120, 0168, 0169 ; voir [Page Utilisateurs](#page-utilisateurs)). |
 | Mémoire (`memory`) | `MemoryPanel` | Fichier `/etc/hackeros/memory.config`, section `[oom-killer]` (ADR 0126). |

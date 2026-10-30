@@ -283,5 +283,5 @@ Questions posées à Benoit le 2026-10-28 ; il a choisi **A** aux quatre premiè
 - [x] Vérification des références contre le runtime (Q1).
 - [x] Commande `hackpkg` et sa doc (`linux-commands.md`, `app-installation.md`).
 - [x] Tests unitaires (sources, paquet, index, vérification des références, passerelle, commande).
-- [ ] Test de bout en bout dans le navigateur avec un paquet de test servi localement.
-- [ ] Servir les ressources `wwwroot/` d'une app installée (voir « Limites »).
+- [x] Test de bout en bout dans le navigateur avec un paquet de test servi localement ([ADR 0206](0206-serve-installed-app-assets.md)).
+- [x] Servir les ressources `wwwroot/` d'une app installée (voir « Limites ») : [ADR 0206](0206-serve-installed-app-assets.md).

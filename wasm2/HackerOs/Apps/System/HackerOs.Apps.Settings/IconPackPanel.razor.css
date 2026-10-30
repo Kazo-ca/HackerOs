@@ -1,0 +1,122 @@
+/* Settings > Appearance > Icon pack (ADR 0203 §5): console panel like the other Settings pages, one
+   "cartridge" per pack showing a strip of its images on a dark slot, lit with the accent when chosen.
+   Every size is in rem so the page follows the text size of Settings > Accessibility. */
+
+.setting-group {
+    background-color: var(--hos-bg-surface, #151c20);
+    border: 1px solid var(--hos-border, #3a4b53);
+    border-radius: var(--hos-radius-md, 0.45rem);
+    padding: 0.875rem;
+    margin-bottom: 1rem;
+}
+
+.setting-group h4 {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0;
+    margin-bottom: 0.375rem;
+    color: color-mix(in srgb, var(--hos-accent, #42d392) 68%, var(--hos-text-primary, #f4f7f8));
+}
+
+.setting-desc {
+    font-size: 0.75rem;
+    color: var(--hos-text-secondary, #a8bac4);
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+}
+
+.setting-desc code {
+    font-family: var(--hos-font-mono, ui-monospace, monospace);
+    color: var(--hos-accent, #42d392);
+}
+
+.icon-pack-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+    gap: 0.6rem;
+}
+
+.icon-pack-option {
+    display: grid;
+    gap: 0.35rem;
+    min-width: 0;
+    padding: 0.5rem;
+    border: 1px solid var(--hos-border-subtle, #27343a);
+    border-radius: var(--hos-radius-md, 0.45rem);
+    background: var(--hos-bg-base, #101417);
+    color: var(--hos-text-primary, #f4f7f8);
+    font: inherit;
+    text-align: start;
+    cursor: pointer;
+    transition: border-color var(--hos-transition-fast, 120ms ease),
+        box-shadow var(--hos-transition-fast, 120ms ease),
+        transform var(--hos-transition-fast, 120ms ease);
+}
+
+.icon-pack-option:hover:not(:disabled) {
+    border-color: var(--hos-border-strong, #61747d);
+    transform: translateY(-1px);
+}
+
+.icon-pack-option.is-selected {
+    border-color: var(--hos-accent, #42d392);
+    box-shadow: 0 0 0 2px var(--hos-accent-glow, rgb(66 211 146 / 24%));
+}
+
+.icon-pack-option:focus-visible {
+    outline: 2px solid var(--hos-focus-ring, #42d392);
+    outline-offset: 2px;
+}
+
+.icon-pack-option:disabled {
+    cursor: default;
+    opacity: 0.6;
+}
+
+.icon-pack-preview {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 2.6rem;
+    padding: 0.4rem 0.5rem;
+    border-radius: var(--hos-radius-sm, 0.3rem);
+    background:
+        repeating-linear-gradient(0deg, transparent 0 3px, rgb(255 255 255 / 3%) 3px 4px),
+        var(--hos-bg-surface, #151c20);
+    color: var(--hos-accent, #42d392);
+}
+
+.icon-pack-preview img {
+    display: block;
+    width: 1.4rem;
+    height: 1.4rem;
+    object-fit: contain;
+}
+
+.icon-pack-name {
+    overflow: hidden;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.icon-pack-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.4rem;
+    font-size: 0.7rem;
+    color: var(--hos-text-secondary, #a8bac4);
+}
+
+.icon-pack-origin {
+    flex: none;
+    font-family: var(--hos-font-mono, monospace);
+    opacity: 0.8;
+}
+
+.icon-pack-warnings {
+    color: var(--hos-warning, #f2c14e);
+}

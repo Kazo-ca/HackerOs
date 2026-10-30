@@ -536,3 +536,38 @@ static HackerOs.Platform.Core.Appearance.WallpaperPreferences.Default.get -> Hac
 static HackerOs.Platform.Core.Appearance.WallpaperPreferences.FromSnapshot(HackerOs.Simulation.Abstractions.Settings.LayeredConfigSnapshot! snapshot) -> HackerOs.Platform.Core.Appearance.WallpaperPreferences!
 static HackerOs.Platform.Core.Appearance.WallpaperPreferences.operator !=(HackerOs.Platform.Core.Appearance.WallpaperPreferences? left, HackerOs.Platform.Core.Appearance.WallpaperPreferences? right) -> bool
 static HackerOs.Platform.Core.Appearance.WallpaperPreferences.operator ==(HackerOs.Platform.Core.Appearance.WallpaperPreferences? left, HackerOs.Platform.Core.Appearance.WallpaperPreferences? right) -> bool
+HackerOs.Platform.Core.Administration.ServerConnectionGatewayServices.HostInfo.get -> System.Func<HackerOs.Platform.Core.ServerConnection.IHostInfoClient!>?
+HackerOs.Platform.Core.Administration.ServerConnectionGatewayServices.HostInfo.init -> void
+HackerOs.Platform.Core.ServerConnection.HttpAccountClient.PairAsync(System.Uri! serverBaseUrl, HackerOs.Server.Contracts.Identity.PairDeviceRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.Server.Contracts.Identity.LoginResponse!>!
+HackerOs.Platform.Core.ServerConnection.IAccountClient.PairAsync(System.Uri! serverBaseUrl, HackerOs.Server.Contracts.Identity.PairDeviceRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.Server.Contracts.Identity.LoginResponse!>!
+HackerOs.Platform.Core.ServerConnection.IServerConnectionService.ConnectWithPairingCodeAsync(System.Uri! serverBaseUrl, string! code, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.Simulation.Abstractions.ServerConnection.ServerConnectionState!>!
+HackerOs.Platform.Core.ServerConnection.ServerConnectionService.ConnectWithPairingCodeAsync(System.Uri! serverBaseUrl, string! code, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.Simulation.Abstractions.ServerConnection.ServerConnectionState!>!
+HackerOs.Platform.Core.Appearance.IconPackService
+HackerOs.Platform.Core.Appearance.IconPackService.Changed -> System.Action?
+HackerOs.Platform.Core.Appearance.IconPackService.Current.get -> HackerOs.Theming.Abstractions.IconPacks.IconPack?
+HackerOs.Platform.Core.Appearance.IconPackService.Dispose() -> void
+HackerOs.Platform.Core.Appearance.IconPackService.FindAppImage(string! appId, string? category, bool hasDeclaredImage) -> string?
+HackerOs.Platform.Core.Appearance.IconPackService.IconPackService(HackerOs.Simulation.Abstractions.FileSystem.IFileSystemService! fileSystem, HackerOs.Simulation.Abstractions.Sessions.ISessionService! session, HackerOs.Simulation.Abstractions.Time.ISimulationClock! clock, HackerOs.Platform.Core.Settings.IOsSettingsService! settings, Microsoft.Extensions.Logging.ILogger<HackerOs.Platform.Core.Appearance.IconPackService!>? logger = null) -> void
+HackerOs.Platform.Core.Appearance.IconPackService.InitializeAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+HackerOs.Platform.Core.Appearance.IconPackService.RefreshAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+HackerOs.Platform.Core.Appearance.IconPackService.SelectedId.get -> string!
+HackerOs.Platform.Core.Appearance.IconPackSettingsDocuments
+static HackerOs.Platform.Core.Appearance.IconPackSettingsDocuments.Document.get -> HackerOs.Platform.Core.Settings.OsSettingsDocument!
+static HackerOs.Platform.Core.Appearance.IconPackSettingsDocuments.Schema.get -> HackerOs.Simulation.Abstractions.Settings.SettingsSchema!
+static HackerOs.Platform.Core.Appearance.IconPackSettingsDocuments.ToPackId(HackerOs.Simulation.Abstractions.Settings.LayeredConfigSnapshot! snapshot) -> string!
+HackerOs.Platform.Core.FileSystem.BuiltInIconPacks
+HackerOs.Platform.Core.FileSystem.BuiltInIconPacks.PackFile
+HackerOs.Platform.Core.FileSystem.BuiltInIconPacks.PackFile.<Clone>$() -> HackerOs.Platform.Core.FileSystem.BuiltInIconPacks.PackFile!
+HackerOs.Platform.Core.FileSystem.BuiltInIconPacks.PackFile.Content.get -> byte[]!
+HackerOs.Platform.Core.FileSystem.BuiltInIconPacks.PackFile.Content.init -> void
+HackerOs.Platform.Core.FileSystem.BuiltInIconPacks.PackFile.Deconstruct(out string! RelativePath, out byte[]! Content) -> void
+HackerOs.Platform.Core.FileSystem.BuiltInIconPacks.PackFile.Equals(HackerOs.Platform.Core.FileSystem.BuiltInIconPacks.PackFile? other) -> bool
+HackerOs.Platform.Core.FileSystem.BuiltInIconPacks.PackFile.PackFile(string! RelativePath, byte[]! Content) -> void
+HackerOs.Platform.Core.FileSystem.BuiltInIconPacks.PackFile.RelativePath.get -> string!
+HackerOs.Platform.Core.FileSystem.BuiltInIconPacks.PackFile.RelativePath.init -> void
+override HackerOs.Platform.Core.FileSystem.BuiltInIconPacks.PackFile.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.FileSystem.BuiltInIconPacks.PackFile.GetHashCode() -> int
+override HackerOs.Platform.Core.FileSystem.BuiltInIconPacks.PackFile.ToString() -> string!
+static HackerOs.Platform.Core.FileSystem.BuiltInIconPacks.Files.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.FileSystem.BuiltInIconPacks.PackFile!>!
+static HackerOs.Platform.Core.FileSystem.BuiltInIconPacks.PackFile.operator !=(HackerOs.Platform.Core.FileSystem.BuiltInIconPacks.PackFile? left, HackerOs.Platform.Core.FileSystem.BuiltInIconPacks.PackFile? right) -> bool
+static HackerOs.Platform.Core.FileSystem.BuiltInIconPacks.PackFile.operator ==(HackerOs.Platform.Core.FileSystem.BuiltInIconPacks.PackFile? left, HackerOs.Platform.Core.FileSystem.BuiltInIconPacks.PackFile? right) -> bool

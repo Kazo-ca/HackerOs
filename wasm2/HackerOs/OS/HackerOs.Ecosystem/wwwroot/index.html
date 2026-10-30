@@ -157,6 +157,9 @@
         } else if ('serviceWorker' in navigator) {
             navigator.serviceWorker.getRegistrations().then(registrations => {
                 for (let registration of registrations) {
+                    // ADR 0206: the worker the OS registers here to serve installed apps' files stays.
+                    const worker = registration.active || registration.waiting || registration.installing;
+                    if (worker && worker.scriptURL.includes('mode=installed-apps')) continue;
                     registration.unregister();
                 }
             });

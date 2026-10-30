@@ -145,3 +145,39 @@ HackerOs.Platform.Blazor.Shell.DesktopWallpaper.DesktopWallpaper() -> void
 HackerOs.Platform.Blazor.Shell.DesktopWallpaper.DisposeAsync() -> System.Threading.Tasks.ValueTask
 HackerOs.Platform.Blazor.Shell.DesktopWallpaper.ScreenNumber.get -> int
 HackerOs.Platform.Blazor.Shell.DesktopWallpaper.ScreenNumber.set -> void
+HackerOs.Platform.Blazor.Shell.NotificationToastPlacement
+HackerOs.Platform.Blazor.Shell.NotificationToastPlacement.AboveTaskbar = 0 -> HackerOs.Platform.Blazor.Shell.NotificationToastPlacement
+HackerOs.Platform.Blazor.Shell.NotificationToastPlacement.TopOfScreen = 1 -> HackerOs.Platform.Blazor.Shell.NotificationToastPlacement
+HackerOs.Platform.Blazor.Shell.NotificationToasts
+HackerOs.Platform.Blazor.Shell.NotificationToasts.Dispose() -> void
+HackerOs.Platform.Blazor.Shell.NotificationToasts.IsPanelOpen.get -> bool
+HackerOs.Platform.Blazor.Shell.NotificationToasts.IsPanelOpen.set -> void
+HackerOs.Platform.Blazor.Shell.NotificationToasts.NotificationToasts() -> void
+HackerOs.Platform.Blazor.Shell.NotificationToasts.Placement.get -> HackerOs.Platform.Blazor.Shell.NotificationToastPlacement
+HackerOs.Platform.Blazor.Shell.NotificationToasts.Placement.set -> void
+HackerOs.Platform.Blazor.Shell.ShellNotificationActions
+HackerOs.Platform.Blazor.Shell.ShellNotificationActions.Register(string! actionId, System.Func<System.Threading.Tasks.Task!>! handler) -> System.IDisposable!
+HackerOs.Platform.Blazor.Shell.ShellNotificationActions.ShellNotificationActions() -> void
+HackerOs.Platform.Blazor.Shell.ShellNotificationActions.TryGet(string! actionId, out System.Func<System.Threading.Tasks.Task!>? handler) -> bool
+HackerOs.Platform.Blazor.Shell.UpdateReadyNotification
+HackerOs.Platform.Blazor.Shell.UpdateReadyNotification.Dispose() -> void
+HackerOs.Platform.Blazor.Shell.UpdateReadyNotification.Show(HackerOs.Simulation.Abstractions.Sessions.LocalUserId user, string! title, string! message, string! restartLabel) -> bool
+HackerOs.Platform.Blazor.Shell.UpdateReadyNotification.UpdateReadyNotification(HackerOs.Simulation.Abstractions.Notifications.INotificationQueue! queue, HackerOs.Simulation.Abstractions.Time.ISimulationClock! clock, HackerOs.Platform.Blazor.Shell.ShellNotificationActions? actions, System.Func<System.Threading.Tasks.Task!>! restart) -> void
+const HackerOs.Platform.Blazor.Shell.UpdateReadyNotification.RestartActionId = "hackeros.update.restart" -> string!
+const HackerOs.Platform.Blazor.Shell.UpdateReadyNotification.SourceAppId = "org.hackeros.update" -> string!
+override HackerOs.Platform.Blazor.Shell.NotificationToasts.OnInitialized() -> void
+override HackerOs.Platform.Blazor.Shell.NotificationToasts.OnParametersSet() -> void
+~override HackerOs.Platform.Blazor.Shell.NotificationToasts.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+HackerOs.Platform.Blazor.Shell.ShellAppIcon
+HackerOs.Platform.Blazor.Shell.ShellAppIcon.App.get -> HackerOs.App.Abstractions.AppManifest!
+HackerOs.Platform.Blazor.Shell.ShellAppIcon.App.set -> void
+HackerOs.Platform.Blazor.Shell.ShellAppIcon.Dispose() -> void
+HackerOs.Platform.Blazor.Shell.ShellAppIcon.Fill.get -> bool
+HackerOs.Platform.Blazor.Shell.ShellAppIcon.Fill.set -> void
+HackerOs.Platform.Blazor.Shell.ShellAppIcon.ShellAppIcon() -> void
+HackerOs.Platform.Blazor.Shell.ShellAppIcon.Size.get -> int
+HackerOs.Platform.Blazor.Shell.ShellAppIcon.Size.set -> void
+HackerOs.Platform.Blazor.Shell.ShellAppIcon.UseDeclaredImage.get -> bool
+HackerOs.Platform.Blazor.Shell.ShellAppIcon.UseDeclaredImage.set -> void
+HackerOs.Platform.Blazor.Windows.WindowLaunchCoordinator.IconFor(HackerOs.App.Abstractions.AppManifest! manifest) -> string?
+HackerOs.Platform.Blazor.Windows.WindowLaunchCoordinator.WindowLaunchCoordinator(HackerOs.Windowing.Core.WindowRuntime! windows, HackerOs.Platform.Core.AppCatalog! catalog, HackerOs.Platform.Core.Globalization.SessionLocaleService! locale, HackerOs.Platform.Blazor.Windows.WindowGeometryRecorder? geometry, HackerOs.Platform.Core.Appearance.IconPackService? iconPacks) -> void

@@ -284,6 +284,8 @@ public sealed partial class ExplorerFileView : IHackFileView
     /// <inheritdoc />
     protected override async Task OnInitializedAsync()
     {
+        // ADR 0203: the selected icon pack draws the files and shortcuts from the first listing.
+        await StartIconPackAsync();
         if (!Has(HackFileViewFeatures.Clipboard))
         {
             return;
@@ -346,6 +348,7 @@ public sealed partial class ExplorerFileView : IHackFileView
         }
 
         await StopDesktopAsync();
+        await StopIconPackAsync();
     }
 
     private void Unsubscribe()

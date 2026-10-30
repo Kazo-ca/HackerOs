@@ -89,6 +89,51 @@ public static class HackServerConnection
         return Call(context, gateway => gateway.CreateAccountAsync(serverUrl, login, password, cancellationToken));
     }
 
+    /// <summary>
+    /// Links this device to a server account with a one-time pairing code (ADR 0191 §6), printed by
+    /// <c>HackerOs.Server pair &lt;account&gt;</c> on the server's machine.
+    /// </summary>
+    /// <param name="serverUrl">Absolute server base URL.</param>
+    /// <param name="code">The pairing code, for example <c>H9R4-JYYG</c>.</param>
+    /// <param name="cancellationToken">Cancels the request.</param>
+    /// <exception cref="HackServerConnectionException">The server refused the code or could not be reached.</exception>
+    /// <exception cref="HackUnauthorizedAccessException">This app lacks <c>server.connection.manage</c>.</exception>
+    public static Task<HackServerConnectionState> PairAsync(Uri serverUrl, string code, CancellationToken cancellationToken = default) =>
+        PairAsync(HackExecutionContext.Current, serverUrl, code, cancellationToken);
+
+    /// <summary>Links this device with a pairing code through an explicit context.</summary>
+    /// <param name="context">The calling app's execution context.</param>
+    /// <param name="serverUrl">Absolute server base URL.</param>
+    /// <param name="code">The pairing code.</param>
+    /// <param name="cancellationToken">Cancels the request.</param>
+    public static Task<HackServerConnectionState> PairAsync(
+        IAppExecutionContext context, Uri serverUrl, string code, CancellationToken cancellationToken = default)
+    {
+        ValidateServerUrl(serverUrl);
+        ArgumentException.ThrowIfNullOrWhiteSpace(code);
+        return Call(context, gateway => gateway.PairAsync(serverUrl, code, cancellationToken));
+    }
+
+    /// <summary>
+    /// Asks an address whether it is a HackerOS server, without linking this device (the
+    /// "Test" button of Settings). Never throws for an unreachable address: the result says why.
+    /// </summary>
+    /// <param name="serverUrl">Absolute server base URL.</param>
+    /// <param name="cancellationToken">Cancels the request.</param>
+    /// <exception cref="HackUnauthorizedAccessException">This app lacks <c>server.connection.manage</c>.</exception>
+    public static Task<HackServerProbe> TestAsync(Uri serverUrl, CancellationToken cancellationToken = default) =>
+        TestAsync(HackExecutionContext.Current, serverUrl, cancellationToken);
+
+    /// <summary>Tests an address through an explicit context.</summary>
+    /// <param name="context">The calling app's execution context.</param>
+    /// <param name="serverUrl">Absolute server base URL.</param>
+    /// <param name="cancellationToken">Cancels the request.</param>
+    public static Task<HackServerProbe> TestAsync(IAppExecutionContext context, Uri serverUrl, CancellationToken cancellationToken = default)
+    {
+        ValidateServerUrl(serverUrl);
+        return Call(context, gateway => gateway.TestAsync(serverUrl, cancellationToken));
+    }
+
     /// <summary>Unlinks this device from its server account.</summary>
     /// <param name="cancellationToken">Cancels the request.</param>
     /// <exception cref="HackUnauthorizedAccessException">This app lacks <c>server.connection.manage</c>.</exception>
@@ -226,14 +271,18 @@ public static class HackServerConnection
 
     private static void ValidateCredentials(Uri serverUrl, string login, string password)
     {
+        ValidateServerUrl(serverUrl);
+        ArgumentException.ThrowIfNullOrWhiteSpace(login);
+        ArgumentException.ThrowIfNullOrEmpty(password);
+    }
+
+    private static void ValidateServerUrl(Uri serverUrl)
+    {
         ArgumentNullException.ThrowIfNull(serverUrl);
         if (!serverUrl.IsAbsoluteUri)
         {
             throw new ArgumentException("The server URL must be absolute.", nameof(serverUrl));
         }
-
-        ArgumentException.ThrowIfNullOrWhiteSpace(login);
-        ArgumentException.ThrowIfNullOrEmpty(password);
     }
 
     private static async Task<T> Call<T>(IAppExecutionContext context, Func<IAppServerConnectionGateway, ValueTask<T>> call)
