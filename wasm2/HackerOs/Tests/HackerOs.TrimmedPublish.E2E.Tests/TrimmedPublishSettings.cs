@@ -17,7 +17,11 @@ namespace HackerOs.TrimmedPublish.E2E.Tests;
 /// <c>localhost</c> and <c>127.0.0.1</c>), e.g. <c>http://127.0.0.2:5124</c>; <see langword="null"/>
 /// skips the offline check.
 /// </param>
-public sealed record TrimmedPublishSettings(string Url, string? CatalogPath, string? ArtifactsDirectory, string? PwaUrl = null)
+/// <param name="PackagesDirectory">
+/// The <c>hackeros-packages</c> folder of the test package of ADR 0206 (<c>index.json</c> and its
+/// <c>.hackapp</c>), served to the browser in place of GitHub; <see langword="null"/> skips that test.
+/// </param>
+public sealed record TrimmedPublishSettings(string Url, string? CatalogPath, string? ArtifactsDirectory, string? PwaUrl = null, string? PackagesDirectory = null)
 {
     /// <summary>Base address of the served publish. Required.</summary>
     public const string UrlVariable = "HACKEROS_TRIMMED_URL";
@@ -30,6 +34,9 @@ public sealed record TrimmedPublishSettings(string Url, string? CatalogPath, str
 
     /// <summary>Address of the same publish with the service worker active.</summary>
     public const string PwaUrlVariable = "HACKEROS_TRIMMED_PWA_URL";
+
+    /// <summary>Folder of the test package installed by hackpkg (ADR 0206).</summary>
+    public const string PackagesVariable = "HACKEROS_TRIMMED_PACKAGES";
 
     /// <summary>The window apps of the Ecosystem host, when no catalog is given.</summary>
     public static readonly IReadOnlyList<string> FallbackWindowApps =
@@ -45,7 +52,7 @@ public sealed record TrimmedPublishSettings(string Url, string? CatalogPath, str
         string? url = Read(UrlVariable);
         return url is null
             ? null
-            : new TrimmedPublishSettings(url.TrimEnd('/'), Read(CatalogVariable), Read(ArtifactsVariable), Read(PwaUrlVariable)?.TrimEnd('/'));
+            : new TrimmedPublishSettings(url.TrimEnd('/'), Read(CatalogVariable), Read(ArtifactsVariable), Read(PwaUrlVariable)?.TrimEnd('/'), Read(PackagesVariable));
     }
 
     /// <summary>
