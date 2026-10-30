@@ -177,6 +177,8 @@
                         }
                         <button type="button" class="btn-secondary" id="settings-open-theme-editor" @onclick="() => OpenThemeEditorAsync(null)">@L["Appearance.OpenThemeEditor"]</button>
                 </div>
+                    @* ADR 0205: cursor themes, chosen in ~/.config/hackeros/cursors.config. *@
+                    <CursorThemePanel />
                     @if (CurrentDesktopThemeSupportsAccent)
                     {
                         <div class="setting-group">

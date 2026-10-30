@@ -70,6 +70,7 @@ in the same change (see [`AGENTS.md`](../../../AGENTS.md)).
 | [`app-responsiveness-api.md`](framework/app-responsiveness-api.md) | `nice` priority and "Not Responding" window: what an app sees and must do to stay responsive. |
 | [`process-resources-api.md`](framework/process-resources-api.md) | CPU time, memory and OOM killer as seen by an app: `HackProcess`, `/proc` fields, declaration of `OomScoreAdjust`. |
 | [`theme-files.md`](framework/theme-files.md) | `.theme` file format, list of verified tokens and reading API of the `HackerOs.Theming.Abstractions` package. |
+| [`cursor-themes.md`](framework/cursor-themes.md) | Cursor themes: `cursor.theme` folder and PNG images with their hot spot, cursor names and fallbacks, `cursors.config`, `HackerOs.Theming.Abstractions` API. |
 | [`file-associations-api.md`](framework/file-associations-api.md) | Per-user file associations: formats of the two files, resolution order, `HackApps` API and capabilities. |
 
 ## OS development (`dev/`)

@@ -8,3 +8,6 @@ HackerOs.Apps.Settings.WhatsNewPanel.WhatsNewPanel() -> void
 HackerOs.Apps.Settings.DateTimePanel
 HackerOs.Apps.Settings.DateTimePanel.DateTimePanel() -> void
 HackerOs.Apps.Settings.DateTimePanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Apps.Settings.CursorThemePanel
+HackerOs.Apps.Settings.CursorThemePanel.CursorThemePanel() -> void
+HackerOs.Apps.Settings.CursorThemePanel.DisposeAsync() -> System.Threading.Tasks.ValueTask

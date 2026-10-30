@@ -56,6 +56,13 @@ jour à la fin de chaque série ou quand une convention change.
 - **Bouton Marche/arrêt dans le menu Démarrer** (ADR 0195, PR #291, fusionnée
   le 2026-10-30) : « Changer d'utilisateur » reste grisé, issue `TODO` #290
   (plusieurs sessions ouvertes en même temps).
+- **Thèmes de curseurs** (ADR 0205, série `todo/base`, chantier
+  `todo/9-cursor-themes`, issue #257) : dossiers `cursor.theme` de PNG dans
+  `/etc/hackeros/cursors/` et `~/.config/hackeros/cursors/`, `cursors.config`,
+  thèmes intégrés Système (défaut), HackerOS Néon et Gothique Pourpre,
+  appliqués à toute la surface par `cursorTheme.js`. Deux questions posées à
+  Benoit (thème par défaut, portée dans les apps) ; le code suit les
+  recommandations (Système, partout).
 - **ADR** : 0001 à 0171 et 0173 à 0195 existent sur `main` (quelques numéros sautés ;
   0141 et 0172 n'ont pas servi). Repères récents : 0173 publication automatique,
   0174 annonce de nouvelle version, 0175 « Nouveau dossier » des dialogues, 0176

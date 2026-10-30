@@ -12,6 +12,39 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Cursor.BadFileName" xml:space="preserve">
+    <value>« {0} » n'est pas un nom de fichier PNG du dossier du thème ; ligne ignorée.</value>
+  </data>
+  <data name="Cursor.HotspotOutside" xml:space="preserve">
+    <value>le point actif est hors de l'image.</value>
+  </data>
+  <data name="Cursor.ImageRefused" xml:space="preserve">
+    <value>Image « {0} » ignorée : {1}</value>
+  </data>
+  <data name="Cursor.ImageTooBig" xml:space="preserve">
+    <value>l'image dépasse {1} × {1} pixels.</value>
+  </data>
+  <data name="Cursor.ImageTooLarge" xml:space="preserve">
+    <value>le fichier dépasse {0} Kio.</value>
+  </data>
+  <data name="Cursor.InvalidName" xml:space="preserve">
+    <value>« name » manque ou est invalide dans [cursor-theme] (1 à {0} caractères).</value>
+  </data>
+  <data name="Cursor.MalformedEntry" xml:space="preserve">
+    <value>Attendu « {0} = fichier.png x y » (image et point actif) ; ligne ignorée.</value>
+  </data>
+  <data name="Cursor.MissingId" xml:space="preserve">
+    <value>« id » manque dans [cursor-theme].</value>
+  </data>
+  <data name="Cursor.NotPng" xml:space="preserve">
+    <value>le fichier n'est pas une image PNG.</value>
+  </data>
+  <data name="Cursor.UnknownKey" xml:space="preserve">
+    <value>Clé inconnue « {0} » dans [cursor-theme] ; ignorée.</value>
+  </data>
+  <data name="Cursor.UnknownName" xml:space="preserve">
+    <value>Nom de curseur inconnu « {0} » ; ligne ignorée.</value>
+  </data>
   <data name="Diagnostic.Error" xml:space="preserve">
     <value>erreur</value>
   </data>

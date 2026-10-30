@@ -25,6 +25,7 @@
 @inject AccessibilityPreferenceService Accessibility
 @inject HackerOs.Platform.Core.Globalization.SessionTimeZoneService TimeZones
 @inject UserThemeCatalogService UserThemes
+@inject CursorThemeService CursorThemes
 @inject HackerOs.Platform.Core.Clipboard.HostClipboardBridge HostClipboard
 @inject HackerOs.Platform.Core.Globalization.SessionLocaleService SessionLocale
 @inject IStringLocalizer<Strings> L
@@ -39,6 +40,8 @@
             HighContrast="@Accessibility.Effective.HighContrast"
             TextScale="@Accessibility.Effective.TextScale">
 <main class="ecosystem-host">
+    @* ADR 0205: the cursor theme of cursors.config, drawn on the whole document. *@
+    <CursorThemeSurface Theme="@CursorThemes.Current" />
     <MudThemeProvider Theme="_theme" IsDarkMode="true" />
     <MudPopoverProvider />
     <MudDialogProvider />
@@ -332,6 +335,7 @@
         PlatformPreference.Changed += OnPlatformPreferenceChanged;
         ThemePreference.Changed += OnThemePreferenceChanged;
         UserThemes.Changed += OnThemePreferenceChanged;
+        CursorThemes.Changed += OnThemePreferenceChanged;
         // ADR 0105: high contrast, text size and reduced motion (which also covers animationsEnabled).
         Accessibility.Changed += OnThemePreferenceChanged;
         // ADR 0104: this component outlives every session; its sign-in screens follow the system
@@ -409,6 +413,7 @@
         PlatformPreference.Changed -= OnPlatformPreferenceChanged;
         ThemePreference.Changed -= OnThemePreferenceChanged;
         UserThemes.Changed -= OnThemePreferenceChanged;
+        CursorThemes.Changed -= OnThemePreferenceChanged;
         Accessibility.Changed -= OnThemePreferenceChanged;
         SessionLocale.Changed -= OnSessionLocaleChanged;
         if (BuildMonitor is not null)
@@ -467,6 +472,8 @@
             // ADR 0193: the time zone of the clock and of the apps (datetime.config).
             await TimeZones.InitializeAsync();
             await UserThemes.InitializeAsync();
+            // ADR 0205: the cursor theme (cursors.config), never more than a few small images.
+            await CursorThemes.InitializeAsync();
             // Shares clipboard text with the real machine (ADR 0065); never fails the boot.
             await HostClipboard.StartAsync();
         }

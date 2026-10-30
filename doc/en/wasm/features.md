@@ -218,6 +218,9 @@ This section lists what is released in the `main` branch and online.
 - **Local time and time zone**: the clock, `date`, `ls -l` and the apps show
   the time in the user's zone, automatic or chosen in Settings ▸ Date and time.
   ([`time-zone.md`](framework/time-zone.md))
+- **Cursor themes**: the pointer of the whole OS as PNG images, System,
+  HackerOS Neon, Gothic Crimson or your own themes, chosen in Settings ▸
+  Appearance ▸ Cursors. ([`cursor-themes.md`](framework/cursor-themes.md))
 
 ### For developers
 
@@ -269,7 +272,6 @@ points to its PR.
 | Image wallpapers | Choose an image as wallpaper, per screen. | [0190](dev/adr/0190-theme-packs.md) | [#254](https://github.com/Kazo-ca/HackerOs/issues/254) |
 | Icon packs | Replace application and file icons. | [0190](dev/adr/0190-theme-packs.md) | [#255](https://github.com/Kazo-ca/HackerOs/issues/255) |
 | OS sounds | Sounds for notifications, errors and sign-in. | [0190](dev/adr/0190-theme-packs.md) | [#256](https://github.com/Kazo-ca/HackerOs/issues/256) |
-| Cursor themes | Custom cursors chosen in Settings. | [0190](dev/adr/0190-theme-packs.md) | [#257](https://github.com/Kazo-ca/HackerOs/issues/257) |
 
 ### Network and server
 

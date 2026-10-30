@@ -1174,6 +1174,14 @@ public static class EcosystemServiceCollectionExtensions
                 provider.GetRequiredService<IOsSettingsService>(),
                 provider.GetService<ITopicMessageBus>(),
                 provider.GetService<ILogger<HackerOs.Platform.Core.Appearance.UserThemeCatalogService>>()));
+        // ADR 0205: the cursor theme of cursors.config, applied to the whole surface by App.razor.
+        services.AddScoped<HackerOs.Platform.Core.Appearance.CursorThemeService>(provider =>
+            new HackerOs.Platform.Core.Appearance.CursorThemeService(
+                provider.GetRequiredService<IFileSystemService>(),
+                provider.GetRequiredService<ISessionService>(),
+                provider.GetRequiredService<ISimulationClock>(),
+                provider.GetRequiredService<IOsSettingsService>(),
+                provider.GetService<ILogger<HackerOs.Platform.Core.Appearance.CursorThemeService>>()));
         services.AddScoped<WindowGeometryPersistence>();
         // ADR 0116: remembers app window geometry from WindowRuntime's facts; read back by
         // WindowLaunchCoordinator. Scoped like WindowRuntime.

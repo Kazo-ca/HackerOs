@@ -484,3 +484,15 @@ HackerOs.Platform.Core.Sessions.GuestAccountRequests.GuestAccountRequests() -> v
 HackerOs.Platform.Core.Sessions.GuestAccountRequests.HasListener.get -> bool
 HackerOs.Platform.Core.Sessions.GuestAccountRequests.RequestCreateAccount() -> bool
 HackerOs.Platform.Core.Lifecycle.AppLifecycleOrchestrator.StopSessionAppsAsync(HackerOs.Simulation.Abstractions.Sessions.SessionId sessionId, HackerOs.Simulation.Abstractions.Processes.ProcessExitReason reason = HackerOs.Simulation.Abstractions.Processes.ProcessExitReason.Logout) -> System.Threading.Tasks.Task<int>!
+HackerOs.Platform.Core.Appearance.CursorSettingsDocuments
+HackerOs.Platform.Core.Appearance.CursorThemeService
+HackerOs.Platform.Core.Appearance.CursorThemeService.Changed -> System.Action?
+HackerOs.Platform.Core.Appearance.CursorThemeService.Current.get -> HackerOs.Theming.Abstractions.CursorTheme!
+HackerOs.Platform.Core.Appearance.CursorThemeService.CursorThemeService(HackerOs.Simulation.Abstractions.FileSystem.IFileSystemService! fileSystem, HackerOs.Simulation.Abstractions.Sessions.ISessionService! session, HackerOs.Simulation.Abstractions.Time.ISimulationClock! clock, HackerOs.Platform.Core.Settings.IOsSettingsService! settings, Microsoft.Extensions.Logging.ILogger<HackerOs.Platform.Core.Appearance.CursorThemeService!>? logger = null) -> void
+HackerOs.Platform.Core.Appearance.CursorThemeService.Dispose() -> void
+HackerOs.Platform.Core.Appearance.CursorThemeService.InitializeAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+HackerOs.Platform.Core.Appearance.CursorThemeService.RefreshAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+const HackerOs.Platform.Core.Appearance.CursorSettingsDocuments.ThemeKey = "theme" -> string!
+static HackerOs.Platform.Core.Appearance.CursorSettingsDocuments.Document.get -> HackerOs.Platform.Core.Settings.OsSettingsDocument!
+static HackerOs.Platform.Core.Appearance.CursorSettingsDocuments.Schema.get -> HackerOs.Simulation.Abstractions.Settings.SettingsSchema!
+static HackerOs.Platform.Core.Appearance.CursorSettingsDocuments.ToThemeId(HackerOs.Simulation.Abstractions.Settings.LayeredConfigSnapshot! snapshot) -> string!

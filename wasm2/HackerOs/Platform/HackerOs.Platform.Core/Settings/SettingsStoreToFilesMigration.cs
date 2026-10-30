@@ -108,7 +108,9 @@ public sealed class SettingsStoreToFilesMigration : IUserProfileInitializer
                      // ADR 0127 §5: the "not responding" dialog switch.
                      Shell.WindowManagerSettingsDocuments.Document,
                      // ADR 0193 §2: the machine's time zone, "auto" (the device's zone).
-                     Globalization.TimeZoneSettingsDocuments.Document
+                     Globalization.TimeZoneSettingsDocuments.Document,
+                     // ADR 0205 §3: the machine's cursor theme, "system" (the host's cursors).
+                     CursorSettingsDocuments.Document
                  })
         {
             await WriteIfAbsentAsync(system, document.SystemPath, DefaultConfig(document), cancellationToken).ConfigureAwait(false);

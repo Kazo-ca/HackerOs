@@ -1617,4 +1617,34 @@
   <data name="Users.Guest.Unavailable" xml:space="preserve">
     <value>Le formulaire de compte n'a pas pu s'ouvrir. Fermez la session, puis choisissez Créer mon compte sur l'écran de connexion.</value>
   </data>
+  <data name="Cursors.Title" xml:space="preserve">
+    <value>Curseurs</value>
+  </data>
+  <data name="Cursors.Description" xml:space="preserve">
+    <value>Le pointeur de tout l'OS. Ajoutez vos thèmes comme dossiers dans {0} (pour vous) ou {1} (pour tous les utilisateurs, en administrateur) : chaque dossier contient un fichier {2} qui liste ses curseurs PNG avec leur point actif.</value>
+  </data>
+  <data name="Cursors.SystemPreview" xml:space="preserve">
+    <value>curseurs de l'appareil</value>
+  </data>
+  <data name="Cursors.Theme.system" xml:space="preserve">
+    <value>Système</value>
+  </data>
+  <data name="Cursors.Theme.hackeros-neon" xml:space="preserve">
+    <value>HackerOS Néon</value>
+  </data>
+  <data name="Cursors.Theme.gothic-crimson" xml:space="preserve">
+    <value>Gothique Pourpre</value>
+  </data>
+  <data name="Cursors.Saved" xml:space="preserve">
+    <value>Enregistré. Le bureau utilise ces curseurs maintenant.</value>
+  </data>
+  <data name="Cursors.Warnings" xml:space="preserve">
+    <value>{0} problème(s) dans les dossiers de thèmes de curseurs :</value>
+  </data>
+  <data name="Cursors.Error.CannotRead" xml:space="preserve">
+    <value>Impossible de lire cursors.config : {0}</value>
+  </data>
+  <data name="Cursors.Error.CannotSave" xml:space="preserve">
+    <value>Impossible d'enregistrer {0} : {1}</value>
+  </data>
 </root>
