@@ -74,7 +74,7 @@ The ecosystem is made of:
 | **With the HackerOS server** | Organizations, advanced users | The optional ASP.NET Core server serves the OS and adds accounts synchronized across devices and a relay to the real network. See [`server-hosting.md`](dev/server-hosting.md). |
 | **Embedded in your own product** | Developers, companies | The NuGet packages and the `dotnet new hackeros-host` template let you compose your own host with your own applications. See [`building-on-hackeros.md`](framework/building-on-hackeros.md). |
 | **Developing applications** | Developers | SDK NuGet packages, `dotnet new` templates, template repository, then installation from the terminal with `hackpkg`. See [`sdk-developer-guide.md`](framework/sdk-developer-guide.md). |
-| **Installable local server** | Advanced users | *In development*: see [Network and server](#network-and-server). |
+| **Installable local server** | Advanced users | Every version publishes the HackerOS server for Windows, Linux and macOS (`hackeros-server-<version>-<system>`) and the Docker image `ghcr.io/kazo-ca/hackeros-server`. It installs as a service on your computer or on a machine of your local network, without being exposed to the internet, and the online OS links to it with a pairing code (Settings > Server connection > Local server). See [`installable-server.md`](dev/installable-server.md). |
 
 ## Available features
 
@@ -94,6 +94,10 @@ This section lists what is released in the `main` branch and online.
   window alone ("peek"). ([`taskbar-window-previews.md`](dev/taskbar-window-previews.md))
   The Start menu shows the signed-in user and their Power button: sign out or
   restart. ([ADR 0195](dev/adr/0195-start-menu-power-button.md))
+- **Notification bubbles**: each notification from the OS or an app shows for
+  a few seconds above the taskbar (at the top on a phone), then stays in the
+  clock panel. A ready update arrives there with its "Restart" button.
+  ([`notification-toasts.md`](dev/notification-toasts.md))
 - **Multiple screens**: each extra screen opens in its own browser window,
   with its own taskbar, and the OS remembers them. Windows can be dragged from
   one screen to another. ([`screen-service.md`](dev/screen-service.md),
@@ -166,6 +170,11 @@ This section lists what is released in the `main` branch and online.
   [`blazor-sites.md`](framework/blazor-sites.md))
 - **Access to the real network** through the optional server, for allowed
   applications. ([`server-network-relay.md`](dev/server-network-relay.md))
+- **Installable local server**: the HackerOS server installs as a service
+  (Windows, Linux, macOS, Docker) on your computer or on a machine of your
+  local network in HTTPS, and the OS, even online on GitHub Pages, links to it
+  with a pairing code. ([`installable-server.md`](dev/installable-server.md),
+  [ADR 0191](dev/adr/0191-installable-local-server.md))
 
 ### Accounts and security
 
@@ -220,6 +229,10 @@ This section lists what is released in the `main` branch and online.
 - **Local time and time zone**: the clock, `date`, `ls -l` and the apps show
   the time in the user's zone, automatic or chosen in Settings ▸ Date and time.
   ([`time-zone.md`](framework/time-zone.md))
+- **Icon packs**: PNG images replace the icons of apps, folders and files
+  everywhere in the OS, chosen in Settings ▸ Appearance; a "Néon" sample pack
+  is included. ([`icon-packs.md`](dev/icon-packs.md),
+  [ADR 0203](dev/adr/0203-icon-packs.md))
 
 ### For developers
 
@@ -233,7 +246,10 @@ This section lists what is released in the `main` branch and online.
   ([`sdk-developer-guide.md`](framework/sdk-developer-guide.md))
 - **Install an application from its GitHub repository** with the `hackpkg`
   command. ([ADR 0182](dev/adr/0182-install-apps-from-github.md),
-  [`app-installation.md`](dev/app-installation.md))
+  [`app-installation.md`](dev/app-installation.md)) Its images, scripts and
+  Web Workers are served at the same address as for an application built into
+  the OS, so an application that wraps a JavaScript project works once
+  installed. ([ADR 0206](dev/adr/0206-serve-installed-app-assets.md))
 - **`hackeros-solution` application repository template**: application, host
   and tests ready to run, the OS as a submodule to debug in its sources, NuGet
   packages in production, CI and submission to the Hack Store catalog with a
@@ -258,13 +274,12 @@ points to its PR.
 | --- | --- | --- | --- |
 | `.zip` archive opened as a folder | The explorer browses a `.zip` archive read-only; an opened file is extracted to `/tmp`. The rest of the ADR is available. | [0185](dev/adr/0185-file-explorer-improvements.md) | [#241](https://github.com/Kazo-ca/HackerOs/issues/241) |
 | Switch user | Open another session without closing the first one, from the Start menu's Power button (greyed out for now, always greyed out for the guest). | [0195](dev/adr/0195-start-menu-power-button.md) | [#290](https://github.com/Kazo-ca/HackerOs/issues/290) |
-| Windows and taskbar | Notification toasts, window animations. The time zone ([ADR 0193](dev/adr/0193-local-time-and-time-zone.md)), the taskbar menus ([ADR 0194](dev/adr/0194-taskbar-context-menus.md)) and the hover previews ([ADR 0199](dev/adr/0199-taskbar-window-previews.md)) are available. | Coming | [#242](https://github.com/Kazo-ca/HackerOs/issues/242) |
+| Windows and taskbar | Window animations. The time zone ([ADR 0193](dev/adr/0193-local-time-and-time-zone.md)), the taskbar menus ([ADR 0194](dev/adr/0194-taskbar-context-menus.md)), the hover previews ([ADR 0199](dev/adr/0199-taskbar-window-previews.md)) and the notification bubbles ([ADR 0197](dev/adr/0197-notification-toasts.md)) are available. | Coming | [#242](https://github.com/Kazo-ca/HackerOs/issues/242) |
 
 ### Hack Store
 
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
-| Assets of installed applications | Serve the images, scripts and workers of an installed application. | [0182](dev/adr/0182-install-apps-from-github.md) | [#247](https://github.com/Kazo-ca/HackerOs/issues/247) |
 | Trusted sources and per-user install | Trusted catalogs, install without an administrator, block list, administrator approval. | [0189](dev/adr/0189-app-sources-trust-and-per-user-install.md) | [#248](https://github.com/Kazo-ca/HackerOs/issues/248) |
 | Application catalog | Catalog format, checking and publishing of the offered applications. | [0188](dev/adr/0188-hack-store-and-app-catalog.md) | [AppMarketPlace #1](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/1) |
 | Hack Store app v1 | Browse, install, update and uninstall applications in one click. | [0188](dev/adr/0188-hack-store-and-app-catalog.md) | [#249](https://github.com/Kazo-ca/HackerOs/issues/249) |
@@ -276,7 +291,6 @@ points to its PR.
 | --- | --- | --- | --- |
 | Theme packs | `.hacktheme` format and the Hack Store Themes tab. | [0190](dev/adr/0190-theme-packs.md) | [#253](https://github.com/Kazo-ca/HackerOs/issues/253) |
 | Image wallpapers | Choose an image as wallpaper, per screen. | [0190](dev/adr/0190-theme-packs.md) | [#254](https://github.com/Kazo-ca/HackerOs/issues/254) |
-| Icon packs | Replace application and file icons. | [0190](dev/adr/0190-theme-packs.md) | [#255](https://github.com/Kazo-ca/HackerOs/issues/255) |
 | OS sounds | Sounds for notifications, errors and sign-in. | [0190](dev/adr/0190-theme-packs.md) | [#256](https://github.com/Kazo-ca/HackerOs/issues/256) |
 | Cursor themes | Custom cursors chosen in Settings. | [0190](dev/adr/0190-theme-packs.md) | [#257](https://github.com/Kazo-ca/HackerOs/issues/257) |
 
@@ -285,7 +299,6 @@ points to its PR.
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Real sites in the browser | Show a real web site through the HackerOS server relay. | Coming | [#266](https://github.com/Kazo-ca/HackerOs/issues/266) |
-| Installable local server | HackerOS server to install on your computer or local network (Windows, Linux, macOS, Docker), used by the online OS. | [0191 (PR #269)](https://github.com/Kazo-ca/HackerOs/pull/269) | [#267](https://github.com/Kazo-ca/HackerOs/issues/267) |
 
 ### Optional ported applications
 

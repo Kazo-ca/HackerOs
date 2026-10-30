@@ -1,0 +1,21 @@
+{
+  "id": "960b393f-b24d-43c8-ae94-a5c00022a4ab",
+  "category": "new",
+  "audience": [
+    "user",
+    "developer"
+  ],
+  "title": {
+    "en": "Installable local server",
+    "fr": "Serveur local installable"
+  },
+  "description": {
+    "en": "The HackerOS server installs on your computer as a service on Windows, Linux and macOS, or as a Docker image, from the archives attached to each release. It listens on this computer only, or also on the local network over HTTPS with a local certificate authority. Settings > Server connection > Local server lists the downloads, tests an address and pairs this device with a one-time code; apps get HackServerConnection.PairAsync and TestAsync.",
+    "fr": "Le serveur HackerOS s'installe sur votre ordinateur comme service sous Windows, Linux et macOS, ou en image Docker, depuis les archives jointes à chaque version. Il n'écoute que sur cet ordinateur, ou aussi sur le réseau local en HTTPS avec une autorité de certification locale. Paramètres > Connexion au serveur > Serveur local liste les téléchargements, teste une adresse et appaire cet appareil avec un code à usage unique ; les apps reçoivent HackServerConnection.PairAsync et TestAsync."
+  },
+  "pr": 308,
+  "links": [
+    "doc/en/wasm/dev/adr/0191-installable-local-server.md",
+    "doc/en/wasm/dev/installable-server.md"
+  ]
+}

@@ -1,0 +1,77 @@
+@using HackerOs.AppSdk.Icons
+@using HackerOs.Theming.Abstractions.IconPacks
+@using HackerOs.Simulation.Abstractions.Settings
+@inherits HackerOs.AppSdk.Blazor.HackComponentBase
+
+@*
+    Settings > Appearance > Icon pack (ADR 0203 §5): the packs of /usr/share/icons and
+    ~/.local/share/icons, with a preview of a few of their images. The choice is the iconPackId key of
+    icons.config; the shell, the desktop and the File Explorer follow the file at once.
+*@
+<div class="setting-group icon-pack-panel">
+    <h4 id="icon-pack-title">
+        @L["IconPack.Title"]
+        @if (_document is not null)
+        {
+            <SettingOriginBadge Source="@_document.GetSource(IconPackLibrary.PackIdKey)" IsLocked="@_document.IsLocked(IconPackLibrary.PackIdKey)" />
+        }
+    </h4>
+    <p class="setting-desc">
+        @LocalizedMarkup.Format(L["IconPack.Description"],
+            LocalizedMarkup.Code(IconPackLibrary.SystemDirectory + "/"),
+            LocalizedMarkup.Code("~/.local/share/icons/"))
+    </p>
+    @if (!_loaded)
+    {
+        <p class="setting-desc">@L["Common.Loading"]</p>
+    }
+    else
+    {
+        <div class="icon-pack-options" role="radiogroup" aria-labelledby="icon-pack-title">
+            <button type="button" role="radio" class="@OptionClass(IconPackLibrary.BuiltInId)"
+                    aria-checked="@(IsSelected(IconPackLibrary.BuiltInId) ? "true" : "false")"
+                    disabled="@IsDisabled"
+                    @onclick="() => SelectAsync(IconPackLibrary.BuiltInId)">
+                <span class="icon-pack-preview is-builtin" aria-hidden="true">
+                    <HackerIcon Library="IconLibrary.Lucide" Name="folder" Size="22" Title="" />
+                    <HackerIcon Library="IconLibrary.Lucide" Name="file-text" Size="22" Title="" />
+                    <HackerIcon Library="IconLibrary.Lucide" Name="settings" Size="22" Title="" />
+                </span>
+                <span class="icon-pack-name">@L["IconPack.BuiltIn"]</span>
+                <span class="icon-pack-meta">@L["IconPack.BuiltIn.Description"]</span>
+            </button>
+            @foreach (IconPack pack in _packs)
+            {
+                <button type="button" role="radio" class="@OptionClass(pack.Info.Id)"
+                        aria-checked="@(IsSelected(pack.Info.Id) ? "true" : "false")"
+                        disabled="@IsDisabled"
+                        title="@pack.Info.RootPath"
+                        @onclick="() => SelectAsync(pack.Info.Id)">
+                    <span class="icon-pack-preview" aria-hidden="true">
+                        @foreach (string url in PreviewOf(pack))
+                        {
+                            <img src="@url" alt="" width="22" height="22" draggable="false" />
+                        }
+                    </span>
+                    <span class="icon-pack-name">@pack.Info.Name</span>
+                    <span class="icon-pack-meta">
+                        @(pack.Info.Description ?? pack.Info.Id)
+                        <span class="icon-pack-origin">@(pack.Info.Origin == IconPackOrigin.System ? "/usr/share" : "~")</span>
+                    </span>
+                </button>
+            }
+        </div>
+        @if (_packs.Count == 0)
+        {
+            <p class="setting-desc">@L["IconPack.None"]</p>
+        }
+        @if (_warningCount > 0)
+        {
+            <p class="setting-desc icon-pack-warnings">@L["IconPack.Warnings", _warningCount]</p>
+        }
+    }
+    @if (_message is not null)
+    {
+        <p class="setting-desc icon-pack-message" role="status">@_message</p>
+    }
+</div>

@@ -13,12 +13,11 @@ Rien ici ne se code sans que Benoit lance le sujet.
 
 ## Fenêtres et barre des tâches (issue #242, série `taskbar/`)
 
-Décidé le 2026-10-29. Chantiers faits : 2 (heure locale, ADR 0193) et 4 (menus
-contextuels, ADR 0194). Restent :
+Décidé le 2026-10-29. Chantiers faits : 1 (bulles de notification, ADR 0197), 2 (heure locale,
+ADR 0193) et 4 (menus contextuels, ADR 0194). Restent :
 
 | Chantier | Décisions |
 | --- | --- |
-| 1. Bulles de notification | Bulle (toast) pour toutes les notifications de l'OS et des apps : en bas à droite, au-dessus de la barre de l'écran 1, ~6 s, pile de 3 au plus, elles restent ensuite dans le panneau de l'horloge. « Update ready » devient une bulle + une notification persistante avec le bouton « Redémarrer », aussi visible sur l'écran de connexion (qui n'a pas de barre). Aujourd'hui les notifications n'existent que dans le panneau de l'horloge, et « Update ready » est un `aside` fixe dans `App.razor`, caché sous la barre. |
 | 3. Animations des fenêtres | Ouvrir, fermer, minimiser (vers le bouton de la barre de **son** écran), restaurer, agrandir, snap. Rapide et sobre (~150 à 200 ms, fondu + échelle). Coupées par le réglage existant « Réduire les animations ». Durée et courbe en variables CSS `--hos-window-anim-*` qu'un thème peut redéfinir. La minimisation retarde l'attribut `hidden` jusqu'à la fin de l'animation. |
 | 5. Aperçu au survol + peek | Copie réduite en direct (HTML cloné, CSS `scale`), image de repli (icône + titre) pour les iframes et canvas. Apparaît après ~400 ms ; clic = active, « × » = ferme ; pas sur mobile. Survoler l'aperçu rend les autres fenêtres transparentes (peek, comme Windows). Le clone ne duplique pas les ID HTML et n'a pas de champs interactifs (axe). |
 
@@ -65,7 +64,9 @@ Décidé le 2026-10-28 :
   en ont ; l'hôte publié est trimmé, donc une app chargée à l'exécution peut
   manquer d'API (`MissingMethodException`) ; le JavaScript d'une app tourne
   sur la même origine que l'OS ; une app qui enveloppe du JavaScript a besoin
-  du chantier `wwwroot` des apps installées (issue #247).
+  du chantier `wwwroot` des apps installées (issue #247, fait par l'ADR 0206
+  dans la série `todo/base` : fichiers servis à `_content/<assemblage>/` par le
+  service worker, Web Workers compris).
 
 ## Apps hébergées par le serveur (« bac à sable serveur »)
 

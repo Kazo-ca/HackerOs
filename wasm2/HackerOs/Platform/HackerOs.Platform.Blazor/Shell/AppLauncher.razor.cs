@@ -414,10 +414,6 @@ public partial class AppLauncher : ComponentBase, IDisposable
         return text.ResourceNotFound ? titled : text.Value;
     }
 
-    /// <summary>The app's icon, the same everywhere the shell draws it (ADR 0160 §6).</summary>
-    private static string GetAppIconName(AppManifest app) =>
-        HackerOs.AppSdk.Apps.HackAppIcons.LucideName(app.Id, app.Presentation.Category);
-
     /// <inheritdoc />
     public void Dispose()
     {

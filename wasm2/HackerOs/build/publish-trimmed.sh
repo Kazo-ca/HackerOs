@@ -10,8 +10,9 @@
 # HackerOS assembly kept whole), prints the size of the published .wasm files, serves the output
 # with a static file server and runs Tests/HackerOs.TrimmedPublish.E2E.Tests against it: sign-in,
 # every window app of the Start menu, a pipeline in the worker pool, the Intranet and the sample
-# Blazor site in the Browser, then a reload with no network once the service worker has cached the
-# release. Exit code 0 only when the publish and every test (EXPECTED_TESTS) passed.
+# Blazor site in the Browser, a reload with no network once the service worker has cached the
+# release, and a test package installed by hackpkg whose wwwroot/ files and worker scripts load.
+# Exit code 0 only when the publish and every test (EXPECTED_TESTS) passed.
 #
 #   --skip-build      reuse the existing publish and test build
 #   --compare         also publish untrimmed (-p:PublishTrimmed=false) and print both sizes
@@ -32,6 +33,9 @@ LOGS="$OUT/logs"
 HOST_PROJECT="$ROOT/OS/HackerOs.Ecosystem/HackerOs.Ecosystem.csproj"
 TEST_PROJECT="$ROOT/Tests/HackerOs.TrimmedPublish.E2E.Tests/HackerOs.TrimmedPublish.E2E.Tests.csproj"
 CATALOG="$ROOT/OS/HackerOs.Ecosystem/obj/Release/net10.0/BuiltInApplications.json"
+# ADR 0206: the test package hackpkg installs (Tests/fixtures/installed-app), packed by HackerOsPack.
+PACKAGE_PROJECT="$ROOT/Tests/fixtures/installed-app/HackerOs.Fixtures.InstalledAssets/HackerOs.Fixtures.InstalledAssets.csproj"
+PACKAGES="$OUT/hackeros-packages"
 
 SKIP_BUILD=0
 COMPARE=0
@@ -39,7 +43,7 @@ while [[ $# -gt 0 ]]; do
     case "$1" in
         --skip-build) SKIP_BUILD=1 ;;
         --compare) COMPARE=1 ;;
-        -h|--help) sed -n '2,24p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit 0 ;;
+        -h|--help) sed -n '2,25p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit 0 ;;
         *) echo "unknown option: $1 (see --help)" >&2; exit 2 ;;
     esac
     shift
@@ -152,6 +156,13 @@ if [[ $SKIP_BUILD -eq 0 ]]; then
         log "RESULT: FAIL (trim warnings in the publish)"
         exit 1
     fi
+    log "packing the test package of installed apps (ADR 0206)"
+    rm -rf "$PACKAGES"
+    if ! dotnet build "$PACKAGE_PROJECT" -c Release -t:HackerOsPack -p:HackerOsPackageOutput="$PACKAGES" >"$LOGS/pack.log" 2>&1; then
+        grep -E ' error ' "$LOGS/pack.log" | sort -u | head -20 | sed 's/^/    /'
+        log "RESULT: FAIL (test package)"
+        exit 1
+    fi
     log "building the test suite"
     if ! dotnet build "$TEST_PROJECT" -c Debug >"$LOGS/build-tests.log" 2>&1; then
         grep -E ' error ' "$LOGS/build-tests.log" | sort -u | head -20 | sed 's/^/    /'
@@ -183,15 +194,18 @@ HACKEROS_TRIMMED_URL="http://127.0.0.1:$PORT" \
 HACKEROS_TRIMMED_PWA_URL="$PWA_URL" \
 HACKEROS_TRIMMED_CATALOG="$CATALOG" \
 HACKEROS_TRIMMED_ARTIFACTS="$OUT/screenshots" \
+HACKEROS_TRIMMED_PACKAGES="$PACKAGES" \
     dotnet test "$TEST_PROJECT" --no-build -c Debug --logger "console;verbosity=detailed" >"$LOGS/tests.log" 2>&1
 code=$?
 stop_servers
 grep -E '^\s*\[(trimmed|chromium)\]' "$LOGS/tests.log" | sed "s/^ */    /"
 
-# A skipped test exits 0 too: require every test to have actually run and passed. Four tests: the
-# boot with every app, the offline boot, and the window rendered in a worker with its measurements
-# (ADR 0133, TrimmedPublishTests.RemoteWindows.cs).
-EXPECTED_TESTS=4
+# A skipped test exits 0 too: require every test to have actually run and passed. Seven tests: the
+# boot with every app, the offline boot, the window rendered in a worker with its measurements
+# (ADR 0133, TrimmedPublishTests.RemoteWindows.cs), the installed app's wwwroot/ files served on
+# both addresses (ADR 0206, TrimmedPublishTests.InstalledApps.cs), and the notification bubble
+# (ADR 0197, TrimmedPublishTests.Toasts.cs).
+EXPECTED_TESTS=7
 if [[ $code -eq 0 ]] && grep -qE "^\s*Passed: +$EXPECTED_TESTS\s*$" "$LOGS/tests.log" && ! grep -qE '^\s*Skipped: +[1-9]' "$LOGS/tests.log"; then
     [[ -z "$PWA_URL" ]] && log "note: the offline test did not run (no 127.0.0.2)"
     log "RESULT: PASS"
