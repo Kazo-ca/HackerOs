@@ -86,6 +86,6 @@ thread; the recommendation applies until he picks something else.
 - Any notification now lights the dot, not only what's new.
 - The read state is lost when the page reloads, like the notifications
   themselves.
-- Tests: `NotificationAttentionTests`, `TaskbarLocalizationTests` (clock dot and
+- Tests: `NotificationAttentionTests`, `TrimmedPublishTests.Notifications` (end to end), `TaskbarLocalizationTests` (clock dot and
   name), `TaskbarClockPanelSourceAdapterTests`, `WhatsNewServiceTests`
   (notification dismissed when everything is seen).

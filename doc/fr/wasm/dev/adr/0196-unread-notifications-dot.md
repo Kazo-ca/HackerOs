@@ -92,6 +92,6 @@ chose.
 - Toute notification allume désormais le point, pas seulement les nouveautés.
 - L'état lu est perdu au rechargement de la page, comme les notifications
   elles-mêmes.
-- Tests : `NotificationAttentionTests`, `TaskbarLocalizationTests`
+- Tests : `NotificationAttentionTests`, `TrimmedPublishTests.Notifications` (bout en bout), `TaskbarLocalizationTests`
   (point et nom de l'horloge), `TaskbarClockPanelSourceAdapterTests`,
   `WhatsNewServiceTests` (notification fermée quand tout est vu).
