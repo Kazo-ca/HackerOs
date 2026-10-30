@@ -62,6 +62,8 @@ at the end of each series or when a convention changes.
   [`app-repository.md`](../framework/app-repository.md), issue #246). The
   `HackerOs-AppTemplate` repository will only be regenerated with a submodule
   on the release that contains this template (draft PR in that repository).
+  ADR 0206 is taken by issue #247 (installed apps' `wwwroot/` served by the
+  service worker, [ADR 0206](../dev/adr/0206-serve-installed-app-assets.md)).
 - **ADR**: 0001 to 0171 and 0173 to 0195 exist on `main` (a few numbers skipped;
   0141 and 0172 were not used). Recent landmarks: 0173 automatic release, 0174
   new-version announcement, 0175 "New folder" in dialogs, 0176 app repository

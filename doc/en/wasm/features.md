@@ -231,7 +231,10 @@ This section lists what is released in the `main` branch and online.
   ([`sdk-developer-guide.md`](framework/sdk-developer-guide.md))
 - **Install an application from its GitHub repository** with the `hackpkg`
   command. ([ADR 0182](dev/adr/0182-install-apps-from-github.md),
-  [`app-installation.md`](dev/app-installation.md))
+  [`app-installation.md`](dev/app-installation.md)) Its images, scripts and
+  Web Workers are served at the same address as for an application built into
+  the OS, so an application that wraps a JavaScript project works once
+  installed. ([ADR 0206](dev/adr/0206-serve-installed-app-assets.md))
 - **`hackeros-solution` application repository template**: application, host
   and tests ready to run, the OS as a submodule to debug in its sources, NuGet
   packages in production, CI and submission to the Hack Store catalog with a
@@ -262,7 +265,6 @@ points to its PR.
 
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
-| Assets of installed applications | Serve the images, scripts and workers of an installed application. | [0182](dev/adr/0182-install-apps-from-github.md) | [#247](https://github.com/Kazo-ca/HackerOs/issues/247) |
 | Trusted sources and per-user install | Trusted catalogs, install without an administrator, block list, administrator approval. | [0189](dev/adr/0189-app-sources-trust-and-per-user-install.md) | [#248](https://github.com/Kazo-ca/HackerOs/issues/248) |
 | Application catalog | Catalog format, checking and publishing of the offered applications. | [0188](dev/adr/0188-hack-store-and-app-catalog.md) | [AppMarketPlace #1](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/1) |
 | Hack Store app v1 | Browse, install, update and uninstall applications in one click. | [0188](dev/adr/0188-hack-store-and-app-catalog.md) | [#249](https://github.com/Kazo-ca/HackerOs/issues/249) |
