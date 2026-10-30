@@ -180,4 +180,9 @@ dans le même changement (voir [`AGENTS.md`](../../../AGENTS.md)).
 
 Voir [`memory/README.md`](memory/README.md) : état des séries, conventions
 (branches, fusions, ADR, documentation), environnement de build et notes
-historiques.
+historiques ; [`memory/decisions-not-built.md`](memory/decisions-not-built.md)
+(décisions prises en discussion, pas encore construites) et
+[`memory/known-test-failures.md`](memory/known-test-failures.md) (échecs de
+tests préexistants connus). Les règles de travail avec le mainteneur sont dans
+la section IV de [`AGENTS.md`](../../../AGENTS.md), lue par Claude Code via
+[`CLAUDE.md`](../../../CLAUDE.md).

@@ -2,7 +2,7 @@
 
 # HackerOS project memory
 
-Project status and working conventions as of **2026-10-28**. This folder serves as a
+Project status and working conventions as of **2026-10-30**. This folder serves as a
 resumption point: a new contributor (human or agent) finds here what is
 done, how we work and what must not be redone. It is updated
 at the end of each series or when a convention changes.
@@ -30,6 +30,8 @@ at the end of each series or when a convention changes.
 | EXEC (`exec/*`) | Process limits, OOM killer, remote gateways, "not responding" box, `HackBackground`, OS served by `HackerOs.Server`, cross-origin isolation, SDK 1.2 | [`execution-followups-plan.md`](../dev/plans/execution-followups-plan.md) |
 | DESK (`desk/0` to `desk/6`) | OS-provided file control, central context menu, app menu entries, desktop, SDK 2.0 | [`desktop-and-context-menu-plan.md`](../dev/plans/desktop-and-context-menu-plan.md) |
 | Multi-monitor (`multi-monitor/0` to `multi-monitor/9`) | Extended desktop: one screen per display surface, `DisplayId` and work area per screen, windows moved through a portal, screen service (Chrome/Edge, fallback elsewhere), one taskbar per screen, "Other screen" menus and identification veil, Settings ▸ Screens, drag between screens; no change to the app SDK | [`multi-monitor-plan.md`](../dev/plans/multi-monitor-plan.md) |
+| File Explorer (`explorer/1` to `explorer/9`) | Resizable sidebar, empty state inside the list, drag out to the computer, shortcuts, tracked network drives, errors in a `MessageBox`; the `.zip` opened as a folder is left (issue #241) | [ADR 0185](../dev/adr/0185-file-explorer-improvements.md), [`file-explorer.md`](../dev/file-explorer.md) |
+| Guest (`guest/*`) | Guest start when no account exists, elevation by a plain confirmation, "Create my account" (migrate or delete the guest), sign-in credits | [ADR 0187](../dev/adr/0187-guest-start-and-sign-in-credits.md), [`guest-account.md`](../dev/guest-account.md) |
 
 - **Since DESK** (on `main`, October 2026): restart offered when the
   build changes under the page (ADR 0162), local preview of window
@@ -44,17 +46,44 @@ at the end of each series or when a convention changes.
 - **Mobile explorer** (October 2026, PR #212 to `main`): mobile entry point of
   apps honored, mobile file explorer, full-screen dialogs on mobile, one tap
   opens (`HackFileView.OpenOnTap`) (ADR 0171).
-- **ADR**: 0001 to 0171 and 0173 to 0190 exist (a few numbers skipped); 0170 is the
-  Settings side menu (PR #210), 0171 the mobile file explorer, 0172,
-  reserved with it, was not used, 0173 is the automatic release, and 0174 the new-version announcement
-  (`version.json`), 0175 the "New folder" button of the Choose folder and Save dialogs, 0176 the app repository template (submodule for debugging, packages for production), 0177 the title bar of maximized and snapped windows, 0178 to 0180, 0183 and 0184 the multi-monitor series, 0181 a folder of the computer mounted as a network drive, 0182 installing an app from GitHub at the terminal (`hackpkg`), 0185 the File Explorer improvements (`explorer/base` series, everything except the `.zip` opened as a folder, issue #241), 0186 the change list and what's new ([`change-list.md`](../dev/change-list.md)), 0187 the guest start and credits, 0188 to 0190 the Hack Store (catalog, trust and per-user install, theme packs; plan [`hackeros-store.md`](../dev/plans/hackeros-store.md)). 0191 reserved by the installable local server (PR #269), 0192 the features overview (`features.md`) and the exception to ADR 0135 for ported apps. **Next free number: 0193**. Parallel
-  threads reserve distinct numbers.
+- **Since multi-monitor** (on `main`, October 28 to 30, 2026): a folder of
+  the computer mounted as a network drive (ADR 0181), `hackpkg install` from
+  GitHub (ADR 0182), features overview `features.md` (ADR 0192), local time
+  and time zone (ADR 0193, work item 2 of issue #242), taskbar context menus
+  (ADR 0194, work item 4 of #242). The Hack Store ADRs (0188 to 0190) and the
+  installable local server ADR (0191) are accepted, nothing is coded (`TODO`
+  issues #246 to #257, #267).
+- **Waiting for Benoit** (open PRs to `main`, 2026-10-30): #285
+  `whats-new/base` (what's new since the last visit, ADR 0186, issue #252
+  fully ticked) and #291 `startmenu/1-power-menu` (Power button in the Start
+  menu, ADR 0195; "Switch user" greyed out, issue #290).
+- **ADR**: 0001 to 0171 and 0173 to 0194 exist on `main` (a few numbers skipped;
+  0141 and 0172 were not used). Recent landmarks: 0173 automatic release, 0174
+  new-version announcement, 0175 "New folder" in dialogs, 0176 app repository
+  template, 0177 title bar of maximized windows, 0178 to 0180, 0183 and 0184
+  multi-monitor, 0181 network drive, 0182 `hackpkg`, 0185 File Explorer, 0186
+  what's new ([`change-list.md`](../dev/change-list.md)), 0187 guest and credits,
+  0188 to 0190 Hack Store ([`hackeros-store.md`](../dev/plans/hackeros-store.md)),
+  0191 installable local server, 0192 `features.md` and exception to ADR 0135,
+  0193 local time, 0194 taskbar menus. **0195 is held by PR #291** (Power
+  menu). **Next free number: 0196.** Before taking one, check `dev/adr/` on
+  `main` and the open PRs.
 
 ## Working conventions
 
+The rules for working with Benoit (language, questions, `TODO` issues, branch
+names, merging into `main`, ADR numbers, change entries) are in section **IV**
+of [`AGENTS.md`](../../../../AGENTS.md), which Claude Code reads through
+[`CLAUDE.md`](../../../../CLAUDE.md). In short:
+
+- **Language**: answer Benoit in French.
+- **To do**: "add it to the to-do list" = a GitHub issue with the `TODO`
+  label and a "Dépendances" section; "what is left to do?" = the open
+  `TODO` issues first, then the docs.
 - **No game in this repository** ([ADR 0135](../dev/adr/0135-no-game-in-this-repository.md)):
   neither code, nor mention in the docs, plans, ADRs or memory.
-- **Branches**: one integration branch `<series>/base` per series, one branch
+- **Branches**: descriptive names (`taskbar/4-context-menus`), never
+  `claude/project-thread-…`. One integration branch `<series>/base` per series, one branch
   `<series>/<n>-<topic>` per work item, PR to the integration branch. The ADRs
   of a phase are written before its code.
 - **`main`**: only Benoit merges into `main` and decides when an integration
@@ -79,6 +108,13 @@ at the end of each series or when a convention changes.
   merge into `main`; the `Release HackerOS` workflow creates the tag, the
   GitHub Release and pushes to nuget.org ([`releases.md`](../dev/releases.md),
   ADR 0173).
+
+## Decisions and context outside the code
+
+| Note | Content |
+| --- | --- |
+| [`decisions-not-built.md`](decisions-not-built.md) | Decisions Benoit took in discussion that are not coded nor written anywhere else yet: windows and taskbar (remaining work items of #242), real sites in the browser (#266), ported third-party apps, server-hosted apps, ideas taken from daedalOS, editors. |
+| [`known-test-failures.md`](known-test-failures.md) | Known pre-existing test failures (to name in a PR, not to hide) and recent environment tips. |
 
 ## Environment and pitfalls
 
