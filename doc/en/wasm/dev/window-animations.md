@@ -75,6 +75,7 @@ replaced by the default curve.
   `WindowHost` (`is-opening` class, `hidden` after the minimize ends, animation passed to
   the script).
 - `Tests/HackerOs.Apps.ThemeEditor.Tests`: the `--hos-window-anim-duration` token is translated.
+- `Tests/HackerOs.UI.E2E.Tests/WindowAnimationTests.cs`: in Chromium, each animation ends with the window opaque and untransformed, the close copy is an inert `div` with no `data-window-id` that leaves the page, and nothing is animated with `prefers-reduced-motion: reduce`. `WindowTitleBarTests` waits for the animation to end before measuring the buttons.
 
 ## 6. Task list
 
