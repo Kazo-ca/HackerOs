@@ -1,4 +1,4 @@
-// The wwwroot/ files of apps installed by hackpkg (ADR 0207), the page half of
+// The wwwroot/ files of apps installed by hackpkg (ADR 0206), the page half of
 // Apps/BrowserInstalledAppAssets.cs, imported by that class (never by a host, AGENTS.md).
 //
 // The OS copies each verified file into the Cache Storage cache below, under the address a

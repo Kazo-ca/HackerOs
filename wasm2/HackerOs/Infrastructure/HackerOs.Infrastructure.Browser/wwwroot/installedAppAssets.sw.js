@@ -1,4 +1,4 @@
-// The wwwroot/ files of apps installed by hackpkg (ADR 0207), the service worker half of
+// The wwwroot/ files of apps installed by hackpkg (ADR 0206), the service worker half of
 // installedAppAssets.js. A classic script, loaded with importScripts by both service-worker files of
 // the host (service-worker.js in development, service-worker.published.js once published).
 //
