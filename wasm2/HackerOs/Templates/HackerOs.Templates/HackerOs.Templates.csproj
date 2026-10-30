@@ -9,6 +9,12 @@
       hackeros-service   background service started at login (ServiceAppBase)
       hackeros-site      ASP.Hack site (WebAppDefinition)
       hackeros-host      Blazor WebAssembly host running HackerOs.Ecosystem.Host with the base apps
+      hackeros-solution  a whole app repository (ADR 0176, ADR 0207): app, host, tests, HackerOS
+                         submodule (sources in Debug, packages in Release), CI and the Hack Store
+                         publishing workflow. Its projects take $(HackerOsVersion) from the submodule.
+
+    Each template has .template.config/ide.host.json (icon, parameter labels) for Visual Studio and
+    Rider (ADR 0176 §7).
 
     Each template project declares <HackerOsVersion>0.0.0-dev</HackerOsVersion>; packing stages
     content/ under obj/ and writes this repository's $(HackerOsVersion) there, so a generated
@@ -22,7 +28,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <PackageId>HackerOs.Templates</PackageId>
     <PackageType>Template</PackageType>
-    <Description>dotnet new templates for HackerOS: window app, terminal command, service, ASP.Hack site and host.</Description>
+    <Description>dotnet new templates for HackerOS: window app, terminal command, service, ASP.Hack site, host and app repository solution.</Description>
     <PackageTags>hackeros;dotnet-new;templates</PackageTags>
     <EnableDefaultItems>false</EnableDefaultItems>
     <IncludeBuildOutput>false</IncludeBuildOutput>

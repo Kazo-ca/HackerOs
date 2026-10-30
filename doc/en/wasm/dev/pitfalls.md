@@ -79,7 +79,7 @@ measurement.
 
 **Known unstable** tests, not reproduced in 25 runs under load on
 2026-10-25: one `AppInstallationService` test (about once in twelve before),
-the web worker of `LocalNetworkTests`. Browser side (manual workflow): the
+the web worker of `LocalNetworkTests`. Browser side (nightly workflow): the
 detached window harness of the UI, `FileExplorerDownload` and
 `BrowserHomePage` of `UI.E2E` under the load of the complete suite, and two
 `Pwa.E2E` tests that wait for the file explorer. Rerun the suite alone before
@@ -125,7 +125,7 @@ same conditions.
 
 | Symptom | Cause | Solution |
 | --- | --- | --- |
-| The GitHub Actions all failed (August to October 2026) | No runner available | During this period, a green local build and tests were authoritative. Since 2026-10-24, the workflows run again (`Verify HackerOS WASM`, `Deploy to GitHub Pages`); the Playwright tests are in a separate manual workflow (`verify-browser-tests.yml`). A green local build and tests are still required before merging. PRs then failed on unstable tests (`Kill_minus_9`, `ResourceAccounting`): the workflows rerun failing tests once ([`ci-workflows.md`](ci-workflows.md)). |
+| The GitHub Actions all failed (August to October 2026) | No runner available | During this period, a green local build and tests were authoritative. Since 2026-10-24, the workflows run again (`Verify HackerOS WASM`, `Deploy to GitHub Pages`); the Playwright tests are in a separate workflow (`verify-browser-tests.yml`), run every night on `main` since issue #292. A green local build and tests are still required before merging. PRs then failed on unstable tests (`Kill_minus_9`, `ResourceAccounting`): the workflows rerun failing tests once ([`ci-workflows.md`](ci-workflows.md)). |
 | GitHub Actions fails at "Setup .NET 10": `409 Unable to download https://dotnetorigin.blob.core.windows.net/...` | With a channel (`10.0.x`), the install script follows the `aka.ms` link, which pointed to a failing storage | Install an exact version: the `.github/actions/setup-dotnet-sdk` action reads `latest-sdk` and downloads from `builds.dotnet.microsoft.com` ([`ci-workflows.md`](ci-workflows.md#net-sdk-installation)). |
 | `dotnet` missing in a cloud container | Nothing is preinstalled | `curl -sSL https://dot.net/v1/dotnet-install.sh \| bash -s -- --channel 10.0`. |
 | A cloud thread cannot delete a GitHub branch (403) | Insufficient rights of cloud sessions | Benoit deletes merged branches himself with a prepared command. |

@@ -80,7 +80,7 @@ encore échouer sur une machine saturée : c'est une mesure de temps.
 Tests **instables connus**, non reproduits en 25 essais sous charge le
 2026-10-25 : un test d'`AppInstallationService` (environ une fois sur douze
 avant), le web worker de `LocalNetworkTests`. Côté navigateur (workflow
-manuel) : le harnais de fenêtre détachée de l'UI, `FileExplorerDownload` et
+de la nuit) : le harnais de fenêtre détachée de l'UI, `FileExplorerDownload` et
 `BrowserHomePage` d'`UI.E2E` sous la charge de la suite complète, et deux
 tests `Pwa.E2E` qui attendent l'explorateur de fichiers. Relancer la suite
 seule avant de conclure, et noter ici la cause d'un nouveau cas. Sur
@@ -125,7 +125,7 @@ compilation à niveaux et comparer des passes faites dans les mêmes conditions.
 
 | Symptôme | Cause | Solution |
 | --- | --- | --- |
-| Les GitHub Actions échouaient toutes (août à octobre 2026) | Plus d'exécuteur disponible | Pendant cette période, un build et des tests locaux verts faisaient foi. Depuis le 2026-10-24, les workflows tournent de nouveau (`Verify HackerOS WASM`, `Deploy to GitHub Pages`) ; les tests Playwright sont dans un workflow manuel séparé (`verify-browser-tests.yml`). Un build et des tests locaux verts restent exigés avant de fusionner. Les PR échouaient ensuite sur des tests instables (`Kill_minus_9`, `ResourceAccounting`) : les workflows relancent une fois les tests en échec ([`ci-workflows.md`](ci-workflows.md)). |
+| Les GitHub Actions échouaient toutes (août à octobre 2026) | Plus d'exécuteur disponible | Pendant cette période, un build et des tests locaux verts faisaient foi. Depuis le 2026-10-24, les workflows tournent de nouveau (`Verify HackerOS WASM`, `Deploy to GitHub Pages`) ; les tests Playwright sont dans un workflow séparé (`verify-browser-tests.yml`), lancé chaque nuit sur `main` depuis l'issue #292. Un build et des tests locaux verts restent exigés avant de fusionner. Les PR échouaient ensuite sur des tests instables (`Kill_minus_9`, `ResourceAccounting`) : les workflows relancent une fois les tests en échec ([`ci-workflows.md`](ci-workflows.md)). |
 | GitHub Actions échoue à « Setup .NET 10 » : `409 Unable to download https://dotnetorigin.blob.core.windows.net/...` | Avec un canal (`10.0.x`), le script d'installation suit le lien `aka.ms`, qui pointait vers un stockage en erreur | Installer une version exacte : l'action `.github/actions/setup-dotnet-sdk` lit `latest-sdk` et télécharge depuis `builds.dotnet.microsoft.com` ([`ci-workflows.md`](ci-workflows.md#installation-du-sdk-net)). |
 | `dotnet` absent dans un conteneur cloud | Rien n'est préinstallé | `curl -sSL https://dot.net/v1/dotnet-install.sh \| bash -s -- --channel 10.0`. |
 | Un thread cloud ne peut pas supprimer une branche GitHub (403) | Droits insuffisants des sessions cloud | Benoit supprime les branches fusionnées lui-même avec une commande préparée. |
