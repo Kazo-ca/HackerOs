@@ -50,9 +50,12 @@ at the end of each series or when a convention changes.
   the computer mounted as a network drive (ADR 0181), `hackpkg install` from
   GitHub (ADR 0182), features overview `features.md` (ADR 0192), local time
   and time zone (ADR 0193, work item 2 of issue #242), taskbar context menus
-  (ADR 0194, work item 4 of #242). The Hack Store ADRs (0188 to 0190) and the
-  installable local server ADR (0191) are accepted, nothing is coded (`TODO`
-  issues #246 to #257, #267).
+  (ADR 0194, work item 4 of #242). The Hack Store ADRs (0188 to 0190) are
+  accepted, nothing is coded (`TODO` issues #246 to #257). The installable
+  local server (ADR 0191, issue #267) is coded in the `todo/base` series (work
+  item `todo/14-installable-server`,
+  [`installable-server.md`](../dev/installable-server.md)); the Windows and
+  macOS scripts and the Docker image still need a real run.
 - **Power button in the Start menu** (ADR 0195, PR #291, merged on
   2026-10-30): "Switch user" stays greyed out, `TODO` issue #290 (several
   sessions open at once).

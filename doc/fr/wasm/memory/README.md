@@ -51,8 +51,11 @@ jour à la fin de chaque série ou quand une convention change.
   GitHub (ADR 0182), présentation des fonctionnalités `features.md` (ADR 0192),
   heure locale et fuseau horaire (ADR 0193, chantier 2 de l'issue #242),
   menus contextuels de la barre des tâches (ADR 0194, chantier 4 de #242).
-  Les ADR du Hack Store (0188 à 0190) et du serveur local installable (0191)
-  sont acceptées, rien n'est codé (issues `TODO` #246 à #257, #267).
+  Les ADR du Hack Store (0188 à 0190) sont acceptées, rien n'est codé (issues
+  `TODO` #246 à #257). Le serveur local installable (ADR 0191, issue #267) est
+  codé dans la série `todo/base` (chantier `todo/14-installable-server`,
+  [`installable-server.md`](../dev/installable-server.md)) ; restent à essayer
+  en vrai les scripts Windows et macOS et l'image Docker.
 - **Bouton Marche/arrêt dans le menu Démarrer** (ADR 0195, PR #291, fusionnée
   le 2026-10-30) : « Changer d'utilisateur » reste grisé, issue `TODO` #290
   (plusieurs sessions ouvertes en même temps).

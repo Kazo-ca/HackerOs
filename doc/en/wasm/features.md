@@ -74,7 +74,7 @@ The ecosystem is made of:
 | **With the HackerOS server** | Organizations, advanced users | The optional ASP.NET Core server serves the OS and adds accounts synchronized across devices and a relay to the real network. See [`server-hosting.md`](dev/server-hosting.md). |
 | **Embedded in your own product** | Developers, companies | The NuGet packages and the `dotnet new hackeros-host` template let you compose your own host with your own applications. See [`building-on-hackeros.md`](framework/building-on-hackeros.md). |
 | **Developing applications** | Developers | SDK NuGet packages, `dotnet new` templates, template repository, then installation from the terminal with `hackpkg`. See [`sdk-developer-guide.md`](framework/sdk-developer-guide.md). |
-| **Installable local server** | Advanced users | *In development*: see [Network and server](#network-and-server). |
+| **Installable local server** | Advanced users | Every version publishes the HackerOS server for Windows, Linux and macOS (`hackeros-server-<version>-<system>`) and the Docker image `ghcr.io/kazo-ca/hackeros-server`. It installs as a service on your computer or on a machine of your local network, without being exposed to the internet, and the online OS links to it with a pairing code (Settings > Server connection > Local server). See [`installable-server.md`](dev/installable-server.md). |
 
 ## Available features
 
@@ -164,6 +164,11 @@ This section lists what is released in the `main` branch and online.
   [`blazor-sites.md`](framework/blazor-sites.md))
 - **Access to the real network** through the optional server, for allowed
   applications. ([`server-network-relay.md`](dev/server-network-relay.md))
+- **Installable local server**: the HackerOS server installs as a service
+  (Windows, Linux, macOS, Docker) on your computer or on a machine of your
+  local network in HTTPS, and the OS, even online on GitHub Pages, links to it
+  with a pairing code. ([`installable-server.md`](dev/installable-server.md),
+  [ADR 0191](dev/adr/0191-installable-local-server.md))
 
 ### Accounts and security
 
@@ -276,7 +281,6 @@ points to its PR.
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Real sites in the browser | Show a real web site through the HackerOS server relay. | Coming | [#266](https://github.com/Kazo-ca/HackerOs/issues/266) |
-| Installable local server | HackerOS server to install on your computer or local network (Windows, Linux, macOS, Docker), used by the online OS. | [0191 (PR #269)](https://github.com/Kazo-ca/HackerOs/pull/269) | [#267](https://github.com/Kazo-ca/HackerOs/issues/267) |
 
 ### Optional ported applications
 

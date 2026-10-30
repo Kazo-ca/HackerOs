@@ -53,7 +53,7 @@ Memory, Backup, What's new, About).
 | Installed applications (`installed-apps`) | `InstalledAppsPanel` | List of apps and their commands, uninstall and reinstall (ADR 0048). |
 | OS components (`os-components`) | `OsComponentsPanel` | Provider chosen for each contract (`HackComponentProviders.GetOverviewAsync`, `SetProviderAsync`). |
 | File menus (`file-menus`) | `FileMenuEntriesPanel` | Menu entries registered by apps (ADR 0151). |
-| Server connection (`server`) | `ServerRelayPolicyPanel` (+ the window) | Optional server, network relay (ADR 0102, 0134). Visible in all cases, the state comes from `HackServerConnection`. |
+| Server connection (`server`) | `ServerRelayPolicyPanel` (+ the window) | Optional server, network relay (ADR 0102, 0134). Visible in all cases, the state comes from `HackServerConnection`. When not connected, `LocalServerPanel` lists the installable server downloads, tests an address and pairs the device with a code ([`installable-server.md`](installable-server.md), ADR 0191). |
 | Synchronization (`sync`) | (in the window) | Sync state and conflicts (ADR 0101). |
 | Users (`users`) | `UsersPanel` (+ `PasskeysPanel`) | Accounts, passwords, adding and deleting accounts by an administrator, session passkeys (ADR 0120, 0168, 0169; see [Users page](#users-page)). |
 | Memory (`memory`) | `MemoryPanel` | File `/etc/hackeros/memory.config`, section `[oom-killer]` (ADR 0126). |
