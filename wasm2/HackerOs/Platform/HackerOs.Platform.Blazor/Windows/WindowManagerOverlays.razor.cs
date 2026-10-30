@@ -242,33 +242,7 @@ public sealed partial class WindowManagerOverlays : ComponentBase
             return definition;
         }
 
-        WindowId windowId = menu.WindowId;
-        HackMenuGroupDefinition commands = definition.AddGroup();
-        foreach (WindowMenuItem item in Commands.GetMenuItems(windowId, kind))
-        {
-            WindowKeyboardAction action = item.Action;
-            HackMenuItemDefinition entry = commands.Add("window." + WindowKeyBindingsSettingsDocuments.KeyOf(action), item.Label);
-            entry.Shortcut = item.Shortcut;
-            entry.IsDisabled = !item.IsEnabled;
-            entry.OnClick = EventCallback.Factory.Create<object?>(this, () => Commands.ExecuteForWindowAsync(action, windowId));
-        }
-
-        HackMenuItemDefinition otherScreen = definition.AddGroup().Add(OtherScreenItemId, L["WindowMenu.OtherScreen"]);
-        HackMenuGroupDefinition screens = new();
-        foreach (WindowScreenMenuItem screen in Commands.GetScreenMenuItems(windowId))
-        {
-            DisplayId display = screen.Display;
-            HackMenuItemDefinition entry = screens.Add(ScreenItemIdPrefix + display.Number.ToString(System.Globalization.CultureInfo.InvariantCulture), screen.Label);
-            entry.IsDisabled = !screen.IsEnabled;
-            entry.OnClick = EventCallback.Factory.Create<object?>(this, () => Commands.MoveToScreen(windowId, display));
-        }
-
-        otherScreen.Children.Add(screens);
-        HackMenuGroupDefinition create = new();
-        HackMenuItemDefinition newScreen = create.Add(NewScreenItemId, L["WindowMenu.NewScreen"]);
-        newScreen.IsDisabled = !Commands.CanOpenScreen;
-        newScreen.OnClick = EventCallback.Factory.Create<object?>(this, () => Commands.MoveToNewScreenAsync(windowId));
-        otherScreen.Children.Add(create);
+        WindowMenuDefinitions.AddWindowEntries(definition, Commands, L, menu.WindowId, kind, this);
         return definition;
     }
 

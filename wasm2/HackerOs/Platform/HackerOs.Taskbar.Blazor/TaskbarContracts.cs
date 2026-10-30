@@ -109,6 +109,21 @@ public interface ITaskbarSessionCommands
 }
 
 /// <summary>
+/// Supplies the host's context menus (ADR 0194 §1): HTML attributes the taskbar sets on itself and
+/// on the button of each window, which the host's own context menu system reads. The taskbar never
+/// inspects them; it keeps the browser's menu when no instance is supplied.
+/// </summary>
+public interface ITaskbarContextMenus
+{
+    /// <summary>Gets the attributes of the taskbar itself (its empty area), or <see langword="null"/> for none.</summary>
+    IReadOnlyDictionary<string, object>? TaskbarAttributes { get; }
+
+    /// <summary>Gets the attributes of the button of one window, or <see langword="null"/> for none.</summary>
+    /// <param name="id">The window the button stands for.</param>
+    IReadOnlyDictionary<string, object>? WindowItemAttributes(WindowId id);
+}
+
+/// <summary>
 /// Host-supplied labels for taskbar chrome that would otherwise hardcode HackerOS branding.
 /// Zone visibility is controlled by which source parameters the host supplies, not by options.
 /// </summary>
