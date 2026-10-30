@@ -33,6 +33,7 @@
 @inject HackerOs.Platform.Core.AppCatalog Catalog
 @inject HackerOs.Platform.Core.Globalization.SessionLocaleService SessionLocale
 @inject HackerOs.Platform.Core.Globalization.SessionTimeZoneService TimeZones
+@inject HackerOs.Platform.Blazor.ContextMenus.ContextMenuService ContextMenus
 
 <div class="desktop-shell" @onkeydown="HandleShellKeyDown">
     <div class="desktop-workspace">
@@ -92,7 +93,8 @@
                                       StatusSource="_taskbarStatus"
                                       ClockPanelSource="_clockPanel"
                                       ClockPanelContent="@ClockPanelFragment"
-                                      NotificationAreaContent="@NotificationAreaFragment" />
+                                      NotificationAreaContent="@NotificationAreaFragment"
+                                      ContextMenus="_taskbarMenus.For(DisplayId.Primary)" />
 
     @if (TestDemoEnabled)
     {
@@ -143,6 +145,7 @@
     private readonly Dictionary<DisplayId, TaskbarWindowSourceAdapter> _screenTaskbarSources = [];
     private TaskbarClockPanelSourceAdapter _clockPanel = null!;
     private TaskbarStatusSourceAdapter _taskbarStatus = null!;
+    private TaskbarContextMenus _taskbarMenus = null!;
 
     private RenderFragment ClockPanelFragment => builder =>
     {
@@ -236,7 +239,8 @@
             <HackerOs.Taskbar.Blazor.Taskbar WindowSource="ScreenTaskbarSource(screen.Id)"
                                               Commands="_taskbarCommands"
                                               Launcher="_launcher.For(screen.Id)"
-                                              StatusSource="_taskbarStatus" />
+                                              StatusSource="_taskbarStatus"
+                                              ContextMenus="_taskbarMenus.For(screen.Id)" />
         </text>;
 
     /// <summary>The window list of a secondary screen's taskbar, kept while the screen is open.</summary>
@@ -352,11 +356,25 @@
 
     private Task HandleAppSelected(AppManifest manifest) => LaunchAsync(manifest, []);
 
-    private async Task LaunchAsync(AppManifest manifest, IReadOnlyList<string> arguments)
+    // ADR 0179 §1: an app started from a screen's Start menu opens on that screen; from screen 1's
+    // notification area, on screen 1.
+    private Task LaunchAsync(AppManifest manifest, IReadOnlyList<string> arguments) =>
+        LaunchAsync(manifest, arguments, _launcher.IsOpen ? _launcher.Display : DisplayId.Primary);
+
+    /// <summary>ADR 0194 §3-4: an app started from a taskbar menu opens on that taskbar's screen.</summary>
+    private Task LaunchFromTaskbarAsync(string appId, IReadOnlyList<string> arguments, DisplayId display) =>
+        Catalog.Manifests.TryGetValue(appId, out AppManifest? manifest)
+            ? LaunchAsync(manifest, arguments, display)
+            : Task.CompletedTask;
+
+    /// <summary>ADR 0194 §3: « Nouvelle fenêtre » for an app in the catalog that accepts more than one window.</summary>
+    private bool CanOpenNewWindow(string appId) =>
+        Catalog.Manifests.TryGetValue(appId, out AppManifest? manifest)
+        && manifest.Kind == AppKind.Window
+        && !manifest.SingleInstancePerUser;
+
+    private async Task LaunchAsync(AppManifest manifest, IReadOnlyList<string> arguments, DisplayId display)
     {
-        // ADR 0179 §1: an app started from a screen's Start menu opens on that screen; from screen 1's
-        // notification area, on screen 1.
-        DisplayId display = _launcher.IsOpen ? _launcher.Display : DisplayId.Primary;
         _launcher.Close();
         if (SessionService.CurrentPrincipal is not AuthenticatedPrincipal principal)
         {
@@ -524,6 +542,14 @@
         _clockPanel = new TaskbarClockPanelSourceAdapter();
         _clockPanel.Changed += Rerender;
         _taskbarStatus = new TaskbarStatusSourceAdapter(SimulationClock, SessionLocale, TimeZones);
+        _taskbarMenus = new TaskbarContextMenus(
+            ContextMenus,
+            KeyboardCommands,
+            WindowRuntime,
+            L,
+            appId => Catalog.Manifests.ContainsKey(appId),
+            CanOpenNewWindow,
+            (appId, arguments, display) => InvokeAsync(() => LaunchFromTaskbarAsync(appId, arguments, display)));
     }
 
     private void Rerender()
@@ -572,5 +598,6 @@
 
         _screenTaskbarSources.Clear();
         _taskbarStatus.Dispose();
+        _taskbarMenus.Dispose();
     }
 }

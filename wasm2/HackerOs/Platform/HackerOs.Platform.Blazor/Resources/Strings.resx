@@ -770,6 +770,27 @@
   <data name="WindowMenu.NewScreen" xml:space="preserve">
     <value>New screen</value>
   </data>
+  <data name="TaskbarMenu.Label" xml:space="preserve">
+    <value>Taskbar menu</value>
+  </data>
+  <data name="TaskbarMenu.NewWindow" xml:space="preserve">
+    <value>New window</value>
+  </data>
+  <data name="TaskbarMenu.TaskManager" xml:space="preserve">
+    <value>Task manager</value>
+  </data>
+  <data name="TaskbarMenu.ShowDesktop" xml:space="preserve">
+    <value>Show the desktop</value>
+  </data>
+  <data name="TaskbarMenu.Cascade" xml:space="preserve">
+    <value>Cascade windows</value>
+  </data>
+  <data name="TaskbarMenu.Tile" xml:space="preserve">
+    <value>Tile windows</value>
+  </data>
+  <data name="TaskbarMenu.Settings" xml:space="preserve">
+    <value>Taskbar settings</value>
+  </data>
   <data name="Security.GuestConfirm" xml:space="preserve">
     <value>You are signed in as the guest, the only account on this computer: confirm to continue, no password is asked.</value>
   </data>

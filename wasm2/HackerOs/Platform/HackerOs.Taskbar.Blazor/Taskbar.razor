@@ -2,7 +2,7 @@
 @implements IDisposable
 @inject IServiceProvider LocalizationServices
 
-<footer class="taskbar-container" role="contentinfo" aria-label="@L["Taskbar.Label"]">
+<footer class="taskbar-container" role="contentinfo" aria-label="@L["Taskbar.Label"]" @attributes="ContextMenus?.TaskbarAttributes">
     <div class="taskbar-start">
         @if (Launcher is not null)
         {
@@ -25,6 +25,7 @@
             {
                 bool isFocused = window.IsFocused && !window.IsMinimized;
                 <button type="button"
+                        @attributes="ContextMenus?.WindowItemAttributes(window.Id)"
                         key="@window.Id.Value"
                         class="taskbar-item @(isFocused ? "is-active" : "") @(window.IsMinimized ? "is-minimized" : "")"
                         aria-label="@L[isFocused ? "Taskbar.Item.Focused" : window.IsMinimized ? "Taskbar.Item.Minimized" : "Taskbar.Item.Background", window.Title]"
@@ -129,6 +130,13 @@
     /// <summary>Gets or sets the optional session commands. Hides the session control when null.</summary>
     [Parameter]
     public ITaskbarSessionCommands? SessionCommands { get; set; }
+
+    /// <summary>
+    /// Gets or sets the host's context menus (ADR 0194): attributes set on the taskbar and on each
+    /// window button. The browser's menu stays when null.
+    /// </summary>
+    [Parameter]
+    public ITaskbarContextMenus? ContextMenus { get; set; }
 
     /// <summary>Gets or sets host-supplied labels for chrome that would otherwise hardcode branding.</summary>
     [Parameter]
