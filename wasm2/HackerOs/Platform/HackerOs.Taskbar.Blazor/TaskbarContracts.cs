@@ -101,6 +101,7 @@ public interface ITaskbarClockPanelSource
 
 /// <summary>
 /// Supplies optional session-level commands. No session control renders when none is supplied.
+/// The HackerOS desktop supplies none: its Power button is in the Start menu (ADR 0195).
 /// </summary>
 public interface ITaskbarSessionCommands
 {

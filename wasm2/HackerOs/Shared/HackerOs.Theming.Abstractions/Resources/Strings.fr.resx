@@ -213,6 +213,24 @@
   <data name="Token.LauncherBackground.Label" xml:space="preserve">
     <value>Lanceur d'applications</value>
   </data>
+  <data name="Token.LauncherPowerBackground.Description" xml:space="preserve">
+    <value>Arrière-plan du bouton Marche/arrêt du menu Démarrer.</value>
+  </data>
+  <data name="Token.LauncherPowerBackground.Label" xml:space="preserve">
+    <value>Bouton Marche/arrêt</value>
+  </data>
+  <data name="Token.LauncherPowerColor.Description" xml:space="preserve">
+    <value>Couleur de l'icône et du libellé du bouton Marche/arrêt.</value>
+  </data>
+  <data name="Token.LauncherPowerColor.Label" xml:space="preserve">
+    <value>Icône du bouton Marche/arrêt</value>
+  </data>
+  <data name="Token.LauncherPowerHoverBackground.Description" xml:space="preserve">
+    <value>Bouton Marche/arrêt sous le pointeur ou avec son menu ouvert.</value>
+  </data>
+  <data name="Token.LauncherPowerHoverBackground.Label" xml:space="preserve">
+    <value>Bouton Marche/arrêt (survol)</value>
+  </data>
   <data name="Token.LauncherSidebarBackground.Description" xml:space="preserve">
     <value>Colonne latérale du lanceur d'applications.</value>
   </data>

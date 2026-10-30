@@ -201,6 +201,13 @@
     --hos-launcher-border: #3a4b53;
     --hos-launcher-shadow: 0 22px 52px rgb(0 0 0 / 58%);
     --hos-launcher-radius: 0.55rem 0.55rem 0 0;
+    --hos-launcher-power-background: #0d1417;
+    --hos-launcher-power-color: #a8bac4;
+    --hos-launcher-power-hover-background: #3a1c1f;
+    --hos-launcher-power-hover-color: #ff8f87;
+    --hos-launcher-power-border: 1px solid #2d3d44;
+    --hos-launcher-power-radius: 0.25rem;
+    --hos-launcher-power-shadow: none;
 
     /* Mobile system surfaces. */
     --hos-mobile-surface-background: #07100f;
@@ -498,6 +505,13 @@
     --hos-launcher-border: #000;
     --hos-launcher-shadow: 4px 4px 0 rgb(0 0 0 / 55%);
     --hos-launcher-radius: 0;
+    --hos-launcher-power-background: #c0c0c0;
+    --hos-launcher-power-color: #000;
+    --hos-launcher-power-hover-background: #d4d0c8;
+    --hos-launcher-power-hover-color: #000;
+    --hos-launcher-power-border: 1px solid #000;
+    --hos-launcher-power-radius: 0;
+    --hos-launcher-power-shadow: inset 1px 1px #fff, inset -1px -1px #808080;
 }
 
 /* Windows XP: saturated Luna blue, green Start control, and softly rounded chrome. */
@@ -621,6 +635,13 @@
     --hos-launcher-border: #0b4dc0;
     --hos-launcher-shadow: 0 15px 34px rgb(0 38 91 / 45%);
     --hos-launcher-radius: 0.65rem 0.65rem 0 0;
+    --hos-launcher-power-background: linear-gradient(#f07a4f, #d4471f);
+    --hos-launcher-power-color: #fff;
+    --hos-launcher-power-hover-background: linear-gradient(#ff9468, #e5552a);
+    --hos-launcher-power-hover-color: #fff;
+    --hos-launcher-power-border: 1px solid #a53214;
+    --hos-launcher-power-radius: 0.3rem;
+    --hos-launcher-power-shadow: inset 0 1px rgb(255 255 255 / 45%);
 }
 
 /* Windows 7: translucent Aero surfaces with cool blue glass highlights. */
@@ -745,6 +766,13 @@
     --hos-launcher-border: rgb(226 246 255 / 76%);
     --hos-launcher-shadow: 0 18px 48px rgb(2 25 43 / 55%);
     --hos-launcher-radius: 0.6rem 0.6rem 0 0;
+    --hos-launcher-power-background: linear-gradient(rgb(255 255 255 / 30%), rgb(30 80 120 / 55%));
+    --hos-launcher-power-color: #fff;
+    --hos-launcher-power-hover-background: linear-gradient(rgb(255 255 255 / 45%), rgb(60 140 200 / 70%));
+    --hos-launcher-power-hover-color: #fff;
+    --hos-launcher-power-border: 1px solid rgb(10 40 70 / 80%);
+    --hos-launcher-power-radius: 0.25rem;
+    --hos-launcher-power-shadow: inset 0 1px rgb(255 255 255 / 40%);
 }
 
 /* Windows 10: flat blue desktop, sharp white windows, and a near-black taskbar. */
@@ -873,6 +901,13 @@
     --hos-launcher-border: #454545;
     --hos-launcher-shadow: 0 18px 45px rgb(0 0 0 / 55%);
     --hos-launcher-radius: 0;
+    --hos-launcher-power-background: transparent;
+    --hos-launcher-power-color: #fff;
+    --hos-launcher-power-hover-background: rgb(255 255 255 / 10%);
+    --hos-launcher-power-hover-color: #fff;
+    --hos-launcher-power-border: 1px solid transparent;
+    --hos-launcher-power-radius: 0;
+    --hos-launcher-power-shadow: none;
 }
 
 /* macOS: bright content, subtle separators, translucent materials, and left traffic lights. */
@@ -1018,6 +1053,13 @@
     --hos-launcher-border: rgb(255 255 255 / 64%);
     --hos-launcher-shadow: 0 24px 58px rgb(22 31 45 / 34%);
     --hos-launcher-radius: 0.85rem;
+    --hos-launcher-power-background: rgb(255 255 255 / 55%);
+    --hos-launcher-power-color: #1d1d1f;
+    --hos-launcher-power-hover-background: rgb(255 59 48 / 14%);
+    --hos-launcher-power-hover-color: #d70015;
+    --hos-launcher-power-border: 1px solid rgb(0 0 0 / 10%);
+    --hos-launcher-power-radius: 0.5rem;
+    --hos-launcher-power-shadow: none;
 }
 
 /* Ubuntu: aubergine shell surfaces and warm orange interaction accents. */
@@ -1140,6 +1182,13 @@
     --hos-launcher-border: #695360;
     --hos-launcher-shadow: 0 22px 52px rgb(13 5 11 / 62%);
     --hos-launcher-radius: 0.65rem 0.65rem 0 0;
+    --hos-launcher-power-background: #3a3038;
+    --hos-launcher-power-color: #f2e9ef;
+    --hos-launcher-power-hover-background: #e95420;
+    --hos-launcher-power-hover-color: #fff;
+    --hos-launcher-power-border: 1px solid #695360;
+    --hos-launcher-power-radius: 0.45rem;
+    --hos-launcher-power-shadow: none;
 }
 
 /* Android: Material-inspired dark system surfaces with large touch targets. */
@@ -1252,6 +1301,13 @@
     --hos-launcher-header-background: #252a2f;
     --hos-launcher-border: #454b51;
     --hos-launcher-radius: 1.4rem 1.4rem 0 0;
+    --hos-launcher-power-background: #252a2f;
+    --hos-launcher-power-color: #e2e2e6;
+    --hos-launcher-power-hover-background: #93000a;
+    --hos-launcher-power-hover-color: #ffdad6;
+    --hos-launcher-power-border: 1px solid transparent;
+    --hos-launcher-power-radius: 999px;
+    --hos-launcher-power-shadow: none;
     --hos-mobile-surface-background: linear-gradient(160deg, #0c2a3c, #101417 58%);
     --hos-mobile-nav-height: 3.75rem;
     --hos-mobile-nav-background: #181c20;
@@ -1385,6 +1441,13 @@
     --hos-launcher-header-background: rgb(255 255 255 / 40%);
     --hos-launcher-border: rgb(255 255 255 / 68%);
     --hos-launcher-radius: 1.2rem;
+    --hos-launcher-power-background: rgb(255 255 255 / 60%);
+    --hos-launcher-power-color: #1c1c1e;
+    --hos-launcher-power-hover-background: rgb(255 59 48 / 16%);
+    --hos-launcher-power-hover-color: #d70015;
+    --hos-launcher-power-border: 1px solid rgb(0 0 0 / 8%);
+    --hos-launcher-power-radius: 0.75rem;
+    --hos-launcher-power-shadow: none;
     --hos-mobile-surface-background:
         radial-gradient(circle at 26% 18%, rgb(255 255 255 / 60%), transparent 24%),
         radial-gradient(circle at 72% 72%, rgb(255 79 150 / 34%), transparent 31%),
@@ -1600,6 +1663,13 @@
     --hos-launcher-header-background: #000000 !important;
     --hos-launcher-border: #ffffff !important;
     --hos-launcher-shadow: none !important;
+    --hos-launcher-power-background: #000000 !important;
+    --hos-launcher-power-color: #ffffff !important;
+    --hos-launcher-power-hover-background: #ffffff !important;
+    --hos-launcher-power-hover-color: #000000 !important;
+    --hos-launcher-power-border: 2px solid #ffffff !important;
+    --hos-launcher-power-radius: 0 !important;
+    --hos-launcher-power-shadow: none !important;
 
     --hos-mobile-surface-background: #000000 !important;
     --hos-mobile-nav-background: #000000 !important;

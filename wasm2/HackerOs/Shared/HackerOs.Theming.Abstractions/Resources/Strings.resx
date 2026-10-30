@@ -213,6 +213,24 @@
   <data name="Token.LauncherBackground.Label" xml:space="preserve">
     <value>Launcher</value>
   </data>
+  <data name="Token.LauncherPowerBackground.Description" xml:space="preserve">
+    <value>Background of the Power button of the launcher.</value>
+  </data>
+  <data name="Token.LauncherPowerBackground.Label" xml:space="preserve">
+    <value>Power button</value>
+  </data>
+  <data name="Token.LauncherPowerColor.Description" xml:space="preserve">
+    <value>Icon and label color of the Power button.</value>
+  </data>
+  <data name="Token.LauncherPowerColor.Label" xml:space="preserve">
+    <value>Power button icon</value>
+  </data>
+  <data name="Token.LauncherPowerHoverBackground.Description" xml:space="preserve">
+    <value>Power button under the pointer or with its menu open.</value>
+  </data>
+  <data name="Token.LauncherPowerHoverBackground.Label" xml:space="preserve">
+    <value>Power button (hover)</value>
+  </data>
   <data name="Token.LauncherSidebarBackground.Description" xml:space="preserve">
     <value>Side column of the app launcher.</value>
   </data>

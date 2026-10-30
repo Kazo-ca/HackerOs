@@ -193,5 +193,6 @@ next free number is given in
 | [`0186-whats-new-change-list.md`](0186-whats-new-change-list.md) | ADR 0186: change list, one file `changes/unreleased/<guid>.json` per change (category, user/developer audience, English and French texts), grouped by version; what's new since the last visit in the OS, Release and NuGet notes, PR check with the `no-changelog` label |
 | [`0192-features-overview-and-ported-apps.md`](0192-features-overview-and-ported-apps.md) | ADR 0192: features overview (`features.md`), "In development" section kept current by every PR to `main`, and exception to ADR 0135 §2 to name the apps ported in their own repositories |
 | [`0193-local-time-and-time-zone.md`](0193-local-time-and-time-zone.md) | ADR 0193: local time and time zone, `timeZone` of `datetime.config` (`auto` = the browser's zone), `SessionTimeZoneService` applied at once, `IAppExecutionContext.TimeZone` and `HackTimeZone` in the SDK (`TZ` wins), clock, `date`, `ls -l`, `dmesg`, Settings ▸ Date and time; logs in UTC |
+| [`0195-start-menu-power-button.md`](0195-start-menu-power-button.md) | ADR 0195: Power button moved from the taskbar to the Start menu, menu Sign out, Switch user (greyed out, issue #290) and Restart (sign-out then a reload that empties the caches), `--hos-launcher-power-*` theme tokens |
 
 Parent folder index: [`../README.md`](../README.md).

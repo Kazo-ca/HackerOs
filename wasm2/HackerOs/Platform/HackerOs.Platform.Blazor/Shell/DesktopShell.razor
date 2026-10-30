@@ -73,7 +73,7 @@
 
     @if (_launcher.IsOpen && _launcher.Display.IsPrimary)
     {
-        <AppLauncher OnClose="CloseLauncher" OnAppSelected="HandleAppSelected" OnSendToDesktop="SendToDesktopCallback" OnCreateAccount="OpenUsersSettingsAsync" />
+        <AppLauncher OnClose="CloseLauncher" OnAppSelected="HandleAppSelected" OnSendToDesktop="SendToDesktopCallback" OnCreateAccount="OpenUsersSettingsAsync" OnSignOut="OpenLogout" OnRestart="RestartCallback" />
     }
 
     @if (!string.IsNullOrEmpty(_launchError))
@@ -83,7 +83,7 @@
 
     @if (_isLogoutOpen)
     {
-        <LogoutDialog OnClose="CloseLogout" OnLoggedOut="HandleLoggedOutAsync" />
+        <LogoutDialog OnClose="CloseLogout" OnLoggedOut="HandleLoggedOutAsync" Restart="_isRestart" />
     }
 
     <HackerOs.Taskbar.Blazor.Taskbar WindowSource="_taskbarWindowSource"
@@ -92,8 +92,7 @@
                                       StatusSource="_taskbarStatus"
                                       ClockPanelSource="_clockPanel"
                                       ClockPanelContent="@ClockPanelFragment"
-                                      NotificationAreaContent="@NotificationAreaFragment"
-                                      SessionCommands="_taskbarSessionCommands" />
+                                      NotificationAreaContent="@NotificationAreaFragment" />
 
     @if (TestDemoEnabled)
     {
@@ -135,6 +134,7 @@
 
 @code {
     private bool _isLogoutOpen;
+    private bool _isRestart;
     private string? _launchError;
     private TaskbarWindowSourceAdapter _taskbarWindowSource = null!;
     private TaskbarCommandDispatcherAdapter _taskbarCommands = null!;
@@ -143,7 +143,6 @@
     private readonly Dictionary<DisplayId, TaskbarWindowSourceAdapter> _screenTaskbarSources = [];
     private TaskbarClockPanelSourceAdapter _clockPanel = null!;
     private TaskbarStatusSourceAdapter _taskbarStatus = null!;
-    private TaskbarSessionCommandsAdapter _taskbarSessionCommands = null!;
 
     private RenderFragment ClockPanelFragment => builder =>
     {
@@ -176,6 +175,18 @@
 
     [Parameter]
     public EventCallback OnLoggedOut { get; set; }
+
+    /// <summary>
+    /// Gets or sets what the host does for « Redémarrer » of the Start menu's Power button
+    /// (ADR 0195), raised once the session ended like a sign-out: the browser host reloads the OS
+    /// past its caches. The Start menu offers no « Redémarrer » when it is not supplied.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnRestart { get; set; }
+
+    private EventCallback RestartCallback => OnRestart.HasDelegate
+        ? EventCallback.Factory.Create(this, OpenRestart)
+        : default;
 
     /// <summary>
     /// Gets or sets optional content forwarded unchanged to <see cref="DesktopArea.BackgroundContent"/>
@@ -213,14 +224,14 @@
 
     /// <summary>
     /// The taskbar of a secondary screen (ADR 0179 §1): the windows of its screen, its Start button
-    /// and its clock. The notification area, the clock panel and the session button stay on screen 1.
-    /// The Start menu opened from it shows on that screen.
+    /// and its clock. The notification area and the clock panel stay on screen 1; the session's Power
+    /// button is in the Start menu (ADR 0195). The Start menu opened from it shows on that screen.
     /// </summary>
     private RenderFragment<HackerOs.Platform.Blazor.Display.SecondaryScreen> SecondaryTaskbarFragment => screen =>
         @<text>
             @if (_launcher.IsOpen && _launcher.Display == screen.Id)
             {
-                <AppLauncher OnClose="CloseLauncher" OnAppSelected="HandleAppSelected" OnSendToDesktop="SendToDesktopCallback" OnCreateAccount="OpenUsersSettingsAsync" />
+                <AppLauncher OnClose="CloseLauncher" OnAppSelected="HandleAppSelected" OnSendToDesktop="SendToDesktopCallback" OnCreateAccount="OpenUsersSettingsAsync" OnSignOut="OpenLogout" OnRestart="RestartCallback" />
             }
             <HackerOs.Taskbar.Blazor.Taskbar WindowSource="ScreenTaskbarSource(screen.Id)"
                                               Commands="_taskbarCommands"
@@ -307,8 +318,14 @@
         _clockPanel.Close();
     }
 
-    private void OpenLogout()
+    private void OpenLogout() => OpenSessionEnd(restart: false);
+
+    private void OpenRestart() => OpenSessionEnd(restart: true);
+
+    /// <summary>ADR 0195: « Se déconnecter » and « Redémarrer » share the sign-out dialog.</summary>
+    private void OpenSessionEnd(bool restart)
     {
+        _isRestart = restart;
         _isLogoutOpen = true;
         _launcher.Close();
         _clockPanel.Close();
@@ -323,7 +340,11 @@
     private async Task HandleLoggedOutAsync()
     {
         _isLogoutOpen = false;
-        if (OnLoggedOut.HasDelegate)
+        if (_isRestart && OnRestart.HasDelegate)
+        {
+            await OnRestart.InvokeAsync();
+        }
+        else if (OnLoggedOut.HasDelegate)
         {
             await OnLoggedOut.InvokeAsync();
         }
@@ -503,7 +524,6 @@
         _clockPanel = new TaskbarClockPanelSourceAdapter();
         _clockPanel.Changed += Rerender;
         _taskbarStatus = new TaskbarStatusSourceAdapter(SimulationClock, SessionLocale, TimeZones);
-        _taskbarSessionCommands = new TaskbarSessionCommandsAdapter(OpenLogout);
     }
 
     private void Rerender()

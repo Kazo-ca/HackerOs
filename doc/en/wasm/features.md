@@ -86,7 +86,9 @@ This section lists what is released in the `main` branch and online.
   ([`desktop.md`](dev/desktop.md))
 - **Windows** that can be moved, resized, maximized or snapped to the screen
   edges. ([`window-model.md`](framework/window-model.md))
-- **Taskbar and Start menu** with pinned applications and open windows.
+- **Taskbar and Start menu** with pinned applications and open windows. The
+  Start menu shows the signed-in user and their Power button: sign out or restart.
+  ([ADR 0195](dev/adr/0195-start-menu-power-button.md))
 - **Multiple screens**: each extra screen opens in its own browser window,
   with its own taskbar, and the OS remembers them. Windows can be dragged from
   one screen to another. ([`screen-service.md`](dev/screen-service.md),
@@ -236,6 +238,7 @@ points to its PR.
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | `.zip` archive opened as a folder | The explorer browses a `.zip` archive read-only; an opened file is extracted to `/tmp`. The rest of the ADR is available. | [0185](dev/adr/0185-file-explorer-improvements.md) | [#241](https://github.com/Kazo-ca/HackerOs/issues/241) |
+| Switch user | Open another session without closing the first one, from the Start menu's Power button (greyed out for now, always greyed out for the guest). | [0195](dev/adr/0195-start-menu-power-button.md) | [#290](https://github.com/Kazo-ca/HackerOs/issues/290) |
 | Windows and taskbar | Notification toasts, window animations, taskbar menus, hover previews. The time zone is available ([ADR 0193](dev/adr/0193-local-time-and-time-zone.md)). | Coming | [#242](https://github.com/Kazo-ca/HackerOs/issues/242) |
 
 ### Accounts and welcome

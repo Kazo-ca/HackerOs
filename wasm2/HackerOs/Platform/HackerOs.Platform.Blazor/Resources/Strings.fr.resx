@@ -354,6 +354,27 @@
   <data name="Launcher.Pinned" xml:space="preserve">
     <value>Épinglées</value>
   </data>
+  <data name="Launcher.Power" xml:space="preserve">
+    <value>Marche/arrêt</value>
+  </data>
+  <data name="Launcher.Power.Menu" xml:space="preserve">
+    <value>Options d'alimentation</value>
+  </data>
+  <data name="Launcher.Power.Restart" xml:space="preserve">
+    <value>Redémarrer</value>
+  </data>
+  <data name="Launcher.Power.SignOut" xml:space="preserve">
+    <value>Se déconnecter</value>
+  </data>
+  <data name="Launcher.Power.SwitchUser" xml:space="preserve">
+    <value>Changer d'utilisateur</value>
+  </data>
+  <data name="Launcher.Power.SwitchUser.Guest" xml:space="preserve">
+    <value>Indisponible en session invité</value>
+  </data>
+  <data name="Launcher.Power.SwitchUser.Unavailable" xml:space="preserve">
+    <value>Bientôt disponible</value>
+  </data>
   <data name="Launcher.QuickAccess" xml:space="preserve">
     <value>Accès rapide</value>
   </data>
@@ -395,6 +416,18 @@
   </data>
   <data name="Logout.Processes" xml:space="preserve">
     <value>Processus actifs à arrêter ({0}) :</value>
+  </data>
+  <data name="Logout.Restart" xml:space="preserve">
+    <value>Redémarrer</value>
+  </data>
+  <data name="Logout.Restart.Body" xml:space="preserve">
+    <value>Le redémarrage ferme votre session comme une déconnexion, puis recharge HackerOS depuis le serveur.</value>
+  </data>
+  <data name="Logout.Restart.Title" xml:space="preserve">
+    <value>Redémarrer HackerOS</value>
+  </data>
+  <data name="Logout.Restarting" xml:space="preserve">
+    <value>Redémarrage...</value>
   </data>
   <data name="Logout.SignOut" xml:space="preserve">
     <value>Se déconnecter</value>

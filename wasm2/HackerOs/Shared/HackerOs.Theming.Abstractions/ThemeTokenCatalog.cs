@@ -99,6 +99,9 @@ public static class ThemeTokenCatalog
         Color("--hos-taskbar-launcher-color", "Launcher button icon", "Icon color of the launcher button.", "#42d392", group: ThemeTokenGroup.Taskbar),
         Color("--hos-launcher-background", "Launcher", "Background of the app launcher.", "#151c20", group: ThemeTokenGroup.Taskbar),
         Color("--hos-launcher-sidebar-background", "Launcher sidebar", "Side column of the app launcher.", "#101417", group: ThemeTokenGroup.Taskbar),
+        Color("--hos-launcher-power-background", "Power button", "Background of the Power button of the launcher.", "#0d1417", group: ThemeTokenGroup.Taskbar),
+        Color("--hos-launcher-power-color", "Power button icon", "Icon and label color of the Power button.", "#a8bac4", group: ThemeTokenGroup.Taskbar),
+        Color("--hos-launcher-power-hover-background", "Power button (hover)", "Power button under the pointer or with its menu open.", "#3a1c1f", group: ThemeTokenGroup.Taskbar),
 
         // Animations.
         new("--hos-transition-fast", ThemeTokenType.Duration, ThemeTokenGroup.Animations, "Fast transition",
