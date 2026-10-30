@@ -98,8 +98,8 @@ of [`AGENTS.md`](../../../../AGENTS.md), which Claude Code reads through
   `build/publish-trimmed.sh` and SDK compatibility
   (`Tests/fixtures/sdk-compat`) when they are concerned. GitHub Actions
   run again since 2026-10-24 and check every PR to `main`
-  and `*/base` (failing tests rerun once, Playwright in a manual
-  workflow): [`../dev/ci-workflows.md`](../dev/ci-workflows.md).
+  and `*/base` (failing tests rerun once; Playwright every night on `main`
+  when `main` changed, a failure opens an issue): [`../dev/ci-workflows.md`](../dev/ci-workflows.md).
 - **SDK**: the public API is tracked by `PublicAPI.Shipped.txt` /
   `PublicAPI.Unshipped.txt`; an addition goes through `Unshipped` until the
   next release (`build/tools/ship-public-api.sh`).

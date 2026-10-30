@@ -41,8 +41,9 @@ deploying it, in its own concurrency group; it therefore never cancels a
 
 Playwright is run neither by Pages nor by the automatic checks on `main`. The
 six browser test projects remain available in
-`.github/workflows/verify-browser-tests.yml`, launched only by
-**Actions → Verify HackerOS browser tests (manual) → Run workflow**. This
+`.github/workflows/verify-browser-tests.yml`, launched every night on `main`
+when `main` changed, or by **Actions → Verify HackerOS browser tests → Run
+workflow** ([`ci-workflows.md`](ci-workflows.md#browser-tests-every-night)). This
 workflow keeps its diagnostics and performs no deployment. See
 [the test suites](building-and-testing.md#testing) for the local commands.
 
@@ -50,7 +51,7 @@ workflow keeps its diagnostics and performs no deployment. See
 
 - [x] Pages publication independent of Playwright.
 - [x] Automatic verification of the 41 non-browser projects.
-- [x] Six Playwright projects kept in a dedicated manual workflow.
+- [x] Six Playwright projects kept in a dedicated workflow (every night on `main` and manual).
 - [x] Project selection verified with `run-test-suite.ps1 -ListOnly`.
 
 ## Assembly and routing

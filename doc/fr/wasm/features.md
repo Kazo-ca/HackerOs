@@ -240,6 +240,9 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   paquets NuGet en production. ([ADR 0176](dev/adr/0176-app-repository-template.md))
 - **Versions publiées automatiquement** : GitHub Release, paquets NuGet et
   archive de l'OS à chaque nouvelle version. ([`releases.md`](dev/releases.md))
+- **Tests navigateur chaque nuit** : les suites Playwright tournent la nuit sur
+  `main` quand il a changé ; un échec ouvre une issue.
+  ([`ci-workflows.md`](dev/ci-workflows.md#tests-navigateur-chaque-nuit))
 
 ## En cours de développement
 

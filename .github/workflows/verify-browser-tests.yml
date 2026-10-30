@@ -1,6 +1,13 @@
-name: Verify HackerOS browser tests (manual)
+name: Verify HackerOS browser tests
 
+# The Playwright suites run every night on main, and only when main changed since the last
+# completed run on main (issue #292). They do not run on pull requests: known unstable browser
+# tests would block them. A failed night opens (or comments on) an issue; the next green run on
+# main closes it. A manual run always tests the chosen branch.
 on:
+  schedule:
+    # 06:17 UTC: 02:17 in Montreal during daylight time, 01:17 in winter.
+    - cron: "17 6 * * *"
   workflow_dispatch:
 
 permissions:
@@ -10,8 +17,51 @@ concurrency:
   group: "verify-hackeros-browser-${{ github.ref }}"
   cancel-in-progress: true
 
+env:
+  FAILURE_ISSUE_TITLE: "Les tests navigateur de la nuit échouent sur main"
+
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: read
+    outputs:
+      run-tests: ${{ steps.compare.outputs.run-tests }}
+    steps:
+      - name: Compare main with the last tested commit
+        id: compare
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          EVENT_NAME: ${{ github.event_name }}
+          HEAD_SHA: ${{ github.sha }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          if [ "$EVENT_NAME" != "schedule" ]; then
+            echo "run-tests=true" >> "$GITHUB_OUTPUT"
+            echo "Manual run: the browser suites always run." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          # Last run of this workflow on main that finished its tests (success or failure).
+          # Cancelled and timed-out runs do not count: their commit was not fully tested.
+          # A skipped night ends in success with the commit tested before, so it changes nothing.
+          last_sha=$(gh run list --workflow verify-browser-tests.yml --branch main --limit 30 \
+            --json databaseId,headSha,status,conclusion \
+            --jq "[.[] | select(.databaseId != $RUN_ID and .status == \"completed\" and (.conclusion == \"success\" or .conclusion == \"failure\"))][0].headSha // \"\"")
+
+          if [ "$last_sha" = "$HEAD_SHA" ]; then
+            echo "run-tests=false" >> "$GITHUB_OUTPUT"
+            echo "main has not changed since the last tested commit (\`$HEAD_SHA\`): browser suites skipped." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "run-tests=true" >> "$GITHUB_OUTPUT"
+            echo "main changed (last tested: \`${last_sha:-none}\`, now: \`$HEAD_SHA\`): browser suites run." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
   browser-tests:
+    needs: changes
+    if: needs.changes.outputs.run-tests == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 90
     defaults:
@@ -50,3 +100,40 @@ jobs:
             wasm2/HackerOs/artifacts/playwright
           if-no-files-found: warn
           retention-days: 14
+
+  report:
+    # Only runs on main report to the failure issue: a manual run on another branch never does.
+    needs: [changes, browser-tests]
+    if: always() && github.ref == 'refs/heads/main' && needs.changes.outputs.run-tests == 'true' && (needs.browser-tests.result == 'success' || needs.browser-tests.result == 'failure')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      issues: write
+    steps:
+      - name: Open, update or close the failure issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RESULT: ${{ needs.browser-tests.result }}
+          HEAD_SHA: ${{ github.sha }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          issue=$(gh issue list --state open --search "in:title \"$FAILURE_ISSUE_TITLE\"" \
+            --json number,title --jq "[.[] | select(.title == env.FAILURE_ISSUE_TITLE)][0].number // \"\"")
+
+          if [ "$RESULT" = "failure" ]; then
+            body="Les tests navigateur (Playwright) échouent sur \`main\` au commit $HEAD_SHA.
+
+          Lancement : $RUN_URL
+          Les résultats (\`.trx\`) et les traces sont dans l'artefact \`hackeros-browser-tests-*\` du lancement. Voir doc/fr/wasm/dev/ci-workflows.md."
+            if [ -n "$issue" ]; then
+              gh issue comment "$issue" --body "$body"
+              echo "Failure added to issue #$issue." >> "$GITHUB_STEP_SUMMARY"
+            else
+              url=$(gh issue create --title "$FAILURE_ISSUE_TITLE" --body "$body")
+              echo "Failure issue opened: $url" >> "$GITHUB_STEP_SUMMARY"
+            fi
+          elif [ -n "$issue" ]; then
+            gh issue close "$issue" --comment "Les tests navigateur passent de nouveau sur \`main\` au commit $HEAD_SHA : $RUN_URL"
+            echo "Issue #$issue closed: the browser suites pass again." >> "$GITHUB_STEP_SUMMARY"
+          fi
