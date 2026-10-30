@@ -35,7 +35,7 @@ public sealed partial class TrimmedPublishTests
             Assert.NotNull(taskbar);
             Assert.True(box.Y + box.Height <= taskbar.Y, $"bubble bottom {box.Y + box.Height} below taskbar top {taskbar.Y}");
             Log($"bubble above the taskbar at {box.X:0},{box.Y:0} ({box.Width:0}x{box.Height:0}).");
-            await SaveEvidenceAsync(page, settings, "notification-bubble");
+            await SaveToastEvidenceAsync(page, settings, "notification-bubble");
 
             // It leaves on its own (6 simulated seconds) and the panel still lists the notification.
             await Assertions.Expect(bubble).ToHaveCountAsync(0, new() { Timeout = StepTimeoutMs });
@@ -52,7 +52,7 @@ public sealed partial class TrimmedPublishTests
         }
     }
 
-    private async Task SaveEvidenceAsync(IPage page, TrimmedPublishSettings settings, string name)
+    private async Task SaveToastEvidenceAsync(IPage page, TrimmedPublishSettings settings, string name)
     {
         if (settings.ArtifactsDirectory is null)
         {
