@@ -232,3 +232,8 @@
     font-family: var(--hos-font-mono, ui-monospace, monospace);
     color: var(--hos-accent, #42d392);
 }
+
+/* ADR 0187 section 5: the guest's invitation to create its account. */
+.guest-banner {
+    border-color: color-mix(in srgb, var(--hos-accent, #42d392) 55%, var(--hos-border, #3a4b53));
+}

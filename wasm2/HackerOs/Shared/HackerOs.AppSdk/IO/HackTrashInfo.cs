@@ -133,7 +133,9 @@ internal sealed record HackTrashInfo(string? OriginalPath, DateTimeOffset? Delet
             return null;
         }
 
+        // ADR 0193: DeletionDate is written in the app's time zone (HackTrash), so it is read back in it.
         DateTime unspecified = DateTime.SpecifyKind(local, DateTimeKind.Unspecified);
-        return new DateTimeOffset(unspecified, TimeZoneInfo.Local.GetUtcOffset(unspecified));
+        TimeZoneInfo zone = HackExecutionContext.CurrentOrNull?.TimeZone ?? TimeZoneInfo.Local;
+        return new DateTimeOffset(unspecified, zone.GetUtcOffset(unspecified));
     }
 }

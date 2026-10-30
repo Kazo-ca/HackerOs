@@ -16,7 +16,30 @@
     flex: 1;
     display: flex;
     align-items: center;
+    gap: 0.9rem;
     overflow-y: auto;
+}
+
+.message-box-icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    color: var(--hos-text-secondary, #8b949e);
+}
+
+.message-box-icon.information {
+    color: var(--hos-info, #58a6ff);
+}
+
+.message-box-icon.warning {
+    color: var(--hos-warning, #d29922);
+}
+
+.message-box-icon.error {
+    color: var(--hos-danger, #f85149);
+}
+
+.message-box-icon.question {
+    color: var(--hos-accent, #42d392);
 }
 
 .message-box-content {

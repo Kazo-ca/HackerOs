@@ -1,5 +1,6 @@
 /* Same look as the Places entries of FileExplorerWindow.razor.css (scoped CSS does not cross components). */
 .sidebar-heading {
+    white-space: nowrap;
     padding: 0.2rem 0.5rem 0.4rem;
     font-size: 0.7rem;
     text-transform: uppercase;
@@ -11,26 +12,28 @@
     margin-top: 0.75rem;
 }
 
+/* A long name stays on one line: the row grows and the sidebar scrolls sideways. */
 .network-drive {
     display: flex;
     align-items: center;
     gap: 0.15rem;
+    width: max-content;
+    min-width: 100%;
 }
 
 .network-drive .sidebar-entry {
-    flex: 1;
-    min-width: 0;
+    flex: 1 0 auto;
 }
 
-.network-drive .sidebar-entry span {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+.network-connect {
+    width: max-content;
+    min-width: 100%;
 }
 
 .sidebar-entry {
     display: flex;
     align-items: center;
+    justify-content: flex-start;
     gap: 0.5rem;
     padding: 0.35rem 0.5rem;
     border: 1px solid transparent;
@@ -40,6 +43,7 @@
     font-family: inherit;
     font-size: 0.82rem;
     text-align: left;
+    white-space: nowrap;
     cursor: pointer;
     transition: background var(--hos-transition-fast, 120ms ease),
                 color var(--hos-transition-fast, 120ms ease);

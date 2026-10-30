@@ -201,7 +201,8 @@ public sealed partial class RemoteWindowHost : ComponentBase, IAsyncDisposable
                 {
                     Title = title,
                     Content = content,
-                    DialogType = (MessageBoxType)request.GetProperty("type").GetInt32()
+                    DialogType = (MessageBoxType)request.GetProperty("type").GetInt32(),
+                    Icon = request.TryGetProperty("icon", out JsonElement icon) ? (MessageBoxIcon)icon.GetInt32() : MessageBoxIcon.None
                 }, AppContext.CancellationToken);
                 Answer(id, (int)result.Result, null);
             }

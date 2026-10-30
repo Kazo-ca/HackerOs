@@ -1,0 +1,16 @@
+{
+  "id": "8dcac79a-1303-44e9-8038-e299fe56e3b5",
+  "category": "fixed",
+  "audience": [
+    "user"
+  ],
+  "title": {
+    "en": "File Explorer: network drives aligned left and errors in a message box",
+    "fr": "Explorateur de fichiers : lecteurs réseau alignés à gauche et erreurs dans une boîte de message"
+  },
+  "description": {
+    "en": "Network drive names are aligned left and stay on one line, with a horizontal scroll bar when they are too long. Errors, such as a file no application can open, appear in an error message box instead of red text in the window.",
+    "fr": "Les noms des lecteurs réseau sont alignés à gauche et restent sur une ligne, avec une barre de défilement horizontale quand ils sont trop longs. Les erreurs, comme un fichier qu'aucune application ne peut ouvrir, s'affichent dans une boîte de message d'erreur au lieu d'un texte rouge dans la fenêtre."
+  },
+  "pr": 277
+}

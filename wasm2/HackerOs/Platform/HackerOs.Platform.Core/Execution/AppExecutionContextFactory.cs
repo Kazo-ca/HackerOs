@@ -191,6 +191,13 @@ public sealed class AppExecutionContextFactory
     public Func<BackgroundJobService>? BackgroundJobs { get; init; }
 
     /// <summary>
+    /// Gets the session's time zone behind <see cref="IAppExecutionContext.TimeZone"/> (ADR 0193): a
+    /// process without its own <c>TZ</c> follows it, live. <see langword="null"/> keeps the SDK's
+    /// default, the device's zone.
+    /// </summary>
+    public Globalization.SessionTimeZoneService? TimeZones { get; init; }
+
+    /// <summary>
     /// Creates a new trusted context for one running app instance, wiring every scoped gateway to
     /// the acting app/user/process.
     /// </summary>
@@ -368,6 +375,11 @@ public sealed class AppExecutionContextFactory
             context.SystemBackup = administration.SystemBackup;
         }
 
+        if (TimeZones is { } timeZones)
+        {
+            context.SessionTimeZone = () => timeZones.TimeZone;
+        }
+
         if (_metrics?.CrossOriginIsolation is { } isolation)
         {
             // ADR 0146: the page's isolation, no capability, set after construction like the backup gateway.
@@ -462,7 +474,8 @@ public sealed class AppExecutionContextFactory
             new AppUserAccountsGateway(_administration.Passwords, capabilities, gate)
             {
                 Accounts = _administration.Accounts,
-                Passkeys = _administration.Passkeys
+                Passkeys = _administration.Passkeys,
+                GuestRequests = _administration.GuestRequests
             },
             new AppComponentProviderAdministrationGateway(_administration.ComponentProviders, _administration.ApprovalPrompt, capabilities, gate),
             new AppFileMenuEntryAdministrationGateway(_administration.FileMenuEntries, capabilities, language));

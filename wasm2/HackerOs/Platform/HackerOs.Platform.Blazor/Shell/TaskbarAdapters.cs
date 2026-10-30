@@ -217,6 +217,7 @@ public sealed class TaskbarStatusSourceAdapter : ITaskbarStatusSource, IDisposab
 {
     private readonly ISimulationClock _clock;
     private readonly SessionLocaleService? _locale;
+    private readonly SessionTimeZoneService? _timeZones;
     private IDisposable? _subscription;
 
     /// <summary>Creates a status source over the session's simulation clock.</summary>
@@ -226,9 +227,24 @@ public sealed class TaskbarStatusSourceAdapter : ITaskbarStatusSource, IDisposab
     /// <see langword="null"/> keeps the taskbar's invariant <c>HH:mm:ss</c>.
     /// </param>
     public TaskbarStatusSourceAdapter(ISimulationClock clock, SessionLocaleService? locale = null)
+        : this(clock, locale, timeZones: null)
+    {
+    }
+
+    /// <summary>Creates a status source that shows the clock in the session's time zone (ADR 0193).</summary>
+    /// <param name="clock">The session's simulation clock.</param>
+    /// <param name="locale">The session language, whose <c>LC_TIME</c> culture formats the clock.</param>
+    /// <param name="timeZones">The session's time zone, followed live; <see langword="null"/> keeps UTC.</param>
+    public TaskbarStatusSourceAdapter(ISimulationClock clock, SessionLocaleService? locale, SessionTimeZoneService? timeZones)
     {
         _clock = clock ?? throw new ArgumentNullException(nameof(clock));
         _locale = locale;
+        _timeZones = timeZones;
+        if (_timeZones is not null)
+        {
+            _timeZones.Changed += OnTimeZoneChanged;
+        }
+
         ScheduleNextTick();
     }
 
@@ -237,6 +253,9 @@ public sealed class TaskbarStatusSourceAdapter : ITaskbarStatusSource, IDisposab
 
     /// <inheritdoc />
     public CultureInfo FormatCulture => _locale?.FormatCulture ?? CultureInfo.InvariantCulture;
+
+    /// <inheritdoc />
+    public TimeZoneInfo TimeZone => _timeZones?.TimeZone ?? TimeZoneInfo.Utc;
 
     /// <inheritdoc />
     public event Action? Changed;
@@ -251,8 +270,19 @@ public sealed class TaskbarStatusSourceAdapter : ITaskbarStatusSource, IDisposab
         });
     }
 
+    // A new zone shows at once, not at the next tick.
+    private void OnTimeZoneChanged() => Changed?.Invoke();
+
     /// <inheritdoc />
-    public void Dispose() => _subscription?.Dispose();
+    public void Dispose()
+    {
+        if (_timeZones is not null)
+        {
+            _timeZones.Changed -= OnTimeZoneChanged;
+        }
+
+        _subscription?.Dispose();
+    }
 }
 
 /// <summary>Routes the taskbar's logout command into the desktop shell's own logout flow.</summary>

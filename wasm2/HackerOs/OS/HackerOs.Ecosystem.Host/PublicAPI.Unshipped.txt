@@ -18,3 +18,4 @@ HackerOs.Ecosystem.InstalledAppsBoot.IsLoaded.get -> bool
 HackerOs.Ecosystem.InstalledAppsBoot.Warnings.get -> System.Collections.Generic.IReadOnlyList<string!>!
 HackerOs.Ecosystem.InstalledAppsBootExtensions
 static HackerOs.Ecosystem.InstalledAppsBootExtensions.LoadInstalledAppsAsync(this Microsoft.AspNetCore.Components.WebAssembly.Hosting.WebAssemblyHost! host) -> System.Threading.Tasks.Task!
+HackerOs.Ecosystem.EcosystemHostState.LoneGuest.get -> HackerOs.Simulation.Abstractions.Sessions.LocalUser?

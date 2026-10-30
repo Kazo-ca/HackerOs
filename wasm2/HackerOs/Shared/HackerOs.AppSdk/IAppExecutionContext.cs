@@ -223,6 +223,15 @@ public interface IAppExecutionContext
         Globalization.HackLocale.ResolveFormatCulture(Environment.GetVariable);
 
     /// <summary>
+    /// Gets the time zone this instance shows its dates in (ADR 0193): the zone named by its own
+    /// <c>TZ</c> variable when set, otherwise the session's zone (Settings &gt; Date and time). This
+    /// default, for hosts without a session zone, falls back to the device's zone.
+    /// <see cref="Globalization.HackTimeZone"/> converts the OS's UTC time with it.
+    /// </summary>
+    TimeZoneInfo TimeZone =>
+        Globalization.HackTimeZone.Resolve(Environment.GetVariable(Globalization.HackTimeZone.Variable));
+
+    /// <summary>
     /// Gets this instance's network stack: resolution, ping, HTTP and TCP probes, with the OS's
     /// real-network fallback (ADR 0056, section 6), read by <c>HackDns</c>, <c>HackPing</c>,
     /// <c>HackHttpClient</c> and <c>HackTcpClient</c>. Defaults to an unsupported gateway so existing

@@ -86,7 +86,10 @@ This section lists what is released in the `main` branch and online.
   ([`desktop.md`](dev/desktop.md))
 - **Windows** that can be moved, resized, maximized or snapped to the screen
   edges. ([`window-model.md`](framework/window-model.md))
-- **Taskbar and Start menu** with pinned applications and open windows.
+- **Taskbar and Start menu** with pinned applications and open windows. A
+  right click on the taskbar gives the window menu, "New window", the task
+  manager, "Show the desktop" and cascaded or tiled windows.
+  ([`taskbar-context-menus.md`](dev/taskbar-context-menus.md))
 - **Multiple screens**: each extra screen opens in its own browser window,
   with its own taskbar, and the OS remembers them. Windows can be dragged from
   one screen to another. ([`screen-service.md`](dev/screen-service.md),
@@ -165,6 +168,10 @@ This section lists what is released in the `main` branch and online.
 - **Multiple accounts** with passwords, administrators and `sudo`. An
   administrator adds and removes users.
   ([ADR 0169](dev/adr/0169-administrator-adds-and-removes-users.md))
+- **Start as a guest**: try the OS without creating an account, then "Create
+  my account", keeping the guest's files or not; credits on the sign-in
+  screen. ([`guest-account.md`](dev/guest-account.md),
+  [ADR 0187](dev/adr/0187-guest-start-and-sign-in-credits.md))
 - **Passkeys**: sign in with a fingerprint, face, device PIN or security key.
   ([`passkeys.md`](dev/passkeys.md))
 - **Application capabilities** and administrator approval of sensitive
@@ -206,6 +213,9 @@ This section lists what is released in the `main` branch and online.
   ([`localization.md`](framework/localization.md))
 - **Accessibility**: display and animation preferences, keyboard navigation.
   ([`accessibility.md`](dev/accessibility.md))
+- **Local time and time zone**: the clock, `date`, `ls -l` and the apps show
+  the time in the user's zone, automatic or chosen in Settings ▸ Date and time.
+  ([`time-zone.md`](framework/time-zone.md))
 
 ### For developers
 
@@ -235,13 +245,7 @@ points to its PR.
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | `.zip` archive opened as a folder | The explorer browses a `.zip` archive read-only; an opened file is extracted to `/tmp`. The rest of the ADR is available. | [0185](dev/adr/0185-file-explorer-improvements.md) | [#241](https://github.com/Kazo-ca/HackerOs/issues/241) |
-| Windows and taskbar | Notification toasts, time zone, window animations, taskbar menus, hover previews. | Coming | [#242](https://github.com/Kazo-ca/HackerOs/issues/242) |
-
-### Accounts and welcome
-
-| Feature | Description | ADR | Issue |
-| --- | --- | --- | --- |
-| Guest start and credits | Try the OS without creating an account, then keep your files by creating one; credits on the sign-in screen. | [0187](dev/adr/0187-guest-start-and-sign-in-credits.md) | [#243](https://github.com/Kazo-ca/HackerOs/issues/243) |
+| Windows and taskbar | Notification toasts, window animations, hover previews. The time zone ([ADR 0193](dev/adr/0193-local-time-and-time-zone.md)) and the taskbar menus ([ADR 0194](dev/adr/0194-taskbar-context-menus.md)) are available. | Coming | [#242](https://github.com/Kazo-ca/HackerOs/issues/242) |
 
 ### Hack Store
 

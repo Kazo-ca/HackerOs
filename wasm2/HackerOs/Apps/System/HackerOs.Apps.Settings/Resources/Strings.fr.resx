@@ -1545,4 +1545,76 @@
   <data name="WhatsNew.Link.PullRequest" xml:space="preserve">
     <value>Pull request</value>
   </data>
+  <data name="Tab.DateTime" xml:space="preserve">
+    <value>Date et heure</value>
+  </data>
+  <data name="DateTime.State.Title" xml:space="preserve">
+    <value>Heure actuelle</value>
+  </data>
+  <data name="DateTime.State.Local" xml:space="preserve">
+    <value>Heure locale</value>
+  </data>
+  <data name="DateTime.State.Zone" xml:space="preserve">
+    <value>Fuseau horaire</value>
+  </data>
+  <data name="DateTime.Zone.Title" xml:space="preserve">
+    <value>Fuseau horaire</value>
+  </data>
+  <data name="DateTime.Zone.Description" xml:space="preserve">
+    <value>L'horloge de la barre des tâches, les dates des apps et celles de ls, date et dmesg utilisent ce fuseau. Le choix est enregistré dans {0} et s'applique tout de suite. Un processus qui a sa propre variable {1} garde ce fuseau.</value>
+  </data>
+  <data name="DateTime.Zone.Automatic" xml:space="preserve">
+    <value>Automatique</value>
+  </data>
+  <data name="DateTime.Zone.Automatic.Detail" xml:space="preserve">
+    <value>Fuseau de cet appareil : {0}</value>
+  </data>
+  <data name="DateTime.Zone.Manual" xml:space="preserve">
+    <value>Choisir dans la liste</value>
+  </data>
+  <data name="DateTime.Zone.Manual.Detail" xml:space="preserve">
+    <value>Choisissez une ville ou une région</value>
+  </data>
+  <data name="DateTime.Zone.Search" xml:space="preserve">
+    <value>Rechercher un fuseau horaire</value>
+  </data>
+  <data name="DateTime.Zone.Search.Placeholder" xml:space="preserve">
+    <value>Toronto, Europe/Paris…</value>
+  </data>
+  <data name="DateTime.Zone.List" xml:space="preserve">
+    <value>Fuseaux horaires</value>
+  </data>
+  <data name="DateTime.Zone.NoMatch" xml:space="preserve">
+    <value>Aucun fuseau ne correspond à « {0} ».</value>
+  </data>
+  <data name="DateTime.Saved.Automatic" xml:space="preserve">
+    <value>Enregistré : fuseau automatique ({0}).</value>
+  </data>
+  <data name="DateTime.Saved.Zone" xml:space="preserve">
+    <value>Enregistré : fuseau {0}.</value>
+  </data>
+  <data name="DateTime.Error.CannotRead" xml:space="preserve">
+    <value>Impossible de lire {0} : {1}</value>
+  </data>
+  <data name="DateTime.Error.CannotSave" xml:space="preserve">
+    <value>Impossible d'enregistrer {0} : {1}</value>
+  </data>
+  <data name="DateTime.Error.Unknown" xml:space="preserve">
+    <value>Fuseau horaire inconnu : {0}</value>
+  </data>
+  <data name="Users.Guest.Title" xml:space="preserve">
+    <value>Vous utilisez le compte invité</value>
+  </data>
+  <data name="Users.Guest.Description" xml:space="preserve">
+    <value>Le compte invité n'a pas de mot de passe. Créez votre propre compte pour protéger vos fichiers : vous pourrez garder les fichiers, les réglages et les applications de l'invité, ou repartir d'un compte vide.</value>
+  </data>
+  <data name="Users.Guest.SignOutNotice" xml:space="preserve">
+    <value>La session invité se ferme d'abord : enregistrez votre travail dans les applications ouvertes.</value>
+  </data>
+  <data name="Users.Guest.Create" xml:space="preserve">
+    <value>Créer mon compte</value>
+  </data>
+  <data name="Users.Guest.Unavailable" xml:space="preserve">
+    <value>Le formulaire de compte n'a pas pu s'ouvrir. Fermez la session, puis choisissez Créer mon compte sur l'écran de connexion.</value>
+  </data>
 </root>

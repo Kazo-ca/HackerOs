@@ -37,6 +37,22 @@ internal sealed class AppUserAccountsGateway : IAppUserAccountsGateway
     /// <summary>Gets the lazily resolved passkey service of ADR 0168; <see langword="null"/> on a host without WebAuthn.</summary>
     public Func<PasskeyService>? Passkeys { get; init; }
 
+    /// <summary>Gets the lazily resolved "Create my account" requests of ADR 0187; <see langword="null"/> on a host without them.</summary>
+    public Func<GuestAccountRequests>? GuestRequests { get; init; }
+
+    /// <inheritdoc />
+    public async ValueTask<bool> RequestGuestAccountCreationAsync(CancellationToken cancellationToken = default)
+    {
+        if (GuestRequests?.Invoke() is not { } requests)
+        {
+            return false;
+        }
+
+        // Only the guest's own session may ask: the form converts the guest and nothing else.
+        IReadOnlyList<LocalUser> users = await Service().ListAsync(cancellationToken).ConfigureAwait(false);
+        return users.Any(user => user.Id == _gate.Principal.UserId && user.IsGuest) && requests.RequestCreateAccount();
+    }
+
     /// <inheritdoc />
     public async ValueTask<IReadOnlyList<HackUserAccount>> ListAsync(CancellationToken cancellationToken = default)
     {
@@ -107,7 +123,8 @@ internal sealed class AppUserAccountsGateway : IAppUserAccountsGateway
         user.UpdatedAtUtc,
         user.Id == _gate.Principal.UserId)
     {
-        PasskeyCount = user.Passkeys.Count
+        PasskeyCount = user.Passkeys.Count,
+        IsGuest = user.IsGuest
     };
 
     private static HackPasskey ToPasskey(LocalPasskeyCredential passkey, IReadOnlySet<string> unlocking) =>

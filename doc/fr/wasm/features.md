@@ -91,7 +91,9 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
 - **Fenêtres** déplaçables, redimensionnables, agrandies ou ancrées sur les
   bords de l'écran. ([`window-model.md`](framework/window-model.md))
 - **Barre des tâches et menu Démarrer** avec les applications épinglées et les
-  fenêtres ouvertes.
+  fenêtres ouvertes. Un clic droit sur la barre donne le menu de la fenêtre,
+  « Nouvelle fenêtre », le gestionnaire des tâches, « Afficher le bureau » et
+  les fenêtres en cascade ou en mosaïque. ([`taskbar-context-menus.md`](dev/taskbar-context-menus.md))
 - **Plusieurs écrans** : chaque écran supplémentaire s'ouvre dans sa propre
   fenêtre du navigateur, avec sa barre des tâches, et l'OS s'en souvient. On
   glisse une fenêtre d'un écran à l'autre. ([`screen-service.md`](dev/screen-service.md),
@@ -171,6 +173,10 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
 - **Plusieurs comptes** avec mot de passe, administrateurs et `sudo`. Un
   administrateur ajoute et retire des utilisateurs.
   ([ADR 0169](dev/adr/0169-administrator-adds-and-removes-users.md))
+- **Démarrer en invité** : essayer l'OS sans créer de compte, puis
+  « Créer mon compte » en gardant ou non les fichiers de l'invité ; crédits
+  sur l'écran de connexion. ([`guest-account.md`](dev/guest-account.md),
+  [ADR 0187](dev/adr/0187-guest-start-and-sign-in-credits.md))
 - **Clés d'accès (passkeys)** : connexion par empreinte, visage, NIP de
   l'appareil ou clé de sécurité. ([`passkeys.md`](dev/passkeys.md))
 - **Capacités des applications** et approbation des capacités sensibles par un
@@ -212,6 +218,9 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   ([`localization.md`](framework/localization.md))
 - **Accessibilité** : préférences d'affichage et d'animation, navigation au
   clavier. ([`accessibility.md`](dev/accessibility.md))
+- **Heure locale et fuseau horaire** : l'horloge, `date`, `ls -l` et les apps
+  affichent l'heure dans le fuseau de l'utilisateur, automatique ou choisi dans
+  Paramètres ▸ Date et heure. ([`time-zone.md`](framework/time-zone.md))
 
 ### Pour les développeurs
 
@@ -241,13 +250,7 @@ dans `main`, le lien mène à sa PR.
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Archive `.zip` ouverte comme un dossier | L'explorateur parcourt une archive `.zip` en lecture seule ; un fichier ouvert est extrait dans `/tmp`. Le reste de l'ADR est disponible. | [0185](dev/adr/0185-file-explorer-improvements.md) | [#241](https://github.com/Kazo-ca/HackerOs/issues/241) |
-| Fenêtres et barre des tâches | Bulles de notification, fuseau horaire, animations des fenêtres, menus de la barre, aperçus au survol. | À venir | [#242](https://github.com/Kazo-ca/HackerOs/issues/242) |
-
-### Comptes et accueil
-
-| Fonctionnalité | Description | ADR | Issue |
-| --- | --- | --- | --- |
-| Démarrer en invité et crédits | Essayer l'OS sans créer de compte, puis garder ses fichiers en créant son compte ; crédits sur l'écran de connexion. | [0187](dev/adr/0187-guest-start-and-sign-in-credits.md) | [#243](https://github.com/Kazo-ca/HackerOs/issues/243) |
+| Fenêtres et barre des tâches | Bulles de notification, animations des fenêtres, aperçus au survol. Le fuseau horaire ([ADR 0193](dev/adr/0193-local-time-and-time-zone.md)) et les menus de la barre ([ADR 0194](dev/adr/0194-taskbar-context-menus.md)) sont disponibles. | À venir | [#242](https://github.com/Kazo-ca/HackerOs/issues/242) |
 
 ### Hack Store
 

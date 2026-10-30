@@ -92,12 +92,18 @@ password ([`admin-authentication-agent.md`](admin-authentication-agent.md)).
 `UsersPanel` (ADR 0120, 0169) and `PasskeysPanel` (ADR 0168), from top to
 bottom:
 
+- **Guest banner** (guest account session only, ADR 0187): "You are using the
+  guest account" and the "Create my account" button, which asks the OS for its
+  form (`HackUserAccounts.RequestGuestAccountCreationAsync`); the guest session
+  closes and the form opens on the sign-in screen. See
+  [`guest-account.md`](guest-account.md).
 - **Account list**: login name, display name, badges "Administrator", "You",
   number of passkeys, state `P`/`NP`/`L`. For an administrator, a "Delete" link
   on each account other than their own opens a confirmation with the checkbox
   "Also delete its home folder `/home/<login>`", unchecked by default
   (`HackUserAccounts.DeleteAsync(login, removeHome)`).
-- **Add an account** (administrator only): login name, display name, standard
+- **Add an account** (administrator only, and absent while the guest
+  account exists): login name, display name, standard
   or administrator type, initial password and confirmation, checked by
   `HackUserAccounts.ValidateNewAccount` before sending
   (`HackUserAccounts.CreateAsync`).

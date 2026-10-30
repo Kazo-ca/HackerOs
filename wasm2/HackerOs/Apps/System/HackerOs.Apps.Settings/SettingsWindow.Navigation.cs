@@ -36,6 +36,7 @@ public partial class SettingsWindow
         new("screens", "Nav.Group.Personalization", "Tab.Screens", Icons.Material.Filled.Monitor),
         new("accessibility", "Nav.Group.Personalization", "Tab.Accessibility", Icons.Material.Filled.Accessibility),
         new("language", "Nav.Group.Personalization", "Tab.Language", Icons.Material.Filled.Translate),
+        new("datetime", "Nav.Group.Personalization", "Tab.DateTime", Icons.Material.Filled.Schedule),
         new("file-associations", "Nav.Group.Applications", "Tab.FileAssociations", Icons.Material.Filled.Extension),
         new("capabilities", "Nav.Group.Applications", "Tab.CapabilityGrants", Icons.Material.Filled.Security),
         new("permissions", "Nav.Group.Applications", "Tab.Permissions", Icons.Material.Filled.AdminPanelSettings),

@@ -309,3 +309,22 @@ static HackerOs.AppSdk.WhatsNew.HackWhatsNew.MarkSeenAsync(HackerOs.AppSdk.IAppE
 static HackerOs.AppSdk.WhatsNew.HackWhatsNew.MarkSeenAsync(System.Collections.Generic.IReadOnlyCollection<string!>! ids, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
 static HackerOs.AppSdk.WhatsNew.HackWhatsNew.WatchAsync(HackerOs.AppSdk.IAppExecutionContext! context, System.Func<System.Threading.Tasks.ValueTask>! onChanged, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.IAsyncDisposable!>!
 static HackerOs.AppSdk.WhatsNew.HackWhatsNew.WatchAsync(System.Func<System.Threading.Tasks.ValueTask>! onChanged, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.IAsyncDisposable!>!
+HackerOs.AppSdk.Globalization.HackTimeZone
+HackerOs.AppSdk.IAppExecutionContext.TimeZone.get -> System.TimeZoneInfo!
+const HackerOs.AppSdk.Globalization.HackTimeZone.Automatic = "auto" -> string!
+const HackerOs.AppSdk.Globalization.HackTimeZone.Variable = "TZ" -> string!
+static HackerOs.AppSdk.Globalization.HackTimeZone.Available.get -> System.Collections.Generic.IReadOnlyList<System.TimeZoneInfo!>!
+static HackerOs.AppSdk.Globalization.HackTimeZone.Current.get -> System.TimeZoneInfo!
+static HackerOs.AppSdk.Globalization.HackTimeZone.Device.get -> System.TimeZoneInfo!
+static HackerOs.AppSdk.Globalization.HackTimeZone.FormatOffset(System.TimeZoneInfo! zone, System.DateTimeOffset time) -> string!
+static HackerOs.AppSdk.Globalization.HackTimeZone.GetId(System.TimeZoneInfo! zone) -> string!
+static HackerOs.AppSdk.Globalization.HackTimeZone.Now.get -> System.DateTimeOffset
+static HackerOs.AppSdk.Globalization.HackTimeZone.Resolve(string? id, System.TimeZoneInfo? fallback = null) -> System.TimeZoneInfo!
+static HackerOs.AppSdk.Globalization.HackTimeZone.ToLocal(System.DateTimeOffset time) -> System.DateTimeOffset
+static HackerOs.AppSdk.Globalization.HackTimeZone.ToLocal(System.DateTimeOffset time, System.TimeZoneInfo! zone) -> System.DateTimeOffset
+static HackerOs.AppSdk.Globalization.HackTimeZone.TryFind(string? id, out System.TimeZoneInfo? zone) -> bool
+HackerOs.AppSdk.Administration.HackUserAccount.IsGuest.get -> bool
+HackerOs.AppSdk.Administration.HackUserAccount.IsGuest.init -> void
+HackerOs.AppSdk.Administration.IAppUserAccountsGateway.RequestGuestAccountCreationAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+static HackerOs.AppSdk.Administration.HackUserAccounts.RequestGuestAccountCreationAsync(HackerOs.AppSdk.IAppExecutionContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
+static HackerOs.AppSdk.Administration.HackUserAccounts.RequestGuestAccountCreationAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!

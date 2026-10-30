@@ -518,6 +518,20 @@ public static class EcosystemServiceCollectionExtensions
             provider.GetRequiredService<IPasskeyAuthenticator>(),
             provider.GetRequiredService<IAuditLog>(),
             provider.GetRequiredService<UserKeyringService>()));
+        // ADR 0187: the guest account, offered while no account exists.
+        services.AddScoped<GuestAccountRequests>();
+        services.AddScoped<GuestAccountService>(provider =>
+        {
+            WebCryptoPasswordHasher hasher = provider.GetRequiredService<WebCryptoPasswordHasher>();
+            return new GuestAccountService(
+                provider.GetRequiredService<ILocalUserRepository>(),
+                provider.GetRequiredService<ILocalGroupRepository>(),
+                provider.GetRequiredService<IAuditLog>(),
+                fileSystem: provider.GetRequiredService<IFileSystemService>(),
+                session: provider.GetRequiredService<ISessionService>(),
+                asyncHasher: (password, salt, iterations, length, ct) =>
+                    hasher.DeriveKeyAsync(password, salt, iterations, length, ct));
+        });
         services.AddScoped<LocalAccountService>(provider =>
         {
             WebCryptoPasswordHasher hasher = provider.GetRequiredService<WebCryptoPasswordHasher>();
@@ -798,6 +812,8 @@ public static class EcosystemServiceCollectionExtensions
                 // HackUserAccounts (ADR 0168, 0169): passkeys of the session user, adding and deleting accounts.
                 Accounts = () => provider.GetRequiredService<LocalAccountService>(),
                 Passkeys = () => provider.GetRequiredService<PasskeyService>(),
+                // ADR 0187: the guest's "Create my account", shown by the host.
+                GuestRequests = () => provider.GetRequiredService<GuestAccountRequests>(),
                 // HackComponentProviders (ADR 0156): a third-party provider goes through the approval window.
                 ComponentProviders = () => provider.GetRequiredService<HackerOs.Platform.Core.ComponentProviders.ComponentProviderService>(),
                 ApprovalPrompt = () => provider.GetRequiredService<IDangerousCapabilityApprovalPrompt>(),
@@ -811,6 +827,8 @@ public static class EcosystemServiceCollectionExtensions
         {
             // HackBackground (ADR 0128): each task a child process, in a worker when the host has some.
             BackgroundJobs = () => provider.GetRequiredService<BackgroundJobService>(),
+            // ADR 0193: IAppExecutionContext.TimeZone follows Settings > Date and time.
+            TimeZones = provider.GetRequiredService<HackerOs.Platform.Core.Globalization.SessionTimeZoneService>(),
         });
         services.AddScoped<BackgroundJobService>(provider => new BackgroundJobService(
             provider.GetRequiredService<IProcessManager>(),
@@ -1145,6 +1163,8 @@ public static class EcosystemServiceCollectionExtensions
         // so Scoped like the environment probe above).
         services.AddScoped<HackerOs.Platform.Core.Appearance.IHostAccessibilityProbe, BrowserHostAccessibilityProbe>();
         services.AddScoped<HackerOs.Platform.Core.Appearance.AccessibilityPreferenceService>();
+        // ADR 0193: the session's time zone (datetime.config), live like the accessibility preferences.
+        services.AddScoped<HackerOs.Platform.Core.Globalization.SessionTimeZoneService>();
         // ADR 0103: user themes of /etc/hackeros/themes and ~/.config/hackeros/themes.
         services.AddScoped<HackerOs.Platform.Core.Appearance.UserThemeCatalogService>(provider =>
             new HackerOs.Platform.Core.Appearance.UserThemeCatalogService(

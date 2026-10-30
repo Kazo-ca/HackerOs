@@ -442,3 +442,45 @@ HackerOs.Platform.Core.WhatsNew.WhatsNewService.WhatsNewService(HackerOs.Platfor
 const HackerOs.Platform.Core.WhatsNew.WhatsNewService.NotificationSourceAppId = "org.hackeros.whats-new" -> string!
 const HackerOs.Platform.Core.WhatsNew.WhatsNewService.SettingsAppId = "org.hackeros.settings" -> string!
 const HackerOs.Platform.Core.WhatsNew.WhatsNewService.SettingsPageArgument = "--page=whats-new" -> string!
+HackerOs.Platform.Core.Globalization.SessionTimeZoneService
+HackerOs.Platform.Core.Globalization.SessionTimeZoneService.Changed -> System.Action?
+HackerOs.Platform.Core.Globalization.TimeZoneSettingsDocuments
+const HackerOs.Platform.Core.Globalization.TimeZoneSettingsDocuments.TimeZoneKey = "timeZone" -> string!
+static HackerOs.Platform.Core.Globalization.TimeZoneSettingsDocuments.Schema.get -> HackerOs.Simulation.Abstractions.Settings.SettingsSchema!
+static HackerOs.Platform.Core.Globalization.TimeZoneSettingsDocuments.Document.get -> HackerOs.Platform.Core.Settings.OsSettingsDocument!
+static HackerOs.Platform.Core.Globalization.TimeZoneSettingsDocuments.ToSetting(HackerOs.Simulation.Abstractions.Settings.LayeredConfigSnapshot! snapshot) -> string!
+HackerOs.Platform.Core.Globalization.SessionTimeZoneService.SessionTimeZoneService(HackerOs.Platform.Core.Settings.IOsSettingsService! settings) -> void
+HackerOs.Platform.Core.Globalization.SessionTimeZoneService.Setting.get -> string!
+HackerOs.Platform.Core.Globalization.SessionTimeZoneService.TimeZone.get -> System.TimeZoneInfo!
+HackerOs.Platform.Core.Globalization.SessionTimeZoneService.SessionTimeZoneService(HackerOs.Platform.Core.Settings.IOsSettingsService! settings, System.TimeZoneInfo! device) -> void
+HackerOs.Platform.Core.Globalization.SessionTimeZoneService.ToLocal(System.DateTimeOffset time) -> System.DateTimeOffset
+HackerOs.Platform.Core.Globalization.SessionTimeZoneService.InitializeAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+HackerOs.Platform.Core.Globalization.SessionTimeZoneService.Apply(string? setting) -> void
+HackerOs.Platform.Core.Globalization.SessionTimeZoneService.RefreshAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+HackerOs.Platform.Core.Globalization.SessionTimeZoneService.Dispose() -> void
+HackerOs.Platform.Core.Execution.AppExecutionContextFactory.TimeZones.get -> HackerOs.Platform.Core.Globalization.SessionTimeZoneService?
+HackerOs.Platform.Core.Execution.AppExecutionContextFactory.TimeZones.init -> void
+HackerOs.Platform.Core.Sessions.GuestAccountService
+HackerOs.Platform.Core.Sessions.GuestAccountService.CanCreateAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+HackerOs.Platform.Core.Sessions.GuestAccountService.CreateAsync(string! displayName, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Sessions.LocalUser!>
+HackerOs.Platform.Core.Sessions.GuestAccountService.FindLoneGuestAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Sessions.LocalUser?>
+HackerOs.Platform.Core.Sessions.InMemoryLocalGroupRepository.DeleteGroupAsync(HackerOs.Simulation.Abstractions.Sessions.LocalGroupId id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+HackerOs.Platform.Core.Sessions.InMemoryLocalGroupRepository.RenameGroupAsync(HackerOs.Simulation.Abstractions.Sessions.LocalGroupId id, HackerOs.Simulation.Abstractions.Sessions.LocalLoginName name, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Sessions.LocalGroup!>
+HackerOs.Platform.Core.Sessions.InMemoryLocalUserRepository.ConvertGuestUserAsync(HackerOs.Simulation.Abstractions.Sessions.LocalUserId id, HackerOs.Simulation.Abstractions.Sessions.LocalLoginName loginName, string! displayName, HackerOs.Simulation.Abstractions.Sessions.LocalPasswordCredential! credential, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Sessions.LocalUser!>
+HackerOs.Platform.Core.Sessions.InMemoryLocalUserRepository.CreateGuestUserAsync(HackerOs.Simulation.Abstractions.Sessions.LocalLoginName loginName, string! displayName, HackerOs.App.Abstractions.AppAuthority authority, HackerOs.Simulation.Abstractions.Sessions.LocalGroupId primaryGroupId, System.Collections.Generic.IReadOnlyCollection<HackerOs.Simulation.Abstractions.Sessions.LocalGroupId>! additionalGroupIds, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Sessions.LocalUser!>
+const HackerOs.Platform.Core.Sessions.GuestAccountService.LoginName = "guest" -> string!
+static HackerOs.Platform.Core.Sessions.GuestAccountService.FindLoneGuest(System.Collections.Generic.IReadOnlyList<HackerOs.Simulation.Abstractions.Sessions.LocalUser!>! users) -> HackerOs.Simulation.Abstractions.Sessions.LocalUser?
+HackerOs.Platform.Core.Elevation.AdminElevationVerifier.CanConfirmWithoutPasswordAsync(string? loginName, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
+HackerOs.Platform.Core.Sessions.GuestAccountService.FindGuestAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Sessions.LocalUser?>
+HackerOs.Platform.Core.Sessions.GuestAccountService.GuestAccountService(HackerOs.Simulation.Abstractions.Sessions.ILocalUserRepository! users, HackerOs.Simulation.Abstractions.Sessions.ILocalGroupRepository! groups, HackerOs.Simulation.Abstractions.Diagnostics.IAuditLog! audit, System.Func<System.DateTimeOffset>? clock = null, HackerOs.Simulation.Abstractions.FileSystem.IFileSystemService? fileSystem = null, HackerOs.Simulation.Abstractions.Sessions.ISessionService? session = null, HackerOs.Platform.Core.Sessions.KeyDerivationAsyncDelegate? asyncHasher = null, int iterations = 210000) -> void
+HackerOs.Platform.Core.Sessions.GuestAccountService.MigrateAsync(HackerOs.AppSdk.Administration.HackNewUserAccount! account, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Sessions.LocalUser!>
+HackerOs.Platform.Core.Sessions.GuestAccountService.ReplaceAsync(HackerOs.AppSdk.Administration.HackNewUserAccount! account, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Sessions.LocalUser!>
+const HackerOs.Platform.Core.Sessions.GuestAccountService.ConfigDirectory = ".config" -> string!
+HackerOs.Platform.Core.Administration.SystemAdministrationGatewayServices.GuestRequests.get -> System.Func<HackerOs.Platform.Core.Sessions.GuestAccountRequests!>?
+HackerOs.Platform.Core.Administration.SystemAdministrationGatewayServices.GuestRequests.init -> void
+HackerOs.Platform.Core.Sessions.GuestAccountRequests
+HackerOs.Platform.Core.Sessions.GuestAccountRequests.CreateAccountRequested -> System.Action?
+HackerOs.Platform.Core.Sessions.GuestAccountRequests.GuestAccountRequests() -> void
+HackerOs.Platform.Core.Sessions.GuestAccountRequests.HasListener.get -> bool
+HackerOs.Platform.Core.Sessions.GuestAccountRequests.RequestCreateAccount() -> bool
+HackerOs.Platform.Core.Lifecycle.AppLifecycleOrchestrator.StopSessionAppsAsync(HackerOs.Simulation.Abstractions.Sessions.SessionId sessionId, HackerOs.Simulation.Abstractions.Processes.ProcessExitReason reason = HackerOs.Simulation.Abstractions.Processes.ProcessExitReason.Logout) -> System.Threading.Tasks.Task<int>!

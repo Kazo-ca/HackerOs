@@ -33,6 +33,8 @@
 @inject HackerOs.Platform.Core.AppCatalog Catalog
 @inject HackerOs.Platform.Core.Globalization.SessionLocaleService SessionLocale
 @inject IServiceProvider Services
+@inject HackerOs.Platform.Core.Globalization.SessionTimeZoneService TimeZones
+@inject HackerOs.Platform.Blazor.ContextMenus.ContextMenuService ContextMenus
 
 <div class="desktop-shell" @onkeydown="HandleShellKeyDown">
     <div class="desktop-workspace">
@@ -73,7 +75,7 @@
 
     @if (_launcher.IsOpen && _launcher.Display.IsPrimary)
     {
-        <AppLauncher OnClose="CloseLauncher" OnAppSelected="HandleAppSelected" OnSendToDesktop="SendToDesktopCallback" />
+        <AppLauncher OnClose="CloseLauncher" OnAppSelected="HandleAppSelected" OnSendToDesktop="SendToDesktopCallback" OnCreateAccount="OpenUsersSettingsAsync" />
     }
 
     @if (!string.IsNullOrEmpty(_launchError))
@@ -93,7 +95,8 @@
                                       ClockPanelSource="_clockPanel"
                                       ClockPanelContent="@ClockPanelFragment"
                                       NotificationAreaContent="@NotificationAreaFragment"
-                                      SessionCommands="_taskbarSessionCommands" />
+                                      SessionCommands="_taskbarSessionCommands"
+                                      ContextMenus="_taskbarMenus.For(DisplayId.Primary)" />
 
     @if (TestDemoEnabled)
     {
@@ -144,6 +147,7 @@
     private TaskbarClockPanelSourceAdapter _clockPanel = null!;
     private TaskbarStatusSourceAdapter _taskbarStatus = null!;
     private TaskbarSessionCommandsAdapter _taskbarSessionCommands = null!;
+    private TaskbarContextMenus _taskbarMenus = null!;
 
     private RenderFragment ClockPanelFragment => builder =>
     {
@@ -163,6 +167,12 @@
     private Task OpenServerSettingsAsync() =>
         Catalog.Manifests.TryGetValue(SettingsAppId, out AppManifest? settings)
             ? HandleAppSelected(settings)
+            : Task.CompletedTask;
+
+    /// <summary>ADR 0187 section 5: the guest's Start menu reminder opens Settings ▸ Users.</summary>
+    private Task OpenUsersSettingsAsync() =>
+        Catalog.Manifests.TryGetValue(SettingsAppId, out AppManifest? settings)
+            ? LaunchAsync(settings, ["--page=users"])
             : Task.CompletedTask;
 
     /// <summary>The Settings app, opened from the server icon's panel.</summary>
@@ -214,12 +224,13 @@
         @<text>
             @if (_launcher.IsOpen && _launcher.Display == screen.Id)
             {
-                <AppLauncher OnClose="CloseLauncher" OnAppSelected="HandleAppSelected" OnSendToDesktop="SendToDesktopCallback" />
+                <AppLauncher OnClose="CloseLauncher" OnAppSelected="HandleAppSelected" OnSendToDesktop="SendToDesktopCallback" OnCreateAccount="OpenUsersSettingsAsync" />
             }
             <HackerOs.Taskbar.Blazor.Taskbar WindowSource="ScreenTaskbarSource(screen.Id)"
                                               Commands="_taskbarCommands"
                                               Launcher="_launcher.For(screen.Id)"
-                                              StatusSource="_taskbarStatus" />
+                                              StatusSource="_taskbarStatus"
+                                              ContextMenus="_taskbarMenus.For(screen.Id)" />
         </text>;
 
     /// <summary>The window list of a secondary screen's taskbar, kept while the screen is open.</summary>
@@ -323,11 +334,27 @@
         }
     }
 
-    private async Task HandleAppSelected(AppManifest manifest)
+    private Task HandleAppSelected(AppManifest manifest) => LaunchAsync(manifest, []);
+
+    // ADR 0179 §1: an app started from a screen's Start menu opens on that screen; from screen 1's
+    // notification area, on screen 1.
+    private Task LaunchAsync(AppManifest manifest, IReadOnlyList<string> arguments) =>
+        LaunchAsync(manifest, arguments, _launcher.IsOpen ? _launcher.Display : DisplayId.Primary);
+
+    /// <summary>ADR 0194 §3-4: an app started from a taskbar menu opens on that taskbar's screen.</summary>
+    private Task LaunchFromTaskbarAsync(string appId, IReadOnlyList<string> arguments, DisplayId display) =>
+        Catalog.Manifests.TryGetValue(appId, out AppManifest? manifest)
+            ? LaunchAsync(manifest, arguments, display)
+            : Task.CompletedTask;
+
+    /// <summary>ADR 0194 §3: « Nouvelle fenêtre » for an app in the catalog that accepts more than one window.</summary>
+    private bool CanOpenNewWindow(string appId) =>
+        Catalog.Manifests.TryGetValue(appId, out AppManifest? manifest)
+        && manifest.Kind == AppKind.Window
+        && !manifest.SingleInstancePerUser;
+
+    private async Task LaunchAsync(AppManifest manifest, IReadOnlyList<string> arguments, DisplayId display)
     {
-        // ADR 0179 §1: an app started from a screen's Start menu opens on that screen; from screen 1's
-        // notification area, on screen 1.
-        DisplayId display = _launcher.IsOpen ? _launcher.Display : DisplayId.Primary;
         _launcher.Close();
         if (SessionService.CurrentPrincipal is not AuthenticatedPrincipal principal)
         {
@@ -338,7 +365,7 @@
         using (LaunchCoordinator.OpenOnDisplay(manifest.Id, display))
         {
             result = await Orchestrator.LaunchAsync(
-                new AppLaunchRequest(manifest.Id, principal, []));
+                new AppLaunchRequest(manifest.Id, principal, arguments));
             if (result.IsSuccess)
             {
                 await LaunchCoordinator.PresentAsync(manifest, result);
@@ -495,11 +522,19 @@
         _launcher.Changed += Rerender;
         _clockPanel = new TaskbarClockPanelSourceAdapter();
         _clockPanel.Changed += Rerender;
-        _taskbarStatus = new TaskbarStatusSourceAdapter(SimulationClock, SessionLocale);
+        _taskbarStatus = new TaskbarStatusSourceAdapter(SimulationClock, SessionLocale, TimeZones);
         _taskbarSessionCommands = new TaskbarSessionCommandsAdapter(OpenLogout);
         // ADR 0186 §4.5: the Start button's dot and the sign-in notification of unseen changes.
         _whatsNew = new WhatsNewAttention(Services, _launcher.SetAttention);
         _ = _whatsNew.StartAsync();
+        _taskbarMenus = new TaskbarContextMenus(
+            ContextMenus,
+            KeyboardCommands,
+            WindowRuntime,
+            L,
+            appId => Catalog.Manifests.ContainsKey(appId),
+            CanOpenNewWindow,
+            (appId, arguments, display) => InvokeAsync(() => LaunchFromTaskbarAsync(appId, arguments, display)));
     }
 
     private void Rerender()
@@ -549,5 +584,6 @@
         _screenTaskbarSources.Clear();
         _taskbarStatus.Dispose();
         _whatsNew?.Dispose();
+        _taskbarMenus.Dispose();
     }
 }

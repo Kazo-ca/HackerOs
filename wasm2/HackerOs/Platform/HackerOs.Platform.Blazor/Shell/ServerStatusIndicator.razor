@@ -35,7 +35,7 @@
                     @if (_lastSync is { } lastSync)
                     {
                         <dt>@L["Server.LastSync"]</dt>
-                        <dd>@lastSync.ToLocalTime().ToString("g", System.Globalization.CultureInfo.CurrentCulture)</dd>
+                        <dd>@LocalTime(lastSync).ToString("g", System.Globalization.CultureInfo.CurrentCulture)</dd>
                     }
                     @if (!string.IsNullOrEmpty(_presence.Detail))
                     {

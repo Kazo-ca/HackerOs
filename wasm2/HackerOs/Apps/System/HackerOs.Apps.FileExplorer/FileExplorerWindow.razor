@@ -170,11 +170,6 @@
         </button>
     </div>
 
-    @if (!string.IsNullOrEmpty(_errorMessage))
-    {
-        <div class="error-state">@_errorMessage</div>
-    }
-
     <!-- Directory Content View: the OS file control, provided by this same app -->
     <div class="explorer-content">
         <HackFileView InitialDirectory="@_initialDirectory.Value"
@@ -207,7 +202,8 @@
     private protected IHackFileView? _files;
     private protected VirtualPath _initialDirectory;
     private protected string _addressInput = string.Empty;
-    private protected string? _errorMessage;
+    /// <summary>The error whose message box is open, so the same failure reported twice opens one box.</summary>
+    private string? _shownError;
     private protected IDisposable? _eventSub;
     private protected BrowserFileDownloader? _downloader;
     private protected Func<HackFileViewItem, bool> _searchFilter = default!;
@@ -492,10 +488,32 @@
         _files?.RefreshFilter();
     }
 
+    /// <summary>Shows an error in the SDK message box of type Error (not in the window), with an OK button.</summary>
     private protected void ReportError(string message)
     {
-        _errorMessage = message;
-        _ = InvokeAsync(StateHasChanged);
+        if (string.IsNullOrEmpty(message) || message == _shownError)
+        {
+            return;
+        }
+
+        _ = InvokeAsync(() => ShowErrorAsync(message));
+    }
+
+    private async Task ShowErrorAsync(string message)
+    {
+        _shownError = message;
+        try
+        {
+            await MessageBox(L["Notification.Title"], message, MessageBoxType.Ok, MessageBoxIcon.Error, AppContext.CancellationToken);
+        }
+        catch (Exception exception) when (exception is InvalidOperationException or OperationCanceledException or NotSupportedException)
+        {
+            // No dialog here (a host without dialogs), or the window closed: nothing more to show.
+        }
+        finally
+        {
+            _shownError = null;
+        }
     }
 
     private protected async Task OnNavigated(string path)
@@ -503,7 +521,6 @@
         _showTrash = false;
         _state.NavigateTo(path);
         _addressInput = _state.CurrentPath;
-        _errorMessage = null;
         if (_pendingReveal is { } reveal && path == ParentOf(reveal).Value)
         {
             _pendingReveal = null;
@@ -522,8 +539,7 @@
         }
         catch (Exception ex) when (ex is InvalidOperationException or FormatException or ArgumentException)
         {
-            _errorMessage = ex.Message;
-            StateHasChanged();
+            ReportError(ex.Message);
         }
     }
 
@@ -595,7 +611,6 @@
 
     private protected Task RunAsync(string command)
     {
-        _errorMessage = null;
         return _files?.ExecuteAsync(command) ?? Task.CompletedTask;
     }
 
@@ -622,7 +637,6 @@
 
         if (creation.Succeeded)
         {
-            _errorMessage = null;
             await _files.RefreshAsync();
         }
         else
@@ -653,7 +667,6 @@
 
         if (creation.Succeeded)
         {
-            _errorMessage = null;
             await _files.RefreshAsync();
         }
         else
@@ -688,16 +701,16 @@
     private protected void ReportTransfer(HackFileTransferResult result, TransferVerb verb)
     {
         string? summary = ExplorerTransferReport.DescribeFailures(L, result, verb);
-        _errorMessage = summary;
         if (summary is not null)
         {
+            ReportError(summary);
             try
             {
                 AppContext.Notifications.Post(NotificationSeverity.Warning, L["Notification.Title"], summary);
             }
             catch (AppGatewayAccessDeniedException)
             {
-                // The banner already shows it.
+                // The message box already shows it.
             }
         }
 
@@ -721,7 +734,6 @@
     private protected async Task ShowTrashAsync()
     {
         _showTrash = true;
-        _errorMessage = null;
         if (_trashView is not null)
         {
             await _trashView.ReloadAsync();
@@ -863,8 +875,6 @@
             ReportError(error);
             return;
         }
-
-        _errorMessage = null;
         _files.ClearSelection();
         await _files.RefreshAsync();
     }
@@ -890,8 +900,6 @@
             ReportError(error);
             return;
         }
-
-        _errorMessage = null;
         _files.ClearSelection();
         await _files.RefreshAsync();
     }

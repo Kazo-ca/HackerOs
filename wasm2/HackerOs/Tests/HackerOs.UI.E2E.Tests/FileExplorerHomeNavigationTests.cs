@@ -41,11 +41,11 @@ public sealed class FileExplorerHomeNavigationTests(ITestOutputHelper output)
             await E2ESupport.OpenAppAsync(page, "File Explorer", output);
 
             // File Explorer must land on the real home directory on its very first
-            // load, with no "Directory not found." error state rendered anywhere.
+            // load, with no "Directory not found." error box shown.
             ILocator addressInput = page.GetByLabel("Current path address");
             await Assertions.Expect(addressInput).ToHaveValueAsync(E2ESupport.HomePath, new() { Timeout = 15000 });
 
-            ILocator errorState = page.Locator(".error-state");
+            ILocator errorState = page.Locator(".message-box-dialog");
             await Assertions.Expect(errorState).Not.ToBeVisibleAsync();
 
             // The home directory's seeded subfolders must actually be listed, proving
@@ -54,7 +54,7 @@ public sealed class FileExplorerHomeNavigationTests(ITestOutputHelper output)
             await Assertions.Expect(page.Locator("tr.entry-row", new() { HasText = "Documents" })).ToBeVisibleAsync();
             await Assertions.Expect(page.Locator("tr.entry-row", new() { HasText = "Downloads" })).ToBeVisibleAsync();
 
-            output.WriteLine($"[test] File Explorer opened directly to '{await addressInput.InputValueAsync()}' with no error state.");
+            output.WriteLine($"[test] File Explorer opened directly to '{await addressInput.InputValueAsync()}' with no error box.");
             Assert.Empty(consoleErrors);
         }
         finally

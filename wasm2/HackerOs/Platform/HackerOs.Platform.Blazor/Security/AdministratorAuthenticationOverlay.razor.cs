@@ -1,3 +1,4 @@
+using HackerOs.App.Abstractions.Policy;
 using HackerOs.Platform.Core.Elevation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -27,6 +28,7 @@ public sealed partial class AdministratorAuthenticationOverlay
     private string? _error;
     private bool _isVerifying;
     private bool _focusPending;
+    private bool _confirmOnly;
 
     /// <summary>Gets or sets the overlay's texts, in the session language (ADR 0104).</summary>
     [Inject]
@@ -36,7 +38,12 @@ public sealed partial class AdministratorAuthenticationOverlay
     [Inject]
     public AdministratorAuthenticationBroker Broker { get; set; } = default!;
 
-    private bool CanAuthenticate => !_isVerifying && !string.IsNullOrWhiteSpace(_login) && !string.IsNullOrEmpty(_password);
+    /// <summary>Gets or sets the services, to reach the verifier when the host has one (ADR 0187).</summary>
+    [Inject]
+    private IServiceProvider Services { get; set; } = default!;
+
+    private bool CanAuthenticate =>
+        !_isVerifying && !string.IsNullOrWhiteSpace(_login) && (_confirmOnly || !string.IsNullOrEmpty(_password));
 
     private bool CanUsePasskey => !_isVerifying && !string.IsNullOrWhiteSpace(_login);
 
@@ -59,7 +66,10 @@ public sealed partial class AdministratorAuthenticationOverlay
         _focusPending = false;
         try
         {
-            await (string.IsNullOrEmpty(_login) ? _loginInput : _passwordInput).FocusAsync();
+            if (!_confirmOnly)
+            {
+                await (string.IsNullOrEmpty(_login) ? _loginInput : _passwordInput).FocusAsync();
+            }
         }
         catch (InvalidOperationException)
         {
@@ -93,7 +103,34 @@ public sealed partial class AdministratorAuthenticationOverlay
         _password = string.Empty;
         _error = null;
         _isVerifying = false;
+        _confirmOnly = false;
         _focusPending = next is not null;
+        if (next is not null)
+        {
+            _ = ShowGuestConfirmationAsync(next);
+        }
+    }
+
+    /// <summary>
+    /// ADR 0187 section 2: when the suggested administrator is the lone guest, the window asks for a
+    /// plain confirmation. The verifier still decides: it accepts the empty password for that account only.
+    /// </summary>
+    private async Task ShowGuestConfirmationAsync(AdministratorAuthenticationBroker.PendingAuthentication pending)
+    {
+        if (Services.GetService(typeof(IAdminElevationVerifier)) is not AdminElevationVerifier verifier
+            || !await verifier.CanConfirmWithoutPasswordAsync(pending.Request.SuggestedAdministratorLogin))
+        {
+            return;
+        }
+
+        await InvokeAsync(() =>
+        {
+            if (ReferenceEquals(_current, pending))
+            {
+                _confirmOnly = true;
+                StateHasChanged();
+            }
+        });
     }
 
     private async Task AuthenticateAsync()
@@ -105,7 +142,7 @@ public sealed partial class AdministratorAuthenticationOverlay
 
         _isVerifying = true;
         _error = null;
-        string password = _password;
+        string password = _confirmOnly ? string.Empty : _password;
         _password = string.Empty;
         AdministratorAuthenticationAttempt attempt = await pending.Request.AuthenticateAsync(_login.Trim(), password, CancellationToken.None);
         _isVerifying = false;

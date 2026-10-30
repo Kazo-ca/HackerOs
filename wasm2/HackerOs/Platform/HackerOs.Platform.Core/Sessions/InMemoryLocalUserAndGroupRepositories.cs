@@ -68,6 +68,67 @@ public sealed class InMemoryLocalUserRepository : ILocalUserRepository
     }
 
     /// <inheritdoc />
+    public ValueTask<LocalUser> CreateGuestUserAsync(
+        LocalLoginName loginName,
+        string displayName,
+        AppAuthority authority,
+        LocalGroupId primaryGroupId,
+        IReadOnlyCollection<LocalGroupId> additionalGroupIds,
+        CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        lock (_gate)
+        {
+            LocalUser created = CreateUser(loginName, displayName, authority, primaryGroupId, additionalGroupIds) with { IsGuest = true };
+            _usersById[created.Id] = created;
+            return ValueTask.FromResult(created);
+        }
+    }
+
+    /// <inheritdoc />
+    public ValueTask<LocalUser> ConvertGuestUserAsync(
+        LocalUserId id,
+        LocalLoginName loginName,
+        string displayName,
+        LocalPasswordCredential credential,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(credential);
+        cancellationToken.ThrowIfCancellationRequested();
+        lock (_gate)
+        {
+            if (!_usersById.TryGetValue(id, out LocalUser? guest) || !guest.IsGuest)
+            {
+                throw new InvalidOperationException($"Local user '{id}' is not the guest account.");
+            }
+
+            if (_usersById.Values.Any(existing => existing.Id != id && existing.LoginName == loginName))
+            {
+                throw new InvalidOperationException($"Login name '{loginName}' is already in use.");
+            }
+
+            LocalUser converted = new(
+                guest.Id,
+                loginName,
+                displayName,
+                guest.Enabled,
+                guest.Authority,
+                guest.PrimaryGroupId,
+                guest.AdditionalGroupIds,
+                credential,
+                guest.Revision + 1,
+                guest.CreatedAtUtc,
+                _clock())
+            {
+                Passkeys = guest.Passkeys,
+                IsGuest = false
+            };
+            _usersById[id] = converted;
+            return ValueTask.FromResult(converted);
+        }
+    }
+
+    /// <inheritdoc />
     public bool TryGetById(LocalUserId id, out LocalUser user)
     {
         lock (_gate)
@@ -250,7 +311,8 @@ public sealed class InMemoryLocalUserRepository : ILocalUserRepository
         user.CreatedAtUtc,
         _clock())
     {
-        Passkeys = user.Passkeys
+        Passkeys = user.Passkeys,
+        IsGuest = user.IsGuest
     };
 
     /// <summary>A credential to set, possibly <see langword="null"/> (no password), as opposed to no change.</summary>
@@ -311,6 +373,42 @@ public sealed class InMemoryLocalGroupRepository : ILocalGroupRepository
         {
             return ValueTask.FromResult<LocalGroup?>(
                 _groupsById.Values.FirstOrDefault(group => group.Name == name));
+        }
+    }
+
+    /// <inheritdoc />
+    public ValueTask<LocalGroup> RenameGroupAsync(
+        LocalGroupId id,
+        LocalLoginName name,
+        CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        lock (_gate)
+        {
+            if (!_groupsById.ContainsKey(id))
+            {
+                throw new InvalidOperationException($"Local group '{id}' does not exist.");
+            }
+
+            if (_groupsById.Values.Any(group => group.Id != id && group.Name == name))
+            {
+                throw new InvalidOperationException($"Group name '{name}' is already in use.");
+            }
+
+            LocalGroup renamed = new(id, name);
+            _groupsById[id] = renamed;
+            return ValueTask.FromResult(renamed);
+        }
+    }
+
+    /// <inheritdoc />
+    public ValueTask DeleteGroupAsync(LocalGroupId id, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        lock (_gate)
+        {
+            _groupsById.Remove(id);
+            return ValueTask.CompletedTask;
         }
     }
 }

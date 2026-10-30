@@ -737,4 +737,34 @@
   <data name="WindowMenu.NewScreen" xml:space="preserve">
     <value>Nouvel écran</value>
   </data>
+  <data name="TaskbarMenu.Label" xml:space="preserve">
+    <value>Menu de la barre des tâches</value>
+  </data>
+  <data name="TaskbarMenu.NewWindow" xml:space="preserve">
+    <value>Nouvelle fenêtre</value>
+  </data>
+  <data name="TaskbarMenu.TaskManager" xml:space="preserve">
+    <value>Gestionnaire des tâches</value>
+  </data>
+  <data name="TaskbarMenu.ShowDesktop" xml:space="preserve">
+    <value>Afficher le bureau</value>
+  </data>
+  <data name="TaskbarMenu.Cascade" xml:space="preserve">
+    <value>Fenêtres en cascade</value>
+  </data>
+  <data name="TaskbarMenu.Tile" xml:space="preserve">
+    <value>Fenêtres en mosaïque</value>
+  </data>
+  <data name="TaskbarMenu.Settings" xml:space="preserve">
+    <value>Paramètres de la barre des tâches</value>
+  </data>
+  <data name="Security.GuestConfirm" xml:space="preserve">
+    <value>Vous êtes connecté en invité, le seul compte de cet ordinateur : confirmez pour continuer, aucun mot de passe n'est demandé.</value>
+  </data>
+  <data name="Security.Confirm" xml:space="preserve">
+    <value>Confirmer</value>
+  </data>
+  <data name="Launcher.Guest.CreateAccount" xml:space="preserve">
+    <value>Invité · Créer mon compte</value>
+  </data>
 </root>

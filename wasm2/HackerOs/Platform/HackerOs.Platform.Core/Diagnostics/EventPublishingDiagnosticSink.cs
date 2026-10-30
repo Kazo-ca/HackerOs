@@ -31,9 +31,12 @@ public sealed class EventPublishingDiagnosticSink : IDiagnosticSink
 
         if (entry.Severity > DiagnosticSeverity.Information)
         {
-            // In Blazor WebAssembly, Console.Error is redirected to the browser's
-            // console.error by the runtime, so this needs no IJSRuntime/JS interop.
-            Console.Error.WriteLine($"[{entry.Category}] {entry.Severity}: {entry.Message}");
+            // In Blazor WebAssembly, Console.Error is redirected to the browser's console.error by
+            // the runtime, so this needs no IJSRuntime/JS interop. Blazor also shows its "An
+            // unhandled error has occurred" bar for every standard error line: a warning, which is
+            // no failure, goes to standard output (console.log) instead.
+            TextWriter writer = entry.Severity == DiagnosticSeverity.Warning ? Console.Out : Console.Error;
+            writer.WriteLine($"[{entry.Category}] {entry.Severity}: {entry.Message}");
         }
 
         _eventBus.Publish(new DiagnosticEntryRecordedEvent(entry));

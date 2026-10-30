@@ -6,6 +6,7 @@ using HackerOs.AppSdk;
 using HackerOs.Commands.Ausearch;
 using HackerOs.Commands.Cat;
 using HackerOs.Commands.Cd;
+using HackerOs.Commands.Date;
 using HackerOs.Commands.Dmesg;
 using HackerOs.Commands.Echo;
 using HackerOs.Commands.Exit;
@@ -233,6 +234,73 @@ public sealed class CoreCommandsTests
     }
 
     [Fact]
+    public async Task LsCommand_long_listing_shows_the_modification_time_in_the_process_time_zone()
+    {
+        // ADR 0193: ls -l converts the UTC timestamp to the process's zone (TZ, else the session's).
+        LsCommand command = new(CreateManifest("ls", "org.hackeros.cmd.ls"));
+        DateTimeOffset modified = new(2026, 10, 29, 14, 5, 0, TimeSpan.Zero);
+        using StringWriter stdout = new();
+        using StringWriter stderr = new();
+        using StringReader stdin = new(string.Empty);
+        TerminalExecutionContext context = CreateContext(
+            ["-l"], stdout, stderr, stdin, "/home/user",
+            seed: files => files.AddFile("/home/user/report.txt", Encoding.UTF8.GetBytes("x"), modified),
+            timeZone: TimeZoneInfo.FindSystemTimeZoneById("Asia/Tokyo"));
+
+        int exitCode = await command.ExecuteAsync(context, CancellationToken.None);
+
+        Assert.Equal(0, exitCode);
+        string line = stdout.ToString().Split('\n').Single(l => l.Contains("report.txt", StringComparison.Ordinal));
+        Assert.Contains("Oct 29 23:05", line, StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData(new string[0], "Thu Oct 29 10:05:09 -04 2026")]
+    [InlineData(new[] { "-u" }, "Thu Oct 29 14:05:09 UTC 2026")]
+    [InlineData(new[] { "-I" }, "2026-10-29")]
+    [InlineData(new[] { "-R" }, "Thu, 29 Oct 2026 10:05:09 -0400")]
+    [InlineData(new[] { "+%F %T %z|%j|%s|%%|%q" }, "2026-10-29 10:05:09 -0400|302|1793282709|%|%q")]
+    public async Task DateCommand_prints_the_os_time_in_the_process_time_zone(string[] arguments, string expected)
+    {
+        // ADR 0193: date reads the simulation clock and the process's zone, like GNU date in the C locale.
+        (int code, string output, string errors) = await RunDateAsync(arguments, "America/Toronto");
+
+        Assert.Equal(0, code);
+        Assert.Equal(expected + Environment.NewLine, output);
+        Assert.Empty(errors);
+    }
+
+    [Fact]
+    public async Task DateCommand_refuses_unknown_options_and_setting_the_clock()
+    {
+        (int invalid, _, string invalidError) = await RunDateAsync(["-x"], "UTC");
+        (int set, _, string setError) = await RunDateAsync(["2026-01-01"], "UTC");
+        (int help, string usage, _) = await RunDateAsync(["--help"], "UTC");
+
+        Assert.Equal(1, invalid);
+        Assert.Contains("-x", invalidError, StringComparison.Ordinal);
+        Assert.Equal(1, set);
+        Assert.Contains("2026-01-01", setError, StringComparison.Ordinal);
+        Assert.Equal(0, help);
+        Assert.Contains("date [-u]", usage, StringComparison.Ordinal);
+    }
+
+    private static async Task<(int Code, string Out, string Err)> RunDateAsync(string[] arguments, string zone)
+    {
+        DateCommand command = new(CreateManifest("date", "org.hackeros.commands.date"));
+        using StringWriter stdout = new();
+        using StringWriter stderr = new();
+        using StringReader stdin = new(string.Empty);
+        TerminalExecutionContext context = CreateContext(
+            arguments, stdout, stderr, stdin, "/",
+            timeZone: TimeZoneInfo.FindSystemTimeZoneById(zone),
+            now: new DateTimeOffset(2026, 10, 29, 14, 5, 9, TimeSpan.Zero));
+        using IDisposable scope = HackExecutionContext.Enter(context.App);
+        int code = await command.ExecuteAsync(context, CancellationToken.None);
+        return (code, stdout.ToString(), stderr.ToString());
+    }
+
+    [Fact]
     public async Task AusearchCommand_filters_audit_records_by_path_and_origin_user()
     {
         // ADR 0100 section 3: ausearch reads auditd-style records from /var/log/audit.log.
@@ -282,7 +350,9 @@ public sealed class CoreCommandsTests
         TextReader stdin,
         string cwd,
         IShellSession? shell = null,
-        Action<TestAppFileSystemGateway>? seed = null)
+        Action<TestAppFileSystemGateway>? seed = null,
+        TimeZoneInfo? timeZone = null,
+        DateTimeOffset? now = null)
     {
         AppManifest manifest = CreateManifest("cmd", "org.hackeros.cmd.test");
         LocalUserId userId = LocalUserId.FromGuid(Guid.NewGuid());
@@ -293,7 +363,11 @@ public sealed class CoreCommandsTests
         fileSystem.AddDirectory("/home/user/.config");
         seed?.Invoke(fileSystem);
 
-        TestAppExecutionContext app = new(manifest, fileSystem);
+        TestAppExecutionContext app = new(manifest, fileSystem)
+        {
+            TimeZone = timeZone ?? TimeZoneInfo.Utc,
+            Clock = new FixedClock(now ?? DateTimeOffset.UnixEpoch)
+        };
 
         Dictionary<string, string> env = new(StringComparer.Ordinal)
         {
@@ -346,8 +420,17 @@ public sealed class CoreCommandsTests
         public IAppEventGateway Events => throw new NotImplementedException();
         public IAppNotificationGateway Notifications => throw new NotImplementedException();
         public IAppLoggingGateway Logging => throw new NotImplementedException();
-        public IAppClockGateway Clock => throw new NotImplementedException();
+        public IAppClockGateway Clock { get; init; } = null!;
         public IAppProcessGateway Processes => throw new NotImplementedException();
+        public TimeZoneInfo TimeZone { get; init; } = TimeZoneInfo.Utc;
+    }
+
+    private sealed class FixedClock(DateTimeOffset now) : IAppClockGateway
+    {
+        public DateTimeOffset UtcNow => now;
+        public long CurrentTick => 0;
+        public IDisposable Schedule(TimeSpan delay, Action callback) => throw new NotSupportedException();
+        public Task DelayAsync(TimeSpan delay, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
     private sealed class TestAppFileSystemGateway : IAppFileSystemGateway
@@ -377,10 +460,10 @@ public sealed class CoreCommandsTests
             _entries[path] = (meta, null);
         }
 
-        public void AddFile(string path, byte[] content)
+        public void AddFile(string path, byte[] content, DateTimeOffset? modified = null)
         {
             FileSystemEntryId id = FileSystemEntryId.FromGuid(Guid.NewGuid());
-            DateTimeOffset now = DateTimeOffset.UtcNow;
+            DateTimeOffset now = modified ?? DateTimeOffset.UtcNow;
             FileSystemTimestamps ts = new(now, now, now);
             FileMetadata meta = new(
                 id,

@@ -620,3 +620,16 @@
     opacity: 0.35;
     transition: opacity 120ms ease;
 }
+
+/* ADR 0187 section 5: the guest's reminder under its name. */
+.guest-create {
+    align-self: flex-start;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--hos-accent, #42d392);
+    font: inherit;
+    font-size: 0.72rem;
+    text-decoration: underline;
+    cursor: pointer;
+}

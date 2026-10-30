@@ -132,6 +132,20 @@ internal sealed class AppExecutionContext : IAppExecutionContext
     /// <inheritdoc />
     public IAppStorageDiagnosticsGateway StorageDiagnostics { get => Guarded(field); }
 
+    /// <summary>
+    /// Gets or sets the session's time zone, read at every access (ADR 0193 section 4), or
+    /// <see langword="null"/> for the device's zone.
+    /// </summary>
+    internal Func<TimeZoneInfo>? SessionTimeZone { get; set; }
+
+    /// <inheritdoc />
+    /// <remarks>The process's own <c>TZ</c> wins, then the session's zone, so a change in Settings applies at once.</remarks>
+    public TimeZoneInfo TimeZone =>
+        HackerOs.AppSdk.Globalization.HackTimeZone.TryFind(
+            Environment.GetVariable(HackerOs.AppSdk.Globalization.HackTimeZone.Variable), out TimeZoneInfo? zone)
+            ? zone
+            : SessionTimeZone?.Invoke() ?? HackerOs.AppSdk.Globalization.HackTimeZone.Device;
+
     /// <inheritdoc />
     public IAppSystemBackupGateway SystemBackup { get => Guarded(field); internal set; } = UnsupportedAdministrationGateways.SystemBackup;
 

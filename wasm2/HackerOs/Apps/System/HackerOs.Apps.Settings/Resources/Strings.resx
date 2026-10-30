@@ -1545,4 +1545,76 @@
   <data name="WhatsNew.Link.PullRequest" xml:space="preserve">
     <value>Pull request</value>
   </data>
+  <data name="Tab.DateTime" xml:space="preserve">
+    <value>Date and time</value>
+  </data>
+  <data name="DateTime.State.Title" xml:space="preserve">
+    <value>Current time</value>
+  </data>
+  <data name="DateTime.State.Local" xml:space="preserve">
+    <value>Local time</value>
+  </data>
+  <data name="DateTime.State.Zone" xml:space="preserve">
+    <value>Time zone</value>
+  </data>
+  <data name="DateTime.Zone.Title" xml:space="preserve">
+    <value>Time zone</value>
+  </data>
+  <data name="DateTime.Zone.Description" xml:space="preserve">
+    <value>The taskbar clock, the dates of the apps and of ls, date and dmesg use this zone. The choice is saved in {0} and applies at once. A process with its own {1} variable keeps that zone.</value>
+  </data>
+  <data name="DateTime.Zone.Automatic" xml:space="preserve">
+    <value>Automatic</value>
+  </data>
+  <data name="DateTime.Zone.Automatic.Detail" xml:space="preserve">
+    <value>Time zone of this device: {0}</value>
+  </data>
+  <data name="DateTime.Zone.Manual" xml:space="preserve">
+    <value>Choose from the list</value>
+  </data>
+  <data name="DateTime.Zone.Manual.Detail" xml:space="preserve">
+    <value>Pick a city or a region</value>
+  </data>
+  <data name="DateTime.Zone.Search" xml:space="preserve">
+    <value>Search for a time zone</value>
+  </data>
+  <data name="DateTime.Zone.Search.Placeholder" xml:space="preserve">
+    <value>Toronto, Europe/Paris…</value>
+  </data>
+  <data name="DateTime.Zone.List" xml:space="preserve">
+    <value>Time zones</value>
+  </data>
+  <data name="DateTime.Zone.NoMatch" xml:space="preserve">
+    <value>No time zone matches "{0}".</value>
+  </data>
+  <data name="DateTime.Saved.Automatic" xml:space="preserve">
+    <value>Saved: automatic time zone ({0}).</value>
+  </data>
+  <data name="DateTime.Saved.Zone" xml:space="preserve">
+    <value>Saved: time zone {0}.</value>
+  </data>
+  <data name="DateTime.Error.CannotRead" xml:space="preserve">
+    <value>Cannot read {0}: {1}</value>
+  </data>
+  <data name="DateTime.Error.CannotSave" xml:space="preserve">
+    <value>Cannot save {0}: {1}</value>
+  </data>
+  <data name="DateTime.Error.Unknown" xml:space="preserve">
+    <value>Unknown time zone: {0}</value>
+  </data>
+  <data name="Users.Guest.Title" xml:space="preserve">
+    <value>You are using the guest account</value>
+  </data>
+  <data name="Users.Guest.Description" xml:space="preserve">
+    <value>The guest account has no password. Create your own account to protect your files: you can keep the guest's files, settings and apps, or start over with an empty account.</value>
+  </data>
+  <data name="Users.Guest.SignOutNotice" xml:space="preserve">
+    <value>The guest session closes first: save your work in open apps.</value>
+  </data>
+  <data name="Users.Guest.Create" xml:space="preserve">
+    <value>Create my account</value>
+  </data>
+  <data name="Users.Guest.Unavailable" xml:space="preserve">
+    <value>The account form could not be opened. Sign out, then choose Create my account on the sign-in screen.</value>
+  </data>
 </root>

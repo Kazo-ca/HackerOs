@@ -36,7 +36,8 @@ public sealed class MinimalAppExecutionContext(
     HackerOs.AppSdk.Settings.IAppSystemSettingsGateway? systemSettings = null,
     HackerOs.AppSdk.Administration.IAppScreensGateway? screens = null,
     HackerOs.AppSdk.IO.IAppDriveGateway? drives = null,
-    HackerOs.AppSdk.WhatsNew.IAppWhatsNewGateway? whatsNew = null) : IAppExecutionContext
+    HackerOs.AppSdk.WhatsNew.IAppWhatsNewGateway? whatsNew = null,
+    HackerOs.AppSdk.Administration.IAppUserAccountsGateway? userAccounts = null) : IAppExecutionContext
 {
     public AppManifest Manifest { get; } = manifest;
     public Guid InstanceId { get; } = Guid.NewGuid();
@@ -78,6 +79,8 @@ public sealed class MinimalAppExecutionContext(
     // Without a change list, the interface's own default applies (an empty list).
     HackerOs.AppSdk.WhatsNew.IAppWhatsNewGateway IAppExecutionContext.WhatsNew =>
         whatsNew ?? UnsupportedAdministrationGateways.WhatsNew;
+    HackerOs.AppSdk.Administration.IAppUserAccountsGateway IAppExecutionContext.UserAccounts =>
+        userAccounts ?? UnsupportedAdministrationGateways.UserAccounts;
 
     public HackerOs.AppSdk.IO.IAppDriveGateway Drives => drives ?? throw Unsupported(nameof(Drives));
 

@@ -106,7 +106,9 @@ public sealed class SettingsStoreToFilesMigration : IUserProfileInitializer
                      PolicySettingsDocuments.Document,
                      Clipboard.ClipboardSettingsDocuments.Document,
                      // ADR 0127 §5: the "not responding" dialog switch.
-                     Shell.WindowManagerSettingsDocuments.Document
+                     Shell.WindowManagerSettingsDocuments.Document,
+                     // ADR 0193 §2: the machine's time zone, "auto" (the device's zone).
+                     Globalization.TimeZoneSettingsDocuments.Document
                  })
         {
             await WriteIfAbsentAsync(system, document.SystemPath, DefaultConfig(document), cancellationToken).ConfigureAwait(false);

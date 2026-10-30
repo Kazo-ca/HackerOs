@@ -231,6 +231,13 @@
                 </div>
                 break;
 
+                @* ADR 0193 §7: the user's time zone (~/.config/hackeros/datetime.config). *@
+            case "datetime":
+                <div class="settings-page">
+                    <DateTimePanel />
+                </div>
+                break;
+
             case "file-associations":
                 <div class="settings-page">
                     <FileAssociationsPanel />
@@ -318,17 +325,23 @@
                                 <div class="info-line"><span>@L["Server.Status"]</span> <strong>@L["Server.NotConnected"]</strong></div>
                             </div>
                             <form class="server-connection-form" @onsubmit="() => ConnectAsync(createNewAccount: false)" @onsubmit:preventDefault>
-                                <label for="server-url">@L["Server.Url"]</label>
-                                <input id="server-url" type="url" placeholder="https://example.com" autocomplete="off"
-                                       disabled="@_isConnecting" @bind="_serverUrl" @bind:event="oninput" />
+                                <div class="field">
+                                    <label for="server-url">@L["Server.Url"]</label>
+                                    <input id="server-url" class="text-input" type="url" placeholder="https://example.com" autocomplete="off"
+                                           disabled="@_isConnecting" @bind="_serverUrl" @bind:event="oninput" />
+                                </div>
 
-                                <label for="server-username">@L["Server.Username"]</label>
-                                <input id="server-username" type="text" autocomplete="username" maxlength="128"
-                                       disabled="@_isConnecting" @bind="_username" @bind:event="oninput" />
+                                <div class="field">
+                                    <label for="server-username">@L["Server.Username"]</label>
+                                    <input id="server-username" class="text-input" type="text" autocomplete="username" maxlength="128"
+                                           disabled="@_isConnecting" @bind="_username" @bind:event="oninput" />
+                                </div>
 
-                                <label for="server-password">@L["Server.Password"]</label>
-                                <input id="server-password" type="password" autocomplete="current-password"
-                                       disabled="@_isConnecting" @bind="_password" @bind:event="oninput" />
+                                <div class="field">
+                                    <label for="server-password">@L["Server.Password"]</label>
+                                    <input id="server-password" class="text-input" type="password" autocomplete="current-password"
+                                           disabled="@_isConnecting" @bind="_password" @bind:event="oninput" />
+                                </div>
 
                                 @if (!string.IsNullOrEmpty(_connectionErrorMessage))
                                 {
@@ -362,7 +375,7 @@
                                 <span>@L["Sync.Last"]</span>
                                 <strong>
                                     @(_syncStatus.LastSyncAt is { } lastSync
-                                        ? L["Sync.LastDetail", lastSync.ToLocalTime().ToString("g", Formats), _syncStatus.LastSent, _syncStatus.LastReceived].Value
+                                        ? L["Sync.LastDetail", TimeZoneInfo.ConvertTime(lastSync, AppContext.TimeZone).ToString("g", Formats), _syncStatus.LastSent, _syncStatus.LastReceived].Value
                                         : L["Sync.Never"].Value)
                                 </strong>
                             </div>
@@ -406,7 +419,7 @@
                                         <code>~/@conflict.Path</code>
                                         @if (conflict.DetectedAt is { } detectedAt)
                                         {
-                                            <span class="sync-conflict-date">@L["Sync.Conflicts.Since", detectedAt.ToLocalTime().ToString("g", Formats)]</span>
+                                            <span class="sync-conflict-date">@L["Sync.Conflicts.Since", TimeZoneInfo.ConvertTime(detectedAt, AppContext.TimeZone).ToString("g", Formats)]</span>
                                         }
                                     </li>
                                 }

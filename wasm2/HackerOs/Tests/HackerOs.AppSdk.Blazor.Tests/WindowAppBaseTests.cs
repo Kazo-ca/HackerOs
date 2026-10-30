@@ -122,6 +122,30 @@ public sealed class WindowAppBaseTests
     }
 
     [Fact]
+    public async Task Message_box_helper_passes_the_icon_to_the_dialog_service()
+    {
+        FakeDialogService dialogs = new();
+        TestWindowApp app = CreateWindowApp(dialogs: dialogs);
+
+        await app.InvokeMessageBoxAsync("File Explorer", "No application is registered to open this file.", MessageBoxType.Ok, MessageBoxIcon.Error);
+
+        Assert.NotNull(dialogs.LastMessageBoxRequest);
+        Assert.Equal(MessageBoxIcon.Error, dialogs.LastMessageBoxRequest.Icon);
+        Assert.Equal(MessageBoxType.Ok, dialogs.LastMessageBoxRequest.DialogType);
+    }
+
+    [Fact]
+    public async Task Message_box_without_icon_shows_none()
+    {
+        FakeDialogService dialogs = new();
+        TestWindowApp app = CreateWindowApp(dialogs: dialogs);
+
+        await app.InvokeMessageBoxAsync("Title", "Body", MessageBoxType.Ok);
+
+        Assert.Equal(MessageBoxIcon.None, dialogs.LastMessageBoxRequest!.Icon);
+    }
+
+    [Fact]
     public async Task Text_input_helper_delegates_to_dialog_service()
     {
         FakeDialogService dialogs = new();
@@ -295,6 +319,10 @@ public sealed class WindowAppBaseTests
         public ValueTask<MessageBoxDialogResult> InvokeMessageBoxAsync(
             string title, string content, MessageBoxType dialogType) =>
             base.MessageBox(title, content, dialogType);
+
+        public ValueTask<MessageBoxDialogResult> InvokeMessageBoxAsync(
+            string title, string content, MessageBoxType dialogType, MessageBoxIcon icon) =>
+            base.MessageBox(title, content, dialogType, icon);
 
         public ValueTask<TextInputDialogResult> InvokeTextInputAsync(
             string title, string content, string? defaultValue = null, string? placeholder = null) =>

@@ -90,6 +90,12 @@
   <data name="org.hackeros.commands.cut.Terminal.Usage" xml:space="preserve">
     <value>cut -f liste [-d délim] [-s] | -c liste | -b liste [--complement] [fichier...]</value>
   </data>
+  <data name="org.hackeros.commands.date.Description" xml:space="preserve">
+    <value>Affiche la date et l'heure actuelles dans le fuseau horaire du processus</value>
+  </data>
+  <data name="org.hackeros.commands.date.Terminal.Usage" xml:space="preserve">
+    <value>date [-u] [-I|-R] [+FORMAT]</value>
+  </data>
   <data name="org.hackeros.commands.df.Description" xml:space="preserve">
     <value>Indique l'espace disque utilisé par les systèmes de fichiers</value>
   </data>

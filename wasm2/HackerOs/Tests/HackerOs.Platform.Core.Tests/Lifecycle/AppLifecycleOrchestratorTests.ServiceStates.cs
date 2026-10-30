@@ -154,6 +154,22 @@ public sealed partial class AppLifecycleOrchestratorTests
     }
 
     [Fact]
+    public async Task Signing_out_stops_the_window_apps_of_the_session_too()
+    {
+        // Services are covered above; a window app is stopped as well, so no window outlives its session.
+        Fixture fixture = new(SingletonWindowManifest());
+        AuthenticatedPrincipal principal = await fixture.LoginAsync();
+        AppLaunchResult window = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.hackeros.notes", principal, []));
+
+        Assert.Equal(0, await fixture.Orchestrator.StopSessionServicesAsync(principal.SessionId));
+        int stopped = await fixture.Orchestrator.StopSessionAppsAsync(principal.SessionId);
+
+        Assert.Equal(1, stopped);
+        Assert.False(fixture.Manager.TryGetActive(window.Process!.Pid, out _));
+        Assert.Equal(ProcessExitReason.Logout, fixture.Manager.GetHistory().Last(r => r.Pid == window.Process.Pid).ExitReason);
+    }
+
+    [Fact]
     public async Task A_system_service_starts_at_boot_as_the_service_account_and_survives_the_logout()
     {
         AppManifest boot = WaiterManifest() with { ServiceStartup = AppServiceStartup.Boot, AutoStart = true };
