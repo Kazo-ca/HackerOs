@@ -1,0 +1,19 @@
+{
+  "id": "0c79efd2-0ade-498e-a2a1-c59c2c53f0ee",
+  "category": "developer",
+  "audience": [
+    "developer"
+  ],
+  "title": {
+    "en": "hackeros-solution template: a whole app repository",
+    "fr": "Modèle hackeros-solution : un dépôt d'app complet"
+  },
+  "description": {
+    "en": "dotnet new hackeros-solution creates an app repository: the app, a host that runs it in HackerOS, its tests, the HackerOS submodule that gives the version, CI and a workflow that submits the app to the Hack Store catalog on a v* tag. Debug builds HackerOS from the submodule's sources (step into the SDK and the OS); Release uses the nuget.org packages. Every template now has its Visual Studio and Rider labels and icon.",
+    "fr": "dotnet new hackeros-solution crée un dépôt d'app : l'app, un hôte qui la lance dans HackerOS, ses tests, le sous-module HackerOS qui donne la version, la CI et un workflow qui soumet l'app au catalogue du Hack Store sur un tag v*. En Debug, HackerOS est compilé depuis les sources du sous-module (on entre dans le SDK et l'OS) ; en Release, ce sont les paquets de nuget.org. Chaque modèle a maintenant ses libellés et son icône pour Visual Studio et Rider."
+  },
+  "links": [
+    "doc/en/wasm/dev/adr/0207-solution-template-implementation.md",
+    "doc/en/wasm/framework/app-repository.md"
+  ]
+}

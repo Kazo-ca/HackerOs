@@ -17,6 +17,17 @@ Details of the packages and of the package mode of `HackerOs.App.Build`:
 [`sdk-developer-guide.md`](sdk-developer-guide.md) and
 [`sdk-reference.md`](sdk-reference.md).
 
+## The shortest way: the `hackeros-solution` template
+
+For an app in its own repository, start from the solution template
+([ADR 0176](../dev/adr/0176-app-repository-template.md),
+[ADR 0207](../dev/adr/0207-solution-template-implementation.md)): app, host,
+tests, a HackerOS submodule that sets the version, the OS sources in `Debug`,
+packages in `Release`, CI and publishing to the Hack Store with a tag.
+Everything is in [`app-repository.md`](app-repository.md). The rest of this
+guide describes the assembly by hand, useful for a repository with several apps
+or its own host.
+
 ## 1. What version 1.0 promises
 
 | Your project depends on… | Guarantee |
@@ -30,8 +41,14 @@ built as `0.9.0-preview.*` must be rebuilt against 1.0.
 
 ## 2. Getting the packages
 
-HackerOS packages are published only to a **local** feed (never on
-nuget.org). In a HackerOS clone, on the desired version:
+Since 2.1.0, every release publishes all HackerOS packages (SDK, platform,
+base apps, `HackerOs.App.Build`, `HackerOs.Ecosystem.Host`,
+`HackerOs.Templates`) to **nuget.org**, with their symbols and Source Link
+([ADR 0173](../dev/adr/0173-automatic-releases-from-the-version-file.md)): a
+`PackageReference` at the desired version is enough, with no `nuget.config`.
+
+The **local** feed is for trying a version not published yet. In a HackerOS
+clone, on the desired branch:
 
 ```bash
 git -C ../HackerSimulator checkout <tag ou branche>
@@ -47,7 +64,7 @@ repackaged package is never served stale.
 
 ```text
 mon-depot/
-├─ nuget.config                 # copié de build/nuget.config.sample
+├─ nuget.config                 # local feed only (build/nuget.config.sample)
 ├─ Directory.Build.props        # HackerOsVersion épinglée une fois
 ├─ MonDepot.sln
 ├─ src/
@@ -58,8 +75,9 @@ mon-depot/
    └─ Contoso.Hello.Tests/
 ```
 
-`nuget.config`: the `hackeros-local` source points to the feed, and the
-`packageSourceMapping` takes `HackerOs.*` only from there:
+`nuget.config` (only with the local feed): the `hackeros-local` source points
+to the feed, and the `packageSourceMapping` takes `HackerOs.*` only from
+there:
 
 ```xml
 <configuration>
@@ -90,7 +108,8 @@ only this one:
 ## 4. Creating the projects
 
 ```bash
-dotnet new install ../HackerSimulator/wasm2/HackerOs/artifacts/local-nupkg/HackerOs.Templates.2.1.0.nupkg
+dotnet new install HackerOs.Templates::2.1.0
+# or, from the local feed: dotnet new install <feed>/HackerOs.Templates.<version>.nupkg
 dotnet new hackeros-window  -n Contoso.Notes -o src/Contoso.Notes --appId com.contoso.notes --publisherId pub.contoso
 dotnet new hackeros-command -n Contoso.Hello -o src/Contoso.Hello --appId com.contoso.hello --publisherId pub.contoso
 dotnet new hackeros-service -n Contoso.Sync  -o src/Contoso.Sync  --appId com.contoso.sync  --publisherId pub.contoso
@@ -265,8 +284,10 @@ The exact list and the breaks outside the SDK for a host (three changes of
 
 ## Decisions
 
-- **A local feed rather than nuget.org** (ADR 0098 §2): GitHub Packages
-  will come when the repository's CI works again.
+- **nuget.org since 2.1.0** (ADR 0173); the local feed of ADR 0098 §2 remains
+  for a version not published yet.
+- **The `hackeros-solution` template** (ADR 0176, ADR 0207) is the
+  recommended start for an app in its own repository.
 - **Version pinned once** in the third-party repository: HackerOS packages
   go together, mixing two versions is not supported.
 
@@ -279,3 +300,4 @@ The exact list and the breaks outside the SDK for a host (three changes of
 - [x] SDK 1.1: additions and link to the breaks outside the SDK (`v3.1/4-sdk-1-1`).
 - [x] SDK 1.2: additions and link to the break outside the SDK (`exec/10-final`).
 - [x] SDK 2.0: current version, break, migration and additions (`desk/6-sdk-2`).
+- [x] Packages on nuget.org and pointer to the `hackeros-solution` template (`todo/1-hackstore-solution-template`).
