@@ -75,11 +75,13 @@ public sealed class InstalledAppsBoot
 
 /// <summary>
 /// Loads an installed app's assemblies from <c>/usr/lib/hackeros/apps</c> (ADR 0182 §5) and every
-/// other declared assembly through the host's lazy loader.
+/// other declared assembly through the host's lazy loader. Before an installed app's code loads, its
+/// <c>wwwroot/</c> files are published at <c>_content/&lt;assembly&gt;/</c> (ADR 0206).
 /// </summary>
 /// <param name="inner">The host's own transport (Blazor's lazy loader).</param>
 /// <param name="installed">The installed apps of this session.</param>
-public sealed class InstalledAppAssemblyTransport(IBuildKnownAssemblyTransport inner, InstalledAppsBoot installed) : IBuildKnownAssemblyTransport
+/// <param name="assets">Serves their <c>wwwroot/</c> files; <see langword="null"/> serves none.</param>
+public sealed class InstalledAppAssemblyTransport(IBuildKnownAssemblyTransport inner, InstalledAppsBoot installed, InstalledAppAssetPublisher? assets = null) : IBuildKnownAssemblyTransport
 {
     /// <inheritdoc />
     [RequiresUnreferencedCode("Installed assemblies arrive after publishing; AppPackageApiCheck verified their references at install time.")]
@@ -94,6 +96,11 @@ public sealed class InstalledAppAssemblyTransport(IBuildKnownAssemblyTransport i
             {
                 builtIn.Add(name);
                 continue;
+            }
+
+            if (assets is not null)
+            {
+                await assets.PublishAsync(app, cancellationToken).ConfigureAwait(false);
             }
 
             Assembly? existing = AssemblyLoadContext.Default.Assemblies.FirstOrDefault(assembly =>

@@ -17,6 +17,17 @@ Détails des paquets et du mode paquet de `HackerOs.App.Build` :
 [`sdk-developer-guide.md`](sdk-developer-guide.md) et
 [`sdk-reference.md`](sdk-reference.md).
 
+## Le plus court : le modèle `hackeros-solution`
+
+Pour une app dans son propre dépôt, partez du modèle de solution
+([ADR 0176](../dev/adr/0176-app-repository-template.md),
+[ADR 0207](../dev/adr/0207-solution-template-implementation.md)) : app, hôte,
+tests, sous-module HackerOS qui fixe la version, sources de l'OS en `Debug`,
+paquets en `Release`, CI et publication dans le Hack Store par un tag. Tout est
+dans [`app-repository.md`](app-repository.md). La suite de ce guide décrit
+l'assemblage à la main, utile pour un dépôt qui a plusieurs apps ou son propre
+hôte.
+
 ## 1. Ce que la version 1.0 promet
 
 | Votre projet dépend de… | Garantie |
@@ -30,8 +41,14 @@ construite en `0.9.0-preview.*` doit être reconstruite contre la 1.0.
 
 ## 2. Récupérer les paquets
 
-Les paquets HackerOS ne sont publiés que dans un flux **local** (jamais sur
-nuget.org). Dans un clone de HackerOS, sur la version voulue :
+Depuis la 2.1.0, chaque release publie tous les paquets HackerOS (SDK,
+plateforme, apps de base, `HackerOs.App.Build`, `HackerOs.Ecosystem.Host`,
+`HackerOs.Templates`) sur **nuget.org**, avec leurs symboles et Source Link
+([ADR 0173](../dev/adr/0173-automatic-releases-from-the-version-file.md)) :
+une `PackageReference` à la version voulue suffit, sans `nuget.config`.
+
+Le flux **local** sert à essayer une version pas encore publiée. Dans un clone
+de HackerOS, sur la branche voulue :
 
 ```bash
 git -C ../HackerSimulator checkout <tag ou branche>
@@ -47,7 +64,7 @@ ré-empaqueté n'est jamais servi périmé.
 
 ```text
 mon-depot/
-├─ nuget.config                 # copié de build/nuget.config.sample
+├─ nuget.config                 # flux local seulement (build/nuget.config.sample)
 ├─ Directory.Build.props        # HackerOsVersion épinglée une fois
 ├─ MonDepot.sln
 ├─ src/
@@ -58,8 +75,9 @@ mon-depot/
    └─ Contoso.Hello.Tests/
 ```
 
-`nuget.config` : la source `hackeros-local` pointe vers le flux, et le
-`packageSourceMapping` ne prend les `HackerOs.*` que de là :
+`nuget.config` (seulement avec le flux local) : la source `hackeros-local`
+pointe vers le flux, et le `packageSourceMapping` ne prend les `HackerOs.*` que
+de là :
 
 ```xml
 <configuration>
@@ -90,7 +108,8 @@ que celle-ci :
 ## 4. Créer les projets
 
 ```bash
-dotnet new install ../HackerSimulator/wasm2/HackerOs/artifacts/local-nupkg/HackerOs.Templates.2.1.0.nupkg
+dotnet new install HackerOs.Templates::2.1.0
+# ou, depuis le flux local : dotnet new install <flux>/HackerOs.Templates.<version>.nupkg
 dotnet new hackeros-window  -n Contoso.Notes -o src/Contoso.Notes --appId com.contoso.notes --publisherId pub.contoso
 dotnet new hackeros-command -n Contoso.Hello -o src/Contoso.Hello --appId com.contoso.hello --publisherId pub.contoso
 dotnet new hackeros-service -n Contoso.Sync  -o src/Contoso.Sync  --appId com.contoso.sync  --publisherId pub.contoso
@@ -265,8 +284,10 @@ La liste exacte et les ruptures hors SDK d'un hôte (trois changements de
 
 ## Décisions
 
-- **Un flux local plutôt que nuget.org** (ADR 0098 §2) : GitHub Packages
-  viendra quand la CI du dépôt remarchera.
+- **nuget.org depuis la 2.1.0** (ADR 0173) ; le flux local de l'ADR 0098 §2
+  reste pour une version pas encore publiée.
+- **Le modèle `hackeros-solution`** (ADR 0176, ADR 0207) est le départ
+  conseillé pour une app dans son dépôt.
 - **Version épinglée une fois** dans le dépôt tiers : les paquets HackerOS
   vont ensemble, mélanger deux versions n'est pas pris en charge.
 
@@ -279,3 +300,4 @@ La liste exacte et les ruptures hors SDK d'un hôte (trois changements de
 - [x] SDK 1.1 : ajouts et lien vers les ruptures hors SDK (`v3.1/4-sdk-1-1`).
 - [x] SDK 1.2 : ajouts et lien vers la rupture hors SDK (`exec/10-final`).
 - [x] SDK 2.0 : version courante, rupture, migration et ajouts (`desk/6-sdk-2`).
+- [x] Paquets sur nuget.org et renvoi vers le modèle `hackeros-solution` (`todo/1-hackstore-solution-template`).

@@ -167,6 +167,7 @@ The package is produced with both resource measurements compiled in
 | `hackeros-service` | service started at sign-in (`ServiceAppBase`, simulated clock) | same |
 | `hackeros-site` | ASP.Hack site (`WebAppDefinition`, embedded `wwwroot/`) | `HackerOs.AppSdk.Web`, `HackerOs.App.Build` |
 | `hackeros-host` | Blazor WebAssembly host: `Program.cs`, `index.html`, `appsettings.json`, the base apps as packages (system apps as in the Ecosystem) | `HackerOs.Ecosystem.Host`, `HackerOs.App.Build`, `HackerOs.Apps.*`, `HackerOs.Commands` |
+| `hackeros-solution` | a whole app repository: app, host, tests, HackerOS submodule (sources in `Debug`, packages in `Release`), CI, publishing to the Hack Store ([`app-repository.md`](app-repository.md), ADR 0207) | those of the app and the host, at the submodule's version |
 
 App templates start with `IsTrimmable=true`; `hackeros-host` publishes as a
 trimmed Release (`PublishTrimmed=true`, `TrimMode=partial`) and
@@ -176,7 +177,11 @@ does not set it (ADR 0106 §4, ADR 0113, [`trimmed-publish.md`](../dev/trimmed-p
 
 App template parameters: `--appId` (default `com.example.my-app`) and
 `--publisherId` (default `pub.example`); the project name (`-n`) becomes
-the namespace and the display name.
+the namespace and the display name. `hackeros-solution` also takes
+`--repository` (`owner/name`). Every template has a
+`.template.config/ide.host.json` (icon, parameter labels) for Visual Studio and
+Rider (ADR 0176 §7), and the app templates declare `HackerOsAppProject=true`
+(ADR 0207 §4).
 
 Each generated project declares `<HackerOsVersion>` once and uses it for
 all its `HackerOs.*` references. In the template sources, the value is

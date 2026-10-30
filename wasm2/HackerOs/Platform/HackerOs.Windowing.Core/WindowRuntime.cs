@@ -86,6 +86,7 @@ public sealed class WindowRuntime
             MoveWindowToDisplayCommand move => MoveToDisplay(move.WindowId, move.DisplayId),
             SetWindowTitleCommand title => ChangeTitle(title.WindowId, title.Title),
             SetWindowRespondingCommand responding => ChangeResponding(responding.WindowId, responding.IsResponding),
+            SetWindowIconCommand icon => ChangeIcon(icon.WindowId, icon.IconAssetPath),
             null => throw new ArgumentNullException(nameof(command)),
             _ => throw new ArgumentOutOfRangeException(nameof(command), command, "Unknown window command."),
         };
@@ -537,6 +538,19 @@ public sealed class WindowRuntime
         return [new WindowTitleChangedEvent(id, current.Title, title)];
     }
 
+    private IReadOnlyList<WindowEvent> ChangeIcon(WindowId id, string? iconAssetPath)
+    {
+        WindowRuntimeState current = Get(id);
+        string? icon = string.IsNullOrWhiteSpace(iconAssetPath) ? null : iconAssetPath;
+        if (string.Equals(current.IconAssetPath, icon, StringComparison.Ordinal))
+        {
+            return [];
+        }
+
+        _windows[id] = Copy(current, iconAssetPath: icon, replaceIconAssetPath: true);
+        return [new WindowIconChangedEvent(id, current.IconAssetPath, icon)];
+    }
+
     private IReadOnlyList<WindowEvent> ChangeResponding(WindowId id, bool isResponding)
     {
         WindowRuntimeState current = Get(id);
@@ -612,13 +626,15 @@ public sealed class WindowRuntime
         bool? isFocused = null,
         string? title = null,
         DisplayId? displayId = null,
-        bool? isSnapped = null) =>
+        bool? isSnapped = null,
+        string? iconAssetPath = null,
+        bool replaceIconAssetPath = false) =>
         new(
             state.Id,
             state.AppId,
             state.OwnerInstanceId,
             title ?? state.Title,
-            state.IconAssetPath,
+            replaceIconAssetPath ? iconAssetPath : state.IconAssetPath,
             bounds ?? state.Bounds,
             replaceRestoreBounds ? restoreBounds : state.RestoreBounds,
             zOrder ?? state.ZOrder,

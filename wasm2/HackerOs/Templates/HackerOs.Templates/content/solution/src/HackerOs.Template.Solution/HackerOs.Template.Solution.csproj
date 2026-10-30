@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <!--
+      ADR 0106 §4: the host that installs this app trims it when it publishes; the trim analysis
+      reports here, at build, any reflection the trimmer could not follow.
+    -->
+    <IsTrimmable>true</IsTrimmable>
+    <!-- A HackerOS app: its manifest.json is generated after the build, in both profiles. -->
+    <HackerOsAppProject>true</HackerOsAppProject>
+  </PropertyGroup>
+
+  <!--
+    $(HackerOsVersion) comes from the submodule (Directory.Build.props). In Debug these references
+    become the submodule's projects (ADR 0176 §4).
+  -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.13" />
+    <PackageReference Include="HackerOs.AppSdk" Version="$(HackerOsVersion)" />
+    <PackageReference Include="HackerOs.AppSdk.Blazor" Version="$(HackerOsVersion)" />
+    <!-- Generates manifest.json after the build and checks the SDK boundary (HOSAPP0030). -->
+    <PackageReference Include="HackerOs.App.Build" Version="$(HackerOsVersion)" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>

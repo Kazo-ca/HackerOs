@@ -317,7 +317,7 @@ public sealed partial class ExplorerFileView
             {
                 HackAppInfo? app = _apps?.GetValueOrDefault(entry.AppId);
                 item.DisplayName = entry.Name;
-                item.IconOverride = ShellIconDescriptor.Vector(IconLibrary.Lucide, HackAppIcons.LucideName(entry.AppId, app?.Category));
+                item.IconOverride = AppShortcutIcon(entry.AppId, app?.Category);
                 item.IsDimmed = app is null;
             }
             else if (state.Link is { } link)

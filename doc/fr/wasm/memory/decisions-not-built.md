@@ -50,7 +50,8 @@ Décidé le 2026-10-28 :
 - Chaque projet open source enveloppé vit dans son propre dépôt
   (`HackerOs-App-Webamp`, `HackerOs-App-IRC` avec KiwiIRC,
   `HackerOs-App-BoxedWine`, et d'autres), créé à partir de
-  `HackerOs-AppTemplate` (ADR 0176) et listé dans `HackerOs-AppMarketPlace`
+  `HackerOs-AppTemplate` (ADR 0176, modèle `hackeros-solution` de l'ADR 0207 ;
+  le dépôt template est régénéré à la release qui contient ce modèle) et listé dans `HackerOs-AppMarketPlace`
   (catalogue du Hack Store, ADR 0188).
 - La licence de chaque dépôt suit celle du projet enveloppé (GPL-2.0 pour
   BoxedWine, par exemple), pas MIT par défaut.
@@ -63,7 +64,9 @@ Décidé le 2026-10-28 :
   en ont ; l'hôte publié est trimmé, donc une app chargée à l'exécution peut
   manquer d'API (`MissingMethodException`) ; le JavaScript d'une app tourne
   sur la même origine que l'OS ; une app qui enveloppe du JavaScript a besoin
-  du chantier `wwwroot` des apps installées (issue #247).
+  du chantier `wwwroot` des apps installées (issue #247, fait par l'ADR 0206
+  dans la série `todo/base` : fichiers servis à `_content/<assemblage>/` par le
+  service worker, Web Workers compris).
 
 ## Apps hébergées par le serveur (« bac à sable serveur »)
 

@@ -25,6 +25,7 @@ build and test commands are in
 | A test breaks after merging two parallel branches although each was green | Some tests count things (apps, manifests, commands: `BuildKnownLazyAppsTests`, `EcosystemBootCoordinatorTests`, `CommandParityTests`) and the documents quote those numbers | After each merge, rerun the complete suite and update the numbers in the tests **and** in the docs (`app-model.md`, `linux-commands.md`…). |
 | A test refuses an "incompatible" app after an SDK version change | A test manifest hard-coded the SDK version (`"1.0.0"`) | Test manifests use `HackerOsSdk.Version`; refusal tests pin explicit versions. |
 | The SDK compatibility package changes for no reason | It was rebuilt | The packages `Tests/fixtures/sdk-compat/packages/*.nupkg` (1.0.0, 1.1.0, 2.0.0) are committed and **never** rebuilt; they prove that apps compiled against a published version still load ([`../framework/sdk-packages.md`](../framework/sdk-packages.md)). |
+| `NETSDK1098` when publishing `HackerOs.Server` for a RID with `-p:PublishSingleFile=true` | A property passed with `-p:` on the command line also applies to the referenced WebAssembly project (Ecosystem), which cannot be published as a single file | Put `PublishSingleFile` (conditioned on the RID) in the server's `.csproj`, never as `-p:`; `build/publish-server.sh` only passes `-r` and `--self-contained` ([`installable-server.md`](installable-server.md)). |
 
 ## 2. Trimmed publication and WebAssembly
 
@@ -34,6 +35,7 @@ build and test commands are in
 | The `IL2110`/`IL2111` warnings appear only in the shipped app, never in tests | Test projects do not run the trimming analyzer | Verify with `build/publish-trimmed.sh` (local merge gate, fails on any `IL…` alert). Do not put `DynamicallyAccessedMembers` on component parameters captured by Razor closures: use `UnconditionalSuppressMessage` on the method, or pass the `Type` in a carrier object. |
 | Trimming removes types used through reflection | Incomplete ILLink roots | The HackerOS assemblies and the apps stay whole; only the framework assemblies are trimmed, with roots generated from the manifests (`HackerOs.TrimmerRoots.xml`, [ADR 0106](adr/0106-trimmed-release-publish.md)). |
 | Rendering a Blazor window in a Web Worker costs too much memory | Each window worker loads its own .NET runtime: 66.5 MiB measured for 40 MiB allowed | Trial stopped, prototype kept off by default ([ADR 0133](adr/0133-window-rendering-in-worker-verdict.md), [`remote-window-rendering.md`](remote-window-rendering.md)). Heavy computations go through `HackBackground.RunAsync`. |
+| The published server answers `404` at `/` and `/index.html` while `dotnet run` works | `OverrideHtmlAssetPlaceholders` leaves `index.html` out of the published static assets manifest: no endpoint serves the page | The `UseOsPageFile` middleware (`OsPageRewrite.cs`) serves `wwwroot/index.html` without cache when no endpoint matches ([`server-hosting.md`](server-hosting.md)). |
 
 ## 3. Browser, cache and stale page
 
@@ -77,7 +79,7 @@ measurement.
 
 **Known unstable** tests, not reproduced in 25 runs under load on
 2026-10-25: one `AppInstallationService` test (about once in twelve before),
-the web worker of `LocalNetworkTests`. Browser side (manual workflow): the
+the web worker of `LocalNetworkTests`. Browser side (nightly workflow): the
 detached window harness of the UI, `FileExplorerDownload` and
 `BrowserHomePage` of `UI.E2E` under the load of the complete suite, and two
 `Pwa.E2E` tests that wait for the file explorer. Rerun the suite alone before
@@ -117,12 +119,13 @@ same conditions.
 | "Unknown IndexedDB transaction boundary" banner at startup | A transaction boundary used by a repository was not declared in the schema | Declared; a test now verifies that each `TransactionBoundary` is declared. If the banner comes back, it is a new bug. |
 | Writing a setting took 845 ms and 604 transactions | Path resolution walked the storage segment by segment | A single `resolvePath` request (604 → 51 transactions, [`filesystem-path-lookup.md`](filesystem-path-lookup.md)). |
 | A `HackWebDb` record with `Id = 0` is stored under key 0 instead of being numbered | Normal IndexedDB behavior with `autoIncrement` | Put `[JsonIgnore(Condition = WhenWritingDefault)]` on `Id` ([`../framework/asp-hack-site-data.md`](../framework/asp-hack-site-data.md)). |
+| The server's `GET /api/devices` fails on SQLite (`NotSupportedException` on `ORDER BY`) | SQLite cannot sort a `DateTimeOffset` column in the database | Sort in memory after the query (`AccountService.GetDevicesAsync`). |
 
 ## 7. Cloud containers, GitHub and organization
 
 | Symptom | Cause | Solution |
 | --- | --- | --- |
-| The GitHub Actions all failed (August to October 2026) | No runner available | During this period, a green local build and tests were authoritative. Since 2026-10-24, the workflows run again (`Verify HackerOS WASM`, `Deploy to GitHub Pages`); the Playwright tests are in a separate manual workflow (`verify-browser-tests.yml`). A green local build and tests are still required before merging. PRs then failed on unstable tests (`Kill_minus_9`, `ResourceAccounting`): the workflows rerun failing tests once ([`ci-workflows.md`](ci-workflows.md)). |
+| The GitHub Actions all failed (August to October 2026) | No runner available | During this period, a green local build and tests were authoritative. Since 2026-10-24, the workflows run again (`Verify HackerOS WASM`, `Deploy to GitHub Pages`); the Playwright tests are in a separate workflow (`verify-browser-tests.yml`), run every night on `main` since issue #292. A green local build and tests are still required before merging. PRs then failed on unstable tests (`Kill_minus_9`, `ResourceAccounting`): the workflows rerun failing tests once ([`ci-workflows.md`](ci-workflows.md)). |
 | GitHub Actions fails at "Setup .NET 10": `409 Unable to download https://dotnetorigin.blob.core.windows.net/...` | With a channel (`10.0.x`), the install script follows the `aka.ms` link, which pointed to a failing storage | Install an exact version: the `.github/actions/setup-dotnet-sdk` action reads `latest-sdk` and downloads from `builds.dotnet.microsoft.com` ([`ci-workflows.md`](ci-workflows.md#net-sdk-installation)). |
 | `dotnet` missing in a cloud container | Nothing is preinstalled | `curl -sSL https://dot.net/v1/dotnet-install.sh \| bash -s -- --channel 10.0`. |
 | A cloud thread cannot delete a GitHub branch (403) | Insufficient rights of cloud sessions | Benoit deletes merged branches himself with a prepared command. |
