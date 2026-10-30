@@ -9,6 +9,8 @@
       reports here, at build, any reflection the trimmer could not follow.
     -->
     <IsTrimmable>true</IsTrimmable>
+    <!-- A HackerOS app; also read by the Debug profile of a hackeros-solution repository (ADR 0207). -->
+    <HackerOsAppProject>true</HackerOsAppProject>
     <!-- One version for every HackerOS package (ADR 0098 §1). -->
     <HackerOsVersion>0.0.0-dev</HackerOsVersion>
   </PropertyGroup>
