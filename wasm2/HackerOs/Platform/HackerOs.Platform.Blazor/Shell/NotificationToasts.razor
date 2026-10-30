@@ -16,8 +16,8 @@
         <article @key="notification.Id"
                  class="notification-toast @SeverityClass(notification.Severity)"
                  aria-label="@notification.Title"
-                 @onmouseenter="() => _feed.Hold(notification.Id)"
-                 @onmouseleave="() => _feed.Release(notification.Id)"
+                 @onpointerenter="args => OnPointerEnter(args, notification.Id)"
+                 @onpointerleave="args => OnPointerLeave(args, notification.Id)"
                  @onfocusin="() => _feed.Hold(notification.Id)"
                  @onfocusout="() => _feed.Release(notification.Id)">
             <header class="notification-toast-header">

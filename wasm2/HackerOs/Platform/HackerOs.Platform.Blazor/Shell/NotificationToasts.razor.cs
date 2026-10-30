@@ -3,6 +3,7 @@ using HackerOs.Platform.Core;
 using HackerOs.Platform.Core.Globalization;
 using HackerOs.Simulation.Abstractions.Notifications;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HackerOs.Platform.Blazor.Shell;
@@ -59,6 +60,23 @@ public partial class NotificationToasts : ComponentBase
     }
 
     private void OnFeedChanged() => InvokeAsync(StateHasChanged);
+
+    // A finger has no hover: a tap would leave the bubble held until the next tap elsewhere.
+    private void OnPointerEnter(PointerEventArgs args, NotificationId id)
+    {
+        if (args.PointerType != "touch")
+        {
+            _feed.Hold(id);
+        }
+    }
+
+    private void OnPointerLeave(PointerEventArgs args, NotificationId id)
+    {
+        if (args.PointerType != "touch")
+        {
+            _feed.Release(id);
+        }
+    }
 
     private static string SeverityClass(NotificationSeverity severity) => severity switch
     {
