@@ -45,7 +45,7 @@ public sealed partial class ExplorerFileView
     /// <summary>Opens a file with its default app (ADR 0039, 0121), or asks which app when several can.</summary>
     private async Task OpenFileAsync(FileViewItem item)
     {
-        if (await RaiseOpeningAsync(item) || await TryLaunchShortcutAsync(item))
+        if (await RaiseOpeningAsync(item) || await TryOpenArchiveItemAsync(item) || await TryLaunchShortcutAsync(item))
         {
             return;
         }
@@ -222,6 +222,11 @@ public sealed partial class ExplorerFileView
             return;
         }
 
+        if (await RefuseArchiveEntriesAsync(items))
+        {
+            return;
+        }
+
         permanent = permanent || await AnyOnNetworkDriveAsync(items);
 
         if (permanent)
@@ -315,6 +320,12 @@ public sealed partial class ExplorerFileView
             return;
         }
 
+        // A cut would remove the items from the archive at the paste: an archive is only copied from (ADR 0185 §9).
+        if (operation == HackClipboardFileOperation.Cut && await RefuseArchiveEntriesAsync(items))
+        {
+            return;
+        }
+
         try
         {
             await HackClipboard.SetFileDropListAsync(items.Select(item => item.FullPath.Value), operation, HostContext.CancellationToken);
@@ -331,7 +342,7 @@ public sealed partial class ExplorerFileView
     /// </summary>
     private async Task PasteIntoAsync(VirtualPath destination)
     {
-        if (!Has(HackFileViewFeatures.Clipboard))
+        if (!Has(HackFileViewFeatures.Clipboard) || await RefuseInArchiveAsync(destination))
         {
             return;
         }
@@ -353,14 +364,16 @@ public sealed partial class ExplorerFileView
         }
 
         bool cut = list.Operation == HackClipboardFileOperation.Cut;
+        // Files copied from an archive are extracted (ADR 0185 §9); the others are copied or moved.
+        (IReadOnlyList<string> others, HackFileTransferResult extracted) = await TrackOperation(ExtractFromArchivesAsync(list.Paths, destination));
         // Copies stay on the window's thread (ADR 0140): each item is an awaited OS call with a
         // checkpoint between two, and a name conflict asks the user between two items.
-        HackFileTransferResult result = await TrackOperation(HackFileOperations.TransferAsync(
-            list.Paths,
+        HackFileTransferResult result = others.Count == 0 ? extracted : Merge(extracted, await TrackOperation(HackFileOperations.TransferAsync(
+            others,
             destination.Value,
             cut ? HackFileTransferMode.Move : HackFileTransferMode.Copy,
             AskConflictAsync,
-            HostContext.CancellationToken));
+            HostContext.CancellationToken)));
 
         if (cut && result.Succeeded)
         {
@@ -415,16 +428,29 @@ public sealed partial class ExplorerFileView
             return;
         }
 
+        // Nothing goes into an archive (ADR 0185 §9).
+        if (await RefuseInArchiveAsync(destination))
+        {
+            return;
+        }
+
         await CreateShortcutsAsync(e.AppIds, destination);
 
         List<HackFileTransferItemResult> completed = [];
         List<string> skipped = [];
         List<HackFileTransferFailure> failures = [];
 
-        if (e.Entries.Count > 0)
+        // Items dragged out of an archive are extracted, never moved out of it (ADR 0185 §9).
+        (IReadOnlyList<string> others, HackFileTransferResult extracted) = await TrackOperation(
+            ExtractFromArchivesAsync([.. e.Entries.Select(entry => entry.Path.Value)], destination));
+        completed.AddRange(extracted.Completed);
+        skipped.AddRange(extracted.Skipped);
+        failures.AddRange(extracted.Failures);
+
+        if (others.Count > 0)
         {
             HackFileTransferResult moved = await TrackOperation(HackFileOperations.TransferAsync(
-                [.. e.Entries.Select(entry => entry.Path.Value)],
+                others,
                 destination.Value,
                 e.Copy ? HackFileTransferMode.Copy : HackFileTransferMode.Move,
                 AskConflictAsync,

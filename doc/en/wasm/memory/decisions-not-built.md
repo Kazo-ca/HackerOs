@@ -92,7 +92,7 @@ series first. What HackerOS lacks and could use: URL deep links (`?app=`,
 and idle lock, file search in the launcher, hover preview (see #242), file
 thumbnails (`~/.cache/thumbnails`), viewers (Markdown, PDF, images, video),
 Eruda developer tools, rich file tooltips, animated or slideshow wallpapers,
-`.zip` browsed as a folder (see #241), `git clone` (needs a CORS proxy), Python
+`git clone` (needs a CORS proxy), Python
 (better in an app repository). Questions to ask again when starting: where the
 viewers live, scope of `?app=`, Eruda or not.
 

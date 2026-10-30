@@ -99,8 +99,7 @@ boîte « Exécuter » (Super+R), économiseur d'écran et verrouillage après
 inactivité, recherche de fichiers dans le lanceur, aperçu au survol (voir #242),
 miniatures de fichiers (`~/.cache/thumbnails`), visionneuses (Markdown, PDF,
 images, vidéo), outils de développement Eruda, infobulles de fichiers riches,
-fonds d'écran animés ou en diaporama, `.zip` parcouru comme dossier (voir
-#241), `git clone` (exige un proxy CORS), Python (plutôt dans un dépôt d'app).
+fonds d'écran animés ou en diaporama, `git clone` (exige un proxy CORS), Python (plutôt dans un dépôt d'app).
 Questions à reposer au démarrage : où vivent les visionneuses, portée de
 `?app=`, Eruda ou non.
 
