@@ -63,6 +63,8 @@ at the end of each series or when a convention changes.
   [`app-repository.md`](../framework/app-repository.md), issue #246). The
   `HackerOs-AppTemplate` repository will only be regenerated with a submodule
   on the release that contains this template (draft PR in that repository).
+  ADR 0206 is taken by issue #247 (installed apps' `wwwroot/` served by the
+  service worker, [ADR 0206](../dev/adr/0206-serve-installed-app-assets.md)).
 - **Icon packs** (ADR 0203, `TODO` issue #255, series `todo/base`): PNG packs
   for apps and files under `/usr/share/icons` and `~/.local/share/icons`, chosen
   in Settings ▸ Appearance (`icons` settings document, key `iconPackId`); the
