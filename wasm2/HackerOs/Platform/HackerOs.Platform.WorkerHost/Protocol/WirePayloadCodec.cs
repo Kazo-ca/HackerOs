@@ -58,6 +58,13 @@ internal static class WirePayloadCodec
         [typeof(SessionLoggedOutEvent)] = Codec.Of<SessionLoggedOutEvent>(
             static (writer, value) => WriteSession(writer, value.SessionId, value.UserId, value.AtUtc),
             static element => new SessionLoggedOutEvent(ReadSessionId(element), ReadUserId(element), WireCodec.ReadTime(element, "at"))),
+        // ADR 0201: switching user.
+        [typeof(SessionSwitchedOutEvent)] = Codec.Of<SessionSwitchedOutEvent>(
+            static (writer, value) => WriteSession(writer, value.SessionId, value.UserId, value.AtUtc),
+            static element => new SessionSwitchedOutEvent(ReadSessionId(element), ReadUserId(element), WireCodec.ReadTime(element, "at"))),
+        [typeof(SessionResumedEvent)] = Codec.Of<SessionResumedEvent>(
+            static (writer, value) => WriteSession(writer, value.SessionId, value.UserId, value.AtUtc),
+            static element => new SessionResumedEvent(ReadSessionId(element), ReadUserId(element), WireCodec.ReadTime(element, "at"))),
         [typeof(SessionShutDownEvent)] = Codec.Of<SessionShutDownEvent>(
             static (writer, value) =>
             {

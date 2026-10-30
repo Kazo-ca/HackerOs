@@ -272,18 +272,29 @@
                                         <span>@L["Launcher.Power.SignOut"]</span>
                                     </button>
                                 }
-                                <button type="button"
-                                        class="power-item"
-                                        role="menuitem"
-                                        disabled
-                                        aria-disabled="true"
-                                        title="@SwitchUserHint">
-                                    <HackerIcon Library="IconLibrary.Lucide" Name="users" Size="17" Title="" />
-                                    <span>
-                                        @L["Launcher.Power.SwitchUser"]
-                                        <small>@SwitchUserHint</small>
-                                    </span>
-                                </button>
+                                @if (CanSwitchUser)
+                                {
+                                    @* ADR 0201: the session moves to the background and the sign-in screen opens. *@
+                                    <button type="button" class="power-item" role="menuitem" @ref="_switchUserItemRef" @onclick="SwitchUserAsync">
+                                        <HackerIcon Library="IconLibrary.Lucide" Name="users" Size="17" Title="" />
+                                        <span>@L["Launcher.Power.SwitchUser"]</span>
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button type="button"
+                                            class="power-item"
+                                            role="menuitem"
+                                            disabled
+                                            aria-disabled="true"
+                                            title="@SwitchUserHint">
+                                        <HackerIcon Library="IconLibrary.Lucide" Name="users" Size="17" Title="" />
+                                        <span>
+                                            @L["Launcher.Power.SwitchUser"]
+                                            <small>@SwitchUserHint</small>
+                                        </span>
+                                    </button>
+                                }
                                 @if (OnRestart.HasDelegate)
                                 {
                                     <button type="button" class="power-item" role="menuitem" @ref="_restartItemRef" @onclick="RestartAsync">

@@ -21,7 +21,7 @@
          data-window-state="@Window.VisualState"
          data-window-snapped="@(Window.IsSnapped ? "true" : null)"
          data-window-z="@Window.ZOrder"
-         hidden="@(Window.VisualState == WindowVisualState.Minimized ? true : null)"
+         hidden="@(Window.VisualState == WindowVisualState.Minimized || IsSuppressed ? true : null)"
          @onpointerdown="FocusAsync">
     @if (ShowChrome)
     {
@@ -56,6 +56,14 @@
     /// <summary>Gets or sets the app content rendered inside the chrome.</summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets whether the window is hidden while it stays rendered, whatever its visual state:
+    /// a window of a session in the background (ADR 0201 section 3) keeps its content alive, like a
+    /// minimized window, but is not shown.
+    /// </summary>
+    [Parameter]
+    public bool IsSuppressed { get; set; }
 
     /// <summary>
     /// Gets or sets content layered over this window's content area only, such as the platform's

@@ -139,6 +139,12 @@ public sealed class WindowKeyboardCommands : IDisposable
     /// </summary>
     public Func<Task<DisplayId?>>? OpenScreen { get; set; }
 
+    /// <summary>
+    /// Gets or sets which windows the keyboard reaches (the switcher, the active window); every window
+    /// when <see langword="null"/>. The desktop shell keeps those of the foreground session (ADR 0201).
+    /// </summary>
+    public Func<WindowRuntimeState, bool>? ListsWindow { get; set; }
+
     /// <summary>Gets every binding read from the file, active or not.</summary>
     public IReadOnlyList<WindowKeyBinding> Bindings => _bindings;
 
@@ -523,7 +529,9 @@ public sealed class WindowKeyboardCommands : IDisposable
         return displays[(index + (next ? 1 : -1) + displays.Count) % displays.Count];
     }
 
-    private WindowRuntimeState? ActiveWindow() => _runtime.Windows.FirstOrDefault(window => window.IsFocused);
+    private WindowRuntimeState? ActiveWindow() => _runtime.Windows.FirstOrDefault(window => window.IsFocused && Lists(window));
+
+    private bool Lists(WindowRuntimeState window) => ListsWindow?.Invoke(window) ?? true;
 
     private WindowRuntimeState? Find(WindowId id) => _runtime.Windows.FirstOrDefault(window => window.Id == id);
 
@@ -549,7 +557,7 @@ public sealed class WindowKeyboardCommands : IDisposable
             _switchOrder =
             [
                 .. _runtime.Windows
-                    .Where(window => !_runtime.IsInteractionBlocked(window.Id))
+                    .Where(window => !_runtime.IsInteractionBlocked(window.Id) && Lists(window))
                     .OrderByDescending(window => window.VisualState != WindowVisualState.Minimized)
                     .ThenByDescending(window => window.ZOrder)
                     .Select(window => window.Id),

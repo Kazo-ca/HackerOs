@@ -164,3 +164,37 @@ h2 {
         animation: dialog-pop var(--hos-transition-normal, 160ms ease-out) both;
     }
 }
+
+/* ADR 0201 section 5: the other open sessions. */
+.other-sessions-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin: 0.25rem 0 0.75rem;
+}
+
+.session-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.85rem;
+}
+
+.session-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.2rem 0;
+    border-bottom: 1px solid var(--hos-border, #34444c);
+}
+
+.end-others {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.end-others input {
+    accent-color: var(--hos-accent, #42d392);
+}

@@ -12,10 +12,17 @@ namespace HackerOs.Platform.Core.Sessions;
 /// <summary>
 /// In-memory <see cref="ISessionService"/> implementing the ADR 0013 session lifecycle state
 /// machine, owning the session root cancellation source and provisioning the authenticated
-/// user's home directory on login.
+/// user's home directory on login. Several sessions may stay open, one in the foreground (ADR 0201,
+/// <see cref="IUserSwitchingService"/>).
 /// </summary>
-public sealed class LocalSessionService : ISessionService
+public sealed class LocalSessionService : ISessionService, IUserSwitchingService
 {
+    /// <summary>
+    /// How many sessions may be open at once by default (ADR 0201 section 6): every session lives
+    /// in the same WebAssembly tab, so its apps share one memory budget.
+    /// </summary>
+    public const int DefaultMaxOpenSessions = 3;
+
     private readonly ILocalUserRepository _users;
     private readonly FileSystemSeeder _homeSeeder;
     private readonly IEventBus _eventBus;
@@ -27,6 +34,9 @@ public sealed class LocalSessionService : ISessionService
     private readonly Lock _gate = new();
     private CancellationTokenSource? _rootTokenSource;
     private AuthenticatedPrincipal? _principal;
+
+    /// <summary>Every open session (foreground included) with its root token, in opening order.</summary>
+    private readonly List<OpenSession> _openSessions = [];
 
     private readonly KeyDerivationAsyncDelegate? _asyncHasher;
     private readonly ILoginProgressTracker _progressTracker;
@@ -83,6 +93,46 @@ public sealed class LocalSessionService : ISessionService
         _catalog = catalog;
         _profileInitializer = profileInitializer;
         _keyring = keyring;
+    }
+
+    /// <summary>
+    /// Gets how many sessions may be open at once (ADR 0201 section 6); <see cref="DefaultMaxOpenSessions"/>
+    /// unless set at construction. At least one.
+    /// </summary>
+    public int MaxOpenSessions
+    {
+        get => _maxOpenSessions;
+        init
+        {
+            ArgumentOutOfRangeException.ThrowIfLessThan(value, 1);
+            _maxOpenSessions = value;
+        }
+    }
+
+    private readonly int _maxOpenSessions = DefaultMaxOpenSessions;
+
+    /// <inheritdoc />
+    public IReadOnlyList<AuthenticatedPrincipal> OpenSessions
+    {
+        get
+        {
+            lock (_gate)
+            {
+                return [.. _openSessions.Select(static open => open.Principal)];
+            }
+        }
+    }
+
+    /// <inheritdoc />
+    public IReadOnlyList<AuthenticatedPrincipal> BackgroundSessions
+    {
+        get
+        {
+            lock (_gate)
+            {
+                return [.. _openSessions.Where(open => !ReferenceEquals(open.Principal, _principal)).Select(static open => open.Principal)];
+            }
+        }
     }
 
     /// <inheritdoc />
@@ -187,6 +237,7 @@ public sealed class LocalSessionService : ISessionService
         {
             LocalUser? user;
             Func<Keyring.ISessionKeyring, AuthenticatedPrincipal, CancellationToken, ValueTask> unlock;
+            OpenSession? resumed;
             using (_progressTracker.BeginStep("Loading Profile"))
             {
                 user = await _users.FindByLoginNameAsync(loginName, cancellationToken);
@@ -202,7 +253,22 @@ public sealed class LocalSessionService : ISessionService
                     throw new InvalidOperationException($"User '{loginName}' is disabled.");
                 }
 
+                OpenSession? background = FindOpenSession(user.Id);
+                if (background is null && OpenSessionCount >= MaxOpenSessions)
+                {
+                    RecordAudit(user.Id.ToString(), "session.login", loginName.Value, AuditOutcome.Denied);
+                    throw new SessionLimitReachedException(MaxOpenSessions);
+                }
+
                 unlock = await verify(user, cancellationToken).ConfigureAwait(false);
+                resumed = background;
+            }
+
+            if (resumed is not null)
+            {
+                // ADR 0201 section 1: the account already has a session in the background; the
+                // verified credential brings it back instead of opening a second one.
+                return await ResumeAsync(resumed, unlock, auditSubject, cancellationToken).ConfigureAwait(false);
             }
 
             await Task.Yield();
@@ -254,6 +320,7 @@ public sealed class LocalSessionService : ISessionService
                 {
                     _rootTokenSource = new CancellationTokenSource();
                     _principal = principal;
+                    _openSessions.Add(new OpenSession(principal, _rootTokenSource));
                     State = SessionState.Active;
                 }
 
@@ -300,6 +367,7 @@ public sealed class LocalSessionService : ISessionService
 
         lock (_gate)
         {
+            _openSessions.RemoveAll(open => ReferenceEquals(open.Principal, principal));
             _principal = null;
             _rootTokenSource = null;
             State = SessionState.LoggedOut;
@@ -316,6 +384,7 @@ public sealed class LocalSessionService : ISessionService
     {
         AuthenticatedPrincipal? principal;
         CancellationTokenSource? rootSource;
+        List<OpenSession> background;
         lock (_gate)
         {
             if (State == SessionState.Stopped)
@@ -331,14 +400,23 @@ public sealed class LocalSessionService : ISessionService
             State = SessionState.ShuttingDown;
             principal = _principal;
             rootSource = _rootTokenSource;
+            background = [.. _openSessions.Where(open => !ReferenceEquals(open.RootSource, rootSource))];
         }
 
         rootSource?.Cancel();
         rootSource?.Dispose();
+        foreach (OpenSession open in background)
+        {
+            // ADR 0201: shutting down ends the sessions in the background too.
+            open.RootSource.Cancel();
+            open.RootSource.Dispose();
+        }
+
         _keyring?.Lock();
 
         lock (_gate)
         {
+            _openSessions.Clear();
             _principal = null;
             _rootTokenSource = null;
             State = SessionState.Stopped;
@@ -363,6 +441,111 @@ public sealed class LocalSessionService : ISessionService
             return CancellationTokenSource.CreateLinkedTokenSource(_rootTokenSource.Token);
         }
     }
+
+    /// <inheritdoc />
+    public Task SwitchAwayAsync(CancellationToken cancellationToken = default)
+    {
+        AuthenticatedPrincipal principal;
+        lock (_gate)
+        {
+            if (State != SessionState.Active || _principal is null)
+            {
+                throw new InvalidOperationException($"Cannot switch user while the session is {State}.");
+            }
+
+            // The root token is not cancelled: the session's processes keep running (ADR 0201 §1).
+            principal = _principal;
+            _principal = null;
+            _rootTokenSource = null;
+            State = SessionState.LoggedOut;
+        }
+
+        // ADR 0201 section 2: the keyring follows the foreground session.
+        _keyring?.Lock();
+        _eventBus.Publish(new SessionSwitchedOutEvent(principal.SessionId, principal.UserId, _clock()));
+        RecordAudit(principal.UserId.ToString(), "session.switch", principal.LoginName.Value, AuditOutcome.Success);
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc />
+    public Task EndBackgroundSessionAsync(SessionId sessionId, CancellationToken cancellationToken = default)
+    {
+        OpenSession ended;
+        lock (_gate)
+        {
+            ended = _openSessions.FirstOrDefault(open =>
+                open.Principal.SessionId == sessionId && !ReferenceEquals(open.Principal, _principal))
+                ?? throw new InvalidOperationException($"No session {sessionId} in the background.");
+            _openSessions.Remove(ended);
+        }
+
+        ended.RootSource.Cancel();
+        ended.RootSource.Dispose();
+        _eventBus.Publish(new SessionLoggedOutEvent(sessionId, ended.Principal.UserId, _clock()));
+        RecordAudit(ended.Principal.UserId.ToString(), "session.logout", ended.Principal.UserId.ToString(), AuditOutcome.Success);
+        return Task.CompletedTask;
+    }
+
+    /// <summary>Gets whether the account has an open session, in the foreground or not (ADR 0201 section 7).</summary>
+    /// <param name="userId">The account.</param>
+    public bool HasOpenSession(LocalUserId userId) => FindOpenSession(userId) is not null;
+
+    private int OpenSessionCount
+    {
+        get
+        {
+            lock (_gate)
+            {
+                return _openSessions.Count;
+            }
+        }
+    }
+
+    private OpenSession? FindOpenSession(LocalUserId userId)
+    {
+        lock (_gate)
+        {
+            return _openSessions.FirstOrDefault(open => open.Principal.UserId == userId);
+        }
+    }
+
+    /// <summary>Brings a session in the background back to the foreground, its credential verified.</summary>
+    private async Task<AuthenticatedPrincipal> ResumeAsync(
+        OpenSession session,
+        Func<Keyring.ISessionKeyring, AuthenticatedPrincipal, CancellationToken, ValueTask> unlock,
+        string auditSubject,
+        CancellationToken cancellationToken)
+    {
+        if (_keyring is not null)
+        {
+            await unlock(_keyring, session.Principal, cancellationToken).ConfigureAwait(false);
+        }
+
+        using (_progressTracker.BeginStep("Starting Session"))
+        {
+            lock (_gate)
+            {
+                if (!_openSessions.Contains(session))
+                {
+                    // Ended while its credential was being checked.
+                    State = SessionState.LoggedOut;
+                    throw new InvalidOperationException("The session ended while it was being resumed.");
+                }
+
+                _rootTokenSource = session.RootSource;
+                _principal = session.Principal;
+                State = SessionState.Active;
+            }
+
+            _eventBus.Publish(new SessionResumedEvent(session.Principal.SessionId, session.Principal.UserId, _clock()));
+            RecordAudit(session.Principal.UserId.ToString(), "session.resume", auditSubject, AuditOutcome.Success);
+        }
+
+        return session.Principal;
+    }
+
+    /// <summary>One open session: its principal and its root cancellation source.</summary>
+    private sealed record OpenSession(AuthenticatedPrincipal Principal, CancellationTokenSource RootSource);
 
     private void RecordAudit(string actor, string action, string subject, AuditOutcome outcome) =>
         _auditLog.Record(new AuditEntry(_clock(), Guid.NewGuid(), actor, action, subject, outcome));

@@ -54,8 +54,9 @@ jour à la fin de chaque série ou quand une convention change.
   Les ADR du Hack Store (0188 à 0190) et du serveur local installable (0191)
   sont acceptées, rien n'est codé (issues `TODO` #246 à #257, #267).
 - **Bouton Marche/arrêt dans le menu Démarrer** (ADR 0195, PR #291, fusionnée
-  le 2026-10-30) : « Changer d'utilisateur » reste grisé, issue `TODO` #290
-  (plusieurs sessions ouvertes en même temps).
+  le 2026-10-30). « Changer d'utilisateur » fait dans la série `todo/base`,
+  chantier `todo/16-switch-user` (ADR 0201, issue #290) : plusieurs sessions
+  ouvertes, une au premier plan, limite de 3 ([`user-switching.md`](../dev/user-switching.md)).
 - **ADR** : 0001 à 0171 et 0173 à 0195 existent sur `main` (quelques numéros sautés ;
   0141 et 0172 n'ont pas servi). Repères récents : 0173 publication automatique,
   0174 annonce de nouvelle version, 0175 « Nouveau dossier » des dialogues, 0176

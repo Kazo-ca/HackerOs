@@ -800,4 +800,13 @@
   <data name="Launcher.Guest.CreateAccount" xml:space="preserve">
     <value>Guest · Create my account</value>
   </data>
+  <data name="Logout.OtherSessions" xml:space="preserve">
+    <value>Other open sessions ({0})</value>
+  </data>
+  <data name="Logout.EndOtherSessions" xml:space="preserve">
+    <value>Also sign out the other sessions</value>
+  </data>
+  <data name="Logout.Restart.EndsOtherSessions" xml:space="preserve">
+    <value>Restarting reloads HackerOS: these sessions are signed out too.</value>
+  </data>
 </root>

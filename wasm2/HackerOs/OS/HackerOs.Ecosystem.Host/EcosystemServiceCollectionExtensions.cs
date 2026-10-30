@@ -541,9 +541,17 @@ public static class EcosystemServiceCollectionExtensions
                 provider.GetRequiredService<IAuditLog>(),
                 provider.GetRequiredService<IFileSystemService>(),
                 asyncHasher: (password, salt, iterations, length, ct) =>
-                    hasher.DeriveKeyAsync(password, salt, iterations, length, ct));
+                    hasher.DeriveKeyAsync(password, salt, iterations, length, ct))
+            {
+                // ADR 0201 section 7: an account with a session in the background is signed in too.
+                HasOpenSession = userId => provider.GetRequiredService<ISessionService>() is LocalSessionService sessions
+                    && sessions.HasOpenSession(userId),
+            };
         });
 
+        // ADR 0201: the session service also switches users.
+        services.AddScoped<IUserSwitchingService>(provider =>
+            (IUserSwitchingService)provider.GetRequiredService<ISessionService>());
         services.AddScoped<ISessionService>(provider =>
         {
             WebCryptoPasswordHasher hasher = provider.GetRequiredService<WebCryptoPasswordHasher>();

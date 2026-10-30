@@ -105,3 +105,41 @@ HackerOs.Simulation.Abstractions.Sessions.ILocalUserRepository.ConvertGuestUserA
 HackerOs.Simulation.Abstractions.Sessions.ILocalUserRepository.CreateGuestUserAsync(HackerOs.Simulation.Abstractions.Sessions.LocalLoginName loginName, string! displayName, HackerOs.App.Abstractions.AppAuthority authority, HackerOs.Simulation.Abstractions.Sessions.LocalGroupId primaryGroupId, System.Collections.Generic.IReadOnlyCollection<HackerOs.Simulation.Abstractions.Sessions.LocalGroupId>! additionalGroupIds, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Sessions.LocalUser!>
 HackerOs.Simulation.Abstractions.Sessions.LocalUser.IsGuest.get -> bool
 HackerOs.Simulation.Abstractions.Sessions.LocalUser.IsGuest.init -> void
+HackerOs.Simulation.Abstractions.Sessions.IUserSwitchingService
+HackerOs.Simulation.Abstractions.Sessions.IUserSwitchingService.BackgroundSessions.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Simulation.Abstractions.Sessions.AuthenticatedPrincipal!>!
+HackerOs.Simulation.Abstractions.Sessions.IUserSwitchingService.EndBackgroundSessionAsync(HackerOs.Simulation.Abstractions.Sessions.SessionId sessionId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+HackerOs.Simulation.Abstractions.Sessions.IUserSwitchingService.MaxOpenSessions.get -> int
+HackerOs.Simulation.Abstractions.Sessions.IUserSwitchingService.OpenSessions.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Simulation.Abstractions.Sessions.AuthenticatedPrincipal!>!
+HackerOs.Simulation.Abstractions.Sessions.IUserSwitchingService.SwitchAwayAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+HackerOs.Simulation.Abstractions.Sessions.SessionResumedEvent
+HackerOs.Simulation.Abstractions.Sessions.SessionResumedEvent.<Clone>$() -> HackerOs.Simulation.Abstractions.Sessions.SessionResumedEvent!
+HackerOs.Simulation.Abstractions.Sessions.SessionResumedEvent.AtUtc.get -> System.DateTimeOffset
+HackerOs.Simulation.Abstractions.Sessions.SessionResumedEvent.AtUtc.init -> void
+HackerOs.Simulation.Abstractions.Sessions.SessionResumedEvent.Deconstruct(out HackerOs.Simulation.Abstractions.Sessions.SessionId SessionId, out HackerOs.Simulation.Abstractions.Sessions.LocalUserId UserId, out System.DateTimeOffset AtUtc) -> void
+HackerOs.Simulation.Abstractions.Sessions.SessionResumedEvent.Equals(HackerOs.Simulation.Abstractions.Sessions.SessionResumedEvent? other) -> bool
+HackerOs.Simulation.Abstractions.Sessions.SessionResumedEvent.SessionId.get -> HackerOs.Simulation.Abstractions.Sessions.SessionId
+HackerOs.Simulation.Abstractions.Sessions.SessionResumedEvent.SessionId.init -> void
+HackerOs.Simulation.Abstractions.Sessions.SessionResumedEvent.SessionResumedEvent(HackerOs.Simulation.Abstractions.Sessions.SessionId SessionId, HackerOs.Simulation.Abstractions.Sessions.LocalUserId UserId, System.DateTimeOffset AtUtc) -> void
+HackerOs.Simulation.Abstractions.Sessions.SessionResumedEvent.UserId.get -> HackerOs.Simulation.Abstractions.Sessions.LocalUserId
+HackerOs.Simulation.Abstractions.Sessions.SessionResumedEvent.UserId.init -> void
+HackerOs.Simulation.Abstractions.Sessions.SessionSwitchedOutEvent
+HackerOs.Simulation.Abstractions.Sessions.SessionSwitchedOutEvent.<Clone>$() -> HackerOs.Simulation.Abstractions.Sessions.SessionSwitchedOutEvent!
+HackerOs.Simulation.Abstractions.Sessions.SessionSwitchedOutEvent.AtUtc.get -> System.DateTimeOffset
+HackerOs.Simulation.Abstractions.Sessions.SessionSwitchedOutEvent.AtUtc.init -> void
+HackerOs.Simulation.Abstractions.Sessions.SessionSwitchedOutEvent.Deconstruct(out HackerOs.Simulation.Abstractions.Sessions.SessionId SessionId, out HackerOs.Simulation.Abstractions.Sessions.LocalUserId UserId, out System.DateTimeOffset AtUtc) -> void
+HackerOs.Simulation.Abstractions.Sessions.SessionSwitchedOutEvent.Equals(HackerOs.Simulation.Abstractions.Sessions.SessionSwitchedOutEvent? other) -> bool
+HackerOs.Simulation.Abstractions.Sessions.SessionSwitchedOutEvent.SessionId.get -> HackerOs.Simulation.Abstractions.Sessions.SessionId
+HackerOs.Simulation.Abstractions.Sessions.SessionSwitchedOutEvent.SessionId.init -> void
+HackerOs.Simulation.Abstractions.Sessions.SessionSwitchedOutEvent.SessionSwitchedOutEvent(HackerOs.Simulation.Abstractions.Sessions.SessionId SessionId, HackerOs.Simulation.Abstractions.Sessions.LocalUserId UserId, System.DateTimeOffset AtUtc) -> void
+HackerOs.Simulation.Abstractions.Sessions.SessionSwitchedOutEvent.UserId.get -> HackerOs.Simulation.Abstractions.Sessions.LocalUserId
+HackerOs.Simulation.Abstractions.Sessions.SessionSwitchedOutEvent.UserId.init -> void
+override HackerOs.Simulation.Abstractions.Sessions.SessionResumedEvent.Equals(object? obj) -> bool
+override HackerOs.Simulation.Abstractions.Sessions.SessionResumedEvent.GetHashCode() -> int
+override HackerOs.Simulation.Abstractions.Sessions.SessionResumedEvent.ToString() -> string!
+override HackerOs.Simulation.Abstractions.Sessions.SessionSwitchedOutEvent.Equals(object? obj) -> bool
+override HackerOs.Simulation.Abstractions.Sessions.SessionSwitchedOutEvent.GetHashCode() -> int
+override HackerOs.Simulation.Abstractions.Sessions.SessionSwitchedOutEvent.ToString() -> string!
+static HackerOs.Simulation.Abstractions.Sessions.SessionResumedEvent.operator !=(HackerOs.Simulation.Abstractions.Sessions.SessionResumedEvent? left, HackerOs.Simulation.Abstractions.Sessions.SessionResumedEvent? right) -> bool
+static HackerOs.Simulation.Abstractions.Sessions.SessionResumedEvent.operator ==(HackerOs.Simulation.Abstractions.Sessions.SessionResumedEvent? left, HackerOs.Simulation.Abstractions.Sessions.SessionResumedEvent? right) -> bool
+static HackerOs.Simulation.Abstractions.Sessions.SessionSwitchedOutEvent.operator !=(HackerOs.Simulation.Abstractions.Sessions.SessionSwitchedOutEvent? left, HackerOs.Simulation.Abstractions.Sessions.SessionSwitchedOutEvent? right) -> bool
+static HackerOs.Simulation.Abstractions.Sessions.SessionSwitchedOutEvent.operator ==(HackerOs.Simulation.Abstractions.Sessions.SessionSwitchedOutEvent? left, HackerOs.Simulation.Abstractions.Sessions.SessionSwitchedOutEvent? right) -> bool

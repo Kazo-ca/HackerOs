@@ -24,6 +24,7 @@
         {
             <WindowPortal @key="window.Id" Target="@LayerFor(window)">
                 <WindowHost Window="window"
+                            IsSuppressed="@(IsWindowShown is not null && !IsWindowShown(window))"
                             IsInteractionBlocked="@IsBlocked(window.Id)"
                             OnFocus="OnFocus"
                             OnMinimize="OnMinimize"
@@ -129,6 +130,13 @@
     /// <summary>Gets or sets the pointer gesture command callback.</summary>
     [Parameter]
     public EventCallback<WindowCommand> OnGesture { get; set; }
+
+    /// <summary>
+    /// Gets or sets which windows are shown; the others stay rendered but hidden (ADR 0201 section 3:
+    /// the windows of a session in the background). Every window is shown when <see langword="null"/>.
+    /// </summary>
+    [Parameter]
+    public Func<WindowRuntimeState, bool>? IsWindowShown { get; set; }
 
     /// <summary>Callback invoked by JS ResizeObserver when the desktop container bounds change.</summary>
     [JSInvokable]

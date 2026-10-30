@@ -174,4 +174,10 @@
   <data name="GuestAccount.Title" xml:space="preserve">
     <value>Create my account</value>
   </data>
+  <data name="Login.OpenSession" xml:space="preserve">
+    <value> — open session</value>
+  </data>
+  <data name="Login.TooManySessions" xml:space="preserve">
+    <value>Too many open sessions: at most {0} may be open at once. Sign in to an open session, or sign one out first.</value>
+  </data>
 </root>

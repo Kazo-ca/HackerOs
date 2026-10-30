@@ -113,7 +113,17 @@ public sealed class SyncScheduler : IAsyncDisposable
             :
             [
                 events.Subscribe<SessionActivatedEvent>(_ => Start()),
-                events.Subscribe<SessionLoggedOutEvent>(_ => { Task ignored = StopAsync(); })
+                // ADR 0201: the sync follows the foreground session; ending a session in the
+                // background leaves the foreground one syncing.
+                events.Subscribe<SessionResumedEvent>(_ => Start()),
+                events.Subscribe<SessionSwitchedOutEvent>(_ => { Task ignored = StopAsync(); }),
+                events.Subscribe<SessionLoggedOutEvent>(_ =>
+                {
+                    if (_session.CurrentPrincipal is null)
+                    {
+                        Task ignored = StopAsync();
+                    }
+                })
             ];
     }
 

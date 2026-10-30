@@ -24,3 +24,7 @@ HackerOs.Windowing.Blazor.WindowMenuRequest.Kind.get -> HackerOs.Windowing.Blazo
 HackerOs.Windowing.Blazor.WindowMenuRequest.Kind.init -> void
 HackerOs.Windowing.Blazor.WindowChrome.ReportDragRestoreAsync(double pointerX, double pointerY, double grabRatioX, double grabOffsetY) -> System.Threading.Tasks.Task<double[]?>!
 HackerOs.Windowing.Blazor.WindowChrome.ReportTitleDoubleClickAsync() -> System.Threading.Tasks.Task!
+HackerOs.Windowing.Blazor.DesktopArea.IsWindowShown.get -> System.Func<HackerOs.Windowing.Abstractions.WindowRuntimeState!, bool>?
+HackerOs.Windowing.Blazor.DesktopArea.IsWindowShown.set -> void
+HackerOs.Windowing.Blazor.WindowHost.IsSuppressed.get -> bool
+HackerOs.Windowing.Blazor.WindowHost.IsSuppressed.set -> void

@@ -105,7 +105,17 @@ public sealed class NetworkDriveService : IDisposable
             :
             [
                 eventBus.Subscribe<SessionActivatedEvent>(_ => Observe(RestoreAsync().AsTask(), "restore")),
-                eventBus.Subscribe<SessionLoggedOutEvent>(_ => Observe(UnmountAllAsync().AsTask(), "unmount"))
+                // ADR 0201 section 2: the drives follow the foreground session, so the next user
+                // never sees them; ending a session in the background keeps the foreground drives.
+                eventBus.Subscribe<SessionResumedEvent>(_ => Observe(RestoreAsync().AsTask(), "restore")),
+                eventBus.Subscribe<SessionSwitchedOutEvent>(_ => Observe(UnmountAllAsync().AsTask(), "unmount")),
+                eventBus.Subscribe<SessionLoggedOutEvent>(_ =>
+                {
+                    if (_principal() is null)
+                    {
+                        Observe(UnmountAllAsync().AsTask(), "unmount");
+                    }
+                })
             ];
     }
 

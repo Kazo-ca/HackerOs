@@ -54,8 +54,9 @@ at the end of each series or when a convention changes.
   installable local server ADR (0191) are accepted, nothing is coded (`TODO`
   issues #246 to #257, #267).
 - **Power button in the Start menu** (ADR 0195, PR #291, merged on
-  2026-10-30): "Switch user" stays greyed out, `TODO` issue #290 (several
-  sessions open at once).
+  2026-10-30). "Switch user" built in the `todo/base` series, work item
+  `todo/16-switch-user` (ADR 0201, issue #290): several open sessions, one in
+  the foreground, limit of 3 ([`user-switching.md`](../dev/user-switching.md)).
 - **ADR**: 0001 to 0171 and 0173 to 0195 exist on `main` (a few numbers skipped;
   0141 and 0172 were not used). Recent landmarks: 0173 automatic release, 0174
   new-version announcement, 0175 "New folder" in dialogs, 0176 app repository

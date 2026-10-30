@@ -111,8 +111,10 @@ Questions à reposer au démarrage : où vivent les visionneuses, portée de
 
 ## Questions posées, réponse à confirmer
 
-- **Changer d'utilisateur** (issue #290) : plusieurs sessions ouvertes en même
-  temps ; le comportement cible a été demandé à Benoit le 2026-10-30.
+- **Changer d'utilisateur** (issue #290, ADR 0201) : fait sur la
+  recommandation « sessions simultanées » (comme Windows) ; la question a été
+  posée à Benoit le 2026-10-30 puis reposée dans le fil du chantier
+  `todo/16-switch-user`. Une autre réponse demande une nouvelle ADR.
 - **« Nouveau dossier » dans les dialogues** (ADR 0175) : rendre
   `SelectFolderDialogRequest.AllowCreateFolder` vrai par défaut pour toutes
   les apps ? Recommandé : garder l'option par app. Posée le 2026-10-26.

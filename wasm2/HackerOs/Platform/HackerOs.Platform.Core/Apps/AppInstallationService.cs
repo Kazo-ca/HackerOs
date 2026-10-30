@@ -97,7 +97,10 @@ public sealed class AppInstallationService : IAppInstallationService, IAsyncDisp
             :
             [
                 eventBus.Subscribe<SessionActivatedEvent>(_ => { Task ignored = OnSessionChangedAsync(); }),
-                eventBus.Subscribe<SessionLoggedOutEvent>(_ => { Task ignored = OnSessionChangedAsync(); })
+                eventBus.Subscribe<SessionLoggedOutEvent>(_ => { Task ignored = OnSessionChangedAsync(); }),
+                // ADR 0201: switching user changes the foreground session too.
+                eventBus.Subscribe<SessionSwitchedOutEvent>(_ => { Task ignored = OnSessionChangedAsync(); }),
+                eventBus.Subscribe<SessionResumedEvent>(_ => { Task ignored = OnSessionChangedAsync(); })
             ];
     }
 

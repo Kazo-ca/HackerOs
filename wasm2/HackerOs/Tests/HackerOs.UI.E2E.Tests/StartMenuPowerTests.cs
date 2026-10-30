@@ -6,8 +6,8 @@ namespace HackerOs.UI.E2E.Tests;
 
 /// <summary>
 /// ADR 0195: the session's Power button left the taskbar for the Start menu. Its menu offers
-/// « Sign out », « Switch user » (greyed out, not available yet) and « Restart », which signs out
-/// like « Sign out » and then reloads the page.
+/// « Sign out », « Switch user » (ADR 0201, see <see cref="StartMenuSwitchUserTests"/>) and
+/// « Restart », which signs out like « Sign out » and then reloads the page.
 /// </summary>
 public sealed class StartMenuPowerTests(ITestOutputHelper output)
 {
@@ -35,7 +35,7 @@ public sealed class StartMenuPowerTests(ITestOutputHelper output)
             await Assertions.Expect(page.Locator("footer.taskbar-container .logout-trigger")).ToHaveCountAsync(0);
 
             ILocator menu = await OpenPowerMenuAsync(page);
-            await Assertions.Expect(menu.GetByRole(AriaRole.Menuitem, new() { Name = "Switch user" })).ToBeDisabledAsync();
+            await Assertions.Expect(menu.GetByRole(AriaRole.Menuitem, new() { Name = "Switch user" })).ToBeEnabledAsync();
             await Assertions.Expect(menu.GetByRole(AriaRole.Menuitem, new() { Name = "Restart" })).ToBeEnabledAsync();
 
             // Escape closes the Power menu first, the Start menu stays open.
@@ -70,7 +70,7 @@ public sealed class StartMenuPowerTests(ITestOutputHelper output)
         }
     }
 
-    private static async Task<ILocator> OpenPowerMenuAsync(IPage page)
+    internal static async Task<ILocator> OpenPowerMenuAsync(IPage page)
     {
         await page.GetByRole(AriaRole.Button, new() { Name = "App launcher" }).ClickAsync();
         ILocator power = page.GetByRole(AriaRole.Button, new() { Name = "Power" });
@@ -82,7 +82,7 @@ public sealed class StartMenuPowerTests(ITestOutputHelper output)
         return menu;
     }
 
-    private static async Task SignInAgainAsync(IPage page)
+    internal static async Task SignInAgainAsync(IPage page)
     {
         ILocator passwordField = page.GetByLabel("Password", new() { Exact = true });
         await passwordField.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 30000 });

@@ -484,3 +484,16 @@ HackerOs.Platform.Core.Sessions.GuestAccountRequests.GuestAccountRequests() -> v
 HackerOs.Platform.Core.Sessions.GuestAccountRequests.HasListener.get -> bool
 HackerOs.Platform.Core.Sessions.GuestAccountRequests.RequestCreateAccount() -> bool
 HackerOs.Platform.Core.Lifecycle.AppLifecycleOrchestrator.StopSessionAppsAsync(HackerOs.Simulation.Abstractions.Sessions.SessionId sessionId, HackerOs.Simulation.Abstractions.Processes.ProcessExitReason reason = HackerOs.Simulation.Abstractions.Processes.ProcessExitReason.Logout) -> System.Threading.Tasks.Task<int>!
+const HackerOs.Platform.Core.Sessions.LocalSessionService.DefaultMaxOpenSessions = 3 -> int
+HackerOs.Platform.Core.Sessions.LocalAccountService.HasOpenSession.get -> System.Func<HackerOs.Simulation.Abstractions.Sessions.LocalUserId, bool>?
+HackerOs.Platform.Core.Sessions.LocalAccountService.HasOpenSession.init -> void
+HackerOs.Platform.Core.Sessions.LocalSessionService.BackgroundSessions.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Simulation.Abstractions.Sessions.AuthenticatedPrincipal!>!
+HackerOs.Platform.Core.Sessions.LocalSessionService.EndBackgroundSessionAsync(HackerOs.Simulation.Abstractions.Sessions.SessionId sessionId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+HackerOs.Platform.Core.Sessions.LocalSessionService.HasOpenSession(HackerOs.Simulation.Abstractions.Sessions.LocalUserId userId) -> bool
+HackerOs.Platform.Core.Sessions.LocalSessionService.MaxOpenSessions.get -> int
+HackerOs.Platform.Core.Sessions.LocalSessionService.MaxOpenSessions.init -> void
+HackerOs.Platform.Core.Sessions.LocalSessionService.OpenSessions.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Simulation.Abstractions.Sessions.AuthenticatedPrincipal!>!
+HackerOs.Platform.Core.Sessions.LocalSessionService.SwitchAwayAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+HackerOs.Platform.Core.Sessions.SessionLimitReachedException
+HackerOs.Platform.Core.Sessions.SessionLimitReachedException.MaxOpenSessions.get -> int
+HackerOs.Platform.Core.Sessions.SessionLimitReachedException.SessionLimitReachedException(int maxOpenSessions) -> void

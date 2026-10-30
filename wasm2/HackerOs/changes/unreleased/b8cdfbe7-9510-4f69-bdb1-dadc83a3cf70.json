@@ -1,0 +1,20 @@
+{
+  "id": "b8cdfbe7-9510-4f69-bdb1-dadc83a3cf70",
+  "category": "new",
+  "audience": [
+    "user",
+    "developer"
+  ],
+  "title": {
+    "en": "Switch user",
+    "fr": "Changer d'utilisateur"
+  },
+  "description": {
+    "en": "Switch user in the Start menu's Power menu keeps your session open in the background with its apps while another account signs in. Signing in again to your account resumes your session and its windows. Up to 3 sessions may be open; Sign out can also end the other sessions, and Restart ends them all. Developers: IUserSwitchingService, SessionSwitchedOutEvent and SessionResumedEvent, DesktopArea.IsWindowShown and WindowHost.IsSuppressed.",
+    "fr": "Changer d'utilisateur, dans le menu Marche/arrêt du menu Démarrer, garde votre session ouverte en arrière-plan avec ses apps pendant qu'un autre compte se connecte. Vous reconnecter à votre compte reprend votre session et ses fenêtres. Jusqu'à 3 sessions peuvent être ouvertes ; Se déconnecter peut aussi fermer les autres sessions, et Redémarrer les ferme toutes. Développeurs : IUserSwitchingService, SessionSwitchedOutEvent et SessionResumedEvent, DesktopArea.IsWindowShown et WindowHost.IsSuppressed."
+  },
+  "links": [
+    "doc/en/wasm/dev/adr/0201-switch-user-simultaneous-sessions.md",
+    "doc/en/wasm/dev/user-switching.md"
+  ]
+}

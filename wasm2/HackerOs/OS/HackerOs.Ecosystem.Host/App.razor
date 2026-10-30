@@ -152,7 +152,8 @@
                     <select id="login-user" autocomplete="username" required @bind="SelectedLogin">
                         @foreach (LocalUser user in State.Users)
                         {
-                            <option value="@user.LoginName.Value">@user.DisplayName (@user.LoginName.Value)</option>
+                            @* ADR 0201 section 4: an account whose session waits in the background resumes it. *@
+                            <option value="@user.LoginName.Value">@user.DisplayName (@user.LoginName.Value)@(HasOpenSession(user) ? L["Login.OpenSession"].Value : string.Empty)</option>
                         }
                     </select>
                     <label for="login-password">@L["Common.Password"]</label>
@@ -179,10 +180,7 @@
             {
                 <MobileShell />
             }
-            else
-            {
-                <DesktopShell OnLoggedOut="HandleLoggedOut" OnRestart="HandleRestartAsync" TestDemoEnabled="@TestDemoEnabled" />
-            }
+            @* The desktop shell is rendered after this switch, so it can stay in the page during "Switch user" (ADR 0201). *@
             break;
         case EcosystemHostView.Recovery:
             <section class="recovery-surface" aria-labelledby="recovery-title">
@@ -208,6 +206,20 @@
                     <ProjectInformation ShowLegacyNotice="false" />
                 </section>
                 break;
+        }
+        @if (KeepsDesktopShell)
+        {
+            @* ADR 0201 section 3: while a session waits in the background, its desktop stays in the page,
+               hidden and inert under the sign-in screen, so the apps of that session keep their windows. *@
+            <div class="@(ShowsDesktop ? "session-desktop" : "session-desktop is-switched-out")"
+                 inert="@(ShowsDesktop ? null : true)"
+                 aria-hidden="@(ShowsDesktop ? null : "true")">
+                <DesktopShell OnLoggedOut="HandleLoggedOut"
+                              OnRestart="HandleRestartAsync"
+                              OnSwitchUser="SwitchUserAsync"
+                              ForegroundSession="@SessionService.CurrentPrincipal?.SessionId"
+                              TestDemoEnabled="@TestDemoEnabled" />
+            </div>
         }
         </ChildContent>
         <ErrorContent Context="exception">
@@ -697,6 +709,11 @@
             ClearPasswords();
             State.CompleteLogin();
         }
+        catch (SessionLimitReachedException limit)
+        {
+            State.CompleteIdentityLoad(State.Users);
+            FormError = L["Login.TooManySessions", limit.MaxOpenSessions];
+        }
         catch (Exception exception) when (exception is FormatException or InvalidOperationException)
         {
             State.CompleteIdentityLoad(State.Users);
@@ -765,6 +782,11 @@
             State.CompleteIdentityLoad(State.Users);
             FormError = L["Login.PasskeyUnsupported"];
         }
+        catch (SessionLimitReachedException limit)
+        {
+            State.CompleteIdentityLoad(State.Users);
+            FormError = L["Login.TooManySessions", limit.MaxOpenSessions];
+        }
         catch (Exception exception) when (exception is FormatException or InvalidOperationException)
         {
             State.CompleteIdentityLoad(State.Users);
@@ -789,8 +811,86 @@
     /// </summary>
     private Task HandleLoggedOut()
     {
+        if (HasBackgroundSessions)
+        {
+            // ADR 0201 section 5: other sessions still run; the sign-in screen offers them again.
+            return ShowSwitchUserScreenAsync();
+        }
+
         State.BeginInitialization();
         return InitializeHostAsync();
+    }
+
+    /// <summary>The session service, when it keeps several sessions open (ADR 0201).</summary>
+    private IUserSwitchingService? Switching => SessionService as IUserSwitchingService;
+
+    private bool HasBackgroundSessions => Switching?.BackgroundSessions.Count > 0;
+
+    private bool HasOpenSession(LocalUser user) =>
+        Switching?.OpenSessions.Any(open => open.UserId == user.Id) == true;
+
+    /// <summary>The desktop is shown: a session is in the foreground on the desktop form factor.</summary>
+    private bool ShowsDesktop =>
+        State.View == EcosystemHostView.Desktop
+        && PlatformPreference.Current.ActivePlatform != WellKnownAppPlatforms.Mobile;
+
+    /// <summary>
+    /// The desktop shell stays in the page when it is shown, and, hidden, while sessions wait in the
+    /// background behind the sign-in screens (ADR 0201 section 3).
+    /// </summary>
+    private bool KeepsDesktopShell =>
+        ShowsDesktop
+        || (HasBackgroundSessions && State.View is EcosystemHostView.Initializing or EcosystemHostView.Login
+            or EcosystemHostView.LoginProgress or EcosystemHostView.Desktop);
+
+    /// <summary>
+    /// ADR 0201 section 4: « Changer d'utilisateur » of the Start menu. The session moves to the
+    /// background with its apps, without confirmation, and the sign-in screen opens.
+    /// </summary>
+    private async Task SwitchUserAsync()
+    {
+        if (Switching is not { } switching || State.View != EcosystemHostView.Desktop)
+        {
+            return;
+        }
+
+        try
+        {
+            await switching.SwitchAwayAsync();
+        }
+        catch (InvalidOperationException)
+        {
+            // The session ended under the menu: the sign-out path already runs.
+            return;
+        }
+
+        await ShowSwitchUserScreenAsync();
+    }
+
+    /// <summary>
+    /// Opens the sign-in screen while sessions run in the background: no boot again (their apps keep
+    /// running), only the accounts and the system language (ADR 0104) are loaded.
+    /// </summary>
+    private async Task ShowSwitchUserScreenAsync()
+    {
+        FormError = null;
+        ShowGuestAccountForm = false;
+        ClearPasswords();
+        State.BeginInitialization();
+        StateHasChanged();
+        try
+        {
+            await SessionLocale.UseSystemLocaleAsync();
+            State.CompleteIdentityLoad(await UserRepository.GetAllAsync());
+            // The first account without an open session is the likely next one.
+            SelectedLogin = (State.Users.FirstOrDefault(user => !HasOpenSession(user)) ?? State.Users.FirstOrDefault())
+                ?.LoginName.Value ?? string.Empty;
+        }
+        catch (Exception exception)
+        {
+            State.ShowRecovery(BrowserStorageRecoveryClassifier.Classify(
+                exception, StorageRecoveryContext.Boot, Guid.NewGuid()));
+        }
     }
 
     /// <summary>

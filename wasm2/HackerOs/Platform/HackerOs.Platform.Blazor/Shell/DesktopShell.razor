@@ -40,6 +40,7 @@
     <div class="desktop-workspace">
         <DesktopArea Windows="WindowRuntime.Windows"
                      Layers="_windowLayers"
+                     IsWindowShown="_showsWindow"
                      BackgroundContent="EffectiveBackgroundContent"
                      BackgroundInteractive="UsesDesktopSurface"
                      OnFocus="HandleFocus"
@@ -75,7 +76,7 @@
 
     @if (_launcher.IsOpen && _launcher.Display.IsPrimary)
     {
-        <AppLauncher OnClose="CloseLauncher" OnAppSelected="HandleAppSelected" OnSendToDesktop="SendToDesktopCallback" OnCreateAccount="OpenUsersSettingsAsync" OnSignOut="OpenLogout" OnRestart="RestartCallback" />
+        <AppLauncher OnClose="CloseLauncher" OnAppSelected="HandleAppSelected" OnSendToDesktop="SendToDesktopCallback" OnCreateAccount="OpenUsersSettingsAsync" OnSignOut="OpenLogout" OnRestart="RestartCallback" OnSwitchUser="SwitchUserCallback" />
     }
 
     @if (!string.IsNullOrEmpty(_launchError))
@@ -88,7 +89,8 @@
         <LogoutDialog OnClose="CloseLogout" OnLoggedOut="HandleLoggedOutAsync" Restart="_isRestart" />
     }
 
-    <HackerOs.Taskbar.Blazor.Taskbar WindowSource="_taskbarWindowSource"
+    <HackerOs.Taskbar.Blazor.Taskbar @key="ForegroundSession"
+                                      WindowSource="_taskbarWindowSource"
                                       Commands="_taskbarCommands"
                                       Launcher="_primaryLauncher"
                                       StatusSource="_taskbarStatus"
@@ -181,6 +183,38 @@
     public EventCallback OnLoggedOut { get; set; }
 
     /// <summary>
+    /// Gets or sets the session in the foreground (ADR 0201), or <see langword="null"/> while the
+    /// "Switch user" screen covers this shell. The host passes it so the shell follows a switch of
+    /// user: the icons, the taskbars and the Start menu are made again for the new session, and the
+    /// windows of the other sessions are hidden.
+    /// </summary>
+    [Parameter]
+    public SessionId? ForegroundSession { get; set; }
+
+    /// <summary>
+    /// Gets or sets what the host does for « Changer d'utilisateur » of the Start menu (ADR 0201):
+    /// the session moves to the background and the sign-in screen opens. The Start menu keeps the
+    /// item greyed out when it is not supplied.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnSwitchUser { get; set; }
+
+    private EventCallback SwitchUserCallback => OnSwitchUser.HasDelegate
+        ? EventCallback.Factory.Create(this, SwitchUserAsync)
+        : default;
+
+    private Task SwitchUserAsync()
+    {
+        _launcher.Close();
+        _clockPanel.Close();
+        return OnSwitchUser.InvokeAsync();
+    }
+
+    private SessionWindowFilter _sessionWindows = null!;
+    private Func<WindowRuntimeState, bool> _showsWindow = null!;
+    private SessionId? _shownSession;
+
+    /// <summary>
     /// Gets or sets what the host does for « Redémarrer » of the Start menu's Power button
     /// (ADR 0195), raised once the session ended like a sign-out: the browser host reloads the OS
     /// past its caches. The Start menu offers no « Redémarrer » when it is not supplied.
@@ -223,6 +257,7 @@
     private RenderFragment<HackerOs.Platform.Blazor.Display.SecondaryScreen> SecondaryDesktopFragment => screen =>
         @<DesktopArea Windows="WindowRuntime.Windows"
                       Layers="_windowLayers"
+                      IsWindowShown="_showsWindow"
                       DisplayId="screen.Id"
                       OnGesture="HandleGesture" />;
 
@@ -235,9 +270,10 @@
         @<text>
             @if (_launcher.IsOpen && _launcher.Display == screen.Id)
             {
-                <AppLauncher OnClose="CloseLauncher" OnAppSelected="HandleAppSelected" OnSendToDesktop="SendToDesktopCallback" OnCreateAccount="OpenUsersSettingsAsync" OnSignOut="OpenLogout" OnRestart="RestartCallback" />
+                <AppLauncher OnClose="CloseLauncher" OnAppSelected="HandleAppSelected" OnSendToDesktop="SendToDesktopCallback" OnCreateAccount="OpenUsersSettingsAsync" OnSignOut="OpenLogout" OnRestart="RestartCallback" OnSwitchUser="SwitchUserCallback" />
             }
-            <HackerOs.Taskbar.Blazor.Taskbar WindowSource="ScreenTaskbarSource(screen.Id)"
+            <HackerOs.Taskbar.Blazor.Taskbar @key="ForegroundSession"
+                                              WindowSource="ScreenTaskbarSource(screen.Id)"
                                               Commands="_taskbarCommands"
                                               Launcher="_launcher.For(screen.Id)"
                                               StatusSource="_taskbarStatus"
@@ -251,7 +287,8 @@
         {
             source = new TaskbarWindowSourceAdapter(
                 WindowRuntime,
-                window => TaskbarScreenFilter.Lists(display, Screens.PrimaryTaskbar, window.DisplayId));
+                window => _sessionWindows.Shows(window)
+                    && TaskbarScreenFilter.Lists(display, Screens.PrimaryTaskbar, window.DisplayId));
             _screenTaskbarSources[display] = source;
         }
 
@@ -281,6 +318,8 @@
     private RenderFragment DesktopSurfaceFragment => builder =>
     {
         builder.OpenComponent<DesktopSurfaceHost>(0);
+        // ADR 0201: each session has its desktop (its ~/Desktop), made again after a switch of user.
+        builder.SetKey(ForegroundSession);
         builder.AddComponentReferenceCapture(1, component => _desktopSurface = (DesktopSurfaceHost)component);
         builder.CloseComponent();
     };
@@ -533,9 +572,15 @@
         KeyboardCommands.OpenScreen = _openScreen;
         _processSubscription = new WindowProcessObserver(EventBus, ProcessManager, Orchestrator, WindowRuntime, LaunchCoordinator, work => InvokeAsync(work));
 
+        // ADR 0201 section 3: only the foreground session's windows are shown, listed and switched to.
+        _sessionWindows = new SessionWindowFilter(SessionService, Orchestrator);
+        _showsWindow = _sessionWindows.Shows;
+        KeyboardCommands.ListsWindow = _showsWindow;
+        _shownSession = ForegroundSession;
         _taskbarWindowSource = new TaskbarWindowSourceAdapter(
             WindowRuntime,
-            window => TaskbarScreenFilter.Lists(DisplayId.Primary, Screens.PrimaryTaskbar, window.DisplayId));
+            window => _sessionWindows.Shows(window)
+                && TaskbarScreenFilter.Lists(DisplayId.Primary, Screens.PrimaryTaskbar, window.DisplayId));
         _taskbarCommands = new TaskbarCommandDispatcherAdapter(WindowRuntime, CloseCoordinator, CloseGuards);
         _launcher = new TaskbarLauncherAdapter();
         _primaryLauncher = _launcher.For(DisplayId.Primary);
@@ -555,6 +600,29 @@
             appId => Catalog.Manifests.ContainsKey(appId),
             CanOpenNewWindow,
             (appId, arguments, display) => InvokeAsync(() => LaunchFromTaskbarAsync(appId, arguments, display)));
+    }
+
+    /// <summary>
+    /// ADR 0201: after a switch of user the menus of the previous session close and the taskbars
+    /// list the windows of the session now in the foreground.
+    /// </summary>
+    protected override void OnParametersSet()
+    {
+        if (_shownSession == ForegroundSession)
+        {
+            return;
+        }
+
+        _shownSession = ForegroundSession;
+        _launcher.Close();
+        _clockPanel.Close();
+        _isLogoutOpen = false;
+        _launchError = null;
+        _taskbarWindowSource.Refresh();
+        foreach (TaskbarWindowSourceAdapter source in _screenTaskbarSources.Values)
+        {
+            source.Refresh();
+        }
     }
 
     private void Rerender()
@@ -589,6 +657,11 @@
         if (ReferenceEquals(KeyboardCommands.OpenScreen, _openScreen))
         {
             KeyboardCommands.OpenScreen = null;
+        }
+
+        if (ReferenceEquals(KeyboardCommands.ListsWindow, _showsWindow))
+        {
+            KeyboardCommands.ListsWindow = null;
         }
 
         _processSubscription?.Dispose();

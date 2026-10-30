@@ -306,3 +306,17 @@ code {
     color: var(--hos-warning, #d5a84f);
     font-size: 0.875rem;
 }
+
+/* ADR 0201 section 3: the desktop of the sessions in the background stays rendered, at its size
+   (its windows keep their layout), hidden under the sign-in screen. */
+.session-desktop {
+    display: contents;
+}
+
+.session-desktop.is-switched-out {
+    position: fixed;
+    inset: 0;
+    display: block;
+    visibility: hidden;
+    pointer-events: none;
+}

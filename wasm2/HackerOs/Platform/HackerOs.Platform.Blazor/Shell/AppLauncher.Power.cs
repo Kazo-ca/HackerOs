@@ -5,8 +5,8 @@ namespace HackerOs.Platform.Blazor.Shell;
 
 /// <summary>
 /// The Power button of the Start menu (ADR 0195): « Se déconnecter », « Changer d'utilisateur »
-/// (not available yet, and never for the guest) and « Redémarrer ». The desktop shell carries out
-/// the request; the menu only closes the launcher and raises it.
+/// (ADR 0201, never for the guest) and « Redémarrer ». The desktop shell carries out the request;
+/// the menu only closes the launcher and raises it.
 /// </summary>
 public partial class AppLauncher
 {
@@ -15,6 +15,7 @@ public partial class AppLauncher
     private ElementReference _powerTriggerRef;
     private ElementReference _signOutItemRef;
     private ElementReference _restartItemRef;
+    private ElementReference _switchUserItemRef;
 
     /// <summary>
     /// Raised by « Se déconnecter » (ADR 0195): the desktop shell confirms and ends the session.
@@ -30,10 +31,21 @@ public partial class AppLauncher
     [Parameter]
     public EventCallback OnRestart { get; set; }
 
+    /// <summary>
+    /// Raised by « Changer d'utilisateur » (ADR 0201): the host moves the session to the background
+    /// and opens the sign-in screen. The item stays greyed out when it is not supplied.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnSwitchUser { get; set; }
+
     private bool HasPowerMenu => OnSignOut.HasDelegate || OnRestart.HasDelegate;
 
-    /// <summary>The guest never switches user (ADR 0195 §3); for the others the feature is still to do.</summary>
-    private string SwitchUserHint => _principal?.LoginName.Value == HackerOs.Platform.Core.Sessions.GuestAccountService.LoginName
+    private bool IsGuest => _principal?.LoginName.Value == HackerOs.Platform.Core.Sessions.GuestAccountService.LoginName;
+
+    /// <summary>The guest never switches user (ADR 0195 §4, ADR 0201 §4); the others do when the host supports it.</summary>
+    private bool CanSwitchUser => OnSwitchUser.HasDelegate && !IsGuest;
+
+    private string SwitchUserHint => IsGuest
         ? L["Launcher.Power.SwitchUser.Guest"]
         : L["Launcher.Power.SwitchUser.Unavailable"];
 
@@ -47,6 +59,12 @@ public partial class AppLauncher
     {
         await CloseAsync();
         await OnSignOut.InvokeAsync();
+    }
+
+    private async Task SwitchUserAsync()
+    {
+        await CloseAsync();
+        await OnSwitchUser.InvokeAsync();
     }
 
     private async Task RestartAsync()
@@ -76,11 +94,16 @@ public partial class AppLauncher
             return;
         }
 
-        // Only the enabled items take the focus; « Changer d'utilisateur » is skipped.
+        // Only the enabled items take the focus; a greyed « Changer d'utilisateur » is skipped.
         List<ElementReference> items = [];
         if (OnSignOut.HasDelegate)
         {
             items.Add(_signOutItemRef);
+        }
+
+        if (CanSwitchUser)
+        {
+            items.Add(_switchUserItemRef);
         }
 
         if (OnRestart.HasDelegate)
@@ -109,7 +132,7 @@ public partial class AppLauncher
 
         _focusPowerMenu = false;
         _powerItemIndex = 0;
-        await TryFocusAsync(OnSignOut.HasDelegate ? _signOutItemRef : _restartItemRef);
+        await TryFocusAsync(OnSignOut.HasDelegate ? _signOutItemRef : CanSwitchUser ? _switchUserItemRef : _restartItemRef);
     }
 
     private static async Task TryFocusAsync(ElementReference element)

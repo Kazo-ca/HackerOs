@@ -140,3 +140,15 @@ HackerOs.Platform.Blazor.Shell.DesktopShell.OnRestart.get -> Microsoft.AspNetCor
 HackerOs.Platform.Blazor.Shell.DesktopShell.OnRestart.set -> void
 HackerOs.Platform.Blazor.Shell.LogoutDialog.Restart.get -> bool
 HackerOs.Platform.Blazor.Shell.LogoutDialog.Restart.set -> void
+HackerOs.Platform.Blazor.Shell.AppLauncher.OnSwitchUser.get -> Microsoft.AspNetCore.Components.EventCallback
+HackerOs.Platform.Blazor.Shell.AppLauncher.OnSwitchUser.set -> void
+HackerOs.Platform.Blazor.Shell.DesktopShell.ForegroundSession.get -> HackerOs.Simulation.Abstractions.Sessions.SessionId?
+HackerOs.Platform.Blazor.Shell.DesktopShell.ForegroundSession.set -> void
+HackerOs.Platform.Blazor.Shell.DesktopShell.OnSwitchUser.get -> Microsoft.AspNetCore.Components.EventCallback
+HackerOs.Platform.Blazor.Shell.DesktopShell.OnSwitchUser.set -> void
+HackerOs.Platform.Blazor.Shell.SessionWindowFilter
+HackerOs.Platform.Blazor.Shell.SessionWindowFilter.SessionWindowFilter(HackerOs.Simulation.Abstractions.Sessions.ISessionService! sessions, HackerOs.Platform.Core.Lifecycle.AppLifecycleOrchestrator! orchestrator) -> void
+HackerOs.Platform.Blazor.Shell.SessionWindowFilter.Shows(HackerOs.Windowing.Abstractions.WindowRuntimeState! window) -> bool
+HackerOs.Platform.Blazor.Windows.WindowKeyboardCommands.ListsWindow.get -> System.Func<HackerOs.Windowing.Abstractions.WindowRuntimeState!, bool>?
+HackerOs.Platform.Blazor.Windows.WindowKeyboardCommands.ListsWindow.set -> void
+override HackerOs.Platform.Blazor.Shell.DesktopShell.OnParametersSet() -> void

@@ -23,6 +23,31 @@
                 <p>@L["Logout.Restart.Body"]</p>
             }
 
+            @if (OtherSessions.Count > 0)
+            {
+                @* ADR 0201 section 5: the other open sessions, ended with this one on request (always by a restart). *@
+                <div class="other-sessions-section">
+                    <span class="section-label">@L["Logout.OtherSessions", OtherSessions.Count]</span>
+                    <ul class="session-list">
+                        @foreach (AuthenticatedPrincipal other in OtherSessions)
+                        {
+                            <li @key="other.SessionId">@other.DisplayName <span class="proc-pid">@other.LoginName.Value</span></li>
+                        }
+                    </ul>
+                    @if (Restart)
+                    {
+                        <p>@L["Logout.Restart.EndsOtherSessions"]</p>
+                    }
+                    else
+                    {
+                        <label class="end-others">
+                            <input type="checkbox" checked="@_endOtherSessions" disabled="@_isSigningOut" @onchange="ToggleEndOtherSessions" />
+                            <span>@L["Logout.EndOtherSessions"]</span>
+                        </label>
+                    }
+                </div>
+            }
+
             @if (RunningProcesses.Count > 0)
             {
                 <div class="running-processes-section">
@@ -64,6 +89,7 @@
 
 @code {
     private bool _isSigningOut;
+    private bool _endOtherSessions;
     private string? _errorMessage;
 
     [Parameter]
@@ -87,10 +113,26 @@
         _ => L["Logout.SignOut"],
     };
 
-    private IReadOnlyList<ProcessRecord> RunningProcesses =>
-        ProcessManager.GetActiveProcesses()
-            .Where(p => p.State == ProcessState.Running || p.State == ProcessState.Starting)
-            .ToList();
+    /// <summary>The open sessions in the background (ADR 0201), none when the host keeps a single session.</summary>
+    private IReadOnlyList<AuthenticatedPrincipal> OtherSessions =>
+        (SessionService as IUserSwitchingService)?.BackgroundSessions ?? [];
+
+    /// <summary>The processes this sign-out stops: none of the sessions left open in the background.</summary>
+    private IReadOnlyList<ProcessRecord> RunningProcesses
+    {
+        get
+        {
+            HashSet<SessionId> kept = EndsOtherSessions ? [] : [.. OtherSessions.Select(static other => other.SessionId)];
+            return ProcessManager.GetActiveProcesses()
+                .Where(p => (p.State == ProcessState.Running || p.State == ProcessState.Starting) && !kept.Contains(p.SessionId))
+                .ToList();
+        }
+    }
+
+    /// <summary>A restart reloads the page, so it always ends every session (ADR 0201 section 5).</summary>
+    private bool EndsOtherSessions => Restart || _endOtherSessions;
+
+    private void ToggleEndOtherSessions(ChangeEventArgs args) => _endOtherSessions = args.Value is true;
 
     private async Task ConfirmLogoutAsync()
     {
@@ -98,6 +140,16 @@
         _errorMessage = null;
         try
         {
+            if (EndsOtherSessions && SessionService is IUserSwitchingService switching)
+            {
+                // Like the foreground one: the apps stop (drafts kept), then the session ends.
+                foreach (AuthenticatedPrincipal other in switching.BackgroundSessions)
+                {
+                    await Orchestrator.StopSessionAppsAsync(other.SessionId);
+                    await switching.EndBackgroundSessionAsync(other.SessionId);
+                }
+            }
+
             // The session's apps stop first, while the desktop can still close their windows.
             if (SessionService.CurrentPrincipal is { } principal)
             {

@@ -174,4 +174,10 @@
   <data name="GuestAccount.Title" xml:space="preserve">
     <value>Créer mon compte</value>
   </data>
+  <data name="Login.OpenSession" xml:space="preserve">
+    <value> — session ouverte</value>
+  </data>
+  <data name="Login.TooManySessions" xml:space="preserve">
+    <value>Trop de sessions ouvertes : {0} au plus peuvent être ouvertes en même temps. Reprenez une session ouverte, ou déconnectez-en une d'abord.</value>
+  </data>
 </root>

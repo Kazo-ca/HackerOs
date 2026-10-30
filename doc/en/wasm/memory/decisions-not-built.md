@@ -103,8 +103,10 @@ viewers live, scope of `?app=`, Eruda or not.
 
 ## Questions asked, answer to confirm
 
-- **Switch user** (issue #290): several sessions open at once; the target
-  behaviour was asked to Benoit on 2026-10-30.
+- **Switch user** (issue #290, ADR 0201): built on the recommendation
+  "simultaneous sessions" (like Windows); the question was asked to Benoit on
+  2026-10-30 and asked again in the thread of work item `todo/16-switch-user`.
+  Another answer needs a new ADR.
 - **"New folder" in dialogs** (ADR 0175): make
   `SelectFolderDialogRequest.AllowCreateFolder` true by default for every app?
   Recommended: keep the per-app option. Asked on 2026-10-26.

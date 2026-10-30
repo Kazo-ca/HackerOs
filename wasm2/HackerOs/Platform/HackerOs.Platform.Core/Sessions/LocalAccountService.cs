@@ -57,6 +57,13 @@ public sealed class LocalAccountService
         _iterations = iterations;
     }
 
+    /// <summary>
+    /// Gets whether an account has an open session, in the foreground or in the background
+    /// (ADR 0201 section 7); such an account is never deleted. <see langword="null"/> only refuses
+    /// the caller's own account.
+    /// </summary>
+    public Func<LocalUserId, bool>? HasOpenSession { get; init; }
+
     /// <summary>Gets whether a login name is reserved for the system (<c>hackeros-svc</c>, <c>root</c>, <c>administrators</c>, <c>guest</c>).</summary>
     /// <param name="loginName">A login name.</param>
     /// <returns><see langword="true"/> when no account may take it.</returns>
@@ -148,7 +155,7 @@ public sealed class LocalAccountService
     /// <param name="removeHome">Whether to delete <c>/home/&lt;login&gt;</c> too.</param>
     /// <param name="cancellationToken">Cancels the deletion.</param>
     /// <exception cref="ArgumentException">No such account.</exception>
-    /// <exception cref="InvalidOperationException">The caller's own account, or the last enabled administrator.</exception>
+    /// <exception cref="InvalidOperationException">The caller's own account, an account with an open session (ADR 0201), or the last enabled administrator.</exception>
     public async ValueTask DeleteAsync(
         AuthenticatedPrincipal caller,
         string administratorLogin,
@@ -175,7 +182,7 @@ public sealed class LocalAccountService
             throw new ArgumentException($"userdel: user '{loginName}' does not exist", nameof(loginName));
         }
 
-        if (user.Id == caller.UserId)
+        if (user.Id == caller.UserId || HasOpenSession?.Invoke(user.Id) == true)
         {
             Record(administratorLogin, "users.delete", user.LoginName.Value, AuditOutcome.Denied);
             throw new InvalidOperationException($"userdel: user '{user.LoginName.Value}' is currently signed in");
