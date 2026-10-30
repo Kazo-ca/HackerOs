@@ -275,18 +275,21 @@ function rememberLayout(element) {
     element.__hosLayer = element.closest(".window-layer") ?? element.__hosLayer ?? null;
 }
 
-// A copy of the window for its close animation: hidden from assistive technologies, out of the
-// focus order and of the window queries (no data-window-*, no id), with no live content (no
-// iframe, video or audio that would load or play again). Canvases keep their last picture.
+// A copy of the window for its close animation: a <div>, not an <article>, hidden from assistive
+// technologies, out of the focus order and of the window queries (no data-window-*, no id), with
+// no live content (no iframe, video or audio that would load or play again). Canvases keep their
+// last picture. It keeps the class and the scoped-CSS attribute, so it is drawn like the window.
 function frozenCopy(element) {
-    const ghost = element.cloneNode(true);
-    for (const attribute of [...ghost.attributes]) {
+    const copy = element.cloneNode(true);
+    const ghost = element.ownerDocument.createElement("div");
+    for (const attribute of copy.attributes) {
         const name = attribute.name;
-        if (name === "id" || name === "role" || name === "tabindex" || name === "hidden"
-            || name.startsWith("aria-") || name.startsWith("data-window")) {
-            ghost.removeAttribute(name);
+        if (name !== "id" && name !== "role" && name !== "tabindex" && name !== "hidden" && name !== "inert"
+            && !name.startsWith("aria-") && !name.startsWith("data-window")) {
+            ghost.setAttribute(name, attribute.value);
         }
     }
+    ghost.append(...copy.childNodes);
     ghost.setAttribute("aria-hidden", "true");
     ghost.inert = true;
     ghost.classList.add("is-closing-ghost");

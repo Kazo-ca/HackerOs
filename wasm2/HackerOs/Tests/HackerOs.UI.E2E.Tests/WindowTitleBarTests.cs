@@ -45,6 +45,7 @@ public sealed class WindowTitleBarTests(ITestOutputHelper output)
             // A double click on the title bar maximizes; nothing is left over the buttons.
             await title.DblClickAsync();
             await Assertions.Expect(window).ToHaveAttributeAsync("data-window-state", "Maximized");
+            await SettleAsync(window);
             await Assertions.Expect(window.Locator(".resize-handle")).ToHaveCountAsync(0);
             foreach (string button in new[] { "minimize", "maximize", "close" })
             {
@@ -55,14 +56,17 @@ public sealed class WindowTitleBarTests(ITestOutputHelper output)
             // The restore button answers a click at its very top edge, where the resize handles were.
             await ClickTopEdgeAsync(page, window.Locator("button.chrome-button-maximize"));
             await Assertions.Expect(window).ToHaveAttributeAsync("data-window-state", "Normal");
+            await SettleAsync(window);
             Assert.Equal(opened, await BoundsAsync(window));
 
             // Double click again: maximized; a drag of the title bar restores the size under the pointer.
             await title.DblClickAsync();
             await Assertions.Expect(window).ToHaveAttributeAsync("data-window-state", "Maximized");
+            await SettleAsync(window);
             LocatorBoundingBoxResult titleBox = (await title.BoundingBoxAsync())!;
             await DragAsync(page, titleBox.X + 40, titleBox.Y + (titleBox.Height / 2), 250, 200);
             await Assertions.Expect(window).ToHaveAttributeAsync("data-window-state", "Normal");
+            await SettleAsync(window);
             (double x, double y, double width, double height) dragged = await BoundsAsync(window);
             Assert.Equal((opened.width, opened.height), (dragged.width, dragged.height));
             Assert.True(dragged.y > 100, $"The restored window should follow the pointer, got {dragged}.");
@@ -72,6 +76,7 @@ public sealed class WindowTitleBarTests(ITestOutputHelper output)
             await title.ClickAsync();
             await page.Keyboard.PressAsync("Alt+Shift+ArrowLeft");
             await Assertions.Expect(window).ToHaveAttributeAsync("data-window-snapped", "true");
+            await SettleAsync(window);
             await Assertions.Expect(window).ToHaveAttributeAsync("data-window-x", "0");
             Assert.True(await CoversWholeSurfaceAsync(page, window.Locator("button.chrome-button-maximize")),
                 "Something sits over the maximize button of a snapped window.");
@@ -79,8 +84,10 @@ public sealed class WindowTitleBarTests(ITestOutputHelper output)
             // Maximize then restore: the snap is undone.
             await ClickTopEdgeAsync(page, window.Locator("button.chrome-button-maximize"));
             await Assertions.Expect(window).ToHaveAttributeAsync("data-window-state", "Maximized");
+            await SettleAsync(window);
             await window.Locator("button.chrome-button-maximize").ClickAsync();
             await Assertions.Expect(window).ToHaveAttributeAsync("data-window-state", "Normal");
+            await SettleAsync(window);
             await Assertions.Expect(window).Not.ToHaveAttributeAsync("data-window-snapped", "true");
             Assert.Equal(dragged, await BoundsAsync(window));
 
@@ -88,9 +95,11 @@ public sealed class WindowTitleBarTests(ITestOutputHelper output)
             await title.ClickAsync();
             await page.Keyboard.PressAsync("Alt+Shift+ArrowRight");
             await Assertions.Expect(window).ToHaveAttributeAsync("data-window-snapped", "true");
+            await SettleAsync(window);
             titleBox = (await title.BoundingBoxAsync())!;
             await DragAsync(page, titleBox.X + 40, titleBox.Y + (titleBox.Height / 2), -200, 150);
             await Assertions.Expect(window).Not.ToHaveAttributeAsync("data-window-snapped", "true");
+            await SettleAsync(window);
             (double x, double y, double width, double height) unsnapped = await BoundsAsync(window);
             Assert.Equal((opened.width, opened.height), (unsnapped.width, unsnapped.height));
 
@@ -98,6 +107,7 @@ public sealed class WindowTitleBarTests(ITestOutputHelper output)
             await title.ClickAsync();
             await page.Keyboard.PressAsync("Alt+Shift+ArrowLeft");
             await Assertions.Expect(window).ToHaveAttributeAsync("data-window-snapped", "true");
+            await SettleAsync(window);
             await ClickTopEdgeAsync(page, window.Locator("button.chrome-button-close"));
             await Assertions.Expect(window).ToHaveCountAsync(0, new() { Timeout = 15000 });
 
@@ -108,6 +118,13 @@ public sealed class WindowTitleBarTests(ITestOutputHelper output)
             E2ESupport.StopProcess(server);
         }
     }
+
+    /// <summary>
+    /// Waits for the window's maximize, restore or snap animation to end (ADR 0198): the boxes and
+    /// hit tests below are about where the window lands, not where it is mid-flight.
+    /// </summary>
+    private static Task SettleAsync(ILocator window) =>
+        window.EvaluateAsync("el => Promise.all(el.getAnimations().map(a => a.finished.catch(() => undefined)))");
 
     /// <summary>Whether every sampled point of <paramref name="button"/> hits the button itself.</summary>
     private static async Task<bool> CoversWholeSurfaceAsync(IPage page, ILocator button)
