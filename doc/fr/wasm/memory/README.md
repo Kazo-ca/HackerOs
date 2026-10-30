@@ -56,6 +56,12 @@ jour à la fin de chaque série ou quand une convention change.
 - **Bouton Marche/arrêt dans le menu Démarrer** (ADR 0195, PR #291, fusionnée
   le 2026-10-30) : « Changer d'utilisateur » reste grisé, issue `TODO` #290
   (plusieurs sessions ouvertes en même temps).
+- **Série `todo/base`** (2026-10-30, toutes les issues `TODO` en parallèle,
+  une PR finale vers `main`) : chantier 1 du Hack Store fait, modèle
+  `hackeros-solution` et workflow de publication vers le catalogue (ADR 0207,
+  [`app-repository.md`](../framework/app-repository.md), issue #246). Le
+  dépôt `HackerOs-AppTemplate` ne sera régénéré qu'avec un sous-module sur la
+  release qui contient ce modèle (PR en brouillon dans ce dépôt).
 - **ADR** : 0001 à 0171 et 0173 à 0195 existent sur `main` (quelques numéros sautés ;
   0141 et 0172 n'ont pas servi). Repères récents : 0173 publication automatique,
   0174 annonce de nouvelle version, 0175 « Nouveau dossier » des dialogues, 0176
@@ -65,7 +71,9 @@ jour à la fin de chaque série ou quand une convention change.
   invité et crédits, 0188 à 0190 Hack Store ([`hackeros-store.md`](../dev/plans/hackeros-store.md)),
   0191 serveur local installable, 0192 `features.md` et exception à l'ADR 0135,
   0193 heure locale, 0194 menus de la barre des tâches, 0195 bouton
-  Marche/arrêt du menu Démarrer. **Prochain numéro libre : 0196.** Avant d'en
+  Marche/arrêt du menu Démarrer ; série `todo/base` : 0207 modèle
+  `hackeros-solution` (les autres numéros de la série sont réservés par ses
+  chantiers). **Prochain numéro libre : 0196.** Avant d'en
   prendre un, vérifier `dev/adr/` sur `main` et les PR ouvertes.
 
 ## Conventions de travail

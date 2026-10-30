@@ -51,7 +51,8 @@ Décidé le 2026-10-28 :
 - Chaque projet open source enveloppé vit dans son propre dépôt
   (`HackerOs-App-Webamp`, `HackerOs-App-IRC` avec KiwiIRC,
   `HackerOs-App-BoxedWine`, et d'autres), créé à partir de
-  `HackerOs-AppTemplate` (ADR 0176) et listé dans `HackerOs-AppMarketPlace`
+  `HackerOs-AppTemplate` (ADR 0176, modèle `hackeros-solution` de l'ADR 0207 ;
+  le dépôt template est régénéré à la release qui contient ce modèle) et listé dans `HackerOs-AppMarketPlace`
   (catalogue du Hack Store, ADR 0188).
 - La licence de chaque dépôt suit celle du projet enveloppé (GPL-2.0 pour
   BoxedWine, par exemple), pas MIT par défaut.

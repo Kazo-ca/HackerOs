@@ -94,10 +94,13 @@ templates, with no VSIX extension. Complements [ADR 0098](0098-sdk-versions-pack
 
 ## Tasks
 
-- [ ] Fix `building-on-hackeros.md` (fr and en): packages and templates on nuget.org.
-- [ ] `ide.host.json` for the five existing templates.
-- [ ] External source mode in `HackerOs.Apps.targets` (`HackerOsUseSource`, `HackerOsSourceRoot`).
-- [ ] `hackeros-solution` template (submodule, `Versions.props` import, profiles, CI).
-- [ ] Test of both profiles in `HackerOs.Templates.E2E.Tests`.
+Implemented by [ADR 0207](0207-solution-template-implementation.md) (work item `todo/1-hackstore-solution-template`).
+
+
+- [x] Fix `building-on-hackeros.md` (fr and en): packages and templates on nuget.org.
+- [x] `ide.host.json` for the five existing templates.
+- [x] External source mode in `HackerOs.Apps.targets` (`HackerOsUseSource`, `HackerOsSourceRoot`).
+- [x] `hackeros-solution` template (submodule, `Versions.props` import, profiles, CI).
+- [x] Test of both profiles in `HackerOs.Templates.E2E.Tests`.
 - [x] Create the `Kazo-ca/HackerOs-AppTemplate` repository (Benoit, 2026-10-28).
-- [ ] Push the output of `dotnet new hackeros-solution` to it and mark it "Template repository".
+- [ ] Push the output of `dotnet new hackeros-solution` to it and mark it "Template repository" (draft PR, see ADR 0207 §11).

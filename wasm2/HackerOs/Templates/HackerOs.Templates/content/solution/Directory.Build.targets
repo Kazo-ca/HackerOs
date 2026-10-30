@@ -1,0 +1,13 @@
+<Project>
+  <!-- Debug profile: the HackerOS packages become projects of the submodule (ADR 0176 §5, ADR 0207). -->
+  <Import Project="$(HackerOsSourceRoot)build/HackerOs.ExternalSource.targets"
+          Condition="'$(HackerOsUseSource)' == 'true' and Exists('$(HackerOsSourceRoot)build/HackerOs.ExternalSource.targets')" />
+
+  <!-- ADR 0176 §3: the submodule is mandatory, it gives the HackerOS version. -->
+  <Target Name="_HackerOsRequireSubmodule"
+          BeforeTargets="_GenerateRestoreProjectSpec;CollectPackageReferences;PrepareForBuild"
+          Condition="!Exists('$(HackerOsSourceRoot)build/Versions.props')">
+    <Error Code="HOSAPP0070"
+           Text="The HackerOS submodule is missing ($(HackerOsSourceRoot)build/Versions.props not found). Run: git submodule update --init" />
+  </Target>
+</Project>
