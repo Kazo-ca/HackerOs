@@ -50,6 +50,9 @@
     <PackageReference Include="Microsoft.OpenApi" Version="2.13.0" />
     <!-- Hosts the Blazor WebAssembly client (ADR 0130): MIME types and debugging proxy of _framework/. -->
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.13" />
+    <!-- ADR 0191 §4: the installable server runs as a Windows service or a systemd unit. -->
+    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="10.0.13" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="10.0.13" />
   </ItemGroup>
 
 </Project>

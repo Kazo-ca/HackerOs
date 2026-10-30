@@ -78,7 +78,7 @@ L'écosystème se compose de :
 | **Avec le serveur HackerOS** | Organisations, utilisateurs avancés | Le serveur ASP.NET Core optionnel sert l'OS et ajoute les comptes synchronisés entre appareils et le relais vers le vrai réseau. Voir [`server-hosting.md`](dev/server-hosting.md). |
 | **Intégré dans son propre produit** | Développeurs, entreprises | Les paquets NuGet et le modèle `dotnet new hackeros-host` permettent de composer son propre hôte avec ses propres applications. Voir [`building-on-hackeros.md`](framework/building-on-hackeros.md). |
 | **Développer des applications** | Développeurs | Paquets NuGet du SDK, modèles `dotnet new`, dépôt modèle, puis installation au terminal avec `hackpkg`. Voir [`sdk-developer-guide.md`](framework/sdk-developer-guide.md). |
-| **Serveur local installable** | Utilisateurs avancés | *En cours de développement* : voir [Réseau et serveur](#réseau-et-serveur). |
+| **Serveur local installable** | Utilisateurs avancés | Chaque version publie le serveur HackerOS pour Windows, Linux et macOS (`hackeros-server-<version>-<système>`) et l'image Docker `ghcr.io/kazo-ca/hackeros-server`. Il s'installe comme service sur son ordinateur ou sur une machine du réseau local, sans être exposé à internet, et l'OS en ligne s'y relie par un code d'appairage (Paramètres > Connexion au serveur > Serveur local). Voir [`installable-server.md`](dev/installable-server.md). |
 
 ## Fonctionnalités disponibles
 
@@ -169,6 +169,11 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   [`blazor-sites.md`](framework/blazor-sites.md))
 - **Accès au vrai réseau** par le serveur optionnel, pour les applications
   autorisées. ([`server-network-relay.md`](dev/server-network-relay.md))
+- **Serveur local installable** : le serveur HackerOS s'installe comme service
+  (Windows, Linux, macOS, Docker) sur son ordinateur ou sur une machine du
+  réseau local en HTTPS, et l'OS, même en ligne sur GitHub Pages, s'y relie
+  par un code d'appairage. ([`installable-server.md`](dev/installable-server.md),
+  [ADR 0191](dev/adr/0191-installable-local-server.md))
 
 ### Comptes et sécurité
 
@@ -293,7 +298,6 @@ dans `main`, le lien mène à sa PR.
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Vrais sites dans le navigateur | Afficher un vrai site web par le relais du serveur HackerOS. | À venir | [#266](https://github.com/Kazo-ca/HackerOs/issues/266) |
-| Serveur local installable | Serveur HackerOS à installer sur son ordinateur ou son réseau local (Windows, Linux, macOS, Docker), utilisé par l'OS en ligne. | [0191 (PR #269)](https://github.com/Kazo-ca/HackerOs/pull/269) | [#267](https://github.com/Kazo-ca/HackerOs/issues/267) |
 
 ### Applications optionnelles portées
 
