@@ -1617,4 +1617,76 @@
   <data name="Users.Guest.Unavailable" xml:space="preserve">
     <value>Le formulaire de compte n'a pas pu s'ouvrir. Fermez la session, puis choisissez Créer mon compte sur l'écran de connexion.</value>
   </data>
+  <data name="LocalServer.AriaLabel" xml:space="preserve">
+    <value>Serveur local</value>
+  </data>
+  <data name="LocalServer.Title" xml:space="preserve">
+    <value>Serveur local</value>
+  </data>
+  <data name="LocalServer.Description" xml:space="preserve">
+    <value>Installez le serveur HackerOS sur cet ordinateur ou sur une autre machine de votre réseau local, sans l'exposer à internet : les applications atteignent alors le vrai réseau par son relais. L'installeur affiche un code d'appairage à usage unique ; saisissez-le ici avec l'adresse du serveur.</value>
+  </data>
+  <data name="LocalServer.Download" xml:space="preserve">
+    <value>Télécharger le serveur</value>
+  </data>
+  <data name="LocalServer.DownloadHelp" xml:space="preserve">
+    <value>Prenez le fichier de la machine qui fera tourner le serveur, dans la dernière version publiée (programmes non signés : Windows demande de confirmer, l'installeur macOS s'en charge). Docker fonctionne partout.</value>
+  </data>
+  <data name="LocalServer.System.WindowsX64" xml:space="preserve">
+    <value>Windows (x64)</value>
+  </data>
+  <data name="LocalServer.System.WindowsArm64" xml:space="preserve">
+    <value>Windows (ARM64)</value>
+  </data>
+  <data name="LocalServer.System.MacArm64" xml:space="preserve">
+    <value>macOS (Apple silicon)</value>
+  </data>
+  <data name="LocalServer.System.MacX64" xml:space="preserve">
+    <value>macOS (Intel)</value>
+  </data>
+  <data name="LocalServer.System.LinuxX64" xml:space="preserve">
+    <value>Linux (x64)</value>
+  </data>
+  <data name="LocalServer.System.LinuxArm64" xml:space="preserve">
+    <value>Linux (ARM64)</value>
+  </data>
+  <data name="LocalServer.OpenReleases" xml:space="preserve">
+    <value>Ouvrir la dernière version publiée</value>
+  </data>
+  <data name="LocalServer.OpenGuide" xml:space="preserve">
+    <value>Guide d'installation</value>
+  </data>
+  <data name="LocalServer.GuideUrl" xml:space="preserve">
+    <value>https://github.com/Kazo-ca/HackerOs/blob/main/doc/fr/wasm/dev/installable-server.md</value>
+  </data>
+  <data name="LocalServer.Address" xml:space="preserve">
+    <value>Adresse du serveur</value>
+  </data>
+  <data name="LocalServer.Test" xml:space="preserve">
+    <value>Tester</value>
+  </data>
+  <data name="LocalServer.Testing" xml:space="preserve">
+    <value>Test en cours…</value>
+  </data>
+  <data name="LocalServer.Found" xml:space="preserve">
+    <value>Un serveur HackerOS répond (version {0}).</value>
+  </data>
+  <data name="LocalServer.NotFound" xml:space="preserve">
+    <value>Aucun serveur HackerOS ici : {0}</value>
+  </data>
+  <data name="LocalServer.Code" xml:space="preserve">
+    <value>Code d'appairage</value>
+  </data>
+  <data name="LocalServer.CodeHelp" xml:space="preserve">
+    <value>Affiché par l'installeur, ou par « HackerOs.Server pair admin » sur la machine du serveur. Valable une fois, 10 minutes.</value>
+  </data>
+  <data name="LocalServer.Pair" xml:space="preserve">
+    <value>Appairer cet appareil</value>
+  </data>
+  <data name="LocalServer.Pairing" xml:space="preserve">
+    <value>Appairage…</value>
+  </data>
+  <data name="LocalServer.PairFailed" xml:space="preserve">
+    <value>L'appairage a échoué : {0}</value>
+  </data>
 </root>

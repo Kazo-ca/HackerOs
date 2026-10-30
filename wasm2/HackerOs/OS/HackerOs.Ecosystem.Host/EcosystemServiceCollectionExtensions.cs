@@ -802,7 +802,11 @@ public static class EcosystemServiceCollectionExtensions
                     () => provider.GetRequiredService<IProxyClient>(),
                     () => provider.GetRequiredService<SyncScheduler>(),
                     () => provider.GetRequiredService<SyncConflictCenter>(),
-                    () => provider.GetRequiredService<IOsSettingsService>()),
+                    () => provider.GetRequiredService<IOsSettingsService>())
+                {
+                    // ADR 0191 §6: the "Test" button of Settings > Local server.
+                    HostInfo = () => provider.GetRequiredService<IHostInfoClient>()
+                },
                 () => provider.GetRequiredService<SystemPowerService>(),
                 () => provider.GetRequiredService<IStorageInspector>(),
                 () => provider.GetRequiredService<IAdministratorAuthenticationAgent>(),

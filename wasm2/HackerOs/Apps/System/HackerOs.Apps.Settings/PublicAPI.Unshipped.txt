@@ -8,3 +8,7 @@ HackerOs.Apps.Settings.WhatsNewPanel.WhatsNewPanel() -> void
 HackerOs.Apps.Settings.DateTimePanel
 HackerOs.Apps.Settings.DateTimePanel.DateTimePanel() -> void
 HackerOs.Apps.Settings.DateTimePanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Apps.Settings.LocalServerPanel
+HackerOs.Apps.Settings.LocalServerPanel.LocalServerPanel() -> void
+HackerOs.Apps.Settings.LocalServerPanel.OnPaired.get -> Microsoft.AspNetCore.Components.EventCallback<HackerOs.AppSdk.Administration.HackServerConnectionState!>
+HackerOs.Apps.Settings.LocalServerPanel.OnPaired.set -> void

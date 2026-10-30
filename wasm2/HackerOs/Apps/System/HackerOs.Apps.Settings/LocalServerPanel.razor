@@ -1,0 +1,76 @@
+@inherits HackerOs.AppSdk.Blazor.HackComponentBase
+@using HackerOs.AppSdk.Administration
+@using HackerOs.App.Abstractions
+
+@*
+    Settings > Server Connection > Local server (ADR 0191 §6): download the installable server,
+    test its address, and link this device with the one-time code it printed. Nothing here calls an
+    address before the user presses a button (ADR 0191 §3).
+*@
+<section class="local-server" aria-label="@L["LocalServer.AriaLabel"]">
+    <h5>@L["LocalServer.Title"]</h5>
+    <p class="setting-desc">@L["LocalServer.Description"]</p>
+
+    <details class="local-server-download">
+        <summary>@L["LocalServer.Download"]</summary>
+        <p class="setting-desc">@L["LocalServer.DownloadHelp"]</p>
+        <ul class="local-server-files">
+            @foreach (ServerDownload download in Downloads(HackerOsSdk.Version))
+            {
+                <li>
+                    <span class="local-server-system">@L[download.SystemKey]</span>
+                    <code>@download.FileName</code>
+                </li>
+            }
+            <li>
+                <span class="local-server-system">Docker</span>
+                <code>@DockerImage</code>
+            </li>
+        </ul>
+        <div class="local-server-links">
+            <a class="local-server-release" href="@ReleasesUrl" target="_blank" rel="noopener noreferrer">@L["LocalServer.OpenReleases"]</a>
+            <a class="local-server-guide" href="@L["LocalServer.GuideUrl"]" target="_blank" rel="noopener noreferrer">@L["LocalServer.OpenGuide"]</a>
+        </div>
+    </details>
+
+    <form class="local-server-form" @onsubmit="PairAsync" @onsubmit:preventDefault>
+        <div class="field">
+            <label for="local-server-url">@L["LocalServer.Address"]</label>
+            <div class="local-server-row">
+                <input id="local-server-url" class="text-input" type="url" autocomplete="off"
+                       disabled="@IsBusy" @bind="Address" @bind:event="oninput" />
+                <button type="button" class="btn-secondary" disabled="@(IsBusy || !HasValidAddress)" @onclick="TestAsync">
+                    @(_isTesting ? L["LocalServer.Testing"] : L["LocalServer.Test"])
+                </button>
+            </div>
+        </div>
+
+        @if (_probe is { IsServer: true } found)
+        {
+            <p class="local-server-ok" role="status">@L["LocalServer.Found", found.ServerVersion ?? "?"]</p>
+        }
+        else if (_probe is { } failed)
+        {
+            <p class="local-server-error" role="alert">@L["LocalServer.NotFound", failed.Error ?? string.Empty]</p>
+        }
+
+        <div class="field">
+            <label for="local-server-code">@L["LocalServer.Code"]</label>
+            <input id="local-server-code" class="text-input local-server-code" type="text" autocomplete="one-time-code"
+                   maxlength="12" placeholder="XXXX-XXXX" spellcheck="false"
+                   disabled="@IsBusy" @bind="Code" @bind:event="oninput" />
+            <p class="setting-desc">@L["LocalServer.CodeHelp"]</p>
+        </div>
+
+        @if (!string.IsNullOrEmpty(_pairError))
+        {
+            <p class="local-server-error" role="alert">@_pairError</p>
+        }
+
+        <div class="server-connection-actions">
+            <button type="submit" class="btn-secondary" disabled="@(IsBusy || !CanPair)">
+                @(_isPairing ? L["LocalServer.Pairing"] : L["LocalServer.Pair"])
+            </button>
+        </div>
+    </form>
+</section>

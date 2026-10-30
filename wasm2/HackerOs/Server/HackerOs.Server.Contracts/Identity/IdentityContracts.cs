@@ -132,6 +132,19 @@ public sealed record DeviceSummary(
     bool IsCurrentDevice);
 
 /// <summary>
+/// Links a new device to a server account with a one-time pairing code (ADR 0191 §6), instead of
+/// the account's password. The code is printed by <c>HackerOs.Server pair &lt;account&gt;</c> on the
+/// machine that runs the server; it is valid once, for a few minutes.
+/// </summary>
+/// <param name="Code">The pairing code, as printed (case and dashes are ignored).</param>
+/// <param name="DeviceName">Human-readable name for the new device (max 128 chars).</param>
+/// <param name="DeviceFingerprint">Opaque stable fingerprint of the new device.</param>
+public sealed record PairDeviceRequest(
+    string Code,
+    string DeviceName,
+    string DeviceFingerprint);
+
+/// <summary>
 /// Source-generated JSON context for all identity contracts.
 /// </summary>
 [JsonSerializable(typeof(CreateAccountRequest))]
@@ -142,6 +155,7 @@ public sealed record DeviceSummary(
 [JsonSerializable(typeof(RefreshTokenResponse))]
 [JsonSerializable(typeof(RegisterDeviceRequest))]
 [JsonSerializable(typeof(RegisterDeviceResponse))]
+[JsonSerializable(typeof(PairDeviceRequest))]
 [JsonSerializable(typeof(DeviceSummary))]
 [JsonSerializable(typeof(IReadOnlyList<DeviceSummary>))]
 [JsonSourceGenerationOptions(

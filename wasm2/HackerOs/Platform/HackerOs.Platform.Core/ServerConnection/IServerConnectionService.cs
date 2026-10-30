@@ -25,6 +25,14 @@ public interface IServerConnectionService
     Task<ServerConnectionState> ConnectWithExistingAccountAsync(
         Uri serverBaseUrl, string username, string password, CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Connects this device to <paramref name="serverBaseUrl"/> with a one-time pairing code printed
+    /// by the server (ADR 0191 §6), without the account's password.
+    /// </summary>
+    Task<ServerConnectionState> ConnectWithPairingCodeAsync(
+        Uri serverBaseUrl, string code, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This server connection service cannot pair a device.");
+
     /// <summary>Clears the stored connection; this device is disconnected until reconnected.</summary>
     ValueTask DisconnectAsync(CancellationToken cancellationToken = default);
 
@@ -67,6 +75,27 @@ public sealed class ServerConnectionService(
     public Task<ServerConnectionState> ConnectWithExistingAccountAsync(
         Uri serverBaseUrl, string username, string password, CancellationToken cancellationToken = default) =>
         ConnectAsync(serverBaseUrl, username, password, createNewAccount: false, cancellationToken);
+
+    /// <inheritdoc />
+    public async Task<ServerConnectionState> ConnectWithPairingCodeAsync(
+        Uri serverBaseUrl, string code, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(serverBaseUrl);
+        ArgumentException.ThrowIfNullOrWhiteSpace(code);
+
+        string deviceFingerprint = Guid.NewGuid().ToString("N");
+        LoginResponse login = await accountClient.PairAsync(
+            serverBaseUrl,
+            new PairDeviceRequest(code.Trim(), DeviceName: "HackerOS", deviceFingerprint),
+            cancellationToken).ConfigureAwait(false);
+        _cachedAccessToken = login.AccessToken;
+        _cachedAccessTokenExpiresUtc = login.AccessTokenExpiresUtc;
+
+        ServerConnectionState state = new(
+            login.AccountId, login.DeviceId, serverBaseUrl.ToString(), deviceFingerprint, login.RefreshToken, login.RefreshTokenExpiresUtc);
+        await repository.SetAsync(state, cancellationToken).ConfigureAwait(false);
+        return state;
+    }
 
     /// <inheritdoc />
     public async ValueTask DisconnectAsync(CancellationToken cancellationToken = default)
