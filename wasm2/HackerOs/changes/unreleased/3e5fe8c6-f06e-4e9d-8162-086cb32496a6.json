@@ -12,6 +12,7 @@
     "en": "Windows now open, close, minimize into their taskbar button, restore, maximize and snap with a short fade and scale. The Reduce motion setting turns the animations off, and a theme can change their duration.",
     "fr": "Les fenêtres s'ouvrent, se ferment, se minimisent vers leur bouton de la barre des tâches, se restaurent, s'agrandissent et s'ancrent avec un court fondu et une légère échelle. Le réglage Réduire les animations les coupe, et un thème peut changer leur durée."
   },
+  "pr": 311,
   "links": [
     "doc/en/wasm/dev/adr/0198-window-animations.md"
   ]
