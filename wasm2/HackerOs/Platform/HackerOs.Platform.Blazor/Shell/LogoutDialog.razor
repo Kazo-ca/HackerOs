@@ -13,11 +13,15 @@
          @onclick:stopPropagation>
         <header class="dialog-header">
             <div class="logout-mark" aria-hidden="true">⏻</div>
-            <h2 id="logout-title">@L["Logout.Title"]</h2>
+            <h2 id="logout-title">@(Restart ? L["Logout.Restart.Title"] : L["Logout.Title"])</h2>
         </header>
 
         <div class="dialog-body">
             <p>@L["Logout.Body"]</p>
+            @if (Restart)
+            {
+                <p>@L["Logout.Restart.Body"]</p>
+            }
 
             @if (RunningProcesses.Count > 0)
             {
@@ -52,7 +56,7 @@
                     class="btn-danger"
                     disabled="@_isSigningOut"
                     @onclick="ConfirmLogoutAsync">
-                @(_isSigningOut ? L["Logout.SigningOut"] : L["Logout.SignOut"])
+                @ConfirmLabel
             </button>
         </footer>
     </div>
@@ -67,6 +71,21 @@
 
     [Parameter]
     public EventCallback OnLoggedOut { get; set; }
+
+    /// <summary>
+    /// Gets or sets whether the dialog asks for « Redémarrer » (ADR 0195): the same sign-out, worded
+    /// as a restart; the caller reloads the OS once <see cref="OnLoggedOut"/> was raised.
+    /// </summary>
+    [Parameter]
+    public bool Restart { get; set; }
+
+    private string ConfirmLabel => (_isSigningOut, Restart) switch
+    {
+        (true, true) => L["Logout.Restarting"],
+        (true, false) => L["Logout.SigningOut"],
+        (false, true) => L["Logout.Restart"],
+        _ => L["Logout.SignOut"],
+    };
 
     private IReadOnlyList<ProcessRecord> RunningProcesses =>
         ProcessManager.GetActiveProcesses()

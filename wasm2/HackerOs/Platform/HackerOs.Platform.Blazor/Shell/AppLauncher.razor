@@ -256,6 +256,55 @@
                     <HackerIcon Library="IconLibrary.Lucide" Name="shield-check" Size="17" Title="" />
                     <span>@L["Launcher.LocalSession"]</span>
                 </div>
+
+                @if (HasPowerMenu)
+                {
+                    @* ADR 0195: the session's Power button, moved from the taskbar into the Start menu. *@
+                    @* Its keys stay in it: an Escape reaching the desktop shell would close the Start menu with the Power menu open. *@
+                    <div class="power-region" @onkeydown="HandlePowerKeyDownAsync" @onkeydown:stopPropagation="true">
+                        @if (_isPowerMenuOpen)
+                        {
+                            <div id="launcher-power-menu" class="power-menu" role="menu" aria-label="@L["Launcher.Power.Menu"]">
+                                @if (OnSignOut.HasDelegate)
+                                {
+                                    <button type="button" class="power-item" role="menuitem" @ref="_signOutItemRef" @onclick="SignOutAsync">
+                                        <HackerIcon Library="IconLibrary.Lucide" Name="log-out" Size="17" Title="" />
+                                        <span>@L["Launcher.Power.SignOut"]</span>
+                                    </button>
+                                }
+                                <button type="button"
+                                        class="power-item"
+                                        role="menuitem"
+                                        disabled
+                                        aria-disabled="true"
+                                        title="@SwitchUserHint">
+                                    <HackerIcon Library="IconLibrary.Lucide" Name="users" Size="17" Title="" />
+                                    <span>
+                                        @L["Launcher.Power.SwitchUser"]
+                                        <small>@SwitchUserHint</small>
+                                    </span>
+                                </button>
+                                @if (OnRestart.HasDelegate)
+                                {
+                                    <button type="button" class="power-item" role="menuitem" @ref="_restartItemRef" @onclick="RestartAsync">
+                                        <HackerIcon Library="IconLibrary.Lucide" Name="rotate-ccw" Size="17" Title="" />
+                                        <span>@L["Launcher.Power.Restart"]</span>
+                                    </button>
+                                }
+                            </div>
+                        }
+                        <button type="button"
+                                class="power-trigger @(_isPowerMenuOpen ? "is-active" : null)"
+                                aria-haspopup="menu"
+                                aria-expanded="@(_isPowerMenuOpen ? "true" : "false")"
+                                aria-controls="launcher-power-menu"
+                                @ref="_powerTriggerRef"
+                                @onclick="TogglePowerMenu">
+                            <HackerIcon Library="IconLibrary.Lucide" Name="power" Size="17" Title="" />
+                            <span>@L["Launcher.Power"]</span>
+                        </button>
+                    </div>
+                }
             </aside>
         </div>
     </section>

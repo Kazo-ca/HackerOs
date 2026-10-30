@@ -53,12 +53,10 @@ jour à la fin de chaque série ou quand une convention change.
   menus contextuels de la barre des tâches (ADR 0194, chantier 4 de #242).
   Les ADR du Hack Store (0188 à 0190) et du serveur local installable (0191)
   sont acceptées, rien n'est codé (issues `TODO` #246 à #257, #267).
-- **En attente de Benoit** (PR ouvertes vers `main`, 2026-10-30) : #285
-  `whats-new/base` (nouveautés depuis la dernière visite, ADR 0186, issue
-  #252 toute cochée) et #291 `startmenu/1-power-menu` (bouton Marche/arrêt
-  dans le menu Démarrer, ADR 0195 ; « Changer d'utilisateur » grisé, issue
-  #290).
-- **ADR** : 0001 à 0171 et 0173 à 0194 existent sur `main` (quelques numéros sautés ;
+- **Bouton Marche/arrêt dans le menu Démarrer** (ADR 0195, PR #291, fusionnée
+  le 2026-10-30) : « Changer d'utilisateur » reste grisé, issue `TODO` #290
+  (plusieurs sessions ouvertes en même temps).
+- **ADR** : 0001 à 0171 et 0173 à 0195 existent sur `main` (quelques numéros sautés ;
   0141 et 0172 n'ont pas servi). Repères récents : 0173 publication automatique,
   0174 annonce de nouvelle version, 0175 « Nouveau dossier » des dialogues, 0176
   dépôt template d'apps, 0177 barre de titre des fenêtres agrandies, 0178 à 0180,
@@ -66,8 +64,8 @@ jour à la fin de chaque série ou quand une convention change.
   Explorer, 0186 nouveautés ([`change-list.md`](../dev/change-list.md)), 0187
   invité et crédits, 0188 à 0190 Hack Store ([`hackeros-store.md`](../dev/plans/hackeros-store.md)),
   0191 serveur local installable, 0192 `features.md` et exception à l'ADR 0135,
-  0193 heure locale, 0194 menus de la barre des tâches. **0195 est prise par la
-  PR #291** (menu Marche/arrêt). **Prochain numéro libre : 0196.** Avant d'en
+  0193 heure locale, 0194 menus de la barre des tâches, 0195 bouton
+  Marche/arrêt du menu Démarrer. **Prochain numéro libre : 0196.** Avant d'en
   prendre un, vérifier `dev/adr/` sur `main` et les PR ouvertes.
 
 ## Conventions de travail

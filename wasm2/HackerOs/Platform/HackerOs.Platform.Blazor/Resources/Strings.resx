@@ -354,6 +354,27 @@
   <data name="Launcher.Pinned" xml:space="preserve">
     <value>Pinned</value>
   </data>
+  <data name="Launcher.Power" xml:space="preserve">
+    <value>Power</value>
+  </data>
+  <data name="Launcher.Power.Menu" xml:space="preserve">
+    <value>Power options</value>
+  </data>
+  <data name="Launcher.Power.Restart" xml:space="preserve">
+    <value>Restart</value>
+  </data>
+  <data name="Launcher.Power.SignOut" xml:space="preserve">
+    <value>Sign out</value>
+  </data>
+  <data name="Launcher.Power.SwitchUser" xml:space="preserve">
+    <value>Switch user</value>
+  </data>
+  <data name="Launcher.Power.SwitchUser.Guest" xml:space="preserve">
+    <value>Not available in a guest session</value>
+  </data>
+  <data name="Launcher.Power.SwitchUser.Unavailable" xml:space="preserve">
+    <value>Coming soon</value>
+  </data>
   <data name="Launcher.QuickAccess" xml:space="preserve">
     <value>Quick access</value>
   </data>
@@ -395,6 +416,18 @@
   </data>
   <data name="Logout.Processes" xml:space="preserve">
     <value>Active processes to terminate ({0}):</value>
+  </data>
+  <data name="Logout.Restart" xml:space="preserve">
+    <value>Restart</value>
+  </data>
+  <data name="Logout.Restart.Body" xml:space="preserve">
+    <value>Restarting ends your session like a sign-out, then reloads HackerOS from the server.</value>
+  </data>
+  <data name="Logout.Restart.Title" xml:space="preserve">
+    <value>Restart HackerOS</value>
+  </data>
+  <data name="Logout.Restarting" xml:space="preserve">
+    <value>Restarting...</value>
   </data>
   <data name="Logout.SignOut" xml:space="preserve">
     <value>Sign out</value>

@@ -513,13 +513,95 @@
     opacity: 0.76;
 }
 
+/* ADR 0195: the Power button and its menu, at the foot of the quick panel. Themes style them
+   with the --hos-launcher-power-* tokens. */
+.power-region {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-top: 0.35rem;
+}
+
+.power-trigger,
+.power-item {
+    width: 100%;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.5rem 0.65rem;
+    font: inherit;
+    font-size: 0.74rem;
+    text-align: left;
+    cursor: pointer;
+}
+
+.power-trigger {
+    justify-content: center;
+    border: var(--hos-launcher-power-border, 1px solid var(--hos-border, #34444c));
+    border-radius: var(--hos-launcher-power-radius, var(--hos-radius-md, 0.4rem));
+    color: var(--hos-launcher-power-color, inherit);
+    background: var(--hos-launcher-power-background, transparent);
+    box-shadow: var(--hos-launcher-power-shadow, none);
+    font-weight: 650;
+}
+
+.power-trigger:hover,
+.power-trigger.is-active {
+    color: var(--hos-launcher-power-hover-color, var(--hos-error, #ff8f87));
+    background: var(--hos-launcher-power-hover-background, color-mix(in srgb, var(--hos-error, #ff8f87) 14%, transparent));
+}
+
+.power-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    padding: 0.25rem;
+    border: 1px solid var(--hos-launcher-border, var(--hos-border, #34444c));
+    border-radius: var(--hos-launcher-power-radius, var(--hos-radius-md, 0.4rem));
+    background: var(--hos-launcher-background, var(--hos-bg-elevated, #151c20));
+    color: var(--hos-text-primary, #f4f7f8);
+}
+
+.power-item {
+    justify-content: flex-start;
+    border: 1px solid transparent;
+    border-radius: var(--hos-radius-sm, 0.3rem);
+    color: inherit;
+    background: transparent;
+}
+
+.power-item:hover:not(:disabled) {
+    border-color: color-mix(in srgb, var(--hos-accent, #42d392) 55%, var(--hos-border, #34444c));
+    background: color-mix(in srgb, var(--hos-accent-subtle, #173b2c) 58%, transparent);
+}
+
+.power-item:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+.power-item > span {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.05rem;
+}
+
+.power-item small {
+    font-size: 0.62rem;
+    opacity: 0.8;
+}
+
 .app-launch-button:focus-visible,
 .close-button:focus-visible,
 .icon-action:focus-visible,
 .pin-toggle:focus-visible,
 .category-button:focus-visible,
 .clear-search-button:focus-visible,
-.quick-link:focus-visible {
+.quick-link:focus-visible,
+.power-trigger:focus-visible,
+.power-item:focus-visible {
     outline: 2px solid var(--hos-accent, #42d392);
     outline-offset: 1px;
 }
@@ -581,6 +663,13 @@
 
     .quick-link {
         padding: 0.38rem 0.5rem;
+    }
+
+    /* The Power button stays on a phone-sized Start menu, across the quick panel's grid. */
+    .power-region {
+        grid-column: 1 / -1;
+        flex-direction: column-reverse;
+        margin-top: 0;
     }
 
     .launcher-main {

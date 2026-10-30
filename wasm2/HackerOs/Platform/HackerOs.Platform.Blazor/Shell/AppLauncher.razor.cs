@@ -123,6 +123,7 @@ public partial class AppLauncher : ComponentBase, IDisposable
     /// <inheritdoc />
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        await FocusPowerMenuIfRequestedAsync();
         if (!firstRender)
         {
             return;

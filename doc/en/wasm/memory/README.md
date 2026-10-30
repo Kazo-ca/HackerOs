@@ -53,11 +53,10 @@ at the end of each series or when a convention changes.
   (ADR 0194, work item 4 of #242). The Hack Store ADRs (0188 to 0190) and the
   installable local server ADR (0191) are accepted, nothing is coded (`TODO`
   issues #246 to #257, #267).
-- **Waiting for Benoit** (open PRs to `main`, 2026-10-30): #285
-  `whats-new/base` (what's new since the last visit, ADR 0186, issue #252
-  fully ticked) and #291 `startmenu/1-power-menu` (Power button in the Start
-  menu, ADR 0195; "Switch user" greyed out, issue #290).
-- **ADR**: 0001 to 0171 and 0173 to 0194 exist on `main` (a few numbers skipped;
+- **Power button in the Start menu** (ADR 0195, PR #291, merged on
+  2026-10-30): "Switch user" stays greyed out, `TODO` issue #290 (several
+  sessions open at once).
+- **ADR**: 0001 to 0171 and 0173 to 0195 exist on `main` (a few numbers skipped;
   0141 and 0172 were not used). Recent landmarks: 0173 automatic release, 0174
   new-version announcement, 0175 "New folder" in dialogs, 0176 app repository
   template, 0177 title bar of maximized windows, 0178 to 0180, 0183 and 0184
@@ -65,8 +64,8 @@ at the end of each series or when a convention changes.
   what's new ([`change-list.md`](../dev/change-list.md)), 0187 guest and credits,
   0188 to 0190 Hack Store ([`hackeros-store.md`](../dev/plans/hackeros-store.md)),
   0191 installable local server, 0192 `features.md` and exception to ADR 0135,
-  0193 local time, 0194 taskbar menus. **0195 is held by PR #291** (Power
-  menu). **Next free number: 0196.** Before taking one, check `dev/adr/` on
+  0193 local time, 0194 taskbar menus, 0195 Start menu Power button.
+  **Next free number: 0196.** Before taking one, check `dev/adr/` on
   `main` and the open PRs.
 
 ## Working conventions

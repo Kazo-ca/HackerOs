@@ -28,7 +28,9 @@ anything else) lives entirely in the host application, outside this package.
 ```
 
 This example omits `SessionCommands` — a host with no session concept just
-doesn't provide it, and the taskbar renders without that region. `TaskbarOptions`
+doesn't provide it, and the taskbar renders without that region. HackerOS itself
+no longer supplies it: its Power button (sign out, switch user, restart) lives in
+the Start menu (ADR 0195). `TaskbarOptions`
 carries only the labels a host would otherwise be forced to see hardcoded (the
 launcher trigger's mark and text); which taskbar zones appear is controlled
 entirely by which contracts you supply.

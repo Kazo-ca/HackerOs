@@ -181,7 +181,7 @@
             }
             else
             {
-                <DesktopShell OnLoggedOut="HandleLoggedOut" TestDemoEnabled="@TestDemoEnabled" />
+                <DesktopShell OnLoggedOut="HandleLoggedOut" OnRestart="HandleRestartAsync" TestDemoEnabled="@TestDemoEnabled" />
             }
             break;
         case EcosystemHostView.Recovery:
@@ -791,5 +791,18 @@
     {
         State.BeginInitialization();
         return InitializeHostAsync();
+    }
+
+    /// <summary>
+    /// ADR 0195: « Redémarrer » of the Start menu. The session already ended like a sign-out; the
+    /// boot screen shows while the caches empty, then the page reloads. If no power device could
+    /// reload it, the sign-in screen opens as after a sign-out.
+    /// </summary>
+    private async Task HandleRestartAsync()
+    {
+        State.BeginInitialization();
+        StateHasChanged();
+        await BrowserHostRestart.RestartAsync(Services);
+        await InitializeHostAsync();
     }
 }

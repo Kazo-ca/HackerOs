@@ -132,3 +132,11 @@ HackerOs.Platform.Blazor.Shell.TaskbarStatusSourceAdapter.TaskbarStatusSourceAda
 HackerOs.Platform.Blazor.Shell.TaskbarStatusSourceAdapter.TimeZone.get -> System.TimeZoneInfo!
 HackerOs.Platform.Blazor.Shell.AppLauncher.OnCreateAccount.get -> Microsoft.AspNetCore.Components.EventCallback
 HackerOs.Platform.Blazor.Shell.AppLauncher.OnCreateAccount.set -> void
+HackerOs.Platform.Blazor.Shell.AppLauncher.OnRestart.get -> Microsoft.AspNetCore.Components.EventCallback
+HackerOs.Platform.Blazor.Shell.AppLauncher.OnRestart.set -> void
+HackerOs.Platform.Blazor.Shell.AppLauncher.OnSignOut.get -> Microsoft.AspNetCore.Components.EventCallback
+HackerOs.Platform.Blazor.Shell.AppLauncher.OnSignOut.set -> void
+HackerOs.Platform.Blazor.Shell.DesktopShell.OnRestart.get -> Microsoft.AspNetCore.Components.EventCallback
+HackerOs.Platform.Blazor.Shell.DesktopShell.OnRestart.set -> void
+HackerOs.Platform.Blazor.Shell.LogoutDialog.Restart.get -> bool
+HackerOs.Platform.Blazor.Shell.LogoutDialog.Restart.set -> void

@@ -194,5 +194,6 @@ next free number is given in
 | [`0192-features-overview-and-ported-apps.md`](0192-features-overview-and-ported-apps.md) | ADR 0192: features overview (`features.md`), "In development" section kept current by every PR to `main`, and exception to ADR 0135 §2 to name the apps ported in their own repositories |
 | [`0193-local-time-and-time-zone.md`](0193-local-time-and-time-zone.md) | ADR 0193: local time and time zone, `timeZone` of `datetime.config` (`auto` = the browser's zone), `SessionTimeZoneService` applied at once, `IAppExecutionContext.TimeZone` and `HackTimeZone` in the SDK (`TZ` wins), clock, `date`, `ls -l`, `dmesg`, Settings ▸ Date and time; logs in UTC |
 | [`0194-taskbar-context-menus.md`](0194-taskbar-context-menus.md) | ADR 0194: taskbar context menus, through the OS context menu (`ContextMenus` parameter of the taskbar package); a window's button: New window, window menu and "Other screen ▸"; the rest of the taskbar: Task manager, Show the desktop, cascade, tile, Settings ("Screens" page) |
+| [`0195-start-menu-power-button.md`](0195-start-menu-power-button.md) | ADR 0195: Power button moved from the taskbar to the Start menu, menu Sign out, Switch user (greyed out, issue #290) and Restart (sign-out then a reload that empties the caches), `--hos-launcher-power-*` theme tokens |
 
 Parent folder index: [`../README.md`](../README.md).
