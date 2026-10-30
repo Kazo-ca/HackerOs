@@ -60,7 +60,8 @@ at the end of each series or when a convention changes.
   2026-10-30): "Switch user" stays greyed out, `TODO` issue #290 (several
   sessions open at once).
 - **`todo/base` series** (2026-10-30, every `TODO` issue in parallel, one
-  final PR to `main`): Hack Store work item 1 done, `hackeros-solution`
+  final PR to `main`, branches `todo/<n>-<topic>`, ADR 0197 to 0211
+  reserved): Hack Store work item 1 done, `hackeros-solution`
   template and catalog publishing workflow (ADR 0207,
   [`app-repository.md`](../framework/app-repository.md), issue #246). The
   `HackerOs-AppTemplate` repository will only be regenerated with a submodule
@@ -71,6 +72,10 @@ at the end of each series or when a convention changes.
   for apps and files under `/usr/share/icons` and `~/.local/share/icons`, chosen
   in Settings ▸ Appearance (`icons` settings document, key `iconPackId`); the
   built-in Néon pack is seeded. See [`icon-packs.md`](../dev/icon-packs.md).
+- **Notification bubbles** (ADR 0197, work item 1 of #242, series
+  `todo/base`): notification bubbles and "Update ready" as a persistent
+  notification with "Restart". See
+  [`notification-toasts.md`](../dev/notification-toasts.md).
 - **ADR**: 0001 to 0171 and 0173 to 0195 exist on `main` (a few numbers skipped;
   0141 and 0172 were not used). Recent landmarks: 0173 automatic release, 0174
   new-version announcement, 0175 "New folder" in dialogs, 0176 app repository
@@ -80,8 +85,10 @@ at the end of each series or when a convention changes.
   0188 to 0190 Hack Store ([`hackeros-store.md`](../dev/plans/hackeros-store.md)),
   0191 installable local server, 0192 `features.md` and exception to ADR 0135,
   0193 local time, 0194 taskbar menus, 0195 Start menu Power button;
-  `todo/base` series: 0207 `hackeros-solution` template (the series' other
-  numbers are reserved by its work items). **Next free number: 0196.** Before taking one, check `dev/adr/` on
+  `todo/base` series: 0197 notification bubbles, 0203 icon packs, 0207
+  `hackeros-solution` template (the other numbers up to 0211 are reserved by
+  its work items). 0196 is taken by PR #294 (unread dot). **Next free number:
+  0212.** Before taking one, check `dev/adr/` on
   `main` and the open PRs.
 
 ## Working conventions

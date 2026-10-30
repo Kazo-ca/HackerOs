@@ -60,7 +60,8 @@ jour à la fin de chaque série ou quand une convention change.
   le 2026-10-30) : « Changer d'utilisateur » reste grisé, issue `TODO` #290
   (plusieurs sessions ouvertes en même temps).
 - **Série `todo/base`** (2026-10-30, toutes les issues `TODO` en parallèle,
-  une PR finale vers `main`) : chantier 1 du Hack Store fait, modèle
+  une PR finale vers `main`, branches `todo/<n>-<sujet>`, ADR 0197 à 0211
+  réservées) : chantier 1 du Hack Store fait, modèle
   `hackeros-solution` et workflow de publication vers le catalogue (ADR 0207,
   [`app-repository.md`](../framework/app-repository.md), issue #246). Le
   dépôt `HackerOs-AppTemplate` ne sera régénéré qu'avec un sous-module sur la
@@ -72,6 +73,10 @@ jour à la fin de chaque série ou quand une convention change.
   `~/.local/share/icons`, choisis dans Paramètres ▸ Apparence (document de
   réglages `icons`, clé `iconPackId`) ; le pack Néon intégré est installé
   d'office. Voir [`icon-packs.md`](../dev/icon-packs.md).
+- **Bulles de notification** (ADR 0197, chantier 1 de #242, série
+  `todo/base`) : bulles des notifications et « Update ready » en
+  notification persistante avec « Redémarrer ». Voir
+  [`notification-toasts.md`](../dev/notification-toasts.md).
 - **ADR** : 0001 à 0171 et 0173 à 0195 existent sur `main` (quelques numéros sautés ;
   0141 et 0172 n'ont pas servi). Repères récents : 0173 publication automatique,
   0174 annonce de nouvelle version, 0175 « Nouveau dossier » des dialogues, 0176
@@ -81,9 +86,11 @@ jour à la fin de chaque série ou quand une convention change.
   invité et crédits, 0188 à 0190 Hack Store ([`hackeros-store.md`](../dev/plans/hackeros-store.md)),
   0191 serveur local installable, 0192 `features.md` et exception à l'ADR 0135,
   0193 heure locale, 0194 menus de la barre des tâches, 0195 bouton
-  Marche/arrêt du menu Démarrer ; série `todo/base` : 0207 modèle
-  `hackeros-solution` (les autres numéros de la série sont réservés par ses
-  chantiers). **Prochain numéro libre : 0196.** Avant d'en
+  Marche/arrêt du menu Démarrer ; série `todo/base` : 0197 bulles de
+  notification, 0203 packs d'icônes, 0207 modèle `hackeros-solution` (les
+  autres numéros jusqu'à 0211 sont réservés par ses chantiers). 0196 est prise
+  par la PR #294 (point des notifications non lues). **Prochain numéro libre :
+  0212.** Avant d'en
   prendre un, vérifier `dev/adr/` sur `main` et les PR ouvertes.
 
 ## Conventions de travail
