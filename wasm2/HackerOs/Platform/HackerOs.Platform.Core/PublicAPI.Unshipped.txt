@@ -993,7 +993,6 @@ HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.Size.get -> long
 HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.Size.init -> void
 HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.Version.get -> HackerOs.App.Abstractions.SemanticVersion
 HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.Version.init -> void
-HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.AppPackageInstaller(HackerOs.Platform.Core.Apps.Packages.IAppPackageDownloader! downloader, HackerOs.Platform.Core.Apps.Packages.IRuntimeApiSurface? runtime = null, HackerOs.App.Abstractions.SemanticVersion? sdkVersion = null, Microsoft.Extensions.Logging.ILogger<HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller!>? logger = null, HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults? defaults = null, System.Func<System.DateTimeOffset>? clock = null) -> void
 HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.DownloadCatalogTextAsync(string! name, string! relativePath, HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig! sources, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<string?>
 HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.FindInCatalogsAsync(string! appId, HackerOs.App.Abstractions.SemanticVersion? version, HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig! sources, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Platform.Core.Apps.Packages.AppPackageSource!>
 HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.FindUpdatesAsync(HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig! sources, HackerOs.Platform.Core.Apps.InstalledAppsReadResult! systemInstalled, HackerOs.Platform.Core.Apps.InstalledAppsReadResult! personalInstalled, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Platform.Core.Apps.Packages.AppPackageUpdateReport!>
@@ -1081,3 +1080,59 @@ const HackerOs.Platform.Core.Apps.Packages.AppUpdateMonitor.UpdatesPageArgument 
 HackerOs.Platform.Core.Shell.StartMenuPreferencesService.StartMenuPreferencesService(HackerOs.Platform.Core.Settings.IOsSettingsService! settings, HackerOs.Simulation.Abstractions.Sessions.ISessionService! session, System.Collections.Generic.IReadOnlyList<string!>! defaultPins) -> void
 const HackerOs.Platform.Core.Shell.StartMenuSettingsDocuments.DefaultPinsAppliedProperty = "defaultPinsApplied" -> string!
 static HackerOs.Platform.Core.Shell.StartMenuSettingsDocuments.DefaultPinnedAppIds.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.Platform.Core.AppCatalog.Changed -> System.EventHandler?
+HackerOs.Platform.Core.AppCatalog.Revision.get -> long
+HackerOs.Platform.Core.AppCatalog.ReplaceContents(HackerOs.Platform.Core.AppCatalog! next) -> void
+HackerOs.Platform.Core.Apps.Packages.IInstalledAppsActivator
+HackerOs.Platform.Core.Apps.Packages.IInstalledAppsActivator.ActivateAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Platform.Core.Apps.Packages.InstalledAppsActivation!>
+HackerOs.Platform.Core.Apps.Packages.InstalledAppsActivation
+HackerOs.Platform.Core.Apps.Packages.InstalledAppsActivation.Added.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.Platform.Core.Apps.Packages.InstalledAppsActivation.Added.init -> void
+HackerOs.Platform.Core.Apps.Packages.InstalledAppsActivation.InstalledAppsActivation(System.Collections.Generic.IReadOnlyList<string!>! Added, System.Collections.Generic.IReadOnlyList<string!>! Updated, System.Collections.Generic.IReadOnlyList<string!>! Removed, System.Collections.Generic.IReadOnlyList<string!>! WaitingForRestart) -> void
+HackerOs.Platform.Core.Apps.Packages.InstalledAppsActivation.IsWaitingForRestart(string! appId) -> bool
+HackerOs.Platform.Core.Apps.Packages.InstalledAppsActivation.Removed.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.Platform.Core.Apps.Packages.InstalledAppsActivation.Removed.init -> void
+HackerOs.Platform.Core.Apps.Packages.InstalledAppsActivation.Updated.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.Platform.Core.Apps.Packages.InstalledAppsActivation.Updated.init -> void
+HackerOs.Platform.Core.Apps.Packages.InstalledAppsActivation.WaitingForRestart.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.Platform.Core.Apps.Packages.InstalledAppsActivation.WaitingForRestart.init -> void
+static HackerOs.Platform.Core.Apps.Packages.InstalledAppsActivation.None.get -> HackerOs.Platform.Core.Apps.Packages.InstalledAppsActivation!
+HackerOs.Platform.Core.AppCatalog.CreateLiveCopy() -> HackerOs.Platform.Core.AppCatalog!
+HackerOs.Platform.Core.Execution.AppCatalogGatewayServices.InstalledAppsActivator.get -> System.Func<HackerOs.Platform.Core.Apps.Packages.IInstalledAppsActivator?>?
+HackerOs.Platform.Core.Execution.AppCatalogGatewayServices.InstalledAppsActivator.init -> void
+HackerOs.Platform.Core.Apps.Packages.InstalledAppsActivation.<Clone>$() -> HackerOs.Platform.Core.Apps.Packages.InstalledAppsActivation!
+HackerOs.Platform.Core.Apps.Packages.InstalledAppsActivation.Deconstruct(out System.Collections.Generic.IReadOnlyList<string!>! Added, out System.Collections.Generic.IReadOnlyList<string!>! Updated, out System.Collections.Generic.IReadOnlyList<string!>! Removed, out System.Collections.Generic.IReadOnlyList<string!>! WaitingForRestart) -> void
+HackerOs.Platform.Core.Apps.Packages.InstalledAppsActivation.Equals(HackerOs.Platform.Core.Apps.Packages.InstalledAppsActivation? other) -> bool
+override HackerOs.Platform.Core.Apps.Packages.InstalledAppsActivation.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.Apps.Packages.InstalledAppsActivation.GetHashCode() -> int
+override HackerOs.Platform.Core.Apps.Packages.InstalledAppsActivation.ToString() -> string!
+static HackerOs.Platform.Core.Apps.Packages.InstalledAppsActivation.operator !=(HackerOs.Platform.Core.Apps.Packages.InstalledAppsActivation? left, HackerOs.Platform.Core.Apps.Packages.InstalledAppsActivation? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.InstalledAppsActivation.operator ==(HackerOs.Platform.Core.Apps.Packages.InstalledAppsActivation? left, HackerOs.Platform.Core.Apps.Packages.InstalledAppsActivation? right) -> bool
+HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.Signature.get -> byte[]?
+HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.Signature.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults.SigningKeys.get -> System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>!
+HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults.SigningKeys.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageIndexEntry.Signature.get -> byte[]?
+HackerOs.Platform.Core.Apps.Packages.AppPackageIndexEntry.Signature.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.AppPackageInstaller(HackerOs.Platform.Core.Apps.Packages.IAppPackageDownloader! downloader, HackerOs.Platform.Core.Apps.Packages.IRuntimeApiSurface? runtime = null, HackerOs.App.Abstractions.SemanticVersion? sdkVersion = null, Microsoft.Extensions.Logging.ILogger<HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller!>? logger = null, HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults? defaults = null, System.Func<System.DateTimeOffset>? clock = null, HackerOs.Platform.Core.Apps.Packages.IAppPackageSignatureVerifier? signatures = null) -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackagePlan.Signed.get -> bool
+HackerOs.Platform.Core.Apps.Packages.AppPackagePlan.Signed.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageSignature
+HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.GetSigningKeys(HackerOs.Platform.Core.Apps.Packages.AppPackageSource! source) -> System.Collections.Generic.IReadOnlyList<byte[]!>!
+HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.SigningKeys.get -> System.Collections.Generic.IReadOnlyDictionary<string!, System.Collections.Generic.IReadOnlyList<byte[]!>!>!
+HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.SigningKeys.init -> void
+HackerOs.Platform.Core.Apps.Packages.IAppPackageSignatureVerifier
+HackerOs.Platform.Core.Apps.Packages.IAppPackageSignatureVerifier.VerifyAsync(byte[]! publicKey, byte[]! data, byte[]! signature, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+HackerOs.Platform.Core.Apps.Packages.ManagedAppPackageSignatureVerifier
+HackerOs.Platform.Core.Apps.Packages.ManagedAppPackageSignatureVerifier.ManagedAppPackageSignatureVerifier() -> void
+HackerOs.Platform.Core.Apps.Packages.ManagedAppPackageSignatureVerifier.VerifyAsync(byte[]! publicKey, byte[]! data, byte[]! signature, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+const HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults.OfficialCatalogSigningKey = "" -> string!
+const HackerOs.Platform.Core.Apps.Packages.AppPackageSignature.FieldName = "signature" -> string!
+const HackerOs.Platform.Core.Apps.Packages.AppPackageSignature.PublicKeyLength = 91 -> int
+const HackerOs.Platform.Core.Apps.Packages.AppPackageSignature.SignatureLength = 64 -> int
+const HackerOs.Platform.Core.Apps.Packages.AppSourcesConfigDocument.SigningKeysSection = "signing-keys" -> string!
+static HackerOs.Platform.Core.Apps.Packages.AppPackageSignature.ReadField(System.Text.Json.JsonElement version, string! versionText) -> byte[]?
+static HackerOs.Platform.Core.Apps.Packages.AppPackageSignature.TryParsePublicKey(string? text, out byte[]? key) -> bool
+static HackerOs.Platform.Core.Apps.Packages.ManagedAppPackageSignatureVerifier.Instance.get -> HackerOs.Platform.Core.Apps.Packages.ManagedAppPackageSignatureVerifier!
+HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.Signed.get -> bool?
+HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.Signed.init -> void

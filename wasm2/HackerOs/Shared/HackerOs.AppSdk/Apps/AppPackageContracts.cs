@@ -87,8 +87,10 @@ public sealed record HackPackagePolicy(
 /// <param name="Source">Its repository, such as <c>github:Kazo-ca/HackerOs-App-Webamp</c>.</param>
 /// <param name="Version">Installed version.</param>
 /// <param name="Loaded">
-/// Whether the running OS has this version in its catalog; <see langword="false"/> until the next
-/// restart after an install or an update, or when it was refused at startup.
+/// Whether the running OS has this version in its catalog: <see langword="false"/> when it was
+/// refused at startup, or until the next restart when an older version was already loaded in the
+/// page (ADR 0214 §1). After a removal, <see langword="true"/> means the removed app stays loaded
+/// until the next restart.
 /// </param>
 public sealed record HackInstalledPackage(string AppId, string Source, string Version, bool Loaded)
 {
@@ -111,6 +113,12 @@ public sealed record HackPackageInfo(
 
     /// <summary>Gets whether the installed copy is for every user; <see langword="null"/> when not installed.</summary>
     public bool? InstalledSystemWide { get; init; }
+
+    /// <summary>
+    /// Gets whether the OS holds a public key for this source (ADR 0214 §2): every package it
+    /// installs from it must then carry a valid signature, otherwise it is refused.
+    /// </summary>
+    public bool SignatureRequired { get; init; }
 }
 
 /// <summary>What an install or an update did (ADR 0182 §5, ADR 0189).</summary>
@@ -130,8 +138,12 @@ public sealed record HackPackageInstallReport(
     IReadOnlyList<string> Capabilities,
     bool Trusted)
 {
-    /// <summary>Gets whether the OS must restart before the app can be launched: always, for now (ADR 0182, Q5).</summary>
-    public bool RestartRequired => true;
+    /// <summary>
+    /// Gets whether the OS must restart before this version can be launched (ADR 0214 §1): only when
+    /// a previous version of the app is already loaded in the page, or the OS cannot add apps while
+    /// it runs. Otherwise the app is in the launcher, the search and the terminal already.
+    /// </summary>
+    public bool RestartRequired { get; init; } = true;
 
     /// <summary>Gets the trust level of its source (ADR 0189 §2).</summary>
     public HackPackageTrust Trust { get; init; } = Trusted ? HackPackageTrust.Trusted : HackPackageTrust.Untrusted;
@@ -144,6 +156,12 @@ public sealed record HackPackageInstallReport(
 
     /// <summary>Gets the personal copies a system install replaced (one copy at a time, ADR 0189 §3).</summary>
     public int ReplacedPersonalCopies { get; init; }
+
+    /// <summary>
+    /// Gets whether a key of the source verified the package's signature (ADR 0214 §2);
+    /// <see langword="false"/> when the source has no key and the package was checked by its SHA-256 only.
+    /// </summary>
+    public bool Signed { get; init; }
 }
 
 /// <summary>A package refused or a source that could not be read (ADR 0182 §5).</summary>

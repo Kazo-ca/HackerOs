@@ -51,6 +51,12 @@ public sealed record AppInstallApprovalRequest(
 {
     /// <summary>Gets why a personal install needs an administrator, when the block list stopped it (ADR 0189 §5).</summary>
     public AppBlockReason? BlockReason { get; init; }
+
+    /// <summary>
+    /// Gets whether a key of the source verified the package's signature (ADR 0214 §2);
+    /// <see langword="null"/> for a removal or a rollback, which download nothing.
+    /// </summary>
+    public bool? Signed { get; init; }
 }
 
 /// <summary>How the approval window ended.</summary>

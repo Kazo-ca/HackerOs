@@ -74,6 +74,7 @@ internal sealed partial class AppManagementGateway
         {
             Trust = ToPublic(trust),
             InstalledSystemWide = systemWide,
+            SignatureRequired = sources.GetSigningKeys(parsed).Count > 0,
         };
     }
 
@@ -131,6 +132,7 @@ internal sealed partial class AppManagementGateway
                     _caller)
                 {
                     BlockReason = plan.BlockReason,
+                    Signed = plan.Signed,
                 },
                 cancellationToken).ConfigureAwait(false);
         }
@@ -141,6 +143,7 @@ internal sealed partial class AppManagementGateway
         await packages
             .CommitAsync(plan.SystemWide ? system : user, plan, by, cancellationToken, personalCopies)
             .ConfigureAwait(false);
+        await ActivateInstalledAppsAsync(CancellationToken.None).ConfigureAwait(false);
         return new HackPackageInstallReport(
             manifest.Id,
             manifest.Name,
@@ -154,6 +157,8 @@ internal sealed partial class AppManagementGateway
             SystemWide = plan.SystemWide,
             BlockedBy = plan.BlockReason?.ToString(),
             ReplacedPersonalCopies = personalCopies.Count,
+            RestartRequired = !RunsVersion(manifest.Id, plan.Package.Version),
+            Signed = plan.Signed,
         };
     }
 
@@ -171,6 +176,7 @@ internal sealed partial class AppManagementGateway
             AppPackageSource removedForUser = await Translate(
                     () => packages.RemoveAsync(user, appId, _principal.LoginName.Value, cancellationToken, _principal.HomePath))
                 .ConfigureAwait(false);
+            await ActivateInstalledAppsAsync(CancellationToken.None).ConfigureAwait(false);
             return ToPublic(appId, removedForUser, systemWide: false);
         }
 
@@ -204,6 +210,7 @@ internal sealed partial class AppManagementGateway
                 _caller),
             cancellationToken).ConfigureAwait(false);
         AppPackageSource removed = await Translate(() => packages.RemoveAsync(system, appId, by, cancellationToken)).ConfigureAwait(false);
+        await ActivateInstalledAppsAsync(CancellationToken.None).ConfigureAwait(false);
         return ToPublic(appId, removed, systemWide: true);
     }
 

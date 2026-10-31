@@ -707,10 +707,16 @@ public static class EcosystemServiceCollectionExtensions
         services.TryAddSingleton<IAppPackageDownloader>(static _ => new HttpAppPackageDownloader(new HttpClient()));
         // ADR 0189 §1, §5: the sources and block list the host was built with (build/HackerOs.Apps.targets).
         services.TryAddSingleton(static _ => AppPackageDefaults.FromAssembly(System.Reflection.Assembly.GetEntryAssembly()));
+        services.TryAddSingleton<IAppPackageSignatureVerifier>(static provider =>
+            provider.GetService<IJSRuntime>() is { } runtime
+                ? new HackerOs.Ecosystem.Passkeys.BrowserAppPackageSignatureVerifier(runtime)
+                : ManagedAppPackageSignatureVerifier.Instance);
         services.TryAddSingleton(static provider => new AppPackageInstaller(
             provider.GetRequiredService<IAppPackageDownloader>(),
             logger: provider.GetService<ILogger<AppPackageInstaller>>(),
-            defaults: provider.GetRequiredService<AppPackageDefaults>()));
+            defaults: provider.GetRequiredService<AppPackageDefaults>(),
+            // ADR 0214 §2: Web Crypto in the browser (registered by the browser host), ECDsa elsewhere.
+            signatures: provider.GetService<IAppPackageSignatureVerifier>()));
         // ADR 0189 §3: the installed apps of the catalog and who sees them; a browser host fills it at boot.
         services.TryAddSingleton<InstalledPackageCatalog>();
         // ADR 0212 §5: the Hack Store's update check (sign-in, then every [updates] interval-hours).
@@ -804,6 +810,8 @@ public static class EcosystemServiceCollectionExtensions
                 UpdateMonitor = () => provider.GetService<AppUpdateMonitor>(),
                 // ADR 0212 §3: « Restart to finish » restarts like Start ▸ Restart, without an administrator.
                 RestartForPackages = () => provider.GetRequiredService<SystemPowerService>().RestartAfterAsync(static () => Task.CompletedTask),
+                // ADR 0214 §1: registered by the browser hosts; without it, changes wait for a restart.
+                InstalledAppsActivator = () => provider.GetService<IInstalledAppsActivator>(),
             },
             // Lazy for the same reason: ShellInterpreter depends on the orchestrator (ADR 0056 section 7).
             shellHostProvider: () => provider.GetRequiredService<ShellHostService>(),

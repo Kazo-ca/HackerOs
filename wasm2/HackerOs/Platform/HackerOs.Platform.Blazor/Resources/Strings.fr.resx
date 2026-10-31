@@ -827,6 +827,15 @@
   <data name="InstallApproval.Size" xml:space="preserve">
     <value>Taille</value>
   </data>
+  <data name="InstallApproval.Signature" xml:space="preserve">
+    <value>Signature</value>
+  </data>
+  <data name="InstallApproval.Signed" xml:space="preserve">
+    <value>Signé par sa source</value>
+  </data>
+  <data name="InstallApproval.Unsigned" xml:space="preserve">
+    <value>Non signé (vérifié par son SHA-256 seulement)</value>
+  </data>
   <data name="InstallApproval.Source" xml:space="preserve">
     <value>Source</value>
   </data>

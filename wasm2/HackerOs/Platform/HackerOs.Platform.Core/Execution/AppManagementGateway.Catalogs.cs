@@ -18,6 +18,9 @@ internal sealed partial class AppManagementGateway
     /// <summary>Gets the restart of « Restart to finish » (ADR 0212 §3).</summary>
     public Func<Task>? RestartForPackages { get; init; }
 
+    /// <summary>Gets what brings installed apps into the running catalog without a restart (ADR 0214 §1).</summary>
+    public Func<IInstalledAppsActivator?>? InstalledAppsActivator { get; init; }
+
     /// <inheritdoc />
     public async ValueTask<IReadOnlyList<HackAppCatalog>> GetPackageCatalogsAsync(bool refresh = false, CancellationToken cancellationToken = default)
     {
@@ -105,6 +108,34 @@ internal sealed partial class AppManagementGateway
         cancellationToken.ThrowIfCancellationRequested();
         await restart().ConfigureAwait(false);
     }
+
+    /// <summary>
+    /// Applies what was just written to the running catalog (ADR 0214 §1). A host without hot add,
+    /// or a failed read, leaves the change for the next start of the OS: the files are written
+    /// already, so the install itself succeeded.
+    /// </summary>
+    private async ValueTask ActivateInstalledAppsAsync(CancellationToken cancellationToken)
+    {
+        if (InstalledAppsActivator?.Invoke() is not { } activator)
+        {
+            return;
+        }
+
+        try
+        {
+            await activator.ActivateAsync(cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception exception) when (exception is IOException or InvalidOperationException or OperationCanceledException)
+        {
+            // « Restart to finish » stays offered: the catalog did not change.
+        }
+    }
+
+    /// <summary>Gets whether the running catalog has <paramref name="appId"/> at <paramref name="version"/>.</summary>
+    private bool RunsVersion(string appId, SemanticVersion version) =>
+        _catalog.Manifests.TryGetValue(appId, out AppManifest? manifest)
+        && SemanticVersion.TryParse(manifest.Version, out SemanticVersion running)
+        && running == version;
 
     /// <summary>
     /// Whether the running catalog differs from what is installed for the system or for the

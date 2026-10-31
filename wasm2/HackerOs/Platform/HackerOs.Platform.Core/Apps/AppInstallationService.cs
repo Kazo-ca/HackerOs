@@ -99,6 +99,7 @@ public sealed class AppInstallationService : IAppInstallationService, IAsyncDisp
                 eventBus.Subscribe<SessionActivatedEvent>(_ => { Task ignored = OnSessionChangedAsync(); }),
                 eventBus.Subscribe<SessionLoggedOutEvent>(_ => { Task ignored = OnSessionChangedAsync(); })
             ];
+        _catalog.Changed += OnCatalogChanged;
     }
 
     /// <inheritdoc />
@@ -344,6 +345,7 @@ public sealed class AppInstallationService : IAppInstallationService, IAsyncDisp
         }
 
         _disposed = true;
+        _catalog.Changed -= OnCatalogChanged;
         foreach (IDisposable subscription in _sessionSubscriptions)
         {
             subscription.Dispose();
@@ -465,6 +467,27 @@ public sealed class AppInstallationService : IAppInstallationService, IAsyncDisp
         defaultContent = AppsConfigDocument.UserDefaultContent;
         gateway = principal is null ? null : CreateUserGateway(principal);
         return gateway is not null;
+    }
+
+    /// <summary>
+    /// Apps installed from packages joined or left the running catalog (ADR 0214 §1): another
+    /// user's new personal app must be hidden from this session, a removed one forgotten.
+    /// </summary>
+    private void OnCatalogChanged(object? sender, EventArgs e)
+    {
+        Task ignored = ReloadAfterCatalogChangeAsync();
+    }
+
+    private async Task ReloadAfterCatalogChangeAsync()
+    {
+        try
+        {
+            await ReloadAsync().ConfigureAwait(false);
+        }
+        catch (Exception exception) when (exception is not OutOfMemoryException)
+        {
+            _logger.LogWarning(exception, "apps: could not reload apps.config after the app catalog changed");
+        }
     }
 
     private async Task OnSessionChangedAsync()

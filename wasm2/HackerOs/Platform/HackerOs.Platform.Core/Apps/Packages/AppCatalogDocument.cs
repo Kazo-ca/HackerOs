@@ -27,6 +27,9 @@ public sealed record AppCatalogVersion(
     /// <summary>Gets when the catalog published it, if it says.</summary>
     public DateTimeOffset? PublishedAt { get; init; }
 
+    /// <summary>Gets the catalog's signature of the package (ADR 0214 §2), or <see langword="null"/> when unsigned.</summary>
+    public byte[]? Signature { get; init; }
+
     /// <summary>Gets the oldest SDK it runs on, if it says.</summary>
     public string? MinimumSdkVersion { get; init; }
 
@@ -72,7 +75,10 @@ public sealed record AppCatalogEntry(
     /// and updated exactly like a repository's (ADR 0212 §1).
     /// </summary>
     public AppPackageIndex ToIndex() =>
-        new(AppId, [.. Versions.Select(static version => new AppPackageIndexEntry(version.Version, version.Package, version.Sha256))]);
+        new(AppId, [.. Versions.Select(static version => new AppPackageIndexEntry(version.Version, version.Package, version.Sha256)
+        {
+            Signature = version.Signature,
+        })]);
 }
 
 /// <summary>A downloaded <c>catalog.json</c> (ADR 0188 §6), with the address its paths are relative to.</summary>
@@ -276,8 +282,19 @@ public static class AppCatalogDocument
             maximum = NullIfEmpty(ReadString(sdk, "maximumVersion"));
         }
 
+        byte[]? signature;
+        try
+        {
+            signature = AppPackageSignature.ReadField(item, version.ToString());
+        }
+        catch (AppPackageException)
+        {
+            return null;
+        }
+
         return new AppCatalogVersion(version, ReadString(item, "commit"), package, sha256, size, ReadStrings(item, "capabilities"))
         {
+            Signature = signature,
             PublishedAt = DateTimeOffset.TryParse(ReadString(item, "publishedAt"), CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTimeOffset at)
                 ? at
                 : null,

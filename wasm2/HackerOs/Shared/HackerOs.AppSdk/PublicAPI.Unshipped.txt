@@ -142,6 +142,7 @@ HackerOs.AppSdk.Apps.HackPackageInstallReport.Name.init -> void
 HackerOs.AppSdk.Apps.HackPackageInstallReport.PreviousVersion.get -> string?
 HackerOs.AppSdk.Apps.HackPackageInstallReport.PreviousVersion.init -> void
 HackerOs.AppSdk.Apps.HackPackageInstallReport.RestartRequired.get -> bool
+HackerOs.AppSdk.Apps.HackPackageInstallReport.RestartRequired.init -> void
 HackerOs.AppSdk.Apps.HackPackageInstallReport.Source.get -> string!
 HackerOs.AppSdk.Apps.HackPackageInstallReport.Source.init -> void
 HackerOs.AppSdk.Apps.HackPackageInstallReport.Trusted.get -> bool
@@ -563,3 +564,7 @@ static HackerOs.AppSdk.Apps.HackCatalogCategory.operator !=(HackerOs.AppSdk.Apps
 static HackerOs.AppSdk.Apps.HackCatalogCategory.operator ==(HackerOs.AppSdk.Apps.HackCatalogCategory? left, HackerOs.AppSdk.Apps.HackCatalogCategory? right) -> bool
 static HackerOs.AppSdk.Apps.HackPackageUpdate.operator !=(HackerOs.AppSdk.Apps.HackPackageUpdate? left, HackerOs.AppSdk.Apps.HackPackageUpdate? right) -> bool
 static HackerOs.AppSdk.Apps.HackPackageUpdate.operator ==(HackerOs.AppSdk.Apps.HackPackageUpdate? left, HackerOs.AppSdk.Apps.HackPackageUpdate? right) -> bool
+HackerOs.AppSdk.Apps.HackPackageInfo.SignatureRequired.get -> bool
+HackerOs.AppSdk.Apps.HackPackageInfo.SignatureRequired.init -> void
+HackerOs.AppSdk.Apps.HackPackageInstallReport.Signed.get -> bool
+HackerOs.AppSdk.Apps.HackPackageInstallReport.Signed.init -> void

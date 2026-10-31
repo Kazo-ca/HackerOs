@@ -15,6 +15,7 @@ namespace HackerOs.Platform.Core.Apps.Packages;
 /// <item><term><c>HackerOsAppCatalogs</c></term><description><c>name=https://…/catalog.json</c>, comma separated.</description></item>
 /// <item><term><c>HackerOsTrustedAppSources</c></term><description><c>catalog:official,github.com/Kazo-ca</c>.</description></item>
 /// <item><term><c>HackerOsAppUpdateIntervalHours</c></term><description><c>6</c>.</description></item>
+/// <item><term><c>HackerOsAppSigningKeys</c></term><description><c>catalog:official=MFkw…</c>, comma separated, one item per key (ADR 0214 §2).</description></item>
 /// <item><term><c>HackerOsBlockedApps</c>, <c>HackerOsBlockedAppCategories</c>, <c>HackerOsBlockedAppCapabilities</c></term><description>empty by default.</description></item>
 /// </list>
 /// A property left unset keeps <see cref="Standard"/>'s value; an invalid item is skipped.
@@ -33,11 +34,27 @@ public sealed record AppPackageDefaults(
     IReadOnlyList<string> BlockedCategories,
     IReadOnlyList<string> BlockedCapabilities)
 {
+    /// <summary>
+    /// Gets the public keys whose signature the sources the host was built with must carry
+    /// (ADR 0214 §2), as <c>trust key → base64 SubjectPublicKeyInfo</c> pairs (one pair per key):
+    /// always required, even when <c>[signing-keys]</c> no longer lists them. Empty by default until
+    /// the official catalog has its key.
+    /// </summary>
+    public IReadOnlyList<KeyValuePair<string, string>> SigningKeys { get; init; } = [];
+
     /// <summary>Hours between two update checks by default (ADR 0189 §1).</summary>
     public const int DefaultUpdateIntervalHours = 6;
 
     /// <summary>Address of the official catalog (ADR 0188).</summary>
     public const string OfficialCatalogAddress = "https://raw.githubusercontent.com/Kazo-ca/HackerOs-AppMarketPlace/packages/catalog.json";
+
+    /// <summary>
+    /// Public key (base64 SubjectPublicKeyInfo, ECDSA P-256) of the official catalog (ADR 0214 §2, Q3):
+    /// every package of <c>catalog:official</c> must carry its signature once it is set. Empty until
+    /// the catalog's maintainer creates the key pair with <c>HackerOs.MarketPlace.Tool keygen</c>; the
+    /// private key stays in the catalog repository's <c>HACK_STORE_SIGNING_KEY</c> secret.
+    /// </summary>
+    public const string OfficialCatalogSigningKey = "";
 
     /// <summary>Prefix of the assembly metadata keys.</summary>
     public const string MetadataPrefix = "HackerOs.AppPackages.";
@@ -49,7 +66,12 @@ public sealed record AppPackageDefaults(
         DefaultUpdateIntervalHours,
         [],
         [],
-        []);
+        [])
+    {
+        SigningKeys = OfficialCatalogSigningKey.Length == 0
+            ? []
+            : [new(AppSourcesConfigDocument.CatalogTrustPrefix + AppSourcesConfig.OfficialCatalogName, OfficialCatalogSigningKey)],
+    };
 
     /// <summary>Reads the defaults a host assembly was built with; <see cref="Standard"/> for anything it does not set.</summary>
     /// <param name="assembly">The host assembly, or <see langword="null"/> for <see cref="Standard"/>.</param>
@@ -63,7 +85,7 @@ public sealed record AppPackageDefaults(
 
     /// <summary>Reads the defaults from metadata values keyed without <see cref="MetadataPrefix"/>.</summary>
     /// <param name="values">
-    /// <c>Catalogs</c>, <c>Trusted</c>, <c>UpdateIntervalHours</c>, <c>BlockedApps</c>,
+    /// <c>Catalogs</c>, <c>Trusted</c>, <c>UpdateIntervalHours</c>, <c>SigningKeys</c>, <c>BlockedApps</c>,
     /// <c>BlockedCategories</c>, <c>BlockedCapabilities</c>; a missing key keeps <see cref="Standard"/>'s value.
     /// </param>
     public static AppPackageDefaults FromMetadata(IReadOnlyDictionary<string, string> values)
@@ -92,6 +114,19 @@ public sealed record AppPackageDefaults(
             && interval is > 0 and <= AppSourcesConfigDocument.MaximumIntervalHours)
         {
             result = result with { UpdateIntervalHours = interval };
+        }
+
+        if (values.TryGetValue("SigningKeys", out string? keys))
+        {
+            result = result with
+            {
+                SigningKeys = [.. Standard.SigningKeys, .. Split(keys)
+                    .Select(static item => item.Split('=', 2, StringSplitOptions.TrimEntries))
+                    .Where(static pair => pair.Length == 2
+                        && AppSourcesConfigDocument.IsTrustKey(pair[0])
+                        && AppPackageSignature.TryParsePublicKey(pair[1], out _))
+                    .Select(static pair => new KeyValuePair<string, string>(pair[0], pair[1]))]
+            };
         }
 
         if (values.TryGetValue("BlockedApps", out string? apps))

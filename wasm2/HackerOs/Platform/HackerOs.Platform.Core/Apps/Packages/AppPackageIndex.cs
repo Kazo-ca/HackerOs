@@ -7,13 +7,20 @@ namespace HackerOs.Platform.Core.Apps.Packages;
 /// <param name="Version">Package version.</param>
 /// <param name="Path">Package path relative to the root of the packages branch.</param>
 /// <param name="Sha256">Lower-case hexadecimal SHA-256 of the package.</param>
-public sealed record AppPackageIndexEntry(SemanticVersion Version, string Path, string Sha256);
+public sealed record AppPackageIndexEntry(SemanticVersion Version, string Path, string Sha256)
+{
+    /// <summary>
+    /// Gets the ECDSA P-256 signature of the package bytes, IEEE P1363 (<c>r||s</c>, 64 bytes), from the
+    /// optional <c>signature</c> field (base64, ADR 0214 §2); <see langword="null"/> when unsigned.
+    /// </summary>
+    public byte[]? Signature { get; init; }
+}
 
 /// <summary>
 /// <c>index.json</c> at the root of an app repository's <c>hackeros-packages</c> branch (ADR 0182 §2):
 /// <code>
 /// { "appId": "org.kazo.webamp",
-///   "versions": [ { "version": "1.0.0", "path": "1.0.0/org.kazo.webamp-1.0.0.hackapp", "sha256": "…" } ] }
+///   "versions": [ { "version": "1.0.0", "path": "1.0.0/org.kazo.webamp-1.0.0.hackapp", "sha256": "…", "signature": "…" } ] }
 /// </code>
 /// </summary>
 /// <param name="AppId">App the repository publishes.</param>
@@ -72,7 +79,10 @@ public sealed record AppPackageIndex(string AppId, IReadOnlyList<AppPackageIndex
                     throw new AppPackageException("apps.index.invalid", $"index.json lists version {version} twice.");
                 }
 
-                versions.Add(new AppPackageIndexEntry(version, path, sha256.ToLowerInvariant()));
+                versions.Add(new AppPackageIndexEntry(version, path, sha256.ToLowerInvariant())
+                {
+                    Signature = AppPackageSignature.ReadField(item, versionText),
+                });
             }
 
             return new AppPackageIndex(appId, [.. versions.OrderByDescending(static entry => entry.Version)]);

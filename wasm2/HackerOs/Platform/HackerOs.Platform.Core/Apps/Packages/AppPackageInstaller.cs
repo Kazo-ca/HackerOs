@@ -45,6 +45,12 @@ public sealed record AppPackagePlan(AppPackageSource Source, AppPackage Package,
     /// </summary>
     public bool RequiresAdministrator => SystemWide || Trust == AppSourceTrust.Untrusted;
 
+    /// <summary>
+    /// Gets whether a key of <c>[signing-keys]</c> verified the package's signature (ADR 0214 §2);
+    /// <see langword="false"/> for a source without a key, whose package is checked by its SHA-256 only.
+    /// </summary>
+    public bool Signed { get; init; }
+
     /// <summary>Gets the size of the package's files, shown in the approval window.</summary>
     public long SizeBytes => Package.Files.Values.Sum(static file => (long)file.Length);
 }
@@ -99,6 +105,7 @@ public sealed class AppPackageInstaller
     private const ushort FileMode = 0b110_100_100;
 
     private readonly IAppPackageDownloader _downloader;
+    private readonly IAppPackageSignatureVerifier _signatures;
     private readonly IRuntimeApiSurface _runtime;
     private readonly SemanticVersion _sdkVersion;
     private readonly ILogger _logger;
@@ -116,14 +123,20 @@ public sealed class AppPackageInstaller
     /// <param name="logger">Writes the <c>/var/log/syslog</c> lines.</param>
     /// <param name="defaults">Sources and block list the host was built with; <see cref="AppPackageDefaults.Standard"/> by default.</param>
     /// <param name="clock">Clock of the catalog cache; the system clock by default.</param>
+    /// <param name="signatures">
+    /// Checks package signatures (ADR 0214 §2): Web Crypto in the browser,
+    /// <see cref="ManagedAppPackageSignatureVerifier"/> by default.
+    /// </param>
     public AppPackageInstaller(
         IAppPackageDownloader downloader,
         IRuntimeApiSurface? runtime = null,
         SemanticVersion? sdkVersion = null,
         ILogger<AppPackageInstaller>? logger = null,
         AppPackageDefaults? defaults = null,
-        Func<DateTimeOffset>? clock = null)
+        Func<DateTimeOffset>? clock = null,
+        IAppPackageSignatureVerifier? signatures = null)
     {
+        _signatures = signatures ?? ManagedAppPackageSignatureVerifier.Instance;
         _clock = clock ?? (static () => DateTimeOffset.UtcNow);
         _downloader = downloader ?? throw new ArgumentNullException(nameof(downloader));
         _runtime = runtime ?? LoadedRuntimeApiSurface.Instance;
@@ -281,6 +294,7 @@ public sealed class AppPackageInstaller
             throw new AppPackageException("apps.package.hash-mismatch", $"{entry.Path} does not match the SHA-256 of the index of {source.Name}.");
         }
 
+        bool signed = await VerifySignatureAsync(source, sources, entry, archive, cancellationToken).ConfigureAwait(false);
         AppPackage package = AppPackage.Read(archive);
         if (!string.Equals(package.AppId, index.AppId, StringComparison.Ordinal) || package.Version != entry.Version)
         {
@@ -299,7 +313,44 @@ public sealed class AppPackageInstaller
             Trust = trust,
             Home = systemWide ? null : request.Home,
             BlockReason = blocked,
+            Signed = signed,
         };
+    }
+
+    /// <summary>
+    /// ADR 0214 §2 (Q2 answer A): a source with keys in <c>[signing-keys]</c> must have signed the
+    /// package with one of them; a source without keys is accepted on its SHA-256 alone. Runs before
+    /// the package is even opened, and before any administrator is asked.
+    /// </summary>
+    /// <returns>Whether a key verified the signature.</returns>
+    /// <exception cref="AppPackageException"><c>apps.package.unsigned</c> or <c>apps.package.bad-signature</c>.</exception>
+    private async ValueTask<bool> VerifySignatureAsync(
+        AppPackageSource source, AppSourcesConfig sources, AppPackageIndexEntry entry, byte[] archive, CancellationToken cancellationToken)
+    {
+        IReadOnlyList<byte[]> keys = sources.GetSigningKeys(source);
+        if (keys.Count == 0)
+        {
+            return false;
+        }
+
+        if (entry.Signature is not { } signature)
+        {
+            throw new AppPackageException(
+                "apps.package.unsigned",
+                $"{entry.Path} of {source.Name} is not signed, but {AppSourcesConfigDocument.MachinePath.Value} requires a signature from this source.");
+        }
+
+        foreach (byte[] key in keys)
+        {
+            if (await _signatures.VerifyAsync(key, archive, signature, cancellationToken).ConfigureAwait(false))
+            {
+                return true;
+            }
+        }
+
+        throw new AppPackageException(
+            "apps.package.bad-signature",
+            $"The signature of {entry.Path} of {source.Name} does not match any key of {AppSourcesConfigDocument.MachinePath.Value}: the package was not published by this source.");
     }
 
     /// <summary>
