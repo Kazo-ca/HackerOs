@@ -10,8 +10,8 @@ namespace HackerOs.Platform.Core.Apps.Packages;
 /// <summary>
 /// The update check of the Hack Store (ADR 0188 §3, ADR 0212 §5): at sign-in, then every
 /// <c>[updates] interval-hours</c> of <c>/etc/hackeros/app-sources.config</c>, the OS looks for a
-/// newer version of every app installed for the system or for the session user. The count is
-/// shown on the Hack Store's icon (<see cref="Changed"/>), and a notification opens its updates.
+/// newer version of every app installed for the system or for the session user. A notification
+/// opens the Store on its updates; no badge is drawn on any icon (ADR 0215 §1, Benoit: notification only).
 /// </summary>
 /// <remarks>
 /// <para>
@@ -22,13 +22,13 @@ namespace HackerOs.Platform.Core.Apps.Packages;
 /// <para>
 /// A notification is posted only when the set of available updates changes, so a check every six
 /// hours that finds the same update says it once. The Store's own check
-/// (<c>HackAppPackages.GetUpdatesAsync</c>) goes through <see cref="Publish"/> too, so the badge
-/// follows what the Store shows.
+/// (<c>HackAppPackages.GetUpdatesAsync</c>) goes through <see cref="Publish"/> too, so an update the
+/// Store already shows is not notified again.
 /// </para>
 /// </remarks>
 public sealed class AppUpdateMonitor : IDisposable
 {
-    /// <summary>The Hack Store (ADR 0188 §1), whose icon carries the count.</summary>
+    /// <summary>The Hack Store (ADR 0188 §1), which the notification opens.</summary>
     public const string StoreAppId = "org.hackeros.store";
 
     /// <summary>Argument that opens the Store on its installed apps and their updates.</summary>
@@ -87,10 +87,6 @@ public sealed class AppUpdateMonitor : IDisposable
             }
         }
     }
-
-    /// <summary>Gets the badge of an app's icon: the update count on the Hack Store, 0 elsewhere.</summary>
-    /// <param name="appId">The app whose icon is drawn.</param>
-    public int GetBadgeCount(string appId) => string.Equals(appId, StoreAppId, StringComparison.Ordinal) ? Pending.Count : 0;
 
     /// <summary>Records what a check found for the session user, and raises <see cref="Changed"/> when the count moves.</summary>
     /// <param name="updates">The available updates.</param>
@@ -153,7 +149,7 @@ public sealed class AppUpdateMonitor : IDisposable
         _ = RunAsync(loop.Token);
     }
 
-    /// <summary>Stops the periodic check (sign-out) and clears the badge.</summary>
+    /// <summary>Stops the periodic check (sign-out) and forgets the pending updates.</summary>
     public void Stop()
     {
         CancellationTokenSource? loop;

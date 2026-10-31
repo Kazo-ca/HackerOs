@@ -47,13 +47,8 @@
                         {
                             <HackerIcon Library="IconLibrary.Lucide" Name="app-window" Size="18" Title="" />
                         }
-                        @if (window.BadgeCount > 0)
-                        {
-                            <span class="item-badge">@(window.BadgeCount > 99 ? "99+" : window.BadgeCount.ToString(System.Globalization.CultureInfo.InvariantCulture))</span>
-                        }
                     </span>
                     <span class="item-title">@window.Title</span>
-
                 </button>
             }
         }
