@@ -1,1 +1,3 @@
 #nullable enable
+HackerOs.Platform.Blazor.Shell.DesktopWallpaper.Mobile.get -> bool
+HackerOs.Platform.Blazor.Shell.DesktopWallpaper.Mobile.set -> void

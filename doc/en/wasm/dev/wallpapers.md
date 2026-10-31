@@ -2,8 +2,10 @@
 
 # Wallpaper images
 
-Decision: [ADR 0202](adr/0202-desktop-wallpaper-images.md). Issue
-[#254](https://github.com/Kazo-ca/HackerOs/issues/254).
+Decisions: [ADR 0202](adr/0202-desktop-wallpaper-images.md) (desktop),
+[ADR 0217](adr/0217-mobile-home-wallpaper.md) (mobile home screen). Issues
+[#254](https://github.com/Kazo-ca/HackerOs/issues/254) and
+[#297](https://github.com/Kazo-ca/HackerOs/issues/297).
 
 ## Purpose
 
@@ -11,6 +13,10 @@ The user chooses a PNG, JPEG or WebP image as the desktop background, for every
 screen or for one secondary screen, in Settings ▸ Appearance ▸ Wallpaper.
 Without an image, the desktop keeps its theme's background
 (`--hos-desktop-background` and the grid).
+
+The mobile home screen has its own image and fit (the "Mobile" choice of the
+same panel); without an image, it keeps its mobile theme's background
+(`--hos-mobile-surface-background`).
 
 ## Settings
 
@@ -20,6 +26,8 @@ In `appearance.config` (`/etc/hackeros/` then `~/.config/hackeros/`):
 wallpaper = /home/alice/Pictures/beach.webp
 wallpaperFit = fill
 wallpaperScreen2 = builtin:nebula
+mobileWallpaper = builtin:aurora
+mobileWallpaperFit = fill
 ```
 
 | Key | Value |
@@ -27,6 +35,8 @@ wallpaperScreen2 = builtin:nebula
 | `wallpaper` | empty (theme background), `builtin:<id>` or an absolute path; screen 1 and screens without their own value |
 | `wallpaperFit` | `fill` (default), `fit`, `stretch`, `center`, `tile` |
 | `wallpaperScreen2` to `wallpaperScreen9` | a screen's own value; empty = same as screen 1 |
+| `mobileWallpaper` | same shape as `wallpaper`, for the mobile home screen; empty = mobile theme's background |
+| `mobileWallpaperFit` | fit on mobile, same values as `wallpaperFit` |
 
 A `nano ~/.config/hackeros/appearance.config` changes the wallpaper on save.
 
@@ -45,11 +55,11 @@ A `nano ~/.config/hackeros/appearance.config` changes the wallpaper on save.
 | Element | Project | Role |
 | --- | --- | --- |
 | `WallpaperCatalog`, `WallpaperFit`, `BuiltInWallpaper` | `HackerOs.Theming.Abstractions` | Shipped images, folders, extensions, type read from the bytes (`TryDetectMediaType`), 16 MB limit, `wallpaperFit` values. |
-| `AppearanceSettingsDocuments` | `HackerOs.Platform.Core` | Declares the `wallpaper`, `wallpaperFit`, `wallpaperScreen2..9` keys. |
-| `WallpaperService`, `WallpaperPreferences`, `WallpaperImage` | `HackerOs.Platform.Core` | Follows `appearance.config`, reads a file as the session user, refuses what is not an image, keeps one copy per file shown. |
-| `DesktopWallpaper` (`.razor`, `.razor.cs`, `.razor.css`, `.razor.js`) | `HackerOs.Platform.Blazor` | Draws a screen's image; `blob:` address for a file, static address for a shipped image; `fit-*` classes. |
+| `AppearanceSettingsDocuments` | `HackerOs.Platform.Core` | Declares the `wallpaper`, `wallpaperFit`, `wallpaperScreen2..9`, `mobileWallpaper`, `mobileWallpaperFit` keys. |
+| `WallpaperService`, `WallpaperPreferences`, `WallpaperImage` | `HackerOs.Platform.Core` | Follows `appearance.config`, reads a file as the session user, refuses what is not an image, keeps one copy per file shown. `GetImageAsync(screen)` for the desktop, `GetMobileImageAsync()` for mobile. |
+| `DesktopWallpaper` (`.razor`, `.razor.cs`, `.razor.css`, `.razor.js`) | `HackerOs.Platform.Blazor` | Draws a screen's image; `blob:` address for a file, static address for a shipped image; `fit-*` classes. With `Mobile="true"`, the mobile image; `MobileShell` places it behind the home screen, which turns transparent and shadows its texts. |
 | `DesktopArea.WallpaperContent` | `HackerOs.Windowing.Blazor` | Layer between the theme's background and the icons. `DesktopShell` fills it for screen 1 and every secondary screen. |
-| `WallpaperPanel` | `HackerOs.Apps.Settings` | Thumbnails, "Browse…", "Fit", screen choice; public SDK only. |
+| `WallpaperPanel` | `HackerOs.Apps.Settings` | Thumbnails, "Browse…", "Fit", screen or "Mobile" choice; public SDK only. |
 
 ## Points of attention
 
@@ -63,11 +73,11 @@ A `nano ~/.config/hackeros/appearance.config` changes the wallpaper on save.
 ## Tests
 
 - `Tests/HackerOs.Platform.Core.Tests/Appearance/WallpaperTests.cs`: catalog
-  rules, schema, service (shipped image, file, own screen, fallback).
+  rules, schema, service (shipped image, file, own screen, mobile, fallback).
 - `Tests/HackerOs.Apps.Settings.Tests/WallpaperPanelTests.cs`: panel
-  (thumbnails, per-screen choice, "Browse…", fit, French).
+  (thumbnails, per-screen or mobile choice, "Browse…", fit, French).
 
 ## Outside this work item
 
-Mobile wallpaper and "Set as wallpaper" in the File Explorer: `TODO` issues #297 and #298
-(ADR 0202 §6).
+"Set as wallpaper" in the File Explorer: `TODO` issue #298 (ADR 0202 §6). The
+mobile app drawer stays opaque (ADR 0217 §3).

@@ -140,5 +140,5 @@ menu stay in issues #297 and #298.
 - [x] Wallpaper panel in Settings ▸ Appearance.
 - [x] 4 shipped wallpapers (WebP).
 - [x] Tests: catalog, schema, service, panel.
-- [ ] Mobile (#297).
+- [x] Mobile (#297): [ADR 0217](0217-mobile-home-wallpaper.md).
 - [ ] "Set as wallpaper" in the File Explorer (#298).

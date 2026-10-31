@@ -34,6 +34,42 @@ public sealed class WallpaperPanelTests
         Assert.Equal(AppearanceSettingsDocuments.WallpaperFitKey, WallpaperPanel.FitKey);
         Assert.Equal(AppearanceSettingsDocuments.MaxWallpaperScreen, WallpaperPanel.MaxScreenNumber);
         Assert.Equal(AppearanceSettingsDocuments.WallpaperScreenKey(4), WallpaperPanel.ScreenKey(4));
+        Assert.Equal(AppearanceSettingsDocuments.MobileWallpaperKey, WallpaperPanel.MobileWallpaperKey);
+        Assert.Equal(AppearanceSettingsDocuments.MobileWallpaperFitKey, WallpaperPanel.MobileFitKey);
+    }
+
+    [Fact]
+    public async Task Mobile_is_always_offered_and_has_its_own_image_and_fit()
+    {
+        FakeAppearance settings = new();
+        settings.User["wallpaperFit"] = "fit";
+        await using PanelHarness harness = await PanelHarness.RenderAsync(settings, new FakeAppFileSystemGateway());
+
+        Assert.Equal([1, WallpaperPanel.MobileTarget], harness.Panel.Targets);
+        string html = harness.Html();
+        Assert.Contains(">Desktop<", html, StringComparison.Ordinal);
+        Assert.Contains(">Mobile<", html, StringComparison.Ordinal);
+
+        await harness.RunAsync(panel =>
+        {
+            panel.SelectScreen(WallpaperPanel.MobileTarget);
+            return panel.ChooseAsync("builtin:nebula");
+        });
+        Assert.Equal("fill", harness.Panel.SelectedFit);
+        await harness.RunAsync(panel => panel.ChangeFitAsync("center"));
+
+        Assert.Equal("builtin:nebula", settings.User["mobileWallpaper"]);
+        Assert.Equal("center", settings.User["mobileWallpaperFit"]);
+        Assert.False(settings.User.ContainsKey("wallpaper"));
+        Assert.Equal("fit", settings.User["wallpaperFit"]);
+        Assert.Contains("Mobile theme background", harness.Html(), StringComparison.Ordinal);
+
+        await harness.RunAsync(panel =>
+        {
+            panel.SelectScreen(1);
+            return Task.CompletedTask;
+        });
+        Assert.Equal("fit", harness.Panel.SelectedFit);
     }
 
     [Fact]
