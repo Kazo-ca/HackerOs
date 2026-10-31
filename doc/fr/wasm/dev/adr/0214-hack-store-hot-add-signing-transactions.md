@@ -12,8 +12,8 @@ redémarrage »), la signature laissée ouverte par l'ADR 0182 (« Conséquences
 et la question 1 du plan `wasm-v3-completion-plan.md` (transaction, migration
 des données). Change l'[ADR 0212](0212-hack-store-app-build.md) §3 : « Redémarrer
 pour terminer » ne sert plus qu'aux apps déjà chargées. Cinq questions ont été
-posées à Benoit (Q1 à Q5 ci-dessous) ; les recommandations sont appliquées en
-attendant ses réponses.
+posées à Benoit (Q1 à Q5 ci-dessous) ; il a choisi la réponse A à chacune le
+2026-10-31.
 
 ## Contexte
 
@@ -57,6 +57,18 @@ attendant ses réponses.
    prochain démarrage, comme les autres services.
 4. Le rapport d'installation dit si l'app est prête (`HackPackageInstallReport.RestartRequired`) ;
    `hackpkg` affiche « disponible maintenant » ou « redémarrez pour terminer ».
+   `HackInstalledPackage.Loaded` reste vrai après le retrait d'une app chargée :
+   `hackpkg` et le Store disent alors de redémarrer.
+5. Mise en œuvre : `InstalledAppsBoot.Live` est l'instance d'`AppCatalog` que
+   tous les services reçoivent ; ce n'est jamais le catalogue intégré lui-même
+   (`AppCatalog.CreateLiveCopy`). Après une écriture réussie, la passerelle
+   appelle `IInstalledAppsActivator`, qui relit les apps installées
+   (`InstalledAppsBoot.ReloadAsync`), garde la version chargée d'une app dont
+   une assembly est dans `AssemblyLoadContext.Default`, remplace le contenu du
+   catalogue (`AppCatalog.ReplaceContents`) et ajoute les nouvelles assemblies au
+   registre de chargement paresseux (`BuildKnownAssemblyLoaderRegistry.AddKnownAssemblies`).
+   `AppEnablementRegistry.Changed` relaie `AppCatalog.Changed`, et
+   `AppInstallationService` relit ses fichiers à chaque changement.
 
 ### 2. Signature des paquets
 
@@ -85,8 +97,10 @@ attendant ses réponses.
    valide par l'une d'elles ; sinon le paquet est refusé
    (`apps.package.unsigned`, `apps.package.bad-signature`) avant toute demande
    d'administrateur. Une source sans clé est acceptée comme aujourd'hui (SHA-256
-   seulement) ; la fenêtre d'approbation, `hackpkg info` et le Store la montrent
-   « non signée ».
+   seulement) ; la fenêtre d’approbation montre « Non signé (vérifié par son SHA-256 seulement) »,
+   `hackpkg info` montre « Signature : aucune (SHA-256 seulement) ». Les clés
+   d'une source `catalog:<nom>` sont celles de `catalog:<nom>` ; celles d'un dépôt
+   `github:` sont celles de `github.com/<owner>` et de `github.com/<owner>/<repo>`.
 5. **(Q3 A) Catalogue officiel** : l'outil `HackerOs.MarketPlace.Tool` du dépôt
    `Kazo-ca/HackerOs-AppMarketPlace` gagne `keygen` (crée la paire, écrit la clé
    privée PKCS#8 dans un fichier local, affiche la clé publique) et `sign` ; le
@@ -113,7 +127,11 @@ Comme `dpkg` et son dossier `updates/` :
    ménage ; sinon il efface `.partial` et le dossier neuf et garde l'ancienne
    version. Une ligne de `/var/log/syslog` dit ce qui a été fait. Au démarrage,
    un dossier `.partial` ou une version non listée n'est jamais chargé.
-6. `update.minimumUpgradableVersion` est appliqué : une version installée plus
+6. `hackpkg repair` répare les apps de l'utilisateur ; `hackpkg repair --system`
+   répare aussi celles du système, après une authentification d'administrateur.
+   Il efface aussi les dossiers `.partial` sans journal et le dossier d'une app
+   qu'aucune ligne de `[installed]` ne nomme plus.
+7. `update.minimumUpgradableVersion` est appliqué : une version installée plus
    ancienne refuse la mise à jour en place (`apps.package.reinstall-required` :
    retirer puis installer).
 
@@ -121,10 +139,11 @@ Comme `dpkg` et son dossier `updates/` :
 
 1. **(Q4 A)** Une mise à jour garde la version qu'elle remplace (une seule) :
    `<racine>/<appId>/<précédente>/`. `hackpkg rollback <appId>` (et le bouton
-   « Revenir à la version précédente » de l'onglet Installées du Store) remet
+   « Revenir à <version> » du Store, sur une app installée) remet
    cette version dans `[installed]`, avec les mêmes approbations qu'une
-   installation de la même portée, et garde à son tour la version quittée. Le
-   retrait efface toutes les versions.
+   installation de la même portée (validation en deux étapes pour le système ou
+   une source non fiable, opération `AppInstallApprovalOperation.Rollback`), et
+   garde à son tour la version quittée. Le retrait efface toutes les versions.
 2. **(Q5 A) Sauvegarde et migration** : chaque utilisateur a
    `~/.config/hackeros/app-data-versions.config` (`[versions] <appId>=<version>`,
    la version qui a utilisé ses données en dernier). Au lancement d'une app
@@ -138,18 +157,26 @@ Comme `dpkg` et son dossier `updates/` :
    - sinon (mise à jour), donne au processus la variable
      `HACKEROS_PREVIOUS_VERSION=<ancienne version>` ; l'app migre elle-même ses
      données, comme `onUpgrade` sous Android ;
-   - note la nouvelle version. Deux sauvegardes au plus sont gardées par app.
+   - note la nouvelle version. Deux sauvegardes au plus sont gardées par app :
+     celle de la version quittée et celle de la version lancée.
+
+   La sauvegarde (`AppDataGuard`) copie `~/.config/<appId>/` dans
+   `<sauvegarde>/.config/` et `~/.local/share/<appId>/` dans
+   `<sauvegarde>/.local-share/`. Une sauvegarde ratée (disque plein) est écrite
+   dans le journal et n'empêche pas le lancement ; la version n'est alors pas
+   notée, et le lancement suivant réessaie.
 3. Tout se fait avec les droits de l'utilisateur, dans son dossier : aucune
    donnée d'un autre utilisateur n'est lue. Aucun ajout au SDK n'est nécessaire
    (`HackEnvironment.GetEnvironmentVariable`).
 
 ### 5. SDK
 
-`HackPackageInstallReport.RestartRequired`, `HackPackageInfo.Signed`,
-`HackPackageInfo.PreviousVersion` et `HackAppPackages.RollbackAsync` dans
-`PublicAPI.Unshipped.txt` (prochaine mineure). Le nouveau membre de
-`IAppManagementGateway` a une implémentation par défaut qui lève
-`NotSupportedException`.
+`HackPackageInstallReport.RestartRequired` et `.Signed`,
+`HackPackageInfo.SignatureRequired`, `HackInstalledPackage.PreviousVersion`,
+`HackAppPackages.RollbackAsync` et `HackAppPackages.RepairAsync` dans
+`PublicAPI.Unshipped.txt` (prochaine mineure). Les nouveaux membres de
+`IAppManagementGateway` (`RollbackPackageAsync`, `RepairPackagesAsync`) ont une
+implémentation par défaut qui lève `NotSupportedException`.
 
 ## Conséquences
 
@@ -159,16 +186,18 @@ Comme `dpkg` et son dossier `updates/` :
   les vues qui listent les apps le font par `AppEnablementRegistry.Changed`, qui
   relaie désormais les changements du catalogue.
 - Le catalogue officiel n'est vraiment protégé qu'une fois la clé créée par
-  Benoit et compilée dans l'hôte ; une app signée par le catalogue ne s'installe
-  alors que depuis lui.
+  Benoit et compilée dans l'hôte (`OfficialCatalogSigningKey` ou
+  `HackerOsAppSigningKeys`) ; les versions déjà publiées doivent être republiées
+  pour recevoir leur signature avant cette version de l'OS.
 - La signature d'un dépôt d'app (`github:`) est possible par le même format ; un
-  outil pour les auteurs reste à faire (issue `TODO`).
+  outil pour les auteurs reste à faire (issue `TODO`
+  [#321](https://github.com/Kazo-ca/HackerOs/issues/321)).
 - Une mise à jour occupe deux versions sur le disque ; les sauvegardes de
   données comptent dans le quota de l'utilisateur.
 
 ## Questions posées à Benoit
 
-| Question | Choix | Recommandation appliquée |
+| Question | Choix | Réponse de Benoit (2026-10-31) |
 |---|---|---|
 | Q1 Mise à jour d'une app déjà ouverte | A redémarrage pour celle-là, le reste à chaud ; B toute mise à jour attend le redémarrage | A |
 | Q2 Source avec clé, paquet non signé | A refuser ; B avertir | A |
@@ -178,11 +207,11 @@ Comme `dpkg` et son dossier `updates/` :
 
 ## Tâches
 
-- [ ] Catalogue en direct (`Revision`, `Changed`), registres paresseux extensibles, relecture des apps installées après chaque changement.
-- [ ] Apps déjà chargées : changement gardé pour le redémarrage ; `RestartRequired`.
-- [ ] `[signing-keys]`, `HackerOsAppSigningKeys`, champ `signature`, vérification (Web Crypto, `ECDsa`).
-- [ ] Journal `.transaction`, dossier `.partial`, reprise, `hackpkg repair`, `minimumUpgradableVersion`.
-- [ ] Version précédente gardée, `hackpkg rollback`, bouton du Store.
-- [ ] Sauvegarde des données au lancement, `HACKEROS_PREVIOUS_VERSION`.
-- [ ] `keygen`, `sign` et signature dans `publish.yml` (dépôt AppMarketPlace).
-- [ ] Tests et documentation (`app-installation.md`, `linux-commands.md`, `sdk-reference.md`).
+- [x] Catalogue en direct (`Revision`, `Changed`), registres paresseux extensibles, relecture des apps installées après chaque changement.
+- [x] Apps déjà chargées : changement gardé pour le redémarrage ; `RestartRequired`.
+- [x] `[signing-keys]`, `HackerOsAppSigningKeys`, champ `signature`, vérification (Web Crypto, `ECDsa`).
+- [x] Journal `.transaction`, dossier `.partial`, reprise, `hackpkg repair`, `minimumUpgradableVersion`.
+- [x] Version précédente gardée, `hackpkg rollback`, bouton du Store.
+- [x] Sauvegarde des données au lancement, `HACKEROS_PREVIOUS_VERSION`.
+- [x] `keygen`, `sign` et signature dans `publish.yml` (dépôt AppMarketPlace).
+- [x] Tests et documentation (`app-installation.md`, `linux-commands.md`, `sdk-reference.md`).

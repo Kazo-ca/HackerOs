@@ -247,6 +247,8 @@ hackpkg install Kazo-ca/HackerOs-App-Webamp            # pour soi si la source e
 hackpkg install Kazo-ca/HackerOs-App-Webamp@1.0.0 --system   # pour tous, validation admin
 hackpkg update                                         # toutes les apps installées
 hackpkg list | info <dépôt> | remove <appId> [--user|--system]
+hackpkg rollback <appId> [--user|--system]             # revient à la version gardée (ADR 0214)
+hackpkg repair [--system]                              # finit ou annule une installation interrompue
 hackpkg sources [add <source> [--trusted] | remove <source>]
 hackpkg policy [block|unblock app|category|capability <valeur>]
 ```
@@ -298,11 +300,13 @@ validation en deux étapes :
   présentes dans l'OS, app sur le fil principal.
 - **Écriture pour tous** : `/usr/lib/hackeros/apps/<appId>/<version>/` et une ligne
   `<appId>=github:owner/repo@version` dans `[installed]` de
-  `/etc/hackeros/apps.config`. Le dossier de la version précédente est retiré ;
+  `/etc/hackeros/apps.config`. Le dossier de la version précédente est gardé pour
+  `hackpkg rollback` (une seule, [ADR 0214](adr/0214-hack-store-hot-add-signing-transactions.md)) ;
   `hackpkg update` garde chaque copie là où elle est.
-- **Redémarrage** : le catalogue est construit au démarrage (Q5) ; l'app
-  apparaît après un redémarrage de HackerOS. `hackpkg list` affiche
-  `(restart pending)` d'ici là.
+- **Sans redémarrage** ([ADR 0214](adr/0214-hack-store-hot-add-signing-transactions.md)) :
+  l'app apparaît tout de suite. Seule la mise à jour, le retrait ou le retour
+  arrière d'une app déjà chargée dans la page attend un redémarrage de HackerOS ;
+  `hackpkg list` affiche `(restart pending)` d'ici là.
 - **Capacités dangereuses** : demandées au premier lancement, comme pour toute
   app non système.
 - **Publication** : `dotnet build -c Release -t:HackerOsPack` dans le projet de
@@ -375,6 +379,48 @@ d'`AppPackageGatewayTests`, `StartMenuPreferencesServiceTests`
 (Platform.Core) et `HackerOs.Apps.Store.Tests` (`StoreCatalog`,
 `StoreMarkdown`, manifeste).
 
+## Ajout sans redémarrage, signature et transactions
+
+L'ADR [0214](adr/0214-hack-store-hot-add-signing-transactions.md) (issue #251)
+termine le Hack Store.
+
+- **Catalogue en direct** : après chaque installation, mise à jour, retrait ou
+  retour arrière, la passerelle appelle `IInstalledAppsActivator`
+  (`InstalledAppsActivator` dans `HackerOs.Ecosystem.Host`). Il relit les apps
+  installées, remplace le contenu de l'unique `AppCatalog` de la page
+  (`InstalledAppsBoot.Live`, `AppCatalog.ReplaceContents`, évènement
+  `AppCatalog.Changed`) et ajoute les assemblies au registre de chargement
+  paresseux. Une app dont une assembly est déjà chargée garde sa version jusqu'au
+  redémarrage (`HackPackageInstallReport.RestartRequired`).
+- **Signature** : champ `signature` facultatif de chaque version (`index.json`,
+  `catalog.json`), ECDSA P-256 / SHA-256 en IEEE P1363, base64. Les clés
+  publiques sont dans `[signing-keys]` de `/etc/hackeros/app-sources.config`
+  (`catalog:official=MFkw…`, plusieurs clés séparées par des virgules) et dans la
+  propriété MSBuild `HackerOsAppSigningKeys` de l'hôte, toujours exigées. Une
+  source qui a une clé refuse un paquet non signé (`apps.package.unsigned`) ou mal
+  signé (`apps.package.bad-signature`). La vérification passe par Web Crypto
+  dans le navigateur (`BrowserAppPackageSignatureVerifier`, `webAuthn.js`
+  `verify`), par `ECDsa` ailleurs.
+- **Transactions** : journal `<racine>/<appId>/.transaction`, fichiers écrits
+  dans `<version>.partial/` puis renommés, ligne `[installed]` comme point de
+  validation, ménage après. `hackpkg repair [--system]` finit ou annule ce
+  qu'une coupure a laissé (`AppPackageInstaller.RecoverAsync`, `RepairAsync`).
+  `update.minimumUpgradableVersion` refuse la mise à jour en place d'une version
+  trop ancienne (`apps.package.reinstall-required`).
+- **Retour arrière** : une mise à jour garde la version qu'elle remplace ;
+  `hackpkg rollback <appId>` et le bouton « Revenir à <version> » du Store la
+  remettent, avec les approbations d'une installation de la même portée.
+- **Données** : au lancement d'une app installée dont la version a changé,
+  `AppDataGuard` copie `~/.config/<appId>/` et `~/.local/share/<appId>/` dans
+  `~/.local/share/hackeros/app-backups/<appId>/<ancienne version>/`, puis donne
+  `HACKEROS_PREVIOUS_VERSION` à l'app (mise à jour) ou remet la sauvegarde de la
+  version retrouvée (retour arrière). La dernière version lancée est notée dans
+  `~/.config/hackeros/app-data-versions.config`. Deux sauvegardes au plus par app.
+
+Tests : `AppPackageGatewayTests.Transactions.cs`, `AppDataGuardTests`,
+`AppPackageSignatureTests`, `AppCatalogTests` (Platform.Core),
+`InstalledAppsBootTests` (Ecosystem), `HackpkgCommandTests` (Commands.Wave5).
+
 ## Tâches
 
 - [x] `IAppInstallationService`, `AppInstallationService`, `AppsConfigDocument`.
@@ -388,3 +434,4 @@ d'`AppPackageGatewayTests`, `StartMenuPreferencesServiceTests`
 - [x] Onglet « Installed Apps » refait (`InstalledAppsPanel`).
 - [x] Tests de contrat et documentation.
 - [x] Hack Store : catalogues, `hackpkg install <appId>`, mises à jour, badge, épinglage par défaut (ADR 0212).
+- [x] Ajout sans redémarrage, signature, installation transactionnelle, `hackpkg rollback` et `repair`, sauvegarde des données (ADR 0214).

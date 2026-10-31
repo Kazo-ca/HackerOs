@@ -104,6 +104,14 @@ at the end of each series or when a convention changes.
   sounds and cursors, Store Themes tab. Four questions asked to Benoit (files
   read in place, catalog CI, nothing applied after the install, no badge),
   recommendations applied. Catalog CI: `TODO` issue AppMarketPlace #4.
+- **Hack Store, next steps** (ADR 0214, `TODO` issue #251, series
+  `todo/base`, branch `todo/19-hackstore-later`): adding without a restart
+  (live catalog `AppCatalog.Changed`), ECDSA P-256 signatures
+  (`[signing-keys]`, `HackerOsAppSigningKeys`), `.transaction` journal,
+  `hackpkg rollback`/`repair`, `AppDataGuard`. Five questions asked to Benoit,
+  answer A to each. The official catalog key is still to be created by Benoit
+  (`keygen`, `HACK_STORE_SIGNING_KEY` secret); tool for authors: `TODO`
+  issue #321.
 - **Notification bubbles** (ADR 0197, work item 1 of #242, series
   `todo/base`): notification bubbles and "Update ready" as a persistent
   notification with "Restart". See
@@ -135,7 +143,7 @@ at the end of each series or when a convention changes.
   0191 installable local server, 0192 `features.md` and exception to ADR 0135,
   0193 local time, 0194 taskbar menus, 0195 Start menu Power button;
   `todo/base` series: 0197 notification bubbles, 0201 "Switch user" stays greyed out, 0203 icon packs, 0207
-  `hackeros-solution` template, 0208 Hack Store trusted sources, 0212 Hack Store app, 0213 theme packs, 0214 reserved for issue #251 (the other numbers up to 0211 are reserved by
+  `hackeros-solution` template, 0208 Hack Store trusted sources, 0212 Hack Store app, 0213 theme packs, 0214 Hack Store without a restart, signing and transactions (the other numbers up to 0211 are reserved by
   its work items). 0196 is taken by PR #294 (unread dot). **Next free number:
   0215.** Before taking one, check `dev/adr/` on
   `main` and the open PRs.
