@@ -28,4 +28,8 @@ public sealed class BrowserInstalledAppAssetCache : IInstalledAppAssetCache
     /// <inheritdoc />
     public async ValueTask RemoveAsync(string url, CancellationToken cancellationToken) =>
         await BrowserInstalledAppAssets.RemoveAsync(url).WaitAsync(cancellationToken).ConfigureAwait(true);
+
+    /// <inheritdoc />
+    public async ValueTask LinkStyleSheetAsync(string url, CancellationToken cancellationToken) =>
+        await BrowserInstalledAppAssets.LinkStyleSheetAsync(url).WaitAsync(cancellationToken).ConfigureAwait(true);
 }

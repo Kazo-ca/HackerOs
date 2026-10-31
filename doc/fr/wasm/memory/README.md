@@ -157,8 +157,8 @@ jour à la fin de chaque série ou quand une convention change.
   0193 heure locale, 0194 menus de la barre des tâches, 0195 bouton
   Marche/arrêt du menu Démarrer, 0196 point des notifications non lues ; série `todo/base` : 0197 bulles de
   notification, 0201 « Changer d'utilisateur » reste grisé, 0203 packs d'icônes, 0207 modèle `hackeros-solution`, 0208 sources de confiance du Hack Store, 0212 app Hack Store, 0213 packs de thèmes, 0214 Hack Store sans redémarrage, signature et transactions, 0215 réponses du Hack Store (pas de badge, appId ambigu refusé) (les
-  autres numéros jusqu'à 0211 sont réservés par ses chantiers ; 0216 à 0219 par le lot 3 : 0216 mode « Ne pas déranger », 0217 fond d'écran de l'accueil mobile, 0218 « Définir comme fond d'écran » dans le menu des images, 0219 outil de signature des auteurs d'apps). **Prochain numéro libre :
-  0220.** Avant d'en
+  autres numéros jusqu'à 0211 sont réservés par ses chantiers ; 0216 à 0219 par le lot 3 : 0216 mode « Ne pas déranger », 0217 fond d'écran de l'accueil mobile, 0218 « Définir comme fond d'écran » dans le menu des images, 0219 outil de signature des auteurs d'apps) ; 0220 réservé au bouton Précédent de la souris ; 0221 toutes les ressources statiques d'une app dans son paquet et CSS isolé d'une app installée (branche `app-assets/static-web-assets`). **Prochain numéro libre :
+  0222.** Avant d'en
   prendre un, vérifier `dev/adr/` sur `main` et les PR ouvertes.
 
 ## Conventions de travail
@@ -205,7 +205,7 @@ section **IV** de [`AGENTS.md`](../../../../AGENTS.md), que Claude Code lit par
 
 | Note | Contenu |
 | --- | --- |
-| [`decisions-not-built.md`](decisions-not-built.md) | Décisions prises par Benoit en discussion et pas encore codées ni écrites ailleurs : fenêtres et barre des tâches (chantiers restants de #242), vrais sites dans le navigateur (#266 : proxy public et Wayback restants), apps tierces portées, apps hébergées par le serveur, idées tirées de daedalOS, éditeurs. |
+| [`decisions-not-built.md`](decisions-not-built.md) | Décisions prises par Benoit en discussion et pas encore codées ni écrites ailleurs : fenêtres et barre des tâches (chantiers restants de #242), vrais sites dans le navigateur (#266 : proxy public et Wayback restants), prochaine version 2.2.1 (ADR 0221, #337), apps tierces portées, apps hébergées par le serveur, idées tirées de daedalOS, éditeurs. |
 | [`known-test-failures.md`](known-test-failures.md) | Échecs de tests préexistants connus (à nommer dans une PR, pas à cacher) et astuces d'environnement récentes. |
 
 ## Environnement et pièges
