@@ -57,8 +57,9 @@ at the end of each series or when a convention changes.
   [`installable-server.md`](../dev/installable-server.md)); the Windows and
   macOS scripts and the Docker image still need a real run.
 - **Power button in the Start menu** (ADR 0195, PR #291, merged on
-  2026-10-30): "Switch user" stays greyed out, `TODO` issue #290 (several
-  sessions open at once).
+  2026-10-30): "Switch user" stays greyed out, Benoit's choice on
+  2026-10-30 (ADR 0201, issue #290; unmerged prototype on the branch
+  `switch-user/simultaneous-sessions-prototype`).
 - **`todo/base` series** (2026-10-30, every `TODO` issue in parallel, one
   final PR to `main`, branches `todo/<n>-<topic>`, ADR 0197 to 0211
   reserved): Hack Store work item 1 done, `hackeros-solution`
@@ -85,7 +86,7 @@ at the end of each series or when a convention changes.
   0188 to 0190 Hack Store ([`hackeros-store.md`](../dev/plans/hackeros-store.md)),
   0191 installable local server, 0192 `features.md` and exception to ADR 0135,
   0193 local time, 0194 taskbar menus, 0195 Start menu Power button;
-  `todo/base` series: 0197 notification bubbles, 0203 icon packs, 0207
+  `todo/base` series: 0197 notification bubbles, 0201 "Switch user" stays greyed out, 0203 icon packs, 0207
   `hackeros-solution` template (the other numbers up to 0211 are reserved by
   its work items). 0196 is taken by PR #294 (unread dot). **Next free number:
   0212.** Before taking one, check `dev/adr/` on
