@@ -121,6 +121,7 @@ same conditions.
 | Writing a setting took 845 ms and 604 transactions | Path resolution walked the storage segment by segment | A single `resolvePath` request (604 → 51 transactions, [`filesystem-path-lookup.md`](filesystem-path-lookup.md)). |
 | A `HackWebDb` record with `Id = 0` is stored under key 0 instead of being numbered | Normal IndexedDB behavior with `autoIncrement` | Put `[JsonIgnore(Condition = WhenWritingDefault)]` on `Id` ([`../framework/asp-hack-site-data.md`](../framework/asp-hack-site-data.md)). |
 | The server's `GET /api/devices` fails on SQLite (`NotSupportedException` on `ORDER BY`) | SQLite cannot sort a `DateTimeOffset` column in the database | Sort in memory after the query (`AccountService.GetDevicesAsync`). |
+| The desktop took 20 s to appear after "Create local profile" and the UI E2E tests timed out (15 s) | The login seeder copied the Néon icon pack (39 images) into the browser store before opening the session: about 10 s at the first login | Large shipped data is installed in the background after the login (`FileSystemSeeder.InstallIconPacksAsync`); keep `SeedAsync` to what the session needs at once. Measure with the browser before adding files to it. |
 
 ## 7. Cloud containers, GitHub and organization
 

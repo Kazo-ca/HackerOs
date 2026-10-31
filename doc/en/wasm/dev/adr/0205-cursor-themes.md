@@ -10,6 +10,8 @@ issue [#257](https://github.com/Kazo-ca/HackerOs/issues/257)). This is the
 [ADR 0190](0190-theme-packs.md) asks for before the Hack Store accepts the
 `cursors/` folder of a pack.
 
+- **Partly superseded by:** [ADR 0213](0213-theme-packs-build.md) for §6
+  (a pack's `cursors/` folder is read in place, not copied).
 - **Complements:** [ADR 0190](0190-theme-packs.md) (theme packs, "data only"
   rules); [ADR 0103](0103-hack-paint-image-files-and-theme-editor.md) (themes
   as files in `/etc` and `~`, no masking);

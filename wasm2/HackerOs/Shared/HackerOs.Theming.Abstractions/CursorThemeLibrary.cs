@@ -25,7 +25,8 @@ public sealed record CursorThemeLibraryResult(IReadOnlyList<CursorTheme> Themes,
 /// <summary>
 /// The cursor themes of the files (ADR 0205 §1): one folder per theme in
 /// <c>/etc/hackeros/cursors/</c> (administrator, every user) and <c>~/.config/hackeros/cursors/</c>
-/// (the user), each with a <c>cursor.theme</c> index and its PNG images. Like the <c>.theme</c>
+/// (the user), each with a <c>cursor.theme</c> index and its PNG images, and the <c>cursors/</c>
+/// folder of every installed theme pack (ADR 0213 §3). Like the <c>.theme</c>
 /// files (ADR 0103 §2.2), an id that repeats a built-in theme or an <c>/etc</c> theme is refused.
 /// </summary>
 public static class CursorThemeLibrary
@@ -63,18 +64,23 @@ public static class CursorThemeLibrary
         ArgumentNullException.ThrowIfNull(readBytes);
         List<CursorTheme> themes = [];
         List<ThemeFileDiagnostic> diagnostics = [];
-        List<(string Directory, ThemeOrigin Origin)> places = [(SystemDirectory, ThemeOrigin.System)];
+        // Order: /etc, the system theme packs, ~, the user's theme packs (ADR 0213 §3).
+        List<(string Directory, ThemeOrigin Origin, bool IsPackRoot)> places =
+            [(SystemDirectory, ThemeOrigin.System, false), (ThemePackLayout.SystemDirectory, ThemeOrigin.System, true)];
         if (!string.IsNullOrWhiteSpace(homeDirectory))
         {
-            places.Add((GetUserDirectory(homeDirectory), ThemeOrigin.User));
+            places.Add((GetUserDirectory(homeDirectory), ThemeOrigin.User, false));
+            places.Add((ThemePackLayout.GetUserDirectory(homeDirectory), ThemeOrigin.User, true));
         }
 
-        foreach ((string directory, ThemeOrigin origin) in places)
+        foreach ((string directory, ThemeOrigin origin, bool isPackRoot) in places)
         {
             IReadOnlyList<string> folders;
             try
             {
-                folders = await listDirectories(directory, cancellationToken).ConfigureAwait(false);
+                folders = isPackRoot
+                    ? await UserThemeLibrary.ListPackFoldersAsync(listDirectories, directory, ThemePackLayout.CursorsFolder, cancellationToken).ConfigureAwait(false)
+                    : await listDirectories(directory, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception exception) when (exception is not OperationCanceledException)
             {

@@ -59,7 +59,13 @@ public sealed record HackCatalogApp(
     IReadOnlyList<HackCatalogAppVersion> Versions,
     HackPackageTrust Trust)
 {
-    /// <summary>Gets the source to pass to <see cref="HackAppPackages.InstallAsync"/>: <c>catalog:&lt;catalog&gt;/&lt;appId&gt;</c>.</summary>
+    /// <summary>Gets what it installs: an app, or a theme pack whose <see cref="AppId"/> is the pack id (ADR 0213 §2).</summary>
+    public HackCatalogItemKind Kind { get; init; }
+
+    /// <summary>
+    /// Gets the source to pass to <see cref="HackAppPackages.InstallAsync"/> (an app) or
+    /// <see cref="HackAppPackages.InstallThemePackAsync"/> (a theme pack): <c>catalog:&lt;catalog&gt;/&lt;appId&gt;</c>.
+    /// </summary>
     public string Source => $"catalog:{Catalog}/{AppId}";
 
     /// <summary>Gets the version <see cref="LatestVersion"/> names.</summary>

@@ -288,6 +288,34 @@ public interface IAppManagementGateway
     /// <exception cref="NotSupportedException">The gateway predates ADR 0212.</exception>
     ValueTask RestartForPackagesAsync(CancellationToken cancellationToken = default) =>
         throw new NotSupportedException("This app-management gateway cannot restart the OS.");
+
+    /// <summary>Lists the theme packs installed for the system and for the session user (ADR 0213 §3).</summary>
+    /// <param name="cancellationToken">Cancels the reads.</param>
+    /// <exception cref="NotSupportedException">The gateway predates ADR 0213.</exception>
+    ValueTask<IReadOnlyList<HackInstalledThemePack>> GetInstalledThemePacksAsync(CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This app-management gateway cannot install theme packs.");
+
+    /// <summary>
+    /// Installs or updates a theme pack of a catalog (ADR 0213 §4): for the session user without an
+    /// administrator from a trusted catalog, otherwise for the system after the two-step approval.
+    /// It applies at once, without a restart.
+    /// </summary>
+    /// <param name="source"><c>catalog:&lt;name&gt;/&lt;packId&gt;</c> or a pack id alone, optionally followed by <c>@version</c>.</param>
+    /// <param name="scope">For whom; <see cref="HackPackageScope.Auto"/> picks the personal install when allowed.</param>
+    /// <param name="cancellationToken">Cancels the download, the approval and the writes.</param>
+    /// <exception cref="NotSupportedException">The gateway predates ADR 0213.</exception>
+    ValueTask<HackThemePackInstallReport> InstallThemePackAsync(
+        string source, HackPackageScope scope = HackPackageScope.Auto, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This app-management gateway cannot install theme packs.");
+
+    /// <summary>Removes an installed theme pack: the user's own copy without an administrator, a system one after the two-step approval.</summary>
+    /// <param name="packId">The installed pack.</param>
+    /// <param name="scope">Which copy; <see cref="HackPackageScope.Auto"/> takes the user's own, else the system's.</param>
+    /// <param name="cancellationToken">Cancels the approval and the writes.</param>
+    /// <exception cref="NotSupportedException">The gateway predates ADR 0213.</exception>
+    ValueTask<HackInstalledThemePack> RemoveThemePackAsync(
+        string packId, HackPackageScope scope = HackPackageScope.Auto, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This app-management gateway cannot install theme packs.");
 }
 
 /// <summary>One running process of an app, as an uninstall lists it (ADR 0097, section 5).</summary>

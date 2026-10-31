@@ -83,8 +83,10 @@ nano ~/.local/share/sounds/retro/index.theme
 | `DialogCoordinator` | Platform Blazor | Plays warning or error for a message box with that icon. |
 | `SoundPanel` | Settings app | The Settings ▸ Sound page, public SDK only. |
 
-Search order of a sound: `/usr/share/sounds/<theme>`, then
-`~/.local/share/sounds/<theme>`; in the folder found, each folder of
+Search order of a sound: `/usr/share/sounds/<theme>`,
+`/usr/share/hackeros/theme-packs/<theme>/sounds`, `~/.local/share/sounds/<theme>`,
+then `~/.local/share/hackeros/theme-packs/<theme>/sounds` (the sound theme of a
+Hack Store pack has the pack's id, [ADR 0213](adr/0213-theme-packs-build.md)); in the folder found, each folder of
 `Directories=` then the folder itself, for `<name>.oga`, `.ogg`, `.mp3`;
 otherwise the `hackeros` theme. The same event twice within 150 ms sounds once.
 

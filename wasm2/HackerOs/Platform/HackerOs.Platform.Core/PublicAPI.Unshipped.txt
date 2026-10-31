@@ -912,6 +912,7 @@ HackerOs.Platform.Core.ServerConnection.ServerConnectionException.ProxyErrorCode
 HackerOs.Platform.Core.ServerConnection.ServerConnectionException.ServerConnectionException(string! message, string? serverBody, string? proxyErrorCode) -> void
 const HackerOs.Platform.Core.ServerConnection.HttpProxyClient.MaxConcurrentRequests = 6 -> int
 const HackerOs.Platform.Core.ServerConnection.HttpProxyClient.QuotaRetries = 3 -> int
+HackerOs.Platform.Core.FileSystem.FileSystemSeeder.InstallIconPacksAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
 HackerOs.Platform.Core.Apps.Packages.AppCatalogCategory
 HackerOs.Platform.Core.Apps.Packages.AppCatalogCategory.<Clone>$() -> HackerOs.Platform.Core.Apps.Packages.AppCatalogCategory!
 HackerOs.Platform.Core.Apps.Packages.AppCatalogCategory.AppCatalogCategory(string! Id, System.Collections.Generic.IReadOnlyDictionary<string!, string!>! Labels) -> void
@@ -1156,3 +1157,91 @@ const HackerOs.Platform.Core.Apps.Packages.AppDataGuard.VersionsSection = "versi
 static HackerOs.Platform.Core.Apps.Packages.AppDataGuard.GetBackupPath(string! home, string! appId, HackerOs.App.Abstractions.SemanticVersion version) -> HackerOs.App.Abstractions.VirtualPath
 static HackerOs.Platform.Core.Apps.Packages.AppDataGuard.GetVersionsPath(string! home) -> HackerOs.App.Abstractions.VirtualPath
 static HackerOs.Platform.Core.Apps.Packages.AppDataGuard.ReadVersion(string? content, string! appId) -> HackerOs.App.Abstractions.SemanticVersion?
+HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry.Kind.get -> HackerOs.Platform.Core.Apps.Packages.AppCatalogEntryKind
+HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry.Kind.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppCatalogEntryKind
+HackerOs.Platform.Core.Apps.Packages.AppCatalogEntryKind.App = 0 -> HackerOs.Platform.Core.Apps.Packages.AppCatalogEntryKind
+HackerOs.Platform.Core.Apps.Packages.AppCatalogEntryKind.ThemePack = 1 -> HackerOs.Platform.Core.Apps.Packages.AppCatalogEntryKind
+HackerOs.Platform.Core.Apps.Packages.AppCatalogListing.Find(string! id, HackerOs.Platform.Core.Apps.Packages.AppCatalogEntryKind kind) -> HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry?
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.CommitThemePackAsync(HackerOs.Simulation.Abstractions.Gateways.IAppFileSystemGateway! writer, HackerOs.Platform.Core.Apps.Packages.ThemePackPlan! plan, string! by, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken), System.Collections.Generic.IReadOnlyList<string!>? personalHomes = null) -> System.Threading.Tasks.ValueTask
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.FindPersonalThemePackCopiesAsync(HackerOs.Simulation.Abstractions.Gateways.IAppFileSystemGateway! system, string! packId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<string!>!>
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.FindThemePackInCatalogsAsync(string! packId, HackerOs.App.Abstractions.SemanticVersion? version, HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig! sources, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Platform.Core.Apps.Packages.AppPackageSource!>
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.PrepareThemePackAsync(HackerOs.Platform.Core.Apps.Packages.AppPackageSource! source, HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig! sources, HackerOs.Platform.Core.Apps.Packages.AppPolicy! policy, HackerOs.Platform.Core.Apps.Packages.AppPackageScope scope, string? home, System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.Apps.Packages.InstalledThemePack!>! systemInstalled, System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.Apps.Packages.InstalledThemePack!>! personalInstalled, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Platform.Core.Apps.Packages.ThemePackPlan!>
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.ReadInstalledThemePacksAsync(HackerOs.Simulation.Abstractions.Gateways.IAppFileSystemGateway! reader, string! root, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.Apps.Packages.InstalledThemePack!>!>
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.RemoveThemePackAsync(HackerOs.Simulation.Abstractions.Gateways.IAppFileSystemGateway! writer, string! packId, string! by, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken), string? home = null) -> System.Threading.Tasks.ValueTask<HackerOs.Platform.Core.Apps.Packages.InstalledThemePack!>
+HackerOs.Platform.Core.Apps.Packages.AppPolicy.FindBlock(string! packId, string? category) -> HackerOs.Platform.Core.Apps.Packages.AppBlockReason?
+HackerOs.Platform.Core.Apps.Packages.InstalledThemePack
+HackerOs.Platform.Core.Apps.Packages.InstalledThemePack.<Clone>$() -> HackerOs.Platform.Core.Apps.Packages.InstalledThemePack!
+HackerOs.Platform.Core.Apps.Packages.InstalledThemePack.Deconstruct(out string! Id, out string! Name, out HackerOs.App.Abstractions.SemanticVersion Version, out string! Source, out bool SystemWide, out HackerOs.Platform.Core.Apps.ThemePacks.ThemePackParts Parts) -> void
+HackerOs.Platform.Core.Apps.Packages.InstalledThemePack.Equals(HackerOs.Platform.Core.Apps.Packages.InstalledThemePack? other) -> bool
+HackerOs.Platform.Core.Apps.Packages.InstalledThemePack.Id.get -> string!
+HackerOs.Platform.Core.Apps.Packages.InstalledThemePack.Id.init -> void
+HackerOs.Platform.Core.Apps.Packages.InstalledThemePack.InstalledThemePack(string! Id, string! Name, HackerOs.App.Abstractions.SemanticVersion Version, string! Source, bool SystemWide, HackerOs.Platform.Core.Apps.ThemePacks.ThemePackParts Parts) -> void
+HackerOs.Platform.Core.Apps.Packages.InstalledThemePack.Name.get -> string!
+HackerOs.Platform.Core.Apps.Packages.InstalledThemePack.Name.init -> void
+HackerOs.Platform.Core.Apps.Packages.InstalledThemePack.Parts.get -> HackerOs.Platform.Core.Apps.ThemePacks.ThemePackParts
+HackerOs.Platform.Core.Apps.Packages.InstalledThemePack.Parts.init -> void
+HackerOs.Platform.Core.Apps.Packages.InstalledThemePack.Source.get -> string!
+HackerOs.Platform.Core.Apps.Packages.InstalledThemePack.Source.init -> void
+HackerOs.Platform.Core.Apps.Packages.InstalledThemePack.SystemWide.get -> bool
+HackerOs.Platform.Core.Apps.Packages.InstalledThemePack.SystemWide.init -> void
+HackerOs.Platform.Core.Apps.Packages.InstalledThemePack.Version.get -> HackerOs.App.Abstractions.SemanticVersion
+HackerOs.Platform.Core.Apps.Packages.InstalledThemePack.Version.init -> void
+HackerOs.Platform.Core.Apps.Packages.ThemePackPlan
+HackerOs.Platform.Core.Apps.Packages.ThemePackPlan.<Clone>$() -> HackerOs.Platform.Core.Apps.Packages.ThemePackPlan!
+HackerOs.Platform.Core.Apps.Packages.ThemePackPlan.BlockReason.get -> HackerOs.Platform.Core.Apps.Packages.AppBlockReason?
+HackerOs.Platform.Core.Apps.Packages.ThemePackPlan.BlockReason.init -> void
+HackerOs.Platform.Core.Apps.Packages.ThemePackPlan.Deconstruct(out HackerOs.Platform.Core.Apps.Packages.AppPackageSource! Source, out HackerOs.Platform.Core.Apps.ThemePacks.ThemePack! Pack, out HackerOs.Platform.Core.Apps.Packages.AppSourceTrust Trust, out HackerOs.App.Abstractions.SemanticVersion? PreviousVersion) -> void
+HackerOs.Platform.Core.Apps.Packages.ThemePackPlan.Equals(HackerOs.Platform.Core.Apps.Packages.ThemePackPlan? other) -> bool
+HackerOs.Platform.Core.Apps.Packages.ThemePackPlan.Home.get -> string?
+HackerOs.Platform.Core.Apps.Packages.ThemePackPlan.Home.init -> void
+HackerOs.Platform.Core.Apps.Packages.ThemePackPlan.Pack.get -> HackerOs.Platform.Core.Apps.ThemePacks.ThemePack!
+HackerOs.Platform.Core.Apps.Packages.ThemePackPlan.Pack.init -> void
+HackerOs.Platform.Core.Apps.Packages.ThemePackPlan.PreviousVersion.get -> HackerOs.App.Abstractions.SemanticVersion?
+HackerOs.Platform.Core.Apps.Packages.ThemePackPlan.PreviousVersion.init -> void
+HackerOs.Platform.Core.Apps.Packages.ThemePackPlan.RequiresAdministrator.get -> bool
+HackerOs.Platform.Core.Apps.Packages.ThemePackPlan.Source.get -> HackerOs.Platform.Core.Apps.Packages.AppPackageSource!
+HackerOs.Platform.Core.Apps.Packages.ThemePackPlan.Source.init -> void
+HackerOs.Platform.Core.Apps.Packages.ThemePackPlan.SystemWide.get -> bool
+HackerOs.Platform.Core.Apps.Packages.ThemePackPlan.ThemePackPlan(HackerOs.Platform.Core.Apps.Packages.AppPackageSource! Source, HackerOs.Platform.Core.Apps.ThemePacks.ThemePack! Pack, HackerOs.Platform.Core.Apps.Packages.AppSourceTrust Trust, HackerOs.App.Abstractions.SemanticVersion? PreviousVersion) -> void
+HackerOs.Platform.Core.Apps.Packages.ThemePackPlan.Trust.get -> HackerOs.Platform.Core.Apps.Packages.AppSourceTrust
+HackerOs.Platform.Core.Apps.Packages.ThemePackPlan.Trust.init -> void
+HackerOs.Platform.Core.Apps.ThemePacks.ThemePack
+HackerOs.Platform.Core.Apps.ThemePacks.ThemePack.Author.get -> string?
+HackerOs.Platform.Core.Apps.ThemePacks.ThemePack.Description.get -> string?
+HackerOs.Platform.Core.Apps.ThemePacks.ThemePack.Files.get -> System.Collections.Generic.IReadOnlyDictionary<string!, byte[]!>!
+HackerOs.Platform.Core.Apps.ThemePacks.ThemePack.Id.get -> string!
+HackerOs.Platform.Core.Apps.ThemePacks.ThemePack.Name.get -> string!
+HackerOs.Platform.Core.Apps.ThemePacks.ThemePack.Parts.get -> HackerOs.Platform.Core.Apps.ThemePacks.ThemePackParts
+HackerOs.Platform.Core.Apps.ThemePacks.ThemePack.SizeBytes.get -> long
+HackerOs.Platform.Core.Apps.ThemePacks.ThemePack.Version.get -> HackerOs.App.Abstractions.SemanticVersion
+HackerOs.Platform.Core.Apps.ThemePacks.ThemePackParts
+HackerOs.Platform.Core.Apps.ThemePacks.ThemePackParts.Cursors = 16 -> HackerOs.Platform.Core.Apps.ThemePacks.ThemePackParts
+HackerOs.Platform.Core.Apps.ThemePacks.ThemePackParts.Icons = 4 -> HackerOs.Platform.Core.Apps.ThemePacks.ThemePackParts
+HackerOs.Platform.Core.Apps.ThemePacks.ThemePackParts.None = 0 -> HackerOs.Platform.Core.Apps.ThemePacks.ThemePackParts
+HackerOs.Platform.Core.Apps.ThemePacks.ThemePackParts.Sounds = 8 -> HackerOs.Platform.Core.Apps.ThemePacks.ThemePackParts
+HackerOs.Platform.Core.Apps.ThemePacks.ThemePackParts.Themes = 1 -> HackerOs.Platform.Core.Apps.ThemePacks.ThemePackParts
+HackerOs.Platform.Core.Apps.ThemePacks.ThemePackParts.Wallpapers = 2 -> HackerOs.Platform.Core.Apps.ThemePacks.ThemePackParts
+const HackerOs.Platform.Core.Apps.Packages.AppCatalogDocument.AppKind = "app" -> string!
+const HackerOs.Platform.Core.Apps.Packages.AppCatalogDocument.ThemePackKind = "theme-pack" -> string!
+const HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.InstallRecordFileName = ".hackeros-install" -> string!
+const HackerOs.Platform.Core.Apps.ThemePacks.ThemePack.MaximumBytes = 31457280 -> long
+const HackerOs.Platform.Core.Apps.ThemePacks.ThemePack.MaximumFiles = 2000 -> int
+const HackerOs.Platform.Core.Apps.ThemePacks.ThemePack.MaximumManifestBytes = 262144 -> int
+const HackerOs.Platform.Core.Apps.ThemePacks.ThemePack.MaximumPreviewBytes = 1048576 -> long
+const HackerOs.Platform.Core.Apps.ThemePacks.ThemePack.MaximumThemes = 32 -> int
+const HackerOs.Platform.Core.Apps.ThemePacks.ThemePack.MaximumWallpaperBytes = 5242880 -> long
+const HackerOs.Platform.Core.Apps.ThemePacks.ThemePack.MaximumWallpapers = 32 -> int
+const HackerOs.Platform.Core.Apps.ThemePacks.ThemePack.SupportedSchemaVersion = 1 -> int
+override HackerOs.Platform.Core.Apps.Packages.InstalledThemePack.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.Apps.Packages.InstalledThemePack.GetHashCode() -> int
+override HackerOs.Platform.Core.Apps.Packages.InstalledThemePack.ToString() -> string!
+override HackerOs.Platform.Core.Apps.Packages.ThemePackPlan.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.Apps.Packages.ThemePackPlan.GetHashCode() -> int
+override HackerOs.Platform.Core.Apps.Packages.ThemePackPlan.ToString() -> string!
+static HackerOs.Platform.Core.Apps.Packages.InstalledThemePack.operator !=(HackerOs.Platform.Core.Apps.Packages.InstalledThemePack? left, HackerOs.Platform.Core.Apps.Packages.InstalledThemePack? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.InstalledThemePack.operator ==(HackerOs.Platform.Core.Apps.Packages.InstalledThemePack? left, HackerOs.Platform.Core.Apps.Packages.InstalledThemePack? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.ThemePackPlan.operator !=(HackerOs.Platform.Core.Apps.Packages.ThemePackPlan? left, HackerOs.Platform.Core.Apps.Packages.ThemePackPlan? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.ThemePackPlan.operator ==(HackerOs.Platform.Core.Apps.Packages.ThemePackPlan? left, HackerOs.Platform.Core.Apps.Packages.ThemePackPlan? right) -> bool
+static HackerOs.Platform.Core.Apps.ThemePacks.ThemePack.IsValidId(string? id) -> bool
+static HackerOs.Platform.Core.Apps.ThemePacks.ThemePack.Read(byte[]! archive) -> HackerOs.Platform.Core.Apps.ThemePacks.ThemePack!

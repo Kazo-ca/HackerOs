@@ -302,21 +302,6 @@ public sealed partial class AppPackageInstaller
             .Select(static entry => entry.Name.Value)];
     }
 
-    private static async ValueTask MoveAsync(IAppFileSystemGateway writer, VirtualPath source, VirtualPath destination, CancellationToken cancellationToken)
-    {
-        FileSystemResult<FileSystemEntrySnapshot> entry = await writer.StatAsync(new FileSystemStatRequest(source), cancellationToken).ConfigureAwait(false);
-        Ensure(entry.Succeeded ? null : entry.Error);
-        VirtualPath parent = SettingsTextFile.GetParent(source);
-        FileSystemResult<FileSystemEntrySnapshot> parentEntry = await writer.StatAsync(new FileSystemStatRequest(parent), cancellationToken).ConfigureAwait(false);
-        Ensure(parentEntry.Succeeded ? null : parentEntry.Error);
-        long parentRevision = parentEntry.Value!.Metadata.Revision;
-        FileSystemMutationResult moved = await writer.MoveAsync(
-                new FileSystemMoveRequest(source, destination, entry.Value!.Metadata.Revision, parentRevision, parentRevision),
-                cancellationToken)
-            .ConfigureAwait(false);
-        Ensure(moved.Succeeded ? null : moved.Transaction.Error);
-    }
-
     private static async ValueTask WriteJournalAsync(
         IAppFileSystemGateway writer, VirtualPath appDirectory, Transaction transaction, CancellationToken cancellationToken)
     {

@@ -291,6 +291,13 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   avec un badge et une notification ; `hackpkg install <appId>` lit les mêmes
   catalogues. ([ADR 0188](dev/adr/0188-hack-store-and-app-catalog.md),
   [ADR 0212](dev/adr/0212-hack-store-app-build.md))
+- **Packs de thèmes** : l'onglet Thèmes du Hack Store installe des packs
+  `.hacktheme` (thèmes, fonds d'écran, icônes, sons et curseurs), pour soi sans
+  administrateur ou pour tous avec la validation en deux étapes. Un pack ne
+  contient aucun code (pas de SVG, aucune adresse distante, tailles limitées)
+  et ses parties apparaissent dans Paramètres ▸ Apparence.
+  ([ADR 0190](dev/adr/0190-theme-packs.md),
+  [ADR 0213](dev/adr/0213-theme-packs-build.md))
 - **Modèle de dépôt d'application `hackeros-solution`** : application, hôte
   et tests prêts à lancer, sous-module de l'OS pour le débogage dans ses
   sources, paquets NuGet en production, CI et soumission au catalogue du Hack
@@ -326,7 +333,7 @@ dans `main`, le lien mène à sa PR.
 
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
-| Packs de thèmes | Format `.hacktheme` et onglet Thèmes du Hack Store. | [0190](dev/adr/0190-theme-packs.md) | [#253](https://github.com/Kazo-ca/HackerOs/issues/253) |
+| Vérification des packs de thèmes par le catalogue | La CI du catalogue vérifie les entrées `kind: "theme-pack"` comme l'OS à l'installation. | [0213](dev/adr/0213-theme-packs-build.md) | [AppMarketPlace #4](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/4) |
 | Fond d'écran sur mobile et menu « Définir comme fond d'écran » | L'image de fond sur l'écran d'accueil mobile, et une entrée du menu contextuel des images. Les fonds d'écran du bureau sont disponibles. | [0202](dev/adr/0202-desktop-wallpaper-images.md) | [#297](https://github.com/Kazo-ca/HackerOs/issues/297), [#298](https://github.com/Kazo-ca/HackerOs/issues/298) |
 
 ### Réseau et serveur

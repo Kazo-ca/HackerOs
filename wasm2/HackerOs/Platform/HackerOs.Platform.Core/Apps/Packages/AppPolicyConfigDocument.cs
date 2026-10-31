@@ -194,4 +194,23 @@ public sealed record AppPolicy(
         string? capability = manifest.Capabilities.FirstOrDefault(BlockedCapabilities.Contains);
         return capability is null ? null : new AppBlockReason(AppBlockKind.Capability, capability);
     }
+
+    /// <summary>
+    /// Finds the rule that blocks a theme pack (ADR 0213 §4): its id in <c>[blocked-apps]</c> or its
+    /// catalog category in <c>[blocked-categories]</c>. A pack has no capability.
+    /// </summary>
+    /// <param name="packId">The pack id.</param>
+    /// <param name="category">Its catalog category, if any.</param>
+    public AppBlockReason? FindBlock(string packId, string? category)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(packId);
+        if (BlockedApps.Contains(packId))
+        {
+            return new AppBlockReason(AppBlockKind.App, packId);
+        }
+
+        return category is { Length: > 0 } && BlockedCategories.Contains(category)
+            ? new AppBlockReason(AppBlockKind.Category, category)
+            : null;
+    }
 }

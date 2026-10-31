@@ -75,11 +75,15 @@ Chaque ligne est un chantier, avec sa branche et sa PR.
 
 ### v2 : packs de thèmes (ADR 0190)
 
-8. Format `.hacktheme`, vérifications, installation, onglet Thèmes du Store
-   (packs de thèmes `.theme` seulement au début).
+8. Format `.hacktheme`, vérifications, installation, onglet Thèmes du Store,
+   avec toutes les parties (thèmes, fonds, icônes, sons, curseurs). **Fait**
+   (branche `todo/18-theme-packs`, issue #253,
+   [ADR 0213](../adr/0213-theme-packs-build.md)) ; CI du catalogue :
+   [AppMarketPlace #4](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/4).
 9. Un chantier par nouveau système de l'OS, chacun avec son ADR : fonds
    d'écran en image, packs d'icônes, sons des évènements, thèmes de curseurs.
    Le Store accepte chaque partie d'un pack quand son système existe.
+   **Fait** (ADR 0202 à 0205).
 
 ## Règles
 

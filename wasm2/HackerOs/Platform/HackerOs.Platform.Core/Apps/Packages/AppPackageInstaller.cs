@@ -745,7 +745,7 @@ public sealed partial class AppPackageInstaller
         await DeleteIfExistsAsync(writer, InstalledAppsLayout.GetPersonalAppDirectory(home, appId), cancellationToken).ConfigureAwait(false);
     }
 
-    private static async ValueTask WriteFileAsync(IAppFileSystemGateway system, VirtualPath path, byte[] content, CancellationToken cancellationToken)
+    internal static async ValueTask WriteFileAsync(IAppFileSystemGateway system, VirtualPath path, byte[] content, CancellationToken cancellationToken)
     {
         string parent = path.Value[..path.Value.LastIndexOf('/')];
         Ensure(await SettingsTextFile.EnsureDirectoryAsync(system, VirtualPath.Parse(parent), cancellationToken).ConfigureAwait(false));
@@ -759,7 +759,7 @@ public sealed partial class AppPackageInstaller
         Ensure(written.Succeeded ? null : written.Transaction.Error);
     }
 
-    private static async ValueTask DeleteIfExistsAsync(IAppFileSystemGateway system, VirtualPath path, CancellationToken cancellationToken)
+    internal static async ValueTask DeleteIfExistsAsync(IAppFileSystemGateway system, VirtualPath path, CancellationToken cancellationToken)
     {
         FileSystemResult<FileSystemEntrySnapshot> entry = await system.StatAsync(new FileSystemStatRequest(path), cancellationToken).ConfigureAwait(false);
         if (!entry.Succeeded)
@@ -778,7 +778,7 @@ public sealed partial class AppPackageInstaller
         Ensure(deleted.Succeeded ? null : deleted.Transaction.Error);
     }
 
-    private static void Ensure(FileSystemError? error)
+    internal static void Ensure(FileSystemError? error)
     {
         if (error is not null)
         {

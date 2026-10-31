@@ -25,6 +25,7 @@ public sealed class LocalSessionService : ISessionService
     private readonly Func<DateTimeOffset> _clock;
 
     private readonly Lock _gate = new();
+    private Task<bool>? _iconPackInstall;
     private CancellationTokenSource? _rootTokenSource;
     private AuthenticatedPrincipal? _principal;
 
@@ -215,6 +216,8 @@ public sealed class LocalSessionService : ISessionService
                     await _profileInitializer.InitializeAsync(user, cancellationToken).ConfigureAwait(false);
                 }
 
+                StartIconPackInstall();
+
                 if (_grantRepository is not null && _catalog is not null)
                 {
                     string userId = user.Id.ToString();
@@ -361,6 +364,44 @@ public sealed class LocalSessionService : ISessionService
             }
 
             return CancellationTokenSource.CreateLinkedTokenSource(_rootTokenSource.Token);
+        }
+    }
+
+    /// <summary>
+    /// Starts installing the icon packs shipped with the OS once per boot, without making the login
+    /// wait for it: their images take about ten seconds to write in the browser store at the first
+    /// login, and the session starts with the built-in icons anyway. A failed install is
+    /// recorded in the audit log and tried again at the next login.
+    /// </summary>
+    private void StartIconPackInstall()
+    {
+        lock (_gate)
+        {
+            // Running, or done: only a failed install is started again.
+            if (_iconPackInstall is not null && (!_iconPackInstall.IsCompleted || _iconPackInstall.Result))
+            {
+                return;
+            }
+
+            _iconPackInstall = InstallIconPacksAsync();
+        }
+    }
+
+    private async Task<bool> InstallIconPacksAsync()
+    {
+        // Let the login finish first: the install only starts once the session code has yielded.
+        await Task.Yield();
+        try
+        {
+            await _homeSeeder.InstallIconPacksAsync(CancellationToken.None).ConfigureAwait(false);
+            RecordAudit("system", "filesystem.install-icon-packs", "/usr/share/icons", AuditOutcome.Success);
+            return true;
+        }
+        catch (Exception exception) when (exception is InvalidOperationException or IOException)
+        {
+            // Nobody awaits this task: the audit log is where the failure shows.
+            RecordAudit("system", "filesystem.install-icon-packs", "/usr/share/icons", AuditOutcome.Failed);
+            return false;
         }
     }
 

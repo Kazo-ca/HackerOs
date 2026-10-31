@@ -16,9 +16,13 @@
                value="@_query"
                @oninput="OnQueryChanged" />
         <nav class="store-tabs" role="tablist" aria-label="@L["Tabs.Label"]">
-            <button type="button" role="tab" class="store-tab @(_view != StoreView.Installed ? "is-active" : null)"
-                    aria-selected="@(_view != StoreView.Installed ? "true" : "false")" @onclick="ShowHome">
+            <button type="button" role="tab" class="store-tab @(IsHomeTab ? "is-active" : null)"
+                    aria-selected="@(IsHomeTab ? "true" : "false")" @onclick="ShowHome">
                 @L["Tabs.Home"]
+            </button>
+            <button type="button" role="tab" class="store-tab @(_view == StoreView.Themes ? "is-active" : null)"
+                    aria-selected="@(_view == StoreView.Themes ? "true" : "false")" @onclick="ShowThemes">
+                @L["Tabs.Themes"]
             </button>
             <button type="button" role="tab" class="store-tab @(_view == StoreView.Installed ? "is-active" : null)"
                     aria-selected="@(_view == StoreView.Installed ? "true" : "false")" @onclick="ShowInstalled">
@@ -72,6 +76,10 @@
         {
             @RenderInstalled()
         }
+        else if (_view == StoreView.Themes)
+        {
+            @RenderThemes()
+        }
         else if (IsSearching)
         {
             <h2 class="store-section-title">@Strings.Plural(L, "Search.Results", SearchResults.Count)</h2>
@@ -115,6 +123,104 @@
 @code {
     /// <summary>Apps shown per category on the home page before « See all ».</summary>
     private const int HomeRowSize = 6;
+
+    private bool IsHomeTab => _view is StoreView.Home or StoreView.Detail;
+
+    private RenderFragment RenderThemes() => __builder =>
+    {
+        <div class="store-section-head">
+            <h2 class="store-section-title">@L["Themes.Title"]</h2>
+        </div>
+        <p class="store-themes-intro">@L["Themes.Intro"]</p>
+        @if (_themePacksUnsupported)
+        {
+            <p class="store-empty">@L["Themes.Unsupported"]</p>
+        }
+        else if (_themePacks.All.Count == 0)
+        {
+            <p class="store-empty">@L["Themes.Empty"]</p>
+        }
+        else if (VisibleThemePacks.Count == 0)
+        {
+            <p class="store-empty">@L["Themes.SearchNone", _query ?? string.Empty]</p>
+        }
+        else
+        {
+            <ul class="store-pack-grid">
+                @foreach (StoreThemePackEntry pack in VisibleThemePacks)
+                {
+                    <li class="store-pack" aria-label="@pack.Name">
+                        @if (pack.Pack?.Latest.IconUri is { } preview)
+                        {
+                            <img class="store-pack-preview" src="@preview" alt="@L["Themes.Preview", pack.Name]" loading="lazy" draggable="false" />
+                        }
+                        else
+                        {
+                            <span class="store-pack-preview is-placeholder" aria-hidden="true">
+                                <HackerIcon Library="IconLibrary.Lucide" Name="palette" Size="40" Title="" />
+                            </span>
+                        }
+                        <div class="store-pack-body">
+                            <span class="store-card-name">@pack.Name</span>
+                            @if (pack.Pack is { } entry)
+                            {
+                                <span class="store-card-description">@entry.GetShortDescription(Culture)</span>
+                                <span class="store-card-meta">
+                                    <span class="store-trust @TrustClass(entry.Trust)">@TrustText(entry.Trust)</span>
+                                    <span>@entry.LatestVersion · @SizeText(entry.Latest.SizeBytes)</span>
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="store-card-description">@L["Themes.NotInCatalog"]</span>
+                            }
+                            @if (pack.Installed is { } installed)
+                            {
+                                <span class="store-pack-parts" aria-label="@L["Themes.Parts"]">@PartsText(installed.Parts)</span>
+                                <span class="store-state">
+                                    @(pack.State == StoreThemePackState.UpdateAvailable
+                                        ? L["State.UpdateAvailable", pack.AvailableUpdate!]
+                                        : installed.SystemWide ? L["State.InstalledForEveryone"] : L["State.InstalledForMe"])
+                                </span>
+                            }
+                            @RenderThemePackActions(pack)
+                        </div>
+                    </li>
+                }
+            </ul>
+        }
+    };
+
+    private RenderFragment RenderThemePackActions(StoreThemePackEntry pack) => __builder =>
+    {
+        bool busy = _isBusy;
+        <div class="store-actions">
+            @switch (pack.State)
+            {
+                case StoreThemePackState.NotInstalled when pack.Pack is not null:
+                    <button type="button" class="store-button is-primary" disabled="@busy" @onclick="() => InstallThemePackAsync(pack, HackPackageScope.User)">
+                        <HackerIcon Library="IconLibrary.Lucide" Name="download" Size="14" Title="" /> @L["Action.InstallForMe"]
+                    </button>
+                    <button type="button" class="store-button" disabled="@busy" @onclick="() => InstallThemePackAsync(pack, HackPackageScope.System)">@L["Action.InstallForEveryone"]</button>
+                    break;
+                case StoreThemePackState.UpdateAvailable:
+                    <button type="button" class="store-button is-primary" disabled="@busy" @onclick="() => UpdateThemePackAsync(pack)">@L["Action.Update", pack.AvailableUpdate!]</button>
+                    <button type="button" class="store-button" disabled="@busy" @onclick="() => OpenAppearanceAsync(pack)">@L["Action.OpenAppearance"]</button>
+                    <button type="button" class="store-button is-danger" disabled="@busy" @onclick="() => RemoveThemePackAsync(pack)">@L["Action.Remove"]</button>
+                    break;
+                case StoreThemePackState.Installed:
+                    <button type="button" class="store-button is-primary" disabled="@busy" @onclick="() => OpenAppearanceAsync(pack)">
+                        <HackerIcon Library="IconLibrary.Lucide" Name="palette" Size="14" Title="" /> @L["Action.OpenAppearance"]
+                    </button>
+                    <button type="button" class="store-button is-danger" disabled="@busy" @onclick="() => RemoveThemePackAsync(pack)">@L["Action.Remove"]</button>
+                    break;
+            }
+            @if (_busyAppId == pack.PackId)
+            {
+                <span class="store-progress" role="status">@L["Working"]</span>
+            }
+        </div>
+    };
 
     private RenderFragment RenderGrid(IReadOnlyList<StoreEntry> entries) => __builder =>
     {

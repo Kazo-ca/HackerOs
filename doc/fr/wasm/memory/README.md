@@ -98,6 +98,14 @@ jour à la fin de chaque série ou quand une convention change.
   Benoit (redémarrage sans administrateur, source écrite, badge, ordre des
   catalogues), recommandations appliquées. Voir
   [`app-installation.md`](../dev/app-installation.md#le-hack-store-et-les-catalogues).
+- **Hack Store v2, packs de thèmes** (ADR 0213, issue `TODO` #253, série
+  `todo/base`, branche `todo/18-theme-packs`) : format `.hacktheme`
+  (`ThemePack.Read`), `kind: "theme-pack"` dans `catalog.json`, pack déballé
+  tel quel dans `theme-packs/<id>/` et lu en place par les thèmes, fonds,
+  icônes, sons et curseurs, onglet Thèmes du Store. Quatre questions posées à
+  Benoit (fichiers lus en place, CI du catalogue, rien appliqué après
+  l'installation, pas de badge), recommandations appliquées. CI du catalogue :
+  issue `TODO` AppMarketPlace #4.
 - **Bulles de notification** (ADR 0197, chantier 1 de #242, série
   `todo/base`) : bulles des notifications et « Update ready » en
   notification persistante avec « Redémarrer ». Voir
@@ -129,10 +137,10 @@ jour à la fin de chaque série ou quand une convention change.
   0191 serveur local installable, 0192 `features.md` et exception à l'ADR 0135,
   0193 heure locale, 0194 menus de la barre des tâches, 0195 bouton
   Marche/arrêt du menu Démarrer ; série `todo/base` : 0197 bulles de
-  notification, 0201 « Changer d'utilisateur » reste grisé, 0203 packs d'icônes, 0207 modèle `hackeros-solution`, 0208 sources de confiance du Hack Store, 0212 app Hack Store (les
+  notification, 0201 « Changer d'utilisateur » reste grisé, 0203 packs d'icônes, 0207 modèle `hackeros-solution`, 0208 sources de confiance du Hack Store, 0212 app Hack Store, 0213 packs de thèmes, 0214 réservée pour l'issue #251 (les
   autres numéros jusqu'à 0211 sont réservés par ses chantiers). 0196 est prise
   par la PR #294 (point des notifications non lues). **Prochain numéro libre :
-  0213.** Avant d'en
+  0215.** Avant d'en
   prendre un, vérifier `dev/adr/` sur `main` et les PR ouvertes.
 
 ## Conventions de travail
