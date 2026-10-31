@@ -998,6 +998,9 @@ public static class EcosystemServiceCollectionExtensions
             provider.GetRequiredService<INotificationQueue>(),
             () => provider.GetRequiredService<ISessionService>().CurrentPrincipal,
             () => provider.GetRequiredService<HackerOs.Platform.Core.Globalization.SessionLocaleService>().Culture));
+        // ADR 0197 §4: the notification actions the shell runs itself, such as « Redémarrer » of
+        // « Update ready »; the clock panel and the notification bubbles run them.
+        services.AddScoped<HackerOs.Platform.Blazor.Shell.ShellNotificationActions>();
         services.AddScoped(provider => new ScreenControl(
             provider.GetRequiredService<ScreenService>(),
             provider.GetRequiredService<WindowRuntime>()));

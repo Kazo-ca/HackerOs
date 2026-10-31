@@ -800,4 +800,10 @@
   <data name="Launcher.Guest.CreateAccount" xml:space="preserve">
     <value>Invité · Créer mon compte</value>
   </data>
+  <data name="Toast.Region" xml:space="preserve">
+    <value>Nouvelles notifications</value>
+  </data>
+  <data name="Toast.Close" xml:space="preserve">
+    <value>Masquer cette bulle</value>
+  </data>
 </root>

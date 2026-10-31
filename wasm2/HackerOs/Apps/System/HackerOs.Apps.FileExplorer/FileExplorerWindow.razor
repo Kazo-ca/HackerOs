@@ -172,15 +172,18 @@
 
     <!-- Directory Content View: the OS file control, provided by this same app -->
     <div class="explorer-content">
-        <HackFileView InitialDirectory="@_initialDirectory.Value"
-                      Mode="ToContractMode(_state.ViewMode)"
-                      ModeChanged="OnModeChanged"
-                      Filter="_searchFilter"
-                      Navigated="OnNavigated"
-                      SelectionChanged="OnSelectionChanged"
-                      ContextMenuOpening="OnFileMenuOpeningAsync"
-                      ErrorOccurred="ReportError"
-                      ControllerChanged="OnControllerChangedAsync" />
+        @* The explorer's own windows see inside the .zip files (ADR 0185 §6-9). *@
+        <CascadingValue Name="@ExplorerFileView.ArchiveBrowsingName" Value="true" IsFixed="true">
+            <HackFileView InitialDirectory="@_initialDirectory.Value"
+                          Mode="ToContractMode(_state.ViewMode)"
+                          ModeChanged="OnModeChanged"
+                          Filter="_searchFilter"
+                          Navigated="OnNavigated"
+                          SelectionChanged="OnSelectionChanged"
+                          ContextMenuOpening="OnFileMenuOpeningAsync"
+                          ErrorOccurred="ReportError"
+                          ControllerChanged="OnControllerChangedAsync" />
+        </CascadingValue>
     </div>
 
     <!-- Status Bar -->
@@ -228,6 +231,30 @@
     private protected FileView? _fileView => (_files as ExplorerFileView)?.View;
 
     private protected int SelectedCount => _files?.SelectedItems.Count ?? 0;
+
+    /// <summary>Gets whether the folder shown is a <c>.zip</c> or a folder inside one (ADR 0185 §6-9).</summary>
+    private protected bool InArchive => (_files as ExplorerFileView)?.IsInArchive == true;
+
+    /// <summary>Gets the file system as the control sees it, the inside of the archives included.</summary>
+    private protected IAppFileSystemGateway ViewFileSystem => (_files as ExplorerFileView)?.ViewFileSystem ?? AppContext.FileSystem;
+
+    /// <summary>
+    /// Refuses a change in a read-only archive (ADR 0185 §9) with a clear message: the folder shown is
+    /// an archive or inside one, or one of <paramref name="entries"/> lies inside an archive.
+    /// </summary>
+    /// <returns><see langword="true"/> when the change was refused.</returns>
+    private protected bool RefuseInArchive(IEnumerable<VirtualPath>? entries = null)
+    {
+        bool inArchive = entries is null
+            ? InArchive
+            : _files is ExplorerFileView view && entries.Any(view.IsArchiveEntry);
+        if (inArchive)
+        {
+            ReportError(L["Error.ArchiveReadOnly"]);
+        }
+
+        return inArchive;
+    }
 
     private protected bool CanExtractSelection =>
         _files?.SelectedItems is [{ IsDirectory: false } item]
@@ -619,7 +646,7 @@
 
     private protected async Task CreateFolderAsync()
     {
-        if (_files is null) return;
+        if (_files is null || RefuseInArchive()) return;
 
         TextInputDialogResult result = await base.TextInput(
             title: L["Dialog.NewFolder.Title"],
@@ -649,7 +676,7 @@
 
     private protected async Task CreateFileAsync()
     {
-        if (_files is null) return;
+        if (_files is null || RefuseInArchive()) return;
 
         TextInputDialogResult result = await base.TextInput(
             title: L["Dialog.NewFile.Title"],
@@ -682,7 +709,7 @@
     /// <summary>A drop on the Trash place or view: moves the dragged entries to the trash (ADR 0052).</summary>
     private protected async Task OnTrashDropAsync(FileViewDropRequestedEventArgs e)
     {
-        if (e.Entries.Count == 0) return;
+        if (e.Entries.Count == 0 || RefuseInArchive(e.Entries.Select(static entry => entry.Path))) return;
 
         HackFileTransferResult result = await TrackOperation(HackFileOperations.MoveToTrashAsync(
             e.Entries.Select(entry => entry.Path.Value).ToList(), AppContext.CancellationToken));
@@ -751,7 +778,7 @@
     /// </summary>
     private protected async Task UploadFilesAsync(InputFileChangeEventArgs e)
     {
-        if (_files is null) return;
+        if (_files is null || RefuseInArchive()) return;
 
         IReadOnlyList<HackHostFile> files = e.GetMultipleFiles(maximumFileCount: 100)
             .Select(file => new HackHostFile(
@@ -777,12 +804,15 @@
     {
         if (_downloader is null) return;
 
+        // Through the view's file system, so the files of an archive can be downloaded too (ADR 0185 §9).
+        IAppFileSystemGateway fileSystem = ViewFileSystem;
+
         if (selected.Count == 1)
         {
             HackFileViewItem item = selected[0];
             if (!item.IsDirectory)
             {
-                FileSystemResult<FileSystemContentReadHandle> result = await AppContext.FileSystem.ReadAsync(
+                FileSystemResult<FileSystemContentReadHandle> result = await fileSystem.ReadAsync(
                     new FileSystemReadRequest(VirtualPath.Parse(item.Path)), AppContext.CancellationToken);
                 if (result.Succeeded && result.Value is not null)
                 {
@@ -795,7 +825,7 @@
                 using MemoryStream ms = new();
                 using (ZipArchive archive = new(ms, ZipArchiveMode.Create, true))
                 {
-                    await FileExplorerZipService.AddDirectoryToZipAsync(AppContext.FileSystem, archive, VirtualPath.Parse(item.Path), item.Name, AppContext.CancellationToken);
+                    await FileExplorerZipService.AddDirectoryToZipAsync(fileSystem, archive, VirtualPath.Parse(item.Path), item.Name, AppContext.CancellationToken);
                 }
                 ms.Position = 0;
                 await _downloader.DownloadFileFromStreamAsync(item.Name + ".zip", ms);
@@ -810,11 +840,11 @@
                 {
                     if (!item.IsDirectory)
                     {
-                        await FileExplorerZipService.AddFileToZipAsync(AppContext.FileSystem, archive, VirtualPath.Parse(item.Path), item.Name, AppContext.CancellationToken);
+                        await FileExplorerZipService.AddFileToZipAsync(fileSystem, archive, VirtualPath.Parse(item.Path), item.Name, AppContext.CancellationToken);
                     }
                     else
                     {
-                        await FileExplorerZipService.AddDirectoryToZipAsync(AppContext.FileSystem, archive, VirtualPath.Parse(item.Path), item.Name, AppContext.CancellationToken);
+                        await FileExplorerZipService.AddDirectoryToZipAsync(fileSystem, archive, VirtualPath.Parse(item.Path), item.Name, AppContext.CancellationToken);
                     }
                 }
             }
@@ -831,7 +861,7 @@
     /// </summary>
     private protected async Task CompressAsync(IReadOnlyList<HackFileViewItem> selected)
     {
-        if (_files is null || selected.Count == 0) return;
+        if (_files is null || selected.Count == 0 || RefuseInArchive()) return;
 
         TextInputDialogResult result = await base.TextInput(
             title: L["Dialog.Compress.Title"],
@@ -885,7 +915,7 @@
     /// <summary>Extracts a <c>.zip</c> into a folder of its name next to it: the toolbar's Extract and the registered "Extract here".</summary>
     private protected async Task ExtractAsync(string archivePath, string archiveName)
     {
-        if (_files is null) return;
+        if (_files is null || RefuseInArchive([VirtualPath.Parse(archivePath)])) return;
 
         // A registered entry also accepts application/zip files without the extension: they get a ".d" folder.
         string folderName = archiveName.EndsWith(".zip", StringComparison.OrdinalIgnoreCase) && archiveName.Length > ".zip".Length

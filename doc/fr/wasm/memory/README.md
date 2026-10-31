@@ -30,7 +30,7 @@ jour à la fin de chaque série ou quand une convention change.
 | EXEC (`exec/*`) | Limites de processus, OOM killer, passerelles distantes, boîte « ne répond pas », `HackBackground`, OS servi par `HackerOs.Server`, isolation cross-origin, SDK 1.2 | [`execution-followups-plan.md`](../dev/plans/execution-followups-plan.md) |
 | DESK (`desk/0` à `desk/6`) | Contrôle de fichiers fourni par l'OS, menu contextuel central, entrées de menu des apps, bureau, SDK 2.0 | [`desktop-and-context-menu-plan.md`](../dev/plans/desktop-and-context-menu-plan.md) |
 | Multi-moniteur (`multi-monitor/0` à `multi-monitor/9`) | Bureau étendu : un écran par surface d'affichage, `DisplayId` et zone de travail par écran, fenêtres déplacées par portail, service d'écrans (Chrome/Edge, repli ailleurs), une barre des tâches par écran, menus « Autre écran » et voile d'identification, Paramètres ▸ Écrans, glisser entre écrans ; aucun changement du SDK des apps | [`multi-monitor-plan.md`](../dev/plans/multi-monitor-plan.md) |
-| File Explorer (`explorer/1` à `explorer/9`) | Barre latérale redimensionnable, état vide dans la liste, glisser vers l'ordinateur, raccourcis, lecteurs réseau suivis, erreurs en `MessageBox` ; reste le `.zip` ouvert comme dossier (issue #241) | [ADR 0185](../dev/adr/0185-file-explorer-improvements.md), [`file-explorer.md`](../dev/file-explorer.md) |
+| File Explorer (`explorer/1` à `explorer/9`) | Barre latérale redimensionnable, état vide dans la liste, glisser vers l'ordinateur, raccourcis, lecteurs réseau suivis, erreurs en `MessageBox` ; le `.zip` ouvert comme dossier est fait dans `todo/base` (`todo/10-zip-as-folder`, issue #241) | [ADR 0185](../dev/adr/0185-file-explorer-improvements.md), [`file-explorer.md`](../dev/file-explorer.md) |
 | Invité (`guest/*`) | Démarrage en invité quand aucun compte n'existe, élévation par simple confirmation, « Créer mon compte » (migrer ou supprimer l'invité), crédits à la connexion | [ADR 0187](../dev/adr/0187-guest-start-and-sign-in-credits.md), [`guest-account.md`](../dev/guest-account.md) |
 
 - **Depuis DESK** (sur `main`, octobre 2026) : redémarrage proposé quand le
@@ -57,10 +57,12 @@ jour à la fin de chaque série ou quand une convention change.
   [`installable-server.md`](../dev/installable-server.md)) ; restent à essayer
   en vrai les scripts Windows et macOS et l'image Docker.
 - **Bouton Marche/arrêt dans le menu Démarrer** (ADR 0195, PR #291, fusionnée
-  le 2026-10-30) : « Changer d'utilisateur » reste grisé, issue `TODO` #290
-  (plusieurs sessions ouvertes en même temps).
+  le 2026-10-30) : « Changer d'utilisateur » reste grisé, choix de
+  Benoit le 2026-10-30 (ADR 0201, issue #290 ; prototype non fusionné sur la
+  branche `switch-user/simultaneous-sessions-prototype`).
 - **Série `todo/base`** (2026-10-30, toutes les issues `TODO` en parallèle,
-  une PR finale vers `main`) : chantier 1 du Hack Store fait, modèle
+  une PR finale vers `main`, branches `todo/<n>-<sujet>`, ADR 0197 à 0211
+  réservées) : chantier 1 du Hack Store fait, modèle
   `hackeros-solution` et workflow de publication vers le catalogue (ADR 0207,
   [`app-repository.md`](../framework/app-repository.md), issue #246). Le
   dépôt `HackerOs-AppTemplate` ne sera régénéré qu'avec un sous-module sur la
@@ -72,6 +74,10 @@ jour à la fin de chaque série ou quand une convention change.
   `~/.local/share/icons`, choisis dans Paramètres ▸ Apparence (document de
   réglages `icons`, clé `iconPackId`) ; le pack Néon intégré est installé
   d'office. Voir [`icon-packs.md`](../dev/icon-packs.md).
+- **Bulles de notification** (ADR 0197, chantier 1 de #242, série
+  `todo/base`) : bulles des notifications et « Update ready » en
+  notification persistante avec « Redémarrer ». Voir
+  [`notification-toasts.md`](../dev/notification-toasts.md).
 - **Animations des fenêtres** (ADR 0198, chantier 3 de #242, branche
   `todo/12-window-animations` vers `todo/base`) : ouvrir, fermer, minimiser vers
   la barre de son écran, restaurer, agrandir, snap ; variables
@@ -85,9 +91,11 @@ jour à la fin de chaque série ou quand une convention change.
   invité et crédits, 0188 à 0190 Hack Store ([`hackeros-store.md`](../dev/plans/hackeros-store.md)),
   0191 serveur local installable, 0192 `features.md` et exception à l'ADR 0135,
   0193 heure locale, 0194 menus de la barre des tâches, 0195 bouton
-  Marche/arrêt du menu Démarrer ; série `todo/base` : 0207 modèle
-  `hackeros-solution` (les autres numéros de la série sont réservés par ses
-  chantiers). **Prochain numéro libre : 0196.** Avant d'en
+  Marche/arrêt du menu Démarrer ; série `todo/base` : 0197 bulles de
+  notification, 0201 « Changer d'utilisateur » reste grisé, 0203 packs d'icônes, 0207 modèle `hackeros-solution` (les
+  autres numéros jusqu'à 0211 sont réservés par ses chantiers). 0196 est prise
+  par la PR #294 (point des notifications non lues). **Prochain numéro libre :
+  0212.** Avant d'en
   prendre un, vérifier `dev/adr/` sur `main` et les PR ouvertes.
 
 ## Conventions de travail

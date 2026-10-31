@@ -64,6 +64,11 @@ public sealed partial class ExplorerFileView
             id => EventCallback.Factory.Create<object?>(this, _ => RunMenuCommandAsync(id, targets, directory)),
             key => L[key]);
 
+        if (IsInArchive)
+        {
+            HideArchiveWriteCommands(args.Menu);
+        }
+
         // ADR 0159 §5: tells the OS what this menu is drawn for, so it adds the entries apps registered.
         args.Menu.FileMenu = new HackFileMenuContext(scope, snapshots, directory.Value);
 
@@ -83,13 +88,18 @@ public sealed partial class ExplorerFileView
     {
         if (id.StartsWith(HackFileMenuItems.OpenWithAppPrefix, StringComparison.Ordinal))
         {
-            return LaunchWithAsync(id[HackFileMenuItems.OpenWithAppPrefix.Length..], targets[0].FullPath.Value);
+            return OpenWithAppAsync(id[HackFileMenuItems.OpenWithAppPrefix.Length..], targets[0]);
+        }
+
+        if (ArchiveWriteCommands.Contains(id) && IsInsideArchive(directory))
+        {
+            return RefuseInArchiveAsync(directory);
         }
 
         return id switch
         {
             HackFileMenuItems.Open => OpenItemsAsync(targets),
-            HackFileMenuItems.OpenWithOther => ChooseAppAsync(targets[0].FullPath, candidateAppIds: null),
+            HackFileMenuItems.OpenWithOther => ChooseAppForAsync(targets[0]),
             HackFileMenuItems.Cut => PutOnClipboardAsync(targets, HackClipboardFileOperation.Cut),
             HackFileMenuItems.Copy => PutOnClipboardAsync(targets, HackClipboardFileOperation.Copy),
             HackFileMenuItems.PasteInto => PasteIntoAsync(targets[0].FullPath),

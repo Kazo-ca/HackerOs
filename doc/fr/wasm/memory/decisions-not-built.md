@@ -13,12 +13,12 @@ Rien ici ne se code sans que Benoit lance le sujet.
 
 ## Fenêtres et barre des tâches (issue #242, série `taskbar/`)
 
-Décidé le 2026-10-29. Chantiers faits : 2 (heure locale, ADR 0193), 3 (animations des fenêtres,
-ADR 0198) et 4 (menus contextuels, ADR 0194). Restent :
+Décidé le 2026-10-29. Chantiers faits : 1 (bulles de notification, ADR 0197), 2 (heure locale,
+ADR 0193), 3 (animations des fenêtres, ADR 0198) et 4 (menus contextuels,
+ADR 0194). Restent :
 
 | Chantier | Décisions |
 | --- | --- |
-| 1. Bulles de notification | Bulle (toast) pour toutes les notifications de l'OS et des apps : en bas à droite, au-dessus de la barre de l'écran 1, ~6 s, pile de 3 au plus, elles restent ensuite dans le panneau de l'horloge. « Update ready » devient une bulle + une notification persistante avec le bouton « Redémarrer », aussi visible sur l'écran de connexion (qui n'a pas de barre). Aujourd'hui les notifications n'existent que dans le panneau de l'horloge, et « Update ready » est un `aside` fixe dans `App.razor`, caché sous la barre. |
 | 5. Aperçu au survol + peek | Copie réduite en direct (HTML cloné, CSS `scale`), image de repli (icône + titre) pour les iframes et canvas. Apparaît après ~400 ms ; clic = active, « × » = ferme ; pas sur mobile. Survoler l'aperçu rend les autres fenêtres transparentes (peek, comme Windows). Le clone ne duplique pas les ID HTML et n'a pas de champs interactifs (axe). |
 
 Une ADR par sujet, un chantier par ADR, multi-écran pris en compte partout
@@ -100,10 +100,15 @@ profonds par URL (`?app=`, `?open=`), boîte « Exécuter » (Super+R), économi
 inactivité, recherche de fichiers dans le lanceur, aperçu au survol (voir #242),
 miniatures de fichiers (`~/.cache/thumbnails`), visionneuses (Markdown, PDF,
 images, vidéo), outils de développement Eruda, infobulles de fichiers riches,
-fonds d'écran animés ou en diaporama, `.zip` parcouru comme dossier (voir
-#241), `git clone` (exige un proxy CORS), Python (plutôt dans un dépôt d'app).
+fonds d'écran animés ou en diaporama, `git clone` (exige un proxy CORS), Python (plutôt dans un dépôt d'app).
 Questions à reposer au démarrage : où vivent les visionneuses, portée de
 `?app=`, Eruda ou non.
+
+## Changer d'utilisateur (décision close, 2026-10-30)
+
+- « Changer d'utilisateur » **reste grisé** (ADR 0201, issue #290) : une
+  session à la fois. Un prototype de sessions simultanées est gardé, non
+  fusionné, sur la branche `switch-user/simultaneous-sessions-prototype`.
 
 ## Éditeurs (décision close, 2026-10-17)
 
@@ -112,8 +117,6 @@ Questions à reposer au démarrage : où vivent les visionneuses, portée de
 
 ## Questions posées, réponse à confirmer
 
-- **Changer d'utilisateur** (issue #290) : plusieurs sessions ouvertes en même
-  temps ; le comportement cible a été demandé à Benoit le 2026-10-30.
 - **« Nouveau dossier » dans les dialogues** (ADR 0175) : rendre
   `SelectFolderDialogRequest.AllowCreateFolder` vrai par défaut pour toutes
   les apps ? Recommandé : garder l'option par app. Posée le 2026-10-26.

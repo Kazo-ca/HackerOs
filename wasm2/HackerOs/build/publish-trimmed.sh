@@ -200,11 +200,12 @@ code=$?
 stop_servers
 grep -E '^\s*\[(trimmed|chromium)\]' "$LOGS/tests.log" | sed "s/^ */    /"
 
-# A skipped test exits 0 too: require every test to have actually run and passed. Six tests: the
+# A skipped test exits 0 too: require every test to have actually run and passed. Seven tests: the
 # boot with every app, the offline boot, the window rendered in a worker with its measurements
-# (ADR 0133, TrimmedPublishTests.RemoteWindows.cs), and the installed app's wwwroot/ files served
-# on both addresses (ADR 0206, TrimmedPublishTests.InstalledApps.cs).
-EXPECTED_TESTS=6
+# (ADR 0133, TrimmedPublishTests.RemoteWindows.cs), the installed app's wwwroot/ files served on
+# both addresses (ADR 0206, TrimmedPublishTests.InstalledApps.cs), and the notification bubble
+# (ADR 0197, TrimmedPublishTests.Toasts.cs).
+EXPECTED_TESTS=7
 if [[ $code -eq 0 ]] && grep -qE "^\s*Passed: +$EXPECTED_TESTS\s*$" "$LOGS/tests.log" && ! grep -qE '^\s*Skipped: +[1-9]' "$LOGS/tests.log"; then
     [[ -z "$PWA_URL" ]] && log "note: the offline test did not run (no 127.0.0.2)"
     log "RESULT: PASS"
