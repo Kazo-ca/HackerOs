@@ -89,7 +89,9 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
 - **Bureau** avec icônes, raccourcis et menus contextuels, comme sur un OS de
   bureau. ([`desktop.md`](dev/desktop.md))
 - **Fenêtres** déplaçables, redimensionnables, agrandies ou ancrées sur les
-  bords de l'écran. ([`window-model.md`](framework/window-model.md))
+  bords de l'écran, avec des animations sobres pour ouvrir, fermer, minimiser
+  vers la barre, agrandir et ancrer, coupées par « Réduire les animations ».
+  ([`window-model.md`](framework/window-model.md), [`window-animations.md`](dev/window-animations.md))
 - **Barre des tâches et menu Démarrer** avec les applications épinglées et les
   fenêtres ouvertes. Un clic droit sur la barre donne le menu de la fenêtre,
   « Nouvelle fenêtre », le gestionnaire des tâches, « Afficher le bureau » et
@@ -236,6 +238,9 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
 - **Heure locale et fuseau horaire** : l'horloge, `date`, `ls -l` et les apps
   affichent l'heure dans le fuseau de l'utilisateur, automatique ou choisi dans
   Paramètres ▸ Date et heure. ([`time-zone.md`](framework/time-zone.md))
+- **Thèmes de curseurs** : pointeur de tout l'OS en images PNG, Système,
+  HackerOS Néon, Gothique Pourpre ou vos propres thèmes, choisi dans
+  Paramètres ▸ Apparence ▸ Curseurs. ([`cursor-themes.md`](framework/cursor-themes.md))
 - **Packs d'icônes** : des images PNG remplacent les icônes des applications,
   des dossiers et des fichiers partout dans l'OS, choisies dans Paramètres ▸
   Apparence ; pack d'exemple « Néon » fourni. ([`icon-packs.md`](dev/icon-packs.md),
@@ -292,7 +297,7 @@ dans `main`, le lien mène à sa PR.
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Changer d'utilisateur | Ouvrir une autre session sans fermer la première. Reste grisé dans le menu Marche/arrêt par choix de Benoit : une session à la fois, Se déconnecter pour changer de compte. | [0195](dev/adr/0195-start-menu-power-button.md), [0201](dev/adr/0201-switch-user-stays-greyed.md) | [#290](https://github.com/Kazo-ca/HackerOs/issues/290) |
-| Fenêtres et barre des tâches | Animations des fenêtres, aperçus au survol. Le fuseau horaire ([ADR 0193](dev/adr/0193-local-time-and-time-zone.md)), les menus de la barre ([ADR 0194](dev/adr/0194-taskbar-context-menus.md)) et les bulles de notification ([ADR 0197](dev/adr/0197-notification-toasts.md)) sont disponibles. | À venir | [#242](https://github.com/Kazo-ca/HackerOs/issues/242) |
+| Fenêtres et barre des tâches | Aperçus au survol. Le fuseau horaire ([ADR 0193](dev/adr/0193-local-time-and-time-zone.md)), les menus de la barre ([ADR 0194](dev/adr/0194-taskbar-context-menus.md)), les bulles de notification ([ADR 0197](dev/adr/0197-notification-toasts.md)) et les animations des fenêtres ([ADR 0198](dev/adr/0198-window-animations.md)) sont disponibles. | À venir | [#242](https://github.com/Kazo-ca/HackerOs/issues/242) |
 
 ### Hack Store
 
@@ -308,7 +313,6 @@ dans `main`, le lien mène à sa PR.
 | --- | --- | --- | --- |
 | Packs de thèmes | Format `.hacktheme` et onglet Thèmes du Hack Store. | [0190](dev/adr/0190-theme-packs.md) | [#253](https://github.com/Kazo-ca/HackerOs/issues/253) |
 | Fonds d'écran en image | Choisir une image comme fond d'écran, par écran. | [0190](dev/adr/0190-theme-packs.md) | [#254](https://github.com/Kazo-ca/HackerOs/issues/254) |
-| Thèmes de curseurs | Curseurs personnalisés choisis dans Paramètres. | [0190](dev/adr/0190-theme-packs.md) | [#257](https://github.com/Kazo-ca/HackerOs/issues/257) |
 
 ### Réseau et serveur
 

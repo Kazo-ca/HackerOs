@@ -1,4 +1,139 @@
 #nullable enable
+HackerOs.Theming.Abstractions.CursorImage
+HackerOs.Theming.Abstractions.CursorImage.<Clone>$() -> HackerOs.Theming.Abstractions.CursorImage!
+HackerOs.Theming.Abstractions.CursorImage.CursorImage(string! Url, int HotspotX, int HotspotY) -> void
+HackerOs.Theming.Abstractions.CursorImage.Deconstruct(out string! Url, out int HotspotX, out int HotspotY) -> void
+HackerOs.Theming.Abstractions.CursorImage.Equals(HackerOs.Theming.Abstractions.CursorImage? other) -> bool
+HackerOs.Theming.Abstractions.CursorImage.HotspotX.get -> int
+HackerOs.Theming.Abstractions.CursorImage.HotspotX.init -> void
+HackerOs.Theming.Abstractions.CursorImage.HotspotY.get -> int
+HackerOs.Theming.Abstractions.CursorImage.HotspotY.init -> void
+HackerOs.Theming.Abstractions.CursorImage.Url.get -> string!
+HackerOs.Theming.Abstractions.CursorImage.Url.init -> void
+HackerOs.Theming.Abstractions.CursorNames
+HackerOs.Theming.Abstractions.CursorTheme
+HackerOs.Theming.Abstractions.CursorTheme.<Clone>$() -> HackerOs.Theming.Abstractions.CursorTheme!
+HackerOs.Theming.Abstractions.CursorTheme.CursorTheme(string! Id, string! Name, HackerOs.Theming.Abstractions.ThemeOrigin? Origin, string? SourcePath, System.Collections.Generic.IReadOnlyDictionary<string!, HackerOs.Theming.Abstractions.CursorImage!>! Images) -> void
+HackerOs.Theming.Abstractions.CursorTheme.Deconstruct(out string! Id, out string! Name, out HackerOs.Theming.Abstractions.ThemeOrigin? Origin, out string? SourcePath, out System.Collections.Generic.IReadOnlyDictionary<string!, HackerOs.Theming.Abstractions.CursorImage!>! Images) -> void
+HackerOs.Theming.Abstractions.CursorTheme.Equals(HackerOs.Theming.Abstractions.CursorTheme? other) -> bool
+HackerOs.Theming.Abstractions.CursorTheme.Id.get -> string!
+HackerOs.Theming.Abstractions.CursorTheme.Id.init -> void
+HackerOs.Theming.Abstractions.CursorTheme.Images.get -> System.Collections.Generic.IReadOnlyDictionary<string!, HackerOs.Theming.Abstractions.CursorImage!>!
+HackerOs.Theming.Abstractions.CursorTheme.Images.init -> void
+HackerOs.Theming.Abstractions.CursorTheme.Name.get -> string!
+HackerOs.Theming.Abstractions.CursorTheme.Name.init -> void
+HackerOs.Theming.Abstractions.CursorTheme.Origin.get -> HackerOs.Theming.Abstractions.ThemeOrigin?
+HackerOs.Theming.Abstractions.CursorTheme.Origin.init -> void
+HackerOs.Theming.Abstractions.CursorTheme.Resolve(string! name) -> HackerOs.Theming.Abstractions.CursorImage?
+HackerOs.Theming.Abstractions.CursorTheme.ResolveAll() -> System.Collections.Generic.IReadOnlyDictionary<string!, HackerOs.Theming.Abstractions.CursorImage!>!
+HackerOs.Theming.Abstractions.CursorTheme.SourcePath.get -> string?
+HackerOs.Theming.Abstractions.CursorTheme.SourcePath.init -> void
+HackerOs.Theming.Abstractions.CursorThemeCatalog
+HackerOs.Theming.Abstractions.CursorThemeEntry
+HackerOs.Theming.Abstractions.CursorThemeEntry.<Clone>$() -> HackerOs.Theming.Abstractions.CursorThemeEntry!
+HackerOs.Theming.Abstractions.CursorThemeEntry.CursorThemeEntry(string! Name, string! FileName, int HotspotX, int HotspotY, int Line) -> void
+HackerOs.Theming.Abstractions.CursorThemeEntry.Deconstruct(out string! Name, out string! FileName, out int HotspotX, out int HotspotY, out int Line) -> void
+HackerOs.Theming.Abstractions.CursorThemeEntry.Equals(HackerOs.Theming.Abstractions.CursorThemeEntry? other) -> bool
+HackerOs.Theming.Abstractions.CursorThemeEntry.FileName.get -> string!
+HackerOs.Theming.Abstractions.CursorThemeEntry.FileName.init -> void
+HackerOs.Theming.Abstractions.CursorThemeEntry.HotspotX.get -> int
+HackerOs.Theming.Abstractions.CursorThemeEntry.HotspotX.init -> void
+HackerOs.Theming.Abstractions.CursorThemeEntry.HotspotY.get -> int
+HackerOs.Theming.Abstractions.CursorThemeEntry.HotspotY.init -> void
+HackerOs.Theming.Abstractions.CursorThemeEntry.Line.get -> int
+HackerOs.Theming.Abstractions.CursorThemeEntry.Line.init -> void
+HackerOs.Theming.Abstractions.CursorThemeEntry.Name.get -> string!
+HackerOs.Theming.Abstractions.CursorThemeEntry.Name.init -> void
+HackerOs.Theming.Abstractions.CursorThemeFile
+HackerOs.Theming.Abstractions.CursorThemeIndex
+HackerOs.Theming.Abstractions.CursorThemeIndex.<Clone>$() -> HackerOs.Theming.Abstractions.CursorThemeIndex!
+HackerOs.Theming.Abstractions.CursorThemeIndex.CursorThemeIndex(string! Id, string! Name, System.Collections.Generic.IReadOnlyList<HackerOs.Theming.Abstractions.CursorThemeEntry!>! Entries) -> void
+HackerOs.Theming.Abstractions.CursorThemeIndex.Deconstruct(out string! Id, out string! Name, out System.Collections.Generic.IReadOnlyList<HackerOs.Theming.Abstractions.CursorThemeEntry!>! Entries) -> void
+HackerOs.Theming.Abstractions.CursorThemeIndex.Entries.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Theming.Abstractions.CursorThemeEntry!>!
+HackerOs.Theming.Abstractions.CursorThemeIndex.Entries.init -> void
+HackerOs.Theming.Abstractions.CursorThemeIndex.Equals(HackerOs.Theming.Abstractions.CursorThemeIndex? other) -> bool
+HackerOs.Theming.Abstractions.CursorThemeIndex.Id.get -> string!
+HackerOs.Theming.Abstractions.CursorThemeIndex.Id.init -> void
+HackerOs.Theming.Abstractions.CursorThemeIndex.Name.get -> string!
+HackerOs.Theming.Abstractions.CursorThemeIndex.Name.init -> void
+HackerOs.Theming.Abstractions.CursorThemeLibrary
+HackerOs.Theming.Abstractions.CursorThemeLibraryResult
+HackerOs.Theming.Abstractions.CursorThemeLibraryResult.<Clone>$() -> HackerOs.Theming.Abstractions.CursorThemeLibraryResult!
+HackerOs.Theming.Abstractions.CursorThemeLibraryResult.All.get -> System.Collections.Generic.IEnumerable<HackerOs.Theming.Abstractions.CursorTheme!>!
+HackerOs.Theming.Abstractions.CursorThemeLibraryResult.CursorThemeLibraryResult(System.Collections.Generic.IReadOnlyList<HackerOs.Theming.Abstractions.CursorTheme!>! Themes, System.Collections.Generic.IReadOnlyList<HackerOs.Theming.Abstractions.ThemeFileDiagnostic!>! Diagnostics) -> void
+HackerOs.Theming.Abstractions.CursorThemeLibraryResult.Deconstruct(out System.Collections.Generic.IReadOnlyList<HackerOs.Theming.Abstractions.CursorTheme!>! Themes, out System.Collections.Generic.IReadOnlyList<HackerOs.Theming.Abstractions.ThemeFileDiagnostic!>! Diagnostics) -> void
+HackerOs.Theming.Abstractions.CursorThemeLibraryResult.Diagnostics.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Theming.Abstractions.ThemeFileDiagnostic!>!
+HackerOs.Theming.Abstractions.CursorThemeLibraryResult.Diagnostics.init -> void
+HackerOs.Theming.Abstractions.CursorThemeLibraryResult.Equals(HackerOs.Theming.Abstractions.CursorThemeLibraryResult? other) -> bool
+HackerOs.Theming.Abstractions.CursorThemeLibraryResult.Resolve(string? id) -> HackerOs.Theming.Abstractions.CursorTheme!
+HackerOs.Theming.Abstractions.CursorThemeLibraryResult.Themes.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Theming.Abstractions.CursorTheme!>!
+HackerOs.Theming.Abstractions.CursorThemeLibraryResult.Themes.init -> void
+HackerOs.Theming.Abstractions.CursorThemeParseResult
+HackerOs.Theming.Abstractions.CursorThemeParseResult.<Clone>$() -> HackerOs.Theming.Abstractions.CursorThemeParseResult!
+HackerOs.Theming.Abstractions.CursorThemeParseResult.CursorThemeParseResult(HackerOs.Theming.Abstractions.CursorThemeIndex? Index, System.Collections.Generic.IReadOnlyList<HackerOs.Theming.Abstractions.ThemeFileDiagnostic!>! Diagnostics) -> void
+HackerOs.Theming.Abstractions.CursorThemeParseResult.Deconstruct(out HackerOs.Theming.Abstractions.CursorThemeIndex? Index, out System.Collections.Generic.IReadOnlyList<HackerOs.Theming.Abstractions.ThemeFileDiagnostic!>! Diagnostics) -> void
+HackerOs.Theming.Abstractions.CursorThemeParseResult.Diagnostics.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Theming.Abstractions.ThemeFileDiagnostic!>!
+HackerOs.Theming.Abstractions.CursorThemeParseResult.Diagnostics.init -> void
+HackerOs.Theming.Abstractions.CursorThemeParseResult.Equals(HackerOs.Theming.Abstractions.CursorThemeParseResult? other) -> bool
+HackerOs.Theming.Abstractions.CursorThemeParseResult.Index.get -> HackerOs.Theming.Abstractions.CursorThemeIndex?
+HackerOs.Theming.Abstractions.CursorThemeParseResult.Index.init -> void
+const HackerOs.Theming.Abstractions.CursorNames.Default = "default" -> string!
+const HackerOs.Theming.Abstractions.CursorNames.Pointer = "pointer" -> string!
+const HackerOs.Theming.Abstractions.CursorNames.Progress = "progress" -> string!
+const HackerOs.Theming.Abstractions.CursorNames.Text = "text" -> string!
+const HackerOs.Theming.Abstractions.CursorNames.Wait = "wait" -> string!
+const HackerOs.Theming.Abstractions.CursorThemeCatalog.AssetRoot = "_content/HackerOs.Theming.Blazor/cursors" -> string!
+const HackerOs.Theming.Abstractions.CursorThemeCatalog.CrimsonId = "gothic-crimson" -> string!
+const HackerOs.Theming.Abstractions.CursorThemeCatalog.NeonId = "hackeros-neon" -> string!
+const HackerOs.Theming.Abstractions.CursorThemeCatalog.SystemId = "system" -> string!
+const HackerOs.Theming.Abstractions.CursorThemeFile.IndexFileName = "cursor.theme" -> string!
+const HackerOs.Theming.Abstractions.CursorThemeFile.MaxImageBytes = 65536 -> int
+const HackerOs.Theming.Abstractions.CursorThemeFile.MaxImageSize = 128 -> int
+const HackerOs.Theming.Abstractions.CursorThemeFile.MaxIndexBytes = 16384 -> int
+const HackerOs.Theming.Abstractions.CursorThemeLibrary.SystemDirectory = "/etc/hackeros/cursors" -> string!
+override HackerOs.Theming.Abstractions.CursorImage.Equals(object? obj) -> bool
+override HackerOs.Theming.Abstractions.CursorImage.GetHashCode() -> int
+override HackerOs.Theming.Abstractions.CursorImage.ToString() -> string!
+override HackerOs.Theming.Abstractions.CursorTheme.Equals(object? obj) -> bool
+override HackerOs.Theming.Abstractions.CursorTheme.GetHashCode() -> int
+override HackerOs.Theming.Abstractions.CursorTheme.ToString() -> string!
+override HackerOs.Theming.Abstractions.CursorThemeEntry.Equals(object? obj) -> bool
+override HackerOs.Theming.Abstractions.CursorThemeEntry.GetHashCode() -> int
+override HackerOs.Theming.Abstractions.CursorThemeEntry.ToString() -> string!
+override HackerOs.Theming.Abstractions.CursorThemeIndex.Equals(object? obj) -> bool
+override HackerOs.Theming.Abstractions.CursorThemeIndex.GetHashCode() -> int
+override HackerOs.Theming.Abstractions.CursorThemeIndex.ToString() -> string!
+override HackerOs.Theming.Abstractions.CursorThemeLibraryResult.Equals(object? obj) -> bool
+override HackerOs.Theming.Abstractions.CursorThemeLibraryResult.GetHashCode() -> int
+override HackerOs.Theming.Abstractions.CursorThemeLibraryResult.ToString() -> string!
+override HackerOs.Theming.Abstractions.CursorThemeParseResult.Equals(object? obj) -> bool
+override HackerOs.Theming.Abstractions.CursorThemeParseResult.GetHashCode() -> int
+override HackerOs.Theming.Abstractions.CursorThemeParseResult.ToString() -> string!
+static HackerOs.Theming.Abstractions.CursorImage.operator !=(HackerOs.Theming.Abstractions.CursorImage? left, HackerOs.Theming.Abstractions.CursorImage? right) -> bool
+static HackerOs.Theming.Abstractions.CursorImage.operator ==(HackerOs.Theming.Abstractions.CursorImage? left, HackerOs.Theming.Abstractions.CursorImage? right) -> bool
+static HackerOs.Theming.Abstractions.CursorNames.All.get -> System.Collections.Generic.IReadOnlyList<string!>!
+static HackerOs.Theming.Abstractions.CursorNames.GetFallback(string! name) -> string?
+static HackerOs.Theming.Abstractions.CursorNames.IsKnown(string? name) -> bool
+static HackerOs.Theming.Abstractions.CursorNames.Preview.get -> System.Collections.Generic.IReadOnlyList<string!>!
+static HackerOs.Theming.Abstractions.CursorTheme.operator !=(HackerOs.Theming.Abstractions.CursorTheme? left, HackerOs.Theming.Abstractions.CursorTheme? right) -> bool
+static HackerOs.Theming.Abstractions.CursorTheme.operator ==(HackerOs.Theming.Abstractions.CursorTheme? left, HackerOs.Theming.Abstractions.CursorTheme? right) -> bool
+static HackerOs.Theming.Abstractions.CursorThemeCatalog.System.get -> HackerOs.Theming.Abstractions.CursorTheme!
+static HackerOs.Theming.Abstractions.CursorThemeCatalog.Themes.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Theming.Abstractions.CursorTheme!>!
+static HackerOs.Theming.Abstractions.CursorThemeCatalog.TryGet(string? id, out HackerOs.Theming.Abstractions.CursorTheme! theme) -> bool
+static HackerOs.Theming.Abstractions.CursorThemeEntry.operator !=(HackerOs.Theming.Abstractions.CursorThemeEntry? left, HackerOs.Theming.Abstractions.CursorThemeEntry? right) -> bool
+static HackerOs.Theming.Abstractions.CursorThemeEntry.operator ==(HackerOs.Theming.Abstractions.CursorThemeEntry? left, HackerOs.Theming.Abstractions.CursorThemeEntry? right) -> bool
+static HackerOs.Theming.Abstractions.CursorThemeFile.Parse(string! content, string? path = null) -> HackerOs.Theming.Abstractions.CursorThemeParseResult!
+static HackerOs.Theming.Abstractions.CursorThemeFile.ToDataUrl(System.ReadOnlySpan<byte> bytes) -> string!
+static HackerOs.Theming.Abstractions.CursorThemeFile.TryValidateImage(System.ReadOnlySpan<byte> bytes, int hotspotX, int hotspotY, out string? reasonKey) -> bool
+static HackerOs.Theming.Abstractions.CursorThemeIndex.operator !=(HackerOs.Theming.Abstractions.CursorThemeIndex? left, HackerOs.Theming.Abstractions.CursorThemeIndex? right) -> bool
+static HackerOs.Theming.Abstractions.CursorThemeIndex.operator ==(HackerOs.Theming.Abstractions.CursorThemeIndex? left, HackerOs.Theming.Abstractions.CursorThemeIndex? right) -> bool
+static HackerOs.Theming.Abstractions.CursorThemeLibrary.GetUserDirectory(string! homeDirectory) -> string!
+static HackerOs.Theming.Abstractions.CursorThemeLibrary.LoadAsync(System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<string!>!>!>! listDirectories, System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<string!>!>! readText, System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<byte[]!>!>! readBytes, string? homeDirectory, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.Theming.Abstractions.CursorThemeLibraryResult!>!
+static HackerOs.Theming.Abstractions.CursorThemeLibraryResult.Empty.get -> HackerOs.Theming.Abstractions.CursorThemeLibraryResult!
+static HackerOs.Theming.Abstractions.CursorThemeLibraryResult.operator !=(HackerOs.Theming.Abstractions.CursorThemeLibraryResult? left, HackerOs.Theming.Abstractions.CursorThemeLibraryResult? right) -> bool
+static HackerOs.Theming.Abstractions.CursorThemeLibraryResult.operator ==(HackerOs.Theming.Abstractions.CursorThemeLibraryResult? left, HackerOs.Theming.Abstractions.CursorThemeLibraryResult? right) -> bool
+static HackerOs.Theming.Abstractions.CursorThemeParseResult.operator !=(HackerOs.Theming.Abstractions.CursorThemeParseResult? left, HackerOs.Theming.Abstractions.CursorThemeParseResult? right) -> bool
+static HackerOs.Theming.Abstractions.CursorThemeParseResult.operator ==(HackerOs.Theming.Abstractions.CursorThemeParseResult? left, HackerOs.Theming.Abstractions.CursorThemeParseResult? right) -> bool
 HackerOs.Theming.Abstractions.IconPacks.IconPack
 HackerOs.Theming.Abstractions.IconPacks.IconPack.FindApp(string? appId) -> string?
 HackerOs.Theming.Abstractions.IconPacks.IconPack.FindApp(string? appId, string? category) -> string?

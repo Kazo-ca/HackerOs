@@ -1779,6 +1779,36 @@
   <data name="Sound.Error.UnknownTheme" xml:space="preserve">
     <value>There is no sound theme “{0}”.</value>
   </data>
+  <data name="Cursors.Title" xml:space="preserve">
+    <value>Cursors</value>
+  </data>
+  <data name="Cursors.Description" xml:space="preserve">
+    <value>The pointer of the whole OS. Add your own themes as folders in {0} (for you) or {1} (for every user, as administrator): each folder holds a {2} file listing its PNG cursors with their hot spot.</value>
+  </data>
+  <data name="Cursors.SystemPreview" xml:space="preserve">
+    <value>device cursors</value>
+  </data>
+  <data name="Cursors.Theme.system" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="Cursors.Theme.hackeros-neon" xml:space="preserve">
+    <value>HackerOS Neon</value>
+  </data>
+  <data name="Cursors.Theme.gothic-crimson" xml:space="preserve">
+    <value>Gothic Crimson</value>
+  </data>
+  <data name="Cursors.Saved" xml:space="preserve">
+    <value>Saved. The desktop uses these cursors now.</value>
+  </data>
+  <data name="Cursors.Warnings" xml:space="preserve">
+    <value>{0} problem(s) in the cursor theme folders:</value>
+  </data>
+  <data name="Cursors.Error.CannotRead" xml:space="preserve">
+    <value>Cannot read cursors.config: {0}</value>
+  </data>
+  <data name="Cursors.Error.CannotSave" xml:space="preserve">
+    <value>Cannot save {0}: {1}</value>
+  </data>
   <data name="Tab.AppSources" xml:space="preserve">
     <value>Sources and block list</value>
   </data>

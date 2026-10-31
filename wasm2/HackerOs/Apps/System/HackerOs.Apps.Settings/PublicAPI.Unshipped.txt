@@ -12,6 +12,9 @@ HackerOs.Apps.Settings.AppSourcesPanel
 HackerOs.Apps.Settings.AppSourcesPanel.AppSourcesPanel() -> void
 override HackerOs.Apps.Settings.AppSourcesPanel.OnInitializedAsync() -> System.Threading.Tasks.Task!
 ~override HackerOs.Apps.Settings.AppSourcesPanel.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+HackerOs.Apps.Settings.CursorThemePanel
+HackerOs.Apps.Settings.CursorThemePanel.CursorThemePanel() -> void
+HackerOs.Apps.Settings.CursorThemePanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
 HackerOs.Apps.Settings.LocalServerPanel
 HackerOs.Apps.Settings.LocalServerPanel.LocalServerPanel() -> void
 HackerOs.Apps.Settings.LocalServerPanel.OnPaired.get -> Microsoft.AspNetCore.Components.EventCallback<HackerOs.AppSdk.Administration.HackServerConnectionState!>

@@ -74,6 +74,7 @@ dans le même changement (voir [`AGENTS.md`](../../../AGENTS.md)).
 | [`app-responsiveness-api.md`](framework/app-responsiveness-api.md) | Priorité `nice` et fenêtre « Ne répond pas » : ce qu'une app voit et doit faire pour rester réactive. |
 | [`process-resources-api.md`](framework/process-resources-api.md) | Temps CPU, mémoire et OOM killer vus par une app : `HackProcess`, champs de `/proc`, déclaration de `OomScoreAdjust`. |
 | [`theme-files.md`](framework/theme-files.md) | Format du fichier `.theme`, liste des jetons vérifiés et API de lecture du paquet `HackerOs.Theming.Abstractions`. |
+| [`cursor-themes.md`](framework/cursor-themes.md) | Thèmes de curseurs : dossier `cursor.theme` et images PNG avec leur point actif, noms de curseurs et replis, `cursors.config`, API de `HackerOs.Theming.Abstractions`. |
 | [`file-associations-api.md`](framework/file-associations-api.md) | Associations de fichiers par utilisateur : formats des deux fichiers, ordre de résolution, API `HackApps` et capacités. |
 
 ## Développement de l'OS (`dev/`)
