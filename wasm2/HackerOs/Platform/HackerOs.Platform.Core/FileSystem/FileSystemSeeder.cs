@@ -102,7 +102,45 @@ public sealed class FileSystemSeeder(
         await EnsureDirectoryAsync("/etc/hackweb", 0x01ED, system, cancellationToken);
         await EnsureDirectoryAsync("/etc/hackweb/sites", 0x01ED, system, cancellationToken);
 
-        // ADR 0203 §6: the icon packs shipped with the OS, root-owned 0644 like /usr/share/icons on Linux.
+        await EnsureDirectoryAsync("/usr", 0x01ED, system, cancellationToken);
+        await EnsureDirectoryAsync("/usr/share", 0x01ED, system, cancellationToken);
+        // ADR 0204: the built-in sound themes, freedesktop.org layout (/usr/share/sounds/<id>/). They
+        // are installed before the session opens so the first sign-in already plays its sound; the
+        // icon packs, much larger, are installed later in the background (InstallIconPacksAsync).
+        await SeedSoundThemesAsync(system, cancellationToken);
+
+        string home = $"/home/{userName.Value}";
+        await EnsureDirectoryAsync(home, 0x01C0, userProvisioning, cancellationToken);
+        await EnsureDirectoryAsync($"{home}/Desktop", 0x01C0, userProvisioning, cancellationToken);
+        await EnsureDirectoryAsync($"{home}/Documents", 0x01C0, userProvisioning, cancellationToken);
+        await EnsureDirectoryAsync($"{home}/Downloads", 0x01C0, userProvisioning, cancellationToken);
+        await EnsureDirectoryAsync($"{home}/.config", 0x01C0, userProvisioning, cancellationToken);
+        // ADR 0044: settings directories are 0755 like on Linux; the 0700 home already keeps
+        // other users out. ~/.config/<appId>/ is created by HackSettings on first write.
+        await EnsureDirectoryAsync($"{home}/.config/hackeros", 0x01ED, userProvisioning, cancellationToken);
+        await EnsureDirectoryAsync($"{home}/.local", 0x01ED, userProvisioning, cancellationToken);
+        await EnsureDirectoryAsync($"{home}/.local/state", 0x01ED, userProvisioning, cancellationToken);
+        await EnsureDirectoryAsync($"{home}/.local/state/hackeros", 0x01ED, userProvisioning, cancellationToken);
+        // ADR 0204: the user's own sound themes, one folder per theme.
+        await EnsureDirectoryAsync($"{home}/.local/share", 0x01ED, userProvisioning, cancellationToken);
+        await EnsureDirectoryAsync(
+            OsSoundEvents.GetUserThemesDirectory(home), 0x01ED, userProvisioning, cancellationToken);
+    }
+
+    /// <summary>
+    /// Installs the icon packs shipped with the OS (ADR 0203 §6) in <c>/usr/share/icons</c>, root-owned
+    /// 0644 like on Linux. Existing files are kept, so an administrator's edits survive.
+    /// </summary>
+    /// <remarks>
+    /// Kept out of <see cref="SeedAsync"/> because writing the pack's images takes about ten seconds
+    /// in the browser store at the first login: like a distribution's package post-install step, it
+    /// runs in the background once the session is open (<see cref="Sessions.LocalSessionService"/>).
+    /// Nothing in the session waits for it: the built-in icons are the default pack.
+    /// </remarks>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    public async ValueTask InstallIconPacksAsync(CancellationToken cancellationToken = default)
+    {
+        FileSystemAuthorizationContext system = CreateContext("system", "system");
         await EnsureDirectoryAsync("/usr", 0x01ED, system, cancellationToken);
         await EnsureDirectoryAsync("/usr/share", 0x01ED, system, cancellationToken);
         await EnsureDirectoryAsync(Theming.Abstractions.IconPacks.IconPackLibrary.SystemDirectory, 0x01ED, system, cancellationToken);
@@ -126,26 +164,6 @@ public sealed class FileSystemSeeder(
                 await EnsureFileAsync(target, file.Content, 0x01A4, system, cancellationToken);
             }
         }
-
-        // ADR 0204: the built-in sound themes, freedesktop.org layout (/usr/share/sounds/<id>/).
-        await SeedSoundThemesAsync(system, cancellationToken);
-
-        string home = $"/home/{userName.Value}";
-        await EnsureDirectoryAsync(home, 0x01C0, userProvisioning, cancellationToken);
-        await EnsureDirectoryAsync($"{home}/Desktop", 0x01C0, userProvisioning, cancellationToken);
-        await EnsureDirectoryAsync($"{home}/Documents", 0x01C0, userProvisioning, cancellationToken);
-        await EnsureDirectoryAsync($"{home}/Downloads", 0x01C0, userProvisioning, cancellationToken);
-        await EnsureDirectoryAsync($"{home}/.config", 0x01C0, userProvisioning, cancellationToken);
-        // ADR 0044: settings directories are 0755 like on Linux; the 0700 home already keeps
-        // other users out. ~/.config/<appId>/ is created by HackSettings on first write.
-        await EnsureDirectoryAsync($"{home}/.config/hackeros", 0x01ED, userProvisioning, cancellationToken);
-        await EnsureDirectoryAsync($"{home}/.local", 0x01ED, userProvisioning, cancellationToken);
-        await EnsureDirectoryAsync($"{home}/.local/state", 0x01ED, userProvisioning, cancellationToken);
-        await EnsureDirectoryAsync($"{home}/.local/state/hackeros", 0x01ED, userProvisioning, cancellationToken);
-        // ADR 0204: the user's own sound themes, one folder per theme.
-        await EnsureDirectoryAsync($"{home}/.local/share", 0x01ED, userProvisioning, cancellationToken);
-        await EnsureDirectoryAsync(
-            OsSoundEvents.GetUserThemesDirectory(home), 0x01ED, userProvisioning, cancellationToken);
     }
 
     /// <summary>

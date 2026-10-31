@@ -907,3 +907,4 @@ static HackerOs.Platform.Core.Sounds.SoundPreferences.operator ==(HackerOs.Platf
 static HackerOs.Platform.Core.Sounds.SoundSettingsDocuments.Document.get -> HackerOs.Platform.Core.Settings.OsSettingsDocument!
 static HackerOs.Platform.Core.Sounds.SoundSettingsDocuments.Schema.get -> HackerOs.Simulation.Abstractions.Settings.SettingsSchema!
 static HackerOs.Platform.Core.Sounds.SoundSettingsDocuments.ToPreferences(HackerOs.Simulation.Abstractions.Settings.LayeredConfigSnapshot! snapshot) -> HackerOs.Platform.Core.Sounds.SoundPreferences!
+HackerOs.Platform.Core.FileSystem.FileSystemSeeder.InstallIconPacksAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask

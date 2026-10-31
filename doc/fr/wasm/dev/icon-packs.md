@@ -49,7 +49,7 @@ nombre.
 | `IconPackLibrary`, `IconPack`, `IconPackInfo`, `IconPackFileAccess` | `HackerOs.Theming.Abstractions` | Lecture des dossiers par l'accès fichier de l'appelant, validation, URL `data:`, règles de recherche |
 | `IconPackSettingsDocuments` | `HackerOs.Platform.Core` | Document `icons` (`iconPackId`, `builtin` par défaut) déclaré dans `OsSettingsDocumentRegistry` |
 | `IconPackService` | `HackerOs.Platform.Core` | Pack choisi pour le shell, relu quand `icons.config` ou la session change, événement `Changed` |
-| `BuiltInIconPacks`, `FileSystemSeeder` | `HackerOs.Platform.Core` | Pack « Néon » embarqué, copié dans `/usr/share/icons/neon/` au démarrage |
+| `BuiltInIconPacks`, `FileSystemSeeder` | `HackerOs.Platform.Core` | Pack « Néon » embarqué, copié dans `/usr/share/icons/neon/` en arrière-plan après la connexion (`InstallIconPacksAsync`, lancé une fois par démarrage par `LocalSessionService`) |
 | `ShellAppIcon` | `HackerOs.Platform.Blazor` | Icône d'app du menu Démarrer et de l'accueil mobile |
 | `WindowLaunchCoordinator.IconFor`, `SetWindowIconCommand` | `HackerOs.Platform.Blazor`, `HackerOs.Windowing.*` | Icône des fenêtres et de la barre des tâches, changée en direct |
 | `ExplorerFileView` (partie `IconPack`), `IconPackShellIconProvider` | File Explorer | Fichiers, dossiers et raccourcis, lus avec les droits de l'app hôte par le SDK public |
