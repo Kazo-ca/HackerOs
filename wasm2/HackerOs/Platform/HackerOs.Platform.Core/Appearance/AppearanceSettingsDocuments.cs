@@ -30,6 +30,12 @@ public static class AppearanceSettingsDocuments
     /// <summary>Key of how the wallpaper covers the screens (ADR 0202 §3).</summary>
     public const string WallpaperFitKey = "wallpaperFit";
 
+    /// <summary>Key of the wallpaper of the mobile home screen; empty keeps the mobile theme's background (ADR 0217 §1).</summary>
+    public const string MobileWallpaperKey = "mobileWallpaper";
+
+    /// <summary>Key of how the wallpaper covers the mobile home screen (ADR 0217 §1).</summary>
+    public const string MobileWallpaperFitKey = "mobileWallpaperFit";
+
     /// <summary>Highest screen number that can have its own wallpaper, as in <c>screens.config</c> (ADR 0180).</summary>
     public const int MaxWallpaperScreen = 9;
 
@@ -90,7 +96,20 @@ public static class AppearanceSettingsDocuments
                 WallpaperScreenKey(number),
                 SettingValueType.String,
                 string.Empty,
-                SettingSensitivity.Public))
+                SettingSensitivity.Public)),
+
+            // ADR 0217: the mobile home screen has its own image and fit, as it has its own theme.
+            new SettingFieldDeclaration(
+                MobileWallpaperKey,
+                SettingValueType.String,
+                string.Empty,
+                SettingSensitivity.Public),
+            new SettingFieldDeclaration(
+                MobileWallpaperFitKey,
+                SettingValueType.Enum,
+                WallpaperCatalog.FormatFit(WallpaperFit.Fill),
+                SettingSensitivity.Public,
+                [.. WallpaperCatalog.FitValues])
         ]);
 
     /// <summary>Gets the layered document.</summary>

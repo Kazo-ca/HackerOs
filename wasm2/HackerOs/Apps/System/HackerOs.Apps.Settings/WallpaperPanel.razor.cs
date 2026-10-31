@@ -13,9 +13,10 @@ using Microsoft.JSInterop;
 namespace HackerOs.Apps.Settings;
 
 /// <summary>
-/// Settings &gt; Appearance &gt; Wallpaper (ADR 0202 §5): the image of the desktop, for every screen
-/// or for one secondary screen, and how it covers the screen. Writes the <c>wallpaper</c>,
-/// <c>wallpaperScreen&lt;n&gt;</c> and <c>wallpaperFit</c> keys of <c>appearance.config</c> through
+/// Settings &gt; Appearance &gt; Wallpaper (ADR 0202 §5, ADR 0217 §5): the image of the desktop, for
+/// every screen or for one secondary screen, or of the mobile home screen, and how it covers the
+/// screen. Writes the <c>wallpaper</c>, <c>wallpaperScreen&lt;n&gt;</c>, <c>wallpaperFit</c>,
+/// <c>mobileWallpaper</c> and <c>mobileWallpaperFit</c> keys of <c>appearance.config</c> through
 /// <see cref="HackSettings.OpenSystemAsync(IAppExecutionContext, string, CancellationToken)"/>; the
 /// shell follows the file and shows the image at once.
 /// </summary>
@@ -32,6 +33,15 @@ public sealed partial class WallpaperPanel : IAsyncDisposable
 
     /// <summary>Key of how the wallpaper covers the screens.</summary>
     internal const string FitKey = "wallpaperFit";
+
+    /// <summary>Key of the wallpaper of the mobile home screen (ADR 0217 §1).</summary>
+    internal const string MobileWallpaperKey = "mobileWallpaper";
+
+    /// <summary>Key of how the wallpaper covers the mobile home screen (ADR 0217 §1).</summary>
+    internal const string MobileFitKey = "mobileWallpaperFit";
+
+    /// <summary>The target number that stands for the mobile home screen, next to the screen numbers.</summary>
+    internal const int MobileTarget = 0;
 
     /// <summary>Highest screen number that can have its own wallpaper.</summary>
     internal const int MaxScreenNumber = 9;
@@ -66,8 +76,19 @@ public sealed partial class WallpaperPanel : IAsyncDisposable
     [Parameter]
     public Func<Task<string?>>? BrowseImage { get; set; }
 
-    /// <summary>Gets the key written for the selected screen.</summary>
-    internal string SelectedKey => _screen == 1 ? WallpaperKey : ScreenKey(_screen);
+    /// <summary>Gets the key written for the selected screen, or for mobile.</summary>
+    internal string SelectedKey => _screen switch
+    {
+        MobileTarget => MobileWallpaperKey,
+        1 => WallpaperKey,
+        _ => ScreenKey(_screen),
+    };
+
+    /// <summary>Gets the fit key of the selected target: the desktop's, shared by every screen, or mobile's.</summary>
+    internal string SelectedFitKey => _screen == MobileTarget ? MobileFitKey : FitKey;
+
+    /// <summary>Gets the fit in effect for the selected target.</summary>
+    internal string SelectedFit => _fit;
 
     /// <summary>Gets the value in effect for the selected screen's key.</summary>
     internal string SelectedValue => _document?.Get<string>(SelectedKey) ?? string.Empty;
@@ -77,6 +98,9 @@ public sealed partial class WallpaperPanel : IAsyncDisposable
 
     /// <summary>Gets the screens offered, screen 1 first.</summary>
     internal IReadOnlyList<int> Screens => _screens;
+
+    /// <summary>Gets the targets offered: the screens, then <see cref="MobileTarget"/> (ADR 0217 §5).</summary>
+    internal IReadOnlyList<int> Targets => [.. _screens, MobileTarget];
 
     /// <summary>Gets the text of the last outcome, or <see langword="null"/>.</summary>
     internal string? Message => _message;
@@ -136,12 +160,16 @@ public sealed partial class WallpaperPanel : IAsyncDisposable
         }
     }
 
-    /// <summary>Selects which screen the next choice is for.</summary>
-    /// <param name="number">Screen number.</param>
+    /// <summary>Selects which screen, or mobile, the next choice is for.</summary>
+    /// <param name="number">Screen number, or <see cref="MobileTarget"/>.</param>
     internal void SelectScreen(int number)
     {
         _screen = number;
         _message = null;
+        if (_document is not null)
+        {
+            _fit = _document.Get<string>(SelectedFitKey);
+        }
     }
 
     /// <summary>Writes a wallpaper value for the selected screen.</summary>
@@ -173,9 +201,9 @@ public sealed partial class WallpaperPanel : IAsyncDisposable
         StateHasChanged();
     }
 
-    /// <summary>Writes <c>wallpaperFit</c>.</summary>
+    /// <summary>Writes <c>wallpaperFit</c>, or <c>mobileWallpaperFit</c> for mobile.</summary>
     /// <param name="fit">One of <see cref="WallpaperCatalog.FitValues"/>.</param>
-    internal Task ChangeFitAsync(string fit) => WriteAsync(FitKey, fit);
+    internal Task ChangeFitAsync(string fit) => WriteAsync(SelectedFitKey, fit);
 
     /// <inheritdoc />
     public async ValueTask DisposeAsync()
@@ -216,7 +244,7 @@ public sealed partial class WallpaperPanel : IAsyncDisposable
             // /etc/hackeros belongs to root: a system write uses this app's own rights, so a denial
             // raises the administrator approval of ADR 0042.
             await _document.SetAsync(key, value, TargetLayer, CancellationToken.None);
-            if (key == FitKey)
+            if (key == SelectedFitKey)
             {
                 _fit = value;
             }
@@ -249,7 +277,7 @@ public sealed partial class WallpaperPanel : IAsyncDisposable
         {
             if (_document is not null && !_isBusy)
             {
-                _fit = _document.Get<string>(FitKey);
+                _fit = _document.Get<string>(SelectedFitKey);
             }
 
             StateHasChanged();
@@ -304,9 +332,9 @@ public sealed partial class WallpaperPanel : IAsyncDisposable
             }
         }
 
-        for (int number = 1; number <= MaxScreenNumber; number++)
+        foreach (string key in new[] { WallpaperKey, MobileWallpaperKey }.Concat(Enumerable.Range(2, MaxScreenNumber - 1).Select(ScreenKey)))
         {
-            string value = _document?.Get<string>(number == 1 ? WallpaperKey : ScreenKey(number)) ?? string.Empty;
+            string value = _document?.Get<string>(key) ?? string.Empty;
             if (value.StartsWith('/') && candidates.All(candidate => candidate.Path != value))
             {
                 candidates.Add((value, "file"));
@@ -382,6 +410,23 @@ public sealed partial class WallpaperPanel : IAsyncDisposable
     private string OptionClass(string value) => value == SelectedValue ? "wallpaper-option is-selected" : "wallpaper-option";
 
     private string Checked(string value) => value == SelectedValue ? "true" : "false";
+
+    /// <summary>The name of a target: screen 1 (with the screens that follow it), screen N, or mobile.</summary>
+    private string TargetName(int number) => number switch
+    {
+        MobileTarget => L["Wallpaper.Screens.Mobile"],
+        1 when _screens.Count == 1 => L["Wallpaper.Screens.Desktop"],
+        1 => L["Wallpaper.Screens.Primary"],
+        _ => L["Wallpaper.Screens.Other", number],
+    };
+
+    /// <summary>The first thumbnail's name: the theme's background, the mobile theme's, or « same as screen 1 ».</summary>
+    private string ThemeOptionName => _screen switch
+    {
+        MobileTarget => L["Wallpaper.MobileTheme"],
+        1 => L["Wallpaper.Theme"],
+        _ => L["Wallpaper.SameAsPrimary"],
+    };
 
     private string ScreenClass(int number) => number == _screen ? "wallpaper-screen is-selected" : "wallpaper-screen";
 

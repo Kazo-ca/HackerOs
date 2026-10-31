@@ -1,0 +1,18 @@
+{
+  "id": "9d8ea376-b030-4622-8b2c-4106eb9011f3",
+  "category": "new",
+  "audience": [
+    "user"
+  ],
+  "title": {
+    "en": "Wallpaper on the mobile home screen",
+    "fr": "Fond d'écran sur l'écran d'accueil mobile"
+  },
+  "description": {
+    "en": "The mobile home screen can show an image too. In Settings ▸ Appearance ▸ Wallpaper, pick « Mobile », then an image and how it fits; the desktop keeps its own choice. Without an image, the mobile theme's background stays.",
+    "fr": "L'écran d'accueil mobile peut lui aussi montrer une image. Dans Paramètres ▸ Apparence ▸ Fond d'écran, choisissez « Mobile », puis une image et son ajustement ; le bureau garde son propre choix. Sans image, le fond du thème mobile reste."
+  },
+  "links": [
+    "doc/en/wasm/dev/adr/0217-mobile-home-wallpaper.md"
+  ]
+}
