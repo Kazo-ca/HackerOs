@@ -85,7 +85,7 @@ internal sealed partial class AppManagementGateway
                 await packages.ReadPersonalInstalledAsync(CreateUserWriter(), _principal.HomePath, cancellationToken).ConfigureAwait(false),
                 cancellationToken)
             .ConfigureAwait(false);
-        // The badge follows what the Store shows (ADR 0212 §5).
+        // What the Store shows is not notified again (ADR 0215 §1).
         UpdateMonitor?.Invoke()?.Publish(report.Updates);
         return [.. report.Updates.Select(static update => new HackPackageUpdate(
             update.AppId,
@@ -157,7 +157,7 @@ internal sealed partial class AppManagementGateway
 
     /// <summary>
     /// Reads what the user typed: a repository or catalog source (<see cref="AppPackageSource.TryParse"/>),
-    /// or an app ID alone, looked up in the catalogs (ADR 0188 §8, ADR 0212 §4).
+    /// or an app ID alone, looked up in the catalogs (ADR 0188 §8, ADR 0215 §2).
     /// </summary>
     private async ValueTask<AppPackageSource> ResolveSourceAsync(
         AppPackageInstaller packages, string source, AppSourcesConfig sources, CancellationToken cancellationToken)

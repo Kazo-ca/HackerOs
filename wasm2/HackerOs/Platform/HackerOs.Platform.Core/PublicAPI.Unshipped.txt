@@ -1067,7 +1067,6 @@ HackerOs.Platform.Core.Apps.Packages.AppUpdateMonitor.AppUpdateMonitor(HackerOs.
 HackerOs.Platform.Core.Apps.Packages.AppUpdateMonitor.Changed -> System.Action?
 HackerOs.Platform.Core.Apps.Packages.AppUpdateMonitor.CheckNowAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.Apps.Packages.AppPackageUpdate!>!>!
 HackerOs.Platform.Core.Apps.Packages.AppUpdateMonitor.Dispose() -> void
-HackerOs.Platform.Core.Apps.Packages.AppUpdateMonitor.GetBadgeCount(string! appId) -> int
 HackerOs.Platform.Core.Apps.Packages.AppUpdateMonitor.Pending.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.Apps.Packages.AppPackageUpdate!>!
 HackerOs.Platform.Core.Apps.Packages.AppUpdateMonitor.Publish(System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.Apps.Packages.AppPackageUpdate!>! updates) -> void
 HackerOs.Platform.Core.Apps.Packages.AppUpdateMonitor.Start() -> void

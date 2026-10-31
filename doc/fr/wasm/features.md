@@ -288,9 +288,11 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   confiance), installation pour soi ou pour tous, ouverture, mise à jour,
   désinstallation, onglet Installées et « Redémarrer pour terminer ». Il
   vérifie les mises à jour à l'ouverture de session puis toutes les 6 heures,
-  avec un badge et une notification ; `hackpkg install <appId>` lit les mêmes
-  catalogues. ([ADR 0188](dev/adr/0188-hack-store-and-app-catalog.md),
-  [ADR 0212](dev/adr/0212-hack-store-app-build.md))
+  et le signale par une notification ; `hackpkg install <appId>` lit les mêmes
+  catalogues et demande de choisir quand plusieurs listent l'app.
+  ([ADR 0188](dev/adr/0188-hack-store-and-app-catalog.md),
+  [ADR 0212](dev/adr/0212-hack-store-app-build.md),
+  [ADR 0215](dev/adr/0215-hack-store-answers-notification-and-ambiguous-app-id.md))
 - **Installations sans redémarrage et sûres** : une application installée ou
   mise à jour s'ouvre tout de suite si elle n'était pas déjà chargée. Les
   paquets d'une source qui a une clé sont signés et vérifiés, l'installation

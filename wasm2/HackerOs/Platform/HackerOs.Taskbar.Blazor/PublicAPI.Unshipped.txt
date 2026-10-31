@@ -13,5 +13,3 @@ HackerOs.Taskbar.Blazor.Taskbar.Previews.get -> HackerOs.Taskbar.Blazor.ITaskbar
 HackerOs.Taskbar.Blazor.Taskbar.Previews.set -> void
 HackerOs.Taskbar.Blazor.Taskbar.DisposeAsync() -> System.Threading.Tasks.ValueTask
 override HackerOs.Taskbar.Blazor.Taskbar.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
-HackerOs.Taskbar.Blazor.TaskbarWindowItem.BadgeCount.get -> int
-HackerOs.Taskbar.Blazor.TaskbarWindowItem.BadgeCount.init -> void

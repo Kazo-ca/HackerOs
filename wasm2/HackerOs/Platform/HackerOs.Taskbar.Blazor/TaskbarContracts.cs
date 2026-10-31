@@ -9,14 +9,7 @@ public sealed record TaskbarWindowItem(
     string Title,
     string? IconAssetPath,
     bool IsFocused,
-    bool IsMinimized)
-{
-    /// <summary>
-    /// Gets the number drawn on the button's icon, such as the Hack Store's available updates
-    /// (ADR 0212 §5); 0 draws nothing.
-    /// </summary>
-    public int BadgeCount { get; init; }
-}
+    bool IsMinimized);
 
 /// <summary>
 /// Provides the ordered set of windows the taskbar should list. The taskbar renders nothing in

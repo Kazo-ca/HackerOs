@@ -355,8 +355,11 @@ hackpkg info org.example.notes
   `[installed]`. The trust is that of `catalog:<name>`; the official catalog
   is *verified*. The SHA-256 and the size come from the catalog; the other
   checks are those of a GitHub app.
-- **App ID alone**: looked up in the official catalog, then in the others by
-  name.
+- **App ID alone**: looked up in every catalog. When one lists it, it is
+  installed from that one; when several list it, the install is refused
+  (`apps.package.ambiguous`) and the message gives every possible
+  `catalog:<name>/<appId>` to type again
+  ([ADR 0215](adr/0215-hack-store-answers-notification-and-ambiguous-app-id.md) §2).
 - **The app**: home by categories, search (name, short description, tags, ID,
   ignoring case and accents), app page (icon, screenshots, Markdown
   description drawn without HTML, version, size, license, category, date,
@@ -365,9 +368,9 @@ hackpkg info org.example.notes
   a restart, the banner offers **Restart to finish** (no administrator).
   Launch arguments: `--page=installed`, `--app=<appId>`.
 - **Updates**: `AppUpdateMonitor` checks at sign-in then every
-  `[updates] interval-hours` hours, shows the update count as a badge on the
-  Store icon (Start menu, mobile home screen, taskbar) and posts a
-  notification that opens the Installed tab.
+  `[updates] interval-hours` hours and posts a notification that opens the
+  Installed tab. No badge on the Store's icon
+  ([ADR 0215](adr/0215-hack-store-answers-notification-and-ambiguous-app-id.md) §1).
 - **Default pin**: `start-menu.json` records `defaultPinsApplied` per profile;
   the Store is added once, to a new profile as to an existing one, and does
   not come back after an unpin.
@@ -431,5 +434,5 @@ Tests: `AppPackageGatewayTests.Transactions.cs`, `AppDataGuardTests`,
 - [x] Removal of `AppCatalogSyncService` and its contract.
 - [x] "Installed Apps" tab redone (`InstalledAppsPanel`).
 - [x] Contract tests and documentation.
-- [x] Hack Store: catalogs, `hackpkg install <appId>`, updates, badge, default pin (ADR 0212).
+- [x] Hack Store: catalogs, `hackpkg install <appId>`, updates by notification, default pin (ADR 0212, ADR 0215).
 - [x] Adding without a restart, signing, transactional install, `hackpkg rollback` and `repair`, data backup (ADR 0214).

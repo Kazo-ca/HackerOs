@@ -41,8 +41,8 @@ public static class HackAppPackages
     /// <summary>Reads what a repository or a catalog publishes for an app.</summary>
     /// <param name="source">
     /// <c>github:owner/repo</c>, <c>owner/repo</c>, <c>https://github.com/owner/repo</c>,
-    /// <c>catalog:name/app.id</c>, or an app ID alone, looked up in the catalogs (the official one
-    /// first, then by name, ADR 0212 §4).
+    /// <c>catalog:name/app.id</c>, or an app ID alone, looked up in the catalogs; an app ID that
+    /// several catalogs list is refused with <c>apps.package.ambiguous</c> (ADR 0215 §2).
     /// </param>
     /// <param name="cancellationToken">Cancels the download.</param>
     /// <exception cref="HackPackageException">The source is invalid, publishes nothing or cannot be downloaded.</exception>

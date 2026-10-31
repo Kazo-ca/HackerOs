@@ -281,10 +281,12 @@ This section lists what is released in the `main` branch and online.
   on desktop and mobile. Home by categories, search, app page (screenshots,
   description, size, license, capabilities, trust), install for oneself or for
   everyone, open, update, uninstall, Installed tab and "Restart to finish". It
-  checks for updates at sign-in then every 6 hours, with a badge and a
-  notification; `hackpkg install <appId>` reads the same catalogs.
+  checks for updates at sign-in then every 6 hours and says so in a
+  notification; `hackpkg install <appId>` reads the same catalogs and asks
+  the user to choose when several list the app.
   ([ADR 0188](dev/adr/0188-hack-store-and-app-catalog.md),
-  [ADR 0212](dev/adr/0212-hack-store-app-build.md))
+  [ADR 0212](dev/adr/0212-hack-store-app-build.md),
+  [ADR 0215](dev/adr/0215-hack-store-answers-notification-and-ambiguous-app-id.md))
 - **Installs without a restart, and safe**: an application installed or
   updated opens at once if it was not already loaded. The packages of a source
   that has a key are signed and verified, the install is transactional
