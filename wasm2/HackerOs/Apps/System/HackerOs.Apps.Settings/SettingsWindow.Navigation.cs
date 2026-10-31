@@ -93,6 +93,8 @@ public partial class SettingsWindow
 
     private void SelectPage(string pageId)
     {
+        // ADR 0220 §4: the mouse's Back/Forward buttons and the phone's Back walk through the pages chosen.
+        _pageHistory.Visit(_activePage, pageId);
         _activePage = pageId;
         _navOverlayOpen = false;
     }
@@ -134,6 +136,7 @@ public partial class SettingsWindow
     /// <inheritdoc />
     protected override async Task OnAppAfterRenderAsync(bool firstRender)
     {
+        RaiseNavigationAvailabilityChanged();
         if (_pendingNavFocus is { } id && _navItemRefs.TryGetValue(id, out ElementReference element))
         {
             _pendingNavFocus = null;

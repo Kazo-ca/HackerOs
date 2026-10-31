@@ -94,6 +94,11 @@ This section lists what is released in the `main` branch and online.
   ([`taskbar-context-menus.md`](dev/taskbar-context-menus.md))
   Hovering a window's button shows a live preview; resting on it shows the
   window alone ("peek"). ([`taskbar-window-previews.md`](dev/taskbar-window-previews.md))
+- **Mouse Back and Forward buttons**: the Back button, Alt+← and the phone's
+  Back (Android button or gesture, iOS swipe) go back inside the active app
+  (File Explorer, browser, Settings, Hack Store) instead of moving the tab back
+  and leaving HackerOS; the Forward button and Alt+→ go forward.
+  ([ADR 0220](dev/adr/0220-mouse-back-forward-buttons.md))
   The Start menu shows the signed-in user and their Power button: sign out or
   restart. ([ADR 0195](dev/adr/0195-start-menu-power-button.md))
   A dot next to the clock shows unread notifications, with their count on
@@ -334,7 +339,6 @@ points to its PR.
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Switch user | Open another session without closing the first one. Stays greyed out in the Power menu by Benoit's choice: one session at a time, Sign out to change account. | [0195](dev/adr/0195-start-menu-power-button.md), [0201](dev/adr/0201-switch-user-stays-greyed.md) | [#290](https://github.com/Kazo-ca/HackerOs/issues/290) |
-| Mouse Back and Forward buttons | The mouse Back button, Alt+← and the phone's Back go back inside the active app (File Explorer, browser, Settings, Hack Store) instead of moving the tab back and leaving HackerOS; the Forward button goes forward. | [0220](dev/adr/0220-mouse-back-forward-buttons.md) | Series `mouse-back/base` |
 
 ### Hack Store
 

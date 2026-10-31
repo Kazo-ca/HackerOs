@@ -21,4 +21,13 @@ public sealed class FileExplorerMobileWindowTests
         Assert.True(typeof(FileExplorerWindow).IsAssignableFrom(typeof(FileExplorerMobileWindow)));
         Assert.True(typeof(IAppBackHandler).IsAssignableFrom(typeof(FileExplorerMobileWindow)));
     }
+
+    [Fact]
+    public void Both_explorer_windows_answer_the_mouse_Back_and_Forward_buttons()
+    {
+        // ADR 0220 §4: the platform sends the mouse buttons, Alt+arrows and the phone's Back to these.
+        Assert.True(typeof(IAppBackHandler).IsAssignableFrom(typeof(FileExplorerWindow)));
+        Assert.True(typeof(IAppForwardHandler).IsAssignableFrom(typeof(FileExplorerWindow)));
+        Assert.True(typeof(IAppForwardHandler).IsAssignableFrom(typeof(FileExplorerMobileWindow)));
+    }
 }

@@ -195,5 +195,5 @@ Chantier `mouse-back/1-platform` (2026-10-31), sans changer la décision :
 - [x] `mouse-back/1-platform` : `hardwareNavigation.js`,
   `HardwareNavigationService`, sources `MouseButton` et `SystemBack`,
   `IAppForwardHandler`, registre, routage bureau et mobile, tests.
-- [ ] `mouse-back/2-apps` : File Explorer (bureau et mobile), navigateur et
+- [x] `mouse-back/2-apps` : File Explorer (bureau et mobile), navigateur et
   `PageBridge.js`, Paramètres et Hack Store, tests, doc des apps et du SDK.

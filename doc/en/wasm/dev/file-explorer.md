@@ -93,6 +93,12 @@ The window inherits `FileExplorerWindow`: same state, same commands, same
 - the system Back button (`IAppBackHandler`) closes the sheet, the search, the
   selection, leaves the Trash, then goes back through the history.
 
+On the desktop as on mobile, the explorer also implements
+`IAppForwardHandler`: the mouse Back button, Alt+← and the browser's or the
+phone's Back leave the Trash then go back through the folders visited; the
+Forward button and Alt+→ go forward, like the toolbar arrows
+([ADR 0220](adr/0220-mouse-back-forward-buttons.md)).
+
 The dialogs the explorer opens (folder name, confirmation, properties) show
 full screen (see
 [`mobile-home-screen.md`](mobile-home-screen.md#full-screen-dialogs-adr-0171)).
