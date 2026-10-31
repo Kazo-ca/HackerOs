@@ -10,7 +10,7 @@ nuget.org ([ADR 0173](adr/0173-automatic-releases-from-the-version-file.md)).
 ## The version file
 
 ```xml
-<HackerOsVersion>2.1.0</HackerOsVersion>
+<HackerOsVersion>2.2.0</HackerOsVersion>
 ```
 
 `Directory.Build.props` imports it: every assembly, each of the 42 `HackerOs.*`

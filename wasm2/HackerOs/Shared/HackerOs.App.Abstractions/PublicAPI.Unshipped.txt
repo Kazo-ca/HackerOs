@@ -1,2 +1,1 @@
 #nullable enable
-const HackerOs.App.Abstractions.AppCapabilities.ScreensManage = "screens.manage" -> string!

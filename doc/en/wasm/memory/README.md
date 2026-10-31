@@ -2,7 +2,7 @@
 
 # HackerOS project memory
 
-Project status and working conventions as of **2026-10-30**. This folder serves as a
+Project status and working conventions as of **2026-10-31**. This folder serves as a
 resumption point: a new contributor (human or agent) finds here what is
 done, how we work and what must not be redone. It is updated
 at the end of each series or when a convention changes.
@@ -12,8 +12,13 @@ at the end of each series or when a convention changes.
 - **Active code**: `wasm2/HackerOs/` (simulated OS in Blazor WebAssembly, .NET 10,
   solution `HackerOs.sln`). `src/` is the old version, kept as a
   reference.
-- **Version**: HackerOS and the SDK are at **2.1.0** (`build/Versions.props`).
-  SDK 2.0.0 removed `HackerOs.AppSdk.FileView` and refuses 1.x apps
+- **Version**: HackerOS and the SDK move to **2.2.0** (`build/Versions.props`),
+  prepared on 2026-10-31 in the `release/2.2.0` PR to `main`, merged after
+  `todo/base`; it is published (`v2.2.0` tag, GitHub Release, nuget.org) when
+  that PR lands in `main`. It folds into `Shipped` the 2926 API lines added
+  since 2.1.0 (Hack Store, `hackeros-solution` template, themes…) and gathers
+  44 entries into `changes/2.2.0.json`. SDK 2.0.0 removed
+  `HackerOs.AppSdk.FileView` and refuses 1.x apps
   ([ADR 0161](../dev/adr/0161-sdk-2-0-implementation-adjustments.md)).
   2.1.0 (2026-10-26) is the first version released automatically (tag,
   GitHub Release, nuget.org; ADR 0173); it folded every addition since 2.0
@@ -73,7 +78,7 @@ at the end of each series or when a convention changes.
   template and catalog publishing workflow (ADR 0207,
   [`app-repository.md`](../framework/app-repository.md), issue #246). The
   `HackerOs-AppTemplate` repository will only be regenerated with a submodule
-  on the release that contains this template (draft PR in that repository).
+  on the release that contains this template, 2.2.0 (draft PR in that repository).
   Image wallpapers done too ([ADR 0202](../dev/adr/0202-desktop-wallpaper-images.md),
   issue #254, [`wallpapers.md`](../dev/wallpapers.md)).
   ADR 0206 is taken by issue #247 (installed apps' `wwwroot/` served by the

@@ -28,7 +28,7 @@ API conventions:
 ## Libraries
 
 All are published as local NuGet packages of the same name, at the version of
-`build/Versions.props` (`2.1.0` today, published on 2026-10-26 by the `Release HackerOS` workflow, ADR 0173; major 2 dates from the end of the desktop series, ADR 0149 and 0161; `1.2.0` at the end of the `exec` series, ADR 0132 §2; `1.1.0` for the v3.1 series, ADR 0117 §5; `1.0.0` at the SDK freeze, ADR 0114); another
+`build/Versions.props` (`2.2.0` today, published by the `Release HackerOS` workflow when its PR is merged; `2.1.0` on 2026-10-26, the first automatic release, ADR 0173; major 2 dates from the end of the desktop series, ADR 0149 and 0161; `1.2.0` at the end of the `exec` series, ADR 0132 §2; `1.1.0` for the v3.1 series, ADR 0117 §5; `1.0.0` at the SDK freeze, ADR 0114); another
 repository consumes them as described in [`building-on-hackeros.md`](building-on-hackeros.md).
 The SemVer compatibility promise covers the libraries on this page and
 `HackerOs.Theming.Blazor`, not the platform (ADR 0114 §2).

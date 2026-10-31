@@ -1,4 +1,5 @@
 #nullable enable
+HackerOs.Infrastructure.Browser.Apps.BrowserInstalledAppAssets
 HackerOs.Infrastructure.Browser.Backup.IndexedDbBackupService
 HackerOs.Infrastructure.Browser.Backup.IndexedDbBackupService.DisposeAsync() -> System.Threading.Tasks.ValueTask
 HackerOs.Infrastructure.Browser.Backup.IndexedDbBackupService.ExportArchiveAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<byte[]!>
@@ -128,12 +129,25 @@ HackerOs.Infrastructure.Browser.FileSystem.IndexedDbStorageUsageProvider.Dispose
 HackerOs.Infrastructure.Browser.FileSystem.IndexedDbStorageUsageProvider.GetUsageAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Metrics.StorageUsage>
 HackerOs.Infrastructure.Browser.FileSystem.IndexedDbStorageUsageProvider.IndexedDbStorageUsageProvider(HackerOs.Infrastructure.Browser.FileSystem.IndexedDbFileSystemProvider! fileSystem, Microsoft.JSInterop.IJSRuntime! runtime) -> void
 HackerOs.Infrastructure.Browser.Globalization.BrowserSatelliteAssemblies
+HackerOs.Infrastructure.Browser.Interop.BrowserHostActivitySignal
+HackerOs.Infrastructure.Browser.Interop.BrowserHostActivitySignal.BrowserHostActivitySignal(Microsoft.JSInterop.IJSRuntime! runtime) -> void
+HackerOs.Infrastructure.Browser.Interop.BrowserHostActivitySignal.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Infrastructure.Browser.Interop.BrowserHostActivitySignal.IsVisible.get -> bool
+HackerOs.Infrastructure.Browser.Interop.BrowserHostActivitySignal.OnActivity(bool visible, bool resumed) -> void
+HackerOs.Infrastructure.Browser.Interop.BrowserHostActivitySignal.Resumed -> System.Action?
 HackerOs.Infrastructure.Browser.Interop.BrowserHostClipboardChannel
 HackerOs.Infrastructure.Browser.Interop.BrowserHostClipboardChannel.AttachAsync(HackerOs.Simulation.Abstractions.Clipboard.IHostClipboardSink! sink, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
 HackerOs.Infrastructure.Browser.Interop.BrowserHostClipboardChannel.BrowserHostClipboardChannel(Microsoft.JSInterop.IJSRuntime! runtime) -> void
 HackerOs.Infrastructure.Browser.Interop.BrowserHostClipboardChannel.DisposeAsync() -> System.Threading.Tasks.ValueTask
 HackerOs.Infrastructure.Browser.Interop.BrowserHostClipboardChannel.SetDirectionsAsync(bool guestToHost, bool hostToGuest, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
 HackerOs.Infrastructure.Browser.Interop.BrowserHostClipboardChannel.SyncGuestTextAsync(string? text, bool writeToHost, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+HackerOs.Infrastructure.Browser.Interop.BrowserHostFolderAccess
+HackerOs.Infrastructure.Browser.Interop.BrowserHostFolderAccess.BrowserHostFolderAccess(Microsoft.JSInterop.IJSRuntime! runtime) -> void
+HackerOs.Infrastructure.Browser.Interop.BrowserHostFolderAccess.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Infrastructure.Browser.Interop.BrowserHostFolderAccess.ForgetAsync(string! key, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+HackerOs.Infrastructure.Browser.Interop.BrowserHostFolderAccess.IsSupportedAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+HackerOs.Infrastructure.Browser.Interop.BrowserHostFolderAccess.LoadAsync(string! key, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.IHostFolder?>
+HackerOs.Infrastructure.Browser.Interop.BrowserHostFolderAccess.PickAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.HostFolderPick?>
 HackerOs.Infrastructure.Browser.Interop.WebCryptoPasswordHasher
 HackerOs.Infrastructure.Browser.Interop.WebCryptoPasswordHasher.DecryptAesGcmAsync(byte[]! key, byte[]! nonce, byte[]! sealedData, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<byte[]?>
 HackerOs.Infrastructure.Browser.Interop.WebCryptoPasswordHasher.DeriveKeyAsync(string! password, byte[]! salt, int iterations, int keyLengthBytes, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<byte[]!>
@@ -194,11 +208,15 @@ HackerOs.Infrastructure.Browser.ServerConnection.IndexedDbServerConnectionReposi
 HackerOs.Infrastructure.Browser.ServerConnection.IndexedDbServerConnectionRepository.SetAsync(HackerOs.Simulation.Abstractions.ServerConnection.ServerConnectionState! state, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
 HackerOs.Infrastructure.Browser.Sessions.IndexedDbLocalGroupRepository
 HackerOs.Infrastructure.Browser.Sessions.IndexedDbLocalGroupRepository.CreateGroupAsync(HackerOs.Simulation.Abstractions.Sessions.LocalLoginName name, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Sessions.LocalGroup!>
+HackerOs.Infrastructure.Browser.Sessions.IndexedDbLocalGroupRepository.DeleteGroupAsync(HackerOs.Simulation.Abstractions.Sessions.LocalGroupId id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
 HackerOs.Infrastructure.Browser.Sessions.IndexedDbLocalGroupRepository.DisposeAsync() -> System.Threading.Tasks.ValueTask
 HackerOs.Infrastructure.Browser.Sessions.IndexedDbLocalGroupRepository.FindByIdAsync(HackerOs.Simulation.Abstractions.Sessions.LocalGroupId id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Sessions.LocalGroup?>
 HackerOs.Infrastructure.Browser.Sessions.IndexedDbLocalGroupRepository.FindByNameAsync(HackerOs.Simulation.Abstractions.Sessions.LocalLoginName name, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Sessions.LocalGroup?>
 HackerOs.Infrastructure.Browser.Sessions.IndexedDbLocalGroupRepository.IndexedDbLocalGroupRepository(Microsoft.JSInterop.IJSRuntime! runtime) -> void
+HackerOs.Infrastructure.Browser.Sessions.IndexedDbLocalGroupRepository.RenameGroupAsync(HackerOs.Simulation.Abstractions.Sessions.LocalGroupId id, HackerOs.Simulation.Abstractions.Sessions.LocalLoginName name, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Sessions.LocalGroup!>
 HackerOs.Infrastructure.Browser.Sessions.IndexedDbLocalUserRepository
+HackerOs.Infrastructure.Browser.Sessions.IndexedDbLocalUserRepository.ConvertGuestUserAsync(HackerOs.Simulation.Abstractions.Sessions.LocalUserId id, HackerOs.Simulation.Abstractions.Sessions.LocalLoginName loginName, string! displayName, HackerOs.Simulation.Abstractions.Sessions.LocalPasswordCredential! credential, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Sessions.LocalUser!>
+HackerOs.Infrastructure.Browser.Sessions.IndexedDbLocalUserRepository.CreateGuestUserAsync(HackerOs.Simulation.Abstractions.Sessions.LocalLoginName loginName, string! displayName, HackerOs.App.Abstractions.AppAuthority authority, HackerOs.Simulation.Abstractions.Sessions.LocalGroupId primaryGroupId, System.Collections.Generic.IReadOnlyCollection<HackerOs.Simulation.Abstractions.Sessions.LocalGroupId>! additionalGroupIds, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Sessions.LocalUser!>
 HackerOs.Infrastructure.Browser.Sessions.IndexedDbLocalUserRepository.CreateUserAsync(HackerOs.Simulation.Abstractions.Sessions.LocalLoginName loginName, string! displayName, HackerOs.App.Abstractions.AppAuthority authority, HackerOs.Simulation.Abstractions.Sessions.LocalGroupId primaryGroupId, System.Collections.Generic.IReadOnlyCollection<HackerOs.Simulation.Abstractions.Sessions.LocalGroupId>? additionalGroupIds = null, HackerOs.Simulation.Abstractions.Sessions.LocalPasswordCredential? credential = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Sessions.LocalUser!>
 HackerOs.Infrastructure.Browser.Sessions.IndexedDbLocalUserRepository.DeleteUserAsync(HackerOs.Simulation.Abstractions.Sessions.LocalUserId id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
 HackerOs.Infrastructure.Browser.Sessions.IndexedDbLocalUserRepository.DisposeAsync() -> System.Threading.Tasks.ValueTask
@@ -321,6 +339,10 @@ override HackerOs.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary.ToS
 override HackerOs.Infrastructure.Browser.Storage.BrowserStorageStatus.Equals(object? obj) -> bool
 override HackerOs.Infrastructure.Browser.Storage.BrowserStorageStatus.GetHashCode() -> int
 override HackerOs.Infrastructure.Browser.Storage.BrowserStorageStatus.ToString() -> string!
+static HackerOs.Infrastructure.Browser.Apps.BrowserInstalledAppAssets.ListAsync() -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<string!>!>!
+static HackerOs.Infrastructure.Browser.Apps.BrowserInstalledAppAssets.PrepareAsync(System.TimeSpan timeout) -> System.Threading.Tasks.Task<bool>!
+static HackerOs.Infrastructure.Browser.Apps.BrowserInstalledAppAssets.PutAsync(string! url, byte[]! bytes, string! contentType) -> System.Threading.Tasks.Task!
+static HackerOs.Infrastructure.Browser.Apps.BrowserInstalledAppAssets.RemoveAsync(string! url) -> System.Threading.Tasks.Task<bool>!
 static HackerOs.Infrastructure.Browser.Backup.IndexedDbBackupService.Inspect(string! backupJson) -> HackerOs.Infrastructure.Browser.Backup.IndexedDbBackupSummary!
 static HackerOs.Infrastructure.Browser.Backup.IndexedDbBackupService.ReadArchive(byte[]! archive) -> string!
 static HackerOs.Infrastructure.Browser.Backup.IndexedDbBackupSummary.operator !=(HackerOs.Infrastructure.Browser.Backup.IndexedDbBackupSummary? left, HackerOs.Infrastructure.Browser.Backup.IndexedDbBackupSummary? right) -> bool

@@ -19,11 +19,17 @@
     HackFileView.OpenOnTap, ParentExitGracePeriod...) folded into PublicAPI.Shipped.txt. Since ADR
     0173, changing this number and merging into main is the whole release: the Release HackerOS
     workflow tags the commit, creates the GitHub Release and pushes the packages to nuget.org.
+    2.2.0 (series todo/base, Hack Store ADR 0206 to 0208, 0212, 0213): hackeros-solution template
+    and its external-source build (HackerOs.ExternalSource.targets), installed-app wwwroot served by
+    the service worker, trusted sources, per-user installs and build-time source/block-list defaults,
+    the Hack Store app and catalog installs, theme packs, plus wallpaper images, icon packs, cursor
+    themes, system sounds, notification toasts, window animations and taskbar previews, all folded
+    into PublicAPI.Shipped.txt (ADR 0207 §11: the template's Release profile needs this version).
 
     The App SDK version an app is compiled against comes from this number (HackerOsSdk.Version), and
     the manifest generator writes it as the app's sdkCompatibility.minimumVersion (ADR 0098 §3).
   -->
   <PropertyGroup>
-    <HackerOsVersion>2.1.0</HackerOsVersion>
+    <HackerOsVersion>2.2.0</HackerOsVersion>
   </PropertyGroup>
 </Project>

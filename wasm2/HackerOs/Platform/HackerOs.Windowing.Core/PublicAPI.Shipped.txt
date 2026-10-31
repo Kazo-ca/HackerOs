@@ -2,8 +2,11 @@
 HackerOs.Windowing.Core.SingleSurfacePresentationPolicy
 HackerOs.Windowing.Core.WindowRuntime
 HackerOs.Windowing.Core.WindowRuntime.Apply(HackerOs.Windowing.Abstractions.WindowCommand! command) -> System.Collections.Generic.IReadOnlyList<HackerOs.Windowing.Abstractions.WindowEvent!>!
+HackerOs.Windowing.Core.WindowRuntime.Displays.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Windowing.Abstractions.DisplayId>!
 HackerOs.Windowing.Core.WindowRuntime.EventsApplied -> System.Action<System.Collections.Generic.IReadOnlyList<HackerOs.Windowing.Abstractions.WindowEvent!>!>?
+HackerOs.Windowing.Core.WindowRuntime.GetWorkArea(HackerOs.Windowing.Abstractions.DisplayId displayId) -> HackerOs.Windowing.Abstractions.WindowBounds
 HackerOs.Windowing.Core.WindowRuntime.IsInteractionBlocked(HackerOs.Windowing.Abstractions.WindowId id) -> bool
+HackerOs.Windowing.Core.WindowRuntime.NextDisplayId.get -> HackerOs.Windowing.Abstractions.DisplayId
 HackerOs.Windowing.Core.WindowRuntime.SetTitle(HackerOs.Windowing.Abstractions.WindowId windowId, string! title) -> System.Collections.Generic.IReadOnlyList<HackerOs.Windowing.Abstractions.WindowEvent!>!
 HackerOs.Windowing.Core.WindowRuntime.StateChanged -> System.Action?
 HackerOs.Windowing.Core.WindowRuntime.WindowRuntime(HackerOs.Windowing.Abstractions.WindowBounds workArea) -> void

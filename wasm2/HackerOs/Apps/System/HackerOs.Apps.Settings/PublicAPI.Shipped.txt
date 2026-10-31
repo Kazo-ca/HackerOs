@@ -8,14 +8,27 @@ HackerOs.Apps.Settings.AppDetailsPanel.AppId.get -> string!
 HackerOs.Apps.Settings.AppDetailsPanel.AppId.set -> void
 HackerOs.Apps.Settings.AppPermissionsPanel
 HackerOs.Apps.Settings.AppPermissionsPanel.AppPermissionsPanel() -> void
+HackerOs.Apps.Settings.AppSourcesPanel
+HackerOs.Apps.Settings.AppSourcesPanel.AppSourcesPanel() -> void
 HackerOs.Apps.Settings.BackupPanel
 HackerOs.Apps.Settings.BackupPanel.BackupPanel() -> void
+HackerOs.Apps.Settings.CursorThemePanel
+HackerOs.Apps.Settings.CursorThemePanel.CursorThemePanel() -> void
+HackerOs.Apps.Settings.CursorThemePanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Apps.Settings.DateTimePanel
+HackerOs.Apps.Settings.DateTimePanel.DateTimePanel() -> void
+HackerOs.Apps.Settings.DateTimePanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
 HackerOs.Apps.Settings.DesktopPanel
 HackerOs.Apps.Settings.DesktopPanel.DesktopPanel() -> void
 HackerOs.Apps.Settings.FileAssociationsPanel
 HackerOs.Apps.Settings.FileAssociationsPanel.FileAssociationsPanel() -> void
 HackerOs.Apps.Settings.FileMenuEntriesPanel
 HackerOs.Apps.Settings.FileMenuEntriesPanel.FileMenuEntriesPanel() -> void
+HackerOs.Apps.Settings.IconPackPanel
+HackerOs.Apps.Settings.IconPackPanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Apps.Settings.IconPackPanel.IconPackPanel() -> void
+HackerOs.Apps.Settings.IconPackPanel.TargetLayer.get -> HackerOs.Simulation.Abstractions.Settings.SettingLayer
+HackerOs.Apps.Settings.IconPackPanel.TargetLayer.set -> void
 HackerOs.Apps.Settings.InstalledAppsPanel
 HackerOs.Apps.Settings.InstalledAppsPanel.Dispose() -> void
 HackerOs.Apps.Settings.InstalledAppsPanel.InstalledAppsPanel() -> void
@@ -23,6 +36,10 @@ HackerOs.Apps.Settings.InstalledAppsPanel.OnlyAppId.get -> string?
 HackerOs.Apps.Settings.InstalledAppsPanel.OnlyAppId.set -> void
 HackerOs.Apps.Settings.LanguagePanel
 HackerOs.Apps.Settings.LanguagePanel.LanguagePanel() -> void
+HackerOs.Apps.Settings.LocalServerPanel
+HackerOs.Apps.Settings.LocalServerPanel.LocalServerPanel() -> void
+HackerOs.Apps.Settings.LocalServerPanel.OnPaired.get -> Microsoft.AspNetCore.Components.EventCallback<HackerOs.AppSdk.Administration.HackServerConnectionState!>
+HackerOs.Apps.Settings.LocalServerPanel.OnPaired.set -> void
 HackerOs.Apps.Settings.MemoryPanel
 HackerOs.Apps.Settings.MemoryPanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
 HackerOs.Apps.Settings.MemoryPanel.MemoryPanel() -> void
@@ -32,6 +49,9 @@ HackerOs.Apps.Settings.PasskeysPanel
 HackerOs.Apps.Settings.PasskeysPanel.Changed.get -> Microsoft.AspNetCore.Components.EventCallback
 HackerOs.Apps.Settings.PasskeysPanel.Changed.set -> void
 HackerOs.Apps.Settings.PasskeysPanel.PasskeysPanel() -> void
+HackerOs.Apps.Settings.ScreensPanel
+HackerOs.Apps.Settings.ScreensPanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Apps.Settings.ScreensPanel.ScreensPanel() -> void
 HackerOs.Apps.Settings.ServerRelayPolicyPanel
 HackerOs.Apps.Settings.ServerRelayPolicyPanel.ServerRelayPolicyPanel() -> void
 HackerOs.Apps.Settings.SettingsApp
@@ -39,11 +59,25 @@ HackerOs.Apps.Settings.SettingsApp.SettingsApp() -> void
 HackerOs.Apps.Settings.SettingsWindow
 HackerOs.Apps.Settings.SettingsWindow.DisposeAsync() -> System.Threading.Tasks.ValueTask
 HackerOs.Apps.Settings.SettingsWindow.SettingsWindow() -> void
+HackerOs.Apps.Settings.SoundPanel
+HackerOs.Apps.Settings.SoundPanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Apps.Settings.SoundPanel.SoundPanel() -> void
 HackerOs.Apps.Settings.UsersPanel
 HackerOs.Apps.Settings.UsersPanel.UsersPanel() -> void
+HackerOs.Apps.Settings.WallpaperPanel
+HackerOs.Apps.Settings.WallpaperPanel.BrowseImage.get -> System.Func<System.Threading.Tasks.Task<string?>!>?
+HackerOs.Apps.Settings.WallpaperPanel.BrowseImage.set -> void
+HackerOs.Apps.Settings.WallpaperPanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Apps.Settings.WallpaperPanel.TargetLayer.get -> HackerOs.Simulation.Abstractions.Settings.SettingLayer
+HackerOs.Apps.Settings.WallpaperPanel.TargetLayer.set -> void
+HackerOs.Apps.Settings.WallpaperPanel.WallpaperPanel() -> void
+HackerOs.Apps.Settings.WhatsNewPanel
+HackerOs.Apps.Settings.WhatsNewPanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Apps.Settings.WhatsNewPanel.WhatsNewPanel() -> void
 HackerOs.Apps.Settings._Imports
 HackerOs.Apps.Settings._Imports.Execute() -> void
 HackerOs.Apps.Settings._Imports._Imports() -> void
+override HackerOs.Apps.Settings.AppSourcesPanel.OnInitializedAsync() -> System.Threading.Tasks.Task!
 override HackerOs.Apps.Settings.InstalledAppsPanel.OnInitializedAsync() -> System.Threading.Tasks.Task!
 override HackerOs.Apps.Settings.PasskeysPanel.OnInitializedAsync() -> System.Threading.Tasks.Task!
 override HackerOs.Apps.Settings.SettingsApp.Assets.get -> System.Collections.Generic.IReadOnlyList<HackerOs.App.Abstractions.AssetManifest!>!
@@ -65,6 +99,7 @@ override HackerOs.Apps.Settings.SettingsWindow.OnAppStopRequestedAsync(HackerOs.
 override HackerOs.Apps.Settings.SettingsWindow.OnIntentReceivedAsync(HackerOs.App.Abstractions.AppIntentDelivery! intent) -> System.Threading.Tasks.Task!
 override HackerOs.Apps.Settings.SettingsWindow.OnWindowActivatedAsync() -> System.Threading.Tasks.Task!
 override HackerOs.Apps.Settings.UsersPanel.OnInitializedAsync() -> System.Threading.Tasks.Task!
+~override HackerOs.Apps.Settings.AppSourcesPanel.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.Apps.Settings.BackupPanel.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.Apps.Settings.InstalledAppsPanel.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.Apps.Settings.PasskeysPanel.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

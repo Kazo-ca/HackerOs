@@ -620,6 +620,8 @@ HackerOs.AppSdk.Blazor.MessageBoxDialogRequest.Content.init -> void
 HackerOs.AppSdk.Blazor.MessageBoxDialogRequest.DialogType.get -> HackerOs.AppSdk.Blazor.MessageBoxType
 HackerOs.AppSdk.Blazor.MessageBoxDialogRequest.DialogType.init -> void
 HackerOs.AppSdk.Blazor.MessageBoxDialogRequest.Equals(HackerOs.AppSdk.Blazor.MessageBoxDialogRequest? other) -> bool
+HackerOs.AppSdk.Blazor.MessageBoxDialogRequest.Icon.get -> HackerOs.AppSdk.Blazor.MessageBoxIcon
+HackerOs.AppSdk.Blazor.MessageBoxDialogRequest.Icon.init -> void
 HackerOs.AppSdk.Blazor.MessageBoxDialogRequest.MessageBoxDialogRequest() -> void
 HackerOs.AppSdk.Blazor.MessageBoxDialogRequest.Title.get -> string!
 HackerOs.AppSdk.Blazor.MessageBoxDialogRequest.Title.init -> void
@@ -630,6 +632,12 @@ HackerOs.AppSdk.Blazor.MessageBoxDialogResult.Equals(HackerOs.AppSdk.Blazor.Mess
 HackerOs.AppSdk.Blazor.MessageBoxDialogResult.MessageBoxDialogResult(HackerOs.AppSdk.Blazor.MessageBoxResult Result) -> void
 HackerOs.AppSdk.Blazor.MessageBoxDialogResult.Result.get -> HackerOs.AppSdk.Blazor.MessageBoxResult
 HackerOs.AppSdk.Blazor.MessageBoxDialogResult.Result.init -> void
+HackerOs.AppSdk.Blazor.MessageBoxIcon
+HackerOs.AppSdk.Blazor.MessageBoxIcon.Error = 3 -> HackerOs.AppSdk.Blazor.MessageBoxIcon
+HackerOs.AppSdk.Blazor.MessageBoxIcon.Information = 1 -> HackerOs.AppSdk.Blazor.MessageBoxIcon
+HackerOs.AppSdk.Blazor.MessageBoxIcon.None = 0 -> HackerOs.AppSdk.Blazor.MessageBoxIcon
+HackerOs.AppSdk.Blazor.MessageBoxIcon.Question = 4 -> HackerOs.AppSdk.Blazor.MessageBoxIcon
+HackerOs.AppSdk.Blazor.MessageBoxIcon.Warning = 2 -> HackerOs.AppSdk.Blazor.MessageBoxIcon
 HackerOs.AppSdk.Blazor.MessageBoxResult
 HackerOs.AppSdk.Blazor.MessageBoxResult.Cancel = 1 -> HackerOs.AppSdk.Blazor.MessageBoxResult
 HackerOs.AppSdk.Blazor.MessageBoxResult.No = 3 -> HackerOs.AppSdk.Blazor.MessageBoxResult
@@ -794,6 +802,7 @@ HackerOs.AppSdk.Blazor.WindowAppBase.LaunchIntent.get -> HackerOs.App.Abstractio
 HackerOs.AppSdk.Blazor.WindowAppBase.Manifest.get -> HackerOs.App.Abstractions.AppManifest!
 HackerOs.AppSdk.Blazor.WindowAppBase.Menus.get -> HackerOs.AppSdk.Blazor.ContextMenus.HackMenus!
 HackerOs.AppSdk.Blazor.WindowAppBase.MessageBox(string! title, string! content, HackerOs.AppSdk.Blazor.MessageBoxType dialogType = HackerOs.AppSdk.Blazor.MessageBoxType.Ok, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Blazor.MessageBoxDialogResult!>
+HackerOs.AppSdk.Blazor.WindowAppBase.MessageBox(string! title, string! content, HackerOs.AppSdk.Blazor.MessageBoxType dialogType, HackerOs.AppSdk.Blazor.MessageBoxIcon icon, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Blazor.MessageBoxDialogResult!>
 HackerOs.AppSdk.Blazor.WindowAppBase.OpenFileAsync(HackerOs.AppSdk.Blazor.OpenFileDialogRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Blazor.OpenFileDialogResult!>
 HackerOs.AppSdk.Blazor.WindowAppBase.SaveFileAsync(HackerOs.AppSdk.Blazor.SaveFileDialogRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Blazor.SaveFileDialogResult!>
 HackerOs.AppSdk.Blazor.WindowAppBase.SelectFolderAsync(HackerOs.AppSdk.Blazor.SelectFolderDialogRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Blazor.SelectFolderDialogResult!>

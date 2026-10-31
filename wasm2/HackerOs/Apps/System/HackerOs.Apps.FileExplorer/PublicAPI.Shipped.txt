@@ -60,6 +60,18 @@ HackerOs.Apps.FileExplorer.ExplorerFileView.SelectionChanged.get -> Microsoft.As
 HackerOs.Apps.FileExplorer.ExplorerFileView.SelectionChanged.set -> void
 HackerOs.Apps.FileExplorer.ExplorerFileView.StateChanged -> System.EventHandler?
 HackerOs.Apps.FileExplorer.ExplorerFileView.WhenIdleAsync() -> System.Threading.Tasks.Task!
+HackerOs.Apps.FileExplorer.ExplorerSidebarResizer
+HackerOs.Apps.FileExplorer.ExplorerSidebarResizer.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Apps.FileExplorer.ExplorerSidebarResizer.ExplorerSidebarResizer() -> void
+HackerOs.Apps.FileExplorer.ExplorerSidebarResizer.Label.get -> string!
+HackerOs.Apps.FileExplorer.ExplorerSidebarResizer.Label.set -> void
+HackerOs.Apps.FileExplorer.ExplorerSidebarResizer.OnResized(int width) -> System.Threading.Tasks.Task!
+HackerOs.Apps.FileExplorer.ExplorerSidebarResizer.PanelSelector.get -> string!
+HackerOs.Apps.FileExplorer.ExplorerSidebarResizer.PanelSelector.set -> void
+HackerOs.Apps.FileExplorer.ExplorerSidebarResizer.Width.get -> int
+HackerOs.Apps.FileExplorer.ExplorerSidebarResizer.Width.set -> void
+HackerOs.Apps.FileExplorer.ExplorerSidebarResizer.WidthChanged.get -> Microsoft.AspNetCore.Components.EventCallback<int>
+HackerOs.Apps.FileExplorer.ExplorerSidebarResizer.WidthChanged.set -> void
 HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext
 HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext.<Clone>$() -> HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext!
 HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext.Deconstruct(out HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuScope Scope, out HackerOs.Apps.FileExplorer.FileControl.FileViewItem? Item) -> void
@@ -237,6 +249,7 @@ HackerOs.Apps.FileExplorer.FileControl.FileView.Filter.get -> System.Func<Hacker
 HackerOs.Apps.FileExplorer.FileControl.FileView.Filter.set -> void
 HackerOs.Apps.FileExplorer.FileControl.FileView.FolderActivation.get -> HackerOs.Apps.FileExplorer.FileControl.FileViewFolderActivationMode
 HackerOs.Apps.FileExplorer.FileControl.FileView.FolderActivation.set -> void
+HackerOs.Apps.FileExplorer.FileControl.FileView.GetItemTooltipAsync(string! path) -> System.Threading.Tasks.Task<string![]?>!
 HackerOs.Apps.FileExplorer.FileControl.FileView.IconProvider.get -> HackerOs.Apps.FileExplorer.FileControl.Icons.IShellIconProvider?
 HackerOs.Apps.FileExplorer.FileControl.FileView.IconProvider.set -> void
 HackerOs.Apps.FileExplorer.FileControl.FileView.InitialDirectory.get -> HackerOs.App.Abstractions.VirtualPath
@@ -244,6 +257,7 @@ HackerOs.Apps.FileExplorer.FileControl.FileView.InitialDirectory.set -> void
 HackerOs.Apps.FileExplorer.FileControl.FileView.Intents.get -> HackerOs.Simulation.Abstractions.Gateways.IAppIntentGateway?
 HackerOs.Apps.FileExplorer.FileControl.FileView.Intents.set -> void
 HackerOs.Apps.FileExplorer.FileControl.FileView.Items.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Apps.FileExplorer.FileControl.FileViewItem!>!
+HackerOs.Apps.FileExplorer.FileControl.FileView.LoadFolderPreviewsAsync(string![]! paths) -> System.Threading.Tasks.Task!
 HackerOs.Apps.FileExplorer.FileControl.FileView.Mode.get -> HackerOs.Apps.FileExplorer.FileControl.FileViewMode
 HackerOs.Apps.FileExplorer.FileControl.FileView.Mode.set -> void
 HackerOs.Apps.FileExplorer.FileControl.FileView.ModeChanged.get -> Microsoft.AspNetCore.Components.EventCallback<HackerOs.Apps.FileExplorer.FileControl.FileViewMode>
@@ -260,6 +274,7 @@ HackerOs.Apps.FileExplorer.FileControl.FileView.Opened -> System.EventHandler<Ha
 HackerOs.Apps.FileExplorer.FileControl.FileView.Opening -> System.EventHandler<HackerOs.Apps.FileExplorer.FileControl.Events.FileViewOpeningEventArgs!>?
 HackerOs.Apps.FileExplorer.FileControl.FileView.OwnerAppId.get -> string?
 HackerOs.Apps.FileExplorer.FileControl.FileView.OwnerAppId.set -> void
+HackerOs.Apps.FileExplorer.FileControl.FileView.PrepareExternalDragAsync(string! path, string![]! selectedPaths) -> System.Threading.Tasks.Task!
 HackerOs.Apps.FileExplorer.FileControl.FileView.RefreshAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
 HackerOs.Apps.FileExplorer.FileControl.FileView.RefreshFilter() -> void
 HackerOs.Apps.FileExplorer.FileControl.FileView.Renamed -> System.EventHandler<HackerOs.Apps.FileExplorer.FileControl.Events.FileViewRenamedEventArgs!>?
@@ -387,6 +402,10 @@ HackerOs.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest.Path.get -> Hac
 HackerOs.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest.Path.init -> void
 HackerOs.Apps.FileExplorer.FileControl.Icons.IShellIconProvider
 HackerOs.Apps.FileExplorer.FileControl.Icons.IShellIconProvider.Resolve(HackerOs.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest request) -> HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor!
+HackerOs.Apps.FileExplorer.FileControl.Icons.IconPackShellIconProvider
+HackerOs.Apps.FileExplorer.FileControl.Icons.IconPackShellIconProvider.IconPackShellIconProvider(HackerOs.Theming.Abstractions.IconPacks.IconPack! pack, HackerOs.Apps.FileExplorer.FileControl.Icons.IShellIconProvider? fallback = null) -> void
+HackerOs.Apps.FileExplorer.FileControl.Icons.IconPackShellIconProvider.Pack.get -> HackerOs.Theming.Abstractions.IconPacks.IconPack!
+HackerOs.Apps.FileExplorer.FileControl.Icons.IconPackShellIconProvider.Resolve(HackerOs.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest request) -> HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor!
 HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIcon
 HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIcon.Icon.get -> HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor?
 HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIcon.Icon.set -> void
@@ -445,6 +464,15 @@ HackerOs.Apps.FileExplorer.FileExplorerState.ViewMode.set -> void
 HackerOs.Apps.FileExplorer.FileExplorerWindow
 HackerOs.Apps.FileExplorer.FileExplorerWindow.DisposeAsync() -> System.Threading.Tasks.ValueTask
 HackerOs.Apps.FileExplorer.FileExplorerWindow.FileExplorerWindow() -> void
+HackerOs.Apps.FileExplorer.NetworkDrivesSidebar
+HackerOs.Apps.FileExplorer.NetworkDrivesSidebar.CurrentPath.get -> string?
+HackerOs.Apps.FileExplorer.NetworkDrivesSidebar.CurrentPath.set -> void
+HackerOs.Apps.FileExplorer.NetworkDrivesSidebar.Failed.get -> Microsoft.AspNetCore.Components.EventCallback<string!>
+HackerOs.Apps.FileExplorer.NetworkDrivesSidebar.Failed.set -> void
+HackerOs.Apps.FileExplorer.NetworkDrivesSidebar.Navigate.get -> Microsoft.AspNetCore.Components.EventCallback<string!>
+HackerOs.Apps.FileExplorer.NetworkDrivesSidebar.Navigate.set -> void
+HackerOs.Apps.FileExplorer.NetworkDrivesSidebar.NetworkDrivesSidebar() -> void
+HackerOs.Apps.FileExplorer.NetworkDrivesSidebar.ReloadAsync() -> System.Threading.Tasks.Task!
 HackerOs.Apps.FileExplorer.TrashView
 HackerOs.Apps.FileExplorer.TrashView.ReloadAsync() -> System.Threading.Tasks.Task!
 HackerOs.Apps.FileExplorer.TrashView.Restored.get -> Microsoft.AspNetCore.Components.EventCallback<System.Collections.Generic.IReadOnlyList<string!>!>
@@ -495,6 +523,8 @@ override HackerOs.Apps.FileExplorer.FileExplorerWindow.OnAppAfterRenderAsync(boo
 override HackerOs.Apps.FileExplorer.FileExplorerWindow.OnAppInitialized() -> void
 override HackerOs.Apps.FileExplorer.FileExplorerWindow.OnAppInitializedAsync() -> System.Threading.Tasks.Task!
 override HackerOs.Apps.FileExplorer.FileExplorerWindow.OnAppStopRequestedAsync(HackerOs.AppSdk.Diagnostics.HackStopRequestedEventArgs! e) -> System.Threading.Tasks.Task!
+override HackerOs.Apps.FileExplorer.NetworkDrivesSidebar.OnInitializedAsync() -> System.Threading.Tasks.Task!
+override HackerOs.Apps.FileExplorer.NetworkDrivesSidebar.OnParametersSetAsync() -> System.Threading.Tasks.Task!
 override HackerOs.Apps.FileExplorer.TrashView.OnInitializedAsync() -> System.Threading.Tasks.Task!
 static HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext.operator !=(HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext? left, HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext? right) -> bool
 static HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext.operator ==(HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext? left, HackerOs.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext? right) -> bool
@@ -526,4 +556,5 @@ static HackerOs.Apps.FileExplorer.FileExplorerApp.RegisterFileContextMenu(Hacker
 ~override HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconLabel.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.Apps.FileExplorer.FileExplorerMobileWindow.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.Apps.FileExplorer.FileExplorerWindow.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override HackerOs.Apps.FileExplorer.NetworkDrivesSidebar.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.Apps.FileExplorer.TrashView.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

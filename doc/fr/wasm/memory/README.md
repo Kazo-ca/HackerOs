@@ -2,7 +2,7 @@
 
 # Mémoire du projet HackerOS
 
-État du projet et conventions de travail au **2026-10-30**. Ce dossier sert de
+État du projet et conventions de travail au **2026-10-31**. Ce dossier sert de
 point de reprise : un nouveau contributeur (humain ou agent) y trouve ce qui
 est fait, comment on travaille et ce qu'il ne faut pas refaire. Il est mis à
 jour à la fin de chaque série ou quand une convention change.
@@ -12,8 +12,14 @@ jour à la fin de chaque série ou quand une convention change.
 - **Code actif** : `wasm2/HackerOs/` (OS simulé en Blazor WebAssembly, .NET 10,
   solution `HackerOs.sln`). `src/` est l'ancienne version, gardée comme
   référence.
-- **Version** : HackerOS et le SDK sont en **2.1.0** (`build/Versions.props`).
-  Le SDK 2.0.0 a retiré `HackerOs.AppSdk.FileView` et refuse les apps 1.x
+- **Version** : HackerOS et le SDK passent en **2.2.0** (`build/Versions.props`),
+  préparée le 2026-10-31 dans la PR `release/2.2.0` vers `main`, fusionnée
+  après `todo/base` ; elle est publiée (tag `v2.2.0`, GitHub Release,
+  nuget.org) quand cette PR arrive dans `main`. Elle verse dans `Shipped` les
+  2926 lignes d'API ajoutées depuis la 2.1.0 (Hack Store, modèle
+  `hackeros-solution`, thèmes…) et regroupe 44 entrées dans
+  `changes/2.2.0.json`. Le SDK 2.0.0 a retiré `HackerOs.AppSdk.FileView` et
+  refuse les apps 1.x
   ([ADR 0161](../dev/adr/0161-sdk-2-0-implementation-adjustments.md)).
   La 2.1.0 (2026-10-26) est la première version publiée automatiquement
   (tag, GitHub Release, nuget.org ; ADR 0173) ; elle a versé dans `Shipped`
@@ -73,7 +79,7 @@ jour à la fin de chaque série ou quand une convention change.
   `hackeros-solution` et workflow de publication vers le catalogue (ADR 0207,
   [`app-repository.md`](../framework/app-repository.md), issue #246). Le
   dépôt `HackerOs-AppTemplate` ne sera régénéré qu'avec un sous-module sur la
-  release qui contient ce modèle (PR en brouillon dans ce dépôt).
+  release qui contient ce modèle, la 2.2.0 (PR en brouillon dans ce dépôt).
   Fonds d'écran en image faits aussi ([ADR 0202](../dev/adr/0202-desktop-wallpaper-images.md),
   issue #254, [`wallpapers.md`](../dev/wallpapers.md)).
   L'ADR 0206 est prise par l'issue #247 (`wwwroot/` des apps installées servi

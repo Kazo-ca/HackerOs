@@ -120,7 +120,7 @@ app at the given commit (ADR 0188 §4 to §6).
 is the output of `dotnet new hackeros-solution -n HackerOs.App` plus the
 submodule link. It is regenerated from the template, never edited by hand. It
 can only work with a submodule on a release that contains this template
-(ADR 0207 §11).
+(2.2.0 or later, ADR 0207 §11).
 
 ## Tasks
 

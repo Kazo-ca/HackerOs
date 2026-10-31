@@ -1,17 +1,1 @@
 #nullable enable
-HackerOs.Taskbar.Blazor.ITaskbarLauncher.HasAttention.get -> bool
-HackerOs.Taskbar.Blazor.ITaskbarContextMenus
-HackerOs.Taskbar.Blazor.ITaskbarContextMenus.TaskbarAttributes.get -> System.Collections.Generic.IReadOnlyDictionary<string!, object!>?
-HackerOs.Taskbar.Blazor.ITaskbarContextMenus.WindowItemAttributes(HackerOs.Windowing.Abstractions.WindowId id) -> System.Collections.Generic.IReadOnlyDictionary<string!, object!>?
-HackerOs.Taskbar.Blazor.Taskbar.ContextMenus.get -> HackerOs.Taskbar.Blazor.ITaskbarContextMenus?
-HackerOs.Taskbar.Blazor.Taskbar.ContextMenus.set -> void
-HackerOs.Taskbar.Blazor.ITaskbarStatusSource.TimeZone.get -> System.TimeZoneInfo!
-HackerOs.Taskbar.Blazor.ITaskbarWindowPreviews
-HackerOs.Taskbar.Blazor.ITaskbarWindowPreviews.LiveCopySelector(HackerOs.Windowing.Abstractions.WindowId id) -> string?
-HackerOs.Taskbar.Blazor.ITaskbarWindowPreviews.Peek(HackerOs.Windowing.Abstractions.WindowId? id) -> void
-HackerOs.Taskbar.Blazor.Taskbar.Previews.get -> HackerOs.Taskbar.Blazor.ITaskbarWindowPreviews?
-HackerOs.Taskbar.Blazor.Taskbar.Previews.set -> void
-HackerOs.Taskbar.Blazor.Taskbar.DisposeAsync() -> System.Threading.Tasks.ValueTask
-override HackerOs.Taskbar.Blazor.Taskbar.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
-HackerOs.Taskbar.Blazor.TaskbarWindowItem.BadgeCount.get -> int
-HackerOs.Taskbar.Blazor.TaskbarWindowItem.BadgeCount.init -> void

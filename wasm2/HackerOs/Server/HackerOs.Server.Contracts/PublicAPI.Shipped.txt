@@ -190,6 +190,17 @@ HackerOs.Server.Contracts.Identity.LoginResponse.RefreshToken.get -> string!
 HackerOs.Server.Contracts.Identity.LoginResponse.RefreshToken.init -> void
 HackerOs.Server.Contracts.Identity.LoginResponse.RefreshTokenExpiresUtc.get -> System.DateTimeOffset
 HackerOs.Server.Contracts.Identity.LoginResponse.RefreshTokenExpiresUtc.init -> void
+HackerOs.Server.Contracts.Identity.PairDeviceRequest
+HackerOs.Server.Contracts.Identity.PairDeviceRequest.<Clone>$() -> HackerOs.Server.Contracts.Identity.PairDeviceRequest!
+HackerOs.Server.Contracts.Identity.PairDeviceRequest.Code.get -> string!
+HackerOs.Server.Contracts.Identity.PairDeviceRequest.Code.init -> void
+HackerOs.Server.Contracts.Identity.PairDeviceRequest.Deconstruct(out string! Code, out string! DeviceName, out string! DeviceFingerprint) -> void
+HackerOs.Server.Contracts.Identity.PairDeviceRequest.DeviceFingerprint.get -> string!
+HackerOs.Server.Contracts.Identity.PairDeviceRequest.DeviceFingerprint.init -> void
+HackerOs.Server.Contracts.Identity.PairDeviceRequest.DeviceName.get -> string!
+HackerOs.Server.Contracts.Identity.PairDeviceRequest.DeviceName.init -> void
+HackerOs.Server.Contracts.Identity.PairDeviceRequest.Equals(HackerOs.Server.Contracts.Identity.PairDeviceRequest? other) -> bool
+HackerOs.Server.Contracts.Identity.PairDeviceRequest.PairDeviceRequest(string! Code, string! DeviceName, string! DeviceFingerprint) -> void
 HackerOs.Server.Contracts.Identity.RefreshTokenRequest
 HackerOs.Server.Contracts.Identity.RefreshTokenRequest.<Clone>$() -> HackerOs.Server.Contracts.Identity.RefreshTokenRequest!
 HackerOs.Server.Contracts.Identity.RefreshTokenRequest.Deconstruct(out string! RefreshToken, out string! DeviceFingerprint) -> void
@@ -278,6 +289,8 @@ HackerOs.Server.Contracts.Proxy.ProxyHttpRequest.ContentType.get -> string?
 HackerOs.Server.Contracts.Proxy.ProxyHttpRequest.ContentType.init -> void
 HackerOs.Server.Contracts.Proxy.ProxyHttpRequest.Deconstruct(out System.Guid RequestId, out HackerOs.Server.Contracts.Proxy.ProxyProtocol Protocol, out string! TargetUrl, out string? HttpMethod, out System.Collections.Generic.IReadOnlyList<HackerOs.Server.Contracts.Proxy.ProxyHeader!>! Headers, out string? BodyHash, out long BodyBytes, out int TimeoutSeconds, out string! AppId, out bool IncludeBody, out byte[]? Body, out string? ContentType) -> void
 HackerOs.Server.Contracts.Proxy.ProxyHttpRequest.Equals(HackerOs.Server.Contracts.Proxy.ProxyHttpRequest? other) -> bool
+HackerOs.Server.Contracts.Proxy.ProxyHttpRequest.FollowRedirects.get -> bool
+HackerOs.Server.Contracts.Proxy.ProxyHttpRequest.FollowRedirects.init -> void
 HackerOs.Server.Contracts.Proxy.ProxyHttpRequest.Headers.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Server.Contracts.Proxy.ProxyHeader!>!
 HackerOs.Server.Contracts.Proxy.ProxyHttpRequest.Headers.init -> void
 HackerOs.Server.Contracts.Proxy.ProxyHttpRequest.HttpMethod.get -> string?
@@ -797,6 +810,9 @@ override HackerOs.Server.Contracts.Identity.LoginRequest.ToString() -> string!
 override HackerOs.Server.Contracts.Identity.LoginResponse.Equals(object? obj) -> bool
 override HackerOs.Server.Contracts.Identity.LoginResponse.GetHashCode() -> int
 override HackerOs.Server.Contracts.Identity.LoginResponse.ToString() -> string!
+override HackerOs.Server.Contracts.Identity.PairDeviceRequest.Equals(object? obj) -> bool
+override HackerOs.Server.Contracts.Identity.PairDeviceRequest.GetHashCode() -> int
+override HackerOs.Server.Contracts.Identity.PairDeviceRequest.ToString() -> string!
 override HackerOs.Server.Contracts.Identity.RefreshTokenRequest.Equals(object? obj) -> bool
 override HackerOs.Server.Contracts.Identity.RefreshTokenRequest.GetHashCode() -> int
 override HackerOs.Server.Contracts.Identity.RefreshTokenRequest.ToString() -> string!
@@ -929,6 +945,8 @@ static HackerOs.Server.Contracts.Identity.LoginRequest.operator !=(HackerOs.Serv
 static HackerOs.Server.Contracts.Identity.LoginRequest.operator ==(HackerOs.Server.Contracts.Identity.LoginRequest? left, HackerOs.Server.Contracts.Identity.LoginRequest? right) -> bool
 static HackerOs.Server.Contracts.Identity.LoginResponse.operator !=(HackerOs.Server.Contracts.Identity.LoginResponse? left, HackerOs.Server.Contracts.Identity.LoginResponse? right) -> bool
 static HackerOs.Server.Contracts.Identity.LoginResponse.operator ==(HackerOs.Server.Contracts.Identity.LoginResponse? left, HackerOs.Server.Contracts.Identity.LoginResponse? right) -> bool
+static HackerOs.Server.Contracts.Identity.PairDeviceRequest.operator !=(HackerOs.Server.Contracts.Identity.PairDeviceRequest? left, HackerOs.Server.Contracts.Identity.PairDeviceRequest? right) -> bool
+static HackerOs.Server.Contracts.Identity.PairDeviceRequest.operator ==(HackerOs.Server.Contracts.Identity.PairDeviceRequest? left, HackerOs.Server.Contracts.Identity.PairDeviceRequest? right) -> bool
 static HackerOs.Server.Contracts.Identity.RefreshTokenRequest.operator !=(HackerOs.Server.Contracts.Identity.RefreshTokenRequest? left, HackerOs.Server.Contracts.Identity.RefreshTokenRequest? right) -> bool
 static HackerOs.Server.Contracts.Identity.RefreshTokenRequest.operator ==(HackerOs.Server.Contracts.Identity.RefreshTokenRequest? left, HackerOs.Server.Contracts.Identity.RefreshTokenRequest? right) -> bool
 static HackerOs.Server.Contracts.Identity.RefreshTokenResponse.operator !=(HackerOs.Server.Contracts.Identity.RefreshTokenResponse? left, HackerOs.Server.Contracts.Identity.RefreshTokenResponse? right) -> bool
@@ -1032,6 +1050,7 @@ static HackerOs.Server.Contracts.Versioning.VersioningContractsJsonContext.Defau
 ~HackerOs.Server.Contracts.Identity.IdentityContractsJsonContext.LoginRequest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<HackerOs.Server.Contracts.Identity.LoginRequest>
 ~HackerOs.Server.Contracts.Identity.IdentityContractsJsonContext.LoginResponse.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<HackerOs.Server.Contracts.Identity.LoginResponse>
 ~HackerOs.Server.Contracts.Identity.IdentityContractsJsonContext.NullableDateTimeOffset.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.DateTimeOffset?>
+~HackerOs.Server.Contracts.Identity.IdentityContractsJsonContext.PairDeviceRequest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<HackerOs.Server.Contracts.Identity.PairDeviceRequest>
 ~HackerOs.Server.Contracts.Identity.IdentityContractsJsonContext.RefreshTokenRequest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<HackerOs.Server.Contracts.Identity.RefreshTokenRequest>
 ~HackerOs.Server.Contracts.Identity.IdentityContractsJsonContext.RefreshTokenResponse.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<HackerOs.Server.Contracts.Identity.RefreshTokenResponse>
 ~HackerOs.Server.Contracts.Identity.IdentityContractsJsonContext.RegisterDeviceRequest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<HackerOs.Server.Contracts.Identity.RegisterDeviceRequest>

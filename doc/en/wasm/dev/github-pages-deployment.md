@@ -5,7 +5,7 @@
 ## Purpose
 
 The public repository is [Kazo-ca/HackerOs](https://github.com/Kazo-ca/HackerOs).
-The standalone WebAssembly version **2.1.0** is published at the root of
+The standalone WebAssembly version **2.2.0** is published at the root of
 `https://hackos.kazo.ca/`; the original TypeScript version is kept under
 `https://hackos.kazo.ca/legacy/`. See [ADR 0167](adr/0167-combined-pages-deployment.md).
 
@@ -86,7 +86,7 @@ strategy.
   link) and GitHub project in the same format.
 - Legacy Settings, About: GitHub URL visible, legacy version unchanged.
 - Package metadata also points to the new repository. The common version is
-  defined once in `build/Versions.props` (`2.1.0`).
+  defined once in `build/Versions.props` (`2.2.0`).
 
 ## Local verification
 

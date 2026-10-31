@@ -53,7 +53,7 @@ de HackerOS, sur la branche voulue :
 ```bash
 git -C ../HackerSimulator checkout <tag ou branche>
 ../HackerSimulator/wasm2/HackerOs/build/pack-local.sh      # ou pack-local.ps1
-# -> ../HackerSimulator/wasm2/HackerOs/artifacts/local-nupkg/*.2.1.0.nupkg
+# -> ../HackerSimulator/wasm2/HackerOs/artifacts/local-nupkg/*.2.2.0.nupkg
 ```
 
 `--output <dossier>` écrit ailleurs (par exemple un dossier partagé de votre
@@ -100,7 +100,7 @@ que celle-ci :
 ```xml
 <Project>
   <PropertyGroup>
-    <HackerOsVersion>2.1.0</HackerOsVersion>
+    <HackerOsVersion>2.2.0</HackerOsVersion>
   </PropertyGroup>
 </Project>
 ```
@@ -108,7 +108,7 @@ que celle-ci :
 ## 4. Créer les projets
 
 ```bash
-dotnet new install HackerOs.Templates::2.1.0
+dotnet new install HackerOs.Templates::2.2.0
 # ou, depuis le flux local : dotnet new install <flux>/HackerOs.Templates.<version>.nupkg
 dotnet new hackeros-window  -n Contoso.Notes -o src/Contoso.Notes --appId com.contoso.notes --publisherId pub.contoso
 dotnet new hackeros-command -n Contoso.Hello -o src/Contoso.Hello --appId com.contoso.hello --publisherId pub.contoso
@@ -199,7 +199,7 @@ statique ; le service worker ne s'enregistre que hors de `localhost`. Voir
 
 Une majeure : l'OS 2.0 refuse une app compilée contre 1.x, et un hôte qui en
 référence une ne se construit plus (`HOSAPP0021`). Toute app doit être
-recompilée contre les paquets 2.x (2.1.0 aujourd'hui ; vérifié par `Tests/fixtures/sdk-compat`,
+recompilée contre les paquets 2.x (2.2.0 aujourd'hui ; vérifié par `Tests/fixtures/sdk-compat`,
 où les apps 1.0.0 et 1.1.0 sont refusées et l'app 2.0.0 tourne).
 
 - **Seule rupture** : le paquet `HackerOs.AppSdk.FileView` n'existe plus. Une

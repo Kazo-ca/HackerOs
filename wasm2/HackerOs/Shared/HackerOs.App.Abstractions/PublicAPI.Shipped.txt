@@ -1014,6 +1014,7 @@ const HackerOs.App.Abstractions.AppCapabilities.NotificationsPost = "notificatio
 const HackerOs.App.Abstractions.AppCapabilities.PermissionsManage = "permissions.manage" -> string!
 const HackerOs.App.Abstractions.AppCapabilities.ProcessList = "process.list" -> string!
 const HackerOs.App.Abstractions.AppCapabilities.ProcessManage = "process.manage" -> string!
+const HackerOs.App.Abstractions.AppCapabilities.ScreensManage = "screens.manage" -> string!
 const HackerOs.App.Abstractions.AppCapabilities.ServerConnectionManage = "server.connection.manage" -> string!
 const HackerOs.App.Abstractions.AppCapabilities.ServicesManage = "services.manage" -> string!
 const HackerOs.App.Abstractions.AppCapabilities.ShellContextMenu = "shell.context-menu" -> string!

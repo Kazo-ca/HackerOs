@@ -22,7 +22,7 @@ empreintes des ressources, ADR 0098 §3 à §5) sont décrites dans
 
 ## Version unique
 
-- `build/Versions.props` définit `HackerOsVersion` (aujourd'hui `2.1.0`, première publication automatique de l'ADR 0173),
+- `build/Versions.props` définit `HackerOsVersion` (aujourd'hui `2.2.0` ; `2.1.0` a été la première publication automatique de l'ADR 0173),
   importé par `Directory.Build.props` : chaque projet de la solution porte ce
   `Version`.
 - Avant le gel : `0.9.0-preview.<n>`. Depuis le gel du SDK 1.0 (chantier
@@ -316,7 +316,7 @@ hôte qui la référence ne se construit plus (`HOSAPP0021`, la même règle que
 catalogue appliquée au build) ; un OS 2.0 qui la trouve à son catalogue la refuse
 au démarrage (`catalog.sdk.incompatible`), ne la charge pas, et Paramètres ▸
 Applications installées l'affiche « Incompatible ». Elle doit être recompilée
-contre les paquets 2.x (2.1.0 aujourd'hui).
+contre les paquets 2.x (2.2.0 aujourd'hui).
 
 ### Migration d'une app 1.x
 
@@ -329,7 +329,7 @@ contre les paquets 2.x (2.1.0 aujourd'hui).
 | un résolveur de conflit écrit par l'app | `Dialogs.AsFileConflictResolver(AppContext)` : le dialogue « Remplacer / Garder les deux / Ignorer » du fournisseur de `hackeros.file-dialogs` |
 | `ShellIcon`, `ShellIconDescriptor` | `HackIcons.Vector(…)` / `HackIcons.FromImage(…)` (`HackerOs.AppSdk.Icons`) pour décrire une icône ; le rendu appartient à l'OS |
 
-Puis passer `HackerOsVersion` à `2.1.0` (ou la dernière 2.x publiée) et recompiler.
+Puis passer `HackerOsVersion` à `2.2.0` (ou la dernière 2.x publiée) et recompiler.
 
 ### Ajouts
 
@@ -368,6 +368,31 @@ le tableau ci-dessous) et les membres de records que l'analyseur d'API publique
 |---|---|---|
 | `HackerOs.Simulation.Abstractions` | `ProcessStartRequest.ParentExitGracePeriod` : délai d'un enfant après la fin de son parent (demande d'arrêt, puis mise à mort) | ADR 0147 |
 | `HackerOs.Platform.Core` | `BackgroundJobService.ParentExitGracePeriod` (5 s) | ADR 0147 |
+
+### SDK 2.2
+
+Préparée le 2026-10-31 (branche `release/2.2.0`), publiée par le workflow
+`Release HackerOS` quand sa PR arrive dans `main` : tag `v2.2.0`, GitHub
+Release et nuget.org. `build/tools/ship-public-api.sh` a versé 2926 lignes de
+`PublicAPI.Unshipped.txt` dans `PublicAPI.Shipped.txt` : les ajouts de la
+série `todo/base` et ceux arrivés sur `main` depuis la 2.1.0. Les seules lignes
+`*REMOVED*` touchent `HackerOs.Apps.Browser` (le constructeur de
+`BrowserResponse` reçoit la source de la réponse, ADR 0210), une app de base
+et non une bibliothèque du SDK : mineure d'après SemVer, une app 2.x tourne
+sans recompilation. Le modèle `hackeros-solution` a besoin de cette version
+pour son profil `Release` (ADR 0207 §11).
+
+| Bibliothèque | Ajout | Décision |
+|---|---|---|
+| `HackerOs.AppSdk` | `HackAppPackages`, `HackPackageSources`, `HackPackagePolicy`, `HackPackageTrust`, `HackPackageScope`, `HackInstalledPackage`, `HackPackageInstallReport`, `HackPackageException` : installer une app pour soi ou pour tous, sources de confiance, liste noire | ADR 0182, 0208 |
+| `HackerOs.AppSdk` | `HackAppCatalog`, `HackCatalogApp`, `HackCatalogAppVersion`, `HackCatalogCategory`, `HackCatalogItemKind`, `HackPackageCatalog`, `HackPackageUpdate` : catalogues du Hack Store et mises à jour | ADR 0189, 0212 |
+| `HackerOs.AppSdk` | `HackInstalledThemePack`, `HackThemePackInstallReport`, `HackThemePackParts` : packs de thèmes | ADR 0213 |
+| `HackerOs.AppSdk` | `HackWhatsNew`, `HackChangeList`, `HackChangeGroup`, `HackChangeEntry`, `HackChangeCategory` : liste des nouveautés | ADR 0186 |
+| `HackerOs.AppSdk` | `HackScreens`, `HackScreenInfo` et leurs types : écrans du bureau étendu | ADR 0184 |
+| `HackerOs.AppSdk` | `HackTimeZone`, `IAppExecutionContext.TimeZone` ; `HackServerProbe`, `HackServerConnection.PairAsync` et `TestAsync` ; `HackHttpResponseSource` ; `HackDirectorySize` ; `HackDesktopLink` | ADR 0193, 0191, 0210, 0185 |
+| `HackerOs.Simulation.Abstractions` | `IHostFolder`, `IHostFolderAccess` et leurs types (dossier de l'ordinateur monté) ; `OsSoundEvent`, `SoundThemeIndex` (sons du système) ; `FileSystemTreeSize` | ADR 0181, 0204, 0185 |
+| `HackerOs.Theming.Abstractions` | `WallpaperCatalog`, `BuiltInWallpaper`, `WallpaperFit` (fonds en image) ; `IconPacks.IconPack`, `IconPackLibrary` et leurs types (packs d'icônes) ; `CursorTheme`, `CursorThemeLibrary` et leurs types (thèmes de curseurs) ; `ThemePackLayout` (packs de thèmes) | ADR 0202, 0203, 0205, 0213 |
+| `HackerOs.AppSdk.Blazor` | `MessageBoxIcon` | ADR 0185 |
 
 ### App de compatibilité
 
