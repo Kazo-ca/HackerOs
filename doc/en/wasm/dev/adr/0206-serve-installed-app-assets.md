@@ -4,8 +4,8 @@
 
 ## Status
 
-Accepted on 2026-10-30 on the recommendation (question Q1 asked to Benoit the same
-day, choice A recommended; another answer will give a new ADR). Issue
+Accepted on 2026-10-30; Benoit confirmed choice A of question Q1 on
+2026-10-31. Issue
 [#247](https://github.com/Kazo-ca/HackerOs/issues/247), work item 2 of the
 [Hack Store plan](../plans/hackeros-store.md), `todo/base` series.
 

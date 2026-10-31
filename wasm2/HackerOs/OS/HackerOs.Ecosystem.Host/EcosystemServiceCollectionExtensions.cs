@@ -145,7 +145,11 @@ public static class EcosystemServiceCollectionExtensions
         });
 
         services.AddScoped<HostExceptionReporter>();
-        services.AddSingleton<INotificationQueue>(_ => new InMemoryNotificationQueue(100));
+        services.AddSingleton<InMemoryNotificationQueue>(_ => new InMemoryNotificationQueue(100));
+        services.AddSingleton<INotificationQueue>(provider => provider.GetRequiredService<InMemoryNotificationQueue>());
+        // ADR 0204: the sound service plays the notification sound of every posted notification.
+        services.AddSingleton<HackerOs.Platform.Core.Notifications.INotificationFeed>(provider =>
+            provider.GetRequiredService<InMemoryNotificationQueue>());
 
         // IJSRuntime is scoped per Blazor Server circuit (WASM hosts have exactly one implicit
         // scope for the app's lifetime, so this is a no-op behavior change there). Everything in
@@ -971,7 +975,8 @@ public static class EcosystemServiceCollectionExtensions
         });
         services.AddScoped<IFileDialogService>(provider => provider.GetRequiredService<FileDialogCoordinator>());
         services.AddScoped<DialogCoordinator>(provider => new DialogCoordinator(
-            provider.GetRequiredService<IFileDialogService>()));
+            provider.GetRequiredService<IFileDialogService>(),
+            provider.GetService<HackerOs.Platform.Core.Sounds.OsSoundService>()));
         services.AddScoped<IDialogService>(provider => provider.GetRequiredService<DialogCoordinator>());
         // Detached display surfaces (ADR 0078): windows of the host browser driven by this instance.
         services.AddScoped(provider => new DisplaySurfaceService(
@@ -1173,6 +1178,20 @@ public static class EcosystemServiceCollectionExtensions
         services.AddScoped<HackerOs.Platform.Core.Appearance.AccessibilityPreferenceService>();
         // ADR 0193: the session's time zone (datetime.config), live like the accessibility preferences.
         services.AddScoped<HackerOs.Platform.Core.Globalization.SessionTimeZoneService>();
+        // ADR 0204: the sounds of the OS events (sound.config, /usr/share/sounds), played with Web
+        // Audio, so Scoped like the browser probes above.
+        services.AddScoped<HackerOs.Platform.Core.Sounds.IOsSoundOutput>(provider =>
+            new HackerOs.Platform.Blazor.Sounds.BrowserSoundOutput(provider.GetRequiredService<IJSRuntime>()));
+        services.AddScoped<HackerOs.Platform.Core.Sounds.OsSoundService>(provider =>
+            new HackerOs.Platform.Core.Sounds.OsSoundService(
+                provider.GetRequiredService<IOsSettingsService>(),
+                provider.GetRequiredService<IFileSystemService>(),
+                provider.GetRequiredService<ISimulationClock>(),
+                provider.GetRequiredService<ISessionService>(),
+                provider.GetRequiredService<HackerOs.Platform.Core.Sounds.IOsSoundOutput>(),
+                provider.GetRequiredService<IEventBus>(),
+                provider.GetService<HackerOs.Platform.Core.Notifications.INotificationFeed>(),
+                logger: provider.GetService<ILogger<HackerOs.Platform.Core.Sounds.OsSoundService>>()));
         // ADR 0103: user themes of /etc/hackeros/themes and ~/.config/hackeros/themes.
         services.AddScoped<HackerOs.Platform.Core.Appearance.UserThemeCatalogService>(provider =>
             new HackerOs.Platform.Core.Appearance.UserThemeCatalogService(
@@ -1182,6 +1201,14 @@ public static class EcosystemServiceCollectionExtensions
                 provider.GetRequiredService<IOsSettingsService>(),
                 provider.GetService<ITopicMessageBus>(),
                 provider.GetService<ILogger<HackerOs.Platform.Core.Appearance.UserThemeCatalogService>>()));
+        // ADR 0205: the cursor theme of cursors.config, applied to the whole surface by App.razor.
+        services.AddScoped<HackerOs.Platform.Core.Appearance.CursorThemeService>(provider =>
+            new HackerOs.Platform.Core.Appearance.CursorThemeService(
+                provider.GetRequiredService<IFileSystemService>(),
+                provider.GetRequiredService<ISessionService>(),
+                provider.GetRequiredService<ISimulationClock>(),
+                provider.GetRequiredService<IOsSettingsService>(),
+                provider.GetService<ILogger<HackerOs.Platform.Core.Appearance.CursorThemeService>>()));
         // ADR 0203: the icon pack named by icons.config, read from /usr/share/icons or ~/.local/share/icons.
         services.AddScoped<HackerOs.Platform.Core.Appearance.IconPackService>(provider =>
             new HackerOs.Platform.Core.Appearance.IconPackService(

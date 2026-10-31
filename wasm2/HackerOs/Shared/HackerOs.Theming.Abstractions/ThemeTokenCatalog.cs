@@ -107,7 +107,9 @@ public static class ThemeTokenCatalog
         new("--hos-transition-fast", ThemeTokenType.Duration, ThemeTokenGroup.Animations, "Fast transition",
             "Hover and press feedback. Ignored when animations are turned off.", "120ms ease"),
         new("--hos-transition-normal", ThemeTokenType.Duration, ThemeTokenGroup.Animations, "Normal transition",
-            "Opening panels, menus and windows. Ignored when animations are turned off.", "180ms ease")
+            "Opening panels, menus and windows. Ignored when animations are turned off.", "180ms ease"),
+        new("--hos-window-anim-duration", ThemeTokenType.Duration, ThemeTokenGroup.Animations, "Window animations",
+            "Opening, closing, minimizing, maximizing and snapping windows. Ignored when animations are turned off.", "180ms")
     ]);
 
     private static readonly IReadOnlyDictionary<string, ThemeTokenDefinition> ByName =

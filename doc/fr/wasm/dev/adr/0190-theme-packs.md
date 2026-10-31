@@ -98,5 +98,5 @@ peut être accepté dès que le Store gère les packs.
 - [ ] Onglet Thèmes du Hack Store.
 - [x] Chantier : fonds d'écran en image ([ADR 0202](0202-desktop-wallpaper-images.md)).
 - [x] Chantier : packs d'icônes. Fait par l'[ADR 0203](0203-icon-packs.md).
-- [ ] Chantier : sons des évènements de l'OS.
+- [x] Chantier : sons des évènements de l'OS ([ADR 0204](0204-os-event-sounds.md)).
 - [ ] Chantier : thèmes de curseurs.

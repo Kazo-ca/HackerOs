@@ -15,6 +15,9 @@ HackerOs.Apps.Settings.WallpaperPanel.DisposeAsync() -> System.Threading.Tasks.V
 HackerOs.Apps.Settings.WallpaperPanel.TargetLayer.get -> HackerOs.Simulation.Abstractions.Settings.SettingLayer
 HackerOs.Apps.Settings.WallpaperPanel.TargetLayer.set -> void
 HackerOs.Apps.Settings.WallpaperPanel.WallpaperPanel() -> void
+HackerOs.Apps.Settings.CursorThemePanel
+HackerOs.Apps.Settings.CursorThemePanel.CursorThemePanel() -> void
+HackerOs.Apps.Settings.CursorThemePanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
 HackerOs.Apps.Settings.LocalServerPanel
 HackerOs.Apps.Settings.LocalServerPanel.LocalServerPanel() -> void
 HackerOs.Apps.Settings.LocalServerPanel.OnPaired.get -> Microsoft.AspNetCore.Components.EventCallback<HackerOs.AppSdk.Administration.HackServerConnectionState!>
@@ -24,3 +27,6 @@ HackerOs.Apps.Settings.IconPackPanel.DisposeAsync() -> System.Threading.Tasks.Va
 HackerOs.Apps.Settings.IconPackPanel.IconPackPanel() -> void
 HackerOs.Apps.Settings.IconPackPanel.TargetLayer.get -> HackerOs.Simulation.Abstractions.Settings.SettingLayer
 HackerOs.Apps.Settings.IconPackPanel.TargetLayer.set -> void
+HackerOs.Apps.Settings.SoundPanel
+HackerOs.Apps.Settings.SoundPanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Apps.Settings.SoundPanel.SoundPanel() -> void

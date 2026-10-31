@@ -94,5 +94,5 @@ soon as the Store handles packs.
 - [ ] Hack Store Themes tab.
 - [x] Work item: image wallpapers ([ADR 0202](0202-desktop-wallpaper-images.md)).
 - [x] Work item: icon packs. Done by [ADR 0203](0203-icon-packs.md).
-- [ ] Work item: OS event sounds.
+- [x] Work item: OS event sounds ([ADR 0204](0204-os-event-sounds.md)).
 - [ ] Work item: cursor themes.

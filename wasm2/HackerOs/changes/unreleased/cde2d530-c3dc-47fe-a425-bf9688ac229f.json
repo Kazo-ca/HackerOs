@@ -1,0 +1,21 @@
+{
+  "id": "cde2d530-c3dc-47fe-a425-bf9688ac229f",
+  "category": "new",
+  "audience": [
+    "user",
+    "developer"
+  ],
+  "title": {
+    "en": "System sounds",
+    "fr": "Sons du système"
+  },
+  "description": {
+    "en": "The OS plays a sound for notifications, warnings, errors, sign-in and sign-out. Choose the sound theme (HackerOS or Soft), the volume or turn the sounds off in Settings > Sound. Add your own theme in ~/.local/share/sounds (freedesktop.org format, OGG or MP3).",
+    "fr": "L'OS joue un son pour les notifications, les avertissements, les erreurs, l'ouverture et la fermeture de session. Choisissez le jeu de sons (HackerOS ou Doux), le volume ou coupez les sons dans Paramètres > Sons. Ajoutez votre propre jeu dans ~/.local/share/sounds (format freedesktop.org, OGG ou MP3)."
+  },
+  "pr": 304,
+  "links": [
+    "doc/en/wasm/dev/adr/0204-os-event-sounds.md",
+    "doc/en/wasm/dev/system-sounds.md"
+  ]
+}

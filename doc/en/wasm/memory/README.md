@@ -30,7 +30,7 @@ at the end of each series or when a convention changes.
 | EXEC (`exec/*`) | Process limits, OOM killer, remote gateways, "not responding" box, `HackBackground`, OS served by `HackerOs.Server`, cross-origin isolation, SDK 1.2 | [`execution-followups-plan.md`](../dev/plans/execution-followups-plan.md) |
 | DESK (`desk/0` to `desk/6`) | OS-provided file control, central context menu, app menu entries, desktop, SDK 2.0 | [`desktop-and-context-menu-plan.md`](../dev/plans/desktop-and-context-menu-plan.md) |
 | Multi-monitor (`multi-monitor/0` to `multi-monitor/9`) | Extended desktop: one screen per display surface, `DisplayId` and work area per screen, windows moved through a portal, screen service (Chrome/Edge, fallback elsewhere), one taskbar per screen, "Other screen" menus and identification veil, Settings ▸ Screens, drag between screens; no change to the app SDK | [`multi-monitor-plan.md`](../dev/plans/multi-monitor-plan.md) |
-| File Explorer (`explorer/1` to `explorer/9`) | Resizable sidebar, empty state inside the list, drag out to the computer, shortcuts, tracked network drives, errors in a `MessageBox`; the `.zip` opened as a folder is left (issue #241) | [ADR 0185](../dev/adr/0185-file-explorer-improvements.md), [`file-explorer.md`](../dev/file-explorer.md) |
+| File Explorer (`explorer/1` to `explorer/9`) | Resizable sidebar, empty state inside the list, drag out to the computer, shortcuts, tracked network drives, errors in a `MessageBox`; the `.zip` opened as a folder is done in `todo/base` (`todo/10-zip-as-folder`, issue #241) | [ADR 0185](../dev/adr/0185-file-explorer-improvements.md), [`file-explorer.md`](../dev/file-explorer.md) |
 | Guest (`guest/*`) | Guest start when no account exists, elevation by a plain confirmation, "Create my account" (migrate or delete the guest), sign-in credits | [ADR 0187](../dev/adr/0187-guest-start-and-sign-in-credits.md), [`guest-account.md`](../dev/guest-account.md) |
 
 - **Since DESK** (on `main`, October 2026): restart offered when the
@@ -57,8 +57,16 @@ at the end of each series or when a convention changes.
   [`installable-server.md`](../dev/installable-server.md)); the Windows and
   macOS scripts and the Docker image still need a real run.
 - **Power button in the Start menu** (ADR 0195, PR #291, merged on
-  2026-10-30): "Switch user" stays greyed out, `TODO` issue #290 (several
-  sessions open at once).
+  2026-10-30): "Switch user" stays greyed out, Benoit's choice on
+  2026-10-30 (ADR 0201, issue #290; unmerged prototype on the branch
+  `switch-user/simultaneous-sessions-prototype`).
+- **Cursor themes** (ADR 0205, series `todo/base`, work item
+  `todo/9-cursor-themes`, issue #257): `cursor.theme` folders of PNGs in
+  `/etc/hackeros/cursors/` and `~/.config/hackeros/cursors/`, `cursors.config`,
+  built-in System (default), HackerOS Neon and Gothic Crimson themes, applied
+  to the whole surface by `cursorTheme.js`. Two questions asked to Benoit
+  (default theme, reach inside apps); the code follows the recommendations
+  (System, everywhere).
 - **`todo/base` series** (2026-10-30, every `TODO` issue in parallel, one
   final PR to `main`, branches `todo/<n>-<topic>`, ADR 0197 to 0211
   reserved): Hack Store work item 1 done, `hackeros-solution`
@@ -78,6 +86,15 @@ at the end of each series or when a convention changes.
   `todo/base`): notification bubbles and "Update ready" as a persistent
   notification with "Restart". See
   [`notification-toasts.md`](../dev/notification-toasts.md).
+- **Window animations** (ADR 0198, work item 3 of #242, branch
+  `todo/12-window-animations` into `todo/base`): open, close, minimize into the
+  taskbar of its screen, restore, maximize, snap; `--hos-window-anim-*`
+  variables ([`window-animations.md`](../dev/window-animations.md)).
+- **System sounds** (ADR 0204, issue #256, `todo/base` series, branch
+  `todo/8-os-sounds`): freedesktop.org sound themes in `/usr/share/sounds`
+  (built-in `hackeros` and `soft` themes written by `FileSystemSeeder`) and
+  `~/.local/share/sounds`, `sound.config`, Settings ▸ Sound. No SDK API to play a
+  sound (question Q2 to Benoit). See [`system-sounds.md`](../dev/system-sounds.md).
 - **ADR**: 0001 to 0171 and 0173 to 0195 exist on `main` (a few numbers skipped;
   0141 and 0172 were not used). Recent landmarks: 0173 automatic release, 0174
   new-version announcement, 0175 "New folder" in dialogs, 0176 app repository
@@ -87,7 +104,7 @@ at the end of each series or when a convention changes.
   0188 to 0190 Hack Store ([`hackeros-store.md`](../dev/plans/hackeros-store.md)),
   0191 installable local server, 0192 `features.md` and exception to ADR 0135,
   0193 local time, 0194 taskbar menus, 0195 Start menu Power button;
-  `todo/base` series: 0197 notification bubbles, 0203 icon packs, 0207
+  `todo/base` series: 0197 notification bubbles, 0201 "Switch user" stays greyed out, 0203 icon packs, 0207
   `hackeros-solution` template (the other numbers up to 0211 are reserved by
   its work items). 0196 is taken by PR #294 (unread dot). **Next free number:
   0212.** Before taking one, check `dev/adr/` on

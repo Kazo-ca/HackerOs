@@ -5,6 +5,7 @@ using HackerOs.AppSdk.Blazor;
 using HackerOs.AppSdk.Globalization;
 using HackerOs.AppSdk.Blazor.Files;
 using HackerOs.AppSdk.Clipboard;
+using HackerOs.Apps.FileExplorer.Archives;
 using HackerOs.Apps.FileExplorer.FileControl;
 using HackerOs.Apps.FileExplorer.FileControl.Events;
 using HackerOs.AppSdk.Files;
@@ -63,6 +64,7 @@ public sealed partial class ExplorerFileView : IHackFileView
     private IStringLocalizer<Strings>? _localizer;
     private IAppFileSystemGateway? _fileSystem;
     private FileSystemSelectedResourceHandle? _fileSystemHandle;
+    private bool _fileSystemBrowsesArchives;
 
     /// <summary>Gets or sets the absolute path of the folder shown first.</summary>
     [Parameter]
@@ -149,6 +151,14 @@ public sealed partial class ExplorerFileView : IHackFileView
             {
                 _fileSystemHandle = SelectedResource;
                 _fileSystem = SelectedResource is { } handle ? HostContext.FileSystem.WithSelectedHandle(handle) : HostContext.FileSystem;
+                _fileSystemBrowsesArchives = false;
+            }
+
+            // ADR 0185 §6-9: only the explorer's own windows see inside the archives.
+            if (BrowsesArchives && !_fileSystemBrowsesArchives)
+            {
+                _fileSystemBrowsesArchives = true;
+                _fileSystem = new ZipArchiveFileSystemGateway(_fileSystem);
             }
 
             return _fileSystem;
@@ -215,6 +225,7 @@ public sealed partial class ExplorerFileView : IHackFileView
         IReadOnlyList<FileViewItem> selection = _view.SelectedItems;
         return command switch
         {
+            _ when IsInArchive && ArchiveWriteCommands.Contains(command) => false,
             HackFileMenuItems.Open => selection.Count > 0,
             HackFileMenuItems.OpenWithOther => selection.Count == 1 && Has(HackFileViewFeatures.OpenWith),
             HackFileMenuItems.Cut or HackFileMenuItems.Copy => selection.Count > 0 && Has(HackFileViewFeatures.Clipboard),
@@ -263,27 +274,37 @@ public sealed partial class ExplorerFileView : IHackFileView
     /// <inheritdoc />
     protected override void OnParametersSet()
     {
-        if (!_initialDirectorySet)
-        {
-            _initialDirectorySet = true;
-            try
-            {
-                _initialDirectory = VirtualPath.Parse(string.IsNullOrWhiteSpace(InitialDirectory) ? "/" : InitialDirectory);
-            }
-            catch (Exception exception) when (exception is FormatException or ArgumentException)
-            {
-                _initialDirectory = VirtualPath.Parse("/");
-            }
-        }
-
+        SetInitialDirectory();
         _binding.AllowRename = Has(HackFileViewFeatures.Rename);
         _binding.AllowDelete = Has(HackFileViewFeatures.Delete);
         ConfigureDesktop();
     }
 
+    /// <summary>Reads <see cref="InitialDirectory"/> once; an empty or invalid value starts at <c>/</c>.</summary>
+    private void SetInitialDirectory()
+    {
+        if (_initialDirectorySet)
+        {
+            return;
+        }
+
+        _initialDirectorySet = true;
+        try
+        {
+            _initialDirectory = VirtualPath.Parse(string.IsNullOrWhiteSpace(InitialDirectory) ? "/" : InitialDirectory);
+        }
+        catch (Exception exception) when (exception is FormatException or ArgumentException)
+        {
+            _initialDirectory = VirtualPath.Parse("/");
+        }
+    }
+
     /// <inheritdoc />
     protected override async Task OnInitializedAsync()
     {
+        // Blazor renders FileView at the first await below, before OnParametersSet runs: its start
+        // folder must be known by then, or it lists "/" (which the desktop may not read).
+        SetInitialDirectory();
         // ADR 0203: the selected icon pack draws the files and shortcuts from the first listing.
         await StartIconPackAsync();
         if (!Has(HackFileViewFeatures.Clipboard))
@@ -369,6 +390,9 @@ public sealed partial class ExplorerFileView : IHackFileView
 
     private void OnViewPathChanged(object? sender, FileViewPathChangedEventArgs e)
     {
+        // Inside an archive the view renames and deletes nothing by itself (ADR 0185 §9).
+        _binding.AllowRename = Has(HackFileViewFeatures.Rename) && !IsInArchive;
+        _binding.AllowDelete = Has(HackFileViewFeatures.Delete) && !IsInArchive;
         RaiseStateChanged();
         if (Navigated.HasDelegate)
         {

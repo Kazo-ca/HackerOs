@@ -59,6 +59,7 @@ travailler depuis un autre dépôt.
 | [`app-responsiveness-api.md`](app-responsiveness-api.md) | Priorité `nice` et fenêtre « Ne répond pas » : ce qu'une app voit et doit faire pour rester réactive. |
 | [`process-resources-api.md`](process-resources-api.md) | Temps CPU, mémoire et OOM killer vus par une app : `HackProcess`, champs de `/proc`, déclaration de `OomScoreAdjust`. |
 | [`theme-files.md`](theme-files.md) | Format du fichier `.theme`, liste des jetons vérifiés et API de lecture du paquet `HackerOs.Theming.Abstractions`. |
+| [`cursor-themes.md`](cursor-themes.md) | Thèmes de curseurs : dossier `cursor.theme` et images PNG avec leur point actif, noms de curseurs et replis, `cursors.config`, API de `HackerOs.Theming.Abstractions`. |
 | [`file-associations-api.md`](file-associations-api.md) | Associations de fichiers par utilisateur : formats des deux fichiers, ordre de résolution, API `HackApps` et capacités. |
 
 Index général : [`../README.md`](../README.md). Tout document ajouté ici a sa
