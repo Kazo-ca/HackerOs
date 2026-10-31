@@ -83,6 +83,13 @@ jour à la fin de chaque série ou quand une convention change.
   `~/.local/share/icons`, choisis dans Paramètres ▸ Apparence (document de
   réglages `icons`, clé `iconPackId`) ; le pack Néon intégré est installé
   d'office. Voir [`icon-packs.md`](../dev/icon-packs.md).
+- **Hack Store 3, sources de confiance** (ADR 0208, issue `TODO` #248, série
+  `todo/base`) : installation pour soi dans `~/.local/share/hackeros/apps`,
+  liste noire `/etc/hackeros/app-policy.config`, validation en deux étapes
+  (`AppInstallApprovalOverlay`), `hackpkg --user/--system`, `sources add/remove`,
+  `policy`, Paramètres ▸ Sources et liste noire. Le catalogue charge au
+  démarrage les apps personnelles de tous et les masque par session (question
+  posée à Benoit). Voir [`app-installation.md`](../dev/app-installation.md).
 - **Bulles de notification** (ADR 0197, chantier 1 de #242, série
   `todo/base`) : bulles des notifications et « Update ready » en
   notification persistante avec « Redémarrer ». Voir
@@ -110,7 +117,7 @@ jour à la fin de chaque série ou quand une convention change.
   0191 serveur local installable, 0192 `features.md` et exception à l'ADR 0135,
   0193 heure locale, 0194 menus de la barre des tâches, 0195 bouton
   Marche/arrêt du menu Démarrer ; série `todo/base` : 0197 bulles de
-  notification, 0201 « Changer d'utilisateur » reste grisé, 0203 packs d'icônes, 0207 modèle `hackeros-solution` (les
+  notification, 0201 « Changer d'utilisateur » reste grisé, 0203 packs d'icônes, 0207 modèle `hackeros-solution`, 0208 sources de confiance du Hack Store (les
   autres numéros jusqu'à 0211 sont réservés par ses chantiers). 0196 est prise
   par la PR #294 (point des notifications non lues). **Prochain numéro libre :
   0212.** Avant d'en

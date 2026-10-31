@@ -106,6 +106,22 @@
   </ItemGroup>
 
   <!--
+    Build-time defaults of the app sources and the block list (ADR 0189 §1, §5, ADR 0208): a host
+    sets these properties to change what /etc/hackeros/app-sources.config and app-policy.config are
+    seeded with. Values are separated by commas; a property left empty keeps the standard value
+    (official catalog, github.com/Kazo-ca trusted, nothing blocked, 6 hours). Catalogs are written
+    name=https://.../catalog.json. They reach AppPackageDefaults.FromAssembly as assembly metadata.
+  -->
+  <ItemGroup Condition="'$(HackerOsAppHost)' == 'true'">
+    <AssemblyMetadata Include="HackerOs.AppPackages.Catalogs" Value="$(HackerOsAppCatalogs)" Condition="'$(HackerOsAppCatalogs)' != ''" />
+    <AssemblyMetadata Include="HackerOs.AppPackages.Trusted" Value="$(HackerOsTrustedAppSources)" Condition="'$(HackerOsTrustedAppSources)' != ''" />
+    <AssemblyMetadata Include="HackerOs.AppPackages.UpdateIntervalHours" Value="$(HackerOsAppUpdateIntervalHours)" Condition="'$(HackerOsAppUpdateIntervalHours)' != ''" />
+    <AssemblyMetadata Include="HackerOs.AppPackages.BlockedApps" Value="$(HackerOsBlockedApps)" Condition="'$(HackerOsBlockedApps)' != ''" />
+    <AssemblyMetadata Include="HackerOs.AppPackages.BlockedCategories" Value="$(HackerOsBlockedAppCategories)" Condition="'$(HackerOsBlockedAppCategories)' != ''" />
+    <AssemblyMetadata Include="HackerOs.AppPackages.BlockedCapabilities" Value="$(HackerOsBlockedAppCapabilities)" Condition="'$(HackerOsBlockedAppCapabilities)' != ''" />
+  </ItemGroup>
+
+  <!--
     ASP.Hack route generator (ADR 0082): a Roslyn source generator every app compiles with. It only
     writes code when the app references HackerOs.AppSdk.Web (controllers, WebAppDefinition); for other
     apps it does nothing. Analyzer only: never a runtime dependency of the app.

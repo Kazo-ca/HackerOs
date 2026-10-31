@@ -1,0 +1,288 @@
+/* Approval window of an app install (ADR 0189 section 4): above every window and the taskbar. */
+.iap-veil {
+    position: fixed;
+    inset: 0;
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background:
+        repeating-linear-gradient(135deg, rgb(255 60 60 / 4%) 0 12px, transparent 12px 24px),
+        rgb(2 4 6 / 86%);
+    backdrop-filter: blur(6px) grayscale(0.7);
+    font-family: var(--hos-font-mono, "Cascadia Mono", Consolas, monospace);
+    user-select: none;
+}
+
+.iap-window {
+    width: min(100%, 34rem);
+    max-height: calc(100vh - 2rem);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 2px solid #e5484d;
+    border-radius: 0.5rem;
+    background: #10151a;
+    color: #f4f7f8;
+    box-shadow:
+        0 0 0 1px rgb(229 72 77 / 35%),
+        0 0 48px rgb(229 72 77 / 30%),
+        0 24px 64px rgb(0 0 0 / 70%);
+}
+
+.iap-banner {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.9rem 1.1rem;
+    background: linear-gradient(90deg, #b4232a, #e5484d);
+    color: #fff;
+}
+
+
+.iap-banner h2 {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.iap-banner p {
+    margin: 0.15rem 0 0;
+    font-size: 0.8rem;
+    opacity: 0.9;
+}
+
+.iap-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    padding: 1.1rem;
+    overflow-y: auto;
+}
+
+.iap-app {
+    display: flex;
+    gap: 0.9rem;
+    align-items: flex-start;
+    padding: 0.75rem;
+    border: 1px solid #2a353c;
+    border-radius: 0.4rem;
+    background: #151c22;
+}
+
+.iap-app-icon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.4rem;
+    background: #1f2a31;
+    color: #9fd3ff;
+}
+
+
+
+.iap-app-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #f4f7f8;
+}
+
+
+.iap-label {
+    display: inline-block;
+    min-width: 5.5rem;
+    color: #6f838e;
+}
+
+.iap-section-title {
+    margin: 0;
+    font-size: 0.78rem;
+    color: #ff8a8f;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.iap-capabilities {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.iap-capability {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.2rem 0.75rem;
+    padding: 0.6rem 0.75rem;
+    border-left: 3px solid #e5484d;
+    border-radius: 0.3rem;
+    background: rgb(229 72 77 / 8%);
+}
+
+.iap-capability-title {
+    font-weight: 600;
+    font-size: 0.88rem;
+}
+
+.iap-capability-id {
+    font-size: 0.72rem;
+    color: #8aa0ab;
+}
+
+.iap-capability-risk {
+    grid-column: 1 / -1;
+    font-size: 0.8rem;
+    line-height: 1.45;
+    color: #c9d5db;
+}
+
+
+
+
+
+
+.iap-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.6rem;
+    margin-top: 0.25rem;
+}
+
+.iap-actions button {
+    padding: 0.5rem 1.1rem;
+    border-radius: 0.3rem;
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.iap-actions button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.iap-refuse {
+    border: 1px solid #34444c;
+    background: #1a2228;
+    color: #f4f7f8;
+}
+
+.iap-approve {
+    border: 1px solid #ff6b70;
+    background: #c62a30;
+    color: #fff;
+}
+
+.iap-approve:not(:disabled):hover {
+    background: #e5484d;
+}
+
+.iap-footer {
+    padding: 0.6rem 1.1rem;
+    border-top: 1px solid #2a353c;
+    background: #0c1014;
+    font-size: 0.72rem;
+    color: #6f838e;
+}
+
+/* Trust level: verified apps get the calm accent, untrusted ones keep the red alarm. */
+.iap-window.is-verified,
+.iap-window.is-trusted {
+    border-color: #3fb68b;
+    box-shadow:
+        0 0 0 1px rgb(63 182 139 / 35%),
+        0 0 48px rgb(63 182 139 / 25%),
+        0 24px 64px rgb(0 0 0 / 70%);
+}
+
+.iap-window.is-verified .iap-banner,
+.iap-window.is-trusted .iap-banner {
+    background: linear-gradient(90deg, #1d6f55, #3fb68b);
+}
+
+.iap-banner ::deep .iap-mark {
+    flex: none;
+    filter: drop-shadow(0 0 6px rgb(0 0 0 / 45%));
+}
+
+.iap-facts {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 0;
+    font-size: 0.8rem;
+    color: #a8bac4;
+}
+
+.iap-facts dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.iap-trust {
+    display: inline-block;
+    padding: 0.05rem 0.45rem;
+    border: 1px solid currentcolor;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #ff8a8f;
+}
+
+.iap-window.is-verified .iap-trust,
+.iap-window.is-trusted .iap-trust {
+    color: #7fe0bb;
+}
+
+.iap-warning {
+    margin: 0;
+    padding: 0.6rem 0.75rem;
+    border-left: 3px solid #e5484d;
+    border-radius: 0.3rem;
+    background: rgb(229 72 77 / 10%);
+    font-size: 0.82rem;
+    line-height: 1.45;
+}
+
+.iap-none {
+    margin: 0;
+    font-size: 0.82rem;
+    color: #8aa0ab;
+}
+
+.iap-capability {
+    border-left-color: #4d6470;
+    background: rgb(77 100 112 / 12%);
+}
+
+.iap-capability.is-dangerous {
+    border-left-color: #e5484d;
+    background: rgb(229 72 77 / 8%);
+}
+
+.iap-window.is-verified .iap-approve,
+.iap-window.is-trusted .iap-approve {
+    border-color: #5fd3a6;
+    background: #1d8a63;
+}
+
+.iap-window.is-verified .iap-approve:hover,
+.iap-window.is-trusted .iap-approve:hover {
+    background: #26a677;
+}
+
+@media (max-width: 30rem) {
+    .iap-actions {
+        flex-direction: column-reverse;
+    }
+}

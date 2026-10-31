@@ -41,6 +41,8 @@ internal sealed partial class AppManagementGateway : IAppManagementGateway
     private readonly Func<System.Globalization.CultureInfo> _language;
     private readonly Func<AppAssetStore>? _assets;
     private readonly Func<Apps.Packages.AppPackageInstaller?>? _packages;
+    private readonly Func<IAppInstallApprovalPrompt?>? _approval;
+    private readonly Func<Apps.Packages.InstalledPackageCatalog?>? _installedPackages;
 
     /// <summary>Creates the gateway for one app instance.</summary>
     /// <param name="catalog">The app catalog.</param>
@@ -58,6 +60,8 @@ internal sealed partial class AppManagementGateway : IAppManagementGateway
     /// </param>
     /// <param name="assets">Integrity of the installed apps' assets (ADR 0098 §5), or <see langword="null"/>.</param>
     /// <param name="packages">Installs apps from their repository (ADR 0182), or <see langword="null"/> to refuse it.</param>
+    /// <param name="approval">Window of the two-step approval (ADR 0189 §4); <see langword="null"/> refuses system installs.</param>
+    /// <param name="installedPackages">Installed apps of the running catalog, with who sees them (ADR 0189 §3).</param>
     public AppManagementGateway(
         AppCatalog catalog,
         Func<IAppInstallationService> installation,
@@ -70,8 +74,12 @@ internal sealed partial class AppManagementGateway : IAppManagementGateway
         ISimulationClock clock,
         Func<System.Globalization.CultureInfo>? language = null,
         Func<AppAssetStore>? assets = null,
-        Func<Apps.Packages.AppPackageInstaller?>? packages = null)
+        Func<Apps.Packages.AppPackageInstaller?>? packages = null,
+        Func<IAppInstallApprovalPrompt?>? approval = null,
+        Func<Apps.Packages.InstalledPackageCatalog?>? installedPackages = null)
     {
+        _approval = approval;
+        _installedPackages = installedPackages;
         _assets = assets;
         _packages = packages;
         _catalog = catalog ?? throw new ArgumentNullException(nameof(catalog));
@@ -93,7 +101,10 @@ internal sealed partial class AppManagementGateway : IAppManagementGateway
         cancellationToken.ThrowIfCancellationRequested();
         IAppInstallationService installation = _installation();
         AppAssetStore? assets = _assets?.Invoke();
+        Apps.Packages.InstalledPackageCatalog? packages = _installedPackages?.Invoke();
+        // ADR 0189 §3: another user's personal apps are not listed for this session.
         IEnumerable<HackAppInstallInfo> loaded = _catalog.Manifests.Values
+            .Where(manifest => packages?.IsVisibleTo(manifest.Id, _principal.HomePath) != false)
             .Select(manifest => new HackAppInstallInfo(
                 HackAppInfo.FromManifest(manifest, _catalog.IsSystemApp(manifest.Id)),
                 assets is not null && assets.IsDamaged(manifest.Id)

@@ -50,7 +50,9 @@ Chaque ligne est un chantier, avec sa branche et sa PR.
    ajoutées par un administrateur), `app-policy.config`, installation dans
    `~/.local/share/hackeros/apps`, catalogue construit à l'ouverture de la
    session, fenêtre de validation en deux étapes, `hackpkg --user/--system`,
-   `sources`, `policy`, Paramètres ▸ Apps ▸ Sources.
+   `sources`, `policy`, Paramètres ▸ Apps ▸ Sources. **Fait** (issue #248,
+   [ADR 0208](../adr/0208-hack-store-sources-trust-build.md) : catalogue chargé
+   au démarrage et masqué par session).
 4. **Dépôt `HackerOs-AppMarketPlace`** (ADR 0188 §4 à §6) : `categories.json`,
    modèle de PR, `validate.yml` (format, manifeste, commit, compilation,
    vérification des API, CodeQL, commentaire des capacités), `publish.yml`,

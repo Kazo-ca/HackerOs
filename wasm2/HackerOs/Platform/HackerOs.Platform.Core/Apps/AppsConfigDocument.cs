@@ -184,7 +184,15 @@ public static class AppsConfigDocument
     /// <param name="content">Current machine file content, or <see langword="null"/> for a new file.</param>
     /// <param name="appId">Installed app.</param>
     /// <param name="source">Its source, pinned to the installed version.</param>
-    public static string SetInstalled(string? content, string appId, AppPackageSource source)
+    public static string SetInstalled(string? content, string appId, AppPackageSource source) =>
+        SetInstalled(content, appId, source, MachineDefaultContent);
+
+    /// <summary>Records an installed package in any <c>[installed]</c> file (ADR 0189 §3), keeping every other line exactly.</summary>
+    /// <param name="content">Current file content, or <see langword="null"/> for a new file.</param>
+    /// <param name="appId">Installed app.</param>
+    /// <param name="source">Its source, pinned to the installed version.</param>
+    /// <param name="defaultContent">Content of a new file.</param>
+    public static string SetInstalled(string? content, string appId, AppPackageSource source, string defaultContent)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(appId);
         ArgumentNullException.ThrowIfNull(source);
@@ -193,7 +201,7 @@ public static class AppsConfigDocument
             throw new ArgumentException("An installed source carries its version.", nameof(source));
         }
 
-        return ConfigDocumentEditor.SetValue(string.IsNullOrEmpty(content) ? MachineDefaultContent : content, InstalledSection, appId, source.ToString());
+        return ConfigDocumentEditor.SetValue(string.IsNullOrEmpty(content) ? defaultContent : content, InstalledSection, appId, source.ToString());
     }
 
     /// <summary>Forgets an installed package, keeping every other line exactly.</summary>

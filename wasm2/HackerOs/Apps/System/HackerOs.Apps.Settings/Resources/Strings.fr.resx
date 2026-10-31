@@ -1887,4 +1887,97 @@
   <data name="Cursors.Error.CannotSave" xml:space="preserve">
     <value>Impossible d'enregistrer {0} : {1}</value>
   </data>
+  <data name="Tab.AppSources" xml:space="preserve">
+    <value>Sources et liste noire</value>
+  </data>
+  <data name="Sources.Title" xml:space="preserve">
+    <value>Sources des apps</value>
+  </data>
+  <data name="Sources.Description" xml:space="preserve">
+    <value>D'où les apps sont installées, dans {0}. Chaque utilisateur peut installer pour lui-même une app d'une source de confiance ; toute autre source demande un administrateur à chaque fois.</value>
+  </data>
+  <data name="Sources.Loading" xml:space="preserve">
+    <value>Lecture des sources…</value>
+  </data>
+  <data name="Sources.Catalogs" xml:space="preserve">
+    <value>Catalogues</value>
+  </data>
+  <data name="Sources.Repositories" xml:space="preserve">
+    <value>Dépôts</value>
+  </data>
+  <data name="Sources.Remove" xml:space="preserve">
+    <value>Retirer</value>
+  </data>
+  <data name="Sources.BuiltIn" xml:space="preserve">
+    <value>Intégrée</value>
+  </data>
+  <data name="Sources.BuiltIn.Title" xml:space="preserve">
+    <value>HackerOS a été compilé avec cette source</value>
+  </data>
+  <data name="Sources.Trust.Verified" xml:space="preserve">
+    <value>Vérifiée</value>
+  </data>
+  <data name="Sources.Trust.Trusted" xml:space="preserve">
+    <value>De confiance</value>
+  </data>
+  <data name="Sources.Trust.Untrusted" xml:space="preserve">
+    <value>Non fiable</value>
+  </data>
+  <data name="Sources.Interval" xml:space="preserve">
+    <value>Les mises à jour sont vérifiées toutes les {0} heures.</value>
+  </data>
+  <data name="Sources.Add.Label" xml:space="preserve">
+    <value>Nouvelle source</value>
+  </data>
+  <data name="Sources.Add.Trusted" xml:space="preserve">
+    <value>Lui faire confiance</value>
+  </data>
+  <data name="Sources.Add" xml:space="preserve">
+    <value>Ajouter</value>
+  </data>
+  <data name="Sources.Add.Hint" xml:space="preserve">
+    <value>Une source de confiance permet à chaque utilisateur d'installer ses apps sans administrateur. Laissez-la non fiable pour approuver chaque installation.</value>
+  </data>
+  <data name="Sources.Error.Unsupported" xml:space="preserve">
+    <value>Cet hôte HackerOS ne peut pas installer d'apps depuis un dépôt.</value>
+  </data>
+  <data name="Policy.Title" xml:space="preserve">
+    <value>Liste noire</value>
+  </data>
+  <data name="Policy.Description" xml:space="preserve">
+    <value>Les apps, catégories et capacités de {0} ne peuvent pas être installées par un utilisateur pour lui-même : un administrateur doit les approuver pour tous.</value>
+  </data>
+  <data name="Policy.Apps" xml:space="preserve">
+    <value>Apps</value>
+  </data>
+  <data name="Policy.Categories" xml:space="preserve">
+    <value>Catégories</value>
+  </data>
+  <data name="Policy.Capabilities" xml:space="preserve">
+    <value>Capacités</value>
+  </data>
+  <data name="Policy.Empty" xml:space="preserve">
+    <value>Rien n'est bloqué.</value>
+  </data>
+  <data name="Policy.Unblock" xml:space="preserve">
+    <value>Débloquer</value>
+  </data>
+  <data name="Policy.Kind" xml:space="preserve">
+    <value>Règle</value>
+  </data>
+  <data name="Policy.Kind.App" xml:space="preserve">
+    <value>ID d'app</value>
+  </data>
+  <data name="Policy.Kind.Category" xml:space="preserve">
+    <value>Catégorie</value>
+  </data>
+  <data name="Policy.Kind.Capability" xml:space="preserve">
+    <value>Capacité</value>
+  </data>
+  <data name="Policy.Value" xml:space="preserve">
+    <value>Valeur</value>
+  </data>
+  <data name="Policy.Block" xml:space="preserve">
+    <value>Bloquer</value>
+  </data>
 </root>

@@ -806,4 +806,85 @@
   <data name="Toast.Close" xml:space="preserve">
     <value>Hide this bubble</value>
   </data>
+  <data name="InstallApproval.Title.Install" xml:space="preserve">
+    <value>Approve an app install</value>
+  </data>
+  <data name="InstallApproval.Title.Update" xml:space="preserve">
+    <value>Approve an app update</value>
+  </data>
+  <data name="InstallApproval.Title.Remove" xml:space="preserve">
+    <value>Approve an app removal</value>
+  </data>
+  <data name="InstallApproval.Subtitle" xml:space="preserve">
+    <value>Signed in as {0}. Check what will run on this system.</value>
+  </data>
+  <data name="InstallApproval.Identifier" xml:space="preserve">
+    <value>Identifier</value>
+  </data>
+  <data name="InstallApproval.Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="InstallApproval.Size" xml:space="preserve">
+    <value>Size</value>
+  </data>
+  <data name="InstallApproval.Source" xml:space="preserve">
+    <value>Source</value>
+  </data>
+  <data name="InstallApproval.For" xml:space="preserve">
+    <value>For</value>
+  </data>
+  <data name="InstallApproval.ForEveryone" xml:space="preserve">
+    <value>every user of this system</value>
+  </data>
+  <data name="InstallApproval.ForUser" xml:space="preserve">
+    <value>{0} only</value>
+  </data>
+  <data name="InstallApproval.RequestedBy" xml:space="preserve">
+    <value>Asked by</value>
+  </data>
+  <data name="InstallApproval.Trust.Verified" xml:space="preserve">
+    <value>Verified</value>
+  </data>
+  <data name="InstallApproval.Trust.Trusted" xml:space="preserve">
+    <value>Trusted</value>
+  </data>
+  <data name="InstallApproval.Trust.Untrusted" xml:space="preserve">
+    <value>Untrusted</value>
+  </data>
+  <data name="InstallApproval.UntrustedWarning" xml:space="preserve">
+    <value>This source is not trusted: nobody reviewed this app. Its code will run with the same rights as the OS.</value>
+  </data>
+  <data name="InstallApproval.Blocked" xml:space="preserve">
+    <value>The administrator's block list stops a personal install ({0}): only an install for every user is possible.</value>
+  </data>
+  <data name="InstallApproval.Capabilities" xml:space="preserve">
+    <value>Capabilities it asks for</value>
+  </data>
+  <data name="InstallApproval.NoCapability" xml:space="preserve">
+    <value>No capability.</value>
+  </data>
+  <data name="InstallApproval.Refuse" xml:space="preserve">
+    <value>Refuse</value>
+  </data>
+  <data name="InstallApproval.Approve.Install" xml:space="preserve">
+    <value>Install</value>
+  </data>
+  <data name="InstallApproval.Approve.Update" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="InstallApproval.Approve.Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="InstallApproval.Footer" xml:space="preserve">
+    <value>HackerOS asks for this approval each time (ADR 0189). An app cannot draw over this window.</value>
+  </data>
+  <data name="InstallApproval.Bytes" xml:space="preserve">
+    <value>{0} bytes</value>
+  </data>
+  <data name="InstallApproval.KiB" xml:space="preserve">
+    <value>{0} KiB</value>
+  </data>
+  <data name="InstallApproval.MiB" xml:space="preserve">
+    <value>{0} MiB</value>
+  </data>
 </root>

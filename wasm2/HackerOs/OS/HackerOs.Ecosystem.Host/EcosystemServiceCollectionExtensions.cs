@@ -291,7 +291,14 @@ public static class EcosystemServiceCollectionExtensions
             service.HostActivity = provider.GetService<IHostActivitySignal>();
             return service;
         });
-        services.AddTransient<FileSystemSeeder>();
+        services.AddTransient<FileSystemSeeder>(provider => new FileSystemSeeder(
+            provider.GetRequiredService<IFileSystemService>(),
+            provider.GetService<TimeProvider>(),
+            provider.GetService<IFileSystemMountRouter>())
+        {
+            // ADR 0189 §1, §5: app-sources.config and app-policy.config start from the host's build.
+            PackageDefaults = provider.GetService<AppPackageDefaults>() ?? AppPackageDefaults.Standard,
+        });
         // Depends on IFileSystemService, which is Scoped (see above) — see this file's IJSRuntime
         // scoping note.
         services.AddScoped<SettingsStoreToFilesMigration>(provider => new SettingsStoreToFilesMigration(
@@ -433,6 +440,9 @@ public static class EcosystemServiceCollectionExtensions
         // OS authentication agent (ADR 0055 section 5, polkit-like): gateways that need an
         // administrator ask it; its secure-desktop overlay is rendered by the shell.
         services.AddScoped<AdministratorAuthenticationBroker>();
+        // ADR 0189 §4: the approval window of an app install for the system, after the sign-in.
+        services.AddScoped<AppInstallApprovalBroker>();
+        services.AddScoped<IAppInstallApprovalPrompt>(provider => provider.GetRequiredService<AppInstallApprovalBroker>());
         services.AddScoped<IAdministratorAuthenticationPrompt>(provider =>
             provider.GetRequiredService<AdministratorAuthenticationBroker>());
         services.AddScoped<IAdministratorAuthenticationAgent>(provider => new AdministratorAuthenticationAgent(
@@ -695,9 +705,14 @@ public static class EcosystemServiceCollectionExtensions
             provider.GetService<ILogger<AppAssetStore>>()));
         // ADR 0182: apps installed from their GitHub repository; the OS downloads with fetch itself.
         services.TryAddSingleton<IAppPackageDownloader>(static _ => new HttpAppPackageDownloader(new HttpClient()));
+        // ADR 0189 §1, §5: the sources and block list the host was built with (build/HackerOs.Apps.targets).
+        services.TryAddSingleton(static _ => AppPackageDefaults.FromAssembly(System.Reflection.Assembly.GetEntryAssembly()));
         services.TryAddSingleton(static provider => new AppPackageInstaller(
             provider.GetRequiredService<IAppPackageDownloader>(),
-            logger: provider.GetService<ILogger<AppPackageInstaller>>()));
+            logger: provider.GetService<ILogger<AppPackageInstaller>>(),
+            defaults: provider.GetRequiredService<AppPackageDefaults>()));
+        // ADR 0189 §3: the installed apps of the catalog and who sees them; a browser host fills it at boot.
+        services.TryAddSingleton<InstalledPackageCatalog>();
         services.AddSingleton<AppEnablementRegistry>(provider =>
             new AppEnablementRegistry(provider.GetRequiredService<AppCatalog>()));
         services.AddSingleton<IAppEnablementRegistry>(provider =>
@@ -761,7 +776,10 @@ public static class EcosystemServiceCollectionExtensions
                 () => provider.GetRequiredService<IAdministratorAuthenticationAgent>(),
                 () => provider.GetRequiredService<AppAssetStore>())
             {
-                Packages = () => provider.GetService<AppPackageInstaller>()
+                Packages = () => provider.GetService<AppPackageInstaller>(),
+                // ADR 0189 §4: step 2 of a system install, drawn by the shell like the authentication prompt.
+                InstallApproval = () => provider.GetService<IAppInstallApprovalPrompt>(),
+                InstalledPackages = () => provider.GetService<InstalledPackageCatalog>(),
             },
             // Lazy for the same reason: ShellInterpreter depends on the orchestrator (ADR 0056 section 7).
             shellHostProvider: () => provider.GetRequiredService<ShellHostService>(),
@@ -919,7 +937,11 @@ public static class EcosystemServiceCollectionExtensions
                 provider.GetRequiredService<IEventBus>(),
                 provider.GetService<ILogger<AppInstallationService>>(),
                 // ADR 0088 section 4: uninstalling a web app deletes its browser database.
-                provider.GetRequiredService<HackerOs.Platform.Core.WebData.IWebSiteDatabaseStore>());
+                provider.GetRequiredService<HackerOs.Platform.Core.WebData.IWebSiteDatabaseStore>())
+            {
+                // ADR 0189 §3: another user's personal apps are not installed for this session.
+                InstalledPackages = provider.GetService<InstalledPackageCatalog>(),
+            };
             // ADR 0156 §4: an app uninstalled for the machine loses its line in components.config,
             // whether Settings, the terminal or an edit of apps.config uninstalled it.
             installation.Changed += (_, _) => _ = RemoveUninstalledComponentProvidersAsync(provider, installation);

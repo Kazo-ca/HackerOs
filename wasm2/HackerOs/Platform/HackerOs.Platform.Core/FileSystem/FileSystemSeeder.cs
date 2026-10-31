@@ -21,6 +21,12 @@ public sealed class FileSystemSeeder(
     TimeProvider? timeProvider = null,
     IFileSystemMountRouter? mountRouter = null)
 {
+    /// <summary>
+    /// Gets the app sources and block list the host was built with (ADR 0189 §1, §5), written to
+    /// <c>/etc/hackeros/app-sources.config</c> and <c>app-policy.config</c> when they do not exist.
+    /// </summary>
+    public Apps.Packages.AppPackageDefaults PackageDefaults { get; init; } = Apps.Packages.AppPackageDefaults.Standard;
+
     private readonly IFileSystemService _fileSystem =
         fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
     private readonly TimeProvider _timeProvider = timeProvider ?? TimeProvider.System;
@@ -70,9 +76,21 @@ public sealed class FileSystemSeeder(
         // ADR 0074, section 4: the static host table read first by hackdns, root-owned 0644.
         await EnsureFileAsync(
             Network.Local.HackDnsResolver.HostsFilePath.Value, Network.Local.HackDnsResolver.DefaultHostsFileContent, 0x01A4, system, cancellationToken);
-        // ADR 0182, section 3: hosts the OS downloads app packages from and trusted owners, root-owned 0644.
+        // ADR 0182 section 3, ADR 0189 section 1: hosts, catalogs and trusted sources of app packages,
+        // from the host's build, root-owned 0644.
         await EnsureFileAsync(
-            Apps.Packages.AppSourcesConfigDocument.MachinePath.Value, Apps.Packages.AppSourcesConfigDocument.DefaultContent, 0x01A4, system, cancellationToken);
+            Apps.Packages.AppSourcesConfigDocument.MachinePath.Value,
+            Apps.Packages.AppSourcesConfigDocument.BuildDefaultContent(PackageDefaults),
+            0x01A4,
+            system,
+            cancellationToken);
+        // ADR 0189 section 5: the administrator's block list for personal installs, root-owned 0644.
+        await EnsureFileAsync(
+            Apps.Packages.AppPolicyConfigDocument.MachinePath.Value,
+            Apps.Packages.AppPolicyConfigDocument.BuildDefaultContent(PackageDefaults),
+            0x01A4,
+            system,
+            cancellationToken);
 
         // ADR 0125, section 3: pam_limits-style session limits, every line commented, root-owned 0644.
         await EnsureDirectoryAsync("/etc/security", 0x01ED, system, cancellationToken);

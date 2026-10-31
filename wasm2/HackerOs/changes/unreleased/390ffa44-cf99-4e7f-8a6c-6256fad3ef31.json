@@ -1,0 +1,20 @@
+{
+  "id": "390ffa44-cf99-4e7f-8a6c-6256fad3ef31",
+  "category": "new",
+  "audience": [
+    "user",
+    "developer"
+  ],
+  "title": {
+    "en": "Install apps for yourself, trusted sources and block list",
+    "fr": "Installer des apps pour soi, sources de confiance et liste noire"
+  },
+  "description": {
+    "en": "An app from a trusted source is now installed for you alone, without an administrator. An install for every user, an untrusted source or an app of the administrator's block list asks every time for an administrator sign-in, then a window that shows the app, its source, its trust level and its capabilities. Administrators manage the sources and the block list in Settings > Sources and block list or with hackpkg sources and hackpkg policy. hackpkg gets --user and --system; --allow-untrusted is gone.",
+    "fr": "Une app d'une source de confiance s'installe maintenant pour vous seul, sans administrateur. Une installation pour tous les utilisateurs, une source non fiable ou une app de la liste noire de l'administrateur demande à chaque fois la connexion d'un administrateur, puis une fenêtre qui montre l'app, sa source, son niveau de confiance et ses capacités. Les administrateurs gèrent les sources et la liste noire dans Paramètres > Sources et liste noire ou avec hackpkg sources et hackpkg policy. hackpkg reçoit --user et --system ; --allow-untrusted disparaît."
+  },
+  "links": [
+    "doc/en/wasm/dev/adr/0208-hack-store-sources-trust-build.md",
+    "doc/en/wasm/dev/app-installation.md"
+  ]
+}

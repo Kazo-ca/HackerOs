@@ -24,6 +24,9 @@ public sealed record AppPackageSource(string Owner, string Repository, SemanticV
     /// <summary>Gets <c>github.com/&lt;owner&gt;</c>, the key of <c>[trusted]</c> in <c>app-sources.config</c>.</summary>
     public string TrustKey => $"github.com/{Owner}";
 
+    /// <summary>Gets <c>github.com/&lt;owner&gt;/&lt;repository&gt;</c>, the key that trusts this repository alone (ADR 0189 §1).</summary>
+    public string RepositoryTrustKey => $"github.com/{Owner}/{Repository}";
+
     /// <summary>Gets the canonical form without version, e.g. <c>github:Kazo-ca/HackerOs-App-Webamp</c>.</summary>
     public string Name => $"{GitHubScheme}{Owner}/{Repository}";
 
@@ -129,7 +132,7 @@ public sealed record AppPackageSource(string Owner, string Repository, SemanticV
         string.Equals(Owner, other.Owner, StringComparison.OrdinalIgnoreCase)
         && string.Equals(Repository, other.Repository, StringComparison.OrdinalIgnoreCase);
 
-    private static bool IsValidName(string name) =>
+    internal static bool IsValidName(string name) =>
         name.Length is > 0 and <= 100
         && name is not "." and not ".."
         && name.All(static c => char.IsAsciiLetterOrDigit(c) || c is '-' or '_' or '.');

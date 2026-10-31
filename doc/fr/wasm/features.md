@@ -272,6 +272,14 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   Workers sont servis à la même adresse que pour une application compilée dans
   l'OS : une application qui enveloppe un projet JavaScript marche une fois
   installée. ([ADR 0206](dev/adr/0206-serve-installed-app-assets.md))
+- **Sources de confiance et installation pour soi** : une application d'une
+  source de confiance s'installe pour soi sans administrateur ; une source non
+  fiable, une application de la liste noire ou une installation pour tous
+  passent par une validation en deux étapes (connexion d'un administrateur puis
+  fenêtre qui montre l'application, sa source et ses capacités). Sources et
+  liste noire dans Paramètres ▸ Sources et liste noire et `hackpkg sources` /
+  `hackpkg policy`. ([ADR 0189](dev/adr/0189-app-sources-trust-and-per-user-install.md),
+  [ADR 0208](dev/adr/0208-hack-store-sources-trust-build.md))
 - **Modèle de dépôt d'application `hackeros-solution`** : application, hôte
   et tests prêts à lancer, sous-module de l'OS pour le débogage dans ses
   sources, paquets NuGet en production, CI et soumission au catalogue du Hack
@@ -300,7 +308,6 @@ dans `main`, le lien mène à sa PR.
 
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
-| Sources de confiance et installation pour soi | Catalogues de confiance, installation sans administrateur, liste noire, validation par un administrateur. | [0189](dev/adr/0189-app-sources-trust-and-per-user-install.md) | [#248](https://github.com/Kazo-ca/HackerOs/issues/248) |
 | Catalogue des applications | Format du catalogue, vérification et publication des applications proposées. | [0188](dev/adr/0188-hack-store-and-app-catalog.md) | [AppMarketPlace #1](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/1) |
 | Application Hack Store v1 | Parcourir, installer, mettre à jour et désinstaller des applications en un clic. | [0188](dev/adr/0188-hack-store-and-app-catalog.md) | [#249](https://github.com/Kazo-ca/HackerOs/issues/249) |
 | Hack Store, étapes suivantes | Ajout sans redémarrage, signature des paquets, installation transactionnelle. | [0188](dev/adr/0188-hack-store-and-app-catalog.md) | [#251](https://github.com/Kazo-ca/HackerOs/issues/251) |

@@ -1,0 +1,190 @@
+/* Settings > Apps > Sources and block list (ADR 0189): dark console rows; green for verified and
+   trusted sources, amber for untrusted ones, danger tint for blocked entries. Tokens match
+   SettingsWindow.razor.css so the tab reads as one panel. */
+
+.setting-group {
+    background-color: var(--hos-bg-surface, #151c20);
+    border: 1px solid var(--hos-border, #3a4b53);
+    border-radius: var(--hos-radius-md, 0.45rem);
+    padding: 14px;
+    margin-bottom: 16px;
+}
+
+.setting-group h4 {
+    margin-top: 0;
+    margin-bottom: 6px;
+    color: color-mix(in srgb, var(--hos-accent, #42d392) 68%, var(--hos-text-primary, #f4f7f8));
+}
+
+.sources-subtitle {
+    margin: 12px 0 6px;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--hos-text-secondary, #a8bac4);
+}
+
+.setting-desc {
+    font-size: 0.75rem;
+    color: var(--hos-text-secondary, #a8bac4);
+    margin-bottom: 12px;
+}
+
+.setting-desc code {
+    font-family: var(--hos-font-mono, ui-monospace, monospace);
+    color: var(--hos-accent, #42d392);
+}
+
+.sources-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.source-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 12px;
+    background-color: var(--hos-bg-base, #101417);
+    border: 1px solid var(--hos-border-subtle, #27343a);
+    border-left: 3px solid var(--hos-border-subtle, #27343a);
+    border-radius: var(--hos-radius-sm, 0.25rem);
+}
+
+.source-row.is-verified,
+.source-row.is-trusted {
+    border-left-color: var(--hos-accent, #42d392);
+}
+
+.source-row.is-untrusted {
+    border-left-color: var(--hos-warning, #e0ad50);
+}
+
+.source-row.is-blocked {
+    border-left-color: var(--hos-danger, #ef6b6b);
+}
+
+.source-identity {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.source-name {
+    font-family: var(--hos-font-mono, ui-monospace, monospace);
+    font-size: 0.82rem;
+    color: var(--hos-text-primary, #f4f7f8);
+    overflow-wrap: anywhere;
+}
+
+.source-meta {
+    font-size: 0.7rem;
+    color: var(--hos-text-secondary, #a8bac4);
+    overflow-wrap: anywhere;
+}
+
+.source-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.source-badge {
+    padding: 2px 8px;
+    border: 1px solid var(--hos-border, #3a4b53);
+    border-radius: 999px;
+    font-size: 0.68rem;
+    color: var(--hos-text-secondary, #a8bac4);
+}
+
+.source-badge.is-verified,
+.source-badge.is-trusted {
+    border-color: var(--hos-accent, #42d392);
+    color: var(--hos-accent, #42d392);
+}
+
+.source-badge.is-untrusted {
+    border-color: var(--hos-warning, #e0ad50);
+    color: var(--hos-warning, #e0ad50);
+}
+
+.sources-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.sources-field {
+    display: flex;
+    flex: 1 1 220px;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.72rem;
+    color: var(--hos-text-secondary, #a8bac4);
+}
+
+.sources-field-narrow {
+    flex: 0 1 160px;
+}
+
+.sources-check {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: var(--hos-text-primary, #f4f7f8);
+}
+
+.sources-input {
+    padding: 6px 8px;
+    background-color: var(--hos-bg-base, #101417);
+    border: 1px solid var(--hos-border, #3a4b53);
+    border-radius: var(--hos-radius-sm, 0.25rem);
+    color: var(--hos-text-primary, #f4f7f8);
+    font-family: var(--hos-font-mono, ui-monospace, monospace);
+    font-size: 0.8rem;
+}
+
+.sources-input:focus-visible {
+    outline: 2px solid var(--hos-accent, #42d392);
+    outline-offset: 1px;
+}
+
+.sources-btn {
+    padding: 6px 12px;
+    background-color: transparent;
+    border: 1px solid var(--hos-accent, #42d392);
+    border-radius: var(--hos-radius-sm, 0.25rem);
+    color: var(--hos-accent, #42d392);
+    font-size: 0.75rem;
+    cursor: pointer;
+}
+
+.sources-btn:hover:not(:disabled) {
+    background-color: color-mix(in srgb, var(--hos-accent, #42d392) 16%, transparent);
+}
+
+.sources-btn-danger {
+    border-color: var(--hos-danger, #ef6b6b);
+    color: var(--hos-danger, #ef6b6b);
+}
+
+.sources-btn-danger:hover:not(:disabled) {
+    background-color: color-mix(in srgb, var(--hos-danger, #ef6b6b) 16%, transparent);
+}
+
+.sources-btn:disabled {
+    opacity: 0.45;
+    cursor: default;
+}
+
+.sources-message {
+    margin: 12px 0 0;
+    font-size: 0.75rem;
+    color: var(--hos-warning, #e0ad50);
+}

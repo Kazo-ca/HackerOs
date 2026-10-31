@@ -91,7 +91,7 @@ public sealed class AppPackageSourceTests
         Assert.False(config.IsTrusted(new AppPackageSource("Kazo-ca", "x")));
         Assert.True(config.IsTrusted(new AppPackageSource("Alice", "x")));
         Assert.Single(config.Warnings);
-        Assert.Contains("'maybe' is not true or false", config.Warnings[0], StringComparison.Ordinal);
+        Assert.Contains("'github.com/bob=maybe' is not a source set to true or false", config.Warnings[0], StringComparison.Ordinal);
     }
 
     [Fact]

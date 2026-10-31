@@ -82,6 +82,13 @@ at the end of each series or when a convention changes.
   for apps and files under `/usr/share/icons` and `~/.local/share/icons`, chosen
   in Settings ▸ Appearance (`icons` settings document, key `iconPackId`); the
   built-in Néon pack is seeded. See [`icon-packs.md`](../dev/icon-packs.md).
+- **Hack Store 3, trusted sources** (ADR 0208, `TODO` issue #248, series
+  `todo/base`): install for oneself in `~/.local/share/hackeros/apps`, block
+  list `/etc/hackeros/app-policy.config`, two-step approval
+  (`AppInstallApprovalOverlay`), `hackpkg --user/--system`, `sources add/remove`,
+  `policy`, Settings ▸ Sources and block list. The catalog loads everyone's
+  personal apps at startup and hides them per session (question asked to
+  Benoit). See [`app-installation.md`](../dev/app-installation.md).
 - **Notification bubbles** (ADR 0197, work item 1 of #242, series
   `todo/base`): notification bubbles and "Update ready" as a persistent
   notification with "Restart". See
@@ -109,7 +116,7 @@ at the end of each series or when a convention changes.
   0191 installable local server, 0192 `features.md` and exception to ADR 0135,
   0193 local time, 0194 taskbar menus, 0195 Start menu Power button;
   `todo/base` series: 0197 notification bubbles, 0201 "Switch user" stays greyed out, 0203 icon packs, 0207
-  `hackeros-solution` template (the other numbers up to 0211 are reserved by
+  `hackeros-solution` template, 0208 Hack Store trusted sources (the other numbers up to 0211 are reserved by
   its work items). 0196 is taken by PR #294 (unread dot). **Next free number:
   0212.** Before taking one, check `dev/adr/` on
   `main` and the open PRs.

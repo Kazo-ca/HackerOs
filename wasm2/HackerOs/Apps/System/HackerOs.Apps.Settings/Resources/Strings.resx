@@ -1887,4 +1887,97 @@
   <data name="Cursors.Error.CannotSave" xml:space="preserve">
     <value>Cannot save {0}: {1}</value>
   </data>
+  <data name="Tab.AppSources" xml:space="preserve">
+    <value>Sources and block list</value>
+  </data>
+  <data name="Sources.Title" xml:space="preserve">
+    <value>App sources</value>
+  </data>
+  <data name="Sources.Description" xml:space="preserve">
+    <value>Where apps are installed from, in {0}. An app from a trusted source can be installed by each user for themselves; any other source asks an administrator every time.</value>
+  </data>
+  <data name="Sources.Loading" xml:space="preserve">
+    <value>Reading the sources…</value>
+  </data>
+  <data name="Sources.Catalogs" xml:space="preserve">
+    <value>Catalogs</value>
+  </data>
+  <data name="Sources.Repositories" xml:space="preserve">
+    <value>Repositories</value>
+  </data>
+  <data name="Sources.Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="Sources.BuiltIn" xml:space="preserve">
+    <value>Built in</value>
+  </data>
+  <data name="Sources.BuiltIn.Title" xml:space="preserve">
+    <value>HackerOS was built with this source</value>
+  </data>
+  <data name="Sources.Trust.Verified" xml:space="preserve">
+    <value>Verified</value>
+  </data>
+  <data name="Sources.Trust.Trusted" xml:space="preserve">
+    <value>Trusted</value>
+  </data>
+  <data name="Sources.Trust.Untrusted" xml:space="preserve">
+    <value>Untrusted</value>
+  </data>
+  <data name="Sources.Interval" xml:space="preserve">
+    <value>Updates are checked every {0} hours.</value>
+  </data>
+  <data name="Sources.Add.Label" xml:space="preserve">
+    <value>New source</value>
+  </data>
+  <data name="Sources.Add.Trusted" xml:space="preserve">
+    <value>Trust it</value>
+  </data>
+  <data name="Sources.Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="Sources.Add.Hint" xml:space="preserve">
+    <value>A trusted source lets every user install its apps without an administrator. Leave it untrusted to approve each install.</value>
+  </data>
+  <data name="Sources.Error.Unsupported" xml:space="preserve">
+    <value>This HackerOS host cannot install apps from a repository.</value>
+  </data>
+  <data name="Policy.Title" xml:space="preserve">
+    <value>Block list</value>
+  </data>
+  <data name="Policy.Description" xml:space="preserve">
+    <value>Apps, categories and capabilities in {0} cannot be installed by a user for themselves: an administrator must approve them for every user.</value>
+  </data>
+  <data name="Policy.Apps" xml:space="preserve">
+    <value>Apps</value>
+  </data>
+  <data name="Policy.Categories" xml:space="preserve">
+    <value>Categories</value>
+  </data>
+  <data name="Policy.Capabilities" xml:space="preserve">
+    <value>Capabilities</value>
+  </data>
+  <data name="Policy.Empty" xml:space="preserve">
+    <value>Nothing blocked.</value>
+  </data>
+  <data name="Policy.Unblock" xml:space="preserve">
+    <value>Unblock</value>
+  </data>
+  <data name="Policy.Kind" xml:space="preserve">
+    <value>Rule</value>
+  </data>
+  <data name="Policy.Kind.App" xml:space="preserve">
+    <value>App ID</value>
+  </data>
+  <data name="Policy.Kind.Category" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="Policy.Kind.Capability" xml:space="preserve">
+    <value>Capability</value>
+  </data>
+  <data name="Policy.Value" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="Policy.Block" xml:space="preserve">
+    <value>Block</value>
+  </data>
 </root>

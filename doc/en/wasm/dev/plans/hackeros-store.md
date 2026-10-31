@@ -50,7 +50,9 @@ Each line is a work item, with its branch and PR.
    administrator), `app-policy.config`, install into
    `~/.local/share/hackeros/apps`, catalog built when the session opens,
    two-step validation window, `hackpkg --user/--system`, `sources`, `policy`,
-   Settings ▸ Apps ▸ Sources.
+   Settings ▸ Apps ▸ Sources. **Done** (issue #248,
+   [ADR 0208](../adr/0208-hack-store-sources-trust-build.md): catalog loaded at
+   startup and hidden per session).
 4. **`HackerOs-AppMarketPlace` repository** (ADR 0188 §4 to §6):
    `categories.json`, PR template, `validate.yml` (format, manifest, commit,
    build, API check, CodeQL, capabilities comment), `publish.yml`, `packages`
