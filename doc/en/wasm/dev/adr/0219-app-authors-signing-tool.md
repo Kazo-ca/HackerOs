@@ -120,14 +120,14 @@ compile the key in with `HackerOsAppSigningKeys`.
 
 ## Questions asked to Benoit
 
-Asked on 2026-10-31; the recommendations (A) are applied in the meantime.
+Asked on 2026-10-31; Benoit chose the recommendations (A) the same day, as built.
 
-| Question | Choices | Benoit's answer |
+| Question | Choices | Benoit's answer (2026-10-31) |
 |---|---|---|
-| Q1 Where to put `keygen` and `sign` | **A HackerOS build tooling (recommended)**; B separate `dotnet` tool; C MarketPlace tool | pending |
-| Q2 Who publishes `hackeros-packages` | **A new `publish-packages.yml` workflow (recommended)**; B inside the Store workflow; C by hand | pending |
-| Q3 Without a secret | **A publish unsigned with a warning (recommended)**; B fail | pending |
-| Q4 Secret name | **A `HACKEROS_APP_SIGNING_KEY` (recommended)**; B `HACK_STORE_SIGNING_KEY` | pending |
+| Q1 Where to put `keygen` and `sign` | **A HackerOS build tooling (recommended)**; B separate `dotnet` tool; C MarketPlace tool | A |
+| Q2 Who publishes `hackeros-packages` | **A new `publish-packages.yml` workflow (recommended)**; B inside the Store workflow; C by hand | A |
+| Q3 Without a secret | **A publish unsigned with a warning (recommended)**; B fail | A |
+| Q4 Secret name | **A `HACKEROS_APP_SIGNING_KEY` (recommended)**; B `HACK_STORE_SIGNING_KEY` | A |
 
 ## Tasks
 
