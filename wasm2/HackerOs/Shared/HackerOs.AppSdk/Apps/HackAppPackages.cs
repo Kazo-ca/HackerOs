@@ -38,8 +38,12 @@ public static class HackAppPackages
     public static Task<IReadOnlyList<HackInstalledPackage>> GetInstalledAsync(CancellationToken cancellationToken = default) =>
         CallAsync(gateway => gateway.GetInstalledPackagesAsync(cancellationToken));
 
-    /// <summary>Reads what a repository publishes.</summary>
-    /// <param name="source"><c>github:owner/repo</c>, <c>owner/repo</c> or <c>https://github.com/owner/repo</c>.</param>
+    /// <summary>Reads what a repository or a catalog publishes for an app.</summary>
+    /// <param name="source">
+    /// <c>github:owner/repo</c>, <c>owner/repo</c>, <c>https://github.com/owner/repo</c>,
+    /// <c>catalog:name/app.id</c>, or an app ID alone, looked up in the catalogs (the official one
+    /// first, then by name, ADR 0212 §4).
+    /// </param>
     /// <param name="cancellationToken">Cancels the download.</param>
     /// <exception cref="HackPackageException">The source is invalid, publishes nothing or cannot be downloaded.</exception>
     /// <exception cref="HackUnauthorizedAccessException">This app lacks <c>apps.manage</c>.</exception>
@@ -56,7 +60,10 @@ public static class HackAppPackages
     /// untrusted source, or when the block list stops it, an administrator signs in and approves in
     /// the OS's window, every time (§4).
     /// </summary>
-    /// <param name="source">The repository, optionally followed by <c>@version</c>.</param>
+    /// <param name="source">
+    /// The repository, <c>catalog:name/app.id</c> or an app ID alone (looked up in the catalogs),
+    /// optionally followed by <c>@version</c>.
+    /// </param>
     /// <param name="scope">For whom; <see cref="HackPackageScope.Auto"/> picks the personal install when allowed.</param>
     /// <param name="cancellationToken">Cancels the download, the approval and the writes.</param>
     /// <exception cref="HackPackageException">The package is refused; its code says why.</exception>
@@ -128,6 +135,62 @@ public static class HackAppPackages
         ArgumentException.ThrowIfNullOrWhiteSpace(value);
         return CallAsync(gateway => gateway.SetPackagePolicyAsync(kind, value, blocked, cancellationToken));
     }
+
+    /// <summary>
+    /// Reads every catalog of <c>/etc/hackeros/app-sources.config</c> (ADR 0188 §6): its categories
+    /// and apps, with the trust level of the catalog. A catalog that cannot be read is listed with
+    /// <see cref="HackAppCatalog.Error"/> and no app. A copy is reused for five minutes.
+    /// </summary>
+    /// <param name="refresh">Downloads again even when a recent copy exists.</param>
+    /// <param name="cancellationToken">Cancels the downloads.</param>
+    /// <exception cref="HackUnauthorizedAccessException">This app lacks <c>apps.manage</c>.</exception>
+    /// <exception cref="HackExecutionContextMissingException">No app context is active.</exception>
+    public static Task<IReadOnlyList<HackAppCatalog>> GetCatalogsAsync(bool refresh = false, CancellationToken cancellationToken = default) =>
+        CallAsync(gateway => gateway.GetPackageCatalogsAsync(refresh, cancellationToken));
+
+    /// <summary>Downloads the long Markdown description of an app of a catalog, in <paramref name="language"/> or else in English.</summary>
+    /// <param name="app">The app.</param>
+    /// <param name="version">One of its versions; its newest by default.</param>
+    /// <param name="language">Language code, such as <c>fr</c>.</param>
+    /// <param name="cancellationToken">Cancels the download.</param>
+    /// <returns>The Markdown text, or <see langword="null"/> when it has none.</returns>
+    /// <exception cref="HackPackageException">The catalog cannot be read.</exception>
+    /// <exception cref="HackUnauthorizedAccessException">This app lacks <c>apps.manage</c>.</exception>
+    /// <exception cref="HackExecutionContextMissingException">No app context is active.</exception>
+    public static Task<string?> GetCatalogDescriptionAsync(
+        HackCatalogApp app, string? version = null, string language = "en", CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(app);
+        ArgumentException.ThrowIfNullOrWhiteSpace(language);
+        return CallAsync(gateway => gateway.GetCatalogDescriptionAsync(app.Catalog, app.AppId, version ?? app.LatestVersion, language, cancellationToken));
+    }
+
+    /// <summary>
+    /// Lists the installed apps whose source publishes a newer version (ADR 0188 §3). The OS also
+    /// checks by itself at sign-in and every <c>[updates] interval-hours</c>, and shows the count on
+    /// the Hack Store's icon.
+    /// </summary>
+    /// <param name="cancellationToken">Cancels the downloads.</param>
+    /// <exception cref="HackUnauthorizedAccessException">This app lacks <c>apps.manage</c>.</exception>
+    /// <exception cref="HackExecutionContextMissingException">No app context is active.</exception>
+    public static Task<IReadOnlyList<HackPackageUpdate>> GetUpdatesAsync(CancellationToken cancellationToken = default) =>
+        CallAsync(gateway => gateway.GetPackageUpdatesAsync(cancellationToken));
+
+    /// <summary>
+    /// Restarts HackerOS so that the apps installed, updated or removed since it started take
+    /// effect (ADR 0182, Q5 C): like Start ▸ Restart, without an administrator, and only when such a
+    /// change is waiting (ADR 0212 §3). The session ends; the returned task may never complete.
+    /// </summary>
+    /// <param name="cancellationToken">Cancels the request before the restart started.</param>
+    /// <exception cref="HackPackageException"><c>apps.package.nothing-pending</c>: no change waits for a restart.</exception>
+    /// <exception cref="HackUnauthorizedAccessException">This app lacks <c>apps.manage</c>.</exception>
+    /// <exception cref="HackExecutionContextMissingException">No app context is active.</exception>
+    public static async Task RestartToFinishAsync(CancellationToken cancellationToken = default) =>
+        await CallAsync(async gateway =>
+        {
+            await gateway.RestartForPackagesAsync(cancellationToken).ConfigureAwait(false);
+            return true;
+        }).ConfigureAwait(false);
 
     private static async Task<T> CallAsync<T>(Func<IAppManagementGateway, ValueTask<T>> call)
     {

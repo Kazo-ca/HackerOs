@@ -12,6 +12,7 @@ namespace HackerOs.Platform.Blazor.Shell;
 public sealed partial class ShellAppIcon : IDisposable
 {
     private IconPackService? _iconPacks;
+    private Core.Apps.Packages.AppUpdateMonitor? _updates;
 
     /// <summary>The app whose icon is drawn.</summary>
     [Parameter, EditorRequired]
@@ -35,6 +36,11 @@ public sealed partial class ShellAppIcon : IDisposable
     [Inject]
     private IServiceProvider Services { get; set; } = null!;
 
+    /// <summary>The count drawn on the icon (the Hack Store's updates), 0 for none.</summary>
+    private int BadgeCount => _updates?.GetBadgeCount(App.Id) ?? 0;
+
+    private string BadgeText => BadgeCount > 99 ? "99+" : BadgeCount.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
     /// <summary>The image to draw, or <see langword="null"/> for the Lucide icon.</summary>
     private string? ImageUrl
     {
@@ -55,6 +61,13 @@ public sealed partial class ShellAppIcon : IDisposable
         {
             _iconPacks.Changed += OnIconPackChanged;
         }
+
+        // ADR 0212 §5: the Hack Store's update count; optional like the icon packs.
+        _updates = Services.GetService<Core.Apps.Packages.AppUpdateMonitor>();
+        if (_updates is not null)
+        {
+            _updates.Changed += OnIconPackChanged;
+        }
     }
 
     /// <inheritdoc />
@@ -63,6 +76,11 @@ public sealed partial class ShellAppIcon : IDisposable
         if (_iconPacks is not null)
         {
             _iconPacks.Changed -= OnIconPackChanged;
+        }
+
+        if (_updates is not null)
+        {
+            _updates.Changed -= OnIconPackChanged;
         }
     }
 

@@ -708,4 +708,16 @@ Cancel: decide at the next launch.</value>
   <data name="Admin.App.EditAppPolicy" xml:space="preserve">
     <value>Change the app block list: {0}</value>
   </data>
+  <data name="AppUpdates.Notification.Title" xml:space="preserve">
+    <value>App updates</value>
+  </data>
+  <data name="AppUpdates.Notification.One" xml:space="preserve">
+    <value>1 app can be updated in the Hack Store.</value>
+  </data>
+  <data name="AppUpdates.Notification.Many" xml:space="preserve">
+    <value>{0} apps can be updated in the Hack Store.</value>
+  </data>
+  <data name="AppUpdates.Notification.View" xml:space="preserve">
+    <value>View</value>
+  </data>
 </root>

@@ -62,7 +62,9 @@ Chaque ligne est un chantier, avec sa branche et sa PR.
    onglet Installées, « Redémarrer pour terminer », vérification des mises à
    jour (démarrage puis toutes les 6 heures), badge et notification,
    épinglage par défaut et migration des profils existants, bureau et mobile.
-   `hackpkg install <appId>` depuis les catalogues.
+   `hackpkg install <appId>` depuis les catalogues. **Fait** (branche
+   `todo/5-hackstore-app`, issue #249,
+   [ADR 0212](../adr/0212-hack-store-app-build.md)).
 6. **Première app du catalogue** : une app tierce, dans son propre dépôt et
    faite avec le modèle, qui teste toute la chaîne (dépôt de l'app → PR au
    catalogue → vérification → publication → installation par le Store).

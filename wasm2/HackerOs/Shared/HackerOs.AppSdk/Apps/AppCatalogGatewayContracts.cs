@@ -234,6 +234,36 @@ public interface IAppManagementGateway
     ValueTask<HackPackagePolicy> SetPackagePolicyAsync(
         HackPackageBlockKind kind, string value, bool blocked, CancellationToken cancellationToken = default) =>
         throw new NotSupportedException("This app-management gateway has no app block list.");
+
+    /// <summary>Reads every catalog of <c>[catalogs]</c> (ADR 0188 §6, ADR 0212 §2).</summary>
+    /// <param name="refresh">Downloads again even when a copy younger than five minutes exists.</param>
+    /// <param name="cancellationToken">Cancels the downloads.</param>
+    /// <exception cref="NotSupportedException">The gateway predates ADR 0212.</exception>
+    ValueTask<IReadOnlyList<HackAppCatalog>> GetPackageCatalogsAsync(bool refresh = false, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This app-management gateway cannot read app catalogs.");
+
+    /// <summary>Downloads the long Markdown description of an app of a catalog.</summary>
+    /// <param name="catalog">Catalog name.</param>
+    /// <param name="appId">The app.</param>
+    /// <param name="version">One of its versions.</param>
+    /// <param name="language">Language wanted; English when it has none in that language.</param>
+    /// <param name="cancellationToken">Cancels the download.</param>
+    /// <exception cref="NotSupportedException">The gateway predates ADR 0212.</exception>
+    ValueTask<string?> GetCatalogDescriptionAsync(
+        string catalog, string appId, string version, string language, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This app-management gateway cannot read app catalogs.");
+
+    /// <summary>Lists the installed apps whose source publishes a newer version (ADR 0188 §3).</summary>
+    /// <param name="cancellationToken">Cancels the downloads.</param>
+    /// <exception cref="NotSupportedException">The gateway predates ADR 0212.</exception>
+    ValueTask<IReadOnlyList<HackPackageUpdate>> GetPackageUpdatesAsync(CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This app-management gateway cannot check for updates.");
+
+    /// <summary>Restarts the OS so the installed, updated or removed apps take effect (ADR 0212 §3).</summary>
+    /// <param name="cancellationToken">Cancels the request before the restart started.</param>
+    /// <exception cref="NotSupportedException">The gateway predates ADR 0212.</exception>
+    ValueTask RestartForPackagesAsync(CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This app-management gateway cannot restart the OS.");
 }
 
 /// <summary>One running process of an app, as an uninstall lists it (ADR 0097, section 5).</summary>

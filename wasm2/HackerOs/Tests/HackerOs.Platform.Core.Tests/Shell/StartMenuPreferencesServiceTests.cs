@@ -11,7 +11,7 @@ public sealed class StartMenuPreferencesServiceTests
     {
         SettingsFilesHarness harness = new();
         AuthenticatedPrincipal alice = await harness.LoginAsync(harness.Alice);
-        using StartMenuPreferencesService service = new(harness.Settings, harness.Session);
+        using StartMenuPreferencesService service = new(harness.Settings, harness.Session, []);
 
         await service.InitializeAsync();
 
@@ -24,7 +24,7 @@ public sealed class StartMenuPreferencesServiceTests
     {
         SettingsFilesHarness harness = new();
         AuthenticatedPrincipal alice = await harness.LoginAsync(harness.Alice);
-        using StartMenuPreferencesService service = new(harness.Settings, harness.Session);
+        using StartMenuPreferencesService service = new(harness.Settings, harness.Session, []);
         await service.InitializeAsync();
 
         Assert.True(await service.PinAsync(alice.UserId, "org.example.unmounted"));
@@ -34,7 +34,7 @@ public sealed class StartMenuPreferencesServiceTests
         // Pins are the user's own file (ADR 0044 section 8), not a shared machine document.
         Assert.Contains("org.example.unmounted", await harness.ReadAsync("/home/alice/.config/hackeros/start-menu.json"));
 
-        using StartMenuPreferencesService reloaded = new(harness.Settings, harness.Session);
+        using StartMenuPreferencesService reloaded = new(harness.Settings, harness.Session, []);
         await reloaded.InitializeAsync();
         Assert.Equal(["org.example.unmounted"], reloaded.GetPinnedAppIds(alice.UserId));
     }
@@ -44,7 +44,7 @@ public sealed class StartMenuPreferencesServiceTests
     {
         SettingsFilesHarness harness = new();
         AuthenticatedPrincipal alice = await harness.LoginAsync(harness.Alice);
-        using StartMenuPreferencesService service = new(harness.Settings, harness.Session);
+        using StartMenuPreferencesService service = new(harness.Settings, harness.Session, []);
         await service.InitializeAsync();
         await service.PinAsync(alice.UserId, "org.hackeros.browser");
         await service.PinAsync(alice.UserId, "org.hackeros.files");
@@ -59,8 +59,56 @@ public sealed class StartMenuPreferencesServiceTests
         Assert.Empty(service.GetPinnedAppIds(harness.Bob.Id));
         Assert.Null(await harness.ReadAsync("/home/bob/.config/hackeros/start-menu.json"));
 
-        using StartMenuPreferencesService reloaded = new(harness.Settings, harness.Session);
+        using StartMenuPreferencesService reloaded = new(harness.Settings, harness.Session, []);
         await reloaded.InitializeAsync();
         Assert.Equal(service.GetPinnedAppIds(alice.UserId), reloaded.GetPinnedAppIds(alice.UserId));
+    }
+
+    [Fact]
+    public async Task A_new_profile_starts_with_the_store_pinned()
+    {
+        SettingsFilesHarness harness = new();
+        AuthenticatedPrincipal alice = await harness.LoginAsync(harness.Alice);
+        using StartMenuPreferencesService service = new(harness.Settings, harness.Session);
+
+        await service.InitializeAsync();
+
+        Assert.Equal(["org.hackeros.store"], service.GetPinnedAppIds(alice.UserId));
+        string? file = await harness.ReadAsync("/home/alice/.config/hackeros/start-menu.json");
+        Assert.Contains("\"defaultPinsApplied\":[\"org.hackeros.store\"]", file, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task An_existing_profile_gets_the_store_once_after_its_own_pins()
+    {
+        SettingsFilesHarness harness = new();
+        AuthenticatedPrincipal alice = await harness.LoginAsync(harness.Alice);
+        using (StartMenuPreferencesService before = new(harness.Settings, harness.Session, []))
+        {
+            await before.InitializeAsync();
+            await before.PinAsync(alice.UserId, "org.hackeros.terminal");
+        }
+
+        using StartMenuPreferencesService service = new(harness.Settings, harness.Session);
+        await service.InitializeAsync();
+
+        Assert.Equal(["org.hackeros.terminal", "org.hackeros.store"], service.GetPinnedAppIds(alice.UserId));
+    }
+
+    [Fact]
+    public async Task An_unpinned_store_stays_unpinned()
+    {
+        SettingsFilesHarness harness = new();
+        AuthenticatedPrincipal alice = await harness.LoginAsync(harness.Alice);
+        using (StartMenuPreferencesService service = new(harness.Settings, harness.Session))
+        {
+            await service.InitializeAsync();
+            Assert.True(await service.UnpinAsync(alice.UserId, "org.hackeros.store"));
+        }
+
+        using StartMenuPreferencesService reloaded = new(harness.Settings, harness.Session);
+        await reloaded.InitializeAsync();
+
+        Assert.Empty(reloaded.GetPinnedAppIds(alice.UserId));
     }
 }

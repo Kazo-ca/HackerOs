@@ -1,0 +1,53 @@
+.store-markdown {
+    color: var(--hos-text-primary, #e6edf3);
+    line-height: 1.55;
+    font-size: 0.92rem;
+}
+
+.store-markdown h3,
+.store-markdown h4,
+.store-markdown h5 {
+    margin: 1rem 0 0.4rem;
+    color: var(--hos-accent, #5eead4);
+    font-weight: 600;
+}
+
+.store-markdown h3 { font-size: 1.05rem; }
+.store-markdown h4 { font-size: 0.98rem; }
+.store-markdown h5 { font-size: 0.92rem; }
+
+.store-markdown p,
+.store-markdown ul,
+.store-markdown ol {
+    margin: 0 0 0.6rem;
+}
+
+.store-markdown ul,
+.store-markdown ol {
+    padding-left: 1.3rem;
+}
+
+.store-markdown code {
+    font-family: var(--hos-font-mono, ui-monospace, monospace);
+    font-size: 0.85em;
+    padding: 0.05rem 0.3rem;
+    border-radius: 4px;
+    background: rgba(94, 234, 212, 0.08);
+}
+
+.store-markdown pre {
+    overflow-x: auto;
+    padding: 0.6rem 0.8rem;
+    border: 1px solid rgba(94, 234, 212, 0.18);
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.35);
+}
+
+.store-markdown pre code {
+    padding: 0;
+    background: none;
+}
+
+.store-markdown a {
+    color: var(--hos-accent, #5eead4);
+}

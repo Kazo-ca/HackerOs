@@ -41,6 +41,7 @@
     <PackageReference Include="HackerOs.Apps.ErrorLogViewer" Version="$(HackerOsVersion)" IsSystemApp="true" />
     <PackageReference Include="HackerOs.Apps.WebServer" Version="$(HackerOsVersion)" IsSystemApp="true" />
     <PackageReference Include="HackerOs.Apps.ThemeEditor" Version="$(HackerOsVersion)" IsSystemApp="true" />
+    <PackageReference Include="HackerOs.Apps.Store" Version="$(HackerOsVersion)" IsSystemApp="true" />
     <PackageReference Include="HackerOs.Apps.Browser" Version="$(HackerOsVersion)" />
     <PackageReference Include="HackerOs.Apps.Calculator" Version="$(HackerOsVersion)" />
     <PackageReference Include="HackerOs.Apps.HackPaint" Version="$(HackerOsVersion)" />

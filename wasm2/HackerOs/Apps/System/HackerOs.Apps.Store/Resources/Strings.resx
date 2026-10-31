@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Action.InstallForEveryone" xml:space="preserve">
+    <value>Install for everyone</value>
+  </data>
+  <data name="Action.InstallForMe" xml:space="preserve">
+    <value>Install for me</value>
+  </data>
+  <data name="Action.Open" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="Action.Uninstall" xml:space="preserve">
+    <value>Uninstall</value>
+  </data>
+  <data name="Action.Update" xml:space="preserve">
+    <value>Update to {0}</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="Catalog.Failed" xml:space="preserve">
+    <value>The catalog “{0}” could not be read.</value>
+  </data>
+  <data name="Category.Other" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="Detail.Capabilities" xml:space="preserve">
+    <value>Capabilities</value>
+  </data>
+  <data name="Detail.Catalog" xml:space="preserve">
+    <value>Catalog: {0}</value>
+  </data>
+  <data name="Detail.Category" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="Detail.Dangerous" xml:space="preserve">
+    <value>Sensitive</value>
+  </data>
+  <data name="Detail.Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="Detail.Facts" xml:space="preserve">
+    <value>Information</value>
+  </data>
+  <data name="Detail.Installed" xml:space="preserve">
+    <value>Installed</value>
+  </data>
+  <data name="Detail.License" xml:space="preserve">
+    <value>License</value>
+  </data>
+  <data name="Detail.NoCapability" xml:space="preserve">
+    <value>This app asks for no capability.</value>
+  </data>
+  <data name="Detail.NotInCatalog" xml:space="preserve">
+    <value>This app is no longer listed in the catalogs.</value>
+  </data>
+  <data name="Detail.Published" xml:space="preserve">
+    <value>Published</value>
+  </data>
+  <data name="Detail.Screenshot" xml:space="preserve">
+    <value>Screenshot of {0}</value>
+  </data>
+  <data name="Detail.Screenshots" xml:space="preserve">
+    <value>Screenshots</value>
+  </data>
+  <data name="Detail.Size" xml:space="preserve">
+    <value>Size</value>
+  </data>
+  <data name="Detail.Source" xml:space="preserve">
+    <value>Source</value>
+  </data>
+  <data name="Detail.Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="Dismiss" xml:space="preserve">
+    <value>Dismiss</value>
+  </data>
+  <data name="Error.Blocked" xml:space="preserve">
+    <value>This app is blocked on this computer.</value>
+  </data>
+  <data name="Error.Generic" xml:space="preserve">
+    <value>The operation failed: {0}</value>
+  </data>
+  <data name="Error.Incompatible" xml:space="preserve">
+    <value>This version is not compatible: {0}</value>
+  </data>
+  <data name="Error.InstalledForSystem" xml:space="preserve">
+    <value>This app is already installed for everyone.</value>
+  </data>
+  <data name="Error.NotAllowed" xml:space="preserve">
+    <value>You are not allowed to do this.</value>
+  </data>
+  <data name="Error.NotApproved" xml:space="preserve">
+    <value>The installation was not approved.</value>
+  </data>
+  <data name="Error.Offline" xml:space="preserve">
+    <value>The catalog cannot be reached. Check the network.</value>
+  </data>
+  <data name="Error.Unsupported" xml:space="preserve">
+    <value>This HackerOS cannot manage packages.</value>
+  </data>
+  <data name="Home.Empty" xml:space="preserve">
+    <value>No app is available in the catalogs yet.</value>
+  </data>
+  <data name="Home.SeeAll" xml:space="preserve">
+    <value>See all ({0})</value>
+  </data>
+  <data name="Installed.Empty" xml:space="preserve">
+    <value>No app from the catalogs is installed.</value>
+  </data>
+  <data name="Installed.Title" xml:space="preserve">
+    <value>Installed apps</value>
+  </data>
+  <data name="Installed.UpdateAll" xml:space="preserve">
+    <value>Update all ({0})</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Loading the catalogs…</value>
+  </data>
+  <data name="Message.InstalledForEveryone" xml:space="preserve">
+    <value>{0} {1} is installed for everyone.</value>
+  </data>
+  <data name="Message.InstalledForMe" xml:space="preserve">
+    <value>{0} {1} is installed for you.</value>
+  </data>
+  <data name="Message.NothingPending" xml:space="preserve">
+    <value>Nothing waits for a restart.</value>
+  </data>
+  <data name="Message.Removed" xml:space="preserve">
+    <value>{0} is uninstalled.</value>
+  </data>
+  <data name="Message.Updated" xml:space="preserve">
+    <value>{0} is updated to {1}.</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Refresh the catalogs</value>
+  </data>
+  <data name="Restart.Button" xml:space="preserve">
+    <value>Restart to finish</value>
+  </data>
+  <data name="Restart.Text" xml:space="preserve">
+    <value>Some changes take effect after HackerOS restarts.</value>
+  </data>
+  <data name="Scope.Everyone" xml:space="preserve">
+    <value>for everyone</value>
+  </data>
+  <data name="Scope.Me" xml:space="preserve">
+    <value>for me</value>
+  </data>
+  <data name="Search.Label" xml:space="preserve">
+    <value>Search the Hack Store</value>
+  </data>
+  <data name="Search.None" xml:space="preserve">
+    <value>No app matches “{0}”.</value>
+  </data>
+  <data name="Search.Placeholder" xml:space="preserve">
+    <value>Search apps</value>
+  </data>
+  <data name="Search.Results.Many" xml:space="preserve">
+    <value>{0} results</value>
+  </data>
+  <data name="Search.Results.One" xml:space="preserve">
+    <value>{0} result</value>
+  </data>
+  <data name="State.InstalledForEveryone" xml:space="preserve">
+    <value>Installed for everyone</value>
+  </data>
+  <data name="State.InstalledForMe" xml:space="preserve">
+    <value>Installed for me</value>
+  </data>
+  <data name="State.PendingRestart" xml:space="preserve">
+    <value>Restart to finish</value>
+  </data>
+  <data name="State.UpdateAvailable" xml:space="preserve">
+    <value>Update available: {0}</value>
+  </data>
+  <data name="Tabs.Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="Tabs.Installed" xml:space="preserve">
+    <value>Installed</value>
+  </data>
+  <data name="Tabs.Label" xml:space="preserve">
+    <value>Store sections</value>
+  </data>
+  <data name="Trust.Trusted" xml:space="preserve">
+    <value>Trusted</value>
+  </data>
+  <data name="Trust.Untrusted" xml:space="preserve">
+    <value>Not trusted</value>
+  </data>
+  <data name="Trust.Verified" xml:space="preserve">
+    <value>Verified</value>
+  </data>
+  <data name="Working" xml:space="preserve">
+    <value>Working…</value>
+  </data>
+</root>

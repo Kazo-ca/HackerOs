@@ -713,6 +713,27 @@ public static class EcosystemServiceCollectionExtensions
             defaults: provider.GetRequiredService<AppPackageDefaults>()));
         // ADR 0189 §3: the installed apps of the catalog and who sees them; a browser host fills it at boot.
         services.TryAddSingleton<InstalledPackageCatalog>();
+        // ADR 0212 §5: the Hack Store's update check (sign-in, then every [updates] interval-hours).
+        // Scoped like the session it watches; it reads the machine's sources as the system.
+        services.TryAddScoped(static provider => new AppUpdateMonitor(
+            provider.GetRequiredService<AppPackageInstaller>(),
+            () => new AppFileSystemGateway(
+                provider.GetRequiredService<IFileSystemService>(),
+                provider.GetRequiredService<ISimulationClock>(),
+                new AppOperationContext
+                {
+                    AppId = OsSettingsService.ShellAppId,
+                    UserId = "system",
+                    UserName = "system",
+                    UserAuthority = AppAuthority.System,
+                    GrantedCapabilities = new HashSet<string>(AppCapabilities.All, StringComparer.Ordinal),
+                    IsSystemOperation = true
+                },
+                ["system"]),
+            () => provider.GetRequiredService<ISessionService>().CurrentPrincipal,
+            provider.GetService<INotificationQueue>(),
+            () => provider.GetRequiredService<HackerOs.Platform.Core.Globalization.SessionLocaleService>().Culture,
+            logger: provider.GetService<ILogger<AppUpdateMonitor>>()));
         services.AddSingleton<AppEnablementRegistry>(provider =>
             new AppEnablementRegistry(provider.GetRequiredService<AppCatalog>()));
         services.AddSingleton<IAppEnablementRegistry>(provider =>
@@ -780,6 +801,9 @@ public static class EcosystemServiceCollectionExtensions
                 // ADR 0189 §4: step 2 of a system install, drawn by the shell like the authentication prompt.
                 InstallApproval = () => provider.GetService<IAppInstallApprovalPrompt>(),
                 InstalledPackages = () => provider.GetService<InstalledPackageCatalog>(),
+                UpdateMonitor = () => provider.GetService<AppUpdateMonitor>(),
+                // ADR 0212 §3: « Restart to finish » restarts like Start ▸ Restart, without an administrator.
+                RestartForPackages = () => provider.GetRequiredService<SystemPowerService>().RestartAfterAsync(static () => Task.CompletedTask),
             },
             // Lazy for the same reason: ShellInterpreter depends on the orchestrator (ADR 0056 section 7).
             shellHostProvider: () => provider.GetRequiredService<ShellHostService>(),
