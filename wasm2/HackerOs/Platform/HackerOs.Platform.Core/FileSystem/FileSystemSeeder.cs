@@ -109,9 +109,6 @@ public sealed class FileSystemSeeder(
             }
         }
 
-        // ADR 0204: the built-in sound themes, freedesktop.org layout (/usr/share/sounds/<id>/).
-        await SeedSoundThemesAsync(system, cancellationToken);
-
         string home = $"/home/{userName.Value}";
         await EnsureDirectoryAsync(home, 0x01C0, userProvisioning, cancellationToken);
         await EnsureDirectoryAsync($"{home}/Desktop", 0x01C0, userProvisioning, cancellationToken);
@@ -134,8 +131,16 @@ public sealed class FileSystemSeeder(
     /// Installs every built-in sound theme (ADR 0204 section 4): <c>index.theme</c> and one
     /// <c>stereo/&lt;sound-name&gt;.oga</c> per event, root-owned 0644. Existing files are kept.
     /// </summary>
-    private async ValueTask SeedSoundThemesAsync(FileSystemAuthorizationContext system, CancellationToken cancellationToken)
+    /// <remarks>
+    /// Not part of <see cref="SeedAsync"/>: the sound service calls it after the first sign-in, in
+    /// the background, so the login does not wait for about fifty kilobytes of audio.
+    /// </remarks>
+    /// <param name="cancellationToken">Signals cancellation of the writes.</param>
+    public async ValueTask InstallSoundThemesAsync(CancellationToken cancellationToken = default)
     {
+        FileSystemAuthorizationContext system = CreateContext("system", "system");
+        await EnsureDirectoryAsync("/usr", 0x01ED, system, cancellationToken);
+        await EnsureDirectoryAsync("/usr/share", 0x01ED, system, cancellationToken);
         await EnsureDirectoryAsync(OsSoundEvents.SystemThemesDirectory, 0x01ED, system, cancellationToken);
         foreach (BuiltInSoundTheme theme in BuiltInSoundThemes.All)
         {

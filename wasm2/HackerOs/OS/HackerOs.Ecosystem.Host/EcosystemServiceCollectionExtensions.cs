@@ -1190,7 +1190,9 @@ public static class EcosystemServiceCollectionExtensions
                 provider.GetRequiredService<HackerOs.Platform.Core.Sounds.IOsSoundOutput>(),
                 provider.GetRequiredService<IEventBus>(),
                 provider.GetService<HackerOs.Platform.Core.Notifications.INotificationFeed>(),
-                logger: provider.GetService<ILogger<HackerOs.Platform.Core.Sounds.OsSoundService>>()));
+                logger: provider.GetService<ILogger<HackerOs.Platform.Core.Sounds.OsSoundService>>(),
+                installBuiltInThemes: cancellationToken =>
+                    provider.GetRequiredService<FileSystemSeeder>().InstallSoundThemesAsync(cancellationToken)));
         // ADR 0103: user themes of /etc/hackeros/themes and ~/.config/hackeros/themes.
         services.AddScoped<HackerOs.Platform.Core.Appearance.UserThemeCatalogService>(provider =>
             new HackerOs.Platform.Core.Appearance.UserThemeCatalogService(
