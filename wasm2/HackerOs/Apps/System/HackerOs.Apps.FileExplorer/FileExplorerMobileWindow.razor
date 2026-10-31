@@ -74,16 +74,19 @@
         }
 
         <div class="mobile-files @(_showTrash ? "hidden" : null)">
-            <HackFileView InitialDirectory="@_initialDirectory.Value"
-                          Mode="ToContractMode(_state.ViewMode)"
-                          ModeChanged="OnModeChanged"
-                          OpenOnTap="true"
-                          Filter="_searchFilter"
-                          Navigated="OnMobileNavigated"
-                          SelectionChanged="OnMobileSelectionChanged"
-                          ContextMenuOpening="OnFileMenuOpeningAsync"
-                          ErrorOccurred="ReportError"
-                          ControllerChanged="OnMobileControllerChangedAsync" />
+            @* The explorer's own windows see inside the .zip files (ADR 0185 §6-9). *@
+            <CascadingValue Name="@ExplorerFileView.ArchiveBrowsingName" Value="true" IsFixed="true">
+                <HackFileView InitialDirectory="@_initialDirectory.Value"
+                              Mode="ToContractMode(_state.ViewMode)"
+                              ModeChanged="OnModeChanged"
+                              OpenOnTap="true"
+                              Filter="_searchFilter"
+                              Navigated="OnMobileNavigated"
+                              SelectionChanged="OnMobileSelectionChanged"
+                              ContextMenuOpening="OnFileMenuOpeningAsync"
+                              ErrorOccurred="ReportError"
+                              ControllerChanged="OnMobileControllerChangedAsync" />
+            </CascadingValue>
         </div>
     </main>
 

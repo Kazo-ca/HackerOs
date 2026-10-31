@@ -92,6 +92,10 @@ This section lists what is released in the `main` branch and online.
   ([`taskbar-context-menus.md`](dev/taskbar-context-menus.md))
   The Start menu shows the signed-in user and their Power button: sign out or
   restart. ([ADR 0195](dev/adr/0195-start-menu-power-button.md))
+- **Notification bubbles**: each notification from the OS or an app shows for
+  a few seconds above the taskbar (at the top on a phone), then stays in the
+  clock panel. A ready update arrives there with its "Restart" button.
+  ([`notification-toasts.md`](dev/notification-toasts.md))
 - **Multiple screens**: each extra screen opens in its own browser window,
   with its own taskbar, and the OS remembers them. Windows can be dragged from
   one screen to another. ([`screen-service.md`](dev/screen-service.md),
@@ -120,6 +124,10 @@ This section lists what is released in the `main` branch and online.
   Send to menu, drag out of the browser to download (Chrome and Edge),
   network drives refreshed on their own.
   ([ADR 0185](dev/adr/0185-file-explorer-improvements.md))
+- **`.zip` archive opened as a folder** in the explorer, read-only: an opened
+  file is extracted to `/tmp`, dragging out of the archive extracts.
+  ([ADR 0185](dev/adr/0185-file-explorer-improvements.md),
+  [`file-explorer.md`](dev/file-explorer.md))
 - **Trash** with restore. ([`trash.md`](dev/trash.md))
 - **Default applications** per file type, for each user.
   ([`user-file-associations.md`](dev/user-file-associations.md))
@@ -269,9 +277,8 @@ points to its PR.
 
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
-| `.zip` archive opened as a folder | The explorer browses a `.zip` archive read-only; an opened file is extracted to `/tmp`. The rest of the ADR is available. | [0185](dev/adr/0185-file-explorer-improvements.md) | [#241](https://github.com/Kazo-ca/HackerOs/issues/241) |
 | Switch user | Open another session without closing the first one, from the Start menu's Power button (greyed out for now, always greyed out for the guest). | [0195](dev/adr/0195-start-menu-power-button.md) | [#290](https://github.com/Kazo-ca/HackerOs/issues/290) |
-| Windows and taskbar | Notification toasts, window animations, hover previews. The time zone ([ADR 0193](dev/adr/0193-local-time-and-time-zone.md)) and the taskbar menus ([ADR 0194](dev/adr/0194-taskbar-context-menus.md)) are available. | Coming | [#242](https://github.com/Kazo-ca/HackerOs/issues/242) |
+| Windows and taskbar | Window animations, hover previews. The time zone ([ADR 0193](dev/adr/0193-local-time-and-time-zone.md)), the taskbar menus ([ADR 0194](dev/adr/0194-taskbar-context-menus.md)) and the notification bubbles ([ADR 0197](dev/adr/0197-notification-toasts.md)) are available. | Coming | [#242](https://github.com/Kazo-ca/HackerOs/issues/242) |
 
 ### Hack Store
 
