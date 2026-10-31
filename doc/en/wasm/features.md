@@ -287,6 +287,12 @@ This section lists what is released in the `main` branch and online.
   ([ADR 0188](dev/adr/0188-hack-store-and-app-catalog.md),
   [ADR 0212](dev/adr/0212-hack-store-app-build.md),
   [ADR 0215](dev/adr/0215-hack-store-answers-notification-and-ambiguous-app-id.md))
+- **Installs without a restart, and safe**: an application installed or
+  updated opens at once if it was not already loaded. The packages of a source
+  that has a key are signed and verified, the install is transactional
+  (nothing broken after a power cut, `hackpkg repair`), the previous version
+  is kept for "Go back to" (`hackpkg rollback`) and the application's data is
+  backed up before its first start in a new version. ([ADR 0214](dev/adr/0214-hack-store-hot-add-signing-transactions.md))
 - **Theme packs**: the Hack Store Themes tab installs `.hacktheme` packs
   (themes, wallpapers, icons, sounds and cursors), for oneself without an
   administrator or for everyone with the two-step approval. A pack holds no
@@ -323,7 +329,7 @@ points to its PR.
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Application catalog | Catalog format, checking and publishing of the offered applications. | [0188](dev/adr/0188-hack-store-and-app-catalog.md) | [AppMarketPlace #1](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/1) |
-| Hack Store, next steps | Adding without restart, package signing, transactional install. | [0188](dev/adr/0188-hack-store-and-app-catalog.md) | [#251](https://github.com/Kazo-ca/HackerOs/issues/251) |
+| Signing tool for authors | Sign the packages published from a GitHub repository (`github:` sources). | [0214](dev/adr/0214-hack-store-hot-add-signing-transactions.md) | [#321](https://github.com/Kazo-ca/HackerOs/issues/321) |
 
 ### Personalization
 

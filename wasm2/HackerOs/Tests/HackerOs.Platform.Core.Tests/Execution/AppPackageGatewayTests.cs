@@ -189,7 +189,7 @@ public sealed partial class AppPackageGatewayTests
     }
 
     [Fact]
-    public async Task An_update_replaces_the_previous_version_folder()
+    public async Task An_update_keeps_the_previous_version_folder_for_a_rollback()
     {
         Harness harness = await Harness.CreateAsync();
         harness.Publish(Trusted, "1.0.0");
@@ -205,8 +205,11 @@ public sealed partial class AppPackageGatewayTests
         Assert.Equal("1.0.0", info.InstalledVersion);
         Assert.True(info.InstalledSystemWide);
         Assert.Equal("1.0.0", report.PreviousVersion);
-        Assert.Null(await harness.Settings.StatAsync($"{Folder}/1.0.0"));
+        // ADR 0214 §4.1: the replaced version stays on disk for hackpkg rollback.
+        Assert.NotNull(await harness.Settings.StatAsync($"{Folder}/1.0.0/manifest.json"));
         Assert.NotNull(await harness.Settings.StatAsync($"{Folder}/1.1.0/manifest.json"));
+        Assert.Null(await harness.Settings.StatAsync($"{Folder}/{AppPackageInstaller.TransactionFileName}"));
+        Assert.Null(await harness.Settings.StatAsync($"{Folder}/1.1.0{AppPackageInstaller.PartialSuffix}"));
         Assert.Equal(
             "apps.package.already-installed",
             (await Assert.ThrowsAsync<HackPackageException>(() => gateway.InstallPackageAsync(Trusted, HackPackageScope.System).AsTask())).Code);

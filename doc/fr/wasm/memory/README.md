@@ -108,6 +108,14 @@ jour à la fin de chaque série ou quand une convention change.
   Benoit (fichiers lus en place, CI du catalogue, rien appliqué après
   l'installation, pas de badge), réponses A pour les quatre (2026-10-31). CI du catalogue :
   issue `TODO` AppMarketPlace #4.
+- **Hack Store, étapes suivantes** (ADR 0214, issue `TODO` #251, série
+  `todo/base`, branche `todo/19-hackstore-later`) : ajout sans redémarrage
+  (catalogue vivant `AppCatalog.Changed`), signatures ECDSA P-256
+  (`[signing-keys]`, `HackerOsAppSigningKeys`), journal `.transaction`,
+  `hackpkg rollback`/`repair`, `AppDataGuard`. Cinq questions posées à Benoit,
+  réponse A à chacune. La clé du catalogue officiel reste à créer par Benoit
+  (`keygen`, secret `HACK_STORE_SIGNING_KEY`) ; outil pour les auteurs :
+  issue `TODO` #321.
 - **Bulles de notification** (ADR 0197, chantier 1 de #242, série
   `todo/base`) : bulles des notifications et « Update ready » en
   notification persistante avec « Redémarrer ». Voir
@@ -139,7 +147,7 @@ jour à la fin de chaque série ou quand une convention change.
   0191 serveur local installable, 0192 `features.md` et exception à l'ADR 0135,
   0193 heure locale, 0194 menus de la barre des tâches, 0195 bouton
   Marche/arrêt du menu Démarrer ; série `todo/base` : 0197 bulles de
-  notification, 0201 « Changer d'utilisateur » reste grisé, 0203 packs d'icônes, 0207 modèle `hackeros-solution`, 0208 sources de confiance du Hack Store, 0212 app Hack Store, 0213 packs de thèmes, 0214 réservée pour l'issue #251, 0215 réponses du Hack Store (pas de badge, appId ambigu refusé) (les
+  notification, 0201 « Changer d'utilisateur » reste grisé, 0203 packs d'icônes, 0207 modèle `hackeros-solution`, 0208 sources de confiance du Hack Store, 0212 app Hack Store, 0213 packs de thèmes, 0214 Hack Store sans redémarrage, signature et transactions, 0215 réponses du Hack Store (pas de badge, appId ambigu refusé) (les
   autres numéros jusqu'à 0211 sont réservés par ses chantiers). 0196 est prise
   par la PR #294 (point des notifications non lues). **Prochain numéro libre :
   0216.** Avant d'en

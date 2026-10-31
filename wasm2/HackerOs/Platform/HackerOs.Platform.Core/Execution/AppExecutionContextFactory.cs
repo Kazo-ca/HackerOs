@@ -293,6 +293,7 @@ public sealed class AppExecutionContextFactory
             {
                 UpdateMonitor = _appCatalog.UpdateMonitor,
                 RestartForPackages = _appCatalog.RestartForPackages,
+                InstalledAppsActivator = _appCatalog.InstalledAppsActivator,
             };
         AppClipboardGateway clipboardGateway = new(_clipboard, capabilities, process.SessionId, process.Pid);
 
@@ -579,6 +580,12 @@ public sealed record AppCatalogGatewayServices(
     /// an administrator; <see langword="null"/> leaves it unsupported.
     /// </summary>
     public Func<Task>? RestartForPackages { get; init; }
+
+    /// <summary>
+    /// Gets what adds, updates and removes installed apps in the running catalog without a restart
+    /// (ADR 0214 §1); <see langword="null"/> leaves every change for the next start of the OS.
+    /// </summary>
+    public Func<Apps.Packages.IInstalledAppsActivator?>? InstalledAppsActivator { get; init; }
 }
 
 /// <summary>

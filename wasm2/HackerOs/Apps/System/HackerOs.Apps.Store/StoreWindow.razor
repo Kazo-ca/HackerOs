@@ -279,12 +279,24 @@
                 case StoreAppState.UpdateAvailable:
                     <button type="button" class="store-button is-primary" disabled="@busy" @onclick="() => UpdateAsync(entry)">@L["Action.Update", entry.Update!.AvailableVersion]</button>
                     <button type="button" class="store-button" disabled="@busy" @onclick="() => OpenAsync(entry)">@L["Action.Open"]</button>
+                    @if (entry.Installed?.PreviousVersion is { } previous)
+                    {
+                        <button type="button" class="store-button" disabled="@busy" @onclick="() => RollbackAsync(entry)">
+                            <HackerIcon Library="IconLibrary.Lucide" Name="undo-2" Size="14" Title="" /> @L["Action.Rollback", previous]
+                        </button>
+                    }
                     <button type="button" class="store-button is-danger" disabled="@busy" @onclick="() => RemoveAsync(entry)">@L["Action.Uninstall"]</button>
                     break;
                 case StoreAppState.Installed:
                     <button type="button" class="store-button is-primary" disabled="@busy" @onclick="() => OpenAsync(entry)">
                         <HackerIcon Library="IconLibrary.Lucide" Name="play" Size="14" Title="" /> @L["Action.Open"]
                     </button>
+                    @if (entry.Installed?.PreviousVersion is { } kept)
+                    {
+                        <button type="button" class="store-button" disabled="@busy" @onclick="() => RollbackAsync(entry)">
+                            <HackerIcon Library="IconLibrary.Lucide" Name="undo-2" Size="14" Title="" /> @L["Action.Rollback", kept]
+                        </button>
+                    }
                     <button type="button" class="store-button is-danger" disabled="@busy" @onclick="() => RemoveAsync(entry)">@L["Action.Uninstall"]</button>
                     break;
                 case StoreAppState.PendingRestart:

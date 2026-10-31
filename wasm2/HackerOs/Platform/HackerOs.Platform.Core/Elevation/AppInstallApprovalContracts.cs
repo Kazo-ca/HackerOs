@@ -14,7 +14,10 @@ public enum AppInstallApprovalOperation
     Update = 1,
 
     /// <summary>The removal of an installed app.</summary>
-    Remove = 2
+    Remove = 2,
+
+    /// <summary>The return of an installed app to the version its last update kept (ADR 0214 §4.1).</summary>
+    Rollback = 3
 }
 
 /// <summary>
@@ -51,6 +54,12 @@ public sealed record AppInstallApprovalRequest(
 {
     /// <summary>Gets why a personal install needs an administrator, when the block list stopped it (ADR 0189 §5).</summary>
     public AppBlockReason? BlockReason { get; init; }
+
+    /// <summary>
+    /// Gets whether a key of the source verified the package's signature (ADR 0214 §2);
+    /// <see langword="null"/> for a removal or a rollback, which download nothing.
+    /// </summary>
+    public bool? Signed { get; init; }
 }
 
 /// <summary>How the approval window ended.</summary>
