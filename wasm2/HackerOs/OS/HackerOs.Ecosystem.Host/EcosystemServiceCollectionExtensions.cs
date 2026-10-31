@@ -1193,6 +1193,7 @@ public static class EcosystemServiceCollectionExtensions
         // IJSRuntime scoping note.
         services.AddScoped<UiPlatformPreferenceService>();
         services.AddScoped<HackerOs.Platform.Core.Appearance.ThemePreferenceService>();
+        services.AddScoped<HackerOs.Platform.Core.Appearance.WallpaperService>();
         // ADR 0105: accessibility.config resolved against the host's media queries (browser probe,
         // so Scoped like the environment probe above).
         services.AddScoped<HackerOs.Platform.Core.Appearance.IHostAccessibilityProbe, BrowserHostAccessibilityProbe>();

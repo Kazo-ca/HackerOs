@@ -74,6 +74,8 @@ at the end of each series or when a convention changes.
   [`app-repository.md`](../framework/app-repository.md), issue #246). The
   `HackerOs-AppTemplate` repository will only be regenerated with a submodule
   on the release that contains this template (draft PR in that repository).
+  Image wallpapers done too ([ADR 0202](../dev/adr/0202-desktop-wallpaper-images.md),
+  issue #254, [`wallpapers.md`](../dev/wallpapers.md)).
   ADR 0206 is taken by issue #247 (installed apps' `wwwroot/` served by the
   service worker, [ADR 0206](../dev/adr/0206-serve-installed-app-assets.md)).
 - **Icon packs** (ADR 0203, `TODO` issue #255, series `todo/base`): PNG packs
@@ -100,6 +102,10 @@ at the end of each series or when a convention changes.
   (built-in `hackeros` and `soft` themes written by `FileSystemSeeder`) and
   `~/.local/share/sounds`, `sound.config`, Settings ▸ Sound. No SDK API to play a
   sound (question Q2 to Benoit). See [`system-sounds.md`](../dev/system-sounds.md).
+- **Taskbar previews** (ADR 0199, work item 5 of issue #242, `todo/` series,
+  branch `todo/13-taskbar-previews` into `todo/base`): reduced live copy of a
+  window when hovering its button, and peek. Number 0199 taken from the
+  0197 to 0205 reservation of the `todo/` series.
 - **ADR**: 0001 to 0171 and 0173 to 0195 exist on `main` (a few numbers skipped;
   0141 and 0172 were not used). Recent landmarks: 0173 automatic release, 0174
   new-version announcement, 0175 "New folder" in dialogs, 0176 app repository

@@ -154,6 +154,11 @@ HackerOs.Platform.Blazor.Security.AppInstallApprovalOverlay.AppInstallApprovalOv
 HackerOs.Platform.Blazor.Security.AppInstallApprovalOverlay.Broker.get -> HackerOs.Platform.Blazor.Security.AppInstallApprovalBroker!
 HackerOs.Platform.Blazor.Security.AppInstallApprovalOverlay.Broker.set -> void
 HackerOs.Platform.Blazor.Security.AppInstallApprovalOverlay.Dispose() -> void
+HackerOs.Platform.Blazor.Shell.DesktopWallpaper
+HackerOs.Platform.Blazor.Shell.DesktopWallpaper.DesktopWallpaper() -> void
+HackerOs.Platform.Blazor.Shell.DesktopWallpaper.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Platform.Blazor.Shell.DesktopWallpaper.ScreenNumber.get -> int
+HackerOs.Platform.Blazor.Shell.DesktopWallpaper.ScreenNumber.set -> void
 HackerOs.Platform.Blazor.Shell.NotificationToastPlacement
 HackerOs.Platform.Blazor.Shell.NotificationToastPlacement.AboveTaskbar = 0 -> HackerOs.Platform.Blazor.Shell.NotificationToastPlacement
 HackerOs.Platform.Blazor.Shell.NotificationToastPlacement.TopOfScreen = 1 -> HackerOs.Platform.Blazor.Shell.NotificationToastPlacement

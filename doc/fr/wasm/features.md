@@ -96,6 +96,8 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   fenêtres ouvertes. Un clic droit sur la barre donne le menu de la fenêtre,
   « Nouvelle fenêtre », le gestionnaire des tâches, « Afficher le bureau » et
   les fenêtres en cascade ou en mosaïque. ([`taskbar-context-menus.md`](dev/taskbar-context-menus.md))
+  Survoler le bouton d'une fenêtre montre un aperçu en direct ; s'y attarder
+  montre la fenêtre seule (« peek »). ([`taskbar-window-previews.md`](dev/taskbar-window-previews.md))
   Le menu Démarrer montre l'utilisateur connecté et son bouton Marche/arrêt :
   se déconnecter ou redémarrer. ([ADR 0195](dev/adr/0195-start-menu-power-button.md))
 - **Bulles de notification** : chaque notification de l'OS ou d'une app
@@ -231,6 +233,10 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
 
 - **Thèmes** de l'OS, et éditeur pour créer les siens.
   ([`theme-files.md`](framework/theme-files.md))
+- **Fonds d'écran en image** : une image PNG, JPEG ou WebP (4 livrées avec
+  l'OS, les siennes ou celles d'un dossier partagé), pour tous les écrans ou
+  un écran à la fois, dans Paramètres ▸ Apparence.
+  ([ADR 0202](dev/adr/0202-desktop-wallpaper-images.md), [`wallpapers.md`](dev/wallpapers.md))
 - **Anglais et français**, la langue suit la locale de l'utilisateur.
   ([`localization.md`](framework/localization.md))
 - **Accessibilité** : préférences d'affichage et d'animation, navigation au
@@ -297,7 +303,6 @@ dans `main`, le lien mène à sa PR.
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Changer d'utilisateur | Ouvrir une autre session sans fermer la première. Reste grisé dans le menu Marche/arrêt par choix de Benoit : une session à la fois, Se déconnecter pour changer de compte. | [0195](dev/adr/0195-start-menu-power-button.md), [0201](dev/adr/0201-switch-user-stays-greyed.md) | [#290](https://github.com/Kazo-ca/HackerOs/issues/290) |
-| Fenêtres et barre des tâches | Aperçus au survol. Le fuseau horaire ([ADR 0193](dev/adr/0193-local-time-and-time-zone.md)), les menus de la barre ([ADR 0194](dev/adr/0194-taskbar-context-menus.md)), les bulles de notification ([ADR 0197](dev/adr/0197-notification-toasts.md)) et les animations des fenêtres ([ADR 0198](dev/adr/0198-window-animations.md)) sont disponibles. | À venir | [#242](https://github.com/Kazo-ca/HackerOs/issues/242) |
 
 ### Hack Store
 
@@ -312,7 +317,7 @@ dans `main`, le lien mène à sa PR.
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Packs de thèmes | Format `.hacktheme` et onglet Thèmes du Hack Store. | [0190](dev/adr/0190-theme-packs.md) | [#253](https://github.com/Kazo-ca/HackerOs/issues/253) |
-| Fonds d'écran en image | Choisir une image comme fond d'écran, par écran. | [0190](dev/adr/0190-theme-packs.md) | [#254](https://github.com/Kazo-ca/HackerOs/issues/254) |
+| Fond d'écran sur mobile et menu « Définir comme fond d'écran » | L'image de fond sur l'écran d'accueil mobile, et une entrée du menu contextuel des images. Les fonds d'écran du bureau sont disponibles. | [0202](dev/adr/0202-desktop-wallpaper-images.md) | [#297](https://github.com/Kazo-ca/HackerOs/issues/297), [#298](https://github.com/Kazo-ca/HackerOs/issues/298) |
 
 ### Réseau et serveur
 

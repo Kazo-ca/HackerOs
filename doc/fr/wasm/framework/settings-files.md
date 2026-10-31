@@ -164,6 +164,9 @@ await appearance.SetManyAsync(values, SettingLayer.System);        // /etc/hacke
   libres depuis `v3/11` (ADR 0103) : l'id d'un thème intégré ou d'un fichier
   `.theme` de `/etc/hackeros/themes/` ou `~/.config/hackeros/themes/` ; un id
   inconnu donne le thème par défaut (voir [`theme-editor.md`](../dev/theme-editor.md)).
+- Dans `appearance`, `wallpaper`, `wallpaperFit` et `wallpaperScreen2` à
+  `wallpaperScreen9` choisissent le fond d'écran (ADR 0202, voir
+  [`wallpapers.md`](../dev/wallpapers.md)).
 - Aucune capacité : les droits des fichiers décident (D16). La couche
   utilisateur est écrite par l'OS au nom de l'utilisateur de la session ; la
   couche système avec les droits de fichiers de l'app appelante, donc `sudo`

@@ -92,7 +92,7 @@ soon as the Store handles packs.
 - [ ] `.hacktheme` format and checks (catalog CI and install).
 - [ ] Per-user and system install, catalogs that read packs.
 - [ ] Hack Store Themes tab.
-- [ ] Work item: image wallpapers.
+- [x] Work item: image wallpapers ([ADR 0202](0202-desktop-wallpaper-images.md)).
 - [x] Work item: icon packs. Done by [ADR 0203](0203-icon-packs.md).
 - [x] Work item: OS event sounds ([ADR 0204](0204-os-event-sounds.md)).
 - [ ] Work item: cursor themes.

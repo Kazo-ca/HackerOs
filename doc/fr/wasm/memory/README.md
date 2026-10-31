@@ -74,6 +74,8 @@ jour à la fin de chaque série ou quand une convention change.
   [`app-repository.md`](../framework/app-repository.md), issue #246). Le
   dépôt `HackerOs-AppTemplate` ne sera régénéré qu'avec un sous-module sur la
   release qui contient ce modèle (PR en brouillon dans ce dépôt).
+  Fonds d'écran en image faits aussi ([ADR 0202](../dev/adr/0202-desktop-wallpaper-images.md),
+  issue #254, [`wallpapers.md`](../dev/wallpapers.md)).
   L'ADR 0206 est prise par l'issue #247 (`wwwroot/` des apps installées servi
   par le service worker, [ADR 0206](../dev/adr/0206-serve-installed-app-assets.md)).
 - **Packs d'icônes** (ADR 0203, issue `TODO` #255, série `todo/base`) : packs
@@ -101,6 +103,10 @@ jour à la fin de chaque série ou quand une convention change.
   (jeux intégrés `hackeros` et `soft` écrits par `FileSystemSeeder`) et
   `~/.local/share/sounds`, `sound.config`, Paramètres ▸ Sons. Pas d'API SDK pour
   jouer un son (question Q2 à Benoit). Voir [`system-sounds.md`](../dev/system-sounds.md).
+- **Aperçus de la barre des tâches** (ADR 0199, chantier 5 de l'issue #242,
+  série `todo/`, branche `todo/13-taskbar-previews` vers `todo/base`) : copie
+  réduite en direct d'une fenêtre au survol de son bouton, et peek. Numéro 0199
+  pris dans la réserve 0197 à 0205 de la série `todo/`.
 - **ADR** : 0001 à 0171 et 0173 à 0195 existent sur `main` (quelques numéros sautés ;
   0141 et 0172 n'ont pas servi). Repères récents : 0173 publication automatique,
   0174 annonce de nouvelle version, 0175 « Nouveau dossier » des dialogues, 0176

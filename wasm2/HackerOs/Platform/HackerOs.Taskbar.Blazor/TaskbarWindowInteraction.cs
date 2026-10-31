@@ -29,4 +29,21 @@ internal static class TaskbarWindowInteraction
             commands.Activate(window.Id);
         }
     }
+
+    /// <summary>
+    /// Brings the window of a clicked preview to the front (ADR 0199 §3): restores it first when it is
+    /// minimized. Unlike the button, a preview never minimizes its window.
+    /// </summary>
+    public static void Show(TaskbarWindowItem window, ITaskbarCommandDispatcher commands)
+    {
+        ArgumentNullException.ThrowIfNull(window);
+        ArgumentNullException.ThrowIfNull(commands);
+
+        if (window.IsMinimized)
+        {
+            commands.Restore(window.Id);
+        }
+
+        commands.Activate(window.Id);
+    }
 }

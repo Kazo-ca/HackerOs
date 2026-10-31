@@ -1,0 +1,30 @@
+/* ADR 0202 §3, §4: the wallpaper covers the screen under the desktop icons and the windows. */
+.desktop-wallpaper {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.desktop-wallpaper.fit-fill {
+    background-size: cover;
+}
+
+.desktop-wallpaper.fit-fit {
+    background-size: contain;
+}
+
+.desktop-wallpaper.fit-stretch {
+    background-size: 100% 100%;
+}
+
+.desktop-wallpaper.fit-center {
+    background-size: auto;
+}
+
+.desktop-wallpaper.fit-tile {
+    background-size: auto;
+    background-position: top left;
+    background-repeat: repeat;
+}

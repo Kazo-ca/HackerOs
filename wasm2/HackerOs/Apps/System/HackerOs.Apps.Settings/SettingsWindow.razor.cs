@@ -3,6 +3,7 @@ using HackerOs.App.Abstractions;
 using HackerOs.AppSdk;
 using HackerOs.AppSdk.Administration;
 using HackerOs.AppSdk.Apps;
+using HackerOs.AppSdk.Blazor;
 using HackerOs.AppSdk.Globalization;
 using HackerOs.AppSdk.IO;
 using HackerOs.AppSdk.Settings;
@@ -196,6 +197,21 @@ public partial class SettingsWindow : IAsyncDisposable
         {
             _appearanceMessage = exception.Message;
         }
+    }
+
+    /// <summary>« Browse… » of the wallpaper (ADR 0202 §5): any PNG, JPEG or WebP file the user can read.</summary>
+    private async Task<string?> BrowseWallpaperAsync()
+    {
+        OpenFileDialogResult result = await OpenFileAsync(new OpenFileDialogRequest
+        {
+            Title = L["Wallpaper.Browse.Title"],
+            InitialDirectory = VirtualPath.Parse(HackUser.Describe(AppContext).HomeDirectory),
+            Filters = [new FileDialogFilter(L["Wallpaper.Browse.Filter"], [".png", ".jpg", ".jpeg", ".webp"], ["image/png", "image/jpeg", "image/webp"])],
+            RequestedAccess = SelectedFileAccess.Read
+        });
+        return result.Status == FileDialogStatus.Selected && result.Resources.Count > 0
+            ? result.Resources[0].Path.Value
+            : null;
     }
 
     /// <inheritdoc />
