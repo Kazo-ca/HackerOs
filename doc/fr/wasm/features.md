@@ -106,6 +106,9 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   s'affiche quelques secondes au-dessus de la barre (en haut sur téléphone),
   puis reste dans le panneau de l'horloge. Une mise à jour prête y arrive avec
   son bouton « Redémarrer ». ([`notification-toasts.md`](dev/notification-toasts.md))
+  Le mode **Ne pas déranger** (panneau de l'horloge ou Paramètres ▸ Notifications)
+  coupe les bulles et les sons des notifications sans les perdre ; une lune le
+  signale à côté de l'horloge. ([ADR 0216](dev/adr/0216-do-not-disturb.md))
 - **Plusieurs écrans** : chaque écran supplémentaire s'ouvre dans sa propre
   fenêtre du navigateur, avec sa barre des tâches, et l'OS s'en souvient. On
   glisse une fenêtre d'un écran à l'autre. ([`screen-service.md`](dev/screen-service.md),

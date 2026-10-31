@@ -184,3 +184,85 @@
     color: var(--hos-text-muted, #6a7e88);
     font-size: 0.74rem;
 }
+
+/* ADR 0216 §2: the "Do not disturb" switch beside the Notifications heading. */
+.clock-panel-heading-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.clock-panel-heading-row .clock-panel-heading {
+    margin: 0;
+}
+
+.dnd-switch {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-size: 0.75rem;
+    color: var(--hos-text-secondary, #a8bac4);
+}
+
+.dnd-switch input {
+    position: absolute;
+    opacity: 0;
+    width: 2.25rem;
+    height: 1.25rem;
+    margin: 0;
+    cursor: pointer;
+}
+
+.dnd-switch-track {
+    position: relative;
+    width: 2.25rem;
+    height: 1.25rem;
+    border: 1px solid var(--hos-border, #3a4b53);
+    border-radius: 999px;
+    background-color: var(--hos-bg-base, #101417);
+    transition: background-color var(--hos-transition-fast, 120ms ease), border-color var(--hos-transition-fast, 120ms ease);
+}
+
+.dnd-switch-thumb {
+    position: absolute;
+    top: 0.1563rem;
+    left: 0.1563rem;
+    width: 0.8125rem;
+    height: 0.8125rem;
+    border-radius: 50%;
+    background-color: var(--hos-text-secondary, #a8bac4);
+    transition: transform var(--hos-transition-fast, 120ms ease), background-color var(--hos-transition-fast, 120ms ease);
+}
+
+.dnd-switch input:checked + .dnd-switch-track {
+    border-color: var(--hos-info, #5fb4e6);
+    background-color: color-mix(in srgb, var(--hos-info, #5fb4e6) 18%, var(--hos-bg-base, #101417));
+}
+
+.dnd-switch input:checked + .dnd-switch-track .dnd-switch-thumb {
+    transform: translateX(1rem);
+    background-color: var(--hos-info, #5fb4e6);
+}
+
+.dnd-switch input:focus-visible + .dnd-switch-track {
+    outline: 2px solid var(--hos-focus-ring, #42d392);
+    outline-offset: 2px;
+}
+
+.dnd-switch input:disabled + .dnd-switch-track {
+    opacity: 0.6;
+}
+
+.dnd-switch input:checked ~ .dnd-switch-label {
+    color: var(--hos-text-primary, #f4f7f8);
+}
+
+.clock-panel-error {
+    margin: 0 0 0.5rem;
+    font-size: 0.75rem;
+    color: var(--hos-danger, #e5606b);
+}

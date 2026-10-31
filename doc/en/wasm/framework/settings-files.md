@@ -39,6 +39,7 @@ migration, read-only.
 | Accessibility (`highContrast`, `textScale`, `reducedMotion`, ADR 0105, see [`accessibility.md`](../dev/accessibility.md)) | `/etc/hackeros/accessibility.config` (also read by the sign-in screen) | `~/.config/hackeros/accessibility.config` |
 | Date and time (`timeZone`: `auto` or an IANA zone, ADR 0193, see [`time-zone.md`](time-zone.md)) | `/etc/hackeros/datetime.config` (also read by the sign-in screen) | `~/.config/hackeros/datetime.config` |
 | System sounds (`enabled`, `theme`, `volume`, ADR 0204, see [`system-sounds.md`](../dev/system-sounds.md)) | `/etc/hackeros/sound.config` | `~/.config/hackeros/sound.config` |
+| Do not disturb (`doNotDisturb`, ADR 0216, see [`notification-toasts.md`](../dev/notification-toasts.md)) | `/etc/hackeros/notifications.config` | `~/.config/hackeros/notifications.config` |
 | File associations | `/etc/hackeros/file-associations.json` | `~/.config/hackeros/file-associations.json` (same schema, read before the machine file, ADR 0121, [`user-file-associations.md`](../dev/user-file-associations.md)) |
 | Window manager shortcuts (`[linux]`, `[fallback]`, ADR 0095, see [`window-model.md`](window-model.md)) | `/etc/hackeros/keybindings.config` | `~/.config/hackeros/keybindings.config` |
 | "Not responding" box (`[unresponsive] dialog`, ADR 0127 §3, see [`process-priority-and-unresponsive-windows.md`](../dev/process-priority-and-unresponsive-windows.md)) | `/etc/hackeros/window-manager.config` | `~/.config/hackeros/window-manager.config` |

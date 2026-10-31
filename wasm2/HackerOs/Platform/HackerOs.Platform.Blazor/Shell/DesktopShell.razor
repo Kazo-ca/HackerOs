@@ -166,10 +166,14 @@
     };
 
     // ADR 0134 §2: the server connection icon; "Server settings" opens the Settings app.
+    // ADR 0216 §5: the "Do not disturb" moon; a click opens the clock panel, which holds the switch.
     private RenderFragment NotificationAreaFragment => builder =>
     {
-        builder.OpenComponent<ServerStatusIndicator>(0);
-        builder.AddAttribute(1, nameof(ServerStatusIndicator.OnOpenSettings), EventCallback.Factory.Create(this, OpenServerSettingsAsync));
+        builder.OpenComponent<DoNotDisturbIndicator>(0);
+        builder.AddAttribute(1, nameof(DoNotDisturbIndicator.OnClick), EventCallback.Factory.Create(this, _clockPanel.Toggle));
+        builder.CloseComponent();
+        builder.OpenComponent<ServerStatusIndicator>(2);
+        builder.AddAttribute(3, nameof(ServerStatusIndicator.OnOpenSettings), EventCallback.Factory.Create(this, OpenServerSettingsAsync));
         builder.CloseComponent();
     };
 

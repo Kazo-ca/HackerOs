@@ -102,6 +102,9 @@ This section lists what is released in the `main` branch and online.
   a few seconds above the taskbar (at the top on a phone), then stays in the
   clock panel. A ready update arrives there with its "Restart" button.
   ([`notification-toasts.md`](dev/notification-toasts.md))
+  **Do not disturb** (clock panel or Settings ▸ Notifications) stops the
+  notification bubbles and sounds without losing the notifications; a moon
+  next to the clock shows it. ([ADR 0216](dev/adr/0216-do-not-disturb.md))
 - **Multiple screens**: each extra screen opens in its own browser window,
   with its own taskbar, and the OS remembers them. Windows can be dragged from
   one screen to another. ([`screen-service.md`](dev/screen-service.md),

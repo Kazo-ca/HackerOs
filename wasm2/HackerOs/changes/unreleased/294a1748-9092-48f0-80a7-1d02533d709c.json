@@ -1,0 +1,18 @@
+{
+  "id": "294a1748-9092-48f0-80a7-1d02533d709c",
+  "category": "new",
+  "audience": [
+    "user"
+  ],
+  "title": {
+    "en": "Do not disturb",
+    "fr": "Ne pas déranger"
+  },
+  "description": {
+    "en": "A Do not disturb switch in the clock panel (the shade on a phone) and in Settings ▸ Notifications stops the notification bubbles and sounds, errors included. Notifications still go to the clock panel and the unread dot still shows them. A moon in the notification area says the mode is on; the choice is saved for each user in ~/.config/hackeros/notifications.config.",
+    "fr": "Un interrupteur Ne pas déranger dans le panneau de l'horloge (le volet sur téléphone) et dans Paramètres ▸ Notifications coupe les bulles et les sons des notifications, erreurs comprises. Les notifications vont quand même dans le panneau de l'horloge et le point des non-lues les signale toujours. Une lune dans la zone de notification indique que le mode est activé ; le choix est enregistré pour chaque utilisateur dans ~/.config/hackeros/notifications.config."
+  },
+  "links": [
+    "doc/en/wasm/dev/adr/0216-do-not-disturb.md"
+  ]
+}

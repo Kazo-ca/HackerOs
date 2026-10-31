@@ -63,6 +63,13 @@
                 aria-expanded="@(_isShadeOpen ? "true" : "false")"
                 @onclick="ToggleShade">
             <span class="mobile-shade-grabber" aria-hidden="true"></span>
+            @if (IsDoNotDisturb)
+            {
+                @* ADR 0216 §5: the moon of "Do not disturb"; the handle's name says it too. *@
+                <span class="mobile-shade-dnd" aria-hidden="true">
+                    <HackerOs.AppSdk.Icons.HackerIcon Library="HackerOs.AppSdk.Icons.IconLibrary.Lucide" Name="moon" Size="12" Title="" />
+                </span>
+            }
             @if (UnreadNotifications > 0)
             {
                 <span class="mobile-shade-attention" aria-hidden="true"></span>
@@ -121,17 +128,31 @@
     private bool _showRecent;
     private AppUpdateAttention? _appUpdates;
     private NotificationAttention? _notificationAttention;
+    private HackerOs.Platform.Core.Notifications.DoNotDisturbService? _doNotDisturb;
 
     /// <summary>Gets the notifications not looked at yet: the dot on the shade handle (ADR 0196).</summary>
     private int UnreadNotifications => _notificationAttention?.UnreadCount ?? 0;
 
-    /// <summary>Gets the shade handle's name and tooltip, which give the unread count (ADR 0196).</summary>
-    private string ShadeName => UnreadNotifications switch
+    /// <summary>Gets whether "Do not disturb" is on: a moon on the shade handle (ADR 0216 §5).</summary>
+    private bool IsDoNotDisturb => _doNotDisturb?.IsEnabled == true;
+
+    /// <summary>
+    /// Gets the shade handle's name and tooltip, which give the unread count (ADR 0196) and say when
+    /// "Do not disturb" is on (ADR 0216 §5).
+    /// </summary>
+    private string ShadeName
     {
-        0 => L["Mobile.Shade"],
-        1 => L["Mobile.ShadeWithOneUnread"],
-        int count => L["Mobile.ShadeWithUnread", count],
-    };
+        get
+        {
+            string name = UnreadNotifications switch
+            {
+                0 => L["Mobile.Shade"],
+                1 => L["Mobile.ShadeWithOneUnread"],
+                int count => L["Mobile.ShadeWithUnread", count],
+            };
+            return IsDoNotDisturb ? L["Mobile.ShadeWithDnd", name] : name;
+        }
+    }
 
     /// <inheritdoc />
     protected override void OnInitialized()
@@ -156,6 +177,13 @@
             ISessionService? sessions = Services.GetService(typeof(ISessionService)) as ISessionService;
             _notificationAttention = new NotificationAttention(notifications, () => sessions?.CurrentPrincipal?.UserId, clock);
             _notificationAttention.Changed += Rerender;
+        }
+
+        _doNotDisturb = Services.GetService(typeof(HackerOs.Platform.Core.Notifications.DoNotDisturbService))
+            as HackerOs.Platform.Core.Notifications.DoNotDisturbService;
+        if (_doNotDisturb is not null)
+        {
+            _doNotDisturb.Changed += Rerender;
         }
 
         // ADR 0186 §4.5: the sign-in notification of unseen changes.
@@ -292,6 +320,10 @@
         {
             _notificationAttention.Changed -= Rerender;
             _notificationAttention.Dispose();
+        }
+        if (_doNotDisturb is not null)
+        {
+            _doNotDisturb.Changed -= Rerender;
         }
         _navigationHistory.Dispose();
 

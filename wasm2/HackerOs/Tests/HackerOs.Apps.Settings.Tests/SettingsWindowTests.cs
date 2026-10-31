@@ -98,7 +98,7 @@ public sealed class SettingsNavigationTests
         Assert.DoesNotContain(minimal, static page => page.Id == SettingsWindow.ApplicationPageId);
         Assert.Contains(full, static page => page.Id == SettingsWindow.BackupPageId);
         Assert.Contains(full, static page => page.Id == SettingsWindow.ApplicationPageId);
-        Assert.Equal(20, minimal.Count);
+        Assert.Equal(21, minimal.Count);
         Assert.Equal(SettingsWindow.AllPages.Count, full.Count);
     }
 
