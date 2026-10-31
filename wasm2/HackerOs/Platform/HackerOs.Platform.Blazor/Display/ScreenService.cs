@@ -119,6 +119,10 @@ public sealed class ScreenService : IAsyncDisposable
     private readonly HashSet<DisplayId> _closingOnRequest = [];
     private readonly Dictionary<int, ScreenGeometry> _geometries = [];
     private readonly SemaphoreSlim _writeLock = new(1, 1);
+    // The values of screens.config as last read or written: a save that would write the same values
+    // again (restoring the screens the file already lists) is skipped, so a later save, such as
+    // forgetting a screen closed at once, is not queued behind it. Guarded by _writeLock.
+    private readonly Dictionary<string, string> _known = new(StringComparer.Ordinal);
     private IJSObjectReference? _module;
     private DotNetObjectReference<ScreenService>? _self;
     private CancellationTokenSource? _pendingGeometrySave;
@@ -622,6 +626,7 @@ public sealed class ScreenService : IAsyncDisposable
         try
         {
             LayeredConfigSnapshot snapshot = await _settings.ReadAsync(ScreensSettingsDocuments.Document, cancellationToken);
+            await RememberAsync(snapshot.Values, cancellationToken);
             foreach ((int number, ScreenGeometry geometry) in ScreensSettingsDocuments.ReadGeometries(snapshot))
             {
                 _geometries[number] = geometry;
@@ -675,6 +680,10 @@ public sealed class ScreenService : IAsyncDisposable
                 PrimaryTaskbar = mode;
                 Changed?.Invoke();
             }
+
+            // The file may have been edited by hand (nano): what it holds now is what a save compares
+            // to. Last, so the taskbar does not wait for a write in progress.
+            await RememberAsync(snapshot.Values, CancellationToken.None);
         }
         catch (Exception exception)
         {
@@ -748,11 +757,40 @@ public sealed class ScreenService : IAsyncDisposable
         await _writeLock.WaitAsync(cancellationToken);
         try
         {
-            await _settings.SetManyAsync(ScreensSettingsDocuments.Document, values, SettingLayer.User, writer: null, cancellationToken);
+            List<KeyValuePair<string, string>> changed =
+                [.. values.Where(value => !_known.TryGetValue(value.Key, out string? known) || known.Trim() != value.Value.Trim())];
+            if (changed.Count == 0)
+            {
+                return;
+            }
+
+            await _settings.SetManyAsync(ScreensSettingsDocuments.Document, changed, SettingLayer.User, writer: null, cancellationToken);
+            foreach ((string key, string value) in changed)
+            {
+                _known[key] = value;
+            }
         }
         catch (Exception exception) when (exception is not OperationCanceledException)
         {
             _logger.LogWarning(exception, "screens: screens.config could not be written");
+        }
+        finally
+        {
+            _writeLock.Release();
+        }
+    }
+
+    /// <summary>Records what <c>screens.config</c> holds, as just read.</summary>
+    private async Task RememberAsync(IReadOnlyDictionary<string, string> values, CancellationToken cancellationToken)
+    {
+        await _writeLock.WaitAsync(cancellationToken);
+        try
+        {
+            _known.Clear();
+            foreach ((string key, string value) in values)
+            {
+                _known[key] = value;
+            }
         }
         finally
         {

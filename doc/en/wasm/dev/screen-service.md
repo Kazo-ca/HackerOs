@@ -70,7 +70,10 @@ without JavaScript), `LimitReached` (numbers 2 to 9 taken). `ScreenPermission`:
    window is moved to a free monitor and `OnScreenPlaced` gives the monitor's name.
 3. Once the surface is open, the service sends `AddDisplayCommand(screen, 0, 0,
    width, height)`, then `ChangeViewportCommand` on each size change.
-4. `open` in `screens.config` is rewritten.
+4. `open` in `screens.config` is rewritten. A save whose values the file already
+   holds (restoring the screens it lists) writes nothing: a screen closed right
+   after is then forgotten at once instead of waiting behind a useless write (about
+   1 s each in the browser store).
 
 ## 4. Closing a screen
 

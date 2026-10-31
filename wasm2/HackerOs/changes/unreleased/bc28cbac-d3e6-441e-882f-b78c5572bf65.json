@@ -1,0 +1,19 @@
+{
+  "id": "bc28cbac-d3e6-441e-882f-b78c5572bf65",
+  "category": "fixed",
+  "audience": [
+    "user"
+  ],
+  "title": {
+    "en": "A screen closed by hand is forgotten even after a quick reload",
+    "fr": "Un écran fermé à la main est oublié même après un rechargement rapide"
+  },
+  "description": {
+    "en": "Restoring the screens of the last session no longer rewrites screens.config with the values it already holds, so closing a screen right after is saved at once. The icon packs and sound themes installed in the background are recorded in /var/lib/hackeros/installed: later boots skip them, and an install cut by a reload completes at the next boot.",
+    "fr": "Restaurer les écrans de la dernière session ne réécrit plus screens.config avec les valeurs qu'il contient déjà : fermer un écran juste après est donc enregistré tout de suite. Les packs d'icônes et jeux de sons installés en arrière-plan sont notés dans /var/lib/hackeros/installed : les démarrages suivants les sautent, et une installation coupée par un rechargement se termine au démarrage suivant."
+  },
+  "links": [
+    "doc/en/wasm/dev/screen-service.md",
+    "doc/en/wasm/dev/icon-packs.md"
+  ]
+}
