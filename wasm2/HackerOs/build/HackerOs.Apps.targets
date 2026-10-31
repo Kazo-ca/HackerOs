@@ -335,6 +335,9 @@
       <_HackerOsPackWebAssets Condition="'$(_HackerOsPackWebAssets)' == ''">$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(IntermediateOutputPath)', 'staticwebassets.build.json'))</_HackerOsPackWebAssets>
       <_HackerOsPackWebAssetsArgument Condition="Exists('$(_HackerOsPackWebAssets)')"> --web-assets &quot;$(_HackerOsPackWebAssets)&quot;</_HackerOsPackWebAssetsArgument>
     </PropertyGroup>
+    <Warning Condition="'$(_HackerOsPackWebAssetsArgument)' == '' and '$(UsingMicrosoftNETSdkRazor)' == 'true'"
+             Code="HOSAPP0062"
+             Text="No static web asset manifest at '$(_HackerOsPackWebAssets)': the package holds only the assets declared in the manifest, without the rest of wwwroot/, the collocated scripts or the scoped CSS (ADR 0216)." />
     <Exec Command="&quot;$(_HackerOsDotnetHost)&quot; &quot;$(_HackerOsManifestGeneratorPath)&quot; pack --manifest &quot;%(_HackerOsPackManifest.Identity)&quot; --bin &quot;$(_HackerOsPackBin)&quot; --webroot &quot;$(MSBuildProjectDirectory)/wwwroot&quot; --output &quot;$(_HackerOsPackOutput)&quot;$(_HackerOsPackWebAssetsArgument)" />
   </Target>
 

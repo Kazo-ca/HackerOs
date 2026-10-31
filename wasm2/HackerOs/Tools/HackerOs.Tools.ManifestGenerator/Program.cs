@@ -209,13 +209,17 @@ public static class Program
             Console.WriteLine($"{manifestPath} : warning {GeneratorCodes.PackageAssetSkipped}: {skipped}");
         }
 
-        foreach (PackagedWebAssets.WebAsset asset in resources.Assets)
+        AppManifest generated = AppManifestJsonSerializer.NormalizeOptionalCollections(
+            AppManifestJsonSerializer.DeserializeStrict(System.Text.Encoding.UTF8.GetString(manifestJson)));
+
+        // A declared asset is still read from wwwroot/, where its hash was computed; only the added
+        // ones come from the build manifest's source files.
+        HashSet<string> declared = new(generated.Assets.Select(static asset => asset.Path), StringComparer.Ordinal);
+        foreach (PackagedWebAssets.WebAsset asset in resources.Assets.Where(asset => !declared.Contains(asset.Path)))
         {
             sources[asset.Path] = asset.SourceFile;
         }
 
-        AppManifest generated = AppManifestJsonSerializer.NormalizeOptionalCollections(
-            AppManifestJsonSerializer.DeserializeStrict(System.Text.Encoding.UTF8.GetString(manifestJson)));
         AppManifest packaged = PackagedWebAssets.Complete(generated, resources.Assets, File.ReadAllBytes);
         return ReferenceEquals(packaged, generated)
             ? manifestJson

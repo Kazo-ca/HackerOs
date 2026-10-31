@@ -85,7 +85,16 @@ projet.
   ses styles sont là.
 - Le paquet grossit de tout le `wwwroot/` du projet : un fichier qui ne doit pas
   être livré n'a rien à faire dans `wwwroot/` (même règle que pour une app
-  compilée, que Blazor publie en entier).
+  compilée, que Blazor publie en entier). Les limites du paquet (2 000 fichiers,
+  64 Mio compressés, 128 Mio décompressés, `AppPackage`) s'appliquent désormais à
+  tout le `wwwroot/`, et la copie dans le cache au premier lancement de la
+  session porte sur tous ces fichiers.
+- L'OS trouve les fichiers et le CSS d'une app sous le nom de l'assemblage de son
+  point d'entrée ; le SDK les publie sous `$(PackageId)`. Une app garde donc
+  `PackageId` égal à `AssemblyName` (c'est le cas par défaut).
+- Un projet Razor mis en paquet sans `staticwebassets.build.json` donne
+  l'avertissement `HOSAPP0062` et un paquet limité aux `Assets` déclarés ; un
+  chemin refusé par le manifeste donne `HOSAPP0061`.
 - Un dépôt créé avec un modèle plus ancien met à jour son
   `publish-to-hack-store.yml` (§3), sinon le catalogue refuse sa version.
 - Les apps déjà publiées doivent être remises en paquet avec la nouvelle version

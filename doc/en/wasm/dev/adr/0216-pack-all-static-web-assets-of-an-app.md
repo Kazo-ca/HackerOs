@@ -86,7 +86,15 @@ template therefore copies the **package's** `manifest.json` (taken from the
   there.
 - The package grows by the project's whole `wwwroot/`: a file that must not ship
   has no place in `wwwroot/` (same rule as for a compiled app, which Blazor
-  publishes entirely).
+  publishes entirely). The package limits (2,000 files, 64 MiB compressed,
+  128 MiB extracted, `AppPackage`) now apply to the whole `wwwroot/`, and the
+  copy into the cache at the session's first launch covers all those files.
+- The OS finds an app's files and CSS under its entry-point assembly name; the
+  SDK publishes them under `$(PackageId)`. An app therefore keeps `PackageId`
+  equal to `AssemblyName` (the default).
+- A Razor project packed without `staticwebassets.build.json` gets the
+  `HOSAPP0062` warning and a package limited to the declared `Assets`; a path the
+  manifest refuses gets `HOSAPP0061`.
 - A repository made with an older template updates its
   `publish-to-hack-store.yml` (§3), otherwise the catalog refuses its version.
 - Apps already published must be packed again with the new version to benefit;

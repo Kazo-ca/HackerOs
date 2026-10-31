@@ -135,6 +135,9 @@ public static class GeneratorCodes
     /// </summary>
     public const string PackageAssetSkipped = "HOSAPP0061";
 
+    // HOSAPP0062 (ADR 0216 §1, a warning) is raised by the HackerOsPack target itself, not by this
+    // tool: a Razor project packed without its staticwebassets.build.json.
+
     /// <summary>The tool was called with invalid arguments.</summary>
     public const string InvalidArguments = "HOSAPP0090";
 
