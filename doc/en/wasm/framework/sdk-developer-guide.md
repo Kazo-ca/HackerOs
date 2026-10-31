@@ -292,7 +292,7 @@ The component can also implement:
 - `IWindowCloseGuard` (`ConfirmCloseAsync`) to ask for confirmation before
   closing, for example if unsaved changes remain
   (CodeEditor does this);
-- `IAppBackHandler` to handle the Back button (mobile and title bar);
+- `IAppBackHandler` to handle the Back button (mobile, title bar, mouse Back button, Alt+←, the phone's Back) and `IAppForwardHandler` for the mouse Forward button and Alt+→ ([ADR 0220](../dev/adr/0220-mouse-back-forward-buttons.md));
   then declare `SupportsBack => true`.
 
 ### Window events and size

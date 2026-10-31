@@ -14,7 +14,16 @@ public enum AppBackSource
     DesktopChromeButton,
 
     /// <summary>The documented keyboard shortcut, per plan §8's "le raccourci clavier documenté utilise le même contrat".</summary>
-    KeyboardShortcut
+    KeyboardShortcut,
+
+    /// <summary>The mouse's Back (button 4) or Forward (button 5) button (ADR 0220 §1).</summary>
+    MouseButton,
+
+    /// <summary>
+    /// The host browser's or the phone's Back: Android Back button or gesture, iOS edge swipe, or the host browser's
+    /// own Back arrow, caught through the tab's history (ADR 0220 §1).
+    /// </summary>
+    SystemBack
 }
 
 /// <summary>Describes one Back navigation request.</summary>
@@ -74,4 +83,28 @@ public interface IAppBackHandler
     /// <param name="request">Describes what triggered the request.</param>
     /// <param name="cancellationToken">Cancels the pending navigation.</param>
     ValueTask<AppBackResult> NavigateBackAsync(AppBackRequest request, CancellationToken cancellationToken = default);
+}
+
+/// <summary>Describes one Forward navigation request (ADR 0220 §3).</summary>
+/// <param name="Source">What triggered this request; the enumeration is shared with Back requests.</param>
+public sealed record AppForwardRequest(AppBackSource Source);
+
+/// <summary>
+/// Lets a window app go forward again after going back, when the user presses the mouse's Forward button,
+/// Alt+→ or the keyboard's Browser Forward key (ADR 0220 §3). The platform sends the request to the active
+/// window; an app that implements this interface needs nothing in its manifest.
+/// </summary>
+public interface IAppForwardHandler
+{
+    /// <summary>Gets whether the app currently has a later internal state to navigate forward to.</summary>
+    bool CanNavigateForward { get; }
+
+    /// <summary>Raised when <see cref="CanNavigateForward"/> changes.</summary>
+    event Action? CanNavigateForwardChanged;
+
+    /// <summary>Asks the app to navigate forward to the state it left by going back.</summary>
+    /// <param name="request">Describes what triggered the request.</param>
+    /// <param name="cancellationToken">Cancels the pending navigation.</param>
+    /// <returns>The outcome; <see cref="AppBackResultStatus.NotHandled"/> when there is nothing to go forward to.</returns>
+    ValueTask<AppBackResult> NavigateForwardAsync(AppForwardRequest request, CancellationToken cancellationToken = default);
 }

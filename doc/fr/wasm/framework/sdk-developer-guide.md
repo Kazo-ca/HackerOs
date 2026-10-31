@@ -292,7 +292,7 @@ Le composant peut aussi implémenter :
 - `IWindowCloseGuard` (`ConfirmCloseAsync`) pour demander confirmation avant
   fermeture, par exemple s'il reste des modifications non enregistrées
   (CodeEditor le fait) ;
-- `IAppBackHandler` pour gérer le bouton Retour (mobile et barre de titre) ;
+- `IAppBackHandler` pour gérer le bouton Retour (mobile, barre de titre, bouton Précédent de la souris, Alt+←, Retour du téléphone) et `IAppForwardHandler` pour le bouton Suivant de la souris et Alt+→ ([ADR 0220](../dev/adr/0220-mouse-back-forward-buttons.md)) ;
   déclarer alors `SupportsBack => true`.
 
 ### Événements et taille de la fenêtre
