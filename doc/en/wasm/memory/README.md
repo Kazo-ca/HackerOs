@@ -103,7 +103,7 @@ at the end of each series or when a convention changes.
   is in `theme-packs/<id>/` and read in place by themes, wallpapers, icons,
   sounds and cursors, Store Themes tab. Four questions asked to Benoit (files
   read in place, catalog CI, nothing applied after the install, no badge),
-  recommendations applied. Catalog CI: `TODO` issue AppMarketPlace #4.
+  answered A for all four (2026-10-31). Catalog CI: `TODO` issue AppMarketPlace #4.
 - **Notification bubbles** (ADR 0197, work item 1 of #242, series
   `todo/base`): notification bubbles and "Update ready" as a persistent
   notification with "Restart". See

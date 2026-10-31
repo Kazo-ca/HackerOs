@@ -104,7 +104,7 @@ jour à la fin de chaque série ou quand une convention change.
   tel quel dans `theme-packs/<id>/` et lu en place par les thèmes, fonds,
   icônes, sons et curseurs, onglet Thèmes du Store. Quatre questions posées à
   Benoit (fichiers lus en place, CI du catalogue, rien appliqué après
-  l'installation, pas de badge), recommandations appliquées. CI du catalogue :
+  l'installation, pas de badge), réponses A pour les quatre (2026-10-31). CI du catalogue :
   issue `TODO` AppMarketPlace #4.
 - **Bulles de notification** (ADR 0197, chantier 1 de #242, série
   `todo/base`) : bulles des notifications et « Update ready » en
