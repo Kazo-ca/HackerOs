@@ -101,10 +101,15 @@ boîte « Exécuter » (Super+R), économiseur d'écran et verrouillage après
 inactivité, recherche de fichiers dans le lanceur, aperçu au survol (voir #242),
 miniatures de fichiers (`~/.cache/thumbnails`), visionneuses (Markdown, PDF,
 images, vidéo), outils de développement Eruda, infobulles de fichiers riches,
-fonds d'écran animés ou en diaporama, `.zip` parcouru comme dossier (voir
-#241), `git clone` (exige un proxy CORS), Python (plutôt dans un dépôt d'app).
+fonds d'écran animés ou en diaporama, `git clone` (exige un proxy CORS), Python (plutôt dans un dépôt d'app).
 Questions à reposer au démarrage : où vivent les visionneuses, portée de
 `?app=`, Eruda ou non.
+
+## Changer d'utilisateur (décision close, 2026-10-30)
+
+- « Changer d'utilisateur » **reste grisé** (ADR 0201, issue #290) : une
+  session à la fois. Un prototype de sessions simultanées est gardé, non
+  fusionné, sur la branche `switch-user/simultaneous-sessions-prototype`.
 
 ## Éditeurs (décision close, 2026-10-17)
 
@@ -113,8 +118,6 @@ Questions à reposer au démarrage : où vivent les visionneuses, portée de
 
 ## Questions posées, réponse à confirmer
 
-- **Changer d'utilisateur** (issue #290) : plusieurs sessions ouvertes en même
-  temps ; le comportement cible a été demandé à Benoit le 2026-10-30.
 - **« Nouveau dossier » dans les dialogues** (ADR 0175) : rendre
   `SelectFolderDialogRequest.AllowCreateFolder` vrai par défaut pour toutes
   les apps ? Recommandé : garder l'option par app. Posée le 2026-10-26.

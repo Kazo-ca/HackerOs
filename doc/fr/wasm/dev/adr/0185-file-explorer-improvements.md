@@ -7,7 +7,8 @@
 Accepté le 2026-10-29. Décisions prises avec Benoit dans le fil « Améliorer l'explorateur de
 fichiers » (questions Q1 à Q18 posées le 2026-10-28, réponses le 2026-10-29). Mis en œuvre
 en partie le 2026-10-29 dans la série `explorer/base` (chantiers 1 à 9) : tous les points sauf
-l'archive ouverte comme un dossier (points 6 à 9), qui reste à faire (issue #241). Voir la note
+l'archive ouverte comme un dossier (points 6 à 9), faite le 2026-10-30 dans la série `todo/base`
+(chantier `todo/10-zip-as-folder`, issue #241). Voir la note
 de mise en œuvre à la fin.
 
 ## Contexte
@@ -190,4 +191,7 @@ Le détail de chaque chantier est dans [`file-explorer.md`](../file-explorer.md)
   lecteur réseau en profite.
 - Points 4 et 5 : le glisser hors du navigateur vaut pour toutes les vues du contrôle partagé,
   bureau compris. Si le glisser commence avant la fin de la préparation, il reste interne.
-- Points 6 à 9 (archive ouverte comme un dossier) : pas encore faits.
+- Points 6 à 9 (archive ouverte comme un dossier) : faits le 2026-10-30 (chantier
+  `todo/10-zip-as-folder`). L'explorateur lit le `.zip` par sa propre passerelle
+  (`ZipArchiveFileSystemGateway`), activée seulement dans ses fenêtres ; un chemin comme
+  `/home/u/photos.zip/2024` n'existe que pour lui. Détail dans [`file-explorer.md`](../file-explorer.md).

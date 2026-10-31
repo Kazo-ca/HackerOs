@@ -290,7 +290,8 @@ name is translated by `Resources/AppManifest.fr.resx`.
 ## Series `explorer/base` (ADR 0185)
 
 Improvements decided in [ADR 0185](adr/0185-file-explorer-improvements.md) (issue #241). The "archive opened
-as a folder" points (§6 to §9) are not part of this series.
+as a folder" points (§6 to §9) are not part of this series: they were done afterwards, see the next
+section.
 
 - [x] `explorer/1-empty-state` (§2): the empty-folder message is inside the shared control's list
   (`FileView.EmptyText`): a row under the column headers in Details mode, centred in Icons mode. A search
@@ -368,3 +369,57 @@ as a folder" points (§6 to §9) are not part of this series.
   as red text above the list (nor in the mobile banner). They open the SDK message box of type Error
   (`MessageBoxIcon.Error`, OK button, title "File Explorer"); the same error reported twice opens one
   box. Everything goes through `ReportError` in `FileExplorerWindow.razor`.
+
+## `.zip` archive opened as a folder (ADR 0185 §6 to §9)
+
+Work item `todo/10-zip-as-folder` of the `todo/base` series (issue #241).
+
+**Purpose.** A double click on a `.zip` in an explorer window opens it as a read-only folder. The
+breadcrumb and the address bar show `Documents › photos.zip › 2024` (path
+`/home/u/Documents/photos.zip/2024`). A double click on a `.zip` on the desktop starts the explorer on
+the archive (the manifest declares `application/zip`, `.zip` in its `fileHandlers`).
+
+**Architecture.**
+
+- `Archives/ZipArchiveIndex.cs`: the table of contents of a `.zip`, read once from its bytes
+  (`System.IO.Compression`). The folders the zip only implies (`a/b/c.txt` with no `a/` entry) are
+  added. Names are cleaned as an extraction would clean them; an entry that climbs out (`..`, "zip
+  slip") or whose name is not a valid HackerOS path is left out.
+- `Archives/ZipArchiveBrowser.cs`: finds the archive of a path (the first `*.zip` segment that is a
+  file; a folder named `x.zip` stays a folder; a path with no `.zip` segment costs no read), caches the
+  last 4 archives while their revision does not change, and extracts an entry (a file or a whole
+  folder) to a path of the file system.
+- `Archives/ZipArchiveFileSystemGateway.cs`: the file system as the explorer's view sees it. A path
+  that does not go through an archive goes as it is to the explorer's gateway, with its rights. Inside
+  an archive: `EnumerateAsync`, `StatAsync`, `ReadAsync` and `MeasureAsync` read the archive (files
+  `r--r--r--`, folders `r-xr-xr-x`, the archive's owner and revision, stable ids); every write is
+  refused with `ProtectedEntry`. The archive itself stays a file for `StatAsync`.
+  `ZipArchiveWatchGateway` watches a folder of an archive through the folder holding the `.zip`: the
+  list is read again when the archive changes.
+- `ExplorerFileView.Archives.cs`: only the explorer's windows (desktop and mobile) turn these rules
+  on, through the cascading value `ExplorerFileView.ArchiveBrowsingName`. The same control shown by
+  another app, a file dialog or the desktop never sees inside an archive (§7): nothing is mounted, the
+  terminal and the other apps only see the `.zip` file.
+
+**Behaviour.**
+
+- Opening a file of the archive (double click, Open, Open with) first extracts it into a new folder
+  `/tmp/<archive>-<8 characters>/` (mode `700`), then opens it with its app. A change made to that copy
+  does not go back into the archive. A `.zip` inside the archive opens as a folder from its copy.
+- Dragging or pasting (after Copy) items of the archive into a folder extracts them, with the usual
+  conflict dialog (Replace, Keep both, Skip). Even a move removes nothing from the archive. Dragging
+  out of the browser and Download read the archive too.
+- Refused with the message "This archive is read-only: extract it to change its content.": rename,
+  delete, cut, paste or drop into the archive, new folder, new file, upload, compress, extract, send to
+  the trash. The Rename, Delete, Cut, Paste, New folder and Properties entries are hidden from the menu
+  inside an archive; the explorer's own menu keeps only Download and Copy path there.
+- An unreadable archive gives "'x.zip' is not a readable .zip archive.".
+- `.zip` only (§8).
+
+**Tasks.**
+
+- [x] `.zip` index, archive reader with its cache, read-only gateway and watch.
+- [x] Explorer windows: double click, opening through `/tmp`, dragging and pasting out of the
+  archive, refused changes, menus.
+- [x] Manifest `fileHandlers` for `.zip`.
+- [x] Tests: `ZipArchiveBrowsingTests` (unit), `ZipArchiveFolderTests` (UI.E2E).

@@ -93,9 +93,15 @@ series first. What HackerOS lacks and could use: URL deep links (`?app=`,
 and idle lock, file search in the launcher, hover preview (see #242), file
 thumbnails (`~/.cache/thumbnails`), viewers (Markdown, PDF, images, video),
 Eruda developer tools, rich file tooltips, animated or slideshow wallpapers,
-`.zip` browsed as a folder (see #241), `git clone` (needs a CORS proxy), Python
+`git clone` (needs a CORS proxy), Python
 (better in an app repository). Questions to ask again when starting: where the
 viewers live, scope of `?app=`, Eruda or not.
+
+## Switch user (closed decision, 2026-10-30)
+
+- "Switch user" **stays greyed out** (ADR 0201, issue #290): one session at a
+  time. A simultaneous-sessions prototype is kept, not merged, on the branch
+  `switch-user/simultaneous-sessions-prototype`.
 
 ## Editors (closed decision, 2026-10-17)
 
@@ -104,8 +110,6 @@ viewers live, scope of `?app=`, Eruda or not.
 
 ## Questions asked, answer to confirm
 
-- **Switch user** (issue #290): several sessions open at once; the target
-  behaviour was asked to Benoit on 2026-10-30.
 - **"New folder" in dialogs** (ADR 0175): make
   `SelectFolderDialogRequest.AllowCreateFolder` true by default for every app?
   Recommended: keep the per-app option. Asked on 2026-10-26.

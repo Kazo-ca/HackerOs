@@ -126,6 +126,10 @@ This section lists what is released in the `main` branch and online.
   Send to menu, drag out of the browser to download (Chrome and Edge),
   network drives refreshed on their own.
   ([ADR 0185](dev/adr/0185-file-explorer-improvements.md))
+- **`.zip` archive opened as a folder** in the explorer, read-only: an opened
+  file is extracted to `/tmp`, dragging out of the archive extracts.
+  ([ADR 0185](dev/adr/0185-file-explorer-improvements.md),
+  [`file-explorer.md`](dev/file-explorer.md))
 - **Trash** with restore. ([`trash.md`](dev/trash.md))
 - **Default applications** per file type, for each user.
   ([`user-file-associations.md`](dev/user-file-associations.md))
@@ -233,6 +237,10 @@ This section lists what is released in the `main` branch and online.
   everywhere in the OS, chosen in Settings ▸ Appearance; a "Néon" sample pack
   is included. ([`icon-packs.md`](dev/icon-packs.md),
   [ADR 0203](dev/adr/0203-icon-packs.md))
+- **System sounds**: notifications, warnings, errors, sign-in and sign-out. Two
+  built-in themes (HackerOS and Soft), your own themes in OGG or MP3, volume and
+  mute in Settings ▸ Sound.
+  ([`system-sounds.md`](dev/system-sounds.md), [ADR 0204](dev/adr/0204-os-event-sounds.md))
 
 ### For developers
 
@@ -272,8 +280,7 @@ points to its PR.
 
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
-| `.zip` archive opened as a folder | The explorer browses a `.zip` archive read-only; an opened file is extracted to `/tmp`. The rest of the ADR is available. | [0185](dev/adr/0185-file-explorer-improvements.md) | [#241](https://github.com/Kazo-ca/HackerOs/issues/241) |
-| Switch user | Open another session without closing the first one, from the Start menu's Power button (greyed out for now, always greyed out for the guest). | [0195](dev/adr/0195-start-menu-power-button.md) | [#290](https://github.com/Kazo-ca/HackerOs/issues/290) |
+| Switch user | Open another session without closing the first one. Stays greyed out in the Power menu by Benoit's choice: one session at a time, Sign out to change account. | [0195](dev/adr/0195-start-menu-power-button.md), [0201](dev/adr/0201-switch-user-stays-greyed.md) | [#290](https://github.com/Kazo-ca/HackerOs/issues/290) |
 | Windows and taskbar | Window animations. The time zone ([ADR 0193](dev/adr/0193-local-time-and-time-zone.md)), the taskbar menus ([ADR 0194](dev/adr/0194-taskbar-context-menus.md)), the hover previews ([ADR 0199](dev/adr/0199-taskbar-window-previews.md)) and the notification bubbles ([ADR 0197](dev/adr/0197-notification-toasts.md)) are available. | Coming | [#242](https://github.com/Kazo-ca/HackerOs/issues/242) |
 
 ### Hack Store
@@ -291,7 +298,6 @@ points to its PR.
 | --- | --- | --- | --- |
 | Theme packs | `.hacktheme` format and the Hack Store Themes tab. | [0190](dev/adr/0190-theme-packs.md) | [#253](https://github.com/Kazo-ca/HackerOs/issues/253) |
 | Image wallpapers | Choose an image as wallpaper, per screen. | [0190](dev/adr/0190-theme-packs.md) | [#254](https://github.com/Kazo-ca/HackerOs/issues/254) |
-| OS sounds | Sounds for notifications, errors and sign-in. | [0190](dev/adr/0190-theme-packs.md) | [#256](https://github.com/Kazo-ca/HackerOs/issues/256) |
 | Cursor themes | Custom cursors chosen in Settings. | [0190](dev/adr/0190-theme-packs.md) | [#257](https://github.com/Kazo-ca/HackerOs/issues/257) |
 
 ### Network and server

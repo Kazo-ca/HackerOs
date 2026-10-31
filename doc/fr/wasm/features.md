@@ -130,6 +130,10 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   Compresser, Télécharger, Copier le chemin et Envoyer vers, glisser hors du
   navigateur pour télécharger (Chrome et Edge), lecteurs réseau rafraîchis
   tout seuls. ([ADR 0185](dev/adr/0185-file-explorer-improvements.md))
+- **Archive `.zip` ouverte comme un dossier** dans l'explorateur, en lecture
+  seule : un fichier ouvert est extrait dans `/tmp`, glisser hors de l'archive
+  extrait. ([ADR 0185](dev/adr/0185-file-explorer-improvements.md),
+  [`file-explorer.md`](dev/file-explorer.md))
 - **Corbeille** avec restauration. ([`trash.md`](dev/trash.md))
 - **Applications par défaut** par type de fichier, propres à chaque
   utilisateur. ([`user-file-associations.md`](dev/user-file-associations.md))
@@ -238,6 +242,10 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   des dossiers et des fichiers partout dans l'OS, choisies dans Paramètres ▸
   Apparence ; pack d'exemple « Néon » fourni. ([`icon-packs.md`](dev/icon-packs.md),
   [ADR 0203](dev/adr/0203-icon-packs.md))
+- **Sons du système** : notifications, avertissements, erreurs, ouverture et
+  fermeture de session. Deux jeux intégrés (HackerOS et Doux), ses propres jeux
+  en OGG ou MP3, volume et coupure dans Paramètres ▸ Sons.
+  ([`system-sounds.md`](dev/system-sounds.md), [ADR 0204](dev/adr/0204-os-event-sounds.md))
 
 ### Pour les développeurs
 
@@ -277,8 +285,7 @@ dans `main`, le lien mène à sa PR.
 
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
-| Archive `.zip` ouverte comme un dossier | L'explorateur parcourt une archive `.zip` en lecture seule ; un fichier ouvert est extrait dans `/tmp`. Le reste de l'ADR est disponible. | [0185](dev/adr/0185-file-explorer-improvements.md) | [#241](https://github.com/Kazo-ca/HackerOs/issues/241) |
-| Changer d'utilisateur | Ouvrir une autre session sans fermer la première, depuis le bouton Marche/arrêt du menu Démarrer (grisé pour l'instant, toujours grisé pour l'invité). | [0195](dev/adr/0195-start-menu-power-button.md) | [#290](https://github.com/Kazo-ca/HackerOs/issues/290) |
+| Changer d'utilisateur | Ouvrir une autre session sans fermer la première. Reste grisé dans le menu Marche/arrêt par choix de Benoit : une session à la fois, Se déconnecter pour changer de compte. | [0195](dev/adr/0195-start-menu-power-button.md), [0201](dev/adr/0201-switch-user-stays-greyed.md) | [#290](https://github.com/Kazo-ca/HackerOs/issues/290) |
 | Fenêtres et barre des tâches | Animations des fenêtres. Le fuseau horaire ([ADR 0193](dev/adr/0193-local-time-and-time-zone.md)), les menus de la barre ([ADR 0194](dev/adr/0194-taskbar-context-menus.md)), les aperçus au survol ([ADR 0199](dev/adr/0199-taskbar-window-previews.md)) et les bulles de notification ([ADR 0197](dev/adr/0197-notification-toasts.md)) sont disponibles. | À venir | [#242](https://github.com/Kazo-ca/HackerOs/issues/242) |
 
 ### Hack Store
@@ -296,7 +303,6 @@ dans `main`, le lien mène à sa PR.
 | --- | --- | --- | --- |
 | Packs de thèmes | Format `.hacktheme` et onglet Thèmes du Hack Store. | [0190](dev/adr/0190-theme-packs.md) | [#253](https://github.com/Kazo-ca/HackerOs/issues/253) |
 | Fonds d'écran en image | Choisir une image comme fond d'écran, par écran. | [0190](dev/adr/0190-theme-packs.md) | [#254](https://github.com/Kazo-ca/HackerOs/issues/254) |
-| Sons de l'OS | Sons pour les notifications, les erreurs et l'ouverture de session. | [0190](dev/adr/0190-theme-packs.md) | [#256](https://github.com/Kazo-ca/HackerOs/issues/256) |
 | Thèmes de curseurs | Curseurs personnalisés choisis dans Paramètres. | [0190](dev/adr/0190-theme-packs.md) | [#257](https://github.com/Kazo-ca/HackerOs/issues/257) |
 
 ### Réseau et serveur

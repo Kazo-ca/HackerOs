@@ -24,6 +24,7 @@
 @inject ThemePreferenceService ThemePreference
 @inject AccessibilityPreferenceService Accessibility
 @inject HackerOs.Platform.Core.Globalization.SessionTimeZoneService TimeZones
+@inject HackerOs.Platform.Core.Sounds.OsSoundService Sounds
 @inject UserThemeCatalogService UserThemes
 @inject IconPackService IconPacks
 @inject HackerOs.Platform.Core.Clipboard.HostClipboardBridge HostClipboard
@@ -491,6 +492,8 @@
             await Accessibility.InitializeAsync();
             // ADR 0193: the time zone of the clock and of the apps (datetime.config).
             await TimeZones.InitializeAsync();
+            // ADR 0204: sound.config, and the sounds of notifications, message boxes and sessions.
+            await Sounds.InitializeAsync();
             await UserThemes.InitializeAsync();
             // ADR 0203: the icon pack of icons.config.
             await IconPacks.InitializeAsync();
