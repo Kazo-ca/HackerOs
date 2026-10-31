@@ -12,6 +12,9 @@ recommended). Plan: https://claude.ai/artifact/Q9BdEs6HxUCjiD1os1TPNq. Tracking:
 Implemented in work items (§9). Work item 1 (format, test, entries of 2.1.0 and of the next
 version) and work item 5 (PR check) come with this ADR.
 
+**Partly replaced** by [ADR 0196](0196-unread-notifications-dot.md) (2026-10-30): the Start menu
+and Home button dot (§4.5) becomes the unread notifications dot next to the clock.
+
 - **Complements:** [ADR 0173](0173-automatic-releases-from-the-version-file.md) (automatic
   release from `Versions.props`) and
   [ADR 0174](0174-announce-a-new-version-to-open-sessions.md) (`/version.json` and the

@@ -78,8 +78,9 @@ warning, serves the publication on `127.0.0.1` and `127.0.0.2`, then runs
 | `An_installed_app_finds_its_wwwroot_files_and_its_worker_scripts` | ADR 0206: the test package `Tests/fixtures/installed-app` (packed by the script with `HackerOsPack`, answered by Playwright in place of `raw.githubusercontent.com`) is installed with `sudo hackpkg install`, the OS restarts, the app imports its module, starts its Web Worker (relative `importScripts`) and shows its image; on `127.0.0.1`, through the `installed-apps` mode service worker |
 | `The_published_service_worker_serves_installed_app_files_to_a_worker` | ADR 0206 on `127.0.0.2`: the published service worker answers files of the `hackeros-installed-apps` cache to a Web Worker under cross-origin isolation |
 | `Trimmed_publish_shows_a_new_notification_as_a_bubble_above_the_taskbar` | ADR 0197: the what's new notification posted at a new account's sign-in shows as a bubble above the taskbar (source "HackerOS", title, "View" button), leaves by itself after about 6 s and stays in the clock panel ([`notification-toasts.md`](notification-toasts.md)) |
+| `Trimmed_publish_shows_unread_notifications_next_to_the_clock` | ADR 0196: a new account gets the what's new notification (`whats-new.json` served); clock dot and tooltip, no dot on Applications, opened panel = read, **View** opens Settings ▸ What's new and dismisses the notification; screenshots `trimmed-clock-dot.png` and `trimmed-whats-new-page.png` |
 
-The script requires all seven tests to pass (`EXPECTED_TESTS`).
+The script requires all eight tests to pass (`EXPECTED_TESTS`).
 
 No console error is allowed. Without `HACKEROS_TRIMMED_URL`, the suite is
 skipped (a `dotnet test` of the solution does not run it).

@@ -441,6 +441,12 @@
   <data name="Mobile.Shade" xml:space="preserve">
     <value>Notifications, calendar, and platform mode</value>
   </data>
+  <data name="Mobile.ShadeWithOneUnread" xml:space="preserve">
+    <value>Notifications, calendar, and platform mode: 1 unread notification</value>
+  </data>
+  <data name="Mobile.ShadeWithUnread" xml:space="preserve">
+    <value>Notifications, calendar, and platform mode: {0} unread notifications</value>
+  </data>
   <data name="Security.AdministratorName" xml:space="preserve">
     <value>Administrator name</value>
   </data>
@@ -827,6 +833,15 @@
   <data name="InstallApproval.Size" xml:space="preserve">
     <value>Size</value>
   </data>
+  <data name="InstallApproval.Signature" xml:space="preserve">
+    <value>Signature</value>
+  </data>
+  <data name="InstallApproval.Signed" xml:space="preserve">
+    <value>Signed by its source</value>
+  </data>
+  <data name="InstallApproval.Unsigned" xml:space="preserve">
+    <value>Not signed (checked by its SHA-256 only)</value>
+  </data>
   <data name="InstallApproval.Source" xml:space="preserve">
     <value>Source</value>
   </data>
@@ -886,5 +901,11 @@
   </data>
   <data name="InstallApproval.MiB" xml:space="preserve">
     <value>{0} MiB</value>
+  </data>
+  <data name="InstallApproval.Title.Rollback" xml:space="preserve">
+    <value>Approve going back to an app's previous version</value>
+  </data>
+  <data name="InstallApproval.Approve.Rollback" xml:space="preserve">
+    <value>Go back</value>
   </data>
 </root>

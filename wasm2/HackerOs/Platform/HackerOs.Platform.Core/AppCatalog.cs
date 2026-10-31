@@ -7,8 +7,15 @@ namespace HackerOs.Platform.Core;
 /// <summary>
 /// Contains validated app manifests in deterministic dependency order.
 /// </summary>
+/// <remarks>
+/// A built catalog never changes by itself. The OS's running catalog changes only when apps installed
+/// from packages join or leave it (<see cref="ReplaceContents"/>, ADR 0214 §1): the whole contents are
+/// swapped at once and <see cref="Changed"/> is raised.
+/// </remarks>
 public sealed class AppCatalog
 {
+    private CatalogState _state;
+
     private AppCatalog(
         IReadOnlyDictionary<string, AppManifest> manifests,
         IReadOnlyList<string> activationOrder,
@@ -18,24 +25,76 @@ public sealed class AppCatalog
         IReadOnlyDictionary<string, IReadOnlyList<AppComponentProvider>> componentProviders,
         IReadOnlyList<AppCatalogError> warnings)
     {
-        CommandOwners = commandOwners;
-        ComponentProviders = componentProviders;
-        Warnings = warnings;
-        Manifests = manifests;
-        ActivationOrder = activationOrder;
-        DeactivationOrder = activationOrder.Reverse().ToArray();
-        SystemAppIds = systemAppIds;
-        Rejected = rejected;
+        _state = new CatalogState(
+            manifests,
+            activationOrder,
+            activationOrder.Reverse().ToArray(),
+            systemAppIds,
+            rejected,
+            commandOwners,
+            componentProviders,
+            warnings,
+            FrozenDictionary<string, IReadOnlyDictionary<string, AppManifestText>>.Empty);
     }
 
+    /// <summary>
+    /// Gets how many times <see cref="ReplaceContents"/> changed this catalog since the OS started
+    /// (ADR 0214 §1): <c>0</c> for the catalog built at boot.
+    /// </summary>
+    public long Revision { get; private set; }
+
+    /// <summary>
+    /// Raised after <see cref="ReplaceContents"/> changed the apps, once the new contents are visible
+    /// (ADR 0214 §1). Code that keeps a copy of anything read from the catalog refreshes it here.
+    /// </summary>
+    public event EventHandler? Changed;
+
+    /// <summary>
+    /// Replaces every member of this catalog by those of <paramref name="next"/> at once, keeping this
+    /// instance, then raises <see cref="Changed"/> (ADR 0214 §1): how apps installed, updated or removed
+    /// from packages join or leave the running OS without a restart, as Linux desktops rebuild their
+    /// application database after <c>apt install</c>.
+    /// </summary>
+    /// <param name="next">A catalog built with the same host input and the new installed apps.</param>
+    /// <remarks>
+    /// Only the host's installed-apps holder calls it. A reader sees either the old or the new
+    /// contents, never a mix of both, as long as it reads one member per decision.
+    /// </remarks>
+    public void ReplaceContents(AppCatalog next)
+    {
+        ArgumentNullException.ThrowIfNull(next);
+        if (ReferenceEquals(next, this))
+        {
+            return;
+        }
+
+        Volatile.Write(ref _state, next._state);
+        Revision++;
+        Changed?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <summary>
+    /// Creates another instance with the same contents, for a host to hand out as its running catalog
+    /// and later <see cref="ReplaceContents"/> without touching this one (ADR 0214 §1).
+    /// </summary>
+    /// <returns>A new catalog, <see cref="Revision"/> <c>0</c>, with no <see cref="Changed"/> subscriber.</returns>
+    public AppCatalog CreateLiveCopy() => new(State);
+
+    private AppCatalog(CatalogState state)
+    {
+        _state = state;
+    }
+
+    private CatalogState State => Volatile.Read(ref _state);
+
     /// <summary>Gets manifests keyed by immutable app ID.</summary>
-    public IReadOnlyDictionary<string, AppManifest> Manifests { get; }
+    public IReadOnlyDictionary<string, AppManifest> Manifests => State.Manifests;
 
     /// <summary>Gets app IDs with dependencies ordered before dependents.</summary>
-    public IReadOnlyList<string> ActivationOrder { get; }
+    public IReadOnlyList<string> ActivationOrder => State.ActivationOrder;
 
     /// <summary>Gets app IDs with dependents ordered before dependencies.</summary>
-    public IReadOnlyList<string> DeactivationOrder { get; }
+    public IReadOnlyList<string> DeactivationOrder => State.DeactivationOrder;
 
     /// <summary>
     /// Gets the IDs of the apps the host declared system apps (ADR 0048 §1). A system app cannot be
@@ -47,7 +106,7 @@ public sealed class AppCatalog
     /// its <c>ProjectReference</c>. Neither <see cref="AppManifest"/> nor <c>AppDefinition</c> can
     /// carry the flag, so an app can never declare itself a system app.
     /// </remarks>
-    public IReadOnlySet<string> SystemAppIds { get; }
+    public IReadOnlySet<string> SystemAppIds => State.SystemAppIds;
 
     /// <summary>
     /// Gets the apps the host shipped but this OS refuses to load (ADR 0098 §3), ordered by id: an
@@ -56,7 +115,7 @@ public sealed class AppCatalog
     /// (<c>catalog.dependency.unavailable</c>). They are not in <see cref="Manifests"/>, so nothing
     /// can launch them; Settings lists them as incompatible with the range they asked for.
     /// </summary>
-    public IReadOnlyList<AppCatalogRejection> Rejected { get; }
+    public IReadOnlyList<AppCatalogRejection> Rejected => State.Rejected;
 
     /// <summary>
     /// Gets the app that owns each terminal command name and alias (case-insensitive keys), the
@@ -64,7 +123,7 @@ public sealed class AppCatalog
     /// it, otherwise the first in <see cref="ActivationOrder"/>; the other app stays launchable but
     /// its command under that name is not registered, and <see cref="Warnings"/> says so.
     /// </summary>
-    public IReadOnlyDictionary<string, string> CommandOwners { get; }
+    public IReadOnlyDictionary<string, string> CommandOwners => State.CommandOwners;
 
     /// <summary>
     /// Gets the providers of each embeddable component contract (ADR 0063, ADR 0148 §3), read from
@@ -78,7 +137,7 @@ public sealed class AppCatalog
     /// Installed state and the administrator's choice of provider (<c>/etc/hackeros/components.config</c>,
     /// ADR 0156 §2) are not applied here: the component host applies both when it resolves.
     /// </remarks>
-    public IReadOnlyDictionary<string, IReadOnlyList<AppComponentProvider>> ComponentProviders { get; }
+    public IReadOnlyDictionary<string, IReadOnlyList<AppComponentProvider>> ComponentProviders => State.ComponentProviders;
 
     /// <summary>Gets the providers of <paramref name="contract"/> in the order they are tried (see <see cref="ComponentProviders"/>).</summary>
     /// <param name="contract">Contract name (ordinal comparison).</param>
@@ -94,7 +153,7 @@ public sealed class AppCatalog
     /// <c>catalog.command.duplicate</c> per command name lost by an app. The boot writes them, with
     /// <see cref="Rejected"/>, to <c>/var/log/syslog</c>.
     /// </summary>
-    public IReadOnlyList<AppCatalogError> Warnings { get; }
+    public IReadOnlyList<AppCatalogError> Warnings => State.Warnings;
 
     /// <summary>
     /// Gets the app whose command answers to <paramref name="commandName"/> (name or alias,
@@ -160,8 +219,11 @@ public sealed class AppCatalog
     /// Gets the translated name, description and usage of each app, by app id then culture
     /// (ADR 0104, section 4). Apps only in English are absent.
     /// </summary>
-    public IReadOnlyDictionary<string, IReadOnlyDictionary<string, AppManifestText>> Localized { get; private set; } =
-        FrozenDictionary<string, IReadOnlyDictionary<string, AppManifestText>>.Empty;
+    public IReadOnlyDictionary<string, IReadOnlyDictionary<string, AppManifestText>> Localized
+    {
+        get => State.Localized;
+        private set => _state = _state with { Localized = value };
+    }
 
     /// <summary>
     /// Returns <paramref name="manifest"/> with its name, description and usage in
@@ -461,6 +523,18 @@ public sealed class AppCatalog
             }
         }
     }
+
+    /// <summary>Everything a catalog holds, swapped as one by <see cref="ReplaceContents"/>.</summary>
+    private sealed record CatalogState(
+        IReadOnlyDictionary<string, AppManifest> Manifests,
+        IReadOnlyList<string> ActivationOrder,
+        IReadOnlyList<string> DeactivationOrder,
+        IReadOnlySet<string> SystemAppIds,
+        IReadOnlyList<AppCatalogRejection> Rejected,
+        IReadOnlyDictionary<string, string> CommandOwners,
+        IReadOnlyDictionary<string, IReadOnlyList<AppComponentProvider>> ComponentProviders,
+        IReadOnlyList<AppCatalogError> Warnings,
+        IReadOnlyDictionary<string, IReadOnlyDictionary<string, AppManifestText>> Localized);
 
     private static IReadOnlyList<string>? CreateActivationOrder(
         IReadOnlyDictionary<string, AppManifest> manifests,

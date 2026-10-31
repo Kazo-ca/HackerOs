@@ -226,6 +226,7 @@ carries the engine code, and `ShellErrorText.Describe` gives the Linux message.
 | `HackAppIcons` | `LucideName(appId, category)`: an app's Lucide icon, the one of the Start menu and shortcuts; SDK 2.0 (ADR 0160) | none | [`desktop.md`](../dev/desktop.md) |
 | `HackBrowser` | `OpenAsync(url)`, `OpenDetachedAsync(url)` (detached window, ADR 0078); `AppId`, `DetachedArgument` (`--detached`) | `apps.launch` | [`detached-display-windows.md`](../dev/detached-display-windows.md), [`display-surface-api.md`](display-surface-api.md) |
 | `HackAppManagement` | `GetAllAsync`, `UninstallAsync`, `ReinstallAsync`; `HackInstallScope`, `HackAppInstallState` | `apps.manage` | [`app-installation.md`](../dev/app-installation.md) |
+| `HackAppPackages` | `GetSourcesAsync`, `GetInstalledAsync` (with `PreviousVersion`), `GetInfoAsync`, `InstallAsync`, `RemoveAsync`, `RollbackAsync(appId, scope)` and `RepairAsync(system)` (ADR 0214), sources, block list, catalogs, updates, `RestartToFinishAsync`, theme packs | `apps.manage` | [`app-installation.md`](../dev/app-installation.md#adding-without-a-restart-signing-and-transactions) |
 
 ### Processes and services
 

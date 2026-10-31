@@ -41,8 +41,8 @@ public static class HackAppPackages
     /// <summary>Reads what a repository or a catalog publishes for an app.</summary>
     /// <param name="source">
     /// <c>github:owner/repo</c>, <c>owner/repo</c>, <c>https://github.com/owner/repo</c>,
-    /// <c>catalog:name/app.id</c>, or an app ID alone, looked up in the catalogs (the official one
-    /// first, then by name, ADR 0212 §4).
+    /// <c>catalog:name/app.id</c>, or an app ID alone, looked up in the catalogs; an app ID that
+    /// several catalogs list is refused with <c>apps.package.ambiguous</c> (ADR 0215 §2).
     /// </param>
     /// <param name="cancellationToken">Cancels the download.</param>
     /// <exception cref="HackPackageException">The source is invalid, publishes nothing or cannot be downloaded.</exception>
@@ -89,6 +89,37 @@ public static class HackAppPackages
         ArgumentException.ThrowIfNullOrWhiteSpace(appId);
         return CallAsync(gateway => gateway.RemovePackageAsync(appId, scope, cancellationToken));
     }
+
+    /// <summary>
+    /// Goes back to the version the last update of an installed app kept (ADR 0214 §4.1), with the
+    /// approvals an install of the same scope needs. The version it leaves is kept in turn, so a
+    /// second call undoes the first. The app's data is put back from the backup the OS made when
+    /// that version last ran.
+    /// </summary>
+    /// <param name="appId">The installed app.</param>
+    /// <param name="scope">Which copy; <see cref="HackPackageScope.Auto"/> takes the user's own, else the system's.</param>
+    /// <param name="cancellationToken">Cancels the approval and the writes.</param>
+    /// <exception cref="HackPackageException"><c>apps.package.not-installed</c> or <c>apps.package.no-previous</c>.</exception>
+    /// <exception cref="HackUnauthorizedAccessException">This app lacks <c>apps.manage</c>, or the administrator did not approve.</exception>
+    /// <exception cref="HackExecutionContextMissingException">No app context is active.</exception>
+    public static Task<HackPackageInstallReport> RollbackAsync(
+        string appId, HackPackageScope scope = HackPackageScope.Auto, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(appId);
+        return CallAsync(gateway => gateway.RollbackPackageAsync(appId, scope, cancellationToken));
+    }
+
+    /// <summary>
+    /// Finishes or undoes the installs an interruption left and deletes unfinished folders
+    /// (ADR 0214 §3.5), like <c>dpkg --configure -a</c>.
+    /// </summary>
+    /// <param name="system">Also repairs the apps installed for the system, after an administrator authenticated.</param>
+    /// <param name="cancellationToken">Cancels the authentication and the writes.</param>
+    /// <returns>One line per repaired app; empty when nothing needed repair.</returns>
+    /// <exception cref="HackUnauthorizedAccessException">This app lacks <c>apps.manage</c>, or no administrator authenticated.</exception>
+    /// <exception cref="HackExecutionContextMissingException">No app context is active.</exception>
+    public static Task<IReadOnlyList<string>> RepairAsync(bool system = false, CancellationToken cancellationToken = default) =>
+        CallAsync(gateway => gateway.RepairPackagesAsync(system, cancellationToken));
 
     /// <summary>Adds a catalog or a GitHub owner or repository to the sources, after an administrator authenticated (ADR 0189 §1).</summary>
     /// <param name="source"><c>name=https://…/catalog.json</c>, <c>https://…/catalog.json</c>, <c>github:owner</c> or <c>github:owner/repo</c>.</param>

@@ -92,10 +92,12 @@ at the end of each series or when a convention changes.
 - **Hack Store 5, the app** (ADR 0212, `TODO` issue #249, series `todo/base`,
   branch `todo/5-hackstore-app`): system app `org.hackeros.store`
   (`HackerOs.Apps.Store`), `catalog:<name>/<appId>@<version>` source,
-  `hackpkg install <appId>`, `AppUpdateMonitor` and badge, default pin
-  (`defaultPinsApplied` of `start-menu.json`). Four questions asked to Benoit
-  (restart without administrator, source written, badge, catalog order),
-  recommendations applied. See
+  `hackpkg install <appId>`, `AppUpdateMonitor` and notification, default pin
+  (`defaultPinsApplied` of `start-menu.json`). Benoit's answers (2026-10-31):
+  Q1 A restart without administrator, Q2 A `catalog:official/<appId>` source,
+  Q3 C notification only (no badge), Q4 B an appId listed by several catalogs
+  refused (`apps.package.ambiguous`); Q3 and Q4 in ADR 0215 (branch
+  `todo/5b-hackstore-no-badge`). See
   [`app-installation.md`](../dev/app-installation.md#the-hack-store-and-the-catalogs).
 - **Hack Store v2, theme packs** (ADR 0213, `TODO` issue #253, series
   `todo/base`, branch `todo/18-theme-packs`): `.hacktheme` format
@@ -104,6 +106,14 @@ at the end of each series or when a convention changes.
   sounds and cursors, Store Themes tab. Four questions asked to Benoit (files
   read in place, catalog CI, nothing applied after the install, no badge),
   answered A for all four (2026-10-31). Catalog CI: `TODO` issue AppMarketPlace #4.
+- **Hack Store, next steps** (ADR 0214, `TODO` issue #251, series
+  `todo/base`, branch `todo/19-hackstore-later`): adding without a restart
+  (live catalog `AppCatalog.Changed`), ECDSA P-256 signatures
+  (`[signing-keys]`, `HackerOsAppSigningKeys`), `.transaction` journal,
+  `hackpkg rollback`/`repair`, `AppDataGuard`. Five questions asked to Benoit,
+  answer A to each. The official catalog key is still to be created by Benoit
+  (`keygen`, `HACK_STORE_SIGNING_KEY` secret); tool for authors: `TODO`
+  issue #321.
 - **Notification bubbles** (ADR 0197, work item 1 of #242, series
   `todo/base`): notification bubbles and "Update ready" as a persistent
   notification with "Restart". See
@@ -125,7 +135,10 @@ at the end of each series or when a convention changes.
   Browser is a system app with `network.real.access`; with a connected server it
   opens real sites through the proxy, cookies included. The public proxy and the
   Wayback Machine are left.
-- **ADR**: 0001 to 0171 and 0173 to 0195 exist on `main` (a few numbers skipped;
+- **Unread notifications dot next to the clock** (ADR 0196, PR #294, merged on
+  `main` 2026-10-31): replaces the what's new Start menu dot; brought into
+  `todo/base` by the merge of `main`.
+- **ADR**: 0001 to 0171 and 0173 to 0196 exist on `main` (a few numbers skipped;
   0141 and 0172 were not used). Recent landmarks: 0173 automatic release, 0174
   new-version announcement, 0175 "New folder" in dialogs, 0176 app repository
   template, 0177 title bar of maximized windows, 0178 to 0180, 0183 and 0184
@@ -133,11 +146,11 @@ at the end of each series or when a convention changes.
   what's new ([`change-list.md`](../dev/change-list.md)), 0187 guest and credits,
   0188 to 0190 Hack Store ([`hackeros-store.md`](../dev/plans/hackeros-store.md)),
   0191 installable local server, 0192 `features.md` and exception to ADR 0135,
-  0193 local time, 0194 taskbar menus, 0195 Start menu Power button;
+  0193 local time, 0194 taskbar menus, 0195 Start menu Power button, 0196 unread notifications dot;
   `todo/base` series: 0197 notification bubbles, 0201 "Switch user" stays greyed out, 0203 icon packs, 0207
-  `hackeros-solution` template, 0208 Hack Store trusted sources, 0212 Hack Store app, 0213 theme packs, 0214 reserved for issue #251 (the other numbers up to 0211 are reserved by
-  its work items). 0196 is taken by PR #294 (unread dot). **Next free number:
-  0215.** Before taking one, check `dev/adr/` on
+  `hackeros-solution` template, 0208 Hack Store trusted sources, 0212 Hack Store app, 0213 theme packs, 0214 Hack Store without a restart, signing and transactions, 0215 Hack Store answers (no badge, ambiguous appId refused) (the other numbers up to 0211 are reserved by
+  its work items). **Next free number:
+  0216.** Before taking one, check `dev/adr/` on
   `main` and the open PRs.
 
 ## Working conventions

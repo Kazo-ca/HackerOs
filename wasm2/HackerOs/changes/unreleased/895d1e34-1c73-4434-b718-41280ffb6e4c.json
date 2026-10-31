@@ -1,0 +1,19 @@
+{
+  "id": "895d1e34-1c73-4434-b718-41280ffb6e4c",
+  "category": "improved",
+  "audience": [
+    "user"
+  ],
+  "title": {
+    "en": "Unread notifications dot next to the clock",
+    "fr": "Point des notifications non lues à côté de l'horloge"
+  },
+  "description": {
+    "en": "A dot next to the taskbar clock (on the notification shade handle on a phone) shows unread notifications, and its tooltip gives their count. Opening the panel marks them read. It replaces the unexplained dot on the Applications button; the what's new notification closes by itself once every change has been seen.",
+    "fr": "Un point à côté de l'horloge de la barre des tâches (sur la poignée du volet de notifications sur téléphone) signale les notifications non lues, et son infobulle donne leur nombre. Ouvrir le panneau les marque lues. Il remplace le point sans explication du bouton Applications ; la notification des nouveautés se ferme seule quand tout a été vu."
+  },
+  "pr": 294,
+  "links": [
+    "doc/en/wasm/dev/adr/0196-unread-notifications-dot.md"
+  ]
+}

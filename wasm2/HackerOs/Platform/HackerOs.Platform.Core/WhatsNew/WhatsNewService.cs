@@ -52,6 +52,7 @@ public sealed class WhatsNewService
     private readonly Func<CultureInfo> _language;
     private readonly TimeProvider _time;
     private readonly HashSet<LocalUserId> _notifiedUsers = [];
+    private readonly Dictionary<LocalUserId, NotificationId> _postedNotifications = [];
     private readonly SemaphoreSlim _gate = new(1, 1);
     private WhatsNewCatalog? _catalog;
     private string? _stateHome;
@@ -181,6 +182,7 @@ public sealed class WhatsNewService
 
         if (changed)
         {
+            await DismissNotificationWhenAllSeenAsync(cancellationToken).ConfigureAwait(false);
             Changed?.Invoke();
         }
     }
@@ -213,8 +215,14 @@ public sealed class WhatsNewService
         }
 
         Microsoft.Extensions.Localization.IStringLocalizer text = Strings.For(_language());
+        NotificationId id = NotificationId.FromGuid(Guid.NewGuid());
+        lock (_notifiedUsers)
+        {
+            _postedNotifications[user.UserId] = id;
+        }
+
         _notifications.Enqueue(new Notification(
-            NotificationId.FromGuid(Guid.NewGuid()),
+            id,
             user.UserId,
             NotificationSourceAppId,
             NotificationSeverity.Information,
@@ -224,6 +232,39 @@ public sealed class WhatsNewService
             _time.GetUtcNow(),
             expiresAtUtc: null));
         return true;
+    }
+
+    /// <summary>
+    /// Dismisses the sign-in notification once the session user has seen every change, wherever it
+    /// was seen (ADR 0196 §4): it has nothing left to say, so it leaves the clock's list and dot.
+    /// </summary>
+    private async ValueTask DismissNotificationWhenAllSeenAsync(CancellationToken cancellationToken)
+    {
+        if (_notifications is null || _currentUser() is not { } user)
+        {
+            return;
+        }
+
+        NotificationId id;
+        lock (_notifiedUsers)
+        {
+            if (!_postedNotifications.TryGetValue(user.UserId, out id))
+            {
+                return;
+            }
+        }
+
+        if (await GetNewCountAsync(cancellationToken).ConfigureAwait(false) > 0)
+        {
+            return;
+        }
+
+        lock (_notifiedUsers)
+        {
+            _postedNotifications.Remove(user.UserId);
+        }
+
+        _notifications.Dismiss(id);
     }
 
     private async ValueTask<IReadOnlySet<string>> GetSeenAsync(WhatsNewCatalog catalog, CancellationToken cancellationToken)

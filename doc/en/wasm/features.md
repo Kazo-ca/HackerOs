@@ -96,6 +96,8 @@ This section lists what is released in the `main` branch and online.
   window alone ("peek"). ([`taskbar-window-previews.md`](dev/taskbar-window-previews.md))
   The Start menu shows the signed-in user and their Power button: sign out or
   restart. ([ADR 0195](dev/adr/0195-start-menu-power-button.md))
+  A dot next to the clock shows unread notifications, with their count on
+  hover. ([ADR 0196](dev/adr/0196-unread-notifications-dot.md))
 - **Notification bubbles**: each notification from the OS or an app shows for
   a few seconds above the taskbar (at the top on a phone), then stays in the
   clock panel. A ready update arrives there with its "Restart" button.
@@ -220,8 +222,8 @@ This section lists what is released in the `main` branch and online.
 - **New version announcements**: an open session learns that a new version is
   available. ([ADR 0174](dev/adr/0174-announce-a-new-version-to-open-sessions.md))
 - **What's new since your last visit**: the Settings ▸ What's new page lists the
-  changes by version with a **New** badge; a notification after sign-in and a dot
-  on the Start menu point out what has not been seen. The same list writes the
+  changes by version with a **New** badge; a notification after sign-in points out
+  what has not been seen. The same list writes the
   notes of the GitHub Release, of the NuGet packages and
   [`CHANGELOG.md`](../../../CHANGELOG.md).
   ([`change-list.md`](dev/change-list.md), [ADR 0186](dev/adr/0186-whats-new-change-list.md))
@@ -281,10 +283,18 @@ This section lists what is released in the `main` branch and online.
   on desktop and mobile. Home by categories, search, app page (screenshots,
   description, size, license, capabilities, trust), install for oneself or for
   everyone, open, update, uninstall, Installed tab and "Restart to finish". It
-  checks for updates at sign-in then every 6 hours, with a badge and a
-  notification; `hackpkg install <appId>` reads the same catalogs.
+  checks for updates at sign-in then every 6 hours and says so in a
+  notification; `hackpkg install <appId>` reads the same catalogs and asks
+  the user to choose when several list the app.
   ([ADR 0188](dev/adr/0188-hack-store-and-app-catalog.md),
-  [ADR 0212](dev/adr/0212-hack-store-app-build.md))
+  [ADR 0212](dev/adr/0212-hack-store-app-build.md),
+  [ADR 0215](dev/adr/0215-hack-store-answers-notification-and-ambiguous-app-id.md))
+- **Installs without a restart, and safe**: an application installed or
+  updated opens at once if it was not already loaded. The packages of a source
+  that has a key are signed and verified, the install is transactional
+  (nothing broken after a power cut, `hackpkg repair`), the previous version
+  is kept for "Go back to" (`hackpkg rollback`) and the application's data is
+  backed up before its first start in a new version. ([ADR 0214](dev/adr/0214-hack-store-hot-add-signing-transactions.md))
 - **Theme packs**: the Hack Store Themes tab installs `.hacktheme` packs
   (themes, wallpapers, icons, sounds and cursors), for oneself without an
   administrator or for everyone with the two-step approval. A pack holds no
@@ -321,7 +331,7 @@ points to its PR.
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Application catalog | Catalog format, checking and publishing of the offered applications. | [0188](dev/adr/0188-hack-store-and-app-catalog.md) | [AppMarketPlace #1](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/1) |
-| Hack Store, next steps | Adding without restart, package signing, transactional install. | [0188](dev/adr/0188-hack-store-and-app-catalog.md) | [#251](https://github.com/Kazo-ca/HackerOs/issues/251) |
+| Signing tool for authors | Sign the packages published from a GitHub repository (`github:` sources). | [0214](dev/adr/0214-hack-store-hot-add-signing-transactions.md) | [#321](https://github.com/Kazo-ca/HackerOs/issues/321) |
 
 ### Personalization
 

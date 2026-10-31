@@ -3,6 +3,7 @@ using HackerOs.App.Abstractions;
 using HackerOs.App.Abstractions.Policy;
 using HackerOs.AppSdk;
 using HackerOs.AppSdk.Diagnostics;
+using HackerOs.Platform.Core.Apps.Packages;
 using HackerOs.Platform.Core.Discovery;
 using HackerOs.Platform.Core.Execution;
 using HackerOs.Platform.Core.Intents;
@@ -161,6 +162,12 @@ public sealed class AppLifecycleOrchestrator
     /// kernel's defaults.
     /// </summary>
     public LoginResourceLimitsProvider? LoginResourceLimits { get; init; }
+
+    /// <summary>
+    /// Gets the guard that backs up a user's data before the first launch of another version of an
+    /// installed app (ADR 0214 §4.2); <see langword="null"/> launches without it.
+    /// </summary>
+    public AppDataGuard? DataGuard { get; init; }
 
     /// <summary>
     /// Gets or sets how long a service may stay <c>activating</c> (its <c>OnStartAsync</c>) before
@@ -461,6 +468,7 @@ public sealed class AppLifecycleOrchestrator
         HashSet<string> grantedCapabilities = ComputeGrantedCapabilities(descriptor.Manifest, request.Principal);
         (VirtualPath? workingDirectory, IReadOnlyDictionary<string, string>? environment) =
             await ResolveStartEnvironmentAsync(request, cancellationToken).ConfigureAwait(false);
+        environment = await GuardInstalledAppDataAsync(descriptor.Manifest, request, environment, cancellationToken).ConfigureAwait(false);
         // ADR 0125 section 3: a session's root process gets the limits of limits.conf; a boot
         // service (hackeros-svc, section 5) and every child get the kernel's or their parent's.
         ProcessResourceLimits? sessionLimits = request.ParentPid is null && !request.SystemScope && LoginResourceLimits is { } pamLimits
@@ -1380,6 +1388,33 @@ public sealed class AppLifecycleOrchestrator
         }
 
         return (workingDirectory, environment.Count == 0 ? null : environment);
+    }
+
+    // ADR 0214 §4.2: before the process exists, as the user, in their home; the request's own variables win.
+    private async ValueTask<IReadOnlyDictionary<string, string>?> GuardInstalledAppDataAsync(
+        AppManifest manifest, AppLaunchRequest request, IReadOnlyDictionary<string, string>? environment, CancellationToken cancellationToken)
+    {
+        if (DataGuard is not { } guard || request.SystemScope || _fileSystem is null || _clock is null)
+        {
+            return environment;
+        }
+
+        AuthenticatedPrincipal principal = request.Principal;
+        AppFileSystemGateway user = new(
+            _fileSystem, _clock, OsSettingsService.CreateUserOperation(principal), [.. principal.GroupIds.Select(static id => id.ToString())]);
+        IReadOnlyDictionary<string, string>? added = await guard.PrepareAsync(user, principal.HomePath, manifest, cancellationToken).ConfigureAwait(false);
+        if (added is null)
+        {
+            return environment;
+        }
+
+        Dictionary<string, string> merged = new(added, StringComparer.Ordinal);
+        foreach ((string name, string value) in environment ?? new Dictionary<string, string>())
+        {
+            merged[name] = value;
+        }
+
+        return merged;
     }
 
     private AppLaunchResult StartService(AppDescriptor descriptor, ProcessRecord process, IAppExecutionContext context)

@@ -194,7 +194,7 @@ public interface IAppManagementGateway
     /// <summary>
     /// Removes an app installed from a package: the session user's own copy without an
     /// administrator, a system one after the two-step approval. Settings stay; it leaves the
-    /// catalog at the next start of the OS.
+    /// catalog at once, or at the next start of the OS when it is loaded in the page (ADR 0214 §1).
     /// </summary>
     /// <param name="appId">The installed app.</param>
     /// <param name="scope">Which copy; <see cref="HackPackageScope.Auto"/> takes the user's own, else the system's.</param>
@@ -203,6 +203,30 @@ public interface IAppManagementGateway
     ValueTask<HackInstalledPackage> RemovePackageAsync(
         string appId, HackPackageScope scope = HackPackageScope.Auto, CancellationToken cancellationToken = default) =>
         throw new NotSupportedException("This app-management gateway cannot install packages.");
+
+    /// <summary>
+    /// Puts back the version the last update of an installed app kept (ADR 0214 §4.1), with the
+    /// approvals an install of the same scope needs, and keeps the version it leaves.
+    /// </summary>
+    /// <param name="appId">The installed app.</param>
+    /// <param name="scope">Which copy; <see cref="HackPackageScope.Auto"/> takes the user's own, else the system's.</param>
+    /// <param name="cancellationToken">Cancels the approval and the writes.</param>
+    /// <exception cref="NotSupportedException">The gateway predates ADR 0214.</exception>
+    ValueTask<HackPackageInstallReport> RollbackPackageAsync(
+        string appId, HackPackageScope scope = HackPackageScope.Auto, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This app-management gateway cannot go back to a previous version.");
+
+    /// <summary>
+    /// Finishes or undoes the installs an interruption left, then deletes unfinished folders
+    /// (<c>hackpkg repair</c>, ADR 0214 §3.5): the session user's own apps, and the system's after
+    /// an administrator authenticated when <paramref name="system"/> is set.
+    /// </summary>
+    /// <param name="system">Also repairs the apps installed for the system.</param>
+    /// <param name="cancellationToken">Cancels the authentication and the writes.</param>
+    /// <returns>One line per repaired app.</returns>
+    /// <exception cref="NotSupportedException">The gateway predates ADR 0214.</exception>
+    ValueTask<IReadOnlyList<string>> RepairPackagesAsync(bool system, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This app-management gateway cannot repair installed apps.");
 
     /// <summary>Adds a catalog or a GitHub source to <c>app-sources.config</c>, after an administrator authenticated (ADR 0189 §1).</summary>
     /// <param name="source"><c>name=https://…/catalog.json</c>, <c>github:owner</c> or <c>github:owner/repo</c>.</param>

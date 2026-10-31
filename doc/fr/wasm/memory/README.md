@@ -93,10 +93,12 @@ jour à la fin de chaque série ou quand une convention change.
 - **Hack Store 5, l'app** (ADR 0212, issue `TODO` #249, série `todo/base`,
   branche `todo/5-hackstore-app`) : app système `org.hackeros.store`
   (`HackerOs.Apps.Store`), source `catalog:<nom>/<appId>@<version>`,
-  `hackpkg install <appId>`, `AppUpdateMonitor` et badge, épinglage par défaut
-  (`defaultPinsApplied` de `start-menu.json`). Quatre questions posées à
-  Benoit (redémarrage sans administrateur, source écrite, badge, ordre des
-  catalogues), recommandations appliquées. Voir
+  `hackpkg install <appId>`, `AppUpdateMonitor` et notification, épinglage par
+  défaut (`defaultPinsApplied` de `start-menu.json`). Réponses de Benoit
+  (2026-10-31) : Q1 A redémarrage sans administrateur, Q2 A source
+  `catalog:official/<appId>`, Q3 C notification seulement (pas de badge),
+  Q4 B appId listé par plusieurs catalogues refusé (`apps.package.ambiguous`) ;
+  Q3 et Q4 dans l'ADR 0215 (branche `todo/5b-hackstore-no-badge`). Voir
   [`app-installation.md`](../dev/app-installation.md#le-hack-store-et-les-catalogues).
 - **Hack Store v2, packs de thèmes** (ADR 0213, issue `TODO` #253, série
   `todo/base`, branche `todo/18-theme-packs`) : format `.hacktheme`
@@ -106,6 +108,14 @@ jour à la fin de chaque série ou quand une convention change.
   Benoit (fichiers lus en place, CI du catalogue, rien appliqué après
   l'installation, pas de badge), réponses A pour les quatre (2026-10-31). CI du catalogue :
   issue `TODO` AppMarketPlace #4.
+- **Hack Store, étapes suivantes** (ADR 0214, issue `TODO` #251, série
+  `todo/base`, branche `todo/19-hackstore-later`) : ajout sans redémarrage
+  (catalogue vivant `AppCatalog.Changed`), signatures ECDSA P-256
+  (`[signing-keys]`, `HackerOsAppSigningKeys`), journal `.transaction`,
+  `hackpkg rollback`/`repair`, `AppDataGuard`. Cinq questions posées à Benoit,
+  réponse A à chacune. La clé du catalogue officiel reste à créer par Benoit
+  (`keygen`, secret `HACK_STORE_SIGNING_KEY`) ; outil pour les auteurs :
+  issue `TODO` #321.
 - **Bulles de notification** (ADR 0197, chantier 1 de #242, série
   `todo/base`) : bulles des notifications et « Update ready » en
   notification persistante avec « Redémarrer ». Voir
@@ -127,7 +137,10 @@ jour à la fin de chaque série ou quand une convention change.
   le Navigateur est une app système avec `network.real.access` ; avec un
   serveur connecté, il ouvre les vrais sites par le proxy, cookies compris.
   Restent le proxy public et la Wayback Machine.
-- **ADR** : 0001 à 0171 et 0173 à 0195 existent sur `main` (quelques numéros sautés ;
+- **Point des notifications non lues à côté de l'horloge** (ADR 0196, PR #294,
+  fusionnée sur `main` le 2026-10-31) : remplace la pastille du menu Démarrer des
+  nouveautés ; ramenée dans `todo/base` par la fusion de `main`.
+- **ADR** : 0001 à 0171 et 0173 à 0196 existent sur `main` (quelques numéros sautés ;
   0141 et 0172 n'ont pas servi). Repères récents : 0173 publication automatique,
   0174 annonce de nouvelle version, 0175 « Nouveau dossier » des dialogues, 0176
   dépôt template d'apps, 0177 barre de titre des fenêtres agrandies, 0178 à 0180,
@@ -136,11 +149,10 @@ jour à la fin de chaque série ou quand une convention change.
   invité et crédits, 0188 à 0190 Hack Store ([`hackeros-store.md`](../dev/plans/hackeros-store.md)),
   0191 serveur local installable, 0192 `features.md` et exception à l'ADR 0135,
   0193 heure locale, 0194 menus de la barre des tâches, 0195 bouton
-  Marche/arrêt du menu Démarrer ; série `todo/base` : 0197 bulles de
-  notification, 0201 « Changer d'utilisateur » reste grisé, 0203 packs d'icônes, 0207 modèle `hackeros-solution`, 0208 sources de confiance du Hack Store, 0212 app Hack Store, 0213 packs de thèmes, 0214 réservée pour l'issue #251 (les
-  autres numéros jusqu'à 0211 sont réservés par ses chantiers). 0196 est prise
-  par la PR #294 (point des notifications non lues). **Prochain numéro libre :
-  0215.** Avant d'en
+  Marche/arrêt du menu Démarrer, 0196 point des notifications non lues ; série `todo/base` : 0197 bulles de
+  notification, 0201 « Changer d'utilisateur » reste grisé, 0203 packs d'icônes, 0207 modèle `hackeros-solution`, 0208 sources de confiance du Hack Store, 0212 app Hack Store, 0213 packs de thèmes, 0214 Hack Store sans redémarrage, signature et transactions, 0215 réponses du Hack Store (pas de badge, appId ambigu refusé) (les
+  autres numéros jusqu'à 0211 sont réservés par ses chantiers). **Prochain numéro libre :
+  0216.** Avant d'en
   prendre un, vérifier `dev/adr/` sur `main` et les PR ouvertes.
 
 ## Conventions de travail

@@ -22,6 +22,8 @@ namespace HackerOs.Platform.Core.Apps.Packages;
 /// github.com/Kazo-ca=true
 /// [updates]
 /// interval-hours=6
+/// [signing-keys]
+/// catalog:official=MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE…
 /// </code>
 /// Read line by line without a schema, like <see cref="AppsConfigDocument"/>: a bad line is skipped
 /// with a warning, the last occurrence of a key wins. The content written when the file does not
@@ -40,6 +42,12 @@ public static class AppSourcesConfigDocument
 
     /// <summary>Section of the update check.</summary>
     public const string UpdatesSection = "updates";
+
+    /// <summary>
+    /// Section of the public keys whose signature a source's packages must carry (ADR 0214 §2):
+    /// <c>&lt;trust key&gt;=&lt;base64 key&gt;[,&lt;base64 key&gt;…]</c>.
+    /// </summary>
+    public const string SigningKeysSection = "signing-keys";
 
     /// <summary>Key of <see cref="UpdatesSection"/>: hours between two update checks.</summary>
     public const string IntervalHoursKey = "interval-hours";
@@ -95,10 +103,19 @@ public static class AppSourcesConfigDocument
             text.Append(key).Append("=true\n");
         }
 
-        return text.Append('\n')
+        text.Append('\n')
             .Append('[').Append(UpdatesSection).Append("]\n")
             .Append(IntervalHoursKey).Append('=').Append(defaults.UpdateIntervalHours.ToString(CultureInfo.InvariantCulture)).Append('\n')
-            .ToString();
+            .Append('\n')
+            .Append("# Public keys (base64 SubjectPublicKeyInfo, ECDSA P-256) a source's packages must be signed with\n")
+            .Append("# (ADR 0214 section 2). A source listed here refuses any unsigned or badly signed package.\n")
+            .Append('[').Append(SigningKeysSection).Append("]\n");
+        foreach (IGrouping<string, KeyValuePair<string, string>> keys in defaults.SigningKeys.GroupBy(static pair => pair.Key, StringComparer.OrdinalIgnoreCase))
+        {
+            text.Append(keys.Key).Append('=').AppendJoin(',', keys.Select(static pair => pair.Value)).Append('\n');
+        }
+
+        return text.ToString();
     }
 
     /// <summary>Reads the file with the standard defaults. Never fails: an absent file gives the defaults.</summary>
@@ -120,6 +137,7 @@ public static class AppSourcesConfigDocument
         Dictionary<string, Uri> catalogs = new(StringComparer.OrdinalIgnoreCase);
         Dictionary<string, bool> trusted = new(StringComparer.OrdinalIgnoreCase);
         int interval = defaults.UpdateIntervalHours;
+        Dictionary<string, List<byte[]>> signingKeys = new(StringComparer.OrdinalIgnoreCase);
         List<string> warnings = [];
         foreach (ConfigLine line in ConfigDocumentLines.Parse(content))
         {
@@ -158,6 +176,25 @@ public static class AppSourcesConfigDocument
                 case UpdatesSection:
                     warnings.Add($"{where}: '{key}={value}' is not interval-hours between 1 and {MaximumIntervalHours}, line ignored");
                     break;
+                case SigningKeysSection when IsTrustKey(key):
+                    List<byte[]> parsed = [];
+                    foreach (string item in value.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+                    {
+                        if (AppPackageSignature.TryParsePublicKey(item, out byte[]? publicKey))
+                        {
+                            parsed.Add(publicKey);
+                        }
+                        else
+                        {
+                            warnings.Add($"{where}: '{item}' is not the base64 of an ECDSA P-256 public key, key ignored");
+                        }
+                    }
+
+                    signingKeys[key] = parsed;
+                    break;
+                case SigningKeysSection:
+                    warnings.Add($"{where}: '{key}' is not a source, line ignored");
+                    break;
             }
         }
 
@@ -170,6 +207,7 @@ public static class AppSourcesConfigDocument
             UntrustedKeys = trusted.Where(static pair => !pair.Value).Select(static pair => pair.Key).ToHashSet(StringComparer.OrdinalIgnoreCase),
             UpdateIntervalHours = interval,
             BuiltInKeys = defaults.TrustedKeys.ToHashSet(StringComparer.OrdinalIgnoreCase),
+            SigningKeys = MergeSigningKeys(signingKeys, defaults),
         };
     }
 
@@ -206,6 +244,33 @@ public static class AppSourcesConfigDocument
         }
 
         return ConfigDocumentEditor.RemoveValue(edited, TrustedSection, source.TrustKey);
+    }
+
+    /// <summary>The keys of the file, plus the host's own (ADR 0214 §2: built-in keys cannot be dropped by editing the file).</summary>
+    private static IReadOnlyDictionary<string, IReadOnlyList<byte[]>> MergeSigningKeys(
+        Dictionary<string, List<byte[]>> fromFile, AppPackageDefaults defaults)
+    {
+        foreach ((string source, string text) in defaults.SigningKeys)
+        {
+            if (!AppPackageSignature.TryParsePublicKey(text, out byte[]? key))
+            {
+                continue;
+            }
+
+            if (!fromFile.TryGetValue(source, out List<byte[]>? keys))
+            {
+                fromFile[source] = keys = [];
+            }
+
+            if (!keys.Any(existing => existing.AsSpan().SequenceEqual(key)))
+            {
+                keys.Add(key);
+            }
+        }
+
+        return fromFile
+            .Where(static pair => pair.Value.Count > 0)
+            .ToDictionary(static pair => pair.Key, static pair => (IReadOnlyList<byte[]>)pair.Value, StringComparer.OrdinalIgnoreCase);
     }
 
     /// <summary>Gets whether <paramref name="key"/> names a catalog or a GitHub owner or repository.</summary>
@@ -285,6 +350,27 @@ public sealed record AppSourcesConfig(string GitHubHost, IReadOnlySet<string> Tr
 
     /// <summary>Gets the trusted keys the host was built with (ADR 0189 §1), compared without case.</summary>
     public IReadOnlySet<string> BuiltInKeys { get; init; } = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>
+    /// Gets the public keys (SubjectPublicKeyInfo) by trust key of <c>[signing-keys]</c>, the host's
+    /// own included (ADR 0214 §2).
+    /// </summary>
+    public IReadOnlyDictionary<string, IReadOnlyList<byte[]>> SigningKeys { get; init; } =
+        new Dictionary<string, IReadOnlyList<byte[]>>(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>
+    /// Gets the keys one of which must have signed every package of <paramref name="source"/>
+    /// (ADR 0214 §2): those of its catalog, or of its GitHub owner and of the repository itself.
+    /// Empty when the source has none: its packages are then accepted on their SHA-256 alone.
+    /// </summary>
+    public IReadOnlyList<byte[]> GetSigningKeys(AppPackageSource source)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+        string[] keys = source.Catalog is { } catalog
+            ? [AppSourcesConfigDocument.CatalogTrustPrefix + catalog]
+            : [source.TrustKey, source.RepositoryTrustKey];
+        return [.. keys.Distinct(StringComparer.OrdinalIgnoreCase).SelectMany(key => SigningKeys.TryGetValue(key, out IReadOnlyList<byte[]>? found) ? found : [])];
+    }
 
     /// <summary>Gets whether apps of <paramref name="source"/> install for one user without an administrator.</summary>
     public bool IsTrusted(AppPackageSource source) => GetTrust(source) != AppSourceTrust.Untrusted;

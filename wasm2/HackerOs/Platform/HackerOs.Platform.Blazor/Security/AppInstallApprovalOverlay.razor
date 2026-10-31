@@ -47,6 +47,10 @@
                             <dd><span class="iap-label">@L["InstallApproval.Size"]</span> @FormatSize(size)</dd>
                         }
                         <dd><span class="iap-label">@L["InstallApproval.Source"]</span> <code>@request.Source</code></dd>
+                        @if (request.Signed is { } signed)
+                        {
+                            <dd><span class="iap-label">@L["InstallApproval.Signature"]</span> @(signed ? L["InstallApproval.Signed"] : L["InstallApproval.Unsigned"])</dd>
+                        }
                         <dd>
                             <span class="iap-label">@L["InstallApproval.For"]</span>
                             @(request.SystemWide ? L["InstallApproval.ForEveryone"] : L["InstallApproval.ForUser", request.RequestedBy?.LoginName.Value ?? "-"])

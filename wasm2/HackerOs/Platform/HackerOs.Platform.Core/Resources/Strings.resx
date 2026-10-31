@@ -720,4 +720,13 @@ Cancel: decide at the next launch.</value>
   <data name="AppUpdates.Notification.View" xml:space="preserve">
     <value>View</value>
   </data>
+  <data name="Admin.App.RollbackPackage" xml:space="preserve">
+    <value>Go back to {0} {1}, installed from {2}, for all users</value>
+  </data>
+  <data name="Admin.App.RollbackPackageForUser" xml:space="preserve">
+    <value>Go back to {0} {1} from {2}, an untrusted source, for {3} only</value>
+  </data>
+  <data name="Admin.App.RepairPackages" xml:space="preserve">
+    <value>Repair the apps installed for all users</value>
+  </data>
 </root>

@@ -25,6 +25,7 @@ public sealed partial class AppPackageGatewayTests
     private const string Untrusted = "someone/sample";
     private const string Folder = "/usr/lib/hackeros/apps/org.kazo.sample";
     private const string PersonalFolder = "/home/alice/.local/share/hackeros/apps/org.kazo.sample";
+    private const string MirrorCatalog = "https://raw.githubusercontent.com/someone/mirror/packages/catalog.json";
     private const string PersonalConfig = "/home/alice/.config/hackeros/installed-apps.config";
 
     [Fact]
@@ -188,7 +189,7 @@ public sealed partial class AppPackageGatewayTests
     }
 
     [Fact]
-    public async Task An_update_replaces_the_previous_version_folder()
+    public async Task An_update_keeps_the_previous_version_folder_for_a_rollback()
     {
         Harness harness = await Harness.CreateAsync();
         harness.Publish(Trusted, "1.0.0");
@@ -204,8 +205,11 @@ public sealed partial class AppPackageGatewayTests
         Assert.Equal("1.0.0", info.InstalledVersion);
         Assert.True(info.InstalledSystemWide);
         Assert.Equal("1.0.0", report.PreviousVersion);
-        Assert.Null(await harness.Settings.StatAsync($"{Folder}/1.0.0"));
+        // ADR 0214 §4.1: the replaced version stays on disk for hackpkg rollback.
+        Assert.NotNull(await harness.Settings.StatAsync($"{Folder}/1.0.0/manifest.json"));
         Assert.NotNull(await harness.Settings.StatAsync($"{Folder}/1.1.0/manifest.json"));
+        Assert.Null(await harness.Settings.StatAsync($"{Folder}/{AppPackageInstaller.TransactionFileName}"));
+        Assert.Null(await harness.Settings.StatAsync($"{Folder}/1.1.0{AppPackageInstaller.PartialSuffix}"));
         Assert.Equal(
             "apps.package.already-installed",
             (await Assert.ThrowsAsync<HackPackageException>(() => gateway.InstallPackageAsync(Trusted, HackPackageScope.System).AsTask())).Code);
@@ -432,6 +436,27 @@ public sealed partial class AppPackageGatewayTests
     }
 
     [Fact]
+    public async Task A_bare_app_id_listed_by_two_catalogs_is_refused_and_names_both()
+    {
+        // ADR 0215 (Benoit): the OS does not pick a catalog; the user writes catalog:<name>/<appId>.
+        Harness harness = await Harness.CreateAsync();
+        harness.PublishCatalog("1.0.0");
+        harness.PublishCatalogAt(MirrorCatalog, "1.0.0");
+        await harness.Settings.WriteAsRootAsync(
+            AppSourcesConfigDocument.MachinePath.Value,
+            AppSourcesConfigDocument.DefaultContent.Replace(
+                "[catalogs]\n", $"[catalogs]\nmirror={MirrorCatalog}\n", StringComparison.Ordinal));
+        AppManagementGateway gateway = await harness.CreateGatewayAsync(new CountingAgent(succeed: true));
+
+        HackPackageException error = await Assert.ThrowsAsync<HackPackageException>(
+            async () => await gateway.InstallPackageAsync(AppPackageTests.AppId));
+
+        Assert.Equal("apps.package.ambiguous", error.Code);
+        Assert.Contains($"catalog:official/{AppPackageTests.AppId}", error.Message, StringComparison.Ordinal);
+        Assert.Contains($"catalog:mirror/{AppPackageTests.AppId}", error.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public async Task The_catalogs_are_listed_with_their_trust_and_absolute_files()
     {
         Harness harness = await Harness.CreateAsync();
@@ -473,7 +498,7 @@ public sealed partial class AppPackageGatewayTests
     }
 
     [Fact]
-    public async Task A_newer_catalog_version_is_reported_and_published_to_the_badge()
+    public async Task A_newer_catalog_version_is_reported_and_published_to_the_monitor()
     {
         Harness harness = await Harness.CreateAsync();
         harness.PublishCatalog("1.0.0");
@@ -487,7 +512,7 @@ public sealed partial class AppPackageGatewayTests
 
         Assert.Equal(("1.0.0", "1.1.0", false), (update.InstalledVersion, update.AvailableVersion, update.SystemWide));
         Assert.Equal("catalog:official/org.kazo.sample", update.Source);
-        Assert.Equal(1, monitor.GetBadgeCount(AppUpdateMonitor.StoreAppId));
+        Assert.Single(monitor.Pending);
     }
 
     [Fact]
@@ -516,7 +541,7 @@ public sealed partial class AppPackageGatewayTests
         Notification posted = Assert.Single(notifications.GetActive(alice.UserId, DateTimeOffset.UnixEpoch));
         Assert.Equal(AppUpdateMonitor.StoreAppId, posted.SourceAppId);
         monitor.Stop();
-        Assert.Equal(0, monitor.GetBadgeCount(AppUpdateMonitor.StoreAppId));
+        Assert.Empty(monitor.Pending);
         Assert.Equal(2, changes);
     }
 
@@ -643,9 +668,13 @@ public sealed partial class AppPackageGatewayTests
         /// Publishes the sample app in the official catalog (ADR 0188 §6): <c>catalog.json</c> on the
         /// <c>packages</c> branch of the catalog repository, each version in its own folder.
         /// </summary>
-        internal void PublishCatalog(string latest, params string[] older)
+        internal void PublishCatalog(string latest, params string[] older) =>
+            PublishCatalogAt(AppPackageDefaults.OfficialCatalogAddress, latest, older);
+
+        /// <summary>Publishes the sample app in the catalog whose <c>catalog.json</c> is at <paramref name="address"/>.</summary>
+        internal void PublishCatalogAt(string address, string latest, params string[] older)
         {
-            string root = AppPackageDefaults.OfficialCatalogAddress[..^"catalog.json".Length];
+            string root = address[..^"catalog.json".Length];
             List<string> versions = [];
             foreach (string version in older.Prepend(latest))
             {
@@ -663,7 +692,7 @@ public sealed partial class AppPackageGatewayTests
                     """);
             }
 
-            _downloader.Files[new Uri(AppPackageDefaults.OfficialCatalogAddress)] = Encoding.UTF8.GetBytes($$$"""
+            _downloader.Files[new Uri(address)] = Encoding.UTF8.GetBytes($$$"""
                 {"schemaVersion":1,"categories":[{"id":"utilities","labels":{"en":"Utilities","fr":"Utilitaires"}}],
                  "apps":[{"appId":"{{{AppPackageTests.AppId}}}","kind":"app","name":"Sample","category":"utilities","tags":["demo"],
                           "shortDescriptions":{"en":"A sample"},"license":"MIT","repository":"https://github.com/Kazo-ca/HackerOs-App-Sample",

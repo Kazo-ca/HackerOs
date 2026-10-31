@@ -8,7 +8,6 @@ HackerOs.Ecosystem.InstalledAppAssetSource
 HackerOs.Ecosystem.InstalledAppAssetSource.InstalledAppAssetSource(HackerOs.Platform.Core.Apps.IAppAssetSource! inner, HackerOs.Ecosystem.InstalledAppsBoot! installed) -> void
 HackerOs.Ecosystem.InstalledAppAssetSource.ReadAsync(HackerOs.App.Abstractions.AppManifest! manifest, string! assetPath, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<byte[]?>
 HackerOs.Ecosystem.InstalledAppsBoot
-HackerOs.Ecosystem.InstalledAppsBoot.Apply(HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage! image, HackerOs.Platform.Core.Apps.Packages.InstalledAppFileReader! read) -> void
 HackerOs.Ecosystem.InstalledAppsBoot.BuiltIn.get -> HackerOs.Ecosystem.HostAppCatalog!
 HackerOs.Ecosystem.InstalledAppsBoot.Current.get -> HackerOs.Ecosystem.HostAppCatalog!
 HackerOs.Ecosystem.InstalledAppsBoot.Find(string! appId) -> HackerOs.Platform.Core.Apps.Packages.InstalledApp?
@@ -39,3 +38,11 @@ HackerOs.Ecosystem.InstalledAppAssetPublisher
 HackerOs.Ecosystem.InstalledAppAssetPublisher.InstalledAppAssetPublisher(HackerOs.Ecosystem.InstalledAppsBoot! installed, HackerOs.Ecosystem.IInstalledAppAssetCache! cache, System.Func<HackerOs.Platform.Core.Apps.AppAssetStore!>! store, Microsoft.Extensions.Logging.ILogger<HackerOs.Ecosystem.InstalledAppAssetPublisher!>? logger = null) -> void
 HackerOs.Ecosystem.InstalledAppAssetPublisher.PublishAsync(HackerOs.Platform.Core.Apps.Packages.InstalledApp! app, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
 static HackerOs.Ecosystem.InstalledAppAssetPublisher.GetUrl(HackerOs.Platform.Core.Apps.Packages.InstalledApp! app, string! assetPath) -> string!
+HackerOs.Ecosystem.InstalledAppsActivator
+HackerOs.Ecosystem.InstalledAppsActivator.ActivateAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Platform.Core.Apps.Packages.InstalledAppsActivation!>
+HackerOs.Ecosystem.InstalledAppsActivator.InstalledAppsActivator(HackerOs.Ecosystem.InstalledAppsBoot! installed, HackerOs.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoaderRegistry! assemblies, Microsoft.Extensions.Logging.ILogger<HackerOs.Ecosystem.InstalledAppsActivator!>? logger = null) -> void
+HackerOs.Ecosystem.InstalledAppsBoot.Apply(HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage! image, HackerOs.Platform.Core.Apps.Packages.InstalledAppFileReader! read, HackerOs.Platform.Core.Apps.Packages.InstalledAppHomeLister? listHomes = null) -> void
+HackerOs.Ecosystem.InstalledAppsBoot.Live.get -> HackerOs.Platform.Core.AppCatalog!
+HackerOs.Ecosystem.InstalledAppsBoot.Refresh(HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage! image, System.Func<HackerOs.Platform.Core.Apps.Packages.InstalledApp!, bool>! isLoaded) -> HackerOs.Platform.Core.Apps.Packages.InstalledAppsActivation!
+HackerOs.Ecosystem.InstalledAppsBoot.ReloadAsync(System.Func<HackerOs.Platform.Core.Apps.Packages.InstalledApp!, bool>! isLoaded, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Platform.Core.Apps.Packages.InstalledAppsActivation!>
+static HackerOs.Ecosystem.InstalledAppsActivator.IsLoaded(HackerOs.Platform.Core.Apps.Packages.InstalledApp! app) -> bool
