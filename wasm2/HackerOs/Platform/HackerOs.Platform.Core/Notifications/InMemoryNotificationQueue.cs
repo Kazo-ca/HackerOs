@@ -7,7 +7,7 @@ namespace HackerOs.Platform.Core.Notifications;
 /// In-memory <see cref="INotificationQueue"/> that retains at most <see cref="MaxEntriesPerUser"/>
 /// notifications per user, evicting the oldest entry for that user once full.
 /// </summary>
-public sealed class InMemoryNotificationQueue : INotificationQueue
+public sealed class InMemoryNotificationQueue : INotificationQueue, INotificationFeed
 {
     private readonly Lock _gate = new();
     private readonly Dictionary<LocalUserId, List<Notification>> _notificationsByUser = [];
@@ -24,6 +24,9 @@ public sealed class InMemoryNotificationQueue : INotificationQueue
 
     /// <summary>Gets the maximum number of notifications retained per user.</summary>
     public int MaxEntriesPerUser { get; }
+
+    /// <inheritdoc />
+    public event Action<Notification>? Posted;
 
     /// <inheritdoc />
     public void Enqueue(Notification notification)
@@ -46,6 +49,9 @@ public sealed class InMemoryNotificationQueue : INotificationQueue
                 _dismissedIds.Remove(evicted.Id);
             }
         }
+
+        // Outside the lock: a listener (the sound service, ADR 0204) may read the queue back.
+        Posted?.Invoke(notification);
     }
 
     /// <inheritdoc />

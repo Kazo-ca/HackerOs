@@ -1,6 +1,8 @@
 using HackerOs.App.Abstractions;
 using HackerOs.Platform.Core.Processes;
+using HackerOs.Platform.Core.Sounds;
 using HackerOs.Simulation.Abstractions.FileSystem;
+using HackerOs.Simulation.Abstractions.Sounds;
 
 namespace HackerOs.Platform.Core.FileSystem;
 
@@ -107,6 +109,9 @@ public sealed class FileSystemSeeder(
             }
         }
 
+        // ADR 0204: the built-in sound themes, freedesktop.org layout (/usr/share/sounds/<id>/).
+        await SeedSoundThemesAsync(system, cancellationToken);
+
         string home = $"/home/{userName.Value}";
         await EnsureDirectoryAsync(home, 0x01C0, userProvisioning, cancellationToken);
         await EnsureDirectoryAsync($"{home}/Desktop", 0x01C0, userProvisioning, cancellationToken);
@@ -119,6 +124,39 @@ public sealed class FileSystemSeeder(
         await EnsureDirectoryAsync($"{home}/.local", 0x01ED, userProvisioning, cancellationToken);
         await EnsureDirectoryAsync($"{home}/.local/state", 0x01ED, userProvisioning, cancellationToken);
         await EnsureDirectoryAsync($"{home}/.local/state/hackeros", 0x01ED, userProvisioning, cancellationToken);
+        // ADR 0204: the user's own sound themes, one folder per theme.
+        await EnsureDirectoryAsync($"{home}/.local/share", 0x01ED, userProvisioning, cancellationToken);
+        await EnsureDirectoryAsync(
+            OsSoundEvents.GetUserThemesDirectory(home), 0x01ED, userProvisioning, cancellationToken);
+    }
+
+    /// <summary>
+    /// Installs every built-in sound theme (ADR 0204 section 4): <c>index.theme</c> and one
+    /// <c>stereo/&lt;sound-name&gt;.oga</c> per event, root-owned 0644. Existing files are kept.
+    /// </summary>
+    private async ValueTask SeedSoundThemesAsync(FileSystemAuthorizationContext system, CancellationToken cancellationToken)
+    {
+        await EnsureDirectoryAsync(OsSoundEvents.SystemThemesDirectory, 0x01ED, system, cancellationToken);
+        foreach (BuiltInSoundTheme theme in BuiltInSoundThemes.All)
+        {
+            string directory = BuiltInSoundThemes.GetDirectory(theme.Id);
+            await EnsureDirectoryAsync(directory, 0x01ED, system, cancellationToken);
+            await EnsureDirectoryAsync(directory + "/stereo", 0x01ED, system, cancellationToken);
+            await EnsureFileAsync(
+                $"{directory}/{OsSoundEvents.IndexFileName}", BuiltInSoundThemes.GetIndexContent(theme), 0x01A4, system, cancellationToken);
+            foreach (OsSoundEvent soundEvent in OsSoundEvents.All)
+            {
+                if (BuiltInSoundThemes.ReadSound(theme.Id, soundEvent) is { } audio)
+                {
+                    await EnsureFileAsync(
+                        BuiltInSoundThemes.GetSoundPath(theme.Id, soundEvent),
+                        audio,
+                        0x01A4,
+                        system,
+                        cancellationToken);
+                }
+            }
+        }
     }
 
     /// <summary>
@@ -214,7 +252,7 @@ public sealed class FileSystemSeeder(
         CancellationToken cancellationToken) =>
         EnsureFileAsync(pathValue, new SeedSource(System.Text.Encoding.UTF8.GetBytes(content), FileSystemContentDescriptor.Text()), mode, context, cancellationToken);
 
-    /// <summary>Creates a binary file (an image of a shipped icon pack) when nothing exists at <paramref name="pathValue"/>.</summary>
+    /// <summary>Creates a binary file (an image of a shipped icon pack, a built-in sound) when nothing exists at <paramref name="pathValue"/>.</summary>
     private ValueTask EnsureFileAsync(
         string pathValue,
         byte[] content,
@@ -288,6 +326,7 @@ public sealed class FileSystemSeeder(
 
     private static string MediaTypeOf(string path) =>
         path.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ? "image/png"
+        : path.EndsWith(".oga", StringComparison.OrdinalIgnoreCase) ? "audio/ogg"
         : "application/octet-stream";
 
     /// <summary>Content of one seeded file: UTF-8 text or the bytes of an image.</summary>
