@@ -1,0 +1,83 @@
+# Publishes the app on the hackeros-packages branch of this repository (ADR 0182 §2, ADR 0219 §3), so
+# that "hackpkg install <owner>/<repo>" installs it without the Hack Store.
+#
+# On a tag v<version> (the app's Version in its [AppManifest] class), this workflow:
+#   1. checks the HackerOS submodule and that the tag is the manifest version;
+#   2. checks out the hackeros-packages branch (an orphan branch the first time), so the versions
+#      already published stay listed in index.json with their signatures;
+#   3. packs the app there (HackerOsPack); with the HACKEROS_APP_SIGNING_KEY secret (the private key
+#      made by "dotnet build -t:HackerOsKeyGen"), each package gets its ECDSA signature; without it,
+#      the package is published unsigned and the run shows a warning;
+#   4. commits and pushes the branch.
+# This is the only workflow of the repository allowed to write to it.
+name: Publish the HackerOS packages
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: hackeros-packages
+  cancel-in-progress: false
+
+env:
+  APP_DIRECTORY: src/HackerOs.Template.Solution
+  PACKAGES_BRANCH: hackeros-packages
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Check the HackerOS submodule
+        run: bash .github/scripts/check-hackeros-submodule.sh
+
+      - name: Check out the packages branch
+        run: |
+          if git fetch --depth 1 origin "$PACKAGES_BRANCH"; then
+            git worktree add packages FETCH_HEAD
+            git -C packages checkout -B "$PACKAGES_BRANCH"
+          else
+            git worktree add --orphan -b "$PACKAGES_BRANCH" packages
+          fi
+
+      - name: Build and pack (Release)
+        env:
+          HACKEROS_APP_SIGNING_KEY: ${{ secrets.HACKEROS_APP_SIGNING_KEY }}
+        run: |
+          if [[ -z "$HACKEROS_APP_SIGNING_KEY" ]]; then
+            echo "::warning::No HACKEROS_APP_SIGNING_KEY secret: the package is published unsigned (SHA-256 only)."
+          fi
+          dotnet build "$APP_DIRECTORY" -c Release -t:HackerOsPack -p:HackerOsPackageOutput="$GITHUB_WORKSPACE/packages"
+
+      - name: Check the tag
+        run: |
+          version="$(jq -r .version "$APP_DIRECTORY/manifest.json")"
+          if [[ "$GITHUB_REF_TYPE" == "tag" && "${GITHUB_REF_NAME#v}" != "$version" ]]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match the app version $version (manifest.json)."
+            exit 1
+          fi
+          echo "VERSION=$version" >> "$GITHUB_ENV"
+
+      - name: Push the packages branch
+        working-directory: packages
+        run: |
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Nothing new to publish."
+            exit 0
+          fi
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -m "Publish $VERSION ($GITHUB_SHA)"
+          git push origin "HEAD:$PACKAGES_BRANCH"
