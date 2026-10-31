@@ -1989,4 +1989,25 @@
   <data name="Policy.Block" xml:space="preserve">
     <value>Block</value>
   </data>
+  <data name="SetWallpaper.Done.Title" xml:space="preserve">
+    <value>Wallpaper changed</value>
+  </data>
+  <data name="SetWallpaper.Done.Message" xml:space="preserve">
+    <value>{0} is now the wallpaper.</value>
+  </data>
+  <data name="SetWallpaper.Done.MessageScreen" xml:space="preserve">
+    <value>{0} is now the wallpaper of screen {1}.</value>
+  </data>
+  <data name="SetWallpaper.Error.Title" xml:space="preserve">
+    <value>Wallpaper not changed</value>
+  </data>
+  <data name="SetWallpaper.Error.NotImage" xml:space="preserve">
+    <value>{0} is not a PNG, JPEG or WebP image of 16 MB at most.</value>
+  </data>
+  <data name="SetWallpaper.Error.Unreadable" xml:space="preserve">
+    <value>{0} cannot be read: {1}</value>
+  </data>
+  <data name="SetWallpaper.Error.NotSaved" xml:space="preserve">
+    <value>The wallpaper cannot be saved: {0}</value>
+  </data>
 </root>

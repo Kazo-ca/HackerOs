@@ -134,6 +134,73 @@ public sealed class FileMenuEntriesTests
         Assert.Null(FileMenuEntries.IconOf("x", null));
     }
 
+    [Fact]
+    public async Task One_screen_shows_the_plain_entry_and_several_screens_the_submenu_of_the_open_screens()
+    {
+        // ADR 0218 §2: the entries of « Set as wallpaper », filtered by the screens open at the moment.
+        AppContextMenuEntryManifest[] wallpaper =
+        [
+            Entry("wall") with { Types = ["image/*"], Screens = AppContextMenus.ScreensSingle },
+            Entry("wall-on") with { Intent = null, Types = ["image/*"], Screens = AppContextMenus.ScreensMultiple },
+            Entry("wall-all") with { Parent = "wall-on" },
+            Entry("wall-2") with { Parent = "wall-on", Screen = 2 },
+            Entry("wall-3") with { Parent = "wall-on", Screen = 3 }
+        ];
+
+        HackMenuDefinition single = FileMenu(FileMenuScope.File, Item("/a.png", "image/png"));
+        await (await ScreenSourceAsync(wallpaper, 1)).ApplyAsync(single);
+        Assert.NotNull(single.Find("app:com.example.tools/wall"));
+        Assert.Null(single.Find("app:com.example.tools/wall-on"));
+
+        HackMenuDefinition several = FileMenu(FileMenuScope.File, Item("/a.png", "image/png"));
+        await (await ScreenSourceAsync(wallpaper, 1, 3)).ApplyAsync(several);
+        Assert.Null(several.Find("app:com.example.tools/wall"));
+        HackMenuItemDefinition submenu = several.Find("app:com.example.tools/wall-on")!;
+        Assert.Equal(
+            ["app:com.example.tools/wall-all", "app:com.example.tools/wall-3"],
+            Assert.Single(submenu.Children).Items.Select(static item => item.Id));
+    }
+
+    [Fact]
+    public void The_screen_filter_counts_screen_1_even_when_the_host_leaves_it_out()
+    {
+        AppContextMenuEntryManifest single = Entry("a") with { Screens = AppContextMenus.ScreensSingle };
+        AppContextMenuEntryManifest multiple = Entry("b") with { Screens = AppContextMenus.ScreensMultiple };
+        AppContextMenuEntryManifest unknown = Entry("c") with { Screens = "many" };
+
+        Assert.True(FileContextMenuMatcher.MatchesScreens(single, new HashSet<int>()));
+        Assert.True(FileContextMenuMatcher.MatchesScreens(single, new HashSet<int> { 1 }));
+        Assert.False(FileContextMenuMatcher.MatchesScreens(single, new HashSet<int> { 2 }));
+        Assert.True(FileContextMenuMatcher.MatchesScreens(multiple, new HashSet<int> { 2 }));
+        Assert.False(FileContextMenuMatcher.MatchesScreens(unknown, new HashSet<int> { 1 }));
+        Assert.True(FileContextMenuMatcher.MatchesScreens(Entry("d"), new HashSet<int> { 1, 2, 3 }));
+    }
+
+    private static async Task<FileMenuEntries> ScreenSourceAsync(AppContextMenuEntryManifest[] entries, params int[] screens)
+    {
+        AppCatalogBuildResult built = AppCatalog.Build([Manifest(ToolsId, entries)], []);
+        Assert.True(built.IsSuccess, string.Join(", ", built.Errors.Select(static error => error.Message)));
+        AppCatalog catalog = built.Catalog!;
+        FakeAppFileSystemGateway files = new FakeAppFileSystemGateway()
+            .WithDirectory(FileContextMenuRegistry.DirectoryPath)
+            .WithFile(FileContextMenuRegistry.PathOf(ToolsId).Value, FileContextMenuRegistry.Serialize(
+                new FileContextMenuDocument(1, ToolsId, "1.0.0", 1, FileContextMenuRegistry.SourceOf(entries), entries)));
+        FileContextMenuRegistry registry = new(catalog, files);
+        await registry.ReloadAsync();
+        IReadOnlySet<string> none = new HashSet<string>();
+        IReadOnlySet<int> open = screens.ToHashSet();
+        return new FileMenuEntries(
+            catalog,
+            registry,
+            new FileContextMenuLauncher(catalog, new AppEnablementRegistry(catalog), orchestrator: null),
+            _ => ValueTask.FromResult(none),
+            static () => CultureInfo.InvariantCulture,
+            static (_, _, _, _) => Task.CompletedTask)
+        {
+            OpenScreens = () => open
+        };
+    }
+
     // ---- Context menu service ----------------------------------------------------------------------
 
     [Fact]

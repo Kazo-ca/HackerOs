@@ -1,4 +1,6 @@
 #nullable enable
+static HackerOs.Platform.Core.ContextMenus.FileContextMenuLauncher.PayloadOf(System.Collections.Generic.IReadOnlyList<string!>! paths, string! scope, string? entry) -> string!
+static HackerOs.Platform.Core.ContextMenus.FileContextMenuMatcher.MatchesScreens(HackerOs.App.Abstractions.AppContextMenuEntryManifest! entry, System.Collections.Generic.IReadOnlySet<int>! openScreens) -> bool
 const HackerOs.Platform.Core.Appearance.AppearanceSettingsDocuments.MobileWallpaperFitKey = "mobileWallpaperFit" -> string!
 const HackerOs.Platform.Core.Appearance.AppearanceSettingsDocuments.MobileWallpaperKey = "mobileWallpaper" -> string!
 HackerOs.Platform.Core.Appearance.WallpaperPreferences.Mobile.get -> string!

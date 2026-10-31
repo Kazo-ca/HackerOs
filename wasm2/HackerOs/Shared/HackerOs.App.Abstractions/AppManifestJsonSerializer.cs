@@ -267,7 +267,7 @@ public static class AppManifestJsonSerializer
                     ValidateArray(property.Value, $"{path}.components", ["contract", "assembly", "type"]);
                     break;
                 case "contextMenus":
-                    ValidateArray(property.Value, $"{path}.contextMenus", ["name", "title", "titles", "target", "intent", "icon", "scopes", "types", "selection", "first", "after", "afterGroup", "parent"]);
+                    ValidateArray(property.Value, $"{path}.contextMenus", ["name", "title", "titles", "target", "intent", "icon", "scopes", "types", "selection", "first", "after", "afterGroup", "parent", "screens", "screen"]);
                     if (property.Value.ValueKind != JsonValueKind.Array)
                     {
                         break;

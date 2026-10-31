@@ -112,6 +112,32 @@ public sealed class RegisterFileContextMenuContext
         });
     }
 
+    /// <summary>
+    /// Shows a registered entry only for a number of open screens (ADR 0218 §2): a plain entry with
+    /// one screen, a submenu of screens with several.
+    /// </summary>
+    /// <param name="name">The name of an entry registered before.</param>
+    /// <param name="screens"><see cref="MenuScreens.Single"/> or <see cref="MenuScreens.Multiple"/>; <see cref="MenuScreens.Any"/> removes the filter.</param>
+    /// <exception cref="ArgumentException">No entry has that name.</exception>
+    public void RestrictToScreens(string name, MenuScreens screens) => Update(name, entry => entry with
+    {
+        Screens = screens switch
+        {
+            MenuScreens.Single => AppContextMenus.ScreensSingle,
+            MenuScreens.Multiple => AppContextMenus.ScreensMultiple,
+            _ => null
+        }
+    });
+
+    /// <summary>
+    /// Shows a registered entry only while one secondary screen is open (ADR 0218 §2), for example
+    /// « Screen 3 » in a submenu of screens.
+    /// </summary>
+    /// <param name="name">The name of an entry registered before.</param>
+    /// <param name="screen">The screen number, 2 to <see cref="AppContextMenus.MaxScreenNumber"/> (the generator checks it).</param>
+    /// <exception cref="ArgumentException">No entry has that name.</exception>
+    public void RestrictToScreen(string name, int screen) => Update(name, entry => entry with { Screen = screen });
+
     /// <summary>Converts the SDK's scope flags to the manifest's names, in menu order.</summary>
     /// <param name="scope">The flags.</param>
     public static IReadOnlyList<string> ToScopes(FileMenuScope scope)
@@ -138,6 +164,19 @@ public sealed class RegisterFileContextMenuContext
         }
 
         return scopes;
+    }
+
+    /// <summary>Replaces a registered entry by a changed copy (the manifest records are immutable).</summary>
+    private void Update(string name, Func<AppContextMenuEntryManifest, AppContextMenuEntryManifest> change)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        int index = _entries.FindIndex(entry => entry.Name == name);
+        if (index < 0)
+        {
+            throw new ArgumentException($"No menu entry named '{name}' was registered before.", nameof(name));
+        }
+
+        _entries[index] = change(_entries[index]);
     }
 
     private IReadOnlyList<string> ScopesOf(string name, int depth)

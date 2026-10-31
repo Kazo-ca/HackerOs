@@ -35,6 +35,22 @@ public sealed class AppManifestContextMenusTests
     }
 
     [Fact]
+    public void The_screen_filter_of_ADR_0218_is_valid_and_round_trips()
+    {
+        AppManifest manifest = Manifest(
+            Entry("plain") with { Screens = AppContextMenus.ScreensSingle },
+            Entry("menu") with { Intent = null, Screens = AppContextMenus.ScreensMultiple },
+            Entry("screen-9") with { Parent = "menu", Screen = AppContextMenus.MaxScreenNumber });
+
+        ManifestValidationResult result = AppManifestValidator.Validate(manifest);
+        Assert.True(result.IsValid, string.Join(", ", result.Errors.Select(static error => error.Code)));
+
+        AppManifest read = AppManifestJsonSerializer.DeserializeStrict(AppManifestJsonSerializer.SerializeCanonical(manifest));
+        Assert.Equal(["single", "multiple", null], read.ContextMenus!.Select(static entry => entry.Screens));
+        Assert.Equal([null, null, 9], read.ContextMenus!.Select(static entry => entry.Screen));
+    }
+
+    [Fact]
     public void A_manifest_without_entries_writes_no_contextMenus_property()
     {
         string json = AppManifestJsonSerializer.SerializeCanonical(Manifest() with { ContextMenus = [] });
@@ -54,6 +70,9 @@ public sealed class AppManifestContextMenusTests
     [InlineData("manifest.context-menu.icon.invalid")]
     [InlineData("manifest.context-menu.position.many")]
     [InlineData("manifest.context-menu.anchor.unknown")]
+    [InlineData("manifest.context-menu.screens.invalid")]
+    [InlineData("manifest.context-menu.screen.invalid")]
+    [InlineData("manifest.context-menu.screen.many")]
     public void Each_rule_of_one_entry_has_its_code(string code)
     {
         AppContextMenuEntryManifest entry = code switch
@@ -68,6 +87,9 @@ public sealed class AppManifestContextMenusTests
             "manifest.context-menu.type.invalid" => Entry("extract") with { Types = ["ZIP"] },
             "manifest.context-menu.icon.invalid" => Entry("extract") with { Icon = new AppContextMenuIconManifest(AppContextMenus.VectorIcon, "zip") },
             "manifest.context-menu.position.many" => Entry("extract") with { First = true, After = "open" },
+            "manifest.context-menu.screens.invalid" => Entry("extract") with { Screens = "some" },
+            "manifest.context-menu.screen.invalid" => Entry("extract") with { Screen = 1 },
+            "manifest.context-menu.screen.many" => Entry("extract") with { Screens = AppContextMenus.ScreensMultiple, Screen = 2 },
             _ => Entry("extract") with { After = "nowhere" }
         };
 

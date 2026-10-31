@@ -273,7 +273,9 @@
           "first": { "type": "boolean" },
           "after": { "type": "string", "minLength": 1 },
           "afterGroup": { "type": "string", "minLength": 1 },
-          "parent": { "type": "string", "minLength": 1 }
+          "parent": { "type": "string", "minLength": 1 },
+          "screens": { "description": "ADR 0218: shown only with one open screen, or with two or more.", "enum": ["single", "multiple"] },
+          "screen": { "description": "ADR 0218: shown only while this secondary screen is open.", "type": "integer", "minimum": 2, "maximum": 9 }
         }
       }
     },

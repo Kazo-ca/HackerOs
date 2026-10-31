@@ -1,1 +1,3 @@
 #nullable enable
+HackerOs.AppSdk.Blazor.Files.RegisterFileContextMenuContext.RestrictToScreen(string! name, int screen) -> void
+HackerOs.AppSdk.Blazor.Files.RegisterFileContextMenuContext.RestrictToScreens(string! name, HackerOs.AppSdk.Files.MenuScreens screens) -> void

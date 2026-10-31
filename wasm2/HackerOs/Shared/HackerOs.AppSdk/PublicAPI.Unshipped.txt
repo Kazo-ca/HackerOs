@@ -1,1 +1,6 @@
 #nullable enable
+HackerOs.AppSdk.Files.MenuScreens
+HackerOs.AppSdk.Files.MenuScreens.Any = 0 -> HackerOs.AppSdk.Files.MenuScreens
+HackerOs.AppSdk.Files.MenuScreens.Multiple = 2 -> HackerOs.AppSdk.Files.MenuScreens
+HackerOs.AppSdk.Files.MenuScreens.Single = 1 -> HackerOs.AppSdk.Files.MenuScreens
+static HackerOs.AppSdk.Files.HackFileMenuIntent.ReadEntry(string? payloadJson) -> string?
