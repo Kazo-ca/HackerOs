@@ -127,6 +127,10 @@ the recommendation applied while waiting for his answer:
   (recommended) separate `TODO` issue.
 - **Q4** Wallpapers shipped with the OS: A (recommended) 4 WebP images; B none.
 
+**Answer (2026-10-31)**: Benoit accepts the four recommendations (Q1 A, Q2 A,
+Q3 B, Q4 A). What is built does not change; mobile and the "Set as wallpaper"
+menu stay in issues #297 and #298.
+
 ## Tasks
 
 - [x] `WallpaperCatalog`, `WallpaperFit`, `BuiltInWallpaper` (Theming Abstractions).
