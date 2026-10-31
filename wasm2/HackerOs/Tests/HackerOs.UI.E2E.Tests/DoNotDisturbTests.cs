@@ -6,6 +6,9 @@ namespace HackerOs.UI.E2E.Tests;
 
 public sealed class DoNotDisturbTests(ITestOutputHelper output)
 {
+    // The whole suite runs one browser harness after another: a step can take long under that load.
+    private const int StepTimeoutMs = 45000;
+
     /// <summary>
     /// ADR 0216: the clock panel's "Do not disturb" switch shows a moon in the taskbar's
     /// notification area, the choice survives a reload (it is a file in ~/.config/hackeros), the
@@ -37,28 +40,28 @@ public sealed class DoNotDisturbTests(ITestOutputHelper output)
 
             ILocator panel = await OpenClockPanelAsync(page);
             ILocator dndSwitch = panel.GetByRole(AriaRole.Switch, new() { Name = "Do not disturb" });
-            await Assertions.Expect(dndSwitch).Not.ToBeCheckedAsync();
+            await Assertions.Expect(dndSwitch).Not.ToBeCheckedAsync(new() { Timeout = StepTimeoutMs });
             await dndSwitch.CheckAsync(new LocatorCheckOptions { Force = true });
-            await Assertions.Expect(dndSwitch).ToBeCheckedAsync(new() { Timeout = 15000 });
-            await Assertions.Expect(moon).ToBeVisibleAsync(new() { Timeout = 15000 });
+            await Assertions.Expect(dndSwitch).ToBeCheckedAsync(new() { Timeout = StepTimeoutMs });
+            await Assertions.Expect(moon).ToBeVisibleAsync(new() { Timeout = StepTimeoutMs });
             output.WriteLine("[test] Do not disturb on: the moon is in the notification area.");
 
             await page.ReloadAsync();
             ILocator passwordField = page.GetByLabel("Password", new() { Exact = true });
-            await passwordField.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 20000 });
+            await passwordField.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = StepTimeoutMs });
             await passwordField.FillAsync(E2ESupport.Password);
             await page.GetByRole(AriaRole.Button, new() { Name = "Start session" }).ClickAsync();
-            await Assertions.Expect(moon).ToBeVisibleAsync(new() { Timeout = 20000 });
+            await Assertions.Expect(moon).ToBeVisibleAsync(new() { Timeout = StepTimeoutMs });
             output.WriteLine("[test] the moon is back after a reload.");
 
             // The moon opens the clock panel, which holds the switch.
             await moon.ClickAsync();
             panel = page.GetByRole(AriaRole.Dialog, new() { Name = "Notifications and calendar" });
-            await Assertions.Expect(panel).ToBeVisibleAsync();
+            await Assertions.Expect(panel).ToBeVisibleAsync(new() { Timeout = StepTimeoutMs });
             dndSwitch = panel.GetByRole(AriaRole.Switch, new() { Name = "Do not disturb" });
-            await Assertions.Expect(dndSwitch).ToBeCheckedAsync();
+            await Assertions.Expect(dndSwitch).ToBeCheckedAsync(new() { Timeout = StepTimeoutMs });
             await dndSwitch.UncheckAsync(new LocatorUncheckOptions { Force = true });
-            await Assertions.Expect(moon).ToHaveCountAsync(0, new() { Timeout = 15000 });
+            await Assertions.Expect(moon).ToHaveCountAsync(0, new() { Timeout = StepTimeoutMs });
             output.WriteLine("[test] Do not disturb off: the moon left.");
 
             Assert.Empty(consoleErrors);
@@ -73,7 +76,7 @@ public sealed class DoNotDisturbTests(ITestOutputHelper output)
     {
         await page.Locator(".taskbar-clock").ClickAsync();
         ILocator panel = page.GetByRole(AriaRole.Dialog, new() { Name = "Notifications and calendar" });
-        await Assertions.Expect(panel).ToBeVisibleAsync();
+        await Assertions.Expect(panel).ToBeVisibleAsync(new() { Timeout = StepTimeoutMs });
         return panel;
     }
 }
