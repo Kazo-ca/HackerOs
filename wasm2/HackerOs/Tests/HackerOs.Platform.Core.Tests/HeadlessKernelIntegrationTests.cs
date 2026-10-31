@@ -35,6 +35,29 @@ namespace HackerOs.Platform.Core.Tests;
 public sealed class HeadlessKernelIntegrationTests
 {
     [Fact]
+    public async Task Login_installs_the_icon_packs_in_the_background_once_per_boot()
+    {
+        Fixture fixture = new(KernelSmokeApp.CreateManifest());
+
+        await fixture.Session.LoginAsync(fixture.AliceLoginName, "hunter2");
+        DateTime deadline = DateTime.UtcNow.AddSeconds(10);
+        while (!InstallAudits(fixture).Any() && DateTime.UtcNow < deadline)
+        {
+            await Task.Delay(20);
+        }
+
+        await fixture.Session.LogoutAsync();
+        await fixture.Session.LoginAsync(fixture.AliceLoginName, "hunter2");
+        await Task.Delay(100);
+
+        AuditEntry install = Assert.Single(InstallAudits(fixture));
+        Assert.Equal(AuditOutcome.Success, install.Outcome);
+
+        static IEnumerable<AuditEntry> InstallAudits(Fixture fixture) =>
+            fixture.AuditLog.Entries.Where(entry => entry.Action == "filesystem.install-icon-packs");
+    }
+
+    [Fact]
     public async Task Headless_kernel_boots_discovers_launches_executes_shuts_down_disables_and_logs_out()
     {
         Fixture fixture = new(KernelSmokeApp.CreateManifest(), WaiterManifest());

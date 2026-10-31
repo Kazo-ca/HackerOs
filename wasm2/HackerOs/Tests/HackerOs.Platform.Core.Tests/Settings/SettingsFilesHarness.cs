@@ -104,6 +104,12 @@ internal sealed class SettingsFilesHarness
     internal Task<AuthenticatedPrincipal> LoginAsync(LocalUser user) =>
         Session.LoginAsync(user.LoginName, Password);
 
+    /// <summary>
+    /// Installs the shipped icon packs now, as the login does in the background (idempotent, so it
+    /// may run next to that background install).
+    /// </summary>
+    internal ValueTask InstallIconPacksAsync() => Seeder.InstallIconPacksAsync();
+
     /// <summary>Boot step: system migration and installation defaults.</summary>
     internal ValueTask BootAsync() => Migration.MigrateSystemAsync();
 
