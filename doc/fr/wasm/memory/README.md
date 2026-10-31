@@ -78,6 +78,10 @@ jour à la fin de chaque série ou quand une convention change.
   `todo/base`) : bulles des notifications et « Update ready » en
   notification persistante avec « Redémarrer ». Voir
   [`notification-toasts.md`](../dev/notification-toasts.md).
+- **Animations des fenêtres** (ADR 0198, chantier 3 de #242, branche
+  `todo/12-window-animations` vers `todo/base`) : ouvrir, fermer, minimiser vers
+  la barre de son écran, restaurer, agrandir, snap ; variables
+  `--hos-window-anim-*` ([`window-animations.md`](../dev/window-animations.md)).
 - **Sons du système** (ADR 0204, issue #256, série `todo/base`, branche
   `todo/8-os-sounds`) : jeux de sons freedesktop.org dans `/usr/share/sounds`
   (jeux intégrés `hackeros` et `soft` écrits par `FileSystemSeeder`) et

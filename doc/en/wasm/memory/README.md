@@ -77,6 +77,10 @@ at the end of each series or when a convention changes.
   `todo/base`): notification bubbles and "Update ready" as a persistent
   notification with "Restart". See
   [`notification-toasts.md`](../dev/notification-toasts.md).
+- **Window animations** (ADR 0198, work item 3 of #242, branch
+  `todo/12-window-animations` into `todo/base`): open, close, minimize into the
+  taskbar of its screen, restore, maximize, snap; `--hos-window-anim-*`
+  variables ([`window-animations.md`](../dev/window-animations.md)).
 - **System sounds** (ADR 0204, issue #256, `todo/base` series, branch
   `todo/8-os-sounds`): freedesktop.org sound themes in `/usr/share/sounds`
   (built-in `hackeros` and `soft` themes written by `FileSystemSeeder`) and

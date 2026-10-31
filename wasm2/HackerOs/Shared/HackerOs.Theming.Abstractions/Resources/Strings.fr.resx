@@ -417,6 +417,12 @@
   <data name="Token.TransitionNormal.Label" xml:space="preserve">
     <value>Transition normale</value>
   </data>
+  <data name="Token.WindowAnimDuration.Description" xml:space="preserve">
+    <value>Ouverture, fermeture, réduction, agrandissement et ancrage des fenêtres. Ignorée quand les animations sont désactivées.</value>
+  </data>
+  <data name="Token.WindowAnimDuration.Label" xml:space="preserve">
+    <value>Animations des fenêtres</value>
+  </data>
   <data name="Token.Warning.Description" xml:space="preserve">
     <value>Avertissements et états dégradés.</value>
   </data>

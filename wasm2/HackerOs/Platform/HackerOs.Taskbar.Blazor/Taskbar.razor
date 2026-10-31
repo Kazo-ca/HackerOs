@@ -32,6 +32,7 @@
                 <button type="button"
                         @attributes="ContextMenus?.WindowItemAttributes(window.Id)"
                         key="@window.Id.Value"
+                        data-taskbar-window-id="@window.Id"
                         class="taskbar-item @(isFocused ? "is-active" : "") @(window.IsMinimized ? "is-minimized" : "")"
                         aria-label="@L[isFocused ? "Taskbar.Item.Focused" : window.IsMinimized ? "Taskbar.Item.Minimized" : "Taskbar.Item.Background", window.Title]"
                         data-taskbar-window-id="@(Previews is null ? null : window.Id.ToString())"
