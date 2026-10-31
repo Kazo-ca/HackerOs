@@ -102,6 +102,18 @@ un nouvel appareil : on peut créer le compte dans un navigateur et s'y
 connecter depuis un autre (ADR 0137 §4). Un compte créé avant ce changement
 ne peut plus se connecter par mot de passe.
 
+## Serveur installé sur l'ordinateur
+
+Le serveur se publie aussi en programme autonome par système et en image
+Docker, installé comme service (issue #267, ADR 0191) :
+[`installable-server.md`](installable-server.md). Il lit alors
+`hackeros-server.json` (à côté du programme, après `appsettings.json`, avant
+les variables `HACKEROS_`), relie les appareils par code d'appairage et,
+lancé comme service Windows, prend le dossier du programme comme racine de
+contenu. Le serveur publié sert `index.html` par un intergiciel
+(`UseOsPageFile`), parce que le manifeste des ressources statiques publié ne
+contient pas cette page ([`pitfalls.md`](pitfalls.md)).
+
 ## Décisions clés
 
 - Fichiers publiés de l'Ecosystem servis tels quels, sans second démarrage à

@@ -40,9 +40,11 @@ Chaque ligne est un chantier, avec sa branche et sa PR.
    [ADR 0207](../adr/0207-solution-template-implementation.md),
    [`app-repository.md`](../../framework/app-repository.md)) ; le dépôt
    template est régénéré à la release suivante.
-2. **Ressources `wwwroot/` des apps installées** : les servir (service worker
-   ou adresses `blob:`), limite connue de l'ADR 0182. Nécessaire pour toute
-   app qui enveloppe un projet JavaScript.
+2. **Ressources `wwwroot/` des apps installées** (fait,
+   [ADR 0206](../adr/0206-serve-installed-app-assets.md), issue #247) : servies à
+   `_content/<assemblage>/` par le service worker depuis un cache rempli au
+   premier lancement de l'app, Web Workers compris. Nécessaire pour toute app
+   qui enveloppe un projet JavaScript.
 3. **Confiance et installation pour soi** (ADR 0189) : `app-sources.config`
    (`[catalogs]`, `[updates]`, valeurs fixées à la compilation, sources
    ajoutées par un administrateur), `app-policy.config`, installation dans

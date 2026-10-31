@@ -725,6 +725,12 @@ HackerOs.Platform.Core.Execution.AppCatalogGatewayServices.InstalledPackages.get
 HackerOs.Platform.Core.Execution.AppCatalogGatewayServices.InstalledPackages.init -> void
 HackerOs.Platform.Core.FileSystem.FileSystemSeeder.PackageDefaults.get -> HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults!
 HackerOs.Platform.Core.FileSystem.FileSystemSeeder.PackageDefaults.init -> void
+HackerOs.Platform.Core.Administration.ServerConnectionGatewayServices.HostInfo.get -> System.Func<HackerOs.Platform.Core.ServerConnection.IHostInfoClient!>?
+HackerOs.Platform.Core.Administration.ServerConnectionGatewayServices.HostInfo.init -> void
+HackerOs.Platform.Core.ServerConnection.HttpAccountClient.PairAsync(System.Uri! serverBaseUrl, HackerOs.Server.Contracts.Identity.PairDeviceRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.Server.Contracts.Identity.LoginResponse!>!
+HackerOs.Platform.Core.ServerConnection.IAccountClient.PairAsync(System.Uri! serverBaseUrl, HackerOs.Server.Contracts.Identity.PairDeviceRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.Server.Contracts.Identity.LoginResponse!>!
+HackerOs.Platform.Core.ServerConnection.IServerConnectionService.ConnectWithPairingCodeAsync(System.Uri! serverBaseUrl, string! code, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.Simulation.Abstractions.ServerConnection.ServerConnectionState!>!
+HackerOs.Platform.Core.ServerConnection.ServerConnectionService.ConnectWithPairingCodeAsync(System.Uri! serverBaseUrl, string! code, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.Simulation.Abstractions.ServerConnection.ServerConnectionState!>!
 HackerOs.Platform.Core.Appearance.IconPackService
 HackerOs.Platform.Core.Appearance.IconPackService.Changed -> System.Action?
 HackerOs.Platform.Core.Appearance.IconPackService.Current.get -> HackerOs.Theming.Abstractions.IconPacks.IconPack?

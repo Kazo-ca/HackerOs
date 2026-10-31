@@ -571,4 +571,13 @@
   <data name="Menu.SendTo.Drive" xml:space="preserve">
     <value>{0} (lecteur réseau)</value>
   </data>
+  <data name="Error.ArchiveReadOnly" xml:space="preserve">
+    <value>Cette archive est en lecture seule : extrayez-la pour modifier son contenu.</value>
+  </data>
+  <data name="Error.ArchiveUnreadable" xml:space="preserve">
+    <value>« {0} » n'est pas une archive .zip lisible.</value>
+  </data>
+  <data name="Error.ArchiveExtract" xml:space="preserve">
+    <value>Impossible d'extraire « {0} » de l'archive ({1}).</value>
+  </data>
 </root>

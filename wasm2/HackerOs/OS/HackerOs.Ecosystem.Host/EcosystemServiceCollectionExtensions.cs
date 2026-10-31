@@ -820,7 +820,11 @@ public static class EcosystemServiceCollectionExtensions
                     () => provider.GetRequiredService<IProxyClient>(),
                     () => provider.GetRequiredService<SyncScheduler>(),
                     () => provider.GetRequiredService<SyncConflictCenter>(),
-                    () => provider.GetRequiredService<IOsSettingsService>()),
+                    () => provider.GetRequiredService<IOsSettingsService>())
+                {
+                    // ADR 0191 §6: the "Test" button of Settings > Local server.
+                    HostInfo = () => provider.GetRequiredService<IHostInfoClient>()
+                },
                 () => provider.GetRequiredService<SystemPowerService>(),
                 () => provider.GetRequiredService<IStorageInspector>(),
                 () => provider.GetRequiredService<IAdministratorAuthenticationAgent>(),
@@ -1016,6 +1020,9 @@ public static class EcosystemServiceCollectionExtensions
             provider.GetRequiredService<INotificationQueue>(),
             () => provider.GetRequiredService<ISessionService>().CurrentPrincipal,
             () => provider.GetRequiredService<HackerOs.Platform.Core.Globalization.SessionLocaleService>().Culture));
+        // ADR 0197 §4: the notification actions the shell runs itself, such as « Redémarrer » of
+        // « Update ready »; the clock panel and the notification bubbles run them.
+        services.AddScoped<HackerOs.Platform.Blazor.Shell.ShellNotificationActions>();
         services.AddScoped(provider => new ScreenControl(
             provider.GetRequiredService<ScreenService>(),
             provider.GetRequiredService<WindowRuntime>()));

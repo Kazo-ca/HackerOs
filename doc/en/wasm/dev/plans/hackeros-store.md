@@ -40,8 +40,10 @@ Each line is a work item, with its branch and PR.
    [ADR 0207](../adr/0207-solution-template-implementation.md),
    [`app-repository.md`](../../framework/app-repository.md)); the template
    repository is regenerated at the next release.
-2. **`wwwroot/` assets of installed apps**: serve them (service worker or
-   `blob:` addresses), a known ADR 0182 limit. Needed for any app that wraps a
+2. **`wwwroot/` assets of installed apps** (done,
+   [ADR 0206](../adr/0206-serve-installed-app-assets.md), issue #247): served at
+   `_content/<assembly>/` by the service worker from a cache filled at the app's
+   first launch, Web Workers included. Needed for any app that wraps a
    JavaScript project.
 3. **Trust and per-user install** (ADR 0189): `app-sources.config`
    (`[catalogs]`, `[updates]`, values set at build, sources added by an

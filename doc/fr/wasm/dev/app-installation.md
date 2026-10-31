@@ -308,15 +308,27 @@ validation en deux étapes :
 - **Publication** : `dotnet build -c Release -t:HackerOsPack` dans le projet de
   l'app écrit le paquet et `index.json` dans `bin/hackeros-packages` (propriété
   `HackerOsPackageOutput`), à pousser sur la branche `hackeros-packages`.
-- **Limites de la première version** : voir la section du même nom de l'ADR
-  0182 (ressources `wwwroot` non servies, fil principal seulement, dépendances
-  NuGet tierces non transportées).
+- **Ressources `wwwroot/`** ([ADR 0206](adr/0206-serve-installed-app-assets.md)) :
+  au premier lancement de l'app dans la session, chaque ressource déclarée est
+  lue par `AppAssetStore` (empreinte vérifiée) et copiée dans le cache
+  `hackeros-installed-apps` ; le service worker la sert à
+  `_content/<assemblage>/<chemin>`, la même adresse qu'une app compilée dans
+  l'OS (balises, `import()`, CSS, Web Workers et leurs `importScripts`). Sur
+  `localhost`, l'OS enregistre `service-worker.js?mode=installed-apps`, qui ne
+  sert que ces fichiers. Sans service worker, les fichiers ne sont pas servis
+  (ligne dans `/var/log/syslog`).
+- **Limites** : voir la section du même nom de l'ADR 0182 (fil principal
+  seulement, dépendances NuGet tierces non transportées) ; la limite des
+  ressources `wwwroot` est levée par l'ADR 0206.
 
 Tests : `AppPackageGatewayTests`, `AppSourcesAndPolicyTests`,
 `InstalledAppsImageTests`, `AppPackageWriterTests`, `AppPackageTests`
 (Platform.Core), `AppInstallApprovalOverlayTests` (Platform.Blazor),
-`HackpkgCommandTests` (Commands.Wave5) et le scénario `hackpkg` de
-`CommandParityTests`.
+`HackpkgCommandTests` (Commands.Wave5), le scénario `hackpkg` de
+`CommandParityTests`, `InstalledAppAssetPublisherTests` (Ecosystem) et
+`TrimmedPublishTests.InstalledApps.cs` (paquet de test
+`Tests/fixtures/installed-app` installé par `hackpkg` dans la publication
+réduite, lancé par `build/publish-trimmed.sh`).
 
 ## Tâches
 

@@ -800,6 +800,12 @@
   <data name="Launcher.Guest.CreateAccount" xml:space="preserve">
     <value>Guest · Create my account</value>
   </data>
+  <data name="Toast.Region" xml:space="preserve">
+    <value>New notifications</value>
+  </data>
+  <data name="Toast.Close" xml:space="preserve">
+    <value>Hide this bubble</value>
+  </data>
   <data name="InstallApproval.Title.Install" xml:space="preserve">
     <value>Approve an app install</value>
   </data>

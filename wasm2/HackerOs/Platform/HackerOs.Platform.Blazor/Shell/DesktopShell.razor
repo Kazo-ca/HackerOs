@@ -97,6 +97,9 @@
                                       NotificationAreaContent="@NotificationAreaFragment"
                                       ContextMenus="_taskbarMenus.For(DisplayId.Primary)" />
 
+    @* ADR 0197: the notification bubbles, above the taskbar of screen 1, hidden while the clock panel is open. *@
+    <NotificationToasts IsPanelOpen="_clockPanel.IsOpen" />
+
     @if (TestDemoEnabled)
     {
         <div class="e2e-test-demo-panel">

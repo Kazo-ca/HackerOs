@@ -272,7 +272,7 @@ build/publish-trimmed.sh --skip-build
 
 Le script échoue sur toute alerte `IL…`, sert la publication sur `127.0.0.1`
 et sur `127.0.0.2` (pour le service worker) et lance
-`Tests/HackerOs.TrimmedPublish.E2E.Tests` (quatre tests, environ 3 min). C'est une porte de
+`Tests/HackerOs.TrimmedPublish.E2E.Tests` (six tests, environ 4 min, dont un paquet de test installé par `hackpkg`, ADR 0206). C'est une porte de
 fusion locale depuis `v3/14`. Sans `HACKEROS_TRIMMED_URL`, la suite est ignorée
 par `dotnet test HackerOs.sln`.
 

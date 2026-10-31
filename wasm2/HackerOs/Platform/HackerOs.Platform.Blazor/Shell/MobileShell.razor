@@ -80,6 +80,9 @@
                               OnDismiss="CloseRecent" />
     }
 
+    @* ADR 0197: the notification bubbles at the top of the screen, hidden while the shade is open. *@
+    <NotificationToasts Placement="NotificationToastPlacement.TopOfScreen" IsPanelOpen="_isShadeOpen" />
+
     <MobileSystemNavigationBar Commands="_systemNavigationCommands" HomeHasAttention="_hasWhatsNew" />
 
     @* ADR 0049: secure-desktop approval, above every app screen and the navigation bar. *@

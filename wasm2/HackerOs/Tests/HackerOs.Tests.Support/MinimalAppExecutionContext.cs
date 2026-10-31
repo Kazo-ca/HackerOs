@@ -37,7 +37,8 @@ public sealed class MinimalAppExecutionContext(
     HackerOs.AppSdk.Administration.IAppScreensGateway? screens = null,
     HackerOs.AppSdk.IO.IAppDriveGateway? drives = null,
     HackerOs.AppSdk.WhatsNew.IAppWhatsNewGateway? whatsNew = null,
-    HackerOs.AppSdk.Administration.IAppUserAccountsGateway? userAccounts = null) : IAppExecutionContext
+    HackerOs.AppSdk.Administration.IAppUserAccountsGateway? userAccounts = null,
+    HackerOs.AppSdk.Administration.IAppServerConnectionGateway? serverConnection = null) : IAppExecutionContext
 {
     public AppManifest Manifest { get; } = manifest;
     public Guid InstanceId { get; } = Guid.NewGuid();
@@ -81,6 +82,8 @@ public sealed class MinimalAppExecutionContext(
         whatsNew ?? UnsupportedAdministrationGateways.WhatsNew;
     HackerOs.AppSdk.Administration.IAppUserAccountsGateway IAppExecutionContext.UserAccounts =>
         userAccounts ?? UnsupportedAdministrationGateways.UserAccounts;
+    HackerOs.AppSdk.Administration.IAppServerConnectionGateway IAppExecutionContext.ServerConnection =>
+        serverConnection ?? UnsupportedAdministrationGateways.ServerConnection;
 
     public HackerOs.AppSdk.IO.IAppDriveGateway Drives => drives ?? throw Unsupported(nameof(Drives));
 

@@ -44,6 +44,37 @@ public static class OsPageRewrite
             return next(context);
         });
 
+    /// <summary>
+    /// Serves the published <c>wwwroot/index.html</c> when <c>MapStaticAssets</c> has no endpoint for
+    /// it. A published server (<c>dotnet publish</c>, the installable server of ADR 0191) gets the
+    /// Ecosystem's page with its asset placeholders already resolved
+    /// (<c>OverrideHtmlAssetPlaceholders</c>) as a plain file, without an entry in the static asset
+    /// endpoints, so <c>/</c> would answer 404 there. Must run after <c>UseRouting</c>: a page an
+    /// endpoint already serves (a build, Development) is left to it.
+    /// </summary>
+    public static IApplicationBuilder UseOsPageFile(this IApplicationBuilder app) =>
+        app.Use(async (context, next) =>
+        {
+            if (context.GetEndpoint() is null
+                && context.Request.Path.Equals(PagePath, StringComparison.OrdinalIgnoreCase)
+                && (HttpMethods.IsGet(context.Request.Method) || HttpMethods.IsHead(context.Request.Method))
+                && context.RequestServices.GetRequiredService<IWebHostEnvironment>().WebRootFileProvider.GetFileInfo(PagePath) is { Exists: true } page)
+            {
+                context.Response.ContentType = "text/html; charset=utf-8";
+                // The page names the fingerprinted files of this version: never keep an old one.
+                context.Response.Headers.CacheControl = "no-cache";
+                context.Response.ContentLength = page.Length;
+                if (HttpMethods.IsGet(context.Request.Method))
+                {
+                    await context.Response.SendFileAsync(page, context.RequestAborted);
+                }
+
+                return;
+            }
+
+            await next(context);
+        });
+
     /// <summary>Gets whether a request asks for a page of the OS rather than a file or a server path.</summary>
     /// <param name="method">HTTP method.</param>
     /// <param name="path">Request path.</param>
