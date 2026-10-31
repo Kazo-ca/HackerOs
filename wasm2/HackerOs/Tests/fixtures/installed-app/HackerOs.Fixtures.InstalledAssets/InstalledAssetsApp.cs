@@ -6,6 +6,10 @@ namespace HackerOs.Fixtures.InstalledAssets;
 /// Manifest of the test package of ADR 0206: a window app whose <c>wwwroot/</c> files exist only
 /// once it is installed by <c>hackpkg</c>. The SHA-256 values are computed by the build.
 /// </summary>
+/// <remarks>
+/// ADR 0216: <c>engine/engine.js</c>, <c>ProbeWindow.razor.js</c> and the scoped CSS bundle are not
+/// declared here; <c>HackerOsPack</c> adds them to the package's manifest.
+/// </remarks>
 [AppManifest]
 public sealed class InstalledAssetsApp : AppDefinition
 {
@@ -32,7 +36,6 @@ public sealed class InstalledAssetsApp : AppDefinition
     [
         new("probe.js", AssetKind.JavaScriptModule, new string('0', 64)),
         new("engine/worker.js", AssetKind.JavaScriptModule, new string('0', 64)),
-        new("engine/engine.js", AssetKind.JavaScriptModule, new string('0', 64)),
         new("images/dot.svg", AssetKind.Image, new string('0', 64)),
     ];
 }

@@ -310,6 +310,7 @@
     HackerOsPack (ADR 0182 §1, §2): "dotnet build -c Release -t:HackerOsPack" writes every app of the
     project as <version>/<appId>-<version>.hackapp and adds it to index.json in HackerOsPackageOutput,
     the content of the repository's hackeros-packages branch (default: bin/hackeros-packages/).
+    The package holds every static web resource of the project, declared or not (ADR 0216 §1).
   -->
   <PropertyGroup>
     <HackerOsPackageOutput Condition="'$(HackerOsPackageOutput)' == ''">$(MSBuildProjectDirectory)/bin/hackeros-packages</HackerOsPackageOutput>
@@ -325,8 +326,16 @@
     <PropertyGroup>
       <_HackerOsPackBin>$(TargetDir.TrimEnd('/\'))</_HackerOsPackBin>
       <_HackerOsPackOutput>$(HackerOsPackageOutput.TrimEnd('/\'))</_HackerOsPackOutput>
+      <!--
+        ADR 0216 §1: the build's static web asset manifest lists every resource the project serves at
+        _content/<assembly>/ (wwwroot/, collocated .razor.js, the scoped CSS bundle); pack adds the
+        undeclared ones to the package's manifest.
+      -->
+      <_HackerOsPackWebAssets>$(StaticWebAssetBuildManifestPath)</_HackerOsPackWebAssets>
+      <_HackerOsPackWebAssets Condition="'$(_HackerOsPackWebAssets)' == ''">$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(IntermediateOutputPath)', 'staticwebassets.build.json'))</_HackerOsPackWebAssets>
+      <_HackerOsPackWebAssetsArgument Condition="Exists('$(_HackerOsPackWebAssets)')"> --web-assets &quot;$(_HackerOsPackWebAssets)&quot;</_HackerOsPackWebAssetsArgument>
     </PropertyGroup>
-    <Exec Command="&quot;$(_HackerOsDotnetHost)&quot; &quot;$(_HackerOsManifestGeneratorPath)&quot; pack --manifest &quot;%(_HackerOsPackManifest.Identity)&quot; --bin &quot;$(_HackerOsPackBin)&quot; --webroot &quot;$(MSBuildProjectDirectory)/wwwroot&quot; --output &quot;$(_HackerOsPackOutput)&quot;" />
+    <Exec Command="&quot;$(_HackerOsDotnetHost)&quot; &quot;$(_HackerOsManifestGeneratorPath)&quot; pack --manifest &quot;%(_HackerOsPackManifest.Identity)&quot; --bin &quot;$(_HackerOsPackBin)&quot; --webroot &quot;$(MSBuildProjectDirectory)/wwwroot&quot; --output &quot;$(_HackerOsPackOutput)&quot;$(_HackerOsPackWebAssetsArgument)" />
   </Target>
 
   <!-- ===================================================================================== -->

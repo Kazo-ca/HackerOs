@@ -1,1 +1,2 @@
 #nullable enable
+static HackerOs.Infrastructure.Browser.Apps.BrowserInstalledAppAssets.LinkStyleSheetAsync(string! url) -> System.Threading.Tasks.Task<bool>!

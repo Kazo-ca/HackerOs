@@ -151,9 +151,11 @@ public static class Program
     }
 
     /// <summary>
-    /// <c>pack --manifest &lt;manifest.json&gt; --bin &lt;output dir&gt; --webroot &lt;wwwroot&gt; --output &lt;packages dir&gt;</c>:
-    /// writes <c>&lt;version&gt;/&lt;appId&gt;-&lt;version&gt;.hackapp</c> and updates <c>index.json</c>
+    /// <c>pack --manifest &lt;manifest.json&gt; --bin &lt;output dir&gt; --webroot &lt;wwwroot&gt; --output &lt;packages dir&gt;
+    /// [--web-assets &lt;staticwebassets.build.json&gt;]</c>: writes <c>&lt;version&gt;/&lt;appId&gt;-&lt;version&gt;.hackapp</c> and updates <c>index.json</c>
     /// in the packages folder, the content of the app repository's <c>hackeros-packages</c> branch.
+    /// With <c>--web-assets</c>, the package holds every static web resource of the project, not only
+    /// the declared ones (ADR 0216 §1).
     /// </summary>
     private static int Pack(IReadOnlyDictionary<string, string> options)
     {
@@ -163,10 +165,17 @@ public static class Program
         string output = Path.GetFullPath(Required(options, "output"));
         try
         {
+            byte[] manifestJson = File.ReadAllBytes(manifestPath);
+            Dictionary<string, string> sources = new(StringComparer.Ordinal);
+            if (options.TryGetValue("web-assets", out string? webAssets) && File.Exists(webAssets))
+            {
+                manifestJson = AddWebAssets(manifestPath, manifestJson, File.ReadAllText(webAssets), sources);
+            }
+
             byte[] package = AppPackageWriter.Write(
-                File.ReadAllBytes(manifestPath),
+                manifestJson,
                 assembly => File.ReadAllBytes(Path.Combine(bin, assembly)),
-                asset => File.ReadAllBytes(Path.Combine(webroot, asset)));
+                asset => File.ReadAllBytes(sources.TryGetValue(asset, out string? source) ? source : Path.Combine(webroot, asset)));
             AppPackage read = AppPackage.Read(package);
             string relativePath = AppPackageWriter.GetPackagePath(read.AppId, read.Version);
             string packagePath = Path.Combine(output, relativePath);
@@ -181,10 +190,36 @@ public static class Program
             Console.WriteLine($"HackerOS package: {read.AppId} {read.Version} -> {packagePath}");
             return 0;
         }
-        catch (Exception exception) when (exception is AppPackageException or IOException or UnauthorizedAccessException)
+        catch (Exception exception) when (exception is AppPackageException or IOException or UnauthorizedAccessException or System.Text.Json.JsonException)
         {
             return Fail(manifestPath, new GeneratorDiagnostic(GeneratorCodes.PackageFailed, manifestPath, exception.Message));
         }
+    }
+
+    /// <summary>
+    /// ADR 0216 §1: adds every static web resource of the project (<c>staticwebassets.build.json</c>)
+    /// to the package's manifest and records where each one is read from. The project's own
+    /// <c>manifest.json</c> is not touched.
+    /// </summary>
+    private static byte[] AddWebAssets(string manifestPath, byte[] manifestJson, string buildManifestJson, Dictionary<string, string> sources)
+    {
+        PackagedWebAssets.ReadResult resources = PackagedWebAssets.Read(buildManifestJson);
+        foreach (string skipped in resources.Skipped)
+        {
+            Console.WriteLine($"{manifestPath} : warning {GeneratorCodes.PackageAssetSkipped}: {skipped}");
+        }
+
+        foreach (PackagedWebAssets.WebAsset asset in resources.Assets)
+        {
+            sources[asset.Path] = asset.SourceFile;
+        }
+
+        AppManifest generated = AppManifestJsonSerializer.NormalizeOptionalCollections(
+            AppManifestJsonSerializer.DeserializeStrict(System.Text.Encoding.UTF8.GetString(manifestJson)));
+        AppManifest packaged = PackagedWebAssets.Complete(generated, resources.Assets, File.ReadAllBytes);
+        return ReferenceEquals(packaged, generated)
+            ? manifestJson
+            : System.Text.Encoding.UTF8.GetBytes(AppManifestJsonSerializer.SerializeCanonical(packaged));
     }
 
     private static int Validate(string manifestPath)
@@ -240,7 +275,7 @@ public static class Program
         Console.WriteLine("HackerOS manifest generator (ADR 0047)");
         Console.WriteLine("  generate --assembly <app.dll> --project <app.csproj> --stamp <file> [--dependencies <list file>]");
         Console.WriteLine("  aggregate --project <host.csproj> --apps <list file> --output <BuiltInApplications.json> [--trimmer-roots <roots.xml>]");
-        Console.WriteLine("  pack --manifest <manifest.json> --bin <output dir> --webroot <wwwroot> --output <packages dir>");
+        Console.WriteLine("  pack --manifest <manifest.json> --bin <output dir> --webroot <wwwroot> --output <packages dir> [--web-assets <staticwebassets.build.json>]");
         Console.WriteLine("  validate <manifest.json>");
     }
 }

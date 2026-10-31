@@ -129,6 +129,12 @@ public static class GeneratorCodes
     /// </summary>
     public const string PackageFailed = "HOSAPP0060";
 
+    /// <summary>
+    /// <c>pack</c> (ADR 0216 §1), a warning: a static web resource of the project has a path a
+    /// manifest refuses (<c>..</c>, <c>#</c>, <c>?</c>) and is left out of the package.
+    /// </summary>
+    public const string PackageAssetSkipped = "HOSAPP0061";
+
     /// <summary>The tool was called with invalid arguments.</summary>
     public const string InvalidArguments = "HOSAPP0090";
 

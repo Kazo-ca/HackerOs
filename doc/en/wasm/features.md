@@ -270,7 +270,10 @@ This section lists what is released in the `main` branch and online.
   [`app-installation.md`](dev/app-installation.md)) Its images, scripts and
   Web Workers are served at the same address as for an application built into
   the OS, so an application that wraps a JavaScript project works once
-  installed. ([ADR 0206](dev/adr/0206-serve-installed-app-assets.md))
+  installed. ([ADR 0206](dev/adr/0206-serve-installed-app-assets.md)) Its
+  package holds all its static resources (collocated scripts included) and the
+  OS loads its scoped CSS: installed, it looks the same as when built into the
+  OS. ([ADR 0216](dev/adr/0216-pack-all-static-web-assets-of-an-app.md))
 - **Trusted sources and install for oneself**: an application from a trusted
   source is installed for oneself without an administrator; an untrusted
   source, an application of the block list or an install for everyone go

@@ -311,7 +311,12 @@ validation en deux étapes :
   app non système.
 - **Publication** : `dotnet build -c Release -t:HackerOsPack` dans le projet de
   l'app écrit le paquet et `index.json` dans `bin/hackeros-packages` (propriété
-  `HackerOsPackageOutput`), à pousser sur la branche `hackeros-packages`.
+  `HackerOsPackageOutput`), à pousser sur la branche `hackeros-packages`. Le
+  paquet contient toutes les ressources statiques du projet, déclarées ou non :
+  le `wwwroot/`, le JavaScript collocalisé (`.razor.js`) et le bundle du CSS
+  isolé (`<assemblage>.bundle.scp.css`) ; celles que l'app ne déclare pas sont
+  ajoutées, avec leur SHA-256, au manifeste **du paquet** seulement
+  ([ADR 0216](adr/0216-pack-all-static-web-assets-of-an-app.md)).
 - **Ressources `wwwroot/`** ([ADR 0206](adr/0206-serve-installed-app-assets.md)) :
   au premier lancement de l'app dans la session, chaque ressource déclarée est
   lue par `AppAssetStore` (empreinte vérifiée) et copiée dans le cache
@@ -321,6 +326,10 @@ validation en deux étapes :
   `localhost`, l'OS enregistre `service-worker.js?mode=installed-apps`, qui ne
   sert que ces fichiers. Sans service worker, les fichiers ne sont pas servis
   (ligne dans `/var/log/syslog`).
+- **CSS isolé** ([ADR 0216](adr/0216-pack-all-static-web-assets-of-an-app.md)) :
+  une fois `<assemblage>.bundle.scp.css` copié dans le cache, l'OS ajoute un
+  `<link rel="stylesheet">` vers lui à la page, une fois par session, comme la
+  feuille `styles.css` de l'hôte le fait pour une app compilée.
 - **Limites** : voir la section du même nom de l'ADR 0182 (fil principal
   seulement, dépendances NuGet tierces non transportées) ; la limite des
   ressources `wwwroot` est levée par l'ADR 0206.
@@ -329,7 +338,8 @@ Tests : `AppPackageGatewayTests`, `AppSourcesAndPolicyTests`,
 `InstalledAppsImageTests`, `AppPackageWriterTests`, `AppPackageTests`
 (Platform.Core), `AppInstallApprovalOverlayTests` (Platform.Blazor),
 `HackpkgCommandTests` (Commands.Wave5), le scénario `hackpkg` de
-`CommandParityTests`, `InstalledAppAssetPublisherTests` (Ecosystem) et
+`CommandParityTests`, `InstalledAppAssetPublisherTests` (Ecosystem),
+`PackagedWebAssetsTests` (Tools.ManifestGenerator) et
 `TrimmedPublishTests.InstalledApps.cs` (paquet de test
 `Tests/fixtures/installed-app` installé par `hackpkg` dans la publication
 réduite, lancé par `build/publish-trimmed.sh`).

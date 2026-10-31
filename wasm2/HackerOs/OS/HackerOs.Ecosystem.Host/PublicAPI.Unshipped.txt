@@ -1,1 +1,4 @@
 #nullable enable
+HackerOs.Ecosystem.BrowserInstalledAppAssetCache.LinkStyleSheetAsync(string! url, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask
+HackerOs.Ecosystem.IInstalledAppAssetCache.LinkStyleSheetAsync(string! url, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask
+static HackerOs.Ecosystem.InstalledAppAssetPublisher.GetScopedCssBundlePath(HackerOs.Platform.Core.Apps.Packages.InstalledApp! app) -> string!

@@ -104,8 +104,11 @@ already declares `HackerOsAppProject=true`; add it to the host with
 3. The **Publish to the Hack Store** workflow checks the submodule, builds the
    app in `Release`, packs it (`HackerOsPack`), refuses a tag that is not the
    manifest version and produces `apps/<appId>_<version>/` (content of
-   `store/`, generated `manifest.json`, `store.json` with the tag's commit),
-   left as a workflow artifact.
+   `store/`, the **package's** `manifest.json`, `store.json` with the tag's
+   commit), left as a workflow artifact. The package's manifest is the generated
+   manifest plus every static resource `HackerOsPack` added to it
+   ([ADR 0216](../dev/adr/0216-pack-all-static-web-assets-of-an-app.md)): the one
+   the catalog compares with the package its CI builds.
 4. With the `HACK_STORE_TOKEN` secret (an author token allowed to fork and open
    a pull request), the workflow opens the pull request to
    `Kazo-ca/HackerOs-AppMarketPlace` from your fork. Without it, download the

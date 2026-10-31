@@ -5,7 +5,8 @@ namespace HackerOs.TrimmedPublish.E2E.Tests;
 
 /// <summary>
 /// ADR 0206: the <c>wwwroot/</c> files of an app installed by <c>hackpkg</c> are served at
-/// <c>_content/&lt;assembly&gt;/</c> by the service worker, Web Worker scripts included.
+/// <c>_content/&lt;assembly&gt;/</c> by the service worker, Web Worker scripts included. ADR 0216:
+/// the files it does not declare, its collocated <c>.razor.js</c> and its scoped CSS too.
 /// </summary>
 public sealed partial class TrimmedPublishTests
 {
@@ -17,7 +18,8 @@ public sealed partial class TrimmedPublishTests
     /// The test package (<c>Tests/fixtures/installed-app</c>), answered in place of GitHub, is
     /// installed with <c>sudo hackpkg install</c> on the development address (no service worker from
     /// index.html there); it opens at once (ADR 0214), then again after the OS restarts: its module, the Web Worker it starts,
-    /// the script that worker loads by a relative <c>importScripts</c>, and its image all load.
+    /// the script that worker loads by a relative <c>importScripts</c>, and its image all load; so do
+    /// its collocated module and its scoped CSS, which it never declared (ADR 0216).
     /// </summary>
     [TrimmedPublishFact]
     public async Task An_installed_app_finds_its_wwwroot_files_and_its_worker_scripts()
@@ -65,6 +67,14 @@ public sealed partial class TrimmedPublishTests
                 "() => { const image = document.querySelector('[data-probe-image]'); return !!image && image.complete && image.naturalWidth > 0; }",
                 null, new PageWaitForFunctionOptions { Timeout = StepTimeoutMs });
             Log("the image loaded.");
+
+            // --- ADR 0216: undeclared files packed by HackerOsPack, and the scoped CSS linked ---
+            await Assertions.Expect(page.Locator("[data-probe-collocated]")).ToHaveTextAsync("collocated ready", new() { Timeout = StepTimeoutMs });
+            Log("the collocated ProbeWindow.razor.js module loaded.");
+            await page.WaitForFunctionAsync(
+                "() => { const probe = document.querySelector('.probe'); return !!probe && getComputedStyle(probe).display === 'flex'; }",
+                null, new PageWaitForFunctionOptions { Timeout = StepTimeoutMs });
+            Log("the scoped CSS of the installed app applies.");
 
             string worker = await page.EvaluateAsync<string>("() => navigator.serviceWorker.controller ? navigator.serviceWorker.controller.scriptURL : ''");
             Assert.Contains("mode=installed-apps", worker, StringComparison.Ordinal);
