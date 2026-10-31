@@ -96,6 +96,10 @@ jour à la fin de chaque série ou quand une convention change.
   (jeux intégrés `hackeros` et `soft` écrits par `FileSystemSeeder`) et
   `~/.local/share/sounds`, `sound.config`, Paramètres ▸ Sons. Pas d'API SDK pour
   jouer un son (question Q2 à Benoit). Voir [`system-sounds.md`](../dev/system-sounds.md).
+- **Aperçus de la barre des tâches** (ADR 0199, chantier 5 de l'issue #242,
+  série `todo/`, branche `todo/13-taskbar-previews` vers `todo/base`) : copie
+  réduite en direct d'une fenêtre au survol de son bouton, et peek. Numéro 0199
+  pris dans la réserve 0197 à 0205 de la série `todo/`.
 - **ADR** : 0001 à 0171 et 0173 à 0195 existent sur `main` (quelques numéros sautés ;
   0141 et 0172 n'ont pas servi). Repères récents : 0173 publication automatique,
   0174 annonce de nouvelle version, 0175 « Nouveau dossier » des dialogues, 0176

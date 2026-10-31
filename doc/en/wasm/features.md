@@ -92,6 +92,8 @@ This section lists what is released in the `main` branch and online.
   right click on the taskbar gives the window menu, "New window", the task
   manager, "Show the desktop" and cascaded or tiled windows.
   ([`taskbar-context-menus.md`](dev/taskbar-context-menus.md))
+  Hovering a window's button shows a live preview; resting on it shows the
+  window alone ("peek"). ([`taskbar-window-previews.md`](dev/taskbar-window-previews.md))
   The Start menu shows the signed-in user and their Power button: sign out or
   restart. ([ADR 0195](dev/adr/0195-start-menu-power-button.md))
 - **Notification bubbles**: each notification from the OS or an app shows for
@@ -288,7 +290,6 @@ points to its PR.
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Switch user | Open another session without closing the first one. Stays greyed out in the Power menu by Benoit's choice: one session at a time, Sign out to change account. | [0195](dev/adr/0195-start-menu-power-button.md), [0201](dev/adr/0201-switch-user-stays-greyed.md) | [#290](https://github.com/Kazo-ca/HackerOs/issues/290) |
-| Windows and taskbar | Hover previews. The time zone ([ADR 0193](dev/adr/0193-local-time-and-time-zone.md)), the taskbar menus ([ADR 0194](dev/adr/0194-taskbar-context-menus.md)), the notification bubbles ([ADR 0197](dev/adr/0197-notification-toasts.md)) and the window animations ([ADR 0198](dev/adr/0198-window-animations.md)) are available. | Coming | [#242](https://github.com/Kazo-ca/HackerOs/issues/242) |
 
 ### Hack Store
 

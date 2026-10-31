@@ -27,3 +27,11 @@ HackerOs.Windowing.Blazor.WindowChrome.ReportTitleDoubleClickAsync() -> System.T
 HackerOs.Windowing.Blazor.DesktopArea.WallpaperContent.get -> Microsoft.AspNetCore.Components.RenderFragment?
 HackerOs.Windowing.Blazor.DesktopArea.WallpaperContent.set -> void
 override HackerOs.Windowing.Blazor.WindowHost.OnParametersSet() -> void
+HackerOs.Windowing.Blazor.DesktopArea.PeekWindowId.get -> HackerOs.Windowing.Abstractions.WindowId?
+HackerOs.Windowing.Blazor.DesktopArea.PeekWindowId.set -> void
+HackerOs.Windowing.Blazor.WindowHost.PeekState.get -> HackerOs.Windowing.Blazor.WindowPeekState
+HackerOs.Windowing.Blazor.WindowHost.PeekState.set -> void
+HackerOs.Windowing.Blazor.WindowPeekState
+HackerOs.Windowing.Blazor.WindowPeekState.None = 0 -> HackerOs.Windowing.Blazor.WindowPeekState
+HackerOs.Windowing.Blazor.WindowPeekState.SeeThrough = 2 -> HackerOs.Windowing.Blazor.WindowPeekState
+HackerOs.Windowing.Blazor.WindowPeekState.Shown = 1 -> HackerOs.Windowing.Blazor.WindowPeekState
