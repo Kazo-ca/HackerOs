@@ -7,6 +7,7 @@ using HackerOs.Platform.Blazor.Hosting;
 using HackerOs.Platform.Blazor.LazyLoading;
 using HackerOs.Platform.Core;
 using HackerOs.Platform.Core.Apps;
+using HackerOs.Platform.Core.Apps.Packages;
 using HackerOs.Platform.Core.Isolation;
 using HackerOs.Platform.Core.ServerConnection;
 using HackerOs.Platform.RemoteRendering;
@@ -79,8 +80,8 @@ public static partial class HackerOsBrowserHostExtensions
         }
 
         builder.Services.AddSingleton<IEcosystemHostEnvironment, WebAssemblyEcosystemHostEnvironment>();
-        // ADR 0182 §5: the apps installed from packages join the catalog once, before the OS starts
-        // (Program.cs calls LoadInstalledAppsAsync); everything below reads the final catalog.
+        // ADR 0182 §5: the apps installed from packages join the catalog before the OS starts
+        // (Program.cs calls LoadInstalledAppsAsync), then after each change (ADR 0214 §1).
         InstalledAppsBoot installedApps = new(apps);
         builder.Services.AddSingleton(installedApps);
         // ADR 0189 §3: the same registry the boot fills, so each session hides the others' personal apps.
@@ -116,8 +117,13 @@ public static partial class HackerOsBrowserHostExtensions
             installedApps.Current.LazyAssemblyNames,
             provider.GetRequiredService<IBuildKnownAssemblyTransport>(),
             provider.GetRequiredService<HostBuildUpdateMonitor>()));
+        // ADR 0214 §1: after each install, update or removal, the running catalog follows without a restart.
+        builder.Services.AddSingleton<IInstalledAppsActivator>(provider => new InstalledAppsActivator(
+            installedApps,
+            provider.GetRequiredService<BuildKnownAssemblyLoaderRegistry>(),
+            provider.GetService<Microsoft.Extensions.Logging.ILogger<InstalledAppsActivator>>()));
         builder.Services.AddSingleton(provider => new BuildKnownLazyAppDescriptorRegistry(
-            installedApps.Current.Catalog,
+            installedApps.Live,
             provider.GetRequiredService<BuildKnownAssemblyLoaderRegistry>()));
         // ADR 0098 §5: app assets are the static web assets of their package, checked at first read.
         builder.Services.AddSingleton<IAppAssetSource>(new InstalledAppAssetSource(
@@ -135,7 +141,8 @@ public static partial class HackerOsBrowserHostExtensions
             apps.Catalog,
             provider => provider.GetRequiredService<BuildKnownLazyAppDescriptorRegistry>().Descriptors,
             provider => provider.GetRequiredService<BuildKnownLazyAppDescriptorRegistry>());
-        builder.Services.Replace(ServiceDescriptor.Singleton<AppCatalog>(_ => installedApps.Current.Catalog));
+        // ADR 0214 §1: one live instance, whose contents change when apps are installed or removed.
+        builder.Services.Replace(ServiceDescriptor.Singleton<AppCatalog>(_ => installedApps.Live));
 
         // ADR 0070/0071: commands and services run in Web Workers; the pool warms up once the desktop
         // is shown. The JavaScript ships in HackerOs.Infrastructure.Browser's wwwroot, imported by

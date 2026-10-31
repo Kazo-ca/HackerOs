@@ -91,7 +91,24 @@ public sealed class TaskbarLocalizationTests
         Assert.Contains("aria-label=\"Lanceur d'applications, nouveautés à voir\"", french, StringComparison.Ordinal);
     }
 
-    private static async Task<string> RenderAsync(Type? localizer, ITaskbarStatusSource status, TaskbarOptions? options = null, Launcher? launcher = null)
+    [Fact]
+    public async Task Unread_notifications_put_a_dot_on_the_clock_and_give_the_count_in_its_name_and_tooltip()
+    {
+        string none = await RenderAsync(localizer: null, new Status(CultureInfo.InvariantCulture), clockPanel: new ClockPanel(unread: 0));
+        string one = await RenderAsync(localizer: null, new Status(CultureInfo.InvariantCulture), clockPanel: new ClockPanel(unread: 1));
+        string english = await RenderAsync(localizer: null, new Status(CultureInfo.InvariantCulture), clockPanel: new ClockPanel(unread: 3));
+        string french = await RenderAsync(typeof(FrenchStringLocalizer<>), new Status(CultureInfo.InvariantCulture), clockPanel: new ClockPanel(unread: 3));
+
+        Assert.DoesNotContain("clock-attention", none, StringComparison.Ordinal);
+        Assert.Contains("title=\"System clock, notifications, and calendar\"", none, StringComparison.Ordinal);
+        Assert.Contains("aria-label=\"System clock, notifications, and calendar: 1 unread notification\"", one, StringComparison.Ordinal);
+        Assert.Contains("class=\"clock-attention\" aria-hidden=\"true\"", english, StringComparison.Ordinal);
+        Assert.Contains("aria-label=\"System clock, notifications, and calendar: 3 unread notifications\"", english, StringComparison.Ordinal);
+        Assert.Contains("title=\"System clock, notifications, and calendar: 3 unread notifications\"", english, StringComparison.Ordinal);
+        Assert.Contains("aria-label=\"Horloge système, notifications et calendrier : 3 notifications non lues\"", french, StringComparison.Ordinal);
+    }
+
+    private static async Task<string> RenderAsync(Type? localizer, ITaskbarStatusSource status, TaskbarOptions? options = null, Launcher? launcher = null, ClockPanel? clockPanel = null)
     {
         ServiceCollection services = new();
         services.AddSingleton<IIconCatalog, IconCatalog>();
@@ -111,6 +128,11 @@ public sealed class TaskbarLocalizationTests
         if (options is not null)
         {
             parameters[nameof(Taskbar.Options)] = options;
+        }
+
+        if (clockPanel is not null)
+        {
+            parameters[nameof(Taskbar.ClockPanelSource)] = clockPanel;
         }
 
         string html = await renderer.Dispatcher.InvokeAsync(async () =>
@@ -161,6 +183,23 @@ public sealed class TaskbarLocalizationTests
         {
             add { }
             remove { }
+        }
+    }
+
+    private sealed class ClockPanel(int unread) : ITaskbarClockPanelSource
+    {
+        public bool IsOpen => false;
+
+        public int UnreadCount => unread;
+
+        public event Action? Changed
+        {
+            add { }
+            remove { }
+        }
+
+        public void Toggle()
+        {
         }
     }
 

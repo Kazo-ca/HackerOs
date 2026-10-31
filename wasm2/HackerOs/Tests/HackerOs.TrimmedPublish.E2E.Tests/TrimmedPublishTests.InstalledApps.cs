@@ -16,7 +16,7 @@ public sealed partial class TrimmedPublishTests
     /// <summary>
     /// The test package (<c>Tests/fixtures/installed-app</c>), answered in place of GitHub, is
     /// installed with <c>sudo hackpkg install</c> on the development address (no service worker from
-    /// index.html there), then the OS restarts and the app starts: its module, the Web Worker it starts,
+    /// index.html there); it opens at once (ADR 0214), then again after the OS restarts: its module, the Web Worker it starts,
     /// the script that worker loads by a relative <c>importScripts</c>, and its image all load.
     /// </summary>
     [TrimmedPublishFact]
@@ -44,9 +44,14 @@ public sealed partial class TrimmedPublishTests
             await WaitForTerminalTextAsync(rows, text => PromptPattern().IsMatch(text), "the shell prompt");
             await RunCommandAsync(page, screen, $"sudo hackpkg install {ProbeRepository}");
             await ConfirmAsAdministratorAsync(page);
-            await WaitForTerminalTextAsync(rows, text => text.Contains("restart HackerOS to finish", StringComparison.Ordinal), "the end of the installation");
+            await WaitForTerminalTextAsync(rows, text => text.Contains("available now", StringComparison.Ordinal), "the end of the installation");
             Log("the test package was installed.");
             session.AssertNoErrors("hackpkg install");
+
+            // --- Without a restart (ADR 0214 §1): an app never loaded opens at once ---
+            await OpenAppAsync(page, ProbeAppName);
+            await Assertions.Expect(page.Locator("[data-probe-status]")).ToHaveTextAsync("engine ready", new() { Timeout = BootTimeoutMs });
+            Log("the installed app opened without a restart.");
 
             // --- Restart (ADR 0182, Q5 C): the app joins the catalog at boot ---
             await page.ReloadAsync(new PageReloadOptions { WaitUntil = WaitUntilState.DOMContentLoaded });

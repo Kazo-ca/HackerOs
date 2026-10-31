@@ -115,6 +115,22 @@
     box-shadow: 0 0 0 2px var(--hos-taskbar-launcher-background, var(--hos-taskbar-button-background, #0d1417));
 }
 
+/* ADR 0196: notifications the user has not looked at yet. */
+.taskbar-clock {
+    position: relative;
+}
+
+.clock-attention {
+    position: absolute;
+    top: 0.2rem;
+    right: 0.2rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--hos-taskbar-attention, var(--hos-warning, #d5a84f));
+    box-shadow: 0 0 0 2px var(--hos-taskbar-button-background, var(--hos-bg-base, #101417));
+}
+
 .launcher-mark {
     color: currentColor;
     font-family: var(--hos-font-mono, monospace);
@@ -142,29 +158,6 @@
     width: 1.15rem;
     height: 1.15rem;
     color: currentColor;
-}
-
-/* ADR 0212 §5: a count on a button's icon, such as the Hack Store's available updates. */
-.item-icon {
-    position: relative;
-}
-
-.item-badge {
-    position: absolute;
-    top: -0.45rem;
-    right: -0.6rem;
-    min-width: 0.95rem;
-    height: 0.95rem;
-    padding: 0 0.2rem;
-    border-radius: 999px;
-    background: var(--hos-accent, #00e5ff);
-    color: var(--hos-taskbar-background, #04121a);
-    font-size: 0.6rem;
-    font-weight: 700;
-    line-height: 0.95rem;
-    text-align: center;
-    box-shadow: 0 0 0 2px var(--hos-taskbar-background, #0b0f14);
-    pointer-events: none;
 }
 
 .item-icon-image {

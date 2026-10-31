@@ -139,6 +139,13 @@ public sealed class FileSystemSeeder(
     public async ValueTask InstallIconPacksAsync(CancellationToken cancellationToken = default)
     {
         FileSystemAuthorizationContext system = CreateContext("system", "system");
+        string list = InstalledList(BuiltInIconPacks.Files.Select(file =>
+            ($"{Theming.Abstractions.IconPacks.IconPackLibrary.SystemDirectory}/{file.RelativePath}", file.Content.LongLength)));
+        if (await IsInstalledAsync(IconPacksListName, list, system, cancellationToken))
+        {
+            return;
+        }
+
         await EnsureDirectoryAsync("/usr", 0x01ED, system, cancellationToken);
         await EnsureDirectoryAsync("/usr/share", 0x01ED, system, cancellationToken);
         await EnsureDirectoryAsync(Theming.Abstractions.IconPacks.IconPackLibrary.SystemDirectory, 0x01ED, system, cancellationToken);
@@ -155,13 +162,15 @@ public sealed class FileSystemSeeder(
             if (file.RelativePath.EndsWith(".json", StringComparison.Ordinal))
             {
                 // icon-pack.json stays a text file, readable with cat and editable with nano.
-                await EnsureFileAsync(target, System.Text.Encoding.UTF8.GetString(file.Content), 0x01A4, system, cancellationToken);
+                await EnsureFileAsync(target, System.Text.Encoding.UTF8.GetString(file.Content), 0x01A4, system, cancellationToken, completeEmpty: true);
             }
             else
             {
-                await EnsureFileAsync(target, file.Content, 0x01A4, system, cancellationToken);
+                await EnsureFileAsync(target, file.Content, 0x01A4, system, cancellationToken, completeEmpty: true);
             }
         }
+
+        await RecordInstalledAsync(IconPacksListName, list, system, cancellationToken);
     }
 
     /// <summary>
@@ -176,6 +185,12 @@ public sealed class FileSystemSeeder(
     public async ValueTask InstallSoundThemesAsync(CancellationToken cancellationToken = default)
     {
         FileSystemAuthorizationContext system = CreateContext("system", "system");
+        string list = InstalledList(SoundThemeFiles());
+        if (await IsInstalledAsync(SoundThemesListName, list, system, cancellationToken))
+        {
+            return;
+        }
+
         await EnsureDirectoryAsync("/usr", 0x01ED, system, cancellationToken);
         await EnsureDirectoryAsync("/usr/share", 0x01ED, system, cancellationToken);
         await EnsureDirectoryAsync(OsSoundEvents.SystemThemesDirectory, 0x01ED, system, cancellationToken);
@@ -185,7 +200,7 @@ public sealed class FileSystemSeeder(
             await EnsureDirectoryAsync(directory, 0x01ED, system, cancellationToken);
             await EnsureDirectoryAsync(directory + "/stereo", 0x01ED, system, cancellationToken);
             await EnsureFileAsync(
-                $"{directory}/{OsSoundEvents.IndexFileName}", BuiltInSoundThemes.GetIndexContent(theme), 0x01A4, system, cancellationToken);
+                $"{directory}/{OsSoundEvents.IndexFileName}", BuiltInSoundThemes.GetIndexContent(theme), 0x01A4, system, cancellationToken, completeEmpty: true);
             foreach (OsSoundEvent soundEvent in OsSoundEvents.All)
             {
                 if (BuiltInSoundThemes.ReadSound(theme.Id, soundEvent) is { } audio)
@@ -195,10 +210,13 @@ public sealed class FileSystemSeeder(
                         audio,
                         0x01A4,
                         system,
-                        cancellationToken);
+                        cancellationToken,
+                        completeEmpty: true);
                 }
             }
         }
+
+        await RecordInstalledAsync(SoundThemesListName, list, system, cancellationToken);
     }
 
     /// <summary>
@@ -291,8 +309,9 @@ public sealed class FileSystemSeeder(
         string content,
         ushort mode,
         FileSystemAuthorizationContext context,
-        CancellationToken cancellationToken) =>
-        EnsureFileAsync(pathValue, new SeedSource(System.Text.Encoding.UTF8.GetBytes(content), FileSystemContentDescriptor.Text()), mode, context, cancellationToken);
+        CancellationToken cancellationToken,
+        bool completeEmpty = false) =>
+        EnsureFileAsync(pathValue, new SeedSource(System.Text.Encoding.UTF8.GetBytes(content), FileSystemContentDescriptor.Text()), mode, context, cancellationToken, completeEmpty);
 
     /// <summary>Creates a binary file (an image of a shipped icon pack, a built-in sound) when nothing exists at <paramref name="pathValue"/>.</summary>
     private ValueTask EnsureFileAsync(
@@ -300,43 +319,53 @@ public sealed class FileSystemSeeder(
         byte[] content,
         ushort mode,
         FileSystemAuthorizationContext context,
-        CancellationToken cancellationToken) =>
-        EnsureFileAsync(pathValue, new SeedSource(content, FileSystemContentDescriptor.Binary(MediaTypeOf(pathValue))), mode, context, cancellationToken);
+        CancellationToken cancellationToken,
+        bool completeEmpty = false) =>
+        EnsureFileAsync(pathValue, new SeedSource(content, FileSystemContentDescriptor.Binary(MediaTypeOf(pathValue))), mode, context, cancellationToken, completeEmpty);
 
+    // completeEmpty also writes an existing empty file: a background install interrupted by a
+    // reload between creating a file and writing it leaves it empty, and the next boot completes it.
     private async ValueTask EnsureFileAsync(
         string pathValue,
         SeedSource content,
         ushort mode,
         FileSystemAuthorizationContext context,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        bool completeEmpty = false)
     {
         VirtualPath path = VirtualPath.Parse(pathValue);
         FileSystemResult<FileSystemEntrySnapshot> existing = await _fileSystem.StatAsync(
             new FileSystemStatRequest(path, FileSystemLinkBehavior.NoFollow),
             context,
             cancellationToken);
-        if (existing.Succeeded)
+        bool interrupted = completeEmpty
+            && existing.Value?.Metadata is FileMetadata { Length: 0 }
+            && content.Length > 0;
+        if (existing.Succeeded && !interrupted)
         {
             return;
         }
 
-        if (existing.Error?.Code != FileSystemErrorCode.NotFound)
+        if (!interrupted)
         {
-            throw new InvalidOperationException($"Cannot inspect seed file '{path}': {existing.Error?.Code}.");
-        }
-
-        FileSystemMutationResult created = await _fileSystem.CreateAsync(
-            new FileSystemCreateRequest(path, FileSystemEntryKind.File, FileSystemPermissions.FromMode(mode)),
-            context,
-            cancellationToken);
-        if (!created.Succeeded)
-        {
-            if (created.Transaction.Error?.Code == FileSystemErrorCode.AlreadyExists)
+            if (existing.Error?.Code != FileSystemErrorCode.NotFound)
             {
-                return;
+                throw new InvalidOperationException($"Cannot inspect seed file '{path}': {existing.Error?.Code}.");
             }
 
-            throw new InvalidOperationException($"Cannot create seed file '{path}': {created.Transaction.Error?.Code}.");
+            FileSystemMutationResult created = await _fileSystem.CreateAsync(
+                new FileSystemCreateRequest(path, FileSystemEntryKind.File, FileSystemPermissions.FromMode(mode)),
+                context,
+                cancellationToken);
+            if (!created.Succeeded)
+            {
+                if (created.Transaction.Error?.Code == FileSystemErrorCode.AlreadyExists)
+                {
+                    return;
+                }
+
+                throw new InvalidOperationException($"Cannot create seed file '{path}': {created.Transaction.Error?.Code}.");
+            }
         }
 
         FileSystemMutationResult written = await _fileSystem.WriteAsync(
@@ -347,6 +376,80 @@ public sealed class FileSystemSeeder(
         if (!written.Succeeded)
         {
             throw new InvalidOperationException($"Cannot write seed file '{path}': {written.Transaction.Error?.Code}.");
+        }
+    }
+
+    // dpkg keeps the files of each installed package in /var/lib/dpkg/info/<package>.list; the
+    // background installs keep theirs here, so a boot whose list matches the shipped files skips
+    // the install instead of checking every file again in the browser store.
+    private const string InstalledListsDirectory = "/var/lib/hackeros/installed";
+    private const string IconPacksListName = "icon-packs.list";
+    private const string SoundThemesListName = "sound-themes.list";
+
+    private static VirtualPath GetInstalledListPath(string name) => VirtualPath.Parse($"{InstalledListsDirectory}/{name}");
+
+    /// <summary>One line per shipped file, "path length", in the order of the install.</summary>
+    private static string InstalledList(IEnumerable<(string Path, long Length)> files) =>
+        string.Concat(files.Select(file => $"{file.Path} {file.Length}\n"));
+
+    private static IEnumerable<(string Path, long Length)> SoundThemeFiles()
+    {
+        foreach (BuiltInSoundTheme theme in BuiltInSoundThemes.All)
+        {
+            yield return (
+                $"{BuiltInSoundThemes.GetDirectory(theme.Id)}/{OsSoundEvents.IndexFileName}",
+                System.Text.Encoding.UTF8.GetByteCount(BuiltInSoundThemes.GetIndexContent(theme)));
+            foreach (OsSoundEvent soundEvent in OsSoundEvents.All)
+            {
+                if (BuiltInSoundThemes.ReadSound(theme.Id, soundEvent) is { } audio)
+                {
+                    yield return (BuiltInSoundThemes.GetSoundPath(theme.Id, soundEvent), audio.LongLength);
+                }
+            }
+        }
+    }
+
+    /// <summary>Whether the install's list already records exactly these files.</summary>
+    private async ValueTask<bool> IsInstalledAsync(
+        string name, string list, FileSystemAuthorizationContext context, CancellationToken cancellationToken)
+    {
+        FileSystemResult<FileSystemContentReadHandle> read = await _fileSystem.ReadAsync(
+            new FileSystemReadRequest(GetInstalledListPath(name)), context, cancellationToken);
+        if (!read.Succeeded || read.Value is null)
+        {
+            return false;
+        }
+
+        await using FileSystemContentReadHandle handle = read.Value;
+        using StreamReader reader = new(handle.Content, System.Text.Encoding.UTF8, detectEncodingFromByteOrderMarks: false, leaveOpen: true);
+        return string.Equals(await reader.ReadToEndAsync(cancellationToken), list, StringComparison.Ordinal);
+    }
+
+    /// <summary>Writes the install's list once every file is in place, root-owned 0644.</summary>
+    private async ValueTask RecordInstalledAsync(
+        string name, string list, FileSystemAuthorizationContext context, CancellationToken cancellationToken)
+    {
+        await EnsureDirectoryAsync("/var/lib", 0x01ED, context, cancellationToken);
+        await EnsureDirectoryAsync("/var/lib/hackeros", 0x01ED, context, cancellationToken);
+        await EnsureDirectoryAsync(InstalledListsDirectory, 0x01ED, context, cancellationToken);
+        VirtualPath path = GetInstalledListPath(name);
+        FileSystemMutationResult created = await _fileSystem.CreateAsync(
+            new FileSystemCreateRequest(path, FileSystemEntryKind.File, FileSystemPermissions.FromMode(0x01A4)),
+            context,
+            cancellationToken);
+        if (!created.Succeeded && created.Transaction.Error?.Code != FileSystemErrorCode.AlreadyExists)
+        {
+            throw new InvalidOperationException($"Cannot create install list '{path}': {created.Transaction.Error?.Code}.");
+        }
+
+        FileSystemMutationResult written = await _fileSystem.WriteAsync(
+            new FileSystemWriteRequest(path),
+            new SeedSource(System.Text.Encoding.UTF8.GetBytes(list), FileSystemContentDescriptor.Text()),
+            context,
+            cancellationToken);
+        if (!written.Succeeded)
+        {
+            throw new InvalidOperationException($"Cannot write install list '{path}': {written.Transaction.Error?.Code}.");
         }
     }
 

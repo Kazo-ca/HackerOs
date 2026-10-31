@@ -372,7 +372,7 @@ under SemVer, a 2.0 app runs without being recompiled.
 
 Prepared on 2026-10-31 (branch `release/2.2.0`), published by the
 `Release HackerOS` workflow when its PR lands in `main`: `v2.2.0` tag, GitHub
-Release and nuget.org. `build/tools/ship-public-api.sh` folded 2926 lines of
+Release and nuget.org. `build/tools/ship-public-api.sh` folded 3020 lines of
 `PublicAPI.Unshipped.txt` into `PublicAPI.Shipped.txt`: the additions of the
 `todo/base` series and those that reached `main` since 2.1.0. The only
 `*REMOVED*` lines touch `HackerOs.Apps.Browser` (the `BrowserResponse`

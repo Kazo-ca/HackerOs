@@ -484,6 +484,7 @@ HackerOs.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadStatus.Loaded = 0 -> 
 HackerOs.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadStatus.Missing = 2 -> HackerOs.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadStatus
 HackerOs.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadStatus.NotDeclared = 1 -> HackerOs.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadStatus
 HackerOs.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoaderRegistry
+HackerOs.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoaderRegistry.AddKnownAssemblies(System.Collections.Generic.IEnumerable<string!>! assemblyNames) -> void
 HackerOs.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoaderRegistry.BuildKnownAssemblyLoaderRegistry(System.Collections.Generic.IEnumerable<string!>! knownAssemblies, HackerOs.Platform.Blazor.LazyLoading.IBuildKnownAssemblyTransport! transport) -> void
 HackerOs.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoaderRegistry.BuildKnownAssemblyLoaderRegistry(System.Collections.Generic.IEnumerable<string!>! knownAssemblies, HackerOs.Platform.Blazor.LazyLoading.IBuildKnownAssemblyTransport! transport, HackerOs.Platform.Blazor.LazyLoading.HostBuildUpdateMonitor! buildMonitor) -> void
 HackerOs.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoaderRegistry.LoadAsync(string! assemblyName, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome!>!
@@ -736,8 +737,10 @@ HackerOs.Platform.Blazor.Shell.TaskbarClockPanelSourceAdapter
 HackerOs.Platform.Blazor.Shell.TaskbarClockPanelSourceAdapter.Changed -> System.Action?
 HackerOs.Platform.Blazor.Shell.TaskbarClockPanelSourceAdapter.Close() -> void
 HackerOs.Platform.Blazor.Shell.TaskbarClockPanelSourceAdapter.IsOpen.get -> bool
+HackerOs.Platform.Blazor.Shell.TaskbarClockPanelSourceAdapter.SetUnreadCount(int value) -> void
 HackerOs.Platform.Blazor.Shell.TaskbarClockPanelSourceAdapter.TaskbarClockPanelSourceAdapter() -> void
 HackerOs.Platform.Blazor.Shell.TaskbarClockPanelSourceAdapter.Toggle() -> void
+HackerOs.Platform.Blazor.Shell.TaskbarClockPanelSourceAdapter.UnreadCount.get -> int
 HackerOs.Platform.Blazor.Shell.TaskbarCommandDispatcherAdapter
 HackerOs.Platform.Blazor.Shell.TaskbarCommandDispatcherAdapter.Activate(HackerOs.Windowing.Abstractions.WindowId id) -> void
 HackerOs.Platform.Blazor.Shell.TaskbarCommandDispatcherAdapter.Close(HackerOs.Windowing.Abstractions.WindowId id) -> void

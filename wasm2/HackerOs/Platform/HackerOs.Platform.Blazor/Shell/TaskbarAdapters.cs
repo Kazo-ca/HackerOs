@@ -14,7 +14,6 @@ public sealed class TaskbarWindowSourceAdapter : ITaskbarWindowSource, IDisposab
 {
     private readonly WindowRuntime _runtime;
     private readonly Func<WindowRuntimeState, bool>? _lists;
-    private readonly Func<string, int>? _badges;
 
     /// <summary>Creates an adapter over the desktop window runtime.</summary>
     public TaskbarWindowSourceAdapter(WindowRuntime runtime)
@@ -26,17 +25,7 @@ public sealed class TaskbarWindowSourceAdapter : ITaskbarWindowSource, IDisposab
     /// <param name="runtime">The desktop window runtime.</param>
     /// <param name="lists">Whether a window shows on this taskbar; <see langword="null"/> lists every window.</param>
     internal TaskbarWindowSourceAdapter(WindowRuntime runtime, Func<WindowRuntimeState, bool>? lists)
-        : this(runtime, lists, badges: null)
     {
-    }
-
-    /// <summary>Creates an adapter that also draws a count on some buttons (ADR 0212 §5).</summary>
-    /// <param name="runtime">The desktop window runtime.</param>
-    /// <param name="lists">Whether a window shows on this taskbar; <see langword="null"/> lists every window.</param>
-    /// <param name="badges">The count on an app's button, such as the Hack Store's updates; <see langword="null"/> draws none.</param>
-    internal TaskbarWindowSourceAdapter(WindowRuntime runtime, Func<WindowRuntimeState, bool>? lists, Func<string, int>? badges)
-    {
-        _badges = badges;
         _runtime = runtime ?? throw new ArgumentNullException(nameof(runtime));
         _lists = lists;
         _runtime.StateChanged += OnRuntimeStateChanged;
@@ -51,15 +40,12 @@ public sealed class TaskbarWindowSourceAdapter : ITaskbarWindowSource, IDisposab
     /// <inheritdoc />
     public event Action? Changed;
 
-    private TaskbarWindowItem ToItem(WindowRuntimeState window) => new(
+    private static TaskbarWindowItem ToItem(WindowRuntimeState window) => new(
         window.Id,
         window.Title,
         window.IconAssetPath,
         window.IsFocused,
-        window.VisualState == WindowVisualState.Minimized)
-    {
-        BadgeCount = _badges?.Invoke(window.AppId) ?? 0,
-    };
+        window.VisualState == WindowVisualState.Minimized);
 
     private void OnRuntimeStateChanged() => Changed?.Invoke();
 
@@ -211,8 +197,23 @@ public sealed class TaskbarClockPanelSourceAdapter : ITaskbarClockPanelSource
     /// <inheritdoc />
     public void Toggle() => SetOpen(!IsOpen);
 
+    /// <inheritdoc />
+    public int UnreadCount { get; private set; }
+
     /// <summary>Closes the clock panel.</summary>
     public void Close() => SetOpen(false);
+
+    /// <summary>Sets the number of unread notifications the clock's dot stands for (ADR 0196).</summary>
+    /// <param name="value">The count; 0 hides the dot.</param>
+    public void SetUnreadCount(int value)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegative(value);
+        if (UnreadCount != value)
+        {
+            UnreadCount = value;
+            Changed?.Invoke();
+        }
+    }
 
     private void SetOpen(bool value)
     {

@@ -103,6 +103,52 @@ public sealed class HackpkgCommandTests
     }
 
     [Fact]
+    public async Task An_app_never_loaded_is_available_at_once_and_its_signature_is_shown()
+    {
+        (int exit, string stdout, _) = await RunAsync(new FakePackages { Immediate = true }, "install", "Kazo-ca/HackerOs-App-Webamp");
+
+        Assert.Equal(0, exit);
+        Assert.Contains("hackpkg: signature verified", stdout, StringComparison.Ordinal);
+        Assert.Contains("hackpkg: available now", stdout, StringComparison.Ordinal);
+        Assert.DoesNotContain("restart HackerOS", stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task Rollback_passes_the_scope_and_reports_both_versions()
+    {
+        FakePackages packages = new();
+
+        (int exit, string stdout, _) = await RunAsync(packages, "rollback", "org.kazo.webamp", "--system");
+
+        Assert.Equal(0, exit);
+        Assert.Equal(["rollback org.kazo.webamp scope=System"], packages.Calls);
+        Assert.Contains("hackpkg: Webamp went back from 1.1.0 to 1.0.0", stdout, StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData(new string[0], "repair system=False", "hackpkg: nothing to repair")]
+    [InlineData(new[] { "--system" }, "repair system=True", "hackpkg: org.kazo.irc: install of 0.3.0 undone")]
+    public async Task Repair_reports_what_it_did(string[] options, string call, string output)
+    {
+        FakePackages packages = new();
+
+        (int exit, string stdout, _) = await RunAsync(packages, ["repair", .. options]);
+
+        Assert.Equal(0, exit);
+        Assert.Equal([call], packages.Calls);
+        Assert.Contains(output, stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task Repair_refuses_the_user_option()
+    {
+        (int exit, _, string stderr) = await RunAsync(new FakePackages(), "repair", "--user");
+
+        Assert.Equal(2, exit);
+        Assert.Contains("usage: hackpkg", stderr, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public async Task Sources_lists_catalogs_trusted_and_untrusted_sources()
     {
         (int exit, string stdout, _) = await RunAsync(new FakePackages(), "sources");
@@ -175,6 +221,8 @@ public sealed class HackpkgCommandTests
 
         public HackPackageException? Refusal { get; init; }
 
+        public bool Immediate { get; init; }
+
         public List<string> Calls { get; } = [];
 
         public ValueTask<IReadOnlyList<HackAppInstallInfo>> GetAllAsync(CancellationToken cancellationToken = default) =>
@@ -220,7 +268,23 @@ public sealed class HackpkgCommandTests
                 version == "1.0.0" ? null : "1.0.0", [AppCapabilities.NetworkRealAccess], Trusted: true)
             {
                 SystemWide = scope == HackPackageScope.System,
+                RestartRequired = !Immediate,
+                Signed = Immediate,
             });
+        }
+
+        public ValueTask<HackPackageInstallReport> RollbackPackageAsync(
+            string appId, HackPackageScope scope = HackPackageScope.Auto, CancellationToken cancellationToken = default)
+        {
+            Calls.Add($"rollback {appId} scope={scope}");
+            return ValueTask.FromResult(new HackPackageInstallReport(
+                appId, "Webamp", "1.0.0", "github:Kazo-ca/HackerOs-App-Webamp@1.0.0", "1.1.0", [], Trusted: true) { RestartRequired = false });
+        }
+
+        public ValueTask<IReadOnlyList<string>> RepairPackagesAsync(bool system, CancellationToken cancellationToken = default)
+        {
+            Calls.Add($"repair system={system}");
+            return ValueTask.FromResult<IReadOnlyList<string>>(system ? ["org.kazo.irc: install of 0.3.0 undone, 0.2.0 stays installed"] : []);
         }
 
         public ValueTask<HackInstalledPackage> RemovePackageAsync(

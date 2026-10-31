@@ -106,6 +106,7 @@ public sealed partial class AppInstallApprovalOverlay
     {
         AppInstallApprovalOperation.Update => L["InstallApproval.Title.Update"],
         AppInstallApprovalOperation.Remove => L["InstallApproval.Title.Remove"],
+        AppInstallApprovalOperation.Rollback => L["InstallApproval.Title.Rollback"],
         _ => L["InstallApproval.Title.Install"]
     };
 
@@ -113,6 +114,7 @@ public sealed partial class AppInstallApprovalOverlay
     {
         AppInstallApprovalOperation.Update => L["InstallApproval.Approve.Update"],
         AppInstallApprovalOperation.Remove => L["InstallApproval.Approve.Remove"],
+        AppInstallApprovalOperation.Rollback => L["InstallApproval.Approve.Rollback"],
         _ => L["InstallApproval.Approve.Install"]
     };
 

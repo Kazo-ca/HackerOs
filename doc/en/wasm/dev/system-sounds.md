@@ -77,7 +77,7 @@ nano ~/.local/share/sounds/retro/index.theme
 | --- | --- | --- |
 | `OsSoundEvent`, `OsSoundEvents`, `SoundThemeIndex` | Simulation Abstractions | Events, sound names, paths, 1 MB limit, reading `index.theme`. |
 | `SoundSettingsDocuments` | Platform Core | The `sound.config` document (schema, defaults, `SoundPreferences`). |
-| `BuiltInSoundThemes` | Platform Core | Built-in themes, embedded (`Sounds/Themes/<id>/*.oga`), written to `/usr/share/sounds` by `FileSystemSeeder.InstallSoundThemesAsync`, which `OsSoundService` runs once in the background after the first sign-in (not during the login, which it made 2 s slower). |
+| `BuiltInSoundThemes` | Platform Core | Built-in themes, embedded (`Sounds/Themes/<id>/*.oga`), written to `/usr/share/sounds` by `FileSystemSeeder.InstallSoundThemesAsync`, which `OsSoundService` runs once in the background after the first sign-in (not during the login, which it made 2 s slower). `/var/lib/hackeros/installed/sound-themes.list` records the installed files, like dpkg's `.list` files: a boot whose list matches skips the install. |
 | `OsSoundService` | Platform Core | Reads and watches `sound.config`, listens to notifications (`INotificationFeed`) and sessions (`IEventBus`), picks the file, plays through `IOsSoundOutput`. |
 | `IOsSoundOutput` / `BrowserSoundOutput` | Platform Core / Platform Blazor | "Sound card": Web Audio in `wwwroot/osSounds.js`, decoded buffers kept by path and revision. |
 | `DialogCoordinator` | Platform Blazor | Plays warning or error for a message box with that icon. |

@@ -269,8 +269,7 @@
         {
             source = new TaskbarWindowSourceAdapter(
                 WindowRuntime,
-                window => TaskbarScreenFilter.Lists(display, Screens.PrimaryTaskbar, window.DisplayId),
-                appId => _appUpdates?.GetBadgeCount(appId) ?? 0);
+                window => TaskbarScreenFilter.Lists(display, Screens.PrimaryTaskbar, window.DisplayId));
             _screenTaskbarSources[display] = source;
         }
 
@@ -539,7 +538,7 @@
     private IDisposable? _processSubscription;
     private Func<WindowId, Task>? _closeWindow;
     private Func<Task<DisplayId?>>? _openScreen;
-    private WhatsNewAttention? _whatsNew;
+    private NotificationAttention? _notificationAttention;
     private AppUpdateAttention? _appUpdates;
 
 
@@ -553,12 +552,9 @@
         KeyboardCommands.OpenScreen = _openScreen;
         _processSubscription = new WindowProcessObserver(EventBus, ProcessManager, Orchestrator, WindowRuntime, LaunchCoordinator, work => InvokeAsync(work));
 
-        // ADR 0212 §5: the Hack Store's update count, on its icon in the Start menu and the taskbar.
-        _appUpdates = new AppUpdateAttention(Services, OnAppUpdatesChanged);
         _taskbarWindowSource = new TaskbarWindowSourceAdapter(
             WindowRuntime,
-            window => TaskbarScreenFilter.Lists(DisplayId.Primary, Screens.PrimaryTaskbar, window.DisplayId),
-            appId => _appUpdates.GetBadgeCount(appId));
+            window => TaskbarScreenFilter.Lists(DisplayId.Primary, Screens.PrimaryTaskbar, window.DisplayId));
         _taskbarCommands = new TaskbarCommandDispatcherAdapter(WindowRuntime, CloseCoordinator, CloseGuards);
         _launcher = new TaskbarLauncherAdapter();
         _primaryLauncher = _launcher.For(DisplayId.Primary);
@@ -568,9 +564,18 @@
         _clockPanel.Changed += Rerender;
         _taskbarPreviews.Changed += Rerender;
         _taskbarStatus = new TaskbarStatusSourceAdapter(SimulationClock, SessionLocale, TimeZones);
-        // ADR 0186 §4.5: the Start button's dot and the sign-in notification of unseen changes.
-        _whatsNew = new WhatsNewAttention(Services, _launcher.SetAttention);
-        _ = _whatsNew.StartAsync();
+        // ADR 0196: the clock's dot counts the notifications not looked at yet; opening the panel reads them.
+        if (Services.GetService(typeof(INotificationQueue)) is INotificationQueue notifications)
+        {
+            _notificationAttention = new NotificationAttention(notifications, () => SessionService.CurrentPrincipal?.UserId, SimulationClock);
+            _notificationAttention.Changed += OnUnreadNotificationsChanged;
+            _clockPanel.Changed += OnClockPanelChanged;
+        }
+
+        // ADR 0186 §4.5: the sign-in notification of unseen changes.
+        _ = PostWhatsNewAsync();
+        // ADR 0212 §5: the Hack Store's update check; a notification shows what it finds.
+        _appUpdates = new AppUpdateAttention(Services);
         _appUpdates.Start();
         _taskbarMenus = new TaskbarContextMenus(
             ContextMenus,
@@ -582,15 +587,22 @@
             (appId, arguments, display) => InvokeAsync(() => LaunchFromTaskbarAsync(appId, arguments, display)));
     }
 
-    private void OnAppUpdatesChanged()
+    /// <summary>Posts the sign-in notification of unseen changes, then shows its dot at once.</summary>
+    private async Task PostWhatsNewAsync()
     {
-        _taskbarWindowSource.Refresh();
-        foreach (TaskbarWindowSourceAdapter source in _screenTaskbarSources.Values)
-        {
-            source.Refresh();
-        }
+        await WhatsNewSignInNotice.PostAsync(Services);
+        _notificationAttention?.Refresh();
+    }
 
-        Rerender();
+    private void OnUnreadNotificationsChanged() =>
+        InvokeAsync(() => _clockPanel.SetUnreadCount(_notificationAttention?.UnreadCount ?? 0));
+
+    private void OnClockPanelChanged()
+    {
+        if (_notificationAttention is not null && _notificationAttention.IsViewing != _clockPanel.IsOpen)
+        {
+            _notificationAttention.IsViewing = _clockPanel.IsOpen;
+        }
     }
 
     private void Rerender()
@@ -640,8 +652,13 @@
 
         _screenTaskbarSources.Clear();
         _taskbarStatus.Dispose();
-        _whatsNew?.Dispose();
         _appUpdates?.Dispose();
+        _clockPanel.Changed -= OnClockPanelChanged;
+        if (_notificationAttention is not null)
+        {
+            _notificationAttention.Changed -= OnUnreadNotificationsChanged;
+            _notificationAttention.Dispose();
+        }
         _taskbarMenus.Dispose();
     }
 }

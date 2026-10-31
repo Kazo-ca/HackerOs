@@ -144,6 +144,24 @@ public sealed class ScreenServiceTests
     }
 
     [Fact]
+    public async Task Restoring_what_the_file_lists_writes_nothing_so_closing_is_saved_at_once()
+    {
+        Harness harness = new();
+        // As the reader gives a line typed "open = 2": with the space after the equals sign.
+        harness.Settings.Values["screens.open"] = " 2";
+        harness.Settings.Values["screens.2"] = " 40,40,900,700";
+        await harness.Service.StartAsync();
+
+        Assert.Equal(1, await harness.Service.RestoreScreensAsync());
+        Assert.Equal(0, harness.Settings.Writes);
+
+        harness.SurfaceService.OnSurfaceEvent(harness.Service.Screens[0].Surface.Id, "closed", 0, 0);
+
+        await harness.Settings.WaitForWritesAsync(1);
+        Assert.Equal("open = ", harness.Settings.Line("screens.open"));
+    }
+
+    [Fact]
     public async Task A_blocked_window_keeps_the_rest_offered_for_the_next_click()
     {
         Harness harness = new();

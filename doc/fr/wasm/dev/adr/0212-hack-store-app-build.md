@@ -10,7 +10,10 @@ Accepté le 2026-10-31, chantier `todo/5-hackstore-app` (issue `TODO`
 sources et la confiance de l'[ADR 0208](0208-hack-store-sources-trust-build.md).
 Ne change aucune décision de l'ADR 0188 ; fixe ce qu'elle laissait ouvert.
 Quatre questions ont été posées à Benoit (Q1 à Q4 ci-dessous) ; les
-recommandations sont appliquées en attendant ses réponses.
+recommandations sont appliquées en attendant ses réponses. Le 2026-10-31,
+Benoit a confirmé Q1 A et Q2 A, et choisi Q3 C (notification seulement) et
+Q4 B (refuser et demander) : §4 et §5 sont remplacés par
+l'[ADR 0215](0215-hack-store-answers-notification-and-ambiguous-app-id.md).
 
 ## Contexte
 

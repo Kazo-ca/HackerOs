@@ -270,4 +270,28 @@
   <data name="Working" xml:space="preserve">
     <value>Working…</value>
   </data>
+  <data name="Action.Rollback" xml:space="preserve">
+    <value>Back to {0}</value>
+  </data>
+  <data name="Message.RemovedRestart" xml:space="preserve">
+    <value>{0} is uninstalled. It was open since the start: restart to finish.</value>
+  </data>
+  <data name="Message.RolledBack" xml:space="preserve">
+    <value>{0} is back to {1}.</value>
+  </data>
+  <data name="Message.RolledBackRestart" xml:space="preserve">
+    <value>{0} is back to {1}. It was open since the start: restart to finish.</value>
+  </data>
+  <data name="Error.NoPrevious" xml:space="preserve">
+    <value>No previous version of this app is kept.</value>
+  </data>
+  <data name="Error.ReinstallRequired" xml:space="preserve">
+    <value>This version cannot update the installed one in place: uninstall the app, then install it again.</value>
+  </data>
+  <data name="Error.Unsigned" xml:space="preserve">
+    <value>This package is not signed by its source: it was refused.</value>
+  </data>
+  <data name="Error.BadSignature" xml:space="preserve">
+    <value>The signature of this package does not match its source: it was refused.</value>
+  </data>
 </root>

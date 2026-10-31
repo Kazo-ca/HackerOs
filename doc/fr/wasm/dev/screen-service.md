@@ -70,7 +70,10 @@ JavaScript), `LimitReached` (numéros 2 à 9 pris). `ScreenPermission` : `Unknow
    déplacée sur un moniteur libre et `OnScreenPlaced` donne le nom du moniteur.
 3. La surface ouverte, le service envoie `AddDisplayCommand(écran, 0, 0, largeur,
    hauteur)`, puis `ChangeViewportCommand` à chaque changement de taille.
-4. `open` de `screens.config` est réécrit.
+4. `open` de `screens.config` est réécrit. Une sauvegarde dont le fichier contient
+   déjà les valeurs (restaurer les écrans qu'il liste) n'écrit rien : un écran fermé
+   juste après est alors oublié tout de suite au lieu d'attendre derrière une écriture
+   inutile (environ 1 s chacune dans le stockage du navigateur).
 
 ## 4. Fermer un écran
 

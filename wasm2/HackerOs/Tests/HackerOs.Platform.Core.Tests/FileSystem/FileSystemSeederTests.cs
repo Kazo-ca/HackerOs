@@ -64,6 +64,56 @@ public sealed class FileSystemSeederTests
         Assert.Equal(pack.Metadata.Revision, (await StatAsync(fixture, "/usr/share/icons/neon/icon-pack.json")).Value!.Metadata.Revision);
     }
 
+    [Fact]
+    public async Task Recorded_install_is_skipped_at_the_next_boot()
+    {
+        Fixture fixture = new();
+        await fixture.Seeder.SeedAsync("alice", "users");
+        await fixture.Seeder.InstallIconPacksAsync();
+        await fixture.Seeder.InstallSoundThemesAsync();
+
+        FileSystemEntrySnapshot list = (await StatAsync(fixture, "/var/lib/hackeros/installed/icon-packs.list")).Value!;
+        Assert.True(((FileMetadata)list.Metadata).Length > 0);
+        Assert.True((await StatAsync(fixture, "/var/lib/hackeros/installed/sound-themes.list")).Succeeded);
+
+        // Like dpkg, a recorded package is not checked file by file again: a deleted file stays deleted.
+        await DeleteAsync(fixture, "/usr/share/icons/neon/icon-pack.json");
+        await fixture.Seeder.InstallIconPacksAsync();
+
+        Assert.Equal(FileSystemErrorCode.NotFound, (await StatAsync(fixture, "/usr/share/icons/neon/icon-pack.json")).Error?.Code);
+    }
+
+    [Fact]
+    public async Task Install_interrupted_by_a_reload_completes_its_empty_files()
+    {
+        Fixture fixture = new();
+        await fixture.Seeder.SeedAsync("alice", "users");
+        await fixture.Seeder.InstallIconPacksAsync();
+        // The reload came between creating the file and writing it, before the list was written.
+        await DeleteAsync(fixture, "/var/lib/hackeros/installed/icon-packs.list");
+        await DeleteAsync(fixture, "/usr/share/icons/neon/icon-pack.json");
+        await fixture.Repository.CreateAsync(
+            new FileSystemCreateRequest(
+                VirtualPath.Parse("/usr/share/icons/neon/icon-pack.json"), FileSystemEntryKind.File, FileSystemPermissions.FromMode(0x01A4)),
+            fixture.SystemContext);
+
+        await fixture.Seeder.InstallIconPacksAsync();
+
+        FileSystemEntrySnapshot pack = (await StatAsync(fixture, "/usr/share/icons/neon/icon-pack.json")).Value!;
+        Assert.True(((FileMetadata)pack.Metadata).Length > 0);
+        Assert.True((await StatAsync(fixture, "/var/lib/hackeros/installed/icon-packs.list")).Succeeded);
+    }
+
+    private static async Task DeleteAsync(Fixture fixture, string path)
+    {
+        VirtualPath target = VirtualPath.Parse(path);
+        long revision = (await StatAsync(fixture, path)).Value!.Metadata.Revision;
+        long parent = (await StatAsync(fixture, path[..path.LastIndexOf('/')])).Value!.Metadata.Revision;
+        FileSystemMutationResult deleted = await fixture.Repository.DeleteAsync(
+            new FileSystemDeleteRequest(target, revision, parent), fixture.SystemContext);
+        Assert.True(deleted.Succeeded, deleted.Transaction.Error?.Code.ToString());
+    }
+
     private static ValueTask<FileSystemResult<FileSystemEntrySnapshot>> StatAsync(Fixture fixture, string path) =>
         fixture.Repository.StatAsync(new FileSystemStatRequest(VirtualPath.Parse(path)), fixture.SystemContext);
 

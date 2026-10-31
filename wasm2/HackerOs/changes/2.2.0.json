@@ -412,6 +412,26 @@
       ]
     },
     {
+      "id": "9c4497c4-93c4-434e-a366-5458de073f01",
+      "category": "new",
+      "audience": [
+        "user",
+        "developer"
+      ],
+      "title": {
+        "en": "Hack Store: apps open without a restart, signed packages, safe installs",
+        "fr": "Hack Store : apps ouvertes sans redémarrage, paquets signés, installations sûres"
+      },
+      "description": {
+        "en": "An app installed or updated opens at once when it was not already loaded. Packages from a source with a signing key are verified before install. Installs are transactional: an interrupted one is finished or undone at the next start, and hackpkg repair fixes the rest. The previous version is kept: Go back to in the Store or hackpkg rollback. The app's settings and data are backed up before its first start in a new version.",
+        "fr": "Une app installée ou mise à jour s'ouvre tout de suite si elle n'était pas déjà chargée. Les paquets d'une source qui a une clé de signature sont vérifiés avant l'installation. Les installations sont transactionnelles : une installation interrompue est terminée ou annulée au démarrage suivant, et hackpkg repair répare le reste. La version précédente est gardée : Revenir à dans le Store ou hackpkg rollback. Les réglages et les données de l'app sont sauvegardés avant sa première ouverture dans une nouvelle version."
+      },
+      "links": [
+        "doc/en/wasm/dev/adr/0214-hack-store-hot-add-signing-transactions.md",
+        "doc/en/wasm/dev/app-installation.md"
+      ]
+    },
+    {
       "id": "dad2a900-2ba4-4804-ad82-bfbee99d93e9",
       "category": "new",
       "audience": [
@@ -423,11 +443,12 @@
         "fr": "Hack Store : parcourir, installer et mettre à jour des apps en un clic"
       },
       "description": {
-        "en": "The Hack Store is pinned in the Start menu on desktop and mobile. It lists the apps of the reviewed catalogs by category, searches them, shows each app's page (screenshots, description, size, license, capabilities, trust), installs it for you or for everyone, opens, updates and uninstalls it, and offers Restart to finish. It checks for updates at sign-in then every 6 hours, with a badge on its icon and a notification. hackpkg install <appId> installs from the same catalogs; the SDK gains HackAppPackages.GetCatalogsAsync, GetUpdatesAsync and RestartToFinishAsync.",
-        "fr": "Le Hack Store est épinglé dans le menu Démarrer, sur le bureau et le mobile. Il liste les apps des catalogues relus par catégorie, les cherche, montre la fiche de chaque app (captures, description, taille, licence, capacités, confiance), l'installe pour vous ou pour tous, l'ouvre, la met à jour et la désinstalle, et propose Redémarrer pour terminer. Il vérifie les mises à jour à l'ouverture de session puis toutes les 6 heures, avec un badge sur son icône et une notification. hackpkg install <appId> installe depuis les mêmes catalogues ; le SDK reçoit HackAppPackages.GetCatalogsAsync, GetUpdatesAsync et RestartToFinishAsync."
+        "en": "The Hack Store is pinned in the Start menu on desktop and mobile. It lists the apps of the reviewed catalogs by category, searches them, shows each app's page (screenshots, description, size, license, capabilities, trust), installs it for you or for everyone, opens, updates and uninstalls it, and offers Restart to finish. It checks for updates at sign-in then every 6 hours, and says what it finds in a notification. hackpkg install <appId> installs from the same catalogs, and asks you to choose with catalog:<name>/<appId> when several list the app; the SDK gains HackAppPackages.GetCatalogsAsync, GetUpdatesAsync and RestartToFinishAsync.",
+        "fr": "Le Hack Store est épinglé dans le menu Démarrer, sur le bureau et le mobile. Il liste les apps des catalogues relus par catégorie, les cherche, montre la fiche de chaque app (captures, description, taille, licence, capacités, confiance), l'installe pour vous ou pour tous, l'ouvre, la met à jour et la désinstalle, et propose Redémarrer pour terminer. Il vérifie les mises à jour à l'ouverture de session puis toutes les 6 heures, et signale ce qu'il trouve par une notification. hackpkg install <appId> installe depuis les mêmes catalogues, et demande de choisir avec catalog:<nom>/<appId> quand plusieurs listent l'app ; le SDK reçoit HackAppPackages.GetCatalogsAsync, GetUpdatesAsync et RestartToFinishAsync."
       },
       "links": [
         "doc/en/wasm/dev/adr/0212-hack-store-app-build.md",
+        "doc/en/wasm/dev/adr/0215-hack-store-answers-notification-and-ambiguous-app-id.md",
         "doc/en/wasm/dev/app-installation.md"
       ]
     },
@@ -544,6 +565,25 @@
       ]
     },
     {
+      "id": "895d1e34-1c73-4434-b718-41280ffb6e4c",
+      "category": "improved",
+      "audience": [
+        "user"
+      ],
+      "title": {
+        "en": "Unread notifications dot next to the clock",
+        "fr": "Point des notifications non lues à côté de l'horloge"
+      },
+      "description": {
+        "en": "A dot next to the taskbar clock (on the notification shade handle on a phone) shows unread notifications, and its tooltip gives their count. Opening the panel marks them read. It replaces the unexplained dot on the Applications button; the what's new notification closes by itself once every change has been seen.",
+        "fr": "Un point à côté de l'horloge de la barre des tâches (sur la poignée du volet de notifications sur téléphone) signale les notifications non lues, et son infobulle donne leur nombre. Ouvrir le panneau les marque lues. Il remplace le point sans explication du bouton Applications ; la notification des nouveautés se ferme seule quand tout a été vu."
+      },
+      "pr": 294,
+      "links": [
+        "doc/en/wasm/dev/adr/0196-unread-notifications-dot.md"
+      ]
+    },
+    {
       "id": "60bb88fc-c913-48e6-ba72-fda0a16e113a",
       "category": "improved",
       "audience": [
@@ -596,6 +636,25 @@
       "pr": 275,
       "links": [
         "doc/en/wasm/dev/adr/0185-file-explorer-improvements.md"
+      ]
+    },
+    {
+      "id": "115ce78f-cd89-4b45-af6b-8da674debdf2",
+      "category": "improved",
+      "audience": [
+        "user",
+        "developer"
+      ],
+      "title": {
+        "en": "Hack Store: no update badge, and hackpkg asks which catalog to use",
+        "fr": "Hack Store : pas de badge de mises à jour, et hackpkg demande quel catalogue utiliser"
+      },
+      "description": {
+        "en": "Available updates are announced by a notification only; the Hack Store's icon no longer carries a count. hackpkg install <appId> refuses an app that several catalogs list and names each catalog:<name>/<appId> to choose from.",
+        "fr": "Les mises à jour disponibles sont annoncées par une notification seulement ; l'icône du Hack Store ne porte plus de nombre. hackpkg install <appId> refuse une app que plusieurs catalogues listent et donne chaque catalog:<nom>/<appId> à choisir."
+      },
+      "links": [
+        "doc/en/wasm/dev/adr/0215-hack-store-answers-notification-and-ambiguous-app-id.md"
       ]
     },
     {
@@ -699,6 +758,25 @@
       "pr": 222,
       "links": [
         "doc/en/wasm/dev/adr/0177-title-bar-of-maximized-and-snapped-windows.md"
+      ]
+    },
+    {
+      "id": "bc28cbac-d3e6-441e-882f-b78c5572bf65",
+      "category": "fixed",
+      "audience": [
+        "user"
+      ],
+      "title": {
+        "en": "A screen closed by hand is forgotten even after a quick reload",
+        "fr": "Un écran fermé à la main est oublié même après un rechargement rapide"
+      },
+      "description": {
+        "en": "Restoring the screens of the last session no longer rewrites screens.config with the values it already holds, so closing a screen right after is saved at once. The icon packs and sound themes installed in the background are recorded in /var/lib/hackeros/installed: later boots skip them, and an install cut by a reload completes at the next boot.",
+        "fr": "Restaurer les écrans de la dernière session ne réécrit plus screens.config avec les valeurs qu'il contient déjà : fermer un écran juste après est donc enregistré tout de suite. Les packs d'icônes et jeux de sons installés en arrière-plan sont notés dans /var/lib/hackeros/installed : les démarrages suivants les sautent, et une installation coupée par un rechargement se termine au démarrage suivant."
+      },
+      "links": [
+        "doc/en/wasm/dev/screen-service.md",
+        "doc/en/wasm/dev/icon-packs.md"
       ]
     },
     {

@@ -639,6 +639,8 @@ HackerOs.AppSdk.Apps.HackInstalledPackage.Equals(HackerOs.AppSdk.Apps.HackInstal
 HackerOs.AppSdk.Apps.HackInstalledPackage.HackInstalledPackage(string! AppId, string! Source, string! Version, bool Loaded) -> void
 HackerOs.AppSdk.Apps.HackInstalledPackage.Loaded.get -> bool
 HackerOs.AppSdk.Apps.HackInstalledPackage.Loaded.init -> void
+HackerOs.AppSdk.Apps.HackInstalledPackage.PreviousVersion.get -> string?
+HackerOs.AppSdk.Apps.HackInstalledPackage.PreviousVersion.init -> void
 HackerOs.AppSdk.Apps.HackInstalledPackage.Source.get -> string!
 HackerOs.AppSdk.Apps.HackInstalledPackage.Source.init -> void
 HackerOs.AppSdk.Apps.HackInstalledPackage.SystemWide.get -> bool
@@ -723,6 +725,8 @@ HackerOs.AppSdk.Apps.HackPackageInfo.InstalledVersion.get -> string?
 HackerOs.AppSdk.Apps.HackPackageInfo.InstalledVersion.init -> void
 HackerOs.AppSdk.Apps.HackPackageInfo.Latest.get -> string?
 HackerOs.AppSdk.Apps.HackPackageInfo.Latest.init -> void
+HackerOs.AppSdk.Apps.HackPackageInfo.SignatureRequired.get -> bool
+HackerOs.AppSdk.Apps.HackPackageInfo.SignatureRequired.init -> void
 HackerOs.AppSdk.Apps.HackPackageInfo.Source.get -> string!
 HackerOs.AppSdk.Apps.HackPackageInfo.Source.init -> void
 HackerOs.AppSdk.Apps.HackPackageInfo.Trust.get -> HackerOs.AppSdk.Apps.HackPackageTrust
@@ -749,6 +753,9 @@ HackerOs.AppSdk.Apps.HackPackageInstallReport.PreviousVersion.init -> void
 HackerOs.AppSdk.Apps.HackPackageInstallReport.ReplacedPersonalCopies.get -> int
 HackerOs.AppSdk.Apps.HackPackageInstallReport.ReplacedPersonalCopies.init -> void
 HackerOs.AppSdk.Apps.HackPackageInstallReport.RestartRequired.get -> bool
+HackerOs.AppSdk.Apps.HackPackageInstallReport.RestartRequired.init -> void
+HackerOs.AppSdk.Apps.HackPackageInstallReport.Signed.get -> bool
+HackerOs.AppSdk.Apps.HackPackageInstallReport.Signed.init -> void
 HackerOs.AppSdk.Apps.HackPackageInstallReport.Source.get -> string!
 HackerOs.AppSdk.Apps.HackPackageInstallReport.Source.init -> void
 HackerOs.AppSdk.Apps.HackPackageInstallReport.SystemWide.get -> bool
@@ -901,7 +908,9 @@ HackerOs.AppSdk.Apps.IAppManagementGateway.ReinstallAsync(string! appId, HackerO
 HackerOs.AppSdk.Apps.IAppManagementGateway.RemovePackageAsync(string! appId, HackerOs.AppSdk.Apps.HackPackageScope scope = HackerOs.AppSdk.Apps.HackPackageScope.Auto, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Apps.HackInstalledPackage!>
 HackerOs.AppSdk.Apps.IAppManagementGateway.RemovePackageSourceAsync(string! source, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Apps.HackPackageSources!>
 HackerOs.AppSdk.Apps.IAppManagementGateway.RemoveThemePackAsync(string! packId, HackerOs.AppSdk.Apps.HackPackageScope scope = HackerOs.AppSdk.Apps.HackPackageScope.Auto, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Apps.HackInstalledThemePack!>
+HackerOs.AppSdk.Apps.IAppManagementGateway.RepairPackagesAsync(bool system, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<string!>!>
 HackerOs.AppSdk.Apps.IAppManagementGateway.RestartForPackagesAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+HackerOs.AppSdk.Apps.IAppManagementGateway.RollbackPackageAsync(string! appId, HackerOs.AppSdk.Apps.HackPackageScope scope = HackerOs.AppSdk.Apps.HackPackageScope.Auto, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Apps.HackPackageInstallReport!>
 HackerOs.AppSdk.Apps.IAppManagementGateway.SetPackagePolicyAsync(HackerOs.AppSdk.Apps.HackPackageBlockKind kind, string! value, bool blocked, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Apps.HackPackagePolicy!>
 HackerOs.AppSdk.Apps.IAppManagementGateway.UninstallAsync(string! appId, HackerOs.AppSdk.Apps.HackInstallScope scope, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<string!>!>
 HackerOs.AppSdk.Apps.IAppManagementGateway.UninstallWithReportAsync(string! appId, HackerOs.AppSdk.Apps.HackInstallScope scope, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Apps.HackUninstallReport!>
@@ -3281,7 +3290,9 @@ static HackerOs.AppSdk.Apps.HackAppPackages.InstallThemePackAsync(string! source
 static HackerOs.AppSdk.Apps.HackAppPackages.RemoveAsync(string! appId, HackerOs.AppSdk.Apps.HackPackageScope scope = HackerOs.AppSdk.Apps.HackPackageScope.Auto, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Apps.HackInstalledPackage!>!
 static HackerOs.AppSdk.Apps.HackAppPackages.RemoveSourceAsync(string! source, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Apps.HackPackageSources!>!
 static HackerOs.AppSdk.Apps.HackAppPackages.RemoveThemePackAsync(string! packId, HackerOs.AppSdk.Apps.HackPackageScope scope = HackerOs.AppSdk.Apps.HackPackageScope.Auto, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Apps.HackInstalledThemePack!>!
+static HackerOs.AppSdk.Apps.HackAppPackages.RepairAsync(bool system = false, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<string!>!>!
 static HackerOs.AppSdk.Apps.HackAppPackages.RestartToFinishAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+static HackerOs.AppSdk.Apps.HackAppPackages.RollbackAsync(string! appId, HackerOs.AppSdk.Apps.HackPackageScope scope = HackerOs.AppSdk.Apps.HackPackageScope.Auto, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Apps.HackPackageInstallReport!>!
 static HackerOs.AppSdk.Apps.HackAppPackages.SetPolicyAsync(HackerOs.AppSdk.Apps.HackPackageBlockKind kind, string! value, bool blocked, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Apps.HackPackagePolicy!>!
 static HackerOs.AppSdk.Apps.HackApps.Changed -> System.EventHandler?
 static HackerOs.AppSdk.Apps.HackApps.EditFileAsync(string! path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Apps.HackOpenFileResult!>!

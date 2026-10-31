@@ -373,7 +373,7 @@ le tableau ci-dessous) et les membres de records que l'analyseur d'API publique
 
 Préparée le 2026-10-31 (branche `release/2.2.0`), publiée par le workflow
 `Release HackerOS` quand sa PR arrive dans `main` : tag `v2.2.0`, GitHub
-Release et nuget.org. `build/tools/ship-public-api.sh` a versé 2926 lignes de
+Release et nuget.org. `build/tools/ship-public-api.sh` a versé 3020 lignes de
 `PublicAPI.Unshipped.txt` dans `PublicAPI.Shipped.txt` : les ajouts de la
 série `todo/base` et ceux arrivés sur `main` depuis la 2.1.0. Les seules lignes
 `*REMOVED*` touchent `HackerOs.Apps.Browser` (le constructeur de

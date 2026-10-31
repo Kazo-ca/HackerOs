@@ -65,10 +65,14 @@ public sealed class AppEnablementRegistry : IAppEnablementRegistry
     private readonly HashSet<string> _disabled = new(StringComparer.Ordinal);
 
     /// <summary>Initializes the registry with every catalog app enabled.</summary>
-    /// <param name="catalog">Catalog whose apps this registry tracks.</param>
+    /// <param name="catalog">
+    /// Catalog whose apps this registry tracks. When apps join or leave it (ADR 0214 §1),
+    /// <see cref="Changed"/> is raised too, so every app list listening here redraws.
+    /// </param>
     public AppEnablementRegistry(AppCatalog catalog)
     {
         _catalog = catalog ?? throw new ArgumentNullException(nameof(catalog));
+        _catalog.Changed += (_, _) => Changed?.Invoke(this, EventArgs.Empty);
     }
 
     /// <inheritdoc />

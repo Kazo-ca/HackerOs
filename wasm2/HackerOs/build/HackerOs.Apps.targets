@@ -110,12 +110,15 @@
     sets these properties to change what /etc/hackeros/app-sources.config and app-policy.config are
     seeded with. Values are separated by commas; a property left empty keeps the standard value
     (official catalog, github.com/Kazo-ca trusted, nothing blocked, 6 hours). Catalogs are written
-    name=https://.../catalog.json. They reach AppPackageDefaults.FromAssembly as assembly metadata.
+    name=https://.../catalog.json. Signing keys (ADR 0214 §2) are written source=base64 public key,
+    one item per key (HackerOsAppSigningKeys=catalog:mine=MFkw...), and are added to the official
+    catalog's own key. They reach AppPackageDefaults.FromAssembly as assembly metadata.
   -->
   <ItemGroup Condition="'$(HackerOsAppHost)' == 'true'">
     <AssemblyMetadata Include="HackerOs.AppPackages.Catalogs" Value="$(HackerOsAppCatalogs)" Condition="'$(HackerOsAppCatalogs)' != ''" />
     <AssemblyMetadata Include="HackerOs.AppPackages.Trusted" Value="$(HackerOsTrustedAppSources)" Condition="'$(HackerOsTrustedAppSources)' != ''" />
     <AssemblyMetadata Include="HackerOs.AppPackages.UpdateIntervalHours" Value="$(HackerOsAppUpdateIntervalHours)" Condition="'$(HackerOsAppUpdateIntervalHours)' != ''" />
+    <AssemblyMetadata Include="HackerOs.AppPackages.SigningKeys" Value="$(HackerOsAppSigningKeys)" Condition="'$(HackerOsAppSigningKeys)' != ''" />
     <AssemblyMetadata Include="HackerOs.AppPackages.BlockedApps" Value="$(HackerOsBlockedApps)" Condition="'$(HackerOsBlockedApps)' != ''" />
     <AssemblyMetadata Include="HackerOs.AppPackages.BlockedCategories" Value="$(HackerOsBlockedAppCategories)" Condition="'$(HackerOsBlockedAppCategories)' != ''" />
     <AssemblyMetadata Include="HackerOs.AppPackages.BlockedCapabilities" Value="$(HackerOsBlockedAppCapabilities)" Condition="'$(HackerOsBlockedAppCapabilities)' != ''" />

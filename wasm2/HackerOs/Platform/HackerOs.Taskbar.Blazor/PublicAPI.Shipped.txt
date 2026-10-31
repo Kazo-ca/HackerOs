@@ -3,6 +3,7 @@ HackerOs.Taskbar.Blazor.ITaskbarClockPanelSource
 HackerOs.Taskbar.Blazor.ITaskbarClockPanelSource.Changed -> System.Action?
 HackerOs.Taskbar.Blazor.ITaskbarClockPanelSource.IsOpen.get -> bool
 HackerOs.Taskbar.Blazor.ITaskbarClockPanelSource.Toggle() -> void
+HackerOs.Taskbar.Blazor.ITaskbarClockPanelSource.UnreadCount.get -> int
 HackerOs.Taskbar.Blazor.ITaskbarCommandDispatcher
 HackerOs.Taskbar.Blazor.ITaskbarCommandDispatcher.Activate(HackerOs.Windowing.Abstractions.WindowId id) -> void
 HackerOs.Taskbar.Blazor.ITaskbarCommandDispatcher.Close(HackerOs.Windowing.Abstractions.WindowId id) -> void
@@ -65,8 +66,6 @@ HackerOs.Taskbar.Blazor.TaskbarOptions.LauncherMark.init -> void
 HackerOs.Taskbar.Blazor.TaskbarOptions.TaskbarOptions() -> void
 HackerOs.Taskbar.Blazor.TaskbarWindowItem
 HackerOs.Taskbar.Blazor.TaskbarWindowItem.<Clone>$() -> HackerOs.Taskbar.Blazor.TaskbarWindowItem!
-HackerOs.Taskbar.Blazor.TaskbarWindowItem.BadgeCount.get -> int
-HackerOs.Taskbar.Blazor.TaskbarWindowItem.BadgeCount.init -> void
 HackerOs.Taskbar.Blazor.TaskbarWindowItem.Deconstruct(out HackerOs.Windowing.Abstractions.WindowId Id, out string! Title, out string? IconAssetPath, out bool IsFocused, out bool IsMinimized) -> void
 HackerOs.Taskbar.Blazor.TaskbarWindowItem.Equals(HackerOs.Taskbar.Blazor.TaskbarWindowItem? other) -> bool
 HackerOs.Taskbar.Blazor.TaskbarWindowItem.IconAssetPath.get -> string?
