@@ -80,7 +80,7 @@ nano ~/.local/share/sounds/retro/index.theme
 | --- | --- | --- |
 | `OsSoundEvent`, `OsSoundEvents`, `SoundThemeIndex` | Simulation Abstractions | Évènements, noms de sons, chemins, limite de 1 Mo, lecture de `index.theme`. |
 | `SoundSettingsDocuments` | Platform Core | Document `sound.config` (schéma, valeurs par défaut, `SoundPreferences`). |
-| `BuiltInSoundThemes` | Platform Core | Jeux intégrés, embarqués (`Sounds/Themes/<id>/*.oga`), écrits dans `/usr/share/sounds` par `FileSystemSeeder.InstallSoundThemesAsync`, que `OsSoundService` lance une fois en arrière-plan après la première ouverture de session (pas pendant la connexion, qu'elle ralentissait de 2 s). |
+| `BuiltInSoundThemes` | Platform Core | Jeux intégrés, embarqués (`Sounds/Themes/<id>/*.oga`), écrits dans `/usr/share/sounds` par `FileSystemSeeder.InstallSoundThemesAsync`, que `OsSoundService` lance une fois en arrière-plan après la première ouverture de session (pas pendant la connexion, qu'elle ralentissait de 2 s). `/var/lib/hackeros/installed/sound-themes.list` note les fichiers installés, comme les fichiers `.list` de dpkg : un démarrage dont la liste correspond saute l'installation. |
 | `OsSoundService` | Platform Core | Lit et surveille `sound.config`, écoute les notifications (`INotificationFeed`) et les sessions (`IEventBus`), choisit le fichier, joue par `IOsSoundOutput`. |
 | `IOsSoundOutput` / `BrowserSoundOutput` | Platform Core / Platform Blazor | « Carte son » : Web Audio dans `wwwroot/osSounds.js`, tampons décodés gardés par chemin et révision. |
 | `DialogCoordinator` | Platform Blazor | Joue avertissement ou erreur pour une boîte de message avec cette icône. |
