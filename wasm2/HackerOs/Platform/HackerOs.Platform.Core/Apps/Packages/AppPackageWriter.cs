@@ -11,13 +11,30 @@ namespace HackerOs.Platform.Core.Apps.Packages;
 /// </summary>
 public static class AppPackageWriter
 {
-    /// <summary>Builds the package of one app.</summary>
+    /// <summary>Builds the package of one app, without satellite assemblies.</summary>
     /// <param name="manifestJson">The generated <c>manifest.json</c>, byte for byte.</param>
     /// <param name="readAssembly">Reads one declared assembly (<c>Kazo.Webamp.dll</c>) from the build output.</param>
     /// <param name="readAsset">Reads one declared asset (path relative to <c>wwwroot/</c>).</param>
     /// <returns>The package, already checked with <see cref="AppPackage.Read"/>.</returns>
     /// <exception cref="AppPackageException">The result would be refused by the OS.</exception>
-    public static byte[] Write(byte[] manifestJson, Func<string, byte[]> readAssembly, Func<string, byte[]> readAsset)
+    public static byte[] Write(byte[] manifestJson, Func<string, byte[]> readAssembly, Func<string, byte[]> readAsset) =>
+        Write(manifestJson, readAssembly, readAsset, null);
+
+    /// <summary>Builds the package of one app.</summary>
+    /// <param name="manifestJson">The generated <c>manifest.json</c>, byte for byte.</param>
+    /// <param name="readAssembly">Reads one declared assembly (<c>Kazo.Webamp.dll</c>) from the build output.</param>
+    /// <param name="readAsset">Reads one declared asset (path relative to <c>wwwroot/</c>).</param>
+    /// <param name="satellites">
+    /// The satellite assemblies of the app's assemblies (ADR 0222 §1), by their path under <c>lib/</c>
+    /// (<c>fr/Kazo.Webamp.resources.dll</c>); <see langword="null"/> for none.
+    /// </param>
+    /// <returns>The package, already checked with <see cref="AppPackage.Read"/>.</returns>
+    /// <exception cref="AppPackageException">The result would be refused by the OS.</exception>
+    public static byte[] Write(
+        byte[] manifestJson,
+        Func<string, byte[]> readAssembly,
+        Func<string, byte[]> readAsset,
+        IReadOnlyDictionary<string, byte[]>? satellites)
     {
         ArgumentNullException.ThrowIfNull(manifestJson);
         ArgumentNullException.ThrowIfNull(readAssembly);
@@ -42,6 +59,11 @@ public static class AppPackageWriter
         foreach (AssetManifest asset in manifest.Assets ?? [])
         {
             files[AppPackage.AssetFolder + asset.Path] = readAsset(asset.Path);
+        }
+
+        foreach ((string path, byte[] bytes) in satellites ?? new Dictionary<string, byte[]>())
+        {
+            files[AppPackage.LibraryFolder + path] = bytes;
         }
 
         byte[] description = WriteJson(writer =>

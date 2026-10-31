@@ -5,7 +5,8 @@
     hackpkg from a GitHub address the browser answers locally. Its wwwroot/ holds a module, a Web
     Worker that loads a second script by a relative importScripts, and an image. ADR 0221: the second
     script, the collocated ProbeWindow.razor.js and the scoped CSS (ProbeWindow.razor.css) are not
-    declared; HackerOsPack adds them to the package.
+    declared; HackerOsPack adds them to the package. ADR 0222: Resources/ProbeStrings.fr.resx gives
+    the satellite lib/fr/HackerOs.Fixtures.InstalledAssets.resources.dll, which HackerOsPack packs too.
   -->
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>

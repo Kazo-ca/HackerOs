@@ -24,3 +24,8 @@ HackerOs.Platform.Core.Appearance.WallpaperPreferences.Mobile.init -> void
 HackerOs.Platform.Core.Appearance.WallpaperPreferences.MobileFit.get -> HackerOs.Theming.Abstractions.WallpaperFit
 HackerOs.Platform.Core.Appearance.WallpaperPreferences.MobileFit.init -> void
 HackerOs.Platform.Core.Appearance.WallpaperService.GetMobileImageAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.Platform.Core.Appearance.WallpaperImage?>!
+const HackerOs.Platform.Core.Apps.Packages.AppPackage.SatelliteSuffix = ".resources.dll" -> string!
+HackerOs.Platform.Core.Apps.Packages.AppPackage.SatelliteAssemblies.get -> System.Collections.Generic.IReadOnlyDictionary<string!, byte[]!>!
+static HackerOs.Platform.Core.Apps.Packages.AppPackage.TryParseSatellitePath(string! path, out string! culture, out string! assemblyFileName) -> bool
+static HackerOs.Platform.Core.Apps.Packages.AppPackageWriter.Write(byte[]! manifestJson, System.Func<string!, byte[]!>! readAssembly, System.Func<string!, byte[]!>! readAsset, System.Collections.Generic.IReadOnlyDictionary<string!, byte[]!>? satellites) -> byte[]!
+HackerOs.Platform.Core.Apps.Packages.InstalledApp.GetSatellitePath(string! culture, string! assemblyFileName) -> HackerOs.App.Abstractions.VirtualPath

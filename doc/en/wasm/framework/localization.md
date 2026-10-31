@@ -86,6 +86,13 @@ to change culture:
   (Infrastructure.Browser);
 - in Web Workers, `BrowserWorkerAssemblyLoader.LoadLazyAsync`, once.
 
+An app installed by `hackpkg` or the Hack Store has its satellites in its
+package (`lib/<culture>/<assembly>.resources.dll`, put there by `HackerOsPack`);
+the OS loads them before the app's first render, for each HackerOS language
+(`InstalledAppSatellites`, [ADR 0222](../dev/adr/0222-installed-app-satellite-assemblies.md)).
+Nothing to declare: a `Resources/Strings.fr.resx` is enough, as for an app
+compiled into the OS.
+
 ### App name and description
 
 The manifest generator reads `Resources/AppManifest.<culture>.resx`:

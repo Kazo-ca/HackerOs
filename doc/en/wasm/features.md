@@ -283,6 +283,9 @@ This section lists what is released in the `main` branch and online.
   package holds all its static resources (collocated scripts included) and the
   OS loads its scoped CSS: installed, it looks the same as when built into the
   OS. ([ADR 0221](dev/adr/0221-pack-all-static-web-assets-of-an-app.md))
+  Its translations (satellite assemblies of per-culture `.resx` files) are in
+  its package and loaded by the OS: once installed, it speaks French as when
+  compiled into the OS. ([ADR 0222](dev/adr/0222-installed-app-satellite-assemblies.md))
 - **Trusted sources and install for oneself**: an application from a trusted
   source is installed for oneself without an administrator; an untrusted
   source, an application of the block list or an install for everyone go

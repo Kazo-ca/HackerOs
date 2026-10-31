@@ -146,6 +146,19 @@ public sealed record InstalledApp(AppPackageSource Source, AppManifest Manifest)
     /// <summary>Gets the path of one assembly.</summary>
     public VirtualPath GetAssemblyPath(string fileName) => VirtualPath.Parse($"{Directory.Value}/{AppPackage.LibraryFolder}{fileName}");
 
+    /// <summary>
+    /// Gets the path of the satellite assembly that translates one of its assemblies into
+    /// <paramref name="culture"/>: <c>lib/&lt;culture&gt;/&lt;assembly&gt;.resources.dll</c> (ADR 0222 §1).
+    /// </summary>
+    /// <param name="culture">Culture name, e.g. <c>fr</c>.</param>
+    /// <param name="assemblyFileName">The translated assembly, e.g. <c>Kazo.Webamp.dll</c>.</param>
+    public VirtualPath GetSatellitePath(string culture, string assemblyFileName)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(culture);
+        ArgumentException.ThrowIfNullOrWhiteSpace(assemblyFileName);
+        return VirtualPath.Parse($"{Directory.Value}/{AppPackage.LibraryFolder}{culture}/{Path.GetFileNameWithoutExtension(assemblyFileName)}{AppPackage.SatelliteSuffix}");
+    }
+
     /// <summary>Gets the path of one declared asset.</summary>
     public VirtualPath GetAssetPath(string assetPath) => VirtualPath.Parse($"{Directory.Value}/{AppPackage.AssetFolder}{assetPath}");
 }

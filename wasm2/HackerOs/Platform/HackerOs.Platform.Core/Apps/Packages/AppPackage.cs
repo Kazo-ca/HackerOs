@@ -21,8 +21,9 @@ public sealed class AppPackageException : Exception
 
 /// <summary>
 /// A verified HackerOS app package (<c>.hackapp</c>, ADR 0182 §1): a zip archive holding
-/// <c>hackeros-package.json</c>, <c>manifest.json</c>, <c>lib/*.dll</c> and <c>wwwroot/...</c>,
-/// where every file matches the SHA-256 the package lists.
+/// <c>hackeros-package.json</c>, <c>manifest.json</c>, <c>lib/*.dll</c>, the satellite assemblies
+/// <c>lib/&lt;culture&gt;/&lt;assembly&gt;.resources.dll</c> of those assemblies (ADR 0222) and
+/// <c>wwwroot/...</c>, where every file matches the SHA-256 the package lists.
 /// </summary>
 public sealed class AppPackage
 {
@@ -37,6 +38,12 @@ public sealed class AppPackage
 
     /// <summary>Folder of the app assemblies.</summary>
     public const string LibraryFolder = "lib/";
+
+    /// <summary>File name ending of a satellite assembly (ADR 0222 §1).</summary>
+    public const string SatelliteSuffix = ".resources.dll";
+
+    /// <summary>Longest culture folder name accepted for a satellite (e.g. <c>zh-Hant-TW</c>).</summary>
+    private const int MaximumCultureNameLength = 20;
 
     /// <summary>Folder of the assets the manifest declares.</summary>
     public const string AssetFolder = "wwwroot/";
@@ -69,10 +76,54 @@ public sealed class AppPackage
     /// <summary>Gets every verified file by its archive path, <see cref="DescriptionFileName"/> included.</summary>
     public IReadOnlyDictionary<string, byte[]> Files { get; }
 
-    /// <summary>Gets the app assemblies, by file name (e.g. <c>Kazo.Webamp.dll</c>).</summary>
+    /// <summary>Gets the app assemblies, by file name (e.g. <c>Kazo.Webamp.dll</c>); satellites are not among them.</summary>
     public IReadOnlyDictionary<string, byte[]> Assemblies => Files
-        .Where(static pair => pair.Key.StartsWith(LibraryFolder, StringComparison.Ordinal))
+        .Where(static pair => pair.Key.StartsWith(LibraryFolder, StringComparison.Ordinal) && pair.Key.IndexOf('/', LibraryFolder.Length) < 0)
         .ToDictionary(static pair => pair.Key[LibraryFolder.Length..], static pair => pair.Value, StringComparer.Ordinal);
+
+    /// <summary>
+    /// Gets the satellite assemblies of the app's assemblies (ADR 0222 §1), by their path under
+    /// <c>lib/</c> (e.g. <c>fr/Kazo.Webamp.resources.dll</c>).
+    /// </summary>
+    public IReadOnlyDictionary<string, byte[]> SatelliteAssemblies => Files
+        .Where(static pair => TryParseSatellitePath(pair.Key, out _, out _))
+        .ToDictionary(static pair => pair.Key[LibraryFolder.Length..], static pair => pair.Value, StringComparer.Ordinal);
+
+    /// <summary>
+    /// Reads a satellite assembly's archive path, <c>lib/&lt;culture&gt;/&lt;assembly&gt;.resources.dll</c>
+    /// (ADR 0222 §1). The culture is a BCP 47 name made of letters, digits and dashes; whether it
+    /// belongs to a declared assembly is checked by <see cref="Read"/>.
+    /// </summary>
+    /// <param name="path">An archive path.</param>
+    /// <param name="culture">The culture folder, e.g. <c>fr</c>.</param>
+    /// <param name="assemblyFileName">The file name of the assembly it translates, e.g. <c>Kazo.Webamp.dll</c>.</param>
+    /// <returns><see langword="true"/> when the path has the satellite form.</returns>
+    public static bool TryParseSatellitePath(string path, out string culture, out string assemblyFileName)
+    {
+        ArgumentNullException.ThrowIfNull(path);
+        culture = string.Empty;
+        assemblyFileName = string.Empty;
+        string[] segments = path.Split('/');
+        if (segments.Length != 3
+            || segments[0] + "/" != LibraryFolder
+            || !IsCultureName(segments[1])
+            || !segments[2].EndsWith(SatelliteSuffix, StringComparison.OrdinalIgnoreCase)
+            || segments[2].Length == SatelliteSuffix.Length)
+        {
+            return false;
+        }
+
+        culture = segments[1];
+        assemblyFileName = segments[2][..^SatelliteSuffix.Length] + ".dll";
+        return true;
+    }
+
+    private static bool IsCultureName(string name) =>
+        name.Length is > 0 and <= MaximumCultureNameLength
+        && char.IsAsciiLetter(name[0])
+        && name.All(static c => char.IsAsciiLetterOrDigit(c) || c == '-')
+        && !name.EndsWith('-')
+        && !name.Contains("--", StringComparison.Ordinal);
 
     /// <summary>Reads and verifies a package.</summary>
     /// <param name="archive">The <c>.hackapp</c> bytes.</param>
@@ -258,24 +309,28 @@ public sealed class AppPackage
 
     private static void CheckContents(AppManifest manifest, Dictionary<string, byte[]> files)
     {
-        foreach (string path in files.Keys)
-        {
-            bool known = path is DescriptionFileName or ManifestFileName
-                || (path.StartsWith(LibraryFolder, StringComparison.Ordinal) && path.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) && path.Count(static c => c == '/') == 1)
-                || path.StartsWith(AssetFolder, StringComparison.Ordinal);
-            if (!known)
-            {
-                throw new AppPackageException("apps.package.unexpected-file", $"'{path}' is outside manifest.json, lib/*.dll and wwwroot/.");
-            }
-        }
-
         ManifestValidationResult validation = AppManifestValidator.Validate(manifest);
         if (!validation.IsValid)
         {
             throw new AppPackageException("apps.package.bad-manifest", $"{ManifestFileName} is not valid: {string.Join("; ", validation.Errors.Select(static error => error.Message))}");
         }
 
-        foreach (string assembly in GetDeclaredAssemblies(manifest))
+        IReadOnlySet<string> declared = GetDeclaredAssemblies(manifest);
+        foreach (string path in files.Keys)
+        {
+            // ADR 0222 §1: a satellite translates one of the app's own assemblies, never the SDK's
+            // (the OS brings those) nor another package's.
+            bool known = path is DescriptionFileName or ManifestFileName
+                || (path.StartsWith(LibraryFolder, StringComparison.Ordinal) && path.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) && path.Count(static c => c == '/') == 1)
+                || (TryParseSatellitePath(path, out _, out string translated) && declared.Contains(translated))
+                || path.StartsWith(AssetFolder, StringComparison.Ordinal);
+            if (!known)
+            {
+                throw new AppPackageException("apps.package.unexpected-file", $"'{path}' is outside manifest.json, lib/*.dll, lib/<culture>/<declared assembly>.resources.dll and wwwroot/.");
+            }
+        }
+
+        foreach (string assembly in declared)
         {
             if (!files.ContainsKey(LibraryFolder + assembly))
             {

@@ -1,0 +1,18 @@
+{
+  "id": "e33f0f44-6579-4873-8abe-2c6b9e54b036",
+  "category": "fixed",
+  "audience": [
+    "user"
+  ],
+  "title": {
+    "en": "Installed apps speak your language",
+    "fr": "Les apps installées parlent votre langue"
+  },
+  "description": {
+    "en": "An app installed from the Hack Store or with hackpkg now shows its French texts, as an app that comes with HackerOS does.",
+    "fr": "Une app installée depuis le Hack Store ou avec hackpkg affiche maintenant ses textes en français, comme une app livrée avec HackerOS."
+  },
+  "links": [
+    "doc/en/wasm/dev/adr/0222-installed-app-satellite-assemblies.md"
+  ]
+}

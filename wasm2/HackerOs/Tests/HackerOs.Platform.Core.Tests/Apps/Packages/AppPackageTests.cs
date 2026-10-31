@@ -61,6 +61,46 @@ public sealed class AppPackageTests
     }
 
     [Fact]
+    public void A_satellite_of_a_declared_assembly_is_kept_apart_from_the_assemblies()
+    {
+        Dictionary<string, byte[]> files = SampleFiles();
+        files["lib/fr/Kazo.Sample.resources.dll"] = [7, 7];
+
+        AppPackage package = AppPackage.Read(Build(files));
+
+        Assert.Equal(["Kazo.Sample.dll"], package.Assemblies.Keys);
+        Assert.Equal(["fr/Kazo.Sample.resources.dll"], package.SatelliteAssemblies.Keys);
+        Assert.Equal(new byte[] { 7, 7 }, package.SatelliteAssemblies["fr/Kazo.Sample.resources.dll"]);
+    }
+
+    [Theory]
+    [InlineData("lib/fr/Kazo.Sdk.resources.dll")]
+    [InlineData("lib/fr/Kazo.Sample.dll")]
+    [InlineData("lib/fr/sub/Kazo.Sample.resources.dll")]
+    [InlineData("lib/f_r/Kazo.Sample.resources.dll")]
+    public void A_satellite_that_belongs_to_no_declared_assembly_or_culture_is_refused(string path)
+    {
+        Dictionary<string, byte[]> files = SampleFiles();
+        files[path] = [7];
+
+        Assert.Equal("apps.package.unexpected-file", Assert.Throws<AppPackageException>(() => AppPackage.Read(Build(files))).Code);
+    }
+
+    [Theory]
+    [InlineData("lib/fr/Kazo.Sample.resources.dll", true, "fr", "Kazo.Sample.dll")]
+    [InlineData("lib/fr-CA/Kazo.Sample.resources.dll", true, "fr-CA", "Kazo.Sample.dll")]
+    [InlineData("lib/zh-Hant/Kazo.Sample.resources.dll", true, "zh-Hant", "Kazo.Sample.dll")]
+    [InlineData("lib/Kazo.Sample.dll", false, "", "")]
+    [InlineData("lib/fr/Kazo.Sample.dll", false, "", "")]
+    [InlineData("wwwroot/fr/Kazo.Sample.resources.dll", false, "", "")]
+    public void Satellite_paths_name_their_culture_and_assembly(string path, bool expected, string culture, string assembly)
+    {
+        bool parsed = AppPackage.TryParseSatellitePath(path, out string parsedCulture, out string parsedAssembly);
+
+        Assert.Equal((expected, culture, assembly), (parsed, parsedCulture, parsedAssembly));
+    }
+
+    [Fact]
     public void An_altered_file_is_refused()
     {
         Dictionary<string, byte[]> files = SampleFiles();
