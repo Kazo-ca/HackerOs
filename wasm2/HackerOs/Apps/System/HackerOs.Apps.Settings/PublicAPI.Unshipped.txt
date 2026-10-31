@@ -2,3 +2,26 @@
 HackerOs.Apps.Settings.NotificationsPanel
 HackerOs.Apps.Settings.NotificationsPanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
 HackerOs.Apps.Settings.NotificationsPanel.NotificationsPanel() -> void
+HackerOs.Apps.Settings.SetWallpaperApp
+HackerOs.Apps.Settings.SetWallpaperApp.SetWallpaperApp() -> void
+HackerOs.Apps.Settings.SetWallpaperService
+HackerOs.Apps.Settings.SetWallpaperService.SetWallpaperService(HackerOs.App.Abstractions.AppManifest! manifest) -> void
+const HackerOs.Apps.Settings.SetWallpaperApp.AllScreensEntry = "set-wallpaper-all" -> string!
+const HackerOs.Apps.Settings.SetWallpaperApp.AppId = "org.hackeros.settings.wallpaper" -> string!
+const HackerOs.Apps.Settings.SetWallpaperApp.ScreenEntryPrefix = "set-wallpaper-screen-" -> string!
+const HackerOs.Apps.Settings.SetWallpaperApp.SetWallpaperIntent = "org.hackeros.settings.set-wallpaper.v1" -> string!
+const HackerOs.Apps.Settings.SetWallpaperApp.SingleEntry = "set-wallpaper" -> string!
+const HackerOs.Apps.Settings.SetWallpaperApp.SubmenuEntry = "set-wallpaper-on" -> string!
+override HackerOs.Apps.Settings.SetWallpaperApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override HackerOs.Apps.Settings.SetWallpaperApp.Category.get -> string!
+override HackerOs.Apps.Settings.SetWallpaperApp.Description.get -> string!
+override HackerOs.Apps.Settings.SetWallpaperApp.EntryPoint.get -> System.Type!
+override HackerOs.Apps.Settings.SetWallpaperApp.Id.get -> string!
+override HackerOs.Apps.Settings.SetWallpaperApp.Intents.get -> System.Collections.Generic.IReadOnlyList<HackerOs.App.Abstractions.AppIntentDeclarationManifest!>!
+override HackerOs.Apps.Settings.SetWallpaperApp.Kind.get -> HackerOs.App.Abstractions.AppKind
+override HackerOs.Apps.Settings.SetWallpaperApp.LaunchVisibility.get -> HackerOs.App.Abstractions.AppLaunchVisibility
+override HackerOs.Apps.Settings.SetWallpaperApp.Name.get -> string!
+override HackerOs.Apps.Settings.SetWallpaperApp.PublisherId.get -> string!
+override HackerOs.Apps.Settings.SetWallpaperApp.Resources.get -> HackerOs.App.Abstractions.AppResourceProfileManifest!
+static HackerOs.Apps.Settings.SetWallpaperApp.RegisterFileContextMenu(HackerOs.AppSdk.Blazor.Files.RegisterFileContextMenuContext! context) -> void
+static readonly HackerOs.Apps.Settings.SetWallpaperApp.ImageTypes -> System.Collections.Generic.IReadOnlyList<string!>!

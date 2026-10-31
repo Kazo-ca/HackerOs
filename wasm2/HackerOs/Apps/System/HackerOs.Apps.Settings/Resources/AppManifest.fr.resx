@@ -12,10 +12,46 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Description" xml:space="preserve">
+  <data name="org.hackeros.settings.Description" xml:space="preserve">
     <value>Panneau de configuration du système : préférences de l'utilisateur, apparence, langue, associations de fichiers, capacités, sauvegarde et configuration de l'appareil</value>
   </data>
-  <data name="Name" xml:space="preserve">
+  <data name="org.hackeros.settings.Name" xml:space="preserve">
     <value>Paramètres</value>
+  </data>
+  <data name="org.hackeros.settings.wallpaper.Description" xml:space="preserve">
+    <value>Définit une image comme fond d'écran depuis les menus des fichiers</value>
+  </data>
+  <data name="org.hackeros.settings.wallpaper.Menu.AllScreens" xml:space="preserve">
+    <value>Écran 1 et les autres</value>
+  </data>
+  <data name="org.hackeros.settings.wallpaper.Menu.Screen2" xml:space="preserve">
+    <value>Écran 2</value>
+  </data>
+  <data name="org.hackeros.settings.wallpaper.Menu.Screen3" xml:space="preserve">
+    <value>Écran 3</value>
+  </data>
+  <data name="org.hackeros.settings.wallpaper.Menu.Screen4" xml:space="preserve">
+    <value>Écran 4</value>
+  </data>
+  <data name="org.hackeros.settings.wallpaper.Menu.Screen5" xml:space="preserve">
+    <value>Écran 5</value>
+  </data>
+  <data name="org.hackeros.settings.wallpaper.Menu.Screen6" xml:space="preserve">
+    <value>Écran 6</value>
+  </data>
+  <data name="org.hackeros.settings.wallpaper.Menu.Screen7" xml:space="preserve">
+    <value>Écran 7</value>
+  </data>
+  <data name="org.hackeros.settings.wallpaper.Menu.Screen8" xml:space="preserve">
+    <value>Écran 8</value>
+  </data>
+  <data name="org.hackeros.settings.wallpaper.Menu.Screen9" xml:space="preserve">
+    <value>Écran 9</value>
+  </data>
+  <data name="org.hackeros.settings.wallpaper.Menu.SetWallpaper" xml:space="preserve">
+    <value>Définir comme fond d'écran</value>
+  </data>
+  <data name="org.hackeros.settings.wallpaper.Name" xml:space="preserve">
+    <value>Définir comme fond d'écran</value>
   </data>
 </root>

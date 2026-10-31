@@ -6,5 +6,7 @@ HackerOs.Platform.Blazor.Shell.DoNotDisturbIndicator.OnClick.get -> Microsoft.As
 HackerOs.Platform.Blazor.Shell.DoNotDisturbIndicator.OnClick.set -> void
 override HackerOs.Platform.Blazor.Shell.DoNotDisturbIndicator.OnInitialized() -> void
 ~override HackerOs.Platform.Blazor.Shell.DoNotDisturbIndicator.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+HackerOs.Platform.Blazor.ContextMenus.FileMenuEntries.OpenScreens.get -> System.Func<System.Collections.Generic.IReadOnlySet<int>!>!
+HackerOs.Platform.Blazor.ContextMenus.FileMenuEntries.OpenScreens.init -> void
 HackerOs.Platform.Blazor.Shell.DesktopWallpaper.Mobile.get -> bool
 HackerOs.Platform.Blazor.Shell.DesktopWallpaper.Mobile.set -> void

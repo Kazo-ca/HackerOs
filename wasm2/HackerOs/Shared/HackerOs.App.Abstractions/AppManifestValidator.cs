@@ -457,7 +457,7 @@ public static partial class AppManifestValidator
     /// <summary>
     /// Checks the file menu entries of ADR 0151 §5 that one manifest can check by itself: the
     /// capability, unique names, a parent of the same app without intent, three levels at most, one
-    /// position, anchors among the default ids or the app's own entries, an intent on every entry
+    /// position, a valid screen filter (ADR 0218), anchors among the default ids or the app's own entries, an intent on every entry
     /// without children, and an English title. Whether another app declares the intent of a
     /// <c>target</c> is checked where every manifest is known (aggregation, and the OS at boot).
     /// </summary>
@@ -537,6 +537,22 @@ public static partial class AppManifestValidator
             if (!AppContextMenus.Selections.Contains(entry.Selection ?? string.Empty, StringComparer.Ordinal))
             {
                 AddError(errors, "manifest.context-menu.selection.invalid", "contextMenus.selection", $"Menu entry '{name}' has an unknown selection '{entry.Selection}' (all, each or single).");
+            }
+
+            // ADR 0218 §2: the screen filter, a count or one secondary screen, never both.
+            if (entry.Screens is { } screens && screens != AppContextMenus.ScreensSingle && screens != AppContextMenus.ScreensMultiple)
+            {
+                AddError(errors, "manifest.context-menu.screens.invalid", "contextMenus.screens", $"Menu entry '{name}' has an unknown screens filter '{screens}' (single or multiple).");
+            }
+
+            if (entry.Screen is { } screen && (screen < AppContextMenus.MinScreenNumber || screen > AppContextMenus.MaxScreenNumber))
+            {
+                AddError(errors, "manifest.context-menu.screen.invalid", "contextMenus.screen", $"Menu entry '{name}' requires screen {screen}: use a number from {AppContextMenus.MinScreenNumber} to {AppContextMenus.MaxScreenNumber}.");
+            }
+
+            if (entry.Screens is not null && entry.Screen is not null)
+            {
+                AddError(errors, "manifest.context-menu.screen.many", "contextMenus", $"Menu entry '{name}' has both a screens filter and a screen: choose one.");
             }
 
             foreach (string type in entry.Types ?? [])
