@@ -342,6 +342,7 @@ dans `main`, le lien mène à sa PR.
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Changer d'utilisateur | Ouvrir une autre session sans fermer la première. Reste grisé dans le menu Marche/arrêt par choix de Benoit : une session à la fois, Se déconnecter pour changer de compte. | [0195](dev/adr/0195-start-menu-power-button.md), [0201](dev/adr/0201-switch-user-stays-greyed.md) | [#290](https://github.com/Kazo-ca/HackerOs/issues/290) |
+| Boutons Précédent et Suivant de la souris | Le bouton Précédent de la souris, Alt+← et le Retour du téléphone reculent dans l'app active (File Explorer, navigateur, Paramètres, Hack Store) au lieu de faire reculer l'onglet et de quitter HackerOS ; le bouton Suivant avance. | [0220](dev/adr/0220-mouse-back-forward-buttons.md) | Série `mouse-back/base` |
 
 ### Hack Store
 
