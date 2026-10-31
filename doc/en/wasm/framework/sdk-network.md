@@ -119,13 +119,32 @@ server also checks agreement on its side and relays:
 | `HackUdpClient.ConnectAsync` | UDP datagrams over WebSocket |
 | DNS, OS detection | never: "host not found" |
 
-A proxy error (`ServerConnectionException`, `HttpRequestException`)
-becomes `HackNetworkError.ConnectionFailed` for HTTP and probing, and
-`TimedOut` for a ping. A refusal when opening a socket becomes the error
+For HTTP, a proxy error becomes the error a browser would show
+(ADR 0210 §6): `BlockedByAdministrator` (`ERR_BLOCKED_BY_ADMINISTRATOR`) for a
+port, an address or an app the operator does not allow, `TimedOut`
+(`ERR_TIMED_OUT`) for a timeout, `ConnectionRefused`, `HostUnreachable` or
+`TooManyRedirects` when the relay says so, otherwise `ConnectionFailed`. The TCP
+probe gives `ConnectionFailed` and a ping `TimedOut`. A refusal when opening a socket becomes the error
 of a real stack (`SocketException`: `ConnectionRefused`, `HostUnreachable`
 or `HostNotFound`, table in `server-network-relay.md`). Without a server, nothing
 signals its absence: the result is that of a machine with no default
 gateway.
+
+### Real sites over HTTP: redirects, cookies, source (ADR 0210)
+
+- The OS asks the server **not to follow** redirects
+  (`ProxyHttpRequest.FollowRedirects = false`) and follows the hops itself, as
+  for the simulated network: each hop sends the `HackCookieContainer` cookies of
+  the host and stores the `Set-Cookie` headers of the response.
+- A `Set-Cookie` with `Domain=example.com` is stored under the key
+  `.example.com` and sent to that domain and its subdomains
+  (`HackCookieContainer.DomainMatches`). `Max-Age=0` or an `Expires` in the past
+  deletes it; `Path`, `Secure`, `HttpOnly` and `SameSite` are not kept.
+- `HackHttpResponse.Source` tells where the final response came from:
+  `Simulated`, `LocalSite` (a site of this machine) or `RealNetwork` (relay). It
+  says nothing about the server nor its token.
+- `HttpProxyClient` keeps at most 6 relay calls in flight for the whole OS and
+  tries a `QUOTA_EXCEEDED` refusal again 3 times; an HTTP call waits up to 30 s.
 
 ### TCP and UDP sockets
 

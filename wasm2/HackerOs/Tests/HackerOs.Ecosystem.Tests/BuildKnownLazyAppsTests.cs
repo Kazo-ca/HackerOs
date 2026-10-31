@@ -110,6 +110,8 @@ public sealed class BuildKnownLazyAppsTests
         AppCatalog catalog = BuildKnownLazyApps.Catalog;
         string[] systemWindows =
         [
+            // ADR 0210 §1: reaches real sites through the relay (network.real.access) without an approval prompt.
+            "org.hackeros.browser",
             // ADR 0056 §7: its terminal panel hosts a shell (shell.host) without an approval prompt.
             "org.hackeros.code-editor",
             // ADR 0160 §1: the desktop, started by the shell under the windows.
@@ -130,7 +132,6 @@ public sealed class BuildKnownLazyAppsTests
         ];
         string[] uninstallable =
         [
-            "org.hackeros.browser",
             "org.hackeros.calculator",
             "org.hackeros.diagnostic",
             "org.hackeros.hack-paint",

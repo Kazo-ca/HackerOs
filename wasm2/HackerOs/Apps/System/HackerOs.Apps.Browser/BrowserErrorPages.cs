@@ -34,7 +34,12 @@ public static class BrowserErrorPages
         {
             "ERR_NAME_NOT_RESOLVED" => new(unreachable,
                 text["Error.NameNotResolved.Message", host], code,
-                [text["Error.NameNotResolved.Hint.Typo", host], text["Error.NameNotResolved.Hint.Hosts"], text["Error.Hint.HostedInstalled"]]),
+                [text["Error.NameNotResolved.Hint.Typo", host], text["Error.NameNotResolved.Hint.Hosts"], text["Error.Hint.HostedInstalled"],
+                 text["Error.NameNotResolved.Hint.Server"]]),
+            // ADR 0210 §6: the relay's operator refused the address, the port or the app.
+            "ERR_BLOCKED_BY_ADMINISTRATOR" => new(text["Error.Blocked.Title"],
+                text["Error.Blocked.Message", host], code,
+                [text["Error.Blocked.Hint"]]),
             "ERR_CONNECTION_REFUSED" => new(unreachable,
                 text["Error.ConnectionRefused.Message", host], code,
                 [text["Error.ConnectionRefused.Hint.Listening"], text["Error.ConnectionRefused.Hint.Start"]]),

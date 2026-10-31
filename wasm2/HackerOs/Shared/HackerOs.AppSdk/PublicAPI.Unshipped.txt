@@ -430,6 +430,15 @@ static HackerOs.AppSdk.Administration.HackServerConnection.TestAsync(HackerOs.Ap
 static HackerOs.AppSdk.Administration.HackServerConnection.TestAsync(System.Uri! serverUrl, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Administration.HackServerProbe!>!
 static HackerOs.AppSdk.Administration.HackServerProbe.operator !=(HackerOs.AppSdk.Administration.HackServerProbe? left, HackerOs.AppSdk.Administration.HackServerProbe? right) -> bool
 static HackerOs.AppSdk.Administration.HackServerProbe.operator ==(HackerOs.AppSdk.Administration.HackServerProbe? left, HackerOs.AppSdk.Administration.HackServerProbe? right) -> bool
+HackerOs.AppSdk.Net.HackHttpResponse.Source.get -> HackerOs.AppSdk.Net.HackHttpResponseSource
+HackerOs.AppSdk.Net.HackHttpResponse.Source.init -> void
+HackerOs.AppSdk.Net.HackHttpResponseSource
+HackerOs.AppSdk.Net.HackHttpResponseSource.LocalSite = 1 -> HackerOs.AppSdk.Net.HackHttpResponseSource
+HackerOs.AppSdk.Net.HackHttpResponseSource.RealNetwork = 2 -> HackerOs.AppSdk.Net.HackHttpResponseSource
+HackerOs.AppSdk.Net.HackHttpResponseSource.Simulated = 0 -> HackerOs.AppSdk.Net.HackHttpResponseSource
+HackerOs.AppSdk.Net.HackNetworkError.BlockedByAdministrator = 8 -> HackerOs.AppSdk.Net.HackNetworkError
+HackerOs.AppSdk.Net.HackNetworkError.TimedOut = 7 -> HackerOs.AppSdk.Net.HackNetworkError
+static HackerOs.AppSdk.Net.HackCookieContainer.DomainMatches(string! host, string! domain) -> bool
 HackerOs.AppSdk.Apps.HackAppCatalog
 HackerOs.AppSdk.Apps.HackAppCatalog.<Clone>$() -> HackerOs.AppSdk.Apps.HackAppCatalog!
 HackerOs.AppSdk.Apps.HackAppCatalog.Apps.get -> System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Apps.HackCatalogApp!>!

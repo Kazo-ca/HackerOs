@@ -119,13 +119,33 @@ serveur vérifie aussi l'accord de son côté et relaie :
 | `HackUdpClient.ConnectAsync` | datagrammes UDP en WebSocket |
 | DNS, détection d'OS | jamais : « hôte introuvable » |
 
-Une erreur du proxy (`ServerConnectionException`, `HttpRequestException`)
-devient `HackNetworkError.ConnectionFailed` pour HTTP et le sondage, et
-`TimedOut` pour un ping. Un refus à l'ouverture d'un socket devient l'erreur
+Une erreur du proxy devient, pour HTTP, l'erreur que montrerait un navigateur
+(ADR 0210 §6) : `BlockedByAdministrator` (`ERR_BLOCKED_BY_ADMINISTRATOR`) pour
+un port, une adresse ou une app que l'opérateur n'autorise pas, `TimedOut`
+(`ERR_TIMED_OUT`) pour un délai dépassé, `ConnectionRefused`,
+`HostUnreachable` ou `TooManyRedirects` quand le relais le dit, sinon
+`ConnectionFailed`. Le sondage TCP donne `ConnectionFailed` et un ping
+`TimedOut`. Un refus à l'ouverture d'un socket devient l'erreur
 d'une vraie pile (`SocketException` : `ConnectionRefused`, `HostUnreachable`
 ou `HostNotFound`, table dans `server-network-relay.md`). Sans serveur, rien
 ne signale son absence : le résultat est celui d'une machine sans passerelle
 par défaut.
+
+### Vrais sites en HTTP : redirections, cookies, source (ADR 0210)
+
+- L'OS demande au serveur de **ne pas suivre** les redirections
+  (`ProxyHttpRequest.FollowRedirects = false`) et suit les sauts lui-même,
+  comme pour le réseau simulé : chaque saut envoie les cookies du
+  `HackCookieContainer` pour l'hôte et range les `Set-Cookie` de la réponse.
+- Un `Set-Cookie` avec `Domain=exemple.com` est gardé sous la clé
+  `.exemple.com` et envoyé à ce domaine et à ses sous-domaines
+  (`HackCookieContainer.DomainMatches`). `Max-Age=0` ou un `Expires` passé
+  l'efface ; `Path`, `Secure`, `HttpOnly` et `SameSite` ne sont pas gardés.
+- `HackHttpResponse.Source` dit d'où vient la réponse finale : `Simulated`,
+  `LocalSite` (site de cette machine) ou `RealNetwork` (relais). Elle ne dit
+  rien du serveur ni de son jeton.
+- `HttpProxyClient` garde au plus 6 appels du relais en cours pour tout l'OS et
+  retente 3 fois un refus `QUOTA_EXCEEDED` ; un appel HTTP attend jusqu'à 30 s.
 
 ### Sockets TCP et UDP
 

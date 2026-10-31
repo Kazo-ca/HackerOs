@@ -226,7 +226,16 @@ public enum HackNetworkError
     ConnectionFailed,
 
     /// <summary>Another process already listens on this address and port (<c>EADDRINUSE</c>).</summary>
-    AddressInUse
+    AddressInUse,
+
+    /// <summary>The target answered too slowly (<c>ERR_TIMED_OUT</c>).</summary>
+    TimedOut,
+
+    /// <summary>
+    /// A rule of the machine's administrator refused the target (<c>ERR_BLOCKED_BY_ADMINISTRATOR</c>):
+    /// for example a port or a private address the relay's operator does not allow (ADR 0210 §6).
+    /// </summary>
+    BlockedByAdministrator
 }
 
 /// <summary>Outcome of one <see cref="IAppNetworkGateway"/> call: a value or a <see cref="HackNetworkError"/>.</summary>
@@ -275,6 +284,8 @@ public static class HackNetworkErrorCodes
         HackNetworkError.TooManyRedirects => "ERR_TOO_MANY_REDIRECTS",
         HackNetworkError.ConnectionFailed => "ERR_CONNECTION_FAILED",
         HackNetworkError.AddressInUse => "ERR_ADDRESS_IN_USE",
+        HackNetworkError.TimedOut => "ERR_TIMED_OUT",
+        HackNetworkError.BlockedByAdministrator => "ERR_BLOCKED_BY_ADMINISTRATOR",
         _ => string.Empty
     };
 }

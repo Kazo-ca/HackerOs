@@ -76,9 +76,59 @@ public sealed class HttpProxyClient(
     {
     }
 
+    /// <summary>
+    /// Relay requests this client keeps in flight at once (ADR 0210 §5). The server refuses more than
+    /// <c>MaxConcurrentPerDevice</c> (8 by default) instead of queuing them, and a page loads all its
+    /// images, scripts and style sheets at the same time: the extra ones wait here, as a browser holds
+    /// at most 6 connections per host. Probes count too, as the server counts them in the same quota.
+    /// </summary>
+    public const int MaxConcurrentRequests = 6;
+
+    /// <summary>How many times a request the server refused with <c>QUOTA_EXCEEDED</c> is tried again (ADR 0210 §5).</summary>
+    public const int QuotaRetries = 3;
+
+    // One queue for the whole OS: the server counts the requests of the device, not of an app.
+    private readonly SemaphoreSlim _slots = new(MaxConcurrentRequests, MaxConcurrentRequests);
+
     /// <inheritdoc />
-    public async Task<ProxyHttpResponse> ExecuteHttpRequestAsync(
-        Uri serverBaseUrl, string accessToken, ProxyHttpRequest request, CancellationToken cancellationToken = default)
+    public Task<ProxyHttpResponse> ExecuteHttpRequestAsync(
+        Uri serverBaseUrl, string accessToken, ProxyHttpRequest request, CancellationToken cancellationToken = default) =>
+        QueueAsync(() => SendHttpRequestAsync(serverBaseUrl, accessToken, request, cancellationToken), cancellationToken);
+
+    /// <inheritdoc />
+    public Task<ProxyTcpProbeResponse> ExecuteTcpProbeAsync(
+        Uri serverBaseUrl, string accessToken, ProxyTcpProbeRequest request, CancellationToken cancellationToken = default) =>
+        QueueAsync(() => SendTcpProbeAsync(serverBaseUrl, accessToken, request, cancellationToken), cancellationToken);
+
+    /// <summary>
+    /// Runs one relay call once a slot is free; a <c>QUOTA_EXCEEDED</c> refusal (another tab of the
+    /// same device, or an operator who set a lower limit) waits a little and tries again.
+    /// </summary>
+    private async Task<T> QueueAsync<T>(Func<Task<T>> call, CancellationToken cancellationToken)
+    {
+        for (int attempt = 0; ; attempt++)
+        {
+            await _slots.WaitAsync(cancellationToken).ConfigureAwait(false);
+            try
+            {
+                return await call().ConfigureAwait(false);
+            }
+            catch (ServerConnectionException exception)
+                when (exception.ProxyErrorCode == ProxyErrorCode.QuotaExceeded && attempt < QuotaRetries)
+            {
+                // Retried below, after the slot is released.
+            }
+            finally
+            {
+                _slots.Release();
+            }
+
+            await Task.Delay(TimeSpan.FromMilliseconds(250 * (attempt + 1)), cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    private async Task<ProxyHttpResponse> SendHttpRequestAsync(
+        Uri serverBaseUrl, string accessToken, ProxyHttpRequest request, CancellationToken cancellationToken)
     {
         using HttpRequestMessage message = new(HttpMethod.Post, new Uri(serverBaseUrl, "api/proxy/http"))
         {
@@ -93,16 +143,17 @@ public sealed class HttpProxyClient(
             throw new ServerConnectionException(
                 error is null
                     ? $"The proxy request failed ({(int)response.StatusCode} {response.ReasonPhrase})."
-                    : $"The proxy request failed: {error.ErrorCode} — {error.Message}");
+                    : $"The proxy request failed: {error.ErrorCode} — {error.Message}",
+                null,
+                error?.ErrorCode);
         }
 
         return (await response.Content.ReadFromJsonAsync(
             ProxyContractsJsonContext.Default.ProxyHttpResponse, cancellationToken).ConfigureAwait(false))!;
     }
 
-    /// <inheritdoc />
-    public async Task<ProxyTcpProbeResponse> ExecuteTcpProbeAsync(
-        Uri serverBaseUrl, string accessToken, ProxyTcpProbeRequest request, CancellationToken cancellationToken = default)
+    private async Task<ProxyTcpProbeResponse> SendTcpProbeAsync(
+        Uri serverBaseUrl, string accessToken, ProxyTcpProbeRequest request, CancellationToken cancellationToken)
     {
         using HttpRequestMessage message = new(HttpMethod.Post, new Uri(serverBaseUrl, "api/proxy/tcp-probe"))
         {
@@ -117,7 +168,9 @@ public sealed class HttpProxyClient(
             throw new ServerConnectionException(
                 error is null
                     ? $"The TCP probe request failed ({(int)response.StatusCode} {response.ReasonPhrase})."
-                    : $"The TCP probe request failed: {error.ErrorCode} — {error.Message}");
+                    : $"The TCP probe request failed: {error.ErrorCode} — {error.Message}",
+                null,
+                error?.ErrorCode);
         }
 
         return (await response.Content.ReadFromJsonAsync(

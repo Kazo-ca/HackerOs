@@ -145,6 +145,11 @@ public sealed partial class BrowserWindow : WindowAppBase, IAsyncDisposable
 
     private string SchemeClass => _documentUrl?.Scheme ?? "none";
 
+    /// <summary>Where the shown page came from (ADR 0210 §4); <see langword="null"/> for an error or an internal page.</summary>
+    private BrowserResponseSource? _documentSource;
+
+    private AddressBarIndicator Indicator => AddressBarIndicators.For(_documentUrl, _documentSource, AppContext.Culture);
+
     private string SchemeTitle => _documentUrl?.Scheme switch
     {
         "https" => L["Scheme.Secure"],
@@ -338,6 +343,7 @@ public sealed partial class BrowserWindow : WindowAppBase, IAsyncDisposable
     {
         ClearView();
         _documentUrl = response.Url;
+        _documentSource = response.Source;
         _finalUrl = BrowserUrl.ToDisplayString(response.Url);
         _currentStatus = response.StatusCode;
         _urlInputValue = BrowserUrl.ToDisplayString(response.Url, _viewSource);
@@ -541,6 +547,7 @@ public sealed partial class BrowserWindow : WindowAppBase, IAsyncDisposable
 
     private void ClearView()
     {
+        _documentSource = null;
         _currentPage = null;
         _currentBody = null;
         _frameDocument = null;

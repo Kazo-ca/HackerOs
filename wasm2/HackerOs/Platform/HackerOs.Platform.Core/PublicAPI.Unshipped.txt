@@ -908,6 +908,10 @@ static HackerOs.Platform.Core.Sounds.SoundSettingsDocuments.ToPreferences(Hacker
 HackerOs.Platform.Core.FileSystem.FileSystemSeeder.InstallSoundThemesAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
 HackerOs.Platform.Core.Sounds.OsSoundService.InstallBuiltInThemesAsync() -> System.Threading.Tasks.Task!
 HackerOs.Platform.Core.Sounds.OsSoundService.OsSoundService(HackerOs.Platform.Core.Settings.IOsSettingsService! settings, HackerOs.Simulation.Abstractions.FileSystem.IFileSystemService! fileSystem, HackerOs.Simulation.Abstractions.Time.ISimulationClock! clock, HackerOs.Simulation.Abstractions.Sessions.ISessionService! session, HackerOs.Platform.Core.Sounds.IOsSoundOutput! output, HackerOs.Simulation.Abstractions.Events.IEventBus? eventBus = null, HackerOs.Platform.Core.Notifications.INotificationFeed? notifications = null, System.TimeProvider? timeProvider = null, Microsoft.Extensions.Logging.ILogger<HackerOs.Platform.Core.Sounds.OsSoundService!>? logger = null, System.Func<System.Threading.CancellationToken, System.Threading.Tasks.ValueTask>? installBuiltInThemes = null) -> void
+HackerOs.Platform.Core.ServerConnection.ServerConnectionException.ProxyErrorCode.get -> string?
+HackerOs.Platform.Core.ServerConnection.ServerConnectionException.ServerConnectionException(string! message, string? serverBody, string? proxyErrorCode) -> void
+const HackerOs.Platform.Core.ServerConnection.HttpProxyClient.MaxConcurrentRequests = 6 -> int
+const HackerOs.Platform.Core.ServerConnection.HttpProxyClient.QuotaRetries = 3 -> int
 HackerOs.Platform.Core.Apps.Packages.AppCatalogCategory
 HackerOs.Platform.Core.Apps.Packages.AppCatalogCategory.<Clone>$() -> HackerOs.Platform.Core.Apps.Packages.AppCatalogCategory!
 HackerOs.Platform.Core.Apps.Packages.AppCatalogCategory.AppCatalogCategory(string! Id, System.Collections.Generic.IReadOnlyDictionary<string!, string!>! Labels) -> void

@@ -59,7 +59,13 @@ public sealed class SdkBrowserTransport(HackCookieContainer cookies) : IBrowserT
                 response.Headers,
                 response.ContentBytes,
                 response.Page,
-                response.RedirectCount));
+                response.RedirectCount,
+                response.Source switch
+                {
+                    HackHttpResponseSource.LocalSite => BrowserResponseSource.LocalSite,
+                    HackHttpResponseSource.RealNetwork => BrowserResponseSource.RealNetwork,
+                    _ => BrowserResponseSource.Simulated,
+                }));
         }
         catch (HackHttpRequestException exception)
         {
@@ -98,7 +104,8 @@ public sealed class SdkBrowserTransport(HackCookieContainer cookies) : IBrowserT
                 "OK",
                 request.Url,
                 [new("Content-Type", SimulatedFileTypes.GetContentType(path)), new("Content-Length", bytes.Length.ToString(System.Globalization.CultureInfo.InvariantCulture))],
-                request.Method == "HEAD" ? [] : bytes));
+                request.Method == "HEAD" ? [] : bytes,
+                Source: BrowserResponseSource.File));
         }
         catch (Exception exception) when (exception is HackFileNotFoundException or HackDirectoryNotFoundException or FileNotFoundException or DirectoryNotFoundException)
         {
@@ -132,6 +139,6 @@ public sealed class SdkBrowserTransport(HackCookieContainer cookies) : IBrowserT
 
         // Like Chromium, a directory URL ends with "/" so the listing's relative links resolve inside it.
         Uri finalUrl = url.AbsolutePath.EndsWith('/') ? url : BrowserUrl.FromLocalPath(directory.FullName.TrimEnd('/') + "/");
-        return new BrowserResponse(200, "OK", finalUrl, [new("Content-Type", "text/html; charset=utf-8")], bytes);
+        return new BrowserResponse(200, "OK", finalUrl, [new("Content-Type", "text/html; charset=utf-8")], bytes, Source: BrowserResponseSource.File);
     }
 }

@@ -129,6 +129,10 @@ la recommandation appliquée en attendant sa réponse :
   chantier ; B (recommandé) issue `TODO` à part.
 - **Q4** Fonds livrés avec l'OS : A (recommandé) 4 images WebP ; B aucune.
 
+**Réponse (2026-10-31)** : Benoit accepte les quatre recommandations (Q1 A,
+Q2 A, Q3 B, Q4 A). Ce qui est construit ne change pas ; le mobile et le menu
+« Définir comme fond d'écran » restent dans les issues #297 et #298.
+
 ## Tâches
 
 - [x] `WallpaperCatalog`, `WallpaperFit`, `BuiltInWallpaper` (Theming Abstractions).

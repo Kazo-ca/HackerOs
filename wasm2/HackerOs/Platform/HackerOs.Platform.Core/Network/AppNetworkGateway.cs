@@ -57,7 +57,9 @@ namespace HackerOs.Platform.Core.Network;
 /// </remarks>
 public sealed class AppNetworkGateway : IAppNetworkGateway
 {
-    private const int ProxyTimeoutSeconds = 10;
+    // ADR 0210 §5: a real page can be slow; 30 s is the most the server allows for one relay call.
+    private const int ProxyTimeoutSeconds = 30;
+    private const int PingTimeoutSeconds = 10;
     private const int ProbeTimeoutSeconds = 5;
     private const int MaxRedirects = 10;
 
@@ -489,14 +491,6 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
             : AppCapabilities.NetworkSimulatedWrite);
 
         Route first = await RouteAsync(request.RequestUri.Host, cancellationToken).ConfigureAwait(false);
-        if (first is { IsLocal: false, Host: null })
-        {
-            // Unknown to every source of hackdns: only the optional relay may still know it.
-            return (CanRelay(request.RequestUri.Host)
-                ? await SendRealAsync(request, method, cancellationToken).ConfigureAwait(false)
-                : HackNetworkResult<HackHttpResponse>.Failure(HackNetworkError.HostNotFound), false);
-        }
-
         Dictionary<string, Dictionary<string, string>> jar = ToJar(request.Cookies);
         HashSet<HackCookie> before = [.. FromJar(jar)];
         Uri currentUri = request.RequestUri;
@@ -514,6 +508,8 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
         SimulatedHttpBody? body = request.Content is { } content ? new SimulatedHttpBody(content.ContentType, content.Bytes.Span) : null;
         int redirectCount = 0;
         Route route = first;
+        (Uri ServerBaseUrl, string AccessToken)? realRoute = null;
+        bool includeBody = method != SimulatedHttpMethods.Head;
 
         // ADR 0074 section 1: one exchange per hop, carrying the method, headers and body; the
         // redirect rules are the browser's (RFC 9110 section 15.4), applied here so every app
@@ -525,8 +521,11 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
             IReadOnlyList<KeyValuePair<string, string>> hopCookies =
                 string.Equals(currentUri.Host, requestedHost, StringComparison.OrdinalIgnoreCase) ? explicitCookies : [];
             SimulatedHttpResponse response;
+            HackHttpResponseSource source;
+            bool untyped = false;
             if (route.IsLocal)
             {
+                source = HackHttpResponseSource.LocalSite;
                 (SimulatedHttpResponse? local, HackNetworkError? error) = await SendLocalAsync(
                     method, currentUri, headers, body, jar, hopCookies, cancellationToken).ConfigureAwait(false);
                 if (error is { } localError)
@@ -538,7 +537,24 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
             }
             else if (route.Host is not { } host)
             {
-                return (HackNetworkResult<HackHttpResponse>.Failure(HackNetworkError.HostNotFound), first.IsLocal);
+                // Unknown to every source of hackdns: only the optional relay may still know it
+                // (ADR 0102). Each real hop is one relay call that does not follow redirects, so the
+                // cookies of every hop land in the jar and go back on the next (ADR 0210 §3).
+                if (!CanRelay(currentUri.Host)
+                    || (realRoute ??= await TryOpenRealRouteAsync(cancellationToken).ConfigureAwait(false)) is not { } real)
+                {
+                    return (HackNetworkResult<HackHttpResponse>.Failure(HackNetworkError.HostNotFound), first.IsLocal);
+                }
+
+                (SimulatedHttpResponse? relayed, HackNetworkError? relayError, string? relayMessage, untyped) = await SendRealHopAsync(
+                    real, method, currentUri, headers, body, jar, hopCookies, includeBody, cancellationToken).ConfigureAwait(false);
+                if (relayError is { } failure)
+                {
+                    return (HackNetworkResult<HackHttpResponse>.Failure(failure, relayMessage), first.IsLocal);
+                }
+
+                response = relayed!;
+                source = HackHttpResponseSource.RealNetwork;
             }
             else if (!host.IsUp)
             {
@@ -557,12 +573,16 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
                 }
 
                 response = exchange.Response!;
+                source = HackHttpResponseSource.Simulated;
             }
 
             if (!response.IsRedirect)
             {
-                return (HackNetworkResult<HackHttpResponse>.Success(BuildResponse(
-                    response, currentUri, redirectCount, includeBody: method != SimulatedHttpMethods.Head, jar, before)), first.IsLocal);
+                HackHttpResponse built = BuildResponse(response, currentUri, redirectCount, includeBody, jar, before) with { Source = source };
+                // A real site that sent no Content-Type keeps none: the app sniffs the bytes, as curl does.
+                return (HackNetworkResult<HackHttpResponse>.Success(untyped
+                    ? built with { Headers = [.. built.Headers.Where(static header => !header.Key.Equals("Content-Type", StringComparison.OrdinalIgnoreCase))] }
+                    : built), first.IsLocal);
             }
 
             if (redirectCount == MaxRedirects)
@@ -582,6 +602,7 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
             {
                 method = SimulatedHttpMethods.Get;
                 body = null;
+                includeBody = true;
             }
         }
     }
@@ -1003,7 +1024,7 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
             ProxyHttpResponse response = await _proxy!.ExecuteHttpRequestAsync(
                 route.ServerBaseUrl,
                 route.AccessToken,
-                new ProxyHttpRequest(Guid.NewGuid(), ProxyProtocol.Http, url, SimulatedHttpMethods.Head, [], null, 0, ProxyTimeoutSeconds, _appId),
+                new ProxyHttpRequest(Guid.NewGuid(), ProxyProtocol.Http, url, SimulatedHttpMethods.Head, [], null, 0, PingTimeoutSeconds, _appId),
                 cancellationToken).ConfigureAwait(false);
             return HackNetworkResult<HackPingReply>.Success(
                 new HackPingReply(null, HackIPStatus.Success, TimeSpan.FromMilliseconds(response.DurationMs)));
@@ -1014,48 +1035,209 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
         }
     }
 
-    private async ValueTask<HackNetworkResult<HackHttpResponse>> SendRealAsync(
-        HackHttpRequest request, string method, CancellationToken cancellationToken)
+    /// <summary>
+    /// Sends one hop to the real Internet through the relay (ADR 0102, ADR 0210 §2 and §3): the
+    /// server does not follow redirects, the <c>Cookie</c> header carries the jar's cookies of the host
+    /// (its own and the domain cookies that match it), and the <c>Set-Cookie</c> headers of the answer
+    /// land in the jar. The answer comes back as a simulated response so the redirect loop treats
+    /// every world alike.
+    /// </summary>
+    private async ValueTask<(SimulatedHttpResponse? Response, HackNetworkError? Error, string? Message, bool Untyped)> SendRealHopAsync(
+        (Uri ServerBaseUrl, string AccessToken) route,
+        string method,
+        Uri uri,
+        IReadOnlyList<KeyValuePair<string, string>> headers,
+        SimulatedHttpBody? body,
+        Dictionary<string, Dictionary<string, string>> jar,
+        IReadOnlyList<KeyValuePair<string, string>> explicitCookies,
+        bool includeBody,
+        CancellationToken cancellationToken)
     {
-        if (await TryOpenRealRouteAsync(cancellationToken).ConfigureAwait(false) is not { } route)
+        string host = uri.Host.ToLowerInvariant();
+        List<ProxyHeader> wire =
+        [
+            .. headers
+                .Where(static header => !header.Key.Equals("Cookie", StringComparison.OrdinalIgnoreCase))
+                .Select(static header => new ProxyHeader(header.Key, header.Value))
+        ];
+        IReadOnlyList<KeyValuePair<string, string>> cookies = MergeCookies(RealCookieView(jar, host), host, explicitCookies);
+        if (cookies.Count > 0)
         {
-            return HackNetworkResult<HackHttpResponse>.Failure(HackNetworkError.HostNotFound);
+            wire.Add(new("Cookie", string.Join("; ", cookies.Select(static cookie => $"{cookie.Key}={cookie.Value}"))));
         }
 
-        // ADR 0102 §1: the body travels with the request; only HEAD answers without one.
-        bool includeBody = method != SimulatedHttpMethods.Head;
+        ProxyHttpResponse response;
         try
         {
-            ProxyHttpResponse response = await _proxy!.ExecuteHttpRequestAsync(
+            response = await _proxy!.ExecuteHttpRequestAsync(
                 route.ServerBaseUrl,
                 route.AccessToken,
                 ProxyHttpRequest.Create(
                     Guid.NewGuid(),
-                    request.RequestUri.AbsoluteUri,
+                    uri.AbsoluteUri,
                     method,
-                    [.. request.Headers.Select(header => new ProxyHeader(header.Key, header.Value))],
-                    request.Content?.Bytes.ToArray(),
-                    request.Content?.ContentType,
+                    wire,
+                    body?.ToArray(),
+                    body?.ContentType,
                     ProxyTimeoutSeconds,
                     _appId,
-                    includeBody),
+                    includeBody) with { FollowRedirects = false },
                 cancellationToken).ConfigureAwait(false);
-
-            byte[] content = includeBody && response.BodyBase64 is not null ? Convert.FromBase64String(response.BodyBase64) : [];
-            Uri finalUri = Uri.TryCreate(response.FinalUrl, UriKind.Absolute, out Uri? parsed) ? parsed : request.RequestUri;
-            return HackNetworkResult<HackHttpResponse>.Success(new HackHttpResponse(
-                response.StatusCode,
-                string.IsNullOrEmpty(response.ReasonPhrase) ? HackHttpResponse.GetReasonPhrase(response.StatusCode) : response.ReasonPhrase,
-                finalUri,
-                [.. response.Headers.Select(header => new KeyValuePair<string, string>(header.Name, header.Value))],
-                content,
-                Page: null,
-                response.RedirectHops,
-                SetCookies: []));
         }
-        catch (Exception exception) when (exception is ServerConnectionException or HttpRequestException)
+        catch (ServerConnectionException exception)
         {
-            return HackNetworkResult<HackHttpResponse>.Failure(HackNetworkError.ConnectionFailed, exception.Message);
+            return (null, MapRelayError(exception.ProxyErrorCode), exception.Message, false);
+        }
+        catch (HttpRequestException exception)
+        {
+            return (null, HackNetworkError.ConnectionFailed, exception.Message, false);
+        }
+
+        ImmutableDictionary<string, string>.Builder responseHeaders = ImmutableDictionary.CreateBuilder<string, string>(StringComparer.OrdinalIgnoreCase);
+        string? contentType = null;
+        string? location = null;
+        foreach (ProxyHeader header in response.Headers)
+        {
+            if (header.Name.Equals("Set-Cookie", StringComparison.OrdinalIgnoreCase))
+            {
+                ApplyRealSetCookie(jar, host, header.Value);
+            }
+            else if (header.Name.Equals("Content-Type", StringComparison.OrdinalIgnoreCase))
+            {
+                contentType = header.Value;
+            }
+            else if (!header.Name.Equals("Content-Length", StringComparison.OrdinalIgnoreCase))
+            {
+                responseHeaders[header.Name] = header.Value;
+                if (header.Name.Equals("Location", StringComparison.OrdinalIgnoreCase))
+                {
+                    location = header.Value;
+                }
+            }
+        }
+
+        byte[] content = includeBody && response.BodyBase64 is not null ? Convert.FromBase64String(response.BodyBase64) : [];
+        SimulatedHttpBody? responseBody = contentType is not null
+            ? new SimulatedHttpBody(contentType, content)
+            : content.Length > 0 ? new SimulatedHttpBody(SimulatedMediaTypes.OctetStream, content) : null;
+        bool isRedirect = response.StatusCode is 301 or 302 or 303 or 307 or 308 && location is not null;
+        return (new SimulatedHttpResponse(
+            response.StatusCode,
+            Page: null,
+            isRedirect ? location : null,
+            ImmutableDictionary<string, string>.Empty,
+            responseHeaders.ToImmutable(),
+            responseBody), null, null, contentType is null);
+    }
+
+    /// <summary>
+    /// Maps a relay refusal (<c>ProxyErrorCode</c>) to what the app sees (ADR 0210 §6): a rule of
+    /// the server's operator is "blocked by the administrator", a slow site is a timeout; the
+    /// operator's address and token never reach the app.
+    /// </summary>
+    internal static HackNetworkError MapRelayError(string? proxyErrorCode) => proxyErrorCode switch
+    {
+        ProxyErrorCode.BlockedAddress or ProxyErrorCode.BlockedPort or ProxyErrorCode.DnsRebindingBlocked
+            or ProxyErrorCode.GrantMissing or ProxyErrorCode.RelayDisabled or ProxyErrorCode.CapabilityDenied
+            or ProxyErrorCode.SimulatedDomainBlocked => HackNetworkError.BlockedByAdministrator,
+        ProxyErrorCode.Timeout => HackNetworkError.TimedOut,
+        ProxyErrorCode.TooManyRedirects => HackNetworkError.TooManyRedirects,
+        ProxyErrorCode.ConnectionRefused => HackNetworkError.ConnectionRefused,
+        ProxyErrorCode.HostUnreachable => HackNetworkError.HostUnreachable,
+        _ => HackNetworkError.ConnectionFailed
+    };
+
+    /// <summary>
+    /// The jar seen by a real hop to <paramref name="host"/>: the host's own cookies, then the domain
+    /// cookies (keys <c>.example.com</c>) that match it, the host's own winning on a shared name.
+    /// </summary>
+    private static Dictionary<string, Dictionary<string, string>> RealCookieView(
+        Dictionary<string, Dictionary<string, string>> jar, string host)
+    {
+        Dictionary<string, string> cookies = new(StringComparer.Ordinal);
+        foreach ((string key, Dictionary<string, string> domainCookies) in jar)
+        {
+            if (HackCookieContainer.DomainMatches(host, key))
+            {
+                foreach (KeyValuePair<string, string> cookie in domainCookies)
+                {
+                    cookies[cookie.Key] = cookie.Value;
+                }
+            }
+        }
+
+        if (jar.TryGetValue(host, out Dictionary<string, string>? own))
+        {
+            foreach (KeyValuePair<string, string> cookie in own)
+            {
+                cookies[cookie.Key] = cookie.Value;
+            }
+        }
+
+        return new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase) { [host] = cookies };
+    }
+
+    /// <summary>
+    /// Applies one <c>Set-Cookie</c> header of a real site (RFC 6265 §5.2 and §5.3, ADR 0210 §2). A
+    /// <c>Domain</c> attribute that domain-matches the host stores a domain cookie under
+    /// <c>.example.com</c>; one that does not (another site, or a single label like <c>com</c>) drops
+    /// the cookie, as a browser does. <c>Max-Age</c> of 0 or less, or an <c>Expires</c> date in the
+    /// past, deletes it. <c>Path</c>, <c>Secure</c>, <c>HttpOnly</c> and <c>SameSite</c> are not kept.
+    /// </summary>
+    internal static void ApplyRealSetCookie(Dictionary<string, Dictionary<string, string>> jar, string host, string header)
+    {
+        string[] parts = header.Split(';', StringSplitOptions.TrimEntries);
+        int equals = parts[0].IndexOf('=', StringComparison.Ordinal);
+        if (equals <= 0)
+        {
+            return;
+        }
+
+        string name = parts[0][..equals].Trim();
+        string value = parts[0][(equals + 1)..].Trim();
+        string key = host;
+        bool expired = false;
+        foreach (string attribute in parts.Skip(1))
+        {
+            int separator = attribute.IndexOf('=', StringComparison.Ordinal);
+            string attributeName = separator < 0 ? attribute : attribute[..separator].Trim();
+            string attributeValue = separator < 0 ? string.Empty : attribute[(separator + 1)..].Trim();
+            if (attributeName.Equals("Domain", StringComparison.OrdinalIgnoreCase) && attributeValue.Length > 0)
+            {
+                string domain = attributeValue.TrimStart('.').ToLowerInvariant();
+                if (!domain.Contains('.', StringComparison.Ordinal) || !HackCookieContainer.DomainMatches(host, "." + domain))
+                {
+                    return;
+                }
+
+                key = "." + domain;
+            }
+            else if (attributeName.Equals("Max-Age", StringComparison.OrdinalIgnoreCase)
+                && int.TryParse(attributeValue, System.Globalization.NumberStyles.AllowLeadingSign, System.Globalization.CultureInfo.InvariantCulture, out int maxAge))
+            {
+                expired = maxAge <= 0;
+            }
+            else if (attributeName.Equals("Expires", StringComparison.OrdinalIgnoreCase)
+                && DateTimeOffset.TryParse(attributeValue, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeUniversal, out DateTimeOffset expires)
+                && !parts.Any(static part => part.StartsWith("Max-Age", StringComparison.OrdinalIgnoreCase)))
+            {
+                expired = expires <= DateTimeOffset.UtcNow;
+            }
+        }
+
+        if (!jar.TryGetValue(key, out Dictionary<string, string>? cookies))
+        {
+            cookies = new Dictionary<string, string>(StringComparer.Ordinal);
+            jar[key] = cookies;
+        }
+
+        if (expired)
+        {
+            cookies.Remove(name);
+        }
+        else
+        {
+            cookies[name] = value;
         }
     }
 

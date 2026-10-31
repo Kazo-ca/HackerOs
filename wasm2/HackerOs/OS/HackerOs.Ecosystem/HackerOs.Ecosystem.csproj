@@ -36,7 +36,8 @@
       This project is the standalone PWA: its page, its service worker and its apps.
     -->
     <ProjectReference Include="..\HackerOs.Ecosystem.Host\HackerOs.Ecosystem.Host.csproj" />
-    <ProjectReference Include="..\..\Apps\System\HackerOs.Apps.Browser\HackerOs.Apps.Browser.csproj" />
+    <!-- ADR 0210 §1: system app, so it reaches real sites through the relay (network.real.access) without an approval prompt. -->
+    <ProjectReference Include="..\..\Apps\System\HackerOs.Apps.Browser\HackerOs.Apps.Browser.csproj" IsSystemApp="true" />
     <ProjectReference Include="..\..\Apps\System\HackerOs.Apps.Calculator\HackerOs.Apps.Calculator.csproj" />
     <ProjectReference Include="..\..\Apps\System\HackerOs.Apps.CodeEditor\HackerOs.Apps.CodeEditor.csproj" IsSystemApp="true" />
     <ProjectReference Include="..\..\Apps\System\HackerOs.Apps.Diagnostic\HackerOs.Apps.Diagnostic.csproj" />

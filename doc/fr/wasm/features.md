@@ -159,8 +159,10 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
 
 - **Éditeur de texte** et **éditeur de code** avec coloration syntaxique.
   ([`text-editor.md`](dev/text-editor.md), [`code-editor.md`](dev/code-editor.md))
-- **Navigateur web** pour les sites du réseau simulé.
-  ([`browser-html-rendering.md`](dev/browser-html-rendering.md))
+- **Navigateur web** pour les sites du réseau simulé et, avec un serveur
+  HackerOS connecté, les vrais sites par son proxy (cookies et connexion aux
+  comptes compris) ; une icône de la barre d'adresse dit d'où vient la page.
+  ([`browser-html-rendering.md`](dev/browser-html-rendering.md), [ADR 0210](dev/adr/0210-browser-real-sites-through-the-proxy.md))
 - **Paramètres** : comptes, apparence, écrans, langue, accessibilité, système.
   ([`settings-app.md`](dev/settings-app.md))
 - **Gestionnaire des tâches** et moniteur système (processus, mémoire,
@@ -331,7 +333,6 @@ dans `main`, le lien mène à sa PR.
 
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
-| Vrais sites dans le navigateur | Afficher un vrai site web par le relais du serveur HackerOS. | À venir | [#266](https://github.com/Kazo-ca/HackerOs/issues/266) |
 
 ### Applications optionnelles portées
 
