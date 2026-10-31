@@ -57,8 +57,9 @@ jour à la fin de chaque série ou quand une convention change.
   [`installable-server.md`](../dev/installable-server.md)) ; restent à essayer
   en vrai les scripts Windows et macOS et l'image Docker.
 - **Bouton Marche/arrêt dans le menu Démarrer** (ADR 0195, PR #291, fusionnée
-  le 2026-10-30) : « Changer d'utilisateur » reste grisé, issue `TODO` #290
-  (plusieurs sessions ouvertes en même temps).
+  le 2026-10-30) : « Changer d'utilisateur » reste grisé, choix de
+  Benoit le 2026-10-30 (ADR 0201, issue #290 ; prototype non fusionné sur la
+  branche `switch-user/simultaneous-sessions-prototype`).
 - **Série `todo/base`** (2026-10-30, toutes les issues `TODO` en parallèle,
   une PR finale vers `main`, branches `todo/<n>-<sujet>`, ADR 0197 à 0211
   réservées) : chantier 1 du Hack Store fait, modèle
@@ -87,7 +88,7 @@ jour à la fin de chaque série ou quand une convention change.
   0191 serveur local installable, 0192 `features.md` et exception à l'ADR 0135,
   0193 heure locale, 0194 menus de la barre des tâches, 0195 bouton
   Marche/arrêt du menu Démarrer ; série `todo/base` : 0197 bulles de
-  notification, 0203 packs d'icônes, 0207 modèle `hackeros-solution` (les
+  notification, 0201 « Changer d'utilisateur » reste grisé, 0203 packs d'icônes, 0207 modèle `hackeros-solution` (les
   autres numéros jusqu'à 0211 sont réservés par ses chantiers). 0196 est prise
   par la PR #294 (point des notifications non lues). **Prochain numéro libre :
   0212.** Avant d'en
