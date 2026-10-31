@@ -674,14 +674,16 @@ public sealed class ScreenService : IAsyncDisposable
         try
         {
             LayeredConfigSnapshot snapshot = await _settings!.ReadAsync(ScreensSettingsDocuments.Document, CancellationToken.None);
-            // The file may have been edited by hand (nano): what it holds now is what a save compares to.
-            await RememberAsync(snapshot.Values, CancellationToken.None);
             PrimaryTaskbarMode mode = ScreensSettingsDocuments.ReadPrimaryTaskbar(snapshot);
             if (mode != PrimaryTaskbar && !_disposed)
             {
                 PrimaryTaskbar = mode;
                 Changed?.Invoke();
             }
+
+            // The file may have been edited by hand (nano): what it holds now is what a save compares
+            // to. Last, so the taskbar does not wait for a write in progress.
+            await RememberAsync(snapshot.Values, CancellationToken.None);
         }
         catch (Exception exception)
         {
