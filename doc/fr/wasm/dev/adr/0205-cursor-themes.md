@@ -10,6 +10,8 @@ issue [#257](https://github.com/Kazo-ca/HackerOs/issues/257)). C'est le
 l'[ADR 0190](0190-theme-packs.md) avant que le Hack Store accepte le dossier
 `cursors/` d'un pack.
 
+- **Remplacé en partie par :** [ADR 0213](0213-theme-packs-build.md) pour le §6
+  (le dossier `cursors/` d'un pack est lu en place, pas copié).
 - **Complète :** [ADR 0190](0190-theme-packs.md) (packs de thèmes, règles
   « données seulement ») ; [ADR 0103](0103-hack-paint-image-files-and-theme-editor.md)
   (thèmes en fichiers dans `/etc` et `~`, pas de masquage) ;

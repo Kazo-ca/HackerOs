@@ -93,10 +93,10 @@ peut être accepté dès que le Store gère les packs.
 
 ## Tâches
 
-- [ ] Format `.hacktheme` et vérifications (CI du catalogue et installation).
-- [ ] Installation pour soi et pour le système, catalogues qui lisent les packs.
-- [ ] Onglet Thèmes du Hack Store.
+- [x] Format `.hacktheme` et vérifications à l'installation ([ADR 0213](0213-theme-packs-build.md)) ; CI du catalogue : [AppMarketPlace #4](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/4).
+- [x] Installation pour soi et pour le système, catalogues qui lisent les packs ([ADR 0213](0213-theme-packs-build.md)).
+- [x] Onglet Thèmes du Hack Store ([ADR 0213](0213-theme-packs-build.md)).
 - [x] Chantier : fonds d'écran en image ([ADR 0202](0202-desktop-wallpaper-images.md)).
 - [x] Chantier : packs d'icônes. Fait par l'[ADR 0203](0203-icon-packs.md).
 - [x] Chantier : sons des évènements de l'OS ([ADR 0204](0204-os-event-sounds.md)).
-- [ ] Chantier : thèmes de curseurs.
+- [x] Chantier : thèmes de curseurs ([ADR 0205](0205-cursor-themes.md)).

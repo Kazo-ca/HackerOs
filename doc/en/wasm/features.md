@@ -285,6 +285,13 @@ This section lists what is released in the `main` branch and online.
   notification; `hackpkg install <appId>` reads the same catalogs.
   ([ADR 0188](dev/adr/0188-hack-store-and-app-catalog.md),
   [ADR 0212](dev/adr/0212-hack-store-app-build.md))
+- **Theme packs**: the Hack Store Themes tab installs `.hacktheme` packs
+  (themes, wallpapers, icons, sounds and cursors), for oneself without an
+  administrator or for everyone with the two-step approval. A pack holds no
+  code (no SVG, no remote address, limited sizes) and its parts show up in
+  Settings ▸ Appearance.
+  ([ADR 0190](dev/adr/0190-theme-packs.md),
+  [ADR 0213](dev/adr/0213-theme-packs-build.md))
 - **`hackeros-solution` application repository template**: application, host
   and tests ready to run, the OS as a submodule to debug in its sources, NuGet
   packages in production, CI and submission to the Hack Store catalog with a
@@ -320,7 +327,7 @@ points to its PR.
 
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
-| Theme packs | `.hacktheme` format and the Hack Store Themes tab. | [0190](dev/adr/0190-theme-packs.md) | [#253](https://github.com/Kazo-ca/HackerOs/issues/253) |
+| Catalog checks of theme packs | The catalog CI checks the `kind: "theme-pack"` entries as the OS does at install. | [0213](dev/adr/0213-theme-packs-build.md) | [AppMarketPlace #4](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/4) |
 | Mobile wallpaper and "Set as wallpaper" menu | The background image on the mobile home screen, and an entry of the images' context menu. Desktop wallpapers are available. | [0202](dev/adr/0202-desktop-wallpaper-images.md) | [#297](https://github.com/Kazo-ca/HackerOs/issues/297), [#298](https://github.com/Kazo-ca/HackerOs/issues/298) |
 
 ### Network and server

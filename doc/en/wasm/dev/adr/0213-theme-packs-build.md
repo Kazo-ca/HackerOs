@@ -180,5 +180,5 @@ Themes tab only, not in the apps badge (`AppUpdateMonitor`).
 - [x] `HackAppPackages` SDK and gateway.
 - [x] Hack Store Themes tab.
 - [x] Tests: format, gateway, pack folders, Store tab.
-- [ ] Catalog CI for `kind: "theme-pack"` (Q2, `TODO` issue on
-      `HackerOs-AppMarketPlace`).
+- [ ] Catalog CI for `kind: "theme-pack"` (Q2, `TODO` issue
+      [AppMarketPlace #4](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/4)).

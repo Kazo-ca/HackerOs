@@ -73,11 +73,14 @@ Each line is a work item, with its branch and PR.
 
 ### v2: theme packs (ADR 0190)
 
-8. `.hacktheme` format, checks, install, Store Themes tab (`.theme` theme packs
-   only at first).
+8. `.hacktheme` format, checks, install, Store Themes tab, with every part
+   (themes, wallpapers, icons, sounds, cursors). **Done** (branch
+   `todo/18-theme-packs`, issue #253,
+   [ADR 0213](../adr/0213-theme-packs-build.md)); catalog CI:
+   [AppMarketPlace #4](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/4).
 9. One work item per new OS system, each with its ADR: image wallpapers, icon
    packs, event sounds, cursor themes. The Store accepts each part of a pack
-   once its system exists.
+   once its system exists. **Done** (ADRs 0202 to 0205).
 
 ## Rules
 

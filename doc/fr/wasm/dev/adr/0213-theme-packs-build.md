@@ -186,5 +186,5 @@ apps (`AppUpdateMonitor`).
 - [x] SDK `HackAppPackages` et passerelle.
 - [x] Onglet Thèmes du Hack Store.
 - [x] Tests : format, passerelle, dossiers des packs, onglet du Store.
-- [ ] CI du catalogue pour `kind: "theme-pack"` (Q2, issue `TODO` sur
-      `HackerOs-AppMarketPlace`).
+- [ ] CI du catalogue pour `kind: "theme-pack"` (Q2, issue `TODO`
+      [AppMarketPlace #4](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/4)).

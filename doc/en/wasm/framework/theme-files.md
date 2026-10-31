@@ -39,6 +39,8 @@ platforms = desktop, mobile
 |---|---|---|
 | `/etc/hackeros/themes/` | the system | the administrator, for the whole machine |
 | `~/.config/hackeros/themes/` | the session user (the mode bits decide) | the user |
+| `/usr/share/hackeros/theme-packs/<pack>/themes/` | the system | Hack Store packs installed for everyone ([ADR 0213](../dev/adr/0213-theme-packs-build.md)) |
+| `~/.local/share/hackeros/theme-packs/<pack>/themes/` | the session user | packs installed for oneself |
 
 No masking: a file whose `id` reuses a built-in theme, or an `id`
 already taken by another file (the one in `/etc` wins), is refused with an
