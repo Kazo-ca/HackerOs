@@ -114,13 +114,18 @@
             <div class="taskbar-clock-region">
                 <button type="button"
                         class="taskbar-clock @(ClockPanelSource?.IsOpen == true ? "is-active" : "")"
-                        aria-label="@L["Taskbar.Clock"]"
+                        aria-label="@ClockName"
+                        title="@ClockName"
                         aria-expanded="@((ClockPanelSource?.IsOpen ?? false).ToString().ToLowerInvariant())"
                         @onclick="HandleClockPanelToggleClick">
                     <span class="clock-icon" aria-hidden="true">
                         <HackerIcon Library="IconLibrary.Lucide" Name="clock" Size="17" Title="" />
                     </span>
                     <span class="clock-text">@FormattedTime</span>
+                    @if (UnreadCount > 0)
+                    {
+                        <span class="clock-attention" aria-hidden="true"></span>
+                    }
                 </button>
                 @if (ClockPanelSource?.IsOpen == true && ClockPanelContent is not null)
                 {
@@ -212,6 +217,17 @@
     private string FormattedTime => StatusSource is { } status
         ? TimeZoneInfo.ConvertTime(status.UtcNow, status.TimeZone).ToString("T", status.FormatCulture)
         : string.Empty;
+
+    /// <summary>Gets the notifications the user has not looked at yet (ADR 0196); 0 without a clock panel.</summary>
+    private int UnreadCount => ClockPanelSource?.UnreadCount ?? 0;
+
+    /// <summary>Gets the clock's name and tooltip: it says how many notifications are unread (ADR 0196).</summary>
+    private string ClockName => UnreadCount switch
+    {
+        0 => L["Taskbar.Clock"],
+        1 => L["Taskbar.ClockWithOneUnread"],
+        int count => L["Taskbar.ClockWithUnread", count],
+    };
 
     /// <summary>Gets the taskbar's texts: the host's session language, or English without localization.</summary>
     private IStringLocalizer L => _localizer ??= PackageStringLocalizer.Resolve<Strings>(LocalizationServices);

@@ -13,6 +13,10 @@ https://claude.ai/artifact/Q9BdEs6HxUCjiD1os1TPNq. Suivi : issue TODO
 Mis en œuvre par chantiers (§9). Le chantier 1 (format, test, entrées de 2.1.0 et de la
 prochaine version) et le chantier 5 (contrôle de PR) arrivent avec cette ADR.
 
+**Remplacée en partie** par l'[ADR 0196](0196-unread-notifications-dot.md) (2026-10-30) : la
+pastille du menu Démarrer et du bouton Accueil (§4.5) devient le point des notifications non lues
+à côté de l'horloge.
+
 - **Complète :** [ADR 0173](0173-automatic-releases-from-the-version-file.md) (publication
   automatique à partir de `Versions.props`) et
   [ADR 0174](0174-announce-a-new-version-to-open-sessions.md) (`/version.json` et bandeau de

@@ -51,6 +51,18 @@
     transition: background var(--hos-transition-fast, 120ms ease);
 }
 
+/* ADR 0196: notifications the user has not looked at yet, right of the grabber. */
+.mobile-shade-attention {
+    position: relative;
+    top: 0.25rem;
+    margin-left: 0.4rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--hos-taskbar-attention, var(--hos-warning, #d5a84f));
+    box-shadow: 0 0 0 2px var(--hos-mobile-shade-attention-ring, rgb(7 16 15 / 70%));
+}
+
 .mobile-shade-handle:hover .mobile-shade-grabber,
 .mobile-shade-handle:focus-visible .mobile-shade-grabber {
     background: var(--hos-mobile-shade-grabber-hover, rgb(231 247 241 / 75%));

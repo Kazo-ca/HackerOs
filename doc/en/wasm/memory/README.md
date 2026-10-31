@@ -135,7 +135,10 @@ at the end of each series or when a convention changes.
   Browser is a system app with `network.real.access`; with a connected server it
   opens real sites through the proxy, cookies included. The public proxy and the
   Wayback Machine are left.
-- **ADR**: 0001 to 0171 and 0173 to 0195 exist on `main` (a few numbers skipped;
+- **Unread notifications dot next to the clock** (ADR 0196, PR #294, merged on
+  `main` 2026-10-31): replaces the what's new Start menu dot; brought into
+  `todo/base` by the merge of `main`.
+- **ADR**: 0001 to 0171 and 0173 to 0196 exist on `main` (a few numbers skipped;
   0141 and 0172 were not used). Recent landmarks: 0173 automatic release, 0174
   new-version announcement, 0175 "New folder" in dialogs, 0176 app repository
   template, 0177 title bar of maximized windows, 0178 to 0180, 0183 and 0184
@@ -143,10 +146,10 @@ at the end of each series or when a convention changes.
   what's new ([`change-list.md`](../dev/change-list.md)), 0187 guest and credits,
   0188 to 0190 Hack Store ([`hackeros-store.md`](../dev/plans/hackeros-store.md)),
   0191 installable local server, 0192 `features.md` and exception to ADR 0135,
-  0193 local time, 0194 taskbar menus, 0195 Start menu Power button;
+  0193 local time, 0194 taskbar menus, 0195 Start menu Power button, 0196 unread notifications dot;
   `todo/base` series: 0197 notification bubbles, 0201 "Switch user" stays greyed out, 0203 icon packs, 0207
   `hackeros-solution` template, 0208 Hack Store trusted sources, 0212 Hack Store app, 0213 theme packs, 0214 Hack Store without a restart, signing and transactions, 0215 Hack Store answers (no badge, ambiguous appId refused) (the other numbers up to 0211 are reserved by
-  its work items). 0196 is taken by PR #294 (unread dot). **Next free number:
+  its work items). **Next free number:
   0216.** Before taking one, check `dev/adr/` on
   `main` and the open PRs.
 

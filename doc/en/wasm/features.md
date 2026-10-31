@@ -96,6 +96,8 @@ This section lists what is released in the `main` branch and online.
   window alone ("peek"). ([`taskbar-window-previews.md`](dev/taskbar-window-previews.md))
   The Start menu shows the signed-in user and their Power button: sign out or
   restart. ([ADR 0195](dev/adr/0195-start-menu-power-button.md))
+  A dot next to the clock shows unread notifications, with their count on
+  hover. ([ADR 0196](dev/adr/0196-unread-notifications-dot.md))
 - **Notification bubbles**: each notification from the OS or an app shows for
   a few seconds above the taskbar (at the top on a phone), then stays in the
   clock panel. A ready update arrives there with its "Restart" button.
@@ -220,8 +222,8 @@ This section lists what is released in the `main` branch and online.
 - **New version announcements**: an open session learns that a new version is
   available. ([ADR 0174](dev/adr/0174-announce-a-new-version-to-open-sessions.md))
 - **What's new since your last visit**: the Settings ▸ What's new page lists the
-  changes by version with a **New** badge; a notification after sign-in and a dot
-  on the Start menu point out what has not been seen. The same list writes the
+  changes by version with a **New** badge; a notification after sign-in points out
+  what has not been seen. The same list writes the
   notes of the GitHub Release, of the NuGet packages and
   [`CHANGELOG.md`](../../../CHANGELOG.md).
   ([`change-list.md`](dev/change-list.md), [ADR 0186](dev/adr/0186-whats-new-change-list.md))

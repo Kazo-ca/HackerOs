@@ -201,3 +201,5 @@ HackerOs.Platform.Blazor.Sounds.BrowserSoundOutput.BrowserSoundOutput(Microsoft.
 HackerOs.Platform.Blazor.Sounds.BrowserSoundOutput.DisposeAsync() -> System.Threading.Tasks.ValueTask
 HackerOs.Platform.Blazor.Sounds.BrowserSoundOutput.PlayAsync(HackerOs.Platform.Core.Sounds.OsSoundClip! clip, double volume, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
 HackerOs.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoaderRegistry.AddKnownAssemblies(System.Collections.Generic.IEnumerable<string!>! assemblyNames) -> void
+HackerOs.Platform.Blazor.Shell.TaskbarClockPanelSourceAdapter.UnreadCount.get -> int
+HackerOs.Platform.Blazor.Shell.TaskbarClockPanelSourceAdapter.SetUnreadCount(int value) -> void

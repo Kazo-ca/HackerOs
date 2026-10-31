@@ -115,8 +115,10 @@ What the user sees (ADR 0186 §4.4 and §4.5):
   "3 new changes since your last visit", with a **View** button that opens the page. It is in the
   clock panel. A notification button can now pass arguments to the app:
   `NotificationAction.LaunchApp(appId, label, arguments)`.
-- **Dot** on the Start button (desktop) and on the Home button (mobile) while unseen entries
-  remain; their accessible name says it too.
+- **Unread notifications dot** next to the clock (desktop) and on the notification shade handle
+  (mobile), with the count in the tooltip; opening the panel marks them read
+  ([ADR 0196](adr/0196-unread-notifications-dot.md), which replaces the Start button dot). When
+  every entry is seen, the what's new notification closes by itself.
 
 ## When a version is released
 

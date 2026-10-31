@@ -441,6 +441,12 @@
   <data name="Mobile.Shade" xml:space="preserve">
     <value>Notifications, calendrier et mode de la plateforme</value>
   </data>
+  <data name="Mobile.ShadeWithOneUnread" xml:space="preserve">
+    <value>Notifications, calendrier et mode de la plateforme : 1 notification non lue</value>
+  </data>
+  <data name="Mobile.ShadeWithUnread" xml:space="preserve">
+    <value>Notifications, calendrier et mode de la plateforme : {0} notifications non lues</value>
+  </data>
   <data name="Security.AdministratorName" xml:space="preserve">
     <value>Nom d'administrateur</value>
   </data>

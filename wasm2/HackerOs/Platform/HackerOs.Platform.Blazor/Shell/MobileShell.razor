@@ -56,10 +56,15 @@
         <button type="button"
                 class="mobile-shade-handle"
                 data-shell-gesture="shade"
-                aria-label="@L["Mobile.Shade"]"
+                aria-label="@ShadeName"
+                title="@ShadeName"
                 aria-expanded="@(_isShadeOpen ? "true" : "false")"
                 @onclick="ToggleShade">
             <span class="mobile-shade-grabber" aria-hidden="true"></span>
+            @if (UnreadNotifications > 0)
+            {
+                <span class="mobile-shade-attention" aria-hidden="true"></span>
+            }
         </button>
     </div>
 
@@ -83,7 +88,7 @@
     @* ADR 0197: the notification bubbles at the top of the screen, hidden while the shade is open. *@
     <NotificationToasts Placement="NotificationToastPlacement.TopOfScreen" IsPanelOpen="_isShadeOpen" />
 
-    <MobileSystemNavigationBar Commands="_systemNavigationCommands" HomeHasAttention="_hasWhatsNew" />
+    <MobileSystemNavigationBar Commands="_systemNavigationCommands" />
 
     @* ADR 0049: secure-desktop approval, above every app screen and the navigation bar. *@
     @* ADR 0101: synchronization conflicts and the session's periodic sync. *@
@@ -112,9 +117,19 @@
     private DotNetObjectReference<MobileShell>? _selfReference;
     private bool _isShadeOpen;
     private bool _showRecent;
-    private WhatsNewAttention? _whatsNew;
     private AppUpdateAttention? _appUpdates;
-    private bool _hasWhatsNew;
+    private NotificationAttention? _notificationAttention;
+
+    /// <summary>Gets the notifications not looked at yet: the dot on the shade handle (ADR 0196).</summary>
+    private int UnreadNotifications => _notificationAttention?.UnreadCount ?? 0;
+
+    /// <summary>Gets the shade handle's name and tooltip, which give the unread count (ADR 0196).</summary>
+    private string ShadeName => UnreadNotifications switch
+    {
+        0 => L["Mobile.Shade"],
+        1 => L["Mobile.ShadeWithOneUnread"],
+        int count => L["Mobile.ShadeWithUnread", count],
+    };
 
     /// <inheritdoc />
     protected override void OnInitialized()
@@ -132,13 +147,17 @@
             CloseOverlays,
             ToggleRecent);
         InitializeMobileHome();
-        // ADR 0186 §4.5: the Home button's dot and the sign-in notification of unseen changes.
-        _whatsNew = new WhatsNewAttention(Services, value =>
+        // ADR 0196: the shade handle's dot counts the notifications not looked at yet; opening the shade reads them.
+        if (Services.GetService(typeof(INotificationQueue)) is INotificationQueue notifications
+            && Services.GetService(typeof(ISimulationClock)) is ISimulationClock clock)
         {
-            _hasWhatsNew = value;
-            Rerender();
-        });
-        _ = _whatsNew.StartAsync();
+            ISessionService? sessions = Services.GetService(typeof(ISessionService)) as ISessionService;
+            _notificationAttention = new NotificationAttention(notifications, () => sessions?.CurrentPrincipal?.UserId, clock);
+            _notificationAttention.Changed += Rerender;
+        }
+
+        // ADR 0186 §4.5: the sign-in notification of unseen changes.
+        _ = PostWhatsNewAsync();
         // ADR 0212 §5: the Hack Store's update check; a notification shows what it finds.
         _appUpdates = new AppUpdateAttention(Services);
         _appUpdates.Start();
@@ -147,6 +166,12 @@
     /// <inheritdoc />
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        // ADR 0196: the shade lists the notifications, so they are read while it is open.
+        if (_notificationAttention is not null && _notificationAttention.IsViewing != _isShadeOpen)
+        {
+            _notificationAttention.IsViewing = _isShadeOpen;
+        }
+
         if (!firstRender)
         {
             return;
@@ -160,6 +185,13 @@
         await _module.InvokeVoidAsync("attachMobileGestures", _shellRoot, _selfReference,
             "data-shell-gesture", nameof(ReportShellGestureAsync));
         await _module.InvokeVoidAsync("observeMobileWorkspace", _shellRoot, _selfReference);
+    }
+
+    /// <summary>Posts the sign-in notification of unseen changes, then shows its dot at once.</summary>
+    private async Task PostWhatsNewAsync()
+    {
+        await WhatsNewSignInNotice.PostAsync(Services);
+        _notificationAttention?.Refresh();
     }
 
     /// <summary>Invoked from JS when a downward swipe past the open threshold is detected on the handle.</summary>
@@ -253,8 +285,12 @@
         WindowRuntime.StateChanged -= Rerender;
         FileDialogAdapter.Changed -= Rerender;
         _mobileProcessObserver?.Dispose();
-        _whatsNew?.Dispose();
         _appUpdates?.Dispose();
+        if (_notificationAttention is not null)
+        {
+            _notificationAttention.Changed -= Rerender;
+            _notificationAttention.Dispose();
+        }
         _navigationHistory.Dispose();
 
         if (_module is not null)
