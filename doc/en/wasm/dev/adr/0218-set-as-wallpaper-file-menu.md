@@ -98,6 +98,7 @@ file dialogs (ADR 0159 §4).
 - The Settings project declares two apps: its
   `Resources/AppManifest*.resx` keys are prefixed with the app's id
   (ADR 0159 §3).
+- The mobile keys (`mobileWallpaper`, [ADR 0217](0217-mobile-home-wallpaper.md)) are not written: the SDK does not tell an app which interface is active. The mobile image is chosen in Settings.
 - An installed app that sets `screens` or `screen` on an older OS shows its
   entries everywhere (field ignored): harmless, the entry still works.
 

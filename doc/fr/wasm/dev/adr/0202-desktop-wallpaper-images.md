@@ -142,5 +142,5 @@ Q2 A, Q3 B, Q4 A). Ce qui est construit ne change pas ; le mobile et le menu
 - [x] Panneau Fond d'écran dans Paramètres ▸ Apparence.
 - [x] 4 fonds livrés (WebP).
 - [x] Tests : catalogue, schéma, service, panneau.
-- [ ] Mobile (#297).
+- [x] Mobile (#297) : [ADR 0217](0217-mobile-home-wallpaper.md).
 - [ ] « Définir comme fond d'écran » dans l'explorateur (#298).

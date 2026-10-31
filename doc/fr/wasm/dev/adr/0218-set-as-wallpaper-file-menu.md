@@ -103,6 +103,7 @@ bureau, dialogues de fichiers (ADR 0159 §4).
 - Le projet Paramètres déclare deux apps : ses clés de
   `Resources/AppManifest*.resx` sont préfixées par l'identifiant de l'app
   (ADR 0159 §3).
+- Les clés du mobile (`mobileWallpaper`, [ADR 0217](0217-mobile-home-wallpaper.md)) ne sont pas écrites : le SDK ne dit pas à une app quelle interface est active. L'image du mobile se choisit dans Paramètres.
 - Une app installée qui pose `screens` ou `screen` sur un OS plus ancien voit
   ses entrées partout (champ ignoré) : sans danger, l'entrée marche toujours.
 
