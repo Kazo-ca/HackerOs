@@ -10,7 +10,9 @@ Implements [ADR 0188](0188-hack-store-and-app-catalog.md) §1 to §3 and §8, on
 top of the sources and trust of [ADR 0208](0208-hack-store-sources-trust-build.md).
 Changes no decision of ADR 0188; settles what it left open. Four questions were
 asked to Benoit (Q1 to Q4 below); the recommendations are applied while waiting
-for his answers.
+for his answers. On 2026-10-31 Benoit confirmed Q1 A and Q2 A, and chose Q3 C
+(notification only) and Q4 B (refuse and ask): §4 and §5 are replaced by
+[ADR 0215](0215-hack-store-answers-notification-and-ambiguous-app-id.md).
 
 ## Context
 

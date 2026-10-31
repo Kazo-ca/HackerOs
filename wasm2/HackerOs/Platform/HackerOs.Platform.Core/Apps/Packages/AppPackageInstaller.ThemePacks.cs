@@ -64,7 +64,8 @@ public sealed partial class AppPackageInstaller
 
     /// <summary>
     /// Finds the catalog that publishes a theme pack: the first one of
-    /// <see cref="GetCatalogSearchOrder"/> that lists it (ADR 0212 §4, applied to packs).
+    /// <see cref="GetCatalogSearchOrder"/> that lists it (the order of ADR 0212 §4, kept for packs by ADR 0213;
+    /// the refusal of ADR 0215 §2 is for apps).
     /// </summary>
     /// <param name="packId">The pack.</param>
     /// <param name="version">A version, or <see langword="null"/> for the newest stable one.</param>

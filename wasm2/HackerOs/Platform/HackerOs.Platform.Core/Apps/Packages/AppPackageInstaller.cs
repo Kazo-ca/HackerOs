@@ -349,7 +349,7 @@ public sealed partial class AppPackageInstaller
     }
 
     /// <summary>
-    /// Gets the catalogs in the order an app ID is looked up (ADR 0212 §4): the official catalog
+    /// Gets the catalogs in the order they are read and shown (ADR 0212 §4): the official catalog
     /// first, then the others by name.
     /// </summary>
     /// <param name="sources">The sources.</param>
@@ -363,20 +363,25 @@ public sealed partial class AppPackageInstaller
 
     /// <summary>
     /// Finds the catalog that publishes <paramref name="appId"/> (<c>hackpkg install &lt;appId&gt;</c>,
-    /// ADR 0188 §8): the first one of <see cref="GetCatalogSearchOrder"/> that lists it. A catalog
-    /// that cannot be downloaded is skipped.
+    /// ADR 0188 §8). ADR 0215 §2 (Benoit, Q4 B): when several catalogs list it, nothing is chosen
+    /// for the user; the error names each <c>catalog:&lt;name&gt;/&lt;appId&gt;</c> to type instead.
+    /// A catalog that cannot be downloaded is skipped.
     /// </summary>
     /// <param name="appId">The app.</param>
     /// <param name="version">A version, or <see langword="null"/> for the newest stable one.</param>
     /// <param name="sources">The sources.</param>
     /// <param name="cancellationToken">Cancels the downloads.</param>
-    /// <exception cref="AppPackageException"><c>apps.package.not-in-catalog</c>, with the catalogs that failed.</exception>
+    /// <exception cref="AppPackageException">
+    /// <c>apps.package.not-in-catalog</c>, with the catalogs that failed; <c>apps.package.ambiguous</c>
+    /// when several catalogs list the app.
+    /// </exception>
     public async ValueTask<AppPackageSource> FindInCatalogsAsync(
         string appId, SemanticVersion? version, AppSourcesConfig sources, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(appId);
         ArgumentNullException.ThrowIfNull(sources);
         List<string> failures = [];
+        List<string> listedBy = [];
         foreach (string name in GetCatalogSearchOrder(sources))
         {
             try
@@ -384,13 +389,27 @@ public sealed partial class AppPackageInstaller
                 AppCatalogListing listing = await GetCatalogAsync(name, sources, cancellationToken).ConfigureAwait(false);
                 if (listing.Find(appId) is not null)
                 {
-                    return AppPackageSource.ForCatalog(name, appId, version);
+                    listedBy.Add(name);
                 }
             }
             catch (AppPackageException exception)
             {
                 failures.Add($"{name}: {exception.Message}");
             }
+        }
+
+        if (listedBy.Count == 1)
+        {
+            return AppPackageSource.ForCatalog(listedBy[0], appId, version);
+        }
+
+        if (listedBy.Count > 1)
+        {
+            throw new AppPackageException(
+                "apps.package.ambiguous",
+                $"{appId} is in several catalogs; choose one: "
+                    + string.Join(", ", listedBy.Select(name => AppPackageSource.ForCatalog(name, appId, version).ToString()))
+                    + ".");
         }
 
         throw new AppPackageException(

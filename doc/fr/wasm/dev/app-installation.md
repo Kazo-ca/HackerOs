@@ -352,8 +352,11 @@ hackpkg info org.example.notes
   `[installed]`. La confiance est celle de `catalog:<nom>` ; le catalogue
   officiel est *vérifié*. Le SHA-256 et la taille viennent du catalogue ; les
   autres vérifications sont celles d'une app GitHub.
-- **AppId seul** : cherché dans le catalogue officiel, puis dans les autres
-  par ordre de nom.
+- **AppId seul** : cherché dans tous les catalogues. Si un seul le liste, il
+  est installé depuis celui-là ; si plusieurs le listent, l'installation est
+  refusée (`apps.package.ambiguous`) et le message donne chaque
+  `catalog:<nom>/<appId>` possible, à retaper
+  ([ADR 0215](adr/0215-hack-store-answers-notification-and-ambiguous-app-id.md) §2).
 - **L'app** : accueil par catégories, recherche (nom, description courte,
   étiquettes, identifiant, sans casse ni accents), fiche (icône, captures,
   description Markdown dessinée sans HTML, version, taille, licence,
@@ -363,9 +366,9 @@ hackpkg info org.example.notes
   **Redémarrer pour terminer** (sans administrateur). Arguments de lancement :
   `--page=installed`, `--app=<appId>`.
 - **Mises à jour** : `AppUpdateMonitor` vérifie à l'ouverture de la session
-  puis toutes les `[updates] interval-hours` heures, met le nombre de mises à
-  jour en badge sur l'icône du Store (menu Démarrer, écran d'accueil mobile,
-  barre des tâches) et envoie une notification qui ouvre l'onglet Installées.
+  puis toutes les `[updates] interval-hours` heures et envoie une notification
+  qui ouvre l'onglet Installées. Aucun badge sur l'icône du Store
+  ([ADR 0215](adr/0215-hack-store-answers-notification-and-ambiguous-app-id.md) §1).
 - **Épinglage par défaut** : `start-menu.json` note par profil
   `defaultPinsApplied` ; le Store est ajouté une fois, à un nouveau profil
   comme à un profil existant, et ne revient pas après un désépinglage.
@@ -387,4 +390,4 @@ d'`AppPackageGatewayTests`, `StartMenuPreferencesServiceTests`
 - [x] Retrait d'`AppCatalogSyncService` et de son contrat.
 - [x] Onglet « Installed Apps » refait (`InstalledAppsPanel`).
 - [x] Tests de contrat et documentation.
-- [x] Hack Store : catalogues, `hackpkg install <appId>`, mises à jour, badge, épinglage par défaut (ADR 0212).
+- [x] Hack Store : catalogues, `hackpkg install <appId>`, mises à jour par notification, épinglage par défaut (ADR 0212, ADR 0215).

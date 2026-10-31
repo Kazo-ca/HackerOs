@@ -139,8 +139,8 @@
             Rerender();
         });
         _ = _whatsNew.StartAsync();
-        // ADR 0212 §5: the update check; the home screen's Hack Store icon draws the count.
-        _appUpdates = new AppUpdateAttention(Services, Rerender);
+        // ADR 0212 §5: the Hack Store's update check; a notification shows what it finds.
+        _appUpdates = new AppUpdateAttention(Services);
         _appUpdates.Start();
     }
 

@@ -47,8 +47,9 @@ internal sealed record StoreEntry(HackCatalogApp? App, HackInstalledPackage? Ins
 /// </summary>
 /// <remarks>
 /// An app listed by several catalogs is shown once, from the first catalog in the OS's order (the
-/// official one first, then by name: ADR 0212 §4), like <c>hackpkg install &lt;appId&gt;</c>; an
-/// installed copy keeps the catalog it came from.
+/// official one first, then by name); the Store installs it with its <c>catalog:&lt;name&gt;/&lt;appId&gt;</c>
+/// source, so the refusal of a bare app ID (ADR 0215 §2) never reaches it. An installed copy keeps
+/// the catalog it came from.
 /// </remarks>
 internal sealed class StoreCatalog
 {
