@@ -171,6 +171,10 @@ public static class Program
             {
                 manifestJson = AddWebAssets(manifestPath, manifestJson, File.ReadAllText(webAssets), sources);
             }
+            else if (webAssets is not null)
+            {
+                Console.WriteLine($"{manifestPath} : warning {GeneratorCodes.PackageWebAssetsMissing}: No static web asset manifest at '{webAssets}': the package holds only the declared assets, without the rest of wwwroot/, the collocated scripts or the scoped CSS (ADR 0216).");
+            }
 
             byte[] package = AppPackageWriter.Write(
                 manifestJson,
