@@ -219,6 +219,35 @@ public sealed class AppCatalogTests
         Assert.Empty(catalog.Warnings);
     }
 
+    [Fact]
+    public void Replacing_the_contents_keeps_the_instance_and_raises_changed()
+    {
+        AppCatalog live = AppCatalog.Build([CreateManifest("org.test.a")]).Catalog!.CreateLiveCopy();
+        AppCatalog next = AppCatalog.Build([CreateManifest("org.test.a"), CreateManifest("org.test.b")]).Catalog!;
+        int changes = 0;
+        live.Changed += (_, _) => changes++;
+        long revision = live.Revision;
+
+        live.ReplaceContents(next);
+
+        Assert.Equal(1, changes);
+        Assert.Equal(revision + 1, live.Revision);
+        Assert.Contains("org.test.b", live.Manifests.Keys);
+        Assert.Equal(next.ActivationOrder.Count, live.ActivationOrder.Count);
+    }
+
+    [Fact]
+    public void A_live_copy_does_not_change_the_catalog_it_was_copied_from()
+    {
+        AppCatalog builtIn = AppCatalog.Build([CreateManifest("org.test.a")]).Catalog!;
+        AppCatalog live = builtIn.CreateLiveCopy();
+
+        live.ReplaceContents(AppCatalog.Build([CreateManifest("org.test.a"), CreateManifest("org.test.b")]).Catalog!);
+
+        Assert.DoesNotContain("org.test.b", builtIn.Manifests.Keys);
+        Assert.NotSame(builtIn, live);
+    }
+
     private static AppManifest CreateProvider(string appId, string contract) => CreateManifest(appId) with
     {
         Components = [new AppComponentManifest(contract, "HackerOs.TestApps", "TestApps.Embed")]
