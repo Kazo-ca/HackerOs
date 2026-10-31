@@ -2,7 +2,9 @@ using HackerOs.App.Abstractions;
 using HackerOs.AppSdk;
 using HackerOs.AppSdk.Blazor;
 using HackerOs.AppSdk.Blazor.Files;
+using HackerOs.Platform.Core.Sounds;
 using HackerOs.Simulation.Abstractions.Processes;
+using HackerOs.Simulation.Abstractions.Sounds;
 
 namespace HackerOs.Platform.Blazor.Dialogs;
 
@@ -86,12 +88,25 @@ public sealed class DialogCoordinator : IDialogService, IDisposable
     private readonly Lock _gate = new();
     private readonly LinkedList<PendingDialog> _pending = [];
     private readonly IFileDialogService _fileDialogs;
+    private readonly OsSoundService? _sounds;
     private bool _disposed;
 
     /// <summary>Creates a basic dialog coordinator over an injected file dialog service.</summary>
     public DialogCoordinator(IFileDialogService fileDialogs)
+        : this(fileDialogs, sounds: null)
+    {
+    }
+
+    /// <summary>
+    /// Creates a basic dialog coordinator that also plays the warning and error sounds of message
+    /// boxes (ADR 0204 section 2).
+    /// </summary>
+    /// <param name="fileDialogs">File dialog service.</param>
+    /// <param name="sounds">The session's sound service, or <see langword="null"/> for silent dialogs.</param>
+    public DialogCoordinator(IFileDialogService fileDialogs, OsSoundService? sounds)
     {
         _fileDialogs = fileDialogs ?? throw new ArgumentNullException(nameof(fileDialogs));
+        _sounds = sounds;
     }
 
     /// <summary>Raised whenever the active basic presentation changes.</summary>
@@ -155,6 +170,12 @@ public sealed class DialogCoordinator : IDialogService, IDisposable
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(request);
+
+        // Like Windows' MessageBeep: the icon of the box chooses the sound, played as it is queued.
+        if (request.Icon is MessageBoxIcon.Error or MessageBoxIcon.Warning)
+        {
+            _sounds?.Play(request.Icon == MessageBoxIcon.Error ? OsSoundEvent.Error : OsSoundEvent.Warning);
+        }
 
         Guid id = Guid.NewGuid();
         return Enqueue<MessageBoxDialogResult>(

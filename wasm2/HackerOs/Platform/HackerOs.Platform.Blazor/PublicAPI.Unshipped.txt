@@ -190,3 +190,8 @@ HackerOs.Platform.Blazor.Shell.ShellAppIcon.UseDeclaredImage.get -> bool
 HackerOs.Platform.Blazor.Shell.ShellAppIcon.UseDeclaredImage.set -> void
 HackerOs.Platform.Blazor.Windows.WindowLaunchCoordinator.IconFor(HackerOs.App.Abstractions.AppManifest! manifest) -> string?
 HackerOs.Platform.Blazor.Windows.WindowLaunchCoordinator.WindowLaunchCoordinator(HackerOs.Windowing.Core.WindowRuntime! windows, HackerOs.Platform.Core.AppCatalog! catalog, HackerOs.Platform.Core.Globalization.SessionLocaleService! locale, HackerOs.Platform.Blazor.Windows.WindowGeometryRecorder? geometry, HackerOs.Platform.Core.Appearance.IconPackService? iconPacks) -> void
+HackerOs.Platform.Blazor.Dialogs.DialogCoordinator.DialogCoordinator(HackerOs.AppSdk.Blazor.IFileDialogService! fileDialogs, HackerOs.Platform.Core.Sounds.OsSoundService? sounds) -> void
+HackerOs.Platform.Blazor.Sounds.BrowserSoundOutput
+HackerOs.Platform.Blazor.Sounds.BrowserSoundOutput.BrowserSoundOutput(Microsoft.JSInterop.IJSRuntime! jsRuntime) -> void
+HackerOs.Platform.Blazor.Sounds.BrowserSoundOutput.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Platform.Blazor.Sounds.BrowserSoundOutput.PlayAsync(HackerOs.Platform.Core.Sounds.OsSoundClip! clip, double volume, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
