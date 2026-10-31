@@ -7,7 +7,8 @@
 Accepted on 2026-10-29. Decisions made with Benoit in the "Améliorer l'explorateur de fichiers"
 thread (questions Q1 to Q18 asked on 2026-10-28, answered on 2026-10-29). Partly implemented
 on 2026-10-29 in the `explorer/base` series (chantiers 1 to 9): every point except the archive
-opened as a folder (points 6 to 9), still to do (issue #241). See the implementation note at the
+opened as a folder (points 6 to 9), done on 2026-10-30 in the `todo/base` series (work item
+`todo/10-zip-as-folder`, issue #241). See the implementation note at the
 end.
 
 ## Context
@@ -180,4 +181,7 @@ Each chantier is detailed in [`file-explorer.md`](../file-explorer.md). Points t
   folder gets it.
 - Points 4 and 5: dragging out of the browser applies to every view of the shared control, the
   desktop included. If the drag starts before the preparation ends, it stays internal.
-- Points 6 to 9 (archive opened as a folder): not done yet.
+- Points 6 to 9 (archive opened as a folder): done on 2026-10-30 (work item
+  `todo/10-zip-as-folder`). The explorer reads the `.zip` through its own gateway
+  (`ZipArchiveFileSystemGateway`), turned on only in its windows; a path such as
+  `/home/u/photos.zip/2024` exists for it alone. Details in [`file-explorer.md`](../file-explorer.md).
