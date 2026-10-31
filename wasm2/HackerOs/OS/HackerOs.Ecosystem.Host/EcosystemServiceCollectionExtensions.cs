@@ -1188,6 +1188,8 @@ public static class EcosystemServiceCollectionExtensions
         services.AddScoped<WindowLaunchCoordinator>();
         services.AddScoped<WindowCloseGuardRegistry>();
         services.AddScoped<AppBackHandlerRegistry>();
+        // ADR 0220: mouse Back/Forward buttons, Alt+←/→ and the phone's Back routed to the active window.
+        services.AddScoped<HackerOs.Platform.Blazor.Navigation.HardwareNavigationService>();
         // ADR 0095: window events to apps' OnWindow* hooks, and the window manager's keyboard
         // commands. Scoped like WindowRuntime; the probe depends on IJSRuntime (see the scoping note).
         services.AddScoped<IWindowClientAreaProbe, BrowserWindowClientAreaProbe>();

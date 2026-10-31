@@ -4,8 +4,8 @@
 
 ## Status
 
-Proposed on 2026-10-31. Questions Q1 to Q3 are asked to Benoit in the project
-thread; the recommendations are taken while waiting for his answers. Series
+Accepted on 2026-10-31; Benoit chose the recommendations (A, A, A, see
+"Questions asked to Benoit"). Series
 `mouse-back/base` (branches `mouse-back/<n>-<topic>`).
 
 - **Complements:** the SDK `IAppBackHandler` contract
@@ -143,8 +143,8 @@ with no change to what exists:
 
 ## Questions asked to Benoit
 
-Asked in the project thread on 2026-10-31; recommendations taken while
-waiting.
+Asked in the project thread on 2026-10-31; Benoit answered A to all three
+the same day.
 
 1. **Mechanism.** A (recommended): mouse and history (§1). B: history only,
    one mechanism but no reliable Forward and no known source. C: mouse only,
@@ -163,10 +163,31 @@ waiting.
 - One more entry in the tab's history: the host browser's Back button no
   longer leaves the OS in one click.
 
+## Implementation notes
+
+Work item `mouse-back/1-platform` (2026-10-31), with no change to the decision:
+
+- The service is `HardwareNavigationService` (scoped); the
+  `HardwareNavigationListener` component (with its `.razor.js`) is rendered by
+  `DesktopShell` and `MobileShell`, and each shell sets its route
+  (`HardwareNavigationService.Route`): the focused window on the desktop, the
+  ◁ sequence (`MobileNavigationCommandsAdapter.RequestBackAsync` and
+  `RequestForwardAsync`) on mobile.
+- The Blazor router adds its `popstate` listener at boot, before the module:
+  it still sees the return onto the entry below, but the address does not
+  change, so it stays on the same page. Listeners added after the module do
+  not see it.
+- Alt+←/→ inside an input field stays with the field (macOS uses it to move
+  the caret); if the host browser goes back anyway, the history path sends it
+  to the app.
+- For now only the main document is listened to: an extra screen or a
+  detached window keeps the host browser's behaviour, like the window
+  manager's shortcuts.
+
 ## Work items
 
 - [x] `mouse-back/0-adr`: this ADR, indexes, memory, `features.md`.
-- [ ] `mouse-back/1-platform`: `hardwareNavigation.js`,
+- [x] `mouse-back/1-platform`: `hardwareNavigation.js`,
   `HardwareNavigationService`, `MouseButton` and `SystemBack` sources,
   `IAppForwardHandler`, registry, desktop and mobile routing, tests.
 - [ ] `mouse-back/2-apps`: File Explorer (desktop and mobile), browser and

@@ -4,8 +4,8 @@
 
 ## Statut
 
-Proposée le 2026-10-31. Les questions Q1 à Q3 sont posées à Benoit dans le
-fil du projet ; les recommandations sont prises en attendant ses réponses.
+Acceptée le 2026-10-31 ; Benoit a choisi les recommandations (A, A, A, voir
+« Questions posées à Benoit »).
 Série `mouse-back/base` (branches `mouse-back/<n>-<sujet>`).
 
 - **Complète :** le contrat `IAppBackHandler` du SDK
@@ -147,8 +147,8 @@ mineure), sans rien changer à l'existant :
 
 ## Questions posées à Benoit
 
-Posées dans le fil du projet le 2026-10-31 ; recommandations prises en
-attendant.
+Posées dans le fil du projet le 2026-10-31 ; Benoit a répondu A aux trois
+questions le même jour.
 
 1. **Mécanisme.** A (recommandé) : souris et historique (§1). B : historique
    seulement, un seul mécanisme mais pas de Suivant fiable ni de source
@@ -168,10 +168,31 @@ attendant.
 - Une entrée de plus dans l'historique de l'onglet : le bouton Précédent du
   navigateur hôte ne quitte plus l'OS d'un seul clic.
 
+## Notes de mise en œuvre
+
+Chantier `mouse-back/1-platform` (2026-10-31), sans changer la décision :
+
+- Le service est `HardwareNavigationService` (scoped) ; le composant
+  `HardwareNavigationListener` (avec son `.razor.js`) est rendu par
+  `DesktopShell` et `MobileShell`, et chaque shell pose sa route
+  (`HardwareNavigationService.Route`) : fenêtre active sur bureau, séquence ◁
+  (`MobileNavigationCommandsAdapter.RequestBackAsync` et
+  `RequestForwardAsync`) sur mobile.
+- Le routeur de Blazor pose son écouteur `popstate` au démarrage, avant le
+  module : il voit quand même le retour sur l'entrée du dessous, mais
+  l'adresse ne change pas, donc il reste sur la même page. Les écouteurs
+  posés après le module ne le voient pas.
+- Alt+←/→ dans un champ de saisie reste au champ (macOS s'en sert pour
+  déplacer le curseur) ; si le navigateur hôte recule quand même, le chemin
+  de l'historique l'envoie à l'app.
+- Pour l'instant, seul le document principal est écouté : un écran
+  supplémentaire ou une fenêtre détachée garde le comportement du navigateur
+  hôte, comme les raccourcis du gestionnaire de fenêtres.
+
 ## Chantiers
 
 - [x] `mouse-back/0-adr` : cette ADR, index, mémoire, `features.md`.
-- [ ] `mouse-back/1-platform` : `hardwareNavigation.js`,
+- [x] `mouse-back/1-platform` : `hardwareNavigation.js`,
   `HardwareNavigationService`, sources `MouseButton` et `SystemBack`,
   `IAppForwardHandler`, registre, routage bureau et mobile, tests.
 - [ ] `mouse-back/2-apps` : File Explorer (bureau et mobile), navigateur et
