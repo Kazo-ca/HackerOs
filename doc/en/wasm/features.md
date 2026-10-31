@@ -85,7 +85,9 @@ This section lists what is released in the `main` branch and online.
 - **Desktop** with icons, shortcuts and context menus, like a desktop OS.
   ([`desktop.md`](dev/desktop.md))
 - **Windows** that can be moved, resized, maximized or snapped to the screen
-  edges. ([`window-model.md`](framework/window-model.md))
+  edges, with plain animations to open, close, minimize into the taskbar,
+  maximize and snap, turned off by "Reduce motion".
+  ([`window-model.md`](framework/window-model.md), [`window-animations.md`](dev/window-animations.md))
 - **Taskbar and Start menu** with pinned applications and open windows. A
   right click on the taskbar gives the window menu, "New window", the task
   manager, "Show the desktop" and cascaded or tiled windows.
@@ -279,7 +281,7 @@ points to its PR.
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Switch user | Open another session without closing the first one. Stays greyed out in the Power menu by Benoit's choice: one session at a time, Sign out to change account. | [0195](dev/adr/0195-start-menu-power-button.md), [0201](dev/adr/0201-switch-user-stays-greyed.md) | [#290](https://github.com/Kazo-ca/HackerOs/issues/290) |
-| Windows and taskbar | Window animations, hover previews. The time zone ([ADR 0193](dev/adr/0193-local-time-and-time-zone.md)), the taskbar menus ([ADR 0194](dev/adr/0194-taskbar-context-menus.md)) and the notification bubbles ([ADR 0197](dev/adr/0197-notification-toasts.md)) are available. | Coming | [#242](https://github.com/Kazo-ca/HackerOs/issues/242) |
+| Windows and taskbar | Hover previews. The time zone ([ADR 0193](dev/adr/0193-local-time-and-time-zone.md)), the taskbar menus ([ADR 0194](dev/adr/0194-taskbar-context-menus.md)), the notification bubbles ([ADR 0197](dev/adr/0197-notification-toasts.md)) and the window animations ([ADR 0198](dev/adr/0198-window-animations.md)) are available. | Coming | [#242](https://github.com/Kazo-ca/HackerOs/issues/242) |
 
 ### Hack Store
 
