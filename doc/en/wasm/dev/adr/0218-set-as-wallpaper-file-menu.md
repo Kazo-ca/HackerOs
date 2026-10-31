@@ -4,8 +4,8 @@
 
 ## Status
 
-Accepted on 2026-10-31, with the recommendations applied while waiting for
-Benoit's answers (see "Questions asked to Benoit"). Issue
+Accepted on 2026-10-31; Benoit chose the recommendations (see "Questions
+asked to Benoit"). Issue
 [#298](https://github.com/Kazo-ca/HackerOs/issues/298), `todo/base` series
 (branch `todo/24-set-as-wallpaper`).
 
@@ -113,8 +113,7 @@ file dialogs (ADR 0159 §4).
 
 ## Questions asked to Benoit
 
-Asked on 2026-10-31 in the "Définir une image comme fond d'écran" thread, with
-the recommendation applied while waiting for his answer:
+Asked on 2026-10-31 in the "Définir une image comme fond d'écran" thread:
 
 - **Q1** What the click does: A (recommended) applies without a window and
   confirms with a notification; B opens Settings ▸ Appearance ▸ Wallpaper with
@@ -122,6 +121,9 @@ the recommendation applied while waiting for his answer:
 - **Q2** Choosing the screen: A (recommended) a screen-count filter in the
   entry model, submenu only with several screens; B a single entry only
   (screen 1 and the others); C a fixed submenu of nine screens.
+
+**Answer (2026-10-31)**: Benoit chooses both recommendations (Q1 A, Q2 A).
+This is what the decision above describes; nothing changes.
 
 ## Tasks
 

@@ -4,8 +4,8 @@
 
 ## Statut
 
-Acceptée le 2026-10-31, avec les recommandations appliquées en attendant les
-réponses de Benoit (voir « Questions posées à Benoit »). Issue
+Acceptée le 2026-10-31 ; Benoit a choisi les recommandations (voir
+« Questions posées à Benoit »). Issue
 [#298](https://github.com/Kazo-ca/HackerOs/issues/298), série `todo/base`
 (branche `todo/24-set-as-wallpaper`).
 
@@ -118,8 +118,7 @@ bureau, dialogues de fichiers (ADR 0159 §4).
 
 ## Questions posées à Benoit
 
-Posées le 2026-10-31 dans le fil « Définir une image comme fond d'écran »,
-recommandation appliquée en attendant sa réponse :
+Posées le 2026-10-31 dans le fil « Définir une image comme fond d'écran » :
 
 - **Q1** Que fait le clic : A (recommandé) applique sans fenêtre et confirme
   par une notification ; B ouvre Paramètres ▸ Apparence ▸ Fond d'écran avec
@@ -127,6 +126,9 @@ recommandation appliquée en attendant sa réponse :
 - **Q2** Choix de l'écran : A (recommandé) filtre par nombre d'écrans dans le
   modèle des entrées, sous-menu seulement avec plusieurs écrans ; B entrée
   simple seulement (écran 1 et les autres) ; C sous-menu fixe de neuf écrans.
+
+**Réponse (2026-10-31)** : Benoit choisit les deux recommandations (Q1 A,
+Q2 A). C'est ce que décrit la décision ci-dessus ; rien ne change.
 
 ## Tâches
 
