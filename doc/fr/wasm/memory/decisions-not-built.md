@@ -110,6 +110,18 @@ Questions à reposer au démarrage : où vivent les visionneuses, portée de
 - Code Editor **reste une app système**.
 - Le remplacement de l'éditeur de texte reste **sans expressions régulières**.
 
+## Prochaine version : 2.2.1 (décision du 2026-10-31)
+
+- La version qui apporte l'[ADR 0216](../dev/adr/0216-pack-all-static-web-assets-of-an-app.md)
+  (PR #336 : toutes les ressources statiques d'une app dans son paquet, CSS
+  isolé d'une app installée) s'appelle **2.2.1**, choix de Benoit, bien que
+  l'API publique grandisse. Les apps tierces attendent cette version pour leur
+  première soumission au Hack Store.
+- Les traductions des apps installées (assemblages satellites) suivent dans une
+  ADR et une PR séparées : issue #337.
+- Le catalogue doit demander le `manifest.json` du paquet :
+  issue Kazo-ca/HackerOs-AppMarketPlace#6.
+
 ## Questions posées, réponse à confirmer
 
 - **« Nouveau dossier » dans les dialogues** (ADR 0175) : rendre

@@ -203,7 +203,7 @@ of [`AGENTS.md`](../../../../AGENTS.md), which Claude Code reads through
 
 | Note | Content |
 | --- | --- |
-| [`decisions-not-built.md`](decisions-not-built.md) | Decisions Benoit took in discussion that are not coded nor written anywhere else yet: windows and taskbar (remaining work items of #242), real sites in the browser (#266: public proxy and Wayback left), ported third-party apps, server-hosted apps, ideas taken from daedalOS, editors. |
+| [`decisions-not-built.md`](decisions-not-built.md) | Decisions Benoit took in discussion that are not coded nor written anywhere else yet: windows and taskbar (remaining work items of #242), real sites in the browser (#266: public proxy and Wayback left), next version 2.2.1 (ADR 0216, #337), ported third-party apps, server-hosted apps, ideas taken from daedalOS, editors. |
 | [`known-test-failures.md`](known-test-failures.md) | Known pre-existing test failures (to name in a PR, not to hide) and recent environment tips. |
 
 ## Environment and pitfalls
