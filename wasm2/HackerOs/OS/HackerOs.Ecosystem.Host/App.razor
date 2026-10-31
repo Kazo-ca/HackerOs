@@ -25,6 +25,7 @@
 @inject AccessibilityPreferenceService Accessibility
 @inject HackerOs.Platform.Core.Globalization.SessionTimeZoneService TimeZones
 @inject UserThemeCatalogService UserThemes
+@inject IconPackService IconPacks
 @inject HackerOs.Platform.Core.Clipboard.HostClipboardBridge HostClipboard
 @inject HackerOs.Platform.Core.Globalization.SessionLocaleService SessionLocale
 @inject IStringLocalizer<Strings> L
@@ -43,9 +44,11 @@
     <MudPopoverProvider />
     <MudDialogProvider />
     <MudSnackbarProvider />
-    @if (State.UpdateAvailable)
+    @* ADR 0197 §5: in a session, « Update ready » is a notification (bubble + clock panel); the
+       sign-in screens have neither, so they keep this notice in the bottom corner. *@
+    @if (State.UpdateAvailable && State.View != EcosystemHostView.Desktop)
     {
-        <aside class="@UpdateNoticeClass" role="status">
+        <aside class="update-notice" role="status">
             <span>@(State.AvailableVersion is { } version ? L["Update.VersionReady", version] : L["Update.Ready"]) @L["Update.Detail"]</span>
             <button type="button" disabled="@IsRestartingForUpdate" @onclick="RestartForUpdateAsync">@L["Update.Restart"]</button>
         </aside>
@@ -290,15 +293,8 @@
     // ADR 0174: reads the served version.json every five minutes (browser host only).
     private HackerOs.Platform.Blazor.LazyLoading.HostReleaseMonitor? ReleaseMonitor { get; set; }
 
-    /// <summary>
-    /// The update notice stays above the desktop taskbar or the mobile navigation bar of the shown
-    /// session (issue #242); the sign-in screens have no bar, so it keeps the bottom corner there.
-    /// </summary>
-    private string UpdateNoticeClass => State.View != EcosystemHostView.Desktop
-        ? "update-notice"
-        : PlatformPreference.Current.ActivePlatform == WellKnownAppPlatforms.Mobile
-            ? "update-notice above-mobile-nav"
-            : "update-notice above-taskbar";
+    // ADR 0197 §5: « Update ready » posted in the session's notifications, with « Redémarrer ».
+    private UpdateReadyNotification? UpdateNotification { get; set; }
 
     private ThemePlatform ActiveThemePlatform =>
         PlatformPreference.Current.ActivePlatform == WellKnownAppPlatforms.Mobile
@@ -324,6 +320,7 @@
         if (State.View == EcosystemHostView.Desktop)
         {
             BootCoordinator.MarkSystemStarted();
+            ShowUpdateNotification();
         }
     }
 
@@ -337,6 +334,16 @@
         // ADR 0104: this component outlives every session; its sign-in screens follow the system
         // language at boot and after a sign-out, and the user's language once signed in.
         SessionLocale.Changed += OnSessionLocaleChanged;
+        if (Services.GetService<HackerOs.Simulation.Abstractions.Notifications.INotificationQueue>() is { } notifications
+            && Services.GetService<HackerOs.Simulation.Abstractions.Time.ISimulationClock>() is { } clock)
+        {
+            UpdateNotification = new UpdateReadyNotification(
+                notifications,
+                clock,
+                Services.GetService<ShellNotificationActions>(),
+                RestartForUpdateAsync);
+        }
+
         BuildMonitor = Services.GetService<HackerOs.Platform.Blazor.LazyLoading.HostBuildUpdateMonitor>();
         if (BuildMonitor is not null)
         {
@@ -387,6 +394,23 @@
     });
 
     /// <summary>
+    /// ADR 0197 §5: once a user is signed in, « Update ready » goes to their notifications, in their
+    /// language; <see cref="UpdateReadyNotification.Show"/> posts it once per user and text.
+    /// </summary>
+    private void ShowUpdateNotification()
+    {
+        if (!State.UpdateAvailable
+            || UpdateNotification is null
+            || SessionService.CurrentPrincipal is not { } principal)
+        {
+            return;
+        }
+
+        string title = State.AvailableVersion is { } version ? L["Update.VersionReady", version] : L["Update.Ready"];
+        UpdateNotification.Show(principal.UserId, title, L["Update.Detail"], L["Update.Restart"]);
+    }
+
+    /// <summary>
     /// ADR 0162: the OS files were replaced under the running page. Restart like after a system
     /// update: flush the logs, end the session (apps close), then reload the new build.
     /// </summary>
@@ -407,6 +431,7 @@
     public void Dispose()
     {
         PlatformPreference.Changed -= OnPlatformPreferenceChanged;
+        UpdateNotification?.Dispose();
         ThemePreference.Changed -= OnThemePreferenceChanged;
         UserThemes.Changed -= OnThemePreferenceChanged;
         Accessibility.Changed -= OnThemePreferenceChanged;
@@ -467,6 +492,8 @@
             // ADR 0193: the time zone of the clock and of the apps (datetime.config).
             await TimeZones.InitializeAsync();
             await UserThemes.InitializeAsync();
+            // ADR 0203: the icon pack of icons.config.
+            await IconPacks.InitializeAsync();
             // Shares clipboard text with the real machine (ADR 0065); never fails the boot.
             await HostClipboard.StartAsync();
         }

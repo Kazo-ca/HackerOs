@@ -84,8 +84,17 @@ public static partial class HackerOsBrowserHostExtensions
         InstalledAppsBoot installedApps = new(apps);
         builder.Services.AddSingleton(installedApps);
         builder.Services.AddSingleton<WebAssemblyLazyAssemblyTransport>();
+        // ADR 0206: their wwwroot/ files, served by the service worker at _content/<assembly>/.
         builder.Services.AddSingleton<IBuildKnownAssemblyTransport>(provider => new InstalledAppAssemblyTransport(
-            provider.GetRequiredService<WebAssemblyLazyAssemblyTransport>(), installedApps));
+            provider.GetRequiredService<WebAssemblyLazyAssemblyTransport>(),
+            installedApps,
+            OperatingSystem.IsBrowser()
+                ? new InstalledAppAssetPublisher(
+                    installedApps,
+                    new BrowserInstalledAppAssetCache(),
+                    () => provider.GetRequiredService<AppAssetStore>(),
+                    provider.GetService<Microsoft.Extensions.Logging.ILogger<InstalledAppAssetPublisher>>())
+                : null));
         // ADR 0162: an app asset that fails to load after a rebuild or a deployment means the OS
         // was updated under the page; the host then offers a restart instead of a dead launch.
         builder.Services.AddSingleton<IHostBuildProbe, BrowserHostBuildProbe>();

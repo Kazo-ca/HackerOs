@@ -12,6 +12,10 @@ name: Release HackerOS
 # Manual run (workflow_dispatch, on main): releases the version of main if it is not tagged
 # yet; with "republish" checked, packs the tagged version again and pushes it to nuget.org
 # (packages already there are skipped), for a release made before NuGet was configured.
+#
+# ADR 0191 §5: once the release exists, the "server" jobs attach the installable HackerOS server
+# (hackeros-server-<version>-<rid>.zip|tar.gz, build/publish-server.sh) to the same release and
+# push its image ghcr.io/kazo-ca/hackeros-server (:<version> and, for a stable version, :latest).
 on:
   workflow_run:
     workflows: [ "Verify HackerOS WASM" ]
@@ -27,6 +31,7 @@ on:
 permissions:
   contents: write  # tag and GitHub Release
   id-token: write  # nuget.org Trusted Publishing (NuGet/login)
+  packages: write  # ghcr.io/kazo-ca/hackeros-server (ADR 0191)
 
 # Never two releases at once, and never cancel one halfway through a push.
 concurrency:
@@ -49,6 +54,12 @@ jobs:
        github.event.workflow_run.event == 'push')
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    outputs:
+      version: ${{ steps.plan.outputs.version }}
+      tag: ${{ steps.plan.outputs.tag }}
+      mode: ${{ steps.plan.outputs.mode }}
+      prerelease: ${{ steps.plan.outputs.prerelease }}
+      sha: ${{ steps.plan.outputs.sha }}
     steps:
       - name: Checkout the verified commit
         uses: actions/checkout@v6
@@ -199,3 +210,103 @@ jobs:
           if [[ "$PRERELEASE" == "true" ]]; then flags+=(--prerelease); else flags+=(--latest); fi
           gh release create "$TAG" "${flags[@]}" "$RELEASE_DIR"/assets/*
           echo "Release: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/tag/$TAG" >> "$GITHUB_STEP_SUMMARY"
+
+  # ADR 0191 §4-5: the installable server, self-contained in one file, for each system.
+  server:
+    needs: release
+    if: needs.release.outputs.mode == 'release'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        rid: [ win-x64, win-arm64, linux-x64, linux-arm64, osx-x64, osx-arm64 ]
+    steps:
+      - name: Checkout the released commit
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.release.outputs.sha }}
+
+      - name: Setup .NET 10
+        uses: ./.github/actions/setup-dotnet-sdk
+
+      - name: Install WASM workload
+        run: dotnet workload install wasm-tools
+
+      - name: Publish and pack the server
+        id: pack
+        working-directory: ${{ env.HACKEROS_SOLUTION_DIR }}
+        env:
+          VERSION: ${{ needs.release.outputs.version }}
+        run: |
+          archive="$(build/publish-server.sh --rid "${{ matrix.rid }}" --version "$VERSION" --output artifacts/server | tail -n 1)"
+          echo "archive=$archive" >> "$GITHUB_OUTPUT"
+
+      - name: Attach it to the release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.release.outputs.tag }}
+          ARCHIVE: ${{ steps.pack.outputs.archive }}
+        run: |
+          gh release upload "$TAG" "$ARCHIVE" --clobber
+          echo "Server: $(basename "$ARCHIVE")" >> "$GITHUB_STEP_SUMMARY"
+
+      # The Linux publications are also the content of the Docker image (job "server-image").
+      - name: Keep the Linux publication for the image
+        if: startsWith(matrix.rid, 'linux-')
+        uses: actions/upload-artifact@v6
+        with:
+          name: server-${{ matrix.rid }}
+          path: ${{ env.HACKEROS_SOLUTION_DIR }}/artifacts/server/staging/
+          retention-days: 1
+
+  server-image:
+    needs: [ release, server ]
+    if: needs.release.outputs.mode == 'release'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout the released commit
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.release.outputs.sha }}
+
+      - name: Get the Linux publications
+        uses: actions/download-artifact@v7
+        with:
+          pattern: server-linux-*
+          path: image-staging
+
+      - name: Arrange them by Docker architecture
+        shell: bash
+        env:
+          VERSION: ${{ needs.release.outputs.version }}
+        run: |
+          mkdir -p image/amd64 image/arm64
+          cp -a "image-staging/server-linux-x64/hackeros-server-$VERSION-linux-x64/." image/amd64/
+          cp -a "image-staging/server-linux-arm64/hackeros-server-$VERSION-linux-arm64/." image/arm64/
+
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+
+      - name: Build and push ghcr.io/kazo-ca/hackeros-server
+        shell: bash
+        env:
+          VERSION: ${{ needs.release.outputs.version }}
+          PRERELEASE: ${{ needs.release.outputs.prerelease }}
+        run: |
+          image="ghcr.io/kazo-ca/hackeros-server"
+          tags=(--tag "$image:$VERSION")
+          [[ "$PRERELEASE" == "true" ]] || tags+=(--tag "$image:latest")
+          docker buildx build --platform linux/amd64,linux/arm64 \
+            --file "$HACKEROS_SOLUTION_DIR/Server/HackerOs.Server/packaging/Dockerfile" \
+            --label "org.opencontainers.image.source=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" \
+            --label "org.opencontainers.image.version=$VERSION" \
+            "${tags[@]}" --push image
+          echo "Image: $image:$VERSION" >> "$GITHUB_STEP_SUMMARY"

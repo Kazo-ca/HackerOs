@@ -13,6 +13,7 @@
     "en": "With a HackerOS server connected, the Browser opens real web sites through its proxy and stays signed in to them (cookies and redirects are kept). An icon at the start of the address bar tells where the page came from, and http pages say Not secure. Apps get HackHttpResponse.Source and the TimedOut and BlockedByAdministrator network errors.",
     "fr": "Avec un serveur HackerOS connecté, le Navigateur ouvre les vrais sites web par son proxy et y reste connecté (cookies et redirections gardés). Une icône au début de la barre d'adresse dit d'où vient la page, et les pages http affichent Non sécurisé. Les apps reçoivent HackHttpResponse.Source et les erreurs réseau TimedOut et BlockedByAdministrator."
   },
+  "pr": 305,
   "links": [
     "doc/en/wasm/dev/adr/0210-browser-real-sites-through-the-proxy.md"
   ]

@@ -276,5 +276,5 @@ Questions asked to Benoit on 2026-10-28; he chose **A** for the first four and *
 - [x] Reference check against the runtime (Q1).
 - [x] `hackpkg` command and its docs (`linux-commands.md`, `app-installation.md`).
 - [x] Unit tests (sources, package, index, reference check, gateway, command).
-- [ ] End-to-end test in the browser with a test package served locally.
-- [ ] Serve the `wwwroot/` resources of an installed app (see "Limits").
+- [x] End-to-end test in the browser with a test package served locally ([ADR 0206](0206-serve-installed-app-assets.md)).
+- [x] Serve the `wwwroot/` resources of an installed app (see "Limits"): [ADR 0206](0206-serve-installed-app-assets.md).

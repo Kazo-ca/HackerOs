@@ -25,6 +25,7 @@ commandes exactes de build et de test sont dans
 | Un test casse après la fusion de deux branches parallèles alors que chacune était verte | Des tests comptent des choses (apps, manifestes, commandes : `BuildKnownLazyAppsTests`, `EcosystemBootCoordinatorTests`, `CommandParityTests`) et les documents citent ces nombres | Après chaque fusion, relancer la suite complète et mettre à jour les nombres dans les tests **et** dans la doc (`app-model.md`, `linux-commands.md`…). |
 | Un test refuse une app « incompatible » après un changement de version du SDK | Un manifeste de test écrivait la version du SDK en dur (`"1.0.0"`) | Les manifestes de test utilisent `HackerOsSdk.Version` ; les tests de refus épinglent des versions explicites. |
 | Le paquet de compatibilité du SDK change sans raison | Il a été reconstruit | Les paquets `Tests/fixtures/sdk-compat/packages/*.nupkg` (1.0.0, 1.1.0, 2.0.0) sont committés et **jamais** reconstruits ; ils prouvent que les apps compilées contre une version publiée se chargent toujours ([`../framework/sdk-packages.md`](../framework/sdk-packages.md)). |
+| `NETSDK1098` en publiant `HackerOs.Server` pour un RID avec `-p:PublishSingleFile=true` | Une propriété passée par `-p:` sur la ligne de commande s'applique aussi au projet WebAssembly référencé (Ecosystem), qui ne peut pas être publié en un seul fichier | Mettre `PublishSingleFile` (conditionné au RID) dans le `.csproj` du serveur, jamais en `-p:` ; `build/publish-server.sh` ne passe que `-r` et `--self-contained` ([`installable-server.md`](installable-server.md)). |
 
 ## 2. Publication trimmée et WebAssembly
 
@@ -34,6 +35,7 @@ commandes exactes de build et de test sont dans
 | Les avertissements `IL2110`/`IL2111` n'apparaissent que dans l'app livrée, jamais dans les tests | Les projets de test n'exécutent pas l'analyseur de trimming | Vérifier avec `build/publish-trimmed.sh` (porte de fusion locale, échoue sur toute alerte `IL…`). Ne pas mettre `DynamicallyAccessedMembers` sur des paramètres de composants capturés par des closures Razor : utiliser `UnconditionalSuppressMessage` sur la méthode, ou passer le `Type` dans un objet porteur. |
 | Le trimming retire des types utilisés par réflexion | Racines ILLink incomplètes | Les assemblies HackerOS et les apps restent entières ; seules les assemblies du framework sont élaguées, avec des racines générées depuis les manifestes (`HackerOs.TrimmerRoots.xml`, [ADR 0106](adr/0106-trimmed-release-publish.md)). |
 | Le rendu d'une fenêtre Blazor dans un Web Worker coûte trop de mémoire | Chaque worker de fenêtre charge son propre runtime .NET : 66,5 Mio mesurés pour 40 Mio permis | Essai arrêté, prototype gardé coupé par défaut ([ADR 0133](adr/0133-window-rendering-in-worker-verdict.md), [`remote-window-rendering.md`](remote-window-rendering.md)). Les calculs lourds passent par `HackBackground.RunAsync`. |
+| Le serveur publié répond `404` à `/` et à `/index.html` alors que `dotnet run` marche | `OverrideHtmlAssetPlaceholders` laisse `index.html` hors du manifeste des ressources statiques publié : aucun point de terminaison ne sert la page | L'intergiciel `UseOsPageFile` (`OsPageRewrite.cs`) sert `wwwroot/index.html` sans cache quand aucun point de terminaison ne correspond ([`server-hosting.md`](server-hosting.md)). |
 
 ## 3. Navigateur, cache et page périmée
 
@@ -117,6 +119,7 @@ compilation à niveaux et comparer des passes faites dans les mêmes conditions.
 | Bandeau « Unknown IndexedDB transaction boundary » au démarrage | Une frontière de transaction utilisée par un dépôt n'était pas déclarée dans le schéma | Déclarée ; un test vérifie maintenant que chaque `TransactionBoundary` est déclarée. Si le bandeau revient, c'est un nouveau bogue. |
 | Écrire un réglage prenait 845 ms et 604 transactions | La résolution de chemin parcourait le stockage segment par segment | Une seule requête `resolvePath` (604 → 51 transactions, [`filesystem-path-lookup.md`](filesystem-path-lookup.md)). |
 | Un enregistrement `HackWebDb` avec `Id = 0` est stocké sous la clé 0 au lieu d'être numéroté | Comportement normal d'IndexedDB avec `autoIncrement` | Mettre `[JsonIgnore(Condition = WhenWritingDefault)]` sur `Id` ([`../framework/asp-hack-site-data.md`](../framework/asp-hack-site-data.md)). |
+| `GET /api/devices` du serveur échoue sous SQLite (`NotSupportedException` sur `ORDER BY`) | SQLite ne sait pas trier une colonne `DateTimeOffset` côté base | Trier en mémoire après la requête (`AccountService.GetDevicesAsync`). |
 
 ## 7. Conteneurs cloud, GitHub et organisation
 

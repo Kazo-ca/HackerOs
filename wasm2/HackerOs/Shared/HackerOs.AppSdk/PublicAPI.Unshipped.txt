@@ -328,6 +328,30 @@ HackerOs.AppSdk.Administration.HackUserAccount.IsGuest.init -> void
 HackerOs.AppSdk.Administration.IAppUserAccountsGateway.RequestGuestAccountCreationAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
 static HackerOs.AppSdk.Administration.HackUserAccounts.RequestGuestAccountCreationAsync(HackerOs.AppSdk.IAppExecutionContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
 static HackerOs.AppSdk.Administration.HackUserAccounts.RequestGuestAccountCreationAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
+HackerOs.AppSdk.Administration.HackServerProbe
+HackerOs.AppSdk.Administration.HackServerProbe.<Clone>$() -> HackerOs.AppSdk.Administration.HackServerProbe!
+HackerOs.AppSdk.Administration.HackServerProbe.ApiVersion.get -> string?
+HackerOs.AppSdk.Administration.HackServerProbe.ApiVersion.init -> void
+HackerOs.AppSdk.Administration.HackServerProbe.Deconstruct(out bool IsServer, out string? ServerVersion, out string? ApiVersion, out string? Error) -> void
+HackerOs.AppSdk.Administration.HackServerProbe.Equals(HackerOs.AppSdk.Administration.HackServerProbe? other) -> bool
+HackerOs.AppSdk.Administration.HackServerProbe.Error.get -> string?
+HackerOs.AppSdk.Administration.HackServerProbe.Error.init -> void
+HackerOs.AppSdk.Administration.HackServerProbe.HackServerProbe(bool IsServer, string? ServerVersion, string? ApiVersion, string? Error) -> void
+HackerOs.AppSdk.Administration.HackServerProbe.IsServer.get -> bool
+HackerOs.AppSdk.Administration.HackServerProbe.IsServer.init -> void
+HackerOs.AppSdk.Administration.HackServerProbe.ServerVersion.get -> string?
+HackerOs.AppSdk.Administration.HackServerProbe.ServerVersion.init -> void
+HackerOs.AppSdk.Administration.IAppServerConnectionGateway.PairAsync(System.Uri! serverUrl, string! code, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Administration.HackServerConnectionState!>
+HackerOs.AppSdk.Administration.IAppServerConnectionGateway.TestAsync(System.Uri! serverUrl, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Administration.HackServerProbe!>
+override HackerOs.AppSdk.Administration.HackServerProbe.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Administration.HackServerProbe.GetHashCode() -> int
+override HackerOs.AppSdk.Administration.HackServerProbe.ToString() -> string!
+static HackerOs.AppSdk.Administration.HackServerConnection.PairAsync(HackerOs.AppSdk.IAppExecutionContext! context, System.Uri! serverUrl, string! code, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Administration.HackServerConnectionState!>!
+static HackerOs.AppSdk.Administration.HackServerConnection.PairAsync(System.Uri! serverUrl, string! code, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Administration.HackServerConnectionState!>!
+static HackerOs.AppSdk.Administration.HackServerConnection.TestAsync(HackerOs.AppSdk.IAppExecutionContext! context, System.Uri! serverUrl, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Administration.HackServerProbe!>!
+static HackerOs.AppSdk.Administration.HackServerConnection.TestAsync(System.Uri! serverUrl, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Administration.HackServerProbe!>!
+static HackerOs.AppSdk.Administration.HackServerProbe.operator !=(HackerOs.AppSdk.Administration.HackServerProbe? left, HackerOs.AppSdk.Administration.HackServerProbe? right) -> bool
+static HackerOs.AppSdk.Administration.HackServerProbe.operator ==(HackerOs.AppSdk.Administration.HackServerProbe? left, HackerOs.AppSdk.Administration.HackServerProbe? right) -> bool
 HackerOs.AppSdk.Net.HackHttpResponse.Source.get -> HackerOs.AppSdk.Net.HackHttpResponseSource
 HackerOs.AppSdk.Net.HackHttpResponse.Source.init -> void
 HackerOs.AppSdk.Net.HackHttpResponseSource

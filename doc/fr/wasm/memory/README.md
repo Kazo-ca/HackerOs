@@ -51,17 +51,32 @@ jour à la fin de chaque série ou quand une convention change.
   GitHub (ADR 0182), présentation des fonctionnalités `features.md` (ADR 0192),
   heure locale et fuseau horaire (ADR 0193, chantier 2 de l'issue #242),
   menus contextuels de la barre des tâches (ADR 0194, chantier 4 de #242).
-  Les ADR du Hack Store (0188 à 0190) et du serveur local installable (0191)
-  sont acceptées, rien n'est codé (issues `TODO` #246 à #257, #267).
+  Les ADR du Hack Store (0188 à 0190) sont acceptées, rien n'est codé (issues
+  `TODO` #246 à #257). Le serveur local installable (ADR 0191, issue #267) est
+  codé dans la série `todo/base` (chantier `todo/14-installable-server`,
+  [`installable-server.md`](../dev/installable-server.md)) ; restent à essayer
+  en vrai les scripts Windows et macOS et l'image Docker.
 - **Bouton Marche/arrêt dans le menu Démarrer** (ADR 0195, PR #291, fusionnée
   le 2026-10-30) : « Changer d'utilisateur » reste grisé, issue `TODO` #290
   (plusieurs sessions ouvertes en même temps).
 - **Série `todo/base`** (2026-10-30, toutes les issues `TODO` en parallèle,
-  une PR finale vers `main`) : chantier 1 du Hack Store fait, modèle
+  une PR finale vers `main`, branches `todo/<n>-<sujet>`, ADR 0197 à 0211
+  réservées) : chantier 1 du Hack Store fait, modèle
   `hackeros-solution` et workflow de publication vers le catalogue (ADR 0207,
   [`app-repository.md`](../framework/app-repository.md), issue #246). Le
   dépôt `HackerOs-AppTemplate` ne sera régénéré qu'avec un sous-module sur la
   release qui contient ce modèle (PR en brouillon dans ce dépôt).
+  L'ADR 0206 est prise par l'issue #247 (`wwwroot/` des apps installées servi
+  par le service worker, [ADR 0206](../dev/adr/0206-serve-installed-app-assets.md)).
+- **Packs d'icônes** (ADR 0203, issue `TODO` #255, série `todo/base`) : packs
+  PNG pour les apps et les fichiers dans `/usr/share/icons` et
+  `~/.local/share/icons`, choisis dans Paramètres ▸ Apparence (document de
+  réglages `icons`, clé `iconPackId`) ; le pack Néon intégré est installé
+  d'office. Voir [`icon-packs.md`](../dev/icon-packs.md).
+- **Bulles de notification** (ADR 0197, chantier 1 de #242, série
+  `todo/base`) : bulles des notifications et « Update ready » en
+  notification persistante avec « Redémarrer ». Voir
+  [`notification-toasts.md`](../dev/notification-toasts.md).
 - **Vrais sites dans le navigateur** (ADR 0210, série `todo/base`, issue #266) :
   le Navigateur est une app système avec `network.real.access` ; avec un
   serveur connecté, il ouvre les vrais sites par le proxy, cookies compris.
@@ -75,9 +90,11 @@ jour à la fin de chaque série ou quand une convention change.
   invité et crédits, 0188 à 0190 Hack Store ([`hackeros-store.md`](../dev/plans/hackeros-store.md)),
   0191 serveur local installable, 0192 `features.md` et exception à l'ADR 0135,
   0193 heure locale, 0194 menus de la barre des tâches, 0195 bouton
-  Marche/arrêt du menu Démarrer ; série `todo/base` : 0207 modèle
-  `hackeros-solution` (les autres numéros de la série sont réservés par ses
-  chantiers). **Prochain numéro libre : 0196.** Avant d'en
+  Marche/arrêt du menu Démarrer ; série `todo/base` : 0197 bulles de
+  notification, 0203 packs d'icônes, 0207 modèle `hackeros-solution` (les
+  autres numéros jusqu'à 0211 sont réservés par ses chantiers). 0196 est prise
+  par la PR #294 (point des notifications non lues). **Prochain numéro libre :
+  0212.** Avant d'en
   prendre un, vérifier `dev/adr/` sur `main` et les PR ouvertes.
 
 ## Conventions de travail

@@ -1,0 +1,106 @@
+.local-server {
+    margin-top: 0.9rem;
+    padding: 0.75rem 0.9rem;
+    border: 1px solid var(--hos-border, #34444c);
+    border-radius: var(--hos-radius-sm, 0.3rem);
+    background: var(--hos-bg-surface, #151c20);
+}
+
+.local-server h5 {
+    margin: 0 0 0.5rem;
+    font-size: 0.85rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--hos-accent, #3ee6a8);
+}
+
+.local-server-download {
+    margin: 0.5rem 0 0.75rem;
+}
+
+.local-server-download summary {
+    cursor: pointer;
+    color: var(--hos-text-primary, #f4f7f8);
+    font-size: 0.85rem;
+}
+
+.local-server-files {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.25rem 1rem;
+    margin: 0.5rem 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.8rem;
+}
+
+.local-server-files li {
+    display: contents;
+}
+
+.local-server-system {
+    color: var(--hos-text-secondary, #9fb0b8);
+}
+
+.local-server-files code,
+.local-server-code {
+    font-family: var(--hos-font-mono, ui-monospace, monospace);
+    word-break: break-all;
+}
+
+.local-server-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.2rem;
+    font-size: 0.82rem;
+}
+
+.local-server-links a {
+    color: var(--hos-accent, #3ee6a8);
+}
+
+.local-server-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.local-server-row .text-input {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.local-server-code {
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+}
+
+.local-server-ok,
+.local-server-error {
+    margin: 0.4rem 0;
+    padding: 0.4rem 0.6rem;
+    border-radius: var(--hos-radius-sm, 0.3rem);
+    font-size: 0.8rem;
+}
+
+.local-server-ok {
+    border: 1px solid var(--hos-success, #3ee6a8);
+    color: var(--hos-success, #3ee6a8);
+}
+
+.local-server-error {
+    border: 1px solid var(--hos-danger, #ff5c7a);
+    color: var(--hos-danger, #ff5c7a);
+    word-break: break-word;
+}
+
+@media (max-width: 600px) {
+    .local-server-files {
+        grid-template-columns: 1fr;
+    }
+
+    .local-server-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
