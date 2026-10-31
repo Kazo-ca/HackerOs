@@ -56,7 +56,7 @@ internal sealed partial class AppManagementGateway
         return await Translate(async () =>
         {
             AppCatalogListing listing = await packages.GetCatalogAsync(catalog, sources, cancellationToken).ConfigureAwait(false);
-            AppCatalogVersion? entry = listing.Find(appId)?.Versions
+            AppCatalogVersion? entry = listing.Apps.FirstOrDefault(app => string.Equals(app.AppId, appId, StringComparison.Ordinal))?.Versions
                 .FirstOrDefault(candidate => string.Equals(candidate.Version.ToString(), version, StringComparison.Ordinal));
             if (entry is null)
             {
@@ -174,5 +174,8 @@ internal sealed partial class AppManagementGateway
             ScreenshotUris = [.. version.Screenshots.Select(path => listing.Resolve(path).AbsoluteUri)],
             DescriptionLanguages = [.. version.Descriptions.Keys.Order(StringComparer.OrdinalIgnoreCase)],
         })],
-        trust);
+        trust)
+    {
+        Kind = app.Kind == AppCatalogEntryKind.ThemePack ? HackCatalogItemKind.ThemePack : HackCatalogItemKind.App,
+    };
 }

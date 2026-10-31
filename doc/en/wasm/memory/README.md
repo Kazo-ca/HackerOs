@@ -97,6 +97,13 @@ at the end of each series or when a convention changes.
   (restart without administrator, source written, badge, catalog order),
   recommendations applied. See
   [`app-installation.md`](../dev/app-installation.md#the-hack-store-and-the-catalogs).
+- **Hack Store v2, theme packs** (ADR 0213, `TODO` issue #253, series
+  `todo/base`, branch `todo/18-theme-packs`): `.hacktheme` format
+  (`ThemePack.Read`), `kind: "theme-pack"` in `catalog.json`, pack unpacked as
+  is in `theme-packs/<id>/` and read in place by themes, wallpapers, icons,
+  sounds and cursors, Store Themes tab. Four questions asked to Benoit (files
+  read in place, catalog CI, nothing applied after the install, no badge),
+  recommendations applied. Catalog CI: `TODO` issue AppMarketPlace #4.
 - **Notification bubbles** (ADR 0197, work item 1 of #242, series
   `todo/base`): notification bubbles and "Update ready" as a persistent
   notification with "Restart". See
@@ -128,9 +135,9 @@ at the end of each series or when a convention changes.
   0191 installable local server, 0192 `features.md` and exception to ADR 0135,
   0193 local time, 0194 taskbar menus, 0195 Start menu Power button;
   `todo/base` series: 0197 notification bubbles, 0201 "Switch user" stays greyed out, 0203 icon packs, 0207
-  `hackeros-solution` template, 0208 Hack Store trusted sources, 0212 Hack Store app (the other numbers up to 0211 are reserved by
+  `hackeros-solution` template, 0208 Hack Store trusted sources, 0212 Hack Store app, 0213 theme packs, 0214 reserved for issue #251 (the other numbers up to 0211 are reserved by
   its work items). 0196 is taken by PR #294 (unread dot). **Next free number:
-  0213.** Before taking one, check `dev/adr/` on
+  0215.** Before taking one, check `dev/adr/` on
   `main` and the open PRs.
 
 ## Working conventions

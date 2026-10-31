@@ -86,8 +86,10 @@ nano ~/.local/share/sounds/retro/index.theme
 | `DialogCoordinator` | Platform Blazor | Joue avertissement ou erreur pour une boîte de message avec cette icône. |
 | `SoundPanel` | App Paramètres | Page Paramètres ▸ Sons, SDK public seulement. |
 
-Ordre de recherche d'un son : `/usr/share/sounds/<thème>`, puis
-`~/.local/share/sounds/<thème>` ; dans le dossier trouvé, chaque dossier de
+Ordre de recherche d'un son : `/usr/share/sounds/<thème>`,
+`/usr/share/hackeros/theme-packs/<thème>/sounds`, `~/.local/share/sounds/<thème>`,
+puis `~/.local/share/hackeros/theme-packs/<thème>/sounds` (le jeu de sons d'un
+pack du Hack Store porte l'identifiant du pack, [ADR 0213](adr/0213-theme-packs-build.md)) ; dans le dossier trouvé, chaque dossier de
 `Directories=` puis le dossier lui-même, pour `<nom>.oga`, `.ogg`, `.mp3` ; sinon
 le jeu `hackeros`. Le même évènement deux fois en moins de 150 ms sonne une
 fois.

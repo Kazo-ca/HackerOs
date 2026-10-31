@@ -44,6 +44,12 @@ dans **Paramètres ▸ Apparence ▸ Curseurs**. Trois thèmes sont intégrés :
    choisissez-le. Le choix est écrit dans `~/.config/hackeros/cursors.config`
    (`theme=neon-crypt`) et s'applique tout de suite.
 
+Un pack de thèmes du Hack Store apporte son thème de curseurs dans son dossier
+`cursors/` ; il est lu là où le pack est installé
+(`/usr/share/hackeros/theme-packs/<pack>/cursors/` puis
+`~/.local/share/hackeros/theme-packs/<pack>/cursors/`,
+[ADR 0213](../dev/adr/0213-theme-packs-build.md)), sans copie.
+
 Règles :
 
 - `id` : 1 à 64 lettres minuscules, chiffres et tirets, différent des thèmes

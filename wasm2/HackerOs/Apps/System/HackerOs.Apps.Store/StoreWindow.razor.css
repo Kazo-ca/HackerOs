@@ -489,6 +489,69 @@
 }
 
 /* Narrow window or mobile shell: stack the header, the detail columns and the installed rows. */
+/* « Themes » tab (ADR 0213 §5): a wide preview on top of each pack, like a wallpaper picker. */
+.store-themes-intro {
+    margin: 0 0 14px;
+    color: var(--hos-text-secondary, #8b949e);
+    max-width: 72ch;
+}
+
+.store-pack-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.store-pack {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background-color: var(--hos-bg-surface, #161b22);
+    border: 1px solid var(--hos-border-subtle, #30363d);
+    border-radius: var(--hos-radius-md, 8px);
+    transition: border-color 120ms ease, transform 120ms ease, box-shadow 120ms ease;
+}
+
+.store-pack:hover,
+.store-pack:focus-within {
+    border-color: var(--hos-accent, #42d392);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+    transform: translateY(-1px);
+}
+
+.store-pack-preview {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    background-color: var(--hos-btn-bg, #21262d);
+    border-bottom: 1px solid var(--hos-border-subtle, #30363d);
+}
+
+.store-pack-preview.is-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--hos-accent, #42d392);
+    background-image: linear-gradient(135deg, rgba(66, 211, 146, 0.12), rgba(88, 166, 255, 0.08));
+}
+
+.store-pack-body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 12px;
+}
+
+.store-pack-parts {
+    font-family: var(--hos-font-mono, 'Cascadia Mono', Consolas, monospace);
+    font-size: 0.8em;
+    color: var(--hos-accent, #42d392);
+}
+
 @container (max-width: 640px) {
     .store-header {
         flex-wrap: wrap;

@@ -94,7 +94,7 @@ public sealed record AppPackageInstallContext(
 /// <see cref="AppPackagePlan.RequiresAdministrator"/>, and passes the writer it then may use (the
 /// system's, or the session user's for a personal install), as <c>apt</c> runs only after <c>sudo</c>.
 /// </remarks>
-public sealed class AppPackageInstaller
+public sealed partial class AppPackageInstaller
 {
     private const ushort FileMode = 0b110_100_100;
 
@@ -708,7 +708,7 @@ public sealed class AppPackageInstaller
         await DeleteIfExistsAsync(writer, InstalledAppsLayout.GetPersonalAppDirectory(home, appId), cancellationToken).ConfigureAwait(false);
     }
 
-    private static async ValueTask WriteFileAsync(IAppFileSystemGateway system, VirtualPath path, byte[] content, CancellationToken cancellationToken)
+    internal static async ValueTask WriteFileAsync(IAppFileSystemGateway system, VirtualPath path, byte[] content, CancellationToken cancellationToken)
     {
         string parent = path.Value[..path.Value.LastIndexOf('/')];
         Ensure(await SettingsTextFile.EnsureDirectoryAsync(system, VirtualPath.Parse(parent), cancellationToken).ConfigureAwait(false));
@@ -722,7 +722,7 @@ public sealed class AppPackageInstaller
         Ensure(written.Succeeded ? null : written.Transaction.Error);
     }
 
-    private static async ValueTask DeleteIfExistsAsync(IAppFileSystemGateway system, VirtualPath path, CancellationToken cancellationToken)
+    internal static async ValueTask DeleteIfExistsAsync(IAppFileSystemGateway system, VirtualPath path, CancellationToken cancellationToken)
     {
         FileSystemResult<FileSystemEntrySnapshot> entry = await system.StatAsync(new FileSystemStatRequest(path), cancellationToken).ConfigureAwait(false);
         if (!entry.Succeeded)
@@ -741,7 +741,7 @@ public sealed class AppPackageInstaller
         Ensure(deleted.Succeeded ? null : deleted.Transaction.Error);
     }
 
-    private static void Ensure(FileSystemError? error)
+    internal static void Ensure(FileSystemError? error)
     {
         if (error is not null)
         {

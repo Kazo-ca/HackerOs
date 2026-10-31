@@ -44,6 +44,12 @@ their own.
    The choice is written to `~/.config/hackeros/cursors.config`
    (`theme=neon-crypt`) and applies at once.
 
+A Hack Store theme pack brings its cursor theme in its `cursors/` folder; it
+is read where the pack is installed
+(`/usr/share/hackeros/theme-packs/<pack>/cursors/` then
+`~/.local/share/hackeros/theme-packs/<pack>/cursors/`,
+[ADR 0213](../dev/adr/0213-theme-packs-build.md)), with no copy.
+
 Rules:
 
 - `id`: 1 to 64 lowercase letters, digits and dashes, different from the
