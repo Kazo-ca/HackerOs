@@ -1,0 +1,18 @@
+{
+  "id": "5c03b6b3-7530-433d-80c8-48c6440756fd",
+  "category": "developer",
+  "audience": [
+    "developer"
+  ],
+  "title": {
+    "en": "Signing tool for app authors",
+    "fr": "Outil de signature pour les auteurs d'apps"
+  },
+  "description": {
+    "en": "dotnet build -t:HackerOsKeyGen creates an author's signing key, HackerOsPack signs each package with the HACKEROS_APP_SIGNING_KEY secret, and the hackeros-solution template publishes the signed packages on the hackeros-packages branch on each version tag. Administrators require an author's signature by adding their public key to [signing-keys].",
+    "fr": "dotnet build -t:HackerOsKeyGen crée la clé de signature d'un auteur, HackerOsPack signe chaque paquet avec le secret HACKEROS_APP_SIGNING_KEY, et le modèle hackeros-solution publie les paquets signés sur la branche hackeros-packages à chaque tag de version. Les administrateurs exigent la signature d'un auteur en ajoutant sa clé publique à [signing-keys]."
+  },
+  "links": [
+    "doc/en/wasm/dev/adr/0219-app-authors-signing-tool.md"
+  ]
+}
