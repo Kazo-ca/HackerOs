@@ -22,6 +22,15 @@
 }
 
 .mobile-home-layer, .mobile-app-layer { position: absolute; inset: 0; }
+
+/* ADR 0217 §2: with a wallpaper, the home screen lets it show and keeps its texts readable on it. */
+.mobile-shell-workspace:has(> .desktop-wallpaper) ::deep .mobile-home-screen {
+    background: transparent;
+}
+
+.mobile-shell-workspace:has(> .desktop-wallpaper) ::deep :is(.mobile-home-heading, .mobile-home-app span, .mobile-gesture-hint) {
+    text-shadow: 0 1px 3px rgb(0 0 0 / 85%), 0 0 1px rgb(0 0 0 / 90%);
+}
 .mobile-home-layer[hidden], .mobile-app-layer[hidden] { display: none; }
 .mobile-launch-error { position: absolute; bottom: 1rem; left: 1rem; right: 1rem; z-index: 1050; padding: .8rem; border-radius: .8rem; color: var(--hos-error, #fda4af); background: var(--hos-bg-surface, #151c20); }
 

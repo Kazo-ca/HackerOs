@@ -14,26 +14,24 @@
             LocalizedMarkup.Code("~/.local/share/hackeros/wallpapers"))
     </p>
 
-    @if (_screens.Count > 1)
-    {
-        <div class="wallpaper-screens" role="radiogroup" aria-label="@L["Wallpaper.Screens.AriaLabel"]">
-            @foreach (int number in _screens)
-            {
-                <button type="button" role="radio" class="@ScreenClass(number)"
-                        aria-checked="@(number == _screen ? "true" : "false")"
-                        @onclick="() => SelectScreen(number)">
-                    @(number == 1 ? L["Wallpaper.Screens.Primary"] : L["Wallpaper.Screens.Other", number])
-                </button>
-            }
-        </div>
-    }
+    @* ADR 0217 §5: the screens, then the mobile home screen, always offered. *@
+    <div class="wallpaper-screens" role="radiogroup" aria-label="@L["Wallpaper.Screens.AriaLabel"]">
+        @foreach (int number in Targets)
+        {
+            <button type="button" role="radio" class="@ScreenClass(number)"
+                    aria-checked="@(number == _screen ? "true" : "false")"
+                    @onclick="() => SelectScreen(number)">
+                @TargetName(number)
+            </button>
+        }
+    </div>
 
     <div class="wallpaper-options" role="radiogroup" aria-labelledby="wallpaper-title">
         <button type="button" role="radio" class="@OptionClass(string.Empty)"
                 aria-checked="@Checked(string.Empty)" disabled="@IsDisabled"
                 @onclick="() => ChooseAsync(string.Empty)">
             <span class="wallpaper-thumb wallpaper-thumb-theme" aria-hidden="true"></span>
-            <span class="wallpaper-label">@(_screen == 1 ? L["Wallpaper.Theme"] : L["Wallpaper.SameAsPrimary"])</span>
+            <span class="wallpaper-label">@ThemeOptionName</span>
         </button>
         @foreach (BuiltInWallpaper wallpaper in WallpaperCatalog.BuiltIn)
         {
@@ -62,7 +60,7 @@
         </button>
         <label class="wallpaper-fit" for="settings-wallpaper-fit">
             @L["Wallpaper.Fit.Label"]
-            <select id="settings-wallpaper-fit" value="@_fit" disabled="@(_document is null || _isBusy || IsBlocked(FitKey))" @onchange="OnFitChangedAsync">
+            <select id="settings-wallpaper-fit" value="@_fit" disabled="@(_document is null || _isBusy || IsBlocked(SelectedFitKey))" @onchange="OnFitChangedAsync">
                 @foreach (string fit in WallpaperCatalog.FitValues)
                 {
                     <option value="@fit">@L["Wallpaper.Fit." + fit]</option>

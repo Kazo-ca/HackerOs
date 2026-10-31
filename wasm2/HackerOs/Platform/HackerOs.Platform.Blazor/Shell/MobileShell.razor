@@ -20,6 +20,8 @@
 
 <div class="mobile-shell" @ref="_shellRoot">
     <div class="mobile-shell-workspace">
+        @* ADR 0217 §2: the mobile wallpaper, behind the home screen, the drawer and the apps. *@
+        <DesktopWallpaper Mobile="true" />
         <div class="mobile-home-layer" hidden="@HasActiveMobileWindow">
             <MobileHomeScreen IsDrawerOpen="_isDrawerOpen" OnDrawerChanged="SetDrawerAsync" OnAppSelected="LaunchMobileAppAsync" />
         </div>
