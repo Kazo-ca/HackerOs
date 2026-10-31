@@ -121,6 +121,7 @@ compilation à niveaux et comparer des passes faites dans les mêmes conditions.
 | Écrire un réglage prenait 845 ms et 604 transactions | La résolution de chemin parcourait le stockage segment par segment | Une seule requête `resolvePath` (604 → 51 transactions, [`filesystem-path-lookup.md`](filesystem-path-lookup.md)). |
 | Un enregistrement `HackWebDb` avec `Id = 0` est stocké sous la clé 0 au lieu d'être numéroté | Comportement normal d'IndexedDB avec `autoIncrement` | Mettre `[JsonIgnore(Condition = WhenWritingDefault)]` sur `Id` ([`../framework/asp-hack-site-data.md`](../framework/asp-hack-site-data.md)). |
 | `GET /api/devices` du serveur échoue sous SQLite (`NotSupportedException` sur `ORDER BY`) | SQLite ne sait pas trier une colonne `DateTimeOffset` côté base | Trier en mémoire après la requête (`AccountService.GetDevicesAsync`). |
+| Le bureau mettait 20 s à apparaître après « Create local profile » et les tests UI E2E expiraient (15 s) | Le semis de la connexion copiait le pack d'icônes Néon (39 images) dans le stockage du navigateur avant d'ouvrir la session : environ 10 s à la première connexion | Les grosses données livrées sont installées en arrière-plan après la connexion (`FileSystemSeeder.InstallIconPacksAsync`) ; `SeedAsync` ne garde que ce dont la session a besoin tout de suite. Mesurer dans le navigateur avant d'y ajouter des fichiers. |
 
 ## 7. Conteneurs cloud, GitHub et organisation
 

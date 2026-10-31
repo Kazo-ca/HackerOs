@@ -912,6 +912,7 @@ HackerOs.Platform.Core.ServerConnection.ServerConnectionException.ProxyErrorCode
 HackerOs.Platform.Core.ServerConnection.ServerConnectionException.ServerConnectionException(string! message, string? serverBody, string? proxyErrorCode) -> void
 const HackerOs.Platform.Core.ServerConnection.HttpProxyClient.MaxConcurrentRequests = 6 -> int
 const HackerOs.Platform.Core.ServerConnection.HttpProxyClient.QuotaRetries = 3 -> int
+HackerOs.Platform.Core.FileSystem.FileSystemSeeder.InstallIconPacksAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
 HackerOs.Platform.Core.Apps.Packages.AppCatalogCategory
 HackerOs.Platform.Core.Apps.Packages.AppCatalogCategory.<Clone>$() -> HackerOs.Platform.Core.Apps.Packages.AppCatalogCategory!
 HackerOs.Platform.Core.Apps.Packages.AppCatalogCategory.AppCatalogCategory(string! Id, System.Collections.Generic.IReadOnlyDictionary<string!, string!>! Labels) -> void

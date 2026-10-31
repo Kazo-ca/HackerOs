@@ -15,6 +15,7 @@ public sealed class IconPackServiceTests
         SettingsFilesHarness harness = new();
         await harness.BootAsync();
         await harness.LoginAsync(harness.Alice);
+        await harness.InstallIconPacksAsync();
 
         Assert.NotEmpty(BuiltInIconPacks.Files);
         string? manifest = await harness.ReadAsync("/usr/share/icons/neon/icon-pack.json");
@@ -29,6 +30,7 @@ public sealed class IconPackServiceTests
         SettingsFilesHarness harness = new();
         await harness.BootAsync();
         await harness.LoginAsync(harness.Alice);
+        await harness.InstallIconPacksAsync();
         using IconPackService service = new(harness.FileSystem, harness.Session, harness.Clock, harness.Settings);
         await service.InitializeAsync();
         Assert.Equal(IconPackLibrary.BuiltInId, service.SelectedId);
