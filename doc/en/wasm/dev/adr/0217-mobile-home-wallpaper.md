@@ -4,8 +4,8 @@
 
 ## Status
 
-Accepted on 2026-10-31, with the recommendations applied while Benoit's answers
-are pending (see "Questions asked to Benoit"). Issue
+Accepted on 2026-10-31; Benoit chose the recommendations (see "Questions asked
+to Benoit"). Issue
 [#297](https://github.com/Kazo-ca/HackerOs/issues/297), `todo/base` series
 (branch `todo/23-mobile-wallpaper`).
 
@@ -97,6 +97,9 @@ the recommendation applied while his answer is pending:
   `wallpaperFit`.
 - **Q3** App drawer: A (recommended) opaque as today; B blurred glass that lets
   the image show.
+
+**Answer (2026-10-31)**: Benoit chooses the three recommendations (Q1 A, Q2 A,
+Q3 A). What is built does not change.
 
 ## Tasks
 
