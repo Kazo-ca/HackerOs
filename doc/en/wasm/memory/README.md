@@ -56,7 +56,10 @@ at the end of each series or when a convention changes.
 - **Power button in the Start menu** (ADR 0195, PR #291, merged on
   2026-10-30): "Switch user" stays greyed out, `TODO` issue #290 (several
   sessions open at once).
-- **ADR**: 0001 to 0171 and 0173 to 0195 exist on `main` (a few numbers skipped;
+- **Unread notifications dot next to the clock** (ADR 0196, branch
+  `notifications/1-clock-dot`, PR #294 to `main`): replaces the what's new Start menu
+  dot; questions Q1 to Q6 asked to Benoit, recommendations applied meanwhile.
+- **ADR**: 0001 to 0171 and 0173 to 0196 exist on `main` (a few numbers skipped;
   0141 and 0172 were not used). Recent landmarks: 0173 automatic release, 0174
   new-version announcement, 0175 "New folder" in dialogs, 0176 app repository
   template, 0177 title bar of maximized windows, 0178 to 0180, 0183 and 0184
@@ -64,8 +67,8 @@ at the end of each series or when a convention changes.
   what's new ([`change-list.md`](../dev/change-list.md)), 0187 guest and credits,
   0188 to 0190 Hack Store ([`hackeros-store.md`](../dev/plans/hackeros-store.md)),
   0191 installable local server, 0192 `features.md` and exception to ADR 0135,
-  0193 local time, 0194 taskbar menus, 0195 Start menu Power button.
-  **Next free number: 0196.** Before taking one, check `dev/adr/` on
+  0193 local time, 0194 taskbar menus, 0195 Start menu Power button, 0196 unread notifications dot.
+  **Next free number: 0197.** Before taking one, check `dev/adr/` on
   `main` and the open PRs.
 
 ## Working conventions

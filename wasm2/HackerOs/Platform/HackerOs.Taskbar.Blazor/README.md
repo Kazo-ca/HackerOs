@@ -14,6 +14,8 @@ parameter supplies what's inside it. This package owns only the trigger button
 and the panel's anchoring/positioning — it never inspects `ClockPanelContent`,
 so the panel's actual design (notifications, calendar, a platform-mode toggle,
 anything else) lives entirely in the host application, outside this package.
+`ITaskbarClockPanelSource.UnreadCount` (0 by default) puts a dot on the clock
+and gives the count in its accessible name and tooltip (ADR 0196).
 
 ## Usage
 

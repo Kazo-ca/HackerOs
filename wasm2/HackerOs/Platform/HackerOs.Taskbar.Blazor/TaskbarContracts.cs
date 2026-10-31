@@ -101,8 +101,14 @@ public interface ITaskbarClockPanelSource
     /// <summary>Requests the clock panel be opened or closed.</summary>
     void Toggle();
 
-    /// <summary>Raised when <see cref="IsOpen"/> changes for a reason external to the taskbar (e.g. Escape).</summary>
+    /// <summary>Raised when <see cref="IsOpen"/> or <see cref="UnreadCount"/> changes for a reason external to the taskbar (e.g. Escape).</summary>
     event Action? Changed;
+
+    /// <summary>
+    /// Gets the number of notifications the user has not looked at yet (ADR 0196): the clock then
+    /// carries a dot and its name and tooltip give the count. Hosts without notifications keep 0.
+    /// </summary>
+    int UnreadCount => 0;
 }
 
 /// <summary>

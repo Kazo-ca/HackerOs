@@ -57,4 +57,19 @@ public sealed class TaskbarClockPanelSourceAdapterTests
         Assert.False(adapter.IsOpen);
         Assert.Equal(1, changedCount);
     }
+
+    [Fact]
+    public void SetUnreadCount_raises_changed_only_when_the_count_moves()
+    {
+        TaskbarClockPanelSourceAdapter adapter = new();
+        int changedCount = 0;
+        adapter.Changed += () => changedCount++;
+
+        adapter.SetUnreadCount(2);
+        adapter.SetUnreadCount(2);
+        adapter.SetUnreadCount(0);
+
+        Assert.Equal(0, adapter.UnreadCount);
+        Assert.Equal(2, changedCount);
+    }
 }
