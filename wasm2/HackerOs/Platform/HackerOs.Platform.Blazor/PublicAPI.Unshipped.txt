@@ -140,6 +140,25 @@ HackerOs.Platform.Blazor.Shell.DesktopShell.OnRestart.get -> Microsoft.AspNetCor
 HackerOs.Platform.Blazor.Shell.DesktopShell.OnRestart.set -> void
 HackerOs.Platform.Blazor.Shell.LogoutDialog.Restart.get -> bool
 HackerOs.Platform.Blazor.Shell.LogoutDialog.Restart.set -> void
+HackerOs.Platform.Blazor.Security.AppInstallApprovalBroker
+HackerOs.Platform.Blazor.Security.AppInstallApprovalBroker.AppInstallApprovalBroker() -> void
+HackerOs.Platform.Blazor.Security.AppInstallApprovalBroker.Attach() -> System.IDisposable!
+HackerOs.Platform.Blazor.Security.AppInstallApprovalBroker.Changed -> System.Action?
+HackerOs.Platform.Blazor.Security.AppInstallApprovalBroker.Current.get -> HackerOs.Platform.Blazor.Security.AppInstallApprovalBroker.PendingApproval?
+HackerOs.Platform.Blazor.Security.AppInstallApprovalBroker.PendingApproval
+HackerOs.Platform.Blazor.Security.AppInstallApprovalBroker.PendingApproval.Complete(HackerOs.Platform.Core.Elevation.AppInstallApprovalOutcome outcome) -> void
+HackerOs.Platform.Blazor.Security.AppInstallApprovalBroker.PendingApproval.Request.get -> HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest!
+HackerOs.Platform.Blazor.Security.AppInstallApprovalBroker.RequestAsync(HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.Platform.Core.Elevation.AppInstallApprovalOutcome>!
+HackerOs.Platform.Blazor.Security.AppInstallApprovalOverlay
+HackerOs.Platform.Blazor.Security.AppInstallApprovalOverlay.AppInstallApprovalOverlay() -> void
+HackerOs.Platform.Blazor.Security.AppInstallApprovalOverlay.Broker.get -> HackerOs.Platform.Blazor.Security.AppInstallApprovalBroker!
+HackerOs.Platform.Blazor.Security.AppInstallApprovalOverlay.Broker.set -> void
+HackerOs.Platform.Blazor.Security.AppInstallApprovalOverlay.Dispose() -> void
+HackerOs.Platform.Blazor.Shell.DesktopWallpaper
+HackerOs.Platform.Blazor.Shell.DesktopWallpaper.DesktopWallpaper() -> void
+HackerOs.Platform.Blazor.Shell.DesktopWallpaper.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Platform.Blazor.Shell.DesktopWallpaper.ScreenNumber.get -> int
+HackerOs.Platform.Blazor.Shell.DesktopWallpaper.ScreenNumber.set -> void
 HackerOs.Platform.Blazor.Shell.NotificationToastPlacement
 HackerOs.Platform.Blazor.Shell.NotificationToastPlacement.AboveTaskbar = 0 -> HackerOs.Platform.Blazor.Shell.NotificationToastPlacement
 HackerOs.Platform.Blazor.Shell.NotificationToastPlacement.TopOfScreen = 1 -> HackerOs.Platform.Blazor.Shell.NotificationToastPlacement
@@ -176,3 +195,8 @@ HackerOs.Platform.Blazor.Shell.ShellAppIcon.UseDeclaredImage.get -> bool
 HackerOs.Platform.Blazor.Shell.ShellAppIcon.UseDeclaredImage.set -> void
 HackerOs.Platform.Blazor.Windows.WindowLaunchCoordinator.IconFor(HackerOs.App.Abstractions.AppManifest! manifest) -> string?
 HackerOs.Platform.Blazor.Windows.WindowLaunchCoordinator.WindowLaunchCoordinator(HackerOs.Windowing.Core.WindowRuntime! windows, HackerOs.Platform.Core.AppCatalog! catalog, HackerOs.Platform.Core.Globalization.SessionLocaleService! locale, HackerOs.Platform.Blazor.Windows.WindowGeometryRecorder? geometry, HackerOs.Platform.Core.Appearance.IconPackService? iconPacks) -> void
+HackerOs.Platform.Blazor.Dialogs.DialogCoordinator.DialogCoordinator(HackerOs.AppSdk.Blazor.IFileDialogService! fileDialogs, HackerOs.Platform.Core.Sounds.OsSoundService? sounds) -> void
+HackerOs.Platform.Blazor.Sounds.BrowserSoundOutput
+HackerOs.Platform.Blazor.Sounds.BrowserSoundOutput.BrowserSoundOutput(Microsoft.JSInterop.IJSRuntime! jsRuntime) -> void
+HackerOs.Platform.Blazor.Sounds.BrowserSoundOutput.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Platform.Blazor.Sounds.BrowserSoundOutput.PlayAsync(HackerOs.Platform.Core.Sounds.OsSoundClip! clip, double volume, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>

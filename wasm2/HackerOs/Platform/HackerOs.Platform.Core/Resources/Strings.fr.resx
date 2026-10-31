@@ -699,4 +699,13 @@ Annuler : décider au prochain lancement.</value>
   <data name="WhatsNew.Notification.View" xml:space="preserve">
     <value>Voir</value>
   </data>
+  <data name="Admin.App.InstallUntrustedPackageForUser" xml:space="preserve">
+    <value>Installer {0} {1} depuis {2}, une source non approuvée, pour {3} seulement : son code aura les mêmes droits que l'OS</value>
+  </data>
+  <data name="Admin.App.EditAppSources" xml:space="preserve">
+    <value>Modifier les sources d'apps : {0}</value>
+  </data>
+  <data name="Admin.App.EditAppPolicy" xml:space="preserve">
+    <value>Modifier la liste noire des apps : {0}</value>
+  </data>
 </root>

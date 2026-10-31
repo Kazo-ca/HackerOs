@@ -164,6 +164,8 @@
                             }
                         </div>
                 </div>
+                    @* ADR 0202 §5: the desktop wallpaper, for every screen or one screen, and how it covers it. *@
+                    <WallpaperPanel TargetLayer="_targetLayer" BrowseImage="BrowseWallpaperAsync" />
                     <div class="setting-group">
                         <h4>@L["Appearance.UserThemes.Title"]</h4>
                         <p class="setting-desc">
@@ -177,6 +179,8 @@
                         }
                         <button type="button" class="btn-secondary" id="settings-open-theme-editor" @onclick="() => OpenThemeEditorAsync(null)">@L["Appearance.OpenThemeEditor"]</button>
                 </div>
+                    @* ADR 0205: cursor themes, chosen in ~/.config/hackeros/cursors.config. *@
+                    <CursorThemePanel />
                     @* ADR 0203: the icon pack of icons.config. *@
                     <IconPackPanel TargetLayer="_targetLayer" />
                     @if (CurrentDesktopThemeSupportsAccent)
@@ -240,6 +244,13 @@
                 </div>
                 break;
 
+                @* ADR 0204 §6: event sounds, volume and sound theme (~/.config/hackeros/sound.config). *@
+            case "sound":
+                <div class="settings-page">
+                    <SoundPanel />
+                </div>
+                break;
+
             case "file-associations":
                 <div class="settings-page">
                     <FileAssociationsPanel />
@@ -270,6 +281,12 @@
             case "installed-apps":
                 <div class="settings-page">
                     <InstalledAppsPanel />
+                </div>
+                break;
+
+            case "app-sources":
+                <div class="settings-page">
+                    <AppSourcesPanel />
                 </div>
                 break;
 

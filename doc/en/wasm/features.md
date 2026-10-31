@@ -85,11 +85,15 @@ This section lists what is released in the `main` branch and online.
 - **Desktop** with icons, shortcuts and context menus, like a desktop OS.
   ([`desktop.md`](dev/desktop.md))
 - **Windows** that can be moved, resized, maximized or snapped to the screen
-  edges. ([`window-model.md`](framework/window-model.md))
+  edges, with plain animations to open, close, minimize into the taskbar,
+  maximize and snap, turned off by "Reduce motion".
+  ([`window-model.md`](framework/window-model.md), [`window-animations.md`](dev/window-animations.md))
 - **Taskbar and Start menu** with pinned applications and open windows. A
   right click on the taskbar gives the window menu, "New window", the task
   manager, "Show the desktop" and cascaded or tiled windows.
   ([`taskbar-context-menus.md`](dev/taskbar-context-menus.md))
+  Hovering a window's button shows a live preview; resting on it shows the
+  window alone ("peek"). ([`taskbar-window-previews.md`](dev/taskbar-window-previews.md))
   The Start menu shows the signed-in user and their Power button: sign out or
   restart. ([ADR 0195](dev/adr/0195-start-menu-power-button.md))
 - **Notification bubbles**: each notification from the OS or an app shows for
@@ -124,6 +128,10 @@ This section lists what is released in the `main` branch and online.
   Send to menu, drag out of the browser to download (Chrome and Edge),
   network drives refreshed on their own.
   ([ADR 0185](dev/adr/0185-file-explorer-improvements.md))
+- **`.zip` archive opened as a folder** in the explorer, read-only: an opened
+  file is extracted to `/tmp`, dragging out of the archive extracts.
+  ([ADR 0185](dev/adr/0185-file-explorer-improvements.md),
+  [`file-explorer.md`](dev/file-explorer.md))
 - **Trash** with restore. ([`trash.md`](dev/trash.md))
 - **Default applications** per file type, for each user.
   ([`user-file-associations.md`](dev/user-file-associations.md))
@@ -222,6 +230,10 @@ This section lists what is released in the `main` branch and online.
 
 - **OS themes**, and an editor to create your own.
   ([`theme-files.md`](framework/theme-files.md))
+- **Image wallpapers**: a PNG, JPEG or WebP image (4 shipped with the OS,
+  your own or those of a shared folder), for every screen or one screen at a
+  time, in Settings ▸ Appearance.
+  ([ADR 0202](dev/adr/0202-desktop-wallpaper-images.md), [`wallpapers.md`](dev/wallpapers.md))
 - **English and French**, the language follows the user's locale.
   ([`localization.md`](framework/localization.md))
 - **Accessibility**: display and animation preferences, keyboard navigation.
@@ -229,10 +241,17 @@ This section lists what is released in the `main` branch and online.
 - **Local time and time zone**: the clock, `date`, `ls -l` and the apps show
   the time in the user's zone, automatic or chosen in Settings ▸ Date and time.
   ([`time-zone.md`](framework/time-zone.md))
+- **Cursor themes**: the pointer of the whole OS as PNG images, System,
+  HackerOS Neon, Gothic Crimson or your own themes, chosen in Settings ▸
+  Appearance ▸ Cursors. ([`cursor-themes.md`](framework/cursor-themes.md))
 - **Icon packs**: PNG images replace the icons of apps, folders and files
   everywhere in the OS, chosen in Settings ▸ Appearance; a "Néon" sample pack
   is included. ([`icon-packs.md`](dev/icon-packs.md),
   [ADR 0203](dev/adr/0203-icon-packs.md))
+- **System sounds**: notifications, warnings, errors, sign-in and sign-out. Two
+  built-in themes (HackerOS and Soft), your own themes in OGG or MP3, volume and
+  mute in Settings ▸ Sound.
+  ([`system-sounds.md`](dev/system-sounds.md), [ADR 0204](dev/adr/0204-os-event-sounds.md))
 
 ### For developers
 
@@ -250,6 +269,14 @@ This section lists what is released in the `main` branch and online.
   Web Workers are served at the same address as for an application built into
   the OS, so an application that wraps a JavaScript project works once
   installed. ([ADR 0206](dev/adr/0206-serve-installed-app-assets.md))
+- **Trusted sources and install for oneself**: an application from a trusted
+  source is installed for oneself without an administrator; an untrusted
+  source, an application of the block list or an install for everyone go
+  through a two-step approval (an administrator signs in, then a window shows
+  the application, its source and its capabilities). Sources and block list in
+  Settings ▸ Sources and block list and `hackpkg sources` / `hackpkg policy`.
+  ([ADR 0189](dev/adr/0189-app-sources-trust-and-per-user-install.md),
+  [ADR 0208](dev/adr/0208-hack-store-sources-trust-build.md))
 - **`hackeros-solution` application repository template**: application, host
   and tests ready to run, the OS as a submodule to debug in its sources, NuGet
   packages in production, CI and submission to the Hack Store catalog with a
@@ -272,15 +299,12 @@ points to its PR.
 
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
-| `.zip` archive opened as a folder | The explorer browses a `.zip` archive read-only; an opened file is extracted to `/tmp`. The rest of the ADR is available. | [0185](dev/adr/0185-file-explorer-improvements.md) | [#241](https://github.com/Kazo-ca/HackerOs/issues/241) |
-| Switch user | Open another session without closing the first one, from the Start menu's Power button (greyed out for now, always greyed out for the guest). | [0195](dev/adr/0195-start-menu-power-button.md) | [#290](https://github.com/Kazo-ca/HackerOs/issues/290) |
-| Windows and taskbar | Window animations, hover previews. The time zone ([ADR 0193](dev/adr/0193-local-time-and-time-zone.md)), the taskbar menus ([ADR 0194](dev/adr/0194-taskbar-context-menus.md)) and the notification bubbles ([ADR 0197](dev/adr/0197-notification-toasts.md)) are available. | Coming | [#242](https://github.com/Kazo-ca/HackerOs/issues/242) |
+| Switch user | Open another session without closing the first one. Stays greyed out in the Power menu by Benoit's choice: one session at a time, Sign out to change account. | [0195](dev/adr/0195-start-menu-power-button.md), [0201](dev/adr/0201-switch-user-stays-greyed.md) | [#290](https://github.com/Kazo-ca/HackerOs/issues/290) |
 
 ### Hack Store
 
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
-| Trusted sources and per-user install | Trusted catalogs, install without an administrator, block list, administrator approval. | [0189](dev/adr/0189-app-sources-trust-and-per-user-install.md) | [#248](https://github.com/Kazo-ca/HackerOs/issues/248) |
 | Application catalog | Catalog format, checking and publishing of the offered applications. | [0188](dev/adr/0188-hack-store-and-app-catalog.md) | [AppMarketPlace #1](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/1) |
 | Hack Store app v1 | Browse, install, update and uninstall applications in one click. | [0188](dev/adr/0188-hack-store-and-app-catalog.md) | [#249](https://github.com/Kazo-ca/HackerOs/issues/249) |
 | Hack Store, next steps | Adding without restart, package signing, transactional install. | [0188](dev/adr/0188-hack-store-and-app-catalog.md) | [#251](https://github.com/Kazo-ca/HackerOs/issues/251) |
@@ -290,9 +314,7 @@ points to its PR.
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Theme packs | `.hacktheme` format and the Hack Store Themes tab. | [0190](dev/adr/0190-theme-packs.md) | [#253](https://github.com/Kazo-ca/HackerOs/issues/253) |
-| Image wallpapers | Choose an image as wallpaper, per screen. | [0190](dev/adr/0190-theme-packs.md) | [#254](https://github.com/Kazo-ca/HackerOs/issues/254) |
-| OS sounds | Sounds for notifications, errors and sign-in. | [0190](dev/adr/0190-theme-packs.md) | [#256](https://github.com/Kazo-ca/HackerOs/issues/256) |
-| Cursor themes | Custom cursors chosen in Settings. | [0190](dev/adr/0190-theme-packs.md) | [#257](https://github.com/Kazo-ca/HackerOs/issues/257) |
+| Mobile wallpaper and "Set as wallpaper" menu | The background image on the mobile home screen, and an entry of the images' context menu. Desktop wallpapers are available. | [0202](dev/adr/0202-desktop-wallpaper-images.md) | [#297](https://github.com/Kazo-ca/HackerOs/issues/297), [#298](https://github.com/Kazo-ca/HackerOs/issues/298) |
 
 ### Network and server
 

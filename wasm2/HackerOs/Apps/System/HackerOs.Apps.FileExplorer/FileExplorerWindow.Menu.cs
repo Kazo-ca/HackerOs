@@ -51,7 +51,7 @@ public partial class FileExplorerWindow
 
         IReadOnlyList<HackFileViewItem> items = args.Items;
         IReadOnlyList<HackDriveInfo> drives = await ReadNetworkDrivesAsync();
-        HackMenuGroupDefinition group = BuildMenuGroup(items, drives, run => EventCallback.Factory.Create<object?>(this, _ => run()), key => L[key]);
+        HackMenuGroupDefinition group = BuildMenuGroup(items, drives, run => EventCallback.Factory.Create<object?>(this, _ => run()), key => L[key], InArchive);
 
         int properties = IndexOfGroup(args.Menu, HackFileMenuItems.Properties);
         if (properties < 0)
@@ -72,16 +72,27 @@ public partial class FileExplorerWindow
     /// <param name="drives">The network drives ready to receive a copy.</param>
     /// <param name="click">The click callback of an entry, given what it runs.</param>
     /// <param name="text">The explorer's texts.</param>
+    /// <param name="readOnlyArchive">The items are in a read-only archive (ADR 0185 §9): no Compress, no Send to.</param>
     internal HackMenuGroupDefinition BuildMenuGroup(
         IReadOnlyList<HackFileViewItem> items,
         IReadOnlyList<HackDriveInfo> drives,
         Func<Func<Task>, EventCallback<object?>> click,
-        Func<string, string> text)
+        Func<string, string> text,
+        bool readOnlyArchive = false)
     {
         HackMenuGroupDefinition group = new();
-        Entry(group, CompressMenuItem, text("Menu.Compress"), "archive", click(() => CompressAsync(items)));
+        // In a read-only archive (ADR 0185 §9) only what reads the items stays: Download and Copy path.
+        if (!readOnlyArchive)
+        {
+            Entry(group, CompressMenuItem, text("Menu.Compress"), "archive", click(() => CompressAsync(items)));
+        }
+
         Entry(group, DownloadMenuItem, text("Menu.Download"), "download", click(() => DownloadAsync(items)));
         Entry(group, CopyPathMenuItem, text("Menu.CopyPath"), "clipboard-copy", click(() => CopyPathsAsync(items)));
+        if (readOnlyArchive)
+        {
+            return group;
+        }
 
         HackMenuItemDefinition sendTo = group.Add(SendToMenuItem, text("Menu.SendTo"));
         sendTo.Icon = Icon("send");

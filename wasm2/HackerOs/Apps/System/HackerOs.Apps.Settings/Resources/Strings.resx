@@ -1617,6 +1617,84 @@
   <data name="Users.Guest.Unavailable" xml:space="preserve">
     <value>The account form could not be opened. Sign out, then choose Create my account on the sign-in screen.</value>
   </data>
+  <data name="Wallpaper.Title" xml:space="preserve">
+    <value>Wallpaper</value>
+  </data>
+  <data name="Wallpaper.Description" xml:space="preserve">
+    <value>A PNG, JPEG or WebP image over the theme's background. Images placed in {0} are offered to every user, those in {1} to you only; "Browse…" picks any image you can open.</value>
+  </data>
+  <data name="Wallpaper.Screens.AriaLabel" xml:space="preserve">
+    <value>Screen</value>
+  </data>
+  <data name="Wallpaper.Screens.Primary" xml:space="preserve">
+    <value>Screen 1 and the others</value>
+  </data>
+  <data name="Wallpaper.Screens.Other" xml:space="preserve">
+    <value>Screen {0}</value>
+  </data>
+  <data name="Wallpaper.Theme" xml:space="preserve">
+    <value>Theme background</value>
+  </data>
+  <data name="Wallpaper.SameAsPrimary" xml:space="preserve">
+    <value>Same as screen 1</value>
+  </data>
+  <data name="Wallpaper.BuiltIn.hacker-grid" xml:space="preserve">
+    <value>Grid</value>
+  </data>
+  <data name="Wallpaper.BuiltIn.circuit" xml:space="preserve">
+    <value>Circuit</value>
+  </data>
+  <data name="Wallpaper.BuiltIn.aurora" xml:space="preserve">
+    <value>Aurora</value>
+  </data>
+  <data name="Wallpaper.BuiltIn.nebula" xml:space="preserve">
+    <value>Nebula</value>
+  </data>
+  <data name="Wallpaper.Origin.system" xml:space="preserve">
+    <value>system</value>
+  </data>
+  <data name="Wallpaper.Origin.user" xml:space="preserve">
+    <value>mine</value>
+  </data>
+  <data name="Wallpaper.Origin.pack" xml:space="preserve">
+    <value>pack</value>
+  </data>
+  <data name="Wallpaper.Origin.file" xml:space="preserve">
+    <value>file</value>
+  </data>
+  <data name="Wallpaper.Browse" xml:space="preserve">
+    <value>Browse…</value>
+  </data>
+  <data name="Wallpaper.Browse.Title" xml:space="preserve">
+    <value>Choose a wallpaper</value>
+  </data>
+  <data name="Wallpaper.Browse.Filter" xml:space="preserve">
+    <value>Images (PNG, JPEG, WebP)</value>
+  </data>
+  <data name="Wallpaper.Fit.Label" xml:space="preserve">
+    <value>Fit</value>
+  </data>
+  <data name="Wallpaper.Fit.fill" xml:space="preserve">
+    <value>Fill</value>
+  </data>
+  <data name="Wallpaper.Fit.fit" xml:space="preserve">
+    <value>Fit</value>
+  </data>
+  <data name="Wallpaper.Fit.stretch" xml:space="preserve">
+    <value>Stretch</value>
+  </data>
+  <data name="Wallpaper.Fit.center" xml:space="preserve">
+    <value>Center</value>
+  </data>
+  <data name="Wallpaper.Fit.tile" xml:space="preserve">
+    <value>Tile</value>
+  </data>
+  <data name="Wallpaper.Error.Format" xml:space="preserve">
+    <value>{0} is not a PNG, JPEG or WebP image.</value>
+  </data>
+  <data name="Wallpaper.Saved" xml:space="preserve">
+    <value>Wallpaper saved.</value>
+  </data>
   <data name="LocalServer.AriaLabel" xml:space="preserve">
     <value>Local server</value>
   </data>
@@ -1712,5 +1790,194 @@
   </data>
   <data name="IconPack.Error.CannotRead" xml:space="preserve">
     <value>Cannot read the icon packs: {0}</value>
+  </data>
+  <data name="Tab.Sound" xml:space="preserve">
+    <value>Sound</value>
+  </data>
+  <data name="Sound.Output.Title" xml:space="preserve">
+    <value>System sounds</value>
+  </data>
+  <data name="Sound.Output.Description" xml:space="preserve">
+    <value>Sounds of the OS events: notifications, warnings, errors, sign-in and sign-out. The browser plays them only after a first click or key press on the page.</value>
+  </data>
+  <data name="Sound.Output.Enabled" xml:space="preserve">
+    <value>Play system sounds</value>
+  </data>
+  <data name="Sound.Volume.Label" xml:space="preserve">
+    <value>Volume</value>
+  </data>
+  <data name="Sound.Theme.Title" xml:space="preserve">
+    <value>Sound theme</value>
+  </data>
+  <data name="Sound.Theme.Description" xml:space="preserve">
+    <value>Themes of {0} are for every user; put your own in {1}, one folder per theme with an index.theme file and .oga, .ogg or .mp3 files of at most 1 MB named after the events below. Choosing a theme plays its notification sound.</value>
+  </data>
+  <data name="Sound.Theme.None" xml:space="preserve">
+    <value>No sound theme found.</value>
+  </data>
+  <data name="Sound.Events.Title" xml:space="preserve">
+    <value>Events</value>
+  </data>
+  <data name="Sound.Events.Description" xml:space="preserve">
+    <value>The file each event plays in a theme (freedesktop.org sound names). A sound missing from a theme plays the HackerOS theme's.</value>
+  </data>
+  <data name="Sound.Event.Notification" xml:space="preserve">
+    <value>Notification</value>
+  </data>
+  <data name="Sound.Event.Warning" xml:space="preserve">
+    <value>Warning</value>
+  </data>
+  <data name="Sound.Event.Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="Sound.Event.SignIn" xml:space="preserve">
+    <value>Sign-in</value>
+  </data>
+  <data name="Sound.Event.SignOut" xml:space="preserve">
+    <value>Sign-out</value>
+  </data>
+  <data name="Sound.Saved.On" xml:space="preserve">
+    <value>System sounds are on.</value>
+  </data>
+  <data name="Sound.Saved.Off" xml:space="preserve">
+    <value>System sounds are off.</value>
+  </data>
+  <data name="Sound.Saved.Volume" xml:space="preserve">
+    <value>Volume set to {0} %.</value>
+  </data>
+  <data name="Sound.Saved.Theme" xml:space="preserve">
+    <value>Sound theme: {0}.</value>
+  </data>
+  <data name="Sound.Error.CannotRead" xml:space="preserve">
+    <value>Cannot read {0}: {1}</value>
+  </data>
+  <data name="Sound.Error.CannotSave" xml:space="preserve">
+    <value>Cannot save {0}: {1}</value>
+  </data>
+  <data name="Sound.Error.UnknownTheme" xml:space="preserve">
+    <value>There is no sound theme “{0}”.</value>
+  </data>
+  <data name="Cursors.Title" xml:space="preserve">
+    <value>Cursors</value>
+  </data>
+  <data name="Cursors.Description" xml:space="preserve">
+    <value>The pointer of the whole OS. Add your own themes as folders in {0} (for you) or {1} (for every user, as administrator): each folder holds a {2} file listing its PNG cursors with their hot spot.</value>
+  </data>
+  <data name="Cursors.SystemPreview" xml:space="preserve">
+    <value>device cursors</value>
+  </data>
+  <data name="Cursors.Theme.system" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="Cursors.Theme.hackeros-neon" xml:space="preserve">
+    <value>HackerOS Neon</value>
+  </data>
+  <data name="Cursors.Theme.gothic-crimson" xml:space="preserve">
+    <value>Gothic Crimson</value>
+  </data>
+  <data name="Cursors.Saved" xml:space="preserve">
+    <value>Saved. The desktop uses these cursors now.</value>
+  </data>
+  <data name="Cursors.Warnings" xml:space="preserve">
+    <value>{0} problem(s) in the cursor theme folders:</value>
+  </data>
+  <data name="Cursors.Error.CannotRead" xml:space="preserve">
+    <value>Cannot read cursors.config: {0}</value>
+  </data>
+  <data name="Cursors.Error.CannotSave" xml:space="preserve">
+    <value>Cannot save {0}: {1}</value>
+  </data>
+  <data name="Tab.AppSources" xml:space="preserve">
+    <value>Sources and block list</value>
+  </data>
+  <data name="Sources.Title" xml:space="preserve">
+    <value>App sources</value>
+  </data>
+  <data name="Sources.Description" xml:space="preserve">
+    <value>Where apps are installed from, in {0}. An app from a trusted source can be installed by each user for themselves; any other source asks an administrator every time.</value>
+  </data>
+  <data name="Sources.Loading" xml:space="preserve">
+    <value>Reading the sources…</value>
+  </data>
+  <data name="Sources.Catalogs" xml:space="preserve">
+    <value>Catalogs</value>
+  </data>
+  <data name="Sources.Repositories" xml:space="preserve">
+    <value>Repositories</value>
+  </data>
+  <data name="Sources.Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="Sources.BuiltIn" xml:space="preserve">
+    <value>Built in</value>
+  </data>
+  <data name="Sources.BuiltIn.Title" xml:space="preserve">
+    <value>HackerOS was built with this source</value>
+  </data>
+  <data name="Sources.Trust.Verified" xml:space="preserve">
+    <value>Verified</value>
+  </data>
+  <data name="Sources.Trust.Trusted" xml:space="preserve">
+    <value>Trusted</value>
+  </data>
+  <data name="Sources.Trust.Untrusted" xml:space="preserve">
+    <value>Untrusted</value>
+  </data>
+  <data name="Sources.Interval" xml:space="preserve">
+    <value>Updates are checked every {0} hours.</value>
+  </data>
+  <data name="Sources.Add.Label" xml:space="preserve">
+    <value>New source</value>
+  </data>
+  <data name="Sources.Add.Trusted" xml:space="preserve">
+    <value>Trust it</value>
+  </data>
+  <data name="Sources.Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="Sources.Add.Hint" xml:space="preserve">
+    <value>A trusted source lets every user install its apps without an administrator. Leave it untrusted to approve each install.</value>
+  </data>
+  <data name="Sources.Error.Unsupported" xml:space="preserve">
+    <value>This HackerOS host cannot install apps from a repository.</value>
+  </data>
+  <data name="Policy.Title" xml:space="preserve">
+    <value>Block list</value>
+  </data>
+  <data name="Policy.Description" xml:space="preserve">
+    <value>Apps, categories and capabilities in {0} cannot be installed by a user for themselves: an administrator must approve them for every user.</value>
+  </data>
+  <data name="Policy.Apps" xml:space="preserve">
+    <value>Apps</value>
+  </data>
+  <data name="Policy.Categories" xml:space="preserve">
+    <value>Categories</value>
+  </data>
+  <data name="Policy.Capabilities" xml:space="preserve">
+    <value>Capabilities</value>
+  </data>
+  <data name="Policy.Empty" xml:space="preserve">
+    <value>Nothing blocked.</value>
+  </data>
+  <data name="Policy.Unblock" xml:space="preserve">
+    <value>Unblock</value>
+  </data>
+  <data name="Policy.Kind" xml:space="preserve">
+    <value>Rule</value>
+  </data>
+  <data name="Policy.Kind.App" xml:space="preserve">
+    <value>App ID</value>
+  </data>
+  <data name="Policy.Kind.Category" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="Policy.Kind.Capability" xml:space="preserve">
+    <value>Capability</value>
+  </data>
+  <data name="Policy.Value" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="Policy.Block" xml:space="preserve">
+    <value>Block</value>
   </data>
 </root>

@@ -48,7 +48,9 @@ public sealed class FileExplorerApp : AppDefinition
     public override IReadOnlyList<AppIntentDeclarationManifest> Intents => [new(FileExplorerMenuEntries.ExtractHereIntent)];
 
     /// <inheritdoc />
-    public override IReadOnlyList<FileHandler> FileHandlers => [new("inode/directory", [], ["open"])];
+    /// <remarks>A <c>.zip</c> opens as a read-only folder of the explorer (ADR 0185 §6).</remarks>
+    public override IReadOnlyList<FileHandler> FileHandlers =>
+        [new("inode/directory", [], ["open"]), new("application/zip", [".zip"], ["open"])];
 
     /// <summary>
     /// The OS file control and its dialogs (ADR 0148, ADR 0155): every app shows the explorer's

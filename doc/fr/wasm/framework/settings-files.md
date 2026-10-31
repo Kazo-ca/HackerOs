@@ -38,6 +38,7 @@ migration, en lecture seule.
 | Décisions sur les capacités dangereuses (ADR 0049) | `/etc/hackeros/app-permissions.config` (`allow`/`deny`) | `~/.config/hackeros/app-permissions.config` (`deny` seulement) |
 | Accessibilité (`highContrast`, `textScale`, `reducedMotion`, ADR 0105, voir [`accessibility.md`](../dev/accessibility.md)) | `/etc/hackeros/accessibility.config` (aussi lu par l'écran de connexion) | `~/.config/hackeros/accessibility.config` |
 | Date et heure (`timeZone` : `auto` ou un fuseau IANA, ADR 0193, voir [`time-zone.md`](time-zone.md)) | `/etc/hackeros/datetime.config` (aussi lu par l'écran de connexion) | `~/.config/hackeros/datetime.config` |
+| Sons du système (`enabled`, `theme`, `volume`, ADR 0204, voir [`system-sounds.md`](../dev/system-sounds.md)) | `/etc/hackeros/sound.config` | `~/.config/hackeros/sound.config` |
 | Associations de fichiers | `/etc/hackeros/file-associations.json` | `~/.config/hackeros/file-associations.json` (même schéma, lu avant le fichier de la machine, ADR 0121, [`user-file-associations.md`](../dev/user-file-associations.md)) |
 | Raccourcis du gestionnaire de fenêtres (`[linux]`, `[fallback]`, ADR 0095, voir [`window-model.md`](window-model.md)) | `/etc/hackeros/keybindings.config` | `~/.config/hackeros/keybindings.config` |
 | Boîte « ne répond pas » (`[unresponsive] dialog`, ADR 0127 §3, voir [`process-priority-and-unresponsive-windows.md`](../dev/process-priority-and-unresponsive-windows.md)) | `/etc/hackeros/window-manager.config` | `~/.config/hackeros/window-manager.config` |
@@ -163,6 +164,9 @@ await appearance.SetManyAsync(values, SettingLayer.System);        // /etc/hacke
   libres depuis `v3/11` (ADR 0103) : l'id d'un thème intégré ou d'un fichier
   `.theme` de `/etc/hackeros/themes/` ou `~/.config/hackeros/themes/` ; un id
   inconnu donne le thème par défaut (voir [`theme-editor.md`](../dev/theme-editor.md)).
+- Dans `appearance`, `wallpaper`, `wallpaperFit` et `wallpaperScreen2` à
+  `wallpaperScreen9` choisissent le fond d'écran (ADR 0202, voir
+  [`wallpapers.md`](../dev/wallpapers.md)).
 - Aucune capacité : les droits des fichiers décident (D16). La couche
   utilisateur est écrite par l'OS au nom de l'utilisateur de la session ; la
   couche système avec les droits de fichiers de l'app appelante, donc `sudo`

@@ -89,11 +89,15 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
 - **Bureau** avec icônes, raccourcis et menus contextuels, comme sur un OS de
   bureau. ([`desktop.md`](dev/desktop.md))
 - **Fenêtres** déplaçables, redimensionnables, agrandies ou ancrées sur les
-  bords de l'écran. ([`window-model.md`](framework/window-model.md))
+  bords de l'écran, avec des animations sobres pour ouvrir, fermer, minimiser
+  vers la barre, agrandir et ancrer, coupées par « Réduire les animations ».
+  ([`window-model.md`](framework/window-model.md), [`window-animations.md`](dev/window-animations.md))
 - **Barre des tâches et menu Démarrer** avec les applications épinglées et les
   fenêtres ouvertes. Un clic droit sur la barre donne le menu de la fenêtre,
   « Nouvelle fenêtre », le gestionnaire des tâches, « Afficher le bureau » et
   les fenêtres en cascade ou en mosaïque. ([`taskbar-context-menus.md`](dev/taskbar-context-menus.md))
+  Survoler le bouton d'une fenêtre montre un aperçu en direct ; s'y attarder
+  montre la fenêtre seule (« peek »). ([`taskbar-window-previews.md`](dev/taskbar-window-previews.md))
   Le menu Démarrer montre l'utilisateur connecté et son bouton Marche/arrêt :
   se déconnecter ou redémarrer. ([ADR 0195](dev/adr/0195-start-menu-power-button.md))
 - **Bulles de notification** : chaque notification de l'OS ou d'une app
@@ -128,6 +132,10 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   Compresser, Télécharger, Copier le chemin et Envoyer vers, glisser hors du
   navigateur pour télécharger (Chrome et Edge), lecteurs réseau rafraîchis
   tout seuls. ([ADR 0185](dev/adr/0185-file-explorer-improvements.md))
+- **Archive `.zip` ouverte comme un dossier** dans l'explorateur, en lecture
+  seule : un fichier ouvert est extrait dans `/tmp`, glisser hors de l'archive
+  extrait. ([ADR 0185](dev/adr/0185-file-explorer-improvements.md),
+  [`file-explorer.md`](dev/file-explorer.md))
 - **Corbeille** avec restauration. ([`trash.md`](dev/trash.md))
 - **Applications par défaut** par type de fichier, propres à chaque
   utilisateur. ([`user-file-associations.md`](dev/user-file-associations.md))
@@ -227,6 +235,10 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
 
 - **Thèmes** de l'OS, et éditeur pour créer les siens.
   ([`theme-files.md`](framework/theme-files.md))
+- **Fonds d'écran en image** : une image PNG, JPEG ou WebP (4 livrées avec
+  l'OS, les siennes ou celles d'un dossier partagé), pour tous les écrans ou
+  un écran à la fois, dans Paramètres ▸ Apparence.
+  ([ADR 0202](dev/adr/0202-desktop-wallpaper-images.md), [`wallpapers.md`](dev/wallpapers.md))
 - **Anglais et français**, la langue suit la locale de l'utilisateur.
   ([`localization.md`](framework/localization.md))
 - **Accessibilité** : préférences d'affichage et d'animation, navigation au
@@ -234,10 +246,17 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
 - **Heure locale et fuseau horaire** : l'horloge, `date`, `ls -l` et les apps
   affichent l'heure dans le fuseau de l'utilisateur, automatique ou choisi dans
   Paramètres ▸ Date et heure. ([`time-zone.md`](framework/time-zone.md))
+- **Thèmes de curseurs** : pointeur de tout l'OS en images PNG, Système,
+  HackerOS Néon, Gothique Pourpre ou vos propres thèmes, choisi dans
+  Paramètres ▸ Apparence ▸ Curseurs. ([`cursor-themes.md`](framework/cursor-themes.md))
 - **Packs d'icônes** : des images PNG remplacent les icônes des applications,
   des dossiers et des fichiers partout dans l'OS, choisies dans Paramètres ▸
   Apparence ; pack d'exemple « Néon » fourni. ([`icon-packs.md`](dev/icon-packs.md),
   [ADR 0203](dev/adr/0203-icon-packs.md))
+- **Sons du système** : notifications, avertissements, erreurs, ouverture et
+  fermeture de session. Deux jeux intégrés (HackerOS et Doux), ses propres jeux
+  en OGG ou MP3, volume et coupure dans Paramètres ▸ Sons.
+  ([`system-sounds.md`](dev/system-sounds.md), [ADR 0204](dev/adr/0204-os-event-sounds.md))
 
 ### Pour les développeurs
 
@@ -255,6 +274,14 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   Workers sont servis à la même adresse que pour une application compilée dans
   l'OS : une application qui enveloppe un projet JavaScript marche une fois
   installée. ([ADR 0206](dev/adr/0206-serve-installed-app-assets.md))
+- **Sources de confiance et installation pour soi** : une application d'une
+  source de confiance s'installe pour soi sans administrateur ; une source non
+  fiable, une application de la liste noire ou une installation pour tous
+  passent par une validation en deux étapes (connexion d'un administrateur puis
+  fenêtre qui montre l'application, sa source et ses capacités). Sources et
+  liste noire dans Paramètres ▸ Sources et liste noire et `hackpkg sources` /
+  `hackpkg policy`. ([ADR 0189](dev/adr/0189-app-sources-trust-and-per-user-install.md),
+  [ADR 0208](dev/adr/0208-hack-store-sources-trust-build.md))
 - **Modèle de dépôt d'application `hackeros-solution`** : application, hôte
   et tests prêts à lancer, sous-module de l'OS pour le débogage dans ses
   sources, paquets NuGet en production, CI et soumission au catalogue du Hack
@@ -277,15 +304,12 @@ dans `main`, le lien mène à sa PR.
 
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
-| Archive `.zip` ouverte comme un dossier | L'explorateur parcourt une archive `.zip` en lecture seule ; un fichier ouvert est extrait dans `/tmp`. Le reste de l'ADR est disponible. | [0185](dev/adr/0185-file-explorer-improvements.md) | [#241](https://github.com/Kazo-ca/HackerOs/issues/241) |
-| Changer d'utilisateur | Ouvrir une autre session sans fermer la première, depuis le bouton Marche/arrêt du menu Démarrer (grisé pour l'instant, toujours grisé pour l'invité). | [0195](dev/adr/0195-start-menu-power-button.md) | [#290](https://github.com/Kazo-ca/HackerOs/issues/290) |
-| Fenêtres et barre des tâches | Animations des fenêtres, aperçus au survol. Le fuseau horaire ([ADR 0193](dev/adr/0193-local-time-and-time-zone.md)), les menus de la barre ([ADR 0194](dev/adr/0194-taskbar-context-menus.md)) et les bulles de notification ([ADR 0197](dev/adr/0197-notification-toasts.md)) sont disponibles. | À venir | [#242](https://github.com/Kazo-ca/HackerOs/issues/242) |
+| Changer d'utilisateur | Ouvrir une autre session sans fermer la première. Reste grisé dans le menu Marche/arrêt par choix de Benoit : une session à la fois, Se déconnecter pour changer de compte. | [0195](dev/adr/0195-start-menu-power-button.md), [0201](dev/adr/0201-switch-user-stays-greyed.md) | [#290](https://github.com/Kazo-ca/HackerOs/issues/290) |
 
 ### Hack Store
 
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
-| Sources de confiance et installation pour soi | Catalogues de confiance, installation sans administrateur, liste noire, validation par un administrateur. | [0189](dev/adr/0189-app-sources-trust-and-per-user-install.md) | [#248](https://github.com/Kazo-ca/HackerOs/issues/248) |
 | Catalogue des applications | Format du catalogue, vérification et publication des applications proposées. | [0188](dev/adr/0188-hack-store-and-app-catalog.md) | [AppMarketPlace #1](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/1) |
 | Application Hack Store v1 | Parcourir, installer, mettre à jour et désinstaller des applications en un clic. | [0188](dev/adr/0188-hack-store-and-app-catalog.md) | [#249](https://github.com/Kazo-ca/HackerOs/issues/249) |
 | Hack Store, étapes suivantes | Ajout sans redémarrage, signature des paquets, installation transactionnelle. | [0188](dev/adr/0188-hack-store-and-app-catalog.md) | [#251](https://github.com/Kazo-ca/HackerOs/issues/251) |
@@ -295,9 +319,7 @@ dans `main`, le lien mène à sa PR.
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Packs de thèmes | Format `.hacktheme` et onglet Thèmes du Hack Store. | [0190](dev/adr/0190-theme-packs.md) | [#253](https://github.com/Kazo-ca/HackerOs/issues/253) |
-| Fonds d'écran en image | Choisir une image comme fond d'écran, par écran. | [0190](dev/adr/0190-theme-packs.md) | [#254](https://github.com/Kazo-ca/HackerOs/issues/254) |
-| Sons de l'OS | Sons pour les notifications, les erreurs et l'ouverture de session. | [0190](dev/adr/0190-theme-packs.md) | [#256](https://github.com/Kazo-ca/HackerOs/issues/256) |
-| Thèmes de curseurs | Curseurs personnalisés choisis dans Paramètres. | [0190](dev/adr/0190-theme-packs.md) | [#257](https://github.com/Kazo-ca/HackerOs/issues/257) |
+| Fond d'écran sur mobile et menu « Définir comme fond d'écran » | L'image de fond sur l'écran d'accueil mobile, et une entrée du menu contextuel des images. Les fonds d'écran du bureau sont disponibles. | [0202](dev/adr/0202-desktop-wallpaper-images.md) | [#297](https://github.com/Kazo-ca/HackerOs/issues/297), [#298](https://github.com/Kazo-ca/HackerOs/issues/298) |
 
 ### Réseau et serveur
 

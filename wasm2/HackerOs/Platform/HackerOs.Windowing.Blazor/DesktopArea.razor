@@ -6,6 +6,8 @@
 
 <main @ref="_desktopElement" class="desktop-area" aria-label="@L["Desktop.Workspace"]">
     <div class="desktop-grid" aria-hidden="true"></div>
+    @* ADR 0202 §4: the wallpaper image covers the theme's background and grid, under everything else. *@
+    @WallpaperContent
     @if (BackgroundContent is not null && BackgroundInteractive)
     {
         @* ADR 0160 §1: the desktop icons are reachable, by the pointer and by assistive technologies. *@
@@ -25,6 +27,7 @@
             <WindowPortal @key="window.Id" Target="@LayerFor(window)">
                 <WindowHost Window="window"
                             IsInteractionBlocked="@IsBlocked(window.Id)"
+                            PeekState="@PeekStateOf(window)"
                             OnFocus="OnFocus"
                             OnMinimize="OnMinimize"
                             OnToggleMaximize="OnToggleMaximize"
@@ -96,11 +99,26 @@
     public bool BackgroundInteractive { get; set; }
 
     /// <summary>
+    /// Gets or sets the wallpaper of this screen (ADR 0202 §4), drawn over the theme's background
+    /// and grid and under <see cref="BackgroundContent"/> and the windows. It must take no pointer
+    /// and be hidden from assistive technologies. <see langword="null"/> keeps the theme's background.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? WallpaperContent { get; set; }
+
+    /// <summary>
     /// Gets or sets content layered over one window's content area, such as the platform's
     /// "not responding" dialog (ADR 0127 §3); rendered through <see cref="WindowHost.Overlay"/>.
     /// </summary>
     [Parameter]
     public RenderFragment<WindowRuntimeState>? WindowOverlay { get; set; }
+
+    /// <summary>
+    /// Gets or sets the window the user peeks at from its taskbar preview (ADR 0199 §5): it shows
+    /// alone on its screen, the other windows of that screen see-through. No peek when null.
+    /// </summary>
+    [Parameter]
+    public WindowId? PeekWindowId { get; set; }
 
     /// <summary>Gets or sets the focus request callback.</summary>
     [Parameter]
@@ -202,6 +220,23 @@
                 Console.Error.WriteLine($"[DesktopArea] Failed to initialize resize observer: {ex.Message}");
             }
         }
+    }
+
+    /// <summary>How one window shows during the peek: the peeked window and its dialogs stay, the other windows of its screen turn see-through.</summary>
+    private WindowPeekState PeekStateOf(WindowRuntimeState window)
+    {
+        if (PeekWindowId is not { } peeked
+            || Windows.FirstOrDefault(candidate => candidate.Id == peeked) is not { } target)
+        {
+            return WindowPeekState.None;
+        }
+
+        if (window.Id == peeked || window.OwnerId == peeked)
+        {
+            return WindowPeekState.Shown;
+        }
+
+        return window.DisplayId == target.DisplayId ? WindowPeekState.SeeThrough : WindowPeekState.None;
     }
 
     private bool IsBlocked(WindowId id) => Windows.Any(window =>

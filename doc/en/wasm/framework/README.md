@@ -59,6 +59,7 @@ work from another repository.
 | [`app-responsiveness-api.md`](app-responsiveness-api.md) | `nice` priority and the "Not responding" window: what an app sees and must do to stay responsive. |
 | [`process-resources-api.md`](process-resources-api.md) | CPU time, memory and the OOM killer as seen by an app: `HackProcess`, `/proc` fields, declaration of `OomScoreAdjust`. |
 | [`theme-files.md`](theme-files.md) | Format of the `.theme` file, list of verified tokens and read API of the `HackerOs.Theming.Abstractions` package. |
+| [`cursor-themes.md`](cursor-themes.md) | Cursor themes: `cursor.theme` folder and PNG images with their hot spot, cursor names and fallbacks, `cursors.config`, `HackerOs.Theming.Abstractions` API. |
 | [`file-associations-api.md`](file-associations-api.md) | Per-user file associations: formats of the two files, resolution order, `HackApps` API and capabilities. |
 
 General index: [`../README.md`](../README.md). Every document added here has its

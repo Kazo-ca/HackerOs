@@ -104,6 +104,12 @@ public sealed class AppInstallationService : IAppInstallationService, IAsyncDisp
     /// <inheritdoc />
     public event EventHandler? Changed;
 
+    /// <summary>
+    /// Gets the apps installed from packages at boot (ADR 0189 §3): another user's personal apps are
+    /// treated as uninstalled for this session. <see langword="null"/> hides nothing.
+    /// </summary>
+    public Packages.InstalledPackageCatalog? InstalledPackages { get; init; }
+
     /// <summary>Reads both files, applies them and starts watching them. Called at boot; idempotent.</summary>
     /// <param name="cancellationToken">Cancels the reads.</param>
     public async ValueTask StartAsync(CancellationToken cancellationToken = default)
@@ -307,6 +313,8 @@ public sealed class AppInstallationService : IAppInstallationService, IAsyncDisp
             HashSet<string> effective = ExpandGuarded(
                 machine.UninstalledAppIds.Concat(user.UninstalledAppIds),
                 principal is null ? AppsConfigDocument.MachinePath : AppsConfigDocument.GetUserPath(principal.HomePath));
+            // ADR 0189 §3: another user's personal apps are not installed for this session.
+            effective.UnionWith(AppsConfigDocument.ExpandDependents(_catalog, InstalledPackages?.GetHiddenFor(principal?.HomePath) ?? new HashSet<string>()));
 
             lock (_sync)
             {

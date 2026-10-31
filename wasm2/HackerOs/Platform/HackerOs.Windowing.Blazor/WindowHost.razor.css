@@ -94,3 +94,45 @@
         transition: none;
     }
 }
+
+/* ADR 0198: window animations are played by WindowHost.razor.js from the theme variables
+   --hos-window-anim-duration, --hos-window-anim-easing and --hos-window-anim-scale. The first
+   render stays transparent until the open animation starts, so the window never shows for a frame
+   before it. */
+.window-host.is-opening {
+    opacity: 0;
+}
+
+/* The frozen copy that fades out when a window closes: never a target of the pointer, even over an
+   interactive desktop where the window layer gives the pointer back to the windows. */
+.window-host.is-closing-ghost {
+    pointer-events: none !important;
+}
+
+/* ADR 0199 §5: the peek from a taskbar preview. The peeked window shows above the others, even
+   minimized; the other windows of its screen keep only their outline, like glass. */
+.window-host.is-peek-shown {
+    z-index: var(--hos-window-peek-z, 2147483000);
+}
+
+/* A host stylesheet may hide [hidden] with !important (MudBlazor does): the peek must win. */
+.window-host.is-peek-shown[hidden] {
+    display: grid !important;
+}
+
+/* The window and everything in it (the chrome is another component) turn invisible; only the
+   outline, drawn by ::after, stays visible. */
+.window-host.is-peek-see-through {
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.window-host.is-peek-see-through::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 1px solid var(--hos-window-peek-outline, rgb(85 214 161 / 55%));
+    border-radius: inherit;
+    background: var(--hos-window-peek-glass, rgb(85 214 161 / 4%));
+    visibility: visible;
+}

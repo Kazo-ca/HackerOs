@@ -98,8 +98,18 @@ public sealed class SettingsNavigationTests
         Assert.DoesNotContain(minimal, static page => page.Id == SettingsWindow.ApplicationPageId);
         Assert.Contains(full, static page => page.Id == SettingsWindow.BackupPageId);
         Assert.Contains(full, static page => page.Id == SettingsWindow.ApplicationPageId);
-        Assert.Equal(18, minimal.Count);
+        Assert.Equal(20, minimal.Count);
         Assert.Equal(SettingsWindow.AllPages.Count, full.Count);
+    }
+
+    [Fact]
+    public void Sources_and_block_list_follow_installed_apps_in_the_applications_group()
+    {
+        IReadOnlyList<SettingsPage> pages = SettingsWindow.AllPages;
+        int installed = pages.ToList().FindIndex(static page => page.Id == "installed-apps");
+
+        Assert.Equal("app-sources", pages[installed + 1].Id);
+        Assert.Equal("Nav.Group.Applications", pages[installed + 1].GroupKey);
     }
 
     [Fact]

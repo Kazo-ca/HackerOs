@@ -40,8 +40,10 @@
     <div class="desktop-workspace">
         <DesktopArea Windows="WindowRuntime.Windows"
                      Layers="_windowLayers"
+                     PeekWindowId="_taskbarPreviews.PeekWindowId"
                      BackgroundContent="EffectiveBackgroundContent"
                      BackgroundInteractive="UsesDesktopSurface"
+                     WallpaperContent="PrimaryWallpaper"
                      OnFocus="HandleFocus"
                      OnMinimize="HandleMinimize"
                      OnToggleMaximize="HandleToggleMaximize"
@@ -95,7 +97,8 @@
                                       ClockPanelSource="_clockPanel"
                                       ClockPanelContent="@ClockPanelFragment"
                                       NotificationAreaContent="@NotificationAreaFragment"
-                                      ContextMenus="_taskbarMenus.For(DisplayId.Primary)" />
+                                      ContextMenus="_taskbarMenus.For(DisplayId.Primary)"
+                                      Previews="_taskbarPreviews" />
 
     @* ADR 0197: the notification bubbles, above the taskbar of screen 1, hidden while the clock panel is open. *@
     <NotificationToasts IsPanelOpen="_clockPanel.IsOpen" />
@@ -136,6 +139,7 @@
     <HackerOs.Platform.Blazor.Sync.SyncConflictOverlay />
     <DangerousCapabilityApprovalOverlay />
     <AdministratorAuthenticationOverlay />
+    <AppInstallApprovalOverlay />
 </div>
 
 @code {
@@ -150,6 +154,9 @@
     private TaskbarClockPanelSourceAdapter _clockPanel = null!;
     private TaskbarStatusSourceAdapter _taskbarStatus = null!;
     private TaskbarContextMenus _taskbarMenus = null!;
+
+    /// <summary>ADR 0199: the hover previews of every taskbar, and the peek they drive.</summary>
+    private readonly TaskbarWindowPreviews _taskbarPreviews = new();
 
     private RenderFragment ClockPanelFragment => builder =>
     {
@@ -227,7 +234,14 @@
         @<DesktopArea Windows="WindowRuntime.Windows"
                       Layers="_windowLayers"
                       DisplayId="screen.Id"
+                      WallpaperContent="@(ScreenWallpaper(screen.Id.Number))"
                       OnGesture="HandleGesture" />;
+
+    /// <summary>The wallpaper of screen 1 (ADR 0202 §4).</summary>
+    private RenderFragment PrimaryWallpaper => ScreenWallpaper(1);
+
+    /// <summary>The wallpaper of a screen: its own choice, otherwise the one of screen 1 (ADR 0202 §1).</summary>
+    private static RenderFragment ScreenWallpaper(int number) => @<DesktopWallpaper ScreenNumber="number" />;
 
     /// <summary>
     /// The taskbar of a secondary screen (ADR 0179 §1): the windows of its screen, its Start button
@@ -244,7 +258,8 @@
                                               Commands="_taskbarCommands"
                                               Launcher="_launcher.For(screen.Id)"
                                               StatusSource="_taskbarStatus"
-                                              ContextMenus="_taskbarMenus.For(screen.Id)" />
+                                              ContextMenus="_taskbarMenus.For(screen.Id)"
+                                              Previews="_taskbarPreviews" />
         </text>;
 
     /// <summary>The window list of a secondary screen's taskbar, kept while the screen is open.</summary>
@@ -546,6 +561,7 @@
         _launcher.Changed += Rerender;
         _clockPanel = new TaskbarClockPanelSourceAdapter();
         _clockPanel.Changed += Rerender;
+        _taskbarPreviews.Changed += Rerender;
         _taskbarStatus = new TaskbarStatusSourceAdapter(SimulationClock, SessionLocale, TimeZones);
         // ADR 0186 §4.5: the Start button's dot and the sign-in notification of unseen changes.
         _whatsNew = new WhatsNewAttention(Services, _launcher.SetAttention);
@@ -597,6 +613,7 @@
         _processSubscription?.Dispose();
         _launcher.Changed -= Rerender;
         _clockPanel.Changed -= Rerender;
+        _taskbarPreviews.Changed -= Rerender;
         _taskbarWindowSource.Dispose();
         Screens.Changed -= OnScreensChanged;
         foreach (TaskbarWindowSourceAdapter source in _screenTaskbarSources.Values)

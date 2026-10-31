@@ -70,9 +70,10 @@ internal sealed class SettingsFilesHarness
             ? new HackerOs.Platform.Core.Keyring.UserKeyringService(
                 FileSystem, Clock, new HackerOs.Platform.Core.Keyring.ManagedKeyringCipher(), Audit, iterations: 10)
             : null;
+        Seeder = new FileSystemSeeder(FileSystem, timeProvider);
         Session = new LocalSessionService(
             Users,
-            new FileSystemSeeder(FileSystem, timeProvider),
+            Seeder,
             EventBus,
             Audit,
             InstallationId.FromGuid(Guid.NewGuid()),
@@ -84,6 +85,7 @@ internal sealed class SettingsFilesHarness
     }
 
     internal FileSystemService FileSystem { get; }
+    internal FileSystemSeeder Seeder { get; }
     internal BoundedAuditLog Audit { get; } = new(maxEntries: 100);
     internal HackerOs.Platform.Core.Keyring.UserKeyringService? Keyring { get; }
     internal CapabilityGrantRepository Grants { get; }

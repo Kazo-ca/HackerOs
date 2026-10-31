@@ -19,6 +19,7 @@ HackerOs.Ecosystem.InstalledAppsBoot.Warnings.get -> System.Collections.Generic.
 HackerOs.Ecosystem.InstalledAppsBootExtensions
 static HackerOs.Ecosystem.InstalledAppsBootExtensions.LoadInstalledAppsAsync(this Microsoft.AspNetCore.Components.WebAssembly.Hosting.WebAssemblyHost! host) -> System.Threading.Tasks.Task!
 HackerOs.Ecosystem.EcosystemHostState.LoneGuest.get -> HackerOs.Simulation.Abstractions.Sessions.LocalUser?
+HackerOs.Ecosystem.InstalledAppsBoot.Packages.get -> HackerOs.Platform.Core.Apps.Packages.InstalledPackageCatalog!
 HackerOs.Ecosystem.BrowserInstalledAppAssetCache
 HackerOs.Ecosystem.BrowserInstalledAppAssetCache.BrowserInstalledAppAssetCache() -> void
 HackerOs.Ecosystem.BrowserInstalledAppAssetCache.ListAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<string!>!>

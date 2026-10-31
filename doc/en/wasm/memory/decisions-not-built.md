@@ -13,11 +13,11 @@ Nothing here is coded until Benoit launches the topic.
 ## Windows and taskbar (issue #242, `taskbar/` series)
 
 Decided on 2026-10-29. Work items done: 1 (notification bubbles, ADR 0197), 2
-(local time, ADR 0193) and 4 (context menus, ADR 0194). Left:
+(local time, ADR 0193), 3 (window animations, ADR 0198) and 4 (context menus,
+ADR 0194). Left:
 
 | Work item | Decisions |
 | --- | --- |
-| 3. Window animations | Open, close, minimize (towards the taskbar button of **its** screen), restore, maximize, snap. Fast and sober (~150 to 200 ms, fade + scale). Turned off by the existing "Reduce animations" setting. Duration and easing in `--hos-window-anim-*` CSS variables a theme can redefine. Minimizing delays the `hidden` attribute until the animation ends. |
 | 5. Hover preview + peek | Live scaled-down copy (cloned HTML, CSS `scale`), fallback image (icon + title) for iframes and canvases. Shows after ~400 ms; click = activate, "×" = close; not on mobile. Hovering the preview makes the other windows transparent (peek, like Windows). The clone does not duplicate HTML ids and has no interactive fields (axe). |
 
 One ADR per topic, one work item per ADR, multi-screen taken into account
@@ -86,13 +86,19 @@ Debate of 2026-10-19, recap validated by Benoit, nothing started:
 
 Evaluation of 2026-10-28. Benoit chose "nothing for now": finish the current
 series first. What HackerOS lacks and could use: URL deep links (`?app=`,
-`?open=`), window animations (see #242), a "Run" box (Super+R), screensaver
+`?open=`), a "Run" box (Super+R), screensaver
 and idle lock, file search in the launcher, hover preview (see #242), file
 thumbnails (`~/.cache/thumbnails`), viewers (Markdown, PDF, images, video),
 Eruda developer tools, rich file tooltips, animated or slideshow wallpapers,
-`.zip` browsed as a folder (see #241), `git clone` (needs a CORS proxy), Python
+`git clone` (needs a CORS proxy), Python
 (better in an app repository). Questions to ask again when starting: where the
 viewers live, scope of `?app=`, Eruda or not.
+
+## Switch user (closed decision, 2026-10-30)
+
+- "Switch user" **stays greyed out** (ADR 0201, issue #290): one session at a
+  time. A simultaneous-sessions prototype is kept, not merged, on the branch
+  `switch-user/simultaneous-sessions-prototype`.
 
 ## Editors (closed decision, 2026-10-17)
 
@@ -101,8 +107,6 @@ viewers live, scope of `?app=`, Eruda or not.
 
 ## Questions asked, answer to confirm
 
-- **Switch user** (issue #290): several sessions open at once; the target
-  behaviour was asked to Benoit on 2026-10-30.
 - **"New folder" in dialogs** (ADR 0175): make
   `SelectFolderDialogRequest.AllowCreateFolder` true by default for every app?
   Recommended: keep the per-app option. Asked on 2026-10-26.

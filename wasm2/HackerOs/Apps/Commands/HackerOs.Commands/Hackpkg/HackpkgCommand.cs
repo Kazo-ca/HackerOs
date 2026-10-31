@@ -9,13 +9,21 @@ using Microsoft.Extensions.Localization;
 namespace HackerOs.Commands.Hackpkg;
 
 /// <summary>
-/// <c>hackpkg install | remove | update | list | info | sources</c> (ADR 0182, section 4): installs
-/// apps from their GitHub repository through <see cref="HackAppPackages"/>.
+/// <c>hackpkg install | remove | update | list | info | sources | policy</c> (ADR 0182 §4, ADR 0189
+/// §6): installs apps from their GitHub repository through <see cref="HackAppPackages"/>.
 /// </summary>
 /// <remarks>
 /// <para>
-/// Like <c>apt</c>, an install, an update or a removal changes the machine: the OS asks an
-/// administrator (or nothing under <c>sudo</c>). <c>list</c>, <c>info</c> and <c>sources</c> only read.
+/// An app from a trusted source is installed for the session user by default
+/// (<c>~/.local/share/hackeros/apps</c>), without an administrator. <c>--system</c> installs it for
+/// every user, and an untrusted source or a blocked app always asks an administrator: the OS shows
+/// its two-step window (a fresh sign-in, then the app, its trust level and its capabilities), every
+/// time, even under <c>sudo</c> (ADR 0189 §4). <c>--allow-untrusted</c> is gone: the window replaces it.
+/// </para>
+/// <para>
+/// <c>sources add|remove</c> and <c>policy block|unblock</c> edit <c>/etc/hackeros/app-sources.config</c>
+/// and <c>/etc/hackeros/app-policy.config</c>, which asks an administrator (or nothing under <c>sudo</c>).
+/// <c>list</c>, <c>info</c>, <c>sources</c> and <c>policy</c> alone only read.
 /// </para>
 /// <para>
 /// The OS catalog is built at startup (ADR 0182, Q5): an installed app appears after a restart of
@@ -24,7 +32,9 @@ namespace HackerOs.Commands.Hackpkg;
 /// </remarks>
 public sealed class HackpkgCommand(AppManifest manifest) : TerminalAppBase(manifest)
 {
-    private const string AllowUntrustedOption = "--allow-untrusted";
+    private const string UserOption = "--user";
+    private const string SystemOption = "--system";
+    private const string TrustedOption = "--trusted";
 
     /// <inheritdoc />
     public override async ValueTask<int> ExecuteAsync(TerminalExecutionContext context, CancellationToken cancellationToken)
@@ -39,46 +49,43 @@ public sealed class HackpkgCommand(AppManifest manifest) : TerminalAppBase(manif
         }
 
         string verb = args[0];
-        List<string> operands = [.. args.Skip(1).Where(static arg => arg != AllowUntrustedOption)];
-        bool allowUntrusted = args.Skip(1).Contains(AllowUntrustedOption);
-        string? invalid = operands.FirstOrDefault(static arg => arg.StartsWith('-'));
-        if (invalid is not null || (allowUntrusted && verb != "install"))
-        {
-            await context.StandardError.WriteLineAsync(text["InvalidOption", invalid ?? AllowUntrustedOption]);
-            await context.StandardError.WriteLineAsync(text["Usage"]);
-            return 2;
-        }
-
-        int? expected = verb switch
-        {
-            "install" or "remove" or "info" => 1,
-            "list" or "sources" => 0,
-            "update" => operands.Count <= 1 ? operands.Count : -1,
-            _ => null
-        };
-        if (expected is null)
+        if (verb is not ("install" or "remove" or "update" or "list" or "info" or "sources" or "policy"))
         {
             await context.StandardError.WriteLineAsync(text["UnknownCommand", verb]);
             await context.StandardError.WriteLineAsync(text["Usage"]);
             return 2;
         }
 
-        if (operands.Count != expected)
+        List<string> options = [.. args.Skip(1).Where(static arg => arg.StartsWith('-'))];
+        List<string> operands = [.. args.Skip(1).Where(static arg => !arg.StartsWith('-'))];
+        string? invalid = options.FirstOrDefault(option => !IsAllowed(verb, operands, option));
+        if (invalid is not null || (options.Contains(UserOption) && options.Contains(SystemOption)))
+        {
+            await context.StandardError.WriteLineAsync(text["InvalidOption", invalid ?? SystemOption]);
+            await context.StandardError.WriteLineAsync(text["Usage"]);
+            return 2;
+        }
+
+        if (!HasExpectedOperands(verb, operands))
         {
             await context.StandardError.WriteLineAsync(text["Usage"]);
             return 2;
         }
 
+        HackPackageScope scope = options.Contains(UserOption) ? HackPackageScope.User
+            : options.Contains(SystemOption) ? HackPackageScope.System
+            : HackPackageScope.Auto;
         try
         {
             return verb switch
             {
-                "install" => await InstallAsync(context, operands[0], allowUntrusted, cancellationToken),
-                "remove" => await RemoveAsync(context, operands[0], cancellationToken),
+                "install" => await InstallAsync(context, operands[0], scope, cancellationToken),
+                "remove" => await RemoveAsync(context, operands[0], scope, cancellationToken),
                 "update" => await UpdateAsync(context, operands.Count == 0 ? null : operands[0], cancellationToken),
                 "list" => await ListAsync(context, cancellationToken),
                 "info" => await InfoAsync(context, operands[0], cancellationToken),
-                _ => await SourcesAsync(context, cancellationToken)
+                "sources" => await SourcesAsync(context, operands, options.Contains(TrustedOption), cancellationToken),
+                _ => await PolicyAsync(context, operands, cancellationToken)
             };
         }
         catch (HackPackageException exception)
@@ -98,12 +105,43 @@ public sealed class HackpkgCommand(AppManifest manifest) : TerminalAppBase(manif
         }
     }
 
+    /// <summary>Whether <paramref name="option"/> belongs to <paramref name="verb"/>.</summary>
+    private static bool IsAllowed(string verb, IReadOnlyList<string> operands, string option) => option switch
+    {
+        UserOption or SystemOption => verb is "install" or "remove",
+        TrustedOption => verb == "sources" && operands.Count > 0 && operands[0] == "add",
+        _ => false
+    };
+
+    /// <summary>Whether the operands fit the verb: the usage text is printed otherwise.</summary>
+    private static bool HasExpectedOperands(string verb, IReadOnlyList<string> operands) => verb switch
+    {
+        "install" or "remove" or "info" => operands.Count == 1,
+        "list" => operands.Count == 0,
+        "update" => operands.Count <= 1,
+        "sources" => operands.Count == 0 || (operands.Count == 2 && operands[0] is "add" or "remove"),
+        _ => operands.Count == 0
+            || (operands.Count == 3 && operands[0] is "block" or "unblock" && TryParseKind(operands[1], out _))
+    };
+
+    private static bool TryParseKind(string value, out HackPackageBlockKind kind)
+    {
+        (bool known, kind) = value switch
+        {
+            "app" => (true, HackPackageBlockKind.App),
+            "category" => (true, HackPackageBlockKind.Category),
+            "capability" => (true, HackPackageBlockKind.Capability),
+            _ => (false, HackPackageBlockKind.App)
+        };
+        return known;
+    }
+
     private static async Task<int> InstallAsync(
-        TerminalExecutionContext context, string source, bool allowUntrusted, CancellationToken cancellationToken)
+        TerminalExecutionContext context, string source, HackPackageScope scope, CancellationToken cancellationToken)
     {
         IStringLocalizer<Strings> text = context.App.GetLocalizer<Strings>();
         await context.StandardOutput.WriteLineAsync(text["Downloading", source]);
-        HackPackageInstallReport report = await HackAppPackages.InstallAsync(source, allowUntrusted, cancellationToken);
+        HackPackageInstallReport report = await HackAppPackages.InstallAsync(source, scope, cancellationToken);
         await WriteReportAsync(context, report);
         return 0;
     }
@@ -111,14 +149,24 @@ public sealed class HackpkgCommand(AppManifest manifest) : TerminalAppBase(manif
     private static async Task WriteReportAsync(TerminalExecutionContext context, HackPackageInstallReport report)
     {
         IStringLocalizer<Strings> text = context.App.GetLocalizer<Strings>();
-        if (!report.Trusted)
+        if (report.Trust == HackPackageTrust.Untrusted)
         {
             await context.StandardError.WriteLineAsync(text["Untrusted", report.Source]);
+        }
+
+        if (report.BlockedBy is not null)
+        {
+            await context.StandardError.WriteLineAsync(text["BlockedBy", report.BlockedBy]);
         }
 
         await context.StandardOutput.WriteLineAsync(report.PreviousVersion is null
             ? text["Installed", report.Name, report.Version, report.Source]
             : text["Updated", report.Name, report.PreviousVersion, report.Version]);
+        await context.StandardOutput.WriteLineAsync(report.SystemWide ? text["ForEveryone"] : text["ForYou"]);
+        if (report.ReplacedPersonalCopies > 0)
+        {
+            await context.StandardOutput.WriteLineAsync(text["ReplacedPersonalCopies", report.ReplacedPersonalCopies]);
+        }
         if (report.Capabilities.Count > 0)
         {
             await context.StandardOutput.WriteLineAsync(text[
@@ -134,10 +182,11 @@ public sealed class HackpkgCommand(AppManifest manifest) : TerminalAppBase(manif
         await context.StandardOutput.WriteLineAsync(text["RestartRequired"]);
     }
 
-    private static async Task<int> RemoveAsync(TerminalExecutionContext context, string appId, CancellationToken cancellationToken)
+    private static async Task<int> RemoveAsync(
+        TerminalExecutionContext context, string appId, HackPackageScope scope, CancellationToken cancellationToken)
     {
         IStringLocalizer<Strings> text = context.App.GetLocalizer<Strings>();
-        HackInstalledPackage removed = await HackAppPackages.RemoveAsync(appId, cancellationToken);
+        HackInstalledPackage removed = await HackAppPackages.RemoveAsync(appId, scope, cancellationToken);
         await context.StandardOutput.WriteLineAsync(text["Removed", removed.AppId, removed.Version]);
         return 0;
     }
@@ -171,9 +220,11 @@ public sealed class HackpkgCommand(AppManifest manifest) : TerminalAppBase(manif
             }
 
             await context.StandardOutput.WriteLineAsync(text["Downloading", $"{package.Source}@{info.Latest}"]);
-            // An installed source was accepted once; an owner removed from [trusted] since is asked again.
+            // An update keeps the copy where it is; a source no longer trusted asks an administrator again.
             HackPackageInstallReport report = await HackAppPackages.InstallAsync(
-                $"{package.Source}@{info.Latest}", allowUntrusted: false, cancellationToken);
+                $"{package.Source}@{info.Latest}",
+                package.SystemWide ? HackPackageScope.System : HackPackageScope.User,
+                cancellationToken);
             await WriteReportAsync(context, report);
         }
 
@@ -199,8 +250,9 @@ public sealed class HackpkgCommand(AppManifest manifest) : TerminalAppBase(manif
         foreach (HackInstalledPackage package in installed)
         {
             string pending = package.Loaded ? string.Empty : $" {text["PendingRestart"]}";
+            string scope = package.SystemWide ? text["ScopeSystem"] : text["ScopeUser"];
             await context.StandardOutput.WriteLineAsync(
-                $"{package.AppId.PadRight(idWidth)}  {package.Version.PadRight(versionWidth)}  {package.Source}{pending}");
+                $"{package.AppId.PadRight(idWidth)}  {package.Version.PadRight(versionWidth)}  {scope}  {package.Source}{pending}");
         }
 
         return 0;
@@ -212,20 +264,55 @@ public sealed class HackpkgCommand(AppManifest manifest) : TerminalAppBase(manif
         HackPackageInfo info = await HackAppPackages.GetInfoAsync(source, cancellationToken);
         await context.StandardOutput.WriteLineAsync(text["InfoSource", info.Source]);
         await context.StandardOutput.WriteLineAsync(text["InfoApp", info.AppId]);
-        await context.StandardOutput.WriteLineAsync(text["InfoTrusted", info.Trusted ? text["Yes"] : text["No"]]);
+        await context.StandardOutput.WriteLineAsync(text["InfoTrusted", TrustText(text, info.Trust)]);
         await context.StandardOutput.WriteLineAsync(text["InfoLatest", info.Latest ?? "-"]);
         await context.StandardOutput.WriteLineAsync(text["InfoVersions", string.Join(", ", info.Versions)]);
-        await context.StandardOutput.WriteLineAsync(text["InfoInstalled", info.InstalledVersion ?? "-"]);
+        await context.StandardOutput.WriteLineAsync(text[
+            "InfoInstalled",
+            info.InstalledVersion is null ? "-"
+                : $"{info.InstalledVersion} ({(info.InstalledSystemWide == false ? text["ScopeUser"] : text["ScopeSystem"])})"]);
         return 0;
     }
 
-    private static async Task<int> SourcesAsync(TerminalExecutionContext context, CancellationToken cancellationToken)
+    private static string TrustText(IStringLocalizer<Strings> text, HackPackageTrust trust) => trust switch
+    {
+        HackPackageTrust.Verified => text["TrustVerified"],
+        HackPackageTrust.Trusted => text["TrustTrusted"],
+        _ => text["TrustUntrusted"]
+    };
+
+    private static async Task<int> SourcesAsync(
+        TerminalExecutionContext context, IReadOnlyList<string> operands, bool trusted, CancellationToken cancellationToken)
     {
         IStringLocalizer<Strings> text = context.App.GetLocalizer<Strings>();
-        HackPackageSources sources = await HackAppPackages.GetSourcesAsync(cancellationToken);
+        HackPackageSources sources = operands.Count == 0
+            ? await HackAppPackages.GetSourcesAsync(cancellationToken)
+            : operands[0] == "add"
+                ? await HackAppPackages.AddSourceAsync(operands[1], trusted, cancellationToken)
+                : await HackAppPackages.RemoveSourceAsync(operands[1], cancellationToken);
+        if (operands.Count > 0)
+        {
+            await context.StandardOutput.WriteLineAsync(operands[0] == "add"
+                ? text[trusted ? "SourceAddedTrusted" : "SourceAdded", operands[1]]
+                : text["SourceRemoved", operands[1]]);
+            return 0;
+        }
+
         await context.StandardOutput.WriteLineAsync(text["SourcesHost", sources.GitHubHost]);
+        foreach (HackPackageCatalog catalog in sources.Catalogs)
+        {
+            string builtIn = catalog.BuiltIn ? $" {text["BuiltIn"]}" : string.Empty;
+            await context.StandardOutput.WriteLineAsync(text[
+                "SourcesCatalog", catalog.Name, catalog.Address, TrustText(text, catalog.Trust) + builtIn]);
+        }
+
         await context.StandardOutput.WriteLineAsync(text[
-            "SourcesTrusted", sources.TrustedOwners.Count == 0 ? "-" : string.Join(", ", sources.TrustedOwners)]);
+            "SourcesTrusted",
+            sources.TrustedSources.Count == 0 ? "-" : string.Join(", ", sources.TrustedSources.Select(source =>
+                sources.BuiltInSources.Contains(source, StringComparer.OrdinalIgnoreCase) ? $"{source} {text["BuiltIn"]}" : source))]);
+        await context.StandardOutput.WriteLineAsync(text[
+            "SourcesUntrusted", sources.UntrustedSources.Count == 0 ? "-" : string.Join(", ", sources.UntrustedSources)]);
+        await context.StandardOutput.WriteLineAsync(text["SourcesInterval", sources.UpdateIntervalHours]);
         foreach (string warning in sources.Warnings)
         {
             await context.StandardError.WriteLineAsync($"hackpkg: {warning}");
@@ -233,4 +320,31 @@ public sealed class HackpkgCommand(AppManifest manifest) : TerminalAppBase(manif
 
         return 0;
     }
+
+    private static async Task<int> PolicyAsync(
+        TerminalExecutionContext context, IReadOnlyList<string> operands, CancellationToken cancellationToken)
+    {
+        IStringLocalizer<Strings> text = context.App.GetLocalizer<Strings>();
+        if (operands.Count > 0)
+        {
+            _ = TryParseKind(operands[1], out HackPackageBlockKind kind);
+            bool blocked = operands[0] == "block";
+            await HackAppPackages.SetPolicyAsync(kind, operands[2], blocked, cancellationToken);
+            await context.StandardOutput.WriteLineAsync(text[blocked ? "PolicyBlocked" : "PolicyUnblocked", operands[1], operands[2]]);
+            return 0;
+        }
+
+        HackPackagePolicy policy = await HackAppPackages.GetPolicyAsync(cancellationToken);
+        await context.StandardOutput.WriteLineAsync(text["PolicyApps", Join(policy.BlockedApps)]);
+        await context.StandardOutput.WriteLineAsync(text["PolicyCategories", Join(policy.BlockedCategories)]);
+        await context.StandardOutput.WriteLineAsync(text["PolicyCapabilities", Join(policy.BlockedCapabilities)]);
+        foreach (string warning in policy.Warnings)
+        {
+            await context.StandardError.WriteLineAsync($"hackpkg: {warning}");
+        }
+
+        return 0;
+    }
+
+    private static string Join(IReadOnlyList<string> values) => values.Count == 0 ? "-" : string.Join(", ", values);
 }

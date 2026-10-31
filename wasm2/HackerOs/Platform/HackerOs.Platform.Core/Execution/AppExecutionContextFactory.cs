@@ -287,7 +287,9 @@ public sealed class AppExecutionContextFactory
                 _clock,
                 language,
                 _appCatalog.Assets,
-                _appCatalog.Packages);
+                _appCatalog.Packages,
+                _appCatalog.InstallApproval,
+                _appCatalog.InstalledPackages);
         AppClipboardGateway clipboardGateway = new(_clipboard, capabilities, process.SessionId, process.Pid);
 
         AppFileSystemGateway fileSystem = new(
@@ -555,6 +557,15 @@ public sealed record AppCatalogGatewayServices(
     /// <c>HackAppPackages</c>; <see langword="null"/> leaves it unsupported.
     /// </summary>
     public Func<Apps.Packages.AppPackageInstaller?>? Packages { get; init; }
+
+    /// <summary>
+    /// Gets the window of the two-step approval (ADR 0189 §4) behind <c>HackAppPackages</c>;
+    /// <see langword="null"/> refuses every install that needs an administrator.
+    /// </summary>
+    public Func<Elevation.IAppInstallApprovalPrompt?>? InstallApproval { get; init; }
+
+    /// <summary>Gets the installed apps of the running catalog, with who sees them (ADR 0189 §3).</summary>
+    public Func<Apps.Packages.InstalledPackageCatalog?>? InstalledPackages { get; init; }
 }
 
 /// <summary>

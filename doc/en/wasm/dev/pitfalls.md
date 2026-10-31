@@ -53,6 +53,7 @@ build and test commands are in
 | Symptom | Cause | Solution |
 | --- | --- | --- |
 | The 16 tests of `E2E.Tests` fail with "harness did not become ready" | The harness launches with `--no-build -c Release` | Build in Release first (`dotnet build HackerOs.sln -c Release` or `Tests/HackerOs.BrowserHarness.Tests -c Release`). |
+| The whole `UI.E2E` suite fails on "App launcher" not visible within 15 s, with no error | Work added to the first login (writing files in `FileSystemSeeder.SeedAsync`) pushes the desktop past the 15 s `CreateLocalProfileAndReachDesktopAsync` waits (13.8 s before the built-in sounds, 16.8 s with them) | Do not write big or many files during the login: run that work in the background after `SessionActivatedEvent` (the sounds: `OsSoundService` calls `FileSystemSeeder.InstallSoundThemesAsync`, [`system-sounds.md`](system-sounds.md)). Time the login with the test host before and after the change. |
 | Unstable E2E tests when several suites run | The Playwright suites compete for CPU and ports | Run `E2E`, `UI.E2E`, `Pwa.E2E` and `TrimmedPublish.E2E` **one at a time**. |
 | Chromium not found for Playwright | Browsers not installed at the expected location | `ChromiumLauncher` falls back to `/opt/pw-browsers/chromium`. Never run `playwright install`. |
 | A test reads the terminal output before it is complete | The output of a command in a worker arrives in several writes | Wait for the next prompt (`OutputFinished`) before reading. |

@@ -1,0 +1,74 @@
+@using HackerOs.Theming.Abstractions
+@inherits HackerOs.AppSdk.Blazor.HackComponentBase
+@implements IAsyncDisposable
+
+@*
+    Settings > Appearance > Cursors (ADR 0205): the built-in cursor themes and the theme folders of
+    /etc/hackeros/cursors/ and ~/.config/hackeros/cursors/, chosen in ~/.config/hackeros/cursors.config.
+    The shell draws the chosen theme on the whole surface as soon as the file changes.
+*@
+<div class="setting-group cursor-panel">
+    <h4 id="cursor-theme-title">@L["Cursors.Title"] <SettingOriginBadge Source="@SourceOf()" IsLocked="@IsLocked" /></h4>
+    <p class="setting-desc">
+        @LocalizedMarkup.Format(L["Cursors.Description"],
+            LocalizedMarkup.Code("~/.config/hackeros/cursors/"),
+            LocalizedMarkup.Code("/etc/hackeros/cursors/"),
+            LocalizedMarkup.Code(CursorThemeFile.IndexFileName))
+    </p>
+    @if (!_loaded)
+    {
+        <p class="setting-desc">@L["Common.Loading"]</p>
+    }
+    else
+    {
+        <div class="cursor-options" role="radiogroup" aria-labelledby="cursor-theme-title">
+            @foreach (CursorTheme theme in Themes)
+            {
+                bool selected = theme.Id == _selectedId;
+                <button type="button" role="radio" class="@OptionClass(selected)"
+                        id="@($"cursor-theme-{theme.Id}")"
+                        aria-checked="@(selected ? "true" : "false")"
+                        disabled="@(_isBusy || IsLocked)"
+                        @onclick="() => ChooseAsync(theme.Id)">
+                    <span class="cursor-preview" aria-hidden="true">
+                        @if (theme.Images.Count == 0)
+                        {
+                            <span class="cursor-preview-system">@L["Cursors.SystemPreview"]</span>
+                        }
+                        else
+                        {
+                            @foreach (string name in CursorNames.Preview)
+                            {
+                                if (theme.Resolve(name) is { } image)
+                                {
+                                    <img src="@image.Url" alt="" width="32" height="32" />
+                                }
+                            }
+                        }
+                    </span>
+                    <span class="cursor-option-label">
+                        @DisplayName(theme)
+                        @if (theme.Origin is { } origin)
+                        {
+                            <span class="cursor-origin">@(origin == ThemeOrigin.System ? "/etc" : "~")</span>
+                        }
+                    </span>
+                </button>
+            }
+        </div>
+        @if (_library.Diagnostics.Count > 0)
+        {
+            <p class="setting-desc cursor-warnings">@L["Cursors.Warnings", _library.Diagnostics.Count]</p>
+            <ul class="cursor-diagnostics">
+                @foreach (ThemeFileDiagnostic diagnostic in _library.Diagnostics.Take(MaxDiagnosticsShown))
+                {
+                    <li>@diagnostic.ToString(Context.Culture)</li>
+                }
+            </ul>
+        }
+    }
+    @if (_message is not null)
+    {
+        <p class="@(_messageIsError ? "setting-desc cursor-message is-error" : "setting-desc cursor-message")" role="status">@_message</p>
+    }
+</div>

@@ -171,14 +171,9 @@ HackerOs.Platform.Core.Apps.Packages.AppPackageIndexEntry.Sha256.init -> void
 HackerOs.Platform.Core.Apps.Packages.AppPackageIndexEntry.Version.get -> HackerOs.App.Abstractions.SemanticVersion
 HackerOs.Platform.Core.Apps.Packages.AppPackageIndexEntry.Version.init -> void
 HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller
-HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.AppPackageInstaller(HackerOs.Platform.Core.Apps.Packages.IAppPackageDownloader! downloader, HackerOs.Platform.Core.Apps.Packages.IRuntimeApiSurface? runtime = null, HackerOs.App.Abstractions.SemanticVersion? sdkVersion = null, Microsoft.Extensions.Logging.ILogger<HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller!>? logger = null) -> void
-HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.Check(HackerOs.Platform.Core.Apps.Packages.AppPackage! package, HackerOs.Platform.Core.Apps.Packages.AppPackageSource! source, HackerOs.Platform.Core.AppCatalog! catalog, HackerOs.Platform.Core.Apps.InstalledAppsReadResult! installed) -> HackerOs.App.Abstractions.SemanticVersion?
-HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.CommitAsync(HackerOs.Simulation.Abstractions.Gateways.IAppFileSystemGateway! system, HackerOs.Platform.Core.Apps.Packages.AppPackagePlan! plan, string! by, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
 HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.GetIndexAsync(HackerOs.Platform.Core.Apps.Packages.AppPackageSource! source, HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig! sources, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Platform.Core.Apps.Packages.AppPackageIndex!>
-HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.PrepareAsync(HackerOs.Platform.Core.Apps.Packages.AppPackageSource! source, HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig! sources, bool allowUntrusted, HackerOs.Platform.Core.AppCatalog! catalog, HackerOs.Platform.Core.Apps.InstalledAppsReadResult! installed, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Platform.Core.Apps.Packages.AppPackagePlan!>
 HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.ReadInstalledAsync(HackerOs.Simulation.Abstractions.Gateways.IAppFileSystemGateway! fileSystem, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Platform.Core.Apps.InstalledAppsReadResult!>
 HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.ReadSourcesAsync(HackerOs.Simulation.Abstractions.Gateways.IAppFileSystemGateway! fileSystem, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig!>
-HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.RemoveAsync(HackerOs.Simulation.Abstractions.Gateways.IAppFileSystemGateway! system, string! appId, string! by, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Platform.Core.Apps.Packages.AppPackageSource!>
 HackerOs.Platform.Core.Apps.Packages.AppPackagePlan
 HackerOs.Platform.Core.Apps.Packages.AppPackagePlan.<Clone>$() -> HackerOs.Platform.Core.Apps.Packages.AppPackagePlan!
 HackerOs.Platform.Core.Apps.Packages.AppPackagePlan.AppPackagePlan(HackerOs.Platform.Core.Apps.Packages.AppPackageSource! Source, HackerOs.Platform.Core.Apps.Packages.AppPackage! Package, HackerOs.App.Abstractions.SemanticVersion? PreviousVersion, bool Trusted) -> void
@@ -288,7 +283,6 @@ const HackerOs.Platform.Core.Apps.Packages.AppPackageIndex.MaximumBytes = 104857
 const HackerOs.Platform.Core.Apps.Packages.AppPackageSource.GitHubScheme = "github:" -> string!
 const HackerOs.Platform.Core.Apps.Packages.AppPackageSource.IndexFileName = "index.json" -> string!
 const HackerOs.Platform.Core.Apps.Packages.AppPackageSource.PackagesBranch = "hackeros-packages" -> string!
-const HackerOs.Platform.Core.Apps.Packages.AppSourcesConfigDocument.DefaultContent = "# Where the OS downloads app packages, and whose apps it trusts (ADR 0182).\n# hackpkg contacts only the hosts below, itself, never through an app.\n[hosts]\ngithub=raw.githubusercontent.com\n\n# GitHub owners whose apps install without a warning. Others need\n# 'hackpkg install --allow-untrusted' and an administrator's confirmation.\n[trusted]\ngithub.com/Kazo-ca=true\n" -> string!
 const HackerOs.Platform.Core.Apps.Packages.AppSourcesConfigDocument.DefaultGitHubHost = "raw.githubusercontent.com" -> string!
 const HackerOs.Platform.Core.Apps.Packages.AppSourcesConfigDocument.DefaultTrustedKey = "github.com/Kazo-ca" -> string!
 const HackerOs.Platform.Core.Apps.Packages.AppSourcesConfigDocument.FileName = "app-sources.config" -> string!
@@ -354,7 +348,6 @@ static HackerOs.Platform.Core.Apps.Packages.AppSourcesConfigDocument.Read(string
 static HackerOs.Platform.Core.Apps.Packages.InstalledApp.operator !=(HackerOs.Platform.Core.Apps.Packages.InstalledApp? left, HackerOs.Platform.Core.Apps.Packages.InstalledApp? right) -> bool
 static HackerOs.Platform.Core.Apps.Packages.InstalledApp.operator ==(HackerOs.Platform.Core.Apps.Packages.InstalledApp? left, HackerOs.Platform.Core.Apps.Packages.InstalledApp? right) -> bool
 static HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage.Empty.get -> HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage!
-static HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage.LoadAsync(HackerOs.Platform.Core.Apps.Packages.InstalledAppFileReader! read, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage!>!
 static HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage.operator !=(HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage? left, HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage? right) -> bool
 static HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage.operator ==(HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage? left, HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage? right) -> bool
 static HackerOs.Platform.Core.Apps.Packages.InstalledAppsLayout.CreateReader(HackerOs.Simulation.Abstractions.FileSystem.IFileSystemProvider! provider) -> HackerOs.Platform.Core.Apps.Packages.InstalledAppFileReader!
@@ -484,6 +477,318 @@ HackerOs.Platform.Core.Sessions.GuestAccountRequests.GuestAccountRequests() -> v
 HackerOs.Platform.Core.Sessions.GuestAccountRequests.HasListener.get -> bool
 HackerOs.Platform.Core.Sessions.GuestAccountRequests.RequestCreateAccount() -> bool
 HackerOs.Platform.Core.Lifecycle.AppLifecycleOrchestrator.StopSessionAppsAsync(HackerOs.Simulation.Abstractions.Sessions.SessionId sessionId, HackerOs.Simulation.Abstractions.Processes.ProcessExitReason reason = HackerOs.Simulation.Abstractions.Processes.ProcessExitReason.Logout) -> System.Threading.Tasks.Task<int>!
+HackerOs.Platform.Core.Apps.Packages.AppBlockKind
+HackerOs.Platform.Core.Apps.Packages.AppBlockKind.App = 0 -> HackerOs.Platform.Core.Apps.Packages.AppBlockKind
+HackerOs.Platform.Core.Apps.Packages.AppBlockKind.Capability = 2 -> HackerOs.Platform.Core.Apps.Packages.AppBlockKind
+HackerOs.Platform.Core.Apps.Packages.AppBlockKind.Category = 1 -> HackerOs.Platform.Core.Apps.Packages.AppBlockKind
+HackerOs.Platform.Core.Apps.Packages.AppBlockReason
+HackerOs.Platform.Core.Apps.Packages.AppBlockReason.<Clone>$() -> HackerOs.Platform.Core.Apps.Packages.AppBlockReason!
+HackerOs.Platform.Core.Apps.Packages.AppBlockReason.AppBlockReason(HackerOs.Platform.Core.Apps.Packages.AppBlockKind Kind, string! Value) -> void
+HackerOs.Platform.Core.Apps.Packages.AppBlockReason.Deconstruct(out HackerOs.Platform.Core.Apps.Packages.AppBlockKind Kind, out string! Value) -> void
+HackerOs.Platform.Core.Apps.Packages.AppBlockReason.Equals(HackerOs.Platform.Core.Apps.Packages.AppBlockReason? other) -> bool
+HackerOs.Platform.Core.Apps.Packages.AppBlockReason.Kind.get -> HackerOs.Platform.Core.Apps.Packages.AppBlockKind
+HackerOs.Platform.Core.Apps.Packages.AppBlockReason.Kind.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppBlockReason.Value.get -> string!
+HackerOs.Platform.Core.Apps.Packages.AppBlockReason.Value.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults
+HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults.<Clone>$() -> HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults!
+HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults.AppPackageDefaults(System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, System.Uri!>>! Catalogs, System.Collections.Generic.IReadOnlyList<string!>! TrustedKeys, int UpdateIntervalHours, System.Collections.Generic.IReadOnlyList<string!>! BlockedApps, System.Collections.Generic.IReadOnlyList<string!>! BlockedCategories, System.Collections.Generic.IReadOnlyList<string!>! BlockedCapabilities) -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults.BlockedApps.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults.BlockedApps.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults.BlockedCapabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults.BlockedCapabilities.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults.BlockedCategories.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults.BlockedCategories.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults.Catalogs.get -> System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, System.Uri!>>!
+HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults.Catalogs.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults.Deconstruct(out System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, System.Uri!>>! Catalogs, out System.Collections.Generic.IReadOnlyList<string!>! TrustedKeys, out int UpdateIntervalHours, out System.Collections.Generic.IReadOnlyList<string!>! BlockedApps, out System.Collections.Generic.IReadOnlyList<string!>! BlockedCategories, out System.Collections.Generic.IReadOnlyList<string!>! BlockedCapabilities) -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults.Equals(HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults? other) -> bool
+HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults.TrustedKeys.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults.TrustedKeys.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults.UpdateIntervalHours.get -> int
+HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults.UpdateIntervalHours.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstallContext
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstallContext.<Clone>$() -> HackerOs.Platform.Core.Apps.Packages.AppPackageInstallContext!
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstallContext.AppPackageInstallContext(HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig! Sources, HackerOs.Platform.Core.Apps.Packages.AppPolicy! Policy, HackerOs.Platform.Core.Apps.Packages.AppPackageScope Scope, string? Home, HackerOs.Platform.Core.AppCatalog! Catalog, HackerOs.Platform.Core.Apps.InstalledAppsReadResult! SystemInstalled, HackerOs.Platform.Core.Apps.InstalledAppsReadResult! PersonalInstalled) -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstallContext.Catalog.get -> HackerOs.Platform.Core.AppCatalog!
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstallContext.Catalog.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstallContext.Deconstruct(out HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig! Sources, out HackerOs.Platform.Core.Apps.Packages.AppPolicy! Policy, out HackerOs.Platform.Core.Apps.Packages.AppPackageScope Scope, out string? Home, out HackerOs.Platform.Core.AppCatalog! Catalog, out HackerOs.Platform.Core.Apps.InstalledAppsReadResult! SystemInstalled, out HackerOs.Platform.Core.Apps.InstalledAppsReadResult! PersonalInstalled) -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstallContext.Equals(HackerOs.Platform.Core.Apps.Packages.AppPackageInstallContext? other) -> bool
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstallContext.Home.get -> string?
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstallContext.Home.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstallContext.PackagedAppIds.get -> System.Collections.Generic.IReadOnlySet<string!>!
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstallContext.PackagedAppIds.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstallContext.PersonalInstalled.get -> HackerOs.Platform.Core.Apps.InstalledAppsReadResult!
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstallContext.PersonalInstalled.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstallContext.Policy.get -> HackerOs.Platform.Core.Apps.Packages.AppPolicy!
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstallContext.Policy.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstallContext.Scope.get -> HackerOs.Platform.Core.Apps.Packages.AppPackageScope
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstallContext.Scope.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstallContext.Sources.get -> HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig!
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstallContext.Sources.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstallContext.SystemInstalled.get -> HackerOs.Platform.Core.Apps.InstalledAppsReadResult!
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstallContext.SystemInstalled.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.AppPackageInstaller(HackerOs.Platform.Core.Apps.Packages.IAppPackageDownloader! downloader, HackerOs.Platform.Core.Apps.Packages.IRuntimeApiSurface? runtime = null, HackerOs.App.Abstractions.SemanticVersion? sdkVersion = null, Microsoft.Extensions.Logging.ILogger<HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller!>? logger = null, HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults? defaults = null) -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.Check(HackerOs.Platform.Core.Apps.Packages.AppPackage! package, HackerOs.Platform.Core.Apps.Packages.AppPackageSource! source, HackerOs.Platform.Core.AppCatalog! catalog, HackerOs.Platform.Core.Apps.InstalledAppsReadResult! installed, System.Collections.Generic.IReadOnlySet<string!>? packagedAppIds = null) -> HackerOs.App.Abstractions.SemanticVersion?
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.CommitAsync(HackerOs.Simulation.Abstractions.Gateways.IAppFileSystemGateway! writer, HackerOs.Platform.Core.Apps.Packages.AppPackagePlan! plan, string! by, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken), System.Collections.Generic.IReadOnlyList<string!>? personalCopies = null) -> System.Threading.Tasks.ValueTask
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.Defaults.get -> HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults!
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.FindPersonalCopiesAsync(HackerOs.Simulation.Abstractions.Gateways.IAppFileSystemGateway! system, string! appId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<string!>!>
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.PrepareAsync(HackerOs.Platform.Core.Apps.Packages.AppPackageSource! source, HackerOs.Platform.Core.Apps.Packages.AppPackageInstallContext! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Platform.Core.Apps.Packages.AppPackagePlan!>
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.ReadPersonalInstalledAsync(HackerOs.Simulation.Abstractions.Gateways.IAppFileSystemGateway! fileSystem, string! homeDirectory, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Platform.Core.Apps.InstalledAppsReadResult!>
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.ReadPolicyAsync(HackerOs.Simulation.Abstractions.Gateways.IAppFileSystemGateway! fileSystem, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Platform.Core.Apps.Packages.AppPolicy!>
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.RemoveAsync(HackerOs.Simulation.Abstractions.Gateways.IAppFileSystemGateway! writer, string! appId, string! by, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken), string? home = null) -> System.Threading.Tasks.ValueTask<HackerOs.Platform.Core.Apps.Packages.AppPackageSource!>
+HackerOs.Platform.Core.Apps.Packages.AppPackagePlan.BlockReason.get -> HackerOs.Platform.Core.Apps.Packages.AppBlockReason?
+HackerOs.Platform.Core.Apps.Packages.AppPackagePlan.BlockReason.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackagePlan.Home.get -> string?
+HackerOs.Platform.Core.Apps.Packages.AppPackagePlan.Home.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackagePlan.RequiresAdministrator.get -> bool
+HackerOs.Platform.Core.Apps.Packages.AppPackagePlan.SizeBytes.get -> long
+HackerOs.Platform.Core.Apps.Packages.AppPackagePlan.SystemWide.get -> bool
+HackerOs.Platform.Core.Apps.Packages.AppPackagePlan.Trust.get -> HackerOs.Platform.Core.Apps.Packages.AppSourceTrust
+HackerOs.Platform.Core.Apps.Packages.AppPackagePlan.Trust.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageScope
+HackerOs.Platform.Core.Apps.Packages.AppPackageScope.Auto = 0 -> HackerOs.Platform.Core.Apps.Packages.AppPackageScope
+HackerOs.Platform.Core.Apps.Packages.AppPackageScope.System = 2 -> HackerOs.Platform.Core.Apps.Packages.AppPackageScope
+HackerOs.Platform.Core.Apps.Packages.AppPackageScope.User = 1 -> HackerOs.Platform.Core.Apps.Packages.AppPackageScope
+HackerOs.Platform.Core.Apps.Packages.AppPackageSource.RepositoryTrustKey.get -> string!
+HackerOs.Platform.Core.Apps.Packages.AppPolicy
+HackerOs.Platform.Core.Apps.Packages.AppPolicy.<Clone>$() -> HackerOs.Platform.Core.Apps.Packages.AppPolicy!
+HackerOs.Platform.Core.Apps.Packages.AppPolicy.AppPolicy(System.Collections.Generic.IReadOnlySet<string!>! BlockedApps, System.Collections.Generic.IReadOnlySet<string!>! BlockedCategories, System.Collections.Generic.IReadOnlySet<string!>! BlockedCapabilities, System.Collections.Generic.IReadOnlyList<string!>! Warnings) -> void
+HackerOs.Platform.Core.Apps.Packages.AppPolicy.BlockedApps.get -> System.Collections.Generic.IReadOnlySet<string!>!
+HackerOs.Platform.Core.Apps.Packages.AppPolicy.BlockedApps.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPolicy.BlockedCapabilities.get -> System.Collections.Generic.IReadOnlySet<string!>!
+HackerOs.Platform.Core.Apps.Packages.AppPolicy.BlockedCapabilities.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPolicy.BlockedCategories.get -> System.Collections.Generic.IReadOnlySet<string!>!
+HackerOs.Platform.Core.Apps.Packages.AppPolicy.BlockedCategories.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPolicy.Deconstruct(out System.Collections.Generic.IReadOnlySet<string!>! BlockedApps, out System.Collections.Generic.IReadOnlySet<string!>! BlockedCategories, out System.Collections.Generic.IReadOnlySet<string!>! BlockedCapabilities, out System.Collections.Generic.IReadOnlyList<string!>! Warnings) -> void
+HackerOs.Platform.Core.Apps.Packages.AppPolicy.Equals(HackerOs.Platform.Core.Apps.Packages.AppPolicy? other) -> bool
+HackerOs.Platform.Core.Apps.Packages.AppPolicy.FindBlock(HackerOs.App.Abstractions.AppManifest! manifest) -> HackerOs.Platform.Core.Apps.Packages.AppBlockReason?
+HackerOs.Platform.Core.Apps.Packages.AppPolicy.Warnings.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.Platform.Core.Apps.Packages.AppPolicy.Warnings.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPolicyConfigDocument
+HackerOs.Platform.Core.Apps.Packages.AppSourceSpecification
+HackerOs.Platform.Core.Apps.Packages.AppSourceSpecification.<Clone>$() -> HackerOs.Platform.Core.Apps.Packages.AppSourceSpecification!
+HackerOs.Platform.Core.Apps.Packages.AppSourceSpecification.AppSourceSpecification(string! Name, string! TrustKey, System.Uri? CatalogAddress) -> void
+HackerOs.Platform.Core.Apps.Packages.AppSourceSpecification.CatalogAddress.get -> System.Uri?
+HackerOs.Platform.Core.Apps.Packages.AppSourceSpecification.CatalogAddress.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppSourceSpecification.Deconstruct(out string! Name, out string! TrustKey, out System.Uri? CatalogAddress) -> void
+HackerOs.Platform.Core.Apps.Packages.AppSourceSpecification.Equals(HackerOs.Platform.Core.Apps.Packages.AppSourceSpecification? other) -> bool
+HackerOs.Platform.Core.Apps.Packages.AppSourceSpecification.IsCatalog.get -> bool
+HackerOs.Platform.Core.Apps.Packages.AppSourceSpecification.Name.get -> string!
+HackerOs.Platform.Core.Apps.Packages.AppSourceSpecification.Name.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppSourceSpecification.TrustKey.get -> string!
+HackerOs.Platform.Core.Apps.Packages.AppSourceSpecification.TrustKey.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppSourceTrust
+HackerOs.Platform.Core.Apps.Packages.AppSourceTrust.Trusted = 1 -> HackerOs.Platform.Core.Apps.Packages.AppSourceTrust
+HackerOs.Platform.Core.Apps.Packages.AppSourceTrust.Untrusted = 2 -> HackerOs.Platform.Core.Apps.Packages.AppSourceTrust
+HackerOs.Platform.Core.Apps.Packages.AppSourceTrust.Verified = 0 -> HackerOs.Platform.Core.Apps.Packages.AppSourceTrust
+HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.BuiltInKeys.get -> System.Collections.Generic.IReadOnlySet<string!>!
+HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.BuiltInKeys.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.Catalogs.get -> System.Collections.Generic.IReadOnlyDictionary<string!, System.Uri!>!
+HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.Catalogs.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.GetCatalogTrust(string! name) -> HackerOs.Platform.Core.Apps.Packages.AppSourceTrust
+HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.GetTrust(HackerOs.Platform.Core.Apps.Packages.AppPackageSource! source) -> HackerOs.Platform.Core.Apps.Packages.AppSourceTrust
+HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.UntrustedKeys.get -> System.Collections.Generic.IReadOnlySet<string!>!
+HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.UntrustedKeys.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.UpdateIntervalHours.get -> int
+HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.UpdateIntervalHours.init -> void
+HackerOs.Platform.Core.Apps.Packages.InstalledApp.FilesHome.get -> string?
+HackerOs.Platform.Core.Apps.Packages.InstalledApp.FilesHome.init -> void
+HackerOs.Platform.Core.Apps.Packages.InstalledApp.IsSystemWide.get -> bool
+HackerOs.Platform.Core.Apps.Packages.InstalledApp.OwnerHomes.get -> System.Collections.Generic.IReadOnlySet<string!>!
+HackerOs.Platform.Core.Apps.Packages.InstalledApp.OwnerHomes.init -> void
+HackerOs.Platform.Core.Apps.Packages.InstalledAppHomeLister
+HackerOs.Platform.Core.Apps.Packages.InstalledPackageCatalog
+HackerOs.Platform.Core.Apps.Packages.InstalledPackageCatalog.Apply(System.Collections.Generic.IEnumerable<HackerOs.Platform.Core.Apps.Packages.InstalledApp!>! apps) -> void
+HackerOs.Platform.Core.Apps.Packages.InstalledPackageCatalog.Apps.get -> System.Collections.Generic.IReadOnlyDictionary<string!, HackerOs.Platform.Core.Apps.Packages.InstalledApp!>!
+HackerOs.Platform.Core.Apps.Packages.InstalledPackageCatalog.Contains(string! appId) -> bool
+HackerOs.Platform.Core.Apps.Packages.InstalledPackageCatalog.GetHiddenFor(string? homePath) -> System.Collections.Generic.IReadOnlySet<string!>!
+HackerOs.Platform.Core.Apps.Packages.InstalledPackageCatalog.InstalledPackageCatalog() -> void
+HackerOs.Platform.Core.Apps.Packages.InstalledPackageCatalog.IsVisibleTo(string! appId, string? homePath) -> bool
+HackerOs.Platform.Core.Elevation.AppInstallApprovalOperation
+HackerOs.Platform.Core.Elevation.AppInstallApprovalOperation.Install = 0 -> HackerOs.Platform.Core.Elevation.AppInstallApprovalOperation
+HackerOs.Platform.Core.Elevation.AppInstallApprovalOperation.Remove = 2 -> HackerOs.Platform.Core.Elevation.AppInstallApprovalOperation
+HackerOs.Platform.Core.Elevation.AppInstallApprovalOperation.Update = 1 -> HackerOs.Platform.Core.Elevation.AppInstallApprovalOperation
+HackerOs.Platform.Core.Elevation.AppInstallApprovalOutcome
+HackerOs.Platform.Core.Elevation.AppInstallApprovalOutcome.Approved = 0 -> HackerOs.Platform.Core.Elevation.AppInstallApprovalOutcome
+HackerOs.Platform.Core.Elevation.AppInstallApprovalOutcome.Refused = 1 -> HackerOs.Platform.Core.Elevation.AppInstallApprovalOutcome
+HackerOs.Platform.Core.Elevation.AppInstallApprovalOutcome.Unavailable = 2 -> HackerOs.Platform.Core.Elevation.AppInstallApprovalOutcome
+HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest
+HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.<Clone>$() -> HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest!
+HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.AdministratorLogin.get -> string!
+HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.AdministratorLogin.init -> void
+HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.AppId.get -> string!
+HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.AppId.init -> void
+HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.AppInstallApprovalRequest(string! AppId, string! Name, string! Version, string? PreviousVersion, long? SizeBytes, string! Source, HackerOs.Platform.Core.Apps.Packages.AppSourceTrust Trust, System.Collections.Generic.IReadOnlyList<string!>! Capabilities, HackerOs.Platform.Core.Elevation.AppInstallApprovalOperation Operation, bool SystemWide, string! AdministratorLogin, HackerOs.Simulation.Abstractions.Sessions.AuthenticatedPrincipal? RequestedBy, HackerOs.App.Abstractions.AppManifest! Caller) -> void
+HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.BlockReason.get -> HackerOs.Platform.Core.Apps.Packages.AppBlockReason?
+HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.BlockReason.init -> void
+HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.Caller.get -> HackerOs.App.Abstractions.AppManifest!
+HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.Caller.init -> void
+HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.Capabilities.init -> void
+HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.Deconstruct(out string! AppId, out string! Name, out string! Version, out string? PreviousVersion, out long? SizeBytes, out string! Source, out HackerOs.Platform.Core.Apps.Packages.AppSourceTrust Trust, out System.Collections.Generic.IReadOnlyList<string!>! Capabilities, out HackerOs.Platform.Core.Elevation.AppInstallApprovalOperation Operation, out bool SystemWide, out string! AdministratorLogin, out HackerOs.Simulation.Abstractions.Sessions.AuthenticatedPrincipal? RequestedBy, out HackerOs.App.Abstractions.AppManifest! Caller) -> void
+HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.Equals(HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest? other) -> bool
+HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.Name.get -> string!
+HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.Name.init -> void
+HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.Operation.get -> HackerOs.Platform.Core.Elevation.AppInstallApprovalOperation
+HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.Operation.init -> void
+HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.PreviousVersion.get -> string?
+HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.PreviousVersion.init -> void
+HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.RequestedBy.get -> HackerOs.Simulation.Abstractions.Sessions.AuthenticatedPrincipal?
+HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.RequestedBy.init -> void
+HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.SizeBytes.get -> long?
+HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.SizeBytes.init -> void
+HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.Source.get -> string!
+HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.Source.init -> void
+HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.SystemWide.get -> bool
+HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.SystemWide.init -> void
+HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.Trust.get -> HackerOs.Platform.Core.Apps.Packages.AppSourceTrust
+HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.Trust.init -> void
+HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.Version.get -> string!
+HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.Version.init -> void
+HackerOs.Platform.Core.Elevation.IAppInstallApprovalPrompt
+HackerOs.Platform.Core.Elevation.IAppInstallApprovalPrompt.RequestAsync(HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.Platform.Core.Elevation.AppInstallApprovalOutcome>!
+const HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults.DefaultUpdateIntervalHours = 6 -> int
+const HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults.MetadataPrefix = "HackerOs.AppPackages." -> string!
+const HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults.OfficialCatalogAddress = "https://raw.githubusercontent.com/Kazo-ca/HackerOs-AppMarketPlace/packages/catalog.json" -> string!
+const HackerOs.Platform.Core.Apps.Packages.AppPolicyConfigDocument.AppsSection = "blocked-apps" -> string!
+const HackerOs.Platform.Core.Apps.Packages.AppPolicyConfigDocument.CapabilitiesSection = "blocked-capabilities" -> string!
+const HackerOs.Platform.Core.Apps.Packages.AppPolicyConfigDocument.CategoriesSection = "blocked-categories" -> string!
+const HackerOs.Platform.Core.Apps.Packages.AppPolicyConfigDocument.FileName = "app-policy.config" -> string!
+const HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig.OfficialCatalogName = "official" -> string!
+const HackerOs.Platform.Core.Apps.Packages.AppSourcesConfigDocument.CatalogTrustPrefix = "catalog:" -> string!
+const HackerOs.Platform.Core.Apps.Packages.AppSourcesConfigDocument.CatalogsSection = "catalogs" -> string!
+const HackerOs.Platform.Core.Apps.Packages.AppSourcesConfigDocument.IntervalHoursKey = "interval-hours" -> string!
+const HackerOs.Platform.Core.Apps.Packages.AppSourcesConfigDocument.UpdatesSection = "updates" -> string!
+const HackerOs.Platform.Core.Apps.Packages.InstalledAppsLayout.HomesRoot = "/home" -> string!
+const HackerOs.Platform.Core.Apps.Packages.InstalledAppsLayout.PersonalConfigDefaultContent = "# Apps you installed for yourself (ADR 0189 section 3), read when your session opens.\n# Use hackpkg install --user | remove --user to change this list.\n[installed]\n" -> string!
+const HackerOs.Platform.Core.Apps.Packages.InstalledAppsLayout.PersonalConfigUnderHome = ".config/hackeros/installed-apps.config" -> string!
+const HackerOs.Platform.Core.Apps.Packages.InstalledAppsLayout.PersonalRootUnderHome = ".local/share/hackeros/apps" -> string!
+override HackerOs.Platform.Core.Apps.Packages.AppBlockReason.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.Apps.Packages.AppBlockReason.GetHashCode() -> int
+override HackerOs.Platform.Core.Apps.Packages.AppBlockReason.ToString() -> string!
+override HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults.GetHashCode() -> int
+override HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults.ToString() -> string!
+override HackerOs.Platform.Core.Apps.Packages.AppPackageInstallContext.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.Apps.Packages.AppPackageInstallContext.GetHashCode() -> int
+override HackerOs.Platform.Core.Apps.Packages.AppPackageInstallContext.ToString() -> string!
+override HackerOs.Platform.Core.Apps.Packages.AppPolicy.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.Apps.Packages.AppPolicy.GetHashCode() -> int
+override HackerOs.Platform.Core.Apps.Packages.AppPolicy.ToString() -> string!
+override HackerOs.Platform.Core.Apps.Packages.AppSourceSpecification.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.Apps.Packages.AppSourceSpecification.GetHashCode() -> int
+override HackerOs.Platform.Core.Apps.Packages.AppSourceSpecification.ToString() -> string!
+override HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.GetHashCode() -> int
+override HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.ToString() -> string!
+static HackerOs.Platform.Core.Apps.AppsConfigDocument.SetInstalled(string? content, string! appId, HackerOs.Platform.Core.Apps.Packages.AppPackageSource! source, string! defaultContent) -> string!
+static HackerOs.Platform.Core.Apps.Packages.AppBlockReason.operator !=(HackerOs.Platform.Core.Apps.Packages.AppBlockReason? left, HackerOs.Platform.Core.Apps.Packages.AppBlockReason? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.AppBlockReason.operator ==(HackerOs.Platform.Core.Apps.Packages.AppBlockReason? left, HackerOs.Platform.Core.Apps.Packages.AppBlockReason? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults.FromAssembly(System.Reflection.Assembly? assembly) -> HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults!
+static HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults.FromMetadata(System.Collections.Generic.IReadOnlyDictionary<string!, string!>! values) -> HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults!
+static HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults.Standard.get -> HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults!
+static HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults.operator !=(HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults? left, HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults.operator ==(HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults? left, HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.AppPackageInstallContext.operator !=(HackerOs.Platform.Core.Apps.Packages.AppPackageInstallContext? left, HackerOs.Platform.Core.Apps.Packages.AppPackageInstallContext? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.AppPackageInstallContext.operator ==(HackerOs.Platform.Core.Apps.Packages.AppPackageInstallContext? left, HackerOs.Platform.Core.Apps.Packages.AppPackageInstallContext? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.AppPolicy.operator !=(HackerOs.Platform.Core.Apps.Packages.AppPolicy? left, HackerOs.Platform.Core.Apps.Packages.AppPolicy? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.AppPolicy.operator ==(HackerOs.Platform.Core.Apps.Packages.AppPolicy? left, HackerOs.Platform.Core.Apps.Packages.AppPolicy? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.AppPolicyConfigDocument.BuildDefaultContent(HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults! defaults) -> string!
+static HackerOs.Platform.Core.Apps.Packages.AppPolicyConfigDocument.DefaultContent.get -> string!
+static HackerOs.Platform.Core.Apps.Packages.AppPolicyConfigDocument.MachinePath.get -> HackerOs.App.Abstractions.VirtualPath
+static HackerOs.Platform.Core.Apps.Packages.AppPolicyConfigDocument.Read(string? content, HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults? defaults = null) -> HackerOs.Platform.Core.Apps.Packages.AppPolicy!
+static HackerOs.Platform.Core.Apps.Packages.AppPolicyConfigDocument.SectionOf(HackerOs.Platform.Core.Apps.Packages.AppBlockKind kind) -> string!
+static HackerOs.Platform.Core.Apps.Packages.AppPolicyConfigDocument.Set(string? content, HackerOs.Platform.Core.Apps.Packages.AppBlockKind kind, string! value, bool blocked) -> string!
+static HackerOs.Platform.Core.Apps.Packages.AppSourceSpecification.TryParse(string? text, out HackerOs.Platform.Core.Apps.Packages.AppSourceSpecification? source) -> bool
+static HackerOs.Platform.Core.Apps.Packages.AppSourceSpecification.operator !=(HackerOs.Platform.Core.Apps.Packages.AppSourceSpecification? left, HackerOs.Platform.Core.Apps.Packages.AppSourceSpecification? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.AppSourceSpecification.operator ==(HackerOs.Platform.Core.Apps.Packages.AppSourceSpecification? left, HackerOs.Platform.Core.Apps.Packages.AppSourceSpecification? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.AppSourcesConfigDocument.AddSource(string? content, HackerOs.Platform.Core.Apps.Packages.AppSourceSpecification! source, bool trusted) -> string!
+static HackerOs.Platform.Core.Apps.Packages.AppSourcesConfigDocument.BuildDefaultContent(HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults! defaults) -> string!
+static HackerOs.Platform.Core.Apps.Packages.AppSourcesConfigDocument.DefaultContent.get -> string!
+static HackerOs.Platform.Core.Apps.Packages.AppSourcesConfigDocument.Read(string? content, HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults! defaults) -> HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig!
+static HackerOs.Platform.Core.Apps.Packages.AppSourcesConfigDocument.RemoveSource(string? content, HackerOs.Platform.Core.Apps.Packages.AppSourceSpecification! source) -> string!
+static HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage.LoadAsync(HackerOs.Platform.Core.Apps.Packages.InstalledAppFileReader! read, HackerOs.Platform.Core.Apps.Packages.InstalledAppHomeLister? listHomes = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.Platform.Core.Apps.Packages.InstalledAppsImage!>!
+static HackerOs.Platform.Core.Apps.Packages.InstalledAppsLayout.CreateHomeLister(HackerOs.Simulation.Abstractions.FileSystem.IFileSystemProvider! provider) -> HackerOs.Platform.Core.Apps.Packages.InstalledAppHomeLister!
+static HackerOs.Platform.Core.Apps.Packages.InstalledAppsLayout.GetPersonalAppDirectory(string! homeDirectory, string! appId) -> HackerOs.App.Abstractions.VirtualPath
+static HackerOs.Platform.Core.Apps.Packages.InstalledAppsLayout.GetPersonalConfigPath(string! homeDirectory) -> HackerOs.App.Abstractions.VirtualPath
+static HackerOs.Platform.Core.Apps.Packages.InstalledAppsLayout.GetPersonalDirectory(string! homeDirectory, string! appId, HackerOs.App.Abstractions.SemanticVersion version) -> HackerOs.App.Abstractions.VirtualPath
+static HackerOs.Platform.Core.Apps.Packages.InstalledAppsLayout.GetPersonalRoot(string! homeDirectory) -> HackerOs.App.Abstractions.VirtualPath
+static HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.operator !=(HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest? left, HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest? right) -> bool
+static HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.operator ==(HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest? left, HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest? right) -> bool
+virtual HackerOs.Platform.Core.Apps.Packages.InstalledAppHomeLister.Invoke(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<string!>!>
+HackerOs.Platform.Core.Apps.AppInstallationService.InstalledPackages.get -> HackerOs.Platform.Core.Apps.Packages.InstalledPackageCatalog?
+HackerOs.Platform.Core.Apps.AppInstallationService.InstalledPackages.init -> void
+HackerOs.Platform.Core.Execution.AppCatalogGatewayServices.InstallApproval.get -> System.Func<HackerOs.Platform.Core.Elevation.IAppInstallApprovalPrompt?>?
+HackerOs.Platform.Core.Execution.AppCatalogGatewayServices.InstallApproval.init -> void
+HackerOs.Platform.Core.Execution.AppCatalogGatewayServices.InstalledPackages.get -> System.Func<HackerOs.Platform.Core.Apps.Packages.InstalledPackageCatalog?>?
+HackerOs.Platform.Core.Execution.AppCatalogGatewayServices.InstalledPackages.init -> void
+HackerOs.Platform.Core.FileSystem.FileSystemSeeder.PackageDefaults.get -> HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults!
+HackerOs.Platform.Core.FileSystem.FileSystemSeeder.PackageDefaults.init -> void
+HackerOs.Platform.Core.Appearance.WallpaperImage
+HackerOs.Platform.Core.Appearance.WallpaperImage.<Clone>$() -> HackerOs.Platform.Core.Appearance.WallpaperImage!
+HackerOs.Platform.Core.Appearance.WallpaperImage.AssetPath.get -> string?
+HackerOs.Platform.Core.Appearance.WallpaperImage.AssetPath.init -> void
+HackerOs.Platform.Core.Appearance.WallpaperImage.Content.get -> byte[]?
+HackerOs.Platform.Core.Appearance.WallpaperImage.Content.init -> void
+HackerOs.Platform.Core.Appearance.WallpaperImage.Deconstruct(out string! Value, out HackerOs.Theming.Abstractions.WallpaperFit Fit, out string? AssetPath, out byte[]? Content, out string? MediaType) -> void
+HackerOs.Platform.Core.Appearance.WallpaperImage.Equals(HackerOs.Platform.Core.Appearance.WallpaperImage? other) -> bool
+HackerOs.Platform.Core.Appearance.WallpaperImage.Fit.get -> HackerOs.Theming.Abstractions.WallpaperFit
+HackerOs.Platform.Core.Appearance.WallpaperImage.Fit.init -> void
+HackerOs.Platform.Core.Appearance.WallpaperImage.MediaType.get -> string?
+HackerOs.Platform.Core.Appearance.WallpaperImage.MediaType.init -> void
+HackerOs.Platform.Core.Appearance.WallpaperImage.Value.get -> string!
+HackerOs.Platform.Core.Appearance.WallpaperImage.Value.init -> void
+HackerOs.Platform.Core.Appearance.WallpaperImage.WallpaperImage(string! Value, HackerOs.Theming.Abstractions.WallpaperFit Fit, string? AssetPath, byte[]? Content, string? MediaType) -> void
+HackerOs.Platform.Core.Appearance.WallpaperPreferences
+HackerOs.Platform.Core.Appearance.WallpaperPreferences.<Clone>$() -> HackerOs.Platform.Core.Appearance.WallpaperPreferences!
+HackerOs.Platform.Core.Appearance.WallpaperPreferences.Deconstruct(out string! Wallpaper, out HackerOs.Theming.Abstractions.WallpaperFit Fit, out System.Collections.Generic.IReadOnlyDictionary<int, string!>! Screens) -> void
+HackerOs.Platform.Core.Appearance.WallpaperPreferences.Equals(HackerOs.Platform.Core.Appearance.WallpaperPreferences? other) -> bool
+HackerOs.Platform.Core.Appearance.WallpaperPreferences.Fit.get -> HackerOs.Theming.Abstractions.WallpaperFit
+HackerOs.Platform.Core.Appearance.WallpaperPreferences.Fit.init -> void
+HackerOs.Platform.Core.Appearance.WallpaperPreferences.ForScreen(int screenNumber) -> string!
+HackerOs.Platform.Core.Appearance.WallpaperPreferences.SameAs(HackerOs.Platform.Core.Appearance.WallpaperPreferences? other) -> bool
+HackerOs.Platform.Core.Appearance.WallpaperPreferences.Screens.get -> System.Collections.Generic.IReadOnlyDictionary<int, string!>!
+HackerOs.Platform.Core.Appearance.WallpaperPreferences.Screens.init -> void
+HackerOs.Platform.Core.Appearance.WallpaperPreferences.Wallpaper.get -> string!
+HackerOs.Platform.Core.Appearance.WallpaperPreferences.Wallpaper.init -> void
+HackerOs.Platform.Core.Appearance.WallpaperPreferences.WallpaperPreferences(string! Wallpaper, HackerOs.Theming.Abstractions.WallpaperFit Fit, System.Collections.Generic.IReadOnlyDictionary<int, string!>! Screens) -> void
+HackerOs.Platform.Core.Appearance.WallpaperService
+HackerOs.Platform.Core.Appearance.WallpaperService.Changed -> System.Action?
+HackerOs.Platform.Core.Appearance.WallpaperService.Current.get -> HackerOs.Platform.Core.Appearance.WallpaperPreferences!
+HackerOs.Platform.Core.Appearance.WallpaperService.Dispose() -> void
+HackerOs.Platform.Core.Appearance.WallpaperService.EnsureInitializedAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+HackerOs.Platform.Core.Appearance.WallpaperService.GetImageAsync(int screenNumber, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.Platform.Core.Appearance.WallpaperImage?>!
+HackerOs.Platform.Core.Appearance.WallpaperService.RefreshAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+HackerOs.Platform.Core.Appearance.WallpaperService.WallpaperService(HackerOs.Platform.Core.Settings.IOsSettingsService! settings, HackerOs.Simulation.Abstractions.FileSystem.IFileSystemService! fileSystem, HackerOs.Simulation.Abstractions.Sessions.ISessionService! session, HackerOs.Simulation.Abstractions.Time.ISimulationClock! clock, Microsoft.Extensions.Logging.ILogger<HackerOs.Platform.Core.Appearance.WallpaperService!>? logger = null) -> void
+const HackerOs.Platform.Core.Appearance.AppearanceSettingsDocuments.MaxWallpaperScreen = 9 -> int
+const HackerOs.Platform.Core.Appearance.AppearanceSettingsDocuments.WallpaperFitKey = "wallpaperFit" -> string!
+const HackerOs.Platform.Core.Appearance.AppearanceSettingsDocuments.WallpaperKey = "wallpaper" -> string!
+override HackerOs.Platform.Core.Appearance.WallpaperImage.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.Appearance.WallpaperImage.GetHashCode() -> int
+override HackerOs.Platform.Core.Appearance.WallpaperImage.ToString() -> string!
+override HackerOs.Platform.Core.Appearance.WallpaperPreferences.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.Appearance.WallpaperPreferences.GetHashCode() -> int
+override HackerOs.Platform.Core.Appearance.WallpaperPreferences.ToString() -> string!
+static HackerOs.Platform.Core.Appearance.AppearanceSettingsDocuments.WallpaperScreenKey(int number) -> string!
+static HackerOs.Platform.Core.Appearance.WallpaperImage.operator !=(HackerOs.Platform.Core.Appearance.WallpaperImage? left, HackerOs.Platform.Core.Appearance.WallpaperImage? right) -> bool
+static HackerOs.Platform.Core.Appearance.WallpaperImage.operator ==(HackerOs.Platform.Core.Appearance.WallpaperImage? left, HackerOs.Platform.Core.Appearance.WallpaperImage? right) -> bool
+static HackerOs.Platform.Core.Appearance.WallpaperPreferences.Default.get -> HackerOs.Platform.Core.Appearance.WallpaperPreferences!
+static HackerOs.Platform.Core.Appearance.WallpaperPreferences.FromSnapshot(HackerOs.Simulation.Abstractions.Settings.LayeredConfigSnapshot! snapshot) -> HackerOs.Platform.Core.Appearance.WallpaperPreferences!
+static HackerOs.Platform.Core.Appearance.WallpaperPreferences.operator !=(HackerOs.Platform.Core.Appearance.WallpaperPreferences? left, HackerOs.Platform.Core.Appearance.WallpaperPreferences? right) -> bool
+static HackerOs.Platform.Core.Appearance.WallpaperPreferences.operator ==(HackerOs.Platform.Core.Appearance.WallpaperPreferences? left, HackerOs.Platform.Core.Appearance.WallpaperPreferences? right) -> bool
+HackerOs.Platform.Core.Appearance.CursorSettingsDocuments
+HackerOs.Platform.Core.Appearance.CursorThemeService
+HackerOs.Platform.Core.Appearance.CursorThemeService.Changed -> System.Action?
+HackerOs.Platform.Core.Appearance.CursorThemeService.Current.get -> HackerOs.Theming.Abstractions.CursorTheme!
+HackerOs.Platform.Core.Appearance.CursorThemeService.CursorThemeService(HackerOs.Simulation.Abstractions.FileSystem.IFileSystemService! fileSystem, HackerOs.Simulation.Abstractions.Sessions.ISessionService! session, HackerOs.Simulation.Abstractions.Time.ISimulationClock! clock, HackerOs.Platform.Core.Settings.IOsSettingsService! settings, Microsoft.Extensions.Logging.ILogger<HackerOs.Platform.Core.Appearance.CursorThemeService!>? logger = null) -> void
+HackerOs.Platform.Core.Appearance.CursorThemeService.Dispose() -> void
+HackerOs.Platform.Core.Appearance.CursorThemeService.InitializeAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+HackerOs.Platform.Core.Appearance.CursorThemeService.RefreshAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+const HackerOs.Platform.Core.Appearance.CursorSettingsDocuments.ThemeKey = "theme" -> string!
+static HackerOs.Platform.Core.Appearance.CursorSettingsDocuments.Document.get -> HackerOs.Platform.Core.Settings.OsSettingsDocument!
+static HackerOs.Platform.Core.Appearance.CursorSettingsDocuments.Schema.get -> HackerOs.Simulation.Abstractions.Settings.SettingsSchema!
+static HackerOs.Platform.Core.Appearance.CursorSettingsDocuments.ToThemeId(HackerOs.Simulation.Abstractions.Settings.LayeredConfigSnapshot! snapshot) -> string!
 HackerOs.Platform.Core.Administration.ServerConnectionGatewayServices.HostInfo.get -> System.Func<HackerOs.Platform.Core.ServerConnection.IHostInfoClient!>?
 HackerOs.Platform.Core.Administration.ServerConnectionGatewayServices.HostInfo.init -> void
 HackerOs.Platform.Core.ServerConnection.HttpAccountClient.PairAsync(System.Uri! serverBaseUrl, HackerOs.Server.Contracts.Identity.PairDeviceRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.Server.Contracts.Identity.LoginResponse!>!
@@ -519,6 +824,91 @@ override HackerOs.Platform.Core.FileSystem.BuiltInIconPacks.PackFile.ToString() 
 static HackerOs.Platform.Core.FileSystem.BuiltInIconPacks.Files.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.FileSystem.BuiltInIconPacks.PackFile!>!
 static HackerOs.Platform.Core.FileSystem.BuiltInIconPacks.PackFile.operator !=(HackerOs.Platform.Core.FileSystem.BuiltInIconPacks.PackFile? left, HackerOs.Platform.Core.FileSystem.BuiltInIconPacks.PackFile? right) -> bool
 static HackerOs.Platform.Core.FileSystem.BuiltInIconPacks.PackFile.operator ==(HackerOs.Platform.Core.FileSystem.BuiltInIconPacks.PackFile? left, HackerOs.Platform.Core.FileSystem.BuiltInIconPacks.PackFile? right) -> bool
+HackerOs.Platform.Core.Notifications.INotificationFeed
+HackerOs.Platform.Core.Notifications.INotificationFeed.Posted -> System.Action<HackerOs.Simulation.Abstractions.Notifications.Notification!>?
+HackerOs.Platform.Core.Notifications.InMemoryNotificationQueue.Posted -> System.Action<HackerOs.Simulation.Abstractions.Notifications.Notification!>?
+HackerOs.Platform.Core.Sounds.BuiltInSoundTheme
+HackerOs.Platform.Core.Sounds.BuiltInSoundTheme.<Clone>$() -> HackerOs.Platform.Core.Sounds.BuiltInSoundTheme!
+HackerOs.Platform.Core.Sounds.BuiltInSoundTheme.BuiltInSoundTheme(string! Id, string! Name, string! FrenchName, string! Comment, string! FrenchComment) -> void
+HackerOs.Platform.Core.Sounds.BuiltInSoundTheme.Comment.get -> string!
+HackerOs.Platform.Core.Sounds.BuiltInSoundTheme.Comment.init -> void
+HackerOs.Platform.Core.Sounds.BuiltInSoundTheme.Deconstruct(out string! Id, out string! Name, out string! FrenchName, out string! Comment, out string! FrenchComment) -> void
+HackerOs.Platform.Core.Sounds.BuiltInSoundTheme.Equals(HackerOs.Platform.Core.Sounds.BuiltInSoundTheme? other) -> bool
+HackerOs.Platform.Core.Sounds.BuiltInSoundTheme.FrenchComment.get -> string!
+HackerOs.Platform.Core.Sounds.BuiltInSoundTheme.FrenchComment.init -> void
+HackerOs.Platform.Core.Sounds.BuiltInSoundTheme.FrenchName.get -> string!
+HackerOs.Platform.Core.Sounds.BuiltInSoundTheme.FrenchName.init -> void
+HackerOs.Platform.Core.Sounds.BuiltInSoundTheme.Id.get -> string!
+HackerOs.Platform.Core.Sounds.BuiltInSoundTheme.Id.init -> void
+HackerOs.Platform.Core.Sounds.BuiltInSoundTheme.Name.get -> string!
+HackerOs.Platform.Core.Sounds.BuiltInSoundTheme.Name.init -> void
+HackerOs.Platform.Core.Sounds.BuiltInSoundThemes
+HackerOs.Platform.Core.Sounds.IOsSoundOutput
+HackerOs.Platform.Core.Sounds.IOsSoundOutput.PlayAsync(HackerOs.Platform.Core.Sounds.OsSoundClip! clip, double volume, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+HackerOs.Platform.Core.Sounds.OsSoundClip
+HackerOs.Platform.Core.Sounds.OsSoundClip.<Clone>$() -> HackerOs.Platform.Core.Sounds.OsSoundClip!
+HackerOs.Platform.Core.Sounds.OsSoundClip.Deconstruct(out string! Key, out string! MediaType, out System.Func<System.Threading.CancellationToken, System.Threading.Tasks.ValueTask<byte[]!>>! LoadAsync) -> void
+HackerOs.Platform.Core.Sounds.OsSoundClip.Equals(HackerOs.Platform.Core.Sounds.OsSoundClip? other) -> bool
+HackerOs.Platform.Core.Sounds.OsSoundClip.Key.get -> string!
+HackerOs.Platform.Core.Sounds.OsSoundClip.Key.init -> void
+HackerOs.Platform.Core.Sounds.OsSoundClip.LoadAsync.get -> System.Func<System.Threading.CancellationToken, System.Threading.Tasks.ValueTask<byte[]!>>!
+HackerOs.Platform.Core.Sounds.OsSoundClip.LoadAsync.init -> void
+HackerOs.Platform.Core.Sounds.OsSoundClip.MediaType.get -> string!
+HackerOs.Platform.Core.Sounds.OsSoundClip.MediaType.init -> void
+HackerOs.Platform.Core.Sounds.OsSoundClip.OsSoundClip(string! Key, string! MediaType, System.Func<System.Threading.CancellationToken, System.Threading.Tasks.ValueTask<byte[]!>>! LoadAsync) -> void
+HackerOs.Platform.Core.Sounds.OsSoundService
+HackerOs.Platform.Core.Sounds.OsSoundService.Changed -> System.Action?
+HackerOs.Platform.Core.Sounds.OsSoundService.Dispose() -> void
+HackerOs.Platform.Core.Sounds.OsSoundService.InitializeAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+HackerOs.Platform.Core.Sounds.OsSoundService.Play(HackerOs.Simulation.Abstractions.Sounds.OsSoundEvent soundEvent) -> void
+HackerOs.Platform.Core.Sounds.OsSoundService.PlayAsync(HackerOs.Simulation.Abstractions.Sounds.OsSoundEvent soundEvent, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
+HackerOs.Platform.Core.Sounds.OsSoundService.Preferences.get -> HackerOs.Platform.Core.Sounds.SoundPreferences!
+HackerOs.Platform.Core.Sounds.OsSoundService.ResolveAsync(string! themeId, HackerOs.Simulation.Abstractions.Sounds.OsSoundEvent soundEvent, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.Platform.Core.Sounds.OsSoundClip?>!
+HackerOs.Platform.Core.Sounds.SoundPreferences
+HackerOs.Platform.Core.Sounds.SoundPreferences.<Clone>$() -> HackerOs.Platform.Core.Sounds.SoundPreferences!
+HackerOs.Platform.Core.Sounds.SoundPreferences.Deconstruct(out bool Enabled, out string! Theme, out int Volume) -> void
+HackerOs.Platform.Core.Sounds.SoundPreferences.Enabled.get -> bool
+HackerOs.Platform.Core.Sounds.SoundPreferences.Enabled.init -> void
+HackerOs.Platform.Core.Sounds.SoundPreferences.Equals(HackerOs.Platform.Core.Sounds.SoundPreferences? other) -> bool
+HackerOs.Platform.Core.Sounds.SoundPreferences.IsAudible.get -> bool
+HackerOs.Platform.Core.Sounds.SoundPreferences.SoundPreferences(bool Enabled, string! Theme, int Volume) -> void
+HackerOs.Platform.Core.Sounds.SoundPreferences.Theme.get -> string!
+HackerOs.Platform.Core.Sounds.SoundPreferences.Theme.init -> void
+HackerOs.Platform.Core.Sounds.SoundPreferences.Volume.get -> int
+HackerOs.Platform.Core.Sounds.SoundPreferences.Volume.init -> void
+HackerOs.Platform.Core.Sounds.SoundSettingsDocuments
+const HackerOs.Platform.Core.Sounds.SoundSettingsDocuments.DefaultVolume = 60 -> int
+const HackerOs.Platform.Core.Sounds.SoundSettingsDocuments.DocumentId = "sound" -> string!
+const HackerOs.Platform.Core.Sounds.SoundSettingsDocuments.EnabledKey = "enabled" -> string!
+const HackerOs.Platform.Core.Sounds.SoundSettingsDocuments.ThemeKey = "theme" -> string!
+const HackerOs.Platform.Core.Sounds.SoundSettingsDocuments.VolumeKey = "volume" -> string!
+override HackerOs.Platform.Core.Sounds.BuiltInSoundTheme.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.Sounds.BuiltInSoundTheme.GetHashCode() -> int
+override HackerOs.Platform.Core.Sounds.BuiltInSoundTheme.ToString() -> string!
+override HackerOs.Platform.Core.Sounds.OsSoundClip.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.Sounds.OsSoundClip.GetHashCode() -> int
+override HackerOs.Platform.Core.Sounds.OsSoundClip.ToString() -> string!
+override HackerOs.Platform.Core.Sounds.SoundPreferences.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.Sounds.SoundPreferences.GetHashCode() -> int
+override HackerOs.Platform.Core.Sounds.SoundPreferences.ToString() -> string!
+static HackerOs.Platform.Core.Sounds.BuiltInSoundTheme.operator !=(HackerOs.Platform.Core.Sounds.BuiltInSoundTheme? left, HackerOs.Platform.Core.Sounds.BuiltInSoundTheme? right) -> bool
+static HackerOs.Platform.Core.Sounds.BuiltInSoundTheme.operator ==(HackerOs.Platform.Core.Sounds.BuiltInSoundTheme? left, HackerOs.Platform.Core.Sounds.BuiltInSoundTheme? right) -> bool
+static HackerOs.Platform.Core.Sounds.BuiltInSoundThemes.All.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.Sounds.BuiltInSoundTheme!>!
+static HackerOs.Platform.Core.Sounds.BuiltInSoundThemes.GetDirectory(string! id) -> string!
+static HackerOs.Platform.Core.Sounds.BuiltInSoundThemes.GetIndexContent(HackerOs.Platform.Core.Sounds.BuiltInSoundTheme! theme) -> string!
+static HackerOs.Platform.Core.Sounds.BuiltInSoundThemes.GetSoundPath(string! id, HackerOs.Simulation.Abstractions.Sounds.OsSoundEvent soundEvent) -> string!
+static HackerOs.Platform.Core.Sounds.BuiltInSoundThemes.ReadSound(string! id, HackerOs.Simulation.Abstractions.Sounds.OsSoundEvent soundEvent) -> byte[]?
+static HackerOs.Platform.Core.Sounds.OsSoundClip.operator !=(HackerOs.Platform.Core.Sounds.OsSoundClip? left, HackerOs.Platform.Core.Sounds.OsSoundClip? right) -> bool
+static HackerOs.Platform.Core.Sounds.OsSoundClip.operator ==(HackerOs.Platform.Core.Sounds.OsSoundClip? left, HackerOs.Platform.Core.Sounds.OsSoundClip? right) -> bool
+static HackerOs.Platform.Core.Sounds.SoundPreferences.Default.get -> HackerOs.Platform.Core.Sounds.SoundPreferences!
+static HackerOs.Platform.Core.Sounds.SoundPreferences.operator !=(HackerOs.Platform.Core.Sounds.SoundPreferences? left, HackerOs.Platform.Core.Sounds.SoundPreferences? right) -> bool
+static HackerOs.Platform.Core.Sounds.SoundPreferences.operator ==(HackerOs.Platform.Core.Sounds.SoundPreferences? left, HackerOs.Platform.Core.Sounds.SoundPreferences? right) -> bool
+static HackerOs.Platform.Core.Sounds.SoundSettingsDocuments.Document.get -> HackerOs.Platform.Core.Settings.OsSettingsDocument!
+static HackerOs.Platform.Core.Sounds.SoundSettingsDocuments.Schema.get -> HackerOs.Simulation.Abstractions.Settings.SettingsSchema!
+static HackerOs.Platform.Core.Sounds.SoundSettingsDocuments.ToPreferences(HackerOs.Simulation.Abstractions.Settings.LayeredConfigSnapshot! snapshot) -> HackerOs.Platform.Core.Sounds.SoundPreferences!
+HackerOs.Platform.Core.FileSystem.FileSystemSeeder.InstallSoundThemesAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+HackerOs.Platform.Core.Sounds.OsSoundService.InstallBuiltInThemesAsync() -> System.Threading.Tasks.Task!
+HackerOs.Platform.Core.Sounds.OsSoundService.OsSoundService(HackerOs.Platform.Core.Settings.IOsSettingsService! settings, HackerOs.Simulation.Abstractions.FileSystem.IFileSystemService! fileSystem, HackerOs.Simulation.Abstractions.Time.ISimulationClock! clock, HackerOs.Simulation.Abstractions.Sessions.ISessionService! session, HackerOs.Platform.Core.Sounds.IOsSoundOutput! output, HackerOs.Simulation.Abstractions.Events.IEventBus? eventBus = null, HackerOs.Platform.Core.Notifications.INotificationFeed? notifications = null, System.TimeProvider? timeProvider = null, Microsoft.Extensions.Logging.ILogger<HackerOs.Platform.Core.Sounds.OsSoundService!>? logger = null, System.Func<System.Threading.CancellationToken, System.Threading.Tasks.ValueTask>? installBuiltInThemes = null) -> void
 HackerOs.Platform.Core.ServerConnection.ServerConnectionException.ProxyErrorCode.get -> string?
 HackerOs.Platform.Core.ServerConnection.ServerConnectionException.ServerConnectionException(string! message, string? serverBody, string? proxyErrorCode) -> void
 const HackerOs.Platform.Core.ServerConnection.HttpProxyClient.MaxConcurrentRequests = 6 -> int
