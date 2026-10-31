@@ -50,6 +50,7 @@ Two ways, same result:
 | `store/` | `icon.png` (256×256), `short_description.{en,fr}.txt`, `description.{en,fr}.md`, `store.json`, optional `screenshots/` |
 | `.github/workflows/ci.yml` | CI: submodule checked, build and tests in `Release` |
 | `.github/workflows/publish-to-hack-store.yml` | submission to the catalog on a `v*` tag |
+| `.github/workflows/publish-packages.yml` | signed package pushed to the `hackeros-packages` branch on a `v*` tag ([ADR 0219](../dev/adr/0219-app-authors-signing-tool.md)) |
 | `README.md`, `readme-fr.md` | these steps, for the created repository |
 
 ## The HackerOS version
@@ -114,6 +115,34 @@ already declares `HackerOsAppProject=true`; add it to the host with
 The catalog never takes a binary: after review and merge, its CI compiles the
 app at the given commit (ADR 0188 §4 to §6).
 
+## Publishing on `hackeros-packages` and signing
+
+[ADR 0219](../dev/adr/0219-app-authors-signing-tool.md). The same `v*` tag runs
+**Publish the HackerOS packages** (`publish-packages.yml`, the only workflow
+with `contents: write`): it fetches the `hackeros-packages` branch (orphan the
+first time), packs the app there (`HackerOsPack`, `HackerOsPackageOutput`),
+keeps the versions already published and their signatures, then pushes the
+branch. `hackpkg install <owner>/<repo>` then installs the app without the
+Store.
+
+To sign:
+
+1. Once, outside the repository:
+   `dotnet build src/<Name> -t:HackerOsKeyGen -p:HackerOsSigningKeyFile=$HOME/hackeros-signing-key.pem`.
+   The private key (PKCS#8, mode `0600`) goes to that new file, never replaced;
+   the public key and the `github.com/<owner>=…` line are printed. `*.pem` is in
+   the template's `.gitignore`.
+2. Put the content of the file in the repository's `HACKEROS_APP_SIGNING_KEY`
+   secret, then keep the file offline.
+3. Publish the public key; an administrator adds it to `[signing-keys]` of
+   `/etc/hackeros/app-sources.config`. From then on, an unsigned or badly signed
+   package from this repository is refused.
+
+Without the secret, the package goes out unsigned (SHA-256 only) with a
+warning. Locally: `HACKEROS_APP_SIGNING_KEY` variable or
+`-p:HackerOsSigningKeyFile=<file.pem>` on `HackerOsPack`. It needs a HackerOS
+version that contains ADR 0219 (the next one after 2.2.0).
+
 ## The GitHub template repository
 
 [`Kazo-ca/HackerOs-AppTemplate`](https://github.com/Kazo-ca/HackerOs-AppTemplate)
@@ -129,3 +158,4 @@ can only work with a submodule on a release that contains this template
 - [x] `ide.host.json` of the templates.
 - [x] Test of both profiles (`HackerOs.Templates.E2E.Tests`).
 - [ ] Template repository regenerated on the release that contains this template.
+- [x] `publish-packages.yml` workflow and package signing (ADR 0219).

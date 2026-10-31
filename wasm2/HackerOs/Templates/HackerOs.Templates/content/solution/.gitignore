@@ -6,3 +6,6 @@ obj/
 .idea/
 TestResults/
 artifacts/
+
+# Private signing keys (ADR 0219): never in the repository.
+*.pem

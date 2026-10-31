@@ -54,4 +54,23 @@ public sealed class AppPackageWriterTests
         Assert.Equal(new string('b', 64), parsed.Find(SemanticVersion.Parse("1.0.0"))!.Sha256);
         Assert.Equal("apps.index.invalid", Assert.Throws<AppPackageException>(() => AppPackageWriter.AddToIndex(index, "org.other", first)).Code);
     }
+
+    [Fact]
+    public void Signatures_already_in_the_index_survive_a_new_version_and_a_republished_one_takes_its_own()
+    {
+        string sha = new('a', 64);
+        byte[] firstSignature = [.. Enumerable.Repeat((byte)1, AppPackageSignature.SignatureLength)];
+        AppPackageIndexEntry first = new(SemanticVersion.Parse("1.0.0"), "1.0.0/org.kazo.sample-1.0.0.hackapp", sha) { Signature = firstSignature };
+        AppPackageIndexEntry second = new(SemanticVersion.Parse("1.1.0"), "1.1.0/org.kazo.sample-1.1.0.hackapp", sha);
+
+        byte[] index = AppPackageWriter.AddToIndex(null, AppPackageTests.AppId, first);
+        index = AppPackageWriter.AddToIndex(index, AppPackageTests.AppId, second);
+        AppPackageIndex kept = AppPackageIndex.Parse(index);
+        index = AppPackageWriter.AddToIndex(index, AppPackageTests.AppId, first with { Signature = null });
+        AppPackageIndex republished = AppPackageIndex.Parse(index);
+
+        Assert.Equal(firstSignature, kept.Find(SemanticVersion.Parse("1.0.0"))!.Signature);
+        Assert.Null(kept.Find(SemanticVersion.Parse("1.1.0"))!.Signature);
+        Assert.Null(republished.Find(SemanticVersion.Parse("1.0.0"))!.Signature);
+    }
 }
