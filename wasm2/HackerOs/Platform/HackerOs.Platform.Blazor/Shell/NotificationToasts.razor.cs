@@ -1,6 +1,7 @@
 using HackerOs.App.Abstractions;
 using HackerOs.Platform.Core;
 using HackerOs.Platform.Core.Globalization;
+using HackerOs.Platform.Core.Notifications;
 using HackerOs.Simulation.Abstractions.Notifications;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -29,6 +30,7 @@ public partial class NotificationToasts : ComponentBase
     private const string SystemSourcePrefix = "org.hackeros.";
 
     private NotificationToastFeed _feed = null!;
+    private DoNotDisturbService? _doNotDisturb;
 
     /// <summary>Gets or sets where the bubbles show.</summary>
     [Parameter]
@@ -41,6 +43,9 @@ public partial class NotificationToasts : ComponentBase
     [Parameter]
     public bool IsPanelOpen { get; set; }
 
+    /// <summary>Gets whether no bubble shows: the panel is open, or "Do not disturb" is on (ADR 0216 §1).</summary>
+    private bool IsSuppressed => IsPanelOpen || _doNotDisturb?.IsEnabled == true;
+
     private string PlacementClass => Placement == NotificationToastPlacement.TopOfScreen ? "is-top" : "is-above-taskbar";
 
     /// <inheritdoc />
@@ -48,18 +53,28 @@ public partial class NotificationToasts : ComponentBase
     {
         _feed = new NotificationToastFeed(NotificationQueue, () => SessionService.CurrentPrincipal?.UserId, SimulationClock);
         _feed.Changed += OnFeedChanged;
+        _doNotDisturb = Services.GetService<DoNotDisturbService>();
+        if (_doNotDisturb is not null)
+        {
+            _doNotDisturb.Changed += OnDoNotDisturbChanged;
+        }
     }
 
     /// <inheritdoc />
-    protected override void OnParametersSet()
+    protected override void OnParametersSet() => ApplySuppression();
+
+    private void ApplySuppression()
     {
-        if (_feed.IsSuppressed != IsPanelOpen)
+        if (_feed.IsSuppressed != IsSuppressed)
         {
-            _feed.IsSuppressed = IsPanelOpen;
+            _feed.IsSuppressed = IsSuppressed;
         }
     }
 
     private void OnFeedChanged() => InvokeAsync(StateHasChanged);
+
+    // Turning the mode on hides the bubbles already shown; turning it off replays nothing.
+    private void OnDoNotDisturbChanged() => InvokeAsync(ApplySuppression);
 
     // A finger has no hover: a tap would leave the bubble held until the next tap elsewhere.
     private void OnPointerEnter(PointerEventArgs args, NotificationId id)
@@ -113,6 +128,11 @@ public partial class NotificationToasts : ComponentBase
     /// <inheritdoc />
     public void Dispose()
     {
+        if (_doNotDisturb is not null)
+        {
+            _doNotDisturb.Changed -= OnDoNotDisturbChanged;
+        }
+
         _feed.Changed -= OnFeedChanged;
         _feed.Dispose();
     }

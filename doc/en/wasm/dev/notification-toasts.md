@@ -4,6 +4,8 @@
 
 Work item 1 of the taskbar series (issue [#242](https://github.com/Kazo-ca/HackerOs/issues/242)),
 implementation of [ADR 0197](adr/0197-notification-toasts.md), done in the `todo/` series.
+The "Do not disturb" mode (issue [#296](https://github.com/Kazo-ca/HackerOs/issues/296))
+implements [ADR 0216](adr/0216-do-not-disturb.md) (section 5).
 
 ## 1. What the user sees
 
@@ -15,6 +17,7 @@ implementation of [ADR 0197](adr/0197-notification-toasts.md), done in the `todo
 - The "×" hides the bubble. The notification stays in the clock panel (the shade on a
   phone). Dismissing it in the panel also removes its bubble.
 - No bubble while the panel is open: the notification arrives in the list.
+- **Do not disturb**: no bubble and no notification sound while it is on (see section 5).
 - **Update ready**: once signed in, "HackerOS x.y.z is available. Open apps will close."
   arrives as a bubble and stays in the panel with the "Restart to update" button. On the
   sign-in screen, the notice in the bottom corner stays, with the same button.
@@ -52,11 +55,36 @@ and `prefers-reduced-motion: no-preference`.
   notification is dismissed, a new version replaces it, an app's action is left to the
   app, unregistration.
 
-## 5. Task list
+## 5. Do not disturb (ADR 0216)
+
+- **For the user**: a "Do not disturb" switch next to the Notifications heading of the
+  clock panel (also in the phone's shade) and in Settings ▸ Notifications. When on, it
+  stops the bubbles and the sound of new notifications, errors included; they still go to
+  the panel and the unread dot lights up. A moon shows in the notification area (a click
+  opens the panel) and on the phone's shade handle.
+- **File**: key `doNotDisturb` (boolean) of the layered `notifications` document,
+  `/etc/hackeros/notifications.config` (the machine's value, `false` at install) and
+  `~/.config/hackeros/notifications.config` (the user's choice). Editing the file with
+  `nano` applies at once.
+
+| Element | Role |
+| --- | --- |
+| `NotificationSettingsDocuments` (Platform.Core) | Schema of the `notifications` document, listed in `OsSettingsDocumentRegistry` and written to `/etc` at install. |
+| `DoNotDisturbService` (Platform.Core, session scope) | Reads the document, watches it, exposes `IsEnabled` and `Changed`, writes the user layer (`SetAsync`). Initialized by `App.razor`. |
+| `NotificationToasts` | Suppresses the bubbles (`NotificationToastFeed.IsSuppressed`) while the panel is open **or** the mode is on. |
+| `OsSoundService.DoNotDisturb` | Plays no notification sound while the mode is on; the other sounds remain. |
+| `ClockPanel` | `role="switch"` switch next to the Notifications heading. |
+| `DoNotDisturbIndicator` (public) | The moon of the notification area, placed by `DesktopShell`; `OnClick` opens the panel. `MobileShell` shows the moon on the shade handle and adds it to its name. |
+| `NotificationsPanel` (Settings) | Page `--page=notifications`, through the public SDK (`HackSettings.OpenSystemAsync`). |
+
+Tests: `DoNotDisturbServiceTests`, `OsSoundServiceTests.Do_not_disturb_mutes_the_notification_sounds_only`,
+`NotificationsPanelTests`, `DoNotDisturbTests` (UI.E2E: switch, moon, reload).
+
+## 6. Task list
 
 - [x] `NotificationToastFeed` and its tests.
 - [x] `NotificationToasts` on the desktop (screen 1) and on a phone.
 - [x] Actions shared by the panel and the bubbles (`NotificationActionRunner`, `ShellNotificationActions`).
 - [x] "Update ready" as a persistent notification with "Restart"; notice kept on the sign-in screen.
 - [x] ADR 0197, docs, `features.md`, memory, change entry.
-- [ ] "Do not disturb": to decide (question Q5 asked to Benoit).
+- [x] "Do not disturb" (ADR 0216): service, bubbles, sound, panel switch, moon, Settings ▸ Notifications, tests.

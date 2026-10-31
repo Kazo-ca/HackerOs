@@ -1,0 +1,20 @@
+@using HackerOs.AppSdk.Icons
+@using HackerOs.Platform.Core.Notifications
+@implements IDisposable
+@inject IServiceProvider Services
+@inject IStringLocalizer<Strings> L
+
+@*
+    ADR 0216 §5: a moon in the taskbar's notification area while "Do not disturb" is on. A click
+    opens the clock panel, which holds the switch. Nothing renders while the mode is off.
+*@
+@if (_service?.IsEnabled == true)
+{
+    <button type="button"
+            class="dnd-indicator"
+            title="@L["Dnd.Indicator"]"
+            aria-label="@L["Dnd.Indicator"]"
+            @onclick="OnClick">
+        <HackerIcon Library="IconLibrary.Lucide" Name="moon" Size="17" Title="" />
+    </button>
+}

@@ -111,6 +111,8 @@ public sealed class SettingsStoreToFilesMigration : IUserProfileInitializer
                      Globalization.TimeZoneSettingsDocuments.Document,
                      // ADR 0204 §3: event sounds on, theme "hackeros", volume 60.
                      Sounds.SoundSettingsDocuments.Document,
+                     // ADR 0216 §3: "Do not disturb" off.
+                     Notifications.NotificationSettingsDocuments.Document,
                      // ADR 0205 §3: the machine's cursor theme, "system" (the host's cursors).
                      CursorSettingsDocuments.Document
                  })

@@ -908,4 +908,19 @@
   <data name="InstallApproval.Approve.Rollback" xml:space="preserve">
     <value>Revenir en arrière</value>
   </data>
+  <data name="Dnd.Label" xml:space="preserve">
+    <value>Ne pas déranger</value>
+  </data>
+  <data name="Dnd.Hint" xml:space="preserve">
+    <value>Ni bulle ni son pour les nouvelles notifications ; elles restent dans cette liste.</value>
+  </data>
+  <data name="Dnd.Indicator" xml:space="preserve">
+    <value>Ne pas déranger est activé</value>
+  </data>
+  <data name="Dnd.Error" xml:space="preserve">
+    <value>Impossible d'enregistrer Ne pas déranger : {0}</value>
+  </data>
+  <data name="Mobile.ShadeWithDnd" xml:space="preserve">
+    <value>{0} (Ne pas déranger est activé)</value>
+  </data>
 </root>

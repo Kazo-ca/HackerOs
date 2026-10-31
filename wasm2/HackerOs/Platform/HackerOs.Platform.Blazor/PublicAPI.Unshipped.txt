@@ -1,1 +1,8 @@
 #nullable enable
+HackerOs.Platform.Blazor.Shell.DoNotDisturbIndicator
+HackerOs.Platform.Blazor.Shell.DoNotDisturbIndicator.Dispose() -> void
+HackerOs.Platform.Blazor.Shell.DoNotDisturbIndicator.DoNotDisturbIndicator() -> void
+HackerOs.Platform.Blazor.Shell.DoNotDisturbIndicator.OnClick.get -> Microsoft.AspNetCore.Components.EventCallback
+HackerOs.Platform.Blazor.Shell.DoNotDisturbIndicator.OnClick.set -> void
+override HackerOs.Platform.Blazor.Shell.DoNotDisturbIndicator.OnInitialized() -> void
+~override HackerOs.Platform.Blazor.Shell.DoNotDisturbIndicator.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

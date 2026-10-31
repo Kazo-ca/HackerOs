@@ -1,1 +1,4 @@
 #nullable enable
+HackerOs.Apps.Settings.NotificationsPanel
+HackerOs.Apps.Settings.NotificationsPanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Apps.Settings.NotificationsPanel.NotificationsPanel() -> void

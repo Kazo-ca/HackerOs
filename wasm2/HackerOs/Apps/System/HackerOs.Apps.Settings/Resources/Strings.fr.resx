@@ -1980,4 +1980,31 @@
   <data name="Policy.Block" xml:space="preserve">
     <value>Bloquer</value>
   </data>
+  <data name="Tab.Notifications" xml:space="preserve">
+    <value>Notifications</value>
+  </data>
+  <data name="Notifications.Dnd.Title" xml:space="preserve">
+    <value>Ne pas déranger</value>
+  </data>
+  <data name="Notifications.Dnd.Description" xml:space="preserve">
+    <value>Quand il est activé, les nouvelles notifications ne font ni bulle ni son, erreurs comprises. Elles vont quand même dans le panneau de l'horloge, et le point de l'horloge les signale toujours. Une lune dans la zone de notification indique que le mode est activé.</value>
+  </data>
+  <data name="Notifications.Dnd.Enabled" xml:space="preserve">
+    <value>Ne pas déranger</value>
+  </data>
+  <data name="Notifications.Dnd.File" xml:space="preserve">
+    <value>Enregistré pour vous dans {0} ; le panneau de l'horloge a le même interrupteur.</value>
+  </data>
+  <data name="Notifications.Saved.On" xml:space="preserve">
+    <value>Ne pas déranger est activé.</value>
+  </data>
+  <data name="Notifications.Saved.Off" xml:space="preserve">
+    <value>Ne pas déranger est désactivé.</value>
+  </data>
+  <data name="Notifications.Error.CannotRead" xml:space="preserve">
+    <value>Impossible de lire {0} : {1}</value>
+  </data>
+  <data name="Notifications.Error.CannotSave" xml:space="preserve">
+    <value>Impossible d'enregistrer {0} : {1}</value>
+  </data>
 </root>
