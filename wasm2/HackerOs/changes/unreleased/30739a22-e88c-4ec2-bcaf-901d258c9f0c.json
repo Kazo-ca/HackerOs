@@ -1,0 +1,18 @@
+{
+  "id": "30739a22-e88c-4ec2-bcaf-901d258c9f0c",
+  "category": "improved",
+  "audience": [
+    "user"
+  ],
+  "title": {
+    "en": "Frosted glass app drawer on the iOS theme",
+    "fr": "Tiroir d'apps en verre flouté sur le thème iOS"
+  },
+  "description": {
+    "en": "On the iOS mobile theme, the app drawer is now the same frosted glass as the notification shade, so the wallpaper shows through. Other themes keep an opaque drawer; a theme can choose with --hos-mobile-drawer-background and --hos-mobile-drawer-backdrop-filter.",
+    "fr": "Sur le thème mobile iOS, le tiroir d'apps est maintenant du même verre flouté que le tiroir de notifications : le fond d'écran se voit au travers. Les autres thèmes gardent un tiroir opaque ; un thème choisit avec --hos-mobile-drawer-background et --hos-mobile-drawer-backdrop-filter."
+  },
+  "links": [
+    "doc/en/wasm/dev/adr/0217-mobile-home-wallpaper.md"
+  ]
+}

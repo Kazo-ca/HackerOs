@@ -107,6 +107,6 @@ quel.
 
 ## Hors de ce chantier
 
-Le tiroir d'apps mobile reste opaque (ADR 0217 §3). « Définir comme fond
+Le tiroir d'apps mobile reste opaque, sauf sur un thème qui règle `--hos-mobile-drawer-background` et `--hos-mobile-drawer-backdrop-filter` (iOS : verre flouté, ADR 0217 §3). « Définir comme fond
 d'écran » n'écrit que les clés du bureau : l'image du mobile se choisit dans
 Paramètres (le SDK ne dit pas à une app quelle interface est active).

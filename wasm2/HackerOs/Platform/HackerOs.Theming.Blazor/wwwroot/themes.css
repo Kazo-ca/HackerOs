@@ -1469,6 +1469,9 @@
     --hos-mobile-shade-backdrop: rgb(13 25 45 / 35%);
     --hos-mobile-shade-panel-background: rgb(248 248 250 / 82%);
     --hos-mobile-shade-panel-radius: 1.5rem;
+    /* ADR 0217 §3: the app drawer is the same frosted glass as the shade, over the wallpaper. */
+    --hos-mobile-drawer-background: rgb(248 248 250 / 72%);
+    --hos-mobile-drawer-backdrop-filter: blur(22px) saturate(155%);
 }
 
 /* Motion is a validated preference; reduced/off modes stay entirely declarative. */

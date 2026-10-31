@@ -63,6 +63,12 @@ The drawer keeps its theme's `--hos-bg-base` background: the image shows on the
 home screen and in the strip above the drawer, and the list stays readable on a
 bright image.
 
+**Clarification (2026-10-31, Benoit's remark)**: a theme whose style is glass
+can keep it. The drawer reads `--hos-mobile-drawer-background` and
+`--hos-mobile-drawer-backdrop-filter` (by default `--hos-bg-base` and no blur,
+so opaque). The iOS theme sets them to the same frosted glass as its
+notification shade; the other themes stay opaque.
+
 ### 4. Mobile themes
 
 No theme changes: their background is still what shows while `mobileWallpaper`
