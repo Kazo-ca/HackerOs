@@ -1136,3 +1136,23 @@ static HackerOs.Platform.Core.Apps.Packages.AppPackageSignature.TryParsePublicKe
 static HackerOs.Platform.Core.Apps.Packages.ManagedAppPackageSignatureVerifier.Instance.get -> HackerOs.Platform.Core.Apps.Packages.ManagedAppPackageSignatureVerifier!
 HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.Signed.get -> bool?
 HackerOs.Platform.Core.Elevation.AppInstallApprovalRequest.Signed.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.FindPreviousVersionAsync(HackerOs.Simulation.Abstractions.Gateways.IAppFileSystemGateway! fileSystem, string! appId, HackerOs.App.Abstractions.SemanticVersion current, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken), string? home = null) -> System.Threading.Tasks.ValueTask<HackerOs.App.Abstractions.SemanticVersion?>
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.RecoverAsync(HackerOs.Simulation.Abstractions.Gateways.IAppFileSystemGateway! writer, string! appId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken), string? home = null) -> System.Threading.Tasks.ValueTask<string?>
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.RepairAsync(HackerOs.Simulation.Abstractions.Gateways.IAppFileSystemGateway! writer, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken), string? home = null) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<string!>!>
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.RollbackAsync(HackerOs.Simulation.Abstractions.Gateways.IAppFileSystemGateway! writer, string! appId, string! by, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken), string? home = null) -> System.Threading.Tasks.ValueTask<(HackerOs.Platform.Core.Apps.Packages.AppPackageSource! From, HackerOs.Platform.Core.Apps.Packages.AppPackageSource! To)>
+const HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.PartialSuffix = ".partial" -> string!
+const HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.TransactionFileName = ".transaction" -> string!
+HackerOs.Platform.Core.Elevation.AppInstallApprovalOperation.Rollback = 3 -> HackerOs.Platform.Core.Elevation.AppInstallApprovalOperation
+HackerOs.Platform.Core.Apps.Packages.AppDataGuard
+HackerOs.Platform.Core.Apps.Packages.AppDataGuard.AppDataGuard(System.Func<HackerOs.Platform.Core.Apps.Packages.InstalledPackageCatalog?>! packages, Microsoft.Extensions.Logging.ILogger<HackerOs.Platform.Core.Apps.Packages.AppDataGuard!>? logger = null) -> void
+HackerOs.Platform.Core.Apps.Packages.AppDataGuard.PrepareAsync(HackerOs.Simulation.Abstractions.Gateways.IAppFileSystemGateway! user, string! home, HackerOs.App.Abstractions.AppManifest! manifest, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyDictionary<string!, string!>?>
+HackerOs.Platform.Core.Lifecycle.AppLifecycleOrchestrator.DataGuard.get -> HackerOs.Platform.Core.Apps.Packages.AppDataGuard?
+HackerOs.Platform.Core.Lifecycle.AppLifecycleOrchestrator.DataGuard.init -> void
+const HackerOs.Platform.Core.Apps.Packages.AppDataGuard.BackupsUnderHome = ".local/share/hackeros/app-backups" -> string!
+const HackerOs.Platform.Core.Apps.Packages.AppDataGuard.MaximumBackups = 2 -> int
+const HackerOs.Platform.Core.Apps.Packages.AppDataGuard.PreviousVersionVariable = "HACKEROS_PREVIOUS_VERSION" -> string!
+const HackerOs.Platform.Core.Apps.Packages.AppDataGuard.VersionsConfigUnderHome = ".config/hackeros/app-data-versions.config" -> string!
+const HackerOs.Platform.Core.Apps.Packages.AppDataGuard.VersionsSection = "versions" -> string!
+static HackerOs.Platform.Core.Apps.Packages.AppDataGuard.GetBackupPath(string! home, string! appId, HackerOs.App.Abstractions.SemanticVersion version) -> HackerOs.App.Abstractions.VirtualPath
+static HackerOs.Platform.Core.Apps.Packages.AppDataGuard.GetVersionsPath(string! home) -> HackerOs.App.Abstractions.VirtualPath
+static HackerOs.Platform.Core.Apps.Packages.AppDataGuard.ReadVersion(string? content, string! appId) -> HackerOs.App.Abstractions.SemanticVersion?

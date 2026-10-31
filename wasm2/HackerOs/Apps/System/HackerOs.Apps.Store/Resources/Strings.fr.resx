@@ -207,4 +207,28 @@
   <data name="Working" xml:space="preserve">
     <value>En cours…</value>
   </data>
+  <data name="Action.Rollback" xml:space="preserve">
+    <value>Revenir à {0}</value>
+  </data>
+  <data name="Message.RemovedRestart" xml:space="preserve">
+    <value>{0} est désinstallée. Elle était ouverte depuis le démarrage : redémarrez pour terminer.</value>
+  </data>
+  <data name="Message.RolledBack" xml:space="preserve">
+    <value>{0} est revenue à {1}.</value>
+  </data>
+  <data name="Message.RolledBackRestart" xml:space="preserve">
+    <value>{0} est revenue à {1}. Elle était ouverte depuis le démarrage : redémarrez pour terminer.</value>
+  </data>
+  <data name="Error.NoPrevious" xml:space="preserve">
+    <value>Aucune version précédente de cette app n'est gardée.</value>
+  </data>
+  <data name="Error.ReinstallRequired" xml:space="preserve">
+    <value>Cette version ne peut pas mettre à jour celle qui est installée : désinstallez l'app, puis installez-la de nouveau.</value>
+  </data>
+  <data name="Error.Unsigned" xml:space="preserve">
+    <value>Ce paquet n'est pas signé par sa source : il a été refusé.</value>
+  </data>
+  <data name="Error.BadSignature" xml:space="preserve">
+    <value>La signature de ce paquet ne correspond pas à sa source : il a été refusé.</value>
+  </data>
 </root>

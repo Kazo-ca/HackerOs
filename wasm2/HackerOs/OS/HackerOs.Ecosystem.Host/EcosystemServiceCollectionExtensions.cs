@@ -946,7 +946,10 @@ public static class EcosystemServiceCollectionExtensions
             provider.GetService<ILogger<AppLifecycleOrchestrator>>())
         {
             // ADR 0125, section 3: a session's root process gets the limits of limits.conf.
-            LoginResourceLimits = provider.GetRequiredService<LoginResourceLimitsProvider>()
+            LoginResourceLimits = provider.GetRequiredService<LoginResourceLimitsProvider>(),
+            // ADR 0214 §4.2: the data of an installed app is backed up when its version changes.
+            DataGuard = new AppDataGuard(
+                () => provider.GetService<InstalledPackageCatalog>(), provider.GetService<ILogger<AppDataGuard>>()),
         });
         // Uninstall/reinstall through /etc/hackeros/apps.config + ~/.config/hackeros/apps.config
         // (ADR 0048). Started by EcosystemBootCoordinator once storage is ready; feeds the

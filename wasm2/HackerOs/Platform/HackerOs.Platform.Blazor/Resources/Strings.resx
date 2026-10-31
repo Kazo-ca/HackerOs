@@ -896,4 +896,10 @@
   <data name="InstallApproval.MiB" xml:space="preserve">
     <value>{0} MiB</value>
   </data>
+  <data name="InstallApproval.Title.Rollback" xml:space="preserve">
+    <value>Approve going back to an app's previous version</value>
+  </data>
+  <data name="InstallApproval.Approve.Rollback" xml:space="preserve">
+    <value>Go back</value>
+  </data>
 </root>

@@ -246,8 +246,22 @@ public partial class StoreWindow
             HackInstalledPackage removed = await HackAppPackages.RemoveAsync(
                 entry.AppId,
                 entry.Installed?.SystemWide == true ? HackPackageScope.System : HackPackageScope.User);
-            _removed.Add(removed.AppId);
-            ShowInfo(L["Message.Removed", entry.Name]);
+            // Hot-add (ADR 0214 §1): only an app loaded in the page waits for the restart.
+            if (removed.Loaded)
+            {
+                _removed.Add(removed.AppId);
+            }
+
+            ShowInfo(L[removed.Loaded ? "Message.RemovedRestart" : "Message.Removed", entry.Name]);
+        });
+
+    private Task RollbackAsync(StoreEntry entry) =>
+        RunAsync(entry, async () =>
+        {
+            HackPackageInstallReport report = await HackAppPackages.RollbackAsync(
+                entry.AppId,
+                entry.Installed?.SystemWide == true ? HackPackageScope.System : HackPackageScope.User);
+            ShowInfo(L[report.RestartRequired ? "Message.RolledBackRestart" : "Message.RolledBack", report.Name, report.Version]);
         });
 
     private Task OpenAsync(StoreEntry entry) =>
@@ -314,6 +328,10 @@ public partial class StoreWindow
         "apps.package.sdk-incompatible" => L["Error.Incompatible", exception.Message],
         "apps.package.missing-api" => L["Error.Incompatible", exception.Message],
         "apps.package.download-failed" => L["Error.Offline"],
+        "apps.package.no-previous" => L["Error.NoPrevious"],
+        "apps.package.reinstall-required" => L["Error.ReinstallRequired"],
+        "apps.package.unsigned" => L["Error.Unsigned"],
+        "apps.package.bad-signature" => L["Error.BadSignature"],
         _ => L["Error.Generic", exception.Message]
     };
 

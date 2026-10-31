@@ -35,9 +35,32 @@ internal sealed partial class AppManagementGateway
         InstalledAppsReadResult personal = await packages
             .ReadPersonalInstalledAsync(CreateUserWriter(), _principal.HomePath, cancellationToken)
             .ConfigureAwait(false);
-        return [.. system.Sources.Select(pair => ToPublic(pair.Key, pair.Value, systemWide: true))
-            .Concat(personal.Sources.Where(pair => !system.Sources.ContainsKey(pair.Key)).Select(pair => ToPublic(pair.Key, pair.Value, systemWide: false)))
-            .OrderBy(static package => package.AppId, StringComparer.Ordinal)];
+        List<HackInstalledPackage> result = [];
+        foreach ((string appId, AppPackageSource source) in system.Sources)
+        {
+            result.Add(await WithPreviousAsync(packages, ToPublic(appId, source, systemWide: true), source, null, cancellationToken).ConfigureAwait(false));
+        }
+
+        foreach ((string appId, AppPackageSource source) in personal.Sources.Where(pair => !system.Sources.ContainsKey(pair.Key)))
+        {
+            result.Add(await WithPreviousAsync(packages, ToPublic(appId, source, systemWide: false), source, _principal.HomePath, cancellationToken)
+                .ConfigureAwait(false));
+        }
+
+        return [.. result.OrderBy(static package => package.AppId, StringComparer.Ordinal)];
+    }
+
+    private async ValueTask<HackInstalledPackage> WithPreviousAsync(
+        AppPackageInstaller packages, HackInstalledPackage package, AppPackageSource source, string? home, CancellationToken cancellationToken)
+    {
+        if (source.Version is not { } current)
+        {
+            return package;
+        }
+
+        IAppFileSystemGateway reader = home is null ? CreateSystemWriter() : CreateUserWriter();
+        SemanticVersion? previous = await packages.FindPreviousVersionAsync(reader, package.AppId, current, cancellationToken, home).ConfigureAwait(false);
+        return package with { PreviousVersion = previous?.ToString() };
     }
 
     /// <inheritdoc />
@@ -212,6 +235,97 @@ internal sealed partial class AppManagementGateway
         AppPackageSource removed = await Translate(() => packages.RemoveAsync(system, appId, by, cancellationToken)).ConfigureAwait(false);
         await ActivateInstalledAppsAsync(CancellationToken.None).ConfigureAwait(false);
         return ToPublic(appId, removed, systemWide: true);
+    }
+
+    /// <inheritdoc />
+    public async ValueTask<HackPackageInstallReport> RollbackPackageAsync(
+        string appId, HackPackageScope scope = HackPackageScope.Auto, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(appId);
+        AppPackageInstaller packages = RequirePackages();
+        IAppFileSystemGateway system = CreateSystemWriter();
+        IAppFileSystemGateway user = CreateUserWriter();
+        InstalledAppsReadResult personal = await packages.ReadPersonalInstalledAsync(user, _principal.HomePath, cancellationToken).ConfigureAwait(false);
+        bool forUser = scope == HackPackageScope.User || (scope == HackPackageScope.Auto && personal.Sources.ContainsKey(appId));
+        InstalledAppsReadResult installed = forUser ? personal : await packages.ReadInstalledAsync(system, cancellationToken).ConfigureAwait(false);
+        string? home = forUser ? _principal.HomePath : null;
+        IAppFileSystemGateway writer = forUser ? user : system;
+        if (!installed.Sources.TryGetValue(appId, out AppPackageSource? source) || source.Version is not { } current)
+        {
+            throw new HackPackageException("apps.package.not-installed", $"{appId} was not installed from a package.");
+        }
+
+        SemanticVersion previous = await packages.FindPreviousVersionAsync(writer, appId, current, cancellationToken, home).ConfigureAwait(false)
+            ?? throw new HackPackageException("apps.package.no-previous", $"{appId} {current} has no previous version kept.");
+        AppSourcesConfig sources = await packages.ReadSourcesAsync(system, cancellationToken).ConfigureAwait(false);
+        AppSourceTrust trust = sources.GetTrust(source);
+        AppManifest? manifest = _catalog.Manifests.TryGetValue(appId, out AppManifest? loaded) ? loaded : null;
+        string name = manifest?.Name ?? appId;
+        string by = _principal.LoginName.Value;
+        // The approvals of an install of the same scope (ADR 0214 §4.1).
+        if (!forUser || trust == AppSourceTrust.Untrusted)
+        {
+            by = await ApproveTwoStepAsync(
+                Strings.For(_language())[
+                    forUser ? "Admin.App.RollbackPackageForUser" : "Admin.App.RollbackPackage",
+                    name,
+                    previous.ToString(),
+                    source.Name,
+                    _principal.LoginName.Value],
+                "apps.package.rollback",
+                new AppInstallApprovalRequest(
+                    appId,
+                    name,
+                    previous.ToString(),
+                    current.ToString(),
+                    null,
+                    source.WithVersion(previous).ToString(),
+                    trust,
+                    manifest?.Capabilities ?? [],
+                    AppInstallApprovalOperation.Rollback,
+                    !forUser,
+                    string.Empty,
+                    _principal,
+                    _caller),
+                cancellationToken).ConfigureAwait(false);
+        }
+
+        (AppPackageSource from, AppPackageSource to) = await Translate(() => packages.RollbackAsync(writer, appId, by, cancellationToken, home))
+            .ConfigureAwait(false);
+        await ActivateInstalledAppsAsync(CancellationToken.None).ConfigureAwait(false);
+        return new HackPackageInstallReport(
+            appId,
+            name,
+            to.Version?.ToString() ?? string.Empty,
+            to.ToString(),
+            from.Version?.ToString(),
+            manifest?.Capabilities ?? [],
+            trust != AppSourceTrust.Untrusted)
+        {
+            Trust = ToPublic(trust),
+            SystemWide = !forUser,
+            RestartRequired = to.Version is not { } version || !RunsVersion(appId, version),
+        };
+    }
+
+    /// <inheritdoc />
+    public async ValueTask<IReadOnlyList<string>> RepairPackagesAsync(bool system, CancellationToken cancellationToken = default)
+    {
+        AppPackageInstaller packages = RequirePackages();
+        List<string> repaired = [.. await packages.RepairAsync(CreateUserWriter(), cancellationToken, _principal.HomePath).ConfigureAwait(false)];
+        if (system)
+        {
+            IAppFileSystemGateway writer = await AuthorizePackageAsync(
+                Strings.For(_language())["Admin.App.RepairPackages"], "apps.package.repair", cancellationToken).ConfigureAwait(false);
+            repaired.AddRange(await packages.RepairAsync(writer, cancellationToken).ConfigureAwait(false));
+        }
+
+        if (repaired.Count > 0)
+        {
+            await ActivateInstalledAppsAsync(CancellationToken.None).ConfigureAwait(false);
+        }
+
+        return repaired;
     }
 
     /// <inheritdoc />

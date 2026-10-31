@@ -96,6 +96,12 @@ public sealed record HackInstalledPackage(string AppId, string Source, string Ve
 {
     /// <summary>Gets whether it is installed for every user (otherwise for the session user only).</summary>
     public bool SystemWide { get; init; } = true;
+
+    /// <summary>
+    /// Gets the version its last update kept on disk, which <see cref="HackAppPackages.RollbackAsync"/>
+    /// puts back (ADR 0214 §4.1), or <see langword="null"/> when none is kept.
+    /// </summary>
+    public string? PreviousVersion { get; init; }
 }
 
 /// <summary>What a repository publishes (its <c>index.json</c>, ADR 0182 §2).</summary>

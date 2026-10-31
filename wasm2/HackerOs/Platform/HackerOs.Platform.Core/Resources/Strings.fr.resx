@@ -720,4 +720,13 @@ Annuler : décider au prochain lancement.</value>
   <data name="AppUpdates.Notification.View" xml:space="preserve">
     <value>Voir</value>
   </data>
+  <data name="Admin.App.RollbackPackage" xml:space="preserve">
+    <value>Revenir à {0} {1}, installée depuis {2}, pour tous les utilisateurs</value>
+  </data>
+  <data name="Admin.App.RollbackPackageForUser" xml:space="preserve">
+    <value>Revenir à {0} {1} depuis {2}, une source non fiable, pour {3} seulement</value>
+  </data>
+  <data name="Admin.App.RepairPackages" xml:space="preserve">
+    <value>Réparer les apps installées pour tous les utilisateurs</value>
+  </data>
 </root>

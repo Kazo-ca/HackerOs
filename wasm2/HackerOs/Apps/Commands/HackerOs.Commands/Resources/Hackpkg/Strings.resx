@@ -58,10 +58,10 @@
     <value>(restart pending)</value>
   </data>
   <data name="Removed" xml:space="preserve">
-    <value>hackpkg: {0} {1} removed; its users' settings are kept. Restart HackerOS to finish</value>
+    <value>hackpkg: {0} {1} removed; its users' settings are kept</value>
   </data>
   <data name="RestartRequired" xml:space="preserve">
-    <value>hackpkg: restart HackerOS to finish: the app appears after the restart</value>
+    <value>hackpkg: restart HackerOS to finish: this app was already loaded, its new version runs after the restart</value>
   </data>
   <data name="SourcesHost" xml:space="preserve">
     <value>host:    {0}</value>
@@ -85,7 +85,7 @@
     <value>hackpkg: {0} updated from {1} to {2}</value>
   </data>
   <data name="Usage" xml:space="preserve">
-    <value>usage: hackpkg install &lt;appId|repo&gt;[@version] [--user|--system] | remove &lt;appId&gt; [--user|--system] | update [&lt;appId&gt;] | list | info &lt;appId|repo&gt; | sources [add &lt;source&gt; [--trusted] | remove &lt;source&gt;] | policy [block|unblock app|category|capability &lt;value&gt;]</value>
+    <value>usage: hackpkg install &lt;appId|repo&gt;[@version] [--user|--system] | remove &lt;appId&gt; [--user|--system] | update [&lt;appId&gt;] | rollback &lt;appId&gt; [--user|--system] | repair [--system] | list | info &lt;appId|repo&gt; | sources [add &lt;source&gt; [--trusted] | remove &lt;source&gt;] | policy [block|unblock app|category|capability &lt;value&gt;]</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>yes</value>
@@ -152,5 +152,32 @@
   </data>
   <data name="PolicyUnblocked" xml:space="preserve">
     <value>hackpkg: {0} {1} unblocked</value>
+  </data>
+  <data name="AvailableNow" xml:space="preserve">
+    <value>hackpkg: available now</value>
+  </data>
+  <data name="Signed" xml:space="preserve">
+    <value>hackpkg: signature verified</value>
+  </data>
+  <data name="RemovedRestart" xml:space="preserve">
+    <value>hackpkg: {0} {1} removed; its users' settings are kept. It was loaded: restart HackerOS to finish</value>
+  </data>
+  <data name="RolledBack" xml:space="preserve">
+    <value>hackpkg: {0} went back from {1} to {2}</value>
+  </data>
+  <data name="NothingToRepair" xml:space="preserve">
+    <value>hackpkg: nothing to repair</value>
+  </data>
+  <data name="PreviousKept" xml:space="preserve">
+    <value>(previous: {0})</value>
+  </data>
+  <data name="InfoSignature" xml:space="preserve">
+    <value>Signature: {0}</value>
+  </data>
+  <data name="SignatureRequired" xml:space="preserve">
+    <value>required (ECDSA P-256)</value>
+  </data>
+  <data name="SignatureNone" xml:space="preserve">
+    <value>none (SHA-256 only)</value>
   </data>
 </root>

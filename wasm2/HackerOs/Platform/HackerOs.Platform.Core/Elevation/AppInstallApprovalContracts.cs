@@ -14,7 +14,10 @@ public enum AppInstallApprovalOperation
     Update = 1,
 
     /// <summary>The removal of an installed app.</summary>
-    Remove = 2
+    Remove = 2,
+
+    /// <summary>The return of an installed app to the version its last update kept (ADR 0214 §4.1).</summary>
+    Rollback = 3
 }
 
 /// <summary>

@@ -100,7 +100,7 @@ public sealed record AppPackageInstallContext(
 /// <see cref="AppPackagePlan.RequiresAdministrator"/>, and passes the writer it then may use (the
 /// system's, or the session user's for a personal install), as <c>apt</c> runs only after <c>sudo</c>.
 /// </remarks>
-public sealed class AppPackageInstaller
+public sealed partial class AppPackageInstaller
 {
     private const ushort FileMode = 0b110_100_100;
 
@@ -592,6 +592,15 @@ public sealed class AppPackageInstaller
             }
 
             previous = current.Version;
+            if (previous is { } from
+                && manifest.Update?.MinimumUpgradableVersion is { } minimumText
+                && SemanticVersion.TryParse(minimumText, out SemanticVersion minimum)
+                && from.CompareTo(minimum) < 0)
+            {
+                throw new AppPackageException(
+                    "apps.package.reinstall-required",
+                    $"{package.AppId} {package.Version} cannot update {from} in place (oldest version it upgrades: {minimum}); remove it, then install it again.");
+            }
         }
         else if (packagedAppIds?.Contains(package.AppId) != true
             && (catalog.Manifests.ContainsKey(package.AppId) || catalog.Rejected.Any(rejection => rejection.AppId == package.AppId)))
@@ -629,9 +638,10 @@ public sealed class AppPackageInstaller
     }
 
     /// <summary>
-    /// Step 5 of ADR 0182 §5: writes the package to its folder (folders <c>0755</c>, files
-    /// <c>0644</c>), records it in the <c>[installed]</c> section of its scope, then deletes the
-    /// replaced version's folder. For the system, every personal copy listed in
+    /// Step 5 of ADR 0182 §5, made transactional by ADR 0214 §3: writes the journal, then the
+    /// package to <c>&lt;version&gt;.partial/</c> (folders <c>0755</c>, files <c>0644</c>) renamed to
+    /// <c>&lt;version&gt;/</c>, records it in the <c>[installed]</c> section of its scope, then deletes
+    /// every other version but the replaced one, kept for <see cref="RollbackAsync"/>. For the system, every personal copy listed in
     /// <paramref name="personalCopies"/> is removed afterwards (one copy at a time, ADR 0189 §3);
     /// their users' settings stay.
     /// </summary>
@@ -654,34 +664,10 @@ public sealed class AppPackageInstaller
         ArgumentNullException.ThrowIfNull(writer);
         ArgumentNullException.ThrowIfNull(plan);
         AppPackage package = plan.Package;
-        VirtualPath directory = GetDirectory(plan.Home, package.AppId, package.Version);
-        // A folder left by an interrupted install of the same version is replaced whole.
-        await DeleteIfExistsAsync(writer, directory, cancellationToken).ConfigureAwait(false);
-        Ensure(await SettingsTextFile.EnsureDirectoryAsync(writer, directory, cancellationToken).ConfigureAwait(false));
-        foreach ((string relativePath, byte[] content) in package.Files.OrderBy(static file => file.Key, StringComparer.Ordinal))
-        {
-            await WriteFileAsync(writer, VirtualPath.Parse($"{directory.Value}/{relativePath}"), content, cancellationToken).ConfigureAwait(false);
-        }
-
-        VirtualPath config = plan.Home is null ? AppsConfigDocument.MachinePath : InstalledAppsLayout.GetPersonalConfigPath(plan.Home);
-        string defaultContent = plan.Home is null ? AppsConfigDocument.MachineDefaultContent : InstalledAppsLayout.PersonalConfigDefaultContent;
-        if (plan.Home is not null)
-        {
-            Ensure(await SettingsTextFile.EnsureDirectoryAsync(writer, SettingsTextFile.GetParent(config), cancellationToken).ConfigureAwait(false));
-        }
-
-        Ensure(await SettingsTextFile.EditAsync(
-                writer,
-                config,
-                content => AppsConfigDocument.SetInstalled(content, package.AppId, plan.Source, defaultContent),
-                createIfMissing: true,
-                cancellationToken)
-            .ConfigureAwait(false));
-        if (plan.PreviousVersion is { } previous && previous != package.Version)
-        {
-            await DeleteIfExistsAsync(writer, GetDirectory(plan.Home, package.AppId, previous), cancellationToken).ConfigureAwait(false);
-        }
-
+        await WritePackageAsync(writer, plan, cancellationToken).ConfigureAwait(false);
+        // The [installed] line is the commit point (ADR 0214 §3.3): until it changes, the previous version stays.
+        await SetInstalledAsync(writer, plan.Home, package.AppId, plan.Source, cancellationToken).ConfigureAwait(false);
+        await FinishPackageAsync(writer, plan, cancellationToken).ConfigureAwait(false);
         if (plan.Home is null)
         {
             foreach (string home in personalCopies ?? [])
@@ -698,7 +684,8 @@ public sealed class AppPackageInstaller
 
     /// <summary>
     /// Removes an installed app (ADR 0182 §5, ADR 0189 §3): its <c>[installed]</c> line, then its
-    /// folder. The user's settings stay; the app leaves the catalog at the next start of the OS.
+    /// folders, every version included (ADR 0214 §4.1). The user's settings stay; the app leaves the
+    /// catalog once the OS reloads the installed apps (ADR 0214 §1), at the next start when it is loaded.
     /// </summary>
     /// <param name="writer">The system writer after the two-step approval, or the user's own writer for a personal app.</param>
     /// <param name="appId">The installed app.</param>
@@ -722,6 +709,8 @@ public sealed class AppPackageInstaller
                 home is null ? $"{appId} was not installed for the system from a package." : $"{appId} was not installed for you from a package.");
         }
 
+        await RecoverAsync(writer, appId, cancellationToken, home).ConfigureAwait(false);
+        await BeginRemoveAsync(writer, appId, source.Version, home, cancellationToken).ConfigureAwait(false);
         if (home is null)
         {
             Ensure(await SettingsTextFile.EditAsync(
@@ -743,9 +732,6 @@ public sealed class AppPackageInstaller
             appId, source.Version, home ?? "the system", source.Name, by);
         return source;
     }
-
-    private static VirtualPath GetDirectory(string? home, string appId, SemanticVersion version) =>
-        home is null ? InstalledAppsLayout.GetDirectory(appId, version) : InstalledAppsLayout.GetPersonalDirectory(home, appId, version);
 
     private static async ValueTask RemovePersonalCopyAsync(IAppFileSystemGateway writer, string home, string appId, CancellationToken cancellationToken)
     {

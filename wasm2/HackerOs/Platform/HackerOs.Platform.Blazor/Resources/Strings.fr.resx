@@ -896,4 +896,10 @@
   <data name="InstallApproval.MiB" xml:space="preserve">
     <value>{0} Mio</value>
   </data>
+  <data name="InstallApproval.Title.Rollback" xml:space="preserve">
+    <value>Valider le retour à la version précédente d'une app</value>
+  </data>
+  <data name="InstallApproval.Approve.Rollback" xml:space="preserve">
+    <value>Revenir en arrière</value>
+  </data>
 </root>

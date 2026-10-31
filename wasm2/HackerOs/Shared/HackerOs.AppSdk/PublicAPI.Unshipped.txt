@@ -568,3 +568,9 @@ HackerOs.AppSdk.Apps.HackPackageInfo.SignatureRequired.get -> bool
 HackerOs.AppSdk.Apps.HackPackageInfo.SignatureRequired.init -> void
 HackerOs.AppSdk.Apps.HackPackageInstallReport.Signed.get -> bool
 HackerOs.AppSdk.Apps.HackPackageInstallReport.Signed.init -> void
+HackerOs.AppSdk.Apps.HackInstalledPackage.PreviousVersion.get -> string?
+HackerOs.AppSdk.Apps.HackInstalledPackage.PreviousVersion.init -> void
+HackerOs.AppSdk.Apps.IAppManagementGateway.RepairPackagesAsync(bool system, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<string!>!>
+HackerOs.AppSdk.Apps.IAppManagementGateway.RollbackPackageAsync(string! appId, HackerOs.AppSdk.Apps.HackPackageScope scope = HackerOs.AppSdk.Apps.HackPackageScope.Auto, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Apps.HackPackageInstallReport!>
+static HackerOs.AppSdk.Apps.HackAppPackages.RepairAsync(bool system = false, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<string!>!>!
+static HackerOs.AppSdk.Apps.HackAppPackages.RollbackAsync(string! appId, HackerOs.AppSdk.Apps.HackPackageScope scope = HackerOs.AppSdk.Apps.HackPackageScope.Auto, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Apps.HackPackageInstallReport!>!

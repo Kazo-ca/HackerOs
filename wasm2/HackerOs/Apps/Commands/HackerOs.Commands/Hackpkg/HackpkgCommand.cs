@@ -9,8 +9,8 @@ using Microsoft.Extensions.Localization;
 namespace HackerOs.Commands.Hackpkg;
 
 /// <summary>
-/// <c>hackpkg install | remove | update | list | info | sources | policy</c> (ADR 0182 §4, ADR 0189
-/// §6): installs apps from their GitHub repository through <see cref="HackAppPackages"/>.
+/// <c>hackpkg install | remove | update | rollback | repair | list | info | sources | policy</c> (ADR 0182 §4,
+/// ADR 0189 §6, ADR 0214): installs apps from their GitHub repository through <see cref="HackAppPackages"/>.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -26,8 +26,9 @@ namespace HackerOs.Commands.Hackpkg;
 /// <c>list</c>, <c>info</c>, <c>sources</c> and <c>policy</c> alone only read.
 /// </para>
 /// <para>
-/// The OS catalog is built at startup (ADR 0182, Q5): an installed app appears after a restart of
-/// HackerOS, which the command says.
+/// An installed app is available at once (ADR 0214 §1); only a change to an app already loaded in
+/// the page waits for a restart of HackerOS, which the command says. <c>rollback</c> goes back to the
+/// version the last update kept, <c>repair</c> finishes or undoes an interrupted install (§3, §4).
 /// </para>
 /// </remarks>
 public sealed class HackpkgCommand(AppManifest manifest) : TerminalAppBase(manifest)
@@ -49,7 +50,7 @@ public sealed class HackpkgCommand(AppManifest manifest) : TerminalAppBase(manif
         }
 
         string verb = args[0];
-        if (verb is not ("install" or "remove" or "update" or "list" or "info" or "sources" or "policy"))
+        if (verb is not ("install" or "remove" or "update" or "rollback" or "repair" or "list" or "info" or "sources" or "policy"))
         {
             await context.StandardError.WriteLineAsync(text["UnknownCommand", verb]);
             await context.StandardError.WriteLineAsync(text["Usage"]);
@@ -82,6 +83,8 @@ public sealed class HackpkgCommand(AppManifest manifest) : TerminalAppBase(manif
                 "install" => await InstallAsync(context, operands[0], scope, cancellationToken),
                 "remove" => await RemoveAsync(context, operands[0], scope, cancellationToken),
                 "update" => await UpdateAsync(context, operands.Count == 0 ? null : operands[0], cancellationToken),
+                "rollback" => await RollbackAsync(context, operands[0], scope, cancellationToken),
+                "repair" => await RepairAsync(context, options.Contains(SystemOption), cancellationToken),
                 "list" => await ListAsync(context, cancellationToken),
                 "info" => await InfoAsync(context, operands[0], cancellationToken),
                 "sources" => await SourcesAsync(context, operands, options.Contains(TrustedOption), cancellationToken),
@@ -108,7 +111,8 @@ public sealed class HackpkgCommand(AppManifest manifest) : TerminalAppBase(manif
     /// <summary>Whether <paramref name="option"/> belongs to <paramref name="verb"/>.</summary>
     private static bool IsAllowed(string verb, IReadOnlyList<string> operands, string option) => option switch
     {
-        UserOption or SystemOption => verb is "install" or "remove",
+        SystemOption => verb is "install" or "remove" or "rollback" or "repair",
+        UserOption => verb is "install" or "remove" or "rollback",
         TrustedOption => verb == "sources" && operands.Count > 0 && operands[0] == "add",
         _ => false
     };
@@ -116,8 +120,8 @@ public sealed class HackpkgCommand(AppManifest manifest) : TerminalAppBase(manif
     /// <summary>Whether the operands fit the verb: the usage text is printed otherwise.</summary>
     private static bool HasExpectedOperands(string verb, IReadOnlyList<string> operands) => verb switch
     {
-        "install" or "remove" or "info" => operands.Count == 1,
-        "list" => operands.Count == 0,
+        "install" or "remove" or "rollback" or "info" => operands.Count == 1,
+        "list" or "repair" => operands.Count == 0,
         "update" => operands.Count <= 1,
         "sources" => operands.Count == 0 || (operands.Count == 2 && operands[0] is "add" or "remove"),
         _ => operands.Count == 0
@@ -179,7 +183,12 @@ public sealed class HackpkgCommand(AppManifest manifest) : TerminalAppBase(manif
             }
         }
 
-        await context.StandardOutput.WriteLineAsync(text["RestartRequired"]);
+        if (report.Signed)
+        {
+            await context.StandardOutput.WriteLineAsync(text["Signed"]);
+        }
+
+        await context.StandardOutput.WriteLineAsync(report.RestartRequired ? text["RestartRequired"] : text["AvailableNow"]);
     }
 
     private static async Task<int> RemoveAsync(
@@ -187,7 +196,36 @@ public sealed class HackpkgCommand(AppManifest manifest) : TerminalAppBase(manif
     {
         IStringLocalizer<Strings> text = context.App.GetLocalizer<Strings>();
         HackInstalledPackage removed = await HackAppPackages.RemoveAsync(appId, scope, cancellationToken);
-        await context.StandardOutput.WriteLineAsync(text["Removed", removed.AppId, removed.Version]);
+        // Loaded: the removed app stays in the page until the next restart (ADR 0214 §1).
+        await context.StandardOutput.WriteLineAsync(text[removed.Loaded ? "RemovedRestart" : "Removed", removed.AppId, removed.Version]);
+        return 0;
+    }
+
+    private static async Task<int> RollbackAsync(
+        TerminalExecutionContext context, string appId, HackPackageScope scope, CancellationToken cancellationToken)
+    {
+        IStringLocalizer<Strings> text = context.App.GetLocalizer<Strings>();
+        HackPackageInstallReport report = await HackAppPackages.RollbackAsync(appId, scope, cancellationToken);
+        await context.StandardOutput.WriteLineAsync(text["RolledBack", report.Name, report.PreviousVersion ?? "-", report.Version]);
+        await context.StandardOutput.WriteLineAsync(report.RestartRequired ? text["RestartRequired"] : text["AvailableNow"]);
+        return 0;
+    }
+
+    private static async Task<int> RepairAsync(TerminalExecutionContext context, bool system, CancellationToken cancellationToken)
+    {
+        IStringLocalizer<Strings> text = context.App.GetLocalizer<Strings>();
+        IReadOnlyList<string> repaired = await HackAppPackages.RepairAsync(system, cancellationToken);
+        if (repaired.Count == 0)
+        {
+            await context.StandardOutput.WriteLineAsync(text["NothingToRepair"]);
+            return 0;
+        }
+
+        foreach (string line in repaired)
+        {
+            await context.StandardOutput.WriteLineAsync($"hackpkg: {line}");
+        }
+
         return 0;
     }
 
@@ -250,6 +288,7 @@ public sealed class HackpkgCommand(AppManifest manifest) : TerminalAppBase(manif
         foreach (HackInstalledPackage package in installed)
         {
             string pending = package.Loaded ? string.Empty : $" {text["PendingRestart"]}";
+            pending += package.PreviousVersion is null ? string.Empty : $" {text["PreviousKept", package.PreviousVersion]}";
             string scope = package.SystemWide ? text["ScopeSystem"] : text["ScopeUser"];
             await context.StandardOutput.WriteLineAsync(
                 $"{package.AppId.PadRight(idWidth)}  {package.Version.PadRight(versionWidth)}  {scope}  {package.Source}{pending}");
@@ -265,6 +304,7 @@ public sealed class HackpkgCommand(AppManifest manifest) : TerminalAppBase(manif
         await context.StandardOutput.WriteLineAsync(text["InfoSource", info.Source]);
         await context.StandardOutput.WriteLineAsync(text["InfoApp", info.AppId]);
         await context.StandardOutput.WriteLineAsync(text["InfoTrusted", TrustText(text, info.Trust)]);
+        await context.StandardOutput.WriteLineAsync(text["InfoSignature", info.SignatureRequired ? text["SignatureRequired"] : text["SignatureNone"]]);
         await context.StandardOutput.WriteLineAsync(text["InfoLatest", info.Latest ?? "-"]);
         await context.StandardOutput.WriteLineAsync(text["InfoVersions", string.Join(", ", info.Versions)]);
         await context.StandardOutput.WriteLineAsync(text[
