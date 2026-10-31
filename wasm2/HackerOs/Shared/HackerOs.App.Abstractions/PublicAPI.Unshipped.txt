@@ -1,1 +1,9 @@
 #nullable enable
+HackerOs.App.Abstractions.AppContextMenuEntryManifest.Screen.get -> int?
+HackerOs.App.Abstractions.AppContextMenuEntryManifest.Screen.init -> void
+HackerOs.App.Abstractions.AppContextMenuEntryManifest.Screens.get -> string?
+HackerOs.App.Abstractions.AppContextMenuEntryManifest.Screens.init -> void
+const HackerOs.App.Abstractions.AppContextMenus.MaxScreenNumber = 9 -> int
+const HackerOs.App.Abstractions.AppContextMenus.MinScreenNumber = 2 -> int
+const HackerOs.App.Abstractions.AppContextMenus.ScreensMultiple = "multiple" -> string!
+const HackerOs.App.Abstractions.AppContextMenus.ScreensSingle = "single" -> string!

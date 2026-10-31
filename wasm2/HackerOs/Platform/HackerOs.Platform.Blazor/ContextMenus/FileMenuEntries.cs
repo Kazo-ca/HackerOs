@@ -27,8 +27,8 @@ public interface IFileMenuEntrySource
 
 /// <summary>
 /// The OS side of the registered file menu entries: filters the entries of
-/// <see cref="FileContextMenuRegistry"/> (scope, types, selection, apps installed, entries the user
-/// hid), places them (<see cref="FileMenuEntryPlacement"/>) and binds each one to
+/// <see cref="FileContextMenuRegistry"/> (scope, types, selection, open screens, apps installed,
+/// entries the user hid), places them (<see cref="FileMenuEntryPlacement"/>) and binds each one to
 /// <see cref="FileContextMenuLauncher"/>.
 /// </summary>
 public sealed class FileMenuEntries : IFileMenuEntrySource
@@ -63,6 +63,14 @@ public sealed class FileMenuEntries : IFileMenuEntrySource
         _launch = launch ?? throw new ArgumentNullException(nameof(launch));
     }
 
+    /// <summary>
+    /// Gets the numbers of the screens open now, for the screen filter of ADR 0218 §2; screen 1 alone
+    /// when the host has no extended desktop.
+    /// </summary>
+    public Func<IReadOnlySet<int>> OpenScreens { get; init; } = static () => SingleScreen;
+
+    private static readonly IReadOnlySet<int> SingleScreen = new HashSet<int> { 1 };
+
     /// <inheritdoc />
     public async Task ApplyAsync(HackMenuDefinition menu, CancellationToken cancellationToken = default)
     {
@@ -78,6 +86,7 @@ public sealed class FileMenuEntries : IFileMenuEntrySource
         IReadOnlyList<string> paths = context.Items.Count > 0 ? [.. context.Items.Select(static item => item.Path)] : [context.Directory];
         string payloadScope = context.Scope.ToString();
         CultureInfo culture = _culture();
+        IReadOnlySet<int> screens = OpenScreens();
 
         List<FileMenuEntryPlacement.Candidate> candidates = [];
         foreach (RegisteredFileMenuApp app in _registry.Apps)
@@ -85,6 +94,7 @@ public sealed class FileMenuEntries : IFileMenuEntrySource
             bool Visible(AppContextMenuEntryManifest entry) =>
                 !hidden.Contains(FileContextMenuPreferences.KeyOf(app.AppId, entry.Name))
                 && FileContextMenuMatcher.Matches(entry, scope, targets)
+                && FileContextMenuMatcher.MatchesScreens(entry, screens)
                 && _launcher.IsAvailable(app.AppId, entry);
 
             foreach (AppContextMenuEntryManifest entry in app.Entries.Where(static entry => entry.Parent is null))

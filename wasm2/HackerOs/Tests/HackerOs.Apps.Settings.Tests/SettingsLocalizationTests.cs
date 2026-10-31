@@ -25,11 +25,12 @@ public sealed class SettingsLocalizationTests
     [Fact]
     public void The_French_name_of_Settings_is_generated_next_to_the_manifest()
     {
+        // The project declares two apps since ADR 0218 (Settings and « Set as wallpaper »): one folder per app.
         string directory = FindProjectDirectory();
-        using JsonDocument french = JsonDocument.Parse(File.ReadAllText(Path.Combine(directory, "localization", "fr.json")));
+        using JsonDocument french = JsonDocument.Parse(File.ReadAllText(Path.Combine(directory, "localization", "org.hackeros.settings", "fr.json")));
         Assert.Equal("Paramètres", french.RootElement.GetProperty("name").GetString());
 
-        AppManifest manifest = AppManifestJsonSerializer.DeserializeStrict(File.ReadAllText(Path.Combine(directory, "manifest.json")));
+        AppManifest manifest = AppManifestJsonSerializer.DeserializeStrict(File.ReadAllText(Path.Combine(directory, "manifests", "org.hackeros.settings.json")));
         Assert.Contains(manifest.Localizations, localization => localization.Culture == "fr");
     }
 
@@ -54,7 +55,7 @@ public sealed class SettingsLocalizationTests
         for (DirectoryInfo? directory = new(System.AppContext.BaseDirectory); directory is not null; directory = directory.Parent)
         {
             string candidate = Path.Combine(directory.FullName, "Apps", "System", "HackerOs.Apps.Settings");
-            if (File.Exists(Path.Combine(candidate, "manifest.json")))
+            if (File.Exists(Path.Combine(candidate, "manifests", "org.hackeros.settings.json")))
             {
                 return candidate;
             }

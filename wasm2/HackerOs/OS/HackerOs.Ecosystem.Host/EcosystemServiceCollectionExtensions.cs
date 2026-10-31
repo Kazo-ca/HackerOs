@@ -1118,7 +1118,12 @@ public static class EcosystemServiceCollectionExtensions
                                 entry.Name, appId, result.Status, result.ErrorCode);
                         }
                     }
-                });
+                })
+            {
+                // ADR 0218 §2: screen 1 and the secondary screens open when the menu is drawn.
+                OpenScreens = () => new HashSet<int>(
+                    provider.GetRequiredService<ScreenService>().Screens.Select(static screen => screen.Id.Number)) { 1 }
+            };
         });
         services.AddSingleton(new HackPlatformComponent(
             HackerOs.AppSdk.Components.HackComponentContracts.ContextMenu,

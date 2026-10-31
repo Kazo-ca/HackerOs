@@ -2,8 +2,11 @@
 
 # Fonds d'écran en image
 
-Décision : [ADR 0202](adr/0202-desktop-wallpaper-images.md). Issue
-[#254](https://github.com/Kazo-ca/HackerOs/issues/254).
+Décisions : [ADR 0202](adr/0202-desktop-wallpaper-images.md) (issue
+[#254](https://github.com/Kazo-ca/HackerOs/issues/254)) et
+[ADR 0218](adr/0218-set-as-wallpaper-file-menu.md), « Définir comme fond
+d'écran » dans le menu des images (issue
+[#298](https://github.com/Kazo-ca/HackerOs/issues/298)).
 
 ## But
 
@@ -51,6 +54,26 @@ Un `nano ~/.config/hackeros/appearance.config` change le fond à l'enregistremen
 | `DesktopArea.WallpaperContent` | `HackerOs.Windowing.Blazor` | Couche entre le fond du thème et les icônes. `DesktopShell` la remplit pour l'écran 1 et chaque écran secondaire. |
 | `WallpaperPanel` | `HackerOs.Apps.Settings` | Vignettes, « Parcourir… », « Ajustement », choix de l'écran ; SDK public seulement. |
 
+## « Définir comme fond d'écran » dans les menus des fichiers
+
+Le menu d'une image PNG, JPEG ou WebP (explorateur, bureau, dialogues de
+fichiers) propose « Définir comme fond d'écran » juste après « Ouvrir avec »
+(ADR 0218) :
+
+- avec un seul écran ouvert, une entrée simple : l'image va dans `wallpaper`
+  (tous les écrans sans image propre) ;
+- avec plusieurs écrans, un sous-menu « Écran 1 et les autres », puis
+  « Écran 2 »… pour chaque écran secondaire ouvert (`wallpaperScreen<n>`).
+
+Les entrées appartiennent à `org.hackeros.settings.wallpaper`
+(`SetWallpaperApp`), un service caché déclaré par le projet Paramètres et
+exécuté sur le fil principal. `SetWallpaperService` lit le fichier en tant
+qu'utilisateur de la session, vérifie ses octets et sa taille comme le shell,
+écrit la couche utilisateur d'`appearance.config`, publie une notification
+« Fond d'écran changé » (ou l'erreur : clé verrouillée, fichier illisible, pas
+une image), puis s'arrête. Aucune fenêtre ne s'ouvre ; le chemin est gardé tel
+quel.
+
 ## Points d'attention
 
 - Le shell ne fait jamais confiance au nom du fichier : un fichier qui n'est
@@ -66,8 +89,13 @@ Un `nano ~/.config/hackeros/appearance.config` change le fond à l'enregistremen
   catalogue, schéma, service (image livrée, fichier, écran propre, repli).
 - `Tests/HackerOs.Apps.Settings.Tests/WallpaperPanelTests.cs` : panneau
   (vignettes, choix par écran, « Parcourir… », ajustement, français).
+- `Tests/HackerOs.Apps.Settings.Tests/SetWallpaperServiceTests.cs` : entrées
+  de menu, écran de chaque entrée, clé écrite, fichier refusé, clé verrouillée,
+  notification.
+- `Tests/HackerOs.Platform.Blazor.Tests/ContextMenus/FileMenuEntriesTests.cs` :
+  filtre par écran (entrée simple ou sous-menu des écrans ouverts).
 
 ## Hors de ce chantier
 
-Fond d'écran du mobile et « Définir comme fond d'écran » dans l'explorateur :
-issues `TODO` #297 et #298 (ADR 0202 §6).
+Fond d'écran du mobile : issue `TODO` #297 (ADR 0202 §6). « Définir comme fond
+d'écran » (#298) est fait par l'ADR 0218.

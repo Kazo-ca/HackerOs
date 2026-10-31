@@ -98,7 +98,7 @@ public sealed class FileContextMenuLauncher
             ? paths.Select(static path => (IReadOnlyList<string>)[path])
             : [paths];
         return [.. batches.Select(batch => declared
-            ? new AppLaunchRequest(target, principal, [], Intent: new AppIntentDelivery(intent, PayloadOf(batch, scope), ShellAppId))
+            ? new AppLaunchRequest(target, principal, [], Intent: new AppIntentDelivery(intent, PayloadOf(batch, scope, entry.Name), ShellAppId))
             : new AppLaunchRequest(target, principal, [intent, .. batch]))];
     }
 
@@ -136,10 +136,19 @@ public sealed class FileContextMenuLauncher
         return results;
     }
 
-    /// <summary>The intent's payload, <c>{"paths":[…],"scope":"File"}</c> (ADR 0151 §7).</summary>
+    /// <summary>The intent's payload without the entry's name, <c>{"paths":[…],"scope":"File"}</c> (ADR 0151 §7).</summary>
     /// <param name="paths">The paths.</param>
     /// <param name="scope">The scope name.</param>
-    public static string PayloadOf(IReadOnlyList<string> paths, string scope)
+    public static string PayloadOf(IReadOnlyList<string> paths, string scope) => PayloadOf(paths, scope, entry: null);
+
+    /// <summary>
+    /// The intent's payload, <c>{"paths":[…],"scope":"File","entry":"extract"}</c> (ADR 0151 §7): the
+    /// entry's name lets one intent serve several entries of an app (ADR 0218 §3).
+    /// </summary>
+    /// <param name="paths">The paths.</param>
+    /// <param name="scope">The scope name.</param>
+    /// <param name="entry">The name of the chosen entry, or <see langword="null"/> to leave it out.</param>
+    public static string PayloadOf(IReadOnlyList<string> paths, string scope, string? entry)
     {
         using MemoryStream stream = new();
         using (Utf8JsonWriter writer = new(stream))
@@ -153,6 +162,11 @@ public sealed class FileContextMenuLauncher
 
             writer.WriteEndArray();
             writer.WriteString("scope", scope);
+            if (entry is not null)
+            {
+                writer.WriteString("entry", entry);
+            }
+
             writer.WriteEndObject();
         }
 

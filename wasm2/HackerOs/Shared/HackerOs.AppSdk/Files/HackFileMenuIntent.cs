@@ -4,7 +4,7 @@ namespace HackerOs.AppSdk.Files;
 
 /// <summary>
 /// Reads the intent the OS hands an app for one of its file menu entries (ADR 0151 §7): the payload
-/// <c>{"paths":["/home/neo/a.zip"],"scope":"File"}</c> of <c>AppContext.Intent</c> or of
+/// <c>{"paths":["/home/neo/a.zip"],"scope":"File","entry":"extract"}</c> of <c>AppContext.Intent</c> or of
 /// <c>OnIntentReceivedAsync</c>.
 /// </summary>
 /// <example>
@@ -47,6 +47,21 @@ public static class HackFileMenuIntent
             && Enum.IsDefined(value)
             ? value
             : FileMenuScope.None;
+    }
+
+    /// <summary>
+    /// Gets the name of the entry chosen (ADR 0218 §3), so one intent can serve several entries of
+    /// the app, or <see langword="null"/> when the payload has none (an OS older than ADR 0218).
+    /// </summary>
+    /// <param name="payloadJson">The intent's payload, or <see langword="null"/>.</param>
+    public static string? ReadEntry(string? payloadJson)
+    {
+        using JsonDocument? document = Parse(payloadJson);
+        return document is not null
+            && document.RootElement.TryGetProperty("entry", out JsonElement entry)
+            && entry.ValueKind == JsonValueKind.String
+            ? entry.GetString()
+            : null;
     }
 
     private static JsonDocument? Parse(string? payloadJson)

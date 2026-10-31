@@ -1980,4 +1980,25 @@
   <data name="Policy.Block" xml:space="preserve">
     <value>Bloquer</value>
   </data>
+  <data name="SetWallpaper.Done.Title" xml:space="preserve">
+    <value>Fond d'écran changé</value>
+  </data>
+  <data name="SetWallpaper.Done.Message" xml:space="preserve">
+    <value>{0} est maintenant le fond d'écran.</value>
+  </data>
+  <data name="SetWallpaper.Done.MessageScreen" xml:space="preserve">
+    <value>{0} est maintenant le fond d'écran de l'écran {1}.</value>
+  </data>
+  <data name="SetWallpaper.Error.Title" xml:space="preserve">
+    <value>Fond d'écran non changé</value>
+  </data>
+  <data name="SetWallpaper.Error.NotImage" xml:space="preserve">
+    <value>{0} n'est pas une image PNG, JPEG ou WebP de 16 Mo au plus.</value>
+  </data>
+  <data name="SetWallpaper.Error.Unreadable" xml:space="preserve">
+    <value>{0} ne peut pas être lu : {1}</value>
+  </data>
+  <data name="SetWallpaper.Error.NotSaved" xml:space="preserve">
+    <value>Le fond d'écran ne peut pas être enregistré : {0}</value>
+  </data>
 </root>

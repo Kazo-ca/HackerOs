@@ -1,1 +1,3 @@
 #nullable enable
+HackerOs.Platform.Blazor.ContextMenus.FileMenuEntries.OpenScreens.get -> System.Func<System.Collections.Generic.IReadOnlySet<int>!>!
+HackerOs.Platform.Blazor.ContextMenus.FileMenuEntries.OpenScreens.init -> void

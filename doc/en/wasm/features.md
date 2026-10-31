@@ -234,8 +234,9 @@ This section lists what is released in the `main` branch and online.
   ([`theme-files.md`](framework/theme-files.md))
 - **Image wallpapers**: a PNG, JPEG or WebP image (4 shipped with the OS,
   your own or those of a shared folder), for every screen or one screen at a
-  time, in Settings ▸ Appearance.
-  ([ADR 0202](dev/adr/0202-desktop-wallpaper-images.md), [`wallpapers.md`](dev/wallpapers.md))
+  time, in Settings ▸ Appearance or with "Set as wallpaper" in the menu of an
+  image.
+  ([ADR 0202](dev/adr/0202-desktop-wallpaper-images.md), [ADR 0218](dev/adr/0218-set-as-wallpaper-file-menu.md), [`wallpapers.md`](dev/wallpapers.md))
 - **English and French**, the language follows the user's locale.
   ([`localization.md`](framework/localization.md))
 - **Accessibility**: display and animation preferences, keyboard navigation.
@@ -338,7 +339,7 @@ points to its PR.
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Catalog checks of theme packs | The catalog CI checks the `kind: "theme-pack"` entries as the OS does at install. | [0213](dev/adr/0213-theme-packs-build.md) | [AppMarketPlace #4](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/4) |
-| Mobile wallpaper and "Set as wallpaper" menu | The background image on the mobile home screen, and an entry of the images' context menu. Desktop wallpapers are available. | [0202](dev/adr/0202-desktop-wallpaper-images.md) | [#297](https://github.com/Kazo-ca/HackerOs/issues/297), [#298](https://github.com/Kazo-ca/HackerOs/issues/298) |
+| Mobile wallpaper | The background image on the mobile home screen. Desktop wallpapers and the "Set as wallpaper" menu are available. | [0202](dev/adr/0202-desktop-wallpaper-images.md) | [#297](https://github.com/Kazo-ca/HackerOs/issues/297) |
 
 ### Network and server
 
