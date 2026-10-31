@@ -34,7 +34,7 @@ public interface IInstalledAppAssetCache
 
     /// <summary>
     /// Links a cached style sheet to the page, once per address (an installed app's scoped CSS,
-    /// ADR 0220 §2).
+    /// ADR 0221 §2).
     /// </summary>
     /// <param name="url">Its address.</param>
     /// <param name="cancellationToken">Cancels the call.</param>
@@ -53,7 +53,7 @@ public interface IInstalledAppAssetCache
 /// no installed app declares any more (an app removed by <c>hackpkg remove</c> or updated before the
 /// restart). A damaged or missing file is left out, with a <c>/var/log/syslog</c> line; the launch
 /// goes on, as with a built-in app's missing file. Once its files are copied, the app's scoped CSS
-/// (<c>&lt;assembly&gt;.bundle.scp.css</c>) is linked to the page (ADR 0220 §2), as the host's
+/// (<c>&lt;assembly&gt;.bundle.scp.css</c>) is linked to the page (ADR 0221 §2), as the host's
 /// <c>styles.css</c> links a built-in app's.
 /// </remarks>
 public sealed class InstalledAppAssetPublisher
@@ -212,7 +212,7 @@ public sealed class InstalledAppAssetPublisher
         }
     }
 
-    // ADR 0220 §2: the scoped CSS of the app's components, linked once its verified copy is served.
+    // ADR 0221 §2: the scoped CSS of the app's components, linked once its verified copy is served.
     private async Task LinkStylesAsync(InstalledApp app, string url, CancellationToken cancellationToken)
     {
         try

@@ -288,7 +288,7 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   installée. ([ADR 0206](dev/adr/0206-serve-installed-app-assets.md)) Son paquet
   contient toutes ses ressources statiques (scripts collocalisés compris) et
   l'OS charge son CSS isolé : installée, elle a la même apparence que compilée
-  dans l'OS. ([ADR 0220](dev/adr/0220-pack-all-static-web-assets-of-an-app.md))
+  dans l'OS. ([ADR 0221](dev/adr/0221-pack-all-static-web-assets-of-an-app.md))
 - **Sources de confiance et installation pour soi** : une application d'une
   source de confiance s'installe pour soi sans administrateur ; une source non
   fiable, une application de la liste noire ou une installation pour tous

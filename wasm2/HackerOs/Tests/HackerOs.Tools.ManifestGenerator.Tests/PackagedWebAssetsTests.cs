@@ -5,7 +5,7 @@ using HackerOs.App.Abstractions;
 namespace HackerOs.Tools.ManifestGenerator.Tests;
 
 /// <summary>
-/// ADR 0220 §1: <c>HackerOsPack</c> puts every static web resource of the project in the package,
+/// ADR 0221 §1: <c>HackerOsPack</c> puts every static web resource of the project in the package,
 /// from the build's <c>staticwebassets.build.json</c>, and declares the undeclared ones.
 /// </summary>
 public sealed class PackagedWebAssetsTests

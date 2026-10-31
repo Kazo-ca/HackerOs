@@ -82,7 +82,7 @@ export async function remove(url) {
 }
 
 /**
- * Links a style sheet the cache serves (an installed app's scoped CSS, ADR 0220 §2) at the end of the
+ * Links a style sheet the cache serves (an installed app's scoped CSS, ADR 0221 §2) at the end of the
  * page's <head>, as Blazor's own styles.css links a built-in app's. Once per address: false when it
  * was already linked.
  */

@@ -317,7 +317,7 @@ approval:
   `wwwroot/`, the collocated JavaScript (`.razor.js`) and the scoped CSS bundle
   (`<assembly>.bundle.scp.css`); those the app does not declare are added, with
   their SHA-256, to the **package's** manifest only
-  ([ADR 0220](adr/0220-pack-all-static-web-assets-of-an-app.md)).
+  ([ADR 0221](adr/0221-pack-all-static-web-assets-of-an-app.md)).
 - **`wwwroot/` resources** ([ADR 0206](adr/0206-serve-installed-app-assets.md)):
   at the app's first launch in the session, each declared resource is read
   through `AppAssetStore` (hash checked) and copied into the
@@ -327,7 +327,7 @@ approval:
   `localhost`, the OS registers `service-worker.js?mode=installed-apps`, which
   serves only those files. Without a service worker, the files are not served
   (line in `/var/log/syslog`).
-- **Scoped CSS** ([ADR 0220](adr/0220-pack-all-static-web-assets-of-an-app.md)):
+- **Scoped CSS** ([ADR 0221](adr/0221-pack-all-static-web-assets-of-an-app.md)):
   once `<assembly>.bundle.scp.css` is copied into the cache, the OS adds a
   `<link rel="stylesheet">` to it to the page, once per session, as the host's
   `styles.css` sheet does for a compiled app.

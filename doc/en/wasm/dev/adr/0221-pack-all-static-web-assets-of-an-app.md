@@ -1,6 +1,6 @@
-> [Version française](../../../../fr/wasm/dev/adr/0220-pack-all-static-web-assets-of-an-app.md)
+> [Version française](../../../../fr/wasm/dev/adr/0221-pack-all-static-web-assets-of-an-app.md)
 
-# ADR 0220: pack every static resource of an app and load its scoped CSS
+# ADR 0221: pack every static resource of an app and load its scoped CSS
 
 ## Status
 

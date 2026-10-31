@@ -55,7 +55,7 @@ public static partial class BrowserInstalledAppAssets
     }
 
     /// <summary>
-    /// Links a cached style sheet to the page (an installed app's scoped CSS, ADR 0220 §2), once per
+    /// Links a cached style sheet to the page (an installed app's scoped CSS, ADR 0221 §2), once per
     /// address; <see langword="true"/> when the link was added.
     /// </summary>
     /// <param name="url">The address, relative to the page's base.</param>

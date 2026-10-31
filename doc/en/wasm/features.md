@@ -282,7 +282,7 @@ This section lists what is released in the `main` branch and online.
   installed. ([ADR 0206](dev/adr/0206-serve-installed-app-assets.md)) Its
   package holds all its static resources (collocated scripts included) and the
   OS loads its scoped CSS: installed, it looks the same as when built into the
-  OS. ([ADR 0220](dev/adr/0220-pack-all-static-web-assets-of-an-app.md))
+  OS. ([ADR 0221](dev/adr/0221-pack-all-static-web-assets-of-an-app.md))
 - **Trusted sources and install for oneself**: an application from a trusted
   source is installed for oneself without an administrator; an untrusted
   source, an application of the block list or an install for everyone go

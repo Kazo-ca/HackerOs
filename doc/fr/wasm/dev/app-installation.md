@@ -318,7 +318,7 @@ validation en deux étapes :
   le `wwwroot/`, le JavaScript collocalisé (`.razor.js`) et le bundle du CSS
   isolé (`<assemblage>.bundle.scp.css`) ; celles que l'app ne déclare pas sont
   ajoutées, avec leur SHA-256, au manifeste **du paquet** seulement
-  ([ADR 0220](adr/0220-pack-all-static-web-assets-of-an-app.md)).
+  ([ADR 0221](adr/0221-pack-all-static-web-assets-of-an-app.md)).
 - **Ressources `wwwroot/`** ([ADR 0206](adr/0206-serve-installed-app-assets.md)) :
   au premier lancement de l'app dans la session, chaque ressource déclarée est
   lue par `AppAssetStore` (empreinte vérifiée) et copiée dans le cache
@@ -328,7 +328,7 @@ validation en deux étapes :
   `localhost`, l'OS enregistre `service-worker.js?mode=installed-apps`, qui ne
   sert que ces fichiers. Sans service worker, les fichiers ne sont pas servis
   (ligne dans `/var/log/syslog`).
-- **CSS isolé** ([ADR 0220](adr/0220-pack-all-static-web-assets-of-an-app.md)) :
+- **CSS isolé** ([ADR 0221](adr/0221-pack-all-static-web-assets-of-an-app.md)) :
   une fois `<assemblage>.bundle.scp.css` copié dans le cache, l'OS ajoute un
   `<link rel="stylesheet">` vers lui à la page, une fois par session, comme la
   feuille `styles.css` de l'hôte le fait pour une app compilée.

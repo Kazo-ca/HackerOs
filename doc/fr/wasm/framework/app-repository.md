@@ -110,7 +110,7 @@ déclare déjà `HackerOsAppProject=true` ; ajoutez-la à l'hôte par
    (contenu de `store/`, `manifest.json` **du paquet**, `store.json` avec le
    commit du tag), laissé en artefact du workflow. Le manifeste du paquet est le
    manifeste généré plus toutes les ressources statiques que `HackerOsPack` y a
-   ajoutées ([ADR 0220](../dev/adr/0220-pack-all-static-web-assets-of-an-app.md)) :
+   ajoutées ([ADR 0221](../dev/adr/0221-pack-all-static-web-assets-of-an-app.md)) :
    c'est celui que le catalogue compare au paquet que sa CI construit.
 4. Avec le secret `HACK_STORE_TOKEN` (un jeton de l'auteur qui peut créer un
    fork et ouvrir une pull request), le workflow ouvre la pull request vers

@@ -1,6 +1,6 @@
-> [English version](../../../../en/wasm/dev/adr/0220-pack-all-static-web-assets-of-an-app.md)
+> [English version](../../../../en/wasm/dev/adr/0221-pack-all-static-web-assets-of-an-app.md)
 
-# ADR 0220 : mettre en paquet toutes les ressources statiques d'une app et charger son CSS isolé
+# ADR 0221 : mettre en paquet toutes les ressources statiques d'une app et charger son CSS isolé
 
 ## Statut
 

@@ -112,7 +112,7 @@ Questions à reposer au démarrage : où vivent les visionneuses, portée de
 
 ## Prochaine version : 2.2.1 (décision du 2026-10-31)
 
-- La version qui apporte l'[ADR 0220](../dev/adr/0220-pack-all-static-web-assets-of-an-app.md)
+- La version qui apporte l'[ADR 0221](../dev/adr/0221-pack-all-static-web-assets-of-an-app.md)
   (PR #336 : toutes les ressources statiques d'une app dans son paquet, CSS
   isolé d'une app installée) s'appelle **2.2.1**, choix de Benoit, bien que
   l'API publique grandisse. Les apps tierces attendent cette version pour leur

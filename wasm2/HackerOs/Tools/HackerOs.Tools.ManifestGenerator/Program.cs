@@ -163,7 +163,7 @@ public static class Program
     /// writes <c>&lt;version&gt;/&lt;appId&gt;-&lt;version&gt;.hackapp</c> and updates <c>index.json</c>
     /// in the packages folder, the content of the app repository's <c>hackeros-packages</c> branch.
     /// With <c>--web-assets</c>, the package holds every static web resource of the project, not only
-    /// the declared ones (ADR 0220 §1).
+    /// the declared ones (ADR 0221 §1).
     /// With a key (the file, else <see cref="PackageSigner.KeyVariable"/>) the version carries its
     /// <c>signature</c>; without one it is published unsigned and a warning says so (ADR 0219 §4).
     /// </summary>
@@ -183,7 +183,7 @@ public static class Program
             }
             else if (webAssets is not null)
             {
-                Console.WriteLine($"{manifestPath} : warning {GeneratorCodes.PackageWebAssetsMissing}: No static web asset manifest at '{webAssets}': the package holds only the declared assets, without the rest of wwwroot/, the collocated scripts or the scoped CSS (ADR 0220).");
+                Console.WriteLine($"{manifestPath} : warning {GeneratorCodes.PackageWebAssetsMissing}: No static web asset manifest at '{webAssets}': the package holds only the declared assets, without the rest of wwwroot/, the collocated scripts or the scoped CSS (ADR 0221).");
             }
 
             byte[] package = AppPackageWriter.Write(
@@ -216,7 +216,7 @@ public static class Program
     }
 
     /// <summary>
-    /// ADR 0220 §1: adds every static web resource of the project (<c>staticwebassets.build.json</c>)
+    /// ADR 0221 §1: adds every static web resource of the project (<c>staticwebassets.build.json</c>)
     /// to the package's manifest and records where each one is read from. The project's own
     /// <c>manifest.json</c> is not touched.
     /// </summary>
