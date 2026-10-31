@@ -15,8 +15,8 @@ l'[ADR 0190](0190-theme-packs.md) avant que le Hack Store accepte le dossier
   (thèmes en fichiers dans `/etc` et `~`, pas de masquage) ;
   [ADR 0044](0044-settings-as-files.md) (réglages en fichiers à couches).
 - **Questions posées à Benoit** (fin du document) : le thème d'une nouvelle
-  installation et la portée du thème dans les apps. Le travail suit les
-  recommandations en attendant ses réponses.
+  installation et la portée du thème dans les apps. Benoit a choisi les
+  recommandations le 2026-10-31 (Système ; partout) : rien ne change.
 
 ## Contexte
 
@@ -152,6 +152,9 @@ et reprend les vérifications de `CursorThemeFile`.
 2. **Portée** : A) partout, apps comprises (recommandé, comme un vrai OS, aucune
    app à modifier) ; B) seulement l'interface de l'OS (bureau, barre des
    tâches, cadres des fenêtres), en marquant chaque surface.
+
+**Réponses de Benoit (2026-10-31) :** 1 A, Système ; 2 A, partout, apps
+comprises. C'est ce que le code fait déjà.
 
 ## Tâches
 
