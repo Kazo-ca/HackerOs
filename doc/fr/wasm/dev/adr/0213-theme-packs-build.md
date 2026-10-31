@@ -20,8 +20,8 @@ des ADR [0202](0202-desktop-wallpaper-images.md) (fonds d'écran),
   `cursors/` dans `/etc/hackeros/cursors/` ou `~/.config/hackeros/cursors/` :
   il est lu là où le pack est déballé, §3 ci-dessous).
 
-Quatre questions ont été posées à Benoit (Q1 à Q4 ci-dessous) ; les
-recommandations sont appliquées en attendant ses réponses.
+Quatre questions ont été posées à Benoit (Q1 à Q4 ci-dessous) ; il a choisi
+A pour les quatre le 2026-10-31, ce qui était construit.
 
 ## Contexte
 
@@ -175,6 +175,13 @@ apps (`AppUpdateMonitor`).
    « Ouvrir Apparence ». B : appliquer tout le pack d'un coup.
 4. **Q4, mises à jour des packs dans le badge.** A (recommandé) : non, onglet
    Thèmes seulement. B : oui, comme les apps.
+
+## Réponses de Benoit
+
+Le 2026-10-31 : **Q1 A** (lus en place), **Q2 A** (issue `TODO`
+[AppMarketPlace #4](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/4)
+après `main`), **Q3 A** (rien n'est appliqué, bouton « Ouvrir Apparence »),
+**Q4 A** (onglet Thèmes seulement, pas de badge).
 
 ## Tâches
 

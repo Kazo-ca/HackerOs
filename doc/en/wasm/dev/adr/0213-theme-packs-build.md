@@ -20,8 +20,8 @@ and [0205](0205-cursor-themes.md) (cursors).
   folder to `/etc/hackeros/cursors/` or `~/.config/hackeros/cursors/`: it is
   read where the pack is unpacked, §3 below).
 
-Four questions were asked to Benoit (Q1 to Q4 below); the recommendations are
-applied while waiting for his answers.
+Four questions were asked to Benoit (Q1 to Q4 below); he chose A for all four
+on 2026-10-31, which was what had been built.
 
 ## Context
 
@@ -169,6 +169,13 @@ Themes tab only, not in the apps badge (`AppUpdateMonitor`).
    Appearance" button. B: apply the whole pack at once.
 4. **Q4, pack updates in the badge.** A (recommended): no, Themes tab only.
    B: yes, like apps.
+
+## Benoit's answers
+
+On 2026-10-31: **Q1 A** (read in place), **Q2 A** (`TODO` issue
+[AppMarketPlace #4](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/4)
+after `main`), **Q3 A** (nothing applied, "Open Appearance" button),
+**Q4 A** (Themes tab only, no badge).
 
 ## Tasks
 
