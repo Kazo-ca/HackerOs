@@ -117,6 +117,12 @@ public sealed class OsSoundService : IDisposable
     /// <summary>Raised after <see cref="Preferences"/> changed.</summary>
     public event Action? Changed;
 
+    /// <summary>
+    /// Gets the "Do not disturb" mode (ADR 0216 §1): while it is on, a posted notification plays no
+    /// sound; the other events still do. <see langword="null"/> when the host has no such mode.
+    /// </summary>
+    public DoNotDisturbService? DoNotDisturb { get; init; }
+
     /// <summary>Loads <c>sound.config</c> and starts watching it.</summary>
     /// <param name="cancellationToken">Signals cancellation of the reads.</param>
     public async Task InitializeAsync(CancellationToken cancellationToken = default)
@@ -202,10 +208,13 @@ public sealed class OsSoundService : IDisposable
         _refreshGate.Dispose();
     }
 
-    /// <summary>Maps a notification to its sound; only the session user's notifications sound.</summary>
+    /// <summary>
+    /// Maps a notification to its sound; only the session user's notifications sound, and none
+    /// while "Do not disturb" is on (ADR 0216).
+    /// </summary>
     private void OnNotificationPosted(Notification notification)
     {
-        if (_session.CurrentPrincipal?.UserId != notification.UserId)
+        if (_session.CurrentPrincipal?.UserId != notification.UserId || DoNotDisturb?.IsEnabled == true)
         {
             return;
         }

@@ -14,10 +14,31 @@
 @inject IStringLocalizer<Strings> L
 @inject HackerOs.Platform.Core.Globalization.SessionLocaleService SessionLocale
 @inject HackerOs.Platform.Core.Globalization.SessionTimeZoneService TimeZones
+@using Microsoft.Extensions.Logging
+@inject ILogger<ClockPanel> Logger
 
 <div class="clock-panel" role="dialog" aria-label="@L["Clock.Panel"]" @onkeydown="HandleKeyDownAsync">
     <section class="clock-panel-section" aria-label="@L["Clock.Notifications"]">
-        <h3 class="clock-panel-heading">@L["Clock.Notifications"]</h3>
+        <div class="clock-panel-heading-row">
+            <h3 class="clock-panel-heading">@L["Clock.Notifications"]</h3>
+            @if (_doNotDisturb is not null)
+            {
+                @* ADR 0216 §2: the quick switch, also in the phone's shade. *@
+                <label class="dnd-switch" for="clock-dnd" title="@L["Dnd.Hint"]">
+                    <input id="clock-dnd" type="checkbox" role="switch"
+                           checked="@_doNotDisturb.IsEnabled"
+                           aria-checked="@(_doNotDisturb.IsEnabled ? "true" : "false")"
+                           disabled="@_isSavingDnd"
+                           @onchange="OnDoNotDisturbChanged" />
+                    <span class="dnd-switch-track" aria-hidden="true"><span class="dnd-switch-thumb"></span></span>
+                    <span class="dnd-switch-label">@L["Dnd.Label"]</span>
+                </label>
+            }
+        </div>
+        @if (_dndError is not null)
+        {
+            <p class="clock-panel-error" role="alert">@_dndError</p>
+        }
         @if (ActiveNotifications.Count == 0)
         {
             <p class="clock-panel-empty">@L["Clock.NoNotifications"]</p>
@@ -197,9 +218,46 @@
         PlatformPreference.Current.SelectionSource == UiPlatformSelectionSource.Explicit
         && PlatformPreference.Current.ExplicitPlatformId == platformId;
 
+    private HackerOs.Platform.Core.Notifications.DoNotDisturbService? _doNotDisturb;
+    private bool _isSavingDnd;
+    private string? _dndError;
+
     protected override void OnInitialized()
     {
         PlatformPreference.Changed += OnPreferenceChanged;
+        _doNotDisturb = Services.GetService(typeof(HackerOs.Platform.Core.Notifications.DoNotDisturbService))
+            as HackerOs.Platform.Core.Notifications.DoNotDisturbService;
+        if (_doNotDisturb is not null)
+        {
+            _doNotDisturb.Changed += OnPreferenceChanged;
+        }
+    }
+
+    /// <summary>Turns "Do not disturb" on or off for the session user (ADR 0216 §2).</summary>
+    private async Task OnDoNotDisturbChanged(ChangeEventArgs args)
+    {
+        if (_doNotDisturb is null || _isSavingDnd)
+        {
+            return;
+        }
+
+        bool enabled = args.Value is true || (args.Value is string text && bool.TryParse(text, out bool value) && value);
+        _isSavingDnd = true;
+        _dndError = null;
+        try
+        {
+            await _doNotDisturb.SetAsync(enabled);
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException)
+        {
+            // A locked key or a read-only file: the switch keeps the state that applies.
+            Logger.LogWarning(exception, "notifications: could not save do-not-disturb");
+            _dndError = L["Dnd.Error", exception.Message];
+        }
+        finally
+        {
+            _isSavingDnd = false;
+        }
     }
 
     private void OnPreferenceChanged() => InvokeAsync(StateHasChanged);
@@ -239,5 +297,12 @@
     }
 
     /// <inheritdoc />
-    public void Dispose() => PlatformPreference.Changed -= OnPreferenceChanged;
+    public void Dispose()
+    {
+        PlatformPreference.Changed -= OnPreferenceChanged;
+        if (_doNotDisturb is not null)
+        {
+            _doNotDisturb.Changed -= OnPreferenceChanged;
+        }
+    }
 }

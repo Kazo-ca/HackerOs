@@ -209,6 +209,6 @@ public static class ContextMenuRegistrationInspector
         private static string Key(AppContextMenuEntryManifest entry) => string.Join('\u001f',
             entry.Name, entry.Title, entry.Target, entry.Intent, entry.Icon?.Kind, entry.Icon?.Source, entry.Icon?.Library,
             string.Join(',', entry.Scopes), entry.Types is null ? "\u0000" : string.Join(',', entry.Types), entry.Selection,
-            entry.First, entry.After, entry.AfterGroup, entry.Parent);
+            entry.First, entry.After, entry.AfterGroup, entry.Parent, entry.Screens, entry.Screen);
     }
 }

@@ -83,7 +83,7 @@ public static class AppPackageWriter
 
     /// <summary>
     /// Adds a version to <c>index.json</c>, or replaces it when it is already listed; versions stay
-    /// newest first.
+    /// newest first and keep their <c>signature</c> (ADR 0219 §2).
     /// </summary>
     /// <param name="existing">The current index, or <see langword="null"/> for a first publication.</param>
     /// <param name="appId">App identifier; it must match the existing index.</param>
@@ -114,6 +114,12 @@ public static class AppPackageWriter
                 writer.WriteString("version", current.Version.ToString());
                 writer.WriteString("path", current.Path);
                 writer.WriteString("sha256", current.Sha256);
+                // ADR 0219 §2: the signatures already published are kept; a replaced version has the new entry's.
+                if (current.Signature is { } signature)
+                {
+                    writer.WriteString(AppPackageSignature.FieldName, Convert.ToBase64String(signature));
+                }
+
                 writer.WriteEndObject();
             }
 

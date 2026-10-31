@@ -154,8 +154,8 @@ at the end of each series or when a convention changes.
   0193 local time, 0194 taskbar menus, 0195 Start menu Power button, 0196 unread notifications dot;
   `todo/base` series: 0197 notification bubbles, 0201 "Switch user" stays greyed out, 0203 icon packs, 0207
   `hackeros-solution` template, 0208 Hack Store trusted sources, 0212 Hack Store app, 0213 theme packs, 0214 Hack Store without a restart, signing and transactions, 0215 Hack Store answers (no badge, ambiguous appId refused) (the other numbers up to 0211 are reserved by
-  its work items). **Next free number:
-  0216.** Before taking one, check `dev/adr/` on
+  its work items; 0216 to 0219 by lot 3: 0216 "Do not disturb" mode, 0217 mobile home wallpaper, 0218 "Set as wallpaper" in the menu of images, 0219 app authors' signing tool). **Next free number:
+  0220.** Before taking one, check `dev/adr/` on
   `main` and the open PRs.
 
 ## Working conventions

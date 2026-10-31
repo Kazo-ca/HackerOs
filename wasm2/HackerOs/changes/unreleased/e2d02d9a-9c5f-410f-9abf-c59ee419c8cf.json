@@ -1,0 +1,12 @@
+{
+  "id": "e2d02d9a-9c5f-410f-9abf-c59ee419c8cf",
+  "category": "new",
+  "audience": ["user"],
+  "title": { "en": "Set as wallpaper from the menu of an image", "fr": "Définir comme fond d'écran depuis le menu d'une image" },
+  "description": {
+    "en": "Right-click a PNG, JPEG or WebP image and choose Set as wallpaper: it becomes the desktop background at once, without opening Settings. With several screens, a submenu chooses the screen.",
+    "fr": "Un clic droit sur une image PNG, JPEG ou WebP puis Définir comme fond d'écran : elle devient le fond du bureau tout de suite, sans ouvrir Paramètres. Avec plusieurs écrans, un sous-menu choisit l'écran."
+  },
+  "pr": 330,
+  "links": ["doc/en/wasm/dev/adr/0218-set-as-wallpaper-file-menu.md", "doc/en/wasm/dev/wallpapers.md"]
+}

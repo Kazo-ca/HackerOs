@@ -61,8 +61,9 @@ internal sealed class NotificationToastFeed : IDisposable
     public event Action? Changed;
 
     /// <summary>
-    /// Gets or sets whether the panel that lists the notifications is open (ADR 0197 §3): while it
-    /// is, no bubble shows, and a notification that arrives meanwhile goes to the open list only.
+    /// Gets or sets whether bubbles are suppressed: the panel that lists the notifications is open
+    /// (ADR 0197 §3) or "Do not disturb" is on (ADR 0216 §1). Meanwhile no bubble shows, and a
+    /// notification that arrives goes to the panel only, without a bubble once suppression ends.
     /// </summary>
     public bool IsSuppressed
     {

@@ -1,0 +1,37 @@
+@using HackerOs.Simulation.Abstractions.Settings
+@inherits HackerOs.AppSdk.Blazor.HackComponentBase
+@implements IAsyncDisposable
+
+@*
+    Settings > Notifications (ADR 0216 §2): the "Do not disturb" switch, written to
+    ~/.config/hackeros/notifications.config. The shell hides the bubbles and mutes the
+    notification sounds at once; the clock panel has the same switch.
+*@
+@if (!_loaded)
+{
+    <p class="setting-desc">@(_message is null ? L["Common.Loading"] : string.Empty)</p>
+}
+else
+{
+    <div class="setting-group notifications-panel">
+        <h4 id="notifications-dnd-title">@L["Notifications.Dnd.Title"] <SettingOriginBadge Source="@SourceOf(DoNotDisturbKey)" IsLocked="@IsLocked(DoNotDisturbKey)" /></h4>
+        <p class="setting-desc">@L["Notifications.Dnd.Description"]</p>
+        <label class="notifications-switch" for="notifications-dnd">
+            <input id="notifications-dnd" type="checkbox" role="switch" checked="@_doNotDisturb"
+                   aria-checked="@(_doNotDisturb ? "true" : "false")"
+                   aria-describedby="notifications-dnd-title"
+                   disabled="@(_isBusy || IsLocked(DoNotDisturbKey))"
+                   @onchange="OnDoNotDisturbChanged" />
+            <span class="notifications-switch-track" aria-hidden="true"><span class="notifications-switch-thumb"></span></span>
+            <span class="notifications-switch-label">@L["Notifications.Dnd.Enabled"]</span>
+        </label>
+        <p class="setting-desc notifications-file">
+            @LocalizedMarkup.Format(L["Notifications.Dnd.File"], LocalizedMarkup.Code("~/.config/hackeros/" + DocumentFileName))
+        </p>
+    </div>
+}
+
+@if (_message is not null)
+{
+    <div class="@(_messageIsError ? "notifications-message is-error" : "notifications-message")" role="@(_messageIsError ? "alert" : "status")">@_message</div>
+}

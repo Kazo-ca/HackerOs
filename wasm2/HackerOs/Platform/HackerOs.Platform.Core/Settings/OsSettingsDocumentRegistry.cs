@@ -32,7 +32,9 @@ public static class OsSettingsDocumentRegistry
         // ADR 0203 §3: Settings > Appearance chooses the icon pack.
         [IconPackSettingsDocuments.Document.DocumentId] = IconPackSettingsDocuments.Document,
         // ADR 0204 §3: Settings > Sound turns the event sounds on or off, picks the theme and the volume.
-        [Sounds.SoundSettingsDocuments.Document.DocumentId] = Sounds.SoundSettingsDocuments.Document
+        [Sounds.SoundSettingsDocuments.Document.DocumentId] = Sounds.SoundSettingsDocuments.Document,
+        // ADR 0216 §3: the clock panel and Settings > Notifications turn "Do not disturb" on or off.
+        [Notifications.NotificationSettingsDocuments.Document.DocumentId] = Notifications.NotificationSettingsDocuments.Document
     };
 
     /// <summary>Gets every listed document id.</summary>

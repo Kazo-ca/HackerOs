@@ -121,6 +121,34 @@ public sealed class OsSoundServiceTests
     }
 
     [Fact]
+    public async Task Do_not_disturb_mutes_the_notification_sounds_only()
+    {
+        SettingsFilesHarness harness = new();
+        await harness.BootAsync();
+        await harness.LoginAsync(harness.Alice);
+        InMemoryNotificationQueue queue = new(10);
+        RecordingOutput output = new();
+        using DoNotDisturbService doNotDisturb = new(harness.Settings);
+        await doNotDisturb.InitializeAsync();
+        await doNotDisturb.SetAsync(true);
+        using OsSoundService service = new(
+            harness.Settings, harness.FileSystem, harness.Clock, harness.Session, output, harness.EventBus, queue,
+            installBuiltInThemes: harness.Seeder.InstallSoundThemesAsync)
+        {
+            DoNotDisturb = doNotDisturb,
+        };
+        await service.InstallBuiltInThemesAsync();
+        await service.InitializeAsync();
+
+        queue.Enqueue(Notify(harness.Alice.Id, NotificationSeverity.Error));
+        await Task.Delay(100);
+        Assert.Empty(output.Played);
+
+        // ADR 0216 §1: the other events still sound.
+        Assert.True(await service.PlayAsync(OsSoundEvent.Warning));
+    }
+
+    [Fact]
     public async Task A_user_theme_plays_its_own_files_and_falls_back_to_the_default_theme()
     {
         SettingsFilesHarness harness = new();

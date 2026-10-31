@@ -70,6 +70,28 @@ public static class FileContextMenuMatcher
         return true;
     }
 
+    /// <summary>
+    /// Gets whether the screen filter of ADR 0218 §2 lets <paramref name="entry"/> appear with the
+    /// screens open now: <c>single</c> with screen 1 alone, <c>multiple</c> with two screens or more,
+    /// <c>screen: n</c> while screen n is open. An unknown filter hides the entry.
+    /// </summary>
+    /// <param name="entry">The registered entry.</param>
+    /// <param name="openScreens">The numbers of the open screens; screen 1 is counted even when absent.</param>
+    public static bool MatchesScreens(AppContextMenuEntryManifest entry, IReadOnlySet<int> openScreens)
+    {
+        ArgumentNullException.ThrowIfNull(entry);
+        ArgumentNullException.ThrowIfNull(openScreens);
+        int count = openScreens.Count + (openScreens.Contains(1) ? 0 : 1);
+        bool countMatches = entry.Screens switch
+        {
+            null => true,
+            AppContextMenus.ScreensSingle => count == 1,
+            AppContextMenus.ScreensMultiple => count > 1,
+            _ => false
+        };
+        return countMatches && (entry.Screen is not { } screen || openScreens.Contains(screen));
+    }
+
     /// <summary>Gets whether one declared type accepts a file: <c>*</c>, its extension, its media type or its family (<c>image/*</c>).</summary>
     /// <param name="type">The declared type, lower-case.</param>
     /// <param name="target">The file.</param>

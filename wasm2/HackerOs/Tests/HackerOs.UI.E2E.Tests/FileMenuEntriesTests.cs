@@ -8,7 +8,8 @@ namespace HackerOs.UI.E2E.Tests;
 /// <summary>
 /// ADR 0151 and ADR 0159, end to end: the entries apps register (the explorer's "Extract here", the
 /// Web Server Manager's "Publish as a web site…") reach the file menus through
-/// <c>/etc/hackeros/context-menus.d</c>, and a click launches the owner with the paths.
+/// <c>/etc/hackeros/context-menus.d</c>, and a click launches the owner with the paths. ADR 0218:
+/// Settings' « Set as wallpaper » on an image, with one screen.
 /// </summary>
 public sealed class FileMenuEntriesTests(ITestOutputHelper output)
 {
@@ -79,6 +80,68 @@ public sealed class FileMenuEntriesTests(ITestOutputHelper output)
         {
             E2ESupport.StopProcess(server);
             File.Delete(zipPath);
+        }
+    }
+
+    [Fact]
+    public async Task Set_as_wallpaper_follows_open_with_and_changes_the_desktop_without_a_window()
+    {
+        string solutionDirectory = E2ESupport.FindSolutionDirectory();
+        int port = E2ESupport.ReservePort();
+        string address = $"http://127.0.0.1:{port}";
+        using Process server = E2ESupport.StartHarness(solutionDirectory, address, testDemo: false, output);
+
+        // A real WebP image: one of the wallpapers shipped with the OS.
+        string imageName = $"e2e-wall-{Guid.NewGuid():N}"[..17] + ".webp";
+        string imagePath = Path.Combine(Path.GetTempPath(), imageName);
+        File.Copy(Path.Combine(solutionDirectory, "Platform", "HackerOs.Theming.Blazor", "wwwroot", "wallpapers", "aurora.webp"), imagePath);
+
+        try
+        {
+            using IPlaywright playwright = await Playwright.CreateAsync();
+            await using IBrowser browser = await ChromiumLauncher.LaunchAsync(playwright, new BrowserTypeLaunchOptions { Headless = true });
+            await using IBrowserContext context = await browser.NewContextAsync();
+            IPage page = await context.NewPageAsync();
+            List<string> consoleErrors = E2ESupport.AttachDiagnostics(page, output);
+
+            await E2ESupport.NavigateWhenReadyAsync(page, address, output);
+            await E2ESupport.CreateLocalProfileAndReachDesktopAsync(page, output);
+            await E2ESupport.OpenAppAsync(page, "File Explorer", output);
+
+            ILocator addressInput = page.GetByLabel("Current path address");
+            await Assertions.Expect(addressInput).ToHaveValueAsync(E2ESupport.HomePath, new() { Timeout = 15000 });
+            await page.Locator("tr.entry-row", new() { HasText = "Documents" }).WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 15000 });
+            await page.Locator("#fileInput").SetInputFilesAsync(imagePath);
+
+            ILocator imageRow = page.Locator("tr.entry-row", new() { HasText = imageName });
+            await imageRow.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 15000 });
+            int windows = await page.Locator("header.window-chrome").CountAsync();
+            await imageRow.ClickAsync(new() { Button = MouseButton.Right });
+
+            ILocator items = page.Locator(".hack-context-menu-panel [role=menuitem] .hack-context-menu-title");
+            await Assertions.Expect(items.Filter(new() { HasText = "Set as wallpaper" })).ToBeVisibleAsync(new() { Timeout = 10000 });
+            IReadOnlyList<string> titles = await items.AllInnerTextsAsync();
+            output.WriteLine($"[test] image menu: {string.Join(" | ", titles)}");
+            int openWith = titles.ToList().FindIndex(static title => title.StartsWith("Open with", StringComparison.Ordinal));
+            Assert.True(openWith >= 0, "the image menu has Open with");
+            Assert.Equal("Set as wallpaper", titles[openWith + 1]);
+            // One screen: a plain entry, no submenu of screens.
+            Assert.DoesNotContain("Screen 1 and the others", titles);
+
+            await items.Filter(new() { HasText = "Set as wallpaper" }).ClickAsync();
+
+            ILocator wallpaper = page.Locator($"[data-wallpaper$='{imageName}']");
+            await wallpaper.First.WaitForAsync(new() { State = WaitForSelectorState.Attached, Timeout = 30000 });
+            output.WriteLine($"[test] wallpaper shown: {await wallpaper.First.GetAttributeAsync("data-wallpaper")}");
+            await Assertions.Expect(page.GetByText("Wallpaper changed").First).ToBeVisibleAsync(new() { Timeout = 15000 });
+            Assert.Equal(windows, await page.Locator("header.window-chrome").CountAsync());
+
+            Assert.Empty(consoleErrors);
+        }
+        finally
+        {
+            E2ESupport.StopProcess(server);
+            File.Delete(imagePath);
         }
     }
 }

@@ -1118,7 +1118,12 @@ public static class EcosystemServiceCollectionExtensions
                                 entry.Name, appId, result.Status, result.ErrorCode);
                         }
                     }
-                });
+                })
+            {
+                // ADR 0218 §2: screen 1 and the secondary screens open when the menu is drawn.
+                OpenScreens = () => new HashSet<int>(
+                    provider.GetRequiredService<ScreenService>().Screens.Select(static screen => screen.Id.Number)) { 1 }
+            };
         });
         services.AddSingleton(new HackPlatformComponent(
             HackerOs.AppSdk.Components.HackComponentContracts.ContextMenu,
@@ -1239,6 +1244,8 @@ public static class EcosystemServiceCollectionExtensions
         // Audio, so Scoped like the browser probes above.
         services.AddScoped<HackerOs.Platform.Core.Sounds.IOsSoundOutput>(provider =>
             new HackerOs.Platform.Blazor.Sounds.BrowserSoundOutput(provider.GetRequiredService<IJSRuntime>()));
+        // ADR 0216: "Do not disturb" (notifications.config) silences the bubbles and the notification sounds.
+        services.AddScoped<HackerOs.Platform.Core.Notifications.DoNotDisturbService>();
         services.AddScoped<HackerOs.Platform.Core.Sounds.OsSoundService>(provider =>
             new HackerOs.Platform.Core.Sounds.OsSoundService(
                 provider.GetRequiredService<IOsSettingsService>(),
@@ -1250,7 +1257,10 @@ public static class EcosystemServiceCollectionExtensions
                 provider.GetService<HackerOs.Platform.Core.Notifications.INotificationFeed>(),
                 logger: provider.GetService<ILogger<HackerOs.Platform.Core.Sounds.OsSoundService>>(),
                 installBuiltInThemes: cancellationToken =>
-                    provider.GetRequiredService<FileSystemSeeder>().InstallSoundThemesAsync(cancellationToken)));
+                    provider.GetRequiredService<FileSystemSeeder>().InstallSoundThemesAsync(cancellationToken))
+            {
+                DoNotDisturb = provider.GetRequiredService<HackerOs.Platform.Core.Notifications.DoNotDisturbService>(),
+            });
         // ADR 0103: user themes of /etc/hackeros/themes and ~/.config/hackeros/themes.
         services.AddScoped<HackerOs.Platform.Core.Appearance.UserThemeCatalogService>(provider =>
             new HackerOs.Platform.Core.Appearance.UserThemeCatalogService(

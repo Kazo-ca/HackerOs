@@ -24,7 +24,13 @@ namespace HackerOs.Platform.Core.Appearance;
 /// <param name="Screens">Non-empty <c>wallpaperScreen&lt;n&gt;</c> values, by screen number.</param>
 public sealed record WallpaperPreferences(string Wallpaper, WallpaperFit Fit, IReadOnlyDictionary<int, string> Screens)
 {
-    /// <summary>Gets the clean-profile preferences: the theme's own background on every screen.</summary>
+    /// <summary>Gets the value of <c>mobileWallpaper</c> (ADR 0217 §1): empty keeps the mobile theme's background.</summary>
+    public string Mobile { get; init; } = string.Empty;
+
+    /// <summary>Gets the value of <c>mobileWallpaperFit</c> (ADR 0217 §1).</summary>
+    public WallpaperFit MobileFit { get; init; } = WallpaperFit.Fill;
+
+    /// <summary>Gets the clean-profile preferences: the theme's own background on every screen and on mobile.</summary>
     public static WallpaperPreferences Default { get; } = new(string.Empty, WallpaperFit.Fill, new Dictionary<int, string>());
 
     /// <summary>Gets the wallpaper value of a screen: its own, otherwise the one of screen 1.</summary>
@@ -50,7 +56,11 @@ public sealed record WallpaperPreferences(string Wallpaper, WallpaperFit Fit, IR
         return new WallpaperPreferences(
             snapshot.Values.TryGetValue(AppearanceSettingsDocuments.WallpaperKey, out string? wallpaper) ? wallpaper.Trim() : string.Empty,
             WallpaperCatalog.ParseFit(snapshot.Values.TryGetValue(AppearanceSettingsDocuments.WallpaperFitKey, out string? fit) ? fit : null),
-            screens);
+            screens)
+        {
+            Mobile = snapshot.Values.TryGetValue(AppearanceSettingsDocuments.MobileWallpaperKey, out string? mobile) ? mobile.Trim() : string.Empty,
+            MobileFit = WallpaperCatalog.ParseFit(snapshot.Values.TryGetValue(AppearanceSettingsDocuments.MobileWallpaperFitKey, out string? mobileFit) ? mobileFit : null),
+        };
     }
 
     /// <summary>Compares the values, including every screen's own choice.</summary>
@@ -59,6 +69,8 @@ public sealed record WallpaperPreferences(string Wallpaper, WallpaperFit Fit, IR
         other is not null
         && Wallpaper == other.Wallpaper
         && Fit == other.Fit
+        && Mobile == other.Mobile
+        && MobileFit == other.MobileFit
         && Screens.Count == other.Screens.Count
         && Screens.All(pair => other.Screens.TryGetValue(pair.Key, out string? value) && value == pair.Value);
 }
@@ -136,10 +148,26 @@ public sealed class WallpaperService : IDisposable
     /// </summary>
     /// <param name="screenNumber">Screen number, 1 or more.</param>
     /// <param name="cancellationToken">Cancels the file read.</param>
-    public async Task<WallpaperImage?> GetImageAsync(int screenNumber, CancellationToken cancellationToken = default)
+    public Task<WallpaperImage?> GetImageAsync(int screenNumber, CancellationToken cancellationToken = default)
     {
         WallpaperPreferences preferences = Current;
-        string value = preferences.ForScreen(screenNumber);
+        return GetImageCoreAsync(preferences.ForScreen(screenNumber), preferences.Fit);
+    }
+
+    /// <summary>
+    /// Gets what the mobile home screen shows (ADR 0217 §2): <see langword="null"/> for the mobile
+    /// theme's own background (no <c>mobileWallpaper</c>, or a file that cannot be shown).
+    /// </summary>
+    /// <param name="cancellationToken">Cancels the file read.</param>
+    public Task<WallpaperImage?> GetMobileImageAsync(CancellationToken cancellationToken = default)
+    {
+        WallpaperPreferences preferences = Current;
+        return GetImageCoreAsync(preferences.Mobile, preferences.MobileFit);
+    }
+
+    /// <summary>Resolves one wallpaper value: a built-in image, or a file shared by every surface that shows it.</summary>
+    private async Task<WallpaperImage?> GetImageCoreAsync(string value, WallpaperFit fit)
+    {
         if (value.Length == 0)
         {
             return null;
@@ -147,7 +175,7 @@ public sealed class WallpaperService : IDisposable
 
         if (WallpaperCatalog.TryGetBuiltIn(value, out BuiltInWallpaper builtIn))
         {
-            return new WallpaperImage(value, preferences.Fit, builtIn.AssetPath, null, null);
+            return new WallpaperImage(value, fit, builtIn.AssetPath, null, null);
         }
 
         if (!WallpaperCatalog.IsValidValue(value))
@@ -168,7 +196,7 @@ public sealed class WallpaperService : IDisposable
         }
 
         WallpaperFile? file = await load.ConfigureAwait(false);
-        return file is null ? null : new WallpaperImage(value, preferences.Fit, null, file.Content, file.MediaType);
+        return file is null ? null : new WallpaperImage(value, fit, null, file.Content, file.MediaType);
     }
 
     /// <inheritdoc />
@@ -241,7 +269,7 @@ public sealed class WallpaperService : IDisposable
         {
             HashSet<string> used = keepFor is null
                 ? []
-                : [keepFor.Wallpaper, .. keepFor.Screens.Values];
+                : [keepFor.Wallpaper, keepFor.Mobile, .. keepFor.Screens.Values];
             foreach (string path in _files.Keys.Where(path => !used.Contains(path)).ToArray())
             {
                 _files.Remove(path);

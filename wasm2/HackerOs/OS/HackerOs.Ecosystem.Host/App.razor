@@ -25,6 +25,7 @@
 @inject AccessibilityPreferenceService Accessibility
 @inject HackerOs.Platform.Core.Globalization.SessionTimeZoneService TimeZones
 @inject HackerOs.Platform.Core.Sounds.OsSoundService Sounds
+@inject HackerOs.Platform.Core.Notifications.DoNotDisturbService DoNotDisturb
 @inject UserThemeCatalogService UserThemes
 @inject CursorThemeService CursorThemes
 @inject IconPackService IconPacks
@@ -499,6 +500,8 @@
             await TimeZones.InitializeAsync();
             // ADR 0204: sound.config, and the sounds of notifications, message boxes and sessions.
             await Sounds.InitializeAsync();
+            // ADR 0216: notifications.config, "Do not disturb" for the bubbles and the notification sounds.
+            await DoNotDisturb.InitializeAsync();
             await UserThemes.InitializeAsync();
             // ADR 0205: the cursor theme (cursors.config), never more than a few small images.
             await CursorThemes.InitializeAsync();

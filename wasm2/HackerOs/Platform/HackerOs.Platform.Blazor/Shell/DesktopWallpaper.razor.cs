@@ -7,7 +7,8 @@ namespace HackerOs.Platform.Blazor.Shell;
 
 /// <summary>
 /// The wallpaper of one screen (ADR 0202 §4), given to <c>DesktopArea.WallpaperContent</c> by the
-/// desktop shell for screen 1 and for every secondary screen. It follows <see cref="WallpaperService"/>:
+/// desktop shell for screen 1 and for every secondary screen, and placed behind the mobile home
+/// screen by <c>MobileShell</c> with <see cref="Mobile"/> (ADR 0217 §2). It follows <see cref="WallpaperService"/>:
 /// a change in Settings, a <c>nano ~/.config/hackeros/appearance.config</c> or a new session shows the
 /// new image at once.
 /// </summary>
@@ -31,6 +32,16 @@ public sealed partial class DesktopWallpaper : IAsyncDisposable
     [Parameter]
     public int ScreenNumber { get; set; } = 1;
 
+    /// <summary>
+    /// Gets or sets whether this is the mobile home screen's wallpaper (<c>mobileWallpaper</c>,
+    /// ADR 0217) rather than a desktop screen's; <see cref="ScreenNumber"/> is then ignored.
+    /// </summary>
+    [Parameter]
+    public bool Mobile { get; set; }
+
+    /// <summary>The value this surface shows: the mobile one, or the screen's own or screen 1's.</summary>
+    private string CurrentValue => Mobile ? Wallpapers.Current.Mobile : Wallpapers.Current.ForScreen(ScreenNumber);
+
     private string CssClass => $"desktop-wallpaper fit-{WallpaperCatalog.FormatFit(_image?.Fit ?? WallpaperFit.Fill)}";
 
     /// <inheritdoc />
@@ -53,7 +64,7 @@ public sealed partial class DesktopWallpaper : IAsyncDisposable
     /// <inheritdoc />
     protected override async Task OnParametersSetAsync()
     {
-        if (_image is not null || Wallpapers.Current.ForScreen(ScreenNumber).Length > 0)
+        if (_image is not null || CurrentValue.Length > 0)
         {
             await LoadAsync();
         }
@@ -112,7 +123,7 @@ public sealed partial class DesktopWallpaper : IAsyncDisposable
 
     private async Task LoadAsync()
     {
-        WallpaperImage? image = await Wallpapers.GetImageAsync(ScreenNumber);
+        WallpaperImage? image = Mobile ? await Wallpapers.GetMobileImageAsync() : await Wallpapers.GetImageAsync(ScreenNumber);
         if (image is null || _image is null || image.Value != _image.Value || image.Fit != _image.Fit || !ReferenceEquals(image.Content, _image.Content))
         {
             if (image is null && _drawn is not null && _module is not null)
