@@ -1713,4 +1713,70 @@
   <data name="IconPack.Error.CannotRead" xml:space="preserve">
     <value>Impossible de lire les packs d'icônes : {0}</value>
   </data>
+  <data name="Tab.Sound" xml:space="preserve">
+    <value>Sons</value>
+  </data>
+  <data name="Sound.Output.Title" xml:space="preserve">
+    <value>Sons du système</value>
+  </data>
+  <data name="Sound.Output.Description" xml:space="preserve">
+    <value>Sons des évènements de l'OS : notifications, avertissements, erreurs, ouverture et fermeture de session. Le navigateur ne les joue qu'après un premier clic ou une première touche sur la page.</value>
+  </data>
+  <data name="Sound.Output.Enabled" xml:space="preserve">
+    <value>Jouer les sons du système</value>
+  </data>
+  <data name="Sound.Volume.Label" xml:space="preserve">
+    <value>Volume</value>
+  </data>
+  <data name="Sound.Theme.Title" xml:space="preserve">
+    <value>Jeu de sons</value>
+  </data>
+  <data name="Sound.Theme.Description" xml:space="preserve">
+    <value>Les jeux de {0} sont pour tous les utilisateurs ; mettez les vôtres dans {1}, un dossier par jeu avec un fichier index.theme et des fichiers .oga, .ogg ou .mp3 d'au plus 1 Mo nommés comme les évènements ci-dessous. Choisir un jeu joue son son de notification.</value>
+  </data>
+  <data name="Sound.Theme.None" xml:space="preserve">
+    <value>Aucun jeu de sons trouvé.</value>
+  </data>
+  <data name="Sound.Events.Title" xml:space="preserve">
+    <value>Évènements</value>
+  </data>
+  <data name="Sound.Events.Description" xml:space="preserve">
+    <value>Le fichier que chaque évènement joue dans un jeu (noms de sons freedesktop.org). Un son absent d'un jeu joue celui du jeu HackerOS.</value>
+  </data>
+  <data name="Sound.Event.Notification" xml:space="preserve">
+    <value>Notification</value>
+  </data>
+  <data name="Sound.Event.Warning" xml:space="preserve">
+    <value>Avertissement</value>
+  </data>
+  <data name="Sound.Event.Error" xml:space="preserve">
+    <value>Erreur</value>
+  </data>
+  <data name="Sound.Event.SignIn" xml:space="preserve">
+    <value>Ouverture de session</value>
+  </data>
+  <data name="Sound.Event.SignOut" xml:space="preserve">
+    <value>Fermeture de session</value>
+  </data>
+  <data name="Sound.Saved.On" xml:space="preserve">
+    <value>Les sons du système sont activés.</value>
+  </data>
+  <data name="Sound.Saved.Off" xml:space="preserve">
+    <value>Les sons du système sont coupés.</value>
+  </data>
+  <data name="Sound.Saved.Volume" xml:space="preserve">
+    <value>Volume réglé à {0} %.</value>
+  </data>
+  <data name="Sound.Saved.Theme" xml:space="preserve">
+    <value>Jeu de sons : {0}.</value>
+  </data>
+  <data name="Sound.Error.CannotRead" xml:space="preserve">
+    <value>Impossible de lire {0} : {1}</value>
+  </data>
+  <data name="Sound.Error.CannotSave" xml:space="preserve">
+    <value>Impossible d'enregistrer {0} : {1}</value>
+  </data>
+  <data name="Sound.Error.UnknownTheme" xml:space="preserve">
+    <value>Il n'y a pas de jeu de sons « {0} ».</value>
+  </data>
 </root>

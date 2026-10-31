@@ -77,6 +77,11 @@ at the end of each series or when a convention changes.
   `todo/base`): notification bubbles and "Update ready" as a persistent
   notification with "Restart". See
   [`notification-toasts.md`](../dev/notification-toasts.md).
+- **System sounds** (ADR 0204, issue #256, `todo/base` series, branch
+  `todo/8-os-sounds`): freedesktop.org sound themes in `/usr/share/sounds`
+  (built-in `hackeros` and `soft` themes written by `FileSystemSeeder`) and
+  `~/.local/share/sounds`, `sound.config`, Settings ▸ Sound. No SDK API to play a
+  sound (question Q2 to Benoit). See [`system-sounds.md`](../dev/system-sounds.md).
 - **ADR**: 0001 to 0171 and 0173 to 0195 exist on `main` (a few numbers skipped;
   0141 and 0172 were not used). Recent landmarks: 0173 automatic release, 0174
   new-version announcement, 0175 "New folder" in dialogs, 0176 app repository

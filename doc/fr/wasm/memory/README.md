@@ -78,6 +78,11 @@ jour à la fin de chaque série ou quand une convention change.
   `todo/base`) : bulles des notifications et « Update ready » en
   notification persistante avec « Redémarrer ». Voir
   [`notification-toasts.md`](../dev/notification-toasts.md).
+- **Sons du système** (ADR 0204, issue #256, série `todo/base`, branche
+  `todo/8-os-sounds`) : jeux de sons freedesktop.org dans `/usr/share/sounds`
+  (jeux intégrés `hackeros` et `soft` écrits par `FileSystemSeeder`) et
+  `~/.local/share/sounds`, `sound.config`, Paramètres ▸ Sons. Pas d'API SDK pour
+  jouer un son (question Q2 à Benoit). Voir [`system-sounds.md`](../dev/system-sounds.md).
 - **ADR** : 0001 à 0171 et 0173 à 0195 existent sur `main` (quelques numéros sautés ;
   0141 et 0172 n'ont pas servi). Repères récents : 0173 publication automatique,
   0174 annonce de nouvelle version, 0175 « Nouveau dossier » des dialogues, 0176

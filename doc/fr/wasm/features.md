@@ -240,6 +240,10 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   des dossiers et des fichiers partout dans l'OS, choisies dans Paramètres ▸
   Apparence ; pack d'exemple « Néon » fourni. ([`icon-packs.md`](dev/icon-packs.md),
   [ADR 0203](dev/adr/0203-icon-packs.md))
+- **Sons du système** : notifications, avertissements, erreurs, ouverture et
+  fermeture de session. Deux jeux intégrés (HackerOS et Doux), ses propres jeux
+  en OGG ou MP3, volume et coupure dans Paramètres ▸ Sons.
+  ([`system-sounds.md`](dev/system-sounds.md), [ADR 0204](dev/adr/0204-os-event-sounds.md))
 
 ### Pour les développeurs
 
@@ -297,7 +301,6 @@ dans `main`, le lien mène à sa PR.
 | --- | --- | --- | --- |
 | Packs de thèmes | Format `.hacktheme` et onglet Thèmes du Hack Store. | [0190](dev/adr/0190-theme-packs.md) | [#253](https://github.com/Kazo-ca/HackerOs/issues/253) |
 | Fonds d'écran en image | Choisir une image comme fond d'écran, par écran. | [0190](dev/adr/0190-theme-packs.md) | [#254](https://github.com/Kazo-ca/HackerOs/issues/254) |
-| Sons de l'OS | Sons pour les notifications, les erreurs et l'ouverture de session. | [0190](dev/adr/0190-theme-packs.md) | [#256](https://github.com/Kazo-ca/HackerOs/issues/256) |
 | Thèmes de curseurs | Curseurs personnalisés choisis dans Paramètres. | [0190](dev/adr/0190-theme-packs.md) | [#257](https://github.com/Kazo-ca/HackerOs/issues/257) |
 
 ### Réseau et serveur
