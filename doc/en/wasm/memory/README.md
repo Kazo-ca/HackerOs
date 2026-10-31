@@ -89,6 +89,14 @@ at the end of each series or when a convention changes.
   `policy`, Settings ▸ Sources and block list. The catalog loads everyone's
   personal apps at startup and hides them per session (question asked to
   Benoit). See [`app-installation.md`](../dev/app-installation.md).
+- **Hack Store 5, the app** (ADR 0212, `TODO` issue #249, series `todo/base`,
+  branch `todo/5-hackstore-app`): system app `org.hackeros.store`
+  (`HackerOs.Apps.Store`), `catalog:<name>/<appId>@<version>` source,
+  `hackpkg install <appId>`, `AppUpdateMonitor` and badge, default pin
+  (`defaultPinsApplied` of `start-menu.json`). Four questions asked to Benoit
+  (restart without administrator, source written, badge, catalog order),
+  recommendations applied. See
+  [`app-installation.md`](../dev/app-installation.md#the-hack-store-and-the-catalogs).
 - **Notification bubbles** (ADR 0197, work item 1 of #242, series
   `todo/base`): notification bubbles and "Update ready" as a persistent
   notification with "Restart". See
@@ -116,9 +124,9 @@ at the end of each series or when a convention changes.
   0191 installable local server, 0192 `features.md` and exception to ADR 0135,
   0193 local time, 0194 taskbar menus, 0195 Start menu Power button;
   `todo/base` series: 0197 notification bubbles, 0201 "Switch user" stays greyed out, 0203 icon packs, 0207
-  `hackeros-solution` template, 0208 Hack Store trusted sources (the other numbers up to 0211 are reserved by
+  `hackeros-solution` template, 0208 Hack Store trusted sources, 0212 Hack Store app (the other numbers up to 0211 are reserved by
   its work items). 0196 is taken by PR #294 (unread dot). **Next free number:
-  0212.** Before taking one, check `dev/adr/` on
+  0213.** Before taking one, check `dev/adr/` on
   `main` and the open PRs.
 
 ## Working conventions
