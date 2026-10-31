@@ -109,7 +109,9 @@ already declares `HackerOsAppProject=true`; add it to the host with
    commit), left as a workflow artifact. The package's manifest is the generated
    manifest plus every static resource `HackerOsPack` added to it
    ([ADR 0221](../dev/adr/0221-pack-all-static-web-assets-of-an-app.md)): the one
-   the catalog compares with the package its CI builds.
+   the catalog compares with the package its CI builds. The package also holds
+   the app's satellite assemblies (its per-culture `.resx` files,
+   [ADR 0222](../dev/adr/0222-installed-app-satellite-assemblies.md)).
 4. With the `HACK_STORE_TOKEN` secret (an author token allowed to fork and open
    a pull request), the workflow opens the pull request to
    `Kazo-ca/HackerOs-AppMarketPlace` from your fork. Without it, download the

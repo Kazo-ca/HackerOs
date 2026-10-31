@@ -289,6 +289,9 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   contient toutes ses ressources statiques (scripts collocalisés compris) et
   l'OS charge son CSS isolé : installée, elle a la même apparence que compilée
   dans l'OS. ([ADR 0221](dev/adr/0221-pack-all-static-web-assets-of-an-app.md))
+  Ses traductions (assemblages satellites des `.resx` par culture) sont dans son
+  paquet et chargées par l'OS : installée, elle parle français comme compilée
+  dans l'OS. ([ADR 0222](dev/adr/0222-installed-app-satellite-assemblies.md))
 - **Sources de confiance et installation pour soi** : une application d'une
   source de confiance s'installe pour soi sans administrateur ; une source non
   fiable, une application de la liste noire ou une installation pour tous

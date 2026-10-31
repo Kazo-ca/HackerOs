@@ -1,0 +1,18 @@
+{
+  "id": "a05d3e11-2601-4723-b145-a4e305121bf6",
+  "category": "developer",
+  "audience": [
+    "developer"
+  ],
+  "title": {
+    "en": "App packages carry their satellite assemblies",
+    "fr": "Les paquets d'apps contiennent leurs assemblages satellites"
+  },
+  "description": {
+    "en": "HackerOsPack puts the satellite assemblies of the app's own assemblies in the package at lib/<culture>/<assembly>.resources.dll; the OS checks them and loads them before the app's first render.",
+    "fr": "HackerOsPack met les assemblages satellites des assemblages de l'app dans le paquet, à lib/<culture>/<assemblage>.resources.dll ; l'OS les vérifie et les charge avant le premier rendu de l'app."
+  },
+  "links": [
+    "doc/en/wasm/dev/adr/0222-installed-app-satellite-assemblies.md"
+  ]
+}

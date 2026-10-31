@@ -26,6 +26,37 @@ public sealed class AppPackageWriterTests
     }
 
     [Fact]
+    public void The_satellites_of_the_app_go_to_lib_culture_and_are_listed_with_their_sha256()
+    {
+        Dictionary<string, byte[]> sample = AppPackageTests.SampleFiles();
+        byte[] french = [5, 6, 7];
+
+        byte[] package = AppPackageWriter.Write(
+            sample["manifest.json"],
+            assembly => sample["lib/" + assembly],
+            asset => sample["wwwroot/" + asset],
+            new Dictionary<string, byte[]>(StringComparer.Ordinal) { ["fr/Kazo.Sample.resources.dll"] = french });
+        AppPackage read = AppPackage.Read(package);
+
+        Assert.Equal(french, read.Files["lib/fr/Kazo.Sample.resources.dll"]);
+        Assert.Equal(["fr/Kazo.Sample.resources.dll"], read.SatelliteAssemblies.Keys);
+    }
+
+    [Fact]
+    public void A_satellite_of_another_assembly_is_refused_like_the_os_would()
+    {
+        Dictionary<string, byte[]> sample = AppPackageTests.SampleFiles();
+
+        AppPackageException refused = Assert.Throws<AppPackageException>(() => AppPackageWriter.Write(
+            sample["manifest.json"],
+            assembly => sample["lib/" + assembly],
+            asset => sample["wwwroot/" + asset],
+            new Dictionary<string, byte[]>(StringComparer.Ordinal) { ["fr/HackerOs.AppSdk.resources.dll"] = [1] }));
+
+        Assert.Equal("apps.package.unexpected-file", refused.Code);
+    }
+
+    [Fact]
     public void A_changed_asset_is_refused_like_the_os_would()
     {
         Dictionary<string, byte[]> sample = AppPackageTests.SampleFiles();

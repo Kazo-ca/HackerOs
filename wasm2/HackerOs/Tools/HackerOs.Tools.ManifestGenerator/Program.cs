@@ -163,7 +163,8 @@ public static class Program
     /// writes <c>&lt;version&gt;/&lt;appId&gt;-&lt;version&gt;.hackapp</c> and updates <c>index.json</c>
     /// in the packages folder, the content of the app repository's <c>hackeros-packages</c> branch.
     /// With <c>--web-assets</c>, the package holds every static web resource of the project, not only
-    /// the declared ones (ADR 0221 §1).
+    /// the declared ones (ADR 0221 §1). The satellite assemblies of the declared assemblies, found in
+    /// <c>--bin</c>, go to <c>lib/&lt;culture&gt;/</c> (ADR 0222 §1).
     /// With a key (the file, else <see cref="PackageSigner.KeyVariable"/>) the version carries its
     /// <c>signature</c>; without one it is published unsigned and a warning says so (ADR 0219 §4).
     /// </summary>
@@ -186,10 +187,13 @@ public static class Program
                 Console.WriteLine($"{manifestPath} : warning {GeneratorCodes.PackageWebAssetsMissing}: No static web asset manifest at '{webAssets}': the package holds only the declared assets, without the rest of wwwroot/, the collocated scripts or the scoped CSS (ADR 0221).");
             }
 
+            // ADR 0222 §1: the translations of the app's own assemblies go with them.
+            SortedDictionary<string, byte[]> satellites = PackagedSatellites.Find(bin, DeclaredAssemblies(manifestJson));
             byte[] package = AppPackageWriter.Write(
                 manifestJson,
                 assembly => File.ReadAllBytes(Path.Combine(bin, assembly)),
-                asset => File.ReadAllBytes(sources.TryGetValue(asset, out string? source) ? source : Path.Combine(webroot, asset)));
+                asset => File.ReadAllBytes(sources.TryGetValue(asset, out string? source) ? source : Path.Combine(webroot, asset)),
+                satellites);
             AppPackage read = AppPackage.Read(package);
             string relativePath = AppPackageWriter.GetPackagePath(read.AppId, read.Version);
             string packagePath = Path.Combine(output, relativePath);
@@ -212,6 +216,20 @@ public static class Program
         catch (Exception exception) when (exception is AppPackageException or IOException or UnauthorizedAccessException or System.Text.Json.JsonException or System.Security.Cryptography.CryptographicException)
         {
             return Fail(manifestPath, new GeneratorDiagnostic(GeneratorCodes.PackageFailed, manifestPath, exception.Message));
+        }
+    }
+
+    /// <summary>Gets the assemblies a manifest declares; an invalid manifest declares none (the writer refuses it).</summary>
+    private static IReadOnlySet<string> DeclaredAssemblies(byte[] manifestJson)
+    {
+        try
+        {
+            return AppPackage.GetDeclaredAssemblies(AppManifestJsonSerializer.NormalizeOptionalCollections(
+                AppManifestJsonSerializer.DeserializeStrict(System.Text.Encoding.UTF8.GetString(manifestJson))));
+        }
+        catch (Exception exception) when (exception is System.Text.Json.JsonException or InvalidOperationException or ArgumentException or FormatException)
+        {
+            return new HashSet<string>(StringComparer.Ordinal);
         }
     }
 

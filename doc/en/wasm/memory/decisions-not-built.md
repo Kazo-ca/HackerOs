@@ -113,7 +113,10 @@ viewers live, scope of `?app=`, Eruda or not.
   grows. Third-party apps wait for this version for their first Hack Store
   submission.
 - Translations of installed apps (satellite assemblies) follow in a separate
-  ADR and PR: issue #337.
+  ADR and PR: issue #337,
+  [ADR 0222](../dev/adr/0222-installed-app-satellite-assemblies.md) (branch
+  `app-assets/satellite-assemblies`). The catalog's `PackageCheck` must move to
+  that version to accept translated packages.
 - The catalog must ask for the package's `manifest.json`:
   issue Kazo-ca/HackerOs-AppMarketPlace#6.
 

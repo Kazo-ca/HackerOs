@@ -97,7 +97,11 @@ public static partial class HackerOsBrowserHostExtensions
                     new BrowserInstalledAppAssetCache(),
                     () => provider.GetRequiredService<AppAssetStore>(),
                     provider.GetService<Microsoft.Extensions.Logging.ILogger<InstalledAppAssetPublisher>>())
-                : null));
+                : null)
+        {
+            // ADR 0222 §2: their satellite assemblies, for every language HackerOS speaks.
+            Satellites = new InstalledAppSatellites(HackerOs.AppSdk.Globalization.HackLocale.SupportedLanguages.Select(static culture => culture.Name)),
+        });
         // ADR 0162: an app asset that fails to load after a rebuild or a deployment means the OS
         // was updated under the page; the host then offers a restart instead of a dead launch.
         builder.Services.AddSingleton<IHostBuildProbe, BrowserHostBuildProbe>();
