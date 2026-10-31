@@ -1,0 +1,32 @@
+# Builds and tests the Release profile: the HackerOS packages from nuget.org, at the version of the
+# submodule (ADR 0176 §4, §6). This is what the Hack Store compiles.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Check the HackerOS submodule
+        run: bash .github/scripts/check-hackeros-submodule.sh
+
+      - name: Build (Release, packages)
+        run: dotnet build -c Release
+
+      - name: Test
+        run: dotnet test -c Release --no-build

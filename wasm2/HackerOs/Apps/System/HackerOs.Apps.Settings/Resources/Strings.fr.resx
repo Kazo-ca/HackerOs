@@ -1617,4 +1617,367 @@
   <data name="Users.Guest.Unavailable" xml:space="preserve">
     <value>Le formulaire de compte n'a pas pu s'ouvrir. Fermez la session, puis choisissez Créer mon compte sur l'écran de connexion.</value>
   </data>
+  <data name="Wallpaper.Title" xml:space="preserve">
+    <value>Fond d'écran</value>
+  </data>
+  <data name="Wallpaper.Description" xml:space="preserve">
+    <value>Une image PNG, JPEG ou WebP par-dessus le fond du thème. Les images déposées dans {0} sont proposées à tous les utilisateurs, celles de {1} à vous seul ; « Parcourir… » choisit toute image que vous pouvez ouvrir.</value>
+  </data>
+  <data name="Wallpaper.Screens.AriaLabel" xml:space="preserve">
+    <value>Écran</value>
+  </data>
+  <data name="Wallpaper.Screens.Primary" xml:space="preserve">
+    <value>Écran 1 et les autres</value>
+  </data>
+  <data name="Wallpaper.Screens.Other" xml:space="preserve">
+    <value>Écran {0}</value>
+  </data>
+  <data name="Wallpaper.Theme" xml:space="preserve">
+    <value>Fond du thème</value>
+  </data>
+  <data name="Wallpaper.SameAsPrimary" xml:space="preserve">
+    <value>Comme l'écran 1</value>
+  </data>
+  <data name="Wallpaper.BuiltIn.hacker-grid" xml:space="preserve">
+    <value>Grille</value>
+  </data>
+  <data name="Wallpaper.BuiltIn.circuit" xml:space="preserve">
+    <value>Circuit</value>
+  </data>
+  <data name="Wallpaper.BuiltIn.aurora" xml:space="preserve">
+    <value>Aurore</value>
+  </data>
+  <data name="Wallpaper.BuiltIn.nebula" xml:space="preserve">
+    <value>Nébuleuse</value>
+  </data>
+  <data name="Wallpaper.Origin.system" xml:space="preserve">
+    <value>système</value>
+  </data>
+  <data name="Wallpaper.Origin.user" xml:space="preserve">
+    <value>à moi</value>
+  </data>
+  <data name="Wallpaper.Origin.pack" xml:space="preserve">
+    <value>pack</value>
+  </data>
+  <data name="Wallpaper.Origin.file" xml:space="preserve">
+    <value>fichier</value>
+  </data>
+  <data name="Wallpaper.Browse" xml:space="preserve">
+    <value>Parcourir…</value>
+  </data>
+  <data name="Wallpaper.Browse.Title" xml:space="preserve">
+    <value>Choisir un fond d'écran</value>
+  </data>
+  <data name="Wallpaper.Browse.Filter" xml:space="preserve">
+    <value>Images (PNG, JPEG, WebP)</value>
+  </data>
+  <data name="Wallpaper.Fit.Label" xml:space="preserve">
+    <value>Ajustement</value>
+  </data>
+  <data name="Wallpaper.Fit.fill" xml:space="preserve">
+    <value>Remplir</value>
+  </data>
+  <data name="Wallpaper.Fit.fit" xml:space="preserve">
+    <value>Ajuster</value>
+  </data>
+  <data name="Wallpaper.Fit.stretch" xml:space="preserve">
+    <value>Étirer</value>
+  </data>
+  <data name="Wallpaper.Fit.center" xml:space="preserve">
+    <value>Centrer</value>
+  </data>
+  <data name="Wallpaper.Fit.tile" xml:space="preserve">
+    <value>Mosaïque</value>
+  </data>
+  <data name="Wallpaper.Error.Format" xml:space="preserve">
+    <value>{0} n'est pas une image PNG, JPEG ou WebP.</value>
+  </data>
+  <data name="Wallpaper.Saved" xml:space="preserve">
+    <value>Fond d'écran enregistré.</value>
+  </data>
+  <data name="LocalServer.AriaLabel" xml:space="preserve">
+    <value>Serveur local</value>
+  </data>
+  <data name="LocalServer.Title" xml:space="preserve">
+    <value>Serveur local</value>
+  </data>
+  <data name="LocalServer.Description" xml:space="preserve">
+    <value>Installez le serveur HackerOS sur cet ordinateur ou sur une autre machine de votre réseau local, sans l'exposer à internet : les applications atteignent alors le vrai réseau par son relais. L'installeur affiche un code d'appairage à usage unique ; saisissez-le ici avec l'adresse du serveur.</value>
+  </data>
+  <data name="LocalServer.Download" xml:space="preserve">
+    <value>Télécharger le serveur</value>
+  </data>
+  <data name="LocalServer.DownloadHelp" xml:space="preserve">
+    <value>Prenez le fichier de la machine qui fera tourner le serveur, dans la dernière version publiée (programmes non signés : Windows demande de confirmer, l'installeur macOS s'en charge). Docker fonctionne partout.</value>
+  </data>
+  <data name="LocalServer.System.WindowsX64" xml:space="preserve">
+    <value>Windows (x64)</value>
+  </data>
+  <data name="LocalServer.System.WindowsArm64" xml:space="preserve">
+    <value>Windows (ARM64)</value>
+  </data>
+  <data name="LocalServer.System.MacArm64" xml:space="preserve">
+    <value>macOS (Apple silicon)</value>
+  </data>
+  <data name="LocalServer.System.MacX64" xml:space="preserve">
+    <value>macOS (Intel)</value>
+  </data>
+  <data name="LocalServer.System.LinuxX64" xml:space="preserve">
+    <value>Linux (x64)</value>
+  </data>
+  <data name="LocalServer.System.LinuxArm64" xml:space="preserve">
+    <value>Linux (ARM64)</value>
+  </data>
+  <data name="LocalServer.OpenReleases" xml:space="preserve">
+    <value>Ouvrir la dernière version publiée</value>
+  </data>
+  <data name="LocalServer.OpenGuide" xml:space="preserve">
+    <value>Guide d'installation</value>
+  </data>
+  <data name="LocalServer.GuideUrl" xml:space="preserve">
+    <value>https://github.com/Kazo-ca/HackerOs/blob/main/doc/fr/wasm/dev/installable-server.md</value>
+  </data>
+  <data name="LocalServer.Address" xml:space="preserve">
+    <value>Adresse du serveur</value>
+  </data>
+  <data name="LocalServer.Test" xml:space="preserve">
+    <value>Tester</value>
+  </data>
+  <data name="LocalServer.Testing" xml:space="preserve">
+    <value>Test en cours…</value>
+  </data>
+  <data name="LocalServer.Found" xml:space="preserve">
+    <value>Un serveur HackerOS répond (version {0}).</value>
+  </data>
+  <data name="LocalServer.NotFound" xml:space="preserve">
+    <value>Aucun serveur HackerOS ici : {0}</value>
+  </data>
+  <data name="LocalServer.Code" xml:space="preserve">
+    <value>Code d'appairage</value>
+  </data>
+  <data name="LocalServer.CodeHelp" xml:space="preserve">
+    <value>Affiché par l'installeur, ou par « HackerOs.Server pair admin » sur la machine du serveur. Valable une fois, 10 minutes.</value>
+  </data>
+  <data name="LocalServer.Pair" xml:space="preserve">
+    <value>Appairer cet appareil</value>
+  </data>
+  <data name="LocalServer.Pairing" xml:space="preserve">
+    <value>Appairage…</value>
+  </data>
+  <data name="LocalServer.PairFailed" xml:space="preserve">
+    <value>L'appairage a échoué : {0}</value>
+  </data>
+  <data name="IconPack.Title" xml:space="preserve">
+    <value>Pack d'icônes</value>
+  </data>
+  <data name="IconPack.Description" xml:space="preserve">
+    <value>Remplace les icônes des applications, des dossiers et des fichiers par les images PNG d'un pack. Installez un pack pour tous dans {0} (administrateur) ou pour vous dans {1} : un dossier qui contient icon-pack.json.</value>
+  </data>
+  <data name="IconPack.BuiltIn" xml:space="preserve">
+    <value>Icônes intégrées</value>
+  </data>
+  <data name="IconPack.BuiltIn.Description" xml:space="preserve">
+    <value>Les icônes vectorielles de l'OS</value>
+  </data>
+  <data name="IconPack.None" xml:space="preserve">
+    <value>Aucun pack d'icônes n'est encore installé.</value>
+  </data>
+  <data name="IconPack.Warnings" xml:space="preserve">
+    <value>{0} avertissement(s) dans les packs d'icônes : images ou dossiers refusés, écrits dans le journal système.</value>
+  </data>
+  <data name="IconPack.Saved" xml:space="preserve">
+    <value>Pack d'icônes appliqué.</value>
+  </data>
+  <data name="IconPack.Error.CannotRead" xml:space="preserve">
+    <value>Impossible de lire les packs d'icônes : {0}</value>
+  </data>
+  <data name="Tab.Sound" xml:space="preserve">
+    <value>Sons</value>
+  </data>
+  <data name="Sound.Output.Title" xml:space="preserve">
+    <value>Sons du système</value>
+  </data>
+  <data name="Sound.Output.Description" xml:space="preserve">
+    <value>Sons des évènements de l'OS : notifications, avertissements, erreurs, ouverture et fermeture de session. Le navigateur ne les joue qu'après un premier clic ou une première touche sur la page.</value>
+  </data>
+  <data name="Sound.Output.Enabled" xml:space="preserve">
+    <value>Jouer les sons du système</value>
+  </data>
+  <data name="Sound.Volume.Label" xml:space="preserve">
+    <value>Volume</value>
+  </data>
+  <data name="Sound.Theme.Title" xml:space="preserve">
+    <value>Jeu de sons</value>
+  </data>
+  <data name="Sound.Theme.Description" xml:space="preserve">
+    <value>Les jeux de {0} sont pour tous les utilisateurs ; mettez les vôtres dans {1}, un dossier par jeu avec un fichier index.theme et des fichiers .oga, .ogg ou .mp3 d'au plus 1 Mo nommés comme les évènements ci-dessous. Choisir un jeu joue son son de notification.</value>
+  </data>
+  <data name="Sound.Theme.None" xml:space="preserve">
+    <value>Aucun jeu de sons trouvé.</value>
+  </data>
+  <data name="Sound.Events.Title" xml:space="preserve">
+    <value>Évènements</value>
+  </data>
+  <data name="Sound.Events.Description" xml:space="preserve">
+    <value>Le fichier que chaque évènement joue dans un jeu (noms de sons freedesktop.org). Un son absent d'un jeu joue celui du jeu HackerOS.</value>
+  </data>
+  <data name="Sound.Event.Notification" xml:space="preserve">
+    <value>Notification</value>
+  </data>
+  <data name="Sound.Event.Warning" xml:space="preserve">
+    <value>Avertissement</value>
+  </data>
+  <data name="Sound.Event.Error" xml:space="preserve">
+    <value>Erreur</value>
+  </data>
+  <data name="Sound.Event.SignIn" xml:space="preserve">
+    <value>Ouverture de session</value>
+  </data>
+  <data name="Sound.Event.SignOut" xml:space="preserve">
+    <value>Fermeture de session</value>
+  </data>
+  <data name="Sound.Saved.On" xml:space="preserve">
+    <value>Les sons du système sont activés.</value>
+  </data>
+  <data name="Sound.Saved.Off" xml:space="preserve">
+    <value>Les sons du système sont coupés.</value>
+  </data>
+  <data name="Sound.Saved.Volume" xml:space="preserve">
+    <value>Volume réglé à {0} %.</value>
+  </data>
+  <data name="Sound.Saved.Theme" xml:space="preserve">
+    <value>Jeu de sons : {0}.</value>
+  </data>
+  <data name="Sound.Error.CannotRead" xml:space="preserve">
+    <value>Impossible de lire {0} : {1}</value>
+  </data>
+  <data name="Sound.Error.CannotSave" xml:space="preserve">
+    <value>Impossible d'enregistrer {0} : {1}</value>
+  </data>
+  <data name="Sound.Error.UnknownTheme" xml:space="preserve">
+    <value>Il n'y a pas de jeu de sons « {0} ».</value>
+  </data>
+  <data name="Cursors.Title" xml:space="preserve">
+    <value>Curseurs</value>
+  </data>
+  <data name="Cursors.Description" xml:space="preserve">
+    <value>Le pointeur de tout l'OS. Ajoutez vos thèmes comme dossiers dans {0} (pour vous) ou {1} (pour tous les utilisateurs, en administrateur) : chaque dossier contient un fichier {2} qui liste ses curseurs PNG avec leur point actif.</value>
+  </data>
+  <data name="Cursors.SystemPreview" xml:space="preserve">
+    <value>curseurs de l'appareil</value>
+  </data>
+  <data name="Cursors.Theme.system" xml:space="preserve">
+    <value>Système</value>
+  </data>
+  <data name="Cursors.Theme.hackeros-neon" xml:space="preserve">
+    <value>HackerOS Néon</value>
+  </data>
+  <data name="Cursors.Theme.gothic-crimson" xml:space="preserve">
+    <value>Gothique Pourpre</value>
+  </data>
+  <data name="Cursors.Saved" xml:space="preserve">
+    <value>Enregistré. Le bureau utilise ces curseurs maintenant.</value>
+  </data>
+  <data name="Cursors.Warnings" xml:space="preserve">
+    <value>{0} problème(s) dans les dossiers de thèmes de curseurs :</value>
+  </data>
+  <data name="Cursors.Error.CannotRead" xml:space="preserve">
+    <value>Impossible de lire cursors.config : {0}</value>
+  </data>
+  <data name="Cursors.Error.CannotSave" xml:space="preserve">
+    <value>Impossible d'enregistrer {0} : {1}</value>
+  </data>
+  <data name="Tab.AppSources" xml:space="preserve">
+    <value>Sources et liste noire</value>
+  </data>
+  <data name="Sources.Title" xml:space="preserve">
+    <value>Sources des apps</value>
+  </data>
+  <data name="Sources.Description" xml:space="preserve">
+    <value>D'où les apps sont installées, dans {0}. Chaque utilisateur peut installer pour lui-même une app d'une source de confiance ; toute autre source demande un administrateur à chaque fois.</value>
+  </data>
+  <data name="Sources.Loading" xml:space="preserve">
+    <value>Lecture des sources…</value>
+  </data>
+  <data name="Sources.Catalogs" xml:space="preserve">
+    <value>Catalogues</value>
+  </data>
+  <data name="Sources.Repositories" xml:space="preserve">
+    <value>Dépôts</value>
+  </data>
+  <data name="Sources.Remove" xml:space="preserve">
+    <value>Retirer</value>
+  </data>
+  <data name="Sources.BuiltIn" xml:space="preserve">
+    <value>Intégrée</value>
+  </data>
+  <data name="Sources.BuiltIn.Title" xml:space="preserve">
+    <value>HackerOS a été compilé avec cette source</value>
+  </data>
+  <data name="Sources.Trust.Verified" xml:space="preserve">
+    <value>Vérifiée</value>
+  </data>
+  <data name="Sources.Trust.Trusted" xml:space="preserve">
+    <value>De confiance</value>
+  </data>
+  <data name="Sources.Trust.Untrusted" xml:space="preserve">
+    <value>Non fiable</value>
+  </data>
+  <data name="Sources.Interval" xml:space="preserve">
+    <value>Les mises à jour sont vérifiées toutes les {0} heures.</value>
+  </data>
+  <data name="Sources.Add.Label" xml:space="preserve">
+    <value>Nouvelle source</value>
+  </data>
+  <data name="Sources.Add.Trusted" xml:space="preserve">
+    <value>Lui faire confiance</value>
+  </data>
+  <data name="Sources.Add" xml:space="preserve">
+    <value>Ajouter</value>
+  </data>
+  <data name="Sources.Add.Hint" xml:space="preserve">
+    <value>Une source de confiance permet à chaque utilisateur d'installer ses apps sans administrateur. Laissez-la non fiable pour approuver chaque installation.</value>
+  </data>
+  <data name="Sources.Error.Unsupported" xml:space="preserve">
+    <value>Cet hôte HackerOS ne peut pas installer d'apps depuis un dépôt.</value>
+  </data>
+  <data name="Policy.Title" xml:space="preserve">
+    <value>Liste noire</value>
+  </data>
+  <data name="Policy.Description" xml:space="preserve">
+    <value>Les apps, catégories et capacités de {0} ne peuvent pas être installées par un utilisateur pour lui-même : un administrateur doit les approuver pour tous.</value>
+  </data>
+  <data name="Policy.Apps" xml:space="preserve">
+    <value>Apps</value>
+  </data>
+  <data name="Policy.Categories" xml:space="preserve">
+    <value>Catégories</value>
+  </data>
+  <data name="Policy.Capabilities" xml:space="preserve">
+    <value>Capacités</value>
+  </data>
+  <data name="Policy.Empty" xml:space="preserve">
+    <value>Rien n'est bloqué.</value>
+  </data>
+  <data name="Policy.Unblock" xml:space="preserve">
+    <value>Débloquer</value>
+  </data>
+  <data name="Policy.Kind" xml:space="preserve">
+    <value>Règle</value>
+  </data>
+  <data name="Policy.Kind.App" xml:space="preserve">
+    <value>ID d'app</value>
+  </data>
+  <data name="Policy.Kind.Category" xml:space="preserve">
+    <value>Catégorie</value>
+  </data>
+  <data name="Policy.Kind.Capability" xml:space="preserve">
+    <value>Capacité</value>
+  </data>
+  <data name="Policy.Value" xml:space="preserve">
+    <value>Valeur</value>
+  </data>
+  <data name="Policy.Block" xml:space="preserve">
+    <value>Bloquer</value>
+  </data>
 </root>

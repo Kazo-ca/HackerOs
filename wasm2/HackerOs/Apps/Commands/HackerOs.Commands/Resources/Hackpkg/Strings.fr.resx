@@ -58,10 +58,10 @@
     <value>(redémarrage en attente)</value>
   </data>
   <data name="Removed" xml:space="preserve">
-    <value>hackpkg : {0} {1} retirée ; les réglages de ses utilisateurs sont gardés. Redémarrez HackerOS pour terminer</value>
+    <value>hackpkg : {0} {1} retirée ; les réglages de ses utilisateurs sont gardés</value>
   </data>
   <data name="RestartRequired" xml:space="preserve">
-    <value>hackpkg : redémarrez HackerOS pour terminer : l'app apparaît après le redémarrage</value>
+    <value>hackpkg : redémarrez HackerOS pour terminer : cette app était déjà chargée, sa nouvelle version démarre après le redémarrage</value>
   </data>
   <data name="SourcesHost" xml:space="preserve">
     <value>hôte :         {0}</value>
@@ -85,9 +85,99 @@
     <value>hackpkg : {0} mise à jour de {1} vers {2}</value>
   </data>
   <data name="Usage" xml:space="preserve">
-    <value>usage : hackpkg install &lt;dépôt&gt;[@version] [--allow-untrusted] | remove &lt;appId&gt; | update [&lt;appId&gt;] | list | info &lt;dépôt&gt; | sources</value>
+    <value>usage : hackpkg install &lt;appId|dépôt&gt;[@version] [--user|--system] | remove &lt;appId&gt; [--user|--system] | update [&lt;appId&gt;] | rollback &lt;appId&gt; [--user|--system] | repair [--system] | list | info &lt;appId|dépôt&gt; | sources [add &lt;source&gt; [--trusted] | remove &lt;source&gt;] | policy [block|unblock app|category|capability &lt;valeur&gt;]</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>oui</value>
+  </data>
+  <data name="BlockedBy" xml:space="preserve">
+    <value>hackpkg : bloquée pour une installation personnelle par l'administrateur ({0}) : installée pour tous après approbation</value>
+  </data>
+  <data name="ForEveryone" xml:space="preserve">
+    <value>hackpkg : installée pour tous les utilisateurs</value>
+  </data>
+  <data name="ForYou" xml:space="preserve">
+    <value>hackpkg : installée pour vous seulement (~/.local/share/hackeros/apps)</value>
+  </data>
+  <data name="ReplacedPersonalCopies" xml:space="preserve">
+    <value>hackpkg : {0} copies personnelles remplacées par cette installation</value>
+  </data>
+  <data name="ScopeSystem" xml:space="preserve">
+    <value>système</value>
+  </data>
+  <data name="ScopeUser" xml:space="preserve">
+    <value>utilisateur</value>
+  </data>
+  <data name="TrustVerified" xml:space="preserve">
+    <value>vérifiée</value>
+  </data>
+  <data name="TrustTrusted" xml:space="preserve">
+    <value>de confiance</value>
+  </data>
+  <data name="TrustUntrusted" xml:space="preserve">
+    <value>non fiable</value>
+  </data>
+  <data name="BuiltIn" xml:space="preserve">
+    <value>(intégrée)</value>
+  </data>
+  <data name="SourcesCatalog" xml:space="preserve">
+    <value>catalogue :    {0} {1} ({2})</value>
+  </data>
+  <data name="SourcesUntrusted" xml:space="preserve">
+    <value>non fiables :  {0}</value>
+  </data>
+  <data name="SourcesInterval" xml:space="preserve">
+    <value>mises à jour : toutes les {0} h</value>
+  </data>
+  <data name="SourceAdded" xml:space="preserve">
+    <value>hackpkg : source {0} ajoutée, non fiable : chaque installation depuis elle demande un administrateur</value>
+  </data>
+  <data name="SourceAddedTrusted" xml:space="preserve">
+    <value>hackpkg : source {0} ajoutée et de confiance</value>
+  </data>
+  <data name="SourceRemoved" xml:space="preserve">
+    <value>hackpkg : source {0} retirée</value>
+  </data>
+  <data name="PolicyApps" xml:space="preserve">
+    <value>apps bloquées :       {0}</value>
+  </data>
+  <data name="PolicyCategories" xml:space="preserve">
+    <value>catégories bloquées : {0}</value>
+  </data>
+  <data name="PolicyCapabilities" xml:space="preserve">
+    <value>capacités bloquées :  {0}</value>
+  </data>
+  <data name="PolicyBlocked" xml:space="preserve">
+    <value>hackpkg : {0} {1} bloquée pour les installations personnelles</value>
+  </data>
+  <data name="PolicyUnblocked" xml:space="preserve">
+    <value>hackpkg : {0} {1} débloquée</value>
+  </data>
+  <data name="AvailableNow" xml:space="preserve">
+    <value>hackpkg : disponible maintenant</value>
+  </data>
+  <data name="Signed" xml:space="preserve">
+    <value>hackpkg : signature vérifiée</value>
+  </data>
+  <data name="RemovedRestart" xml:space="preserve">
+    <value>hackpkg : {0} {1} retirée ; les réglages de ses utilisateurs sont gardés. Elle était chargée : redémarrez HackerOS pour terminer</value>
+  </data>
+  <data name="RolledBack" xml:space="preserve">
+    <value>hackpkg : {0} est revenue de {1} à {2}</value>
+  </data>
+  <data name="NothingToRepair" xml:space="preserve">
+    <value>hackpkg : rien à réparer</value>
+  </data>
+  <data name="PreviousKept" xml:space="preserve">
+    <value>(précédente : {0})</value>
+  </data>
+  <data name="InfoSignature" xml:space="preserve">
+    <value>Signature : {0}</value>
+  </data>
+  <data name="SignatureRequired" xml:space="preserve">
+    <value>exigée (ECDSA P-256)</value>
+  </data>
+  <data name="SignatureNone" xml:space="preserve">
+    <value>aucune (SHA-256 seulement)</value>
   </data>
 </root>

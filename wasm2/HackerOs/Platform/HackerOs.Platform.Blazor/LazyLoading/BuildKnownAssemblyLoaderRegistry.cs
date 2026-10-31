@@ -7,7 +7,8 @@ namespace HackerOs.Platform.Blazor.LazyLoading;
 /// <summary>Loads only assemblies declared by the build and coalesces concurrent requests.</summary>
 public sealed class BuildKnownAssemblyLoaderRegistry
 {
-    private readonly IReadOnlySet<string> _knownAssemblies;
+    private readonly Lock _knownGate = new();
+    private IReadOnlySet<string> _knownAssemblies;
     private readonly IBuildKnownAssemblyTransport _transport;
     private readonly HostBuildUpdateMonitor? _buildMonitor;
     private readonly ConcurrentDictionary<string, Lazy<Task<BuildKnownAssemblyLoadOutcome>>> _loads = new(StringComparer.Ordinal);
@@ -38,11 +39,28 @@ public sealed class BuildKnownAssemblyLoaderRegistry
         _buildMonitor = buildMonitor ?? throw new ArgumentNullException(nameof(buildMonitor));
     }
 
+    /// <summary>
+    /// Declares more loadable assemblies: those of apps installed from packages after the OS started
+    /// (ADR 0214 §1). A name already declared stays declared; nothing is ever withdrawn, since a
+    /// loaded assembly stays in the page until it restarts.
+    /// </summary>
+    /// <param name="assemblyNames">File names such as <c>Org.Example.Notes.dll</c>.</param>
+    public void AddKnownAssemblies(IEnumerable<string> assemblyNames)
+    {
+        ArgumentNullException.ThrowIfNull(assemblyNames);
+        lock (_knownGate)
+        {
+            HashSet<string> known = new(_knownAssemblies, StringComparer.Ordinal);
+            known.UnionWith(assemblyNames.Where(static name => !string.IsNullOrWhiteSpace(name)));
+            Volatile.Write(ref _knownAssemblies, known);
+        }
+    }
+
     /// <summary>Loads one declared optional assembly at most once for the host lifetime.</summary>
     [RequiresUnreferencedCode("Lazy-loaded assemblies require their own trim-safe descriptors.")]
     public async Task<BuildKnownAssemblyLoadOutcome> LoadAsync(string assemblyName, CancellationToken cancellationToken = default)
     {
-        if (string.IsNullOrWhiteSpace(assemblyName) || !_knownAssemblies.Contains(assemblyName))
+        if (string.IsNullOrWhiteSpace(assemblyName) || !Volatile.Read(ref _knownAssemblies).Contains(assemblyName))
             return BuildKnownAssemblyLoadOutcome.NotDeclared(assemblyName);
 
         Task<BuildKnownAssemblyLoadOutcome> sharedLoad = _loads.GetOrAdd(assemblyName, name => new Lazy<Task<BuildKnownAssemblyLoadOutcome>>(

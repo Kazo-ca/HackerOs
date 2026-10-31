@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <!--
+    Test package of ADR 0206, not part of the solution: build/publish-trimmed.sh packs it with
+    `dotnet build -c Release -t:HackerOsPack`, and HackerOs.TrimmedPublish.E2E.Tests installs it with
+    hackpkg from a GitHub address the browser answers locally. Its wwwroot/ holds a module, a Web
+    Worker that loads a second script by a relative importScripts, and an image.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <HackerOsAppProject>true</HackerOsAppProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.13" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Shared\HackerOs.App.Abstractions\HackerOs.App.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\HackerOs.AppSdk\HackerOs.AppSdk.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\HackerOs.AppSdk.Blazor\HackerOs.AppSdk.Blazor.csproj" />
+  </ItemGroup>
+</Project>

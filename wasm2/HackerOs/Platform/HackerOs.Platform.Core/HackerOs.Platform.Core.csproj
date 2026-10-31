@@ -19,6 +19,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- ADR 0203 §6: the sample icon pack copied to /usr/share/icons at boot (BuiltInIconPacks). -->
+    <EmbeddedResource Include="FileSystem\IconPacks\**\*" LogicalName="HackerOs.IconPacks/%(RecursiveDir)%(Filename)%(Extension)" />
+    <!-- ADR 0204: the built-in sound themes, installed in /usr/share/sounds by FileSystemSeeder. -->
+    <EmbeddedResource Include="Sounds\Themes\**\*.oga" LogicalName="HackerOs.Sounds.%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.13" />
   </ItemGroup>
 

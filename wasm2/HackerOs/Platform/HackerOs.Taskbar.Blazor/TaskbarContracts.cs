@@ -137,6 +137,28 @@ public interface ITaskbarContextMenus
 }
 
 /// <summary>
+/// Supplies the host's window previews (ADR 0199): what the hover preview of a window button
+/// copies, and the "peek" that shows one window alone. The taskbar owns the hover timing, the
+/// preview card and the live copy; it shows no preview when no instance is supplied.
+/// </summary>
+public interface ITaskbarWindowPreviews
+{
+    /// <summary>
+    /// Gets the CSS selector of the element that shows the window in the taskbar's document, whose
+    /// reduced live copy fills the preview, or <see langword="null"/> to show the window's icon and
+    /// title instead.
+    /// </summary>
+    /// <param name="id">The window the preview stands for.</param>
+    string? LiveCopySelector(WindowId id);
+
+    /// <summary>
+    /// Shows only one window of its screen, the others see-through ("peek"), or shows them all again.
+    /// </summary>
+    /// <param name="id">The window to show alone, or <see langword="null"/> to end the peek.</param>
+    void Peek(WindowId? id);
+}
+
+/// <summary>
 /// Host-supplied labels for taskbar chrome that would otherwise hardcode HackerOS branding.
 /// Zone visibility is controlled by which source parameters the host supplies, not by options.
 /// </summary>

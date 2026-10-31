@@ -1,0 +1,261 @@
+/* Settings > Sound (ADR 0204): the console panels of the other Settings pages, an on/off switch, a
+   volume fader, one "switch key" per sound theme and the table of event sound files. */
+
+.setting-group {
+    background-color: var(--hos-bg-surface, #151c20);
+    border: 1px solid var(--hos-border, #3a4b53);
+    border-radius: var(--hos-radius-md, 0.45rem);
+    padding: 0.875rem;
+    margin-bottom: 1rem;
+}
+
+.setting-group h4 {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0;
+    margin-bottom: 0.375rem;
+    color: color-mix(in srgb, var(--hos-accent, #42d392) 68%, var(--hos-text-primary, #f4f7f8));
+}
+
+.setting-desc {
+    font-size: 0.75rem;
+    color: var(--hos-text-secondary, #a8bac4);
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+}
+
+.setting-desc code {
+    font-family: var(--hos-font-mono, ui-monospace, monospace);
+    color: var(--hos-accent, #42d392);
+}
+
+.sound-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+    gap: 0.5rem;
+}
+
+.sound-option {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    min-height: 2.75rem;
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+    font: inherit;
+    border: 1px solid var(--hos-border, #3a4b53);
+    border-radius: var(--hos-radius-sm, 0.25rem);
+    background-color: var(--hos-bg-base, #101417);
+    color: var(--hos-text-secondary, #a8bac4);
+    cursor: pointer;
+    transition: border-color var(--hos-transition-fast, 120ms ease), background-color var(--hos-transition-fast, 120ms ease);
+}
+
+.sound-option:hover:not(:disabled) {
+    border-color: var(--hos-accent, #42d392);
+}
+
+.sound-option:focus-visible {
+    outline: 2px solid var(--hos-focus-ring, #42d392);
+    outline-offset: 2px;
+}
+
+.sound-option.is-selected {
+    border-color: var(--hos-accent, #42d392);
+    background-color: color-mix(in srgb, var(--hos-accent, #42d392) 12%, var(--hos-bg-base, #101417));
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--hos-accent, #42d392) 45%, transparent);
+    color: var(--hos-text-primary, #f4f7f8);
+}
+
+.sound-option:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.sound-tag {
+    flex: 0 0 auto;
+    min-width: 2.75rem;
+    padding: 0.2rem 0.35rem;
+    font-family: var(--hos-font-mono, ui-monospace, monospace);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-align: center;
+    border: 1px solid currentColor;
+    border-radius: var(--hos-radius-sm, 0.25rem);
+}
+
+.sound-option.is-selected .sound-tag {
+    color: var(--hos-accent, #42d392);
+}
+
+
+
+.sound-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    min-width: 0;
+}
+
+.sound-label {
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.sound-detail {
+    font-family: var(--hos-font-mono, ui-monospace, monospace);
+    font-size: 0.6875rem;
+    overflow-wrap: anywhere;
+}
+
+.sound-options {
+    grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+}
+
+
+/* On/off: a hardware-style toggle drawn over a real (visually hidden) checkbox. */
+.sound-switch {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: var(--hos-text-primary, #f4f7f8);
+}
+
+.sound-switch input {
+    position: absolute;
+    opacity: 0;
+    width: 2.75rem;
+    height: 1.5rem;
+    margin: 0;
+    cursor: pointer;
+}
+
+.sound-switch-track {
+    position: relative;
+    width: 2.75rem;
+    height: 1.5rem;
+    border: 1px solid var(--hos-border, #3a4b53);
+    border-radius: 999px;
+    background-color: var(--hos-bg-base, #101417);
+    transition: background-color var(--hos-transition-fast, 120ms ease), border-color var(--hos-transition-fast, 120ms ease);
+}
+
+.sound-switch-thumb {
+    position: absolute;
+    top: 0.1875rem;
+    left: 0.1875rem;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background-color: var(--hos-text-secondary, #a8bac4);
+    transition: transform var(--hos-transition-fast, 120ms ease), background-color var(--hos-transition-fast, 120ms ease);
+}
+
+.sound-switch input:checked + .sound-switch-track {
+    border-color: var(--hos-accent, #42d392);
+    background-color: color-mix(in srgb, var(--hos-accent, #42d392) 18%, var(--hos-bg-base, #101417));
+}
+
+.sound-switch input:checked + .sound-switch-track .sound-switch-thumb {
+    transform: translateX(1.25rem);
+    background-color: var(--hos-accent, #42d392);
+    box-shadow: 0 0 6px color-mix(in srgb, var(--hos-accent, #42d392) 70%, transparent);
+}
+
+.sound-switch input:focus-visible + .sound-switch-track {
+    outline: 2px solid var(--hos-focus-ring, #42d392);
+    outline-offset: 2px;
+}
+
+.sound-switch input:disabled + .sound-switch-track {
+    opacity: 0.6;
+}
+
+/* Volume: a fader with a monospace level readout. */
+.sound-volume {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    margin-top: 0.875rem;
+    max-width: 24rem;
+}
+
+.sound-volume label {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--hos-text-secondary, #a8bac4);
+}
+
+.sound-volume-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.sound-volume-row input[type="range"] {
+    flex: 1 1 auto;
+    min-width: 0;
+    accent-color: var(--hos-accent, #42d392);
+}
+
+.sound-volume-row input[type="range"]:focus-visible {
+    outline: 2px solid var(--hos-focus-ring, #42d392);
+    outline-offset: 2px;
+}
+
+.sound-volume-value {
+    flex: 0 0 3.5rem;
+    font-family: var(--hos-font-mono, ui-monospace, monospace);
+    font-size: 0.8125rem;
+    text-align: right;
+    color: var(--hos-accent, #42d392);
+}
+
+/* The event table: which file of the theme each event plays. */
+.sound-events {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.25rem 1rem;
+    margin: 0;
+    padding: 0.625rem 0.75rem;
+    font-size: 0.75rem;
+    background-color: var(--hos-bg-base, #101417);
+    border: 1px solid var(--hos-border, #3a4b53);
+    border-left: 3px solid var(--hos-accent, #42d392);
+    border-radius: var(--hos-radius-sm, 0.25rem);
+}
+
+.sound-events dt {
+    color: var(--hos-text-secondary, #a8bac4);
+}
+
+.sound-events dd {
+    margin: 0;
+    font-family: var(--hos-font-mono, ui-monospace, monospace);
+    color: var(--hos-text-primary, #f4f7f8);
+    overflow-wrap: anywhere;
+}
+
+.sound-message {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+    border: 1px solid color-mix(in srgb, var(--hos-accent, #42d392) 55%, var(--hos-border, #3a4b53));
+    border-radius: var(--hos-radius-sm, 0.25rem);
+    background-color: color-mix(in srgb, var(--hos-accent, #42d392) 8%, var(--hos-bg-base, #101417));
+    color: var(--hos-text-primary, #f4f7f8);
+}
+
+.sound-message.is-error {
+    border-color: var(--hos-error, #ff8f87);
+    background-color: color-mix(in srgb, var(--hos-error, #ff8f87) 10%, var(--hos-bg-base, #101417));
+    color: var(--hos-error, #ff8f87);
+}

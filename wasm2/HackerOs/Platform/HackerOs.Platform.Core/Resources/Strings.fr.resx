@@ -699,4 +699,34 @@ Annuler : décider au prochain lancement.</value>
   <data name="WhatsNew.Notification.View" xml:space="preserve">
     <value>Voir</value>
   </data>
+  <data name="Admin.App.InstallUntrustedPackageForUser" xml:space="preserve">
+    <value>Installer {0} {1} depuis {2}, une source non approuvée, pour {3} seulement : son code aura les mêmes droits que l'OS</value>
+  </data>
+  <data name="Admin.App.EditAppSources" xml:space="preserve">
+    <value>Modifier les sources d'apps : {0}</value>
+  </data>
+  <data name="Admin.App.EditAppPolicy" xml:space="preserve">
+    <value>Modifier la liste noire des apps : {0}</value>
+  </data>
+  <data name="AppUpdates.Notification.Title" xml:space="preserve">
+    <value>Mises à jour des apps</value>
+  </data>
+  <data name="AppUpdates.Notification.One" xml:space="preserve">
+    <value>1 app peut être mise à jour dans le Hack Store.</value>
+  </data>
+  <data name="AppUpdates.Notification.Many" xml:space="preserve">
+    <value>{0} apps peuvent être mises à jour dans le Hack Store.</value>
+  </data>
+  <data name="AppUpdates.Notification.View" xml:space="preserve">
+    <value>Voir</value>
+  </data>
+  <data name="Admin.App.RollbackPackage" xml:space="preserve">
+    <value>Revenir à {0} {1}, installée depuis {2}, pour tous les utilisateurs</value>
+  </data>
+  <data name="Admin.App.RollbackPackageForUser" xml:space="preserve">
+    <value>Revenir à {0} {1} depuis {2}, une source non fiable, pour {3} seulement</value>
+  </data>
+  <data name="Admin.App.RepairPackages" xml:space="preserve">
+    <value>Réparer les apps installées pour tous les utilisateurs</value>
+  </data>
 </root>

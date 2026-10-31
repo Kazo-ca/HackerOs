@@ -39,6 +39,35 @@ public sealed class FileSystemSeederTests
     }
 
     [Fact]
+    public async Task Login_seed_leaves_the_shared_data_to_the_background_installs()
+    {
+        Fixture fixture = new();
+
+        await fixture.Seeder.SeedAsync("alice", "users");
+
+        Assert.Equal(FileSystemEntryKind.Directory, (await StatAsync(fixture, "/usr/share")).Value?.Metadata.Kind);
+        Assert.Equal(FileSystemErrorCode.NotFound, (await StatAsync(fixture, "/usr/share/icons")).Error?.Code);
+        Assert.Equal(FileSystemErrorCode.NotFound, (await StatAsync(fixture, "/usr/share/sounds")).Error?.Code);
+    }
+
+    [Fact]
+    public async Task Icon_pack_install_writes_the_shipped_packs_once()
+    {
+        Fixture fixture = new();
+        await fixture.Seeder.SeedAsync("alice", "users");
+
+        await fixture.Seeder.InstallIconPacksAsync();
+        FileSystemEntrySnapshot pack = (await StatAsync(fixture, "/usr/share/icons/neon/icon-pack.json")).Value!;
+        await fixture.Seeder.InstallIconPacksAsync();
+
+        Assert.Equal("system", pack.Metadata.OwnerId);
+        Assert.Equal(pack.Metadata.Revision, (await StatAsync(fixture, "/usr/share/icons/neon/icon-pack.json")).Value!.Metadata.Revision);
+    }
+
+    private static ValueTask<FileSystemResult<FileSystemEntrySnapshot>> StatAsync(Fixture fixture, string path) =>
+        fixture.Repository.StatAsync(new FileSystemStatRequest(VirtualPath.Parse(path)), fixture.SystemContext);
+
+    [Fact]
     public async Task Repeated_seed_preserves_entry_ids_and_revisions()
     {
         Fixture fixture = new();

@@ -806,4 +806,106 @@
   <data name="Launcher.Guest.CreateAccount" xml:space="preserve">
     <value>Invité · Créer mon compte</value>
   </data>
+  <data name="Toast.Region" xml:space="preserve">
+    <value>Nouvelles notifications</value>
+  </data>
+  <data name="Toast.Close" xml:space="preserve">
+    <value>Masquer cette bulle</value>
+  </data>
+  <data name="InstallApproval.Title.Install" xml:space="preserve">
+    <value>Valider l'installation d'une app</value>
+  </data>
+  <data name="InstallApproval.Title.Update" xml:space="preserve">
+    <value>Valider la mise à jour d'une app</value>
+  </data>
+  <data name="InstallApproval.Title.Remove" xml:space="preserve">
+    <value>Valider le retrait d'une app</value>
+  </data>
+  <data name="InstallApproval.Subtitle" xml:space="preserve">
+    <value>Connecté en tant que {0}. Vérifiez ce qui va s'exécuter sur ce système.</value>
+  </data>
+  <data name="InstallApproval.Identifier" xml:space="preserve">
+    <value>Identifiant</value>
+  </data>
+  <data name="InstallApproval.Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="InstallApproval.Size" xml:space="preserve">
+    <value>Taille</value>
+  </data>
+  <data name="InstallApproval.Signature" xml:space="preserve">
+    <value>Signature</value>
+  </data>
+  <data name="InstallApproval.Signed" xml:space="preserve">
+    <value>Signé par sa source</value>
+  </data>
+  <data name="InstallApproval.Unsigned" xml:space="preserve">
+    <value>Non signé (vérifié par son SHA-256 seulement)</value>
+  </data>
+  <data name="InstallApproval.Source" xml:space="preserve">
+    <value>Source</value>
+  </data>
+  <data name="InstallApproval.For" xml:space="preserve">
+    <value>Pour</value>
+  </data>
+  <data name="InstallApproval.ForEveryone" xml:space="preserve">
+    <value>tous les utilisateurs de ce système</value>
+  </data>
+  <data name="InstallApproval.ForUser" xml:space="preserve">
+    <value>{0} seulement</value>
+  </data>
+  <data name="InstallApproval.RequestedBy" xml:space="preserve">
+    <value>Demandé par</value>
+  </data>
+  <data name="InstallApproval.Trust.Verified" xml:space="preserve">
+    <value>Vérifiée</value>
+  </data>
+  <data name="InstallApproval.Trust.Trusted" xml:space="preserve">
+    <value>De confiance</value>
+  </data>
+  <data name="InstallApproval.Trust.Untrusted" xml:space="preserve">
+    <value>Non fiable</value>
+  </data>
+  <data name="InstallApproval.UntrustedWarning" xml:space="preserve">
+    <value>Cette source n'est pas de confiance : personne n'a relu cette app. Son code aura les mêmes droits que l'OS.</value>
+  </data>
+  <data name="InstallApproval.Blocked" xml:space="preserve">
+    <value>La liste noire de l'administrateur bloque l'installation pour soi ({0}) : seule l'installation pour tous est possible.</value>
+  </data>
+  <data name="InstallApproval.Capabilities" xml:space="preserve">
+    <value>Capacités demandées</value>
+  </data>
+  <data name="InstallApproval.NoCapability" xml:space="preserve">
+    <value>Aucune capacité.</value>
+  </data>
+  <data name="InstallApproval.Refuse" xml:space="preserve">
+    <value>Refuser</value>
+  </data>
+  <data name="InstallApproval.Approve.Install" xml:space="preserve">
+    <value>Installer</value>
+  </data>
+  <data name="InstallApproval.Approve.Update" xml:space="preserve">
+    <value>Mettre à jour</value>
+  </data>
+  <data name="InstallApproval.Approve.Remove" xml:space="preserve">
+    <value>Retirer</value>
+  </data>
+  <data name="InstallApproval.Footer" xml:space="preserve">
+    <value>HackerOS demande cette validation à chaque fois (ADR 0189). Une app ne peut pas dessiner par-dessus cette fenêtre.</value>
+  </data>
+  <data name="InstallApproval.Bytes" xml:space="preserve">
+    <value>{0} octets</value>
+  </data>
+  <data name="InstallApproval.KiB" xml:space="preserve">
+    <value>{0} Kio</value>
+  </data>
+  <data name="InstallApproval.MiB" xml:space="preserve">
+    <value>{0} Mio</value>
+  </data>
+  <data name="InstallApproval.Title.Rollback" xml:space="preserve">
+    <value>Valider le retour à la version précédente d'une app</value>
+  </data>
+  <data name="InstallApproval.Approve.Rollback" xml:space="preserve">
+    <value>Revenir en arrière</value>
+  </data>
 </root>

@@ -108,6 +108,56 @@ public sealed class ProxyRelayTests : IDisposable
         Assert.Equal(("GET", (byte[]?)null), (_handler.Requests[1].Method, _handler.Requests[1].Body));
     }
 
+    // ── ADR 0210: real sites in the browser ────────────────────────────────
+
+    [Fact]
+    public async Task FollowRedirects_Off_AnswersTheRedirect_WithItsLocationAndCookies()
+    {
+        Guid device = AddDevice();
+        HttpResponseMessage redirect = new(HttpStatusCode.Found);
+        redirect.Headers.Location = new Uri("https://example.com/home");
+        redirect.Headers.Add("Set-Cookie", "session=abc; Path=/");
+        _handler.ScriptedResponses.Enqueue(redirect);
+
+        var response = await Proxy().ExecuteHttpRequestAsync(_accountId, device,
+            Get("https://example.com/login") with { FollowRedirects = false }, CancellationToken.None);
+
+        Assert.Equal(302, response.StatusCode);
+        Assert.Equal(0, response.RedirectHops);
+        Assert.Equal(1, _handler.SendCount);
+        Assert.Contains(response.Headers, header => header.Name == "Location" && header.Value == "https://example.com/home");
+        Assert.Contains(response.Headers, header => header.Name == "Set-Cookie" && header.Value == "session=abc; Path=/");
+    }
+
+    [Fact]
+    public async Task CookieHeader_IsRelayed_ButAuthorizationAndForwardingHeadersAreNot()
+    {
+        Guid device = AddDevice();
+        ProxyHttpRequest request = ProxyHttpRequest.Create(Guid.NewGuid(), "https://example.com/", "GET",
+            [new("Cookie", "session=abc"), new("Authorization", "Bearer x"), new("X-Forwarded-For", "1.2.3.4")],
+            null, null, 10, TestApp, includeBody: true);
+
+        await Proxy().ExecuteHttpRequestAsync(_accountId, device, request, CancellationToken.None);
+
+        var headers = Assert.Single(_handler.RequestHeaders);
+        Assert.Equal(["session=abc"], headers.GetValues("Cookie"));
+        Assert.False(headers.Contains("Authorization"));
+        Assert.False(headers.Contains("X-Forwarded-For"));
+    }
+
+    [Fact]
+    public async Task DefaultPolicy_GrantsTheBrowser()
+    {
+        Guid device = AddDevice();
+        ProxyService proxy = new(new FakeHttpClientFactory(_handler), _audit, _db,
+            new FakeProxyAddressResolver(IPAddress.Parse("93.184.216.34")), _pin, new FakeProxyTcpConnector());
+
+        var response = await proxy.ExecuteHttpRequestAsync(_accountId, device,
+            Get("https://example.com/") with { AppId = "org.hackeros.browser" }, CancellationToken.None);
+
+        Assert.Equal(200, response.StatusCode);
+    }
+
     // ── §4 Grant checked by the server ──────────────────────────────────────
 
     [Fact]

@@ -99,10 +99,17 @@ public sealed class AppInstallationService : IAppInstallationService, IAsyncDisp
                 eventBus.Subscribe<SessionActivatedEvent>(_ => { Task ignored = OnSessionChangedAsync(); }),
                 eventBus.Subscribe<SessionLoggedOutEvent>(_ => { Task ignored = OnSessionChangedAsync(); })
             ];
+        _catalog.Changed += OnCatalogChanged;
     }
 
     /// <inheritdoc />
     public event EventHandler? Changed;
+
+    /// <summary>
+    /// Gets the apps installed from packages at boot (ADR 0189 §3): another user's personal apps are
+    /// treated as uninstalled for this session. <see langword="null"/> hides nothing.
+    /// </summary>
+    public Packages.InstalledPackageCatalog? InstalledPackages { get; init; }
 
     /// <summary>Reads both files, applies them and starts watching them. Called at boot; idempotent.</summary>
     /// <param name="cancellationToken">Cancels the reads.</param>
@@ -307,6 +314,8 @@ public sealed class AppInstallationService : IAppInstallationService, IAsyncDisp
             HashSet<string> effective = ExpandGuarded(
                 machine.UninstalledAppIds.Concat(user.UninstalledAppIds),
                 principal is null ? AppsConfigDocument.MachinePath : AppsConfigDocument.GetUserPath(principal.HomePath));
+            // ADR 0189 §3: another user's personal apps are not installed for this session.
+            effective.UnionWith(AppsConfigDocument.ExpandDependents(_catalog, InstalledPackages?.GetHiddenFor(principal?.HomePath) ?? new HashSet<string>()));
 
             lock (_sync)
             {
@@ -336,6 +345,7 @@ public sealed class AppInstallationService : IAppInstallationService, IAsyncDisp
         }
 
         _disposed = true;
+        _catalog.Changed -= OnCatalogChanged;
         foreach (IDisposable subscription in _sessionSubscriptions)
         {
             subscription.Dispose();
@@ -457,6 +467,27 @@ public sealed class AppInstallationService : IAppInstallationService, IAsyncDisp
         defaultContent = AppsConfigDocument.UserDefaultContent;
         gateway = principal is null ? null : CreateUserGateway(principal);
         return gateway is not null;
+    }
+
+    /// <summary>
+    /// Apps installed from packages joined or left the running catalog (ADR 0214 §1): another
+    /// user's new personal app must be hidden from this session, a removed one forgotten.
+    /// </summary>
+    private void OnCatalogChanged(object? sender, EventArgs e)
+    {
+        Task ignored = ReloadAfterCatalogChangeAsync();
+    }
+
+    private async Task ReloadAfterCatalogChangeAsync()
+    {
+        try
+        {
+            await ReloadAsync().ConfigureAwait(false);
+        }
+        catch (Exception exception) when (exception is not OutOfMemoryException)
+        {
+            _logger.LogWarning(exception, "apps: could not reload apps.config after the app catalog changed");
+        }
     }
 
     private async Task OnSessionChangedAsync()

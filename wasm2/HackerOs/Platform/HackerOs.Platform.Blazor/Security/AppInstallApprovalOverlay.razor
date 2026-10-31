@@ -1,0 +1,106 @@
+@using HackerOs.AppSdk.Icons
+@using HackerOs.Platform.Core.Apps.Packages
+@using HackerOs.Platform.Core.Elevation
+@implements IDisposable
+
+@*
+    Step 2 of ADR 0189 section 4: after an administrator signed in, the window shows the app, its
+    source, its trust level and its capabilities before an install, update or removal. Rendered by
+    the platform shell above every window and the taskbar, never inside an app window.
+*@
+@if (_current is { } pending)
+{
+    AppInstallApprovalRequest request = pending.Request;
+    <div class="iap-veil"
+         @onkeydown="HandleKeyDown"
+         @onkeydown:stopPropagation="true"
+         @onclick:stopPropagation="true"
+         @oncontextmenu:preventDefault="true">
+        <section class="iap-window @TrustClass(request.Trust)"
+                 role="alertdialog"
+                 aria-modal="true"
+                 aria-labelledby="iap-title"
+                 aria-describedby="iap-subtitle">
+            <header class="iap-banner">
+                <HackerIcon Library="IconLibrary.Lucide" Name="package-check" Size="28" Title="" class="iap-mark" />
+                <div>
+                    <h2 id="iap-title">@Title(request)</h2>
+                    <p id="iap-subtitle">@L["InstallApproval.Subtitle", request.AdministratorLogin]</p>
+                </div>
+            </header>
+
+            <div class="iap-body">
+                <div class="iap-app">
+                    <div class="iap-app-icon" aria-hidden="true">
+                        <HackerIcon Library="IconLibrary.Lucide" Name="app-window" Size="32" Title="" />
+                    </div>
+                    <dl class="iap-facts">
+                        <dt class="iap-app-name">@request.Name</dt>
+                        <dd><span class="iap-trust">@TrustText(request.Trust)</span></dd>
+                        <dd><span class="iap-label">@L["InstallApproval.Identifier"]</span> <code>@request.AppId</code></dd>
+                        <dd>
+                            <span class="iap-label">@L["InstallApproval.Version"]</span>
+                            @(request.PreviousVersion is { } previous ? $"{previous} → {request.Version}" : request.Version)
+                        </dd>
+                        @if (request.SizeBytes is { } size)
+                        {
+                            <dd><span class="iap-label">@L["InstallApproval.Size"]</span> @FormatSize(size)</dd>
+                        }
+                        <dd><span class="iap-label">@L["InstallApproval.Source"]</span> <code>@request.Source</code></dd>
+                        @if (request.Signed is { } signed)
+                        {
+                            <dd><span class="iap-label">@L["InstallApproval.Signature"]</span> @(signed ? L["InstallApproval.Signed"] : L["InstallApproval.Unsigned"])</dd>
+                        }
+                        <dd>
+                            <span class="iap-label">@L["InstallApproval.For"]</span>
+                            @(request.SystemWide ? L["InstallApproval.ForEveryone"] : L["InstallApproval.ForUser", request.RequestedBy?.LoginName.Value ?? "-"])
+                        </dd>
+                        <dd><span class="iap-label">@L["InstallApproval.RequestedBy"]</span> @request.Caller.Name</dd>
+                    </dl>
+                </div>
+
+                @if (request.Trust == AppSourceTrust.Untrusted)
+                {
+                    <p class="iap-warning" role="note">@L["InstallApproval.UntrustedWarning"]</p>
+                }
+
+                @if (request.BlockReason is { } block)
+                {
+                    <p class="iap-warning" role="note">@L["InstallApproval.Blocked", block.ToString()]</p>
+                }
+
+                @if (request.Operation != AppInstallApprovalOperation.Remove)
+                {
+                    <h3 class="iap-section-title">@L["InstallApproval.Capabilities"]</h3>
+                    @if (request.Capabilities.Count == 0)
+                    {
+                        <p class="iap-none">@L["InstallApproval.NoCapability"]</p>
+                    }
+                    else
+                    {
+                        <ul class="iap-capabilities">
+                            @foreach (CapabilityLine capability in Describe(request.Capabilities))
+                            {
+                                <li key="@capability.Id" class="iap-capability @(capability.Dangerous ? "is-dangerous" : "")">
+                                    <span class="iap-capability-title">@capability.Title</span>
+                                    <code class="iap-capability-id">@capability.Id</code>
+                                    @if (!string.IsNullOrEmpty(capability.Risk))
+                                    {
+                                        <span class="iap-capability-risk">@capability.Risk</span>
+                                    }
+                                </li>
+                            }
+                        </ul>
+                    }
+                }
+
+                <div class="iap-actions">
+                    <button type="button" class="iap-refuse" @onclick="Refuse">@L["InstallApproval.Refuse"]</button>
+                    <button type="button" class="iap-approve" @ref="_approveButton" @onclick="Approve">@ApproveText(request)</button>
+                </div>
+            </div>
+
+            <footer class="iap-footer">@L["InstallApproval.Footer"]</footer>
+        </section>
+    </div>
+}

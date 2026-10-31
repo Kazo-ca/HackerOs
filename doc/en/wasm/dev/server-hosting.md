@@ -102,6 +102,18 @@ a new device: you can create the account in one browser and log in to it
 from another (ADR 0137 §4). An account created before this change
 can no longer log in with a password.
 
+## Server installed on the computer
+
+The server is also published as a self-contained program per system and as a
+Docker image, installed as a service (issue #267, ADR 0191):
+[`installable-server.md`](installable-server.md). It then reads
+`hackeros-server.json` (next to the program, after `appsettings.json`, before
+the `HACKEROS_` variables), links devices with a pairing code and, started as
+a Windows service, uses the program folder as its content root. The published
+server serves `index.html` through a middleware (`UseOsPageFile`), because the
+published static assets manifest does not contain that page
+([`pitfalls.md`](pitfalls.md)).
+
 ## Key decisions
 
 - Published Ecosystem files served as is, with no second startup to

@@ -272,6 +272,7 @@ public partial class ThemeEditorWindow : WindowAppBase, IWindowCloseGuard
         {
             _library = await UserThemeLibrary.LoadAsync(
                 async (directory, token) => await HackDirectory.GetFilesAsync(directory, "*" + ThemeFile.Extension, cancellationToken: token),
+                async (directory, token) => await HackDirectory.GetDirectoriesAsync(directory, cancellationToken: token),
                 (path, token) => HackFile.ReadAllTextAsync(path, token),
                 HomeDirectory,
                 AppContext.CancellationToken);

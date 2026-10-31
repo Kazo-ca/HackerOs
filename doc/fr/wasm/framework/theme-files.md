@@ -39,6 +39,8 @@ platforms = desktop, mobile
 |---|---|---|
 | `/etc/hackeros/themes/` | le système | l'administrateur, pour toute la machine |
 | `~/.config/hackeros/themes/` | l'utilisateur de la session (les bits de mode décident) | l'utilisateur |
+| `/usr/share/hackeros/theme-packs/<pack>/themes/` | le système | les packs du Hack Store installés pour tous ([ADR 0213](../dev/adr/0213-theme-packs-build.md)) |
+| `~/.local/share/hackeros/theme-packs/<pack>/themes/` | l'utilisateur de la session | les packs installés pour soi |
 
 Pas de masquage : un fichier dont l'`id` reprend un thème intégré, ou un `id`
 déjà pris par un autre fichier (celui de `/etc` gagne), est refusé avec une

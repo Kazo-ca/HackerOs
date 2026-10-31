@@ -42,7 +42,7 @@ Memory, Backup, What's new, About).
 
 | Page (id) | Panel | Main content |
 |---|---|---|
-| Appearance (`appearance`) | (in `SettingsWindow.razor`) | Write layer (user or system), desktop and mobile theme, accent, animations, user themes (`/etc/hackeros/themes` and `~/.config/hackeros/themes`, `UserThemeLibrary`); writes `appearance.config`. |
+| Appearance (`appearance`) | (in `SettingsWindow.razor`) | Write layer (user or system), desktop and mobile theme, accent, animations, user themes (`/etc/hackeros/themes` and `~/.config/hackeros/themes`, `UserThemeLibrary`), wallpaper (`WallpaperPanel`, ADR 0202); writes `appearance.config`. |
 | Desktop (`desktop`) | `DesktopPanel` | Desktop options and layout (`desktop.config`, ADR 0160). |
 | Screens (`screens`) | `ScreensPanel` | Open screens through `HackScreens` (Identify, New screen, Restore, Close, Full screen, permission; ADR 0184); `screens.config`: `primary-taskbar` choice, remembered screens and Forget (ADR 0179 §7, [`screens-settings.md`](screens-settings.md)). |
 | Accessibility (`accessibility`) | `AccessibilityPanel` | High contrast, text size, reduced motion (ADR 0105). |
@@ -53,7 +53,7 @@ Memory, Backup, What's new, About).
 | Installed applications (`installed-apps`) | `InstalledAppsPanel` | List of apps and their commands, uninstall and reinstall (ADR 0048). |
 | OS components (`os-components`) | `OsComponentsPanel` | Provider chosen for each contract (`HackComponentProviders.GetOverviewAsync`, `SetProviderAsync`). |
 | File menus (`file-menus`) | `FileMenuEntriesPanel` | Menu entries registered by apps (ADR 0151). |
-| Server connection (`server`) | `ServerRelayPolicyPanel` (+ the window) | Optional server, network relay (ADR 0102, 0134). Visible in all cases, the state comes from `HackServerConnection`. |
+| Server connection (`server`) | `ServerRelayPolicyPanel` (+ the window) | Optional server, network relay (ADR 0102, 0134). Visible in all cases, the state comes from `HackServerConnection`. When not connected, `LocalServerPanel` lists the installable server downloads, tests an address and pairs the device with a code ([`installable-server.md`](installable-server.md), ADR 0191). |
 | Synchronization (`sync`) | (in the window) | Sync state and conflicts (ADR 0101). |
 | Users (`users`) | `UsersPanel` (+ `PasskeysPanel`) | Accounts, passwords, adding and deleting accounts by an administrator, session passkeys (ADR 0120, 0168, 0169; see [Users page](#users-page)). |
 | Memory (`memory`) | `MemoryPanel` | File `/etc/hackeros/memory.config`, section `[oom-killer]` (ADR 0126). |

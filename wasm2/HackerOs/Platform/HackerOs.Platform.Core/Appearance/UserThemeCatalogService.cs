@@ -20,7 +20,9 @@ namespace HackerOs.Platform.Core.Appearance;
 /// <c>/etc/hackeros/themes/</c>, read as the system, and of the session user's
 /// <c>~/.config/hackeros/themes/</c>, read as that user so the files' mode bits decide. Both folders
 /// are watched, so a theme saved by the Theme Editor, copied with <c>cp</c> or edited with
-/// <c>nano</c> applies at once; a session change re-reads the new user's folder.
+/// <c>nano</c> applies at once; a session change re-reads the new user's folder. The
+/// <c>themes/</c> folders of the installed theme packs are read too, and the two pack folders are
+/// watched, so installing or removing a pack updates the list at once (ADR 0213 §3).
 /// </summary>
 /// <remarks>
 /// Invalid lines and refused files are written once each to the log (ADR 0044 §5): the theme still
@@ -134,7 +136,8 @@ public sealed class UserThemeCatalogService : IAsyncDisposable
                 : CreateGateway(OsSettingsService.CreateUserOperation(principal), [.. principal.GroupIds.Select(static id => id.ToString())]);
 
             UserThemeLibraryResult result = await UserThemeLibrary.LoadAsync(
-                (directory, token) => ListAsync(GatewayFor(directory, system, user, principal), directory, token),
+                (directory, token) => ListAsync(GatewayFor(directory, system, user, principal), directory, FileSystemEntryKind.File, token),
+                (directory, token) => ListAsync(GatewayFor(directory, system, user, principal), directory, FileSystemEntryKind.Directory, token),
                 (path, token) => ReadAsync(GatewayFor(path, system, user, principal), path, token),
                 principal?.HomePath,
                 cancellationToken).ConfigureAwait(false);
@@ -169,7 +172,8 @@ public sealed class UserThemeCatalogService : IAsyncDisposable
             ? user
             : system;
 
-    private static async Task<IReadOnlyList<string>> ListAsync(IAppFileSystemGateway gateway, string directory, CancellationToken cancellationToken)
+    private static async Task<IReadOnlyList<string>> ListAsync(
+        IAppFileSystemGateway gateway, string directory, FileSystemEntryKind kind, CancellationToken cancellationToken)
     {
         FileSystemResult<FileSystemDirectorySnapshot> result = await gateway
             .EnumerateAsync(new FileSystemEnumerateRequest(VirtualPath.Parse(directory)), cancellationToken)
@@ -180,7 +184,7 @@ public sealed class UserThemeCatalogService : IAsyncDisposable
         }
 
         return [.. result.Value.Entries
-            .Where(static entry => entry.Metadata.Kind == FileSystemEntryKind.File)
+            .Where(entry => entry.Metadata.Kind == kind)
             .Select(entry => $"{directory}/{entry.Name.Value}")];
     }
 
@@ -201,7 +205,7 @@ public sealed class UserThemeCatalogService : IAsyncDisposable
         {
             _systemWatcher = SettingsFilesWatcher.ForDirectories(
                 CreateWatchGateway(OsSettingsService.CreateSystemOperation(), ["system"]),
-                [VirtualPath.Parse(UserThemeLibrary.SystemDirectory)],
+                [VirtualPath.Parse(UserThemeLibrary.SystemDirectory), VirtualPath.Parse(ThemePackLayout.SystemDirectory)],
                 OnFolderChangedAsync);
             await _systemWatcher.StartAsync(cancellationToken).ConfigureAwait(false);
         }
@@ -222,7 +226,7 @@ public sealed class UserThemeCatalogService : IAsyncDisposable
         {
             _userWatcher = SettingsFilesWatcher.ForDirectories(
                 CreateWatchGateway(OsSettingsService.CreateUserOperation(principal), [.. principal.GroupIds.Select(static id => id.ToString())]),
-                [VirtualPath.Parse(UserThemeLibrary.GetUserDirectory(principal.HomePath))],
+                [VirtualPath.Parse(UserThemeLibrary.GetUserDirectory(principal.HomePath)), VirtualPath.Parse(ThemePackLayout.GetUserDirectory(principal.HomePath))],
                 OnFolderChangedAsync);
             await _userWatcher.StartAsync(cancellationToken).ConfigureAwait(false);
         }

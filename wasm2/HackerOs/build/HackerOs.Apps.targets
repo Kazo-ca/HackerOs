@@ -26,6 +26,14 @@
     HackerOsPackagedApp items) with the same IsSystemApp metadata as a ProjectReference.
     _HackerOsPackageAppManifests puts an app's manifests and that file in its own package.
 
+    External source (ADR 0176 §5, ADR 0207 §3): a repository made with the hackeros-solution template
+    imports this file from its HackerOS submodule through HackerOs.ExternalSource.targets
+    ($(HackerOsExternalSource) == true), in Debug. The repository rules then apply with the
+    submodule as the HackerOS root: the generator and analyzers are the submodule's projects, and
+    the SDK boundary checks the references that enter the submodule. A ProjectReference to another
+    project of the app's own repository (outside the submodule) is that repository's business, as
+    in package mode.
+
     Host projects ($(HackerOsAppHost) == true, today only OS/HackerOs.Ecosystem):
       CollectHackerOsBuiltInApplications
                                     after ResolveProjectReferences, asks every direct ProjectReference
@@ -53,6 +61,12 @@
     <HackerOsSdkLibrary Condition="'$(HackerOsSdkLibrary)' == ''">false</HackerOsSdkLibrary>
 
     <HackerOsManifestGeneratorProject Condition="'$(HackerOsManifestGeneratorProject)' == ''">$(_HackerOsRepoRoot)Tools/HackerOs.Tools.ManifestGenerator/HackerOs.Tools.ManifestGenerator.csproj</HackerOsManifestGeneratorProject>
+  </PropertyGroup>
+
+  <!-- ADR 0106 §4, as in package mode: an app built in another repository is trimmed by the host that publishes it. -->
+  <PropertyGroup Condition="'$(HackerOsExternalSource)' == 'true' and '$(HackerOsAppProject)' == 'true'">
+    <IsTrimmable Condition="'$(IsTrimmable)' == ''">true</IsTrimmable>
+    <EnableTrimAnalyzer Condition="'$(EnableTrimAnalyzer)' == ''">true</EnableTrimAnalyzer>
   </PropertyGroup>
 
   <!--
@@ -89,6 +103,25 @@
                       PrivateAssets="all"
                       SkipGetTargetFrameworkProperties="true"
                       GlobalPropertiesToRemove="TargetFramework;RuntimeIdentifier;SelfContained" />
+  </ItemGroup>
+
+  <!--
+    Build-time defaults of the app sources and the block list (ADR 0189 §1, §5, ADR 0208): a host
+    sets these properties to change what /etc/hackeros/app-sources.config and app-policy.config are
+    seeded with. Values are separated by commas; a property left empty keeps the standard value
+    (official catalog, github.com/Kazo-ca trusted, nothing blocked, 6 hours). Catalogs are written
+    name=https://.../catalog.json. Signing keys (ADR 0214 §2) are written source=base64 public key,
+    one item per key (HackerOsAppSigningKeys=catalog:mine=MFkw...), and are added to the official
+    catalog's own key. They reach AppPackageDefaults.FromAssembly as assembly metadata.
+  -->
+  <ItemGroup Condition="'$(HackerOsAppHost)' == 'true'">
+    <AssemblyMetadata Include="HackerOs.AppPackages.Catalogs" Value="$(HackerOsAppCatalogs)" Condition="'$(HackerOsAppCatalogs)' != ''" />
+    <AssemblyMetadata Include="HackerOs.AppPackages.Trusted" Value="$(HackerOsTrustedAppSources)" Condition="'$(HackerOsTrustedAppSources)' != ''" />
+    <AssemblyMetadata Include="HackerOs.AppPackages.UpdateIntervalHours" Value="$(HackerOsAppUpdateIntervalHours)" Condition="'$(HackerOsAppUpdateIntervalHours)' != ''" />
+    <AssemblyMetadata Include="HackerOs.AppPackages.SigningKeys" Value="$(HackerOsAppSigningKeys)" Condition="'$(HackerOsAppSigningKeys)' != ''" />
+    <AssemblyMetadata Include="HackerOs.AppPackages.BlockedApps" Value="$(HackerOsBlockedApps)" Condition="'$(HackerOsBlockedApps)' != ''" />
+    <AssemblyMetadata Include="HackerOs.AppPackages.BlockedCategories" Value="$(HackerOsBlockedAppCategories)" Condition="'$(HackerOsBlockedAppCategories)' != ''" />
+    <AssemblyMetadata Include="HackerOs.AppPackages.BlockedCapabilities" Value="$(HackerOsBlockedAppCapabilities)" Condition="'$(HackerOsBlockedAppCapabilities)' != ''" />
   </ItemGroup>
 
   <!--
@@ -339,6 +372,9 @@
       <_HackerOsBoundaryReference>
         <RelativePath>$([MSBuild]::MakeRelative('$(_HackerOsRepoRoot)', '%(Identity)').Replace('\', '/'))</RelativePath>
       </_HackerOsBoundaryReference>
+      <!-- External source (ADR 0207 §3): only the references that enter the HackerOS submodule are checked. -->
+      <_HackerOsBoundaryReference Remove="@(_HackerOsBoundaryReference)"
+                                  Condition="'$(HackerOsExternalSource)' == 'true' and $([System.String]::Copy('%(RelativePath)').StartsWith('../'))" />
       <_HackerOsBoundaryViolation Include="@(_HackerOsBoundaryReference)"
                                   Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('%(RelativePath)', '$(_HackerOsBoundaryPattern)'))" />
     </ItemGroup>

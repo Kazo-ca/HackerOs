@@ -1,0 +1,144 @@
+@inherits HackerOs.AppSdk.Blazor.HackComponentBase
+@using HackerOs.AppSdk.Apps
+
+<div class="setting-group">
+    <h4>@L["Sources.Title"]</h4>
+    <p class="setting-desc">
+        @LocalizedMarkup.Format(L["Sources.Description"], LocalizedMarkup.Code("/etc/hackeros/app-sources.config"))
+    </p>
+
+    @if (_sources is null)
+    {
+        <p class="setting-desc">@L["Sources.Loading"]</p>
+    }
+    else
+    {
+        <h5 class="sources-subtitle">@L["Sources.Catalogs"]</h5>
+        <div class="sources-list" role="list">
+            @foreach (HackPackageCatalog catalog in _sources.Catalogs)
+            {
+                <div class="source-row @TrustClass(catalog.Trust)" role="listitem">
+                    <div class="source-identity">
+                        <span class="source-name">@catalog.Name</span>
+                        <span class="source-meta">@catalog.Address</span>
+                    </div>
+                    <div class="source-actions">
+                        @Badges(catalog.Trust, catalog.BuiltIn)
+                        <button type="button" class="sources-btn sources-btn-danger" disabled="@_isBusy"
+                                @onclick="() => RemoveSourceAsync(CatalogKey(catalog.Name))">@L["Sources.Remove"]</button>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <h5 class="sources-subtitle">@L["Sources.Repositories"]</h5>
+        <div class="sources-list" role="list">
+            @foreach (string source in Repositories(_sources.TrustedSources))
+            {
+                @SourceRow(source, HackPackageTrust.Trusted)
+            }
+
+            @foreach (string source in Repositories(_sources.UntrustedSources))
+            {
+                @SourceRow(source, HackPackageTrust.Untrusted)
+            }
+        </div>
+
+        <p class="setting-desc">@L["Sources.Interval", _sources.UpdateIntervalHours]</p>
+
+        <form class="sources-form" @onsubmit="AddSourceAsync" @onsubmit:preventDefault>
+            <label class="sources-field">
+                <span>@L["Sources.Add.Label"]</span>
+                <input type="text" class="sources-input" autocomplete="off" spellcheck="false"
+                       placeholder="github:owner · owner/repo · name=https://…/catalog.json"
+                       @bind="_newSource" @bind:event="oninput" disabled="@_isBusy" />
+            </label>
+            <label class="sources-check">
+                <input type="checkbox" @bind="_newSourceTrusted" disabled="@_isBusy" />
+                <span>@L["Sources.Add.Trusted"]</span>
+            </label>
+            <button type="submit" class="sources-btn" disabled="@(_isBusy || string.IsNullOrWhiteSpace(_newSource))">@L["Sources.Add"]</button>
+        </form>
+        <p class="setting-desc">@L["Sources.Add.Hint"]</p>
+    }
+</div>
+
+<div class="setting-group">
+    <h4>@L["Policy.Title"]</h4>
+    <p class="setting-desc">
+        @LocalizedMarkup.Format(L["Policy.Description"], LocalizedMarkup.Code("/etc/hackeros/app-policy.config"))
+    </p>
+
+    @if (_policy is not null)
+    {
+        @foreach ((HackPackageBlockKind kind, IReadOnlyList<string> values) in BlockGroups)
+        {
+            <h5 class="sources-subtitle">@KindText(kind)</h5>
+            @if (values.Count == 0)
+            {
+                <p class="setting-desc">@L["Policy.Empty"]</p>
+            }
+            else
+            {
+                <div class="sources-list" role="list">
+                    @foreach (string value in values)
+                    {
+                        <div class="source-row is-blocked" role="listitem">
+                            <span class="source-name">@value</span>
+                            <button type="button" class="sources-btn" disabled="@_isBusy"
+                                    @onclick="() => SetBlockedAsync(kind, value, false)">@L["Policy.Unblock"]</button>
+                        </div>
+                    }
+                </div>
+            }
+        }
+
+        <form class="sources-form" @onsubmit="BlockAsync" @onsubmit:preventDefault>
+            <label class="sources-field sources-field-narrow">
+                <span>@L["Policy.Kind"]</span>
+                <select class="sources-input" @bind="_newBlockKind" disabled="@_isBusy">
+                    <option value="@HackPackageBlockKind.App">@L["Policy.Kind.App"]</option>
+                    <option value="@HackPackageBlockKind.Category">@L["Policy.Kind.Category"]</option>
+                    <option value="@HackPackageBlockKind.Capability">@L["Policy.Kind.Capability"]</option>
+                </select>
+            </label>
+            <label class="sources-field">
+                <span>@L["Policy.Value"]</span>
+                <input type="text" class="sources-input" autocomplete="off" spellcheck="false"
+                       @bind="_newBlockValue" @bind:event="oninput" disabled="@_isBusy" />
+            </label>
+            <button type="submit" class="sources-btn sources-btn-danger" disabled="@(_isBusy || string.IsNullOrWhiteSpace(_newBlockValue))">@L["Policy.Block"]</button>
+        </form>
+    }
+
+    @if (!string.IsNullOrEmpty(_message))
+    {
+        <p class="sources-message" role="alert">@_message</p>
+    }
+</div>
+
+@code {
+    /// <summary>One repository source line with its trust badge and a Remove button.</summary>
+    private RenderFragment SourceRow(string source, HackPackageTrust trust) => __builder =>
+    {
+        bool builtIn = _sources?.BuiltInSources.Contains(source, StringComparer.OrdinalIgnoreCase) == true;
+        <div class="source-row @TrustClass(trust)" role="listitem">
+            <span class="source-name">@source</span>
+            <div class="source-actions">
+                @Badges(trust, builtIn)
+                <button type="button" class="sources-btn sources-btn-danger" disabled="@_isBusy"
+                        @onclick="() => RemoveSourceAsync(source)">@L["Sources.Remove"]</button>
+            </div>
+        </div>
+    };
+
+    /// <summary>The trust badge, and "built in" for a source the OS was compiled with.</summary>
+    private RenderFragment Badges(HackPackageTrust trust, bool builtIn) => __builder =>
+    {
+        <span class="source-badge @TrustClass(trust)">@TrustText(trust)</span>
+        @if (builtIn)
+        {
+            <span class="source-badge" title="@L["Sources.BuiltIn.Title"]">@L["Sources.BuiltIn"]</span>
+        }
+    };
+}

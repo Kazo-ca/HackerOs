@@ -36,25 +36,36 @@ Each line is a work item, with its branch and PR.
 
 1. **`hackeros-solution` template**: ADR 0176 tasks, plus the workflow that
    publishes to the catalog (ADR 0188 §7). Catalog apps start from this
-   template.
-2. **`wwwroot/` assets of installed apps**: serve them (service worker or
-   `blob:` addresses), a known ADR 0182 limit. Needed for any app that wraps a
+   template. **Done** (branch `todo/1-hackstore-solution-template`,
+   [ADR 0207](../adr/0207-solution-template-implementation.md),
+   [`app-repository.md`](../../framework/app-repository.md)); the template
+   repository is regenerated at the next release.
+2. **`wwwroot/` assets of installed apps** (done,
+   [ADR 0206](../adr/0206-serve-installed-app-assets.md), issue #247): served at
+   `_content/<assembly>/` by the service worker from a cache filled at the app's
+   first launch, Web Workers included. Needed for any app that wraps a
    JavaScript project.
 3. **Trust and per-user install** (ADR 0189): `app-sources.config`
    (`[catalogs]`, `[updates]`, values set at build, sources added by an
    administrator), `app-policy.config`, install into
    `~/.local/share/hackeros/apps`, catalog built when the session opens,
    two-step validation window, `hackpkg --user/--system`, `sources`, `policy`,
-   Settings ▸ Apps ▸ Sources.
+   Settings ▸ Apps ▸ Sources. **Done** (issue #248,
+   [ADR 0208](../adr/0208-hack-store-sources-trust-build.md): catalog loaded at
+   startup and hidden per session).
 4. **`HackerOs-AppMarketPlace` repository** (ADR 0188 §4 to §6):
    `categories.json`, PR template, `validate.yml` (format, manifest, commit,
    build, API check, CodeQL, capabilities comment), `publish.yml`, `packages`
    branch, `catalog.json`, 3 versions kept.
 5. **Hack Store app v1** (ADR 0188 §1 to §3): home by category, search, app
    pages, Install / Open / Update / Uninstall, Installed tab, "Restart to
-   finish", update checks (startup then every 6 hours), badge and
+   finish", update checks (startup then every 6 hours) by
    notification, default pin and migration of existing profiles, desktop and
-   mobile. `hackpkg install <appId>` from catalogs.
+   mobile. `hackpkg install <appId>` from catalogs. **Done** (branch
+   `todo/5-hackstore-app`, issue #249,
+   [ADR 0212](../adr/0212-hack-store-app-build.md); Benoit's answers:
+   [ADR 0215](../adr/0215-hack-store-answers-notification-and-ambiguous-app-id.md),
+   no badge and an ambiguous appId refused).
 6. **First catalog app**: a third-party app, in its own repository and made
    from the template, that tests the whole chain (app repository → PR to the
    catalog → checks → publishing → install by the Store).
@@ -64,11 +75,14 @@ Each line is a work item, with its branch and PR.
 
 ### v2: theme packs (ADR 0190)
 
-8. `.hacktheme` format, checks, install, Store Themes tab (`.theme` theme packs
-   only at first).
+8. `.hacktheme` format, checks, install, Store Themes tab, with every part
+   (themes, wallpapers, icons, sounds, cursors). **Done** (branch
+   `todo/18-theme-packs`, issue #253,
+   [ADR 0213](../adr/0213-theme-packs-build.md)); catalog CI:
+   [AppMarketPlace #4](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/4).
 9. One work item per new OS system, each with its ADR: image wallpapers, icon
    packs, event sounds, cursor themes. The Store accepts each part of a pack
-   once its system exists.
+   once its system exists. **Done** (ADRs 0202 to 0205).
 
 ## Rules
 

@@ -85,6 +85,9 @@
                               OnDismiss="CloseRecent" />
     }
 
+    @* ADR 0197: the notification bubbles at the top of the screen, hidden while the shade is open. *@
+    <NotificationToasts Placement="NotificationToastPlacement.TopOfScreen" IsPanelOpen="_isShadeOpen" />
+
     <MobileSystemNavigationBar Commands="_systemNavigationCommands" />
 
     @* ADR 0049: secure-desktop approval, above every app screen and the navigation bar. *@
@@ -95,6 +98,7 @@
     <HackerOs.Platform.Blazor.Sync.SyncConflictOverlay />
     <DangerousCapabilityApprovalOverlay />
     <AdministratorAuthenticationOverlay />
+    <AppInstallApprovalOverlay />
 </div>
 
 @code {
@@ -113,6 +117,7 @@
     private DotNetObjectReference<MobileShell>? _selfReference;
     private bool _isShadeOpen;
     private bool _showRecent;
+    private AppUpdateAttention? _appUpdates;
     private NotificationAttention? _notificationAttention;
 
     /// <summary>Gets the notifications not looked at yet: the dot on the shade handle (ADR 0196).</summary>
@@ -153,6 +158,9 @@
 
         // ADR 0186 §4.5: the sign-in notification of unseen changes.
         _ = PostWhatsNewAsync();
+        // ADR 0212 §5: the Hack Store's update check; a notification shows what it finds.
+        _appUpdates = new AppUpdateAttention(Services);
+        _appUpdates.Start();
     }
 
     /// <inheritdoc />
@@ -277,6 +285,7 @@
         WindowRuntime.StateChanged -= Rerender;
         FileDialogAdapter.Changed -= Rerender;
         _mobileProcessObserver?.Dispose();
+        _appUpdates?.Dispose();
         if (_notificationAttention is not null)
         {
             _notificationAttention.Changed -= Rerender;

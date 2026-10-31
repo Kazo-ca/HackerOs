@@ -211,3 +211,157 @@
         max-width: 6rem;
     }
 }
+
+/* ADR 0199: the hover preview of a window button, above the taskbar. The module places it
+   (--taskbar-preview-left) and fills its live layer with a reduced copy of the window. */
+.taskbar-container {
+    position: relative;
+}
+
+.taskbar-preview {
+    position: absolute;
+    bottom: calc(100% + 0.4rem);
+    left: var(--taskbar-preview-left, 0.5rem);
+    z-index: 960;
+    display: grid;
+    gap: 0.35rem;
+    width: var(--hos-taskbar-preview-width, 15rem);
+    padding: 0.4rem;
+    border: var(--hos-taskbar-preview-border, 1px solid var(--hos-border, #34444c));
+    border-radius: var(--hos-taskbar-preview-radius, 0.4rem);
+    background: var(--hos-taskbar-preview-background, var(--hos-bg-elevated, #172025));
+    color: var(--hos-text-primary, #f4f7f8);
+    box-shadow: var(--hos-taskbar-preview-shadow, 0 14px 32px rgb(0 0 0 / 48%));
+    backdrop-filter: var(--hos-taskbar-backdrop-filter, none);
+    animation: taskbar-preview-in var(--hos-taskbar-preview-duration, 140ms) ease-out;
+}
+
+.taskbar-preview-header {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-width: 0;
+}
+
+.taskbar-preview-icon {
+    display: inline-flex;
+    flex: none;
+    color: var(--hos-accent, #42d392);
+}
+
+.taskbar-preview-icon .item-icon-image {
+    width: 0.9rem;
+    height: 0.9rem;
+}
+
+.taskbar-preview-title {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.taskbar-preview-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: 0.25rem;
+    background: transparent;
+    color: var(--hos-text-secondary, #a8bac4);
+    cursor: pointer;
+}
+
+.taskbar-preview-close:hover {
+    border-color: var(--hos-taskbar-preview-close-hover-border, #8a3b3b);
+    background: var(--hos-taskbar-preview-close-hover-background, #5b2020);
+    color: var(--hos-text-primary, #f4f7f8);
+}
+
+.taskbar-preview-close:focus-visible {
+    outline: 2px solid var(--hos-focus-ring, var(--hos-accent, #42d392));
+    outline-offset: 1px;
+}
+
+.taskbar-preview-thumbnail {
+    position: relative;
+    height: var(--hos-taskbar-preview-height, 8.5rem);
+    overflow: hidden;
+    border: 1px solid var(--hos-border-subtle, #212c32);
+    border-radius: 0.25rem;
+    background: var(--hos-bg-base, #101417);
+    cursor: pointer;
+}
+
+.taskbar-preview-thumbnail:hover {
+    border-color: var(--hos-accent, #42d392);
+}
+
+/* The icon and title stay under the live copy: they show when the window cannot be copied. */
+.taskbar-preview-fallback {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.5rem;
+    color: var(--hos-accent, #42d392);
+    text-align: center;
+}
+
+.taskbar-preview-fallback-image {
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+.taskbar-preview-fallback-title {
+    max-width: 100%;
+    overflow: hidden;
+    color: var(--hos-text-secondary, #a8bac4);
+    font-family: var(--hos-font-mono, monospace);
+    font-size: 0.75rem;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.taskbar-preview[data-live-copy] .taskbar-preview-fallback {
+    visibility: hidden;
+}
+
+.taskbar-preview-live {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+@keyframes taskbar-preview-in {
+    from {
+        opacity: 0;
+        transform: translateY(0.35rem);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* The existing "Reduce animations" setting and the system preference stop it (ADR 0105). */
+:is([data-motion="reduced"], [data-motion="disabled"], [data-motion="off"]) .taskbar-preview {
+    animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .taskbar-preview {
+        animation: none;
+    }
+}

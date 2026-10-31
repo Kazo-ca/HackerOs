@@ -1,6 +1,8 @@
 using HackerOs.App.Abstractions;
 using HackerOs.Platform.Core.Processes;
+using HackerOs.Platform.Core.Sounds;
 using HackerOs.Simulation.Abstractions.FileSystem;
+using HackerOs.Simulation.Abstractions.Sounds;
 
 namespace HackerOs.Platform.Core.FileSystem;
 
@@ -19,6 +21,12 @@ public sealed class FileSystemSeeder(
     TimeProvider? timeProvider = null,
     IFileSystemMountRouter? mountRouter = null)
 {
+    /// <summary>
+    /// Gets the app sources and block list the host was built with (ADR 0189 §1, §5), written to
+    /// <c>/etc/hackeros/app-sources.config</c> and <c>app-policy.config</c> when they do not exist.
+    /// </summary>
+    public Apps.Packages.AppPackageDefaults PackageDefaults { get; init; } = Apps.Packages.AppPackageDefaults.Standard;
+
     private readonly IFileSystemService _fileSystem =
         fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
     private readonly TimeProvider _timeProvider = timeProvider ?? TimeProvider.System;
@@ -68,9 +76,21 @@ public sealed class FileSystemSeeder(
         // ADR 0074, section 4: the static host table read first by hackdns, root-owned 0644.
         await EnsureFileAsync(
             Network.Local.HackDnsResolver.HostsFilePath.Value, Network.Local.HackDnsResolver.DefaultHostsFileContent, 0x01A4, system, cancellationToken);
-        // ADR 0182, section 3: hosts the OS downloads app packages from and trusted owners, root-owned 0644.
+        // ADR 0182 section 3, ADR 0189 section 1: hosts, catalogs and trusted sources of app packages,
+        // from the host's build, root-owned 0644.
         await EnsureFileAsync(
-            Apps.Packages.AppSourcesConfigDocument.MachinePath.Value, Apps.Packages.AppSourcesConfigDocument.DefaultContent, 0x01A4, system, cancellationToken);
+            Apps.Packages.AppSourcesConfigDocument.MachinePath.Value,
+            Apps.Packages.AppSourcesConfigDocument.BuildDefaultContent(PackageDefaults),
+            0x01A4,
+            system,
+            cancellationToken);
+        // ADR 0189 section 5: the administrator's block list for personal installs, root-owned 0644.
+        await EnsureFileAsync(
+            Apps.Packages.AppPolicyConfigDocument.MachinePath.Value,
+            Apps.Packages.AppPolicyConfigDocument.BuildDefaultContent(PackageDefaults),
+            0x01A4,
+            system,
+            cancellationToken);
 
         // ADR 0125, section 3: pam_limits-style session limits, every line commented, root-owned 0644.
         await EnsureDirectoryAsync("/etc/security", 0x01ED, system, cancellationToken);
@@ -81,6 +101,11 @@ public sealed class FileSystemSeeder(
         // ADR 0077/0080: declarations of the hosted static sites (hackwebd), edited by an administrator.
         await EnsureDirectoryAsync("/etc/hackweb", 0x01ED, system, cancellationToken);
         await EnsureDirectoryAsync("/etc/hackweb/sites", 0x01ED, system, cancellationToken);
+
+        // The shared data in /usr/share (sound themes, icon packs) is installed after the sign-in,
+        // in the background: InstallSoundThemesAsync and InstallIconPacksAsync.
+        await EnsureDirectoryAsync("/usr", 0x01ED, system, cancellationToken);
+        await EnsureDirectoryAsync("/usr/share", 0x01ED, system, cancellationToken);
 
         string home = $"/home/{userName.Value}";
         await EnsureDirectoryAsync(home, 0x01C0, userProvisioning, cancellationToken);
@@ -94,6 +119,86 @@ public sealed class FileSystemSeeder(
         await EnsureDirectoryAsync($"{home}/.local", 0x01ED, userProvisioning, cancellationToken);
         await EnsureDirectoryAsync($"{home}/.local/state", 0x01ED, userProvisioning, cancellationToken);
         await EnsureDirectoryAsync($"{home}/.local/state/hackeros", 0x01ED, userProvisioning, cancellationToken);
+        // ADR 0204: the user's own sound themes, one folder per theme.
+        await EnsureDirectoryAsync($"{home}/.local/share", 0x01ED, userProvisioning, cancellationToken);
+        await EnsureDirectoryAsync(
+            OsSoundEvents.GetUserThemesDirectory(home), 0x01ED, userProvisioning, cancellationToken);
+    }
+
+    /// <summary>
+    /// Installs the icon packs shipped with the OS (ADR 0203 §6) in <c>/usr/share/icons</c>, root-owned
+    /// 0644 like on Linux. Existing files are kept, so an administrator's edits survive.
+    /// </summary>
+    /// <remarks>
+    /// Kept out of <see cref="SeedAsync"/> because writing the pack's images takes about ten seconds
+    /// in the browser store at the first login: like a distribution's package post-install step, it
+    /// runs in the background once the session is open (<see cref="Sessions.LocalSessionService"/>).
+    /// Nothing in the session waits for it: the built-in icons are the default pack.
+    /// </remarks>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    public async ValueTask InstallIconPacksAsync(CancellationToken cancellationToken = default)
+    {
+        FileSystemAuthorizationContext system = CreateContext("system", "system");
+        await EnsureDirectoryAsync("/usr", 0x01ED, system, cancellationToken);
+        await EnsureDirectoryAsync("/usr/share", 0x01ED, system, cancellationToken);
+        await EnsureDirectoryAsync(Theming.Abstractions.IconPacks.IconPackLibrary.SystemDirectory, 0x01ED, system, cancellationToken);
+        foreach (BuiltInIconPacks.PackFile file in BuiltInIconPacks.Files)
+        {
+            string target = $"{Theming.Abstractions.IconPacks.IconPackLibrary.SystemDirectory}/{file.RelativePath}";
+            string folder = Theming.Abstractions.IconPacks.IconPackLibrary.SystemDirectory;
+            foreach (string part in file.RelativePath.Split('/')[..^1])
+            {
+                folder += "/" + part;
+                await EnsureDirectoryAsync(folder, 0x01ED, system, cancellationToken);
+            }
+
+            if (file.RelativePath.EndsWith(".json", StringComparison.Ordinal))
+            {
+                // icon-pack.json stays a text file, readable with cat and editable with nano.
+                await EnsureFileAsync(target, System.Text.Encoding.UTF8.GetString(file.Content), 0x01A4, system, cancellationToken);
+            }
+            else
+            {
+                await EnsureFileAsync(target, file.Content, 0x01A4, system, cancellationToken);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Installs every built-in sound theme (ADR 0204 section 4): <c>index.theme</c> and one
+    /// <c>stereo/&lt;sound-name&gt;.oga</c> per event, root-owned 0644. Existing files are kept.
+    /// </summary>
+    /// <remarks>
+    /// Not part of <see cref="SeedAsync"/>: the sound service calls it after the first sign-in, in
+    /// the background, so the login does not wait for about fifty kilobytes of audio.
+    /// </remarks>
+    /// <param name="cancellationToken">Signals cancellation of the writes.</param>
+    public async ValueTask InstallSoundThemesAsync(CancellationToken cancellationToken = default)
+    {
+        FileSystemAuthorizationContext system = CreateContext("system", "system");
+        await EnsureDirectoryAsync("/usr", 0x01ED, system, cancellationToken);
+        await EnsureDirectoryAsync("/usr/share", 0x01ED, system, cancellationToken);
+        await EnsureDirectoryAsync(OsSoundEvents.SystemThemesDirectory, 0x01ED, system, cancellationToken);
+        foreach (BuiltInSoundTheme theme in BuiltInSoundThemes.All)
+        {
+            string directory = BuiltInSoundThemes.GetDirectory(theme.Id);
+            await EnsureDirectoryAsync(directory, 0x01ED, system, cancellationToken);
+            await EnsureDirectoryAsync(directory + "/stereo", 0x01ED, system, cancellationToken);
+            await EnsureFileAsync(
+                $"{directory}/{OsSoundEvents.IndexFileName}", BuiltInSoundThemes.GetIndexContent(theme), 0x01A4, system, cancellationToken);
+            foreach (OsSoundEvent soundEvent in OsSoundEvents.All)
+            {
+                if (BuiltInSoundThemes.ReadSound(theme.Id, soundEvent) is { } audio)
+                {
+                    await EnsureFileAsync(
+                        BuiltInSoundThemes.GetSoundPath(theme.Id, soundEvent),
+                        audio,
+                        0x01A4,
+                        system,
+                        cancellationToken);
+                }
+            }
+        }
     }
 
     /// <summary>
@@ -181,9 +286,26 @@ public sealed class FileSystemSeeder(
     /// Creates a file with <paramref name="content"/> when nothing exists at <paramref name="pathValue"/>.
     /// An existing file is never touched: an administrator's edits survive every login.
     /// </summary>
-    private async ValueTask EnsureFileAsync(
+    private ValueTask EnsureFileAsync(
         string pathValue,
         string content,
+        ushort mode,
+        FileSystemAuthorizationContext context,
+        CancellationToken cancellationToken) =>
+        EnsureFileAsync(pathValue, new SeedSource(System.Text.Encoding.UTF8.GetBytes(content), FileSystemContentDescriptor.Text()), mode, context, cancellationToken);
+
+    /// <summary>Creates a binary file (an image of a shipped icon pack, a built-in sound) when nothing exists at <paramref name="pathValue"/>.</summary>
+    private ValueTask EnsureFileAsync(
+        string pathValue,
+        byte[] content,
+        ushort mode,
+        FileSystemAuthorizationContext context,
+        CancellationToken cancellationToken) =>
+        EnsureFileAsync(pathValue, new SeedSource(content, FileSystemContentDescriptor.Binary(MediaTypeOf(pathValue))), mode, context, cancellationToken);
+
+    private async ValueTask EnsureFileAsync(
+        string pathValue,
+        SeedSource content,
         ushort mode,
         FileSystemAuthorizationContext context,
         CancellationToken cancellationToken)
@@ -219,7 +341,7 @@ public sealed class FileSystemSeeder(
 
         FileSystemMutationResult written = await _fileSystem.WriteAsync(
             new FileSystemWriteRequest(path),
-            new SeedTextSource(content),
+            content,
             context,
             cancellationToken);
         if (!written.Succeeded)
@@ -244,12 +366,17 @@ public sealed class FileSystemSeeder(
             _timeProvider.GetUtcNow().ToUniversalTime());
     }
 
-    /// <summary>UTF-8 text content of one seeded file.</summary>
-    private sealed class SeedTextSource(string content) : IFileSystemContentSource
-    {
-        private readonly byte[] _bytes = System.Text.Encoding.UTF8.GetBytes(content);
+    private static string MediaTypeOf(string path) =>
+        path.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ? "image/png"
+        : path.EndsWith(".oga", StringComparison.OrdinalIgnoreCase) ? "audio/ogg"
+        : "application/octet-stream";
 
-        public FileSystemContentDescriptor Descriptor { get; } = FileSystemContentDescriptor.Text();
+    /// <summary>Content of one seeded file: UTF-8 text or the bytes of an image.</summary>
+    private sealed class SeedSource(byte[] bytes, FileSystemContentDescriptor descriptor) : IFileSystemContentSource
+    {
+        private readonly byte[] _bytes = bytes;
+
+        public FileSystemContentDescriptor Descriptor { get; } = descriptor;
 
         public long? Length => _bytes.LongLength;
 

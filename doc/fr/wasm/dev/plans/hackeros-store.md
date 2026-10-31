@@ -36,16 +36,23 @@ Chaque ligne est un chantier, avec sa branche et sa PR.
 
 1. **Modèle `hackeros-solution`** : tâches de l'ADR 0176, plus le workflow de
    publication vers le catalogue (ADR 0188 §7). Les apps du catalogue partent
-   de ce modèle.
-2. **Ressources `wwwroot/` des apps installées** : les servir (service worker
-   ou adresses `blob:`), limite connue de l'ADR 0182. Nécessaire pour toute
-   app qui enveloppe un projet JavaScript.
+   de ce modèle. **Fait** (branche `todo/1-hackstore-solution-template`,
+   [ADR 0207](../adr/0207-solution-template-implementation.md),
+   [`app-repository.md`](../../framework/app-repository.md)) ; le dépôt
+   template est régénéré à la release suivante.
+2. **Ressources `wwwroot/` des apps installées** (fait,
+   [ADR 0206](../adr/0206-serve-installed-app-assets.md), issue #247) : servies à
+   `_content/<assemblage>/` par le service worker depuis un cache rempli au
+   premier lancement de l'app, Web Workers compris. Nécessaire pour toute app
+   qui enveloppe un projet JavaScript.
 3. **Confiance et installation pour soi** (ADR 0189) : `app-sources.config`
    (`[catalogs]`, `[updates]`, valeurs fixées à la compilation, sources
    ajoutées par un administrateur), `app-policy.config`, installation dans
    `~/.local/share/hackeros/apps`, catalogue construit à l'ouverture de la
    session, fenêtre de validation en deux étapes, `hackpkg --user/--system`,
-   `sources`, `policy`, Paramètres ▸ Apps ▸ Sources.
+   `sources`, `policy`, Paramètres ▸ Apps ▸ Sources. **Fait** (issue #248,
+   [ADR 0208](../adr/0208-hack-store-sources-trust-build.md) : catalogue chargé
+   au démarrage et masqué par session).
 4. **Dépôt `HackerOs-AppMarketPlace`** (ADR 0188 §4 à §6) : `categories.json`,
    modèle de PR, `validate.yml` (format, manifeste, commit, compilation,
    vérification des API, CodeQL, commentaire des capacités), `publish.yml`,
@@ -53,9 +60,13 @@ Chaque ligne est un chantier, avec sa branche et sa PR.
 5. **App Hack Store v1** (ADR 0188 §1 à §3) : accueil par catégories,
    recherche, fiches, Installer / Ouvrir / Mettre à jour / Désinstaller,
    onglet Installées, « Redémarrer pour terminer », vérification des mises à
-   jour (démarrage puis toutes les 6 heures), badge et notification,
+   jour (démarrage puis toutes les 6 heures) par notification,
    épinglage par défaut et migration des profils existants, bureau et mobile.
-   `hackpkg install <appId>` depuis les catalogues.
+   `hackpkg install <appId>` depuis les catalogues. **Fait** (branche
+   `todo/5-hackstore-app`, issue #249,
+   [ADR 0212](../adr/0212-hack-store-app-build.md) ; réponses de Benoit :
+   [ADR 0215](../adr/0215-hack-store-answers-notification-and-ambiguous-app-id.md),
+   pas de badge et appId ambigu refusé).
 6. **Première app du catalogue** : une app tierce, dans son propre dépôt et
    faite avec le modèle, qui teste toute la chaîne (dépôt de l'app → PR au
    catalogue → vérification → publication → installation par le Store).
@@ -66,11 +77,15 @@ Chaque ligne est un chantier, avec sa branche et sa PR.
 
 ### v2 : packs de thèmes (ADR 0190)
 
-8. Format `.hacktheme`, vérifications, installation, onglet Thèmes du Store
-   (packs de thèmes `.theme` seulement au début).
+8. Format `.hacktheme`, vérifications, installation, onglet Thèmes du Store,
+   avec toutes les parties (thèmes, fonds, icônes, sons, curseurs). **Fait**
+   (branche `todo/18-theme-packs`, issue #253,
+   [ADR 0213](../adr/0213-theme-packs-build.md)) ; CI du catalogue :
+   [AppMarketPlace #4](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/4).
 9. Un chantier par nouveau système de l'OS, chacun avec son ADR : fonds
    d'écran en image, packs d'icônes, sons des évènements, thèmes de curseurs.
    Le Store accepte chaque partie d'un pack quand son système existe.
+   **Fait** (ADR 0202 à 0205).
 
 ## Règles
 

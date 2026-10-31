@@ -1,0 +1,31 @@
+<Project>
+  <!--
+    HackerOS app repository (hackeros-solution template, ADR 0176, ADR 0207).
+
+    external/HackerOs is the HackerOS repository as a submodule, on a release tag v<version>. Its
+    build/Versions.props is THE version of this repository: every HackerOs.* package reference uses
+    $(HackerOsVersion). Changing the HackerOS version = moving the submodule to another tag.
+
+    Two profiles (ADR 0176 §4):
+      Debug    HackerOsUseSource=true: the HackerOS packages become references to the projects of the
+               submodule, so you can step into the SDK and the OS. Never edit the submodule: CI
+               refuses a modified one.
+      Release  HackerOsUseSource=false: the packages from nuget.org, at the submodule's version.
+               This is what CI builds and what the Hack Store compiles.
+    Force either one with -p:HackerOsUseSource=true|false.
+  -->
+  <PropertyGroup>
+    <HackerOsSourceRoot Condition="'$(HackerOsSourceRoot)' == ''">$(MSBuildThisFileDirectory)external/HackerOs/wasm2/HackerOs/</HackerOsSourceRoot>
+    <HackerOsSourceRoot>$([MSBuild]::EnsureTrailingSlash('$(HackerOsSourceRoot)'))</HackerOsSourceRoot>
+    <HackerOsUseSource Condition="'$(HackerOsUseSource)' == '' and ('$(Configuration)' == '' or '$(Configuration)' == 'Debug')">true</HackerOsUseSource>
+    <HackerOsUseSource Condition="'$(HackerOsUseSource)' == ''">false</HackerOsUseSource>
+    <!--
+      Each profile restores its own references (projects or packages), so it keeps its own restore
+      output: obj/source/ for the sources, obj/ for the packages.
+    -->
+    <BaseIntermediateOutputPath Condition="'$(HackerOsUseSource)' == 'true'">obj/source/</BaseIntermediateOutputPath>
+    <DefaultItemExcludes>$(DefaultItemExcludes);obj/**</DefaultItemExcludes>
+  </PropertyGroup>
+
+  <Import Project="$(HackerOsSourceRoot)build/Versions.props" Condition="Exists('$(HackerOsSourceRoot)build/Versions.props')" />
+</Project>

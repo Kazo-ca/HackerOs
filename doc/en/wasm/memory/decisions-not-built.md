@@ -12,13 +12,12 @@ Nothing here is coded until Benoit launches the topic.
 
 ## Windows and taskbar (issue #242, `taskbar/` series)
 
-Decided on 2026-10-29. Work items done: 2 (local time, ADR 0193) and 4
-(context menus, ADR 0194). Left:
+Decided on 2026-10-29. Work items done: 1 (notification bubbles, ADR 0197), 2
+(local time, ADR 0193), 3 (window animations, ADR 0198) and 4 (context menus,
+ADR 0194). Left:
 
 | Work item | Decisions |
 | --- | --- |
-| 1. Notification toasts | A toast for every OS and app notification: bottom right, above the taskbar of screen 1, ~6 s, a stack of 3 at most, then they stay in the clock panel. "Update ready" becomes a toast + a persistent notification with a "Restart" button, also visible on the sign-in screen (which has no taskbar). Today notifications only exist in the clock panel, and "Update ready" is a fixed `aside` in `App.razor`, hidden under the taskbar. |
-| 3. Window animations | Open, close, minimize (towards the taskbar button of **its** screen), restore, maximize, snap. Fast and sober (~150 to 200 ms, fade + scale). Turned off by the existing "Reduce animations" setting. Duration and easing in `--hos-window-anim-*` CSS variables a theme can redefine. Minimizing delays the `hidden` attribute until the animation ends. |
 | 5. Hover preview + peek | Live scaled-down copy (cloned HTML, CSS `scale`), fallback image (icon + title) for iframes and canvases. Shows after ~400 ms; click = activate, "×" = close; not on mobile. Hovering the preview makes the other windows transparent (peek, like Windows). The clone does not duplicate HTML ids and has no interactive fields (axe). |
 
 One ADR per topic, one work item per ADR, multi-screen taken into account
@@ -26,20 +25,17 @@ everywhere (ADR 0178 to 0184).
 
 ## Browser: showing real sites (issue #266)
 
-Analysis of 2026-10-29, no ADR. Decisions:
+Analysis of 2026-10-29. The HackerOS server proxy is built
+([ADR 0210](../dev/adr/0210-browser-real-sites-through-the-proxy.md), `todo/base`
+series): the Browser's right, cookies, redirects, source icon, "Not secure",
+errors. Decisions still to build:
 
-- No direct iframe to the real site. Fetched content goes through the existing
-  pipeline (fetched in C#, rendered in an isolated `srcdoc`, ADR 0079).
-- Source order: simulated network → HackerOs server proxy → public third-party
-  proxy (can be turned off) → Wayback Machine automatically as a last resort.
+- Source order: simulated network → HackerOs server proxy (done) → public
+  third-party proxy (can be turned off) → Wayback Machine automatically as a
+  last resort. One source icon per new source (public proxy, archive).
+- No direct iframe to the real site: everything goes through the isolated `srcdoc`.
 - Firefox and Safari: show "not supported" when a function needs
   Chrome/Edge.
-- Address bar: an icon shows where the page comes from (simulated, server,
-  proxy, archive), a lock for HTTPS and a "not secure" warning.
-- Gaps to fill (listed in #266): the Browser lacks the `network.real.access`
-  capability and a server-side `GrantedApps` entry; cookies are dropped in
-  `SendRealAsync` and the `Cookie` header is blocked server-side; the
-  8-concurrent-requests quota rejects a page's resources.
 
 ## Ported third-party apps (`Kazo-ca/HackerOs-App-*` repositories)
 
@@ -48,7 +44,8 @@ Decided on 2026-10-28:
 - Each wrapped open-source project lives in its own repository
   (`HackerOs-App-Webamp`, `HackerOs-App-IRC` with KiwiIRC,
   `HackerOs-App-BoxedWine`, and others), created from `HackerOs-AppTemplate`
-  (ADR 0176) and listed in `HackerOs-AppMarketPlace` (Hack Store catalog,
+  (ADR 0176, `hackeros-solution` template of ADR 0207; the template repository
+  is regenerated at the release that contains this template) and listed in `HackerOs-AppMarketPlace` (Hack Store catalog,
   ADR 0188).
 - Each repository's licence follows the wrapped project's (GPL-2.0 for
   BoxedWine, for example), not MIT by default.
@@ -60,7 +57,8 @@ Decided on 2026-10-28:
   published host is trimmed, so an app loaded at run time may miss APIs
   (`MissingMethodException`); an app's JavaScript runs on the same origin as
   the OS; an app wrapping JavaScript needs the installed apps' `wwwroot` work
-  item (issue #247).
+  item (issue #247, built by ADR 0206 in the `todo/base` series: files served
+  at `_content/<assembly>/` by the service worker, Web Workers included).
 
 ## Server-hosted apps ("server sandbox")
 
@@ -88,13 +86,19 @@ Debate of 2026-10-19, recap validated by Benoit, nothing started:
 
 Evaluation of 2026-10-28. Benoit chose "nothing for now": finish the current
 series first. What HackerOS lacks and could use: URL deep links (`?app=`,
-`?open=`), window animations (see #242), a "Run" box (Super+R), screensaver
+`?open=`), a "Run" box (Super+R), screensaver
 and idle lock, file search in the launcher, hover preview (see #242), file
 thumbnails (`~/.cache/thumbnails`), viewers (Markdown, PDF, images, video),
 Eruda developer tools, rich file tooltips, animated or slideshow wallpapers,
-`.zip` browsed as a folder (see #241), `git clone` (needs a CORS proxy), Python
+`git clone` (needs a CORS proxy), Python
 (better in an app repository). Questions to ask again when starting: where the
 viewers live, scope of `?app=`, Eruda or not.
+
+## Switch user (closed decision, 2026-10-30)
+
+- "Switch user" **stays greyed out** (ADR 0201, issue #290): one session at a
+  time. A simultaneous-sessions prototype is kept, not merged, on the branch
+  `switch-user/simultaneous-sessions-prototype`.
 
 ## Editors (closed decision, 2026-10-17)
 
@@ -103,8 +107,6 @@ viewers live, scope of `?app=`, Eruda or not.
 
 ## Questions asked, answer to confirm
 
-- **Switch user** (issue #290): several sessions open at once; the target
-  behaviour was asked to Benoit on 2026-10-30.
 - **"New folder" in dialogs** (ADR 0175): make
   `SelectFolderDialogRequest.AllowCreateFolder` true by default for every app?
   Recommended: keep the per-app option. Asked on 2026-10-26.

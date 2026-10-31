@@ -35,6 +35,16 @@ public interface IAccountClient
     /// <returns>The new token pair.</returns>
     /// <exception cref="ServerConnectionException">The server answered with a non-success status, e.g. an expired refresh token.</exception>
     Task<RefreshTokenResponse> RefreshAsync(Uri serverBaseUrl, RefreshTokenRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Links a new device with a one-time pairing code (<c>POST /api/auth/pair</c>, ADR 0191 §6).
+    /// </summary>
+    /// <param name="serverBaseUrl">The server's base URL.</param>
+    /// <param name="request">The code and the new device.</param>
+    /// <param name="cancellationToken">Cancels the request.</param>
+    /// <exception cref="ServerConnectionException">The server refused the code.</exception>
+    Task<LoginResponse> PairAsync(Uri serverBaseUrl, PairDeviceRequest request, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This account client cannot pair a device.");
 }
 
 /// <summary>Default <see cref="IAccountClient"/> implementation backed by <see cref="HttpClient"/>.</summary>
@@ -82,6 +92,20 @@ public sealed class HttpAccountClient(HttpClient httpClient) : IAccountClient
             IdentityContractsJsonContext.Default.RefreshTokenResponse, cancellationToken).ConfigureAwait(false))!;
     }
 
+    /// <inheritdoc />
+    public async Task<LoginResponse> PairAsync(
+        Uri serverBaseUrl, PairDeviceRequest request, CancellationToken cancellationToken = default)
+    {
+        using HttpResponseMessage response = await httpClient.PostAsJsonAsync(
+            new Uri(serverBaseUrl, "api/auth/pair"),
+            request,
+            IdentityContractsJsonContext.Default.PairDeviceRequest,
+            cancellationToken).ConfigureAwait(false);
+        await EnsureSuccessAsync(response, cancellationToken).ConfigureAwait(false);
+        return (await response.Content.ReadFromJsonAsync(
+            IdentityContractsJsonContext.Default.LoginResponse, cancellationToken).ConfigureAwait(false))!;
+    }
+
     private static async Task EnsureSuccessAsync(HttpResponseMessage response, CancellationToken cancellationToken)
     {
         if (response.IsSuccessStatusCode)
@@ -96,9 +120,34 @@ public sealed class HttpAccountClient(HttpClient httpClient) : IAccountClient
 }
 
 /// <summary>Thrown when the optional server rejects an account/auth/proxy request.</summary>
-public sealed class ServerConnectionException(string message, string? serverBody = null)
-    : Exception(message)
+public sealed class ServerConnectionException : Exception
 {
+    /// <summary>Creates the exception.</summary>
+    /// <param name="message">What failed.</param>
+    /// <param name="serverBody">The raw response body the server returned, if any.</param>
+    public ServerConnectionException(string message, string? serverBody = null)
+        : base(message)
+    {
+        ServerBody = serverBody;
+    }
+
+    /// <summary>Creates the exception for a proxy refusal carrying its <c>ProxyErrorCode</c> (ADR 0210 §6).</summary>
+    /// <param name="message">What failed.</param>
+    /// <param name="serverBody">The raw response body the server returned, if any.</param>
+    /// <param name="proxyErrorCode">The relay's error code (<c>BLOCKED_PORT</c>, <c>QUOTA_EXCEEDED</c>…).</param>
+    public ServerConnectionException(string message, string? serverBody, string? proxyErrorCode)
+        : base(message)
+    {
+        ServerBody = serverBody;
+        ProxyErrorCode = proxyErrorCode;
+    }
+
     /// <summary>Gets the raw response body the server returned, if any, for diagnostics.</summary>
-    public string? ServerBody { get; } = serverBody;
+    public string? ServerBody { get; }
+
+    /// <summary>
+    /// Gets the relay's error code (<c>HackerOs.Server.Contracts.Proxy.ProxyErrorCode</c>) when the
+    /// proxy refused a request, so the OS can tell a blocked port from a full quota; otherwise <see langword="null"/>.
+    /// </summary>
+    public string? ProxyErrorCode { get; }
 }

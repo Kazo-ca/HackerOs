@@ -70,9 +70,10 @@ internal sealed class SettingsFilesHarness
             ? new HackerOs.Platform.Core.Keyring.UserKeyringService(
                 FileSystem, Clock, new HackerOs.Platform.Core.Keyring.ManagedKeyringCipher(), Audit, iterations: 10)
             : null;
+        Seeder = new FileSystemSeeder(FileSystem, timeProvider);
         Session = new LocalSessionService(
             Users,
-            new FileSystemSeeder(FileSystem, timeProvider),
+            Seeder,
             EventBus,
             Audit,
             InstallationId.FromGuid(Guid.NewGuid()),
@@ -84,6 +85,7 @@ internal sealed class SettingsFilesHarness
     }
 
     internal FileSystemService FileSystem { get; }
+    internal FileSystemSeeder Seeder { get; }
     internal BoundedAuditLog Audit { get; } = new(maxEntries: 100);
     internal HackerOs.Platform.Core.Keyring.UserKeyringService? Keyring { get; }
     internal CapabilityGrantRepository Grants { get; }
@@ -101,6 +103,12 @@ internal sealed class SettingsFilesHarness
     /// <summary>Logs in a user, which seeds the home directory and runs the per-user migration.</summary>
     internal Task<AuthenticatedPrincipal> LoginAsync(LocalUser user) =>
         Session.LoginAsync(user.LoginName, Password);
+
+    /// <summary>
+    /// Installs the shipped icon packs now, as the login does in the background (idempotent, so it
+    /// may run next to that background install).
+    /// </summary>
+    internal ValueTask InstallIconPacksAsync() => Seeder.InstallIconPacksAsync();
 
     /// <summary>Boot step: system migration and installation defaults.</summary>
     internal ValueTask BootAsync() => Migration.MigrateSystemAsync();

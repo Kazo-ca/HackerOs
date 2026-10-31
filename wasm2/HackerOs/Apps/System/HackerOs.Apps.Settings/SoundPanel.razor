@@ -1,0 +1,85 @@
+@using HackerOs.Simulation.Abstractions.Settings
+@using HackerOs.Simulation.Abstractions.Sounds
+@inherits HackerOs.AppSdk.Blazor.HackComponentBase
+@implements IAsyncDisposable
+
+@*
+    Settings > Sound (ADR 0204): event sounds on or off, volume and sound theme, written to
+    ~/.config/hackeros/sound.config. The shell plays the notification sound of a new choice.
+*@
+@if (!_loaded)
+{
+    <p class="setting-desc">@(_message is null ? L["Common.Loading"] : string.Empty)</p>
+}
+else
+{
+    <div class="setting-group sound-panel sound-output">
+        <h4 id="sound-output-title">@L["Sound.Output.Title"] <SettingOriginBadge Source="@SourceOf(EnabledKey)" IsLocked="@IsLocked(EnabledKey)" /></h4>
+        <p class="setting-desc">@L["Sound.Output.Description"]</p>
+        <label class="sound-switch" for="sound-enabled">
+            <input id="sound-enabled" type="checkbox" role="switch" checked="@_enabled"
+                   aria-checked="@(_enabled ? "true" : "false")"
+                   disabled="@(_isBusy || IsLocked(EnabledKey))"
+                   @onchange="OnEnabledChanged" />
+            <span class="sound-switch-track" aria-hidden="true"><span class="sound-switch-thumb"></span></span>
+            <span class="sound-switch-label">@L["Sound.Output.Enabled"]</span>
+        </label>
+
+        <div class="sound-volume">
+            <label for="sound-volume">@L["Sound.Volume.Label"] <SettingOriginBadge Source="@SourceOf(VolumeKey)" IsLocked="@IsLocked(VolumeKey)" /></label>
+            <div class="sound-volume-row">
+                <input id="sound-volume" type="range" min="0" max="100" step="5" value="@_volume"
+                       aria-valuetext="@($"{_volume} %")"
+                       disabled="@(_isBusy || !_enabled || IsLocked(VolumeKey))"
+                       @onchange="OnVolumeChanged" />
+                <output for="sound-volume" class="sound-volume-value">@_volume %</output>
+            </div>
+        </div>
+    </div>
+
+    <div class="setting-group sound-panel">
+        <h4 id="sound-theme-title">@L["Sound.Theme.Title"] <SettingOriginBadge Source="@SourceOf(ThemeKey)" IsLocked="@IsLocked(ThemeKey)" /></h4>
+        <p class="setting-desc">
+            @LocalizedMarkup.Format(L["Sound.Theme.Description"],
+                LocalizedMarkup.Code(OsSoundEvents.SystemThemesDirectory),
+                LocalizedMarkup.Code("~/" + OsSoundEvents.UserThemesRelativeDirectory))
+        </p>
+        <div class="sound-options" role="radiogroup" aria-labelledby="sound-theme-title">
+            @foreach (SoundThemeChoice theme in _themes)
+            {
+                bool selected = theme.Id == _theme;
+                <button type="button" role="radio" class="@OptionClass(selected)"
+                        aria-checked="@(selected ? "true" : "false")"
+                        disabled="@(_isBusy || IsLocked(ThemeKey))"
+                        @onclick="() => SetThemeAsync(theme.Id)">
+                    <span class="sound-tag" aria-hidden="true">@(theme.IsUserTheme ? "USER" : "SYS")</span>
+                    <span class="sound-text">
+                        <span class="sound-label">@theme.Name</span>
+                        <span class="sound-detail">@(theme.Comment ?? theme.Directory)</span>
+                    </span>
+                </button>
+            }
+        </div>
+        @if (_themes.Count == 0)
+        {
+            <p class="setting-desc">@L["Sound.Theme.None"]</p>
+        }
+    </div>
+
+    <div class="setting-group sound-panel">
+        <h4 id="sound-events-title">@L["Sound.Events.Title"]</h4>
+        <p class="setting-desc">@L["Sound.Events.Description"]</p>
+        <dl class="sound-events" aria-labelledby="sound-events-title">
+            @foreach (OsSoundEvent soundEvent in OsSoundEvents.All)
+            {
+                <dt>@L[$"Sound.Event.{soundEvent}"]</dt>
+                <dd><code>@(OsSoundEvents.GetSoundName(soundEvent)).oga</code></dd>
+            }
+        </dl>
+    </div>
+}
+
+@if (_message is not null)
+{
+    <div class="@(_messageIsError ? "sound-message is-error" : "sound-message")" role="@(_messageIsError ? "alert" : "status")">@_message</div>
+}

@@ -243,37 +243,186 @@ origine d'app, à côté des apps système et des apps intégrées : un paquet
 `hackeros-packages`, lu par `raw.githubusercontent.com`.
 
 ```text
-hackpkg install Kazo-ca/HackerOs-App-Webamp      # dernière version
-hackpkg install Kazo-ca/HackerOs-App-Webamp@1.0.0
-hackpkg update                                   # toutes les apps installées
-hackpkg list | info <dépôt> | sources | remove <appId>
+hackpkg install Kazo-ca/HackerOs-App-Webamp            # pour soi si la source est de confiance
+hackpkg install Kazo-ca/HackerOs-App-Webamp@1.0.0 --system   # pour tous, validation admin
+hackpkg update                                         # toutes les apps installées
+hackpkg list | info <dépôt> | remove <appId> [--user|--system]
+hackpkg rollback <appId> [--user|--system]             # revient à la version gardée (ADR 0214)
+hackpkg repair [--system]                              # finit ou annule une installation interrompue
+hackpkg sources [add <source> [--trusted] | remove <source>]
+hackpkg policy [block|unblock app|category|capability <valeur>]
 ```
 
-- **Sources de confiance** : `/etc/hackeros/app-sources.config` (créé au
-  démarrage, mode 0644) ; seul `github.com/Kazo-ca` est dans `[trusted]` par
-  défaut. Un autre propriétaire demande `--allow-untrusted`, puis une
-  approbation administrateur dédiée.
+L'ADR [0189](adr/0189-app-sources-trust-and-per-user-install.md) (mise en
+œuvre décrite par l'ADR [0208](adr/0208-hack-store-sources-trust-build.md))
+ajoute les sources de confiance, l'installation pour soi, la liste noire et la
+validation en deux étapes :
+
+- **Sources** : `/etc/hackeros/app-sources.config` (créé au démarrage, mode
+  0644) a quatre sections. `[hosts]` donne l'hôte de téléchargement ;
+  `[catalogs]` les catalogues (`official=https://…/catalog.json`) ;
+  `[trusted]` les sources (`catalog:<nom>`, `github.com/<owner>` ou
+  `github.com/<owner>/<repo>`) mises à `true` (de confiance) ou `false`
+  (ajoutée mais non fiable) ; `[updates]` l'intervalle `interval-hours`
+  (1 à 720, 6 par défaut). Les valeurs par défaut sont fixées à la compilation
+  de l'hôte (catalogue officiel, `catalog:official` et `github.com/Kazo-ca` de
+  confiance) par les propriétés MSBuild `HackerOsAppCatalogs`,
+  `HackerOsTrustedAppSources` et `HackerOsAppUpdateIntervalHours`. Un
+  administrateur ajoute une source sans redéployer, par `hackpkg sources add`,
+  Paramètres ▸ Apps ▸ Sources et liste noire, ou `sudo nano`.
+- **Niveaux de confiance** : *vérifiée* pour le catalogue officiel, *de
+  confiance* pour une source intégrée ou marquée `true`, *non fiable* sinon.
+- **Liste noire** : `/etc/hackeros/app-policy.config` (créé au démarrage) a
+  `[blocked-apps]`, `[blocked-categories]` et `[blocked-capabilities]`, avec des
+  défauts fixés à la compilation (`HackerOsBlockedApps`,
+  `HackerOsBlockedAppCategories`, `HackerOsBlockedAppCapabilities`). Une app
+  bloquée ne s'installe pas pour soi : seulement pour tous, après validation.
+- **Installation pour soi** : sans `--system`, une app d'une source de
+  confiance, non bloquée et pas déjà installée pour le système s'installe dans
+  `~/.local/share/hackeros/apps/<appId>/<version>/` avec une ligne dans
+  `[installed]` de `~/.config/hackeros/installed-apps.config`, sans
+  administrateur. Une seule copie à la fois : une installation pour tous retire
+  les copies personnelles, et une copie personnelle d'une app déjà installée
+  pour le système est refusée.
+- **Validation en deux étapes** : une installation pour tous, une source non
+  fiable (même pour soi) et une désinstallation pour tous demandent, à chaque
+  fois et même sous `sudo`, une connexion administrateur fraîche puis la
+  fenêtre qui montre l'app, sa version, sa taille, sa source, son niveau de
+  confiance et ses capacités (`AppInstallApprovalOverlay`). La même fenêtre sert
+  au Store et à `hackpkg`. `--allow-untrusted` n'existe plus. Modifier les
+  sources ou la liste noire demande une seule authentification administrateur.
+- **Catalogue** : il est construit au démarrage de la page, avec les apps
+  personnelles de tous les utilisateurs ; chaque session ne voit que les
+  siennes (`InstalledPackageCatalog`). Si deux utilisateurs ont des versions
+  différentes de la même app, la plus récente est chargée pour les deux.
 - **Vérifications avant la demande d'administrateur** : SHA-256 du paquet
   (`index.json`) et de chaque fichier, identifiant, `sdkCompatibility`, API
   présentes dans l'OS, app sur le fil principal.
-- **Écriture** : `/usr/lib/hackeros/apps/<appId>/<version>/` et une ligne
+- **Écriture pour tous** : `/usr/lib/hackeros/apps/<appId>/<version>/` et une ligne
   `<appId>=github:owner/repo@version` dans `[installed]` de
-  `/etc/hackeros/apps.config`. Le dossier de la version précédente est retiré.
-- **Redémarrage** : le catalogue est construit au démarrage (Q5) ; l'app
-  apparaît après un redémarrage de HackerOS. `hackpkg list` affiche
-  `(restart pending)` d'ici là.
+  `/etc/hackeros/apps.config`. Le dossier de la version précédente est gardé pour
+  `hackpkg rollback` (une seule, [ADR 0214](adr/0214-hack-store-hot-add-signing-transactions.md)) ;
+  `hackpkg update` garde chaque copie là où elle est.
+- **Sans redémarrage** ([ADR 0214](adr/0214-hack-store-hot-add-signing-transactions.md)) :
+  l'app apparaît tout de suite. Seule la mise à jour, le retrait ou le retour
+  arrière d'une app déjà chargée dans la page attend un redémarrage de HackerOS ;
+  `hackpkg list` affiche `(restart pending)` d'ici là.
 - **Capacités dangereuses** : demandées au premier lancement, comme pour toute
   app non système.
 - **Publication** : `dotnet build -c Release -t:HackerOsPack` dans le projet de
   l'app écrit le paquet et `index.json` dans `bin/hackeros-packages` (propriété
   `HackerOsPackageOutput`), à pousser sur la branche `hackeros-packages`.
-- **Limites de la première version** : voir la section du même nom de l'ADR
-  0182 (ressources `wwwroot` non servies, fil principal seulement, dépendances
-  NuGet tierces non transportées).
+- **Ressources `wwwroot/`** ([ADR 0206](adr/0206-serve-installed-app-assets.md)) :
+  au premier lancement de l'app dans la session, chaque ressource déclarée est
+  lue par `AppAssetStore` (empreinte vérifiée) et copiée dans le cache
+  `hackeros-installed-apps` ; le service worker la sert à
+  `_content/<assemblage>/<chemin>`, la même adresse qu'une app compilée dans
+  l'OS (balises, `import()`, CSS, Web Workers et leurs `importScripts`). Sur
+  `localhost`, l'OS enregistre `service-worker.js?mode=installed-apps`, qui ne
+  sert que ces fichiers. Sans service worker, les fichiers ne sont pas servis
+  (ligne dans `/var/log/syslog`).
+- **Limites** : voir la section du même nom de l'ADR 0182 (fil principal
+  seulement, dépendances NuGet tierces non transportées) ; la limite des
+  ressources `wwwroot` est levée par l'ADR 0206.
 
-Tests : `AppPackageGatewayTests`, `AppPackageWriterTests`, `AppPackageTests`
-(Platform.Core), `HackpkgCommandTests` (Commands.Wave5) et le scénario
-`hackpkg` de `CommandParityTests`.
+Tests : `AppPackageGatewayTests`, `AppSourcesAndPolicyTests`,
+`InstalledAppsImageTests`, `AppPackageWriterTests`, `AppPackageTests`
+(Platform.Core), `AppInstallApprovalOverlayTests` (Platform.Blazor),
+`HackpkgCommandTests` (Commands.Wave5), le scénario `hackpkg` de
+`CommandParityTests`, `InstalledAppAssetPublisherTests` (Ecosystem) et
+`TrimmedPublishTests.InstalledApps.cs` (paquet de test
+`Tests/fixtures/installed-app` installé par `hackpkg` dans la publication
+réduite, lancé par `build/publish-trimmed.sh`).
+
+## Le Hack Store et les catalogues
+
+L'ADR [0212](adr/0212-hack-store-app-build.md) met en œuvre l'app **Hack
+Store** (`org.hackeros.store`, ADR [0188](adr/0188-hack-store-and-app-catalog.md)) :
+app système, non désinstallable, épinglée par défaut dans le menu Démarrer.
+
+```text
+hackpkg install org.example.notes          # cherché dans les catalogues
+hackpkg install org.example.notes@1.0.0    # une version publiée
+hackpkg install catalog:official/org.example.notes
+hackpkg info org.example.notes
+```
+
+- **Catalogues** : chaque entrée de `[catalogs]` désigne un `catalog.json`
+  (`schemaVersion` 1, branche `packages` du dépôt catalogue). Les chemins du
+  fichier (paquet, icône, captures, descriptions) sont relatifs à
+  `catalog.json`. L'OS le garde 5 minutes ; une app ou une version invalide est
+  ignorée avec un avertissement dans `/var/log/syslog`.
+- **Source écrite** : `<appId>=catalog:<nom>/<appId>@<version>` dans
+  `[installed]`. La confiance est celle de `catalog:<nom>` ; le catalogue
+  officiel est *vérifié*. Le SHA-256 et la taille viennent du catalogue ; les
+  autres vérifications sont celles d'une app GitHub.
+- **AppId seul** : cherché dans tous les catalogues. Si un seul le liste, il
+  est installé depuis celui-là ; si plusieurs le listent, l'installation est
+  refusée (`apps.package.ambiguous`) et le message donne chaque
+  `catalog:<nom>/<appId>` possible, à retaper
+  ([ADR 0215](adr/0215-hack-store-answers-notification-and-ambiguous-app-id.md) §2).
+- **L'app** : accueil par catégories, recherche (nom, description courte,
+  étiquettes, identifiant, sans casse ni accents), fiche (icône, captures,
+  description Markdown dessinée sans HTML, version, taille, licence,
+  catégorie, date, dépôt, capacités, confiance), Installer pour moi ou pour
+  tous, Ouvrir, Mettre à jour, Désinstaller, onglet **Installées** avec « Tout
+  mettre à jour ». Quand une app attend un redémarrage, le bandeau propose
+  **Redémarrer pour terminer** (sans administrateur). Arguments de lancement :
+  `--page=installed`, `--app=<appId>`.
+- **Mises à jour** : `AppUpdateMonitor` vérifie à l'ouverture de la session
+  puis toutes les `[updates] interval-hours` heures et envoie une notification
+  qui ouvre l'onglet Installées. Aucun badge sur l'icône du Store
+  ([ADR 0215](adr/0215-hack-store-answers-notification-and-ambiguous-app-id.md) §1).
+- **Épinglage par défaut** : `start-menu.json` note par profil
+  `defaultPinsApplied` ; le Store est ajouté une fois, à un nouveau profil
+  comme à un profil existant, et ne revient pas après un désépinglage.
+
+Tests : `AppCatalogDocumentTests`, les tests de catalogue
+d'`AppPackageGatewayTests`, `StartMenuPreferencesServiceTests`
+(Platform.Core) et `HackerOs.Apps.Store.Tests` (`StoreCatalog`,
+`StoreMarkdown`, manifeste).
+
+## Ajout sans redémarrage, signature et transactions
+
+L'ADR [0214](adr/0214-hack-store-hot-add-signing-transactions.md) (issue #251)
+termine le Hack Store.
+
+- **Catalogue en direct** : après chaque installation, mise à jour, retrait ou
+  retour arrière, la passerelle appelle `IInstalledAppsActivator`
+  (`InstalledAppsActivator` dans `HackerOs.Ecosystem.Host`). Il relit les apps
+  installées, remplace le contenu de l'unique `AppCatalog` de la page
+  (`InstalledAppsBoot.Live`, `AppCatalog.ReplaceContents`, évènement
+  `AppCatalog.Changed`) et ajoute les assemblies au registre de chargement
+  paresseux. Une app dont une assembly est déjà chargée garde sa version jusqu'au
+  redémarrage (`HackPackageInstallReport.RestartRequired`).
+- **Signature** : champ `signature` facultatif de chaque version (`index.json`,
+  `catalog.json`), ECDSA P-256 / SHA-256 en IEEE P1363, base64. Les clés
+  publiques sont dans `[signing-keys]` de `/etc/hackeros/app-sources.config`
+  (`catalog:official=MFkw…`, plusieurs clés séparées par des virgules) et dans la
+  propriété MSBuild `HackerOsAppSigningKeys` de l'hôte, toujours exigées. Une
+  source qui a une clé refuse un paquet non signé (`apps.package.unsigned`) ou mal
+  signé (`apps.package.bad-signature`). La vérification passe par Web Crypto
+  dans le navigateur (`BrowserAppPackageSignatureVerifier`, `webAuthn.js`
+  `verify`), par `ECDsa` ailleurs.
+- **Transactions** : journal `<racine>/<appId>/.transaction`, fichiers écrits
+  dans `<version>.partial/` puis renommés, ligne `[installed]` comme point de
+  validation, ménage après. `hackpkg repair [--system]` finit ou annule ce
+  qu'une coupure a laissé (`AppPackageInstaller.RecoverAsync`, `RepairAsync`).
+  `update.minimumUpgradableVersion` refuse la mise à jour en place d'une version
+  trop ancienne (`apps.package.reinstall-required`).
+- **Retour arrière** : une mise à jour garde la version qu'elle remplace ;
+  `hackpkg rollback <appId>` et le bouton « Revenir à <version> » du Store la
+  remettent, avec les approbations d'une installation de la même portée.
+- **Données** : au lancement d'une app installée dont la version a changé,
+  `AppDataGuard` copie `~/.config/<appId>/` et `~/.local/share/<appId>/` dans
+  `~/.local/share/hackeros/app-backups/<appId>/<ancienne version>/`, puis donne
+  `HACKEROS_PREVIOUS_VERSION` à l'app (mise à jour) ou remet la sauvegarde de la
+  version retrouvée (retour arrière). La dernière version lancée est notée dans
+  `~/.config/hackeros/app-data-versions.config`. Deux sauvegardes au plus par app.
+
+Tests : `AppPackageGatewayTests.Transactions.cs`, `AppDataGuardTests`,
+`AppPackageSignatureTests`, `AppCatalogTests` (Platform.Core),
+`InstalledAppsBootTests` (Ecosystem), `HackpkgCommandTests` (Commands.Wave5).
 
 ## Tâches
 
@@ -287,3 +436,5 @@ Tests : `AppPackageGatewayTests`, `AppPackageWriterTests`, `AppPackageTests`
 - [x] Retrait d'`AppCatalogSyncService` et de son contrat.
 - [x] Onglet « Installed Apps » refait (`InstalledAppsPanel`).
 - [x] Tests de contrat et documentation.
+- [x] Hack Store : catalogues, `hackpkg install <appId>`, mises à jour par notification, épinglage par défaut (ADR 0212, ADR 0215).
+- [x] Ajout sans redémarrage, signature, installation transactionnelle, `hackpkg rollback` et `repair`, sauvegarde des données (ADR 0214).

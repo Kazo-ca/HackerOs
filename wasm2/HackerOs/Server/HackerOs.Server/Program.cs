@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using HackerOs.Server;
 using HackerOs.Server.Data;
 using HackerOs.Server.Endpoints;
+using HackerOs.Server.LocalServer;
 using HackerOs.Server.Services;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
@@ -25,13 +26,36 @@ using Scalar.AspNetCore;
 // every request against its own stored device policy and capability grants.
 // =============================================================================
 
-var builder = WebApplication.CreateBuilder(args);
+// ADR 0191: `HackerOs.Server pair <account>` runs a command against this server's configuration
+// instead of starting it; the host only sees the arguments that follow the command.
+LocalServerCommand? command = LocalServerCommand.Parse(args);
+
+// ADR 0191 §4: an installed server runs as a Windows service, a systemd unit or a launchd agent.
+// A Windows service starts in System32: its content root (appsettings.json, wwwroot, relative data
+// paths) is the program's folder instead. systemd and launchd set the working directory themselves.
+bool isWindowsService = Microsoft.Extensions.Hosting.WindowsServices.WindowsServiceHelpers.IsWindowsService();
+if (isWindowsService)
+{
+    Directory.SetCurrentDirectory(AppContext.BaseDirectory);
+}
+
+var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+{
+    Args = LocalServerCommand.HostArguments(args),
+    ContentRootPath = isWindowsService ? AppContext.BaseDirectory : null
+});
+builder.Services.AddWindowsService(options => options.ServiceName = "HackerOS Server");
+builder.Services.AddSystemd();
 
 // ── Configuration ─────────────────────────────────────────────────────────────
 // WebApplication.CreateBuilder already loads appsettings.json, the environment
 // variant, standard environment variables, and command-line arguments. Add only
 // the documented HACKEROS_ override layer so deployments can use scoped variables
 // without re-adding JSON sources after host/test configuration.
+// ADR 0191 §3: before it, hackeros-server.json, written by the install scripts next to the program
+// (listening address, AllowedHosts, origins, data folders, certificate); absent elsewhere.
+builder.Configuration.AddJsonFile(
+    Path.Combine(builder.Environment.ContentRootPath, "hackeros-server.json"), optional: true, reloadOnChange: false);
 builder.Configuration.AddEnvironmentVariables(prefix: "HACKEROS_");
 
 // ── Database ──────────────────────────────────────────────────────────────────
@@ -57,6 +81,8 @@ builder.Services.AddSingleton<IProxyConnectionPinAccessor, ProxyConnectionPinAcc
 builder.Services.AddSingleton<IProxyTcpConnector, SocketProxyTcpConnector>();
 builder.Services.AddSingleton<IProxyStreamConnector, SocketProxyStreamConnector>();
 builder.Services.AddScoped<IProxyGrantAuthority, ProxyGrantAuthority>();
+// ADR 0191 §6: one-time pairing codes of an installed server.
+builder.Services.AddLocalServer(builder.Configuration, builder.Environment.ContentRootPath);
 
 // ── Network relay policy (ADR 0102 §5) ────────────────────────────────────────
 // HackerOs:Proxy is read once at startup; ProxyRelayPolicy fills the defaults the binder cannot
@@ -152,6 +178,8 @@ if (isolationHeaders.Count > 0)
 // The rewrite runs before routing; API and documentation paths and real files are left alone.
 app.UseOsPageRewrite();
 app.UseRouting();
+// A published server has the page as a plain file only (ADR 0191: the installable server).
+app.UseOsPageFile();
 
 if (app.Environment.IsDevelopment())
 {
@@ -197,6 +225,12 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+// ADR 0191: a command (`pair`) runs here, with the database ready, and the server does not start.
+if (command is not null)
+{
+    return await command.RunAsync(app.Services, Console.Out);
+}
+
 // ── Endpoint groups ───────────────────────────────────────────────────────────
 app.MapVersionEndpoints();    // GET /api/version, POST /api/version/check
 app.MapIdentityEndpoints();   // POST /api/account, POST /api/auth/login, ...
@@ -205,8 +239,10 @@ app.MapProxyEndpoints();      // POST /api/proxy/http, /tcp-probe; WS /api/proxy
 app.MapAdminEndpoints();      // GET /health, GET /api/account/data-summary, ...
 
 app.MapHostInfoEndpoints();   // GET /api/hackeros/host-info (ADR 0134)
+app.MapLocalServerEndpoints(); // POST /api/auth/pair, GET /api/hackeros/local-ca.crt (ADR 0191)
 
 await app.RunAsync();
+return 0;
 
 /// <summary>
 /// Public application entry point marker used by the server integration tests.

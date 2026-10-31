@@ -3,6 +3,7 @@ using HackerOs.App.Abstractions;
 using HackerOs.AppSdk;
 using HackerOs.AppSdk.Administration;
 using HackerOs.AppSdk.Apps;
+using HackerOs.AppSdk.Blazor;
 using HackerOs.AppSdk.Globalization;
 using HackerOs.AppSdk.IO;
 using HackerOs.AppSdk.Settings;
@@ -162,8 +163,9 @@ public partial class SettingsWindow : IAsyncDisposable
     protected override Task OnWindowActivatedAsync() => RefreshUserThemesAsync();
 
     /// <summary>
-    /// Reads the user themes of <c>/etc/hackeros/themes</c> and <c>~/.config/hackeros/themes</c>
-    /// (ADR 0103 §2.2) with the SDK's file API; a missing folder simply means no theme.
+    /// Reads the user themes of <c>/etc/hackeros/themes</c>, <c>~/.config/hackeros/themes</c>
+    /// (ADR 0103 §2.2) and of the installed theme packs (ADR 0213 §3) with the SDK's file API; a
+    /// missing folder simply means no theme.
     /// </summary>
     private async Task RefreshUserThemesAsync()
     {
@@ -171,6 +173,7 @@ public partial class SettingsWindow : IAsyncDisposable
         {
             _userThemes = await UserThemeLibrary.LoadAsync(
                 async (directory, token) => await HackDirectory.GetFilesAsync(directory, "*" + ThemeFile.Extension, cancellationToken: token),
+                async (directory, token) => await HackDirectory.GetDirectoriesAsync(directory, cancellationToken: token),
                 (path, token) => HackFile.ReadAllTextAsync(path, token),
                 HackUser.Describe(AppContext).HomeDirectory,
                 AppContext.CancellationToken);
@@ -196,6 +199,21 @@ public partial class SettingsWindow : IAsyncDisposable
         {
             _appearanceMessage = exception.Message;
         }
+    }
+
+    /// <summary>« Browse… » of the wallpaper (ADR 0202 §5): any PNG, JPEG or WebP file the user can read.</summary>
+    private async Task<string?> BrowseWallpaperAsync()
+    {
+        OpenFileDialogResult result = await OpenFileAsync(new OpenFileDialogRequest
+        {
+            Title = L["Wallpaper.Browse.Title"],
+            InitialDirectory = VirtualPath.Parse(HackUser.Describe(AppContext).HomeDirectory),
+            Filters = [new FileDialogFilter(L["Wallpaper.Browse.Filter"], [".png", ".jpg", ".jpeg", ".webp"], ["image/png", "image/jpeg", "image/webp"])],
+            RequestedAccess = SelectedFileAccess.Read
+        });
+        return result.Status == FileDialogStatus.Selected && result.Resources.Count > 0
+            ? result.Resources[0].Path.Value
+            : null;
     }
 
     /// <inheritdoc />
@@ -407,6 +425,16 @@ public partial class SettingsWindow : IAsyncDisposable
             // ADR 0029 Decision 7: sync once immediately after a successful connect.
             await SyncNowAsync();
         }
+    }
+
+    /// <summary>The Local server panel linked this device with a pairing code (ADR 0191 §6).</summary>
+    private async Task OnLocalServerPairedAsync(HackServerConnectionState state)
+    {
+        _connectionState = state;
+        _connectionErrorMessage = null;
+
+        // ADR 0029 Decision 7: sync once immediately after a successful connect.
+        await SyncNowAsync();
     }
 
     private async Task DisconnectAsync()

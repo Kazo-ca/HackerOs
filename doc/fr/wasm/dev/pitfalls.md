@@ -25,6 +25,7 @@ commandes exactes de build et de test sont dans
 | Un test casse après la fusion de deux branches parallèles alors que chacune était verte | Des tests comptent des choses (apps, manifestes, commandes : `BuildKnownLazyAppsTests`, `EcosystemBootCoordinatorTests`, `CommandParityTests`) et les documents citent ces nombres | Après chaque fusion, relancer la suite complète et mettre à jour les nombres dans les tests **et** dans la doc (`app-model.md`, `linux-commands.md`…). |
 | Un test refuse une app « incompatible » après un changement de version du SDK | Un manifeste de test écrivait la version du SDK en dur (`"1.0.0"`) | Les manifestes de test utilisent `HackerOsSdk.Version` ; les tests de refus épinglent des versions explicites. |
 | Le paquet de compatibilité du SDK change sans raison | Il a été reconstruit | Les paquets `Tests/fixtures/sdk-compat/packages/*.nupkg` (1.0.0, 1.1.0, 2.0.0) sont committés et **jamais** reconstruits ; ils prouvent que les apps compilées contre une version publiée se chargent toujours ([`../framework/sdk-packages.md`](../framework/sdk-packages.md)). |
+| `NETSDK1098` en publiant `HackerOs.Server` pour un RID avec `-p:PublishSingleFile=true` | Une propriété passée par `-p:` sur la ligne de commande s'applique aussi au projet WebAssembly référencé (Ecosystem), qui ne peut pas être publié en un seul fichier | Mettre `PublishSingleFile` (conditionné au RID) dans le `.csproj` du serveur, jamais en `-p:` ; `build/publish-server.sh` ne passe que `-r` et `--self-contained` ([`installable-server.md`](installable-server.md)). |
 
 ## 2. Publication trimmée et WebAssembly
 
@@ -34,6 +35,7 @@ commandes exactes de build et de test sont dans
 | Les avertissements `IL2110`/`IL2111` n'apparaissent que dans l'app livrée, jamais dans les tests | Les projets de test n'exécutent pas l'analyseur de trimming | Vérifier avec `build/publish-trimmed.sh` (porte de fusion locale, échoue sur toute alerte `IL…`). Ne pas mettre `DynamicallyAccessedMembers` sur des paramètres de composants capturés par des closures Razor : utiliser `UnconditionalSuppressMessage` sur la méthode, ou passer le `Type` dans un objet porteur. |
 | Le trimming retire des types utilisés par réflexion | Racines ILLink incomplètes | Les assemblies HackerOS et les apps restent entières ; seules les assemblies du framework sont élaguées, avec des racines générées depuis les manifestes (`HackerOs.TrimmerRoots.xml`, [ADR 0106](adr/0106-trimmed-release-publish.md)). |
 | Le rendu d'une fenêtre Blazor dans un Web Worker coûte trop de mémoire | Chaque worker de fenêtre charge son propre runtime .NET : 66,5 Mio mesurés pour 40 Mio permis | Essai arrêté, prototype gardé coupé par défaut ([ADR 0133](adr/0133-window-rendering-in-worker-verdict.md), [`remote-window-rendering.md`](remote-window-rendering.md)). Les calculs lourds passent par `HackBackground.RunAsync`. |
+| Le serveur publié répond `404` à `/` et à `/index.html` alors que `dotnet run` marche | `OverrideHtmlAssetPlaceholders` laisse `index.html` hors du manifeste des ressources statiques publié : aucun point de terminaison ne sert la page | L'intergiciel `UseOsPageFile` (`OsPageRewrite.cs`) sert `wwwroot/index.html` sans cache quand aucun point de terminaison ne correspond ([`server-hosting.md`](server-hosting.md)). |
 
 ## 3. Navigateur, cache et page périmée
 
@@ -51,6 +53,7 @@ commandes exactes de build et de test sont dans
 | Symptôme | Cause | Solution |
 | --- | --- | --- |
 | Les 16 tests de `E2E.Tests` échouent par « harness did not become ready » | Le harnais se lance avec `--no-build -c Release` | Compiler d'abord en Release (`dotnet build HackerOs.sln -c Release` ou `Tests/HackerOs.BrowserHarness.Tests -c Release`). |
+| Toute la suite `UI.E2E` échoue sur « App launcher » non visible en 15 s, sans erreur | Du travail ajouté à la première connexion (écriture de fichiers dans `FileSystemSeeder.SeedAsync`) pousse le bureau au-delà des 15 s qu'attend `CreateLocalProfileAndReachDesktopAsync` (13,8 s avant les sons intégrés, 16,8 s avec) | Ne pas écrire de gros ni de nombreux fichiers pendant la connexion : faire ce travail en arrière-plan après `SessionActivatedEvent` (les sons : `OsSoundService` appelle `FileSystemSeeder.InstallSoundThemesAsync`, [`system-sounds.md`](system-sounds.md)). Chronométrer la connexion avec l'hôte de test avant et après le changement. |
 | Tests E2E instables quand plusieurs suites tournent | Les suites Playwright se disputent le processeur et les ports | Lancer `E2E`, `UI.E2E`, `Pwa.E2E` et `TrimmedPublish.E2E` **une à la fois**. |
 | Chromium introuvable pour Playwright | Navigateurs non installés à l'endroit attendu | `ChromiumLauncher` se replie sur `/opt/pw-browsers/chromium`. Ne jamais lancer `playwright install`. |
 | Un test lit la sortie du terminal avant qu'elle soit complète | La sortie d'une commande en worker arrive en plusieurs écritures | Attendre le prompt suivant (`OutputFinished`) avant de lire. |
@@ -78,7 +81,7 @@ encore échouer sur une machine saturée : c'est une mesure de temps.
 Tests **instables connus**, non reproduits en 25 essais sous charge le
 2026-10-25 : un test d'`AppInstallationService` (environ une fois sur douze
 avant), le web worker de `LocalNetworkTests`. Côté navigateur (workflow
-manuel) : le harnais de fenêtre détachée de l'UI, `FileExplorerDownload` et
+de la nuit) : le harnais de fenêtre détachée de l'UI, `FileExplorerDownload` et
 `BrowserHomePage` d'`UI.E2E` sous la charge de la suite complète, et deux
 tests `Pwa.E2E` qui attendent l'explorateur de fichiers. Relancer la suite
 seule avant de conclure, et noter ici la cause d'un nouveau cas. Sur
@@ -117,12 +120,14 @@ compilation à niveaux et comparer des passes faites dans les mêmes conditions.
 | Bandeau « Unknown IndexedDB transaction boundary » au démarrage | Une frontière de transaction utilisée par un dépôt n'était pas déclarée dans le schéma | Déclarée ; un test vérifie maintenant que chaque `TransactionBoundary` est déclarée. Si le bandeau revient, c'est un nouveau bogue. |
 | Écrire un réglage prenait 845 ms et 604 transactions | La résolution de chemin parcourait le stockage segment par segment | Une seule requête `resolvePath` (604 → 51 transactions, [`filesystem-path-lookup.md`](filesystem-path-lookup.md)). |
 | Un enregistrement `HackWebDb` avec `Id = 0` est stocké sous la clé 0 au lieu d'être numéroté | Comportement normal d'IndexedDB avec `autoIncrement` | Mettre `[JsonIgnore(Condition = WhenWritingDefault)]` sur `Id` ([`../framework/asp-hack-site-data.md`](../framework/asp-hack-site-data.md)). |
+| `GET /api/devices` du serveur échoue sous SQLite (`NotSupportedException` sur `ORDER BY`) | SQLite ne sait pas trier une colonne `DateTimeOffset` côté base | Trier en mémoire après la requête (`AccountService.GetDevicesAsync`). |
+| Le bureau mettait 20 s à apparaître après « Create local profile » et les tests UI E2E expiraient (15 s) | Le semis de la connexion copiait le pack d'icônes Néon (39 images) dans le stockage du navigateur avant d'ouvrir la session : environ 10 s à la première connexion | Les grosses données livrées sont installées en arrière-plan après la connexion (`FileSystemSeeder.InstallIconPacksAsync`) ; `SeedAsync` ne garde que ce dont la session a besoin tout de suite. Mesurer dans le navigateur avant d'y ajouter des fichiers. |
 
 ## 7. Conteneurs cloud, GitHub et organisation
 
 | Symptôme | Cause | Solution |
 | --- | --- | --- |
-| Les GitHub Actions échouaient toutes (août à octobre 2026) | Plus d'exécuteur disponible | Pendant cette période, un build et des tests locaux verts faisaient foi. Depuis le 2026-10-24, les workflows tournent de nouveau (`Verify HackerOS WASM`, `Deploy to GitHub Pages`) ; les tests Playwright sont dans un workflow manuel séparé (`verify-browser-tests.yml`). Un build et des tests locaux verts restent exigés avant de fusionner. Les PR échouaient ensuite sur des tests instables (`Kill_minus_9`, `ResourceAccounting`) : les workflows relancent une fois les tests en échec ([`ci-workflows.md`](ci-workflows.md)). |
+| Les GitHub Actions échouaient toutes (août à octobre 2026) | Plus d'exécuteur disponible | Pendant cette période, un build et des tests locaux verts faisaient foi. Depuis le 2026-10-24, les workflows tournent de nouveau (`Verify HackerOS WASM`, `Deploy to GitHub Pages`) ; les tests Playwright sont dans un workflow séparé (`verify-browser-tests.yml`), lancé chaque nuit sur `main` depuis l'issue #292. Un build et des tests locaux verts restent exigés avant de fusionner. Les PR échouaient ensuite sur des tests instables (`Kill_minus_9`, `ResourceAccounting`) : les workflows relancent une fois les tests en échec ([`ci-workflows.md`](ci-workflows.md)). |
 | GitHub Actions échoue à « Setup .NET 10 » : `409 Unable to download https://dotnetorigin.blob.core.windows.net/...` | Avec un canal (`10.0.x`), le script d'installation suit le lien `aka.ms`, qui pointait vers un stockage en erreur | Installer une version exacte : l'action `.github/actions/setup-dotnet-sdk` lit `latest-sdk` et télécharge depuis `builds.dotnet.microsoft.com` ([`ci-workflows.md`](ci-workflows.md#installation-du-sdk-net)). |
 | `dotnet` absent dans un conteneur cloud | Rien n'est préinstallé | `curl -sSL https://dot.net/v1/dotnet-install.sh \| bash -s -- --channel 10.0`. |
 | Un thread cloud ne peut pas supprimer une branche GitHub (403) | Droits insuffisants des sessions cloud | Benoit supprime les branches fusionnées lui-même avec une commande préparée. |

@@ -36,7 +36,8 @@
       This project is the standalone PWA: its page, its service worker and its apps.
     -->
     <ProjectReference Include="..\HackerOs.Ecosystem.Host\HackerOs.Ecosystem.Host.csproj" />
-    <ProjectReference Include="..\..\Apps\System\HackerOs.Apps.Browser\HackerOs.Apps.Browser.csproj" />
+    <!-- ADR 0210 §1: system app, so it reaches real sites through the relay (network.real.access) without an approval prompt. -->
+    <ProjectReference Include="..\..\Apps\System\HackerOs.Apps.Browser\HackerOs.Apps.Browser.csproj" IsSystemApp="true" />
     <ProjectReference Include="..\..\Apps\System\HackerOs.Apps.Calculator\HackerOs.Apps.Calculator.csproj" />
     <ProjectReference Include="..\..\Apps\System\HackerOs.Apps.CodeEditor\HackerOs.Apps.CodeEditor.csproj" IsSystemApp="true" />
     <ProjectReference Include="..\..\Apps\System\HackerOs.Apps.Diagnostic\HackerOs.Apps.Diagnostic.csproj" />
@@ -46,6 +47,8 @@
     <ProjectReference Include="..\..\Apps\System\HackerOs.Apps.HackPaint\HackerOs.Apps.HackPaint.csproj" />
     <ProjectReference Include="..\..\Apps\System\HackerOs.Apps.IconViewer\HackerOs.Apps.IconViewer.csproj" />
     <ProjectReference Include="..\..\Apps\System\HackerOs.Apps.Settings\HackerOs.Apps.Settings.csproj" IsSystemApp="true" />
+    <!-- ADR 0188/0212: the Hack Store (system app, cannot be uninstalled). -->
+    <ProjectReference Include="..\..\Apps\System\HackerOs.Apps.Store\HackerOs.Apps.Store.csproj" IsSystemApp="true" />
     <ProjectReference Include="..\..\Apps\System\HackerOs.Apps.SystemMonitor\HackerOs.Apps.SystemMonitor.csproj" IsSystemApp="true" />
     <ProjectReference Include="..\..\Apps\System\HackerOs.Apps.Terminal\HackerOs.Apps.Terminal.csproj" IsSystemApp="true" />
     <ProjectReference Include="..\..\Apps\System\HackerOs.Apps.TextEditor\HackerOs.Apps.TextEditor.csproj" IsSystemApp="true" />

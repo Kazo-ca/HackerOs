@@ -19,7 +19,8 @@ internal static class HackNetworkErrorTranslator
         HackNetworkError.HostNotFound => SocketError.HostNotFound,
         HackNetworkError.HostUnreachable => SocketError.HostUnreachable,
         HackNetworkError.ConnectionRefused => SocketError.ConnectionRefused,
-        HackNetworkError.ConnectionFailed => SocketError.TimedOut,
+        HackNetworkError.ConnectionFailed or HackNetworkError.TimedOut => SocketError.TimedOut,
+        HackNetworkError.BlockedByAdministrator => SocketError.AccessDenied,
         _ => SocketError.SocketError
     };
 
@@ -45,6 +46,8 @@ internal static class HackNetworkErrorTranslator
         {
             HackNetworkError.HostNotFound => $"Could not resolve host: {requestUri.Host}",
             HackNetworkError.TooManyRedirects => "Maximum (10) redirects followed",
+            HackNetworkError.TimedOut => $"Connection to {requestUri.Host} timed out",
+            HackNetworkError.BlockedByAdministrator => $"Access to {requestUri.Host} is blocked by the administrator",
             _ => $"Failed to connect to {requestUri.Host}"
         };
         throw new HackHttpRequestException(result.Error, httpError, message);

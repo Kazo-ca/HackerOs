@@ -179,26 +179,143 @@ public interface IAppManagementGateway
         throw new NotSupportedException("This app-management gateway cannot install packages.");
 
     /// <summary>
-    /// Installs or updates an app from its repository for every user (ADR 0182 §5), after an
-    /// administrator authenticated. The app appears at the next start of the OS.
+    /// Installs or updates an app from its repository (ADR 0182 §5, ADR 0189): for the session
+    /// user without an administrator from a trusted source, otherwise for the system after an
+    /// administrator's two-step approval. The app appears at the next start of the OS.
     /// </summary>
     /// <param name="source">The repository, optionally followed by <c>@version</c>.</param>
-    /// <param name="allowUntrusted">Accepts an owner missing from <c>[trusted]</c>.</param>
-    /// <param name="cancellationToken">Cancels the download, the authentication and the writes.</param>
+    /// <param name="scope">For whom; <see cref="HackPackageScope.Auto"/> picks the personal install when allowed.</param>
+    /// <param name="cancellationToken">Cancels the download, the approval and the writes.</param>
     /// <exception cref="NotSupportedException">The gateway predates ADR 0182.</exception>
     ValueTask<HackPackageInstallReport> InstallPackageAsync(
-        string source, bool allowUntrusted = false, CancellationToken cancellationToken = default) =>
+        string source, HackPackageScope scope = HackPackageScope.Auto, CancellationToken cancellationToken = default) =>
         throw new NotSupportedException("This app-management gateway cannot install packages.");
 
     /// <summary>
-    /// Removes an app installed from a package, for every user, after an administrator
-    /// authenticated. Its users' settings stay; it leaves the catalog at the next start of the OS.
+    /// Removes an app installed from a package: the session user's own copy without an
+    /// administrator, a system one after the two-step approval. Settings stay; it leaves the
+    /// catalog at once, or at the next start of the OS when it is loaded in the page (ADR 0214 §1).
     /// </summary>
     /// <param name="appId">The installed app.</param>
-    /// <param name="cancellationToken">Cancels the authentication and the writes.</param>
+    /// <param name="scope">Which copy; <see cref="HackPackageScope.Auto"/> takes the user's own, else the system's.</param>
+    /// <param name="cancellationToken">Cancels the approval and the writes.</param>
     /// <exception cref="NotSupportedException">The gateway predates ADR 0182.</exception>
-    ValueTask<HackInstalledPackage> RemovePackageAsync(string appId, CancellationToken cancellationToken = default) =>
+    ValueTask<HackInstalledPackage> RemovePackageAsync(
+        string appId, HackPackageScope scope = HackPackageScope.Auto, CancellationToken cancellationToken = default) =>
         throw new NotSupportedException("This app-management gateway cannot install packages.");
+
+    /// <summary>
+    /// Puts back the version the last update of an installed app kept (ADR 0214 §4.1), with the
+    /// approvals an install of the same scope needs, and keeps the version it leaves.
+    /// </summary>
+    /// <param name="appId">The installed app.</param>
+    /// <param name="scope">Which copy; <see cref="HackPackageScope.Auto"/> takes the user's own, else the system's.</param>
+    /// <param name="cancellationToken">Cancels the approval and the writes.</param>
+    /// <exception cref="NotSupportedException">The gateway predates ADR 0214.</exception>
+    ValueTask<HackPackageInstallReport> RollbackPackageAsync(
+        string appId, HackPackageScope scope = HackPackageScope.Auto, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This app-management gateway cannot go back to a previous version.");
+
+    /// <summary>
+    /// Finishes or undoes the installs an interruption left, then deletes unfinished folders
+    /// (<c>hackpkg repair</c>, ADR 0214 §3.5): the session user's own apps, and the system's after
+    /// an administrator authenticated when <paramref name="system"/> is set.
+    /// </summary>
+    /// <param name="system">Also repairs the apps installed for the system.</param>
+    /// <param name="cancellationToken">Cancels the authentication and the writes.</param>
+    /// <returns>One line per repaired app.</returns>
+    /// <exception cref="NotSupportedException">The gateway predates ADR 0214.</exception>
+    ValueTask<IReadOnlyList<string>> RepairPackagesAsync(bool system, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This app-management gateway cannot repair installed apps.");
+
+    /// <summary>Adds a catalog or a GitHub source to <c>app-sources.config</c>, after an administrator authenticated (ADR 0189 §1).</summary>
+    /// <param name="source"><c>name=https://…/catalog.json</c>, <c>github:owner</c> or <c>github:owner/repo</c>.</param>
+    /// <param name="trusted">Whether its apps install for one user without an administrator.</param>
+    /// <param name="cancellationToken">Cancels the authentication and the write.</param>
+    /// <exception cref="NotSupportedException">The gateway predates ADR 0189.</exception>
+    ValueTask<HackPackageSources> AddPackageSourceAsync(string source, bool trusted, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This app-management gateway cannot change the app sources.");
+
+    /// <summary>Removes a source from <c>app-sources.config</c>, after an administrator authenticated.</summary>
+    /// <param name="source">A catalog name (<c>catalog:name</c>) or a GitHub owner or repository.</param>
+    /// <param name="cancellationToken">Cancels the authentication and the write.</param>
+    /// <exception cref="NotSupportedException">The gateway predates ADR 0189.</exception>
+    ValueTask<HackPackageSources> RemovePackageSourceAsync(string source, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This app-management gateway cannot change the app sources.");
+
+    /// <summary>Reads the administrator's block list, <c>/etc/hackeros/app-policy.config</c> (ADR 0189 §5).</summary>
+    /// <param name="cancellationToken">Cancels the read.</param>
+    /// <exception cref="NotSupportedException">The gateway predates ADR 0189.</exception>
+    ValueTask<HackPackagePolicy> GetPackagePolicyAsync(CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This app-management gateway has no app block list.");
+
+    /// <summary>Blocks or unblocks an app, a category or a capability, after an administrator authenticated.</summary>
+    /// <param name="kind">Kind of rule.</param>
+    /// <param name="value">App ID, category or capability.</param>
+    /// <param name="blocked"><see langword="true"/> to block, <see langword="false"/> to unblock.</param>
+    /// <param name="cancellationToken">Cancels the authentication and the write.</param>
+    /// <exception cref="NotSupportedException">The gateway predates ADR 0189.</exception>
+    ValueTask<HackPackagePolicy> SetPackagePolicyAsync(
+        HackPackageBlockKind kind, string value, bool blocked, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This app-management gateway has no app block list.");
+
+    /// <summary>Reads every catalog of <c>[catalogs]</c> (ADR 0188 §6, ADR 0212 §2).</summary>
+    /// <param name="refresh">Downloads again even when a copy younger than five minutes exists.</param>
+    /// <param name="cancellationToken">Cancels the downloads.</param>
+    /// <exception cref="NotSupportedException">The gateway predates ADR 0212.</exception>
+    ValueTask<IReadOnlyList<HackAppCatalog>> GetPackageCatalogsAsync(bool refresh = false, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This app-management gateway cannot read app catalogs.");
+
+    /// <summary>Downloads the long Markdown description of an app of a catalog.</summary>
+    /// <param name="catalog">Catalog name.</param>
+    /// <param name="appId">The app.</param>
+    /// <param name="version">One of its versions.</param>
+    /// <param name="language">Language wanted; English when it has none in that language.</param>
+    /// <param name="cancellationToken">Cancels the download.</param>
+    /// <exception cref="NotSupportedException">The gateway predates ADR 0212.</exception>
+    ValueTask<string?> GetCatalogDescriptionAsync(
+        string catalog, string appId, string version, string language, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This app-management gateway cannot read app catalogs.");
+
+    /// <summary>Lists the installed apps whose source publishes a newer version (ADR 0188 §3).</summary>
+    /// <param name="cancellationToken">Cancels the downloads.</param>
+    /// <exception cref="NotSupportedException">The gateway predates ADR 0212.</exception>
+    ValueTask<IReadOnlyList<HackPackageUpdate>> GetPackageUpdatesAsync(CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This app-management gateway cannot check for updates.");
+
+    /// <summary>Restarts the OS so the installed, updated or removed apps take effect (ADR 0212 §3).</summary>
+    /// <param name="cancellationToken">Cancels the request before the restart started.</param>
+    /// <exception cref="NotSupportedException">The gateway predates ADR 0212.</exception>
+    ValueTask RestartForPackagesAsync(CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This app-management gateway cannot restart the OS.");
+
+    /// <summary>Lists the theme packs installed for the system and for the session user (ADR 0213 §3).</summary>
+    /// <param name="cancellationToken">Cancels the reads.</param>
+    /// <exception cref="NotSupportedException">The gateway predates ADR 0213.</exception>
+    ValueTask<IReadOnlyList<HackInstalledThemePack>> GetInstalledThemePacksAsync(CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This app-management gateway cannot install theme packs.");
+
+    /// <summary>
+    /// Installs or updates a theme pack of a catalog (ADR 0213 §4): for the session user without an
+    /// administrator from a trusted catalog, otherwise for the system after the two-step approval.
+    /// It applies at once, without a restart.
+    /// </summary>
+    /// <param name="source"><c>catalog:&lt;name&gt;/&lt;packId&gt;</c> or a pack id alone, optionally followed by <c>@version</c>.</param>
+    /// <param name="scope">For whom; <see cref="HackPackageScope.Auto"/> picks the personal install when allowed.</param>
+    /// <param name="cancellationToken">Cancels the download, the approval and the writes.</param>
+    /// <exception cref="NotSupportedException">The gateway predates ADR 0213.</exception>
+    ValueTask<HackThemePackInstallReport> InstallThemePackAsync(
+        string source, HackPackageScope scope = HackPackageScope.Auto, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This app-management gateway cannot install theme packs.");
+
+    /// <summary>Removes an installed theme pack: the user's own copy without an administrator, a system one after the two-step approval.</summary>
+    /// <param name="packId">The installed pack.</param>
+    /// <param name="scope">Which copy; <see cref="HackPackageScope.Auto"/> takes the user's own, else the system's.</param>
+    /// <param name="cancellationToken">Cancels the approval and the writes.</param>
+    /// <exception cref="NotSupportedException">The gateway predates ADR 0213.</exception>
+    ValueTask<HackInstalledThemePack> RemoveThemePackAsync(
+        string packId, HackPackageScope scope = HackPackageScope.Auto, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This app-management gateway cannot install theme packs.");
 }
 
 /// <summary>One running process of an app, as an uninstall lists it (ADR 0097, section 5).</summary>

@@ -380,6 +380,9 @@ public sealed class FakeHttpMessageHandler(IProxyConnectionPinAccessor connectio
     /// <summary>Every request seen: method, URI, body bytes (null without content) and Content-Type.</summary>
     public List<(string Method, Uri Uri, byte[]? Body, string? ContentType)> Requests { get; } = [];
 
+    /// <summary>The headers of every request seen, in order (ADR 0210: the relayed Cookie header).</summary>
+    public List<System.Net.Http.Headers.HttpRequestHeaders> RequestHeaders { get; } = [];
+
     protected override async Task<HttpResponseMessage> SendAsync(
         HttpRequestMessage request, CancellationToken cancellationToken)
     {
@@ -387,6 +390,7 @@ public sealed class FakeHttpMessageHandler(IProxyConnectionPinAccessor connectio
         ObservedPin = connectionPin.Address;
         byte[]? body = request.Content is null ? null : await request.Content.ReadAsByteArrayAsync(cancellationToken);
         Requests.Add((request.Method.Method, request.RequestUri!, body, request.Content?.Headers.ContentType?.ToString()));
+        RequestHeaders.Add(request.Headers);
         if (ScriptedResponses.TryDequeue(out var scripted))
             return scripted;
         return new HttpResponseMessage(System.Net.HttpStatusCode.OK)

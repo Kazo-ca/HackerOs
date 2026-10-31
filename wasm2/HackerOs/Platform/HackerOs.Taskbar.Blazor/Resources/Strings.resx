@@ -51,4 +51,10 @@
   <data name="Taskbar.Session" xml:space="preserve">
     <value>User session and logout</value>
   </data>
+  <data name="Taskbar.Preview.Label" xml:space="preserve">
+    <value>Preview of {0}</value>
+  </data>
+  <data name="Taskbar.Preview.Close" xml:space="preserve">
+    <value>Close {0}</value>
+  </data>
 </root>

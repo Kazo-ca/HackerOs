@@ -35,6 +35,7 @@ public sealed record BrowserRequest(
 /// <param name="Body">Body bytes.</param>
 /// <param name="Page">Structured page of a historical simulated site, or <see langword="null"/>.</param>
 /// <param name="RedirectCount">Redirects followed to reach <paramref name="Url"/>.</param>
+/// <param name="Source">Where the response came from, shown in the address bar (ADR 0210 §4).</param>
 public sealed record BrowserResponse(
     int StatusCode,
     string ReasonPhrase,
@@ -42,7 +43,8 @@ public sealed record BrowserResponse(
     IReadOnlyList<KeyValuePair<string, string>> Headers,
     byte[] Body,
     SimulatedPage? Page = null,
-    int RedirectCount = 0)
+    int RedirectCount = 0,
+    BrowserResponseSource Source = BrowserResponseSource.Simulated)
 {
     /// <summary>Gets the <c>Content-Type</c> header, or <see langword="null"/>.</summary>
     public string? ContentType => GetHeader("Content-Type");
@@ -59,6 +61,22 @@ public sealed record BrowserResponse(
 
     /// <summary>Decodes the body with the charset of <see cref="ContentType"/> (UTF-8 by default).</summary>
     public string ReadAsString() => SimulatedMediaTypes.GetEncoding(ContentType).GetString(Body);
+}
+
+/// <summary>Where a page came from (ADR 0210 §4), shown by the icon at the start of the address bar.</summary>
+public enum BrowserResponseSource
+{
+    /// <summary>A machine of the simulated network.</summary>
+    Simulated,
+
+    /// <summary>A site of this machine (<c>.hack</c>, <c>localhost</c>).</summary>
+    LocalSite,
+
+    /// <summary>A local file (<c>file://</c>).</summary>
+    File,
+
+    /// <summary>The real Internet, through the HackerOS server's relay.</summary>
+    RealNetwork,
 }
 
 /// <summary>

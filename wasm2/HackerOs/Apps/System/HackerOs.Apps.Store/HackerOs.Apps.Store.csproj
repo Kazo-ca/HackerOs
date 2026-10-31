@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <Import Project="../../../Platform/Packaging.props" />
+
+  <PropertyGroup>
+    <PackageId>HackerOs.Apps.Store</PackageId>
+    <Description>The Hack Store, the HackerOS system app that installs, updates and removes apps from the catalogs (ADR 0188), to include in an OS host as a system app.</Description>
+    <PackageTags>hackeros;app</PackageTags>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Shared\HackerOs.App.Abstractions\HackerOs.App.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\Shared\HackerOs.AppSdk.Blazor\HackerOs.AppSdk.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\Shared\HackerOs.AppSdk.Icons\HackerOs.AppSdk.Icons.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="HackerOs.Apps.Store.Tests" />
+  </ItemGroup>
+
+</Project>

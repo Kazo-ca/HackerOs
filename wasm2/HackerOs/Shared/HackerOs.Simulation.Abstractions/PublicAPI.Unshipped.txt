@@ -105,3 +105,29 @@ HackerOs.Simulation.Abstractions.Sessions.ILocalUserRepository.ConvertGuestUserA
 HackerOs.Simulation.Abstractions.Sessions.ILocalUserRepository.CreateGuestUserAsync(HackerOs.Simulation.Abstractions.Sessions.LocalLoginName loginName, string! displayName, HackerOs.App.Abstractions.AppAuthority authority, HackerOs.Simulation.Abstractions.Sessions.LocalGroupId primaryGroupId, System.Collections.Generic.IReadOnlyCollection<HackerOs.Simulation.Abstractions.Sessions.LocalGroupId>! additionalGroupIds, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Sessions.LocalUser!>
 HackerOs.Simulation.Abstractions.Sessions.LocalUser.IsGuest.get -> bool
 HackerOs.Simulation.Abstractions.Sessions.LocalUser.IsGuest.init -> void
+HackerOs.Simulation.Abstractions.Sounds.OsSoundEvent
+HackerOs.Simulation.Abstractions.Sounds.OsSoundEvent.Error = 2 -> HackerOs.Simulation.Abstractions.Sounds.OsSoundEvent
+HackerOs.Simulation.Abstractions.Sounds.OsSoundEvent.Notification = 0 -> HackerOs.Simulation.Abstractions.Sounds.OsSoundEvent
+HackerOs.Simulation.Abstractions.Sounds.OsSoundEvent.SignIn = 3 -> HackerOs.Simulation.Abstractions.Sounds.OsSoundEvent
+HackerOs.Simulation.Abstractions.Sounds.OsSoundEvent.SignOut = 4 -> HackerOs.Simulation.Abstractions.Sounds.OsSoundEvent
+HackerOs.Simulation.Abstractions.Sounds.OsSoundEvent.Warning = 1 -> HackerOs.Simulation.Abstractions.Sounds.OsSoundEvent
+HackerOs.Simulation.Abstractions.Sounds.OsSoundEvents
+HackerOs.Simulation.Abstractions.Sounds.SoundThemeIndex
+HackerOs.Simulation.Abstractions.Sounds.SoundThemeIndex.Directories.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.Simulation.Abstractions.Sounds.SoundThemeIndex.GetComment(System.Globalization.CultureInfo! culture) -> string?
+HackerOs.Simulation.Abstractions.Sounds.SoundThemeIndex.GetName(System.Globalization.CultureInfo! culture) -> string!
+HackerOs.Simulation.Abstractions.Sounds.SoundThemeIndex.GetSearchDirectories(string! themeDirectory) -> System.Collections.Generic.IEnumerable<string!>!
+HackerOs.Simulation.Abstractions.Sounds.SoundThemeIndex.Id.get -> string!
+HackerOs.Simulation.Abstractions.Sounds.SoundThemeIndex.Name.get -> string!
+const HackerOs.Simulation.Abstractions.Sounds.OsSoundEvents.DefaultThemeId = "hackeros" -> string!
+const HackerOs.Simulation.Abstractions.Sounds.OsSoundEvents.IndexFileName = "index.theme" -> string!
+const HackerOs.Simulation.Abstractions.Sounds.OsSoundEvents.MaxSoundFileBytes = 1048576 -> long
+const HackerOs.Simulation.Abstractions.Sounds.OsSoundEvents.SystemThemesDirectory = "/usr/share/sounds" -> string!
+const HackerOs.Simulation.Abstractions.Sounds.OsSoundEvents.UserThemesRelativeDirectory = ".local/share/sounds" -> string!
+static HackerOs.Simulation.Abstractions.Sounds.OsSoundEvents.All.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Simulation.Abstractions.Sounds.OsSoundEvent>!
+static HackerOs.Simulation.Abstractions.Sounds.OsSoundEvents.Extensions.get -> System.Collections.Generic.IReadOnlyList<string!>!
+static HackerOs.Simulation.Abstractions.Sounds.OsSoundEvents.GetMediaType(string! fileName) -> string?
+static HackerOs.Simulation.Abstractions.Sounds.OsSoundEvents.GetSoundName(HackerOs.Simulation.Abstractions.Sounds.OsSoundEvent soundEvent) -> string!
+static HackerOs.Simulation.Abstractions.Sounds.OsSoundEvents.GetUserThemesDirectory(string! homePath) -> string!
+static HackerOs.Simulation.Abstractions.Sounds.OsSoundEvents.IsValidThemeId(string? id) -> bool
+static HackerOs.Simulation.Abstractions.Sounds.SoundThemeIndex.Parse(string! id, string? content) -> HackerOs.Simulation.Abstractions.Sounds.SoundThemeIndex!

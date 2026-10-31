@@ -88,6 +88,15 @@ public sealed record ProxyHttpRequest(
     string? ContentType = null)
 {
     /// <summary>
+    /// Gets whether the server follows redirects itself, up to <c>MaxRedirectHops</c>: true by default,
+    /// so older clients are unaffected. When false (ADR 0210 §3), the server answers the first response
+    /// as is, a redirect included, with its <c>Location</c> and <c>Set-Cookie</c> headers: the OS
+    /// follows the hops itself, so the cookies of every hop reach the app's cookie container and go
+    /// back on the next hop.
+    /// </summary>
+    public bool FollowRedirects { get; init; } = true;
+
+    /// <summary>
     /// Builds the request for <paramref name="body"/>, filling <see cref="BodyHash"/> and
     /// <see cref="BodyBytes"/> from the bytes so the server's integrity check passes.
     /// </summary>

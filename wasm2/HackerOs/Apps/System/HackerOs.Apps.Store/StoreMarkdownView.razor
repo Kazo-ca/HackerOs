@@ -1,0 +1,80 @@
+@inherits HackerOs.AppSdk.Blazor.HackComponentBase
+@*
+    An app's long description (ADR 0188 §2), drawn from the blocks of StoreMarkdown: never HTML
+    from the file, only Blazor text, which is escaped.
+*@
+<div class="store-markdown">
+    @foreach (StoreMarkdownBlock block in Blocks)
+    {
+        switch (block.Kind)
+        {
+            case StoreMarkdownBlockKind.Heading when block.Level == 1:
+                <h3>@Spans(block.Items[0])</h3>
+                break;
+            case StoreMarkdownBlockKind.Heading when block.Level == 2:
+                <h4>@Spans(block.Items[0])</h4>
+                break;
+            case StoreMarkdownBlockKind.Heading:
+                <h5>@Spans(block.Items[0])</h5>
+                break;
+            case StoreMarkdownBlockKind.BulletList:
+                <ul>
+                    @foreach (IReadOnlyList<StoreMarkdownSpan> item in block.Items)
+                    {
+                        <li>@Spans(item)</li>
+                    }
+                </ul>
+                break;
+            case StoreMarkdownBlockKind.NumberedList:
+                <ol>
+                    @foreach (IReadOnlyList<StoreMarkdownSpan> item in block.Items)
+                    {
+                        <li>@Spans(item)</li>
+                    }
+                </ol>
+                break;
+            case StoreMarkdownBlockKind.Code:
+                <pre><code>@block.Code</code></pre>
+                break;
+            default:
+                <p>@Spans(block.Items[0])</p>
+                break;
+        }
+    }
+</div>
+
+@code {
+    /// <summary>The Markdown text of the description.</summary>
+    [Parameter]
+    public string? Markdown { get; set; }
+
+    private IReadOnlyList<StoreMarkdownBlock> Blocks { get; set; } = [];
+
+    /// <inheritdoc />
+    protected override void OnParametersSet() => Blocks = StoreMarkdown.Parse(Markdown);
+
+    private static RenderFragment Spans(IReadOnlyList<StoreMarkdownSpan> spans) => __builder =>
+    {
+        foreach (StoreMarkdownSpan span in spans)
+        {
+            switch (span.Kind)
+            {
+                case StoreMarkdownSpanKind.Strong:
+                    <strong>@span.Text</strong>
+                    break;
+                case StoreMarkdownSpanKind.Emphasis:
+                    <em>@span.Text</em>
+                    break;
+                case StoreMarkdownSpanKind.Code:
+                    <code>@span.Text</code>
+                    break;
+                case StoreMarkdownSpanKind.Link:
+                    <a href="@span.Href" target="_blank" rel="noopener noreferrer">@span.Text</a>
+                    break;
+                default:
+                    @span.Text
+                    break;
+            }
+        }
+    };
+}

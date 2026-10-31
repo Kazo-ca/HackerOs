@@ -1,0 +1,153 @@
+/* ADR 0197: above the windows and the taskbar (z-index 900) or the mobile navigation bar (1200),
+   like the shell's other notices (5000); below the window menus and screen overlays (9000).
+   The stack itself lets clicks through: only the bubbles take them. */
+.notification-toasts {
+    position: fixed;
+    z-index: 5000;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: min(calc(100vw - 2rem), 22rem);
+    pointer-events: none;
+}
+
+.notification-toasts.is-above-taskbar {
+    right: 1rem;
+    bottom: calc(var(--hos-taskbar-height, 2.75rem) + 0.75rem);
+}
+
+.notification-toasts.is-top {
+    top: calc(0.75rem + env(safe-area-inset-top));
+    right: 0.75rem;
+    left: 0.75rem;
+    width: auto;
+    /* The newest bubble sits nearest the edge it comes from. */
+    flex-direction: column-reverse;
+}
+
+.notification-toast {
+    padding: 0.65rem 0.75rem;
+    border: 1px solid var(--hos-border, #34444c);
+    border-left: 3px solid var(--hos-accent, #42d392);
+    border-radius: 6px;
+    background: var(--hos-bg-surface, #151c20);
+    box-shadow: var(--hos-shadow-md, 0 12px 28px rgb(0 0 0 / 38%));
+    color: var(--hos-text-primary, #f4f7f8);
+    font-family: var(--hos-font-mono, "Cascadia Mono", Consolas, monospace);
+    font-size: 0.82rem;
+    pointer-events: auto;
+}
+
+.notification-toast.is-success {
+    border-left-color: var(--hos-success, #42d392);
+}
+
+.notification-toast.is-warning {
+    border-left-color: var(--hos-warning, #d5a84f);
+}
+
+.notification-toast.is-error {
+    border-left-color: var(--hos-error, #ff9a91);
+}
+
+.notification-toast-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.notification-toast-source {
+    overflow: hidden;
+    color: var(--hos-text-muted, #6a7e88);
+    font-size: 0.72rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.notification-toast-close {
+    min-width: 1.5rem;
+    min-height: 1.5rem;
+    padding: 0 0.2rem;
+    border: none;
+    background: transparent;
+    color: var(--hos-text-muted, #6a7e88);
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.notification-toast-close:hover,
+.notification-toast-close:focus-visible {
+    color: var(--hos-text-primary, #f4f7f8);
+}
+
+.notification-toast-title {
+    margin: 0.25rem 0 0.15rem;
+    font-size: 0.82rem;
+}
+
+.notification-toast-message {
+    margin: 0;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+.notification-toast-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+}
+
+.notification-toast-action {
+    min-height: 1.75rem;
+    padding: 0.2rem 0.6rem;
+    border: 1px solid var(--hos-accent, #42d392);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--hos-accent, #42d392);
+    font: inherit;
+    font-size: 0.74rem;
+    cursor: pointer;
+}
+
+.notification-toast-action:hover,
+.notification-toast-action:focus-visible {
+    background: var(--hos-accent-subtle, #173b2c);
+}
+
+/* A short slide and fade in, cut by « Réduire les animations » (ADR 0105). */
+@media (prefers-reduced-motion: no-preference) {
+    [data-motion="enabled"] .notification-toasts.is-above-taskbar .notification-toast {
+        animation: notification-toast-in-right 180ms ease-out;
+    }
+
+    [data-motion="enabled"] .notification-toasts.is-top .notification-toast {
+        animation: notification-toast-in-top 180ms ease-out;
+    }
+}
+
+@keyframes notification-toast-in-right {
+    from {
+        opacity: 0;
+        transform: translateX(1.5rem);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@keyframes notification-toast-in-top {
+    from {
+        opacity: 0;
+        transform: translateY(-1rem);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}

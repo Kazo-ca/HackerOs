@@ -30,7 +30,7 @@ jour à la fin de chaque série ou quand une convention change.
 | EXEC (`exec/*`) | Limites de processus, OOM killer, passerelles distantes, boîte « ne répond pas », `HackBackground`, OS servi par `HackerOs.Server`, isolation cross-origin, SDK 1.2 | [`execution-followups-plan.md`](../dev/plans/execution-followups-plan.md) |
 | DESK (`desk/0` à `desk/6`) | Contrôle de fichiers fourni par l'OS, menu contextuel central, entrées de menu des apps, bureau, SDK 2.0 | [`desktop-and-context-menu-plan.md`](../dev/plans/desktop-and-context-menu-plan.md) |
 | Multi-moniteur (`multi-monitor/0` à `multi-monitor/9`) | Bureau étendu : un écran par surface d'affichage, `DisplayId` et zone de travail par écran, fenêtres déplacées par portail, service d'écrans (Chrome/Edge, repli ailleurs), une barre des tâches par écran, menus « Autre écran » et voile d'identification, Paramètres ▸ Écrans, glisser entre écrans ; aucun changement du SDK des apps | [`multi-monitor-plan.md`](../dev/plans/multi-monitor-plan.md) |
-| File Explorer (`explorer/1` à `explorer/9`) | Barre latérale redimensionnable, état vide dans la liste, glisser vers l'ordinateur, raccourcis, lecteurs réseau suivis, erreurs en `MessageBox` ; reste le `.zip` ouvert comme dossier (issue #241) | [ADR 0185](../dev/adr/0185-file-explorer-improvements.md), [`file-explorer.md`](../dev/file-explorer.md) |
+| File Explorer (`explorer/1` à `explorer/9`) | Barre latérale redimensionnable, état vide dans la liste, glisser vers l'ordinateur, raccourcis, lecteurs réseau suivis, erreurs en `MessageBox` ; le `.zip` ouvert comme dossier est fait dans `todo/base` (`todo/10-zip-as-folder`, issue #241) | [ADR 0185](../dev/adr/0185-file-explorer-improvements.md), [`file-explorer.md`](../dev/file-explorer.md) |
 | Invité (`guest/*`) | Démarrage en invité quand aucun compte n'existe, élévation par simple confirmation, « Créer mon compte » (migrer ou supprimer l'invité), crédits à la connexion | [ADR 0187](../dev/adr/0187-guest-start-and-sign-in-credits.md), [`guest-account.md`](../dev/guest-account.md) |
 
 - **Depuis DESK** (sur `main`, octobre 2026) : redémarrage proposé quand le
@@ -51,15 +51,95 @@ jour à la fin de chaque série ou quand une convention change.
   GitHub (ADR 0182), présentation des fonctionnalités `features.md` (ADR 0192),
   heure locale et fuseau horaire (ADR 0193, chantier 2 de l'issue #242),
   menus contextuels de la barre des tâches (ADR 0194, chantier 4 de #242).
-  Les ADR du Hack Store (0188 à 0190) et du serveur local installable (0191)
-  sont acceptées, rien n'est codé (issues `TODO` #246 à #257, #267).
+  Les ADR du Hack Store (0188 à 0190) sont acceptées, rien n'est codé (issues
+  `TODO` #246 à #257). Le serveur local installable (ADR 0191, issue #267) est
+  codé dans la série `todo/base` (chantier `todo/14-installable-server`,
+  [`installable-server.md`](../dev/installable-server.md)) ; restent à essayer
+  en vrai les scripts Windows et macOS et l'image Docker.
 - **Bouton Marche/arrêt dans le menu Démarrer** (ADR 0195, PR #291, fusionnée
-  le 2026-10-30) : « Changer d'utilisateur » reste grisé, issue `TODO` #290
-  (plusieurs sessions ouvertes en même temps).
-- **Point des notifications non lues à côté de l'horloge** (ADR 0196, branche
-  `notifications/1-clock-dot`, PR #294 vers `main`) : remplace la pastille du menu
-  Démarrer des nouveautés ; questions Q1 à Q6 posées à Benoit, recommandations
-  appliquées en attendant.
+  le 2026-10-30) : « Changer d'utilisateur » reste grisé, choix de
+  Benoit le 2026-10-30 (ADR 0201, issue #290 ; prototype non fusionné sur la
+  branche `switch-user/simultaneous-sessions-prototype`).
+- **Thèmes de curseurs** (ADR 0205, série `todo/base`, chantier
+  `todo/9-cursor-themes`, issue #257) : dossiers `cursor.theme` de PNG dans
+  `/etc/hackeros/cursors/` et `~/.config/hackeros/cursors/`, `cursors.config`,
+  thèmes intégrés Système (défaut), HackerOS Néon et Gothique Pourpre,
+  appliqués à toute la surface par `cursorTheme.js`, apps comprises. Fusionné
+  dans `todo/base` (PR #301) ; Benoit a confirmé le 2026-10-31 le thème par
+  défaut Système et la portée partout.
+- **Série `todo/base`** (2026-10-30, toutes les issues `TODO` en parallèle,
+  une PR finale vers `main`, branches `todo/<n>-<sujet>`, ADR 0197 à 0211
+  réservées) : chantier 1 du Hack Store fait, modèle
+  `hackeros-solution` et workflow de publication vers le catalogue (ADR 0207,
+  [`app-repository.md`](../framework/app-repository.md), issue #246). Le
+  dépôt `HackerOs-AppTemplate` ne sera régénéré qu'avec un sous-module sur la
+  release qui contient ce modèle (PR en brouillon dans ce dépôt).
+  Fonds d'écran en image faits aussi ([ADR 0202](../dev/adr/0202-desktop-wallpaper-images.md),
+  issue #254, [`wallpapers.md`](../dev/wallpapers.md)).
+  L'ADR 0206 est prise par l'issue #247 (`wwwroot/` des apps installées servi
+  par le service worker, [ADR 0206](../dev/adr/0206-serve-installed-app-assets.md)).
+- **Packs d'icônes** (ADR 0203, issue `TODO` #255, série `todo/base`) : packs
+  PNG pour les apps et les fichiers dans `/usr/share/icons` et
+  `~/.local/share/icons`, choisis dans Paramètres ▸ Apparence (document de
+  réglages `icons`, clé `iconPackId`) ; le pack Néon intégré est installé
+  d'office. Voir [`icon-packs.md`](../dev/icon-packs.md).
+- **Hack Store 3, sources de confiance** (ADR 0208, issue `TODO` #248, série
+  `todo/base`) : installation pour soi dans `~/.local/share/hackeros/apps`,
+  liste noire `/etc/hackeros/app-policy.config`, validation en deux étapes
+  (`AppInstallApprovalOverlay`), `hackpkg --user/--system`, `sources add/remove`,
+  `policy`, Paramètres ▸ Sources et liste noire. Le catalogue charge au
+  démarrage les apps personnelles de tous et les masque par session (question
+  posée à Benoit). Voir [`app-installation.md`](../dev/app-installation.md).
+- **Hack Store 5, l'app** (ADR 0212, issue `TODO` #249, série `todo/base`,
+  branche `todo/5-hackstore-app`) : app système `org.hackeros.store`
+  (`HackerOs.Apps.Store`), source `catalog:<nom>/<appId>@<version>`,
+  `hackpkg install <appId>`, `AppUpdateMonitor` et notification, épinglage par
+  défaut (`defaultPinsApplied` de `start-menu.json`). Réponses de Benoit
+  (2026-10-31) : Q1 A redémarrage sans administrateur, Q2 A source
+  `catalog:official/<appId>`, Q3 C notification seulement (pas de badge),
+  Q4 B appId listé par plusieurs catalogues refusé (`apps.package.ambiguous`) ;
+  Q3 et Q4 dans l'ADR 0215 (branche `todo/5b-hackstore-no-badge`). Voir
+  [`app-installation.md`](../dev/app-installation.md#le-hack-store-et-les-catalogues).
+- **Hack Store v2, packs de thèmes** (ADR 0213, issue `TODO` #253, série
+  `todo/base`, branche `todo/18-theme-packs`) : format `.hacktheme`
+  (`ThemePack.Read`), `kind: "theme-pack"` dans `catalog.json`, pack déballé
+  tel quel dans `theme-packs/<id>/` et lu en place par les thèmes, fonds,
+  icônes, sons et curseurs, onglet Thèmes du Store. Quatre questions posées à
+  Benoit (fichiers lus en place, CI du catalogue, rien appliqué après
+  l'installation, pas de badge), réponses A pour les quatre (2026-10-31). CI du catalogue :
+  issue `TODO` AppMarketPlace #4.
+- **Hack Store, étapes suivantes** (ADR 0214, issue `TODO` #251, série
+  `todo/base`, branche `todo/19-hackstore-later`) : ajout sans redémarrage
+  (catalogue vivant `AppCatalog.Changed`), signatures ECDSA P-256
+  (`[signing-keys]`, `HackerOsAppSigningKeys`), journal `.transaction`,
+  `hackpkg rollback`/`repair`, `AppDataGuard`. Cinq questions posées à Benoit,
+  réponse A à chacune. La clé du catalogue officiel reste à créer par Benoit
+  (`keygen`, secret `HACK_STORE_SIGNING_KEY`) ; outil pour les auteurs :
+  issue `TODO` #321.
+- **Bulles de notification** (ADR 0197, chantier 1 de #242, série
+  `todo/base`) : bulles des notifications et « Update ready » en
+  notification persistante avec « Redémarrer ». Voir
+  [`notification-toasts.md`](../dev/notification-toasts.md).
+- **Animations des fenêtres** (ADR 0198, chantier 3 de #242, branche
+  `todo/12-window-animations` vers `todo/base`) : ouvrir, fermer, minimiser vers
+  la barre de son écran, restaurer, agrandir, snap ; variables
+  `--hos-window-anim-*` ([`window-animations.md`](../dev/window-animations.md)).
+- **Sons du système** (ADR 0204, issue #256, série `todo/base`, branche
+  `todo/8-os-sounds`) : jeux de sons freedesktop.org dans `/usr/share/sounds`
+  (jeux intégrés `hackeros` et `soft` écrits par `FileSystemSeeder`) et
+  `~/.local/share/sounds`, `sound.config`, Paramètres ▸ Sons. Pas d'API SDK pour
+  jouer un son (question Q2 à Benoit). Voir [`system-sounds.md`](../dev/system-sounds.md).
+- **Aperçus de la barre des tâches** (ADR 0199, chantier 5 de l'issue #242,
+  série `todo/`, branche `todo/13-taskbar-previews` vers `todo/base`) : copie
+  réduite en direct d'une fenêtre au survol de son bouton, et peek. Numéro 0199
+  pris dans la réserve 0197 à 0205 de la série `todo/`.
+- **Vrais sites dans le navigateur** (ADR 0210, série `todo/base`, issue #266) :
+  le Navigateur est une app système avec `network.real.access` ; avec un
+  serveur connecté, il ouvre les vrais sites par le proxy, cookies compris.
+  Restent le proxy public et la Wayback Machine.
+- **Point des notifications non lues à côté de l'horloge** (ADR 0196, PR #294,
+  fusionnée sur `main` le 2026-10-31) : remplace la pastille du menu Démarrer des
+  nouveautés ; ramenée dans `todo/base` par la fusion de `main`.
 - **ADR** : 0001 à 0171 et 0173 à 0196 existent sur `main` (quelques numéros sautés ;
   0141 et 0172 n'ont pas servi). Repères récents : 0173 publication automatique,
   0174 annonce de nouvelle version, 0175 « Nouveau dossier » des dialogues, 0176
@@ -69,8 +149,10 @@ jour à la fin de chaque série ou quand une convention change.
   invité et crédits, 0188 à 0190 Hack Store ([`hackeros-store.md`](../dev/plans/hackeros-store.md)),
   0191 serveur local installable, 0192 `features.md` et exception à l'ADR 0135,
   0193 heure locale, 0194 menus de la barre des tâches, 0195 bouton
-  Marche/arrêt du menu Démarrer, 0196 point des notifications non lues.
-  **Prochain numéro libre : 0197.** Avant d'en
+  Marche/arrêt du menu Démarrer, 0196 point des notifications non lues ; série `todo/base` : 0197 bulles de
+  notification, 0201 « Changer d'utilisateur » reste grisé, 0203 packs d'icônes, 0207 modèle `hackeros-solution`, 0208 sources de confiance du Hack Store, 0212 app Hack Store, 0213 packs de thèmes, 0214 Hack Store sans redémarrage, signature et transactions, 0215 réponses du Hack Store (pas de badge, appId ambigu refusé) (les
+  autres numéros jusqu'à 0211 sont réservés par ses chantiers). **Prochain numéro libre :
+  0216.** Avant d'en
   prendre un, vérifier `dev/adr/` sur `main` et les PR ouvertes.
 
 ## Conventions de travail
@@ -103,8 +185,8 @@ section **IV** de [`AGENTS.md`](../../../../AGENTS.md), que Claude Code lit par
   `build/publish-trimmed.sh` et la compatibilité du SDK
   (`Tests/fixtures/sdk-compat`) quand ils sont concernés. Les GitHub Actions
   tournent de nouveau depuis le 2026-10-24 et vérifient chaque PR vers `main`
-  et `*/base` (tests en échec relancés une fois, Playwright dans un workflow
-  manuel) : [`../dev/ci-workflows.md`](../dev/ci-workflows.md).
+  et `*/base` (tests en échec relancés une fois ; Playwright chaque nuit sur `main`
+  si `main` a changé, un échec ouvre une issue) : [`../dev/ci-workflows.md`](../dev/ci-workflows.md).
 - **SDK** : l'API publique est suivie par `PublicAPI.Shipped.txt` /
   `PublicAPI.Unshipped.txt` ; un ajout passe par `Unshipped` jusqu'à la
   publication suivante (`build/tools/ship-public-api.sh`).
@@ -117,7 +199,7 @@ section **IV** de [`AGENTS.md`](../../../../AGENTS.md), que Claude Code lit par
 
 | Note | Contenu |
 | --- | --- |
-| [`decisions-not-built.md`](decisions-not-built.md) | Décisions prises par Benoit en discussion et pas encore codées ni écrites ailleurs : fenêtres et barre des tâches (chantiers restants de #242), vrais sites dans le navigateur (#266), apps tierces portées, apps hébergées par le serveur, idées tirées de daedalOS, éditeurs. |
+| [`decisions-not-built.md`](decisions-not-built.md) | Décisions prises par Benoit en discussion et pas encore codées ni écrites ailleurs : fenêtres et barre des tâches (chantiers restants de #242), vrais sites dans le navigateur (#266 : proxy public et Wayback restants), apps tierces portées, apps hébergées par le serveur, idées tirées de daedalOS, éditeurs. |
 | [`known-test-failures.md`](known-test-failures.md) | Échecs de tests préexistants connus (à nommer dans une PR, pas à cacher) et astuces d'environnement récentes. |
 
 ## Environnement et pièges

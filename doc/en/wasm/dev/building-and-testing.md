@@ -271,7 +271,7 @@ build/publish-trimmed.sh --skip-build
 
 The script fails on any `IL…` warning, serves the publication on `127.0.0.1`
 and on `127.0.0.2` (for the service worker) and runs
-`Tests/HackerOs.TrimmedPublish.E2E.Tests` (four tests, about 3 min). It is a
+`Tests/HackerOs.TrimmedPublish.E2E.Tests` (six tests, about 4 min, including a test package installed by `hackpkg`, ADR 0206). It is a
 local merge gate since `v3/14`. Without `HACKEROS_TRIMMED_URL`, the suite is
 ignored by `dotnet test HackerOs.sln`.
 
@@ -319,8 +319,9 @@ once and reports as flaky a test that passes on retry; without this
 parameter, the script stays strict.
 
 In GitHub Actions, the Playwright suites are launched only through
-**Verify HackerOS browser tests (manual)** (`verify-browser-tests.yml`,
-`workflow_dispatch`). They do not belong to the Pages deployment.
+**Verify HackerOS browser tests** (`verify-browser-tests.yml`): every night
+on `main` when `main` changed, or by hand (`workflow_dispatch`); see
+[`ci-workflows.md`](ci-workflows.md#browser-tests-every-night). They do not belong to the Pages deployment.
 The conditional scenarios for already-launched hosts or for the trimmed
 publication keep their enabling variables documented below.
 
@@ -463,7 +464,7 @@ dotnet test Tests/HackerOs.UI.E2E.Tests -c Release --no-build --filter "FullyQua
 - **GitHub Actions**: with no runner from August to 23 October 2026, the
   workflows have been running again since 2026-10-24 and have verified every PR
   to `main` and `*/base` since 2026-10-25 ([`ci-workflows.md`](ci-workflows.md);
-  Playwright in the manual workflow `verify-browser-tests.yml`). A green local
+  Playwright every night on `main` in `verify-browser-tests.yml`). A green local
   build and tests are still required before merging.
 - In a cloud container, the Playwright suites run on the Chromium of
   `/opt/pw-browsers` ([fallback](#chromium-for-playwright)). State on

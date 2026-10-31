@@ -290,7 +290,8 @@ l'app est traduit par `Resources/AppManifest.fr.resx`.
 ## Série `explorer/base` (ADR 0185)
 
 Améliorations décidées dans l'[ADR 0185](adr/0185-file-explorer-improvements.md) (issue #241). Les points
-« archive ouverte comme un dossier » (§6 à §9) ne font pas partie de cette série.
+« archive ouverte comme un dossier » (§6 à §9) ne font pas partie de cette série : ils sont faits
+ensuite, voir la section suivante.
 
 - [x] `explorer/1-empty-state` (§2) : le message de dossier vide est dans la liste du contrôle partagé
   (`FileView.EmptyText`) : une ligne sous les en-têtes en mode Détails, centré en mode Icônes. Une
@@ -378,3 +379,59 @@ Améliorations décidées dans l'[ADR 0185](adr/0185-file-explorer-improvements.
   boîte de message du SDK de type Erreur (`MessageBoxIcon.Error`, bouton OK, titre « Explorateur de
   fichiers ») ; la même erreur signalée deux fois n'ouvre qu'une boîte. Tout passe par `ReportError`
   de `FileExplorerWindow.razor`.
+
+## Archive `.zip` ouverte comme un dossier (ADR 0185 §6 à §9)
+
+Chantier `todo/10-zip-as-folder` de la série `todo/base` (issue #241).
+
+**But.** Un double-clic sur un `.zip` dans une fenêtre de l'explorateur l'ouvre comme un dossier en
+lecture seule. Le fil d'Ariane et la barre d'adresse montrent `Documents › photos.zip › 2024`
+(chemin `/home/u/Documents/photos.zip/2024`). Un double-clic sur un `.zip` du bureau lance
+l'explorateur sur l'archive (le manifeste déclare `application/zip`, `.zip` dans ses `fileHandlers`).
+
+**Architecture.**
+
+- `Archives/ZipArchiveIndex.cs` : la table des matières d'un `.zip`, lue une fois depuis ses octets
+  (`System.IO.Compression`). Les dossiers que le zip sous-entend (`a/b/c.txt` sans entrée `a/`) sont
+  ajoutés. Les noms sont nettoyés comme à l'extraction ; une entrée qui remonte (`..`, « zip slip ») ou
+  dont le nom n'est pas un chemin HackerOS valide est ignorée.
+- `Archives/ZipArchiveBrowser.cs` : trouve l'archive d'un chemin (le premier segment `*.zip` qui est un
+  fichier ; un dossier nommé `x.zip` reste un dossier ; un chemin sans segment `.zip` ne coûte aucune
+  lecture), garde en cache les 4 dernières archives tant que leur révision ne change pas, et extrait
+  une entrée (fichier ou dossier entier) vers un chemin du système de fichiers.
+- `Archives/ZipArchiveFileSystemGateway.cs` : le système de fichiers vu par la vue de l'explorateur.
+  Un chemin qui ne passe pas par une archive va tel quel à la passerelle de l'explorateur, avec ses
+  droits. Dans une archive : `EnumerateAsync`, `StatAsync`, `ReadAsync` et `MeasureAsync` lisent
+  l'archive (fichiers `r--r--r--`, dossiers `r-xr-xr-x`, propriétaire et révision de l'archive,
+  identifiants stables) ; toute écriture est refusée avec `ProtectedEntry`. L'archive elle-même reste
+  un fichier pour `StatAsync`. `ZipArchiveWatchGateway` surveille un dossier d'archive par le dossier
+  qui contient le `.zip` : la liste est relue quand l'archive change.
+- `ExplorerFileView.Archives.cs` : seules les fenêtres de l'explorateur (bureau et mobile) activent
+  ces règles, par la valeur en cascade `ExplorerFileView.ArchiveBrowsingName`. Le même contrôle montré
+  par une autre app, un dialogue de fichiers ou le bureau ne voit jamais l'intérieur d'une archive
+  (§7) : rien n'est monté, le terminal et les autres apps ne voient que le fichier `.zip`.
+
+**Comportement.**
+
+- Ouvrir un fichier de l'archive (double-clic, Ouvrir, Ouvrir avec) l'extrait d'abord dans un nouveau
+  dossier `/tmp/<archive>-<8 caractères>/` (droits `700`), puis l'ouvre avec son app. Une
+  modification de cette copie ne revient pas dans l'archive. Un `.zip` dans l'archive s'ouvre comme
+  dossier depuis sa copie.
+- Glisser ou coller (après Copier) des éléments de l'archive vers un dossier les extrait, avec le
+  dialogue de conflit habituel (Remplacer, Garder les deux, Ignorer). Même un déplacement ne retire
+  rien de l'archive. Le glisser hors du navigateur et Télécharger lisent aussi l'archive.
+- Refusé avec le message « Cette archive est en lecture seule : extrayez-la pour modifier son
+  contenu. » : renommer, supprimer, couper, coller ou déposer dans l'archive, nouveau dossier, nouveau
+  fichier, téléverser, compresser, extraire, envoyer à la corbeille. Les entrées Renommer, Supprimer,
+  Couper, Coller, Nouveau dossier et Propriétés sont cachées du menu dans une archive ; le menu de
+  l'explorateur n'y garde que Télécharger et Copier le chemin.
+- Une archive illisible donne « « x.zip » n'est pas une archive .zip lisible. ».
+- `.zip` seulement (§8).
+
+**Tâches.**
+
+- [x] Index du `.zip`, lecteur d'archives avec cache, passerelle en lecture seule et surveillance.
+- [x] Fenêtres de l'explorateur : double-clic, ouverture par `/tmp`, glisser et coller hors de
+  l'archive, refus des changements, menus.
+- [x] `fileHandlers` du manifeste pour `.zip`.
+- [x] Tests : `ZipArchiveBrowsingTests` (unitaires), `ZipArchiveFolderTests` (UI.E2E).

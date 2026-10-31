@@ -24,6 +24,24 @@ public static class AppearanceSettingsDocuments
     /// <summary>Key of the animations switch.</summary>
     public const string AnimationsKey = "animationsEnabled";
 
+    /// <summary>Key of the wallpaper of screen 1, also used by every screen without its own (ADR 0202 §1).</summary>
+    public const string WallpaperKey = "wallpaper";
+
+    /// <summary>Key of how the wallpaper covers the screens (ADR 0202 §3).</summary>
+    public const string WallpaperFitKey = "wallpaperFit";
+
+    /// <summary>Highest screen number that can have its own wallpaper, as in <c>screens.config</c> (ADR 0180).</summary>
+    public const int MaxWallpaperScreen = 9;
+
+    /// <summary>Gets the key of the wallpaper of a secondary screen: <c>wallpaperScreen2</c> to <c>wallpaperScreen9</c>.</summary>
+    /// <param name="number">Screen number, 2 to <see cref="MaxWallpaperScreen"/>.</param>
+    public static string WallpaperScreenKey(int number)
+    {
+        ArgumentOutOfRangeException.ThrowIfLessThan(number, 2);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(number, MaxWallpaperScreen);
+        return string.Create(System.Globalization.CultureInfo.InvariantCulture, $"wallpaperScreen{number}");
+    }
+
     /// <summary>Gets the declared schema; theme ids are open (built-in or user themes, ADR 0103), accent ids a closed set from <see cref="ThemeCatalog"/>.</summary>
     public static SettingsSchema Schema { get; } = new(
         schemaVersion: 2,
@@ -53,7 +71,26 @@ public static class AppearanceSettingsDocuments
                 AnimationsKey,
                 SettingValueType.Boolean,
                 ThemePreferences.Default.AnimationsEnabled ? "true" : "false",
-                SettingSensitivity.Public)
+                SettingSensitivity.Public),
+
+            // ADR 0202: empty means the theme's own background; otherwise builtin:<id> or the absolute
+            // path of a PNG, JPEG or WebP file. The shell checks the file itself when it loads it.
+            new SettingFieldDeclaration(
+                WallpaperKey,
+                SettingValueType.String,
+                string.Empty,
+                SettingSensitivity.Public),
+            new SettingFieldDeclaration(
+                WallpaperFitKey,
+                SettingValueType.Enum,
+                WallpaperCatalog.FormatFit(WallpaperFit.Fill),
+                SettingSensitivity.Public,
+                [.. WallpaperCatalog.FitValues]),
+            .. Enumerable.Range(2, MaxWallpaperScreen - 1).Select(static number => new SettingFieldDeclaration(
+                WallpaperScreenKey(number),
+                SettingValueType.String,
+                string.Empty,
+                SettingSensitivity.Public))
         ]);
 
     /// <summary>Gets the layered document.</summary>
