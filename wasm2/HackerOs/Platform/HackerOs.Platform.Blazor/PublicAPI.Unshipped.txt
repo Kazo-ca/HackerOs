@@ -140,6 +140,11 @@ HackerOs.Platform.Blazor.Shell.DesktopShell.OnRestart.get -> Microsoft.AspNetCor
 HackerOs.Platform.Blazor.Shell.DesktopShell.OnRestart.set -> void
 HackerOs.Platform.Blazor.Shell.LogoutDialog.Restart.get -> bool
 HackerOs.Platform.Blazor.Shell.LogoutDialog.Restart.set -> void
+HackerOs.Platform.Blazor.Shell.DesktopWallpaper
+HackerOs.Platform.Blazor.Shell.DesktopWallpaper.DesktopWallpaper() -> void
+HackerOs.Platform.Blazor.Shell.DesktopWallpaper.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Platform.Blazor.Shell.DesktopWallpaper.ScreenNumber.get -> int
+HackerOs.Platform.Blazor.Shell.DesktopWallpaper.ScreenNumber.set -> void
 HackerOs.Platform.Blazor.Shell.NotificationToastPlacement
 HackerOs.Platform.Blazor.Shell.NotificationToastPlacement.AboveTaskbar = 0 -> HackerOs.Platform.Blazor.Shell.NotificationToastPlacement
 HackerOs.Platform.Blazor.Shell.NotificationToastPlacement.TopOfScreen = 1 -> HackerOs.Platform.Blazor.Shell.NotificationToastPlacement

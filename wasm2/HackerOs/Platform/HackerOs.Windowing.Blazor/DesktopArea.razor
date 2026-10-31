@@ -6,6 +6,8 @@
 
 <main @ref="_desktopElement" class="desktop-area" aria-label="@L["Desktop.Workspace"]">
     <div class="desktop-grid" aria-hidden="true"></div>
+    @* ADR 0202 §4: the wallpaper image covers the theme's background and grid, under everything else. *@
+    @WallpaperContent
     @if (BackgroundContent is not null && BackgroundInteractive)
     {
         @* ADR 0160 §1: the desktop icons are reachable, by the pointer and by assistive technologies. *@
@@ -94,6 +96,14 @@
     /// </summary>
     [Parameter]
     public bool BackgroundInteractive { get; set; }
+
+    /// <summary>
+    /// Gets or sets the wallpaper of this screen (ADR 0202 §4), drawn over the theme's background
+    /// and grid and under <see cref="BackgroundContent"/> and the windows. It must take no pointer
+    /// and be hidden from assistive technologies. <see langword="null"/> keeps the theme's background.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? WallpaperContent { get; set; }
 
     /// <summary>
     /// Gets or sets content layered over one window's content area, such as the platform's

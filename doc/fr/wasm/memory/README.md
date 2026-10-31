@@ -74,6 +74,8 @@ jour à la fin de chaque série ou quand une convention change.
   [`app-repository.md`](../framework/app-repository.md), issue #246). Le
   dépôt `HackerOs-AppTemplate` ne sera régénéré qu'avec un sous-module sur la
   release qui contient ce modèle (PR en brouillon dans ce dépôt).
+  Fonds d'écran en image faits aussi ([ADR 0202](../dev/adr/0202-desktop-wallpaper-images.md),
+  issue #254, [`wallpapers.md`](../dev/wallpapers.md)).
   L'ADR 0206 est prise par l'issue #247 (`wwwroot/` des apps installées servi
   par le service worker, [ADR 0206](../dev/adr/0206-serve-installed-app-assets.md)).
 - **Packs d'icônes** (ADR 0203, issue `TODO` #255, série `todo/base`) : packs

@@ -226,6 +226,10 @@ This section lists what is released in the `main` branch and online.
 
 - **OS themes**, and an editor to create your own.
   ([`theme-files.md`](framework/theme-files.md))
+- **Image wallpapers**: a PNG, JPEG or WebP image (4 shipped with the OS,
+  your own or those of a shared folder), for every screen or one screen at a
+  time, in Settings ▸ Appearance.
+  ([ADR 0202](dev/adr/0202-desktop-wallpaper-images.md), [`wallpapers.md`](dev/wallpapers.md))
 - **English and French**, the language follows the user's locale.
   ([`localization.md`](framework/localization.md))
 - **Accessibility**: display and animation preferences, keyboard navigation.
@@ -300,7 +304,7 @@ points to its PR.
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Theme packs | `.hacktheme` format and the Hack Store Themes tab. | [0190](dev/adr/0190-theme-packs.md) | [#253](https://github.com/Kazo-ca/HackerOs/issues/253) |
-| Image wallpapers | Choose an image as wallpaper, per screen. | [0190](dev/adr/0190-theme-packs.md) | [#254](https://github.com/Kazo-ca/HackerOs/issues/254) |
+| Mobile wallpaper and "Set as wallpaper" menu | The background image on the mobile home screen, and an entry of the images' context menu. Desktop wallpapers are available. | [0202](dev/adr/0202-desktop-wallpaper-images.md) | [#297](https://github.com/Kazo-ca/HackerOs/issues/297), [#298](https://github.com/Kazo-ca/HackerOs/issues/298) |
 
 ### Network and server
 

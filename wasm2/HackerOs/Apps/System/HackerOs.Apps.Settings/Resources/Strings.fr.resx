@@ -1617,6 +1617,84 @@
   <data name="Users.Guest.Unavailable" xml:space="preserve">
     <value>Le formulaire de compte n'a pas pu s'ouvrir. Fermez la session, puis choisissez Créer mon compte sur l'écran de connexion.</value>
   </data>
+  <data name="Wallpaper.Title" xml:space="preserve">
+    <value>Fond d'écran</value>
+  </data>
+  <data name="Wallpaper.Description" xml:space="preserve">
+    <value>Une image PNG, JPEG ou WebP par-dessus le fond du thème. Les images déposées dans {0} sont proposées à tous les utilisateurs, celles de {1} à vous seul ; « Parcourir… » choisit toute image que vous pouvez ouvrir.</value>
+  </data>
+  <data name="Wallpaper.Screens.AriaLabel" xml:space="preserve">
+    <value>Écran</value>
+  </data>
+  <data name="Wallpaper.Screens.Primary" xml:space="preserve">
+    <value>Écran 1 et les autres</value>
+  </data>
+  <data name="Wallpaper.Screens.Other" xml:space="preserve">
+    <value>Écran {0}</value>
+  </data>
+  <data name="Wallpaper.Theme" xml:space="preserve">
+    <value>Fond du thème</value>
+  </data>
+  <data name="Wallpaper.SameAsPrimary" xml:space="preserve">
+    <value>Comme l'écran 1</value>
+  </data>
+  <data name="Wallpaper.BuiltIn.hacker-grid" xml:space="preserve">
+    <value>Grille</value>
+  </data>
+  <data name="Wallpaper.BuiltIn.circuit" xml:space="preserve">
+    <value>Circuit</value>
+  </data>
+  <data name="Wallpaper.BuiltIn.aurora" xml:space="preserve">
+    <value>Aurore</value>
+  </data>
+  <data name="Wallpaper.BuiltIn.nebula" xml:space="preserve">
+    <value>Nébuleuse</value>
+  </data>
+  <data name="Wallpaper.Origin.system" xml:space="preserve">
+    <value>système</value>
+  </data>
+  <data name="Wallpaper.Origin.user" xml:space="preserve">
+    <value>à moi</value>
+  </data>
+  <data name="Wallpaper.Origin.pack" xml:space="preserve">
+    <value>pack</value>
+  </data>
+  <data name="Wallpaper.Origin.file" xml:space="preserve">
+    <value>fichier</value>
+  </data>
+  <data name="Wallpaper.Browse" xml:space="preserve">
+    <value>Parcourir…</value>
+  </data>
+  <data name="Wallpaper.Browse.Title" xml:space="preserve">
+    <value>Choisir un fond d'écran</value>
+  </data>
+  <data name="Wallpaper.Browse.Filter" xml:space="preserve">
+    <value>Images (PNG, JPEG, WebP)</value>
+  </data>
+  <data name="Wallpaper.Fit.Label" xml:space="preserve">
+    <value>Ajustement</value>
+  </data>
+  <data name="Wallpaper.Fit.fill" xml:space="preserve">
+    <value>Remplir</value>
+  </data>
+  <data name="Wallpaper.Fit.fit" xml:space="preserve">
+    <value>Ajuster</value>
+  </data>
+  <data name="Wallpaper.Fit.stretch" xml:space="preserve">
+    <value>Étirer</value>
+  </data>
+  <data name="Wallpaper.Fit.center" xml:space="preserve">
+    <value>Centrer</value>
+  </data>
+  <data name="Wallpaper.Fit.tile" xml:space="preserve">
+    <value>Mosaïque</value>
+  </data>
+  <data name="Wallpaper.Error.Format" xml:space="preserve">
+    <value>{0} n'est pas une image PNG, JPEG ou WebP.</value>
+  </data>
+  <data name="Wallpaper.Saved" xml:space="preserve">
+    <value>Fond d'écran enregistré.</value>
+  </data>
   <data name="LocalServer.AriaLabel" xml:space="preserve">
     <value>Serveur local</value>
   </data>
