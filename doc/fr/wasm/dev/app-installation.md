@@ -311,12 +311,14 @@ validation en deux étapes :
   app non système.
 - **Publication** : `dotnet build -c Release -t:HackerOsPack` dans le projet de
   l'app écrit le paquet et `index.json` dans `bin/hackeros-packages` (propriété
-  `HackerOsPackageOutput`), à pousser sur la branche `hackeros-packages`. Le
+  `HackerOsPackageOutput`), à pousser sur la branche `hackeros-packages` ; le
+  workflow `publish-packages.yml` du modèle `hackeros-solution` le fait sur un
+  tag `v*` ([ADR 0219](adr/0219-app-authors-signing-tool.md)). Le
   paquet contient toutes les ressources statiques du projet, déclarées ou non :
   le `wwwroot/`, le JavaScript collocalisé (`.razor.js`) et le bundle du CSS
   isolé (`<assemblage>.bundle.scp.css`) ; celles que l'app ne déclare pas sont
   ajoutées, avec leur SHA-256, au manifeste **du paquet** seulement
-  ([ADR 0216](adr/0216-pack-all-static-web-assets-of-an-app.md)).
+  ([ADR 0220](adr/0220-pack-all-static-web-assets-of-an-app.md)).
 - **Ressources `wwwroot/`** ([ADR 0206](adr/0206-serve-installed-app-assets.md)) :
   au premier lancement de l'app dans la session, chaque ressource déclarée est
   lue par `AppAssetStore` (empreinte vérifiée) et copiée dans le cache
@@ -326,7 +328,7 @@ validation en deux étapes :
   `localhost`, l'OS enregistre `service-worker.js?mode=installed-apps`, qui ne
   sert que ces fichiers. Sans service worker, les fichiers ne sont pas servis
   (ligne dans `/var/log/syslog`).
-- **CSS isolé** ([ADR 0216](adr/0216-pack-all-static-web-assets-of-an-app.md)) :
+- **CSS isolé** ([ADR 0220](adr/0220-pack-all-static-web-assets-of-an-app.md)) :
   une fois `<assemblage>.bundle.scp.css` copié dans le cache, l'OS ajoute un
   `<link rel="stylesheet">` vers lui à la page, une fois par session, comme la
   feuille `styles.css` de l'hôte le fait pour une app compilée.
@@ -414,6 +416,25 @@ termine le Hack Store.
   signé (`apps.package.bad-signature`). La vérification passe par Web Crypto
   dans le navigateur (`BrowserAppPackageSignatureVerifier`, `webAuthn.js`
   `verify`), par `ECDsa` ailleurs.
+- **Signature par l'auteur d'une app** ([ADR 0219](adr/0219-app-authors-signing-tool.md),
+  issue #321) : `dotnet build -t:HackerOsKeyGen -p:HackerOsSigningKeyFile=<fichier.pem>`
+  crée la paire (clé privée dans un nouveau fichier, clé publique affichée,
+  `HOSAPP0061` sans la propriété) ; `HackerOsPack` signe chaque paquet avec la
+  variable `HACKEROS_APP_SIGNING_KEY` (secret du dépôt de l'app) ou
+  `HackerOsSigningKeyFile`, et vérifie la signature avant de l'écrire. Sans clé,
+  le paquet est publié non signé avec l'avertissement `HOSAPP0063`.
+  `index.json` garde les signatures des versions déjà publiées. Commandes du
+  générateur : `keygen --private-key <fichier.pem>`, `sign --package <fichier.hackapp>`.
+  Pour exiger la signature d'un auteur, un administrateur ajoute sa clé
+  publique avec `sudo nano /etc/hackeros/app-sources.config` :
+
+  ```text
+  [signing-keys]
+  github.com/contoso=MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE…
+  ```
+
+  `github.com/<owner>` couvre tous ses dépôts, `github.com/<owner>/<repo>` un
+  seul ; deux clés séparées par une virgule pendant un changement de clé.
 - **Transactions** : journal `<racine>/<appId>/.transaction`, fichiers écrits
   dans `<version>.partial/` puis renommés, ligne `[installed]` comme point de
   validation, ménage après. `hackpkg repair [--system]` finit ou annule ce

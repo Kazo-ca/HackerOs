@@ -107,7 +107,7 @@ viewers live, scope of `?app=`, Eruda or not.
 
 ## Next version: 2.2.1 (decision of 2026-10-31)
 
-- The version that brings [ADR 0216](../dev/adr/0216-pack-all-static-web-assets-of-an-app.md)
+- The version that brings [ADR 0220](../dev/adr/0220-pack-all-static-web-assets-of-an-app.md)
   (PR #336: every static resource of an app in its package, an installed app's
   scoped CSS) is called **2.2.1**, Benoit's choice, although the public API
   grows. Third-party apps wait for this version for their first Hack Store

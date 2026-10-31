@@ -13,6 +13,6 @@
     "fr": "Une app installée depuis le Hack Store ou avec hackpkg charge maintenant ses propres styles et scripts, et a la même apparence qu'une app livrée avec HackerOS."
   },
   "links": [
-    "doc/en/wasm/dev/adr/0216-pack-all-static-web-assets-of-an-app.md"
+    "doc/en/wasm/dev/adr/0220-pack-all-static-web-assets-of-an-app.md"
   ]
 }

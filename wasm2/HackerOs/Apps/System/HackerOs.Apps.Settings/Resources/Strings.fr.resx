@@ -1632,6 +1632,15 @@
   <data name="Wallpaper.Screens.Other" xml:space="preserve">
     <value>Écran {0}</value>
   </data>
+  <data name="Wallpaper.Screens.Mobile" xml:space="preserve">
+    <value>Mobile</value>
+  </data>
+  <data name="Wallpaper.Screens.Desktop" xml:space="preserve">
+    <value>Bureau</value>
+  </data>
+  <data name="Wallpaper.MobileTheme" xml:space="preserve">
+    <value>Fond du thème mobile</value>
+  </data>
   <data name="Wallpaper.Theme" xml:space="preserve">
     <value>Fond du thème</value>
   </data>
@@ -1979,5 +1988,53 @@
   </data>
   <data name="Policy.Block" xml:space="preserve">
     <value>Bloquer</value>
+  </data>
+  <data name="Tab.Notifications" xml:space="preserve">
+    <value>Notifications</value>
+  </data>
+  <data name="Notifications.Dnd.Title" xml:space="preserve">
+    <value>Ne pas déranger</value>
+  </data>
+  <data name="Notifications.Dnd.Description" xml:space="preserve">
+    <value>Quand il est activé, les nouvelles notifications ne font ni bulle ni son, erreurs comprises. Elles vont quand même dans le panneau de l'horloge, et le point de l'horloge les signale toujours. Une lune dans la zone de notification indique que le mode est activé.</value>
+  </data>
+  <data name="Notifications.Dnd.Enabled" xml:space="preserve">
+    <value>Ne pas déranger</value>
+  </data>
+  <data name="Notifications.Dnd.File" xml:space="preserve">
+    <value>Enregistré pour vous dans {0} ; le panneau de l'horloge a le même interrupteur.</value>
+  </data>
+  <data name="Notifications.Saved.On" xml:space="preserve">
+    <value>Ne pas déranger est activé.</value>
+  </data>
+  <data name="Notifications.Saved.Off" xml:space="preserve">
+    <value>Ne pas déranger est désactivé.</value>
+  </data>
+  <data name="Notifications.Error.CannotRead" xml:space="preserve">
+    <value>Impossible de lire {0} : {1}</value>
+  </data>
+  <data name="Notifications.Error.CannotSave" xml:space="preserve">
+    <value>Impossible d'enregistrer {0} : {1}</value>
+  </data>
+  <data name="SetWallpaper.Done.Title" xml:space="preserve">
+    <value>Fond d'écran changé</value>
+  </data>
+  <data name="SetWallpaper.Done.Message" xml:space="preserve">
+    <value>{0} est maintenant le fond d'écran.</value>
+  </data>
+  <data name="SetWallpaper.Done.MessageScreen" xml:space="preserve">
+    <value>{0} est maintenant le fond d'écran de l'écran {1}.</value>
+  </data>
+  <data name="SetWallpaper.Error.Title" xml:space="preserve">
+    <value>Fond d'écran non changé</value>
+  </data>
+  <data name="SetWallpaper.Error.NotImage" xml:space="preserve">
+    <value>{0} n'est pas une image PNG, JPEG ou WebP de 16 Mo au plus.</value>
+  </data>
+  <data name="SetWallpaper.Error.Unreadable" xml:space="preserve">
+    <value>{0} ne peut pas être lu : {1}</value>
+  </data>
+  <data name="SetWallpaper.Error.NotSaved" xml:space="preserve">
+    <value>Le fond d'écran ne peut pas être enregistré : {0}</value>
   </data>
 </root>

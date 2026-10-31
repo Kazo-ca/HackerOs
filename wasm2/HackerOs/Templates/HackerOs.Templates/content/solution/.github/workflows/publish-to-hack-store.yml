@@ -5,7 +5,7 @@
 #   2. packs it (HackerOsPack, ADR 0182) and checks the manifest version equals the tag;
 #   3. makes the catalog folder apps/<appId>_<version>/ from store/ (icon, short descriptions,
 #      descriptions, screenshots, store.json + the tag's commit) and the package's manifest.json
-#      (the generated one plus every static web resource HackerOsPack added, ADR 0216), the one
+#      (the generated one plus every static web resource HackerOsPack added, ADR 0220), the one
 #      the catalog compares with the package its CI builds;
 #   4. leaves that folder as an artifact of the run; with the HACK_STORE_TOKEN secret (a token of
 #      the author allowed to fork and open pull requests), it also opens the pull request to

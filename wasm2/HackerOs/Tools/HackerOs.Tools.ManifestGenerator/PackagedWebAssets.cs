@@ -6,7 +6,7 @@ using HackerOs.App.Abstractions;
 namespace HackerOs.Tools.ManifestGenerator;
 
 /// <summary>
-/// The static web resources an app project ships (ADR 0216 §1): read from the build's
+/// The static web resources an app project ships (ADR 0220 §1): read from the build's
 /// <c>staticwebassets.build.json</c> and added to the <b>package's</b> manifest, so an installed app
 /// gets the same <c>_content/&lt;assembly&gt;/</c> files Blazor gives an app compiled into the OS.
 /// </summary>

@@ -13,6 +13,6 @@
     "fr": "Le paquet contient désormais tout le wwwroot/, les fichiers .razor.js collocalisés et le bundle du CSS isolé, déclarés dans le manifeste du paquet avec leur SHA-256 ; le workflow de publication du modèle hackeros-solution copie ce manifeste dans le dossier du catalogue."
   },
   "links": [
-    "doc/en/wasm/dev/adr/0216-pack-all-static-web-assets-of-an-app.md"
+    "doc/en/wasm/dev/adr/0220-pack-all-static-web-assets-of-an-app.md"
   ]
 }

@@ -96,10 +96,50 @@ public sealed class MsBuildIntegrationTests
         }
     }
 
+    [Fact]
+    public async Task HackerOsPack_signs_the_package_with_the_author_key_of_the_environment()
+    {
+        string output = Directory.CreateTempSubdirectory("hackeros-pack-").FullName;
+        (string privateKey, string publicKey) = PackageSigner.CreateKeyPair();
+        try
+        {
+            (int exitCode, string log) = await BuildFixtureAsync(
+                "SingleApp",
+                new Dictionary<string, string> { [PackageSigner.KeyVariable] = privateKey },
+                "-t:HackerOsPack",
+                $"-p:HackerOsPackageOutput={output}");
+
+            Assert.True(exitCode == 0, log);
+            Assert.DoesNotContain(GeneratorCodes.UnsignedPackage, log, StringComparison.Ordinal);
+            Assert.DoesNotContain("PRIVATE KEY", log, StringComparison.Ordinal);
+            Platform.Core.Apps.Packages.AppPackageIndex index = Platform.Core.Apps.Packages.AppPackageIndex.Parse(
+                await File.ReadAllBytesAsync(Path.Combine(output, "index.json")));
+            Platform.Core.Apps.Packages.AppPackageIndexEntry entry = Assert.Single(index.Versions);
+            byte[] package = await File.ReadAllBytesAsync(Path.Combine(output, entry.Path));
+            Assert.True(PackageSigner.Verify(package, entry.Signature!, publicKey));
+        }
+        finally
+        {
+            Directory.Delete(output, recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task HackerOsKeyGen_requires_the_key_file_property()
+    {
+        (int exitCode, string output) = await BuildFixtureAsync("SingleApp", null, "-t:HackerOsKeyGen");
+
+        Assert.NotEqual(0, exitCode);
+        Assert.Contains("error HOSAPP0061", output, StringComparison.Ordinal);
+    }
+
     private static string FixtureDirectory(string name) =>
         Path.Combine(FindSolutionDirectory(), "Tests", $"ManifestGenerator.Fixtures.{name}");
 
-    private static async Task<(int ExitCode, string Output)> BuildFixtureAsync(string name)
+    private static Task<(int ExitCode, string Output)> BuildFixtureAsync(string name) => BuildFixtureAsync(name, null);
+
+    private static async Task<(int ExitCode, string Output)> BuildFixtureAsync(
+        string name, IReadOnlyDictionary<string, string>? environment, params string[] arguments)
     {
         string solutionDirectory = FindSolutionDirectory();
         ProcessStartInfo startInfo = new("dotnet")
@@ -114,6 +154,17 @@ public sealed class MsBuildIntegrationTests
         startInfo.ArgumentList.Add(Path.Combine(FixtureDirectory(name), $"ManifestGenerator.Fixtures.{name}.csproj"));
         startInfo.ArgumentList.Add("--nologo");
         startInfo.ArgumentList.Add("-p:NuGetAudit=false");
+        foreach (string argument in arguments)
+        {
+            startInfo.ArgumentList.Add(argument);
+        }
+
+        // A key set on the machine running the tests must not sign the fixtures by accident.
+        startInfo.Environment.Remove(PackageSigner.KeyVariable);
+        foreach ((string variable, string value) in environment ?? new Dictionary<string, string>())
+        {
+            startInfo.Environment[variable] = value;
+        }
 
         using Process process = Process.Start(startInfo)
             ?? throw new InvalidOperationException($"Could not start the {name} fixture build.");

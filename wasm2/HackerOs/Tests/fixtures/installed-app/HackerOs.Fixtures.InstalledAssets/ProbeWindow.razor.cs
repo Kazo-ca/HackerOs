@@ -8,7 +8,7 @@ namespace HackerOs.Fixtures.InstalledAssets;
 /// Imports <c>probe.js</c> from the app's own <c>_content/</c> address, which starts a Web Worker
 /// that loads <c>engine.js</c> next to it; shows what the worker answered (ADR 0206). Also imports
 /// its collocated <c>ProbeWindow.razor.js</c>, which only <c>HackerOsPack</c> puts in the package
-/// (ADR 0216).
+/// (ADR 0220).
 /// </summary>
 public partial class ProbeWindow : WindowAppBase
 {

@@ -310,12 +310,14 @@ approval:
 - **Dangerous capabilities**: asked at first launch, as for any non-system app.
 - **Publishing**: `dotnet build -c Release -t:HackerOsPack` in the app project
   writes the package and `index.json` to `bin/hackeros-packages` (property
-  `HackerOsPackageOutput`), to push to the `hackeros-packages` branch. The
+  `HackerOsPackageOutput`), to push to the `hackeros-packages` branch; the
+  `publish-packages.yml` workflow of the `hackeros-solution` template does it on
+  a `v*` tag ([ADR 0219](adr/0219-app-authors-signing-tool.md)). The
   package holds every static resource of the project, declared or not: the
   `wwwroot/`, the collocated JavaScript (`.razor.js`) and the scoped CSS bundle
   (`<assembly>.bundle.scp.css`); those the app does not declare are added, with
   their SHA-256, to the **package's** manifest only
-  ([ADR 0216](adr/0216-pack-all-static-web-assets-of-an-app.md)).
+  ([ADR 0220](adr/0220-pack-all-static-web-assets-of-an-app.md)).
 - **`wwwroot/` resources** ([ADR 0206](adr/0206-serve-installed-app-assets.md)):
   at the app's first launch in the session, each declared resource is read
   through `AppAssetStore` (hash checked) and copied into the
@@ -325,7 +327,7 @@ approval:
   `localhost`, the OS registers `service-worker.js?mode=installed-apps`, which
   serves only those files. Without a service worker, the files are not served
   (line in `/var/log/syslog`).
-- **Scoped CSS** ([ADR 0216](adr/0216-pack-all-static-web-assets-of-an-app.md)):
+- **Scoped CSS** ([ADR 0220](adr/0220-pack-all-static-web-assets-of-an-app.md)):
   once `<assembly>.bundle.scp.css` is copied into the cache, the OS adds a
   `<link rel="stylesheet">` to it to the page, once per session, as the host's
   `styles.css` sheet does for a compiled app.
@@ -412,6 +414,25 @@ completes the Hack Store.
   (`apps.package.bad-signature`). Verification goes through Web Crypto in the
   browser (`BrowserAppPackageSignatureVerifier`, `webAuthn.js` `verify`), through
   `ECDsa` elsewhere.
+- **Signing by an app's author** ([ADR 0219](adr/0219-app-authors-signing-tool.md),
+  issue #321): `dotnet build -t:HackerOsKeyGen -p:HackerOsSigningKeyFile=<file.pem>`
+  creates the pair (private key in a new file, public key printed, `HOSAPP0061`
+  without the property); `HackerOsPack` signs each package with the
+  `HACKEROS_APP_SIGNING_KEY` variable (secret of the app repository) or
+  `HackerOsSigningKeyFile`, and checks the signature before writing it. Without
+  a key, the package is published unsigned with warning `HOSAPP0063`.
+  `index.json` keeps the signatures of the versions already published. Generator
+  commands: `keygen --private-key <file.pem>`, `sign --package <file.hackapp>`.
+  To require an author's signature, an administrator adds their public key with
+  `sudo nano /etc/hackeros/app-sources.config`:
+
+  ```text
+  [signing-keys]
+  github.com/contoso=MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE…
+  ```
+
+  `github.com/<owner>` covers all their repositories, `github.com/<owner>/<repo>`
+  only one; two keys separated by a comma during a key change.
 - **Transactions**: `<root>/<appId>/.transaction` journal, files written to
   `<version>.partial/` then renamed, the `[installed]` line as commit point,
   clean-up afterwards. `hackpkg repair [--system]` finishes or undoes what an

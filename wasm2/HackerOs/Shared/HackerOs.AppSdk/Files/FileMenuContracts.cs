@@ -103,3 +103,20 @@ public enum MenuSelection
     /// <summary>The entry is hidden when several items are selected.</summary>
     Single
 }
+
+/// <summary>
+/// How many screens must be open for an entry an app registers in the file menus to appear
+/// (ADR 0218 §2). Entries are written at build time; the OS applies the filter each time it draws a
+/// menu, from the screens open at that moment.
+/// </summary>
+public enum MenuScreens
+{
+    /// <summary>The entry appears whatever the number of screens (default).</summary>
+    Any,
+
+    /// <summary>The entry appears only while screen 1 is the only open screen.</summary>
+    Single,
+
+    /// <summary>The entry appears only while two screens or more are open.</summary>
+    Multiple
+}

@@ -50,6 +50,7 @@ Deux façons, même résultat :
 | `store/` | `icon.png` (256×256), `short_description.{en,fr}.txt`, `description.{en,fr}.md`, `store.json`, `screenshots/` facultatif |
 | `.github/workflows/ci.yml` | CI : sous-module vérifié, build et tests en `Release` |
 | `.github/workflows/publish-to-hack-store.yml` | soumission au catalogue sur un tag `v*` |
+| `.github/workflows/publish-packages.yml` | paquet signé poussé sur la branche `hackeros-packages` sur un tag `v*` ([ADR 0219](../dev/adr/0219-app-authors-signing-tool.md)) |
 | `README.md`, `readme-fr.md` | ces étapes, pour le dépôt créé |
 
 ## La version de HackerOS
@@ -109,7 +110,7 @@ déclare déjà `HackerOsAppProject=true` ; ajoutez-la à l'hôte par
    (contenu de `store/`, `manifest.json` **du paquet**, `store.json` avec le
    commit du tag), laissé en artefact du workflow. Le manifeste du paquet est le
    manifeste généré plus toutes les ressources statiques que `HackerOsPack` y a
-   ajoutées ([ADR 0216](../dev/adr/0216-pack-all-static-web-assets-of-an-app.md)) :
+   ajoutées ([ADR 0220](../dev/adr/0220-pack-all-static-web-assets-of-an-app.md)) :
    c'est celui que le catalogue compare au paquet que sa CI construit.
 4. Avec le secret `HACK_STORE_TOKEN` (un jeton de l'auteur qui peut créer un
    fork et ouvrir une pull request), le workflow ouvre la pull request vers
@@ -118,6 +119,33 @@ déclare déjà `HackerOsAppProject=true` ; ajoutez-la à l'hôte par
 
 Le catalogue ne prend jamais de binaire : après relecture et fusion, sa CI
 compile l'app au commit indiqué (ADR 0188 §4 à §6).
+
+## Publier sur `hackeros-packages` et signer
+
+[ADR 0219](../dev/adr/0219-app-authors-signing-tool.md). Le même tag `v*` lance
+**Publish the HackerOS packages** (`publish-packages.yml`, seul workflow avec
+`contents: write`) : il récupère la branche `hackeros-packages` (orpheline la
+première fois), y fait le paquet (`HackerOsPack`, `HackerOsPackageOutput`), garde
+les versions déjà publiées et leurs signatures, puis pousse la branche.
+`hackpkg install <owner>/<repo>` installe alors l'app sans le Store.
+
+Pour signer :
+
+1. Une fois, hors du dépôt :
+   `dotnet build src/<Nom> -t:HackerOsKeyGen -p:HackerOsSigningKeyFile=$HOME/hackeros-signing-key.pem`.
+   La clé privée (PKCS#8, droits `0600`) va dans ce nouveau fichier, jamais
+   remplacé ; la clé publique et la ligne `github.com/<owner>=…` sont affichées.
+   `*.pem` est dans le `.gitignore` du modèle.
+2. Mettre le contenu du fichier dans le secret `HACKEROS_APP_SIGNING_KEY` du
+   dépôt, puis garder le fichier hors ligne.
+3. Publier la clé publique ; un administrateur l'ajoute à `[signing-keys]` de
+   `/etc/hackeros/app-sources.config`. Dès lors, un paquet non signé ou mal
+   signé de ce dépôt est refusé.
+
+Sans le secret, le paquet part non signé (SHA-256 seulement) avec un
+avertissement. En local : variable `HACKEROS_APP_SIGNING_KEY` ou
+`-p:HackerOsSigningKeyFile=<fichier.pem>` sur `HackerOsPack`. Il faut une
+version de HackerOS qui contient l'ADR 0219 (la suivante après 2.2.0).
 
 ## Le dépôt template GitHub
 
@@ -134,3 +162,4 @@ fonctionner qu'avec un sous-module sur une release qui contient ce modèle
 - [x] `ide.host.json` des modèles.
 - [x] Test des deux profils (`HackerOs.Templates.E2E.Tests`).
 - [ ] Dépôt template régénéré sur la release qui contient ce modèle.
+- [x] Workflow `publish-packages.yml` et signature des paquets (ADR 0219).

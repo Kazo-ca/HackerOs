@@ -251,6 +251,13 @@
                 </div>
                 break;
 
+                @* ADR 0216 §2: "Do not disturb" (~/.config/hackeros/notifications.config). *@
+            case "notifications":
+                <div class="settings-page">
+                    <NotificationsPanel />
+                </div>
+                break;
+
             case "file-associations":
                 <div class="settings-page">
                     <FileAssociationsPanel />

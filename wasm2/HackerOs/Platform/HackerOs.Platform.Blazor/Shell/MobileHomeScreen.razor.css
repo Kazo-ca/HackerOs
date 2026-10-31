@@ -26,7 +26,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--hos-focus-r
 .mobile-app-dock { --mobile-app-icon-size: min(12vw, 3rem); }
 .mobile-drawer-trigger { display: grid; place-items: center; width: 2.75rem; height: 3rem; flex: 0 0 auto; padding: 0; border: 0; background: transparent; }
 .mobile-gesture-hint { text-align: center; font-size: .64rem; margin: .55rem 0 0; opacity: .6; }
-.mobile-app-drawer { position: absolute; inset: calc(1.75rem + env(safe-area-inset-top)) 0 0; z-index: 10; display: flex; flex-direction: column; overflow: hidden; padding: 0 1rem 1rem; border-radius: 1.7rem 1.7rem 0 0; background: var(--hos-bg-base, #13232d); box-shadow: 0 -15px 50px #0005; animation: mobile-drawer-enter .18s ease-out; }
+.mobile-app-drawer { position: absolute; inset: calc(1.75rem + env(safe-area-inset-top)) 0 0; z-index: 10; display: flex; flex-direction: column; overflow: hidden; padding: 0 1rem 1rem; border-radius: 1.7rem 1.7rem 0 0; background: var(--hos-mobile-drawer-background, var(--hos-bg-base, #13232d)); backdrop-filter: var(--hos-mobile-drawer-backdrop-filter, none); box-shadow: 0 -15px 50px #0005; animation: mobile-drawer-enter .18s ease-out; }
 .mobile-drawer-handle { display: grid; place-items: center; min-height: 1.8rem; flex: 0 0 auto; touch-action: none; }
 .mobile-drawer-handle span { width: 2.5rem; height: .25rem; border-radius: 1rem; background: currentColor; opacity: .3; }
 .mobile-drawer-heading { flex: 0 0 auto; margin-bottom: .8rem; }

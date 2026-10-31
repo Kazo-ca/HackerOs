@@ -213,7 +213,10 @@ public sealed class FileContextMenuTests
         Assert.Empty(declared.Arguments);
         Assert.Equal(ExtractIntent, declared.Intent!.IntentId);
         Assert.Equal(FileContextMenuLauncher.ShellAppId, declared.Intent.SenderAppId);
-        Assert.Equal("""{"paths":["/a.zip","/b.zip"],"scope":"File"}""", declared.Intent.PayloadJson);
+        // ADR 0218 §3: the entry's name rides along, so one intent can serve several entries.
+        Assert.Equal("""{"paths":["/a.zip","/b.zip"],"scope":"File","entry":"extract"}""", declared.Intent.PayloadJson);
+        Assert.Equal("extract", HackerOs.AppSdk.Files.HackFileMenuIntent.ReadEntry(declared.Intent.PayloadJson));
+        Assert.Null(HackerOs.AppSdk.Files.HackFileMenuIntent.ReadEntry(FileContextMenuLauncher.PayloadOf(["/a.zip"], "File")));
 
         AppContextMenuEntryManifest undeclared = Extract with { Intent = "com.example.zipper.other.v1", Selection = "each" };
         IReadOnlyList<AppLaunchRequest> each = launcher.BuildLaunches(ZipperId, undeclared, "File", ["/a.zip", "/b.zip"], harness.Principal);

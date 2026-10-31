@@ -302,7 +302,16 @@ public sealed class ZipperApp : AppDefinition
 | `parent` | Sous-menu d'une entrée de la même app (3 niveaux au plus) | — |
 
 `X` est une constante de `HackFileMenuItems` (`open`, `copy`, `properties`…)
-ou le `name` d'une entrée de l'app. La méthode **n'enregistre que les appels** :
+ou le `name` d'une entrée de l'app.
+
+Une entrée peut dépendre des écrans ouverts
+([ADR 0218](../dev/adr/0218-set-as-wallpaper-file-menu.md) §2), posé après
+`Register` : `context.RestrictToScreens(name, MenuScreens.Single)` (un seul
+écran ouvert), `MenuScreens.Multiple` (deux ou plus) ou
+`context.RestrictToScreen(name, 3)` (seulement si l'écran 3 est ouvert). Le
+manifeste écrit `screens: "single" | "multiple"` ou `screen: 2..9`.
+
+La méthode **n'enregistre que les appels** :
 elle s'exécute au build, deux fois, et doit donner le même résultat. Le
 générateur écrit les entrées dans `manifest.json` (`contextMenus`) et signale
 une erreur par `HOSAPP0026` (règle, exception, titre anglais manquant),
@@ -314,7 +323,10 @@ qui ne déclare pas l'intent).
 La cible est lancée avec ses propres droits. Si elle déclare l'intent, elle le
 reçoit dans `AppContext.LaunchIntent` (ou `OnIntentReceivedAsync` pour une
 instance unique déjà ouverte), avec la charge utile
-`{"paths":["/home/alice/a.zip"],"scope":"File"}`, que `HackFileMenuIntent` lit :
+`{"paths":["/home/alice/a.zip"],"scope":"File","entry":"extract"}`, que
+`HackFileMenuIntent` lit (`ReadPaths`, `ReadScope`, et `ReadEntry` pour le nom
+de l'entrée choisie : une même intention peut servir plusieurs entrées,
+ADR 0218 §3) :
 
 ```csharp
 if (LaunchIntent is { IntentId: ZipperApp.ExtractIntent } intent)
@@ -342,7 +354,7 @@ affiché.
    (`HackFileMenuContext` : portée, éléments, dossier) sur le menu qu'il ouvre.
 3. Après `Opening`, `ContextMenuService` appelle `IFileMenuEntrySource`
    (`FileMenuEntries`, Platform Blazor) : filtres (`FileContextMenuMatcher` :
-   portée, types, sélection), apps installées pour l'utilisateur et cibles
+   portée, types, sélection, écrans ouverts lus par `FileMenuEntries.OpenScreens`), apps installées pour l'utilisateur et cibles
    valides (`FileContextMenuLauncher.IsAvailable`), entrées masquées par
    l'utilisateur, puis placement (`FileMenuEntryPlacement`). Les entrées ont
    l'id `app:<appId>/<name>`.

@@ -7,7 +7,7 @@ namespace HackerOs.Fixtures.InstalledAssets;
 /// once it is installed by <c>hackpkg</c>. The SHA-256 values are computed by the build.
 /// </summary>
 /// <remarks>
-/// ADR 0216: <c>engine/engine.js</c>, <c>ProbeWindow.razor.js</c> and the scoped CSS bundle are not
+/// ADR 0220: <c>engine/engine.js</c>, <c>ProbeWindow.razor.js</c> and the scoped CSS bundle are not
 /// declared here; <c>HackerOsPack</c> adds them to the package's manifest.
 /// </remarks>
 [AppManifest]

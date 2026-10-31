@@ -64,6 +64,19 @@ public sealed record AppContextMenuEntryManifest
 
     /// <summary>Gets the name of the entry of the same app whose submenu holds this one, or <see langword="null"/>.</summary>
     public string? Parent { get; init; }
+
+    /// <summary>
+    /// Gets how many screens must be open for the entry to appear (ADR 0218 §2):
+    /// <see cref="AppContextMenus.ScreensSingle"/> (only screen 1), <see cref="AppContextMenus.ScreensMultiple"/>
+    /// (two or more), or <see langword="null"/> (omitted) for any count. An OS older than ADR 0218 ignores it.
+    /// </summary>
+    public string? Screens { get; init; }
+
+    /// <summary>
+    /// Gets the number of the secondary screen (2 to <see cref="AppContextMenus.MaxScreenNumber"/>) that
+    /// must be open for the entry to appear (ADR 0218 §2), or <see langword="null"/> (omitted).
+    /// </summary>
+    public int? Screen { get; init; }
 }
 
 /// <summary>The title of a registered menu entry in one language.</summary>
@@ -115,6 +128,18 @@ public static class AppContextMenus
 
     /// <summary>The deepest submenu level of a menu, the entry itself being level 1 (ADR 0150 §2).</summary>
     public const int MaxDepth = 3;
+
+    /// <summary>An entry shown only while a single screen is open (ADR 0218 §2).</summary>
+    public const string ScreensSingle = "single";
+
+    /// <summary>An entry shown only while two screens or more are open (ADR 0218 §2).</summary>
+    public const string ScreensMultiple = "multiple";
+
+    /// <summary>The lowest screen number an entry can require: screen 1 is always open.</summary>
+    public const int MinScreenNumber = 2;
+
+    /// <summary>The highest screen number an entry can require, the limit of <c>screens.config</c> (ADR 0180).</summary>
+    public const int MaxScreenNumber = 9;
 
     /// <summary>The culture of the title every entry must have.</summary>
     public const string EnglishCulture = "en";

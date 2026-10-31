@@ -310,7 +310,14 @@
     HackerOsPack (ADR 0182 §1, §2): "dotnet build -c Release -t:HackerOsPack" writes every app of the
     project as <version>/<appId>-<version>.hackapp and adds it to index.json in HackerOsPackageOutput,
     the content of the repository's hackeros-packages branch (default: bin/hackeros-packages/).
-    The package holds every static web resource of the project, declared or not (ADR 0216 §1).
+    The package holds every static web resource of the project, declared or not (ADR 0220 §1).
+    ADR 0219: each package is signed with the author's key, read from the HACKEROS_APP_SIGNING_KEY
+    environment variable (a workflow secret) or from the HackerOsSigningKeyFile PEM file; without
+    either it is published unsigned with warning HOSAPP0063. The key never goes on a command line.
+
+    HackerOsKeyGen (ADR 0219 §1): "dotnet build -t:HackerOsKeyGen -p:HackerOsSigningKeyFile=<file.pem>"
+    creates the author's key pair: the private key goes to that new file (keep it out of the
+    repository), the public key is printed for [signing-keys]. No default path, on purpose.
   -->
   <PropertyGroup>
     <HackerOsPackageOutput Condition="'$(HackerOsPackageOutput)' == ''">$(MSBuildProjectDirectory)/bin/hackeros-packages</HackerOsPackageOutput>
@@ -327,7 +334,7 @@
       <_HackerOsPackBin>$(TargetDir.TrimEnd('/\'))</_HackerOsPackBin>
       <_HackerOsPackOutput>$(HackerOsPackageOutput.TrimEnd('/\'))</_HackerOsPackOutput>
       <!--
-        ADR 0216 §1: the build's static web asset manifest lists every resource the project serves at
+        ADR 0220 §1: the build's static web asset manifest lists every resource the project serves at
         _content/<assembly>/ (wwwroot/, collocated .razor.js, the scoped CSS bundle); pack adds the
         undeclared ones to the package's manifest.
       -->
@@ -335,7 +342,23 @@
       <_HackerOsPackWebAssets Condition="'$(_HackerOsPackWebAssets)' == ''">$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(IntermediateOutputPath)', 'staticwebassets.build.json'))</_HackerOsPackWebAssets>
       <_HackerOsPackWebAssetsArgument Condition="'$(UsingMicrosoftNETSdkRazor)' == 'true'"> --web-assets &quot;$(_HackerOsPackWebAssets)&quot;</_HackerOsPackWebAssetsArgument>
     </PropertyGroup>
-    <Exec Command="&quot;$(_HackerOsDotnetHost)&quot; &quot;$(_HackerOsManifestGeneratorPath)&quot; pack --manifest &quot;%(_HackerOsPackManifest.Identity)&quot; --bin &quot;$(_HackerOsPackBin)&quot; --webroot &quot;$(MSBuildProjectDirectory)/wwwroot&quot; --output &quot;$(_HackerOsPackOutput)&quot;$(_HackerOsPackWebAssetsArgument)" />
+    <PropertyGroup>
+      <_HackerOsPackKeyArgument Condition="'$(HackerOsSigningKeyFile)' != ''"> --private-key &quot;$([MSBuild]::NormalizePath('$(MSBuildStartupDirectory)', '$(HackerOsSigningKeyFile)'))&quot;</_HackerOsPackKeyArgument>
+    </PropertyGroup>
+    <Exec Command="&quot;$(_HackerOsDotnetHost)&quot; &quot;$(_HackerOsManifestGeneratorPath)&quot; pack --manifest &quot;%(_HackerOsPackManifest.Identity)&quot; --bin &quot;$(_HackerOsPackBin)&quot; --webroot &quot;$(MSBuildProjectDirectory)/wwwroot&quot; --output &quot;$(_HackerOsPackOutput)&quot;$(_HackerOsPackWebAssetsArgument)$(_HackerOsPackKeyArgument)" />
+  </Target>
+
+  <Target Name="_HackerOsRequireSigningKeyFile">
+    <Error Condition="'$(HackerOsSigningKeyFile)' == ''"
+           Code="HOSAPP0061"
+           Text="HackerOsKeyGen needs the file of the new private key, outside the repository: dotnet build -t:HackerOsKeyGen -p:HackerOsSigningKeyFile=&lt;file.pem&gt; (ADR 0219)." />
+  </Target>
+
+  <!-- Build first: it builds the generator in the HackerOS repository and in the Debug profile of an app repository. -->
+  <Target Name="HackerOsKeyGen"
+          DependsOnTargets="_HackerOsRequireSigningKeyFile;Build;_HackerOsResolveManifestGeneratorPath"
+          Condition="'$(HackerOsAppProject)' == 'true'">
+    <Exec Command="&quot;$(_HackerOsDotnetHost)&quot; &quot;$(_HackerOsManifestGeneratorPath)&quot; keygen --private-key &quot;$([MSBuild]::NormalizePath('$(MSBuildStartupDirectory)', '$(HackerOsSigningKeyFile)'))&quot;" />
   </Target>
 
   <!-- ===================================================================================== -->

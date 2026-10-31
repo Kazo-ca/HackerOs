@@ -61,3 +61,26 @@ Force either one with `-p:HackerOsUseSource=true` or `false`.
 
 The catalog never takes a binary from you: once your pull request is reviewed and merged, its CI
 compiles the app at the tagged commit.
+
+## Publishing on the `hackeros-packages` branch, signed
+
+The same `v*` tag also runs **Publish the HackerOS packages**: it packs the app and pushes it to the
+`hackeros-packages` branch of this repository, keeping the versions already published. HackerOS
+users then install it with `hackpkg install <owner>/<repo>`, without the Hack Store.
+
+Sign your packages so that nobody else can publish under your name:
+
+1. Once, on your machine, outside the repository:
+   `dotnet build src/HackerOs.Template.Solution -t:HackerOsKeyGen -p:HackerOsSigningKeyFile=$HOME/hackeros-signing-key.pem`.
+   The private key goes to that new file (`*.pem` is ignored by git); the public key is printed.
+2. Put the content of the file in the `HACKEROS_APP_SIGNING_KEY` secret of this repository
+   (Settings ▸ Secrets and variables ▸ Actions), then keep the file offline.
+3. Publish the printed public key (in this README for example). An administrator adds it to
+   `[signing-keys]` of `/etc/hackeros/app-sources.config`, as `github.com/<owner>=<key>` (all your
+   repositories) or `github.com/<owner>/<repo>=<key>` (this one). From then on, an unsigned or
+   badly signed package of yours is refused.
+
+Without the secret the package is published unsigned (SHA-256 only) and the run shows a warning.
+To sign locally, set `HACKEROS_APP_SIGNING_KEY` or pass `-p:HackerOsSigningKeyFile=<file.pem>` to
+`HackerOsPack`. To change keys without a break, have the new key added after the old one
+(separated by a comma), change the secret, then have the old one removed.

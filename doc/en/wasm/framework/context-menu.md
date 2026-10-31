@@ -301,7 +301,16 @@ public sealed class ZipperApp : AppDefinition
 | `parent` | Submenu of an entry of the same app (3 levels at most) | none |
 
 `X` is a constant of `HackFileMenuItems` (`open`, `copy`, `properties`...)
-or the `name` of an entry of the app. The method **only records the calls**:
+or the `name` of an entry of the app.
+
+An entry can depend on the open screens
+([ADR 0218](../dev/adr/0218-set-as-wallpaper-file-menu.md) §2), set after
+`Register`: `context.RestrictToScreens(name, MenuScreens.Single)` (a single
+open screen), `MenuScreens.Multiple` (two or more) or
+`context.RestrictToScreen(name, 3)` (only while screen 3 is open). The
+manifest writes `screens: "single" | "multiple"` or `screen: 2..9`.
+
+The method **only records the calls**:
 it runs at build time, twice, and must give the same result. The
 generator writes the entries to `manifest.json` (`contextMenus`) and reports
 an error through `HOSAPP0026` (rule, exception, missing English title),
@@ -313,7 +322,9 @@ that does not declare the intent).
 The target is launched with its own rights. If it declares the intent, it
 receives it in `AppContext.LaunchIntent` (or `OnIntentReceivedAsync` for a
 single instance already open), with the payload
-`{"paths":["/home/alice/a.zip"],"scope":"File"}`, which `HackFileMenuIntent` reads:
+`{"paths":["/home/alice/a.zip"],"scope":"File","entry":"extract"}`, which
+`HackFileMenuIntent` reads (`ReadPaths`, `ReadScope`, and `ReadEntry` for the
+name of the chosen entry: one intent can serve several entries, ADR 0218 §3):
 
 ```csharp
 if (LaunchIntent is { IntentId: ZipperApp.ExtractIntent } intent)
@@ -341,7 +352,7 @@ displayed.
    (`HackFileMenuContext`: scope, items, folder) on the menu it opens.
 3. After `Opening`, `ContextMenuService` calls `IFileMenuEntrySource`
    (`FileMenuEntries`, Platform Blazor): filters (`FileContextMenuMatcher`:
-   scope, types, selection), apps installed for the user and valid targets
+   scope, types, selection, open screens read by `FileMenuEntries.OpenScreens`), apps installed for the user and valid targets
    (`FileContextMenuLauncher.IsAvailable`), entries hidden by the
    user, then placement (`FileMenuEntryPlacement`). Entries have
    the id `app:<appId>/<name>`.

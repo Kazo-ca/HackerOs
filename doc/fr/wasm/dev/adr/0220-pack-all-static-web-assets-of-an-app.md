@@ -1,6 +1,6 @@
-> [English version](../../../../en/wasm/dev/adr/0216-pack-all-static-web-assets-of-an-app.md)
+> [English version](../../../../en/wasm/dev/adr/0220-pack-all-static-web-assets-of-an-app.md)
 
-# ADR 0216 : mettre en paquet toutes les ressources statiques d'une app et charger son CSS isolé
+# ADR 0220 : mettre en paquet toutes les ressources statiques d'une app et charger son CSS isolé
 
 ## Statut
 
@@ -93,8 +93,8 @@ projet.
   point d'entrée ; le SDK les publie sous `$(PackageId)`. Une app garde donc
   `PackageId` égal à `AssemblyName` (c'est le cas par défaut).
 - Un projet Razor mis en paquet sans `staticwebassets.build.json` donne
-  l'avertissement `HOSAPP0062` et un paquet limité aux `Assets` déclarés ; un
-  chemin refusé par le manifeste donne `HOSAPP0061`.
+  l'avertissement `HOSAPP0065` et un paquet limité aux `Assets` déclarés ; un
+  chemin refusé par le manifeste donne `HOSAPP0064`.
 - Un dépôt créé avec un modèle plus ancien met à jour son
   `publish-to-hack-store.yml` (§3), sinon le catalogue refuse sa version.
 - Les apps déjà publiées doivent être remises en paquet avec la nouvelle version

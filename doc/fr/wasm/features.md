@@ -106,6 +106,9 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   s'affiche quelques secondes au-dessus de la barre (en haut sur téléphone),
   puis reste dans le panneau de l'horloge. Une mise à jour prête y arrive avec
   son bouton « Redémarrer ». ([`notification-toasts.md`](dev/notification-toasts.md))
+  Le mode **Ne pas déranger** (panneau de l'horloge ou Paramètres ▸ Notifications)
+  coupe les bulles et les sons des notifications sans les perdre ; une lune le
+  signale à côté de l'horloge. ([ADR 0216](dev/adr/0216-do-not-disturb.md))
 - **Plusieurs écrans** : chaque écran supplémentaire s'ouvre dans sa propre
   fenêtre du navigateur, avec sa barre des tâches, et l'OS s'en souvient. On
   glisse une fenêtre d'un écran à l'autre. ([`screen-service.md`](dev/screen-service.md),
@@ -239,8 +242,10 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   ([`theme-files.md`](framework/theme-files.md))
 - **Fonds d'écran en image** : une image PNG, JPEG ou WebP (4 livrées avec
   l'OS, les siennes ou celles d'un dossier partagé), pour tous les écrans ou
-  un écran à la fois, dans Paramètres ▸ Apparence.
-  ([ADR 0202](dev/adr/0202-desktop-wallpaper-images.md), [`wallpapers.md`](dev/wallpapers.md))
+  un écran à la fois, et une image à part pour l'écran d'accueil mobile, dans
+  Paramètres ▸ Apparence ; « Définir comme fond d'écran » dans le menu d'une
+  image change celle du bureau.
+  ([ADR 0202](dev/adr/0202-desktop-wallpaper-images.md), [ADR 0217](dev/adr/0217-mobile-home-wallpaper.md), [ADR 0218](dev/adr/0218-set-as-wallpaper-file-menu.md), [`wallpapers.md`](dev/wallpapers.md))
 - **Anglais et français**, la langue suit la locale de l'utilisateur.
   ([`localization.md`](framework/localization.md))
 - **Accessibilité** : préférences d'affichage et d'animation, navigation au
@@ -270,6 +275,11 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   service, un site, un hôte complet ou un dépôt d'application entier, visibles
   dans Visual Studio et Rider.
   ([`sdk-developer-guide.md`](framework/sdk-developer-guide.md))
+- **Signature des paquets par l'auteur d'une application** : `HackerOsKeyGen`
+  crée la clé, `HackerOsPack` et le workflow `publish-packages.yml` du modèle
+  signent et publient la branche `hackeros-packages`.
+  ([ADR 0219](dev/adr/0219-app-authors-signing-tool.md),
+  [`app-repository.md`](framework/app-repository.md))
 - **Installation d'une application depuis son dépôt GitHub** avec la commande
   `hackpkg`. ([ADR 0182](dev/adr/0182-install-apps-from-github.md),
   [`app-installation.md`](dev/app-installation.md)) Ses images, scripts et Web
@@ -278,7 +288,7 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   installée. ([ADR 0206](dev/adr/0206-serve-installed-app-assets.md)) Son paquet
   contient toutes ses ressources statiques (scripts collocalisés compris) et
   l'OS charge son CSS isolé : installée, elle a la même apparence que compilée
-  dans l'OS. ([ADR 0216](dev/adr/0216-pack-all-static-web-assets-of-an-app.md))
+  dans l'OS. ([ADR 0220](dev/adr/0220-pack-all-static-web-assets-of-an-app.md))
 - **Sources de confiance et installation pour soi** : une application d'une
   source de confiance s'installe pour soi sans administrateur ; une source non
   fiable, une application de la liste noire ou une installation pour tous
@@ -341,14 +351,12 @@ dans `main`, le lien mène à sa PR.
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Catalogue des applications | Format du catalogue, vérification et publication des applications proposées. | [0188](dev/adr/0188-hack-store-and-app-catalog.md) | [AppMarketPlace #1](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/1) |
-| Outil de signature pour les auteurs | Signer les paquets publiés depuis un dépôt GitHub (sources `github:`). | [0214](dev/adr/0214-hack-store-hot-add-signing-transactions.md) | [#321](https://github.com/Kazo-ca/HackerOs/issues/321) |
 
 ### Personnalisation
 
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Vérification des packs de thèmes par le catalogue | La CI du catalogue vérifie les entrées `kind: "theme-pack"` comme l'OS à l'installation. | [0213](dev/adr/0213-theme-packs-build.md) | [AppMarketPlace #4](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/4) |
-| Fond d'écran sur mobile et menu « Définir comme fond d'écran » | L'image de fond sur l'écran d'accueil mobile, et une entrée du menu contextuel des images. Les fonds d'écran du bureau sont disponibles. | [0202](dev/adr/0202-desktop-wallpaper-images.md) | [#297](https://github.com/Kazo-ca/HackerOs/issues/297), [#298](https://github.com/Kazo-ca/HackerOs/issues/298) |
 
 ### Réseau et serveur
 

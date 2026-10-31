@@ -1,6 +1,6 @@
-> [Version française](../../../../fr/wasm/dev/adr/0216-pack-all-static-web-assets-of-an-app.md)
+> [Version française](../../../../fr/wasm/dev/adr/0220-pack-all-static-web-assets-of-an-app.md)
 
-# ADR 0216: pack every static resource of an app and load its scoped CSS
+# ADR 0220: pack every static resource of an app and load its scoped CSS
 
 ## Status
 
@@ -93,8 +93,8 @@ template therefore copies the **package's** `manifest.json` (taken from the
   SDK publishes them under `$(PackageId)`. An app therefore keeps `PackageId`
   equal to `AssemblyName` (the default).
 - A Razor project packed without `staticwebassets.build.json` gets the
-  `HOSAPP0062` warning and a package limited to the declared `Assets`; a path the
-  manifest refuses gets `HOSAPP0061`.
+  `HOSAPP0065` warning and a package limited to the declared `Assets`; a path the
+  manifest refuses gets `HOSAPP0064`.
 - A repository made with an older template updates its
   `publish-to-hack-store.yml` (§3), otherwise the catalog refuses its version.
 - Apps already published must be packed again with the new version to benefit;

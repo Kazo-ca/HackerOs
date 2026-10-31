@@ -1,1 +1,26 @@
 #nullable enable
+HackerOs.Platform.Core.Notifications.DoNotDisturbService
+HackerOs.Platform.Core.Notifications.DoNotDisturbService.Changed -> System.Action?
+HackerOs.Platform.Core.Notifications.DoNotDisturbService.Dispose() -> void
+HackerOs.Platform.Core.Notifications.DoNotDisturbService.DoNotDisturbService(HackerOs.Platform.Core.Settings.IOsSettingsService! settings) -> void
+HackerOs.Platform.Core.Notifications.DoNotDisturbService.InitializeAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+HackerOs.Platform.Core.Notifications.DoNotDisturbService.IsEnabled.get -> bool
+HackerOs.Platform.Core.Notifications.DoNotDisturbService.RefreshAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+HackerOs.Platform.Core.Notifications.DoNotDisturbService.SetAsync(bool enabled, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+HackerOs.Platform.Core.Notifications.NotificationSettingsDocuments
+HackerOs.Platform.Core.Sounds.OsSoundService.DoNotDisturb.get -> HackerOs.Platform.Core.Notifications.DoNotDisturbService?
+HackerOs.Platform.Core.Sounds.OsSoundService.DoNotDisturb.init -> void
+const HackerOs.Platform.Core.Notifications.NotificationSettingsDocuments.DoNotDisturbKey = "doNotDisturb" -> string!
+const HackerOs.Platform.Core.Notifications.NotificationSettingsDocuments.DocumentId = "notifications" -> string!
+static HackerOs.Platform.Core.Notifications.NotificationSettingsDocuments.Document.get -> HackerOs.Platform.Core.Settings.OsSettingsDocument!
+static HackerOs.Platform.Core.Notifications.NotificationSettingsDocuments.IsDoNotDisturb(HackerOs.Simulation.Abstractions.Settings.LayeredConfigSnapshot! snapshot) -> bool
+static HackerOs.Platform.Core.Notifications.NotificationSettingsDocuments.Schema.get -> HackerOs.Simulation.Abstractions.Settings.SettingsSchema!
+static HackerOs.Platform.Core.ContextMenus.FileContextMenuLauncher.PayloadOf(System.Collections.Generic.IReadOnlyList<string!>! paths, string! scope, string? entry) -> string!
+static HackerOs.Platform.Core.ContextMenus.FileContextMenuMatcher.MatchesScreens(HackerOs.App.Abstractions.AppContextMenuEntryManifest! entry, System.Collections.Generic.IReadOnlySet<int>! openScreens) -> bool
+const HackerOs.Platform.Core.Appearance.AppearanceSettingsDocuments.MobileWallpaperFitKey = "mobileWallpaperFit" -> string!
+const HackerOs.Platform.Core.Appearance.AppearanceSettingsDocuments.MobileWallpaperKey = "mobileWallpaper" -> string!
+HackerOs.Platform.Core.Appearance.WallpaperPreferences.Mobile.get -> string!
+HackerOs.Platform.Core.Appearance.WallpaperPreferences.Mobile.init -> void
+HackerOs.Platform.Core.Appearance.WallpaperPreferences.MobileFit.get -> HackerOs.Theming.Abstractions.WallpaperFit
+HackerOs.Platform.Core.Appearance.WallpaperPreferences.MobileFit.init -> void
+HackerOs.Platform.Core.Appearance.WallpaperService.GetMobileImageAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.Platform.Core.Appearance.WallpaperImage?>!
