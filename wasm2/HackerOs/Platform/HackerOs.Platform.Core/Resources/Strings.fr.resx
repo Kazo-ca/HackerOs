@@ -708,4 +708,16 @@ Annuler : décider au prochain lancement.</value>
   <data name="Admin.App.EditAppPolicy" xml:space="preserve">
     <value>Modifier la liste noire des apps : {0}</value>
   </data>
+  <data name="AppUpdates.Notification.Title" xml:space="preserve">
+    <value>Mises à jour des apps</value>
+  </data>
+  <data name="AppUpdates.Notification.One" xml:space="preserve">
+    <value>1 app peut être mise à jour dans le Hack Store.</value>
+  </data>
+  <data name="AppUpdates.Notification.Many" xml:space="preserve">
+    <value>{0} apps peuvent être mises à jour dans le Hack Store.</value>
+  </data>
+  <data name="AppUpdates.Notification.View" xml:space="preserve">
+    <value>Voir</value>
+  </data>
 </root>

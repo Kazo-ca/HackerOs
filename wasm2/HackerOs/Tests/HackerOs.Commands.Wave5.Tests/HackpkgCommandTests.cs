@@ -33,7 +33,7 @@ public sealed class HackpkgCommandTests
         (int exit, _, string stderr) = await RunAsync(packages, args);
 
         Assert.Equal(2, exit);
-        Assert.Contains("usage: hackpkg install <repo>[@version] [--user|--system]", stderr, StringComparison.Ordinal);
+        Assert.Contains("usage: hackpkg install <appId|repo>[@version] [--user|--system]", stderr, StringComparison.Ordinal);
         Assert.Empty(packages.Calls);
     }
 

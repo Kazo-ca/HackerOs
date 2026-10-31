@@ -328,6 +328,50 @@ Tests: `AppPackageGatewayTests`, `AppSourcesAndPolicyTests`,
 `Tests/fixtures/installed-app` installed by `hackpkg` in the trimmed publish,
 run by `build/publish-trimmed.sh`).
 
+## The Hack Store and the catalogs
+
+ADR [0212](adr/0212-hack-store-app-build.md) builds the **Hack Store** app
+(`org.hackeros.store`, ADR [0188](adr/0188-hack-store-and-app-catalog.md)): a
+system app that cannot be uninstalled, pinned by default in the Start menu.
+
+```text
+hackpkg install org.example.notes          # looked up in the catalogs
+hackpkg install org.example.notes@1.0.0    # a published version
+hackpkg install catalog:official/org.example.notes
+hackpkg info org.example.notes
+```
+
+- **Catalogs**: each `[catalogs]` entry names a `catalog.json`
+  (`schemaVersion` 1, `packages` branch of the catalog repository). The file's
+  paths (package, icon, screenshots, descriptions) are relative to
+  `catalog.json`. The OS keeps it 5 minutes; an invalid app or version is
+  skipped with a warning in `/var/log/syslog`.
+- **Source written**: `<appId>=catalog:<name>/<appId>@<version>` in
+  `[installed]`. The trust is that of `catalog:<name>`; the official catalog
+  is *verified*. The SHA-256 and the size come from the catalog; the other
+  checks are those of a GitHub app.
+- **App ID alone**: looked up in the official catalog, then in the others by
+  name.
+- **The app**: home by categories, search (name, short description, tags, ID,
+  ignoring case and accents), app page (icon, screenshots, Markdown
+  description drawn without HTML, version, size, license, category, date,
+  repository, capabilities, trust), Install for me or for everyone, Open,
+  Update, Uninstall, **Installed** tab with "Update all". When an app waits for
+  a restart, the banner offers **Restart to finish** (no administrator).
+  Launch arguments: `--page=installed`, `--app=<appId>`.
+- **Updates**: `AppUpdateMonitor` checks at sign-in then every
+  `[updates] interval-hours` hours, shows the update count as a badge on the
+  Store icon (Start menu, mobile home screen, taskbar) and posts a
+  notification that opens the Installed tab.
+- **Default pin**: `start-menu.json` records `defaultPinsApplied` per profile;
+  the Store is added once, to a new profile as to an existing one, and does
+  not come back after an unpin.
+
+Tests: `AppCatalogDocumentTests`, the catalog tests of
+`AppPackageGatewayTests`, `StartMenuPreferencesServiceTests`
+(Platform.Core) and `HackerOs.Apps.Store.Tests` (`StoreCatalog`,
+`StoreMarkdown`, manifest).
+
 ## Tasks
 
 - [x] `IAppInstallationService`, `AppInstallationService`, `AppsConfigDocument`.
@@ -340,3 +384,4 @@ run by `build/publish-trimmed.sh`).
 - [x] Removal of `AppCatalogSyncService` and its contract.
 - [x] "Installed Apps" tab redone (`InstalledAppsPanel`).
 - [x] Contract tests and documentation.
+- [x] Hack Store: catalogs, `hackpkg install <appId>`, updates, badge, default pin (ADR 0212).

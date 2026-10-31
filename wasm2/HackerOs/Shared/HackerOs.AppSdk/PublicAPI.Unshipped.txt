@@ -439,3 +439,127 @@ HackerOs.AppSdk.Net.HackHttpResponseSource.Simulated = 0 -> HackerOs.AppSdk.Net.
 HackerOs.AppSdk.Net.HackNetworkError.BlockedByAdministrator = 8 -> HackerOs.AppSdk.Net.HackNetworkError
 HackerOs.AppSdk.Net.HackNetworkError.TimedOut = 7 -> HackerOs.AppSdk.Net.HackNetworkError
 static HackerOs.AppSdk.Net.HackCookieContainer.DomainMatches(string! host, string! domain) -> bool
+HackerOs.AppSdk.Apps.HackAppCatalog
+HackerOs.AppSdk.Apps.HackAppCatalog.<Clone>$() -> HackerOs.AppSdk.Apps.HackAppCatalog!
+HackerOs.AppSdk.Apps.HackAppCatalog.Apps.get -> System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Apps.HackCatalogApp!>!
+HackerOs.AppSdk.Apps.HackAppCatalog.Apps.init -> void
+HackerOs.AppSdk.Apps.HackAppCatalog.Categories.get -> System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Apps.HackCatalogCategory!>!
+HackerOs.AppSdk.Apps.HackAppCatalog.Categories.init -> void
+HackerOs.AppSdk.Apps.HackAppCatalog.Deconstruct(out string! Name, out HackerOs.AppSdk.Apps.HackPackageTrust Trust, out System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Apps.HackCatalogCategory!>! Categories, out System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Apps.HackCatalogApp!>! Apps) -> void
+HackerOs.AppSdk.Apps.HackAppCatalog.Equals(HackerOs.AppSdk.Apps.HackAppCatalog? other) -> bool
+HackerOs.AppSdk.Apps.HackAppCatalog.Error.get -> string?
+HackerOs.AppSdk.Apps.HackAppCatalog.Error.init -> void
+HackerOs.AppSdk.Apps.HackAppCatalog.HackAppCatalog(string! Name, HackerOs.AppSdk.Apps.HackPackageTrust Trust, System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Apps.HackCatalogCategory!>! Categories, System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Apps.HackCatalogApp!>! Apps) -> void
+HackerOs.AppSdk.Apps.HackAppCatalog.Name.get -> string!
+HackerOs.AppSdk.Apps.HackAppCatalog.Name.init -> void
+HackerOs.AppSdk.Apps.HackAppCatalog.Trust.get -> HackerOs.AppSdk.Apps.HackPackageTrust
+HackerOs.AppSdk.Apps.HackAppCatalog.Trust.init -> void
+HackerOs.AppSdk.Apps.HackCatalogApp
+HackerOs.AppSdk.Apps.HackCatalogApp.<Clone>$() -> HackerOs.AppSdk.Apps.HackCatalogApp!
+HackerOs.AppSdk.Apps.HackCatalogApp.AppId.get -> string!
+HackerOs.AppSdk.Apps.HackCatalogApp.AppId.init -> void
+HackerOs.AppSdk.Apps.HackCatalogApp.Catalog.get -> string!
+HackerOs.AppSdk.Apps.HackCatalogApp.Catalog.init -> void
+HackerOs.AppSdk.Apps.HackCatalogApp.Category.get -> string!
+HackerOs.AppSdk.Apps.HackCatalogApp.Category.init -> void
+HackerOs.AppSdk.Apps.HackCatalogApp.Deconstruct(out string! Catalog, out string! AppId, out string! Name, out string! Category, out System.Collections.Generic.IReadOnlyList<string!>! Tags, out System.Collections.Generic.IReadOnlyDictionary<string!, string!>! ShortDescriptions, out string! License, out string! Repository, out string! LatestVersion, out System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Apps.HackCatalogAppVersion!>! Versions, out HackerOs.AppSdk.Apps.HackPackageTrust Trust) -> void
+HackerOs.AppSdk.Apps.HackCatalogApp.Equals(HackerOs.AppSdk.Apps.HackCatalogApp? other) -> bool
+HackerOs.AppSdk.Apps.HackCatalogApp.GetShortDescription(System.Globalization.CultureInfo! culture) -> string!
+HackerOs.AppSdk.Apps.HackCatalogApp.HackCatalogApp(string! Catalog, string! AppId, string! Name, string! Category, System.Collections.Generic.IReadOnlyList<string!>! Tags, System.Collections.Generic.IReadOnlyDictionary<string!, string!>! ShortDescriptions, string! License, string! Repository, string! LatestVersion, System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Apps.HackCatalogAppVersion!>! Versions, HackerOs.AppSdk.Apps.HackPackageTrust Trust) -> void
+HackerOs.AppSdk.Apps.HackCatalogApp.Latest.get -> HackerOs.AppSdk.Apps.HackCatalogAppVersion!
+HackerOs.AppSdk.Apps.HackCatalogApp.LatestVersion.get -> string!
+HackerOs.AppSdk.Apps.HackCatalogApp.LatestVersion.init -> void
+HackerOs.AppSdk.Apps.HackCatalogApp.License.get -> string!
+HackerOs.AppSdk.Apps.HackCatalogApp.License.init -> void
+HackerOs.AppSdk.Apps.HackCatalogApp.Name.get -> string!
+HackerOs.AppSdk.Apps.HackCatalogApp.Name.init -> void
+HackerOs.AppSdk.Apps.HackCatalogApp.Repository.get -> string!
+HackerOs.AppSdk.Apps.HackCatalogApp.Repository.init -> void
+HackerOs.AppSdk.Apps.HackCatalogApp.ShortDescriptions.get -> System.Collections.Generic.IReadOnlyDictionary<string!, string!>!
+HackerOs.AppSdk.Apps.HackCatalogApp.ShortDescriptions.init -> void
+HackerOs.AppSdk.Apps.HackCatalogApp.Source.get -> string!
+HackerOs.AppSdk.Apps.HackCatalogApp.Tags.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.AppSdk.Apps.HackCatalogApp.Tags.init -> void
+HackerOs.AppSdk.Apps.HackCatalogApp.Trust.get -> HackerOs.AppSdk.Apps.HackPackageTrust
+HackerOs.AppSdk.Apps.HackCatalogApp.Trust.init -> void
+HackerOs.AppSdk.Apps.HackCatalogApp.Versions.get -> System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Apps.HackCatalogAppVersion!>!
+HackerOs.AppSdk.Apps.HackCatalogApp.Versions.init -> void
+HackerOs.AppSdk.Apps.HackCatalogAppVersion
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.<Clone>$() -> HackerOs.AppSdk.Apps.HackCatalogAppVersion!
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.Capabilities.init -> void
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.Deconstruct(out string! Version, out long SizeBytes, out System.Collections.Generic.IReadOnlyList<string!>! Capabilities) -> void
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.DescriptionLanguages.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.DescriptionLanguages.init -> void
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.Equals(HackerOs.AppSdk.Apps.HackCatalogAppVersion? other) -> bool
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.HackCatalogAppVersion(string! Version, long SizeBytes, System.Collections.Generic.IReadOnlyList<string!>! Capabilities) -> void
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.IconUri.get -> string?
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.IconUri.init -> void
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.MinimumSdkVersion.get -> string?
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.MinimumSdkVersion.init -> void
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.PublishedAt.get -> System.DateTimeOffset?
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.PublishedAt.init -> void
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.ScreenshotUris.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.ScreenshotUris.init -> void
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.SizeBytes.get -> long
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.SizeBytes.init -> void
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.Version.get -> string!
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.Version.init -> void
+HackerOs.AppSdk.Apps.HackCatalogCategory
+HackerOs.AppSdk.Apps.HackCatalogCategory.<Clone>$() -> HackerOs.AppSdk.Apps.HackCatalogCategory!
+HackerOs.AppSdk.Apps.HackCatalogCategory.Deconstruct(out string! Id, out System.Collections.Generic.IReadOnlyDictionary<string!, string!>! Labels) -> void
+HackerOs.AppSdk.Apps.HackCatalogCategory.Equals(HackerOs.AppSdk.Apps.HackCatalogCategory? other) -> bool
+HackerOs.AppSdk.Apps.HackCatalogCategory.GetLabel(System.Globalization.CultureInfo! culture) -> string!
+HackerOs.AppSdk.Apps.HackCatalogCategory.HackCatalogCategory(string! Id, System.Collections.Generic.IReadOnlyDictionary<string!, string!>! Labels) -> void
+HackerOs.AppSdk.Apps.HackCatalogCategory.Id.get -> string!
+HackerOs.AppSdk.Apps.HackCatalogCategory.Id.init -> void
+HackerOs.AppSdk.Apps.HackCatalogCategory.Labels.get -> System.Collections.Generic.IReadOnlyDictionary<string!, string!>!
+HackerOs.AppSdk.Apps.HackCatalogCategory.Labels.init -> void
+HackerOs.AppSdk.Apps.HackPackageUpdate
+HackerOs.AppSdk.Apps.HackPackageUpdate.<Clone>$() -> HackerOs.AppSdk.Apps.HackPackageUpdate!
+HackerOs.AppSdk.Apps.HackPackageUpdate.AppId.get -> string!
+HackerOs.AppSdk.Apps.HackPackageUpdate.AppId.init -> void
+HackerOs.AppSdk.Apps.HackPackageUpdate.AvailableVersion.get -> string!
+HackerOs.AppSdk.Apps.HackPackageUpdate.AvailableVersion.init -> void
+HackerOs.AppSdk.Apps.HackPackageUpdate.Deconstruct(out string! AppId, out string! Source, out string! InstalledVersion, out string! AvailableVersion, out bool SystemWide) -> void
+HackerOs.AppSdk.Apps.HackPackageUpdate.Equals(HackerOs.AppSdk.Apps.HackPackageUpdate? other) -> bool
+HackerOs.AppSdk.Apps.HackPackageUpdate.HackPackageUpdate(string! AppId, string! Source, string! InstalledVersion, string! AvailableVersion, bool SystemWide) -> void
+HackerOs.AppSdk.Apps.HackPackageUpdate.InstalledVersion.get -> string!
+HackerOs.AppSdk.Apps.HackPackageUpdate.InstalledVersion.init -> void
+HackerOs.AppSdk.Apps.HackPackageUpdate.Source.get -> string!
+HackerOs.AppSdk.Apps.HackPackageUpdate.Source.init -> void
+HackerOs.AppSdk.Apps.HackPackageUpdate.SystemWide.get -> bool
+HackerOs.AppSdk.Apps.HackPackageUpdate.SystemWide.init -> void
+HackerOs.AppSdk.Apps.IAppManagementGateway.GetCatalogDescriptionAsync(string! catalog, string! appId, string! version, string! language, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<string?>
+HackerOs.AppSdk.Apps.IAppManagementGateway.GetPackageCatalogsAsync(bool refresh = false, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Apps.HackAppCatalog!>!>
+HackerOs.AppSdk.Apps.IAppManagementGateway.GetPackageUpdatesAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Apps.HackPackageUpdate!>!>
+HackerOs.AppSdk.Apps.IAppManagementGateway.RestartForPackagesAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+override HackerOs.AppSdk.Apps.HackAppCatalog.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Apps.HackAppCatalog.GetHashCode() -> int
+override HackerOs.AppSdk.Apps.HackAppCatalog.ToString() -> string!
+override HackerOs.AppSdk.Apps.HackCatalogApp.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Apps.HackCatalogApp.GetHashCode() -> int
+override HackerOs.AppSdk.Apps.HackCatalogApp.ToString() -> string!
+override HackerOs.AppSdk.Apps.HackCatalogAppVersion.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Apps.HackCatalogAppVersion.GetHashCode() -> int
+override HackerOs.AppSdk.Apps.HackCatalogAppVersion.ToString() -> string!
+override HackerOs.AppSdk.Apps.HackCatalogCategory.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Apps.HackCatalogCategory.GetHashCode() -> int
+override HackerOs.AppSdk.Apps.HackCatalogCategory.ToString() -> string!
+override HackerOs.AppSdk.Apps.HackPackageUpdate.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Apps.HackPackageUpdate.GetHashCode() -> int
+override HackerOs.AppSdk.Apps.HackPackageUpdate.ToString() -> string!
+static HackerOs.AppSdk.Apps.HackAppCatalog.operator !=(HackerOs.AppSdk.Apps.HackAppCatalog? left, HackerOs.AppSdk.Apps.HackAppCatalog? right) -> bool
+static HackerOs.AppSdk.Apps.HackAppCatalog.operator ==(HackerOs.AppSdk.Apps.HackAppCatalog? left, HackerOs.AppSdk.Apps.HackAppCatalog? right) -> bool
+static HackerOs.AppSdk.Apps.HackAppPackages.GetCatalogDescriptionAsync(HackerOs.AppSdk.Apps.HackCatalogApp! app, string? version = null, string! language = "en", System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<string?>!
+static HackerOs.AppSdk.Apps.HackAppPackages.GetCatalogsAsync(bool refresh = false, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Apps.HackAppCatalog!>!>!
+static HackerOs.AppSdk.Apps.HackAppPackages.GetUpdatesAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Apps.HackPackageUpdate!>!>!
+static HackerOs.AppSdk.Apps.HackAppPackages.RestartToFinishAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+static HackerOs.AppSdk.Apps.HackCatalogApp.operator !=(HackerOs.AppSdk.Apps.HackCatalogApp? left, HackerOs.AppSdk.Apps.HackCatalogApp? right) -> bool
+static HackerOs.AppSdk.Apps.HackCatalogApp.operator ==(HackerOs.AppSdk.Apps.HackCatalogApp? left, HackerOs.AppSdk.Apps.HackCatalogApp? right) -> bool
+static HackerOs.AppSdk.Apps.HackCatalogAppVersion.operator !=(HackerOs.AppSdk.Apps.HackCatalogAppVersion? left, HackerOs.AppSdk.Apps.HackCatalogAppVersion? right) -> bool
+static HackerOs.AppSdk.Apps.HackCatalogAppVersion.operator ==(HackerOs.AppSdk.Apps.HackCatalogAppVersion? left, HackerOs.AppSdk.Apps.HackCatalogAppVersion? right) -> bool
+static HackerOs.AppSdk.Apps.HackCatalogCategory.operator !=(HackerOs.AppSdk.Apps.HackCatalogCategory? left, HackerOs.AppSdk.Apps.HackCatalogCategory? right) -> bool
+static HackerOs.AppSdk.Apps.HackCatalogCategory.operator ==(HackerOs.AppSdk.Apps.HackCatalogCategory? left, HackerOs.AppSdk.Apps.HackCatalogCategory? right) -> bool
+static HackerOs.AppSdk.Apps.HackPackageUpdate.operator !=(HackerOs.AppSdk.Apps.HackPackageUpdate? left, HackerOs.AppSdk.Apps.HackPackageUpdate? right) -> bool
+static HackerOs.AppSdk.Apps.HackPackageUpdate.operator ==(HackerOs.AppSdk.Apps.HackPackageUpdate? left, HackerOs.AppSdk.Apps.HackPackageUpdate? right) -> bool

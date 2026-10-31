@@ -289,7 +289,11 @@ public sealed class AppExecutionContextFactory
                 _appCatalog.Assets,
                 _appCatalog.Packages,
                 _appCatalog.InstallApproval,
-                _appCatalog.InstalledPackages);
+                _appCatalog.InstalledPackages)
+            {
+                UpdateMonitor = _appCatalog.UpdateMonitor,
+                RestartForPackages = _appCatalog.RestartForPackages,
+            };
         AppClipboardGateway clipboardGateway = new(_clipboard, capabilities, process.SessionId, process.Pid);
 
         AppFileSystemGateway fileSystem = new(
@@ -566,6 +570,15 @@ public sealed record AppCatalogGatewayServices(
 
     /// <summary>Gets the installed apps of the running catalog, with who sees them (ADR 0189 §3).</summary>
     public Func<Apps.Packages.InstalledPackageCatalog?>? InstalledPackages { get; init; }
+
+    /// <summary>Gets the update check whose count the Hack Store's icon shows (ADR 0212 §5).</summary>
+    public Func<Apps.Packages.AppUpdateMonitor?>? UpdateMonitor { get; init; }
+
+    /// <summary>
+    /// Gets the restart of « Restart to finish » (ADR 0212 §3): the same as Start ▸ Restart, without
+    /// an administrator; <see langword="null"/> leaves it unsupported.
+    /// </summary>
+    public Func<Task>? RestartForPackages { get; init; }
 }
 
 /// <summary>

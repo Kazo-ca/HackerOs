@@ -330,6 +330,51 @@ Tests : `AppPackageGatewayTests`, `AppSourcesAndPolicyTests`,
 `Tests/fixtures/installed-app` installé par `hackpkg` dans la publication
 réduite, lancé par `build/publish-trimmed.sh`).
 
+## Le Hack Store et les catalogues
+
+L'ADR [0212](adr/0212-hack-store-app-build.md) met en œuvre l'app **Hack
+Store** (`org.hackeros.store`, ADR [0188](adr/0188-hack-store-and-app-catalog.md)) :
+app système, non désinstallable, épinglée par défaut dans le menu Démarrer.
+
+```text
+hackpkg install org.example.notes          # cherché dans les catalogues
+hackpkg install org.example.notes@1.0.0    # une version publiée
+hackpkg install catalog:official/org.example.notes
+hackpkg info org.example.notes
+```
+
+- **Catalogues** : chaque entrée de `[catalogs]` désigne un `catalog.json`
+  (`schemaVersion` 1, branche `packages` du dépôt catalogue). Les chemins du
+  fichier (paquet, icône, captures, descriptions) sont relatifs à
+  `catalog.json`. L'OS le garde 5 minutes ; une app ou une version invalide est
+  ignorée avec un avertissement dans `/var/log/syslog`.
+- **Source écrite** : `<appId>=catalog:<nom>/<appId>@<version>` dans
+  `[installed]`. La confiance est celle de `catalog:<nom>` ; le catalogue
+  officiel est *vérifié*. Le SHA-256 et la taille viennent du catalogue ; les
+  autres vérifications sont celles d'une app GitHub.
+- **AppId seul** : cherché dans le catalogue officiel, puis dans les autres
+  par ordre de nom.
+- **L'app** : accueil par catégories, recherche (nom, description courte,
+  étiquettes, identifiant, sans casse ni accents), fiche (icône, captures,
+  description Markdown dessinée sans HTML, version, taille, licence,
+  catégorie, date, dépôt, capacités, confiance), Installer pour moi ou pour
+  tous, Ouvrir, Mettre à jour, Désinstaller, onglet **Installées** avec « Tout
+  mettre à jour ». Quand une app attend un redémarrage, le bandeau propose
+  **Redémarrer pour terminer** (sans administrateur). Arguments de lancement :
+  `--page=installed`, `--app=<appId>`.
+- **Mises à jour** : `AppUpdateMonitor` vérifie à l'ouverture de la session
+  puis toutes les `[updates] interval-hours` heures, met le nombre de mises à
+  jour en badge sur l'icône du Store (menu Démarrer, écran d'accueil mobile,
+  barre des tâches) et envoie une notification qui ouvre l'onglet Installées.
+- **Épinglage par défaut** : `start-menu.json` note par profil
+  `defaultPinsApplied` ; le Store est ajouté une fois, à un nouveau profil
+  comme à un profil existant, et ne revient pas après un désépinglage.
+
+Tests : `AppCatalogDocumentTests`, les tests de catalogue
+d'`AppPackageGatewayTests`, `StartMenuPreferencesServiceTests`
+(Platform.Core) et `HackerOs.Apps.Store.Tests` (`StoreCatalog`,
+`StoreMarkdown`, manifeste).
+
 ## Tâches
 
 - [x] `IAppInstallationService`, `AppInstallationService`, `AppsConfigDocument`.
@@ -342,3 +387,4 @@ réduite, lancé par `build/publish-trimmed.sh`).
 - [x] Retrait d'`AppCatalogSyncService` et de son contrat.
 - [x] Onglet « Installed Apps » refait (`InstalledAppsPanel`).
 - [x] Tests de contrat et documentation.
+- [x] Hack Store : catalogues, `hackpkg install <appId>`, mises à jour, badge, épinglage par défaut (ADR 0212).

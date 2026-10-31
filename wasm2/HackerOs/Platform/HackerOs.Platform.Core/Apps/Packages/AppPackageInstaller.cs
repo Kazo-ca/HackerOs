@@ -49,6 +49,18 @@ public sealed record AppPackagePlan(AppPackageSource Source, AppPackage Package,
     public long SizeBytes => Package.Files.Values.Sum(static file => (long)file.Length);
 }
 
+/// <summary>A newer version published by the source of an installed app (ADR 0188 §3).</summary>
+/// <param name="AppId">The installed app.</param>
+/// <param name="Installed">Its source, pinned to the installed version.</param>
+/// <param name="Available">The newer version.</param>
+/// <param name="SystemWide">Whether the installed copy is for every user.</param>
+public sealed record AppPackageUpdate(string AppId, AppPackageSource Installed, SemanticVersion Available, bool SystemWide);
+
+/// <summary>What <see cref="AppPackageInstaller.FindUpdatesAsync"/> found.</summary>
+/// <param name="Updates">The updates, in app ID order.</param>
+/// <param name="Failures">Sources that could not be read, one line each.</param>
+public sealed record AppPackageUpdateReport(IReadOnlyList<AppPackageUpdate> Updates, IReadOnlyList<string> Failures);
+
 /// <summary>What <see cref="AppPackageInstaller.PrepareAsync"/> decides with (ADR 0189).</summary>
 /// <param name="Sources">The sources and hosts.</param>
 /// <param name="Policy">The administrator's block list.</param>
@@ -90,6 +102,12 @@ public sealed class AppPackageInstaller
     private readonly IRuntimeApiSurface _runtime;
     private readonly SemanticVersion _sdkVersion;
     private readonly ILogger _logger;
+    private readonly Func<DateTimeOffset> _clock;
+    private readonly Lock _catalogGate = new();
+    private readonly Dictionary<Uri, (DateTimeOffset At, AppCatalogListing Listing)> _catalogs = [];
+
+    /// <summary>How long a downloaded <c>catalog.json</c> is reused before it is downloaded again.</summary>
+    public static readonly TimeSpan CatalogCacheLifetime = TimeSpan.FromMinutes(5);
 
     /// <summary>Creates the installer.</summary>
     /// <param name="downloader">Downloads the index and the package.</param>
@@ -97,13 +115,16 @@ public sealed class AppPackageInstaller
     /// <param name="sdkVersion">SDK version of this OS; <see cref="HackerOsSdk.SemanticVersion"/> by default.</param>
     /// <param name="logger">Writes the <c>/var/log/syslog</c> lines.</param>
     /// <param name="defaults">Sources and block list the host was built with; <see cref="AppPackageDefaults.Standard"/> by default.</param>
+    /// <param name="clock">Clock of the catalog cache; the system clock by default.</param>
     public AppPackageInstaller(
         IAppPackageDownloader downloader,
         IRuntimeApiSurface? runtime = null,
         SemanticVersion? sdkVersion = null,
         ILogger<AppPackageInstaller>? logger = null,
-        AppPackageDefaults? defaults = null)
+        AppPackageDefaults? defaults = null,
+        Func<DateTimeOffset>? clock = null)
     {
+        _clock = clock ?? (static () => DateTimeOffset.UtcNow);
         _downloader = downloader ?? throw new ArgumentNullException(nameof(downloader));
         _runtime = runtime ?? LoadedRuntimeApiSurface.Instance;
         _sdkVersion = sdkVersion ?? HackerOsSdk.SemanticVersion;
@@ -194,8 +215,11 @@ public sealed class AppPackageInstaller
         return found;
     }
 
-    /// <summary>Downloads the source's <c>index.json</c> from the GitHub host of <paramref name="sources"/>.</summary>
-    /// <param name="source">The repository; its version is ignored.</param>
+    /// <summary>
+    /// Downloads the source's <c>index.json</c> from the GitHub host of <paramref name="sources"/>; for
+    /// a catalog app, its versions in the catalog's <c>catalog.json</c> (ADR 0212 §1).
+    /// </summary>
+    /// <param name="source">The repository or catalog app; its version is ignored.</param>
     /// <param name="sources">The trusted sources and hosts.</param>
     /// <param name="cancellationToken">Cancels the download.</param>
     /// <exception cref="AppPackageException"><c>apps.package.no-index</c>, <c>apps.index.invalid</c> or a download error.</exception>
@@ -204,6 +228,11 @@ public sealed class AppPackageInstaller
     {
         ArgumentNullException.ThrowIfNull(source);
         ArgumentNullException.ThrowIfNull(sources);
+        if (source.IsCatalog)
+        {
+            return (await GetCatalogEntryAsync(source, sources, cancellationToken).ConfigureAwait(false)).Entry.ToIndex();
+        }
+
         Uri uri = source.GetIndexUri(sources.GitHubHost);
         byte[] bytes = await _downloader.DownloadAsync(uri, AppPackageIndex.MaximumBytes, cancellationToken).ConfigureAwait(false)
             ?? throw new AppPackageException(
@@ -240,8 +269,11 @@ public sealed class AppPackageInstaller
                 source.Version is null
                     ? $"{source.Name} has published no version yet."
                     : $"{source.Name} has no version {source.Version}.");
+        Uri packageUri = source.IsCatalog
+            ? (await GetCatalogEntryAsync(source, sources, cancellationToken).ConfigureAwait(false)).Listing.Resolve(entry.Path)
+            : source.GetFileUri(sources.GitHubHost, entry.Path);
         byte[] archive = await _downloader
-            .DownloadAsync(source.GetFileUri(sources.GitHubHost, entry.Path), AppPackage.MaximumArchiveBytes, cancellationToken)
+            .DownloadAsync(packageUri, AppPackage.MaximumArchiveBytes, cancellationToken)
             .ConfigureAwait(false)
             ?? throw new AppPackageException("apps.package.download-failed", $"{entry.Path} is listed in the index of {source.Name} but missing.");
         if (!string.Equals(AppPackage.Sha256(archive), entry.Sha256, StringComparison.OrdinalIgnoreCase))
@@ -268,6 +300,180 @@ public sealed class AppPackageInstaller
             Home = systemWide ? null : request.Home,
             BlockReason = blocked,
         };
+    }
+
+    /// <summary>
+    /// Downloads one catalog of <c>[catalogs]</c> (ADR 0188 §6), or reuses the copy downloaded less
+    /// than <see cref="CatalogCacheLifetime"/> ago.
+    /// </summary>
+    /// <param name="name">Catalog name.</param>
+    /// <param name="sources">The sources.</param>
+    /// <param name="cancellationToken">Cancels the download.</param>
+    /// <param name="refresh">Downloads again even when a recent copy exists.</param>
+    /// <exception cref="AppPackageException"><c>apps.catalog.not-found</c>, <c>apps.catalog.download-failed</c>, an invalid catalog or a download error.</exception>
+    public async ValueTask<AppCatalogListing> GetCatalogAsync(
+        string name, AppSourcesConfig sources, CancellationToken cancellationToken = default, bool refresh = false)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        ArgumentNullException.ThrowIfNull(sources);
+        if (!sources.Catalogs.TryGetValue(name, out Uri? address))
+        {
+            throw new AppPackageException(
+                "apps.catalog.not-found", $"There is no catalog '{name}' in {AppSourcesConfigDocument.MachinePath.Value}.");
+        }
+
+        DateTimeOffset now = _clock();
+        lock (_catalogGate)
+        {
+            if (!refresh && _catalogs.TryGetValue(address, out (DateTimeOffset At, AppCatalogListing Listing) cached)
+                && now - cached.At < CatalogCacheLifetime)
+            {
+                return cached.Listing with { Name = name };
+            }
+        }
+
+        byte[] bytes = await _downloader.DownloadAsync(address, AppCatalogDocument.MaximumBytes, cancellationToken).ConfigureAwait(false)
+            ?? throw new AppPackageException("apps.catalog.download-failed", $"The catalog '{name}' does not exist: {address} answered 404.");
+        AppCatalogListing listing = AppCatalogDocument.Parse(name, address, bytes);
+        foreach (string warning in listing.Warnings)
+        {
+            _logger.LogWarning("{Warning}", warning);
+        }
+
+        lock (_catalogGate)
+        {
+            _catalogs[address] = (now, listing);
+        }
+
+        return listing;
+    }
+
+    /// <summary>
+    /// Gets the catalogs in the order an app ID is looked up (ADR 0212 §4): the official catalog
+    /// first, then the others by name.
+    /// </summary>
+    /// <param name="sources">The sources.</param>
+    public static IReadOnlyList<string> GetCatalogSearchOrder(AppSourcesConfig sources)
+    {
+        ArgumentNullException.ThrowIfNull(sources);
+        return [.. sources.Catalogs.Keys
+            .OrderBy(static name => string.Equals(name, AppSourcesConfig.OfficialCatalogName, StringComparison.OrdinalIgnoreCase) ? 0 : 1)
+            .ThenBy(static name => name, StringComparer.OrdinalIgnoreCase)];
+    }
+
+    /// <summary>
+    /// Finds the catalog that publishes <paramref name="appId"/> (<c>hackpkg install &lt;appId&gt;</c>,
+    /// ADR 0188 §8): the first one of <see cref="GetCatalogSearchOrder"/> that lists it. A catalog
+    /// that cannot be downloaded is skipped.
+    /// </summary>
+    /// <param name="appId">The app.</param>
+    /// <param name="version">A version, or <see langword="null"/> for the newest stable one.</param>
+    /// <param name="sources">The sources.</param>
+    /// <param name="cancellationToken">Cancels the downloads.</param>
+    /// <exception cref="AppPackageException"><c>apps.package.not-in-catalog</c>, with the catalogs that failed.</exception>
+    public async ValueTask<AppPackageSource> FindInCatalogsAsync(
+        string appId, SemanticVersion? version, AppSourcesConfig sources, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(appId);
+        ArgumentNullException.ThrowIfNull(sources);
+        List<string> failures = [];
+        foreach (string name in GetCatalogSearchOrder(sources))
+        {
+            try
+            {
+                AppCatalogListing listing = await GetCatalogAsync(name, sources, cancellationToken).ConfigureAwait(false);
+                if (listing.Find(appId) is not null)
+                {
+                    return AppPackageSource.ForCatalog(name, appId, version);
+                }
+            }
+            catch (AppPackageException exception)
+            {
+                failures.Add($"{name}: {exception.Message}");
+            }
+        }
+
+        throw new AppPackageException(
+            "apps.package.not-in-catalog",
+            sources.Catalogs.Count == 0
+                ? $"{appId} is in no catalog: {AppSourcesConfigDocument.MachinePath.Value} lists none."
+                : $"{appId} is in none of the catalogs ({string.Join(", ", GetCatalogSearchOrder(sources))})."
+                    + (failures.Count == 0 ? string.Empty : $" Could not read: {string.Join("; ", failures)}"));
+    }
+
+    /// <summary>Downloads a text file of a catalog, such as an app's <c>description.fr.md</c>.</summary>
+    /// <param name="name">Catalog name.</param>
+    /// <param name="relativePath">Path from <c>catalog.json</c>.</param>
+    /// <param name="sources">The sources.</param>
+    /// <param name="cancellationToken">Cancels the download.</param>
+    /// <returns>The UTF-8 text, or <see langword="null"/> when the file does not exist.</returns>
+    public async ValueTask<string?> DownloadCatalogTextAsync(
+        string name, string relativePath, AppSourcesConfig sources, CancellationToken cancellationToken = default)
+    {
+        AppCatalogListing listing = await GetCatalogAsync(name, sources, cancellationToken).ConfigureAwait(false);
+        byte[]? bytes = await _downloader
+            .DownloadAsync(listing.Resolve(relativePath), MaximumCatalogTextBytes, cancellationToken)
+            .ConfigureAwait(false);
+        return bytes is null ? null : System.Text.Encoding.UTF8.GetString(bytes);
+    }
+
+    /// <summary>Largest catalog text file downloaded: the catalog accepts 20 KB descriptions.</summary>
+    public const int MaximumCatalogTextBytes = 64 * 1024;
+
+    /// <summary>
+    /// Finds the installed packages whose source publishes a newer version (ADR 0188 §3): for each
+    /// app, its newest stable version (or the newest one when the installed one is a prerelease) is
+    /// compared with the installed one. A source that cannot be read is skipped with a warning.
+    /// </summary>
+    /// <param name="sources">The sources.</param>
+    /// <param name="systemInstalled">The <c>[installed]</c> section of the system.</param>
+    /// <param name="personalInstalled">The session user's <c>[installed]</c> section.</param>
+    /// <param name="cancellationToken">Cancels the downloads.</param>
+    public async ValueTask<AppPackageUpdateReport> FindUpdatesAsync(
+        AppSourcesConfig sources,
+        InstalledAppsReadResult systemInstalled,
+        InstalledAppsReadResult personalInstalled,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(sources);
+        ArgumentNullException.ThrowIfNull(systemInstalled);
+        ArgumentNullException.ThrowIfNull(personalInstalled);
+        IEnumerable<(string AppId, AppPackageSource Source, bool SystemWide)> installed = systemInstalled.Sources
+            .Select(static pair => (pair.Key, pair.Value, true))
+            .Concat(personalInstalled.Sources
+                .Where(pair => !systemInstalled.Sources.ContainsKey(pair.Key))
+                .Select(static pair => (pair.Key, pair.Value, false)));
+        List<AppPackageUpdate> updates = [];
+        List<string> failures = [];
+        foreach ((string appId, AppPackageSource source, bool systemWide) in installed.OrderBy(static item => item.AppId, StringComparer.Ordinal))
+        {
+            try
+            {
+                AppPackageIndex index = await GetIndexAsync(source, sources, cancellationToken).ConfigureAwait(false);
+                AppPackageIndexEntry? newest = source.Version?.PreRelease is null ? index.Latest : index.Versions.FirstOrDefault();
+                if (newest is not null && source.Version is { } current && newest.Version.CompareTo(current) > 0)
+                {
+                    updates.Add(new AppPackageUpdate(appId, source, newest.Version, systemWide));
+                }
+            }
+            catch (AppPackageException exception)
+            {
+                failures.Add($"{source.Name}: {exception.Message}");
+                _logger.LogWarning("apps: update check of {AppId} from {Source} failed: {Reason}", appId, source.Name, exception.Message);
+            }
+        }
+
+        return new AppPackageUpdateReport(updates, failures);
+    }
+
+    private async ValueTask<(AppCatalogListing Listing, AppCatalogEntry Entry)> GetCatalogEntryAsync(
+        AppPackageSource source, AppSourcesConfig sources, CancellationToken cancellationToken)
+    {
+        AppCatalogListing listing = await GetCatalogAsync(source.Catalog!, sources, cancellationToken).ConfigureAwait(false);
+        AppCatalogEntry entry = listing.Find(source.CatalogAppId!)
+            ?? throw new AppPackageException(
+                "apps.package.not-in-catalog", $"The catalog '{source.Catalog}' does not list {source.CatalogAppId}.");
+        return (listing, entry);
     }
 
     /// <summary>

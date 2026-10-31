@@ -67,7 +67,7 @@ L'écosystème se compose de :
   modèle, débogage dans Visual Studio, tests unitaires et de bout en bout,
   publication automatique.
 - **Une distribution intégrée.** Une application s'installe depuis son dépôt
-  GitHub en une commande, et bientôt en un clic depuis le Hack Store.
+  GitHub en une commande, ou en un clic depuis le Hack Store.
 
 ## Façons d'utiliser et de déployer HackerOS
 
@@ -282,6 +282,15 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   liste noire dans Paramètres ▸ Sources et liste noire et `hackpkg sources` /
   `hackpkg policy`. ([ADR 0189](dev/adr/0189-app-sources-trust-and-per-user-install.md),
   [ADR 0208](dev/adr/0208-hack-store-sources-trust-build.md))
+- **Hack Store** : le magasin d'applications de HackerOS, épinglé par défaut
+  dans le menu Démarrer, sur le bureau et le mobile. Accueil par catégories,
+  recherche, fiche (captures, description, taille, licence, capacités,
+  confiance), installation pour soi ou pour tous, ouverture, mise à jour,
+  désinstallation, onglet Installées et « Redémarrer pour terminer ». Il
+  vérifie les mises à jour à l'ouverture de session puis toutes les 6 heures,
+  avec un badge et une notification ; `hackpkg install <appId>` lit les mêmes
+  catalogues. ([ADR 0188](dev/adr/0188-hack-store-and-app-catalog.md),
+  [ADR 0212](dev/adr/0212-hack-store-app-build.md))
 - **Modèle de dépôt d'application `hackeros-solution`** : application, hôte
   et tests prêts à lancer, sous-module de l'OS pour le débogage dans ses
   sources, paquets NuGet en production, CI et soumission au catalogue du Hack
@@ -311,7 +320,6 @@ dans `main`, le lien mène à sa PR.
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Catalogue des applications | Format du catalogue, vérification et publication des applications proposées. | [0188](dev/adr/0188-hack-store-and-app-catalog.md) | [AppMarketPlace #1](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/1) |
-| Application Hack Store v1 | Parcourir, installer, mettre à jour et désinstaller des applications en un clic. | [0188](dev/adr/0188-hack-store-and-app-catalog.md) | [#249](https://github.com/Kazo-ca/HackerOs/issues/249) |
 | Hack Store, étapes suivantes | Ajout sans redémarrage, signature des paquets, installation transactionnelle. | [0188](dev/adr/0188-hack-store-and-app-catalog.md) | [#251](https://github.com/Kazo-ca/HackerOs/issues/251) |
 
 ### Personnalisation

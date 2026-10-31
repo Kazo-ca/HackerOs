@@ -113,6 +113,7 @@
     private bool _isShadeOpen;
     private bool _showRecent;
     private WhatsNewAttention? _whatsNew;
+    private AppUpdateAttention? _appUpdates;
     private bool _hasWhatsNew;
 
     /// <inheritdoc />
@@ -138,6 +139,9 @@
             Rerender();
         });
         _ = _whatsNew.StartAsync();
+        // ADR 0212 §5: the update check; the home screen's Hack Store icon draws the count.
+        _appUpdates = new AppUpdateAttention(Services, Rerender);
+        _appUpdates.Start();
     }
 
     /// <inheritdoc />
@@ -250,6 +254,7 @@
         FileDialogAdapter.Changed -= Rerender;
         _mobileProcessObserver?.Dispose();
         _whatsNew?.Dispose();
+        _appUpdates?.Dispose();
         _navigationHistory.Dispose();
 
         if (_module is not null)

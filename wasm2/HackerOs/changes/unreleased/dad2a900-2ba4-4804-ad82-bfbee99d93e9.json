@@ -1,0 +1,20 @@
+{
+  "id": "dad2a900-2ba4-4804-ad82-bfbee99d93e9",
+  "category": "new",
+  "audience": [
+    "user",
+    "developer"
+  ],
+  "title": {
+    "en": "Hack Store: browse, install and update apps in one click",
+    "fr": "Hack Store : parcourir, installer et mettre à jour des apps en un clic"
+  },
+  "description": {
+    "en": "The Hack Store is pinned in the Start menu on desktop and mobile. It lists the apps of the reviewed catalogs by category, searches them, shows each app's page (screenshots, description, size, license, capabilities, trust), installs it for you or for everyone, opens, updates and uninstalls it, and offers Restart to finish. It checks for updates at sign-in then every 6 hours, with a badge on its icon and a notification. hackpkg install <appId> installs from the same catalogs; the SDK gains HackAppPackages.GetCatalogsAsync, GetUpdatesAsync and RestartToFinishAsync.",
+    "fr": "Le Hack Store est épinglé dans le menu Démarrer, sur le bureau et le mobile. Il liste les apps des catalogues relus par catégorie, les cherche, montre la fiche de chaque app (captures, description, taille, licence, capacités, confiance), l'installe pour vous ou pour tous, l'ouvre, la met à jour et la désinstalle, et propose Redémarrer pour terminer. Il vérifie les mises à jour à l'ouverture de session puis toutes les 6 heures, avec un badge sur son icône et une notification. hackpkg install <appId> installe depuis les mêmes catalogues ; le SDK reçoit HackAppPackages.GetCatalogsAsync, GetUpdatesAsync et RestartToFinishAsync."
+  },
+  "links": [
+    "doc/en/wasm/dev/adr/0212-hack-store-app-build.md",
+    "doc/en/wasm/dev/app-installation.md"
+  ]
+}

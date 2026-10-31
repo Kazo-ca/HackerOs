@@ -85,7 +85,7 @@
     <value>hackpkg : {0} mise à jour de {1} vers {2}</value>
   </data>
   <data name="Usage" xml:space="preserve">
-    <value>usage : hackpkg install &lt;dépôt&gt;[@version] [--user|--system] | remove &lt;appId&gt; [--user|--system] | update [&lt;appId&gt;] | list | info &lt;dépôt&gt; | sources [add &lt;source&gt; [--trusted] | remove &lt;source&gt;] | policy [block|unblock app|category|capability &lt;valeur&gt;]</value>
+    <value>usage : hackpkg install &lt;appId|dépôt&gt;[@version] [--user|--system] | remove &lt;appId&gt; [--user|--system] | update [&lt;appId&gt;] | list | info &lt;appId|dépôt&gt; | sources [add &lt;source&gt; [--trusted] | remove &lt;source&gt;] | policy [block|unblock app|category|capability &lt;valeur&gt;]</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>oui</value>

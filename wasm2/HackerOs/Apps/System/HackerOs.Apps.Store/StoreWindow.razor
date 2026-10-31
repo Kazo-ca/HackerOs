@@ -1,0 +1,346 @@
+@using HackerOs.AppSdk.Apps
+@using HackerOs.AppSdk.Blazor
+@using HackerOs.AppSdk.Icons
+@inherits WindowAppBase
+
+<div class="store-root">
+    <header class="store-header">
+        <div class="store-brand">
+            <HackerIcon Library="IconLibrary.Lucide" Name="shopping-bag" Size="20" Title="" />
+            <span class="store-title">Hack Store</span>
+        </div>
+        <input class="store-search"
+               type="search"
+               aria-label="@L["Search.Label"]"
+               placeholder="@L["Search.Placeholder"]"
+               value="@_query"
+               @oninput="OnQueryChanged" />
+        <nav class="store-tabs" role="tablist" aria-label="@L["Tabs.Label"]">
+            <button type="button" role="tab" class="store-tab @(_view != StoreView.Installed ? "is-active" : null)"
+                    aria-selected="@(_view != StoreView.Installed ? "true" : "false")" @onclick="ShowHome">
+                @L["Tabs.Home"]
+            </button>
+            <button type="button" role="tab" class="store-tab @(_view == StoreView.Installed ? "is-active" : null)"
+                    aria-selected="@(_view == StoreView.Installed ? "true" : "false")" @onclick="ShowInstalled">
+                @L["Tabs.Installed"]
+                @if (_store.Updatable.Count > 0)
+                {
+                    <span class="store-count">@_store.Updatable.Count</span>
+                }
+            </button>
+        </nav>
+        <button type="button" class="store-icon-button" title="@L["Refresh"]" aria-label="@L["Refresh"]" disabled="@(_isLoading || _isBusy)" @onclick="RefreshAsync">
+            <HackerIcon Library="IconLibrary.Lucide" Name="refresh-cw" Size="16" Title="" />
+        </button>
+    </header>
+
+    @if (_store.HasPendingRestart)
+    {
+        <div class="store-banner is-restart" role="status">
+            <HackerIcon Library="IconLibrary.Lucide" Name="rotate-ccw" Size="16" Title="" />
+            <span>@L["Restart.Text"]</span>
+            <button type="button" class="store-button is-primary" disabled="@_isBusy" @onclick="RestartAsync">@L["Restart.Button"]</button>
+        </div>
+    }
+
+    @if (_message is not null)
+    {
+        <div class="store-banner @(_messageIsError ? "is-error" : "is-info")" role="@(_messageIsError ? "alert" : "status")">
+            <span>@_message</span>
+            <button type="button" class="store-icon-button" aria-label="@L["Dismiss"]" @onclick="() => _message = null">×</button>
+        </div>
+    }
+
+    @foreach (HackAppCatalog failed in _store.FailedCatalogs)
+    {
+        <div class="store-banner is-warning" role="status">
+            <HackerIcon Library="IconLibrary.Lucide" Name="triangle-alert" Size="16" Title="" />
+            <span>@L["Catalog.Failed", failed.Name]</span>
+        </div>
+    }
+
+    <main class="store-body">
+        @if (_isLoading && _store.Available.Count == 0 && _store.Installed.Count == 0)
+        {
+            <p class="store-empty">@L["Loading"]</p>
+        }
+        else if (_view == StoreView.Detail && Selected is { } entry)
+        {
+            @RenderDetail(entry)
+        }
+        else if (_view == StoreView.Installed)
+        {
+            @RenderInstalled()
+        }
+        else if (IsSearching)
+        {
+            <h2 class="store-section-title">@Strings.Plural(L, "Search.Results", SearchResults.Count)</h2>
+            @RenderGrid(SearchResults)
+            @if (SearchResults.Count == 0)
+            {
+                <p class="store-empty">@L["Search.None", _query ?? string.Empty]</p>
+            }
+        }
+        else if (_categoryId is { } categoryId)
+        {
+            <button type="button" class="store-back" @onclick="ShowHome">
+                <HackerIcon Library="IconLibrary.Lucide" Name="arrow-left" Size="16" Title="" /> @L["Back"]
+            </button>
+            <h2 class="store-section-title">@CategoryLabel(categoryId)</h2>
+            @RenderGrid(categoryId == StoreCatalog.OtherCategoryId ? _store.Home().LastOrDefault().Apps ?? [] : _store.InCategory(categoryId))
+        }
+        else
+        {
+            @if (_store.Available.Count == 0)
+            {
+                <p class="store-empty">@L["Home.Empty"]</p>
+            }
+            @foreach ((HackCatalogCategory category, IReadOnlyList<StoreEntry> apps) in _store.Home())
+            {
+                <section class="store-section" aria-label="@CategoryLabel(category.Id)">
+                    <div class="store-section-head">
+                        <h2 class="store-section-title">@CategoryLabel(category.Id)</h2>
+                        @if (apps.Count > HomeRowSize)
+                        {
+                            <button type="button" class="store-link" @onclick="() => ShowCategory(category.Id)">@L["Home.SeeAll", apps.Count]</button>
+                        }
+                    </div>
+                    @RenderGrid(apps.Take(HomeRowSize).ToList())
+                </section>
+            }
+        }
+    </main>
+</div>
+
+@code {
+    /// <summary>Apps shown per category on the home page before « See all ».</summary>
+    private const int HomeRowSize = 6;
+
+    private RenderFragment RenderGrid(IReadOnlyList<StoreEntry> entries) => __builder =>
+    {
+        <ul class="store-grid">
+            @foreach (StoreEntry entry in entries)
+            {
+                <li>
+                    <button type="button" class="store-card" @onclick="() => OpenDetailAsync(entry)">
+                        @RenderIcon(entry, 48)
+                        <span class="store-card-text">
+                            <span class="store-card-name">@entry.Name</span>
+                            <span class="store-card-description">@entry.App?.GetShortDescription(Culture)</span>
+                            <span class="store-card-meta">
+                                @if (entry.App is { } app)
+                                {
+                                    <span class="store-trust @TrustClass(app.Trust)">@TrustText(app.Trust)</span>
+                                }
+                                @if (entry.State != StoreAppState.NotInstalled)
+                                {
+                                    <span class="store-state">@StateText(entry)</span>
+                                }
+                            </span>
+                        </span>
+                    </button>
+                </li>
+            }
+        </ul>
+    };
+
+    private RenderFragment RenderIcon(StoreEntry entry, int size) => __builder =>
+    {
+        @if (entry.App?.Latest.IconUri is { } icon)
+        {
+            <img class="store-app-icon" src="@icon" alt="" width="@size" height="@size" loading="lazy" draggable="false" />
+        }
+        else
+        {
+            <span class="store-app-icon is-placeholder" aria-hidden="true">
+                <HackerIcon Library="IconLibrary.Lucide" Name="package" Size="@(size / 2)" Title="" />
+            </span>
+        }
+    };
+
+    private RenderFragment RenderActions(StoreEntry entry) => __builder =>
+    {
+        bool busy = _isBusy;
+        <div class="store-actions">
+            @switch (entry.State)
+            {
+                case StoreAppState.NotInstalled when entry.App is not null:
+                    <button type="button" class="store-button is-primary" disabled="@busy" @onclick="() => InstallAsync(entry, HackPackageScope.User)">
+                        <HackerIcon Library="IconLibrary.Lucide" Name="download" Size="14" Title="" /> @L["Action.InstallForMe"]
+                    </button>
+                    <button type="button" class="store-button" disabled="@busy" @onclick="() => InstallAsync(entry, HackPackageScope.System)">@L["Action.InstallForEveryone"]</button>
+                    break;
+                case StoreAppState.UpdateAvailable:
+                    <button type="button" class="store-button is-primary" disabled="@busy" @onclick="() => UpdateAsync(entry)">@L["Action.Update", entry.Update!.AvailableVersion]</button>
+                    <button type="button" class="store-button" disabled="@busy" @onclick="() => OpenAsync(entry)">@L["Action.Open"]</button>
+                    <button type="button" class="store-button is-danger" disabled="@busy" @onclick="() => RemoveAsync(entry)">@L["Action.Uninstall"]</button>
+                    break;
+                case StoreAppState.Installed:
+                    <button type="button" class="store-button is-primary" disabled="@busy" @onclick="() => OpenAsync(entry)">
+                        <HackerIcon Library="IconLibrary.Lucide" Name="play" Size="14" Title="" /> @L["Action.Open"]
+                    </button>
+                    <button type="button" class="store-button is-danger" disabled="@busy" @onclick="() => RemoveAsync(entry)">@L["Action.Uninstall"]</button>
+                    break;
+                case StoreAppState.PendingRestart:
+                    <span class="store-state">@L["State.PendingRestart"]</span>
+                    @if (entry.Installed is not null && !entry.Removed)
+                    {
+                        <button type="button" class="store-button is-danger" disabled="@busy" @onclick="() => RemoveAsync(entry)">@L["Action.Uninstall"]</button>
+                    }
+                    else if (entry.Removed && entry.App is not null)
+                    {
+                        <button type="button" class="store-button" disabled="@busy" @onclick="() => InstallAsync(entry, HackPackageScope.User)">@L["Action.InstallForMe"]</button>
+                    }
+                    break;
+            }
+            @if (_busyAppId == entry.AppId)
+            {
+                <span class="store-progress" role="status">@L["Working"]</span>
+            }
+        </div>
+    };
+
+    private RenderFragment RenderDetail(StoreEntry entry) => __builder =>
+    {
+        HackCatalogApp? app = entry.App;
+        HackCatalogAppVersion? latest = app?.Latest;
+        <article class="store-detail">
+            <button type="button" class="store-back" @onclick="CloseDetail">
+                <HackerIcon Library="IconLibrary.Lucide" Name="arrow-left" Size="16" Title="" /> @L["Back"]
+            </button>
+            <div class="store-detail-head">
+                @RenderIcon(entry, 96)
+                <div class="store-detail-title">
+                    <h2>@entry.Name</h2>
+                    @if (app is not null)
+                    {
+                        <p class="store-detail-short">@app.GetShortDescription(Culture)</p>
+                        <span class="store-trust @TrustClass(app.Trust)">
+                            <HackerIcon Library="IconLibrary.Lucide" Name="@TrustIcon(app.Trust)" Size="14" Title="" />
+                            @TrustText(app.Trust) · @L["Detail.Catalog", app.Catalog]
+                        </span>
+                    }
+                    @if (entry.State != StoreAppState.NotInstalled)
+                    {
+                        <span class="store-state">@StateText(entry)</span>
+                    }
+                    @RenderActions(entry)
+                </div>
+            </div>
+
+            @if (latest is { ScreenshotUris.Count: > 0 })
+            {
+                <div class="store-screenshots" aria-label="@L["Detail.Screenshots"]">
+                    @foreach (string screenshot in latest.ScreenshotUris)
+                    {
+                        <img src="@screenshot" alt="@L["Detail.Screenshot", entry.Name]" loading="lazy" />
+                    }
+                </div>
+            }
+
+            <div class="store-detail-columns">
+                <section class="store-detail-description" aria-label="@L["Detail.Description"]">
+                    @if (_isDescriptionLoading)
+                    {
+                        <p class="store-empty">@L["Loading"]</p>
+                    }
+                    else if (_description is not null)
+                    {
+                        <StoreMarkdownView Markdown="@_description" />
+                    }
+                    else if (app is null)
+                    {
+                        <p class="store-empty">@L["Detail.NotInCatalog"]</p>
+                    }
+                </section>
+                <aside class="store-facts" aria-label="@L["Detail.Facts"]">
+                    <dl>
+                        @if (app is not null && latest is not null)
+                        {
+                            <dt>@L["Detail.Version"]</dt>
+                            <dd>@app.LatestVersion</dd>
+                            <dt>@L["Detail.Size"]</dt>
+                            <dd>@SizeText(latest.SizeBytes)</dd>
+                            <dt>@L["Detail.License"]</dt>
+                            <dd>@app.License</dd>
+                            <dt>@L["Detail.Category"]</dt>
+                            <dd>@CategoryLabel(app.Category)</dd>
+                            @if (latest.PublishedAt is { } published)
+                            {
+                                <dt>@L["Detail.Published"]</dt>
+                                <dd>@published.ToString("d", Culture)</dd>
+                            }
+                            <dt>@L["Detail.Source"]</dt>
+                            <dd><a href="@app.Repository" target="_blank" rel="noopener noreferrer">@app.Repository</a></dd>
+                        }
+                        @if (entry.Installed is { } installed)
+                        {
+                            <dt>@L["Detail.Installed"]</dt>
+                            <dd>@installed.Version · @(installed.SystemWide ? L["Scope.Everyone"] : L["Scope.Me"])</dd>
+                        }
+                    </dl>
+                    @if (latest is not null)
+                    {
+                        <h3>@L["Detail.Capabilities"]</h3>
+                        @if (latest.Capabilities.Count == 0)
+                        {
+                            <p class="store-empty">@L["Detail.NoCapability"]</p>
+                        }
+                        else
+                        {
+                            <ul class="store-capabilities">
+                                @foreach (string capability in latest.Capabilities.OrderBy(capability => StoreCatalog.IsDangerous(capability) ? 0 : 1))
+                                {
+                                    bool dangerous = StoreCatalog.IsDangerous(capability);
+                                    <li class="@(dangerous ? "is-dangerous" : null)">
+                                        <code>@capability</code>
+                                        @if (dangerous)
+                                        {
+                                            <span class="store-capability-note">@L["Detail.Dangerous"]</span>
+                                        }
+                                    </li>
+                                }
+                            </ul>
+                        }
+                    }
+                </aside>
+            </div>
+        </article>
+    };
+
+    private RenderFragment RenderInstalled() => __builder =>
+    {
+        <div class="store-section-head">
+            <h2 class="store-section-title">@L["Installed.Title"]</h2>
+            @if (_store.Updatable.Count > 1)
+            {
+                <button type="button" class="store-button is-primary" disabled="@_isBusy" @onclick="UpdateAllAsync">@L["Installed.UpdateAll", _store.Updatable.Count]</button>
+            }
+        </div>
+        @if (_store.Installed.Count == 0)
+        {
+            <p class="store-empty">@L["Installed.Empty"]</p>
+        }
+        else
+        {
+            <ul class="store-list">
+                @foreach (StoreEntry entry in _store.Installed)
+                {
+                    <li class="store-row">
+                        <button type="button" class="store-row-main" @onclick="() => OpenDetailAsync(entry)">
+                            @RenderIcon(entry, 40)
+                            <span class="store-card-text">
+                                <span class="store-card-name">@entry.Name</span>
+                                <span class="store-card-description">
+                                    @entry.Installed?.Version · @(entry.Installed?.SystemWide == true ? L["Scope.Everyone"] : L["Scope.Me"])
+                                </span>
+                                <span class="store-state">@StateText(entry)</span>
+                            </span>
+                        </button>
+                        @RenderActions(entry)
+                    </li>
+                }
+            </ul>
+        }
+    };
+}

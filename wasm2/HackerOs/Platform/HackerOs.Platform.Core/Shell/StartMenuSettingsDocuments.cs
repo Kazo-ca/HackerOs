@@ -23,6 +23,18 @@ public static class StartMenuSettingsDocuments
     /// <summary>Gets the per-user file.</summary>
     public static OsSettingsFile File { get; } = new(OsSettingsLocation.UserConfig, "start-menu.json");
 
+    /// <summary>
+    /// Property of a profile listing the default pins already added once (ADR 0212 §6), so an app the
+    /// user unpinned is not pinned again.
+    /// </summary>
+    public const string DefaultPinsAppliedProperty = "defaultPinsApplied";
+
+    /// <summary>
+    /// Gets the apps pinned by default (ADR 0188 §1): to every new profile, and added once to the
+    /// existing profiles. The user may unpin them.
+    /// </summary>
+    public static IReadOnlyList<string> DefaultPinnedAppIds { get; } = ["org.hackeros.store"];
+
     /// <summary>Gets the clean-profile document containing no pins.</summary>
     public const string EmptyDocumentContent = "{\"schemaVersion\":1,\"profiles\":{}}";
 }
