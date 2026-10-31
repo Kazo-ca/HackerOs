@@ -37,11 +37,13 @@ public sealed class OsSoundServiceTests
     }
 
     [Fact]
-    public async Task Signing_in_installs_the_built_in_themes_as_real_ogg_files()
+    public async Task The_first_sign_in_installs_the_built_in_themes_as_real_ogg_files_after_the_login()
     {
         SettingsFilesHarness harness = new();
         await harness.BootAsync();
+        using OsSoundService service = Create(harness, new RecordingOutput());
         await harness.LoginAsync(harness.Alice);
+        await service.InstallBuiltInThemesAsync();
 
         foreach (BuiltInSoundTheme theme in BuiltInSoundThemes.All)
         {
@@ -106,6 +108,7 @@ public sealed class OsSoundServiceTests
         InMemoryNotificationQueue queue = new(10);
         RecordingOutput output = new();
         using OsSoundService service = Create(harness, output, queue);
+        await service.InstallBuiltInThemesAsync();
         await service.InitializeAsync();
 
         queue.Enqueue(Notify(harness.Bob.Id, severity));
@@ -128,6 +131,7 @@ public sealed class OsSoundServiceTests
         await harness.WriteAsUserAsync("/home/alice/.config/hackeros/sound.config", "theme=retro\nvolume=100\n");
         RecordingOutput output = new();
         using OsSoundService service = Create(harness, output);
+        await service.InstallBuiltInThemesAsync();
         await service.InitializeAsync();
 
         Assert.True(await service.PlayAsync(OsSoundEvent.Error));
@@ -149,6 +153,7 @@ public sealed class OsSoundServiceTests
         await harness.WriteAsUserAsync("/home/alice/.local/share/sounds/big/dialog-error.ogg", new string('x', (int)OsSoundEvents.MaxSoundFileBytes + 1));
         RecordingOutput output = new();
         using OsSoundService service = Create(harness, output);
+        await service.InstallBuiltInThemesAsync();
         await service.InitializeAsync();
 
         OsSoundClip? clip = await service.ResolveAsync("big", OsSoundEvent.Error);
@@ -165,6 +170,7 @@ public sealed class OsSoundServiceTests
         await harness.WriteAsUserAsync("/home/alice/.local/share/sounds/soft/index.theme", "[Sound Theme]\nName=Fake\n");
         await harness.WriteAsUserAsync("/home/alice/.local/share/sounds/soft/dialog-error.ogg", "OggS fake");
         using OsSoundService service = Create(harness, new RecordingOutput());
+        await service.InstallBuiltInThemesAsync();
         await service.InitializeAsync();
 
         OsSoundClip? clip = await service.ResolveAsync("soft", OsSoundEvent.Error);
@@ -180,6 +186,7 @@ public sealed class OsSoundServiceTests
         await harness.LoginAsync(harness.Alice);
         RecordingOutput output = new();
         using OsSoundService service = Create(harness, output);
+        await service.InstallBuiltInThemesAsync();
         await service.InitializeAsync();
         TaskCompletionSource changed = new(TaskCreationOptions.RunContinuationsAsynchronously);
         service.Changed += () => changed.TrySetResult();
@@ -200,6 +207,7 @@ public sealed class OsSoundServiceTests
         await harness.LoginAsync(harness.Alice);
         RecordingOutput output = new();
         using OsSoundService service = Create(harness, output);
+        await service.InstallBuiltInThemesAsync();
         await service.InitializeAsync();
 
         Assert.True(await service.PlayAsync(OsSoundEvent.Warning));
@@ -224,7 +232,9 @@ public sealed class OsSoundServiceTests
     }
 
     private static OsSoundService Create(SettingsFilesHarness harness, IOsSoundOutput output, INotificationFeed? feed = null) =>
-        new(harness.Settings, harness.FileSystem, harness.Clock, harness.Session, output, harness.EventBus, feed);
+        new(
+            harness.Settings, harness.FileSystem, harness.Clock, harness.Session, output, harness.EventBus, feed,
+            installBuiltInThemes: harness.Seeder.InstallSoundThemesAsync);
 
     private static Notification Notify(Simulation.Abstractions.Sessions.LocalUserId user, NotificationSeverity severity) =>
         new(

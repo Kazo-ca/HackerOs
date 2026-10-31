@@ -54,6 +54,9 @@ public sealed class OsSoundService : IDisposable
     private readonly List<IDisposable> _subscriptions = [];
     private readonly Dictionary<OsSoundEvent, long> _lastPlayed = [];
     private readonly Lock _playGate = new();
+    private readonly Func<CancellationToken, ValueTask>? _installBuiltInThemes;
+    private readonly Lock _installGate = new();
+    private Task? _installation;
     private string? _preferencesHome;
     private bool _initialized;
 
@@ -67,6 +70,10 @@ public sealed class OsSoundService : IDisposable
     /// <param name="notifications">Posted notifications; optional.</param>
     /// <param name="timeProvider">Real time of the repeat guard; <see cref="TimeProvider.System"/> by default.</param>
     /// <param name="logger">Logger of unreadable themes.</param>
+    /// <param name="installBuiltInThemes">
+    /// Writes the built-in themes to <c>/usr/share/sounds</c> when they are missing (the seeder); run
+    /// once, in the background after the first sign-in, so the first login does not wait for it.
+    /// </param>
     public OsSoundService(
         IOsSettingsService settings,
         IFileSystemService fileSystem,
@@ -76,7 +83,8 @@ public sealed class OsSoundService : IDisposable
         IEventBus? eventBus = null,
         INotificationFeed? notifications = null,
         TimeProvider? timeProvider = null,
-        ILogger<OsSoundService>? logger = null)
+        ILogger<OsSoundService>? logger = null,
+        Func<CancellationToken, ValueTask>? installBuiltInThemes = null)
     {
         _settings = settings ?? throw new ArgumentNullException(nameof(settings));
         _fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
@@ -86,10 +94,11 @@ public sealed class OsSoundService : IDisposable
         _notifications = notifications;
         _timeProvider = timeProvider ?? TimeProvider.System;
         _logger = logger ?? NullLogger<OsSoundService>.Instance;
+        _installBuiltInThemes = installBuiltInThemes;
         _settings.DocumentChanged += OnDocumentChanged;
         if (eventBus is not null)
         {
-            _subscriptions.Add(eventBus.Subscribe<SessionActivatedEvent>(_ => Play(OsSoundEvent.SignIn)));
+            _subscriptions.Add(eventBus.Subscribe<SessionActivatedEvent>(_ => SignInInBackground()));
             _subscriptions.Add(eventBus.Subscribe<SessionLoggedOutEvent>(_ => Play(OsSoundEvent.SignOut)));
         }
 
@@ -112,6 +121,24 @@ public sealed class OsSoundService : IDisposable
         await RefreshCoreAsync(raiseEvent: false, cancellationToken).ConfigureAwait(false);
         await _settings.WatchAsync(SoundSettingsDocuments.Document, cancellationToken).ConfigureAwait(false);
         _initialized = true;
+    }
+
+    /// <summary>
+    /// Installs the built-in themes when they are missing, like a distribution package written
+    /// once to the disk. Runs once per session service; later calls return the same task.
+    /// </summary>
+    /// <returns>The installation, completed at once without an installer.</returns>
+    public Task InstallBuiltInThemesAsync()
+    {
+        if (_installBuiltInThemes is null)
+        {
+            return Task.CompletedTask;
+        }
+
+        lock (_installGate)
+        {
+            return _installation ??= _installBuiltInThemes(CancellationToken.None).AsTask();
+        }
     }
 
     /// <summary>Plays the sound of an event in the background; never throws.</summary>
@@ -199,6 +226,24 @@ public sealed class OsSoundService : IDisposable
             // A sound never breaks what it accompanies.
             _logger.LogWarning(exception, "sound: could not play {Event}", soundEvent);
         }
+    }
+
+    // The sign-in sound needs the built-in themes, written after the login rather than during it
+    // (writing them made the first login about two seconds slower).
+    private void SignInInBackground() => _ = SignInInBackgroundAsync();
+
+    private async Task SignInInBackgroundAsync()
+    {
+        try
+        {
+            await InstallBuiltInThemesAsync().ConfigureAwait(false);
+        }
+        catch (Exception exception) when (exception is not OutOfMemoryException)
+        {
+            _logger.LogWarning(exception, "sound: could not install the built-in sound themes");
+        }
+
+        await PlayInBackgroundAsync(OsSoundEvent.SignIn).ConfigureAwait(false);
     }
 
     private bool TakeTurn(OsSoundEvent soundEvent)
