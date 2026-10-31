@@ -22,7 +22,7 @@ resource fingerprints, ADR 0098 §3 to §5) are described in
 
 ## Single version
 
-- `build/Versions.props` defines `HackerOsVersion` (today `2.1.0`, first automatic release of ADR 0173),
+- `build/Versions.props` defines `HackerOsVersion` (today `2.2.0`; `2.1.0` was the first automatic release of ADR 0173),
   imported by `Directory.Build.props`: each project of the solution carries this
   `Version`.
 - Before the freeze: `0.9.0-preview.<n>`. Since the SDK 1.0 freeze (work item
@@ -315,7 +315,7 @@ host that references it no longer builds (`HOSAPP0021`, the same rule as the
 catalog applied at build time); an OS 2.0 that finds it in its catalog refuses it
 at startup (`catalog.sdk.incompatible`), does not load it, and Settings ▸
 Installed Apps shows it as "Incompatible". It must be recompiled
-against the 2.x packages (2.1.0 today).
+against the 2.x packages (2.2.0 today).
 
 ### Migrating a 1.x app
 
@@ -328,7 +328,7 @@ against the 2.x packages (2.1.0 today).
 | a conflict resolver written by the app | `Dialogs.AsFileConflictResolver(AppContext)`: the "Replace / Keep both / Skip" dialog of the `hackeros.file-dialogs` provider |
 | `ShellIcon`, `ShellIconDescriptor` | `HackIcons.Vector(…)` / `HackIcons.FromImage(…)` (`HackerOs.AppSdk.Icons`) to describe an icon; rendering belongs to the OS |
 
-Then set `HackerOsVersion` to `2.1.0` (or the latest published 2.x) and recompile.
+Then set `HackerOsVersion` to `2.2.0` (or the latest published 2.x) and recompile.
 
 ### Additions
 
@@ -367,6 +367,31 @@ under SemVer, a 2.0 app runs without being recompiled.
 |---|---|---|
 | `HackerOs.Simulation.Abstractions` | `ProcessStartRequest.ParentExitGracePeriod`: delay of a child after its parent ends (stop request, then kill) | ADR 0147 |
 | `HackerOs.Platform.Core` | `BackgroundJobService.ParentExitGracePeriod` (5 s) | ADR 0147 |
+
+### SDK 2.2
+
+Prepared on 2026-10-31 (branch `release/2.2.0`), published by the
+`Release HackerOS` workflow when its PR lands in `main`: `v2.2.0` tag, GitHub
+Release and nuget.org. `build/tools/ship-public-api.sh` folded 3020 lines of
+`PublicAPI.Unshipped.txt` into `PublicAPI.Shipped.txt`: the additions of the
+`todo/base` series and those that reached `main` since 2.1.0. The only
+`*REMOVED*` lines touch `HackerOs.Apps.Browser` (the `BrowserResponse`
+constructor receives the source of the response, ADR 0210), a base app and not
+an SDK library: a minor version under SemVer, a 2.x app runs without being
+recompiled. The `hackeros-solution` template needs this version for its
+`Release` profile (ADR 0207 §11).
+
+| Library | Addition | Decision |
+|---|---|---|
+| `HackerOs.AppSdk` | `HackAppPackages`, `HackPackageSources`, `HackPackagePolicy`, `HackPackageTrust`, `HackPackageScope`, `HackInstalledPackage`, `HackPackageInstallReport`, `HackPackageException`: install an app for oneself or for everyone, trusted sources, block list | ADR 0182, 0208 |
+| `HackerOs.AppSdk` | `HackAppCatalog`, `HackCatalogApp`, `HackCatalogAppVersion`, `HackCatalogCategory`, `HackCatalogItemKind`, `HackPackageCatalog`, `HackPackageUpdate`: Hack Store catalogs and updates | ADR 0189, 0212 |
+| `HackerOs.AppSdk` | `HackInstalledThemePack`, `HackThemePackInstallReport`, `HackThemePackParts`: theme packs | ADR 0213 |
+| `HackerOs.AppSdk` | `HackWhatsNew`, `HackChangeList`, `HackChangeGroup`, `HackChangeEntry`, `HackChangeCategory`: the change list | ADR 0186 |
+| `HackerOs.AppSdk` | `HackScreens`, `HackScreenInfo` and their types: screens of the extended desktop | ADR 0184 |
+| `HackerOs.AppSdk` | `HackTimeZone`, `IAppExecutionContext.TimeZone`; `HackServerProbe`, `HackServerConnection.PairAsync` and `TestAsync`; `HackHttpResponseSource`; `HackDirectorySize`; `HackDesktopLink` | ADR 0193, 0191, 0210, 0185 |
+| `HackerOs.Simulation.Abstractions` | `IHostFolder`, `IHostFolderAccess` and their types (computer folder mounted as a drive); `OsSoundEvent`, `SoundThemeIndex` (system sounds); `FileSystemTreeSize` | ADR 0181, 0204, 0185 |
+| `HackerOs.Theming.Abstractions` | `WallpaperCatalog`, `BuiltInWallpaper`, `WallpaperFit` (image wallpapers); `IconPacks.IconPack`, `IconPackLibrary` and their types (icon packs); `CursorTheme`, `CursorThemeLibrary` and their types (cursor themes); `ThemePackLayout` (theme packs) | ADR 0202, 0203, 0205, 0213 |
+| `HackerOs.AppSdk.Blazor` | `MessageBoxIcon` | ADR 0185 |
 
 ### Compatibility app
 

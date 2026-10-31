@@ -122,7 +122,7 @@ compile l'app au commit indiqué (ADR 0188 §4 à §6).
 est la sortie de `dotnet new hackeros-solution -n HackerOs.App` plus le lien du
 sous-module. On le régénère depuis le modèle, jamais à la main. Il ne peut
 fonctionner qu'avec un sous-module sur une release qui contient ce modèle
-(ADR 0207 §11).
+(2.2.0 ou plus récente, ADR 0207 §11).
 
 ## Tâches
 

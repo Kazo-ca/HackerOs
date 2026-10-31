@@ -41,6 +41,8 @@ HackerOs.MobileShell.Blazor.MobileRecentSurfaceOptions.Title.init -> void
 HackerOs.MobileShell.Blazor.MobileSystemNavigationBar
 HackerOs.MobileShell.Blazor.MobileSystemNavigationBar.Commands.get -> HackerOs.MobileShell.Blazor.IMobileNavigationCommands!
 HackerOs.MobileShell.Blazor.MobileSystemNavigationBar.Commands.set -> void
+HackerOs.MobileShell.Blazor.MobileSystemNavigationBar.HomeHasAttention.get -> bool
+HackerOs.MobileShell.Blazor.MobileSystemNavigationBar.HomeHasAttention.set -> void
 HackerOs.MobileShell.Blazor.MobileSystemNavigationBar.MobileSystemNavigationBar() -> void
 HackerOs.MobileShell.Blazor.MobileSystemNavigationBar.Options.get -> HackerOs.MobileShell.Blazor.MobileSystemNavigationBarOptions!
 HackerOs.MobileShell.Blazor.MobileSystemNavigationBar.Options.set -> void

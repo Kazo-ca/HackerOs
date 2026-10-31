@@ -153,6 +153,48 @@ HackerOs.AppSdk.Administration.HackPermissionState.DeniedByAdministrator = 3 -> 
 HackerOs.AppSdk.Administration.HackPermissionState.DeniedByUser = 2 -> HackerOs.AppSdk.Administration.HackPermissionState
 HackerOs.AppSdk.Administration.HackPermissionState.Pending = 5 -> HackerOs.AppSdk.Administration.HackPermissionState
 HackerOs.AppSdk.Administration.HackPermissionState.System = 0 -> HackerOs.AppSdk.Administration.HackPermissionState
+HackerOs.AppSdk.Administration.HackScreenInfo
+HackerOs.AppSdk.Administration.HackScreenInfo.<Clone>$() -> HackerOs.AppSdk.Administration.HackScreenInfo!
+HackerOs.AppSdk.Administration.HackScreenInfo.Deconstruct(out int Number, out string? MonitorName, out int Width, out int Height, out bool IsFullScreen) -> void
+HackerOs.AppSdk.Administration.HackScreenInfo.Equals(HackerOs.AppSdk.Administration.HackScreenInfo? other) -> bool
+HackerOs.AppSdk.Administration.HackScreenInfo.HackScreenInfo(int Number, string? MonitorName, int Width, int Height, bool IsFullScreen) -> void
+HackerOs.AppSdk.Administration.HackScreenInfo.Height.get -> int
+HackerOs.AppSdk.Administration.HackScreenInfo.Height.init -> void
+HackerOs.AppSdk.Administration.HackScreenInfo.IsFullScreen.get -> bool
+HackerOs.AppSdk.Administration.HackScreenInfo.IsFullScreen.init -> void
+HackerOs.AppSdk.Administration.HackScreenInfo.MonitorName.get -> string?
+HackerOs.AppSdk.Administration.HackScreenInfo.MonitorName.init -> void
+HackerOs.AppSdk.Administration.HackScreenInfo.Number.get -> int
+HackerOs.AppSdk.Administration.HackScreenInfo.Number.init -> void
+HackerOs.AppSdk.Administration.HackScreenInfo.Width.get -> int
+HackerOs.AppSdk.Administration.HackScreenInfo.Width.init -> void
+HackerOs.AppSdk.Administration.HackScreenOpenStatus
+HackerOs.AppSdk.Administration.HackScreenOpenStatus.Blocked = 1 -> HackerOs.AppSdk.Administration.HackScreenOpenStatus
+HackerOs.AppSdk.Administration.HackScreenOpenStatus.LimitReached = 3 -> HackerOs.AppSdk.Administration.HackScreenOpenStatus
+HackerOs.AppSdk.Administration.HackScreenOpenStatus.Opened = 0 -> HackerOs.AppSdk.Administration.HackScreenOpenStatus
+HackerOs.AppSdk.Administration.HackScreenOpenStatus.Unavailable = 2 -> HackerOs.AppSdk.Administration.HackScreenOpenStatus
+HackerOs.AppSdk.Administration.HackScreenPermission
+HackerOs.AppSdk.Administration.HackScreenPermission.Denied = 4 -> HackerOs.AppSdk.Administration.HackScreenPermission
+HackerOs.AppSdk.Administration.HackScreenPermission.Granted = 3 -> HackerOs.AppSdk.Administration.HackScreenPermission
+HackerOs.AppSdk.Administration.HackScreenPermission.Prompt = 2 -> HackerOs.AppSdk.Administration.HackScreenPermission
+HackerOs.AppSdk.Administration.HackScreenPermission.Unknown = 0 -> HackerOs.AppSdk.Administration.HackScreenPermission
+HackerOs.AppSdk.Administration.HackScreenPermission.Unsupported = 1 -> HackerOs.AppSdk.Administration.HackScreenPermission
+HackerOs.AppSdk.Administration.HackScreens
+HackerOs.AppSdk.Administration.HackScreensState
+HackerOs.AppSdk.Administration.HackScreensState.<Clone>$() -> HackerOs.AppSdk.Administration.HackScreensState!
+HackerOs.AppSdk.Administration.HackScreensState.CallerScreen.get -> int
+HackerOs.AppSdk.Administration.HackScreensState.CallerScreen.init -> void
+HackerOs.AppSdk.Administration.HackScreensState.CanOpenScreen.get -> bool
+HackerOs.AppSdk.Administration.HackScreensState.CanOpenScreen.init -> void
+HackerOs.AppSdk.Administration.HackScreensState.Deconstruct(out System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Administration.HackScreenInfo!>! Screens, out HackerOs.AppSdk.Administration.HackScreenPermission Permission, out bool CanOpenScreen, out System.Collections.Generic.IReadOnlyList<int>! RestorableScreens, out int CallerScreen) -> void
+HackerOs.AppSdk.Administration.HackScreensState.Equals(HackerOs.AppSdk.Administration.HackScreensState? other) -> bool
+HackerOs.AppSdk.Administration.HackScreensState.HackScreensState(System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Administration.HackScreenInfo!>! Screens, HackerOs.AppSdk.Administration.HackScreenPermission Permission, bool CanOpenScreen, System.Collections.Generic.IReadOnlyList<int>! RestorableScreens, int CallerScreen) -> void
+HackerOs.AppSdk.Administration.HackScreensState.Permission.get -> HackerOs.AppSdk.Administration.HackScreenPermission
+HackerOs.AppSdk.Administration.HackScreensState.Permission.init -> void
+HackerOs.AppSdk.Administration.HackScreensState.RestorableScreens.get -> System.Collections.Generic.IReadOnlyList<int>!
+HackerOs.AppSdk.Administration.HackScreensState.RestorableScreens.init -> void
+HackerOs.AppSdk.Administration.HackScreensState.Screens.get -> System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Administration.HackScreenInfo!>!
+HackerOs.AppSdk.Administration.HackScreensState.Screens.init -> void
 HackerOs.AppSdk.Administration.HackServerConnection
 HackerOs.AppSdk.Administration.HackServerConnectionException
 HackerOs.AppSdk.Administration.HackServerConnectionException.HackServerConnectionException(string! message, System.Exception? innerException = null) -> void
@@ -169,6 +211,19 @@ HackerOs.AppSdk.Administration.HackServerConnectionState.IsConnected.get -> bool
 HackerOs.AppSdk.Administration.HackServerConnectionState.IsConnected.init -> void
 HackerOs.AppSdk.Administration.HackServerConnectionState.ServerUrl.get -> System.Uri?
 HackerOs.AppSdk.Administration.HackServerConnectionState.ServerUrl.init -> void
+HackerOs.AppSdk.Administration.HackServerProbe
+HackerOs.AppSdk.Administration.HackServerProbe.<Clone>$() -> HackerOs.AppSdk.Administration.HackServerProbe!
+HackerOs.AppSdk.Administration.HackServerProbe.ApiVersion.get -> string?
+HackerOs.AppSdk.Administration.HackServerProbe.ApiVersion.init -> void
+HackerOs.AppSdk.Administration.HackServerProbe.Deconstruct(out bool IsServer, out string? ServerVersion, out string? ApiVersion, out string? Error) -> void
+HackerOs.AppSdk.Administration.HackServerProbe.Equals(HackerOs.AppSdk.Administration.HackServerProbe? other) -> bool
+HackerOs.AppSdk.Administration.HackServerProbe.Error.get -> string?
+HackerOs.AppSdk.Administration.HackServerProbe.Error.init -> void
+HackerOs.AppSdk.Administration.HackServerProbe.HackServerProbe(bool IsServer, string? ServerVersion, string? ApiVersion, string? Error) -> void
+HackerOs.AppSdk.Administration.HackServerProbe.IsServer.get -> bool
+HackerOs.AppSdk.Administration.HackServerProbe.IsServer.init -> void
+HackerOs.AppSdk.Administration.HackServerProbe.ServerVersion.get -> string?
+HackerOs.AppSdk.Administration.HackServerProbe.ServerVersion.init -> void
 HackerOs.AppSdk.Administration.HackServerRelayPolicy
 HackerOs.AppSdk.Administration.HackServerRelayPolicy.<Clone>$() -> HackerOs.AppSdk.Administration.HackServerRelayPolicy!
 HackerOs.AppSdk.Administration.HackServerRelayPolicy.AllowAllPorts.get -> bool
@@ -303,6 +358,8 @@ HackerOs.AppSdk.Administration.HackUserAccount.IsCurrentUser.get -> bool
 HackerOs.AppSdk.Administration.HackUserAccount.IsCurrentUser.init -> void
 HackerOs.AppSdk.Administration.HackUserAccount.IsEnabled.get -> bool
 HackerOs.AppSdk.Administration.HackUserAccount.IsEnabled.init -> void
+HackerOs.AppSdk.Administration.HackUserAccount.IsGuest.get -> bool
+HackerOs.AppSdk.Administration.HackUserAccount.IsGuest.init -> void
 HackerOs.AppSdk.Administration.HackUserAccount.LoginName.get -> string!
 HackerOs.AppSdk.Administration.HackUserAccount.LoginName.init -> void
 HackerOs.AppSdk.Administration.HackUserAccount.PasskeyCount.get -> int
@@ -347,6 +404,16 @@ HackerOs.AppSdk.Administration.IAppPermissionAdministrationGateway.GetPolicyAsyn
 HackerOs.AppSdk.Administration.IAppPermissionAdministrationGateway.RemoveOwnDenialAsync(string! appId, string! capability, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
 HackerOs.AppSdk.Administration.IAppPermissionAdministrationGateway.SetMachineDecisionAsync(string! appId, string! capability, HackerOs.AppSdk.Administration.HackPermissionDecision decision, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
 HackerOs.AppSdk.Administration.IAppPermissionAdministrationGateway.SetPolicyAsync(HackerOs.AppSdk.Administration.HackDangerousCapabilityPolicy policy, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+HackerOs.AppSdk.Administration.IAppScreensGateway
+HackerOs.AppSdk.Administration.IAppScreensGateway.CloseScreenAsync(int number, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+HackerOs.AppSdk.Administration.IAppScreensGateway.GetState() -> HackerOs.AppSdk.Administration.HackScreensState!
+HackerOs.AppSdk.Administration.IAppScreensGateway.IdentifyAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+HackerOs.AppSdk.Administration.IAppScreensGateway.IsSupported.get -> bool
+HackerOs.AppSdk.Administration.IAppScreensGateway.OpenScreenAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Administration.HackScreenOpenStatus>
+HackerOs.AppSdk.Administration.IAppScreensGateway.RequestPermissionAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Administration.HackScreenPermission>
+HackerOs.AppSdk.Administration.IAppScreensGateway.RestoreScreensAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<int>
+HackerOs.AppSdk.Administration.IAppScreensGateway.ToggleFullScreenAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+HackerOs.AppSdk.Administration.IAppScreensGateway.WatchAsync(System.Func<System.Threading.Tasks.ValueTask>! onChanged, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.IAsyncDisposable!>
 HackerOs.AppSdk.Administration.IAppServerConnectionGateway
 HackerOs.AppSdk.Administration.IAppServerConnectionGateway.ConnectAsync(System.Uri! serverUrl, string! login, string! password, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Administration.HackServerConnectionState!>
 HackerOs.AppSdk.Administration.IAppServerConnectionGateway.CreateAccountAsync(System.Uri! serverUrl, string! login, string! password, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Administration.HackServerConnectionState!>
@@ -355,10 +422,12 @@ HackerOs.AppSdk.Administration.IAppServerConnectionGateway.GetConflictsAsync(Sys
 HackerOs.AppSdk.Administration.IAppServerConnectionGateway.GetRelayPolicyAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Administration.HackServerRelayPolicy?>
 HackerOs.AppSdk.Administration.IAppServerConnectionGateway.GetStateAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Administration.HackServerConnectionState!>
 HackerOs.AppSdk.Administration.IAppServerConnectionGateway.GetSyncStatusAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Administration.HackSyncStatus!>
+HackerOs.AppSdk.Administration.IAppServerConnectionGateway.PairAsync(System.Uri! serverUrl, string! code, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Administration.HackServerConnectionState!>
 HackerOs.AppSdk.Administration.IAppServerConnectionGateway.SetSyncPausedAsync(bool paused, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
 HackerOs.AppSdk.Administration.IAppServerConnectionGateway.ShowConflictsAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
 HackerOs.AppSdk.Administration.IAppServerConnectionGateway.SyncAsync(HackerOs.AppSdk.Administration.HackSyncDomain domain, HackerOs.AppSdk.Administration.HackSyncDirection direction, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
 HackerOs.AppSdk.Administration.IAppServerConnectionGateway.SyncNowAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Administration.HackSyncStatus!>
+HackerOs.AppSdk.Administration.IAppServerConnectionGateway.TestAsync(System.Uri! serverUrl, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Administration.HackServerProbe!>
 HackerOs.AppSdk.Administration.IAppStorageDiagnosticsGateway
 HackerOs.AppSdk.Administration.IAppStorageDiagnosticsGateway.DeleteWebSiteDatabaseAsync(string! databaseName, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
 HackerOs.AppSdk.Administration.IAppStorageDiagnosticsGateway.GetSnapshotAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Administration.HackStorageSnapshot!>
@@ -378,10 +447,26 @@ HackerOs.AppSdk.Administration.IAppUserAccountsGateway.DeleteAsync(string! login
 HackerOs.AppSdk.Administration.IAppUserAccountsGateway.ListAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Administration.HackUserAccount!>!>
 HackerOs.AppSdk.Administration.IAppUserAccountsGateway.ListPasskeysAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Administration.HackPasskey!>!>
 HackerOs.AppSdk.Administration.IAppUserAccountsGateway.RemovePasskeyAsync(string! passkeyId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+HackerOs.AppSdk.Administration.IAppUserAccountsGateway.RequestGuestAccountCreationAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
 HackerOs.AppSdk.Administration.IAppUserAccountsGateway.ResetPasswordAsync(string! loginName, string? newPassword, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
 HackerOs.AppSdk.AppBase
 HackerOs.AppSdk.AppBase.AppBase(HackerOs.App.Abstractions.AppManifest! manifest, HackerOs.App.Abstractions.AppKind expectedKind) -> void
 HackerOs.AppSdk.AppBase.Manifest.get -> HackerOs.App.Abstractions.AppManifest!
+HackerOs.AppSdk.Apps.HackAppCatalog
+HackerOs.AppSdk.Apps.HackAppCatalog.<Clone>$() -> HackerOs.AppSdk.Apps.HackAppCatalog!
+HackerOs.AppSdk.Apps.HackAppCatalog.Apps.get -> System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Apps.HackCatalogApp!>!
+HackerOs.AppSdk.Apps.HackAppCatalog.Apps.init -> void
+HackerOs.AppSdk.Apps.HackAppCatalog.Categories.get -> System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Apps.HackCatalogCategory!>!
+HackerOs.AppSdk.Apps.HackAppCatalog.Categories.init -> void
+HackerOs.AppSdk.Apps.HackAppCatalog.Deconstruct(out string! Name, out HackerOs.AppSdk.Apps.HackPackageTrust Trust, out System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Apps.HackCatalogCategory!>! Categories, out System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Apps.HackCatalogApp!>! Apps) -> void
+HackerOs.AppSdk.Apps.HackAppCatalog.Equals(HackerOs.AppSdk.Apps.HackAppCatalog? other) -> bool
+HackerOs.AppSdk.Apps.HackAppCatalog.Error.get -> string?
+HackerOs.AppSdk.Apps.HackAppCatalog.Error.init -> void
+HackerOs.AppSdk.Apps.HackAppCatalog.HackAppCatalog(string! Name, HackerOs.AppSdk.Apps.HackPackageTrust Trust, System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Apps.HackCatalogCategory!>! Categories, System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Apps.HackCatalogApp!>! Apps) -> void
+HackerOs.AppSdk.Apps.HackAppCatalog.Name.get -> string!
+HackerOs.AppSdk.Apps.HackAppCatalog.Name.init -> void
+HackerOs.AppSdk.Apps.HackAppCatalog.Trust.get -> HackerOs.AppSdk.Apps.HackPackageTrust
+HackerOs.AppSdk.Apps.HackAppCatalog.Trust.init -> void
 HackerOs.AppSdk.Apps.HackAppFileHandler
 HackerOs.AppSdk.Apps.HackAppFileHandler.<Clone>$() -> HackerOs.AppSdk.Apps.HackAppFileHandler!
 HackerOs.AppSdk.Apps.HackAppFileHandler.Actions.get -> System.Collections.Generic.IReadOnlyList<string!>!
@@ -449,8 +534,75 @@ HackerOs.AppSdk.Apps.HackAppLaunchException.AppId.get -> string?
 HackerOs.AppSdk.Apps.HackAppLaunchException.ErrorCode.get -> string?
 HackerOs.AppSdk.Apps.HackAppLaunchException.HackAppLaunchException(string! message, string? appId = null, string? errorCode = null) -> void
 HackerOs.AppSdk.Apps.HackAppManagement
+HackerOs.AppSdk.Apps.HackAppPackages
 HackerOs.AppSdk.Apps.HackApps
 HackerOs.AppSdk.Apps.HackBrowser
+HackerOs.AppSdk.Apps.HackCatalogApp
+HackerOs.AppSdk.Apps.HackCatalogApp.<Clone>$() -> HackerOs.AppSdk.Apps.HackCatalogApp!
+HackerOs.AppSdk.Apps.HackCatalogApp.AppId.get -> string!
+HackerOs.AppSdk.Apps.HackCatalogApp.AppId.init -> void
+HackerOs.AppSdk.Apps.HackCatalogApp.Catalog.get -> string!
+HackerOs.AppSdk.Apps.HackCatalogApp.Catalog.init -> void
+HackerOs.AppSdk.Apps.HackCatalogApp.Category.get -> string!
+HackerOs.AppSdk.Apps.HackCatalogApp.Category.init -> void
+HackerOs.AppSdk.Apps.HackCatalogApp.Deconstruct(out string! Catalog, out string! AppId, out string! Name, out string! Category, out System.Collections.Generic.IReadOnlyList<string!>! Tags, out System.Collections.Generic.IReadOnlyDictionary<string!, string!>! ShortDescriptions, out string! License, out string! Repository, out string! LatestVersion, out System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Apps.HackCatalogAppVersion!>! Versions, out HackerOs.AppSdk.Apps.HackPackageTrust Trust) -> void
+HackerOs.AppSdk.Apps.HackCatalogApp.Equals(HackerOs.AppSdk.Apps.HackCatalogApp? other) -> bool
+HackerOs.AppSdk.Apps.HackCatalogApp.GetShortDescription(System.Globalization.CultureInfo! culture) -> string!
+HackerOs.AppSdk.Apps.HackCatalogApp.HackCatalogApp(string! Catalog, string! AppId, string! Name, string! Category, System.Collections.Generic.IReadOnlyList<string!>! Tags, System.Collections.Generic.IReadOnlyDictionary<string!, string!>! ShortDescriptions, string! License, string! Repository, string! LatestVersion, System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Apps.HackCatalogAppVersion!>! Versions, HackerOs.AppSdk.Apps.HackPackageTrust Trust) -> void
+HackerOs.AppSdk.Apps.HackCatalogApp.Kind.get -> HackerOs.AppSdk.Apps.HackCatalogItemKind
+HackerOs.AppSdk.Apps.HackCatalogApp.Kind.init -> void
+HackerOs.AppSdk.Apps.HackCatalogApp.Latest.get -> HackerOs.AppSdk.Apps.HackCatalogAppVersion!
+HackerOs.AppSdk.Apps.HackCatalogApp.LatestVersion.get -> string!
+HackerOs.AppSdk.Apps.HackCatalogApp.LatestVersion.init -> void
+HackerOs.AppSdk.Apps.HackCatalogApp.License.get -> string!
+HackerOs.AppSdk.Apps.HackCatalogApp.License.init -> void
+HackerOs.AppSdk.Apps.HackCatalogApp.Name.get -> string!
+HackerOs.AppSdk.Apps.HackCatalogApp.Name.init -> void
+HackerOs.AppSdk.Apps.HackCatalogApp.Repository.get -> string!
+HackerOs.AppSdk.Apps.HackCatalogApp.Repository.init -> void
+HackerOs.AppSdk.Apps.HackCatalogApp.ShortDescriptions.get -> System.Collections.Generic.IReadOnlyDictionary<string!, string!>!
+HackerOs.AppSdk.Apps.HackCatalogApp.ShortDescriptions.init -> void
+HackerOs.AppSdk.Apps.HackCatalogApp.Source.get -> string!
+HackerOs.AppSdk.Apps.HackCatalogApp.Tags.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.AppSdk.Apps.HackCatalogApp.Tags.init -> void
+HackerOs.AppSdk.Apps.HackCatalogApp.Trust.get -> HackerOs.AppSdk.Apps.HackPackageTrust
+HackerOs.AppSdk.Apps.HackCatalogApp.Trust.init -> void
+HackerOs.AppSdk.Apps.HackCatalogApp.Versions.get -> System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Apps.HackCatalogAppVersion!>!
+HackerOs.AppSdk.Apps.HackCatalogApp.Versions.init -> void
+HackerOs.AppSdk.Apps.HackCatalogAppVersion
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.<Clone>$() -> HackerOs.AppSdk.Apps.HackCatalogAppVersion!
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.Capabilities.init -> void
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.Deconstruct(out string! Version, out long SizeBytes, out System.Collections.Generic.IReadOnlyList<string!>! Capabilities) -> void
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.DescriptionLanguages.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.DescriptionLanguages.init -> void
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.Equals(HackerOs.AppSdk.Apps.HackCatalogAppVersion? other) -> bool
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.HackCatalogAppVersion(string! Version, long SizeBytes, System.Collections.Generic.IReadOnlyList<string!>! Capabilities) -> void
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.IconUri.get -> string?
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.IconUri.init -> void
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.MinimumSdkVersion.get -> string?
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.MinimumSdkVersion.init -> void
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.PublishedAt.get -> System.DateTimeOffset?
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.PublishedAt.init -> void
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.ScreenshotUris.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.ScreenshotUris.init -> void
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.SizeBytes.get -> long
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.SizeBytes.init -> void
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.Version.get -> string!
+HackerOs.AppSdk.Apps.HackCatalogAppVersion.Version.init -> void
+HackerOs.AppSdk.Apps.HackCatalogCategory
+HackerOs.AppSdk.Apps.HackCatalogCategory.<Clone>$() -> HackerOs.AppSdk.Apps.HackCatalogCategory!
+HackerOs.AppSdk.Apps.HackCatalogCategory.Deconstruct(out string! Id, out System.Collections.Generic.IReadOnlyDictionary<string!, string!>! Labels) -> void
+HackerOs.AppSdk.Apps.HackCatalogCategory.Equals(HackerOs.AppSdk.Apps.HackCatalogCategory? other) -> bool
+HackerOs.AppSdk.Apps.HackCatalogCategory.GetLabel(System.Globalization.CultureInfo! culture) -> string!
+HackerOs.AppSdk.Apps.HackCatalogCategory.HackCatalogCategory(string! Id, System.Collections.Generic.IReadOnlyDictionary<string!, string!>! Labels) -> void
+HackerOs.AppSdk.Apps.HackCatalogCategory.Id.get -> string!
+HackerOs.AppSdk.Apps.HackCatalogCategory.Id.init -> void
+HackerOs.AppSdk.Apps.HackCatalogCategory.Labels.get -> System.Collections.Generic.IReadOnlyDictionary<string!, string!>!
+HackerOs.AppSdk.Apps.HackCatalogCategory.Labels.init -> void
+HackerOs.AppSdk.Apps.HackCatalogItemKind
+HackerOs.AppSdk.Apps.HackCatalogItemKind.App = 0 -> HackerOs.AppSdk.Apps.HackCatalogItemKind
+HackerOs.AppSdk.Apps.HackCatalogItemKind.ThemePack = 1 -> HackerOs.AppSdk.Apps.HackCatalogItemKind
 HackerOs.AppSdk.Apps.HackDefaultHandlerStatus
 HackerOs.AppSdk.Apps.HackDefaultHandlerStatus.AppCannotHandle = 4 -> HackerOs.AppSdk.Apps.HackDefaultHandlerStatus
 HackerOs.AppSdk.Apps.HackDefaultHandlerStatus.AppNotFound = 3 -> HackerOs.AppSdk.Apps.HackDefaultHandlerStatus
@@ -478,6 +630,40 @@ HackerOs.AppSdk.Apps.HackFileAssociationLayer.User = 1 -> HackerOs.AppSdk.Apps.H
 HackerOs.AppSdk.Apps.HackInstallScope
 HackerOs.AppSdk.Apps.HackInstallScope.Machine = 1 -> HackerOs.AppSdk.Apps.HackInstallScope
 HackerOs.AppSdk.Apps.HackInstallScope.User = 0 -> HackerOs.AppSdk.Apps.HackInstallScope
+HackerOs.AppSdk.Apps.HackInstalledPackage
+HackerOs.AppSdk.Apps.HackInstalledPackage.<Clone>$() -> HackerOs.AppSdk.Apps.HackInstalledPackage!
+HackerOs.AppSdk.Apps.HackInstalledPackage.AppId.get -> string!
+HackerOs.AppSdk.Apps.HackInstalledPackage.AppId.init -> void
+HackerOs.AppSdk.Apps.HackInstalledPackage.Deconstruct(out string! AppId, out string! Source, out string! Version, out bool Loaded) -> void
+HackerOs.AppSdk.Apps.HackInstalledPackage.Equals(HackerOs.AppSdk.Apps.HackInstalledPackage? other) -> bool
+HackerOs.AppSdk.Apps.HackInstalledPackage.HackInstalledPackage(string! AppId, string! Source, string! Version, bool Loaded) -> void
+HackerOs.AppSdk.Apps.HackInstalledPackage.Loaded.get -> bool
+HackerOs.AppSdk.Apps.HackInstalledPackage.Loaded.init -> void
+HackerOs.AppSdk.Apps.HackInstalledPackage.PreviousVersion.get -> string?
+HackerOs.AppSdk.Apps.HackInstalledPackage.PreviousVersion.init -> void
+HackerOs.AppSdk.Apps.HackInstalledPackage.Source.get -> string!
+HackerOs.AppSdk.Apps.HackInstalledPackage.Source.init -> void
+HackerOs.AppSdk.Apps.HackInstalledPackage.SystemWide.get -> bool
+HackerOs.AppSdk.Apps.HackInstalledPackage.SystemWide.init -> void
+HackerOs.AppSdk.Apps.HackInstalledPackage.Version.get -> string!
+HackerOs.AppSdk.Apps.HackInstalledPackage.Version.init -> void
+HackerOs.AppSdk.Apps.HackInstalledThemePack
+HackerOs.AppSdk.Apps.HackInstalledThemePack.<Clone>$() -> HackerOs.AppSdk.Apps.HackInstalledThemePack!
+HackerOs.AppSdk.Apps.HackInstalledThemePack.Deconstruct(out string! PackId, out string! Name, out string! Version, out string! Source, out bool SystemWide, out HackerOs.AppSdk.Apps.HackThemePackParts Parts) -> void
+HackerOs.AppSdk.Apps.HackInstalledThemePack.Equals(HackerOs.AppSdk.Apps.HackInstalledThemePack? other) -> bool
+HackerOs.AppSdk.Apps.HackInstalledThemePack.HackInstalledThemePack(string! PackId, string! Name, string! Version, string! Source, bool SystemWide, HackerOs.AppSdk.Apps.HackThemePackParts Parts) -> void
+HackerOs.AppSdk.Apps.HackInstalledThemePack.Name.get -> string!
+HackerOs.AppSdk.Apps.HackInstalledThemePack.Name.init -> void
+HackerOs.AppSdk.Apps.HackInstalledThemePack.PackId.get -> string!
+HackerOs.AppSdk.Apps.HackInstalledThemePack.PackId.init -> void
+HackerOs.AppSdk.Apps.HackInstalledThemePack.Parts.get -> HackerOs.AppSdk.Apps.HackThemePackParts
+HackerOs.AppSdk.Apps.HackInstalledThemePack.Parts.init -> void
+HackerOs.AppSdk.Apps.HackInstalledThemePack.Source.get -> string!
+HackerOs.AppSdk.Apps.HackInstalledThemePack.Source.init -> void
+HackerOs.AppSdk.Apps.HackInstalledThemePack.SystemWide.get -> bool
+HackerOs.AppSdk.Apps.HackInstalledThemePack.SystemWide.init -> void
+HackerOs.AppSdk.Apps.HackInstalledThemePack.Version.get -> string!
+HackerOs.AppSdk.Apps.HackInstalledThemePack.Version.init -> void
 HackerOs.AppSdk.Apps.HackIntentResult
 HackerOs.AppSdk.Apps.HackIntentResult.<Clone>$() -> HackerOs.AppSdk.Apps.HackIntentResult!
 HackerOs.AppSdk.Apps.HackIntentResult.CandidateAppIds.get -> System.Collections.Generic.IReadOnlyList<string!>!
@@ -506,6 +692,135 @@ HackerOs.AppSdk.Apps.HackOpenFileStatus
 HackerOs.AppSdk.Apps.HackOpenFileStatus.ChooserRequired = 1 -> HackerOs.AppSdk.Apps.HackOpenFileStatus
 HackerOs.AppSdk.Apps.HackOpenFileStatus.NoHandler = 2 -> HackerOs.AppSdk.Apps.HackOpenFileStatus
 HackerOs.AppSdk.Apps.HackOpenFileStatus.Opened = 0 -> HackerOs.AppSdk.Apps.HackOpenFileStatus
+HackerOs.AppSdk.Apps.HackPackageBlockKind
+HackerOs.AppSdk.Apps.HackPackageBlockKind.App = 0 -> HackerOs.AppSdk.Apps.HackPackageBlockKind
+HackerOs.AppSdk.Apps.HackPackageBlockKind.Capability = 2 -> HackerOs.AppSdk.Apps.HackPackageBlockKind
+HackerOs.AppSdk.Apps.HackPackageBlockKind.Category = 1 -> HackerOs.AppSdk.Apps.HackPackageBlockKind
+HackerOs.AppSdk.Apps.HackPackageCatalog
+HackerOs.AppSdk.Apps.HackPackageCatalog.<Clone>$() -> HackerOs.AppSdk.Apps.HackPackageCatalog!
+HackerOs.AppSdk.Apps.HackPackageCatalog.Address.get -> string!
+HackerOs.AppSdk.Apps.HackPackageCatalog.Address.init -> void
+HackerOs.AppSdk.Apps.HackPackageCatalog.BuiltIn.get -> bool
+HackerOs.AppSdk.Apps.HackPackageCatalog.BuiltIn.init -> void
+HackerOs.AppSdk.Apps.HackPackageCatalog.Deconstruct(out string! Name, out string! Address, out HackerOs.AppSdk.Apps.HackPackageTrust Trust, out bool BuiltIn) -> void
+HackerOs.AppSdk.Apps.HackPackageCatalog.Equals(HackerOs.AppSdk.Apps.HackPackageCatalog? other) -> bool
+HackerOs.AppSdk.Apps.HackPackageCatalog.HackPackageCatalog(string! Name, string! Address, HackerOs.AppSdk.Apps.HackPackageTrust Trust, bool BuiltIn) -> void
+HackerOs.AppSdk.Apps.HackPackageCatalog.Name.get -> string!
+HackerOs.AppSdk.Apps.HackPackageCatalog.Name.init -> void
+HackerOs.AppSdk.Apps.HackPackageCatalog.Trust.get -> HackerOs.AppSdk.Apps.HackPackageTrust
+HackerOs.AppSdk.Apps.HackPackageCatalog.Trust.init -> void
+HackerOs.AppSdk.Apps.HackPackageException
+HackerOs.AppSdk.Apps.HackPackageException.Code.get -> string!
+HackerOs.AppSdk.Apps.HackPackageException.HackPackageException(string! code, string! message) -> void
+HackerOs.AppSdk.Apps.HackPackageInfo
+HackerOs.AppSdk.Apps.HackPackageInfo.<Clone>$() -> HackerOs.AppSdk.Apps.HackPackageInfo!
+HackerOs.AppSdk.Apps.HackPackageInfo.AppId.get -> string!
+HackerOs.AppSdk.Apps.HackPackageInfo.AppId.init -> void
+HackerOs.AppSdk.Apps.HackPackageInfo.Deconstruct(out string! Source, out string! AppId, out System.Collections.Generic.IReadOnlyList<string!>! Versions, out string? Latest, out bool Trusted, out string? InstalledVersion) -> void
+HackerOs.AppSdk.Apps.HackPackageInfo.Equals(HackerOs.AppSdk.Apps.HackPackageInfo? other) -> bool
+HackerOs.AppSdk.Apps.HackPackageInfo.HackPackageInfo(string! Source, string! AppId, System.Collections.Generic.IReadOnlyList<string!>! Versions, string? Latest, bool Trusted, string? InstalledVersion) -> void
+HackerOs.AppSdk.Apps.HackPackageInfo.InstalledSystemWide.get -> bool?
+HackerOs.AppSdk.Apps.HackPackageInfo.InstalledSystemWide.init -> void
+HackerOs.AppSdk.Apps.HackPackageInfo.InstalledVersion.get -> string?
+HackerOs.AppSdk.Apps.HackPackageInfo.InstalledVersion.init -> void
+HackerOs.AppSdk.Apps.HackPackageInfo.Latest.get -> string?
+HackerOs.AppSdk.Apps.HackPackageInfo.Latest.init -> void
+HackerOs.AppSdk.Apps.HackPackageInfo.SignatureRequired.get -> bool
+HackerOs.AppSdk.Apps.HackPackageInfo.SignatureRequired.init -> void
+HackerOs.AppSdk.Apps.HackPackageInfo.Source.get -> string!
+HackerOs.AppSdk.Apps.HackPackageInfo.Source.init -> void
+HackerOs.AppSdk.Apps.HackPackageInfo.Trust.get -> HackerOs.AppSdk.Apps.HackPackageTrust
+HackerOs.AppSdk.Apps.HackPackageInfo.Trust.init -> void
+HackerOs.AppSdk.Apps.HackPackageInfo.Trusted.get -> bool
+HackerOs.AppSdk.Apps.HackPackageInfo.Trusted.init -> void
+HackerOs.AppSdk.Apps.HackPackageInfo.Versions.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.AppSdk.Apps.HackPackageInfo.Versions.init -> void
+HackerOs.AppSdk.Apps.HackPackageInstallReport
+HackerOs.AppSdk.Apps.HackPackageInstallReport.<Clone>$() -> HackerOs.AppSdk.Apps.HackPackageInstallReport!
+HackerOs.AppSdk.Apps.HackPackageInstallReport.AppId.get -> string!
+HackerOs.AppSdk.Apps.HackPackageInstallReport.AppId.init -> void
+HackerOs.AppSdk.Apps.HackPackageInstallReport.BlockedBy.get -> string?
+HackerOs.AppSdk.Apps.HackPackageInstallReport.BlockedBy.init -> void
+HackerOs.AppSdk.Apps.HackPackageInstallReport.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.AppSdk.Apps.HackPackageInstallReport.Capabilities.init -> void
+HackerOs.AppSdk.Apps.HackPackageInstallReport.Deconstruct(out string! AppId, out string! Name, out string! Version, out string! Source, out string? PreviousVersion, out System.Collections.Generic.IReadOnlyList<string!>! Capabilities, out bool Trusted) -> void
+HackerOs.AppSdk.Apps.HackPackageInstallReport.Equals(HackerOs.AppSdk.Apps.HackPackageInstallReport? other) -> bool
+HackerOs.AppSdk.Apps.HackPackageInstallReport.HackPackageInstallReport(string! AppId, string! Name, string! Version, string! Source, string? PreviousVersion, System.Collections.Generic.IReadOnlyList<string!>! Capabilities, bool Trusted) -> void
+HackerOs.AppSdk.Apps.HackPackageInstallReport.Name.get -> string!
+HackerOs.AppSdk.Apps.HackPackageInstallReport.Name.init -> void
+HackerOs.AppSdk.Apps.HackPackageInstallReport.PreviousVersion.get -> string?
+HackerOs.AppSdk.Apps.HackPackageInstallReport.PreviousVersion.init -> void
+HackerOs.AppSdk.Apps.HackPackageInstallReport.ReplacedPersonalCopies.get -> int
+HackerOs.AppSdk.Apps.HackPackageInstallReport.ReplacedPersonalCopies.init -> void
+HackerOs.AppSdk.Apps.HackPackageInstallReport.RestartRequired.get -> bool
+HackerOs.AppSdk.Apps.HackPackageInstallReport.RestartRequired.init -> void
+HackerOs.AppSdk.Apps.HackPackageInstallReport.Signed.get -> bool
+HackerOs.AppSdk.Apps.HackPackageInstallReport.Signed.init -> void
+HackerOs.AppSdk.Apps.HackPackageInstallReport.Source.get -> string!
+HackerOs.AppSdk.Apps.HackPackageInstallReport.Source.init -> void
+HackerOs.AppSdk.Apps.HackPackageInstallReport.SystemWide.get -> bool
+HackerOs.AppSdk.Apps.HackPackageInstallReport.SystemWide.init -> void
+HackerOs.AppSdk.Apps.HackPackageInstallReport.Trust.get -> HackerOs.AppSdk.Apps.HackPackageTrust
+HackerOs.AppSdk.Apps.HackPackageInstallReport.Trust.init -> void
+HackerOs.AppSdk.Apps.HackPackageInstallReport.Trusted.get -> bool
+HackerOs.AppSdk.Apps.HackPackageInstallReport.Trusted.init -> void
+HackerOs.AppSdk.Apps.HackPackageInstallReport.Version.get -> string!
+HackerOs.AppSdk.Apps.HackPackageInstallReport.Version.init -> void
+HackerOs.AppSdk.Apps.HackPackagePolicy
+HackerOs.AppSdk.Apps.HackPackagePolicy.<Clone>$() -> HackerOs.AppSdk.Apps.HackPackagePolicy!
+HackerOs.AppSdk.Apps.HackPackagePolicy.BlockedApps.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.AppSdk.Apps.HackPackagePolicy.BlockedApps.init -> void
+HackerOs.AppSdk.Apps.HackPackagePolicy.BlockedCapabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.AppSdk.Apps.HackPackagePolicy.BlockedCapabilities.init -> void
+HackerOs.AppSdk.Apps.HackPackagePolicy.BlockedCategories.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.AppSdk.Apps.HackPackagePolicy.BlockedCategories.init -> void
+HackerOs.AppSdk.Apps.HackPackagePolicy.Deconstruct(out System.Collections.Generic.IReadOnlyList<string!>! BlockedApps, out System.Collections.Generic.IReadOnlyList<string!>! BlockedCategories, out System.Collections.Generic.IReadOnlyList<string!>! BlockedCapabilities, out System.Collections.Generic.IReadOnlyList<string!>! Warnings) -> void
+HackerOs.AppSdk.Apps.HackPackagePolicy.Equals(HackerOs.AppSdk.Apps.HackPackagePolicy? other) -> bool
+HackerOs.AppSdk.Apps.HackPackagePolicy.HackPackagePolicy(System.Collections.Generic.IReadOnlyList<string!>! BlockedApps, System.Collections.Generic.IReadOnlyList<string!>! BlockedCategories, System.Collections.Generic.IReadOnlyList<string!>! BlockedCapabilities, System.Collections.Generic.IReadOnlyList<string!>! Warnings) -> void
+HackerOs.AppSdk.Apps.HackPackagePolicy.Warnings.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.AppSdk.Apps.HackPackagePolicy.Warnings.init -> void
+HackerOs.AppSdk.Apps.HackPackageScope
+HackerOs.AppSdk.Apps.HackPackageScope.Auto = 0 -> HackerOs.AppSdk.Apps.HackPackageScope
+HackerOs.AppSdk.Apps.HackPackageScope.System = 2 -> HackerOs.AppSdk.Apps.HackPackageScope
+HackerOs.AppSdk.Apps.HackPackageScope.User = 1 -> HackerOs.AppSdk.Apps.HackPackageScope
+HackerOs.AppSdk.Apps.HackPackageSources
+HackerOs.AppSdk.Apps.HackPackageSources.<Clone>$() -> HackerOs.AppSdk.Apps.HackPackageSources!
+HackerOs.AppSdk.Apps.HackPackageSources.BuiltInSources.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.AppSdk.Apps.HackPackageSources.BuiltInSources.init -> void
+HackerOs.AppSdk.Apps.HackPackageSources.Catalogs.get -> System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Apps.HackPackageCatalog!>!
+HackerOs.AppSdk.Apps.HackPackageSources.Catalogs.init -> void
+HackerOs.AppSdk.Apps.HackPackageSources.Deconstruct(out string! GitHubHost, out System.Collections.Generic.IReadOnlyList<string!>! TrustedSources, out System.Collections.Generic.IReadOnlyList<string!>! Warnings) -> void
+HackerOs.AppSdk.Apps.HackPackageSources.Equals(HackerOs.AppSdk.Apps.HackPackageSources? other) -> bool
+HackerOs.AppSdk.Apps.HackPackageSources.GitHubHost.get -> string!
+HackerOs.AppSdk.Apps.HackPackageSources.GitHubHost.init -> void
+HackerOs.AppSdk.Apps.HackPackageSources.HackPackageSources(string! GitHubHost, System.Collections.Generic.IReadOnlyList<string!>! TrustedSources, System.Collections.Generic.IReadOnlyList<string!>! Warnings) -> void
+HackerOs.AppSdk.Apps.HackPackageSources.TrustedSources.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.AppSdk.Apps.HackPackageSources.TrustedSources.init -> void
+HackerOs.AppSdk.Apps.HackPackageSources.UntrustedSources.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.AppSdk.Apps.HackPackageSources.UntrustedSources.init -> void
+HackerOs.AppSdk.Apps.HackPackageSources.UpdateIntervalHours.get -> int
+HackerOs.AppSdk.Apps.HackPackageSources.UpdateIntervalHours.init -> void
+HackerOs.AppSdk.Apps.HackPackageSources.Warnings.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.AppSdk.Apps.HackPackageSources.Warnings.init -> void
+HackerOs.AppSdk.Apps.HackPackageTrust
+HackerOs.AppSdk.Apps.HackPackageTrust.Trusted = 1 -> HackerOs.AppSdk.Apps.HackPackageTrust
+HackerOs.AppSdk.Apps.HackPackageTrust.Untrusted = 2 -> HackerOs.AppSdk.Apps.HackPackageTrust
+HackerOs.AppSdk.Apps.HackPackageTrust.Verified = 0 -> HackerOs.AppSdk.Apps.HackPackageTrust
+HackerOs.AppSdk.Apps.HackPackageUpdate
+HackerOs.AppSdk.Apps.HackPackageUpdate.<Clone>$() -> HackerOs.AppSdk.Apps.HackPackageUpdate!
+HackerOs.AppSdk.Apps.HackPackageUpdate.AppId.get -> string!
+HackerOs.AppSdk.Apps.HackPackageUpdate.AppId.init -> void
+HackerOs.AppSdk.Apps.HackPackageUpdate.AvailableVersion.get -> string!
+HackerOs.AppSdk.Apps.HackPackageUpdate.AvailableVersion.init -> void
+HackerOs.AppSdk.Apps.HackPackageUpdate.Deconstruct(out string! AppId, out string! Source, out string! InstalledVersion, out string! AvailableVersion, out bool SystemWide) -> void
+HackerOs.AppSdk.Apps.HackPackageUpdate.Equals(HackerOs.AppSdk.Apps.HackPackageUpdate? other) -> bool
+HackerOs.AppSdk.Apps.HackPackageUpdate.HackPackageUpdate(string! AppId, string! Source, string! InstalledVersion, string! AvailableVersion, bool SystemWide) -> void
+HackerOs.AppSdk.Apps.HackPackageUpdate.InstalledVersion.get -> string!
+HackerOs.AppSdk.Apps.HackPackageUpdate.InstalledVersion.init -> void
+HackerOs.AppSdk.Apps.HackPackageUpdate.Source.get -> string!
+HackerOs.AppSdk.Apps.HackPackageUpdate.Source.init -> void
+HackerOs.AppSdk.Apps.HackPackageUpdate.SystemWide.get -> bool
+HackerOs.AppSdk.Apps.HackPackageUpdate.SystemWide.init -> void
 HackerOs.AppSdk.Apps.HackRunningProcessInfo
 HackerOs.AppSdk.Apps.HackRunningProcessInfo.<Clone>$() -> HackerOs.AppSdk.Apps.HackRunningProcessInfo!
 HackerOs.AppSdk.Apps.HackRunningProcessInfo.AppId.get -> string!
@@ -521,6 +836,35 @@ HackerOs.AppSdk.Apps.HackRunningProcessInfo.Pid.get -> long
 HackerOs.AppSdk.Apps.HackRunningProcessInfo.Pid.init -> void
 HackerOs.AppSdk.Apps.HackRunningProcessInfo.UserName.get -> string!
 HackerOs.AppSdk.Apps.HackRunningProcessInfo.UserName.init -> void
+HackerOs.AppSdk.Apps.HackThemePackInstallReport
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.<Clone>$() -> HackerOs.AppSdk.Apps.HackThemePackInstallReport!
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.Deconstruct(out string! PackId, out string! Name, out string! Version, out string! Source, out string? PreviousVersion, out bool SystemWide, out HackerOs.AppSdk.Apps.HackThemePackParts Parts, out HackerOs.AppSdk.Apps.HackPackageTrust Trust) -> void
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.Equals(HackerOs.AppSdk.Apps.HackThemePackInstallReport? other) -> bool
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.HackThemePackInstallReport(string! PackId, string! Name, string! Version, string! Source, string? PreviousVersion, bool SystemWide, HackerOs.AppSdk.Apps.HackThemePackParts Parts, HackerOs.AppSdk.Apps.HackPackageTrust Trust) -> void
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.Name.get -> string!
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.Name.init -> void
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.PackId.get -> string!
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.PackId.init -> void
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.Parts.get -> HackerOs.AppSdk.Apps.HackThemePackParts
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.Parts.init -> void
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.PreviousVersion.get -> string?
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.PreviousVersion.init -> void
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.RestartRequired.get -> bool
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.Source.get -> string!
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.Source.init -> void
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.SystemWide.get -> bool
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.SystemWide.init -> void
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.Trust.get -> HackerOs.AppSdk.Apps.HackPackageTrust
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.Trust.init -> void
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.Version.get -> string!
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.Version.init -> void
+HackerOs.AppSdk.Apps.HackThemePackParts
+HackerOs.AppSdk.Apps.HackThemePackParts.Cursors = 16 -> HackerOs.AppSdk.Apps.HackThemePackParts
+HackerOs.AppSdk.Apps.HackThemePackParts.Icons = 4 -> HackerOs.AppSdk.Apps.HackThemePackParts
+HackerOs.AppSdk.Apps.HackThemePackParts.None = 0 -> HackerOs.AppSdk.Apps.HackThemePackParts
+HackerOs.AppSdk.Apps.HackThemePackParts.Sounds = 8 -> HackerOs.AppSdk.Apps.HackThemePackParts
+HackerOs.AppSdk.Apps.HackThemePackParts.Themes = 1 -> HackerOs.AppSdk.Apps.HackThemePackParts
+HackerOs.AppSdk.Apps.HackThemePackParts.Wallpapers = 2 -> HackerOs.AppSdk.Apps.HackThemePackParts
 HackerOs.AppSdk.Apps.HackUninstallPlan
 HackerOs.AppSdk.Apps.HackUninstallPlan.<Clone>$() -> HackerOs.AppSdk.Apps.HackUninstallPlan!
 HackerOs.AppSdk.Apps.HackUninstallPlan.AppIds.get -> System.Collections.Generic.IReadOnlyList<string!>!
@@ -547,9 +891,27 @@ HackerOs.AppSdk.Apps.IAppCatalogGateway.GetHandlersAsync(HackerOs.App.Abstractio
 HackerOs.AppSdk.Apps.IAppCatalogGateway.GetInstalledAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Apps.HackAppInfo!>!>
 HackerOs.AppSdk.Apps.IAppCatalogGateway.SetUserDefaultHandlerAsync(string! target, string! action, string? appId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Apps.HackDefaultHandlerStatus>
 HackerOs.AppSdk.Apps.IAppManagementGateway
+HackerOs.AppSdk.Apps.IAppManagementGateway.AddPackageSourceAsync(string! source, bool trusted, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Apps.HackPackageSources!>
 HackerOs.AppSdk.Apps.IAppManagementGateway.GetAllAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Apps.HackAppInstallInfo!>!>
+HackerOs.AppSdk.Apps.IAppManagementGateway.GetCatalogDescriptionAsync(string! catalog, string! appId, string! version, string! language, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<string?>
+HackerOs.AppSdk.Apps.IAppManagementGateway.GetInstalledPackagesAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Apps.HackInstalledPackage!>!>
+HackerOs.AppSdk.Apps.IAppManagementGateway.GetInstalledThemePacksAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Apps.HackInstalledThemePack!>!>
+HackerOs.AppSdk.Apps.IAppManagementGateway.GetPackageCatalogsAsync(bool refresh = false, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Apps.HackAppCatalog!>!>
+HackerOs.AppSdk.Apps.IAppManagementGateway.GetPackageInfoAsync(string! source, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Apps.HackPackageInfo!>
+HackerOs.AppSdk.Apps.IAppManagementGateway.GetPackagePolicyAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Apps.HackPackagePolicy!>
+HackerOs.AppSdk.Apps.IAppManagementGateway.GetPackageSourcesAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Apps.HackPackageSources!>
+HackerOs.AppSdk.Apps.IAppManagementGateway.GetPackageUpdatesAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Apps.HackPackageUpdate!>!>
+HackerOs.AppSdk.Apps.IAppManagementGateway.InstallPackageAsync(string! source, HackerOs.AppSdk.Apps.HackPackageScope scope = HackerOs.AppSdk.Apps.HackPackageScope.Auto, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Apps.HackPackageInstallReport!>
+HackerOs.AppSdk.Apps.IAppManagementGateway.InstallThemePackAsync(string! source, HackerOs.AppSdk.Apps.HackPackageScope scope = HackerOs.AppSdk.Apps.HackPackageScope.Auto, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Apps.HackThemePackInstallReport!>
 HackerOs.AppSdk.Apps.IAppManagementGateway.PlanUninstallAsync(string! appId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Apps.HackUninstallPlan!>
 HackerOs.AppSdk.Apps.IAppManagementGateway.ReinstallAsync(string! appId, HackerOs.AppSdk.Apps.HackInstallScope scope, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<string!>!>
+HackerOs.AppSdk.Apps.IAppManagementGateway.RemovePackageAsync(string! appId, HackerOs.AppSdk.Apps.HackPackageScope scope = HackerOs.AppSdk.Apps.HackPackageScope.Auto, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Apps.HackInstalledPackage!>
+HackerOs.AppSdk.Apps.IAppManagementGateway.RemovePackageSourceAsync(string! source, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Apps.HackPackageSources!>
+HackerOs.AppSdk.Apps.IAppManagementGateway.RemoveThemePackAsync(string! packId, HackerOs.AppSdk.Apps.HackPackageScope scope = HackerOs.AppSdk.Apps.HackPackageScope.Auto, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Apps.HackInstalledThemePack!>
+HackerOs.AppSdk.Apps.IAppManagementGateway.RepairPackagesAsync(bool system, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<string!>!>
+HackerOs.AppSdk.Apps.IAppManagementGateway.RestartForPackagesAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+HackerOs.AppSdk.Apps.IAppManagementGateway.RollbackPackageAsync(string! appId, HackerOs.AppSdk.Apps.HackPackageScope scope = HackerOs.AppSdk.Apps.HackPackageScope.Auto, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Apps.HackPackageInstallReport!>
+HackerOs.AppSdk.Apps.IAppManagementGateway.SetPackagePolicyAsync(HackerOs.AppSdk.Apps.HackPackageBlockKind kind, string! value, bool blocked, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Apps.HackPackagePolicy!>
 HackerOs.AppSdk.Apps.IAppManagementGateway.UninstallAsync(string! appId, HackerOs.AppSdk.Apps.HackInstallScope scope, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<string!>!>
 HackerOs.AppSdk.Apps.IAppManagementGateway.UninstallWithReportAsync(string! appId, HackerOs.AppSdk.Apps.HackInstallScope scope, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Apps.HackUninstallReport!>
 HackerOs.AppSdk.Clipboard.HackClipboard
@@ -834,6 +1196,18 @@ HackerOs.AppSdk.Files.HackDesktopIconSize.Medium = 1 -> HackerOs.AppSdk.Files.Ha
 HackerOs.AppSdk.Files.HackDesktopIconSize.Small = 0 -> HackerOs.AppSdk.Files.HackDesktopIconSize
 HackerOs.AppSdk.Files.HackDesktopItems
 HackerOs.AppSdk.Files.HackDesktopLayout
+HackerOs.AppSdk.Files.HackDesktopLink
+HackerOs.AppSdk.Files.HackDesktopLink.<Clone>$() -> HackerOs.AppSdk.Files.HackDesktopLink!
+HackerOs.AppSdk.Files.HackDesktopLink.Deconstruct(out string! Name, out string! Target, out string? Icon) -> void
+HackerOs.AppSdk.Files.HackDesktopLink.Equals(HackerOs.AppSdk.Files.HackDesktopLink? other) -> bool
+HackerOs.AppSdk.Files.HackDesktopLink.Format() -> string!
+HackerOs.AppSdk.Files.HackDesktopLink.HackDesktopLink(string! Name, string! Target, string? Icon = null) -> void
+HackerOs.AppSdk.Files.HackDesktopLink.Icon.get -> string?
+HackerOs.AppSdk.Files.HackDesktopLink.Icon.init -> void
+HackerOs.AppSdk.Files.HackDesktopLink.Name.get -> string!
+HackerOs.AppSdk.Files.HackDesktopLink.Name.init -> void
+HackerOs.AppSdk.Files.HackDesktopLink.Target.get -> string!
+HackerOs.AppSdk.Files.HackDesktopLink.Target.init -> void
 HackerOs.AppSdk.Files.HackDesktopOptions
 HackerOs.AppSdk.Files.HackDesktopOptions.<Clone>$() -> HackerOs.AppSdk.Files.HackDesktopOptions!
 HackerOs.AppSdk.Files.HackDesktopOptions.AlignToGrid.get -> bool
@@ -897,6 +1271,7 @@ HackerOs.AppSdk.Globalization.HackStringLocalizer.this[string! name, params obje
 HackerOs.AppSdk.Globalization.HackStringLocalizer.this[string! name].get -> Microsoft.Extensions.Localization.LocalizedString!
 HackerOs.AppSdk.Globalization.HackStringLocalizer<TResource>
 HackerOs.AppSdk.Globalization.HackStringLocalizer<TResource>.HackStringLocalizer(System.Func<System.Globalization.CultureInfo!>! culture) -> void
+HackerOs.AppSdk.Globalization.HackTimeZone
 HackerOs.AppSdk.HackConsole
 HackerOs.AppSdk.HackEnvironment
 HackerOs.AppSdk.HackExecutionContext
@@ -966,6 +1341,7 @@ HackerOs.AppSdk.IAppExecutionContext.PermissionAdministration.get -> HackerOs.Ap
 HackerOs.AppSdk.IAppExecutionContext.PermissionErrors.get -> HackerOs.Simulation.Abstractions.Gateways.IAppPermissionErrorGateway!
 HackerOs.AppSdk.IAppExecutionContext.ProcessId.get -> HackerOs.Simulation.Abstractions.Processes.ProcessId
 HackerOs.AppSdk.IAppExecutionContext.Processes.get -> HackerOs.Simulation.Abstractions.Gateways.IAppProcessGateway!
+HackerOs.AppSdk.IAppExecutionContext.Screens.get -> HackerOs.AppSdk.Administration.IAppScreensGateway!
 HackerOs.AppSdk.IAppExecutionContext.ServerConnection.get -> HackerOs.AppSdk.Administration.IAppServerConnectionGateway!
 HackerOs.AppSdk.IAppExecutionContext.ServiceNotify.get -> HackerOs.Simulation.Abstractions.Gateways.IAppServiceNotifyGateway!
 HackerOs.AppSdk.IAppExecutionContext.Services.get -> HackerOs.Simulation.Abstractions.Gateways.IAppServiceControlGateway!
@@ -977,6 +1353,7 @@ HackerOs.AppSdk.IAppExecutionContext.StorageDiagnostics.get -> HackerOs.AppSdk.A
 HackerOs.AppSdk.IAppExecutionContext.SystemBackup.get -> HackerOs.AppSdk.Administration.IAppSystemBackupGateway!
 HackerOs.AppSdk.IAppExecutionContext.SystemPower.get -> HackerOs.AppSdk.Administration.IAppSystemPowerGateway!
 HackerOs.AppSdk.IAppExecutionContext.SystemSettings.get -> HackerOs.AppSdk.Settings.IAppSystemSettingsGateway!
+HackerOs.AppSdk.IAppExecutionContext.TimeZone.get -> System.TimeZoneInfo!
 HackerOs.AppSdk.IAppExecutionContext.UserAccounts.get -> HackerOs.AppSdk.Administration.IAppUserAccountsGateway!
 HackerOs.AppSdk.IAppExecutionContext.UserAuthority.get -> HackerOs.App.Abstractions.AppAuthority
 HackerOs.AppSdk.IAppExecutionContext.UserDisplayName.get -> string!
@@ -984,6 +1361,7 @@ HackerOs.AppSdk.IAppExecutionContext.UserId.get -> string!
 HackerOs.AppSdk.IAppExecutionContext.UserLoginName.get -> string!
 HackerOs.AppSdk.IAppExecutionContext.Watch.get -> HackerOs.Simulation.Abstractions.FileSystem.IAppFileSystemWatchGateway!
 HackerOs.AppSdk.IAppExecutionContext.WebDatabase.get -> HackerOs.AppSdk.WebData.IAppWebDatabaseGateway!
+HackerOs.AppSdk.IAppExecutionContext.WhatsNew.get -> HackerOs.AppSdk.WhatsNew.IAppWhatsNewGateway!
 HackerOs.AppSdk.IFullScreenTerminalSession
 HackerOs.AppSdk.IFullScreenTerminalSession.EnterAlternateScreenAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
 HackerOs.AppSdk.IFullScreenTerminalSession.LeaveAlternateScreenAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
@@ -998,12 +1376,26 @@ HackerOs.AppSdk.IO.HackDirectoryInfo.DeleteAsync(bool recursive = false, System.
 HackerOs.AppSdk.IO.HackDirectoryInfo.GetDirectoriesAsync(string! searchPattern = "*", System.IO.SearchOption searchOption = System.IO.SearchOption.TopDirectoryOnly, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.IO.HackDirectoryInfo![]!>!
 HackerOs.AppSdk.IO.HackDirectoryInfo.GetFileSystemInfosAsync(string! searchPattern = "*", System.IO.SearchOption searchOption = System.IO.SearchOption.TopDirectoryOnly, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.IO.HackFileSystemInfo![]!>!
 HackerOs.AppSdk.IO.HackDirectoryInfo.GetFilesAsync(string! searchPattern = "*", System.IO.SearchOption searchOption = System.IO.SearchOption.TopDirectoryOnly, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.IO.HackFileInfo![]!>!
+HackerOs.AppSdk.IO.HackDirectoryInfo.GetTotalSizeAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.IO.HackDirectorySize!>!
 HackerOs.AppSdk.IO.HackDirectoryInfo.HackDirectoryInfo(string! path) -> void
 HackerOs.AppSdk.IO.HackDirectoryInfo.MoveToAsync(string! destDirName, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
 HackerOs.AppSdk.IO.HackDirectoryInfo.Parent.get -> HackerOs.AppSdk.IO.HackDirectoryInfo?
 HackerOs.AppSdk.IO.HackDirectoryInfo.Root.get -> HackerOs.AppSdk.IO.HackDirectoryInfo!
 HackerOs.AppSdk.IO.HackDirectoryNotFoundException
 HackerOs.AppSdk.IO.HackDirectoryNotFoundException.HackDirectoryNotFoundException(string? path, HackerOs.Simulation.Abstractions.FileSystem.FileSystemErrorCode? errorCode = HackerOs.Simulation.Abstractions.FileSystem.FileSystemErrorCode.NotFound) -> void
+HackerOs.AppSdk.IO.HackDirectorySize
+HackerOs.AppSdk.IO.HackDirectorySize.<Clone>$() -> HackerOs.AppSdk.IO.HackDirectorySize!
+HackerOs.AppSdk.IO.HackDirectorySize.Deconstruct(out long Length, out long FileCount, out long DirectoryCount, out bool IsComplete) -> void
+HackerOs.AppSdk.IO.HackDirectorySize.DirectoryCount.get -> long
+HackerOs.AppSdk.IO.HackDirectorySize.DirectoryCount.init -> void
+HackerOs.AppSdk.IO.HackDirectorySize.Equals(HackerOs.AppSdk.IO.HackDirectorySize? other) -> bool
+HackerOs.AppSdk.IO.HackDirectorySize.FileCount.get -> long
+HackerOs.AppSdk.IO.HackDirectorySize.FileCount.init -> void
+HackerOs.AppSdk.IO.HackDirectorySize.HackDirectorySize(long Length, long FileCount, long DirectoryCount, bool IsComplete) -> void
+HackerOs.AppSdk.IO.HackDirectorySize.IsComplete.get -> bool
+HackerOs.AppSdk.IO.HackDirectorySize.IsComplete.init -> void
+HackerOs.AppSdk.IO.HackDirectorySize.Length.get -> long
+HackerOs.AppSdk.IO.HackDirectorySize.Length.init -> void
 HackerOs.AppSdk.IO.HackDriveInfo
 HackerOs.AppSdk.IO.HackDriveInfo.AvailableFreeSpace.get -> long
 HackerOs.AppSdk.IO.HackDriveInfo.DriveFormat.get -> string!
@@ -1021,8 +1413,12 @@ HackerOs.AppSdk.IO.HackDriveSnapshot.AvailableFreeSpace.init -> void
 HackerOs.AppSdk.IO.HackDriveSnapshot.Deconstruct(out string! Name, out string! DriveFormat, out string! VolumeLabel, out long TotalSize, out long AvailableFreeSpace) -> void
 HackerOs.AppSdk.IO.HackDriveSnapshot.DriveFormat.get -> string!
 HackerOs.AppSdk.IO.HackDriveSnapshot.DriveFormat.init -> void
+HackerOs.AppSdk.IO.HackDriveSnapshot.DriveType.get -> HackerOs.AppSdk.IO.HackDriveType
+HackerOs.AppSdk.IO.HackDriveSnapshot.DriveType.init -> void
 HackerOs.AppSdk.IO.HackDriveSnapshot.Equals(HackerOs.AppSdk.IO.HackDriveSnapshot? other) -> bool
 HackerOs.AppSdk.IO.HackDriveSnapshot.HackDriveSnapshot(string! Name, string! DriveFormat, string! VolumeLabel, long TotalSize, long AvailableFreeSpace) -> void
+HackerOs.AppSdk.IO.HackDriveSnapshot.IsReady.get -> bool
+HackerOs.AppSdk.IO.HackDriveSnapshot.IsReady.init -> void
 HackerOs.AppSdk.IO.HackDriveSnapshot.Name.get -> string!
 HackerOs.AppSdk.IO.HackDriveSnapshot.Name.init -> void
 HackerOs.AppSdk.IO.HackDriveSnapshot.TotalSize.get -> long
@@ -1031,6 +1427,7 @@ HackerOs.AppSdk.IO.HackDriveSnapshot.VolumeLabel.get -> string!
 HackerOs.AppSdk.IO.HackDriveSnapshot.VolumeLabel.init -> void
 HackerOs.AppSdk.IO.HackDriveType
 HackerOs.AppSdk.IO.HackDriveType.Fixed = 0 -> HackerOs.AppSdk.IO.HackDriveType
+HackerOs.AppSdk.IO.HackDriveType.Network = 1 -> HackerOs.AppSdk.IO.HackDriveType
 HackerOs.AppSdk.IO.HackFile
 HackerOs.AppSdk.IO.HackFileConflictChoice
 HackerOs.AppSdk.IO.HackFileConflictChoice.KeepBoth = 1 -> HackerOs.AppSdk.IO.HackFileConflictChoice
@@ -1224,6 +1621,10 @@ HackerOs.AppSdk.IO.HackWriteOptions.ExpectedRevision.init -> void
 HackerOs.AppSdk.IO.HackWriteOptions.HackWriteOptions() -> void
 HackerOs.AppSdk.IO.IAppDriveGateway
 HackerOs.AppSdk.IO.IAppDriveGateway.GetDrivesAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.IO.HackDriveSnapshot!>!>
+HackerOs.AppSdk.IO.IAppDriveGateway.IsHostFolderSupportedAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+HackerOs.AppSdk.IO.IAppDriveGateway.MountHostFolderAsync(string? mountPoint, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.IO.HackDriveSnapshot?>
+HackerOs.AppSdk.IO.IAppDriveGateway.ReconnectAsync(string! mountPoint, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+HackerOs.AppSdk.IO.IAppDriveGateway.UnmountAsync(string! mountPoint, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
 HackerOs.AppSdk.IShellSession
 HackerOs.AppSdk.IShellSession.AssignVariable(string! name, string! value) -> void
 HackerOs.AppSdk.IShellSession.ChangeDirectoryAsync(string! path, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask
@@ -1499,8 +1900,14 @@ HackerOs.AppSdk.Net.HackHttpResponse.RequestUri.get -> System.Uri!
 HackerOs.AppSdk.Net.HackHttpResponse.RequestUri.init -> void
 HackerOs.AppSdk.Net.HackHttpResponse.SetCookies.get -> System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Net.HackCookie!>!
 HackerOs.AppSdk.Net.HackHttpResponse.SetCookies.init -> void
+HackerOs.AppSdk.Net.HackHttpResponse.Source.get -> HackerOs.AppSdk.Net.HackHttpResponseSource
+HackerOs.AppSdk.Net.HackHttpResponse.Source.init -> void
 HackerOs.AppSdk.Net.HackHttpResponse.StatusCode.get -> int
 HackerOs.AppSdk.Net.HackHttpResponse.StatusCode.init -> void
+HackerOs.AppSdk.Net.HackHttpResponseSource
+HackerOs.AppSdk.Net.HackHttpResponseSource.LocalSite = 1 -> HackerOs.AppSdk.Net.HackHttpResponseSource
+HackerOs.AppSdk.Net.HackHttpResponseSource.RealNetwork = 2 -> HackerOs.AppSdk.Net.HackHttpResponseSource
+HackerOs.AppSdk.Net.HackHttpResponseSource.Simulated = 0 -> HackerOs.AppSdk.Net.HackHttpResponseSource
 HackerOs.AppSdk.Net.HackIPGlobalProperties
 HackerOs.AppSdk.Net.HackIPStatus
 HackerOs.AppSdk.Net.HackIPStatus.DestinationHostUnreachable = 1 -> HackerOs.AppSdk.Net.HackIPStatus
@@ -1509,11 +1916,13 @@ HackerOs.AppSdk.Net.HackIPStatus.TimedOut = 2 -> HackerOs.AppSdk.Net.HackIPStatu
 HackerOs.AppSdk.Net.HackJsonContent
 HackerOs.AppSdk.Net.HackNetworkError
 HackerOs.AppSdk.Net.HackNetworkError.AddressInUse = 6 -> HackerOs.AppSdk.Net.HackNetworkError
+HackerOs.AppSdk.Net.HackNetworkError.BlockedByAdministrator = 8 -> HackerOs.AppSdk.Net.HackNetworkError
 HackerOs.AppSdk.Net.HackNetworkError.ConnectionFailed = 5 -> HackerOs.AppSdk.Net.HackNetworkError
 HackerOs.AppSdk.Net.HackNetworkError.ConnectionRefused = 3 -> HackerOs.AppSdk.Net.HackNetworkError
 HackerOs.AppSdk.Net.HackNetworkError.HostNotFound = 1 -> HackerOs.AppSdk.Net.HackNetworkError
 HackerOs.AppSdk.Net.HackNetworkError.HostUnreachable = 2 -> HackerOs.AppSdk.Net.HackNetworkError
 HackerOs.AppSdk.Net.HackNetworkError.None = 0 -> HackerOs.AppSdk.Net.HackNetworkError
+HackerOs.AppSdk.Net.HackNetworkError.TimedOut = 7 -> HackerOs.AppSdk.Net.HackNetworkError
 HackerOs.AppSdk.Net.HackNetworkError.TooManyRedirects = 4 -> HackerOs.AppSdk.Net.HackNetworkError
 HackerOs.AppSdk.Net.HackNetworkErrorCodes
 HackerOs.AppSdk.Net.HackNetworkResult<T>
@@ -2189,6 +2598,59 @@ HackerOs.AppSdk.WebData.InMemoryWebDatabase.Version.get -> int
 HackerOs.AppSdk.WebServerAppBase
 HackerOs.AppSdk.WebServerAppBase.Urls.get -> System.Collections.Generic.IReadOnlyList<string!>!
 HackerOs.AppSdk.WebServerAppBase.WebServerAppBase(HackerOs.App.Abstractions.AppManifest! manifest) -> void
+HackerOs.AppSdk.WhatsNew.HackChangeCategory
+HackerOs.AppSdk.WhatsNew.HackChangeCategory.Developer = 3 -> HackerOs.AppSdk.WhatsNew.HackChangeCategory
+HackerOs.AppSdk.WhatsNew.HackChangeCategory.Fixed = 2 -> HackerOs.AppSdk.WhatsNew.HackChangeCategory
+HackerOs.AppSdk.WhatsNew.HackChangeCategory.Improved = 1 -> HackerOs.AppSdk.WhatsNew.HackChangeCategory
+HackerOs.AppSdk.WhatsNew.HackChangeCategory.New = 0 -> HackerOs.AppSdk.WhatsNew.HackChangeCategory
+HackerOs.AppSdk.WhatsNew.HackChangeEntry
+HackerOs.AppSdk.WhatsNew.HackChangeEntry.<Clone>$() -> HackerOs.AppSdk.WhatsNew.HackChangeEntry!
+HackerOs.AppSdk.WhatsNew.HackChangeEntry.Category.get -> HackerOs.AppSdk.WhatsNew.HackChangeCategory
+HackerOs.AppSdk.WhatsNew.HackChangeEntry.Category.init -> void
+HackerOs.AppSdk.WhatsNew.HackChangeEntry.Deconstruct(out string! Id, out HackerOs.AppSdk.WhatsNew.HackChangeCategory Category, out string! Title, out string? Description, out System.Uri? PullRequestUrl, out System.Collections.Generic.IReadOnlyList<System.Uri!>! Links, out bool IsNew) -> void
+HackerOs.AppSdk.WhatsNew.HackChangeEntry.Description.get -> string?
+HackerOs.AppSdk.WhatsNew.HackChangeEntry.Description.init -> void
+HackerOs.AppSdk.WhatsNew.HackChangeEntry.Equals(HackerOs.AppSdk.WhatsNew.HackChangeEntry? other) -> bool
+HackerOs.AppSdk.WhatsNew.HackChangeEntry.HackChangeEntry(string! Id, HackerOs.AppSdk.WhatsNew.HackChangeCategory Category, string! Title, string? Description, System.Uri? PullRequestUrl, System.Collections.Generic.IReadOnlyList<System.Uri!>! Links, bool IsNew) -> void
+HackerOs.AppSdk.WhatsNew.HackChangeEntry.Id.get -> string!
+HackerOs.AppSdk.WhatsNew.HackChangeEntry.Id.init -> void
+HackerOs.AppSdk.WhatsNew.HackChangeEntry.IsNew.get -> bool
+HackerOs.AppSdk.WhatsNew.HackChangeEntry.IsNew.init -> void
+HackerOs.AppSdk.WhatsNew.HackChangeEntry.Links.get -> System.Collections.Generic.IReadOnlyList<System.Uri!>!
+HackerOs.AppSdk.WhatsNew.HackChangeEntry.Links.init -> void
+HackerOs.AppSdk.WhatsNew.HackChangeEntry.PullRequestUrl.get -> System.Uri?
+HackerOs.AppSdk.WhatsNew.HackChangeEntry.PullRequestUrl.init -> void
+HackerOs.AppSdk.WhatsNew.HackChangeEntry.Title.get -> string!
+HackerOs.AppSdk.WhatsNew.HackChangeEntry.Title.init -> void
+HackerOs.AppSdk.WhatsNew.HackChangeGroup
+HackerOs.AppSdk.WhatsNew.HackChangeGroup.<Clone>$() -> HackerOs.AppSdk.WhatsNew.HackChangeGroup!
+HackerOs.AppSdk.WhatsNew.HackChangeGroup.Date.get -> System.DateOnly?
+HackerOs.AppSdk.WhatsNew.HackChangeGroup.Date.init -> void
+HackerOs.AppSdk.WhatsNew.HackChangeGroup.Deconstruct(out string? Version, out string? Since, out System.DateOnly? Date, out System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.WhatsNew.HackChangeEntry!>! Entries) -> void
+HackerOs.AppSdk.WhatsNew.HackChangeGroup.Entries.get -> System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.WhatsNew.HackChangeEntry!>!
+HackerOs.AppSdk.WhatsNew.HackChangeGroup.Entries.init -> void
+HackerOs.AppSdk.WhatsNew.HackChangeGroup.Equals(HackerOs.AppSdk.WhatsNew.HackChangeGroup? other) -> bool
+HackerOs.AppSdk.WhatsNew.HackChangeGroup.HackChangeGroup(string? Version, string? Since, System.DateOnly? Date, System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.WhatsNew.HackChangeEntry!>! Entries) -> void
+HackerOs.AppSdk.WhatsNew.HackChangeGroup.IsNextVersion.get -> bool
+HackerOs.AppSdk.WhatsNew.HackChangeGroup.Since.get -> string?
+HackerOs.AppSdk.WhatsNew.HackChangeGroup.Since.init -> void
+HackerOs.AppSdk.WhatsNew.HackChangeGroup.Version.get -> string?
+HackerOs.AppSdk.WhatsNew.HackChangeGroup.Version.init -> void
+HackerOs.AppSdk.WhatsNew.HackChangeList
+HackerOs.AppSdk.WhatsNew.HackChangeList.<Clone>$() -> HackerOs.AppSdk.WhatsNew.HackChangeList!
+HackerOs.AppSdk.WhatsNew.HackChangeList.Deconstruct(out System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.WhatsNew.HackChangeGroup!>! Groups, out int NewCount) -> void
+HackerOs.AppSdk.WhatsNew.HackChangeList.Equals(HackerOs.AppSdk.WhatsNew.HackChangeList? other) -> bool
+HackerOs.AppSdk.WhatsNew.HackChangeList.Groups.get -> System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.WhatsNew.HackChangeGroup!>!
+HackerOs.AppSdk.WhatsNew.HackChangeList.Groups.init -> void
+HackerOs.AppSdk.WhatsNew.HackChangeList.HackChangeList(System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.WhatsNew.HackChangeGroup!>! Groups, int NewCount) -> void
+HackerOs.AppSdk.WhatsNew.HackChangeList.NewCount.get -> int
+HackerOs.AppSdk.WhatsNew.HackChangeList.NewCount.init -> void
+HackerOs.AppSdk.WhatsNew.HackWhatsNew
+HackerOs.AppSdk.WhatsNew.IAppWhatsNewGateway
+HackerOs.AppSdk.WhatsNew.IAppWhatsNewGateway.GetAsync(System.Globalization.CultureInfo! culture, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.WhatsNew.HackChangeList!>
+HackerOs.AppSdk.WhatsNew.IAppWhatsNewGateway.IsSupported.get -> bool
+HackerOs.AppSdk.WhatsNew.IAppWhatsNewGateway.MarkSeenAsync(System.Collections.Generic.IReadOnlyCollection<string!>! ids, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+HackerOs.AppSdk.WhatsNew.IAppWhatsNewGateway.WatchAsync(System.Func<System.Threading.Tasks.ValueTask>! onChanged, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.IAsyncDisposable!>
 abstract HackerOs.AppSdk.IO.HackFileSystemInfo.Exists.get -> bool
 abstract HackerOs.AppSdk.ServiceAppBase.RunCoreAsync(HackerOs.AppSdk.IAppExecutionContext! context, System.Threading.CancellationToken sessionCancellationToken) -> System.Threading.Tasks.Task!
 abstract HackerOs.AppSdk.Shell.HackCredentialPrompt.ReadCredentialAsync(HackerOs.AppSdk.Shell.HackCredentialRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Shell.HackCredential?>!
@@ -2239,6 +2701,8 @@ const HackerOs.AppSdk.Globalization.HackLocale.MonetaryVariable = "LC_MONETARY" 
 const HackerOs.AppSdk.Globalization.HackLocale.NumericVariable = "LC_NUMERIC" -> string!
 const HackerOs.AppSdk.Globalization.HackLocale.TimeVariable = "LC_TIME" -> string!
 const HackerOs.AppSdk.Globalization.HackLocalization.ResourcesFolder = "Resources" -> string!
+const HackerOs.AppSdk.Globalization.HackTimeZone.Automatic = "auto" -> string!
+const HackerOs.AppSdk.Globalization.HackTimeZone.Variable = "TZ" -> string!
 const HackerOs.AppSdk.IO.HackFileOperations.MaxHostFileBytes = 268435456 -> long
 const HackerOs.AppSdk.IO.HackPath.AltDirectorySeparatorChar = '/' -> char
 const HackerOs.AppSdk.IO.HackPath.DirectorySeparatorChar = '/' -> char
@@ -2293,9 +2757,18 @@ override HackerOs.AppSdk.Administration.HackNewUserAccount.ToString() -> string!
 override HackerOs.AppSdk.Administration.HackPasskey.Equals(object? obj) -> bool
 override HackerOs.AppSdk.Administration.HackPasskey.GetHashCode() -> int
 override HackerOs.AppSdk.Administration.HackPasskey.ToString() -> string!
+override HackerOs.AppSdk.Administration.HackScreenInfo.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Administration.HackScreenInfo.GetHashCode() -> int
+override HackerOs.AppSdk.Administration.HackScreenInfo.ToString() -> string!
+override HackerOs.AppSdk.Administration.HackScreensState.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Administration.HackScreensState.GetHashCode() -> int
+override HackerOs.AppSdk.Administration.HackScreensState.ToString() -> string!
 override HackerOs.AppSdk.Administration.HackServerConnectionState.Equals(object? obj) -> bool
 override HackerOs.AppSdk.Administration.HackServerConnectionState.GetHashCode() -> int
 override HackerOs.AppSdk.Administration.HackServerConnectionState.ToString() -> string!
+override HackerOs.AppSdk.Administration.HackServerProbe.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Administration.HackServerProbe.GetHashCode() -> int
+override HackerOs.AppSdk.Administration.HackServerProbe.ToString() -> string!
 override HackerOs.AppSdk.Administration.HackServerRelayPolicy.Equals(object? obj) -> bool
 override HackerOs.AppSdk.Administration.HackServerRelayPolicy.GetHashCode() -> int
 override HackerOs.AppSdk.Administration.HackServerRelayPolicy.ToString() -> string!
@@ -2320,6 +2793,9 @@ override HackerOs.AppSdk.Administration.HackWebSiteDatabaseInfo.ToString() -> st
 override HackerOs.AppSdk.Administration.HackWebSiteDatabaseStoreInfo.Equals(object? obj) -> bool
 override HackerOs.AppSdk.Administration.HackWebSiteDatabaseStoreInfo.GetHashCode() -> int
 override HackerOs.AppSdk.Administration.HackWebSiteDatabaseStoreInfo.ToString() -> string!
+override HackerOs.AppSdk.Apps.HackAppCatalog.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Apps.HackAppCatalog.GetHashCode() -> int
+override HackerOs.AppSdk.Apps.HackAppCatalog.ToString() -> string!
 override HackerOs.AppSdk.Apps.HackAppFileHandler.Equals(object? obj) -> bool
 override HackerOs.AppSdk.Apps.HackAppFileHandler.GetHashCode() -> int
 override HackerOs.AppSdk.Apps.HackAppFileHandler.ToString() -> string!
@@ -2329,18 +2805,54 @@ override HackerOs.AppSdk.Apps.HackAppInfo.ToString() -> string!
 override HackerOs.AppSdk.Apps.HackAppInstallInfo.Equals(object? obj) -> bool
 override HackerOs.AppSdk.Apps.HackAppInstallInfo.GetHashCode() -> int
 override HackerOs.AppSdk.Apps.HackAppInstallInfo.ToString() -> string!
+override HackerOs.AppSdk.Apps.HackCatalogApp.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Apps.HackCatalogApp.GetHashCode() -> int
+override HackerOs.AppSdk.Apps.HackCatalogApp.ToString() -> string!
+override HackerOs.AppSdk.Apps.HackCatalogAppVersion.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Apps.HackCatalogAppVersion.GetHashCode() -> int
+override HackerOs.AppSdk.Apps.HackCatalogAppVersion.ToString() -> string!
+override HackerOs.AppSdk.Apps.HackCatalogCategory.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Apps.HackCatalogCategory.GetHashCode() -> int
+override HackerOs.AppSdk.Apps.HackCatalogCategory.ToString() -> string!
 override HackerOs.AppSdk.Apps.HackFileAssociation.Equals(object? obj) -> bool
 override HackerOs.AppSdk.Apps.HackFileAssociation.GetHashCode() -> int
 override HackerOs.AppSdk.Apps.HackFileAssociation.ToString() -> string!
+override HackerOs.AppSdk.Apps.HackInstalledPackage.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Apps.HackInstalledPackage.GetHashCode() -> int
+override HackerOs.AppSdk.Apps.HackInstalledPackage.ToString() -> string!
+override HackerOs.AppSdk.Apps.HackInstalledThemePack.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Apps.HackInstalledThemePack.GetHashCode() -> int
+override HackerOs.AppSdk.Apps.HackInstalledThemePack.ToString() -> string!
 override HackerOs.AppSdk.Apps.HackIntentResult.Equals(object? obj) -> bool
 override HackerOs.AppSdk.Apps.HackIntentResult.GetHashCode() -> int
 override HackerOs.AppSdk.Apps.HackIntentResult.ToString() -> string!
 override HackerOs.AppSdk.Apps.HackOpenFileResult.Equals(object? obj) -> bool
 override HackerOs.AppSdk.Apps.HackOpenFileResult.GetHashCode() -> int
 override HackerOs.AppSdk.Apps.HackOpenFileResult.ToString() -> string!
+override HackerOs.AppSdk.Apps.HackPackageCatalog.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Apps.HackPackageCatalog.GetHashCode() -> int
+override HackerOs.AppSdk.Apps.HackPackageCatalog.ToString() -> string!
+override HackerOs.AppSdk.Apps.HackPackageInfo.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Apps.HackPackageInfo.GetHashCode() -> int
+override HackerOs.AppSdk.Apps.HackPackageInfo.ToString() -> string!
+override HackerOs.AppSdk.Apps.HackPackageInstallReport.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Apps.HackPackageInstallReport.GetHashCode() -> int
+override HackerOs.AppSdk.Apps.HackPackageInstallReport.ToString() -> string!
+override HackerOs.AppSdk.Apps.HackPackagePolicy.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Apps.HackPackagePolicy.GetHashCode() -> int
+override HackerOs.AppSdk.Apps.HackPackagePolicy.ToString() -> string!
+override HackerOs.AppSdk.Apps.HackPackageSources.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Apps.HackPackageSources.GetHashCode() -> int
+override HackerOs.AppSdk.Apps.HackPackageSources.ToString() -> string!
+override HackerOs.AppSdk.Apps.HackPackageUpdate.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Apps.HackPackageUpdate.GetHashCode() -> int
+override HackerOs.AppSdk.Apps.HackPackageUpdate.ToString() -> string!
 override HackerOs.AppSdk.Apps.HackRunningProcessInfo.Equals(object? obj) -> bool
 override HackerOs.AppSdk.Apps.HackRunningProcessInfo.GetHashCode() -> int
 override HackerOs.AppSdk.Apps.HackRunningProcessInfo.ToString() -> string!
+override HackerOs.AppSdk.Apps.HackThemePackInstallReport.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Apps.HackThemePackInstallReport.GetHashCode() -> int
+override HackerOs.AppSdk.Apps.HackThemePackInstallReport.ToString() -> string!
 override HackerOs.AppSdk.Apps.HackUninstallPlan.Equals(object? obj) -> bool
 override HackerOs.AppSdk.Apps.HackUninstallPlan.GetHashCode() -> int
 override HackerOs.AppSdk.Apps.HackUninstallPlan.ToString() -> string!
@@ -2381,6 +2893,9 @@ override HackerOs.AppSdk.Files.HackDesktopCell.ToString() -> string!
 override HackerOs.AppSdk.Files.HackDesktopEntry.Equals(object? obj) -> bool
 override HackerOs.AppSdk.Files.HackDesktopEntry.GetHashCode() -> int
 override HackerOs.AppSdk.Files.HackDesktopEntry.ToString() -> string!
+override HackerOs.AppSdk.Files.HackDesktopLink.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Files.HackDesktopLink.GetHashCode() -> int
+override HackerOs.AppSdk.Files.HackDesktopLink.ToString() -> string!
 override HackerOs.AppSdk.Files.HackDesktopOptions.Equals(object? obj) -> bool
 override HackerOs.AppSdk.Files.HackDesktopOptions.GetHashCode() -> int
 override HackerOs.AppSdk.Files.HackDesktopOptions.ToString() -> string!
@@ -2394,6 +2909,9 @@ override HackerOs.AppSdk.HackUserInfo.Equals(object? obj) -> bool
 override HackerOs.AppSdk.HackUserInfo.GetHashCode() -> int
 override HackerOs.AppSdk.HackUserInfo.ToString() -> string!
 override HackerOs.AppSdk.IO.HackDirectoryInfo.Exists.get -> bool
+override HackerOs.AppSdk.IO.HackDirectorySize.Equals(object? obj) -> bool
+override HackerOs.AppSdk.IO.HackDirectorySize.GetHashCode() -> int
+override HackerOs.AppSdk.IO.HackDirectorySize.ToString() -> string!
 override HackerOs.AppSdk.IO.HackDriveInfo.ToString() -> string!
 override HackerOs.AppSdk.IO.HackDriveSnapshot.Equals(object? obj) -> bool
 override HackerOs.AppSdk.IO.HackDriveSnapshot.GetHashCode() -> int
@@ -2586,6 +3104,15 @@ override HackerOs.AppSdk.WebData.HackWebDbSchemaDefinition.ToString() -> string!
 override HackerOs.AppSdk.WebData.HackWebDbStoreDefinition.Equals(object? obj) -> bool
 override HackerOs.AppSdk.WebData.HackWebDbStoreDefinition.GetHashCode() -> int
 override HackerOs.AppSdk.WebData.HackWebDbStoreDefinition.ToString() -> string!
+override HackerOs.AppSdk.WhatsNew.HackChangeEntry.Equals(object? obj) -> bool
+override HackerOs.AppSdk.WhatsNew.HackChangeEntry.GetHashCode() -> int
+override HackerOs.AppSdk.WhatsNew.HackChangeEntry.ToString() -> string!
+override HackerOs.AppSdk.WhatsNew.HackChangeGroup.Equals(object? obj) -> bool
+override HackerOs.AppSdk.WhatsNew.HackChangeGroup.GetHashCode() -> int
+override HackerOs.AppSdk.WhatsNew.HackChangeGroup.ToString() -> string!
+override HackerOs.AppSdk.WhatsNew.HackChangeList.Equals(object? obj) -> bool
+override HackerOs.AppSdk.WhatsNew.HackChangeList.GetHashCode() -> int
+override HackerOs.AppSdk.WhatsNew.HackChangeList.ToString() -> string!
 override sealed HackerOs.AppSdk.WebServerAppBase.RunCoreAsync(HackerOs.AppSdk.IAppExecutionContext! context, System.Threading.CancellationToken sessionCancellationToken) -> System.Threading.Tasks.Task!
 static HackerOs.AppSdk.Accessibility.DefaultAppAccessibilityGateway.Instance.get -> HackerOs.AppSdk.Accessibility.DefaultAppAccessibilityGateway!
 static HackerOs.AppSdk.Accessibility.HackAccessibility.GetPreferencesAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Accessibility.HackAccessibilityPreferences!>!
@@ -2628,6 +3155,28 @@ static HackerOs.AppSdk.Administration.HackPermissionAdministration.SetMachineDec
 static HackerOs.AppSdk.Administration.HackPermissionAdministration.SetMachineDecisionAsync(string! appId, string! capability, HackerOs.AppSdk.Administration.HackPermissionDecision decision, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
 static HackerOs.AppSdk.Administration.HackPermissionAdministration.SetPolicyAsync(HackerOs.AppSdk.Administration.HackDangerousCapabilityPolicy policy, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
 static HackerOs.AppSdk.Administration.HackPermissionAdministration.SetPolicyAsync(HackerOs.AppSdk.IAppExecutionContext! context, HackerOs.AppSdk.Administration.HackDangerousCapabilityPolicy policy, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+static HackerOs.AppSdk.Administration.HackScreenInfo.operator !=(HackerOs.AppSdk.Administration.HackScreenInfo? left, HackerOs.AppSdk.Administration.HackScreenInfo? right) -> bool
+static HackerOs.AppSdk.Administration.HackScreenInfo.operator ==(HackerOs.AppSdk.Administration.HackScreenInfo? left, HackerOs.AppSdk.Administration.HackScreenInfo? right) -> bool
+static HackerOs.AppSdk.Administration.HackScreens.CloseScreenAsync(HackerOs.AppSdk.IAppExecutionContext! context, int number, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+static HackerOs.AppSdk.Administration.HackScreens.CloseScreenAsync(int number, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+static HackerOs.AppSdk.Administration.HackScreens.GetState() -> HackerOs.AppSdk.Administration.HackScreensState!
+static HackerOs.AppSdk.Administration.HackScreens.GetState(HackerOs.AppSdk.IAppExecutionContext! context) -> HackerOs.AppSdk.Administration.HackScreensState!
+static HackerOs.AppSdk.Administration.HackScreens.IdentifyAsync(HackerOs.AppSdk.IAppExecutionContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+static HackerOs.AppSdk.Administration.HackScreens.IdentifyAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+static HackerOs.AppSdk.Administration.HackScreens.IsSupported.get -> bool
+static HackerOs.AppSdk.Administration.HackScreens.IsSupportedFor(HackerOs.AppSdk.IAppExecutionContext! context) -> bool
+static HackerOs.AppSdk.Administration.HackScreens.OpenScreenAsync(HackerOs.AppSdk.IAppExecutionContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Administration.HackScreenOpenStatus>!
+static HackerOs.AppSdk.Administration.HackScreens.OpenScreenAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Administration.HackScreenOpenStatus>!
+static HackerOs.AppSdk.Administration.HackScreens.RequestPermissionAsync(HackerOs.AppSdk.IAppExecutionContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Administration.HackScreenPermission>!
+static HackerOs.AppSdk.Administration.HackScreens.RequestPermissionAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Administration.HackScreenPermission>!
+static HackerOs.AppSdk.Administration.HackScreens.RestoreScreensAsync(HackerOs.AppSdk.IAppExecutionContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<int>!
+static HackerOs.AppSdk.Administration.HackScreens.RestoreScreensAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<int>!
+static HackerOs.AppSdk.Administration.HackScreens.ToggleFullScreenAsync(HackerOs.AppSdk.IAppExecutionContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
+static HackerOs.AppSdk.Administration.HackScreens.ToggleFullScreenAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
+static HackerOs.AppSdk.Administration.HackScreens.WatchAsync(HackerOs.AppSdk.IAppExecutionContext! context, System.Func<System.Threading.Tasks.ValueTask>! onChanged, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.IAsyncDisposable!>!
+static HackerOs.AppSdk.Administration.HackScreens.WatchAsync(System.Func<System.Threading.Tasks.ValueTask>! onChanged, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.IAsyncDisposable!>!
+static HackerOs.AppSdk.Administration.HackScreensState.operator !=(HackerOs.AppSdk.Administration.HackScreensState? left, HackerOs.AppSdk.Administration.HackScreensState? right) -> bool
+static HackerOs.AppSdk.Administration.HackScreensState.operator ==(HackerOs.AppSdk.Administration.HackScreensState? left, HackerOs.AppSdk.Administration.HackScreensState? right) -> bool
 static HackerOs.AppSdk.Administration.HackServerConnection.ConnectAsync(HackerOs.AppSdk.IAppExecutionContext! context, System.Uri! serverUrl, string! login, string! password, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Administration.HackServerConnectionState!>!
 static HackerOs.AppSdk.Administration.HackServerConnection.ConnectAsync(System.Uri! serverUrl, string! login, string! password, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Administration.HackServerConnectionState!>!
 static HackerOs.AppSdk.Administration.HackServerConnection.CreateAccountAsync(HackerOs.AppSdk.IAppExecutionContext! context, System.Uri! serverUrl, string! login, string! password, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Administration.HackServerConnectionState!>!
@@ -2642,6 +3191,8 @@ static HackerOs.AppSdk.Administration.HackServerConnection.GetStateAsync(HackerO
 static HackerOs.AppSdk.Administration.HackServerConnection.GetStateAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Administration.HackServerConnectionState!>!
 static HackerOs.AppSdk.Administration.HackServerConnection.GetSyncStatusAsync(HackerOs.AppSdk.IAppExecutionContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Administration.HackSyncStatus!>!
 static HackerOs.AppSdk.Administration.HackServerConnection.GetSyncStatusAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Administration.HackSyncStatus!>!
+static HackerOs.AppSdk.Administration.HackServerConnection.PairAsync(HackerOs.AppSdk.IAppExecutionContext! context, System.Uri! serverUrl, string! code, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Administration.HackServerConnectionState!>!
+static HackerOs.AppSdk.Administration.HackServerConnection.PairAsync(System.Uri! serverUrl, string! code, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Administration.HackServerConnectionState!>!
 static HackerOs.AppSdk.Administration.HackServerConnection.SetSyncPausedAsync(HackerOs.AppSdk.IAppExecutionContext! context, bool paused, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
 static HackerOs.AppSdk.Administration.HackServerConnection.SetSyncPausedAsync(bool paused, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
 static HackerOs.AppSdk.Administration.HackServerConnection.ShowConflictsAsync(HackerOs.AppSdk.IAppExecutionContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
@@ -2650,9 +3201,13 @@ static HackerOs.AppSdk.Administration.HackServerConnection.SyncAsync(HackerOs.Ap
 static HackerOs.AppSdk.Administration.HackServerConnection.SyncAsync(HackerOs.AppSdk.IAppExecutionContext! context, HackerOs.AppSdk.Administration.HackSyncDomain domain, HackerOs.AppSdk.Administration.HackSyncDirection direction, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
 static HackerOs.AppSdk.Administration.HackServerConnection.SyncNowAsync(HackerOs.AppSdk.IAppExecutionContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Administration.HackSyncStatus!>!
 static HackerOs.AppSdk.Administration.HackServerConnection.SyncNowAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Administration.HackSyncStatus!>!
+static HackerOs.AppSdk.Administration.HackServerConnection.TestAsync(HackerOs.AppSdk.IAppExecutionContext! context, System.Uri! serverUrl, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Administration.HackServerProbe!>!
+static HackerOs.AppSdk.Administration.HackServerConnection.TestAsync(System.Uri! serverUrl, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Administration.HackServerProbe!>!
 static HackerOs.AppSdk.Administration.HackServerConnectionState.NotConnected.get -> HackerOs.AppSdk.Administration.HackServerConnectionState!
 static HackerOs.AppSdk.Administration.HackServerConnectionState.operator !=(HackerOs.AppSdk.Administration.HackServerConnectionState? left, HackerOs.AppSdk.Administration.HackServerConnectionState? right) -> bool
 static HackerOs.AppSdk.Administration.HackServerConnectionState.operator ==(HackerOs.AppSdk.Administration.HackServerConnectionState? left, HackerOs.AppSdk.Administration.HackServerConnectionState? right) -> bool
+static HackerOs.AppSdk.Administration.HackServerProbe.operator !=(HackerOs.AppSdk.Administration.HackServerProbe? left, HackerOs.AppSdk.Administration.HackServerProbe? right) -> bool
+static HackerOs.AppSdk.Administration.HackServerProbe.operator ==(HackerOs.AppSdk.Administration.HackServerProbe? left, HackerOs.AppSdk.Administration.HackServerProbe? right) -> bool
 static HackerOs.AppSdk.Administration.HackServerRelayPolicy.operator !=(HackerOs.AppSdk.Administration.HackServerRelayPolicy? left, HackerOs.AppSdk.Administration.HackServerRelayPolicy? right) -> bool
 static HackerOs.AppSdk.Administration.HackServerRelayPolicy.operator ==(HackerOs.AppSdk.Administration.HackServerRelayPolicy? left, HackerOs.AppSdk.Administration.HackServerRelayPolicy? right) -> bool
 static HackerOs.AppSdk.Administration.HackStorageDiagnostics.DeleteWebSiteDatabaseAsync(string! databaseName, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
@@ -2696,6 +3251,8 @@ static HackerOs.AppSdk.Administration.HackUserAccounts.RemovePasskeyAsync(Hacker
 static HackerOs.AppSdk.Administration.HackUserAccounts.RemovePasskeyAsync(string! passkeyId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
 static HackerOs.AppSdk.Administration.HackUserAccounts.RemovePasswordAsync(HackerOs.AppSdk.IAppExecutionContext! context, string! loginName, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
 static HackerOs.AppSdk.Administration.HackUserAccounts.RemovePasswordAsync(string! loginName, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+static HackerOs.AppSdk.Administration.HackUserAccounts.RequestGuestAccountCreationAsync(HackerOs.AppSdk.IAppExecutionContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
+static HackerOs.AppSdk.Administration.HackUserAccounts.RequestGuestAccountCreationAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
 static HackerOs.AppSdk.Administration.HackUserAccounts.ResetPasswordAsync(HackerOs.AppSdk.IAppExecutionContext! context, string! loginName, string! newPassword, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
 static HackerOs.AppSdk.Administration.HackUserAccounts.ResetPasswordAsync(string! loginName, string! newPassword, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
 static HackerOs.AppSdk.Administration.HackUserAccounts.ValidateNewAccount(HackerOs.AppSdk.Administration.HackNewUserAccount? account) -> string?
@@ -2704,6 +3261,8 @@ static HackerOs.AppSdk.Administration.HackWebSiteDatabaseInfo.operator !=(Hacker
 static HackerOs.AppSdk.Administration.HackWebSiteDatabaseInfo.operator ==(HackerOs.AppSdk.Administration.HackWebSiteDatabaseInfo? left, HackerOs.AppSdk.Administration.HackWebSiteDatabaseInfo? right) -> bool
 static HackerOs.AppSdk.Administration.HackWebSiteDatabaseStoreInfo.operator !=(HackerOs.AppSdk.Administration.HackWebSiteDatabaseStoreInfo? left, HackerOs.AppSdk.Administration.HackWebSiteDatabaseStoreInfo? right) -> bool
 static HackerOs.AppSdk.Administration.HackWebSiteDatabaseStoreInfo.operator ==(HackerOs.AppSdk.Administration.HackWebSiteDatabaseStoreInfo? left, HackerOs.AppSdk.Administration.HackWebSiteDatabaseStoreInfo? right) -> bool
+static HackerOs.AppSdk.Apps.HackAppCatalog.operator !=(HackerOs.AppSdk.Apps.HackAppCatalog? left, HackerOs.AppSdk.Apps.HackAppCatalog? right) -> bool
+static HackerOs.AppSdk.Apps.HackAppCatalog.operator ==(HackerOs.AppSdk.Apps.HackAppCatalog? left, HackerOs.AppSdk.Apps.HackAppCatalog? right) -> bool
 static HackerOs.AppSdk.Apps.HackAppFileHandler.operator !=(HackerOs.AppSdk.Apps.HackAppFileHandler? left, HackerOs.AppSdk.Apps.HackAppFileHandler? right) -> bool
 static HackerOs.AppSdk.Apps.HackAppFileHandler.operator ==(HackerOs.AppSdk.Apps.HackAppFileHandler? left, HackerOs.AppSdk.Apps.HackAppFileHandler? right) -> bool
 static HackerOs.AppSdk.Apps.HackAppIcons.LucideName(string! appId, string? category) -> string!
@@ -2717,6 +3276,24 @@ static HackerOs.AppSdk.Apps.HackAppManagement.PlanUninstallAsync(string! appId, 
 static HackerOs.AppSdk.Apps.HackAppManagement.ReinstallAsync(string! appId, HackerOs.AppSdk.Apps.HackInstallScope scope, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<string!>!>!
 static HackerOs.AppSdk.Apps.HackAppManagement.UninstallAsync(string! appId, HackerOs.AppSdk.Apps.HackInstallScope scope, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<string!>!>!
 static HackerOs.AppSdk.Apps.HackAppManagement.UninstallWithReportAsync(string! appId, HackerOs.AppSdk.Apps.HackInstallScope scope, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Apps.HackUninstallReport!>!
+static HackerOs.AppSdk.Apps.HackAppPackages.AddSourceAsync(string! source, bool trusted = false, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Apps.HackPackageSources!>!
+static HackerOs.AppSdk.Apps.HackAppPackages.GetCatalogDescriptionAsync(HackerOs.AppSdk.Apps.HackCatalogApp! app, string? version = null, string! language = "en", System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<string?>!
+static HackerOs.AppSdk.Apps.HackAppPackages.GetCatalogsAsync(bool refresh = false, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Apps.HackAppCatalog!>!>!
+static HackerOs.AppSdk.Apps.HackAppPackages.GetInfoAsync(string! source, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Apps.HackPackageInfo!>!
+static HackerOs.AppSdk.Apps.HackAppPackages.GetInstalledAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Apps.HackInstalledPackage!>!>!
+static HackerOs.AppSdk.Apps.HackAppPackages.GetInstalledThemePacksAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Apps.HackInstalledThemePack!>!>!
+static HackerOs.AppSdk.Apps.HackAppPackages.GetPolicyAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Apps.HackPackagePolicy!>!
+static HackerOs.AppSdk.Apps.HackAppPackages.GetSourcesAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Apps.HackPackageSources!>!
+static HackerOs.AppSdk.Apps.HackAppPackages.GetUpdatesAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Apps.HackPackageUpdate!>!>!
+static HackerOs.AppSdk.Apps.HackAppPackages.InstallAsync(string! source, HackerOs.AppSdk.Apps.HackPackageScope scope = HackerOs.AppSdk.Apps.HackPackageScope.Auto, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Apps.HackPackageInstallReport!>!
+static HackerOs.AppSdk.Apps.HackAppPackages.InstallThemePackAsync(string! source, HackerOs.AppSdk.Apps.HackPackageScope scope = HackerOs.AppSdk.Apps.HackPackageScope.Auto, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Apps.HackThemePackInstallReport!>!
+static HackerOs.AppSdk.Apps.HackAppPackages.RemoveAsync(string! appId, HackerOs.AppSdk.Apps.HackPackageScope scope = HackerOs.AppSdk.Apps.HackPackageScope.Auto, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Apps.HackInstalledPackage!>!
+static HackerOs.AppSdk.Apps.HackAppPackages.RemoveSourceAsync(string! source, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Apps.HackPackageSources!>!
+static HackerOs.AppSdk.Apps.HackAppPackages.RemoveThemePackAsync(string! packId, HackerOs.AppSdk.Apps.HackPackageScope scope = HackerOs.AppSdk.Apps.HackPackageScope.Auto, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Apps.HackInstalledThemePack!>!
+static HackerOs.AppSdk.Apps.HackAppPackages.RepairAsync(bool system = false, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<string!>!>!
+static HackerOs.AppSdk.Apps.HackAppPackages.RestartToFinishAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+static HackerOs.AppSdk.Apps.HackAppPackages.RollbackAsync(string! appId, HackerOs.AppSdk.Apps.HackPackageScope scope = HackerOs.AppSdk.Apps.HackPackageScope.Auto, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Apps.HackPackageInstallReport!>!
+static HackerOs.AppSdk.Apps.HackAppPackages.SetPolicyAsync(HackerOs.AppSdk.Apps.HackPackageBlockKind kind, string! value, bool blocked, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Apps.HackPackagePolicy!>!
 static HackerOs.AppSdk.Apps.HackApps.Changed -> System.EventHandler?
 static HackerOs.AppSdk.Apps.HackApps.EditFileAsync(string! path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Apps.HackOpenFileResult!>!
 static HackerOs.AppSdk.Apps.HackApps.GetDefaultHandlersAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Apps.HackFileAssociation!>!>!
@@ -2733,14 +3310,38 @@ static HackerOs.AppSdk.Apps.HackApps.SetDefaultHandlerAsync(string! target, stri
 static HackerOs.AppSdk.Apps.HackApps.ShowSettingsAsync(string? appId = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
 static HackerOs.AppSdk.Apps.HackBrowser.OpenAsync(string! url, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
 static HackerOs.AppSdk.Apps.HackBrowser.OpenDetachedAsync(string! url, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+static HackerOs.AppSdk.Apps.HackCatalogApp.operator !=(HackerOs.AppSdk.Apps.HackCatalogApp? left, HackerOs.AppSdk.Apps.HackCatalogApp? right) -> bool
+static HackerOs.AppSdk.Apps.HackCatalogApp.operator ==(HackerOs.AppSdk.Apps.HackCatalogApp? left, HackerOs.AppSdk.Apps.HackCatalogApp? right) -> bool
+static HackerOs.AppSdk.Apps.HackCatalogAppVersion.operator !=(HackerOs.AppSdk.Apps.HackCatalogAppVersion? left, HackerOs.AppSdk.Apps.HackCatalogAppVersion? right) -> bool
+static HackerOs.AppSdk.Apps.HackCatalogAppVersion.operator ==(HackerOs.AppSdk.Apps.HackCatalogAppVersion? left, HackerOs.AppSdk.Apps.HackCatalogAppVersion? right) -> bool
+static HackerOs.AppSdk.Apps.HackCatalogCategory.operator !=(HackerOs.AppSdk.Apps.HackCatalogCategory? left, HackerOs.AppSdk.Apps.HackCatalogCategory? right) -> bool
+static HackerOs.AppSdk.Apps.HackCatalogCategory.operator ==(HackerOs.AppSdk.Apps.HackCatalogCategory? left, HackerOs.AppSdk.Apps.HackCatalogCategory? right) -> bool
 static HackerOs.AppSdk.Apps.HackFileAssociation.operator !=(HackerOs.AppSdk.Apps.HackFileAssociation? left, HackerOs.AppSdk.Apps.HackFileAssociation? right) -> bool
 static HackerOs.AppSdk.Apps.HackFileAssociation.operator ==(HackerOs.AppSdk.Apps.HackFileAssociation? left, HackerOs.AppSdk.Apps.HackFileAssociation? right) -> bool
+static HackerOs.AppSdk.Apps.HackInstalledPackage.operator !=(HackerOs.AppSdk.Apps.HackInstalledPackage? left, HackerOs.AppSdk.Apps.HackInstalledPackage? right) -> bool
+static HackerOs.AppSdk.Apps.HackInstalledPackage.operator ==(HackerOs.AppSdk.Apps.HackInstalledPackage? left, HackerOs.AppSdk.Apps.HackInstalledPackage? right) -> bool
+static HackerOs.AppSdk.Apps.HackInstalledThemePack.operator !=(HackerOs.AppSdk.Apps.HackInstalledThemePack? left, HackerOs.AppSdk.Apps.HackInstalledThemePack? right) -> bool
+static HackerOs.AppSdk.Apps.HackInstalledThemePack.operator ==(HackerOs.AppSdk.Apps.HackInstalledThemePack? left, HackerOs.AppSdk.Apps.HackInstalledThemePack? right) -> bool
 static HackerOs.AppSdk.Apps.HackIntentResult.operator !=(HackerOs.AppSdk.Apps.HackIntentResult? left, HackerOs.AppSdk.Apps.HackIntentResult? right) -> bool
 static HackerOs.AppSdk.Apps.HackIntentResult.operator ==(HackerOs.AppSdk.Apps.HackIntentResult? left, HackerOs.AppSdk.Apps.HackIntentResult? right) -> bool
 static HackerOs.AppSdk.Apps.HackOpenFileResult.operator !=(HackerOs.AppSdk.Apps.HackOpenFileResult? left, HackerOs.AppSdk.Apps.HackOpenFileResult? right) -> bool
 static HackerOs.AppSdk.Apps.HackOpenFileResult.operator ==(HackerOs.AppSdk.Apps.HackOpenFileResult? left, HackerOs.AppSdk.Apps.HackOpenFileResult? right) -> bool
+static HackerOs.AppSdk.Apps.HackPackageCatalog.operator !=(HackerOs.AppSdk.Apps.HackPackageCatalog? left, HackerOs.AppSdk.Apps.HackPackageCatalog? right) -> bool
+static HackerOs.AppSdk.Apps.HackPackageCatalog.operator ==(HackerOs.AppSdk.Apps.HackPackageCatalog? left, HackerOs.AppSdk.Apps.HackPackageCatalog? right) -> bool
+static HackerOs.AppSdk.Apps.HackPackageInfo.operator !=(HackerOs.AppSdk.Apps.HackPackageInfo? left, HackerOs.AppSdk.Apps.HackPackageInfo? right) -> bool
+static HackerOs.AppSdk.Apps.HackPackageInfo.operator ==(HackerOs.AppSdk.Apps.HackPackageInfo? left, HackerOs.AppSdk.Apps.HackPackageInfo? right) -> bool
+static HackerOs.AppSdk.Apps.HackPackageInstallReport.operator !=(HackerOs.AppSdk.Apps.HackPackageInstallReport? left, HackerOs.AppSdk.Apps.HackPackageInstallReport? right) -> bool
+static HackerOs.AppSdk.Apps.HackPackageInstallReport.operator ==(HackerOs.AppSdk.Apps.HackPackageInstallReport? left, HackerOs.AppSdk.Apps.HackPackageInstallReport? right) -> bool
+static HackerOs.AppSdk.Apps.HackPackagePolicy.operator !=(HackerOs.AppSdk.Apps.HackPackagePolicy? left, HackerOs.AppSdk.Apps.HackPackagePolicy? right) -> bool
+static HackerOs.AppSdk.Apps.HackPackagePolicy.operator ==(HackerOs.AppSdk.Apps.HackPackagePolicy? left, HackerOs.AppSdk.Apps.HackPackagePolicy? right) -> bool
+static HackerOs.AppSdk.Apps.HackPackageSources.operator !=(HackerOs.AppSdk.Apps.HackPackageSources? left, HackerOs.AppSdk.Apps.HackPackageSources? right) -> bool
+static HackerOs.AppSdk.Apps.HackPackageSources.operator ==(HackerOs.AppSdk.Apps.HackPackageSources? left, HackerOs.AppSdk.Apps.HackPackageSources? right) -> bool
+static HackerOs.AppSdk.Apps.HackPackageUpdate.operator !=(HackerOs.AppSdk.Apps.HackPackageUpdate? left, HackerOs.AppSdk.Apps.HackPackageUpdate? right) -> bool
+static HackerOs.AppSdk.Apps.HackPackageUpdate.operator ==(HackerOs.AppSdk.Apps.HackPackageUpdate? left, HackerOs.AppSdk.Apps.HackPackageUpdate? right) -> bool
 static HackerOs.AppSdk.Apps.HackRunningProcessInfo.operator !=(HackerOs.AppSdk.Apps.HackRunningProcessInfo? left, HackerOs.AppSdk.Apps.HackRunningProcessInfo? right) -> bool
 static HackerOs.AppSdk.Apps.HackRunningProcessInfo.operator ==(HackerOs.AppSdk.Apps.HackRunningProcessInfo? left, HackerOs.AppSdk.Apps.HackRunningProcessInfo? right) -> bool
+static HackerOs.AppSdk.Apps.HackThemePackInstallReport.operator !=(HackerOs.AppSdk.Apps.HackThemePackInstallReport? left, HackerOs.AppSdk.Apps.HackThemePackInstallReport? right) -> bool
+static HackerOs.AppSdk.Apps.HackThemePackInstallReport.operator ==(HackerOs.AppSdk.Apps.HackThemePackInstallReport? left, HackerOs.AppSdk.Apps.HackThemePackInstallReport? right) -> bool
 static HackerOs.AppSdk.Apps.HackUninstallPlan.operator !=(HackerOs.AppSdk.Apps.HackUninstallPlan? left, HackerOs.AppSdk.Apps.HackUninstallPlan? right) -> bool
 static HackerOs.AppSdk.Apps.HackUninstallPlan.operator ==(HackerOs.AppSdk.Apps.HackUninstallPlan? left, HackerOs.AppSdk.Apps.HackUninstallPlan? right) -> bool
 static HackerOs.AppSdk.Apps.HackUninstallReport.operator !=(HackerOs.AppSdk.Apps.HackUninstallReport? left, HackerOs.AppSdk.Apps.HackUninstallReport? right) -> bool
@@ -2802,6 +3403,12 @@ static HackerOs.AppSdk.Files.HackDesktopLayout.CellSize(HackerOs.AppSdk.Files.Ha
 static HackerOs.AppSdk.Files.HackDesktopLayout.GridSize(double width, double height, HackerOs.AppSdk.Files.HackDesktopIconSize size) -> (int Columns, int Rows)
 static HackerOs.AppSdk.Files.HackDesktopLayout.Move(HackerOs.AppSdk.Files.HackDesktopArrangement! current, System.Collections.Generic.IReadOnlyList<string!>! moved, string! anchor, HackerOs.AppSdk.Files.HackDesktopCell target, int columns, int rows, bool autoArrange) -> System.Collections.Generic.IReadOnlyDictionary<string!, HackerOs.AppSdk.Files.HackDesktopCell>!
 static HackerOs.AppSdk.Files.HackDesktopLayout.Order(System.Collections.Generic.IEnumerable<HackerOs.AppSdk.Files.HackDesktopSortItem!>! items, HackerOs.AppSdk.Files.HackDesktopSort sort, bool showHome, bool showTrash) -> System.Collections.Generic.IReadOnlyList<string!>!
+static HackerOs.AppSdk.Files.HackDesktopLink.CreateLinkAsync(string! directory, string! target, string? name = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<string!>!
+static HackerOs.AppSdk.Files.HackDesktopLink.PathFromUrl(string? url) -> string?
+static HackerOs.AppSdk.Files.HackDesktopLink.ToUrl(string! path) -> string!
+static HackerOs.AppSdk.Files.HackDesktopLink.TryParse(string? content, out HackerOs.AppSdk.Files.HackDesktopLink? link) -> bool
+static HackerOs.AppSdk.Files.HackDesktopLink.operator !=(HackerOs.AppSdk.Files.HackDesktopLink? left, HackerOs.AppSdk.Files.HackDesktopLink? right) -> bool
+static HackerOs.AppSdk.Files.HackDesktopLink.operator ==(HackerOs.AppSdk.Files.HackDesktopLink? left, HackerOs.AppSdk.Files.HackDesktopLink? right) -> bool
 static HackerOs.AppSdk.Files.HackDesktopOptions.Default.get -> HackerOs.AppSdk.Files.HackDesktopOptions!
 static HackerOs.AppSdk.Files.HackDesktopOptions.operator !=(HackerOs.AppSdk.Files.HackDesktopOptions? left, HackerOs.AppSdk.Files.HackDesktopOptions? right) -> bool
 static HackerOs.AppSdk.Files.HackDesktopOptions.operator ==(HackerOs.AppSdk.Files.HackDesktopOptions? left, HackerOs.AppSdk.Files.HackDesktopOptions? right) -> bool
@@ -2838,6 +3445,16 @@ static HackerOs.AppSdk.Globalization.HackLocalization.GetLocalizer<TResource>() 
 static HackerOs.AppSdk.Globalization.HackLocalization.GetLocalizer<TResource>(this HackerOs.AppSdk.IAppExecutionContext? context) -> Microsoft.Extensions.Localization.IStringLocalizer<TResource>!
 static HackerOs.AppSdk.Globalization.HackLocalization.GetResourceBaseName(System.Type! resourceType) -> string!
 static HackerOs.AppSdk.Globalization.HackLocalization.GetResourceManager(System.Type! resourceType) -> System.Resources.ResourceManager!
+static HackerOs.AppSdk.Globalization.HackTimeZone.Available.get -> System.Collections.Generic.IReadOnlyList<System.TimeZoneInfo!>!
+static HackerOs.AppSdk.Globalization.HackTimeZone.Current.get -> System.TimeZoneInfo!
+static HackerOs.AppSdk.Globalization.HackTimeZone.Device.get -> System.TimeZoneInfo!
+static HackerOs.AppSdk.Globalization.HackTimeZone.FormatOffset(System.TimeZoneInfo! zone, System.DateTimeOffset time) -> string!
+static HackerOs.AppSdk.Globalization.HackTimeZone.GetId(System.TimeZoneInfo! zone) -> string!
+static HackerOs.AppSdk.Globalization.HackTimeZone.Now.get -> System.DateTimeOffset
+static HackerOs.AppSdk.Globalization.HackTimeZone.Resolve(string? id, System.TimeZoneInfo? fallback = null) -> System.TimeZoneInfo!
+static HackerOs.AppSdk.Globalization.HackTimeZone.ToLocal(System.DateTimeOffset time) -> System.DateTimeOffset
+static HackerOs.AppSdk.Globalization.HackTimeZone.ToLocal(System.DateTimeOffset time, System.TimeZoneInfo! zone) -> System.DateTimeOffset
+static HackerOs.AppSdk.Globalization.HackTimeZone.TryFind(string? id, out System.TimeZoneInfo? zone) -> bool
 static HackerOs.AppSdk.HackConsole.Error.get -> System.IO.TextWriter!
 static HackerOs.AppSdk.HackConsole.In.get -> System.IO.TextReader!
 static HackerOs.AppSdk.HackConsole.IsAttached.get -> bool
@@ -2876,9 +3493,16 @@ static HackerOs.AppSdk.IO.HackDirectory.ExistsAsync(string? path, System.Threadi
 static HackerOs.AppSdk.IO.HackDirectory.GetDirectoriesAsync(string! path, string! searchPattern = "*", System.IO.SearchOption searchOption = System.IO.SearchOption.TopDirectoryOnly, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<string![]!>!
 static HackerOs.AppSdk.IO.HackDirectory.GetFileSystemEntriesAsync(string! path, string! searchPattern = "*", System.IO.SearchOption searchOption = System.IO.SearchOption.TopDirectoryOnly, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<string![]!>!
 static HackerOs.AppSdk.IO.HackDirectory.GetFilesAsync(string! path, string! searchPattern = "*", System.IO.SearchOption searchOption = System.IO.SearchOption.TopDirectoryOnly, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<string![]!>!
+static HackerOs.AppSdk.IO.HackDirectory.GetTotalSizeAsync(string! path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.IO.HackDirectorySize!>!
 static HackerOs.AppSdk.IO.HackDirectory.MoveAsync(string! sourceDirName, string! destDirName, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
 static HackerOs.AppSdk.IO.HackDirectoryInfo.GetAsync(string! path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.IO.HackDirectoryInfo!>
+static HackerOs.AppSdk.IO.HackDirectorySize.operator !=(HackerOs.AppSdk.IO.HackDirectorySize? left, HackerOs.AppSdk.IO.HackDirectorySize? right) -> bool
+static HackerOs.AppSdk.IO.HackDirectorySize.operator ==(HackerOs.AppSdk.IO.HackDirectorySize? left, HackerOs.AppSdk.IO.HackDirectorySize? right) -> bool
 static HackerOs.AppSdk.IO.HackDriveInfo.GetDrivesAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.IO.HackDriveInfo![]!>!
+static HackerOs.AppSdk.IO.HackDriveInfo.IsHostFolderSupportedAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
+static HackerOs.AppSdk.IO.HackDriveInfo.MountHostFolderAsync(string? mountPoint = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.IO.HackDriveInfo?>!
+static HackerOs.AppSdk.IO.HackDriveInfo.ReconnectAsync(string! mountPoint, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
+static HackerOs.AppSdk.IO.HackDriveInfo.UnmountAsync(string! mountPoint, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
 static HackerOs.AppSdk.IO.HackDriveSnapshot.operator !=(HackerOs.AppSdk.IO.HackDriveSnapshot? left, HackerOs.AppSdk.IO.HackDriveSnapshot? right) -> bool
 static HackerOs.AppSdk.IO.HackDriveSnapshot.operator ==(HackerOs.AppSdk.IO.HackDriveSnapshot? left, HackerOs.AppSdk.IO.HackDriveSnapshot? right) -> bool
 static HackerOs.AppSdk.IO.HackFile.AppendAllLinesAsync(string! path, System.Collections.Generic.IEnumerable<string!>! contents, HackerOs.AppSdk.IO.HackWriteOptions! options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.IO.HackFileInfo!>!
@@ -2976,6 +3600,7 @@ static HackerOs.AppSdk.Keyring.HackKeyringEntry.operator !=(HackerOs.AppSdk.Keyr
 static HackerOs.AppSdk.Keyring.HackKeyringEntry.operator ==(HackerOs.AppSdk.Keyring.HackKeyringEntry? left, HackerOs.AppSdk.Keyring.HackKeyringEntry? right) -> bool
 static HackerOs.AppSdk.Net.HackCookie.operator !=(HackerOs.AppSdk.Net.HackCookie? left, HackerOs.AppSdk.Net.HackCookie? right) -> bool
 static HackerOs.AppSdk.Net.HackCookie.operator ==(HackerOs.AppSdk.Net.HackCookie? left, HackerOs.AppSdk.Net.HackCookie? right) -> bool
+static HackerOs.AppSdk.Net.HackCookieContainer.DomainMatches(string! host, string! domain) -> bool
 static HackerOs.AppSdk.Net.HackDns.GetHostAddressesAsync(string! hostNameOrAddress, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Net.IPAddress![]!>!
 static HackerOs.AppSdk.Net.HackDns.GetHostEntryAsync(System.Net.IPAddress! address, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Net.HackHostEntry!>!
 static HackerOs.AppSdk.Net.HackDns.GetHostEntryAsync(string! hostNameOrAddress, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Net.HackHostEntry!>!
@@ -3095,12 +3720,14 @@ static HackerOs.AppSdk.Threading.HackBackgroundProgress.operator ==(HackerOs.App
 static HackerOs.AppSdk.UnsupportedAdministrationGateways.ComponentProviders.get -> HackerOs.AppSdk.Administration.IAppComponentProviderAdministrationGateway!
 static HackerOs.AppSdk.UnsupportedAdministrationGateways.FileMenuEntries.get -> HackerOs.AppSdk.Administration.IAppFileMenuEntryAdministrationGateway!
 static HackerOs.AppSdk.UnsupportedAdministrationGateways.Permissions.get -> HackerOs.AppSdk.Administration.IAppPermissionAdministrationGateway!
+static HackerOs.AppSdk.UnsupportedAdministrationGateways.Screens.get -> HackerOs.AppSdk.Administration.IAppScreensGateway!
 static HackerOs.AppSdk.UnsupportedAdministrationGateways.ServerConnection.get -> HackerOs.AppSdk.Administration.IAppServerConnectionGateway!
 static HackerOs.AppSdk.UnsupportedAdministrationGateways.StorageDiagnostics.get -> HackerOs.AppSdk.Administration.IAppStorageDiagnosticsGateway!
 static HackerOs.AppSdk.UnsupportedAdministrationGateways.SystemBackup.get -> HackerOs.AppSdk.Administration.IAppSystemBackupGateway!
 static HackerOs.AppSdk.UnsupportedAdministrationGateways.SystemPower.get -> HackerOs.AppSdk.Administration.IAppSystemPowerGateway!
 static HackerOs.AppSdk.UnsupportedAdministrationGateways.SystemSettings.get -> HackerOs.AppSdk.Settings.IAppSystemSettingsGateway!
 static HackerOs.AppSdk.UnsupportedAdministrationGateways.UserAccounts.get -> HackerOs.AppSdk.Administration.IAppUserAccountsGateway!
+static HackerOs.AppSdk.UnsupportedAdministrationGateways.WhatsNew.get -> HackerOs.AppSdk.WhatsNew.IAppWhatsNewGateway!
 static HackerOs.AppSdk.WebData.HackWebDbException.FromMessage(string! message) -> HackerOs.AppSdk.WebData.HackWebDbException!
 static HackerOs.AppSdk.WebData.HackWebDbIndexChange.operator !=(HackerOs.AppSdk.WebData.HackWebDbIndexChange? left, HackerOs.AppSdk.WebData.HackWebDbIndexChange? right) -> bool
 static HackerOs.AppSdk.WebData.HackWebDbIndexChange.operator ==(HackerOs.AppSdk.WebData.HackWebDbIndexChange? left, HackerOs.AppSdk.WebData.HackWebDbIndexChange? right) -> bool
@@ -3123,6 +3750,21 @@ static HackerOs.AppSdk.WebData.HackWebDbSchemaDefinition.operator !=(HackerOs.Ap
 static HackerOs.AppSdk.WebData.HackWebDbSchemaDefinition.operator ==(HackerOs.AppSdk.WebData.HackWebDbSchemaDefinition? left, HackerOs.AppSdk.WebData.HackWebDbSchemaDefinition? right) -> bool
 static HackerOs.AppSdk.WebData.HackWebDbStoreDefinition.operator !=(HackerOs.AppSdk.WebData.HackWebDbStoreDefinition? left, HackerOs.AppSdk.WebData.HackWebDbStoreDefinition? right) -> bool
 static HackerOs.AppSdk.WebData.HackWebDbStoreDefinition.operator ==(HackerOs.AppSdk.WebData.HackWebDbStoreDefinition? left, HackerOs.AppSdk.WebData.HackWebDbStoreDefinition? right) -> bool
+static HackerOs.AppSdk.WhatsNew.HackChangeEntry.operator !=(HackerOs.AppSdk.WhatsNew.HackChangeEntry? left, HackerOs.AppSdk.WhatsNew.HackChangeEntry? right) -> bool
+static HackerOs.AppSdk.WhatsNew.HackChangeEntry.operator ==(HackerOs.AppSdk.WhatsNew.HackChangeEntry? left, HackerOs.AppSdk.WhatsNew.HackChangeEntry? right) -> bool
+static HackerOs.AppSdk.WhatsNew.HackChangeGroup.operator !=(HackerOs.AppSdk.WhatsNew.HackChangeGroup? left, HackerOs.AppSdk.WhatsNew.HackChangeGroup? right) -> bool
+static HackerOs.AppSdk.WhatsNew.HackChangeGroup.operator ==(HackerOs.AppSdk.WhatsNew.HackChangeGroup? left, HackerOs.AppSdk.WhatsNew.HackChangeGroup? right) -> bool
+static HackerOs.AppSdk.WhatsNew.HackChangeList.Empty.get -> HackerOs.AppSdk.WhatsNew.HackChangeList!
+static HackerOs.AppSdk.WhatsNew.HackChangeList.operator !=(HackerOs.AppSdk.WhatsNew.HackChangeList? left, HackerOs.AppSdk.WhatsNew.HackChangeList? right) -> bool
+static HackerOs.AppSdk.WhatsNew.HackChangeList.operator ==(HackerOs.AppSdk.WhatsNew.HackChangeList? left, HackerOs.AppSdk.WhatsNew.HackChangeList? right) -> bool
+static HackerOs.AppSdk.WhatsNew.HackWhatsNew.GetAsync(HackerOs.AppSdk.IAppExecutionContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.WhatsNew.HackChangeList!>!
+static HackerOs.AppSdk.WhatsNew.HackWhatsNew.GetAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.WhatsNew.HackChangeList!>!
+static HackerOs.AppSdk.WhatsNew.HackWhatsNew.IsSupported.get -> bool
+static HackerOs.AppSdk.WhatsNew.HackWhatsNew.IsSupportedFor(HackerOs.AppSdk.IAppExecutionContext! context) -> bool
+static HackerOs.AppSdk.WhatsNew.HackWhatsNew.MarkSeenAsync(HackerOs.AppSdk.IAppExecutionContext! context, System.Collections.Generic.IReadOnlyCollection<string!>! ids, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+static HackerOs.AppSdk.WhatsNew.HackWhatsNew.MarkSeenAsync(System.Collections.Generic.IReadOnlyCollection<string!>! ids, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+static HackerOs.AppSdk.WhatsNew.HackWhatsNew.WatchAsync(HackerOs.AppSdk.IAppExecutionContext! context, System.Func<System.Threading.Tasks.ValueTask>! onChanged, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.IAsyncDisposable!>!
+static HackerOs.AppSdk.WhatsNew.HackWhatsNew.WatchAsync(System.Func<System.Threading.Tasks.ValueTask>! onChanged, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.IAsyncDisposable!>!
 static readonly HackerOs.AppSdk.Diagnostics.HackProcess.DefaultCloseTimeout -> System.TimeSpan
 static readonly HackerOs.AppSdk.Diagnostics.HackProcess.DefaultTerminateTimeout -> System.TimeSpan
 static readonly HackerOs.AppSdk.HackUser.Root -> HackerOs.AppSdk.HackUserInfo!

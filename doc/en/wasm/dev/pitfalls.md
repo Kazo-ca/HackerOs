@@ -52,6 +52,7 @@ build and test commands are in
 
 | Symptom | Cause | Solution |
 | --- | --- | --- |
+| `ChangeEntriesTests` fails with "No data found" in the version PR | `collect-changes.sh` empties `changes/unreleased/` (and git does not keep the empty folder); an xUnit 2 theory with no data fails | The `unreleased/` files are checked in a single `[Fact]` that accepts an empty or missing folder (2.2.0 PR). Do not base a theory on a folder that can be empty. |
 | The 16 tests of `E2E.Tests` fail with "harness did not become ready" | The harness launches with `--no-build -c Release` | Build in Release first (`dotnet build HackerOs.sln -c Release` or `Tests/HackerOs.BrowserHarness.Tests -c Release`). |
 | The whole `UI.E2E` suite fails on "App launcher" not visible within 15 s, with no error | Work added to the first login (writing files in `FileSystemSeeder.SeedAsync`) pushes the desktop past the 15 s `CreateLocalProfileAndReachDesktopAsync` waits (13.8 s before the built-in sounds, 16.8 s with them) | Do not write big or many files during the login: run that work in the background after `SessionActivatedEvent` (the sounds: `OsSoundService` calls `FileSystemSeeder.InstallSoundThemesAsync`, [`system-sounds.md`](system-sounds.md)). Time the login with the test host before and after the change. |
 | Unstable E2E tests when several suites run | The Playwright suites compete for CPU and ports | Run `E2E`, `UI.E2E`, `Pwa.E2E` and `TrimmedPublish.E2E` **one at a time**. |

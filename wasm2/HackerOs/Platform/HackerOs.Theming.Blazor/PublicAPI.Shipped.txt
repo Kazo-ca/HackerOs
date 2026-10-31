@@ -1,4 +1,9 @@
 #nullable enable
+HackerOs.Theming.Blazor.CursorThemeSurface
+HackerOs.Theming.Blazor.CursorThemeSurface.CursorThemeSurface() -> void
+HackerOs.Theming.Blazor.CursorThemeSurface.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Theming.Blazor.CursorThemeSurface.Theme.get -> HackerOs.Theming.Abstractions.CursorTheme?
+HackerOs.Theming.Blazor.CursorThemeSurface.Theme.set -> void
 HackerOs.Theming.Blazor.Localization.PackageStringLocalizer
 HackerOs.Theming.Blazor.ThemePreview
 HackerOs.Theming.Blazor.ThemePreview.AccentId.get -> string!

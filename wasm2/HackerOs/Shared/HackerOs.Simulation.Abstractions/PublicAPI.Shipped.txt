@@ -523,6 +523,20 @@ HackerOs.Simulation.Abstractions.FileSystem.FileSystemTransactionStatus.Cancelle
 HackerOs.Simulation.Abstractions.FileSystem.FileSystemTransactionStatus.Committed = 1 -> HackerOs.Simulation.Abstractions.FileSystem.FileSystemTransactionStatus
 HackerOs.Simulation.Abstractions.FileSystem.FileSystemTransactionStatus.Rejected = 2 -> HackerOs.Simulation.Abstractions.FileSystem.FileSystemTransactionStatus
 HackerOs.Simulation.Abstractions.FileSystem.FileSystemTraversalPolicy
+HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeMeasure
+HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize
+HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize.<Clone>$() -> HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize!
+HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize.Deconstruct(out long Length, out long FileCount, out long DirectoryCount, out bool IsComplete) -> void
+HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize.DirectoryCount.get -> long
+HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize.DirectoryCount.init -> void
+HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize.Equals(HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize? other) -> bool
+HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize.FileCount.get -> long
+HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize.FileCount.init -> void
+HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize.FileSystemTreeSize(long Length, long FileCount, long DirectoryCount, bool IsComplete) -> void
+HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize.IsComplete.get -> bool
+HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize.IsComplete.init -> void
+HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize.Length.get -> long
+HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize.Length.init -> void
 HackerOs.Simulation.Abstractions.FileSystem.FileSystemWatchScope
 HackerOs.Simulation.Abstractions.FileSystem.FileSystemWatchScope.ImmediateChildren = 1 -> HackerOs.Simulation.Abstractions.FileSystem.FileSystemWatchScope
 HackerOs.Simulation.Abstractions.FileSystem.FileSystemWatchScope.Recursive = 2 -> HackerOs.Simulation.Abstractions.FileSystem.FileSystemWatchScope
@@ -533,8 +547,53 @@ HackerOs.Simulation.Abstractions.FileSystem.FileSystemWriteRequest.Equals(Hacker
 HackerOs.Simulation.Abstractions.FileSystem.FileSystemWriteRequest.ExpectedRevision.get -> long?
 HackerOs.Simulation.Abstractions.FileSystem.FileSystemWriteRequest.FileSystemWriteRequest(HackerOs.App.Abstractions.VirtualPath path, long? expectedRevision = null) -> void
 HackerOs.Simulation.Abstractions.FileSystem.FileSystemWriteRequest.Path.get -> HackerOs.App.Abstractions.VirtualPath
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry.<Clone>$() -> HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry!
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry.Deconstruct(out string! Name, out HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntryKind Kind, out long Length, out System.DateTimeOffset? LastModifiedUtc) -> void
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry.Equals(HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry? other) -> bool
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry.HostFolderEntry(string! Name, HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntryKind Kind, long Length, System.DateTimeOffset? LastModifiedUtc) -> void
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry.Kind.get -> HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntryKind
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry.Kind.init -> void
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry.LastModifiedUtc.get -> System.DateTimeOffset?
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry.LastModifiedUtc.init -> void
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry.Length.get -> long
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry.Length.init -> void
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry.Name.get -> string!
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry.Name.init -> void
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntryKind
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntryKind.Directory = 1 -> HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntryKind
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntryKind.File = 0 -> HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntryKind
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderErrorKind
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderErrorKind.AlreadyExists = 1 -> HackerOs.Simulation.Abstractions.FileSystem.HostFolderErrorKind
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderErrorKind.Failure = 7 -> HackerOs.Simulation.Abstractions.FileSystem.HostFolderErrorKind
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderErrorKind.InvalidName = 6 -> HackerOs.Simulation.Abstractions.FileSystem.HostFolderErrorKind
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderErrorKind.NoSpace = 5 -> HackerOs.Simulation.Abstractions.FileSystem.HostFolderErrorKind
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderErrorKind.NotAllowed = 4 -> HackerOs.Simulation.Abstractions.FileSystem.HostFolderErrorKind
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderErrorKind.NotEmpty = 3 -> HackerOs.Simulation.Abstractions.FileSystem.HostFolderErrorKind
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderErrorKind.NotFound = 0 -> HackerOs.Simulation.Abstractions.FileSystem.HostFolderErrorKind
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderErrorKind.TypeMismatch = 2 -> HackerOs.Simulation.Abstractions.FileSystem.HostFolderErrorKind
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderException
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderException.HostFolderException(HackerOs.Simulation.Abstractions.FileSystem.HostFolderErrorKind kind, string! message, System.Exception? innerException = null) -> void
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderException.Kind.get -> HackerOs.Simulation.Abstractions.FileSystem.HostFolderErrorKind
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderPermission
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderPermission.Denied = 2 -> HackerOs.Simulation.Abstractions.FileSystem.HostFolderPermission
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderPermission.Granted = 0 -> HackerOs.Simulation.Abstractions.FileSystem.HostFolderPermission
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderPermission.Prompt = 1 -> HackerOs.Simulation.Abstractions.FileSystem.HostFolderPermission
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderPick
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderPick.<Clone>$() -> HackerOs.Simulation.Abstractions.FileSystem.HostFolderPick!
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderPick.Deconstruct(out string! Key, out HackerOs.Simulation.Abstractions.FileSystem.IHostFolder! Folder) -> void
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderPick.Equals(HackerOs.Simulation.Abstractions.FileSystem.HostFolderPick? other) -> bool
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderPick.Folder.get -> HackerOs.Simulation.Abstractions.FileSystem.IHostFolder!
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderPick.Folder.init -> void
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderPick.HostFolderPick(string! Key, HackerOs.Simulation.Abstractions.FileSystem.IHostFolder! Folder) -> void
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderPick.Key.get -> string!
+HackerOs.Simulation.Abstractions.FileSystem.HostFolderPick.Key.init -> void
 HackerOs.Simulation.Abstractions.FileSystem.IAppFileSystemWatchGateway
 HackerOs.Simulation.Abstractions.FileSystem.IAppFileSystemWatchGateway.WatchAsync(HackerOs.App.Abstractions.VirtualPath path, HackerOs.Simulation.Abstractions.FileSystem.FileSystemWatchScope scope, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Events.ITopicChannelSubscription<HackerOs.Simulation.Abstractions.FileSystem.FileSystemChangeEvent!>!>
+HackerOs.Simulation.Abstractions.FileSystem.IDynamicFileSystemMountRouter
+HackerOs.Simulation.Abstractions.FileSystem.IDynamicFileSystemMountRouter.Mount(HackerOs.Simulation.Abstractions.FileSystem.FileSystemMount! mount) -> void
+HackerOs.Simulation.Abstractions.FileSystem.IDynamicFileSystemMountRouter.MountsChanged -> System.Action?
+HackerOs.Simulation.Abstractions.FileSystem.IDynamicFileSystemMountRouter.Unmount(HackerOs.App.Abstractions.VirtualPath path) -> bool
 HackerOs.Simulation.Abstractions.FileSystem.IFileSystemAuthorizer
 HackerOs.Simulation.Abstractions.FileSystem.IFileSystemAuthorizer.Authorize(HackerOs.Simulation.Abstractions.FileSystem.FileSystemAuthorizationRequest! request) -> HackerOs.Simulation.Abstractions.FileSystem.FileSystemAuthorizationResult!
 HackerOs.Simulation.Abstractions.FileSystem.IFileSystemContentSource
@@ -560,6 +619,27 @@ HackerOs.Simulation.Abstractions.FileSystem.IFileSystemProvider.SetPermissionsAs
 HackerOs.Simulation.Abstractions.FileSystem.IFileSystemProvider.StatAsync(HackerOs.Simulation.Abstractions.FileSystem.FileSystemStatRequest! request, HackerOs.Simulation.Abstractions.FileSystem.FileSystemAuthorizationContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.FileSystemResult<HackerOs.Simulation.Abstractions.FileSystem.FileSystemEntrySnapshot!>!>
 HackerOs.Simulation.Abstractions.FileSystem.IFileSystemProvider.WriteAsync(HackerOs.Simulation.Abstractions.FileSystem.FileSystemWriteRequest! request, HackerOs.Simulation.Abstractions.FileSystem.IFileSystemContentSource! content, HackerOs.Simulation.Abstractions.FileSystem.FileSystemAuthorizationContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.FileSystemMutationResult!>
 HackerOs.Simulation.Abstractions.FileSystem.IFileSystemService
+HackerOs.Simulation.Abstractions.FileSystem.IHostActivitySignal
+HackerOs.Simulation.Abstractions.FileSystem.IHostActivitySignal.IsVisible.get -> bool
+HackerOs.Simulation.Abstractions.FileSystem.IHostActivitySignal.Resumed -> System.Action?
+HackerOs.Simulation.Abstractions.FileSystem.IHostFolder
+HackerOs.Simulation.Abstractions.FileSystem.IHostFolder.CreateAsync(System.Collections.Generic.IReadOnlyList<string!>! path, HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntryKind kind, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+HackerOs.Simulation.Abstractions.FileSystem.IHostFolder.DeleteAsync(System.Collections.Generic.IReadOnlyList<string!>! path, bool recursive, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+HackerOs.Simulation.Abstractions.FileSystem.IHostFolder.ListAsync(System.Collections.Generic.IReadOnlyList<string!>! path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry!>!>
+HackerOs.Simulation.Abstractions.FileSystem.IHostFolder.Name.get -> string!
+HackerOs.Simulation.Abstractions.FileSystem.IHostFolder.QueryPermissionAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.HostFolderPermission>
+HackerOs.Simulation.Abstractions.FileSystem.IHostFolder.ReadAsync(System.Collections.Generic.IReadOnlyList<string!>! path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<byte[]!>
+HackerOs.Simulation.Abstractions.FileSystem.IHostFolder.RequestPermissionAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.HostFolderPermission>
+HackerOs.Simulation.Abstractions.FileSystem.IHostFolder.StatAsync(System.Collections.Generic.IReadOnlyList<string!>! path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry!>
+HackerOs.Simulation.Abstractions.FileSystem.IHostFolder.TryMoveAsync(System.Collections.Generic.IReadOnlyList<string!>! source, System.Collections.Generic.IReadOnlyList<string!>! destination, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+HackerOs.Simulation.Abstractions.FileSystem.IHostFolder.WriteAsync(System.Collections.Generic.IReadOnlyList<string!>! path, byte[]! content, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+HackerOs.Simulation.Abstractions.FileSystem.IHostFolderAccess
+HackerOs.Simulation.Abstractions.FileSystem.IHostFolderAccess.ForgetAsync(string! key, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+HackerOs.Simulation.Abstractions.FileSystem.IHostFolderAccess.IsSupportedAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+HackerOs.Simulation.Abstractions.FileSystem.IHostFolderAccess.LoadAsync(string! key, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.IHostFolder?>
+HackerOs.Simulation.Abstractions.FileSystem.IHostFolderAccess.PickAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.HostFolderPick?>
+HackerOs.Simulation.Abstractions.FileSystem.IObservableHostFolder
+HackerOs.Simulation.Abstractions.FileSystem.IObservableHostFolder.ObserveAsync(System.Collections.Generic.IReadOnlyList<string!>! path, System.Action! changed, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.IAsyncDisposable?>
 HackerOs.Simulation.Abstractions.FileSystem.SymbolicLinkMetadata
 HackerOs.Simulation.Abstractions.FileSystem.SymbolicLinkMetadata.Equals(HackerOs.Simulation.Abstractions.FileSystem.SymbolicLinkMetadata? other) -> bool
 HackerOs.Simulation.Abstractions.FileSystem.SymbolicLinkMetadata.Length.get -> int
@@ -654,6 +734,7 @@ HackerOs.Simulation.Abstractions.Gateways.IAppFileSystemGateway.CopyAsync(Hacker
 HackerOs.Simulation.Abstractions.Gateways.IAppFileSystemGateway.CreateAsync(HackerOs.Simulation.Abstractions.FileSystem.FileSystemCreateRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.FileSystemMutationResult!>
 HackerOs.Simulation.Abstractions.Gateways.IAppFileSystemGateway.DeleteAsync(HackerOs.Simulation.Abstractions.FileSystem.FileSystemDeleteRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.FileSystemMutationResult!>
 HackerOs.Simulation.Abstractions.Gateways.IAppFileSystemGateway.EnumerateAsync(HackerOs.Simulation.Abstractions.FileSystem.FileSystemEnumerateRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.FileSystemResult<HackerOs.Simulation.Abstractions.FileSystem.FileSystemDirectorySnapshot!>!>
+HackerOs.Simulation.Abstractions.Gateways.IAppFileSystemGateway.MeasureAsync(HackerOs.App.Abstractions.VirtualPath path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.FileSystemResult<HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize!>!>
 HackerOs.Simulation.Abstractions.Gateways.IAppFileSystemGateway.MoveAsync(HackerOs.Simulation.Abstractions.FileSystem.FileSystemMoveRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.FileSystemMutationResult!>
 HackerOs.Simulation.Abstractions.Gateways.IAppFileSystemGateway.OpenDescriptorAsync(HackerOs.App.Abstractions.VirtualPath path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.FileSystemResult<System.IDisposable!>!>
 HackerOs.Simulation.Abstractions.Gateways.IAppFileSystemGateway.ReadAsync(HackerOs.Simulation.Abstractions.FileSystem.FileSystemReadRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.FileSystemResult<HackerOs.Simulation.Abstractions.FileSystem.FileSystemContentReadHandle!>!>
@@ -1283,6 +1364,7 @@ HackerOs.Simulation.Abstractions.Notifications.NotificationAction.<Clone>$() -> 
 HackerOs.Simulation.Abstractions.Notifications.NotificationAction.Equals(HackerOs.Simulation.Abstractions.Notifications.NotificationAction? other) -> bool
 HackerOs.Simulation.Abstractions.Notifications.NotificationAction.Id.get -> string!
 HackerOs.Simulation.Abstractions.Notifications.NotificationAction.Label.get -> string!
+HackerOs.Simulation.Abstractions.Notifications.NotificationAction.LaunchArguments.get -> System.Collections.Generic.IReadOnlyList<string!>!
 HackerOs.Simulation.Abstractions.Notifications.NotificationAction.NotificationAction(string! id, string! label) -> void
 HackerOs.Simulation.Abstractions.Notifications.NotificationAction.TryGetLaunchedApp(out string? appId) -> bool
 HackerOs.Simulation.Abstractions.Notifications.NotificationId
@@ -1767,9 +1849,13 @@ HackerOs.Simulation.Abstractions.Sessions.DeviceId.Equals(HackerOs.Simulation.Ab
 HackerOs.Simulation.Abstractions.Sessions.DeviceId.Value.get -> System.Guid
 HackerOs.Simulation.Abstractions.Sessions.ILocalGroupRepository
 HackerOs.Simulation.Abstractions.Sessions.ILocalGroupRepository.CreateGroupAsync(HackerOs.Simulation.Abstractions.Sessions.LocalLoginName name, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Sessions.LocalGroup!>
+HackerOs.Simulation.Abstractions.Sessions.ILocalGroupRepository.DeleteGroupAsync(HackerOs.Simulation.Abstractions.Sessions.LocalGroupId id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
 HackerOs.Simulation.Abstractions.Sessions.ILocalGroupRepository.FindByIdAsync(HackerOs.Simulation.Abstractions.Sessions.LocalGroupId id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Sessions.LocalGroup?>
 HackerOs.Simulation.Abstractions.Sessions.ILocalGroupRepository.FindByNameAsync(HackerOs.Simulation.Abstractions.Sessions.LocalLoginName name, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Sessions.LocalGroup?>
+HackerOs.Simulation.Abstractions.Sessions.ILocalGroupRepository.RenameGroupAsync(HackerOs.Simulation.Abstractions.Sessions.LocalGroupId id, HackerOs.Simulation.Abstractions.Sessions.LocalLoginName name, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Sessions.LocalGroup!>
 HackerOs.Simulation.Abstractions.Sessions.ILocalUserRepository
+HackerOs.Simulation.Abstractions.Sessions.ILocalUserRepository.ConvertGuestUserAsync(HackerOs.Simulation.Abstractions.Sessions.LocalUserId id, HackerOs.Simulation.Abstractions.Sessions.LocalLoginName loginName, string! displayName, HackerOs.Simulation.Abstractions.Sessions.LocalPasswordCredential! credential, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Sessions.LocalUser!>
+HackerOs.Simulation.Abstractions.Sessions.ILocalUserRepository.CreateGuestUserAsync(HackerOs.Simulation.Abstractions.Sessions.LocalLoginName loginName, string! displayName, HackerOs.App.Abstractions.AppAuthority authority, HackerOs.Simulation.Abstractions.Sessions.LocalGroupId primaryGroupId, System.Collections.Generic.IReadOnlyCollection<HackerOs.Simulation.Abstractions.Sessions.LocalGroupId>! additionalGroupIds, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Sessions.LocalUser!>
 HackerOs.Simulation.Abstractions.Sessions.ILocalUserRepository.CreateUserAsync(HackerOs.Simulation.Abstractions.Sessions.LocalLoginName loginName, string! displayName, HackerOs.App.Abstractions.AppAuthority authority, HackerOs.Simulation.Abstractions.Sessions.LocalGroupId primaryGroupId, System.Collections.Generic.IReadOnlyCollection<HackerOs.Simulation.Abstractions.Sessions.LocalGroupId>? additionalGroupIds = null, HackerOs.Simulation.Abstractions.Sessions.LocalPasswordCredential? credential = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Sessions.LocalUser!>
 HackerOs.Simulation.Abstractions.Sessions.ILocalUserRepository.DeleteUserAsync(HackerOs.Simulation.Abstractions.Sessions.LocalUserId id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
 HackerOs.Simulation.Abstractions.Sessions.ILocalUserRepository.FindByIdAsync(HackerOs.Simulation.Abstractions.Sessions.LocalUserId id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Sessions.LocalUser?>
@@ -1847,6 +1933,8 @@ HackerOs.Simulation.Abstractions.Sessions.LocalUser.Enabled.get -> bool
 HackerOs.Simulation.Abstractions.Sessions.LocalUser.Equals(HackerOs.Simulation.Abstractions.Sessions.LocalUser? other) -> bool
 HackerOs.Simulation.Abstractions.Sessions.LocalUser.HomePath.get -> string!
 HackerOs.Simulation.Abstractions.Sessions.LocalUser.Id.get -> HackerOs.Simulation.Abstractions.Sessions.LocalUserId
+HackerOs.Simulation.Abstractions.Sessions.LocalUser.IsGuest.get -> bool
+HackerOs.Simulation.Abstractions.Sessions.LocalUser.IsGuest.init -> void
 HackerOs.Simulation.Abstractions.Sessions.LocalUser.LocalUser(HackerOs.Simulation.Abstractions.Sessions.LocalUserId id, HackerOs.Simulation.Abstractions.Sessions.LocalLoginName loginName, string! displayName, bool enabled, HackerOs.App.Abstractions.AppAuthority authority, HackerOs.Simulation.Abstractions.Sessions.LocalGroupId primaryGroupId, System.Collections.Generic.IReadOnlyCollection<HackerOs.Simulation.Abstractions.Sessions.LocalGroupId>! additionalGroupIds, HackerOs.Simulation.Abstractions.Sessions.LocalPasswordCredential? credential, long revision, System.DateTimeOffset createdAtUtc, System.DateTimeOffset updatedAtUtc) -> void
 HackerOs.Simulation.Abstractions.Sessions.LocalUser.LoginName.get -> HackerOs.Simulation.Abstractions.Sessions.LocalLoginName
 HackerOs.Simulation.Abstractions.Sessions.LocalUser.Passkeys.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Simulation.Abstractions.Sessions.LocalPasskeyCredential!>!
@@ -2117,6 +2205,20 @@ HackerOs.Simulation.Abstractions.Settings.SettingsScope.AppUser = 1 -> HackerOs.
 HackerOs.Simulation.Abstractions.Settings.SettingsScope.AppUserDevice = 5 -> HackerOs.Simulation.Abstractions.Settings.SettingsScope
 HackerOs.Simulation.Abstractions.Settings.SettingsScope.OsAdmin = 4 -> HackerOs.Simulation.Abstractions.Settings.SettingsScope
 HackerOs.Simulation.Abstractions.Settings.SettingsTextFile
+HackerOs.Simulation.Abstractions.Sounds.OsSoundEvent
+HackerOs.Simulation.Abstractions.Sounds.OsSoundEvent.Error = 2 -> HackerOs.Simulation.Abstractions.Sounds.OsSoundEvent
+HackerOs.Simulation.Abstractions.Sounds.OsSoundEvent.Notification = 0 -> HackerOs.Simulation.Abstractions.Sounds.OsSoundEvent
+HackerOs.Simulation.Abstractions.Sounds.OsSoundEvent.SignIn = 3 -> HackerOs.Simulation.Abstractions.Sounds.OsSoundEvent
+HackerOs.Simulation.Abstractions.Sounds.OsSoundEvent.SignOut = 4 -> HackerOs.Simulation.Abstractions.Sounds.OsSoundEvent
+HackerOs.Simulation.Abstractions.Sounds.OsSoundEvent.Warning = 1 -> HackerOs.Simulation.Abstractions.Sounds.OsSoundEvent
+HackerOs.Simulation.Abstractions.Sounds.OsSoundEvents
+HackerOs.Simulation.Abstractions.Sounds.SoundThemeIndex
+HackerOs.Simulation.Abstractions.Sounds.SoundThemeIndex.Directories.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.Simulation.Abstractions.Sounds.SoundThemeIndex.GetComment(System.Globalization.CultureInfo! culture) -> string?
+HackerOs.Simulation.Abstractions.Sounds.SoundThemeIndex.GetName(System.Globalization.CultureInfo! culture) -> string!
+HackerOs.Simulation.Abstractions.Sounds.SoundThemeIndex.GetSearchDirectories(string! themeDirectory) -> System.Collections.Generic.IEnumerable<string!>!
+HackerOs.Simulation.Abstractions.Sounds.SoundThemeIndex.Id.get -> string!
+HackerOs.Simulation.Abstractions.Sounds.SoundThemeIndex.Name.get -> string!
 HackerOs.Simulation.Abstractions.Sync.FileSystemSyncContractsJsonContext
 HackerOs.Simulation.Abstractions.Sync.FileSystemSyncContractsJsonContext.FileSystemSyncContractsJsonContext() -> void
 HackerOs.Simulation.Abstractions.Sync.FileSystemSyncContractsJsonContext.FileSystemSyncContractsJsonContext(System.Text.Json.JsonSerializerOptions! options) -> void
@@ -2365,6 +2467,7 @@ const HackerOs.Simulation.Abstractions.Network.SimulatedNetworkErrors.HostDown =
 const HackerOs.Simulation.Abstractions.Network.SimulatedNetworkErrors.NoRoute = "ERR_NO_ROUTE" -> string!
 const HackerOs.Simulation.Abstractions.Network.SimulatedNetworkErrors.TooManyRedirects = "ERR_TOO_MANY_REDIRECTS" -> string!
 const HackerOs.Simulation.Abstractions.Network.SimulatedNetworkErrors.UnknownHost = "ERR_NAME_NOT_RESOLVED" -> string!
+const HackerOs.Simulation.Abstractions.Notifications.NotificationAction.ArgumentSeparator = '\u001f' -> char
 const HackerOs.Simulation.Abstractions.Notifications.NotificationAction.LaunchAppPrefix = "launch:" -> string!
 const HackerOs.Simulation.Abstractions.Processes.ProcessLimitExceededException.ResourceTemporarilyUnavailable = "Resource temporarily unavailable" -> string!
 const HackerOs.Simulation.Abstractions.Processes.ProcessNice.Default = 0 -> int
@@ -2388,6 +2491,11 @@ const HackerOs.Simulation.Abstractions.Settings.SettingsPrivateFiles.PrivateSuff
 const HackerOs.Simulation.Abstractions.Settings.SettingsPrivateFiles.PublicSuffix = ".config" -> string!
 const HackerOs.Simulation.Abstractions.Settings.SettingsTextFile.DefaultDirectoryMode = 493 -> ushort
 const HackerOs.Simulation.Abstractions.Settings.SettingsTextFile.DefaultFileMode = 420 -> ushort
+const HackerOs.Simulation.Abstractions.Sounds.OsSoundEvents.DefaultThemeId = "hackeros" -> string!
+const HackerOs.Simulation.Abstractions.Sounds.OsSoundEvents.IndexFileName = "index.theme" -> string!
+const HackerOs.Simulation.Abstractions.Sounds.OsSoundEvents.MaxSoundFileBytes = 1048576 -> long
+const HackerOs.Simulation.Abstractions.Sounds.OsSoundEvents.SystemThemesDirectory = "/usr/share/sounds" -> string!
+const HackerOs.Simulation.Abstractions.Sounds.OsSoundEvents.UserThemesRelativeDirectory = ".local/share/sounds" -> string!
 override HackerOs.Simulation.Abstractions.Diagnostics.AuditEntry.Equals(object? obj) -> bool
 override HackerOs.Simulation.Abstractions.Diagnostics.AuditEntry.GetHashCode() -> int
 override HackerOs.Simulation.Abstractions.Diagnostics.AuditEntry.ToString() -> string!
@@ -2526,9 +2634,18 @@ override HackerOs.Simulation.Abstractions.FileSystem.FileSystemTimestamps.ToStri
 override HackerOs.Simulation.Abstractions.FileSystem.FileSystemTransactionResult.Equals(object? obj) -> bool
 override HackerOs.Simulation.Abstractions.FileSystem.FileSystemTransactionResult.GetHashCode() -> int
 override HackerOs.Simulation.Abstractions.FileSystem.FileSystemTransactionResult.ToString() -> string!
+override HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize.Equals(object? obj) -> bool
+override HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize.GetHashCode() -> int
+override HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize.ToString() -> string!
 override HackerOs.Simulation.Abstractions.FileSystem.FileSystemWriteRequest.Equals(object? obj) -> bool
 override HackerOs.Simulation.Abstractions.FileSystem.FileSystemWriteRequest.GetHashCode() -> int
 override HackerOs.Simulation.Abstractions.FileSystem.FileSystemWriteRequest.ToString() -> string!
+override HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry.Equals(object? obj) -> bool
+override HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry.GetHashCode() -> int
+override HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry.ToString() -> string!
+override HackerOs.Simulation.Abstractions.FileSystem.HostFolderPick.Equals(object? obj) -> bool
+override HackerOs.Simulation.Abstractions.FileSystem.HostFolderPick.GetHashCode() -> int
+override HackerOs.Simulation.Abstractions.FileSystem.HostFolderPick.ToString() -> string!
 override HackerOs.Simulation.Abstractions.FileSystem.SymbolicLinkMetadata.<Clone>$() -> HackerOs.Simulation.Abstractions.FileSystem.SymbolicLinkMetadata!
 override HackerOs.Simulation.Abstractions.FileSystem.SymbolicLinkMetadata.Equals(object? obj) -> bool
 override HackerOs.Simulation.Abstractions.FileSystem.SymbolicLinkMetadata.GetHashCode() -> int
@@ -2939,8 +3056,15 @@ static HackerOs.Simulation.Abstractions.FileSystem.FileSystemTransactionResult.C
 static HackerOs.Simulation.Abstractions.FileSystem.FileSystemTransactionResult.Rejected(System.Guid transactionId, HackerOs.Simulation.Abstractions.FileSystem.FileSystemError! error) -> HackerOs.Simulation.Abstractions.FileSystem.FileSystemTransactionResult!
 static HackerOs.Simulation.Abstractions.FileSystem.FileSystemTransactionResult.operator !=(HackerOs.Simulation.Abstractions.FileSystem.FileSystemTransactionResult? left, HackerOs.Simulation.Abstractions.FileSystem.FileSystemTransactionResult? right) -> bool
 static HackerOs.Simulation.Abstractions.FileSystem.FileSystemTransactionResult.operator ==(HackerOs.Simulation.Abstractions.FileSystem.FileSystemTransactionResult? left, HackerOs.Simulation.Abstractions.FileSystem.FileSystemTransactionResult? right) -> bool
+static HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeMeasure.MeasureAsync(HackerOs.App.Abstractions.VirtualPath path, System.Func<HackerOs.App.Abstractions.VirtualPath, System.Threading.CancellationToken, System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.FileSystemResult<HackerOs.Simulation.Abstractions.FileSystem.FileSystemEntrySnapshot!>!>>! stat, System.Func<HackerOs.App.Abstractions.VirtualPath, System.Threading.CancellationToken, System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.FileSystemResult<HackerOs.Simulation.Abstractions.FileSystem.FileSystemDirectorySnapshot!>!>>! enumerate, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.FileSystemResult<HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize!>!>
+static HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize.operator !=(HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize? left, HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize? right) -> bool
+static HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize.operator ==(HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize? left, HackerOs.Simulation.Abstractions.FileSystem.FileSystemTreeSize? right) -> bool
 static HackerOs.Simulation.Abstractions.FileSystem.FileSystemWriteRequest.operator !=(HackerOs.Simulation.Abstractions.FileSystem.FileSystemWriteRequest? left, HackerOs.Simulation.Abstractions.FileSystem.FileSystemWriteRequest? right) -> bool
 static HackerOs.Simulation.Abstractions.FileSystem.FileSystemWriteRequest.operator ==(HackerOs.Simulation.Abstractions.FileSystem.FileSystemWriteRequest? left, HackerOs.Simulation.Abstractions.FileSystem.FileSystemWriteRequest? right) -> bool
+static HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry.operator !=(HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry? left, HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry? right) -> bool
+static HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry.operator ==(HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry? left, HackerOs.Simulation.Abstractions.FileSystem.HostFolderEntry? right) -> bool
+static HackerOs.Simulation.Abstractions.FileSystem.HostFolderPick.operator !=(HackerOs.Simulation.Abstractions.FileSystem.HostFolderPick? left, HackerOs.Simulation.Abstractions.FileSystem.HostFolderPick? right) -> bool
+static HackerOs.Simulation.Abstractions.FileSystem.HostFolderPick.operator ==(HackerOs.Simulation.Abstractions.FileSystem.HostFolderPick? left, HackerOs.Simulation.Abstractions.FileSystem.HostFolderPick? right) -> bool
 static HackerOs.Simulation.Abstractions.FileSystem.SymbolicLinkMetadata.operator !=(HackerOs.Simulation.Abstractions.FileSystem.SymbolicLinkMetadata? left, HackerOs.Simulation.Abstractions.FileSystem.SymbolicLinkMetadata? right) -> bool
 static HackerOs.Simulation.Abstractions.FileSystem.SymbolicLinkMetadata.operator ==(HackerOs.Simulation.Abstractions.FileSystem.SymbolicLinkMetadata? left, HackerOs.Simulation.Abstractions.FileSystem.SymbolicLinkMetadata? right) -> bool
 static HackerOs.Simulation.Abstractions.Gateways.AppIntentLaunchResult.operator !=(HackerOs.Simulation.Abstractions.Gateways.AppIntentLaunchResult? left, HackerOs.Simulation.Abstractions.Gateways.AppIntentLaunchResult? right) -> bool
@@ -3062,6 +3186,7 @@ static HackerOs.Simulation.Abstractions.Network.TableSection.operator ==(HackerO
 static HackerOs.Simulation.Abstractions.Notifications.Notification.operator !=(HackerOs.Simulation.Abstractions.Notifications.Notification? left, HackerOs.Simulation.Abstractions.Notifications.Notification? right) -> bool
 static HackerOs.Simulation.Abstractions.Notifications.Notification.operator ==(HackerOs.Simulation.Abstractions.Notifications.Notification? left, HackerOs.Simulation.Abstractions.Notifications.Notification? right) -> bool
 static HackerOs.Simulation.Abstractions.Notifications.NotificationAction.LaunchApp(string! appId, string! label) -> HackerOs.Simulation.Abstractions.Notifications.NotificationAction!
+static HackerOs.Simulation.Abstractions.Notifications.NotificationAction.LaunchApp(string! appId, string! label, System.Collections.Generic.IReadOnlyList<string!>! arguments) -> HackerOs.Simulation.Abstractions.Notifications.NotificationAction!
 static HackerOs.Simulation.Abstractions.Notifications.NotificationAction.operator !=(HackerOs.Simulation.Abstractions.Notifications.NotificationAction? left, HackerOs.Simulation.Abstractions.Notifications.NotificationAction? right) -> bool
 static HackerOs.Simulation.Abstractions.Notifications.NotificationAction.operator ==(HackerOs.Simulation.Abstractions.Notifications.NotificationAction? left, HackerOs.Simulation.Abstractions.Notifications.NotificationAction? right) -> bool
 static HackerOs.Simulation.Abstractions.Notifications.NotificationId.FromGuid(System.Guid value) -> HackerOs.Simulation.Abstractions.Notifications.NotificationId
@@ -3218,6 +3343,13 @@ static HackerOs.Simulation.Abstractions.Settings.SettingsTextFile.EnsureDirector
 static HackerOs.Simulation.Abstractions.Settings.SettingsTextFile.GetParent(HackerOs.App.Abstractions.VirtualPath path) -> HackerOs.App.Abstractions.VirtualPath
 static HackerOs.Simulation.Abstractions.Settings.SettingsTextFile.ReadAsync(HackerOs.Simulation.Abstractions.Gateways.IAppFileSystemGateway! fileSystem, HackerOs.App.Abstractions.VirtualPath path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.Settings.SettingsFileReadResult!>
 static HackerOs.Simulation.Abstractions.Settings.SettingsTextFile.WriteAllAsync(HackerOs.Simulation.Abstractions.Gateways.IAppFileSystemGateway! fileSystem, HackerOs.App.Abstractions.VirtualPath path, string! content, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Simulation.Abstractions.FileSystem.FileSystemError?>
+static HackerOs.Simulation.Abstractions.Sounds.OsSoundEvents.All.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Simulation.Abstractions.Sounds.OsSoundEvent>!
+static HackerOs.Simulation.Abstractions.Sounds.OsSoundEvents.Extensions.get -> System.Collections.Generic.IReadOnlyList<string!>!
+static HackerOs.Simulation.Abstractions.Sounds.OsSoundEvents.GetMediaType(string! fileName) -> string?
+static HackerOs.Simulation.Abstractions.Sounds.OsSoundEvents.GetSoundName(HackerOs.Simulation.Abstractions.Sounds.OsSoundEvent soundEvent) -> string!
+static HackerOs.Simulation.Abstractions.Sounds.OsSoundEvents.GetUserThemesDirectory(string! homePath) -> string!
+static HackerOs.Simulation.Abstractions.Sounds.OsSoundEvents.IsValidThemeId(string? id) -> bool
+static HackerOs.Simulation.Abstractions.Sounds.SoundThemeIndex.Parse(string! id, string? content) -> HackerOs.Simulation.Abstractions.Sounds.SoundThemeIndex!
 static HackerOs.Simulation.Abstractions.Sync.FileSystemSyncContractsJsonContext.Default.get -> HackerOs.Simulation.Abstractions.Sync.FileSystemSyncContractsJsonContext!
 static HackerOs.Simulation.Abstractions.Sync.FileSystemSyncPayload.operator !=(HackerOs.Simulation.Abstractions.Sync.FileSystemSyncPayload? left, HackerOs.Simulation.Abstractions.Sync.FileSystemSyncPayload? right) -> bool
 static HackerOs.Simulation.Abstractions.Sync.FileSystemSyncPayload.operator ==(HackerOs.Simulation.Abstractions.Sync.FileSystemSyncPayload? left, HackerOs.Simulation.Abstractions.Sync.FileSystemSyncPayload? right) -> bool

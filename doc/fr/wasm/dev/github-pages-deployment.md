@@ -5,7 +5,7 @@
 ## Objet
 
 Le dépôt public est [Kazo-ca/HackerOs](https://github.com/Kazo-ca/HackerOs).
-La version WebAssembly autonome **2.1.0** est publiée à la racine de
+La version WebAssembly autonome **2.2.0** est publiée à la racine de
 `https://hackos.kazo.ca/` ; la version TypeScript d'origine est conservée sous
 `https://hackos.kazo.ca/legacy/`. Voir l'[ADR 0167](adr/0167-combined-pages-deployment.md).
 
@@ -85,7 +85,7 @@ d'isolation au legacy. Les autres chemins gardent la stratégie offline existant
   et projet GitHub au même format.
 - Paramètres legacy, About : URL GitHub visible, version legacy inchangée.
 - Les métadonnées des paquets pointent aussi vers le nouveau dépôt. La version
-  commune est définie une seule fois dans `build/Versions.props` (`2.1.0`).
+  commune est définie une seule fois dans `build/Versions.props` (`2.2.0`).
 
 ## Vérification locale
 

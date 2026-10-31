@@ -39,6 +39,10 @@ HackerOs.Commands.Cut.CutApp
 HackerOs.Commands.Cut.CutApp.CutApp() -> void
 HackerOs.Commands.Cut.CutCommand
 HackerOs.Commands.Cut.CutCommand.CutCommand(HackerOs.App.Abstractions.AppManifest! manifest) -> void
+HackerOs.Commands.Date.DateApp
+HackerOs.Commands.Date.DateApp.DateApp() -> void
+HackerOs.Commands.Date.DateCommand
+HackerOs.Commands.Date.DateCommand.DateCommand(HackerOs.App.Abstractions.AppManifest! manifest) -> void
 HackerOs.Commands.Df.DfApp
 HackerOs.Commands.Df.DfApp.DfApp() -> void
 HackerOs.Commands.Df.DfCommand
@@ -91,6 +95,10 @@ HackerOs.Commands.Hackbackup.HackbackupApp
 HackerOs.Commands.Hackbackup.HackbackupApp.HackbackupApp() -> void
 HackerOs.Commands.Hackbackup.HackbackupCommand
 HackerOs.Commands.Hackbackup.HackbackupCommand.HackbackupCommand(HackerOs.App.Abstractions.AppManifest! manifest) -> void
+HackerOs.Commands.Hackpkg.HackpkgApp
+HackerOs.Commands.Hackpkg.HackpkgApp.HackpkgApp() -> void
+HackerOs.Commands.Hackpkg.HackpkgCommand
+HackerOs.Commands.Hackpkg.HackpkgCommand.HackpkgCommand(HackerOs.App.Abstractions.AppManifest! manifest) -> void
 HackerOs.Commands.Head.HeadApp
 HackerOs.Commands.Head.HeadApp.HeadApp() -> void
 HackerOs.Commands.Head.HeadCommand
@@ -139,6 +147,10 @@ HackerOs.Commands.Mkdir.MkdirApp
 HackerOs.Commands.Mkdir.MkdirApp.MkdirApp() -> void
 HackerOs.Commands.Mkdir.MkdirCommand
 HackerOs.Commands.Mkdir.MkdirCommand.MkdirCommand(HackerOs.App.Abstractions.AppManifest! manifest) -> void
+HackerOs.Commands.Mount.MountApp
+HackerOs.Commands.Mount.MountApp.MountApp() -> void
+HackerOs.Commands.Mount.MountCommand
+HackerOs.Commands.Mount.MountCommand.MountCommand(HackerOs.App.Abstractions.AppManifest! manifest) -> void
 HackerOs.Commands.Mv.MvApp
 HackerOs.Commands.Mv.MvApp.MvApp() -> void
 HackerOs.Commands.Mv.MvCommand
@@ -251,6 +263,10 @@ HackerOs.Commands.True.TrueApp
 HackerOs.Commands.True.TrueApp.TrueApp() -> void
 HackerOs.Commands.True.TrueCommand
 HackerOs.Commands.True.TrueCommand.TrueCommand(HackerOs.App.Abstractions.AppManifest! manifest) -> void
+HackerOs.Commands.Umount.UmountApp
+HackerOs.Commands.Umount.UmountApp.UmountApp() -> void
+HackerOs.Commands.Umount.UmountCommand
+HackerOs.Commands.Umount.UmountCommand.UmountCommand(HackerOs.App.Abstractions.AppManifest! manifest) -> void
 HackerOs.Commands.Uniq.UniqApp
 HackerOs.Commands.Uniq.UniqApp.UniqApp() -> void
 HackerOs.Commands.Uniq.UniqCommand
@@ -407,6 +423,17 @@ override HackerOs.Commands.Cut.CutApp.PublisherId.get -> string!
 override HackerOs.Commands.Cut.CutApp.Resources.get -> HackerOs.App.Abstractions.AppResourceProfileManifest!
 override HackerOs.Commands.Cut.CutApp.Terminal.get -> HackerOs.App.Abstractions.TerminalCommand?
 override HackerOs.Commands.Cut.CutCommand.ExecuteAsync(HackerOs.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override HackerOs.Commands.Date.DateApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override HackerOs.Commands.Date.DateApp.Description.get -> string!
+override HackerOs.Commands.Date.DateApp.EntryPoint.get -> System.Type!
+override HackerOs.Commands.Date.DateApp.Id.get -> string!
+override HackerOs.Commands.Date.DateApp.Kind.get -> HackerOs.App.Abstractions.AppKind
+override HackerOs.Commands.Date.DateApp.LaunchVisibility.get -> HackerOs.App.Abstractions.AppLaunchVisibility
+override HackerOs.Commands.Date.DateApp.Name.get -> string!
+override HackerOs.Commands.Date.DateApp.PublisherId.get -> string!
+override HackerOs.Commands.Date.DateApp.Resources.get -> HackerOs.App.Abstractions.AppResourceProfileManifest!
+override HackerOs.Commands.Date.DateApp.Terminal.get -> HackerOs.App.Abstractions.TerminalCommand?
+override HackerOs.Commands.Date.DateCommand.ExecuteAsync(HackerOs.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
 override HackerOs.Commands.Df.DfApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
 override HackerOs.Commands.Df.DfApp.Description.get -> string!
 override HackerOs.Commands.Df.DfApp.EntryPoint.get -> System.Type!
@@ -548,6 +575,17 @@ override HackerOs.Commands.Hackbackup.HackbackupApp.PublisherId.get -> string!
 override HackerOs.Commands.Hackbackup.HackbackupApp.Resources.get -> HackerOs.App.Abstractions.AppResourceProfileManifest!
 override HackerOs.Commands.Hackbackup.HackbackupApp.Terminal.get -> HackerOs.App.Abstractions.TerminalCommand?
 override HackerOs.Commands.Hackbackup.HackbackupCommand.ExecuteAsync(HackerOs.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override HackerOs.Commands.Hackpkg.HackpkgApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override HackerOs.Commands.Hackpkg.HackpkgApp.Description.get -> string!
+override HackerOs.Commands.Hackpkg.HackpkgApp.EntryPoint.get -> System.Type!
+override HackerOs.Commands.Hackpkg.HackpkgApp.Id.get -> string!
+override HackerOs.Commands.Hackpkg.HackpkgApp.Kind.get -> HackerOs.App.Abstractions.AppKind
+override HackerOs.Commands.Hackpkg.HackpkgApp.LaunchVisibility.get -> HackerOs.App.Abstractions.AppLaunchVisibility
+override HackerOs.Commands.Hackpkg.HackpkgApp.Name.get -> string!
+override HackerOs.Commands.Hackpkg.HackpkgApp.PublisherId.get -> string!
+override HackerOs.Commands.Hackpkg.HackpkgApp.Resources.get -> HackerOs.App.Abstractions.AppResourceProfileManifest!
+override HackerOs.Commands.Hackpkg.HackpkgApp.Terminal.get -> HackerOs.App.Abstractions.TerminalCommand?
+override HackerOs.Commands.Hackpkg.HackpkgCommand.ExecuteAsync(HackerOs.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
 override HackerOs.Commands.Head.HeadApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
 override HackerOs.Commands.Head.HeadApp.Description.get -> string!
 override HackerOs.Commands.Head.HeadApp.EntryPoint.get -> System.Type!
@@ -680,6 +718,17 @@ override HackerOs.Commands.Mkdir.MkdirApp.PublisherId.get -> string!
 override HackerOs.Commands.Mkdir.MkdirApp.Resources.get -> HackerOs.App.Abstractions.AppResourceProfileManifest!
 override HackerOs.Commands.Mkdir.MkdirApp.Terminal.get -> HackerOs.App.Abstractions.TerminalCommand?
 override HackerOs.Commands.Mkdir.MkdirCommand.ExecuteAsync(HackerOs.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override HackerOs.Commands.Mount.MountApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override HackerOs.Commands.Mount.MountApp.Description.get -> string!
+override HackerOs.Commands.Mount.MountApp.EntryPoint.get -> System.Type!
+override HackerOs.Commands.Mount.MountApp.Id.get -> string!
+override HackerOs.Commands.Mount.MountApp.Kind.get -> HackerOs.App.Abstractions.AppKind
+override HackerOs.Commands.Mount.MountApp.LaunchVisibility.get -> HackerOs.App.Abstractions.AppLaunchVisibility
+override HackerOs.Commands.Mount.MountApp.Name.get -> string!
+override HackerOs.Commands.Mount.MountApp.PublisherId.get -> string!
+override HackerOs.Commands.Mount.MountApp.Resources.get -> HackerOs.App.Abstractions.AppResourceProfileManifest!
+override HackerOs.Commands.Mount.MountApp.Terminal.get -> HackerOs.App.Abstractions.TerminalCommand?
+override HackerOs.Commands.Mount.MountCommand.ExecuteAsync(HackerOs.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
 override HackerOs.Commands.Mv.MvApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
 override HackerOs.Commands.Mv.MvApp.Description.get -> string!
 override HackerOs.Commands.Mv.MvApp.EntryPoint.get -> System.Type!
@@ -990,6 +1039,17 @@ override HackerOs.Commands.True.TrueApp.PublisherId.get -> string!
 override HackerOs.Commands.True.TrueApp.Resources.get -> HackerOs.App.Abstractions.AppResourceProfileManifest!
 override HackerOs.Commands.True.TrueApp.Terminal.get -> HackerOs.App.Abstractions.TerminalCommand?
 override HackerOs.Commands.True.TrueCommand.ExecuteAsync(HackerOs.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override HackerOs.Commands.Umount.UmountApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override HackerOs.Commands.Umount.UmountApp.Description.get -> string!
+override HackerOs.Commands.Umount.UmountApp.EntryPoint.get -> System.Type!
+override HackerOs.Commands.Umount.UmountApp.Id.get -> string!
+override HackerOs.Commands.Umount.UmountApp.Kind.get -> HackerOs.App.Abstractions.AppKind
+override HackerOs.Commands.Umount.UmountApp.LaunchVisibility.get -> HackerOs.App.Abstractions.AppLaunchVisibility
+override HackerOs.Commands.Umount.UmountApp.Name.get -> string!
+override HackerOs.Commands.Umount.UmountApp.PublisherId.get -> string!
+override HackerOs.Commands.Umount.UmountApp.Resources.get -> HackerOs.App.Abstractions.AppResourceProfileManifest!
+override HackerOs.Commands.Umount.UmountApp.Terminal.get -> HackerOs.App.Abstractions.TerminalCommand?
+override HackerOs.Commands.Umount.UmountCommand.ExecuteAsync(HackerOs.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
 override HackerOs.Commands.Uniq.UniqApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
 override HackerOs.Commands.Uniq.UniqApp.Description.get -> string!
 override HackerOs.Commands.Uniq.UniqApp.EntryPoint.get -> System.Type!

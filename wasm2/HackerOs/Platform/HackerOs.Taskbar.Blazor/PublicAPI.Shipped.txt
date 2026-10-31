@@ -3,13 +3,18 @@ HackerOs.Taskbar.Blazor.ITaskbarClockPanelSource
 HackerOs.Taskbar.Blazor.ITaskbarClockPanelSource.Changed -> System.Action?
 HackerOs.Taskbar.Blazor.ITaskbarClockPanelSource.IsOpen.get -> bool
 HackerOs.Taskbar.Blazor.ITaskbarClockPanelSource.Toggle() -> void
+HackerOs.Taskbar.Blazor.ITaskbarClockPanelSource.UnreadCount.get -> int
 HackerOs.Taskbar.Blazor.ITaskbarCommandDispatcher
 HackerOs.Taskbar.Blazor.ITaskbarCommandDispatcher.Activate(HackerOs.Windowing.Abstractions.WindowId id) -> void
 HackerOs.Taskbar.Blazor.ITaskbarCommandDispatcher.Close(HackerOs.Windowing.Abstractions.WindowId id) -> void
 HackerOs.Taskbar.Blazor.ITaskbarCommandDispatcher.Minimize(HackerOs.Windowing.Abstractions.WindowId id) -> void
 HackerOs.Taskbar.Blazor.ITaskbarCommandDispatcher.Restore(HackerOs.Windowing.Abstractions.WindowId id) -> void
+HackerOs.Taskbar.Blazor.ITaskbarContextMenus
+HackerOs.Taskbar.Blazor.ITaskbarContextMenus.TaskbarAttributes.get -> System.Collections.Generic.IReadOnlyDictionary<string!, object!>?
+HackerOs.Taskbar.Blazor.ITaskbarContextMenus.WindowItemAttributes(HackerOs.Windowing.Abstractions.WindowId id) -> System.Collections.Generic.IReadOnlyDictionary<string!, object!>?
 HackerOs.Taskbar.Blazor.ITaskbarLauncher
 HackerOs.Taskbar.Blazor.ITaskbarLauncher.Changed -> System.Action?
+HackerOs.Taskbar.Blazor.ITaskbarLauncher.HasAttention.get -> bool
 HackerOs.Taskbar.Blazor.ITaskbarLauncher.IsOpen.get -> bool
 HackerOs.Taskbar.Blazor.ITaskbarLauncher.Toggle() -> void
 HackerOs.Taskbar.Blazor.ITaskbarSessionCommands
@@ -17,7 +22,11 @@ HackerOs.Taskbar.Blazor.ITaskbarSessionCommands.RequestLogout() -> void
 HackerOs.Taskbar.Blazor.ITaskbarStatusSource
 HackerOs.Taskbar.Blazor.ITaskbarStatusSource.Changed -> System.Action?
 HackerOs.Taskbar.Blazor.ITaskbarStatusSource.FormatCulture.get -> System.Globalization.CultureInfo!
+HackerOs.Taskbar.Blazor.ITaskbarStatusSource.TimeZone.get -> System.TimeZoneInfo!
 HackerOs.Taskbar.Blazor.ITaskbarStatusSource.UtcNow.get -> System.DateTimeOffset
+HackerOs.Taskbar.Blazor.ITaskbarWindowPreviews
+HackerOs.Taskbar.Blazor.ITaskbarWindowPreviews.LiveCopySelector(HackerOs.Windowing.Abstractions.WindowId id) -> string?
+HackerOs.Taskbar.Blazor.ITaskbarWindowPreviews.Peek(HackerOs.Windowing.Abstractions.WindowId? id) -> void
 HackerOs.Taskbar.Blazor.ITaskbarWindowSource
 HackerOs.Taskbar.Blazor.ITaskbarWindowSource.Changed -> System.Action?
 HackerOs.Taskbar.Blazor.ITaskbarWindowSource.Windows.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Taskbar.Blazor.TaskbarWindowItem!>!
@@ -28,13 +37,18 @@ HackerOs.Taskbar.Blazor.Taskbar.ClockPanelSource.get -> HackerOs.Taskbar.Blazor.
 HackerOs.Taskbar.Blazor.Taskbar.ClockPanelSource.set -> void
 HackerOs.Taskbar.Blazor.Taskbar.Commands.get -> HackerOs.Taskbar.Blazor.ITaskbarCommandDispatcher?
 HackerOs.Taskbar.Blazor.Taskbar.Commands.set -> void
+HackerOs.Taskbar.Blazor.Taskbar.ContextMenus.get -> HackerOs.Taskbar.Blazor.ITaskbarContextMenus?
+HackerOs.Taskbar.Blazor.Taskbar.ContextMenus.set -> void
 HackerOs.Taskbar.Blazor.Taskbar.Dispose() -> void
+HackerOs.Taskbar.Blazor.Taskbar.DisposeAsync() -> System.Threading.Tasks.ValueTask
 HackerOs.Taskbar.Blazor.Taskbar.Launcher.get -> HackerOs.Taskbar.Blazor.ITaskbarLauncher?
 HackerOs.Taskbar.Blazor.Taskbar.Launcher.set -> void
 HackerOs.Taskbar.Blazor.Taskbar.NotificationAreaContent.get -> Microsoft.AspNetCore.Components.RenderFragment?
 HackerOs.Taskbar.Blazor.Taskbar.NotificationAreaContent.set -> void
 HackerOs.Taskbar.Blazor.Taskbar.Options.get -> HackerOs.Taskbar.Blazor.TaskbarOptions!
 HackerOs.Taskbar.Blazor.Taskbar.Options.set -> void
+HackerOs.Taskbar.Blazor.Taskbar.Previews.get -> HackerOs.Taskbar.Blazor.ITaskbarWindowPreviews?
+HackerOs.Taskbar.Blazor.Taskbar.Previews.set -> void
 HackerOs.Taskbar.Blazor.Taskbar.SessionCommands.get -> HackerOs.Taskbar.Blazor.ITaskbarSessionCommands?
 HackerOs.Taskbar.Blazor.Taskbar.SessionCommands.set -> void
 HackerOs.Taskbar.Blazor.Taskbar.StatusSource.get -> HackerOs.Taskbar.Blazor.ITaskbarStatusSource?
@@ -68,6 +82,7 @@ HackerOs.Taskbar.Blazor.TaskbarWindowItem.Title.init -> void
 HackerOs.Taskbar.Blazor._Imports
 HackerOs.Taskbar.Blazor._Imports.Execute() -> void
 HackerOs.Taskbar.Blazor._Imports._Imports() -> void
+override HackerOs.Taskbar.Blazor.Taskbar.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
 override HackerOs.Taskbar.Blazor.Taskbar.OnInitialized() -> void
 override HackerOs.Taskbar.Blazor.TaskbarOptions.Equals(object? obj) -> bool
 override HackerOs.Taskbar.Blazor.TaskbarOptions.GetHashCode() -> int

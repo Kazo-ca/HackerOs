@@ -18,7 +18,7 @@ profite de tout ce que l'OS fournit déjà (fenêtres, fichiers, réseau,
 sécurité, thèmes, langues, mobile) et se concentre sur son application.
 
 HackerOS est écrit en C# avec Blazor WebAssembly (.NET 10). La version
-actuelle est la **2.1.0**. Essayez-le sur <https://hackos.kazo.ca/>.
+actuelle est la **2.2.0**. Essayez-le sur <https://hackos.kazo.ca/>.
 
 ## Le but de l'écosystème
 
@@ -262,7 +262,7 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
 
 ### Pour les développeurs
 
-- **SDK public sur NuGet** (`HackerOs.*`, version 2.1.0) : API fichier,
+- **SDK public sur NuGet** (`HackerOs.*`, version 2.2.0) : API fichier,
   fenêtres, terminal, réseau, tâches de fond, presse-papiers, dialogues,
   composants Blazor. ([`sdk-reference.md`](framework/sdk-reference.md),
   [`sdk-packages.md`](framework/sdk-packages.md))

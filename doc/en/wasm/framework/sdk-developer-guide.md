@@ -76,7 +76,7 @@ them in `artifacts/local-nupkg`, a `nuget.config` (template
 project:
 
 ```bash
-dotnet new install <HackerOS>/artifacts/local-nupkg/HackerOs.Templates.2.1.0.nupkg
+dotnet new install <HackerOS>/artifacts/local-nupkg/HackerOs.Templates.2.2.0.nupkg
 dotnet new hackeros-window -n Contoso.Notes --appId com.contoso.notes
 dotnet new hackeros-host -n Contoso.Os          # un hôte qui lance tout l'OS
 ```

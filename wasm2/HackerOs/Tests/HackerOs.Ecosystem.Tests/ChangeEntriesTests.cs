@@ -21,17 +21,6 @@ public sealed class ChangeEntriesTests
     private static readonly HashSet<string> VersionProperties = ["version", "date", "entries"];
     private static readonly HashSet<string> Languages = ["en", "fr"];
 
-    public static TheoryData<string> UnreleasedFiles()
-    {
-        TheoryData<string> data = [];
-        foreach (string file in Directory.EnumerateFiles(UnreleasedDirectory).Order(StringComparer.Ordinal))
-        {
-            data.Add(Path.GetFileName(file));
-        }
-
-        return data;
-    }
-
     public static TheoryData<string> VersionFiles()
     {
         TheoryData<string> data = [];
@@ -47,18 +36,33 @@ public sealed class ChangeEntriesTests
     public void The_change_list_has_entries() =>
         Assert.NotEmpty(AllEntries());
 
-    [Theory]
-    [MemberData(nameof(UnreleasedFiles))]
-    public void Every_unreleased_entry_is_named_after_its_id(string fileName)
+    /// <summary>
+    /// A fact rather than a theory over the files: right after a release, <c>collect-changes.sh</c>
+    /// empties <c>unreleased/</c> (and git does not keep the empty folder), and an xUnit theory with
+    /// no data fails with "No data found".
+    /// </summary>
+    [Fact]
+    public void Every_unreleased_entry_is_named_after_its_id()
     {
-        Assert.EndsWith(".json", fileName, StringComparison.Ordinal);
-        using JsonDocument document = Parse(Path.Combine(UnreleasedDirectory, fileName));
-
-        List<string> errors = ValidateEntry(document.RootElement);
-        string id = document.RootElement.TryGetProperty("id", out JsonElement value) ? value.GetString() ?? "" : "";
-        if (!string.Equals(fileName, id + ".json", StringComparison.Ordinal))
+        List<string> errors = [];
+        foreach (string file in UnreleasedFiles())
         {
-            errors.Add($"the file name must be the id: {id}.json");
+            string fileName = Path.GetFileName(file);
+            if (!fileName.EndsWith(".json", StringComparison.Ordinal))
+            {
+                errors.Add($"{fileName}: only <guid>.json files belong in unreleased/");
+                continue;
+            }
+
+            using JsonDocument document = Parse(file);
+            List<string> fileErrors = ValidateEntry(document.RootElement);
+            string id = document.RootElement.TryGetProperty("id", out JsonElement value) ? value.GetString() ?? "" : "";
+            if (!string.Equals(fileName, id + ".json", StringComparison.Ordinal))
+            {
+                fileErrors.Add($"the file name must be the id: {id}.json");
+            }
+
+            errors.AddRange(fileErrors.Select(error => $"{fileName}: {error}"));
         }
 
         Assert.Empty(errors);
@@ -247,10 +251,16 @@ public sealed class ChangeEntriesTests
     private static IEnumerable<string> UnknownProperties(JsonElement element, HashSet<string> known) =>
         element.EnumerateObject().Where(property => !known.Contains(property.Name)).Select(static property => $"unknown property '{property.Name}'");
 
+    /// <summary>The files of <c>unreleased/</c> in ordinal order; none when the folder is missing (after a release).</summary>
+    private static IEnumerable<string> UnreleasedFiles() =>
+        Directory.Exists(UnreleasedDirectory)
+            ? Directory.EnumerateFiles(UnreleasedDirectory).Order(StringComparer.Ordinal)
+            : [];
+
     private static List<(string Id, string Source)> AllEntries()
     {
         List<(string Id, string Source)> entries = [];
-        foreach (string file in Directory.EnumerateFiles(UnreleasedDirectory, "*.json"))
+        foreach (string file in UnreleasedFiles().Where(static file => file.EndsWith(".json", StringComparison.Ordinal)))
         {
             using JsonDocument document = Parse(file);
             entries.Add((document.RootElement.GetProperty("id").GetString()!, "unreleased/" + Path.GetFileName(file)));
