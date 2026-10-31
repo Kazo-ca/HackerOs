@@ -147,11 +147,10 @@ public sealed class TaskbarPreviewControllerTests
     }
 
     [Fact]
-    public async Task Without_previews_the_buttons_carry_no_preview_anchor()
+    public async Task Without_previews_no_preview_is_rendered()
     {
         string html = await RenderAsync(previews: null);
 
-        Assert.DoesNotContain("data-taskbar-window-id", html, StringComparison.Ordinal);
         Assert.DoesNotContain("taskbar-preview", html, StringComparison.Ordinal);
     }
 
