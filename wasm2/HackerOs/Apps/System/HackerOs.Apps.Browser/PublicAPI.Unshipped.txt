@@ -1,1 +1,32 @@
 #nullable enable
+*REMOVED*HackerOs.Apps.Browser.Net.BrowserResponse.BrowserResponse(int StatusCode, string! ReasonPhrase, System.Uri! Url, System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>! Headers, byte[]! Body, HackerOs.Simulation.Abstractions.Network.SimulatedPage? Page = null, int RedirectCount = 0) -> void
+*REMOVED*HackerOs.Apps.Browser.Net.BrowserResponse.Deconstruct(out int StatusCode, out string! ReasonPhrase, out System.Uri! Url, out System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>! Headers, out byte[]! Body, out HackerOs.Simulation.Abstractions.Network.SimulatedPage? Page, out int RedirectCount) -> void
+HackerOs.Apps.Browser.AddressBarIndicator
+HackerOs.Apps.Browser.AddressBarIndicator.<Clone>$() -> HackerOs.Apps.Browser.AddressBarIndicator!
+HackerOs.Apps.Browser.AddressBarIndicator.AddressBarIndicator(string! SourceIcon, string! SourceClass, string! SourceTitle, string? NotSecureLabel) -> void
+HackerOs.Apps.Browser.AddressBarIndicator.Deconstruct(out string! SourceIcon, out string! SourceClass, out string! SourceTitle, out string? NotSecureLabel) -> void
+HackerOs.Apps.Browser.AddressBarIndicator.Equals(HackerOs.Apps.Browser.AddressBarIndicator? other) -> bool
+HackerOs.Apps.Browser.AddressBarIndicator.NotSecureLabel.get -> string?
+HackerOs.Apps.Browser.AddressBarIndicator.NotSecureLabel.init -> void
+HackerOs.Apps.Browser.AddressBarIndicator.SourceClass.get -> string!
+HackerOs.Apps.Browser.AddressBarIndicator.SourceClass.init -> void
+HackerOs.Apps.Browser.AddressBarIndicator.SourceIcon.get -> string!
+HackerOs.Apps.Browser.AddressBarIndicator.SourceIcon.init -> void
+HackerOs.Apps.Browser.AddressBarIndicator.SourceTitle.get -> string!
+HackerOs.Apps.Browser.AddressBarIndicator.SourceTitle.init -> void
+HackerOs.Apps.Browser.AddressBarIndicators
+HackerOs.Apps.Browser.Net.BrowserResponse.BrowserResponse(int StatusCode, string! ReasonPhrase, System.Uri! Url, System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>! Headers, byte[]! Body, HackerOs.Simulation.Abstractions.Network.SimulatedPage? Page = null, int RedirectCount = 0, HackerOs.Apps.Browser.Net.BrowserResponseSource Source = HackerOs.Apps.Browser.Net.BrowserResponseSource.Simulated) -> void
+HackerOs.Apps.Browser.Net.BrowserResponse.Deconstruct(out int StatusCode, out string! ReasonPhrase, out System.Uri! Url, out System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>! Headers, out byte[]! Body, out HackerOs.Simulation.Abstractions.Network.SimulatedPage? Page, out int RedirectCount, out HackerOs.Apps.Browser.Net.BrowserResponseSource Source) -> void
+HackerOs.Apps.Browser.Net.BrowserResponse.Source.get -> HackerOs.Apps.Browser.Net.BrowserResponseSource
+HackerOs.Apps.Browser.Net.BrowserResponse.Source.init -> void
+HackerOs.Apps.Browser.Net.BrowserResponseSource
+HackerOs.Apps.Browser.Net.BrowserResponseSource.File = 2 -> HackerOs.Apps.Browser.Net.BrowserResponseSource
+HackerOs.Apps.Browser.Net.BrowserResponseSource.LocalSite = 1 -> HackerOs.Apps.Browser.Net.BrowserResponseSource
+HackerOs.Apps.Browser.Net.BrowserResponseSource.RealNetwork = 3 -> HackerOs.Apps.Browser.Net.BrowserResponseSource
+HackerOs.Apps.Browser.Net.BrowserResponseSource.Simulated = 0 -> HackerOs.Apps.Browser.Net.BrowserResponseSource
+override HackerOs.Apps.Browser.AddressBarIndicator.Equals(object? obj) -> bool
+override HackerOs.Apps.Browser.AddressBarIndicator.GetHashCode() -> int
+override HackerOs.Apps.Browser.AddressBarIndicator.ToString() -> string!
+static HackerOs.Apps.Browser.AddressBarIndicator.operator !=(HackerOs.Apps.Browser.AddressBarIndicator? left, HackerOs.Apps.Browser.AddressBarIndicator? right) -> bool
+static HackerOs.Apps.Browser.AddressBarIndicator.operator ==(HackerOs.Apps.Browser.AddressBarIndicator? left, HackerOs.Apps.Browser.AddressBarIndicator? right) -> bool
+static HackerOs.Apps.Browser.AddressBarIndicators.For(System.Uri? url, HackerOs.Apps.Browser.Net.BrowserResponseSource? source, System.Globalization.CultureInfo? culture = null) -> HackerOs.Apps.Browser.AddressBarIndicator!

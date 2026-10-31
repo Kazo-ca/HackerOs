@@ -107,6 +107,10 @@ jour à la fin de chaque série ou quand une convention change.
   série `todo/`, branche `todo/13-taskbar-previews` vers `todo/base`) : copie
   réduite en direct d'une fenêtre au survol de son bouton, et peek. Numéro 0199
   pris dans la réserve 0197 à 0205 de la série `todo/`.
+- **Vrais sites dans le navigateur** (ADR 0210, série `todo/base`, issue #266) :
+  le Navigateur est une app système avec `network.real.access` ; avec un
+  serveur connecté, il ouvre les vrais sites par le proxy, cookies compris.
+  Restent le proxy public et la Wayback Machine.
 - **ADR** : 0001 à 0171 et 0173 à 0195 existent sur `main` (quelques numéros sautés ;
   0141 et 0172 n'ont pas servi). Repères récents : 0173 publication automatique,
   0174 annonce de nouvelle version, 0175 « Nouveau dossier » des dialogues, 0176
@@ -167,7 +171,7 @@ section **IV** de [`AGENTS.md`](../../../../AGENTS.md), que Claude Code lit par
 
 | Note | Contenu |
 | --- | --- |
-| [`decisions-not-built.md`](decisions-not-built.md) | Décisions prises par Benoit en discussion et pas encore codées ni écrites ailleurs : fenêtres et barre des tâches (chantiers restants de #242), vrais sites dans le navigateur (#266), apps tierces portées, apps hébergées par le serveur, idées tirées de daedalOS, éditeurs. |
+| [`decisions-not-built.md`](decisions-not-built.md) | Décisions prises par Benoit en discussion et pas encore codées ni écrites ailleurs : fenêtres et barre des tâches (chantiers restants de #242), vrais sites dans le navigateur (#266 : proxy public et Wayback restants), apps tierces portées, apps hébergées par le serveur, idées tirées de daedalOS, éditeurs. |
 | [`known-test-failures.md`](known-test-failures.md) | Échecs de tests préexistants connus (à nommer dans une PR, pas à cacher) et astuces d'environnement récentes. |
 
 ## Environnement et pièges

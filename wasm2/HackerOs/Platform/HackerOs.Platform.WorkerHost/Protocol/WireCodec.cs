@@ -612,6 +612,7 @@ internal static class WireCodec
         writer.WriteBase64String("b", response.ContentBytes);
         writer.WriteNumber("rc", response.RedirectCount);
         WriteCookies(writer, "sk", response.SetCookies);
+        writer.WriteNumber("src", (int)response.Source);
     }
 
     public static HackHttpResponse ReadHttpResponse(JsonElement element) => new(
@@ -622,7 +623,10 @@ internal static class WireCodec
         element.GetProperty("b").GetBytesFromBase64(),
         Page: null,
         element.GetInt32("rc"),
-        ReadCookies(element.GetProperty("sk")));
+        ReadCookies(element.GetProperty("sk")))
+    {
+        Source = element.TryGetProperty("src", out JsonElement source) ? (HackHttpResponseSource)source.GetInt32() : HackHttpResponseSource.Simulated
+    };
 
     public static void WritePortProbes(Utf8JsonWriter writer, IReadOnlyList<HackPortProbeResult> probes)
     {

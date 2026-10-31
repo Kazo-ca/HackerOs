@@ -1,4 +1,4 @@
 {
   "name": "Navigateur",
-  "description": "Navigateur web simulé pour parcourir le réseau virtuel de HackerOS"
+  "description": "Navigateur web pour le réseau virtuel de HackerOS et, par un serveur connecté, le vrai Internet"
 }

@@ -344,6 +344,10 @@ public sealed class ProxyService : IProxyService
                         httpRequest, HttpCompletionOption.ResponseHeadersRead, cts.Token);
                 }
 
+                // ADR 0210 §3: the OS follows the hops itself, to keep each hop's cookies.
+                if (!request.FollowRedirects)
+                    break;
+
                 if (IsRedirect(lastResponse.StatusCode) && redirectHops < _policy.MaxRedirectHops)
                 {
                     var location = lastResponse.Headers.Location;
@@ -631,9 +635,11 @@ public sealed class ProxyService : IProxyService
         { "connection", "keep-alive", "proxy-authenticate", "proxy-authorization",
           "te", "trailers", "transfer-encoding", "upgrade" };
 
+    // ADR 0210 §2: Cookie is relayed. The OS sends only the cookies its own container holds for the
+    // target host (the ones that host set through the relay), so a user can stay signed in to a real site.
     private static readonly HashSet<string> BlockedRequestHeaders =
         new(StringComparer.OrdinalIgnoreCase)
-        { "host", "authorization", "cookie", "x-forwarded-for", "x-real-ip" };
+        { "host", "authorization", "x-forwarded-for", "x-real-ip" };
 
     private static bool IsHopByHopHeader(string name) => HopByHopHeaders.Contains(name);
     private static bool IsBlockedRequestHeader(string name) => BlockedRequestHeaders.Contains(name);

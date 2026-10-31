@@ -164,6 +164,32 @@
     color: var(--hos-warning, #e3b341);
 }
 
+/* ADR 0210 §4: where the page came from. */
+.address-source {
+    display: flex;
+    align-items: center;
+    padding: 0 4px 0 6px;
+    font-size: 0.8rem;
+    color: var(--hos-text-muted, #8fbf8f);
+}
+
+.address-source.source-real {
+    color: var(--hos-accent, #33ff33);
+}
+
+.address-source.source-local {
+    color: var(--hos-info, #58a6ff);
+}
+
+.address-not-secure {
+    display: flex;
+    align-items: center;
+    padding-right: 6px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    color: var(--hos-warning, #e3b341);
+}
+
 .nav-btn.toggled {
     border-color: var(--hos-accent, #33ff33);
     color: var(--hos-accent, #33ff33);
