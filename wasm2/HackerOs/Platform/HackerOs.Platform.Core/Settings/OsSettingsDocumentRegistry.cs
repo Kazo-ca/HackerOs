@@ -27,6 +27,8 @@ public static class OsSettingsDocumentRegistry
         [ScreensSettingsDocuments.Document.DocumentId] = ScreensSettingsDocuments.Document,
         // ADR 0193 §2: Settings > Date and time chooses the user's time zone.
         [Globalization.TimeZoneSettingsDocuments.Document.DocumentId] = Globalization.TimeZoneSettingsDocuments.Document,
+        // ADR 0203 §3: Settings > Appearance chooses the icon pack.
+        [IconPackSettingsDocuments.Document.DocumentId] = IconPackSettingsDocuments.Document,
         // ADR 0204 §3: Settings > Sound turns the event sounds on or off, picks the theme and the volume.
         [Sounds.SoundSettingsDocuments.Document.DocumentId] = Sounds.SoundSettingsDocuments.Document
     };

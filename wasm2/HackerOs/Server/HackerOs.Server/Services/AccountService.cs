@@ -15,6 +15,19 @@ public interface IAccountService
     Task<RegisterDeviceResponse> RegisterDeviceAsync(Guid accountId, RegisterDeviceRequest request, CancellationToken ct);
     Task<IReadOnlyList<DeviceSummary>> GetDevicesAsync(Guid accountId, string callerFingerprint, CancellationToken ct);
     Task RevokeDeviceAsync(Guid accountId, Guid deviceId, CancellationToken ct);
+
+    /// <summary>
+    /// Creates <paramref name="username"/> for pairing (ADR 0191 §6) when it does not exist yet, with a
+    /// random password nobody knows: its devices join by pairing code. Returns whether it was created.
+    /// </summary>
+    Task<bool> EnsurePairingAccountAsync(string username, CancellationToken ct);
+
+    /// <summary>
+    /// Registers a new device on <paramref name="username"/> after its pairing code was redeemed and
+    /// logs it in, as <see cref="LoginAsync"/> does after a password check.
+    /// </summary>
+    /// <exception cref="UnauthorizedAccessException">The account no longer exists.</exception>
+    Task<LoginResponse> PairDeviceAsync(string username, PairDeviceRequest request, CancellationToken ct);
 }
 
 /// <inheritdoc />
@@ -186,12 +199,14 @@ public sealed class AccountService : IAccountService
     public async Task<IReadOnlyList<DeviceSummary>> GetDevicesAsync(
         Guid accountId, string callerFingerprint, CancellationToken ct)
     {
+        // Ordered here, not in SQL: SQLite cannot sort a DateTimeOffset column (NotSupportedException),
+        // and an account has a handful of devices.
         var devices = await _db.Devices
             .Where(d => d.AccountId == accountId && !d.IsRevoked)
-            .OrderBy(d => d.RegisteredUtc)
             .ToListAsync(ct);
 
         return devices
+            .OrderBy(d => d.RegisteredUtc)
             .Select(d => new DeviceSummary(
                 d.DeviceId, d.DeviceName, d.RegisteredUtc, d.LastSeenUtc,
                 d.DeviceFingerprint == callerFingerprint))
@@ -215,6 +230,61 @@ public sealed class AccountService : IAccountService
 
         await _db.SaveChangesAsync(ct);
         await _audit.RecordAsync(accountId, deviceId, "DEVICE_REVOKED", null, ct);
+    }
+
+    /// <inheritdoc />
+    public async Task<bool> EnsurePairingAccountAsync(string username, CancellationToken ct)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(username);
+        if (await _db.Accounts.AnyAsync(a => a.Username == username && !a.IsDeleted, ct))
+        {
+            return false;
+        }
+
+        // The stored hash is of 32 random bytes: no password can match it. The account can still be
+        // given a password later by an administrator; until then only pairing codes open it.
+        string unusablePassword = Convert.ToBase64String(System.Security.Cryptography.RandomNumberGenerator.GetBytes(32));
+        var (serverHash, serverSalt) = _passwordHashService.HashPassword(unusablePassword);
+        var account = new AccountEntity
+        {
+            AccountId = Guid.NewGuid(),
+            Username = username,
+            PasswordHash = serverHash,
+            Salt = serverSalt,
+            CreatedUtc = DateTimeOffset.UtcNow
+        };
+        _db.Accounts.Add(account);
+        await _db.SaveChangesAsync(ct);
+        await _audit.RecordAsync(account.AccountId, null, "ACCOUNT_CREATED_FOR_PAIRING", null, ct);
+        return true;
+    }
+
+    /// <inheritdoc />
+    public async Task<LoginResponse> PairDeviceAsync(string username, PairDeviceRequest request, CancellationToken ct)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        var account = await _db.Accounts
+            .FirstOrDefaultAsync(a => a.Username == username && !a.IsDeleted, ct)
+            ?? throw new UnauthorizedAccessException("INVALID_PAIRING_CODE");
+
+        var now = DateTimeOffset.UtcNow;
+        var device = new DeviceEntity
+        {
+            DeviceId = Guid.NewGuid(),
+            AccountId = account.AccountId,
+            DeviceName = string.IsNullOrWhiteSpace(request.DeviceName) ? "HackerOS" : request.DeviceName[..Math.Min(request.DeviceName.Length, 128)],
+            DeviceFingerprint = request.DeviceFingerprint,
+            RegisteredUtc = now,
+            LastSeenUtc = now
+        };
+        _db.Devices.Add(device);
+
+        var (accessToken, accessExpires) = await _tokenService.IssueAccessTokenAsync(account.AccountId, device.DeviceId, ct);
+        var (refreshToken, refreshExpires) = await IssueRefreshTokenAsync(device.DeviceId, ct);
+        await _db.SaveChangesAsync(ct);
+        await _audit.RecordAsync(account.AccountId, device.DeviceId, "DEVICE_PAIRED", null, ct);
+
+        return new LoginResponse(account.AccountId, device.DeviceId, accessToken, refreshToken, accessExpires, refreshExpires);
     }
 
     // ── Private helpers ───────────────────────────────────────────────────────

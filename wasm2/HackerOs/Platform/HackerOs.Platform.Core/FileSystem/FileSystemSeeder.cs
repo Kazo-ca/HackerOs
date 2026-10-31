@@ -84,9 +84,32 @@ public sealed class FileSystemSeeder(
         await EnsureDirectoryAsync("/etc/hackweb", 0x01ED, system, cancellationToken);
         await EnsureDirectoryAsync("/etc/hackweb/sites", 0x01ED, system, cancellationToken);
 
-        // ADR 0204: the built-in sound themes, freedesktop.org layout (/usr/share/sounds/<id>/).
+        // ADR 0203 §6: the icon packs shipped with the OS, root-owned 0644 like /usr/share/icons on Linux.
         await EnsureDirectoryAsync("/usr", 0x01ED, system, cancellationToken);
         await EnsureDirectoryAsync("/usr/share", 0x01ED, system, cancellationToken);
+        await EnsureDirectoryAsync(Theming.Abstractions.IconPacks.IconPackLibrary.SystemDirectory, 0x01ED, system, cancellationToken);
+        foreach (BuiltInIconPacks.PackFile file in BuiltInIconPacks.Files)
+        {
+            string target = $"{Theming.Abstractions.IconPacks.IconPackLibrary.SystemDirectory}/{file.RelativePath}";
+            string folder = Theming.Abstractions.IconPacks.IconPackLibrary.SystemDirectory;
+            foreach (string part in file.RelativePath.Split('/')[..^1])
+            {
+                folder += "/" + part;
+                await EnsureDirectoryAsync(folder, 0x01ED, system, cancellationToken);
+            }
+
+            if (file.RelativePath.EndsWith(".json", StringComparison.Ordinal))
+            {
+                // icon-pack.json stays a text file, readable with cat and editable with nano.
+                await EnsureFileAsync(target, System.Text.Encoding.UTF8.GetString(file.Content), 0x01A4, system, cancellationToken);
+            }
+            else
+            {
+                await EnsureFileAsync(target, file.Content, 0x01A4, system, cancellationToken);
+            }
+        }
+
+        // ADR 0204: the built-in sound themes, freedesktop.org layout (/usr/share/sounds/<id>/).
         await SeedSoundThemesAsync(system, cancellationToken);
 
         string home = $"/home/{userName.Value}";
@@ -127,7 +150,7 @@ public sealed class FileSystemSeeder(
                 {
                     await EnsureFileAsync(
                         BuiltInSoundThemes.GetSoundPath(theme.Id, soundEvent),
-                        new SeedBytesSource(audio, "audio/ogg"),
+                        audio,
                         0x01A4,
                         system,
                         cancellationToken);
@@ -227,15 +250,20 @@ public sealed class FileSystemSeeder(
         ushort mode,
         FileSystemAuthorizationContext context,
         CancellationToken cancellationToken) =>
-        EnsureFileAsync(pathValue, new SeedTextSource(content), mode, context, cancellationToken);
+        EnsureFileAsync(pathValue, new SeedSource(System.Text.Encoding.UTF8.GetBytes(content), FileSystemContentDescriptor.Text()), mode, context, cancellationToken);
 
-    /// <summary>
-    /// Creates a file with the bytes of <paramref name="content"/> when nothing exists at
-    /// <paramref name="pathValue"/>; an existing file is never touched.
-    /// </summary>
+    /// <summary>Creates a binary file (an image of a shipped icon pack, a built-in sound) when nothing exists at <paramref name="pathValue"/>.</summary>
+    private ValueTask EnsureFileAsync(
+        string pathValue,
+        byte[] content,
+        ushort mode,
+        FileSystemAuthorizationContext context,
+        CancellationToken cancellationToken) =>
+        EnsureFileAsync(pathValue, new SeedSource(content, FileSystemContentDescriptor.Binary(MediaTypeOf(pathValue))), mode, context, cancellationToken);
+
     private async ValueTask EnsureFileAsync(
         string pathValue,
-        IFileSystemContentSource content,
+        SeedSource content,
         ushort mode,
         FileSystemAuthorizationContext context,
         CancellationToken cancellationToken)
@@ -296,12 +324,17 @@ public sealed class FileSystemSeeder(
             _timeProvider.GetUtcNow().ToUniversalTime());
     }
 
-    /// <summary>UTF-8 text content of one seeded file.</summary>
-    private sealed class SeedTextSource(string content) : IFileSystemContentSource
-    {
-        private readonly byte[] _bytes = System.Text.Encoding.UTF8.GetBytes(content);
+    private static string MediaTypeOf(string path) =>
+        path.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ? "image/png"
+        : path.EndsWith(".oga", StringComparison.OrdinalIgnoreCase) ? "audio/ogg"
+        : "application/octet-stream";
 
-        public FileSystemContentDescriptor Descriptor { get; } = FileSystemContentDescriptor.Text();
+    /// <summary>Content of one seeded file: UTF-8 text or the bytes of an image.</summary>
+    private sealed class SeedSource(byte[] bytes, FileSystemContentDescriptor descriptor) : IFileSystemContentSource
+    {
+        private readonly byte[] _bytes = bytes;
+
+        public FileSystemContentDescriptor Descriptor { get; } = descriptor;
 
         public long? Length => _bytes.LongLength;
 
@@ -309,20 +342,6 @@ public sealed class FileSystemSeeder(
         {
             cancellationToken.ThrowIfCancellationRequested();
             return ValueTask.FromResult<Stream>(new MemoryStream(_bytes, writable: false));
-        }
-    }
-
-    /// <summary>Binary content of one seeded file, such as a built-in sound.</summary>
-    private sealed class SeedBytesSource(byte[] bytes, string mediaType) : IFileSystemContentSource
-    {
-        public FileSystemContentDescriptor Descriptor { get; } = FileSystemContentDescriptor.Binary(mediaType);
-
-        public long? Length => bytes.LongLength;
-
-        public ValueTask<Stream> OpenReadAsync(CancellationToken cancellationToken = default)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            return ValueTask.FromResult<Stream>(new MemoryStream(bytes, writable: false));
         }
     }
 

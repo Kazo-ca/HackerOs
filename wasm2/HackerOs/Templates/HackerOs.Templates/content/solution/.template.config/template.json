@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "HackerOS",
+  "classifications": [ "HackerOS", "Blazor", "WebAssembly", "Solution" ],
+  "identity": "HackerOs.Templates.Solution",
+  "groupIdentity": "HackerOs.Templates.Solution",
+  "name": "HackerOS app solution",
+  "description": "A repository for a HackerOS app: the app, a host that runs it in the OS, its tests, the HackerOS submodule (sources in Debug, packages in Release), CI and the Hack Store publishing workflow.",
+  "shortName": "hackeros-solution",
+  "sourceName": "HackerOs.Template.Solution",
+  "preferNameDirectory": true,
+  "tags": { "language": "C#", "type": "solution" },
+  "guids": [
+    "6E2A8C51-3B7D-4F0A-9C1E-2D5B7A9F0C31",
+    "B4D1F0A2-7C3E-4E59-8A6B-1F2C3D4E5A62",
+    "C8E2A1B3-4D5F-4A6B-9C7D-8E9F0A1B2C73",
+    "D1F3B2C4-5E6A-4B7C-8D9E-0F1A2B3C4D84",
+    "E2A4C3D5-6F7B-4C8D-9E0F-1A2B3C4D5E95"
+  ],
+  "symbols": {
+    "appId": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "Application id (reverse-DNS, lowercase), unique in the catalog.",
+      "defaultValue": "com.example.my-app",
+      "replaces": "com.example.template-app"
+    },
+    "publisherId": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "Publisher id written in the manifest.",
+      "defaultValue": "pub.example",
+      "replaces": "pub.template"
+    },
+    "repository": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "GitHub repository of the app (owner/name), written in store/store.json for the Hack Store.",
+      "defaultValue": "example/HackerOs-App-MyApp",
+      "replaces": "example/HackerOs-App-Template"
+    }
+  }
+}

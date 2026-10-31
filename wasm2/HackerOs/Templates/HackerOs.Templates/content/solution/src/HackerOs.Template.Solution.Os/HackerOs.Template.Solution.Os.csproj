@@ -1,0 +1,51 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
+    <!--
+      ADR 0106, ADR 0113: Release publish trims the framework and the other trimmable libraries; the
+      HackerOS packages and every app are kept whole (roots added by HackerOs.App.Build).
+    -->
+    <PublishTrimmed>true</PublishTrimmed>
+    <TrimMode>partial</TrimMode>
+    <!--
+      HackerOS host (ADR 0047, ADR 0098 §2): the build aggregates the manifests of every app package
+      below into this assembly, read back by HostAppCatalog.Load, and lazy-loads their assemblies.
+      IsSystemApp="true" makes an app a system app (not uninstallable, dangerous capabilities granted).
+      $(HackerOsVersion) comes from the submodule; in Debug the packages become its projects (ADR 0176 §4).
+    -->
+    <HackerOsAppHost>true</HackerOsAppHost>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.13" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.13" PrivateAssets="all" />
+    <PackageReference Include="HackerOs.App.Build" Version="$(HackerOsVersion)" PrivateAssets="all" />
+    <PackageReference Include="HackerOs.Ecosystem.Host" Version="$(HackerOsVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The base apps. Add your own apps as ProjectReference or PackageReference items. -->
+    <ProjectReference Include="..\HackerOs.Template.Solution\HackerOs.Template.Solution.csproj" />
+    <PackageReference Include="HackerOs.Commands" Version="$(HackerOsVersion)" IsSystemApp="true" />
+    <PackageReference Include="HackerOs.Apps.Terminal" Version="$(HackerOsVersion)" IsSystemApp="true" />
+    <PackageReference Include="HackerOs.Apps.Settings" Version="$(HackerOsVersion)" IsSystemApp="true" />
+    <PackageReference Include="HackerOs.Apps.FileExplorer" Version="$(HackerOsVersion)" IsSystemApp="true" />
+    <PackageReference Include="HackerOs.Apps.Desktop" Version="$(HackerOsVersion)" IsSystemApp="true" />
+    <PackageReference Include="HackerOs.Apps.TextEditor" Version="$(HackerOsVersion)" IsSystemApp="true" />
+    <PackageReference Include="HackerOs.Apps.CodeEditor" Version="$(HackerOsVersion)" IsSystemApp="true" />
+    <PackageReference Include="HackerOs.Apps.SystemMonitor" Version="$(HackerOsVersion)" IsSystemApp="true" />
+    <PackageReference Include="HackerOs.Apps.ErrorLogViewer" Version="$(HackerOsVersion)" IsSystemApp="true" />
+    <PackageReference Include="HackerOs.Apps.WebServer" Version="$(HackerOsVersion)" IsSystemApp="true" />
+    <PackageReference Include="HackerOs.Apps.ThemeEditor" Version="$(HackerOsVersion)" IsSystemApp="true" />
+    <PackageReference Include="HackerOs.Apps.Browser" Version="$(HackerOsVersion)" />
+    <PackageReference Include="HackerOs.Apps.Calculator" Version="$(HackerOsVersion)" />
+    <PackageReference Include="HackerOs.Apps.HackPaint" Version="$(HackerOsVersion)" />
+    <PackageReference Include="HackerOs.Apps.IconViewer" Version="$(HackerOsVersion)" />
+    <PackageReference Include="HackerOs.Apps.Diagnostic" Version="$(HackerOsVersion)" />
+  </ItemGroup>
+
+</Project>

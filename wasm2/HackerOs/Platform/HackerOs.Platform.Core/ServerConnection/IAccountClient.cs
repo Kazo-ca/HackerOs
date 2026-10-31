@@ -35,6 +35,16 @@ public interface IAccountClient
     /// <returns>The new token pair.</returns>
     /// <exception cref="ServerConnectionException">The server answered with a non-success status, e.g. an expired refresh token.</exception>
     Task<RefreshTokenResponse> RefreshAsync(Uri serverBaseUrl, RefreshTokenRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Links a new device with a one-time pairing code (<c>POST /api/auth/pair</c>, ADR 0191 §6).
+    /// </summary>
+    /// <param name="serverBaseUrl">The server's base URL.</param>
+    /// <param name="request">The code and the new device.</param>
+    /// <param name="cancellationToken">Cancels the request.</param>
+    /// <exception cref="ServerConnectionException">The server refused the code.</exception>
+    Task<LoginResponse> PairAsync(Uri serverBaseUrl, PairDeviceRequest request, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This account client cannot pair a device.");
 }
 
 /// <summary>Default <see cref="IAccountClient"/> implementation backed by <see cref="HttpClient"/>.</summary>
@@ -80,6 +90,20 @@ public sealed class HttpAccountClient(HttpClient httpClient) : IAccountClient
         await EnsureSuccessAsync(response, cancellationToken).ConfigureAwait(false);
         return (await response.Content.ReadFromJsonAsync(
             IdentityContractsJsonContext.Default.RefreshTokenResponse, cancellationToken).ConfigureAwait(false))!;
+    }
+
+    /// <inheritdoc />
+    public async Task<LoginResponse> PairAsync(
+        Uri serverBaseUrl, PairDeviceRequest request, CancellationToken cancellationToken = default)
+    {
+        using HttpResponseMessage response = await httpClient.PostAsJsonAsync(
+            new Uri(serverBaseUrl, "api/auth/pair"),
+            request,
+            IdentityContractsJsonContext.Default.PairDeviceRequest,
+            cancellationToken).ConfigureAwait(false);
+        await EnsureSuccessAsync(response, cancellationToken).ConfigureAwait(false);
+        return (await response.Content.ReadFromJsonAsync(
+            IdentityContractsJsonContext.Default.LoginResponse, cancellationToken).ConfigureAwait(false))!;
     }
 
     private static async Task EnsureSuccessAsync(HttpResponseMessage response, CancellationToken cancellationToken)
