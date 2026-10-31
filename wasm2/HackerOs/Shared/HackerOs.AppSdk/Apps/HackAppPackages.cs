@@ -192,6 +192,46 @@ public static class HackAppPackages
             return true;
         }).ConfigureAwait(false);
 
+    /// <summary>Lists the theme packs installed for the system and for the session user (ADR 0213 §3).</summary>
+    /// <param name="cancellationToken">Cancels the reads.</param>
+    /// <exception cref="HackUnauthorizedAccessException">This app lacks <c>apps.manage</c>.</exception>
+    /// <exception cref="HackExecutionContextMissingException">No app context is active.</exception>
+    public static Task<IReadOnlyList<HackInstalledThemePack>> GetInstalledThemePacksAsync(CancellationToken cancellationToken = default) =>
+        CallAsync(gateway => gateway.GetInstalledThemePacksAsync(cancellationToken));
+
+    /// <summary>
+    /// Installs or updates a theme pack of a catalog (ADR 0213 §4). A pack holds no code: from a
+    /// trusted catalog it installs for oneself without an administrator; for every user, from an
+    /// untrusted catalog or when it is blocked, an administrator approves in two steps. Its themes,
+    /// wallpapers, icons, sounds and cursors are offered at once in Settings, without a restart.
+    /// </summary>
+    /// <param name="source"><c>catalog:&lt;name&gt;/&lt;packId&gt;</c> or a pack id alone, optionally followed by <c>@version</c>.</param>
+    /// <param name="scope">For whom.</param>
+    /// <param name="cancellationToken">Cancels the download, the approval and the writes.</param>
+    /// <exception cref="HackPackageException">The pack is refused; <see cref="HackPackageException.Code"/> says why (<c>themes.pack.*</c>, <c>apps.package.blocked</c>…).</exception>
+    /// <exception cref="HackUnauthorizedAccessException">This app lacks <c>apps.manage</c>, or no administrator approved.</exception>
+    /// <exception cref="HackExecutionContextMissingException">No app context is active.</exception>
+    public static Task<HackThemePackInstallReport> InstallThemePackAsync(
+        string source, HackPackageScope scope = HackPackageScope.Auto, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(source);
+        return CallAsync(gateway => gateway.InstallThemePackAsync(source, scope, cancellationToken));
+    }
+
+    /// <summary>Removes an installed theme pack; what it offered leaves Settings at once.</summary>
+    /// <param name="packId">The installed pack.</param>
+    /// <param name="scope">Which copy; <see cref="HackPackageScope.Auto"/> takes the user's own, else the system's.</param>
+    /// <param name="cancellationToken">Cancels the approval and the writes.</param>
+    /// <exception cref="HackPackageException"><c>themes.pack.not-installed</c>.</exception>
+    /// <exception cref="HackUnauthorizedAccessException">This app lacks <c>apps.manage</c>, or no administrator approved a system removal.</exception>
+    /// <exception cref="HackExecutionContextMissingException">No app context is active.</exception>
+    public static Task<HackInstalledThemePack> RemoveThemePackAsync(
+        string packId, HackPackageScope scope = HackPackageScope.Auto, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(packId);
+        return CallAsync(gateway => gateway.RemoveThemePackAsync(packId, scope, cancellationToken));
+    }
+
     private static async Task<T> CallAsync<T>(Func<IAppManagementGateway, ValueTask<T>> call)
     {
         try

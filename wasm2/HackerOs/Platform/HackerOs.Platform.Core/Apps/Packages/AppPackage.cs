@@ -139,7 +139,21 @@ public sealed class AppPackage
         && !path.Contains(':', StringComparison.Ordinal)
         && path.Split('/').All(static segment => segment is not ("" or "." or "..") && !segment.Any(char.IsControl));
 
-    private static Dictionary<string, byte[]> Extract(byte[] archive)
+    private static Dictionary<string, byte[]> Extract(byte[] archive) =>
+        Extract(archive, MaximumExtractedBytes, MaximumFiles, "package");
+
+    /// <summary>
+    /// Unzips an archive into memory with the checks every HackerOS archive gets: safe relative
+    /// paths only, at most <paramref name="maximumFiles"/> files and <paramref name="maximumBytes"/>
+    /// bytes once expanded, consistent sizes, no duplicate. Shared by <c>.hackapp</c> and
+    /// <c>.hacktheme</c> (ADR 0213 §1).
+    /// </summary>
+    /// <param name="archive">The zip bytes.</param>
+    /// <param name="maximumBytes">Largest total of the expanded files.</param>
+    /// <param name="maximumFiles">Most files accepted.</param>
+    /// <param name="kind">What the archive is, for the messages (<c>package</c>, <c>theme pack</c>).</param>
+    /// <exception cref="AppPackageException">A check failed; the code says which.</exception>
+    internal static Dictionary<string, byte[]> Extract(byte[] archive, long maximumBytes, int maximumFiles, string kind)
     {
         Dictionary<string, byte[]> files = new(StringComparer.Ordinal);
         long total = 0;
@@ -158,15 +172,15 @@ public sealed class AppPackage
                     throw new AppPackageException("apps.package.unsafe-path", $"'{entry.FullName}' is not a safe path.");
                 }
 
-                if (files.Count >= MaximumFiles)
+                if (files.Count >= maximumFiles)
                 {
-                    throw new AppPackageException("apps.package.too-many-files", $"The package holds more than {MaximumFiles} files.");
+                    throw new AppPackageException("apps.package.too-many-files", $"The {kind} holds more than {maximumFiles} files.");
                 }
 
                 total += entry.Length;
-                if (entry.Length < 0 || total > MaximumExtractedBytes)
+                if (entry.Length < 0 || total > maximumBytes)
                 {
-                    throw new AppPackageException("apps.package.too-large", $"The package expands to more than {MaximumExtractedBytes / (1024 * 1024)} MiB.");
+                    throw new AppPackageException("apps.package.too-large", $"The {kind} expands to more than {maximumBytes / (1024 * 1024)} MiB.");
                 }
 
                 using Stream stream = entry.Open();
@@ -185,7 +199,7 @@ public sealed class AppPackage
         }
         catch (InvalidDataException exception)
         {
-            throw new AppPackageException("apps.package.corrupt", $"The package is not a valid zip archive: {exception.Message}");
+            throw new AppPackageException("apps.package.corrupt", $"The {kind} is not a valid zip archive: {exception.Message}");
         }
 
         return files;

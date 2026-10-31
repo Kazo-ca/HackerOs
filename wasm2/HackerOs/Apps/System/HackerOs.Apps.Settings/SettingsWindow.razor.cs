@@ -163,8 +163,9 @@ public partial class SettingsWindow : IAsyncDisposable
     protected override Task OnWindowActivatedAsync() => RefreshUserThemesAsync();
 
     /// <summary>
-    /// Reads the user themes of <c>/etc/hackeros/themes</c> and <c>~/.config/hackeros/themes</c>
-    /// (ADR 0103 §2.2) with the SDK's file API; a missing folder simply means no theme.
+    /// Reads the user themes of <c>/etc/hackeros/themes</c>, <c>~/.config/hackeros/themes</c>
+    /// (ADR 0103 §2.2) and of the installed theme packs (ADR 0213 §3) with the SDK's file API; a
+    /// missing folder simply means no theme.
     /// </summary>
     private async Task RefreshUserThemesAsync()
     {
@@ -172,6 +173,7 @@ public partial class SettingsWindow : IAsyncDisposable
         {
             _userThemes = await UserThemeLibrary.LoadAsync(
                 async (directory, token) => await HackDirectory.GetFilesAsync(directory, "*" + ThemeFile.Extension, cancellationToken: token),
+                async (directory, token) => await HackDirectory.GetDirectoriesAsync(directory, cancellationToken: token),
                 (path, token) => HackFile.ReadAllTextAsync(path, token),
                 HackUser.Describe(AppContext).HomeDirectory,
                 AppContext.CancellationToken);

@@ -11,6 +11,7 @@ using HackerOs.Simulation.Abstractions.Sessions;
 using HackerOs.Simulation.Abstractions.Settings;
 using HackerOs.Simulation.Abstractions.Sounds;
 using HackerOs.Simulation.Abstractions.Time;
+using HackerOs.Theming.Abstractions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -26,8 +27,10 @@ namespace HackerOs.Platform.Core.Sounds;
 /// (<see cref="Play"/>, called by the dialog coordinator), and the session events of the event bus.
 /// </para>
 /// <para>
-/// A sound is a real file. The theme folder is looked up in <c>/usr/share/sounds/&lt;theme&gt;</c>, then in
-/// <c>~/.local/share/sounds/&lt;theme&gt;</c> (a user theme cannot hide a system one); inside it, each folder
+/// A sound is a real file. The theme folder is looked up in <c>/usr/share/sounds/&lt;theme&gt;</c>, the
+/// <c>sounds/</c> folder of the system theme pack of that id (ADR 0213 §3), then in
+/// <c>~/.local/share/sounds/&lt;theme&gt;</c> and the user's theme pack (a user theme cannot hide a
+/// system one); inside it, each folder
 /// of <c>Directories=</c> then the theme folder itself, for <c>&lt;sound-name&gt;.oga</c>, <c>.ogg</c> or
 /// <c>.mp3</c> of at most 1 MiB. An event the theme lacks plays the default theme's sound, like the
 /// freedesktop.org <c>Inherits</c> fallback.
@@ -270,15 +273,20 @@ public sealed class OsSoundService : IDisposable
             return null;
         }
 
-        List<string> roots = [OsSoundEvents.SystemThemesDirectory];
+        // A theme pack's sounds/ folder is a sound theme named after the pack (ADR 0213 §3).
+        List<string> themeDirectories =
+        [
+            $"{OsSoundEvents.SystemThemesDirectory}/{themeId}",
+            $"{ThemePackLayout.SystemDirectory}/{themeId}/{ThemePackLayout.SoundsFolder}",
+        ];
         if (principal is not null)
         {
-            roots.Add(OsSoundEvents.GetUserThemesDirectory(principal.HomePath));
+            themeDirectories.Add($"{OsSoundEvents.GetUserThemesDirectory(principal.HomePath)}/{themeId}");
+            themeDirectories.Add($"{ThemePackLayout.GetUserDirectory(principal.HomePath)}/{themeId}/{ThemePackLayout.SoundsFolder}");
         }
 
-        foreach (string root in roots)
+        foreach (string themeDirectory in themeDirectories)
         {
-            string themeDirectory = $"{root}/{themeId}";
             IAppFileSystemGateway gateway = GatewayFor(themeDirectory, principal);
             string? index = await ReadIndexAsync(gateway, themeDirectory, cancellationToken).ConfigureAwait(false);
             if (index is null)

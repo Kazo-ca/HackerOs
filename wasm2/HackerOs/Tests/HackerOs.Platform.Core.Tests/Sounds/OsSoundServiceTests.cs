@@ -144,6 +144,24 @@ public sealed class OsSoundServiceTests
     }
 
     [Fact]
+    public async Task A_theme_pack_sound_theme_is_found_by_the_pack_id()
+    {
+        SettingsFilesHarness harness = new();
+        await harness.BootAsync();
+        await harness.LoginAsync(harness.Alice);
+        const string pack = "/home/alice/.local/share/hackeros/theme-packs/org.example.neon/sounds";
+        await harness.WriteAsUserAsync($"{pack}/index.theme", "[Sound Theme]\nName=Neon\n");
+        await harness.WriteAsUserAsync($"{pack}/dialog-error.ogg", "OggS fake");
+        using OsSoundService service = Create(harness, new RecordingOutput());
+        await service.InstallBuiltInThemesAsync();
+        await service.InitializeAsync();
+
+        OsSoundClip? clip = await service.ResolveAsync("org.example.neon", OsSoundEvent.Error);
+
+        Assert.StartsWith($"{pack}/dialog-error.ogg#", clip!.Key, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public async Task A_sound_over_one_megabyte_is_not_played()
     {
         SettingsFilesHarness harness = new();

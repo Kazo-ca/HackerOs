@@ -563,3 +563,70 @@ static HackerOs.AppSdk.Apps.HackCatalogCategory.operator !=(HackerOs.AppSdk.Apps
 static HackerOs.AppSdk.Apps.HackCatalogCategory.operator ==(HackerOs.AppSdk.Apps.HackCatalogCategory? left, HackerOs.AppSdk.Apps.HackCatalogCategory? right) -> bool
 static HackerOs.AppSdk.Apps.HackPackageUpdate.operator !=(HackerOs.AppSdk.Apps.HackPackageUpdate? left, HackerOs.AppSdk.Apps.HackPackageUpdate? right) -> bool
 static HackerOs.AppSdk.Apps.HackPackageUpdate.operator ==(HackerOs.AppSdk.Apps.HackPackageUpdate? left, HackerOs.AppSdk.Apps.HackPackageUpdate? right) -> bool
+HackerOs.AppSdk.Apps.HackCatalogApp.Kind.get -> HackerOs.AppSdk.Apps.HackCatalogItemKind
+HackerOs.AppSdk.Apps.HackCatalogApp.Kind.init -> void
+HackerOs.AppSdk.Apps.HackCatalogItemKind
+HackerOs.AppSdk.Apps.HackCatalogItemKind.App = 0 -> HackerOs.AppSdk.Apps.HackCatalogItemKind
+HackerOs.AppSdk.Apps.HackCatalogItemKind.ThemePack = 1 -> HackerOs.AppSdk.Apps.HackCatalogItemKind
+HackerOs.AppSdk.Apps.HackInstalledThemePack
+HackerOs.AppSdk.Apps.HackInstalledThemePack.<Clone>$() -> HackerOs.AppSdk.Apps.HackInstalledThemePack!
+HackerOs.AppSdk.Apps.HackInstalledThemePack.Deconstruct(out string! PackId, out string! Name, out string! Version, out string! Source, out bool SystemWide, out HackerOs.AppSdk.Apps.HackThemePackParts Parts) -> void
+HackerOs.AppSdk.Apps.HackInstalledThemePack.Equals(HackerOs.AppSdk.Apps.HackInstalledThemePack? other) -> bool
+HackerOs.AppSdk.Apps.HackInstalledThemePack.HackInstalledThemePack(string! PackId, string! Name, string! Version, string! Source, bool SystemWide, HackerOs.AppSdk.Apps.HackThemePackParts Parts) -> void
+HackerOs.AppSdk.Apps.HackInstalledThemePack.Name.get -> string!
+HackerOs.AppSdk.Apps.HackInstalledThemePack.Name.init -> void
+HackerOs.AppSdk.Apps.HackInstalledThemePack.PackId.get -> string!
+HackerOs.AppSdk.Apps.HackInstalledThemePack.PackId.init -> void
+HackerOs.AppSdk.Apps.HackInstalledThemePack.Parts.get -> HackerOs.AppSdk.Apps.HackThemePackParts
+HackerOs.AppSdk.Apps.HackInstalledThemePack.Parts.init -> void
+HackerOs.AppSdk.Apps.HackInstalledThemePack.Source.get -> string!
+HackerOs.AppSdk.Apps.HackInstalledThemePack.Source.init -> void
+HackerOs.AppSdk.Apps.HackInstalledThemePack.SystemWide.get -> bool
+HackerOs.AppSdk.Apps.HackInstalledThemePack.SystemWide.init -> void
+HackerOs.AppSdk.Apps.HackInstalledThemePack.Version.get -> string!
+HackerOs.AppSdk.Apps.HackInstalledThemePack.Version.init -> void
+HackerOs.AppSdk.Apps.HackThemePackInstallReport
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.<Clone>$() -> HackerOs.AppSdk.Apps.HackThemePackInstallReport!
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.Deconstruct(out string! PackId, out string! Name, out string! Version, out string! Source, out string? PreviousVersion, out bool SystemWide, out HackerOs.AppSdk.Apps.HackThemePackParts Parts, out HackerOs.AppSdk.Apps.HackPackageTrust Trust) -> void
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.Equals(HackerOs.AppSdk.Apps.HackThemePackInstallReport? other) -> bool
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.HackThemePackInstallReport(string! PackId, string! Name, string! Version, string! Source, string? PreviousVersion, bool SystemWide, HackerOs.AppSdk.Apps.HackThemePackParts Parts, HackerOs.AppSdk.Apps.HackPackageTrust Trust) -> void
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.Name.get -> string!
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.Name.init -> void
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.PackId.get -> string!
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.PackId.init -> void
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.Parts.get -> HackerOs.AppSdk.Apps.HackThemePackParts
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.Parts.init -> void
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.PreviousVersion.get -> string?
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.PreviousVersion.init -> void
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.RestartRequired.get -> bool
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.Source.get -> string!
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.Source.init -> void
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.SystemWide.get -> bool
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.SystemWide.init -> void
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.Trust.get -> HackerOs.AppSdk.Apps.HackPackageTrust
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.Trust.init -> void
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.Version.get -> string!
+HackerOs.AppSdk.Apps.HackThemePackInstallReport.Version.init -> void
+HackerOs.AppSdk.Apps.HackThemePackParts
+HackerOs.AppSdk.Apps.HackThemePackParts.Cursors = 16 -> HackerOs.AppSdk.Apps.HackThemePackParts
+HackerOs.AppSdk.Apps.HackThemePackParts.Icons = 4 -> HackerOs.AppSdk.Apps.HackThemePackParts
+HackerOs.AppSdk.Apps.HackThemePackParts.None = 0 -> HackerOs.AppSdk.Apps.HackThemePackParts
+HackerOs.AppSdk.Apps.HackThemePackParts.Sounds = 8 -> HackerOs.AppSdk.Apps.HackThemePackParts
+HackerOs.AppSdk.Apps.HackThemePackParts.Themes = 1 -> HackerOs.AppSdk.Apps.HackThemePackParts
+HackerOs.AppSdk.Apps.HackThemePackParts.Wallpapers = 2 -> HackerOs.AppSdk.Apps.HackThemePackParts
+HackerOs.AppSdk.Apps.IAppManagementGateway.GetInstalledThemePacksAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Apps.HackInstalledThemePack!>!>
+HackerOs.AppSdk.Apps.IAppManagementGateway.InstallThemePackAsync(string! source, HackerOs.AppSdk.Apps.HackPackageScope scope = HackerOs.AppSdk.Apps.HackPackageScope.Auto, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Apps.HackThemePackInstallReport!>
+HackerOs.AppSdk.Apps.IAppManagementGateway.RemoveThemePackAsync(string! packId, HackerOs.AppSdk.Apps.HackPackageScope scope = HackerOs.AppSdk.Apps.HackPackageScope.Auto, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Apps.HackInstalledThemePack!>
+override HackerOs.AppSdk.Apps.HackInstalledThemePack.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Apps.HackInstalledThemePack.GetHashCode() -> int
+override HackerOs.AppSdk.Apps.HackInstalledThemePack.ToString() -> string!
+override HackerOs.AppSdk.Apps.HackThemePackInstallReport.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Apps.HackThemePackInstallReport.GetHashCode() -> int
+override HackerOs.AppSdk.Apps.HackThemePackInstallReport.ToString() -> string!
+static HackerOs.AppSdk.Apps.HackAppPackages.GetInstalledThemePacksAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<HackerOs.AppSdk.Apps.HackInstalledThemePack!>!>!
+static HackerOs.AppSdk.Apps.HackAppPackages.InstallThemePackAsync(string! source, HackerOs.AppSdk.Apps.HackPackageScope scope = HackerOs.AppSdk.Apps.HackPackageScope.Auto, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Apps.HackThemePackInstallReport!>!
+static HackerOs.AppSdk.Apps.HackAppPackages.RemoveThemePackAsync(string! packId, HackerOs.AppSdk.Apps.HackPackageScope scope = HackerOs.AppSdk.Apps.HackPackageScope.Auto, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Apps.HackInstalledThemePack!>!
+static HackerOs.AppSdk.Apps.HackInstalledThemePack.operator !=(HackerOs.AppSdk.Apps.HackInstalledThemePack? left, HackerOs.AppSdk.Apps.HackInstalledThemePack? right) -> bool
+static HackerOs.AppSdk.Apps.HackInstalledThemePack.operator ==(HackerOs.AppSdk.Apps.HackInstalledThemePack? left, HackerOs.AppSdk.Apps.HackInstalledThemePack? right) -> bool
+static HackerOs.AppSdk.Apps.HackThemePackInstallReport.operator !=(HackerOs.AppSdk.Apps.HackThemePackInstallReport? left, HackerOs.AppSdk.Apps.HackThemePackInstallReport? right) -> bool
+static HackerOs.AppSdk.Apps.HackThemePackInstallReport.operator ==(HackerOs.AppSdk.Apps.HackThemePackInstallReport? left, HackerOs.AppSdk.Apps.HackThemePackInstallReport? right) -> bool

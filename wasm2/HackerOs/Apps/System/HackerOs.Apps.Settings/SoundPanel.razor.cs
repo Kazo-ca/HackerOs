@@ -4,6 +4,7 @@ using HackerOs.AppSdk.IO;
 using HackerOs.AppSdk.Settings;
 using HackerOs.Simulation.Abstractions.Settings;
 using HackerOs.Simulation.Abstractions.Sounds;
+using HackerOs.Theming.Abstractions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
 
@@ -172,22 +173,30 @@ public sealed partial class SoundPanel
     private async Task<IReadOnlyList<SoundThemeChoice>> ListThemesAsync(CancellationToken cancellationToken)
     {
         List<SoundThemeChoice> themes = [];
-        await AddThemesAsync(themes, OsSoundEvents.SystemThemesDirectory, isUserTheme: false, cancellationToken);
-        await AddThemesAsync(themes, UserThemesDirectory, isUserTheme: true, cancellationToken);
+        await AddThemesAsync(themes, OsSoundEvents.SystemThemesDirectory, isUserTheme: false, isPackRoot: false, cancellationToken);
+        await AddThemesAsync(themes, ThemePackLayout.SystemDirectory, isUserTheme: false, isPackRoot: true, cancellationToken);
+        await AddThemesAsync(themes, UserThemesDirectory, isUserTheme: true, isPackRoot: false, cancellationToken);
+        await AddThemesAsync(themes, ThemePackLayout.GetUserDirectory(Context.HomeDirectory), isUserTheme: true, isPackRoot: true, cancellationToken);
         return themes;
     }
 
+    /// <summary>
+    /// Adds the sound themes of one folder: each sub-folder of <c>/usr/share/sounds</c> or
+    /// <c>~/.local/share/sounds</c>, or the <c>sounds/</c> folder of each theme pack, whose id is the
+    /// pack id (ADR 0213 §3). The first folder of an id wins, as in the sound server.
+    /// </summary>
     private async Task AddThemesAsync(
-        List<SoundThemeChoice> themes, string root, bool isUserTheme, CancellationToken cancellationToken)
+        List<SoundThemeChoice> themes, string root, bool isUserTheme, bool isPackRoot, CancellationToken cancellationToken)
     {
         if (!await HackDirectory.ExistsAsync(root, cancellationToken))
         {
             return;
         }
 
-        foreach (string directory in (await HackDirectory.GetDirectoriesAsync(root, cancellationToken: cancellationToken)).Order(StringComparer.Ordinal))
+        foreach (string folder in (await HackDirectory.GetDirectoriesAsync(root, cancellationToken: cancellationToken)).Order(StringComparer.Ordinal))
         {
-            string id = directory[(directory.LastIndexOf('/') + 1)..];
+            string id = folder[(folder.LastIndexOf('/') + 1)..];
+            string directory = isPackRoot ? $"{folder}/{ThemePackLayout.SoundsFolder}" : folder;
             string index = $"{directory}/{OsSoundEvents.IndexFileName}";
             if (!OsSoundEvents.IsValidThemeId(id)
                 || themes.Any(theme => theme.Id == id)

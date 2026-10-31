@@ -277,3 +277,16 @@ static HackerOs.Theming.Abstractions.IconPacks.IconPackListResult.operator !=(Ha
 static HackerOs.Theming.Abstractions.IconPacks.IconPackListResult.operator ==(HackerOs.Theming.Abstractions.IconPacks.IconPackListResult? left, HackerOs.Theming.Abstractions.IconPacks.IconPackListResult? right) -> bool
 static HackerOs.Theming.Abstractions.IconPacks.IconPackLoadResult.operator !=(HackerOs.Theming.Abstractions.IconPacks.IconPackLoadResult? left, HackerOs.Theming.Abstractions.IconPacks.IconPackLoadResult? right) -> bool
 static HackerOs.Theming.Abstractions.IconPacks.IconPackLoadResult.operator ==(HackerOs.Theming.Abstractions.IconPacks.IconPackLoadResult? left, HackerOs.Theming.Abstractions.IconPacks.IconPackLoadResult? right) -> bool
+HackerOs.Theming.Abstractions.ThemePackLayout
+const HackerOs.Theming.Abstractions.ThemePackLayout.CursorsFolder = "cursors" -> string!
+const HackerOs.Theming.Abstractions.ThemePackLayout.Extension = ".hacktheme" -> string!
+const HackerOs.Theming.Abstractions.ThemePackLayout.IconsFolder = "icons" -> string!
+const HackerOs.Theming.Abstractions.ThemePackLayout.ManifestFileName = "hackeros-theme-pack.json" -> string!
+const HackerOs.Theming.Abstractions.ThemePackLayout.PreviewFileName = "preview.png" -> string!
+const HackerOs.Theming.Abstractions.ThemePackLayout.SoundsFolder = "sounds" -> string!
+const HackerOs.Theming.Abstractions.ThemePackLayout.SystemDirectory = "/usr/share/hackeros/theme-packs" -> string!
+const HackerOs.Theming.Abstractions.ThemePackLayout.ThemesFolder = "themes" -> string!
+const HackerOs.Theming.Abstractions.ThemePackLayout.WallpapersFolder = "wallpapers" -> string!
+static HackerOs.Theming.Abstractions.ThemePackLayout.GetRoots(string? homeDirectory) -> System.Collections.Generic.IReadOnlyList<string!>!
+static HackerOs.Theming.Abstractions.ThemePackLayout.GetUserDirectory(string! homeDirectory) -> string!
+static HackerOs.Theming.Abstractions.UserThemeLibrary.LoadAsync(System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<string!>!>!>! listFiles, System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<string!>!>!>! listDirectories, System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<string!>!>! readFile, string? homeDirectory, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.Theming.Abstractions.UserThemeLibraryResult!>!

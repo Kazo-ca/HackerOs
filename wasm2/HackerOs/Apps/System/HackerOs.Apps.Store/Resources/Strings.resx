@@ -21,6 +21,12 @@
   <data name="Action.Open" xml:space="preserve">
     <value>Open</value>
   </data>
+  <data name="Action.OpenAppearance" xml:space="preserve">
+    <value>Open Appearance</value>
+  </data>
+  <data name="Action.Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
   <data name="Action.Uninstall" xml:space="preserve">
     <value>Uninstall</value>
   </data>
@@ -108,6 +114,9 @@
   <data name="Error.Offline" xml:space="preserve">
     <value>The catalog cannot be reached. Check the network.</value>
   </data>
+  <data name="Error.PackRefused" xml:space="preserve">
+    <value>The pack is refused: {0}</value>
+  </data>
   <data name="Error.Unsupported" xml:space="preserve">
     <value>This HackerOS cannot manage packages.</value>
   </data>
@@ -138,11 +147,38 @@
   <data name="Message.NothingPending" xml:space="preserve">
     <value>Nothing waits for a restart.</value>
   </data>
+  <data name="Message.PackInstalledForEveryone" xml:space="preserve">
+    <value>{0} {1} is installed for every user: choose its parts in Settings ▸ Appearance.</value>
+  </data>
+  <data name="Message.PackInstalledForMe" xml:space="preserve">
+    <value>{0} {1} is installed for you: choose its parts in Settings ▸ Appearance.</value>
+  </data>
+  <data name="Message.PackRemoved" xml:space="preserve">
+    <value>{0} is removed. A theme, wallpaper or cursor of the pack that was in use goes back to the default.</value>
+  </data>
+  <data name="Message.PackUpdated" xml:space="preserve">
+    <value>{0} is updated to {1}.</value>
+  </data>
   <data name="Message.Removed" xml:space="preserve">
     <value>{0} is uninstalled.</value>
   </data>
   <data name="Message.Updated" xml:space="preserve">
     <value>{0} is updated to {1}.</value>
+  </data>
+  <data name="Part.Cursors" xml:space="preserve">
+    <value>Cursors</value>
+  </data>
+  <data name="Part.Icons" xml:space="preserve">
+    <value>Icons</value>
+  </data>
+  <data name="Part.Sounds" xml:space="preserve">
+    <value>Sounds</value>
+  </data>
+  <data name="Part.Themes" xml:space="preserve">
+    <value>Themes</value>
+  </data>
+  <data name="Part.Wallpapers" xml:space="preserve">
+    <value>Wallpapers</value>
   </data>
   <data name="Refresh" xml:space="preserve">
     <value>Refresh the catalogs</value>
@@ -194,6 +230,33 @@
   </data>
   <data name="Tabs.Label" xml:space="preserve">
     <value>Store sections</value>
+  </data>
+  <data name="Tabs.Themes" xml:space="preserve">
+    <value>Themes</value>
+  </data>
+  <data name="Themes.Empty" xml:space="preserve">
+    <value>No catalog offers a theme pack yet.</value>
+  </data>
+  <data name="Themes.Intro" xml:space="preserve">
+    <value>A pack holds themes, wallpapers, icons, sounds or cursors. It holds no code and applies at once: choose its parts in Settings.</value>
+  </data>
+  <data name="Themes.NotInCatalog" xml:space="preserve">
+    <value>No catalog lists this pack any more.</value>
+  </data>
+  <data name="Themes.Parts" xml:space="preserve">
+    <value>Contents</value>
+  </data>
+  <data name="Themes.Preview" xml:space="preserve">
+    <value>Preview of {0}</value>
+  </data>
+  <data name="Themes.SearchNone" xml:space="preserve">
+    <value>No theme pack matches « {0} ».</value>
+  </data>
+  <data name="Themes.Title" xml:space="preserve">
+    <value>Theme packs</value>
+  </data>
+  <data name="Themes.Unsupported" xml:space="preserve">
+    <value>This system cannot install theme packs.</value>
   </data>
   <data name="Trust.Trusted" xml:space="preserve">
     <value>Trusted</value>

@@ -4,6 +4,16 @@ using HackerOs.App.Abstractions;
 
 namespace HackerOs.Platform.Core.Apps.Packages;
 
+/// <summary>What a catalog entry installs (<c>kind</c> of <c>catalog.json</c>).</summary>
+public enum AppCatalogEntryKind
+{
+    /// <summary><c>app</c>: a <c>.hackapp</c> package (ADR 0182).</summary>
+    App = 0,
+
+    /// <summary><c>theme-pack</c>: a <c>.hacktheme</c> pack, data only (ADR 0190, ADR 0213).</summary>
+    ThemePack = 1
+}
+
 /// <summary>A category of a catalog, with its label per language (<c>categories.json</c> of the catalog repository).</summary>
 /// <param name="Id">Category ID, such as <c>productivity</c>.</param>
 /// <param name="Labels">Label per language code; English and French are always present.</param>
@@ -64,6 +74,9 @@ public sealed record AppCatalogEntry(
     SemanticVersion LatestVersion,
     IReadOnlyList<AppCatalogVersion> Versions)
 {
+    /// <summary>Gets what it installs; <see cref="AppCatalogEntryKind.App"/> unless the catalog says <c>theme-pack</c>.</summary>
+    public AppCatalogEntryKind Kind { get; init; }
+
     /// <summary>Gets the version <see cref="LatestVersion"/> names, or the newest one.</summary>
     public AppCatalogVersion Latest => Versions.FirstOrDefault(entry => entry.Version == LatestVersion) ?? Versions[0];
 
@@ -88,8 +101,14 @@ public sealed record AppCatalogListing(
     IReadOnlyList<AppCatalogEntry> Apps,
     IReadOnlyList<string> Warnings)
 {
-    /// <summary>Gets one app, or <see langword="null"/>.</summary>
-    public AppCatalogEntry? Find(string appId) => Apps.FirstOrDefault(app => string.Equals(app.AppId, appId, StringComparison.Ordinal));
+    /// <summary>Gets one app (not a theme pack), or <see langword="null"/>.</summary>
+    public AppCatalogEntry? Find(string appId) => Find(appId, AppCatalogEntryKind.App);
+
+    /// <summary>Gets one entry of a kind, or <see langword="null"/>.</summary>
+    /// <param name="id">App or pack id.</param>
+    /// <param name="kind">What it must be.</param>
+    public AppCatalogEntry? Find(string id, AppCatalogEntryKind kind) =>
+        Apps.FirstOrDefault(app => app.Kind == kind && string.Equals(app.AppId, id, StringComparison.Ordinal));
 
     /// <summary>Gets the address of a file of the catalog, next to <c>catalog.json</c>.</summary>
     /// <param name="relativePath">A path of <c>catalog.json</c>, such as <c>packages/org.x.y/1.0.0/org.x.y-1.0.0.hackapp</c>.</param>
@@ -113,13 +132,20 @@ public sealed record AppCatalogListing(
 /// </summary>
 /// <remarks>
 /// A file of a newer schema, or that is not JSON, is refused whole. One invalid app or version is
-/// skipped with a warning, so a single broken entry does not hide the rest of the catalog. Only
-/// <c>kind: "app"</c> is listed: theme packs (ADR 0190) come with their own work item.
+/// skipped with a warning, so a single broken entry does not hide the rest of the catalog.
+/// <c>kind</c> is <c>app</c> (the default) or <c>theme-pack</c> (ADR 0213 §2), whose versions are
+/// <c>.hacktheme</c> files of at most 30 MiB; any other kind is skipped.
 /// </remarks>
 public static class AppCatalogDocument
 {
     /// <summary>Newest <c>schemaVersion</c> this OS reads.</summary>
     public const int SupportedSchemaVersion = 1;
+
+    /// <summary>The <c>kind</c> of an app.</summary>
+    public const string AppKind = "app";
+
+    /// <summary>The <c>kind</c> of a theme pack (ADR 0213 §2).</summary>
+    public const string ThemePackKind = "theme-pack";
 
     /// <summary>Largest <c>catalog.json</c> accepted, in bytes.</summary>
     public const int MaximumBytes = 8 * 1024 * 1024;
@@ -201,11 +227,22 @@ public static class AppCatalogDocument
             return null;
         }
 
-        string kind = item.TryGetProperty("kind", out JsonElement kindElement) ? kindElement.GetString() ?? "app" : "app";
-        if (!string.Equals(kind, "app", StringComparison.Ordinal))
+        string kindText = item.TryGetProperty("kind", out JsonElement kindElement) ? kindElement.GetString() ?? AppKind : AppKind;
+        AppCatalogEntryKind kind;
+        switch (kindText)
         {
-            warnings.Add($"{where}: kind '{kind}' is not supported yet, skipped");
-            return null;
+            case AppKind:
+                kind = AppCatalogEntryKind.App;
+                break;
+            case ThemePackKind when ThemePacks.ThemePack.IsValidId(appId):
+                kind = AppCatalogEntryKind.ThemePack;
+                break;
+            case ThemePackKind:
+                warnings.Add($"{where}: invalid theme pack id, skipped");
+                return null;
+            default:
+                warnings.Add($"{where}: kind '{kindText}' is not supported, skipped");
+                return null;
         }
 
         List<AppCatalogVersion> versions = [];
@@ -213,7 +250,7 @@ public static class AppCatalogDocument
         {
             foreach (JsonElement version in versionArray.EnumerateArray())
             {
-                if (TryReadVersion(version) is { } parsed && versions.All(existing => existing.Version != parsed.Version))
+                if (TryReadVersion(version, kind) is { } parsed && versions.All(existing => existing.Version != parsed.Version))
                 {
                     versions.Add(parsed);
                 }
@@ -245,11 +282,17 @@ public static class AppCatalogDocument
             ReadString(item, "license"),
             ReadString(item, "repository"),
             latest,
-            versions);
+            versions)
+        {
+            Kind = kind,
+        };
     }
 
-    private static AppCatalogVersion? TryReadVersion(JsonElement item)
+    private static AppCatalogVersion? TryReadVersion(JsonElement item, AppCatalogEntryKind kind)
     {
+        (string extension, long maximumSize) = kind == AppCatalogEntryKind.ThemePack
+            ? (Theming.Abstractions.ThemePackLayout.Extension, ThemePacks.ThemePack.MaximumBytes)
+            : (AppPackage.Extension, AppPackage.MaximumArchiveBytes);
         if (item.ValueKind != JsonValueKind.Object
             || !SemanticVersion.TryParse(ReadString(item, "version"), out SemanticVersion version))
         {
@@ -260,10 +303,11 @@ public static class AppCatalogDocument
         string sha256 = ReadString(item, "sha256").ToLowerInvariant();
         long size = item.TryGetProperty("size", out JsonElement sizeElement) && sizeElement.TryGetInt64(out long bytes) ? bytes : -1;
         if (!AppPackage.IsSafeRelativePath(package)
-            || !package.EndsWith(AppPackage.Extension, StringComparison.Ordinal)
+            || !package.EndsWith(extension, StringComparison.Ordinal)
             || sha256.Length != 64
             || !sha256.All(Uri.IsHexDigit)
-            || size is < 0 or > AppPackage.MaximumArchiveBytes)
+            || size < 0
+            || size > maximumSize)
         {
             return null;
         }

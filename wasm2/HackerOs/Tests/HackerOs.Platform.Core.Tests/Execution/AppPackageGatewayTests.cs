@@ -19,7 +19,7 @@ namespace HackerOs.Platform.Core.Tests.Execution;
 /// Installing apps from their GitHub repository through <c>HackAppPackages</c>' gateway (ADR 0182
 /// §3 to §5), for the session user or for the system, with ADR 0189's two-step approval.
 /// </summary>
-public sealed class AppPackageGatewayTests
+public sealed partial class AppPackageGatewayTests
 {
     private const string Trusted = "Kazo-ca/HackerOs-App-Sample";
     private const string Untrusted = "someone/sample";
@@ -581,7 +581,7 @@ public sealed class AppPackageGatewayTests
         }
     }
 
-    private sealed class Harness
+    private sealed partial class Harness
     {
         private readonly FakeDownloader _downloader = new();
         private readonly AppPackageInstaller _installer;

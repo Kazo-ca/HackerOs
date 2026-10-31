@@ -101,11 +101,41 @@ public static class UserThemeLibrary
     /// <param name="readFile">Reads a file as UTF-8 text.</param>
     /// <param name="homeDirectory">Session user's home, or <see langword="null"/> to read <c>/etc</c> only.</param>
     /// <param name="cancellationToken">Cancels the reads.</param>
-    public static async Task<UserThemeLibraryResult> LoadAsync(
+    public static Task<UserThemeLibraryResult> LoadAsync(
         Func<string, CancellationToken, Task<IReadOnlyList<string>>> listFiles,
         Func<string, CancellationToken, Task<string>> readFile,
         string? homeDirectory,
+        CancellationToken cancellationToken = default) =>
+        LoadCoreAsync(listFiles, listDirectories: null, readFile, homeDirectory, cancellationToken);
+
+    /// <summary>
+    /// Reads the <c>.theme</c> files of both folders and of the <c>themes/</c> folder of every
+    /// installed theme pack (ADR 0213 §3): <c>/usr/share/hackeros/theme-packs/*/themes/</c> as the
+    /// system, <c>~/.local/share/hackeros/theme-packs/*/themes/</c> as the user. A pack theme follows
+    /// the same no-masking rule as any other theme.
+    /// </summary>
+    /// <param name="listFiles">Lists the files of a folder (absolute paths); may throw when the folder is missing.</param>
+    /// <param name="listDirectories">Lists the sub-folders of a folder (absolute paths); may throw when the folder is missing.</param>
+    /// <param name="readFile">Reads a file as UTF-8 text.</param>
+    /// <param name="homeDirectory">Session user's home, or <see langword="null"/> to read the system folders only.</param>
+    /// <param name="cancellationToken">Cancels the reads.</param>
+    public static Task<UserThemeLibraryResult> LoadAsync(
+        Func<string, CancellationToken, Task<IReadOnlyList<string>>> listFiles,
+        Func<string, CancellationToken, Task<IReadOnlyList<string>>> listDirectories,
+        Func<string, CancellationToken, Task<string>> readFile,
+        string? homeDirectory,
         CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(listDirectories);
+        return LoadCoreAsync(listFiles, listDirectories, readFile, homeDirectory, cancellationToken);
+    }
+
+    private static async Task<UserThemeLibraryResult> LoadCoreAsync(
+        Func<string, CancellationToken, Task<IReadOnlyList<string>>> listFiles,
+        Func<string, CancellationToken, Task<IReadOnlyList<string>>>? listDirectories,
+        Func<string, CancellationToken, Task<string>> readFile,
+        string? homeDirectory,
+        CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(listFiles);
         ArgumentNullException.ThrowIfNull(readFile);
@@ -115,6 +145,16 @@ public static class UserThemeLibrary
         if (!string.IsNullOrWhiteSpace(homeDirectory))
         {
             folders.Add((GetUserDirectory(homeDirectory), ThemeOrigin.User));
+        }
+
+        if (listDirectories is not null)
+        {
+            foreach (string root in ThemePackLayout.GetRoots(homeDirectory))
+            {
+                ThemeOrigin origin = root == ThemePackLayout.SystemDirectory ? ThemeOrigin.System : ThemeOrigin.User;
+                folders.AddRange((await ListPackFoldersAsync(listDirectories, root, ThemePackLayout.ThemesFolder, cancellationToken).ConfigureAwait(false))
+                    .Select(folder => (folder, origin)));
+            }
         }
 
         foreach ((string directory, ThemeOrigin origin) in folders)
@@ -145,6 +185,48 @@ public static class UserThemeLibrary
 
         UserThemeLibraryResult built = Build(files);
         return built with { Diagnostics = [.. diagnostics, .. built.Diagnostics] };
+    }
+
+    /// <summary>
+    /// Lists the <paramref name="part"/> sub-folder of every installed theme pack of
+    /// <paramref name="root"/>, by pack id; a missing root or a pack without that part is skipped.
+    /// </summary>
+    internal static async Task<IReadOnlyList<string>> ListPackFoldersAsync(
+        Func<string, CancellationToken, Task<IReadOnlyList<string>>> listDirectories,
+        string root,
+        string part,
+        CancellationToken cancellationToken)
+    {
+        List<string> folders = [];
+        IReadOnlyList<string> packs;
+        try
+        {
+            packs = await listDirectories(root, cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception exception) when (exception is not OperationCanceledException)
+        {
+            // No pack installed there yet: the normal case.
+            return folders;
+        }
+
+        foreach (string pack in packs.Order(StringComparer.Ordinal))
+        {
+            try
+            {
+                IReadOnlyList<string> parts = await listDirectories(pack, cancellationToken).ConfigureAwait(false);
+                string wanted = $"{pack.TrimEnd('/')}/{part}";
+                if (parts.Any(candidate => string.Equals(candidate.TrimEnd('/'), wanted, StringComparison.Ordinal)))
+                {
+                    folders.Add(wanted);
+                }
+            }
+            catch (Exception exception) when (exception is not OperationCanceledException)
+            {
+                // A pack folder the caller cannot read is not offered.
+            }
+        }
+
+        return folders;
     }
 }
 

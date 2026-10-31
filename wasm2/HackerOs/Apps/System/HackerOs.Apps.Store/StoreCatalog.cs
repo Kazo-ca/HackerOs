@@ -83,7 +83,8 @@ internal sealed class StoreCatalog
         _entries = new Dictionary<string, StoreEntry>(StringComparer.Ordinal);
         foreach (HackAppCatalog catalog in catalogs)
         {
-            foreach (HackCatalogApp app in catalog.Apps)
+            // Theme packs have their own tab (ADR 0213 §5): StoreThemePacks.
+            foreach (HackCatalogApp app in catalog.Apps.Where(static item => item.Kind == HackCatalogItemKind.App))
             {
                 byId.TryGetValue(app.AppId, out HackInstalledPackage? package);
                 // The first catalog wins, except that an installed copy shows the page of the catalog it came from.
@@ -213,7 +214,9 @@ internal sealed class StoreCatalog
         _ => string.Format(culture, "{0:0.#} MB", bytes / (1024d * 1024d))
     };
 
-    private static string Normalize(string? text)
+    /// <summary>Lower case, without accents, with every space as one space: the form searches compare.</summary>
+    /// <param name="text">The text.</param>
+    internal static string Normalize(string? text)
     {
         string decomposed = (text ?? string.Empty).Normalize(System.Text.NormalizationForm.FormD);
         System.Text.StringBuilder builder = new(decomposed.Length);

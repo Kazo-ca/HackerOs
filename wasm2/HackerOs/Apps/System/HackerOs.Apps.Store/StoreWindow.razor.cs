@@ -17,6 +17,9 @@ internal enum StoreView
     /// <summary>The « Installed » tab, with the updates.</summary>
     Installed,
 
+    /// <summary>The « Themes » tab: the theme packs of the catalogs (ADR 0213 §5).</summary>
+    Themes,
+
     /// <summary>One app's page.</summary>
     Detail
 }
@@ -35,7 +38,12 @@ internal enum StoreView
 /// </para>
 /// <para>
 /// Launch arguments: <c>--page=installed</c> opens the « Installed » tab (the update notification
-/// does), <c>--app=&lt;appId&gt;</c> opens an app's page.
+/// does), <c>--page=themes</c> the « Themes » tab, <c>--app=&lt;appId&gt;</c> opens an app's page.
+/// </para>
+/// <para>
+/// The « Themes » tab (ADR 0213 §5) lists the theme packs of the catalogs: install for me or for
+/// everyone, update, remove, and a button that opens Settings ▸ Appearance, where the pack's parts
+/// are chosen. A pack applies at once: it never waits for a restart.
 /// </para>
 /// </remarks>
 public partial class StoreWindow
@@ -45,6 +53,8 @@ public partial class StoreWindow
 
     private readonly HashSet<string> _removed = new(StringComparer.Ordinal);
     private StoreCatalog _store = StoreCatalog.Empty;
+    private StoreThemePacks _themePacks = StoreThemePacks.Empty;
+    private bool _themePacksUnsupported;
     private StoreView _view = StoreView.Home;
     private StoreView _returnView = StoreView.Home;
     private string? _query;
@@ -81,6 +91,10 @@ public partial class StoreWindow
             {
                 _view = StoreView.Installed;
             }
+            else if (argument.StartsWith(PageArgument, StringComparison.Ordinal) && argument[PageArgument.Length..] == "themes")
+            {
+                _view = StoreView.Themes;
+            }
             else if (argument.StartsWith(AppArgument, StringComparison.Ordinal))
             {
                 _selectedAppId = argument[AppArgument.Length..];
@@ -109,6 +123,7 @@ public partial class StoreWindow
             IReadOnlyList<HackInstalledPackage> installed = await HackAppPackages.GetInstalledAsync();
             IReadOnlyList<HackPackageUpdate> updates = await HackAppPackages.GetUpdatesAsync();
             _store = new StoreCatalog(catalogs, installed, updates, _removed);
+            _themePacks = new StoreThemePacks(catalogs, await ReadInstalledThemePacksAsync());
         }
         catch (NotSupportedException)
         {
@@ -125,6 +140,22 @@ public partial class StoreWindow
         finally
         {
             _isLoading = false;
+        }
+    }
+
+    /// <summary>Reads the installed packs; an OS without theme packs keeps the apps working.</summary>
+    private async Task<IReadOnlyList<HackInstalledThemePack>> ReadInstalledThemePacksAsync()
+    {
+        try
+        {
+            IReadOnlyList<HackInstalledThemePack> packs = await HackAppPackages.GetInstalledThemePacksAsync();
+            _themePacksUnsupported = false;
+            return packs;
+        }
+        catch (NotSupportedException)
+        {
+            _themePacksUnsupported = true;
+            return [];
         }
     }
 
@@ -147,6 +178,13 @@ public partial class StoreWindow
         _selectedAppId = null;
     }
 
+    private void ShowThemes()
+    {
+        _view = StoreView.Themes;
+        _selectedAppId = null;
+        _categoryId = null;
+    }
+
     private void ShowCategory(string categoryId)
     {
         _view = StoreView.Home;
@@ -157,6 +195,12 @@ public partial class StoreWindow
     private void OnQueryChanged(Microsoft.AspNetCore.Components.ChangeEventArgs args)
     {
         _query = args.Value?.ToString();
+        // The search box filters the packs while the « Themes » tab is open.
+        if (_view == StoreView.Themes)
+        {
+            return;
+        }
+
         if (_view == StoreView.Detail || IsSearching)
         {
             _view = StoreView.Home;
@@ -253,6 +297,44 @@ public partial class StoreWindow
     private Task OpenAsync(StoreEntry entry) =>
         RunAsync(entry, async () => await HackApps.LaunchAsync(entry.AppId), reload: false);
 
+    private Task InstallThemePackAsync(StoreThemePackEntry entry, HackPackageScope scope) =>
+        RunAsync(entry.PackId, async () =>
+        {
+            HackThemePackInstallReport report = await HackAppPackages.InstallThemePackAsync(entry.Pack!.Source, scope);
+            ShowInfo(L[report.SystemWide ? "Message.PackInstalledForEveryone" : "Message.PackInstalledForMe", report.Name, report.Version]);
+        });
+
+    private Task UpdateThemePackAsync(StoreThemePackEntry entry) =>
+        RunAsync(entry.PackId, async () =>
+        {
+            HackThemePackInstallReport report = await HackAppPackages.InstallThemePackAsync(
+                $"{entry.Pack!.Source}@{entry.AvailableUpdate}",
+                entry.Installed!.SystemWide ? HackPackageScope.System : HackPackageScope.User);
+            ShowInfo(L["Message.PackUpdated", report.Name, report.Version]);
+        });
+
+    private Task RemoveThemePackAsync(StoreThemePackEntry entry) =>
+        RunAsync(entry.PackId, async () =>
+        {
+            HackInstalledThemePack removed = await HackAppPackages.RemoveThemePackAsync(
+                entry.PackId,
+                entry.Installed!.SystemWide ? HackPackageScope.System : HackPackageScope.User);
+            ShowInfo(L["Message.PackRemoved", removed.Name]);
+        });
+
+    /// <summary>Opens Settings ▸ Appearance, where the pack's theme, wallpaper, icons and cursors are chosen (Q3 A).</summary>
+    private Task OpenAppearanceAsync(StoreThemePackEntry entry) =>
+        RunAsync(entry.PackId, async () => await HackApps.LaunchAsync(SettingsAppId, [AppearancePageArgument]), reload: false);
+
+    private const string SettingsAppId = "org.hackeros.settings";
+    private const string AppearancePageArgument = "--page=appearance";
+
+    private IReadOnlyList<StoreThemePackEntry> VisibleThemePacks => _themePacks.Search(_query, Culture);
+
+    private string PartsText(HackThemePackParts parts) => string.Join(" · ", Enum.GetValues<HackThemePackParts>()
+        .Where(part => part != HackThemePackParts.None && parts.HasFlag(part))
+        .Select(part => L["Part." + part].Value));
+
     private async Task RestartAsync()
     {
         _isBusy = true;
@@ -275,9 +357,12 @@ public partial class StoreWindow
     }
 
     /// <summary>Runs one action on an app, then reads the Store again so every button follows.</summary>
-    private async Task RunAsync(StoreEntry entry, Func<Task> action, bool reload = true)
+    private Task RunAsync(StoreEntry entry, Func<Task> action, bool reload = true) => RunAsync(entry.AppId, action, reload);
+
+    /// <summary>Runs one action on an app or a pack, then reads the Store again so every button follows.</summary>
+    private async Task RunAsync(string id, Func<Task> action, bool reload = true)
     {
-        _busyAppId = entry.AppId;
+        _busyAppId = id;
         _isBusy = true;
         _message = null;
         try
@@ -314,6 +399,7 @@ public partial class StoreWindow
         "apps.package.sdk-incompatible" => L["Error.Incompatible", exception.Message],
         "apps.package.missing-api" => L["Error.Incompatible", exception.Message],
         "apps.package.download-failed" => L["Error.Offline"],
+        { } code when code.StartsWith("themes.pack.", StringComparison.Ordinal) => L["Error.PackRefused", exception.Message],
         _ => L["Error.Generic", exception.Message]
     };
 

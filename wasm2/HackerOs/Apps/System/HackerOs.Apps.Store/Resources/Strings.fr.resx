@@ -21,6 +21,12 @@
   <data name="Action.Open" xml:space="preserve">
     <value>Ouvrir</value>
   </data>
+  <data name="Action.OpenAppearance" xml:space="preserve">
+    <value>Ouvrir Apparence</value>
+  </data>
+  <data name="Action.Remove" xml:space="preserve">
+    <value>Retirer</value>
+  </data>
   <data name="Action.Uninstall" xml:space="preserve">
     <value>Désinstaller</value>
   </data>
@@ -108,6 +114,9 @@
   <data name="Error.Offline" xml:space="preserve">
     <value>Le catalogue est injoignable. Vérifiez le réseau.</value>
   </data>
+  <data name="Error.PackRefused" xml:space="preserve">
+    <value>Le pack est refusé : {0}</value>
+  </data>
   <data name="Error.Unsupported" xml:space="preserve">
     <value>Ce HackerOS ne peut pas gérer les paquets.</value>
   </data>
@@ -138,11 +147,38 @@
   <data name="Message.NothingPending" xml:space="preserve">
     <value>Rien n'attend de redémarrage.</value>
   </data>
+  <data name="Message.PackInstalledForEveryone" xml:space="preserve">
+    <value>{0} {1} est installé pour tous : choisis ses éléments dans Paramètres ▸ Apparence.</value>
+  </data>
+  <data name="Message.PackInstalledForMe" xml:space="preserve">
+    <value>{0} {1} est installé pour toi : choisis ses éléments dans Paramètres ▸ Apparence.</value>
+  </data>
+  <data name="Message.PackRemoved" xml:space="preserve">
+    <value>{0} est retiré. Un thème, un fond ou un curseur du pack en cours d'usage revient au défaut.</value>
+  </data>
+  <data name="Message.PackUpdated" xml:space="preserve">
+    <value>{0} est mis à jour vers {1}.</value>
+  </data>
   <data name="Message.Removed" xml:space="preserve">
     <value>{0} est désinstallée.</value>
   </data>
   <data name="Message.Updated" xml:space="preserve">
     <value>{0} est mise à jour vers {1}.</value>
+  </data>
+  <data name="Part.Cursors" xml:space="preserve">
+    <value>Curseurs</value>
+  </data>
+  <data name="Part.Icons" xml:space="preserve">
+    <value>Icônes</value>
+  </data>
+  <data name="Part.Sounds" xml:space="preserve">
+    <value>Sons</value>
+  </data>
+  <data name="Part.Themes" xml:space="preserve">
+    <value>Thèmes</value>
+  </data>
+  <data name="Part.Wallpapers" xml:space="preserve">
+    <value>Fonds d'écran</value>
   </data>
   <data name="Refresh" xml:space="preserve">
     <value>Actualiser les catalogues</value>
@@ -194,6 +230,33 @@
   </data>
   <data name="Tabs.Label" xml:space="preserve">
     <value>Sections du Store</value>
+  </data>
+  <data name="Tabs.Themes" xml:space="preserve">
+    <value>Thèmes</value>
+  </data>
+  <data name="Themes.Empty" xml:space="preserve">
+    <value>Aucun catalogue ne propose encore de pack de thèmes.</value>
+  </data>
+  <data name="Themes.Intro" xml:space="preserve">
+    <value>Un pack contient des thèmes, des fonds d'écran, des icônes, des sons ou des curseurs. Il ne contient aucun code et s'applique tout de suite : choisis ses éléments dans Paramètres.</value>
+  </data>
+  <data name="Themes.NotInCatalog" xml:space="preserve">
+    <value>Plus aucun catalogue ne propose ce pack.</value>
+  </data>
+  <data name="Themes.Parts" xml:space="preserve">
+    <value>Contenu</value>
+  </data>
+  <data name="Themes.Preview" xml:space="preserve">
+    <value>Aperçu de {0}</value>
+  </data>
+  <data name="Themes.SearchNone" xml:space="preserve">
+    <value>Aucun pack de thèmes ne correspond à « {0} ».</value>
+  </data>
+  <data name="Themes.Title" xml:space="preserve">
+    <value>Packs de thèmes</value>
+  </data>
+  <data name="Themes.Unsupported" xml:space="preserve">
+    <value>Ce système ne peut pas installer de packs de thèmes.</value>
   </data>
   <data name="Trust.Trusted" xml:space="preserve">
     <value>De confiance</value>
