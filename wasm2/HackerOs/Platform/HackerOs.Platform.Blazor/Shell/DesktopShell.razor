@@ -269,7 +269,8 @@
         {
             source = new TaskbarWindowSourceAdapter(
                 WindowRuntime,
-                window => TaskbarScreenFilter.Lists(display, Screens.PrimaryTaskbar, window.DisplayId));
+                window => TaskbarScreenFilter.Lists(display, Screens.PrimaryTaskbar, window.DisplayId),
+                appId => _appUpdates?.GetBadgeCount(appId) ?? 0);
             _screenTaskbarSources[display] = source;
         }
 
@@ -539,6 +540,7 @@
     private Func<WindowId, Task>? _closeWindow;
     private Func<Task<DisplayId?>>? _openScreen;
     private WhatsNewAttention? _whatsNew;
+    private AppUpdateAttention? _appUpdates;
 
 
     protected override void OnInitialized()
@@ -551,9 +553,12 @@
         KeyboardCommands.OpenScreen = _openScreen;
         _processSubscription = new WindowProcessObserver(EventBus, ProcessManager, Orchestrator, WindowRuntime, LaunchCoordinator, work => InvokeAsync(work));
 
+        // ADR 0212 §5: the Hack Store's update count, on its icon in the Start menu and the taskbar.
+        _appUpdates = new AppUpdateAttention(Services, OnAppUpdatesChanged);
         _taskbarWindowSource = new TaskbarWindowSourceAdapter(
             WindowRuntime,
-            window => TaskbarScreenFilter.Lists(DisplayId.Primary, Screens.PrimaryTaskbar, window.DisplayId));
+            window => TaskbarScreenFilter.Lists(DisplayId.Primary, Screens.PrimaryTaskbar, window.DisplayId),
+            appId => _appUpdates.GetBadgeCount(appId));
         _taskbarCommands = new TaskbarCommandDispatcherAdapter(WindowRuntime, CloseCoordinator, CloseGuards);
         _launcher = new TaskbarLauncherAdapter();
         _primaryLauncher = _launcher.For(DisplayId.Primary);
@@ -566,6 +571,7 @@
         // ADR 0186 §4.5: the Start button's dot and the sign-in notification of unseen changes.
         _whatsNew = new WhatsNewAttention(Services, _launcher.SetAttention);
         _ = _whatsNew.StartAsync();
+        _appUpdates.Start();
         _taskbarMenus = new TaskbarContextMenus(
             ContextMenus,
             KeyboardCommands,
@@ -574,6 +580,17 @@
             appId => Catalog.Manifests.ContainsKey(appId),
             CanOpenNewWindow,
             (appId, arguments, display) => InvokeAsync(() => LaunchFromTaskbarAsync(appId, arguments, display)));
+    }
+
+    private void OnAppUpdatesChanged()
+    {
+        _taskbarWindowSource.Refresh();
+        foreach (TaskbarWindowSourceAdapter source in _screenTaskbarSources.Values)
+        {
+            source.Refresh();
+        }
+
+        Rerender();
     }
 
     private void Rerender()
@@ -624,6 +641,7 @@
         _screenTaskbarSources.Clear();
         _taskbarStatus.Dispose();
         _whatsNew?.Dispose();
+        _appUpdates?.Dispose();
         _taskbarMenus.Dispose();
     }
 }

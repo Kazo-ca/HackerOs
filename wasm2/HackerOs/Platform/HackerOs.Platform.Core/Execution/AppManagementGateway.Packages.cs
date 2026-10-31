@@ -44,9 +44,9 @@ internal sealed partial class AppManagementGateway
     public async ValueTask<HackPackageInfo> GetPackageInfoAsync(string source, CancellationToken cancellationToken = default)
     {
         AppPackageInstaller packages = RequirePackages();
-        AppPackageSource parsed = ParseSource(source);
         IAppFileSystemGateway reader = CreateSystemWriter();
         AppSourcesConfig sources = await packages.ReadSourcesAsync(reader, cancellationToken).ConfigureAwait(false);
+        AppPackageSource parsed = await ResolveSourceAsync(packages, source, sources, cancellationToken).ConfigureAwait(false);
         InstalledAppsReadResult system = await packages.ReadInstalledAsync(reader, cancellationToken).ConfigureAwait(false);
         InstalledAppsReadResult personal = await packages
             .ReadPersonalInstalledAsync(CreateUserWriter(), _principal.HomePath, cancellationToken)
@@ -82,12 +82,13 @@ internal sealed partial class AppManagementGateway
         string source, HackPackageScope scope = HackPackageScope.Auto, CancellationToken cancellationToken = default)
     {
         AppPackageInstaller packages = RequirePackages();
-        AppPackageSource parsed = ParseSource(source);
         IAppFileSystemGateway system = CreateSystemWriter();
         IAppFileSystemGateway user = CreateUserWriter();
+        AppSourcesConfig sources = await packages.ReadSourcesAsync(system, cancellationToken).ConfigureAwait(false);
+        AppPackageSource parsed = await ResolveSourceAsync(packages, source, sources, cancellationToken).ConfigureAwait(false);
         InstalledAppsReadResult systemInstalled = await packages.ReadInstalledAsync(system, cancellationToken).ConfigureAwait(false);
         AppPackageInstallContext context = new(
-            await packages.ReadSourcesAsync(system, cancellationToken).ConfigureAwait(false),
+            sources,
             await packages.ReadPolicyAsync(system, cancellationToken).ConfigureAwait(false),
             (AppPackageScope)scope,
             _principal.HomePath,
@@ -326,16 +327,6 @@ internal sealed partial class AppManagementGateway
         [.. policy.BlockedCategories.Order(StringComparer.OrdinalIgnoreCase)],
         [.. policy.BlockedCapabilities.Order(StringComparer.Ordinal)],
         policy.Warnings);
-
-    private static AppPackageSource ParseSource(string source)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(source);
-        return AppPackageSource.TryParse(source, out AppPackageSource? parsed)
-            ? parsed
-            : throw new HackPackageException(
-                "apps.package.bad-source",
-                $"'{source}' is not a repository: use github:owner/repo, owner/repo or https://github.com/owner/repo, optionally followed by @version.");
-    }
 
     private static AppSourceSpecification ParseSourceSpecification(string source)
     {

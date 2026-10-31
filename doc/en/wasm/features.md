@@ -63,7 +63,7 @@ The ecosystem is made of:
 - **Complete development tools.** `dotnet new` templates, template repository,
   debugging in Visual Studio, unit and end-to-end tests, automatic releases.
 - **Built-in distribution.** An application installs from its GitHub
-  repository with one command, and soon with one click from the Hack Store.
+  repository with one command, or with one click from the Hack Store.
 
 ## Ways to use and deploy HackerOS
 
@@ -277,6 +277,14 @@ This section lists what is released in the `main` branch and online.
   Settings ▸ Sources and block list and `hackpkg sources` / `hackpkg policy`.
   ([ADR 0189](dev/adr/0189-app-sources-trust-and-per-user-install.md),
   [ADR 0208](dev/adr/0208-hack-store-sources-trust-build.md))
+- **Hack Store**: the HackerOS app store, pinned by default in the Start menu,
+  on desktop and mobile. Home by categories, search, app page (screenshots,
+  description, size, license, capabilities, trust), install for oneself or for
+  everyone, open, update, uninstall, Installed tab and "Restart to finish". It
+  checks for updates at sign-in then every 6 hours, with a badge and a
+  notification; `hackpkg install <appId>` reads the same catalogs.
+  ([ADR 0188](dev/adr/0188-hack-store-and-app-catalog.md),
+  [ADR 0212](dev/adr/0212-hack-store-app-build.md))
 - **`hackeros-solution` application repository template**: application, host
   and tests ready to run, the OS as a submodule to debug in its sources, NuGet
   packages in production, CI and submission to the Hack Store catalog with a
@@ -306,7 +314,6 @@ points to its PR.
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Application catalog | Catalog format, checking and publishing of the offered applications. | [0188](dev/adr/0188-hack-store-and-app-catalog.md) | [AppMarketPlace #1](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/1) |
-| Hack Store app v1 | Browse, install, update and uninstall applications in one click. | [0188](dev/adr/0188-hack-store-and-app-catalog.md) | [#249](https://github.com/Kazo-ca/HackerOs/issues/249) |
 | Hack Store, next steps | Adding without restart, package signing, transactional install. | [0188](dev/adr/0188-hack-store-and-app-catalog.md) | [#251](https://github.com/Kazo-ca/HackerOs/issues/251) |
 
 ### Personalization

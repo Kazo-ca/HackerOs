@@ -290,7 +290,8 @@ public sealed record AppSourcesConfig(string GitHubHost, IReadOnlySet<string> Tr
     public bool IsTrusted(AppPackageSource source) => GetTrust(source) != AppSourceTrust.Untrusted;
 
     /// <summary>
-    /// Gets the trust level of a GitHub repository: <see cref="AppSourceTrust.Trusted"/> when its owner
+    /// Gets the trust level of a source. An app of a catalog has the catalog's level
+    /// (<see cref="GetCatalogTrust"/>). A GitHub repository is <see cref="AppSourceTrust.Trusted"/> when its owner
     /// or the repository itself is in <c>[trusted]</c>. A repository is never
     /// <see cref="AppSourceTrust.Verified"/> by itself: that level belongs to the apps a Store installs
     /// from the official catalog (ADR 0188).
@@ -298,6 +299,12 @@ public sealed record AppSourcesConfig(string GitHubHost, IReadOnlySet<string> Tr
     public AppSourceTrust GetTrust(AppPackageSource source)
     {
         ArgumentNullException.ThrowIfNull(source);
+        if (source.Catalog is { } catalog)
+        {
+            // ADR 0212 §1: an app of a catalog takes the catalog's level (Verified for the official one).
+            return GetCatalogTrust(catalog);
+        }
+
         return TrustedKeys.Contains(source.TrustKey) || TrustedKeys.Contains(source.RepositoryTrustKey)
             ? AppSourceTrust.Trusted
             : AppSourceTrust.Untrusted;

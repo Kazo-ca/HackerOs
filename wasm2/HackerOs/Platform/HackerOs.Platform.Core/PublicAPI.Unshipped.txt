@@ -528,7 +528,6 @@ HackerOs.Platform.Core.Apps.Packages.AppPackageInstallContext.Sources.get -> Hac
 HackerOs.Platform.Core.Apps.Packages.AppPackageInstallContext.Sources.init -> void
 HackerOs.Platform.Core.Apps.Packages.AppPackageInstallContext.SystemInstalled.get -> HackerOs.Platform.Core.Apps.InstalledAppsReadResult!
 HackerOs.Platform.Core.Apps.Packages.AppPackageInstallContext.SystemInstalled.init -> void
-HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.AppPackageInstaller(HackerOs.Platform.Core.Apps.Packages.IAppPackageDownloader! downloader, HackerOs.Platform.Core.Apps.Packages.IRuntimeApiSurface? runtime = null, HackerOs.App.Abstractions.SemanticVersion? sdkVersion = null, Microsoft.Extensions.Logging.ILogger<HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller!>? logger = null, HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults? defaults = null) -> void
 HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.Check(HackerOs.Platform.Core.Apps.Packages.AppPackage! package, HackerOs.Platform.Core.Apps.Packages.AppPackageSource! source, HackerOs.Platform.Core.AppCatalog! catalog, HackerOs.Platform.Core.Apps.InstalledAppsReadResult! installed, System.Collections.Generic.IReadOnlySet<string!>? packagedAppIds = null) -> HackerOs.App.Abstractions.SemanticVersion?
 HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.CommitAsync(HackerOs.Simulation.Abstractions.Gateways.IAppFileSystemGateway! writer, HackerOs.Platform.Core.Apps.Packages.AppPackagePlan! plan, string! by, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken), System.Collections.Generic.IReadOnlyList<string!>? personalCopies = null) -> System.Threading.Tasks.ValueTask
 HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.Defaults.get -> HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults!
@@ -914,3 +913,172 @@ HackerOs.Platform.Core.ServerConnection.ServerConnectionException.ServerConnecti
 const HackerOs.Platform.Core.ServerConnection.HttpProxyClient.MaxConcurrentRequests = 6 -> int
 const HackerOs.Platform.Core.ServerConnection.HttpProxyClient.QuotaRetries = 3 -> int
 HackerOs.Platform.Core.FileSystem.FileSystemSeeder.InstallIconPacksAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+HackerOs.Platform.Core.Apps.Packages.AppCatalogCategory
+HackerOs.Platform.Core.Apps.Packages.AppCatalogCategory.<Clone>$() -> HackerOs.Platform.Core.Apps.Packages.AppCatalogCategory!
+HackerOs.Platform.Core.Apps.Packages.AppCatalogCategory.AppCatalogCategory(string! Id, System.Collections.Generic.IReadOnlyDictionary<string!, string!>! Labels) -> void
+HackerOs.Platform.Core.Apps.Packages.AppCatalogCategory.Deconstruct(out string! Id, out System.Collections.Generic.IReadOnlyDictionary<string!, string!>! Labels) -> void
+HackerOs.Platform.Core.Apps.Packages.AppCatalogCategory.Equals(HackerOs.Platform.Core.Apps.Packages.AppCatalogCategory? other) -> bool
+HackerOs.Platform.Core.Apps.Packages.AppCatalogCategory.Id.get -> string!
+HackerOs.Platform.Core.Apps.Packages.AppCatalogCategory.Id.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppCatalogCategory.Labels.get -> System.Collections.Generic.IReadOnlyDictionary<string!, string!>!
+HackerOs.Platform.Core.Apps.Packages.AppCatalogCategory.Labels.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppCatalogDocument
+HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry
+HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry.<Clone>$() -> HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry!
+HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry.AppCatalogEntry(string! AppId, string! Name, string! Category, System.Collections.Generic.IReadOnlyList<string!>! Tags, System.Collections.Generic.IReadOnlyDictionary<string!, string!>! ShortDescriptions, string! License, string! Repository, HackerOs.App.Abstractions.SemanticVersion LatestVersion, System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion!>! Versions) -> void
+HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry.AppId.get -> string!
+HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry.AppId.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry.Category.get -> string!
+HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry.Category.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry.Deconstruct(out string! AppId, out string! Name, out string! Category, out System.Collections.Generic.IReadOnlyList<string!>! Tags, out System.Collections.Generic.IReadOnlyDictionary<string!, string!>! ShortDescriptions, out string! License, out string! Repository, out HackerOs.App.Abstractions.SemanticVersion LatestVersion, out System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion!>! Versions) -> void
+HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry.Equals(HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry? other) -> bool
+HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry.Latest.get -> HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion!
+HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry.LatestVersion.get -> HackerOs.App.Abstractions.SemanticVersion
+HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry.LatestVersion.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry.License.get -> string!
+HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry.License.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry.Name.get -> string!
+HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry.Name.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry.Repository.get -> string!
+HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry.Repository.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry.ShortDescriptions.get -> System.Collections.Generic.IReadOnlyDictionary<string!, string!>!
+HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry.ShortDescriptions.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry.Tags.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry.Tags.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry.ToIndex() -> HackerOs.Platform.Core.Apps.Packages.AppPackageIndex!
+HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry.Versions.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion!>!
+HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry.Versions.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppCatalogListing
+HackerOs.Platform.Core.Apps.Packages.AppCatalogListing.<Clone>$() -> HackerOs.Platform.Core.Apps.Packages.AppCatalogListing!
+HackerOs.Platform.Core.Apps.Packages.AppCatalogListing.Address.get -> System.Uri!
+HackerOs.Platform.Core.Apps.Packages.AppCatalogListing.Address.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppCatalogListing.AppCatalogListing(string! Name, System.Uri! Address, System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.Apps.Packages.AppCatalogCategory!>! Categories, System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry!>! Apps, System.Collections.Generic.IReadOnlyList<string!>! Warnings) -> void
+HackerOs.Platform.Core.Apps.Packages.AppCatalogListing.Apps.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry!>!
+HackerOs.Platform.Core.Apps.Packages.AppCatalogListing.Apps.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppCatalogListing.Categories.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.Apps.Packages.AppCatalogCategory!>!
+HackerOs.Platform.Core.Apps.Packages.AppCatalogListing.Categories.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppCatalogListing.Deconstruct(out string! Name, out System.Uri! Address, out System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.Apps.Packages.AppCatalogCategory!>! Categories, out System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry!>! Apps, out System.Collections.Generic.IReadOnlyList<string!>! Warnings) -> void
+HackerOs.Platform.Core.Apps.Packages.AppCatalogListing.Equals(HackerOs.Platform.Core.Apps.Packages.AppCatalogListing? other) -> bool
+HackerOs.Platform.Core.Apps.Packages.AppCatalogListing.Find(string! appId) -> HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry?
+HackerOs.Platform.Core.Apps.Packages.AppCatalogListing.Name.get -> string!
+HackerOs.Platform.Core.Apps.Packages.AppCatalogListing.Name.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppCatalogListing.Resolve(string! relativePath) -> System.Uri!
+HackerOs.Platform.Core.Apps.Packages.AppCatalogListing.Warnings.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.Platform.Core.Apps.Packages.AppCatalogListing.Warnings.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion
+HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.<Clone>$() -> HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion!
+HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.AppCatalogVersion(HackerOs.App.Abstractions.SemanticVersion Version, string! Commit, string! Package, string! Sha256, long Size, System.Collections.Generic.IReadOnlyList<string!>! Capabilities) -> void
+HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.Capabilities.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.Commit.get -> string!
+HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.Commit.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.Deconstruct(out HackerOs.App.Abstractions.SemanticVersion Version, out string! Commit, out string! Package, out string! Sha256, out long Size, out System.Collections.Generic.IReadOnlyList<string!>! Capabilities) -> void
+HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.Descriptions.get -> System.Collections.Generic.IReadOnlyDictionary<string!, string!>!
+HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.Descriptions.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.Equals(HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion? other) -> bool
+HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.Icon.get -> string?
+HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.Icon.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.MaximumSdkVersion.get -> string?
+HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.MaximumSdkVersion.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.MinimumSdkVersion.get -> string?
+HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.MinimumSdkVersion.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.Package.get -> string!
+HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.Package.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.PublishedAt.get -> System.DateTimeOffset?
+HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.PublishedAt.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.Screenshots.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.Screenshots.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.Sha256.get -> string!
+HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.Sha256.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.Size.get -> long
+HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.Size.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.Version.get -> HackerOs.App.Abstractions.SemanticVersion
+HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.Version.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.AppPackageInstaller(HackerOs.Platform.Core.Apps.Packages.IAppPackageDownloader! downloader, HackerOs.Platform.Core.Apps.Packages.IRuntimeApiSurface? runtime = null, HackerOs.App.Abstractions.SemanticVersion? sdkVersion = null, Microsoft.Extensions.Logging.ILogger<HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller!>? logger = null, HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults? defaults = null, System.Func<System.DateTimeOffset>? clock = null) -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.DownloadCatalogTextAsync(string! name, string! relativePath, HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig! sources, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<string?>
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.FindInCatalogsAsync(string! appId, HackerOs.App.Abstractions.SemanticVersion? version, HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig! sources, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Platform.Core.Apps.Packages.AppPackageSource!>
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.FindUpdatesAsync(HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig! sources, HackerOs.Platform.Core.Apps.InstalledAppsReadResult! systemInstalled, HackerOs.Platform.Core.Apps.InstalledAppsReadResult! personalInstalled, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.Platform.Core.Apps.Packages.AppPackageUpdateReport!>
+HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.GetCatalogAsync(string! name, HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig! sources, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken), bool refresh = false) -> System.Threading.Tasks.ValueTask<HackerOs.Platform.Core.Apps.Packages.AppCatalogListing!>
+HackerOs.Platform.Core.Apps.Packages.AppPackageSource.Catalog.get -> string?
+HackerOs.Platform.Core.Apps.Packages.AppPackageSource.CatalogAppId.get -> string?
+HackerOs.Platform.Core.Apps.Packages.AppPackageSource.IsCatalog.get -> bool
+HackerOs.Platform.Core.Apps.Packages.AppPackageSource.IsCatalog.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageUpdate
+HackerOs.Platform.Core.Apps.Packages.AppPackageUpdate.<Clone>$() -> HackerOs.Platform.Core.Apps.Packages.AppPackageUpdate!
+HackerOs.Platform.Core.Apps.Packages.AppPackageUpdate.AppId.get -> string!
+HackerOs.Platform.Core.Apps.Packages.AppPackageUpdate.AppId.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageUpdate.AppPackageUpdate(string! AppId, HackerOs.Platform.Core.Apps.Packages.AppPackageSource! Installed, HackerOs.App.Abstractions.SemanticVersion Available, bool SystemWide) -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageUpdate.Available.get -> HackerOs.App.Abstractions.SemanticVersion
+HackerOs.Platform.Core.Apps.Packages.AppPackageUpdate.Available.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageUpdate.Deconstruct(out string! AppId, out HackerOs.Platform.Core.Apps.Packages.AppPackageSource! Installed, out HackerOs.App.Abstractions.SemanticVersion Available, out bool SystemWide) -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageUpdate.Equals(HackerOs.Platform.Core.Apps.Packages.AppPackageUpdate? other) -> bool
+HackerOs.Platform.Core.Apps.Packages.AppPackageUpdate.Installed.get -> HackerOs.Platform.Core.Apps.Packages.AppPackageSource!
+HackerOs.Platform.Core.Apps.Packages.AppPackageUpdate.Installed.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageUpdate.SystemWide.get -> bool
+HackerOs.Platform.Core.Apps.Packages.AppPackageUpdate.SystemWide.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageUpdateReport
+HackerOs.Platform.Core.Apps.Packages.AppPackageUpdateReport.<Clone>$() -> HackerOs.Platform.Core.Apps.Packages.AppPackageUpdateReport!
+HackerOs.Platform.Core.Apps.Packages.AppPackageUpdateReport.AppPackageUpdateReport(System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.Apps.Packages.AppPackageUpdate!>! Updates, System.Collections.Generic.IReadOnlyList<string!>! Failures) -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageUpdateReport.Deconstruct(out System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.Apps.Packages.AppPackageUpdate!>! Updates, out System.Collections.Generic.IReadOnlyList<string!>! Failures) -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageUpdateReport.Equals(HackerOs.Platform.Core.Apps.Packages.AppPackageUpdateReport? other) -> bool
+HackerOs.Platform.Core.Apps.Packages.AppPackageUpdateReport.Failures.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.Platform.Core.Apps.Packages.AppPackageUpdateReport.Failures.init -> void
+HackerOs.Platform.Core.Apps.Packages.AppPackageUpdateReport.Updates.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.Apps.Packages.AppPackageUpdate!>!
+HackerOs.Platform.Core.Apps.Packages.AppPackageUpdateReport.Updates.init -> void
+const HackerOs.Platform.Core.Apps.Packages.AppCatalogDocument.MaximumBytes = 8388608 -> int
+const HackerOs.Platform.Core.Apps.Packages.AppCatalogDocument.SupportedSchemaVersion = 1 -> int
+const HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.MaximumCatalogTextBytes = 65536 -> int
+const HackerOs.Platform.Core.Apps.Packages.AppPackageSource.CatalogScheme = "catalog:" -> string!
+override HackerOs.Platform.Core.Apps.Packages.AppCatalogCategory.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.Apps.Packages.AppCatalogCategory.GetHashCode() -> int
+override HackerOs.Platform.Core.Apps.Packages.AppCatalogCategory.ToString() -> string!
+override HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry.GetHashCode() -> int
+override HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry.ToString() -> string!
+override HackerOs.Platform.Core.Apps.Packages.AppCatalogListing.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.Apps.Packages.AppCatalogListing.GetHashCode() -> int
+override HackerOs.Platform.Core.Apps.Packages.AppCatalogListing.ToString() -> string!
+override HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.GetHashCode() -> int
+override HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.ToString() -> string!
+override HackerOs.Platform.Core.Apps.Packages.AppPackageUpdate.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.Apps.Packages.AppPackageUpdate.GetHashCode() -> int
+override HackerOs.Platform.Core.Apps.Packages.AppPackageUpdate.ToString() -> string!
+override HackerOs.Platform.Core.Apps.Packages.AppPackageUpdateReport.Equals(object? obj) -> bool
+override HackerOs.Platform.Core.Apps.Packages.AppPackageUpdateReport.GetHashCode() -> int
+override HackerOs.Platform.Core.Apps.Packages.AppPackageUpdateReport.ToString() -> string!
+static HackerOs.Platform.Core.Apps.Packages.AppCatalogCategory.operator !=(HackerOs.Platform.Core.Apps.Packages.AppCatalogCategory? left, HackerOs.Platform.Core.Apps.Packages.AppCatalogCategory? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.AppCatalogCategory.operator ==(HackerOs.Platform.Core.Apps.Packages.AppCatalogCategory? left, HackerOs.Platform.Core.Apps.Packages.AppCatalogCategory? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.AppCatalogDocument.Parse(string! name, System.Uri! address, byte[]! bytes) -> HackerOs.Platform.Core.Apps.Packages.AppCatalogListing!
+static HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry.operator !=(HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry? left, HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry.operator ==(HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry? left, HackerOs.Platform.Core.Apps.Packages.AppCatalogEntry? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.AppCatalogListing.operator !=(HackerOs.Platform.Core.Apps.Packages.AppCatalogListing? left, HackerOs.Platform.Core.Apps.Packages.AppCatalogListing? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.AppCatalogListing.operator ==(HackerOs.Platform.Core.Apps.Packages.AppCatalogListing? left, HackerOs.Platform.Core.Apps.Packages.AppCatalogListing? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.operator !=(HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion? left, HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion.operator ==(HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion? left, HackerOs.Platform.Core.Apps.Packages.AppCatalogVersion? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.GetCatalogSearchOrder(HackerOs.Platform.Core.Apps.Packages.AppSourcesConfig! sources) -> System.Collections.Generic.IReadOnlyList<string!>!
+static HackerOs.Platform.Core.Apps.Packages.AppPackageSource.ForCatalog(string! catalog, string! appId, HackerOs.App.Abstractions.SemanticVersion? version = null) -> HackerOs.Platform.Core.Apps.Packages.AppPackageSource!
+static HackerOs.Platform.Core.Apps.Packages.AppPackageUpdate.operator !=(HackerOs.Platform.Core.Apps.Packages.AppPackageUpdate? left, HackerOs.Platform.Core.Apps.Packages.AppPackageUpdate? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.AppPackageUpdate.operator ==(HackerOs.Platform.Core.Apps.Packages.AppPackageUpdate? left, HackerOs.Platform.Core.Apps.Packages.AppPackageUpdate? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.AppPackageUpdateReport.operator !=(HackerOs.Platform.Core.Apps.Packages.AppPackageUpdateReport? left, HackerOs.Platform.Core.Apps.Packages.AppPackageUpdateReport? right) -> bool
+static HackerOs.Platform.Core.Apps.Packages.AppPackageUpdateReport.operator ==(HackerOs.Platform.Core.Apps.Packages.AppPackageUpdateReport? left, HackerOs.Platform.Core.Apps.Packages.AppPackageUpdateReport? right) -> bool
+static readonly HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller.CatalogCacheLifetime -> System.TimeSpan
+HackerOs.Platform.Core.Apps.Packages.AppUpdateMonitor
+HackerOs.Platform.Core.Apps.Packages.AppUpdateMonitor.AppUpdateMonitor(HackerOs.Platform.Core.Apps.Packages.AppPackageInstaller! installer, System.Func<HackerOs.Simulation.Abstractions.Gateways.IAppFileSystemGateway!>! systemReader, System.Func<HackerOs.Simulation.Abstractions.Sessions.AuthenticatedPrincipal?>! currentUser, HackerOs.Simulation.Abstractions.Notifications.INotificationQueue? notifications = null, System.Func<System.Globalization.CultureInfo!>? language = null, System.TimeProvider? time = null, Microsoft.Extensions.Logging.ILogger<HackerOs.Platform.Core.Apps.Packages.AppUpdateMonitor!>? logger = null) -> void
+HackerOs.Platform.Core.Apps.Packages.AppUpdateMonitor.Changed -> System.Action?
+HackerOs.Platform.Core.Apps.Packages.AppUpdateMonitor.CheckNowAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.Apps.Packages.AppPackageUpdate!>!>!
+HackerOs.Platform.Core.Apps.Packages.AppUpdateMonitor.Dispose() -> void
+HackerOs.Platform.Core.Apps.Packages.AppUpdateMonitor.GetBadgeCount(string! appId) -> int
+HackerOs.Platform.Core.Apps.Packages.AppUpdateMonitor.Pending.get -> System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.Apps.Packages.AppPackageUpdate!>!
+HackerOs.Platform.Core.Apps.Packages.AppUpdateMonitor.Publish(System.Collections.Generic.IReadOnlyList<HackerOs.Platform.Core.Apps.Packages.AppPackageUpdate!>! updates) -> void
+HackerOs.Platform.Core.Apps.Packages.AppUpdateMonitor.Start() -> void
+HackerOs.Platform.Core.Apps.Packages.AppUpdateMonitor.Stop() -> void
+HackerOs.Platform.Core.Execution.AppCatalogGatewayServices.RestartForPackages.get -> System.Func<System.Threading.Tasks.Task!>?
+HackerOs.Platform.Core.Execution.AppCatalogGatewayServices.RestartForPackages.init -> void
+HackerOs.Platform.Core.Execution.AppCatalogGatewayServices.UpdateMonitor.get -> System.Func<HackerOs.Platform.Core.Apps.Packages.AppUpdateMonitor?>?
+HackerOs.Platform.Core.Execution.AppCatalogGatewayServices.UpdateMonitor.init -> void
+const HackerOs.Platform.Core.Apps.Packages.AppUpdateMonitor.StoreAppId = "org.hackeros.store" -> string!
+const HackerOs.Platform.Core.Apps.Packages.AppUpdateMonitor.UpdatesPageArgument = "--page=installed" -> string!
+HackerOs.Platform.Core.Shell.StartMenuPreferencesService.StartMenuPreferencesService(HackerOs.Platform.Core.Settings.IOsSettingsService! settings, HackerOs.Simulation.Abstractions.Sessions.ISessionService! session, System.Collections.Generic.IReadOnlyList<string!>! defaultPins) -> void
+const HackerOs.Platform.Core.Shell.StartMenuSettingsDocuments.DefaultPinsAppliedProperty = "defaultPinsApplied" -> string!
+static HackerOs.Platform.Core.Shell.StartMenuSettingsDocuments.DefaultPinnedAppIds.get -> System.Collections.Generic.IReadOnlyList<string!>!

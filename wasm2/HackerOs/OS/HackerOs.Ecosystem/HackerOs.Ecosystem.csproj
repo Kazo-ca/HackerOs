@@ -47,6 +47,8 @@
     <ProjectReference Include="..\..\Apps\System\HackerOs.Apps.HackPaint\HackerOs.Apps.HackPaint.csproj" />
     <ProjectReference Include="..\..\Apps\System\HackerOs.Apps.IconViewer\HackerOs.Apps.IconViewer.csproj" />
     <ProjectReference Include="..\..\Apps\System\HackerOs.Apps.Settings\HackerOs.Apps.Settings.csproj" IsSystemApp="true" />
+    <!-- ADR 0188/0212: the Hack Store (system app, cannot be uninstalled). -->
+    <ProjectReference Include="..\..\Apps\System\HackerOs.Apps.Store\HackerOs.Apps.Store.csproj" IsSystemApp="true" />
     <ProjectReference Include="..\..\Apps\System\HackerOs.Apps.SystemMonitor\HackerOs.Apps.SystemMonitor.csproj" IsSystemApp="true" />
     <ProjectReference Include="..\..\Apps\System\HackerOs.Apps.Terminal\HackerOs.Apps.Terminal.csproj" IsSystemApp="true" />
     <ProjectReference Include="..\..\Apps\System\HackerOs.Apps.TextEditor\HackerOs.Apps.TextEditor.csproj" IsSystemApp="true" />

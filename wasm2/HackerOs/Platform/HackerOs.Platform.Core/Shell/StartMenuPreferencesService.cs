@@ -21,16 +21,31 @@ public sealed class StartMenuPreferencesService : IDisposable
     private readonly IOsSettingsService _settings;
     private readonly ISessionService _session;
     private readonly SemaphoreSlim _gate = new(1, 1);
+    private readonly IReadOnlyList<string> _defaultPins;
     private Dictionary<LocalUserId, IReadOnlyList<string>> _profiles = [];
+    private Dictionary<LocalUserId, IReadOnlyList<string>> _defaultPinsApplied = [];
     private bool _initialized;
 
     /// <summary>Creates a scoped start-menu preference service over the session user's settings file.</summary>
     /// <param name="settings">OS settings files.</param>
     /// <param name="session">Session service identifying whose pins are loaded.</param>
     public StartMenuPreferencesService(IOsSettingsService settings, ISessionService session)
+        : this(settings, session, StartMenuSettingsDocuments.DefaultPinnedAppIds)
+    {
+    }
+
+    /// <summary>Creates the service with the apps pinned by default (ADR 0212 §6).</summary>
+    /// <param name="settings">OS settings files.</param>
+    /// <param name="session">Session service identifying whose pins are loaded.</param>
+    /// <param name="defaultPins">
+    /// Apps pinned once to each profile, new or existing, at its first load; an app the user unpins
+    /// afterwards stays unpinned.
+    /// </param>
+    public StartMenuPreferencesService(IOsSettingsService settings, ISessionService session, IReadOnlyList<string> defaultPins)
     {
         _settings = settings ?? throw new ArgumentNullException(nameof(settings));
         _session = session ?? throw new ArgumentNullException(nameof(session));
+        _defaultPins = defaultPins ?? throw new ArgumentNullException(nameof(defaultPins));
         _settings.DocumentChanged += OnDocumentChanged;
     }
 
@@ -220,7 +235,7 @@ public sealed class StartMenuPreferencesService : IDisposable
             {
                 await _settings.WriteFileAsync(
                     StartMenuSettingsDocuments.File,
-                    StartMenuSettingsCodec.Encode(candidate),
+                    StartMenuSettingsCodec.Encode(candidate, _defaultPinsApplied),
                     cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             catch
@@ -262,8 +277,58 @@ public sealed class StartMenuPreferencesService : IDisposable
         Dictionary<LocalUserId, IReadOnlyList<string>> own = profiles.TryGetValue(principal.UserId, out IReadOnlyList<string>? pins)
             ? new() { [principal.UserId] = pins }
             : [];
+        IReadOnlyList<string> applied = StartMenuSettingsCodec.DecodeDefaultPinsApplied(content)
+            .TryGetValue(principal.UserId, out IReadOnlyList<string>? done) ? done : EmptyPins;
+        _defaultPinsApplied = new() { [principal.UserId] = applied };
+        string[] missing = [.. _defaultPins.Where(appId => !applied.Contains(appId, StringComparer.Ordinal))];
+        if (missing.Length > 0)
+        {
+            await ApplyDefaultPinsAsync(principal.UserId, own, applied, missing, cancellationToken).ConfigureAwait(false);
+        }
+
         ApplyProfiles(own, raiseEvent);
         return true;
+    }
+
+    /// <summary>
+    /// ADR 0212 §6 (ADR 0188 §1, Q2 A): pins the default apps not yet added to this profile, after its
+    /// own pins, and records them in <c>defaultPinsApplied</c> so an unpin is kept. A new profile
+    /// starts with them; an existing one gets them once. A failed write keeps them in memory only,
+    /// and the next load tries again.
+    /// </summary>
+    private async Task ApplyDefaultPinsAsync(
+        LocalUserId userId,
+        Dictionary<LocalUserId, IReadOnlyList<string>> own,
+        IReadOnlyList<string> applied,
+        IReadOnlyList<string> missing,
+        CancellationToken cancellationToken)
+    {
+        List<string> pins = own.TryGetValue(userId, out IReadOnlyList<string>? existing) ? [.. existing] : [];
+        foreach (string appId in missing)
+        {
+            if (!pins.Contains(appId, StringComparer.Ordinal) && pins.Count < StartMenuSettingsDocuments.MaximumPinnedAppCount)
+            {
+                pins.Add(appId);
+            }
+        }
+
+        if (pins.Count > 0)
+        {
+            own[userId] = Array.AsReadOnly(pins.ToArray());
+        }
+
+        _defaultPinsApplied = new() { [userId] = Array.AsReadOnly(applied.Concat(missing).ToArray()) };
+        try
+        {
+            await _settings.WriteFileAsync(
+                StartMenuSettingsDocuments.File,
+                StartMenuSettingsCodec.Encode(own, _defaultPinsApplied),
+                cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException)
+        {
+            // Shown for this session; written at the next load or the next pin change.
+        }
     }
 
     private void OnDocumentChanged(object? sender, OsSettingsChangedEventArgs args)

@@ -6,9 +6,11 @@ using HackerOs.AppSdk.IO;
 using HackerOs.Platform.Core.Apps.Packages;
 using HackerOs.Platform.Core.Elevation;
 using HackerOs.Platform.Core.Execution;
+using HackerOs.Platform.Core.Notifications;
 using HackerOs.Platform.Core.Tests.Apps.Packages;
 using HackerOs.Platform.Core.Tests.Settings;
 using HackerOs.Simulation.Abstractions.Gateways;
+using HackerOs.Simulation.Abstractions.Notifications;
 using HackerOs.Simulation.Abstractions.Sessions;
 
 namespace HackerOs.Platform.Core.Tests.Execution;
@@ -387,6 +389,155 @@ public sealed class AppPackageGatewayTests
         }
     }
 
+    [Fact]
+    public async Task A_bare_app_id_is_installed_from_the_official_catalog_as_verified()
+    {
+        Harness harness = await Harness.CreateAsync();
+        harness.PublishCatalog("1.1.0", "1.0.0");
+
+        HackPackageInstallReport report = await (await harness.CreateGatewayAsync(new CountingAgent(succeed: true)))
+            .InstallPackageAsync(AppPackageTests.AppId);
+
+        Assert.Equal("1.1.0", report.Version);
+        Assert.False(report.SystemWide);
+        Assert.Equal(HackPackageTrust.Verified, report.Trust);
+        Assert.Contains(
+            "org.kazo.sample=catalog:official/org.kazo.sample@1.1.0",
+            await harness.Settings.ReadAsync(PersonalConfig),
+            StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task A_bare_app_id_with_a_version_installs_that_version()
+    {
+        Harness harness = await Harness.CreateAsync();
+        harness.PublishCatalog("1.1.0", "1.0.0");
+
+        HackPackageInstallReport report = await (await harness.CreateGatewayAsync(new CountingAgent(succeed: true)))
+            .InstallPackageAsync(AppPackageTests.AppId + "@1.0.0");
+
+        Assert.Equal("1.0.0", report.Version);
+    }
+
+    [Fact]
+    public async Task An_app_id_no_catalog_lists_is_refused()
+    {
+        Harness harness = await Harness.CreateAsync();
+        harness.PublishCatalog("1.0.0");
+
+        HackPackageException error = await Assert.ThrowsAsync<HackPackageException>(
+            async () => await (await harness.CreateGatewayAsync(new CountingAgent(succeed: true))).InstallPackageAsync("org.kazo.missing"));
+
+        Assert.Equal("apps.package.not-in-catalog", error.Code);
+    }
+
+    [Fact]
+    public async Task The_catalogs_are_listed_with_their_trust_and_absolute_files()
+    {
+        Harness harness = await Harness.CreateAsync();
+        harness.PublishCatalog("1.1.0", "1.0.0");
+
+        HackAppCatalog official = Assert.Single(await (await harness.CreateGatewayAsync(new CountingAgent(succeed: true))).GetPackageCatalogsAsync());
+
+        Assert.Null(official.Error);
+        Assert.Equal(HackPackageTrust.Verified, official.Trust);
+        Assert.Equal("Utilitaires", Assert.Single(official.Categories).GetLabel(System.Globalization.CultureInfo.GetCultureInfo("fr")));
+        HackCatalogApp app = Assert.Single(official.Apps);
+        Assert.Equal("catalog:official/org.kazo.sample", app.Source);
+        Assert.Equal("1.1.0", app.Latest.Version);
+        Assert.StartsWith("https://raw.githubusercontent.com/Kazo-ca/HackerOs-AppMarketPlace/packages/packages/org.kazo.sample/1.1.0/", app.Latest.IconUri, StringComparison.Ordinal);
+        Assert.Equal(["en"], app.Latest.DescriptionLanguages);
+    }
+
+    [Fact]
+    public async Task A_catalog_that_cannot_be_read_is_listed_with_its_error()
+    {
+        Harness harness = await Harness.CreateAsync();
+
+        HackAppCatalog official = Assert.Single(await (await harness.CreateGatewayAsync(new CountingAgent(succeed: true))).GetPackageCatalogsAsync());
+
+        Assert.NotNull(official.Error);
+        Assert.Empty(official.Apps);
+    }
+
+    [Fact]
+    public async Task The_description_falls_back_to_english()
+    {
+        Harness harness = await Harness.CreateAsync();
+        harness.PublishCatalog("1.0.0");
+
+        string? text = await (await harness.CreateGatewayAsync(new CountingAgent(succeed: true)))
+            .GetCatalogDescriptionAsync("official", AppPackageTests.AppId, "1.0.0", "fr-CA");
+
+        Assert.Equal("# Sample 1.0.0", text);
+    }
+
+    [Fact]
+    public async Task A_newer_catalog_version_is_reported_and_published_to_the_badge()
+    {
+        Harness harness = await Harness.CreateAsync();
+        harness.PublishCatalog("1.0.0");
+        CountingAgent agent = new(succeed: true);
+        await (await harness.CreateGatewayAsync(agent)).InstallPackageAsync(AppPackageTests.AppId);
+        harness.PublishCatalog("1.1.0", "1.0.0");
+        harness.Now += AppPackageInstaller.CatalogCacheLifetime;
+        AppUpdateMonitor monitor = new(harness.Installer, () => harness.Settings.CreateRootGateway(), () => harness.Settings.Session.CurrentPrincipal);
+
+        HackPackageUpdate update = Assert.Single(await (await harness.CreateGatewayAsync(agent, monitor: monitor)).GetPackageUpdatesAsync());
+
+        Assert.Equal(("1.0.0", "1.1.0", false), (update.InstalledVersion, update.AvailableVersion, update.SystemWide));
+        Assert.Equal("catalog:official/org.kazo.sample", update.Source);
+        Assert.Equal(1, monitor.GetBadgeCount(AppUpdateMonitor.StoreAppId));
+    }
+
+    [Fact]
+    public async Task The_update_check_notifies_once_per_new_set_of_updates()
+    {
+        Harness harness = await Harness.CreateAsync();
+        harness.PublishCatalog("1.0.0");
+        CountingAgent agent = new(succeed: true);
+        await (await harness.CreateGatewayAsync(agent)).InstallPackageAsync(AppPackageTests.AppId);
+        harness.PublishCatalog("1.1.0", "1.0.0");
+        harness.Now += AppPackageInstaller.CatalogCacheLifetime;
+        InMemoryNotificationQueue notifications = new(maxEntriesPerUser: 20);
+        AuthenticatedPrincipal alice = harness.Settings.Session.CurrentPrincipal!;
+        using AppUpdateMonitor monitor = new(
+            harness.Installer, () => harness.Settings.CreateRootGateway(), () => alice, notifications,
+            () => System.Globalization.CultureInfo.GetCultureInfo("fr"));
+        int changes = 0;
+        monitor.Changed += () => changes++;
+
+        await monitor.CheckNowAsync();
+        await monitor.CheckNowAsync();
+
+        AppPackageUpdate update = Assert.Single(monitor.Pending);
+        Assert.Equal(SemanticVersion.Parse("1.1.0"), update.Available);
+        Assert.Equal(1, changes);
+        Notification posted = Assert.Single(notifications.GetActive(alice.UserId, DateTimeOffset.UnixEpoch));
+        Assert.Equal(AppUpdateMonitor.StoreAppId, posted.SourceAppId);
+        monitor.Stop();
+        Assert.Equal(0, monitor.GetBadgeCount(AppUpdateMonitor.StoreAppId));
+        Assert.Equal(2, changes);
+    }
+
+    [Fact]
+    public async Task Restart_to_finish_restarts_only_when_a_change_waits()
+    {
+        Harness harness = await Harness.CreateAsync();
+        harness.PublishCatalog("1.0.0");
+        CountingAgent agent = new(succeed: true);
+        int restarts = 0;
+        Func<Task> restart = () => { restarts++; return Task.CompletedTask; };
+
+        HackPackageException nothing = await Assert.ThrowsAsync<HackPackageException>(
+            async () => await (await harness.CreateGatewayAsync(agent, restart: restart)).RestartForPackagesAsync());
+        await (await harness.CreateGatewayAsync(agent)).InstallPackageAsync(AppPackageTests.AppId);
+        await (await harness.CreateGatewayAsync(agent, restart: restart)).RestartForPackagesAsync();
+
+        Assert.Equal("apps.package.nothing-pending", nothing.Code);
+        Assert.Equal(1, restarts);
+    }
+
     /// <summary>Grants exactly the listed capabilities (the gateways only call <see cref="Require"/>).</summary>
     private sealed class FixedCapabilities(params string[] granted) : ICapabilityChecker
     {
@@ -447,7 +598,8 @@ public sealed class AppPackageGatewayTests
             AppCatalogBuildResult built = AppCatalog.Build(apps, ["org.test.term"]);
             Assert.True(built.IsSuccess, string.Join(", ", built.Errors.Select(error => error.Message)));
             Catalog = built.Catalog!;
-            _installer = new AppPackageInstaller(_downloader, new FixedRuntime(runtimeHasEverything), SemanticVersion.Parse("2.1.0"));
+            _installer = new AppPackageInstaller(
+                _downloader, new FixedRuntime(runtimeHasEverything), SemanticVersion.Parse("2.1.0"), clock: () => Now);
         }
 
         internal SettingsFilesHarness Settings { get; }
@@ -455,6 +607,11 @@ public sealed class AppPackageGatewayTests
         internal AppCatalog Catalog { get; }
 
         internal IReadOnlyList<Uri> Downloads => _downloader.Requested;
+
+        internal AppPackageInstaller Installer => _installer;
+
+        /// <summary>The installer's clock: a test moves it past the catalog cache (5 minutes).</summary>
+        internal DateTimeOffset Now { get; set; } = new(2026, 10, 31, 0, 0, 0, TimeSpan.Zero);
 
         internal static async Task<Harness> CreateAsync(bool builtInSample = false, bool runtimeHasEverything = true)
         {
@@ -467,13 +624,51 @@ public sealed class AppPackageGatewayTests
             IAdministratorAuthenticationAgent agent,
             string[]? capabilities = null,
             IAppInstallApprovalPrompt? approval = null,
-            bool isRootElevated = false)
+            bool isRootElevated = false,
+            Func<Task>? restart = null,
+            AppUpdateMonitor? monitor = null)
         {
             AuthenticatedPrincipal alice = Settings.Session.CurrentPrincipal ?? await Settings.LoginAsync(Settings.Alice);
             return new AppManagementGateway(
                 Catalog, () => throw new NotSupportedException(), () => agent,
                 new FixedCapabilities(capabilities ?? [AppCapabilities.AppsManage]), Catalog.Manifests["org.test.term"],
-                alice, isRootElevated, Settings.FileSystem, Settings.Clock, packages: () => _installer, approval: () => approval);
+                alice, isRootElevated, Settings.FileSystem, Settings.Clock, packages: () => _installer, approval: () => approval)
+            {
+                RestartForPackages = restart,
+                UpdateMonitor = monitor is null ? null : () => monitor,
+            };
+        }
+
+        /// <summary>
+        /// Publishes the sample app in the official catalog (ADR 0188 §6): <c>catalog.json</c> on the
+        /// <c>packages</c> branch of the catalog repository, each version in its own folder.
+        /// </summary>
+        internal void PublishCatalog(string latest, params string[] older)
+        {
+            string root = AppPackageDefaults.OfficialCatalogAddress[..^"catalog.json".Length];
+            List<string> versions = [];
+            foreach (string version in older.Prepend(latest))
+            {
+                Dictionary<string, byte[]> files = AppPackageTests.SampleFiles(version);
+                files["lib/Kazo.Sample.dll"] = File.ReadAllBytes(typeof(AppManifest).Assembly.Location);
+                byte[] package = AppPackageTests.Build(files, version: version);
+                string folder = $"packages/{AppPackageTests.AppId}/{version}";
+                _downloader.Files[new Uri($"{root}{folder}/{AppPackageTests.AppId}-{version}.hackapp")] = package;
+                _downloader.Files[new Uri($"{root}{folder}/description.en.md")] = Encoding.UTF8.GetBytes($"# Sample {version}");
+                versions.Add($$$"""
+                    {"version":"{{{version}}}","commit":"abc","package":"{{{folder}}}/{{{AppPackageTests.AppId}}}-{{{version}}}.hackapp",
+                     "sha256":"{{{AppPackage.Sha256(package)}}}","size":{{{package.Length}}},"publishedAt":"2026-10-30T00:00:00Z",
+                     "capabilities":[],"sdkCompatibility":{"minimumVersion":"2.0.0"},"icon":"{{{folder}}}/icon.svg",
+                     "screenshots":["{{{folder}}}/screenshots/1.png"],"descriptions":{"en":"{{{folder}}}/description.en.md"}}
+                    """);
+            }
+
+            _downloader.Files[new Uri(AppPackageDefaults.OfficialCatalogAddress)] = Encoding.UTF8.GetBytes($$$"""
+                {"schemaVersion":1,"categories":[{"id":"utilities","labels":{"en":"Utilities","fr":"Utilitaires"}}],
+                 "apps":[{"appId":"{{{AppPackageTests.AppId}}}","kind":"app","name":"Sample","category":"utilities","tags":["demo"],
+                          "shortDescriptions":{"en":"A sample"},"license":"MIT","repository":"https://github.com/Kazo-ca/HackerOs-App-Sample",
+                          "latestVersion":"{{{latest}}}","versions":[{{{string.Join(',', versions)}}}]}]}
+                """);
         }
 
         /// <summary>Publishes the sample app on the repository's package branch, newest version first.</summary>

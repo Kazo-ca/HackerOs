@@ -61,7 +61,9 @@ Each line is a work item, with its branch and PR.
    pages, Install / Open / Update / Uninstall, Installed tab, "Restart to
    finish", update checks (startup then every 6 hours), badge and
    notification, default pin and migration of existing profiles, desktop and
-   mobile. `hackpkg install <appId>` from catalogs.
+   mobile. `hackpkg install <appId>` from catalogs. **Done** (branch
+   `todo/5-hackstore-app`, issue #249,
+   [ADR 0212](../adr/0212-hack-store-app-build.md)).
 6. **First catalog app**: a third-party app, in its own repository and made
    from the template, that tests the whole chain (app repository → PR to the
    catalog → checks → publishing → install by the Store).

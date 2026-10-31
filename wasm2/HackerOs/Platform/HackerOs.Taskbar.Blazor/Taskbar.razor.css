@@ -144,6 +144,29 @@
     color: currentColor;
 }
 
+/* ADR 0212 §5: a count on a button's icon, such as the Hack Store's available updates. */
+.item-icon {
+    position: relative;
+}
+
+.item-badge {
+    position: absolute;
+    top: -0.45rem;
+    right: -0.6rem;
+    min-width: 0.95rem;
+    height: 0.95rem;
+    padding: 0 0.2rem;
+    border-radius: 999px;
+    background: var(--hos-accent, #00e5ff);
+    color: var(--hos-taskbar-background, #04121a);
+    font-size: 0.6rem;
+    font-weight: 700;
+    line-height: 0.95rem;
+    text-align: center;
+    box-shadow: 0 0 0 2px var(--hos-taskbar-background, #0b0f14);
+    pointer-events: none;
+}
+
 .item-icon-image {
     display: block;
     width: 1.1rem;

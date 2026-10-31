@@ -11,7 +11,7 @@ public sealed class StartMenuSettingsValidator : ISettingsDocumentValidator
         StringComparer.Ordinal);
 
     private static readonly HashSet<string> ProfileProperties = new(
-        ["pinnedAppIds"],
+        ["pinnedAppIds", StartMenuSettingsDocuments.DefaultPinsAppliedProperty],
         StringComparer.Ordinal);
 
     /// <inheritdoc />
@@ -88,6 +88,15 @@ public sealed class StartMenuSettingsValidator : ISettingsDocumentValidator
         if (pinnedAppIds.GetArrayLength() > StartMenuSettingsDocuments.MaximumPinnedAppCount)
         {
             errors.Add("start-menu.pinned-app-ids-limit-exceeded");
+        }
+
+        // ADR 0212 §6: the default pins already added once; optional, an array of app IDs.
+        if (profile.TryGetProperty(StartMenuSettingsDocuments.DefaultPinsAppliedProperty, out JsonElement applied)
+            && (applied.ValueKind != JsonValueKind.Array
+                || applied.GetArrayLength() > StartMenuSettingsDocuments.MaximumPinnedAppCount
+                || applied.EnumerateArray().Any(static item => item.ValueKind != JsonValueKind.String || !StartMenuAppIdSyntax.IsValid(item.GetString()))))
+        {
+            errors.Add("start-menu.default-pins-applied-invalid");
         }
 
         HashSet<string> seenAppIds = new(StringComparer.Ordinal);
