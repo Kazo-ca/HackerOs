@@ -85,6 +85,7 @@ internal sealed class SettingsFilesHarness
     }
 
     internal FileSystemService FileSystem { get; }
+    internal FileSystemSeeder Seeder { get; }
     internal BoundedAuditLog Audit { get; } = new(maxEntries: 100);
     internal HackerOs.Platform.Core.Keyring.UserKeyringService? Keyring { get; }
     internal CapabilityGrantRepository Grants { get; }

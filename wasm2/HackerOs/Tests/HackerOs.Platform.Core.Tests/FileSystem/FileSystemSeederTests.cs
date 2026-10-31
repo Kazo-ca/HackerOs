@@ -39,14 +39,15 @@ public sealed class FileSystemSeederTests
     }
 
     [Fact]
-    public async Task Login_seed_installs_the_sounds_and_leaves_the_icon_packs_to_the_background_install()
+    public async Task Login_seed_leaves_the_shared_data_to_the_background_installs()
     {
         Fixture fixture = new();
 
         await fixture.Seeder.SeedAsync("alice", "users");
 
-        Assert.NotNull((await StatAsync(fixture, "/usr/share/sounds/hackeros/index.theme")).Value);
+        Assert.Equal(FileSystemEntryKind.Directory, (await StatAsync(fixture, "/usr/share")).Value?.Metadata.Kind);
         Assert.Equal(FileSystemErrorCode.NotFound, (await StatAsync(fixture, "/usr/share/icons")).Error?.Code);
+        Assert.Equal(FileSystemErrorCode.NotFound, (await StatAsync(fixture, "/usr/share/sounds")).Error?.Code);
     }
 
     [Fact]

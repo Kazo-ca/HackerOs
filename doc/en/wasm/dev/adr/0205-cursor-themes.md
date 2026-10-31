@@ -15,8 +15,8 @@ issue [#257](https://github.com/Kazo-ca/HackerOs/issues/257)). This is the
   as files in `/etc` and `~`, no masking);
   [ADR 0044](0044-settings-as-files.md) (layered settings files).
 - **Questions asked to Benoit** (end of the document): the theme of a new
-  installation and the reach of the theme inside apps. The work follows the
-  recommendations until he answers.
+  installation and the reach of the theme inside apps. Benoit chose the
+  recommendations on 2026-10-31 (System; everywhere): nothing changes.
 
 ## Context
 
@@ -147,6 +147,9 @@ and reuses the checks of `CursorThemeFile`.
 2. **Reach**: A) everywhere, apps included (recommended, like a real OS, no app
    to change); B) only the OS interface (desktop, taskbar, window frames),
    marking every surface.
+
+**Benoit's answers (2026-10-31):** 1 A, System; 2 A, everywhere, apps
+included. This is what the code already does.
 
 ## Tasks
 

@@ -357,4 +357,25 @@
   <data name="Toolbar.ViewSource" xml:space="preserve">
     <value>View page source (Ctrl+U)</value>
   </data>
+  <data name="Source.RealNetwork" xml:space="preserve">
+    <value>Real site, through the HackerOS server's proxy</value>
+  </data>
+  <data name="Source.LocalSite" xml:space="preserve">
+    <value>Site of this machine</value>
+  </data>
+  <data name="Source.Simulated" xml:space="preserve">
+    <value>Site of the simulated network</value>
+  </data>
+  <data name="Error.Blocked.Title" xml:space="preserve">
+    <value>This site can't be reached</value>
+  </data>
+  <data name="Error.Blocked.Message" xml:space="preserve">
+    <value>Your administrator has blocked {0}.</value>
+  </data>
+  <data name="Error.Blocked.Hint" xml:space="preserve">
+    <value>The HackerOS server's operator does not allow this address, this port or this app (HackerOs:Proxy settings).</value>
+  </data>
+  <data name="Error.NameNotResolved.Hint.Server" xml:space="preserve">
+    <value>To open a real site, connect this machine to a HackerOS server (Settings ▸ Network ▸ Optional Server).</value>
+  </data>
 </root>

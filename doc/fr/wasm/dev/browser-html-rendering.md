@@ -92,6 +92,22 @@ L'historique distingue `Push`, `Replace` (redirection, `history.replaceState`)
 et `Traverse` (précédent/suivant), ce qui corrige l'ancien bug qui tronquait
 l'historique « suivant ».
 
+### Vrais sites et barre d'adresse (ADR 0210)
+
+Un hôte inconnu du réseau simulé passe par le proxy du serveur HackerOS quand un
+serveur est connecté ([ADR 0210](adr/0210-browser-real-sites-through-the-proxy.md)) :
+le Navigateur est une app système avec `network.real.access`. La page suit le
+même chemin que les autres (récupération en C#, `srcdoc` isolé), ses
+ressources et ses `fetch` aussi, avec les cookies du site.
+
+Au début de la barre d'adresse, `AddressBarIndicators` montre d'où vient la
+page (`BrowserResponse.Source`) : `⇄` vrai site par le proxy, `⌂` site de cette
+machine, `◎` réseau simulé, rien pour un fichier. Puis le cadenas pour
+`https:` ; pour `http:`, le texte « Non sécurisé ». Un refus du relais donne la
+page `ERR_BLOCKED_BY_ADMINISTRATOR` (« Votre administrateur a bloqué … ») ou
+`ERR_TIMED_OUT` ; la page `ERR_NAME_NOT_RESOLVED` propose de connecter un
+serveur.
+
 ### La page isolée
 
 L'iframe est en `srcdoc` avec `sandbox="allow-scripts allow-forms"`, sans

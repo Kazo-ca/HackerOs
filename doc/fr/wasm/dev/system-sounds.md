@@ -14,6 +14,8 @@ issue [#256](https://github.com/Kazo-ca/HackerOs/issues/256).
 - Le navigateur ne joue un son qu'après un premier clic ou une première touche
   sur la page : un son avant ce geste (une session invité ouverte toute seule)
   est perdu.
+- Sur une installation neuve, le premier son d'ouverture de session joue
+  quelques secondes après l'arrivée du bureau, une fois les jeux intégrés écrits.
 - Jeux intégrés : **HackerOS** (`hackeros`, bips de console, le défaut) et
   **Doux** (`soft`, carillons).
 
@@ -78,7 +80,7 @@ nano ~/.local/share/sounds/retro/index.theme
 | --- | --- | --- |
 | `OsSoundEvent`, `OsSoundEvents`, `SoundThemeIndex` | Simulation Abstractions | Évènements, noms de sons, chemins, limite de 1 Mo, lecture de `index.theme`. |
 | `SoundSettingsDocuments` | Platform Core | Document `sound.config` (schéma, valeurs par défaut, `SoundPreferences`). |
-| `BuiltInSoundThemes` | Platform Core | Jeux intégrés, embarqués (`Sounds/Themes/<id>/*.oga`), écrits par `FileSystemSeeder` dans `/usr/share/sounds`. |
+| `BuiltInSoundThemes` | Platform Core | Jeux intégrés, embarqués (`Sounds/Themes/<id>/*.oga`), écrits dans `/usr/share/sounds` par `FileSystemSeeder.InstallSoundThemesAsync`, que `OsSoundService` lance une fois en arrière-plan après la première ouverture de session (pas pendant la connexion, qu'elle ralentissait de 2 s). |
 | `OsSoundService` | Platform Core | Lit et surveille `sound.config`, écoute les notifications (`INotificationFeed`) et les sessions (`IEventBus`), choisit le fichier, joue par `IOsSoundOutput`. |
 | `IOsSoundOutput` / `BrowserSoundOutput` | Platform Core / Platform Blazor | « Carte son » : Web Audio dans `wwwroot/osSounds.js`, tampons décodés gardés par chemin et révision. |
 | `DialogCoordinator` | Platform Blazor | Joue avertissement ou erreur pour une boîte de message avec cette icône. |

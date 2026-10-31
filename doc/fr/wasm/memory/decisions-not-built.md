@@ -26,22 +26,17 @@ Une ADR par sujet, un chantier par ADR, multi-écran pris en compte partout
 
 ## Navigateur : afficher les vrais sites (issue #266)
 
-Analyse du 2026-10-29, pas d'ADR. Décisions :
+Analyse du 2026-10-29. Le proxy du serveur HackerOS est construit
+([ADR 0210](../dev/adr/0210-browser-real-sites-through-the-proxy.md), série
+`todo/base`) : droit du Navigateur, cookies, redirections, icône de source,
+« Non sécurisé », erreurs. Décisions encore à construire :
 
-- Pas d'iframe directe vers le vrai site. Le contenu récupéré passe par le
-  pipeline existant (récupération en C#, rendu dans un `srcdoc` isolé,
-  ADR 0079).
-- Ordre des sources : réseau simulé → proxy du serveur HackerOs → proxy public
-  tiers (désactivable) → Wayback Machine automatiquement en dernier recours.
+- Ordre des sources : réseau simulé → proxy du serveur HackerOs (fait) → proxy
+  public tiers (désactivable) → Wayback Machine automatiquement en dernier
+  recours. Une icône de source par nouvelle source (proxy public, archive).
+- Pas d'iframe directe vers le vrai site : tout passe par le `srcdoc` isolé.
 - Firefox et Safari : afficher « non supporté » quand une fonction exige
   Chrome/Edge.
-- Barre d'adresse : une icône montre d'où vient la page (simulé, serveur,
-  proxy, archive), un cadenas pour HTTPS et un avertissement « non sécurisé ».
-- Lacunes à combler (listées dans #266) : le Navigateur n'a pas la capacité
-  `network.real.access` ni d'entrée `GrantedApps` côté serveur ; les cookies
-  sont perdus dans `SendRealAsync` et l'en-tête `Cookie` est bloqué côté
-  serveur ; le quota de 8 requêtes simultanées rejette les ressources d'une
-  page.
 
 ## Apps tierces portées (dépôts `Kazo-ca/HackerOs-App-*`)
 

@@ -35,7 +35,7 @@ public sealed class BrowserApp : AppDefinition
 
     /// <inheritdoc />
     public override string Description =>
-        "Simulated web browser for navigating the HackerOS virtual network";
+        "Web browser for the HackerOS virtual network and, through a connected server, the real Internet";
 
     /// <inheritdoc />
     public override string Category => "internet";
@@ -44,14 +44,17 @@ public sealed class BrowserApp : AppDefinition
     /// <remarks>
     /// Files (ADR 0075 §4 and §5): <c>file://</c> pages are read in the user's home with the user's
     /// rights; downloads go to <c>~/Downloads</c> and <c>localStorage</c> to
-    /// <c>~/.local/share/hackeros/browser/storage</c>. The browser is not a system app, so it does not
-    /// ask for <c>filesystem.system.read</c> (a dangerous capability needing an administrator):
-    /// a <c>file://</c> URL outside the home answers <c>ERR_ACCESS_DENIED</c>.
+    /// <c>~/.local/share/hackeros/browser/storage</c>. The browser does not ask for
+    /// <c>filesystem.system.read</c>: a <c>file://</c> URL outside the home answers <c>ERR_ACCESS_DENIED</c>.
+    /// Real sites (ADR 0210 §1): <c>network.real.access</c> lets the OS relay a host unknown to the
+    /// simulated network through the optional server; the host makes the browser a system app so this
+    /// dangerous capability needs no approval prompt, as for <c>curl</c> and <c>wget</c>.
     /// </remarks>
     public override IReadOnlyList<string> Capabilities =>
     [
         AppCapabilities.NetworkSimulatedRead,
         AppCapabilities.NetworkSimulatedWrite,
+        AppCapabilities.NetworkRealAccess,
         AppCapabilities.FileSystemUserHomeRead,
         AppCapabilities.FileSystemUserHomeWrite,
     ];

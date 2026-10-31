@@ -51,6 +51,13 @@ public sealed record HackHttpResponse(
     int RedirectCount,
     IReadOnlyList<HackCookie> SetCookies)
 {
+    /// <summary>
+    /// Gets where the final response came from (ADR 0210 §4): the simulated network, a site of this
+    /// machine, or the real Internet through the relay. The browser shows it in its address bar; it
+    /// never names the server nor carries its token (ADR 0056 §6).
+    /// </summary>
+    public HackHttpResponseSource Source { get; init; }
+
     /// <summary>Gets whether <see cref="StatusCode"/> is in the 200–299 range.</summary>
     public bool IsSuccessStatusCode => StatusCode is >= 200 and <= 299;
 
@@ -118,6 +125,19 @@ public sealed record HackHttpResponse(
         503 => "Service Unavailable",
         _ => string.Empty
     };
+}
+
+/// <summary>Where a <see cref="HackHttpResponse"/> came from (ADR 0210 §4).</summary>
+public enum HackHttpResponseSource
+{
+    /// <summary>A machine of the simulated network (<c>hackdns</c>, simulated sites).</summary>
+    Simulated,
+
+    /// <summary>A site served by a process of this machine (a <c>.hack</c> site, <c>localhost</c>, ADR 0074).</summary>
+    LocalSite,
+
+    /// <summary>The real Internet, relayed by the optional HackerOS server (ADR 0102, ADR 0210).</summary>
+    RealNetwork
 }
 
 /// <summary>
@@ -189,12 +209,31 @@ public sealed class HackCookieContainer
         }
     }
 
-    /// <summary>Gets the cookies sent to <paramref name="uri"/>'s host.</summary>
+    /// <summary>
+    /// Gets the cookies sent to <paramref name="uri"/>'s host: the host's own cookies, and the domain
+    /// cookies a real site set with a <c>Domain</c> attribute, stored as <c>.example.com</c>
+    /// (ADR 0210 §2), when the host is that domain or one of its subdomains.
+    /// </summary>
     public IReadOnlyList<HackCookie> GetCookies(Uri uri)
     {
         ArgumentNullException.ThrowIfNull(uri);
         string host = uri.Host.ToLowerInvariant();
-        return [.. GetAllCookies().Where(cookie => cookie.Domain == host)];
+        return [.. GetAllCookies().Where(cookie => cookie.Domain == host || DomainMatches(host, cookie.Domain))];
+    }
+
+    /// <summary>
+    /// Whether <paramref name="host"/> matches a domain cookie key (<c>.example.com</c>): the host is
+    /// <c>example.com</c> or ends with <c>.example.com</c> (RFC 6265 §5.1.3).
+    /// </summary>
+    /// <param name="host">The request's host, lower case.</param>
+    /// <param name="domain">The cookie's domain; only a key starting with a dot is a domain cookie.</param>
+    public static bool DomainMatches(string host, string domain)
+    {
+        ArgumentNullException.ThrowIfNull(host);
+        ArgumentNullException.ThrowIfNull(domain);
+        return domain.Length > 1 && domain[0] == '.'
+            && (host.Equals(domain[1..], StringComparison.OrdinalIgnoreCase)
+                || host.EndsWith(domain, StringComparison.OrdinalIgnoreCase));
     }
 
     /// <summary>Gets every cookie, ordered by host then name.</summary>

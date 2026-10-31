@@ -13,6 +13,8 @@ sign-out. Decision: [ADR 0204](adr/0204-os-event-sounds.md), issue
   at once.
 - The browser plays a sound only after a first click or key press on the page:
   a sound before that gesture (a guest session opened by itself) is dropped.
+- On a new installation, the first sign-in sound plays a few seconds after the
+  desktop appears, once the built-in themes are written.
 - Built-in themes: **HackerOS** (`hackeros`, console bleeps, the default) and
   **Soft** (`soft`, chimes).
 
@@ -75,7 +77,7 @@ nano ~/.local/share/sounds/retro/index.theme
 | --- | --- | --- |
 | `OsSoundEvent`, `OsSoundEvents`, `SoundThemeIndex` | Simulation Abstractions | Events, sound names, paths, 1 MB limit, reading `index.theme`. |
 | `SoundSettingsDocuments` | Platform Core | The `sound.config` document (schema, defaults, `SoundPreferences`). |
-| `BuiltInSoundThemes` | Platform Core | Built-in themes, embedded (`Sounds/Themes/<id>/*.oga`), written by `FileSystemSeeder` to `/usr/share/sounds`. |
+| `BuiltInSoundThemes` | Platform Core | Built-in themes, embedded (`Sounds/Themes/<id>/*.oga`), written to `/usr/share/sounds` by `FileSystemSeeder.InstallSoundThemesAsync`, which `OsSoundService` runs once in the background after the first sign-in (not during the login, which it made 2 s slower). |
 | `OsSoundService` | Platform Core | Reads and watches `sound.config`, listens to notifications (`INotificationFeed`) and sessions (`IEventBus`), picks the file, plays through `IOsSoundOutput`. |
 | `IOsSoundOutput` / `BrowserSoundOutput` | Platform Core / Platform Blazor | "Sound card": Web Audio in `wwwroot/osSounds.js`, decoded buffers kept by path and revision. |
 | `DialogCoordinator` | Platform Blazor | Plays warning or error for a message box with that icon. |
