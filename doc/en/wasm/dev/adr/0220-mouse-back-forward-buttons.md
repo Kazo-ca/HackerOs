@@ -190,5 +190,5 @@ Work item `mouse-back/1-platform` (2026-10-31), with no change to the decision:
 - [x] `mouse-back/1-platform`: `hardwareNavigation.js`,
   `HardwareNavigationService`, `MouseButton` and `SystemBack` sources,
   `IAppForwardHandler`, registry, desktop and mobile routing, tests.
-- [ ] `mouse-back/2-apps`: File Explorer (desktop and mobile), browser and
+- [x] `mouse-back/2-apps`: File Explorer (desktop and mobile), browser and
   `PageBridge.js`, Settings and Hack Store, tests, app and SDK docs.

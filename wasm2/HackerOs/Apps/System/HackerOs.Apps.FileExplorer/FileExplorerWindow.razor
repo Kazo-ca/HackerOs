@@ -344,7 +344,12 @@
 
     /// <inheritdoc />
     /// <remarks>Every navigation ends in a render: the window title follows it here.</remarks>
-    protected override Task OnAppAfterRenderAsync(bool firstRender) => SetWindowTitleAsync(FolderWindowTitle).AsTask();
+    protected override Task OnAppAfterRenderAsync(bool firstRender)
+    {
+        // ADR 0220: the shell learns when Back/Forward have something to do (mouse buttons, Alt+arrows).
+        RaiseNavigationAvailabilityChanged();
+        return SetWindowTitleAsync(FolderWindowTitle).AsTask();
+    }
 
     protected override async Task OnAppInitializedAsync()
     {

@@ -1,1 +1,7 @@
 #nullable enable
+HackerOs.Apps.Browser.BrowserWindow.CanNavigateBack.get -> bool
+HackerOs.Apps.Browser.BrowserWindow.CanNavigateBackChanged -> System.Action?
+HackerOs.Apps.Browser.BrowserWindow.CanNavigateForward.get -> bool
+HackerOs.Apps.Browser.BrowserWindow.CanNavigateForwardChanged -> System.Action?
+HackerOs.Apps.Browser.BrowserWindow.NavigateBackAsync(HackerOs.AppSdk.Blazor.AppBackRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Blazor.AppBackResult!>
+HackerOs.Apps.Browser.BrowserWindow.NavigateForwardAsync(HackerOs.AppSdk.Blazor.AppForwardRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Blazor.AppBackResult!>

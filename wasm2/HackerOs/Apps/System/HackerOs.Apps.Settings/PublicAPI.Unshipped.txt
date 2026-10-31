@@ -25,3 +25,9 @@ override HackerOs.Apps.Settings.SetWallpaperApp.PublisherId.get -> string!
 override HackerOs.Apps.Settings.SetWallpaperApp.Resources.get -> HackerOs.App.Abstractions.AppResourceProfileManifest!
 static HackerOs.Apps.Settings.SetWallpaperApp.RegisterFileContextMenu(HackerOs.AppSdk.Blazor.Files.RegisterFileContextMenuContext! context) -> void
 static readonly HackerOs.Apps.Settings.SetWallpaperApp.ImageTypes -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.Apps.Settings.SettingsWindow.CanNavigateBack.get -> bool
+HackerOs.Apps.Settings.SettingsWindow.CanNavigateBackChanged -> System.Action?
+HackerOs.Apps.Settings.SettingsWindow.CanNavigateForward.get -> bool
+HackerOs.Apps.Settings.SettingsWindow.CanNavigateForwardChanged -> System.Action?
+HackerOs.Apps.Settings.SettingsWindow.NavigateBackAsync(HackerOs.AppSdk.Blazor.AppBackRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Blazor.AppBackResult!>
+HackerOs.Apps.Settings.SettingsWindow.NavigateForwardAsync(HackerOs.AppSdk.Blazor.AppForwardRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Blazor.AppBackResult!>

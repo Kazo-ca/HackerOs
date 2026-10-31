@@ -197,6 +197,7 @@ public sealed partial class BrowserWindow : WindowAppBase, IAsyncDisposable
     /// <inheritdoc/>
     protected override async Task OnAppAfterRenderAsync(bool firstRender)
     {
+        RaiseNavigationAvailabilityChanged();
         if (firstRender)
         {
             // Asked to open detached (HackBrowser.OpenDetachedAsync): the window opens first, while
@@ -984,11 +985,13 @@ public sealed partial class BrowserWindow : WindowAppBase, IAsyncDisposable
         {
             await ClearFormHistoryAsync();
         }
-        else if (key.Alt && key.Key == "ArrowLeft")
+        else if ((key.Alt && key.Key == "ArrowLeft") || key.Key == "BrowserBack")
         {
+            // Alt+← or the mouse's Back button over the page (ADR 0220 §4): the page's iframe keeps
+            // these from the OS document, so the bridge hands them to the window.
             await GoBack();
         }
-        else if (key.Alt && key.Key == "ArrowRight")
+        else if ((key.Alt && key.Key == "ArrowRight") || key.Key == "BrowserForward")
         {
             await GoForward();
         }
