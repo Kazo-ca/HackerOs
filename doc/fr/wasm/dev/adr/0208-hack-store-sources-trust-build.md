@@ -9,8 +9,9 @@ Accepté le 2026-10-30, chantier `todo/3-hackstore-sources-trust` (issue `TODO`
 œuvre l'[ADR 0189](0189-app-sources-trust-and-per-user-install.md). Ne change
 aucune de ses décisions sauf une : le catalogue n'est pas construit « à
 l'ouverture de la session » mais au démarrage de la page, avec un masquage par
-session (§3 ci-dessous). Benoit a reçu cette question avec ses choix (Q1) ; la
-recommandation est appliquée en attendant sa réponse.
+session (§3 ci-dessous). Benoit a reçu cette question avec ses choix (Q1) et a choisi,
+le 2026-10-31, la recommandation : chargement au démarrage, apps cachées aux
+autres sessions.
 
 ## Contexte
 
@@ -80,7 +81,8 @@ noire.
    une source ou une règle de la liste noire demande une authentification
    d'administrateur (rien sous `sudo`), comme le permet déjà `sudo nano` sur
    ces fichiers ; il n'y a pas d'app à montrer dans une fenêtre d'étape 2.
-   Benoit a reçu la question (Q2) ; la recommandation est appliquée.
+   Benoit a reçu la question (Q2) et a choisi, le 2026-10-31, une seule
+   authentification d'administrateur.
 7. **SDK.** `HackAppPackages.InstallAsync(source, HackPackageScope)`,
    `RemoveAsync(appId, HackPackageScope)`, `AddSourceAsync`, `RemoveSourceAsync`,
    `GetPolicyAsync`, `SetPolicyAsync` ; `HackPackageSources.TrustedOwners`

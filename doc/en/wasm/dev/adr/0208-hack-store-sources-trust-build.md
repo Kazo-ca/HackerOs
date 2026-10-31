@@ -9,8 +9,8 @@ issue [#248](https://github.com/Kazo-ca/HackerOs/issues/248), Hack Store 3).
 Implements [ADR 0189](0189-app-sources-trust-and-per-user-install.md). Changes
 none of its decisions but one: the catalog is not built "when the session
 opens" but when the page starts, with a per-session hiding (§3 below). Benoit
-was asked this question with its choices (Q1); the recommendation is applied
-while waiting for his answer.
+was asked this question with its choices (Q1) and chose the recommendation on
+2026-10-31: loaded at startup, hidden from other sessions.
 
 ## Context
 
@@ -76,8 +76,8 @@ sources and of the block list ask for.
 6. **Sources and block list: one authentication.** Adding or removing a source
    or a block-list rule asks for one administrator authentication (nothing
    under `sudo`), as `sudo nano` on these files already allows; there is no app
-   to show in a step-2 window. Benoit was asked the question (Q2); the
-   recommendation is applied.
+   to show in a step-2 window. Benoit was asked the question (Q2) and chose
+   one administrator sign-in on 2026-10-31.
 7. **SDK.** `HackAppPackages.InstallAsync(source, HackPackageScope)`,
    `RemoveAsync(appId, HackPackageScope)`, `AddSourceAsync`,
    `RemoveSourceAsync`, `GetPolicyAsync`, `SetPolicyAsync`;
