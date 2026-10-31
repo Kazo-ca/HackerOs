@@ -97,7 +97,6 @@ internal sealed class SettingsFilesHarness
     internal LocalUser Alice { get; }
     internal LocalUser Bob { get; }
     internal LocalSessionService Session { get; }
-    internal FileSystemSeeder Seeder { get; }
     internal OsSettingsService Settings { get; }
     internal SettingsStoreToFilesMigration Migration { get; }
 
