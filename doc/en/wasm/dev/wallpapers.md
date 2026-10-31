@@ -103,6 +103,6 @@ not an image), then stops. No window opens; the path is kept as it is.
 
 ## Outside this work item
 
-The mobile app drawer stays opaque (ADR 0217 §3). "Set as wallpaper" writes the
+The mobile app drawer stays opaque, except on a theme that sets `--hos-mobile-drawer-background` and `--hos-mobile-drawer-backdrop-filter` (iOS: frosted glass, ADR 0217 §3). "Set as wallpaper" writes the
 desktop keys only: the mobile image is chosen in Settings (the SDK does not tell
 an app which interface is active).

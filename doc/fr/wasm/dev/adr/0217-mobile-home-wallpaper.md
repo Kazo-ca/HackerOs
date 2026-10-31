@@ -4,8 +4,8 @@
 
 ## Statut
 
-Accepté le 2026-10-31, avec les recommandations appliquées en attendant les
-réponses de Benoit (voir « Questions posées à Benoit »). Issue
+Accepté le 2026-10-31 ; Benoit a choisi les recommandations (voir « Questions
+posées à Benoit »). Issue
 [#297](https://github.com/Kazo-ca/HackerOs/issues/297), série `todo/base`
 (branche `todo/23-mobile-wallpaper`).
 
@@ -64,6 +64,12 @@ Le tiroir garde le fond `--hos-bg-base` de son thème : l'image se voit sur
 l'écran d'accueil et dans la bande au-dessus du tiroir, et la liste reste
 lisible sur une image claire.
 
+**Précision (2026-10-31, remarque de Benoit)** : un thème dont le style est le
+verre peut le garder. Le tiroir lit `--hos-mobile-drawer-background` et
+`--hos-mobile-drawer-backdrop-filter` (par défaut `--hos-bg-base` et aucun
+flou, donc opaque). Le thème iOS les règle sur le même verre flouté que son
+tiroir de notifications ; les autres thèmes restent opaques.
+
 ### 4. Les thèmes mobiles
 
 Aucun thème ne change : leur fond reste celui qu'on voit tant que
@@ -99,6 +105,9 @@ la recommandation appliquée en attendant sa réponse :
   `wallpaperFit` que le bureau.
 - **Q3** Tiroir d'apps : A (recommandé) opaque comme aujourd'hui ; B verre
   flouté qui laisse voir l'image.
+
+**Réponse (2026-10-31)** : Benoit choisit les trois recommandations (Q1 A,
+Q2 A, Q3 A). Ce qui est construit ne change pas.
 
 ## Tâches
 

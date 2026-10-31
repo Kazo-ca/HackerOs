@@ -4,8 +4,8 @@
 
 ## Status
 
-Accepted on 2026-10-31, with the recommendations applied while Benoit's answers
-are pending (see "Questions asked to Benoit"). Issue
+Accepted on 2026-10-31; Benoit chose the recommendations (see "Questions asked
+to Benoit"). Issue
 [#297](https://github.com/Kazo-ca/HackerOs/issues/297), `todo/base` series
 (branch `todo/23-mobile-wallpaper`).
 
@@ -63,6 +63,12 @@ The drawer keeps its theme's `--hos-bg-base` background: the image shows on the
 home screen and in the strip above the drawer, and the list stays readable on a
 bright image.
 
+**Clarification (2026-10-31, Benoit's remark)**: a theme whose style is glass
+can keep it. The drawer reads `--hos-mobile-drawer-background` and
+`--hos-mobile-drawer-backdrop-filter` (by default `--hos-bg-base` and no blur,
+so opaque). The iOS theme sets them to the same frosted glass as its
+notification shade; the other themes stay opaque.
+
 ### 4. Mobile themes
 
 No theme changes: their background is still what shows while `mobileWallpaper`
@@ -97,6 +103,9 @@ the recommendation applied while his answer is pending:
   `wallpaperFit`.
 - **Q3** App drawer: A (recommended) opaque as today; B blurred glass that lets
   the image show.
+
+**Answer (2026-10-31)**: Benoit chooses the three recommendations (Q1 A, Q2 A,
+Q3 A). What is built does not change.
 
 ## Tasks
 
