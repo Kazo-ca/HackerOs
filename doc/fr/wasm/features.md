@@ -238,6 +238,9 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
 - **Heure locale et fuseau horaire** : l'horloge, `date`, `ls -l` et les apps
   affichent l'heure dans le fuseau de l'utilisateur, automatique ou choisi dans
   Paramètres ▸ Date et heure. ([`time-zone.md`](framework/time-zone.md))
+- **Thèmes de curseurs** : pointeur de tout l'OS en images PNG, Système,
+  HackerOS Néon, Gothique Pourpre ou vos propres thèmes, choisi dans
+  Paramètres ▸ Apparence ▸ Curseurs. ([`cursor-themes.md`](framework/cursor-themes.md))
 - **Packs d'icônes** : des images PNG remplacent les icônes des applications,
   des dossiers et des fichiers partout dans l'OS, choisies dans Paramètres ▸
   Apparence ; pack d'exemple « Néon » fourni. ([`icon-packs.md`](dev/icon-packs.md),
@@ -303,7 +306,6 @@ dans `main`, le lien mène à sa PR.
 | --- | --- | --- | --- |
 | Packs de thèmes | Format `.hacktheme` et onglet Thèmes du Hack Store. | [0190](dev/adr/0190-theme-packs.md) | [#253](https://github.com/Kazo-ca/HackerOs/issues/253) |
 | Fonds d'écran en image | Choisir une image comme fond d'écran, par écran. | [0190](dev/adr/0190-theme-packs.md) | [#254](https://github.com/Kazo-ca/HackerOs/issues/254) |
-| Thèmes de curseurs | Curseurs personnalisés choisis dans Paramètres. | [0190](dev/adr/0190-theme-packs.md) | [#257](https://github.com/Kazo-ca/HackerOs/issues/257) |
 
 ### Réseau et serveur
 

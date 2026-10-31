@@ -60,6 +60,13 @@ at the end of each series or when a convention changes.
   2026-10-30): "Switch user" stays greyed out, Benoit's choice on
   2026-10-30 (ADR 0201, issue #290; unmerged prototype on the branch
   `switch-user/simultaneous-sessions-prototype`).
+- **Cursor themes** (ADR 0205, series `todo/base`, work item
+  `todo/9-cursor-themes`, issue #257): `cursor.theme` folders of PNGs in
+  `/etc/hackeros/cursors/` and `~/.config/hackeros/cursors/`, `cursors.config`,
+  built-in System (default), HackerOS Neon and Gothic Crimson themes, applied
+  to the whole surface by `cursorTheme.js`. Two questions asked to Benoit
+  (default theme, reach inside apps); the code follows the recommendations
+  (System, everywhere).
 - **`todo/base` series** (2026-10-30, every `TODO` issue in parallel, one
   final PR to `main`, branches `todo/<n>-<topic>`, ADR 0197 to 0211
   reserved): Hack Store work item 1 done, `hackeros-solution`

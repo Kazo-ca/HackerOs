@@ -60,6 +60,13 @@ jour à la fin de chaque série ou quand une convention change.
   le 2026-10-30) : « Changer d'utilisateur » reste grisé, choix de
   Benoit le 2026-10-30 (ADR 0201, issue #290 ; prototype non fusionné sur la
   branche `switch-user/simultaneous-sessions-prototype`).
+- **Thèmes de curseurs** (ADR 0205, série `todo/base`, chantier
+  `todo/9-cursor-themes`, issue #257) : dossiers `cursor.theme` de PNG dans
+  `/etc/hackeros/cursors/` et `~/.config/hackeros/cursors/`, `cursors.config`,
+  thèmes intégrés Système (défaut), HackerOS Néon et Gothique Pourpre,
+  appliqués à toute la surface par `cursorTheme.js`. Deux questions posées à
+  Benoit (thème par défaut, portée dans les apps) ; le code suit les
+  recommandations (Système, partout).
 - **Série `todo/base`** (2026-10-30, toutes les issues `TODO` en parallèle,
   une PR finale vers `main`, branches `todo/<n>-<sujet>`, ADR 0197 à 0211
   réservées) : chantier 1 du Hack Store fait, modèle
