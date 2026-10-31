@@ -450,6 +450,12 @@
   <data name="Token.TransitionNormal.Label" xml:space="preserve">
     <value>Normal transition</value>
   </data>
+  <data name="Token.WindowAnimDuration.Description" xml:space="preserve">
+    <value>Opening, closing, minimizing, maximizing and snapping windows. Ignored when animations are turned off.</value>
+  </data>
+  <data name="Token.WindowAnimDuration.Label" xml:space="preserve">
+    <value>Window animations</value>
+  </data>
   <data name="Token.Warning.Description" xml:space="preserve">
     <value>Warnings and degraded states.</value>
   </data>

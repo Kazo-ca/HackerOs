@@ -242,6 +242,13 @@
                 </div>
                 break;
 
+                @* ADR 0204 §6: event sounds, volume and sound theme (~/.config/hackeros/sound.config). *@
+            case "sound":
+                <div class="settings-page">
+                    <SoundPanel />
+                </div>
+                break;
+
             case "file-associations":
                 <div class="settings-page">
                     <FileAssociationsPanel />

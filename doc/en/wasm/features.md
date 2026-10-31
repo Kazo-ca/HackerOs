@@ -85,7 +85,9 @@ This section lists what is released in the `main` branch and online.
 - **Desktop** with icons, shortcuts and context menus, like a desktop OS.
   ([`desktop.md`](dev/desktop.md))
 - **Windows** that can be moved, resized, maximized or snapped to the screen
-  edges. ([`window-model.md`](framework/window-model.md))
+  edges, with plain animations to open, close, minimize into the taskbar,
+  maximize and snap, turned off by "Reduce motion".
+  ([`window-model.md`](framework/window-model.md), [`window-animations.md`](dev/window-animations.md))
 - **Taskbar and Start menu** with pinned applications and open windows. A
   right click on the taskbar gives the window menu, "New window", the task
   manager, "Show the desktop" and cascaded or tiled windows.
@@ -238,6 +240,10 @@ This section lists what is released in the `main` branch and online.
   everywhere in the OS, chosen in Settings ▸ Appearance; a "Néon" sample pack
   is included. ([`icon-packs.md`](dev/icon-packs.md),
   [ADR 0203](dev/adr/0203-icon-packs.md))
+- **System sounds**: notifications, warnings, errors, sign-in and sign-out. Two
+  built-in themes (HackerOS and Soft), your own themes in OGG or MP3, volume and
+  mute in Settings ▸ Sound.
+  ([`system-sounds.md`](dev/system-sounds.md), [ADR 0204](dev/adr/0204-os-event-sounds.md))
 
 ### For developers
 
@@ -277,8 +283,8 @@ points to its PR.
 
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
-| Switch user | Open another session without closing the first one, from the Start menu's Power button (greyed out for now, always greyed out for the guest). | [0195](dev/adr/0195-start-menu-power-button.md) | [#290](https://github.com/Kazo-ca/HackerOs/issues/290) |
-| Windows and taskbar | Window animations, hover previews. The time zone ([ADR 0193](dev/adr/0193-local-time-and-time-zone.md)), the taskbar menus ([ADR 0194](dev/adr/0194-taskbar-context-menus.md)) and the notification bubbles ([ADR 0197](dev/adr/0197-notification-toasts.md)) are available. | Coming | [#242](https://github.com/Kazo-ca/HackerOs/issues/242) |
+| Switch user | Open another session without closing the first one. Stays greyed out in the Power menu by Benoit's choice: one session at a time, Sign out to change account. | [0195](dev/adr/0195-start-menu-power-button.md), [0201](dev/adr/0201-switch-user-stays-greyed.md) | [#290](https://github.com/Kazo-ca/HackerOs/issues/290) |
+| Windows and taskbar | Hover previews. The time zone ([ADR 0193](dev/adr/0193-local-time-and-time-zone.md)), the taskbar menus ([ADR 0194](dev/adr/0194-taskbar-context-menus.md)), the notification bubbles ([ADR 0197](dev/adr/0197-notification-toasts.md)) and the window animations ([ADR 0198](dev/adr/0198-window-animations.md)) are available. | Coming | [#242](https://github.com/Kazo-ca/HackerOs/issues/242) |
 
 ### Hack Store
 
@@ -295,7 +301,6 @@ points to its PR.
 | --- | --- | --- | --- |
 | Theme packs | `.hacktheme` format and the Hack Store Themes tab. | [0190](dev/adr/0190-theme-packs.md) | [#253](https://github.com/Kazo-ca/HackerOs/issues/253) |
 | Image wallpapers | Choose an image as wallpaper, per screen. | [0190](dev/adr/0190-theme-packs.md) | [#254](https://github.com/Kazo-ca/HackerOs/issues/254) |
-| OS sounds | Sounds for notifications, errors and sign-in. | [0190](dev/adr/0190-theme-packs.md) | [#256](https://github.com/Kazo-ca/HackerOs/issues/256) |
 
 ### Network and server
 

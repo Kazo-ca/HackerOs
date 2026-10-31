@@ -57,8 +57,9 @@ jour à la fin de chaque série ou quand une convention change.
   [`installable-server.md`](../dev/installable-server.md)) ; restent à essayer
   en vrai les scripts Windows et macOS et l'image Docker.
 - **Bouton Marche/arrêt dans le menu Démarrer** (ADR 0195, PR #291, fusionnée
-  le 2026-10-30) : « Changer d'utilisateur » reste grisé, issue `TODO` #290
-  (plusieurs sessions ouvertes en même temps).
+  le 2026-10-30) : « Changer d'utilisateur » reste grisé, choix de
+  Benoit le 2026-10-30 (ADR 0201, issue #290 ; prototype non fusionné sur la
+  branche `switch-user/simultaneous-sessions-prototype`).
 - **Thèmes de curseurs** (ADR 0205, série `todo/base`, chantier
   `todo/9-cursor-themes`, issue #257) : dossiers `cursor.theme` de PNG dans
   `/etc/hackeros/cursors/` et `~/.config/hackeros/cursors/`, `cursors.config`,
@@ -84,6 +85,15 @@ jour à la fin de chaque série ou quand une convention change.
   `todo/base`) : bulles des notifications et « Update ready » en
   notification persistante avec « Redémarrer ». Voir
   [`notification-toasts.md`](../dev/notification-toasts.md).
+- **Animations des fenêtres** (ADR 0198, chantier 3 de #242, branche
+  `todo/12-window-animations` vers `todo/base`) : ouvrir, fermer, minimiser vers
+  la barre de son écran, restaurer, agrandir, snap ; variables
+  `--hos-window-anim-*` ([`window-animations.md`](../dev/window-animations.md)).
+- **Sons du système** (ADR 0204, issue #256, série `todo/base`, branche
+  `todo/8-os-sounds`) : jeux de sons freedesktop.org dans `/usr/share/sounds`
+  (jeux intégrés `hackeros` et `soft` écrits par `FileSystemSeeder`) et
+  `~/.local/share/sounds`, `sound.config`, Paramètres ▸ Sons. Pas d'API SDK pour
+  jouer un son (question Q2 à Benoit). Voir [`system-sounds.md`](../dev/system-sounds.md).
 - **ADR** : 0001 à 0171 et 0173 à 0195 existent sur `main` (quelques numéros sautés ;
   0141 et 0172 n'ont pas servi). Repères récents : 0173 publication automatique,
   0174 annonce de nouvelle version, 0175 « Nouveau dossier » des dialogues, 0176
@@ -94,7 +104,7 @@ jour à la fin de chaque série ou quand une convention change.
   0191 serveur local installable, 0192 `features.md` et exception à l'ADR 0135,
   0193 heure locale, 0194 menus de la barre des tâches, 0195 bouton
   Marche/arrêt du menu Démarrer ; série `todo/base` : 0197 bulles de
-  notification, 0203 packs d'icônes, 0207 modèle `hackeros-solution` (les
+  notification, 0201 « Changer d'utilisateur » reste grisé, 0203 packs d'icônes, 0207 modèle `hackeros-solution` (les
   autres numéros jusqu'à 0211 sont réservés par ses chantiers). 0196 est prise
   par la PR #294 (point des notifications non lues). **Prochain numéro libre :
   0212.** Avant d'en
