@@ -156,6 +156,78 @@ public sealed class WallpaperTests
         Assert.Equal("builtin:circuit", (await service.GetImageAsync(1))!.Value);
     }
 
+    [Fact]
+    public void Appearance_declares_the_mobile_wallpaper_keys_with_the_mobile_theme_background_by_default()
+    {
+        IReadOnlyDictionary<string, SettingFieldDeclaration> fields = AppearanceSettingsDocuments.Schema.Fields;
+        Assert.Equal(string.Empty, fields["mobileWallpaper"].DefaultValue);
+        Assert.Equal("fill", fields["mobileWallpaperFit"].DefaultValue);
+        Assert.Equal(WallpaperCatalog.FitValues, fields["mobileWallpaperFit"].AllowedValues);
+    }
+
+    [Fact]
+    public async Task The_mobile_home_screen_keeps_its_theme_background_whatever_the_desktop_shows()
+    {
+        SettingsFilesHarness harness = await SignedInAsync();
+        await SetAsync(harness, ("wallpaper", "builtin:nebula"));
+        using WallpaperService service = new(harness.Settings, harness.FileSystem, harness.Session, harness.Clock);
+        await service.EnsureInitializedAsync();
+
+        Assert.Equal("builtin:nebula", (await service.GetImageAsync(1))!.Value);
+        Assert.Null(await service.GetMobileImageAsync());
+    }
+
+    [Fact]
+    public async Task The_mobile_home_screen_has_its_own_image_and_fit()
+    {
+        SettingsFilesHarness harness = await SignedInAsync();
+        await harness.WriteAsUserAsync("/home/alice/Pictures/phone.webp", WebpHeader);
+        await SetAsync(
+            harness,
+            ("wallpaper", "builtin:aurora"),
+            ("wallpaperFit", "fit"),
+            ("mobileWallpaper", "/home/alice/Pictures/phone.webp"),
+            ("mobileWallpaperFit", "center"));
+        using WallpaperService service = new(harness.Settings, harness.FileSystem, harness.Session, harness.Clock);
+        await service.EnsureInitializedAsync();
+
+        WallpaperImage mobile = Assert.IsType<WallpaperImage>(await service.GetMobileImageAsync());
+        Assert.Equal("image/webp", mobile.MediaType);
+        Assert.Equal(WallpaperFit.Center, mobile.Fit);
+        WallpaperImage desktop = Assert.IsType<WallpaperImage>(await service.GetImageAsync(1));
+        Assert.Equal("builtin:aurora", desktop.Value);
+        Assert.Equal(WallpaperFit.Fit, desktop.Fit);
+    }
+
+    [Fact]
+    public async Task A_mobile_file_that_cannot_be_shown_falls_back_to_the_mobile_theme_background()
+    {
+        SettingsFilesHarness harness = await SignedInAsync();
+        await harness.WriteAsUserAsync("/home/alice/Pictures/fake.png", "<svg xmlns=\"http://www.w3.org/2000/svg\"/>");
+        await SetAsync(harness, ("mobileWallpaper", "/home/alice/Pictures/fake.png"));
+        using WallpaperService service = new(harness.Settings, harness.FileSystem, harness.Session, harness.Clock);
+        await service.EnsureInitializedAsync();
+
+        Assert.Null(await service.GetMobileImageAsync());
+    }
+
+    [Fact]
+    public async Task A_change_of_the_mobile_wallpaper_is_notified()
+    {
+        SettingsFilesHarness harness = await SignedInAsync();
+        using WallpaperService service = new(harness.Settings, harness.FileSystem, harness.Session, harness.Clock);
+        await service.EnsureInitializedAsync();
+        int notifications = 0;
+        service.Changed += () => notifications++;
+
+        await SetAsync(harness, ("mobileWallpaper", "builtin:circuit"));
+        await service.RefreshAsync();
+
+        Assert.True(notifications >= 1);
+        Assert.Equal("builtin:circuit", service.Current.Mobile);
+        Assert.Equal("builtin:circuit", (await service.GetMobileImageAsync())!.Value);
+    }
+
     private static async Task<SettingsFilesHarness> SignedInAsync()
     {
         SettingsFilesHarness harness = new();

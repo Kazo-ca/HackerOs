@@ -242,8 +242,9 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   ([`theme-files.md`](framework/theme-files.md))
 - **Fonds d'écran en image** : une image PNG, JPEG ou WebP (4 livrées avec
   l'OS, les siennes ou celles d'un dossier partagé), pour tous les écrans ou
-  un écran à la fois, dans Paramètres ▸ Apparence.
-  ([ADR 0202](dev/adr/0202-desktop-wallpaper-images.md), [`wallpapers.md`](dev/wallpapers.md))
+  un écran à la fois, et une image à part pour l'écran d'accueil mobile, dans
+  Paramètres ▸ Apparence.
+  ([ADR 0202](dev/adr/0202-desktop-wallpaper-images.md), [ADR 0217](dev/adr/0217-mobile-home-wallpaper.md), [`wallpapers.md`](dev/wallpapers.md))
 - **Anglais et français**, la langue suit la locale de l'utilisateur.
   ([`localization.md`](framework/localization.md))
 - **Accessibilité** : préférences d'affichage et d'animation, navigation au
@@ -273,6 +274,11 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   service, un site, un hôte complet ou un dépôt d'application entier, visibles
   dans Visual Studio et Rider.
   ([`sdk-developer-guide.md`](framework/sdk-developer-guide.md))
+- **Signature des paquets par l'auteur d'une application** : `HackerOsKeyGen`
+  crée la clé, `HackerOsPack` et le workflow `publish-packages.yml` du modèle
+  signent et publient la branche `hackeros-packages`.
+  ([ADR 0219](dev/adr/0219-app-authors-signing-tool.md),
+  [`app-repository.md`](framework/app-repository.md))
 - **Installation d'une application depuis son dépôt GitHub** avec la commande
   `hackpkg`. ([ADR 0182](dev/adr/0182-install-apps-from-github.md),
   [`app-installation.md`](dev/app-installation.md)) Ses images, scripts et Web
@@ -341,14 +347,13 @@ dans `main`, le lien mène à sa PR.
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Catalogue des applications | Format du catalogue, vérification et publication des applications proposées. | [0188](dev/adr/0188-hack-store-and-app-catalog.md) | [AppMarketPlace #1](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/1) |
-| Outil de signature pour les auteurs | Signer les paquets publiés depuis un dépôt GitHub (sources `github:`). | [0214](dev/adr/0214-hack-store-hot-add-signing-transactions.md) | [#321](https://github.com/Kazo-ca/HackerOs/issues/321) |
 
 ### Personnalisation
 
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Vérification des packs de thèmes par le catalogue | La CI du catalogue vérifie les entrées `kind: "theme-pack"` comme l'OS à l'installation. | [0213](dev/adr/0213-theme-packs-build.md) | [AppMarketPlace #4](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/4) |
-| Fond d'écran sur mobile et menu « Définir comme fond d'écran » | L'image de fond sur l'écran d'accueil mobile, et une entrée du menu contextuel des images. Les fonds d'écran du bureau sont disponibles. | [0202](dev/adr/0202-desktop-wallpaper-images.md) | [#297](https://github.com/Kazo-ca/HackerOs/issues/297), [#298](https://github.com/Kazo-ca/HackerOs/issues/298) |
+| Menu « Définir comme fond d'écran » | Une entrée du menu contextuel des images. Les fonds d'écran du bureau et du mobile sont disponibles. | [0202](dev/adr/0202-desktop-wallpaper-images.md) | [#298](https://github.com/Kazo-ca/HackerOs/issues/298) |
 
 ### Réseau et serveur
 

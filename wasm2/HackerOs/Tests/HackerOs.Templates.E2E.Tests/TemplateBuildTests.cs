@@ -48,6 +48,9 @@ public sealed class TemplateBuildTests(TemplateWorkspace workspace)
         Assert.Contains("external/HackerOs", File.ReadAllText(Path.Combine(directory, ".gitmodules")), StringComparison.Ordinal);
         Assert.Contains("contoso/HackerOs-App-Board", File.ReadAllText(Path.Combine(directory, "store", "store.json")), StringComparison.Ordinal);
         Assert.Contains("src/Contoso.Board", File.ReadAllText(Path.Combine(directory, ".github", "workflows", "publish-to-hack-store.yml")), StringComparison.Ordinal);
+        // ADR 0219 §3: the packages branch workflow is named for the app and private keys stay out of git.
+        Assert.Contains("src/Contoso.Board", File.ReadAllText(Path.Combine(directory, ".github", "workflows", "publish-packages.yml")), StringComparison.Ordinal);
+        Assert.Contains("*.pem", File.ReadAllText(Path.Combine(directory, ".gitignore")), StringComparison.Ordinal);
 
         (int missingExit, string missingOutput) = await workspace.RunAsync(directory, "build", "-c", "Release");
         Assert.NotEqual(0, missingExit);

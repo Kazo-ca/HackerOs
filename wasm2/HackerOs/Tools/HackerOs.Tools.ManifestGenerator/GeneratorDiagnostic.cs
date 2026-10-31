@@ -129,6 +129,16 @@ public static class GeneratorCodes
     /// </summary>
     public const string PackageFailed = "HOSAPP0060";
 
+    // HOSAPP0061 is raised by the HackerOsKeyGen MSBuild target itself: HackerOsSigningKeyFile not set (ADR 0219 §1).
+
+    /// <summary><c>keygen</c> or <c>sign</c> (ADR 0219 §1): the key file exists already, or the key or package cannot be used.</summary>
+    public const string SigningFailed = "HOSAPP0062";
+
+    /// <summary>
+    /// <c>pack</c> warning (ADR 0219 §4): no author key was given, the package is published with its SHA-256 only.
+    /// </summary>
+    public const string UnsignedPackage = "HOSAPP0063";
+
     /// <summary>The tool was called with invalid arguments.</summary>
     public const string InvalidArguments = "HOSAPP0090";
 

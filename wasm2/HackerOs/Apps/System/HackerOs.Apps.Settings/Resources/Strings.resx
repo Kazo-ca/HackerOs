@@ -1632,6 +1632,15 @@
   <data name="Wallpaper.Screens.Other" xml:space="preserve">
     <value>Screen {0}</value>
   </data>
+  <data name="Wallpaper.Screens.Mobile" xml:space="preserve">
+    <value>Mobile</value>
+  </data>
+  <data name="Wallpaper.Screens.Desktop" xml:space="preserve">
+    <value>Desktop</value>
+  </data>
+  <data name="Wallpaper.MobileTheme" xml:space="preserve">
+    <value>Mobile theme background</value>
+  </data>
   <data name="Wallpaper.Theme" xml:space="preserve">
     <value>Theme background</value>
   </data>

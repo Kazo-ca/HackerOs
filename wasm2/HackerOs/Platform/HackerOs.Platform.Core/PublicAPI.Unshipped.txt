@@ -15,3 +15,10 @@ const HackerOs.Platform.Core.Notifications.NotificationSettingsDocuments.Documen
 static HackerOs.Platform.Core.Notifications.NotificationSettingsDocuments.Document.get -> HackerOs.Platform.Core.Settings.OsSettingsDocument!
 static HackerOs.Platform.Core.Notifications.NotificationSettingsDocuments.IsDoNotDisturb(HackerOs.Simulation.Abstractions.Settings.LayeredConfigSnapshot! snapshot) -> bool
 static HackerOs.Platform.Core.Notifications.NotificationSettingsDocuments.Schema.get -> HackerOs.Simulation.Abstractions.Settings.SettingsSchema!
+const HackerOs.Platform.Core.Appearance.AppearanceSettingsDocuments.MobileWallpaperFitKey = "mobileWallpaperFit" -> string!
+const HackerOs.Platform.Core.Appearance.AppearanceSettingsDocuments.MobileWallpaperKey = "mobileWallpaper" -> string!
+HackerOs.Platform.Core.Appearance.WallpaperPreferences.Mobile.get -> string!
+HackerOs.Platform.Core.Appearance.WallpaperPreferences.Mobile.init -> void
+HackerOs.Platform.Core.Appearance.WallpaperPreferences.MobileFit.get -> HackerOs.Theming.Abstractions.WallpaperFit
+HackerOs.Platform.Core.Appearance.WallpaperPreferences.MobileFit.init -> void
+HackerOs.Platform.Core.Appearance.WallpaperService.GetMobileImageAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.Platform.Core.Appearance.WallpaperImage?>!

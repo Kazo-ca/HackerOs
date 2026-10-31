@@ -141,6 +141,46 @@ public sealed class MobileHomeScreenTests(ITestOutputHelper output)
         finally { E2ESupport.StopProcess(server); }
     }
 
+    /// <summary>ADR 0217: the mobile home screen shows its own wallpaper, the desktop keeps the theme's background.</summary>
+    [Fact]
+    public async Task The_mobile_wallpaper_is_drawn_behind_the_home_screen_only()
+    {
+        string solution = E2ESupport.FindSolutionDirectory();
+        string address = $"http://127.0.0.1:{E2ESupport.ReservePort()}";
+        using Process server = E2ESupport.StartHarness(solution, address, testDemo: false, output);
+        try
+        {
+            using IPlaywright playwright = await Playwright.CreateAsync();
+            await using IBrowser browser = await ChromiumLauncher.LaunchAsync(playwright, new() { Headless = true });
+            IPage page = await browser.NewPageAsync(new() { ViewportSize = new() { Width = 1400, Height = 900 } });
+            List<string> errors = E2ESupport.AttachDiagnostics(page, output);
+            await E2ESupport.NavigateWhenReadyAsync(page, address, output);
+            await E2ESupport.CreateLocalProfileAndReachDesktopAsync(page, output);
+
+            await E2ESupport.OpenAppAsync(page, "Settings", output);
+            ILocator panel = page.Locator(".wallpaper-panel");
+            await panel.GetByRole(AriaRole.Radio, new() { Name = "Mobile", Exact = true }).ClickAsync();
+            await Assertions.Expect(panel.GetByRole(AriaRole.Radio, new() { Name = "Mobile theme background" })).ToBeVisibleAsync();
+            await panel.GetByRole(AriaRole.Radio, new() { Name = "Aurora", Exact = true }).ClickAsync();
+            await Assertions.Expect(panel.GetByRole(AriaRole.Radio, new() { Name = "Aurora", Exact = true })).ToHaveAttributeAsync("aria-checked", "true");
+            await page.GetByRole(AriaRole.Button, new() { Name = "Close", Exact = true }).ClickAsync();
+            // The desktop's own choice stays the theme's background.
+            Assert.Equal(0, await page.Locator(".desktop-wallpaper").CountAsync());
+
+            await SwitchToMobileAsync(page);
+            await page.SetViewportSizeAsync(390, 844);
+            ILocator wallpaper = page.Locator(".mobile-shell-workspace > .desktop-wallpaper");
+            await Assertions.Expect(wallpaper).ToHaveAttributeAsync("data-wallpaper", "builtin:aurora");
+            await Assertions.Expect(wallpaper).ToHaveClassAsync(new System.Text.RegularExpressions.Regex("fit-fill"));
+            await Assertions.Expect(wallpaper).ToHaveCSSAsync("background-image", new System.Text.RegularExpressions.Regex("aurora\\.webp"));
+            await Assertions.Expect(page.Locator(".mobile-home-screen")).ToHaveCSSAsync("background-image", "none");
+            Directory.CreateDirectory(Path.Combine(solution, "Tests", "TestResults", "mobile-home"));
+            await page.ScreenshotAsync(new() { Path = Path.Combine(solution, "Tests", "TestResults", "mobile-home", "mobile-wallpaper.png") });
+            Assert.Empty(errors);
+        }
+        finally { E2ESupport.StopProcess(server); }
+    }
+
     private static async Task SwitchToMobileAsync(IPage page)
     {
         await page.GetByRole(AriaRole.Button, new() { Name = "System clock, notifications, and calendar" }).ClickAsync();

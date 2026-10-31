@@ -237,8 +237,8 @@ This section lists what is released in the `main` branch and online.
   ([`theme-files.md`](framework/theme-files.md))
 - **Image wallpapers**: a PNG, JPEG or WebP image (4 shipped with the OS,
   your own or those of a shared folder), for every screen or one screen at a
-  time, in Settings ▸ Appearance.
-  ([ADR 0202](dev/adr/0202-desktop-wallpaper-images.md), [`wallpapers.md`](dev/wallpapers.md))
+  time, and a separate image for the mobile home screen, in Settings ▸ Appearance.
+  ([ADR 0202](dev/adr/0202-desktop-wallpaper-images.md), [ADR 0217](dev/adr/0217-mobile-home-wallpaper.md), [`wallpapers.md`](dev/wallpapers.md))
 - **English and French**, the language follows the user's locale.
   ([`localization.md`](framework/localization.md))
 - **Accessibility**: display and animation preferences, keyboard navigation.
@@ -268,6 +268,11 @@ This section lists what is released in the `main` branch and online.
   service, a site, a complete host or a whole application repository, shown
   in Visual Studio and Rider.
   ([`sdk-developer-guide.md`](framework/sdk-developer-guide.md))
+- **Package signing by an application's author**: `HackerOsKeyGen` creates the
+  key, `HackerOsPack` and the template's `publish-packages.yml` workflow sign and
+  publish the `hackeros-packages` branch.
+  ([ADR 0219](dev/adr/0219-app-authors-signing-tool.md),
+  [`app-repository.md`](framework/app-repository.md))
 - **Install an application from its GitHub repository** with the `hackpkg`
   command. ([ADR 0182](dev/adr/0182-install-apps-from-github.md),
   [`app-installation.md`](dev/app-installation.md)) Its images, scripts and
@@ -334,14 +339,13 @@ points to its PR.
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Application catalog | Catalog format, checking and publishing of the offered applications. | [0188](dev/adr/0188-hack-store-and-app-catalog.md) | [AppMarketPlace #1](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/1) |
-| Signing tool for authors | Sign the packages published from a GitHub repository (`github:` sources). | [0214](dev/adr/0214-hack-store-hot-add-signing-transactions.md) | [#321](https://github.com/Kazo-ca/HackerOs/issues/321) |
 
 ### Personalization
 
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Catalog checks of theme packs | The catalog CI checks the `kind: "theme-pack"` entries as the OS does at install. | [0213](dev/adr/0213-theme-packs-build.md) | [AppMarketPlace #4](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/4) |
-| Mobile wallpaper and "Set as wallpaper" menu | The background image on the mobile home screen, and an entry of the images' context menu. Desktop wallpapers are available. | [0202](dev/adr/0202-desktop-wallpaper-images.md) | [#297](https://github.com/Kazo-ca/HackerOs/issues/297), [#298](https://github.com/Kazo-ca/HackerOs/issues/298) |
+| "Set as wallpaper" menu | An entry of the images' context menu. Desktop and mobile wallpapers are available. | [0202](dev/adr/0202-desktop-wallpaper-images.md) | [#298](https://github.com/Kazo-ca/HackerOs/issues/298) |
 
 ### Network and server
 
