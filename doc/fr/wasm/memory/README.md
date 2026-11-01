@@ -12,10 +12,12 @@ jour à la fin de chaque série ou quand une convention change.
 - **Code actif** : `wasm2/HackerOs/` (OS simulé en Blazor WebAssembly, .NET 10,
   solution `HackerOs.sln`). `src/` est l'ancienne version, gardée comme
   référence.
-- **Version** : HackerOS et le SDK passent en **2.2.1** (`build/Versions.props`),
-  préparée le 2026-11-01 dans la PR `release/2.2.1` vers `main` ; elle est
-  publiée (tag `v2.2.1`, GitHub Release, nuget.org) quand cette PR arrive dans
-  `main`. Numéro de correctif choisi par Benoit bien que l'API grandisse : elle
+- **Version** : HackerOS et le SDK passent en **2.2.2** (`build/Versions.props`),
+  préparée le 2026-11-01 dans la PR `release/2.2.2` vers `main` ; elle est
+  publiée (tag `v2.2.2`, GitHub Release, nuget.org) quand cette PR arrive dans
+  `main`. Elle compile la clé publique du catalogue officiel dans l'OS
+  (`AppPackageDefaults.OfficialCatalogSigningKey`, PR #349) : tout paquet du Hack
+  Store doit porter la signature du catalogue. La 2.2.1 (2026-11-01, publiée) a un numéro de correctif choisi par Benoit bien que l'API grandisse : elle
   verse dans `Shipped` 190 lignes d'API (boutons Précédent/Suivant de la
   souris, menus de fichier par écran…) et regroupe 11 entrées dans
   `changes/2.2.1.json`. Elle apporte ce que les apps tierces attendent pour le

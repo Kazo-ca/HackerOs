@@ -12,9 +12,12 @@ at the end of each series or when a convention changes.
 - **Active code**: `wasm2/HackerOs/` (simulated OS in Blazor WebAssembly, .NET 10,
   solution `HackerOs.sln`). `src/` is the old version, kept as a
   reference.
-- **Version**: HackerOS and the SDK move to **2.2.1** (`build/Versions.props`),
-  prepared on 2026-11-01 in the `release/2.2.1` PR to `main`; it is published
-  (`v2.2.1` tag, GitHub Release, nuget.org) when that PR lands in `main`. A
+- **Version**: HackerOS and the SDK move to **2.2.2** (`build/Versions.props`),
+  prepared on 2026-11-01 in the `release/2.2.2` PR to `main`; it is published
+  (`v2.2.2` tag, GitHub Release, nuget.org) when that PR lands in `main`. It
+  compiles the official catalog's public key into the OS
+  (`AppPackageDefaults.OfficialCatalogSigningKey`, PR #349): every Hack Store
+  package must carry the catalog's signature. 2.2.1 (2026-11-01, published) has a
   patch number chosen by Benoit although the API grows: it folds 190 API lines
   into `Shipped` (mouse Back/Forward buttons, file menus per screen…) and
   gathers 11 entries into `changes/2.2.1.json`. It brings what third-party apps
