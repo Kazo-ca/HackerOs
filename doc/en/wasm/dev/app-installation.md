@@ -317,7 +317,10 @@ approval:
   `wwwroot/`, the collocated JavaScript (`.razor.js`) and the scoped CSS bundle
   (`<assembly>.bundle.scp.css`); those the app does not declare are added, with
   their SHA-256, to the **package's** manifest only
-  ([ADR 0221](adr/0221-pack-all-static-web-assets-of-an-app.md)).
+  ([ADR 0221](adr/0221-pack-all-static-web-assets-of-an-app.md)). It also
+  holds the satellite assemblies of the app's assemblies,
+  `lib/<culture>/<assembly>.resources.dll` (not the SDK's)
+  ([ADR 0222](adr/0222-installed-app-satellite-assemblies.md)).
 - **`wwwroot/` resources** ([ADR 0206](adr/0206-serve-installed-app-assets.md)):
   at the app's first launch in the session, each declared resource is read
   through `AppAssetStore` (hash checked) and copied into the
@@ -331,6 +334,12 @@ approval:
   once `<assembly>.bundle.scp.css` is copied into the cache, the OS adds a
   `<link rel="stylesheet">` to it to the page, once per session, as the host's
   `styles.css` sheet does for a compiled app.
+- **Translations** ([ADR 0222](adr/0222-installed-app-satellite-assemblies.md)):
+  before loading one of the app's assemblies, the OS reads its satellite
+  `lib/<culture>/<assembly>.resources.dll` for each HackerOS language
+  (`InstalledAppSatellites`) and loads it: `IStringLocalizer` and
+  `ResourceManager` find its translated texts, whatever the process's `LANG`.
+  `AppPackage` refuses a satellite that translates no declared assembly.
 - **Limits**: see the section of the same name in ADR 0182 (main thread only,
   third-party NuGet dependencies not carried); the `wwwroot` resources limit is
   lifted by ADR 0206.
@@ -340,7 +349,8 @@ Tests: `AppPackageGatewayTests`, `AppSourcesAndPolicyTests`,
 (Platform.Core), `AppInstallApprovalOverlayTests` (Platform.Blazor),
 `HackpkgCommandTests` (Commands.Wave5), the `hackpkg` scenario of
 `CommandParityTests`, `InstalledAppAssetPublisherTests` (Ecosystem),
-`PackagedWebAssetsTests` (Tools.ManifestGenerator) and
+`InstalledAppSatellitesTests` (Ecosystem), `PackagedWebAssetsTests` and
+`PackagedSatellitesTests` (Tools.ManifestGenerator) and
 `TrimmedPublishTests.InstalledApps.cs` (test package
 `Tests/fixtures/installed-app` installed by `hackpkg` in the trimmed publish,
 run by `build/publish-trimmed.sh`).

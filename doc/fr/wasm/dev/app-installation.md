@@ -318,7 +318,10 @@ validation en deux étapes :
   le `wwwroot/`, le JavaScript collocalisé (`.razor.js`) et le bundle du CSS
   isolé (`<assemblage>.bundle.scp.css`) ; celles que l'app ne déclare pas sont
   ajoutées, avec leur SHA-256, au manifeste **du paquet** seulement
-  ([ADR 0221](adr/0221-pack-all-static-web-assets-of-an-app.md)).
+  ([ADR 0221](adr/0221-pack-all-static-web-assets-of-an-app.md)). Il contient
+  aussi les assemblages satellites des assemblages de l'app,
+  `lib/<culture>/<assemblage>.resources.dll` (pas ceux du SDK)
+  ([ADR 0222](adr/0222-installed-app-satellite-assemblies.md)).
 - **Ressources `wwwroot/`** ([ADR 0206](adr/0206-serve-installed-app-assets.md)) :
   au premier lancement de l'app dans la session, chaque ressource déclarée est
   lue par `AppAssetStore` (empreinte vérifiée) et copiée dans le cache
@@ -332,6 +335,13 @@ validation en deux étapes :
   une fois `<assemblage>.bundle.scp.css` copié dans le cache, l'OS ajoute un
   `<link rel="stylesheet">` vers lui à la page, une fois par session, comme la
   feuille `styles.css` de l'hôte le fait pour une app compilée.
+- **Traductions** ([ADR 0222](adr/0222-installed-app-satellite-assemblies.md)) :
+  avant de charger un assemblage de l'app, l'OS lit son satellite
+  `lib/<culture>/<assemblage>.resources.dll` pour chaque langue de HackerOS
+  (`InstalledAppSatellites`) et le charge : `IStringLocalizer` et
+  `ResourceManager` trouvent ses textes traduits, quel que soit le `LANG` du
+  processus. `AppPackage` refuse un satellite qui ne traduit aucun assemblage
+  déclaré.
 - **Limites** : voir la section du même nom de l'ADR 0182 (fil principal
   seulement, dépendances NuGet tierces non transportées) ; la limite des
   ressources `wwwroot` est levée par l'ADR 0206.
@@ -341,7 +351,8 @@ Tests : `AppPackageGatewayTests`, `AppSourcesAndPolicyTests`,
 (Platform.Core), `AppInstallApprovalOverlayTests` (Platform.Blazor),
 `HackpkgCommandTests` (Commands.Wave5), le scénario `hackpkg` de
 `CommandParityTests`, `InstalledAppAssetPublisherTests` (Ecosystem),
-`PackagedWebAssetsTests` (Tools.ManifestGenerator) et
+`InstalledAppSatellitesTests` (Ecosystem), `PackagedWebAssetsTests` et
+`PackagedSatellitesTests` (Tools.ManifestGenerator) et
 `TrimmedPublishTests.InstalledApps.cs` (paquet de test
 `Tests/fixtures/installed-app` installé par `hackpkg` dans la publication
 réduite, lancé par `build/publish-trimmed.sh`).

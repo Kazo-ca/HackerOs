@@ -246,13 +246,17 @@ public sealed class InstalledAppsActivator(
 /// <summary>
 /// Loads an installed app's assemblies from <c>/usr/lib/hackeros/apps</c> (ADR 0182 §5) and every
 /// other declared assembly through the host's lazy loader. Before an installed app's code loads, its
-/// <c>wwwroot/</c> files are published at <c>_content/&lt;assembly&gt;/</c> (ADR 0206).
+/// <c>wwwroot/</c> files are published at <c>_content/&lt;assembly&gt;/</c> (ADR 0206) and its
+/// satellite assemblies are loaded (ADR 0222 §2).
 /// </summary>
 /// <param name="inner">The host's own transport (Blazor's lazy loader).</param>
 /// <param name="installed">The installed apps of this session.</param>
 /// <param name="assets">Serves their <c>wwwroot/</c> files; <see langword="null"/> serves none.</param>
 public sealed class InstalledAppAssemblyTransport(IBuildKnownAssemblyTransport inner, InstalledAppsBoot installed, InstalledAppAssetPublisher? assets = null) : IBuildKnownAssemblyTransport
 {
+    /// <summary>Gets the loader of their satellite assemblies (ADR 0222 §2); <see langword="null"/> loads none.</summary>
+    public InstalledAppSatellites? Satellites { get; init; }
+
     /// <inheritdoc />
     [RequiresUnreferencedCode("Installed assemblies arrive after publishing; AppPackageApiCheck verified their references at install time.")]
     public async Task<IReadOnlyList<Assembly>> LoadAsync(IReadOnlyList<string> assemblyNames, CancellationToken cancellationToken)
@@ -283,6 +287,12 @@ public sealed class InstalledAppAssemblyTransport(IBuildKnownAssemblyTransport i
 
             byte[] bytes = await installed.ReadAsync(app.GetAssemblyPath(name), cancellationToken).ConfigureAwait(false)
                 ?? throw new FileNotFoundException($"{app.GetAssemblyPath(name).Value} is missing.", name);
+            if (Satellites is { } satellites)
+            {
+                // ADR 0222 §2: the translations are in the runtime before the app's first render.
+                await satellites.LoadAsync(app, name, installed.ReadAsync, cancellationToken).ConfigureAwait(false);
+            }
+
             loaded.Add(AssemblyLoadContext.Default.LoadFromStream(new MemoryStream(bytes, writable: false)));
         }
 

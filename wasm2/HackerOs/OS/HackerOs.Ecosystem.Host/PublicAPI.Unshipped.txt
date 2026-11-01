@@ -2,3 +2,10 @@
 HackerOs.Ecosystem.BrowserInstalledAppAssetCache.LinkStyleSheetAsync(string! url, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask
 HackerOs.Ecosystem.IInstalledAppAssetCache.LinkStyleSheetAsync(string! url, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask
 static HackerOs.Ecosystem.InstalledAppAssetPublisher.GetScopedCssBundlePath(HackerOs.Platform.Core.Apps.Packages.InstalledApp! app) -> string!
+HackerOs.Ecosystem.InstalledAppAssemblyTransport.Satellites.get -> HackerOs.Ecosystem.InstalledAppSatellites?
+HackerOs.Ecosystem.InstalledAppAssemblyTransport.Satellites.init -> void
+HackerOs.Ecosystem.InstalledAppSatellites
+HackerOs.Ecosystem.InstalledAppSatellites.Cultures.get -> System.Collections.Generic.IReadOnlyList<string!>!
+HackerOs.Ecosystem.InstalledAppSatellites.InstalledAppSatellites(System.Collections.Generic.IEnumerable<string!>! cultures) -> void
+HackerOs.Ecosystem.InstalledAppSatellites.LoadAsync(HackerOs.Platform.Core.Apps.Packages.InstalledApp! app, string! assemblyFileName, HackerOs.Platform.Core.Apps.Packages.InstalledAppFileReader! read, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<string!>!>!
+static HackerOs.Ecosystem.InstalledAppSatellites.Find(System.Reflection.AssemblyName! name) -> System.Reflection.Assembly?

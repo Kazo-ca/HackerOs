@@ -118,7 +118,10 @@ Questions à reposer au démarrage : où vivent les visionneuses, portée de
   l'API publique grandisse. Les apps tierces attendent cette version pour leur
   première soumission au Hack Store.
 - Les traductions des apps installées (assemblages satellites) suivent dans une
-  ADR et une PR séparées : issue #337.
+  ADR et une PR séparées : issue #337,
+  [ADR 0222](../dev/adr/0222-installed-app-satellite-assemblies.md) (branche
+  `app-assets/satellite-assemblies`). Le `PackageCheck` du catalogue devra
+  passer à cette version pour accepter les paquets traduits.
 - Le catalogue doit demander le `manifest.json` du paquet :
   issue Kazo-ca/HackerOs-AppMarketPlace#6.
 

@@ -14,12 +14,16 @@ public sealed partial class TrimmedPublishTests
     private const string ProbeAppName = "Installed Assets Probe";
     private const string ProbeContent = "_content/HackerOs.Fixtures.InstalledAssets/";
 
+    /// <summary>The fixture's text in <c>Resources/ProbeStrings.fr.resx</c> (ADR 0222).</summary>
+    private const string FrenchGreeting = "Bonjour depuis le paquet";
+
     /// <summary>
     /// The test package (<c>Tests/fixtures/installed-app</c>), answered in place of GitHub, is
     /// installed with <c>sudo hackpkg install</c> on the development address (no service worker from
     /// index.html there); it opens at once (ADR 0214), then again after the OS restarts: its module, the Web Worker it starts,
     /// the script that worker loads by a relative <c>importScripts</c>, and its image all load; so do
-    /// its collocated module and its scoped CSS, which it never declared (ADR 0221).
+    /// its collocated module and its scoped CSS, which it never declared (ADR 0221), and its French
+    /// text, read from the satellite assembly the package carries (ADR 0222).
     /// </summary>
     [TrimmedPublishFact]
     public async Task An_installed_app_finds_its_wwwroot_files_and_its_worker_scripts()
@@ -54,6 +58,8 @@ public sealed partial class TrimmedPublishTests
             await OpenAppAsync(page, ProbeAppName);
             await Assertions.Expect(page.Locator("[data-probe-status]")).ToHaveTextAsync("engine ready", new() { Timeout = BootTimeoutMs });
             Log("the installed app opened without a restart.");
+            await Assertions.Expect(page.Locator("[data-probe-french]")).ToHaveTextAsync(FrenchGreeting, new() { Timeout = StepTimeoutMs });
+            Log("its French satellite assembly loaded without a restart.");
 
             // --- Restart (ADR 0182, Q5 C): the app joins the catalog at boot ---
             await page.ReloadAsync(new PageReloadOptions { WaitUntil = WaitUntilState.DOMContentLoaded });
@@ -75,6 +81,10 @@ public sealed partial class TrimmedPublishTests
                 "() => { const probe = document.querySelector('.probe'); return !!probe && getComputedStyle(probe).display === 'flex'; }",
                 null, new PageWaitForFunctionOptions { Timeout = StepTimeoutMs });
             Log("the scoped CSS of the installed app applies.");
+
+            // --- ADR 0222: the satellite assembly lib/fr/<assembly>.resources.dll, loaded by the OS ---
+            await Assertions.Expect(page.Locator("[data-probe-french]")).ToHaveTextAsync(FrenchGreeting, new() { Timeout = StepTimeoutMs });
+            Log("the French satellite assembly of the installed app loaded.");
 
             string worker = await page.EvaluateAsync<string>("() => navigator.serviceWorker.controller ? navigator.serviceWorker.controller.scriptURL : ''");
             Assert.Contains("mode=installed-apps", worker, StringComparison.Ordinal);

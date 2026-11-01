@@ -86,6 +86,13 @@ Blazor pour changer de culture :
   l'hôte (Infrastructure.Browser) ;
 - dans les Web Workers, `BrowserWorkerAssemblyLoader.LoadLazyAsync`, une fois.
 
+Une app installée par `hackpkg` ou le Hack Store a ses satellites dans son paquet
+(`lib/<culture>/<assemblage>.resources.dll`, mis par `HackerOsPack`) ; l'OS les
+charge avant le premier rendu de l'app, pour chaque langue de HackerOS
+(`InstalledAppSatellites`, [ADR 0222](../dev/adr/0222-installed-app-satellite-assemblies.md)).
+Rien à déclarer : un `Resources/Strings.fr.resx` suffit, comme pour une app
+compilée dans l'OS.
+
 ### Nom et description des apps
 
 Le générateur de manifestes lit `Resources/AppManifest.<culture>.resx` :
