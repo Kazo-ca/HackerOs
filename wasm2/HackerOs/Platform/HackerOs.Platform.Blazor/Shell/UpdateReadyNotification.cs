@@ -22,6 +22,7 @@ public sealed class UpdateReadyNotification : IDisposable
     private readonly ISimulationClock _clock;
     private readonly IDisposable? _registration;
     private readonly Dictionary<LocalUserId, (NotificationId Id, string Message)> _posted = [];
+    private readonly Dictionary<LocalUserId, NotificationId> _failures = [];
 
     /// <summary>Creates the poster and registers what « Redémarrer » does.</summary>
     /// <param name="queue">The OS notification queue.</param>
@@ -80,6 +81,40 @@ public sealed class UpdateReadyNotification : IDisposable
             expiresAtUtc: null));
         _posted[user] = (id, text);
         return true;
+    }
+
+    /// <summary>
+    /// ADR 0223: « Redémarrer » found no downloadable new version (offline, deployment in
+    /// progress). Posts a warning that replaces the previous one for <paramref name="user"/>, with
+    /// « Redémarrer » again to retry; nothing was closed.
+    /// </summary>
+    /// <param name="user">The signed-in user.</param>
+    /// <param name="title">The title, such as « HackerOS 2.2.0 est disponible. ».</param>
+    /// <param name="message">Why nothing restarted.</param>
+    /// <param name="restartLabel">The label of « Redémarrer ».</param>
+    public void ShowDownloadFailed(LocalUserId user, string title, string message, string restartLabel)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(title);
+        ArgumentException.ThrowIfNullOrWhiteSpace(message);
+        ArgumentException.ThrowIfNullOrWhiteSpace(restartLabel);
+        if (_failures.TryGetValue(user, out NotificationId previous))
+        {
+            _queue.Dismiss(previous);
+        }
+
+        NotificationId id = NotificationId.FromGuid(Guid.NewGuid());
+        IReadOnlyList<NotificationAction> actions = _registration is null ? [] : [new NotificationAction(RestartActionId, restartLabel)];
+        _queue.Enqueue(new Notification(
+            id,
+            user,
+            SourceAppId,
+            NotificationSeverity.Warning,
+            title,
+            message,
+            actions,
+            _clock.UtcNow,
+            expiresAtUtc: null));
+        _failures[user] = id;
     }
 
     /// <inheritdoc />

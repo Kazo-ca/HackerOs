@@ -66,6 +66,23 @@ public sealed class UpdateReadyNotificationTests
     }
 
     [Fact]
+    public void A_failed_download_posts_one_warning_with_restart_to_retry()
+    {
+        using UpdateReadyNotification update = new(_queue, _clock, _actions, () => Task.CompletedTask);
+        update.Show(_alice, "Ready", "Apps will close.", "Restart");
+
+        update.ShowDownloadFailed(_alice, "Ready", "Could not download.", "Restart");
+        update.ShowDownloadFailed(_alice, "Ready", "Could not download.", "Restart");
+
+        Notification warning = Assert.Single(
+            _queue.GetActive(_alice, _clock.UtcNow),
+            notification => notification.Severity == NotificationSeverity.Warning);
+        Assert.Equal("Could not download.", warning.Message);
+        Assert.Equal(UpdateReadyNotification.RestartActionId, Assert.Single(warning.Actions).Id);
+        Assert.Equal(2, _queue.GetActive(_alice, _clock.UtcNow).Count);
+    }
+
+    [Fact]
     public async Task An_action_nobody_registered_belongs_to_its_app()
     {
         Notification notification = new(
