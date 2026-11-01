@@ -45,13 +45,17 @@ export function listen(reference) {
     window.hackerOsControllerChangeHandler = onControllerChange;
 }
 
+// The site's registration, whether or not it controls this page. A page loaded with Ctrl+F5 is
+// not controlled, yet the next reload goes to the registration's active worker: when another
+// HackerOS tab or window keeps the previous worker active, the new one waits, and only
+// SKIP_WAITING lets the restart land on the new version (ADR 0223).
 async function registration() {
-    if (!('serviceWorker' in navigator) || !navigator.serviceWorker.controller) {
+    if (!('serviceWorker' in navigator)) {
         return null;
     }
 
     const found = await navigator.serviceWorker.getRegistration();
-    return found && found.active ? found : null;
+    return found && (found.active || found.waiting) ? found : null;
 }
 
 // Resolves 'ready' once a new worker has installed (its cache is filled and integrity-checked),

@@ -1,0 +1,18 @@
+{
+  "id": "d5c0c8e3-e662-4103-93f1-e88122000b9d",
+  "category": "fixed",
+  "audience": [
+    "user"
+  ],
+  "title": {
+    "en": "Restarting to update works with several HackerOS tabs open",
+    "fr": "Redémarrer pour mettre à jour fonctionne avec plusieurs onglets HackerOS ouverts"
+  },
+  "description": {
+    "en": "When another HackerOS tab, screen or window was open, or after Ctrl+F5, « Restart to update » could still reopen an older version. It now activates the downloaded version first.",
+    "fr": "Quand un autre onglet, écran ou fenêtre HackerOS était ouvert, ou après un Ctrl+F5, « Redémarrer pour mettre à jour » pouvait encore rouvrir une version plus ancienne. Il active maintenant d'abord la version téléchargée."
+  },
+  "links": [
+    "doc/en/wasm/dev/adr/0223-restart-onto-the-new-version.md"
+  ]
+}
