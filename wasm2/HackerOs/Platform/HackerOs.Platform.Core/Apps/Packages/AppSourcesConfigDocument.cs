@@ -122,7 +122,13 @@ public static class AppSourcesConfigDocument
     /// <param name="content">File content, or <see langword="null"/> when the file is absent or unreadable.</param>
     public static AppSourcesConfig Read(string? content) => Read(content, AppPackageDefaults.Standard);
 
-    /// <summary>Reads the file. Never fails: an absent file gives the host's defaults.</summary>
+    /// <summary>
+    /// Reads the file. Never fails: an absent file gives the host's defaults. A file with no
+    /// <c>[catalogs]</c> section at all gets the host's catalogs too: the file was written before the
+    /// section existed (the startup only creates a missing file, it never rewrites one), so it names
+    /// no catalog by omission, not by choice. An empty <c>[catalogs]</c> section is the
+    /// administrator's choice and is kept.
+    /// </summary>
     /// <param name="content">File content, or <see langword="null"/> when the file is absent or unreadable.</param>
     /// <param name="defaults">The sources the host was built with; they stay "built in" (ADR 0189 §1).</param>
     public static AppSourcesConfig Read(string? content, AppPackageDefaults defaults)
@@ -139,8 +145,14 @@ public static class AppSourcesConfigDocument
         int interval = defaults.UpdateIntervalHours;
         Dictionary<string, List<byte[]>> signingKeys = new(StringComparer.OrdinalIgnoreCase);
         List<string> warnings = [];
+        bool hasCatalogsSection = false;
         foreach (ConfigLine line in ConfigDocumentLines.Parse(content))
         {
+            if (line.Kind == ConfigLineKind.Section && string.Equals(line.Group, CatalogsSection, StringComparison.Ordinal))
+            {
+                hasCatalogsSection = true;
+            }
+
             if (line.Kind != ConfigLineKind.KeyValue || line.InMalformedSection || line.Key is not { Length: > 0 } key)
             {
                 continue;
@@ -195,6 +207,20 @@ public static class AppSourcesConfigDocument
                 case SigningKeysSection:
                     warnings.Add($"{where}: '{key}' is not a source, line ignored");
                     break;
+            }
+        }
+
+        if (!hasCatalogsSection)
+        {
+            // Each host catalog comes back with the trust the host gives it, unless the file decides it.
+            foreach ((string name, Uri address) in defaults.Catalogs)
+            {
+                catalogs.TryAdd(name, address);
+                string trustKey = CatalogTrustPrefix + name;
+                if (defaults.TrustedKeys.Contains(trustKey, StringComparer.OrdinalIgnoreCase))
+                {
+                    trusted.TryAdd(trustKey, true);
+                }
             }
         }
 
