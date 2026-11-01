@@ -104,6 +104,79 @@ public sealed class InstalledAppAssetPublisherTests
         Assert.Empty(cache.Files);
     }
 
+    [Fact]
+    public async Task The_scoped_css_bundle_is_linked_to_the_page_once_served()
+    {
+        MemoryCache cache = new();
+        byte[] styles = Encoding.UTF8.GetBytes(".board[b-1x2y3z] { display: grid; }");
+        AppManifest manifest = Manifest(
+            new AssetManifest("Kazo.Sample.bundle.scp.css", AssetKind.Css, Hash(styles)),
+            new AssetManifest("engine/engine.js", AssetKind.JavaScriptModule, Hash(Engine)));
+        (InstalledAppAssetPublisher publisher, InstalledApp app, _) = Create(cache, new()
+        {
+            [Folder + "Kazo.Sample.bundle.scp.css"] = styles,
+            [Folder + "engine/engine.js"] = Engine,
+        }, manifest);
+
+        await publisher.PublishAsync(app);
+        await publisher.PublishAsync(app);
+
+        Assert.Equal("text/css", cache.Files["_content/Kazo.Sample/Kazo.Sample.bundle.scp.css"].ContentType);
+        Assert.Equal(["_content/Kazo.Sample/Kazo.Sample.bundle.scp.css"], cache.StyleSheets);
+    }
+
+    [Fact]
+    public async Task An_app_without_a_scoped_css_bundle_links_no_style_sheet()
+    {
+        MemoryCache cache = new();
+        byte[] other = Encoding.UTF8.GetBytes("body { color: red; }");
+        AppManifest manifest = Manifest(new AssetManifest("css/site.css", AssetKind.Css, Hash(other)));
+        (InstalledAppAssetPublisher publisher, InstalledApp app, _) = Create(cache, new() { [Folder + "css/site.css"] = other }, manifest);
+
+        await publisher.PublishAsync(app);
+
+        Assert.True(cache.Files.ContainsKey("_content/Kazo.Sample/css/site.css"));
+        Assert.Empty(cache.StyleSheets);
+    }
+
+    [Fact]
+    public async Task A_damaged_scoped_css_bundle_is_neither_served_nor_linked()
+    {
+        MemoryCache cache = new();
+        byte[] styles = Encoding.UTF8.GetBytes(".board[b-1x2y3z] { display: grid; }");
+        AppManifest manifest = Manifest(new AssetManifest("Kazo.Sample.bundle.scp.css", AssetKind.Css, Hash(styles)));
+        (InstalledAppAssetPublisher publisher, InstalledApp app, _) = Create(cache, new()
+        {
+            [Folder + "Kazo.Sample.bundle.scp.css"] = Encoding.UTF8.GetBytes("altered"),
+        }, manifest);
+
+        await publisher.PublishAsync(app);
+
+        Assert.Empty(cache.Files);
+        Assert.Empty(cache.StyleSheets);
+    }
+
+    [Fact]
+    public async Task A_style_sheet_that_cannot_be_linked_does_not_stop_the_launch()
+    {
+        MemoryCache cache = new() { LinkFails = true };
+        byte[] styles = Encoding.UTF8.GetBytes(".board[b-1x2y3z] { display: grid; }");
+        AppManifest manifest = Manifest(new AssetManifest("Kazo.Sample.bundle.scp.css", AssetKind.Css, Hash(styles)));
+        (InstalledAppAssetPublisher publisher, InstalledApp app, _) = Create(cache, new() { [Folder + "Kazo.Sample.bundle.scp.css"] = styles }, manifest);
+
+        await publisher.PublishAsync(app);
+
+        Assert.True(cache.Files.ContainsKey("_content/Kazo.Sample/Kazo.Sample.bundle.scp.css"));
+    }
+
+    [Fact]
+    public void The_scoped_css_bundle_is_named_after_the_entry_point_assembly()
+    {
+        InstalledApp app = new(new AppPackageSource("Kazo-ca", "Sample", SemanticVersion.Parse("1.0.0")), Manifest());
+
+        Assert.Equal("Kazo.Sample.bundle.scp.css", InstalledAppAssetPublisher.GetScopedCssBundlePath(app));
+    }
+
     [Theory]
     [InlineData("engine/stockfish.wasm", "application/wasm")]
     [InlineData("css/board.CSS", "text/css")]
@@ -141,6 +214,21 @@ public sealed class InstalledAppAssetPublisherTests
         public ValueTask RemoveAsync(string url, CancellationToken cancellationToken)
         {
             Files.Remove(url);
+            return ValueTask.CompletedTask;
+        }
+
+        public List<string> StyleSheets { get; } = [];
+
+        public bool LinkFails { get; init; }
+
+        public ValueTask LinkStyleSheetAsync(string url, CancellationToken cancellationToken)
+        {
+            if (LinkFails)
+            {
+                throw new InvalidOperationException("The page refused the style sheet.");
+            }
+
+            StyleSheets.Add(url);
             return ValueTask.CompletedTask;
         }
     }

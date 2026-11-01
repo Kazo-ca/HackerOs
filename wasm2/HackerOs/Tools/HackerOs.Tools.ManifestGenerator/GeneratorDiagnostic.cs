@@ -139,6 +139,18 @@ public static class GeneratorCodes
     /// </summary>
     public const string UnsignedPackage = "HOSAPP0063";
 
+    /// <summary>
+    /// <c>pack</c> (ADR 0221 §1), a warning: a static web resource of the project has a path a
+    /// manifest refuses (<c>..</c>, <c>#</c>, <c>?</c>) and is left out of the package.
+    /// </summary>
+    public const string PackageAssetSkipped = "HOSAPP0064";
+
+    /// <summary>
+    /// <c>pack</c> (ADR 0221 §1), a warning: the static web asset manifest given by <c>--web-assets</c>
+    /// does not exist, so the package holds only the declared assets.
+    /// </summary>
+    public const string PackageWebAssetsMissing = "HOSAPP0065";
+
     /// <summary>The tool was called with invalid arguments.</summary>
     public const string InvalidArguments = "HOSAPP0090";
 

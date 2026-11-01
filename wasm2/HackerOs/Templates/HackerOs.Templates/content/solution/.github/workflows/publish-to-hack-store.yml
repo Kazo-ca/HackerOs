@@ -4,7 +4,9 @@
 #   1. checks the HackerOS submodule and builds the app in Release, as CI does;
 #   2. packs it (HackerOsPack, ADR 0182) and checks the manifest version equals the tag;
 #   3. makes the catalog folder apps/<appId>_<version>/ from store/ (icon, short descriptions,
-#      descriptions, screenshots, store.json + the tag's commit) and the generated manifest.json;
+#      descriptions, screenshots, store.json + the tag's commit) and the package's manifest.json
+#      (the generated one plus every static web resource HackerOsPack added, ADR 0221), the one
+#      the catalog compares with the package its CI builds;
 #   4. leaves that folder as an artifact of the run; with the HACK_STORE_TOKEN secret (a token of
 #      the author allowed to fork and open pull requests), it also opens the pull request to
 #      HackerOs-AppMarketPlace from the author's fork.
@@ -57,7 +59,8 @@ jobs:
           cp store/icon.png "$folder/"
           cp store/short_description.*.txt store/description.*.md "$folder/"
           if [[ -d store/screenshots ]]; then cp -r store/screenshots "$folder/"; fi
-          cp "$manifest" "$folder/manifest.json"
+          package="$APP_DIRECTORY/bin/hackeros-packages/$version/$app_id-$version.hackapp"
+          unzip -p "$package" manifest.json > "$folder/manifest.json"
           jq --arg commit "$GITHUB_SHA" '. + {commit: $commit}' store/store.json > "$folder/store.json"
           echo "name=$name" >> "$GITHUB_OUTPUT"
           echo "app_id=$app_id" >> "$GITHUB_OUTPUT"

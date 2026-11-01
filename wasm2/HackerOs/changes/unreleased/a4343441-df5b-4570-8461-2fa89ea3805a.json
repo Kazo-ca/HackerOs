@@ -1,0 +1,18 @@
+{
+  "id": "a4343441-df5b-4570-8461-2fa89ea3805a",
+  "category": "developer",
+  "audience": [
+    "developer"
+  ],
+  "title": {
+    "en": "HackerOsPack packs every static resource of an app",
+    "fr": "HackerOsPack met en paquet toutes les ressources statiques d'une app"
+  },
+  "description": {
+    "en": "The package now holds the whole wwwroot/, the collocated .razor.js files and the scoped CSS bundle, declared in the package's manifest with their SHA-256; the publish workflow of the hackeros-solution template copies that manifest into the catalog folder.",
+    "fr": "Le paquet contient désormais tout le wwwroot/, les fichiers .razor.js collocalisés et le bundle du CSS isolé, déclarés dans le manifeste du paquet avec leur SHA-256 ; le workflow de publication du modèle hackeros-solution copie ce manifeste dans le dossier du catalogue."
+  },
+  "links": [
+    "doc/en/wasm/dev/adr/0221-pack-all-static-web-assets-of-an-app.md"
+  ]
+}

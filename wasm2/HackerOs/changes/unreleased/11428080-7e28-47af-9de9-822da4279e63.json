@@ -1,0 +1,18 @@
+{
+  "id": "11428080-7e28-47af-9de9-822da4279e63",
+  "category": "fixed",
+  "audience": [
+    "user"
+  ],
+  "title": {
+    "en": "Installed apps keep their look",
+    "fr": "Les apps installées gardent leur apparence"
+  },
+  "description": {
+    "en": "An app installed from the Hack Store or with hackpkg now loads its own styles and scripts, and looks the same as an app that comes with HackerOS.",
+    "fr": "Une app installée depuis le Hack Store ou avec hackpkg charge maintenant ses propres styles et scripts, et a la même apparence qu'une app livrée avec HackerOS."
+  },
+  "links": [
+    "doc/en/wasm/dev/adr/0221-pack-all-static-web-assets-of-an-app.md"
+  ]
+}

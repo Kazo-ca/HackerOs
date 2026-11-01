@@ -105,6 +105,18 @@ viewers live, scope of `?app=`, Eruda or not.
 - Code Editor **stays a system app**.
 - The text editor's replace stays **without regular expressions**.
 
+## Next version: 2.2.1 (decision of 2026-10-31)
+
+- The version that brings [ADR 0221](../dev/adr/0221-pack-all-static-web-assets-of-an-app.md)
+  (PR #336: every static resource of an app in its package, an installed app's
+  scoped CSS) is called **2.2.1**, Benoit's choice, although the public API
+  grows. Third-party apps wait for this version for their first Hack Store
+  submission.
+- Translations of installed apps (satellite assemblies) follow in a separate
+  ADR and PR: issue #337.
+- The catalog must ask for the package's `manifest.json`:
+  issue Kazo-ca/HackerOs-AppMarketPlace#6.
+
 ## Questions asked, answer to confirm
 
 - **"New folder" in dialogs** (ADR 0175): make

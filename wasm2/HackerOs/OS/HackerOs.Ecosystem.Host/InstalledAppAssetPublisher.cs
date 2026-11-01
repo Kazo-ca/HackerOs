@@ -31,6 +31,14 @@ public interface IInstalledAppAssetCache
     /// <param name="url">Its address.</param>
     /// <param name="cancellationToken">Cancels the removal.</param>
     ValueTask RemoveAsync(string url, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Links a cached style sheet to the page, once per address (an installed app's scoped CSS,
+    /// ADR 0221 §2).
+    /// </summary>
+    /// <param name="url">Its address.</param>
+    /// <param name="cancellationToken">Cancels the call.</param>
+    ValueTask LinkStyleSheetAsync(string url, CancellationToken cancellationToken);
 }
 
 /// <summary>
@@ -44,7 +52,9 @@ public interface IInstalledAppAssetCache
 /// per session per app, at its first launch. The first publication also drops every cached address
 /// no installed app declares any more (an app removed by <c>hackpkg remove</c> or updated before the
 /// restart). A damaged or missing file is left out, with a <c>/var/log/syslog</c> line; the launch
-/// goes on, as with a built-in app's missing file.
+/// goes on, as with a built-in app's missing file. Once its files are copied, the app's scoped CSS
+/// (<c>&lt;assembly&gt;.bundle.scp.css</c>) is linked to the page (ADR 0221 §2), as the host's
+/// <c>styles.css</c> links a built-in app's.
 /// </remarks>
 public sealed class InstalledAppAssetPublisher
 {
@@ -77,6 +87,22 @@ public sealed class InstalledAppAssetPublisher
     {
         ArgumentNullException.ThrowIfNull(app);
         return StaticWebAssetAppAssetSource.RelativeUrl(app.Manifest, assetPath);
+    }
+
+    /// <summary>
+    /// Gets the path of an app's scoped CSS bundle, as Blazor names it: <c>&lt;assembly&gt;.bundle.scp.css</c>
+    /// at the root of its <c>_content/&lt;assembly&gt;/</c> folder (entry-point assembly).
+    /// </summary>
+    /// <param name="app">The installed app.</param>
+    /// <returns>For example <c>Kazo.Sample.bundle.scp.css</c>.</returns>
+    public static string GetScopedCssBundlePath(InstalledApp app)
+    {
+        ArgumentNullException.ThrowIfNull(app);
+        string assembly = app.Manifest.EntryPoint?.Assembly
+            ?? app.Manifest.Platform?.EntryPoints.FirstOrDefault()?.Assembly
+            ?? throw new InvalidOperationException($"'{app.AppId}' has no entry-point assembly.");
+        string package = assembly.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) ? assembly[..^4] : assembly;
+        return $"{package}.bundle.scp.css";
     }
 
     /// <summary>
@@ -158,6 +184,8 @@ public sealed class InstalledAppAssetPublisher
     private async Task CopyAsync(InstalledApp app, CancellationToken cancellationToken)
     {
         AppAssetStore store = _store();
+        string styles = GetScopedCssBundlePath(app);
+        bool stylesCopied = false;
         int copied = 0;
         foreach (string assetPath in app.Manifest.Assets.Select(static asset => asset.Path))
         {
@@ -166,6 +194,7 @@ public sealed class InstalledAppAssetPublisher
             {
                 byte[] bytes = await store.ReadAsync(app.AppId, assetPath, cancellationToken).ConfigureAwait(false);
                 await _cache.PutAsync(url, bytes, InstalledAppAssetContentTypes.For(assetPath), cancellationToken).ConfigureAwait(false);
+                stylesCopied |= string.Equals(assetPath, styles, StringComparison.Ordinal);
                 copied++;
             }
             catch (Exception exception) when (exception is not OperationCanceledException)
@@ -177,6 +206,24 @@ public sealed class InstalledAppAssetPublisher
         }
 
         _logger?.LogInformation("apps: {Count} wwwroot/ file(s) of {AppId} {Version} served", copied, app.AppId, app.Version);
+        if (stylesCopied)
+        {
+            await LinkStylesAsync(app, GetUrl(app, styles), cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    // ADR 0221 §2: the scoped CSS of the app's components, linked once its verified copy is served.
+    private async Task LinkStylesAsync(InstalledApp app, string url, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await _cache.LinkStyleSheetAsync(url, cancellationToken).ConfigureAwait(false);
+            _logger?.LogInformation("apps: scoped CSS of {AppId} loaded from {Url}", app.AppId, url);
+        }
+        catch (Exception exception) when (exception is not OperationCanceledException)
+        {
+            _logger?.LogWarning(exception, "apps: the scoped CSS of {AppId} could not be loaded", app.AppId);
+        }
     }
 
     private async Task TryRemoveAsync(string url, CancellationToken cancellationToken)

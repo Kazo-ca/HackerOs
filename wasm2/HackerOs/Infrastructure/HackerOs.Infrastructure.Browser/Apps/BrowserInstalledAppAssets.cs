@@ -54,6 +54,17 @@ public static partial class BrowserInstalledAppAssets
         return await Remove(url).ConfigureAwait(true);
     }
 
+    /// <summary>
+    /// Links a cached style sheet to the page (an installed app's scoped CSS, ADR 0221 §2), once per
+    /// address; <see langword="true"/> when the link was added.
+    /// </summary>
+    /// <param name="url">The address, relative to the page's base.</param>
+    public static async Task<bool> LinkStyleSheetAsync(string url)
+    {
+        await ImportAsync().ConfigureAwait(true);
+        return LinkStyleSheet(url);
+    }
+
     private static Task ImportAsync() => _import ??= ImportCoreAsync();
 
     private static async Task ImportCoreAsync()
@@ -73,6 +84,9 @@ public static partial class BrowserInstalledAppAssets
 
     [JSImport("remove", ModuleName)]
     private static partial Task<bool> Remove(string url);
+
+    [JSImport("linkStyleSheet", ModuleName)]
+    private static partial bool LinkStyleSheet(string url);
 }
 
 /// <summary>Trim-safe JSON of <see cref="BrowserInstalledAppAssets.ListAsync"/>.</summary>

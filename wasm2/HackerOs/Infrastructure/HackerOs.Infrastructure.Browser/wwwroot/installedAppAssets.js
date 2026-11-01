@@ -80,3 +80,23 @@ export async function remove(url) {
     const cache = await caches.open(cacheName);
     return await cache.delete(absolute(url));
 }
+
+/**
+ * Links a style sheet the cache serves (an installed app's scoped CSS, ADR 0221 §2) at the end of the
+ * page's <head>, as Blazor's own styles.css links a built-in app's. Once per address: false when it
+ * was already linked.
+ */
+export function linkStyleSheet(url) {
+    const href = absolute(url);
+    const linked = [...document.head.querySelectorAll('link[data-hackeros-installed-app]')];
+    if (linked.some(link => link.href === href)) {
+        return false;
+    }
+
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = href;
+    link.dataset.hackerosInstalledApp = '';
+    document.head.appendChild(link);
+    return true;
+}
