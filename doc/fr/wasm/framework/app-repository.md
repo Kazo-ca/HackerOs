@@ -124,6 +124,46 @@ déclare déjà `HackerOsAppProject=true` ; ajoutez-la à l'hôte par
 Le catalogue ne prend jamais de binaire : après relecture et fusion, sa CI
 compile l'app au commit indiqué (ADR 0188 §4 à §6).
 
+### Le secret `HACK_STORE_TOKEN`
+
+C'est un jeton d'accès personnel GitHub de **l'auteur de l'app** : ni HackerOS
+ni le catalogue ne le fournissent. Avec lui, le workflow lit le nom de
+l'auteur, forke `Kazo-ca/HackerOs-AppMarketPlace` sur son compte, y pousse la
+branche `<appId>_<version>` et ouvre la pull request vers le catalogue.
+
+Créer le jeton (un jeton « classic ») :
+
+1. GitHub ▸ photo du profil ▸ **Settings** ▸ **Developer settings** ▸
+   **Personal access tokens** ▸ **Tokens (classic)** ▸ **Generate new token
+   (classic)**.
+2. *Note* : par exemple `<dépôt> → Hack Store` ; *Expiration* : courte
+   (90 jours par exemple), à renouveler.
+3. Scopes : **`repo`** (forker, pousser, ouvrir la pull request) et
+   **`workflow`** (GitHub refuse un push qui apporte au fork des changements de
+   `.github/workflows` du catalogue que le fork n'a pas encore).
+4. **Generate token**, puis copier le jeton : il ne s'affiche qu'une fois.
+
+L'ajouter au dépôt de l'app : **Settings** ▸ **Secrets and variables** ▸
+**Actions** ▸ **New repository secret**, nom `HACK_STORE_TOKEN`. Ou en ligne de
+commande :
+
+```bash
+gh secret set HACK_STORE_TOKEN --repo <propriétaire>/<dépôt>
+```
+
+- **Pourquoi « classic »** : un jeton à grain fin ne vaut que pour un seul
+  propriétaire (le compte de l'auteur **ou** une organisation), alors que le
+  workflow touche le fork de l'auteur et le dépôt du catalogue. Si
+  l'organisation du dépôt de l'app interdit les jetons classic, l'autoriser
+  dans ses réglages (*Personal access tokens*).
+- **Prudence** : `repo` donne accès à tous les dépôts de l'auteur. Garder une
+  expiration courte, ne mettre le jeton que dans ce secret, le révoquer au
+  moindre doute.
+- **Sans le secret**, rien ne bloque : le dossier `apps/<appId>_<version>/`
+  reste en artefact du workflow, et l'auteur ouvre la pull request lui-même.
+- À ne pas confondre avec `HACKEROS_APP_SIGNING_KEY` (section suivante), une
+  clé que l'outillage HackerOS génère pour signer les paquets.
+
 ## Publier sur `hackeros-packages` et signer
 
 [ADR 0219](../dev/adr/0219-app-authors-signing-tool.md). Le même tag `v*` lance

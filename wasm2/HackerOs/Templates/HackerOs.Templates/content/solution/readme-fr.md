@@ -59,6 +59,16 @@ Forcez l'un ou l'autre avec `-p:HackerOsUseSource=true` ou `false`.
    ouvrir des pull requests), il ouvre la pull request vers `Kazo-ca/HackerOs-AppMarketPlace` depuis
    votre fork ; sans lui, téléchargez l'artefact du workflow et ouvrez la pull request vous-même.
 
+`HACK_STORE_TOKEN` est un jeton d'accès personnel GitHub à vous, que HackerOS ne fournit pas :
+
+1. GitHub ▸ **Settings** ▸ **Developer settings** ▸ **Personal access tokens** ▸ **Tokens (classic)** ▸
+   **Generate new token (classic)**, avec une expiration courte et les scopes **`repo`** et
+   **`workflow`** (un jeton à grain fin ne peut pas couvrir à la fois votre fork et le dépôt du catalogue).
+2. Copiez-le (affiché une seule fois) dans ce dépôt : **Settings** ▸ **Secrets and variables** ▸
+   **Actions** ▸ **New repository secret**, nom `HACK_STORE_TOKEN` (ou `gh secret set HACK_STORE_TOKEN`).
+
+`repo` donne accès à tous vos dépôts : gardez le jeton dans ce seul secret et révoquez-le au moindre doute.
+
 Le catalogue ne prend jamais de binaire de votre part : une fois votre pull request relue et
 fusionnée, sa CI compile l'app au commit du tag.
 

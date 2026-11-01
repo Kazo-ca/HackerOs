@@ -122,6 +122,46 @@ already declares `HackerOsAppProject=true`; add it to the host with
 The catalog never takes a binary: after review and merge, its CI compiles the
 app at the given commit (ADR 0188 §4 to §6).
 
+### The `HACK_STORE_TOKEN` secret
+
+It is a GitHub personal access token of **the app's author**: neither HackerOS
+nor the catalog provides it. With it, the workflow reads the author's name,
+forks `Kazo-ca/HackerOs-AppMarketPlace` to the author's account, pushes the
+`<appId>_<version>` branch there and opens the pull request to the catalog.
+
+Creating the token (a "classic" token):
+
+1. GitHub ▸ profile picture ▸ **Settings** ▸ **Developer settings** ▸
+   **Personal access tokens** ▸ **Tokens (classic)** ▸ **Generate new token
+   (classic)**.
+2. *Note*: for example `<repository> → Hack Store`; *Expiration*: short (90
+   days for example), renewed when it ends.
+3. Scopes: **`repo`** (fork, push, open the pull request) and **`workflow`**
+   (GitHub refuses a push that brings to the fork changes of the catalog's
+   `.github/workflows` the fork does not have yet).
+4. **Generate token**, then copy the token: it is shown only once.
+
+Adding it to the app's repository: **Settings** ▸ **Secrets and variables** ▸
+**Actions** ▸ **New repository secret**, name `HACK_STORE_TOKEN`. Or from the
+command line:
+
+```bash
+gh secret set HACK_STORE_TOKEN --repo <owner>/<repository>
+```
+
+- **Why "classic"**: a fine-grained token is valid for one owner only (the
+  author's account **or** an organization), while the workflow touches the
+  author's fork and the catalog's repository. If the organization of the app's
+  repository forbids classic tokens, allow them in its settings (*Personal
+  access tokens*).
+- **Caution**: `repo` gives access to all the author's repositories. Keep a
+  short expiration, put the token only in this secret, revoke it at the
+  slightest doubt.
+- **Without the secret**, nothing blocks: the `apps/<appId>_<version>/` folder
+  stays as a workflow artifact, and the author opens the pull request.
+- Not to be confused with `HACKEROS_APP_SIGNING_KEY` (next section), a key the
+  HackerOS tooling generates to sign packages.
+
 ## Publishing on `hackeros-packages` and signing
 
 [ADR 0219](../dev/adr/0219-app-authors-signing-tool.md). The same `v*` tag runs
