@@ -228,7 +228,9 @@ This section lists what is released in the `main` branch and online.
   ([`virtual-proc-and-dev.md`](dev/virtual-proc-and-dev.md),
   [`logging.md`](dev/logging.md))
 - **New version announcements**: an open session learns that a new version is
-  available. ([ADR 0174](dev/adr/0174-announce-a-new-version-to-open-sessions.md))
+  available; it downloads in the background and "Restart to update" opens it in
+  every tab. ([ADR 0174](dev/adr/0174-announce-a-new-version-to-open-sessions.md),
+  [ADR 0223](dev/adr/0223-restart-onto-the-new-version.md))
 - **What's new since your last visit**: the Settings ▸ What's new page lists the
   changes by version with a **New** badge; a notification after sign-in points out
   what has not been seen. The same list writes the

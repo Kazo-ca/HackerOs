@@ -233,7 +233,10 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   ([`virtual-proc-and-dev.md`](dev/virtual-proc-and-dev.md),
   [`logging.md`](dev/logging.md))
 - **Annonce des nouvelles versions** : une session ouverte apprend qu'une
-  nouvelle version est disponible. ([ADR 0174](dev/adr/0174-announce-a-new-version-to-open-sessions.md))
+  nouvelle version est disponible ; elle se télécharge en arrière-plan et
+  « Redémarrer pour mettre à jour » l'ouvre dans tous les onglets.
+  ([ADR 0174](dev/adr/0174-announce-a-new-version-to-open-sessions.md),
+  [ADR 0223](dev/adr/0223-restart-onto-the-new-version.md))
 - **Nouveautés depuis la dernière visite** : la page Paramètres ▸ Nouveautés liste
   les changements par version avec un badge **Nouveau** ; une notification après la
   connexion signale ce qui n'a pas été vu.

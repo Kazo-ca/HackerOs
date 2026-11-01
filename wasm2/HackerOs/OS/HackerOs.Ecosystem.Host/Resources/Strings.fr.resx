@@ -105,6 +105,9 @@
   <data name="Update.VersionReady" xml:space="preserve">
     <value>HackerOS {0} est disponible.</value>
   </data>
+  <data name="Update.DownloadFailed" xml:space="preserve">
+    <value>La nouvelle version n'a pas pu être téléchargée : HackerOS garde la version actuelle. Réessayez plus tard.</value>
+  </data>
   <data name="Update.Restart" xml:space="preserve">
     <value>Redémarrer pour mettre à jour</value>
   </data>
