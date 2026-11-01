@@ -269,7 +269,12 @@ validation en deux étapes :
   confiance) par les propriétés MSBuild `HackerOsAppCatalogs`,
   `HackerOsTrustedAppSources` et `HackerOsAppUpdateIntervalHours`. Un
   administrateur ajoute une source sans redéployer, par `hackpkg sources add`,
-  Paramètres ▸ Apps ▸ Sources et liste noire, ou `sudo nano`.
+  Paramètres ▸ Apps ▸ Sources et liste noire, ou `sudo nano`. Le démarrage ne
+  crée le fichier que s'il manque et ne le réécrit jamais : un fichier **sans
+  aucune section `[catalogs]`** (écrit par un build de développement d'avant
+  cette section) reçoit à la lecture les catalogues de l'hôte, avec leur
+  confiance sauf si `[trusted]` la fixe. Une section `[catalogs]` vide est le
+  choix de l'administrateur et reste respectée.
 - **Niveaux de confiance** : *vérifiée* pour le catalogue officiel, *de
   confiance* pour une source intégrée ou marquée `true`, *non fiable* sinon.
 - **Liste noire** : `/etc/hackeros/app-policy.config` (créé au démarrage) a

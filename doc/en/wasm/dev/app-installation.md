@@ -269,7 +269,11 @@ approval:
   `HackerOsAppCatalogs`, `HackerOsTrustedAppSources` and
   `HackerOsAppUpdateIntervalHours`. An administrator adds a source without
   redeploying, with `hackpkg sources add`, Settings ▸ Apps ▸ Sources and block
-  list, or `sudo nano`.
+  list, or `sudo nano`. The startup creates the file only when it is missing
+  and never rewrites it: a file with **no `[catalogs]` section at all** (one
+  written by a development build before the section existed) gets the host's
+  catalogs when it is read, with their trust unless `[trusted]` sets it. An
+  empty `[catalogs]` section is the administrator's choice and is kept.
 - **Trust levels**: *verified* for the official catalog, *trusted* for a
   built-in source or one set to `true`, *untrusted* otherwise.
 - **Block list**: `/etc/hackeros/app-policy.config` (created at startup) has

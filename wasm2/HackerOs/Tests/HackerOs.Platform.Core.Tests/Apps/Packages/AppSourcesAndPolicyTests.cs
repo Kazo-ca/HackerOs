@@ -23,6 +23,47 @@ public sealed class AppSourcesAndPolicyTests
     }
 
     [Fact]
+    public void A_file_written_before_the_catalogs_section_existed_gets_the_official_catalog()
+    {
+        // The file a development build of the end of October 2026 wrote: no [catalogs], no
+        // [signing-keys]. The startup never rewrites an existing file, so the OS would know no catalog.
+        const string Written = "# Where the OS downloads app packages, and whose apps it trusts (ADR 0182).\n"
+            + "[hosts]\ngithub=raw.githubusercontent.com\n\n[trusted]\ngithub.com/Kazo-ca=true\n";
+
+        AppSourcesConfig config = AppSourcesConfigDocument.Read(Written);
+
+        Assert.Empty(config.Warnings);
+        Assert.Equal(new Uri(AppPackageDefaults.OfficialCatalogAddress), config.Catalogs["official"]);
+        Assert.Equal(AppSourceTrust.Verified, config.GetCatalogTrust("official"));
+        Assert.NotEmpty(config.GetSigningKeys(AppPackageSource.ForCatalog("official", "ca.kazo.chess")));
+    }
+
+    [Fact]
+    public void A_file_without_catalogs_that_distrusts_the_official_catalog_keeps_its_choice()
+    {
+        AppSourcesConfig config = AppSourcesConfigDocument.Read("[trusted]\ncatalog:official=false\n");
+
+        Assert.Equal(new Uri(AppPackageDefaults.OfficialCatalogAddress), config.Catalogs["official"]);
+        Assert.Equal(AppSourceTrust.Untrusted, config.GetCatalogTrust("official"));
+    }
+
+    [Fact]
+    public void An_empty_catalogs_section_is_the_administrator_choice_and_is_kept()
+    {
+        AppSourcesConfig config = AppSourcesConfigDocument.Read("[catalogs]\n\n[trusted]\ngithub.com/Kazo-ca=true\n");
+
+        Assert.Empty(config.Catalogs);
+    }
+
+    [Fact]
+    public void A_file_with_its_own_catalogs_does_not_get_the_official_one_back()
+    {
+        AppSourcesConfig config = AppSourcesConfigDocument.Read("[catalogs]\nschool=https://school.example.org/catalog.json\n");
+
+        Assert.Equal("school", Assert.Single(config.Catalogs).Key);
+    }
+
+    [Fact]
     public void A_repository_can_be_trusted_without_its_owner()
     {
         AppSourcesConfig config = AppSourcesConfigDocument.Read("[trusted]\ngithub.com/someone/app=true\n");
