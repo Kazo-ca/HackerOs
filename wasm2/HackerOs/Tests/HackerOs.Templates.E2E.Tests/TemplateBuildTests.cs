@@ -47,6 +47,8 @@ public sealed class TemplateBuildTests(TemplateWorkspace workspace)
         Assert.True(File.Exists(Path.Combine(directory, "Contoso.Board.sln")));
         Assert.Contains("external/HackerOs", File.ReadAllText(Path.Combine(directory, ".gitmodules")), StringComparison.Ordinal);
         Assert.Contains("contoso/HackerOs-App-Board", File.ReadAllText(Path.Combine(directory, "store", "store.json")), StringComparison.Ordinal);
+        // The catalog builds this project, not the solution (whose tests project has no HackerOsPack target).
+        Assert.Contains("\"project\": \"src/Contoso.Board/Contoso.Board.csproj\"", File.ReadAllText(Path.Combine(directory, "store", "store.json")), StringComparison.Ordinal);
         Assert.Contains("src/Contoso.Board", File.ReadAllText(Path.Combine(directory, ".github", "workflows", "publish-to-hack-store.yml")), StringComparison.Ordinal);
         // ADR 0219 §3: the packages branch workflow is named for the app and private keys stay out of git.
         Assert.Contains("src/Contoso.Board", File.ReadAllText(Path.Combine(directory, ".github", "workflows", "publish-packages.yml")), StringComparison.Ordinal);

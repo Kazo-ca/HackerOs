@@ -1,0 +1,24 @@
+{
+  "version": "2.2.2",
+  "date": "2026-11-01",
+  "entries": [
+    {
+      "id": "600acbe1-e1cf-4ea2-9154-fed6d8c34225",
+      "category": "improved",
+      "audience": [
+        "user"
+      ],
+      "title": {
+        "en": "Hack Store apps are signed",
+        "fr": "Les apps du Hack Store sont signées"
+      },
+      "description": {
+        "en": "HackerOS now checks the signature of every app from the official Hack Store and refuses a package that was not signed by the catalog or was changed after.",
+        "fr": "HackerOS vérifie maintenant la signature de chaque app du Hack Store officiel et refuse un paquet que le catalogue n'a pas signé ou qui a été modifié depuis."
+      },
+      "links": [
+        "doc/en/wasm/dev/app-installation.md"
+      ]
+    }
+  ]
+}

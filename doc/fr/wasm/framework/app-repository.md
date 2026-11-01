@@ -101,7 +101,9 @@ déclare déjà `HackerOsAppProject=true` ; ajoutez-la à l'hôte par
    anglaise de 120 caractères au plus (le français est facultatif),
    descriptions, et dans `store.json` la catégorie (liste fermée du
    catalogue), les étiquettes et la licence. `repository` vient de
-   `--repository`.
+   `--repository` ; `project` nomme le `.csproj` de l'app, que le catalogue
+   compile (à la racine, `HackerOsPack` tournerait aussi sur le projet de tests,
+   qui n'a pas cette cible).
 2. Changer `Version` dans la classe `[AppManifest]`, valider, poser le tag
    `v<version>` et le pousser.
 3. Le workflow **Publish to the Hack Store** vérifie le sous-module, compile

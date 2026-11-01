@@ -99,7 +99,9 @@ already declares `HackerOsAppProject=true`; add it to the host with
 1. Fill `store/`: 256×256 PNG icon (200 KB at most), English short description
    of 120 characters at most (French is optional), descriptions, and in
    `store.json` the category (closed list of the catalog), tags and license.
-   `repository` comes from `--repository`.
+   `repository` comes from `--repository`; `project` names the app's `.csproj`,
+   which the catalog builds (at the root, `HackerOsPack` would also run on the
+   tests project, which has no such target).
 2. Change `Version` in the `[AppManifest]` class, commit, create the tag
    `v<version>` and push it.
 3. The **Publish to the Hack Store** workflow checks the submodule, builds the

@@ -18,7 +18,7 @@ profite de tout ce que l'OS fournit déjà (fenêtres, fichiers, réseau,
 sécurité, thèmes, langues, mobile) et se concentre sur son application.
 
 HackerOS est écrit en C# avec Blazor WebAssembly (.NET 10). La version
-actuelle est la **2.2.1**. Essayez-le sur <https://hackos.kazo.ca/>.
+actuelle est la **2.2.2**. Essayez-le sur <https://hackos.kazo.ca/>.
 
 ## Le but de l'écosystème
 
@@ -275,7 +275,7 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
 
 ### Pour les développeurs
 
-- **SDK public sur NuGet** (`HackerOs.*`, version 2.2.1) : API fichier,
+- **SDK public sur NuGet** (`HackerOs.*`, version 2.2.2) : API fichier,
   fenêtres, terminal, réseau, tâches de fond, presse-papiers, dialogues,
   composants Blazor. ([`sdk-reference.md`](framework/sdk-reference.md),
   [`sdk-packages.md`](framework/sdk-packages.md))
@@ -306,8 +306,11 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   passent par une validation en deux étapes (connexion d'un administrateur puis
   fenêtre qui montre l'application, sa source et ses capacités). Sources et
   liste noire dans Paramètres ▸ Sources et liste noire et `hackpkg sources` /
-  `hackpkg policy`. ([ADR 0189](dev/adr/0189-app-sources-trust-and-per-user-install.md),
-  [ADR 0208](dev/adr/0208-hack-store-sources-trust-build.md))
+  `hackpkg policy`. Les applications du Hack Store officiel sont signées par le
+  catalogue et vérifiées par l'OS : un paquet non signé ou modifié est refusé.
+  ([ADR 0189](dev/adr/0189-app-sources-trust-and-per-user-install.md),
+  [ADR 0208](dev/adr/0208-hack-store-sources-trust-build.md),
+  [ADR 0214](dev/adr/0214-hack-store-hot-add-signing-transactions.md))
 - **Hack Store** : le magasin d'applications de HackerOS, épinglé par défaut
   dans le menu Démarrer, sur le bureau et le mobile. Accueil par catégories,
   recherche, fiche (captures, description, taille, licence, capacités,

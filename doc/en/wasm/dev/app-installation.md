@@ -424,6 +424,13 @@ completes the Hack Store.
   (`apps.package.bad-signature`). Verification goes through Web Crypto in the
   browser (`BrowserAppPackageSignatureVerifier`, `webAuthn.js` `verify`), through
   `ECDsa` elsewhere.
+- **Official catalog key**: since 2026-11-01, the official catalog's public key
+  is compiled into the OS (`AppPackageDefaults.OfficialCatalogSigningKey`,
+  `catalog:official`). Every package of the official Hack Store must carry the
+  signature the catalog's `publish.yml` makes with the `HACK_STORE_SIGNING_KEY`
+  secret; an unsigned or forged package is refused. To change keys without a
+  break: add the new one to `[signing-keys]` (or `HackerOsAppSigningKeys`),
+  republish with it, then replace the constant.
 - **Signing by an app's author** ([ADR 0219](adr/0219-app-authors-signing-tool.md),
   issue #321): `dotnet build -t:HackerOsKeyGen -p:HackerOsSigningKeyFile=<file.pem>`
   creates the pair (private key in a new file, public key printed, `HOSAPP0061`
