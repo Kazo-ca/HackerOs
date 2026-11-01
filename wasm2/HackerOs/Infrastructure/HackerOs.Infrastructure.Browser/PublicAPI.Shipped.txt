@@ -339,6 +339,7 @@ override HackerOs.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary.ToS
 override HackerOs.Infrastructure.Browser.Storage.BrowserStorageStatus.Equals(object? obj) -> bool
 override HackerOs.Infrastructure.Browser.Storage.BrowserStorageStatus.GetHashCode() -> int
 override HackerOs.Infrastructure.Browser.Storage.BrowserStorageStatus.ToString() -> string!
+static HackerOs.Infrastructure.Browser.Apps.BrowserInstalledAppAssets.LinkStyleSheetAsync(string! url) -> System.Threading.Tasks.Task<bool>!
 static HackerOs.Infrastructure.Browser.Apps.BrowserInstalledAppAssets.ListAsync() -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<string!>!>!
 static HackerOs.Infrastructure.Browser.Apps.BrowserInstalledAppAssets.PrepareAsync(System.TimeSpan timeout) -> System.Threading.Tasks.Task<bool>!
 static HackerOs.Infrastructure.Browser.Apps.BrowserInstalledAppAssets.PutAsync(string! url, byte[]! bytes, string! contentType) -> System.Threading.Tasks.Task!

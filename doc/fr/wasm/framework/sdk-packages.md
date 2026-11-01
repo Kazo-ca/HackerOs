@@ -22,7 +22,7 @@ empreintes des ressources, ADR 0098 §3 à §5) sont décrites dans
 
 ## Version unique
 
-- `build/Versions.props` définit `HackerOsVersion` (aujourd'hui `2.2.0` ; `2.1.0` a été la première publication automatique de l'ADR 0173),
+- `build/Versions.props` définit `HackerOsVersion` (aujourd'hui `2.2.1` ; `2.1.0` a été la première publication automatique de l'ADR 0173),
   importé par `Directory.Build.props` : chaque projet de la solution porte ce
   `Version`.
 - Avant le gel : `0.9.0-preview.<n>`. Depuis le gel du SDK 1.0 (chantier
@@ -316,7 +316,7 @@ hôte qui la référence ne se construit plus (`HOSAPP0021`, la même règle que
 catalogue appliquée au build) ; un OS 2.0 qui la trouve à son catalogue la refuse
 au démarrage (`catalog.sdk.incompatible`), ne la charge pas, et Paramètres ▸
 Applications installées l'affiche « Incompatible ». Elle doit être recompilée
-contre les paquets 2.x (2.2.0 aujourd'hui).
+contre les paquets 2.x (2.2.1 aujourd'hui).
 
 ### Migration d'une app 1.x
 
@@ -329,7 +329,7 @@ contre les paquets 2.x (2.2.0 aujourd'hui).
 | un résolveur de conflit écrit par l'app | `Dialogs.AsFileConflictResolver(AppContext)` : le dialogue « Remplacer / Garder les deux / Ignorer » du fournisseur de `hackeros.file-dialogs` |
 | `ShellIcon`, `ShellIconDescriptor` | `HackIcons.Vector(…)` / `HackIcons.FromImage(…)` (`HackerOs.AppSdk.Icons`) pour décrire une icône ; le rendu appartient à l'OS |
 
-Puis passer `HackerOsVersion` à `2.2.0` (ou la dernière 2.x publiée) et recompiler.
+Puis passer `HackerOsVersion` à `2.2.1` (ou la dernière 2.x publiée) et recompiler.
 
 ### Ajouts
 
@@ -393,6 +393,27 @@ pour son profil `Release` (ADR 0207 §11).
 | `HackerOs.Simulation.Abstractions` | `IHostFolder`, `IHostFolderAccess` et leurs types (dossier de l'ordinateur monté) ; `OsSoundEvent`, `SoundThemeIndex` (sons du système) ; `FileSystemTreeSize` | ADR 0181, 0204, 0185 |
 | `HackerOs.Theming.Abstractions` | `WallpaperCatalog`, `BuiltInWallpaper`, `WallpaperFit` (fonds en image) ; `IconPacks.IconPack`, `IconPackLibrary` et leurs types (packs d'icônes) ; `CursorTheme`, `CursorThemeLibrary` et leurs types (thèmes de curseurs) ; `ThemePackLayout` (packs de thèmes) | ADR 0202, 0203, 0205, 0213 |
 | `HackerOs.AppSdk.Blazor` | `MessageBoxIcon` | ADR 0185 |
+
+### SDK 2.2.1
+
+Préparée le 2026-11-01 (branche `release/2.2.1`), publiée par le workflow
+`Release HackerOS` quand sa PR arrive dans `main`. Benoit a choisi un numéro de
+correctif bien que l'API publique grandisse : `build/tools/ship-public-api.sh`
+a replié 190 lignes de `PublicAPI.Unshipped.txt` dans `PublicAPI.Shipped.txt`.
+Les seules lignes `*REMOVED*` touchent `HackerOs.Apps.FileExplorer` (Précédent
+passe de la fenêtre mobile à la fenêtre, ADR 0220), une app de base et non une
+bibliothèque du SDK : une app 2.x tourne sans être recompilée. Elle apporte aux
+auteurs d'apps ce dont le Hack Store a besoin : toutes les ressources statiques
+d'une app dans son paquet et le CSS isolé d'une app installée (ADR 0221), les
+assemblages satellites des apps installées (ADR 0222) et l'outil de signature
+(ADR 0219).
+
+| Bibliothèque | Ajout | Décision |
+|---|---|---|
+| `HackerOs.AppSdk.Blazor` | `IAppForwardHandler`, `AppForwardRequest`, `AppBackSource.MouseButton` et `.SystemBack` : boutons Précédent/Suivant de la souris et Précédent de l'onglet | ADR 0220 |
+| `HackerOs.AppSdk.Blazor` | `RegisterFileContextMenuContext.RestrictToScreen` et `RestrictToScreens` | ADR 0218 |
+| `HackerOs.AppSdk` | `MenuScreens`, `HackFileMenuIntent.ReadEntry` | ADR 0218 |
+| `HackerOs.App.Abstractions` | `AppContextMenuEntryManifest.Screen` et `.Screens`, `AppContextMenus.MinScreenNumber`, `MaxScreenNumber`, `ScreensSingle`, `ScreensMultiple` | ADR 0218 |
 
 ### App de compatibilité
 

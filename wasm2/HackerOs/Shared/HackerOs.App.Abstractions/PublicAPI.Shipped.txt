@@ -51,6 +51,10 @@ HackerOs.App.Abstractions.AppContextMenuEntryManifest.Parent.get -> string?
 HackerOs.App.Abstractions.AppContextMenuEntryManifest.Parent.init -> void
 HackerOs.App.Abstractions.AppContextMenuEntryManifest.Scopes.get -> System.Collections.Generic.IReadOnlyList<string!>!
 HackerOs.App.Abstractions.AppContextMenuEntryManifest.Scopes.init -> void
+HackerOs.App.Abstractions.AppContextMenuEntryManifest.Screen.get -> int?
+HackerOs.App.Abstractions.AppContextMenuEntryManifest.Screen.init -> void
+HackerOs.App.Abstractions.AppContextMenuEntryManifest.Screens.get -> string?
+HackerOs.App.Abstractions.AppContextMenuEntryManifest.Screens.init -> void
 HackerOs.App.Abstractions.AppContextMenuEntryManifest.Selection.get -> string!
 HackerOs.App.Abstractions.AppContextMenuEntryManifest.Selection.init -> void
 HackerOs.App.Abstractions.AppContextMenuEntryManifest.Target.get -> string!
@@ -1035,6 +1039,10 @@ const HackerOs.App.Abstractions.AppContextMenus.EnglishCulture = "en" -> string!
 const HackerOs.App.Abstractions.AppContextMenus.FileScope = "file" -> string!
 const HackerOs.App.Abstractions.AppContextMenus.ImageIcon = "image" -> string!
 const HackerOs.App.Abstractions.AppContextMenus.MaxDepth = 3 -> int
+const HackerOs.App.Abstractions.AppContextMenus.MaxScreenNumber = 9 -> int
+const HackerOs.App.Abstractions.AppContextMenus.MinScreenNumber = 2 -> int
+const HackerOs.App.Abstractions.AppContextMenus.ScreensMultiple = "multiple" -> string!
+const HackerOs.App.Abstractions.AppContextMenus.ScreensSingle = "single" -> string!
 const HackerOs.App.Abstractions.AppContextMenus.SelectionAll = "all" -> string!
 const HackerOs.App.Abstractions.AppContextMenus.SelectionEach = "each" -> string!
 const HackerOs.App.Abstractions.AppContextMenus.SelectionSingle = "single" -> string!

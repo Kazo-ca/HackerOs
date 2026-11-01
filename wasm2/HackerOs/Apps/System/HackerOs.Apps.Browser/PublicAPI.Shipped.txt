@@ -268,7 +268,13 @@ HackerOs.Apps.Browser.BrowserPageView.OnRequest.get -> System.Func<string!, stri
 HackerOs.Apps.Browser.BrowserPageView.OnRequest.set -> void
 HackerOs.Apps.Browser.BrowserWindow
 HackerOs.Apps.Browser.BrowserWindow.BrowserWindow() -> void
+HackerOs.Apps.Browser.BrowserWindow.CanNavigateBack.get -> bool
+HackerOs.Apps.Browser.BrowserWindow.CanNavigateBackChanged -> System.Action?
+HackerOs.Apps.Browser.BrowserWindow.CanNavigateForward.get -> bool
+HackerOs.Apps.Browser.BrowserWindow.CanNavigateForwardChanged -> System.Action?
 HackerOs.Apps.Browser.BrowserWindow.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Apps.Browser.BrowserWindow.NavigateBackAsync(HackerOs.AppSdk.Blazor.AppBackRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Blazor.AppBackResult!>
+HackerOs.Apps.Browser.BrowserWindow.NavigateForwardAsync(HackerOs.AppSdk.Blazor.AppForwardRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Blazor.AppBackResult!>
 HackerOs.Apps.Browser.DevTools.ConsoleLevel
 HackerOs.Apps.Browser.DevTools.ConsoleLevel.Debug = 0 -> HackerOs.Apps.Browser.DevTools.ConsoleLevel
 HackerOs.Apps.Browser.DevTools.ConsoleLevel.Error = 3 -> HackerOs.Apps.Browser.DevTools.ConsoleLevel

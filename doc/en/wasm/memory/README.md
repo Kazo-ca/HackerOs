@@ -12,12 +12,17 @@ at the end of each series or when a convention changes.
 - **Active code**: `wasm2/HackerOs/` (simulated OS in Blazor WebAssembly, .NET 10,
   solution `HackerOs.sln`). `src/` is the old version, kept as a
   reference.
-- **Version**: HackerOS and the SDK move to **2.2.0** (`build/Versions.props`),
-  prepared on 2026-10-31 in the `release/2.2.0` PR to `main`, merged after
-  `todo/base`; it is published (`v2.2.0` tag, GitHub Release, nuget.org) when
-  that PR lands in `main`. It folds into `Shipped` the 3020 API lines added
-  since 2.1.0 (Hack Store, `hackeros-solution` template, themes…) and gathers
-  48 entries into `changes/2.2.0.json`. SDK 2.0.0 removed
+- **Version**: HackerOS and the SDK move to **2.2.1** (`build/Versions.props`),
+  prepared on 2026-11-01 in the `release/2.2.1` PR to `main`; it is published
+  (`v2.2.1` tag, GitHub Release, nuget.org) when that PR lands in `main`. A
+  patch number chosen by Benoit although the API grows: it folds 190 API lines
+  into `Shipped` (mouse Back/Forward buttons, file menus per screen…) and
+  gathers 11 entries into `changes/2.2.1.json`. It brings what third-party apps
+  wait for to reach the Hack Store: ADRs 0219 (authors' signing), 0221 (every
+  static resource in the package, scoped CSS) and 0222 (satellites of installed
+  apps). The catalog must ask for the package's `manifest.json` (issue
+  Kazo-ca/HackerOs-AppMarketPlace#6). 2.2.0 (2026-10-31) folded the 3020 API
+  lines added since 2.1.0 (Hack Store, `hackeros-solution` template, themes…). SDK 2.0.0 removed
   `HackerOs.AppSdk.FileView` and refuses 1.x apps
   ([ADR 0161](../dev/adr/0161-sdk-2-0-implementation-adjustments.md)).
   2.1.0 (2026-10-26) is the first version released automatically (tag,
@@ -202,7 +207,7 @@ of [`AGENTS.md`](../../../../AGENTS.md), which Claude Code reads through
 
 | Note | Content |
 | --- | --- |
-| [`decisions-not-built.md`](decisions-not-built.md) | Decisions Benoit took in discussion that are not coded nor written anywhere else yet: windows and taskbar (remaining work items of #242), real sites in the browser (#266: public proxy and Wayback left), next version 2.2.1 (ADR 0221, #337), ported third-party apps, server-hosted apps, ideas taken from daedalOS, editors. |
+| [`decisions-not-built.md`](decisions-not-built.md) | Decisions Benoit took in discussion that are not coded nor written anywhere else yet: windows and taskbar (remaining work items of #242), real sites in the browser (#266: public proxy and Wayback left), ported third-party apps, server-hosted apps, ideas taken from daedalOS, editors. |
 | [`known-test-failures.md`](known-test-failures.md) | Known pre-existing test failures (to name in a PR, not to hide) and recent environment tips. |
 
 ## Environment and pitfalls

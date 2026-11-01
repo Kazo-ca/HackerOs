@@ -12,13 +12,19 @@ jour à la fin de chaque série ou quand une convention change.
 - **Code actif** : `wasm2/HackerOs/` (OS simulé en Blazor WebAssembly, .NET 10,
   solution `HackerOs.sln`). `src/` est l'ancienne version, gardée comme
   référence.
-- **Version** : HackerOS et le SDK passent en **2.2.0** (`build/Versions.props`),
-  préparée le 2026-10-31 dans la PR `release/2.2.0` vers `main`, fusionnée
-  après `todo/base` ; elle est publiée (tag `v2.2.0`, GitHub Release,
-  nuget.org) quand cette PR arrive dans `main`. Elle verse dans `Shipped` les
-  3020 lignes d'API ajoutées depuis la 2.1.0 (Hack Store, modèle
-  `hackeros-solution`, thèmes…) et regroupe 48 entrées dans
-  `changes/2.2.0.json`. Le SDK 2.0.0 a retiré `HackerOs.AppSdk.FileView` et
+- **Version** : HackerOS et le SDK passent en **2.2.1** (`build/Versions.props`),
+  préparée le 2026-11-01 dans la PR `release/2.2.1` vers `main` ; elle est
+  publiée (tag `v2.2.1`, GitHub Release, nuget.org) quand cette PR arrive dans
+  `main`. Numéro de correctif choisi par Benoit bien que l'API grandisse : elle
+  verse dans `Shipped` 190 lignes d'API (boutons Précédent/Suivant de la
+  souris, menus de fichier par écran…) et regroupe 11 entrées dans
+  `changes/2.2.1.json`. Elle apporte ce que les apps tierces attendent pour le
+  Hack Store : ADR 0219 (signature des auteurs), 0221 (toutes les ressources
+  statiques dans le paquet, CSS isolé) et 0222 (satellites des apps
+  installées). Le catalogue doit demander le `manifest.json` du paquet
+  (issue Kazo-ca/HackerOs-AppMarketPlace#6). La 2.2.0 (2026-10-31) a versé
+  dans `Shipped` les 3020 lignes d'API ajoutées depuis la 2.1.0 (Hack Store,
+  modèle `hackeros-solution`, thèmes…). Le SDK 2.0.0 a retiré `HackerOs.AppSdk.FileView` et
   refuse les apps 1.x
   ([ADR 0161](../dev/adr/0161-sdk-2-0-implementation-adjustments.md)).
   La 2.1.0 (2026-10-26) est la première version publiée automatiquement
@@ -205,7 +211,7 @@ section **IV** de [`AGENTS.md`](../../../../AGENTS.md), que Claude Code lit par
 
 | Note | Contenu |
 | --- | --- |
-| [`decisions-not-built.md`](decisions-not-built.md) | Décisions prises par Benoit en discussion et pas encore codées ni écrites ailleurs : fenêtres et barre des tâches (chantiers restants de #242), vrais sites dans le navigateur (#266 : proxy public et Wayback restants), prochaine version 2.2.1 (ADR 0221, #337), apps tierces portées, apps hébergées par le serveur, idées tirées de daedalOS, éditeurs. |
+| [`decisions-not-built.md`](decisions-not-built.md) | Décisions prises par Benoit en discussion et pas encore codées ni écrites ailleurs : fenêtres et barre des tâches (chantiers restants de #242), vrais sites dans le navigateur (#266 : proxy public et Wayback restants), apps tierces portées, apps hébergées par le serveur, idées tirées de daedalOS, éditeurs. |
 | [`known-test-failures.md`](known-test-failures.md) | Échecs de tests préexistants connus (à nommer dans une PR, pas à cacher) et astuces d'environnement récentes. |
 
 ## Environnement et pièges

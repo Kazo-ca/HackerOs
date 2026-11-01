@@ -43,6 +43,9 @@ HackerOs.Apps.Settings.LocalServerPanel.OnPaired.set -> void
 HackerOs.Apps.Settings.MemoryPanel
 HackerOs.Apps.Settings.MemoryPanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
 HackerOs.Apps.Settings.MemoryPanel.MemoryPanel() -> void
+HackerOs.Apps.Settings.NotificationsPanel
+HackerOs.Apps.Settings.NotificationsPanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Apps.Settings.NotificationsPanel.NotificationsPanel() -> void
 HackerOs.Apps.Settings.OsComponentsPanel
 HackerOs.Apps.Settings.OsComponentsPanel.OsComponentsPanel() -> void
 HackerOs.Apps.Settings.PasskeysPanel
@@ -54,10 +57,20 @@ HackerOs.Apps.Settings.ScreensPanel.DisposeAsync() -> System.Threading.Tasks.Val
 HackerOs.Apps.Settings.ScreensPanel.ScreensPanel() -> void
 HackerOs.Apps.Settings.ServerRelayPolicyPanel
 HackerOs.Apps.Settings.ServerRelayPolicyPanel.ServerRelayPolicyPanel() -> void
+HackerOs.Apps.Settings.SetWallpaperApp
+HackerOs.Apps.Settings.SetWallpaperApp.SetWallpaperApp() -> void
+HackerOs.Apps.Settings.SetWallpaperService
+HackerOs.Apps.Settings.SetWallpaperService.SetWallpaperService(HackerOs.App.Abstractions.AppManifest! manifest) -> void
 HackerOs.Apps.Settings.SettingsApp
 HackerOs.Apps.Settings.SettingsApp.SettingsApp() -> void
 HackerOs.Apps.Settings.SettingsWindow
+HackerOs.Apps.Settings.SettingsWindow.CanNavigateBack.get -> bool
+HackerOs.Apps.Settings.SettingsWindow.CanNavigateBackChanged -> System.Action?
+HackerOs.Apps.Settings.SettingsWindow.CanNavigateForward.get -> bool
+HackerOs.Apps.Settings.SettingsWindow.CanNavigateForwardChanged -> System.Action?
 HackerOs.Apps.Settings.SettingsWindow.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Apps.Settings.SettingsWindow.NavigateBackAsync(HackerOs.AppSdk.Blazor.AppBackRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Blazor.AppBackResult!>
+HackerOs.Apps.Settings.SettingsWindow.NavigateForwardAsync(HackerOs.AppSdk.Blazor.AppForwardRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Blazor.AppBackResult!>
 HackerOs.Apps.Settings.SettingsWindow.SettingsWindow() -> void
 HackerOs.Apps.Settings.SoundPanel
 HackerOs.Apps.Settings.SoundPanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
@@ -77,9 +90,26 @@ HackerOs.Apps.Settings.WhatsNewPanel.WhatsNewPanel() -> void
 HackerOs.Apps.Settings._Imports
 HackerOs.Apps.Settings._Imports.Execute() -> void
 HackerOs.Apps.Settings._Imports._Imports() -> void
+const HackerOs.Apps.Settings.SetWallpaperApp.AllScreensEntry = "set-wallpaper-all" -> string!
+const HackerOs.Apps.Settings.SetWallpaperApp.AppId = "org.hackeros.settings.wallpaper" -> string!
+const HackerOs.Apps.Settings.SetWallpaperApp.ScreenEntryPrefix = "set-wallpaper-screen-" -> string!
+const HackerOs.Apps.Settings.SetWallpaperApp.SetWallpaperIntent = "org.hackeros.settings.set-wallpaper.v1" -> string!
+const HackerOs.Apps.Settings.SetWallpaperApp.SingleEntry = "set-wallpaper" -> string!
+const HackerOs.Apps.Settings.SetWallpaperApp.SubmenuEntry = "set-wallpaper-on" -> string!
 override HackerOs.Apps.Settings.AppSourcesPanel.OnInitializedAsync() -> System.Threading.Tasks.Task!
 override HackerOs.Apps.Settings.InstalledAppsPanel.OnInitializedAsync() -> System.Threading.Tasks.Task!
 override HackerOs.Apps.Settings.PasskeysPanel.OnInitializedAsync() -> System.Threading.Tasks.Task!
+override HackerOs.Apps.Settings.SetWallpaperApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override HackerOs.Apps.Settings.SetWallpaperApp.Category.get -> string!
+override HackerOs.Apps.Settings.SetWallpaperApp.Description.get -> string!
+override HackerOs.Apps.Settings.SetWallpaperApp.EntryPoint.get -> System.Type!
+override HackerOs.Apps.Settings.SetWallpaperApp.Id.get -> string!
+override HackerOs.Apps.Settings.SetWallpaperApp.Intents.get -> System.Collections.Generic.IReadOnlyList<HackerOs.App.Abstractions.AppIntentDeclarationManifest!>!
+override HackerOs.Apps.Settings.SetWallpaperApp.Kind.get -> HackerOs.App.Abstractions.AppKind
+override HackerOs.Apps.Settings.SetWallpaperApp.LaunchVisibility.get -> HackerOs.App.Abstractions.AppLaunchVisibility
+override HackerOs.Apps.Settings.SetWallpaperApp.Name.get -> string!
+override HackerOs.Apps.Settings.SetWallpaperApp.PublisherId.get -> string!
+override HackerOs.Apps.Settings.SetWallpaperApp.Resources.get -> HackerOs.App.Abstractions.AppResourceProfileManifest!
 override HackerOs.Apps.Settings.SettingsApp.Assets.get -> System.Collections.Generic.IReadOnlyList<HackerOs.App.Abstractions.AssetManifest!>!
 override HackerOs.Apps.Settings.SettingsApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
 override HackerOs.Apps.Settings.SettingsApp.Category.get -> string!
@@ -99,6 +129,8 @@ override HackerOs.Apps.Settings.SettingsWindow.OnAppStopRequestedAsync(HackerOs.
 override HackerOs.Apps.Settings.SettingsWindow.OnIntentReceivedAsync(HackerOs.App.Abstractions.AppIntentDelivery! intent) -> System.Threading.Tasks.Task!
 override HackerOs.Apps.Settings.SettingsWindow.OnWindowActivatedAsync() -> System.Threading.Tasks.Task!
 override HackerOs.Apps.Settings.UsersPanel.OnInitializedAsync() -> System.Threading.Tasks.Task!
+static HackerOs.Apps.Settings.SetWallpaperApp.RegisterFileContextMenu(HackerOs.AppSdk.Blazor.Files.RegisterFileContextMenuContext! context) -> void
+static readonly HackerOs.Apps.Settings.SetWallpaperApp.ImageTypes -> System.Collections.Generic.IReadOnlyList<string!>!
 ~override HackerOs.Apps.Settings.AppSourcesPanel.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.Apps.Settings.BackupPanel.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.Apps.Settings.InstalledAppsPanel.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

@@ -1255,6 +1255,10 @@ HackerOs.AppSdk.Files.HackDesktopSortItem.Size.get -> long
 HackerOs.AppSdk.Files.HackDesktopSortItem.Size.init -> void
 HackerOs.AppSdk.Files.HackFileMenuIntent
 HackerOs.AppSdk.Files.HackFileMenuItems
+HackerOs.AppSdk.Files.MenuScreens
+HackerOs.AppSdk.Files.MenuScreens.Any = 0 -> HackerOs.AppSdk.Files.MenuScreens
+HackerOs.AppSdk.Files.MenuScreens.Multiple = 2 -> HackerOs.AppSdk.Files.MenuScreens
+HackerOs.AppSdk.Files.MenuScreens.Single = 1 -> HackerOs.AppSdk.Files.MenuScreens
 HackerOs.AppSdk.Files.MenuSelection
 HackerOs.AppSdk.Files.MenuSelection.All = 0 -> HackerOs.AppSdk.Files.MenuSelection
 HackerOs.AppSdk.Files.MenuSelection.Each = 1 -> HackerOs.AppSdk.Files.MenuSelection
@@ -3426,6 +3430,7 @@ static HackerOs.AppSdk.Files.HackDesktopSettingsDocument.operator !=(HackerOs.Ap
 static HackerOs.AppSdk.Files.HackDesktopSettingsDocument.operator ==(HackerOs.AppSdk.Files.HackDesktopSettingsDocument? left, HackerOs.AppSdk.Files.HackDesktopSettingsDocument? right) -> bool
 static HackerOs.AppSdk.Files.HackDesktopSortItem.operator !=(HackerOs.AppSdk.Files.HackDesktopSortItem? left, HackerOs.AppSdk.Files.HackDesktopSortItem? right) -> bool
 static HackerOs.AppSdk.Files.HackDesktopSortItem.operator ==(HackerOs.AppSdk.Files.HackDesktopSortItem? left, HackerOs.AppSdk.Files.HackDesktopSortItem? right) -> bool
+static HackerOs.AppSdk.Files.HackFileMenuIntent.ReadEntry(string? payloadJson) -> string?
 static HackerOs.AppSdk.Files.HackFileMenuIntent.ReadPaths(string? payloadJson) -> System.Collections.Generic.IReadOnlyList<string!>!
 static HackerOs.AppSdk.Files.HackFileMenuIntent.ReadScope(string? payloadJson) -> HackerOs.AppSdk.Files.FileMenuScope
 static HackerOs.AppSdk.Globalization.HackLocale.AvailableLocales.get -> System.Collections.Generic.IReadOnlyList<string!>!
