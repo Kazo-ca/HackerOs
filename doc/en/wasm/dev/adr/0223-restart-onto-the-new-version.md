@@ -4,8 +4,9 @@
 
 ## Status
 
-Proposed on 2026-11-01. Questions asked to Benoit in the thread "Corriger le
-redémarrage vers une ancienne version"; nothing is coded before his answers.
+Accepted on 2026-11-01. Questions asked to Benoit in the thread "Corriger le
+redémarrage vers une ancienne version"; he answered "ok": every
+recommendation is taken (A, 2a, 3a, 4a).
 
 - **Complements:** [ADR 0017](0017-pwa-cache-and-offline-strategy.md) (PWA
   cache), [ADR 0162](0162-restart-after-a-host-build-change.md) (restart
@@ -110,7 +111,7 @@ A script reads `version.json` and rewrites `data-v-src` into
 `index.html` served by the worker, and breaks the integrity check and the
 import map if applied to `_framework/` files. Rejected.
 
-## Questions asked to Benoit
+## Questions asked to Benoit (answer: the recommendations)
 
 1. **Method:** A (recommended), B or C.
 2. **When to download:** (a) in the background as soon as it is announced, the
@@ -123,4 +124,47 @@ import map if applied to `_framework/` files. Rejected.
 
 ## Decision
 
-To be written after Benoit's answers.
+Option A, with the background download, the clean restart of other tabs and
+the same flow for the Start menu "Restart".
+
+1. **`HostUpdateInstaller`** (`HackerOs.Platform.Blazor`, next to
+   `HostReleaseMonitor`) holds the logic in C#, behind `IHostUpdateWorker`.
+   `DownloadAsync` returns `NoWorker`, `UpToDate`, `Ready` or `Unavailable`;
+   calls during a download share it, a `Ready` is kept, any other result is
+   checked again at the next call. `ActivateDownloadedAsync` activates the
+   waiting worker only when the download is `Ready`. A JavaScript error counts
+   as `Unavailable`: the current version keeps running.
+2. **`hostUpdate.js`** (`HackerOs.Ecosystem.Host`, loaded by
+   `BrowserHostUpdateWorker`): `download()` calls `registration.update()` and
+   waits until the new worker is installed (cache filled and checked, at most 3
+   minutes); `activate()` sends `SKIP_WAITING` and waits for `controllerchange`
+   (at most 15 seconds), without reloading.
+3. **Background download:** `App.razor` starts `DownloadAsync` as soon as
+   `HostReleaseMonitor` announces a version (ADR 0174) or
+   `HostBuildUpdateMonitor` sees another build (ADR 0162).
+4. **"Restart to update"** (banner and notification): waits for the download.
+   `Unavailable`: nothing closes, the banner shows "The new version could not
+   be downloaded…" and a warning notification says so in a session, with
+   "Restart" to retry (`UpdateReadyNotification.ShowDownloadFailed`).
+   Otherwise `SystemPowerService.RestartAfterAsync` ends the session, activates
+   the new worker, then reloads: the page comes from the new cache. Without a
+   worker (local development, `localhost`), the plain reload stays.
+5. **Other tabs:** `index.html` no longer reloads abruptly on `controllerchange`
+   when the OS handles it (`window.hackerOsControllerChangeHandler`). The tab
+   that activates waits for its own restart; a tab that already had a worker at
+   load does the same clean restart (`HostUpdateInstaller.ActivatedElsewhere`).
+   A page with no worker at load (first visit, Ctrl+F5) keeps the reload of
+   `index.html`.
+6. **Start menu "Restart"** (ADR 0195): once the session has ended, activates
+   the new version when it is downloaded; otherwise the previous `RESET_CACHE`.
+
+## Consequences
+
+- The restart lands on the version the site serves, installed or not, with no
+  number to change: the cache name comes from the manifest generated at build.
+- Offline use and cross-origin isolation on a static host stay.
+- A new version downloads (the size of a release, in the background) as soon as
+  it is announced, even if the user does not restart right away; the browser
+  already did it at the next navigation.
+- Nothing new in the app SDK; public additions in `HackerOs.Platform.Blazor`
+  (`PublicAPI.Unshipped.txt`).

@@ -4,8 +4,9 @@
 
 ## Statut
 
-Proposé le 2026-11-01. Questions posées à Benoit dans le fil « Corriger le
-redémarrage vers une ancienne version » ; rien n'est codé avant ses réponses.
+Accepté le 2026-11-01. Questions posées à Benoit dans le fil « Corriger le
+redémarrage vers une ancienne version » ; il a répondu « ok » : toutes les
+recommandations sont prises (A, 2a, 3a, 4a).
 
 - **Complète :** [ADR 0017](0017-pwa-cache-and-offline-strategy.md) (cache de
   la PWA), [ADR 0162](0162-restart-after-a-host-build-change.md) (bandeau de
@@ -115,7 +116,7 @@ Redondant avec les empreintes de .NET, ne touche pas `index.html` servi par
 le worker, et casse le contrôle d'intégrité et l'import map si on l'applique
 aux fichiers de `_framework/`. Écarté.
 
-## Questions posées à Benoit
+## Questions posées à Benoit (réponse : les recommandations)
 
 1. **Méthode** : A (recommandé), B ou C.
 2. **Quand télécharger** : (a) en arrière-plan dès l'annonce, le bouton
@@ -129,4 +130,50 @@ aux fichiers de `_framework/`. Écarté.
 
 ## Décision
 
-À écrire après les réponses de Benoit.
+Option A, avec le téléchargement en arrière-plan, le redémarrage propre des
+autres onglets et le même flux pour « Redémarrer » du menu Démarrer.
+
+1. **`HostUpdateInstaller`** (`HackerOs.Platform.Blazor`, à côté de
+   `HostReleaseMonitor`) porte la logique en C#, derrière `IHostUpdateWorker`.
+   `DownloadAsync` rend `NoWorker`, `UpToDate`, `Ready` ou `Unavailable` ; les
+   appels pendant un téléchargement le partagent, un `Ready` est gardé, tout
+   autre résultat est revérifié à l'appel suivant. `ActivateDownloadedAsync`
+   active le worker en attente seulement quand le téléchargement est `Ready`.
+   Une erreur JavaScript vaut `Unavailable` : la version actuelle continue.
+2. **`hostUpdate.js`** (`HackerOs.Ecosystem.Host`, chargé par
+   `BrowserHostUpdateWorker`) : `download()` appelle `registration.update()` et
+   attend que le nouveau worker soit installé (cache rempli et vérifié, au plus
+   3 minutes) ; `activate()` envoie `SKIP_WAITING` et attend le
+   `controllerchange` (au plus 15 secondes), sans recharger.
+3. **Téléchargement en arrière-plan** : `App.razor` lance `DownloadAsync` dès
+   que `HostReleaseMonitor` annonce une version (ADR 0174) ou que
+   `HostBuildUpdateMonitor` voit un autre build (ADR 0162).
+4. **« Redémarrer pour mettre à jour »** (bandeau et notification) : attend le
+   téléchargement. `Unavailable` : rien ne se ferme, le bandeau affiche
+   « La nouvelle version n'a pas pu être téléchargée… » et une notification
+   d'avertissement le dit en session, avec « Redémarrer » pour réessayer
+   (`UpdateReadyNotification.ShowDownloadFailed`). Sinon,
+   `SystemPowerService.RestartAfterAsync` ferme la session, active le nouveau
+   worker, puis recharge : la page vient du nouveau cache. Sans worker
+   (développement local, `localhost`), le rechargement simple d'avant reste.
+5. **Autres onglets** : `index.html` ne recharge plus brutalement sur
+   `controllerchange` quand l'OS s'en occupe
+   (`window.hackerOsControllerChangeHandler`). L'onglet qui active attend son
+   propre redémarrage ; un onglet qui avait déjà un worker au chargement fait le
+   même redémarrage propre (`HostUpdateInstaller.ActivatedElsewhere`). Une page
+   sans worker au chargement (première visite, Ctrl+F5) garde le rechargement
+   d'`index.html`.
+6. **« Redémarrer » du menu Démarrer** (ADR 0195) : une fois la session fermée,
+   active la nouvelle version si elle est téléchargée ; sinon le `RESET_CACHE`
+   d'avant.
+
+## Conséquences
+
+- Le redémarrage arrive sur la version que le site sert, installée ou non,
+  sans numéro à changer : le nom du cache vient du manifeste généré au build.
+- Le hors ligne et l'isolation cross-origin sur un hôte statique restent.
+- Une nouvelle version se télécharge (taille d'une version, en arrière-plan) dès
+  son annonce, même si l'utilisateur ne redémarre pas tout de suite ; le
+  navigateur le faisait déjà à la navigation suivante.
+- Rien de nouveau dans le SDK des apps ; ajouts publics dans
+  `HackerOs.Platform.Blazor` (`PublicAPI.Unshipped.txt`).
