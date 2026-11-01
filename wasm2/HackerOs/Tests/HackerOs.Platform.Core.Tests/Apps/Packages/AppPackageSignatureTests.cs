@@ -47,6 +47,21 @@ public sealed class AppPackageSignatureTests
     }
 
     [Fact]
+    public void The_os_requires_the_official_catalog_signature_with_its_p256_key()
+    {
+        KeyValuePair<string, string> official = Assert.Single(AppPackageDefaults.Standard.SigningKeys);
+
+        Assert.Equal("catalog:official", official.Key);
+        Assert.Equal(AppPackageDefaults.OfficialCatalogSigningKey, official.Value);
+        using ECDsa key = ECDsa.Create();
+        key.ImportSubjectPublicKeyInfo(Convert.FromBase64String(official.Value), out int read);
+        Assert.Equal(Convert.FromBase64String(official.Value).Length, read);
+        Assert.Equal(256, key.KeySize);
+        Assert.Single(AppSourcesConfigDocument.Read(string.Empty, AppPackageDefaults.Standard)
+            .GetSigningKeys(AppPackageSource.ForCatalog("official", "org.kazo.sample")));
+    }
+
+    [Fact]
     public void Signing_keys_are_read_per_source_and_built_in_ones_cannot_be_dropped()
     {
         using ECDsa key = ECDsa.Create(ECCurve.NamedCurves.nistP256);
@@ -57,7 +72,8 @@ public sealed class AppPackageSignatureTests
         AppSourcesConfig config = AppSourcesConfigDocument.Read(
             $"[signing-keys]\ngithub.com/someone={publicKey}\ngithub.com/broken=AAAA\n", defaults);
 
-        Assert.Single(config.GetSigningKeys(AppPackageSource.ForCatalog("official", "org.kazo.sample")));
+        // The official catalog's built-in key and the one the host adds.
+        Assert.Equal(2, config.GetSigningKeys(AppPackageSource.ForCatalog("official", "org.kazo.sample")).Count);
         Assert.Single(config.GetSigningKeys(new AppPackageSource("someone", "app")));
         Assert.Empty(config.GetSigningKeys(new AppPackageSource("Kazo-ca", "app")));
         Assert.NotEmpty(config.Warnings);

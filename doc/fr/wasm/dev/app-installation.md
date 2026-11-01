@@ -427,6 +427,14 @@ termine le Hack Store.
   signé (`apps.package.bad-signature`). La vérification passe par Web Crypto
   dans le navigateur (`BrowserAppPackageSignatureVerifier`, `webAuthn.js`
   `verify`), par `ECDsa` ailleurs.
+- **Clé du catalogue officiel** : depuis le 2026-11-01, la clé publique du
+  catalogue officiel est compilée dans l'OS
+  (`AppPackageDefaults.OfficialCatalogSigningKey`, `catalog:official`). Tout
+  paquet du Hack Store officiel doit porter la signature que `publish.yml` du
+  catalogue pose avec le secret `HACK_STORE_SIGNING_KEY` ; un paquet non signé ou
+  falsifié est refusé. Pour changer de clé sans coupure : ajouter la nouvelle
+  dans `[signing-keys]` (ou `HackerOsAppSigningKeys`), republier avec elle, puis
+  remplacer la constante.
 - **Signature par l'auteur d'une app** ([ADR 0219](adr/0219-app-authors-signing-tool.md),
   issue #321) : `dotnet build -t:HackerOsKeyGen -p:HackerOsSigningKeyFile=<fichier.pem>`
   crée la paire (clé privée dans un nouveau fichier, clé publique affichée,

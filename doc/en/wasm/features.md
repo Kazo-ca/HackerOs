@@ -299,8 +299,11 @@ This section lists what is released in the `main` branch and online.
   through a two-step approval (an administrator signs in, then a window shows
   the application, its source and its capabilities). Sources and block list in
   Settings ▸ Sources and block list and `hackpkg sources` / `hackpkg policy`.
+  Applications of the official Hack Store are signed by the catalog and checked
+  by the OS: an unsigned or changed package is refused.
   ([ADR 0189](dev/adr/0189-app-sources-trust-and-per-user-install.md),
-  [ADR 0208](dev/adr/0208-hack-store-sources-trust-build.md))
+  [ADR 0208](dev/adr/0208-hack-store-sources-trust-build.md),
+  [ADR 0214](dev/adr/0214-hack-store-hot-add-signing-transactions.md))
 - **Hack Store**: the HackerOS app store, pinned by default in the Start menu,
   on desktop and mobile. Home by categories, search, app page (screenshots,
   description, size, license, capabilities, trust), install for oneself or for

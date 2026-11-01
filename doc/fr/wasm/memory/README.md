@@ -125,8 +125,9 @@ jour à la fin de chaque série ou quand une convention change.
   (catalogue vivant `AppCatalog.Changed`), signatures ECDSA P-256
   (`[signing-keys]`, `HackerOsAppSigningKeys`), journal `.transaction`,
   `hackpkg rollback`/`repair`, `AppDataGuard`. Cinq questions posées à Benoit,
-  réponse A à chacune. La clé du catalogue officiel reste à créer par Benoit
-  (`keygen`, secret `HACK_STORE_SIGNING_KEY`) ; outil pour les auteurs :
+  réponse A à chacune. La clé du catalogue officiel a été créée par Benoit le
+  2026-11-01 (`keygen`, secret `HACK_STORE_SIGNING_KEY` du catalogue) ; sa clé
+  publique est dans `AppPackageDefaults.OfficialCatalogSigningKey` ; outil pour les auteurs :
   issue `TODO` #321.
 - **Bulles de notification** (ADR 0197, chantier 1 de #242, série
   `todo/base`) : bulles des notifications et « Update ready » en

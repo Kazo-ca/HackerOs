@@ -306,8 +306,11 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   passent par une validation en deux étapes (connexion d'un administrateur puis
   fenêtre qui montre l'application, sa source et ses capacités). Sources et
   liste noire dans Paramètres ▸ Sources et liste noire et `hackpkg sources` /
-  `hackpkg policy`. ([ADR 0189](dev/adr/0189-app-sources-trust-and-per-user-install.md),
-  [ADR 0208](dev/adr/0208-hack-store-sources-trust-build.md))
+  `hackpkg policy`. Les applications du Hack Store officiel sont signées par le
+  catalogue et vérifiées par l'OS : un paquet non signé ou modifié est refusé.
+  ([ADR 0189](dev/adr/0189-app-sources-trust-and-per-user-install.md),
+  [ADR 0208](dev/adr/0208-hack-store-sources-trust-build.md),
+  [ADR 0214](dev/adr/0214-hack-store-hot-add-signing-transactions.md))
 - **Hack Store** : le magasin d'applications de HackerOS, épinglé par défaut
   dans le menu Démarrer, sur le bureau et le mobile. Accueil par catégories,
   recherche, fiche (captures, description, taille, licence, capacités,
