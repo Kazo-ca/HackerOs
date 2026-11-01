@@ -109,6 +109,7 @@ body {
 
 #hackeros-boot-error[data-state="repairing"] .boot-error-repairing,
 #hackeros-boot-error[data-state="offline"] .boot-error-offline,
+#hackeros-boot-error[data-state="retrying"] .boot-error-retrying,
 #hackeros-boot-error[data-state="failed"] .boot-error-failed {
     display: block;
 }

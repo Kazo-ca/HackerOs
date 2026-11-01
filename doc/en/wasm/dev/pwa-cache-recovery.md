@@ -33,7 +33,7 @@ is rebuilt.
 | Integrity check | Blazor (`dotnet.js`, SHA-256 fingerprints of the startup configuration) | Each startup resource is loaded with `integrity`: damaged bytes make the load fail ("SRI's integrity checks failed"), then startup fail ("Failed to start platform. Reason: … download '…' failed"). |
 | Startup guard | `OS/HackerOs.Ecosystem/wwwroot/index.html` (inline script, host bootstrap boundary) | Launches Blazor (`autostart="false"`, then `Blazor.start()`), detects the failure, decides on the repair, displays the error screen. |
 | Repair | `OS/HackerOs.Ecosystem/wwwroot/service-worker.published.js`, `RESET_CACHE` message | Empties the version's cache and fetches it again from the server, or keeps it intact if the server is unreachable. |
-| Error screen | `index.html` (`#hackeros-boot-error`) and `OS/HackerOs.Ecosystem.Host/wwwroot/css/app.css` (served under `_content/HackerOs.Ecosystem.Host/css/app.css`) | Three states (`data-state`): `repairing`, `offline`, `failed`. Dark console style; Blazor's loading ring and error bar are hidden (`html.hackeros-boot-failed`). |
+| Error screen | `index.html` (`#hackeros-boot-error`) and `OS/HackerOs.Ecosystem.Host/wwwroot/css/app.css` (served under `_content/HackerOs.Ecosystem.Host/css/app.css`) | Three states (`data-state`): `repairing`, `retrying`, `offline`, `failed`. Dark console style; Blazor's loading ring and error bar are hidden (`html.hackeros-boot-failed`). |
 
 ### Flow
 
@@ -44,11 +44,19 @@ is rebuilt.
    (`window.Blazor` absent), that is also a load failure.
 2. Only an integrity or load error (`integrity`, `SRI`,
    `download '`, `Failed to fetch`, `Failed to load`, …) triggers the
-   repair, and only if a service worker controls the page. Any other
-   error displays the `failed` state.
-3. If the guard `sessionStorage['hackeros.bootRecovery']` is already set, the
-   page has already repaired and reloaded in this tab: no loop, the `failed`
-   screen (or `offline` if `navigator.onLine` is false) is displayed.
+   repair or a retry. Any other error displays the `failed` state. The guard
+   also listens to the "download '…' for … failed" rejection that escapes
+   from the loader on its own.
+3. If no service worker controls the page (first visit, Ctrl+F5), or if the
+   guard `sessionStorage['hackeros.bootRecovery']` is already set (the page
+   has already repaired and reloaded in this tab), the error often comes from
+   the server and goes away: GitHub Pages sends `503` responses for a while
+   after a deployment, and their body fails the integrity check
+   ([ADR 0224](adr/0224-retry-the-boot-after-a-server-error.md)). The
+   `retrying` screen counts 5, 15 then 30 seconds and reloads the page;
+   "Retry" retries at once. After three attempts
+   (`sessionStorage['hackeros.bootRetries']`), or offline, the `failed` screen
+   (or `offline` if a worker controls the page) is displayed.
 4. Otherwise the `repairing` screen is displayed and the page sends `RESET_CACHE` to the
    service worker over a `MessageChannel` (maximum delay 120 s). The service
    worker:
@@ -76,8 +84,9 @@ cache (ADR 0017).
   in the service worker would cost one SHA-256 per file at each startup.
 - **Offline, nothing is erased**: emptying the cache without being able to fetch it again
   would also remove `index.html`, hence the screen that explains what to do.
-- **A single reload per tab** (guard in `sessionStorage`): if the fresh
-  copy fails too, the user sees an error instead of a loop of reloads.
+- **A single repair reload per tab** (guard in `sessionStorage`), then at
+  most three spaced reloads (ADR 0224): if the fresh copy still fails, the
+  user sees an error instead of a loop of reloads.
 - **Inline script in `index.html`**: the guard must run before and
   during Blazor startup, without depending on a resource that could
   itself be damaged; no `<script src>` is added to the host.
@@ -110,5 +119,6 @@ Without IPv6 (cloud container), the harness binds to `127.0.0.2` instead of
 - [x] Service worker `RESET_CACHE` message: probe, verified transit cache, replacement.
 - [x] Single-reload guard in `sessionStorage`, cleared by a successful startup.
 - [x] Startup error screen (states `repairing`, `offline`, `failed`).
+- [x] ADR 0224: retries after 5, 15 and 30 s (`retrying` state) for a page with no worker or whose cache was already rebuilt; checked with a server that sends `503` for `System.*.wasm` (boot at the third load; `failed` after three attempts when the error lasts).
 - [x] Online and offline recovery E2E tests; harness fallback to `127.0.0.2`.
 - [x] Manual verification (Playwright Node, Release publication served by `python3 -m http.server`): online, offline then reconnection, file damaged on the server (a single reload, then `failed` state).

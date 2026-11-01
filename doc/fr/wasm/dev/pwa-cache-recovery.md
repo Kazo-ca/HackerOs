@@ -44,11 +44,19 @@ fichiers de l'application est reconstruit.
    (`window.Blazor` absent), c'est aussi un échec de chargement.
 2. Seule une erreur d'intégrité ou de chargement (`integrity`, `SRI`,
    `download '`, `Failed to fetch`, `Failed to load`, …) déclenche la
-   réparation, et seulement si un service worker contrôle la page. Toute autre
-   erreur affiche l'état `failed`.
-3. Si la garde `sessionStorage['hackeros.bootRecovery']` est déjà posée, la
-   page a déjà réparé et rechargé dans cet onglet : pas de boucle, l'écran
-   `failed` (ou `offline` si `navigator.onLine` est faux) s'affiche.
+   réparation ou un nouvel essai. Toute autre erreur affiche l'état `failed`.
+   La garde écoute aussi le rejet « download '…' for … failed » qui sort seul
+   du chargeur.
+3. Si aucun service worker ne contrôle la page (première visite, Ctrl+F5), ou
+   si la garde `sessionStorage['hackeros.bootRecovery']` est déjà posée (la
+   page a déjà réparé et rechargé dans cet onglet), l'erreur vient souvent du
+   serveur et passe : GitHub Pages renvoie des `503` un moment après un
+   déploiement, et leur corps échoue au contrôle d'intégrité
+   ([ADR 0224](adr/0224-retry-the-boot-after-a-server-error.md)). L'écran
+   `retrying` compte 5, 15 puis 30 secondes et recharge la page ; « Retry »
+   réessaie tout de suite. Après trois essais
+   (`sessionStorage['hackeros.bootRetries']`), ou hors ligne, l'écran `failed`
+   (ou `offline` si un worker contrôle la page) s'affiche.
 4. Sinon l'écran `repairing` s'affiche et la page envoie `RESET_CACHE` au
    service worker sur un `MessageChannel` (délai maximal 120 s). Le service
    worker :
@@ -76,9 +84,10 @@ périmé (ADR 0017).
   dans le service worker coûterait un SHA-256 par fichier à chaque démarrage.
 - **Hors ligne, rien n'est effacé** : vider le cache sans pouvoir le reprendre
   ôterait aussi `index.html`, donc l'écran qui explique quoi faire.
-- **Un seul rechargement par onglet** (garde dans `sessionStorage`) : si la
-  copie fraîche échoue aussi, l'utilisateur voit une erreur au lieu d'une
-  boucle de rechargements.
+- **Un seul rechargement de réparation par onglet** (garde dans
+  `sessionStorage`), puis au plus trois rechargements espacés (ADR 0224) : si
+  la copie fraîche échoue toujours, l'utilisateur voit une erreur au lieu
+  d'une boucle de rechargements.
 - **Script en ligne dans `index.html`** : la garde doit tourner avant et
   pendant le démarrage de Blazor, sans dépendre d'une ressource qui pourrait
   elle-même être abîmée ; aucun `<script src>` n'est ajouté à l'hôte.
@@ -110,6 +119,7 @@ Sans IPv6 (conteneur cloud), le harnais se lie à `127.0.0.2` au lieu de
 - [x] Lancer Blazor manuellement et détecter l'échec de démarrage (rejet non géré en .NET 10).
 - [x] Message `RESET_CACHE` du service worker : sonde, cache de transit vérifié, remplacement.
 - [x] Garde d'un seul rechargement dans `sessionStorage`, effacée par un démarrage réussi.
-- [x] Écran d'erreur de démarrage (états `repairing`, `offline`, `failed`).
+- [x] Écran d'erreur de démarrage (états `repairing`, `retrying`, `offline`, `failed`).
+- [x] ADR 0224 : nouveaux essais après 5, 15 et 30 s (état `retrying`) pour une page sans worker ou au cache déjà reconstruit ; vérifié avec un serveur qui renvoie `503` pour `System.*.wasm` (démarrage au troisième chargement ; `failed` après trois essais si l'erreur dure).
 - [x] Tests E2E de récupération en ligne et hors ligne ; repli `127.0.0.2` du harnais.
 - [x] Vérification manuelle (Playwright Node, publication Release servie par `python3 -m http.server`) : en ligne, hors ligne puis reconnexion, fichier abîmé sur le serveur (un seul rechargement, puis état `failed`).
