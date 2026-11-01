@@ -1,3 +1,1 @@
 #nullable enable
-*REMOVED*const HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults.OfficialCatalogSigningKey = "" -> string!
-const HackerOs.Platform.Core.Apps.Packages.AppPackageDefaults.OfficialCatalogSigningKey = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAETFtnNlpmUlpSvnqWeaHkF7t5v51wpoZrHW06ziYPigF0jJUnyQkd09C7Vxbl37RTq9Qg+sd1u16gtx2soqK0/g==" -> string!

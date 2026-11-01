@@ -22,7 +22,7 @@ resource fingerprints, ADR 0098 §3 to §5) are described in
 
 ## Single version
 
-- `build/Versions.props` defines `HackerOsVersion` (today `2.2.1`; `2.1.0` was the first automatic release of ADR 0173),
+- `build/Versions.props` defines `HackerOsVersion` (today `2.2.2`; `2.1.0` was the first automatic release of ADR 0173),
   imported by `Directory.Build.props`: each project of the solution carries this
   `Version`.
 - Before the freeze: `0.9.0-preview.<n>`. Since the SDK 1.0 freeze (work item
@@ -315,7 +315,7 @@ host that references it no longer builds (`HOSAPP0021`, the same rule as the
 catalog applied at build time); an OS 2.0 that finds it in its catalog refuses it
 at startup (`catalog.sdk.incompatible`), does not load it, and Settings ▸
 Installed Apps shows it as "Incompatible". It must be recompiled
-against the 2.x packages (2.2.1 today).
+against the 2.x packages (2.2.2 today).
 
 ### Migrating a 1.x app
 
@@ -328,7 +328,7 @@ against the 2.x packages (2.2.1 today).
 | a conflict resolver written by the app | `Dialogs.AsFileConflictResolver(AppContext)`: the "Replace / Keep both / Skip" dialog of the `hackeros.file-dialogs` provider |
 | `ShellIcon`, `ShellIconDescriptor` | `HackIcons.Vector(…)` / `HackIcons.FromImage(…)` (`HackerOs.AppSdk.Icons`) to describe an icon; rendering belongs to the OS |
 
-Then set `HackerOsVersion` to `2.2.1` (or the latest published 2.x) and recompile.
+Then set `HackerOsVersion` to `2.2.2` (or the latest published 2.x) and recompile.
 
 ### Additions
 
@@ -412,6 +412,15 @@ and the signing tool (ADR 0219).
 | `HackerOs.AppSdk.Blazor` | `RegisterFileContextMenuContext.RestrictToScreen` and `RestrictToScreens` | ADR 0218 |
 | `HackerOs.AppSdk` | `MenuScreens`, `HackFileMenuIntent.ReadEntry` | ADR 0218 |
 | `HackerOs.App.Abstractions` | `AppContextMenuEntryManifest.Screen` and `.Screens`, `AppContextMenus.MinScreenNumber`, `MaxScreenNumber`, `ScreensSingle`, `ScreensMultiple` | ADR 0218 |
+
+### SDK 2.2.2
+
+Prepared on 2026-11-01 (branch `release/2.2.2`), published by the
+`Release HackerOS` workflow when its PR lands in `main`. A patch: no SDK change.
+The only API lines are the new value of
+`AppPackageDefaults.OfficialCatalogSigningKey` (`HackerOs.Platform.Core`, not an
+SDK library): the official catalog's public key, so every Hack Store package
+must carry the catalog's signature (ADR 0214 §2).
 
 ### Compatibility app
 

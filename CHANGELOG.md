@@ -6,6 +6,12 @@ The changes of HackerOS, by version. This file is generated from `wasm2/HackerOs
 `wasm2/HackerOs/build/tools/collect-changes.sh` (ADR 0186): do not edit it by hand. Changes already
 deployed but not released yet are in the Settings ▸ What's new page of the OS.
 
+## 2.2.2 (2026-11-01)
+
+### Improved
+
+- **Hack Store apps are signed.** HackerOS now checks the signature of every app from the official Hack Store and refuses a package that was not signed by the catalog or was changed after. ([app-installation.md](doc/en/wasm/dev/app-installation.md))
+
 ## 2.2.1 (2026-11-01)
 
 ### New
