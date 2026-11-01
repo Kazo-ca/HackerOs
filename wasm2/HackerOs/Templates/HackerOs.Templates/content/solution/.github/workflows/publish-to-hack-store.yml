@@ -83,9 +83,20 @@ jobs:
             exit 0
           fi
           user="$(gh api user --jq .login)"
-          gh repo fork "$MARKETPLACE" --clone=false --remote=false
+          # No --remote: gh refuses it when a repository is named (nothing is cloned here anyway).
+          gh repo fork "$MARKETPLACE" --clone=false
           fork="$user/${MARKETPLACE#*/}"
-          git clone --depth 1 "https://x-access-token:$GH_TOKEN@github.com/$fork.git" marketplace
+          # GitHub creates a fork in the background: retry the clone for up to a minute.
+          for attempt in 1 2 3 4 5 6; do
+            if git clone --depth 1 "https://x-access-token:$GH_TOKEN@github.com/$fork.git" marketplace; then
+              break
+            fi
+            if [[ $attempt == 6 ]]; then
+              echo "::error::The fork $fork could not be cloned."
+              exit 1
+            fi
+            sleep 10
+          done
           cd marketplace
           git fetch --depth 1 "https://github.com/$MARKETPLACE.git" main
           git checkout -B "$NAME" FETCH_HEAD
