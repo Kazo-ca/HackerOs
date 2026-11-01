@@ -4,8 +4,8 @@
 
 ## Status
 
-Proposed on 2026-10-31 (issue #337), built with the recommended choices;
-questions asked to Benoit (see "Questions").
+Accepted on 2026-11-01 (issue #337): Benoit took the recommended choices
+(1 A, 2 A, see "Questions").
 
 - **Complements:** [ADR 0182](0182-install-apps-from-github.md) §1 and §5
   (`hackpkg`, `HackerOsPack`), [ADR 0221](0221-pack-all-static-web-assets-of-an-app.md)
@@ -79,7 +79,7 @@ questions asked to Benoit (see "Questions").
 
 ## Questions
 
-Asked to Benoit in the conversation on 2026-10-31; answers to be recorded here.
+Asked to Benoit in the conversation on 2026-10-31; answers of 2026-11-01: **1 A, 2 A**.
 
 1. **Which languages to load?** A (recommended): every HackerOS language, like
    compiled apps, because each process has its `LANG`. B: only the session's
