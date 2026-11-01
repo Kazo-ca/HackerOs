@@ -99,6 +99,9 @@
 
     <MobileSystemNavigationBar Commands="_systemNavigationCommands" />
 
+    @* ADR 0220: the phone's Back, the mouse's Back/Forward buttons and Alt+←/→ follow the ◁ sequence. *@
+    <HackerOs.Platform.Blazor.Navigation.HardwareNavigationListener />
+
     @* ADR 0049: secure-desktop approval, above every app screen and the navigation bar. *@
     @* ADR 0101: synchronization conflicts and the session's periodic sync. *@
     @* ADR 0150 §6: the OS context menu, as a sheet at the bottom (long press). *@
@@ -169,6 +172,15 @@
             () => _isShadeOpen || _showRecent || _isDrawerOpen,
             CloseOverlays,
             ToggleRecent);
+        // ADR 0220 §2: the phone's Back, the mouse buttons and Alt+←/→ follow the ◁ sequence.
+        _hardwareNavigation = Services.GetService(typeof(HackerOs.Platform.Blazor.Navigation.HardwareNavigationService))
+            as HackerOs.Platform.Blazor.Navigation.HardwareNavigationService;
+        if (_hardwareNavigation is not null)
+        {
+            _hardwareNavigationRoute = RouteHardwareNavigationAsync;
+            _hardwareNavigation.Route = _hardwareNavigationRoute;
+        }
+
         InitializeMobileHome();
         // ADR 0196: the shade handle's dot counts the notifications not looked at yet; opening the shade reads them.
         if (Services.GetService(typeof(INotificationQueue)) is INotificationQueue notifications
@@ -312,6 +324,11 @@
     /// <inheritdoc />
     public async ValueTask DisposeAsync()
     {
+        if (_hardwareNavigation is not null && ReferenceEquals(_hardwareNavigation.Route, _hardwareNavigationRoute))
+        {
+            _hardwareNavigation.Route = null;
+        }
+
         WindowRuntime.StateChanged -= Rerender;
         FileDialogAdapter.Changed -= Rerender;
         _mobileProcessObserver?.Dispose();

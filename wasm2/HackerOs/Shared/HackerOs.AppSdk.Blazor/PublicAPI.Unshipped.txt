@@ -1,3 +1,21 @@
 #nullable enable
 HackerOs.AppSdk.Blazor.Files.RegisterFileContextMenuContext.RestrictToScreen(string! name, int screen) -> void
 HackerOs.AppSdk.Blazor.Files.RegisterFileContextMenuContext.RestrictToScreens(string! name, HackerOs.AppSdk.Files.MenuScreens screens) -> void
+HackerOs.AppSdk.Blazor.AppBackSource.MouseButton = 3 -> HackerOs.AppSdk.Blazor.AppBackSource
+HackerOs.AppSdk.Blazor.AppBackSource.SystemBack = 4 -> HackerOs.AppSdk.Blazor.AppBackSource
+HackerOs.AppSdk.Blazor.AppForwardRequest
+HackerOs.AppSdk.Blazor.AppForwardRequest.<Clone>$() -> HackerOs.AppSdk.Blazor.AppForwardRequest!
+HackerOs.AppSdk.Blazor.AppForwardRequest.AppForwardRequest(HackerOs.AppSdk.Blazor.AppBackSource Source) -> void
+HackerOs.AppSdk.Blazor.AppForwardRequest.Deconstruct(out HackerOs.AppSdk.Blazor.AppBackSource Source) -> void
+HackerOs.AppSdk.Blazor.AppForwardRequest.Equals(HackerOs.AppSdk.Blazor.AppForwardRequest? other) -> bool
+HackerOs.AppSdk.Blazor.AppForwardRequest.Source.get -> HackerOs.AppSdk.Blazor.AppBackSource
+HackerOs.AppSdk.Blazor.AppForwardRequest.Source.init -> void
+HackerOs.AppSdk.Blazor.IAppForwardHandler
+HackerOs.AppSdk.Blazor.IAppForwardHandler.CanNavigateForward.get -> bool
+HackerOs.AppSdk.Blazor.IAppForwardHandler.CanNavigateForwardChanged -> System.Action?
+HackerOs.AppSdk.Blazor.IAppForwardHandler.NavigateForwardAsync(HackerOs.AppSdk.Blazor.AppForwardRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Blazor.AppBackResult!>
+override HackerOs.AppSdk.Blazor.AppForwardRequest.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.AppForwardRequest.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.AppForwardRequest.ToString() -> string!
+static HackerOs.AppSdk.Blazor.AppForwardRequest.operator !=(HackerOs.AppSdk.Blazor.AppForwardRequest? left, HackerOs.AppSdk.Blazor.AppForwardRequest? right) -> bool
+static HackerOs.AppSdk.Blazor.AppForwardRequest.operator ==(HackerOs.AppSdk.Blazor.AppForwardRequest? left, HackerOs.AppSdk.Blazor.AppForwardRequest? right) -> bool

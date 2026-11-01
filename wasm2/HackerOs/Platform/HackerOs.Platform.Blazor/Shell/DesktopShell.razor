@@ -119,6 +119,9 @@
     @* ADR 0127 §2: samples which windows stop answering their inputs. *@
     <WindowResponsivenessHost />
 
+    @* ADR 0220: the mouse's Back/Forward buttons, Alt+←/→ and the tab's Back go to the focused window. *@
+    <HackerOs.Platform.Blazor.Navigation.HardwareNavigationListener />
+
     @* ADR 0178 §4: the secondary screens, each with its desktop, and the « Restaurer les écrans » offer. *@
     <HackerOs.Platform.Blazor.Display.ScreenLayer ScreenContent="SecondaryDesktopFragment" ScreenTaskbar="SecondaryTaskbarFragment" />
 
@@ -589,6 +592,37 @@
             appId => Catalog.Manifests.ContainsKey(appId),
             CanOpenNewWindow,
             (appId, arguments, display) => InvokeAsync(() => LaunchFromTaskbarAsync(appId, arguments, display)));
+        _hardwareNavigation = Services.GetService(typeof(HackerOs.Platform.Blazor.Navigation.HardwareNavigationService))
+            as HackerOs.Platform.Blazor.Navigation.HardwareNavigationService;
+        if (_hardwareNavigation is not null)
+        {
+            _hardwareNavigationRoute = RouteHardwareNavigationAsync;
+            _hardwareNavigation.Route = _hardwareNavigationRoute;
+        }
+    }
+
+    private HackerOs.Platform.Blazor.Navigation.HardwareNavigationService? _hardwareNavigation;
+    private Func<HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest, Task>? _hardwareNavigationRoute;
+
+    /// <summary>
+    /// ADR 0220 §2: an open context menu or Start menu closes first, as with Escape; otherwise the gesture
+    /// goes to the focused window, and nothing happens when it has nothing to go back to.
+    /// </summary>
+    private async Task RouteHardwareNavigationAsync(HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest request)
+    {
+        if (ContextMenus.Current is not null)
+        {
+            ContextMenus.Close();
+            return;
+        }
+
+        if (_launcher.IsOpen)
+        {
+            _launcher.Close();
+            return;
+        }
+
+        await _hardwareNavigation!.NavigateFocusedWindowAsync(request);
     }
 
     /// <summary>Posts the sign-in notification of unseen changes, then shows its dot at once.</summary>
@@ -641,6 +675,11 @@
         if (ReferenceEquals(KeyboardCommands.OpenScreen, _openScreen))
         {
             KeyboardCommands.OpenScreen = null;
+        }
+
+        if (_hardwareNavigation is not null && ReferenceEquals(_hardwareNavigation.Route, _hardwareNavigationRoute))
+        {
+            _hardwareNavigation.Route = null;
         }
 
         _processSubscription?.Dispose();

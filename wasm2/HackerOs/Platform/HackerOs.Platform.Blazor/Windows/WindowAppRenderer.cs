@@ -17,6 +17,7 @@ public sealed class WindowAppRenderer : ComponentBase, IDisposable
 {
     private IDisposable? _closeGuardRegistration;
     private IDisposable? _backHandlerRegistration;
+    private IDisposable? _forwardHandlerRegistration;
     private IDisposable? _windowEventsRegistration;
 
     /// <summary>Gets or sets the authoritative window snapshot.</summary>
@@ -183,6 +184,12 @@ public sealed class WindowAppRenderer : ComponentBase, IDisposable
             ? BackHandlers.Register(Window.Id, backHandler)
             : null;
 
+        // ADR 0220 §3: the mouse's Forward button, Alt+→ and Browser Forward reach the app through this one.
+        _forwardHandlerRegistration?.Dispose();
+        _forwardHandlerRegistration = component is IAppForwardHandler forwardHandler
+            ? BackHandlers.RegisterForward(Window.Id, forwardHandler)
+            : null;
+
         _windowEventsRegistration?.Dispose();
         _windowEventsRegistration = component is IWindowAppEventTarget target && WindowEvents is not null
             ? WindowEvents.Register(Window.Id, target)
@@ -197,6 +204,8 @@ public sealed class WindowAppRenderer : ComponentBase, IDisposable
 
         _backHandlerRegistration?.Dispose();
         _backHandlerRegistration = null;
+        _forwardHandlerRegistration?.Dispose();
+        _forwardHandlerRegistration = null;
 
         _windowEventsRegistration?.Dispose();
         _windowEventsRegistration = null;

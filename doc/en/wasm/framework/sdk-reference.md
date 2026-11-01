@@ -344,7 +344,8 @@ Interfaces that a windowed component can implement:
 | Interface | Role |
 |---|---|
 | `IWindowCloseGuard` | `ConfirmCloseAsync`: allow or refuse closing (unsaved changes). |
-| `IAppBackHandler` | `CanNavigateBack`, `CanNavigateBackChanged`, `NavigateBackAsync` → `AppBackResult`; with `SupportsBack => true`. |
+| `IAppBackHandler` | `CanNavigateBack`, `CanNavigateBackChanged`, `NavigateBackAsync` → `AppBackResult`. Receives the mobile ◁ button, the title-bar Back button (with `SupportsBack => true`), and with nothing declared the mouse Back button, Alt+← and the phone's Back ([ADR 0220](../dev/adr/0220-mouse-back-forward-buttons.md)). `AppBackRequest.Source`: `SystemNavigationBar`, `DesktopChromeButton`, `KeyboardShortcut`, `MouseButton`, `SystemBack`. |
+| `IAppForwardHandler` | `CanNavigateForward`, `CanNavigateForwardChanged`, `NavigateForwardAsync(AppForwardRequest)` → `AppBackResult`: mouse Forward button, Alt+→, Browser Forward key ([ADR 0220](../dev/adr/0220-mouse-back-forward-buttons.md)). |
 
 ## Websites (ASP.Hack)
 
