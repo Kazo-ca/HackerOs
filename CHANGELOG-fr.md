@@ -6,6 +6,31 @@ Les changements de HackerOS, par version. Ce fichier est généré à partir de 
 `wasm2/HackerOs/build/tools/collect-changes.sh` (ADR 0186) : ne pas le modifier à la main. Les changements
 déjà déployés mais pas encore publiés sont dans la page Paramètres ▸ Nouveautés de l'OS.
 
+## 2.2.1 (2026-11-01)
+
+### Nouveau
+
+- **Définir comme fond d'écran depuis le menu d'une image.** Un clic droit sur une image PNG, JPEG ou WebP puis Définir comme fond d'écran : elle devient le fond du bureau tout de suite, sans ouvrir Paramètres. Avec plusieurs écrans, un sous-menu choisit l'écran. ([#330](https://github.com/Kazo-ca/HackerOs/pull/330), [0218-set-as-wallpaper-file-menu.md](doc/fr/wasm/dev/adr/0218-set-as-wallpaper-file-menu.md), [wallpapers.md](doc/fr/wasm/dev/wallpapers.md))
+- **Ne pas déranger.** Un interrupteur Ne pas déranger dans le panneau de l'horloge (le volet sur téléphone) et dans Paramètres ▸ Notifications coupe les bulles et les sons des notifications, erreurs comprises. Les notifications vont quand même dans le panneau de l'horloge et le point des non-lues les signale toujours. Une lune dans la zone de notification indique que le mode est activé ; le choix est enregistré pour chaque utilisateur dans ~/.config/hackeros/notifications.config. ([0216-do-not-disturb.md](doc/fr/wasm/dev/adr/0216-do-not-disturb.md))
+- **Boutons Précédent et Suivant de la souris dans les apps.** Le bouton Précédent de la souris, Alt+← et le Retour du téléphone (bouton ou geste Android, glissement iOS) vont maintenant à l'app active au lieu de faire reculer l'onglet du navigateur et de quitter HackerOS ; le bouton Suivant de la souris et Alt+→ avancent. Sur téléphone, Retour suit le bouton ◁. Les apps les reçoivent par IAppBackHandler et le nouveau IAppForwardHandler, avec les nouvelles sources MouseButton et SystemBack. ([0220-mouse-back-forward-buttons.md](doc/fr/wasm/dev/adr/0220-mouse-back-forward-buttons.md))
+- **Fond d'écran sur l'écran d'accueil mobile.** L'écran d'accueil mobile peut lui aussi montrer une image. Dans Paramètres ▸ Apparence ▸ Fond d'écran, choisissez « Mobile », puis une image et son ajustement ; le bureau garde son propre choix. Sans image, le fond du thème mobile reste. ([0217-mobile-home-wallpaper.md](doc/fr/wasm/dev/adr/0217-mobile-home-wallpaper.md))
+
+### Amélioré
+
+- **Tiroir d'apps en verre flouté sur le thème iOS.** Sur le thème mobile iOS, le tiroir d'apps est maintenant du même verre flouté que le tiroir de notifications : le fond d'écran se voit au travers. Les autres thèmes gardent un tiroir opaque ; un thème choisit avec --hos-mobile-drawer-background et --hos-mobile-drawer-backdrop-filter. ([0217-mobile-home-wallpaper.md](doc/fr/wasm/dev/adr/0217-mobile-home-wallpaper.md))
+
+### Corrigé
+
+- **Les apps installées gardent leur apparence.** Une app installée depuis le Hack Store ou avec hackpkg charge maintenant ses propres styles et scripts, et a la même apparence qu'une app livrée avec HackerOS. ([0221-pack-all-static-web-assets-of-an-app.md](doc/fr/wasm/dev/adr/0221-pack-all-static-web-assets-of-an-app.md))
+- **Les apps installées parlent votre langue.** Une app installée depuis le Hack Store ou avec hackpkg affiche maintenant ses textes en français, comme une app livrée avec HackerOS. ([0222-installed-app-satellite-assemblies.md](doc/fr/wasm/dev/adr/0222-installed-app-satellite-assemblies.md))
+- **Redémarrer pour mettre à jour ouvre la nouvelle version.** Quand une nouvelle version de HackerOS est disponible, elle se télécharge maintenant en arrière-plan, et « Redémarrer pour mettre à jour » l'ouvre au lieu d'une copie plus ancienne gardée par le navigateur. Les autres onglets HackerOS ouverts redémarrent aussi, et « Redémarrer » du menu Démarrer prend aussi la nouvelle version. Si le téléchargement échoue, rien ne se ferme et un message le dit. ([0223-restart-onto-the-new-version.md](doc/fr/wasm/dev/adr/0223-restart-onto-the-new-version.md))
+
+### Pour les développeurs
+
+- **Les paquets d'apps contiennent leurs assemblages satellites.** HackerOsPack met les assemblages satellites des assemblages de l'app dans le paquet, à lib/<culture>/<assemblage>.resources.dll ; l'OS les vérifie et les charge avant le premier rendu de l'app. ([0222-installed-app-satellite-assemblies.md](doc/fr/wasm/dev/adr/0222-installed-app-satellite-assemblies.md))
+- **HackerOsPack met en paquet toutes les ressources statiques d'une app.** Le paquet contient désormais tout le wwwroot/, les fichiers .razor.js collocalisés et le bundle du CSS isolé, déclarés dans le manifeste du paquet avec leur SHA-256 ; le workflow de publication du modèle hackeros-solution copie ce manifeste dans le dossier du catalogue. ([0221-pack-all-static-web-assets-of-an-app.md](doc/fr/wasm/dev/adr/0221-pack-all-static-web-assets-of-an-app.md))
+- **Outil de signature pour les auteurs d'apps.** dotnet build -t:HackerOsKeyGen crée la clé de signature d'un auteur, HackerOsPack signe chaque paquet avec le secret HACKEROS_APP_SIGNING_KEY, et le modèle hackeros-solution publie les paquets signés sur la branche hackeros-packages à chaque tag de version. Les administrateurs exigent la signature d'un auteur en ajoutant sa clé publique à [signing-keys]. ([0219-app-authors-signing-tool.md](doc/fr/wasm/dev/adr/0219-app-authors-signing-tool.md))
+
 ## 2.2.0 (2026-10-31)
 
 ### Nouveau

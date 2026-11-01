@@ -6,6 +6,31 @@ The changes of HackerOS, by version. This file is generated from `wasm2/HackerOs
 `wasm2/HackerOs/build/tools/collect-changes.sh` (ADR 0186): do not edit it by hand. Changes already
 deployed but not released yet are in the Settings ▸ What's new page of the OS.
 
+## 2.2.1 (2026-11-01)
+
+### New
+
+- **Set as wallpaper from the menu of an image.** Right-click a PNG, JPEG or WebP image and choose Set as wallpaper: it becomes the desktop background at once, without opening Settings. With several screens, a submenu chooses the screen. ([#330](https://github.com/Kazo-ca/HackerOs/pull/330), [0218-set-as-wallpaper-file-menu.md](doc/en/wasm/dev/adr/0218-set-as-wallpaper-file-menu.md), [wallpapers.md](doc/en/wasm/dev/wallpapers.md))
+- **Do not disturb.** A Do not disturb switch in the clock panel (the shade on a phone) and in Settings ▸ Notifications stops the notification bubbles and sounds, errors included. Notifications still go to the clock panel and the unread dot still shows them. A moon in the notification area says the mode is on; the choice is saved for each user in ~/.config/hackeros/notifications.config. ([0216-do-not-disturb.md](doc/en/wasm/dev/adr/0216-do-not-disturb.md))
+- **Mouse Back and Forward buttons in apps.** The mouse Back button, Alt+← and the phone's Back (Android button or gesture, iOS swipe) now go to the active app instead of moving the browser tab back and leaving HackerOS; the mouse Forward button and Alt+→ go forward. On a phone, Back follows the ◁ button. Apps receive them through IAppBackHandler and the new IAppForwardHandler, with the new MouseButton and SystemBack sources. ([0220-mouse-back-forward-buttons.md](doc/en/wasm/dev/adr/0220-mouse-back-forward-buttons.md))
+- **Wallpaper on the mobile home screen.** The mobile home screen can show an image too. In Settings ▸ Appearance ▸ Wallpaper, pick « Mobile », then an image and how it fits; the desktop keeps its own choice. Without an image, the mobile theme's background stays. ([0217-mobile-home-wallpaper.md](doc/en/wasm/dev/adr/0217-mobile-home-wallpaper.md))
+
+### Improved
+
+- **Frosted glass app drawer on the iOS theme.** On the iOS mobile theme, the app drawer is now the same frosted glass as the notification shade, so the wallpaper shows through. Other themes keep an opaque drawer; a theme can choose with --hos-mobile-drawer-background and --hos-mobile-drawer-backdrop-filter. ([0217-mobile-home-wallpaper.md](doc/en/wasm/dev/adr/0217-mobile-home-wallpaper.md))
+
+### Fixed
+
+- **Installed apps keep their look.** An app installed from the Hack Store or with hackpkg now loads its own styles and scripts, and looks the same as an app that comes with HackerOS. ([0221-pack-all-static-web-assets-of-an-app.md](doc/en/wasm/dev/adr/0221-pack-all-static-web-assets-of-an-app.md))
+- **Installed apps speak your language.** An app installed from the Hack Store or with hackpkg now shows its French texts, as an app that comes with HackerOS does. ([0222-installed-app-satellite-assemblies.md](doc/en/wasm/dev/adr/0222-installed-app-satellite-assemblies.md))
+- **Restarting to update opens the new version.** When a new version of HackerOS is available, it now downloads in the background, and « Restart to update » opens it instead of an older copy kept by the browser. Other open HackerOS tabs restart too, and the Start menu Restart also takes the new version. If the download fails, nothing closes and you are told. ([0223-restart-onto-the-new-version.md](doc/en/wasm/dev/adr/0223-restart-onto-the-new-version.md))
+
+### For developers
+
+- **App packages carry their satellite assemblies.** HackerOsPack puts the satellite assemblies of the app's own assemblies in the package at lib/<culture>/<assembly>.resources.dll; the OS checks them and loads them before the app's first render. ([0222-installed-app-satellite-assemblies.md](doc/en/wasm/dev/adr/0222-installed-app-satellite-assemblies.md))
+- **HackerOsPack packs every static resource of an app.** The package now holds the whole wwwroot/, the collocated .razor.js files and the scoped CSS bundle, declared in the package's manifest with their SHA-256; the publish workflow of the hackeros-solution template copies that manifest into the catalog folder. ([0221-pack-all-static-web-assets-of-an-app.md](doc/en/wasm/dev/adr/0221-pack-all-static-web-assets-of-an-app.md))
+- **Signing tool for app authors.** dotnet build -t:HackerOsKeyGen creates an author's signing key, HackerOsPack signs each package with the HACKEROS_APP_SIGNING_KEY secret, and the hackeros-solution template publishes the signed packages on the hackeros-packages branch on each version tag. Administrators require an author's signature by adding their public key to [signing-keys]. ([0219-app-authors-signing-tool.md](doc/en/wasm/dev/adr/0219-app-authors-signing-tool.md))
+
 ## 2.2.0 (2026-10-31)
 
 ### New

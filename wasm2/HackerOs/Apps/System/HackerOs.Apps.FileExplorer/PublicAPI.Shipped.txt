@@ -441,10 +441,7 @@ HackerOs.Apps.FileExplorer.FileControl._Imports._Imports() -> void
 HackerOs.Apps.FileExplorer.FileExplorerApp
 HackerOs.Apps.FileExplorer.FileExplorerApp.FileExplorerApp() -> void
 HackerOs.Apps.FileExplorer.FileExplorerMobileWindow
-HackerOs.Apps.FileExplorer.FileExplorerMobileWindow.CanNavigateBack.get -> bool
-HackerOs.Apps.FileExplorer.FileExplorerMobileWindow.CanNavigateBackChanged -> System.Action?
 HackerOs.Apps.FileExplorer.FileExplorerMobileWindow.FileExplorerMobileWindow() -> void
-HackerOs.Apps.FileExplorer.FileExplorerMobileWindow.NavigateBackAsync(HackerOs.AppSdk.Blazor.AppBackRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Blazor.AppBackResult!>
 HackerOs.Apps.FileExplorer.FileExplorerState
 HackerOs.Apps.FileExplorer.FileExplorerState.CanNavigateBack.get -> bool
 HackerOs.Apps.FileExplorer.FileExplorerState.CanNavigateForward.get -> bool
@@ -462,8 +459,12 @@ HackerOs.Apps.FileExplorer.FileExplorerState.StateChanged -> System.Action?
 HackerOs.Apps.FileExplorer.FileExplorerState.ViewMode.get -> HackerOs.Apps.FileExplorer.FileControl.FileViewMode
 HackerOs.Apps.FileExplorer.FileExplorerState.ViewMode.set -> void
 HackerOs.Apps.FileExplorer.FileExplorerWindow
+HackerOs.Apps.FileExplorer.FileExplorerWindow.CanNavigateBackChanged -> System.Action?
+HackerOs.Apps.FileExplorer.FileExplorerWindow.CanNavigateForward.get -> bool
+HackerOs.Apps.FileExplorer.FileExplorerWindow.CanNavigateForwardChanged -> System.Action?
 HackerOs.Apps.FileExplorer.FileExplorerWindow.DisposeAsync() -> System.Threading.Tasks.ValueTask
 HackerOs.Apps.FileExplorer.FileExplorerWindow.FileExplorerWindow() -> void
+HackerOs.Apps.FileExplorer.FileExplorerWindow.NavigateForwardAsync(HackerOs.AppSdk.Blazor.AppForwardRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Blazor.AppBackResult!>
 HackerOs.Apps.FileExplorer.NetworkDrivesSidebar
 HackerOs.Apps.FileExplorer.NetworkDrivesSidebar.CurrentPath.get -> string?
 HackerOs.Apps.FileExplorer.NetworkDrivesSidebar.CurrentPath.set -> void
@@ -518,7 +519,8 @@ override HackerOs.Apps.FileExplorer.FileExplorerApp.MobileEntryPoint.get -> Syst
 override HackerOs.Apps.FileExplorer.FileExplorerApp.Name.get -> string!
 override HackerOs.Apps.FileExplorer.FileExplorerApp.PublisherId.get -> string!
 override HackerOs.Apps.FileExplorer.FileExplorerApp.Resources.get -> HackerOs.App.Abstractions.AppResourceProfileManifest!
-override HackerOs.Apps.FileExplorer.FileExplorerMobileWindow.OnAppAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+override HackerOs.Apps.FileExplorer.FileExplorerMobileWindow.CanNavigateBack.get -> bool
+override HackerOs.Apps.FileExplorer.FileExplorerMobileWindow.NavigateBackAsync(HackerOs.AppSdk.Blazor.AppBackRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Blazor.AppBackResult!>
 override HackerOs.Apps.FileExplorer.FileExplorerWindow.OnAppAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
 override HackerOs.Apps.FileExplorer.FileExplorerWindow.OnAppInitialized() -> void
 override HackerOs.Apps.FileExplorer.FileExplorerWindow.OnAppInitializedAsync() -> System.Threading.Tasks.Task!
@@ -541,6 +543,8 @@ static HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor.Vector(H
 static HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor.operator !=(HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor? left, HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor? right) -> bool
 static HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor.operator ==(HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor? left, HackerOs.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor? right) -> bool
 static HackerOs.Apps.FileExplorer.FileExplorerApp.RegisterFileContextMenu(HackerOs.AppSdk.Blazor.Files.RegisterFileContextMenuContext! context) -> void
+virtual HackerOs.Apps.FileExplorer.FileExplorerWindow.CanNavigateBack.get -> bool
+virtual HackerOs.Apps.FileExplorer.FileExplorerWindow.NavigateBackAsync(HackerOs.AppSdk.Blazor.AppBackRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Blazor.AppBackResult!>
 ~override HackerOs.Apps.FileExplorer.FileControl.FileView.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.Apps.FileExplorer.FileControl.FileViewBreadcrumb.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.Apps.FileExplorer.FileControl.FileViewContextMenu.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

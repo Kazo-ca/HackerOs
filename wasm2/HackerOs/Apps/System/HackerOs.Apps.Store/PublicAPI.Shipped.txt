@@ -6,6 +6,9 @@ HackerOs.Apps.Store.StoreMarkdownView.Markdown.get -> string?
 HackerOs.Apps.Store.StoreMarkdownView.Markdown.set -> void
 HackerOs.Apps.Store.StoreMarkdownView.StoreMarkdownView() -> void
 HackerOs.Apps.Store.StoreWindow
+HackerOs.Apps.Store.StoreWindow.CanNavigateBack.get -> bool
+HackerOs.Apps.Store.StoreWindow.CanNavigateBackChanged -> System.Action?
+HackerOs.Apps.Store.StoreWindow.NavigateBackAsync(HackerOs.AppSdk.Blazor.AppBackRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Blazor.AppBackResult!>
 HackerOs.Apps.Store.StoreWindow.StoreWindow() -> void
 HackerOs.Apps.Store._Imports
 HackerOs.Apps.Store._Imports.Execute() -> void
@@ -25,6 +28,7 @@ override HackerOs.Apps.Store.StoreApp.PublisherId.get -> string!
 override HackerOs.Apps.Store.StoreApp.Resources.get -> HackerOs.App.Abstractions.AppResourceProfileManifest!
 override HackerOs.Apps.Store.StoreApp.SingleInstancePerUser.get -> bool
 override HackerOs.Apps.Store.StoreMarkdownView.OnParametersSet() -> void
+override HackerOs.Apps.Store.StoreWindow.OnAppAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
 override HackerOs.Apps.Store.StoreWindow.OnAppInitializedAsync() -> System.Threading.Tasks.Task!
 ~override HackerOs.Apps.Store.StoreMarkdownView.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.Apps.Store.StoreWindow.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

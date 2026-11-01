@@ -111,6 +111,8 @@ HackerOs.Platform.Blazor.ContextMenus.ContextMenuSession.Scope.init -> void
 HackerOs.Platform.Blazor.ContextMenus.FileMenuEntries
 HackerOs.Platform.Blazor.ContextMenus.FileMenuEntries.ApplyAsync(HackerOs.AppSdk.Blazor.ContextMenus.HackMenuDefinition! menu, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
 HackerOs.Platform.Blazor.ContextMenus.FileMenuEntries.FileMenuEntries(HackerOs.Platform.Core.AppCatalog! catalog, HackerOs.Platform.Core.ContextMenus.FileContextMenuRegistry! registry, HackerOs.Platform.Core.ContextMenus.FileContextMenuLauncher! launcher, System.Func<System.Threading.CancellationToken, System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlySet<string!>!>>! hidden, System.Func<System.Globalization.CultureInfo!>! culture, System.Func<string!, HackerOs.App.Abstractions.AppContextMenuEntryManifest!, string!, System.Collections.Generic.IReadOnlyList<string!>!, System.Threading.Tasks.Task!>! launch) -> void
+HackerOs.Platform.Blazor.ContextMenus.FileMenuEntries.OpenScreens.get -> System.Func<System.Collections.Generic.IReadOnlySet<int>!>!
+HackerOs.Platform.Blazor.ContextMenus.FileMenuEntries.OpenScreens.init -> void
 HackerOs.Platform.Blazor.ContextMenus.FileMenuEntryPlacement
 HackerOs.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate
 HackerOs.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate.<Clone>$() -> HackerOs.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate!
@@ -506,6 +508,17 @@ HackerOs.Platform.Blazor.LazyLoading.HostReleaseMonitor.HostReleaseMonitor(Hacke
 HackerOs.Platform.Blazor.LazyLoading.HostReleaseMonitor.ReleaseAvailable -> System.Action<string!>?
 HackerOs.Platform.Blazor.LazyLoading.HostReleaseMonitor.RunningVersion.get -> string!
 HackerOs.Platform.Blazor.LazyLoading.HostReleaseMonitor.Start(System.TimeSpan interval) -> void
+HackerOs.Platform.Blazor.LazyLoading.HostUpdateDownloadResult
+HackerOs.Platform.Blazor.LazyLoading.HostUpdateDownloadResult.NoWorker = 0 -> HackerOs.Platform.Blazor.LazyLoading.HostUpdateDownloadResult
+HackerOs.Platform.Blazor.LazyLoading.HostUpdateDownloadResult.Ready = 2 -> HackerOs.Platform.Blazor.LazyLoading.HostUpdateDownloadResult
+HackerOs.Platform.Blazor.LazyLoading.HostUpdateDownloadResult.Unavailable = 3 -> HackerOs.Platform.Blazor.LazyLoading.HostUpdateDownloadResult
+HackerOs.Platform.Blazor.LazyLoading.HostUpdateDownloadResult.UpToDate = 1 -> HackerOs.Platform.Blazor.LazyLoading.HostUpdateDownloadResult
+HackerOs.Platform.Blazor.LazyLoading.HostUpdateInstaller
+HackerOs.Platform.Blazor.LazyLoading.HostUpdateInstaller.ActivateDownloadedAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
+HackerOs.Platform.Blazor.LazyLoading.HostUpdateInstaller.ActivatedElsewhere -> System.Action?
+HackerOs.Platform.Blazor.LazyLoading.HostUpdateInstaller.DownloadAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.Platform.Blazor.LazyLoading.HostUpdateDownloadResult>!
+HackerOs.Platform.Blazor.LazyLoading.HostUpdateInstaller.HostUpdateInstaller(HackerOs.Platform.Blazor.LazyLoading.IHostUpdateWorker! worker) -> void
+HackerOs.Platform.Blazor.LazyLoading.HostUpdateInstaller.StartAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
 HackerOs.Platform.Blazor.LazyLoading.IBuildKnownAssemblyTransport
 HackerOs.Platform.Blazor.LazyLoading.IBuildKnownAssemblyTransport.LoadAsync(System.Collections.Generic.IReadOnlyList<string!>! assemblyNames, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<System.Reflection.Assembly!>!>!
 HackerOs.Platform.Blazor.LazyLoading.IHostBuildProbe
@@ -513,10 +526,37 @@ HackerOs.Platform.Blazor.LazyLoading.IHostBuildProbe.GetRunningBuildAsync(System
 HackerOs.Platform.Blazor.LazyLoading.IHostBuildProbe.GetServedBuildAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<string?>
 HackerOs.Platform.Blazor.LazyLoading.IHostReleaseProbe
 HackerOs.Platform.Blazor.LazyLoading.IHostReleaseProbe.GetServedVersionDocumentAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<string?>
+HackerOs.Platform.Blazor.LazyLoading.IHostUpdateWorker
+HackerOs.Platform.Blazor.LazyLoading.IHostUpdateWorker.ActivateAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<bool>
+HackerOs.Platform.Blazor.LazyLoading.IHostUpdateWorker.DownloadAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<HackerOs.Platform.Blazor.LazyLoading.HostUpdateDownloadResult>
+HackerOs.Platform.Blazor.LazyLoading.IHostUpdateWorker.ListenAsync(System.Action! activatedElsewhere, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask
 HackerOs.Platform.Blazor.LazyLoading.StaticWebAssetAppAssetSource
 HackerOs.Platform.Blazor.LazyLoading.StaticWebAssetAppAssetSource.Dispose() -> void
 HackerOs.Platform.Blazor.LazyLoading.StaticWebAssetAppAssetSource.ReadAsync(HackerOs.App.Abstractions.AppManifest! manifest, string! assetPath, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<byte[]?>
 HackerOs.Platform.Blazor.LazyLoading.StaticWebAssetAppAssetSource.StaticWebAssetAppAssetSource(System.Uri! baseAddress) -> void
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationDirection
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationDirection.Back = 0 -> HackerOs.Platform.Blazor.Navigation.HardwareNavigationDirection
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationDirection.Forward = 1 -> HackerOs.Platform.Blazor.Navigation.HardwareNavigationDirection
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationListener
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationListener.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationListener.HardwareNavigationListener() -> void
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationListener.OnHardwareNavigationAsync(bool forward, string! source) -> System.Threading.Tasks.Task!
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest.<Clone>$() -> HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest!
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest.Deconstruct(out HackerOs.Platform.Blazor.Navigation.HardwareNavigationDirection Direction, out HackerOs.AppSdk.Blazor.AppBackSource Source) -> void
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest.Direction.get -> HackerOs.Platform.Blazor.Navigation.HardwareNavigationDirection
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest.Direction.init -> void
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest.Equals(HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest? other) -> bool
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest.HardwareNavigationRequest(HackerOs.Platform.Blazor.Navigation.HardwareNavigationDirection Direction, HackerOs.AppSdk.Blazor.AppBackSource Source) -> void
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest.Source.get -> HackerOs.AppSdk.Blazor.AppBackSource
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest.Source.init -> void
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationService
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationService.HardwareNavigationService(HackerOs.Windowing.Core.WindowRuntime! windowRuntime, HackerOs.Platform.Blazor.Windows.AppBackHandlerRegistry! handlers) -> void
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationService.NavigateAsync(HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest! request) -> System.Threading.Tasks.Task!
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationService.NavigateFocusedWindowAsync(HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest! request) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Blazor.AppBackResult!>!
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationService.NavigateWindowAsync(HackerOs.Windowing.Abstractions.WindowId windowId, HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest! request) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Blazor.AppBackResult!>!
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationService.Route.get -> System.Func<HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest!, System.Threading.Tasks.Task!>?
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationService.Route.set -> void
 HackerOs.Platform.Blazor.Security.AdministratorAuthenticationBroker
 HackerOs.Platform.Blazor.Security.AdministratorAuthenticationBroker.AdministratorAuthenticationBroker() -> void
 HackerOs.Platform.Blazor.Security.AdministratorAuthenticationBroker.Attach() -> System.IDisposable!
@@ -644,8 +684,15 @@ HackerOs.Platform.Blazor.Shell.DesktopSurfaceHost.ProcessId.get -> HackerOs.Simu
 HackerOs.Platform.Blazor.Shell.DesktopWallpaper
 HackerOs.Platform.Blazor.Shell.DesktopWallpaper.DesktopWallpaper() -> void
 HackerOs.Platform.Blazor.Shell.DesktopWallpaper.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Platform.Blazor.Shell.DesktopWallpaper.Mobile.get -> bool
+HackerOs.Platform.Blazor.Shell.DesktopWallpaper.Mobile.set -> void
 HackerOs.Platform.Blazor.Shell.DesktopWallpaper.ScreenNumber.get -> int
 HackerOs.Platform.Blazor.Shell.DesktopWallpaper.ScreenNumber.set -> void
+HackerOs.Platform.Blazor.Shell.DoNotDisturbIndicator
+HackerOs.Platform.Blazor.Shell.DoNotDisturbIndicator.Dispose() -> void
+HackerOs.Platform.Blazor.Shell.DoNotDisturbIndicator.DoNotDisturbIndicator() -> void
+HackerOs.Platform.Blazor.Shell.DoNotDisturbIndicator.OnClick.get -> Microsoft.AspNetCore.Components.EventCallback
+HackerOs.Platform.Blazor.Shell.DoNotDisturbIndicator.OnClick.set -> void
 HackerOs.Platform.Blazor.Shell.LauncherAppProjection
 HackerOs.Platform.Blazor.Shell.LauncherAppProjectionResult
 HackerOs.Platform.Blazor.Shell.LauncherAppProjectionResult.<Clone>$() -> HackerOs.Platform.Blazor.Shell.LauncherAppProjectionResult!
@@ -686,6 +733,8 @@ HackerOs.Platform.Blazor.Shell.MobileHomeScreen.ReportHomeLongPress(string! appI
 HackerOs.Platform.Blazor.Shell.MobileNavigationCommandsAdapter
 HackerOs.Platform.Blazor.Shell.MobileNavigationCommandsAdapter.MobileNavigationCommandsAdapter(HackerOs.Windowing.Core.WindowRuntime! windowRuntime, HackerOs.Platform.Blazor.Windows.AppBackHandlerRegistry! backHandlers, HackerOs.Platform.Blazor.Shell.MobileNavigationHistory! history, System.Func<HackerOs.Windowing.Abstractions.WindowId, System.Threading.Tasks.Task!>! closeWindow, System.Func<bool>! isOverlayOpen, System.Action! closeOverlay, System.Action! toggleRecent) -> void
 HackerOs.Platform.Blazor.Shell.MobileNavigationCommandsAdapter.RequestBack() -> void
+HackerOs.Platform.Blazor.Shell.MobileNavigationCommandsAdapter.RequestBackAsync(HackerOs.AppSdk.Blazor.AppBackSource source) -> System.Threading.Tasks.Task!
+HackerOs.Platform.Blazor.Shell.MobileNavigationCommandsAdapter.RequestForwardAsync(HackerOs.AppSdk.Blazor.AppBackSource source) -> System.Threading.Tasks.Task!
 HackerOs.Platform.Blazor.Shell.MobileNavigationCommandsAdapter.RequestHome() -> void
 HackerOs.Platform.Blazor.Shell.MobileNavigationCommandsAdapter.RequestRecent() -> void
 HackerOs.Platform.Blazor.Shell.MobileNavigationHistory
@@ -775,6 +824,7 @@ HackerOs.Platform.Blazor.Shell.TaskbarWindowSourceAdapter.Windows.get -> System.
 HackerOs.Platform.Blazor.Shell.UpdateReadyNotification
 HackerOs.Platform.Blazor.Shell.UpdateReadyNotification.Dispose() -> void
 HackerOs.Platform.Blazor.Shell.UpdateReadyNotification.Show(HackerOs.Simulation.Abstractions.Sessions.LocalUserId user, string! title, string! message, string! restartLabel) -> bool
+HackerOs.Platform.Blazor.Shell.UpdateReadyNotification.ShowDownloadFailed(HackerOs.Simulation.Abstractions.Sessions.LocalUserId user, string! title, string! message, string! restartLabel) -> void
 HackerOs.Platform.Blazor.Shell.UpdateReadyNotification.UpdateReadyNotification(HackerOs.Simulation.Abstractions.Notifications.INotificationQueue! queue, HackerOs.Simulation.Abstractions.Time.ISimulationClock! clock, HackerOs.Platform.Blazor.Shell.ShellNotificationActions? actions, System.Func<System.Threading.Tasks.Task!>! restart) -> void
 HackerOs.Platform.Blazor.Sites.HackWebSiteHost
 HackerOs.Platform.Blazor.Sites.HackWebSiteHost.FindSite(System.Uri! pageUrl) -> HackerOs.App.Abstractions.AppManifest?
@@ -793,7 +843,9 @@ HackerOs.Platform.Blazor.Sync.SyncConflictOverlay.SyncConflictOverlay() -> void
 HackerOs.Platform.Blazor.Windows.AppBackHandlerRegistry
 HackerOs.Platform.Blazor.Windows.AppBackHandlerRegistry.AppBackHandlerRegistry() -> void
 HackerOs.Platform.Blazor.Windows.AppBackHandlerRegistry.NavigateBackAsync(HackerOs.Windowing.Abstractions.WindowId windowId, HackerOs.AppSdk.Blazor.AppBackRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Blazor.AppBackResult!>
+HackerOs.Platform.Blazor.Windows.AppBackHandlerRegistry.NavigateForwardAsync(HackerOs.Windowing.Abstractions.WindowId windowId, HackerOs.AppSdk.Blazor.AppForwardRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Blazor.AppBackResult!>
 HackerOs.Platform.Blazor.Windows.AppBackHandlerRegistry.Register(HackerOs.Windowing.Abstractions.WindowId windowId, HackerOs.AppSdk.Blazor.IAppBackHandler! handler) -> System.IDisposable!
+HackerOs.Platform.Blazor.Windows.AppBackHandlerRegistry.RegisterForward(HackerOs.Windowing.Abstractions.WindowId windowId, HackerOs.AppSdk.Blazor.IAppForwardHandler! handler) -> System.IDisposable!
 HackerOs.Platform.Blazor.Windows.AppWindowGatewayFactory
 HackerOs.Platform.Blazor.Windows.AppWindowGatewayFactory.AppWindowGatewayFactory(HackerOs.Windowing.Core.WindowRuntime! runtime) -> void
 HackerOs.Platform.Blazor.Windows.AppWindowGatewayFactory.AppWindowGatewayFactory(HackerOs.Windowing.Core.WindowRuntime! runtime, HackerOs.Platform.Blazor.Windows.WindowLaunchCoordinator! launchCoordinator) -> void
@@ -1093,6 +1145,11 @@ override HackerOs.Platform.Blazor.Display.ScreenOverlayHost.OnAfterRenderAsync(b
 override HackerOs.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome.Equals(object? obj) -> bool
 override HackerOs.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome.GetHashCode() -> int
 override HackerOs.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome.ToString() -> string!
+override HackerOs.Platform.Blazor.Navigation.HardwareNavigationListener.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+override HackerOs.Platform.Blazor.Navigation.HardwareNavigationListener.OnInitialized() -> void
+override HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest.Equals(object? obj) -> bool
+override HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest.GetHashCode() -> int
+override HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest.ToString() -> string!
 override HackerOs.Platform.Blazor.Shell.AppLauncher.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
 override HackerOs.Platform.Blazor.Shell.AppLauncher.OnInitializedAsync() -> System.Threading.Tasks.Task!
 override HackerOs.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.RawSignals.Equals(object? obj) -> bool
@@ -1103,6 +1160,7 @@ override HackerOs.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.RawSigna
 override HackerOs.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.RawSignals.ToString() -> string!
 override HackerOs.Platform.Blazor.Shell.ClockPanel.OnInitialized() -> void
 override HackerOs.Platform.Blazor.Shell.DesktopShell.OnInitialized() -> void
+override HackerOs.Platform.Blazor.Shell.DoNotDisturbIndicator.OnInitialized() -> void
 override HackerOs.Platform.Blazor.Shell.LauncherAppProjectionResult.Equals(object? obj) -> bool
 override HackerOs.Platform.Blazor.Shell.LauncherAppProjectionResult.GetHashCode() -> int
 override HackerOs.Platform.Blazor.Shell.LauncherAppProjectionResult.ToString() -> string!
@@ -1184,6 +1242,8 @@ static HackerOs.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome.operat
 static HackerOs.Platform.Blazor.LazyLoading.HostBuildIdentity.FromMarkup(string? markup) -> string?
 static HackerOs.Platform.Blazor.LazyLoading.HostReleaseMonitor.ParseVersion(string? document) -> string?
 static HackerOs.Platform.Blazor.LazyLoading.StaticWebAssetAppAssetSource.RelativeUrl(HackerOs.App.Abstractions.AppManifest! manifest, string! assetPath) -> string!
+static HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest.operator !=(HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest? left, HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest? right) -> bool
+static HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest.operator ==(HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest? left, HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest? right) -> bool
 static HackerOs.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.RawSignals.operator !=(HackerOs.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.RawSignals? left, HackerOs.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.RawSignals? right) -> bool
 static HackerOs.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.RawSignals.operator ==(HackerOs.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.RawSignals? left, HackerOs.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.RawSignals? right) -> bool
 static HackerOs.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.RawSignals.operator !=(HackerOs.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.RawSignals? left, HackerOs.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.RawSignals? right) -> bool
@@ -1238,9 +1298,11 @@ virtual HackerOs.Platform.Blazor.Sites.HackWebSiteHost.StartRenderer.Invoke(stri
 ~override HackerOs.Platform.Blazor.Display.ScreenIdentifyVeil.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.Platform.Blazor.Display.ScreenLayer.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.Platform.Blazor.Display.ScreenOverlayHost.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override HackerOs.Platform.Blazor.Navigation.HardwareNavigationListener.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.Platform.Blazor.Shell.AppLauncher.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.Platform.Blazor.Shell.ClockPanel.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.Platform.Blazor.Shell.DesktopShell.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override HackerOs.Platform.Blazor.Shell.DoNotDisturbIndicator.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.Platform.Blazor.Shell.LogoutDialog.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.Platform.Blazor.Shell.MobileAppIcon.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override HackerOs.Platform.Blazor.Shell.MobileHomeScreen.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

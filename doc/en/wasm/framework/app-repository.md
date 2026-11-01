@@ -146,7 +146,7 @@ To sign:
 Without the secret, the package goes out unsigned (SHA-256 only) with a
 warning. Locally: `HACKEROS_APP_SIGNING_KEY` variable or
 `-p:HackerOsSigningKeyFile=<file.pem>` on `HackerOsPack`. It needs a HackerOS
-version that contains ADR 0219 (the next one after 2.2.0).
+version that contains ADR 0219 (2.2.1 or later).
 
 ## The GitHub template repository
 

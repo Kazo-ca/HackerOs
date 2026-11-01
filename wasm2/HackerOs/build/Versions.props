@@ -25,11 +25,17 @@
     the Hack Store app and catalog installs, theme packs, plus wallpaper images, icon packs, cursor
     themes, system sounds, notification toasts, window animations and taskbar previews, all folded
     into PublicAPI.Shipped.txt (ADR 0207 §11: the template's Release profile needs this version).
+    2.2.1 (Benoit's choice of a patch number, 2026-11-01, although the public API grows): every
+    static resource of an app in its package and an installed app's scoped CSS (ADR 0221), the
+    satellite assemblies of installed apps (ADR 0222), the authors' signing tool (ADR 0219), mouse
+    Back/Forward buttons (ADR 0220), restart onto the new version (ADR 0223), do not disturb,
+    wallpaper menus and the mobile home wallpaper (ADR 0216 to 0218), all folded into
+    PublicAPI.Shipped.txt. Apps waiting for the Hack Store build their packages with it.
 
     The App SDK version an app is compiled against comes from this number (HackerOsSdk.Version), and
     the manifest generator writes it as the app's sdkCompatibility.minimumVersion (ADR 0098 §3).
   -->
   <PropertyGroup>
-    <HackerOsVersion>2.2.0</HackerOsVersion>
+    <HackerOsVersion>2.2.1</HackerOsVersion>
   </PropertyGroup>
 </Project>

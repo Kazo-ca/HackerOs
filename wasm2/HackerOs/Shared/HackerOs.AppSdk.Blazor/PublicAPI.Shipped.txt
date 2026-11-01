@@ -22,6 +22,8 @@ HackerOs.AppSdk.Blazor.AppBackResultStatus.NotHandled = 1 -> HackerOs.AppSdk.Bla
 HackerOs.AppSdk.Blazor.AppBackSource
 HackerOs.AppSdk.Blazor.AppBackSource.DesktopChromeButton = 1 -> HackerOs.AppSdk.Blazor.AppBackSource
 HackerOs.AppSdk.Blazor.AppBackSource.KeyboardShortcut = 2 -> HackerOs.AppSdk.Blazor.AppBackSource
+HackerOs.AppSdk.Blazor.AppBackSource.MouseButton = 3 -> HackerOs.AppSdk.Blazor.AppBackSource
+HackerOs.AppSdk.Blazor.AppBackSource.SystemBack = 4 -> HackerOs.AppSdk.Blazor.AppBackSource
 HackerOs.AppSdk.Blazor.AppBackSource.SystemNavigationBar = 0 -> HackerOs.AppSdk.Blazor.AppBackSource
 HackerOs.AppSdk.Blazor.AppChooserDialogRequest
 HackerOs.AppSdk.Blazor.AppChooserDialogRequest.<Clone>$() -> HackerOs.AppSdk.Blazor.AppChooserDialogRequest!
@@ -60,6 +62,13 @@ HackerOs.AppSdk.Blazor.AppChooserOption.Name.init -> void
 HackerOs.AppSdk.Blazor.AppChooserStatus
 HackerOs.AppSdk.Blazor.AppChooserStatus.Cancelled = 1 -> HackerOs.AppSdk.Blazor.AppChooserStatus
 HackerOs.AppSdk.Blazor.AppChooserStatus.Selected = 0 -> HackerOs.AppSdk.Blazor.AppChooserStatus
+HackerOs.AppSdk.Blazor.AppForwardRequest
+HackerOs.AppSdk.Blazor.AppForwardRequest.<Clone>$() -> HackerOs.AppSdk.Blazor.AppForwardRequest!
+HackerOs.AppSdk.Blazor.AppForwardRequest.AppForwardRequest(HackerOs.AppSdk.Blazor.AppBackSource Source) -> void
+HackerOs.AppSdk.Blazor.AppForwardRequest.Deconstruct(out HackerOs.AppSdk.Blazor.AppBackSource Source) -> void
+HackerOs.AppSdk.Blazor.AppForwardRequest.Equals(HackerOs.AppSdk.Blazor.AppForwardRequest? other) -> bool
+HackerOs.AppSdk.Blazor.AppForwardRequest.Source.get -> HackerOs.AppSdk.Blazor.AppBackSource
+HackerOs.AppSdk.Blazor.AppForwardRequest.Source.init -> void
 HackerOs.AppSdk.Blazor.Charts.HackChartGeometry
 HackerOs.AppSdk.Blazor.Charts.HackChartSeries
 HackerOs.AppSdk.Blazor.Charts.HackChartSeries.<Clone>$() -> HackerOs.AppSdk.Blazor.Charts.HackChartSeries!
@@ -547,6 +556,8 @@ HackerOs.AppSdk.Blazor.Files.RegisterFileContextMenuContext
 HackerOs.AppSdk.Blazor.Files.RegisterFileContextMenuContext.Entries.get -> System.Collections.Generic.IReadOnlyList<HackerOs.App.Abstractions.AppContextMenuEntryManifest!>!
 HackerOs.AppSdk.Blazor.Files.RegisterFileContextMenuContext.Register(string! title, string! name, string! target = "self", string? intent = null, HackerOs.AppSdk.Icons.HackIcon? icon = null, HackerOs.AppSdk.Files.FileMenuScope scope = HackerOs.AppSdk.Files.FileMenuScope.None, System.Collections.Generic.IReadOnlyList<string!>? types = null, HackerOs.AppSdk.Files.MenuSelection selection = HackerOs.AppSdk.Files.MenuSelection.All, bool first = false, string? after = null, string? afterGroup = null, string? parent = null) -> void
 HackerOs.AppSdk.Blazor.Files.RegisterFileContextMenuContext.RegisterFileContextMenuContext() -> void
+HackerOs.AppSdk.Blazor.Files.RegisterFileContextMenuContext.RestrictToScreen(string! name, int screen) -> void
+HackerOs.AppSdk.Blazor.Files.RegisterFileContextMenuContext.RestrictToScreens(string! name, HackerOs.AppSdk.Files.MenuScreens screens) -> void
 HackerOs.AppSdk.Blazor.HackComponentBase
 HackerOs.AppSdk.Blazor.HackComponentBase.AppContext.get -> HackerOs.AppSdk.IAppExecutionContext?
 HackerOs.AppSdk.Blazor.HackComponentBase.AppContext.set -> void
@@ -571,6 +582,10 @@ HackerOs.AppSdk.Blazor.IAppBackHandler
 HackerOs.AppSdk.Blazor.IAppBackHandler.CanNavigateBack.get -> bool
 HackerOs.AppSdk.Blazor.IAppBackHandler.CanNavigateBackChanged -> System.Action?
 HackerOs.AppSdk.Blazor.IAppBackHandler.NavigateBackAsync(HackerOs.AppSdk.Blazor.AppBackRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Blazor.AppBackResult!>
+HackerOs.AppSdk.Blazor.IAppForwardHandler
+HackerOs.AppSdk.Blazor.IAppForwardHandler.CanNavigateForward.get -> bool
+HackerOs.AppSdk.Blazor.IAppForwardHandler.CanNavigateForwardChanged -> System.Action?
+HackerOs.AppSdk.Blazor.IAppForwardHandler.NavigateForwardAsync(HackerOs.AppSdk.Blazor.AppForwardRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Blazor.AppBackResult!>
 HackerOs.AppSdk.Blazor.IAppWindowGateway
 HackerOs.AppSdk.Blazor.IAppWindowGateway.DefaultTitle.get -> string!
 HackerOs.AppSdk.Blazor.IAppWindowGateway.SetTitleAsync(string? title, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<string!>
@@ -845,6 +860,9 @@ override HackerOs.AppSdk.Blazor.AppChooserDialogResult.ToString() -> string!
 override HackerOs.AppSdk.Blazor.AppChooserOption.Equals(object? obj) -> bool
 override HackerOs.AppSdk.Blazor.AppChooserOption.GetHashCode() -> int
 override HackerOs.AppSdk.Blazor.AppChooserOption.ToString() -> string!
+override HackerOs.AppSdk.Blazor.AppForwardRequest.Equals(object? obj) -> bool
+override HackerOs.AppSdk.Blazor.AppForwardRequest.GetHashCode() -> int
+override HackerOs.AppSdk.Blazor.AppForwardRequest.ToString() -> string!
 override HackerOs.AppSdk.Blazor.Charts.HackChartSeries.Equals(object? obj) -> bool
 override HackerOs.AppSdk.Blazor.Charts.HackChartSeries.GetHashCode() -> int
 override HackerOs.AppSdk.Blazor.Charts.HackChartSeries.ToString() -> string!
@@ -967,6 +985,8 @@ static HackerOs.AppSdk.Blazor.AppChooserDialogResult.operator !=(HackerOs.AppSdk
 static HackerOs.AppSdk.Blazor.AppChooserDialogResult.operator ==(HackerOs.AppSdk.Blazor.AppChooserDialogResult? left, HackerOs.AppSdk.Blazor.AppChooserDialogResult? right) -> bool
 static HackerOs.AppSdk.Blazor.AppChooserOption.operator !=(HackerOs.AppSdk.Blazor.AppChooserOption? left, HackerOs.AppSdk.Blazor.AppChooserOption? right) -> bool
 static HackerOs.AppSdk.Blazor.AppChooserOption.operator ==(HackerOs.AppSdk.Blazor.AppChooserOption? left, HackerOs.AppSdk.Blazor.AppChooserOption? right) -> bool
+static HackerOs.AppSdk.Blazor.AppForwardRequest.operator !=(HackerOs.AppSdk.Blazor.AppForwardRequest? left, HackerOs.AppSdk.Blazor.AppForwardRequest? right) -> bool
+static HackerOs.AppSdk.Blazor.AppForwardRequest.operator ==(HackerOs.AppSdk.Blazor.AppForwardRequest? left, HackerOs.AppSdk.Blazor.AppForwardRequest? right) -> bool
 static HackerOs.AppSdk.Blazor.Charts.HackChartGeometry.BuildArea(System.Collections.Generic.IReadOnlyList<double>! values, int capacity, double maximum) -> string!
 static HackerOs.AppSdk.Blazor.Charts.HackChartGeometry.BuildPoints(System.Collections.Generic.IReadOnlyList<double>! values, int capacity, double maximum) -> string!
 static HackerOs.AppSdk.Blazor.Charts.HackChartGeometry.NiceMaximum(System.Collections.Generic.IEnumerable<HackerOs.AppSdk.Blazor.Charts.HackChartSeries!>! series, double floor = 1) -> double
