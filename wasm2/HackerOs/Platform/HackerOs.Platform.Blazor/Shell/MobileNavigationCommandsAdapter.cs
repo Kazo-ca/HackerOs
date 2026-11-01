@@ -28,7 +28,16 @@ public sealed class MobileNavigationCommandsAdapter(
         // async void is deliberate here: IMobileNavigationCommands.RequestBack is a fire-and-forget
         // UI command dispatch (the triangle button's onclick), matching MobileSystemNavigationBar's
         // existing synchronous IMobileNavigationCommands contract.
+        await RequestBackAsync(AppBackSource.SystemNavigationBar);
+    }
 
+    /// <summary>
+    /// Runs the ordered Back sequence for one gesture: the ◁ button, or a hardware gesture caught by
+    /// <c>HardwareNavigationListener</c> (ADR 0220 §2), whose source the app receives unchanged.
+    /// </summary>
+    /// <param name="source">What the user pressed.</param>
+    public async Task RequestBackAsync(AppBackSource source)
+    {
         // Step 0 (deliberate addition, not one of the plan's literal five steps): a shell-owned
         // overlay is the true topmost UI regardless of what window is primary underneath it.
         if (isOverlayOpen())
@@ -54,7 +63,7 @@ public sealed class MobileNavigationCommandsAdapter(
         {
             AppBackResult result = await backHandlers.NavigateBackAsync(
                 primary.Id,
-                new AppBackRequest(AppBackSource.SystemNavigationBar));
+                new AppBackRequest(source));
             if (result.Status is AppBackResultStatus.Handled or AppBackResultStatus.Blocked or AppBackResultStatus.ConfirmationRequired)
             {
                 // Handled: the app moved back internally. Blocked/ConfirmationRequired: the app is
@@ -86,6 +95,21 @@ public sealed class MobileNavigationCommandsAdapter(
         }
 
         // Step 5: already at Home with no history -- a deliberate no-op per plan §7.3.
+    }
+
+    /// <summary>
+    /// Sends Forward (the mouse's button 5, Alt+→, Browser Forward) to the foreground app's
+    /// <see cref="IAppForwardHandler"/> (ADR 0220 §2). Nothing happens on Home or when the app can't go forward.
+    /// </summary>
+    /// <param name="source">What the user pressed.</param>
+    public async Task RequestForwardAsync(AppBackSource source)
+    {
+        if (isOverlayOpen() || SelectPrimaryState() is not { } primary)
+        {
+            return;
+        }
+
+        await backHandlers.NavigateForwardAsync(primary.Id, new AppForwardRequest(source));
     }
 
     /// <inheritdoc />

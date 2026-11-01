@@ -1,1 +1,13 @@
 #nullable enable
+HackerOs.Apps.FileExplorer.FileExplorerWindow.CanNavigateBackChanged -> System.Action?
+HackerOs.Apps.FileExplorer.FileExplorerWindow.CanNavigateForward.get -> bool
+HackerOs.Apps.FileExplorer.FileExplorerWindow.CanNavigateForwardChanged -> System.Action?
+HackerOs.Apps.FileExplorer.FileExplorerWindow.NavigateForwardAsync(HackerOs.AppSdk.Blazor.AppForwardRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Blazor.AppBackResult!>
+override HackerOs.Apps.FileExplorer.FileExplorerMobileWindow.CanNavigateBack.get -> bool
+override HackerOs.Apps.FileExplorer.FileExplorerMobileWindow.NavigateBackAsync(HackerOs.AppSdk.Blazor.AppBackRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Blazor.AppBackResult!>
+virtual HackerOs.Apps.FileExplorer.FileExplorerWindow.CanNavigateBack.get -> bool
+virtual HackerOs.Apps.FileExplorer.FileExplorerWindow.NavigateBackAsync(HackerOs.AppSdk.Blazor.AppBackRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Blazor.AppBackResult!>
+*REMOVED*HackerOs.Apps.FileExplorer.FileExplorerMobileWindow.CanNavigateBack.get -> bool
+*REMOVED*HackerOs.Apps.FileExplorer.FileExplorerMobileWindow.CanNavigateBackChanged -> System.Action?
+*REMOVED*HackerOs.Apps.FileExplorer.FileExplorerMobileWindow.NavigateBackAsync(HackerOs.AppSdk.Blazor.AppBackRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Blazor.AppBackResult!>
+*REMOVED*override HackerOs.Apps.FileExplorer.FileExplorerMobileWindow.OnAppAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!

@@ -787,11 +787,33 @@ function (boot) {
             || (event.ctrlKey && !event.shiftKey && lower === "u")
             || (event.ctrlKey && !event.shiftKey && lower === "r")
             || (event.altKey && (key === "ArrowLeft" || key === "ArrowRight"))
+            || key === "BrowserBack" || key === "BrowserForward"
             || (event.ctrlKey && event.shiftKey && key === "Delete");
         if (handled) {
             event.preventDefault();
             emit("key", { key, ctrl: event.ctrlKey, shift: event.shiftKey, alt: event.altKey });
         }
+    }, true);
+
+    // The mouse's Back (button 4) and Forward (button 5) buttons pressed over the page (ADR 0220 §4): the
+    // browser window goes back or forward in its own history instead of the host tab. They travel as the
+    // Browser Back / Forward keys.
+    const isNavigationButton = (event) => event.button === 3 || event.button === 4;
+    for (const type of ["mousedown", "auxclick"]) {
+        window.addEventListener(type, (event) => {
+            if (isNavigationButton(event)) {
+                event.preventDefault();
+            }
+        }, true);
+    }
+
+    window.addEventListener("mouseup", (event) => {
+        if (!isNavigationButton(event)) {
+            return;
+        }
+
+        event.preventDefault();
+        emit("key", { key: event.button === 3 ? "BrowserBack" : "BrowserForward", ctrl: false, shift: false, alt: false });
     }, true);
 
     // ── Resources added after the load (ADR 0075 §3) ──────────────────────

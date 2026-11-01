@@ -24,7 +24,6 @@ public partial class FileExplorerMobileWindow
     private MobileSheet _sheet;
     private bool _searching;
     private bool _selecting;
-    private bool _lastCanNavigateBack;
 
     /// <summary>The top bar's title: the trash's name or the current folder's (<c>/</c> for the root).</summary>
     private string FolderName
@@ -49,14 +48,11 @@ public partial class FileExplorerMobileWindow
     /// The system Back button closes the sheet, the search and the selection first, leaves the trash, then
     /// goes back through the folders visited; with nothing left, the OS takes over (it leaves the app).
     /// </remarks>
-    public bool CanNavigateBack =>
+    public override bool CanNavigateBack =>
         _sheet != MobileSheet.None || _searching || _selecting || _showTrash || _state.CanNavigateBack;
 
     /// <inheritdoc />
-    public event Action? CanNavigateBackChanged;
-
-    /// <inheritdoc />
-    public async ValueTask<AppBackResult> NavigateBackAsync(AppBackRequest request, CancellationToken cancellationToken = default)
+    public override async ValueTask<AppBackResult> NavigateBackAsync(AppBackRequest request, CancellationToken cancellationToken = default)
     {
         if (_sheet != MobileSheet.None)
         {
@@ -85,19 +81,6 @@ public partial class FileExplorerMobileWindow
 
         await InvokeAsync(StateHasChanged);
         return AppBackResult.Handled;
-    }
-
-    /// <inheritdoc />
-    /// <remarks>Also tells the shell when the system Back button starts or stops having something to do.</remarks>
-    protected override async Task OnAppAfterRenderAsync(bool firstRender)
-    {
-        await base.OnAppAfterRenderAsync(firstRender);
-        bool canNavigateBack = CanNavigateBack;
-        if (canNavigateBack != _lastCanNavigateBack)
-        {
-            _lastCanNavigateBack = canNavigateBack;
-            CanNavigateBackChanged?.Invoke();
-        }
     }
 
     /// <summary>The control is ready: in the selection mode, a tap adds or removes an item (ADR 0171 §2).</summary>

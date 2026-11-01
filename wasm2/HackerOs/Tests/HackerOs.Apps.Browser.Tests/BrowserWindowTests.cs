@@ -41,3 +41,23 @@ public sealed class BrowserWindowTests
         Assert.Equal("https://hackmail.com/submit", result);
     }
 }
+
+/// <summary>ADR 0220 §4: the mouse's Back and Forward buttons in the browser.</summary>
+public sealed class BrowserHardwareNavigationTests
+{
+    [Fact]
+    public void The_browser_window_answers_the_mouse_Back_and_Forward_buttons()
+    {
+        Assert.True(typeof(HackerOs.AppSdk.Blazor.IAppBackHandler).IsAssignableFrom(typeof(BrowserWindow)));
+        Assert.True(typeof(HackerOs.AppSdk.Blazor.IAppForwardHandler).IsAssignableFrom(typeof(BrowserWindow)));
+    }
+
+    [Fact]
+    public void The_page_bridge_relays_the_mouse_navigation_buttons_pressed_over_the_page()
+    {
+        string source = HackerOs.Apps.Browser.Bridge.PageBridgeScript.Source;
+
+        Assert.Contains("event.button === 3 || event.button === 4", source, StringComparison.Ordinal);
+        Assert.Contains("\"BrowserBack\" : \"BrowserForward\"", source, StringComparison.Ordinal);
+    }
+}

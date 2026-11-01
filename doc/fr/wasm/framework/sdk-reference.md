@@ -344,7 +344,8 @@ Interfaces qu'un composant fenêtré peut implémenter :
 | Interface | Rôle |
 |---|---|
 | `IWindowCloseGuard` | `ConfirmCloseAsync` : autoriser ou refuser la fermeture (modifications non enregistrées). |
-| `IAppBackHandler` | `CanNavigateBack`, `CanNavigateBackChanged`, `NavigateBackAsync` → `AppBackResult` ; avec `SupportsBack => true`. |
+| `IAppBackHandler` | `CanNavigateBack`, `CanNavigateBackChanged`, `NavigateBackAsync` → `AppBackResult`. Reçoit le bouton ◁ mobile, le bouton Retour de la barre de titre (avec `SupportsBack => true`), et sans rien déclarer le bouton Précédent de la souris, Alt+← et le Retour du téléphone ([ADR 0220](../dev/adr/0220-mouse-back-forward-buttons.md)). `AppBackRequest.Source` : `SystemNavigationBar`, `DesktopChromeButton`, `KeyboardShortcut`, `MouseButton`, `SystemBack`. |
+| `IAppForwardHandler` | `CanNavigateForward`, `CanNavigateForwardChanged`, `NavigateForwardAsync(AppForwardRequest)` → `AppBackResult` : bouton Suivant de la souris, Alt+→, touche Browser Forward ([ADR 0220](../dev/adr/0220-mouse-back-forward-buttons.md)). |
 
 ## Sites web (ASP.Hack)
 
