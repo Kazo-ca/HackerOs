@@ -1,0 +1,19 @@
+{
+  "id": "b9225213-c71f-45e7-807d-d92cef26625e",
+  "category": "new",
+  "audience": [
+    "user",
+    "developer"
+  ],
+  "title": {
+    "en": "Mouse Back and Forward buttons in apps",
+    "fr": "Boutons Précédent et Suivant de la souris dans les apps"
+  },
+  "description": {
+    "en": "The mouse Back button, Alt+← and the phone's Back (Android button or gesture, iOS swipe) now go to the active app instead of moving the browser tab back and leaving HackerOS; the mouse Forward button and Alt+→ go forward. On a phone, Back follows the ◁ button. Apps receive them through IAppBackHandler and the new IAppForwardHandler, with the new MouseButton and SystemBack sources.",
+    "fr": "Le bouton Précédent de la souris, Alt+← et le Retour du téléphone (bouton ou geste Android, glissement iOS) vont maintenant à l'app active au lieu de faire reculer l'onglet du navigateur et de quitter HackerOS ; le bouton Suivant de la souris et Alt+→ avancent. Sur téléphone, Retour suit le bouton ◁. Les apps les reçoivent par IAppBackHandler et le nouveau IAppForwardHandler, avec les nouvelles sources MouseButton et SystemBack."
+  },
+  "links": [
+    "doc/en/wasm/dev/adr/0220-mouse-back-forward-buttons.md"
+  ]
+}

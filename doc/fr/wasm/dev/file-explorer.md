@@ -92,6 +92,12 @@ La fenêtre hérite de `FileExplorerWindow` : même état, mêmes commandes, mê
 - le bouton Retour du système (`IAppBackHandler`) ferme la feuille, la
   recherche, la sélection, quitte la Corbeille, puis remonte l'historique.
 
+Sur bureau comme sur mobile, l'explorateur implémente aussi
+`IAppForwardHandler` : le bouton Précédent de la souris, Alt+← et le Retour du
+navigateur ou du téléphone quittent la Corbeille puis reculent dans les
+dossiers visités ; le bouton Suivant et Alt+→ avancent, comme les flèches de la
+barre d'outils ([ADR 0220](adr/0220-mouse-back-forward-buttons.md)).
+
 Les dialogues que l'explorateur ouvre (nom d'un dossier, confirmation,
 propriétés) s'affichent en plein écran (voir
 [`mobile-home-screen.md`](mobile-home-screen.md#dialogues-en-plein-écran-adr-0171)).

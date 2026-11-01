@@ -5,21 +5,28 @@ using HackerOs.Windowing.Abstractions;
 namespace HackerOs.Platform.Blazor.Windows;
 
 /// <summary>
-/// Tracks the <see cref="IAppBackHandler"/> captured from each dynamically rendered window app,
-/// per doc/en/wasm/dev/old/mobile-interface-platform-plan.md §8 (<c>MOB-012</c>). Registrations are
-/// reference-safe so disposal of an old renderer cannot remove a newer component's handler for
-/// the same window, mirroring <see cref="WindowCloseGuardRegistry"/>.
+/// Tracks the <see cref="IAppBackHandler"/> and <see cref="IAppForwardHandler"/> captured from each dynamically
+/// rendered window app, per doc/en/wasm/dev/old/mobile-interface-platform-plan.md §8 (<c>MOB-012</c>) and
+/// ADR 0220 §3. Registrations are reference-safe so disposal of an old renderer cannot remove a newer
+/// component's handler for the same window, mirroring <see cref="WindowCloseGuardRegistry"/>.
 /// </summary>
 public sealed class AppBackHandlerRegistry
 {
     private readonly Dictionary<WindowId, IAppBackHandler> _handlers = [];
+    private readonly Dictionary<WindowId, IAppForwardHandler> _forwardHandlers = [];
 
     /// <summary>Registers the currently rendered back handler for one window.</summary>
     public IDisposable Register(WindowId windowId, IAppBackHandler handler)
     {
         ArgumentNullException.ThrowIfNull(handler);
-        _handlers[windowId] = handler;
-        return new Registration(this, windowId, handler);
+        return Add(_handlers, windowId, handler);
+    }
+
+    /// <summary>Registers the currently rendered forward handler for one window (ADR 0220 §3).</summary>
+    public IDisposable RegisterForward(WindowId windowId, IAppForwardHandler handler)
+    {
+        ArgumentNullException.ThrowIfNull(handler);
+        return Add(_forwardHandlers, windowId, handler);
     }
 
     /// <summary>
@@ -34,27 +41,44 @@ public sealed class AppBackHandlerRegistry
             ? handler.NavigateBackAsync(request, cancellationToken)
             : ValueTask.FromResult(AppBackResult.NotHandled);
 
-    private void Unregister(WindowId windowId, IAppBackHandler handler)
+    /// <summary>
+    /// Invokes a window's current forward handler, or reports <see cref="AppBackResultStatus.NotHandled"/>
+    /// when the window's app doesn't implement <see cref="IAppForwardHandler"/> (ADR 0220 §3).
+    /// </summary>
+    public ValueTask<AppBackResult> NavigateForwardAsync(
+        WindowId windowId,
+        AppForwardRequest request,
+        CancellationToken cancellationToken = default) =>
+        _forwardHandlers.TryGetValue(windowId, out IAppForwardHandler? handler)
+            ? handler.NavigateForwardAsync(request, cancellationToken)
+            : ValueTask.FromResult(AppBackResult.NotHandled);
+
+    private static Registration<THandler> Add<THandler>(
+        Dictionary<WindowId, THandler> handlers,
+        WindowId windowId,
+        THandler handler)
+        where THandler : class
     {
-        if (_handlers.TryGetValue(windowId, out IAppBackHandler? current)
-            && ReferenceEquals(current, handler))
-        {
-            _handlers.Remove(windowId);
-        }
+        handlers[windowId] = handler;
+        return new Registration<THandler>(handlers, windowId, handler);
     }
 
-    private sealed class Registration(
-        AppBackHandlerRegistry owner,
+    /// <summary>Removes one registration only while it is still the window's current handler.</summary>
+    private sealed class Registration<THandler>(
+        Dictionary<WindowId, THandler> handlers,
         WindowId windowId,
-        IAppBackHandler handler) : IDisposable
+        THandler handler) : IDisposable
+        where THandler : class
     {
         private int _disposed;
 
         public void Dispose()
         {
-            if (Interlocked.Exchange(ref _disposed, 1) == 0)
+            if (Interlocked.Exchange(ref _disposed, 1) == 0
+                && handlers.TryGetValue(windowId, out THandler? current)
+                && ReferenceEquals(current, handler))
             {
-                owner.Unregister(windowId, handler);
+                handlers.Remove(windowId);
             }
         }
     }

@@ -10,3 +10,38 @@ HackerOs.Platform.Blazor.ContextMenus.FileMenuEntries.OpenScreens.get -> System.
 HackerOs.Platform.Blazor.ContextMenus.FileMenuEntries.OpenScreens.init -> void
 HackerOs.Platform.Blazor.Shell.DesktopWallpaper.Mobile.get -> bool
 HackerOs.Platform.Blazor.Shell.DesktopWallpaper.Mobile.set -> void
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationDirection
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationDirection.Back = 0 -> HackerOs.Platform.Blazor.Navigation.HardwareNavigationDirection
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationDirection.Forward = 1 -> HackerOs.Platform.Blazor.Navigation.HardwareNavigationDirection
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationListener
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationListener.DisposeAsync() -> System.Threading.Tasks.ValueTask
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationListener.HardwareNavigationListener() -> void
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationListener.OnHardwareNavigationAsync(bool forward, string! source) -> System.Threading.Tasks.Task!
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest.<Clone>$() -> HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest!
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest.Deconstruct(out HackerOs.Platform.Blazor.Navigation.HardwareNavigationDirection Direction, out HackerOs.AppSdk.Blazor.AppBackSource Source) -> void
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest.Direction.get -> HackerOs.Platform.Blazor.Navigation.HardwareNavigationDirection
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest.Direction.init -> void
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest.Equals(HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest? other) -> bool
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest.HardwareNavigationRequest(HackerOs.Platform.Blazor.Navigation.HardwareNavigationDirection Direction, HackerOs.AppSdk.Blazor.AppBackSource Source) -> void
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest.Source.get -> HackerOs.AppSdk.Blazor.AppBackSource
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest.Source.init -> void
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationService
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationService.HardwareNavigationService(HackerOs.Windowing.Core.WindowRuntime! windowRuntime, HackerOs.Platform.Blazor.Windows.AppBackHandlerRegistry! handlers) -> void
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationService.NavigateAsync(HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest! request) -> System.Threading.Tasks.Task!
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationService.NavigateFocusedWindowAsync(HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest! request) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Blazor.AppBackResult!>!
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationService.NavigateWindowAsync(HackerOs.Windowing.Abstractions.WindowId windowId, HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest! request) -> System.Threading.Tasks.Task<HackerOs.AppSdk.Blazor.AppBackResult!>!
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationService.Route.get -> System.Func<HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest!, System.Threading.Tasks.Task!>?
+HackerOs.Platform.Blazor.Navigation.HardwareNavigationService.Route.set -> void
+HackerOs.Platform.Blazor.Shell.MobileNavigationCommandsAdapter.RequestBackAsync(HackerOs.AppSdk.Blazor.AppBackSource source) -> System.Threading.Tasks.Task!
+HackerOs.Platform.Blazor.Shell.MobileNavigationCommandsAdapter.RequestForwardAsync(HackerOs.AppSdk.Blazor.AppBackSource source) -> System.Threading.Tasks.Task!
+HackerOs.Platform.Blazor.Windows.AppBackHandlerRegistry.NavigateForwardAsync(HackerOs.Windowing.Abstractions.WindowId windowId, HackerOs.AppSdk.Blazor.AppForwardRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<HackerOs.AppSdk.Blazor.AppBackResult!>
+HackerOs.Platform.Blazor.Windows.AppBackHandlerRegistry.RegisterForward(HackerOs.Windowing.Abstractions.WindowId windowId, HackerOs.AppSdk.Blazor.IAppForwardHandler! handler) -> System.IDisposable!
+override HackerOs.Platform.Blazor.Navigation.HardwareNavigationListener.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+override HackerOs.Platform.Blazor.Navigation.HardwareNavigationListener.OnInitialized() -> void
+override HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest.Equals(object? obj) -> bool
+override HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest.GetHashCode() -> int
+override HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest.ToString() -> string!
+static HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest.operator !=(HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest? left, HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest? right) -> bool
+static HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest.operator ==(HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest? left, HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest? right) -> bool
+~override HackerOs.Platform.Blazor.Navigation.HardwareNavigationListener.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

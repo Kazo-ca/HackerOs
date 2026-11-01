@@ -98,6 +98,11 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   les fenêtres en cascade ou en mosaïque. ([`taskbar-context-menus.md`](dev/taskbar-context-menus.md))
   Survoler le bouton d'une fenêtre montre un aperçu en direct ; s'y attarder
   montre la fenêtre seule (« peek »). ([`taskbar-window-previews.md`](dev/taskbar-window-previews.md))
+- **Boutons Précédent et Suivant de la souris** : le bouton Précédent, Alt+←
+  et le Retour du téléphone (bouton ou geste Android, glissement iOS) reculent
+  dans l'app active (File Explorer, navigateur, Paramètres, Hack Store) au lieu
+  de faire reculer l'onglet et de quitter HackerOS ; le bouton Suivant et Alt+→
+  avancent. ([ADR 0220](dev/adr/0220-mouse-back-forward-buttons.md))
   Le menu Démarrer montre l'utilisateur connecté et son bouton Marche/arrêt :
   se déconnecter ou redémarrer. ([ADR 0195](dev/adr/0195-start-menu-power-button.md))
   Un point à côté de l'horloge signale les notifications non lues, avec leur

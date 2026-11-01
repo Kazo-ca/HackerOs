@@ -27,6 +27,24 @@ public partial class MobileShell
     private string? _mobileLaunchError;
     private bool HasActiveMobileWindow => SingleSurfacePresentationPolicy.SelectPrimary(WindowRuntime.Windows) is not null;
 
+    private HackerOs.Platform.Blazor.Navigation.HardwareNavigationService? _hardwareNavigation;
+    private Func<HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest, Task>? _hardwareNavigationRoute;
+
+    /// <summary>ADR 0220 §2: Back runs the ◁ sequence with the gesture's source; Forward goes to the foreground app.</summary>
+    private async Task RouteHardwareNavigationAsync(HackerOs.Platform.Blazor.Navigation.HardwareNavigationRequest request)
+    {
+        if (request.Direction == HackerOs.Platform.Blazor.Navigation.HardwareNavigationDirection.Forward)
+        {
+            await _navigationCommands.RequestForwardAsync(request.Source);
+        }
+        else
+        {
+            await _navigationCommands.RequestBackAsync(request.Source);
+        }
+
+        StateHasChanged();
+    }
+
     private void InitializeMobileHome()
     {
         _mobileProcessObserver = new WindowProcessObserver(MobileEvents, MobileProcesses, Orchestrator,
