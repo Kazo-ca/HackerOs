@@ -10,3 +10,19 @@ HackerOs.Platform.Blazor.ContextMenus.FileMenuEntries.OpenScreens.get -> System.
 HackerOs.Platform.Blazor.ContextMenus.FileMenuEntries.OpenScreens.init -> void
 HackerOs.Platform.Blazor.Shell.DesktopWallpaper.Mobile.get -> bool
 HackerOs.Platform.Blazor.Shell.DesktopWallpaper.Mobile.set -> void
+HackerOs.Platform.Blazor.LazyLoading.HostUpdateDownloadResult
+HackerOs.Platform.Blazor.LazyLoading.HostUpdateDownloadResult.NoWorker = 0 -> HackerOs.Platform.Blazor.LazyLoading.HostUpdateDownloadResult
+HackerOs.Platform.Blazor.LazyLoading.HostUpdateDownloadResult.UpToDate = 1 -> HackerOs.Platform.Blazor.LazyLoading.HostUpdateDownloadResult
+HackerOs.Platform.Blazor.LazyLoading.HostUpdateDownloadResult.Ready = 2 -> HackerOs.Platform.Blazor.LazyLoading.HostUpdateDownloadResult
+HackerOs.Platform.Blazor.LazyLoading.HostUpdateDownloadResult.Unavailable = 3 -> HackerOs.Platform.Blazor.LazyLoading.HostUpdateDownloadResult
+HackerOs.Platform.Blazor.LazyLoading.HostUpdateInstaller
+HackerOs.Platform.Blazor.LazyLoading.HostUpdateInstaller.ActivateDownloadedAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
+HackerOs.Platform.Blazor.LazyLoading.HostUpdateInstaller.ActivatedElsewhere -> System.Action?
+HackerOs.Platform.Blazor.LazyLoading.HostUpdateInstaller.DownloadAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<HackerOs.Platform.Blazor.LazyLoading.HostUpdateDownloadResult>!
+HackerOs.Platform.Blazor.LazyLoading.HostUpdateInstaller.HostUpdateInstaller(HackerOs.Platform.Blazor.LazyLoading.IHostUpdateWorker! worker) -> void
+HackerOs.Platform.Blazor.LazyLoading.HostUpdateInstaller.StartAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+HackerOs.Platform.Blazor.LazyLoading.IHostUpdateWorker
+HackerOs.Platform.Blazor.LazyLoading.IHostUpdateWorker.ActivateAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<bool>
+HackerOs.Platform.Blazor.LazyLoading.IHostUpdateWorker.DownloadAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<HackerOs.Platform.Blazor.LazyLoading.HostUpdateDownloadResult>
+HackerOs.Platform.Blazor.LazyLoading.IHostUpdateWorker.ListenAsync(System.Action! activatedElsewhere, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask
+HackerOs.Platform.Blazor.Shell.UpdateReadyNotification.ShowDownloadFailed(HackerOs.Simulation.Abstractions.Sessions.LocalUserId user, string! title, string! message, string! restartLabel) -> void

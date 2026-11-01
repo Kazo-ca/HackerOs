@@ -55,6 +55,10 @@
     {
         <aside class="update-notice" role="status">
             <span>@(State.AvailableVersion is { } version ? L["Update.VersionReady", version] : L["Update.Ready"]) @L["Update.Detail"]</span>
+            @if (UpdateDownloadFailed)
+            {
+                <span class="update-failed">@L["Update.DownloadFailed"]</span>
+            }
             <button type="button" disabled="@IsRestartingForUpdate" @onclick="RestartForUpdateAsync">@L["Update.Restart"]</button>
         </aside>
     }
@@ -292,6 +296,12 @@
     private GuestAccountRequests? GuestRequests { get; set; }
     private bool IsRestartingForUpdate { get; set; }
 
+    // ADR 0223: the last restart for an update found no downloadable new version.
+    private bool UpdateDownloadFailed { get; set; }
+
+    // ADR 0223: downloads the new version in the background and activates it at the restart (browser host only).
+    private HackerOs.Platform.Blazor.LazyLoading.HostUpdateInstaller? UpdateInstaller { get; set; }
+
     // ADR 0162: only the browser host registers it (a server prerender of this component has none).
     private HackerOs.Platform.Blazor.LazyLoading.HostBuildUpdateMonitor? BuildMonitor { get; set; }
 
@@ -350,11 +360,22 @@
                 RestartForUpdateAsync);
         }
 
+        UpdateInstaller = Services.GetService<HackerOs.Platform.Blazor.LazyLoading.HostUpdateInstaller>();
+        if (UpdateInstaller is not null)
+        {
+            UpdateInstaller.ActivatedElsewhere += OnUpdateActivatedElsewhere;
+            _ = UpdateInstaller.StartAsync();
+        }
+
         BuildMonitor = Services.GetService<HackerOs.Platform.Blazor.LazyLoading.HostBuildUpdateMonitor>();
         if (BuildMonitor is not null)
         {
             BuildMonitor.UpdatePending += OnBuildUpdatePending;
             State.SetUpdateAvailable(BuildMonitor.IsUpdatePending);
+            if (BuildMonitor.IsUpdatePending)
+            {
+                StartUpdateDownload();
+            }
         }
 
         ReleaseMonitor = Services.GetService<HackerOs.Platform.Blazor.LazyLoading.HostReleaseMonitor>();
@@ -364,6 +385,7 @@
             if (ReleaseMonitor.AvailableVersion is { } available)
             {
                 State.SetAvailableVersion(available);
+                StartUpdateDownload();
             }
 
             ReleaseMonitor.Start(HackerOs.Platform.Blazor.LazyLoading.HostReleaseMonitor.DefaultInterval);
@@ -390,12 +412,30 @@
     private void OnBuildUpdatePending() => InvokeAsync(() =>
     {
         State.SetUpdateAvailable(true);
+        StartUpdateDownload();
         StateHasChanged();
+    });
+
+    /// <summary>
+    /// ADR 0223, question 2: the new version downloads in the background as soon as it is
+    /// announced, so « Redémarrer » restarts at once onto it.
+    /// </summary>
+    private void StartUpdateDownload() => _ = UpdateInstaller?.DownloadAsync();
+
+    /// <summary>
+    /// ADR 0223, question 3: another tab activated the new version; this page's files belong to the
+    /// previous one, so it restarts the same clean way (apps close, logs are flushed).
+    /// </summary>
+    private void OnUpdateActivatedElsewhere() => InvokeAsync(async () =>
+    {
+        IsRestartingForUpdate = true;
+        await RestartMachineAsync(static () => Task.CompletedTask);
     });
 
     private void OnReleaseAvailable(string version) => InvokeAsync(() =>
     {
         State.SetAvailableVersion(version);
+        StartUpdateDownload();
         StateHasChanged();
     });
 
@@ -418,19 +458,51 @@
 
     /// <summary>
     /// ADR 0162: the OS files were replaced under the running page. Restart like after a system
-    /// update: flush the logs, end the session (apps close), then reload the new build.
+    /// update: flush the logs, end the session (apps close), then reload the new build. ADR 0223:
+    /// the new version must be downloaded first, and its service worker is activated once the
+    /// session has ended, so the reload is served by it and not by the previous worker's cache.
+    /// When it cannot be downloaded, nothing closes and the user is told.
     /// </summary>
     private async Task RestartForUpdateAsync()
     {
         IsRestartingForUpdate = true;
+        UpdateDownloadFailed = false;
+        if (UpdateInstaller is not null
+            && await UpdateInstaller.DownloadAsync() == HackerOs.Platform.Blazor.LazyLoading.HostUpdateDownloadResult.Unavailable)
+        {
+            IsRestartingForUpdate = false;
+            UpdateDownloadFailed = true;
+            ShowUpdateDownloadFailedNotification();
+            StateHasChanged();
+            return;
+        }
+
+        await RestartMachineAsync(() => UpdateInstaller?.ActivateDownloadedAsync() ?? Task.CompletedTask);
+    }
+
+    private async Task RestartMachineAsync(Func<Task> whileStopped)
+    {
         if (Services.GetService<HackerOs.Platform.Core.Power.SystemPowerService>() is { } power)
         {
-            await power.RestartAfterAsync(static () => Task.CompletedTask);
+            await power.RestartAfterAsync(whileStopped);
         }
         else if (Services.GetService<HackerOs.Platform.Core.Power.ISystemPowerDevice>() is { } device)
         {
+            await whileStopped();
             await device.RestartAsync();
         }
+    }
+
+    /// <summary>ADR 0223: in a session, the failed download is a notification, with « Redémarrer » to retry.</summary>
+    private void ShowUpdateDownloadFailedNotification()
+    {
+        if (UpdateNotification is null || SessionService.CurrentPrincipal is not { } principal)
+        {
+            return;
+        }
+
+        string title = State.AvailableVersion is { } version ? L["Update.VersionReady", version] : L["Update.Ready"];
+        UpdateNotification.ShowDownloadFailed(principal.UserId, title, L["Update.DownloadFailed"], L["Update.Restart"]);
     }
 
     /// <inheritdoc />
@@ -443,6 +515,11 @@
         CursorThemes.Changed -= OnThemePreferenceChanged;
         Accessibility.Changed -= OnThemePreferenceChanged;
         SessionLocale.Changed -= OnSessionLocaleChanged;
+        if (UpdateInstaller is not null)
+        {
+            UpdateInstaller.ActivatedElsewhere -= OnUpdateActivatedElsewhere;
+        }
+
         if (BuildMonitor is not null)
         {
             BuildMonitor.UpdatePending -= OnBuildUpdatePending;
