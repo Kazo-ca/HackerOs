@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using System.Text;
 using HackerOs.App.Abstractions;
 using HackerOs.App.Abstractions.Policy;
@@ -394,6 +395,18 @@ public sealed partial class AppPackageGatewayTests
     }
 
     [Fact]
+    public async Task An_unsigned_package_of_the_official_catalog_is_refused()
+    {
+        Harness harness = await Harness.CreateAsync();
+        harness.PublishCatalogAt(AppPackageDefaults.OfficialCatalogAddress, signed: false, "1.0.0");
+
+        HackPackageException refused = await Assert.ThrowsAsync<HackPackageException>(async () =>
+            await (await harness.CreateGatewayAsync(new CountingAgent(succeed: true))).InstallPackageAsync(AppPackageTests.AppId));
+
+        Assert.Contains("is not signed", refused.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public async Task A_bare_app_id_is_installed_from_the_official_catalog_as_verified()
     {
         Harness harness = await Harness.CreateAsync();
@@ -611,6 +624,11 @@ public sealed partial class AppPackageGatewayTests
         private readonly FakeDownloader _downloader = new();
         private readonly AppPackageInstaller _installer;
 
+        // The official catalog signs its packages (ADR 0214 §2) and the OS ships its public key
+        // (AppPackageDefaults.OfficialCatalogSigningKey). The tests cannot sign with that key, so the
+        // harness's installer knows this one instead and PublishCatalog signs with it.
+        private static readonly ECDsa CatalogKey = ECDsa.Create(ECCurve.NamedCurves.nistP256);
+
         private Harness(SettingsFilesHarness settings, bool builtInSample, bool runtimeHasEverything)
         {
             Settings = settings;
@@ -624,7 +642,12 @@ public sealed partial class AppPackageGatewayTests
             Assert.True(built.IsSuccess, string.Join(", ", built.Errors.Select(error => error.Message)));
             Catalog = built.Catalog!;
             _installer = new AppPackageInstaller(
-                _downloader, new FixedRuntime(runtimeHasEverything), SemanticVersion.Parse("2.1.0"), clock: () => Now);
+                _downloader, new FixedRuntime(runtimeHasEverything), SemanticVersion.Parse("2.1.0"),
+                defaults: AppPackageDefaults.Standard with
+                {
+                    SigningKeys = [new(OfficialCatalogTrustKey, Convert.ToBase64String(CatalogKey.ExportSubjectPublicKeyInfo()))],
+                },
+                clock: () => Now);
         }
 
         internal SettingsFilesHarness Settings { get; }
@@ -671,8 +694,20 @@ public sealed partial class AppPackageGatewayTests
         internal void PublishCatalog(string latest, params string[] older) =>
             PublishCatalogAt(AppPackageDefaults.OfficialCatalogAddress, latest, older);
 
-        /// <summary>Publishes the sample app in the catalog whose <c>catalog.json</c> is at <paramref name="address"/>.</summary>
-        internal void PublishCatalogAt(string address, string latest, params string[] older)
+        // The "signature" field of a catalog version (ADR 0214 §2), or nothing for an unsigned one.
+        private static string Signature(byte[] package, bool signed) => signed
+            ? $"\"signature\":\"{Convert.ToBase64String(CatalogKey.SignData(package, HashAlgorithmName.SHA256, DSASignatureFormat.IeeeP1363FixedFieldConcatenation))}\","
+            : string.Empty;
+
+        /// <summary>The trust key of the official catalog in <c>[signing-keys]</c>.</summary>
+        internal static string OfficialCatalogTrustKey => AppSourcesConfigDocument.CatalogTrustPrefix + AppSourcesConfig.OfficialCatalogName;
+
+        /// <summary>Publishes the sample app in the catalog whose <c>catalog.json</c> is at <paramref name="address"/>, signed.</summary>
+        internal void PublishCatalogAt(string address, string latest, params string[] older) =>
+            PublishCatalogAt(address, signed: true, latest, older);
+
+        /// <summary>Publishes the sample app in a catalog, its versions signed with the harness's catalog key or not.</summary>
+        internal void PublishCatalogAt(string address, bool signed, string latest, params string[] older)
         {
             string root = address[..^"catalog.json".Length];
             List<string> versions = [];
@@ -686,7 +721,7 @@ public sealed partial class AppPackageGatewayTests
                 _downloader.Files[new Uri($"{root}{folder}/description.en.md")] = Encoding.UTF8.GetBytes($"# Sample {version}");
                 versions.Add($$$"""
                     {"version":"{{{version}}}","commit":"abc","package":"{{{folder}}}/{{{AppPackageTests.AppId}}}-{{{version}}}.hackapp",
-                     "sha256":"{{{AppPackage.Sha256(package)}}}","size":{{{package.Length}}},"publishedAt":"2026-10-30T00:00:00Z",
+                     "sha256":"{{{AppPackage.Sha256(package)}}}","size":{{{package.Length}}},"publishedAt":"2026-10-30T00:00:00Z",{{{Signature(package, signed)}}}
                      "capabilities":[],"sdkCompatibility":{"minimumVersion":"2.0.0"},"icon":"{{{folder}}}/icon.svg",
                      "screenshots":["{{{folder}}}/screenshots/1.png"],"descriptions":{"en":"{{{folder}}}/description.en.md"}}
                     """);

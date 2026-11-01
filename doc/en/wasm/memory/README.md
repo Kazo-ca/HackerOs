@@ -121,8 +121,9 @@ at the end of each series or when a convention changes.
   (live catalog `AppCatalog.Changed`), ECDSA P-256 signatures
   (`[signing-keys]`, `HackerOsAppSigningKeys`), `.transaction` journal,
   `hackpkg rollback`/`repair`, `AppDataGuard`. Five questions asked to Benoit,
-  answer A to each. The official catalog key is still to be created by Benoit
-  (`keygen`, `HACK_STORE_SIGNING_KEY` secret); tool for authors: `TODO`
+  answer A to each. Benoit created the official catalog key on 2026-11-01
+  (`keygen`, the catalog's `HACK_STORE_SIGNING_KEY` secret); its public key is in
+  `AppPackageDefaults.OfficialCatalogSigningKey`; tool for authors: `TODO`
   issue #321.
 - **Notification bubbles** (ADR 0197, work item 1 of #242, series
   `todo/base`): notification bubbles and "Update ready" as a persistent
