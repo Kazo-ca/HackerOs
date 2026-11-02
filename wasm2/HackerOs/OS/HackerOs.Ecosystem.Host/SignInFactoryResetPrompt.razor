@@ -1,0 +1,32 @@
+@* ADR 0226: « Forgot password? » of the sign-in screen. The link opens a confirmation that lists
+   what is lost; the reset button stays disabled until the confirmation word is typed. *@
+@inject IStringLocalizer<Strings> L
+
+<button type="button" class="forgot-password" disabled="@Disabled" @onclick="Open">@L["FactoryReset.Open"]</button>
+@if (IsOpen)
+{
+    <div class="factory-reset-backdrop">
+        <section class="factory-reset-dialog" role="alertdialog" aria-modal="true"
+                 aria-labelledby="factory-reset-title" aria-describedby="factory-reset-body"
+                 @onkeydown="OnKeyDown">
+            <h2 id="factory-reset-title">@L["FactoryReset.Title"]</h2>
+            <div id="factory-reset-body">
+                <p>@L["FactoryReset.Body"]</p>
+                <ul class="factory-reset-losses">
+                    <li>@L["FactoryReset.LossAccounts"]</li>
+                    <li>@L["FactoryReset.LossFiles"]</li>
+                    <li>@L["FactoryReset.LossApps"]</li>
+                    <li>@L["FactoryReset.LossSettings"]</li>
+                </ul>
+                <p class="factory-reset-irreversible">@L["FactoryReset.Irreversible"]</p>
+            </div>
+            <label for="factory-reset-word">@L["FactoryReset.TypeWord", ConfirmationWord]</label>
+            <input id="factory-reset-word" autocomplete="off" spellcheck="false" @ref="_wordInput"
+                   @bind="TypedWord" @bind:event="oninput" />
+            <div class="factory-reset-actions">
+                <button type="button" class="factory-reset-cancel" @onclick="Close">@L["FactoryReset.Cancel"]</button>
+                <button type="button" class="factory-reset-confirm" disabled="@(!IsConfirmed || IsResetting)" @onclick="ConfirmAsync">@L["FactoryReset.Confirm"]</button>
+            </div>
+        </section>
+    </div>
+}

@@ -179,6 +179,11 @@
                         <button type="button" class="passkey-login" disabled="@IsSubmitting" @onclick="LoginWithPasskeyAsync">@L["Login.UsePasskey"]</button>
                     }
                 </form>
+                @* ADR 0226: a forgotten password erases the machine, unless the deployment turned it off. *@
+                @if (SignInFactoryReset.IsOffered(Services))
+                {
+                    <SignInFactoryResetPrompt Disabled="@IsSubmitting" OnConfirmed="FactoryResetFromSignInAsync" />
+                }
                 }
                 <ProjectInformation />
             </section>
@@ -898,6 +903,21 @@
         SetupPassword = string.Empty;
         SetupPasswordConfirmation = string.Empty;
         LoginPassword = string.Empty;
+    }
+
+    /// <summary>
+    /// ADR 0226: « Forgot password? » was confirmed. The boot screen shows while the OS database is
+    /// deleted, then the page reloads on the first-run setup. If no power device could do it, the
+    /// sign-in screen opens again with nothing erased.
+    /// </summary>
+    private async Task FactoryResetFromSignInAsync()
+    {
+        FormError = null;
+        ClearPasswords();
+        State.BeginInitialization();
+        StateHasChanged();
+        await SignInFactoryReset.RunAsync(Services);
+        await InitializeHostAsync();
     }
 
     /// <summary>

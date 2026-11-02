@@ -227,6 +227,23 @@ public sealed class SystemAdministrationGatewayTests
     }
 
     [Fact]
+    public async Task Factory_reset_from_the_sign_in_screen_erases_then_restarts_and_audits_its_origin()
+    {
+        AdminHarness harness = await AdminHarness.CreateAsync();
+        RecordingDevice device = new();
+        SystemPowerService power = new(device, harness.Files.Session, auditLog: harness.Audit);
+
+        await power.FactoryResetFromSignInAsync();
+
+        // ADR 0226: nobody signed in and no administrator: the entry names the sign-in screen.
+        Assert.Equal(["erase", "restart"], device.Calls);
+        AuditEntry entry = Assert.Single(harness.Audit.Entries, audit => audit.Action == "system.factory-reset");
+        Assert.Equal("sign-in", entry.Properties["origin"]);
+        Assert.Equal("-", entry.Properties["admin"]);
+        Assert.Equal("-", entry.Properties["requestedBy"]);
+    }
+
+    [Fact]
     public async Task The_operation_shown_to_the_administrator_follows_the_calling_process_language()
     {
         AdminHarness harness = await AdminHarness.CreateAsync();

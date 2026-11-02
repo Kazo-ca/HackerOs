@@ -205,6 +205,10 @@ This section lists what is released in the `main` branch and online.
   [ADR 0187](dev/adr/0187-guest-start-and-sign-in-credits.md))
 - **Passkeys**: sign in with a fingerprint, face, device PIN or security key.
   ([`passkeys.md`](dev/passkeys.md))
+- **Forgot password**: from the sign-in screen, erase the machine and start
+  over, after a confirmation; can be turned off at deployment.
+  ([`sign-in-factory-reset.md`](dev/sign-in-factory-reset.md),
+  [ADR 0226](dev/adr/0226-forgot-password-factory-reset.md))
 - **Application capabilities** and administrator approval of sensitive
   capabilities. ([`capabilities.md`](framework/capabilities.md),
   [`dangerous-capability-approval.md`](dev/dangerous-capability-approval.md))

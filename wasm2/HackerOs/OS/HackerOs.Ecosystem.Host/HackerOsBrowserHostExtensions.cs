@@ -146,6 +146,9 @@ public static partial class HackerOsBrowserHostExtensions
         // ADR 0125: process limits (ulimit, limits.conf), on unless HackerOs:ResourceLimits:Enabled is false.
         builder.Services.AddHackerOsResourceLimits(builder.Configuration);
         builder.Services.AddHackerOsHardware(builder.Configuration);
+        // ADR 0226: « Forgot password? » on the sign-in screen, on unless
+        // HackerOs:SignIn:FactoryReset:Enabled is false in appsettings.json.
+        builder.Services.AddSingleton(SignInFactoryResetSettings.Read(builder.Configuration));
         builder.Services.AddHackerOsEcosystem(
             apps.Catalog,
             provider => provider.GetRequiredService<BuildKnownLazyAppDescriptorRegistry>().Descriptors,
