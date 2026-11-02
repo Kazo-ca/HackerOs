@@ -45,6 +45,13 @@ quels : la même clé s'applique. Une valeur absente ou illisible vaut `true`.
 Un administrateur peut toujours effacer la machine depuis Paramètres ▸
 Système.
 
+Le service worker met `appsettings.json` en cache sans vérifier son
+empreinte : le fichier modifié n'empêche pas l'installation hors ligne. Un
+navigateur qui a déjà installé cette version garde l'ancien fichier jusqu'à
+la version suivante ; pour qu'un changement s'applique partout, le faire
+avant le premier déploiement (ou dans `OS/HackerOs.Ecosystem/wwwroot/appsettings.json`
+avant `dotnet publish`).
+
 ## Architecture
 
 | Élément | Rôle |

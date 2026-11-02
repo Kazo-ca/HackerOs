@@ -6,7 +6,9 @@ Mise en œuvre de la section 3 de
 [l'ADR 0099](adr/0099-os-backup-and-low-storage.md) (chantier
 `v3/7-storage-backup`), qui complète
 [l'ADR 0017](adr/0017-pwa-cache-and-offline-strategy.md) (cache « cache
-d'abord » versionné, intégrité vérifiée à l'installation).
+d'abord » versionné, intégrité vérifiée à l'installation). Seul
+`appsettings.json` est mis en cache sans son empreinte, pour rester modifiable
+après publication ([ADR 0226](adr/0226-forgot-password-factory-reset.md)).
 
 ## Objet
 

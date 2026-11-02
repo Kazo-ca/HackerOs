@@ -53,6 +53,12 @@ un vrai ordinateur, on réinstalle le système.
    `ResourceLimits`. On la change dans les fichiers publiés sans recompiler ;
    le serveur HackerOS sert les mêmes fichiers. À `false`, le lien disparaît
    et `SignInFactoryReset.RunAsync` n'efface rien même s'il est appelé.
+   Le service worker (`service-worker.published.js`) met désormais
+   `appsettings.json` en cache **sans** son empreinte d'intégrité : avant,
+   un `appsettings.json` modifié après publication faisait échouer
+   l'installation de tout le cache hors ligne (vérifié dans Chromium). Une
+   modification faite après qu'un navigateur a installé la version n'y
+   arrive qu'à la version suivante.
 5. **Activé par défaut (question 2, choix A).** Une clé absente ou illisible
    vaut `true` ; le `appsettings.json` publié l'écrit explicitement.
 
@@ -94,4 +100,5 @@ un vrai ordinateur, on réinstalle le système.
   `SignInFactoryResetPrompt` (`.razor`, `.razor.cs`, `.razor.css`), branché
   dans `App.razor` ; textes `FactoryReset.*` dans `Strings.resx` et
   `Strings.fr.resx`.
+- `Ecosystem` : `service-worker.published.js` (`offlineAssetsWithoutIntegrity`).
 - Documentation : [`sign-in-factory-reset.md`](../sign-in-factory-reset.md).

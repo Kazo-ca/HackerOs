@@ -42,6 +42,12 @@ The HackerOS server (`HackerOs.Server`) serves the OS's published files as
 they are: the same key applies. A missing or unreadable value reads as
 `true`. An administrator can still erase the machine from Settings ▸ System.
 
+The service worker caches `appsettings.json` without checking its hash: the
+edited file does not stop the offline install. A browser that already
+installed this release keeps the previous file until the next release; for a
+change to apply everywhere, make it before the first deployment (or in
+`OS/HackerOs.Ecosystem/wwwroot/appsettings.json` before `dotnet publish`).
+
 ## Architecture
 
 | Element | Role |

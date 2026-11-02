@@ -51,6 +51,11 @@ the system.
    It is changed in the published files without rebuilding; the HackerOS
    server serves the same files. At `false`, the link is gone and
    `SignInFactoryReset.RunAsync` erases nothing even when called.
+   The service worker (`service-worker.published.js`) now caches
+   `appsettings.json` **without** its integrity hash: before, an
+   `appsettings.json` edited after publishing made the whole offline cache
+   fail to install (checked in Chromium). An edit made after a browser
+   installed the release only reaches it with the next release.
 5. **On by default (question 2, choice A).** A missing or unreadable key reads
    as `true`; the published `appsettings.json` writes it explicitly.
 
@@ -89,4 +94,5 @@ the system.
   `SignInFactoryReset` (`IsOffered`, `RunAsync`), component
   `SignInFactoryResetPrompt` (`.razor`, `.razor.cs`, `.razor.css`), wired in
   `App.razor`; `FactoryReset.*` texts in `Strings.resx` and `Strings.fr.resx`.
+- `Ecosystem`: `service-worker.published.js` (`offlineAssetsWithoutIntegrity`).
 - Documentation: [`sign-in-factory-reset.md`](../sign-in-factory-reset.md).
