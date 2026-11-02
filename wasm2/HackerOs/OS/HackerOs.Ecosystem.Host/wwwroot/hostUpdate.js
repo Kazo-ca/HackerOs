@@ -27,7 +27,8 @@ function onControllerChange() {
         return true;
     }
 
-    if (hadController && dotnet) {
+    // ADR 0225: a Ctrl+F5 page the worker took later to serve an installed app counts as controlled.
+    if ((hadController || window.hackerOsClaimForInstalledApps === 'done') && dotnet) {
         // Another tab activated it: restart cleanly (ADR 0223, question 3).
         dotnet.invokeMethodAsync('OnActivatedElsewhere').catch(() => window.location.reload());
         return true;

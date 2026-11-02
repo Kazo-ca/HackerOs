@@ -334,8 +334,12 @@ validation en deux étapes :
   `_content/<assemblage>/<chemin>`, la même adresse qu'une app compilée dans
   l'OS (balises, `import()`, CSS, Web Workers et leurs `importScripts`). Sur
   `localhost`, l'OS enregistre `service-worker.js?mode=installed-apps`, qui ne
-  sert que ces fichiers. Sans service worker, les fichiers ne sont pas servis
-  (ligne dans `/var/log/syslog`).
+  sert que ces fichiers. Une page chargée avec Ctrl+F5 n'est pas contrôlée : l'OS
+  demande au worker actif de la réclamer, ce qu'il fait si elle a sa version ;
+  sinon, les fichiers ne sont pas servis (ligne dans `/var/log/syslog`) et l'OS
+  redemande au lancement suivant. Le ménage du cache, partagé par tous les
+  onglets, garde aussi les fichiers des apps installées sur le disque par un
+  autre onglet ([ADR 0225](adr/0225-serve-installed-app-files-to-every-page.md)).
 - **CSS isolé** ([ADR 0221](adr/0221-pack-all-static-web-assets-of-an-app.md)) :
   une fois `<assemblage>.bundle.scp.css` copié dans le cache, l'OS ajoute un
   `<link rel="stylesheet">` vers lui à la page, une fois par session, comme la

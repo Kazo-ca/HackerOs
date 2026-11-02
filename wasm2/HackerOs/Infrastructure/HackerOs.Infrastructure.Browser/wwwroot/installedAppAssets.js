@@ -25,6 +25,10 @@ function absolute(url) {
  * Makes sure a service worker controls the page and returns whether one does. On a development
  * host, registers the "installed apps only" worker first. Waits at most timeoutMs for it to take
  * control (clients.claim on activation).
+ *
+ * A page loaded with Ctrl+F5 is not controlled even though a worker is active (the browser bypasses
+ * it for that load). The page then asks that worker to take control (ADR 0225), which it does only
+ * when it caches the release the page runs.
  */
 export async function prepare(timeoutMs) {
     if (!('serviceWorker' in navigator) || !('caches' in window)) {
@@ -40,16 +44,58 @@ export async function prepare(timeoutMs) {
         const timer = setTimeout(() => resolve(!!container.controller), timeoutMs);
         container.addEventListener('controllerchange', () => { clearTimeout(timer); resolve(true); }, { once: true });
     });
+    let registration = null;
     if (isDevelopmentHost()) {
         try {
-            await container.register(`service-worker.js?${installedAppsOnlyQuery}`, { updateViaCache: 'none' });
+            registration = await container.register(`service-worker.js?${installedAppsOnlyQuery}`, { updateViaCache: 'none' });
         } catch (error) {
             console.warn('HackerOS: the service worker of installed apps could not be registered', error);
             return false;
         }
+    } else {
+        registration = await container.getRegistration().catch(() => null);
+    }
+
+    // An active worker never activates again, so nothing else would make it claim this page.
+    if (registration && registration.active && !container.controller) {
+        const answer = await askToClaim(registration.active, isDevelopmentHost() ? null : await serverReleaseVersion(), timeoutMs);
+        if (!answer.claimed) {
+            console.warn('HackerOS: the service worker does not serve this page, installed apps keep their wwwroot/ files until the next restart', answer);
+            return !!container.controller;
+        }
     }
 
     return await controlled;
+}
+
+/** The version of the release the server delivers now, the one a page loaded with Ctrl+F5 runs (ADR 0225). */
+async function serverReleaseVersion() {
+    try {
+        const response = await fetch('service-worker-assets.js', { cache: 'no-store' });
+        const match = response.ok ? /"version"\s*:\s*"([^"]+)"/.exec(await response.text()) : null;
+        return match ? match[1] : null;
+    } catch {
+        return null;
+    }
+}
+
+/** Asks a worker to take control of this page; resolves to its answer, { claimed: false } on silence. */
+function askToClaim(worker, version, timeoutMs) {
+    return new Promise(resolve => {
+        const channel = new MessageChannel();
+        const timer = setTimeout(() => resolve({ claimed: false, reason: 'no-answer' }), timeoutMs);
+        channel.port1.onmessage = event => {
+            clearTimeout(timer);
+            const answer = event.data || { claimed: false };
+            if (!answer.claimed && window.hackerOsClaimForInstalledApps === 'pending') {
+                window.hackerOsClaimForInstalledApps = undefined;
+            }
+            resolve(answer);
+        };
+        // index.html reloads a page whose controller changes; this change is expected (same release).
+        window.hackerOsClaimForInstalledApps = 'pending';
+        worker.postMessage({ type: 'HACKEROS_CLAIM_FOR_INSTALLED_APPS', version }, [channel.port2]);
+    });
 }
 
 /** Lists the cached addresses, relative to the page's base (for example _content/Kazo.Sample/x.js). */

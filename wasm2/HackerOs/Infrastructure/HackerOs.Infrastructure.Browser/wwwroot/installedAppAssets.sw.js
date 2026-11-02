@@ -75,5 +75,36 @@ self.hackerOsInstalledAppAssets = (() => {
         return installedAppsOnly ? withPageIsolation(cached) : cached;
     }
 
-    return { cacheName, installedAppsOnly, handles, match, respond };
+    /**
+     * ADR 0225: whether this worker may take control of a page that has none (a page loaded with
+     * Ctrl+F5 bypasses the worker). Always in "installed apps only" mode and in development, where the
+     * worker keeps no release cache. Otherwise only when the page runs the release this worker caches
+     * (pageVersion is the version of the server's service-worker-assets.js): a page of another release
+     * must not receive this worker's cached files.
+     */
+    function mayClaim(pageVersion) {
+        const workerVersion = self.assetsManifest && self.assetsManifest.version;
+        return installedAppsOnly || !workerVersion || pageVersion === workerVersion;
+    }
+
+    // ADR 0225: the OS asks for control before it copies an installed app's files (installedAppAssets.js).
+    self.addEventListener('message', event => {
+        if (!event.data || event.data.type !== 'HACKEROS_CLAIM_FOR_INSTALLED_APPS') {
+            return;
+        }
+
+        const port = event.ports && event.ports[0];
+        const workerVersion = (self.assetsManifest && self.assetsManifest.version) || null;
+        if (!mayClaim(event.data.version)) {
+            if (port) port.postMessage({ claimed: false, workerVersion });
+            return;
+        }
+
+        event.waitUntil(self.clients.claim()
+            .then(() => ({ claimed: true, workerVersion }))
+            .catch(error => ({ claimed: false, workerVersion, message: String(error) }))
+            .then(result => port && port.postMessage(result)));
+    });
+
+    return { cacheName, installedAppsOnly, handles, match, respond, mayClaim };
 })();

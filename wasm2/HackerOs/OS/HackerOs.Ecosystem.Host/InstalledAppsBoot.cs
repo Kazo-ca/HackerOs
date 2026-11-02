@@ -116,6 +116,24 @@ public sealed class InstalledAppsBoot
     }
 
     /// <summary>
+    /// Reads the apps installed on disk now, without touching the running catalog (ADR 0225 §2).
+    /// Another tab or window of the OS may have installed an app this page has not reloaded yet;
+    /// what they share (the cache of installed apps' files) must follow the disk, not this page.
+    /// </summary>
+    /// <param name="cancellationToken">Cancels the reads.</param>
+    /// <returns>The apps on disk; <see cref="Current"/>'s before the boot read.</returns>
+    public async ValueTask<IReadOnlyList<InstalledApp>> ReadInstalledOnDiskAsync(CancellationToken cancellationToken = default)
+    {
+        if (_read is not { } read)
+        {
+            return Current.Installed;
+        }
+
+        InstalledAppsImage image = await InstalledAppsImage.LoadAsync(read, _listHomes, cancellationToken).ConfigureAwait(false);
+        return image.Apps;
+    }
+
+    /// <summary>
     /// Replaces the installed apps of the running catalog with <paramref name="image"/> (ADR 0214 §1). An
     /// app whose code is loaded (<paramref name="isLoaded"/>) keeps the version it runs: a .NET assembly
     /// cannot leave the page, so its update or removal waits for the next start of the OS (Q1 answer A).
