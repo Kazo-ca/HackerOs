@@ -16,10 +16,12 @@ public sealed class InstalledAppAssetPublisherTests
 
     private static string Hash(byte[] bytes) => Convert.ToHexStringLower(SHA256.HashData(bytes));
 
-    private static AppManifest Manifest(params AssetManifest[] assets) => AppManifestJsonSerializer.NormalizeOptionalCollections(AppManifestJsonSerializer.DeserializeStrict(
-        "{\"schemaVersion\":1,\"id\":\"" + AppId + "\",\"name\":\"Sample\",\"version\":\"1.0.0\",\"publisherId\":\"pub.kazo\","
+    private static AppManifest Manifest(params AssetManifest[] assets) => ManifestOf(AppId, "Kazo.Sample", assets);
+
+    private static AppManifest ManifestOf(string appId, string assembly, params AssetManifest[] assets) => AppManifestJsonSerializer.NormalizeOptionalCollections(AppManifestJsonSerializer.DeserializeStrict(
+        "{\"schemaVersion\":1,\"id\":\"" + appId + "\",\"name\":\"Sample\",\"version\":\"1.0.0\",\"publisherId\":\"pub.kazo\","
         + "\"description\":\"A sample.\",\"kind\":\"window\",\"platform\":{\"supported\":[\"desktop\"],\"entryPoints\":[{\"platforms\":[\"desktop\"],"
-        + "\"assembly\":\"Kazo.Sample.dll\",\"type\":\"Kazo.Sample.SampleWindow\"}]},\"sdkCompatibility\":{\"minimumVersion\":\"2.0.0\"},"
+        + "\"assembly\":\"" + assembly + ".dll\",\"type\":\"" + assembly + ".SampleWindow\"}]},\"sdkCompatibility\":{\"minimumVersion\":\"2.0.0\"},"
         + "\"presentation\":{\"category\":\"utilities\",\"launchVisibility\":\"visible\",\"iconAssetPaths\":[]},\"localizations\":[],\"capabilities\":[],"
         + "\"declaredTopicPermissions\":[],\"resources\":{\"baselineCpuWeight\":0,\"burstCpuWeight\":0,\"baselineMemoryWeight\":0,\"burstMemoryWeight\":0,"
         + "\"baselineStorageIoWeight\":0,\"burstStorageIoWeight\":0,\"baselineNetworkIoWeight\":0,\"burstNetworkIoWeight\":0},\"intents\":[],\"dependencies\":[],"
@@ -102,6 +104,47 @@ public sealed class InstalledAppAssetPublisherTests
         await publisher.PublishAsync(app);
 
         Assert.Empty(cache.Files);
+    }
+
+    [Fact]
+    public async Task A_launch_after_a_page_without_service_worker_asks_again_and_copies_the_files()
+    {
+        // ADR 0225: a page loaded with Ctrl+F5 can be taken by the worker later in the session.
+        MemoryCache cache = new() { CanServe = false };
+        AppManifest manifest = Manifest(new AssetManifest("engine/engine.js", AssetKind.JavaScriptModule, Hash(Engine)));
+        (InstalledAppAssetPublisher publisher, InstalledApp app, _) = Create(cache, new() { [Folder + "engine/engine.js"] = Engine }, manifest);
+
+        await publisher.PublishAsync(app);
+        cache.CanServe = true;
+        await publisher.PublishAsync(app);
+        await publisher.PublishAsync(app);
+
+        Assert.Equal(2, cache.Prepares);
+        Assert.Equal(1, cache.Puts);
+        Assert.True(cache.Files.ContainsKey("_content/Kazo.Sample/engine/engine.js"));
+    }
+
+    [Fact]
+    public async Task Files_of_an_app_another_tab_installed_are_kept()
+    {
+        // ADR 0225 §2: org.kazo.other is on disk (installed from another tab), not in this page's catalog.
+        MemoryCache cache = new();
+        cache.Files["_content/Kazo.Other/rules.js"] = (Engine, "text/javascript");
+        cache.Files["_content/Kazo.Removed/old.js"] = ([1], "text/javascript");
+        AppManifest other = ManifestOf("org.kazo.other", "Kazo.Other", new AssetManifest("rules.js", AssetKind.JavaScriptModule, Hash(Engine)));
+        AppManifest manifest = Manifest(new AssetManifest("engine/engine.js", AssetKind.JavaScriptModule, Hash(Engine)));
+        (InstalledAppAssetPublisher publisher, InstalledApp app, _) = Create(cache, new()
+        {
+            [Folder + "engine/engine.js"] = Engine,
+            ["/etc/hackeros/apps.config"] = Encoding.UTF8.GetBytes("[installed]\norg.kazo.other=github:Kazo-ca/Other@1.0.0\n"),
+            ["/usr/lib/hackeros/apps/org.kazo.other/1.0.0/manifest.json"] = Encoding.UTF8.GetBytes(AppManifestJsonSerializer.SerializeCanonical(other)),
+        }, manifest);
+
+        await publisher.PublishAsync(app);
+
+        Assert.True(cache.Files.ContainsKey("_content/Kazo.Other/rules.js"));
+        Assert.False(cache.Files.ContainsKey("_content/Kazo.Removed/old.js"));
+        Assert.True(cache.Files.ContainsKey("_content/Kazo.Sample/engine/engine.js"));
     }
 
     [Fact]
@@ -189,7 +232,7 @@ public sealed class InstalledAppAssetPublisherTests
     {
         public Dictionary<string, (byte[] Bytes, string ContentType)> Files { get; } = new(StringComparer.Ordinal);
 
-        public bool CanServe { get; init; } = true;
+        public bool CanServe { get; set; } = true;
 
         public int Puts { get; private set; }
 

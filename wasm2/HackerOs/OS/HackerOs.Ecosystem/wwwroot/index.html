@@ -191,6 +191,12 @@
 
             let refreshing = false;
             navigator.serviceWorker.addEventListener('controllerchange', () => {
+                // ADR 0225: the OS asked the active worker to take this page loaded with Ctrl+F5, to
+                // serve an installed app's files. Same release, nothing to reload.
+                if (window.hackerOsClaimForInstalledApps === 'pending') {
+                    window.hackerOsClaimForInstalledApps = 'done';
+                    return;
+                }
                 // ADR 0223: once the OS runs, it restarts itself cleanly onto the new version
                 // (hostUpdate.js); this abrupt reload stays for a page the OS does not handle.
                 const handler = window.hackerOsControllerChangeHandler;

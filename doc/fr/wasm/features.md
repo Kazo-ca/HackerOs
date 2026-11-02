@@ -293,7 +293,9 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   [`app-installation.md`](dev/app-installation.md)) Ses images, scripts et Web
   Workers sont servis à la même adresse que pour une application compilée dans
   l'OS : une application qui enveloppe un projet JavaScript marche une fois
-  installée. ([ADR 0206](dev/adr/0206-serve-installed-app-assets.md)) Son paquet
+  installée, aussi après un Ctrl+F5 ou une installation faite dans un autre onglet.
+  ([ADR 0206](dev/adr/0206-serve-installed-app-assets.md),
+  [ADR 0225](dev/adr/0225-serve-installed-app-files-to-every-page.md)) Son paquet
   contient toutes ses ressources statiques (scripts collocalisés compris) et
   l'OS charge son CSS isolé : installée, elle a la même apparence que compilée
   dans l'OS. ([ADR 0221](dev/adr/0221-pack-all-static-web-assets-of-an-app.md))

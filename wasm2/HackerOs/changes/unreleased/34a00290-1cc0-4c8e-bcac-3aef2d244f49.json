@@ -1,0 +1,18 @@
+{
+  "id": "34a00290-1cc0-4c8e-bcac-3aef2d244f49",
+  "category": "fixed",
+  "audience": [
+    "user"
+  ],
+  "title": {
+    "en": "An installed app finds its scripts after a Ctrl+F5 or an install made in another tab",
+    "fr": "Une app installée trouve ses scripts après un Ctrl+F5 ou une installation faite dans un autre onglet"
+  },
+  "description": {
+    "en": "The service worker now takes over a page loaded with Ctrl+F5 when it runs the same release, and an open tab no longer removes from the shared cache the files of an app another tab has just installed.",
+    "fr": "Le service worker prend maintenant en charge une page chargée avec Ctrl+F5 si elle a la même version, et un onglet ouvert ne retire plus du cache partagé les fichiers d'une app qu'un autre onglet vient d'installer."
+  },
+  "links": [
+    "doc/en/wasm/dev/adr/0225-serve-installed-app-files-to-every-page.md"
+  ]
+}

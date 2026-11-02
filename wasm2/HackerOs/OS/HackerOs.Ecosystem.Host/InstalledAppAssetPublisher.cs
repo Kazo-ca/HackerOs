@@ -50,8 +50,10 @@ public interface IInstalledAppAssetCache
 /// <remarks>
 /// Like a package manager unpacking files where the web server finds them, the copy is made once
 /// per session per app, at its first launch. The first publication also drops every cached address
-/// no installed app declares any more (an app removed by <c>hackpkg remove</c> or updated before the
-/// restart). A damaged or missing file is left out, with a <c>/var/log/syslog</c> line; the launch
+/// no installed app declares any more, neither in this page nor on disk (an app removed by
+/// <c>hackpkg remove</c> or updated before the restart; ADR 0225 §2 for an app another tab installed).
+/// Without a service worker controlling the page, nothing is copied and the next launch asks again
+/// (ADR 0225 §1). A damaged or missing file is left out, with a <c>/var/log/syslog</c> line; the launch
 /// goes on, as with a built-in app's missing file. Once its files are copied, the app's scoped CSS
 /// (<c>&lt;assembly&gt;.bundle.scp.css</c>) is linked to the page (ADR 0221 §2), as the host's
 /// <c>styles.css</c> links a built-in app's.
@@ -64,7 +66,7 @@ public sealed class InstalledAppAssetPublisher
     private readonly ILogger? _logger;
     private readonly SemaphoreSlim _gate = new(1, 1);
     private readonly HashSet<string> _published = new(StringComparer.Ordinal);
-    private bool? _served;
+    private bool _served;
 
     /// <summary>Creates the publisher.</summary>
     /// <param name="installed">The installed apps of this session.</param>
@@ -127,14 +129,21 @@ public sealed class InstalledAppAssetPublisher
                 return;
             }
 
-            _served ??= await PrepareAsync(cancellationToken).ConfigureAwait(false);
-            if (_served == true)
+            // ADR 0225: only a success is kept; without a worker the next launch asks again, since
+            // the page can be taken by the worker later (Ctrl+F5 page, worker still installing).
+            if (!_served)
+            {
+                _served = await PrepareAsync(cancellationToken).ConfigureAwait(false);
+            }
+
+            if (_served)
             {
                 await CopyAsync(app, cancellationToken).ConfigureAwait(false);
             }
             else
             {
                 _logger?.LogWarning("apps: no service worker serves this page, the wwwroot/ files of {AppId} are not served", app.AppId);
+                return;
             }
 
             _published.Add(app.AppId);
@@ -166,8 +175,12 @@ public sealed class InstalledAppAssetPublisher
 
     private async Task DropStaleAsync(CancellationToken cancellationToken)
     {
+        // ADR 0225 §2: the cache is shared by every tab and window of the OS. An app another tab
+        // installed is on disk but not yet in this page's catalog: its files stay. The apps this page
+        // runs stay too (a loaded copy keeps its version until the restart).
         HashSet<string> declared = new(StringComparer.Ordinal);
-        foreach (InstalledApp app in _installed.Current.Installed)
+        IReadOnlyList<InstalledApp> onDisk = await _installed.ReadInstalledOnDiskAsync(cancellationToken).ConfigureAwait(false);
+        foreach (InstalledApp app in _installed.Current.Installed.Concat(onDisk))
         {
             declared.UnionWith(app.Manifest.Assets.Select(asset => GetUrl(app, asset.Path)));
         }
