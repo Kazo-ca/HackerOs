@@ -81,6 +81,24 @@ public sealed class SystemPowerService
     }
 
     /// <summary>
+    /// The sign-in screen's « Forgot password? » (ADR 0226): the same erase and restart as
+    /// <see cref="FactoryResetAsync"/>, asked by nobody signed in. No administrator authorized it,
+    /// so the audit entry says where it came from (<c>origin = sign-in</c>) instead.
+    /// </summary>
+    /// <remarks>
+    /// The host offers it only when its deployment allows it
+    /// (<c>HackerOs:SignIn:FactoryReset:Enabled</c>): anyone at the sign-in screen can erase the
+    /// machine, as anyone at a real computer can reinstall it.
+    /// </remarks>
+    public async Task FactoryResetFromSignInAsync()
+    {
+        Record("system.factory-reset", "-", requestedBy: null, origin: "sign-in");
+        await ShutdownAsync().ConfigureAwait(false);
+        await _device.EraseStorageAsync(CancellationToken.None).ConfigureAwait(false);
+        await _device.RestartAsync(CancellationToken.None).ConfigureAwait(false);
+    }
+
+    /// <summary>
     /// Flushes, ends the session, runs <paramref name="whileStopped"/> with no process left, then
     /// restarts the machine: the shape of a restore from backup (ADR 0099, section 1). The caller
     /// audits the operation itself. Restarts even when <paramref name="whileStopped"/> throws.
@@ -133,17 +151,30 @@ public sealed class SystemPowerService
         }
     }
 
-    private void Record(string action, string administratorLogin, AuthenticatedPrincipal? requestedBy) =>
-        _auditLog?.Record(new AuditEntry(
+    private void Record(string action, string administratorLogin, AuthenticatedPrincipal? requestedBy, string? origin = null)
+    {
+        if (_auditLog is null)
+        {
+            return;
+        }
+
+        Dictionary<string, string> properties = new(StringComparer.Ordinal)
+        {
+            ["admin"] = administratorLogin,
+            ["requestedBy"] = requestedBy?.LoginName.Value ?? "-"
+        };
+        if (origin is not null)
+        {
+            properties["origin"] = origin;
+        }
+
+        _auditLog.Record(new AuditEntry(
             _clock(),
             Guid.NewGuid(),
             requestedBy?.UserId.ToString() ?? "system",
             action,
             "machine",
             AuditOutcome.Success,
-            new Dictionary<string, string>(StringComparer.Ordinal)
-            {
-                ["admin"] = administratorLogin,
-                ["requestedBy"] = requestedBy?.LoginName.Value ?? "-"
-            }));
+            properties));
+    }
 }

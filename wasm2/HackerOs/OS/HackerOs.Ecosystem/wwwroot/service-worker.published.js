@@ -36,6 +36,10 @@ const offlineAssetsInclude = [ /\.dll$/, /\.pdb$/, /\.wasm/, /\.html/, /\.js$/, 
 // hackeros-host.json is never cached (ADR 0137): HackerOs.Server answers that path itself
 // ("a server delivered this OS"), so its bytes differ from the static file's integrity hash.
 const offlineAssetsExclude = [ /^service-worker\.js$/, /^hackeros-host\.json$/ ];
+// appsettings.json is cached without its integrity hash (ADR 0226 §4): whoever deploys the OS
+// edits it in the published files (HackerOs:SignIn:FactoryReset, CrossOriginIsolation…) without
+// rebuilding, and an edited file must not make the whole release cache fail to install.
+const offlineAssetsWithoutIntegrity = [ /^appsettings\.json$/ ];
 
 // Base URL for relative asset resolution
 const base = "/";
@@ -121,7 +125,9 @@ function buildAssetRequests() {
     return self.assetsManifest.assets
         .filter(asset => offlineAssetsInclude.some(pattern => pattern.test(asset.url)))
         .filter(asset => !offlineAssetsExclude.some(pattern => pattern.test(asset.url)))
-        .map(asset => new Request(asset.url, { integrity: asset.hash, cache: 'no-cache' }));
+        .map(asset => offlineAssetsWithoutIntegrity.some(pattern => pattern.test(asset.url))
+            ? new Request(asset.url, { cache: 'no-cache' })
+            : new Request(asset.url, { integrity: asset.hash, cache: 'no-cache' }));
 }
 
 async function onActivate(event) {

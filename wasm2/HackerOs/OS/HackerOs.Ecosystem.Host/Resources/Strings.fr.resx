@@ -177,4 +177,40 @@
   <data name="GuestAccount.Title" xml:space="preserve">
     <value>Créer mon compte</value>
   </data>
+  <data name="FactoryReset.Open" xml:space="preserve">
+    <value>Mot de passe oublié ?</value>
+  </data>
+  <data name="FactoryReset.Title" xml:space="preserve">
+    <value>Réinitialiser cette machine ?</value>
+  </data>
+  <data name="FactoryReset.Body" xml:space="preserve">
+    <value>Sans mot de passe, la seule façon de revenir est d'effacer HackerOS dans ce navigateur et de tout recommencer. Tout est supprimé :</value>
+  </data>
+  <data name="FactoryReset.LossAccounts" xml:space="preserve">
+    <value>tous les comptes, leur mot de passe et leurs clés d'accès</value>
+  </data>
+  <data name="FactoryReset.LossFiles" xml:space="preserve">
+    <value>tous les fichiers et dossiers, dans tous les dossiers personnels</value>
+  </data>
+  <data name="FactoryReset.LossApps" xml:space="preserve">
+    <value>les apps installées et leurs données</value>
+  </data>
+  <data name="FactoryReset.LossSettings" xml:space="preserve">
+    <value>tous les réglages, thèmes et journaux</value>
+  </data>
+  <data name="FactoryReset.Irreversible" xml:space="preserve">
+    <value>Impossible de revenir en arrière. La machine redémarre ensuite sur la première configuration.</value>
+  </data>
+  <data name="FactoryReset.Word" xml:space="preserve">
+    <value>EFFACER</value>
+  </data>
+  <data name="FactoryReset.TypeWord" xml:space="preserve">
+    <value>Tapez {0} pour confirmer</value>
+  </data>
+  <data name="FactoryReset.Cancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="FactoryReset.Confirm" xml:space="preserve">
+    <value>Effacer et redémarrer</value>
+  </data>
 </root>

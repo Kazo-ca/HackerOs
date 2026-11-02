@@ -177,4 +177,40 @@
   <data name="GuestAccount.Title" xml:space="preserve">
     <value>Create my account</value>
   </data>
+  <data name="FactoryReset.Open" xml:space="preserve">
+    <value>Forgot password?</value>
+  </data>
+  <data name="FactoryReset.Title" xml:space="preserve">
+    <value>Reset this machine?</value>
+  </data>
+  <data name="FactoryReset.Body" xml:space="preserve">
+    <value>Without a password, the only way back in is to erase HackerOS in this browser and start over. Everything is deleted:</value>
+  </data>
+  <data name="FactoryReset.LossAccounts" xml:space="preserve">
+    <value>every user account, its password and its passkeys</value>
+  </data>
+  <data name="FactoryReset.LossFiles" xml:space="preserve">
+    <value>every file and folder, in every home</value>
+  </data>
+  <data name="FactoryReset.LossApps" xml:space="preserve">
+    <value>the installed apps and their data</value>
+  </data>
+  <data name="FactoryReset.LossSettings" xml:space="preserve">
+    <value>every setting, theme and log</value>
+  </data>
+  <data name="FactoryReset.Irreversible" xml:space="preserve">
+    <value>This cannot be undone. The machine then restarts on the first-run setup.</value>
+  </data>
+  <data name="FactoryReset.Word" xml:space="preserve">
+    <value>ERASE</value>
+  </data>
+  <data name="FactoryReset.TypeWord" xml:space="preserve">
+    <value>Type {0} to confirm</value>
+  </data>
+  <data name="FactoryReset.Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="FactoryReset.Confirm" xml:space="preserve">
+    <value>Erase and restart</value>
+  </data>
 </root>

@@ -210,6 +210,10 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   [ADR 0187](dev/adr/0187-guest-start-and-sign-in-credits.md))
 - **Clés d'accès (passkeys)** : connexion par empreinte, visage, NIP de
   l'appareil ou clé de sécurité. ([`passkeys.md`](dev/passkeys.md))
+- **Mot de passe oublié** : depuis l'écran de connexion, effacer la machine
+  et recommencer, après confirmation ; désactivable au déploiement.
+  ([`sign-in-factory-reset.md`](dev/sign-in-factory-reset.md),
+  [ADR 0226](dev/adr/0226-forgot-password-factory-reset.md))
 - **Capacités des applications** et approbation des capacités sensibles par un
   administrateur. ([`capabilities.md`](framework/capabilities.md),
   [`dangerous-capability-approval.md`](dev/dangerous-capability-approval.md))

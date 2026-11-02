@@ -6,7 +6,9 @@ Implementation of section 3 of
 [ADR 0099](adr/0099-os-backup-and-low-storage.md) (work item
 `v3/7-storage-backup`), which completes
 [ADR 0017](adr/0017-pwa-cache-and-offline-strategy.md) (versioned "cache
-first" cache, integrity checked at installation).
+first" cache, integrity checked at installation). Only `appsettings.json` is
+cached without its hash, so it can still be edited after publishing
+([ADR 0226](adr/0226-forgot-password-factory-reset.md)).
 
 ## Purpose
 
