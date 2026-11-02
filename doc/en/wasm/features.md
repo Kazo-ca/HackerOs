@@ -206,9 +206,11 @@ This section lists what is released in the `main` branch and online.
 - **Passkeys**: sign in with a fingerprint, face, device PIN or security key.
   ([`passkeys.md`](dev/passkeys.md))
 - **Forgot password**: from the sign-in screen, erase the machine and start
-  over, after a confirmation; can be turned off at deployment.
+  over, after a confirmation; can be turned off at deployment. Every reset
+  erases everything the OS keeps in the browser.
   ([`sign-in-factory-reset.md`](dev/sign-in-factory-reset.md),
-  [ADR 0226](dev/adr/0226-forgot-password-factory-reset.md))
+  [ADR 0226](dev/adr/0226-forgot-password-factory-reset.md),
+  [ADR 0227](dev/adr/0227-factory-reset-erases-everything.md))
 - **Application capabilities** and administrator approval of sensitive
   capabilities. ([`capabilities.md`](framework/capabilities.md),
   [`dangerous-capability-approval.md`](dev/dangerous-capability-approval.md))

@@ -223,5 +223,6 @@ next free number is given in
 | [`0224-retry-the-boot-after-a-server-error.md`](0224-retry-the-boot-after-a-server-error.md) | ADR 0224: retry the boot after a server error (GitHub Pages 503 after a deployment): automatic reloads after 5, 15 and 30 s, `retrying` state, then `failed`; complements ADR 0099 §3 |
 | [`0225-serve-installed-app-files-to-every-page.md`](0225-serve-installed-app-files-to-every-page.md) | ADR 0225: serve installed apps' files to every page: the active worker claims a page loaded with Ctrl+F5 when it runs its release, and cleaning the shared cache follows the disk (app installed in another tab); complements ADR 0206 |
 | [`0226-forgot-password-factory-reset.md`](0226-forgot-password-factory-reset.md) | ADR 0226: reset the OS from the sign-in screen (forgotten password): "Forgot password?" link, confirmation by typing `ERASE`, same erase as Settings, deployment key `HackerOs:SignIn:FactoryReset:Enabled` (on by default); complements ADR 0056 §11 |
+| [`0227-factory-reset-erases-everything.md`](0227-factory-reset-erases-everything.md) | ADR 0227: the factory reset erases everything HackerOS keeps in the browser (every IndexedDB database, Cache Storage, localStorage, sessionStorage, OPFS, cookies, service worker); complements ADR 0056 §11 and 0226 |
 
 Parent folder index: [`../README.md`](../README.md).

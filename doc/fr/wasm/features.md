@@ -211,9 +211,11 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
 - **Clés d'accès (passkeys)** : connexion par empreinte, visage, NIP de
   l'appareil ou clé de sécurité. ([`passkeys.md`](dev/passkeys.md))
 - **Mot de passe oublié** : depuis l'écran de connexion, effacer la machine
-  et recommencer, après confirmation ; désactivable au déploiement.
+  et recommencer, après confirmation ; désactivable au déploiement. Toute
+  réinitialisation efface tout ce que l'OS garde dans le navigateur.
   ([`sign-in-factory-reset.md`](dev/sign-in-factory-reset.md),
-  [ADR 0226](dev/adr/0226-forgot-password-factory-reset.md))
+  [ADR 0226](dev/adr/0226-forgot-password-factory-reset.md),
+  [ADR 0227](dev/adr/0227-factory-reset-erases-everything.md))
 - **Capacités des applications** et approbation des capacités sensibles par un
   administrateur. ([`capabilities.md`](framework/capabilities.md),
   [`dangerous-capability-approval.md`](dev/dangerous-capability-approval.md))

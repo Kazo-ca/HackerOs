@@ -56,16 +56,18 @@ change to apply everywhere, make it before the first deployment (or in
 | `SignInFactoryReset` (`Ecosystem.Host`) | `IsOffered` (deployment key, `true` when the host registered nothing) and `RunAsync`, which checks the key again then calls the power service. |
 | `SignInFactoryResetPrompt` (`.razor`, `.razor.cs`, `.razor.css`) | Link and confirmation box; `IsConfirmationTyped` compares the typed word ignoring case and surrounding spaces. |
 | `SystemPowerService.FactoryResetFromSignInAsync` (`Platform.Core`) | Same sequence as `FactoryResetAsync` (logs flushed, session ended, IndexedDB database deleted, page reloaded); `system.factory-reset` audit with `origin = sign-in`. |
+| `hostFactoryReset.js` (`Ecosystem.Host`, ADR 0227) | `eraseEverything`: erases every IndexedDB database, Cache Storage, `localStorage`, `sessionStorage`, OPFS, cookies and unregisters the service worker; called by `BrowserSystemPowerDevice`. |
 | `App.razor` | Shows the link under the password form; on confirmation, shows the boot screen and runs `SignInFactoryReset.RunAsync`. |
 
 ## Limits
 
-- Only the OS database is deleted, as with the Settings reset: web site
-  databases (`hackweb.*`) and installed apps' files in Cache Storage stay in
-  the browser, unused.
+- Since [ADR 0227](adr/0227-factory-reset-erases-everything.md), nothing of
+  the OS stays in the browser (every IndexedDB database, Cache Storage,
+  `localStorage`, `sessionStorage`, OPFS, cookies, service worker), here as in
+  Settings. Offline, the OS can only restart once the network is back.
 - Registered passkeys stay in the device's authenticator; the OS no longer
   knows them.
-- Another tab open on the OS loses its database and must be reloaded.
+- Another tab open on the OS loses its data and must be reloaded.
 
 ## Tests
 

@@ -60,16 +60,18 @@ avant `dotnet publish`).
 | `SignInFactoryReset` (`Ecosystem.Host`) | `IsOffered` (clé de déploiement, `true` si l'hôte n'a rien enregistré) et `RunAsync`, qui revérifie la clé puis appelle le service d'alimentation. |
 | `SignInFactoryResetPrompt` (`.razor`, `.razor.cs`, `.razor.css`) | Lien et boîte de confirmation ; `IsConfirmationTyped` compare le mot tapé sans tenir compte de la casse ni des espaces autour. |
 | `SystemPowerService.FactoryResetFromSignInAsync` (`Platform.Core`) | Même séquence que `FactoryResetAsync` (journaux vidés, session fermée, base IndexedDB supprimée, page rechargée) ; audit `system.factory-reset` avec `origin = sign-in`. |
+| `hostFactoryReset.js` (`Ecosystem.Host`, ADR 0227) | `eraseEverything` : efface toutes les bases IndexedDB, le Cache Storage, `localStorage`, `sessionStorage`, l'OPFS, les cookies et désinscrit le service worker ; appelé par `BrowserSystemPowerDevice`. |
 | `App.razor` | Affiche le lien sous le formulaire de mot de passe ; à la confirmation, montre l'écran de démarrage et lance `SignInFactoryReset.RunAsync`. |
 
 ## Limites
 
-- Seule la base de l'OS est supprimée, comme pour la réinitialisation de
-  Paramètres : les bases des sites web (`hackweb.*`) et les fichiers des apps
-  installées dans le Cache Storage restent dans le navigateur, inutilisés.
+- Depuis l'[ADR 0227](adr/0227-factory-reset-erases-everything.md), rien de
+  l'OS ne reste dans le navigateur (toutes les bases IndexedDB, Cache Storage,
+  `localStorage`, `sessionStorage`, OPFS, cookies, service worker), ici comme
+  dans Paramètres. Hors ligne, l'OS ne peut redémarrer qu'au retour du réseau.
 - Les clés d'accès enregistrées restent dans l'authentificateur de
   l'appareil ; l'OS ne les connaît plus.
-- Un autre onglet ouvert sur l'OS perd sa base et doit être rechargé.
+- Un autre onglet ouvert sur l'OS perd ses données et doit être rechargé.
 
 ## Tests
 
