@@ -1,0 +1,18 @@
+{
+  "id": "7e3c8768-51b7-4dc3-8ec3-c580e306a88f",
+  "category": "improved",
+  "audience": [
+    "user"
+  ],
+  "title": {
+    "en": "A factory reset leaves nothing of HackerOS in the browser",
+    "fr": "Une réinitialisation ne laisse plus rien de HackerOS dans le navigateur"
+  },
+  "description": {
+    "en": "Resetting from Settings or from « Forgot password? » now also erases web site databases, installed apps' files, every cache, localStorage, sessionStorage, the origin private file system, cookies and the service worker, not only the OS database.",
+    "fr": "Réinitialiser depuis Paramètres ou « Mot de passe oublié ? » efface maintenant aussi les bases des sites web, les fichiers des apps installées, tous les caches, le localStorage, le sessionStorage, le système de fichiers privé de l'origine, les cookies et le service worker, pas seulement la base de l'OS."
+  },
+  "links": [
+    "doc/en/wasm/dev/adr/0227-factory-reset-erases-everything.md"
+  ]
+}

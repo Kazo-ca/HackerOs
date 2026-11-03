@@ -106,6 +106,36 @@ public sealed class SignInFactoryResetTests
         Assert.Matches($"class=\"factory-reset-confirm\" disabled[^>]*>{confirm}<", html);
     }
 
+    [Theory]
+    [InlineData("indexedDB.databases()")]
+    [InlineData("indexedDB.deleteDatabase(")]
+    [InlineData("caches.keys()")]
+    [InlineData("caches.delete(")]
+    [InlineData("localStorage.clear()")]
+    [InlineData("sessionStorage.clear()")]
+    [InlineData("navigator.storage.getDirectory()")]
+    [InlineData("document.cookie")]
+    [InlineData("registration.unregister()")]
+    public void The_reset_module_erases_every_browser_storage(string call)
+    {
+        // ADR 0227: nothing of HackerOS stays in the browser after a reset. Checked end to end in
+        // Chromium; this guards the module against losing one of its steps.
+        string module = File.ReadAllText(Path.Combine(
+            SolutionDirectory(), "OS", "HackerOs.Ecosystem.Host", "wwwroot", "hostFactoryReset.js"));
+
+        Assert.Contains(call, module, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void The_power_device_runs_the_reset_module()
+    {
+        string device = File.ReadAllText(Path.Combine(
+            SolutionDirectory(), "OS", "HackerOs.Ecosystem.Host", "Administration", "BrowserSystemPowerDevice.cs"));
+
+        Assert.Contains("_content/HackerOs.Ecosystem.Host/hostFactoryReset.js", device, StringComparison.Ordinal);
+        Assert.Contains("\"eraseEverything\"", device, StringComparison.Ordinal);
+    }
+
     private static async Task<string> RenderAsync(CultureInfo culture, bool open)
     {
         ServiceCollection services = new();

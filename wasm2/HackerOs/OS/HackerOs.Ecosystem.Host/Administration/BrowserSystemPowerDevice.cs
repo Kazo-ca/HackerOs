@@ -6,12 +6,14 @@ namespace HackerOs.Ecosystem.Administration;
 
 /// <summary>
 /// The browser as the machine's "hardware" for <see cref="SystemPowerService"/> (ADR 0056,
-/// section 11): a restart reloads the page, and erasing the storage deletes the OS IndexedDB
-/// database with the existing <c>indexedDb.js</c> module of <c>Infrastructure.Browser</c>.
+/// section 11): a restart reloads the page, and erasing the storage leaves nothing of HackerOS in
+/// the browser (ADR 0227): every IndexedDB database, Cache Storage, localStorage, sessionStorage,
+/// the origin private file system, cookies and the service worker.
 /// </summary>
 internal sealed class BrowserSystemPowerDevice(IJSRuntime runtime) : ISystemPowerDevice
 {
     private const string IndexedDbModulePath = "./_content/HackerOs.Infrastructure.Browser/indexedDb.js";
+    private const string FactoryResetModulePath = "./_content/HackerOs.Ecosystem.Host/hostFactoryReset.js";
 
     /// <inheritdoc />
     public async Task RestartAsync(CancellationToken cancellationToken = default) =>
@@ -20,9 +22,24 @@ internal sealed class BrowserSystemPowerDevice(IJSRuntime runtime) : ISystemPowe
     /// <inheritdoc />
     public async Task EraseStorageAsync(CancellationToken cancellationToken = default)
     {
-        await using IJSObjectReference module = await runtime
+        // The OS database first, through the module that holds its cached connections: it closes
+        // them, so this deletion is never blocked by the page itself.
+        await using (IJSObjectReference indexedDb = await runtime
             .InvokeAsync<IJSObjectReference>("import", cancellationToken, IndexedDbModulePath)
+            .ConfigureAwait(false))
+        {
+            await indexedDb.InvokeVoidAsync("deleteDatabase", cancellationToken, HackerOsIndexedDbSchema.DatabaseName).ConfigureAwait(false);
+        }
+
+        // ADR 0227: then everything else the origin keeps. A step that fails is reported by the
+        // module and does not stop the others; the reload follows either way.
+        await using IJSObjectReference reset = await runtime
+            .InvokeAsync<IJSObjectReference>("import", cancellationToken, FactoryResetModulePath)
             .ConfigureAwait(false);
-        await module.InvokeVoidAsync("deleteDatabase", cancellationToken, HackerOsIndexedDbSchema.DatabaseName).ConfigureAwait(false);
+        string[] failed = await reset.InvokeAsync<string[]>("eraseEverything", cancellationToken).ConfigureAwait(false);
+        foreach (string step in failed)
+        {
+            Console.WriteLine($"HackerOS factory reset: could not erase {step}");
+        }
     }
 }
