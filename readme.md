@@ -1,6 +1,6 @@
 > [Version française](readme-fr.md)
 
-# HackerSimulator: HackerOS
+# HackerOS
 
 HackerOS is a **simulated operating system that runs in the browser**, written
 in C# with Blazor WebAssembly (.NET 10). It provides a complete environment for
@@ -63,6 +63,22 @@ layout, features) is in [`src/README.md`](src/README.md).
 Both versions are published by a single
 [GitHub Pages workflow](.github/workflows/deploy-to-pages.yml)
 ([deployment guide](doc/en/wasm/dev/github-pages-deployment.md)).
+
+## Asking for a feature
+
+1. Check the [features overview](doc/en/wasm/features.md): the feature may
+   already exist or be in development.
+2. Search the [open issues](https://github.com/Kazo-ca/HackerOs/issues): if
+   someone already asked for it, add your use case in a comment.
+3. Otherwise, open an issue with the
+   [**Feature request** form](https://github.com/Kazo-ca/HackerOs/issues/new?template=feature_request.yml):
+   describe the need (what you want to do and why), the solution you imagine
+   and the part of the OS it touches. French or English are both fine.
+4. The maintainer answers in the issue. To report a problem, use the
+   [**Bug report** form](https://github.com/Kazo-ca/HackerOs/issues/new?template=bug_report.yml)
+   instead.
+
+Details are in [`CONTRIBUTING.md`](CONTRIBUTING.md#asking-for-a-feature).
 
 ## Contributing
 

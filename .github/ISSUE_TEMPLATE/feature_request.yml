@@ -1,0 +1,61 @@
+name: "Demande de fonctionnalité / Feature request"
+description: "Proposer une nouvelle fonctionnalité pour HackerOS. / Suggest a new feature for HackerOS."
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Merci ! Avant d'ouvrir la demande, vérifiez la [présentation des fonctionnalités](https://github.com/Kazo-ca/HackerOs/blob/main/doc/fr/wasm/features.md) et les [issues ouvertes](https://github.com/Kazo-ca/HackerOs/issues). Vous pouvez écrire en français ou en anglais.
+
+        Thank you! Before opening the request, check the [features overview](https://github.com/Kazo-ca/HackerOs/blob/main/doc/en/wasm/features.md) and the [open issues](https://github.com/Kazo-ca/HackerOs/issues). You may write in French or in English.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: "Vérifications / Checks"
+      options:
+        - label: "La fonctionnalité n'existe pas et n'est pas déjà demandée dans une issue. / The feature does not exist and is not already requested in an issue."
+          required: true
+  - type: textarea
+    id: need
+    attributes:
+      label: "Besoin / Need"
+      description: "Ce que vous voulez faire dans HackerOS et pourquoi. / What you want to do in HackerOS and why."
+      placeholder: "En tant qu'utilisateur, je veux… pour… / As a user, I want… so that…"
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: "Solution proposée / Proposed solution"
+      description: "Comment vous imaginez la fonctionnalité : écrans, commandes, paramètres, API du SDK. / How you picture the feature: screens, commands, settings, SDK API."
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: "Partie concernée / Area"
+      multiple: true
+      options:
+        - "Bureau, fenêtres, barre des tâches / Desktop, windows, taskbar"
+        - "Apps de base / Base apps"
+        - "Terminal, shell, commandes / Terminal, shell, commands"
+        - "Système de fichiers / File system"
+        - "Réseau, navigateur, sites internes / Network, browser, internal sites"
+        - "Comptes, sécurité, paramètres / Accounts, security, settings"
+        - "SDK et création d'apps / SDK and app building"
+        - "Serveur optionnel / Optional server"
+        - "Mobile"
+        - "Documentation"
+        - "Autre / Other"
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: "Solutions de rechange / Alternatives"
+      description: "Autres façons d'y arriver, contournements actuels. / Other ways to get there, current workarounds."
+  - type: textarea
+    id: context
+    attributes:
+      label: "Contexte / Context"
+      description: "Captures, maquettes, liens, exemples dans d'autres OS. / Screenshots, mock-ups, links, examples in other OSes."

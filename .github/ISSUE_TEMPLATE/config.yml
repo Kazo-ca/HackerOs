@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: "Guide de contribution / Contributing guide"
+    url: https://github.com/Kazo-ca/HackerOs/blob/main/CONTRIBUTING-fr.md
+    about: "Comment demander une fonctionnalité et proposer un changement. / How to ask for a feature and send a change (CONTRIBUTING.md)."

@@ -1,6 +1,6 @@
 > [English version](../en/README.md)
 
-# Documentation de HackerSimulator
+# Documentation de HackerOS
 
 | Dossier | Contenu |
 | --- | --- |

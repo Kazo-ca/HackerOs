@@ -1,4 +1,4 @@
-# HackerSimulator documentation
+# HackerOS documentation
 
 | Language | Index |
 | --- | --- |

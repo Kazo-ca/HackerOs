@@ -51,9 +51,9 @@ The **local** feed is for trying a version not published yet. In a HackerOS
 clone, on the desired branch:
 
 ```bash
-git -C ../HackerSimulator checkout <tag ou branche>
-../HackerSimulator/wasm2/HackerOs/build/pack-local.sh      # ou pack-local.ps1
-# -> ../HackerSimulator/wasm2/HackerOs/artifacts/local-nupkg/*.2.2.2.nupkg
+git -C ../HackerOs checkout <tag or branch>
+../HackerOs/wasm2/HackerOs/build/pack-local.sh      # or pack-local.ps1
+# -> ../HackerOs/wasm2/HackerOs/artifacts/local-nupkg/*.2.2.2.nupkg
 ```
 
 `--output <folder>` writes elsewhere (for example a shared folder of your
@@ -82,7 +82,7 @@ there:
 ```xml
 <configuration>
   <packageSources>
-    <add key="hackeros-local" value="../HackerSimulator/wasm2/HackerOs/artifacts/local-nupkg" />
+    <add key="hackeros-local" value="../HackerOs/wasm2/HackerOs/artifacts/local-nupkg" />
     <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
   </packageSources>
   <packageSourceMapping>
