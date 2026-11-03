@@ -51,9 +51,9 @@ Le flux **local** sert à essayer une version pas encore publiée. Dans un clone
 de HackerOS, sur la branche voulue :
 
 ```bash
-git -C ../HackerSimulator checkout <tag ou branche>
-../HackerSimulator/wasm2/HackerOs/build/pack-local.sh      # ou pack-local.ps1
-# -> ../HackerSimulator/wasm2/HackerOs/artifacts/local-nupkg/*.2.2.2.nupkg
+git -C ../HackerOs checkout <tag ou branche>
+../HackerOs/wasm2/HackerOs/build/pack-local.sh      # ou pack-local.ps1
+# -> ../HackerOs/wasm2/HackerOs/artifacts/local-nupkg/*.2.2.2.nupkg
 ```
 
 `--output <dossier>` écrit ailleurs (par exemple un dossier partagé de votre
@@ -82,7 +82,7 @@ de là :
 ```xml
 <configuration>
   <packageSources>
-    <add key="hackeros-local" value="../HackerSimulator/wasm2/HackerOs/artifacts/local-nupkg" />
+    <add key="hackeros-local" value="../HackerOs/wasm2/HackerOs/artifacts/local-nupkg" />
     <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
   </packageSources>
   <packageSourceMapping>

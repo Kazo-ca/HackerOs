@@ -1,6 +1,6 @@
 > [English version](readme.md)
 
-# HackerSimulator : HackerOS
+# HackerOS
 
 HackerOS est un **système d'exploitation simulé qui tourne dans le navigateur**,
 écrit en C# avec Blazor WebAssembly (.NET 10). Il offre un environnement complet
@@ -64,9 +64,26 @@ Les deux versions sont publiées par un seul
 [workflow GitHub Pages](.github/workflows/deploy-to-pages.yml)
 ([guide de déploiement](doc/fr/wasm/dev/github-pages-deployment.md)).
 
+## Demander une fonctionnalité
+
+1. Consultez la [présentation des fonctionnalités](doc/fr/wasm/features.md) :
+   la fonctionnalité existe peut-être déjà ou est en cours de développement.
+2. Cherchez dans les [issues ouvertes](https://github.com/Kazo-ca/HackerOs/issues) :
+   si quelqu'un l'a déjà demandée, ajoutez votre cas d'usage en commentaire.
+3. Sinon, ouvrez une issue avec le
+   [formulaire **Demande de fonctionnalité**](https://github.com/Kazo-ca/HackerOs/issues/new?template=feature_request.yml) :
+   décrivez le besoin (ce que vous voulez faire et pourquoi), la solution que
+   vous imaginez et la partie de l'OS concernée. Le français comme l'anglais
+   conviennent.
+4. Le mainteneur répond dans l'issue. Pour signaler un problème, utilisez
+   plutôt le
+   [formulaire **Rapport de bogue**](https://github.com/Kazo-ca/HackerOs/issues/new?template=bug_report.yml).
+
+Les détails sont dans [`CONTRIBUTING-fr.md`](CONTRIBUTING-fr.md#demander-une-fonctionnalité).
+
 ## Contribuer
 
-Les règles de contribution sont dans [`CONTRIBUTING.md`](CONTRIBUTING.md) et
+Les règles de contribution sont dans [`CONTRIBUTING-fr.md`](CONTRIBUTING-fr.md) et
 [`AGENTS.md`](AGENTS.md) (emplacement du code, documentation à jour à chaque
 changement, index des dossiers de la doc, travail avec le mainteneur :
 questions, issues `TODO`, branches, fusions). Claude Code les lit par
