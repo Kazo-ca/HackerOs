@@ -1,7 +1,7 @@
-using Kazo.Os.App.Abstractions;
-using Kazo.Os.AppSdk;
-using Kazo.Os.AppSdk.Administration;
-using Kazo.Os.AppSdk.IO;
+using HackerOs.App.Abstractions;
+using HackerOs.AppSdk;
+using HackerOs.AppSdk.Administration;
+using HackerOs.AppSdk.IO;
 
 namespace Contoso.Sdk11Compat;
 

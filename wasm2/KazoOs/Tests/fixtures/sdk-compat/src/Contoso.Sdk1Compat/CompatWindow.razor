@@ -16,7 +16,7 @@
     // Writes then reads back a file of the home folder through the System.IO-shaped SDK (ADR 0043).
     private async Task SaveAsync()
     {
-        await Kazo.Os.AppSdk.IO.HackFile.WriteAllTextAsync("~/sdk1-window.txt", "saved by SDK 1.0");
-        _status = "Read back: " + await Kazo.Os.AppSdk.IO.HackFile.ReadAllTextAsync("~/sdk1-window.txt");
+        await HackerOs.AppSdk.IO.HackFile.WriteAllTextAsync("~/sdk1-window.txt", "saved by SDK 1.0");
+        _status = "Read back: " + await HackerOs.AppSdk.IO.HackFile.ReadAllTextAsync("~/sdk1-window.txt");
     }
 }

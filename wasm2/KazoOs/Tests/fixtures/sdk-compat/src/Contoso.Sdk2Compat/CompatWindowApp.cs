@@ -1,7 +1,7 @@
-using Kazo.Os.App.Abstractions;
-using Kazo.Os.AppSdk.Blazor.Files;
-using Kazo.Os.AppSdk.Files;
-using Kazo.Os.AppSdk.Icons;
+using HackerOs.App.Abstractions;
+using HackerOs.AppSdk.Blazor.Files;
+using HackerOs.AppSdk.Files;
+using HackerOs.AppSdk.Icons;
 
 namespace Contoso.Sdk2Compat;
 

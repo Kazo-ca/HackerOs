@@ -1,4 +1,4 @@
-using Kazo.Os.App.Abstractions;
+using HackerOs.App.Abstractions;
 
 namespace Contoso.Sdk2Compat;
 

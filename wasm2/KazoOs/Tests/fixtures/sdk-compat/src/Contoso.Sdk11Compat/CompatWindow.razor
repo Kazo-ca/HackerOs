@@ -20,8 +20,8 @@
     // Writes then reads back a file of the home folder, and marks the document saved in the title.
     private async Task SaveAsync()
     {
-        await Kazo.Os.AppSdk.IO.HackFile.WriteAllTextAsync("~/sdk11-window.txt", "saved by SDK 1.1");
-        _status = "Read back: " + await Kazo.Os.AppSdk.IO.HackFile.ReadAllTextAsync("~/sdk11-window.txt");
+        await HackerOs.AppSdk.IO.HackFile.WriteAllTextAsync("~/sdk11-window.txt", "saved by SDK 1.1");
+        _status = "Read back: " + await HackerOs.AppSdk.IO.HackFile.ReadAllTextAsync("~/sdk11-window.txt");
         await SetWindowTitleAsync(FormatWindowTitle("sdk11-window.txt"));
     }
 }
