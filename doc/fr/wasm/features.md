@@ -389,7 +389,7 @@ dans `main`, le lien mène à sa PR.
 
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
-| HackerOS devient Kazo OS | Le nom HackerOS est déjà pris par une distribution Linux. Tout est renommé : nom affiché, espaces de noms et paquets `Kazo.Os.*` (SDK 3.0.0), préfixe `Kazo` au lieu de `Hack`, commandes, extensions et chemins ; les données des utilisateurs sont migrées au premier démarrage. | [0228](dev/adr/0228-rename-to-kazoos.md), [0229](dev/adr/0229-kazo-os-display-name-and-new-address.md) | Série `rename/base` |
+| HackerOS devient Kazo OS | Le nom HackerOS est déjà pris par une distribution Linux. Tout est renommé : nom affiché, espaces de noms et paquets `Kazo.Os.*` (SDK 3.0.0), préfixe `Kazo` au lieu de `Hack`, commandes, extensions et chemins ; les données des utilisateurs sont migrées au premier démarrage. | [0228](dev/adr/0228-rename-to-kazoos.md), [0229](dev/adr/0229-kazo-os-display-name-and-new-address.md), [0230](dev/adr/0230-rename-migration-by-previous-version.md) | Série `rename/base` |
 
 ### Applications optionnelles portées
 
