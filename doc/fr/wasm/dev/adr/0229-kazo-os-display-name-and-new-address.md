@@ -1,6 +1,6 @@
 > [English version](../../../../en/wasm/dev/adr/0229-kazo-os-display-name-and-new-address.md)
 
-# ADR 0229 : « Kazo OS » avec une espace, dépôts `Kazo.Os.App.*`, redirection vers os.kazo.ca
+# ADR 0229 : « Kazo OS » avec une espace, dépôts `Os-App-*`, redirection vers os.kazo.ca
 
 ## Statut
 
@@ -18,8 +18,10 @@ Après l'ADR 0228, Benoit (2026-11-04) :
 
 1. Sur l'image sociale : « Il manque un espace entre Kazo et Os dans
    l'image », puis il choisit **« Kazo OS »** avec une espace.
-2. Noms des dépôts d'apps : il choisit **`Kazo.Os.App.*`**, comme les
-   espaces de noms.
+2. Noms des dépôts d'apps : il a d'abord choisi `Kazo.Os.App.*`, puis a
+   renommé lui-même tous les dépôts en retirant « Hacker » : **`Os-App-*`**,
+   `Os-AppTemplate`, `Os-AppMarketPlace` (« j'ai renommé tous les
+   repository git et retiré le `Hacker` de `HackerOs` dans le nom »).
 3. Adresse du site : « on laisse faire la migration. Mais on doit faire une
    redirection ». La redirection est faite par Cloudflare ; « je fais la
    redirection Cloudflare dans une autre session ».
@@ -31,11 +33,11 @@ Après l'ADR 0228, Benoit (2026-11-04) :
    « Kazo OS ». Les noms techniques ne changent pas : `Kazo.Os.*`, `Kazo*`,
    `kazoos` (bases, chemins, extension `.kazoos`).
 2. **Dépôts.** Le dépôt principal est `Kazo-ca/Os`. Les dépôts d'apps
-   suivent les espaces de noms : `HackerOs-App-Chess` → `Kazo.Os.App.Chess`
+   perdent « Hacker » : `HackerOs-App-Chess` → `Os-App-Chess`
    (de même Webamp, IRC, EmulatorJS, BoxedWine), `HackerOs-AppTemplate` →
-   `Kazo.Os.AppTemplate`, `HackerOs-AppMarketPlace` →
-   `Kazo.Os.AppMarketPlace`. Benoit renomme les dépôts ; le chantier 8 met
-   leur code et les liens à jour.
+   `Os-AppTemplate`, `HackerOs-AppMarketPlace` →
+   `Os-AppMarketPlace`. Benoit les a renommés ; les liens sont corrigés
+   dans le chantier 3 et leur code dans le chantier 8.
 3. **Adresse du site.** `os.kazo.ca` est la seule adresse servie par GitHub
    Pages. `hackos.kazo.ca` est redirigé par un Worker Cloudflare : il répond
    à `/service-worker.js` par un script qui vide le cache, se désinscrit et
