@@ -50,7 +50,7 @@ DesktopShell ──► DesktopArea.BackgroundContent (BackgroundInteractive)
 | --- | --- | --- |
 | `DesktopSurfaceHost` | `Platform.Blazor` (`Shell/`) | Réserve l'app comme surface de la coquille (`WindowLaunchCoordinator.ReserveShellSurface`), la lance pour l'utilisateur de la session, rend son composant d'entrée hors fenêtre avec le contexte d'app et une portée de menus, la relance une fois si elle plante. `CreateShortcutAsync(appId)` envoie l'intent de raccourci. |
 | `DesktopArea.BackgroundInteractive` | `Windowing.Blazor` | Rend la couche de fond cliquable et lisible ; la couche des fenêtres laisse passer le pointeur hors des fenêtres. |
-| App **Bureau** (`org.hackeros.desktop`) | `Apps/System/HackerOs.Apps.Desktop` | App système cachée, à instance unique, SDK public seulement. Crée `~/Desktop` s'il manque, lit et écrit `desktop.config`, suit `~/.config/hackeros`, complète le menu du fond, reçoit l'intent de raccourci. |
+| App **Bureau** (`org.hackeros.desktop`) | `Apps/System/Kazo.Os.Apps.Desktop` | App système cachée, à instance unique, SDK public seulement. Crée `~/Desktop` s'il manque, lit et écrit `desktop.config`, suit `~/.config/hackeros`, complète le menu du fond, reçoit l'intent de raccourci. |
 | `FileViewDesktop` | explorateur, `FileControl/` (`AppSdk.FileView` avant le SDK 2.0) | Le mode Bureau du contrôle interne : grille mesurée (`ResizeObserver`), sélection, lasso, clavier, glisser-déposer, icônes système. Script collocalisé `FileViewDesktop.razor.js`. |
 | `ExplorerFileView` (`ExplorerFileView.Desktop.cs`) | `Apps.FileExplorer` | Le fournisseur : menus et actions de Dossier perso et Corbeille, état plein ou vide de la Corbeille, décor des raccourcis (nom et icône de l'app, grisé si l'app manque), lancement d'un raccourci, création de raccourcis à un dépôt d'app. |
 | Menu Démarrer (`AppLauncher.Menu.cs`, `AppLauncher.razor.js`) | `Platform.Blazor` | Menu de l'OS sur chaque app (Ouvrir, Épingler, Envoyer vers ▸ Bureau) et glisser d'une app (`application/vnd.hackeros.app+json`). |
@@ -104,16 +104,16 @@ Paramètres s'ouvre directement sur une page avec `--page=appearance` ou
 
 ## Tests
 
-- `HackerOs.AppSdk.Tests/Files/HackDesktopTests.cs` : ordre, placement,
+- `Kazo.Os.AppSdk.Tests/Files/HackDesktopTests.cs` : ordre, placement,
   collisions, hors écran, réorganisation automatique, déplacements, raccourcis
   (lecture, écriture, rejet, noms numérotés), `desktop.config` (lecture,
   écriture, clés encodées, création du dossier).
-- `HackerOs.Apps.FileExplorer.FileControl.Tests/FileViewDesktopTests.cs` : charge d'un glisser
+- `Kazo.Os.Apps.FileExplorer.FileControl.Tests/FileViewDesktopTests.cs` : charge d'un glisser
   d'app.
-- `HackerOs.Platform.Blazor.Tests/WindowLaunchCoordinatorTests.cs` :
+- `Kazo.Os.Platform.Blazor.Tests/WindowLaunchCoordinatorTests.cs` :
   réservation de surface.
-- `HackerOs.Apps.Settings.Tests/SettingsWindowTests.cs` : `--page=`.
-- `HackerOs.Ecosystem.Tests/BuildKnownLazyAppsTests.cs` : l'app Bureau est
+- `Kazo.Os.Apps.Settings.Tests/SettingsWindowTests.cs` : `--page=`.
+- `Kazo.Os.Ecosystem.Tests/BuildKnownLazyAppsTests.cs` : l'app Bureau est
   une app système chargée à la demande.
 
 ## Tâches (chantier `desk/5-desktop`)

@@ -12,7 +12,7 @@ Accepted on 2026-08-17.
 directory in whatever app is registered to handle it — "let the Shell manage it," per the original
 request — rather than `FileView` hardcoding a target app ID. HackerOS already has a complete file-open
 association pipeline for **files**: `IAppIntentGateway.OpenFileAsync(VirtualPath, mediaType)` →
-`FileAssociationResolver.ResolveAsync` (`Platform/HackerOs.Platform.Core/Intents/FileAssociationResolver.cs`)
+`FileAssociationResolver.ResolveAsync` (`Platform/Kazo.Os.Platform.Core/Intents/FileAssociationResolver.cs`)
 → explicit preferred app, then a configured default from the protected
 `/etc/hackeros/file-associations.json` document, then any sole/chooser-required manifest-declared
 candidate. Matching is `HandlesFile`/`MatchesTarget`, which accepts either an extension match **or** a
@@ -61,7 +61,7 @@ manifest/seed changes themselves as already done — those are tracked as `INT-0
 - Establishes a general `inode/*` sentinel pattern that could later extend to other pseudo-types (e.g. a
   distinct handler for symbolic links) without further design work — this ADR accepts only
   `inode/directory`, not the general pattern as a standing policy.
-- `Platform/HackerOs.Platform.Core/Intents/FileAssociationResolver.cs` gains its first regression test
+- `Platform/Kazo.Os.Platform.Core/Intents/FileAssociationResolver.cs` gains its first regression test
   exercising directory resolution (`INT-007`) — a codepath that has existed since `P1-APP-009` but was
   never exercised for a directory target.
 - [`../app-intents-and-associations.md`](../old/app-intents-and-associations.md) must document the
@@ -76,7 +76,7 @@ manifest/seed changes themselves as already done — those are tracked as `INT-0
   Phase 5 (`INT-006`–`INT-010`).
 - [`../app-intents-and-associations.md`](../old/app-intents-and-associations.md) — the existing intent
   dispatch/association pipeline this convention reuses unchanged.
-- `Shared/HackerOs.App.Abstractions/AppManifest.cs` (`FileHandlerManifest`) and
-  `Platform/HackerOs.Platform.Core/Intents/FileAssociationResolver.cs` — the existing contracts/logic this
+- `Shared/Kazo.Os.App.Abstractions/AppManifest.cs` (`FileHandlerManifest`) and
+  `Platform/Kazo.Os.Platform.Core/Intents/FileAssociationResolver.cs` — the existing contracts/logic this
   ADR confirms require no structural change.
 - ADR 0037: `FileView` as the Canonical File-Listing Control — the consumer this association serves.

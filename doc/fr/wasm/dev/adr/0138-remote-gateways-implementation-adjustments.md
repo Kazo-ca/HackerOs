@@ -30,7 +30,7 @@ mise en œuvre :
 ### 1. Bus « wire » côté OS
 
 `InMemoryTopicMessageBus` et `InMemoryEventBus` implémentent deux contrats
-internes de `HackerOs.Platform.Core` (`IWireTopicMessageBus`,
+internes de `Kazo.Os.Platform.Core` (`IWireTopicMessageBus`,
 `IWireEventBus`). Ils indexent les abonnements d'un worker par **nom de type**
 (`"{FullName}, {AssemblyName}"`, `WirePayloadNames.Of`) :
 
@@ -117,14 +117,14 @@ Sur le fil principal, la livraison reste synchrone comme avant.
   le worker écrit l'erreur sur la sortie d'erreur du processus et le termine
   avec le code **127** (comme un shell pour une commande introuvable). Une liste
   vide (hôte qui ne la renseigne pas) n'impose aucune restriction.
-- L'Ecosystem référence désormais `HackerOs.Samples.TerminalApp` : sa commande
+- L'Ecosystem référence désormais `Kazo.Os.Samples.TerminalApp` : sa commande
   `sample-cmd` sert de commande tierce chargée à la demande dans le test des
   hôtes (`HostSmoke`). Comme toute commande, elle est masquée du menu Démarrer
   (`LaunchVisibility = Hidden`) et reste désinstallable. `test/test` n'est pas changé.
 
 ### 9. Revue des apps en `MainThread`
 
-Les 16 commandes en `mainThread` de `HackerOs.Commands` ont été relues ; leur
+Les 16 commandes en `mainThread` de `Kazo.Os.Commands` ont été relues ; leur
 raison tient toujours (commandes intégrées du shell, écran alternatif, `sudo`,
 `passwd`, `hackbackup`). Aucune ne dépendait de `HackEvents` ou de `Watch`.
 

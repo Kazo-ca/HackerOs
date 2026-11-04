@@ -14,7 +14,7 @@ separate plan for the app store of
 A **Hack Store** system app, in the style of the Play Store or Microsoft Store,
 pinned by default in the Start menu, that lists the apps that can be installed
 in Kazo OS, shows their page, and installs, updates or removes them in one
-click. Apps come from a reviewed catalog (`Kazo-ca/HackerOs-AppMarketPlace`),
+click. Apps come from a reviewed catalog (`Kazo-ca/Os-AppMarketPlace`),
 where each version is built by us from its source code. In v2, the Store also
 offers theme packs.
 
@@ -53,7 +53,7 @@ Each line is a work item, with its branch and PR.
    Settings ▸ Apps ▸ Sources. **Done** (issue #248,
    [ADR 0208](../adr/0208-hack-store-sources-trust-build.md): catalog loaded at
    startup and hidden per session).
-4. **`HackerOs-AppMarketPlace` repository** (ADR 0188 §4 to §6):
+4. **`Os-AppMarketPlace` repository** (ADR 0188 §4 to §6):
    `categories.json`, PR template, `validate.yml` (format, manifest, commit,
    build, API check, CodeQL, capabilities comment), `publish.yml`, `packages`
    branch, `catalog.json`, 3 versions kept.
@@ -79,7 +79,7 @@ Each line is a work item, with its branch and PR.
    (themes, wallpapers, icons, sounds, cursors). **Done** (branch
    `todo/18-theme-packs`, issue #253,
    [ADR 0213](../adr/0213-theme-packs-build.md)); catalog CI:
-   [AppMarketPlace #4](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/4).
+   [AppMarketPlace #4](https://github.com/Kazo-ca/Os-AppMarketPlace/issues/4).
 9. One work item per new OS system, each with its ADR: image wallpapers, icon
    packs, event sounds, cursor themes. The Store accepts each part of a pack
    once its system exists. **Done** (ADRs 0202 to 0205).

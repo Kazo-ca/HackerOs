@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../Packaging.props" />
+
+  <PropertyGroup>
+    <PackageId>Kazo.Os.Platform.ResourceAccounting</PackageId>
+    <Description>Optional measured CPU time and process memory for Kazo OS (ADR 0066). Referenced by a host only when accounting is compiled in.</Description>
+    <PackageTags>hackeros;platform;accounting</PackageTags>
+  </PropertyGroup>
+
+  <!--
+    ADR 0066: the measuring half of the optional resource accounting. It depends on Platform Core,
+    never the reverse. A host references it only through build/Kazo.Os.ResourceAccounting.targets,
+    and only when HackerOsCpuAccounting or HackerOsMemoryAccounting is true: with both false, none
+    of this code is in the binary.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kazo.Os.Platform.Core\Kazo.Os.Platform.Core.csproj" />
+    <ProjectReference Include="..\..\Shared\Kazo.Os.AppSdk\Kazo.Os.AppSdk.csproj" />
+    <ProjectReference Include="..\..\Shared\Kazo.Os.Simulation.Abstractions\Kazo.Os.Simulation.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

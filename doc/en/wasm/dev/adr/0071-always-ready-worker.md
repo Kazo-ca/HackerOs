@@ -84,5 +84,5 @@ for a worker to become free, and the `/var/log/syslog` log notes it once
 ## References
 
 - [`execution-isolation-plan.md`](../plans/execution-isolation-plan.md)
-- `OS/HackerOs.Ecosystem/EcosystemBootCoordinator.cs`.
+- `OS/Kazo.Os.Ecosystem/EcosystemBootCoordinator.cs`.
 - ADR 0067, 0069, 0070.

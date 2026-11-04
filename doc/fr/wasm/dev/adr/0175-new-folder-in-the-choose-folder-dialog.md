@@ -38,7 +38,7 @@ le contrôle de fichiers) et l'[ADR 0171](0171-mobile-file-explorer-and-full-scr
    lorsque la liste de la plateforme remplace le contrôle (aucun fournisseur de
    `hackeros.file-view`) : cette liste ne sait que parcourir. `FileDialogBrowser`
    le signale par un nouveau paramètre `FileControlChanged` (`EventCallback<bool>`,
-   API publique de `HackerOs.Platform.Blazor`, dans `PublicAPI.Unshipped.txt`).
+   API publique de `Kazo.Os.Platform.Blazor`, dans `PublicAPI.Unshipped.txt`).
 3. **Le dialogue Enregistrer** autorisait déjà `CreateFolder` : il reçoit le même
    bouton.
 4. **Code Editor** passe `AllowCreateFolder = true` pour « Open Folder » : on peut

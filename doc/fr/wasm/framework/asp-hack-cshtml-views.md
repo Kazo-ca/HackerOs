@@ -97,15 +97,15 @@ Le contrôleur ne change pas : `return View(store.All);`, `return View(note);`.
 ## Architecture
 
 ```text
-Build (build/HackerOs.Apps.targets, cible _HackerOsAspHackRazorViews)
-  si le projet référence HackerOs.AppSdk.Web et a des .cshtml :
+Build (build/Kazo.Os.Apps.targets, cible _HackerOsAspHackRazorViews)
+  si le projet référence Kazo.Os.AppSdk.Web et a des .cshtml :
     + build/asp-hack/_ViewImports.cshtml lié en _ViewImports.cshtml racine
       (@inherits HackRazorPage<TModel>, Html/Json/Component/Url/ModelExpressionProvider)
     + build/asp-hack/HackRazorCompat.cs (types internes aux noms Microsoft.AspNetCore.*)
   compilateur Razor du SDK → classe par .cshtml
   générateur de routes (ADR 0082) → HackWebGeneratedRoutes.Views (genres Component et RazorPage)
 
-Rendu (Shared/HackerOs.AppSdk.Web/Views/)
+Rendu (Shared/Kazo.Os.AppSdk.Web/Views/)
   HackViewEngine.RenderAsync
     ├─ vue .cshtml : _ViewStart.cshtml de Views/ puis des dossiers → Layout initial
     │                HackRazorPage.RenderAsync : @inject remplis, ExecuteAsync, sections → HTML
@@ -185,7 +185,7 @@ HackViewKind, HackViewDescriptor.Kind, HackViewTable.Find(Type)   HackViewTable.
 
 ## Tests
 
-- `Tests/HackerOs.AppSdk.Web.Tests/Views/CshtmlViewTests` : table générée et
+- `Tests/Kazo.Os.AppSdk.Web.Tests/Views/CshtmlViewTests` : table générée et
   noms de classes, `_ViewStart` imbriqués, `@model`, `@inject`, layout, titre,
   section, attributs conditionnels, partials des deux genres, modèle en ligne,
   `Html.Raw`, `Component.InvokeAsync`, `Json.Serialize`, layouts imbriqués et
@@ -196,7 +196,7 @@ HackViewKind, HackViewDescriptor.Kind, HackViewTable.Find(Type)   HackViewTable.
 - `Generator/WebRouteGeneratorTests` : noms des classes `.cshtml` (`@namespace`
   du fichier et d'un `_ViewImports.cshtml` avec les dossiers, caractères
   spéciaux), imports exclus, `HOSWEB0008`.
-- `Tests/HackerOs.Platform.WorkerHost.Tests/MvcSiteTests` : une vue `.cshtml`
+- `Tests/Kazo.Os.Platform.WorkerHost.Tests/MvcSiteTests` : une vue `.cshtml`
   avec `_ViewStart`, layout `.cshtml`, formulaire et section servie par `curl`
   dans un OS complet, sur le fil principal et dans le worker `web`.
 

@@ -22,8 +22,8 @@ de référence `Microsoft.AspNetCore.App`).
 
 ### 1. Bibliothèque
 
-`Shared/HackerOs.AppSdk.Web` (bibliothèque du SDK, `HackerOsSdkLibrary`), qui ne
-dépend que de `HackerOs.AppSdk`. Le site est un processus qui ouvre un
+`Shared/Kazo.Os.AppSdk.Web` (bibliothèque du SDK, `HackerOsSdkLibrary`), qui ne
+dépend que de `Kazo.Os.AppSdk`. Le site est un processus qui ouvre un
 `HackHttpListener` sur ses `Urls` et passe chaque requête au pipeline.
 
 ### 2. Démarrage et pipeline
@@ -130,5 +130,5 @@ base propre à ASP.Hack la rend possible plus tard.
 - Les sites MVC tournent dans le worker web partagé (ADR 0073 §1) ; leurs
   vues n'ont pas besoin du DOM.
 - Les noms d'attributs identiques à ASP.NET vivent dans l'espace de noms
-  `HackerOs.AppSdk.Web.Mvc` et ne peuvent pas entrer en conflit (ASP.NET n'est
+  `Kazo.Os.AppSdk.Web.Mvc` et ne peuvent pas entrer en conflit (ASP.NET n'est
   pas référencé).

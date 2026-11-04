@@ -6,7 +6,7 @@ This document describes what an app gets when it displays the file control (`Hac
 
 ## Display through `HackFileView`
 
-Every app displays it through the SDK's `HackFileView` (`HackerOs.AppSdk.Blazor.Files`)
+Every app displays it through the SDK's `HackFileView` (`Kazo.Os.AppSdk.Blazor.Files`)
 and so does the explorer: its window renders `<HackFileView>` and keeps the chrome
 (bars, Locations, Trash, status bar). The Rename,
 Delete, Cut, Copy, Paste, Properties and Open with buttons call

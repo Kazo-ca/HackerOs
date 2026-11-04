@@ -15,7 +15,7 @@ la mémoire, le CPU et la charge ; `/dev` offre les périphériques `null`, `zer
 
 ## Architecture
 
-Code : `Platform/HackerOs.Platform.Core/FileSystem/Virtual/`.
+Code : `Platform/Kazo.Os.Platform.Core/FileSystem/Virtual/`.
 
 | Type | Rôle |
 | --- | --- |
@@ -38,7 +38,7 @@ montre, puis le fournisseur virtuel les masque.
 Contrats touchés :
 
 - `FileSystemEntryKind.CharacterDevice` et `CharacterDeviceMetadata`
-  (`Shared/HackerOs.Simulation.Abstractions/FileSystem/FileSystemEntryMetadata.cs`).
+  (`Shared/Kazo.Os.Simulation.Abstractions/FileSystem/FileSystemEntryMetadata.cs`).
   Les fournisseurs IndexedDB et mémoire refusent de créer ce type
   (`UnsupportedOperation`). `ls -l` l'affiche avec `c` (et les liens avec `l`).
 - `AppOperationContext.ProcessId` (`long?`), renseigné par
@@ -242,14 +242,14 @@ pour agir.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/FileSystem/Virtual/` : listage de `/`,
+- `Tests/Kazo.Os.Platform.Core.Tests/FileSystem/Virtual/` : listage de `/`,
   formats exacts de `status`, `meminfo`, `cpuinfo`, `uptime` et `loadavg`,
   visibilité selon `process.list`, `/proc/self`, refus des mutations, `/dev/null`,
   lecture bornée de `/dev/zero`, annulation, refus de `CharacterDevice` par le
   stockage, et aucune écriture dans le dépôt racine.
-- `Tests/HackerOs.Commands.Wave5.Tests/PsCommandTests.cs` : `ps` contre le vrai
+- `Tests/Kazo.Os.Commands.Wave5.Tests/PsCommandTests.cs` : `ps` contre le vrai
   fournisseur `/proc`.
-- `Tests/HackerOs.Platform.Core.Tests/FileSystem/Virtual/ProcMetricsTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/FileSystem/Virtual/ProcMetricsTests.cs` :
   fichiers de mesure de la phase 4 (voir [`system-metrics.md`](system-metrics.md)).
 
 ## Liste des tâches

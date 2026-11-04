@@ -40,7 +40,7 @@ all as missing.
    | 12 | Recovery interface when Settings and Terminal are disabled | **Moot**: there is no more disabling (ADR 0048), and a system app cannot be uninstalled. Settings and Terminal are system apps, therefore always present. |
 
 2. **Maximum file size.** The rule already applied by
-   `Infrastructure/HackerOs.Infrastructure.Browser/Schema/FileContentStoragePolicy.cs`
+   `Infrastructure/Kazo.Os.Infrastructure.Browser/Schema/FileContentStoragePolicy.cs`
    becomes the documented rule:
    - a file is at most **16 MiB** (`DefaultMaxFileSizeBytes`);
    - its content is split into chunks of at most **256 KiB**

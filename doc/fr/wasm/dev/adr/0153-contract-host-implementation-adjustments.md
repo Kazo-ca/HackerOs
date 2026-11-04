@@ -23,7 +23,7 @@ par l'ADR ou ne pouvaient pas l'être tels quels.
 ### 1. Le composant hôte typé : `HackContractComponent<TController>`
 
 Le SDK Blazor gagne une classe de base abstraite
-`HackContractComponent<TController>` (`HackerOs.AppSdk.Blazor.Components`).
+`HackContractComponent<TController>` (`Kazo.Os.AppSdk.Blazor.Components`).
 Un composant typé (`HackFileView`, `HackContextMenu`) en dérive, déclare ses
 `[Parameter]` ordinaires et les recopie par nom dans
 `AddProviderParameters`. Il se rend par `HackEmbeddedComponent<T>`, qui gagne
@@ -56,7 +56,7 @@ appliqué à la résolution par `HackComponentHost`.
 
 ### 4. Contrats réservés : où le refus a lieu
 
-Les noms vivent dans `HackerOs.App.Abstractions`
+Les noms vivent dans `Kazo.Os.App.Abstractions`
 (`AppComponentContracts`, `AppComponentProviderScope`) pour que le
 validateur les connaisse ; le SDK les répète dans `HackComponentContracts`.
 

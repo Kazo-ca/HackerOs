@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Sample nuget.config for a repository that builds on Kazo OS packages (ADR 0098 §2), such as the
+  game. Copy it next to that repository's solution and point "hackeros-local" at the folder
+  build/pack-local.sh (or .ps1) filled in a Kazo OS checkout. Kazo OS packages are local only,
+  never published on nuget.org.
+-->
+<configuration>
+  <packageSources>
+    <add key="hackeros-local" value="../HackerSimulator/wasm2/KazoOs/artifacts/local-nupkg" />
+    <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
+  </packageSources>
+  <packageSourceMapping>
+    <packageSource key="hackeros-local">
+      <package pattern="Kazo.Os.*" />
+    </packageSource>
+    <packageSource key="nuget.org">
+      <package pattern="*" />
+    </packageSource>
+  </packageSourceMapping>
+</configuration>

@@ -48,7 +48,7 @@ PageBridgeHandler ◄── PageBridge.js (dans la page) : fetch, XHR, liens, fo
      └── PageStorage (~/.local/share/hackeros/browser/storage/<site>/local-storage.json)
 ```
 
-Tous les fichiers sont sous `Apps/System/HackerOs.Apps.Browser/` :
+Tous les fichiers sont sous `Apps/System/Kazo.Os.Apps.Browser/` :
 
 | Dossier / fichier | Rôle |
 |---|---|
@@ -68,7 +68,7 @@ Tous les fichiers sont sous `Apps/System/HackerOs.Apps.Browser/` :
 | `BrowserPageView.razor(.js)` | Crée l'iframe isolée, relaie les messages, détecte une navigation par script. |
 | `BrowserErrorPages.cs`, `BrowserDownloads.cs` | Pages d'erreur et téléchargements. |
 
-`SimulatedFileTypes` (`Shared/HackerOs.Simulation.Abstractions/Network/`)
+`SimulatedFileTypes` (`Shared/Kazo.Os.Simulation.Abstractions/Network/`)
 donne le type MIME d'un fichier local d'après son extension.
 `HackCookieContainer.Remove` (SDK) supprime un cookie expiré par la page.
 
@@ -197,17 +197,17 @@ page y est recréée et son pont continue de parler à ce navigateur.
 
 ## Tests
 
-- `Tests/HackerOs.Apps.Browser.Tests` : composition HTML, réécriture CSS, pont
+- `Tests/Kazo.Os.Apps.Browser.Tests` : composition HTML, réécriture CSS, pont
   (CORS, credentials, cookies), URL, stockage, pages d'erreur, listing,
   téléchargements, journal des outils de développement.
-- `Tests/HackerOs.UI.E2E.Tests/BrowserHtmlRenderingTests.cs` : dans Chromium,
+- `Tests/Kazo.Os.UI.E2E.Tests/BrowserHtmlRenderingTests.cs` : dans Chromium,
   page web avec CSS, script, `fetch` et cookie ; sandbox vérifié ; onglet
   Network ; vue source ; XHR et formulaire `POST` ; site local `file://` avec
   `localStorage`, `fetch` CORS, lien et retour ; page d'erreur DNS.
-- `Tests/HackerOs.Apps.Browser.Tests/FormHistoryTests.cs` et
-  `Tests/HackerOs.UI.E2E.Tests/BrowserSiteDataTests.cs` : historique de
+- `Tests/Kazo.Os.Apps.Browser.Tests/FormHistoryTests.cs` et
+  `Tests/Kazo.Os.UI.E2E.Tests/BrowserSiteDataTests.cs` : historique de
   formulaires (fichier, limites, `<datalist>` dans Chromium).
-- `Tests/HackerOs.UI.E2E.Tests/BrowserHomePageTests.cs` : hors mode démo, le
+- `Tests/Kazo.Os.UI.E2E.Tests/BrowserHomePageTests.cs` : hors mode démo, le
   navigateur s'ouvre sur HackerSearch et une recherche tapée dans la barre
   d'adresse affiche ses résultats (ADR 0085 : le catalogue réseau par défaut
   est branché dans l'OS).

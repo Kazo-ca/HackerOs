@@ -33,13 +33,13 @@ mkdir: cannot create directory 'projets': No space left on device
 
 | Couche | Fichiers |
 |---|---|
-| Contrats de simulation | `Shared/HackerOs.Simulation.Abstractions/FileSystem/FileSystemResults.cs` (`NoSpace = 1800`, `FileTooLarge = 1801`), `Metrics/StorageSpaceContracts.cs` (`StorageCapacity`, `IStorageCapacityProbe`, `IStorageSpaceGuard`, `StorageSpacePolicy`), `Notifications/NotificationContracts.cs` (`NotificationAction.LaunchApp`) |
-| SDK | `Shared/HackerOs.AppSdk/Administration/HackSystemBackup.cs`, `SystemBackupContracts.cs` (`IAppSystemBackupGateway`, `HackBackupRestoreMode`, `HackBackupInfo`, `HackBackupInvalidException`) ; `IO/HackFileSystemErrorTranslator.cs` et `ShellErrorText.cs` pour les deux codes |
+| Contrats de simulation | `Shared/Kazo.Os.Simulation.Abstractions/FileSystem/FileSystemResults.cs` (`NoSpace = 1800`, `FileTooLarge = 1801`), `Metrics/StorageSpaceContracts.cs` (`StorageCapacity`, `IStorageCapacityProbe`, `IStorageSpaceGuard`, `StorageSpacePolicy`), `Notifications/NotificationContracts.cs` (`NotificationAction.LaunchApp`) |
+| SDK | `Shared/Kazo.Os.AppSdk/Administration/HackSystemBackup.cs`, `SystemBackupContracts.cs` (`IAppSystemBackupGateway`, `HackBackupRestoreMode`, `HackBackupInfo`, `HackBackupInvalidException`) ; `IO/HackFileSystemErrorTranslator.cs` et `ShellErrorText.cs` pour les deux codes |
 | SDK Blazor | `Interop/BrowserFilePicker.cs` et `wwwroot/pickFile.js` (pendant de `download.js` pour ouvrir un fichier de l'hôte) |
 | Platform Core | `Backup/SystemBackupService.cs` (`ISystemBackupDevice`, séquence), `Administration/AppSystemBackupGateway.cs`, `Storage/StorageSpaceMonitor.cs`, `FileSystem/FileSystemService.cs` (réserve), `Diagnostics/LogFileWriter.cs` (lignes perdues), `Power/SystemPowerService.cs` (`RestartAfterAsync`) |
 | Infrastructure.Browser | `Backup/IndexedDbBackupService.cs` (gzip, `ReadArchive`, `Inspect`, fusion par `put`), `Storage/BrowserStorageManager.cs` (`IStorageCapacityProbe`), `FileSystem/IndexedDbFileSystemProvider.cs` (`QuotaExceededError` → `NoSpace`), `IndexedDbFileContentRepository.cs` (16 Mio → `FileTooLarge`), `IndexedDbStorageUsageProvider.cs` (`df`) |
 | Hôte Ecosystem | `Administration/BrowserSystemBackupDevice.cs`, `EcosystemServiceCollectionExtensions.cs` (enregistrements), `EcosystemBootCoordinator.cs` (surveillance de l'espace, entrée d'audit d'une restauration) |
-| Apps | `Apps/System/HackerOs.Apps.Settings/BackupPanel.razor` (onglet *Backup*), `Apps/Commands/HackerOs.Commands/Hackbackup/` ; `Platform/HackerOs.Platform.Blazor/Shell/ClockPanel.razor` (boutons d'action des notifications) |
+| Apps | `Apps/System/Kazo.Os.Apps.Settings/BackupPanel.razor` (onglet *Backup*), `Apps/Commands/Kazo.Os.Commands/Hackbackup/` ; `Platform/Kazo.Os.Platform.Blazor/Shell/ClockPanel.razor` (boutons d'action des notifications) |
 
 Les trois hôtes appellent `AddHackerOsEcosystem`. La sauvegarde n'est branchée
 que dans un navigateur (`OperatingSystem.IsBrowser()`) : l'hôte Server en rendu
@@ -164,13 +164,13 @@ Vidages des versions 2 et 3 dans `Tests/fixtures/indexeddb/` (la version 1 n'a j
 
 ## Tests
 
-- `Tests/HackerOs.Infrastructure.Browser.Tests` : `IndexedDbBackupServiceTests`
+- `Tests/Kazo.Os.Infrastructure.Browser.Tests` : `IndexedDbBackupServiceTests`
   (export puis remplacement atomique, archive falsifiée refusée sans
   écriture, fusion par `put` sans `clear`, aller-retour gzip et JSON brut,
   gzip abîmé, autre version de schéma) ; `IndexedDbFileSystemProviderTests`
   (`QuotaExceededError` → `NoSpace` sans rien écrire, plus de 16 Mio →
   `FileTooLarge` avant toute écriture).
-- `Tests/HackerOs.Platform.Core.Tests` : `SystemAdministrationGatewayTests`
+- `Tests/Kazo.Os.Platform.Core.Tests` : `SystemAdministrationGatewayTests`
   (capacité, hôte sans sauvegarde, création téléchargée et journalisée, refus
   de l'administrateur sans téléchargement, sélecteur fermé ou archive
   invalide sans demande ni arrêt, ordre de la restauration, échec qui
@@ -179,16 +179,16 @@ Vidages des versions 2 et 3 dans `Tests/fixtures/indexeddb/` (la version 1 n'a j
   inconnu) ; `FileSystemServiceTests` (réserve : utilisateur refusé, système
   accepté, nouvelle mesure demandée) ; `LogFileWriterTests` (lignes perdues
   comptées puis signalées une fois).
-- `Tests/HackerOs.AppSdk.Tests/IO/HackErrorTranslationTests.cs` : deux codes
+- `Tests/Kazo.Os.AppSdk.Tests/IO/HackErrorTranslationTests.cs` : deux codes
   traduits en `HackIOException` et en message Linux.
-- `Tests/HackerOs.Commands.Wave5.Tests/HackbackupCommandTests.cs` : usage,
+- `Tests/Kazo.Os.Commands.Wave5.Tests/HackbackupCommandTests.cs` : usage,
   root exigé, création, fusion par défaut, remplacement, archive refusée,
   hôte sans sauvegarde.
-- `Tests/HackerOs.UI.E2E.Tests/LowStorageSpaceTests.cs` : quota de Chromium abaissé
+- `Tests/Kazo.Os.UI.E2E.Tests/LowStorageSpaceTests.cs` : quota de Chromium abaissé
   (`Storage.overrideQuotaForOrigin`) à 3 % de libre ; la notification arrive,
   l'action « Open Diagnostic » est là, et l'administrateur se reconnecte après
   un rechargement (le système écrit encore dans la réserve).
-- `Tests/HackerOs.App.Abstractions.Tests/AppCapabilitiesTests.cs` :
+- `Tests/Kazo.Os.App.Abstractions.Tests/AppCapabilitiesTests.cs` :
   `system.backup` dangereuse.
 
 ## Liste des tâches

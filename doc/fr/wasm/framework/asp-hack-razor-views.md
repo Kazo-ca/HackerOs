@@ -25,7 +25,7 @@ Intranet/
   IntranetApp.cs            [AppManifest] partial WebAppDefinition
   Controllers/NotesController.cs
   Views/
-    _Imports.razor          @using HackerOs.AppSdk.Web.Views, @using Intranet.Views.Shared
+    _Imports.razor          @using Kazo.Os.AppSdk.Web.Views, @using Intranet.Views.Shared
     Shared/_Layout.razor
     Notes/Index.razor, Notes/Edit.razor, Notes/_NoteCard.razor
   wwwroot/css/site.css, wwwroot/js/notes.js
@@ -104,7 +104,7 @@ Générateur : HackWebGeneratedRoutes.Views, passé par <Nom>WebHost ; build : w
 
 ## Vues
 
-- **Classes de base** (`HackerOs.AppSdk.Web.Views`) : `HackView` (`Model` non
+- **Classes de base** (`Kazo.Os.AppSdk.Web.Views`) : `HackView` (`Model` non
   typé), `HackView<TModel>` (`Model` typé), `HackLayout` (`Body`). Toutes
   exposent `ViewContext`, `HttpContext`, `Request`, `ViewData`, `ModelState`,
   `Url`, `Layout`. Un composant quelconque peut aussi servir de vue (sans ces
@@ -170,8 +170,8 @@ de l'OS garde les cookies entre la page et l'envoi du formulaire.
 
 ## `wwwroot` du projet
 
-- Le build (`build/HackerOs.Apps.targets`, cible `_HackerOsEmbedWebRoot`)
-  embarque `wwwroot/**` d'un projet qui référence `HackerOs.AppSdk.Web` en
+- Le build (`build/Kazo.Os.Apps.targets`, cible `_HackerOsEmbedWebRoot`)
+  embarque `wwwroot/**` d'un projet qui référence `Kazo.Os.AppSdk.Web` en
   ressources `wwwroot/<chemin>` ; `<HackerOsEmbedWebRoot>false</HackerOsEmbedWebRoot>`
   (ou `true` pour un projet qui ne référence pas la bibliothèque) force le
   choix. Ces fichiers ne sont pas des contenus du projet : ils n'entrent pas
@@ -187,14 +187,14 @@ de l'OS garde les cookies entre la page et l'envoi du formulaire.
 
 ## Tests
 
-- `Tests/HackerOs.AppSdk.Web.Tests` (102) : `Views/RazorViewTests` (table
+- `Tests/Kazo.Os.AppSdk.Web.Tests` (102) : `Views/RazorViewTests` (table
   générée, layout imbriqué, titre, sections, partials, helpers, formulaire valide
   et invalide, jeton en champ et en en-tête, refus, `[IgnoreAntiforgeryToken]`,
   vue typée, partial, `Shared/`, chemin absolu, `@inject`, erreurs, fichiers
   statiques, `304`, `405`, chemins hors `wwwroot`), `Generator/WebRouteGeneratorTests`
   (table des vues et noms de classes du compilateur Razor, `@namespace`,
   `_Imports.razor`).
-- `Tests/HackerOs.Platform.WorkerHost.Tests/MvcSiteTests` : la vue, son layout,
+- `Tests/Kazo.Os.Platform.WorkerHost.Tests/MvcSiteTests` : la vue, son layout,
   le `wwwroot` et le refus d'un `POST` sans jeton par `curl` dans un OS complet,
   sur le fil principal et dans le worker `web`.
 

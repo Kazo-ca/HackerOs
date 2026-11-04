@@ -32,11 +32,11 @@ magasin d'applications de Kazo OS.
 L'écosystème se compose de :
 
 - **Kazo OS**, l'OS lui-même (ce dépôt) ;
-- **le SDK Kazo OS**, les paquets NuGet `HackerOs.*` qui permettent de
+- **le SDK Kazo OS**, les paquets NuGet `Kazo.Os.*` qui permettent de
   construire sur l'OS depuis un autre dépôt ;
-- **le dépôt modèle** [HackerOs-AppTemplate](https://github.com/Kazo-ca/HackerOs-AppTemplate),
+- **le dépôt modèle** [Os-AppTemplate](https://github.com/Kazo-ca/Os-AppTemplate),
   point de départ d'une nouvelle application ;
-- **le catalogue** [HackerOs-AppMarketPlace](https://github.com/Kazo-ca/HackerOs-AppMarketPlace),
+- **le catalogue** [Os-AppMarketPlace](https://github.com/Kazo-ca/Os-AppMarketPlace),
   la liste relue des applications que le Hack Store propose (en cours de
   développement) ;
 - **les applications** elles-mêmes, chacune dans son propre dépôt.
@@ -74,7 +74,7 @@ L'écosystème se compose de :
 | Usage | Pour qui | Description |
 | --- | --- | --- |
 | **En ligne** | Tout le monde | Ouvrir <https://hackos.kazo.ca/>. Kazo OS s'installe comme une application (PWA) et fonctionne ensuite hors ligne. |
-| **Site statique hébergé chez soi** | Organisations, enseignants | Chaque version publie une archive `hackeros-wasm-<version>.zip` dans les [GitHub Releases](https://github.com/Kazo-ca/HackerOs/releases). Elle se dépose sur n'importe quel hébergement statique (GitHub Pages, serveur web). Voir [`github-pages-deployment.md`](dev/github-pages-deployment.md). |
+| **Site statique hébergé chez soi** | Organisations, enseignants | Chaque version publie une archive `hackeros-wasm-<version>.zip` dans les [GitHub Releases](https://github.com/Kazo-ca/Os/releases). Elle se dépose sur n'importe quel hébergement statique (GitHub Pages, serveur web). Voir [`github-pages-deployment.md`](dev/github-pages-deployment.md). |
 | **Avec le serveur Kazo OS** | Organisations, utilisateurs avancés | Le serveur ASP.NET Core optionnel sert l'OS et ajoute les comptes synchronisés entre appareils et le relais vers le vrai réseau. Voir [`server-hosting.md`](dev/server-hosting.md). |
 | **Intégré dans son propre produit** | Développeurs, entreprises | Les paquets NuGet et le modèle `dotnet new hackeros-host` permettent de composer son propre hôte avec ses propres applications. Voir [`building-on-hackeros.md`](framework/building-on-hackeros.md). |
 | **Développer des applications** | Développeurs | Paquets NuGet du SDK, modèles `dotnet new`, dépôt modèle, puis installation au terminal avec `hackpkg`. Voir [`sdk-developer-guide.md`](framework/sdk-developer-guide.md). |
@@ -281,7 +281,7 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
 
 ### Pour les développeurs
 
-- **SDK public sur NuGet** (`HackerOs.*`, version 2.2.2) : API fichier,
+- **SDK public sur NuGet** (`Kazo.Os.*`, version 2.2.2) : API fichier,
   fenêtres, terminal, réseau, tâches de fond, presse-papiers, dialogues,
   composants Blazor. ([`sdk-reference.md`](framework/sdk-reference.md),
   [`sdk-packages.md`](framework/sdk-packages.md))
@@ -366,19 +366,19 @@ dans `main`, le lien mène à sa PR.
 
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
-| Changer d'utilisateur | Ouvrir une autre session sans fermer la première. Reste grisé dans le menu Marche/arrêt par choix de Benoit : une session à la fois, Se déconnecter pour changer de compte. | [0195](dev/adr/0195-start-menu-power-button.md), [0201](dev/adr/0201-switch-user-stays-greyed.md) | [#290](https://github.com/Kazo-ca/HackerOs/issues/290) |
+| Changer d'utilisateur | Ouvrir une autre session sans fermer la première. Reste grisé dans le menu Marche/arrêt par choix de Benoit : une session à la fois, Se déconnecter pour changer de compte. | [0195](dev/adr/0195-start-menu-power-button.md), [0201](dev/adr/0201-switch-user-stays-greyed.md) | [#290](https://github.com/Kazo-ca/Os/issues/290) |
 
 ### Hack Store
 
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
-| Catalogue des applications | Format du catalogue, vérification et publication des applications proposées. | [0188](dev/adr/0188-hack-store-and-app-catalog.md) | [AppMarketPlace #1](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/1) |
+| Catalogue des applications | Format du catalogue, vérification et publication des applications proposées. | [0188](dev/adr/0188-hack-store-and-app-catalog.md) | [AppMarketPlace #1](https://github.com/Kazo-ca/Os-AppMarketPlace/issues/1) |
 
 ### Personnalisation
 
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
-| Vérification des packs de thèmes par le catalogue | La CI du catalogue vérifie les entrées `kind: "theme-pack"` comme l'OS à l'installation. | [0213](dev/adr/0213-theme-packs-build.md) | [AppMarketPlace #4](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/4) |
+| Vérification des packs de thèmes par le catalogue | La CI du catalogue vérifie les entrées `kind: "theme-pack"` comme l'OS à l'installation. | [0213](dev/adr/0213-theme-packs-build.md) | [AppMarketPlace #4](https://github.com/Kazo-ca/Os-AppMarketPlace/issues/4) |
 
 ### Réseau et serveur
 
@@ -399,11 +399,11 @@ par `hackpkg` puis par le Hack Store.
 
 | Application | Description | Dépôt | Issue |
 | --- | --- | --- | --- |
-| Chess | Échecs, basés sur chess.js ; première application prévue du catalogue. | [HackerOs-App-Chess](https://github.com/Kazo-ca/HackerOs-App-Chess) | [#2](https://github.com/Kazo-ca/HackerOs-App-Chess/issues/2), [#3](https://github.com/Kazo-ca/HackerOs-App-Chess/issues/3) |
-| Webamp | Lecteur de musique dans le style de Winamp. | [HackerOs-App-Webamp](https://github.com/Kazo-ca/HackerOs-App-Webamp) | À venir |
-| IRC | Client de discussion IRC (KiwiIRC). | [HackerOs-App-IRC](https://github.com/Kazo-ca/HackerOs-App-IRC) | À venir |
-| EmulatorJS | Émulateur de consoles rétro. | [HackerOs-App-EmulatorJS](https://github.com/Kazo-ca/HackerOs-App-EmulatorJS) | À venir |
-| BoxedWine | Exécuter d'anciens programmes Windows dans l'OS. | [HackerOs-App-BoxedWine](https://github.com/Kazo-ca/HackerOs-App-BoxedWine) | À venir |
+| Chess | Échecs, basés sur chess.js ; première application prévue du catalogue. | [Os-App-Chess](https://github.com/Kazo-ca/Os-App-Chess) | [#2](https://github.com/Kazo-ca/Os-App-Chess/issues/2), [#3](https://github.com/Kazo-ca/Os-App-Chess/issues/3) |
+| Webamp | Lecteur de musique dans le style de Winamp. | [Os-App-Webamp](https://github.com/Kazo-ca/Os-App-Webamp) | À venir |
+| IRC | Client de discussion IRC (KiwiIRC). | [Os-App-IRC](https://github.com/Kazo-ca/Os-App-IRC) | À venir |
+| EmulatorJS | Émulateur de consoles rétro. | [Os-App-EmulatorJS](https://github.com/Kazo-ca/Os-App-EmulatorJS) | À venir |
+| BoxedWine | Exécuter d'anciens programmes Windows dans l'OS. | [Os-App-BoxedWine](https://github.com/Kazo-ca/Os-App-BoxedWine) | À venir |
 
 ## Garder ce document à jour
 

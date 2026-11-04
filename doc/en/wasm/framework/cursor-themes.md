@@ -90,7 +90,7 @@ those keep the device's cursor.
 
 ## API
 
-Package `HackerOs.Theming.Abstractions`:
+Package `Kazo.Os.Theming.Abstractions`:
 
 - `CursorNames`: the list of names (`All`), the Settings preview (`Preview`) and
   the fallbacks (`GetFallback`).
@@ -102,7 +102,7 @@ Package `HackerOs.Theming.Abstractions`:
 - `CursorThemeCatalog`: the built-in themes; `CursorTheme.Resolve` and
   `ResolveAll` apply the fallbacks.
 
-Package `HackerOs.Theming.Blazor`: `CursorThemeSurface`, a component that
+Package `Kazo.Os.Theming.Blazor`: `CursorThemeSurface`, a component that
 renders nothing and that a host places once in its root (`Theme="…"`).
 
 Setting: document `cursors` (`HackSettings.OpenSystemAsync(context, "cursors")`),
@@ -111,8 +111,8 @@ key `theme`.
 ## Built-in themes
 
 The images of Kazo OS Neon and Gothic Crimson are in
-`wasm2/HackerOs/Platform/HackerOs.Theming.Blazor/wwwroot/cursors/<id>/` and are
-drawn by `wasm2/HackerOs/build/tools/generate-cursor-themes.py` (Pillow).
+`wasm2/KazoOs/Platform/Kazo.Os.Theming.Blazor/wwwroot/cursors/<id>/` and are
+drawn by `wasm2/KazoOs/build/tools/generate-cursor-themes.py` (Pillow).
 Changing a drawing or a hot spot means changing the script and
 `CursorThemeCatalog` together; the test
 `Every_built_in_cursor_is_a_shipped_png_whose_hot_spot_is_inside` checks that

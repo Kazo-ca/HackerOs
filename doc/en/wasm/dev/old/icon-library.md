@@ -4,7 +4,7 @@
 
 ## Overview
 
-`HackerOs.AppSdk.Icons` is a shared, dependency-light SDK project that gives every
+`Kazo.Os.AppSdk.Icons` is a shared, dependency-light SDK project that gives every
 app — and the OS shell itself — access to five icon libraries as themeable inline SVG:
 
 | Library | `IconLibrary` value | License | Icons | Style |
@@ -27,18 +27,18 @@ references the `MudBlazor` package.
 
 ## Using an icon in your app
 
-Reference `HackerOs.AppSdk.Icons` from your app's `.csproj` (it has no dependency on
+Reference `Kazo.Os.AppSdk.Icons` from your app's `.csproj` (it has no dependency on
 `App.Abstractions`, `AppSdk`, or MudBlazor, so it never creates a layering violation —
 see the wrapper conventions in [`platform-ui-library.md`](platform-ui-library.md)):
 
 ```xml
-<ProjectReference Include="..\..\..\Shared\HackerOs.AppSdk.Icons\HackerOs.AppSdk.Icons.csproj" />
+<ProjectReference Include="..\..\..\Shared\Kazo.Os.AppSdk.Icons\Kazo.Os.AppSdk.Icons.csproj" />
 ```
 
 Then draw an icon with the `HackerIcon` component, either by name:
 
 ```razor
-@using HackerOs.AppSdk.Icons
+@using Kazo.Os.AppSdk.Icons
 
 <HackerIcon Library="IconLibrary.Bootstrap" Name="house" Size="20" />
 ```
@@ -93,7 +93,7 @@ in the UI.
 
 ## Regenerating the bundled icon data
 
-The JSON resources embedded in `HackerOs.AppSdk.Icons` (`Shared/HackerOs.AppSdk.Icons/
+The JSON resources embedded in `Kazo.Os.AppSdk.Icons` (`Shared/Kazo.Os.AppSdk.Icons/
 Data/*.json`) are generated from the upstream npm packages, not hand-written. To
 refresh them (e.g. after an upstream icon library releases new icons):
 
@@ -105,10 +105,10 @@ npm run extract
 
 This downloads the four npm packages (`bootstrap-icons`, `@fortawesome/fontawesome-
 free`, `lucide-static`, `simple-icons`) and regenerates
-`Shared/HackerOs.AppSdk.Icons/Data/*.json` in place. Review the diff, bump the package
+`Shared/Kazo.Os.AppSdk.Icons/Data/*.json` in place. Review the diff, bump the package
 versions recorded in `Tools/icon-import/package.json` and in ADR
 [0026](../adr/0026-icon-library-support.md)'s license table, and run
-`dotnet test Tests/HackerOs.AppSdk.Icons.Tests` before committing — its tests assert
+`dotnet test Tests/Kazo.Os.AppSdk.Icons.Tests` before committing — its tests assert
 minimum icon counts per library and spot-check well-known icon names, which catches a
 malformed or truncated regeneration.
 
@@ -128,6 +128,6 @@ Each record uses single-letter keys to keep the embedded resource small (see
 
 ## Browsing every icon
 
-`HackerOs.Apps.IconViewer` — the "Icon Viewer" system app — lets you search and filter
+`Kazo.Os.Apps.IconViewer` — the "Icon Viewer" system app — lets you search and filter
 every bundled icon (including Material) and copy a ready-to-paste `<HackerIcon>`
 snippet. See [`apps/icon-viewer.md`](apps/icon-viewer.md).

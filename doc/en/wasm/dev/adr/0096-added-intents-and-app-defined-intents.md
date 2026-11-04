@@ -14,7 +14,7 @@ Accepted on 2026-10-17 (work item `v3/1-adr`, for the work item `v3/4-intents`).
 
 ## Context
 
-`AppIntentDispatcher` (`Platform/HackerOs.Platform.Core/Intents/AppIntentDispatcher.cs:160-169`)
+`AppIntentDispatcher` (`Platform/Kazo.Os.Platform.Core/Intents/AppIntentDispatcher.cs:160-169`)
 handles `LaunchApp`, `OpenFile` and `ExecuteCommand`. Two intents exist but do
 nothing: `RevealFileIntent` (line 166) and `ShowAppSettingsIntent` (line 297,
 which validates the target and answers "sent"). There is no intent to edit a
@@ -65,7 +65,7 @@ directly. `IAppIntentGateway` only exposes `LaunchAsync` and
 - `IAppIntentGateway.OpenUriAsync` and `HackApps.OpenUriAsync` expose it;
   `HackBrowser.OpenAsync` remains, for an app that specifically wants the
   HackerOS browser.
-- New command `xdg-open <path|uri>` in `HackerOs.Commands`: a
+- New command `xdg-open <path|uri>` in `Kazo.Os.Commands`: a
   path gives `OpenFile` (a folder opens in its handler, as on
   Linux), a URI gives `OpenUri`. Exit code 0 if
   the intent is sent, 3 without a handler, 4 if the file does not exist (codes

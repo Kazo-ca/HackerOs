@@ -12,12 +12,12 @@ Completes [ADR 0162](0162-restart-after-a-host-build-change.md) and
 
 ## Decision
 
-1. **`version.json`**: the build of `OS/HackerOs.Ecosystem` writes
+1. **`version.json`**: the build of `OS/Kazo.Os.Ecosystem` writes
    `{ "product": "HackerOS", "version": "<HackerOsVersion>" }` into `obj/` and
    serves it as a static web asset at the root of the site (`/version.json`).
    It follows `build/Versions.props`: nothing to edit by hand, nothing in the
    sources.
-2. **`HostReleaseMonitor`** (`HackerOs.Platform.Blazor`, next to
+2. **`HostReleaseMonitor`** (`Kazo.Os.Platform.Blazor`, next to
    `HostBuildUpdateMonitor`) reads that file every **5 minutes**
    (`DefaultInterval`) through `IHostReleaseProbe`. The browser host
    (`BrowserHostReleaseProbe`) requests it with `?t=<milliseconds>`, so the
@@ -34,7 +34,7 @@ Completes [ADR 0162](0162-restart-after-a-host-build-change.md) and
 
 ## Consequences
 
-- Works for any site serving the PWA (GitHub Pages, `HackerOs.Server`, another
+- Works for any site serving the PWA (GitHub Pages, `Kazo.Os.Server`, another
   static host); a host from another repository without `version.json` only
   gets a 404, so no announcement.
 - A request of a few bytes every 5 minutes per open session.

@@ -7,7 +7,7 @@ Les API destinées aux apps sont dans [`file-operations-api.md`](../framework/fi
 ## Objet
 
 Chantier `rebuild/4-file-explorer` de la phase 4 (ADR 0056 §12, ADR 0058 §1).
-L'explorateur (`Apps/System/HackerOs.Apps.FileExplorer`) atteint la parité avec
+L'explorateur (`Apps/System/Kazo.Os.Apps.FileExplorer`) atteint la parité avec
 le legacy (`src/apps/file-explorer.ts`) et la dépasse :
 
 - **couper, copier, coller** par Ctrl+X, Ctrl+C, Ctrl+V, la barre d'outils et le
@@ -118,15 +118,15 @@ ExplorerFileView ──► FileView (interne)    ── Ctrl+X/C/V, menus ──
 
 | Pièce | Où | Rôle |
 |---|---|---|
-| `HackClipboard`, `HackClipboardFileList`, `HackClipboardFileOperation` | `Shared/HackerOs.AppSdk/Clipboard/` | Façade publique : texte et liste de fichiers (format GNOME `x-special/gnome-copied-files`). |
+| `HackClipboard`, `HackClipboardFileList`, `HackClipboardFileOperation` | `Shared/Kazo.Os.AppSdk/Clipboard/` | Façade publique : texte et liste de fichiers (format GNOME `x-special/gnome-copied-files`). |
 | `IAppClipboardGateway` | idem | Passerelle `IAppExecutionContext.Clipboard` : `clipboard.read` / `clipboard.write`, événement `Changed`. |
-| `SystemClipboard` | `Platform/HackerOs.Platform.Core/Clipboard/` | Presse-papiers de l'OS : une sélection par session, cibles MIME (`text/plain`, `x-special/gnome-copied-files`), vidée à la déconnexion. En mémoire, comme un vrai presse-papiers. Numéro de séquence, origine et partage du texte avec la vraie machine : [`clipboard.md`](clipboard.md) (ADR 0065). |
-| `AppClipboardGateway` | `Platform/HackerOs.Platform.Core/Execution/` | Passerelle de confiance par instance : vérifie la capacité à chaque appel, ne voit que sa session, rejoue `Changed` dans le contexte ambiant de l'app abonnée. |
-| `HackFileOperations` et contrats (ex-`FileTransfer`) | `Shared/HackerOs.AppSdk/IO/HackFileOperations*.cs` | Copie, déplacement, import de fichiers de l'hôte, envoi à la corbeille ; noms Nautilus, conflits, refus d'un dossier dans lui-même, résumé des échecs. Tourne sur l'API `Hack*`, donc avec les droits de l'app. Dans le SDK depuis la 2.0 (ADR 0161 §2) ; `IDialogService.AsFileConflictResolver` (`HackerOs.AppSdk.Blazor.Files`) pose la question de conflit par `hackeros.file-dialogs`. |
-| `FileView` (ajouts) | `Apps/System/HackerOs.Apps.FileExplorer/FileControl/` (dans `Shared/HackerOs.AppSdk.FileView` avant le SDK 2.0, ADR 0161 §1) | Dépôt sur le fond, `DropRequested`, `ClipboardRequested`, `CanPaste`, `CutPaths` (éléments atténués), Ctrl+A. |
+| `SystemClipboard` | `Platform/Kazo.Os.Platform.Core/Clipboard/` | Presse-papiers de l'OS : une sélection par session, cibles MIME (`text/plain`, `x-special/gnome-copied-files`), vidée à la déconnexion. En mémoire, comme un vrai presse-papiers. Numéro de séquence, origine et partage du texte avec la vraie machine : [`clipboard.md`](clipboard.md) (ADR 0065). |
+| `AppClipboardGateway` | `Platform/Kazo.Os.Platform.Core/Execution/` | Passerelle de confiance par instance : vérifie la capacité à chaque appel, ne voit que sa session, rejoue `Changed` dans le contexte ambiant de l'app abonnée. |
+| `HackFileOperations` et contrats (ex-`FileTransfer`) | `Shared/Kazo.Os.AppSdk/IO/HackFileOperations*.cs` | Copie, déplacement, import de fichiers de l'hôte, envoi à la corbeille ; noms Nautilus, conflits, refus d'un dossier dans lui-même, résumé des échecs. Tourne sur l'API `Hack*`, donc avec les droits de l'app. Dans le SDK depuis la 2.0 (ADR 0161 §2) ; `IDialogService.AsFileConflictResolver` (`Kazo.Os.AppSdk.Blazor.Files`) pose la question de conflit par `hackeros.file-dialogs`. |
+| `FileView` (ajouts) | `Apps/System/Kazo.Os.Apps.FileExplorer/FileControl/` (dans `Shared/Kazo.Os.AppSdk.FileView` avant le SDK 2.0, ADR 0161 §1) | Dépôt sur le fond, `DropRequested`, `ClipboardRequested`, `CanPaste`, `CutPaths` (éléments atténués), Ctrl+A. |
 | `FileViewBreadcrumb`, `FileViewDropZone` | idem | Fil d'Ariane cliquable et déposable ; zone de dépôt générique pour le chrome de l'hôte. |
 | `FileView.razor.js` | idem | Écouteurs natifs `dragover` / `drop` : curseur déplacer/copier, surbrillance de la cible, capture du contenu et des `File` de l'hôte. Depuis l'ADR 0065, Ctrl+V suit l'événement `paste` (`attachPasteTarget`) : des fichiers copiés sur la vraie machine et collés dans la vue sont importés comme un dépôt. |
-| `ExplorerFileDialogs` | `Apps/System/HackerOs.Apps.FileExplorer/` | Fenêtre « Replace / Keep both / Skip » (et « Ouvrir avec », « Propriétés ») du contrat `hackeros.file-dialogs`, en markup natif depuis `desk/3` ; l'ancien `FileConflictDialog` MudBlazor est retiré. |
+| `ExplorerFileDialogs` | `Apps/System/Kazo.Os.Apps.FileExplorer/` | Fenêtre « Replace / Keep both / Skip » (et « Ouvrir avec », « Propriétés ») du contrat `hackeros.file-dialogs`, en markup natif depuis `desk/3` ; l'ancien `FileConflictDialog` MudBlazor est retiré. |
 
 ## Usage et API
 
@@ -214,7 +214,7 @@ l'app est traduit par `Resources/AppManifest.fr.resx`.
 - **Format GNOME.** La liste est stockée en `x-special/gnome-copied-files` et en
   `text/plain` : une app qui lit du texte voit les chemins (ADR 0056 §12).
 - **`HackFileOperations` dans le SDK** (ADR 0161 §2, ex-`FileTransfer` de
-  `HackerOs.AppSdk.FileView`). Toute app, tout fournisseur du contrôle de
+  `Kazo.Os.AppSdk.FileView`). Toute app, tout fournisseur du contrôle de
   fichiers et toute commande reprennent les mêmes règles ; le code n'utilise que
   l'API `Hack*`, donc les capacités et les droits de l'app.
 - **`HackDirectory.CopyAsync`.** .NET n'a pas de `Directory.Copy` ; l'ADR 0058
@@ -237,19 +237,19 @@ l'app est traduit par `Resources/AppManifest.fr.resx`.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Execution/AppClipboardGatewayTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/Execution/AppClipboardGatewayTests.cs` :
   partage entre apps d'une session, isolement des sessions, capacités,
   `Changed`, vidage à la déconnexion, façade `HackClipboard`, format GNOME.
-- `Tests/HackerOs.AppSdk.Tests/IO/HackFileOperationsTests.cs` : noms de copie,
+- `Tests/Kazo.Os.AppSdk.Tests/IO/HackFileOperationsTests.cs` : noms de copie,
   copie récursive, dossier dans lui-même, déplacement sur place, choix de
   conflit, « Apply to all », échec isolé, import, corbeille.
-- `Tests/HackerOs.AppSdk.Blazor.Tests/HackFileOperationDialogsTests.cs` : question
+- `Tests/Kazo.Os.AppSdk.Blazor.Tests/HackFileOperationDialogsTests.cs` : question
   de conflit posée par le dialogue du fournisseur.
-- `Tests/HackerOs.Apps.FileExplorer.FileControl.Tests/FileViewDropAndClipboardTests.cs` : dépôt
+- `Tests/Kazo.Os.Apps.FileExplorer.FileControl.Tests/FileViewDropAndClipboardTests.cs` : dépôt
   sur le fond, remise à `DropRequested`, fichiers de l'hôte, raccourcis,
   éléments coupés, fil d'Ariane.
-- `Tests/HackerOs.AppSdk.Tests/IO/HackDirectoryTests.cs` : `HackDirectory.CopyAsync`.
-- `Tests/HackerOs.Apps.FileExplorer.Tests/FileExplorerLaunchArgumentsTests.cs` : dossier, `--select`, parent déduit, arguments ignorés (`v3/4`).
+- `Tests/Kazo.Os.AppSdk.Tests/IO/HackDirectoryTests.cs` : `HackDirectory.CopyAsync`.
+- `Tests/Kazo.Os.Apps.FileExplorer.Tests/FileExplorerLaunchArgumentsTests.cs` : dossier, `--select`, parent déduit, arguments ignorés (`v3/4`).
 
 ## Liste des tâches du chantier `rebuild/4-file-explorer`
 
@@ -307,7 +307,7 @@ ensuite, voir la section suivante.
   `FileViewEmptyStateTests`.
 - [x] `explorer/2-stray-drop` (§3) : un dépôt qui tombe hors de toute zone de dépôt ne fait rien, dans
   toutes les fenêtres (fenêtres détachées comprises) : le navigateur n'ouvre plus le fichier. Garde
-  installée par l'initialiseur JS de `HackerOs.Platform.Blazor` (`installStrayDropGuard`) : écouteurs
+  installée par l'initialiseur JS de `Kazo.Os.Platform.Blazor` (`installStrayDropGuard`) : écouteurs
   `dragover` et `drop` sur `window`, en phase de bouillonnement, qui n'agissent que si aucune zone n'a
   annulé l'évènement (curseur « interdit », action par défaut annulée). Les champs de texte gardent le
   dépôt de texte du navigateur.

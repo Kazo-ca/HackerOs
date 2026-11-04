@@ -218,7 +218,7 @@ The change applies at the next sign-in, which the panel displays.
 `sudo localectl set-locale` hint. The app declares for this
 `filesystem.user-home.read` and `filesystem.user-home.write`. There is no
 "Sign out" button: the SDK does not expose sign-out to apps.
-Tests: `Tests/HackerOs.Apps.Settings.Tests/LanguagePanelTests.cs`.
+Tests: `Tests/Kazo.Os.Apps.Settings.Tests/LanguagePanelTests.cs`.
 
 ## Migration
 
@@ -258,7 +258,7 @@ nor sign-in. The IndexedDB schema does not change.
 
 ## Contract tests
 
-In `Tests/HackerOs.Platform.Core.Tests/Settings/`:
+In `Tests/Kazo.Os.Platform.Core.Tests/Settings/`:
 
 - `LayeredConfigResolverTests`: layers, locks, tolerant parsing, warning
   text, reserved group;

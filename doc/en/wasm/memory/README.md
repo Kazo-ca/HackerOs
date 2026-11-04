@@ -9,8 +9,8 @@ at the end of each series or when a convention changes.
 
 ## Where the project stands
 
-- **Active code**: `wasm2/HackerOs/` (simulated OS in Blazor WebAssembly, .NET 10,
-  solution `HackerOs.sln`). `src/` is the old version, kept as a
+- **Active code**: `wasm2/KazoOs/` (simulated OS in Blazor WebAssembly, .NET 10,
+  solution `Kazo.Os.sln`). `src/` is the old version, kept as a
   reference.
 - **Version**: Kazo OS and the SDK move to **2.2.2** (`build/Versions.props`),
   prepared on 2026-11-01 in the `release/2.2.2` PR to `main`; it is published
@@ -24,9 +24,9 @@ at the end of each series or when a convention changes.
   wait for to reach the Hack Store: ADRs 0219 (authors' signing), 0221 (every
   static resource in the package, scoped CSS) and 0222 (satellites of installed
   apps). The catalog must ask for the package's `manifest.json` (issue
-  Kazo-ca/HackerOs-AppMarketPlace#6). 2.2.0 (2026-10-31) folded the 3020 API
+  Kazo-ca/Os-AppMarketPlace#6). 2.2.0 (2026-10-31) folded the 3020 API
   lines added since 2.1.0 (Hack Store, `hackeros-solution` template, themes…). SDK 2.0.0 removed
-  `HackerOs.AppSdk.FileView` and refuses 1.x apps
+  `Kazo.Os.AppSdk.FileView` and refuses 1.x apps
   ([ADR 0161](../dev/adr/0161-sdk-2-0-implementation-adjustments.md)).
   2.1.0 (2026-10-26) is the first version released automatically (tag,
   GitHub Release, nuget.org; ADR 0173); it folded every addition since 2.0
@@ -40,7 +40,7 @@ at the end of each series or when a convention changes.
 | Web phase | ASP.Hack (MVC, `.razor`/`.cshtml` views), Blazor sites, static sites, browser HTML rendering, detached windows | [`asp-hack-plan.md`](../dev/plans/asp-hack-plan.md) |
 | V3 (`v3/1` to `v3/16`) | End of the wasm v3 migration, SDK 1.0 frozen, trimmed publishing | [`wasm-v3-final-status.md`](../dev/plans/wasm-v3-final-status.md) |
 | V3.1 | Window geometry and title, SDK 1.1 | [`v3-1-series-plan.md`](../dev/plans/v3-1-series-plan.md) |
-| EXEC (`exec/*`) | Process limits, OOM killer, remote gateways, "not responding" box, `HackBackground`, OS served by `HackerOs.Server`, cross-origin isolation, SDK 1.2 | [`execution-followups-plan.md`](../dev/plans/execution-followups-plan.md) |
+| EXEC (`exec/*`) | Process limits, OOM killer, remote gateways, "not responding" box, `HackBackground`, OS served by `Kazo.Os.Server`, cross-origin isolation, SDK 1.2 | [`execution-followups-plan.md`](../dev/plans/execution-followups-plan.md) |
 | DESK (`desk/0` to `desk/6`) | OS-provided file control, central context menu, app menu entries, desktop, SDK 2.0 | [`desktop-and-context-menu-plan.md`](../dev/plans/desktop-and-context-menu-plan.md) |
 | Multi-monitor (`multi-monitor/0` to `multi-monitor/9`) | Extended desktop: one screen per display surface, `DisplayId` and work area per screen, windows moved through a portal, screen service (Chrome/Edge, fallback elsewhere), one taskbar per screen, "Other screen" menus and identification veil, Settings ▸ Screens, drag between screens; no change to the app SDK | [`multi-monitor-plan.md`](../dev/plans/multi-monitor-plan.md) |
 | File Explorer (`explorer/1` to `explorer/9`) | Resizable sidebar, empty state inside the list, drag out to the computer, shortcuts, tracked network drives, errors in a `MessageBox`; the `.zip` opened as a folder is done in `todo/base` (`todo/10-zip-as-folder`, issue #241) | [ADR 0185](../dev/adr/0185-file-explorer-improvements.md), [`file-explorer.md`](../dev/file-explorer.md) |
@@ -85,7 +85,7 @@ at the end of each series or when a convention changes.
   reserved): Hack Store work item 1 done, `hackeros-solution`
   template and catalog publishing workflow (ADR 0207,
   [`app-repository.md`](../framework/app-repository.md), issue #246). The
-  `HackerOs-AppTemplate` repository will only be regenerated with a submodule
+  `Os-AppTemplate` repository will only be regenerated with a submodule
   on the release that contains this template, 2.2.0 (draft PR in that repository).
   Image wallpapers done too ([ADR 0202](../dev/adr/0202-desktop-wallpaper-images.md),
   issue #254, [`wallpapers.md`](../dev/wallpapers.md)).
@@ -104,7 +104,7 @@ at the end of each series or when a convention changes.
   Benoit). See [`app-installation.md`](../dev/app-installation.md).
 - **Hack Store 5, the app** (ADR 0212, `TODO` issue #249, series `todo/base`,
   branch `todo/5-hackstore-app`): system app `org.hackeros.store`
-  (`HackerOs.Apps.Store`), `catalog:<name>/<appId>@<version>` source,
+  (`Kazo.Os.Apps.Store`), `catalog:<name>/<appId>@<version>` source,
   `hackpkg install <appId>`, `AppUpdateMonitor` and notification, default pin
   (`defaultPinsApplied` of `start-menu.json`). Benoit's answers (2026-10-31):
   Q1 A restart without administrator, Q2 A `catalog:official/<appId>` source,

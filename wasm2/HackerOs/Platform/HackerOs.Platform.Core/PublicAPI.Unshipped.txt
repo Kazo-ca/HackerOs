@@ -1,2 +1,0 @@
-#nullable enable
-HackerOs.Platform.Core.Power.SystemPowerService.FactoryResetFromSignInAsync() -> System.Threading.Tasks.Task!

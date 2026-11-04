@@ -252,28 +252,28 @@ Décision : [ADR 0120](adr/0120-passwd-and-administrator-password-reset.md).
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Settings/SensitiveSettingsTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/Settings/SensitiveSettingsTests.cs` :
   fichier privé `0600`, masquage d'une valeur système, valeur utilisateur
   prioritaire, déplacement d'une clé mal placée, `Restricted` refusée côté
   utilisateur, secret dans le trousseau, avertissements du résolveur.
-- `Tests/HackerOs.Platform.Core.Tests/Keyring/UserKeyringServiceTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/Keyring/UserKeyringServiceTests.cs` :
   création et modes, reconnexion, mise à l'écart sur un autre mot de passe,
   changement de mot de passe, mise à l'écart par l'administrateur, utilisateur
   sans mot de passe, confinement par app et `keyring.read-all`, chiffrement.
-- `Tests/HackerOs.Platform.Core.Tests/Sessions/PasskeyServiceTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/Sessions/PasskeyServiceTests.cs` :
   emplacement PRF, ouverture par clé d'accès, clé sans PRF, changement de mot
   de passe qui garde les emplacements, migration du format 1.
-- `Tests/HackerOs.Platform.Core.Tests/FileSystem/FileSystemAuditTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/FileSystem/FileSystemAuditTests.cs` :
   politique, format aller-retour, écritures acceptées et refusées dans
   `audit.log` (`0600`), `uid`/`auid` sous `sudo`.
-- `Tests/HackerOs.Commands.Tests/CoreCommandsTests.cs` : filtres d'`ausearch`.
-- `Tests/HackerOs.Platform.Core.Tests/Sessions/LocalPasswordServiceTests.cs` :
+- `Tests/Kazo.Os.Commands.Tests/CoreCommandsTests.cs` : filtres d'`ausearch`.
+- `Tests/Kazo.Os.Platform.Core.Tests/Sessions/LocalPasswordServiceTests.cs` :
   changement avec trousseau conservé, mauvais mot de passe courant, règles,
   réinitialisation qui met le trousseau de côté, retrait refusé au dernier
   administrateur, passerelle (`users.manage` et administrateur).
-- `Tests/HackerOs.Commands.Wave5.Tests/PasswdCommandTests.cs` : invites écho
+- `Tests/Kazo.Os.Commands.Wave5.Tests/PasswdCommandTests.cs` : invites écho
   coupé, confirmation différente, `sudo passwd NOM`, `-d`, `-S`.
-- `Tests/HackerOs.UI.E2E.Tests/PasswdTerminalTests.cs` : `passwd` dans le vrai
+- `Tests/Kazo.Os.UI.E2E.Tests/PasswdTerminalTests.cs` : `passwd` dans le vrai
   terminal n'affiche rien de ce qui est tapé, puis seule la nouvelle valeur
   ouvre la session.
 

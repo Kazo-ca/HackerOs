@@ -1,0 +1,42 @@
+#nullable enable
+Kazo.Os.Apps.Calculator.CalculatorApp
+Kazo.Os.Apps.Calculator.CalculatorApp.CalculatorApp() -> void
+Kazo.Os.Apps.Calculator.CalculatorEngine
+Kazo.Os.Apps.Calculator.CalculatorEngine.AllClear() -> void
+Kazo.Os.Apps.Calculator.CalculatorEngine.Calculate() -> void
+Kazo.Os.Apps.Calculator.CalculatorEngine.CalculatorEngine() -> void
+Kazo.Os.Apps.Calculator.CalculatorEngine.Clear() -> void
+Kazo.Os.Apps.Calculator.CalculatorEngine.CurrentValue.get -> string!
+Kazo.Os.Apps.Calculator.CalculatorEngine.HandleEquals() -> void
+Kazo.Os.Apps.Calculator.CalculatorEngine.HandleOperator(string! nextOperator) -> void
+Kazo.Os.Apps.Calculator.CalculatorEngine.InputDecimal() -> void
+Kazo.Os.Apps.Calculator.CalculatorEngine.InputDigit(string! digit) -> void
+Kazo.Os.Apps.Calculator.CalculatorEngine.MemoryAdd() -> void
+Kazo.Os.Apps.Calculator.CalculatorEngine.MemoryClear() -> void
+Kazo.Os.Apps.Calculator.CalculatorEngine.MemoryRecall() -> void
+Kazo.Os.Apps.Calculator.CalculatorEngine.MemorySubtract() -> void
+Kazo.Os.Apps.Calculator.CalculatorEngine.MemoryValue.get -> double
+Kazo.Os.Apps.Calculator.CalculatorEngine.Negate() -> void
+Kazo.Os.Apps.Calculator.CalculatorEngine.Operator.get -> string!
+Kazo.Os.Apps.Calculator.CalculatorEngine.Percentage() -> void
+Kazo.Os.Apps.Calculator.CalculatorEngine.PreviousValue.get -> string!
+Kazo.Os.Apps.Calculator.CalculatorEngine.Square() -> void
+Kazo.Os.Apps.Calculator.CalculatorEngine.SquareRoot() -> void
+Kazo.Os.Apps.Calculator.CalculatorEngine.WaitingForOperand.get -> bool
+Kazo.Os.Apps.Calculator.CalculatorWindow
+Kazo.Os.Apps.Calculator.CalculatorWindow.CalculatorWindow() -> void
+Kazo.Os.Apps.Calculator._Imports
+Kazo.Os.Apps.Calculator._Imports.Execute() -> void
+Kazo.Os.Apps.Calculator._Imports._Imports() -> void
+override Kazo.Os.Apps.Calculator.CalculatorApp.Assets.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AssetManifest!>!
+override Kazo.Os.Apps.Calculator.CalculatorApp.Description.get -> string!
+override Kazo.Os.Apps.Calculator.CalculatorApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Apps.Calculator.CalculatorApp.Icons.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Apps.Calculator.CalculatorApp.Id.get -> string!
+override Kazo.Os.Apps.Calculator.CalculatorApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Apps.Calculator.CalculatorApp.MobileEntryPoint.get -> System.Type?
+override Kazo.Os.Apps.Calculator.CalculatorApp.Name.get -> string!
+override Kazo.Os.Apps.Calculator.CalculatorApp.PublisherId.get -> string!
+override Kazo.Os.Apps.Calculator.CalculatorApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+static Kazo.Os.Apps.Calculator.CalculatorEngine.FormatResult(double val) -> string!
+~override Kazo.Os.Apps.Calculator.CalculatorWindow.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

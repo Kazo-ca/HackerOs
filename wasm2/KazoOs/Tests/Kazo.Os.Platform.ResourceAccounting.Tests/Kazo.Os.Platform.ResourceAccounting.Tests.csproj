@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <!-- The overhead and measurement tests time real code: with tiered compilation, methods keep being
+         recompiled in the background between runs, which made one run of the same scenario vary
+         threefold (CpuAccountingOverheadTests, pitfalls.md section 4). Fully optimized from the
+         first call, the timings are stable. -->
+    <TieredCompilation>false</TieredCompilation>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="10.1.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="4.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Platform\Kazo.Os.Platform.ResourceAccounting\Kazo.Os.Platform.ResourceAccounting.csproj" />
+    <ProjectReference Include="..\Kazo.Os.Tests.Support\Kazo.Os.Tests.Support.csproj" />
+    <!-- Section 5.1 of the execution-isolation plan: /proc/<pid>/stat and status measured on real
+         apps of each family, without changing their code (window, command, service). -->
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.Calculator\Kazo.Os.Apps.Calculator.csproj" />
+    <ProjectReference Include="..\..\Apps\Commands\Kazo.Os.Commands\Kazo.Os.Commands.csproj" />
+    <ProjectReference Include="..\..\Apps\Samples\Kazo.Os.Samples.ServiceApp\Kazo.Os.Samples.ServiceApp.csproj" />
+  </ItemGroup>
+
+</Project>

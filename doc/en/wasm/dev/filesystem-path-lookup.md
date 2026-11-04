@@ -59,15 +59,15 @@ FileSystemService.WriteAsync(path)
 
 ## Tests
 
-- `Tests/HackerOs.Infrastructure.Browser.Tests/IndexedDbFileSystemReaderTests.cs`:
+- `Tests/Kazo.Os.Infrastructure.Browser.Tests/IndexedDbFileSystemReaderTests.cs`:
   a single `resolvePath` transaction for a deep path, missing name, partial
   list, orphan link, disk count.
-- `Tests/HackerOs.Infrastructure.Browser.Tests/IndexedDbFileSystemProviderTests.cs`:
+- `Tests/Kazo.Os.Infrastructure.Browser.Tests/IndexedDbFileSystemProviderTests.cs`:
   provider scenarios adapted to the one-transaction walk.
-- `Tests/HackerOs.Platform.Core.Tests/FileSystem/FileSystemPathResolverTests.cs`:
+- `Tests/Kazo.Os.Platform.Core.Tests/FileSystem/FileSystemPathResolverTests.cs`:
   one-request walk, missing first component, traverse permission and restart
   on a link, path crossing a mount.
-- The E2E suites (`HackerOs.E2E.Tests`, `HackerOs.UI.E2E.Tests`) exercise
+- The E2E suites (`Kazo.Os.E2E.Tests`, `Kazo.Os.UI.E2E.Tests`) exercise
   `resolvePath` in a real browser on every startup.
 - Side effect on the UI tests: the faster filesystem revealed a race in
   `E2ESupport.SelectFileExplorerEntryAsync` (the click on a row arrived while

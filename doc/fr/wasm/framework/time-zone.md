@@ -28,7 +28,7 @@ utilisateur ; l'horloge suit tout de suite.
 ## Dans une app
 
 ```csharp
-using HackerOs.AppSdk.Globalization;
+using Kazo.Os.AppSdk.Globalization;
 
 TimeZoneInfo zone = AppContext.TimeZone;                // ou HackTimeZone.Current
 DateTimeOffset now = HackTimeZone.Now;                  // heure de l'OS dans ce fuseau

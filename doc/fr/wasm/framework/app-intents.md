@@ -175,17 +175,17 @@ donnent 4 et la liste des candidates.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Intents/AppIntentDispatcherTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/Intents/AppIntentDispatcherTests.cs` :
   chaque intent et chaque code d'erreur, arguments et `Intent` reçus par l'app
   lancée, choix retenu dans `intents.config`, remise à une instance ouverte
   par `IntentReceived`, traduction par `AppIntentGateway`.
-- `Tests/HackerOs.Commands.Tests/XdgOpenCommandTests.cs` et le scénario
+- `Tests/Kazo.Os.Commands.Tests/XdgOpenCommandTests.cs` et le scénario
   `xdg-open` de `CommandParityTests` (worker et fil principal).
-- `Tests/HackerOs.Apps.FileExplorer.Tests/FileExplorerLaunchArgumentsTests.cs`,
-  `Tests/HackerOs.Apps.Settings.Tests/SettingsWindowTests.cs` (`--app=`).
-- `Tests/HackerOs.Platform.Blazor.Tests/DialogCoordinatorTests.cs` (sélecteur
-  d'apps), `Tests/HackerOs.AppSdk.Tests/Apps/HackAppsIntentTests.cs` (façades),
-  `Tests/HackerOs.Platform.WorkerHost.Tests/WireCodecIntentTests.cs` (codec).
+- `Tests/Kazo.Os.Apps.FileExplorer.Tests/FileExplorerLaunchArgumentsTests.cs`,
+  `Tests/Kazo.Os.Apps.Settings.Tests/SettingsWindowTests.cs` (`--app=`).
+- `Tests/Kazo.Os.Platform.Blazor.Tests/DialogCoordinatorTests.cs` (sélecteur
+  d'apps), `Tests/Kazo.Os.AppSdk.Tests/Apps/HackAppsIntentTests.cs` (façades),
+  `Tests/Kazo.Os.Platform.WorkerHost.Tests/WireCodecIntentTests.cs` (codec).
 
 ## Tâches
 

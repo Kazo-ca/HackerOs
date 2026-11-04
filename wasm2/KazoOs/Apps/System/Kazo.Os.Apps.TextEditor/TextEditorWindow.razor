@@ -1,0 +1,946 @@
+@using Kazo.Os.App.Abstractions
+@using Kazo.Os.AppSdk.Blazor
+@using Kazo.Os.Simulation.Abstractions.FileSystem
+@using Kazo.Os.Simulation.Abstractions.Gateways
+@using Kazo.Os.AppSdk
+@using Kazo.Os.AppSdk.Diagnostics
+@using Kazo.Os.AppSdk.IO
+@using Kazo.Os.AppSdk.Globalization
+@using Microsoft.Extensions.Localization
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.JSInterop
+@using MudBlazor
+@inherits WindowAppBase
+@implements IAsyncDisposable
+@inject MudBlazor.IDialogService MudDialogService
+@inject IJSRuntime JavaScript
+
+<div class="editor-container" @ref="_editorContainerRef" @onkeydown="HandleGlobalKeyDownAsync" tabindex="0">
+    <!-- Menu Bar -->
+    <nav class="editor-menubar" aria-label="@L["Menu.AriaLabel"]">
+        <div class="menu-group">
+            <span class="menu-label">@L["Menu.File"]</span>
+            <div class="menu-dropdown">
+                <button class="menu-item" id="btn-new" @onclick="NewDocumentAsync">@L["Menu.New"]</button>
+                <button class="menu-item" id="btn-open" @onclick="OpenFileAsync">@L["Menu.Open"]</button>
+                <button class="menu-item" id="btn-save" @onclick="SaveAsync" disabled="@(!_doc.IsDirty)">@L["Menu.Save"]</button>
+                <button class="menu-item" id="btn-save-as" @onclick="SaveAsAsync">@L["Menu.SaveAs"]</button>
+            </div>
+        </div>
+        <div class="menu-group">
+            <span class="menu-label">@L["Menu.Edit"]</span>
+            <div class="menu-dropdown">
+                <button class="menu-item" id="btn-find" @onclick="ToggleFindBar">@L["Menu.Find"]</button>
+                <button class="menu-item" id="btn-replace" @onclick="ToggleReplacePanel">@L["Menu.Replace"]</button>
+            </div>
+        </div>
+        <div class="editor-title-display">
+            @_doc.GetWindowTitle()
+            @if (_doc.LoadState == TextEditorLoadState.Error)
+            {
+                <span class="title-error"> ⚠</span>
+            }
+        </div>
+    </nav>
+
+    <!-- Find / Replace panel (P2-TEXT-006, ADR 0058 §3) -->
+    @if (_showFindBar)
+    {
+        <div class="find-panel @(_showReplace ? "find-panel--replace" : null)" role="search" aria-label="@(_showReplace ? L["Find.ReplaceAriaLabel"] : L["Find.AriaLabel"])">
+            <div class="find-bar">
+                <button class="find-expand-btn"
+                        id="btn-toggle-replace"
+                        @onclick="ToggleReplaceRow"
+                        aria-expanded="@(_showReplace ? "true" : "false")"
+                        title="@L["Find.ToggleReplace"]">@(_showReplace ? "▾" : "▸")</button>
+                <input id="find-input"
+                       type="text"
+                       class="find-input"
+                       placeholder="@L["Find.Placeholder"]"
+                       value="@_findQuery"
+                       @ref="_findInputRef"
+                       @oninput="HandleFindQueryChangedAsync"
+                       @onkeydown="HandleFindKeyDown"
+                       aria-label="@L["Find.InputAriaLabel"]" />
+                <button class="find-option-btn @(_findOptions.MatchCase ? "find-option-btn--on" : null)"
+                        id="btn-match-case"
+                        @onclick="ToggleMatchCaseAsync"
+                        aria-pressed="@(_findOptions.MatchCase ? "true" : "false")"
+                        title="@L["Find.MatchCase"]">Aa</button>
+                <button class="find-option-btn @(_findOptions.WholeWord ? "find-option-btn--on" : null)"
+                        id="btn-whole-word"
+                        @onclick="ToggleWholeWordAsync"
+                        aria-pressed="@(_findOptions.WholeWord ? "true" : "false")"
+                        title="@L["Find.WholeWord"]">ab|</button>
+                <span class="find-match-count" id="find-match-count">@FindMatchSummary</span>
+                <button class="find-nav-btn" id="btn-find-prev" @onclick="FindPrev" title="@L["Find.Previous"]">↑</button>
+                <button class="find-nav-btn" id="btn-find-next" @onclick="FindNext" title="@L["Find.Next"]">↓</button>
+                <button class="find-close-btn" id="btn-find-close" @onclick="CloseFindBar" aria-label="@L["Find.Close"]">✕</button>
+            </div>
+            @if (_showReplace)
+            {
+                <div class="replace-bar">
+                    <input id="replace-input"
+                           type="text"
+                           class="find-input"
+                           placeholder="@L["Replace.Placeholder"]"
+                           value="@_replaceText"
+                           @ref="_replaceInputRef"
+                           @oninput="HandleReplaceTextChanged"
+                           @onkeydown="HandleReplaceKeyDown"
+                           aria-label="@L["Replace.AriaLabel"]" />
+                    <button class="replace-btn" id="btn-replace-one" @onclick="ReplaceAsync" disabled="@(!CanReplace)" title="@L["Replace.Tooltip"]">@L["Replace.Button"]</button>
+                    <button class="replace-btn" id="btn-replace-all" @onclick="ReplaceAllAsync" disabled="@(!CanReplace)" title="@L["Replace.AllTooltip"]">@L["Replace.AllButton"]</button>
+                    @if (_replaceSummary is not null)
+                    {
+                        <span class="replace-summary" id="replace-summary" role="status">@_replaceSummary</span>
+                    }
+                </div>
+            }
+        </div>
+    }
+
+    <!-- Loading / Error Overlay -->
+    @if (_doc.LoadState == TextEditorLoadState.Loading)
+    {
+        <div class="overlay-state" role="status">@L["Overlay.Loading"]</div>
+    }
+    else if (_doc.LoadState == TextEditorLoadState.Error)
+    {
+        <div class="overlay-error" role="alert">
+            <span>@_doc.ErrorMessage</span>
+            <button class="retry-btn" id="btn-retry" @onclick="ReloadCurrentFileAsync">@L["Overlay.Retry"]</button>
+        </div>
+    }
+    else
+    {
+        <!-- Text Area (P2-TEXT-002, P2-TEXT-003) -->
+        <textarea id="editor-textarea"
+                  class="editor-textarea"
+                  aria-label="@L["Editor.AriaLabel"]"
+                  spellcheck="false"
+                  value="@_doc.Content"
+                  @oninput="HandleTextInput"
+                  @ref="_textAreaRef"
+                  disabled="@(_doc.LoadState == TextEditorLoadState.Loading)">
+        </textarea>
+    }
+
+    <!-- Status Bar -->
+    <div class="editor-statusbar" aria-label="@L["Status.AriaLabel"]">
+        <span class="status-path">@(_doc.Path?.ToString() ?? L["Status.NewDocument"])</span>
+        <span class="status-sep">|</span>
+        <span class="status-media">@_doc.MediaType</span>
+        @if (_conflictDetected)
+        {
+            <span class="status-conflict" role="alert">@L["Status.Conflict"]</span>
+        }
+        @if (_recoveryNotice is not null)
+        {
+            <span class="status-recovered" role="status">↺ @_recoveryNotice</span>
+        }
+    </div>
+
+    <!-- Dirty-close Confirmation Dialog (rendered inline via Mud) -->
+</div>
+
+@code {
+    // Replaced at initialization by a document reading the window's texts (ADR 0104).
+    private TextEditorDocument _doc = new();
+    private IStringLocalizer<Strings>? _localizer;
+
+    /// <summary>The Text Editor's texts in its own process's language (ADR 0104).</summary>
+    private IStringLocalizer<Strings> L => _localizer ??= AppContext.GetLocalizer<Strings>();
+    private ElementReference _editorContainerRef;
+    private ElementReference _textAreaRef;
+    private ElementReference _findInputRef;
+    private ElementReference _replaceInputRef;
+    private bool _showFindBar = false;
+    private bool _showReplace = false;
+    private string _findQuery = string.Empty;
+    private int _findIndex = -1;
+    private TextEditorFindOptions _findOptions;
+    private string _replaceText = string.Empty;
+    private string? _replaceSummary;
+    // Set when the panel opens (or switches mode) so the right input is focused after render.
+    private bool _focusFindPending;
+    private bool _focusReplacePending;
+    private bool _conflictDetected = false;
+    private IJSObjectReference? _module;
+
+    // The filesystem gateway used for the current document. Defaults to the app's
+    // capability-scoped gateway (home directory only). When the user picks a file or
+    // destination outside that scope via the Open/Save dialogs, this is replaced with
+    // a gateway carrying the handle issued for that specific resource, so subsequent
+    // reads/writes to the same path stay authorized (P2-TEXT-003).
+    private IAppFileSystemGateway _fileSystem = default!;
+
+    /// <summary>
+    /// Optional initial file path. When supplied by the window host (e.g. via an
+    /// open/edit file intent), the editor loads that file immediately on startup (P2-TEXT-002).
+    /// </summary>
+    [Parameter]
+    public string? LaunchFilePath { get; set; }
+
+    // Supported editable extensions (P2-TEXT-001 MIME review).
+    private static readonly IReadOnlySet<string> EditableExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+    {
+        ".txt", ".log", ".conf", ".json", ".md"
+    };
+
+    // Max file size for text editor: 512 KiB (P2-TEXT-002)
+    private const int MaxTextFileSizeBytes = 512 * 1024;
+
+    // ──────────────────────────── Blazor lifecycle ────────────────────────────────
+
+    protected override async Task OnAppInitializedAsync()
+    {
+        _doc = new TextEditorDocument(L);
+        _fileSystem = AppContext.FileSystem;
+        // ADR 0117 §4: "notes.txt — Text Editor", named before the window is first shown.
+        await SetWindowTitleAsync(DocumentWindowTitle);
+
+        // Accept the file to open (P2-TEXT-002): an explicit host parameter, otherwise the first
+        // launch argument, which is how an open-file intent (File Explorer double-click, `open`)
+        // hands the path over. Loading it sets the document path, so Save writes back in place.
+        VirtualPath? launchFile = !string.IsNullOrWhiteSpace(LaunchFilePath) ? VirtualPath.Parse(LaunchFilePath) : LaunchFile;
+        if (launchFile is { } path)
+        {
+            await LoadFileAsync(path);
+        }
+        else
+        {
+            await RestoreRecoveryDraftAsync();
+        }
+    }
+
+    // ──────────────────────────── Graceful stop (ADR 0069) ─────────────────────────
+
+    // Shown in the status bar after a recovery draft was restored.
+    private string? _recoveryNotice;
+
+    /// <summary>
+    /// When the OS asks the editor to stop (logout, kill, End task) with unsaved changes, the text is
+    /// kept as a recovery draft instead of being lost with the window; the next plain start offers it
+    /// back. A window the user closes asks about unsaved changes instead and never gets here.
+    /// </summary>
+    protected override Task OnAppStopRequestedAsync(HackStopRequestedEventArgs e) =>
+        _doc.IsDirty
+            // Not the process token: it is cancelled right after this request, and the draft must land.
+            ? HackRecoveryDraft.Open().SaveAsync(_doc.Content, _doc.Path?.Value, CancellationToken.None)
+            : Task.CompletedTask;
+
+    /// <summary>Restores the draft a stopped editor left, as a new unsaved buffer, and removes it.</summary>
+    private async Task RestoreRecoveryDraftAsync()
+    {
+        try
+        {
+            if (await HackRecoveryDraft.Open().TakeAsync(AppContext.CancellationToken) is { } draft)
+            {
+                _doc.RestoreDraft(draft.Content, draft.OriginalPath);
+                _recoveryNotice = draft.OriginalPath is null
+                    ? L["Recovery.Untitled"]
+                    : L["Recovery.File", draft.OriginalPath];
+            }
+        }
+        catch (Exception exception) when (exception is HackIOException or HackUnauthorizedAccessException)
+        {
+            // No readable draft: start empty, as before.
+        }
+    }
+
+    /// <summary>
+    /// The window title (ADR 0117 §4): <c>notes.txt — Text Editor</c>, with <c>*</c> in front while
+    /// the text has unsaved changes.
+    /// </summary>
+    private string DocumentWindowTitle => FormatWindowTitle(_doc.Title, _doc.IsDirty);
+
+    protected override async Task OnAppAfterRenderAsync(bool firstRender)
+    {
+        // Opening, editing and saving all end in a render: the window title follows them here.
+        await SetWindowTitleAsync(DocumentWindowTitle);
+
+        if (firstRender)
+        {
+            try
+            {
+                _module = await JavaScript.InvokeAsync<IJSObjectReference>(
+                    "import", "./_content/Kazo.Os.Apps.TextEditor/TextEditorWindow.razor.js");
+                // Keep the browser from hijacking the editor's own shortcuts (Ctrl+H is the
+                // history page, Ctrl+S "save page", ...) while focus is inside this window.
+                await _module.InvokeVoidAsync("guardEditorShortcuts", _editorContainerRef);
+            }
+            catch (Exception)
+            {
+                // Headless test DOM and unavailable-JS fallback: find still works, just without
+                // visual selection/scroll.
+            }
+        }
+
+        await FocusPendingFindInputAsync();
+    }
+
+    /// <summary>Moves keyboard focus into the find or replace input once it is rendered.</summary>
+    private async Task FocusPendingFindInputAsync()
+    {
+        if (!_showFindBar || (!_focusFindPending && !_focusReplacePending))
+        {
+            return;
+        }
+
+        ElementReference target = _focusReplacePending && _showReplace ? _replaceInputRef : _findInputRef;
+        _focusFindPending = false;
+        _focusReplacePending = false;
+        try
+        {
+            await target.FocusAsync();
+        }
+        catch (Exception)
+        {
+            // Element not attached yet (headless renderer): focus is a convenience only.
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_module is not null)
+        {
+            await _module.DisposeAsync();
+        }
+    }
+
+    // ──────────────────────────── File operations ─────────────────────────────────
+
+    /// <summary>
+    /// Opens a new empty buffer, prompting the user to save if the current buffer is
+    /// dirty (P2-TEXT-004).
+    /// </summary>
+    private async Task NewDocumentAsync()
+    {
+        if (!await ConfirmDiscardDirtyAsync()) return;
+        _doc.ResetToNew();
+        _fileSystem = AppContext.FileSystem;
+        _conflictDetected = false;
+        StateHasChanged();
+    }
+
+    private string GetParentDirectory(VirtualPath? path)
+    {
+        if (path is { } p)
+        {
+            string val = p.Value;
+            int lastSlash = val.LastIndexOf('/');
+            if (lastSlash > 0)
+            {
+                return val[..lastSlash];
+            }
+        }
+
+        return HackUser.Describe(AppContext).HomeDirectory;
+    }
+
+    /// <summary>
+    /// Displays the standard file-open dialog and loads the selected file (P2-TEXT-003).
+    /// </summary>
+    private async Task OpenFileAsync()
+    {
+        if (!await ConfirmDiscardDirtyAsync()) return;
+
+        string defaultDir = GetParentDirectory(_doc.Path);
+        OpenFileDialogResult result = await base.OpenFileAsync(new OpenFileDialogRequest
+        {
+            Title = L["Dialog.Open.Title"],
+            InitialDirectory = VirtualPath.Parse(defaultDir),
+            Filters =
+            [
+                new FileDialogFilter(L["Filter.Text"], [".txt", ".log", ".conf", ".json", ".md"],
+                    ["text/plain", "application/json", "text/markdown"]),
+                new FileDialogFilter(L["Filter.All"], [], [])
+            ],
+            RequestedAccess = SelectedFileAccess.ReadWrite
+        });
+
+        if (result.Status == FileDialogStatus.Selected && result.Resources.Count > 0)
+        {
+            SelectedFileResource selected = result.Resources[0];
+            _fileSystem = AppContext.FileSystem.WithSelectedHandle(selected.Handle);
+            await LoadFileAsync(selected.Path);
+        }
+    }
+
+    /// <summary>
+    /// Loads a virtual file by path, validating its type and size before accepting content (P2-TEXT-002).
+    /// </summary>
+    private async Task LoadFileAsync(VirtualPath path)
+    {
+        // Reject unsupported extensions
+        string fileName = path.ToString();
+        int dot = fileName.LastIndexOf('.');
+        string ext = dot >= 0 ? fileName[dot..] : string.Empty;
+        if (!EditableExtensions.Contains(ext) && !string.IsNullOrEmpty(ext))
+        {
+            _doc.BeginLoading(path);
+            _doc.FailLoading(L["Error.UnsupportedType", ext, string.Join(", ", EditableExtensions)]);
+            StateHasChanged();
+            return;
+        }
+
+        _doc.BeginLoading(path);
+        StateHasChanged();
+
+        try
+        {
+            FileSystemResult<FileSystemContentReadHandle> result = await _fileSystem.ReadAsync(
+                new FileSystemReadRequest(path), AppContext.CancellationToken);
+
+            if (!result.Succeeded || result.Value is null)
+            {
+                string reason = result.Error?.Code switch
+                {
+                    FileSystemErrorCode.PermissionDenied => L["Error.PermissionDenied"],
+                    FileSystemErrorCode.NotFound => L["Error.NotFound"],
+                    FileSystemErrorCode.NotFile => L["Error.NotFile"],
+                    _ => result.Error?.Code.ToString() ?? L["Error.UnknownRead"]
+                };
+                _doc.FailLoading(reason);
+                StateHasChanged();
+                return;
+            }
+
+            await using FileSystemContentReadHandle handle = result.Value;
+
+            // Guard against oversized files (P2-TEXT-002)
+            if (handle.Entry.Metadata is FileMetadata fm && fm.Length > MaxTextFileSizeBytes)
+            {
+                _doc.FailLoading(L["Error.TooLarge", fm.Length / 1024, MaxTextFileSizeBytes / 1024]);
+                StateHasChanged();
+                return;
+            }
+
+            // A file is just bytes, as on Linux: the stored descriptor only records how it was
+            // last written (an empty file made by "New File", or one copied with WriteAllBytes, is
+            // tagged binary). Like gedit, decide from the content itself (HackTextContent, P2-TEXT-002).
+            string? content = await Kazo.Os.AppSdk.IO.HackTextContent.TryReadAsync(handle.Content, AppContext.CancellationToken);
+            if (content is null)
+            {
+                _doc.FailLoading(L["Error.Binary"]);
+                StateHasChanged();
+                return;
+            }
+
+            string mediaType = handle.Descriptor.Kind == FileSystemContentKind.Text ? handle.Descriptor.MediaType : "text/plain";
+            _doc.CompleteLoading(content, mediaType, handle.Entry.Metadata.Revision);
+            _conflictDetected = false;
+        }
+        catch (OperationCanceledException)
+        {
+            _doc.FailLoading(L["Error.LoadCancelled"]);
+        }
+        catch (Exception ex)
+        {
+            _doc.FailLoading(L["Error.Unexpected", ex.Message]);
+        }
+
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Saves the current buffer to its existing path, or falls back to Save As for new buffers (P2-TEXT-003).
+    /// </summary>
+    private async Task SaveAsync()
+    {
+        if (_doc.Path is { } path)
+        {
+            await WriteToDiskAsync(path);
+        }
+        else
+        {
+            await SaveAsAsync();
+        }
+    }
+
+    /// <summary>
+    /// Displays the file-save dialog and writes the buffer to the chosen path (P2-TEXT-003).
+    /// </summary>
+    private async Task SaveAsAsync()
+    {
+        string defaultDir = GetParentDirectory(_doc.Path);
+        
+        SaveFileDialogResult result = await base.SaveFileAsync(new SaveFileDialogRequest
+        {
+            Title = L["Dialog.Save.Title"],
+            InitialDirectory = VirtualPath.Parse(defaultDir),
+            SuggestedFileName = _doc.Title != L["Title.Untitled"] ? _doc.Title : "untitled.txt",
+            DefaultExtension = ".txt",
+            Filters =
+            [
+                new FileDialogFilter(L["Filter.Text"], [".txt", ".log", ".conf", ".json", ".md"],
+                    ["text/plain", "application/json", "text/markdown"]),
+                new FileDialogFilter(L["Filter.All"], [], [])
+            ],
+            ConfirmOverwrite = true
+        });
+
+        if (result.Status == FileDialogStatus.Selected && result.Resource is not null)
+        {
+            _fileSystem = AppContext.FileSystem.WithSelectedHandle(result.Resource.Handle);
+            await WriteToDiskAsync(result.Resource.Path);
+        }
+    }
+
+    /// <summary>
+    /// Writes the current document content to a virtual path using an optimistic
+    /// revision check. Detects concurrent conflicts and surfaces them to the user (P2-TEXT-003, P2-TEXT-004).
+    /// </summary>
+    private async Task WriteToDiskAsync(VirtualPath path)
+    {
+        _suppressGenericPermissionNotice = true;
+        try
+        {
+            // The loaded revision guards a save back to the same file (P2-TEXT-004). Save As to
+            // another path has no revision to require: the target is created, or the user already
+            // confirmed replacing it in the Save dialog.
+            long? expectedRevision = path == _doc.Path ? _doc.LoadedRevision : null;
+
+            if (expectedRevision is null)
+            {
+                // Buffer has never been persisted, so there is no existing entry for
+                // WriteAsync to replace (it requires the target to already exist). Create
+                // it first; an AlreadyExists failure means the user chose Save As over an
+                // existing file, so fall through to an unconditional overwrite below.
+                FileSystemMutationResult creation = await _fileSystem.CreateAsync(
+                    new FileSystemCreateRequest(
+                        path,
+                        FileSystemEntryKind.File,
+                        FileSystemPermissions.FromMode(0b110_100_100)),
+                    AppContext.CancellationToken);
+
+                if (creation.Succeeded && creation.Entry is not null)
+                {
+                    expectedRevision = creation.Entry.Metadata.Revision;
+                }
+                else if (creation.Transaction.Error?.Code != FileSystemErrorCode.AlreadyExists)
+                {
+                    await ShowErrorDialogAsync(L["Dialog.SaveFailed.Title"], DescribeSaveError(creation.Transaction.Error?.Code));
+                    StateHasChanged();
+                    return;
+                }
+            }
+
+            byte[] bytes = System.Text.Encoding.UTF8.GetBytes(_doc.Content);
+            MemoryStream stream = new(bytes);
+            MemoryStreamContentSource source = new(
+                FileSystemContentDescriptor.Text(_doc.MediaType, "utf-8"),
+                stream);
+
+            // WriteAsync(request, content, ct) returns FileSystemMutationResult (P2-TEXT-003)
+            FileSystemMutationResult result = await _fileSystem.WriteAsync(
+                new FileSystemWriteRequest(path, expectedRevision),
+                source,
+                AppContext.CancellationToken);
+
+            if (result.Succeeded && result.Entry is not null)
+            {
+                _doc.CompleteSave(path, result.Entry.Metadata.Revision);
+                _conflictDetected = false;
+            }
+            else if (result.Transaction.Error?.Code == FileSystemErrorCode.RevisionConflict)
+            {
+                // File was changed externally – surface conflict (P2-TEXT-004)
+                _conflictDetected = true;
+                await ShowConflictDialogAsync();
+            }
+            else
+            {
+                await ShowErrorDialogAsync(L["Dialog.SaveFailed.Title"], DescribeSaveError(result.Transaction.Error?.Code));
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // User cancelled – leave buffer dirty, no message.
+        }
+        catch (Exception ex)
+        {
+            await ShowErrorDialogAsync(L["Dialog.SaveFailed.Title"], ex.Message);
+        }
+        finally
+        {
+            _suppressGenericPermissionNotice = false;
+        }
+
+        StateHasChanged();
+    }
+
+    private string DescribeSaveError(FileSystemErrorCode? code) => code switch
+    {
+        FileSystemErrorCode.PermissionDenied => L["Error.PermissionDenied"],
+        FileSystemErrorCode.NotFound => L["Error.DestinationNotFound"],
+        FileSystemErrorCode.RevisionConflict => L["Error.RevisionConflict"],
+        _ => code?.ToString() ?? L["Error.WriteFailed"]
+    };
+
+    /// <summary>
+    /// Minimal in-memory implementation of <see cref="IFileSystemContentSource"/> used
+    /// by <see cref="WriteToDiskAsync"/> to stream encoded text to the VFS provider.
+    /// </summary>
+    private sealed class MemoryStreamContentSource : IFileSystemContentSource
+    {
+        private readonly MemoryStream _stream;
+
+        public MemoryStreamContentSource(FileSystemContentDescriptor descriptor, MemoryStream stream)
+        {
+            Descriptor = descriptor;
+            _stream = stream;
+            Length = stream.Length;
+        }
+
+        public FileSystemContentDescriptor Descriptor { get; }
+        public long? Length { get; }
+
+        public ValueTask<Stream> OpenReadAsync(CancellationToken cancellationToken = default)
+        {
+            _stream.Position = 0;
+            return ValueTask.FromResult<Stream>(_stream);
+        }
+    }
+
+    private async Task ReloadCurrentFileAsync()
+    {
+        if (_doc.Path is { } path)
+        {
+            await LoadFileAsync(path);
+        }
+    }
+
+    // ──────────────────────────── Dirty-state guard ───────────────────────────────
+
+    /// <summary>
+    /// Prompts the user when the buffer is dirty. Returns true when it is safe to
+    /// proceed, false when the user chose to cancel (P2-TEXT-004).
+    /// </summary>
+    private async Task<bool> ConfirmDiscardDirtyAsync()
+    {
+        if (!_doc.IsDirty) return true;
+
+        bool confirmed = await ShowDirtyConfirmDialogAsync();
+        return confirmed;
+    }
+
+    // ──────────────────────────── Find / search (P2-TEXT-006) ────────────────────
+
+    /// <summary>Ctrl+F / Edit → Find: opens the find-only bar, or closes it when it is already the active mode.</summary>
+    private void ToggleFindBar()
+    {
+        if (_showFindBar && !_showReplace)
+        {
+            CloseFindBar();
+            return;
+        }
+
+        _showFindBar = true;
+        _showReplace = false;
+        _focusFindPending = true;
+        StateHasChanged();
+    }
+
+    /// <summary>Ctrl+H / Edit → Replace: opens the find bar with its replace row (ADR 0058 §3), or closes it.</summary>
+    private void ToggleReplacePanel()
+    {
+        if (_showFindBar && _showReplace)
+        {
+            CloseFindBar();
+            return;
+        }
+
+        bool hadQuery = _showFindBar && !string.IsNullOrEmpty(_findQuery);
+        _showFindBar = true;
+        _showReplace = true;
+        // With a query already typed, the user is here for the replacement text.
+        _focusReplacePending = hadQuery;
+        _focusFindPending = !hadQuery;
+        StateHasChanged();
+    }
+
+    /// <summary>The ▸/▾ chevron: shows or hides the replace row without closing the bar.</summary>
+    private void ToggleReplaceRow()
+    {
+        _showReplace = !_showReplace;
+        _focusReplacePending = _showReplace;
+        StateHasChanged();
+    }
+
+    private void CloseFindBar()
+    {
+        _showFindBar = false;
+        _showReplace = false;
+        _findQuery = string.Empty;
+        _findIndex = -1;
+        _replaceSummary = null;
+        StateHasChanged();
+    }
+
+    private string FindMatchSummary
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(_findQuery)) return string.Empty;
+            int count = CountMatches();
+            if (count == 0) return L["Find.NoMatches"];
+            return _findIndex < 0 ? Strings.Plural(L, "Find.Matches", count) : L["Find.MatchPosition", _findIndex + 1, count];
+        }
+    }
+
+    /// <summary>Replace is only meaningful on a loaded buffer with a non-empty query.</summary>
+    private bool CanReplace =>
+        !string.IsNullOrEmpty(_findQuery)
+        && _doc.LoadState is not (TextEditorLoadState.Loading or TextEditorLoadState.Error);
+
+    private List<int> GetMatchIndexes() => TextEditorFindEngine.FindMatches(_doc.Content, _findQuery, _findOptions);
+
+    private int CountMatches() => GetMatchIndexes().Count;
+
+    private async Task HandleFindQueryChangedAsync(ChangeEventArgs args)
+    {
+        _findQuery = args.Value as string ?? string.Empty;
+        await RestartSearchAsync();
+    }
+
+    private async Task ToggleMatchCaseAsync()
+    {
+        _findOptions = _findOptions with { MatchCase = !_findOptions.MatchCase };
+        await RestartSearchAsync();
+    }
+
+    private async Task ToggleWholeWordAsync()
+    {
+        _findOptions = _findOptions with { WholeWord = !_findOptions.WholeWord };
+        await RestartSearchAsync();
+    }
+
+    /// <summary>Re-runs the search from the first match after the query or an option changed.</summary>
+    private async Task RestartSearchAsync()
+    {
+        _replaceSummary = null;
+        List<int> indexes = GetMatchIndexes();
+        _findIndex = indexes.Count > 0 ? 0 : -1;
+        StateHasChanged();
+        await HighlightCurrentMatchAsync(indexes);
+    }
+
+    private async Task FindNext()
+    {
+        List<int> indexes = GetMatchIndexes();
+        _findIndex = TextEditorFindEngine.Next(_findIndex, indexes.Count);
+        StateHasChanged();
+        await HighlightCurrentMatchAsync(indexes);
+    }
+
+    private async Task FindPrev()
+    {
+        List<int> indexes = GetMatchIndexes();
+        _findIndex = TextEditorFindEngine.Previous(_findIndex, indexes.Count);
+        StateHasChanged();
+        await HighlightCurrentMatchAsync(indexes);
+    }
+
+    /// <summary>Selects and scrolls to the current match in the live textarea, best-effort.</summary>
+    private async Task HighlightCurrentMatchAsync(List<int>? indexes = null)
+    {
+        indexes ??= GetMatchIndexes();
+        if (_module is null || _findIndex < 0 || _findIndex >= indexes.Count)
+        {
+            return;
+        }
+
+        int start = indexes[_findIndex];
+        int end = start + _findQuery.Length;
+        try
+        {
+            await _module.InvokeVoidAsync("selectRange", _textAreaRef, start, end);
+        }
+        catch (Exception)
+        {
+            // Headless test DOM and unavailable-JS fallback: matching still works, just
+            // without visual selection/scroll.
+        }
+    }
+
+    private async Task HandleFindKeyDown(KeyboardEventArgs args)
+    {
+        if (args.Key == "Enter" && !args.ShiftKey) await FindNext();
+        else if (args.Key == "Enter" && args.ShiftKey) await FindPrev();
+        else if (args.Key == "Escape") CloseFindBar();
+    }
+
+    // ──────────────────────────── Replace (ADR 0058 §3) ──────────────────────────
+
+    private void HandleReplaceTextChanged(ChangeEventArgs args)
+    {
+        _replaceText = args.Value as string ?? string.Empty;
+        _replaceSummary = null;
+    }
+
+    private async Task HandleReplaceKeyDown(KeyboardEventArgs args)
+    {
+        if (args.Key == "Enter" && args.CtrlKey && args.AltKey) await ReplaceAllAsync();
+        else if (args.Key == "Enter") await ReplaceAsync();
+        else if (args.Key == "Escape") CloseFindBar();
+    }
+
+    /// <summary>
+    /// "Replace": replaces the selected occurrence when the textarea selection is one, then
+    /// selects the next; otherwise only selects the next occurrence (two-step, like desktop
+    /// editors). The decision itself lives in <see cref="TextEditorFindEngine.Replace"/>.
+    /// </summary>
+    private async Task ReplaceAsync()
+    {
+        if (!CanReplace) return;
+
+        (int selectionStart, int selectionLength) = await ReadSelectionAsync();
+        TextEditorReplaceResult result = TextEditorFindEngine.Replace(
+            _doc.Content, _findQuery, _replaceText, selectionStart, selectionLength, _findOptions);
+
+        _replaceSummary = null;
+        if (result.Replaced)
+        {
+            // A replacement is an ordinary edit: the buffer becomes dirty and the next save
+            // still goes through the revision check.
+            _doc.Edit(result.Content);
+        }
+
+        List<int> indexes = GetMatchIndexes();
+        _findIndex = indexes.IndexOf(result.NextMatchStart);
+        StateHasChanged();
+        // Let the new value reach the textarea before selecting inside it.
+        await Task.Yield();
+        await HighlightCurrentMatchAsync(indexes);
+    }
+
+    /// <summary>
+    /// "Replace All": replaces every occurrence as one document modification and reports
+    /// how many were replaced ("12 replacements").
+    /// </summary>
+    private Task ReplaceAllAsync()
+    {
+        if (!CanReplace) return Task.CompletedTask;
+
+        TextEditorReplaceAllResult result = TextEditorFindEngine.ReplaceAll(
+            _doc.Content, _findQuery, _replaceText, _findOptions);
+        if (result.Count > 0)
+        {
+            _doc.Edit(result.Content);
+        }
+
+        _replaceSummary = TextEditorFindEngine.DescribeReplacementCount(result.Count, L);
+        List<int> remaining = GetMatchIndexes();
+        _findIndex = remaining.Count > 0 ? 0 : -1;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// Reads the live textarea selection. Falls back to the current find match when the JS
+    /// module is unavailable, so Replace keeps working in a headless renderer.
+    /// </summary>
+    private async Task<(int Start, int Length)> ReadSelectionAsync()
+    {
+        if (_module is not null)
+        {
+            try
+            {
+                int[]? range = await _module.InvokeAsync<int[]?>("getSelectionRange", _textAreaRef);
+                if (range is { Length: 2 } && range[1] >= range[0])
+                {
+                    return (range[0], range[1] - range[0]);
+                }
+            }
+            catch (Exception)
+            {
+                // Fall through to the find-state fallback below.
+            }
+        }
+
+        List<int> indexes = GetMatchIndexes();
+        return _findIndex >= 0 && _findIndex < indexes.Count
+            ? (indexes[_findIndex], _findQuery.Length)
+            : (0, 0);
+    }
+
+    // ──────────────────────────── Keyboard shortcuts (P2-TEXT-006) ────────────────
+
+    private async Task HandleGlobalKeyDownAsync(KeyboardEventArgs args)
+    {
+        if (!args.CtrlKey) return;
+        switch (args.Key)
+        {
+            case "s" or "S":
+                if (args.ShiftKey) await SaveAsAsync();
+                else await SaveAsync();
+                break;
+            case "o" or "O":
+                await OpenFileAsync();
+                break;
+            case "n" or "N":
+                await NewDocumentAsync();
+                break;
+            case "f" or "F":
+                ToggleFindBar();
+                break;
+            case "h" or "H":
+                ToggleReplacePanel();
+                break;
+        }
+    }
+
+    private void HandleTextInput(ChangeEventArgs args)
+    {
+        if (args.Value is string newContent)
+        {
+            _doc.Edit(newContent);
+        }
+    }
+
+    // ──────────────────────────── Permission-error notifications ─────────────────
+
+    /// <summary>
+    /// Set while <see cref="WriteToDiskAsync"/> is in flight, since it already inspects the
+    /// mutation result and shows its own tailored dialog (<see cref="ShowErrorDialogAsync"/>) for
+    /// every failure code, including permission-class ones. Left <see langword="false"/> at all
+    /// other times so read failures from <see cref="LoadFileAsync"/> — which today only surface
+    /// as inline overlay text — still get the host's default error notification.
+    /// </summary>
+    private bool _suppressGenericPermissionNotice;
+
+    protected override void OnPermissionErrorRaised(AppPermissionErrorEventArgs e)
+    {
+        if (_suppressGenericPermissionNotice)
+        {
+            e.ErrorHandled = true;
+        }
+    }
+
+    // ──────────────────────────── MudBlazor dialog helpers ───────────────────────
+
+    private async Task<bool> ShowDirtyConfirmDialogAsync()
+    {
+        bool? result = await MudDialogService.ShowMessageBoxAsync(
+            L["Dialog.Unsaved.Title"],
+            L["Dialog.Unsaved.Message", _doc.Title],
+            yesText: L["Dialog.Unsaved.Discard"],
+            cancelText: L["Dialog.Cancel"]);
+        return result == true;
+    }
+
+    private async Task ShowConflictDialogAsync()
+    {
+        await MudDialogService.ShowMessageBoxAsync(
+            L["Dialog.Conflict.Title"],
+            L["Dialog.Conflict.Message"],
+            yesText: L["Dialog.Ok"]);
+    }
+
+    private async Task ShowErrorDialogAsync(string title, string message)
+    {
+        await MudDialogService.ShowMessageBoxAsync(title, message, yesText: L["Dialog.Ok"]);
+    }
+}

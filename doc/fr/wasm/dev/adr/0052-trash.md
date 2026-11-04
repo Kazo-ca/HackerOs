@@ -13,7 +13,7 @@ Accepté le 2026-10-10.
   `HackDirectory.DeleteAsync` restent des suppressions définitives, comme
   `System.IO` ; la corbeille est une API à part, `HackTrash`.
 - **S'appuie sur :** ADR 0051 (`rm` et la nouvelle commande `trash` vivent dans
-  `HackerOs.Commands`).
+  `Kazo.Os.Commands`).
 
 ## Contexte
 
@@ -72,7 +72,7 @@ inconnue.
 
 ### 3. API `HackTrash` dans le SDK
 
-`Shared/HackerOs.AppSdk/IO/HackTrash.cs`, statique, asynchrone, contexte
+`Shared/Kazo.Os.AppSdk/IO/HackTrash.cs`, statique, asynchrone, contexte
 ambiant de l'ADR 0043, mêmes exceptions `Hack*` :
 
 ```csharp
@@ -151,7 +151,7 @@ Tableau commun aux ADR 0050, 0051 et 0052. Chaque branche part de
 
 | Branche | Contenu | Dépend de |
 |---|---|---|
-| `rebuild/3-commands-merge` | ADR 0051 section 1 : projet `HackerOs.Commands`, déplacement des 28 commandes, `manifests/<appId>.json`, une `ProjectReference` dans l'hôte, solution et projets de tests mis à jour, anciens projets supprimés. Aucun changement de comportement. | — |
+| `rebuild/3-commands-merge` | ADR 0051 section 1 : projet `Kazo.Os.Commands`, déplacement des 28 commandes, `manifests/<appId>.json`, une `ProjectReference` dans l'hôte, solution et projets de tests mis à jour, anciens projets supprimés. Aucun changement de comportement. | — |
 | `rebuild/3-process-environment` | ADR 0050 sections 5 et 6 : `IProcessEnvironmentTable`, arguments, répertoire et environnement à la création (héritage du parent), environnement de connexion et `/etc/environment`, `/etc/hostname`, `/proc/<pid>/cmdline`, `environ`, `cwd`, `HackEnvironment`, contexte ambiant relié au répertoire du processus. | — |
 | `rebuild/3-shell-interpreter` | ADR 0050 sections 1 à 4 et 7 : `ShellParser` (arbre), expansion, `ShellPipe`, redirections, `&&`, `ShellInterpreter` et `ShellSession` dans Platform Core, flux sur `AppLaunchRequest`, sortie au fil de l'eau dans le terminal, `ExecuteCommandIntent` par l'interpréteur. Les noms codés en dur du terminal restent provisoirement. | `3-process-environment` |
 | `rebuild/3-trash` | ADR 0052 : `HackTrash`, `rm` vers la corbeille et `--permanent`, commande `trash`, vue Corbeille et Maj+Suppr dans l'explorateur. | `3-commands-merge` |
@@ -167,6 +167,6 @@ Ordre : `3-commands-merge` et `3-process-environment` en parallèle ; puis
   freedesktop.org.
 - ADR 0043 (API `Hack*`), ADR 0045 (journaux), ADR 0050, ADR 0051.
 - [`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md), sections 7.4 et 11.
-- `Apps/System/HackerOs.Apps.FileExplorer/FileExplorerWindow.razor`,
-  `Apps/Commands/HackerOs.Commands.Rm/RmCommand.cs`,
-  `Shared/HackerOs.AppSdk/IO/HackFile.cs`.
+- `Apps/System/Kazo.Os.Apps.FileExplorer/FileExplorerWindow.razor`,
+  `Apps/Commands/Kazo.Os.Commands.Rm/RmCommand.cs`,
+  `Shared/Kazo.Os.AppSdk/IO/HackFile.cs`.

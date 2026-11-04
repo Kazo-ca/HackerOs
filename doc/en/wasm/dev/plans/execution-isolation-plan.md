@@ -48,8 +48,8 @@ exclusion from its section 9. The decisions are in ADRs 0066 to 0071.
    `Apps/` concerned and migrates them before its PR (section 5.1): it is not
    left to a later work item.
 6. **The three hosts stay operational after each work item.**
-   `OS/HackerOs.Ecosystem` (standalone PWA, no server), `test/test` (debug
-   Blazor Web App) and `Server/HackerOs.Server` (Interactive Server rendering)
+   `OS/Kazo.Os.Ecosystem` (standalone PWA, no server), `test/test` (debug
+   Blazor Web App) and `Server/Kazo.Os.Server` (Interactive Server rendering)
    must build, publish and **start up to the desktop** before any
    merge. The startup verification (section 5.2) is part of the "done"
    of each `rebuild/5-*` PR, with measurements on and off.
@@ -58,14 +58,14 @@ exclusion from its section 9. The decisions are in ADRs 0066 to 0071.
 
 | # | Decision | ADR |
 |---|---|---|
-| 1 | Independent CPU and memory measurements, which can be turned off at build (project `HackerOs.Platform.ResourceAccounting` referenced conditionally) and at startup (`appsettings.json`); turned off, return to the simulator with `CpuSource`/`MemSource: simulated` and the "estimated" label. | 0066 |
+| 1 | Independent CPU and memory measurements, which can be turned off at build (project `Kazo.Os.Platform.ResourceAccounting` referenced conditionally) and at startup (`appsettings.json`); turned off, return to the simulator with `CpuSource`/`MemSource: simulated` and the "estimated" label. | 0066 |
 | 2 | CPU time measured by the value-change callback of the ambient `AsyncLocal`; `utime`, `stime`, time outside a frame charged to the compositor; `/proc/<pid>/stat`. | 0067 |
 | 3 | "Not responding" when a slice exceeds `UnresponsiveThresholdMs` (5 s); display only. | 0067 |
 | 4 | Memory in four layers: image, OS resources, allocations per slice, real heap distributed after each GC; no limit. Marshaling counting is dropped. | 0068 |
 | 5 | `StopRequested` (reason, deadline), `CheckpointAsync`, `TerminateAsync`, `ProcessExitReason.Terminated`; four-step escalation; "End task" becomes `SIGTERM`, "Force kill" is added. | 0069 |
 | 6 | Hybrid model: window apps on the main thread, commands in a pool of one worker per virtual core, services in a dedicated worker with a reserve; remote gateways; heartbeat; only a silent worker is terminated. | 0070 |
 | 7 | Once the system has started, always at least one ready worker; it serves dedicated processes and pool overflow when no worker is free; cap `navigator.hardwareConcurrency`; `/proc/hackeros/workers`. | 0071 |
-| 8 | `HackerOs.Server`: measurements off by default, no worker, until an ADR specific to this host. | 0066, 0067, 0070 |
+| 8 | `Kazo.Os.Server`: measurements off by default, no worker, until an ADR specific to this host. | 0066, 0067, 0070 |
 
 ## 5. Work items
 
@@ -73,11 +73,11 @@ Each branch starts from `rebuild/base` and its PR targets `rebuild/base`.
 
 | Branch | Content | Depends on |
 |---|---|---|
-| `rebuild/5-accounting-switches` | ADR 0066: MSBuild properties, `build/HackerOs.ResourceAccounting.targets`, `RuntimeHostConfigurationOption`, project `HackerOs.Platform.ResourceAccounting` (empty of measurement, with the **context-switch hook** common to both measurements), null contracts in Simulation Abstractions, hosts' `wwwroot/appsettings.json`, `CpuSource`/`MemSource`, "estimated" label. | n/a |
+| `rebuild/5-accounting-switches` | ADR 0066: MSBuild properties, `build/Kazo.Os.ResourceAccounting.targets`, `RuntimeHostConfigurationOption`, project `Kazo.Os.Platform.ResourceAccounting` (empty of measurement, with the **context-switch hook** common to both measurements), null contracts in Simulation Abstractions, hosts' `wwwroot/appsettings.json`, `CpuSource`/`MemSource`, "estimated" label. | n/a |
 | `rebuild/5-cpu-accounting` | ADR 0067: `utime`/`stime` counting, compositor, `/proc/<pid>/stat`, real `/proc/stat`, `HackProcess.*ProcessorTime`, long tasks, "Not responding" and `Responding:`, overhead test (< 5%). | `5-accounting-switches` |
 | `rebuild/5-memory-accounting` | ADR 0068: four layers, fields of `/proc/<pid>/status`, `/proc/meminfo`, `PrivateMemorySize64`. | `5-accounting-switches` |
 | `rebuild/5-graceful-stop` | ADR 0069: `StopRequested`, `CheckpointAsync`, `TerminateAsync`, `Terminated`, per-process scheduler and `HackProcessKilledException`, polite "End task" and "Force kill", `CheckpointAsync` in long commands. | n/a |
-| `rebuild/5-worker-processes` | ADR 0070 and 0071: always-ready worker after boot, overflow and cap, `/proc/hackeros/workers`, `AppExecutionHost` in the manifest, `HackerOs.Platform.WorkerHost`, remote gateways and parity tests, pool and reserve, heartbeat, step 4 escalation, first for `HackerOs.Commands`. | the other four |
+| `rebuild/5-worker-processes` | ADR 0070 and 0071: always-ready worker after boot, overflow and cap, `/proc/hackeros/workers`, `AppExecutionHost` in the manifest, `Kazo.Os.Platform.WorkerHost`, remote gateways and parity tests, pool and reserve, heartbeat, step 4 escalation, first for `Kazo.Os.Commands`. | the other four |
 | `rebuild/5-host-smoke` | Section 5.2: `build/verify-hosts.sh`, Playwright startup test of the three hosts with fallback to the container's Chromium, combinations of measurements; also fixes the launching of existing E2E suites in a container. | n/a |
 | `rebuild/5-final` | End-to-end verification, `system-metrics.md`, `task-manager.md`, `app-sdk.md`, `sdk-reference.md`, index, this list up to date. | all |
 
@@ -88,7 +88,7 @@ Each branch starts from `rebuild/base` and its PR targets `rebuild/base`.
 | `5-accounting-switches` | Check that all app code goes through an ambient frame (`WindowAppBase`, `HackComponentBase`, `TerminalAppBase`, `ServiceAppBase`); add a test that fails if an app in `Apps/` runs code outside a frame, otherwise its time would go to the compositor. |
 | `5-cpu-accounting`, `5-memory-accounting` | No app code change; the manifest generator provides the assembly size (image layer) for **all** apps; tests of `/proc/<pid>/stat` and `status` on a sample of each family (window, command, service). |
 | `5-graceful-stop` | Each window app and each service that holds state (editors, explorer during a copy, Settings, services) reacts to `StopRequested`: finishes or cancels its current operation cleanly, with no silent loss (an editor with unsaved changes keeps a recovery draft). Every long loop in `Apps/` (commands, recursive copy in the explorer, CodeEditor search, zip) calls `CheckpointAsync`. |
-| `5-worker-processes` | Each command of `HackerOs.Commands` and each service declares its `AppExecutionHost` (or gets the right default); the parity tests run **all** built-in commands in both modes; an app that cannot run in a worker stays on `MainThread`, with the reason in a comment. |
+| `5-worker-processes` | Each command of `Kazo.Os.Commands` and each service declares its `AppExecutionHost` (or gets the right default); the parity tests run **all** built-in commands in both modes; an app that cannot run in a worker stays on `MainThread`, with the reason in a comment. |
 
 ### 5.2 Host verification
 
@@ -97,7 +97,7 @@ launched by a single command (`build/verify-hosts.sh`):
 
 - builds the three hosts and publishes Ecosystem;
 - launches each host (published Ecosystem behind a static server, `test/test`
-  and `HackerOs.Server` through `dotnet run`), opens it in Chromium through Playwright
+  and `Kazo.Os.Server` through `dotnet run`), opens it in Chromium through Playwright
   (fallback to `/opt/pw-browsers/chromium` when the version Playwright expects
   is absent, the case in containers);
 - waits for the login screen then the desktop, with no error in the console, opens
@@ -200,10 +200,10 @@ Implementation details (`rebuild/5-graceful-stop`, detail in
 
 On `rebuild/base` at `47de11c` (after #129), in a cloud container:
 
-- `dotnet build HackerOs.sln -c Release`: 0 errors, 0 warnings.
+- `dotnet build Kazo.Os.sln -c Release`: 0 errors, 0 warnings.
 - The 35 `Tests/*.Tests` projects excluding E2E (about 2,400 tests) pass, including
-  `HackerOs.Platform.ResourceAccounting.Tests` (52), `HackerOs.Platform.WorkerHost.Tests`
-  (82, parity of the 63 commands) and `HackerOs.Platform.Core.Tests` (890).
+  `Kazo.Os.Platform.ResourceAccounting.Tests` (52), `Kazo.Os.Platform.WorkerHost.Tests`
+  (82, parity of the 63 commands) and `Kazo.Os.Platform.Core.Tests` (890).
 - `build/verify-hosts.sh`: the first run failed on `test-host`. The startup
   test read the output of `ps` as soon as the `PID` header appeared, whereas the output of a
   command launched in a Web Worker arrives in several writes; the process
@@ -213,10 +213,10 @@ On `rebuild/base` at `47de11c` (after #129), in a cloud container:
 
 ```text
 == Kazo OS host verification (47de11c) ==
-build HackerOs.Ecosystem         PASS
+build Kazo.Os.Ecosystem         PASS
 build test                       PASS
-build HackerOs.Server            PASS
-build HackerOs.HostSmoke.Tests   PASS
+build Kazo.Os.Server            PASS
+build Kazo.Os.HostSmoke.Tests   PASS
 publish ecosystem                PASS
 publish ecosystem-build-off      PASS
 ecosystem                        PASS  30s
@@ -233,7 +233,7 @@ RESULT: PASS
   updated them); the counts (32 capabilities, 75 apps including 63 commands) are exact.
 - Left out of this phase, noted in
   [`building-and-testing.md`](../building-and-testing.md#known-state): two failures of
-  `HackerOs.UI.E2E.Tests` due to the app (accessibility, mobile "Back" button), fixed
+  `Kazo.Os.UI.E2E.Tests` due to the app (accessibility, mobile "Back" button), fixed
   afterwards by `rebuild/5-ui-a11y-mkdir`, and the PWA suite that requires IPv6.
 
 ## 7. Out of scope
@@ -241,7 +241,7 @@ RESULT: PASS
 - Imposed quantum, memory limits, OOM killer, "Force Quit" window.
 - Cross-origin isolation (COOP/COEP), WASM threads, `SharedArrayBuffer`.
 - Window apps in a worker.
-- Workers and measurements on `HackerOs.Server`.
+- Workers and measurements on `Kazo.Os.Server`.
 
 These points are taken up by [`execution-followups-plan.md`](execution-followups-plan.md)
 (plan approved on 2026-10-17, executed after the wasm v3 migration).

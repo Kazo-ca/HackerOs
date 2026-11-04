@@ -1,0 +1,72 @@
+@inherits Kazo.Os.AppSdk.Blazor.HackComponentBase
+@implements IAsyncDisposable
+
+@*
+    Settings > Memory (ADR 0126): the OOM killer's switch and threshold, written to the system layer
+    of /etc/hackeros/memory.config (an administrator approves the write, ADR 0042), and a readout of
+    /proc/meminfo and /proc/vmstat.
+*@
+<div class="setting-group mem-panel">
+    <h4 id="mem-state-title">@L["Memory.State.Title"]</h4>
+    <p class="setting-desc">@LocalizedMarkup.Format(L["Memory.State.Description"], LocalizedMarkup.Code(MemInfoPath), LocalizedMarkup.Code(VmStatPath))</p>
+    <dl class="mem-readout" aria-labelledby="mem-state-title">
+        <dt>MemTotal</dt>
+        <dd>@Mebibytes(_readout.TotalKb)</dd>
+        <dt>MemAvailable</dt>
+        <dd>@Mebibytes(_readout.AvailableKb)</dd>
+        <dt>@L["Memory.State.Source"]</dt>
+        <dd class="@(_readout.Measured ? "mem-measured" : "mem-simulated")">@(_readout.Measured ? L["Memory.State.Measured"] : L["Memory.State.Simulated"])</dd>
+        <dt>oom_kill</dt>
+        <dd>@_readout.OomKills</dd>
+    </dl>
+    @if (!_readout.Measured)
+    {
+        <p class="setting-desc mem-note">@L["Memory.State.NotMeasured"]</p>
+    }
+</div>
+
+@if (!_loaded)
+{
+    <p class="setting-desc">@L["Common.Loading"]</p>
+}
+else
+{
+    <div class="setting-group mem-panel">
+        <h4 id="mem-oom-title">@L["Memory.OomKiller.Title"] <SettingOriginBadge Source="@SourceOf(EnabledKey)" IsLocked="@false" /></h4>
+        <p class="setting-desc">@LocalizedMarkup.Format(L["Memory.OomKiller.Description"], LocalizedMarkup.Code("/proc/<pid>/oom_score"), LocalizedMarkup.Code("dmesg"))</p>
+        <div class="mem-options" role="radiogroup" aria-labelledby="mem-oom-title">
+            @foreach (bool on in Switch)
+            {
+                <button type="button" role="radio" class="@OptionClass(_enabled == on)"
+                        aria-checked="@(_enabled == on ? "true" : "false")"
+                        disabled="@_isBusy"
+                        @onclick="() => SaveAsync(on, _minFreePercent)">
+                    <span class="mem-tag" aria-hidden="true">@(on ? "ON" : "OFF")</span>
+                    <span class="mem-label">@(on ? L["Memory.OomKiller.On"] : L["Memory.OomKiller.Off"])</span>
+                </button>
+            }
+        </div>
+    </div>
+
+    <div class="setting-group mem-panel">
+        <h4 id="mem-threshold-title">@L["Memory.Threshold.Title"] <SettingOriginBadge Source="@SourceOf(MinFreePercentKey)" IsLocked="@false" /></h4>
+        <p class="setting-desc">@L["Memory.Threshold.Description"]</p>
+        <div class="mem-options mem-thresholds" role="radiogroup" aria-labelledby="mem-threshold-title">
+            @foreach (int percent in ThresholdChoices)
+            {
+                <button type="button" role="radio" class="@OptionClass(_minFreePercent == percent)"
+                        aria-checked="@(_minFreePercent == percent ? "true" : "false")"
+                        disabled="@_isBusy"
+                        @onclick="() => SaveAsync(_enabled, percent)">
+                    <span class="mem-label">@percent %</span>
+                </button>
+            }
+        </div>
+        <p class="setting-desc mem-note">@LocalizedMarkup.Format(L["Memory.AdminNote"], LocalizedMarkup.Code("/etc/hackeros/" + DocumentFileName))</p>
+    </div>
+}
+
+@if (_message is not null)
+{
+    <div class="@(_messageIsError ? "mem-message is-error" : "mem-message")" role="@(_messageIsError ? "alert" : "status")">@_message</div>
+}

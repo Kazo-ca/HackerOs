@@ -31,7 +31,7 @@ on which `web/3-listener-dns` (sites that listen on a port) and
 
 ```
 App (navigateur, curl, wget, app tierce)
-  └─ HackHttpClient ── HackHttpRequest(Method, Uri, Headers, Content, Cookies)   (HackerOs.AppSdk.Net)
+  └─ HackHttpClient ── HackHttpRequest(Method, Uri, Headers, Content, Cookies)   (Kazo.Os.AppSdk.Net)
        └─ IAppNetworkGateway.SendAsync   (Web Worker : WireCodec "ct" + "bd", ADR 0070)
             └─ AppNetworkGateway          capacité, boucle de redirections, comptage /proc/net/dev
                  └─ ISimulatedNetworkService.Send(method, url, headers, body, jar)
@@ -39,7 +39,7 @@ App (navigateur, curl, wget, app tierce)
                            → SimulatedHttpResponse(Status, Page?, RedirectUrl?, SetCookies, Headers, Body?)
 ```
 
-### Simulated contracts (`HackerOs.Simulation.Abstractions.Network`)
+### Simulated contracts (`Kazo.Os.Simulation.Abstractions.Network`)
 
 | Type | Role |
 |---|---|

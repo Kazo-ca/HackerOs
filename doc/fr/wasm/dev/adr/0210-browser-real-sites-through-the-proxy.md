@@ -4,7 +4,7 @@
 
 ## Statut
 
-Accepté le 2026-10-30. Issue [#266](https://github.com/Kazo-ca/HackerOs/issues/266)
+Accepté le 2026-10-30. Issue [#266](https://github.com/Kazo-ca/Os/issues/266)
 (série `todo/base`). Ordre des sources décidé par Benoit le 2026-10-29 : réseau
 simulé et sites `.hack`, puis **proxy du serveur HackerOS** (cette ADR), puis
 proxy public désactivable et Wayback Machine (plus tard, hors portée).
@@ -45,7 +45,7 @@ site dans le navigateur (constats de l'issue #266) :
 - `BrowserApp.Capabilities` déclare `network.real.access`.
 - Cette capacité est dangereuse. Pour éviter la boîte d'approbation au premier
   lancement, même sans serveur, l'hôte déclare le Navigateur app système
-  (`IsSystemApp="true"` dans `HackerOs.Ecosystem.csproj`), comme `curl` et
+  (`IsSystemApp="true"` dans `Kazo.Os.Ecosystem.csproj`), comme `curl` et
   `wget`. Il ne demande toujours pas `filesystem.system.read`.
 - Le serveur ajoute `org.hackeros.browser` à `DefaultGrantedApps` et à
   l'`appsettings.json` livré. Un opérateur qui a écrit sa propre liste

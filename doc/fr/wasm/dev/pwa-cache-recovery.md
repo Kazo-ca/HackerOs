@@ -33,9 +33,9 @@ fichiers de l'application est reconstruit.
 | Pièce | Fichier | Rôle |
 |---|---|---|
 | Vérification d'intégrité | Blazor (`dotnet.js`, empreintes SHA-256 de la configuration de démarrage) | Chaque ressource de démarrage est chargée avec `integrity` : des octets abîmés font échouer le chargement (« SRI's integrity checks failed »), puis le démarrage (« Failed to start platform. Reason: … download '…' failed »). |
-| Garde de démarrage | `OS/HackerOs.Ecosystem/wwwroot/index.html` (script en ligne, frontière d'amorçage de l'hôte) | Lance Blazor (`autostart="false"`, puis `Blazor.start()`), détecte l'échec, décide de la réparation, affiche l'écran d'erreur. |
-| Réparation | `OS/HackerOs.Ecosystem/wwwroot/service-worker.published.js`, message `RESET_CACHE` | Vide le cache de la version et le reprend du serveur, ou le garde intact si le serveur est injoignable. |
-| Écran d'erreur | `index.html` (`#hackeros-boot-error`) et `OS/HackerOs.Ecosystem.Host/wwwroot/css/app.css` (servi sous `_content/HackerOs.Ecosystem.Host/css/app.css`) | Trois états (`data-state`) : `repairing`, `offline`, `failed`. Style console sombre ; l'anneau de chargement et la barre d'erreur de Blazor sont masqués (`html.hackeros-boot-failed`). |
+| Garde de démarrage | `OS/Kazo.Os.Ecosystem/wwwroot/index.html` (script en ligne, frontière d'amorçage de l'hôte) | Lance Blazor (`autostart="false"`, puis `Blazor.start()`), détecte l'échec, décide de la réparation, affiche l'écran d'erreur. |
+| Réparation | `OS/Kazo.Os.Ecosystem/wwwroot/service-worker.published.js`, message `RESET_CACHE` | Vide le cache de la version et le reprend du serveur, ou le garde intact si le serveur est injoignable. |
+| Écran d'erreur | `index.html` (`#hackeros-boot-error`) et `OS/Kazo.Os.Ecosystem.Host/wwwroot/css/app.css` (servi sous `_content/Kazo.Os.Ecosystem.Host/css/app.css`) | Trois états (`data-state`) : `repairing`, `offline`, `failed`. Style console sombre ; l'anneau de chargement et la barre d'erreur de Blazor sont masqués (`html.hackeros-boot-failed`). |
 
 ### Déroulé
 
@@ -98,7 +98,7 @@ périmé (ADR 0017).
 
 ## Tests
 
-`Tests/HackerOs.Pwa.E2E.Tests/PublishedPwaTests.cs`, contre une publication
+`Tests/Kazo.Os.Pwa.E2E.Tests/PublishedPwaTests.cs`, contre une publication
 Release servie en statique (le test qui vérifiait que les octets corrompus
 étaient servis tels quels est remplacé) :
 

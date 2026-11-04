@@ -31,7 +31,7 @@ building anything scan-shaped.
 
 ### 1. Exactly one TCP connect attempt per request, no data exchanged, no ranges
 
-New contracts `ProxyTcpProbeRequest`/`ProxyTcpProbeResponse` (`Server/HackerOs.Server.Contracts/Proxy/ProxyContracts.cs`)
+New contracts `ProxyTcpProbeRequest`/`ProxyTcpProbeResponse` (`Server/Kazo.Os.Server.Contracts/Proxy/ProxyContracts.cs`)
 carry a single host and a single port. There is no list-of-ports or range shape anywhere in the
 contract — a client cannot ask for more than one port per call even if it wanted to. The server
 (`ProxyService.ExecuteTcpProbeAsync`) does exactly one `Socket.ConnectAsync` and reports one of
@@ -69,7 +69,7 @@ separately-reviewed server capability, which this ADR does not add.
 
 ### 5. Testable connect boundary
 
-`IProxyTcpConnector`/`SocketProxyTcpConnector` (`Server/HackerOs.Server/Services/ProxyNetworking.cs`)
+`IProxyTcpConnector`/`SocketProxyTcpConnector` (`Server/Kazo.Os.Server/Services/ProxyNetworking.cs`)
 abstracts the raw socket connect the same way `IProxyAddressResolver`/`IHttpClientFactory` already
 abstract DNS resolution and HTTP transport for the existing proxy — unit tests exercise the full
 authorization/SSRF/audit pipeline with a fake connector, never touching a real socket.

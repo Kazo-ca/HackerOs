@@ -6,7 +6,7 @@ Ce document décrit ce qu'une app obtient quand elle affiche le contrôle de fic
 
 ## Affichage par `HackFileView`
 
-Toute app l'affiche par `HackFileView` du SDK (`HackerOs.AppSdk.Blazor.Files`)
+Toute app l'affiche par `HackFileView` du SDK (`Kazo.Os.AppSdk.Blazor.Files`)
 et l'explorateur aussi : sa fenêtre rend `<HackFileView>` et garde le chrome
 (barres, Emplacements, Corbeille, barre d'état). Les boutons Renommer,
 Supprimer, Couper, Copier, Coller, Propriétés et Ouvrir avec appellent

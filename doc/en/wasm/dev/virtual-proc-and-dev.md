@@ -14,7 +14,7 @@ plus `kmsg` when the host provides the kernel log (ADR 0126). Both mounts are
 
 ## Architecture
 
-Code: `Platform/HackerOs.Platform.Core/FileSystem/Virtual/`.
+Code: `Platform/Kazo.Os.Platform.Core/FileSystem/Virtual/`.
 
 | Type | Role |
 | --- | --- |
@@ -37,7 +37,7 @@ them, then the virtual provider masks them.
 Contracts touched:
 
 - `FileSystemEntryKind.CharacterDevice` and `CharacterDeviceMetadata`
-  (`Shared/HackerOs.Simulation.Abstractions/FileSystem/FileSystemEntryMetadata.cs`).
+  (`Shared/Kazo.Os.Simulation.Abstractions/FileSystem/FileSystemEntryMetadata.cs`).
   The IndexedDB and memory providers refuse to create this kind
   (`UnsupportedOperation`). `ls -l` displays it with `c` (and links with `l`).
 - `AppOperationContext.ProcessId` (`long?`), filled in by
@@ -239,14 +239,14 @@ column displays the Linux letter (`R`, `S`...). `kill` keeps
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/FileSystem/Virtual/`: listing of `/`,
+- `Tests/Kazo.Os.Platform.Core.Tests/FileSystem/Virtual/`: listing of `/`,
   exact formats of `status`, `meminfo`, `cpuinfo`, `uptime` and `loadavg`,
   visibility according to `process.list`, `/proc/self`, refusal of mutations,
   `/dev/null`, bounded read of `/dev/zero`, cancellation, refusal of
   `CharacterDevice` by storage, and no write to the root repository.
-- `Tests/HackerOs.Commands.Wave5.Tests/PsCommandTests.cs`: `ps` against the
+- `Tests/Kazo.Os.Commands.Wave5.Tests/PsCommandTests.cs`: `ps` against the
   real `/proc` provider.
-- `Tests/HackerOs.Platform.Core.Tests/FileSystem/Virtual/ProcMetricsTests.cs`:
+- `Tests/Kazo.Os.Platform.Core.Tests/FileSystem/Virtual/ProcMetricsTests.cs`:
   phase 4 metric files (see [`system-metrics.md`](system-metrics.md)).
 
 ## Task list

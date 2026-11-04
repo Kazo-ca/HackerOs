@@ -83,7 +83,7 @@ terminal intégré, et masque le dock pour le dernier.
 
 ## Onglets
 
-`TerminalTabs` (`Shared/HackerOs.AppSdk.Terminal`) est un composant
+`TerminalTabs` (`Shared/Kazo.Os.AppSdk.Terminal`) est un composant
 réutilisable : chaque onglet est un `TerminalPanel`, donc un `hsh` distinct
 avec son répertoire, son environnement, son historique et son `$?`. La
 fenêtre Terminal n'est plus qu'un hôte de `TerminalTabs`.
@@ -140,15 +140,15 @@ les raccourcis d'onglets ci-dessus jusqu'à `TerminalTabs`.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Shell/ShellInterpreterTests.HostedShell.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/Shell/ShellInterpreterTests.HostedShell.cs` :
   chemins (relatifs, `~`, `../`, absolus, échappements, cachés, redirections,
   `./`, dossier absent, casse), répertoire du shell, dossier illisible,
   `DisplayCandidates`, `exit` (statuts, modulo, non numérique, fin du
   processus, suite de la ligne, tube, trop d'arguments, `$?`).
-- `Tests/HackerOs.Commands.Tests/CoreCommandsTests.cs` : `ExitCommand`.
-- `Tests/HackerOs.AppSdk.Terminal.Tests/TerminalTabSetTests.cs` : ordre,
+- `Tests/Kazo.Os.Commands.Tests/CoreCommandsTests.cs` : `ExitCommand`.
+- `Tests/Kazo.Os.AppSdk.Terminal.Tests/TerminalTabSetTests.cs` : ordre,
   fermeture, bascule des onglets.
-- `Tests/HackerOs.Ecosystem.Tests/BuildKnownLazyAppsTests.cs` : `exit` au
+- `Tests/Kazo.Os.Ecosystem.Tests/BuildKnownLazyAppsTests.cs` : `exit` au
   catalogue (75 apps, 63 commandes depuis `stress`, ADR 0070).
 - Vérification dans le navigateur (publication Release) : `cd pro` + Tab →
   `cd projets/`, second Tab liste `alpha/  notes.txt`, le focus reste sur la
@@ -160,7 +160,7 @@ les raccourcis d'onglets ci-dessus jusqu'à `TerminalTabs`.
 - [x] Complétion des chemins dans `ShellCompletion`, avec les droits et le répertoire du shell.
 - [x] `HackShellCompletion.DisplayCandidates`, liste courte au second Tab.
 - [x] `IShellSession.Exit`, `ShellSession.RequestExit`, arrêt de la ligne, fin du processus `hsh`.
-- [x] Commande `exit [n]` dans `HackerOs.Commands`.
+- [x] Commande `exit [n]` dans `Kazo.Os.Commands`.
 - [x] `TerminalTabs`, `TerminalTabSet`, raccourcis, titre des onglets ; fenêtre Terminal sur `TerminalTabs`, fermée avec le dernier onglet.
 - [x] Ctrl+D termine le shell ; Tab ne déplace plus le focus.
 - [x] CodeEditor ferme l'onglet dont le shell sort.

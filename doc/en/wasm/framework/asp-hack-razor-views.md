@@ -25,7 +25,7 @@ Intranet/
   IntranetApp.cs            [AppManifest] partial WebAppDefinition
   Controllers/NotesController.cs
   Views/
-    _Imports.razor          @using HackerOs.AppSdk.Web.Views, @using Intranet.Views.Shared
+    _Imports.razor          @using Kazo.Os.AppSdk.Web.Views, @using Intranet.Views.Shared
     Shared/_Layout.razor
     Notes/Index.razor, Notes/Edit.razor, Notes/_NoteCard.razor
   wwwroot/css/site.css, wwwroot/js/notes.js
@@ -104,7 +104,7 @@ Générateur : HackWebGeneratedRoutes.Views, passé par <Nom>WebHost ; build : w
 
 ## Views
 
-- **Base classes** (`HackerOs.AppSdk.Web.Views`): `HackView` (untyped
+- **Base classes** (`Kazo.Os.AppSdk.Web.Views`): `HackView` (untyped
   `Model`), `HackView<TModel>` (typed `Model`), `HackLayout` (`Body`). All
   expose `ViewContext`, `HttpContext`, `Request`, `ViewData`, `ModelState`,
   `Url`, `Layout`. Any component can also serve as a view (without these
@@ -170,8 +170,8 @@ browser keeps cookies between the page and the form submission.
 
 ## The project's `wwwroot`
 
-- The build (`build/HackerOs.Apps.targets`, target `_HackerOsEmbedWebRoot`)
-  embeds `wwwroot/**` of a project that references `HackerOs.AppSdk.Web` as
+- The build (`build/Kazo.Os.Apps.targets`, target `_HackerOsEmbedWebRoot`)
+  embeds `wwwroot/**` of a project that references `Kazo.Os.AppSdk.Web` as
   `wwwroot/<path>` resources; `<HackerOsEmbedWebRoot>false</HackerOsEmbedWebRoot>`
   (or `true` for a project that does not reference the library) forces the
   choice. These files are not project content: they do not enter
@@ -187,14 +187,14 @@ browser keeps cookies between the page and the form submission.
 
 ## Tests
 
-- `Tests/HackerOs.AppSdk.Web.Tests` (102): `Views/RazorViewTests` (generated
+- `Tests/Kazo.Os.AppSdk.Web.Tests` (102): `Views/RazorViewTests` (generated
   table, nested layout, title, sections, partials, helpers, valid and
   invalid form, token in field and in header, refusal, `[IgnoreAntiforgeryToken]`,
   typed view, partial, `Shared/`, absolute path, `@inject`, errors, static
   files, `304`, `405`, paths outside `wwwroot`), `Generator/WebRouteGeneratorTests`
   (view table and class names from the Razor compiler, `@namespace`,
   `_Imports.razor`).
-- `Tests/HackerOs.Platform.WorkerHost.Tests/MvcSiteTests`: the view, its layout,
+- `Tests/Kazo.Os.Platform.WorkerHost.Tests/MvcSiteTests`: the view, its layout,
   the `wwwroot` and the refusal of a `POST` without a token through `curl` in a full OS,
   on the main thread and in the `web` worker.
 

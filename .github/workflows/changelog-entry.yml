@@ -1,8 +1,8 @@
 name: Change list entry
 
-# ADR 0186 section 5: a pull request to main that changes the product (wasm2/HackerOs outside
+# ADR 0186 section 5: a pull request to main that changes the product (wasm2/KazoOs outside
 # Tests/, docs/, changes/ and Markdown files) adds at least one entry in
-# wasm2/HackerOs/changes/unreleased/<guid>.json, unless it carries the no-changelog label.
+# wasm2/KazoOs/changes/unreleased/<guid>.json, unless it carries the no-changelog label.
 # Series PRs to a <series>/base branch add their entry already, so the final PR to main passes.
 # The format of the entries is checked by ChangeEntriesTests in the Verify Kazo OS WASM workflow.
 on:
@@ -37,4 +37,4 @@ jobs:
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-        run: bash wasm2/HackerOs/build/tools/check-change-entry.sh "$BASE_SHA" "$HEAD_SHA"
+        run: bash wasm2/KazoOs/build/tools/check-change-entry.sh "$BASE_SHA" "$HEAD_SHA"

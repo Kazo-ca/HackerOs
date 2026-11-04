@@ -16,7 +16,7 @@ Accepted on 2026-10-16, with the `web/6-mvc-core` work item.
 
 ## Context
 
-The manifest generator (`HackerOs.Tools.ManifestGenerator`, ADR 0047) runs
+The manifest generator (`Kazo.Os.Tools.ManifestGenerator`, ADR 0047) runs
 **after** compilation: it loads the app's assembly and instantiates its
 `[AppManifest]` classes. It therefore cannot add code to the assembly. Yet
 a route table without reflection must **contain code**: the creation of the
@@ -27,14 +27,14 @@ startup time in the web worker).
 
 ## Decision
 
-1. **A Roslyn source generator.** `Tools/HackerOs.Tools.WebRouteGenerator`
+1. **A Roslyn source generator.** `Tools/Kazo.Os.Tools.WebRouteGenerator`
    (`netstandard2.0`, `IIncrementalGenerator`) is plugged in as an *analyzer* on
-   each app project by `build/HackerOs.Apps.targets` (never a runtime
+   each app project by `build/Kazo.Os.Apps.targets` (never a runtime
    dependency; ignored by the SDK boundary check, like the manifest
    generator). For an app with no controller or `WebAppDefinition`,
    it produces nothing.
 2. **What it produces.**
-   - `HackerOs.AppSdk.Web.Generated.HackWebGeneratedRoutes.Table` (internal to
+   - `Kazo.Os.AppSdk.Web.Generated.HackWebGeneratedRoutes.Table` (internal to
      the assembly): an `HackControllerRouteTable` that describes each action
      (`HackControllerActionDescriptor`) with three generated delegates:
      `CreateController` (longest public constructor, services resolved in
@@ -45,11 +45,11 @@ startup time in the web worker).
      `EntryPoint => typeof(<Name>WebHost)` and a class
      `<Name>WebHost : HackWebHost`. The manifest generator then reads this
      `EntryPoint` as for any app: nothing changes for it.
-3. **A single template parser.** `Shared/HackerOs.AppSdk.Web/Routing/HackRouteTemplate.cs`
+3. **A single template parser.** `Shared/Kazo.Os.AppSdk.Web/Routing/HackRouteTemplate.cs`
    is compiled into the library (the router uses it) **and** linked into the
    generator: build and runtime understand a template in exactly the same
    way.
-4. **Build errors** (category `HackerOs.Web`, all errors):
+4. **Build errors** (category `Kazo.Os.Web`, all errors):
 
    | Code | Case |
    |---|---|
@@ -62,7 +62,7 @@ startup time in the web worker).
    | `HOSWEB0007` | Unsupported action: derived HTTP method attribute that is not ASP.Hack's, `ref struct` or pointer return type, or action of an `HackApiController` without an attribute route (like `[ApiController]` in ASP.NET Core). Generic, static or `[NonAction]` methods are not actions, as in ASP.NET Core. |
 
 5. **Adjustments to ADR 0076.**
-   - §1: the library also depends on `HackerOs.App.Abstractions` (for
+   - §1: the library also depends on `Kazo.Os.App.Abstractions` (for
      `AppDefinition`) and on `Microsoft.Extensions.DependencyInjection` (§6).
    - §3: the constraints `double`, `decimal`, `float`, `datetime`, `required`,
      `range`, `minlength` and `maxlength` are added to the list; complex

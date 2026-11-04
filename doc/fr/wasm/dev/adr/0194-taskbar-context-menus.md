@@ -5,7 +5,7 @@
 ## Statut
 
 Accepté le 2026-10-29, chantier 4 de la série barre des tâches (issue
-[#242](https://github.com/Kazo-ca/HackerOs/issues/242), points 8 et 9 des décisions
+[#242](https://github.com/Kazo-ca/Os/issues/242), points 8 et 9 des décisions
 prises avec Benoit le 2026-10-29). S'appuie sur le menu contextuel de l'OS
 ([ADR 0150](0150-os-context-menu.md)), le menu de fenêtre avec « Autre écran ▸ »
 ([ADR 0179](0179-per-screen-taskbars-and-other-screen-menus.md) §3-5) et les barres
@@ -13,7 +13,7 @@ par écran (ADR 0179 §1). Mise en œuvre : [`taskbar-context-menus.md`](../task
 
 ## Contexte
 
-- La barre des tâches (`HackerOs.Taskbar.Blazor`) est un paquet sans dépendance vers
+- La barre des tâches (`Kazo.Os.Taskbar.Blazor`) est un paquet sans dépendance vers
   l'OS : elle reçoit ses sources et ses commandes par des interfaces
   (`ITaskbarWindowSource`, `ITaskbarCommandDispatcher`, `ITaskbarLauncher`…). Elle n'a
   aucun menu contextuel : un clic droit montre le menu du navigateur.
@@ -75,7 +75,7 @@ par écran (ADR 0179 §1). Mise en œuvre : [`taskbar-context-menus.md`](../task
    L'ordre de profondeur ne change pas, et chaque fenêtre rangée enregistre sa
    géométrie comme après un déplacement à la main (ADR 0116).
 6. **Textes.** Les nouveaux textes vont dans les ressources de
-   `HackerOs.Platform.Blazor` (anglais et français), avec ceux du menu de fenêtre.
+   `Kazo.Os.Platform.Blazor` (anglais et français), avec ceux du menu de fenêtre.
 
 ## Conséquences
 

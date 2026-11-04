@@ -24,15 +24,15 @@ The format of the `.theme` file (sections, locations, tolerant reading, media) a
 
 | Piece | Project | Role |
 |---|---|---|
-| `ThemeTokenCatalog`, `ThemeTokenValidator` | `Shared/HackerOs.Theming.Abstractions` | list and validation of tokens |
+| `ThemeTokenCatalog`, `ThemeTokenValidator` | `Shared/Kazo.Os.Theming.Abstractions` | list and validation of tokens |
 | `ThemeFile` | same | `Parse` (tolerant) and `Serialize` of the `.theme` format |
 | `UserTheme`, `UserThemeLibrary` | same | theme read; reading of the two folders through delegates (`LoadAsync`), non-shadowing rules (`Build`) |
 | `ResolvedTheme.Resolve` | same | theme actually drawn for an id and a form factor (desktop or mobile) |
-| `ThemeScope`, `ThemePreview` (`Tokens` parameter) | `Platform/HackerOs.Theming.Blazor` | apply the tokens through `style.setProperty` on their root element, via `wwwroot/themeTokens.js` (only `--hos-*` properties are touched, and only the differences) |
-| `UserThemeCatalogService` | `Platform/HackerOs.Platform.Core/Appearance` | the shell's live catalog: reads `/etc` as the system and `~` as the user, watches the two folders (`SettingsFilesWatcher.ForDirectories`), rereads on session change, logs each warning once |
-| `App.razor` | `OS/HackerOs.Ecosystem` | `ThemeScope ThemeId=@ActiveTheme.BaseThemeId Tokens=@ActiveTheme.UserTheme?.Tokens` |
-| Theme Editor | `Apps/System/HackerOs.Apps.ThemeEditor` | the app |
-| Settings | `Apps/System/HackerOs.Apps.Settings` | user themes in the desktop and mobile lists, "Open the Theme Editor" button |
+| `ThemeScope`, `ThemePreview` (`Tokens` parameter) | `Platform/Kazo.Os.Theming.Blazor` | apply the tokens through `style.setProperty` on their root element, via `wwwroot/themeTokens.js` (only `--hos-*` properties are touched, and only the differences) |
+| `UserThemeCatalogService` | `Platform/Kazo.Os.Platform.Core/Appearance` | the shell's live catalog: reads `/etc` as the system and `~` as the user, watches the two folders (`SettingsFilesWatcher.ForDirectories`), rereads on session change, logs each warning once |
+| `App.razor` | `OS/Kazo.Os.Ecosystem` | `ThemeScope ThemeId=@ActiveTheme.BaseThemeId Tokens=@ActiveTheme.UserTheme?.Tokens` |
+| Theme Editor | `Apps/System/Kazo.Os.Apps.ThemeEditor` | the app |
+| Settings | `Apps/System/Kazo.Os.Apps.Settings` | user themes in the desktop and mobile lists, "Open the Theme Editor" button |
 
 ### Resolving an id
 
@@ -83,7 +83,7 @@ problems that prevent saving). The documentation sentences contain `<code>` and
 are rendered as markup from the assembly's resources (never from a file),
 hence the `::deep code` of `ThemeTokenDocumentation.razor.css`.
 
-The reading API of the `HackerOs.Theming.Abstractions` package (localized messages, token validation) is in [`../framework/theme-files.md`](../framework/theme-files.md).
+The reading API of the `Kazo.Os.Theming.Abstractions` package (localized messages, token validation) is in [`../framework/theme-files.md`](../framework/theme-files.md).
 
 ## Key decisions
 
@@ -110,5 +110,5 @@ The reading API of the `HackerOs.Theming.Abstractions` package (localized messag
 - [x] Settings: user themes listed, link to the editor.
 - [x] Tests: format, rejected tokens, non-shadowing, resolution, theme applied
   after reload, editor model (`Platform.Core.Tests/Appearance`,
-  `HackerOs.Apps.ThemeEditor.Tests`).
+  `Kazo.Os.Apps.ThemeEditor.Tests`).
 - [ ] Editor axe scans: work item `v3/13`.

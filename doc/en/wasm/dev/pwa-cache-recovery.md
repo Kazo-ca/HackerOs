@@ -33,9 +33,9 @@ is rebuilt.
 | Piece | File | Role |
 |---|---|---|
 | Integrity check | Blazor (`dotnet.js`, SHA-256 fingerprints of the startup configuration) | Each startup resource is loaded with `integrity`: damaged bytes make the load fail ("SRI's integrity checks failed"), then startup fail ("Failed to start platform. Reason: … download '…' failed"). |
-| Startup guard | `OS/HackerOs.Ecosystem/wwwroot/index.html` (inline script, host bootstrap boundary) | Launches Blazor (`autostart="false"`, then `Blazor.start()`), detects the failure, decides on the repair, displays the error screen. |
-| Repair | `OS/HackerOs.Ecosystem/wwwroot/service-worker.published.js`, `RESET_CACHE` message | Empties the version's cache and fetches it again from the server, or keeps it intact if the server is unreachable. |
-| Error screen | `index.html` (`#hackeros-boot-error`) and `OS/HackerOs.Ecosystem.Host/wwwroot/css/app.css` (served under `_content/HackerOs.Ecosystem.Host/css/app.css`) | Three states (`data-state`): `repairing`, `retrying`, `offline`, `failed`. Dark console style; Blazor's loading ring and error bar are hidden (`html.hackeros-boot-failed`). |
+| Startup guard | `OS/Kazo.Os.Ecosystem/wwwroot/index.html` (inline script, host bootstrap boundary) | Launches Blazor (`autostart="false"`, then `Blazor.start()`), detects the failure, decides on the repair, displays the error screen. |
+| Repair | `OS/Kazo.Os.Ecosystem/wwwroot/service-worker.published.js`, `RESET_CACHE` message | Empties the version's cache and fetches it again from the server, or keeps it intact if the server is unreachable. |
+| Error screen | `index.html` (`#hackeros-boot-error`) and `OS/Kazo.Os.Ecosystem.Host/wwwroot/css/app.css` (served under `_content/Kazo.Os.Ecosystem.Host/css/app.css`) | Three states (`data-state`): `repairing`, `retrying`, `offline`, `failed`. Dark console style; Blazor's loading ring and error bar are hidden (`html.hackeros-boot-failed`). |
 
 ### Flow
 
@@ -97,7 +97,7 @@ cache (ADR 0017).
 
 ## Tests
 
-`Tests/HackerOs.Pwa.E2E.Tests/PublishedPwaTests.cs`, against a Release
+`Tests/Kazo.Os.Pwa.E2E.Tests/PublishedPwaTests.cs`, against a Release
 publication served statically (the test that checked that corrupted bytes
 were served as is has been replaced):
 

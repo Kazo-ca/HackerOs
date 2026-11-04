@@ -37,16 +37,16 @@ alice@hackeros:~$ sudo cat /etc/shadow | wc -l
 
 | Élément | Emplacement | Rôle |
 |---|---|---|
-| `IShellSession`, `ShellCommandInfo`, `ShellJobInfo`, `ShellJobState` | `Shared/HackerOs.AppSdk/IShellSession.cs` | Accès au shell appelant : répertoire, environnement, historique, `ChangeDirectoryAsync`, `SetVariable`, `UnsetVariable`, `GetCommands`, `RunElevatedAsync` ; depuis l'ADR 0064 `GetVariable` (variables non exportées comprises), `AssignVariable` (`read`), `RunAsync` (une ligne dans un sous-shell, `watch`), `Jobs` et `KillJob` (`jobs`, `kill %n`). Membres par défaut : une implémentation existante compile toujours. |
-| `TerminalExecutionContext.Shell` | `Shared/HackerOs.AppSdk/` | Le shell, ou `null`. |
-| `AppCapabilities.ShellControl` | `Shared/HackerOs.App.Abstractions/` | `shell.control`, classée **normale** (ADR 0049). |
-| `ShellSessionAccess` | `Platform/HackerOs.Platform.Core/Shell/` | Implémentation interne d'`IShellSession`, créée par l'interpréteur pour une étape. |
+| `IShellSession`, `ShellCommandInfo`, `ShellJobInfo`, `ShellJobState` | `Shared/Kazo.Os.AppSdk/IShellSession.cs` | Accès au shell appelant : répertoire, environnement, historique, `ChangeDirectoryAsync`, `SetVariable`, `UnsetVariable`, `GetCommands`, `RunElevatedAsync` ; depuis l'ADR 0064 `GetVariable` (variables non exportées comprises), `AssignVariable` (`read`), `RunAsync` (une ligne dans un sous-shell, `watch`), `Jobs` et `KillJob` (`jobs`, `kill %n`). Membres par défaut : une implémentation existante compile toujours. |
+| `TerminalExecutionContext.Shell` | `Shared/Kazo.Os.AppSdk/` | Le shell, ou `null`. |
+| `AppCapabilities.ShellControl` | `Shared/Kazo.Os.App.Abstractions/` | `shell.control`, classée **normale** (ADR 0049). |
+| `ShellSessionAccess` | `Platform/Kazo.Os.Platform.Core/Shell/` | Implémentation interne d'`IShellSession`, créée par l'interpréteur pour une étape. |
 | `ShellSession.Fork()` | idem | Copie du shell pour une étape d'un tube (sous-shell). |
 | `ShellInterpreter.GetInstalledCommands()` / `RunElevatedAsync` | idem | Liste des commandes installées ; exécution élevée de `sudo`. |
 | `ShellExecutionOptions.CredentialPrompt` | idem | Fenêtre d'identifiants fournie par l'hôte du shell (le terminal). |
-| `AppLaunchRequest.Shell`, `CommandName` | `Platform/HackerOs.Platform.Core/Lifecycle/` | Shell transmis à la commande ; nom d'appel qui devient `argv[0]`. |
-| `TerminalControlSequenceDecoder` | `Shared/HackerOs.AppSdk.Terminal/` | Interprète les séquences ECMA-48 écrites par les commandes (effacement d'écran). |
-| Commandes | `Apps/Commands/HackerOs.Commands/{Cd,Pwd,Clear,Help,Sudo,Export,Unset,Env,Alias}/` | Commandes du catalogue. |
+| `AppLaunchRequest.Shell`, `CommandName` | `Platform/Kazo.Os.Platform.Core/Lifecycle/` | Shell transmis à la commande ; nom d'appel qui devient `argv[0]`. |
+| `TerminalControlSequenceDecoder` | `Shared/Kazo.Os.AppSdk.Terminal/` | Interprète les séquences ECMA-48 écrites par les commandes (effacement d'écran). |
+| Commandes | `Apps/Commands/Kazo.Os.Commands/{Cd,Pwd,Clear,Help,Sudo,Export,Unset,Env,Alias}/` | Commandes du catalogue. |
 
 ### Qui reçoit le shell
 
@@ -175,17 +175,17 @@ disparu.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Shell/ShellInterpreterTests.cs` : bout en
+- `Tests/Kazo.Os.Platform.Core.Tests/Shell/ShellInterpreterTests.cs` : bout en
   bout avec les vraies commandes du catalogue (`cd` et `&&`, `cd -`, erreurs,
   copie dans un tube, `export`/`unset`/`env`, `help` qui suit les commandes
   installées, `clear` et sa redirection, `sudo` enfant de `sudo` avec ticket,
   refus de `sudo cd` et des identifiants, shell absent pour
   `ExecuteCommandIntent` et pour une commande sans `shell.control`, `unalias`).
-- `Tests/HackerOs.AppSdk.Terminal.Tests/TerminalControlSequenceDecoderTests.cs`.
-- `Tests/HackerOs.Commands.Tests/CoreCommandsTests.cs` et
-  `Tests/HackerOs.Commands.Wave5.Tests/Wave5Tests.cs` : `cd`, `clear`, `help`
-  avec `FakeShellSession` (`Tests/HackerOs.Tests.Support/`).
-- `Tests/HackerOs.Ecosystem.Tests` : 87 apps intégrées, 70 commandes (`stress` depuis `rebuild/5-worker-processes`, `ausearch` depuis `v3/8`, `xdg-open` depuis `v3/4`, `hackbackup` depuis `v3/7`, `localectl` depuis `v3/12`, `xdg-mime` depuis `v3/4b`, `passwd` depuis `v3/8`).
+- `Tests/Kazo.Os.AppSdk.Terminal.Tests/TerminalControlSequenceDecoderTests.cs`.
+- `Tests/Kazo.Os.Commands.Tests/CoreCommandsTests.cs` et
+  `Tests/Kazo.Os.Commands.Wave5.Tests/Wave5Tests.cs` : `cd`, `clear`, `help`
+  avec `FakeShellSession` (`Tests/Kazo.Os.Tests.Support/`).
+- `Tests/Kazo.Os.Ecosystem.Tests` : 87 apps intégrées, 70 commandes (`stress` depuis `rebuild/5-worker-processes`, `ausearch` depuis `v3/8`, `xdg-open` depuis `v3/4`, `hackbackup` depuis `v3/7`, `localectl` depuis `v3/12`, `xdg-mime` depuis `v3/4b`, `passwd` depuis `v3/8`).
 
 ## Liste des tâches
 

@@ -46,7 +46,7 @@ We must evaluate editor framework options (Monaco vs CodeMirror) based on payloa
 ## Implementation evidence (2026-08-03)
 
 The editor uses exact packages pinned by
-`Apps/System/HackerOs.Apps.CodeEditor/package-lock.json` and a checked-in local
+`Apps/System/Kazo.Os.Apps.CodeEditor/package-lock.json` and a checked-in local
 bundle produced by esbuild. `CodeEditorDocument`, `CodeEditorSession`, and
 `CodeEditorFileService` keep documents, tabs, permissions, VFS persistence, and
 recovery data in C#. The collocated JavaScript boundary owns only CodeMirror DOM
@@ -59,9 +59,9 @@ The Framework Comparison Matrix above chose CodeMirror for its smaller
 payload; that choice is now superseded. The Code Editor was reworked to use
 Monaco Editor instead, matching the legacy JavaScript version's editor,
 alongside two additive features: an "Open Folder" tree view (reusing the
-shared `HackerOs.AppSdk.FileView` control) and an embedded terminal panel
+shared `Kazo.Os.AppSdk.FileView` control) and an embedded terminal panel
 (the Terminal app's session/shell/rendering logic was extracted into a new
-shared `HackerOs.AppSdk.Terminal` library — `TerminalPanel` — so both the
+shared `Kazo.Os.AppSdk.Terminal` library — `TerminalPanel` — so both the
 standalone Terminal app and the Code Editor's embedded terminal use the same
 component).
 

@@ -4,7 +4,7 @@
 
 Commandes ajoutées ou revues par l'[ADR 0064](adr/0064-posix-shell-scripts-jobs-and-app-commands.md)
 pour que le terminal se comporte comme un shell Linux. Elles vivent dans
-`Apps/Commands/HackerOs.Commands/` (un dossier par commande, ADR 0051), ne
+`Apps/Commands/Kazo.Os.Commands/` (un dossier par commande, ADR 0051), ne
 dépendent que du SDK public (ADR 0055) et sont des apps système. Le langage du
 shell lui-même (tubes, redirections, scripts, jobs, apps lancées par leur nom)
 est décrit dans [`shell-interpreter.md`](shell-interpreter.md) ; les
@@ -138,18 +138,18 @@ Plus de place : une écriture refusée affiche `No space left on device`
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Shell/ShellInterpreterTests.Commands.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/Shell/ShellInterpreterTests.Commands.cs` :
   `test`/`[`, `read` avec `while read`, `printf`, `seq`, `cut | sort | uniq -c`,
   `sort -k -t -n -r`, `tail -n +N`, `head -c`, `tee`, `chmod +x` puis
   `./script`, modes symboliques, `ln -s` et refus des liens physiques,
   `zip`/`unzip` avec les modes, `whoami`, `basename`, `dirname`, `which`,
   `du`, `locate`, `jobs` et `kill %1`, `kill PID` et `kill -9 PID` sur un vrai
   processus, `grep -r`, `ip`, `top -b`.
-- `Tests/HackerOs.Commands.Wave5.Tests` : `chmod`, `kill`, `sort`, `head`,
+- `Tests/Kazo.Os.Commands.Wave5.Tests` : `chmod`, `kill`, `sort`, `head`,
   `tail`, `mkdir` (`-p`, `-v`, dossier existant, fichier sur le chemin, `..`), `hackbackup` et `hackpkg` avec les passerelles factices.
-- `Tests/HackerOs.Commands.Tests/XdgOpenCommandTests.cs` : chemin relatif, dossier, fichier absent, aucune app, plusieurs apps, URI, schéma inconnu, ligne de commande, refus (`v3/4`). Le scénario de parité (`CommandParityTests`) compare la commande dans un Web Worker et sur le fil principal.
-- `Tests/HackerOs.Ecosystem.Tests` : 94 apps intégrées dont 75 commandes (`stress` ajoutée par `rebuild/5-worker-processes`, `nslookup` par `web/3`, `ausearch` par `v3/8-settings-security`, `xdg-open` par `v3/4`, `hackbackup` par `v3/7`, `localectl` par `v3/12`, `xdg-mime` par `v3/4b`, `passwd` par `v3/8`, `prlimit` par `exec/2`, `nice` et `renice` par `exec/4`, `dmesg` par `exec/3`, `hackpkg` par l'ADR 0182).
-- `Tests/HackerOs.Commands.Tests` : filtres d'`ausearch` ; `LocalizedCommandsTests` et `LocalizedCommandsMzTests` exécutent des commandes avec `LANG=fr_FR.UTF-8` (`mkdir`, `rm`, `seq`, `sleep`, `printf`, `test`, `sudo`, `xdg-open`…), vérifient les mêmes clés en anglais et en français et la description et l'usage français des 75 commandes générés dans `localization/`. `NanoCommandTests` dessine les barres de `nano` en français, `LocalizationShellTests` (WorkerHost) passe par le vrai shell.
+- `Tests/Kazo.Os.Commands.Tests/XdgOpenCommandTests.cs` : chemin relatif, dossier, fichier absent, aucune app, plusieurs apps, URI, schéma inconnu, ligne de commande, refus (`v3/4`). Le scénario de parité (`CommandParityTests`) compare la commande dans un Web Worker et sur le fil principal.
+- `Tests/Kazo.Os.Ecosystem.Tests` : 94 apps intégrées dont 75 commandes (`stress` ajoutée par `rebuild/5-worker-processes`, `nslookup` par `web/3`, `ausearch` par `v3/8-settings-security`, `xdg-open` par `v3/4`, `hackbackup` par `v3/7`, `localectl` par `v3/12`, `xdg-mime` par `v3/4b`, `passwd` par `v3/8`, `prlimit` par `exec/2`, `nice` et `renice` par `exec/4`, `dmesg` par `exec/3`, `hackpkg` par l'ADR 0182).
+- `Tests/Kazo.Os.Commands.Tests` : filtres d'`ausearch` ; `LocalizedCommandsTests` et `LocalizedCommandsMzTests` exécutent des commandes avec `LANG=fr_FR.UTF-8` (`mkdir`, `rm`, `seq`, `sleep`, `printf`, `test`, `sudo`, `xdg-open`…), vérifient les mêmes clés en anglais et en français et la description et l'usage français des 75 commandes générés dans `localization/`. `NanoCommandTests` dessine les barres de `nano` en français, `LocalizationShellTests` (WorkerHost) passe par le vrai shell.
 
 ## Liste des tâches
 

@@ -11,7 +11,7 @@ Donner aux apps une API de fichiers familière à un développeur .NET, calquée
 `System.IO`, sans passer de contexte ni gérer les révisions à la main :
 
 ```csharp
-using HackerOs.AppSdk.IO;
+using Kazo.Os.AppSdk.IO;
 
 await HackFile.WriteAllTextAsync("~/notes.txt", "Bonjour");
 string texte = await HackFile.ReadAllTextAsync("~/notes.txt");
@@ -27,10 +27,10 @@ de permission restent appliqués exactement comme avant.
 
 | Élément | Emplacement | Rôle |
 |---|---|---|
-| `HackExecutionContext` | `Shared/HackerOs.AppSdk/HackExecutionContext.cs` | Contexte ambiant (`AsyncLocal`) : `Current`, `CurrentOrNull`, `WorkingDirectory`, `Enter(context, workingDirectory)`. Depuis la phase 3, `WorkingDirectory` est le répertoire du processus (`HackEnvironment`, [`process-environment.md`](../dev/process-environment.md)), sauf répertoire fixé par `Enter`. Depuis la phase 5, son `AsyncLocal` peut porter le crochet de changement de contexte des mesures de ressources, installé à la composition par `HackerOs.Platform.ResourceAccounting` ([`resource-accounting.md`](../dev/resource-accounting.md)) ; une portée ouverte empêche de l'installer. |
-| `IAppExecutionContext.HomeDirectory` | `Shared/HackerOs.AppSdk/IAppExecutionContext.cs` | Dossier personnel `/home/<login>` (membre par défaut `/home/{UserId}`, remplacé par la plateforme). Sert à `~` et au répertoire courant par défaut. |
-| `IAppExecutionContext.IsRootElevated` | `Shared/HackerOs.AppSdk/IAppExecutionContext.cs` | Lancement en root complet par `sudo` (ADR 0042), membre par défaut `false`. Ne change pas `HomeDirectory` ; sert à la corbeille de l'utilisateur effectif (`/root/.local/share/Trash`, [`trash.md`](../dev/trash.md)). |
-| `HackFile`, `HackDirectory`, `HackPath` | `Shared/HackerOs.AppSdk/IO/` | Façades statiques. `HackPath` est pur, sauf `GetFullPath(path)`. |
+| `HackExecutionContext` | `Shared/Kazo.Os.AppSdk/HackExecutionContext.cs` | Contexte ambiant (`AsyncLocal`) : `Current`, `CurrentOrNull`, `WorkingDirectory`, `Enter(context, workingDirectory)`. Depuis la phase 3, `WorkingDirectory` est le répertoire du processus (`HackEnvironment`, [`process-environment.md`](../dev/process-environment.md)), sauf répertoire fixé par `Enter`. Depuis la phase 5, son `AsyncLocal` peut porter le crochet de changement de contexte des mesures de ressources, installé à la composition par `Kazo.Os.Platform.ResourceAccounting` ([`resource-accounting.md`](../dev/resource-accounting.md)) ; une portée ouverte empêche de l'installer. |
+| `IAppExecutionContext.HomeDirectory` | `Shared/Kazo.Os.AppSdk/IAppExecutionContext.cs` | Dossier personnel `/home/<login>` (membre par défaut `/home/{UserId}`, remplacé par la plateforme). Sert à `~` et au répertoire courant par défaut. |
+| `IAppExecutionContext.IsRootElevated` | `Shared/Kazo.Os.AppSdk/IAppExecutionContext.cs` | Lancement en root complet par `sudo` (ADR 0042), membre par défaut `false`. Ne change pas `HomeDirectory` ; sert à la corbeille de l'utilisateur effectif (`/root/.local/share/Trash`, [`trash.md`](../dev/trash.md)). |
+| `HackFile`, `HackDirectory`, `HackPath` | `Shared/Kazo.Os.AppSdk/IO/` | Façades statiques. `HackPath` est pur, sauf `GetFullPath(path)`. |
 | `HackFileSystemInfo`, `HackFileInfo`, `HackDirectoryInfo` | `IO/HackFileSystemInfo.cs` | Instantanés de métadonnées (`GetAsync`, `RefreshAsync`). |
 | `HackFileStream` | `IO/HackFileStream.cs` | Flux de lecture (enveloppe la lecture du moteur) ou d'écriture (tampon mémoire publié en une écriture atomique). |
 | `HackFileSystemWatcher` | `IO/HackFileSystemWatcher.cs` | Événements `Created`, `Changed`, `Deleted`, `Renamed` au-dessus de `IAppFileSystemWatchGateway`. |
@@ -46,7 +46,7 @@ de permission restent appliqués exactement comme avant.
 | Commande terminal | `AppLifecycleOrchestrator`, autour de `ExecuteAsync` | celui du processus de la commande (copié du shell à la création) |
 | Service | `ServiceAppBase.RunAsync` et `StopAsync` | dossier personnel |
 | Fenêtre | `WindowAppBase` : `SetParametersAsync`, `IHandleEvent.HandleEventAsync`, `IHandleAfterRender.OnAfterRenderAsync` | dossier personnel |
-| Composant enfant | `HackComponentBase` (nouveau, `HackerOs.AppSdk.Blazor`) reçoit le contexte par `CascadingValue` posé par `WindowAppRenderer` | celui de la fenêtre |
+| Composant enfant | `HackComponentBase` (nouveau, `Kazo.Os.AppSdk.Blazor`) reçoit le contexte par `CascadingValue` posé par `WindowAppRenderer` | celui de la fenêtre |
 | Rappels de passerelles | `AppClockGateway.Schedule` et `AppEventGateway.Subscribe` (voie noyau et voie topic) rentrent dans le contexte de leur app (`AppAmbientContextBinding`) | dossier personnel |
 
 Les autres passerelles de l'ADR n'ont pas de rappel à envelopper :
@@ -188,7 +188,7 @@ Les exceptions dérivent de `IOException` et `UnauthorizedAccessException` : un
   pas de `Directory.Copy`) ; le moteur copie l'arbre en une transaction, la façade
   le recrée entrée par entrée entre deux montages. Voir
   [`file-explorer.md`](../dev/file-explorer.md).
-- **Double faux de tests.** `FakeAppFileSystemGateway` (`HackerOs.Tests.Support`)
+- **Double faux de tests.** `FakeAppFileSystemGateway` (`Kazo.Os.Tests.Support`)
   traite maintenant une révision attendue nulle comme une opération
   inconditionnelle et renvoie `NotFile` pour la lecture ou l'écriture d'un dossier,
   comme le vrai moteur. `MinimalAppExecutionContext` accepte une passerelle de
@@ -196,14 +196,14 @@ Les exceptions dérivent de `IOException` et `UnauthorizedAccessException` : un
 
 ## Tests
 
-- `Tests/HackerOs.AppSdk.Tests/IO/` : contexte (absence, restauration, imbrication,
+- `Tests/Kazo.Os.AppSdk.Tests/IO/` : contexte (absence, restauration, imbrication,
   propagation par `await`, `Task.Run` et `Timer`, services), `HackPath`, `HackFile`
   (umask, encodage, nouvel essai unique, révision stricte, flux, copie et
   déplacement entre montages), `HackDirectory`, infos, chaque ligne de la table de
   traduction, `HackFileSystemWatcher`.
-- `Tests/HackerOs.AppSdk.Blazor.Tests/AmbientContextComponentTests.cs` : cycle de
+- `Tests/Kazo.Os.AppSdk.Blazor.Tests/AmbientContextComponentTests.cs` : cycle de
   vie, événements et après-rendu d'une fenêtre et d'un `HackComponentBase` enfant.
-- `Tests/HackerOs.Platform.Core.Tests` : `HomeDirectory` de la fabrique, rappels de
+- `Tests/Kazo.Os.Platform.Core.Tests` : `HomeDirectory` de la fabrique, rappels de
   l'horloge et du bus d'événements, contexte d'une commande terminal.
 
 ## Liste des tâches

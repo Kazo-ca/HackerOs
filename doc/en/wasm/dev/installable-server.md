@@ -7,7 +7,7 @@
 
 ## Purpose
 
-The optional Kazo OS server (`HackerOs.Server`: HTTP, TCP and UDP network
+The optional Kazo OS server (`Kazo.Os.Server`: HTTP, TCP and UDP network
 relay, accounts, devices, synchronization) installs on the user's computer as
 a **service** that starts with the machine, with no .NET installed and no
 command line to learn. The OS stays usable without it (GitHub Pages, PWA); it
@@ -90,7 +90,7 @@ Apple signature).
 ```bash
 docker run -d --name hackeros-server -p 127.0.0.1:5888:8080 \
   -v hackeros-data:/data ghcr.io/kazo-ca/hackeros-server
-docker exec hackeros-server ./HackerOs.Server pair admin
+docker exec hackeros-server ./Kazo.Os.Server pair admin
 ```
 
 The published port is bound to `127.0.0.1`: the server stays on this
@@ -123,12 +123,12 @@ For another code (another device, an expired code), on the server's machine,
 in the program folder:
 
 ```bash
-sudo -u hackeros ./HackerOs.Server pair admin      # Linux
-./HackerOs.Server pair admin                        # macOS (the user who installed)
+sudo -u hackeros ./Kazo.Os.Server pair admin      # Linux
+./Kazo.Os.Server pair admin                        # macOS (the user who installed)
 ```
 
 ```powershell
-.\HackerOs.Server.exe pair admin                    # Windows, PowerShell as administrator
+.\Kazo.Os.Server.exe pair admin                    # Windows, PowerShell as administrator
 ```
 
 A code:
@@ -231,10 +231,10 @@ Windows service, the server uses the program folder as its content root
 
 ## Build and release
 
-- `wasm2/HackerOs/build/publish-server.sh --rid <rid> --version <v> --output <folder>`
+- `wasm2/KazoOs/build/publish-server.sh --rid <rid> --version <v> --output <folder>`
   publishes the server (self-contained, single file: `PublishSingleFile` is in
   the `.csproj`), removes the `.pdb`/`.xml` files and the Blazor debug proxy,
-  adds the scripts of `Server/HackerOs.Server/packaging/` and produces the
+  adds the scripts of `Server/Kazo.Os.Server/packaging/` and produces the
   archive.
 - `release.yml`: the `server` job publishes the 6 archives and attaches them
   to the GitHub release; the `server-image` job builds the multi-architecture
@@ -254,13 +254,13 @@ Windows service, the server uses the program folder as its content root
 
 ## Tests
 
-- `Tests/HackerOs.Server.Tests/LocalServerTests.cs`: codes (single use,
+- `Tests/Kazo.Os.Server.Tests/LocalServerTests.cs`: codes (single use,
   expiry, typed form, attempt limit), command line, and end to end: `pair`
   then `POST /api/auth/pair`, unknown `Host` refused, CA served, GitHub Pages
   CORS.
-- `Tests/HackerOs.Platform.Core.Tests/Administration/LocalServerGatewayTests.cs`:
+- `Tests/Kazo.Os.Platform.Core.Tests/Administration/LocalServerGatewayTests.cs`:
   pairing and test gateway, capability required.
-- `Tests/HackerOs.Apps.Settings.Tests/LocalServerPanelTests.cs`: the panel
+- `Tests/Kazo.Os.Apps.Settings.Tests/LocalServerPanelTests.cs`: the panel
   (downloads, nothing called by itself, Test, Pair, error in French).
 - Real run of `install.sh --no-service --lan ...` on Linux. The PowerShell
   scripts, macOS and the Docker image could not be tried in the development
@@ -269,7 +269,7 @@ Windows service, the server uses the program folder as its content root
 ## Task list
 
 - [x] One-time pairing codes and `POST /api/auth/pair`.
-- [x] `HackerOs.Server pair <account>` command.
+- [x] `Kazo.Os.Server pair <account>` command.
 - [x] Windows and systemd service, `hackeros-server.json`, content root.
 - [x] Local CA, HTTPS certificate, `GET /api/hackeros/local-ca.crt`.
 - [x] `AllowedHosts` and GitHub Pages CORS origin.

@@ -1,0 +1,3 @@
+<Project>
+  <!-- Stops the import of wasm2/KazoOs/Directory.Build.targets (see Directory.Build.props). -->
+</Project>

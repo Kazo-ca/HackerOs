@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "org.hackeros.notification-daemon",
+  "name": "Notification Daemon",
+  "version": "2.1.0",
+  "publisherId": "org.hackeros",
+  "description": "Background service that dispatches OS notifications to subscribed apps.",
+  "kind": "service",
+  "entryPoint": {
+    "assembly": "Kazo.Os.Services.NotificationDaemon",
+    "type": "Kazo.Os.Services.NotificationDaemon.NotificationDaemonService"
+  },
+  "sdkCompatibility": { "minimumVersion": "1.0.0" },
+  "presentation": {
+    "category": "system",
+    "launchVisibility": "hidden",
+    "iconAssetPaths": []
+  },
+  "capabilities": ["notifications.publish"],
+  "resources": {
+    "baselineCpuWeight": 0.02,
+    "burstCpuWeight": 0.08,
+    "baselineMemoryWeight": 0.03,
+    "burstMemoryWeight": 0.06,
+    "baselineStorageIoWeight": 0.0,
+    "burstStorageIoWeight": 0.01,
+    "baselineNetworkIoWeight": 0.0,
+    "burstNetworkIoWeight": 0.0
+  },
+  "singleInstancePerUser": true,
+  "autoStart": true
+}

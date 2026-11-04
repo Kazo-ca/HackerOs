@@ -23,9 +23,9 @@ manifest or the catalog
 ## 0. Update note (2026-08-18)
 
 This document was written on 2026-08-03, **before** the extraction of the
-windows/taskbar engine into standalone packages (`HackerOs.Windowing.Core`,
-`HackerOs.Windowing.Abstractions`, `HackerOs.Windowing.Blazor`,
-`HackerOs.Taskbar.Blazor`, finalized on 2026-08-17, see
+windows/taskbar engine into standalone packages (`Kazo.Os.Windowing.Core`,
+`Kazo.Os.Windowing.Abstractions`, `Kazo.Os.Windowing.Blazor`,
+`Kazo.Os.Taskbar.Blazor`, finalized on 2026-08-17, see
 [`window-taskbar-export-plan.md`](window-taskbar-export-plan.md) and
 [`progress-and-plan-2026-08-17.md`](progress-and-plan-2026-08-17.md)). The original
 text below never names these packages; §16 links the concepts it describes
@@ -136,8 +136,8 @@ entry can cover one or more platforms:
     "entryPoints": [
       {
         "platforms": ["desktop", "mobile"],
-        "assembly": "HackerOs.Apps.Example.dll",
-        "type": "HackerOs.Apps.Example.SharedExampleApp"
+        "assembly": "Kazo.Os.Apps.Example.dll",
+        "type": "Kazo.Os.Apps.Example.SharedExampleApp"
       }
     ]
   }
@@ -155,13 +155,13 @@ Application using two distinct components with the same `AppId`:
     "entryPoints": [
       {
         "platforms": ["desktop"],
-        "assembly": "HackerOs.Apps.Example.dll",
-        "type": "HackerOs.Apps.Example.DesktopExampleApp"
+        "assembly": "Kazo.Os.Apps.Example.dll",
+        "type": "Kazo.Os.Apps.Example.DesktopExampleApp"
       },
       {
         "platforms": ["mobile"],
-        "assembly": "HackerOs.Apps.Example.dll",
-        "type": "HackerOs.Apps.Example.MobileExampleApp"
+        "assembly": "Kazo.Os.Apps.Example.dll",
+        "type": "Kazo.Os.Apps.Example.MobileExampleApp"
       }
     ]
   }
@@ -557,18 +557,18 @@ enabled automatically.
 ## 14. Implementation plan
 
 - [x] `MOB-001` Create `AppPlatformId` and the extensible platform registry.
-  **Phase 0, 2026-08-18**: `Shared/HackerOs.App.Abstractions/AppPlatformId.cs`
+  **Phase 0, 2026-08-18**: `Shared/Kazo.Os.App.Abstractions/AppPlatformId.cs`
   (validated type + `WellKnownAppPlatforms.Desktop`/`.Mobile`). No capability
   descriptors yet (`MOB-002`, still open).
 - [x] `MOB-002` Define the platform capability descriptors and the shell
   contracts. **Phase 1, 2026-08-18**:
-  `Shared/HackerOs.App.Abstractions/AppPlatformCapabilities.cs`
+  `Shared/Kazo.Os.App.Abstractions/AppPlatformCapabilities.cs`
   (`AppPlatformCapabilities`, `IAppPlatformCapabilityRegistry`/
   `AppPlatformCapabilityRegistry`, descriptors `WellKnownAppPlatformCapabilities.Desktop`/
   `.Mobile`). Not yet consumed by a shell UI (that remains Phase 2, `MOB-009`/`010`).
 - [x] `MOB-003` Evolve the manifest towards several entry points covering
   one or more platforms. **Phase 1, 2026-08-18**:
-  `Shared/HackerOs.App.Abstractions/AppManifestPlatform.cs`
+  `Shared/Kazo.Os.App.Abstractions/AppManifestPlatform.cs`
   (`AppManifestPlatform`, `AppPlatformEntryPointManifest`,
   `AppManifestPlatformSupport.Resolve` normalizer). `AppManifest.EntryPoint` became
   optional; `AppManifest.Platform` is the new field, mutually
@@ -578,13 +578,13 @@ enabled automatically.
   be modified; see §16.5.
 - [x] `MOB-004` Update JSON Schema, source-generated serialization,
   validation, fixtures, CLI and templates. **Phase 1, 2026-08-18**: schema:
-  `Shared/HackerOs.App.Abstractions/Schema/manifest.schema.v1.json` (optional
+  `Shared/Kazo.Os.App.Abstractions/Schema/manifest.schema.v1.json` (optional
   `platform` + `oneOf` rule entryPoint/platform); serialization:
   `AppManifestJsonSerializerContext` + canonical sort in
   `AppManifestJsonSerializer.CreateCanonicalManifest`; validation: see
   `MOB-003`; fixtures: `window-multi-platform.valid.json` and
   `invalid-platform-ambiguous.json` under `Schema/Fixtures/`; CLI:
-  `Tools/HackerOs.Tools.ManifestValidator` works without modification (the
+  `Tools/Kazo.Os.Tools.ManifestValidator` works without modification (the
   source generator includes `AppManifestPlatform` automatically, type reached
   from `AppManifest`), verified by validating a real `platform` manifest.
   No `dotnet new` template project found in the repository for this batch,
@@ -592,7 +592,7 @@ enabled automatically.
 - [x] `MOB-005` Implement `IAppPlatformEntryPointResolver` and integrate it into
   discovery, catalog, intents and associations. **Phase 1,
   2026-08-18, discovery slice only**:
-  `Platform/HackerOs.Platform.Core/Discovery/AppPlatformEntryPointResolver.cs`
+  `Platform/Kazo.Os.Platform.Core/Discovery/AppPlatformEntryPointResolver.cs`
   + `AppEntryPointDiscovery.Discover` now takes an optional `activePlatform`
   (default `desktop`, behavior unchanged for any existing caller).
   A manifest not supporting the requested platform is excluded from the
@@ -605,7 +605,7 @@ enabled automatically.
   Mobile shell yet to take them over; see §16.5.
 - [x] `MOB-006` Add the device-scoped `Auto | Explicit` preference and its
   migration. **Phase 0, 2026-08-18, persistence slice only**:
-  `Platform/HackerOs.Platform.Core/Shell/UiPlatformPreferenceSettingsDocuments.cs`
+  `Platform/Kazo.Os.Platform.Core/Shell/UiPlatformPreferenceSettingsDocuments.cs`
   + `UiPlatformPreferenceService.cs` (scope `OsAdmin`/`SyncEligible:false` pending a
   durable `InstallationId` for a real `AppDevice` scope, see
   §16.3), exposed in the clock panel (§16.4). The controlled 9-step sequence
@@ -615,17 +615,17 @@ enabled automatically.
   subscriber, without ever changing the rendering of `DesktopShell`.
 - [x] `MOB-007` Implement the Browser `IPlatformEnvironmentProbe` with testable
   decision reasons. **Phase 0, 2026-08-18**:
-  `Platform/HackerOs.Platform.Core/Shell/IPlatformEnvironmentProbe.cs`
+  `Platform/Kazo.Os.Platform.Core/Shell/IPlatformEnvironmentProbe.cs`
   (`PlatformEnvironmentPolicy.Decide`, pure and testable without a browser) +
-  `Platform/HackerOs.Platform.Blazor/Shell/BrowserPlatformEnvironmentProbe.cs`
+  `Platform/Kazo.Os.Platform.Blazor/Shell/BrowserPlatformEnvironmentProbe.cs`
   (minimal JS interop, `wwwroot/platformEnvironmentProbe.js`).
 - [x] `MOB-008` Implement the controlled shell switch and the `PlatformChanged`
   stop reason. **Phase 2b, 2026-08-18, pragmatic slice, not the literal 9
   steps of §6.3**:
-  `Platform/HackerOs.Platform.Blazor/Shell/PlatformShellSwitchCoordinator.cs`
+  `Platform/Kazo.Os.Platform.Blazor/Shell/PlatformShellSwitchCoordinator.cs`
   confirms each open window via `WindowCloseGuardRegistry`, stops its
   instance with `ProcessExitReason.PlatformChanged` (new, in
-  `Shared/HackerOs.Simulation.Abstractions`) then closes its window, before
+  `Shared/Kazo.Os.Simulation.Abstractions`) then closes its window, before
   persisting via `UiPlatformPreferenceService`. `ClockPanel.razor` now
   routes Auto/Desktop/Mobile through this coordinator rather than calling
   `UiPlatformPreferenceService` directly, in order to confirm *before*
@@ -635,19 +635,19 @@ enabled automatically.
   live, without reload, proven by a real browser E2E test
   (`PlatformShellSwitchTests.cs`). Detail of the accepted simplifications in §16.7.
 - [x] `MOB-009` Create the single full-screen surface Mobile shell. **Phase 2a,
-  2026-08-18**: engine: `Platform/HackerOs.Windowing.Core/SingleSurfacePresentationPolicy.cs`
+  2026-08-18**: engine: `Platform/Kazo.Os.Windowing.Core/SingleSurfacePresentationPolicy.cs`
   (pure logic: selects the main window, minimizes the others,
   reuses Maximize to fill the work area) +
   `WindowConstraints.IsMovable` (new, applied by `WindowRuntime.Move`,
-  defense in depth). Blazor: `Platform/HackerOs.Windowing.Blazor/SingleSurfaceArea.razor`
+  defense in depth). Blazor: `Platform/Kazo.Os.Windowing.Blazor/SingleSurfaceArea.razor`
   (reuses `WindowHost` with its new parameter `ShowChrome=false`) +
-  `Platform/HackerOs.Platform.Blazor/Shell/MobileShell.razor` (composes the
+  `Platform/Kazo.Os.Platform.Blazor/Shell/MobileShell.razor` (composes the
   single surface and the system bar). Fixing a latent bug discovered
   during the feasibility spike (`WindowChrome` already ignored `IsResizable`
   for non-resizable file dialogs), see §16.6.
 - [x] `MOB-010` Create `MobileSystemNavigationBar.razor/.css` with Back/Home/Recent.
-  **Phase 2a, 2026-08-18**: new package `Platform/HackerOs.MobileShell.Blazor/`
-  (sibling of `HackerOs.Taskbar.Blazor`, as planned in §16.2), contract
+  **Phase 2a, 2026-08-18**: new package `Platform/Kazo.Os.MobileShell.Blazor/`
+  (sibling of `Kazo.Os.Taskbar.Blazor`, as planned in §16.2), contract
   `IMobileNavigationCommands`. `Back`/`Recent` are documented no-ops as long as
   `MOB-011`/`MOB-012` do not exist; `Home` hides the active surface via
   Minimize without terminating the process (§7.4), implemented in
@@ -666,13 +666,13 @@ enabled automatically.
   and an application with a shared entry point. **Phase 1, 2026-08-18,
   partial slice: a single shared entry point** (the first example of
   §4.1, not yet the two distinct variants of the second example):
-  `Apps/Samples/HackerOs.Samples.PlatformApp/` (`PlatformDemoWindow.razor` +
+  `Apps/Samples/Kazo.Os.Samples.PlatformApp/` (`PlatformDemoWindow.razor` +
   `app.manifest.json` declaring `platform.entryPoints` for `desktop`+`mobile`
-  through the same type) and `Tests/HackerOs.Samples.PlatformApp.Tests/` (validation,
+  through the same type) and `Tests/Kazo.Os.Samples.PlatformApp.Tests/` (validation,
   resolution by platform, and consistency of the archived JSON file; everything
   goes through the real `AppManifestValidator`/`AppCatalog`/`AppEntryPointDiscovery`).
   Like the existing samples, this project is not wired into the build catalog of
-  `HackerOs.Ecosystem`; it is an isolated demonstration/test project,
+  `Kazo.Os.Ecosystem`; it is an isolated demonstration/test project,
   not an app really launchable in the shell.
 - [x] `MOB-015` Implement the HackerOS virtual keyboard of the Mobile Terminal.
   **2026-08-23**: generalized into a reusable control independent of the
@@ -711,10 +711,10 @@ Mobile support is complete when:
 See `MOB-001`/`006`/`007` above for the file-by-file detail. In addition to
 these three tasks, Phase 0 added a building block that was not named in this
 document originally: a real UI entry point for the platform choice.
-`HackerOs.Taskbar.Blazor.Taskbar` now exposes `ITaskbarClockPanelSource` +
+`Kazo.Os.Taskbar.Blazor.Taskbar` now exposes `ITaskbarClockPanelSource` +
 a parameter `RenderFragment? ClockPanelContent`; the taskbar owns
 only the trigger (clock button) and the panel anchor, never its
-content. `Platform/HackerOs.Platform.Blazor/Shell/ClockPanel.razor` (provided by the
+content. `Platform/Kazo.Os.Platform.Blazor/Shell/ClockPanel.razor` (provided by the
 host application, outside the taskbar package) combines notifications, a
 minimal calendar, and the Auto/Desktop/Mobile selector wired to
 `UiPlatformPreferenceService`. This same change merged the former notification bell
@@ -731,15 +731,15 @@ This document, written before the windows/taskbar extraction, never names the
 packages that now carry the concepts it describes:
 
 - **§3 (capability descriptors, `MOB-002`)**: contract to define alongside
-  `HackerOs.Windowing.Abstractions` (same conventions as `WindowId`/
+  `Kazo.Os.Windowing.Abstractions` (same conventions as `WindowId`/
   `WindowBounds`/`WindowVisualState`).
 - **§7.1 (`SingleFullScreenSurface`, `MOB-009`)**: presentation policy to
-  add to `HackerOs.Windowing.Core`/`WindowRuntime`; **not verified** that the
+  add to `Kazo.Os.Windowing.Core`/`WindowRuntime`; **not verified** that the
   current engine (designed for floating windows) supports a single
   non-movable/non-resizable surface; a spike is needed before
   estimating `MOB-009` in detail.
 - **§7.2 (`MobileSystemNavigationBar.razor`, `MOB-010`)**: new package
-  sibling of `HackerOs.Taskbar.Blazor` (Mobile has no taskbar), not a
+  sibling of `Kazo.Os.Taskbar.Blazor` (Mobile has no taskbar), not a
   modification of it.
 - **§6 (preference and detection, `MOB-006`/`007`)**: done in Phase 0, see
   §16.1.
@@ -855,22 +855,22 @@ stack/Recent) and `MOB-012` (`IAppBackHandler`) remain undone. See
   in depth next to `IsResizable`; the engine had no concept
   of "cannot be moved" before Phase 2a; `WindowRuntime.Move` now throws
   the same exception as `Resize` for a pinned window.
-- **`SingleSurfaceArea` (Blazor) stays in `HackerOs.Windowing.Core`/`.Blazor`**,
+- **`SingleSurfaceArea` (Blazor) stays in `Kazo.Os.Windowing.Core`/`.Blazor`**,
   not in a Mobile-only package, because the "a single
   surface visible at a time" behavior is a generic presentation mode of the windowing
   engine (just like the floating mode), even if Mobile is its
   first consumer; consistent with the §16.2 note that already placed
-  `SingleFullScreenSurface` in `HackerOs.Windowing.Core`/`WindowRuntime`.
+  `SingleFullScreenSurface` in `Kazo.Os.Windowing.Core`/`WindowRuntime`.
   `WindowHost` gains a `ShowChrome` parameter (`true` by default, so no
   behavior change for `DesktopArea`) rather than a new
   duplicated component.
-- **`HackerOs.MobileShell.Blazor` is a new package sibling of
-  `HackerOs.Taskbar.Blazor`**, not a modification of it, exactly
+- **`Kazo.Os.MobileShell.Blazor` is a new package sibling of
+  `Kazo.Os.Taskbar.Blazor`**, not a modification of it, exactly
   as anticipated in §16.2: Mobile has no taskbar. Unlike the
   taskbar contracts (all optional), `MobileSystemNavigationBar.Commands`
   is required: the system bar has no Desktop equivalent where it would
   cleanly disappear when absent.
-- **`MobileShell.razor` (`Platform/HackerOs.Platform.Blazor/Shell/`) composes
+- **`MobileShell.razor` (`Platform/Kazo.Os.Platform.Blazor/Shell/`) composes
   `SingleSurfaceArea` + `MobileSystemNavigationBar`** exactly as
   `DesktopShell.razor` composes `DesktopArea` + `Taskbar`. At the time
   of the Phase 2a delivery, it was reachable from no real route or startup
@@ -893,13 +893,13 @@ panel now switches the rendered shell **live, without reload**,
 and a notification pane reachable by swiping from the top of the
 Mobile screen (§16.8) reuses this same panel to return to Desktop.
 Proven by real end-to-end browser tests
-(`Tests/HackerOs.UI.E2E.Tests/PlatformShellSwitchTests.cs`,
+(`Tests/Kazo.Os.UI.E2E.Tests/PlatformShellSwitchTests.cs`,
 `ClockPanelMobileToggleTests.cs`, `MobileNotificationShadeSwipeTests.cs`), in
 addition to the unit tests of the coordinator
-(`Tests/HackerOs.Platform.Blazor.Tests/Shell/PlatformShellSwitchCoordinatorTests.cs`,
+(`Tests/Kazo.Os.Platform.Blazor.Tests/Shell/PlatformShellSwitchCoordinatorTests.cs`,
 built against a real `AppLifecycleOrchestrator`/`WindowRuntime`, not doubles).
 
-- **`PlatformShellSwitchCoordinator`** (`Platform/HackerOs.Platform.Blazor/Shell/`)
+- **`PlatformShellSwitchCoordinator`** (`Platform/Kazo.Os.Platform.Blazor/Shell/`)
   implements a pragmatic version of the 9-step sequence of §6.3, not
   literal point by point: for each window that actually needs
   to restart (see next point), confirms via
@@ -919,7 +919,7 @@ built against a real `AppLifecycleOrchestrator`/`WindowRuntime`, not doubles).
   the stop, not the platform change itself. `WindowRuntime` is a
   DI singleton shared between `DesktopShell` and `MobileShell`; a window
   whose app declares a shared entry point for both platforms
-  (like `HackerOs.Samples.PlatformApp`) therefore survives the
+  (like `Kazo.Os.Samples.PlatformApp`) therefore survives the
   shell switch as is: the new shell simply re-presents it (with or
   without chrome) without touching the running instance. `SelectWindowsNeedingRestart`
   compares, for each window, the entry point resolved
@@ -950,7 +950,7 @@ built against a real `AppLifecycleOrchestrator`/`WindowRuntime`, not doubles).
   a service appears.
 - **Step 8 (re-resolution of launcher/associations/intents) still deferred**:
   the reason documented in §16.5 remains valid: no embedded manifest
-  declares a Mobile-only entry point (only the `HackerOs.Samples.PlatformApp` sample
+  declares a Mobile-only entry point (only the `Kazo.Os.Samples.PlatformApp` sample
   declares `platform.entryPoints`, shared desktop+mobile), so any app that
   launches today launches identically whatever the active platform
   is; launching a Desktop app on Mobile simply displays its Desktop UI
@@ -1000,7 +1000,7 @@ this support". `MOB-011` (navigation stack, Recent surface) remains
 deliberately out of scope: it is a broader subsystem that deserves its
 own dedicated slice, not an incremental addition to this one.
 
-- **`Shared/HackerOs.AppSdk.Blazor/AppBackContracts.cs`** (new): the
+- **`Shared/Kazo.Os.AppSdk.Blazor/AppBackContracts.cs`** (new): the
   exact contract of §8: `AppBackSource` (`SystemNavigationBar` /
   `DesktopChromeButton` / `KeyboardShortcut`), `AppBackRequest`,
   `AppBackResultStatus` (`Handled`/`NotHandled`/`Blocked`/
@@ -1012,7 +1012,7 @@ own dedicated slice, not an incremental addition to this one.
   in §8 ("The documented keyboard shortcut uses the same
   contract") is not wired in this slice.
 - **`AppEntryPointDiscovery` validates conformance by reflection**, without a
-  project reference to `HackerOs.AppSdk.Blazor`: exactly the same pattern as
+  project reference to `Kazo.Os.AppSdk.Blazor`: exactly the same pattern as
   `DerivesFrom` for base types: a new `Implements` helper
   compares `Type.GetInterfaces()` by full name. `manifest.SupportsBack ==
   true` without a type implementing `IAppBackHandler` fails with
@@ -1073,7 +1073,7 @@ since §16.9, and delivers the Recent surface of §7.5, without introducing a
 heavy fixture or a new engine parallel to `WindowRuntime`.
 
 - **`MobileNavigationHistory`** (new,
-  `Platform/HackerOs.Platform.Blazor/Shell/`): a reactive
+  `Platform/Kazo.Os.Platform.Blazor/Shell/`): a reactive
   `Stack<WindowId>`: it subscribes to `WindowRuntime.StateChanged`,
   recomputes `SingleSurfacePresentationPolicy.SelectPrimary` at each tick, and
   pushes the old primary as soon as it changes as long as the window still exists
@@ -1124,9 +1124,9 @@ heavy fixture or a new engine parallel to `WindowRuntime`.
   `WindowRuntime.Windows` by descending `ZOrder`; the monotonic focus
   counter that `WindowRuntime` already maintains directly serves as a recency
   signal, with no new tracking. `MobileRecentItem`/`MobileRecentSurface`
-  (new, `HackerOs.MobileShell.Blazor`, exact mirror of the generic-contract/HackerOS-projection
+  (new, `Kazo.Os.MobileShell.Blazor`, exact mirror of the generic-contract/HackerOS-projection
   separation already used by
-  `HackerOs.Taskbar.Blazor`/`TaskbarWindowSourceAdapter`) display only
+  `Kazo.Os.Taskbar.Blazor`/`TaskbarWindowSourceAdapter`) display only
   title + icon; **no thumbnail capture mechanism exists
   anywhere in the repository**; the preview protection of §7.5 is therefore satisfied
   by omission (nothing sensitive is ever rendered) rather than by an active
@@ -1183,16 +1183,16 @@ heavy fixture or a new engine parallel to `WindowRuntime`.
   of the overlay), `MobileNavigationHistoryTests` (5 cases:
   push/pop, stale entries, non-re-push of the return) and
   `MobileRecentProjectionTests` (3 cases: sort, mapping, empty list), 16 tests
-  in total in `HackerOs.Platform.Blazor.Tests`, all built against a
+  in total in `Kazo.Os.Platform.Blazor.Tests`, all built against a
   real `WindowRuntime`/`AppBackHandlerRegistry`, no mocking framework.
-  `dotnet build HackerOs.sln --configuration Release`: 0 warnings/0
+  `dotnet build Kazo.Os.sln --configuration Release`: 0 warnings/0
   errors (required regenerating `PublicAPI.Unshipped.txt` of
-  `HackerOs.MobileShell.Blazor` via `dotnet format analyzers
+  `Kazo.Os.MobileShell.Blazor` via `dotnet format analyzers
   --diagnostics RS0016 --include-generated`, same procedure as
   `EXT-WIN-014`).
 - **Finding made while writing the E2E browser test, outside the scope of this
-  slice**: no real application of the `HackerOs.Ecosystem` catalog
-  declares Mobile support (only `HackerOs.Samples.PlatformApp`, an isolated
+  slice**: no real application of the `Kazo.Os.Ecosystem` catalog
+  declares Mobile support (only `Kazo.Os.Samples.PlatformApp`, an isolated
   demonstration project not wired into the build catalog, does so; see
   `MOB-014`). The launcher that would allow launching one is a Desktop-only chrome
   (`AppLauncher.razor`, never composed in `MobileShell`), and
@@ -1223,11 +1223,11 @@ container that shrinks a content region when the keyboard
 deploys below it, rather than a Terminal-only component. The Terminal is
 the first consumer, not the only possible one.
 
-- **`Shared/HackerOs.AppSdk.VirtualKeyboard/` (new, zero dependency)**:
+- **`Shared/Kazo.Os.AppSdk.VirtualKeyboard/` (new, zero dependency)**:
   RCL package joining the exportable batch (`Packaging.props`, PublicAPI,
   README), without any reference to HackerOS or the Terminal:
   - `VirtualKey`/`VirtualKeyPressedEvent`: renderer-independent key contract,
-    modeled on the shape of `TerminalKeyEvent` (`Shared/HackerOs.AppSdk/
+    modeled on the shape of `TerminalKeyEvent` (`Shared/Kazo.Os.AppSdk/
     FullScreenTerminalContracts.cs`) for a direct mapping, but owned by
     this new package rather than by the Terminal.
   - `VirtualKeyboardOptions`: per-row toggles (modifiers, symbols,
@@ -1245,7 +1245,7 @@ the first consumer, not the only possible one.
     `ResizeObserver`/`visualViewport` detection; the shrinking of the content region
     (`flex:1`) when the keyboard appears is a simple conditional flexbox reflow,
     since this keyboard does not detect a native keyboard: it takes its place.
-- **Terminal integration (`Shared/HackerOs.AppSdk.Terminal/TerminalPanel.razor`)**,
+- **Terminal integration (`Shared/Kazo.Os.AppSdk.Terminal/TerminalPanel.razor`)**,
   not in the new package: new `UseVirtualKeyboard` (sets
   `inputmode="none"` on the line-mode `<input>`), `OnExitRequested`
   (unbound by default) and `PushVirtualKey(VirtualKeyPressedEvent)`. In
@@ -1275,12 +1275,12 @@ the first consumer, not the only possible one.
   `TerminalPanel` requires a real `IAppExecutionContext`; building a
   fake one in the harness would have required the same kind of complete fixture
   as the one judged disproportionate for `WindowCloseCoordinator` during
-  `MOB-011`. The new scenario `Tests/HackerOs.BrowserHarness.Tests/
+  `MOB-011`. The new scenario `Tests/Kazo.Os.BrowserHarness.Tests/
   VirtualKeyboardTerminalBrowserScenario.razor` instead takes up the already standalone
   pattern of `TerminalFullScreenBrowserScenario.razor` (self-sufficient full-screen
   loop, without `AppContext`), wrapped in `VirtualKeyboardHost`.
   The Playwright test `Virtual_keyboard_drives_the_full_screen_terminal_without_a_native_input`
-  (`Tests/HackerOs.E2E.Tests/IndexedDbBrowserContractTests.cs`) types
+  (`Tests/Kazo.Os.E2E.Tests/IndexedDbBrowserContractTests.cs`) types
   letters and Ctrl+X on screen, confirms that the terminal receives them through the existing
   `TerminalKeyEvent` pipeline, and verifies that no `<input>`/
   `[contenteditable]` exists anywhere in the page. **Not covered by an
@@ -1296,11 +1296,11 @@ the first consumer, not the only possible one.
   (fixed `IsKeyboardVisible="true"`) and never tests the
   toggle. To be verified concretely when `MOB-016` is tackled, not
   assumed.
-- Tests: 4 new unit cases (`Tests/HackerOs.AppSdk.VirtualKeyboard.Tests`)
+- Tests: 4 new unit cases (`Tests/Kazo.Os.AppSdk.VirtualKeyboard.Tests`)
   for `VirtualKeyboardOptions`/`VirtualKeyPressedEvent`, plus the new
-  E2E test above. `dotnet build HackerOs.sln --configuration Release`: 0
+  E2E test above. `dotnet build Kazo.Os.sln --configuration Release`: 0
   warnings/0 errors (required regenerating `PublicAPI.Unshipped.txt`
   via `dotnet format analyzers --diagnostics RS0016 --include-generated`,
-  same procedure as for `HackerOs.MobileShell.Blazor` during `MOB-011`).
-  The suites `HackerOs.AppSdk.Terminal.Tests` (9/9) and the pre-existing full-screen
+  same procedure as for `Kazo.Os.MobileShell.Blazor` during `MOB-011`).
+  The suites `Kazo.Os.AppSdk.Terminal.Tests` (9/9) and the pre-existing full-screen
   E2E test were replayed: no regression.

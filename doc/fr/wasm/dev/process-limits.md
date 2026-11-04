@@ -103,13 +103,13 @@ Détails : ADR 0139.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Processes/InMemoryProcessManagerTests.Limits.cs`
+- `Tests/Kazo.Os.Platform.Core.Tests/Processes/InMemoryProcessManagerTests.Limits.cs`
   et `ResourceLimitsConfigurationTests.cs` : tables, règles de `setrlimit`,
   limites coupées, exemptions, descripteurs, `pam_limits`, contrôleur.
-- `Tests/HackerOs.Platform.WorkerHost.Tests/ProcessLimitsTests.cs` : de bout en
+- `Tests/Kazo.Os.Platform.WorkerHost.Tests/ProcessLimitsTests.cs` : de bout en
   bout, sur le fil principal et en worker (`ulimit`, `prlimit`,
   `/proc/self/limits`, `EMFILE`, `EAGAIN`, sorties 152 et 137).
-- `Tests/HackerOs.AppSdk.Tests/HackResourceLimitsTests.cs` : lecture de
+- `Tests/Kazo.Os.AppSdk.Tests/HackResourceLimitsTests.cs` : lecture de
   `/proc/<pid>/limits`.
 - `CommandParityTests` : `prlimit` en worker et sur le fil principal.
 - `build/verify-hosts.sh` : étape des limites sur les trois hôtes et passage

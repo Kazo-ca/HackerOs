@@ -9,8 +9,8 @@ jour à la fin de chaque série ou quand une convention change.
 
 ## Où en est le projet
 
-- **Code actif** : `wasm2/HackerOs/` (OS simulé en Blazor WebAssembly, .NET 10,
-  solution `HackerOs.sln`). `src/` est l'ancienne version, gardée comme
+- **Code actif** : `wasm2/KazoOs/` (OS simulé en Blazor WebAssembly, .NET 10,
+  solution `Kazo.Os.sln`). `src/` est l'ancienne version, gardée comme
   référence.
 - **Version** : Kazo OS et le SDK passent en **2.2.2** (`build/Versions.props`),
   préparée le 2026-11-01 dans la PR `release/2.2.2` vers `main` ; elle est
@@ -24,9 +24,9 @@ jour à la fin de chaque série ou quand une convention change.
   Hack Store : ADR 0219 (signature des auteurs), 0221 (toutes les ressources
   statiques dans le paquet, CSS isolé) et 0222 (satellites des apps
   installées). Le catalogue doit demander le `manifest.json` du paquet
-  (issue Kazo-ca/HackerOs-AppMarketPlace#6). La 2.2.0 (2026-10-31) a versé
+  (issue Kazo-ca/Os-AppMarketPlace#6). La 2.2.0 (2026-10-31) a versé
   dans `Shipped` les 3020 lignes d'API ajoutées depuis la 2.1.0 (Hack Store,
-  modèle `hackeros-solution`, thèmes…). Le SDK 2.0.0 a retiré `HackerOs.AppSdk.FileView` et
+  modèle `hackeros-solution`, thèmes…). Le SDK 2.0.0 a retiré `Kazo.Os.AppSdk.FileView` et
   refuse les apps 1.x
   ([ADR 0161](../dev/adr/0161-sdk-2-0-implementation-adjustments.md)).
   La 2.1.0 (2026-10-26) est la première version publiée automatiquement
@@ -41,7 +41,7 @@ jour à la fin de chaque série ou quand une convention change.
 | Phase web | ASP.Hack (MVC, vues `.razor`/`.cshtml`), sites Blazor, sites statiques, rendu HTML du navigateur, fenêtres détachées | [`asp-hack-plan.md`](../dev/plans/asp-hack-plan.md) |
 | V3 (`v3/1` à `v3/16`) | Fin de la migration wasm v3, SDK 1.0 gelé, publication trimmée | [`wasm-v3-final-status.md`](../dev/plans/wasm-v3-final-status.md) |
 | V3.1 | Géométrie et titre des fenêtres, SDK 1.1 | [`v3-1-series-plan.md`](../dev/plans/v3-1-series-plan.md) |
-| EXEC (`exec/*`) | Limites de processus, OOM killer, passerelles distantes, boîte « ne répond pas », `HackBackground`, OS servi par `HackerOs.Server`, isolation cross-origin, SDK 1.2 | [`execution-followups-plan.md`](../dev/plans/execution-followups-plan.md) |
+| EXEC (`exec/*`) | Limites de processus, OOM killer, passerelles distantes, boîte « ne répond pas », `HackBackground`, OS servi par `Kazo.Os.Server`, isolation cross-origin, SDK 1.2 | [`execution-followups-plan.md`](../dev/plans/execution-followups-plan.md) |
 | DESK (`desk/0` à `desk/6`) | Contrôle de fichiers fourni par l'OS, menu contextuel central, entrées de menu des apps, bureau, SDK 2.0 | [`desktop-and-context-menu-plan.md`](../dev/plans/desktop-and-context-menu-plan.md) |
 | Multi-moniteur (`multi-monitor/0` à `multi-monitor/9`) | Bureau étendu : un écran par surface d'affichage, `DisplayId` et zone de travail par écran, fenêtres déplacées par portail, service d'écrans (Chrome/Edge, repli ailleurs), une barre des tâches par écran, menus « Autre écran » et voile d'identification, Paramètres ▸ Écrans, glisser entre écrans ; aucun changement du SDK des apps | [`multi-monitor-plan.md`](../dev/plans/multi-monitor-plan.md) |
 | File Explorer (`explorer/1` à `explorer/9`) | Barre latérale redimensionnable, état vide dans la liste, glisser vers l'ordinateur, raccourcis, lecteurs réseau suivis, erreurs en `MessageBox` ; le `.zip` ouvert comme dossier est fait dans `todo/base` (`todo/10-zip-as-folder`, issue #241) | [ADR 0185](../dev/adr/0185-file-explorer-improvements.md), [`file-explorer.md`](../dev/file-explorer.md) |
@@ -86,7 +86,7 @@ jour à la fin de chaque série ou quand une convention change.
   réservées) : chantier 1 du Hack Store fait, modèle
   `hackeros-solution` et workflow de publication vers le catalogue (ADR 0207,
   [`app-repository.md`](../framework/app-repository.md), issue #246). Le
-  dépôt `HackerOs-AppTemplate` ne sera régénéré qu'avec un sous-module sur la
+  dépôt `Os-AppTemplate` ne sera régénéré qu'avec un sous-module sur la
   release qui contient ce modèle, la 2.2.0 (PR en brouillon dans ce dépôt).
   Fonds d'écran en image faits aussi ([ADR 0202](../dev/adr/0202-desktop-wallpaper-images.md),
   issue #254, [`wallpapers.md`](../dev/wallpapers.md)).
@@ -106,7 +106,7 @@ jour à la fin de chaque série ou quand une convention change.
   posée à Benoit). Voir [`app-installation.md`](../dev/app-installation.md).
 - **Hack Store 5, l'app** (ADR 0212, issue `TODO` #249, série `todo/base`,
   branche `todo/5-hackstore-app`) : app système `org.hackeros.store`
-  (`HackerOs.Apps.Store`), source `catalog:<nom>/<appId>@<version>`,
+  (`Kazo.Os.Apps.Store`), source `catalog:<nom>/<appId>@<version>`,
   `hackpkg install <appId>`, `AppUpdateMonitor` et notification, épinglage par
   défaut (`defaultPinsApplied` de `start-menu.json`). Réponses de Benoit
   (2026-10-31) : Q1 A redémarrage sans administrateur, Q2 A source

@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <!--
+      BL0005 ("component parameter set outside its component") fires for the [Parameter] properties
+      DesktopAreaBackgroundContentTests.cs sets directly on a DesktopArea instance before attaching it to
+      FrameCapturingRenderer, and BL0006 fires for that renderer's direct use of
+      Microsoft.AspNetCore.Components.RenderTree — both are the intended, supported way to drive a
+      component under test without bUnit (which this solution doesn't use); see
+      Tests/Kazo.Os.Apps.FileExplorer.FileControl.Tests/TestComponentRenderer.cs for the established precedent.
+    -->
+    <NoWarn>$(NoWarn);BL0005;BL0006</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="4.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Platform\Kazo.Os.Platform.Blazor\Kazo.Os.Platform.Blazor.csproj" />
+    <ProjectReference Include="..\..\Platform\Kazo.Os.Theming.Blazor\Kazo.Os.Theming.Blazor.csproj" />
+    <ProjectReference Include="..\..\OS\Kazo.Os.Ecosystem\Kazo.Os.Ecosystem.csproj" />
+    <ProjectReference Include="..\Kazo.Os.Tests.Support\Kazo.Os.Tests.Support.csproj" />
+  </ItemGroup>
+
+</Project>

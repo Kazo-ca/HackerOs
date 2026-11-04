@@ -25,12 +25,12 @@ ADRs of section 10 are written before the code of each work item.
 
 | Element | State | Where |
 |---|---|---|
-| `FileView` | Complete control (tree, details, icons, in-place rename, drag and drop, clipboard, transfers), **SDK library compiled into each app**, public since the 1.0 freeze | `Shared/HackerOs.AppSdk.FileView`, ADR 0037, [`file-explorer.md`](../file-explorer.md) |
+| `FileView` | Complete control (tree, details, icons, in-place rename, drag and drop, clipboard, transfers), **SDK library compiled into each app**, public since the 1.0 freeze | `Shared/Kazo.Os.AppSdk.FileView`, ADR 0037, [`file-explorer.md`](../file-explorer.md) |
 | `FileView` menu | Scopes background / folder / file / type, stable identifiers (`open`, `cut`, `copy`, `paste`, `paste-into`, `rename`, `delete`, `delete-permanently`, `new-folder`, `refresh`), `InsertAfter`/`InsertBefore`, **a single level**, providers **specific to the instance** (`MudMenu`) | `ContextMenu/FileViewContextMenuContracts.cs` |
 | Added entries | "UnZip Here" and "Publish as a web site…", coded in the explorer | `ZipFileContextMenuProvider`, `PublishSiteContextMenuProvider` |
 | "Open with" | Explorer dialog (toolbar), "Always use" | `OpenWithDialog`, ADR 0121 |
 | Embeddable components | `hackeros.terminal` contract provided by the Terminal app, displayed by `HackEmbeddedComponent<T>` | ADR 0063, [`embedded-components.md`](../../framework/embedded-components.md) |
-| OS dialogs | `IDialogService`/`IFileDialogService` contracts in the SDK, implemented by the platform (`VirtualFolderBrowser` for Open/Save; since `desk/3b`, the `hackeros.file-view` control, ADR 0157) | `HackerOs.AppSdk.Blazor`, `Platform.Blazor/Dialogs` |
+| OS dialogs | `IDialogService`/`IFileDialogService` contracts in the SDK, implemented by the platform (`VirtualFolderBrowser` for Open/Save; since `desk/3b`, the `hackeros.file-view` control, ADR 0157) | `Kazo.Os.AppSdk.Blazor`, `Platform.Blazor/Dialogs` |
 | Desktop | `~/Desktop` created for each user; `DesktopArea.BackgroundContent` slot provided but empty | `FileSystemSeeder`, `DesktopArea.razor` |
 | Intents | Intents defined by apps, `IntentReceived` for an open instance | ADR 0096, [`app-intents.md`](../../framework/app-intents.md) |
 
@@ -272,7 +272,7 @@ public sealed class SuperApp : AppDefinition
 
 ### 8.2 Registration at installation
 
-- The manifest generator (`HackerOs.Tools.ManifestGenerator`) calls the
+- The manifest generator (`Kazo.Os.Tools.ManifestGenerator`) calls the
   `[RegisterFileContextMenu]` method **at build time** for built-in apps and
   writes the result into `manifest.json` (`contextMenus`) and
   `BuiltInApplications.json`. For an app installed later, the OS runs
@@ -328,7 +328,7 @@ public sealed class SuperApp : AppDefinition
 
 - `HackerOsVersion` goes to `2.0.0`. `AppCatalog` already refuses an app
   of another major version: any 1.x app must be recompiled.
-- **Removed**: the `HackerOs.AppSdk.FileView` library (`FileView`,
+- **Removed**: the `Kazo.Os.AppSdk.FileView` library (`FileView`,
   `FileViewTree`, `FileViewDetails`, `FileViewIcons`, menus
   `IFileViewContextMenuProvider`, `FileViewBreadcrumb`, `FileViewDropZone`,
   `ShellIcon`…); its public types go to `*REMOVED*`. Its code
@@ -354,7 +354,7 @@ Written by work item 0 (branch `desk/0-adrs`, towards `desk/base`).
 | ADR | Subject |
 |---|---|
 | 0148 | The SDK carries only contracts; shared controls and dialogs are provided by the OS at runtime (completes ADR 0063, replaces ADR 0037 §1 and §8) |
-| 0149 | SDK 2.0: removal of `HackerOs.AppSdk.FileView`, file contracts, migration (amends ADR 0114) |
+| 0149 | SDK 2.0: removal of `Kazo.Os.AppSdk.FileView`, file contracts, migration (amends ADR 0114) |
 | 0150 | Central OS context menu (model, groups, separators, `Menus.Attach`, keyboard and long press) |
 | 0151 | Menu entries registered by apps (declaration, registration at installation, placement, execution, `shell.context-menu` capability) |
 | 0152 | Desktop icons (Desktop mode, positions, system icons, `.desktop` files) |
@@ -387,7 +387,7 @@ documentation and the [`README.md`](../../README.md) index.
 - [x] Work item 3c: replaceable file control provider (contracts open to any windowed app, `HOSAPP0025` removed, `/etc/hackeros/components.config`, administrator's choice after approval, `component.fallback` fallback, "OS components" tab; [ADR 0156](../adr/0156-replaceable-file-control-provider.md), [ADR 0158](../adr/0158-replaceable-file-provider-implementation-adjustments.md)).
 - [x] Work item 4: entries registered by apps (`[RegisterFileContextMenu]` run at build time for all apps, manifest `contextMenus`, `/etc/hackeros/context-menus.d` aligned at startup, filters, placement, launch by intent or arguments, `shell.context-menu` capability, `HOSAPP0026` to `HOSAPP0028`, Settings ▸ File menus and `HackFileMenuEntries`, "Extract here" and "Publish as a web site…" registered; [ADR 0159](../adr/0159-app-menu-entries-implementation-adjustments.md), [`context-menu.md`](../../framework/context-menu.md#app-entries-in-the-file-menus-work-item-4)).
 - [x] Work item 5: desktop (system app `org.hackeros.desktop` rendered by the shell under the windows, Desktop mode of the file control, `HackDesktopLayout` grid, `~/.config/hackeros/desktop.config` through `HackDesktopSettings`, Home folder and Recycle Bin, `.desktop` shortcuts by dragging from the Start menu and "Send to ▸ Desktop", View and Sort by menus, Settings ▸ Desktop; [ADR 0160](../adr/0160-desktop-implementation-adjustments.md), [`desktop.md`](../desktop.md)).
-- [x] Work item 6: SDK 2.0 (`HackerOs.AppSdk.FileView` removed, its code in the explorer under `FileControl/`, `HackFileOperations` copy rules in the SDK, `PublicAPI` published, version `2.0.0`, 1.x apps refused at the catalog and at the host build, fixture `Contoso.Sdk2Compat.2.0.0`, migration in [`sdk-packages.md`](../../framework/sdk-packages.md#sdk-20); [ADR 0161](../adr/0161-sdk-2-0-implementation-adjustments.md)) and final verification (§13).
+- [x] Work item 6: SDK 2.0 (`Kazo.Os.AppSdk.FileView` removed, its code in the explorer under `FileControl/`, `HackFileOperations` copy rules in the SDK, `PublicAPI` published, version `2.0.0`, 1.x apps refused at the catalog and at the host build, fixture `Contoso.Sdk2Compat.2.0.0`, migration in [`sdk-packages.md`](../../framework/sdk-packages.md#sdk-20); [ADR 0161](../adr/0161-sdk-2-0-implementation-adjustments.md)) and final verification (§13).
 
 ## 13. Final verification
 
@@ -396,14 +396,14 @@ with work items 0 to 5 and 6), in a Linux container, .NET 10.
 
 | Verification | Result |
 |---|---|
-| `dotnet build HackerOs.sln` (Debug) | succeeded, 0 warnings, 0 errors |
+| `dotnet build Kazo.Os.sln` (Debug) | succeeded, 0 warnings, 0 errors |
 | Unit and integration tests (41 `Tests/*.Tests` projects excluding E2E) | 3,968 passed, 0 failed |
-| `build/publish-trimmed.sh` and `HackerOs.TrimmedPublish.E2E.Tests` | `RESULT: PASS`; 136 `.wasm` files, 27.7 MiB, 8.3 MiB in Brotli |
+| `build/publish-trimmed.sh` and `Kazo.Os.TrimmedPublish.E2E.Tests` | `RESULT: PASS`; 136 `.wasm` files, 27.7 MiB, 8.3 MiB in Brotli |
 | `build/verify-hosts.sh` (Ecosystem and its variants, test host, server) | `RESULT: PASS`, all 13 lines |
-| `HackerOs.E2E.Tests` | 18 passed |
-| `HackerOs.UI.E2E.Tests` | 28 passed |
-| `HackerOs.Templates.E2E.Tests` (including a host that refuses 1.x apps with `HOSAPP0021` and launches the 2.0 app) | 6 passed |
-| `HackerOs.Pwa.E2E.Tests` | 6 passed |
+| `Kazo.Os.E2E.Tests` | 18 passed |
+| `Kazo.Os.UI.E2E.Tests` | 28 passed |
+| `Kazo.Os.Templates.E2E.Tests` (including a host that refuses 1.x apps with `HOSAPP0021` and launches the 2.0 app) | 6 passed |
+| `Kazo.Os.Pwa.E2E.Tests` | 6 passed |
 
 No test was disabled or ignored. The failures known from before the series
 (PWA without IPv6, unstable tests listed in

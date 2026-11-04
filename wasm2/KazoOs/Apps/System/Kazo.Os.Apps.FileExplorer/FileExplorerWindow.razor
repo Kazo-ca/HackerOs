@@ -1,0 +1,955 @@
+@using Kazo.Os.App.Abstractions
+@using Kazo.Os.AppSdk.Blazor
+@using Kazo.Os.AppSdk.Blazor.ContextMenus
+@using Kazo.Os.AppSdk.Blazor.Files
+@using Kazo.Os.Apps.FileExplorer.FileControl
+@using Kazo.Os.Apps.FileExplorer.FileControl.Events
+@using Kazo.Os.AppSdk
+@using Kazo.Os.AppSdk.Files
+@using Kazo.Os.Simulation.Abstractions.Gateways
+@using Kazo.Os.Simulation.Abstractions.Events
+@using Kazo.Os.Simulation.Abstractions.FileSystem
+@using Kazo.Os.AppSdk.Blazor.Interop
+@using Kazo.Os.AppSdk.Icons
+@using Kazo.Os.AppSdk.IO
+@using Kazo.Os.Simulation.Abstractions.Notifications
+@using System.IO.Compression
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.JSInterop
+@inherits WindowAppBase
+@implements IAsyncDisposable
+@inject IJSRuntime JSRuntime
+
+@*
+    The File Explorer's window: the OS file control (HackFileView, contract hackeros.file-view) that this
+    same app provides to every app (ExplorerFileView, ADR 0148, ADR 0155), framed by the chrome the
+    control deliberately doesn't own: toolbar, address bar, search box, view-mode toggle, the "Places"
+    sidebar with the Trash view (TrashView, ADR 0052) and the status bar.
+    The control does by itself the listing, selection, rename in place, the trash and permanent deletion,
+    the session clipboard, drag and drop with the "Replace / Keep both / Skip" dialog, opening with the
+    default app or "Open with", and the file menus of the OS (plan §7); the toolbar runs its commands
+    (IHackFileView.ExecuteAsync), so a button and a menu entry do the same thing. The window keeps what
+    only the explorer does: New Folder/New File by name, upload, download, compress and extract, the
+    drop on the Trash place, and two entries of its own in the file menus ("UnZip Here…" on a .zip,
+    "Publish as a web site…" on a folder) until apps register theirs (chantier 4, ADR 0151).
+*@
+<div class="file-explorer-container">
+    <!-- Navigation & Address Toolbar -->
+    <div class="explorer-toolbar">
+        <div class="nav-buttons">
+            <button class="nav-btn" disabled="@(!_state.CanNavigateBack)" @onclick="NavigateBackAsync" title="@L["Nav.Back"]">
+                <HackerIcon Library="IconLibrary.Lucide" Name="arrow-left" Size="16" />
+            </button>
+            <button class="nav-btn" disabled="@(!_state.CanNavigateForward)" @onclick="NavigateForwardAsync" title="@L["Nav.Forward"]">
+                <HackerIcon Library="IconLibrary.Lucide" Name="arrow-right" Size="16" />
+            </button>
+            <button class="nav-btn" disabled="@(!_state.CanNavigateUp)" @onclick="NavigateUpAsync" title="@L["Nav.Up"]">
+                <HackerIcon Library="IconLibrary.Lucide" Name="arrow-up" Size="16" />
+            </button>
+            <button class="nav-btn" @onclick="RefreshAsync" title="@L["Nav.Refresh"]">
+                <HackerIcon Library="IconLibrary.Lucide" Name="refresh-cw" Size="16" />
+            </button>
+            <button class="nav-btn" @onclick="NavigateHomeAsync" title="@L["Nav.Home"]">
+                <HackerIcon Library="IconLibrary.Lucide" Name="house" Size="16" />
+            </button>
+        </div>
+
+        <div class="address-bar">
+            <input type="text" class="address-input" @bind="_addressInput" @bind:event="oninput" @onkeydown="HandleAddressKeyDownAsync" aria-label="@L["Address.AriaLabel"]" />
+        </div>
+
+        <div class="search-box">
+            <input type="text" class="search-input" placeholder="@L["Search.Placeholder"]" @bind="_state.SearchQuery" @bind:event="oninput" @bind:after="OnSearchQueryChanged" aria-label="@L["Search.AriaLabel"]" />
+        </div>
+
+        <div class="view-toggle">
+            <button type="button" class="view-btn @(_showHiddenFilesAndFolders ? "active" : "")"
+                    aria-label="@L["View.ShowHidden"]" title="@L["View.ShowHidden"]"
+                    aria-pressed="@(_showHiddenFilesAndFolders ? "true" : "false")" @onclick="ToggleHiddenFiles">
+                <HackerIcon Library="IconLibrary.Lucide" Name="eye" Size="16" />
+            </button>
+            <button class="view-btn @(_state.ViewMode == FileViewMode.Details ? "active" : "")" @onclick="() => SetViewMode(FileViewMode.Details)" title="@L["View.Details"]">
+                <HackerIcon Library="IconLibrary.Lucide" Name="list" Size="16" />
+            </button>
+            <button class="view-btn @(_state.ViewMode == FileViewMode.Icons ? "active" : "")" @onclick="() => SetViewMode(FileViewMode.Icons)" title="@L["View.Icons"]">
+                <HackerIcon Library="IconLibrary.Lucide" Name="layout-grid" Size="16" />
+            </button>
+            <button class="view-btn @(_state.ViewMode == FileViewMode.Tree ? "active" : "")" @onclick="() => SetViewMode(FileViewMode.Tree)" title="@L["View.Tree"]">
+                <HackerIcon Library="IconLibrary.Lucide" Name="list-tree" Size="16" />
+            </button>
+        </div>
+    </div>
+
+    <div class="explorer-body">
+    <!-- Places sidebar -->
+    <nav class="explorer-sidebar" aria-label="@L["Places.Heading"]">
+        <div class="sidebar-heading">@L["Places.Heading"]</div>
+        @if (_fileView is not null)
+        {
+            <FileViewDropZone Owner="_fileView" Destination="_homeDirectory">
+                <button class="sidebar-entry @(!_showTrash && _state.CurrentPath == GetHomePath() ? "active" : "")" @onclick="NavigateHomeAsync" title="@L["Places.Home"]">
+                    <HackerIcon Library="IconLibrary.Lucide" Name="house" Size="16" /> <span>@L["Places.Home"]</span>
+                </button>
+            </FileViewDropZone>
+            <FileViewDropZone Owner="_fileView" Dropped="OnTrashDropAsync">
+                <button class="sidebar-entry @(_showTrash ? "active" : "")" @onclick="ShowTrashAsync" title="@L["Places.TrashTooltip"]">
+                    <HackerIcon Library="IconLibrary.Lucide" Name="trash-2" Size="16" /> <span>@L["Places.Trash"]</span>
+                </button>
+            </FileViewDropZone>
+        }
+        <NetworkDrivesSidebar CurrentPath="@(_showTrash ? null : _state.CurrentPath)" Navigate="OpenNetworkDriveAsync" Failed="ReportError" />
+    </nav>
+    <ExplorerSidebarResizer Width="_sidebarWidth" WidthChanged="OnSidebarWidthChangedAsync" PanelSelector=".explorer-sidebar" Label="@L["Places.Resize"]" />
+
+    <div class="explorer-main">
+    @if (_showTrash && _fileView is not null)
+    {
+        <FileViewDropZone Owner="_fileView" Dropped="OnTrashDropAsync" Class="explorer-trash-drop">
+            <TrashView @ref="_trashView" Restored="OnTrashRestoredAsync" />
+        </FileViewDropZone>
+    }
+
+    <div class="explorer-files @(_showTrash ? "hidden" : "")">
+    @if (_fileView is not null)
+    {
+        <div class="explorer-locationbar">
+            <FileViewBreadcrumb Owner="_fileView" RootLabel="@L["Breadcrumb.Root"]" />
+        </div>
+    }
+
+    <!-- Actions Toolbar -->
+    <div class="actions-toolbar">
+        <button class="action-btn" @onclick="CreateFolderAsync" title="@L["Toolbar.NewFolder"]">
+            <HackerIcon Library="IconLibrary.Lucide" Name="folder-plus" Size="16" /> <span>@L["Toolbar.NewFolder"]</span>
+        </button>
+        <button class="action-btn" @onclick="CreateFileAsync" title="@L["Toolbar.NewFile"]">
+            <HackerIcon Library="IconLibrary.Lucide" Name="file-plus" Size="16" /> <span>@L["Toolbar.NewFile"]</span>
+        </button>
+        <button class="action-btn" disabled="@(!CanRun(HackFileMenuItems.Rename))" @onclick="() => RunAsync(HackFileMenuItems.Rename)" title="@L["Toolbar.Rename"]">
+            <HackerIcon Library="IconLibrary.Lucide" Name="pencil" Size="16" /> <span>@L["Toolbar.Rename"]</span>
+        </button>
+        <button class="action-btn danger" disabled="@(!CanRun(HackFileMenuItems.Delete))" @onclick="() => RunAsync(HackFileMenuItems.Delete)" title="@L["Toolbar.DeleteTooltip"]">
+            <HackerIcon Library="IconLibrary.Lucide" Name="trash-2" Size="16" /> <span>@L["Toolbar.Delete"]</span>
+        </button>
+        <span class="toolbar-divider"></span>
+
+        <button class="action-btn" disabled="@(!CanRun(HackFileMenuItems.Cut))" @onclick="() => RunAsync(HackFileMenuItems.Cut)" title="@L["Toolbar.CutTooltip"]">
+            <HackerIcon Library="IconLibrary.Lucide" Name="scissors" Size="16" /> <span>@L["Toolbar.Cut"]</span>
+        </button>
+        <button class="action-btn" disabled="@(!CanRun(HackFileMenuItems.Copy))" @onclick="() => RunAsync(HackFileMenuItems.Copy)" title="@L["Toolbar.CopyTooltip"]">
+            <HackerIcon Library="IconLibrary.Lucide" Name="copy" Size="16" /> <span>@L["Toolbar.Copy"]</span>
+        </button>
+        <button class="action-btn" disabled="@(!CanRun(HackFileMenuItems.Paste))" @onclick="() => RunAsync(HackFileMenuItems.Paste)" title="@L["Toolbar.PasteTooltip"]">
+            <HackerIcon Library="IconLibrary.Lucide" Name="clipboard-paste" Size="16" /> <span>@L["Toolbar.Paste"]</span>
+        </button>
+
+        <span class="toolbar-divider"></span>
+
+        <button class="action-btn" disabled="@(SelectedCount != 1)" @onclick="() => RunAsync(HackFileMenuItems.Properties)" title="@L["Toolbar.Properties"]">
+            <HackerIcon Library="IconLibrary.Lucide" Name="info" Size="16" /> <span>@L["Toolbar.Properties"]</span>
+        </button>
+        <button class="action-btn" disabled="@(!CanRun(HackFileMenuItems.OpenWithOther))" @onclick="() => RunAsync(HackFileMenuItems.OpenWithOther)" title="@L["Toolbar.OpenWith"]">
+            <HackerIcon Library="IconLibrary.Lucide" Name="external-link" Size="16" /> <span>@L["Toolbar.OpenWith"]</span>
+        </button>
+
+        <span class="toolbar-divider"></span>
+
+        <InputFile id="fileInput" OnChange="UploadFilesAsync" multiple hidden />
+        <label for="fileInput" class="action-btn" title="@L["Toolbar.Upload"]">
+            <HackerIcon Library="IconLibrary.Lucide" Name="upload" Size="16" /> <span>@L["Toolbar.Upload"]</span>
+        </label>
+        <button class="action-btn" disabled="@(SelectedCount == 0)" @onclick="DownloadSelectedAsync" title="@L["Toolbar.Download"]">
+            <HackerIcon Library="IconLibrary.Lucide" Name="download" Size="16" /> <span>@L["Toolbar.Download"]</span>
+        </button>
+        <button class="action-btn" disabled="@(SelectedCount == 0)" @onclick="CompressSelectedAsync" title="@L["Toolbar.CompressTooltip"]">
+            <HackerIcon Library="IconLibrary.Lucide" Name="archive" Size="16" /> <span>@L["Toolbar.Compress"]</span>
+        </button>
+        <button class="action-btn" disabled="@(!CanExtractSelection)" @onclick="ExtractSelectedAsync" title="@L["Toolbar.ExtractTooltip"]">
+            <HackerIcon Library="IconLibrary.Lucide" Name="package-open" Size="16" /> <span>@L["Toolbar.Extract"]</span>
+        </button>
+    </div>
+
+    <!-- Directory Content View: the OS file control, provided by this same app -->
+    <div class="explorer-content">
+        @* The explorer's own windows see inside the .zip files (ADR 0185 §6-9). *@
+        <CascadingValue Name="@ExplorerFileView.ArchiveBrowsingName" Value="true" IsFixed="true">
+            <HackFileView InitialDirectory="@_initialDirectory.Value"
+                          Mode="ToContractMode(_state.ViewMode)"
+                          ModeChanged="OnModeChanged"
+                          Filter="_searchFilter"
+                          Navigated="OnNavigated"
+                          SelectionChanged="OnSelectionChanged"
+                          ContextMenuOpening="OnFileMenuOpeningAsync"
+                          ErrorOccurred="ReportError"
+                          ControllerChanged="OnControllerChangedAsync" />
+        </CascadingValue>
+    </div>
+
+    <!-- Status Bar -->
+    <div class="explorer-statusbar">
+        <span>@Strings.Plural(L, "Status.Items", _files?.Items.Count ?? 0)</span>
+        @if (SelectedCount > 0)
+        {
+            <span> | @Strings.Plural(L, "Status.Selected", SelectedCount)</span>
+        }
+    </div>
+    </div>
+    </div>
+    </div>
+
+</div>
+
+@code {
+    private protected FileExplorerState _state = default!;
+    private protected IHackFileView? _files;
+    private protected VirtualPath _initialDirectory;
+    private protected string _addressInput = string.Empty;
+    /// <summary>The error whose message box is open, so the same failure reported twice opens one box.</summary>
+    private string? _shownError;
+    private protected IDisposable? _eventSub;
+    private protected BrowserFileDownloader? _downloader;
+    private protected Func<HackFileViewItem, bool> _searchFilter = default!;
+    private protected bool _showTrash;
+    private protected bool _showHiddenFilesAndFolders;
+    private protected TrashView? _trashView;
+    private protected VirtualPath _homeDirectory;
+
+    /// <summary>The Places panel's width, read from the user's explorer settings (ADR 0185 §1).</summary>
+    private protected int _sidebarWidth = FileExplorerSettings.DefaultSidebarWidth;
+
+    private protected IStringLocalizer<Strings>? _localizer;
+
+    /// <summary>The File Explorer's texts in its own process's language (ADR 0104).</summary>
+    private protected IStringLocalizer<Strings> L => _localizer ??= AppContext.GetLocalizer<Strings>();
+
+    /// <summary>
+    /// The control's own view, only for the chrome that needs its implementation (breadcrumb, drop zones
+    /// on the places). Everything else goes through <c>_files</c>, the contract: when an admin picks
+    /// another provider (ADR 0156), this is <see langword="null"/> and only those extras disappear.
+    /// </summary>
+    private protected FileView? _fileView => (_files as ExplorerFileView)?.View;
+
+    private protected int SelectedCount => _files?.SelectedItems.Count ?? 0;
+
+    /// <summary>Gets whether the folder shown is a <c>.zip</c> or a folder inside one (ADR 0185 §6-9).</summary>
+    private protected bool InArchive => (_files as ExplorerFileView)?.IsInArchive == true;
+
+    /// <summary>Gets the file system as the control sees it, the inside of the archives included.</summary>
+    private protected IAppFileSystemGateway ViewFileSystem => (_files as ExplorerFileView)?.ViewFileSystem ?? AppContext.FileSystem;
+
+    /// <summary>
+    /// Refuses a change in a read-only archive (ADR 0185 §9) with a clear message: the folder shown is
+    /// an archive or inside one, or one of <paramref name="entries"/> lies inside an archive.
+    /// </summary>
+    /// <returns><see langword="true"/> when the change was refused.</returns>
+    private protected bool RefuseInArchive(IEnumerable<VirtualPath>? entries = null)
+    {
+        bool inArchive = entries is null
+            ? InArchive
+            : _files is ExplorerFileView view && entries.Any(view.IsArchiveEntry);
+        if (inArchive)
+        {
+            ReportError(L["Error.ArchiveReadOnly"]);
+        }
+
+        return inArchive;
+    }
+
+    private protected bool CanExtractSelection =>
+        _files?.SelectedItems is [{ IsDirectory: false } item]
+        && item.Name.EndsWith(".zip", StringComparison.OrdinalIgnoreCase);
+
+    private protected string GetHomePath() => HackUser.Describe(AppContext).HomeDirectory;
+
+    /// <summary>Uploads, trash drops and archive tasks in flight (ADR 0069); the control tracks its own.</summary>
+    private protected readonly HashSet<Task> _operations = [];
+
+    /// <summary>
+    /// Records a file operation so a stop request can wait for it: each item moves atomically and
+    /// <see cref="HackFileOperations"/> stops between two when the process is asked to stop, so the window
+    /// closes after the current item, with nothing half-copied and the rest reported as not done.
+    /// </summary>
+    private protected async Task<T> TrackOperation<T>(Task<T> operation)
+    {
+        _operations.Add(operation);
+        try
+        {
+            return await operation;
+        }
+        finally
+        {
+            _operations.Remove(operation);
+        }
+    }
+
+    /// <inheritdoc />
+    /// <remarks>The window waits for its own operations and for the control's (pastes, drops, deletions).</remarks>
+    protected override Task OnAppStopRequestedAsync(HackStopRequestedEventArgs e) =>
+        Task.WhenAll([.. _operations, _files?.WhenIdleAsync() ?? Task.CompletedTask]);
+
+    protected override void OnAppInitialized()
+    {
+        base.OnAppInitialized();
+        string homePath = GetHomePath();
+        _homeDirectory = VirtualPath.Parse(homePath);
+        // Opening a folder (inode/directory, ADR 0039) starts the explorer on it; "Show in folder"
+        // adds --select=<path> (RevealFileIntent, ADR 0096 section 1).
+        (VirtualPath? folder, VirtualPath? select) = ParseLaunchArguments(LaunchArguments);
+        _pendingReveal = select;
+        // The desktop's Trash icon (ADR 0160 §5) starts the explorer on its trash view, like Nautilus's trash:///.
+        _showTrash = LaunchArguments.Contains(TrashArgument, StringComparer.Ordinal);
+        // "Extract here" from a file menu (ADR 0151 §8): open the first archive's folder, extract once ready.
+        if (LaunchIntent is { IntentId: FileExplorerMenuEntries.ExtractHereIntent } intent)
+        {
+            _pendingExtracts = [.. HackFileMenuIntent.ReadPaths(intent.PayloadJson)
+                .Where(static path => path.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))];
+            if (_pendingExtracts.Count > 0)
+            {
+                folder ??= ParentOf(VirtualPath.Parse(_pendingExtracts[0]));
+            }
+        }
+
+        string startPath = (folder ?? _homeDirectory).Value;
+        _state = new FileExplorerState(startPath);
+        _initialDirectory = VirtualPath.Parse(startPath);
+        _addressInput = startPath;
+        _searchFilter = MatchesSearchQuery;
+        _eventSub = AppContext.Events.Subscribe<AppDisabledEvent>(evt =>
+        {
+            if (_files is not null)
+            {
+                InvokeAsync(() => _files.RefreshAsync());
+            }
+        });
+    }
+
+    /// <summary>
+    /// The window title (ADR 0117 §4): the current folder's name, <c>Documents — File Explorer</c>;
+    /// <c>/</c> for the root and the trash's name while it is shown.
+    /// </summary>
+    private protected string FolderWindowTitle
+    {
+        get
+        {
+            if (_showTrash)
+            {
+                return FormatWindowTitle(L["Places.Trash"]);
+            }
+
+            string path = _state.CurrentPath.TrimEnd('/');
+            return FormatWindowTitle(path.Length == 0 ? "/" : path[(path.LastIndexOf('/') + 1)..]);
+        }
+    }
+
+    /// <inheritdoc />
+    /// <remarks>Every navigation ends in a render: the window title follows it here.</remarks>
+    protected override Task OnAppAfterRenderAsync(bool firstRender)
+    {
+        // ADR 0220: the shell learns when Back/Forward have something to do (mouse buttons, Alt+arrows).
+        RaiseNavigationAvailabilityChanged();
+        return SetWindowTitleAsync(FolderWindowTitle).AsTask();
+    }
+
+    protected override async Task OnAppInitializedAsync()
+    {
+        // ADR 0117 §2: named after its folder before the window is first shown.
+        await SetWindowTitleAsync(FolderWindowTitle);
+        _downloader = new BrowserFileDownloader(JSRuntime);
+        await base.OnAppInitializedAsync();
+        try
+        {
+            _sidebarWidth = await FileExplorerSettings.ReadSidebarWidthAsync(_homeDirectory.Value, AppContext.CancellationToken);
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or AppGatewayAccessDeniedException)
+        {
+            // Unreadable settings: the default width.
+        }
+    }
+
+    /// <summary>The Places panel was resized (ADR 0185 §1): keep the width and save it for the next windows.</summary>
+    private protected async Task OnSidebarWidthChangedAsync(int width)
+    {
+        _sidebarWidth = width;
+        try
+        {
+            await FileExplorerSettings.SaveSidebarWidthAsync(_homeDirectory.Value, width, AppContext.CancellationToken);
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or AppGatewayAccessDeniedException)
+        {
+            // Not saved: the width still applies to this window.
+        }
+    }
+
+    /// <summary>
+    /// The control is ready: the breadcrumb and the Places drop zones need its view, so render them now,
+    /// and select the <c>--select=</c> item when the folder is already listed.
+    /// </summary>
+    private protected async Task OnControllerChangedAsync(IHackFileView? files)
+    {
+        if (_files is not null)
+        {
+            _files.StateChanged -= OnFilesStateChanged;
+        }
+
+        _files = files;
+        if (_files is null)
+        {
+            return;
+        }
+
+        _files.StateChanged += OnFilesStateChanged;
+        StateHasChanged();
+        if (_pendingReveal is { } reveal && _files.CurrentDirectory == ParentOf(reveal).Value)
+        {
+            _pendingReveal = null;
+            await RevealAsync(reveal);
+        }
+
+        if (_pendingExtracts.Count > 0)
+        {
+            IReadOnlyList<string> archives = _pendingExtracts;
+            _pendingExtracts = [];
+            foreach (string archive in archives)
+            {
+                await ExtractAsync(archive, archive[(archive.LastIndexOf('/') + 1)..]);
+            }
+        }
+    }
+
+    /// <summary>Archives to extract once the control is ready ("Extract here", ADR 0151 §8).</summary>
+    private protected IReadOnlyList<string> _pendingExtracts = [];
+
+    /// <summary>The clipboard, the selection or the operations in flight changed: the toolbar follows.</summary>
+    private protected void OnFilesStateChanged(object? sender, EventArgs e) => _ = InvokeAsync(StateHasChanged);
+
+    /// <summary>Item to select once the view lists its folder (<c>--select=</c>, ADR 0096 section 1).</summary>
+    private protected VirtualPath? _pendingReveal;
+
+    /// <summary>
+    /// Reads the explorer's command line, like Nautilus's: a folder to open and <c>--select=&lt;path&gt;</c>
+    /// for "Show in folder". A file given as the folder opens its parent and selects it; anything
+    /// malformed is ignored (the explorer then opens the home folder).
+    /// </summary>
+    internal static (VirtualPath? Folder, VirtualPath? Select) ParseLaunchArguments(IReadOnlyList<string> arguments)
+    {
+        VirtualPath? folder = null;
+        VirtualPath? select = null;
+        foreach (string argument in arguments)
+        {
+            string value = argument.StartsWith(SelectPrefix, StringComparison.Ordinal) ? argument[SelectPrefix.Length..] : argument;
+            if (!value.StartsWith('/'))
+            {
+                continue;
+            }
+
+            try
+            {
+                VirtualPath path = VirtualPath.Parse(value);
+                if (argument.StartsWith(SelectPrefix, StringComparison.Ordinal))
+                {
+                    select = path;
+                }
+                else
+                {
+                    folder ??= path;
+                }
+            }
+            catch (Exception exception) when (exception is FormatException or ArgumentException)
+            {
+                // A malformed path is ignored, like an unknown option.
+            }
+        }
+
+        return (select is { } item && folder is null ? ParentOf(item) : folder, select);
+    }
+
+    private protected const string SelectPrefix = "--select=";
+
+    /// <summary>The argument that opens the trash view instead of a folder (ADR 0160 §5).</summary>
+    internal const string TrashArgument = "trash:///";
+
+    private protected static VirtualPath ParentOf(VirtualPath path)
+    {
+        int separator = path.Value.LastIndexOf('/');
+        return separator <= 0 ? VirtualPath.Parse("/") : VirtualPath.Parse(path.Value[..separator]);
+    }
+
+    private protected async Task RevealAsync(VirtualPath path)
+    {
+        if (_files is null)
+        {
+            return;
+        }
+
+        try
+        {
+            if (!await _files.RevealAsync(path.Value))
+            {
+                ReportError(L["Error.NoLongerHere", path.Value]);
+            }
+        }
+        catch (InvalidOperationException exception)
+        {
+            ReportError(exception.Message);
+        }
+    }
+
+    private protected void OnSelectionChanged(IReadOnlyList<HackFileViewItem> selection) => StateHasChanged();
+
+    private protected bool MatchesSearchQuery(HackFileViewItem item) =>
+        (_showHiddenFilesAndFolders || !item.Name.StartsWith('.')) &&
+        (string.IsNullOrWhiteSpace(_state.SearchQuery) ||
+        item.Name.Contains(_state.SearchQuery, StringComparison.OrdinalIgnoreCase));
+
+    // Reuse the provider's filter contract: toggling never reads or modifies the hidden files.
+    private protected void ToggleHiddenFiles()
+    {
+        _showHiddenFilesAndFolders = !_showHiddenFilesAndFolders;
+        _files?.RefreshFilter();
+    }
+
+    /// <remarks>A search that hides everything says so inside the list (ADR 0185 §2).</remarks>
+    private protected void OnSearchQueryChanged()
+    {
+        if (_fileView is not null)
+        {
+            _fileView.NoMatchText = string.IsNullOrWhiteSpace(_state.SearchQuery) ? null : L["Search.NoResults", _state.SearchQuery.Trim()].Value;
+        }
+
+        _files?.RefreshFilter();
+    }
+
+    /// <summary>Shows an error in the SDK message box of type Error (not in the window), with an OK button.</summary>
+    private protected void ReportError(string message)
+    {
+        if (string.IsNullOrEmpty(message) || message == _shownError)
+        {
+            return;
+        }
+
+        _ = InvokeAsync(() => ShowErrorAsync(message));
+    }
+
+    private async Task ShowErrorAsync(string message)
+    {
+        _shownError = message;
+        try
+        {
+            await MessageBox(L["Notification.Title"], message, MessageBoxType.Ok, MessageBoxIcon.Error, AppContext.CancellationToken);
+        }
+        catch (Exception exception) when (exception is InvalidOperationException or OperationCanceledException or NotSupportedException)
+        {
+            // No dialog here (a host without dialogs), or the window closed: nothing more to show.
+        }
+        finally
+        {
+            _shownError = null;
+        }
+    }
+
+    private protected async Task OnNavigated(string path)
+    {
+        _showTrash = false;
+        _state.NavigateTo(path);
+        _addressInput = _state.CurrentPath;
+        if (_pendingReveal is { } reveal && path == ParentOf(reveal).Value)
+        {
+            _pendingReveal = null;
+            await RevealAsync(reveal);
+        }
+    }
+
+    private protected async Task NavigateFileViewAsync(string path)
+    {
+        _showTrash = false;
+        if (_files is null) return;
+
+        try
+        {
+            await _files.NavigateAsync(path);
+        }
+        catch (Exception ex) when (ex is InvalidOperationException or FormatException or ArgumentException)
+        {
+            ReportError(ex.Message);
+        }
+    }
+
+    private protected Task NavigateBackAsync()
+    {
+        _state.NavigateBack();
+        return NavigateFileViewAsync(_state.CurrentPath);
+    }
+
+    private protected Task NavigateForwardAsync()
+    {
+        _state.NavigateForward();
+        return NavigateFileViewAsync(_state.CurrentPath);
+    }
+
+    private protected Task NavigateUpAsync()
+    {
+        _state.NavigateUp();
+        return NavigateFileViewAsync(_state.CurrentPath);
+    }
+
+    /// <summary>Opens a network drive, or home after its unmount (ADR 0181, section 11).</summary>
+    private protected Task OpenNetworkDriveAsync(string path)
+    {
+        _state.NavigateTo(path);
+        return NavigateFileViewAsync(_state.CurrentPath);
+    }
+
+    private protected Task NavigateHomeAsync()
+    {
+        _state.NavigateTo(GetHomePath());
+        return NavigateFileViewAsync(_state.CurrentPath);
+    }
+
+    private protected Task RefreshAsync() => _files?.RefreshAsync() ?? Task.CompletedTask;
+
+    private protected async Task HandleAddressKeyDownAsync(KeyboardEventArgs args)
+    {
+        if (args.Key == "Enter")
+        {
+            _state.NavigateTo(_addressInput);
+            await NavigateFileViewAsync(_state.CurrentPath);
+        }
+    }
+
+    private protected void SetViewMode(FileViewMode mode)
+    {
+        _state.ViewMode = mode;
+        StateHasChanged();
+    }
+
+    private protected void OnModeChanged(HackFileViewMode mode) => _state.ViewMode = mode switch
+    {
+        HackFileViewMode.Icons => FileViewMode.Icons,
+        HackFileViewMode.Tree => FileViewMode.Tree,
+        _ => FileViewMode.Details
+    };
+
+    private protected static HackFileViewMode ToContractMode(FileViewMode mode) => mode switch
+    {
+        FileViewMode.Icons => HackFileViewMode.Icons,
+        FileViewMode.Tree => HackFileViewMode.Tree,
+        _ => HackFileViewMode.Details
+    };
+
+    // ---- Toolbar: the control's commands (ADR 0155 §2) ----------------------------------------------
+
+    private protected bool CanRun(string command) => _files?.CanExecute(command) ?? false;
+
+    private protected Task RunAsync(string command)
+    {
+        return _files?.ExecuteAsync(command) ?? Task.CompletedTask;
+    }
+
+    private protected static VirtualPath CombineChild(VirtualPath parent, string name) =>
+        VirtualPath.Parse(parent.Value == "/" ? $"/{name}" : $"{parent.Value}/{name}");
+
+    private protected async Task CreateFolderAsync()
+    {
+        if (_files is null || RefuseInArchive()) return;
+
+        TextInputDialogResult result = await base.TextInput(
+            title: L["Dialog.NewFolder.Title"],
+            content: L["Dialog.NewFolder.Prompt"],
+            defaultValue: L["Dialog.NewFolder.Default"],
+            placeholder: L["Dialog.NewFolder.Placeholder"]);
+
+        if (result.Status != TextInputStatus.Submitted || string.IsNullOrWhiteSpace(result.Value)) return;
+
+        string folderName = result.Value.Trim();
+        VirtualPath fullPath = CombineChild(VirtualPath.Parse(_files.CurrentDirectory), folderName);
+        FileSystemMutationResult creation = await AppContext.FileSystem.CreateAsync(
+            new FileSystemCreateRequest(fullPath, FileSystemEntryKind.Directory, FileSystemPermissions.FromMode(0b111_101_101)),
+            AppContext.CancellationToken);
+
+        if (creation.Succeeded)
+        {
+            await _files.RefreshAsync();
+        }
+        else
+        {
+            ReportError(creation.Transaction.Error?.Code == FileSystemErrorCode.AlreadyExists
+                ? L["Error.AlreadyExists", folderName]
+                : L["Error.CreateFolder"]);
+        }
+    }
+
+    private protected async Task CreateFileAsync()
+    {
+        if (_files is null || RefuseInArchive()) return;
+
+        TextInputDialogResult result = await base.TextInput(
+            title: L["Dialog.NewFile.Title"],
+            content: L["Dialog.NewFile.Prompt"],
+            defaultValue: "NewFile.txt",
+            placeholder: L["Dialog.NewFile.Placeholder"]);
+
+        if (result.Status != TextInputStatus.Submitted || string.IsNullOrWhiteSpace(result.Value)) return;
+
+        string fileName = result.Value.Trim();
+        VirtualPath fullPath = CombineChild(VirtualPath.Parse(_files.CurrentDirectory), fileName);
+        FileSystemMutationResult creation = await AppContext.FileSystem.CreateAsync(
+            new FileSystemCreateRequest(fullPath, FileSystemEntryKind.File, FileSystemPermissions.FromMode(0b110_100_100)),
+            AppContext.CancellationToken);
+
+        if (creation.Succeeded)
+        {
+            await _files.RefreshAsync();
+        }
+        else
+        {
+            ReportError(creation.Transaction.Error?.Code == FileSystemErrorCode.AlreadyExists
+                ? L["Error.AlreadyExists", fileName]
+                : L["Error.CreateFile"]);
+        }
+    }
+
+    // ---- Trash place (ADR 0052) ----------------------------------------------------------------------
+
+    /// <summary>A drop on the Trash place or view: moves the dragged entries to the trash (ADR 0052).</summary>
+    private protected async Task OnTrashDropAsync(FileViewDropRequestedEventArgs e)
+    {
+        if (e.Entries.Count == 0 || RefuseInArchive(e.Entries.Select(static entry => entry.Path))) return;
+
+        HackFileTransferResult result = await TrackOperation(HackFileOperations.MoveToTrashAsync(
+            e.Entries.Select(entry => entry.Path.Value).ToList(), AppContext.CancellationToken));
+        ReportTransfer(result, TransferVerb.Trash);
+        await RefreshAfterTransferAsync();
+        if (_trashView is not null && _showTrash)
+        {
+            await _trashView.ReloadAsync();
+        }
+    }
+
+    /// <summary>
+    /// Shows the end-of-operation summary: the failures (with their reason) in the error banner and as a
+    /// desktop notification; nothing when everything went through.
+    /// </summary>
+    private protected void ReportTransfer(HackFileTransferResult result, TransferVerb verb)
+    {
+        string? summary = ExplorerTransferReport.DescribeFailures(L, result, verb);
+        if (summary is not null)
+        {
+            ReportError(summary);
+            try
+            {
+                AppContext.Notifications.Post(NotificationSeverity.Warning, L["Notification.Title"], summary);
+            }
+            catch (AppGatewayAccessDeniedException)
+            {
+                // The message box already shows it.
+            }
+        }
+
+        _ = InvokeAsync(StateHasChanged);
+    }
+
+    private protected async Task RefreshAfterTransferAsync()
+    {
+        if (_files is null) return;
+        try
+        {
+            await _files.RefreshAsync();
+        }
+        catch (InvalidOperationException)
+        {
+            // The current folder itself was moved away: go home.
+            await NavigateHomeAsync();
+        }
+    }
+
+    private protected async Task ShowTrashAsync()
+    {
+        _showTrash = true;
+        if (_trashView is not null)
+        {
+            await _trashView.ReloadAsync();
+        }
+    }
+
+    /// <summary>Restored elements may have landed in the folder the control is showing.</summary>
+    private protected Task OnTrashRestoredAsync(IReadOnlyList<string> paths) => _files?.RefreshAsync() ?? Task.CompletedTask;
+
+    // ---- Upload, download, archives -------------------------------------------------------------------
+
+    /// <summary>
+    /// Toolbar "Upload": imports host files into the current folder, like a drop of host files — a taken
+    /// name gets a "(copy)" suffix rather than overwriting (ADR 0058, section 1).
+    /// </summary>
+    private protected async Task UploadFilesAsync(InputFileChangeEventArgs e)
+    {
+        if (_files is null || RefuseInArchive()) return;
+
+        IReadOnlyList<HackHostFile> files = e.GetMultipleFiles(maximumFileCount: 100)
+            .Select(file => new HackHostFile(
+                file.Name,
+                file.Size,
+                file.ContentType,
+                (maxBytes, cancellationToken) => Task.FromResult(file.OpenReadStream(maxBytes, cancellationToken))))
+            .ToList();
+        HackFileTransferResult result = await TrackOperation(HackFileOperations.ImportAsync(files, _files.CurrentDirectory, AppContext.CancellationToken));
+        ReportTransfer(result, TransferVerb.Upload);
+        await _files.RefreshAsync();
+    }
+
+    /// <remarks>
+    /// The download archive is built here, not in a HackBackground task (ADR 0140): the bytes must end
+    /// in this window for the browser's download, and a large selection would exceed the 16 MiB a
+    /// task's result may carry (ADR 0128 section 4). Compress (to a file) uses the task.
+    /// </remarks>
+    private protected Task DownloadSelectedAsync() => _files is null ? Task.CompletedTask : DownloadAsync(_files.SelectedItems);
+
+    /// <summary>Downloads one file as it is, or else a <c>.zip</c> of the items (the toolbar, the menu, "Send to ▸ My computer").</summary>
+    private protected async Task DownloadAsync(IReadOnlyList<HackFileViewItem> selected)
+    {
+        if (_downloader is null) return;
+
+        // Through the view's file system, so the files of an archive can be downloaded too (ADR 0185 §9).
+        IAppFileSystemGateway fileSystem = ViewFileSystem;
+
+        if (selected.Count == 1)
+        {
+            HackFileViewItem item = selected[0];
+            if (!item.IsDirectory)
+            {
+                FileSystemResult<FileSystemContentReadHandle> result = await fileSystem.ReadAsync(
+                    new FileSystemReadRequest(VirtualPath.Parse(item.Path)), AppContext.CancellationToken);
+                if (result.Succeeded && result.Value is not null)
+                {
+                    await using FileSystemContentReadHandle handle = result.Value;
+                    await _downloader.DownloadFileFromStreamAsync(item.Name, handle.Content);
+                }
+            }
+            else
+            {
+                using MemoryStream ms = new();
+                using (ZipArchive archive = new(ms, ZipArchiveMode.Create, true))
+                {
+                    await FileExplorerZipService.AddDirectoryToZipAsync(fileSystem, archive, VirtualPath.Parse(item.Path), item.Name, AppContext.CancellationToken);
+                }
+                ms.Position = 0;
+                await _downloader.DownloadFileFromStreamAsync(item.Name + ".zip", ms);
+            }
+        }
+        else if (selected.Count > 1)
+        {
+            using MemoryStream ms = new();
+            using (ZipArchive archive = new(ms, ZipArchiveMode.Create, true))
+            {
+                foreach (HackFileViewItem item in selected)
+                {
+                    if (!item.IsDirectory)
+                    {
+                        await FileExplorerZipService.AddFileToZipAsync(fileSystem, archive, VirtualPath.Parse(item.Path), item.Name, AppContext.CancellationToken);
+                    }
+                    else
+                    {
+                        await FileExplorerZipService.AddDirectoryToZipAsync(fileSystem, archive, VirtualPath.Parse(item.Path), item.Name, AppContext.CancellationToken);
+                    }
+                }
+            }
+            ms.Position = 0;
+            await _downloader.DownloadFileFromStreamAsync("Archive.zip", ms);
+        }
+    }
+
+    private protected Task CompressSelectedAsync() => _files is null ? Task.CompletedTask : CompressAsync(_files.SelectedItems);
+
+    /// <summary>
+    /// Compresses the items into a <c>.zip</c> of the folder shown, named by the user (the toolbar, the
+    /// menu's "Compress to .zip…"), or by <see cref="CompressToDefaultNameAsync"/> ("Send to ▸ Compressed folder").
+    /// </summary>
+    private protected async Task CompressAsync(IReadOnlyList<HackFileViewItem> selected)
+    {
+        if (_files is null || selected.Count == 0 || RefuseInArchive()) return;
+
+        TextInputDialogResult result = await base.TextInput(
+            title: L["Dialog.Compress.Title"],
+            content: L["Dialog.Compress.Prompt"],
+            defaultValue: DefaultArchiveName(selected),
+            placeholder: L["Dialog.Compress.Placeholder"]);
+
+        if (result.Status != TextInputStatus.Submitted || string.IsNullOrWhiteSpace(result.Value)) return;
+
+        string archiveName = result.Value.Trim();
+        if (!archiveName.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
+        {
+            archiveName += ".zip";
+        }
+
+        VirtualPath destPath = CombineChild(VirtualPath.Parse(_files.CurrentDirectory), archiveName);
+        FileSystemResult<FileSystemEntrySnapshot> destStat = await AppContext.FileSystem.StatAsync(
+            new FileSystemStatRequest(destPath), AppContext.CancellationToken);
+        if (destStat.Succeeded)
+        {
+            ReportError(L["Error.AlreadyExists", archiveName]);
+            return;
+        }
+
+        await CompressToAsync(selected, destPath);
+    }
+
+    /// <summary>Compresses the items into <paramref name="destPath"/> in a child process, then shows the folder again.</summary>
+    private protected async Task CompressToAsync(IReadOnlyList<HackFileViewItem> selected, VirtualPath destPath)
+    {
+        if (_files is null) return;
+
+        // ADR 0128/0140: deflating is CPU work; a child process of the explorer does it, off the window's thread.
+        string? error = await TrackOperation(FileExplorerZipService.CompressInBackgroundAsync(
+            [.. selected.Select(item => new ZipSource(item.Path, item.Name, item.IsDirectory))],
+            destPath,
+            L,
+            AppContext.CancellationToken));
+        if (error is not null)
+        {
+            ReportError(error);
+            return;
+        }
+        _files.ClearSelection();
+        await _files.RefreshAsync();
+    }
+
+    private protected Task ExtractSelectedAsync() =>
+        CanExtractSelection ? ExtractAsync(_files!.SelectedItems[0].Path, _files.SelectedItems[0].Name) : Task.CompletedTask;
+
+    /// <summary>Extracts a <c>.zip</c> into a folder of its name next to it: the toolbar's Extract and the registered "Extract here".</summary>
+    private protected async Task ExtractAsync(string archivePath, string archiveName)
+    {
+        if (_files is null || RefuseInArchive([VirtualPath.Parse(archivePath)])) return;
+
+        // A registered entry also accepts application/zip files without the extension: they get a ".d" folder.
+        string folderName = archiveName.EndsWith(".zip", StringComparison.OrdinalIgnoreCase) && archiveName.Length > ".zip".Length
+            ? archiveName[..^".zip".Length]
+            : archiveName + ".d";
+        VirtualPath destDir = CombineChild(ParentOf(VirtualPath.Parse(archivePath)), folderName);
+
+        // ADR 0128/0140: inflating and writing every entry happen in a child process of the explorer.
+        string? error = await TrackOperation(FileExplorerZipService.ExtractInBackgroundAsync(VirtualPath.Parse(archivePath), destDir, L, AppContext.CancellationToken));
+        if (error is not null)
+        {
+            ReportError(error);
+            return;
+        }
+        _files.ClearSelection();
+        await _files.RefreshAsync();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_files is not null)
+        {
+            _files.StateChanged -= OnFilesStateChanged;
+        }
+
+        _eventSub?.Dispose();
+        if (_downloader is not null)
+        {
+            await _downloader.DisposeAsync();
+        }
+    }
+}

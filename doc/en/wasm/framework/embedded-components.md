@@ -210,16 +210,16 @@ The shell is a child of the host's process: the host must request
 
 | Item | Project | Role |
 | --- | --- | --- |
-| `AppComponent`, `AppComponentManifest`, `AppManifest.Components` | `HackerOs.App.Abstractions` | Declaration and manifest (`components`, omitted if empty). |
-| `HackComponentContracts`, `IHackTerminal`, `HackTerminalOptions`, `HackTerminalCommandResult` | `HackerOs.AppSdk` (`.Components`) | Contracts. |
-| `AppComponentContracts`, `AppComponentProviderScope` | `HackerOs.App.Abstractions` | Contracts known to the OS and who can provide them (ADR 0148 §3.3, ADR 0156). |
-| `IHackComponentHost`, `HackComponentResolution`, `HackEmbeddableComponent`, `HackEmbeddedComponent<T>`, `HackContractComponent<T>` | `HackerOs.AppSdk.Blazor` (`.Components`) | Blazor side of the SDK. |
-| `AppCatalog.ComponentProviders`, `AppComponentProvider` | `HackerOs.Platform.Core` | Provider registry read at startup. |
-| `HackComponentHost`, `HackPlatformComponent` | `HackerOs.Platform.Blazor` (`.Components`) | Platform providers first, then the administrator's choice (`Selection`), then the first installed provider that loads (`AppLifecycleOrchestrator.EnsureDescriptorAsync`); checks the type, writes `component.fallback` (`ReportWarning`) and `component.unavailable`. |
-| `ComponentProviderService`, `ComponentProvidersDocument`, `IComponentProviderSelection` | `HackerOs.Platform.Core` (`.ComponentProviders`) | `/etc/hackeros/components.config`: reading, approval, writing, audit, removal on uninstall (ADR 0156, ADR 0158). |
-| `HackComponentProviders`, `IAppComponentProviderAdministrationGateway`, `HackComponentContractInfo`, `HackComponentProviderInfo` | `HackerOs.AppSdk` (`.Administration`) | Provider choice for Settings (`apps.manage`). |
-| `OsComponentsPanel` | `HackerOs.Apps.Settings` | "OS components" tab. |
-| `TerminalEmbed` | `HackerOs.Apps.Terminal` | Provider of `hackeros.terminal`. |
+| `AppComponent`, `AppComponentManifest`, `AppManifest.Components` | `Kazo.Os.App.Abstractions` | Declaration and manifest (`components`, omitted if empty). |
+| `HackComponentContracts`, `IHackTerminal`, `HackTerminalOptions`, `HackTerminalCommandResult` | `Kazo.Os.AppSdk` (`.Components`) | Contracts. |
+| `AppComponentContracts`, `AppComponentProviderScope` | `Kazo.Os.App.Abstractions` | Contracts known to the OS and who can provide them (ADR 0148 §3.3, ADR 0156). |
+| `IHackComponentHost`, `HackComponentResolution`, `HackEmbeddableComponent`, `HackEmbeddedComponent<T>`, `HackContractComponent<T>` | `Kazo.Os.AppSdk.Blazor` (`.Components`) | Blazor side of the SDK. |
+| `AppCatalog.ComponentProviders`, `AppComponentProvider` | `Kazo.Os.Platform.Core` | Provider registry read at startup. |
+| `HackComponentHost`, `HackPlatformComponent` | `Kazo.Os.Platform.Blazor` (`.Components`) | Platform providers first, then the administrator's choice (`Selection`), then the first installed provider that loads (`AppLifecycleOrchestrator.EnsureDescriptorAsync`); checks the type, writes `component.fallback` (`ReportWarning`) and `component.unavailable`. |
+| `ComponentProviderService`, `ComponentProvidersDocument`, `IComponentProviderSelection` | `Kazo.Os.Platform.Core` (`.ComponentProviders`) | `/etc/hackeros/components.config`: reading, approval, writing, audit, removal on uninstall (ADR 0156, ADR 0158). |
+| `HackComponentProviders`, `IAppComponentProviderAdministrationGateway`, `HackComponentContractInfo`, `HackComponentProviderInfo` | `Kazo.Os.AppSdk` (`.Administration`) | Provider choice for Settings (`apps.manage`). |
+| `OsComponentsPanel` | `Kazo.Os.Apps.Settings` | "OS components" tab. |
+| `TerminalEmbed` | `Kazo.Os.Apps.Terminal` | Provider of `hackeros.terminal`. |
 
 ## Tasks
 

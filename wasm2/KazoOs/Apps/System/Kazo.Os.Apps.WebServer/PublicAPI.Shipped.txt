@@ -1,0 +1,153 @@
+#nullable enable
+Kazo.Os.Apps.WebServer.Daemon.HackWebdLog
+Kazo.Os.Apps.WebServer.Daemon.HackWebdService
+Kazo.Os.Apps.WebServer.Daemon.HackWebdService.HackWebdService(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Apps.WebServer.Daemon.HackWebdService.ServedPrefixes.get -> System.Collections.Generic.IReadOnlyDictionary<string!, string!>!
+Kazo.Os.Apps.WebServer.Daemon.ServedSite
+Kazo.Os.Apps.WebServer.Daemon.ServedSite.<Clone>$() -> Kazo.Os.Apps.WebServer.Daemon.ServedSite!
+Kazo.Os.Apps.WebServer.Daemon.ServedSite.Binding.get -> Kazo.Os.App.Abstractions.WebBinding
+Kazo.Os.Apps.WebServer.Daemon.ServedSite.Binding.init -> void
+Kazo.Os.Apps.WebServer.Daemon.ServedSite.Declaration.get -> Kazo.Os.AppSdk.Net.Hosting.HackWebSiteDeclaration!
+Kazo.Os.Apps.WebServer.Daemon.ServedSite.Declaration.init -> void
+Kazo.Os.Apps.WebServer.Daemon.ServedSite.Deconstruct(out Kazo.Os.AppSdk.Net.Hosting.HackWebSiteDeclaration! Declaration, out Kazo.Os.App.Abstractions.WebBinding Binding) -> void
+Kazo.Os.Apps.WebServer.Daemon.ServedSite.Equals(Kazo.Os.Apps.WebServer.Daemon.ServedSite? other) -> bool
+Kazo.Os.Apps.WebServer.Daemon.ServedSite.ServedSite(Kazo.Os.AppSdk.Net.Hosting.HackWebSiteDeclaration! Declaration, Kazo.Os.App.Abstractions.WebBinding Binding) -> void
+Kazo.Os.Apps.WebServer.Daemon.ServedSite.ServesAsWwwData.get -> bool
+Kazo.Os.Apps.WebServer.Daemon.ServedSite.Site.get -> Kazo.Os.AppSdk.Net.Hosting.HackWebSite!
+Kazo.Os.Apps.WebServer.Daemon.StaticFileHandler
+Kazo.Os.Apps.WebServer.Daemon.StaticFileResult
+Kazo.Os.Apps.WebServer.Daemon.StaticFileResult.BodyBytes.get -> long
+Kazo.Os.Apps.WebServer.Daemon.StaticFileResult.BodyBytes.init -> void
+Kazo.Os.Apps.WebServer.Daemon.StaticFileResult.Deconstruct(out int StatusCode, out long BodyBytes, out string? Error) -> void
+Kazo.Os.Apps.WebServer.Daemon.StaticFileResult.Equals(Kazo.Os.Apps.WebServer.Daemon.StaticFileResult other) -> bool
+Kazo.Os.Apps.WebServer.Daemon.StaticFileResult.Error.get -> string?
+Kazo.Os.Apps.WebServer.Daemon.StaticFileResult.Error.init -> void
+Kazo.Os.Apps.WebServer.Daemon.StaticFileResult.StaticFileResult() -> void
+Kazo.Os.Apps.WebServer.Daemon.StaticFileResult.StaticFileResult(int StatusCode, long BodyBytes, string? Error = null) -> void
+Kazo.Os.Apps.WebServer.Daemon.StaticFileResult.StatusCode.get -> int
+Kazo.Os.Apps.WebServer.Daemon.StaticFileResult.StatusCode.init -> void
+Kazo.Os.Apps.WebServer.Daemon.WwwDataAccess
+Kazo.Os.Apps.WebServer.HackWebdApp
+Kazo.Os.Apps.WebServer.HackWebdApp.HackWebdApp() -> void
+Kazo.Os.Apps.WebServer.Manager.WebServerManagerWindow
+Kazo.Os.Apps.WebServer.Manager.WebServerManagerWindow.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Apps.WebServer.Manager.WebServerManagerWindow.WebServerManagerWindow() -> void
+Kazo.Os.Apps.WebServer.Manager.WebServerSnapshot
+Kazo.Os.Apps.WebServer.Manager.WebServerSnapshot.<Clone>$() -> Kazo.Os.Apps.WebServer.Manager.WebServerSnapshot!
+Kazo.Os.Apps.WebServer.Manager.WebServerSnapshot.Daemon.get -> Kazo.Os.AppSdk.ServiceProcess.HackServiceController?
+Kazo.Os.Apps.WebServer.Manager.WebServerSnapshot.Daemon.init -> void
+Kazo.Os.Apps.WebServer.Manager.WebServerSnapshot.Deconstruct(out Kazo.Os.AppSdk.ServiceProcess.HackServiceController? Daemon, out System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.WebServer.Manager.WebSiteRow!>! Rows, out System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Net.HackTcpListenerInfo!>! Listeners) -> void
+Kazo.Os.Apps.WebServer.Manager.WebServerSnapshot.Equals(Kazo.Os.Apps.WebServer.Manager.WebServerSnapshot? other) -> bool
+Kazo.Os.Apps.WebServer.Manager.WebServerSnapshot.Listeners.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Net.HackTcpListenerInfo!>!
+Kazo.Os.Apps.WebServer.Manager.WebServerSnapshot.Listeners.init -> void
+Kazo.Os.Apps.WebServer.Manager.WebServerSnapshot.Rows.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.WebServer.Manager.WebSiteRow!>!
+Kazo.Os.Apps.WebServer.Manager.WebServerSnapshot.Rows.init -> void
+Kazo.Os.Apps.WebServer.Manager.WebServerSnapshot.WebServerSnapshot(Kazo.Os.AppSdk.ServiceProcess.HackServiceController? Daemon, System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.WebServer.Manager.WebSiteRow!>! Rows, System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Net.HackTcpListenerInfo!>! Listeners) -> void
+Kazo.Os.Apps.WebServer.Manager.WebSiteRow
+Kazo.Os.Apps.WebServer.Manager.WebSiteRow.<Clone>$() -> Kazo.Os.Apps.WebServer.Manager.WebSiteRow!
+Kazo.Os.Apps.WebServer.Manager.WebSiteRow.App.get -> Kazo.Os.AppSdk.Apps.HackAppInfo?
+Kazo.Os.Apps.WebServer.Manager.WebSiteRow.App.init -> void
+Kazo.Os.Apps.WebServer.Manager.WebSiteRow.Declaration.get -> Kazo.Os.AppSdk.Net.Hosting.HackWebSiteDeclaration?
+Kazo.Os.Apps.WebServer.Manager.WebSiteRow.Declaration.init -> void
+Kazo.Os.Apps.WebServer.Manager.WebSiteRow.Deconstruct(out string! Name, out Kazo.Os.AppSdk.Net.Hosting.HackWebSiteDeclaration? Declaration, out Kazo.Os.AppSdk.Apps.HackAppInfo? App, out System.Collections.Generic.IReadOnlyList<string!>! Urls, out Kazo.Os.Apps.WebServer.Manager.WebSiteState State) -> void
+Kazo.Os.Apps.WebServer.Manager.WebSiteRow.Equals(Kazo.Os.Apps.WebServer.Manager.WebSiteRow? other) -> bool
+Kazo.Os.Apps.WebServer.Manager.WebSiteRow.IsEditable.get -> bool
+Kazo.Os.Apps.WebServer.Manager.WebSiteRow.MainUrl.get -> string?
+Kazo.Os.Apps.WebServer.Manager.WebSiteRow.Name.get -> string!
+Kazo.Os.Apps.WebServer.Manager.WebSiteRow.Name.init -> void
+Kazo.Os.Apps.WebServer.Manager.WebSiteRow.State.get -> Kazo.Os.Apps.WebServer.Manager.WebSiteState
+Kazo.Os.Apps.WebServer.Manager.WebSiteRow.State.init -> void
+Kazo.Os.Apps.WebServer.Manager.WebSiteRow.Urls.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.Apps.WebServer.Manager.WebSiteRow.Urls.init -> void
+Kazo.Os.Apps.WebServer.Manager.WebSiteRow.WebSiteRow(string! Name, Kazo.Os.AppSdk.Net.Hosting.HackWebSiteDeclaration? Declaration, Kazo.Os.AppSdk.Apps.HackAppInfo? App, System.Collections.Generic.IReadOnlyList<string!>! Urls, Kazo.Os.Apps.WebServer.Manager.WebSiteState State) -> void
+Kazo.Os.Apps.WebServer.Manager.WebSiteState
+Kazo.Os.Apps.WebServer.Manager.WebSiteState.Down = 2 -> Kazo.Os.Apps.WebServer.Manager.WebSiteState
+Kazo.Os.Apps.WebServer.Manager.WebSiteState.External = 5 -> Kazo.Os.Apps.WebServer.Manager.WebSiteState
+Kazo.Os.Apps.WebServer.Manager.WebSiteState.Invalid = 4 -> Kazo.Os.Apps.WebServer.Manager.WebSiteState
+Kazo.Os.Apps.WebServer.Manager.WebSiteState.Partial = 1 -> Kazo.Os.Apps.WebServer.Manager.WebSiteState
+Kazo.Os.Apps.WebServer.Manager.WebSiteState.Running = 0 -> Kazo.Os.Apps.WebServer.Manager.WebSiteState
+Kazo.Os.Apps.WebServer.Manager.WebSiteState.Stopped = 3 -> Kazo.Os.Apps.WebServer.Manager.WebSiteState
+Kazo.Os.Apps.WebServer.Manager.WebSiteStore
+Kazo.Os.Apps.WebServer.WebServerManagerApp
+Kazo.Os.Apps.WebServer.WebServerManagerApp.WebServerManagerApp() -> void
+Kazo.Os.Apps.WebServer._Imports
+Kazo.Os.Apps.WebServer._Imports.Execute() -> void
+Kazo.Os.Apps.WebServer._Imports._Imports() -> void
+const Kazo.Os.Apps.WebServer.Daemon.HackWebdLog.Directory = "/var/log/hackweb" -> string!
+const Kazo.Os.Apps.WebServer.Daemon.HackWebdLog.DirectoryName = "hackweb" -> string!
+const Kazo.Os.Apps.WebServer.Daemon.HackWebdLog.ErrorLogPath = "/var/log/hackweb/error.log" -> string!
+const Kazo.Os.Apps.WebServer.Daemon.HackWebdLog.ServerSignature = "hackwebd/1.0" -> string!
+const Kazo.Os.Apps.WebServer.Daemon.StaticFileHandler.AllowedMethods = "GET, HEAD, OPTIONS" -> string!
+const Kazo.Os.Apps.WebServer.Daemon.WwwDataAccess.AccountName = "www-data" -> string!
+const Kazo.Os.Apps.WebServer.HackWebdApp.AppId = "org.hackeros.hackwebd" -> string!
+const Kazo.Os.Apps.WebServer.Manager.WebSiteStore.FirstSuggestedPort = 8080 -> int
+const Kazo.Os.Apps.WebServer.WebServerManagerApp.AppId = "org.hackeros.web-server-manager" -> string!
+const Kazo.Os.Apps.WebServer.WebServerManagerApp.PublishSiteIntent = "org.hackeros.web-server-manager.publish-site.v1" -> string!
+override Kazo.Os.Apps.WebServer.Daemon.ServedSite.Equals(object? obj) -> bool
+override Kazo.Os.Apps.WebServer.Daemon.ServedSite.GetHashCode() -> int
+override Kazo.Os.Apps.WebServer.Daemon.ServedSite.ToString() -> string!
+override Kazo.Os.Apps.WebServer.Daemon.StaticFileResult.GetHashCode() -> int
+override Kazo.Os.Apps.WebServer.HackWebdApp.AutoStart.get -> bool
+override Kazo.Os.Apps.WebServer.HackWebdApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Apps.WebServer.HackWebdApp.Category.get -> string!
+override Kazo.Os.Apps.WebServer.HackWebdApp.Description.get -> string!
+override Kazo.Os.Apps.WebServer.HackWebdApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Apps.WebServer.HackWebdApp.Id.get -> string!
+override Kazo.Os.Apps.WebServer.HackWebdApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Apps.WebServer.HackWebdApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Apps.WebServer.HackWebdApp.Name.get -> string!
+override Kazo.Os.Apps.WebServer.HackWebdApp.PublisherId.get -> string!
+override Kazo.Os.Apps.WebServer.HackWebdApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Apps.WebServer.HackWebdApp.SingleInstancePerUser.get -> bool
+override Kazo.Os.Apps.WebServer.Manager.WebServerManagerWindow.OnAppInitializedAsync() -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.WebServer.Manager.WebServerManagerWindow.OnIntentReceivedAsync(Kazo.Os.App.Abstractions.AppIntentDelivery! intent) -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.WebServer.Manager.WebServerSnapshot.Equals(object? obj) -> bool
+override Kazo.Os.Apps.WebServer.Manager.WebServerSnapshot.GetHashCode() -> int
+override Kazo.Os.Apps.WebServer.Manager.WebServerSnapshot.ToString() -> string!
+override Kazo.Os.Apps.WebServer.Manager.WebSiteRow.Equals(object? obj) -> bool
+override Kazo.Os.Apps.WebServer.Manager.WebSiteRow.GetHashCode() -> int
+override Kazo.Os.Apps.WebServer.Manager.WebSiteRow.ToString() -> string!
+override Kazo.Os.Apps.WebServer.WebServerManagerApp.Assets.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AssetManifest!>!
+override Kazo.Os.Apps.WebServer.WebServerManagerApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Apps.WebServer.WebServerManagerApp.Category.get -> string!
+override Kazo.Os.Apps.WebServer.WebServerManagerApp.Description.get -> string!
+override Kazo.Os.Apps.WebServer.WebServerManagerApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Apps.WebServer.WebServerManagerApp.Icons.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Apps.WebServer.WebServerManagerApp.Id.get -> string!
+override Kazo.Os.Apps.WebServer.WebServerManagerApp.Intents.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppIntentDeclarationManifest!>!
+override Kazo.Os.Apps.WebServer.WebServerManagerApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Apps.WebServer.WebServerManagerApp.MobileEntryPoint.get -> System.Type?
+override Kazo.Os.Apps.WebServer.WebServerManagerApp.Name.get -> string!
+override Kazo.Os.Apps.WebServer.WebServerManagerApp.PublisherId.get -> string!
+override Kazo.Os.Apps.WebServer.WebServerManagerApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Apps.WebServer.WebServerManagerApp.SingleInstancePerUser.get -> bool
+static Kazo.Os.Apps.WebServer.Daemon.HackWebdLog.AccessLogPath(string! site) -> string!
+static Kazo.Os.Apps.WebServer.Daemon.HackWebdLog.FormatAccess(Kazo.Os.AppSdk.Net.HackHttpListenerRequest! request, int status, long bytes, System.DateTimeOffset time) -> string!
+static Kazo.Os.Apps.WebServer.Daemon.HackWebdLog.FormatError(string! level, string? site, string! message, System.DateTimeOffset time, long pid) -> string!
+static Kazo.Os.Apps.WebServer.Daemon.ServedSite.operator !=(Kazo.Os.Apps.WebServer.Daemon.ServedSite? left, Kazo.Os.Apps.WebServer.Daemon.ServedSite? right) -> bool
+static Kazo.Os.Apps.WebServer.Daemon.ServedSite.operator ==(Kazo.Os.Apps.WebServer.Daemon.ServedSite? left, Kazo.Os.Apps.WebServer.Daemon.ServedSite? right) -> bool
+static Kazo.Os.Apps.WebServer.Daemon.StaticFileHandler.DirectoryListing(string! urlPath, System.Collections.Generic.IEnumerable<Kazo.Os.AppSdk.IO.HackFileSystemInfo!>! entries) -> string!
+static Kazo.Os.Apps.WebServer.Daemon.StaticFileHandler.HandleAsync(Kazo.Os.Apps.WebServer.Daemon.ServedSite! site, Kazo.Os.AppSdk.Net.HackHttpListenerContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Kazo.Os.Apps.WebServer.Daemon.StaticFileResult>!
+static Kazo.Os.Apps.WebServer.Daemon.StaticFileHandler.StatusPage(int status, string! reason) -> string!
+static Kazo.Os.Apps.WebServer.Daemon.StaticFileHandler.TryMapPath(Kazo.Os.Apps.WebServer.Daemon.ServedSite! site, System.Uri! url, out string? path) -> bool
+static Kazo.Os.Apps.WebServer.Daemon.StaticFileResult.operator !=(Kazo.Os.Apps.WebServer.Daemon.StaticFileResult left, Kazo.Os.Apps.WebServer.Daemon.StaticFileResult right) -> bool
+static Kazo.Os.Apps.WebServer.Daemon.StaticFileResult.operator ==(Kazo.Os.Apps.WebServer.Daemon.StaticFileResult left, Kazo.Os.Apps.WebServer.Daemon.StaticFileResult right) -> bool
+static Kazo.Os.Apps.WebServer.Daemon.WwwDataAccess.CanListDirectoryAsync(string! path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
+static Kazo.Os.Apps.WebServer.Daemon.WwwDataAccess.CanReadFileAsync(string! path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
+static Kazo.Os.Apps.WebServer.Daemon.WwwDataAccess.CanTraverseAsync(string! path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
+static Kazo.Os.Apps.WebServer.Manager.WebServerSnapshot.operator !=(Kazo.Os.Apps.WebServer.Manager.WebServerSnapshot? left, Kazo.Os.Apps.WebServer.Manager.WebServerSnapshot? right) -> bool
+static Kazo.Os.Apps.WebServer.Manager.WebServerSnapshot.operator ==(Kazo.Os.Apps.WebServer.Manager.WebServerSnapshot? left, Kazo.Os.Apps.WebServer.Manager.WebServerSnapshot? right) -> bool
+static Kazo.Os.Apps.WebServer.Manager.WebSiteRow.operator !=(Kazo.Os.Apps.WebServer.Manager.WebSiteRow? left, Kazo.Os.Apps.WebServer.Manager.WebSiteRow? right) -> bool
+static Kazo.Os.Apps.WebServer.Manager.WebSiteRow.operator ==(Kazo.Os.Apps.WebServer.Manager.WebSiteRow? left, Kazo.Os.Apps.WebServer.Manager.WebSiteRow? right) -> bool
+static Kazo.Os.Apps.WebServer.Manager.WebSiteStore.CheckWwwDataAsync(string! root, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<string?>!
+static Kazo.Os.Apps.WebServer.Manager.WebSiteStore.DeleteAsync(Kazo.Os.AppSdk.Net.Hosting.HackWebSiteDeclaration! declaration, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+static Kazo.Os.Apps.WebServer.Manager.WebSiteStore.DirectoryOf(Kazo.Os.AppSdk.Net.Hosting.HackWebSiteScope scope) -> string!
+static Kazo.Os.Apps.WebServer.Manager.WebSiteStore.LoadAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.Apps.WebServer.Manager.WebServerSnapshot!>!
+static Kazo.Os.Apps.WebServer.Manager.WebSiteStore.ReadLogsAsync(string! site, int maxLines = 100, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<(System.Collections.Generic.IReadOnlyList<string!>! Access, System.Collections.Generic.IReadOnlyList<string!>! Errors)>!
+static Kazo.Os.Apps.WebServer.Manager.WebSiteStore.SaveAsync(Kazo.Os.AppSdk.Net.Hosting.HackWebSite! site, Kazo.Os.AppSdk.Net.Hosting.HackWebSiteScope scope, string? previousPath, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<string!>!
+static Kazo.Os.Apps.WebServer.Manager.WebSiteStore.StateOf(Kazo.Os.AppSdk.Net.Hosting.HackWebSiteDeclaration! declaration, System.Collections.Generic.IReadOnlySet<string!>! servedPrefixes) -> Kazo.Os.Apps.WebServer.Manager.WebSiteState
+static Kazo.Os.Apps.WebServer.Manager.WebSiteStore.Suggest(string! folder, Kazo.Os.Apps.WebServer.Manager.WebServerSnapshot! snapshot) -> Kazo.Os.AppSdk.Net.Hosting.HackWebSite!
+static Kazo.Os.Apps.WebServer.WebServerManagerApp.RegisterFileContextMenu(Kazo.Os.AppSdk.Blazor.Files.RegisterFileContextMenuContext! context) -> void
+~override Kazo.Os.Apps.WebServer.Daemon.StaticFileResult.Equals(object obj) -> bool
+~override Kazo.Os.Apps.WebServer.Daemon.StaticFileResult.ToString() -> string
+~override Kazo.Os.Apps.WebServer.Manager.WebServerManagerWindow.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

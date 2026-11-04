@@ -32,8 +32,8 @@ Comme sous Linux, la tâche est un vrai processus :
 
 ```csharp
 using System.Text.Json.Serialization;
-using HackerOs.AppSdk;
-using HackerOs.AppSdk.Threading;
+using Kazo.Os.AppSdk;
+using Kazo.Os.AppSdk.Threading;
 
 [assembly: HackWireContext(typeof(PaintJsonContext))]
 
@@ -66,7 +66,7 @@ byte[] blurred = await HackBackground.RunAsync<BlurInput, byte[]>(
     cancellationToken);
 ```
 
-Formes acceptées (`HackerOs.AppSdk.Threading.HackBackground`) :
+Formes acceptées (`Kazo.Os.AppSdk.Threading.HackBackground`) :
 
 | Forme | Tâche |
 |---|---|
@@ -132,9 +132,9 @@ PrimeCountResult result = await HackBackground.RunAsync<PrimeCountInput, PrimeCo
 
 ## Règles vérifiées au build
 
-L'analyseur `HackerOs.Tools.BackgroundAnalyzer` est livré dans le paquet
-`HackerOs.AppSdk` (`analyzers/dotnet/cs`) ; les apps du dépôt le reçoivent par
-`build/HackerOs.Apps.targets`. Toutes ses règles sont des erreurs.
+L'analyseur `Kazo.Os.Tools.BackgroundAnalyzer` est livré dans le paquet
+`Kazo.Os.AppSdk` (`analyzers/dotnet/cs`) ; les apps du dépôt le reçoivent par
+`build/Kazo.Os.Apps.targets`. Toutes ses règles sont des erreurs.
 
 | Code | Refus |
 |---|---|
@@ -162,17 +162,17 @@ HackBackground.RunAsync ──► IAppExecutionContext.Background
    ◄── résultat désérialisé, progression postée dans le contexte de la fenêtre
 ```
 
-- **SDK** (`Shared/HackerOs.AppSdk/Threading`) : `HackBackground`,
+- **SDK** (`Shared/Kazo.Os.AppSdk/Threading`) : `HackBackground`,
   `HackBackgroundContext`, `HackBackgroundJob<,>`, `IAppBackgroundGateway`,
   `HackBackgroundWire` (contextes `HackWireContext`, 16 Mio au plus),
   `HackBackgroundJobRunner` (liaison d'une cible nommée), passerelle en ligne
   par défaut.
-- **OS** (`Platform/HackerOs.Platform.Core/Execution/BackgroundJobService.cs`) :
+- **OS** (`Platform/Kazo.Os.Platform.Core/Execution/BackgroundJobService.cs`) :
   processus enfant (genre `Terminal`, `argv[0]` = nom), contexte de confiance
   de l'enfant par la fabrique, file par couple utilisateur et app
   (`MaxConcurrentJobsPerApp`, nombre de cœurs virtuels), `GetJobs` et
   `TryGetJob` pour `/proc` et le gestionnaire de tâches.
-- **Workers** (`Platform/HackerOs.Platform.WorkerHost`) : `start` avec `k = 2`,
+- **Workers** (`Platform/Kazo.Os.Platform.WorkerHost`) : `start` avec `k = 2`,
   `bg.progress`, `bg.run` et `bgp` pour une tâche lancée depuis un worker
   ([`worker-processes.md`](../dev/worker-processes.md#tâches-hackbackground-adr-0128-adr-0140)).
 - **`/proc/<pid>/status`** : `Name:` porte le nom de la tâche (15 caractères),
@@ -206,19 +206,19 @@ HackBackground.RunAsync ──► IAppExecutionContext.Background
 
 ## Exemple
 
-`Apps/Samples/HackerOs.Samples.WindowApp`, section « Background Task » :
+`Apps/Samples/Kazo.Os.Samples.WindowApp`, section « Background Task » :
 compte des nombres premiers (`SampleJobs.CountPrimes`) avec barre de
 progression, « Cancel » (annulation) et « Kill » (tue le processus de la
 tâche ; la fenêtre reste ouverte et affiche `killed`).
 
 ## Tests
 
-- `Tests/HackerOs.AppSdk.Tests/Threading/HackBackgroundTests.cs` : passerelle en
+- `Tests/Kazo.Os.AppSdk.Tests/Threading/HackBackgroundTests.cs` : passerelle en
   ligne, lambda refusée, type non déclaré, faute, annulation, limitation de la
   progression.
-- `Tests/HackerOs.AppSdk.Tests/Threading/HackBackgroundAnalyzerTests.cs` : les
+- `Tests/Kazo.Os.AppSdk.Tests/Threading/HackBackgroundAnalyzerTests.cs` : les
   quatre règles `HOSBG`.
-- `Tests/HackerOs.Platform.WorkerHost.Tests/BackgroundJobTests.cs` : chaque cas
+- `Tests/Kazo.Os.Platform.WorkerHost.Tests/BackgroundJobTests.cs` : chaque cas
   sur le fil principal **et** en worker (résultat, processus enfant,
   progression, classe de tâche, faute, annulation, `kill -9` sans fermer l'app,
   l'app qui tue sa propre tâche, `kill -9` de l'app, fermeture de l'app avec

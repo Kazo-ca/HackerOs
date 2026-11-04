@@ -1,0 +1,52 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
+    <!--
+      ADR 0106, ADR 0113: Release publish trims the framework and the other trimmable libraries; the
+      Kazo OS packages and every app are kept whole (roots added by Kazo.Os.App.Build).
+    -->
+    <PublishTrimmed>true</PublishTrimmed>
+    <TrimMode>partial</TrimMode>
+    <!--
+      Kazo OS host (ADR 0047, ADR 0098 §2): the build aggregates the manifests of every app package
+      below into this assembly, read back by HostAppCatalog.Load, and lazy-loads their assemblies.
+      IsSystemApp="true" makes an app a system app (not uninstallable, dangerous capabilities granted).
+    -->
+    <HackerOsAppHost>true</HackerOsAppHost>
+    <!-- One version for every Kazo OS package (ADR 0098 §1). -->
+    <HackerOsVersion>0.0.0-dev</HackerOsVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.13" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.13" PrivateAssets="all" />
+    <PackageReference Include="Kazo.Os.App.Build" Version="$(HackerOsVersion)" PrivateAssets="all" />
+    <PackageReference Include="Kazo.Os.Ecosystem.Host" Version="$(HackerOsVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The base apps. Add your own apps as ProjectReference or PackageReference items. -->
+    <PackageReference Include="Kazo.Os.Commands" Version="$(HackerOsVersion)" IsSystemApp="true" />
+    <PackageReference Include="Kazo.Os.Apps.Terminal" Version="$(HackerOsVersion)" IsSystemApp="true" />
+    <PackageReference Include="Kazo.Os.Apps.Settings" Version="$(HackerOsVersion)" IsSystemApp="true" />
+    <PackageReference Include="Kazo.Os.Apps.FileExplorer" Version="$(HackerOsVersion)" IsSystemApp="true" />
+    <PackageReference Include="Kazo.Os.Apps.Desktop" Version="$(HackerOsVersion)" IsSystemApp="true" />
+    <PackageReference Include="Kazo.Os.Apps.TextEditor" Version="$(HackerOsVersion)" IsSystemApp="true" />
+    <PackageReference Include="Kazo.Os.Apps.CodeEditor" Version="$(HackerOsVersion)" IsSystemApp="true" />
+    <PackageReference Include="Kazo.Os.Apps.SystemMonitor" Version="$(HackerOsVersion)" IsSystemApp="true" />
+    <PackageReference Include="Kazo.Os.Apps.ErrorLogViewer" Version="$(HackerOsVersion)" IsSystemApp="true" />
+    <PackageReference Include="Kazo.Os.Apps.WebServer" Version="$(HackerOsVersion)" IsSystemApp="true" />
+    <PackageReference Include="Kazo.Os.Apps.ThemeEditor" Version="$(HackerOsVersion)" IsSystemApp="true" />
+    <PackageReference Include="Kazo.Os.Apps.Store" Version="$(HackerOsVersion)" IsSystemApp="true" />
+    <PackageReference Include="Kazo.Os.Apps.Browser" Version="$(HackerOsVersion)" />
+    <PackageReference Include="Kazo.Os.Apps.Calculator" Version="$(HackerOsVersion)" />
+    <PackageReference Include="Kazo.Os.Apps.HackPaint" Version="$(HackerOsVersion)" />
+    <PackageReference Include="Kazo.Os.Apps.IconViewer" Version="$(HackerOsVersion)" />
+    <PackageReference Include="Kazo.Os.Apps.Diagnostic" Version="$(HackerOsVersion)" />
+  </ItemGroup>
+
+</Project>

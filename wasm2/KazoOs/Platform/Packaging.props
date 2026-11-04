@@ -1,0 +1,51 @@
+<Project>
+  <!--
+    Shared NuGet packaging metadata of every library Kazo OS publishes (ADR 0098 §2): the SDK, the
+    platform, the base apps and commands, Kazo.Os.Ecosystem.Host. A project is published when it
+    imports this file; Directory.Build.props makes every other project non-packable, so
+    build/pack-local.sh packs the whole solution and only gets these.
+
+    The version is not set here: every project carries $(HackerOsVersion) from build/Versions.props
+    (ADR 0098 §1). build/pack-local.sh produces them into artifacts/local-nupkg, consumed from that
+    folder by another repository (nuget.config sample: build/nuget.config.sample); the Release
+    workflow pushes each new version to nuget.org (ADR 0173). PackageTags below are a default; a
+    package overrides them when another vocabulary is more accurate.
+
+    Every published library has the public API analyzer (ADR 0098 §8): its surface is listed in
+    PublicAPI.Shipped.txt / PublicAPI.Unshipped.txt next to the project.
+  -->
+  <PropertyGroup>
+    <!-- RS0041 fires on Razor-generated BuildRenderTree overrides because the Razor source
+         generator emits that method without a #nullable enable pragma; there is no source we
+         control to fix, so it is excluded rather than hand-authoring oblivious-nullable
+         PublicAPI entries that would break on every Razor SDK bump. -->
+    <!-- RS0026/RS0027 (optional parameters across public overloads) are API design rules, not
+         surface tracking: the SDK predates the analyzer, and changing those overloads now would
+         break every app for no gain. The surface itself stays tracked (RS0016/RS0017). -->
+    <NoWarn>$(NoWarn);RS0041;RS0026;RS0027</NoWarn>
+    <IsPackable>true</IsPackable>
+    <Authors>Benoit Robin</Authors>
+    <RepositoryUrl>https://github.com/Kazo-ca/Os</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>hackeros;blazor;webassembly;os-simulation</PackageTags>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <PackageReadmeFile Condition="Exists('$(MSBuildProjectDirectory)/README.md')">README.md</PackageReadmeFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <!-- ADR 0186 §7: build/pack-local.sh writes the release notes of the version into this file. -->
+    <PackageReleaseNotes Condition="'$(HackerOsPackageReleaseNotesFile)' != '' and Exists('$(HackerOsPackageReleaseNotesFile)')">$([System.IO.File]::ReadAllText('$(HackerOsPackageReleaseNotesFile)'))</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.402" PrivateAssets="All" />
+    <!-- EXT-WIN-014: tracks the public surface of each exported package across releases;
+         additions/removals must be reflected in PublicAPI.Shipped.txt / PublicAPI.Unshipped.txt
+         in the project's own directory, or the build fails (RS0016/RS0017). -->
+    <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="5.6.0" PrivateAssets="All" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\LICENSE.md" Pack="true" PackagePath="" Visible="false" />
+    <None Include="README.md" Pack="true" PackagePath="" Condition="Exists('README.md')" Visible="false" />
+  </ItemGroup>
+</Project>

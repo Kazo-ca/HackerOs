@@ -1,0 +1,21 @@
+@using Kazo.Os.AppSdk.Blazor
+@using Kazo.Os.AppSdk.Blazor.Files
+@inherits WindowAppBase
+
+@*
+    The desktop (ADR 0152, ADR 0160): the OS file control in its desktop mode over ~/Desktop, with the
+    view and the positions of ~/.config/hackeros/desktop.config. Behavior lives in DesktopSurface.razor.cs.
+*@
+<div class="desktop-surface">
+    @if (_desktopDirectory is not null)
+    {
+        <HackFileView InitialDirectory="@_desktopDirectory"
+                      Mode="HackFileViewMode.Desktop"
+                      Filter="IsVisibleDesktopItem"
+                      DesktopOptions="_settings.Options"
+                      DesktopPositions="_settings.Positions"
+                      DesktopPositionsChanged="SavePositionsAsync"
+                      ContextMenuOpening="OnContextMenuOpening"
+                      ErrorOccurred="ReportErrorAsync" />
+    }
+</div>

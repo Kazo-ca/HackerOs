@@ -1,0 +1,1314 @@
+@namespace Kazo.Os.AppSdk.Terminal
+@using System.Text
+@using Kazo.Os.AppSdk
+@using Kazo.Os.AppSdk.Blazor
+@using Kazo.Os.AppSdk.Components
+@using Kazo.Os.AppSdk.Globalization
+@using Kazo.Os.AppSdk.IO
+@using Kazo.Os.AppSdk.Shell
+@using Kazo.Os.AppSdk.VirtualKeyboard
+@using Kazo.Os.Simulation.Abstractions.Diagnostics
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.JSInterop
+@implements IAsyncDisposable
+@implements IHackTerminal
+@inject IJSRuntime JavaScript
+@inject IDialogService Dialogs
+
+@*
+    Reusable terminal emulator any WindowAppBase-hosted app can embed. It hosts an hsh shell
+    through the public SDK only (HackShell, capability shell.host, ADR 0056 section 7): the shell
+    is a child process of the host app (ADR 0050), each panel has its own, and every command is a
+    child of that shell. Parsing, expansion, pipes, redirections and completion are the shell's;
+    credentials typed here are verified by the OS.
+
+    The screen is an xterm.js character-cell terminal (ADR 0061), used as a hardware terminal:
+    commands' bytes (colours and other ECMA-48 sequences included) are written to it as is, and
+    the keyboard's bytes come back to OnTerminalData. The line discipline lives here, in C#: the
+    readline-like editing of the prompt line (TerminalLineEditor), the decoding of key sequences
+    (TerminalInputDecoder), and the alternate screen of full-screen commands such as nano.
+    See Apps/System/Kazo.Os.Apps.Terminal for the thin standalone host, and
+    The Terminal app registers it with the OS for other apps (IHackTerminal, ADR 0063): a host
+    drives it as a person at the keyboard would (RunCommandAsync shows the line at the prompt),
+    and reads back the text it showed without control sequences.
+*@
+<div class="terminal-container" data-terminal-panel>
+    <div class="terminal-surface" @ref="_surfaceRef"></div>
+</div>
+
+@code {
+    /// <summary>Gets or sets the host app's execution context (filesystem, cancellation, logging).</summary>
+    [Parameter, EditorRequired]
+    public IAppExecutionContext AppContext { get; set; } = default!;
+
+    /// <summary>
+    /// Gets the terminal's own texts (banner, status lines, labels) in the host app's language
+    /// (ADR 0104); the shell prints its diagnostics in its own language.
+    /// </summary>
+    private Microsoft.Extensions.Localization.IStringLocalizer<Strings> L => AppContext.GetLocalizer<Strings>();
+
+    /// <summary>
+    /// Gets or sets the app id of the hosting app. Kept for compatibility: the shell's parent is
+    /// <see cref="AppContext"/>'s own process, which already identifies the host.
+    /// </summary>
+    [Parameter]
+    public string CallerAppId { get; set; } = "org.hackeros.terminal";
+
+    /// <summary>Gets or sets the username shown in the prompt until the shell has started.</summary>
+    [Parameter]
+    public string InitialUsername { get; set; } = "user";
+
+    /// <summary>
+    /// Gets or sets the shell's starting directory. When null (or missing), the shell starts in the
+    /// host app's directory (the home directory for an app launched from the desktop). E.g.
+    /// CodeEditor opens new terminal tabs in whatever folder it has open. Each panel's shell is its
+    /// own process: a <c>cd</c> in one tab never moves another.
+    /// </summary>
+    [Parameter]
+    public string? InitialCwd { get; set; }
+
+    /// <summary>
+    /// Gets or sets whether input is driven by a <c>Kazo.Os.AppSdk.VirtualKeyboard</c> control
+    /// instead of the physical keyboard. When true, the line-mode input gets
+    /// <c>inputmode="none"</c> so a touch focus does not open the platform's native keyboard —
+    /// callers are expected to route key presses through <see cref="PushVirtualKey"/> instead.
+    /// </summary>
+    [Parameter]
+    public bool UseVirtualKeyboard { get; set; }
+
+    /// <summary>
+    /// Gets or sets the callback invoked once the panel's shell has exited: the <c>exit</c>
+    /// command, or Ctrl+D on an empty line (a real shell's end of input). The host decides what
+    /// that means (the console closes the tab, ADR 0058 section 4). Unbound, the panel stays open
+    /// and prints the exit status, as a terminal whose child process ended.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnExitRequested { get; set; }
+
+    /// <summary>
+    /// Gets or sets the callback invoked when <see cref="Title"/> changes: the name of the
+    /// running command, otherwise the current directory's name (<c>~</c> for the home directory).
+    /// </summary>
+    [Parameter]
+    public EventCallback<string> OnTitleChanged { get; set; }
+
+    /// <summary>Gets or sets whether the welcome banner is printed before the first prompt.</summary>
+    [Parameter]
+    public bool ShowBanner { get; set; } = true;
+
+    /// <summary>Gets or sets whether the terminal takes the keyboard focus once it is mounted.</summary>
+    [Parameter]
+    public bool FocusOnStart { get; set; } = true;
+
+    /// <summary>Gets the title a tab shows for this panel (see <see cref="OnTitleChanged"/>).</summary>
+    public string Title { get; private set; } = "~";
+
+    /// <summary>Gets the working directory of the panel's shell, or <see langword="null"/> before it started or after it exited.</summary>
+    public string? WorkingDirectory => _shell is { HasExited: false } shell ? shell.WorkingDirectory : null;
+
+    /// <inheritdoc />
+    public bool IsRunning => _shell is { HasExited: false };
+
+    /// <inheritdoc />
+    public bool IsBusy => _activeCts is not null;
+
+    /// <inheritdoc />
+    public event EventHandler<HackTerminalOutputEventArgs>? OutputReceived;
+
+    /// <inheritdoc />
+    public event EventHandler<HackTerminalCommandResult>? CommandCompleted;
+
+    /// <inheritdoc />
+    public event EventHandler? StateChanged;
+
+    /// <inheritdoc />
+    public event EventHandler? Exited;
+
+    /// <summary>Most characters of shown text kept for <see cref="ReadOutput"/>.</summary>
+    private const int MaxTranscript = 256 * 1024;
+
+    /// <summary>Most characters of one command's output kept for its <see cref="HackTerminalCommandResult"/>.</summary>
+    private const int MaxCommandOutput = 1 << 20;
+
+    /// <summary>Most bytes kept for the terminal while it is not mounted (no JS, headless tests).</summary>
+    private const int MaxPendingOutput = 1 << 20;
+
+    /// <summary>Most keys typed ahead while a command runs, as a tty's input queue.</summary>
+    private const int MaxTypeAhead = 4096;
+
+    private const string BannerArt = """
+          _  _         _         ___  ___
+         | || |__ _ __| |_____ _| _ \/ __|
+         | __ / _` / _| / / -_) '_|   /\__ \
+         |_||_\__,_\__|__\_\___|_| |_|_|___/
+        """;
+
+    private ElementReference _surfaceRef;
+    private IHackShell? _shell;
+    private TerminalCredentialPrompt? _credentialPrompt;
+    private string? _lastCompletionLine;
+    private readonly TerminalLineEditor _editor = new();
+    private readonly StringBuilder _pendingOutput = new();
+    private readonly object _outputSync = new();
+    private readonly Queue<TerminalInput> _typedKeys = new();
+    private readonly StringBuilder _transcript = new();
+    private StringBuilder? _commandOutput;
+    private readonly TaskCompletionSource _shellStarted = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    private bool _processingKeys;
+    private bool _flushScheduled;
+    private bool _atLineStart = true;
+    private bool _promptVisible;
+    private bool _alternateScreen;
+    private bool _atLineStartBeforeAlternateScreen = true;
+    private int _columns = 80;
+    private int _rows = 24;
+    private CancellationTokenSource? _activeCts;
+    private TerminalFullScreenSession? _fullScreenSession;
+    private TerminalInputReader? _standardInput;
+    // The lines of an unfinished command (`for x in a b; do` + Enter), shown with the PS2 prompt `>`.
+    private string? _continuation;
+    private readonly StringBuilder _inputLine = new();
+    private IJSObjectReference? _module;
+    private IJSObjectReference? _terminal;
+    private DotNetObjectReference<TerminalPanel>? _dotNetReference;
+    private string? _startError;
+    private bool _disposed;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (ShowBanner)
+        {
+            WriteBanner();
+        }
+
+        // sudo, the one-shot approval (ADR 0042) and a third-party command's dangerous
+        // capabilities (ADR 0049 section 5) are asked here, in text mode; the OS verifies.
+        _credentialPrompt = new TerminalCredentialPrompt(Dialogs, AppContext, WriteApprovalLineAsync);
+        try
+        {
+            _shell = await HackShell.StartAsync(AppContext, new HackShellOptions
+            {
+                WorkingDirectory = InitialCwd,
+                CredentialPrompt = _credentialPrompt
+            }, AppContext.CancellationToken);
+        }
+        catch (Exception exception) when (exception is HackUnauthorizedAccessException or NotSupportedException or InvalidOperationException)
+        {
+            // The host lacks shell.host, or runs without a platform: show why, as a terminal whose
+            // shell failed to exec prints the error and stays open.
+            _startError = "hsh: " + L["Panel.StartFailed", exception.Message];
+            AppContext.Logging.Log(DiagnosticSeverity.Error, _startError);
+            WriteLine(_startError, TerminalAnsi.Error);
+        }
+        finally
+        {
+            // Queued host commands wait for this, whatever the outcome.
+            _shellStarted.TrySetResult();
+        }
+
+        await UpdateTitleAsync(null);
+        ShowPrompt();
+    }
+
+    /// <summary>Moves the keyboard focus to the panel's terminal.</summary>
+    public async Task FocusAsync()
+    {
+        if (_terminal is null)
+        {
+            return;
+        }
+
+        try
+        {
+            await _terminal.InvokeVoidAsync("focus");
+        }
+        catch (Exception exception) when (exception is JSException or JSDisconnectedException or ObjectDisposedException)
+        {
+            // Not mounted any more.
+        }
+    }
+
+    /// <summary>
+    /// Recomputes <see cref="Title"/>: the running command's name, otherwise the last segment of
+    /// the prompt's directory (<c>~</c>, <c>projets</c>, <c>/</c>), as gnome-terminal titles a tab.
+    /// </summary>
+    private async Task UpdateTitleAsync(string? runningLine)
+    {
+        string title = runningLine is { Length: > 0 }
+            ? runningLine.Split((char[]?)null, 2, StringSplitOptions.RemoveEmptyEntries)[0]
+            : DirectoryTitle(Prompt);
+        if (title != Title)
+        {
+            Title = title;
+            await OnTitleChanged.InvokeAsync(title);
+            StateChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    /// <summary>Gets the directory's display name from a <c>user@host:dir$</c> prompt.</summary>
+    private static string DirectoryTitle(string prompt)
+    {
+        int at = prompt.IndexOf('@');
+        int colon = prompt.IndexOf(':', at < 0 ? 0 : at);
+        string directory = (colon < 0 ? prompt : prompt[(colon + 1)..]).TrimEnd('$', '#', ' ');
+        if (directory.Length <= 1)
+        {
+            return directory.Length == 0 ? "~" : directory;
+        }
+
+        string trimmed = directory.TrimEnd('/');
+        int slash = trimmed.LastIndexOf('/');
+        return slash < 0 ? trimmed : trimmed[(slash + 1)..];
+    }
+
+    /// <summary>Gets the prompt, from the shell's process (user, /etc/hostname, directory).</summary>
+    private string Prompt => _continuation is not null
+        ? ">"
+        : _shell?.Prompt ?? $"{InitialUsername}@{AppContext.Environment.MachineName}:~$";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            return;
+        }
+
+        try
+        {
+            Kazo.Os.AppSdk.Accessibility.HackAccessibilityPreferences accessibility =
+                await AppContext.Accessibility.GetPreferencesAsync(AppContext.CancellationToken);
+            _dotNetReference = DotNetObjectReference.Create(this);
+            _module = await JavaScript.InvokeAsync<IJSObjectReference>(
+                "import", "./_content/Kazo.Os.AppSdk.Terminal/TerminalPanel.razor.js");
+            _terminal = await _module.InvokeAsync<IJSObjectReference>(
+                "mountTerminal",
+                _surfaceRef,
+                _dotNetReference,
+                new
+                {
+                    useVirtualKeyboard = UseVirtualKeyboard,
+                    ariaLabel = L["Panel.InputLabel"].Value,
+                    highContrast = accessibility.HighContrast,
+                    reducedMotion = accessibility.ReducedMotion
+                });
+            // ADR 0105: a terminal draws its own grid, so it follows the preferences itself.
+            AppContext.Accessibility.Changed += OnAccessibilityChanged;
+        }
+        catch (Exception)
+        {
+            // Headless test DOM, or the terminal assets could not load: the panel keeps the
+            // safe 80x24 viewport and buffers its output.
+            return;
+        }
+
+        if (_disposed)
+        {
+            return;
+        }
+
+        FlushOutput();
+        if (FocusOnStart)
+        {
+            await FocusAsync();
+        }
+    }
+
+    /// <summary>
+    /// Receives the bytes the terminal sends for the keyboard (typed keys and pastes). Keys go to
+    /// the running full-screen command, interrupt the running command (Ctrl+C), or are queued
+    /// for the line editor: keys typed while a command runs wait for the next prompt, as a tty
+    /// keeps type-ahead input.
+    /// </summary>
+    [JSInvokable]
+    public Task OnTerminalData(string data)
+    {
+        foreach (TerminalKeyEvent key in TerminalInputDecoder.Decode(data))
+        {
+            DispatchKey(key);
+        }
+
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// Routes one key press from a <c>VirtualKeyboard</c> into the same path the physical
+    /// keyboard's bytes take (<see cref="OnTerminalData"/>), so the line editor and full-screen
+    /// apps (e.g. <c>nano</c>) get virtual-keyboard support with no changes of their own.
+    /// </summary>
+    public Task PushVirtualKey(VirtualKeyPressedEvent evt)
+    {
+        ArgumentNullException.ThrowIfNull(evt);
+        if (TryMapToTerminalKey(evt, out TerminalKeyEvent key))
+        {
+            DispatchKey(key);
+        }
+
+        return Task.CompletedTask;
+    }
+
+    private void DispatchKey(TerminalKeyEvent key)
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        if (_fullScreenSession is { IsActive: true } session)
+        {
+            session.TryPostKey(key);
+            return;
+        }
+
+        if (_activeCts is not null && IsControl(key, "c"))
+        {
+            CancelActiveCommand();
+            return;
+        }
+
+        if (_activeCts is not null && _standardInput is { } input)
+        {
+            // ADR 0064: while a command line runs, typing goes to its standard input through the
+            // tty's line discipline (canonical mode), echoed as it is typed.
+            HandleInputKey(input, key);
+            return;
+        }
+
+        if (_typedKeys.Count < MaxTypeAhead)
+        {
+            _typedKeys.Enqueue(new TerminalInput(key, null));
+        }
+
+        StartProcessingInput();
+    }
+
+    private void StartProcessingInput()
+    {
+        if (!_processingKeys)
+        {
+            _ = InvokeAsync(ProcessTypedKeysAsync);
+        }
+    }
+
+    private async Task ProcessTypedKeysAsync()
+    {
+        if (_processingKeys)
+        {
+            return;
+        }
+
+        _processingKeys = true;
+        try
+        {
+            while (!_disposed && _typedKeys.TryDequeue(out TerminalInput? input))
+            {
+                if (input.Command is { } command)
+                {
+                    await RunQueuedCommandAsync(command);
+                    continue;
+                }
+
+                TerminalKeyEvent key = input.Key!;
+                if (_fullScreenSession is { IsActive: true } session)
+                {
+                    session.TryPostKey(key);
+                    continue;
+                }
+
+                await HandleLineKeyAsync(key);
+            }
+        }
+        catch (Exception exception)
+        {
+            AppContext.Logging.Log(DiagnosticSeverity.Error, $"Terminal input fault: {exception.Message}");
+        }
+        finally
+        {
+            _processingKeys = false;
+            if (_disposed)
+            {
+                // Nobody will run what is still queued.
+                while (_typedKeys.TryDequeue(out TerminalInput? left))
+                {
+                    left.Command?.Completion.TrySetException(new InvalidOperationException("The terminal was closed."));
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// The canonical-mode line discipline of a running command's standard input: printable keys
+    /// are echoed and gathered, Backspace and Ctrl+U erase, Enter sends the line, Ctrl+D sends
+    /// the partial line or, on an empty one, an end of input (ADR 0064). With echo off (a password,
+    /// ADR 0120) nothing typed or erased is shown; Enter still moves to the next line.
+    /// </summary>
+    private void HandleInputKey(TerminalInputReader input, TerminalKeyEvent key)
+    {
+        bool echo = input.EchoEnabled;
+        switch (key.Key)
+        {
+            case TerminalKey.Enter:
+                Write("\n");
+                input.Push(_inputLine.Append('\n').ToString());
+                _inputLine.Clear();
+                break;
+            case TerminalKey.Backspace:
+                if (_inputLine.Length > 0)
+                {
+                    _inputLine.Length--;
+                    if (echo)
+                    {
+                        Write("\b \b");
+                    }
+                }
+
+                break;
+            case TerminalKey.Character when key.Control:
+                switch (key.Text?.ToLowerInvariant())
+                {
+                    case "d" when _inputLine.Length == 0:
+                        input.PushEndOfInput();
+                        break;
+                    case "d":
+                        input.Push(_inputLine.ToString());
+                        _inputLine.Clear();
+                        break;
+                    case "u":
+                        if (echo)
+                        {
+                            Write(string.Concat(Enumerable.Repeat("\b \b", _inputLine.Length)));
+                        }
+
+                        _inputLine.Clear();
+                        break;
+                }
+
+                break;
+            case TerminalKey.Character when !key.Alt && !string.IsNullOrEmpty(key.Text):
+                _inputLine.Append(key.Text);
+                if (echo)
+                {
+                    Write(key.Text);
+                }
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Hands what was typed while a command ran, and that it never read, back to the prompt as
+    /// type-ahead, as a tty keeps its input queue for the shell: finished lines run in turn.
+    /// </summary>
+    private void RequeueUnreadInput(string unread)
+    {
+        if (unread.Length == 0)
+        {
+            return;
+        }
+
+        List<TerminalInput> keys = [];
+        foreach (char ch in unread)
+        {
+            keys.Add(new TerminalInput(
+                ch == '\n' ? new TerminalKeyEvent(TerminalKey.Enter) : new TerminalKeyEvent(TerminalKey.Character, ch.ToString()),
+                null));
+        }
+
+        keys.AddRange(_typedKeys);
+        _typedKeys.Clear();
+        foreach (TerminalInput key in keys.Take(MaxTypeAhead))
+        {
+            _typedKeys.Enqueue(key);
+        }
+    }
+
+    /// <summary>Applies one key to the prompt line, as readline does in bash.</summary>
+    private async Task HandleLineKeyAsync(TerminalKeyEvent key)
+    {
+        if (key.Key != TerminalKey.Character || key.Text != "\t")
+        {
+            _lastCompletionLine = null;
+        }
+
+        bool redraw = false;
+        switch (key.Key)
+        {
+            case TerminalKey.Enter:
+                await ExecuteInputAsync();
+                return;
+            case TerminalKey.Backspace:
+                redraw = key.Alt || key.Control ? _editor.DeleteWordBefore() : _editor.Backspace();
+                break;
+            case TerminalKey.Delete:
+                redraw = _editor.Delete();
+                break;
+            case TerminalKey.ArrowLeft:
+                redraw = _editor.Move(-1);
+                break;
+            case TerminalKey.ArrowRight:
+                redraw = _editor.Move(1);
+                break;
+            case TerminalKey.Home:
+                redraw = _editor.MoveToStart();
+                break;
+            case TerminalKey.End:
+                redraw = _editor.MoveToEnd();
+                break;
+            case TerminalKey.ArrowUp:
+            case TerminalKey.ArrowDown:
+                if (_shell?.NavigateHistory(key.Key == TerminalKey.ArrowUp ? -1 : 1) is { } recalled)
+                {
+                    _editor.SetText(recalled);
+                    redraw = true;
+                }
+                break;
+            case TerminalKey.Character when key.Text == "\t" && !key.Shift:
+                await AutoCompleteInputAsync();
+                return;
+            case TerminalKey.Character when key.Control:
+                await HandleControlKeyAsync(key.Text);
+                return;
+            case TerminalKey.Character when !key.Alt && !string.IsNullOrEmpty(key.Text) && key.Text != "\t":
+                _editor.Insert(key.Text);
+                redraw = true;
+                break;
+        }
+
+        if (redraw)
+        {
+            RedrawLine();
+        }
+    }
+
+    private async Task HandleControlKeyAsync(string? letter)
+    {
+        switch (letter)
+        {
+            case "c":
+                // bash: the line is abandoned, ^C is echoed, and a fresh prompt follows.
+                _editor.MoveToEnd();
+                RedrawLine();
+                Write("^C");
+                _promptVisible = false;
+                _editor.Reset();
+                _continuation = null;
+                ShowPrompt();
+                break;
+            case "d":
+                if (_editor.IsEmpty)
+                {
+                    await RequestExitOnEmptyLineAsync();
+                }
+                else if (_editor.Delete())
+                {
+                    RedrawLine();
+                }
+                break;
+            case "l":
+                // Clear the screen but keep the line being typed, redrawn at the top.
+                Write(TerminalAnsi.ClearScreen);
+                _editor.HomeCursor();
+                RedrawLine();
+                break;
+            case "a":
+                if (_editor.MoveToStart()) RedrawLine();
+                break;
+            case "e":
+                if (_editor.MoveToEnd()) RedrawLine();
+                break;
+            case "b":
+                if (_editor.Move(-1)) RedrawLine();
+                break;
+            case "f":
+                if (_editor.Move(1)) RedrawLine();
+                break;
+            case "h":
+                if (_editor.Backspace()) RedrawLine();
+                break;
+            case "u":
+                if (_editor.KillToStart()) RedrawLine();
+                break;
+            case "k":
+                if (_editor.KillToEnd()) RedrawLine();
+                break;
+            case "w":
+                if (_editor.DeleteWordBefore()) RedrawLine();
+                break;
+            case "p":
+                await HandleLineKeyAsync(new TerminalKeyEvent(TerminalKey.ArrowUp));
+                break;
+            case "n":
+                await HandleLineKeyAsync(new TerminalKeyEvent(TerminalKey.ArrowDown));
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Ctrl+D matches a real shell's end of input: on an empty line, with no command running, the
+    /// shell exits (its process ends with <c>$?</c>). Then <see cref="OnExitRequested"/> lets the
+    /// host close the tab or window.
+    /// </summary>
+    private async Task RequestExitOnEmptyLineAsync()
+    {
+        if (!_editor.IsEmpty || _activeCts is not null)
+        {
+            return;
+        }
+
+        // bash reads end of input and prints "exit" before leaving.
+        Write("exit\n");
+        _promptVisible = false;
+        _editor.Reset();
+        if (_shell is not null && !_shell.HasExited)
+        {
+            await _shell.DisposeAsync();
+        }
+
+        await OnShellExitedAsync();
+    }
+
+    /// <summary>
+    /// The shell's process ended (<c>exit</c>, Ctrl+D): hand over to the host, or keep the panel
+    /// open with the status, as a terminal emulator shows that its child process exited.
+    /// </summary>
+    private async Task OnShellExitedAsync()
+    {
+        Exited?.Invoke(this, EventArgs.Empty);
+        if (OnExitRequested.HasDelegate)
+        {
+            await OnExitRequested.InvokeAsync();
+            return;
+        }
+
+        WriteLine(L["Panel.ShellExited", _shell?.ExitStatus ?? 0], TerminalAnsi.Notice);
+    }
+
+    private static bool TryMapToTerminalKey(VirtualKeyPressedEvent evt, out TerminalKeyEvent terminalKeyEvent)
+    {
+        if (evt.Key == VirtualKey.Tab)
+        {
+            terminalKeyEvent = new TerminalKeyEvent(TerminalKey.Character, "\t", evt.Control, evt.Alt, evt.Shift);
+            return true;
+        }
+
+        TerminalKey? key = evt.Key switch
+        {
+            VirtualKey.Character => TerminalKey.Character,
+            VirtualKey.Enter => TerminalKey.Enter,
+            VirtualKey.Backspace => TerminalKey.Backspace,
+            VirtualKey.Delete => TerminalKey.Delete,
+            VirtualKey.Escape => TerminalKey.Escape,
+            VirtualKey.ArrowLeft => TerminalKey.ArrowLeft,
+            VirtualKey.ArrowRight => TerminalKey.ArrowRight,
+            VirtualKey.ArrowUp => TerminalKey.ArrowUp,
+            VirtualKey.ArrowDown => TerminalKey.ArrowDown,
+            VirtualKey.Home => TerminalKey.Home,
+            VirtualKey.End => TerminalKey.End,
+            VirtualKey.PageUp => TerminalKey.PageUp,
+            VirtualKey.PageDown => TerminalKey.PageDown,
+            _ => null,
+        };
+
+        if (key is null)
+        {
+            terminalKeyEvent = default!;
+            return false;
+        }
+
+        terminalKeyEvent = new TerminalKeyEvent(key.Value, evt.Text, evt.Control, evt.Alt, evt.Shift);
+        return true;
+    }
+
+    private static bool IsControl(TerminalKeyEvent key, string letter) =>
+        key.Key == TerminalKey.Character && key.Control && string.Equals(key.Text, letter, StringComparison.OrdinalIgnoreCase);
+
+    /// <summary>
+    /// Runs the line being edited, as Enter does. <paramref name="external"/> interrupts it like
+    /// Ctrl+C (a host's <see cref="RunCommandAsync"/>). Returns the command's result, or
+    /// <see langword="null"/> when nothing ran (empty line, shell gone).
+    /// </summary>
+    private async Task<HackTerminalCommandResult?> ExecuteInputAsync(CancellationToken external = default, bool allowContinuation = true)
+    {
+        (_, int promptWidth) = TerminalAnsi.FormatPrompt(Prompt);
+        string typed = _editor.Text;
+        string rawLine = typed.Trim();
+        AppendTranscript(Prompt + " " + typed + "\n");
+        Write(_editor.Commit(promptWidth, _columns));
+        _atLineStart = true;
+        _promptVisible = false;
+
+        if (_continuation is null && string.IsNullOrWhiteSpace(rawLine))
+        {
+            ShowPrompt();
+            return null;
+        }
+
+        if (_shell is null || _shell.HasExited)
+        {
+            _continuation = null;
+            WriteLine(_startError ?? "hsh: " + L["Panel.ShellGone"], TerminalAnsi.Error);
+            ShowPrompt();
+            return null;
+        }
+
+        // ADR 0064: an unfinished command (`if …; then` + Enter, an open quote) asks for more
+        // with bash's PS2 prompt `>`; the lines then run together.
+        string line = _continuation is null ? rawLine : _continuation + "\n" + typed;
+        if (allowContinuation && _shell.NeedsMoreInput(line))
+        {
+            _continuation = line;
+            ShowPrompt();
+            return null;
+        }
+
+        _continuation = null;
+        rawLine = line.Contains('\n') ? line : rawLine;
+
+        _shell.AddHistory(TerminalHistory.ToSingleLine(rawLine));
+        await UpdateTitleAsync(TerminalHistory.ToSingleLine(rawLine));
+        _activeCts = CancellationTokenSource.CreateLinkedTokenSource(external);
+        _commandOutput = new StringBuilder();
+        _fullScreenSession = new TerminalFullScreenSession(ApplyFullScreenStateAsync);
+        _fullScreenSession.UpdateViewport(_columns, _rows);
+        _standardInput = new TerminalInputReader();
+        _inputLine.Clear();
+        int status;
+        try
+        {
+            // ADR 0050 section 4: output is shown as commands produce it, not when they exit.
+            // The bytes reach the terminal unchanged but for ONLCR: colours and clear just work.
+            status = await _shell.ExecuteAsync(
+                rawLine,
+                new HackShellExecution
+                {
+                    StandardOutput = new TerminalOutputWriter(WriteCommandOutput),
+                    StandardError = new TerminalOutputWriter(WriteCommandOutput),
+                    StandardInput = _standardInput,
+                    FullScreen = _fullScreenSession
+                },
+                _activeCts.Token);
+        }
+        catch (ObjectDisposedException)
+        {
+            WriteLine("hsh: " + L["Panel.ShellGone"], TerminalAnsi.Error);
+            status = 1;
+        }
+        catch (OperationCanceledException)
+        {
+            // Interrupted (Ctrl+C or the host): 128 + SIGINT, as bash reports.
+            status = 130;
+        }
+        catch (Exception ex)
+        {
+            AppContext.Logging.Log(DiagnosticSeverity.Error, $"Shell fault: {ex.Message}");
+            WriteLine(L["Panel.Fault", ex.Message], TerminalAnsi.Error);
+            status = 1;
+        }
+        finally
+        {
+            _standardInput.CloseInput();
+            string unread = _standardInput.TakeUnread() + _inputLine;
+            _standardInput = null;
+            _inputLine.Clear();
+            RequeueUnreadInput(unread);
+            await _fullScreenSession.DisposeAsync();
+            _fullScreenSession = null;
+            _activeCts.Dispose();
+            _activeCts = null;
+        }
+
+        var result = new HackTerminalCommandResult(
+            rawLine, status, TerminalAnsi.StripControlSequences(_commandOutput.ToString()));
+        _commandOutput = null;
+        await UpdateTitleAsync(null);
+        CommandCompleted?.Invoke(this, result);
+        // `cd` and friends change the directory without changing the title's last segment.
+        StateChanged?.Invoke(this, EventArgs.Empty);
+        if (_shell.HasExited)
+        {
+            // `exit [n]` ended the shell's process: the tab closes.
+            await OnShellExitedAsync();
+            return result;
+        }
+
+        ShowPrompt();
+        return result;
+    }
+
+    /// <summary>Shows a command's output and keeps it for its result and the transcript.</summary>
+    private void WriteCommandOutput(string text)
+    {
+        Write(text);
+        if (_commandOutput is { } output && output.Length < MaxCommandOutput)
+        {
+            output.Append(text.Length <= MaxCommandOutput - output.Length ? text : text[..(MaxCommandOutput - output.Length)]);
+        }
+
+        AppendTranscript(text);
+    }
+
+    /// <summary>
+    /// Keeps text a person reads (committed lines, command output, the terminal's own messages)
+    /// for <see cref="ReadOutput"/>, and reports it to the host through <see cref="OutputReceived"/>.
+    /// Line redraws while typing are not reported: they are not output.
+    /// </summary>
+    private void AppendTranscript(string text)
+    {
+        string plain = TerminalAnsi.StripControlSequences(text);
+        if (plain.Length == 0)
+        {
+            return;
+        }
+
+        _transcript.Append(plain);
+        if (_transcript.Length > MaxTranscript)
+        {
+            _transcript.Remove(0, _transcript.Length - MaxTranscript);
+        }
+
+        OutputReceived?.Invoke(this, new HackTerminalOutputEventArgs(plain));
+    }
+
+    /// <inheritdoc />
+    public Task<HackTerminalCommandResult> RunCommandAsync(string commandLine, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(commandLine);
+        if (commandLine.Contains('\n') || commandLine.Contains('\r'))
+        {
+            throw new ArgumentException("A command line cannot span several lines.", nameof(commandLine));
+        }
+
+        if (_disposed || (_shell is not null && _shell.HasExited) || _startError is not null)
+        {
+            throw new InvalidOperationException(_startError ?? "The terminal's shell is not running.");
+        }
+
+        // Queued behind the keys already typed, as typed-ahead input: it runs at the next prompt.
+        var command = new QueuedCommand(commandLine.Trim(), cancellationToken);
+        _typedKeys.Enqueue(new TerminalInput(null, command));
+        StartProcessingInput();
+        return command.Completion.Task;
+    }
+
+    /// <inheritdoc />
+    public Task<HackTerminalCommandResult> SetWorkingDirectoryAsync(string path, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(path);
+        return RunCommandAsync("cd " + QuoteArgument(path), cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task SendInputAsync(string text)
+    {
+        ArgumentNullException.ThrowIfNull(text);
+        return OnTerminalData(text);
+    }
+
+    /// <inheritdoc />
+    public string ReadOutput(int maxCharacters = 65_536)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegative(maxCharacters);
+        return _transcript.Length <= maxCharacters
+            ? _transcript.ToString()
+            : _transcript.ToString(_transcript.Length - maxCharacters, maxCharacters);
+    }
+
+    /// <inheritdoc />
+    public Task ClearAsync()
+    {
+        _transcript.Clear();
+        Write(TerminalAnsi.ClearScreen);
+        if (_promptVisible)
+        {
+            // As `clear` followed by the prompt: the line being typed is kept, at the top.
+            _editor.HomeCursor();
+            RedrawLine();
+        }
+
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// Runs a host's command at the prompt: the line being typed is put aside, the command is shown
+    /// as if typed and run, then the line comes back (as zsh's push-line).
+    /// </summary>
+    private async Task RunQueuedCommandAsync(QueuedCommand command)
+    {
+        // A host may send a command as soon as it has the controller, before the shell started.
+        await _shellStarted.Task;
+        if (command.CancellationToken.IsCancellationRequested)
+        {
+            command.Completion.TrySetCanceled(command.CancellationToken);
+            return;
+        }
+
+        if (_shell is null || _shell.HasExited)
+        {
+            command.Completion.TrySetException(new InvalidOperationException(_startError ?? "The terminal's shell is not running."));
+            return;
+        }
+
+        string pending = _editor.Text;
+        int pendingCursor = _editor.Cursor;
+        _editor.SetText(command.Line);
+        RedrawLine();
+        try
+        {
+            HackTerminalCommandResult? result = await ExecuteInputAsync(command.CancellationToken, allowContinuation: false);
+            command.Completion.TrySetResult(result ?? new HackTerminalCommandResult(command.Line, 1, string.Empty));
+        }
+        catch (Exception exception)
+        {
+            command.Completion.TrySetException(exception);
+        }
+
+        if (pending.Length > 0 && _promptVisible)
+        {
+            _editor.SetText(pending, pendingCursor);
+            RedrawLine();
+        }
+    }
+
+    /// <summary>Quotes a path for hsh when it holds spaces or special characters.</summary>
+    private static string QuoteArgument(string value)
+    {
+        bool plain = value.All(c => char.IsLetterOrDigit(c) || c is '/' or '.' or '-' or '_' or '~' or '+' or ',' or '@' or ':');
+        if (plain)
+        {
+            return value;
+        }
+
+        var quoted = new StringBuilder("\"");
+        foreach (char c in value)
+        {
+            if (c is '"' or '\\' or '$' or '`')
+            {
+                quoted.Append('\\');
+            }
+
+            quoted.Append(c);
+        }
+
+        return quoted.Append('"').ToString();
+    }
+
+    /// <summary>One entry of the terminal's input queue: a key, or a host's command line.</summary>
+    private sealed record TerminalInput(TerminalKeyEvent? Key, QueuedCommand? Command);
+
+    /// <summary>A command line sent by the host, waiting for its turn.</summary>
+    private sealed class QueuedCommand(string line, CancellationToken cancellationToken)
+    {
+        public string Line { get; } = line;
+
+        public CancellationToken CancellationToken { get; } = cancellationToken;
+
+        public TaskCompletionSource<HackTerminalCommandResult> Completion { get; } =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+    }
+
+    /// <summary>Prints the prompt on a fresh row and starts an empty line after it.</summary>
+    private void ShowPrompt()
+    {
+        if (_disposed || (_shell is not null && _shell.HasExited))
+        {
+            return;
+        }
+
+        if (!_atLineStart)
+        {
+            // The last output did not end its line: start the prompt on the next one.
+            Write("\n");
+        }
+
+        _editor.Reset();
+        _promptVisible = true;
+        RedrawLine();
+    }
+
+    /// <summary>Redraws the prompt and the line being typed, leaving the cursor where it edits.</summary>
+    private void RedrawLine()
+    {
+        (string prompt, int promptWidth) = TerminalAnsi.FormatPrompt(Prompt);
+        Write(_editor.Render(prompt, promptWidth, _columns));
+    }
+
+    /// <summary>Prints a line of the terminal's own (an error, a status), in a colour, on a fresh row.</summary>
+    private void WriteLine(string text, string colour)
+    {
+        if (!_atLineStart)
+        {
+            Write("\n");
+        }
+
+        Write(colour + text + TerminalAnsi.Reset + "\n");
+        AppendTranscript(text + "\n");
+    }
+
+    private void WriteBanner()
+    {
+        Write(TerminalAnsi.Banner + BannerArt + "\n" + TerminalAnsi.Reset);
+        Write(L["Panel.Welcome"] + "\n\n");
+    }
+
+    /// <summary>
+    /// Sends bytes to the terminal, translating newlines as a tty does (ONLCR). Writes made in
+    /// the same turn are sent together; before the terminal is mounted they are kept.
+    /// </summary>
+    private void Write(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return;
+        }
+
+        string translated = TerminalAnsi.TranslateOutput(text);
+        lock (_outputSync)
+        {
+            _pendingOutput.Append(translated);
+            if (_pendingOutput.Length > MaxPendingOutput)
+            {
+                _pendingOutput.Remove(0, _pendingOutput.Length - MaxPendingOutput);
+            }
+
+            _atLineStart = TerminalAnsi.EndsAtLineStart(translated, _atLineStart);
+            if (_terminal is null || _flushScheduled)
+            {
+                return;
+            }
+
+            _flushScheduled = true;
+        }
+
+        _ = FlushSoonAsync();
+    }
+
+    private async Task FlushSoonAsync()
+    {
+        // Let the writes of the current turn accumulate, then send them in one interop call.
+        await Task.Yield();
+        FlushOutput();
+    }
+
+    private void FlushOutput()
+    {
+        string chunk;
+        lock (_outputSync)
+        {
+            _flushScheduled = false;
+            if (_terminal is null || _pendingOutput.Length == 0)
+            {
+                return;
+            }
+
+            chunk = _pendingOutput.ToString();
+            _pendingOutput.Clear();
+        }
+
+        _ = SendAsync(_terminal, chunk);
+    }
+
+    private async Task SendAsync(IJSObjectReference terminal, string chunk)
+    {
+        try
+        {
+            await terminal.InvokeVoidAsync("write", chunk);
+        }
+        catch (Exception exception) when (exception is JSException or JSDisconnectedException or ObjectDisposedException or TaskCanceledException)
+        {
+            // The panel is closing: nothing left to show the bytes on.
+        }
+    }
+
+    /// <summary>Prints one line the OS writes through the credential prompt (approval banner, "Sorry, try again.").</summary>
+    private Task WriteApprovalLineAsync(string text, HackPromptLineKind kind)
+    {
+        WriteLine(text, kind switch
+        {
+            HackPromptLineKind.Warning => TerminalAnsi.Notice,
+            HackPromptLineKind.Error => TerminalAnsi.Error,
+            _ => TerminalAnsi.Reset
+        });
+        return Task.CompletedTask;
+    }
+
+    private void CancelActiveCommand()
+    {
+        if (_activeCts is not null && !_activeCts.IsCancellationRequested)
+        {
+            _activeCts.Cancel();
+            Write("^C");
+        }
+    }
+
+    /// <summary>
+    /// Tab: the shell completes the word before the cursor (ADR 0058, section 4), as <c>bash</c>
+    /// does. One candidate is inserted; several insert their common prefix, and a second Tab on the
+    /// same line lists them under the prompt, which is then printed again with the line.
+    /// </summary>
+    private async Task AutoCompleteInputAsync()
+    {
+        if (_shell is null || _shell.HasExited)
+        {
+            return;
+        }
+
+        string line = _editor.Text;
+        int cursor = _editor.Cursor;
+        HackShellCompletion completion;
+        try
+        {
+            completion = await _shell.CompleteAsync(line, cursor);
+        }
+        catch (ObjectDisposedException)
+        {
+            return;
+        }
+
+        string completed = completion.ApplyTo(line, out int completedCursor);
+        if (completed != line)
+        {
+            _editor.SetText(completed, completedCursor);
+            RedrawLine();
+            _lastCompletionLine = null;
+            return;
+        }
+
+        if (completion.Candidates.Count > 1)
+        {
+            if (_lastCompletionLine == line)
+            {
+                (_, int promptWidth) = TerminalAnsi.FormatPrompt(Prompt);
+                Write(_editor.Commit(promptWidth, _columns));
+                Write(string.Join("  ", completion.DisplayCandidates) + "\n");
+                _editor.SetText(line, cursor);
+                RedrawLine();
+                _lastCompletionLine = null;
+                return;
+            }
+
+            _lastCompletionLine = line;
+            return;
+        }
+
+        _lastCompletionLine = null;
+    }
+
+    /// <summary>Receives the terminal's character-cell grid size from the collocated fit observer.</summary>
+    [JSInvokable]
+    public void UpdateTerminalViewport(int columns, int rows)
+    {
+        if (columns < 1 || rows < 1)
+            return;
+        _columns = columns;
+        _rows = rows;
+        if (_promptVisible)
+        {
+            (_, int promptWidth) = TerminalAnsi.FormatPrompt(Prompt);
+            _editor.Reflow(promptWidth, columns);
+        }
+
+        _fullScreenSession?.UpdateViewport(columns, rows);
+    }
+
+    /// <summary>
+    /// The session's accessibility preferences changed (ADR 0105): the emulator takes the new text
+    /// size, palette and cursor. A failure only leaves the old look.
+    /// </summary>
+    private void OnAccessibilityChanged(object? sender, EventArgs args) => _ = InvokeAsync(async () =>
+    {
+        IJSObjectReference? terminal = _terminal;
+        if (terminal is null || _disposed)
+        {
+            return;
+        }
+
+        try
+        {
+            Kazo.Os.AppSdk.Accessibility.HackAccessibilityPreferences preferences =
+                await AppContext.Accessibility.GetPreferencesAsync(CancellationToken.None);
+            await terminal.InvokeVoidAsync("applyAccessibility", new
+            {
+                highContrast = preferences.HighContrast,
+                reducedMotion = preferences.ReducedMotion
+            });
+        }
+        catch (Exception exception) when (exception is JSException or JSDisconnectedException or ObjectDisposedException or TaskCanceledException)
+        {
+            // The terminal went away meanwhile.
+        }
+    });
+
+    /// <inheritdoc />
+    public async ValueTask DisposeAsync()
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        _disposed = true;
+        AppContext.Accessibility.Changed -= OnAccessibilityChanged;
+        _activeCts?.Cancel();
+        // Closing the panel ends its shell's process and every command still running in it.
+        if (_shell is not null)
+            await _shell.DisposeAsync();
+        if (_fullScreenSession is not null)
+            await _fullScreenSession.DisposeAsync();
+        IJSObjectReference? terminal = _terminal;
+        _terminal = null;
+        if (terminal is not null)
+        {
+            try
+            {
+                await terminal.InvokeVoidAsync("dispose");
+                await terminal.DisposeAsync();
+            }
+            catch (Exception exception) when (exception is JSException or JSDisconnectedException or ObjectDisposedException or TaskCanceledException)
+            {
+                // The element is already gone with its terminal.
+            }
+        }
+
+        if (_module is not null)
+        {
+            try
+            {
+                await _module.DisposeAsync();
+            }
+            catch (JSDisconnectedException)
+            {
+                // The circuit (debug host) is already gone.
+            }
+        }
+
+        _dotNetReference?.Dispose();
+        _activeCts?.Dispose();
+    }
+
+    /// <summary>
+    /// A full-screen command entered, drew on, or left the alternate screen: the same bytes a
+    /// curses program writes (smcup, cursor addressing, rmcup).
+    /// </summary>
+    private Task ApplyFullScreenStateAsync(TerminalScreenFrame? frame, bool active)
+    {
+        if (active && !_alternateScreen)
+        {
+            _alternateScreen = true;
+            _atLineStartBeforeAlternateScreen = _atLineStart;
+            Write(TerminalAnsi.EnterAlternateScreen);
+        }
+
+        if (active && frame is not null)
+        {
+            Write(TerminalAnsi.RenderFrame(frame, _columns, _rows));
+        }
+
+        if (!active && _alternateScreen)
+        {
+            _alternateScreen = false;
+            Write(TerminalAnsi.LeaveAlternateScreen);
+            // rmcup restores the cursor where the command found it.
+            _atLineStart = _atLineStartBeforeAlternateScreen;
+        }
+
+        return Task.CompletedTask;
+    }
+}

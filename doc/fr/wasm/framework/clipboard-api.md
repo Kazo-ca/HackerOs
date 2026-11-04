@@ -15,7 +15,7 @@ string? text = await HackClipboard.GetTextAsync();       // y compris un texte c
 ```
 
 Une app ne parle jamais à `navigator.clipboard`. `BrowserClipboard`
-(`HackerOs.AppSdk.Blazor`), qui contournait le réglage, a été retiré au gel du
+(`Kazo.Os.AppSdk.Blazor`), qui contournait le réglage, a été retiré au gel du
 SDK 1.0 (ADR 0114 §3).
 
 ## Presse-papiers (`HackClipboard`)

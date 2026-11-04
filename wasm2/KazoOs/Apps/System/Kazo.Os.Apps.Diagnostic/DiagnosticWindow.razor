@@ -1,0 +1,221 @@
+@using Kazo.Os.AppSdk.Administration
+@using Kazo.Os.AppSdk.Blazor
+@using Kazo.Os.AppSdk.Globalization
+@using Microsoft.Extensions.Localization
+@using Microsoft.JSInterop
+@inherits WindowAppBase
+@inject IJSRuntime JS
+
+<div class="diag-container">
+    <header class="diag-header">
+        <div class="diag-title-area">
+            <span class="diag-title">@L["Header.Title"]</span>
+            @if (_snapshot is not null)
+            {
+                <span class="diag-badge">@L["Header.Database", _snapshot.DatabaseName, _snapshot.DatabaseVersion]</span>
+                <span class="diag-badge diag-badge-info">@L["Header.ResolvedPaths", _snapshot.ResolvedPaths.Count]</span>
+            }
+            @if (_isolation is { } isolation)
+            {
+                <span class="diag-badge @(isolation.IsIsolated ? "diag-badge-isolated" : "diag-badge-muted")"
+                      title="@IsolationDetails(isolation)" data-isolation="@(isolation.IsIsolated ? "yes" : "no")">
+                    @(isolation.IsIsolated ? L["Isolation.Yes"] : L["Isolation.No", IsolationReason(isolation.Reason)])
+                </span>
+            }
+        </div>
+        <div class="diag-actions">
+            <button class="diag-btn" @onclick="RefreshAsync" disabled="@_isLoading">
+                <span>⟳ @L["Toolbar.Refresh"]</span>
+            </button>
+            <button class="diag-btn diag-btn-accent" @onclick="CopyToClipboardAsync" disabled="@(_snapshot is null)">
+                <span>📋 @L["Toolbar.Copy"]</span>
+            </button>
+            <button class="diag-btn diag-btn-primary" @onclick="ExportJsonFileAsync" disabled="@(_snapshot is null)">
+                <span>💾 @L["Toolbar.Save"]</span>
+            </button>
+            <button class="diag-btn" @onclick="DownloadJsonAsync" disabled="@(_snapshot is null)">
+                <span>⬇ @L["Toolbar.Download"]</span>
+            </button>
+        </div>
+    </header>
+
+    <div class="diag-notice-banner">
+        💡 <span class="diag-notice-highlight">@L["Notice.Title"]</span>
+        @LocalizedMarkup.Format(L["Notice.Text"],
+            LocalizedMarkup.Code("fsEntries"),
+            LocalizedMarkup.Code("(parentId, name)"),
+            LocalizedMarkup.Code("entryId"),
+            LocalizedMarkup.Code("fsLinks"),
+            LocalizedMarkup.Code("filePath"))
+    </div>
+
+    <div class="diag-body">
+        @if (_isLoading)
+        {
+            <div class="diag-content">
+                <p>@L["Loading"]</p>
+            </div>
+        }
+        else if (_loadError is not null)
+        {
+            <div class="diag-content">
+                <p class="diag-error" role="alert">@_loadError</p>
+            </div>
+        }
+        else if (_snapshot is not null)
+        {
+            <aside class="diag-sidebar">
+                @foreach (var store in _snapshot.Stores)
+                {
+                    <button class="diag-store-item @(store.Name == _selectedStoreName ? "active" : "")"
+                            @onclick="() => SelectStore(store.Name)">
+                        <span>@store.Name</span>
+                        <span class="diag-store-count">@store.RecordCount</span>
+                    </button>
+                }
+
+                <div class="diag-sidebar-heading" title="@L["Sites.Heading.Title"]">@L["Sites.Heading"]</div>
+                @if (_sites.Count == 0)
+                {
+                    <div class="diag-sidebar-empty">@(_sitesError ?? L["Sites.Empty"])</div>
+                }
+                @foreach (HackWebSiteDatabaseInfo entry in _sites)
+                {
+                    <button class="diag-store-item diag-site-item @(entry.Name == _selectedSiteName ? "active" : "")"
+                            @onclick="() => SelectSite(entry.Name)">
+                        <span>@entry.AppId</span>
+                        <span class="diag-store-count">@FormatSize(entry.SizeBytes)</span>
+                    </button>
+                }
+            </aside>
+
+            <main class="diag-content">
+                @if (SelectedSite is { } site)
+                {
+                    <div class="diag-store-header">
+                        <div class="diag-store-name">@L["Site.Name", site.Name, site.Version]</div>
+                        <div class="diag-store-purpose">
+                            @LocalizedMarkup.Format(L["Site.Purpose"], LocalizedMarkup.Code(site.AppId), site.RecordCount.ToString("N0", Formats), FormatSize(site.SizeBytes))
+                        </div>
+                    </div>
+
+                    <div class="diag-table-wrapper">
+                        <table class="diag-table">
+                            <thead>
+                                <tr>
+                                    <th>@L["Column.ObjectStore"]</th>
+                                    <th>@L["Column.Records"]</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (HackWebSiteDatabaseStoreInfo store in site.Stores)
+                                {
+                                    <tr>
+                                        <td class="diag-path-highlight">@store.Name</td>
+                                        <td>@store.RecordCount</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="diag-site-actions">
+                        @if (_confirmDelete)
+                        {
+                            <span class="diag-site-warning" role="alert">@L["Site.ConfirmDelete", site.AppId]</span>
+                            <button class="diag-btn diag-btn-danger" @onclick="DeleteSiteAsync">@L["Site.Delete"]</button>
+                            <button class="diag-btn" @onclick="() => _confirmDelete = false">@L["Common.Cancel"]</button>
+                        }
+                        else
+                        {
+                            <button class="diag-btn diag-btn-danger" @onclick="() => _confirmDelete = true">🗑 @L["Site.Clear"]</button>
+                        }
+                    </div>
+                }
+                else if (SelectedStore is { } activeStore)
+                {
+                    <div class="diag-store-header">
+                        <div class="diag-store-name">@L["Store.Header", activeStore.Name, activeStore.RecordCount]</div>
+                        <div class="diag-store-purpose">@activeStore.Purpose</div>
+                    </div>
+
+                    <div class="diag-filter-bar">
+                        <input type="text" class="diag-search-input" placeholder="@L["Search.Placeholder"]"
+                               @bind="_searchFilter" @bind:event="oninput" aria-label="@L["Search.AriaLabel"]" />
+                        <button class="diag-btn" @onclick="ToggleRawJsonView">
+                            <span>@(_showRawJson ? "📊 " + L["View.Table"] : "📄 " + L["View.Raw"])</span>
+                        </button>
+                    </div>
+
+                    @if (_showRawJson)
+                    {
+                        <pre class="diag-json-viewer">@activeStore.FormattedJson</pre>
+                    }
+                    else if (activeStore.Kind == HackStorageStoreKind.FileEntries)
+                    {
+                        <div class="diag-table-wrapper">
+                            <table class="diag-table">
+                                <thead>
+                                    <tr>
+                                        <th>@L["Column.ResolvedPath"]</th>
+                                        <th>@L["Column.EntryId"]</th>
+                                        <th>@L["Column.Kind"]</th>
+                                        <th>@L["Column.OwnerId"]</th>
+                                        <th>@L["Column.ContentHash"]</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var entry in FilteredFsEntries(activeStore))
+                                    {
+                                        <tr>
+                                            <td class="diag-path-highlight">@entry.Path</td>
+                                            <td><code>@entry.Id</code></td>
+                                            <td>@entry.Kind</td>
+                                            <td>@entry.OwnerId</td>
+                                            <td><code>@(entry.ContentHash ?? "-")</code></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else if (activeStore.Kind == HackStorageStoreKind.FileLinks)
+                    {
+                        <div class="diag-table-wrapper">
+                            <table class="diag-table">
+                                <thead>
+                                    <tr>
+                                        <th>@L["Column.ParentId"]</th>
+                                        <th>@L["Column.ChildName"]</th>
+                                        <th>@L["Column.ChildEntryId"]</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var link in FilteredFsLinks(activeStore))
+                                    {
+                                        <tr>
+                                            <td><code>@link.ParentId</code></td>
+                                            <td class="diag-path-highlight">@link.Name</td>
+                                            <td><code>@link.EntryId</code></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="diag-table-wrapper">
+                            <pre class="diag-json-viewer">@FilteredJson(activeStore)</pre>
+                        </div>
+                    }
+                }
+            </main>
+        }
+    </div>
+
+    @if (_toastMessage is not null)
+    {
+        <div class="diag-toast" role="status">@_toastMessage</div>
+    }
+</div>

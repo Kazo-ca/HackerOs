@@ -55,7 +55,7 @@ the user).
 
 ## `HackTrash` API
 
-`Shared/HackerOs.AppSdk/IO/HackTrash.cs`. Static class, ambient context of
+`Shared/Kazo.Os.AppSdk/IO/HackTrash.cs`. Static class, ambient context of
 ADR 0043 (`HackExecutionContext.Current`), `Hack*` exceptions. No
 new capability: the `filesystem.*` capabilities and the permissions decide, as
 for `HackFile`.

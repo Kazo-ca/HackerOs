@@ -56,7 +56,7 @@ parcours, un instantané cohérent.
 
 ### 2. Capacité facultative `IFileSystemPathWalkProvider`
 
-Contrat ajouté dans `HackerOs.Simulation.Abstractions.FileSystem` :
+Contrat ajouté dans `Kazo.Os.Simulation.Abstractions.FileSystem` :
 
 ```csharp
 public interface IFileSystemPathWalkProvider

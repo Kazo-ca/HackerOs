@@ -33,27 +33,27 @@ shared icon library; no vendor bitmap or remote font is shipped.
 ## Architecture
 
 ```text
-HackerOs.Theming.Abstractions        (pure .NET catalog and preferences)
+Kazo.Os.Theming.Abstractions        (pure .NET catalog and preferences)
              │
-             ├── HackerOs.Platform.Core       (settings codec/read projection)
+             ├── Kazo.Os.Platform.Core       (settings codec/read projection)
              │
-             └── HackerOs.Theming.Blazor      (ThemeScope, preview, themes.css)
+             └── Kazo.Os.Theming.Blazor      (ThemeScope, preview, themes.css)
                          │
-                         ├── HackerOs.Windowing.Blazor
-                         ├── HackerOs.Taskbar.Blazor
-                         ├── HackerOs.MobileShell.Blazor
-                         ├── HackerOs.Platform.Blazor
-                         └── HackerOs.Ecosystem / Settings
+                         ├── Kazo.Os.Windowing.Blazor
+                         ├── Kazo.Os.Taskbar.Blazor
+                         ├── Kazo.Os.MobileShell.Blazor
+                         ├── Kazo.Os.Platform.Blazor
+                         └── Kazo.Os.Ecosystem / Settings
 ```
 
-`HackerOs.Theming.Abstractions` is safe for non-UI projects. It exposes
+`Kazo.Os.Theming.Abstractions` is safe for non-UI projects. It exposes
 `ThemeDefinition`, `ThemePlatform`, `ThemeCatalog`, `ThemePreferences`,
 `WellKnownThemeIds`, and `WellKnownAccentIds`. Theme IDs are exact,
 case-sensitive, stable persistence keys.
 
-`HackerOs.Theming.Blazor` is the only owner of the complete visual theme
+`Kazo.Os.Theming.Blazor` is the only owner of the complete visual theme
 definitions. Its `wwwroot/themes.css` is published by the Razor class library
-at `_content/HackerOs.Theming.Blazor/themes.css`. `ThemeScope` loads that asset
+at `_content/Kazo.Os.Theming.Blazor/themes.css`. `ThemeScope` loads that asset
 and emits only validated `data-*` selectors on one ancestor; semantic custom
 properties then inherit through scoped Razor CSS and across project boundaries.
 It does not append one stylesheet per window.
@@ -75,14 +75,14 @@ the abstractions project; a Razor surface uses the Blazor project (which already
 references the abstractions project):
 
 ```xml
-<ProjectReference Include="..\HackerOs.Theming.Blazor\HackerOs.Theming.Blazor.csproj" />
+<ProjectReference Include="..\Kazo.Os.Theming.Blazor\Kazo.Os.Theming.Blazor.csproj" />
 ```
 
 Wrap the highest shared ancestor, not every child component:
 
 ```razor
-@using HackerOs.Theming.Abstractions
-@using HackerOs.Theming.Blazor
+@using Kazo.Os.Theming.Abstractions
+@using Kazo.Os.Theming.Blazor
 
 <ThemeScope ThemeId="@WellKnownThemeIds.Windows7"
             Platform="@ThemePlatform.Desktop"
@@ -97,8 +97,8 @@ untrusted selector text. Only HackerOS declares `SupportsAccentColor`; other
 themes keep their authored accent. The user's `prefers-reduced-motion` browser
 setting overrides enabled motion declaratively.
 
-Standalone consumers of `HackerOs.Windowing.Blazor` or
-`HackerOs.Taskbar.Blazor` use the same wrapper. They must not copy `themes.css`
+Standalone consumers of `Kazo.Os.Windowing.Blazor` or
+`Kazo.Os.Taskbar.Blazor` use the same wrapper. They must not copy `themes.css`
 into their host and must not add a manual `<script>` or a second host-owned
 theme stylesheet. The normal Razor static-asset pipeline supplies the RCL
 asset, including in the PWA, debug Blazor host, and future server UI host.
@@ -168,7 +168,7 @@ Follow every step; a catalog-only entry or CSS-only selector is incomplete.
    the correct ordered list in `ThemeCatalog`. Set `supportsAccentColor: true`
    only when all supported accents have deliberately authored contrast states.
 3. Add a static selector to
-   `Platform/HackerOs.Theming.Blazor/wwwroot/themes.css` using both supported
+   `Platform/Kazo.Os.Theming.Blazor/wwwroot/themes.css` using both supported
    forms:
 
    ```css

@@ -1,0 +1,122 @@
+#nullable enable
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackNavLink
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackNavLink.ActiveClass.get -> string!
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackNavLink.ActiveClass.set -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackNavLink.AdditionalAttributes.get -> System.Collections.Generic.IReadOnlyDictionary<string!, object!>?
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackNavLink.AdditionalAttributes.set -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackNavLink.ChildContent.get -> Microsoft.AspNetCore.Components.RenderFragment?
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackNavLink.ChildContent.set -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackNavLink.Dispose() -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackNavLink.HackNavLink() -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackNavLink.Href.get -> string?
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackNavLink.Href.set -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackNavLink.IsActive.get -> bool
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackNavLink.Match.get -> Microsoft.AspNetCore.Components.Routing.NavLinkMatch
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackNavLink.Match.set -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackNavLink.Site.get -> Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSite?
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackNavLink.Site.set -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackPageTitle
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackPageTitle.HackPageTitle() -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackPageTitle.Title.get -> string!
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackPageTitle.Title.set -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackSiteErrorBoundary
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackSiteErrorBoundary.HackSiteErrorBoundary() -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackSiteErrorBoundary.OnError.get -> System.Func<System.Exception!, System.Threading.Tasks.Task!>?
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackSiteErrorBoundary.OnError.set -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackSiteLayoutBase
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackSiteLayoutBase.Body.get -> Microsoft.AspNetCore.Components.RenderFragment?
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackSiteLayoutBase.Body.set -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackSiteLayoutBase.HackSiteLayoutBase() -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackSiteNavigationManager
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackSiteNavigationManager.HackSiteNavigationManager(string! baseUri, string! uri) -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackSiteNavigationManager.IsWithinSite(System.Uri! uri) -> bool
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackSiteNavigationManager.NavigationRequested -> System.Action<string!, Microsoft.AspNetCore.Components.NavigationOptions>?
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackSiteNavigationManager.SetLocation(string! uri, bool isInterceptedLink) -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackSiteRouter
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackSiteRouter.AppAssembly.get -> System.Reflection.Assembly!
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackSiteRouter.AppAssembly.set -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackSiteRouter.DefaultLayout.get -> System.Type?
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackSiteRouter.DefaultLayout.set -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackSiteRouter.Dispose() -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackSiteRouter.HackSiteRouter() -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackSiteRouter.NotFound.get -> Microsoft.AspNetCore.Components.RenderFragment?
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackSiteRouter.NotFound.set -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackSiteRouter.Routes.get -> System.Collections.Generic.IReadOnlyList<(string! Template, System.Type! Page)>!
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackSiteRouter.Site.get -> Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSite?
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackSiteRouter.Site.set -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackSiteRouter.TryMatch(string! path, out System.Type? page, out Kazo.Os.AppSdk.Web.Routing.HackRouteValueDictionary! values) -> bool
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSite
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSite.AppId.get -> string!
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSite.HackWebSite(Kazo.Os.AppSdk.Web.Blazor.Sites.HackSiteNavigationManager! navigation, Kazo.Os.AppSdk.Net.HackHttpClient! http, string! appId, string! name) -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSite.Http.get -> Kazo.Os.AppSdk.Net.HackHttpClient!
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSite.Name.get -> string!
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSite.Navigation.get -> Kazo.Os.AppSdk.Web.Blazor.Sites.HackSiteNavigationManager!
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSite.SetTitle(string? title) -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSite.Title.get -> string!
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSite.TitleChanged -> System.Action<string!>?
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStart
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStart.<Clone>$() -> Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStart!
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStart.Deconstruct(out Kazo.Os.AppSdk.Web.Blazor.Sites.IHackWebSiteProcess? Process, out string? Error) -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStart.Equals(Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStart? other) -> bool
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStart.Error.get -> string?
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStart.Error.init -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStart.HackWebSiteStart(Kazo.Os.AppSdk.Web.Blazor.Sites.IHackWebSiteProcess? Process, string? Error) -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStart.IsStarted.get -> bool
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStart.Process.get -> Kazo.Os.AppSdk.Web.Blazor.Sites.IHackWebSiteProcess?
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStart.Process.init -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest.<Clone>$() -> Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest!
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest.Boot.get -> Kazo.Os.AppSdk.Net.Hosting.HackBlazorBootManifest!
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest.Boot.init -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest.Browser.get -> Kazo.Os.AppSdk.IAppExecutionContext!
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest.Browser.init -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest.Deconstruct(out System.Uri! PageUrl, out Kazo.Os.AppSdk.Net.Hosting.HackBlazorBootManifest! Boot, out Kazo.Os.AppSdk.IAppExecutionContext! Browser) -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest.Equals(Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest? other) -> bool
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest.HackWebSiteStartRequest(System.Uri! PageUrl, Kazo.Os.AppSdk.Net.Hosting.HackBlazorBootManifest! Boot, Kazo.Os.AppSdk.IAppExecutionContext! Browser) -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest.PageUrl.get -> System.Uri!
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest.PageUrl.init -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteView
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteView.Cookies.get -> Kazo.Os.AppSdk.Net.HackCookieContainer!
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteView.Cookies.set -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteView.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteView.HackWebSiteView() -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteView.OnFaulted.get -> System.Func<System.Exception!, System.Threading.Tasks.Task!>?
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteView.OnFaulted.set -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteView.OnLinkClicked(string! href, bool forceLoad) -> System.Threading.Tasks.Task!
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteView.OnLocationChanged.get -> System.Func<System.Uri!, bool, System.Threading.Tasks.Task!>?
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteView.OnLocationChanged.set -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteView.OnNavigate.get -> System.Func<System.Uri!, bool, System.Threading.Tasks.Task!>?
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteView.OnNavigate.set -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteView.OnTitleChanged.get -> System.Func<string!, System.Threading.Tasks.Task!>?
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteView.OnTitleChanged.set -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteView.Process.get -> Kazo.Os.AppSdk.Web.Blazor.Sites.IHackWebSiteProcess!
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteView.Process.set -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteView.Site.get -> Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSite?
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteView.Url.get -> System.Uri!
+Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteView.Url.set -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.IHackWebSiteHost
+Kazo.Os.AppSdk.Web.Blazor.Sites.IHackWebSiteHost.StartAsync(Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStart!>!
+Kazo.Os.AppSdk.Web.Blazor.Sites.IHackWebSiteProcess
+Kazo.Os.AppSdk.Web.Blazor.Sites.IHackWebSiteProcess.AppId.get -> string!
+Kazo.Os.AppSdk.Web.Blazor.Sites.IHackWebSiteProcess.AppName.get -> string!
+Kazo.Os.AppSdk.Web.Blazor.Sites.IHackWebSiteProcess.Context.get -> Kazo.Os.AppSdk.IAppExecutionContext!
+Kazo.Os.AppSdk.Web.Blazor.Sites.IHackWebSiteProcess.Exited -> System.Action?
+Kazo.Os.AppSdk.Web.Blazor.Sites.IHackWebSiteProcess.HasExited.get -> bool
+Kazo.Os.AppSdk.Web.Blazor.Sites.IHackWebSiteProcess.ProcessId.get -> Kazo.Os.Simulation.Abstractions.Processes.ProcessId
+Kazo.Os.AppSdk.Web.Blazor.Sites.IHackWebSiteProcess.RootComponent.get -> System.Type!
+Kazo.Os.AppSdk.Web.Blazor.Sites.IHackWebSiteProcess.StopAsync(bool faulted = false) -> System.Threading.Tasks.Task!
+Kazo.Os.AppSdk.Web.Blazor._Imports
+Kazo.Os.AppSdk.Web.Blazor._Imports.Execute() -> void
+Kazo.Os.AppSdk.Web.Blazor._Imports._Imports() -> void
+override Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStart.Equals(object? obj) -> bool
+override Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStart.GetHashCode() -> int
+override Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStart.ToString() -> string!
+override Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest.Equals(object? obj) -> bool
+override Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest.GetHashCode() -> int
+override Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest.ToString() -> string!
+static Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStart.Failed(string! error) -> Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStart!
+static Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStart.Started(Kazo.Os.AppSdk.Web.Blazor.Sites.IHackWebSiteProcess! process) -> Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStart!
+static Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStart.operator !=(Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStart? left, Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStart? right) -> bool
+static Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStart.operator ==(Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStart? left, Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStart? right) -> bool
+static Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest.operator !=(Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest? left, Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest? right) -> bool
+static Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest.operator ==(Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest? left, Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest? right) -> bool

@@ -219,7 +219,7 @@ Le changement s'applique à la prochaine connexion, ce que le panneau affiche.
 `sudo localectl set-locale`. L'app déclare pour cela
 `filesystem.user-home.read` et `filesystem.user-home.write`. Il n'y a pas de
 bouton « Se déconnecter » : le SDK n'expose pas la déconnexion aux apps.
-Tests : `Tests/HackerOs.Apps.Settings.Tests/LanguagePanelTests.cs`.
+Tests : `Tests/Kazo.Os.Apps.Settings.Tests/LanguagePanelTests.cs`.
 
 ## Migration
 
@@ -259,7 +259,7 @@ ni la connexion. Le schéma IndexedDB ne change pas.
 
 ## Tests de contrat
 
-Dans `Tests/HackerOs.Platform.Core.Tests/Settings/` :
+Dans `Tests/Kazo.Os.Platform.Core.Tests/Settings/` :
 
 - `LayeredConfigResolverTests` : couches, verrous, analyse tolérante, texte
   des avertissements, groupe réservé ;

@@ -10,7 +10,7 @@ virtual file dialogs, and mandatory scoped-asset validation.
 
 ## Architecture
 
-`HackerOs.AppSdk.Blazor` references the headless App SDK and simulation contracts.
+`Kazo.Os.AppSdk.Blazor` references the headless App SDK and simulation contracts.
 The dependency never points in the opposite direction.
 
 `WindowAppBase` derives from Blazor `ComponentBase` and receives an

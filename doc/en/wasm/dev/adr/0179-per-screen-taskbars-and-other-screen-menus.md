@@ -15,7 +15,7 @@ Plan: [`multi-monitor-plan.md`](../plans/multi-monitor-plan.md).
 
 ## Context
 
-- The taskbar (`HackerOs.Taskbar.Blazor.Taskbar`), the Start menu and the
+- The taskbar (`Kazo.Os.Taskbar.Blazor.Taskbar`), the Start menu and the
   notification area exist once, in the main tab. `TaskbarWindowSourceAdapter`
   gives it every window of `WindowRuntime`.
 - The window menu (ADR 0095 §3, `WindowManagerOverlays`) is a single-level list:
@@ -102,7 +102,7 @@ Plan: [`multi-monitor-plan.md`](../plans/multi-monitor-plan.md).
 
 ## Consequences
 
-- The taskbar gets a per-screen filter; `HackerOs.Taskbar.Blazor` has no other
+- The taskbar gets a per-screen filter; `Kazo.Os.Taskbar.Blazor` has no other
   public change.
 - The window menu changes component. The menu tests (`WindowKeyboardCommands`,
   `WindowAppIconTests`) must stay green without changing their expectations.

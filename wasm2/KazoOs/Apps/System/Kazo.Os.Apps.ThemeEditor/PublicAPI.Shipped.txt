@@ -1,0 +1,84 @@
+#nullable enable
+Kazo.Os.Apps.ThemeEditor.ThemeEditorApp
+Kazo.Os.Apps.ThemeEditor.ThemeEditorApp.ThemeEditorApp() -> void
+Kazo.Os.Apps.ThemeEditor.ThemeEditorDocument
+Kazo.Os.Apps.ThemeEditor.ThemeEditorDocument.BaseThemeId.get -> string!
+Kazo.Os.Apps.ThemeEditor.ThemeEditorDocument.BaseThemeId.set -> void
+Kazo.Os.Apps.ThemeEditor.ThemeEditorDocument.Clear(string! tokenName) -> void
+Kazo.Os.Apps.ThemeEditor.ThemeEditorDocument.ForDesktop.get -> bool
+Kazo.Os.Apps.ThemeEditor.ThemeEditorDocument.ForDesktop.set -> void
+Kazo.Os.Apps.ThemeEditor.ThemeEditorDocument.ForMobile.get -> bool
+Kazo.Os.Apps.ThemeEditor.ThemeEditorDocument.ForMobile.set -> void
+Kazo.Os.Apps.ThemeEditor.ThemeEditorDocument.GetError(string! tokenName) -> string?
+Kazo.Os.Apps.ThemeEditor.ThemeEditorDocument.GetProblems() -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.Apps.ThemeEditor.ThemeEditorDocument.GetValue(string! tokenName) -> string?
+Kazo.Os.Apps.ThemeEditor.ThemeEditorDocument.Id.get -> string!
+Kazo.Os.Apps.ThemeEditor.ThemeEditorDocument.IsDirty.get -> bool
+Kazo.Os.Apps.ThemeEditor.ThemeEditorDocument.Load(Kazo.Os.Theming.Abstractions.UserTheme! theme, string? path) -> void
+Kazo.Os.Apps.ThemeEditor.ThemeEditorDocument.MarkSaved(string! path) -> void
+Kazo.Os.Apps.ThemeEditor.ThemeEditorDocument.Name.get -> string!
+Kazo.Os.Apps.ThemeEditor.ThemeEditorDocument.Name.set -> void
+Kazo.Os.Apps.ThemeEditor.ThemeEditorDocument.Path.get -> string?
+Kazo.Os.Apps.ThemeEditor.ThemeEditorDocument.Platforms.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Theming.Abstractions.ThemePlatform>!
+Kazo.Os.Apps.ThemeEditor.ThemeEditorDocument.Reset(string! baseThemeId) -> void
+Kazo.Os.Apps.ThemeEditor.ThemeEditorDocument.SetId(string? id) -> void
+Kazo.Os.Apps.ThemeEditor.ThemeEditorDocument.SetValue(string! tokenName, string? value) -> void
+Kazo.Os.Apps.ThemeEditor.ThemeEditorDocument.ThemeEditorDocument(Microsoft.Extensions.Localization.IStringLocalizer? text = null) -> void
+Kazo.Os.Apps.ThemeEditor.ThemeEditorDocument.ToUserTheme() -> Kazo.Os.Theming.Abstractions.UserTheme!
+Kazo.Os.Apps.ThemeEditor.ThemeEditorDocument.TokenCount.get -> int
+Kazo.Os.Apps.ThemeEditor.ThemeEditorDocument.ValidTokens.get -> System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>!
+Kazo.Os.Apps.ThemeEditor.ThemeEditorPreview
+Kazo.Os.Apps.ThemeEditor.ThemeEditorPreview.AnimationsEnabled.get -> bool
+Kazo.Os.Apps.ThemeEditor.ThemeEditorPreview.AnimationsEnabled.set -> void
+Kazo.Os.Apps.ThemeEditor.ThemeEditorPreview.BaseThemeId.get -> string!
+Kazo.Os.Apps.ThemeEditor.ThemeEditorPreview.BaseThemeId.set -> void
+Kazo.Os.Apps.ThemeEditor.ThemeEditorPreview.Platform.get -> Kazo.Os.Theming.Abstractions.ThemePlatform
+Kazo.Os.Apps.ThemeEditor.ThemeEditorPreview.Platform.set -> void
+Kazo.Os.Apps.ThemeEditor.ThemeEditorPreview.ThemeEditorPreview() -> void
+Kazo.Os.Apps.ThemeEditor.ThemeEditorPreview.ThemeName.get -> string!
+Kazo.Os.Apps.ThemeEditor.ThemeEditorPreview.ThemeName.set -> void
+Kazo.Os.Apps.ThemeEditor.ThemeEditorPreview.Tokens.get -> System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>?
+Kazo.Os.Apps.ThemeEditor.ThemeEditorPreview.Tokens.set -> void
+Kazo.Os.Apps.ThemeEditor.ThemeEditorWindow
+Kazo.Os.Apps.ThemeEditor.ThemeEditorWindow.ConfirmCloseAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+Kazo.Os.Apps.ThemeEditor.ThemeEditorWindow.ThemeEditorWindow() -> void
+Kazo.Os.Apps.ThemeEditor.ThemeFileIo
+Kazo.Os.Apps.ThemeEditor.ThemeTokenDocumentation
+Kazo.Os.Apps.ThemeEditor.ThemeTokenDocumentation.ThemeTokenDocumentation() -> void
+Kazo.Os.Apps.ThemeEditor.ThemeTokenField
+Kazo.Os.Apps.ThemeEditor.ThemeTokenField.Error.get -> string?
+Kazo.Os.Apps.ThemeEditor.ThemeTokenField.Error.set -> void
+Kazo.Os.Apps.ThemeEditor.ThemeTokenField.ThemeTokenField() -> void
+Kazo.Os.Apps.ThemeEditor.ThemeTokenField.Token.get -> Kazo.Os.Theming.Abstractions.ThemeTokenDefinition!
+Kazo.Os.Apps.ThemeEditor.ThemeTokenField.Token.set -> void
+Kazo.Os.Apps.ThemeEditor.ThemeTokenField.Value.get -> string?
+Kazo.Os.Apps.ThemeEditor.ThemeTokenField.Value.set -> void
+Kazo.Os.Apps.ThemeEditor.ThemeTokenField.ValueChanged.get -> Microsoft.AspNetCore.Components.EventCallback<string?>
+Kazo.Os.Apps.ThemeEditor.ThemeTokenField.ValueChanged.set -> void
+Kazo.Os.Apps.ThemeEditor._Imports
+Kazo.Os.Apps.ThemeEditor._Imports.Execute() -> void
+Kazo.Os.Apps.ThemeEditor._Imports._Imports() -> void
+override Kazo.Os.Apps.ThemeEditor.ThemeEditorApp.Assets.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AssetManifest!>!
+override Kazo.Os.Apps.ThemeEditor.ThemeEditorApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Apps.ThemeEditor.ThemeEditorApp.Category.get -> string!
+override Kazo.Os.Apps.ThemeEditor.ThemeEditorApp.Description.get -> string!
+override Kazo.Os.Apps.ThemeEditor.ThemeEditorApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Apps.ThemeEditor.ThemeEditorApp.FileHandlers.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.FileHandler!>!
+override Kazo.Os.Apps.ThemeEditor.ThemeEditorApp.Icons.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Apps.ThemeEditor.ThemeEditorApp.Id.get -> string!
+override Kazo.Os.Apps.ThemeEditor.ThemeEditorApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Apps.ThemeEditor.ThemeEditorApp.MobileEntryPoint.get -> System.Type?
+override Kazo.Os.Apps.ThemeEditor.ThemeEditorApp.Name.get -> string!
+override Kazo.Os.Apps.ThemeEditor.ThemeEditorApp.PublisherId.get -> string!
+override Kazo.Os.Apps.ThemeEditor.ThemeEditorApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Apps.ThemeEditor.ThemeEditorApp.Window.get -> Kazo.Os.App.Abstractions.WindowOptions?
+override Kazo.Os.Apps.ThemeEditor.ThemeEditorWindow.OnAppAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.ThemeEditor.ThemeEditorWindow.OnAppInitializedAsync() -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.ThemeEditor.ThemeEditorWindow.OnWindowActivatedAsync() -> System.Threading.Tasks.Task!
+static Kazo.Os.Apps.ThemeEditor.ThemeEditorDocument.Slugify(string! name) -> string!
+static Kazo.Os.Apps.ThemeEditor.ThemeFileIo.ReadAsync(Kazo.Os.Simulation.Abstractions.Gateways.IAppFileSystemGateway! fileSystem, Kazo.Os.App.Abstractions.VirtualPath path, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<(string? Content, string? Error)>!
+static Kazo.Os.Apps.ThemeEditor.ThemeFileIo.WriteAsync(Kazo.Os.Simulation.Abstractions.Gateways.IAppFileSystemGateway! fileSystem, Kazo.Os.App.Abstractions.VirtualPath path, string! content, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<string?>!
+~override Kazo.Os.Apps.ThemeEditor.ThemeEditorPreview.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Apps.ThemeEditor.ThemeEditorWindow.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Apps.ThemeEditor.ThemeTokenDocumentation.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Apps.ThemeEditor.ThemeTokenField.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

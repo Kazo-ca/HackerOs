@@ -125,7 +125,7 @@ Benoit a retenu toutes les recommandations, avec une précision sur la question 
 | `web/3-listener-dns` | `HackHttpListener`, `network.listen`, table des ports, `hackdns`, `/etc/hosts`, `Urls` du manifeste, activation à la demande, `netstat -tlnp`, `/proc/net/tcp`, worker web partagé et passerelle distante pour un listener dans ce worker. | `2` |
 | `web/4-browser-html` | Iframe isolée, chargeur de sous-ressources, pont `fetch`/XHR/formulaires, `file://`, onglet « source », erreurs réseau. | `2` |
 | `web/5-static-sites` | Fichiers `.site`, service `hackwebd` (fichiers statiques, index, types MIME, 404), app Web Server Manager, ouverture d'un dossier comme site. | `3`, `4` |
-| `web/6-mvc-core` | Bibliothèque `HackerOs.AppSdk.Web` : `WebAppDefinition`, `HackWebApplication`, middlewares, générateur de routes, contrôleurs, liaison, résultats JSON/Content/File/Redirect, DI par requête, session. | `3` |
+| `web/6-mvc-core` | Bibliothèque `Kazo.Os.AppSdk.Web` : `WebAppDefinition`, `HackWebApplication`, middlewares, générateur de routes, contrôleurs, liaison, résultats JSON/Content/File/Redirect, DI par requête, session. | `3` |
 | `web/7-razor-views` | Vues `.razor` en HTML, layout, partials, `Model`, helpers d'URL, anti-forgery, `wwwroot` du projet servi en lecture seule. | `6` |
 | `web/8-cshtml-views` | Preuve de faisabilité puis vues `.cshtml` compilées au build (`@model`, `@inject`, `@section`, `_Layout`, `_ViewStart`). Si la preuve échoue, un ADR de remplacement est écrit avant le code. | `7` |
 | `web/9-blazor-sites` | Sites Blazor interactifs dessinés dans la zone de page du navigateur, navigation par URL, sans capacité `filesystem.*`. | `4`, `6` |

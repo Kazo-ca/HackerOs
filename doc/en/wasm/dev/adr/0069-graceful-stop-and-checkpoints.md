@@ -121,8 +121,8 @@ When the OS stops a process:
 ## References
 
 - [`execution-isolation-plan.md`](../plans/execution-isolation-plan.md)
-- `Platform/HackerOs.Platform.Core/Processes/InMemoryProcessManager.cs`,
-  `Apps/System/HackerOs.Apps.SystemMonitor/Processes/EndTaskRunner.cs`,
-  `Apps/Commands/HackerOs.Commands/Kill/KillCommand.cs`.
+- `Platform/Kazo.Os.Platform.Core/Processes/InMemoryProcessManager.cs`,
+  `Apps/System/Kazo.Os.Apps.SystemMonitor/Processes/EndTaskRunner.cs`,
+  `Apps/Commands/Kazo.Os.Commands/Kill/KillCommand.cs`.
 - `signal(7)`: `SIGTERM`, `SIGKILL`.
 - ADR 0012, 0056, 0058, 0066, 0067, 0070.

@@ -6,12 +6,12 @@ The contract on the side of apps and commands (`TerminalPanel`, `IHackTerminal`,
 
 ## Purpose
 
-`TerminalPanel` (`Shared/HackerOs.AppSdk.Terminal`) displays its shell in a real
+`TerminalPanel` (`Shared/Kazo.Os.AppSdk.Terminal`) displays its shell in a real
 character-grid terminal, xterm.js, the library of the legacy version
 (ADR 0061). Commands can write ANSI colors, `nano` uses the alternate screen,
 and the rendering looks like a Linux terminal.
 
-The console (`Apps/System/HackerOs.Apps.Terminal`) uses `TerminalTabs`. The code
+The console (`Apps/System/Kazo.Os.Apps.Terminal`) uses `TerminalTabs`. The code
 editor no longer uses `TerminalPanel` directly: it embeds the terminal that the
 Terminal app registers for the `hackeros.terminal` contract (`TerminalEmbed`,
 ADR 0063, [`embedded-components.md`](../framework/embedded-components.md)).
@@ -128,7 +128,7 @@ command, and a resize sends `TerminalKey.Resize`.
 ## Updating xterm.js
 
 ```bash
-cd wasm2/HackerOs/Shared/HackerOs.AppSdk.Terminal
+cd wasm2/KazoOs/Shared/Kazo.Os.AppSdk.Terminal
 # modifier les versions dans package.json
 npm install && npm run build
 ```
@@ -137,11 +137,11 @@ Then commit `package-lock.json` and `wwwroot/xterm/`.
 
 ## Tests
 
-- `Tests/HackerOs.AppSdk.Terminal.Tests/TerminalInputDecoderTests.cs`
-- `Tests/HackerOs.AppSdk.Terminal.Tests/TerminalLineEditorTests.cs`
-- `Tests/HackerOs.AppSdk.Terminal.Tests/TerminalAnsiTests.cs`
-- `Tests/HackerOs.AppSdk.Terminal.Tests/TerminalInputReaderTests.cs` (standard input)
-- `Tests/HackerOs.Commands.Nano.Tests/NanoCommandTests.cs` (pre-filled Write Out, cut/paste, search, horizontal scrolling)
+- `Tests/Kazo.Os.AppSdk.Terminal.Tests/TerminalInputDecoderTests.cs`
+- `Tests/Kazo.Os.AppSdk.Terminal.Tests/TerminalLineEditorTests.cs`
+- `Tests/Kazo.Os.AppSdk.Terminal.Tests/TerminalAnsiTests.cs`
+- `Tests/Kazo.Os.AppSdk.Terminal.Tests/TerminalInputReaderTests.cs` (standard input)
+- `Tests/Kazo.Os.Commands.Nano.Tests/NanoCommandTests.cs` (pre-filled Write Out, cut/paste, search, horizontal scrolling)
 - `VirtualScreen.cs` (in the same project): a small character-grid screen that
   applies the written sequences, to check where the text and cursor end up
   (wrapping, return to the start of the prompt block, frames).

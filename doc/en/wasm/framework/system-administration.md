@@ -21,8 +21,8 @@ Core or Infrastructure.Browser.
 
 | Layer | Files |
 |---|---|
-| SDK (contracts, facades) | `Shared/HackerOs.AppSdk/Administration/` (`HackPermissionAdministration`, `HackComponentProviders`, `HackServerConnection`, `HackSystem`, `HackStorageDiagnostics`, `HackScreens` and their contracts), `Shared/HackerOs.AppSdk/Settings/IAppSystemSettingsGateway.cs`, `SettingsDocumentStores.cs` |
-| Platform Core (gateways) | `Platform/HackerOs.Platform.Core/Administration/`: `AppSystemSettingsGateway`, `AppPermissionAdministrationGateway`, `AppServerConnectionGateway`, `AppSystemPowerGateway`, `AppStorageDiagnosticsGateway`, `AppSystemBackupGateway`, `AppUserAccountsGateway`, `AppScreensGateway` (over `IScreenControl`, ADR 0184), `AdministratorGate`, `SystemAdministrationGatewayServices` |
+| SDK (contracts, facades) | `Shared/Kazo.Os.AppSdk/Administration/` (`HackPermissionAdministration`, `HackComponentProviders`, `HackServerConnection`, `HackSystem`, `HackStorageDiagnostics`, `HackScreens` and their contracts), `Shared/Kazo.Os.AppSdk/Settings/IAppSystemSettingsGateway.cs`, `SettingsDocumentStores.cs` |
+| Platform Core (gateways) | `Platform/Kazo.Os.Platform.Core/Administration/`: `AppSystemSettingsGateway`, `AppPermissionAdministrationGateway`, `AppServerConnectionGateway`, `AppSystemPowerGateway`, `AppStorageDiagnosticsGateway`, `AppSystemBackupGateway`, `AppUserAccountsGateway`, `AppScreensGateway` (over `IScreenControl`, ADR 0184), `AdministratorGate`, `SystemAdministrationGatewayServices` |
 | Platform Core (services) | `Power/SystemPowerService.cs` (shutdown sequence, `RestartAfterAsync`), `Backup/SystemBackupService.cs`, `Sessions/LocalPasswordService.cs` (ADR 0120), `Settings/OsSettingsDocumentRegistry.cs`, `Policy/AppPermissionAdministration.cs` (`ApplyMachineDecisionAsync`, `ApplyPolicyAsync`) |
 | Ecosystem host | `Administration/BrowserSystemPowerDevice.cs` (`location.reload`, deletion of the IndexedDB database), `Administration/BrowserSystemBackupDevice.cs` (export, download, host picker), `Administration/IndexedDbStorageInspector.cs` (adapter for `IndexedDbInspectorService`) |
 | Blazor SDK | `Interop/BrowserClipboard.cs` and `wwwroot/clipboard.js` (host clipboard), `[Obsolete]` since ADR 0065 then removed when SDK 1.0 was frozen (ADR 0114): Diagnostics copies through `HackClipboard`, which the OS copies over to the host ([`clipboard.md`](../dev/clipboard.md)) |
@@ -169,7 +169,7 @@ the key opens the keyring. Details: [`passkeys.md`](../dev/passkeys.md).
 
 ## Tests
 
-`Tests/HackerOs.Platform.Core.Tests/Administration/SystemAdministrationGatewayTests.cs`:
+`Tests/Kazo.Os.Platform.Core.Tests/Administration/SystemAdministrationGatewayTests.cs`:
 OS document read and written without a capability, system layer refused to a
 simple user then written under root in one edit, unknown document;
 required capabilities; agent refusal without a write; machine decision and
@@ -179,10 +179,10 @@ in the order close, erase, restart; storage inspection;
 backup (capability, host without backup, administrator refusal,
 picker before administrator, restore order, failure logged at the next
 startup).
-`Tests/HackerOs.Platform.Core.Tests/Sessions/LocalPasswordServiceTests.cs`:
+`Tests/Kazo.Os.Platform.Core.Tests/Sessions/LocalPasswordServiceTests.cs`:
 adding and removing accounts through the gateway (`users.manage` and
 administrator), session passkeys without capability or administrator.
-`Tests/HackerOs.Platform.Core.Tests/Sessions/LocalAccountServiceTests.cs`:
+`Tests/Kazo.Os.Platform.Core.Tests/Sessions/LocalAccountServiceTests.cs`:
 groups, reserved or taken names, deletion with or without home folder, refusal for
 oneself and for the last administrator.
 

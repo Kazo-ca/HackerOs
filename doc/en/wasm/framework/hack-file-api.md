@@ -11,7 +11,7 @@ Give apps a file API familiar to a .NET developer, modeled on
 `System.IO`, without passing a context or handling revisions by hand:
 
 ```csharp
-using HackerOs.AppSdk.IO;
+using Kazo.Os.AppSdk.IO;
 
 await HackFile.WriteAllTextAsync("~/notes.txt", "Bonjour");
 string texte = await HackFile.ReadAllTextAsync("~/notes.txt");
@@ -27,10 +27,10 @@ notification remain applied exactly as before.
 
 | Item | Location | Role |
 |---|---|---|
-| `HackExecutionContext` | `Shared/HackerOs.AppSdk/HackExecutionContext.cs` | Ambient context (`AsyncLocal`): `Current`, `CurrentOrNull`, `WorkingDirectory`, `Enter(context, workingDirectory)`. Since phase 3, `WorkingDirectory` is the process's directory (`HackEnvironment`, [`process-environment.md`](../dev/process-environment.md)), unless a directory is set by `Enter`. Since phase 5, its `AsyncLocal` can carry the resource-measurement context-switch hook, installed at composition by `HackerOs.Platform.ResourceAccounting` ([`resource-accounting.md`](../dev/resource-accounting.md)); an open scope prevents installing it. |
-| `IAppExecutionContext.HomeDirectory` | `Shared/HackerOs.AppSdk/IAppExecutionContext.cs` | Home folder `/home/<login>` (default member `/home/{UserId}`, replaced by the platform). Used for `~` and the default current directory. |
-| `IAppExecutionContext.IsRootElevated` | `Shared/HackerOs.AppSdk/IAppExecutionContext.cs` | Launch as full root through `sudo` (ADR 0042), default member `false`. Does not change `HomeDirectory`; used for the effective user's trash (`/root/.local/share/Trash`, [`trash.md`](../dev/trash.md)). |
-| `HackFile`, `HackDirectory`, `HackPath` | `Shared/HackerOs.AppSdk/IO/` | Static facades. `HackPath` is pure, except `GetFullPath(path)`. |
+| `HackExecutionContext` | `Shared/Kazo.Os.AppSdk/HackExecutionContext.cs` | Ambient context (`AsyncLocal`): `Current`, `CurrentOrNull`, `WorkingDirectory`, `Enter(context, workingDirectory)`. Since phase 3, `WorkingDirectory` is the process's directory (`HackEnvironment`, [`process-environment.md`](../dev/process-environment.md)), unless a directory is set by `Enter`. Since phase 5, its `AsyncLocal` can carry the resource-measurement context-switch hook, installed at composition by `Kazo.Os.Platform.ResourceAccounting` ([`resource-accounting.md`](../dev/resource-accounting.md)); an open scope prevents installing it. |
+| `IAppExecutionContext.HomeDirectory` | `Shared/Kazo.Os.AppSdk/IAppExecutionContext.cs` | Home folder `/home/<login>` (default member `/home/{UserId}`, replaced by the platform). Used for `~` and the default current directory. |
+| `IAppExecutionContext.IsRootElevated` | `Shared/Kazo.Os.AppSdk/IAppExecutionContext.cs` | Launch as full root through `sudo` (ADR 0042), default member `false`. Does not change `HomeDirectory`; used for the effective user's trash (`/root/.local/share/Trash`, [`trash.md`](../dev/trash.md)). |
+| `HackFile`, `HackDirectory`, `HackPath` | `Shared/Kazo.Os.AppSdk/IO/` | Static facades. `HackPath` is pure, except `GetFullPath(path)`. |
 | `HackFileSystemInfo`, `HackFileInfo`, `HackDirectoryInfo` | `IO/HackFileSystemInfo.cs` | Metadata snapshots (`GetAsync`, `RefreshAsync`). |
 | `HackFileStream` | `IO/HackFileStream.cs` | Read stream (wraps the engine's read) or write stream (memory buffer published in a single atomic write). |
 | `HackFileSystemWatcher` | `IO/HackFileSystemWatcher.cs` | `Created`, `Changed`, `Deleted`, `Renamed` events on top of `IAppFileSystemWatchGateway`. |
@@ -46,7 +46,7 @@ notification remain applied exactly as before.
 | Terminal command | `AppLifecycleOrchestrator`, around `ExecuteAsync` | that of the command's process (copied from the shell at creation) |
 | Service | `ServiceAppBase.RunAsync` and `StopAsync` | home folder |
 | Window | `WindowAppBase`: `SetParametersAsync`, `IHandleEvent.HandleEventAsync`, `IHandleAfterRender.OnAfterRenderAsync` | home folder |
-| Child component | `HackComponentBase` (new, `HackerOs.AppSdk.Blazor`) receives the context through the `CascadingValue` set by `WindowAppRenderer` | that of the window |
+| Child component | `HackComponentBase` (new, `Kazo.Os.AppSdk.Blazor`) receives the context through the `CascadingValue` set by `WindowAppRenderer` | that of the window |
 | Gateway callbacks | `AppClockGateway.Schedule` and `AppEventGateway.Subscribe` (kernel path and topic path) enter their app's context (`AppAmbientContextBinding`) | home folder |
 
 The ADR's other gateways have no callback to wrap:
@@ -188,7 +188,7 @@ ordinary `catch` works.
   no `Directory.Copy`); the engine copies the tree in one transaction, the facade
   recreates it entry by entry across two mounts. See
   [`file-explorer.md`](../dev/file-explorer.md).
-- **Test double.** `FakeAppFileSystemGateway` (`HackerOs.Tests.Support`)
+- **Test double.** `FakeAppFileSystemGateway` (`Kazo.Os.Tests.Support`)
   now treats a null expected revision as an unconditional operation
   and returns `NotFile` for reading or writing a folder,
   like the real engine. `MinimalAppExecutionContext` accepts a watch gateway
@@ -196,14 +196,14 @@ ordinary `catch` works.
 
 ## Tests
 
-- `Tests/HackerOs.AppSdk.Tests/IO/`: context (absence, restoration, nesting,
+- `Tests/Kazo.Os.AppSdk.Tests/IO/`: context (absence, restoration, nesting,
   propagation through `await`, `Task.Run` and `Timer`, services), `HackPath`, `HackFile`
   (umask, encoding, single retry, strict revision, streams, copy and
   move across mounts), `HackDirectory`, infos, each row of the translation
   table, `HackFileSystemWatcher`.
-- `Tests/HackerOs.AppSdk.Blazor.Tests/AmbientContextComponentTests.cs`: life
+- `Tests/Kazo.Os.AppSdk.Blazor.Tests/AmbientContextComponentTests.cs`: life
   cycle, events and after-render of a window and of a child `HackComponentBase`.
-- `Tests/HackerOs.Platform.Core.Tests`: the factory's `HomeDirectory`, callbacks of
+- `Tests/Kazo.Os.Platform.Core.Tests`: the factory's `HomeDirectory`, callbacks of
   the clock and event bus, context of a terminal command.
 
 ## Task list

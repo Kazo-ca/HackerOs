@@ -30,10 +30,10 @@ demande rien et le journal porte `via=sudo`.
 
 | Élément | Projet | Rôle |
 |---|---|---|
-| `IAdministratorAuthenticationAgent`, `AdministratorAuthenticationRequest`, `AdministratorAuthenticationResult` | `Platform/HackerOs.Platform.Core/Elevation` | contrat appelé par les passerelles |
+| `IAdministratorAuthenticationAgent`, `AdministratorAuthenticationRequest`, `AdministratorAuthenticationResult` | `Platform/Kazo.Os.Platform.Core/Elevation` | contrat appelé par les passerelles |
 | `AdministratorAuthenticationAgent` | idem | implémentation : root direct, trois essais, journal |
 | `IAdministratorAuthenticationPrompt`, `AdministratorAuthenticationPromptRequest`, `AdministratorAuthenticationAttempt` | idem | surface qui montre la demande ; elle ne décide rien |
-| `AdministratorAuthenticationBroker` | `Platform/HackerOs.Platform.Blazor/Security` | file d'attente des demandes, implémente `IAdministratorAuthenticationPrompt` |
+| `AdministratorAuthenticationBroker` | `Platform/Kazo.Os.Platform.Blazor/Security` | file d'attente des demandes, implémente `IAdministratorAuthenticationPrompt` |
 | `AdministratorAuthenticationOverlay` | idem | fenêtre « bureau sécurisé » rendue par `DesktopShell` et `MobileShell` |
 
 Enregistrement dans l'hôte Ecosystem (`EcosystemServiceCollectionExtensions`) :
@@ -97,9 +97,9 @@ if (!auth.Succeeded)
 // L'OS agit ensuite lui-même, en contexte système.
 ```
 
-`AppManagementGateway` (`Platform/HackerOs.Platform.Core/Execution`) est le
+`AppManagementGateway` (`Platform/Kazo.Os.Platform.Core/Execution`) est le
 premier utilisateur. Le chantier `4-sdk-system-admin` le réutilise tel quel
-par `AdministratorGate` (`Platform/HackerOs.Platform.Core/Administration`) :
+par `AdministratorGate` (`Platform/Kazo.Os.Platform.Core/Administration`) :
 `AppPermissionAdministrationGateway` (politique et décisions machine) et
 `AppSystemPowerGateway` (redémarrage, réinitialisation). Voir
 [`system-administration.md`](../framework/system-administration.md).
@@ -121,14 +121,14 @@ par `AdministratorGate` (`Platform/HackerOs.Platform.Core/Administration`) :
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Elevation/AdministratorAuthenticationAgentTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/Elevation/AdministratorAuthenticationAgentTests.cs` :
   root sans demande, absence de surface, essai faux puis juste, trois échecs,
   surface qui tente de forger une approbation, demande de clé d'accès fermée
   qui ne coûte pas d'essai puis clé vérifiée, pas de bouton sans vérificateur.
-- `Tests/HackerOs.Platform.Core.Tests/Execution/AppCatalogGatewayTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/Execution/AppCatalogGatewayTests.cs` :
   portée machine refusée ou acceptée, app système refusée avant toute demande,
   `sudo` sans demande.
-- `Tests/HackerOs.Platform.Blazor.Tests/Security/AdministratorAuthenticationOverlayTests.cs` :
+- `Tests/Kazo.Os.Platform.Blazor.Tests/Security/AdministratorAuthenticationOverlayTests.cs` :
   rendu de la fenêtre et comportement du courtier.
 
 ## Liste des tâches (`rebuild/4-sdk-user-and-apps`)

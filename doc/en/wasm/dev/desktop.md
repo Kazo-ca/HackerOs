@@ -49,7 +49,7 @@ DesktopShell ──► DesktopArea.BackgroundContent (BackgroundInteractive)
 | --- | --- | --- |
 | `DesktopSurfaceHost` | `Platform.Blazor` (`Shell/`) | Reserves the app as the shell surface (`WindowLaunchCoordinator.ReserveShellSurface`), launches it for the session user, renders its entry component outside a window with the app context and a menu scope, relaunches it once if it crashes. `CreateShortcutAsync(appId)` sends the shortcut intent. |
 | `DesktopArea.BackgroundInteractive` | `Windowing.Blazor` | Renders the background layer clickable and readable; the windows layer lets the pointer through outside the windows. |
-| **Desktop** app (`org.hackeros.desktop`) | `Apps/System/HackerOs.Apps.Desktop` | Hidden, single-instance system app, public SDK only. Creates `~/Desktop` if missing, reads and writes `desktop.config`, tracks `~/.config/hackeros`, completes the background menu, receives the shortcut intent. |
+| **Desktop** app (`org.hackeros.desktop`) | `Apps/System/Kazo.Os.Apps.Desktop` | Hidden, single-instance system app, public SDK only. Creates `~/Desktop` if missing, reads and writes `desktop.config`, tracks `~/.config/hackeros`, completes the background menu, receives the shortcut intent. |
 | `FileViewDesktop` | explorer, `FileControl/` (`AppSdk.FileView` before SDK 2.0) | The Desktop mode of the internal control: measured grid (`ResizeObserver`), selection, lasso, keyboard, drag and drop, system icons. Collocated script `FileViewDesktop.razor.js`. |
 | `ExplorerFileView` (`ExplorerFileView.Desktop.cs`) | `Apps.FileExplorer` | The provider: menus and actions for Home and Trash, full or empty Trash state, shortcut decoration (app name and icon, grayed out if the app is missing), launching a shortcut, creating shortcuts on an app drop. |
 | Start menu (`AppLauncher.Menu.cs`, `AppLauncher.razor.js`) | `Platform.Blazor` | OS menu on each app (Open, Pin, Send to ▸ Desktop) and dragging an app (`application/vnd.hackeros.app+json`). |
@@ -98,16 +98,16 @@ Page after Appearance: icon size, auto-arrange, alignment, system icons, sort,
 
 ## Tests
 
-- `HackerOs.AppSdk.Tests/Files/HackDesktopTests.cs`: order, placement,
+- `Kazo.Os.AppSdk.Tests/Files/HackDesktopTests.cs`: order, placement,
   collisions, off-screen, auto-arrange, moves, shortcuts (reading, writing,
   rejection, numbered names), `desktop.config` (reading, writing, encoded
   keys, folder creation).
-- `HackerOs.Apps.FileExplorer.FileControl.Tests/FileViewDesktopTests.cs`: app
+- `Kazo.Os.Apps.FileExplorer.FileControl.Tests/FileViewDesktopTests.cs`: app
   drag payload.
-- `HackerOs.Platform.Blazor.Tests/WindowLaunchCoordinatorTests.cs`:
+- `Kazo.Os.Platform.Blazor.Tests/WindowLaunchCoordinatorTests.cs`:
   surface reservation.
-- `HackerOs.Apps.Settings.Tests/SettingsWindowTests.cs`: `--page=`.
-- `HackerOs.Ecosystem.Tests/BuildKnownLazyAppsTests.cs`: the Desktop app is a
+- `Kazo.Os.Apps.Settings.Tests/SettingsWindowTests.cs`: `--page=`.
+- `Kazo.Os.Ecosystem.Tests/BuildKnownLazyAppsTests.cs`: the Desktop app is a
   system app loaded on demand.
 
 ## Tasks (work item `desk/5-desktop`)

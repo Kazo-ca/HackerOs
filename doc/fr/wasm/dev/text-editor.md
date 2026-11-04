@@ -2,7 +2,7 @@
 
 # Éditeur de texte
 
-App système `HackerOs.Apps.TextEditor` (`org.hackeros.text-editor`). Ce document
+App système `Kazo.Os.Apps.TextEditor` (`org.hackeros.text-editor`). Ce document
 décrit son fonctionnement actuel et la recherche avec remplacement ajoutée par le
 chantier `rebuild/4-text-editor` (phase 4, [ADR 0058](adr/0058-base-app-features.md) §3).
 
@@ -19,7 +19,7 @@ du SDK depuis `rebuild/4-sdk-user-and-apps`.
 | --- | --- |
 | `TextEditorApp` | Manifeste `[AppManifest]` : capacités `apps.launch`, lecture et écriture du dossier personnel, boîtes de dialogue Ouvrir/Enregistrer, notifications ; gestionnaire de fichiers `text/plain`. |
 | `TextEditorDocument` | État d'un document : chemin, contenu, type MIME, état de chargement, modifié ou non, révision lue. |
-| `TextEditorFindEngine` | Logique de recherche et de remplacement, sans Blazor ni JavaScript, testée seule (`Tests/HackerOs.Apps.TextEditor.Tests`). |
+| `TextEditorFindEngine` | Logique de recherche et de remplacement, sans Blazor ni JavaScript, testée seule (`Tests/Kazo.Os.Apps.TextEditor.Tests`). |
 | `TextEditorWindow.razor` | Fenêtre : menus, barre de recherche et de remplacement, zone de texte, barre d'état, raccourcis clavier. |
 | `TextEditorWindow.razor.js` | Ce que C# n'atteint pas : sélection dans la zone de texte (`selectRange`, `getSelectionRange`) et blocage des raccourcis du navigateur (`guardEditorShortcuts`). |
 

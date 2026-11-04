@@ -20,7 +20,7 @@ work item `rebuild/4-sdk-network` (ADR 0058).
 
 ```text
 App (Browser, ping, curl, cat, nmap)
-  └─ HackDns / HackPing / HackHttpClient / HackTcpClient     (HackerOs.AppSdk.Net)
+  └─ HackDns / HackPing / HackHttpClient / HackTcpClient     (Kazo.Os.AppSdk.Net)
        └─ HackExecutionContext.Current.Network : IAppNetworkGateway
             └─ AppNetworkGateway                             (Platform.Core/Network)
                  ├─ capacité (ICapabilityChecker de l'instance)
@@ -31,10 +31,10 @@ App (Browser, ping, curl, cat, nmap)
 
 | Type | Project | Role |
 |---|---|---|
-| `IAppNetworkGateway` | `HackerOs.AppSdk` (`Net/`) | Instance gateway: `ResolveAsync`, `ReverseLookupAsync`, `PingAsync`, `SendAsync`, `ProbeTcpAsync`, `DetectOperatingSystemAsync`. Network failures are a result (`HackNetworkResult<T>`, `HackNetworkError`), never an exception. |
-| `IAppExecutionContext.Network` | `HackerOs.AppSdk` | Member with a "not supported" default implementation, so that existing contexts compile. |
-| `HackDns`, `HackPing`, `HackHttpClient`, `HackCookieContainer`, `HackTcpClient` | `HackerOs.AppSdk` (`Net/`) | Facades modeled on `System.Net`: they read the ambient context (ADR 0043) and throw .NET exceptions. |
-| `AppNetworkGateway` | `HackerOs.Platform.Core` (`Network/`) | Trusted implementation: capabilities, simulated network, real fallback decision, server token. Built by `AppExecutionContextFactory` for each instance. |
+| `IAppNetworkGateway` | `Kazo.Os.AppSdk` (`Net/`) | Instance gateway: `ResolveAsync`, `ReverseLookupAsync`, `PingAsync`, `SendAsync`, `ProbeTcpAsync`, `DetectOperatingSystemAsync`. Network failures are a result (`HackNetworkResult<T>`, `HackNetworkError`), never an exception. |
+| `IAppExecutionContext.Network` | `Kazo.Os.AppSdk` | Member with a "not supported" default implementation, so that existing contexts compile. |
+| `HackDns`, `HackPing`, `HackHttpClient`, `HackCookieContainer`, `HackTcpClient` | `Kazo.Os.AppSdk` (`Net/`) | Facades modeled on `System.Net`: they read the ambient context (ADR 0043) and throw .NET exceptions. |
+| `AppNetworkGateway` | `Kazo.Os.Platform.Core` (`Network/`) | Trusted implementation: capabilities, simulated network, real fallback decision, server token. Built by `AppExecutionContextFactory` for each instance. |
 
 `AppExecutionContextFactory` receives `ISimulatedNetworkService`,
 `IServerConnectionService` and `IProxyClient` (optional parameters). Without a simulated
@@ -178,10 +178,10 @@ Synchronous calls throw `NotSupportedException`.
   discovery, `HackTcpClient` for probing and `-O`. `-p 80` and `-p 80-80` are
   equivalent for the real fallback (a single port).
 - **`cd`**: `ShellErrorText` moved from Platform Core to the SDK
-  (`HackerOs.AppSdk`, next to `IShellSession`).
+  (`Kazo.Os.AppSdk`, next to `IShellSession`).
 
-`HackerOs.Commands` no longer references `Platform.Core` or `Server.Contracts`;
-`HackerOs.Apps.Browser` and `HackerOs.Commands` left the SDK boundary
+`Kazo.Os.Commands` no longer references `Platform.Core` or `Server.Contracts`;
+`Kazo.Os.Apps.Browser` and `Kazo.Os.Commands` left the SDK boundary
 exemption list.
 
 ## Decisions
@@ -211,7 +211,7 @@ exemption list.
 - [x] `AppNetworkGateway` in Platform Core: capabilities, simulated network, real fallback and token handled by the OS.
 - [x] Wiring in `AppExecutionContextFactory` and the Ecosystem host.
 - [x] `ShellErrorText` moved into the SDK.
-- [x] Migration of Browser, `ping`, `curl`, `cat`, `nmap`; `HackerOs.Commands` without `Platform.Core` or `Server.Contracts`.
-- [x] Exemptions for `HackerOs.Apps.Browser` and `HackerOs.Commands` removed.
+- [x] Migration of Browser, `ping`, `curl`, `cat`, `nmap`; `Kazo.Os.Commands` without `Platform.Core` or `Server.Contracts`.
+- [x] Exemptions for `Kazo.Os.Apps.Browser` and `Kazo.Os.Commands` removed.
 - [x] Tests: commands on the real gateway, facades, capabilities, real fallback refused without `network.real.access`.
 - [x] Documentation: this document, `app-sdk.md`, `shell-interpreter.md`, index.

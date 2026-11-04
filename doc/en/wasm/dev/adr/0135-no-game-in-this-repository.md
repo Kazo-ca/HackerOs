@@ -39,7 +39,7 @@ eliminate it from the memories, from the documentation and replace it with a men
   `building-on-hackeros.md`, `sdk-packages.md`, `ecosystem-rebuild-plan.md`,
   `wasm-v3-completion-plan.md`, `wasm-v3-final-status.md`,
   `execution-followups-plan.md`, measurement documents, `README.md` of
-  `wasm2/HackerOs` and indexes); a few code comments too.
+  `wasm2/KazoOs` and indexes); a few code comments too.
 - The project memory keeps only the rule.
 
 ## References

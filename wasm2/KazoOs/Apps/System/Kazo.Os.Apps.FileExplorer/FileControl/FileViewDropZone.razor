@@ -1,0 +1,16 @@
+@namespace Kazo.Os.Apps.FileExplorer.FileControl
+@inherits Kazo.Os.AppSdk.Blazor.HackComponentBase
+
+@*
+    Makes any host element a drop target for Kazo OS drags and host files (ADR 0058, section 1), reusing
+    the owner FileView's drop pipeline: a "Home" place, a Trash view... With a Destination, the drop goes
+    to the owner's DropRequested exactly like a drop on that folder; without one, Dropped receives it.
+*@
+<div class="file-view-drop-zone @Class"
+     data-drop-target="@(Owner.AllowDragDrop ? "true" : null)"
+     @ref="_element"
+     @ondragover:preventDefault="Owner.AllowDragDrop"
+     @ondrop="DropAsync"
+     @ondrop:stopPropagation="true">
+    @ChildContent
+</div>

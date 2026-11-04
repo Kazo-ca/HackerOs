@@ -38,13 +38,13 @@ before phase 5 (simulated `VmRSS`, no layer line, three-line `meminfo`,
 
 | Element | Project | Role |
 |---|---|---|
-| `IMemoryAccountant` (`TryGetProcessMemory`, `TryGetSystemMemory`), `ProcessMemoryUsage`, `SystemMemoryUsage` | `Shared/HackerOs.Simulation.Abstractions` (`Processes/`) | contract read by `/proc`; `false` = simulated value |
+| `IMemoryAccountant` (`TryGetProcessMemory`, `TryGetSystemMemory`), `ProcessMemoryUsage`, `SystemMemoryUsage` | `Shared/Kazo.Os.Simulation.Abstractions` (`Processes/`) | contract read by `/proc`; `false` = simulated value |
 | `IKernelMemoryLedger`, `KernelMemoryCharge`, `KernelMemoryKind` | same (`Processes/MemoryAccountingContracts.cs`) | ledger of the memory held by the OS for a process |
-| `NullMemoryAccountant`, `NullKernelMemoryLedger` | `Platform/HackerOs.Platform.Core` (`Processes/Accounting/`) | measurement off: nothing is measured, no charge costs anything |
-| `AppImage`, `AppImageAssembly`, `BuiltInApplication.Image` | `Shared/HackerOs.App.Abstractions` | image of an app in `BuiltInApplications.json` |
-| `AppImageInspector` | `Tools/HackerOs.Tools.ManifestGenerator` | reads the assembly references (metadata, without loading code) and measures the files |
-| `HostAppCatalog.Images` (`BuildKnownLazyApps.Images` in the Ecosystem) | `OS/HackerOs.Ecosystem.Host` | host catalog images, by app id |
-| `AllocationTracker` | `Platform/HackerOs.Platform.ResourceAccounting` (`Memory/`) | allocations layer: observer of the context-switch hook |
+| `NullMemoryAccountant`, `NullKernelMemoryLedger` | `Platform/Kazo.Os.Platform.Core` (`Processes/Accounting/`) | measurement off: nothing is measured, no charge costs anything |
+| `AppImage`, `AppImageAssembly`, `BuiltInApplication.Image` | `Shared/Kazo.Os.App.Abstractions` | image of an app in `BuiltInApplications.json` |
+| `AppImageInspector` | `Tools/Kazo.Os.Tools.ManifestGenerator` | reads the assembly references (metadata, without loading code) and measures the files |
+| `HostAppCatalog.Images` (`BuildKnownLazyApps.Images` in the Ecosystem) | `OS/Kazo.Os.Ecosystem.Host` | host catalog images, by app id |
+| `AllocationTracker` | `Platform/Kazo.Os.Platform.ResourceAccounting` (`Memory/`) | allocations layer: observer of the context-switch hook |
 | `KernelMemoryLedger` | same | OS resources layer |
 | `MeasuredMemoryAccountant`, `MemoryAccountingConstants` | same | the four layers, heap distribution, the constants |
 | `IManagedHeapProbe`, `GcManagedHeapProbe` | same | what is read from the GC (replaceable in tests) |
@@ -65,7 +65,7 @@ The host build measures each app's image during aggregation
   libc shared by all processes. Reference assemblies (`ref` folder) are
   ignored.
 
-Several apps in the same assembly (the commands of `HackerOs.Commands`) each
+Several apps in the same assembly (the commands of `Kazo.Os.Commands`) each
 have this assembly as `VmExe`, like each BusyBox applet maps the BusyBox
 binary. `/proc/meminfo` counts each assembly **once** (`Mapped`), regardless
 of the number of processes that map it.
@@ -158,7 +158,7 @@ buffer.Resize(bufferedChars * sizeof(char));   // on each change
 
 ### Composition
 
-`AddHackerOsResourceAccounting` (`HackerOs.Ecosystem.Host`) composes the
+`AddHackerOsResourceAccounting` (`Kazo.Os.Ecosystem.Host`) composes the
 measurement when `plan.MemoryActive` and
 `ResourceAccountingFeatures.IsMemoryAccountingSupported`: `AllocationTracker`
 registered on the dispatcher, `KernelMemoryLedger` (`IKernelMemoryLedger`),
@@ -198,13 +198,13 @@ file and network gateways.
 
 | Suite | Covers |
 |---|---|
-| `HackerOs.Platform.ResourceAccounting.Tests` | `AllocationTracker` (attribution between two switches, first read, forgetting, real hook), `KernelMemoryLedger`, `MeasuredMemoryAccountant` (constants, image, kernel part and window, distribution, only after a GC, half-life, kernel part removed, shared assemblies counted once, simulated or measured, dead processes), real `ls` command under the real hook |
-| `HackerOs.Samples.ServiceApp.Tests` | real service (`SampleTickerService`) measured under the real hook, without changing its code |
-| `HackerOs.Ecosystem.Tests` | all catalog apps have their image; the text editor (window) measured with the real size of its DLL; composition: measurement, ledger and observer present exactly when memory is active |
-| `HackerOs.Platform.Core.Tests` | format of measured `status` and `meminfo`, simulated process unchanged; clipboard and pipe charges; `HackProcess.PrivateMemorySize64` |
-| `HackerOs.AppSdk.Tests` | write stream buffer charged then released, nothing for a read stream |
-| `HackerOs.Network.Tests` | socket charged for the duration of the call |
-| `HackerOs.App.Abstractions.Tests`, `HackerOs.Tools.ManifestGenerator.Tests` | strict `image` field, round trip; aggregation and image measurement; framework excluded |
+| `Kazo.Os.Platform.ResourceAccounting.Tests` | `AllocationTracker` (attribution between two switches, first read, forgetting, real hook), `KernelMemoryLedger`, `MeasuredMemoryAccountant` (constants, image, kernel part and window, distribution, only after a GC, half-life, kernel part removed, shared assemblies counted once, simulated or measured, dead processes), real `ls` command under the real hook |
+| `Kazo.Os.Samples.ServiceApp.Tests` | real service (`SampleTickerService`) measured under the real hook, without changing its code |
+| `Kazo.Os.Ecosystem.Tests` | all catalog apps have their image; the text editor (window) measured with the real size of its DLL; composition: measurement, ledger and observer present exactly when memory is active |
+| `Kazo.Os.Platform.Core.Tests` | format of measured `status` and `meminfo`, simulated process unchanged; clipboard and pipe charges; `HackProcess.PrivateMemorySize64` |
+| `Kazo.Os.AppSdk.Tests` | write stream buffer charged then released, nothing for a read stream |
+| `Kazo.Os.Network.Tests` | socket charged for the duration of the call |
+| `Kazo.Os.App.Abstractions.Tests`, `Kazo.Os.Tools.ManifestGenerator.Tests` | strict `image` field, round trip; aggregation and image measurement; framework excluded |
 
 ## Task list
 

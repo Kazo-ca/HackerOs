@@ -87,7 +87,7 @@ Each one reads `AppContext.Accessibility` on opening and follows `Changed`.
 ## API
 
 ```csharp
-using HackerOs.AppSdk.Accessibility;
+using Kazo.Os.AppSdk.Accessibility;
 
 HackAccessibilityPreferences a11y = await HackAccessibility.GetPreferencesAsync();
 int fontSize = a11y.Scale(14);                 // 28 at 200%
@@ -102,7 +102,7 @@ No capability. Without the service (tests, Web Worker processes), the default va
 - Unit: `AccessibilityPreferenceServiceTests` (Platform.Core: `auto` rules, layers,
   invalid value, host, `animationsEnabled`), `HackAccessibilityTests` (AppSdk),
   `ThemeComponentRenderTests` (`ThemeScope` attributes).
-- E2E (`Tests/HackerOs.UI.E2E.Tests/AccessibilityPreferencesTests.cs`, see
+- E2E (`Tests/Kazo.Os.UI.E2E.Tests/AccessibilityPreferencesTests.cs`, see
   [`building-and-testing.md`](building-and-testing.md)):
   - axe scans of the Terminal, the browser, the calculator, the system monitor, Theme
     Editor, Settings > Backup and Settings > Accessibility, with and without high

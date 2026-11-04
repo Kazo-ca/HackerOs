@@ -18,7 +18,7 @@ Dans une app, `IAppExecutionContext.Logging` (type `IAppLoggingGateway`) écrit 
 
 ## Format des lignes
 
-- `LogLineFormat` (`Shared/HackerOs.Simulation.Abstractions/Diagnostics/`) :
+- `LogLineFormat` (`Shared/Kazo.Os.Simulation.Abstractions/Diagnostics/`) :
   `Format`, `FormatAudit` et `TryParse`. Une entrée tient sur une ligne :
   `2026-10-10T03:11:42.123Z WARN  org.hackeros.text-editor[42]: message {clé=valeur}`.
   Le message échappe `\`, `\n`, `\r`, `\t` et aussi `{` (en `\{`), pour qu'un

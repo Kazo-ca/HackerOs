@@ -5,7 +5,7 @@
 ## Status
 
 Accepted on 2026-10-30, work item 3 of TODO issue
-[#242](https://github.com/Kazo-ca/HackerOs/issues/242) (points 5, 6 and 7 of the decisions
+[#242](https://github.com/Kazo-ca/Os/issues/242) (points 5, 6 and 7 of the decisions
 taken with Benoit on 2026-10-29), `todo/` series. Implementation:
 [`window-animations.md`](../window-animations.md).
 
@@ -55,7 +55,7 @@ taken with Benoit on 2026-10-29), `todo/` series. Implementation:
    zero duration means no animation (the window behaves as before).
 8. **Mobile**: a host without window chrome (one pinned surface, `ShowChrome` set to
    `false`) animates nothing.
-9. **Code**: the `HackerOs.Windowing.Blazor` package only. `WindowHost` picks the
+9. **Code**: the `Kazo.Os.Windowing.Blazor` package only. `WindowHost` picks the
    animation of each render from the window's state change and passes it to
    `projectWindowGeometry`; the script plays it with the browser's Web Animations API (the
    boxes to measure are out of reach of C#). Nothing changes in the app SDK;

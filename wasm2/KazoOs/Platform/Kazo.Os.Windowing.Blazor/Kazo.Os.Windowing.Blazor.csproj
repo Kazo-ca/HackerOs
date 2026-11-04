@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <Import Project="..\Packaging.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PackageId>Kazo.Os.Windowing.Blazor</PackageId>
+    <Description>Razor components (DesktopArea, WindowHost, WindowChrome) that render a Kazo.Os.Windowing.Core WindowRuntime. No MudBlazor dependency.</Description>
+    <PackageTags>hackeros;windowing;blazor;desktop-shell</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Native Blazor/Pointer Events only. No MudBlazor: the exported chrome must render
+         without it, per the windowing/taskbar export plan (EXT-WIN-006). -->
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.13" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kazo.Os.Theming.Blazor\Kazo.Os.Theming.Blazor.csproj" />
+    <ProjectReference Include="..\Kazo.Os.Windowing.Abstractions\Kazo.Os.Windowing.Abstractions.csproj" />
+    <ProjectReference Include="..\Kazo.Os.Windowing.Core\Kazo.Os.Windowing.Core.csproj" />
+  </ItemGroup>
+
+</Project>

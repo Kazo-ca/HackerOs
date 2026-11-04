@@ -1,0 +1,84 @@
+@namespace Kazo.Os.MobileShell.Blazor
+@inject IServiceProvider LocalizationServices
+
+<div class="mobile-recent-backdrop" role="dialog" aria-label="@Title" @onclick="HandleDismiss">
+    <div class="mobile-recent-panel" @onclick:stopPropagation="true">
+        <header class="mobile-recent-header">
+            <span class="mobile-recent-title">@Title</span>
+        </header>
+        @if (Items.Count == 0)
+        {
+            <p class="mobile-recent-empty">@(Options.EmptyMessage ?? L["Recent.Empty"])</p>
+        }
+        else
+        {
+            <ul class="mobile-recent-list">
+                @foreach (MobileRecentItem item in Items)
+                {
+                    <li class="mobile-recent-item @(item.IsFocused ? "is-focused" : "")" key="@item.Id.Value">
+                        <button type="button"
+                                class="mobile-recent-activate"
+                                aria-label="@item.Title"
+                                @onclick="() => HandleActivate(item)">
+                            <span class="mobile-recent-icon" aria-hidden="true">
+                                @if (!string.IsNullOrWhiteSpace(item.IconAssetPath))
+                                {
+                                    <img class="mobile-recent-icon-image" src="@item.IconAssetPath" alt="" />
+                                }
+                                else
+                                {
+                                    <HackerIcon Library="IconLibrary.Lucide" Name="app-window" Size="28" Title="" />
+                                }
+                            </span>
+                            <span class="mobile-recent-item-title">@item.Title</span>
+                        </button>
+                        <button type="button"
+                                class="mobile-recent-close"
+                                aria-label="@CloseLabel(item)"
+                                @onclick="() => HandleClose(item)">
+                            <HackerIcon Library="IconLibrary.Lucide" Name="x" Size="16" Title="" />
+                        </button>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+</div>
+
+@code {
+    /// <summary>Gets or sets the currently open Mobile-compatible window instances, most recent first.</summary>
+    [Parameter, EditorRequired]
+    public IReadOnlyList<MobileRecentItem> Items { get; set; } = [];
+
+    /// <summary>Gets or sets the callback invoked when the user activates a tile.</summary>
+    [Parameter]
+    public EventCallback<WindowId> OnActivate { get; set; }
+
+    /// <summary>Gets or sets the callback invoked when the user closes a tile.</summary>
+    [Parameter]
+    public EventCallback<WindowId> OnClose { get; set; }
+
+    /// <summary>Gets or sets the callback invoked when the user dismisses the surface without a selection.</summary>
+    [Parameter]
+    public EventCallback OnDismiss { get; set; }
+
+    /// <summary>Gets or sets host-supplied accessible text, mirroring <see cref="MobileSystemNavigationBarOptions"/>.</summary>
+    [Parameter]
+    public MobileRecentSurfaceOptions Options { get; set; } = new();
+
+    private Task HandleActivate(MobileRecentItem item) => OnActivate.InvokeAsync(item.Id);
+
+    private Task HandleClose(MobileRecentItem item) => OnClose.InvokeAsync(item.Id);
+
+    private Task HandleDismiss() => OnDismiss.InvokeAsync();
+
+    private string Title => Options.Title ?? L["Recent.Title"];
+
+    private string CloseLabel(MobileRecentItem item) => Options.CloseLabelPrefix is { } prefix
+        ? $"{prefix} {item.Title}"
+        : L["Recent.Close", item.Title];
+
+    /// <summary>Gets the package's texts: the host's session language, or English without localization (ADR 0104).</summary>
+    private IStringLocalizer L => _localizer ??= PackageStringLocalizer.Resolve<Strings>(LocalizationServices);
+    private IStringLocalizer? _localizer;
+}

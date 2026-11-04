@@ -19,7 +19,7 @@ accordée : seule la passerelle de lancement l'accorde, après une décision
 
 ## Catalogue et classement
 
-`Shared/HackerOs.App.Abstractions/AppCapabilities.cs` contient, pour chaque
+`Shared/Kazo.Os.App.Abstractions/AppCapabilities.cs` contient, pour chaque
 capacité, une `CapabilityDescription` : identifiant, titre affiché, classement
 `CapabilityRisk` et, pour une capacité dangereuse, la phrase de risque montrée à
 l'administrateur. Le catalogue (`AppCapabilities.All`) est exactement l'ensemble
@@ -108,17 +108,17 @@ clé inconnue.
 
 ## Tests
 
-- `AppCapabilitiesTests` (`HackerOs.App.Abstractions.Tests`) : classement exact
+- `AppCapabilitiesTests` (`Kazo.Os.App.Abstractions.Tests`) : classement exact
   de chaque capacité selon l'ADR, catalogue égal à la table classée, chaque
   capacité décrite (phrase de risque seulement pour les dangereuses),
   `settings.*` et `diagnostics.*` absents, permissions de sujet jamais
   dangereuses.
-- `CleanProfileCapabilityGrantSeederTests` (`HackerOs.Platform.Core.Tests`) :
+- `CleanProfileCapabilityGrantSeederTests` (`Kazo.Os.Platform.Core.Tests`) :
   source `BuildProfile` pour une capacité normale, `SystemPolicy` pour une
   capacité dangereuse d'une app système, aucune grant dangereuse pour une app
   non système.
 - `BuildKnownLazyAppsTests.No_non_system_app_of_the_host_declares_a_dangerous_capability`
-  (`HackerOs.Ecosystem.Tests`).
+  (`Kazo.Os.Ecosystem.Tests`).
 - `PolicySettingsDocumentsTests` : `capabilityGrantsLocked` absent du schéma.
 
 ## Tâches

@@ -1,0 +1,39 @@
+<!-- Razor SDK: MvcSite has .razor views and an embedded wwwroot (web/7, ADR 0083). -->
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="10.1.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="4.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.13" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Platform\Kazo.Os.Platform.WorkerHost\Kazo.Os.Platform.WorkerHost.csproj" />
+    <!-- ADR 0070, section 5.1 of the plan: every built-in command runs in both modes. -->
+    <ProjectReference Include="..\..\Apps\Commands\Kazo.Os.Commands\Kazo.Os.Commands.csproj" />
+    <ProjectReference Include="..\..\Apps\Samples\Kazo.Os.Samples.ServiceApp\Kazo.Os.Samples.ServiceApp.csproj" />
+    <ProjectReference Include="..\..\Apps\Samples\Kazo.Os.Samples.TerminalApp\Kazo.Os.Samples.TerminalApp.csproj" />
+    <!-- ADR 0077/0080: hackwebd runs in the headless OS of these tests. -->
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.WebServer\Kazo.Os.Apps.WebServer.csproj" />
+    <ProjectReference Include="..\Kazo.Os.Tests.Support\Kazo.Os.Tests.Support.csproj" />
+    <!-- ADR 0076: an ASP.Hack MVC site (MvcSite.cs) served through the real web worker. -->
+    <ProjectReference Include="..\..\Shared\Kazo.Os.AppSdk.Web\Kazo.Os.AppSdk.Web.csproj" />
+    <ProjectReference Include="..\..\Tools\Kazo.Os.Tools.WebRouteGenerator\Kazo.Os.Tools.WebRouteGenerator.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+</Project>

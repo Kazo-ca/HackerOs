@@ -1,19 +1,19 @@
 > [Version française](../../../fr/wasm/dev/browser-infrastructure.md)
 
-# Browser infrastructure: `HackerOs.Infrastructure.Browser`
+# Browser infrastructure: `Kazo.Os.Infrastructure.Browser`
 
 ## Purpose
 
-`Infrastructure/HackerOs.Infrastructure.Browser` is the only layer that
+`Infrastructure/Kazo.Os.Infrastructure.Browser` is the only layer that
 touches the browser: IndexedDB persistence (ADR 0015), recovery after
 a storage failure (ADR 0018), host clipboard, encryption through
 WebCrypto, cross-origin isolation, Web Workers. The rest of the OS never calls
 `IJSRuntime` directly: it goes through the contracts of
-`Shared/HackerOs.Simulation.Abstractions` that this layer implements.
+`Shared/Kazo.Os.Simulation.Abstractions` that this layer implements.
 
-The platform (`Platform/HackerOs.Platform.Core`) does not depend on this project
+The platform (`Platform/Kazo.Os.Platform.Core`) does not depend on this project
 ([`platform-core.md`](platform-core.md)). It is `AddHackerOsEcosystem`
-(`OS/HackerOs.Ecosystem.Host`) that registers the browser
+(`OS/Kazo.Os.Ecosystem.Host`) that registers the browser
 implementations, in the host's composition.
 
 ## What is where
@@ -31,7 +31,7 @@ implementations, in the host's composition.
 | `Isolation/` | `BrowserCrossOriginIsolation`: COOP/COEP state (ADR 0131, 0146). |
 | `Workers/` | `BrowserWebWorkerRuntime`: Web Workers runtime on the browser side ([`worker-processes.md`](worker-processes.md)). |
 | `Globalization/` | Language satellites loaded by the browser. |
-| `wwwroot/` | JavaScript scripts served under `_content/HackerOs.Infrastructure.Browser/`: `indexedDb.js`, `storageManager.js`, `webSiteDatabases.js`, `cryptoHasher.js`, `hostClipboard.js`, `crossOriginIsolation.js`, `sharedRing.js` (shared ring of the workers' pipes), `workerHost.js` and `workerBootstrap.js`. |
+| `wwwroot/` | JavaScript scripts served under `_content/Kazo.Os.Infrastructure.Browser/`: `indexedDb.js`, `storageManager.js`, `webSiteDatabases.js`, `cryptoHasher.js`, `hostClipboard.js`, `crossOriginIsolation.js`, `sharedRing.js` (shared ring of the workers' pipes), `workerHost.js` and `workerBootstrap.js`. |
 
 ## IndexedDB database
 
@@ -68,8 +68,8 @@ in [`system-backup.md`](system-backup.md).
 - A file's path is resolved in one request (`resolvePath`, ADR 0090,
   [`filesystem-path-lookup.md`](filesystem-path-lookup.md)).
 - The `wwwroot/*.js` scripts are contract-tested by
-  `Tests/HackerOs.Infrastructure.Browser.Tests` (Node tests for `sharedRing.js`)
-  and `Tests/HackerOs.E2E.Tests` (`IndexedDbBrowserContractTests`, in a real browser).
+  `Tests/Kazo.Os.Infrastructure.Browser.Tests` (Node tests for `sharedRing.js`)
+  and `Tests/Kazo.Os.E2E.Tests` (`IndexedDbBrowserContractTests`, in a real browser).
 - The old IndexedDB migration notes (versions, resumption, recovery
   contract) are archived in [`old/`](old/); they describe the earlier
   state and are not authoritative for the current schema.

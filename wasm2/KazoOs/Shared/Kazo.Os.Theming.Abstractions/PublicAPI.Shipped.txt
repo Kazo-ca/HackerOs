@@ -1,0 +1,527 @@
+#nullable enable
+Kazo.Os.Theming.Abstractions.BuiltInWallpaper
+Kazo.Os.Theming.Abstractions.BuiltInWallpaper.<Clone>$() -> Kazo.Os.Theming.Abstractions.BuiltInWallpaper!
+Kazo.Os.Theming.Abstractions.BuiltInWallpaper.AssetPath.get -> string!
+Kazo.Os.Theming.Abstractions.BuiltInWallpaper.AssetPath.init -> void
+Kazo.Os.Theming.Abstractions.BuiltInWallpaper.BuiltInWallpaper(string! Id, string! AssetPath) -> void
+Kazo.Os.Theming.Abstractions.BuiltInWallpaper.Deconstruct(out string! Id, out string! AssetPath) -> void
+Kazo.Os.Theming.Abstractions.BuiltInWallpaper.Equals(Kazo.Os.Theming.Abstractions.BuiltInWallpaper? other) -> bool
+Kazo.Os.Theming.Abstractions.BuiltInWallpaper.Id.get -> string!
+Kazo.Os.Theming.Abstractions.BuiltInWallpaper.Id.init -> void
+Kazo.Os.Theming.Abstractions.BuiltInWallpaper.Value.get -> string!
+Kazo.Os.Theming.Abstractions.CursorImage
+Kazo.Os.Theming.Abstractions.CursorImage.<Clone>$() -> Kazo.Os.Theming.Abstractions.CursorImage!
+Kazo.Os.Theming.Abstractions.CursorImage.CursorImage(string! Url, int HotspotX, int HotspotY) -> void
+Kazo.Os.Theming.Abstractions.CursorImage.Deconstruct(out string! Url, out int HotspotX, out int HotspotY) -> void
+Kazo.Os.Theming.Abstractions.CursorImage.Equals(Kazo.Os.Theming.Abstractions.CursorImage? other) -> bool
+Kazo.Os.Theming.Abstractions.CursorImage.HotspotX.get -> int
+Kazo.Os.Theming.Abstractions.CursorImage.HotspotX.init -> void
+Kazo.Os.Theming.Abstractions.CursorImage.HotspotY.get -> int
+Kazo.Os.Theming.Abstractions.CursorImage.HotspotY.init -> void
+Kazo.Os.Theming.Abstractions.CursorImage.Url.get -> string!
+Kazo.Os.Theming.Abstractions.CursorImage.Url.init -> void
+Kazo.Os.Theming.Abstractions.CursorNames
+Kazo.Os.Theming.Abstractions.CursorTheme
+Kazo.Os.Theming.Abstractions.CursorTheme.<Clone>$() -> Kazo.Os.Theming.Abstractions.CursorTheme!
+Kazo.Os.Theming.Abstractions.CursorTheme.CursorTheme(string! Id, string! Name, Kazo.Os.Theming.Abstractions.ThemeOrigin? Origin, string? SourcePath, System.Collections.Generic.IReadOnlyDictionary<string!, Kazo.Os.Theming.Abstractions.CursorImage!>! Images) -> void
+Kazo.Os.Theming.Abstractions.CursorTheme.Deconstruct(out string! Id, out string! Name, out Kazo.Os.Theming.Abstractions.ThemeOrigin? Origin, out string? SourcePath, out System.Collections.Generic.IReadOnlyDictionary<string!, Kazo.Os.Theming.Abstractions.CursorImage!>! Images) -> void
+Kazo.Os.Theming.Abstractions.CursorTheme.Equals(Kazo.Os.Theming.Abstractions.CursorTheme? other) -> bool
+Kazo.Os.Theming.Abstractions.CursorTheme.Id.get -> string!
+Kazo.Os.Theming.Abstractions.CursorTheme.Id.init -> void
+Kazo.Os.Theming.Abstractions.CursorTheme.Images.get -> System.Collections.Generic.IReadOnlyDictionary<string!, Kazo.Os.Theming.Abstractions.CursorImage!>!
+Kazo.Os.Theming.Abstractions.CursorTheme.Images.init -> void
+Kazo.Os.Theming.Abstractions.CursorTheme.Name.get -> string!
+Kazo.Os.Theming.Abstractions.CursorTheme.Name.init -> void
+Kazo.Os.Theming.Abstractions.CursorTheme.Origin.get -> Kazo.Os.Theming.Abstractions.ThemeOrigin?
+Kazo.Os.Theming.Abstractions.CursorTheme.Origin.init -> void
+Kazo.Os.Theming.Abstractions.CursorTheme.Resolve(string! name) -> Kazo.Os.Theming.Abstractions.CursorImage?
+Kazo.Os.Theming.Abstractions.CursorTheme.ResolveAll() -> System.Collections.Generic.IReadOnlyDictionary<string!, Kazo.Os.Theming.Abstractions.CursorImage!>!
+Kazo.Os.Theming.Abstractions.CursorTheme.SourcePath.get -> string?
+Kazo.Os.Theming.Abstractions.CursorTheme.SourcePath.init -> void
+Kazo.Os.Theming.Abstractions.CursorThemeCatalog
+Kazo.Os.Theming.Abstractions.CursorThemeEntry
+Kazo.Os.Theming.Abstractions.CursorThemeEntry.<Clone>$() -> Kazo.Os.Theming.Abstractions.CursorThemeEntry!
+Kazo.Os.Theming.Abstractions.CursorThemeEntry.CursorThemeEntry(string! Name, string! FileName, int HotspotX, int HotspotY, int Line) -> void
+Kazo.Os.Theming.Abstractions.CursorThemeEntry.Deconstruct(out string! Name, out string! FileName, out int HotspotX, out int HotspotY, out int Line) -> void
+Kazo.Os.Theming.Abstractions.CursorThemeEntry.Equals(Kazo.Os.Theming.Abstractions.CursorThemeEntry? other) -> bool
+Kazo.Os.Theming.Abstractions.CursorThemeEntry.FileName.get -> string!
+Kazo.Os.Theming.Abstractions.CursorThemeEntry.FileName.init -> void
+Kazo.Os.Theming.Abstractions.CursorThemeEntry.HotspotX.get -> int
+Kazo.Os.Theming.Abstractions.CursorThemeEntry.HotspotX.init -> void
+Kazo.Os.Theming.Abstractions.CursorThemeEntry.HotspotY.get -> int
+Kazo.Os.Theming.Abstractions.CursorThemeEntry.HotspotY.init -> void
+Kazo.Os.Theming.Abstractions.CursorThemeEntry.Line.get -> int
+Kazo.Os.Theming.Abstractions.CursorThemeEntry.Line.init -> void
+Kazo.Os.Theming.Abstractions.CursorThemeEntry.Name.get -> string!
+Kazo.Os.Theming.Abstractions.CursorThemeEntry.Name.init -> void
+Kazo.Os.Theming.Abstractions.CursorThemeFile
+Kazo.Os.Theming.Abstractions.CursorThemeIndex
+Kazo.Os.Theming.Abstractions.CursorThemeIndex.<Clone>$() -> Kazo.Os.Theming.Abstractions.CursorThemeIndex!
+Kazo.Os.Theming.Abstractions.CursorThemeIndex.CursorThemeIndex(string! Id, string! Name, System.Collections.Generic.IReadOnlyList<Kazo.Os.Theming.Abstractions.CursorThemeEntry!>! Entries) -> void
+Kazo.Os.Theming.Abstractions.CursorThemeIndex.Deconstruct(out string! Id, out string! Name, out System.Collections.Generic.IReadOnlyList<Kazo.Os.Theming.Abstractions.CursorThemeEntry!>! Entries) -> void
+Kazo.Os.Theming.Abstractions.CursorThemeIndex.Entries.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Theming.Abstractions.CursorThemeEntry!>!
+Kazo.Os.Theming.Abstractions.CursorThemeIndex.Entries.init -> void
+Kazo.Os.Theming.Abstractions.CursorThemeIndex.Equals(Kazo.Os.Theming.Abstractions.CursorThemeIndex? other) -> bool
+Kazo.Os.Theming.Abstractions.CursorThemeIndex.Id.get -> string!
+Kazo.Os.Theming.Abstractions.CursorThemeIndex.Id.init -> void
+Kazo.Os.Theming.Abstractions.CursorThemeIndex.Name.get -> string!
+Kazo.Os.Theming.Abstractions.CursorThemeIndex.Name.init -> void
+Kazo.Os.Theming.Abstractions.CursorThemeLibrary
+Kazo.Os.Theming.Abstractions.CursorThemeLibraryResult
+Kazo.Os.Theming.Abstractions.CursorThemeLibraryResult.<Clone>$() -> Kazo.Os.Theming.Abstractions.CursorThemeLibraryResult!
+Kazo.Os.Theming.Abstractions.CursorThemeLibraryResult.All.get -> System.Collections.Generic.IEnumerable<Kazo.Os.Theming.Abstractions.CursorTheme!>!
+Kazo.Os.Theming.Abstractions.CursorThemeLibraryResult.CursorThemeLibraryResult(System.Collections.Generic.IReadOnlyList<Kazo.Os.Theming.Abstractions.CursorTheme!>! Themes, System.Collections.Generic.IReadOnlyList<Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic!>! Diagnostics) -> void
+Kazo.Os.Theming.Abstractions.CursorThemeLibraryResult.Deconstruct(out System.Collections.Generic.IReadOnlyList<Kazo.Os.Theming.Abstractions.CursorTheme!>! Themes, out System.Collections.Generic.IReadOnlyList<Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic!>! Diagnostics) -> void
+Kazo.Os.Theming.Abstractions.CursorThemeLibraryResult.Diagnostics.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic!>!
+Kazo.Os.Theming.Abstractions.CursorThemeLibraryResult.Diagnostics.init -> void
+Kazo.Os.Theming.Abstractions.CursorThemeLibraryResult.Equals(Kazo.Os.Theming.Abstractions.CursorThemeLibraryResult? other) -> bool
+Kazo.Os.Theming.Abstractions.CursorThemeLibraryResult.Resolve(string? id) -> Kazo.Os.Theming.Abstractions.CursorTheme!
+Kazo.Os.Theming.Abstractions.CursorThemeLibraryResult.Themes.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Theming.Abstractions.CursorTheme!>!
+Kazo.Os.Theming.Abstractions.CursorThemeLibraryResult.Themes.init -> void
+Kazo.Os.Theming.Abstractions.CursorThemeParseResult
+Kazo.Os.Theming.Abstractions.CursorThemeParseResult.<Clone>$() -> Kazo.Os.Theming.Abstractions.CursorThemeParseResult!
+Kazo.Os.Theming.Abstractions.CursorThemeParseResult.CursorThemeParseResult(Kazo.Os.Theming.Abstractions.CursorThemeIndex? Index, System.Collections.Generic.IReadOnlyList<Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic!>! Diagnostics) -> void
+Kazo.Os.Theming.Abstractions.CursorThemeParseResult.Deconstruct(out Kazo.Os.Theming.Abstractions.CursorThemeIndex? Index, out System.Collections.Generic.IReadOnlyList<Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic!>! Diagnostics) -> void
+Kazo.Os.Theming.Abstractions.CursorThemeParseResult.Diagnostics.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic!>!
+Kazo.Os.Theming.Abstractions.CursorThemeParseResult.Diagnostics.init -> void
+Kazo.Os.Theming.Abstractions.CursorThemeParseResult.Equals(Kazo.Os.Theming.Abstractions.CursorThemeParseResult? other) -> bool
+Kazo.Os.Theming.Abstractions.CursorThemeParseResult.Index.get -> Kazo.Os.Theming.Abstractions.CursorThemeIndex?
+Kazo.Os.Theming.Abstractions.CursorThemeParseResult.Index.init -> void
+Kazo.Os.Theming.Abstractions.IconPacks.IconPack
+Kazo.Os.Theming.Abstractions.IconPacks.IconPack.FindApp(string? appId) -> string?
+Kazo.Os.Theming.Abstractions.IconPacks.IconPack.FindApp(string? appId, string? category) -> string?
+Kazo.Os.Theming.Abstractions.IconPacks.IconPack.FindCategory(string? category) -> string?
+Kazo.Os.Theming.Abstractions.IconPacks.IconPack.FindFile(bool isDirectory, string? extension) -> string?
+Kazo.Os.Theming.Abstractions.IconPacks.IconPack.IconPack(Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo! info, System.Collections.Generic.IReadOnlyDictionary<string!, string!>! images) -> void
+Kazo.Os.Theming.Abstractions.IconPacks.IconPack.Images.get -> System.Collections.Generic.IReadOnlyDictionary<string!, string!>!
+Kazo.Os.Theming.Abstractions.IconPacks.IconPack.Info.get -> Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo!
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackFileAccess
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackFileAccess.<Clone>$() -> Kazo.Os.Theming.Abstractions.IconPacks.IconPackFileAccess!
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackFileAccess.Deconstruct(out System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<string!>!>!>! ListDirectories, out System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<string!>!>!>! ListFiles, out System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<byte[]!>!>! ReadAllBytes) -> void
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackFileAccess.Equals(Kazo.Os.Theming.Abstractions.IconPacks.IconPackFileAccess? other) -> bool
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackFileAccess.IconPackFileAccess(System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<string!>!>!>! ListDirectories, System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<string!>!>!>! ListFiles, System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<byte[]!>!>! ReadAllBytes) -> void
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackFileAccess.ListDirectories.get -> System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<string!>!>!>!
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackFileAccess.ListDirectories.init -> void
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackFileAccess.ListFiles.get -> System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<string!>!>!>!
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackFileAccess.ListFiles.init -> void
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackFileAccess.ReadAllBytes.get -> System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<byte[]!>!>!
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackFileAccess.ReadAllBytes.init -> void
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo.<Clone>$() -> Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo!
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo.Author.get -> string?
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo.Author.init -> void
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo.Deconstruct(out string! Id, out string! Name, out string? Author, out string? Version, out string? Description, out string! RootPath, out Kazo.Os.Theming.Abstractions.IconPacks.IconPackOrigin Origin) -> void
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo.Description.get -> string?
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo.Description.init -> void
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo.Equals(Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo? other) -> bool
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo.IconPackInfo(string! Id, string! Name, string? Author, string? Version, string? Description, string! RootPath, Kazo.Os.Theming.Abstractions.IconPacks.IconPackOrigin Origin) -> void
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo.Id.get -> string!
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo.Id.init -> void
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo.Name.get -> string!
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo.Name.init -> void
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo.Origin.get -> Kazo.Os.Theming.Abstractions.IconPacks.IconPackOrigin
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo.Origin.init -> void
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo.RootPath.get -> string!
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo.RootPath.init -> void
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo.Version.get -> string?
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo.Version.init -> void
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackLibrary
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackListResult
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackListResult.<Clone>$() -> Kazo.Os.Theming.Abstractions.IconPacks.IconPackListResult!
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackListResult.Deconstruct(out System.Collections.Generic.IReadOnlyList<Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo!>! Packs, out System.Collections.Generic.IReadOnlyList<string!>! Diagnostics) -> void
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackListResult.Diagnostics.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackListResult.Diagnostics.init -> void
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackListResult.Equals(Kazo.Os.Theming.Abstractions.IconPacks.IconPackListResult? other) -> bool
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackListResult.Find(string? id) -> Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo?
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackListResult.IconPackListResult(System.Collections.Generic.IReadOnlyList<Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo!>! Packs, System.Collections.Generic.IReadOnlyList<string!>! Diagnostics) -> void
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackListResult.Packs.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo!>!
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackListResult.Packs.init -> void
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackLoadResult
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackLoadResult.<Clone>$() -> Kazo.Os.Theming.Abstractions.IconPacks.IconPackLoadResult!
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackLoadResult.Deconstruct(out Kazo.Os.Theming.Abstractions.IconPacks.IconPack! Pack, out System.Collections.Generic.IReadOnlyList<string!>! Diagnostics) -> void
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackLoadResult.Diagnostics.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackLoadResult.Diagnostics.init -> void
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackLoadResult.Equals(Kazo.Os.Theming.Abstractions.IconPacks.IconPackLoadResult? other) -> bool
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackLoadResult.IconPackLoadResult(Kazo.Os.Theming.Abstractions.IconPacks.IconPack! Pack, System.Collections.Generic.IReadOnlyList<string!>! Diagnostics) -> void
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackLoadResult.Pack.get -> Kazo.Os.Theming.Abstractions.IconPacks.IconPack!
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackLoadResult.Pack.init -> void
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackOrigin
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackOrigin.System = 0 -> Kazo.Os.Theming.Abstractions.IconPacks.IconPackOrigin
+Kazo.Os.Theming.Abstractions.IconPacks.IconPackOrigin.User = 1 -> Kazo.Os.Theming.Abstractions.IconPacks.IconPackOrigin
+Kazo.Os.Theming.Abstractions.ResolvedTheme
+Kazo.Os.Theming.Abstractions.ResolvedTheme.<Clone>$() -> Kazo.Os.Theming.Abstractions.ResolvedTheme!
+Kazo.Os.Theming.Abstractions.ResolvedTheme.BaseThemeId.get -> string!
+Kazo.Os.Theming.Abstractions.ResolvedTheme.BaseThemeId.init -> void
+Kazo.Os.Theming.Abstractions.ResolvedTheme.Deconstruct(out string! BaseThemeId, out Kazo.Os.Theming.Abstractions.UserTheme? UserTheme, out bool IsFallback) -> void
+Kazo.Os.Theming.Abstractions.ResolvedTheme.Equals(Kazo.Os.Theming.Abstractions.ResolvedTheme? other) -> bool
+Kazo.Os.Theming.Abstractions.ResolvedTheme.IsFallback.get -> bool
+Kazo.Os.Theming.Abstractions.ResolvedTheme.IsFallback.init -> void
+Kazo.Os.Theming.Abstractions.ResolvedTheme.ResolvedTheme(string! BaseThemeId, Kazo.Os.Theming.Abstractions.UserTheme? UserTheme, bool IsFallback) -> void
+Kazo.Os.Theming.Abstractions.ResolvedTheme.UserTheme.get -> Kazo.Os.Theming.Abstractions.UserTheme?
+Kazo.Os.Theming.Abstractions.ResolvedTheme.UserTheme.init -> void
+Kazo.Os.Theming.Abstractions.ThemeCatalog
+Kazo.Os.Theming.Abstractions.ThemeDefinition
+Kazo.Os.Theming.Abstractions.ThemeDefinition.<Clone>$() -> Kazo.Os.Theming.Abstractions.ThemeDefinition!
+Kazo.Os.Theming.Abstractions.ThemeDefinition.DisplayName.get -> string!
+Kazo.Os.Theming.Abstractions.ThemeDefinition.Equals(Kazo.Os.Theming.Abstractions.ThemeDefinition? other) -> bool
+Kazo.Os.Theming.Abstractions.ThemeDefinition.Id.get -> string!
+Kazo.Os.Theming.Abstractions.ThemeDefinition.Platform.get -> Kazo.Os.Theming.Abstractions.ThemePlatform
+Kazo.Os.Theming.Abstractions.ThemeDefinition.SupportsAccentColor.get -> bool
+Kazo.Os.Theming.Abstractions.ThemeDefinition.ThemeDefinition(string! id, string! displayName, Kazo.Os.Theming.Abstractions.ThemePlatform platform, bool supportsAccentColor = false) -> void
+Kazo.Os.Theming.Abstractions.ThemeFile
+Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic
+Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic.<Clone>$() -> Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic!
+Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic.Deconstruct(out int? Line, out string! Message, out bool IsError, out string? Path) -> void
+Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic.Equals(Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic? other) -> bool
+Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic.GetMessage(System.Globalization.CultureInfo? culture) -> string!
+Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic.IsError.get -> bool
+Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic.IsError.init -> void
+Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic.Line.get -> int?
+Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic.Line.init -> void
+Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic.Message.get -> string!
+Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic.Message.init -> void
+Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic.Path.get -> string?
+Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic.Path.init -> void
+Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic.ThemeFileDiagnostic(int? Line, string! Message, bool IsError, string? Path = null) -> void
+Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic.ToString(System.Globalization.CultureInfo? culture) -> string!
+Kazo.Os.Theming.Abstractions.ThemeFileParseResult
+Kazo.Os.Theming.Abstractions.ThemeFileParseResult.<Clone>$() -> Kazo.Os.Theming.Abstractions.ThemeFileParseResult!
+Kazo.Os.Theming.Abstractions.ThemeFileParseResult.Deconstruct(out Kazo.Os.Theming.Abstractions.UserTheme? Theme, out System.Collections.Generic.IReadOnlyList<Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic!>! Diagnostics) -> void
+Kazo.Os.Theming.Abstractions.ThemeFileParseResult.Diagnostics.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic!>!
+Kazo.Os.Theming.Abstractions.ThemeFileParseResult.Diagnostics.init -> void
+Kazo.Os.Theming.Abstractions.ThemeFileParseResult.Equals(Kazo.Os.Theming.Abstractions.ThemeFileParseResult? other) -> bool
+Kazo.Os.Theming.Abstractions.ThemeFileParseResult.Theme.get -> Kazo.Os.Theming.Abstractions.UserTheme?
+Kazo.Os.Theming.Abstractions.ThemeFileParseResult.Theme.init -> void
+Kazo.Os.Theming.Abstractions.ThemeFileParseResult.ThemeFileParseResult(Kazo.Os.Theming.Abstractions.UserTheme? Theme, System.Collections.Generic.IReadOnlyList<Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic!>! Diagnostics) -> void
+Kazo.Os.Theming.Abstractions.ThemeFileSource
+Kazo.Os.Theming.Abstractions.ThemeFileSource.<Clone>$() -> Kazo.Os.Theming.Abstractions.ThemeFileSource!
+Kazo.Os.Theming.Abstractions.ThemeFileSource.Content.get -> string!
+Kazo.Os.Theming.Abstractions.ThemeFileSource.Content.init -> void
+Kazo.Os.Theming.Abstractions.ThemeFileSource.Deconstruct(out string! Path, out Kazo.Os.Theming.Abstractions.ThemeOrigin Origin, out string! Content) -> void
+Kazo.Os.Theming.Abstractions.ThemeFileSource.Equals(Kazo.Os.Theming.Abstractions.ThemeFileSource? other) -> bool
+Kazo.Os.Theming.Abstractions.ThemeFileSource.Origin.get -> Kazo.Os.Theming.Abstractions.ThemeOrigin
+Kazo.Os.Theming.Abstractions.ThemeFileSource.Origin.init -> void
+Kazo.Os.Theming.Abstractions.ThemeFileSource.Path.get -> string!
+Kazo.Os.Theming.Abstractions.ThemeFileSource.Path.init -> void
+Kazo.Os.Theming.Abstractions.ThemeFileSource.ThemeFileSource(string! Path, Kazo.Os.Theming.Abstractions.ThemeOrigin Origin, string! Content) -> void
+Kazo.Os.Theming.Abstractions.ThemeOrigin
+Kazo.Os.Theming.Abstractions.ThemeOrigin.System = 0 -> Kazo.Os.Theming.Abstractions.ThemeOrigin
+Kazo.Os.Theming.Abstractions.ThemeOrigin.User = 1 -> Kazo.Os.Theming.Abstractions.ThemeOrigin
+Kazo.Os.Theming.Abstractions.ThemePackLayout
+Kazo.Os.Theming.Abstractions.ThemePlatform
+Kazo.Os.Theming.Abstractions.ThemePlatform.Desktop = 0 -> Kazo.Os.Theming.Abstractions.ThemePlatform
+Kazo.Os.Theming.Abstractions.ThemePlatform.Mobile = 1 -> Kazo.Os.Theming.Abstractions.ThemePlatform
+Kazo.Os.Theming.Abstractions.ThemePreferences
+Kazo.Os.Theming.Abstractions.ThemePreferences.<Clone>$() -> Kazo.Os.Theming.Abstractions.ThemePreferences!
+Kazo.Os.Theming.Abstractions.ThemePreferences.AccentId.get -> string!
+Kazo.Os.Theming.Abstractions.ThemePreferences.AccentId.init -> void
+Kazo.Os.Theming.Abstractions.ThemePreferences.AnimationsEnabled.get -> bool
+Kazo.Os.Theming.Abstractions.ThemePreferences.AnimationsEnabled.init -> void
+Kazo.Os.Theming.Abstractions.ThemePreferences.Deconstruct(out string! DesktopThemeId, out string! MobileThemeId, out string! AccentId, out bool AnimationsEnabled) -> void
+Kazo.Os.Theming.Abstractions.ThemePreferences.DesktopThemeId.get -> string!
+Kazo.Os.Theming.Abstractions.ThemePreferences.DesktopThemeId.init -> void
+Kazo.Os.Theming.Abstractions.ThemePreferences.Equals(Kazo.Os.Theming.Abstractions.ThemePreferences? other) -> bool
+Kazo.Os.Theming.Abstractions.ThemePreferences.MobileThemeId.get -> string!
+Kazo.Os.Theming.Abstractions.ThemePreferences.MobileThemeId.init -> void
+Kazo.Os.Theming.Abstractions.ThemePreferences.ThemePreferences(string! DesktopThemeId, string! MobileThemeId, string! AccentId, bool AnimationsEnabled) -> void
+Kazo.Os.Theming.Abstractions.ThemeTokenCatalog
+Kazo.Os.Theming.Abstractions.ThemeTokenDefinition
+Kazo.Os.Theming.Abstractions.ThemeTokenDefinition.<Clone>$() -> Kazo.Os.Theming.Abstractions.ThemeTokenDefinition!
+Kazo.Os.Theming.Abstractions.ThemeTokenDefinition.Deconstruct(out string! Name, out Kazo.Os.Theming.Abstractions.ThemeTokenType Type, out Kazo.Os.Theming.Abstractions.ThemeTokenGroup Group, out string! Label, out string! Description, out string! Example, out string? RgbCompanion) -> void
+Kazo.Os.Theming.Abstractions.ThemeTokenDefinition.Description.get -> string!
+Kazo.Os.Theming.Abstractions.ThemeTokenDefinition.Description.init -> void
+Kazo.Os.Theming.Abstractions.ThemeTokenDefinition.Equals(Kazo.Os.Theming.Abstractions.ThemeTokenDefinition? other) -> bool
+Kazo.Os.Theming.Abstractions.ThemeTokenDefinition.Example.get -> string!
+Kazo.Os.Theming.Abstractions.ThemeTokenDefinition.Example.init -> void
+Kazo.Os.Theming.Abstractions.ThemeTokenDefinition.GetDescription(System.Globalization.CultureInfo? culture) -> string!
+Kazo.Os.Theming.Abstractions.ThemeTokenDefinition.GetLabel(System.Globalization.CultureInfo? culture) -> string!
+Kazo.Os.Theming.Abstractions.ThemeTokenDefinition.Group.get -> Kazo.Os.Theming.Abstractions.ThemeTokenGroup
+Kazo.Os.Theming.Abstractions.ThemeTokenDefinition.Group.init -> void
+Kazo.Os.Theming.Abstractions.ThemeTokenDefinition.Label.get -> string!
+Kazo.Os.Theming.Abstractions.ThemeTokenDefinition.Label.init -> void
+Kazo.Os.Theming.Abstractions.ThemeTokenDefinition.Name.get -> string!
+Kazo.Os.Theming.Abstractions.ThemeTokenDefinition.Name.init -> void
+Kazo.Os.Theming.Abstractions.ThemeTokenDefinition.RgbCompanion.get -> string?
+Kazo.Os.Theming.Abstractions.ThemeTokenDefinition.RgbCompanion.init -> void
+Kazo.Os.Theming.Abstractions.ThemeTokenDefinition.ThemeTokenDefinition(string! Name, Kazo.Os.Theming.Abstractions.ThemeTokenType Type, Kazo.Os.Theming.Abstractions.ThemeTokenGroup Group, string! Label, string! Description, string! Example, string? RgbCompanion = null) -> void
+Kazo.Os.Theming.Abstractions.ThemeTokenDefinition.Type.get -> Kazo.Os.Theming.Abstractions.ThemeTokenType
+Kazo.Os.Theming.Abstractions.ThemeTokenDefinition.Type.init -> void
+Kazo.Os.Theming.Abstractions.ThemeTokenGroup
+Kazo.Os.Theming.Abstractions.ThemeTokenGroup.Animations = 5 -> Kazo.Os.Theming.Abstractions.ThemeTokenGroup
+Kazo.Os.Theming.Abstractions.ThemeTokenGroup.Colors = 0 -> Kazo.Os.Theming.Abstractions.ThemeTokenGroup
+Kazo.Os.Theming.Abstractions.ThemeTokenGroup.Spacing = 2 -> Kazo.Os.Theming.Abstractions.ThemeTokenGroup
+Kazo.Os.Theming.Abstractions.ThemeTokenGroup.Taskbar = 4 -> Kazo.Os.Theming.Abstractions.ThemeTokenGroup
+Kazo.Os.Theming.Abstractions.ThemeTokenGroup.Typography = 1 -> Kazo.Os.Theming.Abstractions.ThemeTokenGroup
+Kazo.Os.Theming.Abstractions.ThemeTokenGroup.Windows = 3 -> Kazo.Os.Theming.Abstractions.ThemeTokenGroup
+Kazo.Os.Theming.Abstractions.ThemeTokenType
+Kazo.Os.Theming.Abstractions.ThemeTokenType.Color = 0 -> Kazo.Os.Theming.Abstractions.ThemeTokenType
+Kazo.Os.Theming.Abstractions.ThemeTokenType.Duration = 2 -> Kazo.Os.Theming.Abstractions.ThemeTokenType
+Kazo.Os.Theming.Abstractions.ThemeTokenType.FontFamily = 3 -> Kazo.Os.Theming.Abstractions.ThemeTokenType
+Kazo.Os.Theming.Abstractions.ThemeTokenType.Length = 1 -> Kazo.Os.Theming.Abstractions.ThemeTokenType
+Kazo.Os.Theming.Abstractions.ThemeTokenType.Number = 4 -> Kazo.Os.Theming.Abstractions.ThemeTokenType
+Kazo.Os.Theming.Abstractions.ThemeTokenValidator
+Kazo.Os.Theming.Abstractions.UserTheme
+Kazo.Os.Theming.Abstractions.UserTheme.<Clone>$() -> Kazo.Os.Theming.Abstractions.UserTheme!
+Kazo.Os.Theming.Abstractions.UserTheme.BaseThemeId.get -> string!
+Kazo.Os.Theming.Abstractions.UserTheme.BaseThemeId.init -> void
+Kazo.Os.Theming.Abstractions.UserTheme.Equals(Kazo.Os.Theming.Abstractions.UserTheme? other) -> bool
+Kazo.Os.Theming.Abstractions.UserTheme.Id.get -> string!
+Kazo.Os.Theming.Abstractions.UserTheme.Id.init -> void
+Kazo.Os.Theming.Abstractions.UserTheme.Name.get -> string!
+Kazo.Os.Theming.Abstractions.UserTheme.Name.init -> void
+Kazo.Os.Theming.Abstractions.UserTheme.Origin.get -> Kazo.Os.Theming.Abstractions.ThemeOrigin
+Kazo.Os.Theming.Abstractions.UserTheme.Origin.init -> void
+Kazo.Os.Theming.Abstractions.UserTheme.Platforms.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Theming.Abstractions.ThemePlatform>!
+Kazo.Os.Theming.Abstractions.UserTheme.Platforms.init -> void
+Kazo.Os.Theming.Abstractions.UserTheme.SourcePath.get -> string?
+Kazo.Os.Theming.Abstractions.UserTheme.SourcePath.init -> void
+Kazo.Os.Theming.Abstractions.UserTheme.Supports(Kazo.Os.Theming.Abstractions.ThemePlatform platform) -> bool
+Kazo.Os.Theming.Abstractions.UserTheme.ToCssProperties(bool animationsEnabled = true) -> System.Collections.Generic.IReadOnlyDictionary<string!, string!>!
+Kazo.Os.Theming.Abstractions.UserTheme.Tokens.get -> System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>!
+Kazo.Os.Theming.Abstractions.UserTheme.Tokens.init -> void
+Kazo.Os.Theming.Abstractions.UserTheme.UserTheme(string! id, string! name, string! baseThemeId, System.Collections.Generic.IReadOnlyList<Kazo.Os.Theming.Abstractions.ThemePlatform>! platforms, System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>! tokens, Kazo.Os.Theming.Abstractions.ThemeOrigin origin = Kazo.Os.Theming.Abstractions.ThemeOrigin.User, string? sourcePath = null) -> void
+Kazo.Os.Theming.Abstractions.UserThemeLibrary
+Kazo.Os.Theming.Abstractions.UserThemeLibraryResult
+Kazo.Os.Theming.Abstractions.UserThemeLibraryResult.<Clone>$() -> Kazo.Os.Theming.Abstractions.UserThemeLibraryResult!
+Kazo.Os.Theming.Abstractions.UserThemeLibraryResult.Deconstruct(out System.Collections.Generic.IReadOnlyList<Kazo.Os.Theming.Abstractions.UserTheme!>! Themes, out System.Collections.Generic.IReadOnlyList<Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic!>! Diagnostics) -> void
+Kazo.Os.Theming.Abstractions.UserThemeLibraryResult.Diagnostics.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic!>!
+Kazo.Os.Theming.Abstractions.UserThemeLibraryResult.Diagnostics.init -> void
+Kazo.Os.Theming.Abstractions.UserThemeLibraryResult.Equals(Kazo.Os.Theming.Abstractions.UserThemeLibraryResult? other) -> bool
+Kazo.Os.Theming.Abstractions.UserThemeLibraryResult.Find(string? id) -> Kazo.Os.Theming.Abstractions.UserTheme?
+Kazo.Os.Theming.Abstractions.UserThemeLibraryResult.Themes.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Theming.Abstractions.UserTheme!>!
+Kazo.Os.Theming.Abstractions.UserThemeLibraryResult.Themes.init -> void
+Kazo.Os.Theming.Abstractions.UserThemeLibraryResult.UserThemeLibraryResult(System.Collections.Generic.IReadOnlyList<Kazo.Os.Theming.Abstractions.UserTheme!>! Themes, System.Collections.Generic.IReadOnlyList<Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic!>! Diagnostics) -> void
+Kazo.Os.Theming.Abstractions.WallpaperCatalog
+Kazo.Os.Theming.Abstractions.WallpaperFit
+Kazo.Os.Theming.Abstractions.WallpaperFit.Center = 3 -> Kazo.Os.Theming.Abstractions.WallpaperFit
+Kazo.Os.Theming.Abstractions.WallpaperFit.Fill = 0 -> Kazo.Os.Theming.Abstractions.WallpaperFit
+Kazo.Os.Theming.Abstractions.WallpaperFit.Fit = 1 -> Kazo.Os.Theming.Abstractions.WallpaperFit
+Kazo.Os.Theming.Abstractions.WallpaperFit.Stretch = 2 -> Kazo.Os.Theming.Abstractions.WallpaperFit
+Kazo.Os.Theming.Abstractions.WallpaperFit.Tile = 4 -> Kazo.Os.Theming.Abstractions.WallpaperFit
+Kazo.Os.Theming.Abstractions.WellKnownAccentIds
+Kazo.Os.Theming.Abstractions.WellKnownThemeIds
+const Kazo.Os.Theming.Abstractions.CursorNames.Default = "default" -> string!
+const Kazo.Os.Theming.Abstractions.CursorNames.Pointer = "pointer" -> string!
+const Kazo.Os.Theming.Abstractions.CursorNames.Progress = "progress" -> string!
+const Kazo.Os.Theming.Abstractions.CursorNames.Text = "text" -> string!
+const Kazo.Os.Theming.Abstractions.CursorNames.Wait = "wait" -> string!
+const Kazo.Os.Theming.Abstractions.CursorThemeCatalog.AssetRoot = "_content/Kazo.Os.Theming.Blazor/cursors" -> string!
+const Kazo.Os.Theming.Abstractions.CursorThemeCatalog.CrimsonId = "gothic-crimson" -> string!
+const Kazo.Os.Theming.Abstractions.CursorThemeCatalog.NeonId = "hackeros-neon" -> string!
+const Kazo.Os.Theming.Abstractions.CursorThemeCatalog.SystemId = "system" -> string!
+const Kazo.Os.Theming.Abstractions.CursorThemeFile.IndexFileName = "cursor.theme" -> string!
+const Kazo.Os.Theming.Abstractions.CursorThemeFile.MaxImageBytes = 65536 -> int
+const Kazo.Os.Theming.Abstractions.CursorThemeFile.MaxImageSize = 128 -> int
+const Kazo.Os.Theming.Abstractions.CursorThemeFile.MaxIndexBytes = 16384 -> int
+const Kazo.Os.Theming.Abstractions.CursorThemeLibrary.SystemDirectory = "/etc/hackeros/cursors" -> string!
+const Kazo.Os.Theming.Abstractions.IconPacks.IconPack.AppsFolder = "apps" -> string!
+const Kazo.Os.Theming.Abstractions.IconPacks.IconPack.CategoriesFolder = "categories" -> string!
+const Kazo.Os.Theming.Abstractions.IconPacks.IconPack.FileImageName = "file" -> string!
+const Kazo.Os.Theming.Abstractions.IconPacks.IconPack.FilesFolder = "files" -> string!
+const Kazo.Os.Theming.Abstractions.IconPacks.IconPack.FolderImageName = "folder" -> string!
+const Kazo.Os.Theming.Abstractions.IconPacks.IconPackLibrary.BuiltInId = "builtin" -> string!
+const Kazo.Os.Theming.Abstractions.IconPacks.IconPackLibrary.ImageExtension = ".png" -> string!
+const Kazo.Os.Theming.Abstractions.IconPacks.IconPackLibrary.ManifestFileName = "icon-pack.json" -> string!
+const Kazo.Os.Theming.Abstractions.IconPacks.IconPackLibrary.MaxImageBytes = 262144 -> int
+const Kazo.Os.Theming.Abstractions.IconPacks.IconPackLibrary.MaxImages = 1024 -> int
+const Kazo.Os.Theming.Abstractions.IconPacks.IconPackLibrary.MaxManifestBytes = 16384 -> int
+const Kazo.Os.Theming.Abstractions.IconPacks.IconPackLibrary.MaxPackBytes = 8388608 -> int
+const Kazo.Os.Theming.Abstractions.IconPacks.IconPackLibrary.PackIdKey = "iconPackId" -> string!
+const Kazo.Os.Theming.Abstractions.IconPacks.IconPackLibrary.SettingsDocumentId = "icons" -> string!
+const Kazo.Os.Theming.Abstractions.IconPacks.IconPackLibrary.SystemDirectory = "/usr/share/icons" -> string!
+const Kazo.Os.Theming.Abstractions.IconPacks.IconPackLibrary.SystemThemePackDirectory = "/usr/share/hackeros/theme-packs" -> string!
+const Kazo.Os.Theming.Abstractions.IconPacks.IconPackLibrary.ThemePackIconsFolder = "icons" -> string!
+const Kazo.Os.Theming.Abstractions.ThemeFile.Extension = ".theme" -> string!
+const Kazo.Os.Theming.Abstractions.ThemeFile.MaxFileBytes = 65536 -> int
+const Kazo.Os.Theming.Abstractions.ThemeFile.MaxNameLength = 80 -> int
+const Kazo.Os.Theming.Abstractions.ThemeFile.MediaType = "text/x-hackeros-theme" -> string!
+const Kazo.Os.Theming.Abstractions.ThemePackLayout.CursorsFolder = "cursors" -> string!
+const Kazo.Os.Theming.Abstractions.ThemePackLayout.Extension = ".hacktheme" -> string!
+const Kazo.Os.Theming.Abstractions.ThemePackLayout.IconsFolder = "icons" -> string!
+const Kazo.Os.Theming.Abstractions.ThemePackLayout.ManifestFileName = "hackeros-theme-pack.json" -> string!
+const Kazo.Os.Theming.Abstractions.ThemePackLayout.PreviewFileName = "preview.png" -> string!
+const Kazo.Os.Theming.Abstractions.ThemePackLayout.SoundsFolder = "sounds" -> string!
+const Kazo.Os.Theming.Abstractions.ThemePackLayout.SystemDirectory = "/usr/share/hackeros/theme-packs" -> string!
+const Kazo.Os.Theming.Abstractions.ThemePackLayout.ThemesFolder = "themes" -> string!
+const Kazo.Os.Theming.Abstractions.ThemePackLayout.WallpapersFolder = "wallpapers" -> string!
+const Kazo.Os.Theming.Abstractions.ThemeTokenValidator.MaxValueLength = 200 -> int
+const Kazo.Os.Theming.Abstractions.UserThemeLibrary.SystemDirectory = "/etc/hackeros/themes" -> string!
+const Kazo.Os.Theming.Abstractions.WallpaperCatalog.AssetDirectory = "_content/Kazo.Os.Theming.Blazor/wallpapers" -> string!
+const Kazo.Os.Theming.Abstractions.WallpaperCatalog.BuiltInPrefix = "builtin:" -> string!
+const Kazo.Os.Theming.Abstractions.WallpaperCatalog.MaxImageBytes = 16777216 -> long
+const Kazo.Os.Theming.Abstractions.WallpaperCatalog.PackWallpapersFolder = "wallpapers" -> string!
+const Kazo.Os.Theming.Abstractions.WallpaperCatalog.SystemDirectory = "/usr/share/hackeros/wallpapers" -> string!
+const Kazo.Os.Theming.Abstractions.WallpaperCatalog.SystemThemePacksDirectory = "/usr/share/hackeros/theme-packs" -> string!
+const Kazo.Os.Theming.Abstractions.WellKnownAccentIds.Cyan = "cyan" -> string!
+const Kazo.Os.Theming.Abstractions.WellKnownAccentIds.Green = "green" -> string!
+const Kazo.Os.Theming.Abstractions.WellKnownAccentIds.Purple = "purple" -> string!
+const Kazo.Os.Theming.Abstractions.WellKnownThemeIds.Android = "android" -> string!
+const Kazo.Os.Theming.Abstractions.WellKnownThemeIds.HackerOs = "hackeros" -> string!
+const Kazo.Os.Theming.Abstractions.WellKnownThemeIds.Ios = "ios" -> string!
+const Kazo.Os.Theming.Abstractions.WellKnownThemeIds.MacOs = "macos" -> string!
+const Kazo.Os.Theming.Abstractions.WellKnownThemeIds.Ubuntu = "ubuntu" -> string!
+const Kazo.Os.Theming.Abstractions.WellKnownThemeIds.Windows10 = "windows-10" -> string!
+const Kazo.Os.Theming.Abstractions.WellKnownThemeIds.Windows7 = "windows-7" -> string!
+const Kazo.Os.Theming.Abstractions.WellKnownThemeIds.Windows98 = "windows-98" -> string!
+const Kazo.Os.Theming.Abstractions.WellKnownThemeIds.WindowsXp = "windows-xp" -> string!
+override Kazo.Os.Theming.Abstractions.BuiltInWallpaper.Equals(object? obj) -> bool
+override Kazo.Os.Theming.Abstractions.BuiltInWallpaper.GetHashCode() -> int
+override Kazo.Os.Theming.Abstractions.BuiltInWallpaper.ToString() -> string!
+override Kazo.Os.Theming.Abstractions.CursorImage.Equals(object? obj) -> bool
+override Kazo.Os.Theming.Abstractions.CursorImage.GetHashCode() -> int
+override Kazo.Os.Theming.Abstractions.CursorImage.ToString() -> string!
+override Kazo.Os.Theming.Abstractions.CursorTheme.Equals(object? obj) -> bool
+override Kazo.Os.Theming.Abstractions.CursorTheme.GetHashCode() -> int
+override Kazo.Os.Theming.Abstractions.CursorTheme.ToString() -> string!
+override Kazo.Os.Theming.Abstractions.CursorThemeEntry.Equals(object? obj) -> bool
+override Kazo.Os.Theming.Abstractions.CursorThemeEntry.GetHashCode() -> int
+override Kazo.Os.Theming.Abstractions.CursorThemeEntry.ToString() -> string!
+override Kazo.Os.Theming.Abstractions.CursorThemeIndex.Equals(object? obj) -> bool
+override Kazo.Os.Theming.Abstractions.CursorThemeIndex.GetHashCode() -> int
+override Kazo.Os.Theming.Abstractions.CursorThemeIndex.ToString() -> string!
+override Kazo.Os.Theming.Abstractions.CursorThemeLibraryResult.Equals(object? obj) -> bool
+override Kazo.Os.Theming.Abstractions.CursorThemeLibraryResult.GetHashCode() -> int
+override Kazo.Os.Theming.Abstractions.CursorThemeLibraryResult.ToString() -> string!
+override Kazo.Os.Theming.Abstractions.CursorThemeParseResult.Equals(object? obj) -> bool
+override Kazo.Os.Theming.Abstractions.CursorThemeParseResult.GetHashCode() -> int
+override Kazo.Os.Theming.Abstractions.CursorThemeParseResult.ToString() -> string!
+override Kazo.Os.Theming.Abstractions.IconPacks.IconPackFileAccess.Equals(object? obj) -> bool
+override Kazo.Os.Theming.Abstractions.IconPacks.IconPackFileAccess.GetHashCode() -> int
+override Kazo.Os.Theming.Abstractions.IconPacks.IconPackFileAccess.ToString() -> string!
+override Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo.Equals(object? obj) -> bool
+override Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo.GetHashCode() -> int
+override Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo.ToString() -> string!
+override Kazo.Os.Theming.Abstractions.IconPacks.IconPackListResult.Equals(object? obj) -> bool
+override Kazo.Os.Theming.Abstractions.IconPacks.IconPackListResult.GetHashCode() -> int
+override Kazo.Os.Theming.Abstractions.IconPacks.IconPackListResult.ToString() -> string!
+override Kazo.Os.Theming.Abstractions.IconPacks.IconPackLoadResult.Equals(object? obj) -> bool
+override Kazo.Os.Theming.Abstractions.IconPacks.IconPackLoadResult.GetHashCode() -> int
+override Kazo.Os.Theming.Abstractions.IconPacks.IconPackLoadResult.ToString() -> string!
+override Kazo.Os.Theming.Abstractions.ResolvedTheme.Equals(object? obj) -> bool
+override Kazo.Os.Theming.Abstractions.ResolvedTheme.GetHashCode() -> int
+override Kazo.Os.Theming.Abstractions.ResolvedTheme.ToString() -> string!
+override Kazo.Os.Theming.Abstractions.ThemeDefinition.Equals(object? obj) -> bool
+override Kazo.Os.Theming.Abstractions.ThemeDefinition.GetHashCode() -> int
+override Kazo.Os.Theming.Abstractions.ThemeDefinition.ToString() -> string!
+override Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic.Equals(object? obj) -> bool
+override Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic.GetHashCode() -> int
+override Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic.ToString() -> string!
+override Kazo.Os.Theming.Abstractions.ThemeFileParseResult.Equals(object? obj) -> bool
+override Kazo.Os.Theming.Abstractions.ThemeFileParseResult.GetHashCode() -> int
+override Kazo.Os.Theming.Abstractions.ThemeFileParseResult.ToString() -> string!
+override Kazo.Os.Theming.Abstractions.ThemeFileSource.Equals(object? obj) -> bool
+override Kazo.Os.Theming.Abstractions.ThemeFileSource.GetHashCode() -> int
+override Kazo.Os.Theming.Abstractions.ThemeFileSource.ToString() -> string!
+override Kazo.Os.Theming.Abstractions.ThemePreferences.Equals(object? obj) -> bool
+override Kazo.Os.Theming.Abstractions.ThemePreferences.GetHashCode() -> int
+override Kazo.Os.Theming.Abstractions.ThemePreferences.ToString() -> string!
+override Kazo.Os.Theming.Abstractions.ThemeTokenDefinition.Equals(object? obj) -> bool
+override Kazo.Os.Theming.Abstractions.ThemeTokenDefinition.GetHashCode() -> int
+override Kazo.Os.Theming.Abstractions.ThemeTokenDefinition.ToString() -> string!
+override Kazo.Os.Theming.Abstractions.UserTheme.Equals(object? obj) -> bool
+override Kazo.Os.Theming.Abstractions.UserTheme.GetHashCode() -> int
+override Kazo.Os.Theming.Abstractions.UserTheme.ToString() -> string!
+override Kazo.Os.Theming.Abstractions.UserThemeLibraryResult.Equals(object? obj) -> bool
+override Kazo.Os.Theming.Abstractions.UserThemeLibraryResult.GetHashCode() -> int
+override Kazo.Os.Theming.Abstractions.UserThemeLibraryResult.ToString() -> string!
+static Kazo.Os.Theming.Abstractions.BuiltInWallpaper.operator !=(Kazo.Os.Theming.Abstractions.BuiltInWallpaper? left, Kazo.Os.Theming.Abstractions.BuiltInWallpaper? right) -> bool
+static Kazo.Os.Theming.Abstractions.BuiltInWallpaper.operator ==(Kazo.Os.Theming.Abstractions.BuiltInWallpaper? left, Kazo.Os.Theming.Abstractions.BuiltInWallpaper? right) -> bool
+static Kazo.Os.Theming.Abstractions.CursorImage.operator !=(Kazo.Os.Theming.Abstractions.CursorImage? left, Kazo.Os.Theming.Abstractions.CursorImage? right) -> bool
+static Kazo.Os.Theming.Abstractions.CursorImage.operator ==(Kazo.Os.Theming.Abstractions.CursorImage? left, Kazo.Os.Theming.Abstractions.CursorImage? right) -> bool
+static Kazo.Os.Theming.Abstractions.CursorNames.All.get -> System.Collections.Generic.IReadOnlyList<string!>!
+static Kazo.Os.Theming.Abstractions.CursorNames.GetFallback(string! name) -> string?
+static Kazo.Os.Theming.Abstractions.CursorNames.IsKnown(string? name) -> bool
+static Kazo.Os.Theming.Abstractions.CursorNames.Preview.get -> System.Collections.Generic.IReadOnlyList<string!>!
+static Kazo.Os.Theming.Abstractions.CursorTheme.operator !=(Kazo.Os.Theming.Abstractions.CursorTheme? left, Kazo.Os.Theming.Abstractions.CursorTheme? right) -> bool
+static Kazo.Os.Theming.Abstractions.CursorTheme.operator ==(Kazo.Os.Theming.Abstractions.CursorTheme? left, Kazo.Os.Theming.Abstractions.CursorTheme? right) -> bool
+static Kazo.Os.Theming.Abstractions.CursorThemeCatalog.System.get -> Kazo.Os.Theming.Abstractions.CursorTheme!
+static Kazo.Os.Theming.Abstractions.CursorThemeCatalog.Themes.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Theming.Abstractions.CursorTheme!>!
+static Kazo.Os.Theming.Abstractions.CursorThemeCatalog.TryGet(string? id, out Kazo.Os.Theming.Abstractions.CursorTheme! theme) -> bool
+static Kazo.Os.Theming.Abstractions.CursorThemeEntry.operator !=(Kazo.Os.Theming.Abstractions.CursorThemeEntry? left, Kazo.Os.Theming.Abstractions.CursorThemeEntry? right) -> bool
+static Kazo.Os.Theming.Abstractions.CursorThemeEntry.operator ==(Kazo.Os.Theming.Abstractions.CursorThemeEntry? left, Kazo.Os.Theming.Abstractions.CursorThemeEntry? right) -> bool
+static Kazo.Os.Theming.Abstractions.CursorThemeFile.Parse(string! content, string? path = null) -> Kazo.Os.Theming.Abstractions.CursorThemeParseResult!
+static Kazo.Os.Theming.Abstractions.CursorThemeFile.ToDataUrl(System.ReadOnlySpan<byte> bytes) -> string!
+static Kazo.Os.Theming.Abstractions.CursorThemeFile.TryValidateImage(System.ReadOnlySpan<byte> bytes, int hotspotX, int hotspotY, out string? reasonKey) -> bool
+static Kazo.Os.Theming.Abstractions.CursorThemeIndex.operator !=(Kazo.Os.Theming.Abstractions.CursorThemeIndex? left, Kazo.Os.Theming.Abstractions.CursorThemeIndex? right) -> bool
+static Kazo.Os.Theming.Abstractions.CursorThemeIndex.operator ==(Kazo.Os.Theming.Abstractions.CursorThemeIndex? left, Kazo.Os.Theming.Abstractions.CursorThemeIndex? right) -> bool
+static Kazo.Os.Theming.Abstractions.CursorThemeLibrary.GetUserDirectory(string! homeDirectory) -> string!
+static Kazo.Os.Theming.Abstractions.CursorThemeLibrary.LoadAsync(System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<string!>!>!>! listDirectories, System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<string!>!>! readText, System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<byte[]!>!>! readBytes, string? homeDirectory, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.Theming.Abstractions.CursorThemeLibraryResult!>!
+static Kazo.Os.Theming.Abstractions.CursorThemeLibraryResult.Empty.get -> Kazo.Os.Theming.Abstractions.CursorThemeLibraryResult!
+static Kazo.Os.Theming.Abstractions.CursorThemeLibraryResult.operator !=(Kazo.Os.Theming.Abstractions.CursorThemeLibraryResult? left, Kazo.Os.Theming.Abstractions.CursorThemeLibraryResult? right) -> bool
+static Kazo.Os.Theming.Abstractions.CursorThemeLibraryResult.operator ==(Kazo.Os.Theming.Abstractions.CursorThemeLibraryResult? left, Kazo.Os.Theming.Abstractions.CursorThemeLibraryResult? right) -> bool
+static Kazo.Os.Theming.Abstractions.CursorThemeParseResult.operator !=(Kazo.Os.Theming.Abstractions.CursorThemeParseResult? left, Kazo.Os.Theming.Abstractions.CursorThemeParseResult? right) -> bool
+static Kazo.Os.Theming.Abstractions.CursorThemeParseResult.operator ==(Kazo.Os.Theming.Abstractions.CursorThemeParseResult? left, Kazo.Os.Theming.Abstractions.CursorThemeParseResult? right) -> bool
+static Kazo.Os.Theming.Abstractions.IconPacks.IconPackFileAccess.operator !=(Kazo.Os.Theming.Abstractions.IconPacks.IconPackFileAccess? left, Kazo.Os.Theming.Abstractions.IconPacks.IconPackFileAccess? right) -> bool
+static Kazo.Os.Theming.Abstractions.IconPacks.IconPackFileAccess.operator ==(Kazo.Os.Theming.Abstractions.IconPacks.IconPackFileAccess? left, Kazo.Os.Theming.Abstractions.IconPacks.IconPackFileAccess? right) -> bool
+static Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo.operator !=(Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo? left, Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo? right) -> bool
+static Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo.operator ==(Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo? left, Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo? right) -> bool
+static Kazo.Os.Theming.Abstractions.IconPacks.IconPackLibrary.GetUserDirectory(string! homeDirectory) -> string!
+static Kazo.Os.Theming.Abstractions.IconPacks.IconPackLibrary.GetUserThemePackDirectory(string! homeDirectory) -> string!
+static Kazo.Os.Theming.Abstractions.IconPacks.IconPackLibrary.IsValidId(string? id) -> bool
+static Kazo.Os.Theming.Abstractions.IconPacks.IconPackLibrary.ListAsync(Kazo.Os.Theming.Abstractions.IconPacks.IconPackFileAccess! files, string? homeDirectory, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.Theming.Abstractions.IconPacks.IconPackListResult!>!
+static Kazo.Os.Theming.Abstractions.IconPacks.IconPackLibrary.LoadAsync(Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo! info, Kazo.Os.Theming.Abstractions.IconPacks.IconPackFileAccess! files, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.Theming.Abstractions.IconPacks.IconPackLoadResult!>!
+static Kazo.Os.Theming.Abstractions.IconPacks.IconPackLibrary.TryParseManifest(string! content, string! rootPath, Kazo.Os.Theming.Abstractions.IconPacks.IconPackOrigin origin, out Kazo.Os.Theming.Abstractions.IconPacks.IconPackInfo? info, out string? error) -> bool
+static Kazo.Os.Theming.Abstractions.IconPacks.IconPackListResult.Empty.get -> Kazo.Os.Theming.Abstractions.IconPacks.IconPackListResult!
+static Kazo.Os.Theming.Abstractions.IconPacks.IconPackListResult.operator !=(Kazo.Os.Theming.Abstractions.IconPacks.IconPackListResult? left, Kazo.Os.Theming.Abstractions.IconPacks.IconPackListResult? right) -> bool
+static Kazo.Os.Theming.Abstractions.IconPacks.IconPackListResult.operator ==(Kazo.Os.Theming.Abstractions.IconPacks.IconPackListResult? left, Kazo.Os.Theming.Abstractions.IconPacks.IconPackListResult? right) -> bool
+static Kazo.Os.Theming.Abstractions.IconPacks.IconPackLoadResult.operator !=(Kazo.Os.Theming.Abstractions.IconPacks.IconPackLoadResult? left, Kazo.Os.Theming.Abstractions.IconPacks.IconPackLoadResult? right) -> bool
+static Kazo.Os.Theming.Abstractions.IconPacks.IconPackLoadResult.operator ==(Kazo.Os.Theming.Abstractions.IconPacks.IconPackLoadResult? left, Kazo.Os.Theming.Abstractions.IconPacks.IconPackLoadResult? right) -> bool
+static Kazo.Os.Theming.Abstractions.ResolvedTheme.Resolve(string? themeId, Kazo.Os.Theming.Abstractions.ThemePlatform platform, System.Collections.Generic.IEnumerable<Kazo.Os.Theming.Abstractions.UserTheme!>? userThemes) -> Kazo.Os.Theming.Abstractions.ResolvedTheme!
+static Kazo.Os.Theming.Abstractions.ResolvedTheme.operator !=(Kazo.Os.Theming.Abstractions.ResolvedTheme? left, Kazo.Os.Theming.Abstractions.ResolvedTheme? right) -> bool
+static Kazo.Os.Theming.Abstractions.ResolvedTheme.operator ==(Kazo.Os.Theming.Abstractions.ResolvedTheme? left, Kazo.Os.Theming.Abstractions.ResolvedTheme? right) -> bool
+static Kazo.Os.Theming.Abstractions.ThemeCatalog.AccentIds.get -> System.Collections.Generic.IReadOnlyList<string!>!
+static Kazo.Os.Theming.Abstractions.ThemeCatalog.AllThemes.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Theming.Abstractions.ThemeDefinition!>!
+static Kazo.Os.Theming.Abstractions.ThemeCatalog.DesktopThemes.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Theming.Abstractions.ThemeDefinition!>!
+static Kazo.Os.Theming.Abstractions.ThemeCatalog.Get(string! themeId) -> Kazo.Os.Theming.Abstractions.ThemeDefinition!
+static Kazo.Os.Theming.Abstractions.ThemeCatalog.GetThemes(Kazo.Os.Theming.Abstractions.ThemePlatform platform) -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Theming.Abstractions.ThemeDefinition!>!
+static Kazo.Os.Theming.Abstractions.ThemeCatalog.IsKnownAccent(string? accentId) -> bool
+static Kazo.Os.Theming.Abstractions.ThemeCatalog.MobileThemes.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Theming.Abstractions.ThemeDefinition!>!
+static Kazo.Os.Theming.Abstractions.ThemeCatalog.TryGet(string? themeId, out Kazo.Os.Theming.Abstractions.ThemeDefinition? theme) -> bool
+static Kazo.Os.Theming.Abstractions.ThemeDefinition.operator !=(Kazo.Os.Theming.Abstractions.ThemeDefinition? left, Kazo.Os.Theming.Abstractions.ThemeDefinition? right) -> bool
+static Kazo.Os.Theming.Abstractions.ThemeDefinition.operator ==(Kazo.Os.Theming.Abstractions.ThemeDefinition? left, Kazo.Os.Theming.Abstractions.ThemeDefinition? right) -> bool
+static Kazo.Os.Theming.Abstractions.ThemeFile.FormatPlatform(Kazo.Os.Theming.Abstractions.ThemePlatform platform) -> string!
+static Kazo.Os.Theming.Abstractions.ThemeFile.IsValidId(string? id) -> bool
+static Kazo.Os.Theming.Abstractions.ThemeFile.Parse(string! content, Kazo.Os.Theming.Abstractions.ThemeOrigin origin = Kazo.Os.Theming.Abstractions.ThemeOrigin.User, string? path = null) -> Kazo.Os.Theming.Abstractions.ThemeFileParseResult!
+static Kazo.Os.Theming.Abstractions.ThemeFile.Serialize(Kazo.Os.Theming.Abstractions.UserTheme! theme) -> string!
+static Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic.operator !=(Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic? left, Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic? right) -> bool
+static Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic.operator ==(Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic? left, Kazo.Os.Theming.Abstractions.ThemeFileDiagnostic? right) -> bool
+static Kazo.Os.Theming.Abstractions.ThemeFileParseResult.operator !=(Kazo.Os.Theming.Abstractions.ThemeFileParseResult? left, Kazo.Os.Theming.Abstractions.ThemeFileParseResult? right) -> bool
+static Kazo.Os.Theming.Abstractions.ThemeFileParseResult.operator ==(Kazo.Os.Theming.Abstractions.ThemeFileParseResult? left, Kazo.Os.Theming.Abstractions.ThemeFileParseResult? right) -> bool
+static Kazo.Os.Theming.Abstractions.ThemeFileSource.operator !=(Kazo.Os.Theming.Abstractions.ThemeFileSource? left, Kazo.Os.Theming.Abstractions.ThemeFileSource? right) -> bool
+static Kazo.Os.Theming.Abstractions.ThemeFileSource.operator ==(Kazo.Os.Theming.Abstractions.ThemeFileSource? left, Kazo.Os.Theming.Abstractions.ThemeFileSource? right) -> bool
+static Kazo.Os.Theming.Abstractions.ThemePackLayout.GetRoots(string? homeDirectory) -> System.Collections.Generic.IReadOnlyList<string!>!
+static Kazo.Os.Theming.Abstractions.ThemePackLayout.GetUserDirectory(string! homeDirectory) -> string!
+static Kazo.Os.Theming.Abstractions.ThemePreferences.Default.get -> Kazo.Os.Theming.Abstractions.ThemePreferences!
+static Kazo.Os.Theming.Abstractions.ThemePreferences.operator !=(Kazo.Os.Theming.Abstractions.ThemePreferences? left, Kazo.Os.Theming.Abstractions.ThemePreferences? right) -> bool
+static Kazo.Os.Theming.Abstractions.ThemePreferences.operator ==(Kazo.Os.Theming.Abstractions.ThemePreferences? left, Kazo.Os.Theming.Abstractions.ThemePreferences? right) -> bool
+static Kazo.Os.Theming.Abstractions.ThemeTokenCatalog.All.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Theming.Abstractions.ThemeTokenDefinition!>!
+static Kazo.Os.Theming.Abstractions.ThemeTokenCatalog.InGroup(Kazo.Os.Theming.Abstractions.ThemeTokenGroup group) -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Theming.Abstractions.ThemeTokenDefinition!>!
+static Kazo.Os.Theming.Abstractions.ThemeTokenCatalog.TryGet(string? name, out Kazo.Os.Theming.Abstractions.ThemeTokenDefinition? token) -> bool
+static Kazo.Os.Theming.Abstractions.ThemeTokenDefinition.operator !=(Kazo.Os.Theming.Abstractions.ThemeTokenDefinition? left, Kazo.Os.Theming.Abstractions.ThemeTokenDefinition? right) -> bool
+static Kazo.Os.Theming.Abstractions.ThemeTokenDefinition.operator ==(Kazo.Os.Theming.Abstractions.ThemeTokenDefinition? left, Kazo.Os.Theming.Abstractions.ThemeTokenDefinition? right) -> bool
+static Kazo.Os.Theming.Abstractions.ThemeTokenValidator.ToHexColor(string? color) -> string?
+static Kazo.Os.Theming.Abstractions.ThemeTokenValidator.TryGetRgbTriplet(string! color, out string! triplet) -> bool
+static Kazo.Os.Theming.Abstractions.ThemeTokenValidator.TryValidate(Kazo.Os.Theming.Abstractions.ThemeTokenType type, string? value, System.Globalization.CultureInfo? culture, out string! normalized, out string? error) -> bool
+static Kazo.Os.Theming.Abstractions.ThemeTokenValidator.TryValidate(Kazo.Os.Theming.Abstractions.ThemeTokenType type, string? value, out string! normalized, out string? error) -> bool
+static Kazo.Os.Theming.Abstractions.ThemeTokenValidator.TryValidate(string! tokenName, string? value, out string! normalized, out string? error) -> bool
+static Kazo.Os.Theming.Abstractions.UserTheme.BuildCssProperties(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string!, string!>>! tokens, bool animationsEnabled = true) -> System.Collections.Generic.IReadOnlyDictionary<string!, string!>!
+static Kazo.Os.Theming.Abstractions.UserTheme.operator !=(Kazo.Os.Theming.Abstractions.UserTheme? left, Kazo.Os.Theming.Abstractions.UserTheme? right) -> bool
+static Kazo.Os.Theming.Abstractions.UserTheme.operator ==(Kazo.Os.Theming.Abstractions.UserTheme? left, Kazo.Os.Theming.Abstractions.UserTheme? right) -> bool
+static Kazo.Os.Theming.Abstractions.UserThemeLibrary.Build(System.Collections.Generic.IEnumerable<Kazo.Os.Theming.Abstractions.ThemeFileSource!>! files) -> Kazo.Os.Theming.Abstractions.UserThemeLibraryResult!
+static Kazo.Os.Theming.Abstractions.UserThemeLibrary.GetUserDirectory(string! homeDirectory) -> string!
+static Kazo.Os.Theming.Abstractions.UserThemeLibrary.GetUserThemePath(string! homeDirectory, string! themeId) -> string!
+static Kazo.Os.Theming.Abstractions.UserThemeLibrary.LoadAsync(System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<string!>!>!>! listFiles, System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<string!>!>!>! listDirectories, System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<string!>!>! readFile, string? homeDirectory, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.Theming.Abstractions.UserThemeLibraryResult!>!
+static Kazo.Os.Theming.Abstractions.UserThemeLibrary.LoadAsync(System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<string!>!>!>! listFiles, System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<string!>!>! readFile, string? homeDirectory, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.Theming.Abstractions.UserThemeLibraryResult!>!
+static Kazo.Os.Theming.Abstractions.UserThemeLibraryResult.Empty.get -> Kazo.Os.Theming.Abstractions.UserThemeLibraryResult!
+static Kazo.Os.Theming.Abstractions.UserThemeLibraryResult.operator !=(Kazo.Os.Theming.Abstractions.UserThemeLibraryResult? left, Kazo.Os.Theming.Abstractions.UserThemeLibraryResult? right) -> bool
+static Kazo.Os.Theming.Abstractions.UserThemeLibraryResult.operator ==(Kazo.Os.Theming.Abstractions.UserThemeLibraryResult? left, Kazo.Os.Theming.Abstractions.UserThemeLibraryResult? right) -> bool
+static Kazo.Os.Theming.Abstractions.WallpaperCatalog.BuiltIn.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Theming.Abstractions.BuiltInWallpaper!>!
+static Kazo.Os.Theming.Abstractions.WallpaperCatalog.FitValues.get -> System.Collections.Generic.IReadOnlyList<string!>!
+static Kazo.Os.Theming.Abstractions.WallpaperCatalog.FormatFit(Kazo.Os.Theming.Abstractions.WallpaperFit fit) -> string!
+static Kazo.Os.Theming.Abstractions.WallpaperCatalog.GetUserDirectory(string! homeDirectory) -> string!
+static Kazo.Os.Theming.Abstractions.WallpaperCatalog.GetUserThemePacksDirectory(string! homeDirectory) -> string!
+static Kazo.Os.Theming.Abstractions.WallpaperCatalog.HasSupportedExtension(string? path) -> bool
+static Kazo.Os.Theming.Abstractions.WallpaperCatalog.IsValidValue(string? value) -> bool
+static Kazo.Os.Theming.Abstractions.WallpaperCatalog.ParseFit(string? value) -> Kazo.Os.Theming.Abstractions.WallpaperFit
+static Kazo.Os.Theming.Abstractions.WallpaperCatalog.TryDetectMediaType(System.ReadOnlySpan<byte> header, out string! mediaType) -> bool
+static Kazo.Os.Theming.Abstractions.WallpaperCatalog.TryGetBuiltIn(string? value, out Kazo.Os.Theming.Abstractions.BuiltInWallpaper! wallpaper) -> bool

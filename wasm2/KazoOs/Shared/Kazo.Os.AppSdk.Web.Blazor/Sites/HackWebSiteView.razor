@@ -1,0 +1,22 @@
+@namespace Kazo.Os.AppSdk.Web.Blazor.Sites
+@using Kazo.Os.AppSdk
+@inherits HackComponentBase
+
+@*
+    The page area of a Blazor site (ADR 0084 §4): the site's root component drawn here, in the
+    renderer process's context and with the tab's site services cascaded. Links are intercepted by
+    the collocated script; an unhandled exception stops at the error boundary and the browser
+    takes over (OnFaulted).
+*@
+<div class="site-view" @ref="_element" data-site-app="@Process.AppId">
+    @if (_site is not null && !_faulted)
+    {
+        <CascadingValue TValue="IAppExecutionContext" Value="Process.Context" IsFixed="true">
+            <CascadingValue TValue="HackWebSite" Value="_site" IsFixed="true">
+                <HackSiteErrorBoundary OnError="HandleErrorAsync">
+                    @RootContent
+                </HackSiteErrorBoundary>
+            </CascadingValue>
+        </CascadingValue>
+    }
+</div>

@@ -31,16 +31,16 @@ nul.
 
 | Élément | Projet | Rôle |
 |---|---|---|
-| `ICpuTimeAccountant`, `IMemoryAccountant`, `ResourceMeasurementSource` | `Shared/HackerOs.Simulation.Abstractions` (`Processes/ResourceAccountingContracts.cs`) | contrats lus par `/proc` ; `TryGet…` faux = valeur simulée |
+| `ICpuTimeAccountant`, `IMemoryAccountant`, `ResourceMeasurementSource` | `Shared/Kazo.Os.Simulation.Abstractions` (`Processes/ResourceAccountingContracts.cs`) | contrats lus par `/proc` ; `TryGet…` faux = valeur simulée |
 | `IExecutionContextSwitchObserver`, `ExecutionContextSwitch` | idem | contrat d'observateur du crochet : processus quitté, processus entré, changement fait par le runtime (`ThreadContextChanged`), et depuis l'ADR 0067 le mode de chacun (`FromKernel`, `ToKernel`) |
 | `IExecutionModeSwitchObserver` | idem | changements de mode (entrée ou sortie d'une passerelle de l'OS) sans changement de processus ; facultatif (ADR 0067, [`cpu-accounting.md`](cpu-accounting.md)) |
-| `NullCpuTimeAccountant`, `NullMemoryAccountant` | `Platform/HackerOs.Platform.Core` (`Processes/Accounting/`) | implémentations nulles ; Platform Core ne dépend jamais du projet de mesure |
+| `NullCpuTimeAccountant`, `NullMemoryAccountant` | `Platform/Kazo.Os.Platform.Core` (`Processes/Accounting/`) | implémentations nulles ; Platform Core ne dépend jamais du projet de mesure |
 | `ResourceAccountingPlan`, `ResourceAccountingSettings`, `ResourceAccountingBuildSupport` | idem | décision prise une fois : build × réglage → mesures actives, crochet requis, lignes pour syslog |
-| `HackExecutionContext` (`InstallContextSwitchHook`, interne) | `Shared/HackerOs.AppSdk` | remplace le frame ambiant par un `AsyncLocal<T>(valueChangedHandler)` ; visible seulement du projet de mesure (`InternalsVisibleTo`) |
-| `ContextSwitchHook`, `ContextSwitchDispatcher`, `ResourceAccountingFeatures` | `Platform/HackerOs.Platform.ResourceAccounting` (nouveau) | installation du crochet, diffusion aux mesures (changements de processus, et de mode aux observateurs qui les veulent), interrupteurs `[FeatureSwitchDefinition]` |
+| `HackExecutionContext` (`InstallContextSwitchHook`, interne) | `Shared/Kazo.Os.AppSdk` | remplace le frame ambiant par un `AsyncLocal<T>(valueChangedHandler)` ; visible seulement du projet de mesure (`InternalsVisibleTo`) |
+| `ContextSwitchHook`, `ContextSwitchDispatcher`, `ResourceAccountingFeatures` | `Platform/Kazo.Os.Platform.ResourceAccounting` (nouveau) | installation du crochet, diffusion aux mesures (changements de processus, et de mode aux observateurs qui les veulent), interrupteurs `[FeatureSwitchDefinition]` |
 | `MeasuredCpuTimeAccountant` | idem | mesure du CPU (ADR 0067), inscrite sur le diffuseur quand `plan.CpuActive` |
-| `ResourceAccountingServiceCollectionExtensions` | `OS/HackerOs.Ecosystem.Host` | lecture de `HackerOs:ResourceAccounting`, composition, `#if HACKEROS_RESOURCE_ACCOUNTING` |
-| `build/HackerOs.ResourceAccounting.targets` | `build/` | propriétés MSBuild, `RuntimeHostConfigurationOption`, référence conditionnelle |
+| `ResourceAccountingServiceCollectionExtensions` | `OS/Kazo.Os.Ecosystem.Host` | lecture de `HackerOs:ResourceAccounting`, composition, `#if HACKEROS_RESOURCE_ACCOUNTING` |
+| `build/Kazo.Os.ResourceAccounting.targets` | `build/` | propriétés MSBuild, `RuntimeHostConfigurationOption`, référence conditionnelle |
 
 ### Le crochet
 
@@ -79,22 +79,22 @@ fin de continuation, minuterie ─┘         │ processus différent ?
 ```
 
 Les deux valent `true` par défaut. Les trois hôtes importent
-`build/HackerOs.ResourceAccounting.targets` à la fin de leur `.csproj`.
+`build/Kazo.Os.ResourceAccounting.targets` à la fin de leur `.csproj`.
 
 | Propriétés | Effet |
 |---|---|
-| une au moins à `true` | référence vers `HackerOs.Platform.ResourceAccounting`, constante `HACKEROS_RESOURCE_ACCOUNTING` ; chaque propriété devient l'option d'exécution `HackerOs.ResourceAccounting.{Cpu,Memory}.IsSupported` |
+| une au moins à `true` | référence vers `Kazo.Os.Platform.ResourceAccounting`, constante `HACKEROS_RESOURCE_ACCOUNTING` ; chaque propriété devient l'option d'exécution `Kazo.Os.ResourceAccounting.{Cpu,Memory}.IsSupported` |
 | les deux à `false` | pas de référence : le code de mesure n'est **pas dans le binaire** ; la composition compile sa branche `#else` |
 
-La composition vit dans `HackerOs.Ecosystem.Host` (qui importe aussi ces cibles),
-que l'Ecosystem, `test/test` et `HackerOs.Server` référencent. Le paquet
-`HackerOs.Ecosystem.Host` est produit avec les deux mesures compilées ; un hôte
+La composition vit dans `Kazo.Os.Ecosystem.Host` (qui importe aussi ces cibles),
+que l'Ecosystem, `test/test` et `Kazo.Os.Server` référencent. Le paquet
+`Kazo.Os.Ecosystem.Host` est produit avec les deux mesures compilées ; un hôte
 d'un autre dépôt les coupe à l'exécution (`appsettings.json` ou ses propres
 options `RuntimeHostConfigurationOption`). Pour retirer le code de **tout** le graphe,
 passer les propriétés en ligne de commande ou dans un `Directory.Build.props`.
 Posées seulement dans le `.csproj` de `test/test` ou du serveur, elles coupent
 l'option d'exécution de cet hôte (la mesure est ignorée au démarrage, avec la
-ligne syslog) mais la DLL arrive encore par `HackerOs.Ecosystem.Host`.
+ligne syslog) mais la DLL arrive encore par `Kazo.Os.Ecosystem.Host`.
 
 ### Au démarrage
 
@@ -111,9 +111,9 @@ ligne syslog) mais la DLL arrive encore par `HackerOs.Ecosystem.Host`.
 
 | Hôte | Fichier | Défaut livré |
 |---|---|---|
-| `OS/HackerOs.Ecosystem` | `wwwroot/appsettings.json` (lu par `WebAssemblyHostBuilder`, servi aussi à l'îlot WASM de `test/test`) | les deux activées |
+| `OS/Kazo.Os.Ecosystem` | `wwwroot/appsettings.json` (lu par `WebAssemblyHostBuilder`, servi aussi à l'îlot WASM de `test/test`) | les deux activées |
 | `test/test` | `appsettings.json` (composition côté serveur, pré-rendu) | les deux activées |
-| `Server/HackerOs.Server` | aucun : il sert l'OS de l'Ecosystem et son `wwwroot/appsettings.json` (ADR 0130) | comme l'Ecosystem (activées) |
+| `Server/Kazo.Os.Server` | aucun : il sert l'OS de l'Ecosystem et son `wwwroot/appsettings.json` (ADR 0130) | comme l'Ecosystem (activées) |
 
 Chaque hôte appelle, avant `AddHackerOsEcosystem` :
 
@@ -197,7 +197,7 @@ Migration faite dans ce chantier :
 - frame ouvert en première instruction : `SystemMonitorWindow.SetWindowVisible`
   et les quatre rappels JavaScript de `CodeEditorWindow`.
 
-`AmbientFrameSourceTests` (`HackerOs.Ecosystem.Tests`) lit toutes les sources de
+`AmbientFrameSourceTests` (`Kazo.Os.Ecosystem.Tests`) lit toutes les sources de
 `Apps/` et échoue si un composant ne dérive pas (directement ou par une base de
 l'app) de `WindowAppBase`, `HackComponentBase` ou `HackEmbeddableComponent`, si
 une méthode `[JSInvokable]` n'entre pas dans le frame en premier, ou si du code
@@ -208,7 +208,7 @@ composants et les cinq rappels ci-dessus.
 ## Décisions
 
 - **Crochet dans `HackExecutionContext`, installation réservée.** Le frame est
-  privé au SDK ; seul `HackerOs.Platform.ResourceAccounting` voit les membres
+  privé au SDK ; seul `Kazo.Os.Platform.ResourceAccounting` voit les membres
   internes qui l'échangent. Une app ne peut ni installer ni observer le
   crochet.
 - **Échange de l'`AsyncLocal` plutôt qu'un rappel toujours présent.** Un
@@ -228,15 +228,15 @@ composants et les cinq rappels ci-dessus.
 
 | Suite | Couvre |
 |---|---|
-| `HackerOs.Platform.ResourceAccounting.Tests` | crochet : entrée et sortie, continuations (`ThreadContextChanged`), `Task.Run`, processus imbriqués, même processus ignoré, double installation et portée ouverte refusées, observateur qui lève, retrait ; diffuseur ; interrupteurs indépendants. Parallélisme désactivé (crochet global). |
-| `HackerOs.Platform.Core.Tests` (`ResourceAccountingPlanTests`) | les 16 combinaisons build × réglage, lignes syslog, comptables nuls |
-| `HackerOs.Platform.Core.Tests` (`ProcFileSystemProviderTests`) | format de `status`, retour au simulateur, sources mesurées indépendantes |
-| `HackerOs.Ecosystem.Tests` (`ResourceAccountingCompositionTests`) | crochet installé seulement si une mesure est active (16 combinaisons), aucun crochet par le vrai chemin quand tout est coupé, lecture de la section, `appsettings.json` livrés |
-| `HackerOs.Apps.SystemMonitor.Tests` | mention « estimated » par colonne |
-| `HackerOs.Ecosystem.Tests` (`AmbientFrameSourceTests`) | tout le code des apps de `Apps/` dans un frame ambiant (composants, rappels JavaScript, pas d'évasion du contexte), avec un contrôle que l'analyse détecte bien une faute |
+| `Kazo.Os.Platform.ResourceAccounting.Tests` | crochet : entrée et sortie, continuations (`ThreadContextChanged`), `Task.Run`, processus imbriqués, même processus ignoré, double installation et portée ouverte refusées, observateur qui lève, retrait ; diffuseur ; interrupteurs indépendants. Parallélisme désactivé (crochet global). |
+| `Kazo.Os.Platform.Core.Tests` (`ResourceAccountingPlanTests`) | les 16 combinaisons build × réglage, lignes syslog, comptables nuls |
+| `Kazo.Os.Platform.Core.Tests` (`ProcFileSystemProviderTests`) | format de `status`, retour au simulateur, sources mesurées indépendantes |
+| `Kazo.Os.Ecosystem.Tests` (`ResourceAccountingCompositionTests`) | crochet installé seulement si une mesure est active (16 combinaisons), aucun crochet par le vrai chemin quand tout est coupé, lecture de la section, `appsettings.json` livrés |
+| `Kazo.Os.Apps.SystemMonitor.Tests` | mention « estimated » par colonne |
+| `Kazo.Os.Ecosystem.Tests` (`AmbientFrameSourceTests`) | tout le code des apps de `Apps/` dans un frame ambiant (composants, rappels JavaScript, pas d'évasion du contexte), avec un contrôle que l'analyse détecte bien une faute |
 
-Vérifié à la main : un build de `HackerOs.Ecosystem` avec les deux propriétés
-à `false` ne contient aucun fichier `HackerOs.Platform.ResourceAccounting*` et
+Vérifié à la main : un build de `Kazo.Os.Ecosystem` avec les deux propriétés
+à `false` ne contient aucun fichier `Kazo.Os.Platform.ResourceAccounting*` et
 son `runtimeconfig.json` porte les deux options à `false`.
 
 ## Liste des tâches
@@ -244,8 +244,8 @@ son `runtimeconfig.json` porte les deux options à `false`.
 - [x] Contrats `ICpuTimeAccountant`, `IMemoryAccountant`, `ResourceMeasurementSource`, `IExecutionContextSwitchObserver` (Simulation Abstractions).
 - [x] Implémentations nulles et `ResourceAccountingPlan` (Platform Core).
 - [x] Crochet `AsyncLocal<T>(valueChangedHandler)` installable dans `HackExecutionContext`, refusé si une portée est ouverte.
-- [x] Projet `HackerOs.Platform.ResourceAccounting` : interrupteurs, diffuseur, installation.
-- [x] `build/HackerOs.ResourceAccounting.targets`, import dans les trois hôtes, référence conditionnelle, `RuntimeHostConfigurationOption`.
+- [x] Projet `Kazo.Os.Platform.ResourceAccounting` : interrupteurs, diffuseur, installation.
+- [x] `build/Kazo.Os.ResourceAccounting.targets`, import dans les trois hôtes, référence conditionnelle, `RuntimeHostConfigurationOption`.
 - [x] `appsettings.json` des trois hôtes (créé pour l'Ecosystem, coupé pour le serveur), lecture à la composition, lignes syslog.
 - [x] `CpuSource` / `MemSource` dans `/proc/<pid>/status`, mention « estimated » dans le gestionnaire de tâches.
 - [x] Tests des combinaisons, aucun crochet quand tout est coupé, observateur de test du crochet.

@@ -20,7 +20,7 @@ chantier `rebuild/4-sdk-network` (ADR 0058).
 
 ```text
 App (Browser, ping, curl, cat, nmap)
-  └─ HackDns / HackPing / HackHttpClient / HackTcpClient     (HackerOs.AppSdk.Net)
+  └─ HackDns / HackPing / HackHttpClient / HackTcpClient     (Kazo.Os.AppSdk.Net)
        └─ HackExecutionContext.Current.Network : IAppNetworkGateway
             └─ AppNetworkGateway                             (Platform.Core/Network)
                  ├─ capacité (ICapabilityChecker de l'instance)
@@ -31,10 +31,10 @@ App (Browser, ping, curl, cat, nmap)
 
 | Type | Projet | Rôle |
 |---|---|---|
-| `IAppNetworkGateway` | `HackerOs.AppSdk` (`Net/`) | Passerelle de l'instance : `ResolveAsync`, `ReverseLookupAsync`, `PingAsync`, `SendAsync`, `ProbeTcpAsync`, `DetectOperatingSystemAsync`. Les échecs réseau sont un résultat (`HackNetworkResult<T>`, `HackNetworkError`), jamais une exception. |
-| `IAppExecutionContext.Network` | `HackerOs.AppSdk` | Membre avec une implémentation par défaut « non prise en charge », pour que les contextes existants compilent. |
-| `HackDns`, `HackPing`, `HackHttpClient`, `HackCookieContainer`, `HackTcpClient` | `HackerOs.AppSdk` (`Net/`) | Façades calquées sur `System.Net` : elles lisent le contexte ambiant (ADR 0043) et lèvent les exceptions de .NET. |
-| `AppNetworkGateway` | `HackerOs.Platform.Core` (`Network/`) | Implémentation de confiance : capacités, réseau simulé, décision du repli réel, jeton du serveur. Construite par `AppExecutionContextFactory` pour chaque instance. |
+| `IAppNetworkGateway` | `Kazo.Os.AppSdk` (`Net/`) | Passerelle de l'instance : `ResolveAsync`, `ReverseLookupAsync`, `PingAsync`, `SendAsync`, `ProbeTcpAsync`, `DetectOperatingSystemAsync`. Les échecs réseau sont un résultat (`HackNetworkResult<T>`, `HackNetworkError`), jamais une exception. |
+| `IAppExecutionContext.Network` | `Kazo.Os.AppSdk` | Membre avec une implémentation par défaut « non prise en charge », pour que les contextes existants compilent. |
+| `HackDns`, `HackPing`, `HackHttpClient`, `HackCookieContainer`, `HackTcpClient` | `Kazo.Os.AppSdk` (`Net/`) | Façades calquées sur `System.Net` : elles lisent le contexte ambiant (ADR 0043) et lèvent les exceptions de .NET. |
+| `AppNetworkGateway` | `Kazo.Os.Platform.Core` (`Network/`) | Implémentation de confiance : capacités, réseau simulé, décision du repli réel, jeton du serveur. Construite par `AppExecutionContextFactory` pour chaque instance. |
 
 `AppExecutionContextFactory` reçoit `ISimulatedNetworkService`,
 `IServerConnectionService` et `IProxyClient` (paramètres optionnels). Sans réseau
@@ -179,10 +179,10 @@ Les appels synchrones lèvent `NotSupportedException`.
   l'hôte, `HackTcpClient` pour le sondage et `-O`. `-p 80` et `-p 80-80` sont
   équivalents pour le repli réel (un seul port).
 - **`cd`** : `ShellErrorText` est passé de Platform Core au SDK
-  (`HackerOs.AppSdk`, à côté de `IShellSession`).
+  (`Kazo.Os.AppSdk`, à côté de `IShellSession`).
 
-`HackerOs.Commands` ne référence plus `Platform.Core` ni `Server.Contracts` ;
-`HackerOs.Apps.Browser` et `HackerOs.Commands` sont sortis de la liste
+`Kazo.Os.Commands` ne référence plus `Platform.Core` ni `Server.Contracts` ;
+`Kazo.Os.Apps.Browser` et `Kazo.Os.Commands` sont sortis de la liste
 d'exemptions de la frontière du SDK.
 
 ## Décisions
@@ -212,7 +212,7 @@ d'exemptions de la frontière du SDK.
 - [x] `AppNetworkGateway` dans Platform Core : capacités, réseau simulé, repli réel et jeton gérés par l'OS.
 - [x] Câblage dans `AppExecutionContextFactory` et l'hôte Ecosystem.
 - [x] `ShellErrorText` déplacé dans le SDK.
-- [x] Migration de Browser, `ping`, `curl`, `cat`, `nmap` ; `HackerOs.Commands` sans `Platform.Core` ni `Server.Contracts`.
-- [x] Exemptions de `HackerOs.Apps.Browser` et `HackerOs.Commands` retirées.
+- [x] Migration de Browser, `ping`, `curl`, `cat`, `nmap` ; `Kazo.Os.Commands` sans `Platform.Core` ni `Server.Contracts`.
+- [x] Exemptions de `Kazo.Os.Apps.Browser` et `Kazo.Os.Commands` retirées.
 - [x] Tests : commandes sur la passerelle réelle, façades, capacités, repli réel refusé sans `network.real.access`.
 - [x] Documentation : ce document, `app-sdk.md`, `shell-interpreter.md`, index.

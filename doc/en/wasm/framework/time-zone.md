@@ -28,7 +28,7 @@ clock follows at once.
 ## In an app
 
 ```csharp
-using HackerOs.AppSdk.Globalization;
+using Kazo.Os.AppSdk.Globalization;
 
 TimeZoneInfo zone = AppContext.TimeZone;                // or HackTimeZone.Current
 DateTimeOffset now = HackTimeZone.Now;                  // the OS's time in that zone

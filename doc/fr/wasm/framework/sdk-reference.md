@@ -31,7 +31,7 @@ Toutes sont publiées en paquets NuGet locaux du même nom, à la version de
 `build/Versions.props` (`2.2.2` aujourd'hui, publiée par le workflow `Release Kazo OS` à la fusion de sa PR ; `2.1.0` le 2026-10-26, première publication automatique, ADR 0173 ; la majeure 2 date de la fin de la série du bureau, ADR 0149 et 0161 ; `1.2.0` à la fin de la série `exec`, ADR 0132 §2 ; `1.1.0` pour la série v3.1, ADR 0117 §5 ; `1.0.0` au gel du SDK, ADR 0114) ; un autre
 dépôt les consomme comme le décrit [`building-on-hackeros.md`](building-on-hackeros.md).
 La promesse de compatibilité SemVer couvre les bibliothèques de cette page et
-`HackerOs.Theming.Blazor`, pas la plateforme (ADR 0114 §2).
+`Kazo.Os.Theming.Blazor`, pas la plateforme (ADR 0114 §2).
 
 Cette page présente les API qu'une app utilise au quotidien ; elle n'est pas
 exhaustive. La liste complète et exacte de la surface publique 2.0 est le
@@ -43,17 +43,17 @@ mineure ; ceux qui sont connus sont listés dans [`sdk-packages.md`](sdk-package
 
 | Projet | Espaces de noms | Pour |
 |---|---|---|
-| `Shared/HackerOs.App.Abstractions` | `HackerOs.App.Abstractions` | Définir une app (`AppDefinition`, capacités, manifeste). |
-| `Shared/HackerOs.Simulation.Abstractions` | `HackerOs.Simulation.Abstractions.*` | Types de données du système simulé (chemins, passerelles, journaux, notifications, processus). |
-| `Shared/HackerOs.AppSdk` | `HackerOs.AppSdk`, `.IO`, `.Settings`, `.Keyring`, `.Apps`, `.Net`, `.Clipboard`, `.Diagnostics`, `.ServiceProcess`, `.Shell`, `.Administration`, `.Threading` (SDK 1.2) | Façades `Hack*`, contexte d'exécution, commandes et services. |
-| `Shared/HackerOs.AppSdk.Blazor` | `HackerOs.AppSdk.Blazor`, `.Charts`, `.Interop`, `.Settings`, `.Files`, `.ContextMenus`, `.Components` | Apps fenêtrées, dialogues, graphiques, contrôle de fichiers et menu contextuel de l'OS (SDK 2.0). |
-| `Shared/HackerOs.AppSdk.Terminal` | `HackerOs.AppSdk.Terminal` | Terminal xterm.js. |
-| `Shared/HackerOs.AppSdk.Web` | `HackerOs.AppSdk.Web.Hosting`, `.Http`, `.Routing`, `.Mvc`, `.Views`, `.Antiforgery`, `.Sessions`, `.Diagnostics`, `.Data`, `.Logging` | Sites internes ASP.Hack façon ASP.NET Core MVC ([guide ASP.Hack](asp-hack-developer-guide.md), [`asp-hack-mvc.md`](asp-hack-mvc.md)). |
-| `Shared/HackerOs.AppSdk.Web.Blazor` | `HackerOs.AppSdk.Web.Blazor.Sites` | Sites Blazor interactifs dessinés dans le navigateur ([`blazor-sites.md`](blazor-sites.md)). |
-| `Shared/HackerOs.AppSdk.Icons` | `HackerOs.AppSdk.Icons` | Icônes. |
-| `Shared/HackerOs.AppSdk.VirtualKeyboard` | `HackerOs.AppSdk.VirtualKeyboard` | Clavier virtuel. |
+| `Shared/Kazo.Os.App.Abstractions` | `Kazo.Os.App.Abstractions` | Définir une app (`AppDefinition`, capacités, manifeste). |
+| `Shared/Kazo.Os.Simulation.Abstractions` | `Kazo.Os.Simulation.Abstractions.*` | Types de données du système simulé (chemins, passerelles, journaux, notifications, processus). |
+| `Shared/Kazo.Os.AppSdk` | `Kazo.Os.AppSdk`, `.IO`, `.Settings`, `.Keyring`, `.Apps`, `.Net`, `.Clipboard`, `.Diagnostics`, `.ServiceProcess`, `.Shell`, `.Administration`, `.Threading` (SDK 1.2) | Façades `Hack*`, contexte d'exécution, commandes et services. |
+| `Shared/Kazo.Os.AppSdk.Blazor` | `Kazo.Os.AppSdk.Blazor`, `.Charts`, `.Interop`, `.Settings`, `.Files`, `.ContextMenus`, `.Components` | Apps fenêtrées, dialogues, graphiques, contrôle de fichiers et menu contextuel de l'OS (SDK 2.0). |
+| `Shared/Kazo.Os.AppSdk.Terminal` | `Kazo.Os.AppSdk.Terminal` | Terminal xterm.js. |
+| `Shared/Kazo.Os.AppSdk.Web` | `Kazo.Os.AppSdk.Web.Hosting`, `.Http`, `.Routing`, `.Mvc`, `.Views`, `.Antiforgery`, `.Sessions`, `.Diagnostics`, `.Data`, `.Logging` | Sites internes ASP.Hack façon ASP.NET Core MVC ([guide ASP.Hack](asp-hack-developer-guide.md), [`asp-hack-mvc.md`](asp-hack-mvc.md)). |
+| `Shared/Kazo.Os.AppSdk.Web.Blazor` | `Kazo.Os.AppSdk.Web.Blazor.Sites` | Sites Blazor interactifs dessinés dans le navigateur ([`blazor-sites.md`](blazor-sites.md)). |
+| `Shared/Kazo.Os.AppSdk.Icons` | `Kazo.Os.AppSdk.Icons` | Icônes. |
+| `Shared/Kazo.Os.AppSdk.VirtualKeyboard` | `Kazo.Os.AppSdk.VirtualKeyboard` | Clavier virtuel. |
 
-## Définir une app (`HackerOs.App.Abstractions`)
+## Définir une app (`Kazo.Os.App.Abstractions`)
 
 | Type | Rôle |
 |---|---|
@@ -114,7 +114,7 @@ Une capacité dangereuse d'une app non système n'est accordée qu'après
 approbation d'un administrateur. Détails : [`capabilities.md`](capabilities.md),
 [`dangerous-capability-approval.md`](../dev/dangerous-capability-approval.md).
 
-## Contexte d'exécution (`HackerOs.AppSdk`)
+## Contexte d'exécution (`Kazo.Os.AppSdk`)
 
 ### `IAppExecutionContext`
 
@@ -154,13 +154,13 @@ paramètre de `RunCoreAsync` pour un service, `context.App` pour une commande).
 |---|---|---|---|
 | `HackExecutionContext` | `Current`, `CurrentOrNull`, `WorkingDirectory`, `Enter(context, workingDirectory)` ; `HackExecutionContextMissingException` | — | [`hack-file-api.md`](hack-file-api.md) |
 | `HackEnvironment` | `CurrentDirectory`, `SetCurrentDirectoryAsync`, `GetEnvironmentVariable(s)`, `SetEnvironmentVariable`, `GetCommandLineArgs`, `GetFolderPath(HackSpecialFolder)`, `UserName`, `MachineName`, `ProcessId`, `NewLine`, `Culture`, `FormatCulture` | — | [`process-environment.md`](../dev/process-environment.md) |
-| `HackLocale`, `HackLocalization`, `HackStringLocalizer`, `EnglishStringLocalizer<T>` (`HackerOs.AppSdk.Globalization`) | Règles de locale (`ResolveLanguage`, `ResolveFormatCulture`, `ParseLocaleConf`, `FormatLocaleConf`, `AvailableLocales`) ; `GetLocalizer<T>()` lié au processus ; localiseur toujours anglais pour les tests | — | [`localization.md`](localization.md) |
-| `HackTimeZone` (`HackerOs.AppSdk.Globalization`), `IAppExecutionContext.TimeZone` | Fuseau du processus (`TZ`, sinon celui de la session) : `Current`, `Now`, `ToLocal`, `TryFind`, `Resolve`, `GetId`, `FormatOffset`, `Available` | — | [`time-zone.md`](time-zone.md) |
+| `HackLocale`, `HackLocalization`, `HackStringLocalizer`, `EnglishStringLocalizer<T>` (`Kazo.Os.AppSdk.Globalization`) | Règles de locale (`ResolveLanguage`, `ResolveFormatCulture`, `ParseLocaleConf`, `FormatLocaleConf`, `AvailableLocales`) ; `GetLocalizer<T>()` lié au processus ; localiseur toujours anglais pour les tests | — | [`localization.md`](localization.md) |
+| `HackTimeZone` (`Kazo.Os.AppSdk.Globalization`), `IAppExecutionContext.TimeZone` | Fuseau du processus (`TZ`, sinon celui de la session) : `Current`, `Now`, `ToLocal`, `TryFind`, `Resolve`, `GetId`, `FormatOffset`, `Available` | — | [`time-zone.md`](time-zone.md) |
 | `HackSpecialFolder` | `UserProfile`, `Desktop`, `MyDocuments`, `ApplicationData`, `LocalApplicationData` | — | [`app-sdk.md`](app-sdk.md#utilisateur-courant-adr-0056-1) |
 | `HackUser` | `Current`, `Describe(context)`, `Root` → `HackUserInfo(LoginName, DisplayName, HomeDirectory, IsAdministrator)` | — | [`app-sdk.md`](app-sdk.md#utilisateur-courant-adr-0056-1) |
 | `HackConsole` (`IAppConsoleGateway`) | `Out`, `Error`, `In`, `IsAttached`, `Write`, `WriteLine[Async]`, `ReadLineAsync` : flux standard de l'instance ; ceux du shell qui l'a lancée (une app fenêtrée lancée par son nom écrit dans le terminal), `/dev/null` depuis le bureau (ADR 0064) | — | [`shell-interpreter.md`](../dev/shell-interpreter.md#apps-lancées-par-leur-nom) |
 
-### Fichiers (`HackerOs.AppSdk.IO`)
+### Fichiers (`Kazo.Os.AppSdk.IO`)
 
 | API | Membres | Document |
 |---|---|---|
@@ -192,7 +192,7 @@ porte le code du moteur, et `ShellErrorText.Describe` donne le message Linux.
 | `FileTooLarge` (1801) | `EFBIG` | Le contenu dépasse 16 Mio (taille maximale d'un fichier) | `File too large` |
 | `TooManyOpenFiles` (1802, SDK 1.2) | `EMFILE` | Le processus a atteint sa limite `nofile` de descripteurs ouverts (ADR 0125, [`process-limits.md`](../dev/process-limits.md)) | `Too many open files` |
 
-### Paramètres (`HackerOs.AppSdk.Settings`)
+### Paramètres (`Kazo.Os.AppSdk.Settings`)
 
 | API | Membres | Capacité | Document |
 |---|---|---|---|
@@ -202,7 +202,7 @@ porte le code du moteur, et `ShellErrorText.Describe` donne le message Linux.
 | `HackSettingLockedException` | Clé verrouillée dans `[locked]` | — | [`settings-files.md`](settings-files.md) |
 | `HackSettingMaskedException` | Clé non publique dont le fichier privé est illisible (`QualifiedKey`, `PrivatePath`) | — | [`sensitive-settings.md`](../dev/sensitive-settings.md) |
 
-### Trousseau (`HackerOs.AppSdk.Keyring`)
+### Trousseau (`Kazo.Os.AppSdk.Keyring`)
 
 | API | Membres | Capacité | Document |
 |---|---|---|---|
@@ -210,7 +210,7 @@ porte le code du moteur, et `ShellErrorText.Describe` donne le message Linux.
 | `HackKeyringEntry` | `AppId`, `Id`, `Label`, `UpdatedAtUtc` (jamais le secret) | — | [`sensitive-settings.md`](../dev/sensitive-settings.md) |
 | `HackKeyringLockedException` | Trousseau verrouillé | — | [`sensitive-settings.md`](../dev/sensitive-settings.md) |
 
-### Comptes et mots de passe (`HackerOs.AppSdk.Administration`)
+### Comptes et mots de passe (`Kazo.Os.AppSdk.Administration`)
 
 | API | Membres | Capacité | Document |
 |---|---|---|---|
@@ -218,7 +218,7 @@ porte le code du moteur, et `ShellErrorText.Describe` donne le message Linux.
 | `HackUserAccount` | `LoginName`, `DisplayName`, `Authority`, `IsEnabled`, `HasPassword`, `UpdatedAtUtc`, `IsCurrentUser`, `IsAdministrator` (jamais le hachage) | — | [`sensitive-settings.md`](../dev/sensitive-settings.md) |
 | `IAppUserAccountsGateway` | passerelle derrière `HackUserAccounts` (`IAppExecutionContext.UserAccounts`, membre par défaut non pris en charge) | — | [ADR 0120](../dev/adr/0120-passwd-and-administrator-password-reset.md) |
 
-### Apps (`HackerOs.AppSdk.Apps`)
+### Apps (`Kazo.Os.AppSdk.Apps`)
 
 | API | Membres | Capacité | Document |
 |---|---|---|---|
@@ -240,7 +240,7 @@ porte le code du moteur, et `ShellErrorText.Describe` donne le message Linux.
 | `IAppProcessGateway.KillAsync(pid, reason)` (`Simulation.Abstractions`) | Tuer un processus en attendant l'accusé de l'OS ; utilisé par `HackProcess.KillAsync`, y compris depuis un Web Worker (méthode par défaut qui retombe sur `Kill`) | `process.manage` | [`worker-processes.md`](../dev/worker-processes.md) |
 | `HackServiceController` (`.ServiceProcess`) | `GetServicesAsync`, `RefreshAsync`, `RefreshStatusAsync`, `StartAsync`, `StopAsync`, `ResetFailedAsync`, `SetStartTypeAsync`, `Status`, `StartType`, `ActiveState`, `Result`, `Health`, `StatusText`, `ActiveStateChangedAt`, `ExitCode` ; `HackServiceStates.ToSystemdName` (ADR 0097) | `services.manage` sur les autres apps | [`task-manager.md`](../dev/task-manager.md) |
 
-### Tâches en arrière-plan (`HackerOs.AppSdk.Threading`, SDK 1.2)
+### Tâches en arrière-plan (`Kazo.Os.AppSdk.Threading`, SDK 1.2)
 
 | API | Membres | Capacité | Document |
 |---|---|---|---|
@@ -250,9 +250,9 @@ porte le code du moteur, et `ShellErrorText.Describe` donne le message Linux.
 | `HackBackgroundProgress`, `HackBackgroundOptions` | `Fraction`, `Message`, `ToString()` (`42% message`) ; `Name` (affiché dans `ps`), `Nice` | — | [`background-jobs.md`](background-jobs.md), [`app-responsiveness-api.md`](app-responsiveness-api.md) |
 | `HackBackgroundJobException` | Exception de la tâche : `OriginalTypeName`, `Message`, `OriginalStackTrace` | — | [`background-jobs.md`](background-jobs.md) |
 | `IAppBackgroundGateway`, `HackBackgroundJobRequest`, `HackBackgroundJobTarget` | Contrat entre le SDK et l'OS : cible nommée (assembly, type, méthode, type d'entrée), entrée JSON, nom, `nice` | — | [`background-jobs.md`](background-jobs.md) |
-| Analyseur `HOSBG0001` à `HOSBG0004` | Livré dans le paquet `HackerOs.AppSdk` : groupe de méthode statique, types déclarés par `HackWireContext`, assembly de l'app, pas de générique | — | [`background-jobs.md`](background-jobs.md#règles-vérifiées-au-build) |
+| Analyseur `HOSBG0001` à `HOSBG0004` | Livré dans le paquet `Kazo.Os.AppSdk` : groupe de méthode statique, types déclarés par `HackWireContext`, assembly de l'app, pas de générique | — | [`background-jobs.md`](background-jobs.md#règles-vérifiées-au-build) |
 
-### Réseau (`HackerOs.AppSdk.Net`)
+### Réseau (`Kazo.Os.AppSdk.Net`)
 
 | API | Membres | Document |
 |---|---|---|
@@ -266,13 +266,13 @@ porte le code du moteur, et `ShellErrorText.Describe` donne le message Linux.
 | `HackHttpListener` | `Prefixes`, `StartAsync`, `GetContextAsync`, `StopAsync`, `Close` ; `HackHttpListenerContext` (`Request`, `Response`), `HackHttpListenerRequest` (`HttpMethod`, `Url`, `Headers`, `QueryString`, `Cookies`, `Body`, `ReadForm`, `RemoteEndPoint`), `HackHttpListenerResponse` (`StatusCode`, `ContentType`, `Headers`, `OutputStream`, `RedirectLocation`, `Close`) | [`listening-ports-and-dns.md`](listening-ports-and-dns.md) |
 | `HackIPGlobalProperties` | `GetActiveTcpListenersAsync` → `HackTcpListenerInfo`, `GetActiveTcpListenerEndPointsAsync` | [`listening-ports-and-dns.md`](listening-ports-and-dns.md) |
 | `HackWebSite`, `HackWebSiteFile`, `HackWebSiteDeclaration`, `HackWebSiteScope` (`.Net.Hosting`) | Fichiers `.site` des sites statiques : `SystemSitesDirectory`, `GetUserSitesDirectory`, `Parse`, `Validate`, `Serialize`, `TryParseBinding`, `ReadAllAsync` | [`static-sites.md`](../dev/static-sites.md), [`static-site-files.md`](static-site-files.md) |
-| `WebServerAppBase` (`HackerOs.AppSdk`) | `Urls`, `ProcessRequestAsync`, `OnListeningAsync` : base d'une app web (`AppKind.Web`) | [`listening-ports-and-dns.md`](listening-ports-and-dns.md) |
+| `WebServerAppBase` (`Kazo.Os.AppSdk`) | `Urls`, `ProcessRequestAsync`, `OnListeningAsync` : base d'une app web (`AppKind.Web`) | [`listening-ports-and-dns.md`](listening-ports-and-dns.md) |
 
 Capacités : `network.simulated.*` ; le repli sur le vrai réseau est décidé par
 l'OS et exige `network.real.access` ; écouter hors de ses `Urls` exige
 `network.listen` (et `network.listen.privileged` sous 1024).
 
-### Presse-papiers (`HackerOs.AppSdk.Clipboard`)
+### Presse-papiers (`Kazo.Os.AppSdk.Clipboard`)
 
 `HackClipboard` : `GetTextAsync`, `SetTextAsync`, `ContainsTextAsync`,
 `GetFileDropListAsync`, `SetFileDropListAsync` (copier ou couper des
@@ -281,7 +281,7 @@ fichiers), `ContainsFileDropListAsync`, `ClearAsync`, `Changed`. Capacités
 machine selon `/etc/hackeros/clipboard.config`. Voir [`file-explorer.md`](../dev/file-explorer.md)
 et [`clipboard.md`](../dev/clipboard.md), [`clipboard-api.md`](clipboard-api.md).
 
-### Accessibilité (`HackerOs.AppSdk.Accessibility`)
+### Accessibilité (`Kazo.Os.AppSdk.Accessibility`)
 
 `HackAccessibility` : `GetPreferencesAsync()` → `HackAccessibilityPreferences(HighContrast,
 TextScale, ReducedMotion)`, déjà résolues (`auto` suit l'hôte) ; `PreferencesChanged`. Aucune
@@ -290,20 +290,20 @@ capacité. `HackAccessibilityPreferences.Scale(pixels)` agrandit une taille en p
 qui est dessiné en HTML avec les jetons ; une app qui dessine elle-même (canvas, terminal, éditeur)
 les lit ici. Voir [`accessibility.md`](../dev/accessibility.md).
 
-### Nouveautés (`HackerOs.AppSdk.WhatsNew`)
+### Nouveautés (`Kazo.Os.AppSdk.WhatsNew`)
 
 | API | Membres | Capacité |
 |---|---|---|
 | `HackWhatsNew` | `IsSupported`, `IsSupportedFor(context)`, `GetAsync` → `HackChangeList(Groups, NewCount)` (`HackChangeGroup(Version, Since, Date, Entries)`, `HackChangeEntry(Id, Category, Title, Description, PullRequestUrl, Links, IsNew)`, `HackChangeCategory`), `MarkSeenAsync(ids)`, `WatchAsync` : liste des changements de l'OS dans la langue de l'app, et ce que l'utilisateur de la session a déjà vu (ADR 0186, [`change-list.md`](../dev/change-list.md)). Sans liste servie, la liste est vide. | aucune |
 
-### Composants intégrables (`HackerOs.AppSdk.Components`)
+### Composants intégrables (`Kazo.Os.AppSdk.Components`)
 
 | Type | Rôle | Document |
 |---|---|---|
 | `HackComponentContracts` | Noms des contrats : `Terminal` (`hackeros.terminal`) ; réservés à l'OS (ADR 0148 ; l'ADR 0156 ouvre les deux premiers à une app tierce choisie par un administrateur) : `FileView` (`hackeros.file-view`), `FileDialogs` (`hackeros.file-dialogs`), `ContextMenu` (`hackeros.context-menu`). | [`embedded-components.md`](embedded-components.md) |
 | `IHackTerminal`, `HackTerminalOptions`, `HackTerminalCommandResult`, `HackTerminalOutputEventArgs` | Piloter un terminal embarqué : `RunCommandAsync`, `SetWorkingDirectoryAsync`, `SendInputAsync`, `ReadOutput`, `ClearAsync`, `FocusAsync`, `WorkingDirectory`, `Title`, `IsRunning`, `IsBusy`, `OutputReceived`, `CommandCompleted`, `StateChanged`, `Exited`. | [`embedded-components.md`](embedded-components.md) |
 
-### Shell (`HackerOs.AppSdk.Shell` et `HackerOs.AppSdk`)
+### Shell (`Kazo.Os.AppSdk.Shell` et `Kazo.Os.AppSdk`)
 
 | API | Rôle | Capacité | Document |
 |---|---|---|---|
@@ -313,7 +313,7 @@ les lit ici. Voir [`accessibility.md`](../dev/accessibility.md).
 | `IFullScreenTerminalSession` (`TerminalExecutionContext.FullScreen`) | Écran alternatif : `Viewport`, `EnterAlternateScreenAsync`, `RenderAsync`, `ReadKeyAsync`, `LeaveAlternateScreenAsync` | — | [`terminal-emulator.md`](../dev/terminal-emulator.md), [`terminal-api.md`](terminal-api.md) |
 | `ShellErrorText` | Message court d'une erreur de fichier, pour une commande | — | [`app-sdk.md`](app-sdk.md) |
 
-### Administration (`HackerOs.AppSdk.Administration`)
+### Administration (`Kazo.Os.AppSdk.Administration`)
 
 | API | Membres | Capacité |
 |---|---|---|
@@ -350,9 +350,9 @@ Interfaces qu'un composant fenêtré peut implémenter :
 ## Sites web (ASP.Hack)
 
 Pour apprendre : [guide du développeur ASP.Hack](asp-hack-developer-guide.md),
-qui suit l'exemple `Apps/Samples/HackerOs.Samples.Intranet`.
+qui suit l'exemple `Apps/Samples/Kazo.Os.Samples.Intranet`.
 
-### Démarrage (`HackerOs.AppSdk.Web.Hosting`)
+### Démarrage (`Kazo.Os.AppSdk.Web.Hosting`)
 
 | Type | Membres | Document |
 |---|---|---|
@@ -407,15 +407,15 @@ scopé ni d'événement Blazor ; le CSS et le JavaScript viennent du `wwwroot`.
 | `HackWebDbStore<T>`, `HackWebDbIndex<T>` | `GetAsync`, `GetAllAsync`, `GetAllKeysAsync`, `CountAsync` ; magasin : `AddAsync`, `PutAsync`, `DeleteAsync`, `ClearAsync`, `Index(name)` |
 | `HackWebDbTransaction`, `HackWebDbTransactionStore<T>` | Lot d'écritures (`Add`, `Put`, `Delete`, `Clear`) envoyé par `CommitAsync`, tout ou rien |
 | `HackWebDbKey`, `HackWebDbKeyRange` | Clés (nombre, chaîne, `Array(...)`) et plages (`Only`, `LowerBound`, `UpperBound`, `Bound`) |
-| `HackWebDbException` (`HackerOs.AppSdk.WebData`) | `Name` d'une `DOMException` IndexedDB : `ConstraintError`, `NotFoundError`, `DataError`, `VersionError`… |
-| `HackWebDbInMemoryBackend` (`HackerOs.AppSdk.WebData`) | Passerelle en mémoire pour les tests |
+| `HackWebDbException` (`Kazo.Os.AppSdk.WebData`) | `Name` d'une `DOMException` IndexedDB : `ConstraintError`, `NotFoundError`, `DataError`, `VersionError`… |
+| `HackWebDbInMemoryBackend` (`Kazo.Os.AppSdk.WebData`) | Passerelle en mémoire pour les tests |
 | `HackWebLoggingOptions`, `IHackWebDebugLogSink`, `HackWebDebugLogMemorySink` | Journal de débogage `/var/log/hackweb/<appId>.log` ; récepteur de test |
 
 Guide : [`asp-hack-site-data.md`](asp-hack-site-data.md).
 
 ## Composants et services Blazor
 
-### Dialogues (`HackerOs.AppSdk.Blazor`)
+### Dialogues (`Kazo.Os.AppSdk.Blazor`)
 
 | Type | Champs |
 |---|---|
@@ -431,7 +431,7 @@ Guide : [`asp-hack-site-data.md`](asp-hack-site-data.md).
 `FileDialogStatus.Selected` indique un choix ; tout autre statut est une
 annulation.
 
-### Autres composants de `HackerOs.AppSdk.Blazor`
+### Autres composants de `Kazo.Os.AppSdk.Blazor`
 
 | Type | Rôle | Document |
 |---|---|---|
@@ -441,11 +441,11 @@ annulation.
 | `BrowserFilePicker` (`.Interop`) | `PickAsync(accept)` → `BrowserPickedFile(Name, Content)` ou `null` : ouvrir un fichier du vrai disque ; seulement juste après un clic ou une touche (sinon `InvalidOperationException`) | [`system-backup.md`](../dev/system-backup.md) |
 | `IDisplaySurfaceService`, `IDisplaySurface`, `DisplaySurfaceContent` (`.Display`) | Fenêtres détachées du navigateur hôte (ADR 0078) : `OpenAsync(DisplaySurfaceOptions)` → `DisplaySurfaceOpenResult` (`Opened`, `Blocked`, `Unavailable`), `Surfaces`, `SurfacesChanged`, `CloseAllAsync` ; surface `Id`, `Title`, `Width`, `Height`, `HasFocus`, `State`, `Changed`, `SetTitleAsync`, `FocusAsync`, `CloseAsync` ; `<DisplaySurfaceContent Surface="…">` y dessine son contenu (`Surface` facultatif : sans surface ouverte, le contenu reste en place) | [`detached-display-windows.md`](../dev/detached-display-windows.md), [`display-surface-api.md`](display-surface-api.md) |
 | `IAppWindowGateway` | Fenêtre d'une app vue par le SDK (SDK 1.1, ADR 0123) : `Title`, `DefaultTitle`, `SetTitleAsync`. Implémentée par la plateforme et donnée à `WindowAppBase` par valeur en cascade ; une app passe par `SetWindowTitleAsync` | [`window-model.md`](window-model.md) |
-| `HackContextMenu`, `HackMenuItem`, `HackMenuGroup`, `HackMenus` (`Menus`), `HackMenuBuilder`, `HackMenuDefinition`, `HackMenuOpeningEventArgs`, `IHackContextMenu`, `IHackMenuHost` (`.ContextMenus`) | Menu contextuel de l'OS (ADR 0150, ADR 0154) : déclaré dans le markup ou en C# (`Menus.Define`), attaché à n'importe quel élément (`@attributes="@(Menus.Attach(nom, objet))"`), ouvert depuis le code (`Menus.OpenAsync`) ; groupes, trois niveaux, `Opening` pour l'objet attaché ; dessiné par la plateforme. `Menus` existe sur `WindowAppBase` et `HackComponentBase`. Icônes : `HackIcons.Vector`/`FromImage` (`HackerOs.AppSdk.Icons`) | [`context-menu.md`](context-menu.md) |
-| `RegisterFileContextMenuAttribute`, `RegisterFileContextMenuContext` (`.Files`), `MenuSelection`, `HackFileMenuIntent` (`HackerOs.AppSdk.Files`), `HackFileMenuContext`, `HackMenuDefinition.FileMenu` | Entrées d'une app dans les menus des fichiers (ADR 0151, ADR 0159) : méthode statique `[RegisterFileContextMenu]` de la classe `[AppManifest]` qui appelle `Register(title, name, target, intent, icon, scope, types, selection, first, after, afterGroup, parent)`, exécutée au build ; capacité `shell.context-menu` ; la cible lit les chemins de l'intent par `HackFileMenuIntent.ReadPaths`. Un fournisseur du contrôle de fichiers pose `FileMenu` pour que l'OS ajoute ces entrées | [`context-menu.md`](context-menu.md#entrées-des-apps-dans-les-menus-des-fichiers-chantier-4) |
+| `HackContextMenu`, `HackMenuItem`, `HackMenuGroup`, `HackMenus` (`Menus`), `HackMenuBuilder`, `HackMenuDefinition`, `HackMenuOpeningEventArgs`, `IHackContextMenu`, `IHackMenuHost` (`.ContextMenus`) | Menu contextuel de l'OS (ADR 0150, ADR 0154) : déclaré dans le markup ou en C# (`Menus.Define`), attaché à n'importe quel élément (`@attributes="@(Menus.Attach(nom, objet))"`), ouvert depuis le code (`Menus.OpenAsync`) ; groupes, trois niveaux, `Opening` pour l'objet attaché ; dessiné par la plateforme. `Menus` existe sur `WindowAppBase` et `HackComponentBase`. Icônes : `HackIcons.Vector`/`FromImage` (`Kazo.Os.AppSdk.Icons`) | [`context-menu.md`](context-menu.md) |
+| `RegisterFileContextMenuAttribute`, `RegisterFileContextMenuContext` (`.Files`), `MenuSelection`, `HackFileMenuIntent` (`Kazo.Os.AppSdk.Files`), `HackFileMenuContext`, `HackMenuDefinition.FileMenu` | Entrées d'une app dans les menus des fichiers (ADR 0151, ADR 0159) : méthode statique `[RegisterFileContextMenu]` de la classe `[AppManifest]` qui appelle `Register(title, name, target, intent, icon, scope, types, selection, first, after, afterGroup, parent)`, exécutée au build ; capacité `shell.context-menu` ; la cible lit les chemins de l'intent par `HackFileMenuIntent.ReadPaths`. Un fournisseur du contrôle de fichiers pose `FileMenu` pour que l'OS ajoute ces entrées | [`context-menu.md`](context-menu.md#entrées-des-apps-dans-les-menus-des-fichiers-chantier-4) |
 | `HackEmbeddedComponent<TController>` (`.Components`) | Affiche le composant d'une autre app pour un contrat : `Contract`, `Options`, `Parameters`, `ControllerChanged`, `Unavailable` ; `HackEmbeddableComponent` est la base du composant fourni (`Options`, `ControllerReady`, `HostContext`, `UnmatchedParameters`) ; `HackContractComponent<TController>` est la base des composants typés (`AddProviderParameters`, `Controller`, `DefaultUnavailable`, ADR 0153, ADR 0154) | [`embedded-components.md`](embedded-components.md) |
 
-### Sites Blazor (`HackerOs.AppSdk.Web.Blazor.Sites`)
+### Sites Blazor (`Kazo.Os.AppSdk.Web.Blazor.Sites`)
 
 | Type | Rôle |
 |---|---|
@@ -458,7 +458,7 @@ annulation.
 
 Détails : [`blazor-sites.md`](blazor-sites.md).
 
-### Contrôle de fichiers de l'OS (`HackerOs.AppSdk.Blazor.Files`, ADR 0148, ADR 0155)
+### Contrôle de fichiers de l'OS (`Kazo.Os.AppSdk.Blazor.Files`, ADR 0148, ADR 0155)
 
 | Type | Rôle |
 |---|---|
@@ -467,19 +467,19 @@ Détails : [`blazor-sites.md`](blazor-sites.md).
 | `HackFileMenuOpeningEventArgs` | `Scope`, `Items`, `Directory`, `Menu` (`HackMenuDefinition`), `Cancel`. |
 | `HackFileDialogs` (`.Files`) | Noms des dialogues du fournisseur `hackeros.file-dialogs` : `OpenWith` (« Ouvrir avec »), `Properties`, `Conflict` (types de requêtes : `OpenWithDialogRequest`, `FilePropertiesDialogRequest`, `FileConflictDialogRequest`). |
 | `HackFileOperationDialogs.AsFileConflictResolver(IDialogService, IAppExecutionContext, CancellationToken)` (`.Files`) | Résolveur de conflit de `HackFileOperations.MoveAsync` et `TransferAsync` : le dialogue « Remplacer / Garder les deux / Ignorer » modal à la fenêtre de l'app ; fermer le dialogue ou un hôte sans fournisseur ignore l'élément. |
-| `FileMenuScope`, `HackFileMenuItems` (`HackerOs.AppSdk.Files`) | Portées (`File`, `Directory`, `Background`, `Desktop`) et identifiants des entrées (`open`, `open-with`, `open-with-other`, `open-with:<appId>`, `cut`, `copy`, `paste`, `paste-into`, `rename`, `delete`, `delete-permanently`, `new-folder`, `refresh`, `properties`…). |
+| `FileMenuScope`, `HackFileMenuItems` (`Kazo.Os.AppSdk.Files`) | Portées (`File`, `Directory`, `Background`, `Desktop`) et identifiants des entrées (`open`, `open-with`, `open-with-other`, `open-with:<appId>`, `cut`, `copy`, `paste`, `paste-into`, `rename`, `delete`, `delete-permanently`, `new-folder`, `refresh`, `properties`…). |
 
 Détails : [`embedded-components.md`](embedded-components.md#hackfileview-et-ihackfileview).
 
-### Vue de fichiers (`HackerOs.AppSdk.FileView`) : retirée
+### Vue de fichiers (`Kazo.Os.AppSdk.FileView`) : retirée
 
-Le paquet `HackerOs.AppSdk.FileView` a quitté le SDK à la 2.0 (ADR 0149,
+Le paquet `Kazo.Os.AppSdk.FileView` a quitté le SDK à la 2.0 (ADR 0149,
 ADR 0161) : son code est l'implémentation interne de l'explorateur de fichiers
-(`HackerOs.Apps.FileExplorer.FileControl`), qui fournit `HackFileView` aux
+(`Kazo.Os.Apps.FileExplorer.FileControl`), qui fournit `HackFileView` aux
 autres apps. `FileTransfer` est devenu `HackFileOperations`. Le tableau de
 migration d'une app 1.x est dans [`sdk-packages.md`](sdk-packages.md#sdk-20).
 
-### Terminal (`HackerOs.AppSdk.Terminal`)
+### Terminal (`Kazo.Os.AppSdk.Terminal`)
 
 | Composant | Paramètres | Document |
 |---|---|---|
@@ -493,7 +493,7 @@ migration d'une app 1.x est dans [`sdk-packages.md`](sdk-packages.md#sdk-20).
 | `HackerIcon` (`AppSdk.Icons`) | `Library` (`IconLibrary` : `Bootstrap`, `FontAwesome`, `Lucide`, `SimpleIcons`), `Name`, `Icon`, `Size`, `Title` ; voir [`old/icon-library.md`](../dev/old/icon-library.md). |
 | `VirtualKeyboard`, `VirtualKeyboardHost` (`AppSdk.VirtualKeyboard`) | `Options` (`VirtualKeyboardOptions` : rangées modificateurs, symboles, flèches, libellés), `OnKeyPressed` (`VirtualKeyPressedEvent`), `IsKeyboardVisible`, `ChildContent`. |
 
-## Thèmes (`HackerOs.Theming.Abstractions`)
+## Thèmes (`Kazo.Os.Theming.Abstractions`)
 
 Pour lire ou écrire un thème utilisateur (ADR 0103, détail dans
 [`theme-editor.md`](../dev/theme-editor.md)) :
@@ -509,7 +509,7 @@ Pour lire ou écrire un thème utilisateur (ADR 0103, détail dans
 | `UserThemeLibrary` | `SystemDirectory`, `GetUserDirectory(home)`, `GetUserThemePath(home, id)`, `Build`, `LoadAsync(listFiles, readFile, home)` |
 | `ResolvedTheme` | `Resolve(id, plateforme, thèmes)` → `BaseThemeId`, `UserTheme`, `IsFallback` |
 
-`ThemeScope` et `ThemePreview` (`HackerOs.Theming.Blazor`) prennent un
+`ThemeScope` et `ThemePreview` (`Kazo.Os.Theming.Blazor`) prennent un
 paramètre `Tokens` appliqué par-dessus le thème de base.
 `ThemeScope` prend aussi `HighContrast` et `TextScale` (ADR 0105) : attributs `data-contrast`
 (`high` ou `standard`) et `data-text-scale` (`100`, `125`, `150`, `200`), lus par `themes.css`.
@@ -536,5 +536,5 @@ paramètre `Tokens` appliqué par-dessus le thème de base.
 - [x] Titre de fenêtre : `WindowTitle`, `SetWindowTitleAsync`, `FormatWindowTitle`, `IAppWindowGateway` (`v3.1/3`, SDK 1.1, versé dans `PublicAPI.Shipped.txt` par `v3.1/4-sdk-1-1`).
 - [x] Tâches en arrière-plan : `HackBackground`, `HackBackgroundContext`, `IAppExecutionContext.Background`, `HackProcessKilledException.Reason`, analyseur `HOSBG` (`exec/5`, ADR 0128 et 0140).
 - [x] SDK 1.2 (ADR 0132) : `HackWireContextAttribute` (`exec/1`), limites de processus et `TooManyOpenFiles` (`exec/2`), `OomScoreAdjust`/`OomScoreAdj` et `OutOfMemory` (`exec/3`), `nice` (`exec/4`), versés dans `PublicAPI.Shipped.txt` par `exec/10-final`.
-- [x] SDK 2.0 (`desk/6-sdk-2`, ADR 0149, ADR 0161) : `HackerOs.AppSdk.FileView` retiré, `HackFileOperations`, contrôle de fichiers et menu contextuel de l'OS, versés dans `PublicAPI.Shipped.txt`.
+- [x] SDK 2.0 (`desk/6-sdk-2`, ADR 0149, ADR 0161) : `Kazo.Os.AppSdk.FileView` retiré, `HackFileOperations`, contrôle de fichiers et menu contextuel de l'OS, versés dans `PublicAPI.Shipped.txt`.
 - [x] Relecture finale de la migration v3 (`v3/16-final`) : renvoi vers les fichiers `PublicAPI.Shipped.txt`, liste exhaustive de la surface 1.0.

@@ -6,7 +6,7 @@
 
 Acceptée le 2026-10-31 ; Benoit a choisi les recommandations (voir
 « Questions posées à Benoit »). Issue
-[#298](https://github.com/Kazo-ca/HackerOs/issues/298), série `todo/base`
+[#298](https://github.com/Kazo-ca/Os/issues/298), série `todo/base`
 (branche `todo/24-set-as-wallpaper`).
 
 - **Complète :** [ADR 0202](0202-desktop-wallpaper-images.md) §6 (entrée
@@ -33,7 +33,7 @@ Acceptée le 2026-10-31 ; Benoit a choisi les recommandations (voir
 
 ### 1. Une petite app service déclarée par Paramètres
 
-Le projet `HackerOs.Apps.Settings` déclare une deuxième app,
+Le projet `Kazo.Os.Apps.Settings` déclare une deuxième app,
 `org.hackeros.settings.wallpaper` (« Wallpaper »), de type `Service`, cachée
 du lanceur (`LaunchVisibility.Hidden`), exécutée sur le fil principal (une
 tâche d'un instant par clic : un worker démarrerait un runtime .NET à chaque

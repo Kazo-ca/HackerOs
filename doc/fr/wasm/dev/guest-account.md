@@ -7,7 +7,7 @@
 Décrit le compte invité de Kazo OS : essayer l'OS sans créer de compte, puis
 créer son propre compte en gardant ou non le travail de l'invité. Décision :
 [ADR 0187](adr/0187-guest-start-and-sign-in-credits.md), partie A. Suivi :
-[issue #243](https://github.com/Kazo-ca/HackerOs/issues/243).
+[issue #243](https://github.com/Kazo-ca/Os/issues/243).
 
 ## Pour l'utilisateur
 

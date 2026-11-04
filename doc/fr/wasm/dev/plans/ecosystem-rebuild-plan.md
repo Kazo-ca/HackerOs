@@ -12,7 +12,7 @@ référence de direction pour l'écosystème. Ces deux documents restent dans
 
 ## 1. Objet
 
-Remettre l'écosystème de `wasm2/HackerOs` sur de bonnes bases. Le système
+Remettre l'écosystème de `wasm2/KazoOs` sur de bonnes bases. Le système
 actuel fonctionne, mais il est plus compliqué que le legacy TypeScript de `src/`
 sans être plus agréable à utiliser ni plus simple à étendre. Le but est double,
 et les deux volets comptent autant l'un que l'autre :
@@ -36,14 +36,14 @@ tâches, éditeur de texte). Les autres apps, le serveur et le mobile sont hors 
 
 ### 2.1 Ce qui est solide et qu'on garde
 
-- Le moteur de fichiers (`HackerOs.Simulation.Abstractions.FileSystem`,
+- Le moteur de fichiers (`Kazo.Os.Simulation.Abstractions.FileSystem`,
   `Platform.Core/FileSystem`) : chemins canoniques, identités d'entrées,
   révisions optimistes, transactions atomiques, liens symboliques,
   permissions owner/group/other, montages par chemin.
 - La persistance IndexedDB par blocs dédupliqués
-  (`Infrastructure/HackerOs.Infrastructure.Browser`).
-- Le fenêtrage et la barre des tâches (`HackerOs.Windowing.*`,
-  `HackerOs.Taskbar.Blazor`), le mobile, le thème.
+  (`Infrastructure/Kazo.Os.Infrastructure.Browser`).
+- Le fenêtrage et la barre des tâches (`Kazo.Os.Windowing.*`,
+  `Kazo.Os.Taskbar.Blazor`), le mobile, le thème.
 - Le gestionnaire de processus (arbre parent/enfants, kill en cascade), les
   événements, la messagerie par sujets, les notifications, le presse-papiers,
   la surveillance de fichiers, les sessions et `sudo`.
@@ -52,13 +52,13 @@ tâches, éditeur de texte). Les autres apps, le serveur et le mobile sont hors 
 
 | Sujet | Problème constaté | Référence |
 |---|---|---|
-| API fichier | Écrire une chaîne exige `CreateAsync` avec des bits de mode, puis `WriteAsync` avec la révision attendue, puis une classe `IFileSystemContentSource` maison. | `Apps/System/HackerOs.Apps.TextEditor/TextEditorWindow.razor` (≈ l. 364-460) |
+| API fichier | Écrire une chaîne exige `CreateAsync` avec des bits de mode, puis `WriteAsync` avec la révision attendue, puis une classe `IFileSystemContentSource` maison. | `Apps/System/Kazo.Os.Apps.TextEditor/TextEditorWindow.razor` (≈ l. 364-460) |
 | Manifeste | Défini deux fois : `app.manifest.json` et une copie C# `StaticManifest` (32 apps). | `Apps/**/app.manifest.json` |
-| Ajout d'une app | Un projet, plus trois entrées dans `HackerOs.Ecosystem.csproj` (`ProjectReference`, `BlazorWebAssemblyLazyLoad`, `EmbeddedResource`). | `OS/HackerOs.Ecosystem/HackerOs.Ecosystem.csproj`, `BuildKnownLazyApps.cs` |
-| Paramètres | Le montage `/etc/hackeros` n'est jamais branché dans l'OS réel : le routeur est créé avec le seul fournisseur IndexedDB. `SettingsFileSystemProvider` n'existe que dans les tests. Les paramètres vivent dans un magasin à part, et la sécurité vient du service de paramètres, pas des droits du fichier. | `OS/HackerOs.Ecosystem/EcosystemServiceCollectionExtensions.cs` (≈ l. 157) |
+| Ajout d'une app | Un projet, plus trois entrées dans `Kazo.Os.Ecosystem.csproj` (`ProjectReference`, `BlazorWebAssemblyLazyLoad`, `EmbeddedResource`). | `OS/Kazo.Os.Ecosystem/Kazo.Os.Ecosystem.csproj`, `BuildKnownLazyApps.cs` |
+| Paramètres | Le montage `/etc/hackeros` n'est jamais branché dans l'OS réel : le routeur est créé avec le seul fournisseur IndexedDB. `SettingsFileSystemProvider` n'existe que dans les tests. Les paramètres vivent dans un magasin à part, et la sécurité vient du service de paramètres, pas des droits du fichier. | `OS/Kazo.Os.Ecosystem/EcosystemServiceCollectionExtensions.cs` (≈ l. 157) |
 | Journaux | `/var/log` est créé mais reste vide. Les logs vont dans un magasin IndexedDB lu uniquement par Error Log Viewer. | `Platform.Core/Diagnostics/` |
-| Shell | Pas de pipes, de redirections, de `&&` ni de variables d'environnement. Le legacy avait les pipes et `env`. | `Shared/HackerOs.AppSdk.Terminal/ShellParser.cs`, `adr/0014-shell-grammar-boundary.md` |
-| Commandes | 28 projets, un par commande. `cd`, `pwd`, `clear` et `help` sont codées en dur dans le terminal. | `Apps/Commands/`, commentaire dans `HackerOs.Ecosystem.csproj` |
+| Shell | Pas de pipes, de redirections, de `&&` ni de variables d'environnement. Le legacy avait les pipes et `env`. | `Shared/Kazo.Os.AppSdk.Terminal/ShellParser.cs`, `adr/0014-shell-grammar-boundary.md` |
+| Commandes | 28 projets, un par commande. `cd`, `pwd`, `clear` et `help` sont codées en dur dans le terminal. | `Apps/Commands/`, commentaire dans `Kazo.Os.Ecosystem.csproj` |
 | Corbeille | Inexistante : toute suppression est définitive. | — |
 | Permissions | Toutes les capacités déclarées sont accordées automatiquement à la connexion, sans rien demander. | `Platform.Core/Policy/CleanProfileCapabilityGrantSeeder.cs` |
 | Apps système | Elles injectent des services internes (`ISessionService`, `AppCatalog`, `AppLifecycleOrchestrator`, `IJSRuntime`…). Un développeur externe ne peut pas écrire d'équivalent. | `Apps/System/*/*.razor` (`@inject`) |
@@ -66,7 +66,7 @@ tâches, éditeur de texte). Les autres apps, le serveur et le mobile sont hors 
 
 ## 3. Principes directeurs
 
-1. **Refonte sur place.** On travaille dans `wasm2/HackerOs`. On garde le
+1. **Refonte sur place.** On travaille dans `wasm2/KazoOs`. On garde le
    moteur de fichiers, IndexedDB et le fenêtrage, et on remplace les couches du
    dessus. On ne crée pas de nouveau dossier racine.
 2. **Tout est fichier.** Paramètres, journaux, processus et périphériques
@@ -122,7 +122,7 @@ Décisions prises avec Benoit pendant la discussion du 2026-10-10.
 
 ### 5.1 API `Hack*` de type System.IO
 
-Nouveau namespace public dans le SDK (proposé : `HackerOs.AppSdk.IO`), sans
+Nouveau namespace public dans le SDK (proposé : `Kazo.Os.AppSdk.IO`), sans
 dépendance à Blazor, utilisable par les apps fenêtre, terminal et service.
 
 **Types prévus**, calqués sur `System.IO` :
@@ -249,7 +249,7 @@ public sealed class TextEditorApp : AppDefinition
    conservé.
 4. **Une seule référence :** un fichier `.targets` partagé ajoute
    automatiquement `BlazorWebAssemblyLazyLoad` et la ressource embarquée pour
-   chaque app référencée. Les listes manuelles de `HackerOs.Ecosystem.csproj`
+   chaque app référencée. Les listes manuelles de `Kazo.Os.Ecosystem.csproj`
    et `BuildKnownLazyApps.cs` disparaissent.
 
 ### 6.3 Apps système et désinstallation
@@ -310,8 +310,8 @@ public sealed class TextEditorApp : AppDefinition
 
 ### 7.3 Commandes
 
-- Les 28 projets `Apps/Commands/HackerOs.Commands.*` sont fusionnés dans un seul
-  projet (nom proposé : `HackerOs.Commands`). Chaque commande garde sa classe
+- Les 28 projets `Apps/Commands/Kazo.Os.Commands.*` sont fusionnés dans un seul
+  projet (nom proposé : `Kazo.Os.Commands`). Chaque commande garde sa classe
   et sa déclaration `[AppManifest]`.
 - `cd`, `pwd`, `clear` et `help` deviennent des commandes normales du
   catalogue. Comme sous Linux, `cd` et `export` agissent sur le shell
@@ -342,7 +342,7 @@ public sealed class TextEditorApp : AppDefinition
   l'utilisateur courant, lecture du catalogue d'apps, démarrage et arrêt
   d'apps ou de services, téléchargement et envoi de fichiers navigateur.
 - Un test d'architecture fait échouer le build si un projet sous `Apps/`
-  référence `HackerOs.Platform.Core` ou `HackerOs.Platform.Blazor`.
+  référence `Kazo.Os.Platform.Core` ou `Kazo.Os.Platform.Blazor`.
 
 ### 8.2 Fonctionnalités cibles
 
@@ -458,7 +458,7 @@ l'ADR correspondant, avec la valeur proposée ci-dessous par défaut.
 - [x] Étendre le parseur : pipes, redirections, `&&`, variables (`rebuild/3-shell-interpreter`, ADR 0050 et 0054, [`shell-interpreter.md`](../shell-interpreter.md)).
 - [x] Ajouter répertoire courant et environnement par processus (`rebuild/3-process-environment`, ADR 0050 et 0053, [`process-environment.md`](../process-environment.md)).
 - [x] Fusionner les 28 projets de commandes et rendre `cd`, `pwd`, `clear`, `help` normales.
-  - [x] Fusion des 28 projets dans `HackerOs.Commands`, une seule `ProjectReference` dans l'hôte (`rebuild/3-commands-merge`, ADR 0051 §1, [`app-model.md`](../../framework/app-model.md#commandes-intégrées--un-seul-projet-adr-0051)).
+  - [x] Fusion des 28 projets dans `Kazo.Os.Commands`, une seule `ProjectReference` dans l'hôte (`rebuild/3-commands-merge`, ADR 0051 §1, [`app-model.md`](../../framework/app-model.md#commandes-intégrées--un-seul-projet-adr-0051)).
   - [x] `cd`, `pwd`, `clear`, `help`, `sudo`, `export`, `unset`, `env` du catalogue, `IShellSession` et `shell.control`, plus aucun nom codé en dur dans le terminal (`rebuild/3-shell-commands`, ADR 0051 §2-5, [`shell-commands.md`](../shell-commands.md)).
 - [x] Implémenter la corbeille et l'API `HackTrash` (`rebuild/3-trash`, ADR 0052, [`trash.md`](../trash.md)).
 

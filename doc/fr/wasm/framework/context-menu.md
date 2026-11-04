@@ -30,8 +30,8 @@ apps inscrivent : voir [Entrées des apps](#entrées-des-apps-dans-les-menus-des
 ### Dans le markup
 
 ```razor
-@using HackerOs.AppSdk.Blazor.ContextMenus
-@using HackerOs.AppSdk.Icons
+@using Kazo.Os.AppSdk.Blazor.ContextMenus
+@using Kazo.Os.AppSdk.Icons
 
 <HackContextMenu Name="rows" Opening="OnRowsMenuOpening">
     <HackMenuItem Id="open" Title="@L["Menu.Open"]" Icon="OpenIcon" OnClick="@(item => OpenAsync((Row)item!))" />
@@ -114,7 +114,7 @@ protected override void OnAppInitialized()
 `HackContextMenu.Controller` (`IHackContextMenu`) donne aussi `OpenAsync(objet, x, y)`
 et `Close()`.
 
-L'exemple complet est dans l'app d'exemple `HackerOs.Samples.WindowApp`
+L'exemple complet est dans l'app d'exemple `Kazo.Os.Samples.WindowApp`
 (section « Context Menu »).
 
 ## Modèle
@@ -126,7 +126,7 @@ L'exemple complet est dans l'app d'exemple `HackerOs.Samples.WindowApp`
 | `HackMenuItemDefinition` | Une entrée : `Id`, `Title` (déjà traduit), `Icon`, `IsDisabled`, `IsVisible`, `Shortcut` (texte seulement), `OnClick`, `Children` (sous-menu, groupes) |
 | `HackMenuBuilder` | Construction en C# : `Item`, `Submenu`, `Group` |
 | `HackMenuOpeningEventArgs` | `Menu` (copie de cette ouverture), `Item`, `Cancel` |
-| `HackIcons.Vector(bibliothèque, nom)`, `HackIcons.FromImage(chemin)` | Icône décrite (`HackIcon`), dessinée par l'OS (`HackerOs.AppSdk.Icons`) |
+| `HackIcons.Vector(bibliothèque, nom)`, `HackIcons.FromImage(chemin)` | Icône décrite (`HackIcon`), dessinée par l'OS (`Kazo.Os.AppSdk.Icons`) |
 | `HackMenus` | `Menus` d'un composant : `Attach`, `Define`, `OpenAsync`, `Close`, `IsAvailable` |
 | `IHackMenuHost` | Côté OS des menus d'une fenêtre (mis en œuvre par la plateforme, donné en cascade) |
 | `IHackContextMenu` | Contrôleur du contrat : `Name`, `OpenAsync`, `Close` |
@@ -261,9 +261,9 @@ La classe `[AppManifest]` de l'app demande la capacité `shell.context-menu` et
 déclare **une** méthode statique marquée `[RegisterFileContextMenu]` :
 
 ```csharp
-using HackerOs.AppSdk.Blazor.Files;
-using HackerOs.AppSdk.Files;
-using HackerOs.AppSdk.Icons;
+using Kazo.Os.AppSdk.Blazor.Files;
+using Kazo.Os.AppSdk.Files;
+using Kazo.Os.AppSdk.Icons;
 
 [AppManifest]
 public sealed class ZipperApp : AppDefinition
@@ -386,21 +386,21 @@ app système le fait par l'API publique `HackFileMenuEntries`
 
 ### Tests
 
-- `Tests/HackerOs.App.Abstractions.Tests/AppManifestContextMenusTests.cs` :
+- `Tests/Kazo.Os.App.Abstractions.Tests/AppManifestContextMenusTests.cs` :
   règles du validateur, forme canonique, aller-retour JSON.
-- `Tests/HackerOs.AppSdk.Blazor.Tests/RegisterFileContextMenuTests.cs` :
+- `Tests/Kazo.Os.AppSdk.Blazor.Tests/RegisterFileContextMenuTests.cs` :
   `Register`, charge utile, identifiants par défaut identiques dans le SDK et le
   validateur.
-- `Tests/HackerOs.Tools.ManifestGenerator.Tests/ContextMenuRegistrationTests.cs` :
+- `Tests/Kazo.Os.Tools.ManifestGenerator.Tests/ContextMenuRegistrationTests.cs` :
   titres par culture, `HOSAPP0026` à `HOSAPP0028`, déterminisme.
-- `Tests/HackerOs.Platform.Core.Tests/ContextMenus/FileContextMenuTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/ContextMenus/FileContextMenuTests.cs` :
   dossier `context-menus.d` (rang, réécriture, retrait, fichiers invalides),
   filtres, préférences, lancements, `HackFileMenuEntries`.
-- `Tests/HackerOs.Platform.Blazor.Tests/ContextMenus/FileMenuEntriesTests.cs` :
+- `Tests/Kazo.Os.Platform.Blazor.Tests/ContextMenus/FileMenuEntriesTests.cs` :
   placement, sous-menus vidés, clic, espace vide, service.
-- `Tests/HackerOs.Apps.Settings.Tests/FileMenuEntriesPanelTests.cs` : ordre de la
+- `Tests/Kazo.Os.Apps.Settings.Tests/FileMenuEntriesPanelTests.cs` : ordre de la
   liste.
-- `Tests/HackerOs.UI.E2E.Tests/FileMenuEntriesTests.cs` : « Extraire ici » après
+- `Tests/Kazo.Os.UI.E2E.Tests/FileMenuEntriesTests.cs` : « Extraire ici » après
   « Ouvrir » sur une archive téléversée, extraction, « Publier comme site
   web… » sur le dossier extrait.
 
@@ -416,17 +416,17 @@ app système le fait par l'API publique `HackFileMenuEntries`
 
 ## Tests
 
-- `Tests/HackerOs.AppSdk.Blazor.Tests/HackContextMenuTests.cs` : groupes
+- `Tests/Kazo.Os.AppSdk.Blazor.Tests/HackContextMenuTests.cs` : groupes
   implicites, quatrième niveau refusé, validation, copie, `Menus` hors fenêtre,
   `Define`, description du menu du markup au fournisseur, action dans le
   contexte de l'app, rien dessiné sans fournisseur.
-- `Tests/HackerOs.Platform.Blazor.Tests/ContextMenus/` : repli des séparateurs
+- `Tests/Kazo.Os.Platform.Blazor.Tests/ContextMenus/` : repli des séparateurs
   (exemple « Ouvrir avec » du plan), sous-menus vides, clavier et survol,
   jetons (même objet, valeurs, libération), menus en double, `Opening` sur une
   copie, menus annulés ou cassés, un seul menu ouvert dans l'OS, action dans le
   contexte de l'app après la fermeture, fournisseur de la plateforme de bout en
   bout.
-- `Tests/HackerOs.Ecosystem.Tests` : le conteneur de services résout le contrat
+- `Tests/Kazo.Os.Ecosystem.Tests` : le conteneur de services résout le contrat
   vers `PlatformContextMenu` sans charger d'app.
 
 ## Tâches (chantier 2)
@@ -441,5 +441,5 @@ app système le fait par l'API publique `HackFileMenuEntries`
 - [x] Rendu natif multi-niveaux (bureau) et feuille du bas (mobile), thème de l'OS, ARIA.
 - [x] Script : clic droit, appui long, Touche Menu, Maj+F10, placement à l'écran, fermeture, focus rendu, jetons libérés.
 - [x] Clavier (`ContextMenuNavigator`).
-- [x] Exemple dans `HackerOs.Samples.WindowApp`.
+- [x] Exemple dans `Kazo.Os.Samples.WindowApp`.
 - [x] Tests, ADR 0154, index des documents.

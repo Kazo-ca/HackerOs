@@ -4,13 +4,13 @@
 
 ## Purpose
 
-`HackerOs.Ecosystem` is the standalone .NET 10 Blazor WebAssembly PWA that will
+`Kazo.Os.Ecosystem` is the standalone .NET 10 Blazor WebAssembly PWA that will
 compose the local HackerOS platform. The host remains a thin composition and boot
 boundary; domain behavior belongs to Platform, Infrastructure, or app projects.
 
 ## Architecture
 
-The project lives under `OS/HackerOs.Ecosystem` and uses the
+The project lives under `OS/Kazo.Os.Ecosystem` and uses the
 `Microsoft.NET.Sdk.BlazorWebAssembly` SDK. It currently contains only a minimal
 boot-critical Razor surface, scoped component styling, a web app manifest, and
 the development/published service-worker pair generated for a standalone PWA.
@@ -45,10 +45,10 @@ back to the bounded in-memory sink without replacing the original correlation.
 Build the host directly:
 
 ```powershell
-dotnet build OS/HackerOs.Ecosystem/HackerOs.Ecosystem.csproj
+dotnet build OS/Kazo.Os.Ecosystem/Kazo.Os.Ecosystem.csproj
 ```
 
-The project is also included in `HackerOs.sln` under the logical `OS` solution
+The project is also included in `Kazo.Os.sln` under the logical `OS` solution
 folder.
 
 ## Key Decisions

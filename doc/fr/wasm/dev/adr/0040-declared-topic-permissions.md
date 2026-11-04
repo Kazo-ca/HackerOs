@@ -9,11 +9,11 @@ Accepted on 2026-08-17.
 ## Context
 
 [ADR 0038](0038-emitter-authorized-topic-messaging.md) accepted emitter-authorized topic messaging and
-[`InMemoryTopicMessageBus`](../../../../../wasm2/HackerOs/Platform/HackerOs.Platform.Core/Events/InMemoryTopicMessageBus.cs)
+[`InMemoryTopicMessageBus`](../../../../../wasm2/KazoOs/Platform/Kazo.Os.Platform.Core/Events/InMemoryTopicMessageBus.cs)
 (`MSG-001`–`MSG-005`) implements it: an app-owned topic namespace, plus shared channels whose
 `SharedChannelPolicy` could require a fixed, curated `AppCapabilities` identifier to publish or
 subscribe. Two needs surfaced immediately once real inter-app messaging was considered, using
-`HackerOs.Apps.FileExplorer` accepting a "change directory" command from another app as the concrete
+`Kazo.Os.Apps.FileExplorer` accepting a "change directory" command from another app as the concrete
 example (the "`SendMessage` in `user32.dll`" analogy — a general-purpose way for one app to address a
 command at another running app instance, not a filesystem-watch-specific mechanism):
 
@@ -82,7 +82,7 @@ public static class FileExplorerWindow
 // Caller: FileExplorerWindow.Messages.SendChangeDirectory(context.Events, explorerPid, "/etc/someDir");
 ```
 
-This ADR documents the convention; adopting it in the real `HackerOs.Apps.FileExplorer` is deferred to
+This ADR documents the convention; adopting it in the real `Kazo.Os.Apps.FileExplorer` is deferred to
 Phase 4 of [`integrationPlan.md`](../old/Global-FileView-And-MessagingSystem/integrationPlan.md), once it
 hosts `FileView`.
 
@@ -118,7 +118,7 @@ guarantee over that catalog is untouched:
   `topic-subscribe:app/{appId}/{segment}[/{segment}...]`, produced only via
   `TopicName.ToPublishPermission()`/`.ToSubscribePermission()` extension methods — never hand-typed,
   matching the same discipline as `TopicName` itself.
-- **`TopicPermissions`** (`Shared/HackerOs.App.Abstractions/TopicPermissions.cs`, **implemented**):
+- **`TopicPermissions`** (`Shared/Kazo.Os.App.Abstractions/TopicPermissions.cs`, **implemented**):
   `IsWellFormed(string)`/`IsOwnedByApp(string, string)` — pure syntax validation, no dependency on
   `Simulation.Abstractions` or the app catalog, so it can be referenced from the lower-layer
   `AppManifestValidator` and `CapabilityGrant` without a circular project reference.
@@ -146,7 +146,7 @@ guarantee over that catalog is untouched:
   capability, CapabilityGrantSource.UserApproval | AdministratorApproval, actingAuthority, constraints)`.
   Per the explicit decision above, there is no `CapabilityGrantSource.AppDeclaredConsent` auto-grant path;
   a topic permission is approved exactly like a filesystem or network capability.
-- **JSON manifest schema**: `Shared/HackerOs.App.Abstractions/Schema/manifest.schema.v1.json` gained a
+- **JSON manifest schema**: `Shared/Kazo.Os.App.Abstractions/Schema/manifest.schema.v1.json` gained a
   `declaredTopicPermissions` array property (**implemented**), matching the regex grammar above; the
   canonical serialization fixture was updated to match.
 
@@ -164,7 +164,7 @@ exists only at `Grant()`/manifest-validation time). A `SharedChannelPolicy` buil
 - A future Settings/Permissions UI (not built by this ADR) is the natural consumer of
   `DeclaredTopicPermissions.Description` when presenting an approval prompt; until then, an administrator
   grants a topic permission the same way as any other capability, using the raw identifier.
-- `HackerOs.Apps.FileExplorer` does not yet declare or use any topic permission or the `Topics`/`Messages`
+- `Kazo.Os.Apps.FileExplorer` does not yet declare or use any topic permission or the `Topics`/`Messages`
   convention — this ADR specifies the pattern; adopting it is Phase 4 work in `integrationPlan.md`, once
   `FileExplorerWindow` hosts `FileView` and has a concrete command (e.g. `ChangeDirectory`) worth
   exposing to other apps.
@@ -181,6 +181,6 @@ exists only at `Grant()`/manifest-validation time). A `SharedChannelPolicy` buil
 - ADR 0003: Exact Capability Matching — the fixed-catalog invariant this ADR deliberately does not alter.
 - [`../Global-FileView-And-MessagingSystem/MessagingSystem.md`](../old/Global-FileView-And-MessagingSystem/MessagingSystem.md) —
   updated with the tri-state `SharedChannelPolicy` and Declared Topic Permissions sections.
-- `Shared/HackerOs.App.Abstractions/TopicPermissions.cs`,
-  `Shared/HackerOs.Simulation.Abstractions/Events/TopicMessagingContracts.cs` (`TopicPermissionNames`),
-  `Platform/HackerOs.Platform.Core/Events/InMemoryTopicMessageBus.cs`.
+- `Shared/Kazo.Os.App.Abstractions/TopicPermissions.cs`,
+  `Shared/Kazo.Os.Simulation.Abstractions/Events/TopicMessagingContracts.cs` (`TopicPermissionNames`),
+  `Platform/Kazo.Os.Platform.Core/Events/InMemoryTopicMessageBus.cs`.

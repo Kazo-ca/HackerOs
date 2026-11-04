@@ -59,5 +59,5 @@ Everywhere that ADR 0055 and the work item table of ADR 0058 write
 ## References
 
 - ADR 0047 (codes `HOSAPP0001` to `HOSAPP0099`), ADR 0055, ADR 0058.
-- `Tools/HackerOs.Tools.ManifestGenerator/GeneratorDiagnostic.cs`,
-  `build/HackerOs.Apps.targets`.
+- `Tools/Kazo.Os.Tools.ManifestGenerator/GeneratorDiagnostic.cs`,
+  `build/Kazo.Os.Apps.targets`.

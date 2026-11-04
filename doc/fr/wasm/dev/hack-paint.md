@@ -2,7 +2,7 @@
 
 # Hack Paint
 
-App de dessin `org.hackeros.hack-paint` (`Apps/System/HackerOs.Apps.HackPaint`,
+App de dessin `org.hackeros.hack-paint` (`Apps/System/Kazo.Os.Apps.HackPaint`,
 désinstallable). Chantier `v3/11-apps`,
 [ADR 0103](adr/0103-hack-paint-image-files-and-theme-editor.md) §1 : les images
 vivent dans les fichiers de l'OS.
@@ -90,6 +90,6 @@ que des codes d'erreur. Le titre garde le nom de produit « Hack Paint » ; seul
 - [x] Titre posé dans la fenêtre par le SDK 1.1 (chantier `v3.1/3-window-title`, E2E
   `HackPaintWindowTitleTests`).
 - [x] `FileHandlers` et association par défaut `edit` des images.
-- [x] Tests (`HackerOs.Apps.HackPaint.Tests`) : en-têtes des cinq formats,
+- [x] Tests (`Kazo.Os.Apps.HackPaint.Tests`) : en-têtes des cinq formats,
   fichiers tronqués, limites, format d'enregistrement, suivi des changements, titre.
 - [ ] Scans axe : chantier `v3/13`.

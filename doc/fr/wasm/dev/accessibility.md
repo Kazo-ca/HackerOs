@@ -87,7 +87,7 @@ Chacune lit `AppContext.Accessibility` à l'ouverture et suit `Changed`.
 ## API
 
 ```csharp
-using HackerOs.AppSdk.Accessibility;
+using Kazo.Os.AppSdk.Accessibility;
 
 HackAccessibilityPreferences a11y = await HackAccessibility.GetPreferencesAsync();
 int fontSize = a11y.Scale(14);                 // 28 à 200 %
@@ -102,7 +102,7 @@ Aucune capacité. Sans service (tests, processus d'un Web Worker), les valeurs p
 - Unitaires : `AccessibilityPreferenceServiceTests` (Platform.Core : règles de `auto`, couches,
   valeur invalide, hôte, `animationsEnabled`), `HackAccessibilityTests` (AppSdk),
   `ThemeComponentRenderTests` (attributs de `ThemeScope`).
-- E2E (`Tests/HackerOs.UI.E2E.Tests/AccessibilityPreferencesTests.cs`, voir
+- E2E (`Tests/Kazo.Os.UI.E2E.Tests/AccessibilityPreferencesTests.cs`, voir
   [`building-and-testing.md`](building-and-testing.md)) :
   - scans axe du Terminal, du navigateur, de la calculatrice, du moniteur système, de Theme
     Editor, de Paramètres > Sauvegarde et de Paramètres > Accessibilité, avec et sans contraste

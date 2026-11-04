@@ -21,7 +21,7 @@ Accepted on 2026-10-10.
 An app's manifest currently exists in two copies: a hand-written
 `app.manifest.json` and, for some of the apps, a C# copy
 `StaticManifest` (commands, examples). Installing an app in the host takes
-three lines in `OS/HackerOs.Ecosystem/HackerOs.Ecosystem.csproj`: a
+three lines in `OS/Kazo.Os.Ecosystem/Kazo.Os.Ecosystem.csproj`: a
 `ProjectReference`, a `BlazorWebAssemblyLazyLoad` and an `EmbeddedResource` that
 renames the JSON. `BuildKnownLazyApps.cs` then re-reads these resources by name
 prefix. Forgetting one of the three lines gives an app that is invisible or impossible to
@@ -33,8 +33,8 @@ The plan wants a single source, in C#, and a single line in the host (D6 to D8).
 
 ### 1. `AppDefinition` and `[AppManifest]`
 
-Project `Shared/HackerOs.App.Abstractions` (already referenced by all apps, with no
-Blazor dependency), folder `Definition/`, namespace **`HackerOs.App.Abstractions`**.
+Project `Shared/Kazo.Os.App.Abstractions` (already referenced by all apps, with no
+Blazor dependency), folder `Definition/`, namespace **`Kazo.Os.App.Abstractions`**.
 
 ```csharp
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
@@ -87,7 +87,7 @@ public sealed record TerminalCommand(
 - A non-null `MobileEntryPoint` produces the multi-platform `platform` form of the
   manifest; otherwise, the `entryPoint` form (desktop only), as today.
 - `sdkCompatibility.minimumVersion` is not a property: the generator
-  writes it from the version of `HackerOs.App.Abstractions` used at
+  writes it from the version of `Kazo.Os.App.Abstractions` used at
   compile time (`major.minor.0`).
 - `AppDefinitionMapper.ToManifest(AppDefinition)` (same folder) converts a
   definition into an `AppManifest`. `EntryPoint` becomes
@@ -129,8 +129,8 @@ public sealed class TextEditorApp : AppDefinition
 
 ### 2. Generating `manifest.json` in each app project (D7)
 
-**Tool:** `Tools/HackerOs.Tools.ManifestGenerator`, which replaces and absorbs
-`Tools/HackerOs.Tools.ManifestValidator`. It is a .NET executable that depends on the
+**Tool:** `Tools/Kazo.Os.Tools.ManifestGenerator`, which replaces and absorbs
+`Tools/Kazo.Os.Tools.ManifestValidator`. It is a .NET executable that depends on the
 `Microsoft.AspNetCore.App` shared framework, so that it can load the Blazor
 types of the entry points.
 
@@ -141,7 +141,7 @@ and cannot load a `net10.0` assembly. An `Exec` works the same on the
 command line and in the IDE.
 
 **MSBuild target:** `GenerateHackerOsAppManifests`, in
-`build/HackerOs.Apps.targets`, imported by `Directory.Build.targets`.
+`build/Kazo.Os.Apps.targets`, imported by `Directory.Build.targets`.
 
 - It runs after `CopyFilesToOutputDirectory` when
   `$(HackerOsAppProject)` is `true`. This property is `true` by default for
@@ -180,7 +180,7 @@ the list of manifests produced and the name of its assembly. It is used by the h
 ### 3. Aggregation in the host: `BuiltInApplications.json` (D7, D8)
 
 A host project declares itself with `<HackerOsAppHost>true</HackerOsAppHost>`. Only
-`OS/HackerOs.Ecosystem` does so today. `test/test` reuses the compiled
+`OS/Kazo.Os.Ecosystem` does so today. `test/test` reuses the compiled
 Ecosystem catalog (`BuildKnownLazyApps.Catalog`) and does not aggregate itself.
 
 Target `CollectHackerOsBuiltInApplications` (same `.targets` file), after
@@ -195,7 +195,7 @@ Target `CollectHackerOsBuiltInApplications` (same `.targets` file), after
    missing or cyclic dependencies = build error) and writes
    `$(IntermediateOutputPath)BuiltInApplications.json`;
 4. adds this file as an `EmbeddedResource` with the logical name
-   `HackerOs.BuiltInApplications.json`;
+   `Kazo.Os.BuiltInApplications.json`;
 5. adds a `BlazorWebAssemblyLazyLoad` for each app's assembly, before the
    Blazor targets that consume this item. The right anchor target is verified
    by a `dotnet publish` of the Ecosystem in the work item that implements it.
@@ -212,16 +212,16 @@ app store (an app installed at runtime will always have `isSystemApp: false`).
 
 ### 4. A single line in the host (D8)
 
-Installing an app = one `ProjectReference` in `HackerOs.Ecosystem.csproj`. The
+Installing an app = one `ProjectReference` in `Kazo.Os.Ecosystem.csproj`. The
 `BlazorWebAssemblyLazyLoad` and `EmbeddedResource` lists in the `.csproj` are
 removed, as is the `Content Update="app.manifest.json"` rule in
 `Directory.Build.targets`.
 
 ### 5. Reading at startup
 
-`BuildKnownLazyApps` reads the `HackerOs.BuiltInApplications.json` resource with a
+`BuildKnownLazyApps` reads the `Kazo.Os.BuiltInApplications.json` resource with a
 strict deserializer (`BuiltInApplicationsJsonSerializer`, next to
-`AppManifestJsonSerializer`) instead of the `HackerOs.Ecosystem.Manifests.*` resources.
+`AppManifestJsonSerializer`) instead of the `Kazo.Os.Ecosystem.Manifests.*` resources.
 It exposes the catalog as today, plus the `IsSystemApp` information per
 app (ADR 0048). App DLLs are still only loaded on first launch:
 `AppDefinition` classes are **never** instantiated at runtime, only the JSON
@@ -237,7 +237,7 @@ is read.
 - Then `app.manifest.json` and the `StaticManifest` fields are deleted. Commands
   and examples that built their manifest in C# get it through
   `AppDefinitionMapper.ToManifest(new XxxApp())`, including in tests.
-- The `HackerOs.Commands.Cd/Pwd/Clear/Help` projects also receive their class,
+- The `Kazo.Os.Commands.Cd/Pwd/Clear/Help` projects also receive their class,
   but remain unreferenced by the host until phase 3 (ADR 0034).
 
 ### 7. Contract tests
@@ -273,7 +273,7 @@ is read.
 | Branch | Content | Depends on |
 |---|---|---|
 | `rebuild/2-app-definition` | `AppDefinition`, `[AppManifest]`, `FileHandler`, `TerminalCommand`, `AppDefinitionMapper`, mapper tests. | n/a |
-| `rebuild/2-manifest-generator` | `Tools/HackerOs.Tools.ManifestGenerator` (`generate`, `aggregate`), `build/HackerOs.Apps.targets`, targets `GenerateHackerOsAppManifests` and `GetHackerOsAppManifests`, `HOSAPP*` errors, test projects. | `2-app-definition` |
+| `rebuild/2-manifest-generator` | `Tools/Kazo.Os.Tools.ManifestGenerator` (`generate`, `aggregate`), `build/Kazo.Os.Apps.targets`, targets `GenerateHackerOsAppManifests` and `GetHackerOsAppManifests`, `HOSAPP*` errors, test projects. | `2-app-definition` |
 | `rebuild/2-builtin-applications` | Target `CollectHackerOsBuiltInApplications`, `BuiltInApplications.json`, automatic lazy load, `BuildKnownLazyApps` reads the new file, `IsSystemApp` metadata carried over. | `2-manifest-generator` |
 | `rebuild/2-app-migration` | `[AppManifest]` classes for the 44 app projects (12 apps, 28 commands, 4 examples), equality test against the old JSON, deletion of `app.manifest.json`, `StaticManifest` and the host's manual lists. | `2-builtin-applications` |
 
@@ -282,4 +282,4 @@ is read.
 - ADR 0002 (authority), ADR 0010 (partially replaced), ADR 0034 (commands not
   wired), ADR 0044 (settings schema), ADR 0048 (system apps).
 - [`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md), sections 6.1 and 6.2.
-- `OS/HackerOs.Ecosystem/BuildKnownLazyApps.cs`, `HackerOs.Ecosystem.csproj`.
+- `OS/Kazo.Os.Ecosystem/BuildKnownLazyApps.cs`, `Kazo.Os.Ecosystem.csproj`.

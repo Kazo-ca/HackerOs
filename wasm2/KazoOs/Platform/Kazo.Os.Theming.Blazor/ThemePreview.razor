@@ -1,0 +1,45 @@
+@namespace Kazo.Os.Theming.Blazor
+
+<article @ref="_root"
+         class="theme-preview"
+         data-theme="@RenderState.Theme.Id"
+         data-form-factor="@RenderState.FormFactorId"
+         data-accent="@RenderState.AccentId"
+         data-motion="@RenderState.MotionId"
+         role="img"
+         aria-label="@L["ThemePreview.Label", Title ?? RenderState.Theme.DisplayName]">
+    <div class="preview-canvas @(RenderState.Theme.Platform == ThemePlatform.Mobile ? "is-mobile" : "is-desktop")">
+        <div class="preview-window">
+            <header class="preview-titlebar">
+                <span class="preview-title">@(Title ?? RenderState.Theme.DisplayName)</span>
+                <span class="preview-controls" aria-hidden="true">
+                    <span class="preview-control preview-minimize"></span>
+                    <span class="preview-control preview-maximize"></span>
+                    <span class="preview-control preview-close"></span>
+                </span>
+            </header>
+            <div class="preview-content">
+                <span class="preview-navigation"></span>
+                <span class="preview-copy preview-copy-wide"></span>
+                <span class="preview-copy"></span>
+                <span class="preview-action"></span>
+            </div>
+        </div>
+        @if (RenderState.Theme.Platform == ThemePlatform.Mobile)
+        {
+            <footer class="preview-mobile-navigation" aria-hidden="true">
+                <span class="preview-mobile-back"></span>
+                <span class="preview-mobile-home"></span>
+                <span class="preview-mobile-recent"></span>
+            </footer>
+        }
+        else
+        {
+            <footer class="preview-taskbar" aria-hidden="true">
+                <span class="preview-launcher"></span>
+                <span class="preview-task"></span>
+                <span class="preview-tray"></span>
+            </footer>
+        }
+    </div>
+</article>

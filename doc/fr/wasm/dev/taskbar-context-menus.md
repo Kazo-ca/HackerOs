@@ -2,7 +2,7 @@
 
 # Menus contextuels de la barre des tâches
 
-Chantier 4 de la série barre des tâches (issue [#242](https://github.com/Kazo-ca/HackerOs/issues/242)),
+Chantier 4 de la série barre des tâches (issue [#242](https://github.com/Kazo-ca/Os/issues/242)),
 mise en œuvre de l'[ADR 0194](adr/0194-taskbar-context-menus.md). Il s'appuie sur le menu
 contextuel de l'OS ([ADR 0150](adr/0150-os-context-menu.md)), le menu de fenêtre et « Autre écran ▸ »
 ([`other-screen-menus.md`](other-screen-menus.md)) et les barres par écran
@@ -33,7 +33,7 @@ Les entrées qui n'ont rien à faire sont désactivées.
 
 | Élément | Rôle |
 | --- | --- |
-| `ITaskbarContextMenus` (paquet `HackerOs.Taskbar.Blazor`) | Donne les attributs HTML de la barre (`TaskbarAttributes`) et du bouton de chaque fenêtre (`WindowItemAttributes(id)`). Le paramètre `Taskbar.ContextMenus` les pose avec `@attributes`. Sans lui, rien ne change. |
+| `ITaskbarContextMenus` (paquet `Kazo.Os.Taskbar.Blazor`) | Donne les attributs HTML de la barre (`TaskbarAttributes`) et du bouton de chaque fenêtre (`WindowItemAttributes(id)`). Le paramètre `Taskbar.ContextMenus` les pose avec `@attributes`. Sans lui, rien ne change. |
 | `TaskbarContextMenus` (`Platform.Blazor/Shell`) | Crée une portée du menu de l'OS et y enregistre `taskbar-window-menu` (objet attaché : la fenêtre et l'écran de la barre) et `taskbar-menu` (objet attaché : l'écran). Le menu est rempli à l'ouverture (`Opening`). `For(display)` donne l'objet de chaque barre. |
 | `WindowMenuDefinitions` (`Platform.Blazor/Windows`) | Construit les entrées du menu de fenêtre et « Autre écran ▸ », pour la barre de titre (`WindowManagerOverlays`) et pour la barre des tâches. |
 | `WindowArrangement` (`Platform.Blazor/Windows`) | `ShowDesktop`, `Cascade`, `Tile` et `ArrangeableWindows` sur un `WindowRuntime` et un écran. |
@@ -61,10 +61,10 @@ déplaçable) reste en place.
 
 ## 4. Tests
 
-- `Tests/HackerOs.Taskbar.Blazor.Tests/TaskbarContextMenusTests.cs` : attributs posés sur la barre
+- `Tests/Kazo.Os.Taskbar.Blazor.Tests/TaskbarContextMenusTests.cs` : attributs posés sur la barre
   et les boutons, aucun sans hôte.
-- `Tests/HackerOs.Platform.Blazor.Tests/Shell/TaskbarContextMenusTests.cs` : entrées et état des
+- `Tests/Kazo.Os.Platform.Blazor.Tests/Shell/TaskbarContextMenusTests.cs` : entrées et état des
   deux menus, lancements sur l'écran de la barre, entrées désactivées.
-- `Tests/HackerOs.Platform.Blazor.Tests/WindowArrangementTests.cs` : afficher le bureau, cascade,
+- `Tests/Kazo.Os.Platform.Blazor.Tests/WindowArrangementTests.cs` : afficher le bureau, cascade,
   mosaïque, fenêtres agrandies, ancrées, fixes, minimisées et boîtes de dialogue.
 - `WindowMenuContextMenuTests` garde le menu de la barre de titre identique.

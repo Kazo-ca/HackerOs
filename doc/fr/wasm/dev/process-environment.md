@@ -22,18 +22,18 @@ modifient avec `HackEnvironment`, calqué sur `System.Environment`.
 
 | Élément | Emplacement | Rôle |
 |---|---|---|
-| `IProcessEnvironmentTable`, `ProcessEnvironmentSnapshot`, `ProcessEnvironmentRules` | `Shared/HackerOs.Simulation.Abstractions/Processes/ProcessEnvironmentContracts.cs` | Table par PID : lecture (instantané copié), changement du répertoire et des variables d'un PID, règles de nom (non vide, sans `=` ni NUL) et de valeur (sans NUL). |
+| `IProcessEnvironmentTable`, `ProcessEnvironmentSnapshot`, `ProcessEnvironmentRules` | `Shared/Kazo.Os.Simulation.Abstractions/Processes/ProcessEnvironmentContracts.cs` | Table par PID : lecture (instantané copié), changement du répertoire et des variables d'un PID, règles de nom (non vide, sans `=` ni NUL) et de valeur (sans NUL). |
 | `ProcessStartRequest.Arguments`, `WorkingDirectory`, `Environment` | `ProcessManagerContracts.cs` | Valeurs demandées à la création. |
-| `InMemoryProcessEnvironmentTable` | `Platform/HackerOs.Platform.Core/Processes/` | Implémentation. `Create` (copie du parent puis valeurs de la requête) et `Remove` sont internes : seul le gestionnaire de processus les appelle. |
+| `InMemoryProcessEnvironmentTable` | `Platform/Kazo.Os.Platform.Core/Processes/` | Implémentation. `Create` (copie du parent puis valeurs de la requête) et `Remove` sont internes : seul le gestionnaire de processus les appelle. |
 | `InMemoryProcessManager.Environments` | idem | Remplit l'entrée dans `Start`, la vide à toute fin (`Complete`, `Fault`, `Kill`, descendants tués, délai dépassé). |
 | `LoginEnvironment`, `LoginEnvironmentProvider` | `Processes/LoginEnvironment.cs` | Règles de l'environnement de connexion et de `/etc/hostname` ; lecture une fois par session (ADR 0053). |
 | `AppLaunchRequest.Environment` | `Lifecycle/AppLaunchContracts.cs` | Variables ajoutées par l'appelant. |
 | `AppLifecycleOrchestrator` | `Lifecycle/` | Calcule `argv` (`Terminal.Name` du manifeste, sinon l'identifiant d'app, puis les arguments) et l'état de départ (ci-dessous). |
-| `IAppEnvironmentGateway` | `Shared/HackerOs.Simulation.Abstractions/Gateways/AppEnvironmentGatewayContracts.cs` | Vue d'une app sur **son** processus. Aucune capacité requise. |
-| `AppEnvironmentGateway` | `Platform/HackerOs.Platform.Core/Execution/` | Passerelle liée au PID de l'app ; `DetachedAppEnvironmentGateway` quand il n'y a pas de table (tests). |
-| `IAppExecutionContext.Environment` | `Shared/HackerOs.AppSdk/IAppExecutionContext.cs` | Membre par défaut détaché (dossier personnel, `HOME`), remplacé par la fabrique de confiance. |
-| `HackEnvironment` | `Shared/HackerOs.AppSdk/HackEnvironment.cs` | Façade statique du SDK. |
-| `HackExecutionContext.WorkingDirectory` | `Shared/HackerOs.AppSdk/HackExecutionContext.cs` | Lit le répertoire du processus, sauf si `Enter(context, dir)` en a fixé un et qu'aucun `SetCurrentDirectoryAsync` ne l'a remplacé depuis. |
+| `IAppEnvironmentGateway` | `Shared/Kazo.Os.Simulation.Abstractions/Gateways/AppEnvironmentGatewayContracts.cs` | Vue d'une app sur **son** processus. Aucune capacité requise. |
+| `AppEnvironmentGateway` | `Platform/Kazo.Os.Platform.Core/Execution/` | Passerelle liée au PID de l'app ; `DetachedAppEnvironmentGateway` quand il n'y a pas de table (tests). |
+| `IAppExecutionContext.Environment` | `Shared/Kazo.Os.AppSdk/IAppExecutionContext.cs` | Membre par défaut détaché (dossier personnel, `HOME`), remplacé par la fabrique de confiance. |
+| `HackEnvironment` | `Shared/Kazo.Os.AppSdk/HackEnvironment.cs` | Façade statique du SDK. |
+| `HackExecutionContext.WorkingDirectory` | `Shared/Kazo.Os.AppSdk/HackExecutionContext.cs` | Lit le répertoire du processus, sauf si `Enter(context, dir)` en a fixé un et qu'aucun `SetCurrentDirectoryAsync` ne l'a remplacé depuis. |
 | `ProcFileSystemProvider` | `FileSystem/Virtual/` | `cmdline`, `environ`, `cwd` lus dans la table à chaque lecture. |
 | `FileSystemSeeder` | `FileSystem/` | Crée `/etc/hostname` (`hackeros`) et `/etc/environment` (commentaire) s'ils sont absents, `0644`, root. Ne les réécrit jamais. |
 
@@ -122,15 +122,15 @@ L'invite du terminal affiche le nom de la machine (`alice@hackeros:~$`) lu par
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Processes/ProcessEnvironmentTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/Processes/ProcessEnvironmentTests.cs` :
   héritage, isolation, instantanés, nettoyage, validation.
-- `Tests/HackerOs.Platform.Core.Tests/Processes/LoginEnvironmentTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/Processes/LoginEnvironmentTests.cs` :
   règles de `/etc/environment` et `/etc/hostname`, amorçage.
-- `Tests/HackerOs.Platform.Core.Tests/FileSystem/Virtual/ProcFileSystemProviderTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/FileSystem/Virtual/ProcFileSystemProviderTests.cs` :
   `cmdline`, `environ`, `cwd`.
-- `Tests/HackerOs.Platform.Core.Tests/Lifecycle/AppLifecycleOrchestratorTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/Lifecycle/AppLifecycleOrchestratorTests.cs` :
   processus racine et enfant de bout en bout, lecture une fois par session.
-- `Tests/HackerOs.AppSdk.Tests/HackEnvironmentTests.cs` : façade du SDK.
+- `Tests/Kazo.Os.AppSdk.Tests/HackEnvironmentTests.cs` : façade du SDK.
 
 ## Liste des tâches
 

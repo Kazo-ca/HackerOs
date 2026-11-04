@@ -29,13 +29,13 @@ App ──► HackClipboard ──► IAppClipboardGateway ──► AppClipboar
 
 | Pièce | Où | Rôle |
 |---|---|---|
-| `SystemClipboard`, `SystemClipboardEntry`, `SystemClipboardOrigin` | `Platform/HackerOs.Platform.Core/Clipboard/` | Le presse-papiers : entrée multi-formats par session, numéro de séquence, origine (`Guest`, `GuestNative`, `Host`), vidé à la déconnexion. En mémoire seulement. |
+| `SystemClipboard`, `SystemClipboardEntry`, `SystemClipboardOrigin` | `Platform/Kazo.Os.Platform.Core/Clipboard/` | Le presse-papiers : entrée multi-formats par session, numéro de séquence, origine (`Guest`, `GuestNative`, `Host`), vidé à la déconnexion. En mémoire seulement. |
 | `ClipboardSettingsDocuments`, `ClipboardSharingMode` | idem | Document `clipboard` (clé `sharing`) et sens permis. |
 | `HostClipboardBridge` | idem | Recopie le texte vers l'hôte, applique les collages de l'hôte et les copies natives, relit le réglage à chaud. Toute la logique testable. |
-| `IHostClipboardChannel`, `IHostClipboardSink` | `Shared/HackerOs.Simulation.Abstractions/Clipboard/` | Contrat entre le pont et la page. |
-| `BrowserHostClipboardChannel` | `Infrastructure/HackerOs.Infrastructure.Browser/Interop/` | Importe `hostClipboard.js` et relaie ses rappels. |
-| `hostClipboard.js` | `Infrastructure/HackerOs.Infrastructure.Browser/wwwroot/` | Écoute `paste` (capture, document), `copy` et `cut` (bulle, window) ; appelle `writeText`. |
-| `FileView.attachPasteTarget` | `Apps/System/HackerOs.Apps.FileExplorer/FileControl/FileView.razor.js` | Ctrl+V par l'événement `paste` ; fichiers de l'hôte importés comme un dépôt. |
+| `IHostClipboardChannel`, `IHostClipboardSink` | `Shared/Kazo.Os.Simulation.Abstractions/Clipboard/` | Contrat entre le pont et la page. |
+| `BrowserHostClipboardChannel` | `Infrastructure/Kazo.Os.Infrastructure.Browser/Interop/` | Importe `hostClipboard.js` et relaie ses rappels. |
+| `hostClipboard.js` | `Infrastructure/Kazo.Os.Infrastructure.Browser/wwwroot/` | Écoute `paste` (capture, document), `copy` et `cut` (bulle, window) ; appelle `writeText`. |
+| `FileView.attachPasteTarget` | `Apps/System/Kazo.Os.Apps.FileExplorer/FileControl/FileView.razor.js` | Ctrl+V par l'événement `paste` ; fichiers de l'hôte importés comme un dépôt. |
 
 Le pont est enregistré par `AddHackerOsEcosystem` (portée par circuit, comme
 tout ce qui dépend d'`IJSRuntime`) et démarré par `App.razor` après le
@@ -102,15 +102,15 @@ la convention de l'ADR 0044.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Clipboard/SystemClipboardTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/Clipboard/SystemClipboardTests.cs` :
   séquence, formats multiples, origine, copie de l'entrée, effacement.
-- `Tests/HackerOs.Platform.Core.Tests/Clipboard/ClipboardSettingsDocumentsTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/Clipboard/ClipboardSettingsDocumentsTests.cs` :
   valeurs de `sharing`, fichier installé, surcharge utilisateur, `[locked]`.
-- `Tests/HackerOs.Platform.Core.Tests/Clipboard/HostClipboardBridgeTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/Clipboard/HostClipboardBridgeTests.cs` :
   écriture vers l'hôte, liste de fichiers en chemins, collage sans écho,
   fichiers de l'hôte, copie native, chaque mode, verrou, changement à chaud,
   déconnexion, refus du navigateur, absence de session.
-- `Tests/HackerOs.Apps.FileExplorer.FileControl.Tests/FileViewDropAndClipboardTests.cs` :
+- `Tests/Kazo.Os.Apps.FileExplorer.FileControl.Tests/FileViewDropAndClipboardTests.cs` :
   Ctrl+V par l'événement `paste`, fichiers de l'hôte collés.
 
 ## Liste des tâches

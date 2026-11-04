@@ -1,0 +1,106 @@
+@using Kazo.Os.App.Abstractions
+@using Kazo.Os.AppSdk
+@using Kazo.Os.AppSdk.Blazor
+@using Kazo.Os.AppSdk.Globalization
+@using Microsoft.Extensions.Localization
+@using Kazo.Os.Simulation.Abstractions.Diagnostics
+@using MudBlazor
+@inherits WindowAppBase
+@implements IAsyncDisposable
+
+<div class="logviewer-container">
+    <header class="logviewer-header">
+        <span class="logviewer-title">/var/log <span class="logviewer-subtitle">@L["Header.Subtitle"]</span></span>
+        <div class="logviewer-actions">
+            <label class="logviewer-field">
+                <span>@L["Toolbar.Source"]</span>
+                <select class="logviewer-select" @bind="SelectedPath" @bind:after="OnSelectionChangedAsync">
+                    <option value="">@L["Toolbar.AllLogs"]</option>
+                    @foreach (LogSource source in _sources)
+                    {
+                        <option value="@source.Path.Value">@source.Label</option>
+                    }
+                </select>
+            </label>
+            <label class="logviewer-field logviewer-toggle">
+                <input type="checkbox" @bind="IncludeArchives" @bind:after="ReloadAllAsync" />
+                <span>@L["Toolbar.Archives"]</span>
+            </label>
+            <button class="logviewer-btn" @onclick="ReloadAllAsync">@L["Toolbar.Refresh"]</button>
+            <button class="logviewer-btn logviewer-btn-danger"
+                    disabled="@(!CanTruncate)"
+                    title="@L["Toolbar.Truncate.Title"]"
+                    @onclick="TruncateSelectedAsync">@L["Toolbar.Truncate"]</button>
+        </div>
+    </header>
+
+    @if (!string.IsNullOrEmpty(_errorMessage))
+    {
+        <div class="logviewer-error" role="alert">@_errorMessage</div>
+    }
+
+    <div class="logviewer-body">
+        <MudTabs Elevation="0" Rounded="true" ApplyEffectsToContainer="true" Class="logviewer-tabs">
+            <MudTabPanel Text="@L["Tab.AllLogs"]" Icon="@Icons.Material.Filled.List">
+                @RenderLogTable(_rows)
+            </MudTabPanel>
+
+            <MudTabPanel Text="@L["Tab.Errors"]" Icon="@Icons.Material.Filled.Error">
+                @RenderLogTable(_rows.Where(static row => row.Line.Severity >= DiagnosticSeverity.Error).ToList())
+            </MudTabPanel>
+
+            <MudTabPanel Text="@L["Tab.Warnings"]" Icon="@Icons.Material.Filled.Warning">
+                @RenderLogTable(_rows.Where(static row => row.Line.Severity == DiagnosticSeverity.Warning).ToList())
+            </MudTabPanel>
+
+            <MudTabPanel Text="@L["Tab.Info"]" Icon="@Icons.Material.Filled.Info">
+                @RenderLogTable(_rows.Where(static row => row.Line.Severity == DiagnosticSeverity.Information).ToList())
+            </MudTabPanel>
+        </MudTabs>
+    </div>
+
+    <footer class="logviewer-status" role="status">@StatusText</footer>
+</div>
+
+@code {
+    private RenderFragment RenderLogTable(List<LogRow> rows) => __builder =>
+    {
+        <div class="table-wrapper">
+            <table class="log-table">
+                <thead>
+                    <tr>
+                        <th>@L["Column.Timestamp"]</th>
+                        <th>@L["Column.Level"]</th>
+                        <th>@L["Column.Source"]</th>
+                        <th>@L["Column.Message"]</th>
+                        <th>@L["Column.File"]</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (rows.Count == 0)
+                    {
+                        <tr><td colspan="5" class="empty-msg">@L["Table.Empty"]</td></tr>
+                    }
+                    else
+                    {
+                        @foreach (LogRow row in rows.Take(MaxDisplayedRows))
+                        {
+                            string severity = row.Line.Severity.ToString().ToLowerInvariant();
+                            <tr class="@severity">
+                                <td class="log-time">@row.Line.TimestampUtc.ToString("yyyy-MM-dd HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture)</td>
+                                <td><span class="badge @severity">@LogLineFormat.LevelName(row.Line.Severity)</span></td>
+                                <td class="log-source">@FormatSource(row.Line)</td>
+                                <td class="log-message">@FormatMessage(row.Line)</td>
+                                <td class="log-file">@row.Source.Label</td>
+                            </tr>
+                        }
+                        @if (rows.Count > MaxDisplayedRows)
+                        {
+                            <tr><td colspan="5" class="empty-msg">@L["Table.Truncated", MaxDisplayedRows, rows.Count]</td></tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    };
+}

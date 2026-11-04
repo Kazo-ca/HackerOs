@@ -50,22 +50,22 @@ boundary.
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Shared\HackerOs.App.Abstractions\HackerOs.App.Abstractions.csproj" />
-    <ProjectReference Include="..\..\..\Shared\HackerOs.Simulation.Abstractions\HackerOs.Simulation.Abstractions.csproj" />
-    <ProjectReference Include="..\..\..\Shared\HackerOs.AppSdk\HackerOs.AppSdk.csproj" />
-    <ProjectReference Include="..\..\..\Shared\HackerOs.AppSdk.Blazor\HackerOs.AppSdk.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Kazo.Os.App.Abstractions\Kazo.Os.App.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Kazo.Os.Simulation.Abstractions\Kazo.Os.Simulation.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Kazo.Os.AppSdk\Kazo.Os.AppSdk.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Kazo.Os.AppSdk.Blazor\Kazo.Os.AppSdk.Blazor.csproj" />
   </ItemGroup>
 
 </Project>
 ```
 
 - A command or a service without an interface can use
-  `Microsoft.NET.Sdk` and do without `HackerOs.AppSdk.Blazor`.
+  `Microsoft.NET.Sdk` and do without `Kazo.Os.AppSdk.Blazor`.
 - Allowed references: the four `Shared/*.Abstractions`, the
-  `Shared/HackerOs.AppSdk*` libraries, `Platform/HackerOs.Theming.Blazor` and other
+  `Shared/Kazo.Os.AppSdk*` libraries, `Platform/Kazo.Os.Theming.Blazor` and other
   projects under `Apps/`. Any other project reference fails the build
   (`HOSAPP0030`). `PackageReference`s (MudBlazor for example) are free.
-- Add the project to `HackerOs.sln` (`dotnet sln add`).
+- Add the project to `Kazo.Os.sln` (`dotnet sln add`).
 
 ### From another repository (local packages)
 
@@ -76,12 +76,12 @@ them in `artifacts/local-nupkg`, a `nuget.config` (template
 project:
 
 ```bash
-dotnet new install <Kazo OS>/artifacts/local-nupkg/HackerOs.Templates.2.2.2.nupkg
+dotnet new install <Kazo OS>/artifacts/local-nupkg/Kazo.Os.Templates.2.2.2.nupkg
 dotnet new hackeros-window -n Contoso.Notes --appId com.contoso.notes
 dotnet new hackeros-host -n Contoso.Os          # un hôte qui lance tout l'OS
 ```
 
-The project references `HackerOs.AppSdk*` and `HackerOs.App.Build`
+The project references `Kazo.Os.AppSdk*` and `Kazo.Os.App.Build`
 (`PrivateAssets="all"`), which brings manifest generation, the ASP.Hack route
 generator and the boundary rule on packages (`HOSAPP0030`).
 A host adds the app through a `ProjectReference` or a `PackageReference`.
@@ -92,7 +92,7 @@ publishing, version upgrade, what the SDK 1.0 promise covers) is
 ## 2. Describing the app: `AppDefinition`
 
 ```csharp
-using HackerOs.App.Abstractions;
+using Kazo.Os.App.Abstractions;
 
 namespace Example.Notes;
 
@@ -169,7 +169,7 @@ build refuses `style="..."`, `<style>`, `<script>` and `onclick="..."`).
 
 ```razor
 @inherits WindowAppBase
-@using HackerOs.AppSdk.Blazor
+@using Kazo.Os.AppSdk.Blazor
 
 <div class="notes">
     <header class="notes-toolbar">
@@ -185,12 +185,12 @@ build refuses `style="..."`, `<style>`, `<script>` and `onclick="..."`).
 `NotesWindow.razor.cs`:
 
 ```csharp
-using HackerOs.AppSdk;
-using HackerOs.AppSdk.Blazor;
-using HackerOs.AppSdk.IO;
-using HackerOs.AppSdk.Settings;
-using HackerOs.Simulation.Abstractions.Diagnostics;
-using HackerOs.Simulation.Abstractions.Notifications;
+using Kazo.Os.AppSdk;
+using Kazo.Os.AppSdk.Blazor;
+using Kazo.Os.AppSdk.IO;
+using Kazo.Os.AppSdk.Settings;
+using Kazo.Os.Simulation.Abstractions.Diagnostics;
+using Kazo.Os.Simulation.Abstractions.Notifications;
 
 namespace Example.Notes;
 
@@ -561,7 +561,7 @@ that requests `Boot` starts at sign-in, with a warning in
 The service appears in the Services tab of the task manager and in
 `/proc`. It communicates with other apps through event bus
 topics (`context.Events.Publish(topic, payload)` in its own namespace,
-ADR 0038): see `Apps/Samples/HackerOs.Samples.ServiceApp`. A
+ADR 0038): see `Apps/Samples/Kazo.Os.Samples.ServiceApp`. A
 service runs by default in a dedicated Web Worker (ADR 0070): the type of its
 payloads must then be declared by `[assembly: HackWireContext(typeof(…))]`
 (SDK 1.2, ADR 0124), as the example's `SampleTickerJsonContext` does;
@@ -654,7 +654,7 @@ killed from `kill` or the task manager: `HackProcessKilledException`
 canceled and has 5 s to finish before being killed (ADR 0147). In the app's tests, the job runs
 inline with the same serialization. Complete guide and example:
 [`background-jobs.md`](background-jobs.md) and the "Background Task" section of
-`Apps/Samples/HackerOs.Samples.WindowApp`.
+`Apps/Samples/Kazo.Os.Samples.WindowApp`.
 
 ### Adding entries to the file menus
 
@@ -681,7 +681,7 @@ the administrator refuses. The code must therefore expect
 
 ## 7. Installing the app in the OS
 
-Add a `ProjectReference` in `OS/HackerOs.Ecosystem/HackerOs.Ecosystem.csproj`:
+Add a `ProjectReference` in `OS/Kazo.Os.Ecosystem/Kazo.Os.Ecosystem.csproj`:
 
 ```xml
 <ProjectReference Include="..\..\Apps\Samples\Example.Notes\Example.Notes.csproj" />
@@ -695,7 +695,7 @@ base apps.
 
 ## 8. Testing an app
 
-`Tests/HackerOs.Tests.Support` provides `MinimalAppExecutionContext` and fake
+`Tests/Kazo.Os.Tests.Support` provides `MinimalAppExecutionContext` and fake
 gateways (`FakeAppFileSystemGateway`, `FakeAppClockGateway`,
 `FakeAppLoggingGateway`, `FakeAppIntentGateway`, `FakeAppEnvironmentGateway`,
 `FakeShellSession`...). The manifest comes from the definition itself.
@@ -729,9 +729,9 @@ public sealed class WordCountCommandTests
 }
 ```
 
-The test project references the app's project and `HackerOs.Tests.Support`
+The test project references the app's project and `Kazo.Os.Tests.Support`
 (xUnit 2.9). Windowed components are tested with bUnit (see
-`Tests/HackerOs.Apps.*.Tests`).
+`Tests/Kazo.Os.Apps.*.Tests`).
 
 ## 8 bis. Translating your app
 
@@ -745,7 +745,7 @@ own `LANG` (ADR 0104). To translate an app:
 2. Read the texts in the process's language:
 
    ```razor
-   @using HackerOs.AppSdk.Globalization
+   @using Kazo.Os.AppSdk.Globalization
    @using Microsoft.Extensions.Localization
 
    <button aria-label="@L["Toolbar.NewFolder"]">@L["Toolbar.NewFolder"]</button>
@@ -768,7 +768,7 @@ in English. The complete guide is [`localization.md`](localization.md).
 
 ## 9. Checklist before delivering
 
-- [ ] The project is under `Apps/`, in `HackerOs.sln`, and only references the SDK.
+- [ ] The project is under `Apps/`, in `Kazo.Os.sln`, and only references the SDK.
 - [ ] The `[AppManifest]` class only requests the necessary capabilities.
 - [ ] The regenerated `manifest.json` (or `manifests/*.json`) is committed.
 - [ ] No inline CSS or JavaScript; styles use the `--hos-*` tokens.

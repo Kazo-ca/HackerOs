@@ -25,7 +25,7 @@ recommandée en attendant.
 
 ## Contexte
 
-- `WindowRuntimeState.Title` (`Platform/HackerOs.Windowing.Abstractions/WindowRuntimeState.cs:98`)
+- `WindowRuntimeState.Title` (`Platform/Kazo.Os.Windowing.Abstractions/WindowRuntimeState.cs:98`)
   est fixé à l'ouverture par `WindowLaunchCoordinator` avec le nom de l'app et
   ne change plus. La barre de titre, la barre des tâches et le sélecteur Alt+`
   (`WindowManagerOverlays.razor`) le lisent.
@@ -63,7 +63,7 @@ recommandée en attendant.
 
 ### 2. API du SDK
 
-Dans `HackerOs.AppSdk.Blazor`, sur `WindowAppBase` :
+Dans `Kazo.Os.AppSdk.Blazor`, sur `WindowAppBase` :
 
 ```csharp
 /// Titre affiché par le gestionnaire de fenêtres (barre de titre, barre des tâches, Alt+`).
@@ -74,7 +74,7 @@ protected ValueTask SetWindowTitleAsync(string? title, CancellationToken cancell
 ```
 
 - L'appel passe par une passerelle de la plateforme (`IAppWindowGateway`,
-  interne), jamais par un type de `HackerOs.Windowing.*` dans le SDK
+  interne), jamais par un type de `Kazo.Os.Windowing.*` dans le SDK
   (ADR 0055). Aucune capacité n'est demandée : une app ne change que le titre
   de ses propres fenêtres.
 - Appelé avant le premier rendu (dans `OnAppInitializedAsync`), le titre est

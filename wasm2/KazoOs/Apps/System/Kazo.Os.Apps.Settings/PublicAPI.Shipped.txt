@@ -1,0 +1,139 @@
+#nullable enable
+Kazo.Os.Apps.Settings.AccessibilityPanel
+Kazo.Os.Apps.Settings.AccessibilityPanel.AccessibilityPanel() -> void
+Kazo.Os.Apps.Settings.AccessibilityPanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Apps.Settings.AppDetailsPanel
+Kazo.Os.Apps.Settings.AppDetailsPanel.AppDetailsPanel() -> void
+Kazo.Os.Apps.Settings.AppDetailsPanel.AppId.get -> string!
+Kazo.Os.Apps.Settings.AppDetailsPanel.AppId.set -> void
+Kazo.Os.Apps.Settings.AppPermissionsPanel
+Kazo.Os.Apps.Settings.AppPermissionsPanel.AppPermissionsPanel() -> void
+Kazo.Os.Apps.Settings.AppSourcesPanel
+Kazo.Os.Apps.Settings.AppSourcesPanel.AppSourcesPanel() -> void
+Kazo.Os.Apps.Settings.BackupPanel
+Kazo.Os.Apps.Settings.BackupPanel.BackupPanel() -> void
+Kazo.Os.Apps.Settings.CursorThemePanel
+Kazo.Os.Apps.Settings.CursorThemePanel.CursorThemePanel() -> void
+Kazo.Os.Apps.Settings.CursorThemePanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Apps.Settings.DateTimePanel
+Kazo.Os.Apps.Settings.DateTimePanel.DateTimePanel() -> void
+Kazo.Os.Apps.Settings.DateTimePanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Apps.Settings.DesktopPanel
+Kazo.Os.Apps.Settings.DesktopPanel.DesktopPanel() -> void
+Kazo.Os.Apps.Settings.FileAssociationsPanel
+Kazo.Os.Apps.Settings.FileAssociationsPanel.FileAssociationsPanel() -> void
+Kazo.Os.Apps.Settings.FileMenuEntriesPanel
+Kazo.Os.Apps.Settings.FileMenuEntriesPanel.FileMenuEntriesPanel() -> void
+Kazo.Os.Apps.Settings.IconPackPanel
+Kazo.Os.Apps.Settings.IconPackPanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Apps.Settings.IconPackPanel.IconPackPanel() -> void
+Kazo.Os.Apps.Settings.IconPackPanel.TargetLayer.get -> Kazo.Os.Simulation.Abstractions.Settings.SettingLayer
+Kazo.Os.Apps.Settings.IconPackPanel.TargetLayer.set -> void
+Kazo.Os.Apps.Settings.InstalledAppsPanel
+Kazo.Os.Apps.Settings.InstalledAppsPanel.Dispose() -> void
+Kazo.Os.Apps.Settings.InstalledAppsPanel.InstalledAppsPanel() -> void
+Kazo.Os.Apps.Settings.InstalledAppsPanel.OnlyAppId.get -> string?
+Kazo.Os.Apps.Settings.InstalledAppsPanel.OnlyAppId.set -> void
+Kazo.Os.Apps.Settings.LanguagePanel
+Kazo.Os.Apps.Settings.LanguagePanel.LanguagePanel() -> void
+Kazo.Os.Apps.Settings.LocalServerPanel
+Kazo.Os.Apps.Settings.LocalServerPanel.LocalServerPanel() -> void
+Kazo.Os.Apps.Settings.LocalServerPanel.OnPaired.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.AppSdk.Administration.HackServerConnectionState!>
+Kazo.Os.Apps.Settings.LocalServerPanel.OnPaired.set -> void
+Kazo.Os.Apps.Settings.MemoryPanel
+Kazo.Os.Apps.Settings.MemoryPanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Apps.Settings.MemoryPanel.MemoryPanel() -> void
+Kazo.Os.Apps.Settings.NotificationsPanel
+Kazo.Os.Apps.Settings.NotificationsPanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Apps.Settings.NotificationsPanel.NotificationsPanel() -> void
+Kazo.Os.Apps.Settings.OsComponentsPanel
+Kazo.Os.Apps.Settings.OsComponentsPanel.OsComponentsPanel() -> void
+Kazo.Os.Apps.Settings.PasskeysPanel
+Kazo.Os.Apps.Settings.PasskeysPanel.Changed.get -> Microsoft.AspNetCore.Components.EventCallback
+Kazo.Os.Apps.Settings.PasskeysPanel.Changed.set -> void
+Kazo.Os.Apps.Settings.PasskeysPanel.PasskeysPanel() -> void
+Kazo.Os.Apps.Settings.ScreensPanel
+Kazo.Os.Apps.Settings.ScreensPanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Apps.Settings.ScreensPanel.ScreensPanel() -> void
+Kazo.Os.Apps.Settings.ServerRelayPolicyPanel
+Kazo.Os.Apps.Settings.ServerRelayPolicyPanel.ServerRelayPolicyPanel() -> void
+Kazo.Os.Apps.Settings.SetWallpaperApp
+Kazo.Os.Apps.Settings.SetWallpaperApp.SetWallpaperApp() -> void
+Kazo.Os.Apps.Settings.SetWallpaperService
+Kazo.Os.Apps.Settings.SetWallpaperService.SetWallpaperService(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Apps.Settings.SettingsApp
+Kazo.Os.Apps.Settings.SettingsApp.SettingsApp() -> void
+Kazo.Os.Apps.Settings.SettingsWindow
+Kazo.Os.Apps.Settings.SettingsWindow.CanNavigateBack.get -> bool
+Kazo.Os.Apps.Settings.SettingsWindow.CanNavigateBackChanged -> System.Action?
+Kazo.Os.Apps.Settings.SettingsWindow.CanNavigateForward.get -> bool
+Kazo.Os.Apps.Settings.SettingsWindow.CanNavigateForwardChanged -> System.Action?
+Kazo.Os.Apps.Settings.SettingsWindow.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Apps.Settings.SettingsWindow.NavigateBackAsync(Kazo.Os.AppSdk.Blazor.AppBackRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Blazor.AppBackResult!>
+Kazo.Os.Apps.Settings.SettingsWindow.NavigateForwardAsync(Kazo.Os.AppSdk.Blazor.AppForwardRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Blazor.AppBackResult!>
+Kazo.Os.Apps.Settings.SettingsWindow.SettingsWindow() -> void
+Kazo.Os.Apps.Settings.SoundPanel
+Kazo.Os.Apps.Settings.SoundPanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Apps.Settings.SoundPanel.SoundPanel() -> void
+Kazo.Os.Apps.Settings.UsersPanel
+Kazo.Os.Apps.Settings.UsersPanel.UsersPanel() -> void
+Kazo.Os.Apps.Settings.WallpaperPanel
+Kazo.Os.Apps.Settings.WallpaperPanel.BrowseImage.get -> System.Func<System.Threading.Tasks.Task<string?>!>?
+Kazo.Os.Apps.Settings.WallpaperPanel.BrowseImage.set -> void
+Kazo.Os.Apps.Settings.WallpaperPanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Apps.Settings.WallpaperPanel.TargetLayer.get -> Kazo.Os.Simulation.Abstractions.Settings.SettingLayer
+Kazo.Os.Apps.Settings.WallpaperPanel.TargetLayer.set -> void
+Kazo.Os.Apps.Settings.WallpaperPanel.WallpaperPanel() -> void
+Kazo.Os.Apps.Settings.WhatsNewPanel
+Kazo.Os.Apps.Settings.WhatsNewPanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Apps.Settings.WhatsNewPanel.WhatsNewPanel() -> void
+Kazo.Os.Apps.Settings._Imports
+Kazo.Os.Apps.Settings._Imports.Execute() -> void
+Kazo.Os.Apps.Settings._Imports._Imports() -> void
+const Kazo.Os.Apps.Settings.SetWallpaperApp.AllScreensEntry = "set-wallpaper-all" -> string!
+const Kazo.Os.Apps.Settings.SetWallpaperApp.AppId = "org.hackeros.settings.wallpaper" -> string!
+const Kazo.Os.Apps.Settings.SetWallpaperApp.ScreenEntryPrefix = "set-wallpaper-screen-" -> string!
+const Kazo.Os.Apps.Settings.SetWallpaperApp.SetWallpaperIntent = "org.hackeros.settings.set-wallpaper.v1" -> string!
+const Kazo.Os.Apps.Settings.SetWallpaperApp.SingleEntry = "set-wallpaper" -> string!
+const Kazo.Os.Apps.Settings.SetWallpaperApp.SubmenuEntry = "set-wallpaper-on" -> string!
+override Kazo.Os.Apps.Settings.AppSourcesPanel.OnInitializedAsync() -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.Settings.InstalledAppsPanel.OnInitializedAsync() -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.Settings.PasskeysPanel.OnInitializedAsync() -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.Settings.SetWallpaperApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Apps.Settings.SetWallpaperApp.Category.get -> string!
+override Kazo.Os.Apps.Settings.SetWallpaperApp.Description.get -> string!
+override Kazo.Os.Apps.Settings.SetWallpaperApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Apps.Settings.SetWallpaperApp.Id.get -> string!
+override Kazo.Os.Apps.Settings.SetWallpaperApp.Intents.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppIntentDeclarationManifest!>!
+override Kazo.Os.Apps.Settings.SetWallpaperApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Apps.Settings.SetWallpaperApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Apps.Settings.SetWallpaperApp.Name.get -> string!
+override Kazo.Os.Apps.Settings.SetWallpaperApp.PublisherId.get -> string!
+override Kazo.Os.Apps.Settings.SetWallpaperApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Apps.Settings.SettingsApp.Assets.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AssetManifest!>!
+override Kazo.Os.Apps.Settings.SettingsApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Apps.Settings.SettingsApp.Category.get -> string!
+override Kazo.Os.Apps.Settings.SettingsApp.Description.get -> string!
+override Kazo.Os.Apps.Settings.SettingsApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Apps.Settings.SettingsApp.Icons.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Apps.Settings.SettingsApp.Id.get -> string!
+override Kazo.Os.Apps.Settings.SettingsApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Apps.Settings.SettingsApp.MobileEntryPoint.get -> System.Type?
+override Kazo.Os.Apps.Settings.SettingsApp.Name.get -> string!
+override Kazo.Os.Apps.Settings.SettingsApp.PublisherId.get -> string!
+override Kazo.Os.Apps.Settings.SettingsApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Apps.Settings.SettingsApp.SingleInstancePerUser.get -> bool
+override Kazo.Os.Apps.Settings.SettingsWindow.OnAppAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.Settings.SettingsWindow.OnAppInitializedAsync() -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.Settings.SettingsWindow.OnAppStopRequestedAsync(Kazo.Os.AppSdk.Diagnostics.HackStopRequestedEventArgs! e) -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.Settings.SettingsWindow.OnIntentReceivedAsync(Kazo.Os.App.Abstractions.AppIntentDelivery! intent) -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.Settings.SettingsWindow.OnWindowActivatedAsync() -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.Settings.UsersPanel.OnInitializedAsync() -> System.Threading.Tasks.Task!
+static Kazo.Os.Apps.Settings.SetWallpaperApp.RegisterFileContextMenu(Kazo.Os.AppSdk.Blazor.Files.RegisterFileContextMenuContext! context) -> void
+static readonly Kazo.Os.Apps.Settings.SetWallpaperApp.ImageTypes -> System.Collections.Generic.IReadOnlyList<string!>!
+~override Kazo.Os.Apps.Settings.AppSourcesPanel.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Apps.Settings.BackupPanel.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Apps.Settings.InstalledAppsPanel.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Apps.Settings.PasskeysPanel.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Apps.Settings.SettingsWindow.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Apps.Settings.UsersPanel.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

@@ -51,7 +51,7 @@ chose.
   « Horloge système, notifications et calendrier : 3 notifications non lues ».
   Sans notification non lue, l'infobulle reste « Horloge système, notifications
   et calendrier ».
-- Contrat du paquet `HackerOs.Taskbar.Blazor` :
+- Contrat du paquet `Kazo.Os.Taskbar.Blazor` :
   `ITaskbarClockPanelSource.UnreadCount` (0 par défaut, les autres hôtes ne
   changent pas). `TaskbarClockPanelSourceAdapter.SetUnreadCount` le règle.
 

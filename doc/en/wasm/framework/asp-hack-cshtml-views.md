@@ -97,15 +97,15 @@ The controller does not change: `return View(store.All);`, `return View(note);`.
 ## Architecture
 
 ```text
-Build (build/HackerOs.Apps.targets, cible _HackerOsAspHackRazorViews)
-  si le projet référence HackerOs.AppSdk.Web et a des .cshtml :
+Build (build/Kazo.Os.Apps.targets, cible _HackerOsAspHackRazorViews)
+  si le projet référence Kazo.Os.AppSdk.Web et a des .cshtml :
     + build/asp-hack/_ViewImports.cshtml lié en _ViewImports.cshtml racine
       (@inherits HackRazorPage<TModel>, Html/Json/Component/Url/ModelExpressionProvider)
     + build/asp-hack/HackRazorCompat.cs (types internes aux noms Microsoft.AspNetCore.*)
   compilateur Razor du SDK → classe par .cshtml
   générateur de routes (ADR 0082) → HackWebGeneratedRoutes.Views (genres Component et RazorPage)
 
-Rendu (Shared/HackerOs.AppSdk.Web/Views/)
+Rendu (Shared/Kazo.Os.AppSdk.Web/Views/)
   HackViewEngine.RenderAsync
     ├─ vue .cshtml : _ViewStart.cshtml de Views/ puis des dossiers → Layout initial
     │                HackRazorPage.RenderAsync : @inject remplis, ExecuteAsync, sections → HTML
@@ -185,7 +185,7 @@ HackViewKind, HackViewDescriptor.Kind, HackViewTable.Find(Type)   HackViewTable.
 
 ## Tests
 
-- `Tests/HackerOs.AppSdk.Web.Tests/Views/CshtmlViewTests`: generated table and
+- `Tests/Kazo.Os.AppSdk.Web.Tests/Views/CshtmlViewTests`: generated table and
   class names, nested `_ViewStart`, `@model`, `@inject`, layout, title,
   section, conditional attributes, partials of both kinds, inline template,
   `Html.Raw`, `Component.InvokeAsync`, `Json.Serialize`, nested layouts and
@@ -196,7 +196,7 @@ HackViewKind, HackViewDescriptor.Kind, HackViewTable.Find(Type)   HackViewTable.
 - `Generator/WebRouteGeneratorTests`: `.cshtml` class names (`@namespace`
   of the file and of a `_ViewImports.cshtml` with the folders, special
   characters), excluded imports, `HOSWEB0008`.
-- `Tests/HackerOs.Platform.WorkerHost.Tests/MvcSiteTests`: a `.cshtml` view
+- `Tests/Kazo.Os.Platform.WorkerHost.Tests/MvcSiteTests`: a `.cshtml` view
   with `_ViewStart`, `.cshtml` layout, form and section served by `curl`
   in a full OS, on the main thread and in the `web` worker.
 

@@ -39,13 +39,13 @@ lignes, `MemSource: simulated`).
 
 | Élément | Projet | Rôle |
 |---|---|---|
-| `IMemoryAccountant` (`TryGetProcessMemory`, `TryGetSystemMemory`), `ProcessMemoryUsage`, `SystemMemoryUsage` | `Shared/HackerOs.Simulation.Abstractions` (`Processes/`) | contrat lu par `/proc` ; `false` = valeur simulée |
+| `IMemoryAccountant` (`TryGetProcessMemory`, `TryGetSystemMemory`), `ProcessMemoryUsage`, `SystemMemoryUsage` | `Shared/Kazo.Os.Simulation.Abstractions` (`Processes/`) | contrat lu par `/proc` ; `false` = valeur simulée |
 | `IKernelMemoryLedger`, `KernelMemoryCharge`, `KernelMemoryKind` | idem (`Processes/MemoryAccountingContracts.cs`) | registre de la mémoire tenue par l'OS pour un processus |
-| `NullMemoryAccountant`, `NullKernelMemoryLedger` | `Platform/HackerOs.Platform.Core` (`Processes/Accounting/`) | mesure coupée : rien n'est mesuré, aucune charge ne coûte |
-| `AppImage`, `AppImageAssembly`, `BuiltInApplication.Image` | `Shared/HackerOs.App.Abstractions` | image d'une app dans `BuiltInApplications.json` |
-| `AppImageInspector` | `Tools/HackerOs.Tools.ManifestGenerator` | lit les références de l'assembly (métadonnées, sans charger de code) et mesure les fichiers |
-| `HostAppCatalog.Images` (`BuildKnownLazyApps.Images` dans l'Ecosystem) | `OS/HackerOs.Ecosystem.Host` | images du catalogue de l'hôte, par id d'app |
-| `AllocationTracker` | `Platform/HackerOs.Platform.ResourceAccounting` (`Memory/`) | couche allocations : observateur du crochet de changement de contexte |
+| `NullMemoryAccountant`, `NullKernelMemoryLedger` | `Platform/Kazo.Os.Platform.Core` (`Processes/Accounting/`) | mesure coupée : rien n'est mesuré, aucune charge ne coûte |
+| `AppImage`, `AppImageAssembly`, `BuiltInApplication.Image` | `Shared/Kazo.Os.App.Abstractions` | image d'une app dans `BuiltInApplications.json` |
+| `AppImageInspector` | `Tools/Kazo.Os.Tools.ManifestGenerator` | lit les références de l'assembly (métadonnées, sans charger de code) et mesure les fichiers |
+| `HostAppCatalog.Images` (`BuildKnownLazyApps.Images` dans l'Ecosystem) | `OS/Kazo.Os.Ecosystem.Host` | images du catalogue de l'hôte, par id d'app |
+| `AllocationTracker` | `Platform/Kazo.Os.Platform.ResourceAccounting` (`Memory/`) | couche allocations : observateur du crochet de changement de contexte |
 | `KernelMemoryLedger` | idem | couche ressources de l'OS |
 | `MeasuredMemoryAccountant`, `MemoryAccountingConstants` | idem | les quatre couches, la répartition du tas, les constantes |
 | `IManagedHeapProbe`, `GcManagedHeapProbe` | idem | ce qui est lu du GC (remplaçable dans les tests) |
@@ -66,7 +66,7 @@ Le build de l'hôte mesure l'image de chaque app pendant l'agrégation
   libc que partagent tous les processus. Les assemblies de référence (dossier
   `ref`) sont ignorées.
 
-Plusieurs apps dans une même assembly (les commandes de `HackerOs.Commands`)
+Plusieurs apps dans une même assembly (les commandes de `Kazo.Os.Commands`)
 ont chacune cette assembly en `VmExe`, comme chaque applet BusyBox mappe le
 binaire BusyBox. `/proc/meminfo` compte chaque assembly **une fois**
 (`Mapped`), quel que soit le nombre de processus qui la mappent.
@@ -160,7 +160,7 @@ buffer.Resize(bufferedChars * sizeof(char));   // à chaque changement
 
 ### Composition
 
-`AddHackerOsResourceAccounting` (`HackerOs.Ecosystem.Host`) compose la mesure quand
+`AddHackerOsResourceAccounting` (`Kazo.Os.Ecosystem.Host`) compose la mesure quand
 `plan.MemoryActive` et `ResourceAccountingFeatures.IsMemoryAccountingSupported`
 : `AllocationTracker` inscrit sur le diffuseur, `KernelMemoryLedger`
 (`IKernelMemoryLedger`), `MeasuredMemoryAccountant` (`IMemoryAccountant`), avec
@@ -198,13 +198,13 @@ au shell, aux passerelles de fichiers et de réseau.
 
 | Suite | Couvre |
 |---|---|
-| `HackerOs.Platform.ResourceAccounting.Tests` | `AllocationTracker` (attribution entre deux changements, première lecture, oubli, vrai crochet), `KernelMemoryLedger`, `MeasuredMemoryAccountant` (constantes, image, part noyau et fenêtre, répartition, seulement après un GC, demi-vie, part noyau retirée, assemblies partagées comptées une fois, simulé ou mesuré, processus morts), commande réelle `ls` sous le vrai crochet |
-| `HackerOs.Samples.ServiceApp.Tests` | service réel (`SampleTickerService`) mesuré sous le vrai crochet, sans changement de son code |
-| `HackerOs.Ecosystem.Tests` | toutes les apps du catalogue ont leur image ; l'éditeur de texte (fenêtre) mesuré avec la vraie taille de sa DLL ; composition : mesure, registre et observateur présents exactement quand la mémoire est active |
-| `HackerOs.Platform.Core.Tests` | format de `status` et `meminfo` mesurés, processus simulé inchangé ; charges du presse-papiers et des tubes ; `HackProcess.PrivateMemorySize64` |
-| `HackerOs.AppSdk.Tests` | tampon d'un flux d'écriture chargé puis libéré, rien pour un flux de lecture |
-| `HackerOs.Network.Tests` | socket chargée le temps de l'appel |
-| `HackerOs.App.Abstractions.Tests`, `HackerOs.Tools.ManifestGenerator.Tests` | champ `image` strict, aller-retour ; agrégation et mesure de l'image ; framework exclu |
+| `Kazo.Os.Platform.ResourceAccounting.Tests` | `AllocationTracker` (attribution entre deux changements, première lecture, oubli, vrai crochet), `KernelMemoryLedger`, `MeasuredMemoryAccountant` (constantes, image, part noyau et fenêtre, répartition, seulement après un GC, demi-vie, part noyau retirée, assemblies partagées comptées une fois, simulé ou mesuré, processus morts), commande réelle `ls` sous le vrai crochet |
+| `Kazo.Os.Samples.ServiceApp.Tests` | service réel (`SampleTickerService`) mesuré sous le vrai crochet, sans changement de son code |
+| `Kazo.Os.Ecosystem.Tests` | toutes les apps du catalogue ont leur image ; l'éditeur de texte (fenêtre) mesuré avec la vraie taille de sa DLL ; composition : mesure, registre et observateur présents exactement quand la mémoire est active |
+| `Kazo.Os.Platform.Core.Tests` | format de `status` et `meminfo` mesurés, processus simulé inchangé ; charges du presse-papiers et des tubes ; `HackProcess.PrivateMemorySize64` |
+| `Kazo.Os.AppSdk.Tests` | tampon d'un flux d'écriture chargé puis libéré, rien pour un flux de lecture |
+| `Kazo.Os.Network.Tests` | socket chargée le temps de l'appel |
+| `Kazo.Os.App.Abstractions.Tests`, `Kazo.Os.Tools.ManifestGenerator.Tests` | champ `image` strict, aller-retour ; agrégation et mesure de l'image ; framework exclu |
 
 ## Liste des tâches
 

@@ -10,7 +10,7 @@ et à `CHANGELOG.md`.
 ## Où
 
 ```
-wasm2/HackerOs/changes/
+wasm2/KazoOs/changes/
 ├── unreleased/<guid>.json   un fichier par changement pas encore publié
 └── <version>.json           les entrées d'une version publiée (ex. 2.1.0.json)
 ```
@@ -19,7 +19,7 @@ wasm2/HackerOs/changes/
 
 1. Créer un GUID en minuscules : `python3 -c "import uuid; print(uuid.uuid4())"`,
    `[guid]::NewGuid()` (PowerShell) ou `uuidgen | tr A-Z a-z`.
-2. Créer `wasm2/HackerOs/changes/unreleased/<guid>.json` :
+2. Créer `wasm2/KazoOs/changes/unreleased/<guid>.json` :
 
 ```json
 {
@@ -43,7 +43,7 @@ wasm2/HackerOs/changes/
 | `pr` | non | Numéro de la PR (ajouté après son ouverture si on veut). |
 | `links` | non | URL `https` ou chemin d'un fichier du dépôt depuis la racine. |
 
-3. Lancer le test : `dotnet test Tests/HackerOs.Ecosystem.Tests --filter ChangeEntriesTests`.
+3. Lancer le test : `dotnet test Tests/Kazo.Os.Ecosystem.Tests --filter ChangeEntriesTests`.
 
 ## Bien écrire
 
@@ -62,14 +62,14 @@ des fichiers `.md` n'en a pas besoin.
 ## Le contrôle de PR
 
 Le workflow **Change list entry** (`.github/workflows/changelog-entry.yml`) tourne sur chaque PR
-vers `main` et lance `wasm2/HackerOs/build/tools/check-change-entry.sh <base> <head>`. Il échoue
-quand la PR touche `wasm2/HackerOs` (hors `Tests/`, `docs/`, `changes/` et `.md`) sans ajouter de
+vers `main` et lance `wasm2/KazoOs/build/tools/check-change-entry.sh <base> <head>`. Il échoue
+quand la PR touche `wasm2/KazoOs` (hors `Tests/`, `docs/`, `changes/` et `.md`) sans ajouter de
 fichier dans `changes/unreleased/` (ou un nouveau `changes/<version>.json`, voir plus bas), sauf
 avec l'étiquette `no-changelog`. Pour le lancer avant de
 pousser :
 
 ```bash
-wasm2/HackerOs/build/tools/check-change-entry.sh origin/main HEAD
+wasm2/KazoOs/build/tools/check-change-entry.sh origin/main HEAD
 ```
 
 Dans une série, chaque PR de chantier vers `<série>/base` ajoute son entrée : la PR finale vers
@@ -77,7 +77,7 @@ Dans une série, chaque PR de chantier vers `<série>/base` ajoute son entrée :
 
 ## Dans l'OS : `/whats-new.json`
 
-Au build de `OS/HackerOs.Ecosystem`, l'outil `Tools/HackerOs.Tools.ChangeList` lit `changes/` et
+Au build de `OS/Kazo.Os.Ecosystem`, l'outil `Tools/Kazo.Os.Tools.ChangeList` lit `changes/` et
 écrit `obj/…/hackeros-whats-new/whats-new.json`, servi à la racine du site comme `/version.json`
 (ADR 0186 §4.1). Il ne garde que les entrées dont le public contient `user`, groupées par
 version, la plus récente en haut ; les entrées de `unreleased/` forment le premier groupe
@@ -88,13 +88,13 @@ ancienne. Les chemins de `links` deviennent des URL GitHub et `pr` donne aussi `
 Pour voir le fichier sans construire l'OS :
 
 ```bash
-dotnet run --project wasm2/HackerOs/Tools/HackerOs.Tools.ChangeList -- \
-  site --changes wasm2/HackerOs/changes --version 2.1.0 --output /tmp/whats-new.json
+dotnet run --project wasm2/KazoOs/Tools/Kazo.Os.Tools.ChangeList -- \
+  site --changes wasm2/KazoOs/changes --version 2.1.0 --output /tmp/whats-new.json
 ```
 
 Côté OS :
 
-- `WhatsNewService` (Platform.Core, `HackerOs.Platform.Core.WhatsNew`) lit le fichier une fois par
+- `WhatsNewService` (Platform.Core, `Kazo.Os.Platform.Core.WhatsNew`) lit le fichier une fois par
   page (un nouveau déploiement recharge la page) et garde, pour chaque compte, les IDs déjà vus
   dans `~/.local/state/hackeros/whats-new.json` : `{ "seen": [ "<id>", … ] }`. Un ID qui sort de
   la liste reste dans le fichier : une entrée ne redevient jamais nouvelle.
@@ -127,11 +127,11 @@ Ce que voit l'utilisateur (ADR 0186 §4.4 et §4.5) :
 Dans la PR qui change `build/Versions.props`, lancer :
 
 ```bash
-wasm2/HackerOs/build/tools/collect-changes.sh            # date du jour (UTC)
-wasm2/HackerOs/build/tools/collect-changes.sh --date 2026-11-02
+wasm2/KazoOs/build/tools/collect-changes.sh            # date du jour (UTC)
+wasm2/KazoOs/build/tools/collect-changes.sh --date 2026-11-02
 ```
 
-Le script (outil `Tools/HackerOs.Tools.ChangeList`, commande `collect`) :
+Le script (outil `Tools/Kazo.Os.Tools.ChangeList`, commande `collect`) :
 
 1. déplace toutes les entrées de `unreleased/` dans `changes/<version>.json`, la version étant
    celle de `Versions.props`, sans changer leur contenu ni leurs IDs (les badges **Nouveau** déjà
@@ -150,7 +150,7 @@ Ensuite, à la fusion dans `main`, sans rien faire de plus :
   avertissement.
 - **NuGet** : `build/pack-local.sh` écrit `artifacts/package-release-notes.txt` (commande
   `notes --kind package`) et le passe à `dotnet pack` ; `Platform/Packaging.props` le met dans
-  `PackageReleaseNotes` de chaque paquet `HackerOs.*` : les entrées `developer` de la version et le
+  `PackageReleaseNotes` de chaque paquet `Kazo.Os.*` : les entrées `developer` de la version et le
   lien vers la Release. Avant la collecte (paquet local), les entrées de `unreleased/` servent.
 - **Journaux** : `CHANGELOG.md` et `CHANGELOG-fr.md` ne listent que les versions publiées. Le test
   `ReleaseNotesTests.The_changelogs_of_the_repository_are_up_to_date` échoue s'ils ne

@@ -148,42 +148,42 @@ implementation details.
 Use multiple shared projects with one-way dependencies:
 
 ```text
-wasm2/HackerOs/
-  HackerOs.sln
+wasm2/KazoOs/
+  Kazo.Os.sln
   OS/
-    HackerOs.Ecosystem/                 # Runnable Blazor WASM PWA host
+    Kazo.Os.Ecosystem/                 # Runnable Blazor WASM PWA host
   Shared/
-    HackerOs.App.Abstractions/           # Stable manifests, contracts, DTOs
-    HackerOs.AppSdk/                     # Lifecycle plus terminal/service bases
-    HackerOs.AppSdk.Blazor/              # Window base and shared app UI contracts
-    HackerOs.Simulation.Abstractions/     # Files, processes, network, clock contracts
+    Kazo.Os.App.Abstractions/           # Stable manifests, contracts, DTOs
+    Kazo.Os.AppSdk/                     # Lifecycle plus terminal/service bases
+    Kazo.Os.AppSdk.Blazor/              # Window base and shared app UI contracts
+    Kazo.Os.Simulation.Abstractions/     # Files, processes, network, clock contracts
   Platform/
-    HackerOs.Platform.Core/              # Registry, lifecycle, policies, associations
-    HackerOs.Platform.Blazor/            # Desktop, window shell, taskbar, launcher
-    HackerOs.Infrastructure.Browser/     # IndexedDB, PWA, browser interop adapters
+    Kazo.Os.Platform.Core/              # Registry, lifecycle, policies, associations
+    Kazo.Os.Platform.Blazor/            # Desktop, window shell, taskbar, launcher
+    Kazo.Os.Infrastructure.Browser/     # IndexedDB, PWA, browser interop adapters
   Apps/
     System/
-      HackerOs.Apps.Terminal/
-      HackerOs.Apps.FileExplorer/
-      HackerOs.Apps.Settings/
-      HackerOs.Apps.SystemMonitor/
+      Kazo.Os.Apps.Terminal/
+      Kazo.Os.Apps.FileExplorer/
+      Kazo.Os.Apps.Settings/
+      Kazo.Os.Apps.SystemMonitor/
       ...one project per independently versioned app...
     Commands/
-      HackerOs.Commands.Ls/
-      HackerOs.Commands.Cd/
+      Kazo.Os.Commands.Ls/
+      Kazo.Os.Commands.Cd/
       ...one project per independently versioned command app...
     Samples/
-      HackerOs.Samples.WindowApp/
-      HackerOs.Samples.TerminalApp/
-      HackerOs.Samples.ServiceApp/
+      Kazo.Os.Samples.WindowApp/
+      Kazo.Os.Samples.TerminalApp/
+      Kazo.Os.Samples.ServiceApp/
   Server/
-    HackerOs.Server/                     # Optional sync and network proxy
-    HackerOs.Server.Contracts/           # Versioned transport records
+    Kazo.Os.Server/                     # Optional sync and network proxy
+    Kazo.Os.Server.Contracts/           # Versioned transport records
   Tests/
-    HackerOs.AppSdk.Tests/
-    HackerOs.Platform.Tests/
-    HackerOs.Infrastructure.Tests/
-    HackerOs.E2E.Tests/
+    Kazo.Os.AppSdk.Tests/
+    Kazo.Os.Platform.Tests/
+    Kazo.Os.Infrastructure.Tests/
+    Kazo.Os.E2E.Tests/
 ```
 
 Names may change during scaffolding. The dependency rules are the important
@@ -192,7 +192,7 @@ part.
 ### 6.2 Dependency rules
 
 1. App projects reference only the SDK/abstraction projects they require.
-2. App projects never reference `HackerOs.Ecosystem`, browser infrastructure,
+2. App projects never reference `Kazo.Os.Ecosystem`, browser infrastructure,
    another app implementation, or the root service provider.
 3. Cross-app integration uses app IDs, intents, files, commands, or shared
    contracts. It does not call another app's concrete class.
@@ -210,7 +210,7 @@ part.
 
 ```mermaid
 flowchart TB
-    Host[HackerOs.Ecosystem PWA] --> Kernel[Ecosystem Kernel]
+    Host[Kazo.Os.Ecosystem PWA] --> Kernel[Ecosystem Kernel]
     Host --> Shell[Desktop and Window Shell]
     Kernel --> Registry[App Registry and Package Catalog]
     Kernel --> Policy[Capability and Enablement Policy]

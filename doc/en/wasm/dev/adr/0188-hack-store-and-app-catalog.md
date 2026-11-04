@@ -1,6 +1,6 @@
 > [Version française](../../../../fr/wasm/dev/adr/0188-hack-store-and-app-catalog.md)
 
-# ADR 0188: the Hack Store and the `HackerOs-AppMarketPlace` catalog
+# ADR 0188: the Hack Store and the `Os-AppMarketPlace` catalog
 
 ## Status
 
@@ -19,7 +19,7 @@ in [ADR 0190](0190-theme-packs.md).
 - `hackpkg` (ADR 0182) installs an app from the `hackeros-packages` branch of
   its GitHub repository, read through `raw.githubusercontent.com`. There is no
   list of apps and no graphical interface.
-- The [`Kazo-ca/HackerOs-AppMarketPlace`](https://github.com/Kazo-ca/HackerOs-AppMarketPlace)
+- The [`Kazo-ca/Os-AppMarketPlace`](https://github.com/Kazo-ca/Os-AppMarketPlace)
   repository exists and is empty.
 - The Start menu has a **Pinned** section (the "quick access"); a new profile
   has no app there today.
@@ -60,7 +60,7 @@ The Store checks for updates when the session starts, then every 6 hours
 and sends a notification; updating takes one click, with the same rights as
 installing (ADR 0189). No automatic updates.
 
-### 4. The `HackerOs-AppMarketPlace` catalog repository
+### 4. The `Os-AppMarketPlace` catalog repository
 
 `main` branch, reviewed through pull requests: **one folder per app
 version**, named `<appId>_<version>`.
@@ -86,7 +86,7 @@ categories.json                  closed list of categories, French and English l
 
 ```json
 {
-  "repository": "https://github.com/example/HackerOs-App-MyApp",
+  "repository": "https://github.com/example/Os-App-MyApp",
   "commit": "3f2a9c1…",
   "category": "productivity",
   "tags": ["notes", "markdown"],
@@ -143,7 +143,7 @@ older ones are removed from `packages` (their folder stays in the history of
 The `hackeros-solution` template (ADR 0176) gets a workflow: on a `v*` tag, it
 builds the app, produces the `<appId>_<version>` folder (icon, descriptions and
 `store.json` taken from a `store/` folder of the app repository, commit of the
-tag) and opens the PR to `HackerOs-AppMarketPlace` from the author's fork, with
+tag) and opens the PR to `Os-AppMarketPlace` from the author's fork, with
 a token the author puts in their secrets. Without a token, the folder is left
 as a workflow artifact, to submit by hand.
 
@@ -191,7 +191,7 @@ recommendation.
 
 - [ ] `hackeros-solution` template (ADR 0176 tasks), with the §7 workflow.
 - [ ] Serve the `wwwroot/` assets of installed apps (ADR 0182 limit).
-- [ ] `HackerOs-AppMarketPlace` repository: `categories.json`, PR template,
+- [ ] `Os-AppMarketPlace` repository: `categories.json`, PR template,
       `validate.yml`, `publish.yml`, `packages` branch, `catalog.json`.
 - [ ] Hack Store system app (v1, §1 to §3), default pin and migration.
 - [ ] `hackpkg install <appId>` from catalogs.

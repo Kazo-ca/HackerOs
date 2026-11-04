@@ -65,11 +65,11 @@ transitively) on an app thus uninstalled.
 
 | Type | Project | Role |
 | --- | --- | --- |
-| `IAppInstallationService`, `AppInstallationService` | `Platform/HackerOs.Platform.Core/Apps` | reads, watches and writes the two files; keeps `AppEnablementRegistry` equal to the effective state |
+| `IAppInstallationService`, `AppInstallationService` | `Platform/Kazo.Os.Platform.Core/Apps` | reads, watches and writes the two files; keeps `AppEnablementRegistry` equal to the effective state |
 | `AppsConfigDocument` | same | paths, tolerant reading, line-by-line writing, dependency closures |
 | `AppEnablementToFilesMigration` | same | creates a commented `/etc/hackeros/apps.config` and copies into it once the old `IsEnabled = false` entries |
-| `AppEnablementRegistry` | `Platform/HackerOs.Platform.Core/Lifecycle` | single launch checkpoint, now fed by the service; `Changed` event |
-| `InstalledAppsPanel` | `Apps/System/HackerOs.Apps.Settings` | "Installed Apps" tab of the Settings app |
+| `AppEnablementRegistry` | `Platform/Kazo.Os.Platform.Core/Lifecycle` | single launch checkpoint, now fed by the service; `Changed` event |
+| `InstalledAppsPanel` | `Apps/System/Kazo.Os.Apps.Settings` | "Installed Apps" tab of the Settings app |
 
 Single flow, whatever the origin of the change (Settings app, `nano`,
 `/home` synchronization, login, logout):
@@ -182,7 +182,7 @@ by `HackApps` without a capability.
   IndexedDB store keeps the manifest snapshot, but the OS no longer reads or
   writes `IsEnabled`; its schema version does not change.
 - **`DisableAsync` and `EnableAsync` become internal** to
-  `HackerOs.Platform.Core` (visible to tests through `InternalsVisibleTo`): only
+  `Kazo.Os.Platform.Core` (visible to tests through `InternalsVisibleTo`): only
   the installation service calls them. The orchestrator no longer receives
   `IOsSettingsService` or `IPersistentAppCatalogRepository`.
 - **Dependents uninstalled implicitly.** A hand-written line for
@@ -209,7 +209,7 @@ by `HackApps` without a capability.
 
 ## Contract tests
 
-`Tests/HackerOs.Platform.Core.Tests/Apps/AppInstallationServiceTests.cs`
+`Tests/Kazo.Os.Platform.Core.Tests/Apps/AppInstallationServiceTests.cs`
 (ADR 0048 section 7):
 
 - user uninstall: file written, launch refused, instance
@@ -243,8 +243,8 @@ app's GitHub repository on its `hackeros-packages` branch, read through
 `raw.githubusercontent.com`.
 
 ```text
-hackpkg install Kazo-ca/HackerOs-App-Webamp            # for yourself if the source is trusted
-hackpkg install Kazo-ca/HackerOs-App-Webamp@1.0.0 --system   # for everyone, admin approval
+hackpkg install Kazo-ca/Os-App-Webamp            # for yourself if the source is trusted
+hackpkg install Kazo-ca/Os-App-Webamp@1.0.0 --system   # for everyone, admin approval
 hackpkg update                                         # every installed app
 hackpkg list | info <repo> | remove <appId> [--user|--system]
 hackpkg rollback <appId> [--user|--system]             # goes back to the kept version (ADR 0214)
@@ -407,7 +407,7 @@ hackpkg info org.example.notes
 
 Tests: `AppCatalogDocumentTests`, the catalog tests of
 `AppPackageGatewayTests`, `StartMenuPreferencesServiceTests`
-(Platform.Core) and `HackerOs.Apps.Store.Tests` (`StoreCatalog`,
+(Platform.Core) and `Kazo.Os.Apps.Store.Tests` (`StoreCatalog`,
 `StoreMarkdown`, manifest).
 
 ## Adding without a restart, signing and transactions
@@ -417,7 +417,7 @@ completes the Hack Store.
 
 - **Live catalog**: after each install, update, removal or rollback, the gateway
   calls `IInstalledAppsActivator` (`InstalledAppsActivator` in
-  `HackerOs.Ecosystem.Host`). It reads the installed apps again, replaces the
+  `Kazo.Os.Ecosystem.Host`). It reads the installed apps again, replaces the
   content of the page's one `AppCatalog` (`InstalledAppsBoot.Live`,
   `AppCatalog.ReplaceContents`, `AppCatalog.Changed` event) and adds the
   assemblies to the lazy-loading registry. An app with an assembly already

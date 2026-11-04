@@ -5,7 +5,7 @@
 ## Status
 
 Accepted on 2026-10-30. Work item 9 of the Hack Store plan, issue
-[#255](https://github.com/Kazo-ca/HackerOs/issues/255), `todo/base` series
+[#255](https://github.com/Kazo-ca/Os/issues/255), `todo/base` series
 (branch `todo/7-icon-packs`). Questions Q1 to Q4 were asked to Benoit in the
 "Ajouter les packs d'icônes" thread; the recommendations hold unless he answers
 otherwise.
@@ -111,11 +111,11 @@ It is there to try the feature and as a model.
 - The Store can accept the `icons/` folder of a theme pack: the catalog already
   reads it.
 - A well-made pack also replaces third-party app icons by their id.
-- No change to the public SDK (`HackerOs.AppSdk`): the new types live in
-  `HackerOs.Theming.Abstractions` (`IconPackLibrary`, `IconPack`),
-  `HackerOs.Platform.Core` (`IconPackService`, `IconPackSettingsDocuments`,
-  `BuiltInIconPacks`), `HackerOs.Platform.Blazor` (`ShellAppIcon`),
-  `HackerOs.Windowing.Abstractions` (`SetWindowIconCommand`) and File Explorer
+- No change to the public SDK (`Kazo.Os.AppSdk`): the new types live in
+  `Kazo.Os.Theming.Abstractions` (`IconPackLibrary`, `IconPack`),
+  `Kazo.Os.Platform.Core` (`IconPackService`, `IconPackSettingsDocuments`,
+  `BuiltInIconPacks`), `Kazo.Os.Platform.Blazor` (`ShellAppIcon`),
+  `Kazo.Os.Windowing.Abstractions` (`SetWindowIconCommand`) and File Explorer
   (`IconPackShellIconProvider`).
 
 ## Verification

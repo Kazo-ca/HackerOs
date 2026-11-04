@@ -38,7 +38,7 @@ A window stays on the main thread: the trial of rendering in a worker
 [`remote-window-rendering.md`](remote-window-rendering.md)). Its prototype,
 switched off by default, is the only one to start a `start` process with `k = 3`.
 
-The 74 commands of `HackerOs.Commands`: 56 in `pool`, 18 in `mainThread`
+The 74 commands of `Kazo.Os.Commands`: 56 in `pool`, 18 in `mainThread`
 with the reason in a comment in their definition (`cd`, `exit`, `export`,
 `unset`, `jobs`, `read`, `help`, `which`, `kill` drive the shell; `sudo`
 asks the authentication agent for a password; `passwd` reads the terminal without echo; `hackbackup` opens
@@ -51,7 +51,7 @@ service and `hackwebd` run in a dedicated worker since `HackEvents`
 and `Watch` cross the boundary (ADR 0124).
 
 All three hosts have workers: `test/test` runs the Ecosystem's `Program.cs` on
-the browser side, and `HackerOs.Server` serves the Ecosystem OS as
+the browser side, and `Kazo.Os.Server` serves the Ecosystem OS as
 WebAssembly since ADR 0130 (its former Interactive Server rendering, without
 workers, was removed). A host composed without `IWebWorkerRuntime` writes to
 `/var/log/syslog` "workers: no Web Worker on this host: AppExecutionHost
@@ -74,13 +74,13 @@ workers, was removed). A host composed without `IWebWorkerRuntime` writes to
 
 | Project | Types |
 |---|---|
-| `Shared/HackerOs.App.Abstractions` | `AppExecutionHost`, `AppExecutionHosts` (`DefaultFor`, `Resolve`, `Of`, `IsWorker`), `AppManifestAttribute.Execution`, `AppManifest.Execution`. |
-| `Shared/HackerOs.Simulation.Abstractions/Workers` | `IWebWorkerRuntime`, `IWebWorker`, `WebWorkerStartOptions`; `IWorkerPoolStatus`, `WorkerSnapshot`, `WorkerRole`, `WorkerState`. |
-| `Platform/HackerOs.Platform.Core` | `IRemoteProcessHost`, `RemoteProcessLaunch`, `RemoteProcessExit`, `IRemoteService`, `ExecutionPlacement` (pipeline group), `SystemStartupSignal`; `AppLifecycleOrchestrator` launches remotely what `ShouldRunRemotely` accepts; `/proc/hackeros/workers`. |
-| `Platform/HackerOs.Platform.WorkerHost` | **Protocol**: `WorkerMessages`, `WireCodec` (explicit encoding, no reflection), `RemoteErrors`, `RemoteOps`. **Worker side**: `WorkerProcessHost`, `RemoteAppExecutionContext`, remote gateways (`RemoteGateways`, `RemoteFileSystemGateway`, `RemoteStandardStreams`), `WorkerCpuMeter`, `WorkerAssemblyLoader`, `BrowserWorkerEntryPoint`. **OS side**: `WorkerPool`, `WorkerConnection`, `RemoteProcessSession`, `WorkerRemoteProcessHost`, `WorkerAwareCpuTimeAccountant`, `WorkerAwareMemoryAccountant`, `AddHackerOsWorkerProcesses`. **Tests**: `LoopbackWebWorkerRuntime`. |
-| `Infrastructure/HackerOs.Infrastructure.Browser` | `wwwroot/workerHost.js` (creation, `postMessage`, `terminate`, `hardwareConcurrency`, `requestIdleCallback`), `wwwroot/workerBootstrap.js` (the worker's .NET runtime), `Workers/BrowserWebWorkerRuntime`. No host references them: they are imported by the C# (`_content/HackerOs.Infrastructure.Browser/…`). |
-| `OS/HackerOs.Ecosystem.Host` | `AddHackerOsBrowserHost` (called by the Ecosystem's `Program.cs`) registers `BrowserWebWorkerRuntime` and the workers **in the browser only** (`OperatingSystem.IsBrowser()`), preloading `HackerOs.Commands.dll` and with `KnownAssemblies` = the catalog's lazy assemblies (ADR 0124 §4); `EcosystemBootCoordinator.MarkSystemStarted` gives the end-of-boot signal. |
-| `Apps/System/HackerOs.Apps.SystemMonitor` | `ProcWorkers`/`ParseWorkers`, "Workers" section of the Performance tab. |
+| `Shared/Kazo.Os.App.Abstractions` | `AppExecutionHost`, `AppExecutionHosts` (`DefaultFor`, `Resolve`, `Of`, `IsWorker`), `AppManifestAttribute.Execution`, `AppManifest.Execution`. |
+| `Shared/Kazo.Os.Simulation.Abstractions/Workers` | `IWebWorkerRuntime`, `IWebWorker`, `WebWorkerStartOptions`; `IWorkerPoolStatus`, `WorkerSnapshot`, `WorkerRole`, `WorkerState`. |
+| `Platform/Kazo.Os.Platform.Core` | `IRemoteProcessHost`, `RemoteProcessLaunch`, `RemoteProcessExit`, `IRemoteService`, `ExecutionPlacement` (pipeline group), `SystemStartupSignal`; `AppLifecycleOrchestrator` launches remotely what `ShouldRunRemotely` accepts; `/proc/hackeros/workers`. |
+| `Platform/Kazo.Os.Platform.WorkerHost` | **Protocol**: `WorkerMessages`, `WireCodec` (explicit encoding, no reflection), `RemoteErrors`, `RemoteOps`. **Worker side**: `WorkerProcessHost`, `RemoteAppExecutionContext`, remote gateways (`RemoteGateways`, `RemoteFileSystemGateway`, `RemoteStandardStreams`), `WorkerCpuMeter`, `WorkerAssemblyLoader`, `BrowserWorkerEntryPoint`. **OS side**: `WorkerPool`, `WorkerConnection`, `RemoteProcessSession`, `WorkerRemoteProcessHost`, `WorkerAwareCpuTimeAccountant`, `WorkerAwareMemoryAccountant`, `AddHackerOsWorkerProcesses`. **Tests**: `LoopbackWebWorkerRuntime`. |
+| `Infrastructure/Kazo.Os.Infrastructure.Browser` | `wwwroot/workerHost.js` (creation, `postMessage`, `terminate`, `hardwareConcurrency`, `requestIdleCallback`), `wwwroot/workerBootstrap.js` (the worker's .NET runtime), `Workers/BrowserWebWorkerRuntime`. No host references them: they are imported by the C# (`_content/Kazo.Os.Infrastructure.Browser/…`). |
+| `OS/Kazo.Os.Ecosystem.Host` | `AddHackerOsBrowserHost` (called by the Ecosystem's `Program.cs`) registers `BrowserWebWorkerRuntime` and the workers **in the browser only** (`OperatingSystem.IsBrowser()`), preloading `Kazo.Os.Commands.dll` and with `KnownAssemblies` = the catalog's lazy assemblies (ADR 0124 §4); `EcosystemBootCoordinator.MarkSystemStarted` gives the end-of-boot signal. |
+| `Apps/System/Kazo.Os.Apps.SystemMonitor` | `ProcWorkers`/`ParseWorkers`, "Workers" section of the Performance tab. |
 
 ### Starting a worker
 
@@ -287,7 +287,7 @@ members refused with the same message, memory from the heartbeat.
 Who sets the headers: the Ecosystem's service worker (according to
 `HackerOs:CrossOriginIsolation` in `appsettings.json`, fallback `require-corp`
 with a single reload), the middleware of `test/test` and
-`HackerOs.Server`. The Ecosystem served on `localhost` or `127.0.0.1` has no
+`Kazo.Os.Server`. The Ecosystem served on `localhost` or `127.0.0.1` has no
 service worker, hence no isolation (ADR 0143 §3): try it on
 `127.0.0.2`.
 
@@ -317,7 +317,7 @@ Host side:
 if (OperatingSystem.IsBrowser())
 {
     builder.Services.AddSingleton<IWebWorkerRuntime, BrowserWebWorkerRuntime>();
-    builder.Services.AddHackerOsWorkerProcesses(o => o with { PreloadAssemblies = ["HackerOs.Commands.dll"] });
+    builder.Services.AddHackerOsWorkerProcesses(o => o with { PreloadAssemblies = ["Kazo.Os.Commands.dll"] });
 }
 ```
 
@@ -364,7 +364,7 @@ its descriptor is returned as soon as this answer arrives (ADR 0139 §3).
 
 ## Tests
 
-- `Tests/HackerOs.Platform.WorkerHost.Tests` (full OS without an interface,
+- `Tests/Kazo.Os.Platform.WorkerHost.Tests` (full OS without an interface,
   workers in local loopback):
   - `CommandParityTests`: **the 74 built-in commands** (`nslookup`, `ausearch`, `xdg-open`, `xdg-mime`, `passwd`, `hackbackup`, `dmesg`, `nice`, `renice` and `prlimit` included) run in both
     modes (main thread, worker) with the same output, the same code and the
@@ -383,9 +383,9 @@ its descriptor is returned as soon as this answer arrives (ADR 0139 §3).
     unsubscribe on `kill`; sample service in a dedicated worker;
     `sample-cmd` (third-party sample project) loaded on demand; refusal of an
     unknown assembly.
-- `Tests/HackerOs.App.Abstractions.Tests`: `Execution` in the mapper, the
+- `Tests/Kazo.Os.App.Abstractions.Tests`: `Execution` in the mapper, the
   validator, the serializer and the schema.
-- `Tests/HackerOs.HostSmoke.Tests` (`build/verify-hosts.sh`): on the three
+- `Tests/Kazo.Os.HostSmoke.Tests` (`build/verify-hosts.sh`): on the three
   hosts (the server serves the same OS since ADR 0130), pipeline,
   `/proc/hackeros/workers`, `echo` during `stress`, "not-responding",
   `kill -9` and `kill`.
@@ -394,8 +394,8 @@ its descriptor is returned as soon as this answer arrives (ADR 0139 §3).
 
 - [x] `AppExecutionHost` in `[AppManifest]`, the mapper, the validator, the schema and `manifest.json` (defaults from ADR 0070 §1).
 - [x] Contracts `IWebWorkerRuntime`, `IWorkerPoolStatus`; `IRemoteProcessHost` in the orchestrator.
-- [x] `HackerOs.Platform.WorkerHost`: protocol, worker process host, remote gateways, standard streams through messages.
-- [x] JS module in `HackerOs.Infrastructure.Browser/wwwroot` and `BrowserWebWorkerRuntime`.
+- [x] `Kazo.Os.Platform.WorkerHost`: protocol, worker process host, remote gateways, standard streams through messages.
+- [x] JS module in `Kazo.Os.Infrastructure.Browser/wwwroot` and `BrowserWebWorkerRuntime`.
 - [x] Pool per virtual core, pipeline placement, dedicated workers.
 - [x] Worker always ready after boot, overflow, return to size, ceiling and syslog (ADR 0071).
 - [x] Heartbeat, CPU and memory measurements, "Not responding", step 4 of the escalation.
@@ -434,7 +434,7 @@ its descriptor is returned as soon as this answer arrives (ADR 0139 §3).
 ## Task list for work item `exec/9-cross-origin-isolation` (ADR 0131, ADR 0143)
 
 - [x] Setting `HackerOs:CrossOriginIsolation`, audit constant and copy in the service worker.
-- [x] Headers: the Ecosystem's service worker (fallback `require-corp`), middleware of `test/test` and `HackerOs.Server`.
+- [x] Headers: the Ecosystem's service worker (fallback `require-corp`), middleware of `test/test` and `Kazo.Os.Server`.
 - [x] Page probe (`crossOriginIsolation.js`), reasons, `syslog` line.
 - [x] Shared rings (`sharedRing.js`) in `workerHost.js` and `workerBootstrap.js`.
 - [x] Synchronous calls `ListProcesses`/`Kill`, operation `proc.list`, `sample-cmd --processes` and `--kill`.
@@ -448,7 +448,7 @@ its descriptor is returned as soon as this answer arrives (ADR 0139 §3).
 
 Trimmed Release publication, headless Chromium. A ready, empty worker occupies
 **55.4 MiB** of WebAssembly linear memory (the runtime and the 87 boot
-assemblies, ≈ 20.3 MB of which 8.67 MB for `HackerOs.AppSdk.Icons`) and
+assemblies, ≈ 20.3 MB of which 8.67 MB for `Kazo.Os.AppSdk.Icons`) and
 5.7 MiB of managed heap. With the Calculator: 66.5 MiB. Opening +≈ 340 ms
 (ready worker), click latency p95 +3.3 ms. Details and verdict in
 [ADR 0133](adr/0133-window-rendering-in-worker-verdict.md).

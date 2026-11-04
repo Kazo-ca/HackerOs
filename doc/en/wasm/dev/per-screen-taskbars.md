@@ -32,7 +32,7 @@ primary-taskbar = own   ; all | own
 
 | Member | Role |
 | --- | --- |
-| `PrimaryTaskbarMode` (`HackerOs.Platform.Core.Shell`) | `All` or `Own`. |
+| `PrimaryTaskbarMode` (`Kazo.Os.Platform.Core.Shell`) | `All` or `Own`. |
 | `ScreensSettingsDocuments.ReadPrimaryTaskbar(snapshot)` | `own` (ignoring case and spaces) gives `Own`; any other value, or no line, gives `All`. |
 | `ScreensSettingsDocuments.FormatPrimaryTaskbar(mode)` | `all` or `own`. |
 | `ScreenService.PrimaryTaskbar` | Read at start, then followed: the service watches the file (`WatchAsync`) and reads **only** `primary-taskbar` again on each change. The screens to restore are read at start only. |
@@ -83,27 +83,27 @@ out by itself, and a maximized window stops above the taskbar.
 
 | File | Role |
 | --- | --- |
-| `Platform/HackerOs.Platform.Blazor/Shell/TaskbarAdapters.cs` | `TaskbarScreenFilter.Lists`, `TaskbarWindowSourceAdapter`'s filtered list (`Refresh`), `TaskbarLauncherAdapter`'s per-screen views. |
-| `Platform/HackerOs.Platform.Blazor/Shell/DesktopShell.razor` | Screen 1's filtered taskbar, each secondary screen's taskbar and Start menu, the launch's screen. |
-| `Platform/HackerOs.Platform.Blazor/Display/ScreenLayer.razor` | `ScreenTaskbar` parameter, rendered under the screen's desktop. |
-| `Platform/HackerOs.Platform.Blazor/Display/ScreenService.cs` | `PrimaryTaskbar`, `SetPrimaryTaskbarAsync`, watching `screens.config`. |
-| `Platform/HackerOs.Platform.Blazor/Windows/WindowLaunchCoordinator.cs` | `OpenOnDisplay`, screen and work area of a new window. |
-| `Platform/HackerOs.Platform.Core/Shell/ScreensSettings.cs` | `PrimaryTaskbarMode`, `[taskbar]` section. |
+| `Platform/Kazo.Os.Platform.Blazor/Shell/TaskbarAdapters.cs` | `TaskbarScreenFilter.Lists`, `TaskbarWindowSourceAdapter`'s filtered list (`Refresh`), `TaskbarLauncherAdapter`'s per-screen views. |
+| `Platform/Kazo.Os.Platform.Blazor/Shell/DesktopShell.razor` | Screen 1's filtered taskbar, each secondary screen's taskbar and Start menu, the launch's screen. |
+| `Platform/Kazo.Os.Platform.Blazor/Display/ScreenLayer.razor` | `ScreenTaskbar` parameter, rendered under the screen's desktop. |
+| `Platform/Kazo.Os.Platform.Blazor/Display/ScreenService.cs` | `PrimaryTaskbar`, `SetPrimaryTaskbarAsync`, watching `screens.config`. |
+| `Platform/Kazo.Os.Platform.Blazor/Windows/WindowLaunchCoordinator.cs` | `OpenOnDisplay`, screen and work area of a new window. |
+| `Platform/Kazo.Os.Platform.Core/Shell/ScreensSettings.cs` | `PrimaryTaskbarMode`, `[taskbar]` section. |
 
-The `HackerOs.Taskbar.Blazor` package does not change: the filter lives in the OS adapter.
+The `Kazo.Os.Taskbar.Blazor` package does not change: the filter lives in the OS adapter.
 
 ## 6. Tests
 
-- `Tests/HackerOs.Platform.Blazor.Tests/Shell/ScreenTaskbarTests.cs`: filter (`all` / `own`,
+- `Tests/Kazo.Os.Platform.Blazor.Tests/Shell/ScreenTaskbarTests.cs`: filter (`all` / `own`,
   secondary screens), lists that follow a window changing screen, per-screen Start menu.
-- `Tests/HackerOs.Platform.Blazor.Tests/WindowLaunchCoordinatorTests.cs`: an app from a screen's
+- `Tests/Kazo.Os.Platform.Blazor.Tests/WindowLaunchCoordinatorTests.cs`: an app from a screen's
   Start menu opens on that screen; another launch on the active window's screen; vanished screen.
-- `Tests/HackerOs.Platform.Blazor.Tests/Display/ScreenServiceTests.cs`: `primary-taskbar` read at
+- `Tests/Kazo.Os.Platform.Blazor.Tests/Display/ScreenServiceTests.cs`: `primary-taskbar` read at
   start, followed when the file changes, written to the user's file.
-- `Tests/HackerOs.Platform.Blazor.Tests/Display/ScreenLayerTests.cs`: taskbar rendered under the desktop.
-- `Tests/HackerOs.Platform.Core.Tests/Shell/ScreensSettingsTests.cs`: reading and writing `[taskbar]`
+- `Tests/Kazo.Os.Platform.Blazor.Tests/Display/ScreenLayerTests.cs`: taskbar rendered under the desktop.
+- `Tests/Kazo.Os.Platform.Core.Tests/Shell/ScreensSettingsTests.cs`: reading and writing `[taskbar]`
   on the virtual disk.
-- `Tests/HackerOs.UI.E2E.Tests/ScreenServiceTests.cs`, real Chromium: screen 2 has its taskbar, under
+- `Tests/Kazo.Os.UI.E2E.Tests/ScreenServiceTests.cs`, real Chromium: screen 2 has its taskbar, under
   its desktop, without notification area; its Start menu opens there and opens its app there; screen
   1's menu stays on screen 1; screen 1's taskbar lists both windows, then only its own once
   `primary-taskbar = own` is written in the terminal.

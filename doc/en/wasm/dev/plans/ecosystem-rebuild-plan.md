@@ -12,7 +12,7 @@ direction reference for the ecosystem. These two documents stay in
 
 ## 1. Purpose
 
-Put the `wasm2/HackerOs` ecosystem back on a good footing. The current
+Put the `wasm2/KazoOs` ecosystem back on a good footing. The current
 system works, but it is more complicated than the TypeScript legacy in `src/`
 without being more pleasant to use or simpler to extend. The goal is twofold,
 and both parts matter equally:
@@ -35,14 +35,14 @@ base apps (file explorer, console, task manager, text editor). Other apps, the s
 
 ### 2.1 What is solid and kept
 
-- The file engine (`HackerOs.Simulation.Abstractions.FileSystem`,
+- The file engine (`Kazo.Os.Simulation.Abstractions.FileSystem`,
   `Platform.Core/FileSystem`): canonical paths, entry identities,
   optimistic revisions, atomic transactions, symbolic links,
   owner/group/other permissions, mounts by path.
 - IndexedDB persistence in deduplicated blocks
-  (`Infrastructure/HackerOs.Infrastructure.Browser`).
-- Windowing and the taskbar (`HackerOs.Windowing.*`,
-  `HackerOs.Taskbar.Blazor`), mobile, the theme.
+  (`Infrastructure/Kazo.Os.Infrastructure.Browser`).
+- Windowing and the taskbar (`Kazo.Os.Windowing.*`,
+  `Kazo.Os.Taskbar.Blazor`), mobile, the theme.
 - The process manager (parent/child tree, cascading kill), events,
   topic messaging, notifications, clipboard,
   file watching, sessions and `sudo`.
@@ -51,13 +51,13 @@ base apps (file explorer, console, task manager, text editor). Other apps, the s
 
 | Subject | Problem found | Reference |
 |---|---|---|
-| File API | Writing a string requires `CreateAsync` with mode bits, then `WriteAsync` with the expected revision, then a home-made `IFileSystemContentSource` class. | `Apps/System/HackerOs.Apps.TextEditor/TextEditorWindow.razor` (≈ l. 364-460) |
+| File API | Writing a string requires `CreateAsync` with mode bits, then `WriteAsync` with the expected revision, then a home-made `IFileSystemContentSource` class. | `Apps/System/Kazo.Os.Apps.TextEditor/TextEditorWindow.razor` (≈ l. 364-460) |
 | Manifest | Defined twice: `app.manifest.json` and a C# copy `StaticManifest` (32 apps). | `Apps/**/app.manifest.json` |
-| Adding an app | A project, plus three entries in `HackerOs.Ecosystem.csproj` (`ProjectReference`, `BlazorWebAssemblyLazyLoad`, `EmbeddedResource`). | `OS/HackerOs.Ecosystem/HackerOs.Ecosystem.csproj`, `BuildKnownLazyApps.cs` |
-| Settings | The `/etc/hackeros` mount is never wired into the real OS: the router is created with the IndexedDB provider alone. `SettingsFileSystemProvider` exists only in tests. Settings live in a separate store, and security comes from the settings service, not from file permissions. | `OS/HackerOs.Ecosystem/EcosystemServiceCollectionExtensions.cs` (≈ l. 157) |
+| Adding an app | A project, plus three entries in `Kazo.Os.Ecosystem.csproj` (`ProjectReference`, `BlazorWebAssemblyLazyLoad`, `EmbeddedResource`). | `OS/Kazo.Os.Ecosystem/Kazo.Os.Ecosystem.csproj`, `BuildKnownLazyApps.cs` |
+| Settings | The `/etc/hackeros` mount is never wired into the real OS: the router is created with the IndexedDB provider alone. `SettingsFileSystemProvider` exists only in tests. Settings live in a separate store, and security comes from the settings service, not from file permissions. | `OS/Kazo.Os.Ecosystem/EcosystemServiceCollectionExtensions.cs` (≈ l. 157) |
 | Logs | `/var/log` is created but stays empty. Logs go to an IndexedDB store read only by Error Log Viewer. | `Platform.Core/Diagnostics/` |
-| Shell | No pipes, redirections, `&&` or environment variables. The legacy had pipes and `env`. | `Shared/HackerOs.AppSdk.Terminal/ShellParser.cs`, `adr/0014-shell-grammar-boundary.md` |
-| Commands | 28 projects, one per command. `cd`, `pwd`, `clear` and `help` are hard-coded in the terminal. | `Apps/Commands/`, comment in `HackerOs.Ecosystem.csproj` |
+| Shell | No pipes, redirections, `&&` or environment variables. The legacy had pipes and `env`. | `Shared/Kazo.Os.AppSdk.Terminal/ShellParser.cs`, `adr/0014-shell-grammar-boundary.md` |
+| Commands | 28 projects, one per command. `cd`, `pwd`, `clear` and `help` are hard-coded in the terminal. | `Apps/Commands/`, comment in `Kazo.Os.Ecosystem.csproj` |
 | Trash | Nonexistent: every deletion is permanent. | n/a |
 | Permissions | All declared capabilities are granted automatically at login, without asking anything. | `Platform.Core/Policy/CleanProfileCapabilityGrantSeeder.cs` |
 | System apps | They inject internal services (`ISessionService`, `AppCatalog`, `AppLifecycleOrchestrator`, `IJSRuntime`…). An external developer cannot write an equivalent. | `Apps/System/*/*.razor` (`@inject`) |
@@ -65,7 +65,7 @@ base apps (file explorer, console, task manager, text editor). Other apps, the s
 
 ## 3. Guiding principles
 
-1. **Rebuild in place.** We work in `wasm2/HackerOs`. We keep the
+1. **Rebuild in place.** We work in `wasm2/KazoOs`. We keep the
    file engine, IndexedDB and windowing, and replace the layers above
    them. We do not create a new root folder.
 2. **Everything is a file.** Settings, logs, processes and devices
@@ -121,7 +121,7 @@ Decisions made with Benoit during the discussion of 2026-10-10.
 
 ### 5.1 `System.IO`-style `Hack*` API
 
-New public namespace in the SDK (proposed: `HackerOs.AppSdk.IO`), with no
+New public namespace in the SDK (proposed: `Kazo.Os.AppSdk.IO`), with no
 dependency on Blazor, usable by window, terminal and service apps.
 
 **Planned types**, modeled on `System.IO`:
@@ -248,7 +248,7 @@ public sealed class TextEditorApp : AppDefinition
    kept.
 4. **A single reference:** a shared `.targets` file automatically adds
    `BlazorWebAssemblyLazyLoad` and the embedded resource for
-   each referenced app. The manual lists in `HackerOs.Ecosystem.csproj`
+   each referenced app. The manual lists in `Kazo.Os.Ecosystem.csproj`
    and `BuildKnownLazyApps.cs` disappear.
 
 ### 6.3 System apps and uninstallation
@@ -309,8 +309,8 @@ public sealed class TextEditorApp : AppDefinition
 
 ### 7.3 Commands
 
-- The 28 `Apps/Commands/HackerOs.Commands.*` projects are merged into a single
-  project (proposed name: `HackerOs.Commands`). Each command keeps its class
+- The 28 `Apps/Commands/Kazo.Os.Commands.*` projects are merged into a single
+  project (proposed name: `Kazo.Os.Commands`). Each command keeps its class
   and its `[AppManifest]` declaration.
 - `cd`, `pwd`, `clear` and `help` become normal catalog commands. As on
   Linux, `cd` and `export` act on the shell itself: the SDK gives them
@@ -340,7 +340,7 @@ public sealed class TextEditorApp : AppDefinition
   the current user, reading the app catalog, starting and stopping
   apps or services, browser file download and upload.
 - An architecture test fails the build if a project under `Apps/`
-  references `HackerOs.Platform.Core` or `HackerOs.Platform.Blazor`.
+  references `Kazo.Os.Platform.Core` or `Kazo.Os.Platform.Blazor`.
 
 ### 8.2 Target features
 
@@ -456,7 +456,7 @@ the corresponding ADR, with the value proposed below by default.
 - [x] Extend the parser: pipes, redirections, `&&`, variables (`rebuild/3-shell-interpreter`, ADR 0050 and 0054, [`shell-interpreter.md`](../shell-interpreter.md)).
 - [x] Add current directory and environment per process (`rebuild/3-process-environment`, ADR 0050 and 0053, [`process-environment.md`](../process-environment.md)).
 - [x] Merge the 28 command projects and make `cd`, `pwd`, `clear`, `help` normal.
-  - [x] Merge of the 28 projects into `HackerOs.Commands`, a single `ProjectReference` in the host (`rebuild/3-commands-merge`, ADR 0051 §1, [`app-model.md`](../../framework/app-model.md#built-in-commands-a-single-project-adr-0051)).
+  - [x] Merge of the 28 projects into `Kazo.Os.Commands`, a single `ProjectReference` in the host (`rebuild/3-commands-merge`, ADR 0051 §1, [`app-model.md`](../../framework/app-model.md#built-in-commands-a-single-project-adr-0051)).
   - [x] `cd`, `pwd`, `clear`, `help`, `sudo`, `export`, `unset`, `env` from the catalog, `IShellSession` and `shell.control`, no more hard-coded names in the terminal (`rebuild/3-shell-commands`, ADR 0051 §2-5, [`shell-commands.md`](../shell-commands.md)).
 - [x] Implement the trash and the `HackTrash` API (`rebuild/3-trash`, ADR 0052, [`trash.md`](../trash.md)).
 

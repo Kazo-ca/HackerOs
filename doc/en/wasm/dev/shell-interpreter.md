@@ -25,7 +25,7 @@ alice@hackeros:~$ text-editor notes.txt &
 
 ## Architecture
 
-Everything is in `Platform/HackerOs.Platform.Core/Shell/`:
+Everything is in `Platform/Kazo.Os.Platform.Core/Shell/`:
 
 | Type | Role |
 |---|---|
@@ -43,7 +43,7 @@ Everything is in `Platform/HackerOs.Platform.Core/Shell/`:
 | `ShellSessionAccess` | `IShellSession` handed to commands that declare `shell.control` ([`shell-commands.md`](shell-commands.md)). |
 | `ShellErrorText` | Short text of a file error (`No such file or directory`, `Permission denied`...), in the SDK. |
 
-Terminal side (`Shared/HackerOs.AppSdk.Terminal/`):
+Terminal side (`Shared/Kazo.Os.AppSdk.Terminal/`):
 
 | Type | Role |
 |---|---|
@@ -274,11 +274,11 @@ and `ErrorCode` = the error's code).
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Shell/ShellParserTests.cs`: quotes,
+- `Tests/Kazo.Os.Platform.Core.Tests/Shell/ShellParserTests.cs`: quotes,
   operators, lists, descriptor redirections, here-documents, compound
   commands, functions, incomplete input, errors, word pieces.
-- `Tests/HackerOs.Platform.Core.Tests/Shell/ShellPipeTests.cs`.
-- `Tests/HackerOs.Platform.Core.Tests/Shell/ShellInterpreterTests.cs` and
+- `Tests/Kazo.Os.Platform.Core.Tests/Shell/ShellPipeTests.cs`.
+- `Tests/Kazo.Os.Platform.Core.Tests/Shell/ShellInterpreterTests.cs` and
   `ShellInterpreterTests.Scripting.cs`: end to end with orchestrator, processes
   and real files (pipes, `;`, `||`, assignments, substitutions, arithmetic,
   `${x%motif}`, `if`/`for`/`while`/`until`/`case`, `break 2`, functions and
@@ -287,7 +287,7 @@ and `ErrorCode` = the error's code).
   apps by name and `HackConsole`, Ctrl+C on an app).
 - `ShellInterpreterTests.Commands.cs`: the commands of
   [`linux-commands.md`](linux-commands.md) in the real shell.
-- `Tests/HackerOs.Platform.Core.Tests/Shell/ShellCommandResolverTests.cs`.
+- `Tests/Kazo.Os.Platform.Core.Tests/Shell/ShellCommandResolverTests.cs`.
 
 ## Task list
 

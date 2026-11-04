@@ -6,14 +6,14 @@
 
 Accepted on 2026-10-29 by Benoit (thread "Évaluer un serveur local installable"),
 who chose the recommended options of questions Q1 to Q4 (§1, §2, §4). Tracking
-issue [#267](https://github.com/Kazo-ca/HackerOs/issues/267).
+issue [#267](https://github.com/Kazo-ca/Os/issues/267).
 
 - **Complements:** [ADR 0102](0102-server-network-relay-tcp-udp-and-policy.md) and
   [ADR 0108](0108-server-relay-implementation-adjustments.md) (relay),
   [ADR 0130](0130-server-serves-webassembly-os-and-api.md) (the server serves the OS),
   [ADR 0134](0134-automatic-server-connection-and-status-icon.md) (server
   connection), [ADR 0173](0173-automatic-releases-from-the-version-file.md) (releases).
-- **Related:** issue [#266](https://github.com/Kazo-ca/HackerOs/issues/266) (gaps of
+- **Related:** issue [#266](https://github.com/Kazo-ca/Os/issues/266) (gaps of
   the simulated browser with the relay).
 
 ## Context
@@ -22,7 +22,7 @@ issue [#267](https://github.com/Kazo-ca/HackerOs/issues/267).
   an application from Settings, install it on their computer or on another
   machine of their local network, without exposing it to the internet, and so
   get the network relay (HTTP, TCP, UDP).
-- `HackerOs.Server` already has the relay, accounts, devices, sync, a
+- `Kazo.Os.Server` already has the relay, accounts, devices, sync, a
   configurable CORS (`Cors:AllowedOrigins`, today `http://localhost:5000` and
   `https://localhost:7000`), and it serves the OS itself. The OS can connect to a
   server whose address is entered in Settings (ADR 0134).
@@ -47,7 +47,7 @@ issue [#267](https://github.com/Kazo-ca/HackerOs/issues/267).
 
 ### 1. One server, published as an installable application
 
-We ship `HackerOs.Server` as it is (OS, accounts, sync, relay), not a "relay
+We ship `Kazo.Os.Server` as it is (OS, accounts, sync, relay), not a "relay
 only" program (Q3, option a). The version is the one of `build/Versions.props`:
 the OS checks compatibility with `GET /api/version`.
 

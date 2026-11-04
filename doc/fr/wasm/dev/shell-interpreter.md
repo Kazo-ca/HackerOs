@@ -26,7 +26,7 @@ alice@hackeros:~$ text-editor notes.txt &
 
 ## Architecture
 
-Tout est dans `Platform/HackerOs.Platform.Core/Shell/` :
+Tout est dans `Platform/Kazo.Os.Platform.Core/Shell/` :
 
 | Type | Rôle |
 |---|---|
@@ -44,7 +44,7 @@ Tout est dans `Platform/HackerOs.Platform.Core/Shell/` :
 | `ShellSessionAccess` | `IShellSession` remis aux commandes qui déclarent `shell.control` ([`shell-commands.md`](shell-commands.md)). |
 | `ShellErrorText` | Texte court d'une erreur de fichier (`No such file or directory`, `Permission denied`…), dans le SDK. |
 
-Côté terminal (`Shared/HackerOs.AppSdk.Terminal/`) :
+Côté terminal (`Shared/Kazo.Os.AppSdk.Terminal/`) :
 
 | Type | Rôle |
 |---|---|
@@ -276,11 +276,11 @@ sinon `Dispatched` avec le code de sortie (une erreur de syntaxe donne
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Shell/ShellParserTests.cs` : guillemets,
+- `Tests/Kazo.Os.Platform.Core.Tests/Shell/ShellParserTests.cs` : guillemets,
   opérateurs, listes, redirections de descripteurs, here-documents, commandes
   composées, fonctions, saisies incomplètes, erreurs, morceaux de mots.
-- `Tests/HackerOs.Platform.Core.Tests/Shell/ShellPipeTests.cs`.
-- `Tests/HackerOs.Platform.Core.Tests/Shell/ShellInterpreterTests.cs` et
+- `Tests/Kazo.Os.Platform.Core.Tests/Shell/ShellPipeTests.cs`.
+- `Tests/Kazo.Os.Platform.Core.Tests/Shell/ShellInterpreterTests.cs` et
   `ShellInterpreterTests.Scripting.cs` : bout en bout avec orchestrateur,
   processus et fichiers réels (tubes, `;`, `||`, affectations, substitutions,
   arithmétique, `${x%motif}`, `if`/`for`/`while`/`until`/`case`, `break 2`,
@@ -289,7 +289,7 @@ sinon `Dispatched` avec le code de sortie (une erreur de syntaxe donne
   `| bash`, `.`, jobs, apps par leur nom et `HackConsole`, Ctrl+C sur une app).
 - `ShellInterpreterTests.Commands.cs` : les commandes de
   [`linux-commands.md`](linux-commands.md) dans le vrai shell.
-- `Tests/HackerOs.Platform.Core.Tests/Shell/ShellCommandResolverTests.cs`.
+- `Tests/Kazo.Os.Platform.Core.Tests/Shell/ShellCommandResolverTests.cs`.
 
 ## Liste des tâches
 

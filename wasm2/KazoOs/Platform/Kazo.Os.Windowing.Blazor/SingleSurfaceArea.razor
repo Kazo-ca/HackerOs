@@ -1,0 +1,100 @@
+@namespace Kazo.Os.Windowing.Blazor
+@using Kazo.Os.Windowing.Core
+@inject IServiceProvider LocalizationServices
+
+<main class="single-surface-area" aria-label="@L["Surface.Application"]">
+    @* ADR 0171 §3: an owner-modal dialog fills the screen above its window, which stays rendered (and
+       inert) under it so the app awaiting the dialog keeps its state. *@
+    @{ IReadOnlyList<WindowRuntimeState> stack = SingleSurfacePresentationPolicy.SelectSurfaceStack(Windows); }
+    @for (int index = 0; index < stack.Count; index++)
+    {
+        WindowRuntimeState window = stack[index];
+        <WindowHost @key="window.Id"
+                    Window="window"
+                    ShowChrome="false"
+                    IsInteractionBlocked="@(index < stack.Count - 1)"
+                    OnFocus="OnFocus"
+                    OnMinimize="OnMinimize"
+                    OnToggleMaximize="OnToggleMaximize"
+                    OnClose="OnClose"
+                    OnGesture="OnGesture"
+                    Overlay="@(WindowOverlay?.Invoke(window))">
+            @if (WindowContent is not null)
+            {
+                @WindowContent(window)
+            }
+        </WindowHost>
+    }
+</main>
+
+@code {
+    /// <summary>
+    /// Gets or sets stable window snapshots ordered back-to-front — the same shape
+    /// <see cref="DesktopArea.Windows"/> takes, so a host can switch presentation modes without
+    /// reshaping its window-source data.
+    /// </summary>
+    [Parameter, EditorRequired]
+    public IReadOnlyList<WindowRuntimeState> Windows { get; set; } = [];
+
+    /// <summary>Gets or sets content rendered for the single visible window snapshot.</summary>
+    [Parameter]
+    public RenderFragment<WindowRuntimeState>? WindowContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets content layered over one window's content area, such as the platform's
+    /// "not responding" dialog (ADR 0127 §3); rendered through <see cref="WindowHost.Overlay"/>.
+    /// </summary>
+    [Parameter]
+    public RenderFragment<WindowRuntimeState>? WindowOverlay { get; set; }
+
+    /// <summary>Gets or sets the focus request callback.</summary>
+    [Parameter]
+    public EventCallback<WindowId> OnFocus { get; set; }
+
+    /// <summary>Gets or sets the minimize request callback.</summary>
+    [Parameter]
+    public EventCallback<WindowId> OnMinimize { get; set; }
+
+    /// <summary>Gets or sets the maximize/restore request callback.</summary>
+    [Parameter]
+    public EventCallback<WindowId> OnToggleMaximize { get; set; }
+
+    /// <summary>Gets or sets the close request callback.</summary>
+    [Parameter]
+    public EventCallback<WindowId> OnClose { get; set; }
+
+    /// <summary>Gets or sets the raw command dispatch callback used for policy-driven commands.</summary>
+    [Parameter]
+    public EventCallback<WindowCommand> OnGesture { get; set; }
+
+    /// <summary>
+    /// Applies the single-full-screen-surface policy (plan §7.1, <c>MOB-009</c>): every window
+    /// except the current primary (and the owners under a primary dialog, ADR 0171 §3) is minimized,
+    /// and the surface is maximized to fill the work area
+    /// via the existing Maximize mechanism rather than computing full-screen geometry separately.
+    /// Idempotent — once applied, a subsequent parameter set with the same <see cref="Windows"/>
+    /// shape issues no further commands.
+    /// </summary>
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!OnGesture.HasDelegate)
+        {
+            return;
+        }
+
+        WindowId? primaryId = SingleSurfacePresentationPolicy.SelectPrimary(Windows);
+        foreach (WindowId id in SingleSurfacePresentationPolicy.WindowsToMinimize(Windows, primaryId))
+        {
+            await OnGesture.InvokeAsync(new MinimizeWindowCommand(id));
+        }
+
+        foreach (WindowId id in SingleSurfacePresentationPolicy.WindowsToMaximize(Windows, primaryId))
+        {
+            await OnGesture.InvokeAsync(new MaximizeWindowCommand(id));
+        }
+    }
+
+    /// <summary>Gets the package's texts: the host's session language, or English without localization (ADR 0104).</summary>
+    private IStringLocalizer L => _localizer ??= PackageStringLocalizer.Resolve<Strings>(LocalizationServices);
+    private IStringLocalizer? _localizer;
+}

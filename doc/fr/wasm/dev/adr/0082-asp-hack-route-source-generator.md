@@ -16,7 +16,7 @@ Accepté le 2026-10-16, avec le chantier `web/6-mvc-core`.
 
 ## Contexte
 
-Le générateur de manifestes (`HackerOs.Tools.ManifestGenerator`, ADR 0047) tourne
+Le générateur de manifestes (`Kazo.Os.Tools.ManifestGenerator`, ADR 0047) tourne
 **après** la compilation : il charge l'assembly de l'app et instancie ses
 classes `[AppManifest]`. Il ne peut donc pas ajouter de code à l'assembly. Or
 une table de routes sans réflexion doit **contenir du code** : la création du
@@ -27,14 +27,14 @@ temps de démarrage dans le worker web).
 
 ## Décision
 
-1. **Un générateur de sources Roslyn.** `Tools/HackerOs.Tools.WebRouteGenerator`
+1. **Un générateur de sources Roslyn.** `Tools/Kazo.Os.Tools.WebRouteGenerator`
    (`netstandard2.0`, `IIncrementalGenerator`) est branché comme *analyzer* sur
-   chaque projet d'app par `build/HackerOs.Apps.targets` (jamais une dépendance
+   chaque projet d'app par `build/Kazo.Os.Apps.targets` (jamais une dépendance
    d'exécution ; ignoré par la vérification de frontière du SDK, comme le
    générateur de manifestes). Pour une app sans contrôleur ni `WebAppDefinition`,
    il ne produit rien.
 2. **Ce qu'il produit.**
-   - `HackerOs.AppSdk.Web.Generated.HackWebGeneratedRoutes.Table` (interne à
+   - `Kazo.Os.AppSdk.Web.Generated.HackWebGeneratedRoutes.Table` (interne à
      l'assembly) : un `HackControllerRouteTable` qui décrit chaque action
      (`HackControllerActionDescriptor`) avec trois délégués générés :
      `CreateController` (constructeur public le plus long, services résolus dans
@@ -45,11 +45,11 @@ temps de démarrage dans le worker web).
      `EntryPoint => typeof(<Nom>WebHost)` et une classe
      `<Nom>WebHost : HackWebHost`. Le générateur de manifestes lit ensuite cet
      `EntryPoint` comme pour toute app : rien ne change pour lui.
-3. **Un seul analyseur de gabarit.** `Shared/HackerOs.AppSdk.Web/Routing/HackRouteTemplate.cs`
+3. **Un seul analyseur de gabarit.** `Shared/Kazo.Os.AppSdk.Web/Routing/HackRouteTemplate.cs`
    est compilé dans la bibliothèque (le routeur s'en sert) **et** lié dans le
    générateur : le build et l'exécution comprennent un gabarit exactement de la
    même façon.
-4. **Erreurs de build** (catégorie `HackerOs.Web`, toutes en erreur) :
+4. **Erreurs de build** (catégorie `Kazo.Os.Web`, toutes en erreur) :
 
    | Code | Cas |
    |---|---|
@@ -62,7 +62,7 @@ temps de démarrage dans le worker web).
    | `HOSWEB0007` | Action non prise en charge : attribut de méthode HTTP dérivé qui n'est pas celui d'ASP.Hack, type de retour `ref struct` ou pointeur, ou action d'un `HackApiController` sans route d'attribut (comme `[ApiController]` dans ASP.NET Core). Les méthodes génériques, statiques ou `[NonAction]` ne sont pas des actions, comme dans ASP.NET Core. |
 
 5. **Ajustements de l'ADR 0076.**
-   - §1 : la bibliothèque dépend aussi de `HackerOs.App.Abstractions` (pour
+   - §1 : la bibliothèque dépend aussi de `Kazo.Os.App.Abstractions` (pour
      `AppDefinition`) et de `Microsoft.Extensions.DependencyInjection` (§6).
    - §3 : les contraintes `double`, `decimal`, `float`, `datetime`, `required`,
      `range`, `minlength` et `maxlength` s'ajoutent à la liste ; les segments

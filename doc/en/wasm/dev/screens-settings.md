@@ -26,7 +26,7 @@ defaults (an administrator writes it, for instance with `sudo nano`).
 Settings is a base app: it only goes through the public SDK. The file goes through
 `HackSettings.OpenSystemAsync(AppContext, "screens")` (a document listed in
 `OsSettingsDocumentRegistry`); the open screens go through the system facade `HackScreens`
-(ADR 0184, namespace `HackerOs.AppSdk.Administration`), which requires the normal capability
+(ADR 0184, namespace `Kazo.Os.AppSdk.Administration`), which requires the normal capability
 `screens.manage` that Settings declares.
 
 | Call | Effect |
@@ -61,16 +61,16 @@ the terminal, shows without reloading the page.
 
 | File | Role |
 | --- | --- |
-| `Apps/System/HackerOs.Apps.Settings/ScreensPanel.razor(.cs, .css)` | The page, `RememberedScreen`, `RememberedPlace`. |
-| `Apps/System/HackerOs.Apps.Settings/SettingsWindow.Navigation.cs` | `screens` entry in the Personalization group (`--page=screens`). |
-| `Platform/HackerOs.Platform.Core/Settings/OsSettingsDocumentRegistry.cs` | `screens` document open to apps. |
-| `Shared/HackerOs.AppSdk/Administration/HackScreens.cs`, `ScreensAdministrationContracts.cs` | SDK facade and contracts (ADR 0184). |
-| `Platform/HackerOs.Platform.Core/Administration/AppScreensGateway.cs`, `IScreenControl.cs` | Trusted gateway: `screens.manage`, calling instance. |
-| `Platform/HackerOs.Platform.Blazor/Display/ScreenControl.cs` | `IScreenControl` over `ScreenService` and `WindowRuntime` (screen of the calling window). |
-| `Tests/HackerOs.Apps.Settings.Tests/ScreensPanelTests.cs` | Keys equal to the OS schema, `own` choice written, list and places, Forget, outside change, open screens and buttons, refusals, French. |
-| `Tests/HackerOs.Platform.Core.Tests/Administration/AppScreensGatewayTests.cs` | Capability required, host without screens, facade. |
-| `Tests/HackerOs.UI.E2E.Tests/ScreenServiceTests.cs` | New screen, Identify and Close from Settings in a real browser. |
-| `Tests/HackerOs.Tests.Support/MinimalAppExecutionContext.cs` | `systemSettings` and `screens` parameters for panel tests. |
+| `Apps/System/Kazo.Os.Apps.Settings/ScreensPanel.razor(.cs, .css)` | The page, `RememberedScreen`, `RememberedPlace`. |
+| `Apps/System/Kazo.Os.Apps.Settings/SettingsWindow.Navigation.cs` | `screens` entry in the Personalization group (`--page=screens`). |
+| `Platform/Kazo.Os.Platform.Core/Settings/OsSettingsDocumentRegistry.cs` | `screens` document open to apps. |
+| `Shared/Kazo.Os.AppSdk/Administration/HackScreens.cs`, `ScreensAdministrationContracts.cs` | SDK facade and contracts (ADR 0184). |
+| `Platform/Kazo.Os.Platform.Core/Administration/AppScreensGateway.cs`, `IScreenControl.cs` | Trusted gateway: `screens.manage`, calling instance. |
+| `Platform/Kazo.Os.Platform.Blazor/Display/ScreenControl.cs` | `IScreenControl` over `ScreenService` and `WindowRuntime` (screen of the calling window). |
+| `Tests/Kazo.Os.Apps.Settings.Tests/ScreensPanelTests.cs` | Keys equal to the OS schema, `own` choice written, list and places, Forget, outside change, open screens and buttons, refusals, French. |
+| `Tests/Kazo.Os.Platform.Core.Tests/Administration/AppScreensGatewayTests.cs` | Capability required, host without screens, facade. |
+| `Tests/Kazo.Os.UI.E2E.Tests/ScreenServiceTests.cs` | New screen, Identify and Close from Settings in a real browser. |
+| `Tests/Kazo.Os.Tests.Support/MinimalAppExecutionContext.cs` | `systemSettings` and `screens` parameters for panel tests. |
 
 ## 5. Limits
 

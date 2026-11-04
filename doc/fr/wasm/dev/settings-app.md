@@ -4,7 +4,7 @@
 
 ## Objet
 
-Décrit l'app système `Apps/System/HackerOs.Apps.Settings` : le panneau de
+Décrit l'app système `Apps/System/Kazo.Os.Apps.Settings` : le panneau de
 configuration de l'OS. Elle ne possède aucune donnée : chaque page lit et
 écrit des fichiers de l'OS (paramètres en fichiers, ADR 0044) ou appelle une
 façade `Hack*` du SDK. Les décisions qui l'ont façonnée sont l'ADR 0047
@@ -17,7 +17,7 @@ fenêtre : menu latéral puis `@switch` sur la page active),
 `SettingsWindow.Navigation.cs` (liste des pages, état réduit, clavier),
 `SettingsWindow.Mobile.cs` (préférences mobiles), un panneau `*Panel.razor` par page, `Strings.cs` et `Resources/` (textes
 anglais et français). Le `manifest.json` est généré au build à partir de
-`SettingsApp.cs` (ne pas l'éditer). Tests : `Tests/HackerOs.Apps.Settings.Tests`.
+`SettingsApp.cs` (ne pas l'éditer). Tests : `Tests/Kazo.Os.Apps.Settings.Tests`.
 
 ## Menu latéral (ADR 0170)
 

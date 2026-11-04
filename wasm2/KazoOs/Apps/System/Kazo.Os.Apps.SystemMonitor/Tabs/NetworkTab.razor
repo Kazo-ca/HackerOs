@@ -1,0 +1,45 @@
+@namespace Kazo.Os.Apps.SystemMonitor.Tabs
+@inherits Kazo.Os.AppSdk.Blazor.HackComponentBase
+
+<div class="net">
+    @foreach (NetworkActivity nic in Metrics.Network)
+    {
+        <section class="net-interface">
+            <h3>@nic.Name <span class="sysmon-source">/proc/net/dev</span>@if (nic.Name == "lo") {<span class="net-note"> @L["Net.Loopback"]</span>}</h3>
+            <HackLineChart Title="@L["Chart.Throughput", nic.Name]"
+                           Series="@([new HackChartSeries(L["Net.Received"], nic.ReceivePerSecond.Values), new HackChartSeries(L["Net.Sent"], nic.TransmitPerSecond.Values)])"
+                           MinimumScale="1024"
+                           Size="@(nic.Name == "lo" ? HackChartSize.Small : HackChartSize.Large)"
+                           ValueFormatter="FormatRate" />
+            @if (nic.Counters is { } counters)
+            {
+                <table class="sysmon-table net-counters">
+                    <thead>
+                        <tr><th></th><th class="num">@L["Common.Bytes"]</th><th class="num">@L["Net.Packets"]</th><th class="num">@L["Net.Errors"]</th><th class="num">@L["Net.Dropped"]</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>@L["Net.Received"]</td>
+                            <td class="num">@Units.Bytes(counters.ReceiveBytes, Formats)</td>
+                            <td class="num">@Units.Count(counters.ReceivePackets, Formats)</td>
+                            <td class="num @(counters.ReceiveErrors > 0 ? "net-bad" : null)">@Units.Count(counters.ReceiveErrors, Formats)</td>
+                            <td class="num">@Units.Count(counters.ReceiveDropped, Formats)</td>
+                        </tr>
+                        <tr>
+                            <td>@L["Net.Sent"]</td>
+                            <td class="num">@Units.Bytes(counters.TransmitBytes, Formats)</td>
+                            <td class="num">@Units.Count(counters.TransmitPackets, Formats)</td>
+                            <td class="num @(counters.TransmitErrors > 0 ? "net-bad" : null)">@Units.Count(counters.TransmitErrors, Formats)</td>
+                            <td class="num">@Units.Count(counters.TransmitDropped, Formats)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            }
+        </section>
+    }
+
+    @if (Metrics.Network.Count == 0)
+    {
+        <p class="sysmon-muted">@L["Net.NoInterface"]</p>
+    }
+</div>

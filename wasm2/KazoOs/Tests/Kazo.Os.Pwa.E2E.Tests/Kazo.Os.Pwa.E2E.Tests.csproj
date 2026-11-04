@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <!--
+      P2-PWA-007 / P2-ACC-015 / P2-ACC-016: these tests exercise a real
+      `dotnet publish` of OS/Kazo.Os.Ecosystem served from a minimal static
+      host, not a dev server or a source service-worker file. See
+      doc/en/wasm/dev/old/phase-2-acceptance.md for the evidence this satisfies.
+    -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
+    <PackageReference Include="Microsoft.Playwright" Version="1.64.0" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="4.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <!-- ADR 0173: the published pages show build/Versions.props; the test reads the same number. -->
+  <ItemGroup>
+    <AssemblyMetadata Include="HackerOsVersion" Value="$(HackerOsVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kazo.Os.E2E.Support\Kazo.Os.E2E.Support.csproj" />
+    <Using Include="Kazo.Os.E2E.Support" />
+  </ItemGroup>
+
+</Project>

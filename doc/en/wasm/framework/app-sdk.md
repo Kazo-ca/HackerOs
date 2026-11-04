@@ -25,15 +25,15 @@ public APIs, the [SDK reference](sdk-reference.md).
 
 | Project | Content |
 |---|---|
-| `Shared/HackerOs.AppSdk` | `IAppExecutionContext` and its gateways, static `Hack*` facades, entry point base classes (`TerminalAppBase`…). |
-| `Shared/HackerOs.AppSdk.Blazor` | Blazor components and services for windowed apps (window, download, charts, embeddable components `HackEmbeddedComponent<T>`…). |
-| `Shared/HackerOs.AppSdk.Icons` | Icon catalog. |
-| `Shared/HackerOs.AppSdk.Terminal` | xterm.js terminal (`TerminalPanel`, ADR 0061), which hosts a shell through `HackShell`, and tabbed console (`TerminalTabs`). |
-| `Shared/HackerOs.AppSdk.VirtualKeyboard` | Virtual keyboard. |
+| `Shared/Kazo.Os.AppSdk` | `IAppExecutionContext` and its gateways, static `Hack*` facades, entry point base classes (`TerminalAppBase`…). |
+| `Shared/Kazo.Os.AppSdk.Blazor` | Blazor components and services for windowed apps (window, download, charts, embeddable components `HackEmbeddedComponent<T>`…). |
+| `Shared/Kazo.Os.AppSdk.Icons` | Icon catalog. |
+| `Shared/Kazo.Os.AppSdk.Terminal` | xterm.js terminal (`TerminalPanel`, ADR 0061), which hosts a shell through `HackShell`, and tabbed console (`TerminalTabs`). |
+| `Shared/Kazo.Os.AppSdk.VirtualKeyboard` | Virtual keyboard. |
 
-Any `Shared/HackerOs.AppSdk` or `Shared/HackerOs.AppSdk.*` library is
+Any `Shared/Kazo.Os.AppSdk` or `Shared/Kazo.Os.AppSdk.*` library is
 an **SDK library** (MSBuild property `HackerOsSdkLibrary`, computed by
-`build/HackerOs.Apps.targets`). A test project named the same way is not
+`build/Kazo.Os.Apps.targets`). A test project named the same way is not
 one: only the location under `Shared/` counts.
 
 ## Rules
@@ -42,13 +42,13 @@ one: only the location under `Shared/` counts.
 
 | Project | May reference | Otherwise |
 |---|---|---|
-| App project (`HackerOsAppProject=true`, any project under `Apps/`) | `Shared/HackerOs.{App,Simulation,Theming}.Abstractions`, the SDK libraries, `Platform/HackerOs.Theming.Blazor`, another project under `Apps/` | `HOSAPP0030` |
+| App project (`HackerOsAppProject=true`, any project under `Apps/`) | `Shared/Kazo.Os.{App,Simulation,Theming}.Abstractions`, the SDK libraries, `Platform/Kazo.Os.Theming.Blazor`, another project under `Apps/` | `HOSAPP0030` |
 | SDK library | the three `*.Abstractions` above, another SDK library | `HOSSDK0001` |
 
 Only **direct** references of the project count: a transitive reference
 is checked in the project that declares it. `PackageReference`s
 remain free. The build-order reference to the manifest generator,
-added by `HackerOs.Apps.targets`, is ignored.
+added by `Kazo.Os.Apps.targets`, is ignored.
 
 ### Injection (ADR 0055 §3)
 
@@ -87,57 +87,57 @@ _module = await JS.InvokeAsync<IJSObjectReference>(
 
 Calls on the resulting `IJSObjectReference` are free: it is the
 app's code. Passing the `IJSRuntime` to a component or service of an SDK
-library (for example `BrowserFileDownloader` of `HackerOs.AppSdk.Blazor`) is
+library (for example `BrowserFileDownloader` of `Kazo.Os.AppSdk.Blazor`) is
 allowed: it is the SDK's code that makes the call.
 
 ## Verification
 
 | Rule | Where | When | Code |
 |---|---|---|---|
-| An app's references | target `ValidateHackerOsSdkBoundary` of `build/HackerOs.Apps.targets` | before `ResolveProjectReferences`, so before compilation | `HOSAPP0030` |
+| An app's references | target `ValidateHackerOsSdkBoundary` of `build/Kazo.Os.Apps.targets` | before `ResolveProjectReferences`, so before compilation | `HOSAPP0030` |
 | An SDK library's references | same target | same | `HOSSDK0001` |
-| `HackerOs.*` packages of an app or SDK library (ADR 0098 §2), direct or transitive | target `_ValidateHackerOsPackageBoundary` | after `ResolveAssemblyReferences`: each compile reference coming from a `HackerOs.*` package must be allowed (app: `*.Abstractions`, `HackerOs.AppSdk*`, `HackerOs.Theming.Blazor`, `HackerOs.App.Build`, `HackerOs.Apps.*`, `HackerOs.Commands`; SDK library: `*.Abstractions` and SDK) | `HOSAPP0030` / `HOSSDK0001` |
-| Injection | `SdkBoundaryInspector` of the manifest generator (`Tools/HackerOs.Tools.ManifestGenerator`) | after compilation, with the generation of `manifest.json`; on error, nothing is written | `HOSAPP0031` |
-| `IJSRuntime` | source test `SdkBoundarySourceTests` (`Tests/HackerOs.Ecosystem.Tests`) | `dotnet test` | test failure |
+| `Kazo.Os.*` packages of an app or SDK library (ADR 0098 §2), direct or transitive | target `_ValidateHackerOsPackageBoundary` | after `ResolveAssemblyReferences`: each compile reference coming from a `Kazo.Os.*` package must be allowed (app: `*.Abstractions`, `Kazo.Os.AppSdk*`, `Kazo.Os.Theming.Blazor`, `Kazo.Os.App.Build`, `Kazo.Os.Apps.*`, `Kazo.Os.Commands`; SDK library: `*.Abstractions` and SDK) | `HOSAPP0030` / `HOSSDK0001` |
+| Injection | `SdkBoundaryInspector` of the manifest generator (`Tools/Kazo.Os.Tools.ManifestGenerator`) | after compilation, with the generation of `manifest.json`; on error, nothing is written | `HOSAPP0031` |
+| `IJSRuntime` | source test `SdkBoundarySourceTests` (`Tests/Kazo.Os.Ecosystem.Tests`) | `dotnet test` | test failure |
 
 The messages name the project, reference or type at fault, and the
 ADR rule:
 
 ```text
-App.csproj : error HOSAPP0030: [My.App] Forbidden project reference 'Platform/HackerOs.Platform.Core/HackerOs.Platform.Core.csproj'. …
-App.csproj : error HOSAPP0031: [My.App.MyWindow] [Inject] property 'Sessions' injects 'HackerOs.Simulation.Abstractions.Sessions.ISessionService' …
+App.csproj : error HOSAPP0030: [My.App] Forbidden project reference 'Platform/Kazo.Os.Platform.Core/Kazo.Os.Platform.Core.csproj'. …
+App.csproj : error HOSAPP0031: [My.App.MyWindow] [Inject] property 'Sessions' injects 'Kazo.Os.Simulation.Abstractions.Sessions.ISessionService' …
 ```
 
-The generator reruns the inspection when `HackerOs.Apps.targets` changes.
+The generator reruns the inspection when `Kazo.Os.Apps.targets` changes.
 
-Outside the repository (package `HackerOs.App.Build`, see [`sdk-packages.md`](sdk-packages.md)),
+Outside the repository (package `Kazo.Os.App.Build`, see [`sdk-packages.md`](sdk-packages.md)),
 the `ProjectReference` rule does not apply (it is written in repository
 paths); it is the package rule that protects the boundary, and the injection
 inspection (`HOSAPP0031`) runs the same way.
 
 These three checks are always **errors**: no project can
 downgrade them to warnings. A project's role comes from its location
-(`Apps/` for an app, `Shared/HackerOs.AppSdk*` for an SDK library); a
+(`Apps/` for an app, `Shared/Kazo.Os.AppSdk*` for an SDK library); a
 `.csproj` under these folders that sets `HackerOsAppProject` or
 `HackerOsSdkLibrary` itself makes
 `SdkBoundarySourceTests.No_app_or_sdk_project_overrides_its_boundary_role` fail, and
 `Build_targets_have_no_exemption_mechanism` fails if an exemption or a
-`<Warning>` reappears in `HackerOs.Apps.targets`.
+`<Warning>` reappears in `Kazo.Os.Apps.targets`.
 
 ## End of temporary exemptions (ADR 0055 §6)
 
 `4-sdk-boundary` had introduced a `HackerOsSdkBoundaryExemption` list in
-`build/HackerOs.Apps.targets`: a listed project received warnings
+`build/Kazo.Os.Apps.targets`: a listed project received warnings
 instead of errors, and the `IJSRuntime` test ignored it. Nine projects were on it;
 each phase 4 work item removed its own:
 
 | Project | Removed by |
 |---|---|
-| `HackerOs.Apps.Browser`, `HackerOs.Commands` | `4-sdk-network` ([`sdk-network.md`](sdk-network.md)) |
-| `HackerOs.AppSdk.Terminal` | `4-sdk-shell-host` ([`shell-host.md`](shell-host.md)) |
-| `HackerOs.Apps.FileExplorer`, `HackerOs.Apps.TextEditor`, `HackerOs.Apps.CodeEditor` | `4-sdk-user-and-apps` |
-| `HackerOs.Apps.SystemMonitor` | `4-task-manager` ([`task-manager.md`](../dev/task-manager.md)) |
-| `HackerOs.Apps.Settings`, `HackerOs.Apps.Diagnostic` | `4-sdk-system-admin` ([`system-administration.md`](system-administration.md)) |
+| `Kazo.Os.Apps.Browser`, `Kazo.Os.Commands` | `4-sdk-network` ([`sdk-network.md`](sdk-network.md)) |
+| `Kazo.Os.AppSdk.Terminal` | `4-sdk-shell-host` ([`shell-host.md`](shell-host.md)) |
+| `Kazo.Os.Apps.FileExplorer`, `Kazo.Os.Apps.TextEditor`, `Kazo.Os.Apps.CodeEditor` | `4-sdk-user-and-apps` |
+| `Kazo.Os.Apps.SystemMonitor` | `4-task-manager` ([`task-manager.md`](../dev/task-manager.md)) |
+| `Kazo.Os.Apps.Settings`, `Kazo.Os.Apps.Diagnostic` | `4-sdk-system-admin` ([`system-administration.md`](system-administration.md)) |
 
 `4-sdk-boundary-final` (2026-10-11) removed the mechanism: the
 `HackerOsSdkBoundaryExemption` item, the target `_HackerOsResolveSdkBoundaryExemption`
@@ -145,7 +145,7 @@ and its property `_HackerOsSdkBoundaryExempt`, the `HOSAPP0030` /
 `HOSSDK0001` warning of the target `ValidateHackerOsSdkBoundary`, the generator's
 `--boundary-exempt` option and the `severity` parameter of
 `GeneratorDiagnostic.ToMsBuildLine`. All apps in `Apps/` and all
-`HackerOs.AppSdk*` libraries compile without any boundary diagnostic.
+`Kazo.Os.AppSdk*` libraries compile without any boundary diagnostic.
 
 The unused `Platform.Core` references of Calculator, HackPaint,
 IconViewer, TextEditor and Browser were removed by `4-sdk-boundary`:
@@ -358,7 +358,7 @@ What existing apps do (section 5.1 of the
 | FileExplorer | waits for the current item; `HackFileOperations` stops between two (atomic) items and reports the others "stopped before this item" (`HackFileTransferResult.Cancelled`) | copy, move, import, trash, zip, extraction, trash restore |
 | Settings | waits for the setting write in progress, which no longer uses the process token | none |
 | Services (`SampleTickerService`) | `OnStoppingAsync` (once) | none |
-| `HackerOs.Commands` | token cancelled: exit 130; killed: 137 | `find`, `grep` (including `-r`), `du`, `zip`, `unzip`, `locate` |
+| `Kazo.Os.Commands` | token cancelled: exit 130; killed: 137 | `find`, `grep` (including `-r`), `du`, `zip`, `unzip`, `locate` |
 
 HackPaint has no save: nothing to keep. The other apps have neither
 unsaved state nor long loops.
@@ -427,7 +427,7 @@ are always asynchronous in a worker.
 
 ### Charts (ADR 0058 §2)
 
-`HackLineChart` (`HackerOs.AppSdk.Blazor.Charts`) draws one or more
+`HackLineChart` (`Kazo.Os.AppSdk.Blazor.Charts`) draws one or more
 `HackChartSeries` in native SVG, the most recent value on the right, with a
 legend and an automatic scale; no library or JavaScript. Colors
 come from the theme (`--hos-chart-series-0` to `7`). See
@@ -456,7 +456,7 @@ string? text = await HackClipboard.GetTextAsync();
   An app never talks to `navigator.clipboard`; `BrowserClipboard` was
   removed at the SDK 1.0 freeze (ADR 0114 §3). See [`clipboard.md`](../dev/clipboard.md), [`clipboard-api.md`](clipboard-api.md).
 - `HackDirectory.CopyAsync` (recursive copy) and `HackFileOperations`
-  (`HackerOs.AppSdk.IO`, formerly `FileTransfer`, transfers of the explorer and of
+  (`Kazo.Os.AppSdk.IO`, formerly `FileTransfer`, transfers of the explorer and of
   any app since SDK 2.0) are described in
   [`file-explorer.md`](../dev/file-explorer.md).
 
@@ -495,7 +495,7 @@ HackStorageSnapshot snapshot = await HackStorageDiagnostics.GetSnapshotAsync();
 
 `4-terminal` adds path completion, `HackShellCompletion.DisplayCandidates`,
 `IShellSession.Exit` (command `exit`) and the `TerminalTabs` tabs component
-of `HackerOs.AppSdk.Terminal` ([`terminal-console.md`](../dev/terminal-console.md)).
+of `Kazo.Os.AppSdk.Terminal` ([`terminal-console.md`](../dev/terminal-console.md)).
 
 The shell is an `hsh` process that is a child of the app; its commands are its
 children and keep their own capabilities. The terminal reads the credentials
@@ -514,9 +514,9 @@ the associated app with this path: a document app reads its initial file there
 `WindowAppBase` receives the hooks `OnWindowActivated`, `OnWindowDeactivated`,
 `OnWindowStateChanged` and `OnWindowResized` (with their `Async` versions) and
 the state `IsWindowActive`, `WindowState`, `WindowSize`. The types `HackWindowState`,
-`HackWindowSize` and `IWindowAppEventTarget` are in `HackerOs.AppSdk.Blazor`;
+`HackWindowSize` and `IWindowAppEventTarget` are in `Kazo.Os.AppSdk.Blazor`;
 `WindowOptions` (sizes declared by `AppDefinition.Window`, and since SDK 1.1
-`RememberGeometry`, ADR 0116) is in `HackerOs.App.Abstractions`. No app injects a service to receive them:
+`RememberGeometry`, ADR 0116) is in `Kazo.Os.App.Abstractions`. No app injects a service to receive them:
 the OS calls them. See [`window-model.md`](window-model.md).
 
 ### Window title (ADR 0117, ADR 0123, SDK 1.1)
@@ -526,7 +526,7 @@ window (no capability), `WindowTitle` reads it and
 `FormatWindowTitle(document, modified)` composes `document — App` with the app's
 translated name. The platform gives each window an `IAppWindowGateway`
 as a fixed cascading value, never by injection: an app reaches only its
-own window and the SDK references no `HackerOs.Windowing.*` type
+own window and the SDK references no `Kazo.Os.Windowing.*` type
 (ADR 0055). See [`window-model.md`](window-model.md) §4.
 
 ### SDK 1.2 API (`exec` series, ADR 0124 to 0128, ADR 0132)
@@ -545,12 +545,12 @@ in the [SDK reference](sdk-reference.md).
 ### SDK 2.0 API (desktop series, ADR 0148 to 0161)
 
 A major version: a 1.x app is refused and must be recompiled. The only removal
-is the `HackerOs.AppSdk.FileView` package; the migration table is in
+is the `Kazo.Os.AppSdk.FileView` package; the migration table is in
 [`sdk-packages.md`](sdk-packages.md#migrating-a-1x-app).
 
 | API | Role | Capability | Document |
 |---|---|---|---|
-| `HackFileView`, `IHackFileView` (`HackerOs.AppSdk.Blazor.Files`) | File control provided by the OS (the default explorer), with the rights of the app that displays it | those of the files shown | [`embedded-components.md`](embedded-components.md), [`file-explorer.md`](../dev/file-explorer.md), [`file-control-api.md`](file-control-api.md) |
+| `HackFileView`, `IHackFileView` (`Kazo.Os.AppSdk.Blazor.Files`) | File control provided by the OS (the default explorer), with the rights of the app that displays it | those of the files shown | [`embedded-components.md`](embedded-components.md), [`file-explorer.md`](../dev/file-explorer.md), [`file-control-api.md`](file-control-api.md) |
 | `Menus.Attach`, `Menus.Define`, `HackContextMenu`, `HackMenuDefinition` | OS context menu, multi-level, keyboard and long press | none | [`context-menu.md`](context-menu.md) |
 | `[RegisterFileContextMenu]`, `RegisterFileContextMenuContext`, `HackFileMenuItems` | Entries of an app in file menus, registered at build time | `shell.context-menu` | [`context-menu.md`](context-menu.md#app-entries-in-the-file-menus-work-item-4) |
 | `HackFileOperations`, `IDialogService.AsFileConflictResolver` | Copy, move, import, trash, Nautilus-style conflicts (formerly `FileTransfer`) | those of the files | [`file-explorer.md`](../dev/file-explorer.md), [`file-operations-api.md`](file-operations-api.md) |
@@ -574,7 +574,7 @@ the `[AppManifest]`); their details are in the
 | `HackClipboard` shared with the host (`BrowserClipboard` removed in 1.0) | Copied text goes to the real machine according to `clipboard.config` | `clipboard.read`, `clipboard.write` | [`clipboard.md`](../dev/clipboard.md) |
 
 None of these APIs gives access to an internal service: the apps that
-use them (Terminal, CodeEditor, Diagnostics, FileExplorer, `HackerOs.Commands`)
+use them (Terminal, CodeEditor, Diagnostics, FileExplorer, `Kazo.Os.Commands`)
 pass the boundary check without exception (see
 [Final verification](#final-verification-of-phase-4-2026-10-16)).
 
@@ -610,15 +610,15 @@ Rerun of `rebuild/4-sdk-boundary-final` on `rebuild/base` after PRs #115
 to #122 (xterm.js, code editor, embeddable components, POSIX shell and
 Linux commands, clipboard shared with the host):
 
-- `dotnet build HackerOs.sln`: 0 warnings, 0 errors, no diagnostic
+- `dotnet build Kazo.Os.sln`: 0 warnings, 0 errors, no diagnostic
   `HOSAPP0002`, `HOSAPP0003`, `HOSAPP0030`, `HOSAPP0031` or `HOSSDK0001`.
-- No `Apps/` project or `HackerOs.AppSdk*` library references
+- No `Apps/` project or `Kazo.Os.AppSdk*` library references
   `Platform.Core`, `Platform.Blazor`, `Infrastructure.*` or `Server.*`. No
   remnant of the exemption mechanism outside the documents' history.
 - Injections in `Apps/`: only `IJSRuntime` (import of the app's
   module), `MudBlazor.IDialogService`, and SDK types.
   `SdkBoundarySourceTests` walks all `.csproj` files of `Apps/`, so also
-  `HackerOs.Apps.Terminal` and the new commands.
+  `Kazo.Os.Apps.Terminal` and the new commands.
 - Capabilities: each app and command added or modified declares those of the APIs
   it calls (for example `systemctl`: `services.manage`; `htop`:
   `process.manage`; `jobs`, `read`, `watch`: `shell.control`; Terminal and
@@ -638,7 +638,7 @@ Linux commands, clipboard shared with the host):
 - [x] Property `HackerOsSdkLibrary` for SDK libraries.
 - [x] `SdkBoundaryInspector` in the generator (`HOSAPP0031`), `--boundary-exempt` option.
 - [x] `HackerOsSdkBoundaryExemption` list (9 projects) and a test that keeps it from growing.
-- [x] `IJSRuntime` source test in `HackerOs.Ecosystem.Tests`.
+- [x] `IJSRuntime` source test in `Kazo.Os.Ecosystem.Tests`.
 - [x] Removal of unused `Platform.Core` references (Calculator, HackPaint, IconViewer, TextEditor, Browser).
 - [x] Test projects `ManifestGenerator.Fixtures.ForbiddenReference` and `ForbiddenInjection`, unit tests of the inspector.
 - [x] ADR 0059 (code numbers), this document, `app-model.md`, plan and index up to date.
@@ -673,7 +673,7 @@ Linux commands, clipboard shared with the host):
 ## Task list of work item `rebuild/4-sdk-boundary-final`
 
 - [x] Verify that the exemption list is empty and that the solution compiles without any `HOSAPP0030`, `HOSAPP0031` or `HOSSDK0001` diagnostic.
-- [x] Remove the mechanism from `build/HackerOs.Apps.targets` (item, target `_HackerOsResolveSdkBoundaryExemption`, property, warning).
+- [x] Remove the mechanism from `build/Kazo.Os.Apps.targets` (item, target `_HackerOsResolveSdkBoundaryExemption`, property, warning).
 - [x] Remove the generator's `--boundary-exempt` option and the `warning` severity of `GeneratorDiagnostic`.
 - [x] Replace the list's tests with `Build_targets_have_no_exemption_mechanism` and `No_app_or_sdk_project_overrides_its_boundary_role`; the `IJSRuntime` test covers all apps.
 - [x] This document, the plan (phase 4 checked) and the index up to date.

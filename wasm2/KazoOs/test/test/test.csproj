@@ -1,0 +1,72 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
+    <PublishAot>false</PublishAot>
+    <EnableTrimAnalyzer>false</EnableTrimAnalyzer>
+    <IsTrimmable>false</IsTrimmable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.13" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <!-- Suppress IL2111 trimmer analysis warnings -->
+    <NoWarn>$(NoWarn);IL2111</NoWarn>
+    <GenerateDocumentationFile>False</GenerateDocumentationFile>
+    <PublishTrimmed>False</PublishTrimmed>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <IsPublishable>True</IsPublishable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <IsPublishable>True</IsPublishable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\OS\Kazo.Os.Ecosystem\Kazo.Os.Ecosystem.csproj" />
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.Browser\Kazo.Os.Apps.Browser.csproj" />
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.Calculator\Kazo.Os.Apps.Calculator.csproj" />
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.CodeEditor\Kazo.Os.Apps.CodeEditor.csproj" />
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.ErrorLogViewer\Kazo.Os.Apps.ErrorLogViewer.csproj" />
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.FileExplorer\Kazo.Os.Apps.FileExplorer.csproj" />
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.Desktop\Kazo.Os.Apps.Desktop.csproj" />
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.HackPaint\Kazo.Os.Apps.HackPaint.csproj" />
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.Settings\Kazo.Os.Apps.Settings.csproj" />
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.SystemMonitor\Kazo.Os.Apps.SystemMonitor.csproj" />
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.Terminal\Kazo.Os.Apps.Terminal.csproj" />
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.TextEditor\Kazo.Os.Apps.TextEditor.csproj" />
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.ThemeEditor\Kazo.Os.Apps.ThemeEditor.csproj" />
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.WebServer\Kazo.Os.Apps.WebServer.csproj" />
+    <ProjectReference Include="..\..\Apps\Samples\Kazo.Os.Samples.BlazorSite\Kazo.Os.Samples.BlazorSite.csproj" />
+    <ProjectReference Include="..\..\Apps\Samples\Kazo.Os.Samples.Intranet\Kazo.Os.Samples.Intranet.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <BlazorWebAssemblyLazyLoad Include="Kazo.Os.Apps.Browser.dll" />
+    <BlazorWebAssemblyLazyLoad Include="Kazo.Os.Apps.Calculator.dll" />
+    <BlazorWebAssemblyLazyLoad Include="Kazo.Os.Apps.CodeEditor.dll" />
+    <BlazorWebAssemblyLazyLoad Include="Kazo.Os.Apps.ErrorLogViewer.dll" />
+    <BlazorWebAssemblyLazyLoad Include="Kazo.Os.Apps.FileExplorer.dll" />
+    <BlazorWebAssemblyLazyLoad Include="Kazo.Os.Apps.Desktop.dll" />
+    <BlazorWebAssemblyLazyLoad Include="Kazo.Os.Apps.HackPaint.dll" />
+    <BlazorWebAssemblyLazyLoad Include="Kazo.Os.Apps.Settings.dll" />
+    <BlazorWebAssemblyLazyLoad Include="Kazo.Os.Apps.SystemMonitor.dll" />
+    <BlazorWebAssemblyLazyLoad Include="Kazo.Os.Apps.Terminal.dll" />
+    <BlazorWebAssemblyLazyLoad Include="Kazo.Os.Apps.TextEditor.dll" />
+    <BlazorWebAssemblyLazyLoad Include="Kazo.Os.Apps.ThemeEditor.dll" />
+    <BlazorWebAssemblyLazyLoad Include="Kazo.Os.Apps.WebServer.dll" />
+    <BlazorWebAssemblyLazyLoad Include="Kazo.Os.Samples.BlazorSite.dll" />
+    <BlazorWebAssemblyLazyLoad Include="Kazo.Os.Samples.Intranet.dll" />
+  </ItemGroup>
+
+  <!-- ADR 0066: optional CPU/memory accounting (HackerOsCpuAccounting, HackerOsMemoryAccounting). -->
+  <Import Project="..\..\build\Kazo.Os.ResourceAccounting.targets" />
+
+</Project>

@@ -1,0 +1,98 @@
+@using Kazo.Os.AppSdk.Icons
+@implements IAsyncDisposable
+
+<section class="mobile-home-screen @(_editing ? "is-editing" : null) @(_mouseHelpers ? "has-mouse-helpers" : null)" @ref="_root" aria-label="@L["MobileHome.Label"]" @onkeydown="HandleKeys">
+    <div class="mobile-home-content" inert="@IsDrawerOpen">
+    <header class="mobile-home-heading">
+        <div><span class="mobile-home-eyebrow">Kazo OS</span><h1>@L["MobileHome.Title"]</h1></div>
+        <button type="button" class="mobile-home-tool" aria-pressed="@(_editing ? "true" : "false")" @onclick="ToggleEdit">@L[_editing ? "MobileHome.Done" : "MobileHome.Edit"]</button>
+    </header>
+    <div class="mobile-home-pages" data-home-gesture="pages" aria-label="@L["MobileHome.Page", _page + 1]">
+        <div class="mobile-home-grid" @key="_page">
+            @foreach (string id in Layout.Pages[_page].Where(_appsById.ContainsKey))
+            {
+                AppManifest app = _appsById[id];
+                <article class="mobile-home-tile" @key="id" data-home-app="@id" draggable="@(_editing ? "true" : "false")"
+                         @ondragstart="() => _draggedId = id" @ondragover:preventDefault="true" @ondrop="() => DropOnAsync(id)">
+                    <button type="button" class="mobile-home-app" aria-label="@Name(app)" @onclick="() => LaunchAsync(app)" @oncontextmenu="() => BeginEdit(id)" @oncontextmenu:preventDefault="true">
+                        <MobileAppIcon App="app" /><span>@Name(app)</span>
+                    </button>
+                    @if (_editing)
+                    {
+                        <div class="mobile-tile-tools">
+                            <button type="button" disabled="@_saving" aria-label="@L["MobileHome.MoveEarlier", Name(app)]" @onclick="() => ReorderAsync(id, -1)">‹</button>
+                            <button type="button" disabled="@_saving" aria-label="@L["MobileHome.Remove", Name(app)]" @onclick="() => RemoveAsync(id)">×</button>
+                            <button type="button" disabled="@_saving" aria-label="@L["MobileHome.MoveLater", Name(app)]" @onclick="() => ReorderAsync(id, 1)">›</button>
+                            <button type="button" disabled="@(_saving || _page == 0)" aria-label="@L["MobileHome.PreviousPageFor", Name(app)]" @onclick="() => MoveToPageAsync(id, -1)">←</button>
+                            <button type="button" disabled="@(_saving || _page == MobileHomeLayout.MaximumPages - 1)" aria-label="@L["MobileHome.NextPageFor", Name(app)]" @onclick="() => MoveToPageAsync(id, 1)">→</button>
+                        </div>
+                    }
+                </article>
+            }
+        </div>
+        @if (Layout.Pages[_page].Count == 0)
+        {
+            <p class="mobile-home-empty">@L["MobileHome.Empty"]</p>
+        }
+    </div>
+    @if (_editing)
+    {
+        <div class="mobile-page-edit">
+            <button type="button" disabled="@(_saving || Layout.Pages.Count >= MobileHomeLayout.MaximumPages)" @onclick="AddPageAsync">@L["MobileHome.AddPage"]</button>
+            <button type="button" disabled="@(_saving || Layout.Pages.Count == 1 || Layout.Pages[_page].Count != 0)" @onclick="RemovePageAsync">@L["MobileHome.RemovePage"]</button>
+        </div>
+    }
+    <nav class="mobile-page-navigation @(_indicatorsVisible ? "is-revealed" : null)" aria-label="@L["MobileHome.Pages"]">
+        @if (_mouseHelpers)
+        {
+            <button type="button" class="mobile-page-arrow" aria-label="@L["MobileHome.PreviousPage"]" disabled="@(_page == 0)" @onclick="() => Navigate(-1)">‹</button>
+        }
+        <div class="mobile-page-dots">
+            @for (int index = 0; index < Layout.Pages.Count; index++)
+            {
+                int destination = index;
+                <button type="button" class="mobile-page-dot @(index == _page ? "is-current" : null)" aria-label="@L["MobileHome.Page", index + 1]" aria-current="@(index == _page ? "page" : null)" @onclick="() => ShowPage(destination)"></button>
+            }
+        </div>
+        @if (_mouseHelpers)
+        {
+            <button type="button" class="mobile-page-arrow" aria-label="@L["MobileHome.NextPage"]" disabled="@(_page >= Layout.Pages.Count - 1)" @onclick="() => Navigate(1)">›</button>
+        }
+    </nav>
+    @if (!string.IsNullOrEmpty(_message)) { <p class="mobile-home-message" role="status">@_message</p> }
+    @if (!string.IsNullOrEmpty(_error)) { <p class="mobile-home-error" role="alert">@_error</p> }
+    <nav class="mobile-app-dock" aria-label="@L["MobileHome.Dock"]" data-home-gesture="open-drawer">
+        @foreach (string id in Layout.Dock.Where(_appsById.ContainsKey))
+        {
+            AppManifest app = _appsById[id];
+            <button type="button" class="mobile-dock-app" aria-label="@Name(app)" title="@Name(app)" @onclick="() => LaunchAsync(app)"><MobileAppIcon App="app" /></button>
+        }
+        <button type="button" class="mobile-drawer-trigger" aria-label="@L["MobileHome.AllApps"]" aria-expanded="@(IsDrawerOpen ? "true" : "false")" @onclick="OpenDrawerAsync"><HackerIcon Library="IconLibrary.Lucide" Name="grid-3x3" Size="26" Title="" /></button>
+    </nav>
+    @if (_mouseHelpers) { <p class="mobile-gesture-hint">@L["MobileHome.GestureHint"]</p> }
+    </div>
+    @if (IsDrawerOpen)
+    {
+        <section class="mobile-app-drawer" role="dialog" aria-modal="true" aria-label="@L["MobileHome.AllApps"]">
+            <div class="mobile-drawer-handle" data-home-gesture="drawer" aria-hidden="true"><span></span></div>
+            <header class="mobile-drawer-heading"><h2>@L["MobileHome.AllApps"]</h2><button type="button" class="mobile-home-tool" aria-label="@L["MobileHome.CloseDrawer"]" @onclick="CloseDrawerAsync">×</button></header>
+            <input class="mobile-drawer-search" type="search" aria-label="@L["MobileHome.Search"]" placeholder="@L["MobileHome.Search"]" value="@_search" @oninput="args => _search = args.Value?.ToString() ?? string.Empty" />
+            <p class="mobile-drawer-help">@L["MobileHome.DrawerHint"]</p>
+            @if (!string.IsNullOrEmpty(_message)) { <p class="mobile-home-message" role="status">@_message</p> }
+            @if (!string.IsNullOrEmpty(_error)) { <p class="mobile-home-error" role="alert">@_error</p> }
+            <div class="mobile-drawer-apps">
+                @foreach (AppManifest app in FilteredApps)
+                {
+                    <article class="mobile-drawer-card" @key="app.Id">
+                        <button type="button" class="mobile-drawer-launch" aria-label="@Name(app)" @onclick="() => LaunchAsync(app)"><MobileAppIcon App="app" /><span>@Name(app)</span></button>
+                        <div class="mobile-drawer-actions">
+                            <button type="button" disabled="@(_saving || Layout.Contains(app.Id))" aria-label="@L["MobileHome.AddHome", Name(app)]" @onclick="() => AddHomeAsync(app.Id)">@(Layout.Contains(app.Id) ? "✓" : "+")</button>
+                            <button type="button" disabled="@(_saving || (!Layout.Dock.Contains(app.Id) && Layout.Dock.Count >= MobileHomeLayout.DockCapacity))" aria-pressed="@(Layout.Dock.Contains(app.Id) ? "true" : "false")" aria-label="@L[Layout.Dock.Contains(app.Id) ? "MobileHome.UnpinDock" : "MobileHome.PinDock", Name(app)]" @onclick="() => ToggleDockAsync(app.Id)">@(Layout.Dock.Contains(app.Id) ? "★" : "☆")</button>
+                        </div>
+                    </article>
+                }
+                @if (!FilteredApps.Any()) { <p>@L["MobileHome.NoApps"]</p> }
+            </div>
+        </section>
+    }
+</section>

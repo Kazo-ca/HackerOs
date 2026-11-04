@@ -99,7 +99,7 @@ transmet les identifiants à `IElevationService` (jeton `SudoRoot` ou
 qui écrit `/etc/hackeros/app-permissions.config` et `/var/log/auth.log`.
 `HackCredential.ToString()` masque le mot de passe.
 
-`TerminalCredentialPrompt` (`HackerOs.AppSdk.Terminal`) est l'implémentation de
+`TerminalCredentialPrompt` (`Kazo.Os.AppSdk.Terminal`) est l'implémentation de
 `TerminalPanel` : boîte d'identifiants et boîte Oui / Non / Annuler de la
 plateforme (`IDialogService`), lignes écrites dans le terminal.
 
@@ -117,22 +117,22 @@ aucun processus n'est créé.
 
 Terminal et CodeEditor la déclarent ; les deux sont des apps système
 (`IsSystemApp="true"` sur leur `ProjectReference` dans
-`HackerOs.Ecosystem.csproj`, ADR 0048), donc la reçoivent sans approbation
+`Kazo.Os.Ecosystem.csproj`, ADR 0048), donc la reçoivent sans approbation
 d'administrateur.
 
 ## Architecture
 
 | Type | Projet | Rôle |
 |---|---|---|
-| `HackShell` | `Shared/HackerOs.AppSdk/Shell` | Façade ; traduit le refus de capacité en `HackUnauthorizedAccessException`. |
+| `HackShell` | `Shared/Kazo.Os.AppSdk/Shell` | Façade ; traduit le refus de capacité en `HackUnauthorizedAccessException`. |
 | `IHackShell`, `HackShellOptions`, `HackShellExecution`, `HackShellCompletion` | idem | Contrats publics. |
 | `HackCredentialPrompt` et ses types | idem | Questions au terminal. |
 | `IAppShellHostGateway` | idem | Passerelle `IAppExecutionContext.ShellHost` (par défaut : « non prise en charge »). |
-| `AppShellHostGateway` | `Platform/HackerOs.Platform.Core/Execution` | Vérifie `shell.host`, puis appelle le service. |
-| `ShellHostService` | `Platform/HackerOs.Platform.Core/Shell` | Crée le processus `hsh`, son contexte et sa `ShellSession` ; implémente `IHackShell`. |
+| `AppShellHostGateway` | `Platform/Kazo.Os.Platform.Core/Execution` | Vérifie `shell.host`, puis appelle le service. |
+| `ShellHostService` | `Platform/Kazo.Os.Platform.Core/Shell` | Crée le processus `hsh`, son contexte et sa `ShellSession` ; implémente `IHackShell`. |
 | `ShellHostPrompts` | idem | Adapte `HackCredentialPrompt` aux invites de `ShellInterpreter` et à `IDangerousCapabilityApprovalPrompt`. |
 | `ShellCompletion` | idem | Complétion des noms de commande. |
-| `TerminalPanel`, `TerminalCredentialPrompt` | `Shared/HackerOs.AppSdk.Terminal` | Émulateur de terminal sur le SDK seul. |
+| `TerminalPanel`, `TerminalCredentialPrompt` | `Shared/Kazo.Os.AppSdk.Terminal` | Émulateur de terminal sur le SDK seul. |
 
 ### Démarrage d'un shell
 
@@ -197,12 +197,12 @@ de lever `KeyNotFoundException`.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Shell/ShellInterpreterTests.HostedShell.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/Shell/ShellInterpreterTests.HostedShell.cs` :
   refus sans `shell.host`, processus enfant et parent des commandes, répertoires
   et `$?` séparés, `WorkingDirectory` et repli, fin du shell qui tue les
   commandes, `sudo` par `HackCredentialPrompt`, entrée standard et historique,
   complétion (positions de commande, alias, casse).
-- `Tests/HackerOs.App.Abstractions.Tests/AppCapabilitiesTests.cs` : `shell.host`
+- `Tests/Kazo.Os.App.Abstractions.Tests/AppCapabilitiesTests.cs` : `shell.host`
   dangereuse.
 
 ## Liste des tâches du chantier `rebuild/4-sdk-shell-host`

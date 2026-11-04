@@ -24,9 +24,9 @@ draggable window, and shows up on the taskbar &mdash; with **no manual wiring**.
 ## Architecture
 
 The framework is split into two projects, both located under
-`wasm2/HackerOs/Ecosystem/` per the project directory rules.
+`wasm2/KazoOs/Ecosystem/` per the project directory rules.
 
-### `HackerOs.AppFramework` (Razor Class Library)
+### `Kazo.Os.AppFramework` (Razor Class Library)
 
 | Area | Type | Responsibility |
 | --- | --- | --- |
@@ -45,7 +45,7 @@ The framework builds on two existing libraries: **BlazorWindowManager**
 (window base class, window manager service, desktop area, taskbar) and
 **BlazorTerminal** (the terminal rendering component).
 
-### `HackerOs.Ecosystem` (Blazor WebAssembly host)
+### `Kazo.Os.Ecosystem` (Blazor WebAssembly host)
 
 The runnable application. `Program.cs` calls
 `AddHackerOsAppFramework(typeof(App).Assembly)` and `App.razor` renders a single

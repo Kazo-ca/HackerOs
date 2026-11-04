@@ -82,7 +82,7 @@ tab, and hides the dock for the last one.
 
 ## Tabs
 
-`TerminalTabs` (`Shared/HackerOs.AppSdk.Terminal`) is a reusable component:
+`TerminalTabs` (`Shared/Kazo.Os.AppSdk.Terminal`) is a reusable component:
 each tab is a `TerminalPanel`, hence a distinct `hsh` with its directory,
 environment, history and `$?`. The Terminal window is now only a host of
 `TerminalTabs`.
@@ -137,15 +137,15 @@ up to `TerminalTabs`.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Shell/ShellInterpreterTests.HostedShell.cs`:
+- `Tests/Kazo.Os.Platform.Core.Tests/Shell/ShellInterpreterTests.HostedShell.cs`:
   paths (relative, `~`, `../`, absolute, escapes, hidden, redirections, `./`,
   missing folder, case), shell directory, unreadable folder,
   `DisplayCandidates`, `exit` (statuses, modulo, non-numeric, end of process,
   rest of the line, pipe, too many arguments, `$?`).
-- `Tests/HackerOs.Commands.Tests/CoreCommandsTests.cs`: `ExitCommand`.
-- `Tests/HackerOs.AppSdk.Terminal.Tests/TerminalTabSetTests.cs`: order,
+- `Tests/Kazo.Os.Commands.Tests/CoreCommandsTests.cs`: `ExitCommand`.
+- `Tests/Kazo.Os.AppSdk.Terminal.Tests/TerminalTabSetTests.cs`: order,
   closing, tab switching.
-- `Tests/HackerOs.Ecosystem.Tests/BuildKnownLazyAppsTests.cs`: `exit` in the
+- `Tests/Kazo.Os.Ecosystem.Tests/BuildKnownLazyAppsTests.cs`: `exit` in the
   catalog (75 apps, 63 commands since `stress`, ADR 0070).
 - Verification in the browser (Release publication): `cd pro` + Tab →
   `cd projets/`, second Tab lists `alpha/  notes.txt`, focus stays on the line,
@@ -157,7 +157,7 @@ up to `TerminalTabs`.
 - [x] Path completion in `ShellCompletion`, with the shell's permissions and directory.
 - [x] `HackShellCompletion.DisplayCandidates`, short list on the second Tab.
 - [x] `IShellSession.Exit`, `ShellSession.RequestExit`, stop of the line, end of the `hsh` process.
-- [x] `exit [n]` command in `HackerOs.Commands`.
+- [x] `exit [n]` command in `Kazo.Os.Commands`.
 - [x] `TerminalTabs`, `TerminalTabSet`, shortcuts, tab titles; Terminal window on `TerminalTabs`, closed with the last tab.
 - [x] Ctrl+D ends the shell; Tab no longer moves focus.
 - [x] CodeEditor closes the tab whose shell exits.

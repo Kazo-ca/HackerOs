@@ -1,0 +1,102 @@
+@using Kazo.Os.Platform.Blazor.Windows
+@using Kazo.Os.Windowing.Core
+@using Kazo.Os.Windowing.Abstractions
+
+<section class="window-browser-scenario" data-status="ready">
+    <nav class="scenario-taskbar" aria-label="Window test controls">
+        <button type="button" @onclick="RestorePrimary">Restore Primary</button>
+        <button type="button" @onclick="UseMobileViewport">Use Mobile Viewport</button>
+        <button type="button" @onclick="OpenModal">Open Primary Modal</button>
+    </nav>
+    <DesktopArea Windows="_runtime.Windows"
+                 OnFocus="Focus"
+                 OnMinimize="Minimize"
+                 OnToggleMaximize="ToggleMaximize"
+                 OnClose="Close"
+                 OnGesture="Apply">
+        <WindowContent Context="window">
+            <p class="scenario-content" data-app-id="@window.AppId">Rendered app content: @window.Title</p>
+        </WindowContent>
+    </DesktopArea>
+</section>
+
+@code {
+    private static readonly WindowId PrimaryId = WindowId.FromGuid(Guid.Parse("10000000-0000-0000-0000-000000000001"));
+    private static readonly WindowId ModalId = WindowId.FromGuid(Guid.Parse("10000000-0000-0000-0000-000000000003"));
+    private readonly WindowRuntime _runtime = new(new WindowBounds(0, 0, 960, 640));
+
+    /// <inheritdoc />
+    protected override void OnInitialized()
+    {
+        CreateWindow("10000000-0000-0000-0000-000000000001", "org.hackeros.browser.primary", "Primary", 80, 70);
+        CreateWindow("10000000-0000-0000-0000-000000000002", "org.hackeros.browser.secondary", "Secondary", 520, 110);
+    }
+
+    private Task Focus(WindowId id) => Apply(new FocusWindowCommand(id));
+
+    private Task Minimize(WindowId id) => Apply(new MinimizeWindowCommand(id));
+
+    private Task RestorePrimary() => Apply(new RestoreWindowCommand(PrimaryId));
+
+    private Task UseMobileViewport() => Apply(new ChangeViewportCommand(new WindowBounds(0, 0, 480, 320)));
+
+    private Task OpenModal()
+    {
+        if (_runtime.Windows.Any(window => window.Id == ModalId))
+        {
+            return Task.CompletedTask;
+        }
+
+        _runtime.Apply(new CreateWindowCommand(new WindowRuntimeState(
+            ModalId,
+            "org.hackeros.browser.modal",
+            WindowOwnerId.FromGuid(Guid.Parse("30000000-0000-0000-0000-000000000003")),
+            "Primary Modal",
+            null,
+            new WindowBounds(180, 140, 320, 220),
+            null,
+            0,
+            WindowVisualState.Normal,
+            new WindowConstraints(true, 240, 180),
+            WindowModality.OwnerModal,
+            PrimaryId)));
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+
+    private Task ToggleMaximize(WindowId id)
+    {
+        WindowRuntimeState window = _runtime.Windows.Single(item => item.Id == id);
+        return Apply(window.VisualState == WindowVisualState.Maximized
+            ? new RestoreWindowCommand(id)
+            : new MaximizeWindowCommand(id));
+    }
+
+    private Task Close(WindowId id)
+    {
+        _runtime.Apply(new RequestWindowCloseCommand(id));
+        return Apply(new ForceWindowCloseCommand(id));
+    }
+
+    private Task Apply(WindowCommand command)
+    {
+        _runtime.Apply(command);
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+
+    private void CreateWindow(string id, string appId, string title, double x, double y)
+    {
+        _runtime.Apply(new CreateWindowCommand(new WindowRuntimeState(
+            WindowId.FromGuid(Guid.Parse(id)),
+            appId,
+            WindowOwnerId.FromGuid(Guid.NewGuid()),
+            title,
+            null,
+            new WindowBounds(x, y, 360, 280),
+            null,
+            0,
+            WindowVisualState.Normal,
+            new WindowConstraints(true, 240, 180))));
+    }
+}

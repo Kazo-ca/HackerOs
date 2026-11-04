@@ -1,0 +1,147 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
+    <StaticWebAssetProjectMode>Default</StaticWebAssetProjectMode>
+    <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
+    <!--
+      ADR 0106, ADR 0113: Release publish trims the framework and the other trimmable libraries
+      (TrimMode=partial leaves untrimmable packages whole). Every Kazo OS assembly and every app is
+      kept whole by build/Kazo.Os.Apps.targets; build/publish-trimmed.sh publishes and tests it.
+    -->
+    <PublishTrimmed>true</PublishTrimmed>
+    <TrimMode>partial</TrimMode>
+    <!--
+      ADR 0047: aggregates the generated manifests of every referenced app into
+      BuiltInApplications.json and lazy-loads their assemblies (build/Kazo.Os.Apps.targets).
+      Installing a migrated app takes only its ProjectReference below.
+      ADR 0048: IsSystemApp="true" on a ProjectReference makes every app of that project a system
+      app (not uninstallable, dangerous capabilities granted). An app cannot declare it itself.
+    -->
+    <HackerOsAppHost>true</HackerOsAppHost>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.13" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.13" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!--
+      ADR 0098 §2: the OS itself (desktop, boot, services, browser adapters) is the
+      Kazo.Os.Ecosystem.Host library, published as a package for hosts in other repositories.
+      This project is the standalone PWA: its page, its service worker and its apps.
+    -->
+    <ProjectReference Include="..\Kazo.Os.Ecosystem.Host\Kazo.Os.Ecosystem.Host.csproj" />
+    <!-- ADR 0210 §1: system app, so it reaches real sites through the relay (network.real.access) without an approval prompt. -->
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.Browser\Kazo.Os.Apps.Browser.csproj" IsSystemApp="true" />
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.Calculator\Kazo.Os.Apps.Calculator.csproj" />
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.CodeEditor\Kazo.Os.Apps.CodeEditor.csproj" IsSystemApp="true" />
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.Diagnostic\Kazo.Os.Apps.Diagnostic.csproj" />
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.ErrorLogViewer\Kazo.Os.Apps.ErrorLogViewer.csproj" IsSystemApp="true" />
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.FileExplorer\Kazo.Os.Apps.FileExplorer.csproj" IsSystemApp="true" />
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.Desktop\Kazo.Os.Apps.Desktop.csproj" IsSystemApp="true" />
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.HackPaint\Kazo.Os.Apps.HackPaint.csproj" />
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.IconViewer\Kazo.Os.Apps.IconViewer.csproj" />
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.Settings\Kazo.Os.Apps.Settings.csproj" IsSystemApp="true" />
+    <!-- ADR 0188/0212: the Hack Store (system app, cannot be uninstalled). -->
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.Store\Kazo.Os.Apps.Store.csproj" IsSystemApp="true" />
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.SystemMonitor\Kazo.Os.Apps.SystemMonitor.csproj" IsSystemApp="true" />
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.Terminal\Kazo.Os.Apps.Terminal.csproj" IsSystemApp="true" />
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.TextEditor\Kazo.Os.Apps.TextEditor.csproj" IsSystemApp="true" />
+    <!-- ADR 0103 §2.1: the Theme Editor (system app on the public SDK). -->
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.ThemeEditor\Kazo.Os.Apps.ThemeEditor.csproj" IsSystemApp="true" />
+    <!-- ADR 0077/0080: hackwebd and Web Server Manager (system apps: hackwebd needs network.listen.privileged). -->
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.WebServer\Kazo.Os.Apps.WebServer.csproj" IsSystemApp="true" />
+    <!-- ADR 0084: the sample Blazor site (http://blazor-sample.hack/), drawn by the browser's page area. -->
+    <ProjectReference Include="..\..\Apps\Samples\Kazo.Os.Samples.BlazorSite\Kazo.Os.Samples.BlazorSite.csproj" />
+    <!-- web/11: the Intranet sample (http://intranet.hack/), MVC pages, REST API and a Blazor board in one site. -->
+    <ProjectReference Include="..\..\Apps\Samples\Kazo.Os.Samples.Intranet\Kazo.Os.Samples.Intranet.csproj" />
+    <!-- ADR 0124: the sample command (sample-cmd), an assembly of its own that a worker loads on demand. -->
+    <ProjectReference Include="..\..\Apps\Samples\Kazo.Os.Samples.TerminalApp\Kazo.Os.Samples.TerminalApp.csproj" />
+    <!--
+      ADR 0051: every built-in terminal command is in one project (one assembly, lazy-loaded as a
+      whole). cd/pwd/clear/help are now part of it; the terminal still intercepts those names until
+      the rebuild/3-shell-commands chantier routes them through the catalog.
+    -->
+    <ProjectReference Include="..\..\Apps\Commands\Kazo.Os.Commands\Kazo.Os.Commands.csproj" IsSystemApp="true" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
+  </ItemGroup>
+
+  <!--
+    ADR 0174: wwwroot/version.json carries build/Versions.props, so a running session can see that
+    its origin now serves another version. Written into obj/ at every build and served as a static
+    web asset, never kept in the source tree.
+  -->
+  <Target Name="WriteHackerOsVersionFile" BeforeTargets="ResolveProjectStaticWebAssets">
+    <PropertyGroup>
+      <_HackerOsVersionFile>$(IntermediateOutputPath)hackeros-version/version.json</_HackerOsVersionFile>
+    </PropertyGroup>
+    <WriteLinesToFile File="$(_HackerOsVersionFile)"
+                      Lines="{ &quot;product&quot;: &quot;Kazo OS&quot;, &quot;version&quot;: &quot;$(HackerOsVersion)&quot; }"
+                      Overwrite="true"
+                      WriteOnlyWhenDifferent="true" />
+    <ItemGroup>
+      <Content Include="$(_HackerOsVersionFile)" Link="wwwroot/version.json" />
+      <FileWrites Include="$(_HackerOsVersionFile)" />
+    </ItemGroup>
+  </Target>
+
+  <!--
+    ADR 0186 §4.1: wwwroot/whats-new.json carries the user entries of the change list (changes/),
+    grouped by version, for the What's new page of Settings. Written into obj/ by
+    Tools/Kazo.Os.Tools.ChangeList and served as a static web asset, like version.json.
+    The project reference only orders the build: the tool never ships.
+  -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\Tools\Kazo.Os.Tools.ChangeList\Kazo.Os.Tools.ChangeList.csproj"
+                      ReferenceOutputAssembly="false"
+                      Private="false"
+                      PrivateAssets="all"
+                      SkipGetTargetFrameworkProperties="true"
+                      GlobalPropertiesToRemove="TargetFramework;RuntimeIdentifier;SelfContained" />
+    <_HackerOsChangeFile Include="..\..\changes\**\*.json" />
+  </ItemGroup>
+
+  <Target Name="_HackerOsResolveChangeListTool">
+    <PropertyGroup>
+      <_HackerOsWhatsNewFile>$(IntermediateOutputPath)hackeros-whats-new/whats-new.json</_HackerOsWhatsNewFile>
+    </PropertyGroup>
+    <MSBuild Projects="..\..\Tools\Kazo.Os.Tools.ChangeList\Kazo.Os.Tools.ChangeList.csproj"
+             Targets="GetTargetPath"
+             Properties="Configuration=$(Configuration)"
+             RemoveProperties="TargetFramework;RuntimeIdentifier;SelfContained">
+      <Output TaskParameter="TargetOutputs" PropertyName="_HackerOsChangeListTool" />
+    </MSBuild>
+  </Target>
+
+  <Target Name="_HackerOsGenerateWhatsNewFile"
+          DependsOnTargets="_HackerOsResolveChangeListTool"
+          Inputs="@(_HackerOsChangeFile);$(MSBuildThisFileDirectory)..\..\build\Versions.props;$(_HackerOsChangeListTool)"
+          Outputs="$(_HackerOsWhatsNewFile)">
+    <PropertyGroup>
+      <_HackerOsDotnet>$(DOTNET_HOST_PATH)</_HackerOsDotnet>
+      <_HackerOsDotnet Condition="'$(_HackerOsDotnet)' == ''">dotnet</_HackerOsDotnet>
+    </PropertyGroup>
+    <Exec Command="&quot;$(_HackerOsDotnet)&quot; &quot;$(_HackerOsChangeListTool)&quot; site --changes &quot;$(MSBuildThisFileDirectory)..\..\changes&quot; --version $(HackerOsVersion) --output &quot;$(_HackerOsWhatsNewFile)&quot;" />
+    <!-- The tool skips an unchanged file; touch it so the target stays up to date. -->
+    <Touch Files="$(_HackerOsWhatsNewFile)" />
+  </Target>
+
+  <Target Name="WriteHackerOsWhatsNewFile" BeforeTargets="ResolveProjectStaticWebAssets" DependsOnTargets="_HackerOsGenerateWhatsNewFile">
+    <ItemGroup>
+      <Content Include="$(_HackerOsWhatsNewFile)" Link="wwwroot/whats-new.json" />
+      <FileWrites Include="$(_HackerOsWhatsNewFile)" />
+    </ItemGroup>
+  </Target>
+
+  <!-- ADR 0066: optional CPU/memory accounting (HackerOsCpuAccounting, HackerOsMemoryAccounting). -->
+  <Import Project="..\..\build\Kazo.Os.ResourceAccounting.targets" />
+
+</Project>

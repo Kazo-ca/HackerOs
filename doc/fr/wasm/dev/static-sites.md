@@ -44,11 +44,11 @@ Publier un dossier comme site web, comme avec IIS, Apache ou nginx :
 
 | Élément | Projet | Rôle |
 |---|---|---|
-| `HackWebdApp`, `HackWebdService` | `Apps/System/HackerOs.Apps.WebServer` | Le service : réconciliation des écoutes, boucle d'acceptation, journaux. |
+| `HackWebdApp`, `HackWebdService` | `Apps/System/Kazo.Os.Apps.WebServer` | Le service : réconciliation des écoutes, boucle d'acceptation, journaux. |
 | `StaticFileHandler`, `WwwDataAccess`, `HackWebdLog` | idem, `Daemon/` | Traitement d'une requête, droits de `www-data`, formats des journaux. |
 | `WebServerManagerApp`, `WebServerManagerWindow`, `WebSiteStore` | idem, `Manager/` | L'app à fenêtre et sa logique sans interface. |
-| `WebServerManagerApp.RegisterFileContextMenu`, `PublishSiteIntent` | `Apps/System/HackerOs.Apps.WebServer` | Entrée « Publish as a web site… » des menus de dossiers, inscrite par Web Server Manager (ADR 0151 §8, ADR 0159) : portée `Directory`, un seul dossier, intent `org.hackeros.web-server-manager.publish-site.v1` reçu au lancement ou par `IntentReceived`. Était `PublishSiteContextMenuProvider`, puis `FileExplorerMenuEntries.PublishSite`. |
-| `HostedSiteNameSource` | `Platform/HackerOs.Platform.Core/Network/Local` | Source 4 du résolveur (`IHostedSiteNameSource`, asynchrone). |
+| `WebServerManagerApp.RegisterFileContextMenu`, `PublishSiteIntent` | `Apps/System/Kazo.Os.Apps.WebServer` | Entrée « Publish as a web site… » des menus de dossiers, inscrite par Web Server Manager (ADR 0151 §8, ADR 0159) : portée `Directory`, un seul dossier, intent `org.hackeros.web-server-manager.publish-site.v1` reçu au lancement ou par `IntentReceived`. Était `PublishSiteContextMenuProvider`, puis `FileExplorerMenuEntries.PublishSite`. |
+| `HostedSiteNameSource` | `Platform/Kazo.Os.Platform.Core/Network/Local` | Source 4 du résolveur (`IHostedSiteNameSource`, asynchrone). |
 | `IAppLoggingGateway.AppendToLogFile`, `LogFileTarget.ForDaemon` | `Simulation.Abstractions`, `Platform.Core` | Journaux des démons système (ADR 0080 §3). |
 
 Le service et le Manager sont dans **le même assembly** : le Manager pilote
@@ -158,19 +158,19 @@ puis Save dans le Manager et **Open in browser**.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.WorkerHost.Tests/StaticSitesTests.cs` : OS complet
+- `Tests/Kazo.Os.Platform.WorkerHost.Tests/StaticSitesTests.cs` : OS complet
   (processus sur le fil principal et en workers) — site d'utilisateur servi
   (type, document par défaut, `404`, `nslookup`), `304` par `ETag`, `403` puis
   liste du dossier après rechargement à chaud, refus d'un port privilégié et
   formats des journaux, site système sur le port 80 servi en `www-data`
   (`403` sur un fichier `0600` et sur un dossier personnel), `netstat`,
   `systemctl stop`.
-- `Tests/HackerOs.Apps.WebServer.Tests` : correspondance URL → fichier
+- `Tests/Kazo.Os.Apps.WebServer.Tests` : correspondance URL → fichier
   (traversées refusées), états des sites, suggestion d'un site depuis un
   dossier, formats des journaux.
-- `Tests/HackerOs.AppSdk.Tests/Net/HackWebSiteFileTests.cs` : lecture,
+- `Tests/Kazo.Os.AppSdk.Tests/Net/HackWebSiteFileTests.cs` : lecture,
   validation et écriture des `.site`.
-- `Tests/HackerOs.Platform.Core.Tests/Diagnostics/DaemonLogFileTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/Diagnostics/DaemonLogFileTests.cs` :
   `LogFileTarget.ForDaemon` et la règle « apps système seulement ».
 
 ## Liste des tâches

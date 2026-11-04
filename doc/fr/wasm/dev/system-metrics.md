@@ -102,7 +102,7 @@ persistés.
 
 ### Contrats
 
-`Shared/HackerOs.Simulation.Abstractions/Metrics/SystemMetricsContracts.cs` :
+`Shared/Kazo.Os.Simulation.Abstractions/Metrics/SystemMetricsContracts.cs` :
 
 | Contrat | Rôle |
 | --- | --- |
@@ -314,17 +314,17 @@ seuls le propriétaire et l'autorité `System` le lisent.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/FileSystem/Virtual/ProcMetricsTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/FileSystem/Virtual/ProcMetricsTests.cs` :
   format exact de `stat`, `diskstats`, `net/dev`, `mounts` ; débordement d'un
   cœur à l'autre ; échantillonnage par seconde simulée ; `io` compté par le
   service de fichiers, sans octets de stockage pour `/proc` ; `io` privé ;
   temps occupé pondéré par la file.
-- `Tests/HackerOs.Platform.Core.Tests/Execution/AppDriveGatewayTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/Execution/AppDriveGatewayTests.cs` :
   taille, quota, espace libre jamais négatif, `HackDriveInfo` dans le contexte
   ambiant.
-- `Tests/HackerOs.Network.Tests/Wave4NetworkTests.ProcMetrics.cs` : DNS, ping,
+- `Tests/Kazo.Os.Network.Tests/Wave4NetworkTests.ProcMetrics.cs` : DNS, ping,
   HTTP et refus de capacité comptés (ou non) sur `eth0` et dans `rchar`/`wchar`.
-- `Tests/HackerOs.Infrastructure.Browser.Tests/IndexedDbFileSystemReaderTests.cs` :
+- `Tests/Kazo.Os.Infrastructure.Browser.Tests/IndexedDbFileSystemReaderTests.cs` :
   espace occupé dédupliqué, transactions signalées à `hda`.
 
 ## Liste des tâches du chantier `rebuild/4-proc-metrics`

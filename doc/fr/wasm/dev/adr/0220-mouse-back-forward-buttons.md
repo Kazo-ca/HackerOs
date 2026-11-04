@@ -49,7 +49,7 @@ Série `mouse-back/base` (branches `mouse-back/<n>-<sujet>`).
 ### 1. Deux façons de capter le Retour : la souris et l'historique (Q1)
 
 Un module `hardwareNavigation.js` (dans `wwwroot/` de
-`HackerOs.Platform.Blazor`, importé par le service du §2) écoute le document
+`Kazo.Os.Platform.Blazor`, importé par le service du §2) écoute le document
 de l'OS et ne contient aucune règle : il traduit un geste en « Précédent » ou
 « Suivant » avec sa source, et appelle C#.
 
@@ -77,7 +77,7 @@ de l'OS et ne contient aucune règle : il traduit un geste en « Précédent » 
 
 ### 2. `HardwareNavigationService` envoie le geste à la fenêtre active
 
-Un service scoped de `HackerOs.Platform.Blazor` reçoit les appels du module et
+Un service scoped de `Kazo.Os.Platform.Blazor` reçoit les appels du module et
 choisit la cible :
 
 - **Bureau** : la fenêtre qui a le focus (pas réduite). Précédent appelle son
@@ -96,7 +96,7 @@ choisit la cible :
 
 ### 3. SDK : deux sources de plus et `IAppForwardHandler` (Q2)
 
-Ajouts dans `HackerOs.AppSdk.Blazor` (`PublicAPI.Unshipped.txt`, prochaine
+Ajouts dans `Kazo.Os.AppSdk.Blazor` (`PublicAPI.Unshipped.txt`, prochaine
 mineure), sans rien changer à l'existant :
 
 - `AppBackSource.MouseButton` : bouton Précédent ou Suivant de la souris ;

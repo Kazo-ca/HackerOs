@@ -20,7 +20,7 @@ to declare everything).
   `_content/<assembly>/`: its `wwwroot/`, a component's collocated JavaScript
   (`Component.razor.js`, AGENTS.md II.2) and the bundle of its scoped CSS
   (`<assembly>.bundle.scp.css`), which the host's
-  `HackerOs.Ecosystem.styles.css` sheet imports.
+  `Kazo.Os.Ecosystem.styles.css` sheet imports.
 - An app installed by `hackpkg` or the Hack Store only gets the files of its
   package. `HackerOsPack` only puts the `Assets` declared by
   `AppDefinition.Assets` in it (often the icons), and ADR 0206 only serves those.
@@ -109,5 +109,5 @@ template therefore copies the **package's** `manifest.json` (taken from the
 - [x] `hackeros-solution` template: `publish-to-hack-store.yml` copies the package's manifest.
 - [x] `InstalledAppAssetPublisher`: link to the scoped CSS (`linkStyleSheet` in `installedAppAssets.js`).
 - [x] Unit tests (`PackagedWebAssetsTests`, `InstalledAppAssetPublisherTests`).
-- [x] Test package `Tests/fixtures/installed-app`: collocated JavaScript and an undeclared file; end-to-end tests (`HackerOs.TrimmedPublish.E2E.Tests`): collocated module and scoped CSS.
+- [x] Test package `Tests/fixtures/installed-app`: collocated JavaScript and an undeclared file; end-to-end tests (`Kazo.Os.TrimmedPublish.E2E.Tests`): collocated module and scoped CSS.
 - [x] Docs: `app-installation.md`, `app-repository.md`, `features.md`, memory, change entry.

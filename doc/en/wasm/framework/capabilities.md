@@ -19,7 +19,7 @@ administrator.
 
 ## Catalog and classification
 
-`Shared/HackerOs.App.Abstractions/AppCapabilities.cs` contains, for each
+`Shared/Kazo.Os.App.Abstractions/AppCapabilities.cs` contains, for each
 capability, a `CapabilityDescription`: identifier, displayed title, `CapabilityRisk`
 classification and, for a dangerous capability, the risk sentence shown to the
 administrator. The catalog (`AppCapabilities.All`) is exactly the set of
@@ -108,17 +108,17 @@ unknown key.
 
 ## Tests
 
-- `AppCapabilitiesTests` (`HackerOs.App.Abstractions.Tests`): exact classification
+- `AppCapabilitiesTests` (`Kazo.Os.App.Abstractions.Tests`): exact classification
   of each capability according to the ADR, catalog equal to the classified table, each
   capability described (risk sentence only for dangerous ones),
   `settings.*` and `diagnostics.*` absent, topic permissions never
   dangerous.
-- `CleanProfileCapabilityGrantSeederTests` (`HackerOs.Platform.Core.Tests`):
+- `CleanProfileCapabilityGrantSeederTests` (`Kazo.Os.Platform.Core.Tests`):
   source `BuildProfile` for a normal capability, `SystemPolicy` for a
   dangerous capability of a system app, no dangerous grant for a
   non-system app.
 - `BuildKnownLazyAppsTests.No_non_system_app_of_the_host_declares_a_dangerous_capability`
-  (`HackerOs.Ecosystem.Tests`).
+  (`Kazo.Os.Ecosystem.Tests`).
 - `PolicySettingsDocumentsTests`: `capabilityGrantsLocked` absent from the schema.
 
 ## Tasks

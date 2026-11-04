@@ -1,0 +1,832 @@
+#nullable enable
+Kazo.Os.Apps.Browser.AddressBarIndicator
+Kazo.Os.Apps.Browser.AddressBarIndicator.<Clone>$() -> Kazo.Os.Apps.Browser.AddressBarIndicator!
+Kazo.Os.Apps.Browser.AddressBarIndicator.AddressBarIndicator(string! SourceIcon, string! SourceClass, string! SourceTitle, string? NotSecureLabel) -> void
+Kazo.Os.Apps.Browser.AddressBarIndicator.Deconstruct(out string! SourceIcon, out string! SourceClass, out string! SourceTitle, out string? NotSecureLabel) -> void
+Kazo.Os.Apps.Browser.AddressBarIndicator.Equals(Kazo.Os.Apps.Browser.AddressBarIndicator? other) -> bool
+Kazo.Os.Apps.Browser.AddressBarIndicator.NotSecureLabel.get -> string?
+Kazo.Os.Apps.Browser.AddressBarIndicator.NotSecureLabel.init -> void
+Kazo.Os.Apps.Browser.AddressBarIndicator.SourceClass.get -> string!
+Kazo.Os.Apps.Browser.AddressBarIndicator.SourceClass.init -> void
+Kazo.Os.Apps.Browser.AddressBarIndicator.SourceIcon.get -> string!
+Kazo.Os.Apps.Browser.AddressBarIndicator.SourceIcon.init -> void
+Kazo.Os.Apps.Browser.AddressBarIndicator.SourceTitle.get -> string!
+Kazo.Os.Apps.Browser.AddressBarIndicator.SourceTitle.init -> void
+Kazo.Os.Apps.Browser.AddressBarIndicators
+Kazo.Os.Apps.Browser.Bridge.BridgeConsoleEvent
+Kazo.Os.Apps.Browser.Bridge.BridgeConsoleEvent.<Clone>$() -> Kazo.Os.Apps.Browser.Bridge.BridgeConsoleEvent!
+Kazo.Os.Apps.Browser.Bridge.BridgeConsoleEvent.BridgeConsoleEvent(string? Level, string? Message, string? Source) -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeConsoleEvent.Deconstruct(out string? Level, out string? Message, out string? Source) -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeConsoleEvent.Equals(Kazo.Os.Apps.Browser.Bridge.BridgeConsoleEvent? other) -> bool
+Kazo.Os.Apps.Browser.Bridge.BridgeConsoleEvent.Level.get -> string?
+Kazo.Os.Apps.Browser.Bridge.BridgeConsoleEvent.Level.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeConsoleEvent.Message.get -> string?
+Kazo.Os.Apps.Browser.Bridge.BridgeConsoleEvent.Message.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeConsoleEvent.Source.get -> string?
+Kazo.Os.Apps.Browser.Bridge.BridgeConsoleEvent.Source.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeCookieEvent
+Kazo.Os.Apps.Browser.Bridge.BridgeCookieEvent.<Clone>$() -> Kazo.Os.Apps.Browser.Bridge.BridgeCookieEvent!
+Kazo.Os.Apps.Browser.Bridge.BridgeCookieEvent.BridgeCookieEvent(string? Value) -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeCookieEvent.Deconstruct(out string? Value) -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeCookieEvent.Equals(Kazo.Os.Apps.Browser.Bridge.BridgeCookieEvent? other) -> bool
+Kazo.Os.Apps.Browser.Bridge.BridgeCookieEvent.Value.get -> string?
+Kazo.Os.Apps.Browser.Bridge.BridgeCookieEvent.Value.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeDialogEvent
+Kazo.Os.Apps.Browser.Bridge.BridgeDialogEvent.<Clone>$() -> Kazo.Os.Apps.Browser.Bridge.BridgeDialogEvent!
+Kazo.Os.Apps.Browser.Bridge.BridgeDialogEvent.BridgeDialogEvent(string? Kind, string? Message) -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeDialogEvent.Deconstruct(out string? Kind, out string? Message) -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeDialogEvent.Equals(Kazo.Os.Apps.Browser.Bridge.BridgeDialogEvent? other) -> bool
+Kazo.Os.Apps.Browser.Bridge.BridgeDialogEvent.Kind.get -> string?
+Kazo.Os.Apps.Browser.Bridge.BridgeDialogEvent.Kind.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeDialogEvent.Message.get -> string?
+Kazo.Os.Apps.Browser.Bridge.BridgeDialogEvent.Message.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply.<Clone>$() -> Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply!
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply.Body.get -> string?
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply.Body.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply.BridgeFetchReply(bool Error, string? Message, int Status, string? StatusText, string? Url, bool Redirected, string? Type, bool Opaque, System.Collections.Generic.IReadOnlyList<string![]!>? Headers, string? Body, string? Cookies) -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply.Cookies.get -> string?
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply.Cookies.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply.Deconstruct(out bool Error, out string? Message, out int Status, out string? StatusText, out string? Url, out bool Redirected, out string? Type, out bool Opaque, out System.Collections.Generic.IReadOnlyList<string![]!>? Headers, out string? Body, out string? Cookies) -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply.Equals(Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply? other) -> bool
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply.Error.get -> bool
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply.Error.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply.Headers.get -> System.Collections.Generic.IReadOnlyList<string![]!>?
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply.Headers.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply.Message.get -> string?
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply.Message.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply.Opaque.get -> bool
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply.Opaque.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply.Redirected.get -> bool
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply.Redirected.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply.Status.get -> int
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply.Status.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply.StatusText.get -> string?
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply.StatusText.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply.Type.get -> string?
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply.Type.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply.Url.get -> string?
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply.Url.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchRequest
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchRequest.<Clone>$() -> Kazo.Os.Apps.Browser.Bridge.BridgeFetchRequest!
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchRequest.Body.get -> string?
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchRequest.Body.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchRequest.BridgeFetchRequest(string! Method, string! Url, System.Collections.Generic.IReadOnlyList<string![]!>? Headers, string? Body, string? Kind, string? Credentials, string? Mode) -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchRequest.Credentials.get -> string?
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchRequest.Credentials.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchRequest.Deconstruct(out string! Method, out string! Url, out System.Collections.Generic.IReadOnlyList<string![]!>? Headers, out string? Body, out string? Kind, out string? Credentials, out string? Mode) -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchRequest.Equals(Kazo.Os.Apps.Browser.Bridge.BridgeFetchRequest? other) -> bool
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchRequest.Headers.get -> System.Collections.Generic.IReadOnlyList<string![]!>?
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchRequest.Headers.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchRequest.Kind.get -> string?
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchRequest.Kind.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchRequest.Method.get -> string!
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchRequest.Method.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchRequest.Mode.get -> string?
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchRequest.Mode.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchRequest.Url.get -> string!
+Kazo.Os.Apps.Browser.Bridge.BridgeFetchRequest.Url.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryReply
+Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryReply.<Clone>$() -> Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryReply!
+Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryReply.BridgeFormHistoryReply(System.Collections.Generic.IReadOnlyList<string!>! Values) -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryReply.Deconstruct(out System.Collections.Generic.IReadOnlyList<string!>! Values) -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryReply.Equals(Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryReply? other) -> bool
+Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryReply.Values.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryReply.Values.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryRequest
+Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryRequest.<Clone>$() -> Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryRequest!
+Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryRequest.BridgeFormHistoryRequest(string? Name) -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryRequest.Deconstruct(out string? Name) -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryRequest.Equals(Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryRequest? other) -> bool
+Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryRequest.Name.get -> string?
+Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryRequest.Name.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeFormSubmitEvent
+Kazo.Os.Apps.Browser.Bridge.BridgeFormSubmitEvent.<Clone>$() -> Kazo.Os.Apps.Browser.Bridge.BridgeFormSubmitEvent!
+Kazo.Os.Apps.Browser.Bridge.BridgeFormSubmitEvent.BridgeFormSubmitEvent(System.Collections.Generic.IReadOnlyList<string![]!>? Fields) -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeFormSubmitEvent.Deconstruct(out System.Collections.Generic.IReadOnlyList<string![]!>? Fields) -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeFormSubmitEvent.Equals(Kazo.Os.Apps.Browser.Bridge.BridgeFormSubmitEvent? other) -> bool
+Kazo.Os.Apps.Browser.Bridge.BridgeFormSubmitEvent.Fields.get -> System.Collections.Generic.IReadOnlyList<string![]!>?
+Kazo.Os.Apps.Browser.Bridge.BridgeFormSubmitEvent.Fields.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeHistoryEvent
+Kazo.Os.Apps.Browser.Bridge.BridgeHistoryEvent.<Clone>$() -> Kazo.Os.Apps.Browser.Bridge.BridgeHistoryEvent!
+Kazo.Os.Apps.Browser.Bridge.BridgeHistoryEvent.BridgeHistoryEvent(string! Url, bool Replace) -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeHistoryEvent.Deconstruct(out string! Url, out bool Replace) -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeHistoryEvent.Equals(Kazo.Os.Apps.Browser.Bridge.BridgeHistoryEvent? other) -> bool
+Kazo.Os.Apps.Browser.Bridge.BridgeHistoryEvent.Replace.get -> bool
+Kazo.Os.Apps.Browser.Bridge.BridgeHistoryEvent.Replace.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeHistoryEvent.Url.get -> string!
+Kazo.Os.Apps.Browser.Bridge.BridgeHistoryEvent.Url.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeKeyEvent
+Kazo.Os.Apps.Browser.Bridge.BridgeKeyEvent.<Clone>$() -> Kazo.Os.Apps.Browser.Bridge.BridgeKeyEvent!
+Kazo.Os.Apps.Browser.Bridge.BridgeKeyEvent.Alt.get -> bool
+Kazo.Os.Apps.Browser.Bridge.BridgeKeyEvent.Alt.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeKeyEvent.BridgeKeyEvent(string? Key, bool Ctrl, bool Shift, bool Alt) -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeKeyEvent.Ctrl.get -> bool
+Kazo.Os.Apps.Browser.Bridge.BridgeKeyEvent.Ctrl.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeKeyEvent.Deconstruct(out string? Key, out bool Ctrl, out bool Shift, out bool Alt) -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeKeyEvent.Equals(Kazo.Os.Apps.Browser.Bridge.BridgeKeyEvent? other) -> bool
+Kazo.Os.Apps.Browser.Bridge.BridgeKeyEvent.Key.get -> string?
+Kazo.Os.Apps.Browser.Bridge.BridgeKeyEvent.Key.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeKeyEvent.Shift.get -> bool
+Kazo.Os.Apps.Browser.Bridge.BridgeKeyEvent.Shift.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeNavigateEvent
+Kazo.Os.Apps.Browser.Bridge.BridgeNavigateEvent.<Clone>$() -> Kazo.Os.Apps.Browser.Bridge.BridgeNavigateEvent!
+Kazo.Os.Apps.Browser.Bridge.BridgeNavigateEvent.Body.get -> string?
+Kazo.Os.Apps.Browser.Bridge.BridgeNavigateEvent.Body.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeNavigateEvent.BridgeNavigateEvent(string! Url, string? Method, string? Body, string? ContentType, string? Target, bool Download, bool Replace) -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeNavigateEvent.ContentType.get -> string?
+Kazo.Os.Apps.Browser.Bridge.BridgeNavigateEvent.ContentType.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeNavigateEvent.Deconstruct(out string! Url, out string? Method, out string? Body, out string? ContentType, out string? Target, out bool Download, out bool Replace) -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeNavigateEvent.Download.get -> bool
+Kazo.Os.Apps.Browser.Bridge.BridgeNavigateEvent.Download.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeNavigateEvent.Equals(Kazo.Os.Apps.Browser.Bridge.BridgeNavigateEvent? other) -> bool
+Kazo.Os.Apps.Browser.Bridge.BridgeNavigateEvent.Method.get -> string?
+Kazo.Os.Apps.Browser.Bridge.BridgeNavigateEvent.Method.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeNavigateEvent.Replace.get -> bool
+Kazo.Os.Apps.Browser.Bridge.BridgeNavigateEvent.Replace.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeNavigateEvent.Target.get -> string?
+Kazo.Os.Apps.Browser.Bridge.BridgeNavigateEvent.Target.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeNavigateEvent.Url.get -> string!
+Kazo.Os.Apps.Browser.Bridge.BridgeNavigateEvent.Url.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeResourceReply
+Kazo.Os.Apps.Browser.Bridge.BridgeResourceReply.<Clone>$() -> Kazo.Os.Apps.Browser.Bridge.BridgeResourceReply!
+Kazo.Os.Apps.Browser.Bridge.BridgeResourceReply.BridgeResourceReply(string! DataUrl) -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeResourceReply.DataUrl.get -> string!
+Kazo.Os.Apps.Browser.Bridge.BridgeResourceReply.DataUrl.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeResourceReply.Deconstruct(out string! DataUrl) -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeResourceReply.Equals(Kazo.Os.Apps.Browser.Bridge.BridgeResourceReply? other) -> bool
+Kazo.Os.Apps.Browser.Bridge.BridgeResourceRequest
+Kazo.Os.Apps.Browser.Bridge.BridgeResourceRequest.<Clone>$() -> Kazo.Os.Apps.Browser.Bridge.BridgeResourceRequest!
+Kazo.Os.Apps.Browser.Bridge.BridgeResourceRequest.BridgeResourceRequest(string! Url, string? Kind) -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeResourceRequest.Deconstruct(out string! Url, out string? Kind) -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeResourceRequest.Equals(Kazo.Os.Apps.Browser.Bridge.BridgeResourceRequest? other) -> bool
+Kazo.Os.Apps.Browser.Bridge.BridgeResourceRequest.Kind.get -> string?
+Kazo.Os.Apps.Browser.Bridge.BridgeResourceRequest.Kind.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeResourceRequest.Url.get -> string!
+Kazo.Os.Apps.Browser.Bridge.BridgeResourceRequest.Url.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeStorageEvent
+Kazo.Os.Apps.Browser.Bridge.BridgeStorageEvent.<Clone>$() -> Kazo.Os.Apps.Browser.Bridge.BridgeStorageEvent!
+Kazo.Os.Apps.Browser.Bridge.BridgeStorageEvent.Area.get -> string?
+Kazo.Os.Apps.Browser.Bridge.BridgeStorageEvent.Area.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeStorageEvent.BridgeStorageEvent(string? Area, string? Op, string? Key, string? Value) -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeStorageEvent.Deconstruct(out string? Area, out string? Op, out string? Key, out string? Value) -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeStorageEvent.Equals(Kazo.Os.Apps.Browser.Bridge.BridgeStorageEvent? other) -> bool
+Kazo.Os.Apps.Browser.Bridge.BridgeStorageEvent.Key.get -> string?
+Kazo.Os.Apps.Browser.Bridge.BridgeStorageEvent.Key.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeStorageEvent.Op.get -> string?
+Kazo.Os.Apps.Browser.Bridge.BridgeStorageEvent.Op.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeStorageEvent.Value.get -> string?
+Kazo.Os.Apps.Browser.Bridge.BridgeStorageEvent.Value.init -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeTitleEvent
+Kazo.Os.Apps.Browser.Bridge.BridgeTitleEvent.<Clone>$() -> Kazo.Os.Apps.Browser.Bridge.BridgeTitleEvent!
+Kazo.Os.Apps.Browser.Bridge.BridgeTitleEvent.BridgeTitleEvent(string? Title) -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeTitleEvent.Deconstruct(out string? Title) -> void
+Kazo.Os.Apps.Browser.Bridge.BridgeTitleEvent.Equals(Kazo.Os.Apps.Browser.Bridge.BridgeTitleEvent? other) -> bool
+Kazo.Os.Apps.Browser.Bridge.BridgeTitleEvent.Title.get -> string?
+Kazo.Os.Apps.Browser.Bridge.BridgeTitleEvent.Title.init -> void
+Kazo.Os.Apps.Browser.Bridge.PageBootstrap
+Kazo.Os.Apps.Browser.Bridge.PageBootstrap.<Clone>$() -> Kazo.Os.Apps.Browser.Bridge.PageBootstrap!
+Kazo.Os.Apps.Browser.Bridge.PageBootstrap.Cookies.get -> string!
+Kazo.Os.Apps.Browser.Bridge.PageBootstrap.Cookies.init -> void
+Kazo.Os.Apps.Browser.Bridge.PageBootstrap.Deconstruct(out string! Token, out string! Url, out string! Referrer, out string! Cookies, out System.Collections.Generic.IReadOnlyDictionary<string!, string!>! LocalStorage, out System.Collections.Generic.IReadOnlyDictionary<string!, string!>! SessionStorage, out int StorageQuota, out bool IsFile, out Kazo.Os.Apps.Browser.Bridge.RefreshDirective? Refresh) -> void
+Kazo.Os.Apps.Browser.Bridge.PageBootstrap.Equals(Kazo.Os.Apps.Browser.Bridge.PageBootstrap? other) -> bool
+Kazo.Os.Apps.Browser.Bridge.PageBootstrap.IsFile.get -> bool
+Kazo.Os.Apps.Browser.Bridge.PageBootstrap.IsFile.init -> void
+Kazo.Os.Apps.Browser.Bridge.PageBootstrap.LocalStorage.get -> System.Collections.Generic.IReadOnlyDictionary<string!, string!>!
+Kazo.Os.Apps.Browser.Bridge.PageBootstrap.LocalStorage.init -> void
+Kazo.Os.Apps.Browser.Bridge.PageBootstrap.PageBootstrap(string! Token, string! Url, string! Referrer, string! Cookies, System.Collections.Generic.IReadOnlyDictionary<string!, string!>! LocalStorage, System.Collections.Generic.IReadOnlyDictionary<string!, string!>! SessionStorage, int StorageQuota, bool IsFile, Kazo.Os.Apps.Browser.Bridge.RefreshDirective? Refresh = null) -> void
+Kazo.Os.Apps.Browser.Bridge.PageBootstrap.Referrer.get -> string!
+Kazo.Os.Apps.Browser.Bridge.PageBootstrap.Referrer.init -> void
+Kazo.Os.Apps.Browser.Bridge.PageBootstrap.Refresh.get -> Kazo.Os.Apps.Browser.Bridge.RefreshDirective?
+Kazo.Os.Apps.Browser.Bridge.PageBootstrap.Refresh.init -> void
+Kazo.Os.Apps.Browser.Bridge.PageBootstrap.SessionStorage.get -> System.Collections.Generic.IReadOnlyDictionary<string!, string!>!
+Kazo.Os.Apps.Browser.Bridge.PageBootstrap.SessionStorage.init -> void
+Kazo.Os.Apps.Browser.Bridge.PageBootstrap.StorageQuota.get -> int
+Kazo.Os.Apps.Browser.Bridge.PageBootstrap.StorageQuota.init -> void
+Kazo.Os.Apps.Browser.Bridge.PageBootstrap.Token.get -> string!
+Kazo.Os.Apps.Browser.Bridge.PageBootstrap.Token.init -> void
+Kazo.Os.Apps.Browser.Bridge.PageBootstrap.Url.get -> string!
+Kazo.Os.Apps.Browser.Bridge.PageBootstrap.Url.init -> void
+Kazo.Os.Apps.Browser.Bridge.PageBridgeHandler
+Kazo.Os.Apps.Browser.Bridge.PageBridgeHandler.ApplyDocumentCookie(System.Uri! documentUrl, string! assignment, System.DateTimeOffset now) -> string!
+Kazo.Os.Apps.Browser.Bridge.PageBridgeHandler.FetchAsync(Kazo.Os.Apps.Browser.Bridge.PageSession! session, Kazo.Os.Apps.Browser.Bridge.BridgeFetchRequest! request) -> System.Threading.Tasks.Task<Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply!>!
+Kazo.Os.Apps.Browser.Bridge.PageBridgeHandler.GetDocumentCookies(System.Uri! documentUrl) -> string!
+Kazo.Os.Apps.Browser.Bridge.PageBridgeHandler.LoadResourceAsync(Kazo.Os.Apps.Browser.Bridge.PageSession! session, Kazo.Os.Apps.Browser.Bridge.BridgeResourceRequest! request) -> System.Threading.Tasks.Task<Kazo.Os.Apps.Browser.Bridge.BridgeResourceReply!>!
+Kazo.Os.Apps.Browser.Bridge.PageBridgeHandler.PageBridgeHandler(Kazo.Os.Apps.Browser.Net.BrowserResourceLoader! loader, Kazo.Os.AppSdk.Net.HackCookieContainer! cookies) -> void
+Kazo.Os.Apps.Browser.Bridge.PageBridgeJsonContext
+Kazo.Os.Apps.Browser.Bridge.PageBridgeJsonContext.PageBridgeJsonContext() -> void
+Kazo.Os.Apps.Browser.Bridge.PageBridgeJsonContext.PageBridgeJsonContext(System.Text.Json.JsonSerializerOptions! options) -> void
+Kazo.Os.Apps.Browser.Bridge.PageBridgeScript
+Kazo.Os.Apps.Browser.Bridge.PageSession
+Kazo.Os.Apps.Browser.Bridge.PageSession.CancellationToken.get -> System.Threading.CancellationToken
+Kazo.Os.Apps.Browser.Bridge.PageSession.Css.get -> Kazo.Os.Apps.Browser.Rendering.CssResourceRewriter!
+Kazo.Os.Apps.Browser.Bridge.PageSession.DocumentUrl.get -> System.Uri!
+Kazo.Os.Apps.Browser.Bridge.PageSession.Fetcher.get -> Kazo.Os.Apps.Browser.Rendering.SubresourceFetcher!
+Kazo.Os.Apps.Browser.Bridge.PageSession.PageSession(System.Uri! documentUrl, string! token, Kazo.Os.Apps.Browser.Net.BrowserResourceLoader! loader, System.Threading.CancellationToken cancellationToken) -> void
+Kazo.Os.Apps.Browser.Bridge.PageSession.StorageKey.get -> string!
+Kazo.Os.Apps.Browser.Bridge.PageSession.Token.get -> string!
+Kazo.Os.Apps.Browser.Bridge.RefreshDirective
+Kazo.Os.Apps.Browser.Bridge.RefreshDirective.<Clone>$() -> Kazo.Os.Apps.Browser.Bridge.RefreshDirective!
+Kazo.Os.Apps.Browser.Bridge.RefreshDirective.Deconstruct(out double Seconds, out string? Url) -> void
+Kazo.Os.Apps.Browser.Bridge.RefreshDirective.Equals(Kazo.Os.Apps.Browser.Bridge.RefreshDirective? other) -> bool
+Kazo.Os.Apps.Browser.Bridge.RefreshDirective.RefreshDirective(double Seconds, string? Url) -> void
+Kazo.Os.Apps.Browser.Bridge.RefreshDirective.Seconds.get -> double
+Kazo.Os.Apps.Browser.Bridge.RefreshDirective.Seconds.init -> void
+Kazo.Os.Apps.Browser.Bridge.RefreshDirective.Url.get -> string?
+Kazo.Os.Apps.Browser.Bridge.RefreshDirective.Url.init -> void
+Kazo.Os.Apps.Browser.BrowserApp
+Kazo.Os.Apps.Browser.BrowserApp.BrowserApp() -> void
+Kazo.Os.Apps.Browser.BrowserDownloads
+Kazo.Os.Apps.Browser.BrowserErrorPages
+Kazo.Os.Apps.Browser.BrowserErrorView
+Kazo.Os.Apps.Browser.BrowserErrorView.<Clone>$() -> Kazo.Os.Apps.Browser.BrowserErrorView!
+Kazo.Os.Apps.Browser.BrowserErrorView.BrowserErrorView(string! Title, string! Message, string! Code, System.Collections.Generic.IReadOnlyList<string!>! Hints) -> void
+Kazo.Os.Apps.Browser.BrowserErrorView.Code.get -> string!
+Kazo.Os.Apps.Browser.BrowserErrorView.Code.init -> void
+Kazo.Os.Apps.Browser.BrowserErrorView.Deconstruct(out string! Title, out string! Message, out string! Code, out System.Collections.Generic.IReadOnlyList<string!>! Hints) -> void
+Kazo.Os.Apps.Browser.BrowserErrorView.Equals(Kazo.Os.Apps.Browser.BrowserErrorView? other) -> bool
+Kazo.Os.Apps.Browser.BrowserErrorView.Hints.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.Apps.Browser.BrowserErrorView.Hints.init -> void
+Kazo.Os.Apps.Browser.BrowserErrorView.Message.get -> string!
+Kazo.Os.Apps.Browser.BrowserErrorView.Message.init -> void
+Kazo.Os.Apps.Browser.BrowserErrorView.Title.get -> string!
+Kazo.Os.Apps.Browser.BrowserErrorView.Title.init -> void
+Kazo.Os.Apps.Browser.BrowserPageView
+Kazo.Os.Apps.Browser.BrowserPageView.BrowserPageView() -> void
+Kazo.Os.Apps.Browser.BrowserPageView.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Apps.Browser.BrowserPageView.Document.get -> Kazo.Os.Apps.Browser.PageFrameDocument!
+Kazo.Os.Apps.Browser.BrowserPageView.Document.set -> void
+Kazo.Os.Apps.Browser.BrowserPageView.FocusAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Apps.Browser.BrowserPageView.OnBridgeEvent(string! type, string! payload) -> System.Threading.Tasks.Task!
+Kazo.Os.Apps.Browser.BrowserPageView.OnBridgeRequest(string! operation, string! payload) -> System.Threading.Tasks.Task<string!>!
+Kazo.Os.Apps.Browser.BrowserPageView.OnEscaped.get -> System.Func<System.Threading.Tasks.Task!>?
+Kazo.Os.Apps.Browser.BrowserPageView.OnEscaped.set -> void
+Kazo.Os.Apps.Browser.BrowserPageView.OnEvent.get -> System.Func<string!, string!, System.Threading.Tasks.Task!>!
+Kazo.Os.Apps.Browser.BrowserPageView.OnEvent.set -> void
+Kazo.Os.Apps.Browser.BrowserPageView.OnFrameEscaped() -> System.Threading.Tasks.Task!
+Kazo.Os.Apps.Browser.BrowserPageView.OnRequest.get -> System.Func<string!, string!, System.Threading.Tasks.Task<string!>!>!
+Kazo.Os.Apps.Browser.BrowserPageView.OnRequest.set -> void
+Kazo.Os.Apps.Browser.BrowserWindow
+Kazo.Os.Apps.Browser.BrowserWindow.BrowserWindow() -> void
+Kazo.Os.Apps.Browser.BrowserWindow.CanNavigateBack.get -> bool
+Kazo.Os.Apps.Browser.BrowserWindow.CanNavigateBackChanged -> System.Action?
+Kazo.Os.Apps.Browser.BrowserWindow.CanNavigateForward.get -> bool
+Kazo.Os.Apps.Browser.BrowserWindow.CanNavigateForwardChanged -> System.Action?
+Kazo.Os.Apps.Browser.BrowserWindow.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Apps.Browser.BrowserWindow.NavigateBackAsync(Kazo.Os.AppSdk.Blazor.AppBackRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Blazor.AppBackResult!>
+Kazo.Os.Apps.Browser.BrowserWindow.NavigateForwardAsync(Kazo.Os.AppSdk.Blazor.AppForwardRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Blazor.AppBackResult!>
+Kazo.Os.Apps.Browser.DevTools.ConsoleLevel
+Kazo.Os.Apps.Browser.DevTools.ConsoleLevel.Debug = 0 -> Kazo.Os.Apps.Browser.DevTools.ConsoleLevel
+Kazo.Os.Apps.Browser.DevTools.ConsoleLevel.Error = 3 -> Kazo.Os.Apps.Browser.DevTools.ConsoleLevel
+Kazo.Os.Apps.Browser.DevTools.ConsoleLevel.Log = 1 -> Kazo.Os.Apps.Browser.DevTools.ConsoleLevel
+Kazo.Os.Apps.Browser.DevTools.ConsoleLevel.Warning = 2 -> Kazo.Os.Apps.Browser.DevTools.ConsoleLevel
+Kazo.Os.Apps.Browser.DevTools.ConsoleLogEntry
+Kazo.Os.Apps.Browser.DevTools.ConsoleLogEntry.<Clone>$() -> Kazo.Os.Apps.Browser.DevTools.ConsoleLogEntry!
+Kazo.Os.Apps.Browser.DevTools.ConsoleLogEntry.ConsoleLogEntry(Kazo.Os.Apps.Browser.DevTools.ConsoleLevel Level, string! Message, string! Source) -> void
+Kazo.Os.Apps.Browser.DevTools.ConsoleLogEntry.Deconstruct(out Kazo.Os.Apps.Browser.DevTools.ConsoleLevel Level, out string! Message, out string! Source) -> void
+Kazo.Os.Apps.Browser.DevTools.ConsoleLogEntry.Equals(Kazo.Os.Apps.Browser.DevTools.ConsoleLogEntry? other) -> bool
+Kazo.Os.Apps.Browser.DevTools.ConsoleLogEntry.Level.get -> Kazo.Os.Apps.Browser.DevTools.ConsoleLevel
+Kazo.Os.Apps.Browser.DevTools.ConsoleLogEntry.Level.init -> void
+Kazo.Os.Apps.Browser.DevTools.ConsoleLogEntry.Message.get -> string!
+Kazo.Os.Apps.Browser.DevTools.ConsoleLogEntry.Message.init -> void
+Kazo.Os.Apps.Browser.DevTools.ConsoleLogEntry.Source.get -> string!
+Kazo.Os.Apps.Browser.DevTools.ConsoleLogEntry.Source.init -> void
+Kazo.Os.Apps.Browser.DevTools.DevToolsLog
+Kazo.Os.Apps.Browser.DevTools.DevToolsLog.Add(Kazo.Os.Apps.Browser.DevTools.ConsoleLogEntry! entry) -> void
+Kazo.Os.Apps.Browser.DevTools.DevToolsLog.Add(Kazo.Os.Apps.Browser.DevTools.NetworkLogEntry! entry) -> void
+Kazo.Os.Apps.Browser.DevTools.DevToolsLog.Changed -> System.Action?
+Kazo.Os.Apps.Browser.DevTools.DevToolsLog.Clear() -> void
+Kazo.Os.Apps.Browser.DevTools.DevToolsLog.Console.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.Browser.DevTools.ConsoleLogEntry!>!
+Kazo.Os.Apps.Browser.DevTools.DevToolsLog.DevToolsLog() -> void
+Kazo.Os.Apps.Browser.DevTools.DevToolsLog.ErrorCount.get -> int
+Kazo.Os.Apps.Browser.DevTools.DevToolsLog.Network.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.Browser.DevTools.NetworkLogEntry!>!
+Kazo.Os.Apps.Browser.DevTools.DevToolsPanel
+Kazo.Os.Apps.Browser.DevTools.DevToolsPanel.DevToolsPanel() -> void
+Kazo.Os.Apps.Browser.DevTools.DevToolsPanel.Dispose() -> void
+Kazo.Os.Apps.Browser.DevTools.DevToolsPanel.Log.get -> Kazo.Os.Apps.Browser.DevTools.DevToolsLog!
+Kazo.Os.Apps.Browser.DevTools.DevToolsPanel.Log.set -> void
+Kazo.Os.Apps.Browser.DevTools.DevToolsPanel.OnClose.get -> Microsoft.AspNetCore.Components.EventCallback
+Kazo.Os.Apps.Browser.DevTools.DevToolsPanel.OnClose.set -> void
+Kazo.Os.Apps.Browser.DevTools.NetworkLogEntry
+Kazo.Os.Apps.Browser.DevTools.NetworkLogEntry.<Clone>$() -> Kazo.Os.Apps.Browser.DevTools.NetworkLogEntry!
+Kazo.Os.Apps.Browser.DevTools.NetworkLogEntry.Deconstruct(out string! Method, out string! Url, out Kazo.Os.Apps.Browser.DevTools.NetworkRequestKind Kind, out int StatusCode, out string? Error, out string! MediaType, out int Size, out System.TimeSpan Duration) -> void
+Kazo.Os.Apps.Browser.DevTools.NetworkLogEntry.Duration.get -> System.TimeSpan
+Kazo.Os.Apps.Browser.DevTools.NetworkLogEntry.Duration.init -> void
+Kazo.Os.Apps.Browser.DevTools.NetworkLogEntry.Equals(Kazo.Os.Apps.Browser.DevTools.NetworkLogEntry? other) -> bool
+Kazo.Os.Apps.Browser.DevTools.NetworkLogEntry.Error.get -> string?
+Kazo.Os.Apps.Browser.DevTools.NetworkLogEntry.Error.init -> void
+Kazo.Os.Apps.Browser.DevTools.NetworkLogEntry.IsFailure.get -> bool
+Kazo.Os.Apps.Browser.DevTools.NetworkLogEntry.Kind.get -> Kazo.Os.Apps.Browser.DevTools.NetworkRequestKind
+Kazo.Os.Apps.Browser.DevTools.NetworkLogEntry.Kind.init -> void
+Kazo.Os.Apps.Browser.DevTools.NetworkLogEntry.MediaType.get -> string!
+Kazo.Os.Apps.Browser.DevTools.NetworkLogEntry.MediaType.init -> void
+Kazo.Os.Apps.Browser.DevTools.NetworkLogEntry.Method.get -> string!
+Kazo.Os.Apps.Browser.DevTools.NetworkLogEntry.Method.init -> void
+Kazo.Os.Apps.Browser.DevTools.NetworkLogEntry.NetworkLogEntry(string! Method, string! Url, Kazo.Os.Apps.Browser.DevTools.NetworkRequestKind Kind, int StatusCode, string? Error, string! MediaType, int Size, System.TimeSpan Duration) -> void
+Kazo.Os.Apps.Browser.DevTools.NetworkLogEntry.Size.get -> int
+Kazo.Os.Apps.Browser.DevTools.NetworkLogEntry.Size.init -> void
+Kazo.Os.Apps.Browser.DevTools.NetworkLogEntry.StatusCode.get -> int
+Kazo.Os.Apps.Browser.DevTools.NetworkLogEntry.StatusCode.init -> void
+Kazo.Os.Apps.Browser.DevTools.NetworkLogEntry.Url.get -> string!
+Kazo.Os.Apps.Browser.DevTools.NetworkLogEntry.Url.init -> void
+Kazo.Os.Apps.Browser.DevTools.NetworkRequestKind
+Kazo.Os.Apps.Browser.DevTools.NetworkRequestKind.Document = 0 -> Kazo.Os.Apps.Browser.DevTools.NetworkRequestKind
+Kazo.Os.Apps.Browser.DevTools.NetworkRequestKind.Fetch = 6 -> Kazo.Os.Apps.Browser.DevTools.NetworkRequestKind
+Kazo.Os.Apps.Browser.DevTools.NetworkRequestKind.Font = 4 -> Kazo.Os.Apps.Browser.DevTools.NetworkRequestKind
+Kazo.Os.Apps.Browser.DevTools.NetworkRequestKind.Image = 3 -> Kazo.Os.Apps.Browser.DevTools.NetworkRequestKind
+Kazo.Os.Apps.Browser.DevTools.NetworkRequestKind.Media = 5 -> Kazo.Os.Apps.Browser.DevTools.NetworkRequestKind
+Kazo.Os.Apps.Browser.DevTools.NetworkRequestKind.Other = 8 -> Kazo.Os.Apps.Browser.DevTools.NetworkRequestKind
+Kazo.Os.Apps.Browser.DevTools.NetworkRequestKind.Script = 2 -> Kazo.Os.Apps.Browser.DevTools.NetworkRequestKind
+Kazo.Os.Apps.Browser.DevTools.NetworkRequestKind.Stylesheet = 1 -> Kazo.Os.Apps.Browser.DevTools.NetworkRequestKind
+Kazo.Os.Apps.Browser.DevTools.NetworkRequestKind.Xhr = 7 -> Kazo.Os.Apps.Browser.DevTools.NetworkRequestKind
+Kazo.Os.Apps.Browser.Net.AddressTarget
+Kazo.Os.Apps.Browser.Net.AddressTarget.<Clone>$() -> Kazo.Os.Apps.Browser.Net.AddressTarget!
+Kazo.Os.Apps.Browser.Net.AddressTarget.AddressTarget(System.Uri! Url, bool ViewSource) -> void
+Kazo.Os.Apps.Browser.Net.AddressTarget.Deconstruct(out System.Uri! Url, out bool ViewSource) -> void
+Kazo.Os.Apps.Browser.Net.AddressTarget.Equals(Kazo.Os.Apps.Browser.Net.AddressTarget? other) -> bool
+Kazo.Os.Apps.Browser.Net.AddressTarget.Url.get -> System.Uri!
+Kazo.Os.Apps.Browser.Net.AddressTarget.Url.init -> void
+Kazo.Os.Apps.Browser.Net.AddressTarget.ViewSource.get -> bool
+Kazo.Os.Apps.Browser.Net.AddressTarget.ViewSource.init -> void
+Kazo.Os.Apps.Browser.Net.BrowserErrorCodes
+Kazo.Os.Apps.Browser.Net.BrowserFetchResult
+Kazo.Os.Apps.Browser.Net.BrowserFetchResult.<Clone>$() -> Kazo.Os.Apps.Browser.Net.BrowserFetchResult!
+Kazo.Os.Apps.Browser.Net.BrowserFetchResult.BrowserFetchResult(Kazo.Os.Apps.Browser.Net.BrowserResponse? Response, string? ErrorCode) -> void
+Kazo.Os.Apps.Browser.Net.BrowserFetchResult.Deconstruct(out Kazo.Os.Apps.Browser.Net.BrowserResponse? Response, out string? ErrorCode) -> void
+Kazo.Os.Apps.Browser.Net.BrowserFetchResult.Equals(Kazo.Os.Apps.Browser.Net.BrowserFetchResult? other) -> bool
+Kazo.Os.Apps.Browser.Net.BrowserFetchResult.ErrorCode.get -> string?
+Kazo.Os.Apps.Browser.Net.BrowserFetchResult.ErrorCode.init -> void
+Kazo.Os.Apps.Browser.Net.BrowserFetchResult.Response.get -> Kazo.Os.Apps.Browser.Net.BrowserResponse?
+Kazo.Os.Apps.Browser.Net.BrowserFetchResult.Response.init -> void
+Kazo.Os.Apps.Browser.Net.BrowserRequest
+Kazo.Os.Apps.Browser.Net.BrowserRequest.<Clone>$() -> Kazo.Os.Apps.Browser.Net.BrowserRequest!
+Kazo.Os.Apps.Browser.Net.BrowserRequest.Body.get -> byte[]?
+Kazo.Os.Apps.Browser.Net.BrowserRequest.Body.init -> void
+Kazo.Os.Apps.Browser.Net.BrowserRequest.BrowserRequest(string! Method, System.Uri! Url, System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>! Headers, byte[]? Body = null, string? ContentType = null, bool WithCredentials = true) -> void
+Kazo.Os.Apps.Browser.Net.BrowserRequest.ContentType.get -> string?
+Kazo.Os.Apps.Browser.Net.BrowserRequest.ContentType.init -> void
+Kazo.Os.Apps.Browser.Net.BrowserRequest.Deconstruct(out string! Method, out System.Uri! Url, out System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>! Headers, out byte[]? Body, out string? ContentType, out bool WithCredentials) -> void
+Kazo.Os.Apps.Browser.Net.BrowserRequest.Equals(Kazo.Os.Apps.Browser.Net.BrowserRequest? other) -> bool
+Kazo.Os.Apps.Browser.Net.BrowserRequest.Headers.get -> System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>!
+Kazo.Os.Apps.Browser.Net.BrowserRequest.Headers.init -> void
+Kazo.Os.Apps.Browser.Net.BrowserRequest.Method.get -> string!
+Kazo.Os.Apps.Browser.Net.BrowserRequest.Method.init -> void
+Kazo.Os.Apps.Browser.Net.BrowserRequest.Url.get -> System.Uri!
+Kazo.Os.Apps.Browser.Net.BrowserRequest.Url.init -> void
+Kazo.Os.Apps.Browser.Net.BrowserRequest.WithCredentials.get -> bool
+Kazo.Os.Apps.Browser.Net.BrowserRequest.WithCredentials.init -> void
+Kazo.Os.Apps.Browser.Net.BrowserResourceLoader
+Kazo.Os.Apps.Browser.Net.BrowserResourceLoader.BrowserResourceLoader(Kazo.Os.Apps.Browser.Net.IBrowserTransport! transport, Kazo.Os.Apps.Browser.DevTools.DevToolsLog! log, System.TimeProvider? time = null) -> void
+Kazo.Os.Apps.Browser.Net.BrowserResourceLoader.Log.get -> Kazo.Os.Apps.Browser.DevTools.DevToolsLog!
+Kazo.Os.Apps.Browser.Net.BrowserResourceLoader.LogBlocked(Kazo.Os.Apps.Browser.Net.BrowserRequest! request, Kazo.Os.Apps.Browser.DevTools.NetworkRequestKind kind, string! errorCode, string! consoleMessage) -> void
+Kazo.Os.Apps.Browser.Net.BrowserResourceLoader.SendAsync(Kazo.Os.Apps.Browser.Net.BrowserRequest! request, Kazo.Os.Apps.Browser.DevTools.NetworkRequestKind kind, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.Apps.Browser.Net.BrowserFetchResult!>!
+Kazo.Os.Apps.Browser.Net.BrowserResponse
+Kazo.Os.Apps.Browser.Net.BrowserResponse.<Clone>$() -> Kazo.Os.Apps.Browser.Net.BrowserResponse!
+Kazo.Os.Apps.Browser.Net.BrowserResponse.Body.get -> byte[]!
+Kazo.Os.Apps.Browser.Net.BrowserResponse.Body.init -> void
+Kazo.Os.Apps.Browser.Net.BrowserResponse.BrowserResponse(int StatusCode, string! ReasonPhrase, System.Uri! Url, System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>! Headers, byte[]! Body, Kazo.Os.Simulation.Abstractions.Network.SimulatedPage? Page = null, int RedirectCount = 0, Kazo.Os.Apps.Browser.Net.BrowserResponseSource Source = Kazo.Os.Apps.Browser.Net.BrowserResponseSource.Simulated) -> void
+Kazo.Os.Apps.Browser.Net.BrowserResponse.ContentType.get -> string?
+Kazo.Os.Apps.Browser.Net.BrowserResponse.Deconstruct(out int StatusCode, out string! ReasonPhrase, out System.Uri! Url, out System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>! Headers, out byte[]! Body, out Kazo.Os.Simulation.Abstractions.Network.SimulatedPage? Page, out int RedirectCount, out Kazo.Os.Apps.Browser.Net.BrowserResponseSource Source) -> void
+Kazo.Os.Apps.Browser.Net.BrowserResponse.Equals(Kazo.Os.Apps.Browser.Net.BrowserResponse? other) -> bool
+Kazo.Os.Apps.Browser.Net.BrowserResponse.GetHeader(string! name) -> string?
+Kazo.Os.Apps.Browser.Net.BrowserResponse.Headers.get -> System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>!
+Kazo.Os.Apps.Browser.Net.BrowserResponse.Headers.init -> void
+Kazo.Os.Apps.Browser.Net.BrowserResponse.IsSuccessStatusCode.get -> bool
+Kazo.Os.Apps.Browser.Net.BrowserResponse.MediaType.get -> string!
+Kazo.Os.Apps.Browser.Net.BrowserResponse.Page.get -> Kazo.Os.Simulation.Abstractions.Network.SimulatedPage?
+Kazo.Os.Apps.Browser.Net.BrowserResponse.Page.init -> void
+Kazo.Os.Apps.Browser.Net.BrowserResponse.ReadAsString() -> string!
+Kazo.Os.Apps.Browser.Net.BrowserResponse.ReasonPhrase.get -> string!
+Kazo.Os.Apps.Browser.Net.BrowserResponse.ReasonPhrase.init -> void
+Kazo.Os.Apps.Browser.Net.BrowserResponse.RedirectCount.get -> int
+Kazo.Os.Apps.Browser.Net.BrowserResponse.RedirectCount.init -> void
+Kazo.Os.Apps.Browser.Net.BrowserResponse.Source.get -> Kazo.Os.Apps.Browser.Net.BrowserResponseSource
+Kazo.Os.Apps.Browser.Net.BrowserResponse.Source.init -> void
+Kazo.Os.Apps.Browser.Net.BrowserResponse.StatusCode.get -> int
+Kazo.Os.Apps.Browser.Net.BrowserResponse.StatusCode.init -> void
+Kazo.Os.Apps.Browser.Net.BrowserResponse.Url.get -> System.Uri!
+Kazo.Os.Apps.Browser.Net.BrowserResponse.Url.init -> void
+Kazo.Os.Apps.Browser.Net.BrowserResponseSource
+Kazo.Os.Apps.Browser.Net.BrowserResponseSource.File = 2 -> Kazo.Os.Apps.Browser.Net.BrowserResponseSource
+Kazo.Os.Apps.Browser.Net.BrowserResponseSource.LocalSite = 1 -> Kazo.Os.Apps.Browser.Net.BrowserResponseSource
+Kazo.Os.Apps.Browser.Net.BrowserResponseSource.RealNetwork = 3 -> Kazo.Os.Apps.Browser.Net.BrowserResponseSource
+Kazo.Os.Apps.Browser.Net.BrowserResponseSource.Simulated = 0 -> Kazo.Os.Apps.Browser.Net.BrowserResponseSource
+Kazo.Os.Apps.Browser.Net.BrowserUrl
+Kazo.Os.Apps.Browser.Net.DirectoryListingEntry
+Kazo.Os.Apps.Browser.Net.DirectoryListingEntry.<Clone>$() -> Kazo.Os.Apps.Browser.Net.DirectoryListingEntry!
+Kazo.Os.Apps.Browser.Net.DirectoryListingEntry.Deconstruct(out string! Name, out bool IsDirectory, out long? Length, out System.DateTime LastWriteTimeUtc) -> void
+Kazo.Os.Apps.Browser.Net.DirectoryListingEntry.DirectoryListingEntry(string! Name, bool IsDirectory, long? Length, System.DateTime LastWriteTimeUtc) -> void
+Kazo.Os.Apps.Browser.Net.DirectoryListingEntry.Equals(Kazo.Os.Apps.Browser.Net.DirectoryListingEntry? other) -> bool
+Kazo.Os.Apps.Browser.Net.DirectoryListingEntry.IsDirectory.get -> bool
+Kazo.Os.Apps.Browser.Net.DirectoryListingEntry.IsDirectory.init -> void
+Kazo.Os.Apps.Browser.Net.DirectoryListingEntry.LastWriteTimeUtc.get -> System.DateTime
+Kazo.Os.Apps.Browser.Net.DirectoryListingEntry.LastWriteTimeUtc.init -> void
+Kazo.Os.Apps.Browser.Net.DirectoryListingEntry.Length.get -> long?
+Kazo.Os.Apps.Browser.Net.DirectoryListingEntry.Length.init -> void
+Kazo.Os.Apps.Browser.Net.DirectoryListingEntry.Name.get -> string!
+Kazo.Os.Apps.Browser.Net.DirectoryListingEntry.Name.init -> void
+Kazo.Os.Apps.Browser.Net.DirectoryListingPage
+Kazo.Os.Apps.Browser.Net.IBrowserTransport
+Kazo.Os.Apps.Browser.Net.IBrowserTransport.SendAsync(Kazo.Os.Apps.Browser.Net.BrowserRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.Apps.Browser.Net.BrowserFetchResult!>!
+Kazo.Os.Apps.Browser.Net.SdkBrowserTransport
+Kazo.Os.Apps.Browser.Net.SdkBrowserTransport.SdkBrowserTransport(Kazo.Os.AppSdk.Net.HackCookieContainer! cookies) -> void
+Kazo.Os.Apps.Browser.Net.SdkBrowserTransport.SendAsync(Kazo.Os.Apps.Browser.Net.BrowserRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.Apps.Browser.Net.BrowserFetchResult!>!
+Kazo.Os.Apps.Browser.PageFrameDocument
+Kazo.Os.Apps.Browser.PageFrameDocument.<Clone>$() -> Kazo.Os.Apps.Browser.PageFrameDocument!
+Kazo.Os.Apps.Browser.PageFrameDocument.Deconstruct(out string! Html, out string! Token) -> void
+Kazo.Os.Apps.Browser.PageFrameDocument.Equals(Kazo.Os.Apps.Browser.PageFrameDocument? other) -> bool
+Kazo.Os.Apps.Browser.PageFrameDocument.Html.get -> string!
+Kazo.Os.Apps.Browser.PageFrameDocument.Html.init -> void
+Kazo.Os.Apps.Browser.PageFrameDocument.PageFrameDocument(string! Html, string! Token) -> void
+Kazo.Os.Apps.Browser.PageFrameDocument.Token.get -> string!
+Kazo.Os.Apps.Browser.PageFrameDocument.Token.init -> void
+Kazo.Os.Apps.Browser.Rendering.ComposedPage
+Kazo.Os.Apps.Browser.Rendering.ComposedPage.<Clone>$() -> Kazo.Os.Apps.Browser.Rendering.ComposedPage!
+Kazo.Os.Apps.Browser.Rendering.ComposedPage.BaseUrl.get -> System.Uri!
+Kazo.Os.Apps.Browser.Rendering.ComposedPage.BaseUrl.init -> void
+Kazo.Os.Apps.Browser.Rendering.ComposedPage.ComposedPage(string! Html, string! Title, System.Uri! BaseUrl, int SubresourceCount) -> void
+Kazo.Os.Apps.Browser.Rendering.ComposedPage.Deconstruct(out string! Html, out string! Title, out System.Uri! BaseUrl, out int SubresourceCount) -> void
+Kazo.Os.Apps.Browser.Rendering.ComposedPage.Equals(Kazo.Os.Apps.Browser.Rendering.ComposedPage? other) -> bool
+Kazo.Os.Apps.Browser.Rendering.ComposedPage.Html.get -> string!
+Kazo.Os.Apps.Browser.Rendering.ComposedPage.Html.init -> void
+Kazo.Os.Apps.Browser.Rendering.ComposedPage.SubresourceCount.get -> int
+Kazo.Os.Apps.Browser.Rendering.ComposedPage.SubresourceCount.init -> void
+Kazo.Os.Apps.Browser.Rendering.ComposedPage.Title.get -> string!
+Kazo.Os.Apps.Browser.Rendering.ComposedPage.Title.init -> void
+Kazo.Os.Apps.Browser.Rendering.CssResourceRewriter
+Kazo.Os.Apps.Browser.Rendering.CssResourceRewriter.CssResourceRewriter(Kazo.Os.Apps.Browser.Rendering.SubresourceFetcher! fetcher) -> void
+Kazo.Os.Apps.Browser.Rendering.CssResourceRewriter.RewriteAsync(string! css, System.Uri! baseUrl) -> System.Threading.Tasks.Task<string!>!
+Kazo.Os.Apps.Browser.Rendering.DataUrl
+Kazo.Os.Apps.Browser.Rendering.HtmlPageComposer
+Kazo.Os.Apps.Browser.Rendering.HtmlPageComposer.ComposeAsync(string! html, Kazo.Os.Apps.Browser.Bridge.PageSession! session, Kazo.Os.Apps.Browser.Bridge.PageBootstrap! bootstrap) -> System.Threading.Tasks.Task<Kazo.Os.Apps.Browser.Rendering.ComposedPage!>!
+Kazo.Os.Apps.Browser.Rendering.HtmlPageComposer.HtmlPageComposer(Kazo.Os.Apps.Browser.Net.BrowserResourceLoader! loader) -> void
+Kazo.Os.Apps.Browser.Rendering.LoadedResource
+Kazo.Os.Apps.Browser.Rendering.LoadedResource.<Clone>$() -> Kazo.Os.Apps.Browser.Rendering.LoadedResource!
+Kazo.Os.Apps.Browser.Rendering.LoadedResource.Body.get -> byte[]!
+Kazo.Os.Apps.Browser.Rendering.LoadedResource.Body.init -> void
+Kazo.Os.Apps.Browser.Rendering.LoadedResource.ContentType.get -> string!
+Kazo.Os.Apps.Browser.Rendering.LoadedResource.ContentType.init -> void
+Kazo.Os.Apps.Browser.Rendering.LoadedResource.Deconstruct(out System.Uri! Url, out string! ContentType, out byte[]! Body) -> void
+Kazo.Os.Apps.Browser.Rendering.LoadedResource.Equals(Kazo.Os.Apps.Browser.Rendering.LoadedResource? other) -> bool
+Kazo.Os.Apps.Browser.Rendering.LoadedResource.LoadedResource(System.Uri! Url, string! ContentType, byte[]! Body) -> void
+Kazo.Os.Apps.Browser.Rendering.LoadedResource.MediaType.get -> string!
+Kazo.Os.Apps.Browser.Rendering.LoadedResource.ReadAsString() -> string!
+Kazo.Os.Apps.Browser.Rendering.LoadedResource.ToDataUrl(string! fallbackMediaType) -> string!
+Kazo.Os.Apps.Browser.Rendering.LoadedResource.Url.get -> System.Uri!
+Kazo.Os.Apps.Browser.Rendering.LoadedResource.Url.init -> void
+Kazo.Os.Apps.Browser.Rendering.SubresourceFetcher
+Kazo.Os.Apps.Browser.Rendering.SubresourceFetcher.GetAsync(System.Uri! url, Kazo.Os.Apps.Browser.DevTools.NetworkRequestKind kind) -> System.Threading.Tasks.Task<Kazo.Os.Apps.Browser.Rendering.LoadedResource?>!
+Kazo.Os.Apps.Browser.Rendering.SubresourceFetcher.RequestCount.get -> int
+Kazo.Os.Apps.Browser.Rendering.SubresourceFetcher.SubresourceFetcher(Kazo.Os.Apps.Browser.Net.BrowserResourceLoader! loader, System.Uri! documentUrl, System.Threading.CancellationToken cancellationToken) -> void
+Kazo.Os.Apps.Browser.ResponseBodyKind
+Kazo.Os.Apps.Browser.ResponseBodyKind.Binary = 6 -> Kazo.Os.Apps.Browser.ResponseBodyKind
+Kazo.Os.Apps.Browser.ResponseBodyKind.Empty = 0 -> Kazo.Os.Apps.Browser.ResponseBodyKind
+Kazo.Os.Apps.Browser.ResponseBodyKind.Html = 3 -> Kazo.Os.Apps.Browser.ResponseBodyKind
+Kazo.Os.Apps.Browser.ResponseBodyKind.Image = 4 -> Kazo.Os.Apps.Browser.ResponseBodyKind
+Kazo.Os.Apps.Browser.ResponseBodyKind.Json = 2 -> Kazo.Os.Apps.Browser.ResponseBodyKind
+Kazo.Os.Apps.Browser.ResponseBodyKind.Pdf = 5 -> Kazo.Os.Apps.Browser.ResponseBodyKind
+Kazo.Os.Apps.Browser.ResponseBodyKind.Text = 1 -> Kazo.Os.Apps.Browser.ResponseBodyKind
+Kazo.Os.Apps.Browser.ResponseBodyPresenter
+Kazo.Os.Apps.Browser.ResponseBodyView
+Kazo.Os.Apps.Browser.ResponseBodyView.<Clone>$() -> Kazo.Os.Apps.Browser.ResponseBodyView!
+Kazo.Os.Apps.Browser.ResponseBodyView.DataUrl.get -> string!
+Kazo.Os.Apps.Browser.ResponseBodyView.DataUrl.init -> void
+Kazo.Os.Apps.Browser.ResponseBodyView.Deconstruct(out Kazo.Os.Apps.Browser.ResponseBodyKind Kind, out string! MediaType, out int Length, out string! Text, out string! DataUrl) -> void
+Kazo.Os.Apps.Browser.ResponseBodyView.Equals(Kazo.Os.Apps.Browser.ResponseBodyView? other) -> bool
+Kazo.Os.Apps.Browser.ResponseBodyView.Kind.get -> Kazo.Os.Apps.Browser.ResponseBodyKind
+Kazo.Os.Apps.Browser.ResponseBodyView.Kind.init -> void
+Kazo.Os.Apps.Browser.ResponseBodyView.Length.get -> int
+Kazo.Os.Apps.Browser.ResponseBodyView.Length.init -> void
+Kazo.Os.Apps.Browser.ResponseBodyView.MediaType.get -> string!
+Kazo.Os.Apps.Browser.ResponseBodyView.MediaType.init -> void
+Kazo.Os.Apps.Browser.ResponseBodyView.ResponseBodyView(Kazo.Os.Apps.Browser.ResponseBodyKind Kind, string! MediaType, int Length, string! Text, string! DataUrl) -> void
+Kazo.Os.Apps.Browser.ResponseBodyView.Text.get -> string!
+Kazo.Os.Apps.Browser.ResponseBodyView.Text.init -> void
+Kazo.Os.Apps.Browser.ResponseBodyViewer
+Kazo.Os.Apps.Browser.ResponseBodyViewer.DownloadedTo.get -> string?
+Kazo.Os.Apps.Browser.ResponseBodyViewer.DownloadedTo.set -> void
+Kazo.Os.Apps.Browser.ResponseBodyViewer.ResponseBodyViewer() -> void
+Kazo.Os.Apps.Browser.ResponseBodyViewer.StatusCode.get -> int
+Kazo.Os.Apps.Browser.ResponseBodyViewer.StatusCode.set -> void
+Kazo.Os.Apps.Browser.ResponseBodyViewer.Url.get -> string!
+Kazo.Os.Apps.Browser.ResponseBodyViewer.Url.set -> void
+Kazo.Os.Apps.Browser.ResponseBodyViewer.View.get -> Kazo.Os.Apps.Browser.ResponseBodyView!
+Kazo.Os.Apps.Browser.ResponseBodyViewer.View.set -> void
+Kazo.Os.Apps.Browser.SimulatedPageRenderer
+Kazo.Os.Apps.Browser.SimulatedPageRenderer.OnNavigate.get -> Microsoft.AspNetCore.Components.EventCallback<string!>
+Kazo.Os.Apps.Browser.SimulatedPageRenderer.OnNavigate.set -> void
+Kazo.Os.Apps.Browser.SimulatedPageRenderer.OnSubmit.get -> Microsoft.AspNetCore.Components.EventCallback<(string! PostPath, System.Collections.Immutable.ImmutableDictionary<string!, string!>! FormBody)>
+Kazo.Os.Apps.Browser.SimulatedPageRenderer.OnSubmit.set -> void
+Kazo.Os.Apps.Browser.SimulatedPageRenderer.Page.get -> Kazo.Os.Simulation.Abstractions.Network.SimulatedPage!
+Kazo.Os.Apps.Browser.SimulatedPageRenderer.Page.set -> void
+Kazo.Os.Apps.Browser.SimulatedPageRenderer.SimulatedPageRenderer() -> void
+Kazo.Os.Apps.Browser.Storage.FormHistory
+Kazo.Os.Apps.Browser.Storage.FormHistory.ClearAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Kazo.Os.Apps.Browser.Storage.FormHistory.FormHistory(Kazo.Os.Apps.Browser.Storage.IBrowserStorageFiles! files, string! path, System.Func<System.DateTimeOffset>? clock = null, System.Action<string!>? onError = null) -> void
+Kazo.Os.Apps.Browser.Storage.FormHistory.Path.get -> string!
+Kazo.Os.Apps.Browser.Storage.FormHistory.RecordAsync(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string!, string!>>! fields, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<int>!
+Kazo.Os.Apps.Browser.Storage.FormHistory.SuggestAsync(string! fieldName, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<string!>!>!
+Kazo.Os.Apps.Browser.Storage.FormHistoryDocument
+Kazo.Os.Apps.Browser.Storage.FormHistoryDocument.<Clone>$() -> Kazo.Os.Apps.Browser.Storage.FormHistoryDocument!
+Kazo.Os.Apps.Browser.Storage.FormHistoryDocument.Deconstruct(out int Version, out System.Collections.Generic.List<Kazo.Os.Apps.Browser.Storage.FormHistoryEntry!>! Entries) -> void
+Kazo.Os.Apps.Browser.Storage.FormHistoryDocument.Entries.get -> System.Collections.Generic.List<Kazo.Os.Apps.Browser.Storage.FormHistoryEntry!>!
+Kazo.Os.Apps.Browser.Storage.FormHistoryDocument.Entries.init -> void
+Kazo.Os.Apps.Browser.Storage.FormHistoryDocument.Equals(Kazo.Os.Apps.Browser.Storage.FormHistoryDocument? other) -> bool
+Kazo.Os.Apps.Browser.Storage.FormHistoryDocument.FormHistoryDocument(int Version, System.Collections.Generic.List<Kazo.Os.Apps.Browser.Storage.FormHistoryEntry!>! Entries) -> void
+Kazo.Os.Apps.Browser.Storage.FormHistoryDocument.Version.get -> int
+Kazo.Os.Apps.Browser.Storage.FormHistoryDocument.Version.init -> void
+Kazo.Os.Apps.Browser.Storage.FormHistoryEntry
+Kazo.Os.Apps.Browser.Storage.FormHistoryEntry.<Clone>$() -> Kazo.Os.Apps.Browser.Storage.FormHistoryEntry!
+Kazo.Os.Apps.Browser.Storage.FormHistoryEntry.Deconstruct(out string! Field, out string! Value, out int TimesUsed, out System.DateTimeOffset FirstUsed, out System.DateTimeOffset LastUsed) -> void
+Kazo.Os.Apps.Browser.Storage.FormHistoryEntry.Equals(Kazo.Os.Apps.Browser.Storage.FormHistoryEntry? other) -> bool
+Kazo.Os.Apps.Browser.Storage.FormHistoryEntry.Field.get -> string!
+Kazo.Os.Apps.Browser.Storage.FormHistoryEntry.Field.init -> void
+Kazo.Os.Apps.Browser.Storage.FormHistoryEntry.FirstUsed.get -> System.DateTimeOffset
+Kazo.Os.Apps.Browser.Storage.FormHistoryEntry.FirstUsed.init -> void
+Kazo.Os.Apps.Browser.Storage.FormHistoryEntry.FormHistoryEntry(string! Field, string! Value, int TimesUsed, System.DateTimeOffset FirstUsed, System.DateTimeOffset LastUsed) -> void
+Kazo.Os.Apps.Browser.Storage.FormHistoryEntry.LastUsed.get -> System.DateTimeOffset
+Kazo.Os.Apps.Browser.Storage.FormHistoryEntry.LastUsed.init -> void
+Kazo.Os.Apps.Browser.Storage.FormHistoryEntry.TimesUsed.get -> int
+Kazo.Os.Apps.Browser.Storage.FormHistoryEntry.TimesUsed.init -> void
+Kazo.Os.Apps.Browser.Storage.FormHistoryEntry.Value.get -> string!
+Kazo.Os.Apps.Browser.Storage.FormHistoryEntry.Value.init -> void
+Kazo.Os.Apps.Browser.Storage.HackBrowserStorageFiles
+Kazo.Os.Apps.Browser.Storage.HackBrowserStorageFiles.HackBrowserStorageFiles() -> void
+Kazo.Os.Apps.Browser.Storage.HackBrowserStorageFiles.ReadTextAsync(string! path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<string?>!
+Kazo.Os.Apps.Browser.Storage.HackBrowserStorageFiles.WriteTextAsync(string! path, string! text, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Kazo.Os.Apps.Browser.Storage.IBrowserStorageFiles
+Kazo.Os.Apps.Browser.Storage.IBrowserStorageFiles.ReadTextAsync(string! path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<string?>!
+Kazo.Os.Apps.Browser.Storage.IBrowserStorageFiles.WriteTextAsync(string! path, string! text, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Kazo.Os.Apps.Browser.Storage.PageStorage
+Kazo.Os.Apps.Browser.Storage.PageStorage.Apply(string! siteKey, Kazo.Os.Apps.Browser.Bridge.BridgeStorageEvent! change) -> void
+Kazo.Os.Apps.Browser.Storage.PageStorage.FlushAsync() -> System.Threading.Tasks.Task!
+Kazo.Os.Apps.Browser.Storage.PageStorage.GetLocalAsync(string! siteKey, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyDictionary<string!, string!>!>!
+Kazo.Os.Apps.Browser.Storage.PageStorage.GetLocalStoragePath(string! siteKey) -> string!
+Kazo.Os.Apps.Browser.Storage.PageStorage.GetSession(string! siteKey) -> System.Collections.Generic.IReadOnlyDictionary<string!, string!>!
+Kazo.Os.Apps.Browser.Storage.PageStorage.PageStorage(Kazo.Os.Apps.Browser.Storage.IBrowserStorageFiles! files, string! root, System.Action<string!>? onError = null) -> void
+Kazo.Os.Apps.Browser._Imports
+Kazo.Os.Apps.Browser._Imports.Execute() -> void
+Kazo.Os.Apps.Browser._Imports._Imports() -> void
+const Kazo.Os.Apps.Browser.BrowserErrorPages.RendererCrashed = "STATUS_ACCESS_VIOLATION" -> string!
+const Kazo.Os.Apps.Browser.BrowserErrorPages.RendererKilled = "RESULT_CODE_KILLED" -> string!
+const Kazo.Os.Apps.Browser.BrowserErrorPages.SiteNotStarted = "ERR_SITE_NOT_STARTED" -> string!
+const Kazo.Os.Apps.Browser.DevTools.DevToolsLog.MaxEntries = 500 -> int
+const Kazo.Os.Apps.Browser.Net.BrowserErrorCodes.AccessDenied = "ERR_ACCESS_DENIED" -> string!
+const Kazo.Os.Apps.Browser.Net.BrowserErrorCodes.BlockedByClient = "ERR_BLOCKED_BY_CLIENT" -> string!
+const Kazo.Os.Apps.Browser.Net.BrowserErrorCodes.BlockedLocalResource = "ERR_BLOCKED_LOCAL_RESOURCE" -> string!
+const Kazo.Os.Apps.Browser.Net.BrowserErrorCodes.Failed = "ERR_FAILED" -> string!
+const Kazo.Os.Apps.Browser.Net.BrowserErrorCodes.FileNotFound = "ERR_FILE_NOT_FOUND" -> string!
+const Kazo.Os.Apps.Browser.Net.BrowserErrorCodes.InvalidUrl = "ERR_INVALID_URL" -> string!
+const Kazo.Os.Apps.Browser.Net.BrowserErrorCodes.UnknownUrlScheme = "ERR_UNKNOWN_URL_SCHEME" -> string!
+const Kazo.Os.Apps.Browser.Rendering.CssResourceRewriter.MaxImportDepth = 4 -> int
+const Kazo.Os.Apps.Browser.Rendering.DataUrl.Empty = "data:," -> string!
+const Kazo.Os.Apps.Browser.Rendering.HtmlPageComposer.ContentSecurityPolicy = "default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' data: blob:; style-src 'unsafe-inline' data: blob:; img-src data: blob:; font-src data: blob:; media-src data: blob:; connect-src 'none'; frame-src 'none'; object-src 'none'; worker-src 'none'; manifest-src 'none'; form-action 'none'; base-uri 'none'" -> string!
+const Kazo.Os.Apps.Browser.Rendering.SubresourceFetcher.MaxRequests = 300 -> int
+const Kazo.Os.Apps.Browser.Rendering.SubresourceFetcher.MaxTotalBytes = 33554432 -> long
+const Kazo.Os.Apps.Browser.Storage.FormHistory.FileName = "form-history.json" -> string!
+const Kazo.Os.Apps.Browser.Storage.FormHistory.MaxEntries = 2000 -> int
+const Kazo.Os.Apps.Browser.Storage.FormHistory.MaxSuggestions = 20 -> int
+const Kazo.Os.Apps.Browser.Storage.FormHistory.MaxValueLength = 200 -> int
+const Kazo.Os.Apps.Browser.Storage.FormHistory.MaxValuesPerField = 100 -> int
+const Kazo.Os.Apps.Browser.Storage.PageStorage.LocalStorageFileName = "local-storage.json" -> string!
+const Kazo.Os.Apps.Browser.Storage.PageStorage.Quota = 5242880 -> int
+override Kazo.Os.Apps.Browser.AddressBarIndicator.Equals(object? obj) -> bool
+override Kazo.Os.Apps.Browser.AddressBarIndicator.GetHashCode() -> int
+override Kazo.Os.Apps.Browser.AddressBarIndicator.ToString() -> string!
+override Kazo.Os.Apps.Browser.Bridge.BridgeConsoleEvent.Equals(object? obj) -> bool
+override Kazo.Os.Apps.Browser.Bridge.BridgeConsoleEvent.GetHashCode() -> int
+override Kazo.Os.Apps.Browser.Bridge.BridgeConsoleEvent.ToString() -> string!
+override Kazo.Os.Apps.Browser.Bridge.BridgeCookieEvent.Equals(object? obj) -> bool
+override Kazo.Os.Apps.Browser.Bridge.BridgeCookieEvent.GetHashCode() -> int
+override Kazo.Os.Apps.Browser.Bridge.BridgeCookieEvent.ToString() -> string!
+override Kazo.Os.Apps.Browser.Bridge.BridgeDialogEvent.Equals(object? obj) -> bool
+override Kazo.Os.Apps.Browser.Bridge.BridgeDialogEvent.GetHashCode() -> int
+override Kazo.Os.Apps.Browser.Bridge.BridgeDialogEvent.ToString() -> string!
+override Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply.Equals(object? obj) -> bool
+override Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply.GetHashCode() -> int
+override Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply.ToString() -> string!
+override Kazo.Os.Apps.Browser.Bridge.BridgeFetchRequest.Equals(object? obj) -> bool
+override Kazo.Os.Apps.Browser.Bridge.BridgeFetchRequest.GetHashCode() -> int
+override Kazo.Os.Apps.Browser.Bridge.BridgeFetchRequest.ToString() -> string!
+override Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryReply.Equals(object? obj) -> bool
+override Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryReply.GetHashCode() -> int
+override Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryReply.ToString() -> string!
+override Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryRequest.Equals(object? obj) -> bool
+override Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryRequest.GetHashCode() -> int
+override Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryRequest.ToString() -> string!
+override Kazo.Os.Apps.Browser.Bridge.BridgeFormSubmitEvent.Equals(object? obj) -> bool
+override Kazo.Os.Apps.Browser.Bridge.BridgeFormSubmitEvent.GetHashCode() -> int
+override Kazo.Os.Apps.Browser.Bridge.BridgeFormSubmitEvent.ToString() -> string!
+override Kazo.Os.Apps.Browser.Bridge.BridgeHistoryEvent.Equals(object? obj) -> bool
+override Kazo.Os.Apps.Browser.Bridge.BridgeHistoryEvent.GetHashCode() -> int
+override Kazo.Os.Apps.Browser.Bridge.BridgeHistoryEvent.ToString() -> string!
+override Kazo.Os.Apps.Browser.Bridge.BridgeKeyEvent.Equals(object? obj) -> bool
+override Kazo.Os.Apps.Browser.Bridge.BridgeKeyEvent.GetHashCode() -> int
+override Kazo.Os.Apps.Browser.Bridge.BridgeKeyEvent.ToString() -> string!
+override Kazo.Os.Apps.Browser.Bridge.BridgeNavigateEvent.Equals(object? obj) -> bool
+override Kazo.Os.Apps.Browser.Bridge.BridgeNavigateEvent.GetHashCode() -> int
+override Kazo.Os.Apps.Browser.Bridge.BridgeNavigateEvent.ToString() -> string!
+override Kazo.Os.Apps.Browser.Bridge.BridgeResourceReply.Equals(object? obj) -> bool
+override Kazo.Os.Apps.Browser.Bridge.BridgeResourceReply.GetHashCode() -> int
+override Kazo.Os.Apps.Browser.Bridge.BridgeResourceReply.ToString() -> string!
+override Kazo.Os.Apps.Browser.Bridge.BridgeResourceRequest.Equals(object? obj) -> bool
+override Kazo.Os.Apps.Browser.Bridge.BridgeResourceRequest.GetHashCode() -> int
+override Kazo.Os.Apps.Browser.Bridge.BridgeResourceRequest.ToString() -> string!
+override Kazo.Os.Apps.Browser.Bridge.BridgeStorageEvent.Equals(object? obj) -> bool
+override Kazo.Os.Apps.Browser.Bridge.BridgeStorageEvent.GetHashCode() -> int
+override Kazo.Os.Apps.Browser.Bridge.BridgeStorageEvent.ToString() -> string!
+override Kazo.Os.Apps.Browser.Bridge.BridgeTitleEvent.Equals(object? obj) -> bool
+override Kazo.Os.Apps.Browser.Bridge.BridgeTitleEvent.GetHashCode() -> int
+override Kazo.Os.Apps.Browser.Bridge.BridgeTitleEvent.ToString() -> string!
+override Kazo.Os.Apps.Browser.Bridge.PageBootstrap.Equals(object? obj) -> bool
+override Kazo.Os.Apps.Browser.Bridge.PageBootstrap.GetHashCode() -> int
+override Kazo.Os.Apps.Browser.Bridge.PageBootstrap.ToString() -> string!
+override Kazo.Os.Apps.Browser.Bridge.PageBridgeJsonContext.GetTypeInfo(System.Type! type) -> System.Text.Json.Serialization.Metadata.JsonTypeInfo?
+override Kazo.Os.Apps.Browser.Bridge.RefreshDirective.Equals(object? obj) -> bool
+override Kazo.Os.Apps.Browser.Bridge.RefreshDirective.GetHashCode() -> int
+override Kazo.Os.Apps.Browser.Bridge.RefreshDirective.ToString() -> string!
+override Kazo.Os.Apps.Browser.BrowserApp.Assets.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AssetManifest!>!
+override Kazo.Os.Apps.Browser.BrowserApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Apps.Browser.BrowserApp.Category.get -> string!
+override Kazo.Os.Apps.Browser.BrowserApp.Description.get -> string!
+override Kazo.Os.Apps.Browser.BrowserApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Apps.Browser.BrowserApp.FileHandlers.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.FileHandler!>!
+override Kazo.Os.Apps.Browser.BrowserApp.Icons.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Apps.Browser.BrowserApp.Id.get -> string!
+override Kazo.Os.Apps.Browser.BrowserApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Apps.Browser.BrowserApp.MobileEntryPoint.get -> System.Type?
+override Kazo.Os.Apps.Browser.BrowserApp.Name.get -> string!
+override Kazo.Os.Apps.Browser.BrowserApp.PublisherId.get -> string!
+override Kazo.Os.Apps.Browser.BrowserApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Apps.Browser.BrowserErrorView.Equals(object? obj) -> bool
+override Kazo.Os.Apps.Browser.BrowserErrorView.GetHashCode() -> int
+override Kazo.Os.Apps.Browser.BrowserErrorView.ToString() -> string!
+override Kazo.Os.Apps.Browser.DevTools.ConsoleLogEntry.Equals(object? obj) -> bool
+override Kazo.Os.Apps.Browser.DevTools.ConsoleLogEntry.GetHashCode() -> int
+override Kazo.Os.Apps.Browser.DevTools.ConsoleLogEntry.ToString() -> string!
+override Kazo.Os.Apps.Browser.DevTools.NetworkLogEntry.Equals(object? obj) -> bool
+override Kazo.Os.Apps.Browser.DevTools.NetworkLogEntry.GetHashCode() -> int
+override Kazo.Os.Apps.Browser.DevTools.NetworkLogEntry.ToString() -> string!
+override Kazo.Os.Apps.Browser.Net.AddressTarget.Equals(object? obj) -> bool
+override Kazo.Os.Apps.Browser.Net.AddressTarget.GetHashCode() -> int
+override Kazo.Os.Apps.Browser.Net.AddressTarget.ToString() -> string!
+override Kazo.Os.Apps.Browser.Net.BrowserFetchResult.Equals(object? obj) -> bool
+override Kazo.Os.Apps.Browser.Net.BrowserFetchResult.GetHashCode() -> int
+override Kazo.Os.Apps.Browser.Net.BrowserFetchResult.ToString() -> string!
+override Kazo.Os.Apps.Browser.Net.BrowserRequest.Equals(object? obj) -> bool
+override Kazo.Os.Apps.Browser.Net.BrowserRequest.GetHashCode() -> int
+override Kazo.Os.Apps.Browser.Net.BrowserRequest.ToString() -> string!
+override Kazo.Os.Apps.Browser.Net.BrowserResponse.Equals(object? obj) -> bool
+override Kazo.Os.Apps.Browser.Net.BrowserResponse.GetHashCode() -> int
+override Kazo.Os.Apps.Browser.Net.BrowserResponse.ToString() -> string!
+override Kazo.Os.Apps.Browser.Net.DirectoryListingEntry.Equals(object? obj) -> bool
+override Kazo.Os.Apps.Browser.Net.DirectoryListingEntry.GetHashCode() -> int
+override Kazo.Os.Apps.Browser.Net.DirectoryListingEntry.ToString() -> string!
+override Kazo.Os.Apps.Browser.PageFrameDocument.Equals(object? obj) -> bool
+override Kazo.Os.Apps.Browser.PageFrameDocument.GetHashCode() -> int
+override Kazo.Os.Apps.Browser.PageFrameDocument.ToString() -> string!
+override Kazo.Os.Apps.Browser.Rendering.ComposedPage.Equals(object? obj) -> bool
+override Kazo.Os.Apps.Browser.Rendering.ComposedPage.GetHashCode() -> int
+override Kazo.Os.Apps.Browser.Rendering.ComposedPage.ToString() -> string!
+override Kazo.Os.Apps.Browser.Rendering.LoadedResource.Equals(object? obj) -> bool
+override Kazo.Os.Apps.Browser.Rendering.LoadedResource.GetHashCode() -> int
+override Kazo.Os.Apps.Browser.Rendering.LoadedResource.ToString() -> string!
+override Kazo.Os.Apps.Browser.ResponseBodyView.Equals(object? obj) -> bool
+override Kazo.Os.Apps.Browser.ResponseBodyView.GetHashCode() -> int
+override Kazo.Os.Apps.Browser.ResponseBodyView.ToString() -> string!
+override Kazo.Os.Apps.Browser.SimulatedPageRenderer.OnParametersSet() -> void
+override Kazo.Os.Apps.Browser.Storage.FormHistoryDocument.Equals(object? obj) -> bool
+override Kazo.Os.Apps.Browser.Storage.FormHistoryDocument.GetHashCode() -> int
+override Kazo.Os.Apps.Browser.Storage.FormHistoryDocument.ToString() -> string!
+override Kazo.Os.Apps.Browser.Storage.FormHistoryEntry.Equals(object? obj) -> bool
+override Kazo.Os.Apps.Browser.Storage.FormHistoryEntry.GetHashCode() -> int
+override Kazo.Os.Apps.Browser.Storage.FormHistoryEntry.ToString() -> string!
+static Kazo.Os.Apps.Browser.AddressBarIndicator.operator !=(Kazo.Os.Apps.Browser.AddressBarIndicator? left, Kazo.Os.Apps.Browser.AddressBarIndicator? right) -> bool
+static Kazo.Os.Apps.Browser.AddressBarIndicator.operator ==(Kazo.Os.Apps.Browser.AddressBarIndicator? left, Kazo.Os.Apps.Browser.AddressBarIndicator? right) -> bool
+static Kazo.Os.Apps.Browser.AddressBarIndicators.For(System.Uri? url, Kazo.Os.Apps.Browser.Net.BrowserResponseSource? source, System.Globalization.CultureInfo? culture = null) -> Kazo.Os.Apps.Browser.AddressBarIndicator!
+static Kazo.Os.Apps.Browser.Bridge.BridgeConsoleEvent.operator !=(Kazo.Os.Apps.Browser.Bridge.BridgeConsoleEvent? left, Kazo.Os.Apps.Browser.Bridge.BridgeConsoleEvent? right) -> bool
+static Kazo.Os.Apps.Browser.Bridge.BridgeConsoleEvent.operator ==(Kazo.Os.Apps.Browser.Bridge.BridgeConsoleEvent? left, Kazo.Os.Apps.Browser.Bridge.BridgeConsoleEvent? right) -> bool
+static Kazo.Os.Apps.Browser.Bridge.BridgeCookieEvent.operator !=(Kazo.Os.Apps.Browser.Bridge.BridgeCookieEvent? left, Kazo.Os.Apps.Browser.Bridge.BridgeCookieEvent? right) -> bool
+static Kazo.Os.Apps.Browser.Bridge.BridgeCookieEvent.operator ==(Kazo.Os.Apps.Browser.Bridge.BridgeCookieEvent? left, Kazo.Os.Apps.Browser.Bridge.BridgeCookieEvent? right) -> bool
+static Kazo.Os.Apps.Browser.Bridge.BridgeDialogEvent.operator !=(Kazo.Os.Apps.Browser.Bridge.BridgeDialogEvent? left, Kazo.Os.Apps.Browser.Bridge.BridgeDialogEvent? right) -> bool
+static Kazo.Os.Apps.Browser.Bridge.BridgeDialogEvent.operator ==(Kazo.Os.Apps.Browser.Bridge.BridgeDialogEvent? left, Kazo.Os.Apps.Browser.Bridge.BridgeDialogEvent? right) -> bool
+static Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply.Fail(string! message, string? cookies = null) -> Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply!
+static Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply.operator !=(Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply? left, Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply? right) -> bool
+static Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply.operator ==(Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply? left, Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply? right) -> bool
+static Kazo.Os.Apps.Browser.Bridge.BridgeFetchRequest.operator !=(Kazo.Os.Apps.Browser.Bridge.BridgeFetchRequest? left, Kazo.Os.Apps.Browser.Bridge.BridgeFetchRequest? right) -> bool
+static Kazo.Os.Apps.Browser.Bridge.BridgeFetchRequest.operator ==(Kazo.Os.Apps.Browser.Bridge.BridgeFetchRequest? left, Kazo.Os.Apps.Browser.Bridge.BridgeFetchRequest? right) -> bool
+static Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryReply.operator !=(Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryReply? left, Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryReply? right) -> bool
+static Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryReply.operator ==(Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryReply? left, Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryReply? right) -> bool
+static Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryRequest.operator !=(Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryRequest? left, Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryRequest? right) -> bool
+static Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryRequest.operator ==(Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryRequest? left, Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryRequest? right) -> bool
+static Kazo.Os.Apps.Browser.Bridge.BridgeFormSubmitEvent.operator !=(Kazo.Os.Apps.Browser.Bridge.BridgeFormSubmitEvent? left, Kazo.Os.Apps.Browser.Bridge.BridgeFormSubmitEvent? right) -> bool
+static Kazo.Os.Apps.Browser.Bridge.BridgeFormSubmitEvent.operator ==(Kazo.Os.Apps.Browser.Bridge.BridgeFormSubmitEvent? left, Kazo.Os.Apps.Browser.Bridge.BridgeFormSubmitEvent? right) -> bool
+static Kazo.Os.Apps.Browser.Bridge.BridgeHistoryEvent.operator !=(Kazo.Os.Apps.Browser.Bridge.BridgeHistoryEvent? left, Kazo.Os.Apps.Browser.Bridge.BridgeHistoryEvent? right) -> bool
+static Kazo.Os.Apps.Browser.Bridge.BridgeHistoryEvent.operator ==(Kazo.Os.Apps.Browser.Bridge.BridgeHistoryEvent? left, Kazo.Os.Apps.Browser.Bridge.BridgeHistoryEvent? right) -> bool
+static Kazo.Os.Apps.Browser.Bridge.BridgeKeyEvent.operator !=(Kazo.Os.Apps.Browser.Bridge.BridgeKeyEvent? left, Kazo.Os.Apps.Browser.Bridge.BridgeKeyEvent? right) -> bool
+static Kazo.Os.Apps.Browser.Bridge.BridgeKeyEvent.operator ==(Kazo.Os.Apps.Browser.Bridge.BridgeKeyEvent? left, Kazo.Os.Apps.Browser.Bridge.BridgeKeyEvent? right) -> bool
+static Kazo.Os.Apps.Browser.Bridge.BridgeNavigateEvent.operator !=(Kazo.Os.Apps.Browser.Bridge.BridgeNavigateEvent? left, Kazo.Os.Apps.Browser.Bridge.BridgeNavigateEvent? right) -> bool
+static Kazo.Os.Apps.Browser.Bridge.BridgeNavigateEvent.operator ==(Kazo.Os.Apps.Browser.Bridge.BridgeNavigateEvent? left, Kazo.Os.Apps.Browser.Bridge.BridgeNavigateEvent? right) -> bool
+static Kazo.Os.Apps.Browser.Bridge.BridgeResourceReply.operator !=(Kazo.Os.Apps.Browser.Bridge.BridgeResourceReply? left, Kazo.Os.Apps.Browser.Bridge.BridgeResourceReply? right) -> bool
+static Kazo.Os.Apps.Browser.Bridge.BridgeResourceReply.operator ==(Kazo.Os.Apps.Browser.Bridge.BridgeResourceReply? left, Kazo.Os.Apps.Browser.Bridge.BridgeResourceReply? right) -> bool
+static Kazo.Os.Apps.Browser.Bridge.BridgeResourceRequest.operator !=(Kazo.Os.Apps.Browser.Bridge.BridgeResourceRequest? left, Kazo.Os.Apps.Browser.Bridge.BridgeResourceRequest? right) -> bool
+static Kazo.Os.Apps.Browser.Bridge.BridgeResourceRequest.operator ==(Kazo.Os.Apps.Browser.Bridge.BridgeResourceRequest? left, Kazo.Os.Apps.Browser.Bridge.BridgeResourceRequest? right) -> bool
+static Kazo.Os.Apps.Browser.Bridge.BridgeStorageEvent.operator !=(Kazo.Os.Apps.Browser.Bridge.BridgeStorageEvent? left, Kazo.Os.Apps.Browser.Bridge.BridgeStorageEvent? right) -> bool
+static Kazo.Os.Apps.Browser.Bridge.BridgeStorageEvent.operator ==(Kazo.Os.Apps.Browser.Bridge.BridgeStorageEvent? left, Kazo.Os.Apps.Browser.Bridge.BridgeStorageEvent? right) -> bool
+static Kazo.Os.Apps.Browser.Bridge.BridgeTitleEvent.operator !=(Kazo.Os.Apps.Browser.Bridge.BridgeTitleEvent? left, Kazo.Os.Apps.Browser.Bridge.BridgeTitleEvent? right) -> bool
+static Kazo.Os.Apps.Browser.Bridge.BridgeTitleEvent.operator ==(Kazo.Os.Apps.Browser.Bridge.BridgeTitleEvent? left, Kazo.Os.Apps.Browser.Bridge.BridgeTitleEvent? right) -> bool
+static Kazo.Os.Apps.Browser.Bridge.PageBootstrap.operator !=(Kazo.Os.Apps.Browser.Bridge.PageBootstrap? left, Kazo.Os.Apps.Browser.Bridge.PageBootstrap? right) -> bool
+static Kazo.Os.Apps.Browser.Bridge.PageBootstrap.operator ==(Kazo.Os.Apps.Browser.Bridge.PageBootstrap? left, Kazo.Os.Apps.Browser.Bridge.PageBootstrap? right) -> bool
+static Kazo.Os.Apps.Browser.Bridge.PageBridgeHandler.CorsAllows(Kazo.Os.Apps.Browser.Net.BrowserResponse! response, string! origin, bool withCredentials, out string? reason) -> bool
+static Kazo.Os.Apps.Browser.Bridge.PageBridgeJsonContext.Default.get -> Kazo.Os.Apps.Browser.Bridge.PageBridgeJsonContext!
+static Kazo.Os.Apps.Browser.Bridge.PageBridgeScript.Source.get -> string!
+static Kazo.Os.Apps.Browser.Bridge.RefreshDirective.operator !=(Kazo.Os.Apps.Browser.Bridge.RefreshDirective? left, Kazo.Os.Apps.Browser.Bridge.RefreshDirective? right) -> bool
+static Kazo.Os.Apps.Browser.Bridge.RefreshDirective.operator ==(Kazo.Os.Apps.Browser.Bridge.RefreshDirective? left, Kazo.Os.Apps.Browser.Bridge.RefreshDirective? right) -> bool
+static Kazo.Os.Apps.Browser.BrowserDownloads.GetFolder(string! homeDirectory) -> string!
+static Kazo.Os.Apps.Browser.BrowserDownloads.GetUniquePathAsync(string! folder, string! fileName, System.Func<string!, System.Threading.Tasks.Task<bool>!>! exists) -> System.Threading.Tasks.Task<string!>!
+static Kazo.Os.Apps.Browser.BrowserDownloads.SaveAsync(string! homeDirectory, string! fileName, byte[]! bytes, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<string!>!
+static Kazo.Os.Apps.Browser.BrowserDownloads.SuggestFileName(System.Uri! url, string? contentDisposition) -> string!
+static Kazo.Os.Apps.Browser.BrowserErrorPages.ForHttpStatus(int statusCode, System.Uri! url, System.Globalization.CultureInfo? culture = null) -> Kazo.Os.Apps.Browser.BrowserErrorView!
+static Kazo.Os.Apps.Browser.BrowserErrorPages.ForNetworkError(string! code, System.Uri? url, System.Globalization.CultureInfo? culture = null) -> Kazo.Os.Apps.Browser.BrowserErrorView!
+static Kazo.Os.Apps.Browser.BrowserErrorPages.ForRendererCrash(System.Uri? url, bool killed, System.Globalization.CultureInfo? culture = null) -> Kazo.Os.Apps.Browser.BrowserErrorView!
+static Kazo.Os.Apps.Browser.BrowserErrorPages.ForScriptNavigation(System.Globalization.CultureInfo? culture = null) -> Kazo.Os.Apps.Browser.BrowserErrorView!
+static Kazo.Os.Apps.Browser.BrowserErrorPages.ForSiteNotStarted(System.Uri! url, string! reason, System.Globalization.CultureInfo? culture = null) -> Kazo.Os.Apps.Browser.BrowserErrorView!
+static Kazo.Os.Apps.Browser.BrowserErrorView.operator !=(Kazo.Os.Apps.Browser.BrowserErrorView? left, Kazo.Os.Apps.Browser.BrowserErrorView? right) -> bool
+static Kazo.Os.Apps.Browser.BrowserErrorView.operator ==(Kazo.Os.Apps.Browser.BrowserErrorView? left, Kazo.Os.Apps.Browser.BrowserErrorView? right) -> bool
+static Kazo.Os.Apps.Browser.BrowserWindow.ResolveSubmitUrl(string! finalUrl, string! postPath) -> string!
+static Kazo.Os.Apps.Browser.DevTools.ConsoleLogEntry.operator !=(Kazo.Os.Apps.Browser.DevTools.ConsoleLogEntry? left, Kazo.Os.Apps.Browser.DevTools.ConsoleLogEntry? right) -> bool
+static Kazo.Os.Apps.Browser.DevTools.ConsoleLogEntry.operator ==(Kazo.Os.Apps.Browser.DevTools.ConsoleLogEntry? left, Kazo.Os.Apps.Browser.DevTools.ConsoleLogEntry? right) -> bool
+static Kazo.Os.Apps.Browser.DevTools.DevToolsPanel.ShortName(string! url) -> string!
+static Kazo.Os.Apps.Browser.DevTools.NetworkLogEntry.operator !=(Kazo.Os.Apps.Browser.DevTools.NetworkLogEntry? left, Kazo.Os.Apps.Browser.DevTools.NetworkLogEntry? right) -> bool
+static Kazo.Os.Apps.Browser.DevTools.NetworkLogEntry.operator ==(Kazo.Os.Apps.Browser.DevTools.NetworkLogEntry? left, Kazo.Os.Apps.Browser.DevTools.NetworkLogEntry? right) -> bool
+static Kazo.Os.Apps.Browser.Net.AddressTarget.operator !=(Kazo.Os.Apps.Browser.Net.AddressTarget? left, Kazo.Os.Apps.Browser.Net.AddressTarget? right) -> bool
+static Kazo.Os.Apps.Browser.Net.AddressTarget.operator ==(Kazo.Os.Apps.Browser.Net.AddressTarget? left, Kazo.Os.Apps.Browser.Net.AddressTarget? right) -> bool
+static Kazo.Os.Apps.Browser.Net.BrowserFetchResult.Fail(string! errorCode) -> Kazo.Os.Apps.Browser.Net.BrowserFetchResult!
+static Kazo.Os.Apps.Browser.Net.BrowserFetchResult.Ok(Kazo.Os.Apps.Browser.Net.BrowserResponse! response) -> Kazo.Os.Apps.Browser.Net.BrowserFetchResult!
+static Kazo.Os.Apps.Browser.Net.BrowserFetchResult.operator !=(Kazo.Os.Apps.Browser.Net.BrowserFetchResult? left, Kazo.Os.Apps.Browser.Net.BrowserFetchResult? right) -> bool
+static Kazo.Os.Apps.Browser.Net.BrowserFetchResult.operator ==(Kazo.Os.Apps.Browser.Net.BrowserFetchResult? left, Kazo.Os.Apps.Browser.Net.BrowserFetchResult? right) -> bool
+static Kazo.Os.Apps.Browser.Net.BrowserRequest.Get(System.Uri! url) -> Kazo.Os.Apps.Browser.Net.BrowserRequest!
+static Kazo.Os.Apps.Browser.Net.BrowserRequest.operator !=(Kazo.Os.Apps.Browser.Net.BrowserRequest? left, Kazo.Os.Apps.Browser.Net.BrowserRequest? right) -> bool
+static Kazo.Os.Apps.Browser.Net.BrowserRequest.operator ==(Kazo.Os.Apps.Browser.Net.BrowserRequest? left, Kazo.Os.Apps.Browser.Net.BrowserRequest? right) -> bool
+static Kazo.Os.Apps.Browser.Net.BrowserResponse.operator !=(Kazo.Os.Apps.Browser.Net.BrowserResponse? left, Kazo.Os.Apps.Browser.Net.BrowserResponse? right) -> bool
+static Kazo.Os.Apps.Browser.Net.BrowserResponse.operator ==(Kazo.Os.Apps.Browser.Net.BrowserResponse? left, Kazo.Os.Apps.Browser.Net.BrowserResponse? right) -> bool
+static Kazo.Os.Apps.Browser.Net.BrowserUrl.FromAddressBar(string? input, string! homeDirectory, string! searchUrl) -> Kazo.Os.Apps.Browser.Net.AddressTarget?
+static Kazo.Os.Apps.Browser.Net.BrowserUrl.FromLocalPath(string! path) -> System.Uri!
+static Kazo.Os.Apps.Browser.Net.BrowserUrl.GetOrigin(System.Uri! url) -> string!
+static Kazo.Os.Apps.Browser.Net.BrowserUrl.GetStorageKey(System.Uri! url) -> string!
+static Kazo.Os.Apps.Browser.Net.BrowserUrl.IsSameOrigin(System.Uri! first, System.Uri! second) -> bool
+static Kazo.Os.Apps.Browser.Net.BrowserUrl.Resolve(System.Uri! baseUrl, string? reference) -> System.Uri?
+static Kazo.Os.Apps.Browser.Net.BrowserUrl.ToDisplayString(System.Uri! url, bool viewSource = false) -> string!
+static Kazo.Os.Apps.Browser.Net.BrowserUrl.ToLocalPath(System.Uri! url) -> string!
+static Kazo.Os.Apps.Browser.Net.DirectoryListingEntry.operator !=(Kazo.Os.Apps.Browser.Net.DirectoryListingEntry? left, Kazo.Os.Apps.Browser.Net.DirectoryListingEntry? right) -> bool
+static Kazo.Os.Apps.Browser.Net.DirectoryListingEntry.operator ==(Kazo.Os.Apps.Browser.Net.DirectoryListingEntry? left, Kazo.Os.Apps.Browser.Net.DirectoryListingEntry? right) -> bool
+static Kazo.Os.Apps.Browser.Net.DirectoryListingPage.Build(string! directoryPath, System.Collections.Generic.IEnumerable<Kazo.Os.Apps.Browser.Net.DirectoryListingEntry!>! entries, System.Globalization.CultureInfo? culture = null, System.Globalization.CultureInfo? formatCulture = null) -> string!
+static Kazo.Os.Apps.Browser.Net.DirectoryListingPage.FormatSize(long bytes, System.Globalization.CultureInfo? culture = null, System.Globalization.CultureInfo? formatCulture = null) -> string!
+static Kazo.Os.Apps.Browser.PageFrameDocument.operator !=(Kazo.Os.Apps.Browser.PageFrameDocument? left, Kazo.Os.Apps.Browser.PageFrameDocument? right) -> bool
+static Kazo.Os.Apps.Browser.PageFrameDocument.operator ==(Kazo.Os.Apps.Browser.PageFrameDocument? left, Kazo.Os.Apps.Browser.PageFrameDocument? right) -> bool
+static Kazo.Os.Apps.Browser.Rendering.ComposedPage.operator !=(Kazo.Os.Apps.Browser.Rendering.ComposedPage? left, Kazo.Os.Apps.Browser.Rendering.ComposedPage? right) -> bool
+static Kazo.Os.Apps.Browser.Rendering.ComposedPage.operator ==(Kazo.Os.Apps.Browser.Rendering.ComposedPage? left, Kazo.Os.Apps.Browser.Rendering.ComposedPage? right) -> bool
+static Kazo.Os.Apps.Browser.Rendering.DataUrl.FromBytes(string! mediaType, byte[]! bytes) -> string!
+static Kazo.Os.Apps.Browser.Rendering.DataUrl.FromText(string! mediaType, string! text) -> string!
+static Kazo.Os.Apps.Browser.Rendering.HtmlPageComposer.BridgeScript.get -> string!
+static Kazo.Os.Apps.Browser.Rendering.LoadedResource.operator !=(Kazo.Os.Apps.Browser.Rendering.LoadedResource? left, Kazo.Os.Apps.Browser.Rendering.LoadedResource? right) -> bool
+static Kazo.Os.Apps.Browser.Rendering.LoadedResource.operator ==(Kazo.Os.Apps.Browser.Rendering.LoadedResource? left, Kazo.Os.Apps.Browser.Rendering.LoadedResource? right) -> bool
+static Kazo.Os.Apps.Browser.ResponseBodyPresenter.Present(string? contentType, byte[]! content) -> Kazo.Os.Apps.Browser.ResponseBodyView!
+static Kazo.Os.Apps.Browser.ResponseBodyView.operator !=(Kazo.Os.Apps.Browser.ResponseBodyView? left, Kazo.Os.Apps.Browser.ResponseBodyView? right) -> bool
+static Kazo.Os.Apps.Browser.ResponseBodyView.operator ==(Kazo.Os.Apps.Browser.ResponseBodyView? left, Kazo.Os.Apps.Browser.ResponseBodyView? right) -> bool
+static Kazo.Os.Apps.Browser.Storage.FormHistory.GetPath(string! homeDirectory) -> string!
+static Kazo.Os.Apps.Browser.Storage.FormHistory.IsRememberable(string? value) -> bool
+static Kazo.Os.Apps.Browser.Storage.FormHistoryDocument.operator !=(Kazo.Os.Apps.Browser.Storage.FormHistoryDocument? left, Kazo.Os.Apps.Browser.Storage.FormHistoryDocument? right) -> bool
+static Kazo.Os.Apps.Browser.Storage.FormHistoryDocument.operator ==(Kazo.Os.Apps.Browser.Storage.FormHistoryDocument? left, Kazo.Os.Apps.Browser.Storage.FormHistoryDocument? right) -> bool
+static Kazo.Os.Apps.Browser.Storage.FormHistoryEntry.operator !=(Kazo.Os.Apps.Browser.Storage.FormHistoryEntry? left, Kazo.Os.Apps.Browser.Storage.FormHistoryEntry? right) -> bool
+static Kazo.Os.Apps.Browser.Storage.FormHistoryEntry.operator ==(Kazo.Os.Apps.Browser.Storage.FormHistoryEntry? left, Kazo.Os.Apps.Browser.Storage.FormHistoryEntry? right) -> bool
+static Kazo.Os.Apps.Browser.Storage.PageStorage.GetRoot(string! homeDirectory) -> string!
+static readonly Kazo.Os.Apps.Browser.Net.BrowserUrl.AboutBlank -> System.Uri!
+~Kazo.Os.Apps.Browser.Bridge.PageBridgeJsonContext.Boolean.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<bool>
+~Kazo.Os.Apps.Browser.Bridge.PageBridgeJsonContext.BridgeConsoleEvent.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Apps.Browser.Bridge.BridgeConsoleEvent>
+~Kazo.Os.Apps.Browser.Bridge.PageBridgeJsonContext.BridgeCookieEvent.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Apps.Browser.Bridge.BridgeCookieEvent>
+~Kazo.Os.Apps.Browser.Bridge.PageBridgeJsonContext.BridgeDialogEvent.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Apps.Browser.Bridge.BridgeDialogEvent>
+~Kazo.Os.Apps.Browser.Bridge.PageBridgeJsonContext.BridgeFetchReply.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply>
+~Kazo.Os.Apps.Browser.Bridge.PageBridgeJsonContext.BridgeFetchRequest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Apps.Browser.Bridge.BridgeFetchRequest>
+~Kazo.Os.Apps.Browser.Bridge.PageBridgeJsonContext.BridgeFormHistoryReply.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryReply>
+~Kazo.Os.Apps.Browser.Bridge.PageBridgeJsonContext.BridgeFormHistoryRequest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Apps.Browser.Bridge.BridgeFormHistoryRequest>
+~Kazo.Os.Apps.Browser.Bridge.PageBridgeJsonContext.BridgeFormSubmitEvent.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Apps.Browser.Bridge.BridgeFormSubmitEvent>
+~Kazo.Os.Apps.Browser.Bridge.PageBridgeJsonContext.BridgeHistoryEvent.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Apps.Browser.Bridge.BridgeHistoryEvent>
+~Kazo.Os.Apps.Browser.Bridge.PageBridgeJsonContext.BridgeKeyEvent.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Apps.Browser.Bridge.BridgeKeyEvent>
+~Kazo.Os.Apps.Browser.Bridge.PageBridgeJsonContext.BridgeNavigateEvent.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Apps.Browser.Bridge.BridgeNavigateEvent>
+~Kazo.Os.Apps.Browser.Bridge.PageBridgeJsonContext.BridgeResourceReply.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Apps.Browser.Bridge.BridgeResourceReply>
+~Kazo.Os.Apps.Browser.Bridge.PageBridgeJsonContext.BridgeResourceRequest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Apps.Browser.Bridge.BridgeResourceRequest>
+~Kazo.Os.Apps.Browser.Bridge.PageBridgeJsonContext.BridgeStorageEvent.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Apps.Browser.Bridge.BridgeStorageEvent>
+~Kazo.Os.Apps.Browser.Bridge.PageBridgeJsonContext.BridgeTitleEvent.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Apps.Browser.Bridge.BridgeTitleEvent>
+~Kazo.Os.Apps.Browser.Bridge.PageBridgeJsonContext.DictionaryStringString.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.Dictionary<string, string>>
+~Kazo.Os.Apps.Browser.Bridge.PageBridgeJsonContext.Double.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<double>
+~Kazo.Os.Apps.Browser.Bridge.PageBridgeJsonContext.IReadOnlyDictionaryStringString.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyDictionary<string, string>>
+~Kazo.Os.Apps.Browser.Bridge.PageBridgeJsonContext.IReadOnlyListString.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<string>>
+~Kazo.Os.Apps.Browser.Bridge.PageBridgeJsonContext.IReadOnlyListStringArray.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<string[]>>
+~Kazo.Os.Apps.Browser.Bridge.PageBridgeJsonContext.Int32.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<int>
+~Kazo.Os.Apps.Browser.Bridge.PageBridgeJsonContext.PageBootstrap.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Apps.Browser.Bridge.PageBootstrap>
+~Kazo.Os.Apps.Browser.Bridge.PageBridgeJsonContext.RefreshDirective.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Apps.Browser.Bridge.RefreshDirective>
+~Kazo.Os.Apps.Browser.Bridge.PageBridgeJsonContext.String.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<string>
+~Kazo.Os.Apps.Browser.Bridge.PageBridgeJsonContext.StringArray.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<string[]>
+~override Kazo.Os.Apps.Browser.ResponseBodyViewer.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Apps.Browser.SimulatedPageRenderer.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

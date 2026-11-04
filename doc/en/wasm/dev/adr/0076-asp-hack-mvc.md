@@ -22,8 +22,8 @@ ASP.NET Core itself does not run in Blazor WebAssembly (no Kestrel and no
 
 ### 1. Library
 
-`Shared/HackerOs.AppSdk.Web` (SDK library, `HackerOsSdkLibrary`), which
-depends only on `HackerOs.AppSdk`. The site is a process that opens an
+`Shared/Kazo.Os.AppSdk.Web` (SDK library, `HackerOsSdkLibrary`), which
+depends only on `Kazo.Os.AppSdk`. The site is a process that opens an
 `HackHttpListener` on its `Urls` and passes each request to the pipeline.
 
 ### 2. Startup and pipeline
@@ -130,5 +130,5 @@ ASP.Hack makes it possible later.
 - MVC sites run in the shared web worker (ADR 0073 §1); their
   views do not need the DOM.
 - Attribute names identical to ASP.NET live in the namespace
-  `HackerOs.AppSdk.Web.Mvc` and cannot conflict (ASP.NET is not
+  `Kazo.Os.AppSdk.Web.Mvc` and cannot conflict (ASP.NET is not
   referenced).

@@ -15,11 +15,11 @@ The passkey is added to the password: the account keeps its password
 
 | Layer | File | Role |
 | --- | --- | --- |
-| Model | `Shared/HackerOs.Simulation.Abstractions/Sessions/LocalPasskeyCredential.cs` | A passkey of an account: id, SPKI public key, algorithm (ES256 `-7` or RS256 `-257`), name, counter, dates, PRF salt. `LocalUser.Passkeys` carries them. |
+| Model | `Shared/Kazo.Os.Simulation.Abstractions/Sessions/LocalPasskeyCredential.cs` | A passkey of an account: id, SPKI public key, algorithm (ES256 `-7` or RS256 `-257`), name, counter, dates, PRF salt. `LocalUser.Passkeys` carries them. |
 | Repository | `ILocalUserRepository.SetPasskeysAsync`; `InMemoryLocalUserRepository`, `IndexedDbLocalUserRepository` | The IndexedDB `users` store keeps a `passkeys` array per account (without a schema version change). |
 | Verification | `Platform.Core/Sessions/PasskeyService.cs`, `PasskeyResponseChecks.cs` | Challenge, checks, counter, `auth.log` journal (`passkey.add`, `passkey.verify`, `passkey.remove`). |
 | Browser contract | `Platform.Core/Sessions/PasskeyContracts.cs` (`IPasskeyAuthenticator`) | What the page provides: environment, creation, assertion, signature verification. |
-| Browser bridge | `Infrastructure.Browser/wwwroot/webAuthn.js`, `OS/HackerOs.Ecosystem.Host/Passkeys/BrowserPasskeyAuthenticator.cs` | `navigator.credentials.create`/`get` and `crypto.subtle.verify`; WebAuthn errors become .NET exceptions. |
+| Browser bridge | `Infrastructure.Browser/wwwroot/webAuthn.js`, `OS/Kazo.Os.Ecosystem.Host/Passkeys/BrowserPasskeyAuthenticator.cs` | `navigator.credentials.create`/`get` and `crypto.subtle.verify`; WebAuthn errors become .NET exceptions. |
 | Session | `LocalSessionService.LoginWithPasskeyAsync` | Sign-in: verifies the key, opens the session, then the keyring through the key. |
 | Keyring | `Platform.Core/Keyring/UserKeyringService.cs`, `KeyringFileFormat.cs` | Format 2 with slots ([`sensitive-settings.md`](sensitive-settings.md#2-login-keyring)). |
 | Administrator | `AdminElevationVerifier.VerifyWithPasskeyAsync`, `AdministratorAuthenticationAgent.PasskeyVerifier` | Administrator confirmation by passkey ([`admin-authentication-agent.md`](admin-authentication-agent.md)). |
@@ -78,7 +78,7 @@ throws `InvalidOperationException` and writes a denied `passkey.verify`.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Sessions/PasskeyServiceTests.cs`:
+- `Tests/Kazo.Os.Platform.Core.Tests/Sessions/PasskeyServiceTests.cs`:
   registration, sign-in that unlocks the keyring, PRF at creation, key without
   PRF, counter and date, forged responses (challenge, origin, relying party,
   signature, cloned counter, missing presence), closed request, page without
@@ -86,11 +86,11 @@ throws `InvalidOperationException` and writes a denied `passkey.verify`.
   password change, migration of the format 1 keyring.
   `FakePasskeyAuthenticator` produces real WebAuthn responses there (P-256 key,
   DER signature, PRF by HMAC).
-- `Tests/HackerOs.Platform.Core.Tests/Sessions/PasskeySignatureFormatTests.cs`:
+- `Tests/Kazo.Os.Platform.Core.Tests/Sessions/PasskeySignatureFormatTests.cs`:
   conversion from DER to `r‖s`, short integers, malformed DER.
-- `Tests/HackerOs.Platform.Core.Tests/Elevation/AdministratorAuthenticationAgentTests.cs`:
+- `Tests/Kazo.Os.Platform.Core.Tests/Elevation/AdministratorAuthenticationAgentTests.cs`:
   closed request that does not cost an attempt, passkey that approves.
-- `Tests/HackerOs.Infrastructure.Browser.Tests/IndexedDbLocalUserRepositoryTests.cs`:
+- `Tests/Kazo.Os.Infrastructure.Browser.Tests/IndexedDbLocalUserRepositoryTests.cs`:
   round trip of passkeys in IndexedDB.
 - The `webAuthn.js` bridge needs a real authenticator: it has no automatic
   test; it is verified by hand in Chrome (virtual authenticator

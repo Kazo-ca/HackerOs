@@ -1,0 +1,24 @@
+#nullable enable
+Kazo.Os.Apps.Diagnostic.DiagnosticApp
+Kazo.Os.Apps.Diagnostic.DiagnosticApp.DiagnosticApp() -> void
+Kazo.Os.Apps.Diagnostic.DiagnosticWindow
+Kazo.Os.Apps.Diagnostic.DiagnosticWindow.DiagnosticWindow() -> void
+Kazo.Os.Apps.Diagnostic.DiagnosticWindow.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Apps.Diagnostic._Imports
+Kazo.Os.Apps.Diagnostic._Imports.Execute() -> void
+Kazo.Os.Apps.Diagnostic._Imports._Imports() -> void
+override Kazo.Os.Apps.Diagnostic.DiagnosticApp.Assets.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AssetManifest!>!
+override Kazo.Os.Apps.Diagnostic.DiagnosticApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Apps.Diagnostic.DiagnosticApp.Category.get -> string!
+override Kazo.Os.Apps.Diagnostic.DiagnosticApp.Description.get -> string!
+override Kazo.Os.Apps.Diagnostic.DiagnosticApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Apps.Diagnostic.DiagnosticApp.Icons.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Apps.Diagnostic.DiagnosticApp.Id.get -> string!
+override Kazo.Os.Apps.Diagnostic.DiagnosticApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Apps.Diagnostic.DiagnosticApp.MobileEntryPoint.get -> System.Type?
+override Kazo.Os.Apps.Diagnostic.DiagnosticApp.Name.get -> string!
+override Kazo.Os.Apps.Diagnostic.DiagnosticApp.PublisherId.get -> string!
+override Kazo.Os.Apps.Diagnostic.DiagnosticApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Apps.Diagnostic.DiagnosticApp.SingleInstancePerUser.get -> bool
+override Kazo.Os.Apps.Diagnostic.DiagnosticWindow.OnAppInitializedAsync() -> System.Threading.Tasks.Task!
+~override Kazo.Os.Apps.Diagnostic.DiagnosticWindow.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

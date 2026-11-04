@@ -22,7 +22,7 @@ d'affichage ([`detached-display-windows.md`](detached-display-windows.md)).
 
 | Élément | Rôle |
 | --- | --- |
-| `WindowLayers` (`HackerOs.Windowing.Blazor`, public) | Couches de fenêtres de chaque écran. Chaque `DesktopArea` qui reçoit la même instance y inscrit sa couche après son premier rendu et la retire quand il disparaît. `TryGetLayer(écran)`, `Displays`, événement `Changed`. |
+| `WindowLayers` (`Kazo.Os.Windowing.Blazor`, public) | Couches de fenêtres de chaque écran. Chaque `DesktopArea` qui reçoit la même instance y inscrit sa couche après son premier rendu et la retire quand il disparaît. `TryGetLayer(écran)`, `Displays`, événement `Changed`. |
 | `DesktopArea.DisplayId` | Écran que montre la zone (écran 1 par défaut). Ses changements de taille vont à la zone de travail de cet écran (`ChangeViewportCommand(zone, écran)`). L'écran doit être ajouté au gestionnaire (`AddDisplayCommand`) avant le rendu de sa zone. |
 | `DesktopArea.Layers` | Les couches partagées. La zone de l'écran 1 rend alors toutes les fenêtres ; les autres zones n'en rendent aucune et reçoivent les leurs par le portail. Sans `Layers`, une zone rend seulement les fenêtres de son écran (sans portail : changer d'écran recrée la fenêtre). |
 | `WindowPortal` (public, utilisé par `DesktopArea`) | Entoure chaque `WindowHost`. Il laisse une ancre vide dans la liste des fenêtres et déplace l'élément de la fenêtre dans la couche cible, ou le remet sous l'ancre. |
@@ -51,8 +51,8 @@ d'affichage ([`detached-display-windows.md`](detached-display-windows.md)).
 
 ## 4. Tests
 
-- `Tests/HackerOs.E2E.Tests/IndexedDbBrowserContractTests.ScreenPortal.cs`, scénario
-  `?scenario=screen-portal` de `HackerOs.BrowserHarness.Tests` (deux écrans côte à côte
+- `Tests/Kazo.Os.E2E.Tests/IndexedDbBrowserContractTests.ScreenPortal.cs`, scénario
+  `?scenario=screen-portal` de `Kazo.Os.BrowserHarness.Tests` (deux écrans côte à côte
   dans une page) : la fenêtre passe dans la couche de l'écran 2 sans être recréée (même
   numéro d'instance), garde son compteur, le texte saisi et le focus, reçoit encore ses
   clics, revient sur l'écran 1, puis revient sous son ancre quand la zone de l'écran 2

@@ -2,7 +2,7 @@
 
 # Code editor
 
-`Apps/System/HackerOs.Apps.CodeEditor` (`org.hackeros.code-editor`): a
+`Apps/System/Kazo.Os.Apps.CodeEditor` (`org.hackeros.code-editor`): a
 VS Code-style code editor, on Monaco 0.55 (ADR 0020) and laid out as a
 workbench (ADR 0062), with a bottom dock (ADR 0063). It opens files and
 folders of the virtual filesystem, searches across a whole folder, and embeds
@@ -39,7 +39,7 @@ cross-file IntelliSense, source control, debugger, extensions.
 | `CodeEditorSession`, `CodeEditorDocument` | Tabs and content in C#; `RelocatePaths` follows a file or folder rename. |
 | `CodeEditorWorkspace` | Open folder: file list (exclusions `.git`, `.svn`, `.hg`, `node_modules`, `bin`, `obj`; at most 5,000), creation of files and folders, relative paths. |
 | `CodeEditorSearch.cs` | `CodeEditorTextSearch` (line by line, 1,000 occurrences per file, preview cut around the occurrence), `CodeEditorGlob`, `CodeEditorWorkspaceSearch` (5,000 occurrences in total, files over 1 MiB ignored), `CodeEditorQuickOpen` (fuzzy ranking). |
-| `CodeEditorExplorer`, `CodeEditorSearchView`, `CodeEditorQuickOpenPalette`, `CodeEditorCursorStatus` | Sidebar views, Ctrl+P box and cursor position, each with its collocated CSS. Since `desk/3`, `CodeEditorExplorer` displays `HackFileView` (no more reference to `HackerOs.AppSdk.FileView`): `Opening` opens a file in a tab (`Handled`), `SelectionChanged` shows it, `Renamed` makes the tabs follow. |
+| `CodeEditorExplorer`, `CodeEditorSearchView`, `CodeEditorQuickOpenPalette`, `CodeEditorCursorStatus` | Sidebar views, Ctrl+P box and cursor position, each with its collocated CSS. Since `desk/3`, `CodeEditorExplorer` displays `HackFileView` (no more reference to `Kazo.Os.AppSdk.FileView`): `Opening` opens a file in a tab (`Handled`), `SelectionChanged` shows it, `Renamed` makes the tabs follow. |
 
 The content of each file belongs to `CodeEditorDocument` (C#). Monaco keeps a
 model per tab for the history and position; when a tab becomes active,
@@ -108,7 +108,7 @@ Kazo OS is not installed as a PWA; each command also has its menu entry.
 ## Updating Monaco
 
 As before: modify `package.json`, then in
-`Apps/System/HackerOs.Apps.CodeEditor` run `npm ci && npm run build`, and
+`Apps/System/Kazo.Os.Apps.CodeEditor` run `npm ci && npm run build`, and
 version `wwwroot/monaco/`. The .NET build does not run npm.
 
 ## Tasks

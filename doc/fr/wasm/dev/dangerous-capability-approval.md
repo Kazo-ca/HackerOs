@@ -227,7 +227,7 @@ app non système ne détient simplement jamais de capacité dangereuse.
 
 ## Tests
 
-- `DangerousCapabilityApprovalTests` (`HackerOs.Platform.Core.Tests`) :
+- `DangerousCapabilityApprovalTests` (`Kazo.Os.Platform.Core.Tests`) :
   analyse des fichiers, table de décision, app système sans invite, app non
   système sans décision non accordée et invite appelée au lancement, `allow` +
   `prompt` accordé / + `block` refusé, `deny` utilisateur prioritaire, `allow`
@@ -237,7 +237,7 @@ app non système ne détient simplement jamais de capacité dangereuse.
   révocation au passage à `block`, `block` qui désactive l'approbation
   ponctuelle mais pas `sudo`, fichiers par défaut, administration des
   Paramètres.
-- `DangerousCapabilityApprovalOverlayTests` (`HackerOs.Platform.Blazor.Tests`,
+- `DangerousCapabilityApprovalOverlayTests` (`Kazo.Os.Platform.Blazor.Tests`,
   rendu `HtmlRenderer`, la solution n'utilisant pas bUnit) : capacités et
   risques affichés, nom prérempli, bouton Autoriser désactivé sans mot de
   passe, invite indisponible sans fenêtre, demande fermée quand la coque

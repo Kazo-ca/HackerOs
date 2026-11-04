@@ -131,7 +131,7 @@ leurs textes voyagent dans `BuiltInApplications.json`.
    privé) dans l'espace de noms racine du projet. Les ressources sont
    `Resources/Strings.resx` (anglais) et `Resources/Strings.fr.resx`
    (français). Un sous-dossier donne un sous-espace de noms :
-   `HackerOs.Commands.Ls.Strings` ↔ `Resources/Ls/Strings.resx`. Le nom de
+   `Kazo.Os.Commands.Ls.Strings` ↔ `Resources/Ls/Strings.resx`. Le nom de
    ressource suit la règle `<assembly>.Resources.<nom du type sans le préfixe de l'assembly>`.
 2. **Écrire les `.resx`.** `build/tools/resx.py sortie.resx table.json` écrit
    un `.resx` trié depuis une table JSON `{"Clé": "Texte"}`. Les deux fichiers
@@ -145,7 +145,7 @@ leurs textes voyagent dans `BuiltInApplications.json`.
    - Commande : `IStringLocalizer<Strings> text = context.App.GetLocalizer<Strings>();`.
      Les raisons d'erreur de fichier à la glibc (« Aucun fichier ou dossier de ce
      nom ») viennent de `CommandText.Reason`/`FileError`/`Describe`
-     (`HackerOs.Commands.Common`), et `ShellErrorText.Describe(exception, context)`
+     (`Kazo.Os.Commands.Common`), et `ShellErrorText.Describe(exception, context)`
      les donne en français pour une app tierce.
    - Composant de la plateforme : `@inject IStringLocalizer<Strings> L`.
    - Bibliothèque du SDK (`AppSdk.Blazor`, `FileView`, `Terminal`) : le

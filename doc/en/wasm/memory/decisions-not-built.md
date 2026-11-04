@@ -37,15 +37,15 @@ errors. Decisions still to build:
 - Firefox and Safari: show "not supported" when a function needs
   Chrome/Edge.
 
-## Ported third-party apps (`Kazo-ca/HackerOs-App-*` repositories)
+## Ported third-party apps (`Kazo-ca/Os-App-*` repositories)
 
 Decided on 2026-10-28:
 
 - Each wrapped open-source project lives in its own repository
-  (`HackerOs-App-Webamp`, `HackerOs-App-IRC` with KiwiIRC,
-  `HackerOs-App-BoxedWine`, and others), created from `HackerOs-AppTemplate`
+  (`Os-App-Webamp`, `Os-App-IRC` with KiwiIRC,
+  `Os-App-BoxedWine`, and others), created from `Os-AppTemplate`
   (ADR 0176, `hackeros-solution` template of ADR 0207; the template repository
-  is regenerated at the release that contains this template) and listed in `HackerOs-AppMarketPlace` (Hack Store catalog,
+  is regenerated at the release that contains this template) and listed in `Os-AppMarketPlace` (Hack Store catalog,
   ADR 0188).
 - Each repository's licence follows the wrapped project's (GPL-2.0 for
   BoxedWine, for example), not MIT by default.

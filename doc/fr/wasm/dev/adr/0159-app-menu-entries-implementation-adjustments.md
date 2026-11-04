@@ -29,7 +29,7 @@ réglage pour masquer les entrées. En l'implémentant, quelques points ont dû
 ### 1. Une seule inscription : au build, pour toutes les apps
 
 Toutes les apps de l'écosystème sont compilées dans l'hôte
-(`HackerOs.App.Build`) : il n'existe pas d'installation de paquet à
+(`Kazo.Os.App.Build`) : il n'existe pas d'installation de paquet à
 l'exécution où l'OS exécuterait la méthode (ADR 0151 §3.2). Le générateur de
 manifeste l'exécute donc pour **chaque** app, au build, et écrit les entrées
 dans `manifest.json` (`contextMenus`, omise sans entrée) puis dans

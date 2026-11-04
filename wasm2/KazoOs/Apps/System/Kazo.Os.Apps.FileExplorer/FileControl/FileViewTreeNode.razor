@@ -1,0 +1,63 @@
+@namespace Kazo.Os.Apps.FileExplorer.FileControl
+@using Microsoft.AspNetCore.Components.Web
+@inherits Kazo.Os.AppSdk.Blazor.HackComponentBase
+
+@*
+    One Tree-mode node, recursively rendering its own expanded children (FV-004). The chevron toggles
+    expansion (lazy-loading children on first expand); the row itself uses the same select/activate/
+    rename/context-menu handlers as FileViewDetails/FileViewIcons — a node doesn't know it's in a tree.
+*@
+<li role="treeitem" aria-level="@Depth" aria-selected="@(Node.Item.IsSelected ? "true" : "false")" aria-expanded="@AriaExpanded">
+    <div class="file-view-tree-row @(Node.Item.IsSelected ? "selected" : null) @(Node.Item.IsCut ? "cut" : null) @(Node.Item.IsDimmed ? "dimmed" : null)"
+         data-drop-target="@(Node.Item.IsDirectory && Owner.AllowDragDrop ? "true" : null)"
+         data-item-path="@Node.Item.FullPath.Value"
+         tabindex="@(IsTabStop() ? 0 : -1)"
+         draggable="@(Owner.AllowDragDrop ? "true" : "false")"
+         @onclick="OnRowClick"
+         @ondblclick="OnRowDoubleClickAsync"
+         @attributes="Owner.MenuAttributesFor(Node.Item)"
+         @oncontextmenu="OnRowContextMenuAsync"
+         @oncontextmenu:preventDefault="Owner.UsesOwnMenu"
+         @oncontextmenu:stopPropagation="true"
+         @onkeydown="OnRowKeyDownAsync"
+         @ondragstart="OnRowDragStartAsync"
+         @ondragover:preventDefault="@(Node.Item.IsDirectory && Owner.AllowDragDrop)"
+         @ondrop="OnRowDropAsync"
+         @ondrop:stopPropagation="@Node.Item.IsDirectory">
+        <button type="button"
+                class="file-view-tree-toggle"
+                disabled="@(!Node.Item.IsDirectory)"
+                tabindex="-1"
+                @onclick="ToggleExpandAsync"
+                @onclick:stopPropagation="true">
+            @if (Node.Item.IsDirectory)
+            {
+                @(Node.IsLoading ? "…" : Node.IsExpanded ? "▼" : "▶")
+            }
+        </button>
+        <ShellIcon Icon="ResolveIcon(Node.Item)" Size="16" />
+        @if (Node.Item.IsRenaming)
+        {
+            <input class="file-view-rename-input"
+                   value="@GetRenameBuffer()"
+                   @oninput="@(args => SetRenameBuffer(args.Value?.ToString() ?? string.Empty))"
+                   @onkeydown="OnRenameKeyDownAsync"
+                   @onkeydown:stopPropagation="true"
+                   @onblur="CommitRenameAsync"
+                   @onclick:stopPropagation="true" />
+        }
+        else
+        {
+            <span>@Node.Item.Label</span>
+        }
+    </div>
+    @if (Node.Item.IsDirectory && Node.IsExpanded && Node.Children is not null)
+    {
+        <ul class="file-view-tree-group" role="group">
+            @foreach (FileViewTreeNodeState child in Node.Children.Where(child => Owner.Filter?.Invoke(child.Item) != false))
+            {
+                <FileViewTreeNode Owner="Owner" Root="Root" Node="child" Depth="Depth + 1" />
+            }
+        </ul>
+    }
+</li>

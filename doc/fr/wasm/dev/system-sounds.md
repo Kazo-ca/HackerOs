@@ -4,7 +4,7 @@
 
 L'OS joue un son pour ses évènements : notification, avertissement, erreur,
 ouverture et fermeture de session. Décision : [ADR 0204](adr/0204-os-event-sounds.md),
-issue [#256](https://github.com/Kazo-ca/HackerOs/issues/256).
+issue [#256](https://github.com/Kazo-ca/Os/issues/256).
 
 ## Pour l'utilisateur
 
@@ -99,11 +99,11 @@ fois.
 Les sons sont calculés, sans échantillon venu d'ailleurs :
 
 ```sh
-cd wasm2/HackerOs
+cd wasm2/KazoOs
 python3 build/tools/generate-system-sounds.py /tmp/sounds
 for f in /tmp/sounds/*/*.wav; do ffmpeg -y -i "$f" -c:a libvorbis -q:a 2 -ar 22050 -ac 1 "${f%.wav}.oga"; done
-cp /tmp/sounds/hackeros/*.oga Platform/HackerOs.Platform.Core/Sounds/Themes/hackeros/
-cp /tmp/sounds/soft/*.oga Platform/HackerOs.Platform.Core/Sounds/Themes/soft/
+cp /tmp/sounds/hackeros/*.oga Platform/Kazo.Os.Platform.Core/Sounds/Themes/hackeros/
+cp /tmp/sounds/soft/*.oga Platform/Kazo.Os.Platform.Core/Sounds/Themes/soft/
 ```
 
 Une installation existante garde ses anciens fichiers (`FileSystemSeeder`
@@ -111,7 +111,7 @@ n'écrase rien).
 
 ## Tests
 
-`Tests/HackerOs.Platform.Core.Tests/Sounds/` : format `index.theme` et noms,
+`Tests/Kazo.Os.Platform.Core.Tests/Sounds/` : format `index.theme` et noms,
 fichiers installés, son d'ouverture de session, sons coupés, sévérité des
 notifications, jeu de l'utilisateur et repli, limite de 1 Mo, pas de masquage,
 changement de jeu, répétition, volume borné.

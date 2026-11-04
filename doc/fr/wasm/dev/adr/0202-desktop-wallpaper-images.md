@@ -6,7 +6,7 @@
 
 Accepté le 2026-10-30. Chantier 9 du plan du Hack Store, système de l'OS
 demandé par l'[ADR 0190](0190-theme-packs.md) §4 avant que le Store accepte des
-fonds d'écran dans un pack. Issue [#254](https://github.com/Kazo-ca/HackerOs/issues/254),
+fonds d'écran dans un pack. Issue [#254](https://github.com/Kazo-ca/Os/issues/254),
 série `todo/base` (branche `todo/6-wallpaper-images`).
 
 - **Complète :** [ADR 0044](0044-settings-as-files.md) §8 (`appearance.config`
@@ -44,8 +44,8 @@ limite de 9 écrans est celle de `screens.config` (ADR 0180).
 ### 2. D'où viennent les images
 
 - **Livrées avec l'OS** : 4 images WebP (`hacker-grid`, `circuit`, `aurora`,
-  `nebula`) dans `HackerOs.Theming.Blazor/wwwroot/wallpapers/`, servies comme
-  fichiers statiques (`_content/HackerOs.Theming.Blazor/wallpapers/`). Elles ne
+  `nebula`) dans `Kazo.Os.Theming.Blazor/wwwroot/wallpapers/`, servies comme
+  fichiers statiques (`_content/Kazo.Os.Theming.Blazor/wallpapers/`). Elles ne
   prennent aucune place dans le stockage de l'utilisateur, comme les thèmes
   intégrés vivent dans le code.
 - **Système** : `/usr/share/hackeros/wallpapers/`, déposées par un
@@ -102,16 +102,16 @@ limite de 9 écrans est celle de `screens.config` (ADR 0180).
 ### 6. Hors de ce chantier
 
 - **Mobile** (Q1) : l'écran d'accueil mobile garde le fond de son thème.
-  Issue `TODO` [#297](https://github.com/Kazo-ca/HackerOs/issues/297).
+  Issue `TODO` [#297](https://github.com/Kazo-ca/Os/issues/297).
 - **« Définir comme fond d'écran »** dans le menu contextuel des images de
-  l'explorateur (Q3) : issue `TODO` [#298](https://github.com/Kazo-ca/HackerOs/issues/298).
+  l'explorateur (Q3) : issue `TODO` [#298](https://github.com/Kazo-ca/Os/issues/298).
 
 ## Conséquences
 
 - Le Store peut accepter la partie `wallpapers/` d'un pack dès que les packs
   s'installent (#253) : les dossiers sont déjà lus.
-- `HackerOs.Theming.Abstractions` gagne `WallpaperCatalog`, `WallpaperFit` et
-  `BuiltInWallpaper` ; `HackerOs.Windowing.Blazor` gagne
+- `Kazo.Os.Theming.Abstractions` gagne `WallpaperCatalog`, `WallpaperFit` et
+  `BuiltInWallpaper` ; `Kazo.Os.Windowing.Blazor` gagne
   `DesktopArea.WallpaperContent`. Aucun changement du SDK des apps.
 - Une image de 16 Mo reste en mémoire tant qu'un écran l'affiche (une copie par
   fichier, partagée entre les écrans).

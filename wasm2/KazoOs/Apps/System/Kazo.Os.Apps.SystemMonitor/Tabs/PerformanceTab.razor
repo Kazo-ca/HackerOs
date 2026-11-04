@@ -1,0 +1,140 @@
+@namespace Kazo.Os.Apps.SystemMonitor.Tabs
+@inherits Kazo.Os.AppSdk.Blazor.HackComponentBase
+
+<div class="perf">
+    <div class="sysmon-cards">
+        <div class="sysmon-card">
+            <span class="sysmon-card-label">@L["Perf.Cpu"]</span>
+            <span class="sysmon-card-value">@Units.Percent(Metrics.CpuTotal.Latest, Formats)</span>
+            <span class="sysmon-card-detail">@L["Perf.Cores", CoreCount]</span>
+        </div>
+        <div class="sysmon-card">
+            <span class="sysmon-card-label">@L["Perf.Memory"]</span>
+            <span class="sysmon-card-value">@Units.Percent(Memory?.UsedPercent ?? 0, Formats)</span>
+            <span class="sysmon-card-detail">@Units.Bytes(Memory?.UsedBytes ?? 0, Formats) / @Units.Bytes(Memory?.TotalBytes ?? 0, Formats)</span>
+        </div>
+        <div class="sysmon-card">
+            <span class="sysmon-card-label">@L["Perf.Processes"]</span>
+            <span class="sysmon-card-value">@ProcessCount</span>
+            <span class="sysmon-card-detail">@L["Perf.ProcessesDetail", Metrics.Latest?.Stat?.ProcessesRunning ?? 0, Metrics.Latest?.Stat?.Processes ?? 0]</span>
+        </div>
+        <div class="sysmon-card">
+            <span class="sysmon-card-label">@L["Perf.Uptime"]</span>
+            <span class="sysmon-card-value">@Units.Duration(TimeSpan.FromSeconds(Metrics.Latest?.UptimeSeconds ?? 0), Formats)</span>
+            <span class="sysmon-card-detail">@L["Perf.Load", LoadText]</span>
+        </div>
+    </div>
+
+    <section class="perf-section">
+        <div class="perf-section-header">
+            <h3>@L["Perf.Cpu"]</h3>
+            <div class="perf-toggle" role="group" aria-label="@L["Perf.CpuView"]">
+                <button class="sysmon-btn @(_perCore ? null : "active")" aria-pressed="@(!_perCore ? "true" : "false")" @onclick="() => _perCore = false">@L["Perf.Total"]</button>
+                <button class="sysmon-btn @(_perCore ? "active" : null)" aria-pressed="@(_perCore ? "true" : "false")" @onclick="() => _perCore = true">@L["Perf.PerCore"]</button>
+            </div>
+        </div>
+        @if (!_perCore)
+        {
+            <HackLineChart Title="@L["Perf.TotalCpuChart"]"
+                           Series="@([new HackChartSeries(L["Perf.Total"], Metrics.CpuTotal.Values)])"
+                           Maximum="100"
+                           Filled="true"
+                           Size="HackChartSize.Large"
+                           ValueFormatter="FormatPercent" />
+        }
+        else
+        {
+            <div class="perf-cores">
+                @for (int core = 0; core < Metrics.CpuCores.Count; core++)
+                {
+                    <HackLineChart Title="@($"cpu{core}")"
+                                   Series="@([new HackChartSeries(L["Perf.Series.Usage"], Metrics.CpuCores[core].Values)])"
+                                   Maximum="100"
+                                   Filled="true"
+                                   ShowLegend="false"
+                                   Size="HackChartSize.Small"
+                                   ValueFormatter="FormatPercent" />
+                }
+                @if (Metrics.CpuCores.Count == 0)
+                {
+                    <p class="sysmon-muted">@L["Perf.WaitingStat"]</p>
+                }
+            </div>
+        }
+    </section>
+
+    @if (Workers is { } workers)
+    {
+        <section class="perf-section">
+            <div class="perf-section-header">
+                <h3>@L["Perf.Workers"]</h3>
+                <span class="sysmon-muted">@L["Perf.WorkersSummary", workers.Workers.Count, workers.Capacity, workers.PoolSize] · <span class="sysmon-source">/proc/hackeros/workers</span></span>
+            </div>
+            <div class="perf-workers">
+                @foreach (ProcWorker worker in workers.Workers)
+                {
+                    <div class="perf-worker @($"worker-{worker.State}")">
+                        <div class="perf-worker-head">
+                            <span class="perf-worker-name">@L["Perf.WorkerName", worker.Id]</span>
+                            <span class="perf-worker-role">@RoleText(worker)</span>
+                        </div>
+                        <span class="perf-worker-state">@StateText(worker)</span>
+                        <dl class="sysmon-kv">
+                            <dt>@L["Perf.Worker.Runtime"]</dt><dd>@Units.Bytes(worker.MemoryKilobytes * 1024, Formats)</dd>
+                            <dt>@L["Perf.Worker.Busy"]</dt><dd>@Units.Duration(TimeSpan.FromMilliseconds(worker.BusyMilliseconds), Formats)</dd>
+                            <dt>@L["Perf.Worker.Processes"]</dt><dd>@(worker.ProcessIds.Count == 0 ? "—" : string.Join(", ", worker.ProcessIds))</dd>
+                        </dl>
+                    </div>
+                }
+            </div>
+        </section>
+    }
+
+    <section class="perf-section">
+        <h3>@L["Perf.Memory"]</h3>
+        <HackLineChart Title="@L["Perf.MemoryChart"]"
+                       Series="@([new HackChartSeries(L["Perf.Series.Used"], Metrics.MemoryUsedPercent.Values)])"
+                       Maximum="100"
+                       Filled="true"
+                       ValueFormatter="FormatPercent" />
+    </section>
+
+    <section class="perf-section">
+        <h3>@L["Perf.Hardware"]</h3>
+        <div class="perf-hardware">
+            <div class="sysmon-card perf-info">
+                <span class="sysmon-card-label">@L["Perf.Processor"] <span class="sysmon-source">/proc/cpuinfo</span></span>
+                @if (CpuInfo.Count > 0)
+                {
+                    <dl class="sysmon-kv">
+                        @foreach (KeyValuePair<string, string> field in CpuInfo[0].Fields.Where(field => field.Key != "processor"))
+                        {
+                            <dt>@field.Key</dt><dd>@field.Value</dd>
+                        }
+                        <dt>@L["Perf.LogicalProcessors"]</dt><dd>@CpuInfo.Count</dd>
+                    </dl>
+                }
+                else
+                {
+                    <p class="sysmon-muted">@L["Perf.CpuInfoUnreadable"]</p>
+                }
+            </div>
+            <div class="sysmon-card perf-info">
+                <span class="sysmon-card-label">@L["Perf.Memory"] <span class="sysmon-source">/proc/meminfo</span></span>
+                @if (Memory is { } memory)
+                {
+                    <dl class="sysmon-kv">
+                        @foreach (KeyValuePair<string, string> field in memory.Fields)
+                        {
+                            <dt>@field.Key</dt><dd>@field.Value</dd>
+                        }
+                    </dl>
+                }
+                else
+                {
+                    <p class="sysmon-muted">@L["Perf.MemInfoUnreadable"]</p>
+                }
+            </div>
+        </div>
+    </section>
+</div>

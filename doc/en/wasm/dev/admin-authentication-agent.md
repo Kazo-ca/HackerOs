@@ -30,10 +30,10 @@ ask for anything and the log carries `via=sudo`.
 
 | Element | Project | Role |
 |---|---|---|
-| `IAdministratorAuthenticationAgent`, `AdministratorAuthenticationRequest`, `AdministratorAuthenticationResult` | `Platform/HackerOs.Platform.Core/Elevation` | contract called by the gateways |
+| `IAdministratorAuthenticationAgent`, `AdministratorAuthenticationRequest`, `AdministratorAuthenticationResult` | `Platform/Kazo.Os.Platform.Core/Elevation` | contract called by the gateways |
 | `AdministratorAuthenticationAgent` | same | implementation: direct root, three attempts, log |
 | `IAdministratorAuthenticationPrompt`, `AdministratorAuthenticationPromptRequest`, `AdministratorAuthenticationAttempt` | same | surface that shows the request; it decides nothing |
-| `AdministratorAuthenticationBroker` | `Platform/HackerOs.Platform.Blazor/Security` | request queue, implements `IAdministratorAuthenticationPrompt` |
+| `AdministratorAuthenticationBroker` | `Platform/Kazo.Os.Platform.Blazor/Security` | request queue, implements `IAdministratorAuthenticationPrompt` |
 | `AdministratorAuthenticationOverlay` | same | "secure desktop" window rendered by `DesktopShell` and `MobileShell` |
 
 Registration in the Ecosystem host (`EcosystemServiceCollectionExtensions`):
@@ -97,9 +97,9 @@ if (!auth.Succeeded)
 // The OS then acts itself, in a system context.
 ```
 
-`AppManagementGateway` (`Platform/HackerOs.Platform.Core/Execution`) is the
+`AppManagementGateway` (`Platform/Kazo.Os.Platform.Core/Execution`) is the
 first user. The work item `4-sdk-system-admin` reuses it as is
-through `AdministratorGate` (`Platform/HackerOs.Platform.Core/Administration`):
+through `AdministratorGate` (`Platform/Kazo.Os.Platform.Core/Administration`):
 `AppPermissionAdministrationGateway` (policy and machine decisions) and
 `AppSystemPowerGateway` (reboot, reset). See
 [`system-administration.md`](../framework/system-administration.md).
@@ -121,14 +121,14 @@ through `AdministratorGate` (`Platform/HackerOs.Platform.Core/Administration`):
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Elevation/AdministratorAuthenticationAgentTests.cs`:
+- `Tests/Kazo.Os.Platform.Core.Tests/Elevation/AdministratorAuthenticationAgentTests.cs`:
   root without a request, no surface, wrong attempt then correct one, three failures,
   surface that tries to forge an approval, closed passkey request
   that costs no attempt then verified key, no button without a verifier.
-- `Tests/HackerOs.Platform.Core.Tests/Execution/AppCatalogGatewayTests.cs`:
+- `Tests/Kazo.Os.Platform.Core.Tests/Execution/AppCatalogGatewayTests.cs`:
   machine scope refused or accepted, system app refused before any request,
   `sudo` without a request.
-- `Tests/HackerOs.Platform.Blazor.Tests/Security/AdministratorAuthenticationOverlayTests.cs`:
+- `Tests/Kazo.Os.Platform.Blazor.Tests/Security/AdministratorAuthenticationOverlayTests.cs`:
   window rendering and broker behavior.
 
 ## Task list (`rebuild/4-sdk-user-and-apps`)

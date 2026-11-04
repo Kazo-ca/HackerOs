@@ -32,14 +32,14 @@ l'OS. Ce chantier lui donne trois choses :
 
 | Classe | Projet | Rôle |
 |---|---|---|
-| `IAppWebDatabaseGateway`, `HackWebDbNames`, contrats `HackWebDb*` | `Shared/HackerOs.AppSdk/WebData` | contrat entre le site et l'OS, en JSON |
+| `IAppWebDatabaseGateway`, `HackWebDbNames`, contrats `HackWebDb*` | `Shared/Kazo.Os.AppSdk/WebData` | contrat entre le site et l'OS, en JSON |
 | `InMemoryWebDatabase`, `HackWebDbInMemoryBackend` | idem | moteur IndexedDB en mémoire (hôtes sans navigateur, tests) |
-| `HackWebDb`, `HackWebDbStore<T>`, `HackWebDbIndex<T>`, `HackWebDbTransaction` | `Shared/HackerOs.AppSdk.Web/Data` | API du site |
-| `HackWebLoggingOptions`, `IHackWebDebugLogSink` | `Shared/HackerOs.AppSdk.Web/Logging` | journal de débogage |
-| `AppWebDatabaseGateway`, `IWebSiteDatabaseStore`, `InMemoryWebSiteDatabaseStore` | `Platform/HackerOs.Platform.Core/WebData` | passerelle de confiance, magasin en mémoire |
-| `WebSiteDatabaseInterop`, `wwwroot/webSiteDatabases.js` | `Infrastructure/HackerOs.Infrastructure.Browser` | IndexedDB réel |
-| `IndexedDbWebSiteDatabaseStore` | `OS/HackerOs.Ecosystem/WebData` | magasin de l'hôte Ecosystem |
-| `FormHistory` | `Apps/System/HackerOs.Apps.Browser/Storage` | historique de formulaires |
+| `HackWebDb`, `HackWebDbStore<T>`, `HackWebDbIndex<T>`, `HackWebDbTransaction` | `Shared/Kazo.Os.AppSdk.Web/Data` | API du site |
+| `HackWebLoggingOptions`, `IHackWebDebugLogSink` | `Shared/Kazo.Os.AppSdk.Web/Logging` | journal de débogage |
+| `AppWebDatabaseGateway`, `IWebSiteDatabaseStore`, `InMemoryWebSiteDatabaseStore` | `Platform/Kazo.Os.Platform.Core/WebData` | passerelle de confiance, magasin en mémoire |
+| `WebSiteDatabaseInterop`, `wwwroot/webSiteDatabases.js` | `Infrastructure/Kazo.Os.Infrastructure.Browser` | IndexedDB réel |
+| `IndexedDbWebSiteDatabaseStore` | `OS/Kazo.Os.Ecosystem/WebData` | magasin de l'hôte Ecosystem |
+| `FormHistory` | `Apps/System/Kazo.Os.Apps.Browser/Storage` | historique de formulaires |
 
 ## La base d'un site
 
@@ -153,9 +153,9 @@ public sealed class NotesController(NoteStore store, ILogger<NotesController> lo
 
 ```text
 $ tail /var/log/hackweb/org.hackeros.samples.intranet.log
-2026-10-17T01:54:42.880Z info: HackerOs.AppSdk.Web.Hosting.Diagnostics[0] Request starting HTTP/1.1 POST http://intranet.hack/Notes/Create - application/x-www-form-urlencoded 87
-2026-10-17T01:54:42.921Z info: HackerOs.Samples.Intranet.Controllers.NotesController[0] Note 4 created by anonymous
-2026-10-17T01:54:42.925Z info: HackerOs.AppSdk.Web.Hosting.Diagnostics[0] Request finished HTTP/1.1 POST http://intranet.hack/Notes/Create - 302 0 - 45.1000ms
+2026-10-17T01:54:42.880Z info: Kazo.Os.AppSdk.Web.Hosting.Diagnostics[0] Request starting HTTP/1.1 POST http://intranet.hack/Notes/Create - application/x-www-form-urlencoded 87
+2026-10-17T01:54:42.921Z info: Kazo.Os.Samples.Intranet.Controllers.NotesController[0] Note 4 created by anonymous
+2026-10-17T01:54:42.925Z info: Kazo.Os.AppSdk.Web.Hosting.Diagnostics[0] Request finished HTTP/1.1 POST http://intranet.hack/Notes/Create - 302 0 - 45.1000ms
 ```
 
 - Format : heure UTC, niveau court d'ASP.NET Core (`trce`, `dbug`, `info`, `warn`, `fail`,
@@ -183,12 +183,12 @@ Les formulaires d'un site Blazor (ADR 0084) ne passent pas par le pont et n'en p
 
 | Suite | Ce qu'elle prouve |
 |---|---|
-| `HackerOs.AppSdk.Web.Tests/Data/HackWebDbTests` | générateur de clés, index uniques et `multiEntry`, ordre des clés, plages, transactions atomiques, migrations, `VersionError`, repli en mémoire |
-| `HackerOs.AppSdk.Web.Tests/Logging/HackWebDebugLogTests` | journal muet par défaut, lignes de requêtes, `ILogger<T>`, exceptions, niveau minimal |
-| `HackerOs.Platform.Core.Tests/WebData/WebSiteDatabaseTests` | nom imposé, apps non `Web` refusées, liste et effacement soumis à `system.storage.inspect`, fichier `/var/log/hackweb/<id>.log` |
-| `HackerOs.Platform.Core.Tests/Apps/AppInstallationServiceTests` | la désinstallation d'un site supprime sa base, et seulement la sienne |
-| `HackerOs.Apps.Browser.Tests/FormHistoryTests` | fichier de l'utilisateur, tri par usage, limites, cartes refusées, effacement |
-| `HackerOs.UI.E2E.Tests/BrowserSiteDataTests` | dans Chromium : note de l'Intranet dans IndexedDB, `<datalist>` proposée, ligne du journal lue par `grep`, base listée et effacée par le Diagnostic |
+| `Kazo.Os.AppSdk.Web.Tests/Data/HackWebDbTests` | générateur de clés, index uniques et `multiEntry`, ordre des clés, plages, transactions atomiques, migrations, `VersionError`, repli en mémoire |
+| `Kazo.Os.AppSdk.Web.Tests/Logging/HackWebDebugLogTests` | journal muet par défaut, lignes de requêtes, `ILogger<T>`, exceptions, niveau minimal |
+| `Kazo.Os.Platform.Core.Tests/WebData/WebSiteDatabaseTests` | nom imposé, apps non `Web` refusées, liste et effacement soumis à `system.storage.inspect`, fichier `/var/log/hackweb/<id>.log` |
+| `Kazo.Os.Platform.Core.Tests/Apps/AppInstallationServiceTests` | la désinstallation d'un site supprime sa base, et seulement la sienne |
+| `Kazo.Os.Apps.Browser.Tests/FormHistoryTests` | fichier de l'utilisateur, tri par usage, limites, cartes refusées, effacement |
+| `Kazo.Os.UI.E2E.Tests/BrowserSiteDataTests` | dans Chromium : note de l'Intranet dans IndexedDB, `<datalist>` proposée, ligne du journal lue par `grep`, base listée et effacée par le Diagnostic |
 
 ## Décisions clés
 

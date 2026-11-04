@@ -25,12 +25,12 @@ ADR de la section 10 sont écrits avant le code de chaque chantier.
 
 | Élément | État | Où |
 |---|---|---|
-| `FileView` | Contrôle complet (arbre, détails, icônes, renommage en place, glisser-déposer, presse-papiers, transferts), **bibliothèque du SDK compilée dans chaque app**, publique depuis le gel 1.0 | `Shared/HackerOs.AppSdk.FileView`, ADR 0037, [`file-explorer.md`](../file-explorer.md) |
+| `FileView` | Contrôle complet (arbre, détails, icônes, renommage en place, glisser-déposer, presse-papiers, transferts), **bibliothèque du SDK compilée dans chaque app**, publique depuis le gel 1.0 | `Shared/Kazo.Os.AppSdk.FileView`, ADR 0037, [`file-explorer.md`](../file-explorer.md) |
 | Menu de `FileView` | Portées fond / dossier / fichier / type, identifiants stables (`open`, `cut`, `copy`, `paste`, `paste-into`, `rename`, `delete`, `delete-permanently`, `new-folder`, `refresh`), `InsertAfter`/`InsertBefore`, **un seul niveau**, fournisseurs **propres à l'instance** (`MudMenu`) | `ContextMenu/FileViewContextMenuContracts.cs` |
 | Entrées ajoutées | « UnZip Here » et « Publish as a web site… », codées dans l'explorateur | `ZipFileContextMenuProvider`, `PublishSiteContextMenuProvider` |
 | « Ouvrir avec » | Boîte de l'explorateur (barre d'outils), « Toujours utiliser » | `OpenWithDialog`, ADR 0121 |
 | Composants intégrables | Contrat `hackeros.terminal` fourni par l'app Terminal, affiché par `HackEmbeddedComponent<T>` | ADR 0063, [`embedded-components.md`](../../framework/embedded-components.md) |
-| Dialogues de l'OS | Contrats `IDialogService`/`IFileDialogService` dans le SDK, mis en œuvre par la plateforme (`VirtualFolderBrowser` pour Ouvrir/Enregistrer ; depuis `desk/3b`, le contrôle `hackeros.file-view`, ADR 0157) | `HackerOs.AppSdk.Blazor`, `Platform.Blazor/Dialogs` |
+| Dialogues de l'OS | Contrats `IDialogService`/`IFileDialogService` dans le SDK, mis en œuvre par la plateforme (`VirtualFolderBrowser` pour Ouvrir/Enregistrer ; depuis `desk/3b`, le contrôle `hackeros.file-view`, ADR 0157) | `Kazo.Os.AppSdk.Blazor`, `Platform.Blazor/Dialogs` |
 | Bureau | `~/Desktop` créé pour chaque utilisateur ; emplacement `DesktopArea.BackgroundContent` prévu mais vide | `FileSystemSeeder`, `DesktopArea.razor` |
 | Intents | Intents définis par les apps, `IntentReceived` pour une instance ouverte | ADR 0096, [`app-intents.md`](../../framework/app-intents.md) |
 
@@ -272,7 +272,7 @@ public sealed class SuperApp : AppDefinition
 
 ### 8.2 Inscription à l'installation
 
-- Le générateur de manifeste (`HackerOs.Tools.ManifestGenerator`) appelle la
+- Le générateur de manifeste (`Kazo.Os.Tools.ManifestGenerator`) appelle la
   méthode `[RegisterFileContextMenu]` **au build** des apps intégrées et
   écrit le résultat dans `manifest.json` (`contextMenus`) et
   `BuiltInApplications.json`. Pour une app installée plus tard, l'OS exécute
@@ -328,7 +328,7 @@ public sealed class SuperApp : AppDefinition
 
 - `HackerOsVersion` passe à `2.0.0`. `AppCatalog` refuse déjà une app
   d'une autre majeure : toute app 1.x doit être recompilée.
-- **Retiré** : la bibliothèque `HackerOs.AppSdk.FileView` (`FileView`,
+- **Retiré** : la bibliothèque `Kazo.Os.AppSdk.FileView` (`FileView`,
   `FileViewTree`, `FileViewDetails`, `FileViewIcons`, menus
   `IFileViewContextMenuProvider`, `FileViewBreadcrumb`, `FileViewDropZone`,
   `ShellIcon`…) ; ses types publics passent en `*REMOVED*`. Son code
@@ -354,7 +354,7 @@ public sealed class SuperApp : AppDefinition
 | ADR | Sujet |
 |---|---|
 | 0148 | Le SDK ne porte que des contrats ; les contrôles et dialogues partagés sont fournis par l'OS à l'exécution (complète l'ADR 0063, remplace l'ADR 0037 §1 et §8) |
-| 0149 | SDK 2.0 : retrait de `HackerOs.AppSdk.FileView`, contrats de fichiers, migration (amende l'ADR 0114) |
+| 0149 | SDK 2.0 : retrait de `Kazo.Os.AppSdk.FileView`, contrats de fichiers, migration (amende l'ADR 0114) |
 | 0150 | Menu contextuel central de l'OS (modèle, groupes, séparateurs, `Menus.Attach`, clavier et appui long) |
 | 0151 | Entrées de menu inscrites par les apps (déclaration, inscription à l'installation, placement, exécution, capacité `shell.context-menu`) |
 | 0152 | Icônes du bureau (mode Bureau, positions, icônes système, fichiers `.desktop`) |
@@ -387,7 +387,7 @@ documentation et l'index [`README.md`](../../README.md).
 - [x] Chantier 3c : fournisseur du contrôle de fichiers remplaçable (contrats ouverts à toute app fenêtrée, `HOSAPP0025` retiré, `/etc/hackeros/components.config`, choix de l'administrateur après approbation, repli `component.fallback`, onglet « Composants de l'OS » ; [ADR 0156](../adr/0156-replaceable-file-control-provider.md), [ADR 0158](../adr/0158-replaceable-file-provider-implementation-adjustments.md)).
 - [x] Chantier 4 : entrées inscrites par les apps (`[RegisterFileContextMenu]` exécutée au build pour toutes les apps, `contextMenus` du manifeste, `/etc/hackeros/context-menus.d` aligné au démarrage, filtres, placement, lancement par intent ou arguments, capacité `shell.context-menu`, `HOSAPP0026` à `HOSAPP0028`, Paramètres ▸ Menus des fichiers et `HackFileMenuEntries`, « Extraire ici » et « Publier comme site web… » inscrits ; [ADR 0159](../adr/0159-app-menu-entries-implementation-adjustments.md), [`context-menu.md`](../../framework/context-menu.md#entrées-des-apps-dans-les-menus-des-fichiers-chantier-4)).
 - [x] Chantier 5 : bureau (app système `org.hackeros.desktop` rendue par la coquille sous les fenêtres, mode Bureau du contrôle de fichiers, grille `HackDesktopLayout`, `~/.config/hackeros/desktop.config` par `HackDesktopSettings`, Dossier perso et Corbeille, raccourcis `.desktop` par glisser depuis le menu Démarrer et « Envoyer vers ▸ Bureau », menus Affichage et Trier par, Paramètres ▸ Bureau ; [ADR 0160](../adr/0160-desktop-implementation-adjustments.md), [`desktop.md`](../desktop.md)).
-- [x] Chantier 6 : SDK 2.0 (`HackerOs.AppSdk.FileView` retiré, son code dans l'explorateur sous `FileControl/`, règles de copie `HackFileOperations` dans le SDK, `PublicAPI` publié, version `2.0.0`, apps 1.x refusées au catalogue et au build de l'hôte, fixture `Contoso.Sdk2Compat.2.0.0`, migration dans [`sdk-packages.md`](../../framework/sdk-packages.md#sdk-20) ; [ADR 0161](../adr/0161-sdk-2-0-implementation-adjustments.md)) et vérification finale (§13).
+- [x] Chantier 6 : SDK 2.0 (`Kazo.Os.AppSdk.FileView` retiré, son code dans l'explorateur sous `FileControl/`, règles de copie `HackFileOperations` dans le SDK, `PublicAPI` publié, version `2.0.0`, apps 1.x refusées au catalogue et au build de l'hôte, fixture `Contoso.Sdk2Compat.2.0.0`, migration dans [`sdk-packages.md`](../../framework/sdk-packages.md#sdk-20) ; [ADR 0161](../adr/0161-sdk-2-0-implementation-adjustments.md)) et vérification finale (§13).
 
 ## 13. Vérification finale
 
@@ -396,14 +396,14 @@ avec les chantiers 0 à 5 et le 6), dans un conteneur Linux, .NET 10.
 
 | Vérification | Résultat |
 |---|---|
-| `dotnet build HackerOs.sln` (Debug) | réussi, 0 avertissement, 0 erreur |
+| `dotnet build Kazo.Os.sln` (Debug) | réussi, 0 avertissement, 0 erreur |
 | Tests unitaires et d'intégration (41 projets `Tests/*.Tests` hors E2E) | 3 968 réussis, 0 échec |
-| `build/publish-trimmed.sh` et `HackerOs.TrimmedPublish.E2E.Tests` | `RESULT: PASS` ; 136 fichiers `.wasm`, 27,7 Mio, 8,3 Mio en Brotli |
+| `build/publish-trimmed.sh` et `Kazo.Os.TrimmedPublish.E2E.Tests` | `RESULT: PASS` ; 136 fichiers `.wasm`, 27,7 Mio, 8,3 Mio en Brotli |
 | `build/verify-hosts.sh` (Ecosystem et ses variantes, hôte de test, serveur) | `RESULT: PASS`, les 13 lignes |
-| `HackerOs.E2E.Tests` | 18 réussis |
-| `HackerOs.UI.E2E.Tests` | 28 réussis |
-| `HackerOs.Templates.E2E.Tests` (dont un hôte qui refuse les apps 1.x par `HOSAPP0021` et lance l'app 2.0) | 6 réussis |
-| `HackerOs.Pwa.E2E.Tests` | 6 réussis |
+| `Kazo.Os.E2E.Tests` | 18 réussis |
+| `Kazo.Os.UI.E2E.Tests` | 28 réussis |
+| `Kazo.Os.Templates.E2E.Tests` (dont un hôte qui refuse les apps 1.x par `HOSAPP0021` et lance l'app 2.0) | 6 réussis |
+| `Kazo.Os.Pwa.E2E.Tests` | 6 réussis |
 
 Aucun test n'a été désactivé ni ignoré. Les échecs connus d'avant la série
 (PWA sans IPv6, tests instables listés dans

@@ -74,7 +74,7 @@ added to the subset of ADR 0076 §6.
 
 ### 4. The sample is installed in the hosts; its data stays in memory
 
-`HackerOs.Samples.Intranet` is, like the Blazor sample site (ADR 0084), a
+`Kazo.Os.Samples.Intranet` is, like the Blazor sample site (ADR 0084), a
 built-in non-system `Web` app, hidden from the launcher, referenced by the Ecosystem and
 `test/test` (lazy loading). Its notes and cards are singletons
 of the site's process: they return to their initial state when the OS stops the

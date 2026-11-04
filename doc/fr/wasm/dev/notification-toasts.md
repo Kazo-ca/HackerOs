@@ -2,9 +2,9 @@
 
 # Bulles de notification
 
-Chantier 1 de la série barre des tâches (issue [#242](https://github.com/Kazo-ca/HackerOs/issues/242)),
+Chantier 1 de la série barre des tâches (issue [#242](https://github.com/Kazo-ca/Os/issues/242)),
 mise en œuvre de l'[ADR 0197](adr/0197-notification-toasts.md), fait dans la série `todo/`.
-Le mode « Ne pas déranger » (issue [#296](https://github.com/Kazo-ca/HackerOs/issues/296)) met
+Le mode « Ne pas déranger » (issue [#296](https://github.com/Kazo-ca/Os/issues/296)) met
 en œuvre l'[ADR 0216](adr/0216-do-not-disturb.md) (section 5).
 
 ## 1. Ce que voit l'utilisateur

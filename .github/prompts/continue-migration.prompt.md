@@ -29,7 +29,7 @@ following the project rules in [AGENTS.md](../../AGENTS.md).
 
 ## While implementing
 
-- All new code goes under `wasm2/HackerOs/` only — never under `src/`.
+- All new code goes under `wasm2/KazoOs/` only — never under `src/`.
 - Follow AGENTS.md: prefer C# over JS interop, MudBlazor for complex UI,
   scoped `.razor.css` files (no inline styles/`<style>` blocks), "mimic the
   metal" realism for simulated OS behavior, XML doc comments on public APIs,
@@ -44,7 +44,7 @@ following the project rules in [AGENTS.md](../../AGENTS.md).
 1. Run the narrowest relevant test filter first, then the full solution suite
    (warnings are treated as errors):
    ```powershell
-   dotnet test HackerOs.sln --no-restore
+   dotnet test Kazo.Os.sln --no-restore
    ```
 2. Update, in the same change:
    - The task's checkbox in integration-task-list.md (only `[x]` if code,

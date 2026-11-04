@@ -7,7 +7,7 @@
 Describes the Kazo OS guest account: try the OS without creating an account,
 then create your own account, keeping the guest's work or not. Decision:
 [ADR 0187](adr/0187-guest-start-and-sign-in-credits.md), part A. Tracking:
-[issue #243](https://github.com/Kazo-ca/HackerOs/issues/243).
+[issue #243](https://github.com/Kazo-ca/Os/issues/243).
 
 ## For the user
 

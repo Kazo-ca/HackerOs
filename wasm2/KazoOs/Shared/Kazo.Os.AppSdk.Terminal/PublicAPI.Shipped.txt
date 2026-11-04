@@ -1,0 +1,165 @@
+#nullable enable
+Kazo.Os.AppSdk.Terminal.TerminalControlSequenceDecoder
+Kazo.Os.AppSdk.Terminal.TerminalControlSequenceDecoder.Decode(string! chunk) -> System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Terminal.TerminalOutputAction!>!
+Kazo.Os.AppSdk.Terminal.TerminalControlSequenceDecoder.TerminalControlSequenceDecoder() -> void
+Kazo.Os.AppSdk.Terminal.TerminalCredentialPrompt
+Kazo.Os.AppSdk.Terminal.TerminalCredentialPrompt.TerminalCredentialPrompt(Kazo.Os.AppSdk.Blazor.IDialogService! dialogs, Kazo.Os.AppSdk.IAppExecutionContext! context, System.Func<string!, Kazo.Os.AppSdk.Shell.HackPromptLineKind, System.Threading.Tasks.Task!>! writeLine) -> void
+Kazo.Os.AppSdk.Terminal.TerminalFullScreenSession
+Kazo.Os.AppSdk.Terminal.TerminalFullScreenSession.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.AppSdk.Terminal.TerminalFullScreenSession.EnterAlternateScreenAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+Kazo.Os.AppSdk.Terminal.TerminalFullScreenSession.IsActive.get -> bool
+Kazo.Os.AppSdk.Terminal.TerminalFullScreenSession.LeaveAlternateScreenAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+Kazo.Os.AppSdk.Terminal.TerminalFullScreenSession.ReadKeyAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.TerminalKeyEvent!>
+Kazo.Os.AppSdk.Terminal.TerminalFullScreenSession.RenderAsync(Kazo.Os.AppSdk.TerminalScreenFrame! frame, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+Kazo.Os.AppSdk.Terminal.TerminalFullScreenSession.TerminalFullScreenSession(System.Func<Kazo.Os.AppSdk.TerminalScreenFrame?, bool, System.Threading.Tasks.Task!>! screenChanged) -> void
+Kazo.Os.AppSdk.Terminal.TerminalFullScreenSession.TryPostKey(Kazo.Os.AppSdk.TerminalKeyEvent! keyEvent) -> bool
+Kazo.Os.AppSdk.Terminal.TerminalFullScreenSession.UpdateViewport(int columns, int rows) -> void
+Kazo.Os.AppSdk.Terminal.TerminalFullScreenSession.Viewport.get -> Kazo.Os.AppSdk.TerminalViewport
+Kazo.Os.AppSdk.Terminal.TerminalHistory
+Kazo.Os.AppSdk.Terminal.TerminalInputReader
+Kazo.Os.AppSdk.Terminal.TerminalInputReader.CloseInput() -> void
+Kazo.Os.AppSdk.Terminal.TerminalInputReader.EchoEnabled.get -> bool
+Kazo.Os.AppSdk.Terminal.TerminalInputReader.EchoEnabled.set -> void
+Kazo.Os.AppSdk.Terminal.TerminalInputReader.IsWaiting.get -> bool
+Kazo.Os.AppSdk.Terminal.TerminalInputReader.Push(string! text) -> void
+Kazo.Os.AppSdk.Terminal.TerminalInputReader.PushEndOfInput() -> void
+Kazo.Os.AppSdk.Terminal.TerminalInputReader.TakeUnread() -> string!
+Kazo.Os.AppSdk.Terminal.TerminalInputReader.TerminalInputReader() -> void
+Kazo.Os.AppSdk.Terminal.TerminalOutputAction
+Kazo.Os.AppSdk.Terminal.TerminalOutputAction.<Clone>$() -> Kazo.Os.AppSdk.Terminal.TerminalOutputAction!
+Kazo.Os.AppSdk.Terminal.TerminalOutputAction.Deconstruct(out Kazo.Os.AppSdk.Terminal.TerminalOutputActionKind Kind, out string! Text) -> void
+Kazo.Os.AppSdk.Terminal.TerminalOutputAction.Equals(Kazo.Os.AppSdk.Terminal.TerminalOutputAction? other) -> bool
+Kazo.Os.AppSdk.Terminal.TerminalOutputAction.Kind.get -> Kazo.Os.AppSdk.Terminal.TerminalOutputActionKind
+Kazo.Os.AppSdk.Terminal.TerminalOutputAction.Kind.init -> void
+Kazo.Os.AppSdk.Terminal.TerminalOutputAction.TerminalOutputAction(Kazo.Os.AppSdk.Terminal.TerminalOutputActionKind Kind, string! Text) -> void
+Kazo.Os.AppSdk.Terminal.TerminalOutputAction.Text.get -> string!
+Kazo.Os.AppSdk.Terminal.TerminalOutputAction.Text.init -> void
+Kazo.Os.AppSdk.Terminal.TerminalOutputActionKind
+Kazo.Os.AppSdk.Terminal.TerminalOutputActionKind.EraseScreen = 1 -> Kazo.Os.AppSdk.Terminal.TerminalOutputActionKind
+Kazo.Os.AppSdk.Terminal.TerminalOutputActionKind.Text = 0 -> Kazo.Os.AppSdk.Terminal.TerminalOutputActionKind
+Kazo.Os.AppSdk.Terminal.TerminalOutputWriter
+Kazo.Os.AppSdk.Terminal.TerminalOutputWriter.TerminalOutputWriter(System.Action<string!>! append) -> void
+Kazo.Os.AppSdk.Terminal.TerminalPanel
+Kazo.Os.AppSdk.Terminal.TerminalPanel.AppContext.get -> Kazo.Os.AppSdk.IAppExecutionContext!
+Kazo.Os.AppSdk.Terminal.TerminalPanel.AppContext.set -> void
+Kazo.Os.AppSdk.Terminal.TerminalPanel.CallerAppId.get -> string!
+Kazo.Os.AppSdk.Terminal.TerminalPanel.CallerAppId.set -> void
+Kazo.Os.AppSdk.Terminal.TerminalPanel.ClearAsync() -> System.Threading.Tasks.Task!
+Kazo.Os.AppSdk.Terminal.TerminalPanel.CommandCompleted -> System.EventHandler<Kazo.Os.AppSdk.Components.HackTerminalCommandResult!>?
+Kazo.Os.AppSdk.Terminal.TerminalPanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.AppSdk.Terminal.TerminalPanel.Exited -> System.EventHandler?
+Kazo.Os.AppSdk.Terminal.TerminalPanel.FocusAsync() -> System.Threading.Tasks.Task!
+Kazo.Os.AppSdk.Terminal.TerminalPanel.FocusOnStart.get -> bool
+Kazo.Os.AppSdk.Terminal.TerminalPanel.FocusOnStart.set -> void
+Kazo.Os.AppSdk.Terminal.TerminalPanel.InitialCwd.get -> string?
+Kazo.Os.AppSdk.Terminal.TerminalPanel.InitialCwd.set -> void
+Kazo.Os.AppSdk.Terminal.TerminalPanel.InitialUsername.get -> string!
+Kazo.Os.AppSdk.Terminal.TerminalPanel.InitialUsername.set -> void
+Kazo.Os.AppSdk.Terminal.TerminalPanel.IsBusy.get -> bool
+Kazo.Os.AppSdk.Terminal.TerminalPanel.IsRunning.get -> bool
+Kazo.Os.AppSdk.Terminal.TerminalPanel.OnExitRequested.get -> Microsoft.AspNetCore.Components.EventCallback
+Kazo.Os.AppSdk.Terminal.TerminalPanel.OnExitRequested.set -> void
+Kazo.Os.AppSdk.Terminal.TerminalPanel.OnTerminalData(string! data) -> System.Threading.Tasks.Task!
+Kazo.Os.AppSdk.Terminal.TerminalPanel.OnTitleChanged.get -> Microsoft.AspNetCore.Components.EventCallback<string!>
+Kazo.Os.AppSdk.Terminal.TerminalPanel.OnTitleChanged.set -> void
+Kazo.Os.AppSdk.Terminal.TerminalPanel.OutputReceived -> System.EventHandler<Kazo.Os.AppSdk.Components.HackTerminalOutputEventArgs!>?
+Kazo.Os.AppSdk.Terminal.TerminalPanel.PushVirtualKey(Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent! evt) -> System.Threading.Tasks.Task!
+Kazo.Os.AppSdk.Terminal.TerminalPanel.ReadOutput(int maxCharacters = 65536) -> string!
+Kazo.Os.AppSdk.Terminal.TerminalPanel.RunCommandAsync(string! commandLine, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Components.HackTerminalCommandResult!>!
+Kazo.Os.AppSdk.Terminal.TerminalPanel.SendInputAsync(string! text) -> System.Threading.Tasks.Task!
+Kazo.Os.AppSdk.Terminal.TerminalPanel.SetWorkingDirectoryAsync(string! path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Components.HackTerminalCommandResult!>!
+Kazo.Os.AppSdk.Terminal.TerminalPanel.ShowBanner.get -> bool
+Kazo.Os.AppSdk.Terminal.TerminalPanel.ShowBanner.set -> void
+Kazo.Os.AppSdk.Terminal.TerminalPanel.StateChanged -> System.EventHandler?
+Kazo.Os.AppSdk.Terminal.TerminalPanel.TerminalPanel() -> void
+Kazo.Os.AppSdk.Terminal.TerminalPanel.Title.get -> string!
+Kazo.Os.AppSdk.Terminal.TerminalPanel.UpdateTerminalViewport(int columns, int rows) -> void
+Kazo.Os.AppSdk.Terminal.TerminalPanel.UseVirtualKeyboard.get -> bool
+Kazo.Os.AppSdk.Terminal.TerminalPanel.UseVirtualKeyboard.set -> void
+Kazo.Os.AppSdk.Terminal.TerminalPanel.WorkingDirectory.get -> string?
+Kazo.Os.AppSdk.Terminal.TerminalScreen
+Kazo.Os.AppSdk.Terminal.TerminalScreen.AppContext.get -> Kazo.Os.AppSdk.IAppExecutionContext?
+Kazo.Os.AppSdk.Terminal.TerminalScreen.AppContext.set -> void
+Kazo.Os.AppSdk.Terminal.TerminalScreen.FocusAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.AppSdk.Terminal.TerminalScreen.Frame.get -> Kazo.Os.AppSdk.TerminalScreenFrame?
+Kazo.Os.AppSdk.Terminal.TerminalScreen.Frame.set -> void
+Kazo.Os.AppSdk.Terminal.TerminalScreen.OnKey.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.AppSdk.TerminalKeyEvent!>
+Kazo.Os.AppSdk.Terminal.TerminalScreen.OnKey.set -> void
+Kazo.Os.AppSdk.Terminal.TerminalScreen.TerminalScreen() -> void
+Kazo.Os.AppSdk.Terminal.TerminalTabSet
+Kazo.Os.AppSdk.Terminal.TerminalTabSet.Activate(Kazo.Os.AppSdk.Terminal.TerminalTabState! tab) -> void
+Kazo.Os.AppSdk.Terminal.TerminalTabSet.Active.get -> Kazo.Os.AppSdk.Terminal.TerminalTabState?
+Kazo.Os.AppSdk.Terminal.TerminalTabSet.Close(Kazo.Os.AppSdk.Terminal.TerminalTabState! tab) -> bool
+Kazo.Os.AppSdk.Terminal.TerminalTabSet.Open(string? initialCwd) -> Kazo.Os.AppSdk.Terminal.TerminalTabState!
+Kazo.Os.AppSdk.Terminal.TerminalTabSet.Switch(int offset) -> bool
+Kazo.Os.AppSdk.Terminal.TerminalTabSet.Tabs.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Terminal.TerminalTabState!>!
+Kazo.Os.AppSdk.Terminal.TerminalTabSet.TerminalTabSet() -> void
+Kazo.Os.AppSdk.Terminal.TerminalTabState
+Kazo.Os.AppSdk.Terminal.TerminalTabState.Id.get -> string!
+Kazo.Os.AppSdk.Terminal.TerminalTabState.InitialCwd.get -> string?
+Kazo.Os.AppSdk.Terminal.TerminalTabState.Panel.get -> Kazo.Os.AppSdk.Terminal.TerminalPanel?
+Kazo.Os.AppSdk.Terminal.TerminalTabState.Panel.set -> void
+Kazo.Os.AppSdk.Terminal.TerminalTabState.TerminalTabState(string! id, string? initialCwd) -> void
+Kazo.Os.AppSdk.Terminal.TerminalTabState.Title.get -> string!
+Kazo.Os.AppSdk.Terminal.TerminalTabState.Title.set -> void
+Kazo.Os.AppSdk.Terminal.TerminalTabs
+Kazo.Os.AppSdk.Terminal.TerminalTabs.AppContext.get -> Kazo.Os.AppSdk.IAppExecutionContext!
+Kazo.Os.AppSdk.Terminal.TerminalTabs.AppContext.set -> void
+Kazo.Os.AppSdk.Terminal.TerminalTabs.CallerAppId.get -> string!
+Kazo.Os.AppSdk.Terminal.TerminalTabs.CallerAppId.set -> void
+Kazo.Os.AppSdk.Terminal.TerminalTabs.CloseActiveTabAsync() -> System.Threading.Tasks.Task!
+Kazo.Os.AppSdk.Terminal.TerminalTabs.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.AppSdk.Terminal.TerminalTabs.InitialCwd.get -> string?
+Kazo.Os.AppSdk.Terminal.TerminalTabs.InitialCwd.set -> void
+Kazo.Os.AppSdk.Terminal.TerminalTabs.OnLastTabClosed.get -> Microsoft.AspNetCore.Components.EventCallback
+Kazo.Os.AppSdk.Terminal.TerminalTabs.OnLastTabClosed.set -> void
+Kazo.Os.AppSdk.Terminal.TerminalTabs.OpenTabAsync() -> System.Threading.Tasks.Task!
+Kazo.Os.AppSdk.Terminal.TerminalTabs.SwitchTabAsync(int offset) -> System.Threading.Tasks.Task!
+Kazo.Os.AppSdk.Terminal.TerminalTabs.TerminalTabs() -> void
+Kazo.Os.AppSdk.Terminal._Imports
+Kazo.Os.AppSdk.Terminal._Imports.Execute() -> void
+Kazo.Os.AppSdk.Terminal._Imports._Imports() -> void
+override Kazo.Os.AppSdk.Terminal.TerminalCredentialPrompt.ConfirmAsync(Kazo.Os.AppSdk.Shell.HackConfirmationRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Shell.HackConfirmation>!
+override Kazo.Os.AppSdk.Terminal.TerminalCredentialPrompt.ReadCredentialAsync(Kazo.Os.AppSdk.Shell.HackCredentialRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Shell.HackCredential?>!
+override Kazo.Os.AppSdk.Terminal.TerminalCredentialPrompt.WriteLineAsync(string! text, Kazo.Os.AppSdk.Shell.HackPromptLineKind kind, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+override Kazo.Os.AppSdk.Terminal.TerminalInputReader.Peek() -> int
+override Kazo.Os.AppSdk.Terminal.TerminalInputReader.Read() -> int
+override Kazo.Os.AppSdk.Terminal.TerminalInputReader.Read(System.Span<char> buffer) -> int
+override Kazo.Os.AppSdk.Terminal.TerminalInputReader.Read(char[]! buffer, int index, int count) -> int
+override Kazo.Os.AppSdk.Terminal.TerminalInputReader.ReadAsync(System.Memory<char> buffer, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.AppSdk.Terminal.TerminalInputReader.ReadAsync(char[]! buffer, int index, int count) -> System.Threading.Tasks.Task<int>!
+override Kazo.Os.AppSdk.Terminal.TerminalInputReader.ReadLine() -> string?
+override Kazo.Os.AppSdk.Terminal.TerminalInputReader.ReadLineAsync() -> System.Threading.Tasks.Task<string?>!
+override Kazo.Os.AppSdk.Terminal.TerminalInputReader.ReadLineAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<string?>
+override Kazo.Os.AppSdk.Terminal.TerminalInputReader.ReadToEnd() -> string!
+override Kazo.Os.AppSdk.Terminal.TerminalInputReader.ReadToEndAsync() -> System.Threading.Tasks.Task<string!>!
+override Kazo.Os.AppSdk.Terminal.TerminalInputReader.ReadToEndAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<string!>!
+override Kazo.Os.AppSdk.Terminal.TerminalOutputAction.Equals(object? obj) -> bool
+override Kazo.Os.AppSdk.Terminal.TerminalOutputAction.GetHashCode() -> int
+override Kazo.Os.AppSdk.Terminal.TerminalOutputAction.ToString() -> string!
+override Kazo.Os.AppSdk.Terminal.TerminalOutputWriter.Encoding.get -> System.Text.Encoding!
+override Kazo.Os.AppSdk.Terminal.TerminalOutputWriter.FlushAsync() -> System.Threading.Tasks.Task!
+override Kazo.Os.AppSdk.Terminal.TerminalOutputWriter.FlushAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task!
+override Kazo.Os.AppSdk.Terminal.TerminalOutputWriter.Write(System.ReadOnlySpan<char> buffer) -> void
+override Kazo.Os.AppSdk.Terminal.TerminalOutputWriter.Write(char value) -> void
+override Kazo.Os.AppSdk.Terminal.TerminalOutputWriter.Write(char[]! buffer, int index, int count) -> void
+override Kazo.Os.AppSdk.Terminal.TerminalOutputWriter.Write(string? value) -> void
+override Kazo.Os.AppSdk.Terminal.TerminalOutputWriter.WriteAsync(System.ReadOnlyMemory<char> buffer, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+override Kazo.Os.AppSdk.Terminal.TerminalOutputWriter.WriteAsync(char value) -> System.Threading.Tasks.Task!
+override Kazo.Os.AppSdk.Terminal.TerminalOutputWriter.WriteAsync(char[]! buffer, int index, int count) -> System.Threading.Tasks.Task!
+override Kazo.Os.AppSdk.Terminal.TerminalOutputWriter.WriteAsync(string? value) -> System.Threading.Tasks.Task!
+override Kazo.Os.AppSdk.Terminal.TerminalOutputWriter.WriteLineAsync() -> System.Threading.Tasks.Task!
+override Kazo.Os.AppSdk.Terminal.TerminalOutputWriter.WriteLineAsync(System.ReadOnlyMemory<char> buffer, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+override Kazo.Os.AppSdk.Terminal.TerminalOutputWriter.WriteLineAsync(char value) -> System.Threading.Tasks.Task!
+override Kazo.Os.AppSdk.Terminal.TerminalOutputWriter.WriteLineAsync(char[]! buffer, int index, int count) -> System.Threading.Tasks.Task!
+override Kazo.Os.AppSdk.Terminal.TerminalOutputWriter.WriteLineAsync(string? value) -> System.Threading.Tasks.Task!
+override Kazo.Os.AppSdk.Terminal.TerminalPanel.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+override Kazo.Os.AppSdk.Terminal.TerminalPanel.OnInitializedAsync() -> System.Threading.Tasks.Task!
+override Kazo.Os.AppSdk.Terminal.TerminalTabs.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+override Kazo.Os.AppSdk.Terminal.TerminalTabs.OnInitialized() -> void
+static Kazo.Os.AppSdk.Terminal.TerminalHistory.ToSingleLine(string! text) -> string!
+static Kazo.Os.AppSdk.Terminal.TerminalOutputAction.operator !=(Kazo.Os.AppSdk.Terminal.TerminalOutputAction? left, Kazo.Os.AppSdk.Terminal.TerminalOutputAction? right) -> bool
+static Kazo.Os.AppSdk.Terminal.TerminalOutputAction.operator ==(Kazo.Os.AppSdk.Terminal.TerminalOutputAction? left, Kazo.Os.AppSdk.Terminal.TerminalOutputAction? right) -> bool
+~override Kazo.Os.AppSdk.Terminal.TerminalPanel.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.AppSdk.Terminal.TerminalScreen.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.AppSdk.Terminal.TerminalTabs.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

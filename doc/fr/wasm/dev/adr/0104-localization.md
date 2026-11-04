@@ -19,7 +19,7 @@ Accepté le 2026-10-17 (chantier `v3/1-adr`, pour le chantier `v3/12-localizatio
 
 - Aucun `.resx`, aucun `IStringLocalizer` : les chaînes sont écrites en dur, en
   anglais et en français mélangés.
-- `LoginEnvironment` (`Platform/HackerOs.Platform.Core/Processes/LoginEnvironment.cs`)
+- `LoginEnvironment` (`Platform/Kazo.Os.Platform.Core/Processes/LoginEnvironment.cs`)
   pose `LANG=en_US.UTF-8`, puis applique `/etc/environment`. Rien ne lit `LANG`.
 - `AppManifest.Localizations` (`LocalizationManifest(Culture, ResourcePath)`)
   existe et reste vide partout.

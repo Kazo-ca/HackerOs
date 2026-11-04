@@ -5,7 +5,7 @@
 ## Statut
 
 Accepté le 2026-10-31, chantier `todo/18-theme-packs` (issue `TODO`
-[#253](https://github.com/Kazo-ca/HackerOs/issues/253), Hack Store v2). Met en
+[#253](https://github.com/Kazo-ca/Os/issues/253), Hack Store v2). Met en
 œuvre l'[ADR 0190](0190-theme-packs.md) §1 à §3, sur le Store de
 l'[ADR 0212](0212-hack-store-app-build.md) et les règles de confiance de
 l'[ADR 0189](0189-app-sources-trust-and-per-user-install.md) et de
@@ -71,7 +71,7 @@ cursors/*.png                 images nommées par cursor.theme, point actif vér
   `unexpected-file`, `bad-file`, `file-too-large`, `remote-address`,
   `unsupported`, `bad-description`) que le Store traduit.
 
-Le code est `ThemePack.Read` dans `HackerOs.Platform.Core` (Apps/ThemePacks).
+Le code est `ThemePack.Read` dans `Kazo.Os.Platform.Core` (Apps/ThemePacks).
 La CI du catalogue appliquera les mêmes règles (Q2).
 
 ### 2. Dans le catalogue
@@ -169,7 +169,7 @@ apps (`AppUpdateMonitor`).
    chaque partie dans les dossiers existants (`/etc/hackeros/cursors/`…).
    A garde une suppression propre et une mise à jour atomique.
 2. **Q2, CI du catalogue.** A (recommandé) : issue `TODO` sur
-   `HackerOs-AppMarketPlace` pour vérifier `kind: "theme-pack"`, à faire quand
+   `Os-AppMarketPlace` pour vérifier `kind: "theme-pack"`, à faire quand
    `todo/base` est sur `main`. B : la faire dans ce chantier.
 3. **Q3, après l'installation.** A (recommandé) : rien n'est appliqué, bouton
    « Ouvrir Apparence ». B : appliquer tout le pack d'un coup.
@@ -179,7 +179,7 @@ apps (`AppUpdateMonitor`).
 ## Réponses de Benoit
 
 Le 2026-10-31 : **Q1 A** (lus en place), **Q2 A** (issue `TODO`
-[AppMarketPlace #4](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/4)
+[AppMarketPlace #4](https://github.com/Kazo-ca/Os-AppMarketPlace/issues/4)
 après `main`), **Q3 A** (rien n'est appliqué, bouton « Ouvrir Apparence »),
 **Q4 A** (onglet Thèmes seulement, pas de badge).
 
@@ -194,4 +194,4 @@ après `main`), **Q3 A** (rien n'est appliqué, bouton « Ouvrir Apparence »),
 - [x] Onglet Thèmes du Hack Store.
 - [x] Tests : format, passerelle, dossiers des packs, onglet du Store.
 - [ ] CI du catalogue pour `kind: "theme-pack"` (Q2, issue `TODO`
-      [AppMarketPlace #4](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/4)).
+      [AppMarketPlace #4](https://github.com/Kazo-ca/Os-AppMarketPlace/issues/4)).

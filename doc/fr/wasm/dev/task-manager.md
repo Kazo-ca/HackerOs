@@ -4,7 +4,7 @@
 
 Mise en œuvre du chantier `rebuild/4-task-manager` de la phase 4 : ADR 0056
 sections 4 et 5 (`HackProcess`, `HackServiceController`) et ADR 0058 section 2
-(réécriture de `HackerOs.Apps.SystemMonitor`). Les mesures lues viennent du
+(réécriture de `Kazo.Os.Apps.SystemMonitor`). Les mesures lues viennent du
 chantier `4-proc-metrics` ([`system-metrics.md`](system-metrics.md),
 ADR 0057).
 
@@ -24,7 +24,7 @@ ce qu'elle affiche, une app tierce ou `ps` peut le lire aussi.
 
 L'app ne référence plus que le SDK : `IProcessManager`, `AppCatalog`,
 `AppLifecycleOrchestrator` et `IEventBus` ont disparu, et son exemption de
-l'ADR 0055 est retirée de `build/HackerOs.Apps.targets`.
+l'ADR 0055 est retirée de `build/Kazo.Os.Apps.targets`.
 
 ## Architecture
 
@@ -32,11 +32,11 @@ l'ADR 0055 est retirée de `build/HackerOs.Apps.targets`.
 
 | Type | Projet | Rôle |
 | --- | --- | --- |
-| `HackProcess`, `HackProcessState`, `HackProcessIoCounters` | `HackerOs.AppSdk` (`Diagnostics/`) | un processus, sur le modèle de `System.Diagnostics.Process`, lu dans `/proc` par la passerelle fichier de l'app |
-| `HackServiceController`, `HackServiceControllerStatus` | `HackerOs.AppSdk` (`ServiceProcess/`) | un service, sur le modèle de `System.ServiceProcess.ServiceController` |
-| `HackLineChart`, `HackChartSeries`, `HackChartGeometry`, `HackChartSize` | `HackerOs.AppSdk.Blazor` (`Charts/`) | graphique en courbes SVG natif, sans bibliothèque ni JavaScript |
+| `HackProcess`, `HackProcessState`, `HackProcessIoCounters` | `Kazo.Os.AppSdk` (`Diagnostics/`) | un processus, sur le modèle de `System.Diagnostics.Process`, lu dans `/proc` par la passerelle fichier de l'app |
+| `HackServiceController`, `HackServiceControllerStatus` | `Kazo.Os.AppSdk` (`ServiceProcess/`) | un service, sur le modèle de `System.ServiceProcess.ServiceController` |
+| `HackLineChart`, `HackChartSeries`, `HackChartGeometry`, `HackChartSize` | `Kazo.Os.AppSdk.Blazor` (`Charts/`) | graphique en courbes SVG natif, sans bibliothèque ni JavaScript |
 
-### App (`Apps/System/HackerOs.Apps.SystemMonitor`)
+### App (`Apps/System/Kazo.Os.Apps.SystemMonitor`)
 
 | Fichier | Rôle |
 | --- | --- |
@@ -238,7 +238,7 @@ await sync.SetStartTypeAsync(ServiceStartMode.Automatic);
   `HackUnauthorizedAccessException` (refus), `InvalidOperationException`
   (service désinstallé, désactivé ou en échec).
 
-### `HackLineChart` (`HackerOs.AppSdk.Blazor.Charts`)
+### `HackLineChart` (`Kazo.Os.AppSdk.Blazor.Charts`)
 
 ```razor
 <HackLineChart Title="Total CPU usage"
@@ -273,11 +273,11 @@ await sync.SetStartTypeAsync(ServiceStartMode.Automatic);
   `ParseStatus` et `ParseIo` sont publics pour les apps qui lisent `/proc`
   elles-mêmes.
 - **Graphique dans le SDK** : l'ADR 0058 demande des composants SVG natifs ;
-  `HackLineChart` vit dans `HackerOs.AppSdk.Blazor` pour qu'une autre app
+  `HackLineChart` vit dans `Kazo.Os.AppSdk.Blazor` pour qu'une autre app
   (Diagnostic, une app tierce) le réutilise, comme le demande `AGENTS.md`.
 - **Fenêtre réduite détectée en JavaScript** : le SDK n'expose pas l'état de la
   fenêtre. Le module de la fenêtre observe sa propre visibilité, seul point que
-  C# ne voit pas ; il est importé depuis `./_content/HackerOs.Apps.SystemMonitor/`
+  C# ne voit pas ; il est importé depuis `./_content/Kazo.Os.Apps.SystemMonitor/`
   (ADR 0055 §3). Le même module empêche Ctrl+A de sélectionner toute la page
   quand la table a le focus.
 - **Onglets non conservés** (`KeepPanelsAlive="false"`) : seul l'onglet visible
@@ -305,17 +305,17 @@ await sync.SetStartTypeAsync(ServiceStartMode.Automatic);
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Execution/HackProcessTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/Execution/HackProcessTests.cs` :
   `HackProcess` et `HackServiceController` sur le vrai fournisseur `/proc` et
   `AppFileSystemGateway` ; visibilité sans `process.list`, `io` et `environ`
   privés, processus terminé, refus et sortie de `KillAsync`, délai de
   `CloseMainWindowAsync`, raison et délai de `TerminateAsync`, services (état,
   type illisible, désactivé, refus).
-- `Tests/HackerOs.Platform.Core.Tests/Lifecycle/AppLifecycleOrchestratorTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/Lifecycle/AppLifecycleOrchestratorTests.cs` :
   le processus reçoit les poids `Resources` de son manifeste.
-- `Tests/HackerOs.AppSdk.Blazor.Tests/HackChartGeometryTests.cs` : échelle
+- `Tests/Kazo.Os.AppSdk.Blazor.Tests/HackChartGeometryTests.cs` : échelle
   automatique, position des points, aire, culture invariante.
-- `Tests/HackerOs.Apps.SystemMonitor.Tests/` : parseurs `/proc`
+- `Tests/Kazo.Os.Apps.SystemMonitor.Tests/` : parseurs `/proc`
   (`ProcFilesTests`), différences et historique (`SystemMetricsTests`), tri,
   filtre, sélection et « End task » (`ProcessTableTests`), « End task » en
   `SIGTERM` 5 s et « Force kill » en `SIGKILL`, sélection signalée ensemble
@@ -335,7 +335,7 @@ surcharges sans culture restent invariantes. Les noms et valeurs lus dans
 
 - [x] `HackProcess` : lecture de `/proc/<pid>/status`, `cmdline`, `cwd`, `io`, `environ` ; `KillAsync`, `CloseMainWindowAsync` par `IAppProcessGateway`.
 - [x] `HackServiceController` : liste par `HackApps`, état par `HackProcess`, actions et type de démarrage par `IAppServiceControlGateway`.
-- [x] `HackLineChart` : graphique SVG natif dans `HackerOs.AppSdk.Blazor`.
+- [x] `HackLineChart` : graphique SVG natif dans `Kazo.Os.AppSdk.Blazor`.
 - [x] Parseurs `/proc` et calcul des débits par différence, historique de 60 s.
 - [x] Modèle de la table : tri, filtre, sélection multiple (Ctrl, Maj, Ctrl+A), détail.
 - [x] Réécriture de la fenêtre : onglets Processes, Performance, Disk, Network, Services ; détail ; « End task » confirmé, refus par processus ; rafraîchissement d'une seconde suspendu quand la fenêtre est réduite.

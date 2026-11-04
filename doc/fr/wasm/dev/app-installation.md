@@ -65,11 +65,11 @@ non optionnelle, transitivement) d'une app ainsi désinstallée.
 
 | Type | Projet | Rôle |
 | --- | --- | --- |
-| `IAppInstallationService`, `AppInstallationService` | `Platform/HackerOs.Platform.Core/Apps` | lit, surveille et écrit les deux fichiers ; tient `AppEnablementRegistry` égal à l'état effectif |
+| `IAppInstallationService`, `AppInstallationService` | `Platform/Kazo.Os.Platform.Core/Apps` | lit, surveille et écrit les deux fichiers ; tient `AppEnablementRegistry` égal à l'état effectif |
 | `AppsConfigDocument` | idem | chemins, lecture tolérante, écriture ligne à ligne, fermetures de dépendances |
 | `AppEnablementToFilesMigration` | idem | crée `/etc/hackeros/apps.config` commenté et y recopie une fois les anciens `IsEnabled = false` |
-| `AppEnablementRegistry` | `Platform/HackerOs.Platform.Core/Lifecycle` | point de contrôle unique du lancement, désormais alimenté par le service ; événement `Changed` |
-| `InstalledAppsPanel` | `Apps/System/HackerOs.Apps.Settings` | onglet « Installed Apps » de l'app Paramètres |
+| `AppEnablementRegistry` | `Platform/Kazo.Os.Platform.Core/Lifecycle` | point de contrôle unique du lancement, désormais alimenté par le service ; événement `Changed` |
+| `InstalledAppsPanel` | `Apps/System/Kazo.Os.Apps.Settings` | onglet « Installed Apps » de l'app Paramètres |
 
 Flux unique, quelle que soit l'origine du changement (app Paramètres, `nano`,
 synchronisation de `/home`, connexion, déconnexion) :
@@ -182,7 +182,7 @@ utilisée pour ce fichier. La liste des apps installées, elle, est lue par
   magasin IndexedDB garde l'instantané des manifestes, mais l'OS ne lit ni
   n'écrit plus `IsEnabled` ; sa version de schéma ne change pas.
 - **`DisableAsync` et `EnableAsync` deviennent internes** à
-  `HackerOs.Platform.Core` (visibles des tests par `InternalsVisibleTo`) : seul
+  `Kazo.Os.Platform.Core` (visibles des tests par `InternalsVisibleTo`) : seul
   le service d'installation les appelle. L'orchestrateur ne reçoit plus
   `IOsSettingsService` ni `IPersistentAppCatalogRepository`.
 - **Dépendants désinstallés implicitement.** Une ligne écrite à la main pour
@@ -209,7 +209,7 @@ utilisée pour ce fichier. La liste des apps installées, elle, est lue par
 
 ## Tests de contrat
 
-`Tests/HackerOs.Platform.Core.Tests/Apps/AppInstallationServiceTests.cs`
+`Tests/Kazo.Os.Platform.Core.Tests/Apps/AppInstallationServiceTests.cs`
 (ADR 0048 section 7) :
 
 - désinstallation utilisateur : fichier écrit, lancement refusé, instance
@@ -243,8 +243,8 @@ origine d'app, à côté des apps système et des apps intégrées : un paquet
 `hackeros-packages`, lu par `raw.githubusercontent.com`.
 
 ```text
-hackpkg install Kazo-ca/HackerOs-App-Webamp            # pour soi si la source est de confiance
-hackpkg install Kazo-ca/HackerOs-App-Webamp@1.0.0 --system   # pour tous, validation admin
+hackpkg install Kazo-ca/Os-App-Webamp            # pour soi si la source est de confiance
+hackpkg install Kazo-ca/Os-App-Webamp@1.0.0 --system   # pour tous, validation admin
 hackpkg update                                         # toutes les apps installées
 hackpkg list | info <dépôt> | remove <appId> [--user|--system]
 hackpkg rollback <appId> [--user|--system]             # revient à la version gardée (ADR 0214)
@@ -411,7 +411,7 @@ hackpkg info org.example.notes
 
 Tests : `AppCatalogDocumentTests`, les tests de catalogue
 d'`AppPackageGatewayTests`, `StartMenuPreferencesServiceTests`
-(Platform.Core) et `HackerOs.Apps.Store.Tests` (`StoreCatalog`,
+(Platform.Core) et `Kazo.Os.Apps.Store.Tests` (`StoreCatalog`,
 `StoreMarkdown`, manifeste).
 
 ## Ajout sans redémarrage, signature et transactions
@@ -421,7 +421,7 @@ termine le Hack Store.
 
 - **Catalogue en direct** : après chaque installation, mise à jour, retrait ou
   retour arrière, la passerelle appelle `IInstalledAppsActivator`
-  (`InstalledAppsActivator` dans `HackerOs.Ecosystem.Host`). Il relit les apps
+  (`InstalledAppsActivator` dans `Kazo.Os.Ecosystem.Host`). Il relit les apps
   installées, remplace le contenu de l'unique `AppCatalog` de la page
   (`InstalledAppsBoot.Live`, `AppCatalog.ReplaceContents`, évènement
   `AppCatalog.Changed`) et ajoute les assemblies au registre de chargement

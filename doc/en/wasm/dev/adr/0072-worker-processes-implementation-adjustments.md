@@ -82,7 +82,7 @@ waits for the OS's response instead of an impossible synchronous call.
 ### 7. Hosts
 
 `test/test` runs the Ecosystem's `Program.cs` on the browser side: it has the
-workers like the Ecosystem. `HackerOs.Server` has none and writes it once
+workers like the Ecosystem. `Kazo.Os.Server` has none and writes it once
 to `/var/log/syslog` (ADR 0070 §6); `/proc/hackeros` does not exist there.
 
 ## Consequences

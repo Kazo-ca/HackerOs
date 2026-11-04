@@ -48,7 +48,7 @@ HostExceptionReporter ───────────────────�
     missing.
   - Attaching a **different** filesystem abandons the previous one: its token
     is cancelled and later flushes no longer wait for it. On
-    `HackerOs.Server`, each circuit mounts its own; a reload can cut the old
+    `Kazo.Os.Server`, each circuit mounts its own; a reload can cut the old
     circuit in the middle of a flush (JS call with no response), and the
     startup of the new circuit stayed blocked behind it, about one time in
     five (found by `build/verify-hosts.sh`). The lines of the abandoned batch
@@ -70,7 +70,7 @@ HostExceptionReporter ───────────────────�
 - `IPersistentDiagnosticRepository` and `IndexedDbDiagnosticRepository` are no
   longer registered; the IndexedDB audit was already not wired. The classes
   and their stores remain, and the IndexedDB schema version does not change.
-- The `OS/HackerOs.Ecosystem` host no longer removes its `ILoggerProvider`:
+- The `OS/Kazo.Os.Ecosystem` host no longer removes its `ILoggerProvider`:
   all its dependencies are singletons. The server keeps its composition (the
   `ILogger` bridge remains removed there, no filesystem is attached to it).
 
@@ -98,15 +98,15 @@ HostExceptionReporter ───────────────────�
 
 ## Contract tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Diagnostics/LogLineFormatTests.cs`: format,
+- `Tests/Kazo.Os.Platform.Core.Tests/Diagnostics/LogLineFormatTests.cs`: format,
   exact ADR example, escapes, properties, audit, rejection of foreign lines.
 - `.../LogFileWriterTests.cs`: creation and modes, periodic and threshold
   flush, one write per file, rotation and archives, giant batch, line loss,
   non-recursive failures, logout, shutdown, read permissions, new attachment
   that does not wait for a flush blocked on the previous one.
 - `.../LogProducersTests.cs`: `ILogger`, `AppLoggingGateway`, `FileAuditLog`.
-- `Tests/HackerOs.Platform.Core.Tests/Time/SimulationClockDriverTests.cs`.
-- `Tests/HackerOs.Apps.ErrorLogViewer.Tests/`: manifest and `LogFileReader` on
+- `Tests/Kazo.Os.Platform.Core.Tests/Time/SimulationClockDriverTests.cs`.
+- `Tests/Kazo.Os.Apps.ErrorLogViewer.Tests/`: manifest and `LogFileReader` on
   a real `AppFileSystemGateway`.
 
 ## Task list

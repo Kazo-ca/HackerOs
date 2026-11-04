@@ -1,0 +1,2 @@
+#nullable enable
+Kazo.Os.Platform.Core.Power.SystemPowerService.FactoryResetFromSignInAsync() -> System.Threading.Tasks.Task!

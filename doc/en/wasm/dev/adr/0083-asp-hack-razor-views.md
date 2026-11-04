@@ -97,8 +97,8 @@ writes the hidden field unless `Antiforgery="false"` or `Method="get"`;
 
 ### 6. Embedded `wwwroot`, served read-only
 
-- `build/HackerOs.Apps.targets` embeds `wwwroot/**` of a project that references
-  `HackerOs.AppSdk.Web` as `wwwroot/<path>` resources (property
+- `build/Kazo.Os.Apps.targets` embeds `wwwroot/**` of a project that references
+  `Kazo.Os.AppSdk.Web` as `wwwroot/<path>` resources (property
   `HackerOsEmbedWebRoot` to force or forbid), and removes them from the content:
   a site's `wwwroot` is never a static web resource of the host
   (`_content/`). The Razor class library of a windowed app keeps its usual
@@ -116,7 +116,7 @@ writes the hidden field unless `Antiforgery="false"` or `Method="get"`;
 
 ## Consequences
 
-- `HackerOs.AppSdk.Web` references `Microsoft.AspNetCore.Components.Web` (for
+- `Kazo.Os.AppSdk.Web` references `Microsoft.AspNetCore.Components.Web` (for
   `HtmlRenderer` and the components); test projects that have views
   move to the `Microsoft.NET.Sdk.Razor` SDK.
 - `HackWebApplicationBuilder` and `HackWebHost` gain an overload with

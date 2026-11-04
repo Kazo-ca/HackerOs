@@ -74,7 +74,7 @@ ajouté au sous-ensemble de l'ADR 0076 §6.
 
 ### 4. L'exemple est installé dans les hôtes ; ses données restent en mémoire
 
-`HackerOs.Samples.Intranet` est, comme le site d'exemple Blazor (ADR 0084), une
+`Kazo.Os.Samples.Intranet` est, comme le site d'exemple Blazor (ADR 0084), une
 app `Web` intégrée non système, cachée du lanceur, référencée par l'Ecosystem et
 `test/test` (chargement paresseux). Ses notes et ses cartes sont des singletons
 du processus du site : elles reviennent à leur état initial quand l'OS arrête le

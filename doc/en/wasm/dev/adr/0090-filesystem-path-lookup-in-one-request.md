@@ -56,7 +56,7 @@ walk, a consistent snapshot.
 
 ### 2. Optional capability `IFileSystemPathWalkProvider`
 
-Contract added in `HackerOs.Simulation.Abstractions.FileSystem`:
+Contract added in `Kazo.Os.Simulation.Abstractions.FileSystem`:
 
 ```csharp
 public interface IFileSystemPathWalkProvider

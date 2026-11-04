@@ -17,7 +17,7 @@ The upgrade transaction is aborted when the selected targets are missing, duplic
 > **Superseded (2026-10-17, ADR 0099 section 4).** The text below described the state before
 > any version was released. Upgrade fixtures now live in `Tests/fixtures/indexeddb/`
 > (`hackeros-v2.json`, `hackeros-v3.json`), are produced by booting the OS of an old commit, and
-> are replayed by `HackerOs.UI.E2E.Tests.IndexedDbUpgradeFixtureTests`. Version 1 has no fixture:
+> are replayed by `Kazo.Os.UI.E2E.Tests.IndexedDbUpgradeFixtureTests`. Version 1 has no fixture:
 > it never existed in any commit of the repository (the root commit `fdca68e` already declares
 > version 2). Procedure and rule: [`building-and-testing.md`](../building-and-testing.md#indexeddb-version-upgrade-fixtures).
 

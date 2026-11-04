@@ -6,8 +6,8 @@ Parent document: [`../Global-FileView-And-MessagingSystem.md`](../Global-FileVie
 
 ## Purpose
 
-Extend the existing in-process event bus (`Shared/HackerOs.Simulation.Abstractions/Events/EventBusContracts.cs`
-`IEventBus`, implemented by `Platform/HackerOs.Platform.Core/Events/InMemoryEventBus.cs`, exposed to apps
+Extend the existing in-process event bus (`Shared/Kazo.Os.Simulation.Abstractions/Events/EventBusContracts.cs`
+`IEventBus`, implemented by `Platform/Kazo.Os.Platform.Core/Events/InMemoryEventBus.cs`, exposed to apps
 as `IAppEventGateway`) so that:
 
 1. Publishing is **authorized by emitter**, not open to any subscriber of the gateway. Today
@@ -18,7 +18,7 @@ as `IAppEventGateway`) so that:
    const/helper APIs — never a hand-typed string at a call site — so topic names can't typo-drift between
    publisher and subscriber and are discoverable via IntelliSense/compile-time reference.
 3. A module can declare a **shared channel** other modules subscribe to, optionally restricted by the
-   existing capability-grant security model (`Shared/HackerOs.App.Abstractions/Policy/`) — no new
+   existing capability-grant security model (`Shared/Kazo.Os.App.Abstractions/Policy/`) — no new
    authorization mechanism is introduced.
 4. Directory-change notifications are exposed as a **disposable object wrapping a
    `System.Threading.Channels.Channel<T>`**, so a consumer can `await foreach` and simply dispose to
@@ -102,8 +102,8 @@ surfaces (capabilities and topics) stay conceptually symmetric.
 ## Core contracts
 
 **Implemented** (`MSG-001`–`MSG-005`) in
-`Shared/HackerOs.Simulation.Abstractions/Events/TopicMessagingContracts.cs` and
-`Platform/HackerOs.Platform.Core/Events/InMemoryTopicMessageBus.cs`. The shapes below are current; the
+`Shared/Kazo.Os.Simulation.Abstractions/Events/TopicMessagingContracts.cs` and
+`Platform/Kazo.Os.Platform.Core/Events/InMemoryTopicMessageBus.cs`. The shapes below are current; the
 `Subscribe`/`SubscribeChannel` signatures additionally carry the caller's `PublisherIdentity` (used as
 subscriber identity for shared-channel subscribe policy — see [Shared channels](#shared-channels-and-optional-per-channel-access)),
 which the app-facing `IAppEventGateway` stamps automatically so app code never supplies it directly:
@@ -157,7 +157,7 @@ and `ICapabilityChecker.Evaluate(policy.PublishCapability, ...)` for the publish
 context grants it. Both checks reuse machinery that already exists (`ICapabilityChecker`,
 `CapabilityPolicyEvaluation`) — no new grant storage, no new evaluation algorithm.
 
-`IAppEventGateway` (existing, `Shared/HackerOs.Simulation.Abstractions/Gateways/AppGatewayContracts.cs`)
+`IAppEventGateway` (existing, `Shared/Kazo.Os.Simulation.Abstractions/Gateways/AppGatewayContracts.cs`)
 gains the topic-bus members alongside its existing (now subscribe-only, for kernel event types)
 `Subscribe<TEvent>`:
 
@@ -222,7 +222,7 @@ public sealed record SharedChannelPolicy(
 
 ## Declared topic permissions
 
-**Implemented** (`Shared/HackerOs.App.Abstractions/TopicPermissions.cs`), per
+**Implemented** (`Shared/Kazo.Os.App.Abstractions/TopicPermissions.cs`), per
 [ADR 0040](../../adr/0040-declared-topic-permissions.md) — lets an app gate its own shared channel behind a
 permission it defines itself, e.g. `FileExplorer` requiring a permission before another app may command
 it to change directory, without adding a per-app entry to the fixed, centrally curated `AppCapabilities`
@@ -295,7 +295,7 @@ public static class FileExplorerWindow
 // Caller: FileExplorerWindow.Messages.SendChangeDirectory(context.Events, explorerPid, "/etc/someDir");
 ```
 
-Adopting this in the real `HackerOs.Apps.FileExplorer` is deferred to Phase 4 of `integrationPlan.md`,
+Adopting this in the real `Kazo.Os.Apps.FileExplorer` is deferred to Phase 4 of `integrationPlan.md`,
 once it hosts `FileView` and has a concrete command worth exposing to other apps.
 
 ## Filesystem watch API
@@ -339,7 +339,7 @@ every filesystem authorization check in this codebase (`IFileSystemService.StatA
 calls) is async, so a synchronous `Watch` could not have performed the real read-authorization check this
 API exists to reuse.
 
-- The filesystem provider (`FileSystemService` in `Platform/HackerOs.Platform.Core/FileSystem/`) is the
+- The filesystem provider (`FileSystemService` in `Platform/Kazo.Os.Platform.Core/FileSystem/`) is the
   **sole** registered owner/publisher of the `shared/filesystem/changed` channel root — registered once,
   in the singleton's constructor, under `KernelPublisherIdentity` (a reserved `"kernel"` app ID no
   installed manifest can ever validate to — `AppManifestValidator.ValidateAppId` requires at least three

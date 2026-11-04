@@ -31,7 +31,7 @@ grille, comment le menu Démarrer crée un raccourci. Le guide d'utilisation est
 
 Le contrôle de fichiers s'exécute avec les droits de l'app qui l'affiche
 (ADR 0148 §4) : il lui faut un contexte d'app. Le bureau est donc une app
-système, **Bureau** (`org.hackeros.desktop`, projet `HackerOs.Apps.Desktop`),
+système, **Bureau** (`org.hackeros.desktop`, projet `Kazo.Os.Apps.Desktop`),
 cachée du menu Démarrer, à instance unique, qui n'utilise que le SDK public.
 C'est le rôle d'`explorer.exe` sous Windows ou de `xfdesktop` sous Xfce.
 
@@ -70,7 +70,7 @@ C'est le rôle d'`explorer.exe` sous Windows ou de `xfdesktop` sous Xfce.
 
 L'hôte (l'app Bureau) lit et écrit le fichier ; le fournisseur dessine, place
 et déplace. Un fournisseur tiers du contrôle (ADR 0156) reçoit les mêmes
-paramètres. Les types sont dans `HackerOs.AppSdk.Files` (sans Blazor) :
+paramètres. Les types sont dans `Kazo.Os.AppSdk.Files` (sans Blazor) :
 `HackDesktopCell`, `HackDesktopIconSize`, `HackDesktopSort`,
 `HackDesktopOptions`, `HackDesktopItems`, `HackDesktopLayout`.
 
@@ -109,7 +109,7 @@ devient nouveau et se range dans l'ordre du tri.
   comme le fichier de configuration d'un bureau Linux sous `~/.config/` : pas
   de document de l'OS ni de couche `/etc` (le bureau est propre à chaque
   utilisateur, et `[positions]` n'a pas de schéma). Le format est lu et écrit
-  par `HackDesktopSettings` (SDK, `HackerOs.AppSdk.Files`) : `Parse`,
+  par `HackDesktopSettings` (SDK, `Kazo.Os.AppSdk.Files`) : `Parse`,
   `WithOptions`, `WithPositions`, `ReadAsync`, `SaveOptionsAsync`,
   `SavePositionsAsync`, avec les droits de l'app ambiante.
 - `[view]` (`icon-size`, `auto-arrange`, `align-to-grid`, `sort`, `show-home`,

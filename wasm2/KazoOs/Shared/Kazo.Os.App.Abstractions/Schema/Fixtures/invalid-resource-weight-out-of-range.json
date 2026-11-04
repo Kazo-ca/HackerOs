@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "org.hackeros.echo",
+  "name": "Echo",
+  "version": "1.0.0",
+  "publisherId": "org.hackeros",
+  "description": "Prints its arguments back to the terminal.",
+  "kind": "terminal",
+  "entryPoint": {
+    "assembly": "Kazo.Os.Apps.Echo",
+    "type": "Kazo.Os.Apps.Echo.EchoCommand"
+  },
+  "sdkCompatibility": { "minimumVersion": "1.0.0" },
+  "presentation": {
+    "category": "utilities",
+    "launchVisibility": "hidden",
+    "iconAssetPaths": []
+  },
+  "resources": {
+    "baselineCpuWeight": 1.5,
+    "burstCpuWeight": 0.05,
+    "baselineMemoryWeight": 0.01,
+    "burstMemoryWeight": 0.02,
+    "baselineStorageIoWeight": 0.0,
+    "burstStorageIoWeight": 0.0,
+    "baselineNetworkIoWeight": 0.0,
+    "burstNetworkIoWeight": 0.0
+  },
+  "terminal": {
+    "name": "echo",
+    "aliases": ["print"],
+    "usage": "echo [text...]"
+  }
+}

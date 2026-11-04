@@ -8,7 +8,7 @@ and its adjustments in [ADR 0108](adr/0108-server-relay-implementation-adjustmen
 
 ## Goal
 
-The optional server (`Server/HackerOs.Server`) relays to the real network what
+The optional server (`Server/Kazo.Os.Server`) relays to the real network what
 a browser cannot do alone:
 
 - HTTP requests of **all** methods, with their body;
@@ -35,7 +35,7 @@ HackUdpClient  ──► AppNetworkGateway.ConnectUdpAsync ─┴► OpenStreamA
 Paramètres     ──► HackServerConnection.GetRelayPolicyAsync ────────────► GET  /api/proxy/policy
 ```
 
-### Contracts (`HackerOs.Server.Contracts/Proxy`)
+### Contracts (`Kazo.Os.Server.Contracts/Proxy`)
 
 | Type | Role |
 |---|---|

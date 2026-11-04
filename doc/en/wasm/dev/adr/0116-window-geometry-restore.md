@@ -20,7 +20,7 @@ thread (§1); what follows applies the recommended answer while awaiting it.
 ## Context
 
 - `WindowGeometryPersistence` and `WindowGeometrySettings`
-  (`Platform/HackerOs.Platform.Blazor/Windows/WindowGeometrySettings.cs`)
+  (`Platform/Kazo.Os.Platform.Blazor/Windows/WindowGeometrySettings.cs`)
   know how to read and write `x=`, `y=`, `width=`, `height=` in an app's state
   file. The service is registered in dependency injection
   (`EcosystemServiceCollectionExtensions.cs:820`), but **no code calls
@@ -43,7 +43,7 @@ thread (§1); what follows applies the recommended answer while awaiting it.
 
 - Each window of an app of kind `Window` remembers, per app and per user,
   its size, its position and whether it was maximized.
-- `WindowOptions` (`HackerOs.App.Abstractions`) receives
+- `WindowOptions` (`Kazo.Os.App.Abstractions`) receives
   `RememberGeometry` (boolean, true by default). An app that sets it to false
   (a calculator that wants to always open at the same place, a wizard)
   always opens at its cascade position. The generator writes

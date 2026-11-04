@@ -9,7 +9,7 @@ de routes produite par un générateur de sources). Plan :
 
 ## Objet
 
-`Shared/HackerOs.AppSdk.Web` permet d'écrire un site interne de Kazo OS comme
+`Shared/Kazo.Os.AppSdk.Web` permet d'écrire un site interne de Kazo OS comme
 un site ASP.NET Core MVC : une classe de démarrage, des middlewares, des
 contrôleurs avec `[HttpGet]`/`[HttpPost]`/`[HttpPut]`/`[HttpPatch]`/`[HttpDelete]`,
 la liaison de modèle, la validation `DataAnnotations`, des résultats JSON, texte,
@@ -94,7 +94,7 @@ UseExceptionPage : toute exception du pipeline → page d'erreur (sinon « 500 I
 | `Mvc/` | Attributs, `HackControllerBase` / `HackController` / `HackApiController`, `HackModelBinder`, `HackModelStateDictionary`, filtres, résultats, `HackUrlHelper`, `HackActionInvoker`, `HackResults`, contrat `HackControllerActionDescriptor`. |
 | `Sessions/` | `HackSession`, `HackSessionOptions`, `HackSessionStore`. |
 | `Diagnostics/` | `HackExceptionPage` (page d'erreur au style console). |
-| `Tools/HackerOs.Tools.WebRouteGenerator` | Générateur de sources Roslyn (ADR 0082) : table de routes et `<Nom>WebHost`, erreurs `HOSWEB0001` à `HOSWEB0007` (`HOSWEB0008` : vue `.razor` et `.cshtml` au même chemin, ADR 0086). |
+| `Tools/Kazo.Os.Tools.WebRouteGenerator` | Générateur de sources Roslyn (ADR 0082) : table de routes et `<Nom>WebHost`, erreurs `HOSWEB0001` à `HOSWEB0007` (`HOSWEB0008` : vue `.razor` et `.cshtml` au même chemin, ADR 0086). |
 
 ## Démarrage
 
@@ -242,14 +242,14 @@ le contrat reste la référence de `web/9`.
 
 ## Tests
 
-- `Tests/HackerOs.AppSdk.Web.Tests` : gabarits et routeur
+- `Tests/Kazo.Os.AppSdk.Web.Tests` : gabarits et routeur
   (`RouteTemplateTests`, `EndpointRouterTests`), pipeline complet d'un site de
   test compilé avec le générateur (`MvcPipelineTests` : CRUD d'API, problèmes,
   `400` automatique, `415`, filtres, routes conventionnelles, formulaires,
   redirections, liens, session, fichiers, page d'erreur, DI par requête),
   générateur piloté sur des extraits de code (`WebRouteGeneratorTests` :
   `HOSWEB0001` à `HOSWEB0007`, table et entrée produites).
-- `Tests/HackerOs.Platform.WorkerHost.Tests/MvcSiteTests` : un site MVC démarré
+- `Tests/Kazo.Os.Platform.WorkerHost.Tests/MvcSiteTests` : un site MVC démarré
   par `curl` dans un OS complet, sur le fil principal et dans le worker `web`.
 
 ## Limites connues
@@ -265,7 +265,7 @@ le contrat reste la référence de `web/9`.
 
 ## Tâches
 
-- [x] Bibliothèque `HackerOs.AppSdk.Web` : projet, solution, frontière du SDK.
+- [x] Bibliothèque `Kazo.Os.AppSdk.Web` : projet, solution, frontière du SDK.
 - [x] HTTP : contexte, requête, réponse, en-têtes, cookies, formulaire, échange indépendant du transport.
 - [x] Routage : gabarits, contraintes, préséance, `405`/`OPTIONS`/`HEAD`, génération d'URL.
 - [x] Générateur de sources (ADR 0082) branché sur les apps, erreurs `HOSWEB0001` à `HOSWEB0007`.

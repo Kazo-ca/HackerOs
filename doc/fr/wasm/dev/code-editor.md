@@ -2,7 +2,7 @@
 
 # Éditeur de code
 
-`Apps/System/HackerOs.Apps.CodeEditor` (`org.hackeros.code-editor`) : éditeur
+`Apps/System/Kazo.Os.Apps.CodeEditor` (`org.hackeros.code-editor`) : éditeur
 de code façon VS Code, sur Monaco 0.55 (ADR 0020) et disposé en atelier
 (ADR 0062), avec un dock en bas (ADR 0063). Il ouvre des fichiers et des
 dossiers du système de fichiers virtuel, cherche dans tout un dossier, et
@@ -39,7 +39,7 @@ IntelliSense entre fichiers, contrôle de source, débogueur, extensions.
 | `CodeEditorSession`, `CodeEditorDocument` | Onglets et contenu en C# ; `RelocatePaths` suit un renommage de fichier ou de dossier. |
 | `CodeEditorWorkspace` | Dossier ouvert : liste des fichiers (exclusions `.git`, `.svn`, `.hg`, `node_modules`, `bin`, `obj` ; au plus 5 000), création de fichiers et de dossiers, chemins relatifs. |
 | `CodeEditorSearch.cs` | `CodeEditorTextSearch` (ligne par ligne, 1 000 occurrences par fichier, aperçu coupé autour de l'occurrence), `CodeEditorGlob`, `CodeEditorWorkspaceSearch` (5 000 occurrences au total, fichiers de plus de 1 Mio ignorés), `CodeEditorQuickOpen` (classement flou). |
-| `CodeEditorExplorer`, `CodeEditorSearchView`, `CodeEditorQuickOpenPalette`, `CodeEditorCursorStatus` | Vues de la barre latérale, boîte Ctrl+P et position du curseur, chacune avec son CSS collocé. Depuis `desk/3`, `CodeEditorExplorer` affiche `HackFileView` (plus de référence à `HackerOs.AppSdk.FileView`) : `Opening` ouvre un fichier dans un onglet (`Handled`), `SelectionChanged` le montre, `Renamed` fait suivre les onglets. |
+| `CodeEditorExplorer`, `CodeEditorSearchView`, `CodeEditorQuickOpenPalette`, `CodeEditorCursorStatus` | Vues de la barre latérale, boîte Ctrl+P et position du curseur, chacune avec son CSS collocé. Depuis `desk/3`, `CodeEditorExplorer` affiche `HackFileView` (plus de référence à `Kazo.Os.AppSdk.FileView`) : `Opening` ouvre un fichier dans un onglet (`Handled`), `SelectionChanged` le montre, `Renamed` fait suivre les onglets. |
 
 Le contenu de chaque fichier appartient à `CodeEditorDocument` (C#). Monaco
 garde un modèle par onglet pour l'historique et la position ; quand un onglet
@@ -114,7 +114,7 @@ menu.
 ## Mettre à jour Monaco
 
 Comme avant : modifier `package.json`, puis dans
-`Apps/System/HackerOs.Apps.CodeEditor` lancer `npm ci && npm run build`, et
+`Apps/System/Kazo.Os.Apps.CodeEditor` lancer `npm ci && npm run build`, et
 versionner `wwwroot/monaco/`. Le build .NET n'exécute pas npm.
 
 ## Tâches

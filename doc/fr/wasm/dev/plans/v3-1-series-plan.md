@@ -55,7 +55,7 @@ La série v3.1 garde donc deux chantiers de code, plus la publication de la 1.1.
 GitHub Actions ne tourne pas dans le dépôt : la suite locale fait foi, comme
 pour la série v3. Avant de fusionner, chaque chantier compile la solution et
 passe les tests des projets qu'il touche, la suite UI E2E pour les fenêtres,
-`HackerOs.SdkCompatibility.Tests` et `build/publish-trimmed.sh`.
+`Kazo.Os.SdkCompatibility.Tests` et `build/publish-trimmed.sh`.
 
 ## Tâches de ce chantier
 

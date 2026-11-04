@@ -1,0 +1,170 @@
+#nullable enable
+Kazo.Os.Windowing.Blazor.DesktopArea
+Kazo.Os.Windowing.Blazor.DesktopArea.BackgroundContent.get -> Microsoft.AspNetCore.Components.RenderFragment?
+Kazo.Os.Windowing.Blazor.DesktopArea.BackgroundContent.set -> void
+Kazo.Os.Windowing.Blazor.DesktopArea.BackgroundInteractive.get -> bool
+Kazo.Os.Windowing.Blazor.DesktopArea.BackgroundInteractive.set -> void
+Kazo.Os.Windowing.Blazor.DesktopArea.DesktopArea() -> void
+Kazo.Os.Windowing.Blazor.DesktopArea.DisplayId.get -> Kazo.Os.Windowing.Abstractions.DisplayId
+Kazo.Os.Windowing.Blazor.DesktopArea.DisplayId.set -> void
+Kazo.Os.Windowing.Blazor.DesktopArea.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Windowing.Blazor.DesktopArea.Layers.get -> Kazo.Os.Windowing.Blazor.WindowLayers?
+Kazo.Os.Windowing.Blazor.DesktopArea.Layers.set -> void
+Kazo.Os.Windowing.Blazor.DesktopArea.OnBack.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Windowing.Abstractions.WindowId>
+Kazo.Os.Windowing.Blazor.DesktopArea.OnBack.set -> void
+Kazo.Os.Windowing.Blazor.DesktopArea.OnClose.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Windowing.Abstractions.WindowId>
+Kazo.Os.Windowing.Blazor.DesktopArea.OnClose.set -> void
+Kazo.Os.Windowing.Blazor.DesktopArea.OnDesktopResized(double width, double height) -> System.Threading.Tasks.Task!
+Kazo.Os.Windowing.Blazor.DesktopArea.OnFocus.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Windowing.Abstractions.WindowId>
+Kazo.Os.Windowing.Blazor.DesktopArea.OnFocus.set -> void
+Kazo.Os.Windowing.Blazor.DesktopArea.OnGesture.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Windowing.Abstractions.WindowCommand!>
+Kazo.Os.Windowing.Blazor.DesktopArea.OnGesture.set -> void
+Kazo.Os.Windowing.Blazor.DesktopArea.OnMinimize.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Windowing.Abstractions.WindowId>
+Kazo.Os.Windowing.Blazor.DesktopArea.OnMinimize.set -> void
+Kazo.Os.Windowing.Blazor.DesktopArea.OnToggleMaximize.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Windowing.Abstractions.WindowId>
+Kazo.Os.Windowing.Blazor.DesktopArea.OnToggleMaximize.set -> void
+Kazo.Os.Windowing.Blazor.DesktopArea.OnWindowMenu.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Windowing.Blazor.WindowMenuRequest!>
+Kazo.Os.Windowing.Blazor.DesktopArea.OnWindowMenu.set -> void
+Kazo.Os.Windowing.Blazor.DesktopArea.PeekWindowId.get -> Kazo.Os.Windowing.Abstractions.WindowId?
+Kazo.Os.Windowing.Blazor.DesktopArea.PeekWindowId.set -> void
+Kazo.Os.Windowing.Blazor.DesktopArea.WallpaperContent.get -> Microsoft.AspNetCore.Components.RenderFragment?
+Kazo.Os.Windowing.Blazor.DesktopArea.WallpaperContent.set -> void
+Kazo.Os.Windowing.Blazor.DesktopArea.WindowContent.get -> Microsoft.AspNetCore.Components.RenderFragment<Kazo.Os.Windowing.Abstractions.WindowRuntimeState!>?
+Kazo.Os.Windowing.Blazor.DesktopArea.WindowContent.set -> void
+Kazo.Os.Windowing.Blazor.DesktopArea.WindowOverlay.get -> Microsoft.AspNetCore.Components.RenderFragment<Kazo.Os.Windowing.Abstractions.WindowRuntimeState!>?
+Kazo.Os.Windowing.Blazor.DesktopArea.WindowOverlay.set -> void
+Kazo.Os.Windowing.Blazor.DesktopArea.Windows.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Windowing.Abstractions.WindowRuntimeState!>!
+Kazo.Os.Windowing.Blazor.DesktopArea.Windows.set -> void
+Kazo.Os.Windowing.Blazor.SingleSurfaceArea
+Kazo.Os.Windowing.Blazor.SingleSurfaceArea.OnClose.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Windowing.Abstractions.WindowId>
+Kazo.Os.Windowing.Blazor.SingleSurfaceArea.OnClose.set -> void
+Kazo.Os.Windowing.Blazor.SingleSurfaceArea.OnFocus.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Windowing.Abstractions.WindowId>
+Kazo.Os.Windowing.Blazor.SingleSurfaceArea.OnFocus.set -> void
+Kazo.Os.Windowing.Blazor.SingleSurfaceArea.OnGesture.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Windowing.Abstractions.WindowCommand!>
+Kazo.Os.Windowing.Blazor.SingleSurfaceArea.OnGesture.set -> void
+Kazo.Os.Windowing.Blazor.SingleSurfaceArea.OnMinimize.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Windowing.Abstractions.WindowId>
+Kazo.Os.Windowing.Blazor.SingleSurfaceArea.OnMinimize.set -> void
+Kazo.Os.Windowing.Blazor.SingleSurfaceArea.OnToggleMaximize.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Windowing.Abstractions.WindowId>
+Kazo.Os.Windowing.Blazor.SingleSurfaceArea.OnToggleMaximize.set -> void
+Kazo.Os.Windowing.Blazor.SingleSurfaceArea.SingleSurfaceArea() -> void
+Kazo.Os.Windowing.Blazor.SingleSurfaceArea.WindowContent.get -> Microsoft.AspNetCore.Components.RenderFragment<Kazo.Os.Windowing.Abstractions.WindowRuntimeState!>?
+Kazo.Os.Windowing.Blazor.SingleSurfaceArea.WindowContent.set -> void
+Kazo.Os.Windowing.Blazor.SingleSurfaceArea.WindowOverlay.get -> Microsoft.AspNetCore.Components.RenderFragment<Kazo.Os.Windowing.Abstractions.WindowRuntimeState!>?
+Kazo.Os.Windowing.Blazor.SingleSurfaceArea.WindowOverlay.set -> void
+Kazo.Os.Windowing.Blazor.SingleSurfaceArea.Windows.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Windowing.Abstractions.WindowRuntimeState!>!
+Kazo.Os.Windowing.Blazor.SingleSurfaceArea.Windows.set -> void
+Kazo.Os.Windowing.Blazor.WindowChrome
+Kazo.Os.Windowing.Blazor.WindowChrome.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Windowing.Blazor.WindowChrome.OnBack.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Windowing.Abstractions.WindowId>
+Kazo.Os.Windowing.Blazor.WindowChrome.OnBack.set -> void
+Kazo.Os.Windowing.Blazor.WindowChrome.OnClose.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Windowing.Abstractions.WindowId>
+Kazo.Os.Windowing.Blazor.WindowChrome.OnClose.set -> void
+Kazo.Os.Windowing.Blazor.WindowChrome.OnFocus.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Windowing.Abstractions.WindowId>
+Kazo.Os.Windowing.Blazor.WindowChrome.OnFocus.set -> void
+Kazo.Os.Windowing.Blazor.WindowChrome.OnGesture.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Windowing.Abstractions.WindowCommand!>
+Kazo.Os.Windowing.Blazor.WindowChrome.OnGesture.set -> void
+Kazo.Os.Windowing.Blazor.WindowChrome.OnMinimize.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Windowing.Abstractions.WindowId>
+Kazo.Os.Windowing.Blazor.WindowChrome.OnMinimize.set -> void
+Kazo.Os.Windowing.Blazor.WindowChrome.OnToggleMaximize.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Windowing.Abstractions.WindowId>
+Kazo.Os.Windowing.Blazor.WindowChrome.OnToggleMaximize.set -> void
+Kazo.Os.Windowing.Blazor.WindowChrome.OnWindowMenu.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Windowing.Blazor.WindowMenuRequest!>
+Kazo.Os.Windowing.Blazor.WindowChrome.OnWindowMenu.set -> void
+Kazo.Os.Windowing.Blazor.WindowChrome.ReportDragRestoreAsync(double pointerX, double pointerY, double grabRatioX, double grabOffsetY) -> System.Threading.Tasks.Task<double[]?>!
+Kazo.Os.Windowing.Blazor.WindowChrome.ReportGestureCompletedAsync(string! mode) -> System.Threading.Tasks.Task!
+Kazo.Os.Windowing.Blazor.WindowChrome.ReportGestureStartedAsync() -> System.Threading.Tasks.Task!
+Kazo.Os.Windowing.Blazor.WindowChrome.ReportPointerDeltaAsync(string! mode, string? edge, double deltaX, double deltaY, double originX, double originY, double originWidth, double originHeight) -> System.Threading.Tasks.Task!
+Kazo.Os.Windowing.Blazor.WindowChrome.ReportScreenDropAsync(int displayNumber, double x, double y) -> System.Threading.Tasks.Task!
+Kazo.Os.Windowing.Blazor.WindowChrome.ReportTitleDoubleClickAsync() -> System.Threading.Tasks.Task!
+Kazo.Os.Windowing.Blazor.WindowChrome.TitleId.get -> string!
+Kazo.Os.Windowing.Blazor.WindowChrome.TitleId.set -> void
+Kazo.Os.Windowing.Blazor.WindowChrome.Window.get -> Kazo.Os.Windowing.Abstractions.WindowRuntimeState!
+Kazo.Os.Windowing.Blazor.WindowChrome.Window.set -> void
+Kazo.Os.Windowing.Blazor.WindowChrome.WindowChrome() -> void
+Kazo.Os.Windowing.Blazor.WindowHost
+Kazo.Os.Windowing.Blazor.WindowHost.ChildContent.get -> Microsoft.AspNetCore.Components.RenderFragment?
+Kazo.Os.Windowing.Blazor.WindowHost.ChildContent.set -> void
+Kazo.Os.Windowing.Blazor.WindowHost.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Windowing.Blazor.WindowHost.IsInteractionBlocked.get -> bool
+Kazo.Os.Windowing.Blazor.WindowHost.IsInteractionBlocked.set -> void
+Kazo.Os.Windowing.Blazor.WindowHost.OnBack.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Windowing.Abstractions.WindowId>
+Kazo.Os.Windowing.Blazor.WindowHost.OnBack.set -> void
+Kazo.Os.Windowing.Blazor.WindowHost.OnClose.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Windowing.Abstractions.WindowId>
+Kazo.Os.Windowing.Blazor.WindowHost.OnClose.set -> void
+Kazo.Os.Windowing.Blazor.WindowHost.OnFocus.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Windowing.Abstractions.WindowId>
+Kazo.Os.Windowing.Blazor.WindowHost.OnFocus.set -> void
+Kazo.Os.Windowing.Blazor.WindowHost.OnGesture.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Windowing.Abstractions.WindowCommand!>
+Kazo.Os.Windowing.Blazor.WindowHost.OnGesture.set -> void
+Kazo.Os.Windowing.Blazor.WindowHost.OnMinimize.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Windowing.Abstractions.WindowId>
+Kazo.Os.Windowing.Blazor.WindowHost.OnMinimize.set -> void
+Kazo.Os.Windowing.Blazor.WindowHost.OnToggleMaximize.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Windowing.Abstractions.WindowId>
+Kazo.Os.Windowing.Blazor.WindowHost.OnToggleMaximize.set -> void
+Kazo.Os.Windowing.Blazor.WindowHost.OnWindowMenu.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Windowing.Blazor.WindowMenuRequest!>
+Kazo.Os.Windowing.Blazor.WindowHost.OnWindowMenu.set -> void
+Kazo.Os.Windowing.Blazor.WindowHost.Overlay.get -> Microsoft.AspNetCore.Components.RenderFragment?
+Kazo.Os.Windowing.Blazor.WindowHost.Overlay.set -> void
+Kazo.Os.Windowing.Blazor.WindowHost.PeekState.get -> Kazo.Os.Windowing.Blazor.WindowPeekState
+Kazo.Os.Windowing.Blazor.WindowHost.PeekState.set -> void
+Kazo.Os.Windowing.Blazor.WindowHost.ShowChrome.get -> bool
+Kazo.Os.Windowing.Blazor.WindowHost.ShowChrome.set -> void
+Kazo.Os.Windowing.Blazor.WindowHost.Window.get -> Kazo.Os.Windowing.Abstractions.WindowRuntimeState!
+Kazo.Os.Windowing.Blazor.WindowHost.Window.set -> void
+Kazo.Os.Windowing.Blazor.WindowHost.WindowHost() -> void
+Kazo.Os.Windowing.Blazor.WindowLayers
+Kazo.Os.Windowing.Blazor.WindowLayers.Changed -> System.Action?
+Kazo.Os.Windowing.Blazor.WindowLayers.Displays.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Windowing.Abstractions.DisplayId>!
+Kazo.Os.Windowing.Blazor.WindowLayers.TryGetLayer(Kazo.Os.Windowing.Abstractions.DisplayId displayId, out Microsoft.AspNetCore.Components.ElementReference layer) -> bool
+Kazo.Os.Windowing.Blazor.WindowLayers.WindowLayers() -> void
+Kazo.Os.Windowing.Blazor.WindowMenuKind
+Kazo.Os.Windowing.Blazor.WindowMenuKind.MaximizeButton = 1 -> Kazo.Os.Windowing.Blazor.WindowMenuKind
+Kazo.Os.Windowing.Blazor.WindowMenuKind.Window = 0 -> Kazo.Os.Windowing.Blazor.WindowMenuKind
+Kazo.Os.Windowing.Blazor.WindowMenuRequest
+Kazo.Os.Windowing.Blazor.WindowMenuRequest.<Clone>$() -> Kazo.Os.Windowing.Blazor.WindowMenuRequest!
+Kazo.Os.Windowing.Blazor.WindowMenuRequest.ClientX.get -> double?
+Kazo.Os.Windowing.Blazor.WindowMenuRequest.ClientX.init -> void
+Kazo.Os.Windowing.Blazor.WindowMenuRequest.ClientY.get -> double?
+Kazo.Os.Windowing.Blazor.WindowMenuRequest.ClientY.init -> void
+Kazo.Os.Windowing.Blazor.WindowMenuRequest.Deconstruct(out Kazo.Os.Windowing.Abstractions.WindowId WindowId, out double? ClientX, out double? ClientY) -> void
+Kazo.Os.Windowing.Blazor.WindowMenuRequest.Equals(Kazo.Os.Windowing.Blazor.WindowMenuRequest? other) -> bool
+Kazo.Os.Windowing.Blazor.WindowMenuRequest.Kind.get -> Kazo.Os.Windowing.Blazor.WindowMenuKind
+Kazo.Os.Windowing.Blazor.WindowMenuRequest.Kind.init -> void
+Kazo.Os.Windowing.Blazor.WindowMenuRequest.WindowId.get -> Kazo.Os.Windowing.Abstractions.WindowId
+Kazo.Os.Windowing.Blazor.WindowMenuRequest.WindowId.init -> void
+Kazo.Os.Windowing.Blazor.WindowMenuRequest.WindowMenuRequest(Kazo.Os.Windowing.Abstractions.WindowId WindowId, double? ClientX, double? ClientY) -> void
+Kazo.Os.Windowing.Blazor.WindowPeekState
+Kazo.Os.Windowing.Blazor.WindowPeekState.None = 0 -> Kazo.Os.Windowing.Blazor.WindowPeekState
+Kazo.Os.Windowing.Blazor.WindowPeekState.SeeThrough = 2 -> Kazo.Os.Windowing.Blazor.WindowPeekState
+Kazo.Os.Windowing.Blazor.WindowPeekState.Shown = 1 -> Kazo.Os.Windowing.Blazor.WindowPeekState
+Kazo.Os.Windowing.Blazor.WindowPortal
+Kazo.Os.Windowing.Blazor.WindowPortal.ChildContent.get -> Microsoft.AspNetCore.Components.RenderFragment?
+Kazo.Os.Windowing.Blazor.WindowPortal.ChildContent.set -> void
+Kazo.Os.Windowing.Blazor.WindowPortal.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Windowing.Blazor.WindowPortal.Target.get -> Microsoft.AspNetCore.Components.ElementReference?
+Kazo.Os.Windowing.Blazor.WindowPortal.Target.set -> void
+Kazo.Os.Windowing.Blazor.WindowPortal.WindowPortal() -> void
+Kazo.Os.Windowing.Blazor.WindowSurface
+Kazo.Os.Windowing.Blazor.WindowSurface.Dispose() -> void
+Kazo.Os.Windowing.Blazor.WindowSurface.Runtime.get -> Kazo.Os.Windowing.Core.WindowRuntime!
+Kazo.Os.Windowing.Blazor.WindowSurface.Runtime.set -> void
+Kazo.Os.Windowing.Blazor.WindowSurface.WindowContent.get -> Microsoft.AspNetCore.Components.RenderFragment<Kazo.Os.Windowing.Abstractions.WindowRuntimeState!>?
+Kazo.Os.Windowing.Blazor.WindowSurface.WindowContent.set -> void
+Kazo.Os.Windowing.Blazor.WindowSurface.WindowSurface() -> void
+Kazo.Os.Windowing.Blazor._Imports
+Kazo.Os.Windowing.Blazor._Imports.Execute() -> void
+Kazo.Os.Windowing.Blazor._Imports._Imports() -> void
+override Kazo.Os.Windowing.Blazor.DesktopArea.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+override Kazo.Os.Windowing.Blazor.DesktopArea.OnParametersSet() -> void
+override Kazo.Os.Windowing.Blazor.SingleSurfaceArea.OnParametersSetAsync() -> System.Threading.Tasks.Task!
+override Kazo.Os.Windowing.Blazor.WindowChrome.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+override Kazo.Os.Windowing.Blazor.WindowHost.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+override Kazo.Os.Windowing.Blazor.WindowHost.OnParametersSet() -> void
+override Kazo.Os.Windowing.Blazor.WindowMenuRequest.Equals(object? obj) -> bool
+override Kazo.Os.Windowing.Blazor.WindowMenuRequest.GetHashCode() -> int
+override Kazo.Os.Windowing.Blazor.WindowMenuRequest.ToString() -> string!
+override Kazo.Os.Windowing.Blazor.WindowSurface.OnParametersSet() -> void
+static Kazo.Os.Windowing.Blazor.WindowMenuRequest.operator !=(Kazo.Os.Windowing.Blazor.WindowMenuRequest? left, Kazo.Os.Windowing.Blazor.WindowMenuRequest? right) -> bool
+static Kazo.Os.Windowing.Blazor.WindowMenuRequest.operator ==(Kazo.Os.Windowing.Blazor.WindowMenuRequest? left, Kazo.Os.Windowing.Blazor.WindowMenuRequest? right) -> bool
+~override Kazo.Os.Windowing.Blazor.DesktopArea.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Windowing.Blazor.SingleSurfaceArea.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Windowing.Blazor.WindowChrome.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Windowing.Blazor.WindowHost.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Windowing.Blazor.WindowSurface.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

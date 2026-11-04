@@ -15,11 +15,11 @@ La clé d'accès s'ajoute au mot de passe : le compte garde son mot de passe
 
 | Couche | Fichier | Rôle |
 | --- | --- | --- |
-| Modèle | `Shared/HackerOs.Simulation.Abstractions/Sessions/LocalPasskeyCredential.cs` | Une clé d'accès d'un compte : id, clé publique SPKI, algorithme (ES256 `-7` ou RS256 `-257`), nom, compteur, dates, sel PRF. `LocalUser.Passkeys` les porte. |
+| Modèle | `Shared/Kazo.Os.Simulation.Abstractions/Sessions/LocalPasskeyCredential.cs` | Une clé d'accès d'un compte : id, clé publique SPKI, algorithme (ES256 `-7` ou RS256 `-257`), nom, compteur, dates, sel PRF. `LocalUser.Passkeys` les porte. |
 | Dépôt | `ILocalUserRepository.SetPasskeysAsync` ; `InMemoryLocalUserRepository`, `IndexedDbLocalUserRepository` | Le magasin `users` d'IndexedDB garde un tableau `passkeys` par compte (sans changement de version du schéma). |
 | Vérification | `Platform.Core/Sessions/PasskeyService.cs`, `PasskeyResponseChecks.cs` | Défi, contrôles, compteur, journal `auth.log` (`passkey.add`, `passkey.verify`, `passkey.remove`). |
 | Contrat navigateur | `Platform.Core/Sessions/PasskeyContracts.cs` (`IPasskeyAuthenticator`) | Ce que la page fournit : environnement, création, assertion, vérification de signature. |
-| Pont navigateur | `Infrastructure.Browser/wwwroot/webAuthn.js`, `OS/HackerOs.Ecosystem.Host/Passkeys/BrowserPasskeyAuthenticator.cs` | `navigator.credentials.create`/`get` et `crypto.subtle.verify` ; les erreurs WebAuthn deviennent des exceptions .NET. |
+| Pont navigateur | `Infrastructure.Browser/wwwroot/webAuthn.js`, `OS/Kazo.Os.Ecosystem.Host/Passkeys/BrowserPasskeyAuthenticator.cs` | `navigator.credentials.create`/`get` et `crypto.subtle.verify` ; les erreurs WebAuthn deviennent des exceptions .NET. |
 | Session | `LocalSessionService.LoginWithPasskeyAsync` | Connexion : vérifie la clé, ouvre la session, puis le trousseau par la clé. |
 | Trousseau | `Platform.Core/Keyring/UserKeyringService.cs`, `KeyringFileFormat.cs` | Format 2 à emplacements ([`sensitive-settings.md`](sensitive-settings.md#2-trousseau-de-connexion)). |
 | Administrateur | `AdminElevationVerifier.VerifyWithPasskeyAsync`, `AdministratorAuthenticationAgent.PasskeyVerifier` | Confirmation administrateur par clé d'accès ([`admin-authentication-agent.md`](admin-authentication-agent.md)). |
@@ -78,7 +78,7 @@ lève `InvalidOperationException` et écrit `passkey.verify` refusé.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Sessions/PasskeyServiceTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/Sessions/PasskeyServiceTests.cs` :
   enregistrement, connexion qui ouvre le trousseau, PRF à la création, clé sans
   PRF, compteur et date, réponses falsifiées (défi, origine, relying party,
   signature, compteur cloné, présence absente), demande fermée, page sans
@@ -86,11 +86,11 @@ lève `InvalidOperationException` et écrit `passkey.verify` refusé.
   changement de mot de passe, migration du trousseau format 1.
   `FakePasskeyAuthenticator` y produit de vraies réponses WebAuthn (clé P-256,
   signature DER, PRF par HMAC).
-- `Tests/HackerOs.Platform.Core.Tests/Sessions/PasskeySignatureFormatTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/Sessions/PasskeySignatureFormatTests.cs` :
   conversion DER vers `r‖s`, entiers courts, DER mal formé.
-- `Tests/HackerOs.Platform.Core.Tests/Elevation/AdministratorAuthenticationAgentTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/Elevation/AdministratorAuthenticationAgentTests.cs` :
   demande fermée qui ne coûte pas d'essai, clé d'accès qui approuve.
-- `Tests/HackerOs.Infrastructure.Browser.Tests/IndexedDbLocalUserRepositoryTests.cs` :
+- `Tests/Kazo.Os.Infrastructure.Browser.Tests/IndexedDbLocalUserRepositoryTests.cs` :
   aller-retour des clés d'accès dans IndexedDB.
 - Le pont `webAuthn.js` demande un vrai authentificateur : il n'a pas de test
   automatique ; il se vérifie à la main dans Chrome (authentificateur virtuel

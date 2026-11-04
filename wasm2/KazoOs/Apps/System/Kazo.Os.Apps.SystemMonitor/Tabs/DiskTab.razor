@@ -1,0 +1,70 @@
+@namespace Kazo.Os.Apps.SystemMonitor.Tabs
+@inherits Kazo.Os.AppSdk.Blazor.HackComponentBase
+
+<div class="disk">
+    <section>
+        <h3>@L["Disk.Space"] <span class="sysmon-source">HackDriveInfo</span></h3>
+        @if (Drives.Count == 0)
+        {
+            <p class="sysmon-muted">@L["Disk.NoDrive"]</p>
+        }
+        <div class="disk-drives">
+            @foreach (HackDriveInfo drive in Drives)
+            {
+                long used = Math.Max(0, drive.TotalSize - drive.AvailableFreeSpace);
+                double percent = drive.TotalSize <= 0 ? 0 : used * 100d / drive.TotalSize;
+                <div class="sysmon-card disk-drive">
+                    <div class="disk-drive-header">
+                        <span class="disk-drive-name">@drive.Name</span>
+                        <span class="disk-drive-format">@drive.VolumeLabel · @drive.DriveFormat</span>
+                    </div>
+                    <svg class="disk-bar" viewBox="0 0 100 6" preserveAspectRatio="none" role="img" aria-label="@L["Disk.UsedAria", Units.Percent(percent, Formats)]">
+                        <rect class="disk-bar-track" x="0" y="0" width="100" height="6" />
+                        <rect class="disk-bar-fill @(percent >= 90 ? "critical" : percent >= 75 ? "warning" : null)" x="0" y="0" width="@BarWidth(percent)" height="6" />
+                    </svg>
+                    <div class="disk-drive-numbers">
+                        <span>@L["Disk.Used", Units.Bytes(used, Formats), Units.Percent(percent, Formats)]</span>
+                        <span>@L["Disk.Free", Units.Bytes(drive.AvailableFreeSpace, Formats), Units.Bytes(drive.TotalSize, Formats)]</span>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+
+    @foreach (DiskActivity disk in Metrics.Disks)
+    {
+        <section>
+            <h3>@L["Disk.Activity", disk.Name] <span class="sysmon-source">/proc/diskstats</span></h3>
+            <div class="disk-activity">
+                <HackLineChart Title="@L["Chart.Throughput", disk.Name]"
+                               Series="@([new HackChartSeries(L["Disk.Series.Read"], disk.ReadPerSecond.Values), new HackChartSeries(L["Disk.Series.Write"], disk.WritePerSecond.Values)])"
+                               MinimumScale="4096"
+                               Size="HackChartSize.Large"
+                               ValueFormatter="FormatRate" />
+                <HackLineChart Title="@L["Disk.ActiveTime"]"
+                               Series="@([new HackChartSeries(L["Disk.Series.Busy"], disk.BusyPercent.Values)])"
+                               Maximum="100"
+                               Filled="true"
+                               ValueFormatter="FormatPercent" />
+            </div>
+            @if (disk.Counters is { } counters)
+            {
+                <table class="sysmon-table disk-counters">
+                    <thead>
+                        <tr><th></th><th class="num">@L["Disk.Requests"]</th><th class="num">@L["Common.Bytes"]</th><th class="num">@L["Disk.Time"]</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>@L["Disk.Reads"]</td><td class="num">@Units.Count(counters.ReadsCompleted, Formats)</td><td class="num">@Units.Bytes(counters.BytesRead, Formats)</td><td class="num">@L["Disk.Ms", Units.Count(counters.MillisecondsReading, Formats)]</td></tr>
+                        <tr><td>@L["Disk.Writes"]</td><td class="num">@Units.Count(counters.WritesCompleted, Formats)</td><td class="num">@Units.Bytes(counters.BytesWritten, Formats)</td><td class="num">@L["Disk.Ms", Units.Count(counters.MillisecondsWriting, Formats)]</td></tr>
+                        <tr><td>@L["Disk.InFlight"]</td><td class="num">@counters.IosInProgress</td><td class="num">—</td><td class="num">@L["Disk.MsBusy", Units.Count(counters.MillisecondsDoingIo, Formats)]</td></tr>
+                    </tbody>
+                </table>
+            }
+        </section>
+    }
+
+    @if (Metrics.Disks.Count == 0)
+    {
+        <p class="sysmon-muted">@L["Disk.NoDisk"]</p>
+    }
+</div>

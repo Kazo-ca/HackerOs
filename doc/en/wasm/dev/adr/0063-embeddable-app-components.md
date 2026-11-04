@@ -19,12 +19,12 @@ Accepted on 2026-10-11.
   Problems) and its terminals are those of the Terminal app, embedded by
   contract, instead of `TerminalPanel` referenced directly.
 - **Respects** ADR 0055: the editor uses only the public SDK; it no longer
-  references `HackerOs.AppSdk.Terminal`.
+  references `Kazo.Os.AppSdk.Terminal`.
 
 ## Context
 
 Until now, an app that wanted a terminal referenced the library
-`HackerOs.AppSdk.Terminal` and drew a `TerminalPanel` itself. The
+`Kazo.Os.AppSdk.Terminal` and drew a `TerminalPanel` itself. The
 editor's terminal and the console's had the same code, but
 no link to the Terminal app: nothing made it possible to drive it
 (change folder, launch a command, read the output), and another app
@@ -56,7 +56,7 @@ generated manifest carries `components: [{ contract, assembly, type }]`.
 
 ### 2. The component inherits from `HackEmbeddableComponent`
 
-The component derives from `HackEmbeddableComponent` (`HackerOs.AppSdk.Blazor.Components`),
+The component derives from `HackEmbeddableComponent` (`Kazo.Os.AppSdk.Blazor.Components`),
 which derives from `HackComponentBase`. It receives:
 
 - the context of the **host** window (cascading parameter `AppContext`): it
@@ -90,7 +90,7 @@ fragment.
 ### 4. The first contract: `hackeros.terminal`
 
 `HackComponentContracts.Terminal` designates `IHackTerminal` and
-`HackTerminalOptions` (`HackerOs.AppSdk.Components`). The Terminal app
+`HackTerminalOptions` (`Kazo.Os.AppSdk.Components`). The Terminal app
 registers it with `TerminalEmbed`, which renders the same `TerminalPanel` as its
 window; `TerminalPanel` implements `IHackTerminal`:
 
@@ -134,7 +134,7 @@ Ctrl+J shows or hides it; Ctrl+` goes to the Terminal tab.
 
 ## Rejected alternatives
 
-- **Referencing `HackerOs.AppSdk.Terminal` in each app** (what exists): no
+- **Referencing `Kazo.Os.AppSdk.Terminal` in each app** (what exists): no
   control, and nothing is registered with the OS.
 - **A global DI service per component**: each component would have to be
   registered in the ecosystem and all apps loaded at startup; the

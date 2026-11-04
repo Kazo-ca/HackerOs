@@ -6,12 +6,12 @@ Le contrat côté apps et commandes (`TerminalPanel`, `IHackTerminal`, lecture d
 
 ## Objet
 
-`TerminalPanel` (`Shared/HackerOs.AppSdk.Terminal`) affiche son shell dans un
+`TerminalPanel` (`Shared/Kazo.Os.AppSdk.Terminal`) affiche son shell dans un
 vrai terminal à grille de caractères, xterm.js, la librairie de la version
 legacy (ADR 0061). Les commandes peuvent écrire des couleurs ANSI, `nano`
 utilise l'écran alternatif, et le rendu ressemble à un terminal Linux.
 
-La console (`Apps/System/HackerOs.Apps.Terminal`) utilise `TerminalTabs`.
+La console (`Apps/System/Kazo.Os.Apps.Terminal`) utilise `TerminalTabs`.
 L'éditeur de code n'utilise plus `TerminalPanel` directement : il embarque le
 terminal que l'app Terminal enregistre pour le contrat `hackeros.terminal`
 (`TerminalEmbed`, ADR 0063, [`embedded-components.md`](../framework/embedded-components.md)).
@@ -130,7 +130,7 @@ chaque commande, et un redimensionnement envoie `TerminalKey.Resize`.
 ## Mettre à jour xterm.js
 
 ```bash
-cd wasm2/HackerOs/Shared/HackerOs.AppSdk.Terminal
+cd wasm2/KazoOs/Shared/Kazo.Os.AppSdk.Terminal
 # modifier les versions dans package.json
 npm install && npm run build
 ```
@@ -139,11 +139,11 @@ Puis versionner `package-lock.json` et `wwwroot/xterm/`.
 
 ## Tests
 
-- `Tests/HackerOs.AppSdk.Terminal.Tests/TerminalInputDecoderTests.cs`
-- `Tests/HackerOs.AppSdk.Terminal.Tests/TerminalLineEditorTests.cs`
-- `Tests/HackerOs.AppSdk.Terminal.Tests/TerminalAnsiTests.cs`
-- `Tests/HackerOs.AppSdk.Terminal.Tests/TerminalInputReaderTests.cs` (entrée standard)
-- `Tests/HackerOs.Commands.Nano.Tests/NanoCommandTests.cs` (Write Out pré-rempli, couper/coller, recherche, défilement horizontal)
+- `Tests/Kazo.Os.AppSdk.Terminal.Tests/TerminalInputDecoderTests.cs`
+- `Tests/Kazo.Os.AppSdk.Terminal.Tests/TerminalLineEditorTests.cs`
+- `Tests/Kazo.Os.AppSdk.Terminal.Tests/TerminalAnsiTests.cs`
+- `Tests/Kazo.Os.AppSdk.Terminal.Tests/TerminalInputReaderTests.cs` (entrée standard)
+- `Tests/Kazo.Os.Commands.Nano.Tests/NanoCommandTests.cs` (Write Out pré-rempli, couper/coller, recherche, défilement horizontal)
 - `VirtualScreen.cs` (dans le même projet) : petit écran à grille de
   caractères qui applique les séquences écrites, pour vérifier où finissent le
   texte et le curseur (repli, retour au début du bloc de l'invite, cadres).

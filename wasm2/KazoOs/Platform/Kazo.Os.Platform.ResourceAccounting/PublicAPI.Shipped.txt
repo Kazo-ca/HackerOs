@@ -1,0 +1,62 @@
+#nullable enable
+Kazo.Os.Platform.ResourceAccounting.ContextSwitchDispatcher
+Kazo.Os.Platform.ResourceAccounting.ContextSwitchDispatcher.ContextSwitchDispatcher() -> void
+Kazo.Os.Platform.ResourceAccounting.ContextSwitchDispatcher.ObserverCount.get -> int
+Kazo.Os.Platform.ResourceAccounting.ContextSwitchDispatcher.OnContextSwitch(in Kazo.Os.Simulation.Abstractions.Processes.ExecutionContextSwitch contextSwitch) -> void
+Kazo.Os.Platform.ResourceAccounting.ContextSwitchDispatcher.OnModeSwitch(Kazo.Os.Simulation.Abstractions.Processes.ProcessId process, bool toKernel, bool threadContextChanged) -> void
+Kazo.Os.Platform.ResourceAccounting.ContextSwitchDispatcher.Register(Kazo.Os.Simulation.Abstractions.Processes.IExecutionContextSwitchObserver! observer) -> System.IDisposable!
+Kazo.Os.Platform.ResourceAccounting.ContextSwitchHook
+Kazo.Os.Platform.ResourceAccounting.MeasuredCpuTimeAccountant
+Kazo.Os.Platform.ResourceAccounting.MeasuredCpuTimeAccountant.CompositorSliceBudget.get -> System.TimeSpan
+Kazo.Os.Platform.ResourceAccounting.MeasuredCpuTimeAccountant.IsMeasuring.get -> bool
+Kazo.Os.Platform.ResourceAccounting.MeasuredCpuTimeAccountant.MeasuredCpuTimeAccountant(System.TimeSpan unresponsiveThreshold) -> void
+Kazo.Os.Platform.ResourceAccounting.MeasuredCpuTimeAccountant.MeasuredCpuTimeAccountant(System.TimeSpan unresponsiveThreshold, System.Func<long>! clock, long frequency, System.TimeSpan? compositorSliceBudget = null) -> void
+Kazo.Os.Platform.ResourceAccounting.MeasuredCpuTimeAccountant.OnContextSwitch(in Kazo.Os.Simulation.Abstractions.Processes.ExecutionContextSwitch contextSwitch) -> void
+Kazo.Os.Platform.ResourceAccounting.MeasuredCpuTimeAccountant.OnModeSwitch(Kazo.Os.Simulation.Abstractions.Processes.ProcessId process, bool toKernel, bool threadContextChanged) -> void
+Kazo.Os.Platform.ResourceAccounting.MeasuredCpuTimeAccountant.OutOfFrameTime.get -> System.TimeSpan
+Kazo.Os.Platform.ResourceAccounting.MeasuredCpuTimeAccountant.TryGetCpuUsage(Kazo.Os.Simulation.Abstractions.Processes.ProcessId pid, out double coreEquivalents) -> bool
+Kazo.Os.Platform.ResourceAccounting.MeasuredCpuTimeAccountant.TryGetProcessTimes(Kazo.Os.Simulation.Abstractions.Processes.ProcessId pid, out Kazo.Os.Simulation.Abstractions.Processes.ProcessCpuTimes times) -> bool
+Kazo.Os.Platform.ResourceAccounting.MeasuredCpuTimeAccountant.TryGetThreadTimes(out Kazo.Os.Simulation.Abstractions.Processes.MeasuredThreadCpuTimes times) -> bool
+Kazo.Os.Platform.ResourceAccounting.MeasuredCpuTimeAccountant.UnresponsiveThreshold.get -> System.TimeSpan
+Kazo.Os.Platform.ResourceAccounting.Memory.AllocationTracker
+Kazo.Os.Platform.ResourceAccounting.Memory.AllocationTracker.AllocationTracker(Kazo.Os.Platform.ResourceAccounting.Memory.IManagedHeapProbe! probe) -> void
+Kazo.Os.Platform.ResourceAccounting.Memory.AllocationTracker.FlushCurrentThread() -> void
+Kazo.Os.Platform.ResourceAccounting.Memory.AllocationTracker.GetAllocatedBytes(Kazo.Os.Simulation.Abstractions.Processes.ProcessId pid) -> long
+Kazo.Os.Platform.ResourceAccounting.Memory.AllocationTracker.HasRun(Kazo.Os.Simulation.Abstractions.Processes.ProcessId pid) -> bool
+Kazo.Os.Platform.ResourceAccounting.Memory.AllocationTracker.OnContextSwitch(in Kazo.Os.Simulation.Abstractions.Processes.ExecutionContextSwitch contextSwitch) -> void
+Kazo.Os.Platform.ResourceAccounting.Memory.AllocationTracker.OsAllocatedBytes.get -> long
+Kazo.Os.Platform.ResourceAccounting.Memory.AllocationTracker.Retain(System.Collections.Generic.IReadOnlySet<long>! live) -> void
+Kazo.Os.Platform.ResourceAccounting.Memory.GcManagedHeapProbe
+Kazo.Os.Platform.ResourceAccounting.Memory.GcManagedHeapProbe.CollectionCount.get -> int
+Kazo.Os.Platform.ResourceAccounting.Memory.GcManagedHeapProbe.GetAllocatedBytesForCurrentThread() -> long
+Kazo.Os.Platform.ResourceAccounting.Memory.GcManagedHeapProbe.HeapSizeBytes.get -> long
+Kazo.Os.Platform.ResourceAccounting.Memory.IManagedHeapProbe
+Kazo.Os.Platform.ResourceAccounting.Memory.IManagedHeapProbe.CollectionCount.get -> int
+Kazo.Os.Platform.ResourceAccounting.Memory.IManagedHeapProbe.GetAllocatedBytesForCurrentThread() -> long
+Kazo.Os.Platform.ResourceAccounting.Memory.IManagedHeapProbe.HeapSizeBytes.get -> long
+Kazo.Os.Platform.ResourceAccounting.Memory.KernelMemoryLedger
+Kazo.Os.Platform.ResourceAccounting.Memory.KernelMemoryLedger.Charge(Kazo.Os.Simulation.Abstractions.Processes.ProcessId pid, Kazo.Os.Simulation.Abstractions.Processes.KernelMemoryKind kind, long bytes = 0) -> Kazo.Os.Simulation.Abstractions.Processes.KernelMemoryCharge!
+Kazo.Os.Platform.ResourceAccounting.Memory.KernelMemoryLedger.GetBytes(Kazo.Os.Simulation.Abstractions.Processes.ProcessId pid) -> long
+Kazo.Os.Platform.ResourceAccounting.Memory.KernelMemoryLedger.GetBytes(Kazo.Os.Simulation.Abstractions.Processes.ProcessId pid, Kazo.Os.Simulation.Abstractions.Processes.KernelMemoryKind kind) -> long
+Kazo.Os.Platform.ResourceAccounting.Memory.KernelMemoryLedger.IsTracking.get -> bool
+Kazo.Os.Platform.ResourceAccounting.Memory.KernelMemoryLedger.KernelMemoryLedger() -> void
+Kazo.Os.Platform.ResourceAccounting.Memory.KernelMemoryLedger.Retain(System.Collections.Generic.IReadOnlySet<long>! live) -> void
+Kazo.Os.Platform.ResourceAccounting.Memory.MeasuredMemoryAccountant
+Kazo.Os.Platform.ResourceAccounting.Memory.MeasuredMemoryAccountant.IsMeasuring.get -> bool
+Kazo.Os.Platform.ResourceAccounting.Memory.MeasuredMemoryAccountant.MeasuredMemoryAccountant(Kazo.Os.Platform.ResourceAccounting.Memory.AllocationTracker! allocations, Kazo.Os.Platform.ResourceAccounting.Memory.KernelMemoryLedger! kernel, System.Collections.Generic.IReadOnlyDictionary<string!, Kazo.Os.App.Abstractions.AppImage!>! images, Kazo.Os.Platform.ResourceAccounting.Memory.IManagedHeapProbe! probe, System.TimeProvider? time = null) -> void
+Kazo.Os.Platform.ResourceAccounting.Memory.MeasuredMemoryAccountant.TryGetProcessMemory(Kazo.Os.Simulation.Abstractions.Processes.ProcessRecord! process, System.Collections.Generic.IReadOnlyList<Kazo.Os.Simulation.Abstractions.Processes.ProcessRecord!>! active, out Kazo.Os.Simulation.Abstractions.Processes.ProcessMemoryUsage usage) -> bool
+Kazo.Os.Platform.ResourceAccounting.Memory.MeasuredMemoryAccountant.TryGetSystemMemory(System.Collections.Generic.IReadOnlyList<Kazo.Os.Simulation.Abstractions.Processes.ProcessRecord!>! active, out Kazo.Os.Simulation.Abstractions.Processes.SystemMemoryUsage usage) -> bool
+Kazo.Os.Platform.ResourceAccounting.Memory.MemoryAccountingConstants
+Kazo.Os.Platform.ResourceAccounting.ResourceAccountingFeatures
+const Kazo.Os.Platform.ResourceAccounting.Memory.MemoryAccountingConstants.WindowBytes = 524288 -> long
+const Kazo.Os.Platform.ResourceAccounting.ResourceAccountingFeatures.CpuSwitchName = "Kazo.Os.ResourceAccounting.Cpu.IsSupported" -> string!
+const Kazo.Os.Platform.ResourceAccounting.ResourceAccountingFeatures.MemorySwitchName = "Kazo.Os.ResourceAccounting.Memory.IsSupported" -> string!
+static Kazo.Os.Platform.ResourceAccounting.ContextSwitchHook.Install(Kazo.Os.Simulation.Abstractions.Processes.IExecutionContextSwitchObserver! observer) -> System.IDisposable!
+static Kazo.Os.Platform.ResourceAccounting.ContextSwitchHook.IsInstalled.get -> bool
+static Kazo.Os.Platform.ResourceAccounting.Memory.GcManagedHeapProbe.Instance.get -> Kazo.Os.Platform.ResourceAccounting.Memory.GcManagedHeapProbe!
+static Kazo.Os.Platform.ResourceAccounting.ResourceAccountingFeatures.IsCpuAccountingSupported.get -> bool
+static Kazo.Os.Platform.ResourceAccounting.ResourceAccountingFeatures.IsMemoryAccountingSupported.get -> bool
+static readonly Kazo.Os.Platform.ResourceAccounting.MeasuredCpuTimeAccountant.DefaultCompositorSliceBudget -> System.TimeSpan
+static readonly Kazo.Os.Platform.ResourceAccounting.MeasuredCpuTimeAccountant.LongTaskThreshold -> System.TimeSpan
+static readonly Kazo.Os.Platform.ResourceAccounting.MeasuredCpuTimeAccountant.UsageWindow -> System.TimeSpan
+static readonly Kazo.Os.Platform.ResourceAccounting.Memory.MemoryAccountingConstants.ResidentHalfLife -> System.TimeSpan

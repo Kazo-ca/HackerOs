@@ -69,7 +69,7 @@ AppIntentDispatcher (passe le principal à chaque résolution)
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Intents/UserFileAssociationTests.cs`:
+- `Tests/Kazo.Os.Platform.Core.Tests/Intents/UserFileAssociationTests.cs`:
   layer order, user by user, stale choice, separate `open` and `edit`, `0644`
   file and reset, invalid file kept, refusals (`InvalidTarget`, `InvalidAction`,
   `AppNotFound`, `AppCannotHandle`), scheme, "Open with", list of defaults.
@@ -77,7 +77,7 @@ AppIntentDispatcher (passe le principal à chaque résolution)
 - `AppCatalogGatewayTests`: capabilities and row order.
 - `XdgMimeCommandTests`, `xdg-mime` parity in `CommandParityTests`,
   `WireCodecIntentTests.Default_handlers_keep_target_action_app_and_layer`.
-- `HackerOs.Apps.Settings.Tests/FileAssociationsPanelTests.cs`: panel rows.
+- `Kazo.Os.Apps.Settings.Tests/FileAssociationsPanelTests.cs`: panel rows.
 
 ## Task list
 

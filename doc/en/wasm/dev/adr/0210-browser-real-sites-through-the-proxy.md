@@ -4,7 +4,7 @@
 
 ## Status
 
-Accepted on 2026-10-30. Issue [#266](https://github.com/Kazo-ca/HackerOs/issues/266)
+Accepted on 2026-10-30. Issue [#266](https://github.com/Kazo-ca/Os/issues/266)
 (`todo/base` series). Order of the sources decided by Benoit on 2026-10-29:
 simulated network and `.hack` sites, then the **HackerOS server's proxy** (this
 ADR), then a public proxy that can be turned off and the Wayback Machine (later,
@@ -45,7 +45,7 @@ The browser only showed the simulated network. The server relay already served
 - `BrowserApp.Capabilities` declares `network.real.access`.
 - This capability is dangerous. To avoid the approval prompt at first launch,
   even without a server, the host declares the Browser a system app
-  (`IsSystemApp="true"` in `HackerOs.Ecosystem.csproj`), like `curl` and `wget`.
+  (`IsSystemApp="true"` in `Kazo.Os.Ecosystem.csproj`), like `curl` and `wget`.
   It still does not ask for `filesystem.system.read`.
 - The server adds `org.hackeros.browser` to `DefaultGrantedApps` and to the
   shipped `appsettings.json`. An operator who wrote their own

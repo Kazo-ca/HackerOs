@@ -42,7 +42,7 @@ The `.trashinfo` format (tolerant reading, writing, `nom.N.ext` names) is in
 
 ## Commands
 
-In `Apps/Commands/HackerOs.Commands` (ADR 0051).
+In `Apps/Commands/Kazo.Os.Commands` (ADR 0051).
 
 ### `rm`
 
@@ -76,7 +76,7 @@ With no argument, `trash` prints help on the error output and returns 1.
 
 ## File explorer
 
-- **FileView** (`Shared/HackerOs.AppSdk.FileView` at the time, in the explorer since SDK 2.0, `FileControl/`) receives a
+- **FileView** (`Shared/Kazo.Os.AppSdk.FileView` at the time, in the explorer since SDK 2.0, `FileControl/`) receives a
   `DeleteRequested` parameter (`EventCallback<FileViewDeleteRequestedEventArgs>`).
   When the host supplies it, the Delete key, Shift+Delete and the context menu
   hand the deletion over to it (`Items`, `Permanent`) instead of deleting
@@ -91,7 +91,7 @@ With no argument, `trash` prints help on the error output and returns 1.
     delete with `HackFile`/`HackDirectory.DeleteAsync`;
   - errors (permissions, `/proc`) are displayed in the error strip.
 - A "Places" side panel offers **Home** and **Trash**. "Trash" displays
-  `TrashView` (`Apps/System/HackerOs.Apps.FileExplorer/TrashView.razor`) in
+  `TrashView` (`Apps/System/Kazo.Os.Apps.FileExplorer/TrashView.razor`) in
   place of the list; FileView stays mounted (hidden) and finds its folder again
   on return.
 - **TrashView** (derives from `HackComponentBase`, hence in the explorer's
@@ -105,7 +105,7 @@ With no argument, `trash` prints help on the error output and returns 1.
   to the trash (`FileTransfer.MoveToTrashAsync`, today `HackFileOperations.MoveToTrashAsync`). See
   [`file-explorer.md`](file-explorer.md).
 
-Fix along the way: `Shared/HackerOs.AppSdk.FileView/_Imports.razor` now imports
+Fix along the way: `Shared/Kazo.Os.AppSdk.FileView/_Imports.razor` now imports
 `Microsoft.AspNetCore.Components.Web`. Without it, `FileView.razor` emitted
 `@oncontextmenu` as a literal HTML attribute and opening the explorer displayed
 "An unhandled error has occurred" (seen when testing in the browser).
@@ -115,20 +115,20 @@ of the plan).
 
 ## Tests
 
-- `Tests/HackerOs.AppSdk.Tests/IO/HackTrashTests.cs`: `.trashinfo` format,
+- `Tests/Kazo.Os.AppSdk.Tests/IO/HackTrashTests.cs`: `.trashinfo` format,
   `0700`/`0600` permissions, colliding names, whole folders and size, refusals
   (root, home folder, trash), item already in the trash, virtual mount without
   residual `.trashinfo`, `sudo` to `/root`, listing (orphans, unknown origin,
   sort), restore (parents recreated, destination, never overwriting), deletion,
   emptying and log.
-- `Tests/HackerOs.Commands.Wave5.Tests/RmCommandTests.cs`: `rm` (trash,
+- `Tests/Kazo.Os.Commands.Wave5.Tests/RmCommandTests.cs`: `rm` (trash,
   `--permanent`, `-r`, `-f`, unknown option, `/proc`, revision conflict) and
   `trash` (put, list, restore by path and by name, rm, empty, help).
-- `Tests/HackerOs.Apps.FileExplorer.FileControl.Tests/FileViewTests.cs`: `DeleteRequested`
+- `Tests/Kazo.Os.Apps.FileExplorer.FileControl.Tests/FileViewTests.cs`: `DeleteRequested`
   receives the items and the `Permanent` flag.
-- `Tests/HackerOs.Ecosystem.Tests`: 41 built-in apps, 29 commands (45 and 33 since `3-shell-commands`).
+- `Tests/Kazo.Os.Ecosystem.Tests`: 41 built-in apps, 29 commands (45 and 33 since `3-shell-commands`).
 - Test doubles: `FakeAppLoggingGateway` (new) in
-  `HackerOs.Tests.Support`; `MinimalAppExecutionContext` accepts
+  `Kazo.Os.Tests.Support`; `MinimalAppExecutionContext` accepts
   `isRootElevated`.
 
 ## Task list

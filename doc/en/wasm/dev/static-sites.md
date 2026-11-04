@@ -44,11 +44,11 @@ Publish a folder as a website, as with IIS, Apache or nginx:
 
 | Element | Project | Role |
 |---|---|---|
-| `HackWebdApp`, `HackWebdService` | `Apps/System/HackerOs.Apps.WebServer` | The service: reconciliation of listeners, accept loop, logs. |
+| `HackWebdApp`, `HackWebdService` | `Apps/System/Kazo.Os.Apps.WebServer` | The service: reconciliation of listeners, accept loop, logs. |
 | `StaticFileHandler`, `WwwDataAccess`, `HackWebdLog` | same, `Daemon/` | Request handling, `www-data` permissions, log formats. |
 | `WebServerManagerApp`, `WebServerManagerWindow`, `WebSiteStore` | same, `Manager/` | The windowed app and its interface-free logic. |
-| `WebServerManagerApp.RegisterFileContextMenu`, `PublishSiteIntent` | `Apps/System/HackerOs.Apps.WebServer` | "Publish as a web site…" entry of the folder menus, registered by Web Server Manager (ADR 0151 §8, ADR 0159): `Directory` scope, a single folder, intent `org.hackeros.web-server-manager.publish-site.v1` received at launch or through `IntentReceived`. Was `PublishSiteContextMenuProvider`, then `FileExplorerMenuEntries.PublishSite`. |
-| `HostedSiteNameSource` | `Platform/HackerOs.Platform.Core/Network/Local` | Source 4 of the resolver (`IHostedSiteNameSource`, asynchronous). |
+| `WebServerManagerApp.RegisterFileContextMenu`, `PublishSiteIntent` | `Apps/System/Kazo.Os.Apps.WebServer` | "Publish as a web site…" entry of the folder menus, registered by Web Server Manager (ADR 0151 §8, ADR 0159): `Directory` scope, a single folder, intent `org.hackeros.web-server-manager.publish-site.v1` received at launch or through `IntentReceived`. Was `PublishSiteContextMenuProvider`, then `FileExplorerMenuEntries.PublishSite`. |
+| `HostedSiteNameSource` | `Platform/Kazo.Os.Platform.Core/Network/Local` | Source 4 of the resolver (`IHostedSiteNameSource`, asynchronous). |
 | `IAppLoggingGateway.AppendToLogFile`, `LogFileTarget.ForDaemon` | `Simulation.Abstractions`, `Platform.Core` | System daemon logs (ADR 0080 §3). |
 
 The service and the Manager are in **the same assembly**: the Manager drives
@@ -156,17 +156,17 @@ Save in the Manager and **Open in browser**.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.WorkerHost.Tests/StaticSitesTests.cs`: full OS
+- `Tests/Kazo.Os.Platform.WorkerHost.Tests/StaticSitesTests.cs`: full OS
   (processes on the main thread and in workers): user site served (type,
   default document, `404`, `nslookup`), `304` by `ETag`, `403` then folder
   listing after hot reload, refusal of a privileged port and log formats,
   system site on port 80 served as `www-data` (`403` on a `0600` file and on a
   home folder), `netstat`, `systemctl stop`.
-- `Tests/HackerOs.Apps.WebServer.Tests`: URL → file mapping (traversals
+- `Tests/Kazo.Os.Apps.WebServer.Tests`: URL → file mapping (traversals
   rejected), site states, suggestion of a site from a folder, log formats.
-- `Tests/HackerOs.AppSdk.Tests/Net/HackWebSiteFileTests.cs`: reading,
+- `Tests/Kazo.Os.AppSdk.Tests/Net/HackWebSiteFileTests.cs`: reading,
   validation and writing of `.site` files.
-- `Tests/HackerOs.Platform.Core.Tests/Diagnostics/DaemonLogFileTests.cs`:
+- `Tests/Kazo.Os.Platform.Core.Tests/Diagnostics/DaemonLogFileTests.cs`:
   `LogFileTarget.ForDaemon` and the "system apps only" rule.
 
 ## Task list

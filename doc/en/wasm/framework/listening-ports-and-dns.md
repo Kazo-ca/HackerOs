@@ -46,11 +46,11 @@ client (curl, navigateur, HackHttpClient)
 
 | Type | Project | Role |
 |---|---|---|
-| `AppKind.Web`, `AppExecutionHost.Web`, `WebAppManifest`, `WebAppUrls`, `WebBinding` | `HackerOs.App.Abstractions` | `web` kind, `web.urls` field, parsing and normalization of URLs and prefixes. |
-| `HackHttpListener`, `HackHttpListenerContext/Request/Response` | `HackerOs.AppSdk` (`Net/`) | HTTP listening modeled on `System.Net.HttpListener`. |
-| `WebServerAppBase` | `HackerOs.AppSdk` | Base of a web app: listens on its `Urls`, calls `ProcessRequestAsync` for each request. |
-| `HackIPGlobalProperties` | `HackerOs.AppSdk` (`Net/`) | `GetActiveTcpListenersAsync`, `GetActiveTcpListenerEndPointsAsync` (what `netstat` reads). |
-| `IAppNetworkGateway.ListenHttpAsync`, `GetTcpListenersAsync`, `IHackHttpListenerSocket`, `HackTcpListenerInfo` | `HackerOs.AppSdk` (`Net/`) | Gateway contract. |
+| `AppKind.Web`, `AppExecutionHost.Web`, `WebAppManifest`, `WebAppUrls`, `WebBinding` | `Kazo.Os.App.Abstractions` | `web` kind, `web.urls` field, parsing and normalization of URLs and prefixes. |
+| `HackHttpListener`, `HackHttpListenerContext/Request/Response` | `Kazo.Os.AppSdk` (`Net/`) | HTTP listening modeled on `System.Net.HttpListener`. |
+| `WebServerAppBase` | `Kazo.Os.AppSdk` | Base of a web app: listens on its `Urls`, calls `ProcessRequestAsync` for each request. |
+| `HackIPGlobalProperties` | `Kazo.Os.AppSdk` (`Net/`) | `GetActiveTcpListenersAsync`, `GetActiveTcpListenerEndPointsAsync` (what `netstat` reads). |
+| `IAppNetworkGateway.ListenHttpAsync`, `GetTcpListenersAsync`, `IHackHttpListenerSocket`, `HackTcpListenerInfo` | `Kazo.Os.AppSdk` (`Net/`) | Gateway contract. |
 | `ListeningPortTable`, `OsHttpListenerSocket` | `Platform.Core` (`Network/Local/`) | Socket table: binding, conflicts, routing, inodes, cleanup of dead processes. |
 | `HackDnsResolver` | `Platform.Core` (`Network/Local/`) | Local resolver with cache (30 simulated seconds). |
 | `WebAppActivator` | `Platform.Core` (`Network/Local/`) | On-demand activation, like systemd's socket activation. |
@@ -236,12 +236,12 @@ OS detection) on `lo` instead of `eth0`. A local ping answers in ~0.04 ms.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.WorkerHost.Tests/LocalNetworkTests.cs` (with and without
+- `Tests/Kazo.Os.Platform.WorkerHost.Tests/LocalNetworkTests.cs` (with and without
   a worker): on-demand activation, cookies, redirects, `POST`, shared web worker
   and its end, stop then restart, `netstat`, `/proc/net/tcp`,
   listening permissions, `EADDRINUSE`, connection refused, 400, `nslookup`,
   `/etc/hosts` priority, `.hack` never relayed, alias to a simulated host.
-- `Tests/HackerOs.App.Abstractions.Tests`: `WebAppUrlsTests`, `web` rules of the
+- `Tests/Kazo.Os.App.Abstractions.Tests`: `WebAppUrlsTests`, `web` rules of the
   validator, `web.urls` serializer round trip, schema fixtures
   `web.valid.json`, `invalid-web-missing-web-block.json`,
   `invalid-web-on-service.json`.

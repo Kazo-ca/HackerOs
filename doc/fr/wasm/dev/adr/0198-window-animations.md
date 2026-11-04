@@ -5,7 +5,7 @@
 ## Statut
 
 Accepté le 2026-10-30, chantier 3 de l'issue TODO
-[#242](https://github.com/Kazo-ca/HackerOs/issues/242) (points 5, 6 et 7 des décisions
+[#242](https://github.com/Kazo-ca/Os/issues/242) (points 5, 6 et 7 des décisions
 prises avec Benoit le 2026-10-29), série `todo/`. Mise en œuvre :
 [`window-animations.md`](../window-animations.md).
 
@@ -57,7 +57,7 @@ prises avec Benoit le 2026-10-29), série `todo/`. Mise en œuvre :
    une durée nulle veut dire aucune animation (la fenêtre se comporte comme avant).
 8. **Mobile** : un hôte sans cadre de fenêtre (une seule surface épinglée, `ShowChrome`
    à `false`) n'anime rien.
-9. **Code** : le paquet `HackerOs.Windowing.Blazor` seul. `WindowHost` choisit
+9. **Code** : le paquet `Kazo.Os.Windowing.Blazor` seul. `WindowHost` choisit
    l'animation de chaque rendu à partir du changement d'état de la fenêtre et la passe à
    `projectWindowGeometry` ; le script joue l'animation avec l'API Web Animations du
    navigateur (les cadres à mesurer ne sont pas accessibles en C#). Rien ne change dans

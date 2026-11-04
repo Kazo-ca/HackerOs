@@ -25,11 +25,11 @@ l'éditeur de code. Plusieurs détails n'étaient pas fixés.
 
 ### 1. `FileView` devient l'implémentation de l'explorateur, sans changer de place
 
-Le code de `HackerOs.AppSdk.FileView` reste dans sa bibliothèque jusqu'au
+Le code de `Kazo.Os.AppSdk.FileView` reste dans sa bibliothèque jusqu'au
 SDK 2.0 (chantier 6, ADR 0149), qui la retire du SDK. D'ici là :
 
 - l'explorateur l'utilise comme implémentation interne
-  (`InternalsVisibleTo("HackerOs.Apps.FileExplorer")`) ;
+  (`InternalsVisibleTo("Kazo.Os.Apps.FileExplorer")`) ;
 - le fournisseur `ExplorerFileView` donne en cascade une liaison interne,
   `FileViewMenuBinding`, à la vue. Avec elle, la vue ne dessine plus son
   `MudMenu` : chaque ligne, tuile, nœud de l'arbre et le fond portent les
@@ -42,7 +42,7 @@ contrat, comme l'ADR 0154 l'annonçait.
 
 ### 2. L'API du contrat
 
-Dans `HackerOs.AppSdk.Blazor.Files` :
+Dans `Kazo.Os.AppSdk.Blazor.Files` :
 
 - **`HackFileView`** (`HackContractComponent<IHackFileView>`) prend des
   **paramètres ordinaires** plutôt qu'un enregistrement d'options
@@ -63,7 +63,7 @@ Dans `HackerOs.AppSdk.Blazor.Files` :
   instantané, pour que le jeton de `Menus.Attach` reste stable.
 - **`HackFileMenuOpeningEventArgs`** : portée, cibles, dossier, menu à
   modifier, `Cancel`.
-- Dans `HackerOs.AppSdk.Files` (sans Blazor, pour le chantier 4) :
+- Dans `Kazo.Os.AppSdk.Files` (sans Blazor, pour le chantier 4) :
   **`FileMenuScope`** (`File`, `Directory`, `Background`, `Desktop`) et
   **`HackFileMenuItems`**, avec deux identifiants de plus que le plan :
   `open-with-other` (« Choisir une autre application… ») et le préfixe
@@ -176,7 +176,7 @@ chantier suivant. Ce chantier la prépare :
 - Une correction du contrôle, de ses menus ou de ses dialogues atteint
   l'explorateur, l'éditeur de code et toute app qui affiche `HackFileView`
   sans les recompiler.
-- L'éditeur de code ne référence plus `HackerOs.AppSdk.FileView` ; son
+- L'éditeur de code ne référence plus `Kazo.Os.AppSdk.FileView` ; son
   explorateur latéral affiche `HackFileView` en arbre et ajoute ses entrées
   (« Nouveau fichier », « Nouveau dossier », « Rechercher dans le dossier »,
   « Ouvrir dans le terminal ») par `ContextMenuOpening`. Sa propre suppression

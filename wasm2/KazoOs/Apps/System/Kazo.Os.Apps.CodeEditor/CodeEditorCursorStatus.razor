@@ -1,0 +1,30 @@
+@inherits Kazo.Os.AppSdk.Blazor.HackComponentBase
+@*
+    "Ln 12, Col 5 (3 selected)" in the status bar. Its own component so that a cursor move
+    re-renders this text only, not the whole workbench.
+*@
+<span class="cursor-status" title="@L["Cursor.GoToLine"]">@L["Cursor.Position", _line, _column]@(_selected > 0 ? Strings.Count(L, "Cursor.Selected", _selected) : null)</span>
+
+@code {
+    private int _line = 1;
+    private int _column = 1;
+    private int _selected;
+    private IStringLocalizer<Strings>? _localizer;
+
+    /// <summary>The Code Editor's texts in its own process's language (ADR 0104).</summary>
+    private IStringLocalizer<Strings> L => _localizer ??= AppContext.GetLocalizer<Strings>();
+
+    /// <summary>Shows a new cursor position; renders only when it changed.</summary>
+    public void Update(int line, int column, int selected)
+    {
+        if (line == _line && column == _column && selected == _selected)
+        {
+            return;
+        }
+
+        _line = line;
+        _column = column;
+        _selected = selected;
+        _ = InvokeAsync(StateHasChanged);
+    }
+}

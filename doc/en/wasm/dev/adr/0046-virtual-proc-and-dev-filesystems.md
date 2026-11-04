@@ -29,8 +29,8 @@ today only mounts the IndexedDB provider.
 | `/proc` | `ProcFileSystemProvider` | `procfs` |
 | `/dev` | `DevFileSystemProvider` | `devfs` |
 
-- Location: `Platform/HackerOs.Platform.Core/FileSystem/Virtual/`, namespace
-  `HackerOs.Platform.Core.FileSystem.Virtual`. Both implement
+- Location: `Platform/Kazo.Os.Platform.Core/FileSystem/Virtual/`, namespace
+  `Kazo.Os.Platform.Core.FileSystem.Virtual`. Both implement
   `IFileSystemProvider`.
 - **Computed on every read.** No call to storage, nothing is written to
   IndexedDB (D20).
@@ -123,7 +123,7 @@ Sources of the figures:
 
 To know the caller (`/proc/self`), a property
 `long? ProcessId { get; init; }` is added to `AppOperationContext`
-(`Shared/HackerOs.App.Abstractions/AppOperationContext.cs`). It is the raw value, because
+(`Shared/Kazo.Os.App.Abstractions/AppOperationContext.cs`). It is the raw value, because
 `App.Abstractions` does not reference the `ProcessId` type.
 `AppExecutionContextFactory` fills it in.
 
@@ -160,7 +160,7 @@ in the platform and the base apps must be reviewed for this new case.
 
 ### 6. Contract tests
 
-In `Tests/HackerOs.Platform.Core.Tests/FileSystem/Virtual/`:
+In `Tests/Kazo.Os.Platform.Core.Tests/FileSystem/Virtual/`:
 
 - listing of `/` containing `proc` and `dev`;
 - exact format of `status`, `meminfo`, `uptime` and `loadavg` with a deterministic
@@ -188,4 +188,4 @@ In `Tests/HackerOs.Platform.Core.Tests/FileSystem/Virtual/`:
 - ADR 0012: processes, clock, resources and randomness.
 - ADR 0043: `Hack*` API.
 - [`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md), sections 5.4, 7.2 and 8.2.
-- `Platform/HackerOs.Platform.Core/FileSystem/FileSystemMountRouter.cs`, `Platform/HackerOs.Platform.Core/Processes/`.
+- `Platform/Kazo.Os.Platform.Core/FileSystem/FileSystemMountRouter.cs`, `Platform/Kazo.Os.Platform.Core/Processes/`.

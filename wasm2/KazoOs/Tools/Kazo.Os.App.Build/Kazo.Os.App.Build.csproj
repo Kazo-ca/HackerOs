@@ -1,0 +1,79 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Kazo.Os.App.Build (ADR 0098 §2): the build integration of Kazo OS apps for a project outside
+    this repository. It carries no assembly, only:
+
+      buildTransitive/Kazo.Os.App.Build.targets  sets HackerOsBuildFromPackage, imports hackeros-build/
+      hackeros-build/Kazo.Os.Apps.targets         the same file the repository builds with (not under
+                                                   build/, which NuGet would expect to hold only
+                                                   Kazo.Os.App.Build.targets)
+      hackeros-build/asp-hack/                     ASP.Hack .cshtml support files (ADR 0086)
+      tools/generator/                             the manifest generator (ADR 0047), run with dotnet
+      analyzers/dotnet/cs/                         the ASP.Hack route generator (ADR 0082)
+
+    An app references it with PrivateAssets="all" so that the app's own package does not turn its
+    consumers into apps; a host references it the same way and sets HackerOsAppHost to true.
+  -->
+  <Import Project="..\..\Platform\Packaging.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <PackageId>Kazo.Os.App.Build</PackageId>
+    <Description>Build integration of Kazo OS apps: generated manifest.json, SDK boundary checks, ASP.Hack route generator and host aggregation of app packages.</Description>
+    <PackageTags>hackeros;msbuild;build;app-manifest</PackageTags>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <IncludeSymbols>false</IncludeSymbols>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <IsTrimmable>false</IsTrimmable>
+    <EnableTrimAnalyzer>false</EnableTrimAnalyzer>
+    <!-- No assembly, so nothing for the public API analyzer to track. -->
+    <NoWarn>$(NoWarn);NU5128;NU5100;RS0016;RS0017;RS0037</NoWarn>
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);_HackerOsPackBuildTools</TargetsForTfmSpecificContentInPackage>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Build order only: both tools are packed from their output folders. -->
+    <ProjectReference Include="..\Kazo.Os.Tools.ManifestGenerator\Kazo.Os.Tools.ManifestGenerator.csproj"
+                      ReferenceOutputAssembly="false" Private="false" PrivateAssets="all"
+                      SkipGetTargetFrameworkProperties="true"
+                      GlobalPropertiesToRemove="TargetFramework;RuntimeIdentifier;SelfContained" />
+    <ProjectReference Include="..\Kazo.Os.Tools.WebRouteGenerator\Kazo.Os.Tools.WebRouteGenerator.csproj"
+                      ReferenceOutputAssembly="false" Private="false" PrivateAssets="all"
+                      SkipGetTargetFrameworkProperties="true"
+                      GlobalPropertiesToRemove="TargetFramework;RuntimeIdentifier;SelfContained" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="buildTransitive\Kazo.Os.App.Build.targets" Pack="true" PackagePath="buildTransitive\" />
+    <None Include="..\..\build\Kazo.Os.Apps.targets" Pack="true" PackagePath="hackeros-build/Kazo.Os.Apps.targets" Link="build\Kazo.Os.Apps.targets" />
+    <None Include="..\..\build\asp-hack\**" Pack="true" PackagePath="hackeros-build/asp-hack/%(RecursiveDir)%(Filename)%(Extension)" Link="build\asp-hack\%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <Target Name="_HackerOsPackBuildTools">
+    <MSBuild Projects="..\Kazo.Os.Tools.ManifestGenerator\Kazo.Os.Tools.ManifestGenerator.csproj"
+             Targets="GetTargetPath"
+             Properties="Configuration=$(Configuration)"
+             RemoveProperties="TargetFramework;RuntimeIdentifier;SelfContained">
+      <Output TaskParameter="TargetOutputs" PropertyName="_HackerOsGeneratorPath" />
+    </MSBuild>
+    <MSBuild Projects="..\Kazo.Os.Tools.WebRouteGenerator\Kazo.Os.Tools.WebRouteGenerator.csproj"
+             Targets="GetTargetPath"
+             Properties="Configuration=$(Configuration)"
+             RemoveProperties="TargetFramework;RuntimeIdentifier;SelfContained">
+      <Output TaskParameter="TargetOutputs" PropertyName="_HackerOsRouteGeneratorPath" />
+    </MSBuild>
+    <PropertyGroup>
+      <_HackerOsGeneratorDir>$([System.IO.Path]::GetDirectoryName('$(_HackerOsGeneratorPath)'))</_HackerOsGeneratorDir>
+    </PropertyGroup>
+    <ItemGroup>
+      <_HackerOsGeneratorFile Include="$(_HackerOsGeneratorDir)/**" Exclude="$(_HackerOsGeneratorDir)/**/*.pdb;$(_HackerOsGeneratorDir)/**/*.xml;$(_HackerOsGeneratorDir)/Kazo.Os.Tools.ManifestGenerator;$(_HackerOsGeneratorDir)/Kazo.Os.Tools.ManifestGenerator.exe" />
+      <!-- The native apphost is left out: the targets run the tool with "dotnet <dll>" on every OS. -->
+      <TfmSpecificPackageFile Include="@(_HackerOsGeneratorFile)" PackagePath="tools/generator/%(RecursiveDir)%(Filename)%(Extension)" />
+      <TfmSpecificPackageFile Include="$(_HackerOsRouteGeneratorPath)" PackagePath="analyzers/dotnet/cs/" />
+    </ItemGroup>
+  </Target>
+
+</Project>

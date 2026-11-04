@@ -4,7 +4,7 @@
 
 ## Objet
 
-La publication Release de l'hôte Ecosystem (`OS/HackerOs.Ecosystem`) est
+La publication Release de l'hôte Ecosystem (`OS/Kazo.Os.Ecosystem`) est
 élaguée par ILLink (chantier `v3/14-trimming`, ADR 0106 et 0113) : le code du
 framework .NET que Kazo OS n'utilise pas est retiré des fichiers
 WebAssembly. Le premier chargement télécharge moins, et chaque Web Worker
@@ -23,13 +23,13 @@ satellites `fr/` compris). L'AOT est hors périmètre.
 ```
 Ecosystem.csproj            PublishTrimmed=true, TrimMode=partial
         │
-        ├─ CollectHackerOsBuiltInApplications (build/HackerOs.Apps.targets)
+        ├─ CollectHackerOsBuiltInApplications (build/Kazo.Os.Apps.targets)
         │     ManifestGenerator aggregate --trimmer-roots
         │       → obj/.../BuiltInApplications.json
-        │       → obj/.../HackerOs.TrimmerRoots.xml  ──► TrimmerRootDescriptor
+        │       → obj/.../Kazo.Os.TrimmerRoots.xml  ──► TrimmerRootDescriptor
         │
         └─ _HackerOsRootHackerOsAssemblies (avant PrepareForILLink)
-              chaque HackerOs.*.dll publiée ──► TrimmerRootAssembly
+              chaque Kazo.Os.*.dll publiée ──► TrimmerRootAssembly
                                     │
                               ILLink (publish)
             framework et bibliothèques élaguables : élagués
@@ -47,7 +47,7 @@ Ecosystem.csproj            PublishTrimmed=true, TrimMode=partial
   l'interop JavaScript, qui les sérialise par réflexion sans que l'analyse de
   trimming le voie. Un élagage membre par membre casse le démarrage (stockage
   « unavailable ») pour seulement 0,4 Mio de Brotli gagné (ADR 0113 §1).
-- **`HackerOs.TrimmerRoots.xml`** (`TrimmerRootDescriptorWriter` du générateur
+- **`Kazo.Os.TrimmerRoots.xml`** (`TrimmerRootDescriptorWriter` du générateur
   de manifestes) : une ligne `<assembly fullname="…" preserve="all" />` par
   assembly que nomme un manifeste (point d'entrée, entrées par plateforme,
   composants, `web.blazor`). Il couvre les apps installées en paquets, même
@@ -61,14 +61,14 @@ Ecosystem.csproj            PublishTrimmed=true, TrimMode=partial
 ### Publier et tester
 
 ```bash
-wasm2/HackerOs/build/publish-trimmed.sh            # publie, mesure, sert, teste
-wasm2/HackerOs/build/publish-trimmed.sh --compare  # publie aussi sans trimming et compare
-wasm2/HackerOs/build/publish-trimmed.sh --skip-build
+wasm2/KazoOs/build/publish-trimmed.sh            # publie, mesure, sert, teste
+wasm2/KazoOs/build/publish-trimmed.sh --compare  # publie aussi sans trimming et compare
+wasm2/KazoOs/build/publish-trimmed.sh --skip-build
 ```
 
 Le script publie dans `artifacts/publish-trimmed/publish`, échoue sur toute
 alerte `IL…`, sert la publication sur `127.0.0.1` et `127.0.0.2`, puis lance
-`Tests/HackerOs.TrimmedPublish.E2E.Tests` :
+`Tests/Kazo.Os.TrimmedPublish.E2E.Tests` :
 
 | Test | Ce qu'il vérifie |
 |---|---|
@@ -93,7 +93,7 @@ Release : son test de démarrage porte donc lui aussi sur la publication trimmé
 ### Un hôte d'un autre dépôt
 
 Le gabarit `hackeros-host` publie trimmé de la même façon. Les cibles de
-`HackerOs.App.Build` génèrent les racines et gardent les paquets `HackerOs.*`
+`Kazo.Os.App.Build` génèrent les racines et gardent les paquets `Kazo.Os.*`
 entiers ; les gabarits d'apps partent avec `IsTrimmable=true`, et le paquet
 active l'analyse de trimming dans un projet d'app qui ne la règle pas.
 
@@ -102,7 +102,7 @@ active l'analyse de trimming dans un projet d'app qui ne la règle pas.
 La conversion WebCIL du SDK est incrémentale par dates de fichiers. Une
 publication non trimmée (`-p:PublishTrimmed=false`) faite après une publication
 trimmée dans le même dossier `obj/` peut reprendre les assemblies élaguées.
-Avant de comparer, supprimer `OS/HackerOs.Ecosystem/obj/Release/net10.0/linked`,
+Avant de comparer, supprimer `OS/Kazo.Os.Ecosystem/obj/Release/net10.0/linked`,
 `webcil` et `tmp-webcil` (le script le fait).
 
 ## Décisions clés
@@ -118,10 +118,10 @@ Avant de comparer, supprimer `OS/HackerOs.Ecosystem/obj/Release/net10.0/linked`,
 ## Tâches
 
 - [x] `PublishTrimmed=true` et `TrimMode=partial` dans l'Ecosystem et le gabarit d'hôte.
-- [x] `HackerOs.TrimmerRoots.xml` généré par l'agrégation et passé à ILLink.
-- [x] Assemblies `HackerOs.*` gardées entières à la publication d'un hôte.
+- [x] `Kazo.Os.TrimmerRoots.xml` généré par l'agrégation et passé à ILLink.
+- [x] Assemblies `Kazo.Os.*` gardées entières à la publication d'un hôte.
 - [x] Justifications des suppressions d'avertissements mises à jour.
-- [x] `HackerOs.App.Build` : analyse de trimming dans les projets d'apps ; gabarits `IsTrimmable=true`.
-- [x] `build/publish-trimmed.sh` et `Tests/HackerOs.TrimmedPublish.E2E.Tests`.
+- [x] `Kazo.Os.App.Build` : analyse de trimming dans les projets d'apps ; gabarits `IsTrimmable=true`.
+- [x] `build/publish-trimmed.sh` et `Tests/Kazo.Os.TrimmedPublish.E2E.Tests`.
 - [x] Tailles avant et après mesurées (ici et dans `building-and-testing.md`).
 - [x] ADR 0113.

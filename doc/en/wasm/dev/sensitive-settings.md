@@ -251,28 +251,28 @@ Decision: [ADR 0120](adr/0120-passwd-and-administrator-password-reset.md).
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Settings/SensitiveSettingsTests.cs`:
+- `Tests/Kazo.Os.Platform.Core.Tests/Settings/SensitiveSettingsTests.cs`:
   private file `0600`, masking of a system value, user value
   taking priority, moving of a misplaced key, `Restricted` refused on the
   user side, secret in the keyring, resolver warnings.
-- `Tests/HackerOs.Platform.Core.Tests/Keyring/UserKeyringServiceTests.cs`:
+- `Tests/Kazo.Os.Platform.Core.Tests/Keyring/UserKeyringServiceTests.cs`:
   creation and modes, reconnection, set-aside on a different password,
   password change, set-aside by the administrator, user
   without a password, per-app confinement and `keyring.read-all`, encryption.
-- `Tests/HackerOs.Platform.Core.Tests/Sessions/PasskeyServiceTests.cs`:
+- `Tests/Kazo.Os.Platform.Core.Tests/Sessions/PasskeyServiceTests.cs`:
   PRF slot, opening through a passkey, key without PRF, password change
   that keeps the slots, migration from format 1.
-- `Tests/HackerOs.Platform.Core.Tests/FileSystem/FileSystemAuditTests.cs`:
+- `Tests/Kazo.Os.Platform.Core.Tests/FileSystem/FileSystemAuditTests.cs`:
   policy, round-trip format, accepted and refused writes in
   `audit.log` (`0600`), `uid`/`auid` under `sudo`.
-- `Tests/HackerOs.Commands.Tests/CoreCommandsTests.cs`: `ausearch` filters.
-- `Tests/HackerOs.Platform.Core.Tests/Sessions/LocalPasswordServiceTests.cs`:
+- `Tests/Kazo.Os.Commands.Tests/CoreCommandsTests.cs`: `ausearch` filters.
+- `Tests/Kazo.Os.Platform.Core.Tests/Sessions/LocalPasswordServiceTests.cs`:
   change with keyring kept, wrong current password, rules,
   reset that sets the keyring aside, removal refused for the last
   administrator, gateway (`users.manage` and administrator).
-- `Tests/HackerOs.Commands.Wave5.Tests/PasswdCommandTests.cs`: echo-off
+- `Tests/Kazo.Os.Commands.Wave5.Tests/PasswdCommandTests.cs`: echo-off
   prompts, different confirmation, `sudo passwd NAME`, `-d`, `-S`.
-- `Tests/HackerOs.UI.E2E.Tests/PasswdTerminalTests.cs`: `passwd` in the real
+- `Tests/Kazo.Os.UI.E2E.Tests/PasswdTerminalTests.cs`: `passwd` in the real
   terminal displays nothing of what is typed, then only the new value
   opens the session.
 

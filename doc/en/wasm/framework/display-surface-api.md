@@ -8,9 +8,9 @@ This document describes how an app opens a surface, draws its content in it, fol
 
 | File | Role |
 |---|---|
-| `Shared/HackerOs.AppSdk.Blazor/Display/DisplaySurfaceContracts.cs` | Public contract: `IDisplaySurfaceService`, `IDisplaySurface`, `DisplaySurfaceOptions`, `DisplaySurfaceOpenResult`, `DisplaySurfaceOpenStatus`, `DisplaySurfaceState`. |
-| `Shared/HackerOs.AppSdk.Blazor/Display/DisplaySurfaceContent.razor(.cs,.css)` | Portal: renders its content here, then moves its element into the surface; renders it back before being removed. `Surface` is optional (ADR 0084 §7): with no open surface, the content stays in place, which makes it possible to render it only once and keep its state when detaching. |
-| `Shared/HackerOs.AppSdk/Apps/HackBrowser.cs` | `HackBrowser.OpenAsync(url)`, `HackBrowser.OpenDetachedAsync(url)`. |
+| `Shared/Kazo.Os.AppSdk.Blazor/Display/DisplaySurfaceContracts.cs` | Public contract: `IDisplaySurfaceService`, `IDisplaySurface`, `DisplaySurfaceOptions`, `DisplaySurfaceOpenResult`, `DisplaySurfaceOpenStatus`, `DisplaySurfaceState`. |
+| `Shared/Kazo.Os.AppSdk.Blazor/Display/DisplaySurfaceContent.razor(.cs,.css)` | Portal: renders its content here, then moves its element into the surface; renders it back before being removed. `Surface` is optional (ADR 0084 §7): with no open surface, the content stays in place, which makes it possible to render it only once and keep its state when detaching. |
+| `Shared/Kazo.Os.AppSdk/Apps/HackBrowser.cs` | `HackBrowser.OpenAsync(url)`, `HackBrowser.OpenDetachedAsync(url)`. |
 
 ## Opening a surface
 

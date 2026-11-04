@@ -51,21 +51,21 @@ The implementation showed three things:
 ## Decision
 
 1. **All HackerOS assemblies stay whole.** A target of
-   `build/HackerOs.Apps.targets` (`_HackerOsRootHackerOsAssemblies`, hosts
+   `build/Kazo.Os.Apps.targets` (`_HackerOsRootHackerOsAssemblies`, hosts
    only, when `PublishTrimmed` is `true`) adds each
-   `HackerOs.*` assembly of the publish as a `TrimmerRootAssembly`. The framework and
+   `Kazo.Os.*` assembly of the publish as a `TrimmerRootAssembly`. The framework and
    the other trimmable libraries are trimmed; non-trimmable packages
    (MudBlazor, AngleSharp…) stay whole (`TrimMode=partial`, unchanged). This
    replaces "only our assemblies are trimmed" of ADR 0106 §1. Moving to
    trimming our assemblies would first require making all JavaScript interop
    safe (generated serialization): a new ADR, with measurements.
 2. **Generated roots: whole assemblies.** The manifest generator
-   (`aggregate --trimmer-roots`) writes `HackerOs.TrimmerRoots.xml` next to
+   (`aggregate --trimmer-roots`) writes `Kazo.Os.TrimmerRoots.xml` next to
    `BuiltInApplications.json`; the host passes it to ILLink
    (`TrimmerRootDescriptor`). Each assembly named by a manifest (entry
    point, per-platform entries, components, Blazor root of a site) is
    kept whole (`preserve="all"`), not only the named types. This is what
-   keeps an app from another repository that is not named `HackerOs.*` (§1 does not
+   keeps an app from another repository that is not named `Kazo.Os.*` (§1 does not
    cover it). The `AppDefinition` class needs no root: the OS never
    instantiates it (the manifest comes from the JSON, a site's generated `WebHost`
    calls it from code). This replaces the detail of ADR 0106 §2.
@@ -78,7 +78,7 @@ The implementation showed three things:
    (ADR 0082, 0083, 0086). The remaining warning suppressions now cite
    this ADR instead of "PublishTrimmed is disabled".
 4. **Publish test.** `build/publish-trimmed.sh` publishes, measures, serves
-   the publish and runs `Tests/HackerOs.TrimmedPublish.E2E.Tests` (login,
+   the publish and runs `Tests/Kazo.Os.TrimmedPublish.E2E.Tests` (login,
    each windowed app in the menu, a command in a worker, the Intranet and the
    Blazor site, then offline startup). The service worker is registered
    neither on `localhost` nor on `127.0.0.1` (`index.html`): the offline test
@@ -97,12 +97,12 @@ The implementation showed three things:
   (13.5 to 8.0 MiB in Brotli). The first load downloads less, and each
   worker starts a smaller runtime.
 - The feature switches of resource accounting (ADR 0066) do not
-  remove code inside `HackerOs.Platform.ResourceAccounting`,
+  remove code inside `Kazo.Os.Platform.ResourceAccounting`,
   kept whole; with both measurements turned off at build time, the assembly is
   still not published.
 - The `hackeros-host` template publishes trimmed the same way (`PublishTrimmed`,
   `TrimMode=partial`); app templates ship with `IsTrimmable=true`, and
-  `HackerOs.App.Build` enables the analysis in an app project that does not set it
+  `Kazo.Os.App.Build` enables the analysis in an app project that does not set it
   itself (ADR 0106 §4, unchanged).
 - `verify-hosts.sh` publishes the Ecosystem as before: it therefore now tests
   the trimmed publish.

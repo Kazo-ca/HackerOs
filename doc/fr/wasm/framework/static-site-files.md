@@ -13,7 +13,7 @@ Ce document décrit le format des fichiers `.site` qu'une app ou un outil écrit
 
 | Élément | Projet | Rôle |
 |---|---|---|
-| `HackWebSite`, `HackWebSiteDeclaration`, `HackWebSiteScope` | `Shared/HackerOs.AppSdk/Net/Hosting` | Contenu d'un `.site` et fichier lu (chemin, portée, propriétaire, erreurs). |
+| `HackWebSite`, `HackWebSiteDeclaration`, `HackWebSiteScope` | `Shared/Kazo.Os.AppSdk/Net/Hosting` | Contenu d'un `.site` et fichier lu (chemin, portée, propriétaire, erreurs). |
 | `HackWebSiteFile` | idem | Emplacements, `Parse`, `Validate`, `Serialize`, `TryParseBinding`, `ReadAllAsync`. Partagé par le démon, le Manager et le résolveur. |
 
 ## Le fichier `.site`

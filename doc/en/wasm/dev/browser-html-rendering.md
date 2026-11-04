@@ -48,7 +48,7 @@ PageBridgeHandler ◄── PageBridge.js (dans la page) : fetch, XHR, liens, fo
      └── PageStorage (~/.local/share/hackeros/browser/storage/<site>/local-storage.json)
 ```
 
-All files are under `Apps/System/HackerOs.Apps.Browser/`:
+All files are under `Apps/System/Kazo.Os.Apps.Browser/`:
 
 | Folder / file | Role |
 |---|---|
@@ -68,7 +68,7 @@ All files are under `Apps/System/HackerOs.Apps.Browser/`:
 | `BrowserPageView.razor(.js)` | Creates the isolated iframe, relays messages, detects a script navigation. |
 | `BrowserErrorPages.cs`, `BrowserDownloads.cs` | Error pages and downloads. |
 
-`SimulatedFileTypes` (`Shared/HackerOs.Simulation.Abstractions/Network/`)
+`SimulatedFileTypes` (`Shared/Kazo.Os.Simulation.Abstractions/Network/`)
 gives the MIME type of a local file from its extension.
 `HackCookieContainer.Remove` (SDK) deletes a cookie expired by the page.
 
@@ -197,17 +197,17 @@ is recreated there and its bridge keeps talking to this browser.
 
 ## Tests
 
-- `Tests/HackerOs.Apps.Browser.Tests`: HTML composition, CSS rewriting, bridge
+- `Tests/Kazo.Os.Apps.Browser.Tests`: HTML composition, CSS rewriting, bridge
   (CORS, credentials, cookies), URLs, storage, error pages, listing,
   downloads, developer tools log.
-- `Tests/HackerOs.UI.E2E.Tests/BrowserHtmlRenderingTests.cs`: in Chromium,
+- `Tests/Kazo.Os.UI.E2E.Tests/BrowserHtmlRenderingTests.cs`: in Chromium,
   web page with CSS, script, `fetch` and cookie; sandbox verified; Network
   tab; source view; XHR and `POST` form; local `file://` site with
   `localStorage`, CORS `fetch`, link and back; DNS error page.
-- `Tests/HackerOs.Apps.Browser.Tests/FormHistoryTests.cs` and
-  `Tests/HackerOs.UI.E2E.Tests/BrowserSiteDataTests.cs`: form
+- `Tests/Kazo.Os.Apps.Browser.Tests/FormHistoryTests.cs` and
+  `Tests/Kazo.Os.UI.E2E.Tests/BrowserSiteDataTests.cs`: form
   history (file, limits, `<datalist>` in Chromium).
-- `Tests/HackerOs.UI.E2E.Tests/BrowserHomePageTests.cs`: outside demo mode, the
+- `Tests/Kazo.Os.UI.E2E.Tests/BrowserHomePageTests.cs`: outside demo mode, the
   browser opens on HackerSearch and a search typed in the address bar
   displays its results (ADR 0085: the default network catalog
   is wired into the OS).

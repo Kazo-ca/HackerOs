@@ -227,7 +227,7 @@ non-system app simply never holds a dangerous capability.
 
 ## Tests
 
-- `DangerousCapabilityApprovalTests` (`HackerOs.Platform.Core.Tests`): file
+- `DangerousCapabilityApprovalTests` (`Kazo.Os.Platform.Core.Tests`): file
   parsing, decision table, system app without a prompt, non-system app
   without a decision not granted and prompt called at launch, `allow` +
   `prompt` granted / + `block` refused, user `deny` takes priority, user
@@ -236,7 +236,7 @@ non-system app simply never holds a dangerous capability.
   user, denial, `deferred`, unverified approval rejected, revocation on
   switch to `block`, `block` that disables one-time approval but not `sudo`,
   default files, Settings administration.
-- `DangerousCapabilityApprovalOverlayTests` (`HackerOs.Platform.Blazor.Tests`,
+- `DangerousCapabilityApprovalOverlayTests` (`Kazo.Os.Platform.Blazor.Tests`,
   `HtmlRenderer` rendering, the solution not using bUnit): capabilities and
   risks displayed, prefilled name, Allow button disabled without a password,
   prompt unavailable without a window, request closed when the shell

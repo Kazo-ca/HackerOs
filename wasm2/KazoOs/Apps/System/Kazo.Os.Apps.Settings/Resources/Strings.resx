@@ -1,0 +1,2040 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="About.Architecture" xml:space="preserve">
+    <value>Architecture:</value>
+  </data>
+  <data name="About.ArchitectureValue" xml:space="preserve">
+    <value>C# Kernel / Scoped CSS / MudBlazor</value>
+  </data>
+  <data name="About.Authority" xml:space="preserve">
+    <value>Authority:</value>
+  </data>
+  <data name="About.Authority.Administrator" xml:space="preserve">
+    <value>Administrator</value>
+  </data>
+  <data name="About.Authority.System" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="About.Authority.User" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="About.OsVersion" xml:space="preserve">
+    <value>OS Version:</value>
+  </data>
+  <data name="About.Runtime" xml:space="preserve">
+    <value>Runtime:</value>
+  </data>
+  <data name="About.UserId" xml:space="preserve">
+    <value>User ID:</value>
+  </data>
+  <data name="Accessibility.Error.CannotRead" xml:space="preserve">
+    <value>Cannot read {0}: {1}</value>
+  </data>
+  <data name="Accessibility.Error.CannotSave" xml:space="preserve">
+    <value>Cannot save {0}: {1}</value>
+  </data>
+  <data name="Accessibility.HighContrast.Description" xml:space="preserve">
+    <value>Black surfaces, white text and a thick yellow focus outline, over every theme, user themes included.</value>
+  </data>
+  <data name="Accessibility.HighContrast.Title" xml:space="preserve">
+    <value>High contrast</value>
+  </data>
+  <data name="Accessibility.Mode.Auto" xml:space="preserve">
+    <value>Auto</value>
+  </data>
+  <data name="Accessibility.Mode.Off" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="Accessibility.Mode.On" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="Accessibility.ReducedMotion.AnimationsLocked" xml:space="preserve">
+    <value>An administrator set {0} and locked it: animations stay reduced whatever you choose.</value>
+  </data>
+  <data name="Accessibility.ReducedMotion.Description" xml:space="preserve">
+    <value>Stops transitions, blinking cursors and smooth scrolling.</value>
+  </data>
+  <data name="Accessibility.ReducedMotion.Title" xml:space="preserve">
+    <value>Reduce animations</value>
+  </data>
+  <data name="Accessibility.Saved" xml:space="preserve">
+    <value>Saved. The desktop applies it now.</value>
+  </data>
+  <data name="Accessibility.State.Description" xml:space="preserve">
+    <value>Your choices are saved in {0}, over the machine's defaults in {1}. "Auto" follows the settings of the computer Kazo OS runs on.</value>
+  </data>
+  <data name="Accessibility.State.Off" xml:space="preserve">
+    <value>off</value>
+  </data>
+  <data name="Accessibility.State.On" xml:space="preserve">
+    <value>on</value>
+  </data>
+  <data name="Accessibility.State.Title" xml:space="preserve">
+    <value>Applied now</value>
+  </data>
+  <data name="Accessibility.TextScale.Description" xml:space="preserve">
+    <value>Enlarges the text of the desktop and of every app; the terminal and the code editor follow it.</value>
+  </data>
+  <data name="Accessibility.TextScale.Title" xml:space="preserve">
+    <value>Text size</value>
+  </data>
+  <data name="Appearance.Accent.AriaLabel" xml:space="preserve">
+    <value>Kazo OS accent colors</value>
+  </data>
+  <data name="Appearance.Accent.Description" xml:space="preserve">
+    <value>Accent colors are intentionally available only for the Kazo OS theme.</value>
+  </data>
+  <data name="Appearance.Accent.Title" xml:space="preserve">
+    <value>Kazo OS accent</value>
+  </data>
+  <data name="Appearance.DesktopTheme.AriaLabel" xml:space="preserve">
+    <value>Desktop themes</value>
+  </data>
+  <data name="Appearance.DesktopTheme.Description" xml:space="preserve">
+    <value>Applied to the desktop, windows, taskbar, and Start menu.</value>
+  </data>
+  <data name="Appearance.DesktopTheme.Title" xml:space="preserve">
+    <value>Desktop theme</value>
+  </data>
+  <data name="Appearance.EditTheme" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="Appearance.Error.AdminRequired" xml:space="preserve">
+    <value>Administrator approval is required to change the system default. Approve the prompt, then apply again.</value>
+  </data>
+  <data name="Appearance.Error.CannotRead" xml:space="preserve">
+    <value>The appearance settings cannot be read: {0}</value>
+  </data>
+  <data name="Appearance.Error.CannotSave" xml:space="preserve">
+    <value>Could not save the settings file: {0}</value>
+  </data>
+  <data name="Appearance.Layer.AriaLabel" xml:space="preserve">
+    <value>Settings layer</value>
+  </data>
+  <data name="Appearance.Layer.Description" xml:space="preserve">
+    <value>Your choices are saved in {0}. The default for every user lives in {1} and needs administrator approval.</value>
+  </data>
+  <data name="Appearance.Layer.System" xml:space="preserve">
+    <value>All users (system default)</value>
+  </data>
+  <data name="Appearance.Layer.Title" xml:space="preserve">
+    <value>Apply changes to</value>
+  </data>
+  <data name="Appearance.Layer.User" xml:space="preserve">
+    <value>Only me</value>
+  </data>
+  <data name="Appearance.MobileTheme.AriaLabel" xml:space="preserve">
+    <value>Mobile themes</value>
+  </data>
+  <data name="Appearance.MobileTheme.Description" xml:space="preserve">
+    <value>Saved independently and applied when the mobile shell is active.</value>
+  </data>
+  <data name="Appearance.MobileTheme.Title" xml:space="preserve">
+    <value>Mobile theme</value>
+  </data>
+  <data name="Appearance.OpenThemeEditor" xml:space="preserve">
+    <value>Open the Theme Editor</value>
+  </data>
+  <data name="Appearance.SaveAsSystemDefault" xml:space="preserve">
+    <value>Save the current look as the system default</value>
+  </data>
+  <data name="Appearance.SavedAsSystemDefault" xml:space="preserve">
+    <value>Saved as the default for every user.</value>
+  </data>
+  <data name="Appearance.UserThemes.Description" xml:space="preserve">
+    <value>Themes made of verified design tokens, saved in {0} (yours) or {1} (installed for every user). They appear above with the built-in themes.</value>
+  </data>
+  <data name="Appearance.UserThemes.Title" xml:space="preserve">
+    <value>Your themes</value>
+  </data>
+  <data name="Appearance.UserThemes.Warnings" xml:space="preserve">
+    <value>{0} warning(s) in theme files; open the Theme Editor for details.</value>
+  </data>
+  <data name="Apps.Commands" xml:space="preserve">
+    <value>Terminal commands ({0}) — part of the system, always installed</value>
+  </data>
+  <data name="Apps.Description" xml:space="preserve">
+    <value>Uninstalling an app hides it everywhere, blocks every way to start it and stops its running windows. Nothing is deleted: its settings and your files stay in place for a reinstall. Only a website loses its browser database. The list lives in {0} (for you) and {1} (for every user: an administrator must authenticate).</value>
+  </data>
+  <data name="Apps.Error.CannotWrite" xml:space="preserve">
+    <value>Could not write apps.config: {0}</value>
+  </data>
+  <data name="Apps.Error.NoAdmin" xml:space="preserve">
+    <value>No administrator authenticated: /etc/hackeros/apps.config was not changed.</value>
+  </data>
+  <data name="Apps.Error.NotAllowed" xml:space="preserve">
+    <value>Settings is not allowed to manage apps (capability apps.manage).</value>
+  </data>
+  <data name="Apps.InstallationTitle" xml:space="preserve">
+    <value>Installation</value>
+  </data>
+  <data name="Apps.Loading" xml:space="preserve">
+    <value>Loading applications...</value>
+  </data>
+  <data name="Apps.ProcessItem" xml:space="preserve">
+    <value>{0} (PID {1})</value>
+  </data>
+  <data name="Apps.Reinstall" xml:space="preserve">
+    <value>Reinstall</value>
+  </data>
+  <data name="Apps.Scope.Machine" xml:space="preserve">
+    <value>For all users</value>
+  </data>
+  <data name="Apps.Scope.User" xml:space="preserve">
+    <value>Only for me</value>
+  </data>
+  <data name="Apps.Stopped" xml:space="preserve">
+    <value>Stopped: {0}.</value>
+  </data>
+  <data name="Apps.StoppedAndForced" xml:space="preserve">
+    <value>Stopped: {0}. Forced after their grace period: {1}.</value>
+  </data>
+  <data name="Apps.SystemBadge" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="Apps.SystemBadge.Title" xml:space="preserve">
+    <value>System apps cannot be uninstalled</value>
+  </data>
+  <data name="Apps.Title" xml:space="preserve">
+    <value>Installed Applications</value>
+  </data>
+  <data name="Apps.Uninstall" xml:space="preserve">
+    <value>Uninstall</value>
+  </data>
+  <data name="Apps.Uninstall.AdminWillAuthenticate" xml:space="preserve">
+    <value>The system will ask an administrator to authenticate.</value>
+  </data>
+  <data name="Apps.Uninstall.Dependents" xml:space="preserve">
+    <value>These apps need it and will be uninstalled too:</value>
+  </data>
+  <data name="Apps.Uninstall.ForYouOnly" xml:space="preserve">
+    <value>This uninstalls it for you only.</value>
+  </data>
+  <data name="Apps.Uninstall.GracePeriod" xml:space="preserve">
+    <value>Each one is asked to stop and gets a few seconds to save its work before it is forced. Settings and files are kept.</value>
+  </data>
+  <data name="Apps.Uninstall.NothingRunning" xml:space="preserve">
+    <value>Nothing of it is running. Settings and files are kept.</value>
+  </data>
+  <data name="Apps.Uninstall.Processes" xml:space="preserve">
+    <value>These processes will be stopped:</value>
+  </data>
+  <data name="Apps.Uninstall.ScopeAriaLabel" xml:space="preserve">
+    <value>Uninstall for</value>
+  </data>
+  <data name="Apps.Uninstall.SiteData" xml:space="preserve">
+    <value>The website data of {0} (its browser database {1}) is deleted: it is not in your files and cannot come back with a reinstall.</value>
+  </data>
+  <data name="Apps.Uninstall.Title" xml:space="preserve">
+    <value>Uninstall {0}?</value>
+  </data>
+  <data name="Apps.Uninstalled" xml:space="preserve">
+    <value>Uninstalled</value>
+  </data>
+  <data name="Apps.UninstalledByAdmin" xml:space="preserve">
+    <value>Uninstalled by the administrator</value>
+  </data>
+  <data name="Apps.UninstalledForAll" xml:space="preserve">
+    <value>Uninstalled for all users</value>
+  </data>
+  <data name="Apps.Uninstalling" xml:space="preserve">
+    <value>Uninstalling...</value>
+  </data>
+  <data name="Backup.Create" xml:space="preserve">
+    <value>Create a backup</value>
+  </data>
+  <data name="Backup.Create.Description" xml:space="preserve">
+    <value>A backup holds {0}: the files of every user, {1}, the accounts and their password hashes. It is downloaded to your computer as one {2} archive, never kept inside Kazo OS, like a backup on an external disk. An administrator must confirm with their password. From a terminal: {3}.</value>
+  </data>
+  <data name="Backup.Create.Everything" xml:space="preserve">
+    <value>everything</value>
+  </data>
+  <data name="Backup.Create.Title" xml:space="preserve">
+    <value>Back up this machine</value>
+  </data>
+  <data name="Backup.Creating" xml:space="preserve">
+    <value>Backing up...</value>
+  </data>
+  <data name="Backup.Error.Failed" xml:space="preserve">
+    <value>Backup failed: {0}</value>
+  </data>
+  <data name="Backup.Error.Invalid" xml:space="preserve">
+    <value>This file cannot be restored: {0}</value>
+  </data>
+  <data name="Backup.Error.RestoreFailed" xml:space="preserve">
+    <value>Restore failed: {0}</value>
+  </data>
+  <data name="Backup.Mode.AriaLabel" xml:space="preserve">
+    <value>Restore mode</value>
+  </data>
+  <data name="Backup.Mode.Merge" xml:space="preserve">
+    <value>Merge</value>
+  </data>
+  <data name="Backup.Mode.Merge.Description" xml:space="preserve">
+    <value>The backup's records overwrite the same ones here; everything else stays.</value>
+  </data>
+  <data name="Backup.Mode.Replace" xml:space="preserve">
+    <value>Replace</value>
+  </data>
+  <data name="Backup.Mode.Replace.Description" xml:space="preserve">
+    <value>This machine becomes exactly the backup: anything newer is lost.</value>
+  </data>
+  <data name="Backup.Restore" xml:space="preserve">
+    <value>Restore...</value>
+  </data>
+  <data name="Backup.Restore.Description" xml:space="preserve">
+    <value>Pick a {0} archive on your computer. Kazo OS checks it first; an archive from another database version or a damaged one is refused and nothing changes. Then an administrator confirms, every process stops, the backup is written and Kazo OS restarts. From a terminal: {1} or {2}.</value>
+  </data>
+  <data name="Backup.Restore.Title" xml:space="preserve">
+    <value>Restore from a backup</value>
+  </data>
+  <data name="Backup.Restoring" xml:space="preserve">
+    <value>Restoring...</value>
+  </data>
+  <data name="Backup.Result" xml:space="preserve">
+    <value>Downloaded {0}: {1}, {2} records.</value>
+  </data>
+  <data name="Backup.Size.Bytes" xml:space="preserve">
+    <value>{0} B</value>
+  </data>
+  <data name="Backup.Size.KiB" xml:space="preserve">
+    <value>{0} KiB</value>
+  </data>
+  <data name="Backup.Size.MiB" xml:space="preserve">
+    <value>{0} MiB</value>
+  </data>
+  <data name="Components.AlsoFor" xml:space="preserve">
+    <value>Also use it for: {0}</value>
+  </data>
+  <data name="Components.Apply" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="Components.Confirm.Default" xml:space="preserve">
+    <value>Go back to the File Explorer for: {0}.</value>
+  </data>
+  <data name="Components.Confirm.Set" xml:space="preserve">
+    <value>Use “{0}” for: {1}, for the whole machine.</value>
+  </data>
+  <data name="Components.Default" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="Components.Description" xml:space="preserve">
+    <value>Choose which app shows files and file dialogs in every app, for the whole machine. The choice is written to {0} and needs an administrator.</value>
+  </data>
+  <data name="Components.Error.CannotSave" xml:space="preserve">
+    <value>The choice could not be saved: {0}</value>
+  </data>
+  <data name="Components.FileDialogs.Description" xml:space="preserve">
+    <value>Open, Save, Choose a folder, Open with, Properties and name conflicts.</value>
+  </data>
+  <data name="Components.FileDialogs.Title" xml:space="preserve">
+    <value>File dialogs</value>
+  </data>
+  <data name="Components.FileView.Description" xml:space="preserve">
+    <value>The file list of the desktop, the File Explorer, the code editor and every app that shows files.</value>
+  </data>
+  <data name="Components.FileView.Title" xml:space="preserve">
+    <value>File view</value>
+  </data>
+  <data name="Components.NotInstalled" xml:space="preserve">
+    <value>Not installed</value>
+  </data>
+  <data name="Components.ResetToDefault" xml:space="preserve">
+    <value>Back to the File Explorer</value>
+  </data>
+  <data name="Components.Risk" xml:space="preserve">
+    <value>This app is not a system app: its code will run inside every app that shows files, with that app's rights. The OS will ask an administrator to approve.</value>
+  </data>
+  <data name="Components.Saved" xml:space="preserve">
+    <value>“{0}” is now used. It applies to the next file view or dialog shown.</value>
+  </data>
+  <data name="Components.Saved.Default" xml:space="preserve">
+    <value>The File Explorer is used again.</value>
+  </data>
+  <data name="Components.SelectedMissing" xml:space="preserve">
+    <value>The chosen app '{0}' is not installed for you: the File Explorer is used instead.</value>
+  </data>
+  <data name="Components.Unavailable" xml:space="preserve">
+    <value>OS components are not available on this host.</value>
+  </data>
+  <data name="Common.Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Common.Loading" xml:space="preserve">
+    <value>Loading...</value>
+  </data>
+  <data name="Danger.Description" xml:space="preserve">
+    <value>Reset Kazo OS to its factory state. This permanently clears the local database — all accounts, files, sessions, and settings — and restores your account to its default configuration. This action cannot be undone. An administrator must confirm with their password.</value>
+  </data>
+  <data name="Danger.Title" xml:space="preserve">
+    <value>Danger Zone</value>
+  </data>
+  <data name="Details.Capabilities" xml:space="preserve">
+    <value>Capabilities</value>
+  </data>
+  <data name="Details.CapabilitiesDescription" xml:space="preserve">
+    <value>Declared in its manifest. Dangerous ones also need an administrator's decision (Permissions tab).</value>
+  </data>
+  <data name="Details.FileTypes" xml:space="preserve">
+    <value>File types and links</value>
+  </data>
+  <data name="Details.Kind.Service" xml:space="preserve">
+    <value>service</value>
+  </data>
+  <data name="Details.Kind.Terminal" xml:space="preserve">
+    <value>command</value>
+  </data>
+  <data name="Details.Kind.Web" xml:space="preserve">
+    <value>web site</value>
+  </data>
+  <data name="Details.Kind.Window" xml:space="preserve">
+    <value>window app</value>
+  </data>
+  <data name="Details.Links" xml:space="preserve">
+    <value>{0}: links</value>
+  </data>
+  <data name="Details.NoCapability" xml:space="preserve">
+    <value>This app declares no capability.</value>
+  </data>
+  <data name="Details.NotFound" xml:space="preserve">
+    <value>No installed app has the id '{0}'.</value>
+  </data>
+  <data name="Details.Permission.Allowed" xml:space="preserve">
+    <value>allowed</value>
+  </data>
+  <data name="Details.Permission.Pending" xml:space="preserve">
+    <value>pending</value>
+  </data>
+  <data name="Details.Permission.Refused" xml:space="preserve">
+    <value>refused ({0})</value>
+  </data>
+  <data name="Details.Permission.System" xml:space="preserve">
+    <value>system</value>
+  </data>
+  <data name="Details.Pid" xml:space="preserve">
+    <value> (pid {0})</value>
+  </data>
+  <data name="Details.ReadingService" xml:space="preserve">
+    <value>Reading the service state...</value>
+  </data>
+  <data name="Details.Service" xml:space="preserve">
+    <value>Service</value>
+  </data>
+  <data name="Details.ServiceError" xml:space="preserve">
+    <value>The service state cannot be read: {0}</value>
+  </data>
+  <data name="Details.ServiceStarted" xml:space="preserve">
+    <value>Service started.</value>
+  </data>
+  <data name="Details.ServiceStatus.Running" xml:space="preserve">
+    <value>Running</value>
+  </data>
+  <data name="Details.ServiceStatus.StartPending" xml:space="preserve">
+    <value>Starting</value>
+  </data>
+  <data name="Details.ServiceStatus.StopPending" xml:space="preserve">
+    <value>Stopping</value>
+  </data>
+  <data name="Details.ServiceStatus.Stopped" xml:space="preserve">
+    <value>Stopped</value>
+  </data>
+  <data name="Details.ServiceStopped" xml:space="preserve">
+    <value>Service stopped.</value>
+  </data>
+  <data name="Details.ServiceUnavailable" xml:space="preserve">
+    <value>The service is not available for this user.</value>
+  </data>
+  <data name="Details.Start" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="Details.StartMode" xml:space="preserve">
+    <value>Start mode</value>
+  </data>
+  <data name="Details.StartModeSet" xml:space="preserve">
+    <value>Start mode: {0}.</value>
+  </data>
+  <data name="Details.State" xml:space="preserve">
+    <value>State:</value>
+  </data>
+  <data name="Details.Stop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="Details.Title" xml:space="preserve">
+    <value>Application</value>
+  </data>
+  <data name="FileAssociations.Description" xml:space="preserve">
+    <value>The app that opens each file type and link for you. Your choice is saved in {0} and comes before the machine default of {1}, for you only.</value>
+  </data>
+  <data name="FileAssociations.Empty" xml:space="preserve">
+    <value>No installed app declares a file type.</value>
+  </data>
+  <data name="FileAssociations.Title" xml:space="preserve">
+    <value>Default applications</value>
+  </data>
+  <data name="Grants.Description" xml:space="preserve">
+    <value>Active security grants for current session.</value>
+  </data>
+  <data name="Grants.Title" xml:space="preserve">
+    <value>Granted Application Capabilities</value>
+  </data>
+  <data name="Header.Title" xml:space="preserve">
+    <value>Kazo OS System Settings</value>
+  </data>
+  <data name="Language.Choice.AriaLabel" xml:space="preserve">
+    <value>Language of your sessions</value>
+  </data>
+  <data name="Language.Choice.Description" xml:space="preserve">
+    <value>Pick the language and the regional formats (dates, numbers) of your sessions.</value>
+  </data>
+  <data name="Language.Choice.Title" xml:space="preserve">
+    <value>Your language</value>
+  </data>
+  <data name="Language.Error.CannotRead" xml:space="preserve">
+    <value>Could not read {0}: {1}</value>
+  </data>
+  <data name="Language.Error.CannotRemove" xml:space="preserve">
+    <value>Could not remove {0}: {1}</value>
+  </data>
+  <data name="Language.Error.CannotSave" xml:space="preserve">
+    <value>Could not save {0}: {1}</value>
+  </data>
+  <data name="Language.Error.Unknown" xml:space="preserve">
+    <value>Unknown locale: {0}</value>
+  </data>
+  <data name="Language.FollowSystem" xml:space="preserve">
+    <value>Follow the system language</value>
+  </data>
+  <data name="Language.FollowSystem.Detail" xml:space="preserve">
+    <value>Currently {0}</value>
+  </data>
+  <data name="Language.Locale.Posix" xml:space="preserve">
+    <value>POSIX (C), untranslated</value>
+  </data>
+  <data name="Language.NextSignIn" xml:space="preserve">
+    <value>The change takes effect at your next sign-in.</value>
+  </data>
+  <data name="Language.Pending" xml:space="preserve">
+    <value>At your next sign-in: {0}</value>
+  </data>
+  <data name="Language.Saved.FollowSystem" xml:space="preserve">
+    <value>Saved: you follow the system language ({0}).</value>
+  </data>
+  <data name="Language.Saved.Locale" xml:space="preserve">
+    <value>Saved: {0}.</value>
+  </data>
+  <data name="Language.Session.Description" xml:space="preserve">
+    <value>Kazo OS speaks the language of your locale, like Linux: the {0} variable every process inherits when you sign in. Your choice below is saved in {1} and applies to the desktop and to every app at your next sign-in.</value>
+  </data>
+  <data name="Language.Session.Formats" xml:space="preserve">
+    <value>Formats</value>
+  </data>
+  <data name="Language.Session.Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="Language.Session.Title" xml:space="preserve">
+    <value>This session</value>
+  </data>
+  <data name="Language.System.Description" xml:space="preserve">
+    <value>Read from {0}. It is the language of the sign-in screen and of every account without a choice of its own. Only an administrator can change it, from a terminal: {1}.</value>
+  </data>
+  <data name="Language.System.Title" xml:space="preserve">
+    <value>System language</value>
+  </data>
+  <data name="Language.System.Unset" xml:space="preserve">
+    <value>not set ({0} by default)</value>
+  </data>
+  <data name="Language.Unset" xml:space="preserve">
+    <value>not set</value>
+  </data>
+  <data name="Permissions.AllowMachine" xml:space="preserve">
+    <value>Allow for the machine</value>
+  </data>
+  <data name="Permissions.AskAgain" xml:space="preserve">
+    <value>Ask again at launch</value>
+  </data>
+  <data name="Permissions.Empty" xml:space="preserve">
+    <value>No installed application declares a dangerous capability.</value>
+  </data>
+  <data name="Permissions.Error.CannotSave" xml:space="preserve">
+    <value>The decision could not be saved: {0}</value>
+  </data>
+  <data name="Permissions.Error.NotConfirmed" xml:space="preserve">
+    <value>No administrator confirmed: nothing was changed.</value>
+  </data>
+  <data name="Permissions.Message.DecisionSaved" xml:space="preserve">
+    <value>{0}: decision saved, effective at the next launch.</value>
+  </data>
+  <data name="Permissions.Message.DenialRemoved" xml:space="preserve">
+    <value>{0}: your refusal is withdrawn; the question comes back at the next launch.</value>
+  </data>
+  <data name="Permissions.Message.PolicyBlock" xml:space="preserve">
+    <value>Policy: always block.</value>
+  </data>
+  <data name="Permissions.Message.PolicyPrompt" xml:space="preserve">
+    <value>Policy: ask an administrator.</value>
+  </data>
+  <data name="Permissions.NonSystemApp" xml:space="preserve">
+    <value>Non-system app</value>
+  </data>
+  <data name="Permissions.Policy.AriaLabel" xml:space="preserve">
+    <value>Dangerous capability policy</value>
+  </data>
+  <data name="Permissions.Policy.Block" xml:space="preserve">
+    <value>Always block</value>
+  </data>
+  <data name="Permissions.Policy.Description" xml:space="preserve">
+    <value>Policy of {0}. Every change needs an administrator and takes effect at the app's next launch.</value>
+  </data>
+  <data name="Permissions.Policy.Prompt" xml:space="preserve">
+    <value>Ask an administrator</value>
+  </data>
+  <data name="Permissions.Policy.Title" xml:space="preserve">
+    <value>Dangerous capabilities of non-system apps</value>
+  </data>
+  <data name="Permissions.RemoveDenial" xml:space="preserve">
+    <value>Withdraw my refusal</value>
+  </data>
+  <data name="Permissions.Revoke" xml:space="preserve">
+    <value>Revoke</value>
+  </data>
+  <data name="Permissions.State.Allowed" xml:space="preserve">
+    <value>Allowed</value>
+  </data>
+  <data name="Permissions.State.BlockedByPolicy" xml:space="preserve">
+    <value>Blocked by the policy</value>
+  </data>
+  <data name="Permissions.State.DeniedByAdministrator" xml:space="preserve">
+    <value>Refused by the administrator</value>
+  </data>
+  <data name="Permissions.State.DeniedByUser" xml:space="preserve">
+    <value>Refused by you</value>
+  </data>
+  <data name="Permissions.State.Pending" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="Permissions.State.System" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="Permissions.SystemApp" xml:space="preserve">
+    <value>System app</value>
+  </data>
+  <data name="Permissions.Unavailable" xml:space="preserve">
+    <value>App permissions are not available on this host.</value>
+  </data>
+  <data name="Relay.AllPorts" xml:space="preserve">
+    <value>All ports</value>
+  </data>
+  <data name="Relay.AriaLabel" xml:space="preserve">
+    <value>Network relay policy</value>
+  </data>
+  <data name="Relay.Blocked" xml:space="preserve">
+    <value>Blocked</value>
+  </data>
+  <data name="Relay.Disabled" xml:space="preserve">
+    <value>Disabled</value>
+  </data>
+  <data name="Relay.GrantedApps" xml:space="preserve">
+    <value>Granted apps</value>
+  </data>
+  <data name="Relay.HttpPorts" xml:space="preserve">
+    <value>HTTP ports</value>
+  </data>
+  <data name="Relay.Loading" xml:space="preserve">
+    <value>Reading the server's relay policy...</value>
+  </data>
+  <data name="Relay.Off" xml:space="preserve">
+    <value>The server's operator turned the relay off: apps have no route to the real network.</value>
+  </data>
+  <data name="Relay.PrivateNetworks" xml:space="preserve">
+    <value>Private networks</value>
+  </data>
+  <data name="Relay.Quotas" xml:space="preserve">
+    <value>Quotas</value>
+  </data>
+  <data name="Relay.QuotasValue" xml:space="preserve">
+    <value>{0} requests, {1}/{2} sockets open, bodies up to {3} MiB, idle sockets closed after {4} s</value>
+  </data>
+  <data name="Relay.Reachable" xml:space="preserve">
+    <value>Reachable</value>
+  </data>
+  <data name="Relay.TcpPorts" xml:space="preserve">
+    <value>TCP ports</value>
+  </data>
+  <data name="Relay.Title" xml:space="preserve">
+    <value>Network relay</value>
+  </data>
+  <data name="Relay.UdpPorts" xml:space="preserve">
+    <value>UDP ports</value>
+  </data>
+  <data name="Relay.Unavailable" xml:space="preserve">
+    <value>The relay policy is not available on this host.</value>
+  </data>
+  <data name="Reset.Button" xml:space="preserve">
+    <value>Reset to Factory Settings</value>
+  </data>
+  <data name="Reset.Dialog.Accounts" xml:space="preserve">
+    <value>All local user accounts and sessions</value>
+  </data>
+  <data name="Reset.Dialog.Confirm" xml:space="preserve">
+    <value>Type {0} to confirm:</value>
+  </data>
+  <data name="Reset.Dialog.Files" xml:space="preserve">
+    <value>All files and folders</value>
+  </data>
+  <data name="Reset.Dialog.Grants" xml:space="preserve">
+    <value>All capability grants and audit history</value>
+  </data>
+  <data name="Reset.Dialog.Intro" xml:space="preserve">
+    <value>This will permanently delete the entire local Kazo OS database, including:</value>
+  </data>
+  <data name="Reset.Dialog.Restart" xml:space="preserve">
+    <value>Kazo OS will restart afterward as if freshly installed.</value>
+  </data>
+  <data name="Reset.Dialog.Settings" xml:space="preserve">
+    <value>All application and account settings (restored to defaults)</value>
+  </data>
+  <data name="Reset.Error.Failed" xml:space="preserve">
+    <value>Reset failed: {0}</value>
+  </data>
+  <data name="Reset.Error.NotConfirmed" xml:space="preserve">
+    <value>No administrator confirmed the reset: nothing was erased.</value>
+  </data>
+  <data name="Reset.Resetting" xml:space="preserve">
+    <value>Resetting...</value>
+  </data>
+  <data name="Restart.Button" xml:space="preserve">
+    <value>Restart Kazo OS</value>
+  </data>
+  <data name="Restart.Description" xml:space="preserve">
+    <value>Flush the logs, end every process and restart Kazo OS, like {0}. An administrator must confirm with their password.</value>
+  </data>
+  <data name="Restart.Error.NotConfirmed" xml:space="preserve">
+    <value>No administrator confirmed the restart: nothing was done.</value>
+  </data>
+  <data name="Restart.Restarting" xml:space="preserve">
+    <value>Restarting...</value>
+  </data>
+  <data name="Restart.Title" xml:space="preserve">
+    <value>Restart</value>
+  </data>
+  <data name="Server.Account" xml:space="preserve">
+    <value>Account:</value>
+  </data>
+  <data name="Server.ConflictCount" xml:space="preserve">
+    <value>{0} file(s) have unresolved sync conflicts</value>
+  </data>
+  <data name="Server.Connected" xml:space="preserve">
+    <value>Connected</value>
+  </data>
+  <data name="Server.Connecting" xml:space="preserve">
+    <value>Connecting...</value>
+  </data>
+  <data name="Server.CreateAccount" xml:space="preserve">
+    <value>Create Account</value>
+  </data>
+  <data name="Server.Description" xml:space="preserve">
+    <value>Connecting a device to an optional Kazo OS server enables real network access for apps like Terminal's {0}/{1}, through the server's relay. Local storage remains the source of truth either way — connecting is never required for normal use.</value>
+  </data>
+  <data name="Server.Disconnect" xml:space="preserve">
+    <value>Disconnect</value>
+  </data>
+  <data name="Server.Error.Unavailable" xml:space="preserve">
+    <value>The server connection is not available: {0}</value>
+  </data>
+  <data name="Server.Files" xml:space="preserve">
+    <value>Files:</value>
+  </data>
+  <data name="Server.LogIn" xml:space="preserve">
+    <value>Log In</value>
+  </data>
+  <data name="Server.NotConnected" xml:space="preserve">
+    <value>Not connected</value>
+  </data>
+  <data name="Server.Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="Server.Server" xml:space="preserve">
+    <value>Server:</value>
+  </data>
+  <data name="Server.Status" xml:space="preserve">
+    <value>Status:</value>
+  </data>
+  <data name="Server.Sync" xml:space="preserve">
+    <value>Sync:</value>
+  </data>
+  <data name="Server.Title" xml:space="preserve">
+    <value>Optional Server</value>
+  </data>
+  <data name="Server.Url" xml:space="preserve">
+    <value>Server URL</value>
+  </data>
+  <data name="Server.Username" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="StartMode.Automatic" xml:space="preserve">
+    <value>Automatic</value>
+  </data>
+  <data name="StartMode.Disabled" xml:space="preserve">
+    <value>Disabled</value>
+  </data>
+  <data name="StartMode.Manual" xml:space="preserve">
+    <value>Manual</value>
+  </data>
+  <data name="Sync.Automatic" xml:space="preserve">
+    <value>Automatic sync:</value>
+  </data>
+  <data name="Sync.Conflicts.Description" xml:space="preserve">
+    <value>These files changed both here and on another device. They stay as they are here and are neither sent nor replaced until you choose which version to keep.</value>
+  </data>
+  <data name="Sync.Conflicts.None" xml:space="preserve">
+    <value>No conflict: every synchronized file agrees with your other devices.</value>
+  </data>
+  <data name="Sync.Conflicts.Resolve" xml:space="preserve">
+    <value>Resolve...</value>
+  </data>
+  <data name="Sync.Conflicts.Since" xml:space="preserve">
+    <value>since {0}</value>
+  </data>
+  <data name="Sync.Conflicts.Title" xml:space="preserve">
+    <value>Conflicts</value>
+  </data>
+  <data name="Sync.Description" xml:space="preserve">
+    <value>While this device is connected to a server, your home folder, file associations and granted capabilities synchronize by themselves {0}, when you sign in, and a few seconds after you change a file. A file deleted on another device lands in your trash here, so it can be restored.</value>
+  </data>
+  <data name="Sync.Error.CannotChange" xml:space="preserve">
+    <value>Could not change the setting: {0}</value>
+  </data>
+  <data name="Sync.Interval.Minute" xml:space="preserve">
+    <value>every minute</value>
+  </data>
+  <data name="Sync.Interval.Minutes" xml:space="preserve">
+    <value>every {0} minutes</value>
+  </data>
+  <data name="Sync.Last" xml:space="preserve">
+    <value>Last sync:</value>
+  </data>
+  <data name="Sync.LastDetail" xml:space="preserve">
+    <value>{0} ({1} sent, {2} received)</value>
+  </data>
+  <data name="Sync.LastError" xml:space="preserve">
+    <value>Last error:</value>
+  </data>
+  <data name="Sync.LastSynced" xml:space="preserve">
+    <value>Last synced {0}</value>
+  </data>
+  <data name="Sync.LastSyncedWithConflicts" xml:space="preserve">
+    <value>Last synced {0} ({1} file conflict(s))</value>
+  </data>
+  <data name="Sync.Never" xml:space="preserve">
+    <value>never</value>
+  </data>
+  <data name="Sync.Now" xml:space="preserve">
+    <value>Sync now</value>
+  </data>
+  <data name="Sync.Pause" xml:space="preserve">
+    <value>Pause my synchronization on this device (manual sync still works)</value>
+  </data>
+  <data name="Sync.State.Inactive" xml:space="preserve">
+    <value>inactive</value>
+  </data>
+  <data name="Sync.State.Off" xml:space="preserve">
+    <value>off (not connected to a server)</value>
+  </data>
+  <data name="Sync.State.Paused" xml:space="preserve">
+    <value>paused</value>
+  </data>
+  <data name="Sync.State.Running" xml:space="preserve">
+    <value>running</value>
+  </data>
+  <data name="Sync.State.WaitingForServer" xml:space="preserve">
+    <value>waiting for the server</value>
+  </data>
+  <data name="Sync.Syncing" xml:space="preserve">
+    <value>Syncing...</value>
+  </data>
+  <data name="Sync.Title" xml:space="preserve">
+    <value>Synchronization</value>
+  </data>
+  <data name="Tab.About" xml:space="preserve">
+    <value>About System</value>
+  </data>
+  <data name="Tab.Accessibility" xml:space="preserve">
+    <value>Accessibility</value>
+  </data>
+  <data name="Tab.Appearance" xml:space="preserve">
+    <value>Appearance</value>
+  </data>
+  <data name="Tab.Application" xml:space="preserve">
+    <value>Application</value>
+  </data>
+  <data name="Tab.Backup" xml:space="preserve">
+    <value>Backup</value>
+  </data>
+  <data name="Tab.CapabilityGrants" xml:space="preserve">
+    <value>Capability Grants</value>
+  </data>
+  <data name="Tab.FileAssociations" xml:space="preserve">
+    <value>File Associations</value>
+  </data>
+  <data name="Tab.OsComponents" xml:space="preserve">
+    <value>OS components</value>
+  </data>
+  <data name="Tab.InstalledApps" xml:space="preserve">
+    <value>Installed Apps</value>
+  </data>
+  <data name="Tab.Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="Tab.Permissions" xml:space="preserve">
+    <value>Permissions</value>
+  </data>
+  <data name="Tab.ServerConnection" xml:space="preserve">
+    <value>Server Connection</value>
+  </data>
+  <data name="Tab.Synchronization" xml:space="preserve">
+    <value>Synchronization</value>
+  </data>
+  <data name="Tab.Users" xml:space="preserve">
+    <value>Users</value>
+  </data>
+  <data name="Users.List.Title" xml:space="preserve">
+    <value>Accounts</value>
+  </data>
+  <data name="Users.List.Description" xml:space="preserve">
+    <value>The local accounts of this machine. P: password set, NP: no password, L: account disabled, as {0} -S shows them. In the terminal, {0} changes your password and {1} another account's.</value>
+  </data>
+  <data name="Users.List.Empty" xml:space="preserve">
+    <value>No account to show.</value>
+  </data>
+  <data name="Users.Badge.Administrator" xml:space="preserve">
+    <value>administrator</value>
+  </data>
+  <data name="Users.Badge.You" xml:space="preserve">
+    <value>you</value>
+  </data>
+  <data name="Users.State.Password" xml:space="preserve">
+    <value>Password set</value>
+  </data>
+  <data name="Users.State.NoPassword" xml:space="preserve">
+    <value>No password</value>
+  </data>
+  <data name="Users.State.Locked" xml:space="preserve">
+    <value>Account disabled</value>
+  </data>
+  <data name="Users.Own.Title" xml:space="preserve">
+    <value>Change my password</value>
+  </data>
+  <data name="Users.Own.Description" xml:space="preserve">
+    <value>Your keyring is re-sealed with the new password: saved secrets stay readable.</value>
+  </data>
+  <data name="Users.Own.Submit" xml:space="preserve">
+    <value>Change password</value>
+  </data>
+  <data name="Users.Own.Done" xml:space="preserve">
+    <value>Password updated.</value>
+  </data>
+  <data name="Users.Field.Current" xml:space="preserve">
+    <value>Current password</value>
+  </data>
+  <data name="Users.Field.New" xml:space="preserve">
+    <value>New password</value>
+  </data>
+  <data name="Users.Field.Confirm" xml:space="preserve">
+    <value>Confirm the new password</value>
+  </data>
+  <data name="Users.Field.Account" xml:space="preserve">
+    <value>Account</value>
+  </data>
+  <data name="Users.Reset.Title" xml:space="preserve">
+    <value>Reset another account's password</value>
+  </data>
+  <data name="Users.Reset.Description" xml:space="preserve">
+    <value>An administrator confirms in the OS window (capability {1}). The account's keyring cannot be opened with the new password: it is set aside as {0} and its saved secrets are lost for that account.</value>
+  </data>
+  <data name="Users.Reset.Submit" xml:space="preserve">
+    <value>Reset password</value>
+  </data>
+  <data name="Users.Reset.Remove" xml:space="preserve">
+    <value>Remove password</value>
+  </data>
+  <data name="Users.Reset.Done" xml:space="preserve">
+    <value>Password of {0} reset.</value>
+  </data>
+  <data name="Users.Reset.Removed" xml:space="preserve">
+    <value>Password of {0} removed: the account opens without one.</value>
+  </data>
+  <data name="Users.Error.CannotList" xml:space="preserve">
+    <value>Cannot read the accounts: {0}</value>
+  </data>
+  <data name="Users.Error.WrongCurrent" xml:space="preserve">
+    <value>The current password is wrong. Password unchanged.</value>
+  </data>
+  <data name="Users.Error.Failed" xml:space="preserve">
+    <value>Password unchanged: {0}</value>
+  </data>
+  <data name="Users.Error.TooShort" xml:space="preserve">
+    <value>The password must have at least {0} characters.</value>
+  </data>
+  <data name="Users.Error.Mismatch" xml:space="preserve">
+    <value>The two passwords do not match.</value>
+  </data>
+  <data name="FileAssociations.Filter" xml:space="preserve">
+    <value>Filter by type or app</value>
+  </data>
+  <data name="FileAssociations.Column.Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="FileAssociations.Column.Action" xml:space="preserve">
+    <value>Action</value>
+  </data>
+  <data name="FileAssociations.Column.App" xml:space="preserve">
+    <value>Application</value>
+  </data>
+  <data name="FileAssociations.Action.Open" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="FileAssociations.Action.Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="FileAssociations.ChooseFor" xml:space="preserve">
+    <value>Application to {1} {0}</value>
+  </data>
+  <data name="FileAssociations.SystemDefault" xml:space="preserve">
+    <value>System default ({0})</value>
+  </data>
+  <data name="FileAssociations.OnlyApp" xml:space="preserve">
+    <value>Only app ({0})</value>
+  </data>
+  <data name="FileAssociations.AskEachTime" xml:space="preserve">
+    <value>Ask each time</value>
+  </data>
+  <data name="FileAssociations.Saved" xml:space="preserve">
+    <value>{1} now opens {0} for you.</value>
+  </data>
+  <data name="FileAssociations.Saved.Reset" xml:space="preserve">
+    <value>{0} follows the system default again.</value>
+  </data>
+  <data name="FileAssociations.Error.Read" xml:space="preserve">
+    <value>The default applications could not be read: {0}</value>
+  </data>
+  <data name="FileAssociations.Error.Write" xml:space="preserve">
+    <value>Your choice could not be saved: {0}</value>
+  </data>
+  <data name="FileAssociations.Error.InvalidTarget" xml:space="preserve">
+    <value>{0} is not a valid file type.</value>
+  </data>
+  <data name="FileAssociations.Error.InvalidAction" xml:space="preserve">
+    <value>This action is not supported for {0}.</value>
+  </data>
+  <data name="FileAssociations.Error.AppNotFound" xml:space="preserve">
+    <value>That app is no longer installed.</value>
+  </data>
+  <data name="FileAssociations.Error.AppCannotHandle" xml:space="preserve">
+    <value>That app does not declare {0}.</value>
+  </data>
+  <data name="FileAssociations.Error.FileInvalid" xml:space="preserve">
+    <value>~/.config/hackeros/file-associations.json is not valid: fix or remove it, then try again.</value>
+  </data>
+  <data name="FileAssociations.Error.WriteFailed" xml:space="preserve">
+    <value>~/.config/hackeros/file-associations.json could not be written.</value>
+  </data>
+  <data name="Tab.Memory" xml:space="preserve">
+    <value>Memory</value>
+  </data>
+  <data name="Memory.State.Title" xml:space="preserve">
+    <value>Memory now</value>
+  </data>
+  <data name="Memory.State.Description" xml:space="preserve">
+    <value>What {0} and {1} report, the files free and vmstat read.</value>
+  </data>
+  <data name="Memory.State.Source" xml:space="preserve">
+    <value>Source</value>
+  </data>
+  <data name="Memory.State.Measured" xml:space="preserve">
+    <value>measured</value>
+  </data>
+  <data name="Memory.State.Simulated" xml:space="preserve">
+    <value>simulated</value>
+  </data>
+  <data name="Memory.State.NotMeasured" xml:space="preserve">
+    <value>Memory is simulated on this host: the OOM killer stays idle even when it is on. It never kills on simulated figures.</value>
+  </data>
+  <data name="Memory.OomKiller.Title" xml:space="preserve">
+    <value>OOM killer</value>
+  </data>
+  <data name="Memory.OomKiller.Description" xml:space="preserve">
+    <value>When free memory stays too low, the system closes the process with the highest {0} and writes why in the kernel log ({1}). It also protects the page from the browser's real memory limit.</value>
+  </data>
+  <data name="Memory.OomKiller.On" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="Memory.OomKiller.Off" xml:space="preserve">
+    <value>Off (default)</value>
+  </data>
+  <data name="Memory.Threshold.Title" xml:space="preserve">
+    <value>Free memory to keep</value>
+  </data>
+  <data name="Memory.Threshold.Description" xml:space="preserve">
+    <value>The OOM killer acts when MemAvailable stays under this share of MemTotal for two seconds.</value>
+  </data>
+  <data name="Memory.AdminNote" xml:space="preserve">
+    <value>Saved in {0}, a system file: an administrator approves the change.</value>
+  </data>
+  <data name="Memory.Saved" xml:space="preserve">
+    <value>Saved. The system applies the change at once.</value>
+  </data>
+  <data name="Memory.Error.AdminRequired" xml:space="preserve">
+    <value>An administrator must approve this change.</value>
+  </data>
+  <data name="Memory.Error.CannotRead" xml:space="preserve">
+    <value>Cannot read {0}: {1}</value>
+  </data>
+  <data name="Memory.Error.CannotSave" xml:space="preserve">
+    <value>Cannot save {0}: {1}</value>
+  </data>
+  <data name="Tab.FileMenus" xml:space="preserve">
+    <value>File menus</value>
+  </data>
+  <data name="FileMenus.Unavailable" xml:space="preserve">
+    <value>File menu entries are not available on this host.</value>
+  </data>
+  <data name="FileMenus.Description" xml:space="preserve">
+    <value>Entries that apps add to the file menus (explorer, desktop, file dialogs). Uncheck an entry to hide it from your menus; the choice is saved in {0} and applies to the next menu opened.</value>
+  </data>
+  <data name="FileMenus.Empty" xml:space="preserve">
+    <value>No installed app adds entries to the file menus.</value>
+  </data>
+  <data name="FileMenus.HiddenByParent" xml:space="preserve">
+    <value>Hidden with its parent menu.</value>
+  </data>
+  <data name="FileMenus.Error.CannotSave" xml:space="preserve">
+    <value>The choice could not be saved: {0}</value>
+  </data>
+  <data name="FileMenus.Scope.File" xml:space="preserve">
+    <value>Files</value>
+  </data>
+  <data name="FileMenus.Scope.Directory" xml:space="preserve">
+    <value>Folders</value>
+  </data>
+  <data name="FileMenus.Scope.Background" xml:space="preserve">
+    <value>Empty space</value>
+  </data>
+  <data name="FileMenus.Scope.Desktop" xml:space="preserve">
+    <value>Desktop</value>
+  </data>
+  <data name="Tab.Desktop" xml:space="preserve">
+    <value>Desktop</value>
+  </data>
+  <data name="Nav.AriaLabel" xml:space="preserve">
+    <value>Settings pages</value>
+  </data>
+  <data name="Nav.Collapse" xml:space="preserve">
+    <value>Collapse the menu</value>
+  </data>
+  <data name="Nav.Expand" xml:space="preserve">
+    <value>Expand the menu</value>
+  </data>
+  <data name="Nav.Group.Personalization" xml:space="preserve">
+    <value>Personalization</value>
+  </data>
+  <data name="Nav.Group.Applications" xml:space="preserve">
+    <value>Applications</value>
+  </data>
+  <data name="Nav.Group.Network" xml:space="preserve">
+    <value>Network</value>
+  </data>
+  <data name="Nav.Group.System" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="Desktop.Description" xml:space="preserve">
+    <value>The desktop shows the files of {0}. These options live in {1}; the desktop follows the file as soon as it changes.</value>
+  </data>
+  <data name="Desktop.IconSize.Title" xml:space="preserve">
+    <value>Icon size</value>
+  </data>
+  <data name="Desktop.IconSize.Small" xml:space="preserve">
+    <value>Small</value>
+  </data>
+  <data name="Desktop.IconSize.Medium" xml:space="preserve">
+    <value>Medium</value>
+  </data>
+  <data name="Desktop.IconSize.Large" xml:space="preserve">
+    <value>Large</value>
+  </data>
+  <data name="Desktop.Layout.Title" xml:space="preserve">
+    <value>Layout</value>
+  </data>
+  <data name="Desktop.Layout.Description" xml:space="preserve">
+    <value>Auto-arrange keeps the icons packed in columns; otherwise each icon stays where you drop it.</value>
+  </data>
+  <data name="Desktop.AutoArrange" xml:space="preserve">
+    <value>Auto-arrange icons</value>
+  </data>
+  <data name="Desktop.AlignToGrid" xml:space="preserve">
+    <value>Align icons to the grid</value>
+  </data>
+  <data name="Desktop.ShowHome" xml:space="preserve">
+    <value>Show the Home icon</value>
+  </data>
+  <data name="Desktop.ShowTrash" xml:space="preserve">
+    <value>Show the Trash icon</value>
+  </data>
+  <data name="Desktop.Sort.Title" xml:space="preserve">
+    <value>Sort</value>
+  </data>
+  <data name="Desktop.Sort.Description" xml:space="preserve">
+    <value>Sorting arranges the icons once in this order and forgets the positions you chose.</value>
+  </data>
+  <data name="Desktop.Sort.Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Desktop.Sort.Size" xml:space="preserve">
+    <value>Size</value>
+  </data>
+  <data name="Desktop.Sort.Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Desktop.Sort.Date" xml:space="preserve">
+    <value>Date modified</value>
+  </data>
+  <data name="Desktop.ResetPositions" xml:space="preserve">
+    <value>Forget icon positions</value>
+  </data>
+  <data name="Desktop.Saved" xml:space="preserve">
+    <value>Saved. The desktop has been updated.</value>
+  </data>
+  <data name="Desktop.SaveFailed" xml:space="preserve">
+    <value>The desktop settings could not be saved: {0}</value>
+  </data>
+  <data name="Desktop.On" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="Desktop.Off" xml:space="preserve">
+    <value>Off</value>
+  </data>
+<data name="Mobile.HelpersTitle" xml:space="preserve"><value>Mobile mouse controls</value></data>
+<data name="Mobile.HelpersDescription" xml:space="preserve"><value>Show page arrows and gesture hints on the mobile Home screen. Swipes remain available with touch and mouse.</value></data>
+<data name="Mobile.HelpersLabel" xml:space="preserve"><value>Show mobile mouse helpers</value></data>
+<data name="Mobile.HelpersError" xml:space="preserve"><value>Unable to update mobile mouse helpers.</value></data>
+  <data name="About.Repository" xml:space="preserve"><value>GitHub project:</value></data>
+  <data name="About.Author" xml:space="preserve"><value>Author:</value></data>
+  <data name="Users.Badge.Passkeys" xml:space="preserve">
+    <value>{0} passkey(s)</value>
+  </data>
+  <data name="Users.Badge.PasskeysTitle" xml:space="preserve">
+    <value>This account can sign in with a passkey.</value>
+  </data>
+  <data name="Users.Delete.Button" xml:space="preserve">
+    <value>Delete the account {0}</value>
+  </data>
+  <data name="Users.Delete.Short" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Users.Delete.Title" xml:space="preserve">
+    <value>Delete {0}</value>
+  </data>
+  <data name="Users.Delete.Description" xml:space="preserve">
+    <value>Delete the account {0}? Its passkeys and password go with it. An administrator confirms in the OS window.</value>
+  </data>
+  <data name="Users.Delete.RemoveHome" xml:space="preserve">
+    <value>Also delete its home folder {0} and every file in it</value>
+  </data>
+  <data name="Users.Delete.Confirm" xml:space="preserve">
+    <value>Delete {0}</value>
+  </data>
+  <data name="Users.Delete.Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Users.Delete.Done" xml:space="preserve">
+    <value>Account {0} deleted. Its home folder was kept.</value>
+  </data>
+  <data name="Users.Delete.DoneWithHome" xml:space="preserve">
+    <value>Account {0} and its home folder deleted.</value>
+  </data>
+  <data name="Users.Add.Title" xml:space="preserve">
+    <value>Add an account</value>
+  </data>
+  <data name="Users.Add.Description" xml:space="preserve">
+    <value>A new local account with its own group and a password. An administrator confirms in the OS window (capability {0}). The home folder is created at the first sign-in.</value>
+  </data>
+  <data name="Users.Add.Submit" xml:space="preserve">
+    <value>Add the account</value>
+  </data>
+  <data name="Users.Add.Done" xml:space="preserve">
+    <value>Account {0} added.</value>
+  </data>
+  <data name="Users.Field.Login" xml:space="preserve">
+    <value>Login name (lowercase letters, digits, - and _)</value>
+  </data>
+  <data name="Users.Field.DisplayName" xml:space="preserve">
+    <value>Display name</value>
+  </data>
+  <data name="Users.Field.Type" xml:space="preserve">
+    <value>Account type</value>
+  </data>
+  <data name="Users.Type.Standard" xml:space="preserve">
+    <value>Standard</value>
+  </data>
+  <data name="Users.Type.Administrator" xml:space="preserve">
+    <value>Administrator</value>
+  </data>
+  <data name="Users.Field.InitialPassword" xml:space="preserve">
+    <value>Initial password</value>
+  </data>
+  <data name="Passkeys.Title" xml:space="preserve">
+    <value>My passkeys</value>
+  </data>
+  <data name="Passkeys.Description" xml:space="preserve">
+    <value>A passkey signs you in with your fingerprint, your face, a PIN or a security key, without typing your password. The browser keeps the key; Kazo OS only stores its public half. A passkey that supports the PRF extension also opens your keyring.</value>
+  </data>
+  <data name="Passkeys.Empty" xml:space="preserve">
+    <value>No passkey yet.</value>
+  </data>
+  <data name="Passkeys.Created" xml:space="preserve">
+    <value>added {0}</value>
+  </data>
+  <data name="Passkeys.LastUsed" xml:space="preserve">
+    <value>last used {0}</value>
+  </data>
+  <data name="Passkeys.Keyring" xml:space="preserve">
+    <value>keyring</value>
+  </data>
+  <data name="Passkeys.KeyringTitle" xml:space="preserve">
+    <value>Signing in with this passkey opens your keyring.</value>
+  </data>
+  <data name="Passkeys.NoKeyring" xml:space="preserve">
+    <value>no keyring</value>
+  </data>
+  <data name="Passkeys.NoKeyringTitle" xml:space="preserve">
+    <value>This authenticator does not support PRF: after signing in with it, your keyring stays locked until you give your password.</value>
+  </data>
+  <data name="Passkeys.Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="Passkeys.RemoveLabel" xml:space="preserve">
+    <value>Remove the passkey {0}</value>
+  </data>
+  <data name="Passkeys.Field.Name" xml:space="preserve">
+    <value>Name of the new passkey (for example: Phone, YubiKey)</value>
+  </data>
+  <data name="Passkeys.Add" xml:space="preserve">
+    <value>Add a passkey</value>
+  </data>
+  <data name="Passkeys.Added" xml:space="preserve">
+    <value>Passkey {0} added. It also opens your keyring.</value>
+  </data>
+  <data name="Passkeys.AddedNoKeyring" xml:space="preserve">
+    <value>Passkey {0} added. Your authenticator does not support PRF, so it will not open your keyring.</value>
+  </data>
+  <data name="Passkeys.Removed" xml:space="preserve">
+    <value>Passkey {0} removed.</value>
+  </data>
+  <data name="Passkeys.Unsupported" xml:space="preserve">
+    <value>This browser cannot use passkeys here (WebAuthn needs a secure context: https or localhost).</value>
+  </data>
+  <data name="Passkeys.Error.NameRequired" xml:space="preserve">
+    <value>Give the passkey a name.</value>
+  </data>
+  <data name="Passkeys.Error.Cancelled" xml:space="preserve">
+    <value>The browser request was cancelled or timed out.</value>
+  </data>
+  <data name="Passkeys.Error.NotFound" xml:space="preserve">
+    <value>The passkey {0} no longer exists.</value>
+  </data>
+  <data name="Tab.Screens" xml:space="preserve">
+    <value>Screens</value>
+  </data>
+  <data name="Screens.Taskbar.Title" xml:space="preserve">
+    <value>Taskbar of screen 1</value>
+  </data>
+  <data name="Screens.Taskbar.Description" xml:space="preserve">
+    <value>The taskbars of the other screens always list the windows of their own screen. The change applies at once.</value>
+  </data>
+  <data name="Screens.Taskbar.All" xml:space="preserve">
+    <value>Every window of every screen</value>
+  </data>
+  <data name="Screens.Taskbar.Own" xml:space="preserve">
+    <value>Only the windows of screen 1</value>
+  </data>
+  <data name="Screens.List.Title" xml:space="preserve">
+    <value>Remembered screens</value>
+  </data>
+  <data name="Screens.List.Description" xml:space="preserve">
+    <value>Each secondary screen opens in its own browser window. Kazo OS remembers where it was in {0}, even after it closes.</value>
+  </data>
+  <data name="Screens.List.Screen" xml:space="preserve">
+    <value>Screen {0}</value>
+  </data>
+  <data name="Screens.List.Primary" xml:space="preserve">
+    <value>This browser tab</value>
+  </data>
+  <data name="Screens.List.Open" xml:space="preserve">
+    <value>Open, or offered at the next sign-in</value>
+  </data>
+  <data name="Screens.List.Closed" xml:space="preserve">
+    <value>Closed</value>
+  </data>
+  <data name="Screens.List.Place" xml:space="preserve">
+    <value>{0} × {1} at ({2}, {3})</value>
+  </data>
+  <data name="Screens.List.NoPlace" xml:space="preserve">
+    <value>Place not remembered yet</value>
+  </data>
+  <data name="Screens.List.Forget" xml:space="preserve">
+    <value>Forget</value>
+  </data>
+  <data name="Screens.List.ForgetLabel" xml:space="preserve">
+    <value>Forget the place of screen {0}</value>
+  </data>
+  <data name="Screens.List.None" xml:space="preserve">
+    <value>No secondary screen yet.</value>
+  </data>
+  <data name="Screens.Help.Title" xml:space="preserve">
+    <value>Open and move screens</value>
+  </data>
+  <data name="Screens.Help.New" xml:space="preserve">
+    <value>New screen: right-click the icon of a window, or its Maximize button, then Other screen ▸ New screen.</value>
+  </data>
+  <data name="Screens.Help.Move" xml:space="preserve">
+    <value>Move the focused window to the previous or next screen with {0} or {1}, or with Other screen ▸ Screen N. Hovering a screen in that menu shows its number on every screen.</value>
+  </data>
+  <data name="Screens.Help.Restore" xml:space="preserve">
+    <value>After you sign in, the Restore screens card above the taskbar reopens the screens of your last session.</value>
+  </data>
+  <data name="Screens.Help.FullScreen" xml:space="preserve">
+    <value>Full screen: the ⤢ button at the top right of each secondary screen; Esc leaves it.</value>
+  </data>
+  <data name="Screens.Help.Permission" xml:space="preserve">
+    <value>In Chrome and Edge, allow window management when the browser asks: each new screen then goes to a free monitor. Elsewhere, place the window yourself; Kazo OS remembers its place.</value>
+  </data>
+  <data name="Screens.Saved" xml:space="preserve">
+    <value>Saved.</value>
+  </data>
+  <data name="Screens.Error.CannotRead" xml:space="preserve">
+    <value>Cannot read screens.config: {0}</value>
+  </data>
+  <data name="Screens.Error.CannotSave" xml:space="preserve">
+    <value>Cannot save {0}: {1}</value>
+  </data>
+  <data name="Screens.Open.Title" xml:space="preserve">
+    <value>Open screens</value>
+  </data>
+  <data name="Screens.Open.Size" xml:space="preserve">
+    <value>{0} × {1}</value>
+  </data>
+  <data name="Screens.Open.IsFullScreen" xml:space="preserve">
+    <value>Full screen</value>
+  </data>
+  <data name="Screens.Open.ThisWindow" xml:space="preserve">
+    <value>This window</value>
+  </data>
+  <data name="Screens.Open.Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="Screens.Open.CloseLabel" xml:space="preserve">
+    <value>Close screen {0}</value>
+  </data>
+  <data name="Screens.Open.Identify" xml:space="preserve">
+    <value>Identify</value>
+  </data>
+  <data name="Screens.Open.New" xml:space="preserve">
+    <value>New screen</value>
+  </data>
+  <data name="Screens.Open.Restore" xml:space="preserve">
+    <value>Restore screens ({0})</value>
+  </data>
+  <data name="Screens.Open.FullScreen" xml:space="preserve">
+    <value>Full screen</value>
+  </data>
+  <data name="Screens.Open.LeaveFullScreen" xml:space="preserve">
+    <value>Leave full screen</value>
+  </data>
+  <data name="Screens.Open.NoMonitorName" xml:space="preserve">
+    <value>Monitor name not available</value>
+  </data>
+  <data name="Screens.Open.Blocked" xml:space="preserve">
+    <value>The browser blocked the window. Allow pop-ups for Kazo OS, then try again.</value>
+  </data>
+  <data name="Screens.Open.LimitReached" xml:space="preserve">
+    <value>Screens 2 to 9 are all open.</value>
+  </data>
+  <data name="Screens.Open.Unavailable" xml:space="preserve">
+    <value>This host cannot open screens.</value>
+  </data>
+  <data name="Screens.Open.FullScreenRefused" xml:space="preserve">
+    <value>The browser refused full screen.</value>
+  </data>
+  <data name="Screens.Permission.Granted" xml:space="preserve">
+    <value>Window management allowed: each new screen goes to a free monitor.</value>
+  </data>
+  <data name="Screens.Permission.Denied" xml:space="preserve">
+    <value>Window management refused: place each screen's window yourself. Change it in the browser's site settings.</value>
+  </data>
+  <data name="Screens.Permission.Prompt" xml:space="preserve">
+    <value>Window management not asked yet: the browser asks at the next new screen.</value>
+  </data>
+  <data name="Screens.Permission.Unsupported" xml:space="preserve">
+    <value>This browser cannot place windows on a monitor: place each screen's window yourself.</value>
+  </data>
+  <data name="Screens.Permission.Unknown" xml:space="preserve">
+    <value>Window management: state unknown.</value>
+  </data>
+  <data name="Screens.Permission.Ask" xml:space="preserve">
+    <value>Allow now</value>
+  </data>
+  <data name="Screens.Error.Request" xml:space="preserve">
+    <value>The request failed: {0}</value>
+  </data>
+  <data name="Tab.WhatsNew" xml:space="preserve">
+    <value>What's new</value>
+  </data>
+  <data name="About.WhatsNew" xml:space="preserve">
+    <value>What's new?</value>
+  </data>
+  <data name="WhatsNew.Empty" xml:space="preserve">
+    <value>No changes to show. The list comes with the OS; it may be missing when the OS is offline.</value>
+  </data>
+  <data name="WhatsNew.Summary.None" xml:space="preserve">
+    <value>You have seen every change.</value>
+  </data>
+  <data name="WhatsNew.Summary.One" xml:space="preserve">
+    <value>1 new change since your last visit.</value>
+  </data>
+  <data name="WhatsNew.Summary.Many" xml:space="preserve">
+    <value>{0} new changes since your last visit.</value>
+  </data>
+  <data name="WhatsNew.Group.Next" xml:space="preserve">
+    <value>Since {0} (next version)</value>
+  </data>
+  <data name="WhatsNew.Group.Version" xml:space="preserve">
+    <value>Version {0}</value>
+  </data>
+  <data name="WhatsNew.Group.VersionWithDate" xml:space="preserve">
+    <value>Version {0} — {1}</value>
+  </data>
+  <data name="WhatsNew.Badge.New" xml:space="preserve">
+    <value>New</value>
+  </data>
+  <data name="WhatsNew.Category.New" xml:space="preserve">
+    <value>Feature</value>
+  </data>
+  <data name="WhatsNew.Category.Improved" xml:space="preserve">
+    <value>Improved</value>
+  </data>
+  <data name="WhatsNew.Category.Fixed" xml:space="preserve">
+    <value>Fixed</value>
+  </data>
+  <data name="WhatsNew.Category.Developer" xml:space="preserve">
+    <value>Developers</value>
+  </data>
+  <data name="WhatsNew.Link.More" xml:space="preserve">
+    <value>Learn more</value>
+  </data>
+  <data name="WhatsNew.Link.PullRequest" xml:space="preserve">
+    <value>Pull request</value>
+  </data>
+  <data name="Tab.DateTime" xml:space="preserve">
+    <value>Date and time</value>
+  </data>
+  <data name="DateTime.State.Title" xml:space="preserve">
+    <value>Current time</value>
+  </data>
+  <data name="DateTime.State.Local" xml:space="preserve">
+    <value>Local time</value>
+  </data>
+  <data name="DateTime.State.Zone" xml:space="preserve">
+    <value>Time zone</value>
+  </data>
+  <data name="DateTime.Zone.Title" xml:space="preserve">
+    <value>Time zone</value>
+  </data>
+  <data name="DateTime.Zone.Description" xml:space="preserve">
+    <value>The taskbar clock, the dates of the apps and of ls, date and dmesg use this zone. The choice is saved in {0} and applies at once. A process with its own {1} variable keeps that zone.</value>
+  </data>
+  <data name="DateTime.Zone.Automatic" xml:space="preserve">
+    <value>Automatic</value>
+  </data>
+  <data name="DateTime.Zone.Automatic.Detail" xml:space="preserve">
+    <value>Time zone of this device: {0}</value>
+  </data>
+  <data name="DateTime.Zone.Manual" xml:space="preserve">
+    <value>Choose from the list</value>
+  </data>
+  <data name="DateTime.Zone.Manual.Detail" xml:space="preserve">
+    <value>Pick a city or a region</value>
+  </data>
+  <data name="DateTime.Zone.Search" xml:space="preserve">
+    <value>Search for a time zone</value>
+  </data>
+  <data name="DateTime.Zone.Search.Placeholder" xml:space="preserve">
+    <value>Toronto, Europe/Paris…</value>
+  </data>
+  <data name="DateTime.Zone.List" xml:space="preserve">
+    <value>Time zones</value>
+  </data>
+  <data name="DateTime.Zone.NoMatch" xml:space="preserve">
+    <value>No time zone matches "{0}".</value>
+  </data>
+  <data name="DateTime.Saved.Automatic" xml:space="preserve">
+    <value>Saved: automatic time zone ({0}).</value>
+  </data>
+  <data name="DateTime.Saved.Zone" xml:space="preserve">
+    <value>Saved: time zone {0}.</value>
+  </data>
+  <data name="DateTime.Error.CannotRead" xml:space="preserve">
+    <value>Cannot read {0}: {1}</value>
+  </data>
+  <data name="DateTime.Error.CannotSave" xml:space="preserve">
+    <value>Cannot save {0}: {1}</value>
+  </data>
+  <data name="DateTime.Error.Unknown" xml:space="preserve">
+    <value>Unknown time zone: {0}</value>
+  </data>
+  <data name="Users.Guest.Title" xml:space="preserve">
+    <value>You are using the guest account</value>
+  </data>
+  <data name="Users.Guest.Description" xml:space="preserve">
+    <value>The guest account has no password. Create your own account to protect your files: you can keep the guest's files, settings and apps, or start over with an empty account.</value>
+  </data>
+  <data name="Users.Guest.SignOutNotice" xml:space="preserve">
+    <value>The guest session closes first: save your work in open apps.</value>
+  </data>
+  <data name="Users.Guest.Create" xml:space="preserve">
+    <value>Create my account</value>
+  </data>
+  <data name="Users.Guest.Unavailable" xml:space="preserve">
+    <value>The account form could not be opened. Sign out, then choose Create my account on the sign-in screen.</value>
+  </data>
+  <data name="Wallpaper.Title" xml:space="preserve">
+    <value>Wallpaper</value>
+  </data>
+  <data name="Wallpaper.Description" xml:space="preserve">
+    <value>A PNG, JPEG or WebP image over the theme's background. Images placed in {0} are offered to every user, those in {1} to you only; "Browse…" picks any image you can open.</value>
+  </data>
+  <data name="Wallpaper.Screens.AriaLabel" xml:space="preserve">
+    <value>Screen</value>
+  </data>
+  <data name="Wallpaper.Screens.Primary" xml:space="preserve">
+    <value>Screen 1 and the others</value>
+  </data>
+  <data name="Wallpaper.Screens.Other" xml:space="preserve">
+    <value>Screen {0}</value>
+  </data>
+  <data name="Wallpaper.Screens.Mobile" xml:space="preserve">
+    <value>Mobile</value>
+  </data>
+  <data name="Wallpaper.Screens.Desktop" xml:space="preserve">
+    <value>Desktop</value>
+  </data>
+  <data name="Wallpaper.MobileTheme" xml:space="preserve">
+    <value>Mobile theme background</value>
+  </data>
+  <data name="Wallpaper.Theme" xml:space="preserve">
+    <value>Theme background</value>
+  </data>
+  <data name="Wallpaper.SameAsPrimary" xml:space="preserve">
+    <value>Same as screen 1</value>
+  </data>
+  <data name="Wallpaper.BuiltIn.hacker-grid" xml:space="preserve">
+    <value>Grid</value>
+  </data>
+  <data name="Wallpaper.BuiltIn.circuit" xml:space="preserve">
+    <value>Circuit</value>
+  </data>
+  <data name="Wallpaper.BuiltIn.aurora" xml:space="preserve">
+    <value>Aurora</value>
+  </data>
+  <data name="Wallpaper.BuiltIn.nebula" xml:space="preserve">
+    <value>Nebula</value>
+  </data>
+  <data name="Wallpaper.Origin.system" xml:space="preserve">
+    <value>system</value>
+  </data>
+  <data name="Wallpaper.Origin.user" xml:space="preserve">
+    <value>mine</value>
+  </data>
+  <data name="Wallpaper.Origin.pack" xml:space="preserve">
+    <value>pack</value>
+  </data>
+  <data name="Wallpaper.Origin.file" xml:space="preserve">
+    <value>file</value>
+  </data>
+  <data name="Wallpaper.Browse" xml:space="preserve">
+    <value>Browse…</value>
+  </data>
+  <data name="Wallpaper.Browse.Title" xml:space="preserve">
+    <value>Choose a wallpaper</value>
+  </data>
+  <data name="Wallpaper.Browse.Filter" xml:space="preserve">
+    <value>Images (PNG, JPEG, WebP)</value>
+  </data>
+  <data name="Wallpaper.Fit.Label" xml:space="preserve">
+    <value>Fit</value>
+  </data>
+  <data name="Wallpaper.Fit.fill" xml:space="preserve">
+    <value>Fill</value>
+  </data>
+  <data name="Wallpaper.Fit.fit" xml:space="preserve">
+    <value>Fit</value>
+  </data>
+  <data name="Wallpaper.Fit.stretch" xml:space="preserve">
+    <value>Stretch</value>
+  </data>
+  <data name="Wallpaper.Fit.center" xml:space="preserve">
+    <value>Center</value>
+  </data>
+  <data name="Wallpaper.Fit.tile" xml:space="preserve">
+    <value>Tile</value>
+  </data>
+  <data name="Wallpaper.Error.Format" xml:space="preserve">
+    <value>{0} is not a PNG, JPEG or WebP image.</value>
+  </data>
+  <data name="Wallpaper.Saved" xml:space="preserve">
+    <value>Wallpaper saved.</value>
+  </data>
+  <data name="LocalServer.AriaLabel" xml:space="preserve">
+    <value>Local server</value>
+  </data>
+  <data name="LocalServer.Title" xml:space="preserve">
+    <value>Local server</value>
+  </data>
+  <data name="LocalServer.Description" xml:space="preserve">
+    <value>Install the Kazo OS server on this computer or on another machine of your local network, without exposing it to the internet: apps then reach the real network through its relay. The installer prints a one-time pairing code; type it here with the server's address.</value>
+  </data>
+  <data name="LocalServer.Download" xml:space="preserve">
+    <value>Download the server</value>
+  </data>
+  <data name="LocalServer.DownloadHelp" xml:space="preserve">
+    <value>Pick the file for the machine that will run the server, in the latest release (unsigned programs: Windows asks to confirm, the macOS installer handles it). Docker runs everywhere.</value>
+  </data>
+  <data name="LocalServer.System.WindowsX64" xml:space="preserve">
+    <value>Windows (x64)</value>
+  </data>
+  <data name="LocalServer.System.WindowsArm64" xml:space="preserve">
+    <value>Windows (ARM64)</value>
+  </data>
+  <data name="LocalServer.System.MacArm64" xml:space="preserve">
+    <value>macOS (Apple silicon)</value>
+  </data>
+  <data name="LocalServer.System.MacX64" xml:space="preserve">
+    <value>macOS (Intel)</value>
+  </data>
+  <data name="LocalServer.System.LinuxX64" xml:space="preserve">
+    <value>Linux (x64)</value>
+  </data>
+  <data name="LocalServer.System.LinuxArm64" xml:space="preserve">
+    <value>Linux (ARM64)</value>
+  </data>
+  <data name="LocalServer.OpenReleases" xml:space="preserve">
+    <value>Open the latest release</value>
+  </data>
+  <data name="LocalServer.OpenGuide" xml:space="preserve">
+    <value>Installation guide</value>
+  </data>
+  <data name="LocalServer.GuideUrl" xml:space="preserve">
+    <value>https://github.com/Kazo-ca/Os/blob/main/doc/en/wasm/dev/installable-server.md</value>
+  </data>
+  <data name="LocalServer.Address" xml:space="preserve">
+    <value>Server address</value>
+  </data>
+  <data name="LocalServer.Test" xml:space="preserve">
+    <value>Test</value>
+  </data>
+  <data name="LocalServer.Testing" xml:space="preserve">
+    <value>Testing…</value>
+  </data>
+  <data name="LocalServer.Found" xml:space="preserve">
+    <value>A Kazo OS server answers (version {0}).</value>
+  </data>
+  <data name="LocalServer.NotFound" xml:space="preserve">
+    <value>No Kazo OS server here: {0}</value>
+  </data>
+  <data name="LocalServer.Code" xml:space="preserve">
+    <value>Pairing code</value>
+  </data>
+  <data name="LocalServer.CodeHelp" xml:space="preserve">
+    <value>Printed by the installer, or by "Kazo.Os.Server pair admin" on the server's machine. Valid once, for 10 minutes.</value>
+  </data>
+  <data name="LocalServer.Pair" xml:space="preserve">
+    <value>Pair this device</value>
+  </data>
+  <data name="LocalServer.Pairing" xml:space="preserve">
+    <value>Pairing…</value>
+  </data>
+  <data name="LocalServer.PairFailed" xml:space="preserve">
+    <value>Pairing failed: {0}</value>
+  </data>
+  <data name="IconPack.Title" xml:space="preserve">
+    <value>Icon pack</value>
+  </data>
+  <data name="IconPack.Description" xml:space="preserve">
+    <value>Replaces the icons of apps, folders and files with the PNG images of a pack. Install a pack for everyone in {0} (administrator) or for yourself in {1}: a folder holding icon-pack.json.</value>
+  </data>
+  <data name="IconPack.BuiltIn" xml:space="preserve">
+    <value>Built-in icons</value>
+  </data>
+  <data name="IconPack.BuiltIn.Description" xml:space="preserve">
+    <value>The OS's vector icons</value>
+  </data>
+  <data name="IconPack.None" xml:space="preserve">
+    <value>No icon pack is installed yet.</value>
+  </data>
+  <data name="IconPack.Warnings" xml:space="preserve">
+    <value>{0} warning(s) in the icon packs: refused images or folders, written to the system log.</value>
+  </data>
+  <data name="IconPack.Saved" xml:space="preserve">
+    <value>Icon pack applied.</value>
+  </data>
+  <data name="IconPack.Error.CannotRead" xml:space="preserve">
+    <value>Cannot read the icon packs: {0}</value>
+  </data>
+  <data name="Tab.Sound" xml:space="preserve">
+    <value>Sound</value>
+  </data>
+  <data name="Sound.Output.Title" xml:space="preserve">
+    <value>System sounds</value>
+  </data>
+  <data name="Sound.Output.Description" xml:space="preserve">
+    <value>Sounds of the OS events: notifications, warnings, errors, sign-in and sign-out. The browser plays them only after a first click or key press on the page.</value>
+  </data>
+  <data name="Sound.Output.Enabled" xml:space="preserve">
+    <value>Play system sounds</value>
+  </data>
+  <data name="Sound.Volume.Label" xml:space="preserve">
+    <value>Volume</value>
+  </data>
+  <data name="Sound.Theme.Title" xml:space="preserve">
+    <value>Sound theme</value>
+  </data>
+  <data name="Sound.Theme.Description" xml:space="preserve">
+    <value>Themes of {0} are for every user; put your own in {1}, one folder per theme with an index.theme file and .oga, .ogg or .mp3 files of at most 1 MB named after the events below. Choosing a theme plays its notification sound.</value>
+  </data>
+  <data name="Sound.Theme.None" xml:space="preserve">
+    <value>No sound theme found.</value>
+  </data>
+  <data name="Sound.Events.Title" xml:space="preserve">
+    <value>Events</value>
+  </data>
+  <data name="Sound.Events.Description" xml:space="preserve">
+    <value>The file each event plays in a theme (freedesktop.org sound names). A sound missing from a theme plays the Kazo OS theme's.</value>
+  </data>
+  <data name="Sound.Event.Notification" xml:space="preserve">
+    <value>Notification</value>
+  </data>
+  <data name="Sound.Event.Warning" xml:space="preserve">
+    <value>Warning</value>
+  </data>
+  <data name="Sound.Event.Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="Sound.Event.SignIn" xml:space="preserve">
+    <value>Sign-in</value>
+  </data>
+  <data name="Sound.Event.SignOut" xml:space="preserve">
+    <value>Sign-out</value>
+  </data>
+  <data name="Sound.Saved.On" xml:space="preserve">
+    <value>System sounds are on.</value>
+  </data>
+  <data name="Sound.Saved.Off" xml:space="preserve">
+    <value>System sounds are off.</value>
+  </data>
+  <data name="Sound.Saved.Volume" xml:space="preserve">
+    <value>Volume set to {0} %.</value>
+  </data>
+  <data name="Sound.Saved.Theme" xml:space="preserve">
+    <value>Sound theme: {0}.</value>
+  </data>
+  <data name="Sound.Error.CannotRead" xml:space="preserve">
+    <value>Cannot read {0}: {1}</value>
+  </data>
+  <data name="Sound.Error.CannotSave" xml:space="preserve">
+    <value>Cannot save {0}: {1}</value>
+  </data>
+  <data name="Sound.Error.UnknownTheme" xml:space="preserve">
+    <value>There is no sound theme “{0}”.</value>
+  </data>
+  <data name="Cursors.Title" xml:space="preserve">
+    <value>Cursors</value>
+  </data>
+  <data name="Cursors.Description" xml:space="preserve">
+    <value>The pointer of the whole OS. Add your own themes as folders in {0} (for you) or {1} (for every user, as administrator): each folder holds a {2} file listing its PNG cursors with their hot spot.</value>
+  </data>
+  <data name="Cursors.SystemPreview" xml:space="preserve">
+    <value>device cursors</value>
+  </data>
+  <data name="Cursors.Theme.system" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="Cursors.Theme.hackeros-neon" xml:space="preserve">
+    <value>Kazo OS Neon</value>
+  </data>
+  <data name="Cursors.Theme.gothic-crimson" xml:space="preserve">
+    <value>Gothic Crimson</value>
+  </data>
+  <data name="Cursors.Saved" xml:space="preserve">
+    <value>Saved. The desktop uses these cursors now.</value>
+  </data>
+  <data name="Cursors.Warnings" xml:space="preserve">
+    <value>{0} problem(s) in the cursor theme folders:</value>
+  </data>
+  <data name="Cursors.Error.CannotRead" xml:space="preserve">
+    <value>Cannot read cursors.config: {0}</value>
+  </data>
+  <data name="Cursors.Error.CannotSave" xml:space="preserve">
+    <value>Cannot save {0}: {1}</value>
+  </data>
+  <data name="Tab.AppSources" xml:space="preserve">
+    <value>Sources and block list</value>
+  </data>
+  <data name="Sources.Title" xml:space="preserve">
+    <value>App sources</value>
+  </data>
+  <data name="Sources.Description" xml:space="preserve">
+    <value>Where apps are installed from, in {0}. An app from a trusted source can be installed by each user for themselves; any other source asks an administrator every time.</value>
+  </data>
+  <data name="Sources.Loading" xml:space="preserve">
+    <value>Reading the sources…</value>
+  </data>
+  <data name="Sources.Catalogs" xml:space="preserve">
+    <value>Catalogs</value>
+  </data>
+  <data name="Sources.Repositories" xml:space="preserve">
+    <value>Repositories</value>
+  </data>
+  <data name="Sources.Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="Sources.BuiltIn" xml:space="preserve">
+    <value>Built in</value>
+  </data>
+  <data name="Sources.BuiltIn.Title" xml:space="preserve">
+    <value>Kazo OS was built with this source</value>
+  </data>
+  <data name="Sources.Trust.Verified" xml:space="preserve">
+    <value>Verified</value>
+  </data>
+  <data name="Sources.Trust.Trusted" xml:space="preserve">
+    <value>Trusted</value>
+  </data>
+  <data name="Sources.Trust.Untrusted" xml:space="preserve">
+    <value>Untrusted</value>
+  </data>
+  <data name="Sources.Interval" xml:space="preserve">
+    <value>Updates are checked every {0} hours.</value>
+  </data>
+  <data name="Sources.Add.Label" xml:space="preserve">
+    <value>New source</value>
+  </data>
+  <data name="Sources.Add.Trusted" xml:space="preserve">
+    <value>Trust it</value>
+  </data>
+  <data name="Sources.Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="Sources.Add.Hint" xml:space="preserve">
+    <value>A trusted source lets every user install its apps without an administrator. Leave it untrusted to approve each install.</value>
+  </data>
+  <data name="Sources.Error.Unsupported" xml:space="preserve">
+    <value>This Kazo OS host cannot install apps from a repository.</value>
+  </data>
+  <data name="Policy.Title" xml:space="preserve">
+    <value>Block list</value>
+  </data>
+  <data name="Policy.Description" xml:space="preserve">
+    <value>Apps, categories and capabilities in {0} cannot be installed by a user for themselves: an administrator must approve them for every user.</value>
+  </data>
+  <data name="Policy.Apps" xml:space="preserve">
+    <value>Apps</value>
+  </data>
+  <data name="Policy.Categories" xml:space="preserve">
+    <value>Categories</value>
+  </data>
+  <data name="Policy.Capabilities" xml:space="preserve">
+    <value>Capabilities</value>
+  </data>
+  <data name="Policy.Empty" xml:space="preserve">
+    <value>Nothing blocked.</value>
+  </data>
+  <data name="Policy.Unblock" xml:space="preserve">
+    <value>Unblock</value>
+  </data>
+  <data name="Policy.Kind" xml:space="preserve">
+    <value>Rule</value>
+  </data>
+  <data name="Policy.Kind.App" xml:space="preserve">
+    <value>App ID</value>
+  </data>
+  <data name="Policy.Kind.Category" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="Policy.Kind.Capability" xml:space="preserve">
+    <value>Capability</value>
+  </data>
+  <data name="Policy.Value" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="Policy.Block" xml:space="preserve">
+    <value>Block</value>
+  </data>
+  <data name="Tab.Notifications" xml:space="preserve">
+    <value>Notifications</value>
+  </data>
+  <data name="Notifications.Dnd.Title" xml:space="preserve">
+    <value>Do not disturb</value>
+  </data>
+  <data name="Notifications.Dnd.Description" xml:space="preserve">
+    <value>While it is on, new notifications show no bubble and play no sound, errors included. They still go to the clock panel, and the clock's dot still shows them. A moon in the notification area says the mode is on.</value>
+  </data>
+  <data name="Notifications.Dnd.Enabled" xml:space="preserve">
+    <value>Do not disturb</value>
+  </data>
+  <data name="Notifications.Dnd.File" xml:space="preserve">
+    <value>Saved for you in {0}; the clock panel has the same switch.</value>
+  </data>
+  <data name="Notifications.Saved.On" xml:space="preserve">
+    <value>Do not disturb is on.</value>
+  </data>
+  <data name="Notifications.Saved.Off" xml:space="preserve">
+    <value>Do not disturb is off.</value>
+  </data>
+  <data name="Notifications.Error.CannotRead" xml:space="preserve">
+    <value>Cannot read {0}: {1}</value>
+  </data>
+  <data name="Notifications.Error.CannotSave" xml:space="preserve">
+    <value>Cannot save {0}: {1}</value>
+  </data>
+  <data name="SetWallpaper.Done.Title" xml:space="preserve">
+    <value>Wallpaper changed</value>
+  </data>
+  <data name="SetWallpaper.Done.Message" xml:space="preserve">
+    <value>{0} is now the wallpaper.</value>
+  </data>
+  <data name="SetWallpaper.Done.MessageScreen" xml:space="preserve">
+    <value>{0} is now the wallpaper of screen {1}.</value>
+  </data>
+  <data name="SetWallpaper.Error.Title" xml:space="preserve">
+    <value>Wallpaper not changed</value>
+  </data>
+  <data name="SetWallpaper.Error.NotImage" xml:space="preserve">
+    <value>{0} is not a PNG, JPEG or WebP image of 16 MB at most.</value>
+  </data>
+  <data name="SetWallpaper.Error.Unreadable" xml:space="preserve">
+    <value>{0} cannot be read: {1}</value>
+  </data>
+  <data name="SetWallpaper.Error.NotSaved" xml:space="preserve">
+    <value>The wallpaper cannot be saved: {0}</value>
+  </data>
+</root>

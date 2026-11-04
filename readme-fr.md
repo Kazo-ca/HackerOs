@@ -11,19 +11,19 @@ apps, commandes, services et sites.
 
 - **Essayer** : <https://hackos.kazo.ca/> (PWA, fonctionne hors ligne).
 - **Fonctionnalités** : [présentation et fonctionnalités de Kazo OS](doc/fr/wasm/features.md) : ce que Kazo OS offre aujourd'hui, le but de l'écosystème, les façons de le déployer et ce qui est en cours de développement.
-- **Code** : [`wasm2/HackerOs/`](wasm2/HackerOs/readme-fr.md).
+- **Code** : [`wasm2/KazoOs/`](wasm2/KazoOs/readme-fr.md).
 - **Documentation** : [`doc/fr/wasm/README.md`](doc/fr/wasm/README.md) (en anglais : [`doc/en/wasm/README.md`](doc/en/wasm/README.md)).
-- Dépôt source : [Kazo-ca/HackerOs](https://github.com/Kazo-ca/HackerOs).
+- Dépôt source : [Kazo-ca/Os](https://github.com/Kazo-ca/Os).
 
 ## Démarrer
 
-Prérequis : le SDK .NET 10 (`wasm2/HackerOs/global.json`).
+Prérequis : le SDK .NET 10 (`wasm2/KazoOs/global.json`).
 
 ```bash
-cd wasm2/HackerOs
-dotnet build HackerOs.sln
-dotnet test HackerOs.sln
-dotnet run --project OS/HackerOs.Ecosystem     # l'OS en PWA autonome
+cd wasm2/KazoOs
+dotnet build Kazo.Os.sln
+dotnet test Kazo.Os.sln
+dotnet run --project OS/Kazo.Os.Ecosystem     # l'OS en PWA autonome
 ```
 
 Les hôtes de débogage, la publication trimmée, les contournements connus et
@@ -47,7 +47,7 @@ l'exécution des tests E2E sont décrits dans
 
 | Dossier | Contenu |
 | --- | --- |
-| [`wasm2/HackerOs/`](wasm2/HackerOs/readme-fr.md) | **Version active** : la solution Kazo OS (OS, SDK, apps, hôtes, tests). |
+| [`wasm2/KazoOs/`](wasm2/KazoOs/readme-fr.md) | **Version active** : la solution Kazo OS (OS, SDK, apps, hôtes, tests). |
 | [`doc/`](doc/fr/README.md) | Documentation. |
 | [`src/`](src/readme-fr.md) | Version legacy en TypeScript, gardée en lecture seule comme référence. |
 | [`.github/workflows/`](.github/workflows/) | Vérification et publication GitHub Pages. |
@@ -68,16 +68,16 @@ Les deux versions sont publiées par un seul
 
 1. Consultez la [présentation des fonctionnalités](doc/fr/wasm/features.md) :
    la fonctionnalité existe peut-être déjà ou est en cours de développement.
-2. Cherchez dans les [issues ouvertes](https://github.com/Kazo-ca/HackerOs/issues) :
+2. Cherchez dans les [issues ouvertes](https://github.com/Kazo-ca/Os/issues) :
    si quelqu'un l'a déjà demandée, ajoutez votre cas d'usage en commentaire.
 3. Sinon, ouvrez une issue avec le
-   [formulaire **Demande de fonctionnalité**](https://github.com/Kazo-ca/HackerOs/issues/new?template=feature_request.yml) :
+   [formulaire **Demande de fonctionnalité**](https://github.com/Kazo-ca/Os/issues/new?template=feature_request.yml) :
    décrivez le besoin (ce que vous voulez faire et pourquoi), la solution que
    vous imaginez et la partie de l'OS concernée. Le français comme l'anglais
    conviennent.
 4. Le mainteneur répond dans l'issue. Pour signaler un problème, utilisez
    plutôt le
-   [formulaire **Rapport de bogue**](https://github.com/Kazo-ca/HackerOs/issues/new?template=bug_report.yml).
+   [formulaire **Rapport de bogue**](https://github.com/Kazo-ca/Os/issues/new?template=bug_report.yml).
 
 Les détails sont dans [`CONTRIBUTING-fr.md`](CONTRIBUTING-fr.md#demander-une-fonctionnalité).
 

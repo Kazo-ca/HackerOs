@@ -6,7 +6,7 @@
 
 Accepté le 2026-10-30. Chantier 9 du plan du Hack Store
 ([ADR 0190](0190-theme-packs.md) §4, point 3), issue `TODO`
-[#256](https://github.com/Kazo-ca/HackerOs/issues/256), série `todo/base`.
+[#256](https://github.com/Kazo-ca/Os/issues/256), série `todo/base`.
 
 - **Complète :** [ADR 0190](0190-theme-packs.md) (le dossier `sounds/` d'un pack
   `.hacktheme` vise ce système), [ADR 0044](0044-settings-as-files.md) (réglages
@@ -77,7 +77,7 @@ de GNOME ; l'ouverture d'une autre session ne le fait pas.
 `hackeros` (« HackerOS », bips de console, le défaut) et `soft` (« Doux »,
 carillons) sont calculés par `build/tools/generate-system-sounds.py` (aucun
 échantillon venu d'ailleurs), encodés en OGG Vorbis (environ 5 Ko par son),
-embarqués dans `HackerOs.Platform.Core` et écrits par `FileSystemSeeder` dans
+embarqués dans `Kazo.Os.Platform.Core` et écrits par `FileSystemSeeder` dans
 `/usr/share/sounds/<id>/` (root, `0644`), comme un paquet de distribution. Un
 fichier existant n'est jamais remplacé. `~/.local/share/sounds/` est créé dans
 chaque dossier personnel.
@@ -109,7 +109,7 @@ de `~/.local/share/sounds`, et tableau des fichiers joués par évènement.
 
 - Le dossier `sounds/` d'un pack devient un jeu de sons copié dans
   `~/.local/share/sounds/<packId>/`, sans autre système à créer.
-- Environ 50 Ko de sons sont ajoutés à `HackerOs.Platform.Core` et au disque
+- Environ 50 Ko de sons sont ajoutés à `Kazo.Os.Platform.Core` et au disque
   simulé.
 - Une modification des sons intégrés n'atteint pas une installation existante
   (fichier déjà présent), comme pour les autres fichiers semés.

@@ -23,7 +23,7 @@ Benoit a demandé deux choses :
    `Start as a Guest`, puis transformer cette session invité en vrai compte depuis
    Paramètres et depuis la page d'accueil / de connexion ;
 2. afficher les crédits sur la page de connexion : `Auteur : Benoit Robin` (lien vers
-   https://kazo.ca) et `Projet GitHub : (icône GitHub) Kazo-ca/HackerOs` (lien vers le dépôt).
+   https://kazo.ca) et `Projet GitHub : (icône GitHub) Kazo-ca/Os` (lien vers le dépôt).
 
 État du code au moment de la décision (main `fd52528c`) :
 
@@ -39,7 +39,7 @@ Benoit a demandé deux choses :
   (`LocalUser.HomePath`).
 - Les installations d'apps ont une portée Utilisateur et une portée Machine (admin).
 - Le pied de page `ProjectInformation.razor` affiche `HackerOS <version>` et l'URL brute
-  `https://github.com/Kazo-ca/HackerOs` sur les écrans de premier démarrage, de connexion,
+  `https://github.com/Kazo-ca/Os` sur les écrans de premier démarrage, de connexion,
   de récupération et d'erreur. Paramètres ▸ À propos affiche la version et l'URL du dépôt.
 
 ## Décision
@@ -122,7 +122,7 @@ toujours par le choix migrer / supprimer. Après, l'ajout de comptes suit l'ADR 
 
 #### 6. Ce que l'invité ne change pas
 
-- Le serveur (`HackerOs.Server`, comptes serveur, ADR 0024 et 0134) n'est pas concerné :
+- Le serveur (`Kazo.Os.Server`, comptes serveur, ADR 0024 et 0134) n'est pas concerné :
   l'invité est un compte local du navigateur, comme les autres comptes locaux.
 - Le SDK des apps ne change pas pour les apps ordinaires. `HackUserAccount` peut exposer
   un indicateur « invité » pour Paramètres ; s'il est ajouté, il passe par
@@ -138,7 +138,7 @@ connexion, récupération, erreur) :
 ```
 HackerOS <version>
 Auteur : Benoit Robin                           → lien https://kazo.ca
-Projet GitHub : [icône GitHub] Kazo-ca/HackerOs → lien https://github.com/Kazo-ca/HackerOs
+Projet GitHub : [icône GitHub] Kazo-ca/Os → lien https://github.com/Kazo-ca/Os
 ```
 
 La ligne « Projet GitHub » remplace l'URL brute. Les liens s'ouvrent dans un nouvel onglet
@@ -149,7 +149,7 @@ L'avis de l'ancienne version (domaine public) ne change pas.
 #### 8. Paramètres ▸ À propos (Q9 : A)
 
 Une ligne « Auteur : Benoit Robin » avec le lien kazo.ca, et la ligne du dépôt au même
-format `[icône] Kazo-ca/HackerOs`.
+format `[icône] Kazo-ca/Os`.
 
 #### 9. Langue (Q10 : A)
 
@@ -172,7 +172,7 @@ Les libellés suivent la langue du système (écrans de connexion) ou de la sess
 
 ## Choses à faire
 
-Suivi : [issue #243](https://github.com/Kazo-ca/HackerOs/issues/243).
+Suivi : [issue #243](https://github.com/Kazo-ca/Os/issues/243).
 Une PR par chantier ; les crédits d'abord (petit et indépendant).
 
 1. Crédits dans le pied de page de l'hôte et dans Paramètres ▸ À propos, libellés FR/EN

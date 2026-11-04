@@ -4,7 +4,7 @@
 
 Work item `web/11-sample-final`, the last of the web phase ([`asp-hack-plan.md`](../dev/plans/asp-hack-plan.md)).
 This guide shows how to write an **internal site** for Kazo OS with ASP.Hack, by
-following the **Intranet** example (`Apps/Samples/HackerOs.Samples.Intranet`,
+following the **Intranet** example (`Apps/Samples/Kazo.Os.Samples.Intranet`,
 `http://intranet.hack/`), which brings together all the building blocks of the phase. Decisions
 specific to this work item: [ADR 0087](../dev/adr/0087-asp-hack-intranet-sample-adjustments.md).
 Reference for each type: [`sdk-reference.md`](sdk-reference.md#websites-asphack).
@@ -34,7 +34,7 @@ task manager and `netstat -tlnp`.
 
 ## Visiting the example
 
-Launch a host (`dotnet run --project OS/HackerOs.Ecosystem`, see
+Launch a host (`dotnet run --project OS/Kazo.Os.Ecosystem`, see
 [`building-and-testing.md`](../dev/building-and-testing.md)), open the OS
 browser and type `intranet.hack`.
 
@@ -78,18 +78,18 @@ A site is a project under `Apps/` (like any shipped app), using the Razor SDK:
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.13" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Shared\HackerOs.App.Abstractions\HackerOs.App.Abstractions.csproj" />
-    <ProjectReference Include="..\..\..\Shared\HackerOs.AppSdk\HackerOs.AppSdk.csproj" />
-    <ProjectReference Include="..\..\..\Shared\HackerOs.AppSdk.Web\HackerOs.AppSdk.Web.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Kazo.Os.App.Abstractions\Kazo.Os.App.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Kazo.Os.AppSdk\Kazo.Os.AppSdk.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Kazo.Os.AppSdk.Web\Kazo.Os.AppSdk.Web.csproj" />
     <!-- Seulement pour des pages Blazor interactives : -->
-    <ProjectReference Include="..\..\..\Shared\HackerOs.AppSdk.Blazor\HackerOs.AppSdk.Blazor.csproj" />
-    <ProjectReference Include="..\..\..\Shared\HackerOs.AppSdk.Web.Blazor\HackerOs.AppSdk.Web.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Kazo.Os.AppSdk.Blazor\Kazo.Os.AppSdk.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Kazo.Os.AppSdk.Web.Blazor\Kazo.Os.AppSdk.Web.Blazor.csproj" />
   </ItemGroup>
 </Project>
 ```
 
-The build (`build/HackerOs.Apps.targets`) adds by itself, because the project
-references `HackerOs.AppSdk.Web`:
+The build (`build/Kazo.Os.Apps.targets`) adds by itself, because the project
+references `Kazo.Os.AppSdk.Web`:
 
 - the route generator (ADR 0082): controller table, view table and
   `<Definition>WebHost` entry class;
@@ -104,7 +104,7 @@ references `HackerOs.AppSdk.Web`:
 Layout of the example:
 
 ```text
-HackerOs.Samples.Intranet/
+Kazo.Os.Samples.Intranet/
   IntranetSite.cs                 [AppManifest] partial WebAppDefinition, Configure
   Models/                         Note, Person, BoardTask, ProfileForm, IntranetJsonContext
   Services/                       NoteStore, TaskBoard, StaffDirectory, AnnouncementFeed, IntranetSession
@@ -359,7 +359,7 @@ HackHttpResponse created = await Site.Http.PostAsync("api/tasks", HackJsonConten
 
 Three levels, all in the example:
 
-1. **In memory** (`Tests/HackerOs.Samples.Intranet.Tests`, like ASP.NET Core's
+1. **In memory** (`Tests/Kazo.Os.Samples.Intranet.Tests`, like ASP.NET Core's
    `TestServer`): the site is built without an OS or listener and receives
    requests.
 
@@ -370,13 +370,13 @@ Three levels, all in the example:
    ```
 
    `HackWebGeneratedRoutes` is internal to the site's assembly:
-   `<InternalsVisibleTo Include="HackerOs.Samples.Intranet.Tests" />`.
+   `<InternalsVisibleTo Include="Kazo.Os.Samples.Intranet.Tests" />`.
    `IntranetClient` keeps cookies there like a tab and finds the
    anti-forgery field of a form.
-2. **In a full OS** (`Tests/HackerOs.Platform.WorkerHost.Tests/MvcSiteTests`):
+2. **In a full OS** (`Tests/Kazo.Os.Platform.WorkerHost.Tests/MvcSiteTests`):
    `curl` starts the site on demand, on the main thread and in the `web`
    worker.
-3. **In Chromium** (`Tests/HackerOs.UI.E2E.Tests/BrowserIntranetTests`): the
+3. **In Chromium** (`Tests/Kazo.Os.UI.E2E.Tests/BrowserIntranetTests`): the
    OS browser walks through the example (scripts, form, session, Blazor
    board, return through `target="_top"`). `BrowserSiteDataTests` checks there
    the site's IndexedDB database, autofill, the debug log
@@ -434,6 +434,6 @@ manifests and the lazy assemblies (`BuildKnownLazyAppsTests`,
 - [x] Views compilable in a shipped app: base classes without trimming annotation (ADR 0087 §2).
 - [x] `TryValidateModel` on controllers (ADR 0087 §3).
 - [x] Example installed in the Ecosystem and `test/test`, Ecosystem tests updated.
-- [x] In-memory tests (`HackerOs.Samples.Intranet.Tests`) and Chromium E2E (`BrowserIntranetTests`).
+- [x] In-memory tests (`Kazo.Os.Samples.Intranet.Tests`) and Chromium E2E (`BrowserIntranetTests`).
 - [x] `web/12`: example notes in `HackWebDb`, debug log, `GET /api/notes?author=` filter through the `byAuthor` index ([`asp-hack-site-data.md`](asp-hack-site-data.md)).
 - [x] This guide, `sdk-reference.md`, ADR 0087, plan, index and phase documents updated.

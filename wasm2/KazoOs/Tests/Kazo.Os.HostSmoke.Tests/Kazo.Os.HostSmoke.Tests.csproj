@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Boot smoke test of the three hosts (execution-isolation-plan.md section 5.2). It does not
+    start any host itself: build/verify-hosts.sh builds, publishes and launches each host, then
+    runs this suite once per host with HACKEROS_SMOKE_URL pointing at it. Without that variable
+    every test reports as skipped, so a plain `dotnet test Kazo.Os.sln` stays unaffected.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
+    <PackageReference Include="Microsoft.Playwright" Version="1.64.0" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="4.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kazo.Os.E2E.Support\Kazo.Os.E2E.Support.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+    <Using Include="Kazo.Os.E2E.Support" />
+  </ItemGroup>
+
+</Project>

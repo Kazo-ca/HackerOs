@@ -2,7 +2,7 @@
 
 # Text editor
 
-System app `HackerOs.Apps.TextEditor` (`org.hackeros.text-editor`). This document
+System app `Kazo.Os.Apps.TextEditor` (`org.hackeros.text-editor`). This document
 describes how it currently works and the search with replacement added by the
 `rebuild/4-text-editor` work item (phase 4, [ADR 0058](adr/0058-base-app-features.md) §3).
 
@@ -19,7 +19,7 @@ SDK boundary since `rebuild/4-sdk-user-and-apps`.
 | --- | --- |
 | `TextEditorApp` | `[AppManifest]` manifest: capabilities `apps.launch`, home folder read and write, Open/Save dialog boxes, notifications; `text/plain` file handler. |
 | `TextEditorDocument` | State of a document: path, content, MIME type, loading state, modified or not, revision read. |
-| `TextEditorFindEngine` | Search and replace logic, without Blazor or JavaScript, tested on its own (`Tests/HackerOs.Apps.TextEditor.Tests`). |
+| `TextEditorFindEngine` | Search and replace logic, without Blazor or JavaScript, tested on its own (`Tests/Kazo.Os.Apps.TextEditor.Tests`). |
 | `TextEditorWindow.razor` | Window: menus, search and replace bar, text area, status bar, keyboard shortcuts. |
 | `TextEditorWindow.razor.js` | What C# cannot reach: selection in the text area (`selectRange`, `getSelectionRange`) and blocking of browser shortcuts (`guardEditorShortcuts`). |
 

@@ -25,11 +25,11 @@ the code editor. Several details were not fixed.
 
 ### 1. `FileView` becomes the explorer's implementation, without changing place
 
-The code of `HackerOs.AppSdk.FileView` stays in its library until
+The code of `Kazo.Os.AppSdk.FileView` stays in its library until
 SDK 2.0 (work item 6, ADR 0149), which removes it from the SDK. Until then:
 
 - the explorer uses it as an internal implementation
-  (`InternalsVisibleTo("HackerOs.Apps.FileExplorer")`);
+  (`InternalsVisibleTo("Kazo.Os.Apps.FileExplorer")`);
 - the `ExplorerFileView` provider gives the view an internal binding,
   `FileViewMenuBinding`, in cascade. With it, the view no longer draws its
   `MudMenu`: each row, tile, tree node and the background carry the
@@ -42,7 +42,7 @@ contract, as ADR 0154 announced.
 
 ### 2. The contract API
 
-In `HackerOs.AppSdk.Blazor.Files`:
+In `Kazo.Os.AppSdk.Blazor.Files`:
 
 - **`HackFileView`** (`HackContractComponent<IHackFileView>`) takes
   **ordinary parameters** rather than an options record
@@ -63,7 +63,7 @@ In `HackerOs.AppSdk.Blazor.Files`:
   snapshot, so that the `Menus.Attach` token stays stable.
 - **`HackFileMenuOpeningEventArgs`**: scope, targets, folder, menu to
   modify, `Cancel`.
-- In `HackerOs.AppSdk.Files` (without Blazor, for work item 4):
+- In `Kazo.Os.AppSdk.Files` (without Blazor, for work item 4):
   **`FileMenuScope`** (`File`, `Directory`, `Background`, `Desktop`) and
   **`HackFileMenuItems`**, with two more identifiers than the plan:
   `open-with-other` ("Choose another application...") and the prefix
@@ -176,7 +176,7 @@ later work item. This work item prepares for it:
 - A fix to the control, its menus or its dialogs reaches
   the explorer, the code editor and any app that displays `HackFileView`
   without recompiling them.
-- The code editor no longer references `HackerOs.AppSdk.FileView`; its
+- The code editor no longer references `Kazo.Os.AppSdk.FileView`; its
   side explorer displays `HackFileView` as a tree and adds its entries
   ("New File", "New Folder", "Search in Folder",
   "Open in Terminal") through `ContextMenuOpening`. Its own deletion

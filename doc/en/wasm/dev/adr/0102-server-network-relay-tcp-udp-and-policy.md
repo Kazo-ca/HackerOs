@@ -93,7 +93,7 @@ remains; the server's check prevents a modified client from bypassing it.
 
 ## Consequences
 
-- `v3/10` adds the contracts (`HackerOs.Server.Contracts/Proxy`), the two
+- `v3/10` adds the contracts (`Kazo.Os.Server.Contracts/Proxy`), the two
   WebSocket endpoints, the options, the grant check, `HackUdpClient`, and
   server tests (body passed through, TCP stream round trip against a local echo with
   `AllowPrivateNetworks`, UDP datagram, missing grant, warnings).

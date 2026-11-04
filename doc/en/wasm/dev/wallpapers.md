@@ -5,9 +5,9 @@
 Decisions: [ADR 0202](adr/0202-desktop-wallpaper-images.md) (desktop),
 [ADR 0217](adr/0217-mobile-home-wallpaper.md) (mobile home screen) and
 [ADR 0218](adr/0218-set-as-wallpaper-file-menu.md) ("Set as wallpaper" in the
-menu of images). Issues [#254](https://github.com/Kazo-ca/HackerOs/issues/254),
-[#297](https://github.com/Kazo-ca/HackerOs/issues/297) and
-[#298](https://github.com/Kazo-ca/HackerOs/issues/298).
+menu of images). Issues [#254](https://github.com/Kazo-ca/Os/issues/254),
+[#297](https://github.com/Kazo-ca/Os/issues/297) and
+[#298](https://github.com/Kazo-ca/Os/issues/298).
 
 ## Purpose
 
@@ -46,7 +46,7 @@ A `nano ~/.config/hackeros/appearance.config` changes the wallpaper on save.
 
 | Source | Location |
 | --- | --- |
-| Shipped with the OS | `builtin:hacker-grid`, `builtin:circuit`, `builtin:aurora`, `builtin:nebula` (static files `_content/HackerOs.Theming.Blazor/wallpapers/*.webp`) |
+| Shipped with the OS | `builtin:hacker-grid`, `builtin:circuit`, `builtin:aurora`, `builtin:nebula` (static files `_content/Kazo.Os.Theming.Blazor/wallpapers/*.webp`) |
 | System | `/usr/share/hackeros/wallpapers/` |
 | User | `~/.local/share/hackeros/wallpapers/` |
 | Installed packs | `/usr/share/hackeros/theme-packs/<pack>/wallpapers/`, `~/.local/share/hackeros/theme-packs/<pack>/wallpapers/` (ADR 0190) |
@@ -56,12 +56,12 @@ A `nano ~/.config/hackeros/appearance.config` changes the wallpaper on save.
 
 | Element | Project | Role |
 | --- | --- | --- |
-| `WallpaperCatalog`, `WallpaperFit`, `BuiltInWallpaper` | `HackerOs.Theming.Abstractions` | Shipped images, folders, extensions, type read from the bytes (`TryDetectMediaType`), 16 MB limit, `wallpaperFit` values. |
-| `AppearanceSettingsDocuments` | `HackerOs.Platform.Core` | Declares the `wallpaper`, `wallpaperFit`, `wallpaperScreen2..9`, `mobileWallpaper`, `mobileWallpaperFit` keys. |
-| `WallpaperService`, `WallpaperPreferences`, `WallpaperImage` | `HackerOs.Platform.Core` | Follows `appearance.config`, reads a file as the session user, refuses what is not an image, keeps one copy per file shown. `GetImageAsync(screen)` for the desktop, `GetMobileImageAsync()` for mobile. |
-| `DesktopWallpaper` (`.razor`, `.razor.cs`, `.razor.css`, `.razor.js`) | `HackerOs.Platform.Blazor` | Draws a screen's image; `blob:` address for a file, static address for a shipped image; `fit-*` classes. With `Mobile="true"`, the mobile image; `MobileShell` places it behind the home screen, which turns transparent and shadows its texts. |
-| `DesktopArea.WallpaperContent` | `HackerOs.Windowing.Blazor` | Layer between the theme's background and the icons. `DesktopShell` fills it for screen 1 and every secondary screen. |
-| `WallpaperPanel` | `HackerOs.Apps.Settings` | Thumbnails, "Browse…", "Fit", screen or "Mobile" choice; public SDK only. |
+| `WallpaperCatalog`, `WallpaperFit`, `BuiltInWallpaper` | `Kazo.Os.Theming.Abstractions` | Shipped images, folders, extensions, type read from the bytes (`TryDetectMediaType`), 16 MB limit, `wallpaperFit` values. |
+| `AppearanceSettingsDocuments` | `Kazo.Os.Platform.Core` | Declares the `wallpaper`, `wallpaperFit`, `wallpaperScreen2..9`, `mobileWallpaper`, `mobileWallpaperFit` keys. |
+| `WallpaperService`, `WallpaperPreferences`, `WallpaperImage` | `Kazo.Os.Platform.Core` | Follows `appearance.config`, reads a file as the session user, refuses what is not an image, keeps one copy per file shown. `GetImageAsync(screen)` for the desktop, `GetMobileImageAsync()` for mobile. |
+| `DesktopWallpaper` (`.razor`, `.razor.cs`, `.razor.css`, `.razor.js`) | `Kazo.Os.Platform.Blazor` | Draws a screen's image; `blob:` address for a file, static address for a shipped image; `fit-*` classes. With `Mobile="true"`, the mobile image; `MobileShell` places it behind the home screen, which turns transparent and shadows its texts. |
+| `DesktopArea.WallpaperContent` | `Kazo.Os.Windowing.Blazor` | Layer between the theme's background and the icons. `DesktopShell` fills it for screen 1 and every secondary screen. |
+| `WallpaperPanel` | `Kazo.Os.Apps.Settings` | Thumbnails, "Browse…", "Fit", screen or "Mobile" choice; public SDK only. |
 
 ## "Set as wallpaper" in the file menus
 
@@ -91,14 +91,14 @@ not an image), then stops. No window opens; the path is kept as it is.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Appearance/WallpaperTests.cs`: catalog
+- `Tests/Kazo.Os.Platform.Core.Tests/Appearance/WallpaperTests.cs`: catalog
   rules, schema, service (shipped image, file, own screen, mobile, fallback).
-- `Tests/HackerOs.Apps.Settings.Tests/WallpaperPanelTests.cs`: panel
+- `Tests/Kazo.Os.Apps.Settings.Tests/WallpaperPanelTests.cs`: panel
   (thumbnails, per-screen or mobile choice, "Browse…", fit, French).
-- `Tests/HackerOs.Apps.Settings.Tests/SetWallpaperServiceTests.cs`: menu
+- `Tests/Kazo.Os.Apps.Settings.Tests/SetWallpaperServiceTests.cs`: menu
   entries, screen of each entry, written key, refused file, locked key,
   notification.
-- `Tests/HackerOs.Platform.Blazor.Tests/ContextMenus/FileMenuEntriesTests.cs`:
+- `Tests/Kazo.Os.Platform.Blazor.Tests/ContextMenus/FileMenuEntriesTests.cs`:
   screen filter (plain entry or submenu of the open screens).
 
 ## Outside this work item

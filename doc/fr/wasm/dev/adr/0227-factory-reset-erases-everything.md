@@ -35,7 +35,7 @@ l'OPFS et le service worker.
    l'origine (OPFS), les cookies lisibles par script, et désinscrit le
    service worker. La page se recharge ensuite.
 2. Le travail est fait par le module `hostFactoryReset.js`
-   (`eraseEverything`) de `HackerOs.Ecosystem.Host`, appelé par
+   (`eraseEverything`) de `Kazo.Os.Ecosystem.Host`, appelé par
    `BrowserSystemPowerDevice` après la suppression de la base de l'OS (par le
    module qui tient ses connexions). Chaque étape est indépendante : un échec
    est écrit dans la console et n'arrête pas les autres.

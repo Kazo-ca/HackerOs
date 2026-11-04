@@ -1,0 +1,15 @@
+{
+  "name": "hackeros-icon-import",
+  "private": true,
+  "version": "1.0.0",
+  "description": "One-off/regeneration tooling that extracts icon SVG data from upstream npm packages into the JSON resources embedded by Kazo.Os.AppSdk.Icons. Not part of any published app; run manually and commit the resulting Data/*.json files. See doc/en/wasm/dev/old/icon-library.md.",
+  "scripts": {
+    "extract": "node extract.js"
+  },
+  "devDependencies": {
+    "bootstrap-icons": "1.13.1",
+    "@fortawesome/fontawesome-free": "7.3.1",
+    "lucide-static": "1.28.0",
+    "simple-icons": "16.28.0"
+  }
+}

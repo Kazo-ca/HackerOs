@@ -30,7 +30,7 @@ proposed: keep (A), remove the badge (B), add a small non-dangerous public API
 
 ## Decision
 
-1. **API** (`HackerOs.AppSdk`, namespace `Diagnostics`):
+1. **API** (`Kazo.Os.AppSdk`, namespace `Diagnostics`):
    - `HackCrossOriginIsolation.GetStatusAsync(CancellationToken)` returns a
      `HackCrossOriginIsolationStatus`: `IsIsolated`, `Reason`
      (`HackCrossOriginIsolationReason`: `None`, `Setting`, `MissingHeaders`,
@@ -72,8 +72,8 @@ proposed: keep (A), remove the badge (B), add a small non-dangerous public API
   `/etc/hackeros/app-permissions.config`. It is no longer used, since the
   manifest no longer declares this capability. No new approval
   window appears.
-- New lines in `Shared/HackerOs.AppSdk/PublicAPI.Unshipped.txt` and
-  `Platform/HackerOs.Platform.Core/PublicAPI.Unshipped.txt`; `HackerOsVersion`
+- New lines in `Shared/Kazo.Os.AppSdk/PublicAPI.Unshipped.txt` and
+  `Platform/Kazo.Os.Platform.Core/PublicAPI.Unshipped.txt`; `HackerOsVersion`
   stays `1.2.0`.
 - Tests:
   - `CrossOriginIsolationStatusTests` (WorkerHost): same response on the main

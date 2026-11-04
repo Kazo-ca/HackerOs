@@ -1,0 +1,77 @@
+@inherits Kazo.Os.AppSdk.Blazor.HackComponentBase
+@using Kazo.Os.App.Abstractions
+@using Kazo.Os.AppSdk.Blazor.Files
+@using Kazo.Os.AppSdk.Icons
+@using Kazo.Os.Simulation.Abstractions.FileSystem
+@using Kazo.Os.Simulation.Abstractions.Gateways
+
+@*
+    The Explorer view of the side bar, as in VS Code: the open folder as a tree (the OS file control,
+    HackFileView, provided by the File Explorer, ADR 0155), a single click previews a file, and the
+    header's buttons (or the tree's file menu) create a file or a folder in the selected folder, with
+    the name typed in place. Rename, cut/copy/paste, drag and drop and the trash are the control's own.
+*@
+<div class="explorer">
+    <div class="view-title">@L["Explorer.Title"]</div>
+
+    @if (Workspace is null)
+    {
+        <div class="explorer-empty">
+            <p>@L["Explorer.NoFolder"]</p>
+            <button type="button" class="primary-button" @onclick="OnOpenFolder">@L["Explorer.OpenFolder"]</button>
+            <p class="hint">@L["Explorer.Hint"]</p>
+        </div>
+    }
+    else
+    {
+        <div class="folder-header" title="@Workspace.Root.Value">
+            <span class="folder-name">@Workspace.Name</span>
+            <span class="folder-actions" role="toolbar" aria-label="@L["Explorer.Actions"]">
+                <button type="button" class="icon-button" id="explorer-new-file" title="@L["Explorer.NewFile.Title"]" aria-label="@L["Explorer.NewFile"]" @onclick="() => BeginCreate(CreationKind.File, null)">
+                    <HackerIcon Library="IconLibrary.Lucide" Name="file-plus" Size="16" />
+                </button>
+                <button type="button" class="icon-button" id="explorer-new-folder" title="@L["Explorer.NewFolder.Title"]" aria-label="@L["Explorer.NewFolder"]" @onclick="() => BeginCreate(CreationKind.Folder, null)">
+                    <HackerIcon Library="IconLibrary.Lucide" Name="folder-plus" Size="16" />
+                </button>
+                <button type="button" class="icon-button" title="@L["Explorer.Refresh"]" aria-label="@L["Explorer.Refresh"]" @onclick="RefreshAsync">
+                    <HackerIcon Library="IconLibrary.Lucide" Name="refresh-cw" Size="16" />
+                </button>
+            </span>
+        </div>
+
+        @if (_creating is not null)
+        {
+            <div class="create-row">
+                <HackerIcon Library="IconLibrary.Lucide" Name="@(_creating == CreationKind.File ? "file" : "folder")" Size="16" />
+                <input @ref="_createInput"
+                       class="create-input @(_createError is null ? null : "has-error")"
+                       aria-label="@(_creating == CreationKind.File ? L["Explorer.NewFileName"] : L["Explorer.NewFolderName"])"
+                       placeholder="@(_creating == CreationKind.File ? L["Explorer.FileNamePlaceholder"] : L["Explorer.FolderNamePlaceholder"])"
+                       @bind="_createName"
+                       @bind:event="oninput"
+                       @onkeydown="OnCreateKeyDown"
+                       @onkeyup="OnCreateKeyUpAsync"
+                       @onblur="OnCreateBlurAsync" />
+            </div>
+            <div class="create-target">@(_createDirectory == Workspace.Root ? L["Explorer.CreateTargetRoot", Workspace.RelativePathOf(_createDirectory)] : L["Explorer.CreateTarget", Workspace.RelativePathOf(_createDirectory)])</div>
+            @if (_createError is not null)
+            {
+                <div class="create-error" role="alert">@_createError</div>
+            }
+        }
+
+        <div class="explorer-tree">
+            <HackFileView @key="Workspace.Root"
+                          InitialDirectory="@Workspace.Root.Value"
+                          SelectedResource="Workspace.SelectedResource"
+                          Mode="HackFileViewMode.Tree"
+                          AllowMultiSelect="false"
+                          Opening="OnOpening"
+                          SelectionChanged="OnSelectionChanged"
+                          Renamed="OnRenamedItem"
+                          ContextMenuOpening="OnContextMenuOpening"
+                          ErrorOccurred="OnError"
+                          ControllerChanged="OnControllerChanged" />
+        </div>
+    }
+</div>

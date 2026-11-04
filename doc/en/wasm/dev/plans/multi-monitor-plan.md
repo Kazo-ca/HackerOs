@@ -36,9 +36,9 @@ without losing its state.
 | Item | State | Where |
 | --- | --- | --- |
 | Display surfaces | `IDisplaySurfaceService`, `DisplaySurfaceContent` portal, styles and theme copied, size and focus events, end states | ADR 0078, 0081, [`detached-display-windows.md`](../detached-display-windows.md) |
-| Window manager | One `WorkArea` (`ChangeViewportCommand`); maximize and snap refer to it | `Platform/HackerOs.Windowing.Core/WindowRuntime.cs` |
-| Desktop | One `DesktopArea` in `DesktopShell`, desktop app (`org.hackeros.desktop`) as background | `Platform/HackerOs.Platform.Blazor/Shell/` |
-| Taskbar | One instance, every window | `Platform/HackerOs.Taskbar.Blazor` |
+| Window manager | One `WorkArea` (`ChangeViewportCommand`); maximize and snap refer to it | `Platform/Kazo.Os.Windowing.Core/WindowRuntime.cs` |
+| Desktop | One `DesktopArea` in `DesktopShell`, desktop app (`org.hackeros.desktop`) as background | `Platform/Kazo.Os.Platform.Blazor/Shell/` |
+| Taskbar | One instance, every window | `Platform/Kazo.Os.Taskbar.Blazor` |
 | Window menu | Single-level list in `WindowManagerOverlays`; right click on the icon, `Alt+Space` | ADR 0095, 0164 |
 | OS context menu | Multi-level, keyboard | ADR 0150 |
 
@@ -103,7 +103,7 @@ The answers will be copied here and into the ADRs.
   a snapped window that changes screen stays snapped on the same half, with its
   geometry from before the snap mapped to the target screen (two tests in
   `WindowRuntimeDisplayTests`).
-- **Build**: `HackerOs.sln` in Debug and Release, 0 errors, 0 warnings.
+- **Build**: `Kazo.Os.sln` in Debug and Release, 0 errors, 0 warnings.
 - **Tests**: every suite, one at a time, in Release. Remaining failures, all
   known before the series or flaky: `E2E.Tests`
   `Window_runtime_renders_and_handles_mouse_and_touch_pointer_gestures` and
@@ -114,7 +114,7 @@ The answers will be copied here and into the ADRs.
   rerun).
 - **Trimmed publish**: `build/publish-trimmed.sh` publishes and runs `TrimmedPublish.E2E`: 3 of 4 tests green (offline boot, every app and both sites, calculator measurement). The test of the calculator rendered in a worker fails on axe `label-content-name-mismatch` for the `MC`, `MR`, `M+`, `M-`, `AC` and `x²` keys (labels "Memory clear", etc.): the same rule as the known launcher failure, in an app the series does not touch.
 - **SDK**: `SdkCompatibility.Tests` green; the series does not change the app
-  SDK (Q1). Public additions of `HackerOs.Windowing.*` are in
+  SDK (Q1). Public additions of `Kazo.Os.Windowing.*` are in
   `PublicAPI.Unshipped.txt`, for the next version.
 - **Docs**: general index and folder indexes, project memory
   ([`../../memory/README.md`](../../memory/README.md), next free ADR 0185).

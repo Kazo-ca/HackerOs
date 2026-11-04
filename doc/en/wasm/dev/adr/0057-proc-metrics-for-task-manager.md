@@ -211,5 +211,5 @@ foreach (HackDriveInfo drive in await HackDriveInfo.GetDrivesAsync())
   `Documentation/admin-guide/iostats.rst`.
 - ADR 0012, 0046, 0050, 0055, 0056;
   [`virtual-proc-and-dev.md`](../virtual-proc-and-dev.md).
-- `Platform/HackerOs.Platform.Core/FileSystem/Virtual/ProcFileSystemProvider.cs`,
-  `Shared/HackerOs.Simulation.Abstractions/Processes/ResourceSimulationContracts.cs`.
+- `Platform/Kazo.Os.Platform.Core/FileSystem/Virtual/ProcFileSystemProvider.cs`,
+  `Shared/Kazo.Os.Simulation.Abstractions/Processes/ResourceSimulationContracts.cs`.

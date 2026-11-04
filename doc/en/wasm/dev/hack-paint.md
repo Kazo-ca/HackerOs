@@ -2,7 +2,7 @@
 
 # Hack Paint
 
-Drawing app `org.hackeros.hack-paint` (`Apps/System/HackerOs.Apps.HackPaint`,
+Drawing app `org.hackeros.hack-paint` (`Apps/System/Kazo.Os.Apps.HackPaint`,
 uninstallable). Work item `v3/11-apps`,
 [ADR 0103](adr/0103-hack-paint-image-files-and-theme-editor.md) §1: images
 live in the OS files.
@@ -87,6 +87,6 @@ returns error codes. The title keeps the product name "Hack Paint"; only
 - [x] Title set in the window by SDK 1.1 (work item `v3.1/3-window-title`, E2E
   `HackPaintWindowTitleTests`).
 - [x] `FileHandlers` and default `edit` association for images.
-- [x] Tests (`HackerOs.Apps.HackPaint.Tests`): headers of the five formats,
+- [x] Tests (`Kazo.Os.Apps.HackPaint.Tests`): headers of the five formats,
   truncated files, limits, save format, change tracking, title.
 - [ ] axe scans: work item `v3/13`.

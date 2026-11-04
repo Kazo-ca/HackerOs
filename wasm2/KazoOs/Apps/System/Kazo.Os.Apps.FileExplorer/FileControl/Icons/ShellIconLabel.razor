@@ -1,0 +1,23 @@
+@namespace Kazo.Os.Apps.FileExplorer.FileControl.Icons
+@inherits Kazo.Os.AppSdk.Blazor.HackComponentBase
+
+@*
+    Icon-plus-label pairing used wherever a row/tile shows a ShellIcon next to its name (or the inline
+    rename textbox that replaces it). Owns the gap between icon and content itself via scoped CSS, since a
+    caller's own scoped CSS can't reach into ShellIcon's rendered markup without ::deep.
+*@
+<span class="shell-icon-label">
+    <ShellIcon Icon="Icon" Size="Size" />
+    @ChildContent
+</span>
+
+@code {
+    /// <summary>The icon to render.</summary>
+    [Parameter] public ShellIconDescriptor? Icon { get; set; }
+
+    /// <summary>The rendered width/height in pixels, forwarded to <see cref="ShellIcon"/>.</summary>
+    [Parameter] public int Size { get; set; } = 20;
+
+    /// <summary>The label (or rename textbox) shown next to the icon.</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

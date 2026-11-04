@@ -32,14 +32,14 @@ three things:
 
 | Class | Project | Role |
 |---|---|---|
-| `IAppWebDatabaseGateway`, `HackWebDbNames`, `HackWebDb*` contracts | `Shared/HackerOs.AppSdk/WebData` | contract between the site and the OS, in JSON |
+| `IAppWebDatabaseGateway`, `HackWebDbNames`, `HackWebDb*` contracts | `Shared/Kazo.Os.AppSdk/WebData` | contract between the site and the OS, in JSON |
 | `InMemoryWebDatabase`, `HackWebDbInMemoryBackend` | same | in-memory IndexedDB engine (hosts without a browser, tests) |
-| `HackWebDb`, `HackWebDbStore<T>`, `HackWebDbIndex<T>`, `HackWebDbTransaction` | `Shared/HackerOs.AppSdk.Web/Data` | site API |
-| `HackWebLoggingOptions`, `IHackWebDebugLogSink` | `Shared/HackerOs.AppSdk.Web/Logging` | debug log |
-| `AppWebDatabaseGateway`, `IWebSiteDatabaseStore`, `InMemoryWebSiteDatabaseStore` | `Platform/HackerOs.Platform.Core/WebData` | trusted gateway, in-memory store |
-| `WebSiteDatabaseInterop`, `wwwroot/webSiteDatabases.js` | `Infrastructure/HackerOs.Infrastructure.Browser` | real IndexedDB |
-| `IndexedDbWebSiteDatabaseStore` | `OS/HackerOs.Ecosystem/WebData` | Ecosystem host store |
-| `FormHistory` | `Apps/System/HackerOs.Apps.Browser/Storage` | form history |
+| `HackWebDb`, `HackWebDbStore<T>`, `HackWebDbIndex<T>`, `HackWebDbTransaction` | `Shared/Kazo.Os.AppSdk.Web/Data` | site API |
+| `HackWebLoggingOptions`, `IHackWebDebugLogSink` | `Shared/Kazo.Os.AppSdk.Web/Logging` | debug log |
+| `AppWebDatabaseGateway`, `IWebSiteDatabaseStore`, `InMemoryWebSiteDatabaseStore` | `Platform/Kazo.Os.Platform.Core/WebData` | trusted gateway, in-memory store |
+| `WebSiteDatabaseInterop`, `wwwroot/webSiteDatabases.js` | `Infrastructure/Kazo.Os.Infrastructure.Browser` | real IndexedDB |
+| `IndexedDbWebSiteDatabaseStore` | `OS/Kazo.Os.Ecosystem/WebData` | Ecosystem host store |
+| `FormHistory` | `Apps/System/Kazo.Os.Apps.Browser/Storage` | form history |
 
 ## A site's database
 
@@ -153,9 +153,9 @@ public sealed class NotesController(NoteStore store, ILogger<NotesController> lo
 
 ```text
 $ tail /var/log/hackweb/org.hackeros.samples.intranet.log
-2026-10-17T01:54:42.880Z info: HackerOs.AppSdk.Web.Hosting.Diagnostics[0] Request starting HTTP/1.1 POST http://intranet.hack/Notes/Create - application/x-www-form-urlencoded 87
-2026-10-17T01:54:42.921Z info: HackerOs.Samples.Intranet.Controllers.NotesController[0] Note 4 created by anonymous
-2026-10-17T01:54:42.925Z info: HackerOs.AppSdk.Web.Hosting.Diagnostics[0] Request finished HTTP/1.1 POST http://intranet.hack/Notes/Create - 302 0 - 45.1000ms
+2026-10-17T01:54:42.880Z info: Kazo.Os.AppSdk.Web.Hosting.Diagnostics[0] Request starting HTTP/1.1 POST http://intranet.hack/Notes/Create - application/x-www-form-urlencoded 87
+2026-10-17T01:54:42.921Z info: Kazo.Os.Samples.Intranet.Controllers.NotesController[0] Note 4 created by anonymous
+2026-10-17T01:54:42.925Z info: Kazo.Os.AppSdk.Web.Hosting.Diagnostics[0] Request finished HTTP/1.1 POST http://intranet.hack/Notes/Create - 302 0 - 45.1000ms
 ```
 
 - Format: UTC time, ASP.NET Core short level (`trce`, `dbug`, `info`, `warn`, `fail`,
@@ -183,12 +183,12 @@ Forms of a Blazor site (ADR 0084) do not go through the bridge and do not benefi
 
 | Suite | What it proves |
 |---|---|
-| `HackerOs.AppSdk.Web.Tests/Data/HackWebDbTests` | key generator, unique and `multiEntry` indexes, key order, ranges, atomic transactions, migrations, `VersionError`, in-memory fallback |
-| `HackerOs.AppSdk.Web.Tests/Logging/HackWebDebugLogTests` | log silent by default, request lines, `ILogger<T>`, exceptions, minimum level |
-| `HackerOs.Platform.Core.Tests/WebData/WebSiteDatabaseTests` | enforced name, non-`Web` apps refused, listing and clearing subject to `system.storage.inspect`, file `/var/log/hackweb/<id>.log` |
-| `HackerOs.Platform.Core.Tests/Apps/AppInstallationServiceTests` | uninstalling a site deletes its database, and only its own |
-| `HackerOs.Apps.Browser.Tests/FormHistoryTests` | user's file, sort by usage, limits, cards refused, clearing |
-| `HackerOs.UI.E2E.Tests/BrowserSiteDataTests` | in Chromium: Intranet note in IndexedDB, `<datalist>` offered, log line read by `grep`, database listed and cleared by Diagnostics |
+| `Kazo.Os.AppSdk.Web.Tests/Data/HackWebDbTests` | key generator, unique and `multiEntry` indexes, key order, ranges, atomic transactions, migrations, `VersionError`, in-memory fallback |
+| `Kazo.Os.AppSdk.Web.Tests/Logging/HackWebDebugLogTests` | log silent by default, request lines, `ILogger<T>`, exceptions, minimum level |
+| `Kazo.Os.Platform.Core.Tests/WebData/WebSiteDatabaseTests` | enforced name, non-`Web` apps refused, listing and clearing subject to `system.storage.inspect`, file `/var/log/hackweb/<id>.log` |
+| `Kazo.Os.Platform.Core.Tests/Apps/AppInstallationServiceTests` | uninstalling a site deletes its database, and only its own |
+| `Kazo.Os.Apps.Browser.Tests/FormHistoryTests` | user's file, sort by usage, limits, cards refused, clearing |
+| `Kazo.Os.UI.E2E.Tests/BrowserSiteDataTests` | in Chromium: Intranet note in IndexedDB, `<datalist>` offered, log line read by `grep`, database listed and cleared by Diagnostics |
 
 ## Key decisions
 

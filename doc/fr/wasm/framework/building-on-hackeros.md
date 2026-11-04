@@ -12,7 +12,7 @@ et [ADR 0161](../dev/adr/0161-sdk-2-0-implementation-adjustments.md), voir « Pa
 la 1.2 vient de la série `exec`, [ADR 0132](../dev/adr/0132-exec-series-sdk-1-2-and-merge-rules.md) §2,
 la 1.1 de la série v3.1, [ADR 0117](../dev/adr/0117-sdk-window-title-and-sdk-1-1.md) §5).
 
-Détails des paquets et du mode paquet de `HackerOs.App.Build` :
+Détails des paquets et du mode paquet de `Kazo.Os.App.Build` :
 [`sdk-packages.md`](sdk-packages.md). Écrire une app (API, exemples) :
 [`sdk-developer-guide.md`](sdk-developer-guide.md) et
 [`sdk-reference.md`](sdk-reference.md).
@@ -32,8 +32,8 @@ hôte.
 
 | Votre projet dépend de… | Garantie |
 |---|---|
-| le SDK : `HackerOs.App.Abstractions`, `HackerOs.Simulation.Abstractions`, `HackerOs.Theming.Abstractions`, `HackerOs.AppSdk*`, `HackerOs.Theming.Blazor`, le contrat de build de `HackerOs.App.Build`, le format du manifeste | une app compilée contre `1.x` tourne sur tout OS `1.y` (y ≥ x) ; une rupture n'arrive qu'avec une 2.0 |
-| la plateforme : `HackerOs.Ecosystem.Host`, `HackerOs.Platform.*`, `HackerOs.Windowing.*`, `HackerOs.Infrastructure.Browser`, les types publics des apps de base | versionnée avec le SDK ; une mineure peut casser un **hôte**, jamais une app. Chaque rupture est listée dans [`sdk-packages.md`](sdk-packages.md#ruptures-hors-sdk) |
+| le SDK : `Kazo.Os.App.Abstractions`, `Kazo.Os.Simulation.Abstractions`, `Kazo.Os.Theming.Abstractions`, `Kazo.Os.AppSdk*`, `Kazo.Os.Theming.Blazor`, le contrat de build de `Kazo.Os.App.Build`, le format du manifeste | une app compilée contre `1.x` tourne sur tout OS `1.y` (y ≥ x) ; une rupture n'arrive qu'avec une 2.0 |
+| la plateforme : `Kazo.Os.Ecosystem.Host`, `Kazo.Os.Platform.*`, `Kazo.Os.Windowing.*`, `Kazo.Os.Infrastructure.Browser`, les types publics des apps de base | versionnée avec le SDK ; une mineure peut casser un **hôte**, jamais une app. Chaque rupture est listée dans [`sdk-packages.md`](sdk-packages.md#ruptures-hors-sdk) |
 
 L'OS refuse une app compilée contre un SDK plus récent que le sien, ou d'une
 autre majeure (état « incompatible » dans Paramètres, ADR 0098 §3). Une app
@@ -42,8 +42,8 @@ construite en `0.9.0-preview.*` doit être reconstruite contre la 1.0.
 ## 2. Récupérer les paquets
 
 Depuis la 2.1.0, chaque release publie tous les paquets Kazo OS (SDK,
-plateforme, apps de base, `HackerOs.App.Build`, `HackerOs.Ecosystem.Host`,
-`HackerOs.Templates`) sur **nuget.org**, avec leurs symboles et Source Link
+plateforme, apps de base, `Kazo.Os.App.Build`, `Kazo.Os.Ecosystem.Host`,
+`Kazo.Os.Templates`) sur **nuget.org**, avec leurs symboles et Source Link
 ([ADR 0173](../dev/adr/0173-automatic-releases-from-the-version-file.md)) :
 une `PackageReference` à la version voulue suffit, sans `nuget.config`.
 
@@ -52,8 +52,8 @@ de Kazo OS, sur la branche voulue :
 
 ```bash
 git -C ../HackerOs checkout <tag ou branche>
-../HackerOs/wasm2/HackerOs/build/pack-local.sh      # ou pack-local.ps1
-# -> ../HackerOs/wasm2/HackerOs/artifacts/local-nupkg/*.2.2.2.nupkg
+../HackerOs/wasm2/KazoOs/build/pack-local.sh      # ou pack-local.ps1
+# -> ../HackerOs/wasm2/KazoOs/artifacts/local-nupkg/*.2.2.2.nupkg
 ```
 
 `--output <dossier>` écrit ailleurs (par exemple un dossier partagé de votre
@@ -76,17 +76,17 @@ mon-depot/
 ```
 
 `nuget.config` (seulement avec le flux local) : la source `hackeros-local`
-pointe vers le flux, et le `packageSourceMapping` ne prend les `HackerOs.*` que
+pointe vers le flux, et le `packageSourceMapping` ne prend les `Kazo.Os.*` que
 de là :
 
 ```xml
 <configuration>
   <packageSources>
-    <add key="hackeros-local" value="../HackerOs/wasm2/HackerOs/artifacts/local-nupkg" />
+    <add key="hackeros-local" value="../HackerOs/wasm2/KazoOs/artifacts/local-nupkg" />
     <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
   </packageSources>
   <packageSourceMapping>
-    <packageSource key="hackeros-local"><package pattern="HackerOs.*" /></packageSource>
+    <packageSource key="hackeros-local"><package pattern="Kazo.Os.*" /></packageSource>
     <packageSource key="nuget.org"><package pattern="*" /></packageSource>
   </packageSourceMapping>
 </configuration>
@@ -108,8 +108,8 @@ que celle-ci :
 ## 4. Créer les projets
 
 ```bash
-dotnet new install HackerOs.Templates::2.2.2
-# ou, depuis le flux local : dotnet new install <flux>/HackerOs.Templates.<version>.nupkg
+dotnet new install Kazo.Os.Templates::2.2.2
+# ou, depuis le flux local : dotnet new install <flux>/Kazo.Os.Templates.<version>.nupkg
 dotnet new hackeros-window  -n Contoso.Notes -o src/Contoso.Notes --appId com.contoso.notes --publisherId pub.contoso
 dotnet new hackeros-command -n Contoso.Hello -o src/Contoso.Hello --appId com.contoso.hello --publisherId pub.contoso
 dotnet new hackeros-service -n Contoso.Sync  -o src/Contoso.Sync  --appId com.contoso.sync  --publisherId pub.contoso
@@ -118,8 +118,8 @@ dotnet new hackeros-host    -n Contoso.Os    -o src/Contoso.Os
 dotnet sln add src/*/*.csproj
 ```
 
-Chaque projet d'app référence `HackerOs.AppSdk*` et `HackerOs.App.Build`
-(`PrivateAssets="all"`). Au build, `HackerOs.App.Build` écrit `manifest.json`
+Chaque projet d'app référence `Kazo.Os.AppSdk*` et `Kazo.Os.App.Build`
+(`PrivateAssets="all"`). Au build, `Kazo.Os.App.Build` écrit `manifest.json`
 depuis la classe `[AppManifest]`, avec la version du SDK comme minimum, et
 refuse une référence hors du SDK (`HOSAPP0030`) ou une injection d'un service
 de la plateforme (`HOSAPP0031`).
@@ -127,7 +127,7 @@ de la plateforme (`HOSAPP0031`).
 ## 5. Composer l'hôte
 
 L'hôte `hackeros-host` est une PWA Blazor WebAssembly complète : tout l'OS vient
-de `HackerOs.Ecosystem.Host`, les apps sont ses références.
+de `Kazo.Os.Ecosystem.Host`, les apps sont ses références.
 
 ```xml
 <!-- src/Contoso.Os/Contoso.Os.csproj -->
@@ -138,7 +138,7 @@ de `HackerOs.Ecosystem.Host`, les apps sont ses références.
   <!-- …ou en paquets d'apps. -->
   <PackageReference Include="Contoso.Tools" Version="2.3.0" />
   <!-- Les apps de base que vous gardez (retirez les autres). -->
-  <PackageReference Include="HackerOs.Apps.Terminal" Version="$(HackerOsVersion)" IsSystemApp="true" />
+  <PackageReference Include="Kazo.Os.Apps.Terminal" Version="$(HackerOsVersion)" IsSystemApp="true" />
 </ItemGroup>
 ```
 
@@ -156,7 +156,7 @@ de `HackerOs.Ecosystem.Host`, les apps sont ses références.
 `dotnet pack` d'un projet d'app produit un paquet qui embarque ses manifestes
 (`hackeros/manifests/`), leurs traductions et un `buildTransitive` qui les
 déclare à l'hôte : un hôte n'a jamais besoin de son code source. Donnez au
-paquet un `PackageId` hors de l'espace `HackerOs.*`, réservé au flux Kazo OS
+paquet un `PackageId` hors de l'espace `Kazo.Os.*`, réservé au flux Kazo OS
 par le `packageSourceMapping`.
 
 ## 7. Tester
@@ -166,7 +166,7 @@ par le `packageSourceMapping`.
   `TerminalExecutionContext` sur des passerelles factices, et
   `HackExecutionContext.Enter(app)` autour de `ExecuteAsync`
   ([`sdk-developer-guide.md`](sdk-developer-guide.md), test d'une commande).
-- Un hôte se teste comme `HackerOs.Templates.E2E.Tests` : `dotnet run` de
+- Un hôte se teste comme `Kazo.Os.Templates.E2E.Tests` : `dotnet run` de
   l'hôte, puis Playwright (création de l'administrateur, menu Applications,
   Terminal).
 - Pour vérifier qu'une montée de version ne casse pas vos apps déjà publiées,
@@ -181,7 +181,7 @@ dotnet publish src/Contoso.Os -c Release
 
 Le modèle d'hôte active `PublishTrimmed` en mode `partial` : le framework est
 élagué, les assemblies Kazo OS et toutes les apps restent entières (racines
-ajoutées par `HackerOs.App.Build`, ADR 0113). La sortie `wwwroot` est un site
+ajoutées par `Kazo.Os.App.Build`, ADR 0113). La sortie `wwwroot` est un site
 statique ; le service worker ne s'enregistre que hors de `localhost`. Voir
 [`trimmed-publish.md`](../dev/trimmed-publish.md).
 
@@ -202,10 +202,10 @@ référence une ne se construit plus (`HOSAPP0021`). Toute app doit être
 recompilée contre les paquets 2.x (2.2.2 aujourd'hui ; vérifié par `Tests/fixtures/sdk-compat`,
 où les apps 1.0.0 et 1.1.0 sont refusées et l'app 2.0.0 tourne).
 
-- **Seule rupture** : le paquet `HackerOs.AppSdk.FileView` n'existe plus. Une
+- **Seule rupture** : le paquet `Kazo.Os.AppSdk.FileView` n'existe plus. Une
   app qui affichait `FileView` affiche `HackFileView` (contrôle de fichiers
-  fourni par l'OS, `HackerOs.AppSdk.Blazor.Files`) ; `FileTransfer` devient
-  `HackFileOperations` (`HackerOs.AppSdk.IO`). Le tableau complet est dans
+  fourni par l'OS, `Kazo.Os.AppSdk.Blazor.Files`) ; `FileTransfer` devient
+  `HackFileOperations` (`Kazo.Os.AppSdk.IO`). Le tableau complet est dans
   [`sdk-packages.md`](sdk-packages.md#migration-dune-app-1x).
 - **Menu contextuel de l'OS** : `Menus.Attach(nom, élément)` sur n'importe quel
   élément, `Menus.Define` en C#, sous-menus, clavier et appui long
@@ -234,7 +234,7 @@ sur l'OS 1.2. Ses ajouts font partie de la 2.0.
   méthode statique et des arguments sérialisables, ou une classe
   `HackBackgroundJob<TInput, TResult>` ; progression, annulation et
   `CheckpointAsync` par `HackBackgroundContext`. L'analyseur `HOSBG0001` à
-  `HOSBG0004`, livré dans `HackerOs.AppSdk`, refuse une lambda qui capture
+  `HOSBG0004`, livré dans `Kazo.Os.AppSdk`, refuse une lambda qui capture
   (ADR 0128, 0140, [`background-jobs.md`](background-jobs.md)).
 - **Limites par processus** : `HackProcess.GetResourceLimitsAsync`,
   `SetResourceLimitAsync`, `HackResourceLimits` ; `EMFILE`
@@ -279,7 +279,7 @@ un OS 1.1 ou plus récent.
   [`user-file-associations.md`](../dev/user-file-associations.md)).
 
 La liste exacte et les ruptures hors SDK d'un hôte (trois changements de
-`HackerOs.Platform.Blazor` autour de la géométrie des fenêtres) sont dans
+`Kazo.Os.Platform.Blazor` autour de la géométrie des fenêtres) sont dans
 [`sdk-packages.md`](sdk-packages.md#sdk-11).
 
 ## Décisions

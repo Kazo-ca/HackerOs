@@ -18,7 +18,7 @@ deux modes d'exécution :
 
 - **WebAssembly** — le projet est une assembly Blazor WASM chargée en lazy-load
   à la demande, comme les apps système existantes (`docs/lazy-loading.md`).
-- **Server** — le projet s'exécute côté `Server/HackerOs.Server` et est atteint
+- **Server** — le projet s'exécute côté `Server/Kazo.Os.Server` et est atteint
   depuis le Browser via le pont proxy déjà en place (ADR 0028).
 
 Si aucun domaine n'est déclaré, le domaine par défaut dérive du nom du projet
@@ -43,7 +43,7 @@ itération.
   fallback) via DI + capacité manifeste, repris ici pour la résolution
   WebAssembly-vs-Server et pour la résolution DNS unifiée (§7).
 - [ADR 0027](../adr/0027-server-hosted-blazor-ui.md) et
-  [ADR 0028](../adr/0028-client-side-server-connection.md) — `Server/HackerOs.Server`
+  [ADR 0028](../adr/0028-client-side-server-connection.md) — `Server/Kazo.Os.Server`
   héberge déjà l'arbre de composants Razor et un `IProxyClient` pour les
   commandes réseau réelles ; le mode Server de ce plan réutilise ces deux
   mécanismes plutôt que d'en inventer un troisième.
@@ -62,9 +62,9 @@ itération.
   `user-scripts.execute`. Le scaffolding de fichiers (§8, phase 1) respecte
   cette limite ; l'aperçu compilé (§8, phase 2) ne le peut pas sans la
   décision `D-xxx` du plan de compilation/exécution.
-- `Shared/HackerOs.App.Abstractions/AppManifest.cs`, `AppKind.cs` — modèle de
+- `Shared/Kazo.Os.App.Abstractions/AppManifest.cs`, `AppKind.cs` — modèle de
   manifeste existant, point d'ancrage du nouveau bloc `Web` (§4).
-- `Shared/HackerOs.Simulation.Abstractions/Network/SimulatedNetworkServiceContracts.cs` —
+- `Shared/Kazo.Os.Simulation.Abstractions/Network/SimulatedNetworkServiceContracts.cs` —
   `ISimulatedWebsiteRegistry`/`ISimulatedDns` existants, non modifiés par ce
   plan (§7 ajoute un registre parallèle, pas une extension de ceux-ci).
 
@@ -98,7 +98,7 @@ compilation entre client et serveur.
 ### 4.1 Nouvelle valeur d'énumération
 
 ```csharp
-// Shared/HackerOs.App.Abstractions/AppKind.cs
+// Shared/Kazo.Os.App.Abstractions/AppKind.cs
 public enum AppKind
 {
     Window,
@@ -121,7 +121,7 @@ public WebAppManifest? Web { get; init; }
 /// Domaine explicite (ex. "mycompany.hos"). Si null, le domaine par défaut
 /// dérive du nom d'assembly/namespace du projet — voir §4.3.
 /// </param>
-/// <param name="ExecutionMode">WebAssembly (lazy-load client) ou Server (hébergé par HackerOs.Server).</param>
+/// <param name="ExecutionMode">WebAssembly (lazy-load client) ou Server (hébergé par Kazo.Os.Server).</param>
 /// <param name="RootComponentType">
 /// Nom qualifié du composant Razor racine à monter (mode WebAssembly
 /// uniquement). Convention par défaut si absent : voir §5.2.
@@ -170,7 +170,7 @@ Ordre de résolution, du plus spécifique au plus générique :
 Réutilisation intégrale du mécanisme existant (`docs/lazy-loading.md`) :
 
 - L'assembly du projet Web est déclarée `<BlazorWebAssemblyLazyLoad>` dans
-  `HackerOs.Ecosystem.csproj`, exactement comme les apps système actuelles.
+  `Kazo.Os.Ecosystem.csproj`, exactement comme les apps système actuelles.
 - Son `app.manifest.json` est embarqué et découvert par
   `BuildKnownLazyAppDescriptorRegistry` au même titre que les manifestes
   `Window`/`Terminal`/`Service`.
@@ -196,12 +196,12 @@ WASM) — pas à de l'ASP.NET Core MVC/Razor Pages classique, qui suppose un
 vrai cycle requête/réponse HTTP. Un projet MVC/Razor Pages classique doit
 utiliser le mode Server (§6).
 
-## 6. Mode Server — hébergement dans `HackerOs.Server`, accès via proxy
+## 6. Mode Server — hébergement dans `Kazo.Os.Server`, accès via proxy
 
 ### 6.1 Hébergement
 
 Le projet ASP.NET référencé est déployé/exécuté **à l'intérieur du process
-`Server/HackerOs.Server`** existant, aux côtés de ses API sync/identité/proxy
+`Server/Kazo.Os.Server`** existant, aux côtés de ses API sync/identité/proxy
 actuelles (ADR 0027 y a déjà ajouté un troisième mode d'hébergement Razor —
 ce plan en ajoute un quatrième, dédié aux projets Web référencés).
 
@@ -219,7 +219,7 @@ dédiée :
   importante : un projet référencé au build-time par le développeur du host
   n'a **pas** le même modèle de menace qu'un futur projet compilé à la volée
   depuis du code utilisateur (Phase 2, §8) — le premier peut raisonnablement
-  partager le process `HackerOs.Server` sans sandbox supplémentaire ; le
+  partager le process `Kazo.Os.Server` sans sandbox supplémentaire ; le
   second, non. Ce plan ne pré-approuve donc l'hébergement in-process que
   pour les projets référencés au build-time.
 
@@ -227,7 +227,7 @@ dédiée :
 
 Le Browser n'ouvre jamais de connexion HTTP directe vers l'hôte réel. Il
 passe par `IProxyClient` (ADR 0028), exactement comme le fallback réel de
-`ping`. La requête proxyée cible `HackerOs.Server` avec le domaine résolu
+`ping`. La requête proxyée cible `Kazo.Os.Server` avec le domaine résolu
 (§4.3) transmis en en-tête ou en chemin, pour que le middleware §6.1 route
 vers la bonne sous-app.
 
@@ -332,7 +332,7 @@ dans cet ordre (chaque étape peut être une ADR séparée) :
    nouvelle valeur d'enum, `WebAppManifest`, résolution de domaine par
    défaut, montage de composant sans iframe. Ne dépend de rien d'autre que
    l'existant.
-2. **ADR — Hébergement Server dans `HackerOs.Server` et exception iframe.**
+2. **ADR — Hébergement Server dans `Kazo.Os.Server` et exception iframe.**
    Couvre §6 : montage sous-app, routage proxy par domaine, et l'exception
    explicite à l'ADR 0021 pour le rendu iframe scopé aux apps hébergées
    réelles. Dépend de (1) pour le modèle de manifeste, et bloquée par le
@@ -347,7 +347,7 @@ dans cet ordre (chaque étape peut être une ADR séparée) :
 ## 10. Hors scope pour l'instant
 
 - Hébergement de projets Web sur un serveur réel externe non opéré par
-  `HackerOs.Server` (écarté par la décision du user en §Contexte).
+  `Kazo.Os.Server` (écarté par la décision du user en §Contexte).
 - Multi-tenance/isolation multi-utilisateur des apps Server hébergées —
   hérite de la limitation single-tenant déjà actée par l'ADR 0027.
 - Compilation/exécution à la volée de projets Web créés en jeu (Phase 2,

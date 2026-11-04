@@ -14,7 +14,7 @@ Accepté le 2026-10-10.
 Écrire une chaîne dans un fichier exige aujourd'hui quatre étapes : `CreateAsync`
 avec des bits de mode, `StatAsync` pour obtenir la révision, `WriteAsync` avec la
 révision attendue, et une classe `IFileSystemContentSource` écrite à la main (voir
-`Apps/System/HackerOs.Apps.TextEditor/TextEditorWindow.razor`). Chaque appel exige
+`Apps/System/Kazo.Os.Apps.TextEditor/TextEditorWindow.razor`). Chaque appel exige
 aussi de transporter l'`IAppExecutionContext` de l'app jusqu'à la passerelle
 `IAppFileSystemGateway`.
 
@@ -26,14 +26,14 @@ solide et reste en place (D2). Il manque une façade familière à un développe
 
 ### 1. Emplacement et dépendances
 
-- Projet : `Shared/HackerOs.AppSdk` (aucune dépendance Blazor, utilisable par les
+- Projet : `Shared/Kazo.Os.AppSdk` (aucune dépendance Blazor, utilisable par les
   apps fenêtre, terminal et service).
-- Dossier `Shared/HackerOs.AppSdk/IO/`, namespace public **`HackerOs.AppSdk.IO`**.
-- Le contexte ambiant vit dans `Shared/HackerOs.AppSdk/HackExecutionContext.cs`,
-  namespace **`HackerOs.AppSdk`**.
+- Dossier `Shared/Kazo.Os.AppSdk/IO/`, namespace public **`Kazo.Os.AppSdk.IO`**.
+- Le contexte ambiant vit dans `Shared/Kazo.Os.AppSdk/HackExecutionContext.cs`,
+  namespace **`Kazo.Os.AppSdk`**.
 - La façade n'appelle **que** `IAppFileSystemGateway` et
   `IAppFileSystemWatchGateway` du contexte courant. Elle ne référence ni
-  `HackerOs.Platform.Core` ni `IFileSystemService`. Les capacités, l'autorité,
+  `Kazo.Os.Platform.Core` ni `IFileSystemService`. Les capacités, l'autorité,
   les bits de mode, les tickets d'élévation (ADR 0042) et la notification
   d'erreur de permission (`IAppPermissionErrorGateway`) restent donc appliqués
   exactement comme aujourd'hui.
@@ -41,7 +41,7 @@ solide et reste en place (D2). Il manque une façade familière à un développe
 ### 2. Contexte d'exécution ambiant
 
 ```csharp
-namespace HackerOs.AppSdk;
+namespace Kazo.Os.AppSdk;
 
 public static class HackExecutionContext
 {
@@ -83,8 +83,8 @@ implémenter) :
 |---|---|---|
 | Terminal | `AppLifecycleOrchestrator`, autour de `app.ExecuteAsync(terminalContext, …)` | `TerminalExecutionContext.WorkingDirectory` |
 | Service | `ServiceAppBase.RunAsync` et `ServiceAppBase.StopAsync` (scope ouvert dans la base, avec le contexte reçu) | dossier personnel |
-| Fenêtre | `WindowAppBase` (`Shared/HackerOs.AppSdk.Blazor`) : `SetParametersAsync` (déjà scellé), et réimplémentation explicite de `IHandleEvent.HandleEventAsync` et `IHandleAfterRender.OnAfterRenderAsync`, chacun enveloppé dans `Enter(AppContext)` | dossier personnel |
-| Composants enfants | nouvelle base `HackComponentBase : ComponentBase` dans `HackerOs.AppSdk.Blazor`, avec `[CascadingParameter] IAppExecutionContext`, qui enveloppe de la même façon ses événements et son cycle de vie. `WindowAppRenderer` (`Platform/HackerOs.Platform.Blazor/Windows/`) entoure l'app d'un `CascadingValue` (`IsFixed="true"`) portant son contexte. | celui du parent |
+| Fenêtre | `WindowAppBase` (`Shared/Kazo.Os.AppSdk.Blazor`) : `SetParametersAsync` (déjà scellé), et réimplémentation explicite de `IHandleEvent.HandleEventAsync` et `IHandleAfterRender.OnAfterRenderAsync`, chacun enveloppé dans `Enter(AppContext)` | dossier personnel |
+| Composants enfants | nouvelle base `HackComponentBase : ComponentBase` dans `Kazo.Os.AppSdk.Blazor`, avec `[CascadingParameter] IAppExecutionContext`, qui enveloppe de la même façon ses événements et son cycle de vie. `WindowAppRenderer` (`Platform/Kazo.Os.Platform.Blazor/Windows/`) entoure l'app d'un `CascadingValue` (`IsFixed="true"`) portant son contexte. | celui du parent |
 | Rappels des passerelles | `AppClockGateway.Schedule`, `AppEventGateway.Subscribe` (les deux voies), `AppFileSystemWatchGateway`, actions de `AppNotificationGateway` : chaque passerelle, liée à une seule instance, enveloppe l'appel du gestionnaire dans `Enter` avec son propre contexte | dossier personnel |
 
 Les rappels JavaScript (`[JSInvokable]`) ne transportent pas l'`AsyncLocal`. Une
@@ -142,7 +142,7 @@ n'invente pas de type maison.
 
 ### 5. Exceptions (D5)
 
-Hiérarchie, dans `HackerOs.AppSdk.IO` :
+Hiérarchie, dans `Kazo.Os.AppSdk.IO` :
 
 ```text
 System.IO.IOException
@@ -176,8 +176,8 @@ Un code inconnu ajouté plus tard donne `HackIOException`.
 
 ### 6. Tests de contrat
 
-Dans `Tests/HackerOs.AppSdk.Tests/IO/`, avec un faux `IAppExecutionContext` et
-le système de fichiers en mémoire de `HackerOs.Tests.Support` :
+Dans `Tests/Kazo.Os.AppSdk.Tests/IO/`, avec un faux `IAppExecutionContext` et
+le système de fichiers en mémoire de `Kazo.Os.Tests.Support` :
 
 - chaque méthode publique et chaque ligne du tableau de traduction ;
 - le nouvel essai unique sur conflit ;
@@ -206,5 +206,5 @@ le système de fichiers en mémoire de `HackerOs.Tests.Support` :
 - ADR 0008 : modèle du système de fichiers virtuel.
 - ADR 0042 : `sudo` et invite d'approbation administrateur.
 - [`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md), sections 4 (D2 à D5) et 5.1.
-- `Shared/HackerOs.Simulation.Abstractions/Gateways/AppGatewayContracts.cs` (`IAppFileSystemGateway`).
-- `Shared/HackerOs.Simulation.Abstractions/FileSystem/FileSystemResults.cs` (`FileSystemErrorCode`).
+- `Shared/Kazo.Os.Simulation.Abstractions/Gateways/AppGatewayContracts.cs` (`IAppFileSystemGateway`).
+- `Shared/Kazo.Os.Simulation.Abstractions/FileSystem/FileSystemResults.cs` (`FileSystemErrorCode`).

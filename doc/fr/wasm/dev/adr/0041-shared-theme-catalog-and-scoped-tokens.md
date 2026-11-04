@@ -22,11 +22,11 @@ the browser-independent window runtime depend on Blazor, MudBlazor, or a host.
 
 ## Decision
 
-1. `HackerOs.Theming.Abstractions` is the browser-independent source of truth
+1. `Kazo.Os.Theming.Abstractions` is the browser-independent source of truth
    for built-in theme identifiers, platform compatibility, display metadata,
    accent support, and the persisted `ThemePreferences` value. It contains no
    Razor, MudBlazor, DOM, filesystem, or host dependency.
-2. `HackerOs.Theming.Blazor` owns the visual contract. Its static
+2. `Kazo.Os.Theming.Blazor` owns the visual contract. Its static
    `themes.css` asset defines semantic custom properties for every built-in
    theme, while `ThemeScope` selects a validated theme through data attributes
    on one ancestor. CSS isolation still applies to component layout; inherited
@@ -57,7 +57,7 @@ the browser-independent window runtime depend on Blazor, MudBlazor, or a host.
 - MudBlazor remains a Platform/host concern; neither theme project exposes a
   MudBlazor type.
 - Static assets are served through
-  `_content/HackerOs.Theming.Blazor/themes.css`; hosts must not create a second
+  `_content/Kazo.Os.Theming.Blazor/themes.css`; hosts must not create a second
   copy or add a manual script/style bootstrap dependency.
 
 ## References

@@ -18,17 +18,17 @@ The general guide for a repository that uses Kazo OS is
 Two ways, same result:
 
 - **From GitHub**: "Use this template" on
-  [`Kazo-ca/HackerOs-AppTemplate`](https://github.com/Kazo-ca/HackerOs-AppTemplate),
+  [`Kazo-ca/Os-AppTemplate`](https://github.com/Kazo-ca/Os-AppTemplate),
   then `git clone --recurse-submodules`. The submodule is already there.
 - **From the command line or Visual Studio**:
 
   ```bash
-  dotnet new install HackerOs.Templates
+  dotnet new install Kazo.Os.Templates
   dotnet new hackeros-solution -n Contoso.Notes --appId com.contoso.notes \
-      --publisherId pub.contoso --repository contoso/HackerOs-App-Notes
+      --publisherId pub.contoso --repository contoso/Os-App-Notes
   cd Contoso.Notes
   git init
-  git submodule add --depth 1 https://github.com/Kazo-ca/HackerOs.git external/HackerOs
+  git submodule add --depth 1 https://github.com/Kazo-ca/Os.git external/HackerOs
   git -C external/HackerOs checkout v<Kazo OS version>
   ```
 
@@ -55,8 +55,8 @@ Two ways, same result:
 
 ## The Kazo OS version
 
-`external/HackerOs/wasm2/HackerOs/build/Versions.props` is the repository's
-version: `Directory.Build.props` imports it, and every `HackerOs.*` reference
+`external/HackerOs/wasm2/KazoOs/build/Versions.props` is the repository's
+version: `Directory.Build.props` imports it, and every `Kazo.Os.*` reference
 uses `$(HackerOsVersion)`. Changing the version means moving the submodule to
 another release tag and committing that change. The submodule is never edited:
 CI refuses a submodule that is modified or off its tag
@@ -67,15 +67,15 @@ CI refuses a submodule that is modified or off its tag
 | Profile | Kazo OS comes from | Restore output |
 | --- | --- | --- |
 | `Debug` (`HackerOsUseSource=true`) | the projects of the submodule: step into the SDK and the OS, breakpoints anywhere | `obj/source/` |
-| `Release` (`HackerOsUseSource=false`) | the `HackerOs.*` packages of nuget.org, at the submodule's version | `obj/` |
+| `Release` (`HackerOsUseSource=false`) | the `Kazo.Os.*` packages of nuget.org, at the submodule's version | `obj/` |
 
 `-p:HackerOsUseSource=true` or `false` forces either one;
 `-p:HackerOsSourceRoot=<folder>` points at another copy of Kazo OS (the folder
-of `HackerOs.sln`). The first `Debug` build compiles the whole OS.
+of `Kazo.Os.sln`). The first `Debug` build compiles the whole OS.
 
 ### How the `Debug` profile works
 
-`build/HackerOs.ExternalSource.targets` (in the Kazo OS repository) is
+`build/Kazo.Os.ExternalSource.targets` (in the Kazo OS repository) is
 imported from the submodule. It:
 
 1. finds the projects that can be packages: `Shared/*`, `Platform/*`, `OS/*`,
@@ -83,7 +83,7 @@ imported from the submodule. It:
    project of the same name);
 2. replaces every `PackageReference` to one of them with a `ProjectReference`,
    keeping `IsSystemApp` for the host's base apps;
-3. removes `HackerOs.App.Build` and imports `HackerOs.Apps.targets` for the
+3. removes `Kazo.Os.App.Build` and imports `Kazo.Os.Apps.targets` for the
    projects that declare `HackerOsAppProject` or `HackerOsAppHost`: the same
    manifest generator, analyzers and host aggregation as in the Kazo OS
    repository (`HackerOsExternalSource=true`).
@@ -116,7 +116,7 @@ already declares `HackerOsAppProject=true`; add it to the host with
    [ADR 0222](../dev/adr/0222-installed-app-satellite-assemblies.md)).
 4. With the `HACK_STORE_TOKEN` secret (an author token allowed to fork and open
    a pull request), the workflow opens the pull request to
-   `Kazo-ca/HackerOs-AppMarketPlace` from your fork. Without it, download the
+   `Kazo-ca/Os-AppMarketPlace` from your fork. Without it, download the
    artifact and open the pull request yourself.
 
 The catalog never takes a binary: after review and merge, its CI compiles the
@@ -126,7 +126,7 @@ app at the given commit (ADR 0188 §4 to §6).
 
 It is a GitHub personal access token of **the app's author**: neither Kazo OS
 nor the catalog provides it. With it, the workflow reads the author's name,
-forks `Kazo-ca/HackerOs-AppMarketPlace` to the author's account, pushes the
+forks `Kazo-ca/Os-AppMarketPlace` to the author's account, pushes the
 `<appId>_<version>` branch there and opens the pull request to the catalog.
 
 Creating the token (a "classic" token):
@@ -192,17 +192,17 @@ version that contains ADR 0219 (2.2.1 or later).
 
 ## The GitHub template repository
 
-[`Kazo-ca/HackerOs-AppTemplate`](https://github.com/Kazo-ca/HackerOs-AppTemplate)
-is the output of `dotnet new hackeros-solution -n HackerOs.App` plus the
+[`Kazo-ca/Os-AppTemplate`](https://github.com/Kazo-ca/Os-AppTemplate)
+is the output of `dotnet new hackeros-solution -n Kazo.Os.App` plus the
 submodule link. It is regenerated from the template, never edited by hand. It
 can only work with a submodule on a release that contains this template
 (2.2.0 or later, ADR 0207 §11).
 
 ## Tasks
 
-- [x] External source mode (`HackerOs.ExternalSource.targets`, `HackerOs.Apps.targets`).
+- [x] External source mode (`Kazo.Os.ExternalSource.targets`, `Kazo.Os.Apps.targets`).
 - [x] `hackeros-solution` template, CI and publishing workflow.
 - [x] `ide.host.json` of the templates.
-- [x] Test of both profiles (`HackerOs.Templates.E2E.Tests`).
+- [x] Test of both profiles (`Kazo.Os.Templates.E2E.Tests`).
 - [ ] Template repository regenerated on the release that contains this template.
 - [x] `publish-packages.yml` workflow and package signing (ADR 0219).

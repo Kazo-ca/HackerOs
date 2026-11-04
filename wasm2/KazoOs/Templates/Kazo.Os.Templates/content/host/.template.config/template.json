@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Kazo OS",
+  "classifications": [ "Kazo OS", "Blazor", "WebAssembly" ],
+  "identity": "Kazo.Os.Templates.Host",
+  "groupIdentity": "Kazo.Os.Templates.Host",
+  "name": "Kazo OS host",
+  "description": "A Blazor WebAssembly host that runs the whole Kazo OS (Kazo.Os.Ecosystem.Host) with the base apps as packages.",
+  "shortName": "hackeros-host",
+  "sourceName": "Kazo.Os.Template.Host",
+  "preferNameDirectory": true,
+  "tags": { "language": "C#", "type": "project" }
+}

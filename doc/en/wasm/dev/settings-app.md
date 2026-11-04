@@ -4,7 +4,7 @@
 
 ## Purpose
 
-Describes the system app `Apps/System/HackerOs.Apps.Settings`: the OS control
+Describes the system app `Apps/System/Kazo.Os.Apps.Settings`: the OS control
 panel. It owns no data: each page reads and writes OS files (settings as files,
 ADR 0044) or calls an SDK `Hack*` facade. The decisions that shaped it are
 ADR 0047 (manifest), ADR 0048 (system app), ADR 0096 (`--app=` arguments),
@@ -17,7 +17,7 @@ page), `SettingsWindow.Navigation.cs` (list of pages, collapsed state,
 keyboard), `SettingsWindow.Mobile.cs` (mobile preferences), one `*Panel.razor`
 panel per page, `Strings.cs` and `Resources/` (English and French texts). The
 `manifest.json` is generated at build time from `SettingsApp.cs` (do not edit
-it). Tests: `Tests/HackerOs.Apps.Settings.Tests`.
+it). Tests: `Tests/Kazo.Os.Apps.Settings.Tests`.
 
 ## Side menu (ADR 0170)
 
