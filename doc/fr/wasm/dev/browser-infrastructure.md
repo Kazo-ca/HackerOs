@@ -25,13 +25,14 @@ navigateur, dans la composition de l'hôte.
 | `Sessions/`, `Policy/`, `Catalog/`, `Settings/`, `ServerConnection/`, `Sync/`, `WebData/` | Un dépôt IndexedDB par domaine (utilisateurs, groupes, grants, catalogue des apps, réglages hérités, connexion serveur, curseurs et états de synchro, bases des sites ASP.Kazo). |
 | `Diagnostics/` | Journal de diagnostic et d'audit persistés, inspecteur du stockage. |
 | `Backup/` | Sauvegarde et restauration du stockage (`IndexedDbBackupService`). |
+| `Rename/` | Migration des données enregistrées sous les noms de HackerOS, au démarrage et à la restauration (ADR 0230, [`rename-migration.md`](rename-migration.md)). |
 | `Recovery/` | `BrowserStorageRecoveryClassifier` : traduit une erreur du navigateur en état de récupération (ADR 0018, `StorageRecoveryState`). |
 | `Storage/` | `BrowserStorageManager` : estimation de quota, demande de persistance, seuils d'espace faible. |
 | `Interop/` | `IndexedDbInteropAdapter` (appels JavaScript), `WebCryptoPasswordHasher`, canal du presse-papiers de l'hôte. |
 | `Isolation/` | `BrowserCrossOriginIsolation` : état COOP/COEP (ADR 0131, 0146). |
 | `Workers/` | `BrowserWebWorkerRuntime` : runtime des Web Workers côté navigateur ([`worker-processes.md`](worker-processes.md)). |
 | `Globalization/` | Satellites de langue chargés par le navigateur. |
-| `wwwroot/` | Scripts JavaScript servis sous `_content/Kazo.Os.Infrastructure.Browser/` : `indexedDb.js`, `storageManager.js`, `webSiteDatabases.js`, `cryptoHasher.js`, `hostClipboard.js`, `crossOriginIsolation.js`, `sharedRing.js` (anneau partagé des pipes des workers), `workerHost.js` et `workerBootstrap.js`. |
+| `wwwroot/` | Scripts JavaScript servis sous `_content/Kazo.Os.Infrastructure.Browser/` : `indexedDb.js`, `storageManager.js`, `webSiteDatabases.js`, `renamedStorage.js` (migration du renommage), `cryptoHasher.js`, `hostClipboard.js`, `crossOriginIsolation.js`, `sharedRing.js` (anneau partagé des pipes des workers), `workerHost.js` et `workerBootstrap.js`. |
 
 ## Base IndexedDB
 

@@ -7,8 +7,9 @@ using Xunit.Abstractions;
 namespace Kazo.Os.UI.E2E.Tests;
 
 /// <summary>
-/// Boots the current OS over a <c>kazoos</c> IndexedDB database left by an older build and
-/// checks that the schema upgrade keeps files, accounts and settings (ADR 0099 section 4).
+/// Boots the current OS over the IndexedDB database an older build left and checks that the
+/// rename migration (ADR 0230) and the schema upgrade keep files, accounts and settings
+/// (ADR 0099 section 4).
 /// </summary>
 /// <remarks>
 /// <para>
@@ -16,21 +17,31 @@ namespace Kazo.Os.UI.E2E.Tests;
 /// real OS of an old commit (procedure: <c>doc/en/wasm/dev/building-and-testing.md</c>). The test recreates
 /// that database with raw <c>indexedDB.open(name, oldVersion)</c> from a page of the harness
 /// origin that does not boot Blazor, so the old database exists, at its old version, before the
-/// current OS opens it with <c>KazoOsIndexedDbSchema.CurrentVersion</c> and runs its
-/// migration plan, exactly as on a returning player's browser.
+/// current OS opens it. Every fixture was recorded before the rename, under the database name
+/// <c>hackeros</c>: the OS first moves it to <c>kazoos</c> with the Kazo OS names (ADR 0230), then
+/// opens it with <c>KazoOsIndexedDbSchema.CurrentVersion</c> and runs its migration plan, exactly as
+/// on a returning user's browser.
 /// </para>
 /// <para>
 /// Then it signs in with the fixture's administrator password (the account and its credential
 /// survived), reads the fixture's file back with <c>cat</c> in the Terminal (filesystem entries,
 /// links and content chunks survived), reads <c>/etc/kazoos/appearance.config</c> (the setting
 /// stored in the retired <c>settings</c> store was carried over by the settings-to-files
-/// migration, ADR 0044) and checks the database is now at version 4.
+/// migration, ADR 0044), checks the database is now <c>kazoos</c> at version 4, that <c>hackeros</c>
+/// is gone, and that no stored record names HackerOS any more (the fixture's own document, whose
+/// text is the person's, is stored as base64 and kept as it is).
 /// </para>
 /// </remarks>
 public sealed partial class IndexedDbUpgradeFixtureTests(ITestOutputHelper output)
 {
     /// <summary>The schema version the current OS must leave the database at.</summary>
     private const int ExpectedCurrentVersion = 4;
+
+    /// <summary>The OS database since the rename (<c>KazoOsIndexedDbSchema.DatabaseName</c>).</summary>
+    private const string CurrentDatabaseName = "kazoos";
+
+    /// <summary>Any old name a migrated record must no longer hold.</summary>
+    private static readonly Regex OldName = new("hacker ?os|hackweb|hack-?paint", RegexOptions.IgnoreCase);
 
     /// <summary>
     /// A same-origin page that is not the OS, answered by Playwright itself (it never reaches the
@@ -112,6 +123,29 @@ public sealed partial class IndexedDbUpgradeFixtureTests(ITestOutputHelper outpu
             const state = { version: db.version, stores: Array.from(db.objectStoreNames) };
             db.close();
             return state;
+        }
+        """;
+
+    /// <summary>Lists the origin's databases and dumps every record of <paramref name="name"/> as JSON.</summary>
+    private const string DumpScript = """
+        async name => {
+            const names = (await indexedDB.databases()).map(database => database.name);
+            const db = await new Promise((resolve, reject) => {
+                const open = indexedDB.open(name);
+                open.onsuccess = () => resolve(open.result);
+                open.onerror = () => reject(open.error);
+            });
+            const stores = {};
+            const tx = db.transaction(Array.from(db.objectStoreNames), "readonly");
+            for (const store of Array.from(db.objectStoreNames)) {
+                stores[store] = await new Promise((resolve, reject) => {
+                    const request = tx.objectStore(store).getAll();
+                    request.onsuccess = () => resolve(request.result);
+                    request.onerror = () => reject(request.error);
+                });
+            }
+            db.close();
+            return { names, stores: JSON.stringify(stores) };
         }
         """;
 
@@ -197,7 +231,7 @@ public sealed partial class IndexedDbUpgradeFixtureTests(ITestOutputHelper outpu
             output.WriteLine($"[test] signed in as '{loginName}' with the fixture password.");
 
             // 3. The database is now at the current version, with every store of that version.
-            JsonElement state = await page.EvaluateAsync<JsonElement>(InspectScript, databaseName);
+            JsonElement state = await page.EvaluateAsync<JsonElement>(InspectScript, CurrentDatabaseName);
             Assert.Equal(ExpectedCurrentVersion, state.GetProperty("version").GetInt32());
             string[] stores = [.. state.GetProperty("stores").EnumerateArray().Select(store => store.GetString()!)];
             Assert.Contains("serverConnection", stores);
@@ -221,6 +255,16 @@ public sealed partial class IndexedDbUpgradeFixtureTests(ITestOutputHelper outpu
                 text => setting.IsMatch(text) && OutputFinished(text, settingValue),
                 $"{settingKey}={settingValue} in /etc/kazoos/appearance.config");
             output.WriteLine($"[test] the appearance setting {settingKey}={settingValue} survived.");
+
+            // 5. ADR 0230: the old database is gone and no record holds an old name.
+            JsonElement dump = await page.EvaluateAsync<JsonElement>(DumpScript, CurrentDatabaseName);
+            string[] names = [.. dump.GetProperty("names").EnumerateArray().Select(name => name.GetString()!)];
+            Assert.DoesNotContain(databaseName, names);
+            Assert.DoesNotContain(names, name => OldName.IsMatch(name));
+            string records = dump.GetProperty("stores").GetString()!;
+            Match old = OldName.Match(records);
+            Assert.False(old.Success, $"A migrated record still holds '{old.Value}': …{records[Math.Max(0, old.Index - 200)..Math.Min(records.Length, old.Index + 200)]}…");
+            output.WriteLine($"[test] '{databaseName}' moved to '{CurrentDatabaseName}' without any old name.");
 
             Assert.Empty(consoleErrors);
         }

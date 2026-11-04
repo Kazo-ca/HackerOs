@@ -372,8 +372,11 @@ journaux, processus, intentions, environnement, shell). Exemple : voir le
 
 ### Fixtures de montée de version IndexedDB
 
-ADR 0099 §4. `Tests/fixtures/indexeddb/` contient un vidage de la base
-`kazoos` par version de schéma déjà publiée. `IndexedDbUpgradeFixtureTests`
+ADR 0099 §4. `Tests/fixtures/indexeddb/` contient un vidage de la base de
+l'OS par version de schéma déjà publiée. Ils ont été enregistrés avant le
+renommage, sous le nom `hackeros`, et ne changent pas : l'OS déplace d'abord
+cette base vers `kazoos` avec les noms de Kazo OS
+([`rename-migration.md`](rename-migration.md), ADR 0230). `IndexedDbUpgradeFixtureTests`
 (`Kazo.Os.UI.E2E.Tests`) recrée chaque base à son ancienne version avec
 `indexedDB.open(nom, ancienneVersion)`, depuis une page de la même origine
 qui ne démarre pas l'OS (servie par Playwright lui-même ; l'attente de l'hôte
@@ -386,13 +389,15 @@ démarre l'OS courant et vérifie :
 - `cat /etc/kazoos/appearance.config` contient `accent=cyan` : le réglage
   rangé dans l'ancien magasin `settings` a été repris par la migration vers les
   fichiers (ADR 0044) ;
-- la base est en version 4 avec `serverConnection`, `syncCursors` et
-  `syncRecordState`.
+- la base est `kazoos`, en version 4 avec `serverConnection`, `syncCursors`
+  et `syncRecordState` ;
+- la base `hackeros` a disparu et aucun enregistrement de `kazoos` ne contient
+  d'ancien nom (ADR 0230).
 
 `IndexedDbUpgradeFixtureCatalogTests` (`Kazo.Os.Infrastructure.Browser.Tests`,
 sans navigateur, donc dans chaque passe ordinaire) vérifie qu'un vidage existe
 pour chaque version de 2 à `CurrentVersion - 1` et qu'il concorde avec le
-schéma (nom de la base, version, magasins connus, chemin de clé,
+schéma (nom d'une base d'avant 3.0.0 que la migration envoie vers `kazoos`, version, magasins connus, chemin de clé,
 auto-incrément, administrateur présent).
 
 | Fichier | Version | Commit démarré | Production |

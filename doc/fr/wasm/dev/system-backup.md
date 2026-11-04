@@ -57,7 +57,10 @@ L'archive, l'API du SDK et la capacité `system.backup` destinées aux apps sont
 
 **Restauration**, comme un outil de sauvegarde système :
 
-1. sélecteur de l'hôte et validation complète (rien n'est arrêté) ;
+1. sélecteur de l'hôte et validation complète (rien n'est arrêté) ; une
+   sauvegarde faite avant 3.0.0 (base `hackeros`, sans `osVersion`) est migrée
+   vers les noms de Kazo OS après la vérification de son SHA-256
+   ([`rename-migration.md`](rename-migration.md), ADR 0230) ;
 2. demande d'administrateur (`system.backup.restore`) ;
 3. `SystemPowerService.RestartAfterAsync` : vidage des journaux, fermeture
    de la session (chaque processus est annulé) ;
@@ -167,7 +170,8 @@ Vidages des versions 2 et 3 dans `Tests/fixtures/indexeddb/` (la version 1 n'a j
 - `Tests/Kazo.Os.Infrastructure.Browser.Tests` : `IndexedDbBackupServiceTests`
   (export puis remplacement atomique, archive falsifiée refusée sans
   écriture, fusion par `put` sans `clear`, aller-retour gzip et JSON brut,
-  gzip abîmé, autre version de schéma) ; `IndexedDbFileSystemProviderTests`
+  gzip abîmé, autre version de schéma) ; `RenamedStorageMigrationTests`
+  (sauvegarde d'avant 3.0.0 migrée, falsifiée refusée) ; `IndexedDbFileSystemProviderTests`
   (`QuotaExceededError` → `NoSpace` sans rien écrire, plus de 16 Mio →
   `FileTooLarge` avant toute écriture).
 - `Tests/Kazo.Os.Platform.Core.Tests` : `SystemAdministrationGatewayTests`

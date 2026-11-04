@@ -25,13 +25,14 @@ implementations, in the host's composition.
 | `Sessions/`, `Policy/`, `Catalog/`, `Settings/`, `ServerConnection/`, `Sync/`, `WebData/` | One IndexedDB repository per domain (users, groups, grants, app catalog, legacy settings, server connection, sync cursors and states, ASP.Kazo site databases). |
 | `Diagnostics/` | Persisted diagnostic and audit log, storage inspector. |
 | `Backup/` | Storage backup and restore (`IndexedDbBackupService`). |
+| `Rename/` | Migration of the data stored under the HackerOS names, at boot and at restore (ADR 0230, [`rename-migration.md`](rename-migration.md)). |
 | `Recovery/` | `BrowserStorageRecoveryClassifier`: translates a browser error into a recovery state (ADR 0018, `StorageRecoveryState`). |
 | `Storage/` | `BrowserStorageManager`: quota estimation, persistence request, low-space thresholds. |
 | `Interop/` | `IndexedDbInteropAdapter` (JavaScript calls), `WebCryptoPasswordHasher`, host clipboard channel. |
 | `Isolation/` | `BrowserCrossOriginIsolation`: COOP/COEP state (ADR 0131, 0146). |
 | `Workers/` | `BrowserWebWorkerRuntime`: Web Workers runtime on the browser side ([`worker-processes.md`](worker-processes.md)). |
 | `Globalization/` | Language satellites loaded by the browser. |
-| `wwwroot/` | JavaScript scripts served under `_content/Kazo.Os.Infrastructure.Browser/`: `indexedDb.js`, `storageManager.js`, `webSiteDatabases.js`, `cryptoHasher.js`, `hostClipboard.js`, `crossOriginIsolation.js`, `sharedRing.js` (shared ring of the workers' pipes), `workerHost.js` and `workerBootstrap.js`. |
+| `wwwroot/` | JavaScript scripts served under `_content/Kazo.Os.Infrastructure.Browser/`: `indexedDb.js`, `storageManager.js`, `webSiteDatabases.js`, `renamedStorage.js` (rename migration), `cryptoHasher.js`, `hostClipboard.js`, `crossOriginIsolation.js`, `sharedRing.js` (shared ring of the workers' pipes), `workerHost.js` and `workerBootstrap.js`. |
 
 ## IndexedDB database
 

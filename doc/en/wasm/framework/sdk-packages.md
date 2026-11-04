@@ -450,7 +450,7 @@ stores (Benoit, 2026-11-04: "what is written on disk changes too"). Kazo OS
 **writes only the new names**. It **still reads** the old names that come from
 outside the machine (packages, configuration, commands typed by habit); the
 data already stored in the browser under the old names is rewritten by the
-migration of work item 6.
+migration of work item 6 ([`rename-migration.md`](../dev/rename-migration.md), ADR 0230).
 
 | Before | After | Old name still read |
 |---|---|---|
@@ -460,13 +460,13 @@ migration of work item 6.
 | folder `hackeros/manifests/` (and `hackeros/localization/`) of app NuGet packages | `kazoos/manifests/`, `kazoos/localization/` | yes: a 2.x package keeps its own `buildTransitive/*.targets`, which point to its folder |
 | configuration section `HackerOs` (`HackerOs:Proxy`...) | `KazoOs` | yes: a `HackerOs:*` key answers under `KazoOs:*` when the new section lacks it (`KazoOsConfigurationNames.MapLegacySettings`, server, PWA and service worker) |
 | server environment variables `HACKEROS_*` | `KAZOOS_*` | yes: both prefixes are read, the new one wins |
-| connection string `HackerOsDb`, file `hackeros-server.json`, default database `hackeros.db` | `KazoOsDb`, `kazoos-server.json`, `kazoos.db` | yes for the connection string and the file (an installed server keeps the database its configuration names) |
+| connection string `HackerOsDb`, file `hackeros-server.json`, default database `hackeros.db` | `KazoOsDb`, `kazoos-server.json`, `kazoos.db` | yes for the connection string and the file; `hackeros.db` is renamed `kazoos.db` at start when the configured `kazoos.db` does not exist yet (ADR 0230) |
 | key `X-HackerOS-Origin` of `.trashinfo` files | `X-KazoOS-Origin` | yes |
 | variable `HACKEROS_PREVIOUS_VERSION` handed to an updated app | `KAZOOS_PREVIOUS_VERSION` | yes: both are handed |
 | service worker caches `hackeros-cache-*` | `kazoos-cache-*` | deleted on activation |
-| app ids `org.hackeros.*`, publisher `pub.hackeros`, capabilities, contracts and intents `hackeros.*` (`hackeros.file-view`...) | `org.kazoos.*`, `pub.kazoos`, `kazoos.*` | no: work item 6 |
-| IndexedDB databases `hackeros*`, `hackweb.*`, `localStorage` / `sessionStorage` keys, theme ids (`hackeros`, `hackeros-neon`...), sound theme `hackeros` | `kazoos*`, `kazoweb.*`, `kazoos...` | no: work item 6 |
-| paths `/etc/hackeros`, `~/.config/hackeros`, `~/.local/share/hackeros`, `~/.local/state/hackeros`, `/usr/share/hackeros`, `/usr/lib/hackeros`, `/var/lib/hackeros`, `/proc/hackeros`, `/etc/hackweb`, `/var/log/hackweb`, `~/.config/hackweb`, `~/.hackeros/aliases` | `/etc/kazoos`, `~/.config/kazoos`... `/proc/kazoos`, `/etc/kazoweb`, `/var/log/kazoweb`, `~/.config/kazoweb`, `~/.kazoos/aliases` | no: work item 6 moves the existing files |
+| app ids `org.hackeros.*`, publisher `pub.hackeros`, capabilities, contracts and intents `hackeros.*` (`hackeros.file-view`...) | `org.kazoos.*`, `pub.kazoos`, `kazoos.*` | no: the stored ones are rewritten at boot and at restore (work item 6, ADR 0230) |
+| IndexedDB databases `hackeros*`, `hackweb.*`, `localStorage` / `sessionStorage` keys, theme ids (`hackeros`, `hackeros-neon`...), sound theme `hackeros` | `kazoos*`, `kazoweb.*`, `kazoos...` | no: the databases are copied under the new names, the keys renamed, at boot (work item 6, ADR 0230) |
+| paths `/etc/hackeros`, `~/.config/hackeros`, `~/.local/share/hackeros`, `~/.local/state/hackeros`, `/usr/share/hackeros`, `/usr/lib/hackeros`, `/var/lib/hackeros`, `/proc/hackeros`, `/etc/hackweb`, `/var/log/hackweb`, `~/.config/hackweb`, `~/.hackeros/aliases` | `/etc/kazoos`, `~/.config/kazoos`... `/proc/kazoos`, `/etc/kazoweb`, `/var/log/kazoweb`, `~/.config/kazoweb`, `~/.kazoos/aliases` | no: work item 6 moves the existing files at boot (ADR 0230) |
 | service `hackwebd`, resolver `hackdns`, default host name `hackeros`, service account `hackeros-svc` | `kazowebd`, `kazodns`, `kazoos`, `kazoos-svc` | no (an `/etc/hostname` already written is kept) |
 | CSS variables `--hackeros-*`, attributes `data-hack-menu*`, sites' script `_framework/blazor.hack.js`, C# names `IHack*` / `Hack*` / `Hacker*` left by work item 3 | `--kazoos-*`, `data-kazo-menu*`, `_framework/blazor.kazo.js`, `IKazo*` / `Kazo*` | no |
 | ASP.Hack, Hack Store, Hack Paint | ASP.Kazo (folder `build/asp-kazo/`, header `X-Powered-By: ASP.Kazo`), Kazo OS Store, Kazo Paint | — |
